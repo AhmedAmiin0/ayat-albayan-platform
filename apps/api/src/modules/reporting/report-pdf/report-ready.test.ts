@@ -1,10 +1,23 @@
 import { describe, expect, it } from 'vitest';
-import { reportFileName, reportReadyDedupKey, reportReadyMessage } from './report-ready';
+import { reportDate, reportFileName, reportReadyDedupKey, reportReadyMessage, type ReportReadyInput } from './report-ready';
 
 const guardian = { id: 'g1', phone_e164: '+966551234567', tz: 'Asia/Riyadh' };
 const NOW = new Date('2026-09-29T15:12:00Z');
+const FEEDBACK = 'https://api.example/r/Ab12Cd34Ef';
+const input = (over: Partial<ReportReadyInput> = {}): ReportReadyInput => ({
+  reportId: 'r1',
+  lessonId: 'l1',
+  studentName: 'سلمى',
+  studentCode: 'AB-0183',
+  startsAt: new Date('2026-09-29T14:00:00Z'),
+  guardian,
+  pdfPath: 's1/l1.pdf',
+  teacherName: 'أ. هدى',
+  feedbackUrl: FEEDBACK,
+  ...over,
+});
 
-describe('report_ready message (R-REP-03, R-MSG-01, docs/11 §5)', () => {
+describe('report_ready message (R-REP-03, docs/19 «Report flow»)', () => {
   it('file name: code, the local lesson date, the ar.json suffix', () => {
     expect(
       reportFileName({ code: 'AB-0183', startsAt: new Date('2026-09-29T22:30:00Z'), tz: 'Asia/Riyadh' }),
@@ -15,20 +28,8 @@ describe('report_ready message (R-REP-03, R-MSG-01, docs/11 §5)', () => {
     expect(reportReadyDedupKey('r1')).toBe('report_ready:r1');
   });
 
-  it('queues the template with the student, the guardian-zone time and the PDF document', () => {
-    const msg = reportReadyMessage(
-      {
-        reportId: 'r1',
-        lessonId: 'l1',
-        studentName: 'سلمى',
-        studentCode: 'AB-0183',
-        startsAt: new Date('2026-09-29T14:00:00Z'),
-        guardian,
-        pdfPath: 's1/l1.pdf',
-      },
-      NOW,
-    );
-    expect(msg).toEqual({
+  it('session_report_pdf: [student, dd/MM/yyyy, teacher, feedback link] and the PDF document', () => {
+    expect(reportReadyMessage(input(), NOW)).toEqual({
       direction: 'outbound',
       status: 'queued',
       phone_e164: '+966551234567',
@@ -37,7 +38,9 @@ describe('report_ready message (R-REP-03, R-MSG-01, docs/11 §5)', () => {
       template_key: 'report_ready',
       template_params: {
         '1': 'سلمى',
-        '2': 'الثلاثاء 29 سبتمبر 17:00',
+        '2': '29/09/2026',
+        '3': 'أ. هدى',
+        '4': FEEDBACK,
         document: { bucket: 'reports', path: 's1/l1.pdf', filename: 'AB-0183_2026-09-29_تقرير-الحلقة.pdf' },
         crm: { report: 'regular' },
       },
@@ -47,18 +50,16 @@ describe('report_ready message (R-REP-03, R-MSG-01, docs/11 §5)', () => {
   });
 
   it('formats {{2}} in the guardian zone, not the student or the teacher', () => {
-    const msg = reportReadyMessage(
-      {
-        reportId: 'r1',
-        lessonId: 'l1',
-        studentName: 'سلمى',
-        studentCode: 'AB-0183',
-        startsAt: new Date('2026-09-29T14:00:00Z'),
-        guardian: { ...guardian, tz: 'Europe/London' },
-        pdfPath: 's1/l1.pdf',
-      },
-      NOW,
-    );
-    expect(msg.template_params['2']).toBe('الثلاثاء 29 سبتمبر 15:00');
+    const late = new Date('2026-09-29T22:30:00Z');
+    expect(reportReadyMessage(input({ startsAt: late }), NOW).template_params['2']).toBe('30/09/2026');
+    const london = { ...guardian, tz: 'Europe/London' };
+    expect(reportReadyMessage(input({ startsAt: late, guardian: london }), NOW).template_params['2']).toBe('29/09/2026');
+    expect(reportDate(new Date('2026-10-26T09:00:00Z'), 'Asia/Riyadh')).toBe('26/10/2026');
+  });
+
+  it('a trial lesson goes with the same template and values', () => {
+    const msg = reportReadyMessage(input({ trial: true }), NOW);
+    expect(msg.template_key).toBe('report_ready');
+    expect(msg.template_params['4']).toBe(FEEDBACK);
   });
 });

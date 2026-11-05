@@ -19,6 +19,7 @@ const LEGACY_PAGE_ORDER = [
   'chat_reopen_template',
   'crm_media_host',
   'crm_media_copy_all',
+  'short_link_base',
   'whatsapp_calls_enabled',
   'calls_permission_template',
   'booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available',

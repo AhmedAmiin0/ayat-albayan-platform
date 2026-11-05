@@ -1,18 +1,18 @@
 import type { Json } from '@ab/db';
 import { reportBlock, type Attendance, type Program, type ReportSubmit, type ReportView } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
 import { badRequest, conflict } from '../../../../common/http/errors';
 import { ReportFollowUp } from './report-follow-up';
 import { ReportGate } from './report-gate';
+import { callerActor, type ReportCaller } from '../report-access';
 import { reportView, submitColumns, type FormColumns } from '../report.mapper';
 import type { ReportRow } from '../report-row';
 import { ReportsQueries } from '../reports.queries';
 import { submitPayload } from './submit-plan';
 
-type SubmitInput = { id: string; form: ReportSubmit; user: AuthUser };
-type RetryInput = { id: string; user: AuthUser };
-type Editable = Awaited<ReturnType<ReportGate['editable']>> & { user: AuthUser };
+type SubmitInput = { id: string; form: ReportSubmit; user: ReportCaller };
+type RetryInput = { id: string; user: ReportCaller };
+type Editable = Awaited<ReturnType<ReportGate['editable']>> & { user: ReportCaller };
 /** What a v1 or v2 form sends, as the submit writes it. content: v2 only. */
 type SubmitWrite = {
   expectedVersion: number;
@@ -59,7 +59,7 @@ export class ReportSubmitService {
       current: lesson.lesson_students.find((s) => s.student_id === row.student_id) ?? null,
       columns: form.columns,
       attendance: form.attendance,
-      actor: user.id,
+      actor: callerActor(user),
       now: ctx.now,
       lateCancelHours: ctx.lateCancelHours,
     });
@@ -77,14 +77,17 @@ export class ReportSubmitService {
     return this.view(id, user);
   }
 
-  private async view(id: string, user: AuthUser): Promise<ReportView> {
+  private async view(id: string, user: ReportCaller): Promise<ReportView> {
     const saved = await this.queries.get(id);
     if (!saved) throw new NotFoundException();
     return reportView(saved, await this.gate.context(user));
   }
 }
 
-/** The v1 routes write v1 reports, the v2 routes v2 ones (409 form_version_mismatch: refresh the form). */
+/**
+ * The v1 routes write v1 reports, the v2 routes v2 ones (409 form_version_mismatch: refresh the
+ * form).
+ */
 export function assertForm(row: Pick<ReportRow, 'form_version'>, version: 1 | 2): void {
   if (row.form_version !== version) throw conflict('form_version_mismatch');
 }

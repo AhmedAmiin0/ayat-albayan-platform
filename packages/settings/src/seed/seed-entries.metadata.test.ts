@@ -13,7 +13,7 @@ const CONFIG_GROUPS: Record<string, string[]> = {
     'lesson_confirmation_required'],
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
     'meeting_link_auto', 'meetings_in_app'],
-  reports: ['report_teacher_edit_hours', 'report_form_v2'],
+  reports: ['report_teacher_edit_hours', 'report_form_v2', 'short_link_base'],
   accounts: ['reporting_currency', 'renewal_alert_remaining', 'subscription_expiry_days', 'flag_future_lessons_when_unpaid', 'fx_fresh_hours'],
   payouts: ['payout_count_late', 'payout_count_no_show', 'payout_count_trials'],
   uploads: ['upload_max_mb'],
@@ -39,9 +39,9 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
     expect(missing).toEqual([]);
   });
 
-  it('the 44 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + renewal_commission_enabled, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33, + sales_require_assignee, docs/16 row 39, + lesson_confirmation_required) sit in their «القيم» group, scope config', () => {
+  it('the 45 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + renewal_commission_enabled, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33, + sales_require_assignee, docs/16 row 39, + lesson_confirmation_required, + short_link_base) sit in their «القيم» group, scope config', () => {
     const config = Object.values(CONFIG_GROUPS).flat();
-    expect(config).toHaveLength(44);
+    expect(config).toHaveLength(45);
     for (const [group, keys] of Object.entries(CONFIG_GROUPS)) expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });

@@ -17,13 +17,15 @@ import type { FormColumns } from '../report.mapper';
 export type SubmitPayload = {
   report_id: string;
   expected_version: number;
-  actor: string;
+  actor: string | null;
   report: FormColumns & { version: number; submitted_at: string; edited_at: string | null };
   /** Open lesson: its outcome through apply_lesson_changes (compare-and-set on the status). */
   lesson_change?: ChangeSet;
   /** Lesson already has an outcome: this student's lesson_students row, when it differs. */
   student?: { attendance: Attendance; chargeable: boolean };
-  /** v2 reports: the structured content, stored by submit_report_content in the same transaction. */
+  /**
+   * v2 reports: the structured content, stored by submit_report_content in the same transaction.
+   */
   content?: Json;
 };
 
@@ -35,7 +37,7 @@ export type SubmitPlanInput = {
   /** submitColumns(form): the whole form; attendance is required by reportSubmitSchema. */
   columns: FormColumns;
   attendance: Attendance;
-  actor: string;
+  actor: string | null;
   now: Date;
   /** settings.late_cancel_hours; null = OFF. */
   lateCancelHours: number | null;
@@ -69,7 +71,8 @@ export function submitPayload(input: SubmitPlanInput): SubmitPayload {
  * - a lesson that already has an outcome: this student's attendance and chargeable are synced,
  *   only when they differ (the report is the source of truth for its student).
  * Either way submit_report (migration 131) then re-derives lessons.status from every student's
- * attendance, so a sibling's report or a corrected one also corrects the lesson (payouts, R-PAY-02).
+ * attendance, so a sibling's report or a corrected one also corrects the lesson (payouts,
+ * R-PAY-02).
  */
 export function lessonOutcome(input: SubmitPlanInput): Pick<SubmitPayload, 'lesson_change' | 'student'> {
   const { lesson, now, lateCancelHours } = input;

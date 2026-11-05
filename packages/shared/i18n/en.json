@@ -1801,6 +1801,16 @@
     "submittedAtCol": "Sent on",
     "gradeCol": "Grade",
     "actionsCol": "Action",
+    "teacherLink": {
+      "subtitle": "This page is for this lesson's report only; no sign-in is needed.",
+      "invalid": "This link is not valid. Open the full link as you received it, or ask the academy for a new one.",
+      "expired": "This report link has expired. Ask the academy for a new one.",
+      "notOpen": "The report opens when the lesson starts. Open the link again after its start time.",
+      "tooMany": "Too many tries in a short time. Wait a little, then try again.",
+      "loadFailed": "The report could not be loaded. Check your connection, then try again.",
+      "retry": "Try again",
+      "loading": "Loading the report…"
+    },
     "v2": {
       "formTitle": "Lesson report",
       "autoFilled": "Lesson details are filled in automatically from the schedule.",
@@ -4045,7 +4055,8 @@
       "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed.",
       "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are.",
       "presenceEnabled": "When on, «Online now» or «Last seen» shows in the platform chats between teachers and families, and the admin sees the team's online status. Each user sees only the people they can already message. When off, no online status or last seen is recorded or shown.",
-      "lessonConfirmationRequired": "When off (the default) no lesson shows \"Needs confirmation\", and a lesson counts as held 30 minutes after its end unless another status was recorded, so it is deducted from the package. If the teacher cancelled it or the student excused themself, an assistant or the admin team records that before or after the lesson. A family's \"Yes\" reply still works. When on, a lesson shows \"Needs confirmation\" until the family or the admin team confirms it."
+      "lessonConfirmationRequired": "When off (the default) no lesson shows \"Needs confirmation\", and a lesson counts as held 30 minutes after its end unless another status was recorded, so it is deducted from the package. If the teacher cancelled it or the student excused themself, an assistant or the admin team records that before or after the lesson. A family's \"Yes\" reply still works. When on, a lesson shows \"Needs confirmation\" until the family or the admin team confirms it.",
+      "shortLinkBase": "The address the platform's short links start with, e.g. https://example.com/r/ (must start with https:// and end with /). Empty = the platform API's address followed by /r/."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -4075,7 +4086,8 @@
     "commsSource": "Where the number setup comes from",
     "reportFormV2": "New lesson report form",
     "presenceEnabled": "Show online status and last seen",
-    "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson"
+    "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson",
+    "shortLinkBase": "Short links base"
   },
   "language": {
     "label": "Language",
@@ -7704,5 +7716,8 @@
       "fri": "Fr"
     },
     "earliest": "Earliest allowed date: {date}"
+  },
+  "shortLinks": {
+    "notFound": "This link is not valid or has expired."
   }
 }

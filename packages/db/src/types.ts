@@ -3745,6 +3745,33 @@ export type Database = {
         };
         Relationships: [];
       };
+      short_links: {
+        Row: {
+          code: string;
+          created_at: string;
+          expires_at: string | null;
+          kind: string;
+          subject: string;
+          target_url: string;
+        };
+        Insert: {
+          code: string;
+          created_at?: string;
+          expires_at?: string | null;
+          kind: string;
+          subject: string;
+          target_url: string;
+        };
+        Update: {
+          code?: string;
+          created_at?: string;
+          expires_at?: string | null;
+          kind?: string;
+          subject?: string;
+          target_url?: string;
+        };
+        Relationships: [];
+      };
       sticker_favourites: {
         Row: {
           created_at: string;

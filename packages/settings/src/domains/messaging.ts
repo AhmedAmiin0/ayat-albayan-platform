@@ -82,4 +82,13 @@ export const MESSAGING_SETTINGS = {
     module: 'messaging', group: 'messaging', confirm: 'simple',
     type: 'bool', default: false, labelKey: 'settings.crmMediaCopyAll', hintKey: 'settings.hints.crmMediaCopyAll',
   },
+  /**
+   * The in-house short links' base (owner 2026-11-05, docs/19 «Short links»): «https://<host>/r/». Empty
+   * (the seed) = the API's public origin + /r/. A short domain later is this one value.
+   */
+  short_link_base: {
+    module: 'messaging', group: 'reports', reachesFamilies: true,
+    type: 'string', default: '', minLength: 0, maxLength: 100,
+    labelKey: 'settings.shortLinkBase', hintKey: 'settings.hints.shortLinkBase',
+  },
 } as const satisfies Record<string, SettingDef>;

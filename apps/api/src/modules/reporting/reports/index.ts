@@ -9,3 +9,4 @@ export {
 } from './history/report-history.queries';
 export { ReportsModule } from './reports.module';
 export { ReportsSettings, type ReportsSettingsValues } from './reports.settings';
+export { TeacherReportLinks } from './teacher-link/teacher-link.issuer';
