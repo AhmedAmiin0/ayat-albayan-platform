@@ -9,7 +9,7 @@ import { Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { uuidFor } from '@/modules/finance/stripe';
 import { StopRefundCards, type CardState } from './stop-refund.cards';
-import { StopRefundRepo, type MoneyRow } from './stop-refund.repo';
+import { StopRefundRepo, type MoneyRow, type RefundPackage } from './stop-refund.repo';
 import {
   manualRefundKey,
   replayMismatch,
@@ -18,6 +18,16 @@ import {
 } from './stop-refund.plan';
 import { StopRefundLedger } from './stop-refund.ledger';
 import { CourseStopSettings } from './course-stop.settings';
+
+/** The preview's request: no stop yet, so none of the package's refunds is this stop's own. */
+const PREVIEW_REQUEST = 'course-stop-preview';
+
+interface Allowed {
+  pkg: RefundPackage;
+  rows: MoneyRow[];
+  cards: CardState[];
+  calc: StopRefund;
+}
 
 const net = (rows: readonly MoneyRow[]): number =>
   rows.reduce((sum, r) => sum + (r.kind === 'refund' ? -r.amount : r.amount), 0);
@@ -41,31 +51,22 @@ export class StopRefunds {
     private readonly settings: CourseStopSettings,
   ) {}
 
-  /** The sheet's lines (no Stripe call): what was paid net, at the current rate. */
-  async preview(sub: RefundSub, paid: number): Promise<StopRefund> {
-    const [pkg, rate] = await Promise.all([this.repo.pkg(sub.id), this.rate()]);
-    return stopRefund({ ...pkg, paid, ratePercent: rate, currency: sub.currency });
+  /**
+   * The sheet's lines: the same allowed refund the stop plans (pending Stripe refunds taken off),
+   * so the sheet's default amount never meets 409 refund_exceeds_allowed.
+   */
+  async preview(sub: RefundSub): Promise<StopRefund> {
+    return (await this.allowed(sub, PREVIEW_REQUEST)).calc;
   }
 
   /** 409 refund_exceeds_allowed above the computed refund; 503 stripe_not_configured with cards. */
   async plan(input: { sub: RefundSub; requestId: string; amount: number }): Promise<RefundPlan> {
     const { sub, requestId } = input;
-    const [pkg, rate, rows] = await Promise.all([
-      this.repo.pkg(sub.id),
-      this.rate(),
-      this.repo.money(sub.id),
-    ]);
-    const intents = await this.repo.intents(rows.map((r) => r.id));
-    const cards = await this.cards.states({ rows, intents, requestId });
-    const manualKey = manualRefundKey(requestId);
-    const mineIds = cards.flatMap((c) => c.mine.map((r) => uuidFor(r.id)));
-    const own = new Set([manualKey, ...mineIds]);
-    const pending = cards.reduce((n, c) => n + c.unrecorded, 0);
-    const paid = net(rows.filter((r) => !own.has(r.client_request_id ?? ''))) - pending;
     const { currency } = sub;
-    const calc = stopRefund({ ...pkg, paid, ratePercent: rate, currency });
+    const { pkg, rows, cards, calc } = await this.allowed(sub, requestId);
     if (refundAmountProblem(input.amount, calc.refund, currency))
       throw conflict('refund_exceeds_allowed');
+    const manualKey = manualRefundKey(requestId);
     const legs = cards.map((c) => ({ id: c.paymentId, refundable: c.refundable }));
     const split = splitRefund({ amount: input.amount, cards: legs, currency });
     const manualRow = rows.find((r) => r.client_request_id === manualKey)?.amount ?? null;
@@ -110,7 +111,24 @@ export class StopRefunds {
     ];
   }
 
-  private async rate(): Promise<number> {
-    return (await this.settings.read()).refund_attended_rate_percent;
+  /**
+   * What this stop may refund: net paid with its own refunds left out (a replay plans the same)
+   * and the other refunds still pending in Stripe taken off, minus the attended charge.
+   */
+  private async allowed(sub: RefundSub, requestId: string): Promise<Allowed> {
+    const [pkg, settings, rows] = await Promise.all([
+      this.repo.pkg(sub.id),
+      this.settings.read(),
+      this.repo.money(sub.id),
+    ]);
+    const intents = await this.repo.intents(rows.map((r) => r.id));
+    const cards = await this.cards.states({ rows, intents, requestId });
+    const mineIds = cards.flatMap((c) => c.mine.map((r) => uuidFor(r.id)));
+    const own = new Set([manualRefundKey(requestId), ...mineIds]);
+    const pending = cards.reduce((n, c) => n + c.unrecorded, 0);
+    const paid = net(rows.filter((r) => !own.has(r.client_request_id ?? ''))) - pending;
+    const ratePercent = settings.refund_attended_rate_percent;
+    const calc = stopRefund({ ...pkg, paid, ratePercent, currency: sub.currency });
+    return { pkg, rows, cards, calc };
   }
 }

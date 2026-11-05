@@ -16,6 +16,11 @@ export interface ReceivableIn {
   /** The package's first day (YYYY-MM-DD): what is owed is due from then. */
   starts_on: string;
   status: string;
+  /**
+   * What the package is owed for when not its price: a STOPPED course's attended lessons at the
+   * refund rate (owner 2026-11-05), so a «إلغاء مع استرداد» never lists the refund as owed.
+   */
+  owed_for?: number;
 }
 
 export interface ReceivableRow extends ReceivableIn {
@@ -36,7 +41,7 @@ export function daysSince(startsOn: string, today: string): number {
   return Math.max(0, calendarDaysBetween(startsOn, today));
 }
 
-/** Packages that still owe (owed = price − net paid > 0), the oldest debt first. */
+/** Packages that still owe (owed = (owed_for ?? price) − net paid > 0), the oldest debt first. */
 export function receivablesOf(input: {
   subs: readonly ReceivableIn[];
   paid: ReadonlyMap<string, number>;
@@ -45,7 +50,7 @@ export function receivablesOf(input: {
   return input.subs
     .flatMap((s) => {
       const paid = input.paid.get(s.id) ?? 0;
-      const owed = round2(Number(s.price) - paid);
+      const owed = round2(Number(s.owed_for ?? s.price) - paid);
       if (owed <= 0) return [];
       const days = daysSince(s.starts_on, input.today);
       return [{ ...s, paid, owed, days_overdue: days, bucket: agingBucket(days) }];

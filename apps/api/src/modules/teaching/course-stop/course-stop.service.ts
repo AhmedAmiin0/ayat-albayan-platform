@@ -2,12 +2,11 @@ import type { CourseStopPreview, CourseStopRequest, CourseStopResult } from '@ab
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import { can } from '@/common/auth/permissions';
-import { conflict, forbidden } from '@/common/http/errors';
+import { conflict } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions';
 import { CourseStopRepo } from './course-stop.repo';
 import { toResult, toStopped } from './course-stop.mapper';
-import { StopRefunds, type RefundPlan, type RefundSub } from './refund';
+import { StopRefundGate, type RefundPlan } from './refund';
 
 interface PreviewInput {
   studentId: string;
@@ -36,8 +35,9 @@ interface StopInput {
  * template says «the course stopped» (course_paused says «مؤقتًا», lesson_cancelled names one
  * lesson); a course_stopped template and push kind wait for the owner's approval.
  * «إلغاء مع استرداد» (owner 2026-11-02, body.refund, subscriptions.refund): planned and checked
- * BEFORE the stop (403 refund_not_allowed, 409 refund_exceeds_allowed, 503 stripe_not_configured
- * leave the package as it was), executed after it (StopRefunds, idempotent on clientRequestId).
+ * BEFORE the stop (403 refund_not_allowed / not_your_student: StopRefundGate; 409
+ * refund_exceeds_allowed, 503 stripe_not_configured leave the package as it was), executed
+ * after it (StopRefunds, idempotent on clientRequestId).
  */
 @Injectable()
 export class CourseStop {
@@ -45,7 +45,7 @@ export class CourseStop {
     private readonly repo: CourseStopRepo,
     private readonly writes: MoneyWrites,
     private readonly events: LessonEvents,
-    private readonly refunds: StopRefunds,
+    private readonly refunds: StopRefundGate,
   ) {}
 
   /** The sheet's lines; `refund` only for a holder of subscriptions.refund. */
@@ -62,7 +62,7 @@ export class CourseStop {
     if (stopped === null && plan.unattributed) throw conflict('course_unattributed');
     const live = stopped === null;
     const subRef = { id: sub.id, studentId, currency: sub.currency };
-    const refund = await this.refundLines({ user: input.user, sub: subRef, paid });
+    const refund = await this.refunds.preview(input.user, subRef);
     return {
       subscriptionId: sub.id,
       futureLessons: live ? plan.lessons.length : 0,
@@ -94,17 +94,10 @@ export class CourseStop {
     return toResult(body.subscriptionId, row, refund);
   }
 
-  /** The refund lines, for a holder of subscriptions.refund only. */
-  private async refundLines(c: { user: AuthUser; sub: RefundSub; paid: number }) {
-    if (!can(c.user, 'subscriptions.refund')) return null;
-    return this.refunds.preview(c.sub, c.paid);
-  }
-
-  /** «إلغاء مع استرداد» needs subscriptions.refund; the amount at most the computed refund. */
+  /** «إلغاء مع استرداد»: StopRefundGate's checks; the amount at most the computed refund. */
   private async refundPlan({ studentId, body, actor }: StopInput): Promise<RefundPlan> {
-    if (!can(actor, 'subscriptions.refund')) throw forbidden('refund_not_allowed');
     const sub = await this.repo.subscription(body.subscriptionId, studentId);
-    return this.refunds.plan({
+    return this.refunds.plan(actor, {
       sub: { id: sub.id, studentId, currency: sub.currency },
       requestId: body.clientRequestId,
       amount: body.refund?.amount ?? 0,
