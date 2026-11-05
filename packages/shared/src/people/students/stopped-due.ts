@@ -1,7 +1,7 @@
 import { stopRefund } from './stop-refund.js';
 
-// What a STOPPED course («إلغاء الاشتراك» / «إلغاء مع استرداد») is still owed for (owner 2026-11-05):
-// its attended lessons at the refund rate, the charge stopRefund keeps. Never its price (the unused
+// What a STOPPED course («إلغاء الاشتراك» / «إلغاء مع استرداد») is still owed for
+// (owner 2026-11-05): its attended lessons at the refund rate, the charge stopRefund keeps. Never its price (the unused
 // lessons are not owed) and never the refund (a refunded gap is not a debt). Pure.
 
 export interface StoppedPackage {
