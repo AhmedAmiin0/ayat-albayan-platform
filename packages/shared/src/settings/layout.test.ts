@@ -29,7 +29,7 @@ const LEGACY_PAGE_ORDER = [
   'meeting_link_auto', 'meetings_in_app',
   'report_teacher_edit_hours', 'report_form_v2',
   'reporting_currency', 'renewal_alert_remaining', 'subscription_expiry_days', 'flag_future_lessons_when_unpaid',
-  'payout_count_late', 'payout_count_no_show', 'payout_count_trials', 'fx_fresh_hours',
+  'payout_count_late', 'payout_count_no_show', 'payout_count_trials', 'fx_fresh_hours', 'refund_attended_rate_percent',
   'upload_max_mb',
   'academy_whatsapp_e164', 'academy_timezone', 'feedback_rate_window_min', 'academy_contact',
   'recording_consent_notice', 'family_login_enabled', 'login_code_ttl_minutes', 'login_code_max_attempts',

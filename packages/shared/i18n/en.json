@@ -4137,6 +4137,7 @@
     "renewalAlertRemaining": "Renewal alert when this many lessons are left in the package",
     "subscriptionExpiryDays": "Mark the subscription expired after this many days pending renewal",
     "flagFutureLessonsWhenUnpaid": "Flag upcoming lessons when the package has ended and isn't paid",
+    "refundAttendedRate": "Attended-lesson rate for refunds",
     "reportTeacherEditHours": "Hours after sending that a teacher can still edit the report",
     "reportingCurrency": "Dashboard currency",
     "payoutCountLate": "Count lessons where the student was late toward teacher payouts",
@@ -4163,6 +4164,7 @@
       "subscriptionExpiryDays": "A student still pending renewal this long with no new payment becomes «Subscription expired».",
       "reportingCurrency": "Revenue and expense figures on the dashboard are converted to it.",
       "flagFutureLessonsWhenUnpaid": "The student's upcoming lessons show an «unpaid package» mark.",
+      "refundAttendedRate": "With «Cancel and refund», each lesson the student attended costs this percent of the package's per-lesson price (package price ÷ its lessons), taken off what was paid. 100 = the full lesson price, 0 = nothing is taken off.",
       "payoutCountLate": "When off, this lesson is not counted for the teacher.",
       "payoutCountNoShow": "When off, this lesson is not counted for the teacher.",
       "reminderLookaheadHours": "The reminder job reads lessons starting within this many hours; at least 25 so the day-before reminder is never missed.",
@@ -5647,6 +5649,7 @@
       "student_channels.monitor": "Read student–teacher channels",
       "courses.pause": "Pause and resume any student's course",
       "subscriptions.stop": "Cancel any student's subscription and stop the course",
+      "subscriptions.refund": "Refund when cancelling a subscription",
       "students.change_teacher": "Change any student's teacher for the rest of the course",
       "courses.reschedule": "Change any student's lesson days and times",
       "sales.renew_any": "Renew any student's subscription from the chat",
@@ -5666,6 +5669,7 @@
       "lessons.confirm": "Confirm a lesson after the family's «yes» in the chat, for any scheduled lesson that has not ended. No message is sent.",
       "courses.pause": "Stops the student's upcoming lessons during the pause without counting them from the package or paying the teacher, and extends the package by the paused days on resume. No message is sent.",
       "subscriptions.stop": "Cancels the subscription's upcoming lessons, ends its schedule and marks the student churned. Payments, past lessons, reports and teacher pay stay as they are.",
+      "subscriptions.refund": "Allows «Cancel and refund»: the family gets back what was paid minus the lessons attended, to the card when paid by a payment link, the rest by a manual transfer.",
       "students.change_teacher": "Moves the remaining lessons of the course to the new teacher after checking their time. Past lessons, reports and pay stay with the previous teacher.",
       "courses.reschedule": "Moves the remaining lessons to the new days and times, same count, after checking the teacher's and the student's time.",
       "sales.renew_any": "Shows «Renew subscription», «New subscription», «Record a bank transfer» and «Lesson days» for every child of the family in its chat, and «Renew» and «Record transfer» in «Student details», for any student, even one that is not theirs or belongs to another assistant (e.g. families imported from the old sheet). They book and change the package's lesson days as for their own students, after checking the teacher's and the student's time and never over a clash. Commission keeps its rules. Renewing and recording a transfer send no message.",
@@ -7693,7 +7697,8 @@
     "bell": {
       "refusedTitle": "A card payment was not recorded in the platform",
       "disputeTitle": "A card payment was disputed",
-      "disputeBody": "Needs review in the Stripe dashboard"
+      "disputeBody": "Needs review in the Stripe dashboard",
+      "refundFailedTitle": "A card refund failed: transfer it to the family by hand"
     },
     "settings": {
       "enabled": "Online payments",
@@ -7724,7 +7729,19 @@
       "confirm": "Confirm cancellation",
       "done": "Subscription cancelled and course stopped",
       "stopped": "Subscription cancelled on {date}",
-      "stoppedReason": "Reason: {reason}"
+      "stoppedReason": "Reason: {reason}",
+      "choice": "How to cancel",
+      "cancelOnly": "Cancel only",
+      "withRefund": "Cancel and refund",
+      "refundPaid": "Paid: {amount}",
+      "refundCharged": "Attended lessons: {n} × {price} × {rate}% = {amount}",
+      "refundTotal": "Refund due: {amount}",
+      "refundAmount": "Refund amount",
+      "refundAmountHint": "You may lower it; at most {amount}",
+      "refundWhere": "What was paid by a payment link goes back to the card; the rest is recorded as a manual refund the admin transfers to the family",
+      "doneRefund": "Subscription cancelled and a {amount} refund recorded",
+      "refundNote": "Cancel and refund: {reason}",
+      "refundBell": "Transfer {amount} to the family (cancel and refund)"
     },
     "teacher": {
       "action": "Change teacher",
@@ -7780,7 +7797,11 @@
       "starts_before_subscription": "The date is before the subscription starts",
       "teacher_inactive": "This teacher is inactive",
       "teacher_not_found": "Teacher not found",
-      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this subscription. Change them from the schedule first."
+      "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this subscription. Change them from the schedule first.",
+      "refund_exceeds_allowed": "The amount is above the refund due",
+      "refund_not_allowed": "You are not allowed to refund",
+      "stripe_not_configured": "Online payment is not set up, so the card cannot be refunded",
+      "refund_mismatch": "This retry differs from an earlier refund of the same request: reopen the sheet"
     }
   },
   "coursePause": {

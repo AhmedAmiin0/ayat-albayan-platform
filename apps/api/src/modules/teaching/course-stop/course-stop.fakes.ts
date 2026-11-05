@@ -8,7 +8,12 @@ import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { MoneyWrites } from '@/modules/finance/subscriptions';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
+import { AuditService } from '@/common/audit/audit.service';
+import { PushService } from '@/common/push/push.service';
+import { PaymentsService } from '@/modules/finance/payments';
+import { StripeClients } from '@/modules/finance/stripe';
 import { CourseStopRepo, type StopSub } from './course-stop.repo';
+import { StopRefundRepo } from './refund';
 
 export const STUDENT = '5a000000-0000-4000-8000-0000000000a1';
 export const SUB = 'b0000000-0000-4000-8000-0000000000b1';
@@ -49,8 +54,27 @@ function mocks() {
     repo: { current: vi.fn(), subscription: vi.fn(), plan: vi.fn(), paid: vi.fn(), stop: vi.fn() },
     writes: { recorded: vi.fn() },
     events: { changed: vi.fn(), onChanged: vi.fn(), onScheduleChange: vi.fn() },
+    refunds: { pkg: vi.fn(), money: vi.fn(), intents: vi.fn() },
+    stripe: { refunds: { list: vi.fn(), create: vi.fn() } },
+    clients: { client: vi.fn() },
+    payments: { create: vi.fn() },
+    push: { notifyAdmins: vi.fn() },
+    audit: { record: vi.fn() },
   };
 }
+
+/** A bank payment of 290 SAR (the package: 400 SAR, 8 lessons, 3 used → 140 refundable). */
+export const bankRow = (over: object = {}) => ({
+  id: 'p-bank',
+  amount: 290,
+  kind: 'payment',
+  method: 'bank',
+  currency: 'SAR',
+  original_amount: null,
+  original_currency: null,
+  client_request_id: null,
+  ...over,
+});
 
 function reset(m: ReturnType<typeof mocks>): void {
   vi.resetAllMocks();
@@ -68,6 +92,14 @@ function reset(m: ReturnType<typeof mocks>): void {
   m.repo.stop.mockResolvedValue(STOPPED);
   m.writes.recorded.mockResolvedValue(undefined);
   m.events.changed.mockResolvedValue(undefined);
+  const created = (w: { amount: number }) => Promise.resolve({ amount: w.amount });
+  m.payments.create.mockImplementation(created);
+  m.refunds.pkg.mockResolvedValue({ price: 400, lessonsTotal: 8, attended: 3, studentName: 'ط' });
+  m.refunds.money.mockResolvedValue([bankRow()]);
+  m.refunds.intents.mockResolvedValue(new Map());
+  m.stripe.refunds.list.mockReturnValue({ autoPagingToArray: () => Promise.resolve([]) });
+  m.stripe.refunds.create.mockResolvedValue({ id: 're_new' });
+  m.clients.client.mockResolvedValue(m.stripe);
 }
 
 export async function stopApp() {
@@ -80,7 +112,17 @@ export async function stopApp() {
     .overrideProvider(LessonEvents)
     .useValue(m.events)
     .overrideProvider(MoneyWrites)
-    .useValue(m.writes);
+    .useValue(m.writes)
+    .overrideProvider(StopRefundRepo)
+    .useValue(m.refunds)
+    .overrideProvider(StripeClients)
+    .useValue(m.clients)
+    .overrideProvider(PaymentsService)
+    .useValue(m.payments)
+    .overrideProvider(PushService)
+    .useValue(m.push)
+    .overrideProvider(AuditService)
+    .useValue(m.audit);
   const app = await bootWith(builder, ROLE_USERS);
   const call = (input: { method: 'GET' | 'POST'; url: string; token: string; body?: object }) =>
     app.inject({

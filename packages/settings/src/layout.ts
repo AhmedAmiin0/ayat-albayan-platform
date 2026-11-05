@@ -55,6 +55,7 @@ export const SETTINGS_LAYOUT = {
     'payout_count_no_show',
     'payout_count_trials',
     'fx_fresh_hours',
+    'refund_attended_rate_percent',
   ],
   uploads: ['upload_max_mb'],
   academy: [

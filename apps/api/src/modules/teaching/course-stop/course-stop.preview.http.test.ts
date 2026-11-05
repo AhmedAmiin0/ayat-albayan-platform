@@ -21,7 +21,17 @@ describe('GET /students/:id/course-stop', () => {
       activeRules: 2,
       paid: 290,
       currency: 'SAR',
+      // owner 2026-11-02: sales hold no subscriptions.refund, so no refund lines.
+      refund: null,
       stopped: null,
+    });
+  });
+
+  it('the admin (subscriptions.refund): 290 − 3 × 50 × 100 % (the default rate) = 140', async () => {
+    const res = await t.call({ method: 'GET', url: `${URL}?subscriptionId=${SUB}`, token: 'admin' });
+    expect(res.json().refund).toEqual({
+      ...{ paid: 290, perLesson: 50, attended: 3 },
+      ...{ ratePercent: 100, charged: 150, refund: 140 },
     });
   });
 

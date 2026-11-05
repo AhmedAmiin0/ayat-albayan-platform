@@ -6,6 +6,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n/i18n';
 import { courseStopPreviewQuery, useStopCourse } from './api';
+import { useRefundOffer } from './refund/use-refund-offer';
 import { StopBody } from './StopSummary';
 
 export interface CourseActionDialogProps {
@@ -19,15 +20,19 @@ export interface CourseActionDialogProps {
 /**
  * «إلغاء الاشتراك» (owner 2026-10-30): stop the course, keep the money. The sheet says what
  * happens, asks a short reason, then ONE «تأكيد الإلغاء»; one idempotency key per opening.
+ * With subscriptions.refund and something to refund (owner 2026-11-02) it asks «إلغاء فقط» or
+ * «إلغاء مع استرداد» first (never automatic; «إلغاء فقط» is the default).
  */
 export function StopCourseDialog(props: CourseActionDialogProps) {
   const { studentId, subscriptionId, onClose } = props;
   const formId = useId();
   const [reason, setReason] = useState('');
   const preview = useQuery(courseStopPreviewQuery({ studentId, subscriptionId }));
-  const stop = useStopCourse({ ...props, reason });
+  const currency = preview.data?.currency ?? '';
+  const { asked, refund } = useRefundOffer(preview.data);
+  const stop = useStopCourse({ ...props, reason, refund: asked.refund, currency });
   const live = preview.data?.stopped === null;
-  const blocked = !live || reason.trim().length < 2 || stop.isPending;
+  const blocked = !live || reason.trim().length < 2 || !asked.valid || stop.isPending;
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     if (!blocked) stop.mutate();
@@ -47,7 +52,10 @@ export function StopCourseDialog(props: CourseActionDialogProps) {
     <Dialog layout="sheet" title={t.courseActions.stop.title} onClose={onClose} actions={actions}>
       <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
         {preview.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
-        {preview.data && <StopBody preview={preview.data} reason={reason} onReason={setReason} />}
+        {preview.data && (
+          <StopBody preview={preview.data} reason={reason} onReason={setReason} refund={refund} />
+        )}
+        {!asked.valid && <FormAlert>{t.courseActions.errors.refund_exceeds_allowed}</FormAlert>}
         {error && <FormAlert>{t.courseActions.errors[courseStopErrorCode(error)]}</FormAlert>}
       </form>
     </Dialog>

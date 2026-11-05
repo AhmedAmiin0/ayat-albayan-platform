@@ -23,4 +23,13 @@ export const SUBSCRIPTION_SETTINGS = {
     type: 'bool', default: true,
     labelKey: 'settings.flagFutureLessonsWhenUnpaid', hintKey: `${h}.flagFutureLessonsWhenUnpaid`,
   },
+  /**
+   * «إلغاء مع استرداد» (owner 2026-11-02): each attended lesson costs this percent of the package's
+   * per-lesson price. The API only (no SQL reader): no migration.
+   */
+  refund_attended_rate_percent: {
+    module: 'subscriptions', group: 'accounts',
+    type: 'int', default: 100, min: 0, max: 300,
+    labelKey: 'settings.refundAttendedRate', hintKey: `${h}.refundAttendedRate`,
+  },
 } as const satisfies Record<string, SettingDef>;

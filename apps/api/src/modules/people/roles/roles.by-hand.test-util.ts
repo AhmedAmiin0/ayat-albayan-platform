@@ -7,9 +7,11 @@ import type { Permission } from '@ab/shared';
  * roles get them from the matrix («استعادة الافتراضي» restores them for the system sales role).
  */
 const PEOPLE_EDIT: Permission[] = ['people.edit', 'students.attach_guardian', 'people.switch_role'];
+/** «إلغاء مع استرداد» (feat/cancel-with-refund): admin only, no migration (allGrantable). */
+const REFUND: Permission[] = ['subscriptions.refund'];
 
 export const GRANTED_BY_HAND: Record<'admin' | 'teacher' | 'assistant' | 'sales', Permission[]> = {
-  admin: PEOPLE_EDIT,
+  admin: [...PEOPLE_EDIT, ...REFUND],
   teacher: [],
   assistant: [],
   sales: PEOPLE_EDIT,

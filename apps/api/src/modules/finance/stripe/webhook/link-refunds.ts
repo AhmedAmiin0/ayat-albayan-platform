@@ -11,6 +11,10 @@ import { WebhookDeps } from './webhook-deps';
 
 /** How long a refund waits (Stripe retries) for the payment it reverses to be recorded. */
 const RETRY_MS = 60 * 60_000;
+const FAILED = new Set(['failed', 'canceled']);
+/** A «إلغاء مع استرداد» card refund Stripe gave up on. */
+const stopRefundFailed = (r: Stripe.Refund): boolean =>
+  FAILED.has(r.status ?? '') && Boolean(r.metadata?.course_stop);
 
 /**
  * charge.refunded → one refund payment per Stripe Refund (client_request_id = a uuid of the refund id), so a
@@ -30,6 +34,7 @@ export class LinkRefunds {
 
   /** refund.updated: a refund pending at charge.refunded that has now succeeded. */
   async updated(refund: Stripe.Refund): Promise<string> {
+    if (stopRefundFailed(refund)) return this.failed(refund);
     const charge = idOf(refund.charge);
     if (refund.status !== 'succeeded' || !charge) return 'ignored';
     return this.refundsOf({ paymentIntent: idOf(refund.payment_intent), charge, created: refund.created });
@@ -57,6 +62,15 @@ export class LinkRefunds {
     if (link.processing || Date.now() - c.created * 1000 < RETRY_MS) throw new Error('stripe refund before its payment was recorded');
     await this.deps.alerts.admins({ subject: `stripe_refund_unrecorded:${c.charge}`, title: ar.paymentLinks.bell.refusedTitle, text: c.charge, link });
     return 'refund_alerted';
+  }
+
+  /** «إلغاء مع استرداد» (owner 2026-11-02): nothing reached the family; admins pay it by hand. */
+  private async failed(refund: Stripe.Refund): Promise<string> {
+    const text = `${fromMinorUnits(refund.amount)} ${refund.currency.toUpperCase()} ${refund.id}`;
+    const title = ar.paymentLinks.bell.refundFailedTitle;
+    const subject = `stripe_refund_failed:${refund.id}`;
+    await this.deps.alerts.admins({ subject, title, text, link: null });
+    return 'refund_failed_alert';
   }
 
   async disputed(dispute: Stripe.Dispute): Promise<string> {

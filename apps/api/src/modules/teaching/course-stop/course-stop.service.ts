@@ -6,6 +6,14 @@ import { conflict } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions';
 import { CourseStopRepo } from './course-stop.repo';
 import { toResult, toStopped } from './course-stop.mapper';
+import { StopRefundGate, type RefundPlan } from './refund';
+
+interface PreviewInput {
+  studentId: string;
+  /** Absent: the student's current package (a sales file of a student not hers). */
+  subscriptionId?: string | undefined;
+  user: AuthUser;
+}
 
 interface StopInput {
   studentId: string;
@@ -26,6 +34,10 @@ interface StopInput {
  * Silent on purpose (owner 2026-10-30, «notify both» covers moves, cancels and pauses): no push or
  * template says «the course stopped» (course_paused says «مؤقتًا», lesson_cancelled names one
  * lesson); a course_stopped template and push kind wait for the owner's approval.
+ * «إلغاء مع استرداد» (owner 2026-11-02, body.refund, subscriptions.refund): planned and checked
+ * BEFORE the stop (403 refund_not_allowed / not_your_student: StopRefundGate; 409
+ * refund_exceeds_allowed, 503 stripe_not_configured leave the package as it was), executed
+ * after it (StopRefunds, idempotent on clientRequestId).
  */
 @Injectable()
 export class CourseStop {
@@ -33,10 +45,12 @@ export class CourseStop {
     private readonly repo: CourseStopRepo,
     private readonly writes: MoneyWrites,
     private readonly events: LessonEvents,
+    private readonly refunds: StopRefundGate,
   ) {}
 
-  /** subscriptionId absent: the student's current package (a sales file of a student not hers). */
-  async preview(studentId: string, subscriptionId?: string): Promise<CourseStopPreview> {
+  /** The sheet's lines; `refund` only for a holder of subscriptions.refund. */
+  async preview(input: PreviewInput): Promise<CourseStopPreview> {
+    const { studentId, subscriptionId } = input;
     const sub = subscriptionId
       ? await this.repo.subscription(subscriptionId, studentId)
       : await this.repo.current(studentId);
@@ -47,17 +61,21 @@ export class CourseStop {
     ]);
     if (stopped === null && plan.unattributed) throw conflict('course_unattributed');
     const live = stopped === null;
+    const subRef = { id: sub.id, studentId, currency: sub.currency };
+    const refund = await this.refunds.preview(input.user, subRef);
     return {
       subscriptionId: sub.id,
       futureLessons: live ? plan.lessons.length : 0,
       activeRules: live ? plan.rule_ids.length : 0,
       paid,
       currency: sub.currency,
+      refund,
       stopped,
     };
   }
 
   async stop({ studentId, body, actor }: StopInput): Promise<CourseStopResult> {
+    const plan = body.refund ? await this.refundPlan({ studentId, body, actor }) : null;
     const row = await this.repo.stop({
       subscriptionId: body.subscriptionId,
       studentId,
@@ -69,6 +87,20 @@ export class CourseStop {
     await this.events.changed(row.cancelled_lessons);
     const entry = { actorId: actor.id, entity: 'subscriptions', entityId: body.subscriptionId };
     await this.writes.recorded({ ...entry, action: 'cancel' }, studentId);
-    return toResult(body.subscriptionId, row);
+    const reason = body.reason;
+    const refund = plan
+      ? await this.refunds.execute({ plan, actor: { id: actor.id, reason } })
+      : null;
+    return toResult(body.subscriptionId, row, refund);
+  }
+
+  /** «إلغاء مع استرداد»: StopRefundGate's checks; the amount at most the computed refund. */
+  private async refundPlan({ studentId, body, actor }: StopInput): Promise<RefundPlan> {
+    const sub = await this.repo.subscription(body.subscriptionId, studentId);
+    return this.refunds.plan(actor, {
+      sub: { id: sub.id, studentId, currency: sub.currency },
+      requestId: body.clientRequestId,
+      amount: body.refund?.amount ?? 0,
+    });
   }
 }

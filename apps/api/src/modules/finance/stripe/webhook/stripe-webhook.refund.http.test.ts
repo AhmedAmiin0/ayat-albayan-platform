@@ -74,6 +74,13 @@ describe('POST /webhooks/stripe: refunds reverse through a refund payment, dispu
     expect(m.payments.insert).not.toHaveBeenCalled();
   });
 
+  it('refund.updated: a «إلغاء مع استرداد» card refund that failed → the admins pay it by hand', async () => {
+    const failed = { ...refund('re_f', 5000, 'failed'), payment_intent: 'pi_1', metadata: { course_stop: 'rq' } };
+    await post(chargeEvent('refund.updated', failed, 'evt_12'));
+    expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ subject: 'stripe_refund_failed:re_f' }));
+    expect(m.payments.insert).not.toHaveBeenCalled();
+  });
+
   it('a refund above the net paid is not recorded: the admins get a bell row', async () => {
     m.payments.netPaid.mockResolvedValue(10);
     s.stripe.refunds.list.mockResolvedValue({ data: [refund('re_1', 5000)] });

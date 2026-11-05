@@ -30,6 +30,7 @@ describe('POST /students/:id/course-stop', () => {
       endedRules: 2,
       studentStatus: 'churned',
       stoppedAt: NOW.toISOString(),
+      refund: null,
     });
     expect(t.m.repo.stop).toHaveBeenCalledTimes(1);
     expect(t.m.repo.stop).toHaveBeenCalledWith({

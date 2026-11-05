@@ -66,7 +66,8 @@ const DEFAULTS_LITERAL = Object.freeze({
   join_opens_before_min: 15, join_closes_after_min: 120, default_meeting_title: 'اجتماع', meeting_link_auto: false,
   meetings_in_app: true, meeting_max_minutes: 120,
   report_teacher_edit_hours: 24, report_form_v2: false, reporting_currency: 'SAR', renewal_alert_remaining: 2, subscription_expiry_days: 7,
-  flag_future_lessons_when_unpaid: true, payout_count_late: false, payout_count_no_show: false,
+  flag_future_lessons_when_unpaid: true, refund_attended_rate_percent: 100,
+  payout_count_late: false, payout_count_no_show: false,
   payout_count_trials: false, fx_fresh_hours: 24, upload_max_mb: 10, academy_whatsapp_e164: '+966566101447',
   academy_timezone: 'Asia/Riyadh', feedback_rate_window_min: 10, sales_auto_assign: true, sales_require_assignee: false, renewal_commission_enabled: true, renewal_commission_percent: 50,
   academy_contact: { site: 'ayatalbayan.com' }, recording_consent_notice: null, recording_retention_days: null,
@@ -82,9 +83,9 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expect(surface[name]).toBeDefined();
   });
 
-  it('SETTING_DEFAULTS holds the 58 keys with today\'s values', () => {
-    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(58);
-    expect(root.SETTING_KEYS).toHaveLength(58);
+  it('SETTING_DEFAULTS holds the 59 keys with today\'s values', () => {
+    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(59);
+    expect(root.SETTING_KEYS).toHaveLength(59);
     expect(root.SETTING_DEFAULTS).toEqual(DEFAULTS_LITERAL);
   });
 
