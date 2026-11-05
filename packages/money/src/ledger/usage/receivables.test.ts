@@ -57,3 +57,25 @@ describe('receivablesOf / receivableTotals', () => {
     ]);
   });
 });
+
+describe('receivablesOf: a stopped course is owed for owed_for, never its price', () => {
+  const stopped = (paid: number) =>
+    receivablesOf({
+      subs: [sub('s', { status: 'cancelled', price: 1000, owed_for: 300 })],
+      paid: new Map([['s', paid]]),
+      today: '2026-10-05',
+    }).map((r) => r.owed);
+
+  it('a full or partial refund (net paid at or above the attended value) owes nothing', () => {
+    expect(stopped(0 + 300)).toEqual([]);
+    expect(stopped(500)).toEqual([]);
+  });
+
+  it('a stop that refunded nothing beyond the attended value owes nothing', () => {
+    expect(stopped(300)).toEqual([]);
+  });
+
+  it('a stop with no payment owes the attended value only', () => {
+    expect(stopped(0)).toEqual([300]);
+  });
+});
