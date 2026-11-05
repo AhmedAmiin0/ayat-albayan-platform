@@ -1,5 +1,6 @@
 import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
+import { ReopenRequest } from '@/modules/messaging/whatsapp';
 import type { Page } from '@/common/http/http';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
@@ -14,6 +15,9 @@ export type { ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-pag
 /** H1/H2 (docs/12 §4, R-LEAD-02, R-MSG-05): the WhatsApp inbox over v_threads and messages. */
 @Injectable()
 export class ThreadsService {
+  /** Property-injected (the constructor is at its limit); absent (unit tests): no reopen note. */
+  @Optional() @Inject(ReopenRequest) private readonly reopen?: ReopenRequest;
+
   constructor(
     private readonly queries: ThreadsRepo,
     private readonly views: MessageViews,
@@ -24,8 +28,11 @@ export class ThreadsService {
   /** Each row's family tags come from its guardian's students (one read for the whole page, beside the unsupported marks). */
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
     const { items: rows, total } = await this.queries.list(f);
-    const [items, tags] = await Promise.all([this.queries.unsupported(rows), this.queries.familyTags(guardiansOf(rows))]);
-    const view = (r: ThreadRow) => toThreadView(r, now, r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null);
+    const [items, tags, reopenUsable] = await Promise.all([
+      this.queries.unsupported(rows), this.queries.familyTags(guardiansOf(rows)), this.reopenUsable(),
+    ]);
+    const tagOf = (r: ThreadRow) => (r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null);
+    const view = (r: ThreadRow) => toThreadView(r, now, { tag: tagOf(r), reopenUsable });
     return { items: items.map(view), total, page: f.page, pageSize: f.pageSize };
   }
 
@@ -39,16 +46,24 @@ export class ThreadsService {
     const first = !q.before;
     const at = await pageRows({ threads: this.queries, messages: this.messages }, q);
     const page = at.rows.slice(0, q.limit).reverse();
-    const [people, lessons, messages, tag, read] = await Promise.all([
+    const [people, lessons, messages, tag, read, reopenUsable] = await Promise.all([
       first ? this.queries.people(at.who) : NO_PEOPLE,
       first && at.who ? this.queries.lessons(at.who, now) : [],
       Promise.all(page.map((m) => this.views.view(m))),
       first ? null : this.tagOf(at.found),
       stampRead(this.receipts, { q, page: at, now }),
+      this.reopenUsable(),
     ]);
-    const thread = at.found ? toThreadView(at.found, now, first ? familyTag(people.students) : tag) : null;
+    const opts = { tag: first ? familyTag(people.students) : tag, reopenUsable };
+    const thread = at.found ? toThreadView(at.found, now, opts) : null;
     const detail: ThreadDetail = { thread, messages, has_more: at.rows.length > q.limit, lessons, people };
     return read ? asRead(detail, now) : detail;
+  }
+
+  /** A closed Kapso chat is offered only while the reopen template is usable (review 2026-11-05). */
+  private async reopenUsable(): Promise<boolean> {
+    // A failed settings or registry read only drops the note: the chat list still answers.
+    return (await this.reopen?.usable().catch(() => false)) ?? false;
   }
 
   private async tagOf(row: ThreadRow | null): Promise<FamilyTag | null> {

@@ -30,16 +30,11 @@ const chatOn = (provider: 'meta' | 'kapso') => {
 const queries = { thread: vi.fn(), numberWindows: vi.fn() };
 const outbox = { queue: vi.fn() };
 const storage = { signedUpload: vi.fn() };
-const kapso = { reopen: vi.fn() };
 const repo = queries as unknown as ThreadsRepo;
 const box = outbox as unknown as Outbox;
 const store = storage as unknown as StorageService;
 const file = { path: `out/${ACTOR}/${REQ}/r.png`, mime: 'image/png', name: 'r.png', caption: null };
-const forwardFiles = () => {
-  const f = new ForwardFiles(repo, box, store);
-  Object.assign(f, { kapso });
-  return f;
-};
+const forwardFiles = () => new ForwardFiles(repo, box, store);
 const teacher = { teacherId: 't1', teacherName: 'أ', phones: new Set([PHONE]), ownPhone: null };
 const code = (e: unknown) => (e as { getResponse(): { code: string } }).getResponse().code;
 
@@ -52,13 +47,17 @@ describe('a staff file after the 24 h window, as a text', () => {
   });
   afterEach(() => vi.unstubAllEnvs());
 
-  it('kapso chat line: Kapso reopened, then one row from the chat line', async () => {
+  it('kapso chat line: one row from the chat line, held for the reopen template', async () => {
     chatOn('kapso');
     const s = { phone: PHONE, input: { clientRequestId: REQ }, actorId: ACTOR };
     await forwardFiles().send(s, file, NOW);
-    expect(kapso.reopen).toHaveBeenCalledExactlyOnceWith(PHONE);
     expect(outbox.queue).toHaveBeenCalledExactlyOnceWith(
-      expect.objectContaining({ media_path: file.path, line: 'chat', dedup_key: `admin:${PHONE}:${REQ}` }),
+      expect.objectContaining({
+        media_path: file.path,
+        line: 'chat',
+        error_code: 'awaiting_reply',
+        dedup_key: `admin:${PHONE}:${REQ}`,
+      }),
     );
   });
 
@@ -75,17 +74,16 @@ describe('a staff file after the 24 h window, as a text', () => {
     const s = { phone: PHONE, input: { clientRequestId: REQ }, actorId: ACTOR, scope: teacher };
     const e = await forwardFiles().send(s, file, NOW).catch((x: unknown) => x);
     expect(code(e)).toBe('session_closed');
-    expect(kapso.reopen).not.toHaveBeenCalled();
+    expect(outbox.queue).not.toHaveBeenCalled();
   });
 
-  it('the upload URL is signed after the window on Kapso, with no reopen yet', async () => {
+  it('the upload URL is signed after the window on Kapso, nothing queued yet', async () => {
     chatOn('kapso');
     storage.signedUpload.mockResolvedValue({ path: 'p', token: 't', signedUrl: 'u' });
     const sender = new ThreadFileSender(repo, box, store);
-    Object.assign(sender, { kapso });
     const input = { clientRequestId: REQ, mime: 'image/png' as const, size: 2048 };
     await sender.uploadUrl({ phone: PHONE, input, actorId: ACTOR }, NOW);
     expect(storage.signedUpload).toHaveBeenCalledOnce();
-    expect(kapso.reopen).not.toHaveBeenCalled();
+    expect(outbox.queue).not.toHaveBeenCalled();
   });
 });

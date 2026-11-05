@@ -2933,7 +2933,7 @@
       "stickerSend": "Send sticker"
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
-    "tryAfterWindow": "The last message was more than 24 hours ago: we will reopen the conversation when you send",
+    "tryAfterWindow": "More than 24 hours since the family's last message: your message waits for their reply, and the welcome template invites them to reply unless it already reached them.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
@@ -3705,10 +3705,16 @@
       "template_not_approved": "The template isn't approved by Meta yet",
       "network": "We couldn't reach WhatsApp",
       "internal": "The platform hit an error while sending",
-      "unknown": "Something went wrong while sending ({code})"
+      "unknown": "Something went wrong while sending ({code})",
+      "awaiting_reply": "Waiting for the family's reply",
+      "hold_expired": "The wait ended with no reply",
+      "window_closed": "More than 24 hours since the family's last message; only a template can be sent",
+      "reopen_unavailable": "Not sent: the chat reopen template is not set or not valid — an admin picks it in Settings from the approved templates allowed for restricted roles with no variables",
+      "reopen_failed": "Not sent: the chat reopen template did not reach the family — resend the message to send the template again"
     },
     "cancelManual": "Not yet",
-    "failedMenu": "Message not sent"
+    "failedMenu": "Message not sent",
+    "awaitingReply": "Waiting for the family's reply"
   },
   "mobileLeads": {
     "filter": "Filter",
@@ -4117,7 +4123,7 @@
       "followUpSlotsFromHours": "No slot sooner than this is offered to the lead.",
       "followUpSlotsToDays": "Free slots are offered up to this many days ahead.",
       "quickReplyWindowHours": "A guardian’s typed reply confirms only a lesson we messaged them about within this many hours.",
-      "chatReopenTemplate": "The WhatsApp template sent when a closed chat is opened, to reopen it. Until it is approved on the line, only the Kapso conversation is reopened and nothing is sent.",
+      "chatReopenTemplate": "The template sent once per 24 hours before a message to a family whose last message is more than 24 hours old; the message is sent after they reply. It must be approved on the chat number, allowed for restricted roles, and have no variables (for example welcome_greeting). Empty or not valid: nothing is sent and the message fails with that reason.",
       "crmMediaHost": "The old CRM storage host only (no https:// and no path). Photos and voice notes imported from the old CRM chats are fetched from it once and kept here. Left empty, these files do not open.",
       "crmMediaCopyAll": "When on, every photo and voice note imported from the old CRM is copied in the background, in small batches, into our private storage, not only the ones that are opened. Needs the old CRM files host to be set, and turns itself off when the copy is done. These copies are not deleted after 30 days.",
       "makeupWindowDays": "After this, the makeup button no longer shows for the lesson.",

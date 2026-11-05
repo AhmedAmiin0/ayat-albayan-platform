@@ -17,14 +17,21 @@ import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.m
 
 export type ThreadRow = Tables<'v_threads'>;
 
+/** The family tags (null: none), and can a closed chat be reopened (ReopenRequest.usable)? */
+interface ThreadViewOpts {
+  tag?: FamilyTag | null;
+  reopenUsable?: boolean;
+}
+
 /**
  * v_threads row → ThreadView (H1/H2). The view's columns are typed nullable, but a thread only
  * exists for a phone with at least one message, so the last-message fields are always set.
  * The family tags come from the guardian's students (ThreadsQueries.familyTags / people); a
  * guardian without students is «مش مشترك», a row without a guardian has no badge.
  */
-export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: boolean }, now: Date, tag: FamilyTag | null = null): ThreadView {
+export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: boolean }, now: Date, opts: ThreadViewOpts = {}): ThreadView {
   const chat = lineEnvs(loadEnv()).chat;
+  const tag = opts.tag ?? null;
   return {
     phone_e164: row.phone_e164 ?? '',
     display_name: row.display_name,
@@ -42,8 +49,9 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     last_chat_inbound_at: row.last_chat_inbound_at,
     last_notifications_inbound_at: row.last_notifications_inbound_at,
     reply_line: shownReplyLine(row, { chatConfigured: Boolean(chat), now }),
-    // Owner 2026-10-31: a Kapso chat line still tries free text after the window (textLine).
-    ...(chat?.provider === 'kapso' ? { try_after_window: true } : {}),
+    // Owner 2026-11-03: a Kapso chat line holds a late text behind the reopen template (textLine),
+    // only while that template is usable: else nothing asks the family to reply (review 11-05).
+    ...(chat?.provider === 'kapso' && opts.reopenUsable ? { try_after_window: true } : {}),
     unread_count: row.unread_count ?? 0,
     lead_id: row.lead_id,
     lead_name: row.lead_name,
