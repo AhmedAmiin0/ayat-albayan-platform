@@ -1,4 +1,11 @@
-import { isOpenLesson, type LessonStatus, type SalesCancel, type SalesLessonMoved, type SalesScheduleLesson } from '@ab/shared';
+import {
+  isOpenLesson,
+  type CorrectTo,
+  type LessonStatus,
+  type SalesCancel,
+  type SalesLessonMoved,
+  type SalesScheduleLesson,
+} from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
@@ -49,5 +56,14 @@ export function useSalesCancel(lessonId: string) {
   return useMutation({
     mutationFn: (body: SalesCancel) => apiSend<{ id: string; status: LessonStatus }>('POST', `/sales/lessons/${lessonId}/cancel`, body),
     onSuccess: refresh,
+  });
+}
+
+/** POST /sales/lessons/:id/correct { to } (owner 2026-11-03): «تصحيح حالة الحلقة». */
+export function useSalesCorrect(lessonId: string) {
+  const refresh = useRefreshSchedule();
+  return useMutation({
+    mutationFn: (to: CorrectTo) => apiSend('POST', `/sales/lessons/${lessonId}/correct`, { to }),
+    onSettled: refresh,
   });
 }

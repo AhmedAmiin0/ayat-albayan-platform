@@ -6,7 +6,7 @@ import { pathKey } from '@/core/lib/query/query-keys';
 import { useStudentHref } from '@/core/nav/tree-base';
 import { t } from '@/core/lib/i18n/i18n';
 import { CancelPackage } from '@/payments';
-import { UsedBeforeEdit } from '@/subscribe';
+import { StartDateEdit, UsedBeforeEdit } from '@/subscribe';
 import { packageName, paidLine, usedOf } from '@/core/lib/money/format';
 import { packageLine } from '@/payments/lib/package-line';
 import { useRenewalThreshold, useStudentBalance } from '@/payments/hooks/queries';
@@ -88,6 +88,7 @@ export function BalanceCard({ studentId }: { studentId: string }) {
               />
             ) : null}
             <UsedBeforeEdit sub={current} stale={[['students', studentId], pathKey('/subscriptions')]} />
+            <StartDateEdit sub={current} stale={[['students', studentId], pathKey('/subscriptions')]} />
           </>
         ) : (
           <AppText style={small}>{t.subscriptions.empty}</AppText>

@@ -59,8 +59,8 @@ test('an English run of a teacher’s students and the read-only schedule', asyn
   // The row's second line: the kind first, the bare name (no «Teacher»), the length.
   const teacherLine = `${en.schedule.trialTag} · ${en.today.teacherTitled.replace('{teacher}', 'Abrar Mohamed')} · ${en.enums.duration['30']}`;
   expect(await screen.findByText(teacherLine)).toBeTruthy();
-  // One word for the state, like the rows: «Upcoming» with no confirmation required (the default).
-  expect(screen.getByRole('tab', { name: `${en.lessons.noConfirm.scheduledShort} 0` })).toBeTruthy();
+  // One word for the state, like the rows: «To confirm» while confirmation is required (default).
+  expect(screen.getByRole('tab', { name: `${en.today.statusShort.scheduled} 0` })).toBeTruthy();
   expect(en.sales.academySchedule.status.scheduled).toBe(en.today.statusShort.scheduled);
   expect(screen.queryByText(en.sales.lessonActions.ownNote)).toBeNull();
 });
