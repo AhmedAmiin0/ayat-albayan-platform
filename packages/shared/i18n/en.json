@@ -2749,7 +2749,7 @@
     "dayYesterday": "Yesterday",
     "noticeMore": "Show the full notice",
     "title": "Messages",
-    "searchPlaceholder": "Search by name or number",
+    "searchPlaceholder": "Search by name, number or message text",
     "filterAll": "All",
     "filterUnread": "Unread",
     "filterRow": "Filter chats",
@@ -3227,7 +3227,16 @@
       "counter": "{n} of {m}",
       "empty": "No results",
       "searching": "Searching…",
-      "unreachable": "This message could not be reached in the chat"
+      "unreachable": "This message could not be reached in the chat",
+      "fromProfile": "Search messages"
+    },
+    "messageSearch": {
+      "section": "Messages",
+      "chats": "Chats",
+      "empty": "No matching messages",
+      "more": "Show more messages",
+      "failed": "Could not search the messages. Please try again.",
+      "hint": "Type at least three characters to search message text"
     }
   },
   "mobileFinance": {

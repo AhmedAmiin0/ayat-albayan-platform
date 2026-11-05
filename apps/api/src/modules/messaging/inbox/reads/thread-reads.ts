@@ -14,6 +14,7 @@ import { ThreadQuotes } from '@/modules/messaging/inbox/threads/thread-quotes';
 import { ThreadsRepo, type ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
 import { threadReactable } from '@/modules/messaging/inbox/reactions/reaction-line';
 import { ThreadsService, type ThreadPageQuery } from '@/modules/messaging/inbox/threads/threads.service';
+import { isFirstPage } from '@/modules/messaging/inbox/reads/thread-page';
 
 /**
  * H1/H2 for whoever is signed in: the admin's inbox (ThreadsService), a salesperson's (every chat,
@@ -74,7 +75,7 @@ export class ThreadReads {
     // The quoted bubbles and the chat's lists are independent reads: in parallel.
     const [quoted, listed] = await Promise.all([
       this.quoted(detail, q.phone),
-      withLists(detail, { user, lists: this.chatLists, phone: q.phone, first: !q.before }),
+      withLists(detail, { user, lists: this.chatLists, phone: q.phone, first: isFirstPage(q) }),
     ]);
     return this.reactable({ ...listed, messages: quoted.messages }, true);
   }
