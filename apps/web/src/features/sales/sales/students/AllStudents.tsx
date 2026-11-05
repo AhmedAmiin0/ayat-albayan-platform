@@ -8,7 +8,8 @@ import { SearchInput } from '@/components/ui/form/search-input';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { t } from '@/lib/i18n/i18n';
 import { ALL_STUDENTS_PAGE_SIZE, salesAllStudentsQuery } from '@/features/sales/sales/academy-api';
-import { allStudentColumns } from './all-student-columns';
+import { usePermissions } from '@/features/people/auth';
+import { allStudentColumns, peopleEditColumn } from './all-student-columns';
 
 /**
  * «كل الطلاب» on /sales/students (the default view; «طلابي» is the other): every student of the academy,
@@ -18,6 +19,8 @@ export function AllStudents() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const list = useQuery(salesAllStudentsQuery({ page, search: search.trim() }));
+  const { can } = usePermissions();
+  const columns = can('people.edit') ? [...allStudentColumns, peopleEditColumn] : allStudentColumns;
   return (
     <>
       <div className="mb-3 max-w-sm">
@@ -45,7 +48,7 @@ export function AllStudents() {
           <DataTable
             stacked
             label={t.sales.allStudents.title}
-            columns={allStudentColumns}
+            columns={columns}
             data={list.data.items}
             getRowId={(s) => s.id}
             emptyText={t.sales.allStudents.empty}
