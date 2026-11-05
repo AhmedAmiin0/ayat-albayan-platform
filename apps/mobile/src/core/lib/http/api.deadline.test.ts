@@ -78,3 +78,12 @@ test("the caller's signal (TanStack's) aborts the fetch", async () => {
   expect(init.signal?.aborted).toBe(true);
   expect(connectivity.reportFailure).not.toHaveBeenCalled();
 });
+
+test('a chat PDF page (rendered by the API first) is not cut at 20 s', async () => {
+  getSession.mockResolvedValue(session as never);
+  mockFetch.mockImplementation(never);
+  const onDone = jest.fn();
+  void apiFetch('/threads/%2B9665/messages/m1/pdf/1').then(onDone, onDone);
+  await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS * 3);
+  expect(onDone).not.toHaveBeenCalled();
+});

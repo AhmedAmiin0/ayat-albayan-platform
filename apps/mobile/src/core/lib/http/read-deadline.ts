@@ -5,6 +5,17 @@
  */
 export const READ_TIMEOUT_MS = 20_000;
 
+/**
+ * Reads the API answers slowly by design: a chat file (signed, `?download=1` too) or a PDF page,
+ * which the API may first fetch from Meta or the CRM, then render (the renderer alone allows 45 s).
+ */
+export const SLOW_READ_TIMEOUT_MS = 120_000;
+const SLOW_READS = [/^\/threads\/[^/?]+\/messages\/[^/?]+\/(file|pdf\/\d+)(\?|$)/];
+
+/** The deadline for a read of this API path. */
+export const readTimeoutFor = (path: string): number =>
+  SLOW_READS.some((slow) => slow.test(path)) ? SLOW_READ_TIMEOUT_MS : READ_TIMEOUT_MS;
+
 /** Where a timed-out request stood: still waiting for the access token, or sent and unanswered. */
 export type StallStage = 'token' | 'fetch';
 
@@ -64,7 +75,10 @@ export function withDeadline<T>(
       end(noAnswer());
     }, opts.timeoutMs ?? READ_TIMEOUT_MS);
     caller?.addEventListener('abort', cancel);
-    if (caller?.aborted) cancel();
+    if (caller?.aborted) {
+      cancel();
+      return;
+    }
     run(abort.signal).then(resolve, reject).finally(done);
   });
 }

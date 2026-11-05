@@ -1,4 +1,11 @@
-import { isRead, markSending, READ_TIMEOUT_MS, withDeadline } from './read-deadline';
+import {
+  isRead,
+  markSending,
+  READ_TIMEOUT_MS,
+  readTimeoutFor,
+  SLOW_READ_TIMEOUT_MS,
+  withDeadline,
+} from './read-deadline';
 
 beforeEach(() => jest.useFakeTimers());
 afterEach(() => jest.useRealTimers());
@@ -78,5 +85,17 @@ test('only GET and HEAD are reads', () => {
     false,
     false,
     false,
+  ]);
+});
+
+test('chat files and PDF pages get the slow deadline; every other read the normal one', () => {
+  const chat = '/threads/%2B9665/messages/m1';
+  expect(
+    [`${chat}/file`, `${chat}/file?download=1`, `${chat}/pdf/2`].map(readTimeoutFor),
+  ).toEqual([SLOW_READ_TIMEOUT_MS, SLOW_READ_TIMEOUT_MS, SLOW_READ_TIMEOUT_MS]);
+  expect(['/threads?page=1', '/threads/%2B9665', `${chat}/files`].map(readTimeoutFor)).toEqual([
+    READ_TIMEOUT_MS,
+    READ_TIMEOUT_MS,
+    READ_TIMEOUT_MS,
   ]);
 });

@@ -3,7 +3,14 @@ import { connectivity } from '../connectivity/connectivity';
 import { isNetworkError } from '../connectivity/network-error';
 import { mobileClientTag } from './client-tag';
 import { env } from './env';
-import { isRead, markSending, noAnswer, withDeadline } from './read-deadline';
+import {
+  isRead,
+  markSending,
+  noAnswer,
+  READ_TIMEOUT_MS,
+  readTimeoutFor,
+  withDeadline,
+} from './read-deadline';
 import { reportStall } from './stall-report';
 import { supabase } from './supabase';
 
@@ -49,15 +56,16 @@ const client = createApiClient({
 export function withReadDeadline<T>(
   send: (init: RequestInit) => Promise<T>,
   init: RequestInit = {},
+  timeoutMs = READ_TIMEOUT_MS,
 ): Promise<T> {
   if (!isRead(init)) return send(init);
   const read = (signal: AbortSignal) => send({ ...init, signal });
-  return withDeadline(read, { signal: init.signal, onTimeout: reportStall });
+  return withDeadline(read, { signal: init.signal, onTimeout: reportStall, timeoutMs });
 }
 
 /** fetch against the Nest API with the current Supabase access token and the client tag (`X-AB-Client`). */
 export const apiFetch = <T>(path: string, init?: RequestInit): Promise<T> =>
-  withReadDeadline((sent) => client.apiFetch(path, sent), init);
+  withReadDeadline((sent) => client.apiFetch(path, sent), init, readTimeoutFor(path));
 
 /** JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. */
 export const apiSend = client.apiSend;
