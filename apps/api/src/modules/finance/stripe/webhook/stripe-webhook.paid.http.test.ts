@@ -53,7 +53,7 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     );
     expect(m.activation.afterPayment).toHaveBeenCalledWith(STUDENT_ID, SALES_A.id, PAYMENT_ID); // recompute → «مشترك»
     expect(s.links.markPaid).toHaveBeenCalledWith(LINK_ID, expect.objectContaining({ paymentId: PAYMENT_ID, paymentIntent: 'pi_1' }));
-    expect(s.push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ kind: 'payment_due', profileIds: [SALES_A.id], bellOnly: true }));
+    expect(s.push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ kind: 'payment_due', profileIds: [SALES_A.id] }));
     expect(s.events.done).toHaveBeenCalledWith('evt_1', 'paid');
   });
 
@@ -91,7 +91,7 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     const res = await post(sessionEvent('checkout.session.completed', {}, 'evt_5'));
     expect(res.statusCode).toBe(200);
     expect(s.events.done).toHaveBeenCalledWith('evt_5', 'refused:subscription_cancelled');
-    expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ bellOnly: true }));
+    expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.not.objectContaining({ bellOnly: true }));
   });
 
   it('a package paid another way while the session stayed open is refused with a bell, no second payment; its own retry replays', async () => {
@@ -101,7 +101,7 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     expect(s.links.attribute).not.toHaveBeenCalled();
     expect(s.links.markPaid).not.toHaveBeenCalled();
     expect(s.events.done).toHaveBeenCalledWith('evt_1', 'refused:already_paid');
-    expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ subject: `payment_link_refused:${SESSION}`, bellOnly: true }));
+    expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ subject: `payment_link_refused:${SESSION}` }));
     m.payments.byRequest.mockResolvedValue({ id: PAYMENT_ID }); // this session's payment is the one on the package
     await post(sessionEvent('checkout.session.completed', {}, 'evt_2'));
     expect(m.payments.insert).not.toHaveBeenCalled();
