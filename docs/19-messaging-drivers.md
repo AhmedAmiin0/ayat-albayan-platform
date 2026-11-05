@@ -269,7 +269,7 @@ a short domain later is that one value (it must serve `/r/<code>` from the API).
 ### Teacher report link (owner 2026-11-05: «activate reports from teacher»)
 
 9 of 11 teachers have no platform account, so the reminder's report link needs no login. The token is
-`base64url(lessonId | teacherId | exp).signature` (71 characters, `common/crypto/pair-token.ts`), an HMAC with the
+`base64url(lessonId | teacherId | exp).signature` (71 characters, `common/http/pair-token.ts`), an HMAC with the
 existing `FEEDBACK_TOKEN_SECRET` under its own context (a family's feedback token never opens a report and the
 reverse). It grants ONLY that lesson's report for that lesson's teacher: `GET /public/teacher-report/:token` (the
 form, drafts made on first open), `PUT …/reports/:id/draft`, `POST …/reports/:id/submit` and the v2 pair

@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
-import { signPair, verifyPair } from '@/common/crypto/pair-token';
+import { signPair, verifyPair } from '@/common/http/pair-token';
 
 // The signed «رأيك يهمّنا» link: base64url(lessonId | studentId | exp).signature (docs/13), 71
-// characters (common/crypto/pair-token.ts). Stateless to verify; lesson_feedback.token_hash is what
+// characters (common/http/pair-token.ts). Stateless to verify; lesson_feedback.token_hash is what
 // makes a link revocable (a resend stores a new hash, so the old link no longer finds its row).
 
 /** Link lifetime. */

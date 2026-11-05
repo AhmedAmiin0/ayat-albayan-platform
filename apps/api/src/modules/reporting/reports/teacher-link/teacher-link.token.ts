@@ -1,8 +1,8 @@
-import { signPair, verifyPair } from '@/common/crypto/pair-token';
+import { signPair, verifyPair } from '@/common/http/pair-token';
 
 // The teacher's no-login report link for ONE lesson (owner 2026-11-05, docs/19 «Teacher report
 // link»):
-// base64url(lessonId | teacherId | exp).signature, 71 characters (common/crypto/pair-token.ts),
+// base64url(lessonId | teacherId | exp).signature, 71 characters (common/http/pair-token.ts),
 // signed
 // with the server's FEEDBACK_TOKEN_SECRET under its own context, so a family's feedback token never
 // verifies here and this token never verifies there. Stateless: the lesson's own teacher and time
