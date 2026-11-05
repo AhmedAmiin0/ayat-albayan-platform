@@ -25,6 +25,7 @@ export * from './sales/family-link.js';
 export * from './sales/start-date.js';
 export * from './sales/used-before/used-before-edit.js';
 export * from './sales/used-before/used-before-state.js';
+export * from './sales/start-date-edit/start-date-edit.js';
 export * from './sales/renewal-due.js';
 export * from './sales/qualification-form.js';
 export * from './sales/student/student-attendance.js';

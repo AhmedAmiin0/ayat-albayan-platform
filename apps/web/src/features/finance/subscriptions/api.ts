@@ -1,4 +1,8 @@
-import { usedBeforeEditResultSchema, usedBeforeStateSchema } from '@ab/shared';
+import {
+  startDateEditResultSchema,
+  usedBeforeEditResultSchema,
+  usedBeforeStateSchema,
+} from '@ab/shared';
 import type {
   AdminTaskView,
   QuoteResponse,
@@ -80,6 +84,12 @@ export const cancelSubscription = (id: string, body: { reason?: string }) =>
 export const editUsedBefore = (id: string, lessonsUsedBefore: number) =>
   apiSend('PATCH', `/subscriptions/${id}/lessons-used-before`, { lessonsUsedBefore }).then(
     (raw: unknown) => usedBeforeEditResultSchema.parse(raw),
+  );
+
+/** «تعديل تاريخ البدء» (owner 2026-11-03): subscriptions.edit_terms; starts_on only. */
+export const editStartDate = (id: string, startsOn: string) =>
+  apiSend('PATCH', `/subscriptions/${id}/start-date`, { startsOn }).then((raw: unknown) =>
+    startDateEditResultSchema.parse(raw),
   );
 
 /** GET /subscriptions/:id/lessons-used-before: the stored number, the max, a refusal. */
