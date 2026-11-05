@@ -3736,6 +3736,10 @@
     "course_resumed": {
       "title": "استئناف الحلقات",
       "body": "استُؤنفت حلقات {student}، وأول حلقة في {when}"
+    },
+    "payment_received": {
+      "title": "تم استلام دفعة",
+      "body": "{student}: {amount} {currency}"
     }
   },
   "bell": {
@@ -3964,7 +3968,8 @@
       "lesson_rescheduled": "تغيير موعد حلقة",
       "lesson_cancelled": "إلغاء حلقة",
       "course_paused": "إيقاف الحلقات مؤقتًا",
-      "course_resumed": "استئناف الحلقات"
+      "course_resumed": "استئناف الحلقات",
+      "payment_received": "تم استلام دفعة"
     },
     "paymentKind": {
       "payment": "دفعة",
@@ -6282,6 +6287,10 @@
       "course_resumed": {
         "name": "استئناف الحلقات",
         "trigger": "عند استئناف دورة الطالب، مع موعد أول حلقة، إلى المعلم وولي الأمر"
+      },
+      "payment_received": {
+        "name": "تم استلام دفعة",
+        "trigger": "عند تسجيل دفعة واردة لطالب، إلى الإدارة والمساعد المتابع للطالب"
       }
     }
   },
@@ -7494,7 +7503,6 @@
       "backToApp": "العودة إلى التطبيق"
     },
     "bell": {
-      "paidTitle": "تم الدفع عبر رابط الدفع",
       "refusedTitle": "دفعة بالبطاقة لم تُسجَّل في المنصة",
       "disputeTitle": "اعتراض على دفعة بالبطاقة",
       "disputeBody": "يحتاج إلى مراجعة في لوحة Stripe"

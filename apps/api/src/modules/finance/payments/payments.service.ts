@@ -8,6 +8,7 @@ import { toPaymentView } from './payments.mapper';
 import { PaymentsRepo, type PaymentFilter, type PaymentRow, type PeriodTotal } from './payments.repo';
 import { PaymentInputs } from './payment-inputs';
 import { notCancelled, precheckPayment, type Prechecked } from './payment-precheck';
+import { PaymentReceived, receivedOf } from './received/payment-received';
 
 /**
  * Manual transfers and refunds recorded by an admin (R-PAY-01, R-MOB-02). Every write is audited, then the
@@ -19,6 +20,7 @@ export class PaymentsService {
     private readonly payments: PaymentsRepo,
     private readonly inputs: PaymentInputs,
     private readonly writes: MoneyWrites,
+    private readonly received: PaymentReceived,
   ) {}
 
   /** P1 plus the filter's totals per currency (net of refunds). */
@@ -63,6 +65,7 @@ export class PaymentsService {
     if (!row) return this.raced(input, actorId);
     await this.files.saveBooked(row.id, files, actorId); // never throws: before the follow-ups, so none can drop them
     await this.writes.done({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, sub.student_id);
+    this.received.fire({ payment: receivedOf(row), recorderId: actorId }); // «تم استلام دفعة», off the request path
     return this.get(row.id);
   }
 

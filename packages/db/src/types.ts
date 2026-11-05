@@ -5798,7 +5798,8 @@ export type Database = {
         | 'lesson_rescheduled'
         | 'lesson_cancelled'
         | 'course_paused'
-        | 'course_resumed';
+        | 'course_resumed'
+        | 'payment_received';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -6000,6 +6001,7 @@ export const Constants = {
         'lesson_cancelled',
         'course_paused',
         'course_resumed',
+        'payment_received',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],

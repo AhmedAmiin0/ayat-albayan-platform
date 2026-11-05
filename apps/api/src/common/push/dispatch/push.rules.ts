@@ -19,6 +19,7 @@ const ROW_OF: Record<PushKind, NotificationKey> = {
   lesson_cancelled: 'lesson_cancelled',
   course_paused: 'course_paused',
   course_resumed: 'course_resumed',
+  payment_received: 'payment_received',
 };
 
 /** Where a staff notification goes: the bell row (push_notifications), and the browser / app push. */
