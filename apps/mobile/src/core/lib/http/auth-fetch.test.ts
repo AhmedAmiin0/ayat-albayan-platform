@@ -20,7 +20,8 @@ async function settlesAt(call: Promise<Response>, ms: number) {
   const settled = expect(call).rejects.toBeInstanceOf(TypeError);
   await jest.advanceTimersByTimeAsync(ms);
   await settled;
-  expect(connectivity.reportFailure).toHaveBeenCalledTimes(1);
+  // A hung session read is the token stage: not the API's connection (no «connecting» bar).
+  expect(connectivity.reportFailure).not.toHaveBeenCalled();
 }
 
 async function stillWaiting(call: Promise<Response>) {

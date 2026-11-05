@@ -21,23 +21,25 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-async function expectNoAnswerAtDeadline(read: Promise<unknown>) {
+/** The read fails as no answer; `failures`: what the connection state heard. */
+async function expectNoAnswerAtDeadline(read: Promise<unknown>, failures: number) {
   const settled = expect(read).rejects.toEqual(new TypeError('Network request failed'));
   await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS);
   await settled;
-  expect(connectivity.reportFailure).toHaveBeenCalledTimes(1);
+  expect(connectivity.reportFailure).toHaveBeenCalledTimes(failures);
 }
 
-test('getSession() that never resolves: the GET rejects at the deadline, nothing is sent', async () => {
+test('getSession() never resolves: the GET fails at the deadline, the API is not blamed', async () => {
   getSession.mockImplementation(never);
-  await expectNoAnswerAtDeadline(apiFetch('/threads'));
+  // A hung token refresh: no «connecting» bar, whose reconnect refetch would hang on it again.
+  await expectNoAnswerAtDeadline(apiFetch('/threads'), 0);
   expect(mockFetch).not.toHaveBeenCalled();
 });
 
 test('a sent GET with no answer rejects at the deadline and its fetch is aborted', async () => {
   getSession.mockResolvedValue(session as never);
   mockFetch.mockImplementation(never);
-  await expectNoAnswerAtDeadline(apiFetch('/threads/x'));
+  await expectNoAnswerAtDeadline(apiFetch('/threads/x'), 1);
   const [, init] = mockFetch.mock.calls[0] as [string, RequestInit];
   expect(init.signal?.aborted).toBe(true);
 });
@@ -86,4 +88,14 @@ test('a chat PDF page (rendered by the API first) is not cut at 20 s', async () 
   void apiFetch('/threads/%2B9665/messages/m1/pdf/1').then(onDone, onDone);
   await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS * 3);
   expect(onDone).not.toHaveBeenCalled();
+});
+
+test('a booking/invoice file (downloaded from WhatsApp first) is not cut at 20 s', async () => {
+  getSession.mockResolvedValue(session as never);
+  mockFetch.mockImplementation(never);
+  const onDone = jest.fn();
+  void apiFetch('/threads/%2B9665/media/m1').then(onDone, onDone);
+  await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS * 3);
+  expect(onDone).not.toHaveBeenCalled();
+  expect(connectivity.reportFailure).not.toHaveBeenCalled();
 });
