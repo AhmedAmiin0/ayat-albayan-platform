@@ -1,5 +1,5 @@
 import type { SettingKey } from './registry.js';
-import { SCHEDULE_KEYS } from './schedule-keys.js';
+import { SCHEDULE_KEYS } from './domains/teaching/schedule-keys.js';
 
 // «القيم» (docs/26b §2): the store's rows in small groups, one group per view (owner, 2026-10-23
 // «i dont like long pages», «stick with table»). Kept apart from layout.ts, which still orders the

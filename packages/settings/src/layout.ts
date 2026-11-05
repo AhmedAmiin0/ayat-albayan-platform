@@ -1,5 +1,5 @@
 import type { SettingKey } from './registry.js';
-import { SCHEDULE_KEYS } from './schedule-keys.js';
+import { SCHEDULE_KEYS } from './domains/teaching/schedule-keys.js';
 
 // Where each setting shows on /admin/settings, kept apart from who owns it (domains/*.ts). The
 // page renders a section's registry fields in this order; the sections come in SETTINGS_SECTIONS order.
