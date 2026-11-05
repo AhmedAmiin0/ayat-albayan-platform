@@ -2,7 +2,7 @@ import type { Tx } from '../core/rls';
 
 // SQL helpers of message-search.sql.spec.ts (docs/37): rows to search and the RPC call.
 
-export interface MsgInput {
+interface MsgInput {
   phone: string;
   body: string;
   at?: string;
@@ -30,7 +30,7 @@ export async function msg(tx: Tx, input: MsgInput): Promise<string> {
   return row.id;
 }
 
-export interface SearchArgs {
+interface SearchArgs {
   q: string;
   phones?: string[] | null;
   hide?: string[];
@@ -39,7 +39,7 @@ export interface SearchArgs {
   limit?: number;
 }
 
-export interface SearchHit {
+interface SearchHit {
   id: string;
   phone_e164: string;
   created_at: string;

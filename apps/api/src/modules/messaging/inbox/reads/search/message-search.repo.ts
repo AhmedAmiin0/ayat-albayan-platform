@@ -10,7 +10,7 @@ export interface MessageSearchRow extends SearchRow {
 }
 
 /** What the caller may search (MessageSearchService) and where the page starts. */
-export interface MessageSearchInput {
+interface MessageSearchInput {
   q: string;
   /** null = every chat (the admin, sales); a teacher's scope otherwise. */
   phones: string[] | null;

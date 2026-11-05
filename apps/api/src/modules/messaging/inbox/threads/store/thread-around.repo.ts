@@ -4,11 +4,11 @@ import { MESSAGE_SELECT, NOT_A_REACTION, type ThreadMessageRow } from '@/modules
 import { check } from './check';
 
 /** Messages a window shows above its hit (newer); older ones fill the rest of the page. */
-export const AROUND_NEWER = 20;
+const AROUND_NEWER = 20;
 
 export const PAGE_SELECT = `${MESSAGE_SELECT}, lesson:lessons(starts_at, ends_at, status)` as const;
 
-export interface AroundInput {
+interface AroundInput {
   phone: string;
   around: string;
   limit: number;

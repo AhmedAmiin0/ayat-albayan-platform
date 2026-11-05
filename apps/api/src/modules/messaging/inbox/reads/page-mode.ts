@@ -1,5 +1,5 @@
 /** The page fields a detail request may combine (GET /threads/:phone). */
-export interface PageModeInput {
+interface PageModeInput {
   before?: string | undefined;
   before_id?: string | undefined;
   around?: string | undefined;
