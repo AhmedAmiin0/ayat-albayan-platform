@@ -1,12 +1,14 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
+import { FamilyFeedbackLinks } from '@/common/http/family-feedback';
 import { loadEnv } from '@/config/env/env';
 import { FEEDBACK_CONFIG, type FeedbackConfig } from '@/modules/teaching/feedback/feedback.config';
 import { FeedbackRepo } from '@/modules/teaching/feedback/feedback.repo';
 import { FeedbackLinks } from './feedback.links';
 
 /**
- * The family's feedback link for other modules (the report's WhatsApp message), without the inbox.
+ * FamilyFeedbackLinks for every module (global; the report's WhatsApp message), without the inbox.
  */
+@Global()
 @Module({
   providers: [
     {
@@ -15,7 +17,8 @@ import { FeedbackLinks } from './feedback.links';
     },
     FeedbackRepo,
     FeedbackLinks,
+    { provide: FamilyFeedbackLinks, useExisting: FeedbackLinks },
   ],
-  exports: [FeedbackLinks],
+  exports: [FamilyFeedbackLinks],
 })
 export class FeedbackLinksModule {}

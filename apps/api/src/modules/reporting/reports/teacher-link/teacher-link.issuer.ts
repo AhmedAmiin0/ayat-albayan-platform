@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { firstOrigin } from '@/common/http/public-origin';
 import { loadEnv } from '@/config/env/env';
 import { ShortLinks } from '@/modules/platform/short-links';
 import { ReportsSettings } from '@/modules/reporting/reports/reports.settings';
-import { firstWebOrigin } from '@/modules/teaching/classroom';
 import { TEACHER_LINK_CONFIG, type TeacherLinkConfig } from './teacher-link.config';
 import { signTeacherLink, teacherLinkExpiry } from './teacher-link.token';
 
@@ -34,7 +34,7 @@ export class TeacherReportLinks {
   ) {}
 
   async forLesson(lesson: TeacherLinkLesson): Promise<string | null> {
-    const origin = firstWebOrigin(loadEnv().WEB_ORIGIN);
+    const origin = firstOrigin(loadEnv().WEB_ORIGIN);
     const { secret } = this.config;
     if (!secret || !origin) return null;
     const { report_teacher_edit_hours: hours } = await this.settings.read();

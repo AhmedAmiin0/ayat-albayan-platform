@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ShortLinksModule } from '@/modules/platform/short-links';
-import { FeedbackLinksModule } from '@/modules/teaching/feedback';
 import { ReportFeedbackLink } from './report-feedback-link';
 import { PdfRenderer } from './render/pdf-renderer';
 import { ReportPdfJob } from './report-pdf.job';
@@ -15,7 +14,7 @@ import { ReportPdfSource } from './report-pdf.source';
  * Exports the job so the reports module can `kick()` it after a submit or an admin retry.
  */
 @Module({
-  imports: [ShortLinksModule, FeedbackLinksModule],
+  imports: [ShortLinksModule],
   providers: [ReportPdfQueries, ReportPdfSettings, ReportPdfSource, PdfRenderer, ReportFeedbackLink, ReportPdfPublisher, ReportPdfJob],
   exports: [ReportPdfJob],
 })

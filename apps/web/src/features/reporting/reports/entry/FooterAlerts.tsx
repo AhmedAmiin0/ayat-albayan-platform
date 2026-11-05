@@ -1,7 +1,7 @@
 import type { ReportFormResponse, ReportView } from '@ab/shared';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { reportErrorText } from '@/features/reporting/reports/api';
+import { useReportApi } from '@/features/reporting/reports/report-api';
 import { SubmittedNote } from '@/features/reporting/reports/history/ReportStatusLine';
 
 const ERRORS: Record<string, string> = t.reports.error;
@@ -18,10 +18,11 @@ export interface FooterAlertsProps {
 
 /** What stops a send (the check, the API, the lesson not started yet), then the sent state. */
 export function FooterAlerts({ problem, error, block, report, tz }: FooterAlertsProps) {
+  const { errorText } = useReportApi();
   return (
     <>
       {problem && <FormAlert>{ERRORS[problem] ?? t.common.error}</FormAlert>}
-      {error ? <FormAlert>{reportErrorText(error)}</FormAlert> : null}
+      {error ? <FormAlert>{errorText(error)}</FormAlert> : null}
       {block && <FormAlert>{ERRORS[block]}</FormAlert>}
       <SubmittedNote report={report} tz={tz} />
     </>

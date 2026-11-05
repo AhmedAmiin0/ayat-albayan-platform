@@ -15,7 +15,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { BUNDLES, t } from '@/lib/i18n/i18n';
-import { REPORTS_KEY, saveDraftV2, submitReportV2 } from '@/features/reporting/reports/api';
+import { REPORTS_KEY } from '@/features/reporting/reports/api';
+import { useReportApi } from '@/features/reporting/reports/report-api';
 import { useDraftSave } from '@/features/reporting/reports/entry/use-autosave';
 
 const words = () => t.reports.v2.suggest;
@@ -28,11 +29,12 @@ const storedWords = () => [BUNDLES.ar.reports.v2.suggest, t.reports.v2.suggest];
  */
 export function useReportEntryV2(initial: ReportView, studentProgram: Program) {
   const queryClient = useQueryClient();
+  const api = useReportApi();
   const [report, setReport] = useState(initial);
   const [values, setValues] = useState<V2Values>(() => v2ValuesOf(initial, studentProgram, storedWords()));
   const [problem, setProblem] = useState<string | null>(null);
   const submit = useMutation({
-    mutationFn: submitReportV2,
+    mutationFn: api.submitReportV2,
     onSuccess: async (view) => {
       setReport(view);
       setValues(v2ValuesOf(view, studentProgram, storedWords()));
@@ -45,7 +47,7 @@ export function useReportEntryV2(initial: ReportView, studentProgram: Program) {
   const draft = useDraftSave({
     body: JSON.stringify(v2DraftBody(values)),
     enabled: report.status === 'draft' && !submit.isPending,
-    save: (b) => saveDraftV2({ id: report.id, body: JSON.parse(b) as ReportV2DraftBody }),
+    save: (b) => api.saveDraftV2({ id: report.id, body: JSON.parse(b) as ReportV2DraftBody }),
   });
 
   const set = <K extends keyof V2Values>(key: K, value: V2Values[K]) => {

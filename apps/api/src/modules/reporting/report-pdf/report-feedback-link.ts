@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { firstOrigin } from '@/common/http/public-origin';
 import { loadEnv } from '@/config/env/env';
 import { ShortLinks } from '@/modules/platform/short-links';
-import { firstWebOrigin } from '@/modules/teaching/classroom';
-import { FeedbackLinks } from '@/modules/teaching/feedback';
+import { FamilyFeedbackLinks } from '@/common/http/family-feedback';
 
 interface Pair {
   lessonId: string;
@@ -12,7 +12,7 @@ interface Pair {
 /**
  * session_report_pdf's {{4}} (docs/19 «Report flow»): the family's «رأيك يهمّنا» page for this
  * lesson
- * and student (FeedbackLinks: the live link, else a new one), shortened (one code per lesson and
+ * and student (FamilyFeedbackLinks: live link, else a new one), shortened (one code per lesson and
  * student). Never blocks the report: without a secret, a guardian or a short link it is the long
  * page,
  * and without any link the academy's web address (logged).
@@ -22,13 +22,13 @@ export class ReportFeedbackLink {
   private readonly log = new Logger(ReportFeedbackLink.name);
 
   constructor(
-    private readonly feedback: FeedbackLinks,
+    private readonly feedback: FamilyFeedbackLinks,
     private readonly links: ShortLinks,
   ) {}
 
   /** Never throws: any failure is logged and the academy's web address goes. */
   async url(pair: Pair, now: Date): Promise<string> {
-    const origin = firstWebOrigin(loadEnv().WEB_ORIGIN);
+    const origin = firstOrigin(loadEnv().WEB_ORIGIN);
     return this.build({ pair, origin }, now).catch((e: unknown) => {
       this.log.warn(`report_ready: feedback link failed (${String(e)}), the web address goes`);
       return origin;

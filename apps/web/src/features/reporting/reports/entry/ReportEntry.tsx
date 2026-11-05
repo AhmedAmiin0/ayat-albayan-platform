@@ -18,6 +18,7 @@ import { IdentityBlock, MeetingLinkRow } from './IdentityBlock';
 import { ProgramField } from './ProgramField';
 import { ReportEntryFooter } from './ReportEntryFooter';
 import { ReportTextField } from './ReportTextField';
+import { useReportApi } from '@/features/reporting/reports/report-api';
 import { useFocusInvalid } from './use-focus-invalid';
 import { useReportEntry } from './use-report-entry';
 
@@ -39,6 +40,7 @@ const H3 = 'font-display text-h3 font-bold';
  */
 export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
   const s = useReportEntry(entry.report, entry.student.program);
+  const { attachments } = useReportApi();
   const { report, values } = s;
   const locked = !report.can_edit;
   const title = t.reports.entryFor.replace('{name}', entry.student.name);
@@ -109,7 +111,10 @@ export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
       <section aria-label={t.reports.notesTitle} className="grid gap-3">
         <h3 className={H3}>{t.reports.notesTitle}</h3>
         {AFTER_FIELDS.map(text)}
-        <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments} editable={!locked} />
+        {attachments && (
+          <AttachmentsField reportId={report.id} files={report.attachments}
+            onChange={s.setAttachments} editable={!locked} />
+        )}
       </section>
       <ReportEntryFooter s={s} block={form.submit_block} tz={tz} />
     </article>

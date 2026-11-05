@@ -1,5 +1,6 @@
 import { feedbackEligible } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
+import type { FamilyFeedbackLinks } from '@/common/http/family-feedback';
 import { FEEDBACK_CONFIG, type FeedbackConfig } from '@/modules/teaching/feedback/feedback.config';
 import {
   FeedbackRepo,
@@ -32,7 +33,7 @@ const live = (row: FeedbackRow, now: Date): boolean =>
  * «ابعت طلب الرأي» does. null when the secret is unset, or the student or guardian is not found.
  */
 @Injectable()
-export class FeedbackLinks {
+export class FeedbackLinks implements FamilyFeedbackLinks {
   constructor(
     private readonly queries: FeedbackRepo,
     @Inject(FEEDBACK_CONFIG) private readonly config: FeedbackConfig,

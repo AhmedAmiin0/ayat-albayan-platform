@@ -9,3 +9,7 @@ export function apiPublicOrigin(env: NodeJS.ProcessEnv = process.env): string {
   const raw = (env.API_PUBLIC_URL ?? '').trim().replace(/\/+$/, '');
   return /^https?:\/\/[^/\s]+$/.test(raw) ? raw : `http://localhost:${env.PORT ?? '3000'}`;
 }
+
+/** The web app's origin: the first of WEB_ORIGIN (a comma list), no trailing slash. */
+export const firstOrigin = (webOrigin: string): string =>
+  (webOrigin.split(',')[0] ?? '').trim().replace(/\/+$/, '');

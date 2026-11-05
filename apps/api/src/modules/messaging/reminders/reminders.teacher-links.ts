@@ -1,7 +1,6 @@
-import type { JoinWindowConfig } from '@ab/shared';
+import { roomClosesAt, type JoinWindowConfig } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { TeacherReportLinks } from '@/modules/reporting/reports';
-import { linkExpiry } from '@/modules/teaching/classroom';
 import { classroomUrl } from './plan/reminders.links';
 import { isOpen, type ReminderLesson } from './plan/reminders.plan';
 import { teacherReminderDue, type TeacherTiming } from './plan/teacher-due';
@@ -54,7 +53,7 @@ export class ReminderTeacherLinks {
   private async room(lesson: ReminderLesson, ctx: LinksAt): Promise<string | null> {
     const url = classroomUrl(ctx.origin, lesson.id);
     if (lesson.meeting_link !== url) return null;
-    const expiresAt = new Date(linkExpiry(lesson, ctx.win));
+    const expiresAt = new Date(roomClosesAt(lesson, ctx.win));
     return this.links.classroom({ lessonId: lesson.id, url, expiresAt });
   }
 }

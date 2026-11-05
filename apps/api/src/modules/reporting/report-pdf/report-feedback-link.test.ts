@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ShortLinks } from '@/modules/platform/short-links';
-import type { FeedbackLinks } from '@/modules/teaching/feedback';
+import type { FamilyFeedbackLinks as FeedbackLinks } from '@/common/http/family-feedback';
 import { ReportFeedbackLink } from './report-feedback-link';
 
 const NOW = new Date('2026-11-05T12:00:00Z');
@@ -12,7 +12,7 @@ function setup() {
   const feedback = { forLesson: vi.fn(async () => LINK as typeof LINK | null) };
   const links = { forTarget: vi.fn(async () => 'https://api.example/r/Ab12Cd34Ef') };
   const service = new ReportFeedbackLink(
-    feedback as unknown as FeedbackLinks,
+    feedback,
     links as unknown as ShortLinks,
   );
   return { feedback, links, service };

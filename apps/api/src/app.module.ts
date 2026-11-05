@@ -23,6 +23,7 @@ import { ExpensesModule } from './modules/finance/expenses/expenses.module';
 import { ExportsModule } from './modules/reporting/exports/exports.module';
 import { ClassroomModule } from './modules/teaching/classroom/classroom.module';
 import { FeedbackModule } from './modules/teaching/feedback/feedback.module';
+import { FeedbackLinksModule } from './modules/teaching/feedback';
 import { FxModule } from './modules/finance/fx/fx.module';
 import { GuardiansModule } from './modules/people/guardians/guardians.module';
 import { HealthController } from './modules/platform/health/health.controller';
@@ -134,6 +135,7 @@ import { ScriptRelayModule } from './modules/messaging/whatsapp';
     InboxModule,
     SavedRepliesModule,
     FeedbackModule,
+    FeedbackLinksModule,
     LessonRatingModule,
     ClassroomModule,
     StudentRecordingsModule,

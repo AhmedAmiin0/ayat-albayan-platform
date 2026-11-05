@@ -2,7 +2,7 @@ import { AUTOSAVE_MS, draftBody, shouldSave, type DraftBody, type FormValues } f
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useDebounced } from '@/features/finance/pricing/use-debounced';
-import { saveDraft } from '@/features/reporting/reports/api';
+import { useReportApi } from '@/features/reporting/reports/report-api';
 
 export type SaveState = { kind: 'idle' } | { kind: 'saving' } | { kind: 'saved'; at: Date } | { kind: 'failed' };
 
@@ -46,6 +46,7 @@ export function useDraftSave(input: DraftSaveInput): { state: SaveState; saveNow
 /** Debounced PUT /reports/:id/draft of the whole form while it is a draft. */
 export function useAutosave(input: { id: string; values: FormValues; enabled: boolean }): SaveState {
   const { id } = input;
+  const { saveDraft } = useReportApi();
   return useDraftSave({
     body: JSON.stringify(draftBody(input.values)),
     enabled: input.enabled,
