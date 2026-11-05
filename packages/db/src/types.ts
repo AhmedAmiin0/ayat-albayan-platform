@@ -5579,6 +5579,14 @@ export type Database = {
         Args: { p_rule: string; p_status: Database['public']['Enums']['lesson_status'] };
         Returns: boolean;
       };
+      lesson_ended_open: {
+        Args: { p_ends_at: string; p_status: Database['public']['Enums']['lesson_status'] };
+        Returns: boolean;
+      };
+      lesson_outcomes_since: {
+        Args: never;
+        Returns: string;
+      };
       merge_students: {
         Args: { p_actor: string; p_kept: string; p_merged: string };
         Returns: string;

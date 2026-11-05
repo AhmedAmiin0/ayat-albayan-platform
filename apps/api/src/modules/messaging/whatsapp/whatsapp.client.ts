@@ -3,16 +3,15 @@ import { recipientAllowed, type GraphEnv } from '@/config/env/env';
 import { z } from 'zod';
 import type { Http } from '@/common/infra/http/http.types';
 import { graphHttp, graphSend, type FetchLike, type GraphConn } from './drivers/meta/graph';
-import { fetchMedia, nextTemplateCursor, templateEditPath } from './drivers/kapso/kapso';
-import {
-  sentSchema,
-  submitSchema,
-  templatesPageSchema,
-  toMetaTemplate,
-} from './drivers/meta/meta-shapes';
+import { fetchMedia, templateEditPath } from './drivers/kapso/kapso';
+import type { CrmBody } from './drivers/crm/crm-body';
+import { sentSchema, submitSchema } from './drivers/meta/meta-shapes';
+import { listTemplates } from './drivers/meta/meta-templates';
 import { resumableUpload } from './drivers/meta/meta-upload';
+import { relayGraphBody } from './drivers/waba/waba-graph';
+import { sendGraphTemplate } from './drivers/waba/waba-send';
 import { callPermissionMessage } from './messages/wa-call-permission';
-import { mediaMessage, readReceipt, submitPayload, templateMessage, textMessage, type GraphBody } from './messages/wa-components';
+import { mediaMessage, readReceipt, submitPayload, textMessage, type GraphBody } from './messages/wa-components';
 import { reactionMessage } from './drivers/meta/meta-reaction';
 import { WaError, type MetaTemplate, type ReactionSend, type SampleFile, type TemplateRow, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
@@ -33,11 +32,6 @@ interface Connected {
   http: Http;
 }
 
-/** ponytail: 20 × 100 templates; the academy has 12. */
-const MAX_TEMPLATE_PAGES = 20;
-const TEMPLATE_PAGE = 100;
-const TEMPLATE_FIELDS = 'id,name,language,status,category,quality_score,components,rejected_reason';
-
 /**
  * WhatsApp Cloud API over the line's base (docs/12 §3.2): tools/wa-stub locally and in e2e, Meta
  * or Kapso's Meta proxy only when production names them (docs/19: the driver differences live in
@@ -57,8 +51,15 @@ export class HttpWhatsappClient implements WhatsappClient {
     return this.conn !== null;
   }
 
+  /** The row's WABA template (the crm driver's too), or the old report's two sends (waba-send.ts). */
   sendTemplate(input: TemplateSend): Promise<WaSent> {
-    return this.send(input.to, () => templateMessage(input));
+    const post = (to: string, build: () => GraphBody) => this.send(to, build);
+    return sendGraphTemplate(input, { post, document: (d) => this.sendDocument(d) });
+  }
+
+  /** A body in the CRM's shape (docs/19 «script relay»), sent as Graph's on this line. */
+  sendBody(body: CrmBody): Promise<WaSent> {
+    return this.send(body.to, () => relayGraphBody(body));
   }
 
   sendText(input: { to: string; text: string; replyTo?: string | null }): Promise<WaSent> {
@@ -83,20 +84,9 @@ export class HttpWhatsappClient implements WhatsappClient {
     await http.json({ path: `${env.phoneNumberId}/messages`, method: 'POST', json, schema: ANY });
   }
 
-  /** Every page, following the cursor while the driver says there is a next page (kapso.ts). */
   async getTemplates(): Promise<MetaTemplate[]> {
     const { env, http } = this.connection();
-    const all: MetaTemplate[] = [];
-    let after: string | undefined;
-    for (let page = 0; page < MAX_TEMPLATE_PAGES; page += 1) {
-      const cursor = after ? `&after=${encodeURIComponent(after)}` : '';
-      const path = `${env.wabaId}/message_templates?limit=${TEMPLATE_PAGE}&fields=${TEMPLATE_FIELDS}${cursor}`;
-      const body = await http.json({ path, schema: templatesPageSchema });
-      all.push(...body.data.map(toMetaTemplate));
-      after = nextTemplateCursor(env, { count: body.data.length, limit: TEMPLATE_PAGE, paging: body.paging });
-      if (!after) break;
-    }
-    return all;
+    return listTemplates(env, http);
   }
 
   /**

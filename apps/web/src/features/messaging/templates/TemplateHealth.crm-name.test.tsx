@@ -10,7 +10,8 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// docs/19 «crm driver»: the CRM name is edited only on a crm line's rows; a save replaces the row and closes.
+// docs/19: the WABA name («اسم القالب في واتساب») is edited on crm and meta lines' rows (every driver sends
+// it, «CRM → Meta»); a save replaces the row and closes.
 
 const s = t.templates.crmName;
 const ON_CRM = template({ key: 'renewal_due', status: 'approved', line: 'notifications' });
@@ -19,7 +20,7 @@ const editFor = (key: 'renewal_due' | 'welcome_greeting') => s.editFor.replace('
 
 function renderHealth() {
   routeFetch(apiFetch, [
-    ['/messaging/templates/lines', [lineView('notifications', { provider: 'crm', waba_id: null }), lineView('chat')]],
+    ['/messaging/templates/lines', [lineView('notifications', { provider: 'crm', waba_id: null }), lineView('chat', { provider: 'meta' })]],
     ['/messaging/templates', [ON_CRM, ON_META]],
   ]);
   renderWithClient(<TemplateHealth headingId="h" />);
@@ -31,11 +32,11 @@ afterEach(() => {
 });
 
 describe('template health: the CRM name', () => {
-  it('only a crm line\'s row offers it; a save PUTs, shows the new name, closes and says so', async () => {
+  it('a crm and a meta line\'s rows offer it; a save PUTs, shows the new name, closes and says so', async () => {
     renderHealth();
     const row = within((await screen.findByText(t.templates.names.renewal_due)).closest('tr') as HTMLElement);
     const meta = within((await screen.findByText(t.templates.names.welcome_greeting)).closest('tr') as HTMLElement);
-    expect(meta.queryByRole('button', { name: editFor('welcome_greeting') })).toBeNull();
+    expect(meta.getByRole('button', { name: editFor('welcome_greeting') })).toBeTruthy();
     apiSend.mockResolvedValue({ ...ON_CRM, crm_name: 'renewal_v2', crm_language: null });
     fireEvent.click(await row.findByRole('button', { name: editFor('renewal_due') }));
     fireEvent.change(screen.getByLabelText(s.name), { target: { value: 'renewal_v2' } });

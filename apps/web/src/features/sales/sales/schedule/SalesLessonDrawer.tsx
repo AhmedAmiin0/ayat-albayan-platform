@@ -1,4 +1,10 @@
-import { canSalesChangeLesson, canSalesConfirm, isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
+import {
+  canSalesChangeLesson,
+  canSalesConfirm,
+  correctionTargets,
+  isRunningLesson,
+  type SalesScheduleLesson,
+} from '@ab/shared';
 import { useState } from 'react';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { usePermissions } from '@/features/people/auth';
@@ -7,7 +13,8 @@ import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
 import { t } from '@/lib/i18n/i18n';
 import { usePublicConfig } from '@/lib/settings/public-config';
-import { canSalesCorrect, isHeldLesson } from './correct/correctable';
+import { CorrectOutcome } from '@/features/teaching/schedule';
+import { canSalesCorrect } from './correct/correctable';
 import { SalesCorrectLesson } from './correct/SalesCorrectLesson';
 import { SalesConfirmLesson } from './SalesConfirmLesson';
 import { SalesMoveLesson } from './move';
@@ -31,17 +38,20 @@ interface StepsProps {
 
 /**
  * What sales may do: «تأكيد الحلقة» on a scheduled lesson not ended (lessons.confirm), only while
- * the academy requires a confirmation; «لم تنعقد؟» (lessons.cancel) on a completed lesson or,
- * without the confirmation, an open one before or after its end (owner 2026-11-02); «تغيير الموعد»
- * (lessons.reschedule) on an open lesson not ended; else read-only.
+ * the academy requires a confirmation; «لم تنعقد؟» (lessons.cancel) on an open one before its end
+ * without the confirmation (owner 2026-11-02); «تصحيح حالة الحلقة» (lessons.cancel) on an ended
+ * open lesson or a held / absent one (owner 2026-11-03); «تغيير الموعد» (lessons.reschedule) on an
+ * open lesson not ended; else read-only.
  */
 function SalesLessonSteps({ lesson, now, running, confirmed, onConfirmed }: StepsProps) {
   const { can } = usePermissions();
   const required = usePublicConfig().lesson_confirmation_required;
   const confirmable = required && canSalesConfirm(lesson, { now, holds: can('lessons.confirm') });
-  const correctable = canSalesCorrect(lesson, { now, required, holds: can('lessons.cancel') });
+  const holds = can('lessons.cancel');
+  const correctable = canSalesCorrect(lesson, { now, required, holds });
+  const outcome = holds && correctionTargets(lesson, now).length > 0;
   const moves = canSalesChangeLesson(lesson, { now, can }).reschedule;
-  const readOnly = ![confirmable, confirmed, correctable, moves].some(Boolean);
+  const readOnly = ![confirmable, confirmed, correctable, outcome, moves].some(Boolean);
   return (
     <>
       {confirmable && (
@@ -52,8 +62,9 @@ function SalesLessonSteps({ lesson, now, running, confirmed, onConfirmed }: Step
       )}
       {moves && <SalesMoveLesson lesson={lesson} />}
       {correctable && (
-        <SalesCorrectLesson lessonId={lesson.id} autoHeld={isHeldLesson(lesson)} />
+        <SalesCorrectLesson lessonId={lesson.id} autoHeld={false} />
       )}
+      {outcome && <CorrectOutcome lesson={lesson} area="sales" />}
       {readOnly && <p className="text-xs text-ink-3">{t.lessons.sheet.readOnly}</p>}
     </>
   );

@@ -1,6 +1,7 @@
 import {
   CANCEL_STATUS,
   type CancelBy,
+  type LessonCorrect,
   type LessonStatus,
   type SalesCancel,
   type SalesLessonMoved,
@@ -9,7 +10,12 @@ import {
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { LessonCancelService, LessonStatusService, RescheduleOneService } from '@/modules/teaching/lessons';
+import {
+  LessonCancelService,
+  LessonStatusService,
+  OutcomeCorrection,
+  RescheduleOneService,
+} from '@/modules/teaching/lessons';
 import { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
 import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 
@@ -23,6 +29,11 @@ const AFTER_END: Record<CancelBy, boolean> = {
 type Move = { lessonId: string; body: SalesReschedule; actor: AuthUser };
 type Cancel = { lessonId: string; body: SalesCancel; actor: AuthUser };
 type Confirm = { lessonId: string; actor: AuthUser };
+interface Correct {
+  lessonId: string;
+  body: LessonCorrect;
+  actor: AuthUser;
+}
 
 /** The admin's lesson services, held together (max-params: three constructor dependencies). */
 @Injectable()
@@ -31,6 +42,7 @@ export class LessonServices {
     readonly one: RescheduleOneService,
     readonly cancels: LessonCancelService,
     readonly status: LessonStatusService,
+    readonly corrections: OutcomeCorrection,
   ) {}
 }
 
@@ -83,5 +95,15 @@ export class SalesLessonActions {
     if (Date.parse(lesson.ends_at) <= now.getTime()) throw conflict('lesson_ended');
     await this.lessons.status.confirm({ lessonId, actor, anyLesson: true });
     return { id: lesson.id, starts_at: new Date(lesson.starts_at).toISOString(), status: 'confirmed' };
+  }
+
+  /** «تصحيح الحالة» (owner 2026-11-03): ANY lesson, after its end; the admin OutcomeCorrection. */
+  async correct(
+    { lessonId, body, actor }: Correct,
+    now = new Date(),
+  ): Promise<{ id: string; status: LessonStatus }> {
+    await this.scope.assertLesson({ lessonId, now, afterEnd: true });
+    await this.lessons.corrections.correct({ lessonId, to: body.to, actor });
+    return { id: lessonId, status: body.to };
   }
 }

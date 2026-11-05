@@ -15,7 +15,7 @@ export interface CrmNameDialogProps {
 }
 
 /**
- * «اسم القالب في نظام CRM» (docs/19): what the crm driver sends instead of the Meta name / language; blank =
+ * «اسم القالب في واتساب» (docs/19): what every driver sends instead of the Meta name / language; blank =
  * the default (the old script's name, else the Meta name). report_ready explains its report_session switch.
  * Checked here with the API's own schema, so a bad value never leaves the form.
  */

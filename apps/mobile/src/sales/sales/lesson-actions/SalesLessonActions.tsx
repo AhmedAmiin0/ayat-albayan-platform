@@ -12,7 +12,7 @@ import { salesCancelRights } from './cancel-by';
 import { canChangeLesson } from './lesson-actions-api';
 import { SalesCancelLesson } from './SalesCancelLesson';
 import { SalesConfirmLesson } from './SalesConfirmLesson';
-import { SalesCorrectLesson } from './SalesCorrectLesson';
+import { SalesCorrectOutcome } from './SalesCorrectOutcome';
 
 interface SalesLessonActionsProps {
   lesson: SalesScheduleLesson;
@@ -30,7 +30,8 @@ interface SalesLessonActionsProps {
  * until «رجوع»: two «تأكيد…» buttons that do opposite things, the filled one the wrong one, invited a
  * mis-tap that confirms the lesson (UX review 2026-10-29). The form's danger «تأكيد الإلغاء» is its one path.
  * No confirmation required (owner 2026-11-02): «إلغاء الحلقة» also after the end (teacher or
- * student only), and a held lesson offers «لم تنعقد الحلقة؟» (SalesCorrectLesson).
+ * student only). An ended open lesson, or a held / absent one, offers «تصحيح حالة الحلقة»
+ * (SalesCorrectOutcome, owner 2026-11-03).
  */
 export function SalesLessonActions({ lesson, onReschedule, onConfirmed }: SalesLessonActionsProps) {
   const can = usePermissions();
@@ -61,7 +62,9 @@ export function SalesLessonActions({ lesson, onReschedule, onConfirmed }: SalesL
           {cancel ? <Button variant="danger" label={a.cancel} onPress={() => setCancelling(true)} /> : null}
         </ButtonRow>
       ) : null}
-      {rights.correct ? <SalesCorrectLesson lessonId={lesson.id} /> : null}
+      {rights.correct.length > 0 ? (
+        <SalesCorrectOutcome lessonId={lesson.id} targets={rights.correct} />
+      ) : null}
     </View>
   );
 }

@@ -1,10 +1,9 @@
-import { CRM_DEFAULT_NAMES, crmTemplateLanguage, crmTemplateName } from '@ab/shared';
-import { bodyValues, buttonValues, documentHeader } from '../../messages/wa-components';
-import type { MediaSend, TemplateSend } from '../../whatsapp.types';
+import { wabaTemplate, type WabaTemplate } from '@/modules/messaging/whatsapp/drivers/waba/waba-template';
+import type { MediaSend, TemplateSend } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // POST {crm}/messages bodies (docs/19 «crm driver»). The CRM resolves the template from its own synced list
-// by name + language and builds Meta's components itself, so we pass the values only, read by the SAME
-// helpers the meta driver uses (wa-components.ts): the same checks refuse the same bad sends.
+// by name + language and builds Meta's components itself, so we pass the values only: the SAME
+// WabaTemplate the meta driver sends (waba-template.ts), so the same checks refuse the same bad sends.
 
 /** The CRM's structured template params (its SendTimeParams). */
 export interface CrmTemplateParams {
@@ -22,65 +21,24 @@ export type CrmBody = (
   | { to: string; type: 'image' | 'document'; media_url: string; filename?: string; text?: string }
 ) & { name?: string };
 
-/** The old script's name for this key (CRM_DEFAULT_NAMES), not one an admin set. */
-const byDefault = (t: TemplateSend['template']): boolean =>
-  !t.crm_name && crmTemplateName(t) === CRM_DEFAULT_NAMES[t.key];
-
 /**
- * The name the CRM gets for this row: crmTemplateName, except that the old script's default
- * (teacher_lesson_v2, teacher_lesson_reminder) needs the producer's CRM values; a row without them
- * (queued before they existed, or a value missing) keeps meta_name and its Meta values, as before
- * the mapping. An admin's crm_name is always sent as set.
+ * type template: the row's WABA template (waba-template.ts, the one resolution both drivers send) in
+ * the CRM's params; an empty part is left out (a static template sends `params: {}`). The CRM
+ * resolves the template from its own synced list by name + language and builds Meta's components.
  */
-function crmRowName(input: TemplateSend): string {
-  const { template } = input;
-  const fallback = byDefault(template) && !input.params.crm?.body;
-  return fallback ? template.meta_name : crmTemplateName(template);
+export function crmTemplateBody(input: TemplateSend): CrmBody {
+  return { to: input.to, type: 'template', template: crmTemplate(wabaTemplate(input)) };
 }
 
-/**
- * The producer's CRM values (params.crm) fit only the CRM's OWN template: the old script's
- * default, even when it is the Meta name as well (teacher_lesson_reminder), or an admin's crm_name
- * other than meta_name. When the CRM gets the Meta name otherwise (an admin's crm_name pointing at
- * the CRM's copy of the Meta template), the Meta values go, or a 3-variable template would get 5.
- */
-function ownCrm(input: TemplateSend) {
-  const { template, params } = input;
-  if (byDefault(template)) return params.crm?.body ? params.crm : undefined;
-  return crmRowName(input) === template.meta_name ? undefined : params.crm;
-}
-
-/**
- * URL-button suffixes / payloads by index: the producer's CRM values (params.crm.buttons; [] =
- * none, the CRM's template has no buttons), else the meta driver's.
- */
-function crmButtons(input: TemplateSend): [string, string][] {
-  const own = ownCrm(input)?.buttons;
-  if (own) return own.map((value, i) => [String(i), value]);
-  return buttonValues(input).map((b) => [String(b.index), b.value]);
-}
-
-/**
- * The template's values; an empty part is left out (a static template sends `params: {}`). A producer that
- * knows the CRM's own template (params.crm, e.g. teacher_lesson_v2) gives its body values and buttons; the
- * meta driver's checks still run on the meta values, so a row a Meta line would refuse is refused here too.
- */
-function crmTemplateParams(input: TemplateSend): CrmTemplateParams {
-  const meta = bodyValues(input.template, input.params);
-  const body = ownCrm(input)?.body ?? meta;
-  const header = documentHeader(input);
-  const buttons = crmButtons(input);
-  return {
-    ...(body.length ? { body } : {}),
-    ...(header ? { headerMediaUrl: header.link } : {}),
+/** A WabaTemplate as the CRM's template part: URL suffixes and payloads by button index. */
+export function crmTemplate(t: WabaTemplate): Extract<CrmBody, { type: 'template' }>['template'] {
+  const buttons = t.buttons.map((b): [string, string] => [String(b.index), b.value]);
+  const params: CrmTemplateParams = {
+    ...(t.body.length ? { body: t.body } : {}),
+    ...(t.header ? { headerMediaUrl: t.header.link } : {}),
     ...(buttons.length ? { buttonParams: Object.fromEntries(buttons) } : {}),
   };
-}
-
-/** type template: the CRM's name for this row (crmRowName) and language (crm_language, else language). */
-export function crmTemplateBody(input: TemplateSend): CrmBody {
-  const language = crmTemplateLanguage(input.template);
-  return { to: input.to, type: 'template', template: { name: crmRowName(input), language, params: crmTemplateParams(input) } };
+  return { name: t.name, language: t.language, params };
 }
 
 /** type text. A reply-to is not sent: the CRM wants its own message uuid, not a wamid. */
