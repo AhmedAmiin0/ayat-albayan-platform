@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ShortLinks } from '@/modules/platform/short-links';
-import type { FamilyFeedbackLinks as FeedbackLinks } from '@/common/http/family-feedback';
 import { ReportFeedbackLink } from './report-feedback-link';
 
 const NOW = new Date('2026-11-05T12:00:00Z');
