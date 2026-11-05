@@ -31,8 +31,8 @@ interface Seconds {
  * take 45 s to render. One base client is built once (one cache directory, one connection pool to
  * ping); each caller (fetch, Fresco, WebSockets) gets it with its own cookie container, as before.
  * No call timeout: React Native's NetworkingModule replaces it on every fetch with the XHR timeout
- * (0), so the whole-call deadline of an API read lives in JS (apiFetch). Chat files, PDF pages and
- * booking media, which the API may first download from Meta and then render, read even longer.
+ * (0); the whole-call deadline of an API read lives in JS (apiFetch's read deadline, #635).
+ * Chat files, PDF pages and chat media (the API may download them from Meta first) read longer.
  */
 function factoryKotlin(s: Seconds): string {
   return `// plugins/okhttp-timeouts (owner 2026-11-05): chats stuck on a dead connection after a resume.
@@ -50,7 +50,7 @@ private class AbOkHttpClientFactory(private val context: Context) : OkHttpClient
     base.newBuilder().cookieJar(ReactCookieJarContainer()).build()
 }
 
-// A chat file or PDF page, or a booking/invoice file: the API may download it first (Meta, the CRM).
+// A chat file, a PDF page or a chat image/PDF (/media): the API may download it from Meta first.
 private val AB_SLOW_READ = Regex("/messages/[^/]+/(file|pdf/[0-9]+)$|/threads/[^/]+/media/[^/]+$")
 
 private object AbSlowReads : Interceptor {
