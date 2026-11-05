@@ -50,8 +50,7 @@ export const PERMISSION_ROWS = [
   { key: 'courses.pause', area: 'schedule', grants: ['sales'] },
   // The profile's course actions (owner 2026-10-30, migration 990): ANY student, audited.
   { key: 'subscriptions.stop', area: 'schedule', grants: ['sales'] },
-  // «إلغاء مع استرداد» (2026-11-02): inline check of CourseStop; admin only, never sales.
-  { key: 'subscriptions.refund', area: 'finance', grants: [] },
+  { key: 'subscriptions.refund', area: 'finance', grants: [] }, // «إلغاء مع استرداد»: admin only
   { key: 'students.change_teacher', area: 'schedule', grants: ['sales'] },
   { key: 'courses.reschedule', area: 'schedule', grants: ['sales'] },
   // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog: sales by default (owner 2026-10-26, migration 760).
@@ -130,8 +129,7 @@ export const PERMISSION_ROWS = [
   { key: 'translations.manage', area: 'system', grants: [] },
   { key: 'users.read', area: 'system', grants: [] },
   { key: 'users.write', area: 'system', grants: [] },
-  // Scope, not grants: the "my …" pages of a base role (teachers/me/*, sales/*, assistants/me/*).
-  // Every role with that base role holds it; nobody else does (the admin neither, as before).
+  // Scope, not grants: a base role's "my …" pages; every role of that base role holds it.
   { key: 'self.teacher', area: 'self', grants: T },
   { key: 'self.sales', area: 'self', grants: ['sales'] },
   // The assistant's own pages (sales/me/*): the students they brought, the payments they recorded and
