@@ -13,7 +13,7 @@ vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch
 
 const c = t.lessons.correct;
 const ENDED = '2000-01-01T10:00:00Z';
-const AUTO_HELD: LessonView = { ...lesson({ id: 'l-7', status: 'completed', ends_at: ENDED }), auto_held: true };
+const AUTO_HELD: LessonView = { ...lesson({ id: 'l-7', status: 'completed', starts_at: ENDED }), auto_held: true };
 
 function renderDrawer(l: LessonView, required = false) {
   const onDone = vi.fn();
@@ -45,7 +45,7 @@ describe('LessonDrawer: no confirmation (owner 2026-11-02) and «تصحيح ال
   });
 
   it('a completed lesson recorded by hand offers no correction', () => {
-    renderDrawer(lesson({ status: 'completed', ends_at: ENDED }));
+    renderDrawer(lesson({ status: 'completed', starts_at: ENDED }));
     expect(screen.queryByText(c.outcomeTitle)).toBeNull();
   });
 
@@ -60,7 +60,7 @@ describe('LessonDrawer: no confirmation (owner 2026-11-02) and «تصحيح ال
   });
 
   it('confirmation on (the default): an ended «يحتاج تأكيد» lesson offers all four', () => {
-    const { drawer } = renderDrawer(lesson({ ends_at: ENDED }), true);
+    const { drawer } = renderDrawer(lesson({ starts_at: ENDED }), true);
     for (const to of ['completed', 'no_show', 'excused', 'cancelled_by_teacher'] as const) {
       expect(within(drawer).getByRole('button', { name: c.to[to] })).toBeTruthy();
     }

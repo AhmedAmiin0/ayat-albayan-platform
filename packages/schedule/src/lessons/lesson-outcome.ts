@@ -6,7 +6,7 @@ import { OPEN_LESSON_STATUSES } from './state-machine.js';
 // used lessons, and if the student didn't reply after the reminder message mark him as absent»):
 // while settings.lesson_confirmation_required is ON, the job settles a lesson only once it ended
 // plus the grace (settings.lesson_outcome_grace_minutes), and only one that ended after the cutoff
-// (lesson_outcomes_since(), the deploy of migration 999): never a retro change.
+// (lesson_outcomes_since(), the deploy of migration 1000): never a retro change.
 
 /** The audit row's `after.reason` of the job's «غائب» (the family never answered the reminder). */
 export const AUTO_NO_SHOW_REASON = 'auto_no_show';
