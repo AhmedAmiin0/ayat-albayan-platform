@@ -39,16 +39,22 @@ test("the factory keeps React Native's builder and adds the ping and the timeout
   expect(kt.startsWith('package com.example.app\n')).toBe(true);
   expect(kt).toContain('private class AbOkHttpClientFactory(private val context: Context)');
   expect(kt).toContain('OkHttpClientProvider.createClientBuilder(context)'); // cookie jar + cache
-  expect(OKHTTP_SECONDS).toEqual({ ping: 15, connect: 15, read: 30, call: 60 });
-  for (const line of ['pingInterval(15L', 'connectTimeout(15L', 'readTimeout(30L', 'callTimeout(60L']) {
+  expect(OKHTTP_SECONDS).toEqual({ ping: 15, connect: 15, read: 30, slowRead: 120 });
+  for (const line of ['pingInterval(15L', 'connectTimeout(15L', 'readTimeout(30L']) {
     expect(kt).toContain(line);
   }
+  // NetworkingModule resets a call timeout on every fetch: the whole-call deadline is apiFetch's.
+  expect(kt).not.toContain('callTimeout');
 });
 
-test('only API (X-AB-Client) and auth calls keep the whole-call cap', () => {
+test('one base client (one cache, one pool); each caller gets its own cookie container', () => {
   const kt = registerFactory(MAIN);
-  expect(kt).toContain('request.header("X-AB-Client") != null && !AB_SLOW_READ');
+  expect(kt).toContain('private val base: OkHttpClient by lazy');
+  expect(kt).toContain('base.newBuilder().cookieJar(ReactCookieJarContainer()).build()');
+});
+
+test('chat files and PDF pages get the long read timeout', () => {
+  const kt = registerFactory(MAIN);
   expect(kt).toContain('Regex("/messages/[^/]+/(file|pdf/[0-9]+)$")');
-  expect(kt).toContain('startsWith("/auth/v1/")');
-  expect(kt).toContain('(chain.call().timeout() as? AsyncTimeout)?.exit()');
+  expect(kt).toContain('chain.withReadTimeout(120, TimeUnit.SECONDS)');
 });
