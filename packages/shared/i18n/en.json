@@ -1014,7 +1014,15 @@
       "byTeacher": "Cancelled by teacher",
       "byStudent": "Student excused",
       "done": "Lesson status updated",
-      "autoHeld": "Recorded as held automatically"
+      "autoHeld": "Recorded as held automatically",
+      "outcomeTitle": "Correct the lesson status",
+      "outcomeHint": "This lesson has ended. Pick what actually happened; the package balance is recounted.",
+      "to": {
+        "completed": "Held",
+        "no_show": "Absent",
+        "excused": "Student excused",
+        "cancelled_by_teacher": "Cancelled by teacher"
+      }
     }
   },
   "teacherDash": {
@@ -4052,7 +4060,8 @@
       "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed.",
       "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are.",
       "presenceEnabled": "When on, «Online now» or «Last seen» shows in the platform chats between teachers and families, and the admin sees the team's online status. Each user sees only the people they can already message. When off, no online status or last seen is recorded or shown.",
-      "lessonConfirmationRequired": "When off (the default) no lesson shows \"Needs confirmation\", and a lesson counts as held 30 minutes after its end unless another status was recorded, so it is deducted from the package. If the teacher cancelled it or the student excused themself, an assistant or the admin team records that before or after the lesson. A family's \"Yes\" reply still works. When on, a lesson shows \"Needs confirmation\" until the family or the admin team confirms it."
+      "lessonConfirmationRequired": "When on (the default) a lesson shows \"Needs confirmation\" until the family replies \"Yes\" or the admin team confirms it. Every lesson that has ended is deducted from the package, confirmed or not. After the grace period a confirmed lesson is recorded as held; an unconfirmed one is recorded as absent when the platform sent the family's reminder and no reply came, and otherwise stays \"Needs confirmation\" for an assistant to resolve. When off, no lesson shows \"Needs confirmation\" and a lesson counts as held after the grace period unless another status was recorded.",
+      "lessonOutcomeGraceMinutes": "Minutes after a lesson's end before its status is recorded automatically (held or absent). Default: 30 minutes."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -4082,7 +4091,8 @@
     "commsSource": "Where the number setup comes from",
     "reportFormV2": "New lesson report form",
     "presenceEnabled": "Show online status and last seen",
-    "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson"
+    "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson",
+    "lessonOutcomeGraceMinutes": "Grace after a lesson ends before its status is recorded (minutes)"
   },
   "language": {
     "label": "Language",

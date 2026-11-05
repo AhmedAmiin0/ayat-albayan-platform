@@ -13,6 +13,7 @@ const EXPECTED = [
   'payout_count_late',
   'payout_count_no_show',
   'lesson_confirmation_required',
+  'lesson_outcome_grace_minutes',
 ] as const;
 
 describe('LessonsSettings', () => {

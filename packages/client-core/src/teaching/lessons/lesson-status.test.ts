@@ -1,7 +1,6 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import {
-  canCorrectAutoHeld,
   lessonStatusLabel,
   lessonStatusLook,
   UPCOMING_LESSON_STYLE,
@@ -38,11 +37,5 @@ describe('lesson status words and look (owner 2026-11-02)', () => {
       expect(lessonStatusLabel('confirmed', required, words)).toBe('مؤكدة');
       expect(lessonStatusLook('completed', required)).toEqual(lessonStatusStyle.completed);
     }
-  });
-
-  it('only a completed lesson flagged auto_held may be corrected', () => {
-    expect(canCorrectAutoHeld({ status: 'completed', auto_held: true })).toBe(true);
-    expect(canCorrectAutoHeld({ status: 'completed' })).toBe(false);
-    expect(canCorrectAutoHeld({ status: 'cancelled_by_teacher', auto_held: true })).toBe(false);
   });
 });

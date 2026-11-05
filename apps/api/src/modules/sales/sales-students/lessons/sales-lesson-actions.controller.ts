@@ -1,4 +1,13 @@
-import { salesCancelSchema, salesRescheduleSchema, type LessonStatus, type SalesLessonMoved } from '@ab/shared';
+import {
+  lessonCorrectSchema,
+  salesCancelSchema,
+  salesRescheduleSchema,
+  type LessonCorrect,
+  type LessonStatus,
+  type SalesLessonMoved,
+} from '@ab/shared';
+import { z } from 'zod';
+import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
@@ -49,5 +58,17 @@ export class SalesLessonActionsController {
   @Permissions('lessons.confirm')
   confirm(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<SalesLessonMoved> {
     return this.actions.confirm({ lessonId: id, actor: user });
+  }
+
+  /** «تصحيح الحالة» `{ to }` after the end (owner 2026-11-03): 409 not_auto_held / earning_paid. */
+  @Post(':id/correct')
+  @HttpCode(200)
+  @Permissions('lessons.cancel')
+  correct(
+    @ZodParam('id', z.uuid()) id: string,
+    @ZodBody(lessonCorrectSchema) body: LessonCorrect,
+    @CurrentUser() user: AuthUser,
+  ): Promise<{ id: string; status: LessonStatus }> {
+    return this.actions.correct({ lessonId: id, body, actor: user });
   }
 }

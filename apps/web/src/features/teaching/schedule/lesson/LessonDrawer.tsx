@@ -1,4 +1,3 @@
-import { canCorrectAutoHeld } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { useFocusOnChange } from '@/components/ui/overlay/use-focus-on-change';
@@ -8,8 +7,7 @@ import { FeedbackRequestButton } from '@/features/teaching/feedback/FeedbackRequ
 import { LessonReportLinks } from '@/features/reporting/reports/history/LessonReportLinks';
 import { t } from '@/lib/i18n/i18n';
 import { CancelForm } from '@/features/teaching/schedule/reschedule/CancelForm';
-import type { CorrectBy } from '@/features/teaching/schedule/correct/correct-by';
-import { CorrectLessonChoice } from '@/features/teaching/schedule/correct/CorrectLessonChoice';
+import { CorrectOutcome } from '@/features/teaching/schedule/correct/CorrectOutcome';
 import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { EditTimeForm } from '@/features/teaching/schedule/edit-time/EditTimeForm';
 import { LessonActions } from './LessonActions';
@@ -36,33 +34,21 @@ const LABEL: Record<Mode, string> = {
   courseChange: t.booking.courseChange.changeDays,
 };
 
-/** «لم تنعقد؟» under the actions, on a lesson held automatically (owner 2026-11-02). */
-interface CorrectSlotProps {
-  lesson: LessonView;
-  onPick: (by: CorrectBy) => void;
-}
-
-function CorrectSlot({ lesson, onPick }: CorrectSlotProps) {
-  if (!canCorrectAutoHeld(lesson)) return null;
-  return <CorrectLessonChoice autoHeld onPick={onPick} />;
+/** «تصحيح حالة الحلقة» under the actions (owner 2026-11-03; the admin's page, lessons.write). */
+function CorrectSlot({ lesson }: { lesson: LessonView }) {
+  return <CorrectOutcome lesson={{ ...lesson, auto: lesson.auto_held === true }} area="admin" />;
 }
 
 /**
  * Admin lesson drawer (R-SCH-03, R-SCH-07, R-SCH-08): details, a teacher's pending proposal, then
  * confirm / attendance, «تغيير الميعاد» (slot picker, conflict → message → another slot) and
  * «إلغاء الحلقة» (scope, by whom, reason), the booking's invoice and «حجز تعويضي» on a missed
- * lesson (R-SCH-10, R-PAY-03), «لم تنعقد؟» on a lesson held automatically (owner 2026-11-02), «عدّل الوقت» (same lesson, new time; R-SCH-11) and, on an assistant course's lesson, «تغيير أيام الحلقات» (owner 2026-10-18). Switching form moves focus to it (it replaced the button that had focus).
+ * lesson (R-SCH-10, R-PAY-03), «تصحيح حالة الحلقة» on an ended or auto-settled one (owner 2026-11-03), «عدّل الوقت» (same lesson, new time; R-SCH-11) and, on an assistant course's lesson, «تغيير أيام الحلقات» (owner 2026-10-18). Switching form moves focus to it (it replaced the button that had focus).
  */
 export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
   const [mode, setMode] = useState<Mode>('view');
-  // The cancel form, or its «لم تنعقد؟» variant: this lesson only, by the teacher or the student.
-  const [correction, setCorrection] = useState<CorrectBy | undefined>();
   const panel = useRef<HTMLDivElement>(null);
   useFocusOnChange(panel, mode);
-  const cancel = (by?: CorrectBy) => {
-    setCorrection(by);
-    setMode('cancel');
-  };
   const done = (message: string) => {
     onDone(message);
     onClose();
@@ -81,17 +67,17 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
               lesson={lesson}
               proposalLeads={Boolean(lesson.pending_proposal)}
               onDone={done}
-              onCancel={() => cancel()}
+              onCancel={() => setMode('cancel')}
               onReschedule={() => setMode('reschedule')}
               onChangeCourse={() => setMode('courseChange')}
             />
-            <CorrectSlot lesson={lesson} onPick={cancel} />
+            <CorrectSlot lesson={lesson} />
             <MakeupAction lesson={lesson} />
             <FeedbackRequestButton lesson={lesson} />
           </>
         )}
         {mode === 'cancel' && (
-          <CancelForm lesson={lesson} correction={correction} onBack={() => setMode('view')} onDone={done} />
+          <CancelForm lesson={lesson} onBack={() => setMode('view')} onDone={done} />
         )}
         {mode === 'reschedule' && <RescheduleForm lesson={lesson} onBack={() => setMode('view')} onDone={done} />}
         {mode === 'editTime' && <EditTimeForm lesson={lesson} onBack={() => setMode('view')} onDone={done} />}

@@ -22,11 +22,14 @@ export const AUTO_HELD_REASON = 'auto_held';
  */
 export const AUTO_HELD_CORRECTION_REASON = 'auto_held_correction';
 
-/** Lesson ends the job reads: [now − 14 days, now − 30 min]. */
-export function autoHeldWindow(now: Date): { from: Date; until: Date } {
+/** Lesson ends the job reads: [now − 14 days, now − grace] (lesson_outcome_grace_minutes). */
+export function autoHeldWindow(
+  now: Date,
+  graceMs = AUTO_HELD_GRACE_MS,
+): { from: Date; until: Date } {
   return {
     from: new Date(now.getTime() - AUTO_HELD_MAX_AGE_MS),
-    until: new Date(now.getTime() - AUTO_HELD_GRACE_MS),
+    until: new Date(now.getTime() - graceMs),
   };
 }
 
@@ -37,8 +40,8 @@ export interface AutoHeldCandidate {
   packageStarts: readonly (Date | null)[];
 }
 
-const inWindow = (endsAt: number, now: Date): boolean => {
-  const { from, until } = autoHeldWindow(now);
+const inWindow = (endsAt: number, now: Date, graceMs: number): boolean => {
+  const { from, until } = autoHeldWindow(now, graceMs);
   return endsAt >= from.getTime() && endsAt <= until.getTime();
 };
 
@@ -51,11 +54,15 @@ const afterPackageStart =
  * Due for «انعقدت تلقائيًا»: still open (scheduled | confirmed; any other status is never touched),
  * ended at least 30 min and at most 14 days ago, and after every student's current package start.
  */
-export function isAutoHeldDue(lesson: AutoHeldCandidate, now: Date): boolean {
+export function isAutoHeldDue(
+  lesson: AutoHeldCandidate,
+  now: Date,
+  graceMs = AUTO_HELD_GRACE_MS,
+): boolean {
   const endsAt = Date.parse(lesson.ends_at);
   return (
     isOpenLesson(lesson.status) &&
-    inWindow(endsAt, now) &&
+    inWindow(endsAt, now, graceMs) &&
     lesson.packageStarts.every(afterPackageStart(endsAt))
   );
 }

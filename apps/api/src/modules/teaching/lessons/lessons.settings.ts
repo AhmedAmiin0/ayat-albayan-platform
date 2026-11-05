@@ -18,6 +18,7 @@ const KEYS = [
   'payout_count_late',
   'payout_count_no_show',
   'lesson_confirmation_required',
+  'lesson_outcome_grace_minutes',
 ] as const satisfies readonly SettingKey[];
 export type LessonsSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

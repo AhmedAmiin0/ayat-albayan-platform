@@ -43,9 +43,16 @@ export function seedPublicConfig(client: QueryClient, patch: Partial<PublicSetti
   client.setQueryData(publicConfigQuery.queryKey, data);
 }
 
-/** A test client for an academy that requires lesson confirmation (the default is OFF). */
+/** A test client for an academy that requires lesson confirmation (the default, 2026-11-03). */
 export function confirmingQueryClient(options: TestClientOptions = {}): QueryClient {
   const client = createTestQueryClient(options);
   seedPublicConfig(client, { lesson_confirmation_required: true });
+  return client;
+}
+
+/** A test client for an academy that requires no lesson confirmation (OFF, owner 2026-11-02). */
+export function noConfirmQueryClient(options: TestClientOptions = {}): QueryClient {
+  const client = createTestQueryClient(options);
+  seedPublicConfig(client, { lesson_confirmation_required: false });
   return client;
 }

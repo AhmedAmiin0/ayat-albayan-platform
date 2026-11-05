@@ -127,11 +127,12 @@ test('a refusal from the API says why (409 lesson_ended)', async () => {
   expect(await screen.findByText(t.lessons.error.lesson_ended)).toBeTruthy();
 });
 
-test('a lesson that has ended offers nothing: «للاطلاع فقط»', async () => {
+test('a lesson that has ended: no move or cancel, «تصحيح حالة الحلقة» instead', async () => {
   const ended = { ...MINE, id: 'l0', starts_at: '2026-10-01T12:00:00.000Z', ends_at: '2026-10-01T12:45:00.000Z', students: [{ id: 'st4', code: 'AB-0201', name: 'ريم', mine: true }] };
   mockApiFetch.mockImplementation(async (path: string) => (path === '/sales/teachers' ? [teacher()] : { date: '2026-10-01', lessons: [ended] }));
   await open('ريم');
   expect(screen.queryByRole('button', { name: a.reschedule })).toBeNull();
   expect(screen.queryByRole('button', { name: a.cancel })).toBeNull();
-  expect(screen.getByText(t.lessons.sheet.readOnly)).toBeTruthy();
+  expect(screen.getByText(t.lessons.correct.outcomeTitle)).toBeTruthy();
+  expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
 });

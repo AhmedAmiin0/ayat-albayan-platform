@@ -25,6 +25,7 @@ const AFTER_COPY: readonly string[] = [
   'family_login_enabled', 'login_code_ttl_minutes', 'login_code_max_attempts', 'report_form_v2', 'presence_enabled',
   'meeting_max_minutes', 'meetings_in_app', 'renewal_commission_enabled', 'sales_require_assignee',
   'lesson_confirmation_required',
+  'lesson_outcome_grace_minutes',
 ];
 
 describe('migration config_describe', () => {
