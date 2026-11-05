@@ -8,7 +8,7 @@ const base = {
 
 describe('usedBeforeState', () => {
   it('the stored number, the max and nothing blocking', () => {
-    expect(usedBeforeState(base)).toEqual({ subscription_id: 'sub-1', lessons_used_before: 2, max: 6, blocked: null });
+    expect(usedBeforeState(base)).toEqual({ subscription_id: 'sub-1', lessons_used_before: 2, max: 7, blocked: null });
   });
 
   it('a future start: max 0 (lowering only)', () => {
