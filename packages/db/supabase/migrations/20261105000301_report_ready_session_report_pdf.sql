@@ -1,8 +1,8 @@
 -- report_ready goes as the WABA's approved session_report_pdf (owner 2026-11-05, docs/19 «Report flow»):
 -- a DOCUMENT header (the report PDF) and four body values: {{1}} the student, {{2}} the lesson date
 -- (dd/MM/yyyy in the guardian's tz), {{3}} the teacher's display name, {{4}} the family's feedback link.
--- crm_name / crm_language is the WABA name every driver sends (the crm driver today, the meta driver
--- after the notifications line leaves the CRM), so the same template goes on either path. The body below
+-- crm_name / crm_language is the WABA name the crm driver sends today; the meta driver sends it once the
+-- notifications line leaves the CRM with PR #622 (one WABA-name resolution for every driver). The body below
 -- is the platform's own copy (its {{n}} count is what the send path checks: a row queued before this
 -- change has two values and is refused, never sent with the wrong ones). Status approved: the template
 -- is approved on the WABA. Only the report_ready row is touched. Idempotent.

@@ -47,7 +47,8 @@ export class TeacherReportLinks {
     const url = teacherLinkPage(origin, token);
     return this.links.forTarget({
       kind: 'teacher_report',
-      subject: lesson.id,
+      // Per teacher: a substitute's link is a new code, never the old teacher's code re-pointed.
+      subject: `${lesson.id}:${lesson.teacherId}`,
       url,
       expiresAt: new Date(exp * 1000),
     });

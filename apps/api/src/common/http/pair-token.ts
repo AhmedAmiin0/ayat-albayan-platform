@@ -28,9 +28,13 @@ interface PairKey {
   context: string;
 }
 
+/** A context gets its own derived key (HMAC(secret, context)); none = the secret itself. */
+const keyBytes = (key: PairKey): string | Buffer =>
+  key.context === '' ? key.secret : createHmac('sha256', key.secret).update(key.context).digest();
+
 const mac = (key: PairKey, body: string) =>
-  createHmac('sha256', key.secret)
-    .update(`${key.context}${body}`)
+  createHmac('sha256', keyBytes(key))
+    .update(body)
     .digest()
     .subarray(0, SIG_BYTES)
     .toString('base64url');

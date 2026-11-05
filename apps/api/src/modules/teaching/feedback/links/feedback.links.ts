@@ -1,3 +1,4 @@
+import { feedbackEligible } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { FEEDBACK_CONFIG, type FeedbackConfig } from '@/modules/teaching/feedback/feedback.config';
 import {
@@ -60,7 +61,8 @@ export class FeedbackLinks {
     now: Date,
   ): Promise<FeedbackLink | null> {
     const ctx = await this.queries.requestContext(input.pair.lessonId, input.pair.studentId);
-    if (!ctx) return null;
+    // Only an attended lesson is rated (absent / excused: no link, as for the admin's request).
+    if (!ctx || !feedbackEligible(ctx.lessonStatus, ctx.attendance)) return null;
     const made = await issueLink(this.queries, { ...input, ctx }, now);
     return made ? { token: made.token, expiresAt: new Date(made.exp * 1000) } : null;
   }

@@ -53,4 +53,15 @@ describe('teacher report link token (docs/19 «Teacher report link»)', () => {
       reason: 'bad_signature',
     });
   });
+
+  it('the context is a derived key: a feedback-shaped forgery with the prefix never verifies', async () => {
+    const { createHmac } = await import('node:crypto');
+    const body = token().split('.')[0] ?? '';
+    const naive = createHmac('sha256', SECRET).update(`teacher-report|${body}`).digest();
+    const sig = naive.subarray(0, 16).toString('base64url');
+    expect(verifyTeacherLink(SECRET, `${body}.${sig}`, NOW)).toEqual({
+      ok: false,
+      reason: 'bad_signature',
+    });
+  });
 });

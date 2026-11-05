@@ -63,4 +63,14 @@ describe('FeedbackLinks.forLesson (session_report_pdf {{4}}, docs/19)', () => {
     repo.requestContext.mockResolvedValue(null as never);
     expect(await links.forLesson(PAIR, NOW)).toBeNull();
   });
+
+  it('absent or excused: no link (nothing to rate), nothing stored', async () => {
+    const { repo, links } = setup();
+    repo.find.mockResolvedValue(null);
+    for (const attendance of ['absent', 'excused'] as const) {
+      repo.requestContext.mockResolvedValue(requestContext({ attendance }));
+      expect(await links.forLesson(PAIR, NOW)).toBeNull();
+    }
+    expect(repo.issue).not.toHaveBeenCalled();
+  });
 });

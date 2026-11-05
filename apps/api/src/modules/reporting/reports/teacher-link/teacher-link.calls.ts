@@ -15,4 +15,3 @@ interface Forms {
 
 /** A write to one report of the link's lesson. */
 export type LinkReportCall<K extends keyof Forms> = LinkCall & { reportId: string; form: Forms[K] };
-
