@@ -35,6 +35,7 @@ describe('usedBeforeEditProblem', () => {
 
   it('refuses more than the max: never the whole package', () => {
     expect(usedBeforeEditProblem({ ...base, next: 8 })).toBe('used_before_too_many');
+    expect(usedBeforeEditProblem({ ...base, next: 9 })).toBe('used_before_too_many');
     expect(usedBeforeEditProblem({ ...base, next: 4, platformUsed: 5, pastStart: true })).toBe('used_before_too_many');
   });
 

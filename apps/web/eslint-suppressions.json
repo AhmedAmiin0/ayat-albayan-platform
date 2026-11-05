@@ -8639,9 +8639,6 @@
   "src/features/sales/sales/schedule/SalesLessonDrawer.tsx": {
     "ab/module-boundaries": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/sales/sales/schedule/SalesSchedule.test.tsx": {
