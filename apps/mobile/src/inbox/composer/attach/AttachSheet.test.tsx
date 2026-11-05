@@ -1,4 +1,5 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { Composer } from '../Composer';
@@ -8,10 +9,15 @@ import { cachedThread, detail, PHONE, thread } from '../../shared/thread-fixture
 // The paperclip's sheet (owner 2026-10-27): everything that left the bar, most used first.
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
-  apiFetch: jest.fn(async (mockPath: string) => (mockPath === '/messages/gate' ? { open: true, reason: null, queued: 0 } : [])),
+  apiFetch: jest.fn(async (mockPath: string) =>
+    mockPath === '/messages/gate' ? { open: true, reason: null, queued: 0 } : [],
+  ),
   apiSend: jest.fn(),
 }));
-jest.mock('expo-image-picker', () => ({ launchCameraAsync: jest.fn(), launchImageLibraryAsync: jest.fn() }));
+jest.mock('expo-image-picker', () => ({
+  launchCameraAsync: jest.fn(),
+  launchImageLibraryAsync: jest.fn(),
+}));
 jest.mock('expo-document-picker', () => ({ getDocumentAsync: jest.fn() }));
 
 const OPEN = { ...thread, last_inbound_at: new Date(Date.now() - 5 * 60_000).toISOString() };
@@ -32,7 +38,14 @@ const labels = (tiles: ReturnType<typeof screen.getByTestId>) =>
 
 test('six tiles in order: gallery, camera, document, template, quick replies, emoji; no «عرض سعر»', async () => {
   const tiles = await sheet();
-  expect(labels(tiles)).toEqual([c.gallery, c.camera, c.document, c.modeTemplate, t.savedReplies.open, c.emoji]);
+  expect(labels(tiles)).toEqual([
+    c.gallery,
+    c.camera,
+    c.document,
+    c.modeTemplate,
+    t.savedReplies.open,
+    c.emoji,
+  ]);
   expect(within(tiles).queryByRole('button', { name: t.inbox.quote.open })).toBeNull();
 });
 
@@ -55,4 +68,29 @@ test('«الرموز التعبيرية» closes the sheet and opens the emoji s
   await fireEvent.press(within(tiles).getByRole('button', { name: c.emoji }));
   expect(screen.queryByTestId('attach-sheet')).toBeNull();
   expect(screen.getByTestId('emoji-sheet')).toBeTruthy();
+});
+
+test('an even three-column grid under a drag handle, every word on one line, no «إلغاء»', async () => {
+  const tiles = await sheet();
+  expect(screen.getByTestId('attach-handle')).toBeTruthy();
+  expect(tiles.props.style).toMatchObject({
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  });
+  within(tiles)
+    .getAllByRole('button')
+    .forEach((b) => expect(StyleSheet.flatten(b.props.style)).toMatchObject({ width: '33.333%' }));
+  expect(within(tiles).getByText(c.tileShort.replies).props.numberOfLines).toBe(1);
+  expect(within(tiles).getByText(c.tileShort.emoji).props.numberOfLines).toBe(1);
+  expect(within(screen.getByTestId('attach-sheet')).queryByText(t.common.cancel)).toBeNull();
+});
+
+test('Android back and a tap outside close the sheet', async () => {
+  await sheet();
+  await fireEvent(screen.getByTestId('attach-modal'), 'requestClose');
+  expect(screen.queryByTestId('attach-sheet')).toBeNull();
+  await sheet();
+  await fireEvent.press(screen.getByTestId('attach-scrim'));
+  expect(screen.queryByTestId('attach-sheet')).toBeNull();
 });

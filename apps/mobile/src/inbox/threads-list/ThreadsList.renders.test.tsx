@@ -11,14 +11,14 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-// Counts each row's draws by its title (ThreadRow → ListRow), then draws the real row.
+// Counts each row's draws by its title (ThreadRow → ChatRow), then draws the real row.
 const mockDraws = new Map<string, number>();
-jest.mock('@/core/ui/layout/ListRow', () => {
-  const actual = jest.requireActual('@/core/ui/layout/ListRow');
+jest.mock('./row/ChatRow', () => {
+  const actual = jest.requireActual('./row/ChatRow');
   return {
-    ListRow: (props: { title: string }) => {
+    ChatRow: (props: { title: string }) => {
       mockDraws.set(props.title, (mockDraws.get(props.title) ?? 0) + 1);
-      return actual.ListRow(props);
+      return actual.ChatRow(props);
     },
   };
 });
