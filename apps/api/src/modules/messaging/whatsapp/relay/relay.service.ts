@@ -8,8 +8,9 @@ import { RelayRepo, type RelayIds } from './relay.repo';
 import type { RelayRequest } from './relay.schema';
 
 // The script relay (docs/19 «script relay»): the old Apps Script → this API → the notifications
-// line's crm driver → the CRM → Meta. The platform is only the pipe: no gate on automatic
-// messages, no template translation; one messages row per message, shown in the chat with ticks.
+// line's current driver (the CRM, or Meta directly after «CRM → Meta») → Meta. The platform is
+// only the pipe: no gate on automatic messages, no template translation; one messages row per
+// message, shown in the chat with ticks.
 
 /** What the script reads back: 201 {data:{message_id, whatsapp_message_id}}. */
 export interface RelaySent {
@@ -25,7 +26,7 @@ const asSent = (ids: RelayIds): RelaySent => ({
 const NOT_CRM = {
   status: 503,
   code: 'relay_unavailable',
-  message: 'the notifications line is not on the crm driver',
+  message: 'the notifications line or the CRM key the script uses is not configured',
 };
 const BAD_KEY = { status: 401, code: 'unauthorized', message: 'invalid or missing API key' };
 

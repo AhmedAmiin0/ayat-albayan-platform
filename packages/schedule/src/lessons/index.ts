@@ -11,3 +11,4 @@ export * from './makeup-offer.js';
 export * from './series/day-times.js';
 export * from './pick-progress.js';
 export * from './auto-held.js';
+export * from './lesson-outcome.js';

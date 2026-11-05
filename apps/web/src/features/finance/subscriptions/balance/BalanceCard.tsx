@@ -11,6 +11,7 @@ import { cancelSubscription, studentBalanceQuery } from '@/features/finance/subs
 import { CancelPackageDialog } from '@/features/finance/subscriptions/cancel/CancelPackageDialog';
 import { BalanceDetails } from './BalanceDetails';
 import { EditUsedBeforeAction } from '@/features/finance/subscriptions/used-before/EditUsedBeforeAction';
+import { EditStartDateAction } from '@/features/finance/subscriptions/start-date/EditStartDateAction';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
 import { packageName, unpaidFlagged } from '@/features/finance/subscriptions/format';
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
@@ -54,6 +55,7 @@ export function BalanceCard({ student }: { student: PickedStudent }) {
           {current && (
             <EditUsedBeforeAction pkg={current} />
           )}
+          {current && <EditStartDateAction pkg={current} />}
           {current && cancelOffered(current) && (
             <Button type="button" variant="ghost" size="sm" onClick={() => setDialog('cancel')}>
               {t.subscriptions.cancel.action}

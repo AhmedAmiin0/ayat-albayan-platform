@@ -29,7 +29,9 @@ import { StudentTrialRepo } from './trial/student-trial.repo';
 import { SubscriptionsService } from './subscriptions.service';
 import { SubscriptionsSettings } from './subscriptions.settings';
 import { UnpaidFlags } from './alerts/unpaid-flags.service';
-import { UsedBeforeEditController } from './used-before-edit/used-before-edit.controller';
+import { StartDateEditController } from './start-date-edit/start-date-edit.controller';
+import { StartDateEditRepo } from './start-date-edit/start-date-edit.repo';
+import { StartDateEdit } from './start-date-edit/start-date-edit.service';
 import { UsedBeforeEditRepo } from './used-before-edit/used-before-edit.repo';
 import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
 
@@ -49,7 +51,7 @@ import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
     SubscriptionsController,
     StudentBalanceController,
     AdminTasksController,
-    UsedBeforeEditController,
+    StartDateEditController,
   ],
   providers: [
     AdminTasksRepo,
@@ -82,6 +84,8 @@ import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
     UnpaidFlags,
     UsedBeforeEdit,
     UsedBeforeEditRepo,
+    StartDateEdit,
+    StartDateEditRepo,
   ],
   exports: [
     BalanceRepo,
@@ -95,6 +99,7 @@ import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
     SubscriptionsRepo,
     SubscriptionsService,
     UnpaidFlags,
+    UsedBeforeEdit,
   ],
 })
 export class SubscriptionsModule {}

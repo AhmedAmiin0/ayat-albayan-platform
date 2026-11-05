@@ -39,7 +39,7 @@ export interface TemplateColumnsInput {
   saving: string | null;
   /** «يُرسل من» (docs/23c decision 9): the numbers, templates.manage, and a pick (confirmed by the caller). */
   sendFrom: Omit<SendFromCellProps, 'tpl'>;
-  /** A crm line's rows (docs/19): the status set by hand (`busy` = the key being saved) and its CRM name. */
+  /** crm rows (docs/19): the status by hand (`busy` = the key being saved) and the WABA name (meta too). */
   crmStatus: { busyKey: string | null; onSet: CrmStatusActionsProps['onSet']; onEditName: (tpl: TemplateView) => void };
 }
 
@@ -55,6 +55,9 @@ export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, f
         <CrmNameButton tpl={tpl} onEdit={crmStatus.onEditName} />
       </>
     ) : undefined;
+  // A meta line keeps its submit; its WABA name is edited beside it (docs/19 «CRM → Meta»).
+  const metaName = (tpl: TemplateView) =>
+    factsOf(tpl.line)?.provider === 'meta' ? <CrmNameButton tpl={tpl} onEdit={crmStatus.onEditName} /> : undefined;
   return col.columns([
     // The value is the shown name, so it sorts and filters by what the row says.
     col.accessor((r) => templateName(r.key), {
@@ -137,7 +140,7 @@ export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, f
       id: 'actions',
       header: () => t.templates.actions,
       cell: (c) => (
-        <RowActions tpl={c.row.original} onSubmit={onSubmit} onMove={onMove} target={factsOf(otherLine(c.row.original.line))} crm={crmCell(c.row.original)} />
+        <RowActions tpl={c.row.original} onSubmit={onSubmit} onMove={onMove} target={factsOf(otherLine(c.row.original.line))} crm={crmCell(c.row.original)} name={metaName(c.row.original)} />
       ),
       meta: { className: 'max-sm:order-7', headClassName: 'w-px' },
     }),

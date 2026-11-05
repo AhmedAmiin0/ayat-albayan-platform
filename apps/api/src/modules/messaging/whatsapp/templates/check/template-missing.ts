@@ -9,11 +9,14 @@ import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 // a crm line's statuses are set by hand and can go stale: a teacher reminder failed with Meta
 // #132001 while our row said approved. The first send Meta refuses that way marks the row missing
 // at once, so the sender stops reading its rows (sender.queries.ts due()) and «القوالب» shows which
-// ones to fix.
+// ones to fix. A meta line does the same (docs/19 «CRM → Meta»), until its next sync.
 
 /** Meta's «template name does not exist in the translation» (#132001), as the CRM passes it on. */
 const ABSENT = /\b132001\b|does not exist in the translation/i;
 const ERROR_MAX = 300;
+
+/** Meta's own code, as the meta and kapso drivers report it (graph-errors.ts). */
+const META_ABSENT = 132001;
 
 /**
  * A crm send refused because the template (name + language) is not on the CRM's WhatsApp account.
@@ -21,6 +24,20 @@ const ERROR_MAX = 300;
 export function absentOnCrm(error: unknown): error is WaError {
   if (!(error instanceof WaError) || error.info.crmCode !== 'meta_error') return false;
   return ABSENT.test(`${error.info.details ?? ''} ${error.message}`);
+}
+
+/** A Graph send (meta / kapso line) Meta refused with #132001: no such name + language. */
+const absentOnGraph = (info: WaError['info']): boolean =>
+  !info.crmCode && info.code === META_ABSENT;
+
+/**
+ * Either driver's «this template is not on the WABA» (docs/19 «CRM → Meta»: the same rule after
+ * the switch): the error itself, else null.
+ */
+export function absentOnWaba(error: unknown): WaError | null {
+  if (!(error instanceof WaError)) return null;
+  const graph = absentOnGraph(error.info);
+  return graph || absentOnCrm(error) ? error : null;
 }
 
 interface FailedSend {
@@ -51,8 +68,9 @@ export class TemplateMissing {
 
   /** Never throws: the send's own failure is already recorded, this is the registry's follow-up. */
   async check(send: FailedSend): Promise<void> {
-    const { key, line, error, now } = send;
-    if (!key || !absentOnCrm(error)) return;
+    const { key, line, now } = send;
+    const error = absentOnWaba(send.error);
+    if (!key || !error) return;
     try {
       await this.mark({ key, line, error, now });
     } catch (e) {
@@ -64,7 +82,8 @@ export class TemplateMissing {
    * An approved row of the line it went from → missing, compare-and-set: one write and one audit
    * row however many sends fail at once. A row on another line (moved meanwhile) or already not
    * approved stays as it is. The admin marks it approved again once the CRM holds it («علِّمه
-   * معتمدًا»). Only the key's own CRM name (crmTemplateName) counts: a row that went by a fallback
+   * معتمدًا»), a meta line's sync does. Only the key's own WABA name (crmTemplateName) counts: a
+   * row that went by a fallback
    * (crm-body.ts crmRowName: meta_name teacher_lesson_reminder_meet, not the CRM's
    * teacher_lesson_reminder) fails alone, or every later row of that key would stop.
    */
@@ -79,7 +98,7 @@ export class TemplateMissing {
     const last_error = (m.error.info.details ?? m.error.message).slice(0, ERROR_MAX);
     const patch = { status: 'missing' as const, last_error, last_checked_at: m.now.toISOString() };
     if (!(await this.queries.update(m.key, patch, 'approved'))) return;
-    this.log.warn(`template ${m.key} marked missing on ${m.line}: Meta #132001 through the CRM`);
+    this.log.warn(`template ${m.key} marked missing on ${m.line}: Meta #132001`);
     await this.audit.record({
       actorId: null,
       entity: 'message_templates',

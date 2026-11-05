@@ -64,6 +64,8 @@ export interface RowActionsProps {
   target: TemplateLineView | undefined;
   /** The row's line is on crm (docs/19): no submit; these hand-set status buttons instead. */
   crm?: ReactNode;
+  /** A meta line's «اسم القالب في واتساب» button, beside its submit (docs/19 «CRM → Meta»). */
+  name?: ReactNode;
 }
 
 /**
@@ -71,12 +73,13 @@ export interface RowActionsProps {
  * the API uploads a sample PDF first) and «نقل إلى الرقم الآخر», each behind its own dialog. Moving to
  * a number the server has no credentials for is disabled, with the reason beside it.
  */
-export function RowActions({ tpl, onSubmit, onMove, target, crm }: RowActionsProps) {
+export function RowActions({ tpl, onSubmit, onMove, target, crm, name }: RowActionsProps) {
   const reason = useId();
   const noTarget = target?.configured === false;
   return (
     <span className="flex flex-wrap gap-2">
       {crm}
+      {name}
       {!crm && canSubmit(tpl) && (
         <Button size="sm" variant="secondary" onClick={() => onSubmit(tpl)}>
           {t.templates.submit}

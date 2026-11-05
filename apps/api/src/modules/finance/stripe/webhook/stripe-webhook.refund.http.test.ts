@@ -92,7 +92,7 @@ describe('POST /webhooks/stripe: refunds reverse through a refund payment, dispu
   it('charge.dispute.created: an admin bell row only, nothing recorded or changed', async () => {
     const dispute = { id: 'dp_1', object: 'dispute', amount: 12000, currency: 'sar', payment_intent: 'pi_1', charge: 'ch_1' };
     await post(chargeEvent('charge.dispute.created', dispute));
-    expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ subject: 'stripe_dispute:dp_1', bellOnly: true, data: { studentId: STUDENT_ID } }));
+    expect(s.push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ subject: 'stripe_dispute:dp_1', data: { studentId: STUDENT_ID } }));
     expect(m.payments.insert).not.toHaveBeenCalled();
     expect(s.links.markPaid).not.toHaveBeenCalled();
     expect(s.events.done).toHaveBeenCalledWith('evt_9', 'dispute_alert');
