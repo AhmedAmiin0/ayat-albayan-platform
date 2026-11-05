@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -38,13 +39,13 @@ export function TeacherEarningsScreen() {
       }),
     [],
   );
-  const back = <Button variant="ghost" label={t.common.back} onPress={() => (paying ? setPaying(false) : router.back())} />;
+  const back = <BackButton onPress={() => (paying ? setPaying(false) : router.back())} />;
   const title = balance.data ? `${t.earnings.title} · ${teacherName(balance.data.teacher, locale)}` : t.earnings.title;
 
   if (paying && balance.data) {
     return (
       <Screen>
-        <ScreenHeader title={t.earnings.payTitle} trailing={back} />
+        <ScreenHeader title={t.earnings.payTitle} leading={back} />
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 32 }}>
           <PayForm
             teacherId={id}
@@ -63,7 +64,7 @@ export function TeacherEarningsScreen() {
   const header = <EarningsHeader balance={balance.data} tab={tab} onTab={setTab} filter={filter} onFilter={setFilter} />;
   return (
     <Screen>
-      <ScreenHeader title={title} trailing={back} />
+      <ScreenHeader title={title} leading={back} />
       {done ? <Note>{done}</Note> : null}
       {balance.isError && !balance.data ? (
         <ErrorState onRetry={() => void balance.refetch()} message={t.earnings.mobile.loadFailed} />

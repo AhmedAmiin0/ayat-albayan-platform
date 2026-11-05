@@ -6,6 +6,7 @@ import { ApiError, apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -36,14 +37,14 @@ export function TeacherDetailScreen() {
   const path = `/teachers/${id}`;
   const teacher = useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<Teacher>(path) });
   const admin = useIsAdmin();
-  const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
+  const back = <BackButton onPress={() => router.back()} />;
   const data = teacher.data;
 
   if (!data) {
     const missing = teacher.error instanceof ApiError && teacher.error.status === 404;
     return (
       <Screen>
-        <ScreenHeader title={t.teachers.profile} trailing={back} />
+        <ScreenHeader title={t.teachers.profile} leading={back} />
         {teacher.isError ? (
           <ErrorState
             onRetry={() => void teacher.refetch()}
@@ -59,7 +60,7 @@ export function TeacherDetailScreen() {
         style={{ flex: 1, marginHorizontal: -16 }}
         contentContainerStyle={{ gap: 20, paddingHorizontal: 16, paddingBottom: 32 }}
       >
-        <ScreenHeader title={teacherName(data, locale)} trailing={back} />
+        <ScreenHeader title={teacherName(data, locale)} leading={back} />
         <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
         {admin ? (
           <StaffPhotoControl

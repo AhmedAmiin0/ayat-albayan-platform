@@ -2967,6 +2967,11 @@
       "gallery": "Gallery",
       "document": "Document",
       "emojiDone": "Done",
+      "tileShort": {
+        "document": "Document",
+        "replies": "Replies",
+        "emoji": "Emoji"
+      },
       "voice": {
         "record": "Record a voice message",
         "hint": "Hold to record, release to send",

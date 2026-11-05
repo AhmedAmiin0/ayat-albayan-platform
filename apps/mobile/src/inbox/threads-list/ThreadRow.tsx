@@ -1,56 +1,15 @@
 import { formatPhone, type ThreadView } from '@ab/shared';
 import { router } from 'expo-router';
 import { memo, useCallback } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
 import { inTree, type TreeBase } from '@/core/nav/tree-base';
 import { Avatar } from '@/core/ui/primitives/Avatar';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { kindLabel } from '@/inbox/shared/format';
-import { DeliveryTicks } from '@/inbox/messages/components/DeliveryTicks';
-import { threadPreview } from '@/inbox/messages/hooks/message-text';
 import { useComposerDraft } from '@/inbox/composer/draft-store';
-import { ThreadTags } from './ThreadTags';
-import { ThreadTrailing } from './ThreadTrailing';
+import { ThreadMeta } from './ThreadTags';
+import { ThreadTime, TurnBadge } from './ThreadTrailing';
+import { ChatRow, ThreadPreview } from './row';
 import { threadLink, type ThreadMode } from '@/inbox/thread/hooks/thread-mode';
-
-/**
- * The row reads the ticks' status word before the preview (the ticks add no stop of their own);
- * failed is the row's «لم تُرسل» chip already.
- */
-function ticksWord(th: ThreadView): string | undefined {
-  if (th.last_direction !== 'outbound' || th.last_status === 'failed') return undefined;
-  return `${t.enums.messageStatus[th.last_status]} · ${threadPreview(th)}`;
-}
-
-/** «مسوّدة:» in the act colour before the unsent text, as WhatsApp's «Draft:» (review 2026-10-29 #4). */
-function DraftWord() {
-  const { color } = useTheme();
-  return (
-    // Hidden from the reader: the row's subtitleLabel already starts with «مسوّدة:».
-    <AppText
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
-      style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.act }}>
-      {t.inbox.draft}
-    </AppText>
-  );
-}
-
-/** The second line: her unsent text when the chat has one, else the last message with its ticks. */
-function previewOf(th: ThreadView, draft: string) {
-  if (draft) {
-    const text = draft.replace(/\s+/g, ' ').trim();
-    return { subtitle: text, subtitleLeading: <DraftWord />, subtitleLabel: `${t.inbox.draft} ${text}` };
-  }
-  return {
-    subtitle: threadPreview(th),
-    subtitleLeading: th.last_direction === 'outbound' ? <DeliveryTicks status={th.last_status} inList /> : undefined,
-    subtitleLabel: ticksWord(th),
-  };
-}
 
 interface ThreadRowProps {
   thread: ThreadView;
@@ -70,18 +29,29 @@ interface ThreadRowProps {
  * One chat in «المحادثات». Memo (the draft store redraws only the row whose draft changed): a poll that changes one thread (a new message, a tick) hands the
  * others the same object (TanStack's structural sharing), so only that row redraws.
  */
-const ThreadRow = memo(function ThreadRow({ thread: th, teacher, tags, money, onOpen, now }: ThreadRowProps) {
+const ThreadRow = memo(function ThreadRow({
+  thread: th,
+  teacher,
+  tags,
+  money,
+  onOpen,
+  now,
+}: ThreadRowProps) {
   const phone = formatPhone(th.phone_e164);
   const draft = useComposerDraft(th.phone_e164);
   const open = useCallback(() => onOpen(th.phone_e164), [onOpen, th.phone_e164]);
+  const name = th.display_name;
   return (
-    <ListRow
-      leading={<Avatar name={th.display_name ?? ''} id={th.phone_e164} decorative />}
-      title={th.display_name ?? (teacher ? kindLabel(th) : ltr(phone))}
-      meta={th.display_name && !teacher ? phone : undefined}
-      {...previewOf(th, draft)}
-      tags={tags ? <ThreadTags thread={th} money={money} /> : undefined}
-      trailing={<ThreadTrailing thread={th} now={now} />}
+    <ChatRow
+      leading={<Avatar name={name ?? ''} id={th.phone_e164} decorative />}
+      title={name ?? (teacher ? kindLabel(th) : ltr(phone))}
+      titleLtr={!name && !teacher}
+      time={<ThreadTime thread={th} now={now} />}
+      preview={<ThreadPreview thread={th} draft={draft} />}
+      badge={<TurnBadge thread={th} />}
+      meta={
+        tags ? <ThreadMeta thread={th} money={money} phone={name ? phone : undefined} /> : undefined
+      }
       onPress={open}
     />
   );
@@ -97,9 +67,21 @@ export function useThreadRow(mode: ThreadMode, base: TreeBase, now: Date) {
   // The sales tree too (review 2026-10-29 #2): new / no-reply / trial-booked chats look different.
   const tags = mode.kind === 'admin';
   const money = tags && !base;
-  const open = useCallback((phone: string) => router.push(inTree(base, threadLink(phone, mode))), [base, mode]);
+  const open = useCallback(
+    (phone: string) => router.push(inTree(base, threadLink(phone, mode))),
+    [base, mode],
+  );
   return useCallback(
-    ({ item }: { item: ThreadView }) => <ThreadRow thread={item} teacher={teacher} tags={tags} money={money} onOpen={open} now={now} />,
+    ({ item }: { item: ThreadView }) => (
+      <ThreadRow
+        thread={item}
+        teacher={teacher}
+        tags={tags}
+        money={money}
+        onOpen={open}
+        now={now}
+      />
+    ),
     [teacher, tags, money, open, now],
   );
 }

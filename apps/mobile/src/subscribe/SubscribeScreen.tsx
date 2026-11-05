@@ -10,6 +10,7 @@ import { pathKey } from '@/core/lib/query/query-keys';
 import type { StudentProfile, StudentRef } from '@/students/shared/types';
 import { localDate } from '@/today';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -85,7 +86,7 @@ export function SubscribeScreen() {
         <ScreenHeader
           title={params.renew ? t.inbox.subscription.renew : t.subscriptions.new}
           subtitle={childLine(family.find((f) => f.id === studentId))}
-          trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+          leading={<BackButton onPress={back} />}
         />
         {profile.isError ? <ErrorState onRetry={() => void profile.refetch()} /> : null}
         <StudentPills family={family} value={studentId} onChange={setStudentId} />

@@ -3885,22 +3885,11 @@
   "src/inbox/composer/attach/AttachSheet.test.tsx": {
     "ab/no-parent-imports": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/inbox/composer/attach/AttachSheet.tsx": {
     "ab/no-parent-imports": {
       "count": 3
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/inbox/composer/attach/AttachTile.tsx": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/inbox/composer/attach/use-pick-send.ts": {
@@ -6941,7 +6930,7 @@
   },
   "src/inbox/threads-list/ThreadRow.tsx": {
     "max-len": {
-      "count": 6
+      "count": 1
     },
     "no-restricted-syntax": {
       "count": 2
@@ -6950,14 +6939,11 @@
   "src/inbox/threads-list/ThreadTags.tsx": {
     "ab/no-parent-imports": {
       "count": 2
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/inbox/threads-list/ThreadTrailing.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/threads-list/ThreadsList.draft.test.tsx": {

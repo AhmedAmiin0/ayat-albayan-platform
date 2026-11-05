@@ -10,7 +10,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { locale } from '@/core/lib/i18n/locale';
 import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
@@ -99,7 +99,7 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
         size="h2"
         connecting
         subtitle={zoneNote(tz)}
-        trailing={asTab ? undefined : <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        leading={asTab ? undefined : <BackButton onPress={() => router.back()} />}
       />
       <View style={{ gap: 8 }}>
         <SchedulePeriod view="day" date={date} today={today} onDate={setDate} />

@@ -6,6 +6,7 @@ import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { ActionPanel } from '@/users/panels/ActionPanel';
@@ -67,7 +68,7 @@ export function UserEditor({ user, options, canWrite }: UserEditorProps) {
         <ScreenHeader
           title={t.users.detail.title}
           subtitle={user.full_name}
-          trailing={<Button variant="ghost" label={t.common.back} onPress={backToUsers} />}
+          leading={<BackButton onPress={backToUsers} />}
         />
         {mode ? (
           <ActionPanel mode={mode} user={user} onBack={() => setMode(null)} onDone={done} />

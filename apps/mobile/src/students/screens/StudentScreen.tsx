@@ -9,6 +9,7 @@ import { useStudentHref } from '@/core/nav/tree-base';
 import { StudentFileSections } from '@/student-file/components/StudentFileSections';
 import { TrialDateSection } from '@/trial-date/components/TrialDateSection';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -43,13 +44,13 @@ export function StudentScreen() {
   });
   const student = query.data;
   const to = useStudentHref();
-  const backButton = <Button variant="ghost" label={t.common.back} onPress={back} />;
+  const backButton = <BackButton onPress={back} />;
 
   if (!student) {
     const notFound = query.error instanceof ApiError && query.error.status === 404;
     return (
       <Screen>
-        <ScreenHeader title={t.students.profile} size="h2" connecting trailing={backButton} />
+        <ScreenHeader title={t.students.profile} size="h2" connecting leading={backButton} />
         {query.isError ? (
           <ErrorState
             onRetry={() => void query.refetch()}
@@ -67,7 +68,7 @@ export function StudentScreen() {
         size="h2"
         connecting
         subtitle={student.code ? ltr(student.code) : undefined}
-        trailing={backButton}
+        leading={backButton}
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>
         <StatusChanger student={student} />

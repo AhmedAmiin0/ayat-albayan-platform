@@ -4,7 +4,7 @@ import { addDays, riyadhNoon, riyadhToday } from '@/calendar';
 import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { useJoinWindow } from '@/core/lib/query/public-config';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -30,14 +30,14 @@ export function AdminSessionsScreen() {
   const lessons = useDayLessons(riyadhNoon(date));
   const groups = groupSessions(lessons.data ?? [], now, win);
   const none = SESSION_GROUPS.every((g) => groups[g].length === 0);
-  const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
+  const back = <BackButton onPress={() => router.back()} />;
   let body = <AppText>{t.common.loading}</AppText>;
   if (lessons.isError && !lessons.data) body = <ErrorState onRetry={() => void lessons.refetch()} />;
   else if (lessons.data && none) body = <EmptyState title={t.classroom.admin.empty} />;
   else if (lessons.data) body = <SessionGroupList groups={groups} />;
   return (
     <Screen>
-      <ScreenHeader title={t.mobileClassroom.title} trailing={back} />
+      <ScreenHeader title={t.mobileClassroom.title} leading={back} />
       <DaySwitcher date={date} isToday={date === today} onStep={(n) => setDate(addDays(date, n))} onToday={() => setDate(today)} />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 32 }}>
         <View style={{ gap: 16 }}>{body}</View>

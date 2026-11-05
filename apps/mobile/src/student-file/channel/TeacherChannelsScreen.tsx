@@ -9,7 +9,7 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useTheme } from '@/theme';
@@ -51,7 +51,7 @@ export function TeacherChannelsScreen() {
         size="h2"
         connecting
         count={list.data?.length}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        leading={<BackButton onPress={() => router.back()} />}
       />
       <FlatList
         style={{ flex: 1 }}
