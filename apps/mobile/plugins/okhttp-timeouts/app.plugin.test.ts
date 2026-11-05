@@ -39,8 +39,8 @@ test("the factory keeps React Native's builder and adds the ping and the timeout
   expect(kt.startsWith('package com.example.app\n')).toBe(true);
   expect(kt).toContain('private class AbOkHttpClientFactory(private val context: Context)');
   expect(kt).toContain('OkHttpClientProvider.createClientBuilder(context)'); // cookie jar + cache
-  expect(OKHTTP_SECONDS).toEqual({ ping: 15, connect: 15, read: 30, slowRead: 120 });
-  for (const line of ['pingInterval(15L', 'connectTimeout(15L', 'readTimeout(30L']) {
+  expect(OKHTTP_SECONDS).toEqual({ ping: 15, connect: 15, read: 120, slowRead: 300 });
+  for (const line of ['pingInterval(15L', 'connectTimeout(15L', 'readTimeout(120L']) {
     expect(kt).toContain(line);
   }
   // NetworkingModule resets a call timeout on every fetch: the whole-call deadline is apiFetch's.
@@ -53,8 +53,27 @@ test('one base client (one cache, one pool); each caller gets its own cookie con
   expect(kt).toContain('base.newBuilder().cookieJar(ReactCookieJarContainer()).build()');
 });
 
-test('chat files and PDF pages get the long read timeout', () => {
+test('the read timeout waits longer than the slowest server read (a 45 s PDF render)', () => {
+  // OkHttp's read timeout also covers the wait for the response headers (the first byte).
+  expect(OKHTTP_SECONDS.read).toBeGreaterThanOrEqual(2 * 45);
+  expect(OKHTTP_SECONDS.slowRead).toBeGreaterThan(OKHTTP_SECONDS.read);
+});
+
+/** The AB_SLOW_READ pattern the Kotlin carries, run here against sample paths. */
+function slowReadPattern(kt: string): RegExp {
+  const [, source = '$^'] = /AB_SLOW_READ = Regex\("(.+)"\)/.exec(kt) ?? [];
+  return new RegExp(source);
+}
+
+test('chat files, PDF pages and booking media get the slow read timeout; nothing else', () => {
   const kt = registerFactory(MAIN);
-  expect(kt).toContain('Regex("/messages/[^/]+/(file|pdf/[0-9]+)$")');
-  expect(kt).toContain('chain.withReadTimeout(120, TimeUnit.SECONDS)');
+  expect(kt).toContain('chain.withReadTimeout(300, TimeUnit.SECONDS)');
+  const slow = slowReadPattern(kt);
+  const chat = '/threads/%2B9665/messages/m1';
+  for (const path of [`${chat}/file`, `${chat}/pdf/2`, '/threads/%2B9665/media/m1']) {
+    expect(slow.test(path)).toBe(true);
+  }
+  for (const path of ['/threads', '/threads/%2B9665/media', '/threads/%2B9665/media/m1/x']) {
+    expect(slow.test(path)).toBe(false);
+  }
 });
