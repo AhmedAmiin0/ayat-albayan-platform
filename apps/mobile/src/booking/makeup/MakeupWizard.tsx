@@ -7,6 +7,7 @@ import { ScrollView, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
+import { BackButton } from '@/core/ui/navigation';
 import { Button } from '@/core/ui/primitives/Button';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { BookedPanel } from '@/booking/shared/BookedPanel';
@@ -58,9 +59,7 @@ export function MakeupWizard({ source }: { source: MakeupSource }) {
       <ScreenHeader
         title={t.booking.makeup.title}
         subtitle={book.isSuccess ? undefined : position}
-        trailing={
-          <Button variant="ghost" label={t.common.back} busy={book.isPending} onPress={back} />
-        }
+        leading={<BackButton busy={book.isPending} onPress={back} />}
       />
       <ScrollView
         style={{ flex: 1 }}
