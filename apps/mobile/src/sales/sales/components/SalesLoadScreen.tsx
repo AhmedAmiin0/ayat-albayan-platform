@@ -3,7 +3,7 @@ import { ActivityIndicator } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -21,7 +21,7 @@ export function SalesLoadScreen({ title, query, notFound }: SalesLoadScreenProps
   const missing = query.error instanceof ApiError && query.error.status === 404;
   return (
     <Screen>
-      <ScreenHeader title={title} trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />} />
+      <ScreenHeader title={title} leading={<BackButton onPress={() => router.back()} />} />
       {query.isError ? (
         <ErrorState message={missing ? notFound : t.sales.loadFailed} onRetry={() => void query.refetch()} />
       ) : (

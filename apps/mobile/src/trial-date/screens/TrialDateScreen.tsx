@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { BookingModeProvider } from '@/booking/shared/booking-mode';
 import { useTreeBase } from '@/core/nav/tree-base';
 import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -24,7 +24,10 @@ export function TrialDateScreen() {
   if (!studentId) {
     return (
       <Screen>
-        <ScreenHeader title={t.trialDate.action} trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />} />
+        <ScreenHeader
+          title={t.trialDate.action}
+          leading={<BackButton onPress={() => router.back()} />}
+        />
         <EmptyState title={t.common.notFound} />
       </Screen>
     );

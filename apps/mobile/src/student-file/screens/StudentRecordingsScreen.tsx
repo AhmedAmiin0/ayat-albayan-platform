@@ -8,7 +8,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { useStudentName } from '@/ops/reports/use-student-name';
 import { useTeacherMe } from '@/teacher/lib/queries';
 import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -52,7 +52,7 @@ export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
         connecting
         count={list.data ? list.total : undefined}
         subtitle={name}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+        leading={<BackButton onPress={back} />}
       />
       {can('recordings.read') ? (
         <>

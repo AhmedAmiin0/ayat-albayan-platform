@@ -4,7 +4,7 @@ import { useHolds, useIsAdmin } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
@@ -60,7 +60,7 @@ export function SettingsScreen() {
     <Screen scroll>
       <ScreenHeader
         title={t.settingsHub.title}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+        leading={<BackButton onPress={back} />}
       />
       <InsetGroup>
         <ListRow

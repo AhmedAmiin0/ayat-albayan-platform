@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -24,7 +25,7 @@ export function MyEarningsScreen() {
     <Screen>
       <ScreenHeader
         title={t.earnings.mineTitle}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        leading={<BackButton onPress={() => router.back()} />}
       />
       {balance.isError && !balance.data ? (
         <ErrorState onRetry={() => void balance.refetch()} message={t.earnings.mobile.loadFailed} />

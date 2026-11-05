@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { LoadState } from '@/sales-money/components/LoadState';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -26,11 +26,11 @@ export function AssistantDetailScreen() {
   const can = useStatementCan();
   const list = useAssistants();
   const assistant = list.data?.find((a) => a.id === id);
-  const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
+  const back = <BackButton onPress={() => router.back()} />;
   if (!assistant) {
     return (
       <Screen>
-        <ScreenHeader title={t.assistants.title} trailing={back} />
+        <ScreenHeader title={t.assistants.title} leading={back} />
         {list.data ? <ErrorState message={t.assistants.notFound} onRetry={() => void list.refetch()} /> : <LoadState status={list} empty={false} emptyTitle="" />}
       </Screen>
     );
@@ -41,7 +41,7 @@ export function AssistantDetailScreen() {
   };
   return (
     <Screen>
-      <ScreenHeader title={assistant.name} trailing={back} />
+      <ScreenHeader title={assistant.name} leading={back} />
       <FilterPills items={TABS()} value={tab} onChange={show} accessibilityLabel={t.mobileSalesMoney.tabs.label} />
       {notice ? <Note>{notice}</Note> : null}
       <AssistantTabBody tab={tab} assistant={assistant} can={can} onNotice={setNotice} />
