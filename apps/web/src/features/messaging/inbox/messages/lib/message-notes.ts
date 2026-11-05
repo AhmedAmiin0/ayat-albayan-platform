@@ -1,4 +1,4 @@
-import { canRetryCode, MAX_SEND_ATTEMPTS, type MessageView } from '@ab/shared';
+import { canRetryCode, isAwaitingReply, MAX_SEND_ATTEMPTS, type MessageView } from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { errorText, fullTime } from '@/features/messaging/inbox/format';
@@ -25,6 +25,8 @@ export function outboundNotes(m: MessageView, o: NotesInput): string[] {
 }
 
 function queuedNotes(m: MessageView, o: NotesInput): string[] {
+  // Held behind the reopen template (owner 2026-11-03): no tries, no next try, until they reply.
+  if (isAwaitingReply(m)) return [t.messages.awaitingReply];
   const notes: string[] = [];
   if (o.waitingTemplate) notes.push(t.messages.waitingTemplate);
   else if (m.scheduled_for && Date.parse(m.scheduled_for) > o.now.getTime()) {

@@ -24,8 +24,11 @@ import { useThreadPoll } from './thread-poll';
 export function useThread(phone: string) {
   const query = useInfiniteQuery({
     queryKey: threadKey(phone),
-    queryFn: ({ pageParam }) =>
-      apiFetch<ThreadDetail>(`${threadPath(phone)}${toQueryString({ before: pageParam })}`),
+    // TanStack's signal: closing the chat drops its read, so a later push tap never joins it.
+    queryFn: ({ pageParam, signal }) =>
+      apiFetch<ThreadDetail>(`${threadPath(phone)}${toQueryString({ before: pageParam })}`, {
+        signal,
+      }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) => (last.has_more ? last.messages[0]?.created_at : undefined),
   });

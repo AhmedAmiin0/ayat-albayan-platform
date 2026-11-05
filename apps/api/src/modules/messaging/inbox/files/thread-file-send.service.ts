@@ -18,7 +18,6 @@ import { InboxSettings } from '@/modules/messaging/inbox/inbox.settings';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
 import { ThreadQuotes } from '@/modules/messaging/inbox/threads/thread-quotes';
 import { chatLine, dedupKey, outboundBase, replyOf, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
-import { KapsoReopener } from '@/modules/messaging/inbox/reopen/kapso-reopener';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { toVoiceOgg } from './voice-ogg';
 import { voiceMedia } from './voice-send';
@@ -48,8 +47,6 @@ export class ThreadFileSender {
   @Inject(InboxSettings) private readonly settings?: InboxSettings;
   /** «رد» on a file (owner 2026-10-25), property-injected like settings. */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
-  /** Kapso's conversation record, for a file tried after the window as a text is (chatLine). */
-  @Inject(KapsoReopener) private readonly kapso?: KapsoReopener;
   /** m4a → ogg/opus for a voice note (owner 2026-10-27); tests swap in a fake, never the real ffmpeg. */
   private readonly toOgg = toVoiceOgg;
 
@@ -61,14 +58,14 @@ export class ThreadFileSender {
 
   /**
    * A signed upload URL for one file of this actor and request id; type and size checked first, then
-   * the line as send() picks it (no Kapso reopen yet: send() does it), so a chat that cannot be sent
+   * the line as send() picks it, so a chat that cannot be sent
    * to stores nothing.
    */
   async uploadUrl(s: ThreadSend<ThreadFileUpload>, now = new Date()): Promise<SignedUpload> {
     assertSendable({ mime: s.input.mime, size: s.input.size, maxBytes: await this.maxBytes() });
     const windows = () => this.queries.numberWindows(s.phone);
     const teacher = !!s.scope;
-    await chatLine(await this.queries.thread(s.phone), { now, windows, phone: s.phone, kapso: undefined, teacher });
+    await chatLine(await this.queries.thread(s.phone), { now, windows, teacher });
     const path = chatOutPath({ actorId: s.actorId, requestId: s.input.clientRequestId, mime: s.input.mime });
     return this.storage.signedUpload({ bucket: BUCKETS.waMedia, path });
   }
@@ -83,7 +80,7 @@ export class ThreadFileSender {
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
     const windows = () => this.queries.numberWindows(s.phone);
-    const at = { now, windows, phone: s.phone, kapso: this.kapso, teacher: !!s.scope };
+    const at = { now, windows, teacher: !!s.scope };
     const line = await chatLine(thread, at);
     const { path, clientRequestId, filename, caption } = s.input;
     if (!isChatOutPathOf(path, { actorId: s.actorId, requestId: clientRequestId })) throw filePath();

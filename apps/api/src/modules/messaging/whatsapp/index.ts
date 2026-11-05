@@ -91,3 +91,6 @@ export {
   TemplatesRepo,
 } from './templates/catalog/templates.repo';
 export { WhatsappModule } from './whatsapp.module';
+export { reopenUsable } from './sender/window/window-rules';
+export { ReopenRequest } from './sender/window/reopen-request';
+export { DAY_MS as REOPEN_LIFE_MS } from './sender/window/reopen-state';

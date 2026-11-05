@@ -46,6 +46,8 @@ export default reactConfig(
   syntaxExempt({
     files: [
       'src/core/lib/http/api.ts',
+      // supabase-js's transport (a kept SDK, docs/36 §3.2): its auth calls get the read deadline.
+      'src/core/lib/http/auth-fetch.ts',
       'src/core/lib/connectivity/probe.ts',
       'src/inbox/composer/send-file.ts',
       'src/inbox/composer/voice/send-voice.ts',
