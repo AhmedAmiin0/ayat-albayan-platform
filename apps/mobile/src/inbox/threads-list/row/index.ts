@@ -1,3 +1,2 @@
-export { ChatRow, type ChatRowProps } from './ChatRow';
-export { spanStyle, WaText } from './WaText';
+export { ChatRow } from './ChatRow';
 export { ThreadPreview } from './ThreadPreview';

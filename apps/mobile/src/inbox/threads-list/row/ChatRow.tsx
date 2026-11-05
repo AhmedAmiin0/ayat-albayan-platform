@@ -4,7 +4,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { useInset } from '@/core/ui/surface/inset';
 import { type, useTheme } from '@/theme';
 
-export interface ChatRowProps {
+interface ChatRowProps {
   /** The avatar, centred on the row's height. */
   leading: ReactNode;
   /** The name, or the LTR-isolated phone when the contact has none. */
