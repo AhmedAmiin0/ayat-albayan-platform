@@ -13,8 +13,8 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 
 const rows: ThreadView[] = [
-  { ...thread, phone_e164: '+201000000001', display_name: 'أم سارة' },
-  { ...thread, phone_e164: '+201000000002', display_name: 'أبو خالد' },
+  { ...thread, phone_e164: '+201000000001', display_name: 'Umm Sara' },
+  { ...thread, phone_e164: '+201000000002', display_name: 'Abu Khalid' },
 ];
 const page = (items: ThreadView[]) => ({ items, total: items.length, page: 1, pageSize: 25 });
 const renderItem = ({ item }: { item: ThreadView }) => <AppText>{item.display_name ?? ''}</AppText>;
@@ -26,15 +26,15 @@ test('the newest chats from GET /threads, without the excluded one', async () =>
   await renderWithQuery(
     <ChatPickList renderItem={renderItem} exclude={(th) => th.phone_e164 === '+201000000002'} />,
   );
-  expect(await screen.findByText('أم سارة')).toBeTruthy();
-  expect(screen.queryByText('أبو خالد')).toBeNull();
+  expect(await screen.findByText('Umm Sara')).toBeTruthy();
+  expect(screen.queryByText('Abu Khalid')).toBeNull();
   expect(mockApiFetch).toHaveBeenCalledWith('/threads?page=1&pageSize=25');
 });
 
 test('searching asks the server by name or number', async () => {
   mockApiFetch.mockResolvedValue(page(rows));
   await renderWithQuery(<ChatPickList renderItem={renderItem} exclude={() => false} />);
-  await screen.findByText('أم سارة');
+  await screen.findByText('Umm Sara');
   const field = screen.getByLabelText(t.inbox.forward.search);
   await fireEvent.changeText(field, 'خالد');
   await fireEvent(field, 'submitEditing');

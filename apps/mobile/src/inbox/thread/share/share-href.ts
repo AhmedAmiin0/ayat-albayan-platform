@@ -6,11 +6,11 @@ import { type Can, canOpen, type GateStatus } from '@/core/auth';
 
 const none = (): null => null;
 
+// Each tree's chats only with inbox.read, as its tabs and a tapped push (toSalesThread) decide.
 const CHOOSER: Record<GateStatus, (can: Can) => Href | null> = {
-  admin: () => '/inbox/share',
-  // As a tapped push (toSalesThread): the chats only with inbox.read.
+  admin: (can) => (canOpen(can, 'inbox') ? '/inbox/share' : null),
   sales: (can) => (canOpen(can, 'inbox') ? '/sales/inbox/share' : null),
-  teacher: () => '/teacher/chats/share',
+  teacher: (can) => (canOpen(can, 'chats') ? '/teacher/chats/share' : null),
   assistant: none,
   booting: none,
   out: none,
@@ -24,6 +24,7 @@ export function shareHref(gate: GateStatus, can: Can): Href | null {
 const HOME: Partial<Record<GateStatus, Href>> = {
   assistant: '/assistant/lessons',
   sales: '/sales/more',
+  teacher: '/teacher/today',
 };
 
 /** «رجوع» when there is nothing to share into: the tree's own landing (never the admin's tabs). */

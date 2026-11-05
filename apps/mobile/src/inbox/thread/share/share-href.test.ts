@@ -10,8 +10,10 @@ test('each tree gets its own chooser', () => {
   expect(shareHref('teacher', all)).toBe('/teacher/chats/share');
 });
 
-test('a salesperson without the chats, the assistant and no session: nowhere to share', () => {
+test('without the chats (inbox.read), the assistant and no session: nowhere to share', () => {
   expect(shareHref('sales', without('inbox.read'))).toBeNull();
+  expect(shareHref('admin', without('inbox.read'))).toBeNull();
+  expect(shareHref('teacher', without('inbox.read'))).toBeNull();
   expect(shareHref('assistant', all)).toBeNull();
   expect(shareHref('out', all)).toBeNull();
   expect(shareHref('booting', all)).toBeNull();
@@ -20,5 +22,6 @@ test('a salesperson without the chats, the assistant and no session: nowhere to 
 test('«رجوع» stays in the tree: the assistant to its lessons, never the admin-only tabs', () => {
   expect(shareHome('assistant')).toBe('/assistant/lessons');
   expect(shareHome('sales')).toBe('/sales/more');
+  expect(shareHome('teacher')).toBe('/teacher/today');
   expect(shareHome('admin')).toBe('/');
 });

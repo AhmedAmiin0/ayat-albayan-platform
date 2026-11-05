@@ -12,9 +12,9 @@ const OTHER = '+201000000002';
 const OWN = '+201000000009';
 
 const chats: ThreadView[] = [
-  { ...thread, phone_e164: FAMILY, display_name: 'أم سارة', lead_id: null },
-  { ...thread, phone_e164: OTHER, display_name: 'أبو خالد', lead_id: null },
-  { ...thread, phone_e164: OWN, display_name: 'المعلمة نور', teacher_id: 't-1', lead_id: null },
+  { ...thread, phone_e164: FAMILY, display_name: 'Umm Sara', lead_id: null },
+  { ...thread, phone_e164: OTHER, display_name: 'Abu Khalid', lead_id: null },
+  { ...thread, phone_e164: OWN, display_name: 'Teacher Noor', teacher_id: 't-1', lead_id: null },
 ];
 
 export const TEACHER: ThreadMode = { kind: 'teacher', teacherId: 't-1' };

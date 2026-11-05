@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { refreshInbox, touchInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { appendMessage, removeMessage, type ThreadCache, threadKey } from '@/inbox/thread/hooks/thread-cache';
 import type { SharedFile } from './read-share';
 import { type ShareResult, sendSharedFiles } from './send-shared';
 
@@ -38,7 +39,12 @@ export function useShareSend() {
   const send = async (phone: string, items: readonly SharedFile[]): Promise<FailedShare[]> => {
     const onStep = (done: number, total: number) => setStep({ done, total });
     const results = await sendSharedFiles({ phone, items, maxBytes }, onStep);
-    await Promise.all(results.flatMap((r) => (r.ok ? [touchInbox(client, r.row)] : [])));
+    const rows = results.flatMap((r) => (r.ok ? [r.row] : []));
+    // As useSendFile: each row joins the chat at once (a held AWAITING_REPLY row shows on open).
+    client.setQueryData<ThreadCache>(threadKey(phone), (old) =>
+      rows.reduce((cache, row) => appendMessage(removeMessage(cache, row.id), row), old),
+    );
+    await Promise.all(rows.map((row) => touchInbox(client, row)));
     void refreshInbox(client, phone);
     const failed = results.filter(isFailed);
     setStep(null);

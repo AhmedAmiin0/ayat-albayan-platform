@@ -36,7 +36,7 @@ beforeEach(() => {
 });
 
 async function pickFamily() {
-  await fireEvent.press(await screen.findByRole('checkbox', { name: 'أم سارة' }));
+  await fireEvent.press(await screen.findByRole('checkbox', { name: 'Umm Sara' }));
 }
 
 test('text: nothing happens until a chat is picked and the button pressed; then box + chat', async () => {
@@ -71,10 +71,10 @@ test('the sales tree opens its own chat route', async () => {
 test('a teacher shares text into her families’ chats; her own academy chat is not offered', async () => {
   await renderShare({ mode: TEACHER });
   await pickFamily();
-  expect(screen.queryByRole('checkbox', { name: 'المعلمة نور' })).toBeNull();
+  expect(screen.queryByRole('checkbox', { name: 'Teacher Noor' })).toBeNull();
   await fireEvent.press(screen.getByText(s.openChat));
   expect(mockReplace).toHaveBeenCalledWith('/teacher/chats/%2B201000000001');
-  expect(screen.getByRole('checkbox', { name: 'أبو خالد' })).toBeTruthy();
+  expect(screen.getByRole('checkbox', { name: 'Abu Khalid' })).toBeTruthy();
 });
 
 test('an empty share says so and keeps the button off', async () => {

@@ -41,11 +41,17 @@ async function reencode(uri: string): Promise<string> {
   const size = wide ? { width: LONGEST_SIDE } : { height: LONGEST_SIDE };
   const sized = fits ? image : await ImageManipulator.manipulate(image).resize(size).renderAsync();
   const saved = await sized.saveAsync({ format: SaveFormat.JPEG, compress: QUALITY });
+  // The decoded bitmaps (a 50 MP photo is ~200 MB) go now, not at the next GC.
+  image.release();
+  sized.release();
   return saved.uri;
 }
 
 async function photo(item: SharedFile): Promise<ChatFilePick> {
-  // A decode failure (an SVG, a broken file) is the type's fault, not the upload's.
+  // The native copy failed (missing or empty): the upload's fault, not the type's.
+  const copied = await readSize(item.uri);
+  if (copied === 0) throw new ChatFileError('file_upload');
+  // A decode failure (an SVG, a broken file) is the type's fault.
   const uri = await reencode(item.uri).catch(fail('file_type'));
   const bytes = await readBytes(uri);
   return { mime: JPEG, bytes, size: bytes.byteLength, filename: `photo-${String(item.n)}.jpg` };

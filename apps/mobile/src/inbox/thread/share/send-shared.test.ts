@@ -37,7 +37,12 @@ const bytes = (size: number) => ({
   arrayBuffer: async () => new ArrayBuffer(size),
   blob: async () => ({ size }),
 });
-const image = (width: number, height: number) => ({ width, height, saveAsync: mockSave });
+const image = (width: number, height: number) => ({
+  width,
+  height,
+  saveAsync: mockSave,
+  release: jest.fn(),
+});
 
 /** fetch reads the cached copies (file://); each test answers with its own bytes. */
 const mockFetch = (impl: () => Promise<unknown>) =>
@@ -95,7 +100,6 @@ test('a read error or an empty copy is file_upload; an undecodable image file_ty
   mockFetch(async () => bytes(2048))
     .mockRejectedValueOnce(new Error('ENOENT'))
     .mockResolvedValueOnce(bytes(0) as unknown as Response);
-  mockRender.mockResolvedValueOnce(image(10, 10)).mockResolvedValueOnce(image(10, 10));
   mockRender.mockRejectedValueOnce(new Error('decode'));
   const items = [
     item(1, 'image/jpeg'),
@@ -106,6 +110,8 @@ test('a read error or an empty copy is file_upload; an undecodable image file_ty
   const results = await sendSharedFiles({ phone: PHONE, items, maxBytes: MAX }, jest.fn());
   const codes = results.map((r) => (r.ok ? 'ok' : (r.error as { code?: string }).code));
   expect(codes).toEqual(['file_upload', 'file_upload', 'file_type', 'file_type']);
+  // A missing copy never reaches the manipulator: only the SVG is decoded (and fails).
+  expect(mockRender).toHaveBeenCalledTimes(1);
   expect(send).not.toHaveBeenCalled();
 });
 

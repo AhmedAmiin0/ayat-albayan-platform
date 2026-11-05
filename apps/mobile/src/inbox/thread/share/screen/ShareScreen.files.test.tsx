@@ -49,9 +49,9 @@ beforeEach(() => {
 });
 
 async function sendToFamily() {
-  await fireEvent.press(await screen.findByRole('checkbox', { name: 'أم سارة' }));
+  await fireEvent.press(await screen.findByRole('checkbox', { name: 'Umm Sara' }));
   await act(async () => {
-    await fireEvent.press(screen.getByText(s.sendTo.replace('{name}', 'أم سارة')));
+    await fireEvent.press(screen.getByText(s.sendTo.replace('{name}', 'Umm Sara')));
   });
 }
 
@@ -108,4 +108,16 @@ test('more than ten files: the limit is named and nothing is sent', async () => 
   share(...Array.from({ length: 11 }, (_, i) => `f${String(i)}.pdf`));
   await renderShare();
   expect(await screen.findByText(s.tooMany.replace('{max}', '10'))).toBeTruthy();
+});
+
+test('a send that ends after she left the chooser never moves her to the chat', async () => {
+  share('a.pdf');
+  let finish: (row: never) => void = () => undefined;
+  send.mockImplementationOnce(() => new Promise((ok) => (finish = ok)));
+  const view = await renderShare();
+  await fireEvent.press(await screen.findByRole('checkbox', { name: 'Umm Sara' }));
+  await fireEvent.press(screen.getByText(s.sendTo.replace('{name}', 'Umm Sara')));
+  await view.unmount();
+  await act(async () => finish({ id: 'row-a', phone_e164: '+201000000001' } as never));
+  expect(mockReplace).not.toHaveBeenCalled();
 });
