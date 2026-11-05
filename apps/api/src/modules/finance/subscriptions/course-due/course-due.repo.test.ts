@@ -13,11 +13,23 @@ const row = (id: string, rules: { id: string }[] = []) => ({
 
 describe('CourseDueRepo (owner 2026-11-06)', () => {
   it('unbooked: the package with no rule of its own; null once booked or unknown', async () => {
-    const t = fakeDb({ subscriptions: [{ data: row('a') }, { data: row('b', [{ id: 'r' }]) }, { data: null }] });
+    const t = fakeDb({
+      subscriptions: [{ data: row('a') }, { data: row('b', [{ id: 'r' }]) }, { data: null }],
+      schedule_rule_students: [{ data: [] }],
+    });
     const repo = new CourseDueRepo(t.db);
     expect(await repo.unbooked('a')).toEqual({ subscriptionId: 'a', studentId: 'st-a', student: 'سهيلة', phone: '+966500000000', soldBy: 's1' });
     expect(await repo.unbooked('b')).toBeNull();
     expect(await repo.unbooked('x')).toBeNull();
+  });
+
+  it('unbooked: a student on a running imported course is not told to book', async () => {
+    const legacy = { starts_on: '2026-01-01', ends_on: null, package: '8', status: 'active', subscription_id: null };
+    const t = fakeDb({
+      subscriptions: [{ data: row('a') }],
+      schedule_rule_students: [{ data: [{ student_id: 'st-a', rule: legacy }] }],
+    });
+    expect(await new CourseDueRepo(t.db).unbooked('a', NOW)).toBeNull();
   });
 
   it('overdue: active 2 h+ (latest activation), no course, not on a running imported course', async () => {

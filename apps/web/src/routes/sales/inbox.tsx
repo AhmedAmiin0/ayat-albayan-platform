@@ -17,15 +17,16 @@ export const Route = createFileRoute('/sales/inbox')({
 });
 
 function SalesInboxRoute() {
-  const search = Route.useSearch();
+  // `course` opens its chat's «أيام الحلقات» only: the list's links never carry it along.
+  const { course, ...search } = Route.useSearch();
   const navigate = Route.useNavigate();
   const { can } = usePermissions();
   return (
     <InboxModeContext.Provider value="sales">
-      <LinkedCourseContext.Provider value={search.course ?? null}>
+      <LinkedCourseContext.Provider value={course ?? null}>
         <InboxPage
           search={search}
-          onSearch={(next) => void navigate({ search: { ...next, course: undefined } })}
+          onSearch={(next) => void navigate({ search: next })}
           head={<SalesLiveStrip enabled={can('self.sales_academy')} compact />}
         />
       </LinkedCourseContext.Provider>

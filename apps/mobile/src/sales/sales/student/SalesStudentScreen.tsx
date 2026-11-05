@@ -19,7 +19,7 @@ import { FamilySection } from '@/sales/sales/family/FamilySection';
 import { PackageCancelAction } from './PackageCancelAction';
 import { ReportsSection } from './ReportsSection';
 import { ScheduleSection } from './ScheduleSection';
-import { StudentCourseSection } from './StudentCourseSection';
+import { StudentCourseSection } from './course/StudentCourseSection';
 import { SubscriptionSection } from './SubscriptionSection';
 import { TrialSection } from './TrialSection';
 import { useSalesStudent } from './student-api';

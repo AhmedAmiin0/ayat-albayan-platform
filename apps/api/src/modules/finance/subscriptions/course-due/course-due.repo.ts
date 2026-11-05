@@ -46,15 +46,20 @@ const unbooked = (rows: readonly PackageRow[]): UnbookedPackage[] =>
 export class CourseDueRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** The package when it has no weekly course yet; null when booked or unknown. */
-  async unbooked(subscriptionId: string): Promise<UnbookedPackage | null> {
+  /**
+   * The package when it has no weekly course yet; null when booked, unknown, or its student is on
+   * an imported weekly course still running (the wizard would answer course_exists).
+   */
+  async unbooked(subscriptionId: string, now = new Date()): Promise<UnbookedPackage | null> {
     const { data, error } = await this.db
       .from('subscriptions')
       .select(PACKAGE_SELECT)
       .eq('id', subscriptionId)
       .maybeSingle();
     if (error) throw dbError(error);
-    return unbooked(data ? [data] : [])[0] ?? null;
+    const p = unbooked(data ? [data] : [])[0];
+    if (!p) return null;
+    return (await this.legacy([p.studentId], now)).has(p.studentId) ? null : p;
   }
 
   /**

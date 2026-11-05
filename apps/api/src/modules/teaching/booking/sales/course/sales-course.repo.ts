@@ -54,11 +54,20 @@ export class SalesCourseRepo {
   }
 
   /**
-   * The subscription the course books: the newest unpaid or active one WITHOUT a course (owner
-   * 2026-11-06: a family with two active packages books the older one too), else the newest (its
-   * course is booked: course_exists, and the view shows it), or null.
+   * The subscription the course books: the newest unpaid or active one, or (owner 2026-11-06: a
+   * family with two packages books the older one too) the newest WITHOUT a course of its own. Not
+   * for a student with an imported course (a rule with no subscription_id): its old packages were
+   * taught on that course and look unbooked. null without any.
    */
   async subscription(studentId: string): Promise<CourseSubscription | null> {
+    const [subs, imported] = await Promise.all([this.openPackages(studentId), this.imported(studentId)]);
+    const row = (imported ? undefined : subs.find((r) => r.rules.length === 0)) ?? subs[0];
+    if (!row) return null;
+    const { rules, ...sub } = row;
+    return toSubscription(sub);
+  }
+
+  private async openPackages(studentId: string) {
     const { data, error } = await this.db
       .from('subscriptions')
       .select('id, package, duration, lessons_total, lessons_used_before, starts_on, rules:schedule_rules(id)')
@@ -67,10 +76,19 @@ export class SalesCourseRepo {
       .order('created_at', { ascending: false })
       .limit(SUBSCRIPTIONS_READ);
     if (error) throw dbError(error);
-    const row = data.find((r) => r.rules.length === 0) ?? data[0];
-    if (!row) return null;
-    const { rules, ...sub } = row;
-    return toSubscription(sub);
+    return data;
+  }
+
+  /** Has the student any rule not tied to a package (imported, admin-booked)? */
+  private async imported(studentId: string): Promise<boolean> {
+    const { data, error } = await this.db
+      .from('schedule_rule_students')
+      .select('rule:schedule_rules!inner(id)')
+      .eq('student_id', studentId)
+      .is('rule.subscription_id', null)
+      .limit(1);
+    if (error) throw dbError(error);
+    return data.length > 0;
   }
 
   /** The student's active rules (schedule_rule_students → schedule_rules.status = 'active'). */

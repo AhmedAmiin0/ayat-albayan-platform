@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { SalesCourseRepo } from './sales-course.repo';
 
+/** No rule without a package (not an imported student), twice. */
+const notImported = () => ({ schedule_rule_students: [{ data: [] }, { data: [] }] });
 const SUB = { id: 'sub1', package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-10' };
 
 describe('SalesCourseQueries', () => {
@@ -14,7 +16,8 @@ describe('SalesCourseQueries', () => {
   });
 
   it('subscription: the newest unpaid or active one of the student', async () => {
-    const t = fakeDb({ subscriptions: [{ data: [{ ...SUB, rules: [] }] }, { data: [] }] });
+    const subs = [{ data: [{ ...SUB, rules: [] }] }, { data: [] }];
+    const t = fakeDb({ subscriptions: subs, ...notImported() });
     const q = new SalesCourseRepo(t.db);
     expect(await q.subscription('s1')).toEqual(SUB);
     expect(t.argsOf('subscriptions', 'in')).toEqual(['status', ['unpaid', 'active']]);
@@ -24,18 +27,28 @@ describe('SalesCourseQueries', () => {
 
   it('subscription: the newest one WITHOUT a course (two active packages, the older one unbooked)', async () => {
     const older = { ...SUB, id: 'sub0', rules: [] };
-    const t = fakeDb({ subscriptions: [{ data: [{ ...SUB, rules: [{ id: 'r1' }] }, older] }] });
+    const t = fakeDb({ subscriptions: [{ data: [{ ...SUB, rules: [{ id: 'r1' }] }, older] }], ...notImported() });
     expect(await new SalesCourseRepo(t.db).subscription('s1')).toEqual({ ...SUB, id: 'sub0' });
+  });
+
+  it('subscription: a student with an imported course books the newest only (old packages were taught)', async () => {
+    const older = { ...SUB, id: 'sub0', rules: [] };
+    const t = fakeDb({
+      subscriptions: [{ data: [{ ...SUB, rules: [{ id: 'r1' }] }, older] }],
+      schedule_rule_students: [{ data: [{ rule: { id: 'legacy' } }] }],
+    });
+    expect(await new SalesCourseRepo(t.db).subscription('s1')).toEqual(SUB);
   });
 
   it('subscription: every package booked → the newest (course_exists, the view shows its course)', async () => {
     const booked = [{ ...SUB, rules: [{ id: 'r1' }] }, { ...SUB, id: 'sub0', rules: [{ id: 'r0' }] }];
-    const t = fakeDb({ subscriptions: [{ data: booked }] });
+    const t = fakeDb({ subscriptions: [{ data: booked }], ...notImported() });
     expect(await new SalesCourseRepo(t.db).subscription('s1')).toEqual(SUB);
   });
 
   it('subscription: a duration outside 30/45/60/90 is a broken row (throws)', async () => {
-    const t = fakeDb({ subscriptions: [{ data: [{ ...SUB, duration: 50, rules: [] }] }] });
+    const subs = [{ data: [{ ...SUB, duration: 50, rules: [] }] }];
+    const t = fakeDb({ subscriptions: subs, ...notImported() });
     await expect(new SalesCourseRepo(t.db).subscription('s1')).rejects.toThrow('duration 50');
   });
 

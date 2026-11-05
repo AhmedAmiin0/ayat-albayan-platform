@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
 import { CourseActionsSection } from '@/students';
-import { useCourseState } from './student-api';
+import { useCourseState } from '@/sales/sales/student/student-api';
 
 interface StudentCourseSectionProps {
   studentId: string;
@@ -35,6 +35,7 @@ export function StudentCourseSection(props: StudentCourseSectionProps) {
         studentId={studentId}
         subscriptionId={subscriptionId}
         moves={acts && course.moves}
+        movesOf={course.movesOf}
       />
     </>
   );

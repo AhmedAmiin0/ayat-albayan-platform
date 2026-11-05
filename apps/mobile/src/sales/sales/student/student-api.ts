@@ -24,8 +24,13 @@ export const useSalesStudent = (id: string) =>
 interface CourseState {
   /** «أيام الحلقات»: the package may be booked now (GET /sales/booking/course: blocked null). */
   book: boolean;
-  /** «تغيير المعلم» / «تغيير موعد الحلقات»: a course runs or is booked ahead (`current`). */
+  /**
+   * «تغيير المعلم» / «تغيير موعد الحلقات»: a course runs or is booked ahead (`current`), or an
+   * imported one blocks the wizard (course_exists without `current`).
+   */
   moves: boolean;
+  /** The package of `current`: the moves change that course, not a newer unbooked package. */
+  movesOf: string | null;
 }
 
 /**
@@ -37,8 +42,12 @@ export const courseState = (
   failed: boolean,
 ): CourseState => ({
   book: view?.blocked === null,
-  moves: view ? Boolean(view.current) : failed,
+  moves: view ? hasCourse(view) : failed,
+  movesOf: view?.current?.subscriptionId ?? null,
 });
+
+const hasCourse = (view: SalesCourseView): boolean =>
+  Boolean(view.current) || view.blocked === 'course_exists';
 
 /** The course view of a student she acts on (owner 2026-11-06): «أيام الحلقات», or its moves. */
 export function useCourseState(studentId: string, acts: boolean): CourseState {
