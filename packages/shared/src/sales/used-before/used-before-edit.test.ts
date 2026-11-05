@@ -12,8 +12,7 @@ const base = {
 };
 
 describe('usedBeforeEditMax', () => {
-  // #610 (owner 2026-11-02): every lesson but one, whatever the days a week.
-  it('is usedBeforeMax for an untouched package (8 lessons: 7)', () => {
+  it('is usedBeforeMax for an untouched package (every lesson but one: 8 → 7)', () => {
     expect(usedBeforeEditMax({ lessonsTotal: 8, platformUsed: 0, pastStart: true })).toBe(7);
     expect(usedBeforeEditMax({ lessonsTotal: 12, platformUsed: 0, pastStart: true })).toBe(11);
   });
@@ -31,12 +30,12 @@ describe('usedBeforeEditMax', () => {
 describe('usedBeforeEditProblem', () => {
   it('accepts 0..max on a package without a course', () => {
     expect(usedBeforeEditProblem({ ...base, next: 0 })).toBeNull();
-    expect(usedBeforeEditProblem({ ...base, next: 6 })).toBeNull();
+    expect(usedBeforeEditProblem({ ...base, next: 7 })).toBeNull();
   });
 
   it('refuses more than the max: never the whole package', () => {
-    expect(usedBeforeEditProblem({ ...base, next: 7 })).toBeNull();
     expect(usedBeforeEditProblem({ ...base, next: 8 })).toBe('used_before_too_many');
+    expect(usedBeforeEditProblem({ ...base, next: 9 })).toBe('used_before_too_many');
     expect(usedBeforeEditProblem({ ...base, next: 4, platformUsed: 5, pastStart: true })).toBe('used_before_too_many');
   });
 

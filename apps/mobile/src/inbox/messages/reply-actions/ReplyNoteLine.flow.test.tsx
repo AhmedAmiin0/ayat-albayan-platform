@@ -4,7 +4,7 @@ import { Pressable, Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery, seedPublicConfig } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
@@ -42,8 +42,10 @@ const YES = message({ id: 'm-y', direction: 'inbound', body: 'ايوة', guardia
 const NO = 'لم تتأكد أي حلقة بهذا الرد';
 const SALES: Permission[] = [...selfPermissionsOf('sales'), 'lessons.reschedule', 'lessons.confirm'];
 
-async function renderNote(m: typeof ASK, permissions?: Permission[]) {
+/** `required`: settings.lesson_confirmation_required (default OFF since owner 2026-11-02). */
+async function renderNote(m: typeof ASK, permissions?: Permission[], required = true) {
   const client = createTestQueryClient();
+  seedPublicConfig(client, { lesson_confirmation_required: required });
   if (permissions) client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions });
   // «تأكيد الحلقة» only while the academy requires a confirmation (#619).
   const config = { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: false };
@@ -99,5 +101,11 @@ test('«ايوة» without the right to confirm: nothing at all', async () => {
   await renderNote(YES, ['lessons.reschedule']);
   expect(screen.queryByRole('button')).toBeNull();
   expect(screen.queryByText(NO)).toBeNull();
+  expect(screen.queryByText(t.inbox.replyAction.confirm)).toBeNull();
+});
+
+test('«ايوة» while no confirmation is required (the default): no «تأكيد الحلقة»', async () => {
+  await renderNote(YES, SALES, false);
+  expect(screen.queryByRole('button', { name: /^تأكيد حلقة/ })).toBeNull();
   expect(screen.queryByText(t.inbox.replyAction.confirm)).toBeNull();
 });
