@@ -9,7 +9,7 @@ const q = (over: object = {}) => ({ q: '', settings: SETTINGS, ...over });
 
 describe('«القيم» rows', () => {
   it('builds each group’s rows', () => {
-    expect(groupRows('reports', []).map(rowKey)).toEqual(['report_teacher_edit_hours', 'report_form_v2']);
+    expect(groupRows('reports', []).map(rowKey)).toEqual(['report_teacher_edit_hours', 'report_form_v2', 'short_link_base']);
     expect(groupRows('sending', [])[0]).toMatchObject({ kind: 'setting', owned: true });
     expect(groupRows('accounts', [])[0]).toMatchObject({ owned: false });
     expect(groupRows('google', []).map(rowKey)).toEqual(['google_sync_enabled', 'google_sync_mode', 'google_calendar_window_days']);
