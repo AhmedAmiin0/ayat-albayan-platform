@@ -5,6 +5,7 @@ import {
   type ProfileCourseView,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
+import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { CourseChangeRepo } from '@/modules/teaching/booking/course-change/course-change.repo';
@@ -23,10 +24,23 @@ interface Move {
 }
 
 /**
+ * An assistant (base role sales) changes her own students' courses while SalesOwnershipRule
+ * enforces it (owner 2026-11-02, «update student booking»), ANY with sales.renew_any; every other
+ * holder of the key, and every assistant while the rule is off, ANY student.
+ */
+const ownsOnly = (user: AuthUser): boolean => user.role === 'sales' && !can(user, 'sales.renew_any');
+
+const actorOf = (user: AuthUser): ChangeActor => ({
+  user,
+  role: user.role === 'admin' ? 'admin' : 'sales',
+  anyStudent: !ownsOnly(user),
+});
+
+/**
  * «تغيير المعلم» and «تغيير موعد الحلقات» from the student's profile (owner 2026-10-30): the same
  * CourseChange as the lesson drawer's «تغيير أيام الحلقات» (the remaining count kept, the conflict
- * check, one transaction, audited), for ANY student, by whoever holds the route's key. The admin
- * may override a clash with a reason; every other holder never (403 override_not_allowed). A
+ * check, one transaction, audited), by whoever holds the route's key (an assistant: actorOf). The
+ * admin may override a clash with a reason; every other holder never (403 override_not_allowed). A
  * teacher change also moves students.teacher_id (the family channel follows it). Past lessons,
  * reports and earnings are never touched; the calendar sync hears every moved and new lesson
  * through the lessons' outbox triggers (docs/24).
@@ -41,9 +55,14 @@ export class ProfileCourse {
   ) {}
 
   /** The course to change, with its current teacher and «من تاريخ»'s default (the next lesson). */
-  async view(studentId: string, picked?: string): Promise<ProfileCourseView> {
+  async view(
+    studentId: string,
+    picked: string | undefined,
+    user: AuthUser,
+  ): Promise<ProfileCourseView> {
     const subscriptionId = picked ?? (await this.repo.currentSubscription(studentId));
     await this.ownedBy(studentId, subscriptionId);
+    await this.course.owned(subscriptionId, actorOf(user));
     const view = await this.views.view(subscriptionId);
     const course = await this.queries.course(subscriptionId);
     const upcoming = await this.repo.upcoming(course.map((r) => r.rule_id));
@@ -80,8 +99,7 @@ export class ProfileCourse {
   private async guarded<T>(move: Move, run: (actor: ChangeActor) => Promise<T>): Promise<T> {
     await this.ownedBy(move.studentId, move.body.subscriptionId);
     if (move.body.teacherId !== undefined) await this.assertTeacher(move.body);
-    const role = move.user.role === 'admin' ? 'admin' : 'sales';
-    return run({ user: move.user, role, anyStudent: true });
+    return run(actorOf(move.user));
   }
 
   /** 404 subscription_not_found unless the package is this student's. */

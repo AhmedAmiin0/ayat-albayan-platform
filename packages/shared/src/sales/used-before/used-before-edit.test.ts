@@ -12,7 +12,7 @@ const base = {
 };
 
 describe('usedBeforeEditMax', () => {
-  it('is usedBeforeMax for an untouched package (8 lessons: every lesson but one, 7)', () => {
+  it('is usedBeforeMax for an untouched package (every lesson but one: 8 → 7)', () => {
     expect(usedBeforeEditMax({ lessonsTotal: 8, platformUsed: 0, pastStart: true })).toBe(7);
     expect(usedBeforeEditMax({ lessonsTotal: 12, platformUsed: 0, pastStart: true })).toBe(11);
   });

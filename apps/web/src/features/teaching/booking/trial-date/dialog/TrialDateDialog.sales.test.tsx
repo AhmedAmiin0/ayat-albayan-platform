@@ -24,6 +24,7 @@ async function toReview(answers: unknown[]) {
   const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });
   await waitFor(() => expect(abrar).toHaveProperty('checked', true));
   next();
+  next(); // «مدة الحلقة»: the last trial's length, kept
   const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
   fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
   next();
@@ -62,5 +63,16 @@ describe('TrialDateDialog, sales (R-ASST-01)', () => {
     expect(screen.getByText('موعد واحد')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.trialDate.showHistory }));
     expect(within(screen.getByTestId('trial-date-history')).getByText(t.trialDate.outcome.absent)).toBeTruthy();
+  });
+
+  it('her own meeting link goes with the new date (owner 2026-11-02)', async () => {
+    await toReview([DONE]);
+    const link = screen.getByLabelText(t.booking.meetingLink);
+    fireEvent.change(link, { target: { value: 'https://meet.jit.si/ab-trial' } });
+    fireEvent.click(screen.getByRole('button', { name: t.trialDate.submit }));
+    expect(await screen.findByText(t.trialDate.done)).toBeTruthy();
+    const [body] = sentTo(apiSend, `${BASE}/trial-date`);
+    expect(body).toMatchObject({ meetingLink: 'https://meet.jit.si/ab-trial', durationMin: 45 });
+    expect(sentTo(apiSend, `${BASE}/trial-date/check`).every((b) => !b.meetingLink)).toBe(true);
   });
 });
