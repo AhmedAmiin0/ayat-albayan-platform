@@ -1,3 +1,4 @@
+export { OutcomeCorrection } from './auto-held/outcome-correction';
 export { LessonsModule } from './lessons.module';
 export { RescheduleOneService } from './reschedule/reschedule-one.service';
 export {

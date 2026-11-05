@@ -24,6 +24,7 @@ const LEGACY_PAGE_ORDER = [
   'calls_permission_template',
   'booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available',
   'lesson_confirmation_required',
+  'lesson_outcome_grace_minutes',
   'join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
   'meeting_link_auto', 'meetings_in_app',
   'report_teacher_edit_hours', 'report_form_v2',

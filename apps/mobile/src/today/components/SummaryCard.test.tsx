@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react-native';
+import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { confirmingQueryClient, renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, noConfirmQueryClient, renderWithQuery } from '@/test/query';
 import { SummaryCard } from './SummaryCard';
 
 const counts = { all: 12, scheduled: 5, completed: 3 };
@@ -20,8 +20,8 @@ test('the short wording: «للتأكيد», not the two-word «تحتاج تأ�
   expect(t.today.summary.scheduled).toBe('للتأكيد');
 });
 
-test('no confirmation required (the default): «قادمة» in ink, no «للتأكيد» and no saffron dot', async () => {
-  await render(<SummaryCard counts={counts} filter="all" onFilter={jest.fn()} />);
+test('no confirmation required (OFF): «قادمة» in ink, no «للتأكيد» and no saffron dot', async () => {
+  await renderWithQuery(<SummaryCard counts={counts} filter="all" onFilter={jest.fn()} />, noConfirmQueryClient());
   expect(screen.getByText(t.lessons.noConfirm.scheduledShort)).toBeTruthy();
   expect(screen.queryByText(t.today.summary.scheduled)).toBeNull();
 });

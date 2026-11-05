@@ -1,5 +1,4 @@
 export {
-  canCorrectAutoHeld,
   lessonStatusLabel,
   lessonStatusLook,
   type LessonStatusWords,

@@ -7,6 +7,8 @@ import { AutoHeldCorrection } from './auto-held/auto-held-correction';
 import { AutoHeldJob } from './auto-held/auto-held.job';
 import { AutoHeldRepo } from './auto-held/auto-held.repo';
 import { AutoHeldService } from './auto-held/auto-held.service';
+import { OutcomeSettleService } from './auto-held/outcome-settle.service';
+import { OutcomeCorrection } from './auto-held/outcome-correction';
 import { LessonAccess } from './store/lesson-access';
 import { LessonActionsController } from './status/lesson-actions.controller';
 import { LessonCancelService } from './status/lesson-cancel.service';
@@ -44,7 +46,9 @@ import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
  * GET /lessons/overview is the all-teachers calendar (R-SCH-09). PATCH /lessons/:id/time is
  * «عدّل الوقت» (R-SCH-11): one lesson edited in place. AutoHeldJob (owner 2026-11-02): with
  * no confirmation required, a lesson still open 30 min after its end counts as held;
- * AutoHeldCorrection undoes it.
+ * AutoHeldCorrection undoes it. With one required (owner 2026-11-03, the default) it settles
+ * confirmed → completed and reminded → no_show (OutcomeSettleService); OutcomeCorrection is
+ * «تصحيح الحالة» (POST /lessons/:id/correct, and sales' own route).
  */
 @Module({
   imports: [SchedulingModule, SubscriptionsModule, TeachersModule, ScheduleNoticesModule],
@@ -63,6 +67,8 @@ import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
     AutoHeldJob,
     AutoHeldRepo,
     AutoHeldService,
+    OutcomeSettleService,
+    OutcomeCorrection,
     LessonAccess,
     LessonCancelService,
     LessonProposalRepo,
@@ -83,6 +89,13 @@ import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
     TimeEditPayout,
     TimeEditRepo,
   ],
-  exports: [LessonCancelService, LessonStatusService, LessonViews, RescheduleOneService, TeacherMeRepo],
+  exports: [
+    LessonCancelService,
+    LessonStatusService,
+    LessonViews,
+    OutcomeCorrection,
+    RescheduleOneService,
+    TeacherMeRepo,
+  ],
 })
 export class LessonsModule {}

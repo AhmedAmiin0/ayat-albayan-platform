@@ -1,4 +1,10 @@
-import { isOpenLesson, type SalesCancel, type SalesScheduleLesson } from '@ab/shared';
+import {
+  correctionTargets,
+  isOpenLesson,
+  type CorrectTo,
+  type SalesCancel,
+  type SalesScheduleLesson,
+} from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 
 /** Who cancelled (POST /sales/lessons/:id/cancel `by`); none = «ألغتها الإدارة». */
@@ -26,8 +32,11 @@ const CHOICES: Record<'on' | 'off', Record<When, readonly SalesCancelBy[]>> = {
 interface CancelRights {
   /** «إلغاء الحلقة» and who may be recorded; empty = no cancel. */
   cancelBy: readonly SalesCancelBy[];
-  /** «لم تنعقد الحلقة؟» on a held lesson (409 not_auto_held unless held automatically). */
-  correct: boolean;
+  /**
+   * «تصحيح حالة الحلقة» targets (owner 2026-11-03): an ended open lesson, or a held / absent one
+   * (the sales row has no auto flag: 409 not_auto_held unless the job settled it); [] = none.
+   */
+  correct: readonly CorrectTo[];
 }
 
 interface CancelInput {
@@ -43,19 +52,18 @@ const choicesFor = (lesson: SalesScheduleLesson, input: CancelInput): readonly S
   const table = CHOICES[input.required ? 'on' : 'off'];
   return isOpenLesson(lesson.status) ? table[whenOf(lesson, input.now)] : [];
 };
-const isHeld = (lesson: SalesScheduleLesson): boolean => lesson.status === 'completed';
 const whenOf = (lesson: SalesScheduleLesson, now: Date): When =>
   Date.parse(lesson.ends_at) > now.getTime() ? 'before' : 'after';
 
-/** What «إلغاء الحلقة» and «لم تنعقد الحلقة؟» offer on this lesson; the API checks each again. */
+/** What «إلغاء الحلقة» and «تصحيح حالة الحلقة» offer on this lesson; the API checks each again. */
 export function salesCancelRights(lesson: SalesScheduleLesson, input: CancelInput): CancelRights {
   const may = input.holds && hasStudents(lesson);
   return {
     cancelBy: may ? choicesFor(lesson, input) : [],
-    correct: may && isHeld(lesson),
+    correct: may ? correctionTargets(lesson, input.now) : [],
   };
 }
 
 /** Anything to do here: a cancel or a correction. */
 export const offersCancel = (rights: CancelRights): boolean =>
-  rights.cancelBy.length > 0 || rights.correct;
+  rights.cancelBy.length > 0 || rights.correct.length > 0;

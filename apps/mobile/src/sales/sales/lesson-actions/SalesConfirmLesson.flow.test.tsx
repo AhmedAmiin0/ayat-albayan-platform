@@ -56,11 +56,11 @@ test('a confirmed lesson offers no confirm, only her move / cancel (any lesson)'
   expect(screen.getByRole('button', { name: a.cancel })).toBeTruthy();
 });
 
-test('an ended lesson offers no action and stays «للاطلاع فقط»', async () => {
+test('an ended lesson offers no confirm, move or cancel: «تصحيح حالة الحلقة» only', async () => {
   mockApiFetch.mockImplementation(day([{ ...OTHERS, starts_at: '2026-10-01T12:00:00.000Z', ends_at: '2026-10-01T12:45:00.000Z' }]));
   await open();
   for (const name of [a.confirm, a.reschedule, a.cancel]) expect(screen.queryByRole('button', { name })).toBeNull();
-  expect(screen.getByText(t.lessons.sheet.readOnly)).toBeTruthy();
+  expect(screen.getByText(t.lessons.correct.outcomeTitle)).toBeTruthy();
 });
 
 test('without lessons.confirm the button is not there', async () => {

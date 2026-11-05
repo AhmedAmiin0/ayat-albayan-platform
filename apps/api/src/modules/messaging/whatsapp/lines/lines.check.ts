@@ -4,6 +4,7 @@ import { lineEnvs, loadEnv, type WhatsappEnv } from '@/config/env/env';
 import { graphHttp, type FetchLike, type GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { crmConn, crmLineCheck } from './lines.check.crm';
 import { driverOf, type LineDriver } from './lines.check.driver';
+import { withMetaReady } from './lines.check.meta';
 import { phoneNumberSchema, subscribedAppsSchema } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
@@ -11,7 +12,6 @@ type Phone = Pick<
   LineCheckView,
   'display_phone_number' | 'verified_name' | 'quality_rating' | 'status' | 'name_status' | 'code_verification_status'
 >;
-type Apps = NonNullable<LineCheckView['subscribed_apps']>;
 type Step = LineCheckView['errors'][number]['step'];
 type Outcome<T> = { ok: true; value: T } | { ok: false; error: LineCheckView['errors'][number] };
 
@@ -62,7 +62,7 @@ async function phoneOf(conn: GraphConn): Promise<Phone> {
   };
 }
 
-async function appsOf(conn: GraphConn): Promise<Apps> {
+async function appsOf(conn: GraphConn): Promise<NonNullable<LineCheckView['subscribed_apps']>> {
   const path = `${encodeURIComponent(conn.env.wabaId)}/subscribed_apps`;
   const body = await graphHttp(conn).json({ path, schema: subscribedAppsSchema });
   return body.data.map(({ whatsapp_business_api_data: a, override_callback_uri: uri }) => ({
@@ -91,11 +91,13 @@ export class LinesCheck {
       notifications: env.WA_APP_ID,
       chat: env.WA_CHAT_APP_ID,
     };
+    const ctx = { env, fetch: this.fetch, timeoutMs: this.timeoutMs, apps: appsOf };
     return Promise.all(
-      WA_LINES.map((line) => {
+      WA_LINES.map(async (line) => {
         const driver = driverOf(env, line);
         const appId = driver.provider === 'meta' ? (appIds[line] ?? null) : null;
-        return this.one({ line, env: envs[line], appId, checkedAt, driver });
+        const view = await this.one({ line, env: envs[line], appId, checkedAt, driver });
+        return withMetaReady(view, { ...ctx, line });
       }),
     );
   }

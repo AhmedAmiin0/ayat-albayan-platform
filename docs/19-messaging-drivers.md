@@ -375,15 +375,16 @@ the `Authorization: Bearer` is accepted when it is the notifications line's own 
 when the CRM itself answers `GET /me` for it with the same `account.id` as the line's key and the
 `messages:send` scope (`relay.keys.ts`; an accepted key is remembered as its sha256 for 10 minutes). The send
 always goes with the line's key. No new key or secret. Wrong or missing key → 401; the CRM unreachable during
-the check → 502; notifications line not on the crm driver → 503; invalid body → 422; failures use the CRM's
+the check → 502; notifications line not configured or `WACRM_API_BASE` / `WACRM_API_KEY` unset → 503; invalid body → 422; failures use the CRM's
 envelope `{error:{message, code}}`.
 
 **What happens.** One `messages` row (outbound, line notifications, the module-mode number stamped, no lead,
 guardian or staff, `created_by` null) is written first, with a readable body (template: `[name]` + its body
 values; document: caption, file name, link), so it shows in the family's or teacher's chat with its ticks (the
 `/webhooks/wacrm` status path matches its wamid). Then the body goes, unchanged in shape and with the CRM's own
-template name (no translation through our templates table), through the notifications line's crm driver
-(`CrmWhatsappClient.sendBody`: same allow-list, same call). Not gated by «الرسائل التلقائية»: the script decides.
+template name (no translation through our templates table), through the notifications line's current driver
+(`CrmWhatsappClient.sendBody`, or on a meta line `HttpWhatsappClient.sendBody`: the same body as Graph's
+template / text / document message, `buttonParams` as URL-button suffixes; same allow-list). Not gated by «الرسائل التلقائية»: the script decides.
 Idempotent (rule 8): `dedup_key` = `script-relay:` + sha256 of recipient, type, content and the 15-minute window,
 so the script's retries (it retries 429 / 5xx with no key) send once. A CRM 4xx refusal answers the same 4xx (the
 row is removed, nothing was sent, so a retry is a fresh send); a CRM 5xx or network error answers 502 and the
@@ -393,7 +394,61 @@ row is kept as «uncertain» (a retry in the window gets the first row back, uns
 **Cut-over (owner step).** In the Apps Script project → Project Settings → Script Properties, change `CRM_URL`
 only, to `<API origin>/script-relay` (production: `https://api.ayatalbayan.com/script-relay`, no trailing
 slash needed). `CRM_API_KEY` stays as it is (any key of the CRM account with `messages:send`). The notifications
-line must be on «نظام CRM». **Rollback:** set `CRM_URL` back to the CRM's own URL (`https://crm.ayatalbayan.com`).
+line may be on «نظام CRM» or, after «CRM → Meta» below, on Meta: the relay sends through the line's CURRENT
+driver (`relay.line.ts`), the key is still checked against the CRM account, so `WACRM_API_BASE` /
+`WACRM_API_KEY` must stay set while the script runs (unset → 503). **Rollback:** set `CRM_URL` back to the CRM's own URL (`https://crm.ayatalbayan.com`).
+
+### CRM → Meta: the notifications line leaves the CRM (owner 2026-11-03)
+
+Owner: «migrate to the platform notification leaving the crm». The CRM is connected to the SAME Meta WABA and
+number, so every template it sends is already on that WABA under the CRM's names. Switching the notifications
+line from `crm` to `meta` is a settings change only: **no new template, no migration**.
+
+**One resolution for every driver** (`drivers/waba/`). A row's WABA name / language is `crm_name` /
+`crm_language` (shown as «اسم القالب في واتساب», editable on crm and meta lines), else the old script's
+default (`CRM_DEFAULT_NAMES`), else `meta_name` / `language`; its values are the producer's `params.crm` for
+that template, else its own. The crm driver posts it to the CRM (`crm-body.ts`), the meta driver builds Graph
+components from it (`waba-graph.ts`): the same template and values on either driver.
+
+| Platform key | WABA template | Values sent |
+|---|---|---|
+| teacher_new_student | `teacher_lesson_v2` | body [teacher, students, codes, time, duration]; URL buttons 0 room, 1 report |
+| teacher_lesson_reminder, teacher_lesson_reminder_meet | `teacher_lesson_reminder` | body [teacher, one line]; no button |
+| report_ready (crm_name `report_session`) | the PDF as a document message, then `report_trial_session` / `report_session` | no variables |
+| every other key (booking_confirmation(_meet/_plain), lesson_reminder (`lesson_reminder_v2`), _meet, _plain, …) | its `crm_name`, else `meta_name` | its own values and buttons |
+
+A row queued without `params.crm` (a value missing) goes by its `meta_name` and own values on both drivers.
+
+**Sync and missing.** On a meta line, a key whose WABA name differs from `meta_name` is read by that name: its
+WABA template approved → the key approved (status, quality and reason only; the row keeps its own body,
+buttons and `meta_id`), never missing because `meta_name` is absent. Those WABA templates (and both report
+templates) are never imported as new rows. Meta's #132001 marks the key missing on a meta line as on a crm one
+(`template-missing.ts`), only for the name it went as; the next sync restores it. Saving a line as meta
+(«التكاملات» `WA_PROVIDER`, or a role's default number in «الأرقام») runs one sync of that line.
+
+**Owner steps (Meta Business Manager, then the platform).**
+
+1. Business settings → System users → a system user with **full control** of the notifications WABA; generate
+   a token (never expires) with `whatsapp_business_messaging` and `whatsapp_business_management`, for the
+   academy's Meta app.
+2. «التواصل» ← «الحماية» / «الأرقام»: `WA_PHONE_NUMBER_ID`, `WA_WABA_ID`, `WA_APP_ID`, the token as
+   `WA_ACCESS_TOKEN`, the app secret as `WA_APP_SECRET`, a random `WA_VERIFY_TOKEN`. Keep `WACRM_*` as they
+   are (the script relay checks its key with them).
+3. Meta app → WhatsApp → Configuration → Webhook: URL `https://api.ayatalbayan.com/webhooks/whatsapp`, verify
+   token = `WA_VERIFY_TOKEN`; subscribe the field **messages**.
+4. Subscribe the app to the WABA (`POST /{WABA_ID}/subscribed_apps` with the token, or Meta's UI).
+5. «افحص الخطوط» (still on crm): «الجاهزية للإرسال عبر ميتا مباشرة» must show the app secret set, the
+   verify token set and the app subscribed.
+6. At a quiet hour (no reminder due in the next minutes), set `WA_PROVIDER` (or the notifications number's
+   provider) to «Meta مباشرة» and save: the templates sync once. Check «القوالب» (the teacher keys and
+   report_ready approved), then send one test to a number in `WA_ALLOWED_RECIPIENTS`.
+
+**Never deregister the number** (`/deregister`, or deleting it in WhatsApp Manager): the CRM and the platform
+share it, and the rollback needs it as is.
+
+**Rollback:** set `WA_PROVIDER` (or the number's provider) back to «نظام CRM» and save. Nothing else changes;
+the CRM sends again with the same names and values. Rows the meta line marked missing (#132001) stay missing
+until marked approved again on «القوالب» («علِّمه معتمدًا في نظام CRM»).
 
 ### Files imported from the old CRM: our own copy of all of them (owner 2026-10-27 «Fix it»)
 

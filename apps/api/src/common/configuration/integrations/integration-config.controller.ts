@@ -17,6 +17,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { integrationKeyAvailable, stripeServerKey } from '@/config/env/env.stripe';
 import { IntegrationConfigService, INTEGRATIONS_ENTITY_ID } from './integration-config.service';
+import { lineSaved, savedLines } from './provider-saved';
 
 // A key this server does not offer (a Stripe one without FEATURE_STRIPE) is an unknown key: 400.
 const secretKey = z
@@ -65,6 +66,8 @@ export class IntegrationConfigController {
     const { values } = parseOrThrow(valuesBody, body);
     await this.config.writeValues(values, user.id);
     await this.record(user, { action: 'update', keys: Object.keys(values) });
+    // A line saved as meta syncs its templates once (docs/19 «CRM → Meta»), in the background.
+    savedLines(values).forEach(lineSaved);
     return this.config.items();
   }
 

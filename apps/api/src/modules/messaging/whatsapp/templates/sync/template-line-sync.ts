@@ -1,7 +1,7 @@
 import type { TemplateLineFacts, TemplateLineSync, WaLine } from '@ab/shared';
 import { lineFacts, readError } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { newStarters } from './template-import';
-import { findMeta, syncPatch } from './template-sync';
+import { wabaSyncPatch } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
 import { CRM_MANAGED } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { WaError, type MetaTemplate, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -45,7 +45,7 @@ export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Pro
   const rows = await deps.queries.all();
   let synced = 0;
   for (const row of rows.filter((r) => r.line === line)) {
-    if (await deps.queries.update(row.key, syncPatch(row, findMeta(row, list), now))) synced += 1;
+    if (await deps.queries.update(row.key, wabaSyncPatch(row, list, now))) synced += 1;
   }
   const plan = newStarters({ meta: list, known: rows, now, line });
   plan.skipped.forEach((s) => deps.log.warn(`${line} template ${s.name} not imported: ${JSON.stringify(s.reason)}`));
