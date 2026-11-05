@@ -25,7 +25,8 @@ function show(mode: InboxMode, tries: boolean, choice?: 'template' | 'wait') {
     ['/auth/me', me],
     ['/messaging/templates', [template({ key: 'free_trial_invite' })]],
   ]);
-  const flag = tries ? { try_after_window: true, ...(choice ? { reopen_choice: choice } : {}) } : {};
+  const picked = choice ? { reopen_choice: choice } : {};
+  const flag = tries ? { try_after_window: true, ...picked } : {};
   const closed = thread({ session_open: false, ...flag });
   renderWithClient(
     <InboxModeContext.Provider value={mode}>

@@ -18,7 +18,7 @@ const CHOICES = choiceSchema.options;
 
 /** The value a picked choice stores: the default starter template, or «بدون قالب». */
 const VALUE_OF: Record<ReopenChoice, string> = {
-  template: String(settingDef('chat_reopen_template').default),
+  template: z.string().parse(settingDef('chat_reopen_template').default),
   wait: REOPEN_NO_TEMPLATE,
 };
 

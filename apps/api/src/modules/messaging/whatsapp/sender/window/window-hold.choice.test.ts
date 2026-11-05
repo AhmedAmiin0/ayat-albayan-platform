@@ -99,7 +99,7 @@ describe('WindowRelease — a text held without a template', () => {
 describe('WindowRelease — a staff retry not held yet (review finding 1)', () => {
   it('queued AWAITING_REPLY with a retry time but no deadline: never failed as orphaned', async () => {
     f = windowFakes();
-    const retried = { ...staffText(), scheduled_for: NOW.toISOString(), error_text: null, expires_at: null };
+    const retried = { ...staffText(), scheduled_for: NOW.toISOString(), expires_at: null };
     f.repo.waiting.mockResolvedValue([retried] as never);
     await f.release.run(NOW);
     expect(f.repo.fail).toHaveBeenCalledWith([], expect.anything());
