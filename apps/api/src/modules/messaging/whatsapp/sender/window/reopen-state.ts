@@ -13,7 +13,7 @@ export type ReopenRow = Pick<
 >;
 
 /** Reopen tries per phone per Riyadh day: a template failing again sends no more calls today. */
-export const REOPEN_TRIES = 3;
+const REOPEN_TRIES = 3;
 /** One reopen per phone per 24 h: the reads' span, and each row's own life (expires_at). */
 export const DAY_MS = 24 * 60 * 60_000;
 

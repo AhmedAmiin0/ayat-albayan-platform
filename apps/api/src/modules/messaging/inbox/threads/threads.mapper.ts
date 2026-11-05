@@ -18,7 +18,7 @@ import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.m
 export type ThreadRow = Tables<'v_threads'>;
 
 /** The family tags (null: none), and can a closed chat be reopened (ReopenRequest.usable)? */
-export interface ThreadViewOpts {
+interface ThreadViewOpts {
   tag?: FamilyTag | null;
   reopenUsable?: boolean;
 }
