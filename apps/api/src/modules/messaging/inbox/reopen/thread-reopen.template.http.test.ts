@@ -1,3 +1,4 @@
+import { reopenDedupKey } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { messageRow } from '../../whatsapp/sender/sender.fakes';
 import { templateRow } from '../../whatsapp/whatsapp.fakes';
@@ -30,7 +31,7 @@ describe('POST /threads/:phone/reopen — the configured template', () => {
     t.queries.enqueue.mockImplementation(async (r: object) => messageRow({ ...r, id: 'm9', status: 'queued' }));
     t.queries.get.mockResolvedValue(null);
     t.templates.get.mockImplementation(async (key: string) => registry[key] ?? null);
-    t.reopens.requestedSince.mockResolvedValue(false);
+    t.reopens.nextKey.mockResolvedValue(reopenDedupKey(PHONE, new Date()));
     t.kapso.reopen.mockResolvedValue(true);
   });
 
@@ -38,7 +39,7 @@ describe('POST /threads/:phone/reopen — the configured template', () => {
     registry.inquiry_followup_ar_v2 = row('inquiry_followup_ar_v2');
     expect((await reopen()).json()).toEqual({ kapso_reopened: true, template: 'template_queued' });
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ template_key: 'inquiry_followup_ar_v2' }));
-    expect(t.reopens.requestedSince).toHaveBeenCalledWith(PHONE, expect.any(Date), 'inquiry_followup_ar_v2');
+    expect(t.reopens.nextKey).toHaveBeenCalledWith(PHONE, expect.any(Date));
   });
 
   it('v2 missing (v1 approved): template_unavailable, Kapso still reopened, nothing queued, no fallback to v1', async () => {
@@ -62,7 +63,7 @@ describe('POST /threads/:phone/reopen — the configured template', () => {
     t.reopens.templateKey.mockResolvedValue('reopen_custom');
     registry.reopen_custom = row('reopen_custom');
     expect((await reopen()).json().template).toBe('template_queued');
-    expect(t.reopens.requestedSince).toHaveBeenCalledWith(PHONE, expect.any(Date), 'reopen_custom');
+    expect(t.reopens.nextKey).toHaveBeenCalledWith(PHONE, expect.any(Date));
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ template_key: 'reopen_custom' }));
   });
 });

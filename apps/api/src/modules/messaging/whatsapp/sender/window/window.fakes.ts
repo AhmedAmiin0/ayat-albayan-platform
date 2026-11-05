@@ -6,7 +6,10 @@ import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due'
 import { toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { ReopenRow } from './reopen-state';
+import { ReopenRequest } from './reopen-request';
 import { WindowHold } from './window-hold';
+import { WindowRelease } from './window-release';
 import type { WindowRepo } from './window.repo';
 import type { WindowSettings } from './window.settings';
 
@@ -45,7 +48,7 @@ const WELCOME = toTemplateView(templateRow(STARTER));
 
 export function windowFakes() {
   const repo = {
-    reopenSince: vi.fn(async () => false),
+    reopens: vi.fn(async (): Promise<ReopenRow[]> => []),
     queueReopen: vi.fn(async () => undefined),
     hold: vi.fn(async () => true),
     fail: vi.fn(async () => undefined),
@@ -58,11 +61,31 @@ export function windowFakes() {
   );
   const settings = { read: vi.fn(async () => ({ chat_reopen_template: 'welcome_greeting' })) };
   const dispatch = { ready: vi.fn(() => true) };
-  const hold = new WindowHold(
-    repo as unknown as WindowRepo,
+  const asRepo = repo as unknown as WindowRepo;
+  const request = new ReopenRequest(
+    asRepo,
     { approved } as unknown as TemplateRegistry,
     settings as unknown as WindowSettings,
+  );
+  const release = new WindowRelease(asRepo);
+  const hold = new WindowHold(
+    asRepo,
+    request,
+    release,
     dispatch as unknown as MessageDispatch,
   );
-  return { repo, approved, settings, dispatch, hold };
+  return { repo, approved, settings, dispatch, hold, request, release };
+}
+
+/** A reopen template row of PHONE (today, 2026-11-03 in Riyadh), as WindowRepo.reopens reads it. */
+export function reopenOf(over: Partial<ReopenRow> = {}): ReopenRow {
+  return {
+    phone_e164: PHONE,
+    status: 'sent',
+    error_code: null,
+    expires_at: '2026-11-04T07:00:00Z',
+    created_at: '2026-11-03T07:00:00Z',
+    dedup_key: `reopen:${PHONE}:2026-11-03`,
+    ...over,
+  };
 }

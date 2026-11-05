@@ -1,3 +1,4 @@
+import { reopenDedupKey } from '@ab/shared';
 import { Logger } from '@nestjs/common';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { KAPSO_ENV } from '../../whatsapp/drivers/kapso/kapso.fakes';
@@ -33,7 +34,7 @@ describe('POST /threads/:phone/reopen — Kapso never holds the template', () =>
     t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9', status: 'queued' }));
     t.queries.get.mockResolvedValue(null);
     t.templates.get.mockResolvedValue(REOPEN);
-    t.reopens.requestedSince.mockResolvedValue(false);
+    t.reopens.nextKey.mockResolvedValue(reopenDedupKey(PHONE, new Date()));
   });
 
   it('a Kapso that never answers: the request still answers and ONE template row is queued', async () => {
@@ -76,7 +77,7 @@ describe('POST /threads/:phone/reopen — Kapso never holds the template', () =>
 
   it('every other outcome: one warn line with the last 4 digits only', async () => {
     t.kapso.reopen.mockResolvedValue(false);
-    t.reopens.requestedSince.mockResolvedValue(true);
+    t.reopens.nextKey.mockResolvedValue(null);
     expect((await reopen()).json().template).toBe('already_requested_today');
     const lines = vi.mocked(Logger.prototype.warn).mock.calls.map((c) => String(c[0])).filter((l) => l.includes('reopen for'));
     expect(lines).toEqual(['reopen for …4567: already_requested_today']);

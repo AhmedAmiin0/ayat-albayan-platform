@@ -23,6 +23,8 @@ const EMPTY: SendSummary = {
 
 /** One due row of a pass and the line (legacy) or number (module mode) a pause applies to. */
 interface PassItem { job: PassJob; pause: string | null }
+/** One runOnce: its counts and paused lines (numbers); the extra pass skips them too. */
+interface PassRun { summary: SendSummary; paused: Set<string> }
 
 /**
  * The outbound sender (R-MSG-01/02, docs/12 §3.3): drains due queued `messages` (a session text or
@@ -75,26 +77,27 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
       await this.worker.release(); // held texts the family answered (window/): due again
       // Idle (the usual tick): one cheap read instead of the templates + the queue (+ the routes).
       if (!(await this.queries.anyDue(now))) return this.report(summary);
-      await this.pass(summary, now);
+      const run: PassRun = { summary, paused: new Set<string>() };
+      await this.pass(run, now);
       // A text just held queued its reopen template: one more pass sends it now, not next tick.
-      if (summary.waiting > 0) await this.pass(summary, new Date());
+      if (summary.waiting > 0) await this.pass(run, new Date());
     } catch (e) {
       this.log.error(`send pass aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
     return this.report(summary);
   }
 
-  private pass(summary: SendSummary, now: Date): Promise<void> {
+  private pass(run: PassRun, now: Date): Promise<void> {
     const numbers = overlayNumbers();
-    if (numbers === null) return this.linesPass(summary, now);
-    return this.numbersPass({ summary, now, numbers });
+    if (numbers === null) return this.linesPass(run, now);
+    return this.numbersPass({ run, now, numbers });
   }
 
   /** Legacy (comms_source = legacy): today's pass, line by line. */
-  private async linesPass(summary: SendSummary, now: Date): Promise<void> {
+  private async linesPass(run: PassRun, now: Date): Promise<void> {
     const templates = new Map((await this.queries.approvedTemplates()).map((t) => [t.key, t]));
     const rows = await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH });
-    await this.drain(summary, rows.map((row) => {
+    await this.drain(run, rows.map((row) => {
       const template = templates.get(row.template_key ?? '') ?? null;
       return { job: { row, template, now }, pause: lineOf(row, template, this.queries.chatConfigured) };
     }));
@@ -104,13 +107,13 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
    * Module mode (docs/23c): each row's number from routeOf (none = the worker leaves it queued). A
    * broken token pauses that NUMBER for the rest of the pass; the role's other numbers keep sending.
    */
-  private async numbersPass(input: { summary: SendSummary; now: Date; numbers: readonly OverlayNumber[] }): Promise<void> {
-    const { summary, now } = input;
+  private async numbersPass(input: { run: PassRun; now: Date; numbers: readonly OverlayNumber[] }): Promise<void> {
+    const { run, now } = input;
     if (!this.routes) return;
     const { pass, templates: rows } = await this.routes.pass(input.numbers);
     const templates = new Map(rows.map((t) => [t.key, t]));
     const due = await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH });
-    await this.drain(summary, due.map((row) => {
+    await this.drain(run, due.map((row) => {
       const template = templates.get(row.template_key ?? '') ?? null;
       const route = routeOf(pass, { row, template });
       return { job: { row, template, now, route }, pause: route?.numberId ?? null };
@@ -121,8 +124,8 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
    * A broken token (or Meta's 131042) pauses ITS line (number) for the rest of the pass; the other
    * keeps sending. A 131042-held line's later rows in the batch are deferred in one write.
    */
-  private async drain(summary: SendSummary, items: readonly PassItem[]): Promise<void> {
-    const paused = new Set<string>();
+  private async drain(run: PassRun, items: readonly PassItem[]): Promise<void> {
+    const { summary, paused } = run;
     for (const [i, { job, pause }] of items.entries()) {
       if (pause !== null && paused.has(pause)) continue;
       // Both switches are read (one uncached read) before every row, so OFF stops a long pass at once (docs/09).

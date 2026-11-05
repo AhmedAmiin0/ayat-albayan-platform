@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { windowFakes } from './window.fakes';
+import { reopenOf, windowFakes } from './window.fakes';
 
 // The family's reply releases every held text of THAT phone, oldest first (owner 2026-11-03).
 
@@ -21,7 +21,9 @@ describe('WindowHold.release', () => {
       row('a2', A, '2026-11-01T09:02:00Z'),
     ] as never);
     f.repo.lastChatInbound.mockResolvedValue(new Map([[A, '2026-11-02T10:00:00Z']]));
+    f.repo.reopens.mockResolvedValue([B].map((p) => reopenOf({ phone_e164: p, created_at: '2026-11-01T08:00:00Z' })));
     await expect(f.hold.release()).resolves.toBe(2);
+    expect(f.repo.fail).toHaveBeenCalledWith([], expect.anything());
     expect(f.repo.lastChatInbound).toHaveBeenCalledWith([A, B]);
     expect(f.repo.release).toHaveBeenCalledExactlyOnceWith(['a1', 'a2']);
     expect(f.repo.waiting).toHaveBeenCalledExactlyOnceWith(null);
@@ -51,5 +53,73 @@ describe('WindowHold.release', () => {
     const f = windowFakes();
     f.repo.waiting.mockRejectedValue(new Error('db down'));
     await expect(f.hold.release()).resolves.toBe(0);
+  });
+});
+
+describe('WindowRelease — a held text never waits behind a dead reopen (review 2026-11-05)', () => {
+  const NOW = new Date('2026-11-03T08:00:00Z');
+  const held = row('h1', A, '2026-11-03T07:59:00Z');
+
+  it('its reopen failed or expired unsent: failed reopen_failed now, not left for 7 days', async () => {
+    const f = windowFakes();
+    f.repo.waiting.mockResolvedValue([held] as never);
+    f.repo.reopens.mockResolvedValue([reopenOf({ phone_e164: A, status: 'failed' })]);
+    await expect(f.release.run(NOW)).resolves.toBe(0);
+    expect(f.repo.reopens).toHaveBeenCalledWith([A], new Date('2026-11-02T07:59:00Z'), true);
+    expect(f.repo.release).toHaveBeenCalledWith([]);
+    expect(f.repo.fail).toHaveBeenCalledWith(
+      ['h1'],
+      expect.objectContaining({ code: 'reopen_failed', from: 'awaiting_reply' }),
+    );
+  });
+
+  it('its reopen still pending or sent: stays held, nothing failed', async () => {
+    const f = windowFakes();
+    f.repo.waiting.mockResolvedValue([held] as never);
+    f.repo.reopens.mockResolvedValue([reopenOf({ phone_e164: A, status: 'queued' })]);
+    await f.release.run(NOW);
+    expect(f.repo.fail).toHaveBeenCalledWith([], expect.anything());
+  });
+
+  it('answered: released, never failed, even though its reopen failed', async () => {
+    const f = windowFakes();
+    f.repo.waiting.mockResolvedValue([held] as never);
+    f.repo.lastChatInbound.mockResolvedValue(new Map([[A, '2026-11-03T08:05:00Z']]));
+    f.repo.reopens.mockResolvedValue([reopenOf({ phone_e164: A, status: 'failed' })]);
+    await expect(f.release.run(NOW)).resolves.toBe(1);
+    expect(f.repo.fail).toHaveBeenCalledWith([], expect.anything());
+  });
+
+  it('a row not held yet (just queued by the inbox): no reopen read, nothing failed', async () => {
+    const f = windowFakes();
+    f.repo.waiting.mockResolvedValue([{ ...held, scheduled_for: null }] as never);
+    await f.release.run(NOW);
+    expect(f.repo.reopens).toHaveBeenCalledWith([], expect.anything(), true);
+    expect(f.repo.fail).toHaveBeenCalledWith([], expect.anything());
+  });
+});
+
+describe('WindowRelease — a reply racing the hold write (review finding 4)', () => {
+  // The hold starts at the inbox's enqueue (07:59), when it saw the window closed; written 08:00.
+  const held = row('h1', A, '2026-11-03T07:59:00Z');
+  const run = async (inbound: string) => {
+    const f = windowFakes();
+    f.repo.waiting.mockResolvedValue([held] as never);
+    f.repo.reopens.mockResolvedValue([reopenOf({ phone_e164: A })]);
+    f.repo.lastChatInbound.mockResolvedValue(new Map([[A, inbound]]));
+    await f.release.run(new Date('2026-11-03T08:01:00Z'));
+    return f.repo.release.mock.calls.at(0)?.at(0);
+  };
+
+  it('the reply lands between the window read and the hold write: released', async () => {
+    await expect(run('2026-11-03T07:59:30Z')).resolves.toEqual(['h1']);
+  });
+
+  it('the reply lands after the hold write: released', async () => {
+    await expect(run('2026-11-03T08:00:30Z')).resolves.toEqual(['h1']);
+  });
+
+  it('the last reply is older than the hold start: stays held', async () => {
+    await expect(run('2026-11-02T07:00:00Z')).resolves.toEqual([]);
   });
 });

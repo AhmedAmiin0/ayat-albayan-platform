@@ -23,4 +23,6 @@ test('a failed window send says why in words, never the raw HTTP text', () => {
   expect(errorLine({ error_code: 'reopen_unavailable' })).toBe(
     reason(t.messages.errors.reopen_unavailable),
   );
+  // Its reopen template failed or expired unsent (review 2026-11-05): failed, staff may resend.
+  expect(errorLine({ error_code: 'reopen_failed' })).toBe(reason(t.messages.errors.reopen_failed));
 });

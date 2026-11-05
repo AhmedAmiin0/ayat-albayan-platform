@@ -24,7 +24,9 @@ import { MessageSender } from './sender/message.sender';
 import { MessageViews } from './messages/message.views';
 import { TemplateNames } from './templates/names/template-names';
 import { MessageWorker } from './sender/message.worker';
+import { ReopenRequest } from './sender/window/reopen-request';
 import { WindowHold } from './sender/window/window-hold';
+import { WindowRelease } from './sender/window/window-release';
 import { WindowRepo } from './sender/window/window.repo';
 import { WindowSettings } from './sender/window/window.settings';
 import { PaymentHoldRepo } from './sender/hold/payment-hold.repo';
@@ -101,6 +103,8 @@ function lines(): WhatsappLines {
     PaymentHolds,
     WindowRepo,
     WindowSettings,
+    ReopenRequest,
+    WindowRelease,
     WindowHold,
     MessageWorker,
     MessageSender,
@@ -119,7 +123,7 @@ function lines(): WhatsappLines {
     InboundMedia,
     WaMediaRetentionJob,
   ],
-  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore],
+  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore, ReopenRequest],
 })
 export class WhatsappModule implements OnModuleInit {
   /**

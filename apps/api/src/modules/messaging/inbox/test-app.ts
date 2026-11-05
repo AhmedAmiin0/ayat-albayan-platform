@@ -15,6 +15,7 @@ import type { AuthUser } from '../../../common/auth/verify-token';
 import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { ReopenRequest } from '@/modules/messaging/whatsapp/sender/window/reopen-request';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { TemplatesRepo, type ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -75,8 +76,9 @@ function mocks() {
     gate: { open: vi.fn() },
     sender: { kick: vi.fn() },
     audit: { record: vi.fn() },
-    reopens: { requestedSince: vi.fn(async () => false), templateKey: vi.fn(async () => 'inquiry_followup_ar_v2') },
+    reopens: { nextKey: vi.fn(async (): Promise<string | null> => null), templateKey: vi.fn(async () => 'inquiry_followup_ar_v2') },
     kapso: { reopen: vi.fn(async () => false) },
+    reopenRequest: { usable: vi.fn(async () => true), nextKey: vi.fn() },
     hides: { target: vi.fn(), set: vi.fn(async () => true) },
     delta: { newer: vi.fn(), pending: vi.fn() },
     search: { rows: vi.fn() },
@@ -108,6 +110,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(ReopenRepo).useValue(m.reopens)
     .overrideProvider(KapsoReopener).useValue(m.kapso)
+    .overrideProvider(ReopenRequest).useValue(m.reopenRequest)
     .overrideProvider(MessageHideRepo).useValue(m.hides)
     .overrideProvider(DeltaRepo).useValue(m.delta)
     .overrideProvider(StickerRepo).useValue(m.stickers)

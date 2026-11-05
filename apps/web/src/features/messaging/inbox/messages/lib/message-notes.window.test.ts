@@ -25,7 +25,7 @@ describe('outbound notes and the 24 h window', () => {
     expect(t.messages.awaitingReply).toBe('بانتظار رد العائلة');
   });
 
-  it.each(['hold_expired', 'window_closed', 'reopen_unavailable'] as const)(
+  it.each(['hold_expired', 'window_closed', 'reopen_unavailable', 'reopen_failed'] as const)(
     'failed %s: its reason in words',
     (code) => {
       const notes = outboundNotes(out({ status: 'failed', error_code: code }), o);

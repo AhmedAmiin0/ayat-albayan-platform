@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { NOW, PHONE, STAFF, staffText, windowFakes } from './window.fakes';
+import { NOW, PHONE, reopenOf, STAFF, staffText, windowFakes } from './window.fakes';
 
 // Owner 2026-11-03: after the window a staff text is never sent as free text. ONE reopen template
 // per phone per 24 h, the text held until the family replies, failed after 7 days. Fakes only.
@@ -40,13 +40,10 @@ describe('WindowHold.due — a text queued after the window', () => {
     expect(queued).toBeLessThan(held ?? 0);
   });
 
-  it('a second text while one reopen is recent or queued: held too, no second template', async () => {
-    f.repo.reopenSince.mockResolvedValue(true);
+  it('a second text while one reopen is pending or sent: held too, no second template', async () => {
+    f.repo.reopens.mockResolvedValue([reopenOf({ status: 'queued' })]);
     await expect(f.hold.due(at(staffText({ id: 'm2' })))).resolves.toBe('waiting');
-    expect(f.repo.reopenSince).toHaveBeenCalledWith(
-      PHONE,
-      new Date(NOW.getTime() - 24 * 3_600_000),
-    );
+    expect(f.repo.reopens).toHaveBeenCalledWith([PHONE], new Date(NOW.getTime() - 24 * 3_600_000));
     expect(f.repo.queueReopen).not.toHaveBeenCalled();
     expect(f.repo.hold).toHaveBeenCalledOnce();
   });
@@ -73,7 +70,7 @@ describe('WindowHold.due — a text queued after the window', () => {
     expect(f.repo.queueReopen).not.toHaveBeenCalled();
     expect(f.repo.hold).not.toHaveBeenCalled();
     expect(f.repo.fail).toHaveBeenCalledWith(
-      staffText().id,
+      [staffText().id],
       expect.objectContaining({ code: 'reopen_unavailable' }),
     );
   });
@@ -87,7 +84,7 @@ describe('WindowHold.due — a text queued after the window', () => {
     const old = staffText({ created_at: '2026-10-27T07:00:00Z' });
     await expect(f.hold.due(at(old))).resolves.toBe('expired');
     expect(f.repo.fail).toHaveBeenCalledWith(
-      old.id,
+      [old.id],
       expect.objectContaining({ code: 'hold_expired' }),
     );
     expect(f.repo.queueReopen).not.toHaveBeenCalled();
@@ -97,7 +94,7 @@ describe('WindowHold.due — a text queued after the window', () => {
     const held = staffText({ expires_at: until.toISOString() });
     await expect(f.hold.due({ ...at(held), now: until })).resolves.toBe('expired');
     expect(f.repo.fail).toHaveBeenCalledWith(
-      held.id,
+      [held.id],
       expect.objectContaining({ code: 'hold_expired' }),
     );
   });
@@ -126,7 +123,7 @@ describe('WindowHold.closed — WhatsApp refused it for the window', () => {
   });
 
   it('a failed read while holding: null, so the planned failure is still written', async () => {
-    f.repo.reopenSince.mockRejectedValue(new Error('db down'));
+    f.repo.reopens.mockRejectedValue(new Error('db down'));
     await expect(f.hold.closed(at(staffText({ error_code: 'sending' })))).resolves.toBeNull();
     expect(f.repo.hold).not.toHaveBeenCalled();
   });

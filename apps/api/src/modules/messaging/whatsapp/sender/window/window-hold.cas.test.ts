@@ -19,7 +19,7 @@ describe('WindowHold — compare-and-set on what the worker read', () => {
     f.settings.read.mockResolvedValue({ chat_reopen_template: '' });
     await f.hold.closed(at(staffText({ error_code: null })));
     expect(f.repo.fail).toHaveBeenCalledWith(
-      staffText().id,
+      [staffText().id],
       expect.objectContaining({ from: 'sending' }),
     );
   });
@@ -33,7 +33,7 @@ describe('WindowHold — compare-and-set on what the worker read', () => {
     const held = staffText({ expires_at: until.toISOString() });
     await f.hold.due({ ...at(held), now: until });
     expect(f.repo.fail).toHaveBeenCalledWith(
-      held.id,
+      [held.id],
       expect.objectContaining({ from: 'awaiting_reply' }),
     );
   });

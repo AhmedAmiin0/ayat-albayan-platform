@@ -29,6 +29,8 @@ export interface ThreadSend<T> {
   forwardedFrom?: string;
   /** A server-made idempotency key (the reopen request's `reopen:<phone>:<day>`) instead of the client's request id. */
   dedup?: string;
+  /** A server-made send that must not go out late (the reopen template: 24 h). */
+  expiresAt?: string;
 }
 
 /**
@@ -128,6 +130,7 @@ export class ThreadSendService {
       template_key: s.input.key,
       template_params: s.input.params,
       lesson_id: s.input.lessonId ?? null,
+      ...(s.expiresAt ? { expires_at: s.expiresAt } : {}),
     });
   }
 

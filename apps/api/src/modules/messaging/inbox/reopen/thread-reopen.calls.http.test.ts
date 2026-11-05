@@ -1,3 +1,4 @@
+import { reopenDedupKey } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { messageRow } from '../../whatsapp/sender/sender.fakes';
 import { templateRow } from '../../whatsapp/whatsapp.fakes';
@@ -45,7 +46,7 @@ describe('POST /threads/:phone/reopen after a message to the calls number', () =
         sales_starter: true,
       }),
     );
-    t.reopens.requestedSince.mockResolvedValue(false);
+    t.reopens.nextKey.mockResolvedValue(reopenDedupKey(PHONE, new Date()));
     t.kapso.reopen.mockResolvedValue(true);
   });
 

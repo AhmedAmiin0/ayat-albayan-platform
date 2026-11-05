@@ -10,6 +10,12 @@ describe('reopenDedupKey', () => {
     expect(reopenDedupKey('+201000000001', new Date('2026-10-26T20:59:00Z'))).toBe('reopen:+201000000001:2026-10-26');
     expect(reopenDedupKey('+201000000001', new Date('2026-10-26T21:00:00Z'))).toBe('reopen:+201000000001:2026-10-27');
   });
+
+  it('a later try the same day gets its own key (the first failed): one per try, still per day', () => {
+    const at = new Date('2026-10-26T10:00:00Z');
+    expect(reopenDedupKey('+201000000001', at, 1)).toBe('reopen:+201000000001:2026-10-26');
+    expect(reopenDedupKey('+201000000001', at, 2)).toBe('reopen:+201000000001:2026-10-26:2');
+  });
 });
 
 describe('isAwaitingReply', () => {

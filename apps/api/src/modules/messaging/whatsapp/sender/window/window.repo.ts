@@ -2,12 +2,17 @@ import type { TablesInsert } from '@ab/db';
 import { AWAITING_REPLY } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { UNCERTAIN } from '@/modules/messaging/whatsapp/sender/send-plan';
+import type { ReopenRow } from './reopen-state';
+import type { FailWhy } from './window-reopen';
 import type { WaitingRow } from './window-rules';
 
 /** Waiting rows are read in pages of this many (oldest first, by created_at). */
 export const RELEASE_BATCH = 200;
 /** The reopen rows' dedup prefix: `reopen:<E.164>:<Riyadh day>` (reopenDedupKey, shared). */
 const REOPEN_PREFIX = 'reopen:%';
+/** Not failed, or failed `uncertain` (it may have reached the family: reopenLive). */
+const NOT_DEAD = `status.neq.failed,error_code.eq.${UNCERTAIN}`;
 
 /** A held row: from when it waits, until when (next_attempt_at = expires_at = the deadline). */
 interface HoldWrite {
@@ -29,18 +34,23 @@ const fail = (what: string, message: string): Error => new Error(`${what} failed
 export class WindowRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** A reopen template of this phone since `since` (any status), or an older one still queued. */
-  async reopenSince(phone: string, since: Date): Promise<boolean> {
-    const { data, error } = await this.db
+  /**
+   * These phones' reopen template rows made since `since` (reopen-state decides which count).
+   * `liveOnly` (the release's read over many phones and days): never a plain failed row, so the
+   * rows that can count are never cut off behind dead ones (Supabase max-rows).
+   */
+  async reopens(phones: readonly string[], since: Date, liveOnly = false): Promise<ReopenRow[]> {
+    if (phones.length === 0) return [];
+    const query = this.db
       .from('messages')
-      .select('id')
-      .eq('phone_e164', phone)
+      .select('phone_e164, status, error_code, expires_at, created_at, dedup_key')
+      .in('phone_e164', [...phones])
       .eq('direction', 'outbound')
       .like('dedup_key', REOPEN_PREFIX)
-      .or(`created_at.gte.${since.toISOString()},and(status.eq.queued,expires_at.is.null)`)
-      .limit(1);
+      .gte('created_at', since.toISOString());
+    const { data, error } = await (liveOnly ? query.or(NOT_DEAD) : query);
     if (error) throw fail('reopen read', error.message);
-    return data.length > 0;
+    return data;
   }
 
   /** The reopen template row; a replayed dedup_key inserts nothing. */
@@ -72,7 +82,8 @@ export class WindowRepo {
   }
 
   /** Failed for good, with no try counted (the hold's own refusals). */
-  async fail(id: string, why: { code: string; text: string; from: string }): Promise<void> {
+  async fail(ids: readonly string[], why: FailWhy & { from: string }): Promise<void> {
+    if (ids.length === 0) return;
     const { error } = await this.db
       .from('messages')
       .update({
@@ -81,7 +92,7 @@ export class WindowRepo {
         error_text: why.text,
         next_attempt_at: null,
       })
-      .eq('id', id)
+      .in('id', [...ids])
       .eq('status', 'queued')
       .eq('error_code', why.from);
     if (error) throw fail('message hold failure', error.message);

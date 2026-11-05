@@ -9,7 +9,7 @@ const kid = (id: string, code: string | null = 'AB-0101') =>
 
 describe('forTeacher (teacher mode thread)', () => {
   it('clears the lead and the money tags and shows my unread, not the admin’s', () => {
-    const view = toThreadView(threadRow({ unread_count: 5, guardian_id: 'g1' }), NOW, { badge: 'subscribed', unpaid: true });
+    const view = toThreadView(threadRow({ unread_count: 5, guardian_id: 'g1' }), NOW, { tag: { badge: 'subscribed', unpaid: true } });
     expect(view).toMatchObject({ subscribed: true, badge: 'subscribed', unpaid: true });
     expect(forTeacher(view, new Map([[PHONE, 2]]))).toMatchObject({
       ...{ lead_id: null, lead_name: null, lead_status: null, lead_source: null, badge: null, unpaid: false },

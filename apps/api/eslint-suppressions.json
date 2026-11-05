@@ -4440,12 +4440,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
-    }
-  },
-  "src/modules/messaging/inbox/reopen/reopen.repo.ts": {
-    "max-len": {
-      "count": 3
+      "count": 6
     }
   },
   "src/modules/messaging/inbox/reopen/reopen.settings.ts": {
@@ -4509,7 +4504,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/sales-threads/sales-threads.test.ts": {
@@ -4946,7 +4941,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/messaging/inbox/threads/threads.teacher-send.http.test.ts": {

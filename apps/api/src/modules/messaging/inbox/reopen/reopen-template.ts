@@ -1,7 +1,7 @@
-import { reopenDedupKey, type ReopenTemplateOutcome } from '@ab/shared';
+import type { ReopenTemplateOutcome } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
-import { reopenUsable } from '@/modules/messaging/whatsapp';
+import { REOPEN_LIFE_MS, reopenUsable } from '@/modules/messaging/whatsapp';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
@@ -10,8 +10,6 @@ import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper
 import { last4 } from './kapso-reopener';
 import { ReopenRepo } from './reopen.repo';
 import { reopenParams } from './reopen-params';
-
-const DAY_MS = 24 * 60 * 60_000;
 
 /** The outcome, and the row when one was sent through the outbox (the controller audits it). */
 export interface Queued {
@@ -34,8 +32,8 @@ interface ReopenSend {
  * template sync brings it approved, this same path queues it), through the composer's own path,
  * ThreadSendService.template (approved, allow-list, params, its line), then the Outbox: the send gate
  * and the sender decide as for any send. `created_by` = the staff member (a staff send, not a job's).
- * Once per phone per 24 h (any reopen row since, or one still queued behind a closed gate, so days of
- * opens never pile up copies), and `reopen:<E.164>:<Riyadh day>` dedupes the row.
+ * Once per phone per 24 h: a reopen pending or sent since counts, a failed or expired one does not
+ * (ReopenRepo.nextKey, its dedup key per day and try). The row expires after 24 h, as the sender's.
  */
 @Injectable()
 export class ReopenTemplate {
@@ -49,7 +47,8 @@ export class ReopenTemplate {
 
   async queue(r: ReopenSend): Promise<Queued> {
     const key = await this.reopens.templateKey();
-    if (await this.reopens.requestedSince(r.phone, new Date(r.now.getTime() - DAY_MS), key)) return { outcome: 'already_requested_today' };
+    const dedup = await this.reopens.nextKey(r.phone, r.now);
+    if (!dedup) return { outcome: 'already_requested_today' };
     const template = await this.templates.approved(key);
     // Owner 2026-11-03: only an approved chat-line starter with no variables (reopenUsable).
     if (!template || !reopenUsable(template) || !onThreadLine(template.line, r.thread)) {
@@ -63,7 +62,8 @@ export class ReopenTemplate {
         actorId: r.actorId,
         scope: r.scope,
         sales: r.sales,
-        dedup: reopenDedupKey(r.phone, r.now),
+        dedup,
+        expiresAt: new Date(r.now.getTime() + REOPEN_LIFE_MS).toISOString(),
       });
       return sent.replayed ? { outcome: 'already_requested_today' } : { outcome: 'template_queued', sent };
     } catch (e) {

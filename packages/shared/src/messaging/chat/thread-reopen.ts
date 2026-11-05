@@ -23,9 +23,13 @@ export interface ThreadReopenView {
   template: ReopenTemplateOutcome;
 }
 
-/** `reopen:<E.164>:<Asia/Riyadh date>`: a second open the same day enqueues nothing. */
-export function reopenDedupKey(phone: string, now: Date): string {
-  return `reopen:${phone}:${localDate(now, REOPEN_TZ)}`;
+/**
+ * `reopen:<E.164>:<Asia/Riyadh date>`: a second open the same day enqueues nothing. A later try the
+ * same day (the first failed or expired unsent) adds `:<try>` (2, 3…), so it is not deduped away.
+ */
+export function reopenDedupKey(phone: string, now: Date, attempt = 1): string {
+  const day = `reopen:${phone}:${localDate(now, REOPEN_TZ)}`;
+  return attempt > 1 ? `${day}:${attempt}` : day;
 }
 
 // Owner 2026-11-03 («chat messages are not being sent after 24h»): a staff text to a family whose
@@ -41,6 +45,8 @@ export const HOLD_EXPIRED = 'hold_expired';
 export const WINDOW_CLOSED = 'window_closed';
 /** The window is closed and no usable reopen template is set: the text fails with this reason. */
 export const REOPEN_UNAVAILABLE = 'reopen_unavailable';
+/** A held text whose reopen template failed or expired unsent: failed, so staff can resend it. */
+export const REOPEN_FAILED = 'reopen_failed';
 /** How long a held text waits for the family's reply. */
 export const HOLD_DAYS = 7;
 

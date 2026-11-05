@@ -56,6 +56,19 @@ describe('MessageSender with the chat window', () => {
     expect(summary).toMatchObject({ waiting: 1, sent: 1 });
   });
 
+  it('a CRM 429 paused the notifications line: the extra pass never calls that line again', async () => {
+    const notice = (id: string) => dueMessage({ id, template_key: null, body: 'تذكير', line: 'notifications' });
+    const text = dueMessage({ id: 'chat-text', template_key: null, body: 'نص', line: 'chat' });
+    const reopen = dueMessage({ id: 'reopen', template_key: null, body: 'قالب', line: 'chat' });
+    queries.due.mockResolvedValueOnce([notice('n1'), text]).mockResolvedValueOnce([notice('n2'), reopen]);
+    worker.process.mockResolvedValueOnce('paused').mockResolvedValueOnce('waiting').mockResolvedValue('sent');
+    const summary = await sender().runOnce(NOW);
+    expect(queries.due).toHaveBeenCalledTimes(2);
+    const ids = worker.process.mock.calls.map((c) => (c[0] as { row: { id: string } }).row.id);
+    expect(ids).toEqual(['n1', 'chat-text', 'reopen']);
+    expect(summary).toMatchObject({ paused: 1, waiting: 1, sent: 1 });
+  });
+
   it('nothing held: one pass only', async () => {
     worker.process.mockResolvedValue('sent');
     await sender().runOnce(NOW);

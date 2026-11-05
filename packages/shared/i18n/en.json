@@ -2849,7 +2849,7 @@
       "stickerSend": "Send sticker"
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
-    "tryAfterWindow": "More than 24 hours since the family's last message: the welcome template is sent first, and your message goes out after they reply.",
+    "tryAfterWindow": "More than 24 hours since the family's last message: your message waits for their reply, and the welcome template invites them to reply unless it already reached them.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
@@ -3618,7 +3618,8 @@
       "awaiting_reply": "Waiting for the family's reply",
       "hold_expired": "The wait ended with no reply",
       "window_closed": "More than 24 hours since the family's last message; only a template can be sent",
-      "reopen_unavailable": "Not sent: the chat reopen template is not set or not valid — an admin picks it in Settings from the approved templates allowed for restricted roles with no variables"
+      "reopen_unavailable": "Not sent: the chat reopen template is not set or not valid — an admin picks it in Settings from the approved templates allowed for restricted roles with no variables",
+      "reopen_failed": "Not sent: the chat reopen template did not reach the family — resend the message to send the template again"
     },
     "cancelManual": "Not yet",
     "failedMenu": "Message not sent",
