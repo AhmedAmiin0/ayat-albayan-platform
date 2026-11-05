@@ -1,3 +1,4 @@
+import { AWAITING_REPLY } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { MESSAGE_SELECT, type ThreadMessageRow } from './message.mapper';
@@ -6,6 +7,9 @@ import { HANDED_OFF, SENDING } from '@/modules/messaging/whatsapp/sender/send-pl
 
 /** Not while the sender holds the row (its claim): Meta may be sending it right now. */
 const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
+
+const heldAgain = (at: Date) =>
+  ({ error_code: AWAITING_REPLY, scheduled_for: at.toISOString(), expires_at: null }) as const;
 
 /**
  * M1–M3 (docs/12 §4): the admin's retry, «I sent it myself» and the hand-off, all compare-and-set.
@@ -24,11 +28,14 @@ export class MessagesRepo {
   /**
    * failed → queued with a fresh attempt budget; null when it is no longer failed, or it was never
    * ours to send: a message sent outside the app or imported (created_by null, attempts 0, a wamid).
+   * `restart` (a held text's retry): held again (AWAITING_REPLY, never tried as free text), its
+   * 7 days from then (scheduled_for), no old deadline.
    */
-  async requeue(id: string): Promise<ThreadMessageRow | null> {
+  async requeue(id: string, restart: Date | null = null): Promise<ThreadMessageRow | null> {
+    const fresh = restart ? heldAgain(restart) : {};
     const { data, error } = await this.db
       .from('messages')
-      .update({ status: 'queued', attempts: 0, next_attempt_at: null, error_code: null, error_text: null })
+      .update({ status: 'queued', attempts: 0, next_attempt_at: null, error_code: null, error_text: null, ...fresh })
       .eq('id', id)
       .eq('status', 'failed')
       .or('attempts.gt.0,wa_message_id.is.null,created_by.not.is.null')

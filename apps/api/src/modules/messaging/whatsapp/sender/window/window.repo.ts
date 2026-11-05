@@ -17,28 +17,24 @@ const NOT_DEAD = `status.neq.failed,error_code.eq.${UNCERTAIN}`;
 /** A held row: from when it waits, until when (next_attempt_at = expires_at = the deadline). */
 interface HoldWrite {
   id: string;
-  /** The error_code the row must still carry (compare-and-set): AWAITING_REPLY or SENDING. */
+  /** The error_code it must still carry (compare-and-set): AWAITING_REPLY or SENDING. */
   from: string;
   since: Date;
   until: Date;
+  /** error_text while held: null behind a template, NO_TEMPLATE_NOTE under «بدون قالب». */
+  note: string | null;
 }
-
 const fail = (what: string, message: string): Error => new Error(`${what} failed: ${message}`);
 
 /**
  * The 24 h window's reads and writes on `messages` (owner 2026-11-03). Every state change is
- * compare-and-set on status = queued, so two API instances never hold, release or fail one row
- * twice; the reopen template row is deduped by its dedup_key (rule 8).
+ * compare-and-set on status = queued; the reopen template row is deduped by its dedup_key (rule 8).
  */
 @Injectable()
 export class WindowRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /**
-   * These phones' reopen template rows made since `since` (reopen-state decides which count).
-   * `liveOnly` (the release's read over many phones and days): never a plain failed row, so the
-   * rows that can count are never cut off behind dead ones (Supabase max-rows).
-   */
+  /** Reopen rows since `since`; liveOnly (the release): no plain failed row (Supabase max-rows). */
   async reopens(phones: readonly string[], since: Date, liveOnly = false): Promise<ReopenRow[]> {
     if (phones.length === 0) return [];
     const query = this.db
@@ -68,7 +64,7 @@ export class WindowRepo {
       .from('messages')
       .update({
         error_code: AWAITING_REPLY,
-        error_text: null,
+        error_text: h.note,
         scheduled_for: h.since.toISOString(),
         expires_at: until,
         next_attempt_at: until,
@@ -79,6 +75,17 @@ export class WindowRepo {
       .select('id');
     if (error) throw fail('message hold', error.message);
     return data.length > 0;
+  }
+
+  /** A held row's error_text (Kapso's reopen failed), only while held. */
+  async note(id: string, text: string): Promise<void> {
+    const { error } = await this.db
+      .from('messages')
+      .update({ error_text: text })
+      .eq('id', id)
+      .eq('status', 'queued')
+      .eq('error_code', AWAITING_REPLY);
+    if (error) throw fail('held message note', error.message);
   }
 
   /** Failed for good, with no try counted (the hold's own refusals). */
@@ -102,7 +109,7 @@ export class WindowRepo {
   async waiting(after: string | null): Promise<WaitingRow[]> {
     const query = this.db
       .from('messages')
-      .select('id, phone_e164, created_at, scheduled_for')
+      .select('id, phone_e164, created_at, scheduled_for, error_text')
       .eq('direction', 'outbound')
       .eq('status', 'queued')
       .eq('error_code', AWAITING_REPLY);

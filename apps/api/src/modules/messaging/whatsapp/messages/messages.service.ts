@@ -1,4 +1,4 @@
-import type { MessageView } from '@ab/shared';
+import { isHoldFailure, type MessageView } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { MessageViews } from './message.views';
@@ -31,7 +31,9 @@ export class MessagesService {
     // A calls-number row (docs/28 §10) is never queued: staff tap «اطلب إذن الاتصال» again instead.
     if (before.status !== 'failed' || before.line === 'calls') throw notRetryable();
     if (before.error_code === AUTO_OFF.code && !opts.automaticOn) throw waHttpError(AUTO_OFF.code, 409);
-    const after = await this.queries.requeue(id);
+    // A held text that failed (reopen_*): its 7-day hold starts again from this retry (11-06).
+    const restart = isHoldFailure(before.error_code) ? new Date() : null;
+    const after = await this.queries.requeue(id, restart);
     if (!after) throw notRetryable();
     void this.sender.kick();
     return { before, view: await this.views.view(after) };

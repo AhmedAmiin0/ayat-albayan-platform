@@ -89,6 +89,8 @@ export interface WaitingRow {
   created_at: string;
   /** When it was held (null: queued by the inbox, not held yet: its created_at counts). */
   scheduled_for: string | null;
+  /** NO_TEMPLATE_NOTE: held under «بدون قالب» (never orphaned: no template was asked for). */
+  error_text: string | null;
 }
 
 /**

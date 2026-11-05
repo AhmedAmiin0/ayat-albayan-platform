@@ -82,6 +82,7 @@ describe("answered: a reply releases only its own phone's rows, held before it",
     phone_e164: phone,
     created_at: '2026-11-01T08:00:00Z',
     scheduled_for: since,
+    error_text: null,
   });
   const rows = [
     row('a1', '+966500000001', '2026-11-01T09:00:00Z'),

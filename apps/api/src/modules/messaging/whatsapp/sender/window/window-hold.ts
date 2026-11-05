@@ -1,14 +1,15 @@
 import type { WaLine } from '@ab/shared';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import {
   MessageDispatch,
   type SendVia,
 } from '@/modules/messaging/whatsapp/sender/message.dispatch';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
+import { KapsoHold } from './kapso-hold';
 import { ReopenRequest } from './reopen-request';
 import { heldStep, HOLD_MS, holdable } from './window-rules';
-import { checkedAt, EXPIRED, expectedCode, type FailWhy } from './window-reopen';
+import { checkedAt, EXPIRED, expectedCode, holdStart, type FailWhy } from './window-reopen';
 import { WindowRelease } from './window-release';
 import { WindowRepo } from './window.repo';
 
@@ -36,11 +37,14 @@ const messageOf = (e: unknown): string => (e instanceof Error ? e.message : Stri
  * family writes on the chat line (WindowRelease), then sent through the normal sender and its
  * gates. No reopen live and none can be queued: it fails at once. After 7 days it fails.
  * The worker only runs with the send gate open; a phone off the allow-list or an unconfigured
- * line holds nothing and queues nothing (ready).
+ * line holds nothing and queues nothing (ready). «بدون قالب» (owner 2026-11-06): no template, the
+ * text waits all the same. Each hold on a Kapso line reopens Kapso's conversation once (KapsoHold).
  */
 @Injectable()
 export class WindowHold {
   private readonly log = new Logger('WindowHold');
+  /** Property-injected (the constructor is at its limit); absent (a bare test): no Kapso PATCH. */
+  @Optional() @Inject(KapsoHold) kapso?: KapsoHold;
 
   constructor(
     private readonly repo: WindowRepo,
@@ -80,13 +84,27 @@ export class WindowHold {
 
   private async hold(at: WindowAt): Promise<HoldOutcome> {
     if (!this.ready(at)) return 'skipped';
-    const until = new Date(Date.parse(at.row.created_at ?? at.now.toISOString()) + HOLD_MS);
+    const until = new Date(holdStart(at.row, at.now) + HOLD_MS);
     if (until <= at.now) return this.expire(at.row);
-    const why = await this.reopen.ensure(at.row, at.now);
-    if (why) return this.refuse(at.row, why);
+    const plan = await this.reopen.ensure(at.row, at.now);
+    if (plan.fail) return this.refuse(at.row, plan.fail);
     const since = checkedAt(at.row, at.now);
-    const held = await this.repo.hold({ id: at.row.id, from: expectedCode(at.row), since, until });
-    return held ? 'waiting' : 'skipped';
+    const from = expectedCode(at.row);
+    const held = await this.repo.hold({ id: at.row.id, from, since, until, note: plan.note });
+    if (!held) return 'skipped';
+    await this.reopenKapso(at, plan.note);
+    return 'waiting';
+  }
+
+  /** Once per hold, after it is written: a Kapso failure is noted on the row, never blocks it. */
+  private async reopenKapso(at: WindowAt, note: string | null): Promise<void> {
+    try {
+      const failed = await this.kapso?.reopen({ ...at, phone: at.row.phone_e164 });
+      const text = [note, failed].filter(Boolean).join('; ');
+      if (failed) await this.repo.note(at.row.id, text);
+    } catch (e) {
+      this.log.warn(`Kapso note not kept for ${last4(at.row.phone_e164)}: ${messageOf(e)}`);
+    }
   }
 
   /** The line (number) can send to this phone now: configured and on the allow-list. */
