@@ -23,6 +23,7 @@ import { SiblingMerge } from '@/features/people/students/duplicates/SiblingMerge
 import { StudentInvoices } from './StudentInvoices';
 import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
+import { StudentFamily } from '@/features/people/students/family/StudentFamily';
 import { HeadActions } from '@/components/ui/layout/head-actions';
 import { PeopleEditActions, RemovedStudent } from '@/features/people/students/people-edit';
 import { StudentRecordings } from '@/features/people/students/recordings/StudentRecordings';
@@ -59,7 +60,11 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const second = secondPhoneOf(student.guardian.phones);
   const meta = [
     [t.students.code, <Ltr key="c">{student.code ?? '—'}</Ltr>],
-    [t.students.guardian, <span key="g">{student.guardian.name}</span>],
+    [t.students.guardian, (
+      <Link key="g" to="/admin/inbox" search={{ page: 1, phone: student.guardian.phone_e164 }} className="text-lapis underline underline-offset-4">
+        {student.guardian.name}
+      </Link>
+    )],
     [t.students.guardianPhone, <Ltr key="p">{formatPhone(student.guardian.phone_e164)}</Ltr>],
     ...(second ? [[t.guardians.secondPhone, <Ltr key="p2">{formatPhone(second)}</Ltr>] as const] : []),
     [
@@ -114,6 +119,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           </div>
         ))}
       </dl>
+      <StudentFamily siblings={student.siblings} contactIsSelf={student.contact_is_self ?? false} />
       <TrialDatesSection student={student} />
       <BalanceCard student={student} />
       <StudentPayments studentId={student.id} />

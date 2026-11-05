@@ -11565,7 +11565,7 @@
   },
   "src/modules/sales/sales-students/details/sales-student.repo.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/sales/sales-students/details/sales-student.service.ts": {
