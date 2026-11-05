@@ -44,6 +44,17 @@ describe('POST /sales/lessons/:id/reschedule and /cancel while the ownership rul
     expect(t.lessons.cancels.cancel).not.toHaveBeenCalled();
   });
 
+  it('«تصحيح الحالة» after the end: hers passes, another family\'s lesson gets 403', async () => {
+    const ended = { starts_at: '2026-10-26T15:00:00Z', ends_at: '2026-10-26T15:30:00Z' };
+    t.queries.lesson.mockResolvedValue(lessonFacts(ended));
+    expect((await call('correct', { to: 'completed' })).statusCode).toBe(200);
+    const lesson_students = [{ student_id: OTHER }];
+    t.queries.lesson.mockResolvedValue(lessonFacts({ ...ended, lesson_students }));
+    const res = await call('correct', { to: 'no_show' });
+    expect([res.statusCode, res.json().code]).toEqual([403, 'not_your_student']);
+    expect(t.lessons.corrections.correct).toHaveBeenCalledTimes(1);
+  });
+
   it('a salesperson who owns nothing is refused too', async () => {
     t.queries.lesson.mockResolvedValue(lessonFacts());
     expect((await call('cancel', {}, 'salesB')).statusCode).toBe(403);

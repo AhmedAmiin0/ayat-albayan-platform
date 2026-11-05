@@ -97,12 +97,15 @@ export class SalesLessonActions {
     return { id: lesson.id, starts_at: new Date(lesson.starts_at).toISOString(), status: 'confirmed' };
   }
 
-  /** «تصحيح الحالة» (owner 2026-11-03): ANY lesson, after its end; the admin OutcomeCorrection. */
+  /**
+   * «تصحيح الحالة» (owner 2026-11-03): after its end, the admin OutcomeCorrection; ANY lesson while
+   * SalesOwnershipRule is off, only hers while it enforces (as cancel, its after-end case).
+   */
   async correct(
     { lessonId, body, actor }: Correct,
     now = new Date(),
   ): Promise<{ id: string; status: LessonStatus }> {
-    await this.scope.assertLesson({ lessonId, now, afterEnd: true });
+    await this.scope.assertLesson({ lessonId, now, user: actor, afterEnd: true });
     await this.lessons.corrections.correct({ lessonId, to: body.to, actor });
     return { id: lessonId, status: body.to };
   }

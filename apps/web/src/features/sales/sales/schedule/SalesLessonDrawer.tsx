@@ -1,24 +1,16 @@
-import {
-  canSalesChangeLesson,
-  canSalesConfirm,
-  correctionTargets,
-  isRunningLesson,
-  type SalesScheduleLesson,
-} from '@ab/shared';
+import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { usePermissions } from '@/features/people/auth';
 import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
 import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
 import { t } from '@/lib/i18n/i18n';
-import { usePublicConfig } from '@/lib/settings/public-config';
 import { CorrectOutcome } from '@/features/teaching/schedule';
-import { canSalesCorrect } from './correct/correctable';
 import { SalesCorrectLesson } from './correct/SalesCorrectLesson';
 import { SalesConfirmLesson } from './SalesConfirmLesson';
 import { SalesMoveLesson } from './move';
 import { SalesLessonDetails } from './SalesLessonDetails';
+import { useSalesLessonRights } from './use-sales-lesson-rights';
 
 export interface SalesLessonDrawerProps {
   lesson: SalesScheduleLesson;
@@ -44,13 +36,7 @@ interface StepsProps {
  * open lesson not ended; else read-only.
  */
 function SalesLessonSteps({ lesson, now, running, confirmed, onConfirmed }: StepsProps) {
-  const { can } = usePermissions();
-  const required = usePublicConfig().lesson_confirmation_required;
-  const confirmable = required && canSalesConfirm(lesson, { now, holds: can('lessons.confirm') });
-  const holds = can('lessons.cancel');
-  const correctable = canSalesCorrect(lesson, { now, required, holds });
-  const outcome = holds && correctionTargets(lesson, now).length > 0;
-  const moves = canSalesChangeLesson(lesson, { now, can }).reschedule;
+  const { confirmable, correctable, outcome, moves } = useSalesLessonRights(lesson, now);
   const readOnly = ![confirmable, confirmed, correctable, outcome, moves].some(Boolean);
   return (
     <>
