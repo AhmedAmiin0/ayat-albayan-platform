@@ -1913,7 +1913,7 @@
       "count": 1
     },
     "@typescript-eslint/unbound-method": {
-      "count": 2
+      "count": 1
     },
     "ab/no-parent-imports": {
       "count": 2
@@ -1984,13 +1984,15 @@
     },
     "max-len": {
       "count": 1
-    },
-    "no-console": {
-      "count": 1
     }
   },
   "src/core/lib/i18n/locale.ts": {
     "max-len": {
+      "count": 1
+    }
+  },
+  "src/core/lib/log/log.ts": {
+    "no-console": {
       "count": 1
     }
   },
@@ -2361,9 +2363,6 @@
       "count": 1
     },
     "max-len": {
-      "count": 1
-    },
-    "no-console": {
       "count": 1
     }
   },
@@ -12219,14 +12218,8 @@
     "ab/no-shape-checks": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 2
     }
   },
   "src/today/screens/TodayLayout.tsx": {

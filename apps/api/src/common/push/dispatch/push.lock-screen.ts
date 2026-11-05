@@ -12,6 +12,8 @@ const AMOUNT =
 const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
 /** Single-person name slots: their first name only (each name of a joinNames list «سهيلة ومريم»). */
 const NAME_SLOTS: ReadonlySet<string> = new Set(['name', 'student', 'teacher']);
+/** A sum slot is masked whole, whatever its currency (AMOUNT knows a few codes only). */
+const MONEY_SLOTS: ReadonlySet<string> = new Set(['amount']);
 /** The quoted message in an inbox alert. */
 export const PREVIEW_MAX = 60;
 
@@ -40,6 +42,7 @@ const firstNames = (value: string) => value.split(/،| و/).map(firstName).join(
 const clip = (text: string) => (text.length > PREVIEW_MAX ? `${text.slice(0, PREVIEW_MAX - 1)}…` : text);
 
 function lockVar(key: string, value: string | number): string | number {
+  if (MONEY_SLOTS.has(key)) return '•••';
   // A lesson time is ours, never personal (and a date must not read as a phone number).
   if (typeof value === 'number' || key === 'when') return value;
   const shown = redact(value);

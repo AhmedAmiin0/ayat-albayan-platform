@@ -2,6 +2,7 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
 import { balanceOf, editApp, URL } from './used-before-edit.test-util';
 
 // «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): the weekly package, 4 lessons, 1 a week: 0..3.
@@ -21,7 +22,10 @@ describe('PATCH /subscriptions/:id/lessons-used-before', () => {
     resetMocks(m);
     edits.courseBooked.mockReset().mockResolvedValue(false);
     edits.setUsedBefore.mockReset().mockResolvedValue(subRow({ lessons_used_before: 2 }));
+    salesDefaults(m);
     m.subs.get
+      .mockReset()
+      .mockResolvedValueOnce(subRow())
       .mockResolvedValueOnce(subRow())
       .mockResolvedValueOnce(subRow())
       .mockResolvedValue(subRow({ lessons_used_before: 2 }));
@@ -55,7 +59,7 @@ describe('PATCH /subscriptions/:id/lessons-used-before', () => {
     expect(edits.setUsedBefore).not.toHaveBeenCalled();
   });
 
-  it('the whole package or more than one lesson per course day → 400 used_before_too_many', async () => {
+  it('the whole package or more (4 lessons: at most 3) → 400 used_before_too_many', async () => {
     for (const n of [4, 5]) {
       const res = await edit({ lessonsUsedBefore: n });
       expect([res.statusCode, res.json().code]).toEqual([400, 'used_before_too_many']);

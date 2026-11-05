@@ -1,6 +1,7 @@
 import {
   CANCEL_STATUS,
   type CancelBy,
+  type LessonCorrect,
   type LessonStatus,
   type SalesCancel,
   type SalesLessonMoved,
@@ -9,7 +10,12 @@ import {
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { LessonCancelService, LessonStatusService, RescheduleOneService } from '@/modules/teaching/lessons';
+import {
+  LessonCancelService,
+  LessonStatusService,
+  OutcomeCorrection,
+  RescheduleOneService,
+} from '@/modules/teaching/lessons';
 import { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
 import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 
@@ -23,6 +29,11 @@ const AFTER_END: Record<CancelBy, boolean> = {
 type Move = { lessonId: string; body: SalesReschedule; actor: AuthUser };
 type Cancel = { lessonId: string; body: SalesCancel; actor: AuthUser };
 type Confirm = { lessonId: string; actor: AuthUser };
+interface Correct {
+  lessonId: string;
+  body: LessonCorrect;
+  actor: AuthUser;
+}
 
 /** The admin's lesson services, held together (max-params: three constructor dependencies). */
 @Injectable()
@@ -31,6 +42,7 @@ export class LessonServices {
     readonly one: RescheduleOneService,
     readonly cancels: LessonCancelService,
     readonly status: LessonStatusService,
+    readonly corrections: OutcomeCorrection,
   ) {}
 }
 
@@ -49,7 +61,7 @@ export class SalesLessonActions {
   ) {}
 
   async reschedule({ lessonId, body, actor }: Move, now = new Date()): Promise<SalesLessonMoved> {
-    await this.scope.assertLesson({ lessonId, now });
+    await this.scope.assertLesson({ lessonId, now, user: actor });
     // Her own booking refuses a past time too (SalesBookingService): never a lesson that is already over.
     if (Date.parse(body.startsAt) <= now.getTime()) throw badRequest('date_in_past');
     const id = await this.lessons.one.reschedule({ lessonId, body: { scope: 'one', startsAt: body.startsAt }, actor });
@@ -64,7 +76,7 @@ export class SalesLessonActions {
    */
   async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<{ id: string; status: LessonStatus }> {
     const by = body.by ?? 'admin';
-    await this.scope.assertLesson({ lessonId, now, afterEnd: AFTER_END[by] });
+    await this.scope.assertLesson({ lessonId, now, user: actor, afterEnd: AFTER_END[by] });
     const reason = body.reason ? body.reason : null;
     await this.lessons.cancels.cancel({ lessonId, body: { scope: 'one', by, reason }, actor });
     const lesson = await this.queries.lesson(lessonId);
@@ -83,5 +95,18 @@ export class SalesLessonActions {
     if (Date.parse(lesson.ends_at) <= now.getTime()) throw conflict('lesson_ended');
     await this.lessons.status.confirm({ lessonId, actor, anyLesson: true });
     return { id: lesson.id, starts_at: new Date(lesson.starts_at).toISOString(), status: 'confirmed' };
+  }
+
+  /**
+   * «تصحيح الحالة» (owner 2026-11-03): after its end, the admin OutcomeCorrection; ANY lesson while
+   * SalesOwnershipRule is off, only hers while it enforces (as cancel, its after-end case).
+   */
+  async correct(
+    { lessonId, body, actor }: Correct,
+    now = new Date(),
+  ): Promise<{ id: string; status: LessonStatus }> {
+    await this.scope.assertLesson({ lessonId, now, user: actor, afterEnd: true });
+    await this.lessons.corrections.correct({ lessonId, to: body.to, actor });
+    return { id: lessonId, status: body.to };
   }
 }

@@ -294,7 +294,15 @@
     "noPackage": "No package",
     "weeklyYes": "Has a weekly lesson",
     "weeklyNo": "No weekly lesson",
-    "renew": "Renew subscription"
+    "renew": "Renew subscription",
+    "family": {
+      "title": "Family",
+      "siblings": "Siblings",
+      "contactIsSelf": "The student owns the chat number",
+      "openChat": "Open the guardian's chat",
+      "openStudent": "Open {name}'s file",
+      "noGuardianName": "Guardian"
+    }
   },
   "guardians": {
     "title": "Guardians",
@@ -319,6 +327,82 @@
     "removePhoneConfirm": "Remove {phone} from the family's numbers? Its chat becomes a lead chat again.",
     "phoneRemoved": "The second number was removed",
     "phoneNotFound": "This number is not a second number of this family"
+  },
+  "peopleEdit": {
+    "editData": "Edit details",
+    "attach": "Link to another guardian",
+    "convert": "Convert to student / guardian",
+    "studentSection": "Student",
+    "familySection": "Family",
+    "fields": {
+      "name": "Name",
+      "age": "Age",
+      "gender": "Gender",
+      "level": "Level",
+      "memorized": "Memorised",
+      "goal": "Goal",
+      "riwaya": "Riwaya",
+      "tz": "Time zone",
+      "notes": "Notes",
+      "teacherGenderPref": "Teacher gender preference",
+      "noPreference": "No preference",
+      "phone": "WhatsApp number (with country code)",
+      "country": "Country",
+      "secondPhone": "Family's second number"
+    },
+    "removeSecond": "Remove the second number",
+    "removeSecondConfirm": "Remove the second number {phone} from the family? Its chat becomes a lead chat again.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "loading": "Loading…",
+    "saved": "Details saved.",
+    "invalid": "Check the marked fields.",
+    "noChange": "Nothing changed.",
+    "currentFamily": "Current family: {name} {phone}",
+    "search": "Search by the guardian's name, number or a child's code",
+    "searchShort": "Type at least two characters.",
+    "noResults": "No matching family.",
+    "children": "Children: {names}",
+    "newFamily": "New guardian",
+    "newFamilyHint": "If the number belongs to a family, the student moves to it.",
+    "moveConfirm": "Move {student} to the family of {family}? The student's packages, lessons, payments and reports go with them, the old family's chats stay with its number, and the old family stays as it is.",
+    "moved": "The student moved to the new family.",
+    "selfToggle": "The student is the guardian",
+    "selfHint": "The family's WhatsApp number is the student's own (an adult learner).",
+    "selfOn": "The student owns the family number.",
+    "selfOff": "The guardian owns the family number.",
+    "selfTaken": "Another student of this family owns the number.",
+    "toStudent": "Convert the guardian to a student",
+    "toStudentHint": "When the guardian is the learner: they are added as a student of their own family, and the family number is theirs. The family login and chats stay as they are.",
+    "toStudentConfirm": "Add {name} as a student of their own family?",
+    "toStudentDone": "The guardian was added as a student, code {code}.",
+    "toGuardian": "Convert the student to the guardian",
+    "toGuardianHint": "When the guardian was registered as a student by mistake: the student record is removed and its name becomes the family guardian's; the other children and the family numbers stay. Only without lessons, packages, payments, reports, messages or a login.",
+    "toGuardianConfirm": "Remove the student record of {name} and make them the family's guardian? This cannot be undone.",
+    "toGuardianDone": "{name} is now the family's guardian.",
+    "toGuardianLogin": "Not possible: the student has a login.",
+    "errors": {
+      "same_guardian": "The student is already in this family.",
+      "guardian_changed": "The student's family just changed. Try again.",
+      "family_has_self": "Another student of this family owns the number.",
+      "guardian_has_self": "The guardian is already a student of their family.",
+      "student_has_records": "Not possible: the student has lessons, packages, payments, reports or messages.",
+      "student_has_login": "Not possible: the student has a login. The admin unlinks it first.",
+      "phone_taken": "This number belongs to another family.",
+      "duplicate_student": "A student with the same name is already in the family.",
+      "student_not_found": "This student does not exist.",
+      "guardian_not_found": "The guardian does not exist.",
+      "phone_not_found": "This number is not the family's second number.",
+      "validation_failed": "Check the details you entered.",
+      "generic": "Could not save. Try again.",
+      "guardian_has_login": "The main number of a family with a login cannot be changed here: its sign-in codes go to it. The admin changes it.",
+      "self_has_login": "Cannot move: the student owns the family number and the family has a login. The admin unlinks it first."
+    },
+    "toGuardianRecords": "Not possible: the student has lessons, packages, payments, reports or messages.",
+    "moveLogin": "Cannot move: the student has a login, or owns the number of a family with a login. The admin unlinks it first.",
+    "backToStudents": "Back to students"
   },
   "teachers": {
     "title": "Teachers",
@@ -1014,7 +1098,15 @@
       "byTeacher": "Cancelled by teacher",
       "byStudent": "Student excused",
       "done": "Lesson status updated",
-      "autoHeld": "Recorded as held automatically"
+      "autoHeld": "Recorded as held automatically",
+      "outcomeTitle": "Correct the lesson status",
+      "outcomeHint": "This lesson has ended. Pick what actually happened; the package balance is recounted.",
+      "to": {
+        "completed": "Held",
+        "no_show": "Absent",
+        "excused": "Student excused",
+        "cancelled_by_teacher": "Cancelled by teacher"
+      }
     }
   },
   "teacherDash": {
@@ -1801,6 +1893,16 @@
     "submittedAtCol": "Sent on",
     "gradeCol": "Grade",
     "actionsCol": "Action",
+    "teacherLink": {
+      "subtitle": "This page is for this lesson's report only; no sign-in is needed.",
+      "invalid": "This link is not valid. Open the full link as you received it, or ask the academy for a new one.",
+      "expired": "This report link has expired. Ask the academy for a new one.",
+      "notOpen": "The report opens when the lesson starts. Open the link again after its start time.",
+      "tooMany": "Too many tries in a short time. Wait a little, then try again.",
+      "loadFailed": "The report could not be loaded. Check your connection, then try again.",
+      "retry": "Try again",
+      "loading": "Loading the report…"
+    },
     "v2": {
       "formTitle": "Lesson report",
       "autoFilled": "Lesson details are filled in automatically from the schedule.",
@@ -2871,7 +2973,7 @@
       "stickerSend": "Send sticker"
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
-    "tryAfterWindow": "The last message was more than 24 hours ago: we will reopen the conversation when you send",
+    "tryAfterWindow": "More than 24 hours since the family's last message: your message waits for their reply, and the welcome template invites them to reply unless it already reached them.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
@@ -3208,18 +3310,18 @@
     "moveFor": "{name}: move to the other number",
     "moveUnavailable": "The other number is not configured on the server",
     "crmName": {
-      "edit": "Edit its name in the CRM",
-      "editFor": "{name}: edit its name in the CRM",
-      "current": "In the CRM: {crm}",
-      "title": "Template name in the CRM",
-      "description": "«{name}» is sent to the CRM with this name and language only while its line is on the CRM; nothing changes on Meta or Kapso. Leave a field blank to use the default.",
-      "name": "Name in the CRM",
-      "nameHint": "Lowercase English letters, digits and underscores, as the CRM shows it. Default: {crm}",
-      "language": "Template language in the CRM",
-      "languageHint": "The language code as the CRM shows it, e.g. ar or en_US. Default: {language}",
-      "invalid": "Use only lowercase English letters, digits and underscores for the name, and a code like ar or en_US for the language.",
-      "reportNote": "Type report_session to send the report file first, then report_session for a regular lesson or report_trial_session for a trial lesson, as the old system did. Only do this if both templates have no variables in the CRM.",
-      "saved": "Saved the name «{name}» is sent under to the CRM"
+      "edit": "Edit its WhatsApp name",
+      "editFor": "{name}: edit its WhatsApp name",
+      "current": "On WhatsApp: {crm}",
+      "title": "Template name on WhatsApp",
+      "description": "«{name}» is sent by this name and language from the WhatsApp Business account, whether the line sends through the CRM or directly through Meta; no template is created or changed on Meta. Leave it blank for the default.",
+      "name": "Name on WhatsApp",
+      "nameHint": "Lowercase letters, digits and underscores, as the WhatsApp Business account shows it. Default: {crm}",
+      "language": "Template language on WhatsApp",
+      "languageHint": "The language code as the WhatsApp Business account shows it, such as ar or en_US. Default: {language}",
+      "invalid": "Use lowercase letters, digits and underscores for the name, and a code such as ar or en_US for the language.",
+      "reportNote": "Type report_session to send the report file first, then report_session for a regular lesson or report_trial_session for a trial lesson, as the old system did. Only if both templates on WhatsApp have no variables.",
+      "saved": "Saved the WhatsApp name «{name}» is sent by"
     },
     "crmStatus": {
       "approved": "Mark approved in the CRM",
@@ -3384,6 +3486,13 @@
         "webhookCrmNoSecret": "«CRM webhook signing secret» is not set in «Communications» → «Safety», so every CRM delivery is refused and no delivery ticks show",
         "crmScopeMissing": "The CRM API key is valid but lacks the messages:send scope, so this line will not send. Update it in «Communications» → «Safety».",
         "crmScopeOk": "The CRM API key is valid and has the send scope",
+        "metaReady": "Ready to send directly through Meta",
+        "metaAppSecretSet": "The Meta app secret is set, so signed inbound messages are accepted",
+        "metaAppSecretMissing": "The Meta app secret is not set, so inbound messages from Meta will be refused",
+        "metaVerifyTokenSet": "The webhook verify token is set",
+        "metaVerifyTokenMissing": "The webhook verify token is not set, so Meta will not accept the ⁦/webhooks/whatsapp⁩ URL",
+        "metaAppSubscribed": "The Meta app is subscribed to the WhatsApp Business account",
+        "metaAppNotSubscribed": "The Meta app is not subscribed to the WhatsApp Business account, so no inbound messages or delivery ticks arrive through Meta",
         "callbackOverride": "Alternative callback address: {url}",
         "checkedAt": "Last checked: {time}",
         "checkFailed": "Could not check the lines",
@@ -3435,7 +3544,8 @@
       "slot_2": "Sunday 4 October 19:00",
       "tz_city": "Riyadh",
       "lesson_kind": "Trial",
-      "contact_name": "Ahmed"
+      "contact_name": "Ahmed",
+      "feedback_link": "https://example.com/r/Ab12Cd34Ef"
     },
     "teacherLessonMinutes": "{n} minutes",
     "teacherReminderCrm": "{when} · {students} · Lesson link: {join} · Lesson report: {report}",
@@ -3636,10 +3746,16 @@
       "template_not_approved": "The template isn't approved by Meta yet",
       "network": "We couldn't reach WhatsApp",
       "internal": "The platform hit an error while sending",
-      "unknown": "Something went wrong while sending ({code})"
+      "unknown": "Something went wrong while sending ({code})",
+      "awaiting_reply": "Waiting for the family's reply",
+      "hold_expired": "The wait ended with no reply",
+      "window_closed": "More than 24 hours since the family's last message; only a template can be sent",
+      "reopen_unavailable": "Not sent: the chat reopen template is not set or not valid — an admin picks it in Settings from the approved templates allowed for restricted roles with no variables",
+      "reopen_failed": "Not sent: the chat reopen template did not reach the family — resend the message to send the template again"
     },
     "cancelManual": "Not yet",
-    "failedMenu": "Message not sent"
+    "failedMenu": "Message not sent",
+    "awaitingReply": "Waiting for the family's reply"
   },
   "mobileLeads": {
     "filter": "Filter",
@@ -3759,6 +3875,10 @@
     "course_resumed": {
       "title": "Lessons resumed",
       "body": "{student}’s lessons resume; first lesson {when}"
+    },
+    "payment_received": {
+      "title": "Payment received",
+      "body": "{student}: {amount}"
     }
   },
   "bell": {
@@ -3987,7 +4107,8 @@
       "lesson_rescheduled": "Lesson time changed",
       "lesson_cancelled": "Lesson cancelled",
       "course_paused": "Lessons paused",
-      "course_resumed": "Lessons resumed"
+      "course_resumed": "Lessons resumed",
+      "payment_received": "Payment received"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -4048,7 +4169,7 @@
       "followUpSlotsFromHours": "No slot sooner than this is offered to the lead.",
       "followUpSlotsToDays": "Free slots are offered up to this many days ahead.",
       "quickReplyWindowHours": "A guardian’s typed reply confirms only a lesson we messaged them about within this many hours.",
-      "chatReopenTemplate": "The WhatsApp template sent when a closed chat is opened, to reopen it. Until it is approved on the line, only the Kapso conversation is reopened and nothing is sent.",
+      "chatReopenTemplate": "The template sent once per 24 hours before a message to a family whose last message is more than 24 hours old; the message is sent after they reply. It must be approved on the chat number, allowed for restricted roles, and have no variables (for example welcome_greeting). Empty or not valid: nothing is sent and the message fails with that reason.",
       "crmMediaHost": "The old CRM storage host only (no https:// and no path). Photos and voice notes imported from the old CRM chats are fetched from it once and kept here. Left empty, these files do not open.",
       "crmMediaCopyAll": "When on, every photo and voice note imported from the old CRM is copied in the background, in small batches, into our private storage, not only the ones that are opened. Needs the old CRM files host to be set, and turns itself off when the copy is done. These copies are not deleted after 30 days.",
       "makeupWindowDays": "After this, the makeup button no longer shows for the lesson.",
@@ -4067,7 +4188,9 @@
       "commsSource": "«Current setup» or «Numbers». Changed only in the «Numbers» section, after parity is confirmed.",
       "reportFormV2": "When on, teachers use the new form for new reports (surah and ayahs, content per program) and families receive the new report layout. Earlier reports stay as they are.",
       "presenceEnabled": "When on, «Online now» or «Last seen» shows in the platform chats between teachers and families, and the admin sees the team's online status. Each user sees only the people they can already message. When off, no online status or last seen is recorded or shown.",
-      "lessonConfirmationRequired": "When off (the default) no lesson shows \"Needs confirmation\", and a lesson counts as held 30 minutes after its end unless another status was recorded, so it is deducted from the package. If the teacher cancelled it or the student excused themself, an assistant or the admin team records that before or after the lesson. A family's \"Yes\" reply still works. When on, a lesson shows \"Needs confirmation\" until the family or the admin team confirms it."
+      "lessonConfirmationRequired": "When on (the default) a lesson shows \"Needs confirmation\" until the family replies \"Yes\" or the admin team confirms it. Every lesson that has ended is deducted from the package, confirmed or not. After the grace period a confirmed lesson is recorded as held; an unconfirmed one is recorded as absent when the platform sent the family's reminder and no reply came, and otherwise stays \"Needs confirmation\" for an assistant to resolve. When off, no lesson shows \"Needs confirmation\" and a lesson counts as held after the grace period unless another status was recorded.",
+      "lessonOutcomeGraceMinutes": "Minutes after a lesson's end before its status is recorded automatically (held or absent). Default: 30 minutes.",
+      "shortLinkBase": "The address the platform's short links start with, e.g. https://example.com/r/ (must start with https:// and end with /). Empty = the platform API's address followed by /r/."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -4097,7 +4220,9 @@
     "commsSource": "Where the number setup comes from",
     "reportFormV2": "New lesson report form",
     "presenceEnabled": "Show online status and last seen",
-    "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson"
+    "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson",
+    "lessonOutcomeGraceMinutes": "Grace after a lesson ends before its status is recorded (minutes)",
+    "shortLinkBase": "Short links base"
   },
   "language": {
     "label": "Language",
@@ -4937,6 +5062,23 @@
         "generic": "Could not save, try again."
       }
     },
+    "startDateEdit": {
+      "action": "Edit start date",
+      "title": "Edit the package start date",
+      "label": "Start date",
+      "hint": "Only the start date changes; payments and the renewal date stay as they are, and the lessons counted from the package may follow the new date.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Start date updated.",
+      "current": "Current date: {date}",
+      "errors": {
+        "already_cancelled": "This package is cancelled.",
+        "start_date_too_old": "The start date cannot be more than a year before today.",
+        "used_before_needs_past_start": "This package counts lessons used before the platform, so it must start before today.",
+        "start_date_changed": "The start date changed before saving; refresh and try again.",
+        "generic": "Could not save, try again."
+      }
+    },
     "noCommissionStarted": "No commission: the course started before it was recorded",
     "teacher": "Teacher",
     "teacherHint": "The teacher–student chat opens after the subscription.",
@@ -5508,7 +5650,10 @@
       "students.change_teacher": "Change any student's teacher for the rest of the course",
       "courses.reschedule": "Change any student's lesson days and times",
       "sales.renew_any": "Renew any student's subscription from the chat",
-      "leads.link_family": "Link a lead's number to an existing student's family"
+      "leads.link_family": "Link a lead's number to an existing student's family",
+      "people.edit": "Edit students' and families' details",
+      "students.attach_guardian": "Link a student to another guardian",
+      "people.switch_role": "Convert between student and guardian"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -5524,7 +5669,10 @@
       "students.change_teacher": "Moves the remaining lessons of the course to the new teacher after checking their time. Past lessons, reports and pay stay with the previous teacher.",
       "courses.reschedule": "Moves the remaining lessons to the new days and times, same count, after checking the teacher's and the student's time.",
       "sales.renew_any": "Shows «Renew subscription», «New subscription», «Record a bank transfer» and «Lesson days» for every child of the family in its chat, and «Renew» and «Record transfer» in «Student details», for any student, even one that is not theirs or belongs to another assistant (e.g. families imported from the old sheet). They book and change the package's lesson days as for their own students, after checking the teacher's and the student's time and never over a clash. Commission keeps its rules. Renewing and recording a transfer send no message.",
-      "leads.link_family": "Adds the lead chat's number as a second number of a registered student's family, so the chat shows the family. It does not change who follows up the lead and makes no one responsible for the family. No message is sent."
+      "leads.link_family": "Adds the lead chat's number as a second number of a registered student's family, so the chat shows the family. It does not change who follows up the lead and makes no one responsible for the family. No message is sent.",
+      "people.edit": "Edit any student's name, age, gender, level, time zone and notes, and the family's details and numbers. Never deletes or merges, never changes the status, program or teacher.",
+      "students.attach_guardian": "Move the student to another family or to a new guardian by number. Packages, lessons and payments stay with the student; the old family stays. Also needs «Edit students' and families' details».",
+      "people.switch_role": "«The student is the guardian», converting a guardian into a student of their family, and converting a student record with no history into the family's guardian. Also needs «Edit students' and families' details»."
     },
     "page": {
       "title": "Roles and permissions",
@@ -6325,6 +6473,10 @@
       "course_resumed": {
         "name": "Lessons resumed",
         "trigger": "When a student’s course resumes, with the first lesson’s time, to the teacher and the guardian"
+      },
+      "payment_received": {
+        "name": "Payment received",
+        "trigger": "When an incoming payment is recorded for a student, to the administration and the student's assistant"
       }
     }
   },
@@ -7539,7 +7691,6 @@
       "backToApp": "Back to the app"
     },
     "bell": {
-      "paidTitle": "Paid through a payment link",
       "refusedTitle": "A card payment was not recorded in the platform",
       "disputeTitle": "A card payment was disputed",
       "disputeBody": "Needs review in the Stripe dashboard"
@@ -7726,5 +7877,8 @@
       "fri": "Fr"
     },
     "earliest": "Earliest allowed date: {date}"
+  },
+  "shortLinks": {
+    "notFound": "This link is not valid or has expired."
   }
 }

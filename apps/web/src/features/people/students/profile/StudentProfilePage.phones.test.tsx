@@ -44,6 +44,12 @@ describe('StudentProfilePage: «الرقم الثاني»', () => {
     expect(meta()?.querySelectorAll('dd')[3]?.textContent).toBe(formatPhone(SECOND));
   });
 
+  it('«العائلة» (owner 2026-11-02): the guardian name opens the family chat', async () => {
+    renderPage(guardian());
+    const link = await screen.findByRole('link', { name: 'أم سهيلة' });
+    expect(link.getAttribute('href')).toBe(`/admin/inbox?page=1&phone=${encodeURIComponent(MAIN)}`);
+  });
+
   it.each([
     ['only the main number', guardian([{ phone_e164: MAIN, is_primary: true }])],
     ['an older API without phones', guardian()],

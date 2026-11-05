@@ -2,7 +2,8 @@ import type { TemplateNumberSyncView } from '@ab/shared';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import type { WhatsappEnv } from '@/config/env/env';
 import { readError, requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
-import { findMeta, syncPatch } from './template-sync';
+import { wabaSyncPatch } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
+import type { TemplatePatch } from './template-sync';
 import { CRM_MANAGED, waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { ApprovalRow, ApprovalWrite, TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { WaError, type MetaTemplate, type TemplateRow, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -33,11 +34,18 @@ async function readList(deps: NumberSyncDeps, n: OverlayNumber & { env: Whatsapp
 type Meta = Pick<ApprovalWrite, 'meta_id' | 'quality' | 'last_error'>;
 const kept = (prev: ApprovalRow | undefined): Meta => ({ meta_id: prev?.meta_id ?? null, quality: prev?.quality ?? null, last_error: prev?.last_error ?? null });
 
+/** Meta's view when found; a mapped WABA name (template-waba-match.ts) never brings its meta_id. */
+function metaOf(p: TemplatePatch, prev: ApprovalRow | undefined): Meta {
+  if (p.quality === undefined) return kept(prev);
+  const meta_id = p.meta_id ?? prev?.meta_id ?? null;
+  return { meta_id, quality: p.quality, last_error: p.last_error ?? null };
+}
+
 /** One key on one number: Meta's view, or (absent) not_submitted stays not_submitted and anything else is missing. */
 function approval(input: { row: TemplateRow; prev: ApprovalRow | undefined; meta: readonly MetaTemplate[] }, numberId: string, now: Date): ApprovalWrite {
   const { row, prev } = input;
-  const p = syncPatch({ ...row, status: prev?.status ?? 'not_submitted' }, findMeta(row, input.meta), now);
-  const meta: Meta = p.meta_id === undefined ? kept(prev) : { meta_id: p.meta_id, quality: p.quality ?? null, last_error: p.last_error ?? null };
+  const p = wabaSyncPatch({ ...row, status: prev?.status ?? 'not_submitted' }, input.meta, now);
+  const meta = metaOf(p, prev);
   return { template_key: row.key, number_id: numberId, status: p.status ?? 'not_submitted', ...meta, last_checked_at: now.toISOString() };
 }
 

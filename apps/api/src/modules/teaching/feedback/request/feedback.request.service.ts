@@ -5,7 +5,8 @@ import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/temp
 import { FEEDBACK_CONFIG, type FeedbackConfig } from '@/modules/teaching/feedback/feedback.config';
 import { FeedbackRepo, type FeedbackRow, type RequestContext } from '@/modules/teaching/feedback/feedback.repo';
 import { FEEDBACK_TEMPLATE, FeedbackSender } from './feedback.sender';
-import { expiryOf, hashToken, signToken } from '@/modules/teaching/feedback/public/feedback.token';
+import { hashToken, signToken } from '@/modules/teaching/feedback/public/feedback.token';
+import { issueLink } from '@/modules/teaching/feedback/links/feedback.links';
 
 type RequestInput = { lessonId: string; body: FeedbackRequest; actorId: string };
 type Link = { row: FeedbackRow; token: string; exp: number };
@@ -31,7 +32,8 @@ export class FeedbackRequestService {
     const ctx = await this.queries.requestContext(lessonId, body.studentId);
     if (!ctx) throw notFound('student_not_in_lesson');
     if (!feedbackEligible(ctx.lessonStatus, ctx.attendance)) throw conflict('lesson_not_eligible');
-    const link = await this.link({ lessonId, ctx, resend: body.resend === true, secret: this.config.secret }, now);
+    const resend = body.resend === true;
+    const link = await this.link({ lessonId, ctx, resend, secret: this.config.secret }, now);
     const sent = await this.sender.send({
       phone_e164: ctx.guardian.phone,
       guardian_id: ctx.guardian.id,
@@ -62,19 +64,9 @@ export class FeedbackRequestService {
       const token = signToken(secret, { lessonId, studentId: ctx.student.id, exp });
       if (hashToken(token) === existing.token_hash) return { row: existing, token, exp };
     }
-    const exp = expiryOf(now);
-    const token = signToken(secret, { lessonId, studentId: ctx.student.id, exp });
-    const row = await this.queries.issue({
-      lesson_id: lessonId,
-      student_id: ctx.student.id,
-      guardian_id: ctx.guardian.id,
-      teacher_id: ctx.teacher.id,
-      kind: ctx.kind,
-      token_hash: hashToken(token),
-      requested_at: now.toISOString(),
-      expires_at: new Date(exp * 1000).toISOString(),
-    });
-    if (!row) throw conflict('already_submitted');
-    return { row, token, exp };
+    const pair = { lessonId, studentId: ctx.student.id };
+    const made = await issueLink(this.queries, { secret, pair, ctx }, now);
+    if (!made) throw conflict('already_submitted');
+    return made;
   }
 }

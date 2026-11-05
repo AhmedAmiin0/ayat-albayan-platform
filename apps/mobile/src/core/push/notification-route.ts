@@ -54,6 +54,8 @@ const ROUTES: Record<PushKind, (data: unknown) => string> = {
   lesson_cancelled: toStudent,
   course_paused: toStudent,
   course_resumed: toStudent,
+  // A payment came in (owner 2026-11-05): the student (the balance card is on that screen).
+  payment_received: toStudent,
 };
 
 const tabOf = (href: string): TabRoute => (href.startsWith('/inbox') ? 'inbox' : href.startsWith('/students') ? 'students' : 'today');
@@ -113,6 +115,8 @@ const TEACHER_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   lesson_cancelled: () => '/teacher/schedule',
   course_paused: () => '/teacher/schedule',
   course_resumed: () => '/teacher/schedule',
+  // Admins and assistants only; never sent to a teacher.
+  payment_received: () => TEACHER_TODAY,
 };
 
 /** The teacher screen a tapped push opens; null for anything that is not one of our pushes. */

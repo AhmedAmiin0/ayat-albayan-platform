@@ -93,7 +93,7 @@ export class ThreadDeltaService {
     if (!news && !unread) return undefined;
     const [row, stamped] = await Promise.all([this.queries.thread(q.phone), this.stamp({ inbound, news, unread }, input)]);
     if (!row) return undefined;
-    const view = toThreadView(row, now, null);
+    const view = toThreadView(row, now);
     return { window: windowOf(view, caller.kind === 'teacher' || stamped ? 0 : view.unread_count), stamped };
   }
 

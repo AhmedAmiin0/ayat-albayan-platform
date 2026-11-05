@@ -79,13 +79,34 @@ interface TeacherReminderInput {
   };
   /** The web origin (firstWebOrigin): both links absolute; '' = no CRM values. */
   origin: string;
+  /** The short links the job made for this lesson; a missing one keeps the long page. */
+  links?: TeacherLinks;
 }
+
+/** The teacher's short links (docs/19 «Short links»): the no-login report, and our classroom. */
+export interface TeacherLinks {
+  report?: string;
+  /** Only when the lesson's link is our own classroom page: a Meet or fixed link stays as it is. */
+  join?: string;
+}
+
+/** <join> and <report>: the short links when the job made them, else the long pages. */
+function lineLinks(input: TeacherReminderInput): { join: string; report: string } {
+  const { origin, links = {} } = input;
+  const report = links.report ?? teacherReportUrl(origin, input.lesson.id);
+  return { join: links.join ?? ownJoin(input), report };
+}
+
+/** The lesson's own link (Meet, the teacher's fixed link, our classroom), else our classroom. */
+const ownJoin = ({ lesson, origin }: TeacherReminderInput): string =>
+  lesson.meeting_link?.trim() || classroomUrl(origin, lesson.id);
 
 /**
  * The same-day reminder as the CRM's teacher_lesson_reminder (the old script's: {{1}} the teacher,
  * {{2}} one line, no buttons): «<the time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) ·
  * رابط الحلقة: <join> · تقرير الحلقة: <report>». join: the lesson's own link (Meet, the teacher's
- * fixed link, our classroom), else our classroom; report: the teacher's report form. null when a
+ * fixed link, our classroom: shortened), else our classroom; report: the teacher's no-login report
+ * link, shortened (else the signed-in report page). Both drivers send this {{2}}. null when a
  * value is missing: the row then carries only the Meta values (meta_name on the CRM).
  */
 export function teacherReminderCrm(input: TeacherReminderInput): CrmValues | null {
@@ -97,8 +118,7 @@ export function teacherReminderCrm(input: TeacherReminderInput): CrmValues | nul
   const line = fill(text.teacherReminderCrm, {
     when: lessonWhenText(new Date(lesson.starts_at), input.teacher.tz),
     students: joinNames(students),
-    join: lesson.meeting_link?.trim() || classroomUrl(origin, lesson.id),
-    report: teacherReportUrl(origin, lesson.id),
+    ...lineLinks(input),
   });
   return { body: [oneLine(who.teacher), oneLine(line)], buttons: [] };
 }

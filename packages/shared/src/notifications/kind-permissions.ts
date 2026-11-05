@@ -30,6 +30,8 @@ export const PUSH_KIND_PERMISSIONS: Readonly<Record<PushKind, readonly Permissio
   lesson_cancelled: BELL,
   course_paused: BELL,
   course_resumed: BELL,
+  // Owner 2026-11-05: a payment came in (the admins and the student's assistant).
+  payment_received: BELL,
 };
 
 /** May a profile holding `held` be told about `kind`? */

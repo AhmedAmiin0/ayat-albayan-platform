@@ -1,16 +1,16 @@
-import { canSalesConfirm, isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
+import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { usePermissions } from '@/features/people/auth';
 import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
 import { Drawer } from '@/features/teaching/schedule/Drawer';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
 import { t } from '@/lib/i18n/i18n';
-import { usePublicConfig } from '@/lib/settings/public-config';
-import { canSalesCorrect, isHeldLesson } from './correct/correctable';
+import { CorrectOutcome } from '@/features/teaching/schedule';
 import { SalesCorrectLesson } from './correct/SalesCorrectLesson';
 import { SalesConfirmLesson } from './SalesConfirmLesson';
+import { SalesMoveLesson } from './move';
 import { SalesLessonDetails } from './SalesLessonDetails';
+import { useSalesLessonRights } from './use-sales-lesson-rights';
 
 export interface SalesLessonDrawerProps {
   lesson: SalesScheduleLesson;
@@ -30,15 +30,14 @@ interface StepsProps {
 
 /**
  * What sales may do: «تأكيد الحلقة» on a scheduled lesson not ended (lessons.confirm), only while
- * the academy requires a confirmation; «لم تنعقد؟» (lessons.cancel) on a completed lesson or,
- * without the confirmation, an open one before or after its end (owner 2026-11-02); else read-only.
+ * the academy requires a confirmation; «لم تنعقد؟» (lessons.cancel) on an open one before its end
+ * without the confirmation (owner 2026-11-02); «تصحيح حالة الحلقة» (lessons.cancel) on an ended
+ * open lesson or a held / absent one (owner 2026-11-03); «تغيير الموعد» (lessons.reschedule) on an
+ * open lesson not ended; else read-only.
  */
 function SalesLessonSteps({ lesson, now, running, confirmed, onConfirmed }: StepsProps) {
-  const { can } = usePermissions();
-  const required = usePublicConfig().lesson_confirmation_required;
-  const confirmable = required && canSalesConfirm(lesson, { now, holds: can('lessons.confirm') });
-  const correctable = canSalesCorrect(lesson, { now, required, holds: can('lessons.cancel') });
-  const readOnly = ![confirmable, confirmed, correctable].some(Boolean);
+  const { confirmable, correctable, outcome, moves } = useSalesLessonRights(lesson, now);
+  const readOnly = ![confirmable, confirmed, correctable, outcome, moves].some(Boolean);
   return (
     <>
       {confirmable && (
@@ -47,9 +46,11 @@ function SalesLessonSteps({ lesson, now, running, confirmed, onConfirmed }: Step
       {confirmed && (
         <p role="status" className="text-sm text-ink-2">{t.sales.lessonActions.confirmed}</p>
       )}
+      {moves && <SalesMoveLesson lesson={lesson} />}
       {correctable && (
-        <SalesCorrectLesson lessonId={lesson.id} autoHeld={isHeldLesson(lesson)} />
+        <SalesCorrectLesson lessonId={lesson.id} autoHeld={false} />
       )}
+      {outcome && <CorrectOutcome lesson={lesson} area="sales" />}
       {readOnly && <p className="text-xs text-ink-3">{t.lessons.sheet.readOnly}</p>}
     </>
   );
@@ -58,7 +59,7 @@ function SalesLessonSteps({ lesson, now, running, confirmed, onConfirmed }: Step
 /**
  * The admin lesson drawer for sales (owner 2026-10-26): the same panel and details, and on a
  * running lesson «جارية الآن» with «ادخل الحلقة» (she joins as the classroom assistant, docs/16),
- * then SalesLessonSteps (owner 2026-10-28, 2026-11-02). No edit, move, invoice or report action.
+ * then SalesLessonSteps (owner 2026-10-28, 2026-11-02). No edit, invoice or report action.
  * Render it conditionally.
  */
 export function SalesLessonDrawer({ lesson, now, onClose }: SalesLessonDrawerProps) {

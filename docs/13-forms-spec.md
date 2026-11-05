@@ -85,6 +85,12 @@ Tables and buckets (migrations 170-172): `invoices` (admin-only RLS, no teacher 
 
 2) تقرير الحلقة
 
+> **Platform (owner 2026-11-05).** The teacher opens this form from the same-day reminder's «تقرير الحلقة» short
+> link, without signing in: one lesson, from its start until its end + `report_teacher_edit_hours`, the same
+> fields and validation as the signed-in page (docs/19 «Teacher report link»). The submitted report's PDF goes to
+> the family as `session_report_pdf` with the «رأيك يهمّنا» link (docs/19 «Report flow»). The old Google form
+> stays on until the owner turns it off; the platform no longer links it through the Vercel redirector.
+
 بيانات الحلقة
 الحقل    النوع    الخيارات
 معرّف الطالب (لا تعدله) *    نص قصير    بيتعبّى تلقائيًا من الرابط

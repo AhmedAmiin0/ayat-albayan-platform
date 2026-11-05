@@ -1,4 +1,4 @@
-import { createApiClient } from '@ab/client-core';
+import { createApiClient, type SendMethod } from '@ab/client-core';
 import { WEB_CLIENT_TAG } from './client-tag';
 import { env } from './env';
 import { supabase } from './supabase';
@@ -17,3 +17,20 @@ export const apiFetch = client.apiFetch;
 
 /** JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. */
 export const apiSend = client.apiSend;
+
+// The signed-link pages (no login): the same client that never sends the session's token.
+const publicClient = createApiClient({
+  baseUrl: () => env.apiUrl,
+  accessToken: () => Promise.resolve(null),
+  clientTag: () => WEB_CLIENT_TAG,
+});
+
+/** GET for a signed-link page: no Authorization header, whoever is signed in on this browser. */
+export function publicApiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  return publicClient.apiFetch(path, init);
+}
+
+/** JSON mutation for a signed-link page, without the session (undefined on 204). */
+export function publicApiSend<T>(method: SendMethod, path: string, body?: unknown): Promise<T> {
+  return publicClient.apiSend(method, path, body);
+}

@@ -1,4 +1,5 @@
 import type { SettingKey } from './registry.js';
+import { SCHEDULE_KEYS } from './domains/teaching/schedule-keys.js';
 
 // Where each setting shows on /admin/settings, kept apart from who owns it (domains/*.ts). The
 // page renders a section's registry fields in this order; the sections come in SETTINGS_SECTIONS order.
@@ -37,11 +38,11 @@ export const SETTINGS_LAYOUT = {
     'chat_reopen_template',
     'crm_media_host',
     'crm_media_copy_all',
+    'short_link_base',
     'whatsapp_calls_enabled',
     'calls_permission_template',
   ],
-  schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available',
-    'lesson_confirmation_required'],
+  schedule: SCHEDULE_KEYS,
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
     'meeting_link_auto', 'meetings_in_app'],
   reports: ['report_teacher_edit_hours', 'report_form_v2'],

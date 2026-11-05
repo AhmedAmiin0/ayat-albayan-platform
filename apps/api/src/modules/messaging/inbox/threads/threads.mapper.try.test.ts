@@ -22,13 +22,19 @@ const chatOn = (provider: 'meta' | 'kapso') => {
 describe('toThreadView try_after_window', () => {
   afterEach(() => vi.unstubAllEnvs());
 
-  it('a Kapso chat line: true, whatever the window', () => {
+  it('a Kapso chat line with a usable reopen template: true, whatever the window', () => {
     chatOn('kapso');
-    expect(toThreadView(threadRow(), NOW).try_after_window).toBe(true);
+    expect(toThreadView(threadRow(), NOW, { reopenUsable: true }).try_after_window).toBe(true);
+  });
+
+  it('a Kapso chat line with no usable reopen template: absent (nothing would be sent)', () => {
+    chatOn('kapso');
+    expect(toThreadView(threadRow(), NOW, { reopenUsable: false })).not.toHaveProperty('try_after_window');
+    expect(toThreadView(threadRow(), NOW)).not.toHaveProperty('try_after_window');
   });
 
   it('a meta chat line: absent (templates only after the window, as before)', () => {
     chatOn('meta');
-    expect(toThreadView(threadRow(), NOW)).not.toHaveProperty('try_after_window');
+    expect(toThreadView(threadRow(), NOW, { reopenUsable: true })).not.toHaveProperty('try_after_window');
   });
 });

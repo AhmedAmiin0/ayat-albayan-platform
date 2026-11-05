@@ -9,10 +9,8 @@ import { t } from '@/lib/i18n/i18n';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { reportErrorText, reportFormQuery } from './api';
 import { reportHistoryHref } from './paths';
-import { ReportEntry } from './entry/ReportEntry';
-import { ReportEntryV2 } from './entry-v2/ReportEntryV2';
 import { ReportLink } from './history/ReportLink';
-import { AdminReportV2 } from './view-v2/AdminReportV2';
+import { ReportEntryForm } from './ReportEntryForm';
 
 export interface ReportFormPageProps {
   lessonId: string;
@@ -52,13 +50,8 @@ export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProp
       <div className="grid gap-10">
         {entries.map((entry) => (
           <div key={entry.report.id} className="grid gap-3">
-            {entry.report.form_version !== 2 ? (
-              <ReportEntry form={data} entry={entry} titled={entries.length > 1} tz={tz} />
-            ) : role === 'admin' ? (
-              <AdminReportV2 form={data} entry={entry} titled={entries.length > 1} tz={tz} />
-            ) : (
-              <ReportEntryV2 form={data} entry={entry} titled={entries.length > 1} tz={tz} />
-            )}
+            <ReportEntryForm form={data} entry={entry} role={role}
+              titled={entries.length > 1} tz={tz} />
             <ReportLink href={reportHistoryHref(role, entry.student.id)} className="justify-self-start">
               {t.reports.history}
             </ReportLink>

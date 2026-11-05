@@ -4,7 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
-import { CourseActionsSection, CoursePauseSection } from '@/students';
+import { CourseActionsSection, CoursePauseSection, PeopleEditSection } from '@/students';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Button } from '@/core/ui/primitives/Button';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -15,6 +15,7 @@ import { familyChatHref } from '@/sales/sales/lib/sales-href';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { MoneyActionButton } from '@/sales/sales/money-action';
 import { AttendanceSection } from './AttendanceSection';
+import { FamilySection } from '@/sales/sales/family/FamilySection';
 import { PackageCancelAction } from './PackageCancelAction';
 import { ReportsSection } from './ReportsSection';
 import { ScheduleSection } from './ScheduleSection';
@@ -73,12 +74,14 @@ export function SalesStudentScreen() {
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
           {acts ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
+          <FamilySection family={data.family} phone={phone} />
           <CoursePauseSection studentId={data.student.id} />
           <CourseActionsSection
             studentId={data.student.id}
             subscriptionId={data.current_id}
             moves={acts}
           />
+          <PeopleEditSection studentId={data.student.id} onRemoved={() => router.back()} />
           <PackageCancelAction studentId={data.student.id} subscriptionId={data.current_id} />
           <TrialSection trial={data.trial} student={mine ? data.student : null} />
           <SubscriptionSection data={data} />

@@ -231,8 +231,8 @@ Meta values, never the producer's CRM values.
 |---|---|---|
 | `booking_confirmation` / `_meet` / `_plain`, `lesson_reminder` (`lesson_reminder_v2` on Meta) / `_meet` / `_plain` | same names (no change) | the meta driver's values |
 | `teacher_new_student` | `teacher_lesson_v2` (default, no crm_name needed) | body [teacher, students, their codes `AB-nnnn`, the first lesson's time in the teacher's tz, its duration «45 دقيقة»]; URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` (**wrong on the real template**, see below) |
-| `teacher_lesson_reminder` / `_meet` (the same-day reminder, since 2026-10-31: the CRM's account has no `teacher_lesson_reminder_meet`, Meta #132001) | `teacher_lesson_reminder` (default, the old script's own teacher template, no buttons) | body [teacher, one line: «<the lesson's time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) · رابط الحلقة: <join> · تقرير الحلقة: <report>»]; no buttons |
-| `report_ready` | `report_ready` (default) **or**, once `crm_name` = `report_session`, the old script's flow | the PDF as a `type:"document"` message (7-day signed URL), then `report_trial_session` (the lesson's rule is a trial package) or `report_session` (any other), **no variables** |
+| `teacher_lesson_reminder` / `_meet` (the same-day reminder, since 2026-10-31: the CRM's account has no `teacher_lesson_reminder_meet`, Meta #132001) | `teacher_lesson_reminder` (default, the old script's own teacher template, no buttons) | body [teacher, one line: «<the lesson's time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) · رابط الحلقة: <join> · تقرير الحلقة: <report>»]; no buttons; `<report>` is the teacher's short no-login report link («Teacher report link» below) |
+| `report_ready` | `session_report_pdf` (since 2026-11-05: `crm_name` set by migration `20261105000301`) | ONE template call: header DOCUMENT = the report PDF (7-day signed URL); body [student, the lesson date `dd/MM/yyyy` in the guardian's tz, the teacher's display name, the family's «رأيك يهمّنا» short link]; trial lessons too («Report flow» below). The old two-call flow (`report_session` / `report_trial_session`) is still in the code but those templates are PENDING_DELETION on Meta: never set them |
 
 The teacher alert's CRM values are built by `teacherLessonCrm`, the teacher reminder's by `teacherReminderCrm`
 (both `reminders/plan/teacher-lesson.crm.ts`; the reminder read adds `students.code`), into `template_params.crm`
@@ -240,12 +240,64 @@ beside the Meta values (the alert's {{1}}–{{3}}, the reminder's {{1}}–{{2}} 
 unchanged). The reminder's line is one line for Meta (no newline, no tab, never 4 spaces in a row); its texts are
 `templates.teacherReminderCrm` / `teacherReminderCrmStudent` in ar.json; `<join>` is the lesson's own link as the
 reminders send it (Meet, the teacher's fixed link, our classroom when LiveKit runs it), else our classroom, and
-`<report>` the teacher's report form, both absolute (`<WEB_ORIGIN>/classroom/<id>`, `<WEB_ORIGIN>/teacher/report/<id>`,
-login required); an empty `buttons` sends no `buttonParams` (not even the Meet code). The old script's default
+`<report>` the teacher's no-login report link for that lesson, shortened (`<API>/r/<code>`, «Teacher report link»);
+our own classroom page is shortened too (a Meet or a teacher's fixed link is sent as it is). Without the secret or
+the web origin, or when a short link fails, the long pages go (`<WEB_ORIGIN>/classroom/<id>`,
+`<WEB_ORIGIN>/teacher/report/<id>`, login required). The same one-line {{2}} goes on the crm driver and on the
+meta driver's WABA path (#622), since both send `params.crm.body` for `teacher_lesson_reminder`; an empty `buttons` sends no `buttonParams` (not even the Meet code). The old script's default
 name carries the CRM values even when it equals `meta_name` (`teacher_lesson_reminder`). A row without its `crm`
 part (queued before this change, or a value missing: no teacher name, a student without a name or code, no web
 origin, the alert's end time) goes as before, `meta_name` with the Meta values (`crmRowName`): a `_meet` row then
 asks for `teacher_lesson_reminder_meet` and fails with #132001 again; an admin's crm_name is always sent as set.
+
+### Short links (owner 2026-11-05: «make an in-house URL shortener instead of Vercel»)
+
+The platform makes its own short links and **no longer uses the old Vercel redirector**
+(`vercelayat-r.vercel.app`). Table `short_links` (migration `20261105000300`: `code` ≥ 8 base62 characters from
+crypto random, `target_url`, `kind`, `subject`, `created_at`, `expires_at` null = never; `unique (kind, subject)`;
+RLS on with no client policy: service role only). `GET <API>/r/<code>` (public, rate-limited 60 a minute per IP
+and 20 per IP and code, shared through `rate_limit_take`) answers 302 to the target, unknown or expired 404 with
+a short Arabic text (`shortLinks.notFound`), never cached. **No open redirect**: only the server writes targets,
+and `ShortLinks.forTarget({ kind, subject, url, expiresAt })` refuses any target that is not https on our own
+origins (every `WEB_ORIGIN`, `API_PUBLIC_URL`) or `meet.google.com` (no other host, no http, no `javascript:`, no
+user:password, no other port). Idempotent: the same kind + subject keeps its code, its target and expiry
+refreshed. The base is the setting `short_link_base` («القيم» → التقارير; empty = `API_PUBLIC_URL` + `/r/`), so
+a short domain later is that one value (it must serve `/r/<code>` from the API). Kinds: `teacher_report`
+(subject = lesson id), `classroom` (lesson id), `feedback` (`<lesson id>:<student id>`). Code:
+`apps/api/src/modules/platform/short-links/`.
+
+### Teacher report link (owner 2026-11-05: «activate reports from teacher»)
+
+9 of 11 teachers have no platform account, so the reminder's report link needs no login. The token is
+`base64url(lessonId | teacherId | exp).signature` (71 characters, `common/http/pair-token.ts`), an HMAC with the
+existing `FEEDBACK_TOKEN_SECRET` under its own context (a family's feedback token never opens a report and the
+reverse). It grants ONLY that lesson's report for that lesson's teacher: `GET /public/teacher-report/:token` (the
+form, drafts made on first open), `PUT …/reports/:id/draft`, `POST …/reports/:id/submit` and the v2 pair
+(`…/reports/:id/v2/draft|submit`). Every call checks again: the signature and its expiry, the lesson still taught
+by that teacher (404 `link_not_found`), from the lesson's start (409 `link_not_open`) until its end +
+`report_teacher_edit_hours` (410 `link_expired`), the report one of that lesson (404). The writes run the SAME
+services as the signed-in routes (`ReportsService`, `ReportSubmitService`, `ReportV2Service` with a `LinkCaller`),
+so drafts, versions, the lesson outcome, the PDF and report_ready behave exactly the same; the edit window after a
+submit is the teacher's (`canEditReport`). Actor = the teacher's auth user when they have one, else none; a
+submit also writes an audit row `teacher_link_submit` naming the teacher and the lesson. Rate-limited (120 a
+minute per IP, 60 per IP and link). No attachments on the link (they need a session). Web page: `/teacher-report/<token>`
+(no sign-in); signed-in teachers keep `/teacher/report/<id>`. The reminder carries it as `<API>/r/<code>` (kind
+`teacher_report`, expiring with the token). Code: `apps/api/src/modules/reporting/reports/teacher-link/`.
+
+### Report flow: report_ready → session_report_pdf (owner 2026-11-05)
+
+`report_ready` goes as the WABA's approved `session_report_pdf` (ar, Utility) on the notifications line, the same
+name on the crm driver and on Meta direct (#622): migration `20261105000301` sets only the report_ready row
+(`crm_name` / `crm_language`, `header_format` document, its four-value body, status approved). Values
+(`report-ready.ts`): header = the PDF; {{1}} the student's name, {{2}} the lesson date `dd/MM/yyyy` in the
+guardian's tz, {{3}} the teacher's display name, {{4}} the family's «رأيك يهمّنا» link for that lesson and student
+(`FeedbackLinks`: the live link the admin's request would send, else a new 14-day one; answered = the page says
+so), shortened (kind `feedback`); without a feedback link the academy's web address goes (logged). Trial lessons
+use the same template. ONE template call, so the PDF can never go twice; dedup stays `report_ready:{report id}`.
+A row queued before this change carries two values and is refused before any call (Meta's 132000), never sent
+with the wrong ones. The CRM's `report_session` / `report_trial_session` are PENDING_DELETION on Meta: never use
+them. Fallback, not needed today (the crm driver sends a document header as `headerMediaUrl`):
+`session_report_link` (no header; {{1}} student, {{2}} date, {{3}} teacher, {{4}} report URL, {{5}} feedback URL).
 
 **teacher_lesson_v2's real buttons (read from the old script, 2026-10-31).** «ادخل الحلقة» is
 `https://meet.google.com/{{1}}` and «تقرير الحلقة» is `https://vercelayat-r.vercel.app/r/{{1}}`, a redirector to the
@@ -253,8 +305,10 @@ asks for `teacher_lesson_reminder_meet` and fails with #132001 again; an admin's
 note here said so, never verified). So `teacher_new_student`'s two suffixes on a crm line open a broken Meet URL
 (`meet.google.com/classroom/<id>`) and the old form: **owner decision pending** (send a Meet code and the old form's
 values, a new CRM template with platform buttons, or a crm_name to a template without buttons); not changed yet.
+These two base URLs are fixed inside the Meta template, so the platform cannot point them at its own short links:
+the only template that still opens the Vercel redirector is this one (owner follow-up, 2026-11-05).
 
-The report kind is `template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
+**The old script's report flow (superseded 2026-11-05 by «Report flow» above; kept for the record).** The report kind is `template_params.crm.report` (`report-ready.ts`, from `schedule_rules.package`). The report flow is two calls
 from one row: the document first (a failure there fails the row as today, nothing sent); if the template call
 fails after the PDF went, the row fails as **`uncertain`**, never resent automatically, so the PDF never goes
 twice on its own. Its text says which: «the CRM refused its template» (a CRM code; the code and a refused key's
@@ -321,15 +375,16 @@ the `Authorization: Bearer` is accepted when it is the notifications line's own 
 when the CRM itself answers `GET /me` for it with the same `account.id` as the line's key and the
 `messages:send` scope (`relay.keys.ts`; an accepted key is remembered as its sha256 for 10 minutes). The send
 always goes with the line's key. No new key or secret. Wrong or missing key → 401; the CRM unreachable during
-the check → 502; notifications line not on the crm driver → 503; invalid body → 422; failures use the CRM's
+the check → 502; notifications line not configured or `WACRM_API_BASE` / `WACRM_API_KEY` unset → 503; invalid body → 422; failures use the CRM's
 envelope `{error:{message, code}}`.
 
 **What happens.** One `messages` row (outbound, line notifications, the module-mode number stamped, no lead,
 guardian or staff, `created_by` null) is written first, with a readable body (template: `[name]` + its body
 values; document: caption, file name, link), so it shows in the family's or teacher's chat with its ticks (the
 `/webhooks/wacrm` status path matches its wamid). Then the body goes, unchanged in shape and with the CRM's own
-template name (no translation through our templates table), through the notifications line's crm driver
-(`CrmWhatsappClient.sendBody`: same allow-list, same call). Not gated by «الرسائل التلقائية»: the script decides.
+template name (no translation through our templates table), through the notifications line's current driver
+(`CrmWhatsappClient.sendBody`, or on a meta line `HttpWhatsappClient.sendBody`: the same body as Graph's
+template / text / document message, `buttonParams` as URL-button suffixes; same allow-list). Not gated by «الرسائل التلقائية»: the script decides.
 Idempotent (rule 8): `dedup_key` = `script-relay:` + sha256 of recipient, type, content and the 15-minute window,
 so the script's retries (it retries 429 / 5xx with no key) send once. A CRM 4xx refusal answers the same 4xx (the
 row is removed, nothing was sent, so a retry is a fresh send); a CRM 5xx or network error answers 502 and the
@@ -339,7 +394,61 @@ row is kept as «uncertain» (a retry in the window gets the first row back, uns
 **Cut-over (owner step).** In the Apps Script project → Project Settings → Script Properties, change `CRM_URL`
 only, to `<API origin>/script-relay` (production: `https://api.ayatalbayan.com/script-relay`, no trailing
 slash needed). `CRM_API_KEY` stays as it is (any key of the CRM account with `messages:send`). The notifications
-line must be on «نظام CRM». **Rollback:** set `CRM_URL` back to the CRM's own URL (`https://crm.ayatalbayan.com`).
+line may be on «نظام CRM» or, after «CRM → Meta» below, on Meta: the relay sends through the line's CURRENT
+driver (`relay.line.ts`), the key is still checked against the CRM account, so `WACRM_API_BASE` /
+`WACRM_API_KEY` must stay set while the script runs (unset → 503). **Rollback:** set `CRM_URL` back to the CRM's own URL (`https://crm.ayatalbayan.com`).
+
+### CRM → Meta: the notifications line leaves the CRM (owner 2026-11-03)
+
+Owner: «migrate to the platform notification leaving the crm». The CRM is connected to the SAME Meta WABA and
+number, so every template it sends is already on that WABA under the CRM's names. Switching the notifications
+line from `crm` to `meta` is a settings change only: **no new template, no migration**.
+
+**One resolution for every driver** (`drivers/waba/`). A row's WABA name / language is `crm_name` /
+`crm_language` (shown as «اسم القالب في واتساب», editable on crm and meta lines), else the old script's
+default (`CRM_DEFAULT_NAMES`), else `meta_name` / `language`; its values are the producer's `params.crm` for
+that template, else its own. The crm driver posts it to the CRM (`crm-body.ts`), the meta driver builds Graph
+components from it (`waba-graph.ts`): the same template and values on either driver.
+
+| Platform key | WABA template | Values sent |
+|---|---|---|
+| teacher_new_student | `teacher_lesson_v2` | body [teacher, students, codes, time, duration]; URL buttons 0 room, 1 report |
+| teacher_lesson_reminder, teacher_lesson_reminder_meet | `teacher_lesson_reminder` | body [teacher, one line]; no button |
+| report_ready (crm_name `report_session`) | the PDF as a document message, then `report_trial_session` / `report_session` | no variables |
+| every other key (booking_confirmation(_meet/_plain), lesson_reminder (`lesson_reminder_v2`), _meet, _plain, …) | its `crm_name`, else `meta_name` | its own values and buttons |
+
+A row queued without `params.crm` (a value missing) goes by its `meta_name` and own values on both drivers.
+
+**Sync and missing.** On a meta line, a key whose WABA name differs from `meta_name` is read by that name: its
+WABA template approved → the key approved (status, quality and reason only; the row keeps its own body,
+buttons and `meta_id`), never missing because `meta_name` is absent. Those WABA templates (and both report
+templates) are never imported as new rows. Meta's #132001 marks the key missing on a meta line as on a crm one
+(`template-missing.ts`), only for the name it went as; the next sync restores it. Saving a line as meta
+(«التكاملات» `WA_PROVIDER`, or a role's default number in «الأرقام») runs one sync of that line.
+
+**Owner steps (Meta Business Manager, then the platform).**
+
+1. Business settings → System users → a system user with **full control** of the notifications WABA; generate
+   a token (never expires) with `whatsapp_business_messaging` and `whatsapp_business_management`, for the
+   academy's Meta app.
+2. «التواصل» ← «الحماية» / «الأرقام»: `WA_PHONE_NUMBER_ID`, `WA_WABA_ID`, `WA_APP_ID`, the token as
+   `WA_ACCESS_TOKEN`, the app secret as `WA_APP_SECRET`, a random `WA_VERIFY_TOKEN`. Keep `WACRM_*` as they
+   are (the script relay checks its key with them).
+3. Meta app → WhatsApp → Configuration → Webhook: URL `https://api.ayatalbayan.com/webhooks/whatsapp`, verify
+   token = `WA_VERIFY_TOKEN`; subscribe the field **messages**.
+4. Subscribe the app to the WABA (`POST /{WABA_ID}/subscribed_apps` with the token, or Meta's UI).
+5. «افحص الخطوط» (still on crm): «الجاهزية للإرسال عبر ميتا مباشرة» must show the app secret set, the
+   verify token set and the app subscribed.
+6. At a quiet hour (no reminder due in the next minutes), set `WA_PROVIDER` (or the notifications number's
+   provider) to «Meta مباشرة» and save: the templates sync once. Check «القوالب» (the teacher keys and
+   report_ready approved), then send one test to a number in `WA_ALLOWED_RECIPIENTS`.
+
+**Never deregister the number** (`/deregister`, or deleting it in WhatsApp Manager): the CRM and the platform
+share it, and the rollback needs it as is.
+
+**Rollback:** set `WA_PROVIDER` (or the number's provider) back to «نظام CRM» and save. Nothing else changes;
+the CRM sends again with the same names and values. Rows the meta line marked missing (#132001) stay missing
+until marked approved again on «القوالب» («علِّمه معتمدًا في نظام CRM»).
 
 ### Files imported from the old CRM: our own copy of all of them (owner 2026-10-27 «Fix it»)
 

@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import { CORRECT_TO, type LessonStatus, type LessonView } from '@ab/shared';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import type { Role } from '@/common/auth/verify-token';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
@@ -9,6 +9,9 @@ import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';
 import { LessonsRepo, type LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { markUnpaid, upcomingStudentIds } from '@/modules/teaching/lessons/status/unpaid-mark';
 import { AutoHeldRepo } from '@/modules/teaching/lessons/auto-held/auto-held.repo';
+
+/** The statuses the job writes or a correction may land on (LessonView.auto_held). */
+const SETTLED: readonly LessonStatus[] = CORRECT_TO;
 
 const withAutoHeld = (view: LessonView, held: ReadonlySet<string>): LessonView =>
   held.has(view.id) ? { ...view, auto_held: true } : view;
@@ -22,6 +25,9 @@ const withPhoto = (view: LessonView, photos: ReadonlyMap<string, string>): Lesso
  * views carry the teacher's photo (one lookup and one signing call per response); a teacher's own
  * schedule does not (it is always her).
  */
+const settledIds = (rows: readonly LessonRow[]): string[] =>
+  rows.filter((r) => SETTLED.includes(r.status)).map((r) => r.id);
+
 @Injectable()
 export class LessonViews {
   private readonly log = new Logger(LessonViews.name);
@@ -41,16 +47,16 @@ export class LessonViews {
       this.flagged(upcomingStudentIds(rows, now)),
       this.lessons.academyAuto(),
       role === 'teacher' ? new Map<string, string>() : this.photos.ofTeachers(rows.map((r) => r.teacher_id)),
-      role === 'teacher' ? new Set<string>() : this.correctable(completed),
+      role === 'teacher' ? new Set<string>() : this.correctable(settledIds(rows)),
     ]);
     const view = (row: LessonRow) => markUnpaid(toLessonView(row, { role, seq, academyAuto }), flagged, now);
     return rows.map((row) => withPhoto(withAutoHeld(view(row), held), photos));
   }
 
   /** Also a hint: the correction route checks it again. */
-  private async correctable(completed: string[]): Promise<ReadonlySet<string>> {
+  private async correctable(settled: string[]): Promise<ReadonlySet<string>> {
     try {
-      return await this.autoHeld.correctable(completed);
+      return await this.autoHeld.correctable(settled);
     } catch (e) {
       this.log.warn(`auto-held lookup failed: ${e instanceof Error ? e.message : String(e)}`);
       return new Set();

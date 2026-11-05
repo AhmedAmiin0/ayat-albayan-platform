@@ -6,21 +6,17 @@ import { PAYMENT_HOLD_EXPIRED, paymentSubject, WA_PAYMENT_HOLD } from './hold/pa
 import { PaymentHolds, type HoldAt } from './hold/payment-holds';
 import { MessageDispatch } from './message.dispatch';
 import { authSubject, claimRow, RECORD_DELAYS_MS, sendingAt, UNRECORDED, type FailedInput, type PassJob, type SendJob, type SendOutcome } from './message.job';
-import type { FailurePlan } from './send-plan';
-import { CRM_RATE_LIMITED, failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
+import { CRM_RATE_LIMITED, failurePlan, messageLabel, readyToSend, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderRepo, type DueMessage } from './sender.repo';
 import { TemplateMissing } from '@/modules/messaging/whatsapp/templates/check/template-missing';
+import { isWindowClosedError, WindowHold } from './window/window-hold';
 import type { WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 export type { PassJob, SendJob, SendOutcome } from './message.job';
-
 /**
- * One queued row, end to end (docs/12 §3.3): expiry, send-time staleness (a staff alert's teacher
- * checked again: staffAtSend), the automatic-messages hold (auto_off), the 131042 line hold
- * (hold/), claim, send, outcome. Never throws.
- * Idempotency: a row is claimed by compare-and-set before Meta is called, so two
- * workers never send it twice; producers dedupe the row itself by dedup_key.
+ * One queued row (docs/12 §3.3): the window hold (window/), expiry, staleness, auto_off, the 131042
+ * hold (hold/), claim, send, outcome. Never throws; claimed by compare-and-set: never sent twice.
  */
 @Injectable()
 export class MessageWorker {
@@ -29,6 +25,8 @@ export class MessageWorker {
   wait: (ms: number) => Promise<void> = sleep;
   /** Meta #132001 on a crm send marks its template missing (templates/check); unit tests: none. */
   @Optional() @Inject(TemplateMissing) missing?: TemplateMissing;
+  /** The chat window (window/): held texts, window refusals, release(); unit tests: none. */
+  @Optional() @Inject(WindowHold) private readonly window?: WindowHold;
 
   constructor(
     private readonly queries: SenderRepo,
@@ -50,6 +48,8 @@ export class MessageWorker {
   private async run(job: SendJob): Promise<SendOutcome> {
     const { row, template, now, route } = job;
     const { line, via } = sendingAt(job, this.dispatch.multi);
+    const held = await this.window?.due({ row, now, line, route });
+    if (held) return held;
     const staff = await this.queries.staffAtSend(row);
     const drop = dropReason(staff ? { ...row, staff } : row, now);
     if (drop) {
@@ -66,7 +66,7 @@ export class MessageWorker {
     try {
       sent = await this.dispatch.send(row, template, via);
     } catch (error) {
-      return this.failed({ row, error, attempts, now, line, route });
+      return this.refused({ row, error, attempts, now, line, route });
     }
     const record = () => this.queries.sent({ row, waMessageId: sent.waMessageId, at: new Date() });
     if (!(await retry(record, { delays: RECORD_DELAYS_MS, sleep: this.wait }))) {
@@ -74,6 +74,11 @@ export class MessageWorker {
     }
     await this.holds?.lift({ line, route, now });
     return 'sent';
+  }
+
+  private async refused(input: FailedInput): Promise<SendOutcome> {
+    const held = isWindowClosedError(input.error) ? await this.window?.closed(input) : null;
+    return held ?? this.failed(input);
   }
 
   private async failed(input: FailedInput): Promise<SendOutcome> {
@@ -103,9 +108,8 @@ export class MessageWorker {
   }
 
   /**
-   * Not now: automatic messages are OFF ('held'), its PDF is not attached yet ('skipped'), or its
-   * line is on a 131042 hold ('skipped': deferred, untried). A line-held row due 48 h ago fails as
-   * 131042 instead (pushed per row). null = send.
+   * Not now: automatic messages OFF ('held'), its PDF not attached yet ('skipped'), or a 131042
+   * line hold ('skipped': deferred; due 48 h ago: fails as 131042, pushed). null = send.
    */
   private async notNow(job: SendJob, at: HoldAt): Promise<SendOutcome | null> {
     const { row } = job;
@@ -124,9 +128,10 @@ export class MessageWorker {
   /** The failure's plan; a template's 131042 also holds its line with this row as the probe. */
   private plan(input: FailedInput): Promise<FailurePlan> {
     const plan = failurePlan(input);
-    if (!this.holds) return Promise.resolve(plan);
-    return this.holds.probe(plan, input);
+    return this.holds ? this.holds.probe(plan, input) : Promise.resolve(plan);
   }
+
+  release = (): Promise<number> => this.window?.release() ?? Promise.resolve(0);
 
   /** The pass's later rows of a paused line: deferred in one write while it is 131042-held. */
   async deferRest(probe: PassJob, rest: readonly DueMessage[]): Promise<void> {

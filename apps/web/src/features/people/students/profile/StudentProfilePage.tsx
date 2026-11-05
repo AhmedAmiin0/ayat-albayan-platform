@@ -23,7 +23,9 @@ import { SiblingMerge } from '@/features/people/students/duplicates/SiblingMerge
 import { StudentInvoices } from './StudentInvoices';
 import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
+import { StudentFamily } from '@/features/people/students/family/StudentFamily';
 import { HeadActions } from '@/components/ui/layout/head-actions';
+import { PeopleEditActions, RemovedStudent } from '@/features/people/students/people-edit';
 import { StudentRecordings } from '@/features/people/students/recordings/StudentRecordings';
 import { CreateAccountButton } from '@/features/people/users/create/CreateAccountButton';
 import { TrialDatesSection } from '@/features/teaching/booking/trial-date/TrialDatesSection';
@@ -45,7 +47,9 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const [editGuardian, setEditGuardian] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const { can } = usePermissions();
-
+  // «تحويل إلى ولي أمر» removed this student row: its file is gone, back to the list.
+  const [removed, setRemoved] = useState<string | null>(null);
+  if (removed) return <RemovedStudent notice={removed} />;
   if (isPending) return <p className="text-ink-3">{t.common.loading}</p>;
   if (error) {
     const notFound = error instanceof ApiError && error.status === 404;
@@ -56,7 +60,11 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const second = secondPhoneOf(student.guardian.phones);
   const meta = [
     [t.students.code, <Ltr key="c">{student.code ?? '—'}</Ltr>],
-    [t.students.guardian, <span key="g">{student.guardian.name}</span>],
+    [t.students.guardian, (
+      <Link key="g" to="/admin/inbox" search={{ page: 1, phone: student.guardian.phone_e164 }} className="text-lapis underline underline-offset-4">
+        {student.guardian.name}
+      </Link>
+    )],
     [t.students.guardianPhone, <Ltr key="p">{formatPhone(student.guardian.phone_e164)}</Ltr>],
     ...(second ? [[t.guardians.secondPhone, <Ltr key="p2">{formatPhone(second)}</Ltr>] as const] : []),
     [
@@ -102,6 +110,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
         />
       </PageHead>
       <CoursePausePanel studentId={student.id} onDone={setNotice} />
+      <PeopleEditActions studentId={student.id} onRemoved={setRemoved} />
       <dl className="mb-6 flex flex-wrap gap-x-7 gap-y-2 border-b border-rule pb-4 text-sm">
         {meta.map(([term, value]) => (
           <div key={term} className="flex min-w-0 items-baseline gap-2">
@@ -110,6 +119,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           </div>
         ))}
       </dl>
+      <StudentFamily siblings={student.siblings} contactIsSelf={student.contact_is_self ?? false} />
       <TrialDatesSection student={student} />
       <BalanceCard student={student} />
       <StudentPayments studentId={student.id} />

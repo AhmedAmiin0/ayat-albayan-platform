@@ -34,7 +34,10 @@ type Token = 'salesA' | 'salesB' | 'admin' | 'teacher' | 'assistant';
 const studentRow = () => ({
   id: MINE, code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', tz: 'Africa/Cairo', notes: 'سر', meeting_link_override: 'https://x/secret',
   teacher: { display_name_ar: 'أبرار', phone_e164: '+201001234567' },
-  guardian: { phone_e164: '+966551110000', name: 'سر', email: 'secret@example.org' },
+  guardian: { phone_e164: '+966551110000', name: 'أم ياسمين', email: 'secret@example.org', students: [
+    { id: MINE, code: 'AB-0101', name: 'ياسمين', status: 'active', notes: 'سر' },
+    { id: OTHER, code: 'AB-0102', name: 'مريم', status: 'paused', notes: 'سر' },
+  ] },
 });
 
 const pastLessons = (): AttendanceRow[] => [
@@ -74,7 +77,7 @@ export async function studentsApp(settings: Partial<AcademySettings> = {}) {
   const files = { studentPdfUrl: vi.fn() };
   const overview = { exists: vi.fn(), rules: vi.fn(), lessons: vi.fn() };
   const attendance = { exists: vi.fn(), lessons: vi.fn(), starts: vi.fn(), reports: vi.fn() };
-  const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() }, status: { confirm: vi.fn() } };
+  const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() }, status: { confirm: vi.fn() }, corrections: { correct: vi.fn() } };
   const roster = { rules: vi.fn(), packages: vi.fn(), lessons: vi.fn(), balances: vi.fn() };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)

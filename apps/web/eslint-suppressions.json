@@ -7426,9 +7426,6 @@
   "src/features/reporting/reports/ReportFormPage.tsx": {
     "max-len": {
       "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
     }
   },
   "src/features/reporting/reports/api.ts": {
@@ -7634,7 +7631,7 @@
   },
   "src/features/reporting/reports/entry/ReportEntry.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1

@@ -14,6 +14,7 @@ import { FxService } from '@/modules/finance/fx/fx.service';
 import { InvoicesRepo } from '@/modules/finance/invoices/invoices.repo';
 import { PaymentAttachmentsRepo } from '@/modules/finance/payments/attachments/payment-attachments.repo';
 import { PaymentsRepo } from '@/modules/finance/payments/payments.repo';
+import { PaymentReceivedRepo } from '@/modules/finance/payments/received/payment-received.repo';
 import { PayoutsRepo } from '@/modules/finance/payouts/payouts.repo';
 import { CorrectionsRepo } from '@/modules/finance/teacher-earnings/summary/corrections.repo';
 import { EarningsRepo } from '@/modules/finance/teacher-earnings/earnings.repo';
@@ -71,6 +72,7 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver, mo
     .overrideProvider(AlertsRepo).useValue(m.alerts)
     .overrideProvider(AdminTasksRepo).useValue(m.tasks)
     .overrideProvider(PaymentsRepo).useValue(m.payments)
+    .overrideProvider(PaymentReceivedRepo).useValue(m.received)
     .overrideProvider(PaymentAttachmentsRepo).useValue(m.attachments)
     .overrideProvider(PayoutsRepo).useValue(m.payouts)
     .overrideProvider(EarningsRepo).useValue(m.earnings)

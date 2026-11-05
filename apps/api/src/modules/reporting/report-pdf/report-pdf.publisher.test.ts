@@ -23,15 +23,17 @@ function setup(found = true, store = fakeSettings()) {
     storage as unknown as StorageService,
   );
   // The settings arrive by property injection (the constructor stays at three parameters).
-  Object.assign(publisher, { settings: new ReportPdfSettings(store) });
-  return { publisher, renderer, storage, source };
+  const feedback = { url: vi.fn(async () => 'https://api.example/r/Ab12Cd34Ef') };
+  Object.assign(publisher, { settings: new ReportPdfSettings(store), feedback });
+  return { publisher, renderer, storage, source, feedback };
 }
 
 describe('ReportPdfPublisher — render and store one report', () => {
   it('renders the report HTML and overwrites reports/{student_id}/{lesson_id}.pdf', async () => {
     const { publisher, renderer, storage, source } = setup();
     const out = await publisher.publish('r1', NOW);
-    // The clock reaches the source: «الحلقة القادمة» is read after now, never a lesson already past.
+    // The clock reaches the source: «الحلقة القادمة» is read after now, never a lesson already
+    // past.
     expect(source.load).toHaveBeenCalledWith('r1', NOW);
     const html = renderer.render.mock.calls[0]?.[0] ?? '';
     expect(html).toContain('سلمى عبد الرحمن');
@@ -47,6 +49,8 @@ describe('ReportPdfPublisher — render and store one report', () => {
     expect(out.path).toBe('s1/l1.pdf');
     expect(out.message.dedup_key).toBe('report_ready:r1');
     expect(out.message.template_params.document.path).toBe('s1/l1.pdf');
+    // session_report_pdf's {{3}} the teacher and {{4}} the family's feedback link (shortened).
+    expect(out.message.template_params['4']).toBe('https://api.example/r/Ab12Cd34Ef');
   });
 
   it('a report deleted since the claim is an error (the job marks it failed, a no-op)', async () => {

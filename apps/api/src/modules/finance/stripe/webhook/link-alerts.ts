@@ -1,38 +1,54 @@
 import { Injectable } from '@nestjs/common';
-import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
+import { PaymentReceived } from '@/modules/finance/payments';
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 
 /**
- * The bell rows of the payment links (in-app only: bellOnly, never WhatsApp). They reuse the payment_due kind
- * (its rule, its permission and its tap target: the student), with their own title, so no notification kind
- * is added to the normal build. Never throws (PushService swallows its own failures).
+ * The payment links' staff alerts (never WhatsApp). A paid link is «تم استلام دفعة»
+ * (payment_received: bell + device push) to the admins, the student's following assistant and the
+ * link's assistant, once per payment. The admins' alerts (a dispute, a payment the platform could
+ * not record) reuse the payment_due kind (its rule, its permission and its tap target: the
+ * student), with their own title. Never throws (PushService and PaymentReceived swallow failures).
  */
 @Injectable()
 export class LinkAlerts {
-  constructor(private readonly push: PushService) {}
+  constructor(
+    private readonly push: PushService,
+    private readonly received: PaymentReceived,
+  ) {}
 
-  /** The link's assistant: «تم الدفع عبر رابط الدفع». */
-  async paid(link: LinkRow, money: { amount: number; currency: string }): Promise<void> {
-    await this.push.notifyProfiles({
-      kind: 'payment_due',
-      profileIds: [link.created_by],
-      subject: `payment_link:${link.id}`,
-      title: ar.paymentLinks.bell.paidTitle,
-      vars: { student: link.student?.name ?? '', left: `${money.amount} ${money.currency}` },
-      data: { studentId: link.student_id },
-      bellOnly: true,
+  /**
+   * The payment recorded from the link (not awaited: off the webhook's path). Nobody recorded it
+   * by hand, so nobody is left out: PaymentsService's own notice skips the link's assistant.
+   */
+  paid(link: LinkRow, payment: { id: string; amount: number; currency: string }): void {
+    this.received.fire({
+      payment: {
+        ...payment,
+        kind: 'payment',
+        studentId: link.student_id,
+        student: link.student?.name ?? '',
+      },
+      recorderId: null,
+      also: [link.created_by],
     });
   }
 
-  /** The admins: a dispute, or a payment Stripe took that the platform could not record (no automatic change). */
-  async admins(input: { subject: string; title: string; text: string; link: LinkRow | null }): Promise<void> {
+  /**
+   * The admins: a dispute, or a payment Stripe took that the platform could not record (no
+   * automatic change).
+   */
+  async admins(input: {
+    subject: string;
+    title: string;
+    text: string;
+    link: LinkRow | null;
+  }): Promise<void> {
     await this.push.notifyAdmins('payment_due', {
       subject: input.subject,
       title: input.title,
       vars: { student: input.link?.student?.name ?? '', left: input.text },
       ...(input.link ? { data: { studentId: input.link.student_id } } : {}),
-      bellOnly: true,
     });
   }
 }

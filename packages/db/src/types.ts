@@ -3745,6 +3745,33 @@ export type Database = {
         };
         Relationships: [];
       };
+      short_links: {
+        Row: {
+          code: string;
+          created_at: string;
+          expires_at: string | null;
+          kind: string;
+          subject: string;
+          target_url: string;
+        };
+        Insert: {
+          code: string;
+          created_at?: string;
+          expires_at?: string | null;
+          kind: string;
+          subject: string;
+          target_url: string;
+        };
+        Update: {
+          code?: string;
+          created_at?: string;
+          expires_at?: string | null;
+          kind?: string;
+          subject?: string;
+          target_url?: string;
+        };
+        Relationships: [];
+      };
       sticker_favourites: {
         Row: {
           created_at: string;
@@ -5579,6 +5606,14 @@ export type Database = {
         Args: { p_rule: string; p_status: Database['public']['Enums']['lesson_status'] };
         Returns: boolean;
       };
+      lesson_ended_open: {
+        Args: { p_ends_at: string; p_status: Database['public']['Enums']['lesson_status'] };
+        Returns: boolean;
+      };
+      lesson_outcomes_since: {
+        Args: never;
+        Returns: string;
+      };
       merge_students: {
         Args: { p_actor: string; p_kept: string; p_merged: string };
         Returns: string;
@@ -5799,7 +5834,8 @@ export type Database = {
         | 'lesson_rescheduled'
         | 'lesson_cancelled'
         | 'course_paused'
-        | 'course_resumed';
+        | 'course_resumed'
+        | 'payment_received';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -6001,6 +6037,7 @@ export const Constants = {
         'lesson_cancelled',
         'course_paused',
         'course_resumed',
+        'payment_received',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],

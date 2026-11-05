@@ -15,6 +15,6 @@ describe('DashboardSettings', () => {
 
   it('answers the stored reporting currency', async () => {
     expect(await readerOf(DashboardSettings, { reporting_currency: 'EGP' }).read())
-      .toEqual({ reporting_currency: 'EGP', lesson_confirmation_required: false });
+      .toEqual({ reporting_currency: 'EGP', lesson_confirmation_required: true });
   });
 });

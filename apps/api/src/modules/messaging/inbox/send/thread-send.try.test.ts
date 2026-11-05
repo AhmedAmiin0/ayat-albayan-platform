@@ -10,7 +10,7 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { Outbox } from './outbox';
 import { ThreadSendService } from './thread-send.service';
 
-// ThreadSendService.text after the 24 h window (owner 2026-10-31). Fakes only: no Kapso, no Meta.
+// ThreadSendService.text after the 24 h window (owner 2026-11-03: held). Fakes only: no WhatsApp.
 
 const NOW = new Date('2026-10-31T10:00:00Z');
 const ACTOR = 's0000000-0000-4000-8000-000000000001';
@@ -30,12 +30,9 @@ const LINES = {
 
 const queries = { thread: vi.fn(), numberWindows: vi.fn(), get: vi.fn() };
 const outbox = { queue: vi.fn() };
-const kapso = { reopen: vi.fn() };
 const service = () => {
   const q = queries as unknown as ThreadsRepo;
-  const s = new ThreadSendService(q, {} as TemplateRegistry, outbox as unknown as Outbox);
-  Object.assign(s, { kapso });
-  return s;
+  return new ThreadSendService(q, {} as TemplateRegistry, outbox as unknown as Outbox);
 };
 const input = { text: 'السلام عليكم', clientRequestId: REQ };
 const text = (scope: TeacherScope | null = null) =>
@@ -56,45 +53,36 @@ describe('ThreadSendService.text after the window', () => {
   });
   afterEach(() => vi.unstubAllEnvs());
 
-  it('kapso chat line: Kapso reopened first, then the text queued from the chat line', async () => {
+  it('kapso chat line: ONE row from the chat line, held for the reopen template (awaiting_reply)', async () => {
     chatOn('kapso');
-    kapso.reopen.mockResolvedValue(true);
     await text();
-    expect(outbox.queue).toHaveBeenCalledWith(
-      expect.objectContaining({ body: 'السلام عليكم', line: 'chat', dedup_key: `admin:${PHONE}:${REQ}` }),
+    expect(outbox.queue).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
+        body: 'السلام عليكم',
+        line: 'chat',
+        error_code: 'awaiting_reply',
+        dedup_key: `admin:${PHONE}:${REQ}`,
+      }),
     );
-    const [reopened] = kapso.reopen.mock.invocationCallOrder;
-    const [queued] = outbox.queue.mock.invocationCallOrder;
-    expect(reopened).toBeLessThan(queued ?? 0);
   });
 
-  it('a failed reopen (KapsoReopener answers false) still queues the text', async () => {
-    chatOn('kapso');
-    kapso.reopen.mockResolvedValue(false);
-    await text();
-    expect(outbox.queue).toHaveBeenCalledWith(expect.objectContaining({ line: 'chat' }));
-  });
-
-  it('a meta chat line: 409 session_closed as before, nothing queued, no reopen', async () => {
+  it('a meta chat line: 409 session_closed as before, nothing queued', async () => {
     chatOn('meta');
     const e = await text().catch((x: unknown) => x);
     expect((e as { getStatus(): number }).getStatus()).toBe(409);
     expect(outbox.queue).not.toHaveBeenCalled();
-    expect(kapso.reopen).not.toHaveBeenCalled();
   });
 
-  it('teacher mode (docs/19: never): 409 session_closed, no reopen, nothing queued', async () => {
+  it('teacher mode (docs/19: unchanged): 409 session_closed, nothing queued, no template', async () => {
     chatOn('kapso');
     const scope = { teacherId: 't1', teacherName: 'أ', phones: new Set([PHONE]), ownPhone: null };
     const e = await text(scope).catch((x: unknown) => x);
     expect(refused(e)).toEqual([409, 'session_closed']);
-    expect(kapso.reopen).not.toHaveBeenCalled();
     expect(outbox.queue).not.toHaveBeenCalled();
   });
 
-  it('a text forward to a closed chat (owner 2026-11-01): Kapso reopened, queued as a text', async () => {
+  it('a text forward to a closed chat (owner 2026-11-01): queued as a held text', async () => {
     chatOn('kapso');
-    kapso.reopen.mockResolvedValue(true);
     const src = { id: 'f1', direction: 'inbound' as const, body: 'نص', template_key: null };
     queries.get.mockResolvedValue(messageRow({ ...src, media_mime: null }));
     const q = queries as unknown as ThreadMessagesRepo;
@@ -103,8 +91,9 @@ describe('ThreadSendService.text after the window', () => {
     const f = { input: fwd, actorId: ACTOR, scope: null, sales: null };
     const { results } = await forwards.forward(f);
     expect(results).toEqual([{ phone: PHONE, sent: true, message_id: 'm1', replayed: false }]);
-    expect(kapso.reopen).toHaveBeenCalledExactlyOnceWith(PHONE);
-    expect(outbox.queue).toHaveBeenCalledWith(expect.objectContaining({ body: 'نص', line: 'chat' }));
+    expect(outbox.queue).toHaveBeenCalledWith(
+      expect.objectContaining({ body: 'نص', line: 'chat', error_code: 'awaiting_reply' }),
+    );
   });
 
   it('a payment link typed into the box (owner 2026-11-01): the text path, one row', async () => {
@@ -114,7 +103,7 @@ describe('ThreadSendService.text after the window', () => {
     const input = { text: link, clientRequestId: REQ };
     await s.text({ phone: PHONE, input, actorId: ACTOR }, NOW);
     expect(outbox.queue).toHaveBeenCalledExactlyOnceWith(
-      expect.objectContaining({ body: link, line: 'chat', dedup_key: `admin:${PHONE}:${REQ}` }),
+      expect.objectContaining({ body: link, line: 'chat', error_code: 'awaiting_reply', dedup_key: `admin:${PHONE}:${REQ}` }),
     );
   });
 });

@@ -54,6 +54,7 @@ describe('LinesCheck (docs/12 §13.9, R-MSG-05)', () => {
         { id: 'app-notifications', name: 'Ayat Platform', override_callback_uri: null },
         { id: 'app-crm', name: 'Old CRM', override_callback_uri: 'https://crm.example.test/webhook' },
       ],
+      meta_ready: { app_secret: true, verify_token: false, app_subscribed: true },
       errors: [], checked_at: expect.stringMatching(/^\d{4}-\d\d-\d\dT/),
     });
     expect(chat).toMatchObject({

@@ -47,6 +47,13 @@ describe('webNotificationPath (R-NOT-01)', () => {
     expect(webNotificationPath({ kind: 'channel_message', studentId: id }, 'admin')).toBe('/admin');
   });
 
+  it('payment_received: the student (owner 2026-11-05) for an admin, «الطلاب» for sales', () => {
+    const data = { kind: 'payment_received', studentId: STUDENT };
+    expect(webNotificationPath(data, 'admin')).toBe(`/admin/students/${STUDENT}`);
+    expect(webNotificationPath({ kind: 'payment_received' }, 'admin')).toBe('/admin/students');
+    expect(webNotificationPath(data, 'sales')).toBe('/sales/students');
+  });
+
   it('commission_earned: «محفظتي» for sales (owner 2026-10-29), home for anyone else', () => {
     expect(webNotificationPath({ kind: 'commission_earned', commissionId: STUDENT }, 'sales')).toBe('/sales/earnings');
     expect(webNotificationPath({ kind: 'commission_earned' }, 'admin')).toBe('/admin');
