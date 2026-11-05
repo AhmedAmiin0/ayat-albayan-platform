@@ -1,6 +1,7 @@
 import { Inject, Injectable, Optional, type OnModuleInit } from '@nestjs/common';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { AuditService, type AuditEntry } from '@/common/audit/audit.service';
+import { lineSaved, savedNumber } from '@/common/configuration/integrations/provider-saved';
 import { kickConfigReload } from '@/config/role/worker-kick';
 import { NumbersConfig } from './config/numbers.config';
 import { OwnNumbers } from './own/own-numbers';
@@ -8,7 +9,8 @@ import { OwnNumbers } from './own/own-numbers';
 /**
  * What follows every numbers write: an audit row (ids, labels, flags and secret NAMES only, never a
  * value), a refresh of the line config, so module mode applies a change without a restart, and a fresh
- * read of the academy's own numbers (OwnNumbers); then the worker's copy (kickConfigReload).
+ * read of the academy's own numbers (OwnNumbers); then the worker's copy (kickConfigReload). A
+ * role's default number saved tells the line-saved listeners (provider-saved.ts).
  */
 @Injectable()
 export class NumbersEffects implements OnModuleInit {
@@ -40,5 +42,8 @@ export class NumbersEffects implements OnModuleInit {
       kickConfigReload();
       await this.shared?.invalidate({ topic: 'numbers' });
     }
+    // A role's default number saved as meta syncs its templates once (docs/19 «CRM → Meta»).
+    const saved = savedNumber(entry);
+    if (saved) lineSaved(saved);
   }
 }

@@ -21,12 +21,12 @@ test('not required: «قادمة» / «مجدولة» in the neutral look, never
   expect(text.label('completed')).toBe(t.enums.lessonStatus.completed);
 });
 
-test('the hook follows the academy setting, OFF by default', async () => {
-  const off = await renderHook(() => useLessonStatusText());
-  expect(off.result.current.required).toBe(false);
+test('the hook follows the academy setting, ON by default (owner 2026-11-03)', async () => {
+  const on = await renderHook(() => useLessonStatusText());
+  expect(on.result.current.required).toBe(true);
   const client = createTestQueryClient();
-  seedPublicConfig(client, { lesson_confirmation_required: true });
+  seedPublicConfig(client, { lesson_confirmation_required: false });
   const wrapper = queryWrapper(client);
   const { result } = await renderHook(() => useLessonStatusText(), { wrapper });
-  expect(result.current.word('scheduled')).toBe(t.today.statusShort.scheduled);
+  expect(result.current.word('scheduled')).toBe(t.lessons.noConfirm.scheduledShort);
 });

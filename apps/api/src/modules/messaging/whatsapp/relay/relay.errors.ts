@@ -1,4 +1,4 @@
-import { WA_ERROR } from '@ab/shared';
+import { isWaAuthFailure, WA_ERROR } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
@@ -20,6 +20,8 @@ type Info = WaError['info'];
 type Rule = readonly [(info: Info) => boolean, (e: WaError) => RelayFailure];
 
 const isRefusal = (info: Info): boolean => info.status >= 400 && info.status < 500;
+/** Meta refused the line's OWN token (a meta line, docs/19), not the script's key. */
+const lineToken = (info: Info): boolean => !info.crmCode && isWaAuthFailure(info);
 const crmCode = (info: Info, fallback: string): string => info.crmCode ?? fallback;
 
 /** First match wins: the allow-list, a send that may have gone, the CRM's 4xx, the rest (502). */
@@ -36,6 +38,10 @@ const RULES: readonly Rule[] = [
       message: e.message,
       maybe: true,
     }),
+  ],
+  [
+    lineToken,
+    (e) => ({ status: 502, code: 'line_auth', message: e.message, maybe: false }),
   ],
   [
     isRefusal,

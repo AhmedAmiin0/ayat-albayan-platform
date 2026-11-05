@@ -1,7 +1,8 @@
 import { WA_LINES, type TemplateHealthView, type TemplateLineSync, type WaLine } from '@ab/shared';
 import {
-  Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy,
+  Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy, type OnModuleInit,
 } from '@nestjs/common';
+import { onLineSaved, type LineSaved } from '@/common/configuration/integrations/provider-saved';
 import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import {
@@ -18,6 +19,8 @@ import {
 /** Soon after boot, not at once: the e2e stub may still be starting. One run, no interval. */
 const BOOT_CHECK = { firstMs: 5_000 };
 const errText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
+/** Only a save as meta, with the sync on, triggers one. */
+const wantsSync = (saved: LineSaved): boolean => saved.provider === 'meta' && syncOn();
 /** A crm line is not a failure: its templates live in the CRM (docs/19). */
 const failedLine = (l: TemplateLineSync): boolean => !l.ok && l.error !== CRM_MANAGED;
 
@@ -29,8 +32,9 @@ const failedLine = (l: TemplateLineSync): boolean => !l.ok && l.error !== CRM_MA
  */
 @BackgroundJob({ name: 'template-boot-check' })
 @Injectable()
-export class TemplateVerifier implements OnApplicationBootstrap, OnModuleDestroy {
+export class TemplateVerifier implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(TemplateVerifier.name);
+  private off: (() => void) | null = null;
   private readonly ticker = new Ticker({
     name: TemplateVerifier.name, ...BOOT_CHECK, run: () => this.bootCheck(),
   });
@@ -41,6 +45,11 @@ export class TemplateVerifier implements OnApplicationBootstrap, OnModuleDestroy
     private readonly catalog: TemplateRegistry,
   ) {}
 
+  /** Request-driven (not a job): the API process that saved the line runs the sync. */
+  onModuleInit(): void {
+    this.off = onLineSaved((saved) => this.afterSave(saved));
+  }
+
   onApplicationBootstrap(): void {
     if (!this.configuredLines().length || !syncOn()) return;
     this.ticker.start();
@@ -48,6 +57,18 @@ export class TemplateVerifier implements OnApplicationBootstrap, OnModuleDestroy
 
   onModuleDestroy(): void {
     this.ticker.stop();
+    this.off?.();
+  }
+
+  /**
+   * A line saved as meta (docs/19 «CRM → Meta») syncs once, so its keys read the WABA's statuses by
+   * the names they go as; any other driver, the sync off or the line not configured: nothing.
+   */
+  async afterSave(saved: LineSaved): Promise<void> {
+    if (!wantsSync(saved) || !this.lines[saved.line].configured()) return;
+    const { lines } = await this.verifyAll({ line: saved.line });
+    const failed = lines.filter(failedLine).map((l) => l.error ?? 'error');
+    this.log.log(`${saved.line} saved as meta: templates synced${failed.length ? ` (failed: ${failed.join(', ')})` : ''}`);
   }
 
   async bootCheck(): Promise<void> {

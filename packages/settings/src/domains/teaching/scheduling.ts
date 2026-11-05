@@ -30,12 +30,19 @@ export const SCHEDULING_SETTINGS = {
     labelKey: 'settings.teachersAlwaysAvailable', hintKey: 'settings.hints.teachersAlwaysAvailable',
   },
   /**
-   * Owner 2026-11-02: OFF (default) = no «يحتاج تأكيد»; a lesson still scheduled / confirmed
-   * 30 min after its end counts as held (AutoHeldJob). ON = the family or staff confirm it.
+   * Owner 2026-11-03: ON (default) = «يحتاج تأكيد»; after its end + the grace a confirmed lesson
+   * is completed, a reminded one with no «نعم» no_show (AutoHeldJob). OFF = held after the grace
+   * (owner 2026-11-02).
    */
   lesson_confirmation_required: {
     module: 'scheduling', group: 'schedule',
-    type: 'bool', default: false, public: true,
+    type: 'bool', default: true, public: true,
     labelKey: 'settings.lessonConfirmationRequired', hintKey: 'settings.hints.lessonConfirmationRequired',
+  },
+  /** Minutes after a lesson's end before AutoHeldJob settles it (owner 2026-11-03, default 30). */
+  lesson_outcome_grace_minutes: {
+    module: 'scheduling', group: 'schedule',
+    type: 'int', default: 30, min: 0, max: 720,
+    labelKey: 'settings.lessonOutcomeGraceMinutes', hintKey: 'settings.hints.lessonOutcomeGraceMinutes',
   },
 } as const satisfies Record<string, SettingDef>;

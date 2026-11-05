@@ -1,10 +1,17 @@
-import { canCorrectAutoHeld } from '@ab/client-core';
-import { applyLessonEvent, type LessonEvent, type LessonView } from '@ab/shared';
+import {
+  applyLessonEvent,
+  correctionTargets,
+  type CorrectTo,
+  type LessonEvent,
+  type LessonView,
+} from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { MakeupAction } from '@/booking/makeup/MakeupAction';
 import { useJoinOpen } from '@/classroom';
-import { CorrectAutoHeld, type CorrectBy } from '@/teaching';
+import { CorrectOutcome } from '@/teaching';
+import { useNow } from '@/core/lib/time/use-now';
+import { usePermissions } from '@/core/auth';
 import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
@@ -15,11 +22,22 @@ import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 
-/** The reason the API requires on a correction: the choice's own words. */
-const CORRECT_REASON: Record<CorrectBy, string> = {
-  teacher: t.lessons.correct.byTeacher,
-  student: t.lessons.correct.byStudent,
-};
+interface RowCorrectionProps {
+  lesson: LessonView;
+  action: ReturnType<typeof useLessonAction>;
+  busy: boolean;
+}
+
+/** «تصحيح حالة الحلقة» for staff who edit lessons (owner 2026-11-03); nothing when none applies. */
+function RowCorrection({ lesson, action, busy }: RowCorrectionProps) {
+  const now = useNow();
+  const staff = usePermissions()('lessons.write');
+  const auto = lesson.auto_held === true;
+  const targets = staff ? correctionTargets({ ...lesson, auto }, now) : [];
+  const onCorrect = (to: CorrectTo) => action.correct(lesson.id, to);
+  if (targets.length === 0) return null;
+  return <CorrectOutcome targets={targets} onCorrect={onCorrect} busy={busy} />;
+}
 
 interface LessonRowActionsProps {
   lesson: LessonView;
@@ -49,12 +67,9 @@ export function LessonRowActions({ lesson, action, onReschedule, onEditTime, onL
   const who = studentNames(lesson);
   const joinOpen = useJoinOpen(lesson);
   // «تأكيد» only while the academy requires a confirmation (settings.lesson_confirmation_required);
-  // a lesson held automatically offers «لم تنعقد الحلقة؟» (also after the setting is back ON).
   const { required } = useLessonStatusText();
   const confirmable = required && can('confirm');
-  const correctable = canCorrectAutoHeld(lesson);
-  const correct = (by: CorrectBy) =>
-    action.cancel(lesson.id, { scope: 'one', by, reason: CORRECT_REASON[by] });
+
   const act = (label: string, variant: ButtonVariant, onPress: () => void) => (
     <Button
       variant={variant}
@@ -83,7 +98,7 @@ export function LessonRowActions({ lesson, action, onReschedule, onEditTime, onL
         {can('reschedule') ? act(t.lessons.rescheduleSubmit, 'secondary', () => onReschedule(lesson)) : null}
         {can('cancel_by_admin') ? act(t.today.cancel, 'danger', () => setCancelling(true)) : null}
       </ButtonRow>
-      {correctable ? <CorrectAutoHeld onCorrect={correct} busy={busy} /> : null}
+      <RowCorrection lesson={lesson} action={action} busy={busy} />
       <MakeupAction lesson={lesson} onLeave={onLeave} />
       <FeedbackRequestButton lesson={lesson} />
       {error ? <ErrorLine message={error} /> : null}

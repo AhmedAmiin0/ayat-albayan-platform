@@ -691,14 +691,6 @@
       "count": 2
     }
   },
-  "src/common/push/expo/expo-deliver.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/common/push/expo/expo-push.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -2689,11 +2681,6 @@
   "src/modules/finance/stripe/testing/stripe-mocks.fakes.ts": {
     "max-len": {
       "count": 8
-    }
-  },
-  "src/modules/finance/stripe/webhook/link-alerts.ts": {
-    "max-len": {
-      "count": 4
     }
   },
   "src/modules/finance/stripe/webhook/link-fulfilment.ts": {
@@ -6504,11 +6491,8 @@
     }
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-body.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "max-len": {
-      "count": 8
+      "count": 5
     }
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-http.test.ts": {
@@ -6532,7 +6516,7 @@
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-mapping.test.ts": {
     "ab/no-parent-imports": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 1
@@ -6555,14 +6539,8 @@
     }
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-report.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "complexity": {
-      "count": 2
-    },
     "max-len": {
-      "count": 8
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm.client.test.ts": {
@@ -7096,7 +7074,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/messaging/whatsapp/messages/wa-json.test.ts": {
@@ -7510,7 +7488,7 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/template-crm-name.ts": {
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template-crm-status.ts": {
@@ -7686,10 +7664,10 @@
   },
   "src/modules/messaging/whatsapp/templates/sync/template-number-sync.ts": {
     "complexity": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
-      "count": 14
+      "count": 13
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.controller.ts": {
@@ -7806,7 +7784,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/whatsapp.client.ts": {
@@ -14494,7 +14472,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/lessons/lessons.repo.seq.test.ts": {

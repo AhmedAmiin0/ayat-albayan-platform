@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { crmTemplateBody } from './crm-body';
-import { templateMessage } from '../../messages/wa-components';
+import { templateMessage } from '@/modules/messaging/whatsapp/drivers/waba/waba-graph';
 import { templateRow } from '../../whatsapp.fakes';
 
 // docs/19 «crm driver»: the CRM's own name (crm_name, the old script's default) and the producer's CRM values,
@@ -57,11 +57,18 @@ describe('teacher_new_student on a crm line = the CRM\'s teacher_lesson_v2', () 
     expect(crmTemplateBody({ to: TO, template: named, params: metaOnly })).toMatchObject({ template: { name: 'teacher_lesson_v2' } });
   });
 
-  it('the meta driver ignores crm_name and the CRM values: meta_name, its own three values', () => {
-    const named = templateRow({ ...ALERT, crm_name: 'teacher_alert_x' });
-    const body = templateMessage({ to: TO, template: named, params });
-    expect(body).toMatchObject({ template: { name: 'teacher_new_student', language: { code: 'ar' } } });
-    expect(JSON.stringify(body)).not.toContain('AB-0001');
+  it('the meta driver sends the same WABA template: teacher_lesson_v2, five values, two URL buttons', () => {
+    const body = templateMessage({ to: TO, template: ALERT, params });
+    expect(body).toMatchObject({ template: { name: 'teacher_lesson_v2', language: { code: 'ar' } } });
+    expect(body).toMatchObject({
+      template: {
+        components: [
+          { type: 'body', parameters: crm.body.map((text) => ({ type: 'text', text })) },
+          { type: 'button', sub_type: 'url', index: '0', parameters: [{ type: 'text', text: 'classroom/l-1' }] },
+          { type: 'button', sub_type: 'url', index: '1', parameters: [{ type: 'text', text: 'teacher/report/l-1' }] },
+        ],
+      },
+    });
   });
 
   it('a template the CRM shares with us keeps meta_name (booking_confirmation)', () => {
@@ -114,10 +121,10 @@ describe('the teacher\'s same-day reminders on a crm line = the CRM\'s teacher_l
     });
   });
 
-  it('the meta driver: meta_name, its two values and the Meet code, never the CRM line', () => {
+  it('the meta driver: the same teacher_lesson_reminder with [teacher, one line], no button', () => {
     const meta = templateMessage({ to: TO, template: MEET, params: { ...meetParams, crm: own } });
-    expect(meta).toMatchObject({ template: { name: 'teacher_lesson_reminder_meet' } });
-    expect(JSON.stringify(meta)).toContain('abc-defg-hij');
-    expect(JSON.stringify(meta)).not.toContain('AB-0001');
+    const body = { type: 'body', parameters: own.body.map((text) => ({ type: 'text', text })) };
+    expect(meta).toMatchObject({ template: { name: 'teacher_lesson_reminder', components: [body] } });
+    expect(JSON.stringify(meta)).not.toContain('"button"');
   });
 });
