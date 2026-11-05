@@ -15,7 +15,7 @@ function setup(results: Record<string, FakeResult[]>) {
 
 describe('PeopleViewService, GET /people/students/:id', () => {
   it('the logins and the history as yes / no, never a profile id', async () => {
-    const view = await setup({ ...none(), students: [{ data: ROW }] }).view('s1');
+    const view = await setup({ ...none(), students: [{ data: ROW }] }).view('s1', false);
     expect(view).toEqual({
       student: { id: 's1', code: 'AB-0183', name: 'سهيلة', has_login: true, has_records: false },
       guardian: { id: 'g1', name: 'أم سهيلة', has_login: false, phones: [], students: [] },
@@ -27,9 +27,19 @@ describe('PeopleViewService, GET /people/students/:id', () => {
       ...none(),
       subscriptions: [{ count: 2 }],
       students: [{ data: ROW }],
-    }).view('s1');
+    }).view('s1', true);
     expect(busy.student.has_records).toBe(true);
     const gone = setup({ students: [{ data: null }] });
-    await expect(gone.view('x')).rejects.toMatchObject({ response: { code: 'student_not_found' } });
+    await expect(gone.view('x', true)).rejects.toMatchObject({
+      response: { code: 'student_not_found' },
+    });
+  });
+
+  it('notes only for the admin (owner 2026-10-27): left out of every other view', async () => {
+    const noted = { ...ROW, notes: 'ملاحظة', guardian: { ...FAMILY, notes: 'عائلية' } };
+    const admin = await setup({ ...none(), students: [{ data: noted }] }).view('s1', true);
+    expect([admin.student.notes, admin.guardian.notes]).toEqual(['ملاحظة', 'عائلية']);
+    const sales = await setup({ ...none(), students: [{ data: noted }] }).view('s1', false);
+    expect('notes' in sales.student || 'notes' in sales.guardian).toBe(false);
   });
 });

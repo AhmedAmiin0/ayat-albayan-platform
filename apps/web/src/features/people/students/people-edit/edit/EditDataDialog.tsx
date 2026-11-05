@@ -1,6 +1,7 @@
 import {
   familyFormOf,
   familyPatchOf,
+  notesShown,
   studentFormOf,
   studentPatchOf,
   type FamilyForm,
@@ -72,12 +73,14 @@ export function EditDataDialog({ view, onClose, onDone }: PeopleDialogProps) {
       <form id={formId} onSubmit={submit} className="grid gap-6 sm:grid-cols-2">
         <StudentFields
           value={current.student}
+          notes={notesShown(view)}
           invalid={of('student')}
           onChange={(p) => setCurrent((c) => ({ ...c, student: { ...c.student, ...p } }))}
         />
         <div className="grid content-start gap-4">
           <FamilyFields
             value={current.family}
+            notes={notesShown(view)}
             invalid={of('family')}
             onChange={(p) => setCurrent((c) => ({ ...c, family: { ...c.family, ...p } }))}
           />

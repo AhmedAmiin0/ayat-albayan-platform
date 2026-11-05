@@ -110,9 +110,11 @@ describe('payments routes (P1–P7, R-PAY-01)', () => {
 
   it('P4/P5: edits are audited and recomputed; delete removes the receipt', async () => {
     m.payments.update.mockResolvedValue(paymentRow({ amount: 100 }));
+    m.payments.netPaid.mockResolvedValue(145);
     const res = await call({ method: 'PATCH', url: `/payments/${PAYMENT_ID}`, body: { amount: 100 } });
     expect(res.statusCode).toBe(200);
-    expect(m.payments.update).toHaveBeenCalledWith(PAYMENT_ID, { amount: 100 });
+    const fx = { original_amount: null, original_currency: null, fx_rate: null };
+    expect(m.payments.update).toHaveBeenCalledWith(PAYMENT_ID, { amount: 100, ...fx });
     m.payments.get.mockResolvedValue(paymentRow({ receipt_path: RECEIPT }));
     expect((await call({ method: 'DELETE', url: `/payments/${PAYMENT_ID}` })).statusCode).toBe(204);
     expect(m.storage.remove).toHaveBeenCalledWith({ bucket: 'receipts', path: RECEIPT });

@@ -8,10 +8,11 @@ import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import type { PaymentView } from './api';
+import { amountEditable } from './amount/amount-check';
 
 const col = createColumnHelper<DataTableFeatures, PaymentView>();
 
-export type PaymentAction = 'receipt' | 'attachments' | 'edit' | 'delete';
+export type PaymentAction = 'receipt' | 'attachments' | 'amount' | 'edit' | 'delete';
 type Handlers = { onAction: (p: PaymentView, action: PaymentAction) => void };
 
 const methodOptions = PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
@@ -80,6 +81,17 @@ export function paymentColumns({ onAction }: Handlers) {
             {(p.method === 'bank' || p.receipt_path) && (
               <Button type="button" variant="secondary" size="sm" onClick={() => onAction(p, 'attachments')}>
                 {t.payments.viewAttachments}
+              </Button>
+            )}
+            {amountEditable(p) && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                aria-label={`${t.payments.editAmount.action} ${name}`}
+                onClick={() => onAction(p, 'amount')}
+              >
+                {t.payments.editAmount.action}
               </Button>
             )}
             <Button type="button" variant="ghost" size="sm" aria-label={`${t.common.edit} ${name}`} onClick={() => onAction(p, 'edit')}>

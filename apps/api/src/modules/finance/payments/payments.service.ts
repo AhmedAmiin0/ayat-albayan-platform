@@ -8,6 +8,7 @@ import { toPaymentView } from './payments.mapper';
 import { PaymentsRepo, type PaymentFilter, type PaymentRow, type PeriodTotal } from './payments.repo';
 import { PaymentInputs } from './payment-inputs';
 import { notCancelled, precheckPayment, type Prechecked } from './payment-precheck';
+import { amountWrite } from './payment-amount-edit';
 import { PaymentReceived, receivedOf } from './received/payment-received';
 
 /**
@@ -72,8 +73,7 @@ export class PaymentsService {
   async update(id: string, patch: Partial<PaymentUpdate>, actorId: string): Promise<PaymentView> {
     const before = notCancelled(await this.row(id));
     await this.files.checkPatch(before, patch);
-    const write: TablesUpdate<'payments'> = {};
-    if (patch.amount !== undefined) write.amount = patch.amount;
+    const write: TablesUpdate<'payments'> = await amountWrite(this.payments, before, patch);
     if (patch.method !== undefined) write.method = patch.method;
     if (patch.paidAt !== undefined) write.paid_at = patch.paidAt;
     if (patch.receiptPath !== undefined) write.receipt_path = patch.receiptPath;

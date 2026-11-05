@@ -47,7 +47,7 @@ const resolver: PermissionResolver = async (user) => {
 export const mocks = {
   people: { editStudent: vi.fn(), editGuardian: vi.fn() },
   views: { view: vi.fn() },
-  owners: { student: vi.fn(), family: vi.fn() },
+  owners: { student: vi.fn(), family: vi.fn(), target: vi.fn() },
   phones: { removeSecond: vi.fn() },
   families: { families: vi.fn(), move: vi.fn() },
   roles: { setSelf: vi.fn(), guardianToStudent: vi.fn(), studentToGuardian: vi.fn() },

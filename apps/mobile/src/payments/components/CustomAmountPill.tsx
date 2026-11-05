@@ -2,22 +2,25 @@ import { Pressable } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { shape, type, useTheme } from '@/theme';
-import type { LinkPay } from './use-link-pay';
+
+interface CustomAmountPillProps {
+  on: boolean;
+  onChange: (on: boolean) => void;
+}
 
 /**
  * «مبلغ مخصص» (owner 2026-11-01) under the discount pills, in their look (checked = the green
- * wash): on shows the amount field; off hides it and the link carries the calculator price after
- * the pill.
+ * wash): on shows the caller's amount field; off hides it and the calculator price is used. The
+ * payment link's amount and the package price (owner 2026-11-02) both use it.
  */
-export function CustomAmountPill({ pay }: { pay: LinkPay }) {
+export function CustomAmountPill({ on, onChange }: CustomAmountPillProps) {
   const { color } = useTheme();
-  const on = pay.custom;
   return (
     <Pressable
       accessibilityRole="checkbox"
       accessibilityState={{ checked: on }}
       accessibilityLabel={t.paymentLinks.customAmount}
-      onPress={() => pay.setCustom(!on)}
+      onPress={() => onChange(!on)}
       hitSlop={{ top: 4, bottom: 4 }}
       style={{
         alignSelf: 'flex-start',

@@ -3,6 +3,8 @@ import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { apiErrorText, moneyText, studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { deletePayment, type PaymentView } from './api';
+import { EditAmountDialog } from './amount/EditAmountDialog';
+import { useAdminAmountEdit } from './amount/use-admin-amount-edit';
 import { ConfirmDialog } from './record/ConfirmDialog';
 import { EditPaymentDialog } from './record/EditPaymentDialog';
 import { AttachmentsDialog } from './attachments/AttachmentsDialog';
@@ -22,6 +24,16 @@ export function PaymentDialogs({ payment, action, onClose, onDone }: Props) {
       onDone(t.finance.paymentDeleted);
     },
   });
+  const amount = useAdminAmountEdit(payment.id);
+  const amountDone = () => {
+    onClose();
+    onDone(t.payments.editAmount.saved);
+  };
+  if (action === 'amount') {
+    return (
+      <EditAmountDialog payment={payment} save={amount} onClose={onClose} onDone={amountDone} />
+    );
+  }
   if (action === 'receipt') return <ReceiptDialog payment={payment} onClose={onClose} />;
   if (action === 'attachments') {
     return <AttachmentsDialog path={`/payments/${payment.id}/attachments`} description={studentLabel(payment.student)} onClose={onClose} />;

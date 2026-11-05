@@ -22,7 +22,8 @@ export const peopleEditStudentSchema = z.object({
   goal: text,
   riwaya: text,
   tz: z.string(),
-  notes: text,
+  /** The admin's only (owner 2026-10-27): absent for every other role. */
+  notes: text.optional(),
   teacher_gender_pref: gender,
   contact_is_self: z.boolean(),
   has_login: z.boolean(),
@@ -38,7 +39,8 @@ export const peopleEditFamilySchema = z.object({
   phone_e164: z.string(),
   country: text,
   tz: z.string(),
-  notes: text,
+  /** The admin's only, as the student's. */
+  notes: text.optional(),
   /** A family login (phone + WhatsApp code): its main number and its adult learner stay put. */
   has_login: z.boolean(),
   phones: z.array(z.object({ phone_e164: z.string(), is_primary: z.boolean() })),

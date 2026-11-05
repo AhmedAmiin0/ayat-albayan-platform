@@ -21,13 +21,19 @@ type Props = {
   currency: string;
   today: string;
   amountError?: string | null;
+  /** A card payment (amountFromStripe): its amount comes from Stripe, shown but never edited. */
+  amountLocked?: boolean;
 };
 
 /** Amount (in the package currency, fixed in v1), method, date and note. */
-export function PaymentFields({ form, set, currency, today, amountError }: Props) {
+export function PaymentFields({ form, set, currency, today, amountError, amountLocked }: Props) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <Field label={`${t.payments.amount} (${currencySymbol(currency)})`} error={amountError ?? undefined}>
+      <Field
+        label={`${t.payments.amount} (${currencySymbol(currency)})`}
+        hint={amountLocked ? t.payments.editAmount.fromStripe : undefined}
+        error={amountError ?? undefined}
+      >
         {(p) => (
           // Text, not type=number: an Arabic keyboard types «١٤٥», which parseAmount reads.
           <Input
@@ -37,6 +43,7 @@ export function PaymentFields({ form, set, currency, today, amountError }: Props
             dir="ltr"
             value={form.amount}
             onChange={(e) => set({ amount: e.target.value })}
+            disabled={amountLocked}
             required
           />
         )}

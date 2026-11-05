@@ -10,6 +10,8 @@ export {
   familyFormOf,
   familyPatchOf,
   newFamilyOf,
+  notesFilter,
+  notesShown,
   studentFormOf,
   studentPatchOf,
   type FamilyForm,

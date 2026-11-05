@@ -61,6 +61,10 @@ export const myPaymentsQuery = queryOptions({
   queryFn: () => apiFetch<MyPaymentRow[]>('/sales/me/payments'),
 });
 
+/** PATCH /sales/payments/:id/amount (payments.edit_amount): a payment she recorded, never card. */
+export const updateMyPaymentAmount = (id: string, amount: number) =>
+  apiSend('PATCH', `/sales/payments/${id}/amount`, { amount });
+
 /** GET /sales/people (admin):the salespeople with their open-lead counts. */
 export const salesPeopleQuery = queryOptions({
   queryKey: ['sales', 'people'],

@@ -35,6 +35,12 @@ export const peopleGuardianPatchSchema = guardianCreateSchema
   .strict();
 export type PeopleGuardianPatch = z.output<typeof peopleGuardianPatchSchema>;
 
+/**
+ * Notes stay the admin's (owner 2026-10-27, «never notes» for sales): a student or family PATCH
+ * from any other role is also parsed by this, so a `notes` key answers 400.
+ */
+export const notesFreeSchema = z.object({ notes: z.undefined().optional() });
+
 /** A new family for «ربط بولي أمر آخر»: found by its main phone first, created only when new. */
 export const newFamilySchema = guardianCreateSchema.pick({
   name: true,

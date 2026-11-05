@@ -3,7 +3,11 @@ import { t } from '@/core/lib/i18n/i18n';
 import { isOffline } from '@/core/lib/money/payment-errors';
 import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 
-const messages: Record<string, string | undefined> = t.salesMoney.error;
+// «مبلغ مخصص» on the package price (owner 2026-11-02): below the admin's lowest amount.
+const messages: Record<string, string | undefined> = {
+  ...t.salesMoney.error,
+  discount_too_large: t.paymentLinks.error.discount_too_large,
+};
 
 function bodyOf(error: unknown): { code?: unknown; currency?: unknown; issues?: unknown } {
   if (!(error instanceof ApiError)) return {};

@@ -34,6 +34,8 @@ export const salesSubscriptionCreateSchema = z.strictObject({
   lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
   /** «المعلم/ة» (owner 2026-10-29): students.teacher_id once subscribed; opens the student channel. */
   teacherId: z.uuid().optional(),
+  /** «مبلغ مخصص» (owner 2026-11-02): the package price, not the quote's (the link's cap). */
+  customPrice: moneyAmount.optional(),
   clientRequestId: z.uuid(),
   phone: chatPhone,
 });

@@ -10,6 +10,7 @@ import { AttachmentsViewer } from '@/money/attachments/AttachmentsViewer';
 import { hasAttachments } from '@/money/attachments/receipt-file';
 import { ReceiptViewer } from '@/money/attachments/ReceiptViewer';
 import { useViewerTz } from '@/core/lib/clock';
+import { AdminAmountEdit } from '@/payments';
 
 /**
  * One payment or refund: the amount (refunds struck in saffron-free ink with the «استرداد» word),
@@ -47,6 +48,7 @@ export const PaymentItem = memo(function PaymentItem({ payment }: { payment: Pay
       {invoiceOnly ? <ReceiptViewer payment={payment} /> : null}
       {files ? <AttachmentsViewer path={`/payments/${payment.id}/attachments`} name={payment.student.name} /> : null}
       {!files && !invoiceOnly ? <AppText style={{ ...small, color: color.ink3 }}>{t.mobileMoney.noReceipt}</AppText> : null}
+      <AdminAmountEdit payment={payment} />
     </View>
   );
 });

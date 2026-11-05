@@ -28,6 +28,8 @@ interface SalesSubscribeInput {
   teacherId?: string;
   /** The chat's phone for a child not hers (chatBinding, sales.renew_any). */
   phone?: string;
+  /** «مبلغ مخصص» (owner 2026-11-02): the package price; omitted = the quote's. */
+  customPrice?: number;
 }
 
 /**

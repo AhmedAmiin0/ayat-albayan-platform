@@ -16,10 +16,11 @@ export class PeopleViewService {
     private readonly records: StudentRecordsRepo,
   ) {}
 
-  async view(id: string): Promise<PeopleEditView> {
+  /** `notes`: the admin's only (owner 2026-10-27), left out for every other role. */
+  async view(id: string, notes: boolean): Promise<PeopleEditView> {
     const row = await this.repo.view(id);
     if (!row?.guardian) throw notFound('student_not_found');
     const tables = await this.records.records(id);
-    return toEditView(row, { family: row.guardian, hasRecords: tables.length > 0 });
+    return toEditView(row, { family: row.guardian, hasRecords: tables.length > 0, notes });
   }
 }

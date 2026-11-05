@@ -49,7 +49,10 @@ describe('«ربط بولي أمر آخر»', () => {
       target: { value: '+20 100 000 0003' },
     });
     fireEvent.click(screen.getByRole('button', { name: E.newFamily }));
-    fireEvent.click(screen.getByRole('button', { name: E.confirm }));
+    // The number is looked up first: an existing family with it would replace the typed one.
+    const confirm = screen.getByRole<HTMLButtonElement>('button', { name: E.confirm });
+    await waitFor(() => expect(confirm.disabled).toBe(false));
+    fireEvent.click(confirm);
     await waitFor(() =>
       expect(apiSend).toHaveBeenCalledWith('POST', '/people/students/s1/guardian', {
         guardian: { name: 'أبو سهيلة', phone_e164: '+201000000003', tz: 'Africa/Cairo' },

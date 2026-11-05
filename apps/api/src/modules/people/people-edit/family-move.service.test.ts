@@ -6,8 +6,10 @@ import { FamilyMoveService } from './family-move.service';
 import { FamilySearchRepo } from './family-search.repo';
 import { PeopleEditRepo } from './people-edit.repo';
 
+const allowed = () => Promise.resolve();
 const STUDENT = { id: 's1', guardian_id: 'g-old', contact_is_self: false, profile_id: null };
 const FRESH = { name: 'أبو سهيلة', phone_e164: '+201000000003', tz: 'Africa/Cairo', country: null };
+const NEW = { kind: 'new', guardian: FRESH } as const;
 /** Tables a family move never touches: money, lessons and chats stay keyed as they are. */
 const UNTOUCHED = [
   'subscriptions',
@@ -41,7 +43,12 @@ describe('FamilyMoveService «ربط بولي أمر آخر»', () => {
       audit_log: [{}],
     });
     await expect(
-      t.service.move({ studentId: 's1', move: { kind: 'existing', id: 'g-new' }, actorId: 'u1' }),
+      t.service.move({
+        studentId: 's1',
+        move: { kind: 'existing', id: 'g-new' },
+        actorId: 'u1',
+        allowed,
+      }),
     ).resolves.toEqual({ student_id: 's1', guardian_id: 'g-new' });
     expect(t.argsOf('students', 'update')?.[0]).toEqual({
       guardian_id: 'g-new',
@@ -68,11 +75,8 @@ describe('FamilyMoveService «ربط بولي أمر آخر»', () => {
       guardians: [{ data: { id: 'g-phone' } }],
       audit_log: [{}],
     });
-    await found.service.move({
-      studentId: 's1',
-      move: { kind: 'new', guardian: FRESH },
-      actorId: 'u1',
-    });
+    const fresh = { studentId: 's1', move: NEW, actorId: 'u1', allowed };
+    await found.service.move(fresh);
     expect(found.argsOf('guardians', 'insert')).toBeUndefined();
     expect(found.argsOf('students', 'update')?.[0]).toMatchObject({ guardian_id: 'g-phone' });
 
@@ -81,11 +85,7 @@ describe('FamilyMoveService «ربط بولي أمر آخر»', () => {
       guardians: [{ data: null }, { data: { id: 'g-made' } }],
       audit_log: [{}],
     });
-    await created.service.move({
-      studentId: 's1',
-      move: { kind: 'new', guardian: FRESH },
-      actorId: 'u1',
-    });
+    await created.service.move(fresh);
     expect(created.argsOf('guardians', 'insert')?.[0]).toMatchObject({
       name: FRESH.name,
       phone_e164: FRESH.phone_e164,
@@ -136,7 +136,9 @@ describe('FamilyMoveService «ربط بولي أمر آخر»', () => {
     ];
     for (const [results, move, code] of cases) {
       const t = setup(results);
-      await expect(t.service.move({ studentId: 's1', move, actorId: 'u1' })).rejects.toMatchObject({
+      await expect(
+        t.service.move({ studentId: 's1', move, actorId: 'u1', allowed }),
+      ).rejects.toMatchObject({
         response: { code },
       });
       expect(t.trips).not.toContain('audit_log');
