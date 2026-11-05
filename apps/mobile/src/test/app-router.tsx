@@ -1,9 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter } from 'expo-router/testing-library';
+import type * as Api from '@/core/lib/http/api';
 import { queryClient } from '@/core/lib/query/query-client';
 import { pathKey } from '@/core/lib/query/query-keys';
 import type { NavState } from '@/core/nav/chat-groups';
 import { currentBackend, type FakeBackend, setBackend } from './fake-backend';
+import type * as Backend from './fake-backend';
 import { resetNative } from './native-mocks';
 import { routes } from './app-routes';
 import { fullAccessMe } from './staff-me';
@@ -20,7 +22,16 @@ jest.mock('expo-notifications', () => jest.requireActual('./native-mocks').notif
 jest.mock('expo-image-picker', () => jest.requireActual('./native-mocks').imagePickerMock());
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
-  apiFetch: (url: string) => jest.requireActual('./fake-backend').currentBackend().fetch(url),
+  // The real read deadline and token read around the fake answer (owner 2026-11-05: stuck reads).
+  apiFetch: (url: string, init?: RequestInit) => {
+    const api = jest.requireActual<typeof Api>('@/core/lib/http/api');
+    const backend = () => jest.requireActual<typeof Backend>('./fake-backend');
+    const read = async () => {
+      await api.accessToken();
+      return backend().currentBackend().fetch(url);
+    };
+    return api.withReadDeadline(read, init);
+  },
   apiSend: (method: string, url: string, body?: unknown) =>
     jest.requireActual('./fake-backend').currentBackend().send(method, url, body),
 }));

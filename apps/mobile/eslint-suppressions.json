@@ -1994,6 +1994,11 @@
       "count": 1
     }
   },
+  "src/core/lib/log/log.ts": {
+    "no-console": {
+      "count": 1
+    }
+  },
   "src/core/lib/money/format.ts": {
     "max-len": {
       "count": 6
