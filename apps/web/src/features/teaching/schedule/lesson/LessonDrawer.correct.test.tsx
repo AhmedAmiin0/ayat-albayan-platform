@@ -12,8 +12,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
 
 const c = t.lessons.correct;
-// A lesson that started (and ended) long ago.
-const ENDED = '2000-01-01T09:00:00Z';
+const ENDED = '2000-01-01T10:00:00Z';
 const AUTO_HELD: LessonView = { ...lesson({ id: 'l-7', status: 'completed', starts_at: ENDED }), auto_held: true };
 
 function renderDrawer(l: LessonView, required = false) {

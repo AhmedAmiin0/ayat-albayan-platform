@@ -14,6 +14,8 @@ export interface OpenEndedLesson {
   id: string;
   status: LessonStatus;
   ends_at: string;
+  /** «عدّل الوقت» (R-SCH-11): a reminder made before it was about the old time. */
+  time_edited_at?: string | null;
   lesson_students: { student_id: string; student: { tz: string } | null }[];
 }
 

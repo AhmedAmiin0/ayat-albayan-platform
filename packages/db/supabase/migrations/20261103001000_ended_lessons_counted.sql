@@ -29,7 +29,7 @@ end
 $do$;
 
 comment on function public.lesson_outcomes_since() is
-  'When ended lessons started to count without an outcome (migration 999 = the deploy). Never moved.';
+  'When ended lessons started to count without an outcome (migration 1000 = the deploy). Never moved.';
 
 create or replace function public.lesson_ended_open(p_status public.lesson_status, p_ends_at timestamptz)
   returns boolean language sql stable set search_path = '' as $$

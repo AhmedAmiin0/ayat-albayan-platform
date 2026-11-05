@@ -8,6 +8,7 @@ import { OutcomeSettleService } from './outcome-settle.service';
 const NOW = new Date('2026-11-04T12:00:00Z');
 const SINCE = new Date('2026-11-03T09:00:00Z');
 const GRACE = 30 * 60_000;
+const SENT = Date.parse('2026-11-04T09:00:00Z');
 const PASS = { now: NOW, graceMs: GRACE };
 const open = (id: string, over: Partial<OpenEndedLesson> = {}): OpenEndedLesson => ({
   id,
@@ -22,7 +23,7 @@ function setup(lessons: OpenEndedLesson[], reminded: string[] = []) {
   const repo = {
     outcomesSince: vi.fn(async () => SINCE),
     openEnded: vi.fn(async () => lessons),
-    reminded: vi.fn(async () => new Set(reminded)),
+    reminded: vi.fn(async () => new Map(reminded.map((id) => [id, SENT]))),
   };
   const service = new OutcomeSettleService(repo as unknown as AutoHeldRepo, deps.store);
   return { ...deps, repo, service };
@@ -76,10 +77,18 @@ describe('OutcomeSettleService (owner 2026-11-03, confirmation required)', () =>
     expect(await service.runOnce(PASS)).toMatchObject({ held: 0, absent: 0, lost: 2 });
   });
 
-  it('no cutoff (migration 999 not applied): the pass fails before reading any lesson', async () => {
+  it('no cutoff (migration 1000 not applied): the pass fails before reading any lesson', async () => {
     const { service, repo } = setup([open('a')], ['a']);
     repo.outcomesSince.mockRejectedValueOnce(new Error('function does not exist'));
     await expect(service.runOnce({ now: NOW, graceMs: GRACE })).rejects.toThrow();
     expect(repo.openEnded).not.toHaveBeenCalled();
+  });
+
+  it('«عدّل الوقت» after the reminder: that reminder was about the old time, left unresolved', async () => {
+    const edited = open('e', { time_edited_at: '2026-11-04T09:30:00Z' });
+    const before = open('b', { time_edited_at: '2026-11-04T08:00:00Z' });
+    const { service, writer } = setup([edited, before], ['e', 'b']);
+    expect(await service.runOnce(PASS)).toMatchObject({ absent: 1, unresolved: 1 });
+    expect(appliedChange(writer)?.changes[0]).toMatchObject({ id: 'b', to_status: 'no_show' });
   });
 });
