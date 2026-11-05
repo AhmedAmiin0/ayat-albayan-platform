@@ -11,7 +11,7 @@ import { StopRefunds } from './stop-refund.service';
 const isAssistant = (user: AuthUser): boolean => user.role === 'sales';
 
 /** The refund leg of one stop: the package, its key, the amount asked. */
-export interface RefundAsk {
+interface RefundAsk {
   sub: RefundSub;
   requestId: string;
   amount: number;
