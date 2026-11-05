@@ -24,6 +24,7 @@ export function mocks() {
     payments: {
       list: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn(), subscription: vi.fn(),
       recorders: vi.fn(), byRequest: vi.fn(), byInvoice: vi.fn(), totals: vi.fn(), netPaid: vi.fn(),
+      setAmount: vi.fn(),
     },
     payouts: {
       teachers: vi.fn(), lessons: vi.fn(), forMonth: vi.fn(), forTeacher: vi.fn(), get: vi.fn(),
@@ -75,6 +76,11 @@ export function resetMocks(m: Mocks): void {
   m.payouts.pendingReports.mockResolvedValue(0);
   m.payouts.editedSince.mockResolvedValue(0);
   m.payments.byRequest.mockResolvedValue(null);
+  // payment_amount_set writes the amount and clears the fx fields: the update mock stands in.
+  const noFx = { original_amount: null, original_currency: null, fx_rate: null };
+  m.payments.setAmount.mockImplementation((id: string, c: { amount: number }) =>
+    m.payments.update(id, { amount: c.amount, ...noFx }),
+  );
   m.payments.totals.mockResolvedValue([]);
   m.payments.byInvoice.mockResolvedValue(null);
   m.earnings.byRequest.mockResolvedValue(null);

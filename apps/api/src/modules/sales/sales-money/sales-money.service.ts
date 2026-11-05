@@ -10,12 +10,18 @@ import {
   type SalesReceiptUpload,
   type SalesSubscriptionCreate,
   type SignedUpload,
+  type SubscriptionView,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { badRequest, conflict } from '../../../common/http/errors';
 import { toSalesPayment, toSalesQuote, toSalesSubscription } from './sales-money.mapper';
-import { assertSalesDiscount, renewsAny, SalesMoneyScope } from './sales-money.scope';
+import {
+  assertSalesDiscount,
+  assertSalesPrice,
+  renewsAny,
+  SalesMoneyScope,
+} from './sales-money.scope';
 import { SalesMoneyServices } from './sales-money.services';
 import { SalesMoneyReads } from './reads/sales-money.reads';
 import { salesStartsOn } from './sales-start';
@@ -43,28 +49,42 @@ export class SalesMoney {
     return toSalesQuote(await this.services.creator.quote({ studentId: input.studentId, pricing: input.pricing }));
   }
 
-  /** The start day: salesStartsOn (docs/16 row 24). */
+  /**
+   * The start day: salesStartsOn (docs/16 row 24). A retry of the same form (clientRequestId)
+   * returns the stored package before any re-quote (its custom price is checked once, at creation).
+   */
   async subscribe(input: SalesSubscriptionCreate, user: AuthUser, now = new Date()): Promise<SalesMoneySubscriptionView> {
     await this.scope.assertRenews(user, input.studentId);
     assertSalesDiscount(input.pricing);
     const startsOn = salesStartsOn(input, user, now);
-    // alreadyStarted is not a column
-    const { studentId, pricing, clientRequestId, lessonsUsedBefore, customPrice } = input;
-    if (customPrice !== undefined) await this.assertCustomPrice(input, customPrice);
-    const create = { studentId, pricing, clientRequestId, startsOn, lessonsUsedBefore };
-    const priced = customPrice === undefined ? create : { ...create, customPrice };
-    const view = await this.services.creator.create(priced, user.id);
+    const replay = await this.services.creator.replay(input.clientRequestId);
+    const view = replay ?? (await this.create(input, { startsOn, actorId: user.id }));
     // A clientRequestId already used for another student replays that package: never show it here.
     if (view.student.id !== input.studentId) throw conflict('client_request_reused');
     return toSalesSubscription(view);
   }
 
+  private async create(
+    input: SalesSubscriptionCreate,
+    at: { startsOn: string; actorId: string },
+  ): Promise<SubscriptionView> {
+    // alreadyStarted is not a column
+    const { studentId, pricing, clientRequestId, lessonsUsedBefore, customPrice } = input;
+    const { startsOn } = at;
+    const create = { studentId, pricing, clientRequestId, startsOn, lessonsUsedBefore };
+    if (customPrice === undefined) return this.services.creator.create(create, at.actorId);
+    await this.assertCustomPrice(input, customPrice);
+    return this.services.creator.create({ ...create, customPrice }, at.actorId);
+  }
+
   /**
-   * «مبلغ مخصص» (owner 2026-11-02): free (> 0) like the payment link's agreed amount, unless the
-   * admin set STRIPE_MAX_DISCOUNT_PCT («التكاملات»): then not below that share of the quote (400).
+   * «مبلغ مخصص» (owner 2026-11-02/05): never below the deepest pill's price (assertSalesPrice,
+   * 403 discount_not_allowed), and, when the admin set STRIPE_MAX_DISCOUNT_PCT («التكاملات»),
+   * not below that share of the quote either (400 discount_too_large).
    */
   private async assertCustomPrice(input: SalesSubscriptionCreate, amount: number): Promise<void> {
     const quote = await this.services.creator.quote(input);
+    assertSalesPrice({ amount, total: quote.total, currency: quote.currency });
     const maxDiscountPct = loadEnv().STRIPE_MAX_DISCOUNT_PCT ?? null;
     const problem = linkAmountProblem({ amount, reference: quote.afterDiscount, maxDiscountPct });
     const min = minLinkAmount(quote.afterDiscount, maxDiscountPct);

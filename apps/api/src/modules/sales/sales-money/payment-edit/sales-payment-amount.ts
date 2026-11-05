@@ -8,7 +8,7 @@ import { SalesMoneyServices } from '@/modules/sales/sales-money/sales-money.serv
 import { SalesMoneyScope } from '@/modules/sales/sales-money/sales-money.scope';
 
 /**
- * «تعديل المبلغ» by the assistant (owner 2026-11-02), permission payments.edit_amount (never
+ * «تعديل المبلغ» by the assistant (owner 2026-11-02), permission subscriptions.edit_terms (never
  * payments.write): the admin's PaymentsService.update with her as the actor, so the audit
  * (before/after), the package's paid state, the balance, both commissions (the payment triggers)
  * and the alerts follow exactly as on the admin's edit. Whose: the transfer's own rule

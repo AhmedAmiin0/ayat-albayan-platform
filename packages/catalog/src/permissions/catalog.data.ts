@@ -87,9 +87,6 @@ export const PERMISSION_ROWS = [
   { key: 'student_channels.monitor', area: 'messaging', grants: [] },
   { key: 'payments.read', area: 'finance', grants: [] },
   { key: 'payments.write', area: 'finance', grants: [] },
-  // «تعديل المبلغ» of a recorded transfer (owner 2026-11-02): the assistant's
-  // PATCH /sales/payments/:id/amount only (never payments.write); granted from the matrix.
-  { key: 'payments.edit_amount', area: 'finance', grants: [] },
   { key: 'subscriptions.read', area: 'finance', grants: [] },
   { key: 'subscriptions.write', area: 'finance', grants: [] },
   // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): the start date on the CREATE / renew forms only.

@@ -61,7 +61,7 @@ export const myPaymentsQuery = queryOptions({
   queryFn: () => apiFetch<MyPaymentRow[]>('/sales/me/payments'),
 });
 
-/** PATCH /sales/payments/:id/amount (payments.edit_amount): a payment she recorded, never card. */
+/** PATCH /sales/payments/:id/amount (subscriptions.edit_terms): a payment, never card. */
 export const updateMyPaymentAmount = (id: string, amount: number) =>
   apiSend('PATCH', `/sales/payments/${id}/amount`, { amount });
 

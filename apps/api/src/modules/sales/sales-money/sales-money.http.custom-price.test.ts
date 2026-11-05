@@ -28,21 +28,21 @@ describe('custom subscription price', () => {
   });
 
   it('on: her amount is the price (the commission runs on it); the quote kept, marked custom', async () => {
-    m.subs.insert.mockResolvedValue(subRow({ price: 99 }));
-    m.subs.get.mockResolvedValue(subRow({ price: 99 }));
-    const body = { ...CREATE, customPrice: 99 };
+    m.subs.insert.mockResolvedValue(subRow({ price: 130 }));
+    m.subs.get.mockResolvedValue(subRow({ price: 130 }));
+    const body = { ...CREATE, customPrice: 130 };
     const res = await call({ method: 'POST', url: '/sales/subscriptions', token: 'salesA', body });
     expect(res.statusCode).toBe(201);
-    const stored = expect.objectContaining({ price: 99, price_source: CUSTOM });
+    const stored = expect.objectContaining({ price: 130, price_source: CUSTOM });
     expect(m.subs.insert).toHaveBeenCalledWith(stored);
-    expect(res.json()).toMatchObject({ price: 99, due: 99 });
+    expect(res.json()).toMatchObject({ price: 130, due: 130 });
   });
 
   it('a renewal (a student with a package) takes the custom price the same way', async () => {
     m.subs.forStudent.mockResolvedValue([subRow({ id: 'old' })]);
-    const body = { ...CREATE, customPrice: 120.5 };
+    const body = { ...CREATE, customPrice: 125.5 };
     await call({ method: 'POST', url: '/sales/subscriptions', token: 'salesA', body });
-    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ price: 120.5 }));
+    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ price: 125.5 }));
   });
 
   it('the payment link’s cap (STRIPE_MAX_DISCOUNT_PCT) holds for her: 400 discount_too_large', async () => {

@@ -8,7 +8,7 @@ import { MyPayments } from './MyPayments';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-const granted = vi.hoisted(() => ({ keys: ['payments.edit_amount'] as string[] }));
+const granted = vi.hoisted(() => ({ keys: ['subscriptions.edit_terms'] as string[] }));
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@/features/people/auth/use-permissions', () => ({
   usePermissions: () => ({
@@ -38,7 +38,7 @@ const ROWS = [
   pay({ id: 'p3', student: { id: 's3', code: 'AB-1002', name: 'مريم' }, kind: 'refund' }),
 ];
 
-async function open(keys: string[] = ['payments.edit_amount']) {
+async function open(keys: string[] = ['subscriptions.edit_terms']) {
   granted.keys = keys;
   apiFetch.mockResolvedValue(ROWS);
   renderWithClient(<MyPayments />);
@@ -58,7 +58,7 @@ function editTo(value: string) {
 const confirm = () =>
   fireEvent.click(within(screen.getByRole('dialog', { name: T.confirmTitle })).getByRole('button', { name: T.confirm }));
 
-describe('«تعديل المبلغ» in «مدفوعاتي» (payments.edit_amount, owner 2026-11-02)', () => {
+describe('«تعديل المبلغ» in «مدفوعاتي» (subscriptions.edit_terms, owner 2026-11-02)', () => {
   afterEach(() => {
     apiFetch.mockReset();
     apiSend.mockReset();

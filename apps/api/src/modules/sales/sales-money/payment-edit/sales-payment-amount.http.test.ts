@@ -7,11 +7,12 @@ import { PAYMENT_ID, paymentRow } from '@/modules/finance/subscriptions/money/mo
 import { moneyApp, resetMocks, SALES_B, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
 
-// «تعديل المبلغ» by the assistant (owner 2026-11-02): payments.edit_amount, never payments.write.
+// «تعديل المبلغ» by the assistant (owner 2026-11-02): subscriptions.edit_terms (owner
+// 2026-11-03), never payments.write.
 const URL = `/sales/payments/${PAYMENT_ID}/amount`;
 const withEdit: PermissionResolver = async (user) => [
   ...(await systemResolver(user)),
-  ...(user.role === 'sales' ? ['payments.edit_amount' as const] : []),
+  ...(user.role === 'sales' ? ['subscriptions.edit_terms' as const] : []),
 ];
 
 describe('PATCH /sales/payments/:id/amount', () => {
@@ -83,7 +84,7 @@ describe('PATCH /sales/payments/:id/amount', () => {
   });
 });
 
-describe('PATCH /sales/payments/:id/amount without payments.edit_amount', () => {
+describe('PATCH /sales/payments/:id/amount without subscriptions.edit_terms', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
   let call: Awaited<ReturnType<typeof moneyApp>>['call'];

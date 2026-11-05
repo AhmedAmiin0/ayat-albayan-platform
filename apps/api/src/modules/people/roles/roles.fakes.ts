@@ -85,11 +85,3 @@ export function rolesHarness(profiles: ProfileRecord[]): { store: FakeRoleStore;
 }
 
 export const fakeAudit = (): AuditService => new FakeAudit() as unknown as AuditService;
-
-/**
- * Keys added with NO migration (owner 2026-11-02: «do not add a migration»): the system admin holds
- * them as every grantable key (allGrantable) and production grants them from the matrix. Admin-only
- * keys only (roles.seed.unseeded.test.ts): a default of another role needs its seed row.
- */
-export const UNSEEDED: readonly string[] = ['payments.edit_amount'];
-export const unseeded = (role: string): readonly string[] => (role === 'admin' ? UNSEEDED : []);
