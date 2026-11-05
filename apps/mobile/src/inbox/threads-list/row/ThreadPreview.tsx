@@ -1,4 +1,4 @@
-import type { ThreadView } from '@ab/shared';
+import { stripWaMarkup, type ThreadView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
@@ -12,7 +12,7 @@ import { WaText } from './WaText';
  */
 function ticksWord(th: ThreadView): string | undefined {
   if (th.last_direction !== 'outbound' || th.last_status === 'failed') return undefined;
-  return `${t.enums.messageStatus[th.last_status]} · ${threadPreview(th)}`;
+  return `${t.enums.messageStatus[th.last_status]} · ${stripWaMarkup(threadPreview(th))}`;
 }
 
 /** «مسوّدة:» in the act colour before the unsent text, as WhatsApp's «Draft:» (review 10-29 #4). */
@@ -62,7 +62,7 @@ export function ThreadPreview({ thread: th, draft }: { thread: ThreadView; draft
     return (
       <>
         <DraftWord />
-        <PreviewText text={text} label={`${t.inbox.draft} ${text}`} />
+        <PreviewText text={text} label={`${t.inbox.draft} ${stripWaMarkup(text)}`} />
       </>
     );
   }

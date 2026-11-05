@@ -24,7 +24,7 @@ const pair = (name: Mark, c: string): string => `${c}(?<${name}>\\S(?:[^\\n]*?\\
  * no other markup.
  */
 const PATTERN = new RegExp(
-  '(?<![\\p{L}\\p{N}])(?:```(?<mono>[^]+?)```|' +
+  '(?<![\\p{L}\\p{M}\\p{N}])(?:```(?<mono>[^]+?)```|' +
     `${pair('bold', '\\*')}|${pair('italic', '_')}|${pair('strike', '~')})(?![\\p{L}\\p{N}])`,
   'gu',
 );

@@ -15,13 +15,17 @@ const downward = (g: PanResponderGestureState): boolean => g.dy > 8 && g.dy > Ma
  */
 export function useSwipeClose(onClose: () => void) {
   const [y] = useState(() => new Animated.Value(0));
+  const back = () => Animated.spring(y, { toValue: 0, useNativeDriver: true }).start();
+  const close = () => {
+    y.setValue(0);
+    onClose();
+  };
   const pan = PanResponder.create({
     onMoveShouldSetPanResponder: (_, g) => downward(g),
     onPanResponderMove: (_, g) => y.setValue(Math.max(0, g.dy)),
-    onPanResponderRelease: (_, g) =>
-      swipeCloses(g)
-        ? onClose()
-        : Animated.spring(y, { toValue: 0, useNativeDriver: true }).start(),
+    onPanResponderRelease: (_, g) => (swipeCloses(g) ? close() : back()),
+    // Another responder took the drag (a system gesture): back up, never stuck half-way.
+    onPanResponderTerminate: back,
   });
   return { handlers: pan.panHandlers, translateY: y, reset: () => y.setValue(0) };
 }

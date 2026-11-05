@@ -70,3 +70,10 @@ test('the time sits on line 1, the unread count on line 2', async () => {
   expect(within(first as never).getByTestId('thread-time')).toBeTruthy();
   expect(within(second as never).getByTestId('unread-count')).toBeTruthy();
 });
+
+test('the reader hears our marked preview without its markers', async () => {
+  await draw({ last_direction: 'outbound', last_status: 'read', last_body: '*موعد* الحلقة' });
+  const label = String(screen.getByTestId('thread-preview').props.accessibilityLabel);
+  expect(label).toContain('موعد الحلقة');
+  expect(label).not.toContain('*');
+});

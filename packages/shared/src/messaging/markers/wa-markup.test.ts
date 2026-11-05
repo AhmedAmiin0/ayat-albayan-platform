@@ -34,6 +34,10 @@ describe('parseWaMarkup', () => {
     ]);
   });
 
+  it('never opens a marker after an Arabic diacritic (mid-word)', () => {
+    expect(parseWaMarkup('شكرًا*x*')).toEqual([{ ...P, text: 'شكرًا*x*' }]);
+  });
+
   it('reads Arabic text', () => {
     expect(parseWaMarkup('مرحبًا *أكاديمية آيات البيان*')).toEqual([
       { ...P, text: 'مرحبًا ' },

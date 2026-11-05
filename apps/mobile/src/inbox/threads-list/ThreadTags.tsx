@@ -39,32 +39,21 @@ function familyChips(th: ThreadView, money: boolean): Item[] {
   ];
 }
 
-interface ThreadMetaProps {
-  thread: ThreadView;
-  /** False in the sales tree (docs/16): never «غير مدفوع», whatever the payload says. */
+interface MetaOptions {
   money: boolean;
-  /** The formatted phone when the name took line 1; drawn last, LTR-isolated. */
   phone: string | undefined;
+  word: TextStyle;
 }
 
-/**
- * The row's third line, one line that never wraps (owner 2026-11-06): role (or the lead's status
- * chip) · source · package chips · phone. Chips keep their size; the words shrink and ellipsize.
- */
-export function ThreadMeta({ thread: th, money, phone }: ThreadMetaProps) {
-  const { color } = useTheme();
-  const word: TextStyle = {
-    flexShrink: 1,
-    fontFamily: type.ui[500],
-    fontSize: type.size['2xs'],
-    color: color.ink3,
-  };
+/** Line 3's items in order; a null node is skipped. */
+function metaItems(th: ThreadView, { money, phone, word }: MetaOptions): Item[] {
   const status = leadStatusOf(th);
   const words = [
     status ? null : kindWord(th),
     th.lead_source ? leadSourceWord(th.lead_source) : null,
   ];
-  const items: Item[] = [
+  const phoneStyle: TextStyle = { ...word, flexShrink: 0, fontFamily: type.ui[400] };
+  return [
     ['status', status ? <StatusChip {...statusChip(status)} size="sm" /> : null],
     ...words.map((w): Item => [
       `w${String(w)}`,
@@ -75,8 +64,31 @@ export function ThreadMeta({ thread: th, money, phone }: ThreadMetaProps) {
       ) : null,
     ]),
     ...familyChips(th, money),
-    ['phone', phone ? <Ltr style={{ ...word, fontFamily: type.ui[400] }}>{phone}</Ltr> : null],
+    ['phone', phone ? <Ltr style={phoneStyle}>{phone}</Ltr> : null],
   ];
+}
+
+interface ThreadMetaProps {
+  thread: ThreadView;
+  /** False in the sales tree (docs/16): never «غير مدفوع», whatever the payload says. */
+  money: boolean;
+  /** The formatted phone when the name took line 1; drawn last, LTR-isolated. */
+  phone: string | undefined;
+}
+
+/**
+ * The row's third line, one line that never wraps (owner 2026-11-06): role (or the lead's status
+ * chip) · source · package chips · phone. The phone keeps its size; words and chips ellipsize.
+ */
+export function ThreadMeta({ thread: th, money, phone }: ThreadMetaProps) {
+  const { color } = useTheme();
+  const word: TextStyle = {
+    flexShrink: 1,
+    fontFamily: type.ui[500],
+    fontSize: type.size['2xs'],
+    color: color.ink3,
+  };
+  const items = metaItems(th, { money, phone, word });
   return (
     <View
       testID="thread-meta"
