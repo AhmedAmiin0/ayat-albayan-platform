@@ -13,11 +13,8 @@ const BASE: Spec[] = [
   { key: 'phone_e164', label: E.fields.phone, phone: true },
   { key: 'country', label: E.fields.country },
 ];
-/** With or without the notes field (never for sales: hasNotes). */
-const SPECS: Record<'true' | 'false', Spec[]> = {
-  true: [...BASE, { key: 'notes', label: E.fields.notes }],
-  false: BASE,
-};
+/** With the notes field (never for sales: hasNotes). */
+const WITH_NOTES: Spec[] = [...BASE, { key: 'notes', label: E.fields.notes }];
 
 interface FamilyEditFieldsProps {
   value: FamilyForm;
@@ -32,7 +29,12 @@ export function FamilyEditFields({ value, onChange, invalid, notes }: FamilyEdit
   return (
     <View style={{ gap: 12 }}>
       <SectionLabel>{E.familySection}</SectionLabel>
-      <PeopleFields specs={SPECS[`${notes}`]} value={value} error={error} onChange={onChange} />
+      <PeopleFields
+        specs={notes ? WITH_NOTES : BASE}
+        value={value}
+        error={error}
+        onChange={onChange}
+      />
       <PeopleChoice
         label={E.fields.tz}
         items={zoneItems(value.tz)}

@@ -16,6 +16,13 @@ const OTHER = {
   students: [{ code: 'AB-0190', name: 'خالد' }],
 };
 
+/** The confirm opens once the new number's lookup answered, then is clicked. */
+async function confirmWhenLooked() {
+  const confirm = screen.getByRole<HTMLButtonElement>('button', { name: E.confirm });
+  await waitFor(() => expect(confirm.disabled).toBe(false));
+  fireEvent.click(confirm);
+}
+
 async function open() {
   renderActions(apiFetch, { permissions: ALL, extra: [['/people/guardians?search=', [OTHER]]] });
   fireEvent.click(await screen.findByRole('button', { name: E.attach }));
@@ -49,12 +56,25 @@ describe('«ربط بولي أمر آخر»', () => {
       target: { value: '+20 100 000 0003' },
     });
     fireEvent.click(screen.getByRole('button', { name: E.newFamily }));
-    fireEvent.click(screen.getByRole('button', { name: E.confirm }));
+    await confirmWhenLooked();
     await waitFor(() =>
       expect(apiSend).toHaveBeenCalledWith('POST', '/people/students/s1/guardian', {
         guardian: { name: 'أبو سهيلة', phone_e164: '+201000000003', tz: 'Africa/Cairo' },
       }),
     );
+    expect(apiFetch).toHaveBeenCalledWith('/people/guardians?search=%2B201000000003');
+  });
+
+  it('a «new» number that is already a family’s main number confirms that family’s name', async () => {
+    await open();
+    const fields = screen.getAllByLabelText(E.fields.name);
+    fireEvent.change(fields[fields.length - 1] as HTMLElement, { target: { value: 'اسم آخر' } });
+    fireEvent.change(screen.getByLabelText(E.fields.phone), {
+      target: { value: OTHER.phone_e164 },
+    });
+    fireEvent.click(screen.getByRole('button', { name: E.newFamily }));
+    await waitFor(() => expect(screen.getByRole('status').textContent).toContain('أبو خالد'));
+    expect(screen.getByRole('status').textContent).not.toContain('اسم آخر');
   });
 
   it('nothing to confirm before a pick; a refusal (same family) reads in MSA', async () => {
