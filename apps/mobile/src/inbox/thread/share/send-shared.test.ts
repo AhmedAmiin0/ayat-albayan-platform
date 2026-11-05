@@ -39,9 +39,13 @@ const bytes = (size: number) => ({
 });
 const image = (width: number, height: number) => ({ width, height, saveAsync: mockSave });
 
+/** fetch reads the cached copies (file://); each test answers with its own bytes. */
+const mockFetch = (impl: () => Promise<unknown>) =>
+  jest.spyOn(globalThis, 'fetch').mockImplementation(impl as unknown as typeof fetch);
+
 beforeEach(() => {
   jest.clearAllMocks();
-  global.fetch = jest.fn(async () => bytes(2048));
+  mockFetch(async () => bytes(2048));
   mockRender.mockResolvedValue(image(4000, 3000));
   mockResize.mockResolvedValue(image(1600, 1200));
   mockSave.mockResolvedValue({ uri: 'file:///cache/manipulated.jpg', width: 1600, height: 1200 });
@@ -88,10 +92,9 @@ test('a failure on file 2 still sends file 3; a retry passes the same ids', asyn
 });
 
 test('a read error or an empty copy is file_upload; an undecodable image file_type', async () => {
-  global.fetch = jest
-    .fn()
+  mockFetch(async () => bytes(2048))
     .mockRejectedValueOnce(new Error('ENOENT'))
-    .mockResolvedValueOnce(bytes(0));
+    .mockResolvedValueOnce(bytes(0) as unknown as Response);
   mockRender.mockResolvedValueOnce(image(10, 10)).mockResolvedValueOnce(image(10, 10));
   mockRender.mockRejectedValueOnce(new Error('decode'));
   const items = [
@@ -109,7 +112,7 @@ test('a read error or an empty copy is file_upload; an undecodable image file_ty
 test('a PDF of unknown size is measured as a Blob, refused over the limit unread', async () => {
   const arrayBuffer = jest.fn();
   const blob = async () => ({ size: MAX + 1 });
-  global.fetch = jest.fn(async () => ({ blob, arrayBuffer }));
+  mockFetch(async () => ({ blob, arrayBuffer }));
   const pdf = { ...item(1, 'application/pdf'), size: null };
   const [result] = await sendSharedFiles({ phone: PHONE, items: [pdf], maxBytes: MAX }, jest.fn());
   expect(result?.ok ? 'ok' : (result?.error as { code?: string }).code).toBe('file_too_large');

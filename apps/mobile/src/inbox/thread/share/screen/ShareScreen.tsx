@@ -5,7 +5,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { Button } from '@/core/ui/primitives/Button';
-import { type ShareRead, useSharedItems } from '@/inbox/share/use-shared-items';
+import { type ShareRead, useSharedItems } from '@/inbox/thread/share/use-shared-items';
 import { threadBase, useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { ShareChooser } from './ShareChooser';
 

@@ -51,7 +51,7 @@ export default reactConfig(
       'src/core/lib/connectivity/probe.ts',
       'src/inbox/composer/send-file.ts',
       // docs/38: the shared files' cached copies (file://), read as pickPdf reads its copy.
-      'src/inbox/share/shared-file.ts',
+      'src/inbox/thread/share/shared-file.ts',
       'src/inbox/composer/voice/send-voice.ts',
     ],
     http: true,

@@ -5,8 +5,8 @@ import { Note } from '@/core/ui/feedback/Note';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { Button } from '@/core/ui/primitives/Button';
-import { shareHome, shareHref } from '@/inbox/share/share-href';
-import { useDropShare } from '@/inbox/share/use-shared-items';
+import { shareHome, shareHref } from '@/inbox/thread/share/share-href';
+import { useDropShare } from '@/inbox/thread/share/use-shared-items';
 
 const s = t.inbox.share;
 

@@ -35,9 +35,13 @@ const share = (...names: string[]) => {
   jest.mocked(Sharing.getResolvedSharedPayloadsAsync).mockResolvedValue(resolved as never);
 };
 
+/** fetch reads the cached copies (file://); each test answers with its own bytes. */
+const mockFetch = (impl: () => Promise<unknown>) =>
+  jest.spyOn(globalThis, 'fetch').mockImplementation(impl as unknown as typeof fetch);
+
 beforeEach(() => {
   jest.clearAllMocks();
-  global.fetch = jest.fn(async () => ({
+  mockFetch(async () => ({
     arrayBuffer: async () => new ArrayBuffer(2048),
     blob: async () => ({ size: 2048 }),
   }));

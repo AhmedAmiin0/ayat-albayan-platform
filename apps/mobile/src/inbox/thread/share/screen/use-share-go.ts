@@ -2,8 +2,8 @@ import type { ThreadView } from '@ab/shared';
 import { router } from 'expo-router';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { appendComposerText } from '@/inbox/composer/draft-store';
-import type { SharedFile, SharedItems } from '@/inbox/share/read-share';
-import { useShareSend } from '@/inbox/share/use-share-send';
+import type { SharedFile, SharedItems } from '@/inbox/thread/share/read-share';
+import { useShareSend } from '@/inbox/thread/share/use-share-send';
 import { threadLink, useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 
 export type ShareKind = 'text' | 'files';
