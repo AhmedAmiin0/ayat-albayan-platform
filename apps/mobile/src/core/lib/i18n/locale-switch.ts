@@ -4,6 +4,7 @@ import { reloadAppAsync } from 'expo';
 import { getLocales } from 'expo-localization';
 import { useEffect, useState } from 'react';
 import { I18nManager } from 'react-native';
+import { logWarning } from '@/core/lib/log';
 import { locale } from './locale';
 
 // The language a reload was last asked for. While starts still disagree with it (the native flag
@@ -64,7 +65,7 @@ export async function syncLocale(current: Locale = locale): Promise<boolean> {
     return false;
   }
   if (pending !== wanted) return reloadInto(wanted);
-  if (__DEV__) console.warn(`locale: the native direction did not switch to ${wanted}`);
+  if (__DEV__) logWarning(`locale: the native direction did not switch to ${wanted}`);
   return false;
 }
 

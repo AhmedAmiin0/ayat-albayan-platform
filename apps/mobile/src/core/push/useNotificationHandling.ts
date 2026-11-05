@@ -2,8 +2,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
 import { router, useNavigationContainerRef } from 'expo-router';
 import { useEffect, useRef } from 'react';
+import { AppState } from 'react-native';
 import { usePermissions } from '@/core/auth/use-permissions';
-import { refreshInbox, refreshLists } from '@/inbox/thread/hooks/inbox-sync';
+import { refreshInbox, refreshLists, resumeInbox } from '@/inbox/thread/hooks/inbox-sync';
 import { isThreadHref, overChat } from '@/core/nav/chat-groups';
 import { pushKind, pushPhone, routeIn, type PushTree } from './notification-route';
 
@@ -56,8 +57,14 @@ export function useNotificationHandling(tree: PushTree = 'admin'): void {
       if (phone) void refreshInbox(client, phone);
       else if (message) refreshLists(client);
     });
+    // A push that came while the app slept refreshed nothing (no JS ran): every tree re-reads its
+    // chats on the way back, past any read stuck across the background (resumeInbox).
+    const resume = AppState.addEventListener('change', (state) => {
+      if (state === 'active') void resumeInbox(client);
+    });
     return () => {
       sub.remove();
+      resume.remove();
       Notifications.setNotificationHandler(null);
     };
   }, [client]);

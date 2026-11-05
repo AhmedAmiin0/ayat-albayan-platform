@@ -55,3 +55,4 @@ export {
   type StudentRef,
   type TeacherOption,
 } from './types';
+export { PeopleEditActions } from './people-edit';

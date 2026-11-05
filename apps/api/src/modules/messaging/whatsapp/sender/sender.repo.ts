@@ -63,7 +63,8 @@ export class SenderRepo {
     const allowed = this.allowed;
     const sendable = this.chatConfigured ? query : query.or('template_key.not.is.null,line.is.null,line.neq.chat');
     const scoped = allowed ? sendable.in('phone_e164', [...allowed]) : sendable;
-    const { data, error } = await scoped.order('scheduled_for', { ascending: true, nullsFirst: true }).limit(input.limit);
+    const ordered = scoped.order('scheduled_for', { ascending: true, nullsFirst: true }).order('created_at');
+    const { data, error } = await ordered.limit(input.limit);
     if (error) throw new Error(`outbound queue read failed: ${error.message}`);
     return data.filter(onMessagingLine);
   }

@@ -36,7 +36,7 @@ export interface ThreadView extends ThreadNote {
   teacher_name: string | null;
   /** sessionWindowOpen(last_inbound_at, now): free text allowed, else a template (or a try). */
   session_open: boolean;
-  /** The chat line is on Kapso: after the window free text is still tried (owner 2026-10-31). */
+  /** The chat line is on Kapso: after the window a staff text waits behind the reopen template. */
   try_after_window?: boolean;
   /** subscriptionBadge(the guardian's students) === 'subscribed': the «مشترك» tag. */
   subscribed: boolean;

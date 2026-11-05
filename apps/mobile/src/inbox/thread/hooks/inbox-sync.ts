@@ -34,6 +34,17 @@ export function refreshInbox(client: QueryClient, phone?: string): Promise<void>
 }
 
 /**
+ * Back in the foreground (owner 2026-11-05): a chat read started before the background may hang
+ * on a dead connection, and every automatic refresh (focus, interval, realtime) joins it instead
+ * of starting anew. Every chat read is cancelled (shown or not, loaded or not: a push tap mounts a
+ * hidden chat), then the lists, the badge, «القوائم» and the shown chats read again.
+ */
+export async function resumeInbox(client: QueryClient): Promise<void> {
+  await client.cancelQueries({ queryKey: ['threads'] });
+  await refreshInbox(client);
+}
+
+/**
  * A send's row on top of its chat in every cached list at once (WhatsApp-like). A list refetch in
  * flight is cancelled first, so its older answer never lands over the move; refreshInbox confirms
  * it, and a refused send's refetch puts the list back as the server has it.

@@ -36,9 +36,11 @@ export function useThreadList({ search, unread, list, status, live: liveTab = fa
   useLiveWatch(liveTab ? 'list' : null, focused);
   const query = useInfiniteQuery({
     queryKey: ['threads', 'list', { search, unread, list, status }],
-    queryFn: ({ pageParam }) =>
+    // TanStack's signal: a list nobody shows drops its read, so a later mount starts a new one.
+    queryFn: ({ pageParam, signal }) =>
       apiFetch<Page<ThreadView>>(
         `/threads${toQueryString({ search, unread: unread ? 'true' : undefined, list, status, page: pageParam, pageSize: PAGE_SIZE })}`,
+        { signal },
       ),
     initialPageParam: 1,
     getNextPageParam: nextPageParam,

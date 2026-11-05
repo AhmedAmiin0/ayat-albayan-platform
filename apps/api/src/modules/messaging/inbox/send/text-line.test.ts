@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
-import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import type { ThreadWindow } from './send-number';
 import { NUMBERS } from './send-number.fakes';
 import { textLine } from './text-line';
 
-// Owner 2026-10-31: after the 24 h window a free text is still tried, on a Kapso chat line only.
-// Fakes only: never Kapso, never WhatsApp.
+// Owner 2026-11-03: after the 24 h window a staff text on a Kapso chat line is queued marked
+// awaiting_reply (the sender sends the reopen template first). Fakes only: no Kapso, no WhatsApp.
 
 const NOW = new Date('2026-10-31T10:00:00Z');
 const hoursAgo = (h: number) => new Date(NOW.getTime() - h * 3_600_000).toISOString();
@@ -28,10 +28,8 @@ const LINES = {
 const chatOn = (provider: 'meta' | 'kapso' | 'crm') => {
   for (const [k, v] of Object.entries({ ...LINES, WA_CHAT_PROVIDER: provider })) vi.stubEnv(k, v);
 };
-const kapso = (answer = true) => ({ reopen: vi.fn(async () => answer) });
 const noWindows = async (): Promise<ThreadWindow[]> => [];
-type Kapso = ReturnType<typeof kapso>;
-const at = (k: Kapso) => ({ now: NOW, windows: noWindows, phone: PHONE, kapso: k });
+const at = { now: NOW, windows: noWindows };
 const code = (e: unknown) => (e as { getResponse(): { code: string } }).getResponse().code;
 const status = (e: unknown) => (e as { getStatus(): number }).getStatus();
 
@@ -41,48 +39,31 @@ afterEach(() => {
 });
 
 describe('textLine', () => {
-  it('kapso chat line, every window closed: Kapso reopened for that phone, then the chat line', async () => {
+  it('kapso chat line, every window closed: the chat line, marked to wait for the reopen template', async () => {
     chatOn('kapso');
-    const k = kapso();
-    expect(await textLine(closed, at(k))).toEqual({ line: 'chat' });
-    expect(k.reopen).toHaveBeenCalledExactlyOnceWith(PHONE);
+    expect(await textLine(closed, at)).toEqual({ line: 'chat', error_code: 'awaiting_reply' });
   });
 
-  it('the reopen failed (false: logged by KapsoReopener): the text is still tried', async () => {
+  it('an open window: the usual line, never marked (a plain send)', async () => {
     chatOn('kapso');
-    const k = kapso(false);
-    expect(await textLine(closed, at(k))).toEqual({ line: 'chat' });
-    expect(k.reopen).toHaveBeenCalledOnce();
+    expect(await textLine(openChat, at)).toEqual({ line: 'chat' });
   });
 
-  it('an open window: the usual line, Kapso is never called', async () => {
-    chatOn('kapso');
-    const k = kapso();
-    expect(await textLine(openChat, at(k))).toEqual({ line: 'chat' });
-    expect(k.reopen).not.toHaveBeenCalled();
-  });
-
-  it.each(['meta', 'crm'] as const)('a %s chat line keeps 409 session_closed, no reopen', async (p) => {
+  it.each(['meta', 'crm'] as const)('a %s chat line keeps 409 session_closed', async (p) => {
     chatOn(p);
-    const k = kapso();
-    const e = await textLine(closed, at(k)).catch((x: unknown) => x);
+    const e = await textLine(closed, at).catch((x: unknown) => x);
     expect([status(e), code(e)]).toEqual([409, 'session_closed']);
-    expect(k.reopen).not.toHaveBeenCalled();
   });
 
-  it('no thread (the number never wrote): 409 even on kapso, no reopen', async () => {
+  it('no thread (the number never wrote): 409 even on kapso', async () => {
     chatOn('kapso');
-    const k = kapso();
-    const e = await textLine(null, at(k)).catch((x: unknown) => x);
+    const e = await textLine(null, at).catch((x: unknown) => x);
     expect([status(e), code(e)]).toEqual([409, 'session_closed']);
-    expect(k.reopen).not.toHaveBeenCalled();
   });
 
   it('module mode: the default chat number is stamped, as the claim would', async () => {
     chatOn('kapso');
     setNumbersOverlay({ values: {}, numberIds: { chat: 'num-chat' }, numbers: NUMBERS });
-    const k = kapso();
-    expect(await textLine(closed, at(k))).toEqual({ line: 'chat', number_id: 'num-chat' });
-    expect(k.reopen).toHaveBeenCalledOnce();
+    expect(await textLine(closed, at)).toEqual({ line: 'chat', number_id: 'num-chat', error_code: 'awaiting_reply' });
   });
 });

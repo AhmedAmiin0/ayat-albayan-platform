@@ -1,5 +1,6 @@
 import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
+import { ReopenRequest } from '@/modules/messaging/whatsapp';
 import type { Page } from '@/common/http/http';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
@@ -19,6 +20,9 @@ const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
  */
 @Injectable()
 export class SalesThreadsService {
+  /** Property-injected (the constructor is at its limit); absent (unit tests): no reopen note. */
+  @Optional() @Inject(ReopenRequest) private readonly reopen?: ReopenRequest;
+
   constructor(
     private readonly queries: ThreadsRepo,
     private readonly views: MessageViews,
@@ -29,8 +33,11 @@ export class SalesThreadsService {
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
     const { items: rows, total } = await this.queries.list(f);
     const guardians = rows.flatMap((r) => (r.guardian_id ? [r.guardian_id] : []));
-    const [items, tags] = await Promise.all([this.queries.unsupported(rows), this.queries.familyTags(guardians)]);
-    const view = (r: ThreadRow) => forSales(toThreadView(r, now, r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null));
+    const [items, tags, reopenUsable] = await Promise.all([
+      this.queries.unsupported(rows), this.queries.familyTags(guardians), this.reopenUsable(),
+    ]);
+    const tagOf = (r: ThreadRow) => (r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null);
+    const view = (r: ThreadRow) => forSales(toThreadView(r, now, { tag: tagOf(r), reopenUsable }));
     return { items: items.map(view), total, page: f.page, pageSize: f.pageSize };
   }
 
@@ -39,15 +46,21 @@ export class SalesThreadsService {
     const first = !q.before;
     const at = await pageRows({ threads: this.queries, messages: this.messages }, q);
     const page = at.rows.slice(0, q.limit).reverse().filter(visibleToSales);
-    const [people, lessons, messages, read] = await Promise.all([
+    const [people, lessons, messages, read, reopenUsable] = await Promise.all([
       first ? this.people(at.who) : NO_ONE,
       first && at.who ? this.queries.lessons(at.who, now).then(salesLessons) : [],
       Promise.all(page.map(async (m) => withoutLinks(await this.views.view(m)))),
       stampRead(this.receipts, { q, page: at, now }),
+      this.reopenUsable(),
     ]);
-    const thread = at.found ? forSales(toThreadView(at.found, now, null)) : null;
+    const thread = at.found ? forSales(toThreadView(at.found, now, { reopenUsable })) : null;
     const detail: ThreadDetail = { thread, messages, has_more: at.rows.length > q.limit, lessons, people };
     return read ? asRead(detail, now) : detail;
+  }
+
+  private async reopenUsable(): Promise<boolean> {
+    // A failed settings or registry read only drops the note: the chat list still answers.
+    return (await this.reopen?.usable().catch(() => false)) ?? false;
   }
 
   private async people(row: PeopleOf | null): Promise<ThreadPeople> {

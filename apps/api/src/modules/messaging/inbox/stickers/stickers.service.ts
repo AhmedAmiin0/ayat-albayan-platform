@@ -59,10 +59,10 @@ export class StickersService {
     await this.repo.drop({ profile_id: input.profileId, sticker_key: stickerKey(row) });
   }
 
-  /** POST /threads/:phone/sticker: the line (ForwardFiles.send reopens Kapso), copy, queue. */
+  /** POST /threads/:phone/sticker: the line (as ForwardFiles.send), copy, queue. */
   async send(s: ThreadSend<ThreadStickerSend>, now = new Date()): Promise<Sent> {
     const windows = () => this.threads.numberWindows(s.phone);
-    const at = { now, windows, phone: s.phone, kapso: undefined, teacher: !!s.scope };
+    const at = { now, windows, teacher: !!s.scope };
     await chatLine(await this.threads.thread(s.phone), at);
     await this.sticker(s.input.messageId);
     const source = await this.messages.get(s.input.messageId);
