@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { allowedLessonEvents } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { confirmingQueryClient, createTestQueryClient, renderWithQuery } from '@/test/query';
+import { confirmingQueryClient, noConfirmQueryClient, renderWithQuery } from '@/test/query';
 import { lesson, muscat, pending } from '../testing/fixtures';
 import { HeroCard } from './HeroCard';
 
@@ -50,7 +50,7 @@ test('confirm not offered by the API (another role): no «تأكيد الحلق�
 });
 
 test('no confirmation required: «قادمة» in the chip, no «تأكيد الحلقة», join while it runs', async () => {
-  await show({ kind: 'running', lesson: pending }, createTestQueryClient()).done;
+  await show({ kind: 'running', lesson: pending }, noConfirmQueryClient()).done;
   expect(screen.getByText(t.lessons.noConfirm.scheduledShort)).toBeTruthy();
   expect(screen.queryByText(t.today.statusShort.scheduled)).toBeNull();
   expect(screen.queryByRole('button', { name: t.today.confirmLesson })).toBeNull();

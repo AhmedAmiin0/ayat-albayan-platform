@@ -77,7 +77,7 @@ export async function studentsApp(settings: Partial<AcademySettings> = {}) {
   const files = { studentPdfUrl: vi.fn() };
   const overview = { exists: vi.fn(), rules: vi.fn(), lessons: vi.fn() };
   const attendance = { exists: vi.fn(), lessons: vi.fn(), starts: vi.fn(), reports: vi.fn() };
-  const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() }, status: { confirm: vi.fn() } };
+  const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() }, status: { confirm: vi.fn() }, corrections: { correct: vi.fn() } };
   const roster = { rules: vi.fn(), packages: vi.fn(), lessons: vi.fn(), balances: vi.fn() };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)

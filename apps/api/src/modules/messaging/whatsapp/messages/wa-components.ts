@@ -58,37 +58,8 @@ export function buttonValues(input: TemplateSend): ButtonValue[] {
   });
 }
 
-function buttonComponents(input: TemplateSend): GraphBody[] {
-  return buttonValues(input).map(({ index, kind, value }) => ({
-    type: 'button',
-    sub_type: kind,
-    index: String(index),
-    parameters: [kind === 'url' ? { type: 'text', text: value } : { type: 'payload', payload: value }],
-  }));
-}
-
-/** The template's components in Meta's order: header, body, buttons by index. */
-function templateComponents(input: TemplateSend): GraphBody[] {
-  const parameters = bodyValues(input.template, input.params).map((text) => ({ type: 'text', text }));
-  const doc = documentHeader(input);
-  const header = doc ? { type: 'header', parameters: [{ type: 'document', document: doc }] } : null;
-  return [
-    ...(header ? [header] : []),
-    ...(parameters.length ? [{ type: 'body', parameters }] : []),
-    ...buttonComponents(input),
-  ];
-}
-
-const envelope = (to: string) => ({ messaging_product: 'whatsapp', recipient_type: 'individual', to: waTo(to) });
-
-export function templateMessage(input: TemplateSend): GraphBody {
-  const { template } = input;
-  return {
-    ...envelope(input.to),
-    type: 'template',
-    template: { name: template.meta_name, language: { code: template.language }, components: templateComponents(input) },
-  };
-}
+/** Meta's recipient envelope of every message (template, text, file, reaction). */
+export const envelope = (to: string) => ({ messaging_product: 'whatsapp', recipient_type: 'individual', to: waTo(to) });
 
 export function textMessage(input: { to: string; text: string; replyTo?: string | null }): GraphBody {
   return {

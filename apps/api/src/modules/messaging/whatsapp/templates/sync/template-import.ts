@@ -11,6 +11,7 @@ import {
 } from '@ab/shared';
 import { components, metaButtons, ourStatus, type Component } from './template-sync';
 import { metaDisplay } from './template-display';
+import { wabaNames } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
 import type { MetaTemplate, TemplateRow } from '../../whatsapp.types';
 
 // One line's sync, pure part (owner 2026-10-12, 2026-10-18, docs/12 §3.4): an approved template on a
@@ -112,13 +113,13 @@ interface StarterInput {
 }
 
 /**
- * Every approved template of one WABA the registry does not know by Meta name + language (a known one
- * is a sync's), each once. key = the Meta name, so a name whose key is taken is skipped.
+ * Every approved template of one WABA the registry does not know by Meta name + language, nor as a
+ * row's WABA name (template-waba-match.ts: a known one is a sync's), each once. key = the Meta name, so a name whose key is taken is skipped.
  */
 export function newStarters(input: StarterInput): ImportPlan {
   const plan: ImportPlan = { rows: [], skipped: [] };
   const keys = new Set(input.known.map((r) => r.key));
-  const synced = new Set(input.known.map((r) => `${r.meta_name}:${r.language}`));
+  const synced = new Set(input.known.flatMap(wabaNames));
   for (const meta of input.meta) {
     if (ourStatus(meta.status) !== 'approved' || synced.has(`${meta.name}:${meta.language}`)) continue;
     const row: ImportRow | TemplateSkipReason = keys.has(meta.name) ? { code: 'key_taken' } : starterRow(meta, input.now, input.line);

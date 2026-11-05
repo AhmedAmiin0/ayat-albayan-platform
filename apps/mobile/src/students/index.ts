@@ -4,3 +4,5 @@ export { StudentsScreen } from './screens/StudentsScreen';
 export { CoursePauseSection } from './course-pause/CoursePauseSection';
 // «إلغاء الاشتراك» / «تغيير المعلم» / «تغيير موعد الحلقات» (owner 2026-10-30), also for sales.
 export { CourseActionsSection } from './course-actions/CourseActionsSection';
+// «تعديل البيانات» / «ربط بولي أمر آخر» / «تحويل» (owner 2026-11-02), also for sales.
+export { PeopleEditSection } from './people-edit/PeopleEditSection';

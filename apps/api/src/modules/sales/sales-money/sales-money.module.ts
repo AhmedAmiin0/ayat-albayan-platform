@@ -18,6 +18,8 @@ import { AnyPackageCancelController } from './package-cancel/any-package-cancel.
 import { AnyPackageCancel } from './package-cancel/any-package-cancel.service';
 import { SalesPackageCancel } from './sales-package-cancel';
 import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
+import { UsedBeforeAccess } from './used-before/used-before-access';
+import { UsedBeforeEditController } from './used-before/used-before-edit.controller';
 
 /**
  * The salesperson subscribes her student from the chat and records the family's bank transfer (owner
@@ -30,11 +32,13 @@ import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
   controllers: [
     ...[SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
     AnyPackageCancelController,
+    UsedBeforeEditController,
   ],
   providers: [
     ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyRepo],
     ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals, SalesPackageCancel, SalesTeacherAssign],
     AnyPackageCancel,
+    UsedBeforeAccess,
   ],
   // The Stripe module's link takes «المعلم/ة» too: her own student only (the scope), then the assignment.
   exports: [SalesMoneyScope, SalesTeacherAssign],

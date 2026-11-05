@@ -4,7 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
-import { CourseActionsSection, CoursePauseSection } from '@/students';
+import { CourseActionsSection, CoursePauseSection, PeopleEditSection } from '@/students';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Button } from '@/core/ui/primitives/Button';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -81,6 +81,7 @@ export function SalesStudentScreen() {
             subscriptionId={data.current_id}
             moves={acts}
           />
+          <PeopleEditSection studentId={data.student.id} onRemoved={() => router.back()} />
           <PackageCancelAction studentId={data.student.id} subscriptionId={data.current_id} />
           <TrialSection trial={data.trial} student={mine ? data.student : null} />
           <SubscriptionSection data={data} />

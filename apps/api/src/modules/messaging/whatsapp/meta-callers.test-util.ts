@@ -19,6 +19,10 @@ const WHITELIST = new Set([
   // Kapso's own conversation record (owner 2026-10-26): its Platform API, beside the Meta proxy.
   'modules/messaging/whatsapp/drivers/kapso/kapso-conversations.ts',
   'modules/messaging/whatsapp/lines/lines.check.ts',
+  // «افحص الخطوط»'s switch preflight (docs/19 «CRM → Meta»): one read-only GET of subscribed apps.
+  'modules/messaging/whatsapp/lines/lines.check.meta.ts',
+  // The script relay (docs/19): the line's current client, its allow-list, the script's own sends.
+  'modules/messaging/whatsapp/relay/relay.line.ts',
   'modules/messaging/whatsapp/sender/message.dispatch.ts',
   'modules/messaging/whatsapp/templates/catalog/template.registry.ts',
   // The registry's own parts (150-line cap, s3): the admin's edits, the Meta sync, one line's sync

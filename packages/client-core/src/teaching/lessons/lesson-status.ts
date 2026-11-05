@@ -2,7 +2,6 @@ import {
   lessonStatusStyle,
   needsConfirmation,
   type LessonStatus,
-  type LessonView,
   type StatusStyle,
 } from '@ab/shared';
 
@@ -38,11 +37,3 @@ export function lessonStatusLook(status: LessonStatus, required: boolean): Statu
   return isUpcoming(status, required) ? UPCOMING_LESSON_STYLE : lessonStatusStyle[status];
 }
 
-/**
- * «لم تنعقد؟»: a lesson the auto-held job closed with no report since (LessonView.auto_held) may
- * still
- * be recorded as cancelled by its teacher or excused by the student (POST …/cancel, by teacher |
- * student).
- */
-export const canCorrectAutoHeld = (lesson: Pick<LessonView, 'status' | 'auto_held'>): boolean =>
-  lesson.status === 'completed' && lesson.auto_held === true;
