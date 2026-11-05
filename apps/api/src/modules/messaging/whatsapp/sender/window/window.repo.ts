@@ -109,7 +109,7 @@ export class WindowRepo {
   async waiting(after: string | null): Promise<WaitingRow[]> {
     const query = this.db
       .from('messages')
-      .select('id, phone_e164, created_at, scheduled_for, error_text')
+      .select('id, phone_e164, created_at, scheduled_for, error_text, expires_at')
       .eq('direction', 'outbound')
       .eq('status', 'queued')
       .eq('error_code', AWAITING_REPLY);

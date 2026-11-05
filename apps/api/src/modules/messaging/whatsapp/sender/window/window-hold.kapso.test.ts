@@ -87,3 +87,13 @@ describe('WindowHold — a retried held text restarts its 7 days (owner 2026-11-
     );
   });
 });
+
+describe('WindowHold — a released text refused again keeps its deadline (review finding 2)', () => {
+  it('its expires_at (from the retry) stands, not created_at + 7 days', async () => {
+    f = windowFakes();
+    const kept = '2026-11-08T08:00:00.000Z';
+    const row = staffText({ error_code: 'sending', created_at: '2026-10-20T08:00:00Z', expires_at: kept });
+    await expect(f.hold.closed(at(row))).resolves.toBe('waiting');
+    expect(f.repo.hold).toHaveBeenCalledWith(expect.objectContaining({ until: new Date(kept) }));
+  });
+});

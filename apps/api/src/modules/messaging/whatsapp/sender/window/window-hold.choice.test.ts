@@ -76,6 +76,7 @@ describe('WindowRelease — a text held without a template', () => {
     created_at: '2026-11-03T07:59:00Z',
     scheduled_for: '2026-11-03T07:59:00Z',
     error_text: NO_TEMPLATE_NOTE,
+    expires_at: '2026-11-10T07:59:00Z',
   };
 
   it('no reopen template exists: it is never failed as orphaned, it keeps waiting', async () => {
@@ -92,5 +93,15 @@ describe('WindowRelease — a text held without a template', () => {
     f.repo.lastChatInbound.mockResolvedValue(new Map([[PHONE, '2026-11-03T09:00:00Z']]));
     await expect(f.release.run(NOW)).resolves.toBe(1);
     expect(f.repo.release).toHaveBeenCalledWith(['w1']);
+  });
+});
+
+describe('WindowRelease — a staff retry not held yet (review finding 1)', () => {
+  it('queued AWAITING_REPLY with a retry time but no deadline: never failed as orphaned', async () => {
+    f = windowFakes();
+    const retried = { ...staffText(), scheduled_for: NOW.toISOString(), error_text: null, expires_at: null };
+    f.repo.waiting.mockResolvedValue([retried] as never);
+    await f.release.run(NOW);
+    expect(f.repo.fail).toHaveBeenCalledWith([], expect.anything());
   });
 });

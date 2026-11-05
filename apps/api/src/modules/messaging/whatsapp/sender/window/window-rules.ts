@@ -91,6 +91,8 @@ export interface WaitingRow {
   scheduled_for: string | null;
   /** NO_TEMPLATE_NOTE: held under «بدون قالب» (never orphaned: no template was asked for). */
   error_text: string | null;
+  /** Its deadline, set by the hold: null = not held yet (the inbox's enqueue, a staff retry). */
+  expires_at: string | null;
 }
 
 /**

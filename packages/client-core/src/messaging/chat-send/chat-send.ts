@@ -21,7 +21,7 @@ export function triesAfterWindow(chat: ChatSendState, staff: boolean): boolean {
   return !chat.open && staffMaySend(chat, staff);
 }
 
-/** The composer's after-the-window note per the admin's choice (owner 2026-11-06), in i18n inbox. */
+/** The composer's after-the-window note per the admin's choice (owner 2026-11-06). */
 const AFTER_WINDOW_NOTE = { template: 'tryAfterWindow', wait: 'tryAfterWindowWait' } as const;
 export type AfterWindowNote = (typeof AFTER_WINDOW_NOTE)[keyof typeof AFTER_WINDOW_NOTE];
 

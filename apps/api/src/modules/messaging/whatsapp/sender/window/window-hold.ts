@@ -8,8 +8,8 @@ import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due'
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { KapsoHold } from './kapso-hold';
 import { ReopenRequest } from './reopen-request';
-import { heldStep, HOLD_MS, holdable } from './window-rules';
-import { checkedAt, EXPIRED, expectedCode, holdStart, type FailWhy } from './window-reopen';
+import { heldStep, holdable } from './window-rules';
+import { checkedAt, EXPIRED, expectedCode, holdDeadline, type FailWhy } from './window-reopen';
 import { WindowRelease } from './window-release';
 import { WindowRepo } from './window.repo';
 
@@ -84,7 +84,7 @@ export class WindowHold {
 
   private async hold(at: WindowAt): Promise<HoldOutcome> {
     if (!this.ready(at)) return 'skipped';
-    const until = new Date(holdStart(at.row, at.now) + HOLD_MS);
+    const until = holdDeadline(at.row, at.now);
     if (until <= at.now) return this.expire(at.row);
     const plan = await this.reopen.ensure(at.row, at.now);
     if (plan.fail) return this.refuse(at.row, plan.fail);

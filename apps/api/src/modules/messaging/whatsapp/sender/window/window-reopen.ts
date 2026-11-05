@@ -9,6 +9,7 @@ import {
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { DAY_MS } from './reopen-state';
+import { HOLD_MS } from './window-rules';
 
 /** The reopen row's template, its dedup key (nextReopenKey: one per try per day) and the time. */
 interface ReopenAt {
@@ -85,7 +86,7 @@ export const LOST: FailWhy = {
  */
 export const NO_TEMPLATE_NOTE = 'held without a reopen template: waiting for the family to write';
 
-/** Held under «بدون قالب»: its error_text starts with NO_TEMPLATE_NOTE (a Kapso note may follow). */
+/** Held under «بدون قالب»: error_text starts with NO_TEMPLATE_NOTE (a Kapso note may follow). */
 export const heldWithoutTemplate = (errorText: string | null): boolean =>
   errorText?.startsWith(NO_TEMPLATE_NOTE) ?? false;
 
@@ -95,12 +96,16 @@ export interface HoldPlan {
   note: string | null;
 }
 
+type DeadlineRow = Pick<DueMessage, 'created_at' | 'scheduled_for' | 'expires_at'>;
+
 /**
- * When the 7-day hold began: the later of when it was written and when it was (re)queued for
- * (scheduled_for: a staff retry restarts it, owner 2026-11-06; a released row's is cleared).
+ * A hold's deadline: one it already had (a released text refused again keeps it), else 7 days
+ * from the later of when it was written and when it was (re)queued for (scheduled_for: a staff
+ * retry clears the deadline and restarts it, owner 2026-11-06).
  */
-export function holdStart(row: Pick<DueMessage, 'created_at' | 'scheduled_for'>, now: Date): number {
+export function holdDeadline(row: DeadlineRow, now: Date): Date {
   const written = Date.parse(row.created_at ?? now.toISOString());
   const requeued = row.scheduled_for ? Date.parse(row.scheduled_for) : written;
-  return Math.max(written, requeued);
+  const kept = row.expires_at ? Date.parse(row.expires_at) : null;
+  return new Date(kept ?? Math.max(written, requeued) + HOLD_MS);
 }
