@@ -11,7 +11,7 @@ const hostOf = (path: string): string | null => {
   }
 };
 
-/** '/share' for the share URL; any other path (the Stripe return, a push link, garbage) unchanged. */
+/** '/share' for the share URL; any other path (Stripe's return, a push link) unchanged. */
 export function shareRedirect(path: string): string {
   return hostOf(path) === SHARE_HOST ? '/share' : path;
 }

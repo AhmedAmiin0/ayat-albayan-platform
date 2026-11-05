@@ -50,7 +50,7 @@ const PDF = 'application/pdf';
 const OCTET = 'application/octet-stream';
 const PDF_NAME = /\.pdf$/i;
 
-/** The provider's type (contentResolver.getType wins natively); a «.pdf» sent as octet-stream is a PDF. */
+/** The provider's type (getType wins natively); a «.pdf» sent as octet-stream is a PDF. */
 export function sharedMime(type: string | null | undefined, name: string): string {
   const base = baseMime(type ?? null);
   return base === OCTET && PDF_NAME.test(name) ? PDF : base;
@@ -63,11 +63,12 @@ export function toSharedItems(resolved: readonly Resolved[]): SharedFile[] {
   return resolved.filter(hasUri).map((p, i) => {
     const name = p.originalName ?? '';
     const mime = sharedMime(p.contentMimeType ?? p.mimeType, name);
-    return { uri: p.contentUri, mime, name, size: p.contentSize ?? null, id: requestId(), n: i + 1 };
+    const size = p.contentSize ?? null;
+    return { uri: p.contentUri, mime, name, size, id: requestId(), n: i + 1 };
   });
 }
 
-/** Files are copied into the cache on a background thread (never for text: it would fetch a link). */
+/** Files are copied into the cache on a background thread (not text: it would fetch a link). */
 async function resolveFiles(): Promise<SharedFile[]> {
   return toSharedItems(resolvedSchema.parse(await Sharing.getResolvedSharedPayloadsAsync()));
 }

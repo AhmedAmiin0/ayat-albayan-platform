@@ -89,7 +89,8 @@ interface GatedRootProps {
 }
 
 /**
- * The room (docs/35: a lesson or meeting inside the app) is open to every signed-in tree.
+ * The room (docs/35: a lesson or meeting inside the app) is open to every signed-in tree, and so is
+ * /share (docs/38: an Android share), which replaces itself at once with the tree's own chooser.
  * Inside the query provider, so the persisted /auth/me counts: a signed-in tree mounts only once
  * /auth/me is loaded (saved or live), and its tab bar renders once, complete (docs/27 E2, D6). Until
  * then «جارٍ الاتصال» stays up; useMeReady fetches /auth/me meanwhile.
@@ -132,7 +133,6 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
               </Stack.Protected>
               <Stack.Protected guard={signedIn}>
                 <Stack.Screen name="room/[kind]/[id]" options={ROOM_SCREEN} />
-                {/* An Android share (docs/38): replaced at once by the tree's own chooser. */}
                 <Stack.Screen name="share" />
               </Stack.Protected>
               <Stack.Protected guard={gate === 'out'}>

@@ -1,8 +1,8 @@
 import { type ConfigPlugin, withMainActivity } from 'expo/config-plugins';
 
-// Expo config plugin (native: needs a new APK), docs/38 «Review corrections» 2 and 3. expo-sharing's
-// own listener misses a share in two states, and replays an old one in a third:
-// - the process is dead but the task sits in Recents: Android re-creates MainActivity from the task's
+// Expo config plugin (native: needs a new APK), docs/38 «Review corrections» 2 and 3.
+// expo-sharing's own listener misses a share in one state and replays an old one in another:
+// - the process is dead, the task in Recents: Android re-creates MainActivity from the task's
 //   MAIN intent and hands the SEND to onNewIntent before expo-updates lets the delegate run, so the
 //   listener never sees it. Here it is taken first: kept in SharingSingleton, and the activity's
 //   intent becomes VIEW <scheme>://expo-sharing, which getInitialURL (cold) or React's VIEW emit
@@ -11,7 +11,12 @@ import { type ConfigPlugin, withMainActivity } from 'expo/config-plugins';
 //   from the original SEND: that stale share is dropped before super.onCreate.
 
 const MARK = '// plugins/share-intent (docs/38)';
-const IMPORTS = ['android.app.Activity', 'android.content.Intent', 'android.net.Uri', 'expo.modules.sharing.SharingSingleton'];
+const IMPORTS = [
+  'android.app.Activity',
+  'android.content.Intent',
+  'android.net.Uri',
+  'expo.modules.sharing.SharingSingleton',
+];
 const ON_CREATE = /(override fun onCreate\(savedInstanceState: Bundle\?\)\s*\{\s*\n)(\s*)/;
 const CLASS_OPEN = /(class MainActivity : ReactActivity\(\) \{\n)/;
 
@@ -48,11 +53,11 @@ private fun abTakeShare(activity: Activity, intent: Intent) {
 `;
 }
 
-/** MainActivity.kt with the imports, the stale-share drop in onCreate, onNewIntent and the helpers. */
+/** MainActivity.kt with the imports, the stale-share drop in onCreate, onNewIntent, the helpers. */
 export function addShareIntake(source: string, scheme: string): string {
   if (source.includes(MARK)) return source;
   if (!ON_CREATE.test(source) || !CLASS_OPEN.test(source)) {
-    throw new Error('share-intent: MainActivity has no onCreate(savedInstanceState) or class header');
+    throw new Error('share-intent: MainActivity has no onCreate(savedInstanceState) or class');
   }
   const imports = IMPORTS.filter((name) => !source.includes(`import ${name}\n`))
     .map((name) => `import ${name}`)

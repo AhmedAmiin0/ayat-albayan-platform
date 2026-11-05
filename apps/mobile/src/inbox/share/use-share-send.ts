@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { t } from '@/core/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { refreshInbox, touchInbox } from '@/inbox/thread/hooks/inbox-sync';
 import type { SharedFile } from './read-share';
@@ -18,6 +19,10 @@ export interface ShareOutcome {
   phone: string;
   failed: FailedShare[];
 }
+
+/** «جارٍ إرسال {n} من {m}». */
+export const sendingText = (step: ShareStep): string =>
+  t.inbox.share.sending.replace('{n}', String(step.done)).replace('{m}', String(step.total));
 
 const isFailed = (r: ShareResult): r is FailedShare => !r.ok;
 

@@ -5,7 +5,7 @@ import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Button } from '@/core/ui/primitives/Button';
 import { fileError } from '@/inbox/composer/send-file';
 import type { SharedFile } from '@/inbox/share/read-share';
-import type { FailedShare, ShareStep } from '@/inbox/share/use-share-send';
+import { type FailedShare, sendingText, type ShareStep } from '@/inbox/share/use-share-send';
 
 const s = t.inbox.share;
 
@@ -19,10 +19,10 @@ interface ShareFailuresProps {
   actions: { retry: () => void; open: () => void };
 }
 
-/** «تعذّر إرسال بعض الملفات:», each failed file with its reason (inbox.error.*), retry or open the chat. */
+/** «تعذّر إرسال بعض الملفات:», each failed file and its reason (inbox.error.*), retry, open. */
 export function ShareFailures({ failed, step, actions }: ShareFailuresProps) {
   const busy = step !== null;
-  const retryLabel = step ? s.sending.replace('{n}', String(step.done)).replace('{m}', String(step.total)) : s.retry;
+  const retryLabel = step ? sendingText(step) : s.retry;
   return (
     <View style={{ gap: 8 }}>
       <Note alert>{s.someFailed}</Note>

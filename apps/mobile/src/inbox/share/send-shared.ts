@@ -20,7 +20,8 @@ interface SendSharedInput {
 async function sendOne(input: SendSharedInput, item: SharedFile): Promise<ShareResult> {
   try {
     const file = await toChatFile(item, input.maxBytes);
-    const row = await sendChatFile({ phone: input.phone, file, id: item.id, maxBytes: input.maxBytes });
+    const { phone, maxBytes } = input;
+    const row = await sendChatFile({ phone, file, id: item.id, maxBytes });
     return { ok: true, item, row };
   } catch (error) {
     return { ok: false, item, error };

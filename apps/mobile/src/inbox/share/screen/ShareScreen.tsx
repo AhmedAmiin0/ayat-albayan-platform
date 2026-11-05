@@ -1,4 +1,4 @@
-import { type Href, router } from 'expo-router';
+import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Note } from '@/core/ui/feedback/Note';
@@ -11,9 +11,9 @@ import { ShareChooser } from './ShareChooser';
 
 const s = t.inbox.share;
 
-/** Reading, or the read failed (the grant is gone, e.g. reopened from Recents): back to the chats. */
+/** Reading, or the read failed (the grant is gone, reopened from Recents): back to the chats. */
 function NotReady({ failed }: { failed: boolean }) {
-  const list = inTree(useTreeBase(), threadBase(useThreadMode()) as Href);
+  const list = inTree(useTreeBase(), threadBase(useThreadMode()));
   const back = () => (router.canGoBack() ? router.back() : router.replace(list));
   return (
     <>

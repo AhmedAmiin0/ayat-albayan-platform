@@ -22,7 +22,7 @@ const shareable = (f: SharedFile): boolean => isImage(f) || isPdfMime(f.mime);
 const pdfTooLarge = (f: SharedFile, maxBytes: number): boolean =>
   isPdfMime(f.mime) && f.size !== null && f.size > maxBytes;
 
-/** In order: the first that breaks names the problem. Images have no size check (re-encoded first). */
+/** In order: the first broken rule names the problem. Images are re-encoded, so no size check. */
 const RULES: readonly (readonly [ShareProblem, (c: ShareCheck) => boolean])[] = [
   ['empty', ({ items }) => items.text.trim() === '' && items.files.length === 0],
   ['too_many', ({ items }) => items.files.length > SHARE_MAX_FILES],

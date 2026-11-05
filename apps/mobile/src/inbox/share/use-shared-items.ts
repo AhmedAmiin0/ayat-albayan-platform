@@ -28,7 +28,7 @@ export function useSharedItems(): ShareRead {
   return read;
 }
 
-/** Nowhere to share into (the assistant's tree): the share is dropped, so a resume does not bring it back. */
+/** Nowhere to share into (the assistant's tree): the share is dropped, a resume never shows it. */
 export function useDropShare(): void {
   useEffect(() => {
     Sharing.clearSharedPayloads();

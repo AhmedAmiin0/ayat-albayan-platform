@@ -1,5 +1,6 @@
 import { CHAT_FILE_MIMES, chatFileProblem } from '@ab/shared';
 import { ChatFileError, type ChatFilePick, pdfName } from '@/inbox/composer/send-file';
+import { loadManipulator } from './load-manipulator';
 import type { SharedFile } from './read-share';
 import { sharedKind } from './share-rules';
 
@@ -31,12 +32,9 @@ async function readSize(uri: string): Promise<number> {
     .catch(fail('file_upload'));
 }
 
-/**
- * Loaded only here (a dynamic import): an OTA that reaches an APK without the native module never
- * evaluates it until a photo is shared, and that APK cannot receive shares at all.
- */
+/** Rendered, scaled down when over 1600 px, saved as JPEG (loaded lazily: loadManipulator). */
 async function reencode(uri: string): Promise<string> {
-  const { ImageManipulator, SaveFormat } = await import('expo-image-manipulator');
+  const { ImageManipulator, SaveFormat } = await loadManipulator();
   const image = await ImageManipulator.manipulate(uri).renderAsync();
   const wide = image.width >= image.height;
   const fits = Math.max(image.width, image.height) <= LONGEST_SIDE;
@@ -61,13 +59,15 @@ async function pdf(item: SharedFile, maxBytes: number): Promise<ChatFilePick> {
   return { mime: PDF, bytes, size: bytes.byteLength, filename: pdfName(item.name) };
 }
 
-const MAKE: Record<ReturnType<typeof sharedKind>, (item: SharedFile, maxBytes: number) => Promise<ChatFilePick>> = {
+type Make = (item: SharedFile, maxBytes: number) => Promise<ChatFilePick>;
+
+const MAKE: Record<ReturnType<typeof sharedKind>, Make> = {
   image: photo,
   pdf,
-  other: async () => fail('file_type')(),
+  other: () => Promise.reject(new ChatFileError('file_type')),
 };
 
-/** The shared file ready for sendChatFile, or a ChatFileError (file_type, file_too_large, file_upload). */
+/** The file ready for sendChatFile, or a ChatFileError (file_type, file_too_large, file_upload). */
 export function toChatFile(item: SharedFile, maxBytes: number): Promise<ChatFilePick> {
   return MAKE[sharedKind(item)](item, maxBytes);
 }

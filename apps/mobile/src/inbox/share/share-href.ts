@@ -2,7 +2,7 @@ import type { Href } from 'expo-router';
 import { type Can, canOpen, type GateStatus } from '@/core/auth';
 
 // docs/38 §mobile 2: the root /share screen hands the share to the signed-in tree's own chooser,
-// inside its chat group (its thread mode and link base). null: this account has no chats to share into.
+// inside its chat group (its thread mode and link base). null: no chats to share into.
 
 const none = (): null => null;
 

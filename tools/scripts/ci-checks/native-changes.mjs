@@ -16,8 +16,12 @@ const NATIVE_KEYS = ['version', 'sdkVersion', 'plugins', 'android', 'ios', 'sche
 // Bundled into the binary (app.json icon/adaptive icon/splash = top-level assets) or deciding how it is
 // built: a change needs an APK. Images in assets/<folder>/ (tabs, brand) are imported from JS and travel
 // inside the OTA bundle, so they are not native.
-const NATIVE_PATHS = [`${MOBILE}/assets`, `${MOBILE}/eas.json`];
+const NATIVE_PATHS = [`${MOBILE}/assets`, `${MOBILE}/eas.json`, `${MOBILE}/plugins`, 'patches'];
 const isNativeAsset = (f) => /^apps\/mobile\/assets\/[^/]+$/.test(f);
+// docs/38: a local config plugin writes native code at prebuild, and a pnpm patch may change a
+// native module's source (expo-sharing, built from source); their tests and snapshots do not.
+const isNativeSource = (f) =>
+  /^(apps\/mobile\/plugins|patches)\//.test(f) && !/(\.test\.|__snapshots__)/.test(f);
 // eas.json profiles that never build the normal app (docs/30: the separate Stripe test app): editing one is no
 // reason for a new preview / production APK. Every other part of eas.json still is. For a side profile's own
 // OTA it is the reverse: only that profile (and the non-build parts) decide.
@@ -66,7 +70,10 @@ export function nativeChanges(before, after, { files: changedFiles = [], profile
     if (da[name] === db[name] || jsOnly(name, db[name] ?? da[name])) continue;
     found.push(`dependency ${name}: ${da[name] ?? '(none)'} -> ${db[name] ?? '(removed)'}`);
   }
-  for (const f of changedFiles) if (isNativeAsset(f)) found.push(`${f} changed`);
+  // package.json "expo": autolinking (buildFromSource: a module compiled from its patched source).
+  const expoKey = (pkg) => JSON.parse(pkg || '{}').expo;
+  if (!same(expoKey(before.pkg), expoKey(after.pkg))) found.push('package.json: expo (autolinking)');
+  for (const f of changedFiles) if (isNativeAsset(f) || isNativeSource(f)) found.push(`${f} changed`);
   const easKnown = typeof before.eas === 'string' && typeof after.eas === 'string';
   const easChanged = easKnown ? easCore(before.eas, profile) !== easCore(after.eas, profile) : changedFiles.includes(`${MOBILE}/eas.json`);
   if (easChanged) found.push(`${MOBILE}/eas.json changed`);

@@ -6,7 +6,7 @@ import { boundaries, domainModuleRegex, forbiddenImports, noParentImports, react
 const DOMAINS = ['sales'];
 export default reactConfig(
   import.meta.dirname,
-  { ignores: ['babel.config.cjs', 'jest.config.cjs', 'jest.setup.cjs'] },
+  { ignores: ['babel.config.cjs', 'jest.config.cjs', 'jest.setup.cjs', '**/__snapshots__/**'] },
   // React 19.2: no forwardRef / useContext / .Provider; effects in hooks. The React Compiler builds every file
   // (babel.config.cjs, jest included), so no useMemo / useCallback / memo by hand.
   ...reactRestrictions({ files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'], effects: ['src/**/*.tsx', 'app/**/*.tsx'], compiler: true, react19: true }),
@@ -50,6 +50,8 @@ export default reactConfig(
       'src/core/lib/http/auth-fetch.ts',
       'src/core/lib/connectivity/probe.ts',
       'src/inbox/composer/send-file.ts',
+      // docs/38: the shared files' cached copies (file://), read as pickPdf reads its copy.
+      'src/inbox/share/shared-file.ts',
       'src/inbox/composer/voice/send-voice.ts',
     ],
     http: true,

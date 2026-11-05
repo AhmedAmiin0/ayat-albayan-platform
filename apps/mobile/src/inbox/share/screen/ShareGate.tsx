@@ -23,9 +23,9 @@ function NoChats({ gate }: { gate: GateStatus }) {
 }
 
 /**
- * app/share.tsx (docs/38 §mobile 2): where +native-intent sends an Android share. It replaces itself
- * with the signed-in tree's chooser, inside that tree's chat group. Signed out, the root guard sends
- * the user to the login and the share is dropped.
+ * app/share.tsx (docs/38 §mobile 2): where +native-intent sends an Android share. It replaces
+ * itself with the signed-in tree's chooser, inside that tree's chat group. Signed out, the root
+ * guard sends the user to the login and the share is dropped.
  */
 export function ShareGate() {
   const gate = useAuthGate();

@@ -43,8 +43,8 @@ test('the share-intent and OkHttp plugins are both listed; expo-sharing comes af
   expect(names.indexOf('expo-sharing')).toBeGreaterThan(names.indexOf('expo-video'));
 });
 
-test('BLOCKING (docs/38 corrections 1): expo-sharing is built from source, so its pnpm patch is compiled', () => {
-  // Without this Gradle links the prebuilt AAR in local-maven-repo and the patched Kotlin is ignored.
+test('BLOCKING (docs/38 correction 1): expo-sharing builds from source (its patch compiles)', () => {
+  // Without it Gradle links the prebuilt AAR (local-maven-repo) and ignores the patched Kotlin.
   expect(pkg.expo.autolinking.android.buildFromSource).toContain('expo-sharing');
 });
 

@@ -28,11 +28,21 @@ interface ChatPickListProps {
  * Search (name / number, debounced: GET /threads?search=) over the newest chats first, with their
  * loading, empty and error states. The server's GET /threads scope already limits it per role.
  */
-export function ChatPickList({ renderItem, exclude, extraData, note, testID = 'forward-list' }: ChatPickListProps) {
+export function ChatPickList(props: ChatPickListProps) {
+  const { renderItem, exclude, extraData, note, testID = 'forward-list' } = props;
   const [search, setSearch] = useState('');
   const list = useThreadList({ search, unread: false });
   const chats = list.items.filter((th) => !exclude(th));
-  const waiting = list.isPending ? <Note>{t.inbox.forward.loading}</Note> : <EmptyState title={t.inbox.forward.empty} />;
+  const waiting = list.isPending ? (
+    <Note>{t.inbox.forward.loading}</Note>
+  ) : (
+    <EmptyState title={t.inbox.forward.empty} />
+  );
+  const empty = list.isError ? (
+    <ErrorState onRetry={list.refresh} />
+  ) : (
+    <View style={{ padding: 16 }}>{waiting}</View>
+  );
   return (
     <>
       <SearchField label={t.inbox.forward.search} onSearch={setSearch} />
@@ -46,9 +56,7 @@ export function ChatPickList({ renderItem, exclude, extraData, note, testID = 'f
         renderItem={renderItem}
         extraData={extraData}
         onEndReached={list.loadMore}
-        ListEmptyComponent={
-          list.isError ? <ErrorState onRetry={list.refresh} /> : <View style={{ padding: 16 }}>{waiting}</View>
-        }
+        ListEmptyComponent={empty}
       />
     </>
   );
