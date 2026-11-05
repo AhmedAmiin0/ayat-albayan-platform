@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { EditUsedBeforeAction } from '@/features/finance/subscriptions';
+import { EditStartDateAction, EditUsedBeforeAction } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { subscriptionHistoryQuery } from '@/features/sales/sales/academy-api';
 import { HistoryEntryCard } from './HistoryEntryCard';
@@ -41,7 +41,10 @@ export function SubscriptionHistory({ id, onClose }: SubscriptionHistoryProps) {
               current={s.id === history.data.subscription_id}
               action={
                 s.id === currentOf(history.data.subscriptions) ? (
-                  <EditUsedBeforeAction pkg={s} />
+                  <>
+                    <EditUsedBeforeAction pkg={s} />
+                    <EditStartDateAction pkg={s} />
+                  </>
                 ) : null
               }
             />

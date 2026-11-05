@@ -3186,18 +3186,18 @@
     "moveFor": "{name}: move to the other number",
     "moveUnavailable": "The other number is not configured on the server",
     "crmName": {
-      "edit": "Edit its name in the CRM",
-      "editFor": "{name}: edit its name in the CRM",
-      "current": "In the CRM: {crm}",
-      "title": "Template name in the CRM",
-      "description": "«{name}» is sent to the CRM with this name and language only while its line is on the CRM; nothing changes on Meta or Kapso. Leave a field blank to use the default.",
-      "name": "Name in the CRM",
-      "nameHint": "Lowercase English letters, digits and underscores, as the CRM shows it. Default: {crm}",
-      "language": "Template language in the CRM",
-      "languageHint": "The language code as the CRM shows it, e.g. ar or en_US. Default: {language}",
-      "invalid": "Use only lowercase English letters, digits and underscores for the name, and a code like ar or en_US for the language.",
-      "reportNote": "Type report_session to send the report file first, then report_session for a regular lesson or report_trial_session for a trial lesson, as the old system did. Only do this if both templates have no variables in the CRM.",
-      "saved": "Saved the name «{name}» is sent under to the CRM"
+      "edit": "Edit its WhatsApp name",
+      "editFor": "{name}: edit its WhatsApp name",
+      "current": "On WhatsApp: {crm}",
+      "title": "Template name on WhatsApp",
+      "description": "«{name}» is sent by this name and language from the WhatsApp Business account, whether the line sends through the CRM or directly through Meta; no template is created or changed on Meta. Leave it blank for the default.",
+      "name": "Name on WhatsApp",
+      "nameHint": "Lowercase letters, digits and underscores, as the WhatsApp Business account shows it. Default: {crm}",
+      "language": "Template language on WhatsApp",
+      "languageHint": "The language code as the WhatsApp Business account shows it, such as ar or en_US. Default: {language}",
+      "invalid": "Use lowercase letters, digits and underscores for the name, and a code such as ar or en_US for the language.",
+      "reportNote": "Type report_session to send the report file first, then report_session for a regular lesson or report_trial_session for a trial lesson, as the old system did. Only if both templates on WhatsApp have no variables.",
+      "saved": "Saved the WhatsApp name «{name}» is sent by"
     },
     "crmStatus": {
       "approved": "Mark approved in the CRM",
@@ -3362,6 +3362,13 @@
         "webhookCrmNoSecret": "«CRM webhook signing secret» is not set in «Communications» → «Safety», so every CRM delivery is refused and no delivery ticks show",
         "crmScopeMissing": "The CRM API key is valid but lacks the messages:send scope, so this line will not send. Update it in «Communications» → «Safety».",
         "crmScopeOk": "The CRM API key is valid and has the send scope",
+        "metaReady": "Ready to send directly through Meta",
+        "metaAppSecretSet": "The Meta app secret is set, so signed inbound messages are accepted",
+        "metaAppSecretMissing": "The Meta app secret is not set, so inbound messages from Meta will be refused",
+        "metaVerifyTokenSet": "The webhook verify token is set",
+        "metaVerifyTokenMissing": "The webhook verify token is not set, so Meta will not accept the ⁦/webhooks/whatsapp⁩ URL",
+        "metaAppSubscribed": "The Meta app is subscribed to the WhatsApp Business account",
+        "metaAppNotSubscribed": "The Meta app is not subscribed to the WhatsApp Business account, so no inbound messages or delivery ticks arrive through Meta",
         "callbackOverride": "Alternative callback address: {url}",
         "checkedAt": "Last checked: {time}",
         "checkFailed": "Could not check the lines",
@@ -4912,6 +4919,23 @@
         "used_before_needs_past_start": "Lessons already used apply only to a package that started before today.",
         "already_cancelled": "This package is cancelled.",
         "used_before_changed": "The number changed before saving; refresh and try again.",
+        "generic": "Could not save, try again."
+      }
+    },
+    "startDateEdit": {
+      "action": "Edit start date",
+      "title": "Edit the package start date",
+      "label": "Start date",
+      "hint": "Only the start date changes; payments and the renewal date stay as they are, and the lessons counted from the package may follow the new date.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Start date updated.",
+      "current": "Current date: {date}",
+      "errors": {
+        "already_cancelled": "This package is cancelled.",
+        "start_date_too_old": "The start date cannot be more than a year before today.",
+        "used_before_needs_past_start": "This package counts lessons used before the platform, so it must start before today.",
+        "start_date_changed": "The start date changed before saving; refresh and try again.",
         "generic": "Could not save, try again."
       }
     },

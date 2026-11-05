@@ -30,6 +30,8 @@ type FakeBinding = { token: string; profile_id: string; session_id: string; cont
 interface FakePushOptions {
   /** Every upsert hits an existing dedup key. */
   duplicate?: boolean;
+  /** Like the unique dedup_key: a key already written answers no row (a repeat). */
+  dedup?: boolean;
   /** Default: every profile token bound to its profile, session 'live'. */
   bindings?: FakeBinding[];
   /** Sessions push_live_sessions answers as live; default ['live']. */
@@ -44,6 +46,7 @@ export function fakePushDb(profiles: FakeProfile[], opts: FakePushOptions = {}) 
   const writes: { table: string; op: string; value: unknown }[] = [];
   const bindings = opts.bindings ?? profiles.flatMap((p) => p.push_tokens.map((token) => ({ token, profile_id: p.id, session_id: 'live' })));
   const live = opts.live ?? ['live'];
+  const keys = new Set<string | undefined>();
   const rpc = vi.fn(async (_fn: string, args: { p_ids: string[] }) => ({ data: args.p_ids.filter((id) => live.includes(id)), error: null }));
   const from = vi.fn((table: string) => ({
     select: () => ({
@@ -53,9 +56,12 @@ export function fakePushDb(profiles: FakeProfile[], opts: FakePushOptions = {}) 
           ? Promise.resolve({ data: bindings.filter((b) => ids.includes(b.token)), error: null })
           : enabled(profiles.filter((p) => ids.includes(p.id))),
     }),
-    upsert: (value: unknown) => {
+    upsert: (value: { dedup_key?: string }) => {
+      const repeat = opts.duplicate === true || (opts.dedup === true && keys.has(value.dedup_key));
+      keys.add(value.dedup_key);
       writes.push({ table, op: 'upsert', value });
-      return { select: async () => ({ data: opts.duplicate ? [] : [{ id: `row-${writes.length}` }], error: null }) };
+      const data = repeat ? [] : [{ id: `row-${writes.length}` }];
+      return { select: async () => ({ data, error: null }) };
     },
     delete: () => ({
       in: async (_c: string, value: unknown) => (writes.push({ table, op: 'delete', value }), { error: null }),

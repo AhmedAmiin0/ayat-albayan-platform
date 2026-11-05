@@ -4,9 +4,10 @@ import { PushService } from '@/common/push/push.service';
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 
 /**
- * The bell rows of the payment links (in-app only: bellOnly, never WhatsApp). They reuse the payment_due kind
- * (its rule, its permission and its tap target: the student), with their own title, so no notification kind
- * is added to the normal build. Never throws (PushService swallows its own failures).
+ * The bell rows of the payment links (never WhatsApp). They reuse the payment_due kind (its rule,
+ * so its bell + device push like any staff kind; its permission and its tap target: the student),
+ * with their own title, so no notification kind is added to the normal build. Never throws
+ * (PushService swallows its own failures).
  */
 @Injectable()
 export class LinkAlerts {
@@ -21,18 +22,24 @@ export class LinkAlerts {
       title: ar.paymentLinks.bell.paidTitle,
       vars: { student: link.student?.name ?? '', left: `${money.amount} ${money.currency}` },
       data: { studentId: link.student_id },
-      bellOnly: true,
     });
   }
 
-  /** The admins: a dispute, or a payment Stripe took that the platform could not record (no automatic change). */
-  async admins(input: { subject: string; title: string; text: string; link: LinkRow | null }): Promise<void> {
+  /**
+   * The admins: a dispute, or a payment Stripe took that the platform could not record (no
+   * automatic change).
+   */
+  async admins(input: {
+    subject: string;
+    title: string;
+    text: string;
+    link: LinkRow | null;
+  }): Promise<void> {
     await this.push.notifyAdmins('payment_due', {
       subject: input.subject,
       title: input.title,
       vars: { student: input.link?.student?.name ?? '', left: input.text },
       ...(input.link ? { data: { studentId: input.link.student_id } } : {}),
-      bellOnly: true,
     });
   }
 }
