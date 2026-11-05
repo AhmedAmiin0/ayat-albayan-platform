@@ -20,7 +20,11 @@ const quoted = (replyTo: string | null | undefined): EvolutionBody =>
   replyTo ? { quoted: { key: { id: replyTo } } } : {};
 
 /** POST /message/sendText/{instance}. */
-export function textSend(input: { to: string; text: string; replyTo?: string | null }): EvolutionSend {
+export function textSend(input: {
+  to: string;
+  text: string;
+  replyTo?: string | null;
+}): EvolutionSend {
   const body = { number: waTo(input.to), text: input.text, ...quoted(input.replyTo) };
   return { path: 'message/sendText', body };
 }
@@ -57,6 +61,7 @@ export function mediaSend(input: MediaSend): EvolutionSend {
 
 /** Cloud mode: POST /message/sendTemplate/{instance} {number, name, language, components}. */
 export function templateSend(to: string, t: WabaTemplate): EvolutionSend {
-  const body = { number: waTo(to), name: t.name, language: t.language, components: wabaComponents(t) };
+  const components = wabaComponents(t);
+  const body = { number: waTo(to), name: t.name, language: t.language, components };
   return { path: 'message/sendTemplate', body };
 }

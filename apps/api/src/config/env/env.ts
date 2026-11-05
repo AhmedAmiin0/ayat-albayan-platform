@@ -15,14 +15,10 @@ import { LOGIN_CODE_SHAPE } from './env.login-code';
 import { LIVEKIT_SHAPE } from './env.livekit';
 import { STRIPE_SHAPE } from './env.stripe';
 
-export {
-  whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider, isGraphEnv,
-} from './whatsapp/env.whatsapp';
+export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider, isGraphEnv } from './whatsapp/env.whatsapp';
 export { lineGaps, duplicatePhone, bootGaps, DUPLICATE_CHAT_PHONE } from './env.gaps';
 export { allowedRecipients, recipientAllowed, parseAllowedRecipients, kapsoWebhookSecret } from './whatsapp/env.whatsapp';
-export type {
-  WhatsappEnv, GraphEnv, MetaLineEnv, KapsoLineEnv, CrmLineEnv, EvolutionLineEnv, LineEnvs, LineNumbers,
-} from './whatsapp/env.whatsapp';
+export type { WhatsappEnv, GraphEnv, MetaLineEnv, KapsoLineEnv, CrmLineEnv, EvolutionLineEnv, LineEnvs, LineNumbers } from './whatsapp/env.whatsapp';
 export { livekitEnv, type LivekitEnv } from './env.livekit';
 export { webPushEnv } from './env.web-push';
 export { iceServers } from './env.calls';
@@ -72,8 +68,7 @@ const schema = z.object({
   /** false = the template sync and submit stop (Meta test credentials must not rewrite the registry). */
   WA_TEMPLATE_SYNC: z.preprocess(blankIsUnset, z.stringbool().default(true)),
   ...KAPSO_SHAPE,
-  ...CRM_SHAPE,
-  ...EVOLUTION_SHAPE,
+  ...CRM_SHAPE, ...EVOLUTION_SHAPE,
   /** Expo push access token (only when the Expo project enforces push security). */
   EXPO_ACCESS_TOKEN: optionalSecret,
   /**

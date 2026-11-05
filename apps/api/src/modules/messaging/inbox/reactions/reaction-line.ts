@@ -8,17 +8,23 @@ import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo
 /** Where the chat's next session message leaves from (sendLine / pickSend): a line and/or a number. */
 type ReactFrom = { line?: WaLine; number_id?: string };
 
+/** A number: its own driver's capability. */
+const numberReacts = (id: string): boolean =>
+  capsOf(overlayNumbers()?.find((n) => n.id === id)?.env).reactions;
+
+/** A line (no key = the single notifications line): a crm line never, even half-configured. */
+function lineReacts(line: WaLine = 'notifications'): boolean {
+  const env = loadEnv();
+  return lineProvider(env, line) !== 'crm' && capsOf(lineEnvs(env)[line]).reactions;
+}
+
 /**
- * The crm driver (wacrm's public API: text, files and templates only, docs/19) has no reaction call, so
- * a chat answered from a CRM line cannot react. The env and the numbers overlay are read per call.
- * No line key = the single (notifications) line.
+ * The crm driver (wacrm's public API: text, files and templates only, docs/19) has no reaction
+ * call, nor does Evolution, so a chat answered from such a line cannot react (driver-caps).
+ * The env and the numbers overlay are read per call.
  */
 export function sendsOnCrm(from: ReactFrom): boolean {
-  const number = from.number_id ? overlayNumbers()?.find((n) => n.id === from.number_id) : null;
-  if (from.number_id) return !capsOf(number?.env).reactions;
-  const line = from.line ?? 'notifications';
-  // An Evolution line has no reaction call of ours either (docs/19 «Evolution driver»).
-  return lineProvider(loadEnv(), line) === 'crm' || !capsOf(lineEnvs(loadEnv())[line]).reactions;
+  return from.number_id ? !numberReacts(from.number_id) : !lineReacts(from.line);
 }
 
 /**

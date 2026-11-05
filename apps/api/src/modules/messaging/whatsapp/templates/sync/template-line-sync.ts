@@ -1,4 +1,4 @@
-import type { TemplateLineFacts, TemplateLineSync, WaLine } from '@ab/shared';
+import type { TemplateLineFacts, TemplateLineSync, WaLine, WaProvider } from '@ab/shared';
 import { lineFacts, readError } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { newStarters } from './template-import';
 import { wabaSyncPatch } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
@@ -31,6 +31,12 @@ async function readList(deps: LineSyncDeps, line: WaLine): Promise<MetaTemplate[
   }
 }
 
+/** The drivers whose templates are not ours to list (docs/19): the CRM's, Evolution's. */
+const NO_LIST: Partial<Record<WaProvider, string>> = {
+  crm: CRM_MANAGED,
+  evolution: EVOLUTION_NO_TEMPLATES,
+};
+
 /**
  * POST /messaging/templates/health for one line; an unconfigured line answers not_configured and reads
  * nothing. A crm line answers crm_managed (docs/19): no call, and no row is touched (a status the admin set
@@ -38,8 +44,8 @@ async function readList(deps: LineSyncDeps, line: WaLine): Promise<MetaTemplate[
  */
 export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Promise<TemplateLineSync> {
   const facts = lineFacts(line, deps.lines[line]);
-  if (facts.provider === 'crm') return { ...empty(facts, now), ok: false, error: CRM_MANAGED };
-  if (facts.provider === 'evolution') return { ...empty(facts, now), ok: false, error: EVOLUTION_NO_TEMPLATES };
+  const elsewhere = NO_LIST[facts.provider];
+  if (elsewhere) return { ...empty(facts, now), ok: false, error: elsewhere };
   if (!facts.configured) return { ...empty(facts, now), ok: false, error: 'not_configured' };
   const list = await readList(deps, line);
   if (!Array.isArray(list)) return { ...empty(facts, now), ok: false, ...list };

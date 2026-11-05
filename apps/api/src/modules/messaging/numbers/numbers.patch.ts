@@ -1,4 +1,5 @@
 import type { NumberUpdate } from '@ab/shared';
+import { BadRequestException } from '@nestjs/common';
 import type { NumberRow } from './numbers.repo';
 
 /** A plain PATCH of wa_numbers (is_default true goes through wa_number_make_default instead). */
@@ -7,13 +8,25 @@ export type NumberPatch = Omit<NumberUpdate, 'is_default'> & { is_default?: fals
 >;
 
 /**
+ * The engine follows the provider (migration 20261106000300): leaving Evolution clears it;
+ * moving to Evolution without one is refused (400 evolution_mode_needed).
+ */
+function evolutionFields(before: NumberRow, body: Omit<NumberUpdate, 'is_default'>): Partial<NumberPatch> {
+  const provider = body.provider ?? before.provider;
+  const mode = body.evolution_mode === undefined ? before.evolution_mode : body.evolution_mode;
+  if (provider !== 'evolution') return mode === null ? {} : { evolution_mode: null };
+  if (!mode) throw new BadRequestException({ message: 'evolution_mode_needed' });
+  return {};
+}
+
+/**
  * What a PATCH also changes so a row never says something false:
  * - a new phone id drops the phone, health and check time cached for the old one (#134 item 9);
  * - a role change or a disable unsets is_default, so the default never moves to the other role
  *   silently and a disabled ex-default can't collide with a newer default when re-enabled.
  */
 export function numberPatch(before: NumberRow, body: Omit<NumberUpdate, 'is_default'>): NumberPatch {
-  const patch: NumberPatch = { ...body };
+  const patch: NumberPatch = { ...body, ...evolutionFields(before, body) };
   if (body.phone_number_id !== undefined && body.phone_number_id !== before.phone_number_id) {
     Object.assign(patch, { display_phone_e164: null, health: null, checked_at: null });
   }

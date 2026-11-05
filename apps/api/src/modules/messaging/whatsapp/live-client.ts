@@ -38,6 +38,9 @@ export class LiveWhatsappClient implements WhatsappClient {
     if (!client.sendReaction) throw new WaError('this driver cannot send a reaction', { code: 100, status: 0, unsupported: 'crm' });
     return client.sendReaction(input);
   }
+  automaticOff(): boolean {
+    return this.current().automaticOff?.() ?? false;
+  }
   markRead(waMessageId: string): Promise<void> {
     return this.current().markRead(waMessageId);
   }

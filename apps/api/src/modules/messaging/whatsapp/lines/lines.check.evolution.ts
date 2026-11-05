@@ -1,4 +1,7 @@
 import type { LineCheckView, WaLine } from '@ab/shared';
+import type { GraphEnv, WhatsappEnv } from '@/config/env/env';
+import type { FetchLike } from '@/common/infra/http/failure';
+import { crmConn, crmLineCheck } from './lines.check.crm';
 import {
   instanceState, type InstanceCall,
 } from '@/modules/messaging/whatsapp/drivers/evolution/evolution-instance';
@@ -46,4 +49,21 @@ export async function evolutionLineCheck(input: EvolutionCheckInput): Promise<Li
     errors: error ? [error] : [],
     checked_at: input.checkedAt,
   };
+}
+
+interface OffGraphInput {
+  line: WaLine;
+  env: Exclude<WhatsappEnv, GraphEnv>;
+  checkedAt: string;
+  driver: Parameters<typeof crmLineCheck>[0]['driver'];
+  at: { fetch: FetchLike; timeoutMs: number };
+}
+
+/** A line with no Graph ids of ours: crm (GET /me) or evolution (connectionState). */
+export function offGraphCheck(input: OffGraphInput): Promise<LineCheckView> {
+  const { line, env, checkedAt, driver } = input;
+  if (env.provider === 'crm') {
+    return crmLineCheck({ line, conn: crmConn(env, input.at), checkedAt, driver });
+  }
+  return evolutionLineCheck({ line, call: { env, fetch: input.at.fetch }, checkedAt, driver });
 }

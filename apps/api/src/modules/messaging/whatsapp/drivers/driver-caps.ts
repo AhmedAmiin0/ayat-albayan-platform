@@ -14,7 +14,7 @@ export interface DriverCaps {
 
 const GRAPH: DriverCaps = { window24h: true, reactions: true, templateList: true };
 
-/** Per driver; an Evolution instance per engine (Baileys = WhatsApp Web: no window, no templates). */
+/** Per driver; an Evolution instance per engine (Baileys: no window, no templates). */
 const CAPS = {
   meta: GRAPH,
   kapso: GRAPH,

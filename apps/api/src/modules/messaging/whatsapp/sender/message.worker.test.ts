@@ -33,7 +33,7 @@ describe('MessageWorker — one queued row (docs/12 §3.3)', () => {
     await expect(worker().process({ row: dueMessage(), template, now: NOW, autoOn: true })).resolves.toBe('sent');
     expect(queries.claim).toHaveBeenCalledWith({ id: dueMessage().id, attempts: 0, now: NOW });
     expect(dispatch.send).toHaveBeenCalledWith(dueMessage(), template, 'notifications');
-    expect(queries.sent).toHaveBeenCalledWith(expect.objectContaining({ row: dueMessage(), waMessageId: 'wamid.1' }));
+    expect(queries.sent).toHaveBeenCalledWith(expect.objectContaining({ row: dueMessage(), sent: { waMessageId: 'wamid.1' } }));
     const [claim, send, sent] = [queries.claim, dispatch.send, queries.sent].map((f) => f.mock.invocationCallOrder[0] ?? 0);
     expect(claim).toBeLessThan(send ?? 0);
     expect(send).toBeLessThan(sent ?? 0);

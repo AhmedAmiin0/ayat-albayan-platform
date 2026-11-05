@@ -7,10 +7,10 @@ import {
   WaError, type MediaSend, type MetaTemplate, type TemplateSend, type WaSent, type WhatsappClient,
 } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { mediaSend, templateSend, textSend, type EvolutionSend } from './evolution-body';
-import { evolutionJson, type EvolutionConn } from './evolution-http';
+import { evolutionHttp, evolutionPath, type EvolutionConn } from './evolution-http';
 import { evolutionMedia } from './evolution-media';
 import { evolutionPacer, type EvolutionPacer } from './evolution-pacer';
-import { sentOf } from './evolution-shapes';
+import { sentSchema } from './evolution-shapes';
 import { templateAsText } from './evolution-template-text';
 
 // The Evolution driver (docs/19 «Evolution driver»): a number on a self-hosted Evolution API
@@ -26,20 +26,27 @@ export interface EvolutionClientOpts {
 
 const DEFAULT_TIMEOUT_MS = 20_000;
 
-/** The runtime fetch for Evolution calls: this file's one global use. */
-export const evolutionFetch: FetchLike = fetch;
-
 /** What Evolution cannot do from here: the template list, submit, samples (and cloud media). */
 export const evolutionUnsupported = (what: string): WaError =>
   new WaError(`${what} is not supported by the Evolution driver`, {
     code: null, status: 0, unsupported: 'evolution',
   });
 
-/** A Baileys number with automatic sends off refuses a template (docs/19): fails, never sent. */
-const autoOff = (): WaError =>
+/** A Baileys number with automatic sends off refuses a job's row (docs/19): fails, never sent. */
+export const evolutionAutoOff = (): WaError =>
   new WaError('automatic sends are off on this Baileys number', {
     code: WA_ERROR.invalidParameter, status: 0, unsupported: 'evolution', blocked: 'evolution_auto_off',
   });
+
+const notAllowed = (): WaError =>
+  new WaError('recipient not allowed', { code: WA_ERROR.recipientNotAllowed, status: 0 });
+
+/** The connection of a configured client (the fetch only when a test passes one). */
+const connOf = (env: EvolutionLineEnv, opts: EvolutionClientOpts): EvolutionConn => ({
+  env,
+  timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS,
+  ...(opts.fetch ? { fetch: opts.fetch } : {}),
+});
 
 type TemplateWay = (c: EvolutionWhatsappClient, input: TemplateSend) => Promise<WaSent>;
 
@@ -55,8 +62,7 @@ export class EvolutionWhatsappClient implements WhatsappClient {
   private readonly pacer: EvolutionPacer;
 
   constructor(env: EvolutionLineEnv | null, opts: EvolutionClientOpts = {}) {
-    const timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-    this.conn = env ? { env, fetch: opts.fetch ?? evolutionFetch, timeoutMs } : null;
+    this.conn = env ? connOf(env, opts) : null;
     this.allowed = opts.allowed ?? null;
     this.pacer = opts.pacer ?? evolutionPacer;
   }
@@ -66,9 +72,13 @@ export class EvolutionWhatsappClient implements WhatsappClient {
   }
 
   sendTemplate(input: TemplateSend): Promise<WaSent> {
-    const c = this.connection();
-    const blocked = c.env.mode === 'baileys' && !c.env.autoSends;
-    return blocked ? Promise.reject(autoOff()) : TEMPLATE[c.env.mode](this, input);
+    return TEMPLATE[this.connection().env.mode](this, input);
+  }
+
+  /** Baileys with automatic sends off: staff chat messages only (the dispatch refuses the rest). */
+  automaticOff(): boolean {
+    const env = this.conn?.env;
+    return env?.mode === 'baileys' && !env.autoSends;
   }
 
   sendText(input: { to: string; text: string; replyTo?: string | null }): Promise<WaSent> {
@@ -80,8 +90,9 @@ export class EvolutionWhatsappClient implements WhatsappClient {
   }
 
   /** Evolution's read receipt needs the chat jid beside the id; the family's ticks stay theirs. */
-  async markRead(): Promise<void> {
+  markRead(): Promise<void> {
     this.connection();
+    return Promise.resolve();
   }
 
   getTemplates(): Promise<MetaTemplate[]> {
@@ -117,13 +128,12 @@ export class EvolutionWhatsappClient implements WhatsappClient {
   /** The allow-list, the Baileys pace, then one call; the message id or `uncertain`. */
   async post(to: string, build: () => EvolutionSend): Promise<WaSent> {
     const c = this.connection();
-    const notAllowed = !recipientAllowed(this.allowed, to);
-    if (notAllowed) throw new WaError('recipient not allowed', {
-      code: WA_ERROR.recipientNotAllowed, status: 0,
-    });
+    if (!recipientAllowed(this.allowed, to)) throw notAllowed();
     const send = build();
     await this.pace(c, to);
-    return sentOf(await evolutionJson(c, { path: send.path, method: 'POST', body: send.body }));
+    const path = evolutionPath(c.env, send.path);
+    const sent = await evolutionHttp(c, true).json({ path, method: 'POST', json: send.body, schema: sentSchema });
+    return { waMessageId: sent.key.id };
   }
 
   private pace(c: EvolutionConn, to: string): Promise<void> {

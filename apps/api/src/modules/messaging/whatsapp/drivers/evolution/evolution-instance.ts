@@ -1,8 +1,9 @@
+import type { EvolutionState } from '@ab/shared';
+import { evolutionStateOf } from '@ab/shared';
 import type { EvolutionLineEnv } from '@/config/env/env';
 import type { FetchLike } from '@/common/infra/http/failure';
-import { evolutionJson } from './evolution-http';
-import { qrOf, stateOf, type EvolutionQr } from './evolution-shapes';
-import type { EvolutionState } from '@ab/shared';
+import { evolutionHttp, evolutionPath } from './evolution-http';
+import { connectSchema, qrOf, stateSchema, type EvolutionQr } from './evolution-shapes';
 
 // The admin's two read calls on an instance (docs/19 «Evolution driver»): «افحص الاتصال»
 // (connectionState) and the QR panel (connect). Never a send. The key is the instance token, or
@@ -12,17 +13,22 @@ const TIMEOUT_MS = 10_000;
 
 export interface InstanceCall {
   env: EvolutionLineEnv;
-  fetch: FetchLike;
+  /** Test seam; the runtime client's fetch otherwise. */
+  fetch?: FetchLike;
 }
 
-const conn = (c: InstanceCall) => ({ env: c.env, fetch: c.fetch, timeoutMs: TIMEOUT_MS });
+const http = (c: InstanceCall) =>
+  evolutionHttp({ env: c.env, timeoutMs: TIMEOUT_MS, ...(c.fetch ? { fetch: c.fetch } : {}) });
 
 /** GET /instance/connectionState/{instance}. */
 export async function instanceState(c: InstanceCall): Promise<EvolutionState | null> {
-  return stateOf(await evolutionJson(conn(c), { path: 'instance/connectionState' }));
+  const path = evolutionPath(c.env, 'instance/connectionState');
+  const body = await http(c).json({ path, schema: stateSchema });
+  return evolutionStateOf(body.instance.state);
 }
 
 /** GET /instance/connect/{instance}: starts the session when closed and answers its QR. */
 export async function instanceQr(c: InstanceCall): Promise<EvolutionQr> {
-  return qrOf(await evolutionJson(conn(c), { path: 'instance/connect' }));
+  const path = evolutionPath(c.env, 'instance/connect');
+  return qrOf(await http(c).json({ path, schema: connectSchema }));
 }

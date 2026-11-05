@@ -1,14 +1,13 @@
-import { EVOLUTION_MODES, isWaLine, type NumberSecretName, type WaLine } from '@ab/shared';
+import { isWaLine, type NumberSecretName, type WaLine } from '@ab/shared';
 import type { CallsNumber } from '@/common/configuration/integrations/calls-number';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import {
   validOverlay,
   type Env,
-  type EvolutionLineEnv,
   type KapsoLineEnv,
   type WhatsappEnv,
 } from '@/config/env/env';
-import { evolutionBaseOf } from '@/config/env/whatsapp/env.evolution';
+import { evolutionEnv, evolutionTokenOf } from './numbers.env.evolution';
 import { ROLE_KEYS } from '@/modules/messaging/numbers/lines/numbers.lines';
 import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 
@@ -18,7 +17,7 @@ import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 // KAPSO_API_VERSION and the project-wide KAPSO_API_KEY (env.kapso.ts kapsoLine); crm = WACRM_API_BASE and
 // WACRM_API_KEY (env.crm.ts crmLine). Never logs a value.
 
-interface NumberSource {
+export interface NumberSource {
   row: NumberRow;
   secrets: Partial<Record<NumberSecretName, string>>;
 }
@@ -63,20 +62,6 @@ export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
 }
 
 type Ids = { phoneNumberId: string; wabaId: string };
-
-/**
- * Evolution (docs/19 «Evolution driver»): EVOLUTION_API_BASE, the instance named by the row's
- * phone_number_id, ITS token (Vault, never the global key) and engine; null while one is missing.
- */
-function evolutionEnv({ row, secrets }: NumberSource, env: Env): EvolutionLineEnv | null {
-  const base = evolutionBaseOf(env.EVOLUTION_API_BASE);
-  const mode = EVOLUTION_MODES.find((m) => m === row.evolution_mode);
-  const token = secrets.evolution_token;
-  if (!base || !mode || !token) return null;
-  const gapMs = env.EVOLUTION_SEND_GAP_MS;
-  const autoSends = row.evolution_auto_sends;
-  return { provider: 'evolution', base, instance: row.phone_number_id, token, mode, autoSends, gapMs };
-}
 
 /** The drivers whose number config is not Graph ids + a credential. */
 const OWN_ENV: Partial<Record<string, (s: NumberSource, env: Env) => WhatsappEnv | null>> = {
@@ -132,6 +117,7 @@ export function overlayNumber(source: NumberSource, env: Env): OverlayNumber {
     created_at: row.created_at,
     env: numberEnv(source, env),
     appSecret: appSecretOf(source),
+    ...evolutionTokenOf(source),
   };
 }
 

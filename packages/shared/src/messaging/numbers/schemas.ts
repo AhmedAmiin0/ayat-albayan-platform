@@ -16,6 +16,10 @@ export const numberLabelSchema = z.string().trim().min(1).max(60);
 export const callsNeedKapso = (row: { purpose?: string; provider?: string }): boolean =>
   row.purpose === 'calls' && row.provider !== 'kapso';
 
+/** An Evolution number names its engine (baileys | cloud); any other provider carries none. */
+export const evolutionModeFits = (v: { provider?: string; evolution_mode?: string | null }): boolean =>
+  (v.provider === 'evolution') === (v.evolution_mode !== undefined && v.evolution_mode !== null);
+
 /** POST /admin/numbers. A new number starts disabled unless asked. */
 export const numberCreateSchema = z
   .object({
@@ -28,7 +32,8 @@ export const numberCreateSchema = z
     enabled: z.boolean().default(false),
     ...evolutionFieldsSchema.partial().shape,
   })
-  .refine((v) => !callsNeedKapso(v), { message: 'calls_need_kapso', path: ['provider'] });
+  .refine((v) => !callsNeedKapso(v), { message: 'calls_need_kapso', path: ['provider'] })
+  .refine(evolutionModeFits, { message: 'evolution_mode_needed', path: ['evolution_mode'] });
 export type NumberCreate = z.infer<typeof numberCreateSchema>;
 
 /** PATCH /admin/numbers/:id: any subset; is_default true makes it its role's default (enabled only). */

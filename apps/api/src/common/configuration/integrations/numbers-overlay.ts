@@ -28,6 +28,11 @@ export interface OverlayNumber {
   env: WhatsappEnv | null;
   /** Its app secret (Vault), for the webhook signature; null = none set. */
   appSecret: string | null;
+  /**
+   * An Evolution number's instance token (Vault): POST /webhooks/evolution/:instance is checked
+   * against it, enabled or not (docs/19). Absent on any other provider.
+   */
+  evolutionToken?: string;
 }
 
 export interface NumbersOverlay {

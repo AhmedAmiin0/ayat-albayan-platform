@@ -2,6 +2,7 @@ import { WA_LINES } from '@ab/shared';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '@/common/configuration/integrations/integration-config.module';
 import { NumbersModule } from '@/modules/messaging/numbers/numbers.module';
+import { NumbersEvolutionController } from './drivers/evolution/evolution-admin.controller';
 import { bootGaps, lineProvider, loadEnv } from '@/config/env/env';
 import { CodeSend } from './direct/code-send';
 import { GateController } from './gate/gate.controller';
@@ -76,7 +77,7 @@ function lines(): WhatsappLines {
   imports: [IntegrationConfigModule, NumbersModule],
   controllers: [
     TemplatesController, TemplateEditsController, MessagesController, GateController,
-    LinesController, TemplateNumbersController,
+    LinesController, TemplateNumbersController, NumbersEvolutionController,
   ],
   providers: [
     { provide: WHATSAPP_LINES, useFactory: lines },

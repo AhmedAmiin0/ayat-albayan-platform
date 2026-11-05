@@ -1,8 +1,8 @@
 import { EVOLUTION_GAP_DEFAULT_MS, evolutionBase, evolutionGapMs, type WaLine } from '@ab/shared';
 import { z } from 'zod';
 import { numbersOverlay, overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
-import type { Env } from '../env';
-import { blankIsUnset, optionalSecret } from '../env.blank';
+import type { Env } from '@/config/env/env';
+import { blankIsUnset, optionalSecret } from '@/config/env/env.blank';
 import type { EvolutionLineEnv, WhatsappEnv } from './env.whatsapp';
 
 /**

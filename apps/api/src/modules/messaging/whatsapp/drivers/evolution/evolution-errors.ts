@@ -1,90 +1,97 @@
 import { WA_ERROR } from '@ab/shared';
 import { z } from 'zod';
+import type { ErrorTable } from '@/common/infra/http/errors';
+import type { HttpFailure } from '@/common/infra/http/failure';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// Evolution API's failures → WaError (docs/19 «Evolution driver»). Evolution answers every error
-// as {status, error, response: {message}} (src/main.ts); `message` is a string or an array.
+// Evolution API's failures → WaError, as a table (docs/19 «Evolution driver», docs/36 H-3).
+// Evolution answers every error as {status, error, response: {message}} (src/main.ts); the
+// message is a string or an array (a 400 for a number not on WhatsApp: [{exists:false, jid}]).
 
-const envelopeSchema = z.object({
-  response: z.object({ message: z.unknown() }).optional(),
+export const evolutionErrorSchema = z.looseObject({
   error: z.string().optional(),
+  response: z.looseObject({ message: z.unknown() }).optional(),
 });
 
-/** sendMessageWithTyping's 400 when the number is not on WhatsApp: [{exists:false, jid}]. */
-const notOnWhatsappSchema = z.array(z.object({ exists: z.literal(false) })).min(1);
+/** sendMessageWithTyping's 400 when the number is not on WhatsApp. */
+const notOnWhatsappSchema = z.array(z.looseObject({ exists: z.literal(false) })).min(1);
+
+const notOnWhatsapp = (raw: unknown): boolean => notOnWhatsappSchema.safeParse(raw).success;
 
 /** The instance itself is down (no session): the line, not the message. Nothing was sent. */
-const LINE_DOWN = /connection closed|not connected|instance does not exist|does not exist/i;
+const LINE_DOWN = /connection closed|not connected|does not exist/i;
+/** A Cloud instance passes Meta's 24 h refusal on in its words (131047, re-engagement). */
+const WINDOW = /131047|re-?engagement|24[- ]hour/i;
 
-export interface EvolutionFailure {
+interface Said {
   status: number;
-  text: string;
+  words: string;
+  raw: unknown;
 }
 
-function parsed(text: string): unknown {
-  try {
-    return JSON.parse(text);
-  } catch {
-    return null;
-  }
+const wordsOf = (raw: unknown): string => (typeof raw === 'string' ? raw : JSON.stringify(raw));
+
+/** Only a status failure reaches the table's default (every other kind has its own entry). */
+const NO_STATUS = { status: 0, body: null };
+const statusOf = (f: HttpFailure): { status: number; body: unknown } =>
+  f.kind === 'status' ? f : NO_STATUS;
+
+/** Evolution's own words: response.message, else error. */
+function rawOf(body: unknown): unknown {
+  const parsed = evolutionErrorSchema.safeParse(body);
+  return parsed.data?.response?.message ?? parsed.data?.error;
 }
 
-/** The answer's own words, capped; a body that is not Evolution's envelope says nothing. */
-function said(text: string): { words: string; raw: unknown } {
-  const env = envelopeSchema.safeParse(parsed(text));
-  const raw = env.success ? env.data.response?.message : undefined;
-  const words = typeof raw === 'string' ? raw : JSON.stringify(raw ?? env.data?.error ?? '');
-  return { words: (words ?? '').slice(0, 300), raw };
+function saidOf(f: HttpFailure): Said {
+  const { status, body } = statusOf(f);
+  const raw = rawOf(body);
+  return { status, words: raw === undefined ? '' : wordsOf(raw).slice(0, 300), raw };
 }
 
-type Kind = 'auth' | 'lineDown' | 'notOnWhatsapp' | 'later' | 'uncertain' | 'plain';
+type Info = Partial<WaError['info']>;
 
-const isAuth = (status: number): boolean => status === 401 || status === 403;
-const isMissingInstance = (status: number): boolean => status === 404;
-/** A proxy's «try later»: nothing was sent, another try may pass. */
-const LATER: ReadonlySet<number> = new Set([408, 425, 429]);
-
-/** One classification per answer: the first rule that matches wins. */
-const RULES: readonly { kind: Kind; test: (f: EvolutionFailure, s: ReturnType<typeof said>) => boolean }[] = [
-  { kind: 'auth', test: (f) => isAuth(f.status) },
-  { kind: 'lineDown', test: (f, s) => isMissingInstance(f.status) || LINE_DOWN.test(s.words) },
-  { kind: 'notOnWhatsapp', test: (_f, s) => notOnWhatsappSchema.safeParse(s.raw).success },
-  { kind: 'later', test: (f) => LATER.has(f.status) },
-  { kind: 'uncertain', test: (f) => f.status >= 500 },
-  { kind: 'plain', test: () => true },
+/** The first rule that matches adds its fields; the rest keep code null (retried). */
+const RULES: readonly { test: (s: Said) => boolean; info: Info }[] = [
+  // The token refused, or the instance gone / logged out: held like Meta's 190 (rows stay
+  // queued, uncounted), in Evolution's own words (evolution_auth).
+  { test: (s) => s.status === 401 || s.status === 403, info: { credential: 'evolution' } },
+  { test: (s) => s.status === 404 || LINE_DOWN.test(s.words), info: { credential: 'evolution' } },
+  { test: (s) => notOnWhatsapp(s.raw), info: { code: WA_ERROR.undeliverable } },
+  // Meta's own code: the #629 window rules see the window closing (Cloud mode only).
+  { test: (s) => s.status < 500 && WINDOW.test(s.words), info: { code: WA_ERROR.reEngagement } },
+  // A proxy's «try later»: nothing was sent; retried with backoff.
+  { test: (s) => [408, 425, 429].includes(s.status), info: {} },
+  // Baileys may have handed the message to WhatsApp before failing: never resent automatically.
+  { test: (s) => s.status >= 500, info: { uncertain: true } },
+  // Any other 4xx: nothing was sent, a retry fails the same way: fails at once like Meta's #100.
+  { test: () => true, info: { code: WA_ERROR.invalidParameter } },
 ];
 
-type Info = WaError['info'];
-
-/** What each kind adds to the error's info. */
-const INFO: Record<Kind, Partial<Info>> = {
-  // The key or the instance token is refused, or the instance is gone / logged out: held like
-  // Meta's 190 (rows stay queued, uncounted), in Evolution's own words (evolution_auth).
-  auth: { credential: 'evolution' },
-  lineDown: { credential: 'evolution' },
-  notOnWhatsapp: { code: WA_ERROR.undeliverable },
-  // Retried with backoff (code null, docs/12 §3.3).
-  later: {},
-  // Baileys may have handed the message to WhatsApp before failing: never resent automatically.
-  uncertain: { uncertain: true },
-  // Any other 4xx (a bad body, an unknown route): nothing was sent and a retry fails the same way,
-  // so it fails at once like Meta's #100 (never retried).
-  plain: { code: WA_ERROR.invalidParameter },
-};
-
-/** Evolution's non-2xx answer → WaError. Never carries the URL, a header or the body sent. */
-export function evolutionError(f: EvolutionFailure): WaError {
-  const s = said(f.text);
-  const kind = RULES.find((r) => r.test(f, s))?.kind ?? 'plain';
-  const info: Info = { code: null, status: f.status, details: s.words || undefined, ...INFO[kind] };
-  return new WaError(`Evolution HTTP ${f.status}${s.words ? `: ${s.words}` : ''}`, info);
+/** Evolution's non-2xx answer → WaError. Never the URL, a header or the body sent. */
+export function evolutionError(f: HttpFailure): WaError {
+  const s = saidOf(f);
+  const info = RULES.find((r) => r.test(s))?.info ?? {};
+  const message = `Evolution HTTP ${s.status}${s.words ? `: ${s.words}` : ''}`;
+  const details = s.words || undefined;
+  return new WaError(message, { code: null, status: s.status, details, ...info });
 }
 
-/** A 2xx whose body is not what the call expects: it may have been sent (send) or not (read). */
-export function evolutionShapeError(what: string, uncertain: boolean): WaError {
-  return new WaError(`Evolution answered ${what} in an unexpected shape`, {
-    code: null,
-    status: 200,
-    uncertain,
-  });
+/** A 2xx whose body is not what the call expects: a send may have gone out (uncertain). */
+const shape = (uncertain: boolean) => (): WaError =>
+  new WaError('Unexpected Evolution response', { code: null, status: 200, uncertain });
+
+/** The table of every Evolution call; `sent` = a message send (an odd 2xx is uncertain). */
+export function evolutionTable(sent: boolean): ErrorTable<WaError> {
+  return {
+    network: (f) =>
+      new WaError('Evolution request failed', {
+        code: null,
+        status: 0,
+        uncertain: f.kind === 'network' && f.reached,
+      }),
+    timeout: () =>
+      new WaError('Evolution request timed out', { code: null, status: 0, uncertain: true }),
+    shape: shape(sent),
+    default: evolutionError,
+  };
 }

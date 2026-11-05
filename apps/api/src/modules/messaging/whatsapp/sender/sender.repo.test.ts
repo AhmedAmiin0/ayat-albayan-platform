@@ -43,7 +43,7 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
   it('sent: status, wamid, error cleared; stamps the lead and the report it delivered', async () => {
     const row = dueMessage({ lead_id: 'lead-1', dedup_key: 'report_ready:r1' });
     const { db, argsOf, calls } = fakeDb({ [M]: [{ data: [{ id: row.id }] }], leads: [{}], lesson_reports: [{}] });
-    await expect(new SenderRepo(db).sent({ row, waMessageId: 'wamid.1', at: NOW })).resolves.toBe(true);
+    await expect(new SenderRepo(db).sent({ row, sent: { waMessageId: 'wamid.1' }, at: NOW })).resolves.toBe(true);
     expect(argsOf(M, 'update')).toEqual([{
       status: 'sent', sent_at: '2026-10-02T08:00:00.000Z', wa_message_id: 'wamid.1', next_attempt_at: null, error_code: null, error_text: null,
     }]);
@@ -57,7 +57,7 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
   it('sent on a row the admin marked by hand meanwhile → false; their send already stamped the lead', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
     const row = dueMessage({ lead_id: 'lead-1', dedup_key: 'report_ready:r1' });
-    await expect(new SenderRepo(db).sent({ row, waMessageId: 'w', at: NOW })).resolves.toBe(false);
+    await expect(new SenderRepo(db).sent({ row, sent: { waMessageId: 'w' }, at: NOW })).resolves.toBe(false);
     expect(calls.some((c) => c.table !== M)).toBe(false);
   });
 
