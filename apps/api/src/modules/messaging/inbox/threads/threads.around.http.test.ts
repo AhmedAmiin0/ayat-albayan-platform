@@ -53,6 +53,7 @@ describe('GET /threads/:phone?around=', () => {
   it('before + before_id reach the page read (the compound keyset)', async () => {
     const at = '2026-10-02T08:00:00.123456Z';
     await t.call({ method: 'GET', url: `${URL}?before=${encodeURIComponent(at)}&before_id=${HIT}` });
-    expect(t.queries.messages).toHaveBeenCalledWith(expect.objectContaining({ before: at, before_id: HIT }));
+    const read = expect.objectContaining({ before: at, before_id: HIT });
+    expect(t.queries.messages).toHaveBeenCalledWith(read);
   });
 });
