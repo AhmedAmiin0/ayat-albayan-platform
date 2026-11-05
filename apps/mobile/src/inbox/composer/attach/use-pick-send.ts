@@ -19,13 +19,7 @@ export function usePickSend(phone: string, onError: (message: string | null) => 
       const file = await pickChatFile(source, maxBytes);
       if (!file) return;
       const to = reply?.id;
-      await send.mutateAsync({
-        phone,
-        file,
-        id: requestId(),
-        maxBytes,
-        ...(to ? { replyToMessageId: to } : {}),
-      });
+      await send.mutateAsync({ phone, file, id: requestId(), maxBytes, ...(to ? { replyToMessageId: to } : {}) });
       if (to) setReply((now) => (now?.id === to ? null : now));
     } catch (e) {
       onError(fileError(e));
