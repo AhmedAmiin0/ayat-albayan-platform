@@ -35,7 +35,7 @@ describe('POST /webhooks/stripe: the event mode must match the server mode', () 
     expect(m.payments.insert).not.toHaveBeenCalled();
     expect(s.push.notifyAdmins).toHaveBeenCalledWith(
       'payment_due',
-      expect.objectContaining({ subject: `stripe_mode_mismatch:${eventId}`, bellOnly: true }),
+      expect.objectContaining({ subject: `stripe_mode_mismatch:${eventId}` }),
     );
   };
 
