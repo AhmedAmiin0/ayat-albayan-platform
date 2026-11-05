@@ -8,7 +8,7 @@ import { myPayment } from '@/sales-money/testing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { MyPaymentItem } from './MyPaymentItem';
 
-// «تعديل المبلغ» on «مدفوعاتي» with payments.edit_amount (owner 2026-11-02).
+// «تعديل المبلغ» on «مدفوعاتي» with subscriptions.edit_terms (owner 2026-11-02).
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -20,7 +20,7 @@ const e = t.payments.editAmount;
 const LABEL = new RegExp(e.newAmount.split(' (')[0] ?? '');
 const action = () => screen.queryByRole('button', { name: new RegExp(`^${e.action} · `) });
 
-async function show(row: MyPaymentRow, held = ['self.sales_money', 'payments.edit_amount']) {
+async function show(row: MyPaymentRow, held = ['self.sales_money', 'subscriptions.edit_terms']) {
   const client = createTestQueryClient();
   client.setQueryData(pathKey('/auth/me'), { role: 'assistant', permissions: held });
   await renderWithQuery(<MyPaymentItem payment={row} />, client);
@@ -48,7 +48,7 @@ test('with the key: old → new confirm, then PATCH /sales/payments/:id/amount',
   );
 });
 
-test('without payments.edit_amount: no action', async () => {
+test('without subscriptions.edit_terms: no action', async () => {
   await show(myPayment(), ['self.sales_money']);
   expect(action()).toBeNull();
 });

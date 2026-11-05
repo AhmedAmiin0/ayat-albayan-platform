@@ -23,6 +23,7 @@ import { RecordPaymentDialog } from './record/RecordPaymentDialog';
 import { paymentsView, type PaymentsUrlSearch } from './search';
 import { usePaymentFilters } from './use-payment-filters';
 import { HeadActions } from '@/components/ui/layout/head-actions';
+import { usePermissions } from '@/features/people/auth';
 
 /** A filter or sort change goes back to page 1 (the route drops `page: undefined`). */
 type Props = { search: PaymentsUrlSearch; onSearch: (patch: Partial<PaymentsUrlSearch>) => void };
@@ -46,7 +47,11 @@ export function PaymentsPage({ search, onSearch }: Props) {
   const csv = useMutation({
     mutationFn: () => downloadCsv({ kind: 'payments', params: { ...filterParams(filters), ...csvRange(filters) } }),
   });
-  const columns = useMemo(() => paymentColumns({ onAction: (payment, action) => setOpen({ payment, action }) }), [setOpen]);
+  const canWrite = usePermissions().can('payments.write');
+  const columns = useMemo(
+    () => paymentColumns({ onAction: (payment, action) => setOpen({ payment, action }), canWrite }),
+    [setOpen, canWrite],
+  );
   const reset = (patch: Partial<PaymentsUrlSearch>) => onSearch({ ...patch, page: undefined });
   const items = list.data?.items ?? [];
   const extra = usePaymentFilters({ value: filters, studentName: items[0]?.student.name, onChange: reset });

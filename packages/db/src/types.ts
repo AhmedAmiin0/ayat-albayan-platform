@@ -5742,6 +5742,7 @@ export type Database = {
       };
       channel_teacher_ids: { Args: { p_student_id: string }; Returns: string[] };
       assign_student_teacher: { Args: { p_student: string; p_teacher: string; p_actor: string }; Returns: boolean };
+      payment_amount_set: { Args: { p_payment: string; p_amount: number; p_expected: number }; Returns: boolean };
       link_family_phone: { Args: { p_lead: string; p_code: string; p_actor: string }; Returns: boolean };
       remove_family_phone: { Args: { p_guardian: string; p_phone: string; p_actor: string }; Returns: undefined };
       teacher_channel_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };

@@ -24,14 +24,14 @@ export class SubscriptionCreator {
   ) {}
 
   async create(input: SubscriptionCreate, actorId: string, opts: { price?: number } = {}): Promise<SubscriptionView> {
-    const replay = await this.replayOf(input.clientRequestId);
+    const replay = await this.replay(input.clientRequestId);
     if (replay) return replay;
     const quote = await this.quote(input);
     assertUsedBeforeFits(input.lessonsUsedBefore, quote.lessons);
     const row = subscriptionRow(input, quote, actorId);
     const created = await this.service.add(opts.price === undefined ? row : { ...row, price: opts.price }, actorId);
     // Lost the race to a retry of the same form: that one created it.
-    const view = created ?? (await this.replayOf(input.clientRequestId));
+    const view = created ?? (await this.replay(input.clientRequestId));
     if (!view) throw notFound('subscription_not_found');
     return view;
   }
@@ -44,7 +44,8 @@ export class SubscriptionCreator {
     return this.pricing.quote(quoteQueryFor(input.pricing, country));
   }
 
-  private async replayOf(clientRequestId: string | undefined): Promise<SubscriptionView | null> {
+  /** The package a clientRequestId already created, or null (a caller's checks run after it). */
+  async replay(clientRequestId: string | undefined): Promise<SubscriptionView | null> {
     const row = clientRequestId ? await this.subs.byRequest(clientRequestId) : null;
     return row ? this.service.get(row.id) : null;
   }

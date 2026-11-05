@@ -2,6 +2,7 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { PAYMENT_ID, paymentRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { conflict } from '@/common/http/errors';
 
 const URL = `/payments/${PAYMENT_ID}`;
 
@@ -23,6 +24,8 @@ describe('PATCH /payments/:id amount', () => {
   it('a bank transfer: the new amount, audited before → after, then the recompute and the bell', async () => {
     const res = await call({ method: 'PATCH', url: URL, body: { amount: 100 } });
     expect(res.statusCode).toBe(200);
+    // written under the package lock, against the amount read (payment_amount_set)
+    expect(m.payments.setAmount).toHaveBeenCalledWith(PAYMENT_ID, { amount: 100, expected: 145 });
     expect(m.payments.update).toHaveBeenCalledWith(PAYMENT_ID, {
       amount: 100,
       original_amount: null,
@@ -73,6 +76,13 @@ describe('PATCH /payments/:id amount', () => {
     const res = await call({ method: 'PATCH', url: URL, body: { amount: 40 } });
     expect(res.statusCode).toBe(409);
     expect(res.json().code).toBe('refund_exceeds_paid');
+  });
+
+  it('a concurrent edit won (payment_amount_set): 409, nothing audited', async () => {
+    m.payments.setAmount.mockRejectedValue(conflict('payment_amount_changed'));
+    const res = await call({ method: 'PATCH', url: URL, body: { amount: 100 } });
+    expect([res.statusCode, res.json().code]).toEqual([409, 'payment_amount_changed']);
+    expect(m.audit.record).not.toHaveBeenCalled();
   });
 
   it('refuses a zero or 3-decimal amount (400)', async () => {

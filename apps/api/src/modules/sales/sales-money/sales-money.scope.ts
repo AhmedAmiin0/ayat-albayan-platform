@@ -22,6 +22,22 @@ export function assertSalesDiscount(pricing: { discount?: number }): void {
   if (!DISCOUNTS.some((d) => d === discount)) throw forbidden('discount_not_allowed');
 }
 
+/** The deepest pill's price (round(total × 0.85)): the lowest she may set as «مبلغ مخصص». */
+export function salesPriceFloor(total: number): number {
+  return Math.round(total * (1 - Math.max(...DISCOUNTS) / 100));
+}
+
+/**
+ * «مبلغ مخصص» on her path (owner 2026-11-05): the same floor as the pills, or a 1 SAR
+ * package plus her own recorded transfer would earn the commission: 403 discount_not_allowed
+ * with the lowest price. The admin's POST /subscriptions never calls it (unrestricted).
+ */
+export function assertSalesPrice(price: { amount: number; total: number; currency: string }): void {
+  const min = salesPriceFloor(price.total);
+  const details = { min, currency: price.currency };
+  if (price.amount < min) throw forbidden('discount_not_allowed', details);
+}
+
 /** sales.renew_any (owner 2026-10-29/11-01, docs/16 row 38): the renew flow for ANY student, not only hers. */
 export function renewsAny(user: AuthUser): boolean {
   return can(user, 'sales.renew_any');

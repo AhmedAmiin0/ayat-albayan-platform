@@ -9,7 +9,14 @@ import { EditPaymentDialog } from '@/features/finance/payments/record/EditPaymen
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
+const granted = vi.hoisted(() => ({ keys: ['payments.read', 'payments.write'] as string[] }));
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@/features/people/auth/use-permissions', () => ({
+  usePermissions: () => ({
+    permissions: granted.keys,
+    can: (k: string) => granted.keys.includes(k),
+  }),
+}));
 
 const CARD: PaymentView = { ...PAYMENT, id: 'pay-2', method: 'card', receipt_path: null };
 const amountName = `${t.payments.amount} (ر.س)`;
@@ -25,6 +32,7 @@ const actionFor = (row: HTMLElement) =>
 
 describe('«تعديل المبلغ» never for a card payment: its amount is Stripe’s', () => {
   afterEach(() => {
+    granted.keys = ['payments.read', 'payments.write'];
     apiFetch.mockReset();
     apiSend.mockReset();
   });
@@ -35,6 +43,13 @@ describe('«تعديل المبلغ» never for a card payment: its amount is St
     const card = screen.getByText('يوسف').closest('tr');
     expect(bank && actionFor(bank)).toBeTruthy();
     expect(card && actionFor(card)).toBeNull();
+  });
+
+  it('payments.read only: no «تعديل المبلغ» (PATCH /payments/:id needs payments.write)', async () => {
+    granted.keys = ['payments.read'];
+    page([PAYMENT]);
+    const bank = (await screen.findByText('سهيلة')).closest('tr');
+    expect(bank && actionFor(bank)).toBeNull();
   });
 
   it('«تعديل الدفعة» of a card payment: the amount is disabled, said, and never sent', async () => {

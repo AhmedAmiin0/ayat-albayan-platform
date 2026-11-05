@@ -12,12 +12,12 @@ import { PortalList } from '@/features/sales/sales/students/PortalList';
 
 /**
  * «مدفوعاتي» on /sales/earnings: the payments I recorded and no others (the API answers only for
- * me). «تعديل المبلغ» only with payments.edit_amount (owner 2026-11-02).
+ * me). «تعديل المبلغ» only with subscriptions.edit_terms (owner 2026-11-02).
  */
 export function MyPayments() {
   const [open, setOpen] = useState<MyPaymentRow | null>(null);
   const [editing, setEditing] = useState<MyPaymentRow | null>(null);
-  const canEdit = usePermissions().can('payments.edit_amount');
+  const canEdit = usePermissions().can('subscriptions.edit_terms');
   const columns = myPaymentColumns({ onAttachments: setOpen, onEditAmount: canEdit ? setEditing : null });
   return (
     <>

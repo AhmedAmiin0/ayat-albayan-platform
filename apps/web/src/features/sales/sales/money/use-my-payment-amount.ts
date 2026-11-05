@@ -6,7 +6,8 @@ const SALES_MONEY_KEY = ['sales', 'money'] as const;
 const SALES_SUBSCRIPTIONS_KEY = ['sales', 'subscriptions'] as const;
 
 /**
- * «تعديل المبلغ» by the assistant (payments.edit_amount): PATCH /sales/payments/:id/amount, then
+ * «تعديل المبلغ» by the assistant (subscriptions.edit_terms): PATCH
+ * /sales/payments/:id/amount, then
  * «مدفوعاتي» / «محفظتي» (commission), the family's packages owed and her subscriptions refresh.
  */
 export function useMyPaymentAmount(paymentId: string) {
