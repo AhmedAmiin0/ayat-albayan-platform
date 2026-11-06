@@ -5,7 +5,11 @@ import type { CourseRuleRow } from '@/modules/teaching/booking/core/course-read'
 import type { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 import type { SalesCourseRepo } from './sales-course.repo';
 import type { CourseRule } from './sales-course.rules';
+import type { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { SalesCourse } from './sales-course.service';
+
+/** No payment link held and no draft (owner 2026-11-06). */
+const noDrafts = { held: async () => false, get: async () => null };
 
 // A renewal continues the course on the same days (owner 2026-10-18, «تابِع بنفس الأيام»).
 const S1 = 'c0000000-0000-4000-8000-000000000001';
@@ -19,7 +23,7 @@ const OLD: CourseRuleRow[] = [
 ];
 const RULES: CourseRule[] = OLD.map((r) => ({ starts_on: r.starts_on, ends_on: r.ends_on, package: '8' }));
 
-function setup(booked = false) {
+function setup(booked = false, drafts: object = noDrafts) {
   const queries = {
     student: vi.fn().mockResolvedValue(STUDENT),
     subscription: vi.fn().mockResolvedValue(NEW_SUB),
@@ -29,7 +33,8 @@ function setup(booked = false) {
     requested: vi.fn().mockResolvedValue(false),
   };
   const scope = { of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }) };
-  return new SalesCourse(queries as unknown as SalesCourseRepo, scope as unknown as SalesBookingScope);
+  const asScope = scope as unknown as SalesBookingScope;
+  return new SalesCourse(queries as unknown as SalesCourseRepo, asScope, drafts as CourseDraftRepo);
 }
 
 describe('SalesCourse — the renewal of a running course', () => {
@@ -51,6 +56,19 @@ describe('SalesCourse — the renewal of a running course', () => {
       }),
     );
     expect(view.current?.subscriptionId).toBe('sub1');
+  });
+
+  it('view: a renewal held for its payment with saved picks: hold, and those picks prefill (not the old days)', async () => {
+    const request = bookingRequestSchema.parse({
+      kind: 'package', package: '8', studentIds: [S1], teacherId: 'd0000000-0000-4000-8000-000000000001',
+      byday: [1, 3], startTimeLocal: '18:00', tz: 'Asia/Riyadh', durationMin: 45, startsOn: '2026-11-08',
+    });
+    const draft = { subscriptionId: 'sub2', request, savedBy: 'a1', savedAt: '2026-10-18T07:00:00.000Z' };
+    const held = { held: async () => true, get: async () => draft };
+    const view = await setup(false, held).view(S1, USER);
+    expect(view).toMatchObject({ hold: true, draft: { saved_at: draft.savedAt } });
+    const days = [{ weekday: 1 }, { weekday: 3 }];
+    expect(view.previous).toMatchObject({ subscriptionId: 'sub2', startsOn: '2026-11-08', days });
   });
 
   it('view: once the new subscription has its course, no previous (and course_exists)', async () => {

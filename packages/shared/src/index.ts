@@ -39,6 +39,7 @@ export * from './sales/teacher/teacher-overview.js';
 export * from './sales/course/course.js';
 export * from './sales/course/course-follow.js';
 export * from './sales/course/course-change.js';
+export * from './sales/course/course-draft.js';
 export * from './sales/course/course-picks.js';
 export * from './people/users/index.js';
 export * from './people/account/index.js';

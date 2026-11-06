@@ -18,3 +18,4 @@ export {
   uploadSalesReceipt,
 } from './api';
 export { LinkedCourseContext } from './course/linked-course';
+export { LinkedCourseDialog } from './course/LinkedCourseDialog';

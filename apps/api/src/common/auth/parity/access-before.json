@@ -331,6 +331,7 @@
   "SalesCourseController.view": ["sales"],
   "SalesCourseController.check": ["sales"],
   "SalesCourseController.change": ["sales"],
+  "SalesCourseController.draft": ["sales"],
   "TrialDateController.history": ["admin"],
   "TrialDateController.check": ["admin"],
   "TrialDateController.pick": ["admin"],

@@ -5,7 +5,11 @@ import { errorCode } from '@/common/http/errors';
 import type { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 import type { SalesCourseRepo } from './sales-course.repo';
 import type { CourseRule } from './sales-course.rules';
+import type { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { SalesCourse } from './sales-course.service';
+
+/** No payment link held and no draft (owner 2026-11-06). */
+const noDrafts = { held: async () => false, get: async () => null };
 
 const S1 = 'c0000000-0000-4000-8000-000000000001';
 const S2 = 'c0000000-0000-4000-8000-000000000002';
@@ -34,7 +38,7 @@ function setup(sub: CourseSubscription | null = SUB, rules: CourseRule[] = []) {
     requested: vi.fn().mockResolvedValue(false),
   };
   const scope = { of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }) };
-  const course = new SalesCourse(queries as unknown as SalesCourseRepo, scope as unknown as SalesBookingScope);
+  const course = new SalesCourse(queries as unknown as SalesCourseRepo, scope as unknown as SalesBookingScope, noDrafts as unknown as CourseDraftRepo);
   return { queries, scope, course };
 }
 
@@ -47,7 +51,7 @@ describe('SalesCourse.options — the course guard (R-ASST-01, R-ASST-04)', () =
     const course8 = { package: '8', subscriptionId: 'sub1', follows: null };
     expect(await course.options(bookingRequestSchema.parse(BODY))).toEqual({ invoiceWaived: true, endsOn: '2026-11-10', course: course8 });
     expect(queries.subscriptionBooked).toHaveBeenCalledWith('sub1');
-    expect(queries.subscription).toHaveBeenCalledWith(S1);
+    expect(queries.subscription).toHaveBeenCalledWith(S1, undefined);
     expect(queries.rules).toHaveBeenCalledWith(S1);
   });
 
@@ -86,7 +90,7 @@ describe('SalesCourse.view — GET /sales/booking/course', () => {
 
   it('her student: the subscription, 2 days a week, not blocked', async () => {
     const { course } = setup();
-    expect(await course.view(S1, USER)).toEqual({ student: STUDENT, subscription: SUB, perWeek: 2, blocked: null, previous: null, current: null });
+    expect(await course.view(S1, USER)).toEqual({ student: STUDENT, subscription: SUB, perWeek: 2, blocked: null, previous: null, current: null, hold: false, draft: null });
   });
 
   it('a running course blocks (course_exists); no subscription → perWeek null, subscription_required', async () => {

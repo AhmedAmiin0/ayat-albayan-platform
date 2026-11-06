@@ -12719,7 +12719,7 @@
       "count": 9
     },
     "max-len": {
-      "count": 20
+      "count": 19
     }
   },
   "src/modules/teaching/booking/sales/course/sales-course.controller.ts": {
@@ -12743,7 +12743,7 @@
   },
   "src/modules/teaching/booking/sales/course/sales-course.previous.test.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/booking/sales/course/sales-course.repo.ts": {

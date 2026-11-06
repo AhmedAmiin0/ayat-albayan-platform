@@ -15,6 +15,7 @@ export function mocks() {
     commissionBell: { notify: vi.fn() }, // «عمولة جديدة» after every money write
     received: { adminIds: vi.fn(), ownerIds: vi.fn() }, // «تم استلام دفعة»: who is told
     courseDue: { unbooked: vi.fn(), overdue: vi.fn() }, // «احجز أيام الحلقات» (owner 2026-11-06)
+    drafts: { get: vi.fn(), held: vi.fn() }, // course drafts: none unless a test sets one
     statuses: { student: vi.fn(), lastStatusChange: vi.fn(), hasPositivePayment: vi.fn(), move: vi.fn() },
     trials: { studentsOfTrialLessons: vi.fn(), lessonsOf: vi.fn() },
     balances: { forSubscriptions: vi.fn(), forStudents: vi.fn() },
@@ -73,6 +74,8 @@ export function resetMocks(m: Mocks): void {
   m.received.ownerIds.mockResolvedValue([]);
   m.courseDue.unbooked.mockResolvedValue(null);
   m.courseDue.overdue.mockResolvedValue([]);
+  m.drafts.get.mockResolvedValue(null);
+  m.drafts.held.mockResolvedValue(false);
   m.subs.forStudents.mockResolvedValue([]);
   m.family.linkPackages.mockResolvedValue([]);
   m.subs.paid.mockResolvedValue(new Map());

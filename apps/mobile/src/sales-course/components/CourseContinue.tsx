@@ -26,6 +26,8 @@ interface CourseContinueProps {
   onSame: () => void;
   /** «اختر أيامًا أخرى»: the teacher, then the days, empty, as for a first course. */
   onOther: () => void;
+  /** `previous` is the draft saved before the payment (view.draft): its own line and «عدّل». */
+  saved?: boolean | undefined;
   /** «سجّل التحويل البنكي»: the days later, the transfer now (from «احفظ الاشتراك»). */
   transfer?: (() => void) | undefined;
 }
@@ -38,13 +40,15 @@ export function CourseContinue(props: CourseContinueProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const viewer = { tz, cycle };
-  const { previous, opensOn, teacher, adjustTo, onSame, onOther, transfer } = props;
+  const { previous, opensOn, teacher, adjustTo, onSame, onOther, transfer, saved } = props;
   const { color } = useTheme();
   const texts = t.booking.courseChange;
   const days = daysText(previous.days, previous.tz, viewer);
+  const line = saved ? texts.draftHint : texts.continueHint;
+  const same = saved ? texts.draftEdit : texts.continueSameDays;
   const hint =
     adjustTo === null
-      ? texts.continueHint.replace('{days}', days).replace('{date}', localDay(opensOn))
+      ? line.replace('{days}', days).replace('{date}', localDay(opensOn))
       : counted(texts.continueAdjust, adjustTo).replace('{days}', days);
   const text = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   return (
@@ -58,7 +62,7 @@ export function CourseContinue(props: CourseContinueProps) {
       ) : null}
       {teacher.failed ? <ErrorState message={t.common.error} onRetry={teacher.refetch} /> : null}
       <Button
-        label={adjustTo === null ? texts.continueSameDays : texts.adjustDays}
+        label={adjustTo === null ? same : texts.adjustDays}
         busy={teacher.pending}
         disabled={!teacher.bookable}
         onPress={onSame}
