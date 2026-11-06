@@ -47,6 +47,8 @@ export const WINDOW_CLOSED = 'window_closed';
 export const REOPEN_UNAVAILABLE = 'reopen_unavailable';
 /** A held text whose reopen template failed or expired unsent: failed, so staff can resend it. */
 export const REOPEN_FAILED = 'reopen_failed';
+/** Today's reopen template tries are all used: the text fails, staff may send it again tomorrow. */
+export const REOPEN_TRIES_USED = 'reopen_tries_used';
 /** How long a held text waits for the family's reply. */
 export const HOLD_DAYS = 7;
 
@@ -54,3 +56,28 @@ export const HOLD_DAYS = 7;
 export function isAwaitingReply(m: { status: string; error_code: string | null }): boolean {
   return m.status === 'queued' && m.error_code === AWAITING_REPLY;
 }
+
+// Owner 2026-11-06 («give him a choice»): `chat_reopen_template` holds a starter template's key, or
+// REOPEN_NO_TEMPLATE («بدون قالب»): then no template is sent, Kapso's conversation is reopened and
+// the text waits for the family's next message (7 days at most), as a held text does.
+
+/** The `chat_reopen_template` value of «بدون قالب: انتظار رد العائلة». */
+export const REOPEN_NO_TEMPLATE = 'none';
+
+/** What asks the family to reply after the window: a starter template, or nothing (wait). */
+export type ReopenChoice = 'template' | 'wait';
+
+/** The admin's choice from the stored setting (any other value is a template key). */
+export function reopenChoiceOf(setting: string): ReopenChoice {
+  return setting.trim().toLowerCase() === REOPEN_NO_TEMPLATE ? 'wait' : 'template';
+}
+
+/** The failed codes of a held text a staff retry holds again with a fresh 7 days. */
+const HOLD_FAILURES: ReadonlySet<string> = new Set([
+  REOPEN_FAILED,
+  REOPEN_UNAVAILABLE,
+  REOPEN_TRIES_USED,
+]);
+
+export const isHoldFailure = (code: string | null | undefined): boolean =>
+  HOLD_FAILURES.has(code ?? '');

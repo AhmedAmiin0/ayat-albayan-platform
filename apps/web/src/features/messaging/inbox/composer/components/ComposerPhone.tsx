@@ -1,3 +1,4 @@
+import { afterWindowNote } from '@ab/client-core';
 import type { ChatFileProblem, ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { Icon } from '@/components/ui/display/icon';
@@ -66,7 +67,8 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
   const open = thread.session_open;
   const until = open && thread.last_inbound_at ? sessionUntil(thread.last_inbound_at, clock) : null;
   const shut = open || noneAllowed ? null : t.inbox.sessionClosed;
-  const closedNote = input.trying ? t.inbox.tryAfterWindow : shut;
+  // Owner 2026-11-06: the note says what happens (the welcome template, or reopen and wait).
+  const closedNote = input.trying ? t.inbox[afterWindowNote(thread.reopen_choice)] : shut;
   const replyFrom = mode === 'text' ? replyFromText(thread) : null;
   return [closedNote, gateNote, replyFrom, until].filter((n): n is string => !!n);
 }

@@ -6,6 +6,7 @@ import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due'
 import { toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { KapsoHold } from './kapso-hold';
 import type { ReopenRow } from './reopen-state';
 import { ReopenRequest } from './reopen-request';
 import { WindowHold } from './window-hold';
@@ -51,6 +52,7 @@ export function windowFakes() {
     reopens: vi.fn(async (): Promise<ReopenRow[]> => []),
     queueReopen: vi.fn(async () => undefined),
     hold: vi.fn(async () => true),
+    note: vi.fn(async () => undefined),
     fail: vi.fn(async () => undefined),
     waiting: vi.fn(async () => []),
     lastChatInbound: vi.fn(async () => new Map<string, string>()),
@@ -74,7 +76,9 @@ export function windowFakes() {
     release,
     dispatch as unknown as MessageDispatch,
   );
-  return { repo, approved, settings, dispatch, hold, request, release };
+  const kapso = { reopen: vi.fn(async (): Promise<string | null> => null) };
+  hold.kapso = kapso as unknown as KapsoHold;
+  return { repo, approved, settings, dispatch, hold, request, release, kapso };
 }
 
 /** A reopen template row of PHONE (today, 2026-11-03 in Riyadh), as WindowRepo.reopens reads it. */
