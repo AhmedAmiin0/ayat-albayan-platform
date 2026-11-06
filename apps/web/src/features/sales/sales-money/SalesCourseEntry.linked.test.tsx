@@ -11,13 +11,28 @@ import { student } from './sales-money-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => false }) }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@/features/people/auth/use-permissions', () => ({
+  usePermissions: () => ({ permissions: [], can: () => false }),
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
-const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
+const FAMILY = {
+  guardian_id: 'g-1',
+  lead_id: null,
+  lead_status: null,
+  guardian_name: 'أم سهيلة',
+} as const;
 const BLOCKED = { ...COURSE_VIEW, blocked: 'course_exists' as const };
 
-const NO_CHAT = { thread: null, messages: [], has_more: false, lessons: [], people: { guardian: null, lead: null, students: [] } };
+const NO_CHAT = {
+  thread: null,
+  messages: [],
+  has_more: false,
+  lessons: [],
+  people: { guardian: null, lead: null, students: [] },
+};
 
 function openChat(linked: string | null, chat: object = detail([], FAMILY)) {
   routeFetch(apiFetch, [

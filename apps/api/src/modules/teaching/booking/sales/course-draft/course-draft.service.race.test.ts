@@ -36,8 +36,26 @@ describe('CourseDrafts — races with the payment', () => {
     const t = setup({ held: [true, true] });
     await t.drafts.save(REQ, USER);
     t.env.booking.book.mockRejectedValueOnce(domainError(HttpStatus.CONFLICT, 'course_exists'));
+    t.env.course.isBooked.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
     expect(await t.drafts.confirm(SUB)).toBe('booked');
     expect(t.env.due.clash).not.toHaveBeenCalled();
+    expect(t.rows.size).toBe(0);
+  });
+
+  it('an overlap with another course (course_exists, package unbooked): a clash, the draft kept', async () => {
+    const t = setup({ held: [true, true] });
+    await t.drafts.save(REQ, USER);
+    t.env.course.options.mockRejectedValueOnce(domainError(HttpStatus.CONFLICT, 'course_exists'));
+    expect(await t.drafts.confirm(SUB)).toBe('clash');
+    expect(t.env.due.clash).toHaveBeenCalledWith(SUB, expect.objectContaining({ reason: 'clash' }));
+    expect(t.rows.size).toBe(1);
+  });
+
+  it('saved while paid, another version booked first: the 409 comes back and the stale row goes', async () => {
+    const t = setup({ held: [true, false] });
+    t.env.course.options.mockRejectedValueOnce(domainError(HttpStatus.CONFLICT, 'course_exists'));
+    t.env.course.isBooked.mockResolvedValueOnce(true);
+    await expect(t.drafts.save(REQ, USER)).rejects.toThrow();
     expect(t.rows.size).toBe(0);
   });
 

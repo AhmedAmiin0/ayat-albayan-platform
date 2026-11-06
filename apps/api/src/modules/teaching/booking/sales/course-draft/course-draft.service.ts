@@ -1,6 +1,5 @@
 import type { BookingRequest, BookingResult, CourseDraftSaved } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable, Logger, type OnModuleInit } from '@nestjs/common';
-import { z } from 'zod';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { PackageEvents } from '@/common/infra/events/lesson-events';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
@@ -10,11 +9,6 @@ import { confirmRequest, type CourseDraft } from './course-draft.rules';
 
 /** A confirm: nothing to book, still unpaid, booked (now or before), or a clash kept the draft. */
 type ConfirmOutcome = 'none' | 'held' | 'booked' | 'clash' | 'failed';
-
-/** create_booking's refusal: the package got its course meanwhile (migration 20261106000201). */
-const courseExists = z.object({ code: z.literal('course_exists') });
-const isCourseExists = (e: unknown): boolean =>
-  e instanceof HttpException && courseExists.safeParse(e.getResponse()).success;
 
 /**
  * «اختر أيام الحلقات» before the payment (owner 2026-11-06). While the package is unpaid with an
@@ -66,13 +60,19 @@ export class CourseDrafts implements OnModuleInit {
 
   /**
    * The payment landed while saving: the saved row (re-read; ours when the payment's confirm took
-   * it already) is booked with the draft key, so it replays whatever that confirm booked.
+   * it already) is booked with the draft key, so it replays whatever that confirm booked. Refused
+   * (another version won the race): the row goes once the package has its course, then rethrown.
    */
   private async bookSaved(mine: CourseDraft): Promise<CourseDraftSaved> {
     const draft = (await this.repo.get(mine.subscriptionId)) ?? mine;
-    const booking = await this.bookDraft(draft, new Date());
-    await this.repo.remove(draft);
-    return { state: 'booked', booking };
+    try {
+      const booking = await this.bookDraft(draft, new Date());
+      await this.repo.remove(draft);
+      return { state: 'booked', booking };
+    } catch (e) {
+      if (await this.env.course.isBooked(draft.subscriptionId)) await this.repo.remove(draft);
+      throw e;
+    }
   }
 
   /** Books the package's draft once it is active; idempotent; a miss tells the staff. */
@@ -106,13 +106,15 @@ export class CourseDrafts implements OnModuleInit {
   }
 
   /**
-   * Not booked. Booked meanwhile («احجز», a redelivered event, course_exists): done, no alert.
+   * Not booked. Booked meanwhile («احجز», a redelivered event; create_booking's course_exists
+   * leaves a rule of this package, so isBooked): done, no alert. An overlap with another course
+   * (SalesCourse's course_exists) is a clash: the draft stays.
    * Else the draft stays (the prefill) and the assistant and admins are told: a refusal she can act
    * on (409 conflict, 400 date…) is a clash; anything else a failure (logged).
    */
   private async missed(draft: CourseDraft, e: unknown): Promise<ConfirmOutcome> {
     const id = draft.subscriptionId;
-    if (isCourseExists(e) || (await this.env.course.isBooked(id))) return this.done(draft);
+    if (await this.env.course.isBooked(id)) return this.done(draft);
     const reason = e instanceof HttpException && e.getStatus() < 500 ? 'clash' : 'failed';
     this.log.warn(`course draft ${id} ${reason}: ${String(e)}`);
     await this.env.due.clash(id, { savedBy: draft.savedBy, savedAt: draft.savedAt, reason });

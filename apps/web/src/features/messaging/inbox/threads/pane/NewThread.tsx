@@ -2,7 +2,10 @@ import { formatPhone, type ThreadLesson } from '@ab/shared';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
-import { noneAllowedText, useNoneAllowed } from '@/features/messaging/inbox/composer/lib/allowed-templates';
+import {
+  noneAllowedText,
+  useNoneAllowed,
+} from '@/features/messaging/inbox/composer/lib/allowed-templates';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { TemplateComposer } from '@/features/messaging/inbox/composer/components/TemplateComposer';
 import { LinkedCourseDialog } from '@/features/sales/sales-money';
@@ -27,8 +30,20 @@ export function NewThread({ phone, lessons }: { phone: string; lessons: readonly
       <h2 className="text-lg font-semibold">
         {writes ? <Ltr>{formatPhone(phone)}</Ltr> : t.inbox.newChat.title}
       </h2>
-      <EmptyState title={t.inbox.noThread}>{noneAllowed ? noneAllowedText(noneAllowed, t.inbox.newChat.noAllowed) : composes ? t.inbox.newChat.firstTemplate : null}</EmptyState>
-      {composes && <TemplateComposer phone={phone} context={{ studentName: null, teacherName: null, lessons }} teacher={false} />}
+      <EmptyState title={t.inbox.noThread}>
+        {noneAllowed
+          ? noneAllowedText(noneAllowed, t.inbox.newChat.noAllowed)
+          : composes
+            ? t.inbox.newChat.firstTemplate
+            : null}
+      </EmptyState>
+      {composes && (
+        <TemplateComposer
+          phone={phone}
+          context={{ studentName: null, teacherName: null, lessons }}
+          teacher={false}
+        />
+      )}
       {mode === 'sales' && <LinkedCourseDialog />}
     </section>
   );
