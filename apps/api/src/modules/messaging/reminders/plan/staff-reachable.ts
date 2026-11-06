@@ -16,7 +16,12 @@ export function staffReachable(teacher: StaffOnRecord): boolean {
 }
 
 /** The staff WhatsApp alerts: queued to a teacher's number, checked again when sent (send-stale). */
-export const STAFF_ALERT_KEYS: readonly string[] = ['teacher_new_student', 'teacher_lesson_reminder', 'teacher_lesson_reminder_meet'];
+export const STAFF_ALERT_KEYS: readonly string[] = [
+  'teacher_new_student',
+  'teacher_lesson_reminder',
+  'teacher_lesson_reminder_meet',
+  'teacher_lesson_v3',
+];
 
 export function isStaffAlert(templateKey: string | null): boolean {
   return templateKey !== null && STAFF_ALERT_KEYS.includes(templateKey);

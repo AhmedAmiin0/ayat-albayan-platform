@@ -47,15 +47,30 @@ interface ButtonValue {
 /** The buttons that need a value at send time (a fixed link and an unset payload need none). */
 export function buttonValues(input: TemplateSend): ButtonValue[] {
   const payloads = input.payloads ?? input.params.payloads ?? [];
-  return templateButtons(input.template.buttons).flatMap((b, index): ButtonValue[] => {
-    if (b.type === 'url') {
-      if (!b.url.includes('{{1}}')) return [];
-      if (!input.params.button) throw badParams(`${input.template.key}: the link button has no value`);
-      return [{ index, kind: 'url', value: input.params.button }];
-    }
+  const buttons = templateButtons(input.template.buttons);
+  return buttons.flatMap((b, index): ButtonValue[] => {
+    const nth = urlOrder(buttons, index);
+    if (b.type === 'url') return urlValue(input, { url: b.url, index, nth });
     const payload = payloads[index];
     return payload ? [{ index, kind: 'quick_reply', value: payload }] : [];
   });
+}
+
+/** How many URL buttons come before this one: its place in params.buttons. */
+const urlOrder = (buttons: readonly { type: string }[], index: number): number =>
+  buttons.slice(0, index).filter((b) => b.type === 'url').length;
+
+/** A URL button's suffix: params.buttons by URL order, else the one params.button. */
+interface UrlAt {
+  url: string;
+  index: number;
+  nth: number;
+}
+function urlValue(input: TemplateSend, b: UrlAt): ButtonValue[] {
+  if (!b.url.includes('{{1}}')) return [];
+  const value = input.params.buttons?.[b.nth] ?? input.params.button;
+  if (!value) throw badParams(`${input.template.key}: the link button has no value`);
+  return [{ index: b.index, kind: 'url', value }];
 }
 
 /** Meta's recipient envelope of every message (template, text, file, reaction). */
@@ -113,7 +128,7 @@ export function submitPayload(row: TemplateRow, headerHandle?: string): GraphBod
   if (row.footer_ar) components.push({ type: 'FOOTER', text: row.footer_ar });
   const buttons = templateButtons(row.buttons).map((b) =>
     b.type === 'url'
-      ? { type: 'URL', text: b.text ?? '', url: b.url, ...(b.url.includes('{{1}}') ? { example: [b.url.replace('{{1}}', 'sample')] } : {}) }
+      ? { type: 'URL', text: b.text ?? '', url: b.url, ...(b.url.includes('{{1}}') ? { example: [b.url.replace('{{1}}', b.example ?? 'sample')] } : {}) }
       : { type: 'QUICK_REPLY', text: b.text },
   );
   if (buttons.length) components.push({ type: 'BUTTONS', buttons });

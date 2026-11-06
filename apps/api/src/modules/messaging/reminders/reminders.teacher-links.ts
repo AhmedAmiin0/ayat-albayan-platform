@@ -1,59 +1,49 @@
-import { roomClosesAt, type JoinWindowConfig } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { TeacherReportLinks } from '@/modules/reporting/reports';
-import { classroomUrl } from './plan/reminders.links';
+import { TeacherLessonLinks } from '@/modules/teaching/lesson-links';
 import { isOpen, type ReminderLesson } from './plan/reminders.plan';
 import { teacherReminderDue, type TeacherTiming } from './plan/teacher-due';
 import type { TeacherLinks } from './plan/teacher-lesson.crm';
-
-/** When the teacher reminders are due, and what our classroom page and its room window are. */
-interface LinksAt extends TeacherTiming {
-  origin: string;
-  win: JoinWindowConfig;
-}
+import type { RemindersRepo } from './reminders.repo';
 
 /**
- * The teacher reminder's short links (owner 2026-11-05, docs/19), made only for the lessons whose
- * teacher reminder is due this tick: the no-login report link, and our classroom page when that is
- * the
- * lesson's link (a Meet or fixed link is sent as it is). Idempotent per lesson. A failure leaves
- * that
- * lesson's long links (logged): a reminder is never held back by a short link.
+ * The teacher reminder's signed links (owner 2026-11-06: no short links any more), made only for
+ * the lessons whose teacher reminder is due this tick: the /join token and the no-login report
+ * token and page. Stateless (nothing is written). A failure leaves that lesson without them
+ * (logged): the reminder then goes as the older template with the signed-in report page.
  */
 @Injectable()
 export class ReminderTeacherLinks {
   private readonly log = new Logger(ReminderTeacherLinks.name);
 
-  constructor(private readonly links: TeacherReportLinks) {}
+  constructor(private readonly links: TeacherLessonLinks) {}
 
-  /** `lessons` as sentLinks gives them: meeting_link = our classroom, a fixed link or null. */
-  async build(lessons: readonly ReminderLesson[], at: LinksAt): Promise<Map<string, TeacherLinks>> {
+  async build(
+    lessons: readonly ReminderLesson[],
+    at: TeacherTiming,
+  ): Promise<Map<string, TeacherLinks>> {
     const due = lessons.filter((l) => isOpen(l.status) && teacherReminderDue(l, at));
-    const pairs = await Promise.all(due.map(async (l) => [l.id, await this.one(l, at)] as const));
-    return new Map(pairs);
+    const pairs = await Promise.all(due.map(async (l) => [l.id, await this.one(l)] as const));
+    return new Map(pairs.flatMap(([id, links]) => (links ? [[id, links] as const] : [])));
   }
 
-  private async one(lesson: ReminderLesson, ctx: LinksAt): Promise<TeacherLinks> {
+  private async one(lesson: ReminderLesson): Promise<TeacherLinks | null> {
+    const teacherId = lesson.teacher?.id;
+    if (!teacherId) return null;
     try {
-      const [report, join] = await Promise.all([this.report(lesson), this.room(lesson, ctx)]);
-      return { ...(report ? { report } : {}), ...(join ? { join } : {}) };
+      return await this.links.forLesson({ id: lesson.id, teacherId, ends_at: lesson.ends_at });
     } catch (e) {
       const why = e instanceof Error ? e.message : String(e);
-      this.log.warn(`teacher reminder short links failed for lesson ${lesson.id}: ${why}`);
-      return {};
+      this.log.warn(`teacher reminder links failed for lesson ${lesson.id}: ${why}`);
+      return null;
     }
   }
+}
 
-  private report(lesson: ReminderLesson): Promise<string | null> {
-    const teacherId = lesson.teacher?.id ?? '';
-    return this.links.forLesson({ id: lesson.id, teacherId, ends_at: lesson.ends_at });
-  }
-
-  /** Our classroom page only (a Meet or fixed link is sent as it is); null otherwise. */
-  private async room(lesson: ReminderLesson, ctx: LinksAt): Promise<string | null> {
-    const url = classroomUrl(ctx.origin, lesson.id);
-    if (lesson.meeting_link !== url) return null;
-    const expiresAt = new Date(roomClosesAt(lesson, ctx.win));
-    return this.links.classroom({ lessonId: lesson.id, url, expiresAt });
-  }
+/** teacher_lesson_v3 approved: read only when a teacher reminder with its links is due. */
+export async function v3Approved(
+  repo: Pick<RemindersRepo, 'approved'>,
+  links: ReadonlyMap<string, unknown> | undefined,
+): Promise<boolean> {
+  const due = (links?.size ?? 0) > 0;
+  return due && (await repo.approved(['teacher_lesson_v3'])).has('teacher_lesson_v3');
 }
