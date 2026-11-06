@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 type RingKey = FamilyRing | 'none';
 
-/** Green (`ok`) while subscribed, the gray input rule when a renewal is due; none: a clear frame. */
+/** Green (`ok`) while subscribed, the gray input rule when a renewal is due; none: clear. */
 const BORDER: Record<RingKey, string> = {
   subscribed: 'border-ok',
   renewal: 'border-rule-input',

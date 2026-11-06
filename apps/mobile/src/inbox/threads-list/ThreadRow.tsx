@@ -7,7 +7,7 @@ import { ltr } from '@/core/ui/primitives/Ltr';
 import { kindLabel } from '@/inbox/shared/format';
 import { useComposerDraft } from '@/inbox/composer/draft-store';
 import { ThreadTime, TurnBadge } from './ThreadTrailing';
-import { AvatarRing, ChatRow, ThreadPreview } from './row';
+import { AvatarRing, ChatRow, ThreadPreview, ringHint } from './row';
 import { threadLink, type ThreadMode } from '@/inbox/thread/hooks/thread-mode';
 
 interface ThreadRowProps {
@@ -22,10 +22,10 @@ interface ThreadRowProps {
 
 /**
  * One chat in «المحادثات», two lines like WhatsApp (owner 2026-11-06: no tags): the name (the
- * LTR-isolated phone without one) and time, then the preview and badge; the family's state is the
- * avatar's ring (ThreadView.ring: green subscribed, gray renewal due). Memo (the draft store redraws
- * only the row whose draft changed): a poll that changes one thread hands the others the same object
- * (TanStack's structural sharing), so only that row redraws.
+ * LTR-isolated phone without one) and time, then the preview and badge; the family's state is
+ * the avatar's ring (ThreadView.ring: green subscribed, gray renewal due), read as the hint.
+ * Memo (the draft store redraws only the row whose draft changed): a poll that changes one
+ * thread hands the others the same object (structural sharing), so only that row redraws.
  */
 const ThreadRow = memo(function ThreadRow({ thread: th, teacher, onOpen, now }: ThreadRowProps) {
   const draft = useComposerDraft(th.phone_e164);
@@ -43,6 +43,7 @@ const ThreadRow = memo(function ThreadRow({ thread: th, teacher, onOpen, now }: 
       time={<ThreadTime thread={th} now={now} />}
       preview={<ThreadPreview thread={th} draft={draft} />}
       badge={<TurnBadge thread={th} />}
+      hint={ringHint(th.ring)}
       onPress={open}
     />
   );

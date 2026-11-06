@@ -117,13 +117,13 @@ function shownReplyLine(row: ThreadRow, at: { chatConfigured: boolean; now: Date
 const NO_TAG: FamilyTag = { badge: 'none', unpaid: false, ring: null };
 
 /** A guardian's tags («مش مشترك» without students); none for a lead, a teacher or a stranger. */
-function familyFields(tag: FamilyTag | null): Pick<ThreadView, 'subscribed' | 'badge' | 'unpaid' | 'ring'> {
-  return {
-    subscribed: tag?.badge === 'subscribed',
-    badge: tag?.badge ?? null,
-    unpaid: tag?.unpaid ?? false,
-    ring: tag?.ring ?? null,
-  };
+type FamilyFields = Pick<ThreadView, 'subscribed' | 'badge' | 'unpaid' | 'ring'>;
+const NO_FAMILY: FamilyFields = { subscribed: false, badge: null, unpaid: false, ring: null };
+
+function familyFields(tag: FamilyTag | null): FamilyFields {
+  if (!tag) return NO_FAMILY;
+  const { badge, unpaid } = tag;
+  return { subscribed: badge === 'subscribed', badge, unpaid, ring: tag.ring ?? null };
 }
 
 /** H1 search: a phone in any format → its digits; else the display name. */

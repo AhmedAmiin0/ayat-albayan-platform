@@ -39,7 +39,9 @@ export class SalesThreadsService {
     ]);
     const guardians = rows.flatMap((r) => (r.guardian_id ? [r.guardian_id] : []));
     const [items, tags, reopenUsable] = await Promise.all([
-      this.queries.unsupported(rows), this.queries.familyTags(guardians, threshold), this.reopenUsable(),
+      this.queries.unsupported(rows),
+      this.queries.familyTags(guardians, threshold),
+      this.reopenUsable(),
     ]);
     const tagOf = (r: ThreadRow) => (r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null);
     const view = (r: ThreadRow) => forSales(toThreadView(r, now, { tag: tagOf(r), reopenUsable }));

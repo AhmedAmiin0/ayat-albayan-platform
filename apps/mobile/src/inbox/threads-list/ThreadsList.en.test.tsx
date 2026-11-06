@@ -29,7 +29,8 @@ const teacher: ThreadView = {
 test('an LTR run: no tags on the rows, the unread count and the ring in en.json words', async () => {
   const lead: ThreadView = { ...thread, lead_status: 'interested_no_slot', unread_count: 1 };
   const parent: ThreadView = { ...teacher, display_name: 'Umm Ali', teacher_id: null, ring: 'renewal' };
-  mockApiFetch.mockResolvedValue({ items: [lead, teacher, parent], total: 3, page: 1, pageSize: 25 });
+  const items = [lead, teacher, parent];
+  mockApiFetch.mockResolvedValue({ items, total: 3, page: 1, pageSize: 25 });
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('هدى سالم');
 
@@ -38,7 +39,7 @@ test('an LTR run: no tags on the rows, the unread count and the ring in en.json 
   expect(row.queryByText(en.enums.leadSource.facebook_ad)).toBeNull();
   expect(row.getByLabelText(en.inbox.unread.one)).toBeTruthy();
   expect(screen.queryByText(en.inbox.kind.teacher)).toBeNull();
-  expect(screen.getByLabelText(en.inbox.ring.renewal)).toBeTruthy();
+  expect(screen.getByRole('button', { name: /Umm Ali/ }).props.accessibilityHint).toBe(en.inbox.ring.renewal);
 });
 
 test('an LTR run: the compact top reads «Chats» on one line, a pill search, one row All · Unread', async () => {

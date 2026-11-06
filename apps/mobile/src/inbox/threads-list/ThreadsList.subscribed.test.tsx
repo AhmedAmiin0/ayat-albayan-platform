@@ -23,12 +23,10 @@ const family = (phone: string, name: string, ring: ThreadView['ring']): ThreadVi
   ring,
 });
 
-const ringOf = (name: string) => {
-  const row = within(screen.getByRole('button', { name: new RegExp(name) }));
-  return row.getByTestId(/^avatar-ring-/);
-};
+const rowOf = (name: string) => screen.getByRole('button', { name: new RegExp(name) });
+const ringOf = (name: string) => within(rowOf(name)).getByTestId(/^avatar-ring-/);
 
-test('the avatar ring: green subscribed, gray renewal, none for the rest; read aloud', async () => {
+test('the avatar ring: green subscribed, gray renewal, none for the rest; read as the hint', async () => {
   const items = [
     family('+966552147731', 'أم يوسف', 'subscribed'),
     family('+966552147732', 'أم ليان', 'renewal'),
@@ -41,15 +39,15 @@ test('the avatar ring: green subscribed, gray renewal, none for the rest; read a
   const green = ringOf('أم يوسف');
   expect(green.props.testID).toBe('avatar-ring-subscribed');
   expect(green.props.style).toMatchObject({ borderWidth: 2, padding: 2, borderColor: palette.light.ok });
-  expect(green.props.accessibilityLabel).toBe(t.inbox.ring.subscribed);
+  expect(rowOf('أم يوسف').props.accessibilityHint).toBe(t.inbox.ring.subscribed);
 
   const gray = ringOf('أم ليان');
   expect(gray.props.testID).toBe('avatar-ring-renewal');
   expect(gray.props.style).toMatchObject({ borderColor: palette.light.ruleInput });
-  expect(gray.props.accessibilityLabel).toBe(t.inbox.ring.renewal);
+  expect(rowOf('أم ليان').props.accessibilityHint).toBe(t.inbox.ring.renewal);
 
   const none = ringOf('هدى سالم');
   expect(none.props.testID).toBe('avatar-ring-none');
   expect(none.props.style).toMatchObject({ borderColor: 'transparent' });
-  expect(none.props.accessibilityLabel).toBeUndefined();
+  expect(rowOf('هدى سالم').props.accessibilityHint).toBeUndefined();
 });
