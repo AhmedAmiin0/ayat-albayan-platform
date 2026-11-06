@@ -2,7 +2,8 @@ import type { ThreadView } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { delivered, detail, inbound, listCache, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
-import { refreshInbox, threadListKey, useInboxRead } from './inbox-sync';
+import { missedChange } from '@/inbox/thread/live';
+import { refreshInbox, refreshLists, threadListKey, useInboxRead } from './inbox-sync';
 import type { ThreadListCache } from './thread-list-cache';
 import { useSendMessage, useThread } from './use-thread';
 
@@ -85,4 +86,21 @@ test('a saved copy shown before the API answers reads nothing', async () => {
   client.setQueryData(ALL, listCache([{ ...thread, unread_count: 2 }]));
   await renderHook(() => useOpenChat(PHONE), { wrapper: queryWrapper(client) });
   expect(top(client, ALL)?.unread_count).toBe(2);
+});
+
+test('a send and an opened chat keep the lists\' read time (the mark survives)', async () => {
+  mockApiFetch.mockResolvedValue(detail([inbound, delivered]));
+  mockApiSend.mockReturnValue(new Promise(() => undefined));
+  const client = createTestQueryClient();
+  client.setQueryData(ALL, listCache([other, { ...thread, unread_count: 2 }]), { updatedAt: 1000 });
+  refreshLists(client); // an earlier change while the list is hidden (a send's settle, an event)
+  const wrapper = queryWrapper(client);
+  await renderHook(() => useOpenChat(PHONE), { wrapper });
+  const unread = () => client.getQueryData<ThreadListCache>(ALL)?.pages[0]?.items[1]?.unread_count;
+  await waitFor(() => expect(unread()).toBe(0));
+  const send = await renderHook(() => useSendMessage(PHONE), { wrapper });
+  await act(async () => send.result.current.mutate({ id: 'p2', out: { kind: 'text', text: 'تم' } }));
+  await waitFor(() => expect(top(client, ALL)).toMatchObject({ phone_e164: PHONE, last_body: 'تم' }));
+  expect(client.getQueryState(ALL)?.dataUpdatedAt).toBe(1000);
+  expect(missedChange(client, ALL)).toBe(true); // back on screen it still reads again
 });

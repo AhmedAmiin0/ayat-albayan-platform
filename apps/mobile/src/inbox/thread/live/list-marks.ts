@@ -10,6 +10,7 @@ import { hashKey, type QueryClient, type QueryKey } from '@tanstack/react-query'
 const LISTS = ['threads', 'list'];
 const shown = new Map<string, { key: QueryKey; count: number }>();
 const following = new Set<string>();
+const pending = new Set<string>();
 let markedAt = 0;
 
 /** This list is on screen until the release (useListCatchUp). */
@@ -32,18 +33,23 @@ const fetching = (client: QueryClient, queryKey: QueryKey) =>
   client.getQueryState(queryKey)?.fetchStatus === 'fetching';
 
 /**
- * Re-reads one list without starving it: a read in flight is joined, then one more read follows it
- * (calls meanwhile are folded into that one); with nothing in flight, one read.
+ * Re-reads one list without starving it: a read in flight is joined, then one more read follows it;
+ * with nothing in flight, one read, followed by one more only when a change came during it. Calls
+ * meanwhile are folded into that one follow-up.
  */
 export async function rereadList(client: QueryClient, queryKey: QueryKey): Promise<void> {
   const hash = hashKey(queryKey);
-  if (following.has(hash)) return;
+  if (following.has(hash)) {
+    pending.add(hash); // a change during the read: it gets the follow-up too
+    return;
+  }
   const filters = { queryKey, exact: true };
   const joined = fetching(client, queryKey);
   following.add(hash);
   await client.refetchQueries(filters, { cancelRefetch: false });
   following.delete(hash);
-  if (joined) await client.refetchQueries(filters, { cancelRefetch: false });
+  const changedMeanwhile = pending.delete(hash);
+  if (joined || changedMeanwhile) await client.refetchQueries(filters, { cancelRefetch: false });
 }
 
 /** A change for every chats list: the shown ones re-read, the hidden ones are marked and wait. */
