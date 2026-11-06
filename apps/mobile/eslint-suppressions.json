@@ -9619,9 +9619,6 @@
     },
     "max-len": {
       "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
     }
   },
   "src/teacher/report/components/ReportTextField.tsx": {
@@ -9652,7 +9649,7 @@
   },
   "src/teacher/report/hooks/use-report-entry.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teacher/report/hooks/use-scroll-to-invalid.test.tsx": {
@@ -9725,14 +9722,8 @@
     }
   },
   "src/teacher/report/v2/V2Footer.tsx": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
-    },
-    "no-nested-ternary": {
-      "count": 1
     }
   },
   "src/teacher/report/v2/V2Header.tsx": {

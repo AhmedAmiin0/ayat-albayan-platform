@@ -45,6 +45,10 @@ test.describe('teacher report edit window (R-REP-02/04)', () => {
     const before = await storedObject(pdf);
     expect(before).toBeDefined();
 
+    // Sent: read-only until «تعديل التقرير», which re-opens the same report (owner 2026-11-06).
+    const homework = teacher.getByRole('textbox', { name: ar.reports.homework, exact: true });
+    await expect(homework).toBeDisabled();
+    await teacher.getByRole('button', { name: ar.reports.edit, exact: true }).click();
     await fillTexts(teacher, { homework: 'سورة الملك 11-20' });
     await teacher.getByRole('button', { name: ar.reports.resubmit }).click();
     await expect(teacher.getByText(ar.reports.version.replace('{n}', '2'))).toBeVisible();

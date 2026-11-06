@@ -44,7 +44,7 @@ export function NoteCard({ s, report }: NoteCardProps) {
       />
       {attachments && (
         <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments}
-          editable={report.can_edit} addLabel={t.reports.v2.attach} />
+          editable={!s.mode.locked} addLabel={t.reports.v2.attach} />
       )}
     </section>
   );
