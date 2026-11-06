@@ -62,3 +62,14 @@ test('sales with no template allowed reads «noAllowed», with nothing to send',
   expect(screen.queryByText(t.inbox.newChat.firstTemplate)).toBeNull();
   expect(mockApiSend).not.toHaveBeenCalled();
 });
+
+test('while «أرسل» is on its way, close waits for it (no second first template)', async () => {
+  mockApiSend.mockReturnValue(new Promise(() => undefined));
+  await toTemplates([OPENER]);
+  await fireEvent.press(await screen.findByText(t.templates.names.follow_up_slots));
+  await fireEvent.changeText(screen.getByLabelText(t.inbox.composer.paramNames.student_name), 'سهيلة');
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
+  expect(await screen.findByText(t.inbox.newChat.sending)).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.common.close })).toBeDisabled();
+  expect(mockApiSend).toHaveBeenCalledTimes(1);
+});

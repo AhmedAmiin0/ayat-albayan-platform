@@ -1,4 +1,4 @@
-import { formatPhone, type TemplateView } from '@ab/shared';
+import { forAudience, formatPhone, type TemplateView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -40,14 +40,16 @@ export function TemplateStep({ found, onBack, onClose, onSent }: TemplateStepPro
   const first = useFirstTemplate(found.phone, onSent);
   const unpick = () => setChosen(null);
   // Why a template (WhatsApp's rule), over a list that has one; none allowed says so on its own.
-  const offers = (templates.data?.length ?? 0) > 0;
+  const offers = (templates.data ?? []).some((row) => forAudience(row.key, false));
   return (
     <>
       <ScreenHeader
         title={chosen ? templateName(chosen) : t.inbox.composer.chooseTemplate}
         subtitle={ltr(formatPhone(found.phone))}
         leading={<BackButton testID="new-chat-back" busy={first.pending} onPress={chosen ? unpick : onBack} />}
-        trailing={<Button variant="ghost" label={t.common.close} onPress={onClose} />}
+        trailing={
+          <Button variant="ghost" label={t.common.close} disabled={first.pending} onPress={onClose} />
+        }
       />
       <SendStatus error={first.error} pending={first.pending} />
       {chosen ? (

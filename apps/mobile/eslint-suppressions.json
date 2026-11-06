@@ -6887,7 +6887,7 @@
   },
   "src/inbox/threads-list/NewChatSheet.tsx": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/inbox/threads-list/OpenRow.tsx": {

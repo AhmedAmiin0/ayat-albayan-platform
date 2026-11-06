@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { useTemplateId } from '@/inbox/composer/use-composer-send';
 import { sendError } from '@/inbox/messages/hooks/message-text';
+import { sendKey } from '@/inbox/thread/hooks/thread-cache';
 import { type Outgoing, threadQuery, useSendMessage } from '@/inbox/thread/hooks/use-thread';
 
 /** A number read by «التالي»: a chat already (WhatsApp opens it) or new (its first template). */
@@ -27,7 +28,10 @@ export function useLookupNumber() {
     mutationFn: async (phone: string): Promise<FoundNumber> => {
       const data = await client.infiniteQuery(threadQuery(phone));
       const [page] = data.pages;
-      return { phone, kind: kindOf(page), lessons: page?.lessons ?? [] };
+      // A first template still on its way (closed mid-send, then reopened): a chat already.
+      const sending = client.isMutating({ mutationKey: sendKey(phone) }) > 0;
+      const kind = sending ? 'existing' : kindOf(page);
+      return { phone, kind, lessons: page?.lessons ?? [] };
     },
   });
 }

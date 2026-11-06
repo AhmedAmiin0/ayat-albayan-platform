@@ -11,11 +11,11 @@ import { NewChatSteps } from './new-chat/NewChatSteps';
 export const FAB = 56;
 
 /**
- * «محادثة جديدة» (admin and sales): one sheet with steps, like Kapso (NewChatSteps): the number, then
- * for a new number its allowed templates, the params and «أرسل»; a number with a chat opens it.
- * The trigger floats as a 56pt round button in the chats list's bottom inline-end corner, above the
- * tab bar, as WhatsApp (owner 2026-10-27: «Remove new chat from the top and make it a floating circle
- * icon in the bottom corner»). Render it last inside the list's frame: it is absolutely placed.
+ * «محادثة جديدة» (admin and sales): one sheet with steps, like Kapso (NewChatSteps): the number,
+ * then for a new number its allowed templates, the params and «أرسل»; a number with a chat opens
+ * it. The trigger floats as a 56pt round button in the chats list's bottom inline-end corner,
+ * above the tab bar, as WhatsApp (owner 2026-10-27: «Remove new chat from the top and make it a
+ * floating circle icon in the bottom corner»). Render it last inside the list's frame.
  */
 export function NewChatSheet() {
   const { color, elevation } = useTheme();
