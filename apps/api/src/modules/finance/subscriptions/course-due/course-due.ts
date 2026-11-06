@@ -5,7 +5,7 @@ import { PushService } from '@/common/push/push.service';
 import { CourseDueRepo, type UnbookedPackage } from './course-due.repo';
 
 /** How a paid link's assistant is told instead (PaymentReceived): her own title and tap target. */
-export interface CourseBook {
+interface CourseBook {
   profileId: string;
   title: string;
   data: Record<string, string>;
