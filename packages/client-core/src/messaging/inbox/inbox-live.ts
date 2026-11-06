@@ -7,8 +7,12 @@ export const INBOX_LIVE_TOPIC = 'inbox:staff';
 /** Sent once per phone per insert / update statement on messages (migration 20261028000860). */
 export const INBOX_LIVE_EVENT = 'thread_changed';
 
-/** While the channel is SUBSCRIBED the open chat, the chats list and the badge re-read only this often. */
-export const INBOX_FALLBACK_MS = 60_000;
+/**
+ * While the channel is SUBSCRIBED the open chat, the chats list and the badge still re-read this often:
+ * a safety net for a socket that died quietly (mobile networks) while the status still reads SUBSCRIBED
+ * (owner 2026-11-06 «chat is slow and gets delayed»: up to a minute at 60 s). Events re-read sooner.
+ */
+export const INBOX_FALLBACK_MS = 15_000;
 /** A burst of events becomes one fetch now and one at the end: an open chat at most once a second… */
 export const LIVE_CHAT_THROTTLE_MS = 1_000;
 /** …the chats list and the unread badge at most once every 3 s (GET /threads is the costliest read). */

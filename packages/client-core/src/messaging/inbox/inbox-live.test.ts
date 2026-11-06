@@ -19,9 +19,9 @@ describe('the thread_changed event → what refreshes', () => {
     expect(throttleMsOf('badge')).toBe(3_000);
   });
 
-  it('connected: the 60 s fallback; not connected: the caller’s own poll', () => {
-    expect(INBOX_FALLBACK_MS).toBe(60_000);
-    expect(liveInterval(true, 10_000)).toBe(60_000);
+  it('connected: the 15 s safety net (a quietly dead socket still reads SUBSCRIBED); not connected: the caller’s own poll', () => {
+    expect(INBOX_FALLBACK_MS).toBe(15_000);
+    expect(liveInterval(true, 10_000)).toBe(15_000);
     expect(liveInterval(false, 10_000)).toBe(10_000);
     expect(liveInterval(false, 30_000)).toBe(30_000);
   });
