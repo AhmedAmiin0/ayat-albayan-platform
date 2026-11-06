@@ -7,10 +7,14 @@ import { SAMPLE_REPORT, templateProblem } from '@/modules/messaging/whatsapp/tem
 import { ourStatus } from './template-sync';
 import { CRM_MANAGED, REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
-import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import type { TemplateRow, WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Submitting a template (T3, docs/12 §3.4), out of template.registry.ts (150-line cap). It goes to the
 // template's OWN line's WABA (owner 2026-10-18), chat rows included, under that line's driver.
+
+/** A document header on a crm line: the CRM has no PDF sample upload. */
+const crmDocument = (row: TemplateRow): boolean =>
+  onCrm(row.line) && row.header_format === 'document';
 
 const SUBMITTABLE: ReadonlySet<TemplateStatus> = new Set(['not_submitted', 'rejected', 'missing']);
 
@@ -25,14 +29,14 @@ interface SubmitDeps {
  * call; the row's line must be configured (503 not_configured). A document header (report_ready) first
  * uploads the sample PDF for Meta's reviewer: that needs the line's app id (409 needs_app_id without it;
  * 409 needs_meta_driver on a kapso line), both naming the row's line. A rejected row is edited in place
- * by the driver (Kapso: hsm_id). A row whose line is on crm: 409 crm_managed before anything else.
+ * by the driver (Kapso: hsm_id). A crm line's document row: 409 crm_managed before anything.else.
  */
 export async function submitTemplate(deps: SubmitDeps, key: string, actorId: string): Promise<TemplateView> {
   requireSync();
   const row = await deps.queries.get(key);
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
-  // A crm line's templates are submitted and approved in the CRM (from Meta), never from here.
-  if (onCrm(row.line)) throw waHttpError(CRM_MANAGED, 409, { line: row.line });
+  // A crm line submits through the CRM (docs/39); no PDF sample there, so a document is made there.
+  if (crmDocument(row)) throw waHttpError(CRM_MANAGED, 409, { line: row.line });
   if (!SUBMITTABLE.has(row.status)) throw waHttpError('not_submittable', 409, { status: row.status });
   const problem = templateProblem(row);
   if (problem) throw waHttpError('invalid_template', 409, { reason: problem });

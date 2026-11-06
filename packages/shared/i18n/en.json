@@ -3411,7 +3411,7 @@
         "key_taken": "Another registry template already uses this key"
       },
       "notConfigured": "This number is not configured on the server, so it cannot be synced.",
-      "crmManaged": "This number's templates are managed in the CRM, so there is no sync with Meta from here. Set each template's status by hand in the table.",
+      "crmManaged": "This number's templates live in the CRM: «Sync» reads their status from it after it syncs with Meta, and a new template is sent for review through it.",
       "wabaId": "Account ID",
       "phone": "Number",
       "provider": "Sending provider"
@@ -3651,7 +3651,7 @@
       "invalidField": "This value is not valid; see the note under the field.",
       "save": "Save template",
       "saved": "Template «{name}» saved.",
-      "crmNote": "This number's templates are managed in the CRM, so the template is not sent to Meta from here. After saving, create it in the CRM with the same name, language, text and buttons (Settings → Templates → New template), sync it from Meta there, then mark it approved here."
+      "crmNote": "This number's templates are sent to Meta through the CRM under the name it knows. After saving, send it for review, then press «Sync» to see its status."
     },
     "crmCheck": {
       "title": "Template check",

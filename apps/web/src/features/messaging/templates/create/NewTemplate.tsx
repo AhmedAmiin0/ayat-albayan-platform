@@ -17,8 +17,8 @@ interface NewTemplateProps {
 }
 
 /**
- * «قالب جديد» (owner 2026-10-31) beside the section's title: the form, then (a meta / kapso number)
- * the new row's submit confirm. A crm number's template is made in the CRM, so no submit follows.
+ * «قالب جديد» (owner 2026-10-31) beside the section's title: the form, then the new row's submit
+ * confirm. A crm number's template is sent for review through the CRM (docs/39).
  */
 export function NewTemplate({ manage, factsOf, onNotice, onSubmit }: NewTemplateProps) {
   const [open, setOpen] = useState(false);
@@ -27,7 +27,7 @@ export function NewTemplate({ manage, factsOf, onNotice, onSubmit }: NewTemplate
   const created = (tpl: TemplateView) => {
     setOpen(false);
     onNotice({ message: S.saved.replace('{name}', tpl.meta_name) });
-    if (!onCrm(tpl.line)) onSubmit(tpl);
+    onSubmit(tpl);
   };
   return (
     <>

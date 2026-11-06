@@ -19,8 +19,9 @@ import {
 /** Soon after boot, not at once: the e2e stub may still be starting. One run, no interval. */
 const BOOT_CHECK = { firstMs: 5_000 };
 const errText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
-/** Only a save as meta, with the sync on, triggers one. */
-const wantsSync = (saved: LineSaved): boolean => saved.provider === 'meta' && syncOn();
+/** A save as meta or crm (docs/39), with the sync on, triggers one. */
+const SYNCED_ON_SAVE: ReadonlySet<string> = new Set(['meta', 'crm']);
+const wantsSync = (saved: LineSaved): boolean => SYNCED_ON_SAVE.has(saved.provider) && syncOn();
 /** A crm line is not a failure: its templates live in the CRM (docs/19). */
 const failedLine = (l: TemplateLineSync): boolean => !l.ok && l.error !== CRM_MANAGED;
 
@@ -61,14 +62,16 @@ export class TemplateVerifier implements OnModuleInit, OnApplicationBootstrap, O
   }
 
   /**
-   * A line saved as meta (docs/19 «CRM → Meta») syncs once, so its keys read the WABA's statuses by
-   * the names they go as; any other driver, the sync off or the line not configured: nothing.
+   * A line saved as meta (docs/19 «CRM → Meta») or crm (docs/39) syncs once, so its keys read
+   * the statuses by the names they go as; any other driver, the sync off or the line not
+   * configured: nothing.
    */
   async afterSave(saved: LineSaved): Promise<void> {
     if (!wantsSync(saved) || !this.lines[saved.line].configured()) return;
     const { lines } = await this.verifyAll({ line: saved.line });
     const failed = lines.filter(failedLine).map((l) => l.error ?? 'error');
-    this.log.log(`${saved.line} saved as meta: templates synced${failed.length ? ` (failed: ${failed.join(', ')})` : ''}`);
+    const tail = failed.length ? ` (failed: ${failed.join(', ')})` : '';
+    this.log.log(`${saved.line} saved as ${saved.provider}: templates synced${tail}`);
   }
 
   async bootCheck(): Promise<void> {

@@ -4107,7 +4107,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/messaging/templates/lines/TemplateLines.tsx": {

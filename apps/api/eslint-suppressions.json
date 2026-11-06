@@ -7612,7 +7612,7 @@
   },
   "src/modules/messaging/whatsapp/templates/sync/template-line-sync.ts": {
     "max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-move.ts": {
