@@ -30,8 +30,6 @@ export const EVOLUTION_DAILY_CAP_DEFAULT = 60;
 /** A host name or IPv4 (no scheme, no port, no path). */
 const HOST_RE = /^[A-Za-z0-9.-]{1,100}$/;
 
-/** The typing delay's cap: it runs inside the send call, which holds the one sender loop. */
-export const EVOLUTION_DELAY_MAX = 2_000;
 /** WhatsApp ERRORs on our sends within this window that switch the number off (default 3). */
 export const EVOLUTION_ERROR_WINDOW_MS = 15 * 60_000;
 export const EVOLUTION_ERROR_TRIP_DEFAULT = 3;
@@ -54,12 +52,15 @@ export const evolutionHookPath = (instance: string): string =>
 export const evolutionHookUrl = (origin: string | null, instance: string): string | null =>
   (origin === null ? null : `${origin}${evolutionHookPath(instance)}`);
 
-/** /settings/set: Evolution's instance behaviour (groups ignored, nothing automatic). */
+/**
+ * /settings/set: Evolution's instance behaviour (groups ignored, nothing automatic). No
+ * `always_online` (owner 2026-11-06: families never see us «online»): the push pins it off, and a
+ * stored value is dropped on read.
+ */
 export const evolutionBehaviourSchema = z.object({
   reject_call: z.boolean().default(false),
   msg_call: z.string().trim().max(500).default(''),
   groups_ignore: z.boolean().default(true),
-  always_online: z.boolean().default(false),
   read_messages: z.boolean().default(false),
   read_status: z.boolean().default(false),
   sync_full_history: z.boolean().default(false),
@@ -90,9 +91,12 @@ export const evolutionProxySchema = z
     message: 'proxy_needed', path: ['host'],
   });
 
-/** Each send: the typing delay (sendText `delay`, capped) and the link preview. */
+/**
+ * Each send: the link preview. No typing delay (owner 2026-11-06: «dont make the family see
+ * typing»): Evolution's `delay` shows «يكتب…» to the family, so it is never sent; an old stored
+ * `delay_ms` is dropped on read (zod strips unknown keys).
+ */
 export const evolutionSendingSchema = z.object({
-  delay_ms: z.number().int().min(0).max(EVOLUTION_DELAY_MAX).default(0),
   link_preview: z.boolean().default(false),
 });
 
@@ -126,8 +130,8 @@ const sectionOf = <S extends z.ZodType>(schema: S, raw: unknown): z.output<S> =>
   schema.safeParse(raw).data ?? schema.parse(undefined);
 
 /**
- * A stored value read back section by section: one unreadable section (e.g. a delay over the
- * new cap) falls back to its own defaults, never resetting the proxy or the others.
+ * A stored value read back section by section: one unreadable section (e.g. a gap over the
+ * cap) falls back to its own defaults, never resetting the proxy or the others.
  */
 export function evolutionConfigOf(raw: unknown): EvolutionConfig {
   const o = storedSchema.safeParse(raw).data ?? {};

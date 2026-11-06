@@ -6,18 +6,12 @@ import type { SectionProps } from './config-draft';
 
 const c = t.numbers.evolution.config;
 
-/** «الإرسال»: the typing delay before each message and the link preview. */
-export function SendingSection({ value, errors, onChange }: SectionProps<'sending'>) {
+/**
+ * «الإرسال»: the link preview. No typing delay (owner 2026-11-06: families never see «يكتب…»).
+ */
+export function SendingSection({ value, onChange }: SectionProps<'sending'>) {
   return (
     <ConfigFieldset legend={c.sections.sending}>
-      <ConfigTextField
-        numeric
-        label={c.sending.delay_ms}
-        hint={c.sending.delayHint}
-        error={errors['sending.delay_ms']}
-        value={value.delay_ms}
-        onChange={(delay_ms) => onChange({ delay_ms })}
-      />
       <CheckField
         label={c.sending.link_preview}
         checked={value.link_preview}

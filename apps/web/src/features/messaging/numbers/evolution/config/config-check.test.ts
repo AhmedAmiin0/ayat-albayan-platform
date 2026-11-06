@@ -55,7 +55,7 @@ describe('checkConfig (evolutionConfigSchema)', () => {
     });
     const none = patchSection(fresh(), 'webhook', { events: [] });
     expect(checkConfig(none, 'baileys').errors).toEqual({ 'webhook.events': c.errors.invalid });
-    const delay = patchSection(fresh(), 'sending', { delay_ms: '2001' });
-    expect(checkConfig(delay, 'baileys').errors).toEqual({ 'sending.delay_ms': c.errors.invalid });
+    const sent = checkConfig(patchSection(fresh(), 'sending', { link_preview: true }), 'baileys');
+    expect(sent.config?.sending).toEqual({ link_preview: true });
   });
 });

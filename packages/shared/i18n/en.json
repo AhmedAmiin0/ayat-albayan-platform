@@ -6937,7 +6937,6 @@
           "msg_call": "Reply to a rejected call",
           "msg_callHint": "Sent to the caller when the call is rejected. Leave empty for no reply.",
           "groups_ignore": "Ignore group messages",
-          "always_online": "Always show as online",
           "read_messages": "Mark incoming messages as read automatically",
           "read_status": "Read status updates automatically",
           "sync_full_history": "Sync the full chat history when linking"
@@ -6966,8 +6965,6 @@
           "passwordHint": "The password is saved in the «Proxy password» row below and never shown again."
         },
         "sending": {
-          "delay_ms": "Typing time before each message (ms)",
-          "delayHint": "The recipient sees «typing…» this long before the message, at most 2000. 0 = no wait.",
           "link_preview": "Show link previews"
         },
         "limits": {
