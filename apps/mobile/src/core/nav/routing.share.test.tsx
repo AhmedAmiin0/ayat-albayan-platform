@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { UserRole } from '@ab/shared';
-import { renderRouter, screen } from 'expo-router/testing-library';
+import { act, renderRouter, screen } from 'expo-router/testing-library';
 import * as Sharing from 'expo-sharing';
 import { Text } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -21,10 +21,16 @@ import SalesLayout from '../../../app/sales/_layout';
 import ShareRoute from '../../../app/share';
 import TeacherLayout from '../../../app/teacher/_layout';
 
-// docs/38: an Android share opens /share (+native-intent); the real gate hands it to its tree's
-// chooser in the tree's chat group (stub choosers print the links base and thread mode they get).
+// docs/38: an Android share opens /share (+native-intent); the root layout's gate (a store here,
+// so it can move) hands it to its tree's chooser in its chat group (stubs print base, mode, share).
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('expo-sharing', () => ({ clearSharedPayloads: jest.fn() }));
+const mockShare = { payloads: [] as object[] };
+jest.mock('expo-sharing', () => ({
+  getSharedPayloads: () => mockShare.payloads,
+  clearSharedPayloads: jest.fn(() => {
+    mockShare.payloads = [];
+  }),
+}));
 jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 const mockMe = { answer: {} as object };
 const mockTeacher = { id: 't1', display_name_ar: 'نور', tz: 'Africa/Cairo', students: [] };
@@ -33,13 +39,24 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: async (path: string) =>
     ({ '/auth/me': mockMe.answer, '/teachers/me': mockTeacher })[path] ?? { total: 0 },
 }));
+const mockGate = { now: 'out', seen: new Set<() => void>() };
+const mockWatch = (listener: () => void) => {
+  mockGate.seen.add(listener);
+  return () => mockGate.seen.delete(listener);
+};
 jest.mock('@/core/auth/use-auth-gate', () => ({
   ...jest.requireActual('@/core/auth/use-auth-gate'),
-  useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out',
+  useAuthGate: () => jest.requireActual('react').useSyncExternalStore(mockWatch, () => mockGate.now),
 }));
+const moveGate = (gate: string) =>
+  act(async () => {
+    mockGate.now = gate;
+    mockGate.seen.forEach((listener) => listener());
+  });
 
 function ChooserStub() {
-  return <Text>{`chooser base=${useTreeBase()} mode=${useThreadMode().kind}`}</Text>;
+  const items = Sharing.getSharedPayloads().length;
+  return <Text>{`chooser base=${useTreeBase()} mode=${useThreadMode().kind} items=${items}`}</Text>;
 }
 const stub = (label: string) => () => <Text>{label}</Text>;
 const app = {
@@ -70,7 +87,7 @@ const app = {
 };
 
 async function open(gate: string, url: string) {
-  (globalThis as { gate?: string }).gate = gate;
+  mockGate.now = gate;
   mockMe.answer = gate === 'out' ? {} : fullAccessMe(gate as UserRole);
   queryClient.setQueryData(pathKey('/auth/me'), mockMe.answer);
   const pending = renderRouter(app, { initialUrl: url });
@@ -80,20 +97,23 @@ async function open(gate: string, url: string) {
 
 beforeEach(async () => {
   jest.clearAllMocks();
+  mockShare.payloads = [{ value: 'hello', shareType: 'text' }];
   queryClient.clear();
   await AsyncStorage.clear();
 });
 
-test('the share URL becomes /share; the Stripe return does not', () => {
+test('the share URL becomes /share (home once read); the Stripe return does not', () => {
   expect(redirectSystemPath({ path: 'ayatalbayan://expo-sharing', initial: true })).toBe('/share');
   const pay = 'ayatalbayan://pay-done?token=t&r=done';
   expect(redirectSystemPath({ path: pay, initial: false })).toBe(pay);
+  mockShare.payloads = [];
+  expect(redirectSystemPath({ path: 'ayatalbayan://expo-sharing', initial: false })).toBe('/');
 });
 
 test.each([
-  { gate: 'admin', path: '/inbox/share', group: '(admin-chat)', text: 'chooser base= mode=admin' },
-  { gate: 'sales', path: '/sales/inbox/share', group: '(sales-chat)', text: 'chooser base=/sales mode=admin' },
-  { gate: 'teacher', path: '/teacher/chats/share', group: '(teacher-chat)', text: 'chooser base= mode=teacher' },
+  { gate: 'admin', path: '/inbox/share', group: '(admin-chat)', text: 'chooser base= mode=admin items=1' },
+  { gate: 'sales', path: '/sales/inbox/share', group: '(sales-chat)', text: 'chooser base=/sales mode=admin items=1' },
+  { gate: 'teacher', path: '/teacher/chats/share', group: '(teacher-chat)', text: 'chooser base= mode=teacher items=1' },
 ])('$gate: /share replaces itself with $path in $group', async ({ gate, path, group, text }) => {
   const router = await open(gate, '/share');
   expect(await screen.findByText(text)).toBeTruthy();
@@ -105,7 +125,16 @@ test('the static share route outranks a lead (/inbox/[id]) and a teacher chat ([
   expect((await open('admin', '/inbox/share')).segments()[0]).toBe('(admin-chat)');
   expect(screen.queryByText('lead-detail')).toBeNull();
   await open('teacher', '/teacher/chats/share');
-  expect(await screen.findByText('chooser base= mode=teacher')).toBeTruthy();
+  expect(await screen.findByText('chooser base= mode=teacher items=1')).toBeTruthy();
+});
+
+test('booting, then the role: the share is kept (never dropped) and reaches the chooser', async () => {
+  const router = await open('booting', '/share');
+  expect(Sharing.clearSharedPayloads).not.toHaveBeenCalled();
+  await moveGate('teacher');
+  expect(await screen.findByText('chooser base= mode=teacher items=1')).toBeTruthy();
+  expect(router.pathname()).toBe('/teacher/chats/share');
+  expect(Sharing.clearSharedPayloads).not.toHaveBeenCalled();
 });
 
 test('the classroom assistant has no chats: the note, the share dropped', async () => {

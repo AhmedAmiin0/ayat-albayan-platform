@@ -36,6 +36,12 @@ test('a stale share is dropped first thing in onCreate, before super.onCreate ru
   expect(out).toContain('Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY');
 });
 
+test('a restored activity also drops the VIEW share URL (font size, density: process alive)', () => {
+  expect(out).toContain('intent.data?.toString() == "ayatalbayan://expo-sharing"');
+  expect(out).toContain('val stale = abIsShare(activity.intent) || abIsShareView(activity.intent)');
+  expect(out).toContain('if (!stale || (savedInstanceState == null && !fromHistory)) return');
+});
+
 test('onNewIntent takes the share BEFORE super (the delegate may return early while the app loads)', () => {
   const at = lines.indexOf('override fun onNewIntent(intent: Intent) {');
   expect(lines.slice(at + 1, at + 3)).toEqual(['abTakeShare(this, intent)', 'super.onNewIntent(intent)']);

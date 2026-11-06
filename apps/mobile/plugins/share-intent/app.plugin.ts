@@ -8,7 +8,8 @@ import { type ConfigPlugin, withMainActivity } from 'expo/config-plugins';
 //   intent becomes VIEW <scheme>://expo-sharing, which getInitialURL (cold) or React's VIEW emit
 //   (warm) carries to app/+native-intent.ts;
 // - a relaunch from history (Recents, or the launcher after process death) re-creates the activity
-//   from the original SEND: that stale share is dropped before super.onCreate.
+//   from the original SEND, and a restore with the process alive (font size, density) from the
+//   VIEW URL it became: either is replaced by the launcher intent before super.onCreate.
 
 const MARK = '// plugins/share-intent (docs/38)';
 const IMPORTS = [
@@ -35,10 +36,16 @@ function helpersKotlin(scheme: string): string {
 private fun abIsShare(intent: Intent?): Boolean =
   intent != null && intent.type != null && (intent.action == Intent.ACTION_SEND || intent.action == Intent.ACTION_SEND_MULTIPLE)
 
-// Restored (savedInstanceState) or launched from history: the share it was created with is old.
+// The VIEW URL abTakeShare (or expo-sharing's listener) left on the activity after a share.
+private fun abIsShareView(intent: Intent?): Boolean =
+  intent != null && intent.action == Intent.ACTION_VIEW && intent.data?.toString() == "${scheme}://expo-sharing"
+
+// Restored (savedInstanceState: a font size or density change with the process alive) or launched
+// from history: the share it was created with, or the VIEW URL it became, is old.
 private fun abDropStaleShare(activity: Activity, savedInstanceState: Bundle?) {
   val fromHistory = (activity.intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0
-  if (!abIsShare(activity.intent) || (savedInstanceState == null && !fromHistory)) return
+  val stale = abIsShare(activity.intent) || abIsShareView(activity.intent)
+  if (!stale || (savedInstanceState == null && !fromHistory)) return
   activity.intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setPackage(activity.packageName)
 }
 

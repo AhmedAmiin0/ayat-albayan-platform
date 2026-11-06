@@ -79,7 +79,7 @@
   },
   "app/_layout.tsx": {
     "max-len": {
-      "count": 10
+      "count": 6
     },
     "no-restricted-syntax": {
       "count": 2
