@@ -6,7 +6,8 @@ import { draftRequestId } from './course-draft.rules';
 
 // PR #648 review: a draft saved while the payment lands, and «احجز» racing the payment, never
 // book two courses; a draft is removed only as the version that was booked.
-const keyed = (savedAt: string) => expect.objectContaining({ clientRequestId: draftRequestId({ subscriptionId: SUB, savedAt }) });
+const keyed = (savedAt: string) =>
+  expect.objectContaining({ clientRequestId: draftRequestId({ subscriptionId: SUB, savedAt }) });
 
 describe('CourseDrafts — races with the payment', () => {
   it('saved while the payment lands: the SAVED row is booked with the payment’s draft key', async () => {

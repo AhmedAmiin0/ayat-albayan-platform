@@ -47,7 +47,8 @@ export class CourseDue {
     try {
       const p = await this.repo.unbooked(subscriptionId);
       const title = ar.courseDue.paidTitle;
-      return p && selfBooked(p) ? { profileId: assistantId, title, data: noticeData(p) } : undefined;
+      const notice = p && selfBooked(p) ? p : null;
+      return notice ? { profileId: assistantId, title, data: noticeData(notice) } : undefined;
     } catch (e) {
       this.log.warn(`course due ${subscriptionId}: ${errText(e)}`);
       return undefined;
