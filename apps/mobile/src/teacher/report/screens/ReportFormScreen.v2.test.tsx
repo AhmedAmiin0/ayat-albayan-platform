@@ -2,7 +2,7 @@ import type { ReportFormResponse } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { formResponse, formResponseV2 } from '../testing/fixtures';
+import { formResponse, formResponseV2 } from '@/teacher/report/testing/fixtures';
 import { ReportFormScreen } from './ReportFormScreen';
 
 const mockApiFetch = jest.fn();

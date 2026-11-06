@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Animated } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { requestId } from '@/core/lib/http/request-id';
-import { fileError } from '../send-file';
+import { fileError } from '@/inbox/composer/send-file';
 import { useSendVoice } from './send-voice';
 import { useVoiceRecorder } from './use-voice-recorder';
 import type { VoiceNote } from './VoiceNoteLine';

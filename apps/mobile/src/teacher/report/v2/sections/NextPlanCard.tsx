@@ -4,9 +4,9 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
-import { ReportTextField } from '../../components/ReportTextField';
-import type { V2EntryState } from '../hooks/use-v2-entry';
-import { Card } from '../ui/Card';
+import { ReportTextField } from '@/teacher/report/components/ReportTextField';
+import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
+import { Card } from '@/teacher/report/v2/ui/Card';
 
 /** «الحلقة القادمة»: the suggested plan, read-only until «تعديل الخطة» opens it for editing. */
 export function NextPlanCard({ s }: { s: V2EntryState }) {

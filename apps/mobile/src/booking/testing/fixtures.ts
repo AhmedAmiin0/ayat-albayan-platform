@@ -1,6 +1,6 @@
 import type { BookingResult, BookingTeacherOption, SlotView } from '@ab/shared';
-import type { InvoiceDraft } from '../shared/contract';
-import type { TrialDraft } from '../trial/lib/draft';
+import type { InvoiceDraft } from '@/booking/shared/contract';
+import type { TrialDraft } from '@/booking/trial/lib/draft';
 
 // Invented test rows in the GET /booking/* and POST /booking shapes (no real people).
 

@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import type { AdminTaskView } from '@ab/shared';
-import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { t } from '@/core/lib/i18n/i18n';
 import { instantDay } from '@/core/lib/money/format';
@@ -18,7 +18,7 @@ export const TaskItem = memo(function TaskItem({ task }: { task: AdminTaskView }
     <ListRow
       title={student?.name ?? taskText(task)}
       {...(student ? { meta: student.code } : {})}
-      {...(student && toStudents ? { onPress: () => router.push(`/students/${student.id}`) } : {})}
+      {...(student && toStudents ? { onPress: () => pushInTab(`/students/${student.id}`) } : {})}
       subtitle={`${taskText(task)} · ${instantDay(task.created_at, tz)}`}
       trailing={<StatusChip tone="act" glyph="hollow" label={t.mobileMoney.taskNeedsAction} size="sm" />}
     />

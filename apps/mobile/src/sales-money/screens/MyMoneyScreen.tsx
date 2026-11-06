@@ -7,7 +7,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { MyEarningsView } from './MyEarningsView';
 import { MyPaymentsView } from './MyPaymentsView';
-import { MyWalletView } from '../wallet/MyWalletView';
+import { MyWalletView } from '@/sales-money/wallet/MyWalletView';
 
 export type MoneyView = 'wallet' | 'statements' | 'payments';
 

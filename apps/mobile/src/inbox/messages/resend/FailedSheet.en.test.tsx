@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen, within } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
-import { failed, PHONE } from '../../shared/thread-fixtures';
+import { failed, PHONE } from '@/inbox/shared/thread-fixtures';
 import { FailedSheet } from './FailedSheet';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).

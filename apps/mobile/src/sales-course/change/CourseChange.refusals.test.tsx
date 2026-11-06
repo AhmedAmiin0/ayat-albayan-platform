@@ -7,9 +7,9 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { isDisabled, press } from '../testing/course-test-utils';
-import { CourseScreen } from '../screens/CourseScreen';
-import { courseView } from '../testing/fixtures';
+import { isDisabled, press } from '@/sales-course/testing/course-test-utils';
+import { CourseScreen } from '@/sales-course/screens/CourseScreen';
+import { courseView } from '@/sales-course/testing/fixtures';
 import { changeApi, changeSundayToMonday, NOW, runningCourse, TZ, windowed } from './change-test-setup';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;

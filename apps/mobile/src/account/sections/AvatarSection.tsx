@@ -2,13 +2,13 @@ import { AVATAR_MAX_BYTES, type AccountProfile } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { removeAvatar, uploadAvatar } from '../hooks/account-api';
-import { accountMessage } from '../lib/account-errors';
-import { AccountCard } from '../components/AccountCard';
-import { type AvatarSource, pickAvatar, type PickedAvatar } from '../lib/avatar';
+import { removeAvatar, uploadAvatar } from '@/account/hooks/account-api';
+import { accountMessage } from '@/account/lib/account-errors';
+import { AccountCard } from '@/account/components/AccountCard';
+import { type AvatarSource, pickAvatar, type PickedAvatar } from '@/account/lib/avatar';
 import { AvatarButtons } from './AvatarButtons';
 import { Avatar } from '@/core/ui/primitives/Avatar';
-import { useAccountAction } from '../hooks/use-account-action';
+import { useAccountAction } from '@/account/hooks/use-account-action';
 
 const a = t.account.avatar;
 

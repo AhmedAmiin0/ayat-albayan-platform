@@ -5,7 +5,7 @@ import { Clipboard } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { bulkSa } from '@/finance/pricing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { getComposerText, setComposerText } from '../draft-store';
+import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { QuoteSheet } from './QuoteSheet';
 
 const mockApiFetch = jest.fn();

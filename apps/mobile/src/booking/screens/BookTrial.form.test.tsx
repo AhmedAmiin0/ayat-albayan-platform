@@ -3,8 +3,8 @@ import { cachedList, huda } from '@/inbox/shared/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { BookTrialScreen } from './BookTrialScreen';
-import { booked, maryam, SUN_17 } from '../testing/fixtures';
-import { fakeBookingApi, LEADS_KEY } from '../testing/test-utils';
+import { booked, maryam, SUN_17 } from '@/booking/testing/fixtures';
+import { fakeBookingApi, LEADS_KEY } from '@/booking/testing/test-utils';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

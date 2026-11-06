@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { palette } from '@/theme';
-import { pending } from '../testing/fixtures';
+import { pending } from '@/today/testing/fixtures';
 import { HeroCard } from './HeroCard';
 
 jest.mock('@/core/lib/http/api', () => ({

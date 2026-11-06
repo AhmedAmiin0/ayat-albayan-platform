@@ -6,9 +6,9 @@ import { t } from '@/core/lib/i18n/i18n';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { ensureCameraPermission, pickReceipt } from '@/payments';
-import { sendError } from '../messages/hooks/message-text';
-import { refreshInbox, touchInbox } from '../thread/hooks/inbox-sync';
-import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '../thread/hooks/thread-cache';
+import { sendError } from '@/inbox/messages/hooks/message-text';
+import { refreshInbox, touchInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '@/inbox/thread/hooks/thread-cache';
 
 // The assistant sends a photo or a PDF from the chat (owner 2026-10-19 #1/#2), inside the 24 h
 // window: the API signs an upload into wa-media, then queues the file as her message.

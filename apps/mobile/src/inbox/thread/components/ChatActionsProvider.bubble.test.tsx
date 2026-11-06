@@ -2,9 +2,9 @@ import { act, screen } from '@testing-library/react-native';
 import { useContext } from 'react';
 import { renderWithQuery } from '@/test/query';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { inbound, PHONE, thread } from '../../shared/thread-fixtures';
-import { BubbleActionsContext, type BubbleChatActions, ChatActionsContext, type ChatActions } from '../hooks/chat-actions';
-import { ThreadModeProvider } from '../hooks/thread-mode';
+import { inbound, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import { BubbleActionsContext, type BubbleChatActions, ChatActionsContext, type ChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ChatActionsProvider } from './ChatActionsProvider';
 
 jest.mock('@/core/lib/http/api', () => ({

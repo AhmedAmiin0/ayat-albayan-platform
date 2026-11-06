@@ -5,8 +5,8 @@ import { Avatar } from '@/core/ui/primitives/Avatar';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { leadStatusChip } from '../detail/lead-words';
-import type { Lead } from '../../shared/types';
+import { leadStatusChip } from '@/inbox/leads/detail/lead-words';
+import type { Lead } from '@/inbox/shared/types';
 import { leadRowSubtitle } from './lead-row';
 
 /** One lead: initial, name (or the LTR phone), source line with its age at `now`, status chip. Tap → the lead. */

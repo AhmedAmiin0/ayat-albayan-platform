@@ -5,7 +5,7 @@ import { shape, useTheme } from '@/theme';
 import { Mark } from '@/core/ui/primitives/Mark';
 import type { AccountHref } from './AccountRow';
 import { Avatar } from '@/core/ui/primitives/Avatar';
-import { useMyProfile } from '../hooks/queries';
+import { useMyProfile } from '@/account/hooks/queries';
 
 /**
  * The More screens' header end (R-ACC-05): the user's photo or initials, a 44pt button to «حسابي».

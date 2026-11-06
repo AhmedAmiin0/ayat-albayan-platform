@@ -1,7 +1,7 @@
-import { router } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 
 /** «رجوع»: the previous screen, or «المزيد» when the screen was opened directly (a link). */
-export const backToMore = () => (router.canGoBack() ? router.back() : router.replace('/more'));
+export const backToMore = () => backWithin('/more');
 
 /** Back to «المستخدمون» from a user or the create form. */
-export const backToUsers = () => (router.canGoBack() ? router.back() : router.replace('/more/users'));
+export const backToUsers = () => backWithin('/more/users');

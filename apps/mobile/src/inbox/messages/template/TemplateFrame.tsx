@@ -5,8 +5,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import { AttachIcon } from '../../shared/chat-icons';
-import { DocumentIcon } from '../../shared/composer-icons';
+import { AttachIcon } from '@/inbox/shared/chat-icons';
+import { DocumentIcon } from '@/inbox/shared/composer-icons';
 
 /** A text header in bold; a media one is the message's own file when it has one, else its kind («مستند»). */
 function Header({ header, hasMedia }: { header: TemplateHeader | null; hasMedia: boolean }) {

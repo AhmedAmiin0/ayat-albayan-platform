@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { catalogue } from '../shared/fixtures';
-import { NotificationCatalogue } from '../settings/NotificationCatalogue';
+import { catalogue } from '@/ops/shared/fixtures';
+import { NotificationCatalogue } from '@/ops/settings/NotificationCatalogue';
 import { answer, catalogueV2, MANAGER, READER, withUnknownBlocker } from './testing/rules-fixtures';
 
 const mockApiFetch = jest.fn();

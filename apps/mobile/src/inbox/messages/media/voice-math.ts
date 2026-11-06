@@ -1,4 +1,4 @@
-import { mediaTime } from '../hooks/media-time';
+import { mediaTime } from '@/inbox/messages/hooks/media-time';
 
 /** Bars in a voice note's waveform, about WhatsApp's count at bubble width. */
 export const BARS = 28;

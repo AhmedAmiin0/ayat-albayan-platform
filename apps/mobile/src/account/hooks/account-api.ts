@@ -1,7 +1,7 @@
 import type { AccountProfile, SignedUpload } from '@ab/shared';
 import { apiSend } from '@/core/lib/http/api';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
-import type { PickedAvatar } from '../lib/avatar';
+import type { PickedAvatar } from '@/account/lib/avatar';
 
 // The /me writes (R-ACC-02..05). Each answers the fresh profile, except the password (204).
 

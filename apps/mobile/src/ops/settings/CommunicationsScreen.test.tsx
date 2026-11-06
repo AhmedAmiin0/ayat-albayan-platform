@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { CommunicationsScreen } from './CommunicationsScreen';
-import { overviewAnswer } from '../comms/comms-fixtures';
+import { overviewAnswer } from '@/ops/comms/comms-fixtures';
 import { readOnlyNoteText } from './ReadOnlySettings';
 
 const mockApiFetch = jest.fn();

@@ -1,7 +1,7 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { leadAge } from '../../shared/format';
-import { leadSourceWord } from '../detail/lead-words';
-import type { Lead } from '../../shared/types';
+import { leadAge } from '@/inbox/shared/format';
+import { leadSourceWord } from '@/inbox/leads/detail/lead-words';
+import type { Lead } from '@/inbox/shared/types';
 
 /**
  * «إعلان فيسبوك · منذ يومين · المسؤول: سارة»; the owner part only when the API sent a name. `now` (ms) is

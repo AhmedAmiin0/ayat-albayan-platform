@@ -1,5 +1,5 @@
 import { leavesGap, mergeNewest, provisionalMessage, threadMessages } from './thread-cache';
-import { cachedThread, delivered, detail, failed, inbound, message, NOW, PHONE } from '../../shared/thread-fixtures';
+import { cachedThread, delivered, detail, failed, inbound, message, NOW, PHONE } from '@/inbox/shared/thread-fixtures';
 
 // mergeNewest: what a poll of the newest page does to the cached thread.
 

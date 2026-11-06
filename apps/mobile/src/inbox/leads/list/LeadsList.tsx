@@ -10,11 +10,11 @@ import { LazyList } from '@/core/ui/lists/LazyList';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { clockAt } from '../../shared/format';
+import { clockAt } from '@/inbox/shared/format';
 import { activeFilterCount, leadListParams, NO_FILTERS, type LeadFilters } from './lead-filters';
 import { LeadsFilterBar } from './LeadsFilterBar';
 import { LeadRow } from './LeadRow';
-import type { Lead } from '../../shared/types';
+import type { Lead } from '@/inbox/shared/types';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 type Filter = 'all' | LeadStatus;

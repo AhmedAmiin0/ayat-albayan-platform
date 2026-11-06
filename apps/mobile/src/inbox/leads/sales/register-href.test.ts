@@ -1,5 +1,5 @@
 import { registerHref } from './register-href';
-import { thread } from '../../shared/thread-fixtures';
+import { thread } from '@/inbox/shared/thread-fixtures';
 
 test('a lead in the funnel opens the sales wizard with the lead, the number, the name and the source', () => {
   expect(registerHref(thread)).toEqual({

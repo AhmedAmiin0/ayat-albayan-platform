@@ -1,7 +1,7 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { EssentialOffSheet } from './EssentialOffSheet';
-import { nameOf } from '../lib/rule-words';
-import type { CatalogueToggles } from '../hooks/use-catalogue-toggles';
+import { nameOf } from '@/ops/notif-rules/lib/rule-words';
+import type { CatalogueToggles } from '@/ops/notif-rules/hooks/use-catalogue-toggles';
 
 /** The typed «إيقاف» sheet for the row that asked for it (essential OFF, or a 428), if any. */
 export function TypedOffSheet({ entries, toggles }: { entries: readonly NotificationEntryView[]; toggles: CatalogueToggles }) {

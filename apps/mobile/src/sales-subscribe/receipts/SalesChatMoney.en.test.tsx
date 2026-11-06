@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { familyOf, familyThread, kid, openSub } from '../testing/fixtures';
+import { familyOf, familyThread, kid, openSub } from '@/sales-subscribe/testing/fixtures';
 import { SalesChatMoney } from './SalesChatMoney';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

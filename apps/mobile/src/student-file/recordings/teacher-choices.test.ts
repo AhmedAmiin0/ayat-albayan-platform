@@ -1,6 +1,6 @@
 import type { StudentRecordingView } from '@ab/shared';
 import type { TeacherChoice } from './RecordingFiltersBar';
-import { recording } from '../testing/fixtures';
+import { recording } from '@/student-file/testing/fixtures';
 import { renderHook } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { mergeChoices, useTeacherChoices } from './teacher-choices';

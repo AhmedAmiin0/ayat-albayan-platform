@@ -1,9 +1,9 @@
 import { continueFits, type BookedCourse, type SalesCourseView } from '@ab/shared';
 import { View } from 'react-native';
-import { CurrentCourse } from '../change/CurrentCourse';
+import { CurrentCourse } from '@/sales-course/change/CurrentCourse';
 import { CourseContinue } from './CourseContinue';
 import { CourseTeacherStep } from './CourseTeacherStep';
-import type { KnownTeacher } from '../hooks/use-known-teacher';
+import type { KnownTeacher } from '@/sales-course/hooks/use-known-teacher';
 
 /** «تغيير أيام الحلقات» offered beside the wizard: the student's course (view.current) and how to open it. */
 export interface CourseChangeEntry {

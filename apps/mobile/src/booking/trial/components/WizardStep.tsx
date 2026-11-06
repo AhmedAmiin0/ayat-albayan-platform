@@ -1,20 +1,20 @@
 import { normalizePhone } from '@ab/shared';
 import { View } from 'react-native';
-import type { BookFailure } from '../../shared/booking-errors';
-import { useBookingMode } from '../../shared/booking-mode';
+import type { BookFailure } from '@/booking/shared/booking-errors';
+import { useBookingMode } from '@/booking/shared/booking-mode';
 import { ConfirmStep } from './ConfirmStep';
 import { ContactStep } from './ContactStep';
-import type { StudentChoice, TrialDraft } from '../lib/draft';
-import { InvoiceStep } from '../../invoice/InvoiceStep';
+import type { StudentChoice, TrialDraft } from '@/booking/trial/lib/draft';
+import { InvoiceStep } from '@/booking/invoice/InvoiceStep';
 import { KindPills } from './KindPills';
-import { kindPatch } from '../lib/package-choice';
+import { kindPatch } from '@/booking/trial/lib/package-choice';
 import { PackageStep } from './PackageStep';
-import { fromPicks, NO_PICKS, picksOf } from '../../shared/picks';
+import { fromPicks, NO_PICKS, picksOf } from '@/booking/shared/picks';
 import { SlotStep, type SlotStepProps } from './SlotStep';
-import type { Step } from '../lib/steps';
+import type { Step } from '@/booking/trial/lib/steps';
 import { TeacherStep } from './TeacherStep';
 
-export type { Step } from '../lib/steps';
+export type { Step } from '@/booking/trial/lib/steps';
 
 interface WizardStepProps {
   step: Step;

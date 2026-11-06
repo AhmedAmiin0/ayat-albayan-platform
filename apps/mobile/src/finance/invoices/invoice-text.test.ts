@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { INVOICE } from '../shared/fixtures';
+import { INVOICE } from '@/finance/shared/fixtures';
 import { invoiceKind, invoiceStudents, invoiceSubtitle } from './invoice-text';
 
 test('students are joined, a booking without one says so', () => {

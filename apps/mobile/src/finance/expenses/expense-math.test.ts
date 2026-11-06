@@ -1,4 +1,4 @@
-import { EXPENSE } from '../shared/fixtures';
+import { EXPENSE } from '@/finance/shared/fixtures';
 import { totalsByCurrency } from './expense-math';
 
 test('totals per currency, categories biggest first, cents rounded', () => {

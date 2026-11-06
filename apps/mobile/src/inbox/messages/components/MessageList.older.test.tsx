@@ -4,8 +4,8 @@ import { FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { AT_NEWEST, MessageList, OLDER_THRESHOLD } from './MessageList';
-import { cachedThread, detail, inbound, message, PHONE } from '../../shared/thread-fixtures';
-import type { useThread } from '../../thread/hooks/use-thread';
+import { cachedThread, detail, inbound, message, PHONE } from '@/inbox/shared/thread-fixtures';
+import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
 // Owner 2026-10-27 «do like WhatsApp»: no «رسائل أقدم» button; reaching the top loads the next page.
 jest.mock('@/core/lib/http/api', () => ({

@@ -3,9 +3,9 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 import { renderWithQuery } from '@/test/query';
 import { MessageList } from './MessageList';
-import { dayLabel } from '../days/day-label';
-import { cachedThread, detail, message, PHONE } from '../../shared/thread-fixtures';
-import type { useThread } from '../../thread/hooks/use-thread';
+import { dayLabel } from '@/inbox/messages/days/day-label';
+import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
+import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
 // Owner 2026-10-27 (screenshot): the floating «الأربعاء» was drawn over the inline «الأحد». As
 // WhatsApp, it hides while an inline separator is in its band and comes back once it scrolled past.

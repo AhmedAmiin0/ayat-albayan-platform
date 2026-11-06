@@ -1,6 +1,7 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
@@ -29,7 +30,7 @@ import { usePastUsedBefore } from './UsedBeforeField';
 /** studentId, the form's prefill (form-prefill) and, after a booking, the first lesson's day; renew from «جدّد الاشتراك». */
 type Params = FormPrefill & { studentId?: string; startsOn?: string; renew?: string };
 
-const back = () => (router.canGoBack() ? router.back() : router.replace('/inbox'));
+const back = () => backWithin('/inbox');
 
 /** GET /students/:id (the student screen's key): name, code, zone and the siblings to pick from. */
 function useProfile(id: string) {

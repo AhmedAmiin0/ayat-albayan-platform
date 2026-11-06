@@ -1,5 +1,6 @@
 import { cancelOffered, chatBinding, type SalesPaymentView } from '@ab/shared';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { apiSend } from '@/core/lib/http/api';
@@ -12,10 +13,10 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { chosenOpen, familyKey, openPackages, useSalesFamily } from '../lib/family';
-import { OpenPackagePicker } from '../components/OpenPackagePicker';
-import { TransferDone } from '../components/TransferDone';
-import { TransferForm } from '../components/TransferForm';
+import { chosenOpen, familyKey, openPackages, useSalesFamily } from '@/sales-subscribe/lib/family';
+import { OpenPackagePicker } from '@/sales-subscribe/components/OpenPackagePicker';
+import { TransferDone } from '@/sales-subscribe/components/TransferDone';
+import { TransferForm } from '@/sales-subscribe/components/TransferForm';
 
 /** The chat's number; the package (right after «احفظ الاشتراك»). */
 type Params = { phone?: string; subscriptionId?: string };
@@ -37,7 +38,7 @@ export function SalesTransferScreen() {
   // A child not hers (sales.renew_any, docs/16 row 38): the transfer only, never «إلغاء الباقة» (hers only).
   const bind = sub ? chatBinding(family.data?.students ?? [], { studentId: sub.student.id, phone }) : {};
   const base = useTreeBase();
-  const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
+  const back = () => backWithin(inTree(base, '/inbox'));
   return (
     <Screen>
       <ScrollView

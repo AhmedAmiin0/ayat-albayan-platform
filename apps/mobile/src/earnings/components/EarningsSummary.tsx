@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { egp } from '../lib/format';
+import { egp } from '@/earnings/lib/format';
 
 function Card({ label, amount, strong }: { label: string; amount: number; strong?: boolean }) {
   const { color } = useTheme();

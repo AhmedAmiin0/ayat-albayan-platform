@@ -3,13 +3,13 @@ import type { TextInput } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
-import { TemplateIcon } from '../../shared/chat-icons';
-import { EmojiIcon } from '../../shared/composer-icons';
-import { AttachFile } from '../AttachFile';
-import { ComposerInput, type Selection } from '../ComposerInput';
-import { EmojiSheet } from '../emoji/EmojiSheet';
-import { insertAt } from '../emoji/emoji-list';
-import { QuoteButton } from '../quote/QuoteButton';
+import { TemplateIcon } from '@/inbox/shared/chat-icons';
+import { EmojiIcon } from '@/inbox/shared/composer-icons';
+import { AttachFile } from '@/inbox/composer/AttachFile';
+import { ComposerInput, type Selection } from '@/inbox/composer/ComposerInput';
+import { EmojiSheet } from '@/inbox/composer/emoji/EmojiSheet';
+import { insertAt } from '@/inbox/composer/emoji/emoji-list';
+import { QuoteButton } from '@/inbox/composer/quote/QuoteButton';
 
 export interface PillProps {
   phone: string;

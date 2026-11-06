@@ -1,5 +1,5 @@
 import { freshRecordingUrl } from './recordings-queries';
-import { recording, recordingsPage } from '../testing/fixtures';
+import { recording, recordingsPage } from '@/student-file/testing/fixtures';
 
 const rec = (id: string, url: string | null) => recording({ id, url });
 const page = (n: number, items: ReturnType<typeof rec>[]) => ({ ...recordingsPage(items), page: n });

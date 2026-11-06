@@ -1,10 +1,10 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, inbound, thread } from '../shared/thread-fixtures';
-import { ThreadScreen } from '../screens/ThreadScreen';
+import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { MINE, REPLIES, WELCOME } from './testing/fixtures';
-import { clearComposerDrafts } from '../composer/draft-store';
+import { clearComposerDrafts } from '@/inbox/composer/draft-store';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

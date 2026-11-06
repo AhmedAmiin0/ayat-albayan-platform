@@ -1,9 +1,9 @@
 import { cleanup, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, inbound, thread } from '../shared/thread-fixtures';
-import { InboxScreen } from '../screens/InboxScreen';
-import { ThreadScreen } from '../screens/ThreadScreen';
+import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
+import { InboxScreen } from '@/inbox/screens/InboxScreen';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { forgetReopens } from './use-thread-reopen';
 
 // «إعادة فتح المحادثة» (owner 2026-10-26): opening a closed chat asks once per thread per app session;

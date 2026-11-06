@@ -11,8 +11,7 @@ describe('evolutionConfigSchema', () => {
   it('defaults: groups ignored, no full sync, no auto read, 3 s gap, 60 a day, 3 errors', () => {
     const c = evolutionConfigSchema.parse({});
     expect(c.behaviour).toEqual({
-      reject_call: false, msg_call: '', groups_ignore: true, always_online: false,
-      read_messages: false, read_status: false, sync_full_history: false,
+      reject_call: false, msg_call: '', groups_ignore: true, read_messages: false, read_status: false, sync_full_history: false,
     });
     expect(c.limits).toEqual({ gap_ms: 3_000, daily_cap: 60, error_trip: 3 });
     const events = [...EVOLUTION_DEFAULT_EVENTS];
@@ -31,9 +30,15 @@ describe('evolutionConfigSchema', () => {
     expect(evolutionHookUrl(null, 'sec-1')).toBeNull();
   });
 
-  it('the typing delay is capped at 2 s (it holds the sender loop)', () => {
-    expect(evolutionConfigSchema.safeParse({ sending: { delay_ms: 2_000 } }).success).toBe(true);
-    expect(evolutionConfigSchema.safeParse({ sending: { delay_ms: 2_001 } }).success).toBe(false);
+  it('no typing delay and no always-online: old stored values still read, then are dropped', () => {
+    const old = {
+      sending: { delay_ms: 1_500, link_preview: true }, behaviour: { always_online: true },
+    };
+    const read = evolutionConfigOf(old);
+    expect(read.sending).toEqual({ link_preview: true });
+    expect(read.behaviour).not.toHaveProperty('always_online');
+    expect(evolutionConfigSchema.parse(old).sending).not.toHaveProperty('delay_ms');
+    expect(evolutionConfigSchema.safeParse({ sending: { delay_ms: 15_000 } }).success).toBe(true);
     expect(evolutionConfigSchema.safeParse({ limits: { error_trip: 0 } }).success).toBe(false);
   });
 
@@ -49,9 +54,9 @@ describe('evolutionConfigSchema', () => {
   it('a stored value that no longer reads falls back to the defaults', () => {
     expect(evolutionConfigOf({ limits: { gap_ms: 'x' } })).toEqual(evolutionConfigSchema.parse({}));
     const proxy = { enabled: true, host: 'p.example.test', port: 3128 };
-    const kept = evolutionConfigOf({ proxy, sending: { delay_ms: 15_000 } });
+    const kept = evolutionConfigOf({ proxy, limits: { gap_ms: 90_000 } });
     expect(kept.proxy).toMatchObject(proxy);
-    expect(kept.sending.delay_ms).toBe(0);
+    expect(kept.limits.gap_ms).toBe(3_000);
     expect(evolutionConfigOf(null).limits.daily_cap).toBe(60);
     expect(evolutionSyncOf({ synced: 'yes' })).toBeNull();
   });

@@ -4,7 +4,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
-import type { AvatarSource } from '../lib/avatar';
+import type { AvatarSource } from '@/account/lib/avatar';
 
 interface AvatarButtonsProps {
   /** A new photo is in the preview, not uploaded yet. */

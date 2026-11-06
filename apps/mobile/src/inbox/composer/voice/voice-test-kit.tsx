@@ -1,8 +1,8 @@
 import { act, fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, message, thread } from '../../shared/thread-fixtures';
-import { ThreadScreen } from '../../screens/ThreadScreen';
+import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 // Shared by the voice tests: a fake expo-audio recorder (no native module, nothing recorded) and a
 // chat with an open window. Each test file mocks with `jest.mock('expo-audio', () => require(kit).audioMock())`.

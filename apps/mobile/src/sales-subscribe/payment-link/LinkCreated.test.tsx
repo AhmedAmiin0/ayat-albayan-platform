@@ -2,8 +2,8 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking, Platform } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { PHONE } from '../testing/fixtures';
-import { paymentLink } from '../testing/link-fixtures';
+import { PHONE } from '@/sales-subscribe/testing/fixtures';
+import { paymentLink } from '@/sales-subscribe/testing/link-fixtures';
 import { LinkCreated } from './LinkCreated';
 import { linkMessage } from './link-text';
 

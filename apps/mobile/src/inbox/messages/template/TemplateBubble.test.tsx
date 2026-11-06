@@ -3,8 +3,8 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking, StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { MessageBubble } from '../components/MessageBubble';
-import { delivered, inbound, PHONE } from '../../shared/thread-fixtures';
+import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
+import { delivered, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 
 // A template drawn like WhatsApp (owner 2026-10-28): header, body, grey footer, buttons under it.
 

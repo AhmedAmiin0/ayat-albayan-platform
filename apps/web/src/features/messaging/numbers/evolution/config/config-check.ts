@@ -18,7 +18,7 @@ export const rawOf = (d: ConfigDraft) => ({
   behaviour: d.behaviour,
   webhook: d.webhook,
   proxy: { ...d.proxy, port: numberOrNull(d.proxy.port) },
-  sending: { ...d.sending, delay_ms: numberOrNull(d.sending.delay_ms) },
+  sending: d.sending,
   limits: {
     gap_ms: numberOrNull(d.limits.gap_ms),
     daily_cap: numberOrNull(d.limits.daily_cap),

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { ReplyIcon } from '../../shared/chat-icons';
+import { ReplyIcon } from '@/inbox/shared/chat-icons';
 
 /** Theirs, from a tap on a template button: a small «ضغطة زرّ» mark over the tapped label (the body). */
 export function TappedLabel({ message: m }: { message: MessageView }) {

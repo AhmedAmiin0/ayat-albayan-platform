@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { CATEGORIES } from '../shared/fixtures';
+import { CATEGORIES } from '@/finance/shared/fixtures';
 import { activeCategories, categoryLabel } from './categories';
 
 test('a known key shows the table label, a seeded key its word, an unknown key itself', () => {

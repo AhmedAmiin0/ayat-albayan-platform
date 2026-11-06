@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { formResponse, reportView } from '../testing/fixtures';
+import { formResponse, reportView } from '@/teacher/report/testing/fixtures';
 import { ReportFormScreen } from './ReportFormScreen';
 
 const mockApiFetch = jest.fn();

@@ -3,7 +3,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { AssistantDetailScreen } from './AssistantDetailScreen';
-import { ALL, ASSISTANT, commission, routes, termsRowOf } from '../api/fixtures';
+import { ALL, ASSISTANT, commission, routes, termsRowOf } from '@/assistants/api/fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

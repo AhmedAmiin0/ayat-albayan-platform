@@ -2,7 +2,7 @@ import { emptyContent, type ReportFormResponse } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { formResponseV2 } from '../testing/fixtures';
+import { formResponseV2 } from '@/teacher/report/testing/fixtures';
 import { ReportEntryCardV2 } from './ReportEntryCardV2';
 
 const mockApiSend = jest.fn();

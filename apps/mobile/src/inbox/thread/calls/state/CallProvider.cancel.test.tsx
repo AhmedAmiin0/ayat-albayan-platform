@@ -2,8 +2,8 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { setAudioModeAsync } from 'expo-audio';
 import { Vibration } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { PLAYBACK } from '../rtc/audio-route';
-import type { MicAnswer } from '../rtc/media';
+import { PLAYBACK } from '@/inbox/thread/calls/rtc/audio-route';
+import type { MicAnswer } from '@/inbox/thread/calls/rtc/media';
 import { deferred, fakeRtc, ON, ringing, routes } from './call-test-kit';
 import { mountCalls as mount, placed } from './call-test-mount';
 

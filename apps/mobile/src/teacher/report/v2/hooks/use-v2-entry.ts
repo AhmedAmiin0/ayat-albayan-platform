@@ -13,8 +13,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import arBundle from '@ab/shared/i18n/ar.json';
 import { t } from '@/core/lib/i18n/i18n';
-import { refreshAfterSubmit } from '../../hooks/api';
-import { useDraftAutosave } from '../../hooks/use-autosave';
+import { refreshAfterSubmit } from '@/teacher/report/hooks/api';
+import { useDraftAutosave } from '@/teacher/report/hooks/use-autosave';
 import { saveDraftV2, submitReportV2 } from './api';
 
 /** The suggestion templates, read per call (t can be overridden after boot). */

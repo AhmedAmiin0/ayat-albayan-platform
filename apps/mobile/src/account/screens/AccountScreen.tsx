@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
@@ -7,13 +7,13 @@ import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { AccountSummary } from '../components/AccountSummary';
-import { AvatarSection } from '../sections/AvatarSection';
-import { EmailSection } from '../sections/EmailSection';
-import { NameSection } from '../sections/NameSection';
-import { PasswordSection } from '../sections/PasswordSection';
-import { PhoneSection } from '../sections/PhoneSection';
-import { useMyProfile } from '../hooks/queries';
+import { AccountSummary } from '@/account/components/AccountSummary';
+import { AvatarSection } from '@/account/sections/AvatarSection';
+import { EmailSection } from '@/account/sections/EmailSection';
+import { NameSection } from '@/account/sections/NameSection';
+import { PasswordSection } from '@/account/sections/PasswordSection';
+import { PhoneSection } from '@/account/sections/PhoneSection';
+import { useMyProfile } from '@/account/hooks/queries';
 
 export interface AccountScreenProps {
   /** The «المزيد» this screen was opened from, for «رجوع» on a cold deep link. */
@@ -27,7 +27,7 @@ export interface AccountScreenProps {
 export function AccountScreen({ home }: AccountScreenProps) {
   const { color } = useTheme();
   const profile = useMyProfile();
-  const back = () => (router.canGoBack() ? router.back() : router.replace(home));
+  const back = () => backWithin(home);
   const data = profile.data;
   return (
     <Screen>

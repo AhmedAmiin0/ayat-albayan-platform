@@ -1,7 +1,7 @@
 import { Pressable } from 'react-native';
 import { shape, useTheme } from '@/theme';
 import { pressScale } from '@/core/ui/primitives/Button';
-import { PauseIcon, PlayIcon } from '../../shared/chat-icons';
+import { PauseIcon, PlayIcon } from '@/inbox/shared/chat-icons';
 import { Spinner } from './Spinner';
 
 interface VoiceButtonProps {

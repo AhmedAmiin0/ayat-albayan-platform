@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
-import { PAID } from '../shared/fixtures';
+import { PAID } from '@/finance/shared/fixtures';
 import { PayoutFacts } from './PayoutFacts';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).

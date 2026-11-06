@@ -5,7 +5,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
-import type { TimeEditResult } from '../lib/types';
+import type { TimeEditResult } from '@/edit-time/lib/types';
 import { useViewerClock } from '@/core/lib/clock';
 
 export interface EditTimeDoneProps {

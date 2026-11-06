@@ -1,5 +1,5 @@
 import { egp, sessionDetail, sessionWhen } from './format';
-import { SESSIONS } from '../testing/fixtures';
+import { SESSIONS } from '@/earnings/testing/fixtures';
 
 test('teacher money is EGP with the isolated amount', () => {
   expect(egp(145)).toContain('145');

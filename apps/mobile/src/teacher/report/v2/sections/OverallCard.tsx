@@ -1,9 +1,9 @@
 import { effective, suggestOverall } from '@ab/shared';
 import { fillSlots } from '@ab/client-core';
 import { t } from '@/core/lib/i18n/i18n';
-import type { V2EntryState } from '../hooks/use-v2-entry';
-import { Card } from '../ui/Card';
-import { GradePills } from '../ui/GradePills';
+import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
+import { Card } from '@/teacher/report/v2/ui/Card';
+import { GradePills } from '@/teacher/report/v2/ui/GradePills';
 
 /** «التقدير العام»: preselected from the rows' grades until the teacher picks one. */
 export function OverallCard({ s }: { s: V2EntryState }) {

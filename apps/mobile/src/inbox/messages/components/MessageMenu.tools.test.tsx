@@ -4,10 +4,10 @@ import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ChatActionsProvider } from '../../thread/components/ChatActionsProvider';
-import { ChatNotice } from '../../thread/components/ChatNotice';
+import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
+import { ChatNotice } from '@/inbox/thread/components/ChatNotice';
 import { MessageBubble } from './MessageBubble';
-import { message, PHONE, thread } from '../../shared/thread-fixtures';
+import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
 // «نسخ النص» and «تنزيل» in the long-press menu (owner 2026-10-26), JS only: no clipboard module.
 const mockApiFetch = jest.fn();

@@ -3,11 +3,11 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 import { renderWithQuery } from '@/test/query';
 import { MessageList } from './MessageList';
-import { dayLabel } from '../days/day-label';
-import { TOP_DAY_HIDE_MS } from '../days/use-top-day';
-import { clock } from '../hooks/message-text';
-import { cachedThread, detail, message, PHONE } from '../../shared/thread-fixtures';
-import type { useThread } from '../../thread/hooks/use-thread';
+import { dayLabel } from '@/inbox/messages/days/day-label';
+import { TOP_DAY_HIDE_MS } from '@/inbox/messages/days/use-top-day';
+import { clock } from '@/inbox/messages/hooks/message-text';
+import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
+import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
 // Owner 2026-10-27: a chip over each day's first message, a floating day while scrolling, and the
 // bubbles' times without the date.

@@ -1,5 +1,5 @@
 import type { PaymentKind, SubscriptionStatus } from '@ab/shared';
-import { monthRange } from '../shared/months';
+import { monthRange } from '@/money/shared/months';
 
 export type SubscriptionFilter = SubscriptionStatus | 'partial' | 'all';
 

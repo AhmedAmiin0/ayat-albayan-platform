@@ -2,9 +2,9 @@ import type { MyPaymentRow } from '@ab/shared';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
-import { LoadState } from '../components/LoadState';
-import { useMyPayments } from '../lib/my-api';
-import { MyPaymentItem } from '../components/MyPaymentItem';
+import { LoadState } from '@/sales-money/components/LoadState';
+import { useMyPayments } from '@/sales-money/lib/my-api';
+import { MyPaymentItem } from '@/sales-money/components/MyPaymentItem';
 
 const renderRow = ({ item }: ListRenderItemInfo<MyPaymentRow>) => <MyPaymentItem payment={item} />;
 

@@ -1,7 +1,7 @@
 import { INBOX_FALLBACK_MS, INBOX_LIST_REFRESH_MS } from '@ab/client-core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { inboxLive } from '../thread/live';
+import { inboxLive } from '@/inbox/thread/live';
 import { useThreadList } from './use-thread-list';
 
 // The chats tab re-reads its list while focused, so unread counts and order update (owner 2026-10-27).

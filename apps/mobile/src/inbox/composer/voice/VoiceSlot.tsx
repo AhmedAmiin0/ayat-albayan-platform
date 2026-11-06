@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useCalls } from '../../thread/calls/state/call-context';
+import { useCalls } from '@/inbox/thread/calls/state/call-context';
 import { useVoice, type VoiceUi } from './use-voice';
 import { useVoiceGuards } from './use-voice-guards';
 
