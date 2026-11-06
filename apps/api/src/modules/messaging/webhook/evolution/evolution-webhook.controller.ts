@@ -39,7 +39,7 @@ export class EvolutionWebhookController {
 
   constructor(private readonly evolution: EvolutionWebhookService) {}
 
-  /** 429 over the limit, 404 unknown instance (503 before the numbers load), 401 bad token, 500 when an item failed. */
+  /** 429 over budget, 404 unknown (503 before numbers load), 401 bad token, 500 failed item. */
   @Post(':instance')
   @HttpCode(200)
   async receive(

@@ -4280,7 +4280,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/inbox/reactions/reaction.fakes.ts": {
@@ -5280,7 +5280,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/messaging/numbers/config/numbers.secrets.test.ts": {
@@ -6426,11 +6426,8 @@
     }
   },
   "src/modules/messaging/whatsapp/client-factory.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/direct/auth-template.test.ts": {
@@ -6945,7 +6942,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 22
+      "count": 21
     }
   },
   "src/modules/messaging/whatsapp/messages/message.mapper.crm.test.ts": {
@@ -7353,10 +7350,10 @@
   },
   "src/modules/messaging/whatsapp/sender/send-plan.ts": {
     "complexity": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
-      "count": 13
+      "count": 11
     }
   },
   "src/modules/messaging/whatsapp/sender/send-stale.trial-date.test.ts": {

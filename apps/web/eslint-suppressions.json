@@ -3338,7 +3338,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "no-nested-ternary": {
       "count": 2
@@ -3815,7 +3815,7 @@
   },
   "src/features/messaging/numbers/card/NumberCard.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/numbers/card/NumberHealthLine.tsx": {
@@ -3956,11 +3956,6 @@
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/features/messaging/numbers/numbers.fixture.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/messaging/numbers/use-numbers-mutation.ts": {
@@ -6173,7 +6168,7 @@
   },
   "src/features/platform/integrations/integration-places.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/platform/integrations/integrations-api.ts": {
