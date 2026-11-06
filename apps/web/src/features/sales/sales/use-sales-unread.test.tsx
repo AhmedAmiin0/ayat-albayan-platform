@@ -2,10 +2,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { INBOX_REFRESH_MS, inboxLive, inboxPollMs } from '@/features/messaging/inbox';
+import { INBOX_REFRESH_MS, inboxLive } from '@/features/messaging/inbox';
 import { t } from '@/lib/i18n/i18n';
 import { ApiError } from '@/lib/http/api';
-import { salesUnreadQuery, unreadRetry, unreadTitle, useSalesUnread } from './use-sales-unread';
+import { salesUnreadPollMs, salesUnreadQuery, unreadRetry, unreadTitle, useSalesUnread } from './use-sales-unread';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -67,10 +67,10 @@ describe('salesUnreadQuery', () => {
   it('lives under ["threads"] and never polls from a hidden tab', () => {
     const q = salesUnreadQuery(true);
     expect(q.queryKey).toEqual(['threads', 'nav-count', 'unread']);
-    expect(q.refetchInterval).toBe(inboxPollMs);
-    expect(inboxPollMs()).toBe(INBOX_REFRESH_MS);
+    expect(q.refetchInterval).toBe(salesUnreadPollMs);
+    expect(salesUnreadPollMs()).toBe(INBOX_REFRESH_MS);
     inboxLive.setLive(true);
-    expect(inboxPollMs()).toBe(20_000); // connected: the safety net; its events refresh it sooner
+    expect(salesUnreadPollMs()).toBe(false); // connected: its events re-read it (docs/43 AU6)
     inboxLive.setLive(false);
     expect('refetchIntervalInBackground' in q).toBe(false);
     expect(salesUnreadQuery(false).enabled).toBe(false);

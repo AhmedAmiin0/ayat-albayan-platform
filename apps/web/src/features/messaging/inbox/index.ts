@@ -2,7 +2,6 @@ export {
   changeLeadStatus,
   handOffMessage,
   INBOX_REFRESH_MS,
-  inboxPollMs,
   type InboxLead,
   leadByPhoneQuery,
   markSentManually,

@@ -37,7 +37,9 @@ async function mount(enabled = true) {
   const invalidate = jest.spyOn(client, 'invalidateQueries').mockResolvedValue(undefined);
   const hook = await renderHook(() => useInboxRealtime(enabled));
   await act(async () => undefined); // setAuth, then the join
-  const chats = () => refetch.mock.calls.filter(([f]) => f?.queryKey?.[0] === 'thread-poll').map(([f]) => f?.queryKey?.[1]);
+  const isChat = (k: unknown) => k === 'thread-poll' || k === 'thread-delta';
+  const chatCalls = () => refetch.mock.calls.filter(([f]) => isChat(f?.queryKey?.[0]));
+  const chats = () => chatCalls().map(([f]) => f?.queryKey?.[1]);
   const lists = () => jest.mocked(changeLists).mock.calls.length;
   return { hook, chats, lists, badges: () => invalidate.mock.calls.length };
 }
@@ -70,16 +72,16 @@ test('disabled (no inbox.read): never subscribes', async () => {
   expect(mockSupabase.channel).not.toHaveBeenCalled();
 });
 
-test('an event for the open chat re-reads its newest page once; another phone only the list and the badge', async () => {
+test('an event for the open chat re-reads it, not the badge (AU6); another: list + badge', async () => {
   const release = [inboxLive.watch(chatLiveKey(OPEN)), inboxLive.watch('list')];
   const m = await mount();
   await send(OPEN);
   expect(m.chats()).toEqual([OPEN]);
-  expect([m.lists(), m.badges()]).toEqual([1, 1]);
+  expect([m.lists(), m.badges()]).toEqual([1, 0]);
   await act(() => jest.advanceTimersByTimeAsync(5_000));
   await send(OTHER);
   expect(m.chats()).toEqual([OPEN]);
-  expect(m.lists()).toBe(2);
+  expect([m.lists(), m.badges()]).toEqual([2, 1]);
   expect(threadPollKey(OPEN)).toEqual(['thread-poll', OPEN]);
   release.forEach((r) => r());
   await m.hook.unmount();
@@ -99,12 +101,12 @@ test('a burst of 20 events → at most 2 fetches per target', async () => {
   const m = await mount();
   for (let i = 0; i < 20; i += 1) await send(OPEN);
   await act(() => jest.advanceTimersByTimeAsync(10_000));
-  expect([m.chats().length, m.lists(), m.badges()]).toEqual([2, 2, 2]);
+  expect([m.chats().length, m.lists(), m.badges()]).toEqual([2, 2, 0]);
   release.forEach((r) => r());
   await m.hook.unmount();
 });
 
-test('SUBSCRIBED → live, and one refresh of what is on screen; reconnect and foreground refresh once more', async () => {
+test('SUBSCRIBED: one refresh; a reconnect: one more; foreground still joined: none (AU3)', async () => {
   const release = inboxLive.watch('list');
   const m = await mount();
   await act(async () => mockHooks.status?.('SUBSCRIBED'));
@@ -116,7 +118,7 @@ test('SUBSCRIBED → live, and one refresh of what is on screen; reconnect and f
   expect(m.lists()).toBe(2);
   await act(() => jest.advanceTimersByTimeAsync(5_000));
   await act(async () => mockAppChange?.('active'));
-  expect(m.lists()).toBe(3);
+  expect(m.lists()).toBe(2);
   release();
   await m.hook.unmount();
   expect(inboxLive.isLive()).toBe(false);

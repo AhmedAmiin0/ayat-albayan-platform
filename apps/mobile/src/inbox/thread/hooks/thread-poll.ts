@@ -1,4 +1,4 @@
-import { chatLiveKey, deltaSearch, freshRow, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead, THREAD_FULL_MS } from '@ab/client-core';
+import { chatLiveKey, deltaSearch, freshRow, fullReadInterval, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead } from '@ab/client-core';
 import type { ThreadDelta, ThreadDetail } from '@ab/shared';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
@@ -8,7 +8,7 @@ import { leavesGap, mergeNewest, sendKey, threadKey, threadPath, type ThreadCach
 
 /** The polls' own keys: outside threadKey, so a push's invalidation never runs them too. */
 export const threadPollKey = (phone: string) => ['thread-poll', phone];
-const threadDeltaKey = (phone: string) => ['thread-delta', phone];
+export const threadDeltaKey = (phone: string) => ['thread-delta', phone];
 
 /** A send or a thread fetch in flight wins: its answer would overwrite a merge, or show a sent row twice. */
 const busy = (client: QueryClient, phone: string) =>
@@ -36,8 +36,9 @@ const foldPage = (fresh: ThreadDetail, moved: boolean) => (old: ThreadCache | un
  *   every THREAD_FULL_MS    the newest page (GET /threads/:phone), folded in by mergeNewest; the loaded
  *                           older pages are not re-read.
  * Too many new rows for one answer (a gap) re-read the whole thread instead.
- * Realtime (docs/12 §15) runs the page poll sooner on an event; while it is connected the delta slows to
- * INBOX_FALLBACK_MS (a safety net for a socket that died quietly); a change under another screen re-reads it on return.
+ * Realtime (docs/12 §15) runs the delta sooner on an event (docs/43 AU5, refreshOpenChat); while it is
+ * connected the delta slows to INBOX_FALLBACK_MS (the one safety net for a socket that died quietly) and
+ * the page to THREAD_FULL_LIVE_MS; a change under another screen re-reads it on return.
  */
 export function useThreadPoll(phone: string, loaded: boolean) {
   const client = useQueryClient();
@@ -75,6 +76,6 @@ export function useThreadPoll(phone: string, loaded: boolean) {
     },
     ...POLL,
     enabled: onScreen,
-    refetchInterval: onScreen ? THREAD_FULL_MS : false,
+    refetchInterval: onScreen ? fullReadInterval(live) : false,
   });
 }

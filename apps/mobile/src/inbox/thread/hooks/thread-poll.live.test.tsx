@@ -1,4 +1,4 @@
-import { INBOX_FALLBACK_MS, INBOX_REFRESH_MS } from '@ab/client-core';
+import { INBOX_FALLBACK_MS, INBOX_REFRESH_MS, THREAD_FULL_LIVE_MS, THREAD_FULL_MS } from '@ab/client-core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { detail, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
@@ -51,5 +51,16 @@ test('the channel drops: back to every 10 s', async () => {
   expect(mockApiFetch).toHaveBeenCalledTimes(1);
   await wait(INBOX_REFRESH_MS);
   expect(mockApiFetch).toHaveBeenCalledTimes(2);
+  await hook.unmount();
+});
+
+test('SUBSCRIBED: no whole page each minute, only every THREAD_FULL_LIVE_MS (docs/43 AU5)', async () => {
+  await act(async () => inboxLive.setLive(true));
+  const hook = await open();
+  const pages = () => mockApiFetch.mock.calls.filter(([p]) => !String(p).includes('?')).length;
+  await wait(THREAD_FULL_MS);
+  expect(pages()).toBe(0);
+  await wait(THREAD_FULL_LIVE_MS - THREAD_FULL_MS);
+  expect(pages()).toBe(1);
   await hook.unmount();
 });
