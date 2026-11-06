@@ -1,4 +1,5 @@
 import { clearComposerDrafts } from '@/inbox/composer/draft-store';
+import { clearHeldSends } from '@/inbox/thread/send/pinned-send';
 import { listenerSet } from './listeners';
 
 // «بحث في الرسائل» on the student's details (docs/37 NEW 2): the screen asks, goes back, and the
@@ -29,8 +30,12 @@ function clearSearchRequests(): void {
   asked.clear();
 }
 
-/** A sign-out forgets the chats' unsent drafts and any pending search ask together. */
+/**
+ * A sign-out forgets the chats' unsent drafts, any pending search ask and the held (unconfirmed)
+ * sends: the next user must never reuse their ids (the `admin:` dedup namespace is shared).
+ */
 export function clearChatMemory(): void {
   clearComposerDrafts();
   clearSearchRequests();
+  clearHeldSends();
 }

@@ -7,7 +7,7 @@ import { CalcSteps } from '@/features/finance/pricing';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { fillComposer } from '@/features/messaging/inbox/saved-replies/lib/filter';
-import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { getDraft, keptFailed, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { useMaySend } from '@/features/messaging/inbox/shared/may-send';
 import { QuoteActions } from './QuoteActions';
@@ -37,7 +37,8 @@ export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
   const ready = text !== null && !offer.stale;
   const edit = () => {
     if (!text) return;
-    setDraft(phone, { text: fillComposer(getDraft(phone).text, text), failed: null });
+    const now = getDraft(phone);
+    setDraft(phone, { text: fillComposer(now.text, text), failed: keptFailed(now.failed) });
     onFilled();
     onClose();
   };

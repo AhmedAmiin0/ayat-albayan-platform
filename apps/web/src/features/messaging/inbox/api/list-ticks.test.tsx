@@ -4,7 +4,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
-import { threadQuery, threadsQuery } from './api';
+import { threadsQuery } from './api';
+import { threadQuery } from './thread-query';
 import { useThreads, useTicksInLists } from './list-ticks';
 
 // docs/43 §2 (the owner's «pending in the list»), web: a list row follows its chat's tick.

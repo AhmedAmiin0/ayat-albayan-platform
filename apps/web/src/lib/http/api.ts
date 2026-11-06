@@ -1,4 +1,9 @@
-import { createApiClient, type SendMethod } from '@ab/client-core';
+import {
+  createApiClient,
+  readTimeoutFor,
+  type SendMethod,
+  withReadDeadline,
+} from '@ab/client-core';
 import { WEB_CLIENT_TAG } from './client-tag';
 import { env } from './env';
 import { supabase } from './supabase';
@@ -12,8 +17,15 @@ const client = createApiClient({
   clientTag: () => WEB_CLIENT_TAG,
 });
 
-/** fetch against the Nest API with the current Supabase access token and the client tag (`X-AB-Client`). */
-export const apiFetch = client.apiFetch;
+/**
+ * fetch against the Nest API with the current Supabase access token and the client tag
+ * (`X-AB-Client`). A read with no answer within readTimeoutFor(path) (20 s; a chat file 120 s)
+ * rejects as no answer and frees its request (docs/43 AU9, the same deadline as mobile).
+ */
+export const apiFetch = <T>(path: string, init?: RequestInit): Promise<T> => {
+  const timeoutMs = readTimeoutFor(path);
+  return withReadDeadline((sent) => client.apiFetch(path, sent), init, { timeoutMs });
+};
 
 /** JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. */
 export const apiSend = client.apiSend;

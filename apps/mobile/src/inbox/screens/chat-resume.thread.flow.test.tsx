@@ -2,7 +2,7 @@ import { renderApp, resetApp } from '@/test/app-router';
 import { THREAD_FULL_MS } from '@ab/client-core';
 import { act, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { READ_TIMEOUT_MS } from '@/core/lib/http/read-deadline';
+import { READ_TIMEOUT_MS } from '@ab/client-core';
 import { native } from '@/test/native-mocks';
 import { GUARDIAN_PHONE, inboxBackend } from '@/inbox/shared/flow-backend';
 import { message } from '@/inbox/shared/thread-fixtures';

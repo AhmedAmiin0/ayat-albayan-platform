@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { INBOX_REFRESH_MS, inboxPollMs, threadFileQuery, threadQuery, threadsQuery } from './api';
+import { INBOX_REFRESH_MS, inboxPollMs, threadFileQuery, threadsQuery } from './api';
+import { threadQuery } from './thread-query';
 import { inboxLive } from './live';
 
 const apiFetch = vi.hoisted(() => vi.fn());

@@ -3,8 +3,9 @@ import { QueryClient, QueryClientProvider, useInfiniteQuery } from '@tanstack/re
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { SEND_UNCONFIRMED } from '@ab/client-core';
 import { ApiError } from '@/lib/http/api';
-import { threadQuery } from '@/features/messaging/inbox/api/api';
+import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { clearAllDrafts, draftGeneration, getDraft } from './draft-store';
 import { ownSendGeneration } from './own-send';
@@ -101,14 +102,30 @@ describe('useTextSend: an optimistic send', () => {
     expect(s.ids().filter((id) => id === 's1' || id === ID)).toEqual(['s1']);
   });
 
-  it('a refused send takes the row out and puts the text back with its key', async () => {
-    apiSend.mockRejectedValue(new ApiError(500, null));
+  it('a refused send (4xx) takes the row out and puts the text back with its key', async () => {
+    apiSend.mockRejectedValue(new ApiError(422, null));
     const s = setup();
     act(() => s.hook.result.current.mutate(sending()));
     await waitFor(() => expect(s.hooks.settled).toHaveBeenCalled());
     expect(s.ids()).not.toContain(ID);
     expect(getDraft(PHONE)).toMatchObject({ text: 'وصلت', failed: { text: 'وصلت', id: ID } });
     expect(paths()).toEqual([]);
+  });
+
+  it('no answer (a 5xx too): the bubble stays «unconfirmed», the text and its id pin the box', async () => {
+    apiSend.mockRejectedValue(new ApiError(502, null));
+    const s = setup();
+    act(() => s.hook.result.current.mutate(sending()));
+    await waitFor(() => expect(s.hooks.settled).toHaveBeenCalled());
+    const bubble = s.cached()?.pages[0]?.messages.find((m) => m.id === ID);
+    expect(bubble?.error_code).toBe(SEND_UNCONFIRMED);
+    expect(getDraft(PHONE)).toMatchObject({ text: 'وصلت', failed: { id: ID, code: SEND_UNCONFIRMED } });
+    expect(paths()).toEqual([]);
+    // The retry (edited) with the pinned id takes the old bubble's place: one bubble, not two.
+    apiSend.mockReturnValue(new Promise(() => undefined));
+    act(() => s.hook.result.current.mutate({ ...sending(), text: 'وصلت الآن' }));
+    await waitFor(() => expect(s.ids().filter((id) => id === ID)).toHaveLength(1));
+    expect(s.cached()?.pages[0]?.messages.find((m) => m.id === ID)?.body).toBe('وصلت الآن');
   });
 
   it('a read in flight at the answer is replaced by a full one; the badge refreshes too', async () => {

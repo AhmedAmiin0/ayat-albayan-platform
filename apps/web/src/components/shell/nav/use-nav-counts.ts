@@ -11,7 +11,7 @@ type Total = { total: number };
 const countQuery = (prefix: string, path: string, enabled: boolean) => ({
   enabled,
   queryKey: [prefix, 'nav-count', path],
-  queryFn: () => apiFetch<Total>(path),
+  queryFn: ({ signal }: { signal: AbortSignal }) => apiFetch<Total>(path, { signal }),
   staleTime: 60_000,
   select: (p: Total) => p.total,
 });

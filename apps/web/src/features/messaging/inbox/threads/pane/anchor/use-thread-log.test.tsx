@@ -85,7 +85,8 @@ describe('useThreadLog', () => {
     expect(result.current.messages.map((m) => m.id)).toEqual([ID(2)]);
     rerender();
     expect(apiFetch).toHaveBeenCalledTimes(1);
-    expect(apiFetch).toHaveBeenCalledWith(`/threads/%2B966501234567?around=${ID(2)}`);
+    const around = `/threads/%2B966501234567?around=${ID(2)}`;
+    expect(apiFetch).toHaveBeenCalledWith(around, { signal: expect.any(AbortSignal) });
   });
 
   it('«الانتقال إلى أحدث رسالة» goes back to the live chat', async () => {

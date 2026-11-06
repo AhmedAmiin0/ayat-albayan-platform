@@ -21,10 +21,12 @@ const stageIds = () =>
 /** The text answer waits for `release()`; the stage and file answers come at once. */
 function holdText() {
   let release: () => void = () => undefined;
-  mockApiSend.mockImplementation((_m: string, path: string) => {
+  // A text's answer echoes it (another body would be a replay of a first message).
+  mockApiSend.mockImplementation((_m: string, path: string, sent?: { text?: string }) => {
     if (path.endsWith('/stage')) return Promise.resolve({ path: 'out/x.pdf', filename: 'الأسعار.pdf' });
     if (path.endsWith('/file')) return Promise.resolve(message({ id: 'f1', status: 'queued' }));
-    return new Promise((resolve) => (release = () => resolve(message({ id: 't1', status: 'queued' }))));
+    const row = message({ id: 't1', status: 'queued', body: sent?.text ?? null });
+    return new Promise((resolve) => (release = () => resolve(row)));
   });
   return () => release();
 }

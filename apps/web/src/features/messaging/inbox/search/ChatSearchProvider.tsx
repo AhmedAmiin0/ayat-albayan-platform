@@ -2,7 +2,7 @@ import { CHAT_SEARCH_CLOSED, chatSearchReducer } from '@ab/client-core';
 import type { ThreadDetail } from '@ab/shared';
 import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { useReducer, type ReactNode } from 'react';
-import { threadQuery } from '@/features/messaging/inbox/api/api';
+import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 import { useChatAnchor } from '@/features/messaging/inbox/shared/chat-anchor';
 import { ChatSearchContext, type ChatSearchValue } from './search-context';
 import { toNewest } from './to-newest';

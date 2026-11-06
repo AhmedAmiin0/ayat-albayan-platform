@@ -1,5 +1,6 @@
 import {
   appendMessage,
+  markUnconfirmed,
   refreshNewest,
   removeMessage,
   replaceMessage,
@@ -8,7 +9,8 @@ import {
 import type { MessageView, ThreadView } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import type { Page } from '@/features/sales/leads';
-import { threadPage, threadPath, threadQuery } from './api';
+import { threadPage, threadPath } from './api';
+import { threadQuery } from './thread-query';
 
 // What a send does to the cached chat and lists (docs/44 BUG3, as mobile does): the provisional row
 // shows at once, the API's row takes its place (or a refusal takes it out), then ONE read of the
@@ -50,7 +52,8 @@ function refreshSentChat(client: QueryClient, row: MessageView, own: string[]): 
 export async function showSending(client: QueryClient, row: MessageView): Promise<void> {
   const { queryKey } = threadQuery(row.phone_e164);
   await client.cancelQueries({ queryKey });
-  client.setQueryData(queryKey, (old) => appendMessage(old, row));
+  // A retry with a pinned id takes the place of its older «unconfirmed» bubble (docs/44 BUG7).
+  client.setQueryData(queryKey, (old) => appendMessage(removeMessage(old, row.id), row));
   touchLists(client, row);
 }
 
@@ -64,5 +67,11 @@ export function showSent(client: QueryClient, id: string, row: MessageView): voi
 /** A refused send: its bubble goes (the text is back in the box), the lists read the truth. */
 export function dropSending(client: QueryClient, phone: string, id: string): void {
   client.setQueryData(threadQuery(phone).queryKey, (old) => removeMessage(old, id));
+  refreshLists(client);
+}
+
+/** No answer (deadline, network, 5xx): the bubble stays, «unconfirmed»; only the lists re-read. */
+export function holdSending(client: QueryClient, phone: string, id: string): void {
+  client.setQueryData(threadQuery(phone).queryKey, (old) => markUnconfirmed(old, id));
   refreshLists(client);
 }

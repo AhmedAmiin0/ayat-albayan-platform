@@ -3,7 +3,8 @@ import type { ThreadView } from '@ab/shared';
 import { type QueryClient, type QueryKey, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
-import { threadQuery, threadsQuery } from './api';
+import { threadsQuery } from './api';
+import { threadQuery } from './thread-query';
 
 // The owner's pending tick (docs/43 §2, 43-1), web: the open chat merges ✓ / ✓✓ (delta, full read)
 // while the list beside it may still hold an older answer. A list row takes the tick its chat
