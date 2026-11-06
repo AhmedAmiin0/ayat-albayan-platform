@@ -1,4 +1,4 @@
-import { chatLiveKey, deltaSearch, INBOX_REFRESH_MS, mergeDelta, needsFullRead, THREAD_FULL_MS } from '@ab/client-core';
+import { chatLiveKey, deltaSearch, INBOX_REFRESH_MS, liveInterval, mergeDelta, needsFullRead, THREAD_FULL_MS } from '@ab/client-core';
 import type { ThreadDelta, ThreadDetail } from '@ab/shared';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
@@ -24,8 +24,8 @@ const POLL = { initialData: 0, staleTime: Infinity, gcTime: 0, meta: { noPersist
  *   every THREAD_FULL_MS    the newest page (GET /threads/:phone), folded in by mergeNewest; the loaded
  *                           older pages are not re-read.
  * Too many new rows for one answer (a gap) re-read the whole thread instead.
- * Realtime (docs/12 §15) runs the page poll sooner on an event; while it is connected the delta pauses
- * (one page read per THREAD_FULL_MS = INBOX_FALLBACK_MS); a change under another screen re-reads it on return.
+ * Realtime (docs/12 §15) runs the page poll sooner on an event; while it is connected the delta slows to
+ * INBOX_FALLBACK_MS (a safety net for a socket that died quietly); a change under another screen re-reads it on return.
  */
 export function useThreadPoll(phone: string, loaded: boolean) {
   const client = useQueryClient();
@@ -48,7 +48,7 @@ export function useThreadPoll(phone: string, loaded: boolean) {
     },
     ...POLL,
     enabled: onScreen,
-    refetchInterval: onScreen && !live ? INBOX_REFRESH_MS : false,
+    refetchInterval: onScreen ? liveInterval(live, INBOX_REFRESH_MS) : false,
   });
   useQuery({
     queryKey: threadPollKey(phone),
