@@ -33,11 +33,11 @@ describe('threadQuery polls only while the window has focus (W13)', () => {
     expect(inboxPollMs()).toBe(INBOX_REFRESH_MS);
   });
 
-  it('realtime connected: the list, the badge and the full re-read at the 60 s fallback; dropped: their own intervals again', () => {
+  it('realtime connected: list and badge at the 20 s safety net, the full re-read stays 60 s; dropped: their own again', () => {
     vi.spyOn(document, 'hasFocus').mockReturnValue(true);
     inboxLive.setLive(true);
     const polls = () => [interval(threadsQuery({ page: 1 }).refetchInterval), inboxPollMs(), interval(threadQuery('+966501234567').refetchInterval)];
-    expect(polls()).toEqual([60_000, 60_000, 60_000]);
+    expect(polls()).toEqual([20_000, 20_000, 60_000]);
     inboxLive.setLive(false);
     expect(polls()).toEqual([15_000, INBOX_REFRESH_MS, 60_000]);
   });

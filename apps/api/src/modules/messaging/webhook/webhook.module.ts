@@ -32,6 +32,7 @@ import { ExternalCatchUpJob } from './external/external-catchup.job';
 import { ExternalStatus, KAPSO_HISTORY } from './external/external-status';
 import { ExternalRepo } from './external/external.repo';
 import { ExternalStore } from './external/external.store';
+import { ManualEcho, ManualEchoRepo } from './external/manual-echo';
 import { KapsoHistory } from './external/kapso-history';
 import { InboundCatchUpJob } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.job';
 import { InboundCatchUpRepo } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.repo';
@@ -70,6 +71,8 @@ import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inb
     { provide: KAPSO_HISTORY, useFactory: () => new KapsoHistory() },
     ExternalRepo,
     ExternalStore,
+    ManualEcho,
+    ManualEchoRepo,
     ExternalStatus,
     ExternalCatchUpJob,
     // Families' messages the webhook missed (Kapso's inbound history, incident 2026-10-30).

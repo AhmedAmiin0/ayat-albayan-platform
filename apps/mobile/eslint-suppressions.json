@@ -5429,9 +5429,6 @@
     }
   },
   "src/inbox/messages/resend/FailedSheet.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     },
@@ -6771,7 +6768,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/thread/hooks/thread-poll.test.tsx": {
@@ -6923,15 +6920,7 @@
     }
   },
   "src/inbox/threads-list/ThreadRow.tsx": {
-    "max-len": {
-      "count": 1
-    },
     "no-restricted-syntax": {
-      "count": 2
-    }
-  },
-  "src/inbox/threads-list/ThreadTags.tsx": {
-    "ab/no-parent-imports": {
       "count": 2
     }
   },
@@ -7000,7 +6989,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/threads-list/ThreadsList.teacher.test.tsx": {
@@ -7021,7 +7010,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "no-nested-ternary": {
       "count": 1

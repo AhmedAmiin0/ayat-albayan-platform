@@ -9,7 +9,14 @@ import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-ro
 import { KapsoHold } from './kapso-hold';
 import { ReopenRequest } from './reopen-request';
 import { heldStep, holdable } from './window-rules';
-import { checkedAt, EXPIRED, expectedCode, holdDeadline, type FailWhy } from './window-reopen';
+import {
+  checkedAt,
+  EXPIRED,
+  expectedCode,
+  holdDeadline,
+  type FailWhy,
+  type HoldPlan,
+} from './window-reopen';
 import { WindowRelease } from './window-release';
 import { WindowRepo } from './window.repo';
 
@@ -91,9 +98,18 @@ export class WindowHold {
     const since = checkedAt(at.row, at.now);
     const from = expectedCode(at.row);
     const held = await this.repo.hold({ id: at.row.id, from, since, until, note: plan.note });
-    if (!held) return 'skipped';
+    if (!held) return this.missed(at.row, plan);
     await this.reopenKapso(at, plan.note);
     return 'waiting';
+  }
+
+  /**
+   * The row moved between ensure() and the hold's compare-and-set (review 2026-11-06): a reopen
+   * template this pass queued for it is failed too, unless a text of the family is still queued.
+   */
+  private async missed(row: DueMessage, plan: HoldPlan): Promise<HoldOutcome> {
+    await this.reopen.drop(row.phone_e164, plan);
+    return 'skipped';
   }
 
   /** Once per hold, after it is written: a Kapso failure is noted on the row, never blocks it. */

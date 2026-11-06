@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { REPORT_READY, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { newStarters } from '@/modules/messaging/whatsapp/templates/sync/template-import';
-import { wabaMatch, wabaNames, wabaSyncPatch } from './template-waba-match';
+import { crmSyncPatch, wabaMatch, wabaNames, wabaSyncPatch } from './template-waba-match';
 
 // docs/19 «CRM → Meta»: a meta line's sync reads a key by the WABA name it goes as.
 
@@ -75,5 +75,20 @@ describe('wabaNames and the import', () => {
     const list = ['teacher_lesson_v2', 'report_session', 'report_trial_session'].map((n) => meta(n, { components: [{ type: 'BODY', text: 'x' }] }));
     const plan = newStarters({ meta: [...list, meta('welcome', { components: [{ type: 'BODY', text: 'w' }] })], known: [ALERT, report], now: NOW, line: 'notifications' });
     expect(plan.rows.map((r) => r.key)).toEqual(['welcome']);
+  });
+});
+
+describe('crmSyncPatch (docs/39)', () => {
+  it('found by the name it is sent under: status, quality and reason; footer, display and body stay ours', () => {
+    const row = templateRow({ status: 'pending', display: { header: null, buttons: [] } });
+    const patch = crmSyncPatch(row, [meta('booking_confirmation', { status: 'REJECTED', quality: 'RED', rejectedReason: 'bad' })], NOW);
+    expect(patch).toEqual({ last_checked_at: NOW.toISOString(), status: 'rejected', quality: 'RED', last_error: 'bad' });
+    expect(Object.keys(patch)).not.toEqual(expect.arrayContaining(['footer_ar']));
+    expect(crmSyncPatch(ALERT, [meta('teacher_lesson_v2')], NOW)).toMatchObject({ status: 'approved', last_error: null });
+  });
+
+  it('absent from the CRM: only last_checked_at, never missing', () => {
+    expect(crmSyncPatch(ALERT, [meta('teacher_new_student')], NOW)).toEqual({ last_checked_at: NOW.toISOString() });
+    expect(crmSyncPatch(REPORT_READY, [], NOW)).toEqual({ last_checked_at: NOW.toISOString() });
   });
 });

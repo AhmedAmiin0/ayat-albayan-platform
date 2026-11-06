@@ -1,4 +1,4 @@
-import { AWAITING_REPLY } from '@ab/shared';
+import { APP_SEND_UNCONFIRMED, AWAITING_REPLY } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { MESSAGE_SELECT, type ThreadMessageRow } from './message.mapper';
@@ -7,6 +7,12 @@ import { HANDED_OFF, SENDING } from '@/modules/messaging/whatsapp/sender/send-pl
 
 /** Not while the sender holds the row (its claim): Meta may be sending it right now. */
 const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
+
+/**
+ * Never a row the platform handed to WhatsApp and staff did not confirm (docs/19): its text may
+ * have gone out from the app, so it is never put back to automatic sending (compare-and-set).
+ */
+const NOT_APP_SEND_UNCONFIRMED = `error_code.is.null,error_code.neq.${APP_SEND_UNCONFIRMED}`;
 
 const heldAgain = (at: Date) =>
   ({ error_code: AWAITING_REPLY, scheduled_for: at.toISOString(), expires_at: null }) as const;
@@ -29,7 +35,7 @@ export class MessagesRepo {
    * failed → queued with a fresh attempt budget; null when it is no longer failed, or it was never
    * ours to send: a message sent outside the app or imported (created_by null, attempts 0, a wamid).
    * `restart` (a held text's retry): held again (AWAITING_REPLY, never tried as free text), its
-   * 7 days from then (scheduled_for), no old deadline.
+   * 7 days from then (scheduled_for), no old deadline. Never an app_send_unconfirmed row.
    */
   async requeue(id: string, restart: Date | null = null): Promise<ThreadMessageRow | null> {
     const fresh = restart ? heldAgain(restart) : {};
@@ -39,6 +45,7 @@ export class MessagesRepo {
       .eq('id', id)
       .eq('status', 'failed')
       .or('attempts.gt.0,wa_message_id.is.null,created_by.not.is.null')
+      .or(NOT_APP_SEND_UNCONFIRMED)
       .select(MESSAGE_SELECT)
       .maybeSingle();
     if (error) throw new Error(`message retry failed: ${error.message}`);

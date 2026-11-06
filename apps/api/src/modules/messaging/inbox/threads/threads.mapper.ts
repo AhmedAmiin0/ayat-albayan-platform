@@ -65,7 +65,7 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     teacher_name: row.teacher_name,
     // An Evolution Baileys chat line has no 24 h window: free text at any time (docs/19).
     session_open: messagingWindowOpen(row, now) || windowless(chat),
-    ...familyFields(row.guardian_id ? (tag ?? { badge: 'none', unpaid: false }) : null),
+    ...familyFields(row.guardian_id ? (tag ?? NO_TAG) : null),
   };
 }
 
@@ -115,9 +115,16 @@ function shownReplyLine(row: ThreadRow, at: { chatConfigured: boolean; now: Date
   return at.chatConfigured || line === 'chat' ? line : null;
 }
 
+const NO_TAG: FamilyTag = { badge: 'none', unpaid: false, ring: null };
+
 /** A guardian's tags («مش مشترك» without students); none for a lead, a teacher or a stranger. */
-function familyFields(tag: FamilyTag | null): Pick<ThreadView, 'subscribed' | 'badge' | 'unpaid'> {
-  return { subscribed: tag?.badge === 'subscribed', badge: tag?.badge ?? null, unpaid: tag?.unpaid ?? false };
+type FamilyFields = Pick<ThreadView, 'subscribed' | 'badge' | 'unpaid' | 'ring'>;
+const NO_FAMILY: FamilyFields = { subscribed: false, badge: null, unpaid: false, ring: null };
+
+function familyFields(tag: FamilyTag | null): FamilyFields {
+  if (!tag) return NO_FAMILY;
+  const { badge, unpaid } = tag;
+  return { subscribed: badge === 'subscribed', badge, unpaid, ring: tag.ring ?? null };
 }
 
 /** H1 search: a phone in any format → its digits; else the display name. */

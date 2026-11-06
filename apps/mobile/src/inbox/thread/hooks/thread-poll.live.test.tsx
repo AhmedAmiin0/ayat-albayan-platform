@@ -5,8 +5,8 @@ import { detail, inbound, PHONE } from '../../shared/thread-fixtures';
 import { inboxLive } from '../live/inbox-live';
 import { useThread } from './use-thread';
 
-// docs/12 §15: while realtime is SUBSCRIBED the open chat re-reads only every INBOX_FALLBACK_MS (its
-// events re-read it sooner); not connected (error, timeout, closed, never) it polls every 10 s as before.
+// docs/12 §15: while realtime is SUBSCRIBED the open chat's delta slows to INBOX_FALLBACK_MS, a safety
+// net for a quietly dead socket (its events re-read it sooner); not connected it polls every 10 s.
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -33,12 +33,12 @@ afterEach(async () => {
   jest.useRealTimers();
 });
 
-test('SUBSCRIBED: one read per 60 s, none at 10 s', async () => {
+test('SUBSCRIBED: the delta slows to the safety net, none at 10 s', async () => {
   await act(async () => inboxLive.setLive(true));
   const hook = await open();
-  await wait(INBOX_REFRESH_MS * 3);
+  await wait(INBOX_REFRESH_MS);
   expect(mockApiFetch).not.toHaveBeenCalled();
-  await wait(INBOX_FALLBACK_MS - INBOX_REFRESH_MS * 3);
+  await wait(INBOX_FALLBACK_MS - INBOX_REFRESH_MS);
   expect(mockApiFetch).toHaveBeenCalledTimes(1);
   await hook.unmount();
 });

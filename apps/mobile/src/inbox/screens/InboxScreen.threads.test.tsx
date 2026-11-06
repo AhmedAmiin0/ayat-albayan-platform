@@ -54,9 +54,8 @@ test('the tab opens on every WhatsApp thread: a guardian and a teacher are reach
   expect(await screen.findByText('أم إيمان')).toBeTruthy();
   expect(screen.getByRole('header', { name: t.nav.conversations })).toBeTruthy();
   expect(screen.getByText('ممكن نأجل حلقة بكرة؟')).toBeTruthy();
-  expect(screen.getByText(t.inbox.kind.guardian)).toBeTruthy();
   expect(screen.getByText('هتأخر عشر دقايق')).toBeTruthy();
-  expect(screen.getByText(t.inbox.kind.teacher)).toBeTruthy();
+  expect(screen.getByText('أ. فاطمة')).toBeTruthy();
   expect(screen.getByLabelText(t.inbox.unread.one)).toBeTruthy();
   expect(screen.getByText(t.enums.messageStatus.failed)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/threads?page=1&pageSize=25');

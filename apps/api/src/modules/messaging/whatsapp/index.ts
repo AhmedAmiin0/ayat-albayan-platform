@@ -95,3 +95,5 @@ export { reopenUsable } from './sender/window/window-rules';
 export { ReopenRequest } from './sender/window/reopen-request';
 export { DAY_MS as REOPEN_LIFE_MS } from './sender/window/reopen-state';
 export { capsOf, windowless } from './drivers/driver-caps';
+export { stampDelivered } from './messages/delivered';
+export { ReopenCancel } from './sender/window/manual-send';

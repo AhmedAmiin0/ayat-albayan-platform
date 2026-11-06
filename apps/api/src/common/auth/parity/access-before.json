@@ -199,6 +199,7 @@
   "MeetingMuteController.mute": ["admin","assistant","sales","teacher"],
   "MeetingRecordingsController.list": ["admin","assistant","sales","teacher"],
   "MeetingShareController.share": ["admin","assistant","sales","teacher"],
+  "MessagesController.appSend": ["admin"],
   "MessagesController.gate": ["admin","sales","teacher"],
   "MyController.commissions": ["sales"],
   "MyController.earnings": ["sales"],

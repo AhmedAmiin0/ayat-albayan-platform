@@ -6,6 +6,7 @@ import { WebhookRepo } from '@/modules/messaging/webhook/webhook.repo';
 import { externalMessage, type ExternalMessage } from './external-message';
 import { externalRow } from './external-row';
 import { ExternalRepo } from './external.repo';
+import { ManualEcho } from './manual-echo';
 
 interface ExternalInput {
   /** Meta's message object (an echo, or an item of Kapso's history). */
@@ -15,7 +16,10 @@ interface ExternalInput {
   event?: StatusEvent;
 }
 
-/** stored = a new row; known = the wamid was already there; skipped = not an outbound message we can read. */
+/**
+ * stored = a new row; known = the wamid was already there, or it confirmed a «أرسل عبر واتساب»
+ * row (ManualEcho attached it); skipped = not an outbound message we can read.
+ */
 export type ExternalOutcome = 'stored' | 'known' | 'skipped';
 
 /** An outbound message we can read, with its customer's E.164 phone; null otherwise. */
@@ -39,6 +43,7 @@ export class ExternalStore {
   constructor(
     private readonly queries: ExternalRepo,
     private readonly webhook: WebhookRepo,
+    private readonly manual: ManualEcho,
   ) {}
 
   async store({ message, from, event }: ExternalInput): Promise<ExternalOutcome> {
@@ -46,8 +51,12 @@ export class ExternalStore {
     if (!read) return 'skipped';
     const { msg, phone } = read;
     if ((await this.queries.existing([msg.waMessageId])).size > 0) return 'known';
-    if (await this.queries.inFlight(phone)) return 'skipped';
     const numberId = from.numberId ?? (from.phoneNumberId ? await this.webhook.numberIdFor(from.phoneNumberId) : null);
+    // Never while our own send to the phone is unrecorded: its status may be this very message
+    // (the catch-up retries). Then every external path tries the «أرسل عبر واتساب» row first.
+    if (await this.queries.inFlight(phone)) return 'skipped';
+    const origin = { line: from.line, numberId };
+    if (await this.manual.attach({ msg, phone, from: origin, event })) return this.attached(phone, msg.at);
     const who = await this.webhook.identify(phone);
     const at = orderedAt(msg.at, await this.webhook.latestInSecond(phone, msg.at));
     const row = externalRow({ msg, phone, who, from: { line: from.line, numberId }, at, ...(event ? { event } : {}) });
@@ -56,6 +65,12 @@ export class ExternalStore {
     const marker = isHiddenPayload(row.interactive_payload);
     if (row.template_key !== ACCOUNT_CODE_TEMPLATE && !marker) await this.answered(phone, at);
     return 'stored';
+  }
+
+  /** The attached row answers the chat as a stored one does; the message is known now. */
+  private async attached(phone: string, at: Date): Promise<ExternalOutcome> {
+    await this.answered(phone, at);
+    return 'known';
   }
 
   /**

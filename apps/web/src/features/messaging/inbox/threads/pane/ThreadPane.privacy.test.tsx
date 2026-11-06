@@ -57,7 +57,7 @@ describe('teacher chat never shows the number', () => {
 
   it('list row: no name says who it is, not the number', () => {
     renderRow('teacher', { display_name: null });
-    expect(screen.getAllByText(t.inbox.kind.guardian)).toHaveLength(2);
+    expect(screen.getAllByText(t.inbox.kind.guardian)).toHaveLength(1); // the title (no role tag)
     for (const s of SHOWN) expect(readable()).not.toContain(s);
   });
 
@@ -74,8 +74,8 @@ describe('teacher chat never shows the number', () => {
     for (const s of SHOWN) expect(readable()).not.toContain(s);
   });
 
-  it('the admin still sees the number in the row and the header', async () => {
-    renderRow('admin', { display_name: 'أم سهيلة' });
+  it('the admin sees the number for an unnamed row and in the header', async () => {
+    renderRow('admin', { display_name: null });
     expect(readable()).toContain('+966 50 123 4567');
     renderPane('admin', page({ display_name: null }));
     expect(await screen.findByRole('heading', { name: '+966 50 123 4567' })).toBeTruthy();

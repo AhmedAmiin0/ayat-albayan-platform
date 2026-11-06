@@ -6,7 +6,7 @@ import { allowedRecipients, lineEnvs, loadEnv } from '@/config/env/env';
 import { stampDelivered } from '@/modules/messaging/whatsapp/messages/delivered';
 import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS } from './send-stale';
-import { anyDue, DUE_COLUMNS, type DueMessage } from './sender.due';
+import { anyDue, DUE_COLUMNS, NOT_APP_SENT, type DueMessage } from './sender.due';
 import { staffAtSend } from './staff-at-send';
 import { sendableTemplates } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
 import type { TemplateRow, WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -59,6 +59,7 @@ export class SenderRepo {
       .or(`scheduled_for.is.null,scheduled_for.lte.${now}`)
       .or(`next_attempt_at.is.null,next_attempt_at.lte.${now}`)
       .or(`template_key.is.null${approved}`)
+      .or(NOT_APP_SENT)
       .or('line.is.null,line.neq.calls'); // never a row of the calls number (docs/28 §10)
     const allowed = this.allowed;
     const sendable = this.chatConfigured ? query : query.or('template_key.not.is.null,line.is.null,line.neq.chat');
@@ -107,6 +108,7 @@ export class SenderRepo {
       .eq('id', input.id)
       .eq('status', 'queued')
       .eq('attempts', input.attempts)
+      .or(NOT_APP_SENT) // never a row staff may have sent from the app (docs/19)
       .select('id');
     if (error) throw new Error(`message claim failed: ${error.message}`);
     return data.length ? attempts : null;

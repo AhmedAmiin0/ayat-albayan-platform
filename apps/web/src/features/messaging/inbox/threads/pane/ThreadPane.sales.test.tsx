@@ -38,9 +38,9 @@ function renderRow(mode: InboxMode) {
 afterEach(() => apiFetch.mockReset());
 
 describe('inbox sales mode: scoped like the teacher, shown like the admin', () => {
-  it('the row shows the number next to the name and links under /sales/inbox', () => {
+  it('a named row shows the name only (no tags) and links under /sales/inbox', () => {
     renderRow('sales');
-    expect(document.body.textContent).toContain(GROUPED);
+    expect(document.body.textContent).not.toContain(GROUPED);
     expect(screen.getByRole('link').getAttribute('href')).toMatch(/^\/sales\/inbox\?/);
   });
 

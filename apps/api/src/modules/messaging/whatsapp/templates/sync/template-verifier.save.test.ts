@@ -2,7 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { lineSaved } from '@/common/configuration/integrations/provider-saved';
 import { templateServices } from './template-services.fakes';
 
-// docs/19 «CRM → Meta»: saving a line as meta syncs its templates once; nothing else does.
+// docs/19 «CRM → Meta», docs/39: saving a line as meta or crm syncs its templates once; nothing
+// else does.
 
 afterEach(() => vi.unstubAllEnvs());
 
@@ -22,13 +23,19 @@ describe('TemplateVerifier.afterSave', () => {
     expect(verifyAll).toHaveBeenCalledWith({ line: 'notifications' });
   });
 
-  it('saved as crm or kapso, the line not configured, or the sync off: nothing', async () => {
+  it('a line saved as crm (docs/39): one sync of that line', async () => {
     const { v, verifyAll } = verifier();
     await v.afterSave({ line: 'notifications', provider: 'crm' });
+    expect(verifyAll).toHaveBeenCalledExactlyOnceWith({ line: 'notifications' });
+  });
+
+  it('saved as kapso, the line not configured, or the sync off: nothing', async () => {
+    const { v, verifyAll } = verifier();
     await v.afterSave({ line: 'notifications', provider: 'kapso' });
     await verifier(false).v.afterSave({ line: 'notifications', provider: 'meta' });
     vi.stubEnv('WA_TEMPLATE_SYNC', 'false');
     await v.afterSave({ line: 'notifications', provider: 'meta' });
+    await v.afterSave({ line: 'notifications', provider: 'crm' });
     expect(verifyAll).not.toHaveBeenCalled();
   });
 

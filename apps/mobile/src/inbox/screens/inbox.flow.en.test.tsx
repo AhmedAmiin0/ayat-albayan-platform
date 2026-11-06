@@ -15,13 +15,13 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 
 beforeEach(resetApp);
 
-test('English: tags, thread, reply and the closed-session template sheet use the en.json words', async () => {
+test('English: rows without tags, thread, reply and the closed-session template sheet in en.json words', async () => {
   const { backend } = inboxBackend();
   const app = await renderApp({ url: '/inbox', backend, storage: { [LOCALE_STORAGE_KEY]: 'en' } });
   const row = within(await screen.findByRole('button', { name: /هدى سالم/ }));
-  expect(row.getByText(en.enums.leadStatus.new)).toBeTruthy();
-  expect(row.getByText(en.enums.leadSource.facebook_ad)).toBeTruthy();
-  expect(screen.getByText(en.inbox.kind.guardian)).toBeTruthy();
+  expect(row.queryByText(en.enums.leadStatus.new)).toBeNull();
+  expect(row.queryByText(en.enums.leadSource.facebook_ad)).toBeNull();
+  expect(screen.queryByText(en.inbox.kind.guardian)).toBeNull();
 
   await fireEvent.press(screen.getByRole('button', { name: /هدى سالم/ }));
   await fireEvent.changeText(await screen.findByLabelText(en.inbox.composer.placeholder), 'Hello Huda');

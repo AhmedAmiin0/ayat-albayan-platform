@@ -98,7 +98,8 @@ export function useSendMessage(phone: string) {
   });
 }
 
-type MessageAction = 'retry' | 'sent-manually' | 'hand-off';
+/** app-send: «أرسل عبر واتساب», the row's short pending window (docs/19). */
+type MessageAction = 'retry' | 'sent-manually' | 'hand-off' | 'app-send';
 
 /**
  * POST /messages/:id/retry (failed → queued), /sent-manually (the admin sent it from WhatsApp, so

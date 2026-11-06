@@ -18,7 +18,7 @@ export function subscribeBackend({ hold = false } = {}) {
   };
   const at = rows.findIndex((r) => r.phone_e164 === GUARDIAN_PHONE);
   const guardianRow = rows[at];
-  if (guardianRow) rows[at] = { ...guardianRow, badge: 'expired' };
+  if (guardianRow) rows[at] = { ...guardianRow, badge: 'expired', ring: 'renewal' };
   const booking = fakeBookingApi();
 
   const people = (phone: string): ThreadPeople | undefined =>
@@ -39,7 +39,7 @@ export function subscribeBackend({ hold = false } = {}) {
       state.child = child({ subscription: sub({ status: 'active', due_amount: 0, paid_amount: 180 }) });
       const now = rows.findIndex((r) => r.phone_e164 === GUARDIAN_PHONE);
       const row = rows[now];
-      if (row) rows[now] = { ...row, badge: 'subscribed' };
+      if (row) rows[now] = { ...row, badge: 'subscribed', ring: 'subscribed' };
       const row2 = saved('new-sub');
       return hold ? new Promise((resolve) => (state.release = () => resolve(row2))) : row2;
     });

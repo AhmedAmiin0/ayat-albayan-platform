@@ -4,6 +4,7 @@ import { ReopenRequest } from '@/modules/messaging/whatsapp';
 import type { Page } from '@/common/http/http';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
+import { InboxSettings, renewalThreshold } from '@/modules/messaging/inbox/inbox.settings';
 import { forSales, salesLessons, salesPeople, visibleToSales, withoutLinks } from './sales-threads';
 import { toThreadView, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import type { PeopleOf } from '@/modules/messaging/inbox/people/thread-people';
@@ -30,11 +31,18 @@ export class SalesThreadsService {
     private readonly messages: ThreadMessagesRepo,
   ) {}
 
+  /** Property-injected like `reopen`: the ring's threshold (inbox.settings.ts); absent: default. */
+  @Optional() @Inject(InboxSettings) private readonly settings?: InboxSettings;
+
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
-    const { items: rows, total } = await this.queries.list(f);
+    const [{ items: rows, total }, threshold] = await Promise.all([
+      this.queries.list(f), renewalThreshold(this.settings),
+    ]);
     const guardians = rows.flatMap((r) => (r.guardian_id ? [r.guardian_id] : []));
     const [items, tags, reopenUsable] = await Promise.all([
-      this.queries.unsupported(rows), this.queries.familyTags(guardians), this.reopenUsable(),
+      this.queries.unsupported(rows),
+      this.queries.familyTags(guardians, threshold),
+      this.reopenUsable(),
     ]);
     const tagOf = (r: ThreadRow) => (r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null);
     const view = (r: ThreadRow) => forSales(toThreadView(r, now, { tag: tagOf(r), reopenUsable }));

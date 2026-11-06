@@ -86,12 +86,14 @@ describe('familyTags (H1 «مشترك» / «اشتراكه خلص» / «غير �
       unit({ id: 's5-1', student: 's5', used: 4, total: 4, last: true }),
       unit({ id: 's6-0', student: 's6', used: 0, total: 1, last: true }),
     ];
-    expect(Object.fromEntries(familyTags(students, balances))).toEqual({
-      g1: { badge: 'subscribed', unpaid: true },
-      g2: { badge: 'expired', unpaid: false },
-      g3: { badge: 'subscribed', unpaid: false },
-      g4: { badge: 'expired', unpaid: false },
-      g5: { badge: 'none', unpaid: false },
+    expect(Object.fromEntries(familyTags(students, balances, 2))).toEqual({
+      g1: { badge: 'subscribed', unpaid: true, ring: 'subscribed' },
+      g2: { badge: 'expired', unpaid: false, ring: 'renewal' },
+      g3: { badge: 'subscribed', unpaid: false, ring: 'subscribed' },
+      g4: { badge: 'expired', unpaid: false, ring: 'renewal' },
+      g5: { badge: 'none', unpaid: false, ring: null },
     });
+    // s1 has 3 left: at a threshold of 3 the family needs renewal (renewal_due fires there).
+    expect(familyTags(students, balances, 3).get('g1')?.ring).toBe('renewal');
   });
 });

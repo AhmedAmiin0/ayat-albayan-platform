@@ -26,7 +26,7 @@ describe('sales mode H1-H4: every chat, with the sales redactions (docs/16)', ()
     t.queries.messages.mockResolvedValue([]);
     t.queries.markInboundRead.mockResolvedValue([]);
     t.queries.lessons.mockResolvedValue([]);
-    t.queries.familyTags.mockResolvedValue(new Map([['g1', { badge: 'subscribed' as const, unpaid: true }]]));
+    t.queries.familyTags.mockResolvedValue(new Map([['g1', { badge: 'subscribed' as const, unpaid: true, ring: 'renewal' as const }]]));
     t.queries.people.mockResolvedValue({
       guardian: { id: 'g1', name: 'أم ياسمين' },
       lead: { id: 'l1', status: 'converted' },
@@ -44,7 +44,7 @@ describe('sales mode H1-H4: every chat, with the sales redactions (docs/16)', ()
     expect(t.queries.list).toHaveBeenCalledWith(expect.not.objectContaining({ phones: expect.anything() }));
     expect(t.sales.ownership).not.toHaveBeenCalled();
     const [item] = res.json().items;
-    expect(item).toMatchObject({ lead_id: expect.any(String), lead_status: 'new', badge: 'subscribed', unpaid: false });
+    expect(item).toMatchObject({ lead_id: expect.any(String), lead_status: 'new', badge: 'subscribed', unpaid: false, ring: 'renewal' });
     const other = await t.call({ method: 'GET', url: '/threads', token: 'salesB' });
     expect(other.json().total).toBe(1);
   });

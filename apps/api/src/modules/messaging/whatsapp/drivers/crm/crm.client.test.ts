@@ -84,13 +84,40 @@ describe('CrmWhatsappClient', () => {
     expect(await failure(client(scriptedFetch({ status: 201, body: { data: {} } })).sendTemplate(send))).toMatchObject({ uncertain: true });
   });
 
-  it('markRead is a no-op; templates, samples and media are «not supported by the crm driver»', async () => {
+  it('markRead is a no-op; samples and media are «not supported by the crm driver»', async () => {
     const f = scriptedFetch();
     await client(f).markRead();
     expect(client(f).canUploadSamples()).toBe(false);
-    for (const call of [client(f).getTemplates(), client(f).submitTemplate(), client(f).uploadSample(), client(f).getMedia()]) {
+    for (const call of [client(f).uploadSample(), client(f).getMedia()]) {
       expect(await failure(call)).toMatchObject({ unsupported: 'crm', code: null, status: 0 });
     }
+    expect(f.requests).toHaveLength(0);
+  });
+
+  it('templates (docs/39): one GET templates?sync=1, one POST templates', async () => {
+    const f = scriptedFetch({ status: 200, body: { data: [] } }, { status: 201, body: { data: { meta_template_id: 'mt-1', status: 'PENDING' } } });
+    await expect(client(f).getTemplates()).resolves.toEqual([]);
+    await expect(client(f).submitTemplate(templateRow({ status: 'not_submitted' }))).resolves.toEqual({ metaId: 'mt-1', status: 'PENDING' });
+    expect(f.requests.map((r) => [r.init.method, r.url])).toEqual([
+      ['GET', `${CRM_ENV.base}/templates?sync=1&limit=100`],
+      ['POST', `${CRM_ENV.base}/templates`],
+    ]);
+  });
+
+  it('a CRM without /templates (404) is unsupported:crm; 401 / 403 stay credential holds', async () => {
+    const lost = () => scriptedFetch(crmFailure(404, 'not_found'));
+    expect(await failure(client(lost()).getTemplates())).toMatchObject({ unsupported: 'crm', status: 0 });
+    expect(await failure(client(lost()).submitTemplate(templateRow()))).toMatchObject({ unsupported: 'crm', status: 0 });
+    for (const [status, code] of [[401, 'unauthorized'], [403, 'forbidden']] as const) {
+      expect(await failure(client(scriptedFetch(crmFailure(status, code))).getTemplates())).toMatchObject({ status, credential: 'crm' });
+    }
+  });
+
+  it('a rejected row with a meta_id is edited in the CRM: refused before any request; unconfigured too', async () => {
+    const f = scriptedFetch();
+    const rejected = templateRow({ status: 'rejected', meta_id: 'mt-1' });
+    expect(await failure(client(f).submitTemplate(rejected))).toMatchObject({ unsupported: 'crm' });
+    expect(await failure(new CrmWhatsappClient(null).getTemplates())).toMatchObject({ code: null, status: 0 });
     expect(f.requests).toHaveLength(0);
   });
 });

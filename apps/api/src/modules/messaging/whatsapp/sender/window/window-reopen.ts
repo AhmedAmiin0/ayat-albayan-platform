@@ -94,6 +94,8 @@ export const heldWithoutTemplate = (errorText: string | null): boolean =>
 export interface HoldPlan {
   fail?: FailWhy;
   note: string | null;
+  /** The dedup key of the reopen row this plan queued (dropped if the hold then misses). */
+  queued?: string;
 }
 
 type DeadlineRow = Pick<DueMessage, 'created_at' | 'scheduled_for' | 'expires_at'>;

@@ -59,7 +59,7 @@ describe('teacher chat never shows the number, English', () => {
 
   it('list row: no name says who it is, not the number', () => {
     renderRow('teacher', { display_name: null });
-    expect(screen.getAllByText(en.inbox.kind.guardian)).toHaveLength(2);
+    expect(screen.getAllByText(en.inbox.kind.guardian)).toHaveLength(1); // the title (no role tag)
     for (const s of SHOWN) expect(readable()).not.toContain(s);
   });
 

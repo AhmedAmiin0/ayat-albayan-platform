@@ -1,5 +1,6 @@
 import { AWAITING_REPLY } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
+import { AppSendExpiry } from './manual-send';
 import { DAY_MS, orphaned } from './reopen-state';
 import { heldWithoutTemplate, LOST } from './window-reopen';
 import { answered, type WaitingRow } from './window-rules';
@@ -21,16 +22,22 @@ const reopenSince = (rows: readonly WaitingRow[]): Date =>
  * At the start of every sender pass: held texts whose family wrote on the chat line since the
  * hold began become due again (answered); held texts whose reopen template failed or expired
  * unsent fail now with REOPEN_FAILED (orphaned), never left «بانتظار رد العائلة» for 7 days.
+ * First, «أرسل عبر واتساب» rows with no echo become app_send_unconfirmed (AppSendExpiry); if that
+ * write fails nothing is released this pass.
  */
 @Injectable()
 export class WindowRelease {
   private readonly log = new Logger('WindowRelease');
 
-  constructor(private readonly repo: WindowRepo) {}
+  constructor(
+    private readonly repo: WindowRepo,
+    private readonly expiry: AppSendExpiry,
+  ) {}
 
   /** Never throws: the pass goes on. */
   async run(now = new Date()): Promise<number> {
     try {
+      await this.expiry.run(now);
       const released = await this.page({ after: null, pages: RELEASE_PAGES, now });
       if (released > 0) this.log.log(`released ${released} held message(s)`);
       return released;

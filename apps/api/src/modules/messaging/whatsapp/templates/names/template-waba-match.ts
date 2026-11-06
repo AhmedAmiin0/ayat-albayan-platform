@@ -54,6 +54,18 @@ export function wabaSyncPatch(row: TemplateRow, list: List, now: Date): Template
 }
 
 /**
+ * A crm line's row (docs/39): status, quality and reason only, found by the name it is sent
+ * under. The CRM lists no components, so body, footer and display stay ours (syncPatch would
+ * blank footer_ar and display). If the CRM has no such template, only last_checked_at changes:
+ * nothing is marked missing because of the CRM (report_ready, or a key without crm_name, would
+ * otherwise stop sending). A real absence is still caught on send by TemplateMissing (132001).
+ */
+export function crmSyncPatch(row: TemplateRow, list: List, now: Date): TemplatePatch {
+  const { meta } = wabaMatch(row, list);
+  return meta ? mappedPatch(meta, now) : { last_checked_at: now.toISOString() };
+}
+
+/**
  * Every WABA name + language («name:language») a row stands for: its own, its WABA name and, for
  * the old script's report, both report templates. The import never takes these as new rows.
  */

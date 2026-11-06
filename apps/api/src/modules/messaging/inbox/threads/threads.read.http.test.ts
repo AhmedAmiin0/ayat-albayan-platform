@@ -33,11 +33,15 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
       threadRow(),
     ];
     t.queries.list.mockResolvedValue({ items: rows, total: 4 });
-    t.queries.familyTags.mockResolvedValue(new Map([['g1', { badge: 'subscribed', unpaid: true }], ['g2', { badge: 'expired', unpaid: false }]]));
+    t.queries.familyTags.mockResolvedValue(new Map([
+      ['g1', { badge: 'subscribed', unpaid: true, ring: 'subscribed' }],
+      ['g2', { badge: 'expired', unpaid: false, ring: 'renewal' }],
+    ]));
     const items = (await t.call({ method: 'GET', url: '/threads' })).json().items;
     const tags = items.map((i: { subscribed: boolean; badge: string | null; unpaid: boolean }) => [i.subscribed, i.badge, i.unpaid]);
     expect(tags).toEqual([[true, 'subscribed', true], [false, 'expired', false], [false, 'none', false], [false, null, false]]);
-    expect(t.queries.familyTags).toHaveBeenCalledWith(['g1', 'g2', 'g3']);
+    expect(items.map((i: { ring: string | null }) => i.ring)).toEqual(['subscribed', 'renewal', null, null]);
+    expect(t.queries.familyTags).toHaveBeenCalledWith(['g1', 'g2', 'g3'], expect.any(Number));
   });
 
   it('H2 first page: people, and the thread’s tags from the same badge', async () => {
@@ -58,7 +62,7 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
     expect(body.people).toEqual(NO_PEOPLE);
     expect(body.thread.subscribed).toBe(true);
     expect(t.queries.people).not.toHaveBeenCalled();
-    expect(t.queries.familyTags).toHaveBeenCalledWith(['g1']);
+    expect(t.queries.familyTags).toHaveBeenCalledWith(['g1'], expect.any(Number));
   });
 
   it('admin and teacher (teacher mode, threads.teacher.http.test); a guardian gets 403', async () => {

@@ -1,0 +1,86 @@
+import { describe, expect, it } from 'vitest';
+import { foldText } from '@ab/shared';
+import { appSendMatches, appSendSpan, attachPatch } from './manual-echo';
+import { CHAT, row, SENT_AT } from './manual-echo.fixtures.test-util';
+
+// The pure rules of the «أرسل عبر واتساب» attach (docs/19): which row an external text confirms.
+
+const BODY = 'السلام عليكم موعد الحلقة غدًا';
+const SENT = { at: SENT_AT, status: null };
+const event = (status: 'sent' | 'delivered' | 'read' | 'failed') => ({
+  waMessageId: 'wamid.APP1',
+  status,
+  at: new Date('2026-11-06T10:06:00Z'),
+  errorCode: null,
+  errorText: null,
+  conversationId: null,
+  pricingCategory: null,
+});
+
+describe('app send attach rules', () => {
+  it('folds runs of whitespace and line breaks', () => {
+    expect(foldText('  a \n\n b\tc ')).toBe('a b c');
+  });
+
+  it('the span: a window that ended up to 15 min before, or opened up to 15 min after', () => {
+    expect(appSendSpan(SENT_AT)).toEqual({
+      since: new Date('2026-11-06T09:50:00Z'),
+      until: new Date('2026-11-06T10:30:00Z'),
+    });
+  });
+
+  it('never another text, line or number; an unknown line or number does not block', () => {
+    const rows = [
+      row({ id: 'other-text', body: 'نص آخر' }),
+      row({ id: 'other-line', line: 'notifications' }),
+      row({ id: 'other-number', number_id: 'num-2' }),
+      row({ id: 'unrouted', line: null, number_id: null }),
+    ];
+    expect(appSendMatches(rows, { body: BODY, from: CHAT }).map((r) => r.id)).toEqual(['unrouted']);
+  });
+
+  it('an empty text never matches', () => {
+    expect(appSendMatches([row({ body: '  ' })], { body: ' ', from: CHAT })).toEqual([]);
+  });
+
+  it('earliest window first', () => {
+    const rows = [row({ id: 'late', app_send_until: '2026-11-06T10:12:00Z' }), row({ id: 'early' })];
+    expect(appSendMatches(rows, { body: BODY, from: CHAT })[0]?.id).toBe('early');
+  });
+
+  it('the queued / failed row just tapped before an earlier row marked sent by hand', () => {
+    const rows = [
+      row({ id: 'marked', status: 'sent_manually', app_send_until: '2026-11-06T10:02:00Z' }),
+      row({ id: 'failed', status: 'failed', app_send_until: '2026-11-06T10:12:00Z' }),
+      row({ id: 'queued', app_send_until: '2026-11-06T10:11:00Z' }),
+    ];
+    const ids = appSendMatches(rows, { body: BODY, from: CHAT }).map((r) => r.id);
+    expect(ids).toEqual(['queued', 'failed', 'marked']);
+  });
+
+  it('status: sent for an echo; the event as it says; never on a failed one', () => {
+    expect(attachPatch(SENT)).toEqual({ status: 'sent', sent_at: SENT_AT.toISOString() });
+    expect(attachPatch(SENT, event('delivered'))).toMatchObject({
+      status: 'delivered',
+      delivered_at: '2026-11-06T10:06:00.000Z',
+    });
+    expect(attachPatch(SENT, event('read'))).toMatchObject({
+      status: 'read',
+      delivered_at: '2026-11-06T10:06:00.000Z',
+      read_at: '2026-11-06T10:06:00.000Z',
+    });
+    expect(attachPatch(SENT, event('failed'))).toBeNull();
+  });
+
+  it('no event: the status Kapso stored for the message, else sent; never a failed one', () => {
+    expect(attachPatch({ at: SENT_AT, status: 'read' })).toMatchObject({ status: 'read' });
+    expect(attachPatch({ at: SENT_AT, status: 'delivered' })).toMatchObject({
+      status: 'delivered',
+      delivered_at: SENT_AT.toISOString(),
+    });
+    expect(attachPatch({ at: SENT_AT, status: 'failed' })).toBeNull();
+    expect(attachPatch({ at: SENT_AT, status: 'failed' }, event('sent'))).toMatchObject({
+      status: 'sent',
+    });
+  });
+});
