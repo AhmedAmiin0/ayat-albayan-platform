@@ -2867,6 +2867,28 @@
         "send_failed": "Could not send"
       }
     },
+    "share": {
+      "title": "Share to…",
+      "preparing": "Preparing the shared content…",
+      "files": {
+        "one": "1 file",
+        "two": "2 files",
+        "few": "{n} files",
+        "other": "{n} files"
+      },
+      "openChat": "Open chat",
+      "sendTo": "Send to {name}",
+      "sending": "Sending {n} of {m}",
+      "noChats": "This account has no chats to share into",
+      "teacherFiles": "Teachers can share text and links only, not files.",
+      "unsupported": "This type is not supported. You can share text, links, photos and PDF files.",
+      "tooMany": "You can share at most {max} files at a time.",
+      "readFailed": "Could not read the shared content. Share it again.",
+      "empty": "Nothing that can be shared arrived. Share it again.",
+      "someFailed": "Some files could not be sent:",
+      "retry": "Try again",
+      "pickHint": "Pick one chat"
+    },
     "copy": {
       "action": "Copy",
       "text": "Copy text",

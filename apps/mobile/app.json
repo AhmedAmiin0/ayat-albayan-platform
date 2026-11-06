@@ -59,6 +59,17 @@
       ],
       "expo-video",
       [
+        "expo-sharing",
+        {
+          "android": {
+            "enabled": true,
+            "singleShareMimeTypes": ["text/plain", "image/*", "application/pdf"],
+            "multipleShareMimeTypes": ["image/*", "application/pdf"]
+          }
+        }
+      ],
+      "./plugins/share-intent/app.plugin.ts",
+      [
         "@config-plugins/react-native-webrtc",
         {
           "microphonePermission": "نحتاج إلى الميكروفون لإجراء المكالمات الصوتية عبر واتساب مع الأسر، وللتحدث في الحلقات والاجتماعات من داخل التطبيق.",

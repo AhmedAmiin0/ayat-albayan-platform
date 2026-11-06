@@ -8,7 +8,14 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import { type GateStatus, retryGate, useAuthGate, useMeId, useMeReady } from '@/core/auth';
+import {
+  type GateStatus,
+  retryGate,
+  RootGateProvider,
+  useAuthGate,
+  useMeId,
+  useMeReady,
+} from '@/core/auth';
 import { connectivity } from '@/core/lib/connectivity/connectivity';
 import { usePresenceSelf } from '@/core/lib/presence';
 import { useOverridesReady } from '@/core/lib/i18n/i18n-overrides';
@@ -37,17 +44,10 @@ const fonts = {
 };
 
 /**
- * Fonts + language + translation overrides + session gate, then one stack: admins get (tabs),
- * teachers get /teacher (their own lessons, chats, reports and payouts; a real segment, so its tabs never share a URL with the
- * admin's), the salesperson /sales (the web sales portal's pages) and the classroom assistant /assistant
- * (the lessons they assist, internal meetings), everyone else only /login.
- * A tree's chat (and what a chat opens) is its chat group beside it, a full screen above its tabs
- * (react-native-screens#4132); groups add no URL segment, so every link stays the same. Each group
- * sits in its tree's guard (an unlisted route is unprotected), after the tree, which stays first.
- * When the gate flips, Stack.Protected moves the screen by itself: no screen navigates after sign-in/out.
- * Until then the branded startup screen lies over it and fades out on the first screen; the
- * reconnecting bar shows under the focused screen's header (ScreenHeader), or above the stack under the
- * top safe area for a screen with none, and pushes the content down while the app has no connection.
+ * Fonts + language + translation overrides + session gate, then one stack: admins (tabs), teachers
+ * /teacher (a real segment: no URL shared with the admin's), sales /sales, the classroom assistant
+ * /assistant, everyone else /login. Each tree's chat group (react-native-screens#4132, no URL segment)
+ * sits in its guard, after it. Stack.Protected moves it on a gate flip; screens read useRootGate.
  */
 export default function RootLayout() {
   const [loaded, error] = useFonts(fonts);
@@ -73,7 +73,9 @@ export default function RootLayout() {
       onSuccess={onCacheRestored}
       onError={onCacheRestored}
     >
-      <GatedRoot gate={gate} settled={Boolean(ready)} fontsLoaded={loaded} />
+      <RootGateProvider value={gate}>
+        <GatedRoot gate={gate} settled={Boolean(ready)} fontsLoaded={loaded} />
+      </RootGateProvider>
     </PersistQueryClientProvider>
   );
 }
@@ -89,7 +91,8 @@ interface GatedRootProps {
 }
 
 /**
- * The room (docs/35: a lesson or meeting inside the app) is open to every signed-in tree.
+ * The room (docs/35: a lesson or meeting inside the app) is open to every signed-in tree, and so is
+ * /share (docs/38: an Android share), which replaces itself at once with the tree's own chooser.
  * Inside the query provider, so the persisted /auth/me counts: a signed-in tree mounts only once
  * /auth/me is loaded (saved or live), and its tab bar renders once, complete (docs/27 E2, D6). Until
  * then «جارٍ الاتصال» stays up; useMeReady fetches /auth/me meanwhile.
@@ -132,6 +135,7 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
               </Stack.Protected>
               <Stack.Protected guard={signedIn}>
                 <Stack.Screen name="room/[kind]/[id]" options={ROOM_SCREEN} />
+                <Stack.Screen name="share" />
               </Stack.Protected>
               <Stack.Protected guard={gate === 'out'}>
                 <Stack.Screen name="login" />
