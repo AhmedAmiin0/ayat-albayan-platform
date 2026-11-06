@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 import { templateProblem } from '@/modules/messaging/whatsapp/template-review';
 
-// Migration 20261106000900, read as text: no database here.
-const sql = readFileSync(migrationPath('20261106000900_report_public_page.sql'), 'utf8')
+// Migration 20261106001400, read as text: no database here.
+const sql = readFileSync(migrationPath('20261106001400_report_public_page.sql'), 'utf8')
   .split('\n')
   .filter((l) => !l.trim().startsWith('--'))
   .join('\n');
