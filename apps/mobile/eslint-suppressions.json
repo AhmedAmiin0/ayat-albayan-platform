@@ -5568,7 +5568,7 @@
   },
   "src/inbox/thread/hooks/inbox-sync.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/thread/hooks/send-paths.test.tsx": {

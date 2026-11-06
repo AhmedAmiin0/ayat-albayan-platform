@@ -82,6 +82,16 @@ test('an event for the open chat re-reads its newest page once; another phone on
   await m.hook.unmount();
 });
 
+test('an event re-reads the list cancelling an older read in flight, never joining it (docs/43 AU1)', async () => {
+  const release = inboxLive.watch('list');
+  const m = await mount();
+  await send(OTHER);
+  const calls = jest.mocked(client.refetchQueries).mock.calls.filter(([f]) => f?.queryKey?.[1] === 'list');
+  expect(calls).toEqual([[{ queryKey: ['threads', 'list'], type: 'active' }, { cancelRefetch: true }]]);
+  release();
+  await m.hook.unmount();
+});
+
 test('a burst of 20 events → at most 2 fetches per target', async () => {
   const release = [inboxLive.watch(chatLiveKey(OPEN)), inboxLive.watch('list')];
   const m = await mount();

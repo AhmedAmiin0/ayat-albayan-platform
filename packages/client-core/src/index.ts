@@ -20,3 +20,4 @@ export * from './messaging/chat-search/index.js';
 export * from './messaging/message-search/index.js';
 export * from './messaging/thread-pages/index.js';
 export * from './messaging/whatsapp-send/index.js';
+export * from './messaging/ticks/index.js';
