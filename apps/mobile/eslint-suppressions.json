@@ -4047,7 +4047,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/inbox/composer/use-composer-send.id.test.tsx": {
@@ -5362,7 +5362,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/messages/reply-actions/ReplyActionsProvider.tsx": {
@@ -5788,14 +5788,8 @@
     }
   },
   "src/inbox/saved-replies/hooks/send-staged.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "ab/no-untyped-api-calls": {
       "count": 2
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/inbox/saved-replies/hooks/use-saved-reply.slash.test.ts": {
@@ -6286,7 +6280,7 @@
   },
   "src/inbox/thread/calls/entries/log-rows.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/thread/calls/entries/use-thread-calls.ts": {
@@ -6831,7 +6825,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/inbox/thread/live/inbox-live.test.tsx": {

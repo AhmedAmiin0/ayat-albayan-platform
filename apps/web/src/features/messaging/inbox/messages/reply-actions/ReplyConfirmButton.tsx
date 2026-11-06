@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/form/button';
 import { confirmErrorText } from '@/features/sales/sales';
 import { apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
+import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 
 export interface ReplyConfirmButtonProps {
   phone: string;
@@ -25,6 +26,7 @@ export function ReplyConfirmButton({ phone, lessonId, route, label }: ReplyConfi
     onSettled: () =>
       Promise.all([
         client.invalidateQueries({ queryKey: ['threads', 'detail', phone] }),
+        refreshAnchored(client, phone),
         client.invalidateQueries({ queryKey: ['lessons'] }),
         client.invalidateQueries({ queryKey: ['sales', 'schedule'] }),
       ]),

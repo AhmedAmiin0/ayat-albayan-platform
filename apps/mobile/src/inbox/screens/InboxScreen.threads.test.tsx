@@ -75,6 +75,6 @@ test('unread and search go to the API', async () => {
   await fireEvent.changeText(field, '0552');
   await fireEvent(field, 'submitEditing');
   await waitFor(() =>
-    expect(mockApiFetch).toHaveBeenLastCalledWith('/threads?search=0552&unread=true&page=1&pageSize=25'),
+    expect(mockApiFetch).toHaveBeenCalledWith('/threads?search=0552&unread=true&page=1&pageSize=25'),
   );
 });

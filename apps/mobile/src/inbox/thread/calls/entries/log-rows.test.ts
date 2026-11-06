@@ -19,4 +19,12 @@ describe('logRows (calls merged by time into the inverted list)', () => {
     expect(logRows([m('m1', '2026-10-26T09:00:00Z')], { calls, hasMore: true }).map((r) => r.id)).toEqual(['m1']);
     expect(logRows([m('m1', '2026-10-26T09:00:00Z')], { calls, hasMore: false }).map((r) => r.id)).toEqual(['m1', 'old']);
   });
+
+  it('in the window around an old search hit, later calls stay out of it (docs/37)', () => {
+    const calls = [c('in', '2026-03-01T10:00:00Z'), c('later', '2026-10-25T09:00:00Z')];
+    const shown = [m('m1', '2026-03-01T09:00:00Z'), m('m2', '2026-03-01T11:00:00Z')];
+    const rows = logRows(shown, { calls, hasMore: false, to: '2026-03-01T11:00:00Z' });
+    expect(rows.map((r) => r.id)).toEqual(['m2', 'in', 'm1']);
+    expect(logRows(shown, { calls, hasMore: false, to: null }).map((r) => r.id)[0]).toBe('later');
+  });
 });

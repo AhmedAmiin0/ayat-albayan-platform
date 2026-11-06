@@ -46,4 +46,12 @@ describe('mergeChat (call entries merged by time with the messages)', () => {
     expect(merged).toHaveLength(1);
     expect(mergeChat([], [c('old', '2026-10-25T09:00:00Z')], { from: null })).toHaveLength(1);
   });
+
+  it('an anchored window also leaves out calls after its newest message', () => {
+    const calls = [c('in', '2026-03-01T10:00:00Z'), c('later', '2026-10-25T09:00:00Z')];
+    const window = { from: '2026-03-01T09:00:00Z', to: '2026-03-01T11:00:00Z' };
+    const merged = mergeChat([m('m1', '2026-03-01T09:00:00Z'), m('m2', '2026-03-01T11:00:00Z')], calls, window);
+    expect(merged.map((e) => (e.kind === 'message' ? e.message.id : e.call.id))).toEqual(['m1', 'in', 'm2']);
+    expect(mergeChat([], calls, { to: null })).toHaveLength(2);
+  });
 });

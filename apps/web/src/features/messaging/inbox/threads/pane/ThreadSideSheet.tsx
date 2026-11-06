@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
+import { SideSheetCloseContext } from '@/features/messaging/inbox/shared/side-sheet';
 
 export interface ThreadSideSheetProps {
   /** The button's text and the sheet's title: «بيانات العميل والتسجيل» / «الأبناء والاشتراكات». */
@@ -33,7 +34,9 @@ export function ThreadSideSheet({ label, open, onOpenChange, children, compact }
       )}
       {open && (
         <Dialog title={label} onClose={() => onOpenChange(false)}>
-          {children}
+          <SideSheetCloseContext value={() => onOpenChange(false)}>
+            {children}
+          </SideSheetCloseContext>
         </Dialog>
       )}
     </>

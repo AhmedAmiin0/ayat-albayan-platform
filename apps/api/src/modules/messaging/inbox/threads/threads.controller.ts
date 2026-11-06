@@ -17,6 +17,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { invalidPhone, phoneParam } from './phone-param';
+import { onePageMode } from '@/modules/messaging/inbox/reads/page-mode';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
@@ -26,6 +27,10 @@ import { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.se
 
 const detailQuery = z.object({
   before: z.iso.datetime({ offset: true }).optional(),
+  /** With `before`: the oldest loaded row's id (the compound keyset, docs/37 NEW 4). */
+  before_id: z.uuid().optional(),
+  /** The window around one message (a search hit, docs/37 NEW 3). */
+  around: z.uuid().optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50),
 });
 
@@ -37,6 +42,13 @@ const deltaQuery = detailQuery.omit({ before: true }).extend({
     .optional()
     .transform((v) => (v ? v.split(',').filter(Boolean) : []))
     .pipe(z.array(z.uuid()).max(PENDING_IDS_MAX)),
+  /** A delta never mixes with a window (onePageMode: around excludes after). */
+  around: z.never().optional(),
+});
+
+/** The detail's page mode, checked only when parsed (zod 4 refuses omit on a refined schema). */
+const onePage = detailQuery.superRefine((q, ctx) => {
+  for (const code of onePageMode(q)) ctx.addIssue({ code: 'custom', message: code });
 });
 
 /**
@@ -72,7 +84,7 @@ export class ThreadsController {
   ) {
     if (query?.['after'] !== undefined)
       return this.reads.delta({ phone, ...parseOrThrow(deltaQuery, query) }, user);
-    return this.reads.detail({ phone, ...parseOrThrow(detailQuery, query) }, user);
+    return this.reads.detail({ phone, ...parseOrThrow(onePage, query) }, user);
   }
 
   @Post(':phone/text')

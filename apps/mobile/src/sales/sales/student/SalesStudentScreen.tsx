@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
+import { MessageSearchRow } from '@/inbox';
 import { Note } from '@/more';
 import { CoursePauseSection, PeopleEditSection } from '@/students';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
@@ -68,6 +69,7 @@ export function SalesStudentScreen() {
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
         <View style={{ gap: 20 }}>
+          <MessageSearchRow />
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
             <StatusChip {...studentStatusStyle[status]} label={t.enums.studentStatus[status]} size="sm" />
             <Note>{about.join(' · ')}</Note>

@@ -8,6 +8,7 @@ import { leadByPhoneQuery } from '@/features/messaging/inbox/api/api';
 import { FollowUpLine } from './FollowUpLine';
 import { LeadDataActions } from './LeadDataActions';
 import { LeadSummary } from './LeadSummary';
+import { SearchFromProfile } from '@/features/messaging/inbox/search';
 import { QuickActions } from '@/features/messaging/inbox/composer/components/QuickActions';
 
 export type LeadNotice = Pick<ToastProps, 'message' | 'tone'>;
@@ -37,6 +38,7 @@ export function LeadPanel({ phone, onNotice }: LeadPanelProps) {
 
   return (
     <aside aria-label={t.inbox.leadPanel} className={cn('@container grid content-start gap-6', railXl)}>
+      <SearchFromProfile />
       {lead.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
       {lead.isError && <p role="alert">{t.common.error}</p>}
       {lead.isSuccess && !lead.data && <p className="text-sm text-ink-3">{t.inbox.noLead}</p>}

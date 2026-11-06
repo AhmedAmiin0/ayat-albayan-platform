@@ -1,5 +1,5 @@
 import type { ThreadStudentView } from '@ab/shared';
-import { type Href, router } from 'expo-router';
+import { type Href, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, type TreeBase, useTreeBase } from '@/core/nav/tree-base';
@@ -10,8 +10,11 @@ import { ThreadMenu, type ThreadMenuItem } from './ThreadMenu';
  * (app/(sales-chat)/sales/inbox/student, app/(admin-chat)/inbox/student) so «رجوع» returns to the chat,
  * not to the tabs (owner 2026-10-29). None in the assistant's tree.
  */
-const detailsHref = (base: TreeBase, id: string): Href | null =>
-  base === '/assistant' ? null : inTree(base, `/inbox/student/${id}` as Href);
+const detailsHref = (base: TreeBase, id: string, phone: string): Href | null =>
+  base === '/assistant' ? null : inTree(base, `/inbox/student/${id}${phoneQuery(phone)}` as Href);
+
+/** `?phone=` of the chat: the details screen offers «بحث في الرسائل» back in it (docs/37 NEW 2). */
+const phoneQuery = (phone: string): string => (phone ? `?phone=${encodeURIComponent(phone)}` : '');
 
 /** «مريم · AB-0200 · نشط · أبرار»: who, which code, the status and the teacher (owner 2026-11-02). */
 export const studentLine = (s: ThreadStudentView): string =>
@@ -23,9 +26,11 @@ export const studentLine = (s: ThreadStudentView): string =>
  */
 export function useHeaderStudents(students: readonly ThreadStudentView[]) {
   const base = useTreeBase();
+  // The chat route's own phone (encoded + decoded by expo-router).
+  const { phone = '' } = useLocalSearchParams<{ phone?: string }>();
   const [open, setOpen] = useState(false);
   const items = students.flatMap((s): ThreadMenuItem[] => {
-    const href = detailsHref(base, s.id);
+    const href = detailsHref(base, s.id, phone);
     return href ? [{ label: studentLine(s), onPress: () => router.push(href) }] : [];
   });
   const [first] = items;

@@ -26,7 +26,7 @@ function SalesInboxRoute() {
       <LinkedCourseContext.Provider value={course ?? null}>
         <InboxPage
           search={search}
-          onSearch={(next) => void navigate({ search: next })}
+          onSearch={(next, how) => void navigate({ search: next, ...how })}
           head={<SalesLiveStrip enabled={can('self.sales_academy')} compact />}
         />
       </LinkedCourseContext.Provider>

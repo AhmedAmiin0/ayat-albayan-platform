@@ -6,7 +6,7 @@ import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.view
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
 import { familyTag, type FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
-import { asRead, pageRows, stampRead, type ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-page';
+import { asRead, isFirstPage, pageRows, stampRead, type ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-page';
 import { toThreadView, type ThreadRow } from './threads.mapper';
 import { ThreadsRepo, type ThreadListFilter } from './threads.repo';
 
@@ -43,7 +43,7 @@ export class ThreadsService {
    * list's cheap tags instead (one read, not 1 + 3 a child).
    */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
-    const first = !q.before;
+    const first = isFirstPage(q);
     const at = await pageRows({ threads: this.queries, messages: this.messages }, q);
     const page = at.rows.slice(0, q.limit).reverse();
     const [people, lessons, messages, tag, read, reopenUsable] = await Promise.all([

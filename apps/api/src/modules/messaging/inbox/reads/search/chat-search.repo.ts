@@ -17,6 +17,8 @@ export interface SearchRow {
 /** One read's rows (PostgREST's own cap is 1000). */
 export const SCAN_BATCH = 1000;
 /** Rows one search reads at most, newest first (a chat has far fewer; pg_trgm is the later fix). */
+// ponytail: Node scan, SCAN_MAX 20k rows a chat; switch ChatSearchRepo to
+// search_messages(p_phones=[phone]) when a chat passes ~10k rows
 const SCAN_MAX = 20_000;
 
 const SELECT = 'id, created_at, body, media_name, template_key, direction, media_mime' as const;

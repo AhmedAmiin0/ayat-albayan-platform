@@ -5,16 +5,26 @@ import {
   MESSAGE_SELECT, NOT_A_REACTION, type MessageRow, type ThreadMessageRow,
 } from '@/modules/messaging/whatsapp';
 import { check } from './check';
+import { aroundRows, PAGE_SELECT, quoted } from './thread-around.repo';
 
 /** The queued row; `replayed` = its dedup_key was already queued (nothing written). */
 type Queued = MessageRow & { replayed?: boolean };
 
-/** One page of a phone's messages: `before` = created_at of the oldest loaded one. */
+/**
+ * One page of a phone's messages: `before` (+ `before_id`) = the oldest loaded one, or `around` =
+ * the window around one message (thread-around.ts).
+ */
 interface PageInput {
   phone: string;
   before?: string;
+  before_id?: string;
+  around?: string;
   limit: number;
 }
+
+/** Strictly older than (before, before_id): an earlier time, or the same time and a lower id. */
+const keyset = (before: string, id: string): string =>
+  `created_at.lt.${quoted(before)},and(created_at.eq.${quoted(before)},id.lt.${id})`;
 
 /** The page of one phone's messages, one message by id and the queue write (rule 8). */
 @Injectable()
@@ -27,10 +37,15 @@ export class ThreadMessagesRepo {
    * each with its lesson.
    */
   async messages(input: PageInput): Promise<ThreadMessageRow[]> {
-    const select = `${MESSAGE_SELECT}, lesson:lessons(starts_at, ends_at, status)` as const;
-    let query = this.db.from('messages').select(select).eq('phone_e164', input.phone);
+    if (input.around) return aroundRows(this.db, { ...input, around: input.around });
+    let query = this.db.from('messages').select(PAGE_SELECT).eq('phone_e164', input.phone);
     query = query.or(NOT_A_REACTION);
-    if (input.before) query = query.lt('created_at', input.before);
+    // Old clients send `before` alone (lt); new ones the compound keyset (no tie ever skipped).
+    if (input.before) {
+      query = input.before_id
+        ? query.lte('created_at', input.before).or(keyset(input.before, input.before_id))
+        : query.lt('created_at', input.before);
+    }
     const { data, error } = await query
       .order('created_at', { ascending: false })
       .order('id', { ascending: false })

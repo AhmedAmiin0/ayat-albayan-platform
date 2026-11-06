@@ -4,6 +4,7 @@ import { useState, type ReactNode } from 'react';
 import { usePermissions } from '@/features/people/auth';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { usePublicConfig } from '@/lib/settings/public-config';
+import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 import { movedKey, ReplyActionsContext, type ReplyActions } from './reply-actions-context';
 import { RescheduleLessonDrawer } from './RescheduleLessonDrawer';
 
@@ -38,6 +39,7 @@ export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsP
   const done = () => {
     if (moving) client.setQueryData<string[]>(movedKey(phone), (ids = []) => [...ids, moving.messageId]);
     void client.invalidateQueries({ queryKey: ['threads', 'detail', phone] });
+    void refreshAnchored(client, phone);
   };
   return (
     <ReplyActionsContext.Provider value={value}>

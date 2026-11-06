@@ -4356,7 +4356,7 @@
   },
   "src/modules/messaging/inbox/reads/thread-page.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/reads/thread-reads.ts": {
