@@ -54,8 +54,7 @@ export interface EvolutionLineEnv {
   gapMs: number;
   /** Baileys: at most this many sends a UTC day from the number (limits.daily_cap). */
   dailyCap: number;
-  /** sendText `delay` (typing shown) and `linkPreview` (sending.*). */
-  delayMs: number;
+  /** sendText `linkPreview` (sending.*). Never a `delay`: it shows «يكتب…» to the family. */
   linkPreview: boolean;
 }
 /** A line the Graph client (graph.ts) can reach: Meta's Cloud API or Kapso's Meta proxy (or the stub). */

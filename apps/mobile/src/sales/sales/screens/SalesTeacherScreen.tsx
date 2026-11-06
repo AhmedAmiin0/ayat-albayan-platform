@@ -1,5 +1,6 @@
 import { type SalesTeacherView, splitByStatus, studentStatusStyle, type StudentListKind } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -46,7 +47,7 @@ export function SalesTeacherScreen() {
   const row = useCallback(
     ({ item }: ListRenderItemInfo<SalesTeacherView['students'][number]>) => (
       <ListRow
-        onPress={() => router.push(studentDetailsHref(base, item.id))}
+        onPress={() => pushInTab(studentDetailsHref(base, item.id))}
         accessibilityHint={t.sales.allStudents.detailsHint}
         title={item.name}
         meta={item.code}

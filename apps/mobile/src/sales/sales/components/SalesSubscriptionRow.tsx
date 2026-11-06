@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { ListRow } from '@/core/ui/layout/ListRow';
@@ -21,7 +22,7 @@ export function SalesSubscriptionRow({ sub, withHistory }: { sub: SalesSubscript
   const base = useTreeBase();
   return (
     <ListRow
-      onPress={() => router.push(studentDetailsHref(base, sub.student.id))}
+      onPress={() => pushInTab(studentDetailsHref(base, sub.student.id))}
       accessibilityHint={t.sales.allStudents.detailsHint}
       title={sub.student.name}
       meta={sub.student.code}

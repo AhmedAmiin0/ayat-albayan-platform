@@ -1,4 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import type { CourseBlock } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
@@ -37,7 +38,7 @@ export function CourseScreen() {
   const base = useTreeBase();
   const [changing, setChanging] = useState(false);
   const current = view?.current ?? null;
-  const leave = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
+  const leave = () => backWithin(inTree(base, '/inbox'));
   const { phone, subscriptionId } = params;
   const transfer =
     phone && subscriptionId

@@ -18,7 +18,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 const mockBack = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
+  router: { back: () => mockBack(), canDismiss: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ studentId: '44444444-4444-4444-8444-444444444444', name: 'ريم' }),
 }));
 

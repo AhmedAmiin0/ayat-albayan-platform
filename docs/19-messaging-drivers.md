@@ -569,7 +569,9 @@ redirects are refused. A base off the list leaves the line unconfigured (gap `EV
 Cloud instance's Meta access token, which Evolution also uses as that instance's key) and `evolution_proxy_password`.
 `evolution_config` sections, each pushed on save with Evolution's own endpoint and read back:
 - `behaviour` → `/settings/set` + `/settings/find`: reject_call + msg_call, groups_ignore (default **true**),
-  always_online, read_messages, read_status, sync_full_history (all default **false**).
+  read_messages, read_status, sync_full_history (all default **false**). `alwaysOnline` is not an option: it is
+  always pushed **false** (owner 2026-11-06: families never see the number «online»; a stored `always_online` is
+  dropped on read), and a server still on `true` reads back «غير متزامن» until the next push.
 - `webhook` → `/webhook/set` + `/webhook/find`: enabled (default **on**), origin and events (default MESSAGES_UPSERT,
   MESSAGES_UPDATE, SEND_MESSAGE, CONNECTION_UPDATE, QRCODE_UPDATED). **The URL is never typed** (security review: it
   receives the instance token): the server builds it on every push from the origin (`internal` = `http://ayat-lb:8080`,
@@ -579,8 +581,9 @@ Cloud instance's Meta access token, which Evolution also uses as that instance's
   limit, 413): media keeps the download path. The header `x-evolution-token` is always the instance key.
 - `proxy` → `/proxy/set` + `/proxy/find`: enabled, host, port, protocol (http, https, socks4, socks5), username;
   the password only ever travels in the set body, never read back or compared.
-- `sending`: `delay_ms` (sendText/sendMedia `delay`, the typing shown; **at most 2000**: Evolution waits it inside the
-  send call, which holds the one sender loop; the send deadline is max(20 s, delay + 15 s)) and `link_preview` (sendText).
+- `sending`: `link_preview` (sendText) only. **No `delay` (or `presence`) is ever sent** (owner 2026-11-06: «dont make
+  the family see typing»; Evolution shows «يكتب…» for the delay): a stored `delay_ms` is dropped on read, and the
+  send deadline is a fixed 20 s.
 - `limits`: `gap_ms` (default 3000; there is no global gap key), `daily_cap` (default 60 sends a UTC day) and
   `error_trip` (default 3: WhatsApp ERRORs within 15 min that switch the number off, below).
 - `cloud`: phone_number_id and business_id, **required on a Cloud instance** (400 `cloud_ids_needed` on save, 409

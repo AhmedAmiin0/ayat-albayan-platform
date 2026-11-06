@@ -4765,9 +4765,11 @@ export type Database = {
       };
       thread_summaries: {
         Row: {
+          last_activity_at: string | null;
           last_body: string | null;
           last_chat_inbound_at: string | null;
           last_direction: Database['public']['Enums']['message_direction'];
+          last_family_read_at: string | null;
           last_inbound_at: string | null;
           last_inbound_line: Database['public']['Enums']['wa_line'] | null;
           last_media_mime: string | null;
@@ -4781,9 +4783,11 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          last_activity_at?: string | null;
           last_body?: string | null;
           last_chat_inbound_at?: string | null;
           last_direction: Database['public']['Enums']['message_direction'];
+          last_family_read_at?: string | null;
           last_inbound_at?: string | null;
           last_inbound_line?: Database['public']['Enums']['wa_line'] | null;
           last_media_mime?: string | null;
@@ -4797,9 +4801,11 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          last_activity_at?: string | null;
           last_body?: string | null;
           last_chat_inbound_at?: string | null;
           last_direction?: Database['public']['Enums']['message_direction'];
+          last_family_read_at?: string | null;
           last_inbound_at?: string | null;
           last_inbound_line?: Database['public']['Enums']['wa_line'] | null;
           last_media_mime?: string | null;
@@ -5386,9 +5392,11 @@ export type Database = {
           guardian_id: string | null;
           guardian_name: string | null;
           guardian_tz: string | null;
+          last_activity_at: string | null;
           last_body: string | null;
           last_chat_inbound_at: string | null;
           last_direction: Database['public']['Enums']['message_direction'] | null;
+          last_family_read_at: string | null;
           last_inbound_at: string | null;
           last_inbound_line: Database['public']['Enums']['wa_line'] | null;
           last_media_mime: string | null;
@@ -5432,9 +5440,11 @@ export type Database = {
           guardian_id: string | null;
           guardian_name: string | null;
           guardian_tz: string | null;
+          last_activity_at: string | null;
           last_body: string | null;
           last_chat_inbound_at: string | null;
           last_direction: Database['public']['Enums']['message_direction'] | null;
+          last_family_read_at: string | null;
           last_inbound_at: string | null;
           last_inbound_line: Database['public']['Enums']['wa_line'] | null;
           last_media_mime: string | null;

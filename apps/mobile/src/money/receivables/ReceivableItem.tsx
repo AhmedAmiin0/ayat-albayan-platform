@@ -1,5 +1,5 @@
 import type { ReceivableRow } from '@ab/shared';
-import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { View } from 'react-native';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { t } from '@/core/lib/i18n/i18n';
@@ -19,7 +19,7 @@ export function ReceivableItem({ row }: { row: ReceivableRow }) {
       title={row.student.name}
       meta={row.student.code}
       subtitle={[row.guardian?.name, paidOf(row)].filter(Boolean).join(' · ')}
-      onPress={toStudents ? () => router.push(`/students/payment/${row.student.id}`) : undefined}
+      onPress={toStudents ? () => pushInTab(`/students/payment/${row.student.id}`) : undefined}
       trailing={
         <View
           accessible

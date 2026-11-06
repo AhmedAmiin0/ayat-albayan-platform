@@ -75,10 +75,10 @@ test('a student row opens «تفاصيل الطالب» in the sales tree and th
   mockApiFetch.mockImplementation(api());
   const view = await inSales(<SalesTeacherScreen />);
   await fireEvent.press(await screen.findByText('يوسف أحمد'));
-  expect(router.push).toHaveBeenCalledWith('/sales/students/st1');
+  expect(router.push).toHaveBeenCalledWith('/sales/students/st1', { withAnchor: true });
   await view.unmount();
   jest.mocked(router.push).mockClear();
   await renderWithQuery(<SalesTeacherScreen />);
   await fireEvent.press(await screen.findByText('يوسف أحمد'));
-  expect(router.push).toHaveBeenCalledWith('/students/st1');
+  expect(router.push).toHaveBeenCalledWith('/students/st1', { withAnchor: true });
 });

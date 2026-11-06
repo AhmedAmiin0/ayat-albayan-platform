@@ -13,7 +13,6 @@ export const EVO_BAILEYS: EvolutionLineEnv = {
   autoSends: false,
   gapMs: 3_000,
   dailyCap: 60,
-  delayMs: 0,
   linkPreview: false,
 };
 

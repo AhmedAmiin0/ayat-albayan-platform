@@ -9,7 +9,7 @@ export interface ConfigDraft {
   behaviour: Cfg['behaviour'];
   webhook: Cfg['webhook'];
   proxy: Omit<Cfg['proxy'], 'port'> & { port: string };
-  sending: { delay_ms: string; link_preview: boolean };
+  sending: Cfg['sending'];
   limits: { gap_ms: string; daily_cap: string; error_trip: string };
   cloud: { phone_number_id: string; business_id: string };
 }
@@ -40,7 +40,7 @@ export function draftOfConfig(config: Cfg): ConfigDraft {
     behaviour: config.behaviour,
     webhook,
     proxy: { ...proxy, port: text(proxy.port) },
-    sending: { delay_ms: text(sending.delay_ms), link_preview: sending.link_preview },
+    sending,
     limits: {
       gap_ms: text(limits.gap_ms), daily_cap: text(limits.daily_cap),
       error_trip: text(limits.error_trip),

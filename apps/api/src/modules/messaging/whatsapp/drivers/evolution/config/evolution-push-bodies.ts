@@ -8,12 +8,15 @@ import { z } from 'zod';
 
 export type Body = Record<string, unknown>;
 
-/** POST /settings/set/{instance}. */
+/**
+ * POST /settings/set/{instance}. `alwaysOnline` is pinned off (owner 2026-11-06: families never
+ * see us «online»), whatever an old stored config said.
+ */
 export function settingsBody(c: EvolutionConfig): Body {
   const b = c.behaviour;
   return {
     rejectCall: b.reject_call, msgCall: b.msg_call, groupsIgnore: b.groups_ignore,
-    alwaysOnline: b.always_online, readMessages: b.read_messages, readStatus: b.read_status,
+    alwaysOnline: false, readMessages: b.read_messages, readStatus: b.read_status,
     syncFullHistory: b.sync_full_history,
   };
 }

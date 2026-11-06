@@ -1,5 +1,5 @@
 import { studentStatusStyle, type SalesStudentView } from '@ab/shared';
-import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { memo } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
@@ -24,7 +24,7 @@ const S = t.sales.allStudents;
 export const AllStudentRow = memo(function AllStudentRow({ student }: { student: SalesStudentView }) {
   const base = useTreeBase();
   const phone = student.guardian_phone;
-  const open = () => router.push(studentDetailsHref(base, student.id));
+  const open = () => pushInTab(studentDetailsHref(base, student.id));
   const status = student.status;
   return (
     <ListRow

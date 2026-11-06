@@ -1,5 +1,6 @@
 import type { SalesFamilyStudent } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -40,7 +41,7 @@ export function SalesSubscribeScreen() {
   const family = useSalesFamily(phone);
   const students = family.data?.students ?? [];
   const base = useTreeBase();
-  const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
+  const back = () => backWithin(inTree(base, '/inbox'));
   const renew = params.renew === '1';
   const [picked, setPicked] = useState<string>();
   const studentId = childOf(students, { picked, route: params.studentId });

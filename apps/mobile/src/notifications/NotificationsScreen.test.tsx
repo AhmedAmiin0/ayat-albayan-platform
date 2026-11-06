@@ -54,7 +54,7 @@ test('a read row opens without asking the API again; the teacher tree routes to 
   serve(page([student], 0));
   await renderWithQuery(<NotificationsScreen tree="teacher" />, createTestQueryClient({ meFromApi: true }));
   fireEvent.press(await screen.findByText('طالب جديد'));
-  expect(router.push).toHaveBeenCalledWith('/teacher/schedule');
+  expect(router.push).toHaveBeenCalledWith('/teacher/schedule', { withAnchor: true });
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 

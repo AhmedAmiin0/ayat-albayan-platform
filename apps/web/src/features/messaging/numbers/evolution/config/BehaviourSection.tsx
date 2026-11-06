@@ -5,9 +5,9 @@ import { ConfigTextField } from './ConfigTextField';
 import type { SectionProps } from './config-draft';
 
 const c = t.numbers.evolution.config;
+/** No «always online» (owner 2026-11-06: families never see us «online»; the push pins it off). */
 const SWITCHES = [
-  'reject_call', 'groups_ignore', 'always_online', 'read_messages', 'read_status',
-  'sync_full_history',
+  'reject_call', 'groups_ignore', 'read_messages', 'read_status', 'sync_full_history',
 ] as const;
 type Switch = (typeof SWITCHES)[number];
 
