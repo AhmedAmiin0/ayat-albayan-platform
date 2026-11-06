@@ -20,12 +20,13 @@ const RESULT = { rule_id: 'R1', student_ids: ['s1'], guardian_ids: [], lessons: 
 const OWN = templateRow({ key: 'teacher_new_student', meta_name: 'teacher_new_student', status: 'not_submitted' });
 const V2 = templateRow({ key: 'teacher_lesson_v2', meta_name: 'teacher_lesson_v2', status: 'approved' });
 
-/** A real TeacherAlertRepo.approved() over these message_templates rows; the other reads faked. */
+/** A real TeacherAlertRepo.sendable() over these message_templates rows; the other reads faked. */
 function alertOver(rows: unknown[], settings: { teacher_whatsapp_new_student?: boolean } = {}) {
   const { db, calls } = fakeDb({ message_templates: [{ data: rows }] });
   const fake = fakeTeacherAlert({ lessons: LESSONS, settings });
   fake.queries.students.mockImplementation(async () => STUDENTS);
-  fake.queries.approved.mockImplementation(() => new TeacherAlertRepo(db).approved());
+  const repo = new TeacherAlertRepo(db, {} as never);
+  fake.queries.sendable.mockImplementation(() => repo.sendable());
   return { ...fake, calls };
 }
 

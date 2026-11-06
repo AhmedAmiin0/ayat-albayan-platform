@@ -50,6 +50,11 @@ export function staleReason(row: StaleInput): string | null {
   return row.template_key === 'follow_up_slots' && row.lead_id ? followUpStale(row) : null;
 }
 
+/** The new-student alert, also when it goes as teacher_lesson_v3 (its dedup key names it). */
+const isNewStudentAlert = (row: { template_key: string | null; dedup_key: string | null }) =>
+  row.template_key === 'teacher_new_student' ||
+  (row.dedup_key ?? '').startsWith('teacher_new_student:');
+
 /**
  * teacher_new_student is queued with expires_at = the first lesson's start (TeacherAlert): a lesson
  * moved since (edit_lesson_time) would announce the old time, so the row is dropped, like the
@@ -59,10 +64,11 @@ export function staleReason(row: StaleInput): string | null {
  */
 function newStudentRetimed(row: {
   template_key: string | null;
+  dedup_key: string | null;
   expires_at: string | null;
   lesson: { starts_at: string; status: LessonStatus } | null;
 }): boolean {
-  if (row.template_key !== 'teacher_new_student' || !row.lesson) return false;
+  if (!isNewStudentAlert(row) || !row.lesson) return false;
   if (!OPEN_LESSON.includes(row.lesson.status)) return true;
   return !!row.expires_at && Date.parse(row.expires_at) !== Date.parse(row.lesson.starts_at);
 }

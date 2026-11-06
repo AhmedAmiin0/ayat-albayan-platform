@@ -316,8 +316,27 @@ so drafts, versions, the lesson outcome, the PDF and report_ready behave exactly
 submit is the teacher's (`canEditReport`). Actor = the teacher's auth user when they have one, else none; a
 submit also writes an audit row `teacher_link_submit` naming the teacher and the lesson. Rate-limited (120 a
 minute per IP, 60 per IP and link). No attachments on the link (they need a session). Web page: `/teacher-report/<token>`
-(no sign-in); signed-in teachers keep `/teacher/report/<id>`. The reminder carries it as `<API>/r/<code>` (kind
-`teacher_report`, expiring with the token). Code: `apps/api/src/modules/reporting/reports/teacher-link/`.
+(no sign-in); signed-in teachers keep `/teacher/report/<id>`. Since 2026-11-06 the reminder carries the page
+itself (no short link). Code: `apps/api/src/modules/reporting/reports/teacher-link/`.
+
+### teacher_lesson_v3, the join link and the legacy report bridge (owner 2026-11-06)
+
+«now we no more need url shortener»: the teacher's links are no longer shortened (`GET /r/<code>` keeps
+answering links already sent; `short_links` stays; the report PDF's feedback link still uses it).
+`teacher_lesson_v3` (migration `20261106000800`, UTILITY, ar, notifications line, not_submitted until the admin
+submits it): body {{1}} teacher, {{2}} students, {{3}} codes, {{4}} time in the teacher's tz, {{5}} duration,
+{{6}} the meeting link (also in the text); URL buttons «ادخل الحلقة» `https://api.ayatalbayan.com/join/{{1}}` and
+«تقرير الحلقة» `https://app.ayatalbayan.com/teacher-report/{{1}}` (the report link is a button only). Definition:
+`packages/shared/src/messaging/templates/teacher-lesson-v3.ts`; a send fills each URL button from
+`template_params.buttons` by URL order. Once approved, the same-day teacher reminder and the new-student alert
+go as it (their dedup keys unchanged); until then they keep their templates with direct links.
+`GET <API>/join/:token`: a pair token (context `teacher-join|`, the lesson's end + 2 h) → 302 to the lesson's own
+room (its stored http(s) link, or `/classroom/<id>` for a platform lesson or none), only while the lesson is
+still the token's teacher's and not cancelled/moved; else the `shortLinks.notFound` page. `GET <API>/report-link/
+legacy/*` (the old Vercel redirector forwards `/r/<path>` there): `teacher/report/<lessonId>` or the old Apps
+Script's `<AB-code>/<teacher name>/<…>` (the pair's lesson started in the last 24 h, else its next one today) →
+302 to that lesson's no-login report page; anything else the same «invalid link» page. Both rate-limited (60 a
+minute per IP, 20 per IP and link). Code: `apps/api/src/modules/teaching/lesson-links/`.
 
 ### Report flow: report_ready → session_report_pdf (owner 2026-11-05)
 

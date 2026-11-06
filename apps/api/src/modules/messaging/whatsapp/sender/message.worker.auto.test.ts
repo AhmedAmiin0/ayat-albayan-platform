@@ -55,6 +55,8 @@ describe('isAutomatic: job-made reminders, classroom links, follow-ups, renewals
     const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request', 'teacher_new_student'];
     // A schedule change a person made (owner 2026-10-30): never held by the automatic switch.
     onAction.push('lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed');
+    // teacher_lesson_v3 also carries the new-student alert (a booking): never held.
+    onAction.push('teacher_lesson_v3');
     expect([...AUTOMATIC_KEYS, ...onAction].sort()).toEqual([...TEMPLATE_KEYS].sort());
   });
 
