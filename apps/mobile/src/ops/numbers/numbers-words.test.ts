@@ -1,7 +1,15 @@
 import { formatPhone } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { checkedLine, healthChip, numberSubtitle, parityLine, sourceLine, stateChips } from './numbers-words';
+import {
+  checkedLine,
+  driverLine,
+  healthChip,
+  numberSubtitle,
+  parityLine,
+  sourceLine,
+  stateChips,
+} from './numbers-words';
 import { numbers, parityDiff, parityOk } from './numbers-fixtures';
 
 const n = t.numbers;
@@ -36,4 +44,9 @@ test('health chip and last check', () => {
     .toEqual({ tone: 'bad', glyph: 'struck', label: n.health.failed });
   expect(checkedLine(main, '24', 'Asia/Riyadh')).toMatch(/2026/);
   expect(checkedLine(chat, '24', 'Asia/Riyadh')).toBeNull();
+});
+
+test('the driver by name, Evolution included', () => {
+  expect(driverLine(main)).toBe(`${n.fields.provider}: ${n.provider.meta}`);
+  expect(driverLine({ provider: 'evolution' })).toBe(`${n.fields.provider}: ${n.provider.evolution}`);
 });

@@ -5,7 +5,10 @@ import { createBody, draftErrors, draftOf, updateBody } from './number-form';
 
 describe('number-form', () => {
   it('a new draft is an empty Meta notifications number; an edit starts from the record', () => {
-    expect(draftOf()).toEqual({ label: '', purpose: 'notifications', provider: 'meta', phone_number_id: '', waba_id: '', app_id: '' });
+    expect(draftOf()).toEqual({
+      label: '', purpose: 'notifications', provider: 'meta', phone_number_id: '', waba_id: '', app_id: '',
+      evolution_mode: 'baileys', evolution_auto_sends: false,
+    });
     expect(draftOf(numberView()).waba_id).toBe('2000000001');
     expect(draftOf(numberView()).app_id).toBe('');
   });

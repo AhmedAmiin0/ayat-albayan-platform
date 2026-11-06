@@ -1,6 +1,10 @@
 import type { NumberView, ParityView } from '@ab/shared';
 
-const secrets = { access_token: { set: true, updated_at: null }, app_secret: { set: false, updated_at: null } };
+const secrets = {
+  access_token: { set: true, updated_at: null },
+  app_secret: { set: false, updated_at: null },
+  evolution_token: { set: false, updated_at: null },
+};
 
 /** Two fake numbers: a checked, default notifications line and a disabled, unchecked chat line. */
 export const numbers: NumberView[] = [
@@ -20,6 +24,7 @@ export const numbers: NumberView[] = [
     checked_at: '2026-10-20T09:00:00.000Z',
     updated_at: '2026-10-20T09:00:00.000Z',
     secrets,
+    evolution: null,
   },
   {
     id: 'num-2',
@@ -37,6 +42,7 @@ export const numbers: NumberView[] = [
     checked_at: null,
     updated_at: '2026-10-20T09:00:00.000Z',
     secrets,
+    evolution: null,
   },
 ];
 

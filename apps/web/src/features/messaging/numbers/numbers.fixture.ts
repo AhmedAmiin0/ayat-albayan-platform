@@ -20,10 +20,37 @@ export function numberView(patch: Partial<NumberView> = {}): NumberView {
     health: { ok: true, status: 'CONNECTED', quality_rating: 'GREEN', verified_name: null, gaps: [], errors: 0 },
     checked_at: AT,
     updated_at: AT,
-    secrets: { access_token: { set: true, updated_at: AT }, app_secret: { set: false, updated_at: null } },
+    secrets: {
+      access_token: { set: true, updated_at: AT },
+      app_secret: { set: false, updated_at: null },
+      evolution_token: { set: false, updated_at: null },
+    },
+    evolution: null,
     ...patch,
   };
 }
+
+/** An Evolution (Baileys) number: its instance name in phone_number_id, its token secret saved. */
+export const evolutionView = (patch: Partial<NumberView> = {}): NumberView =>
+  numberView({
+    id: 'num-7',
+    label: 'Staff chat line',
+    purpose: 'chat',
+    provider: 'evolution',
+    phone_number_id: 'academy-staff',
+    waba_id: null,
+    display_phone_e164: null,
+    is_default: false,
+    health: null,
+    checked_at: null,
+    secrets: {
+      access_token: { set: false, updated_at: null },
+      app_secret: { set: false, updated_at: null },
+      evolution_token: { set: true, updated_at: AT },
+    },
+    evolution: { mode: 'baileys', auto_sends: false, state: 'open', state_at: AT },
+    ...patch,
+  });
 
 export const NUMBERS: NumberView[] = [
   numberView(),

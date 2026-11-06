@@ -34,6 +34,11 @@ export function numberSubtitle(view: Pick<NumberView, 'purpose' | 'display_phone
   return view.checked_at ? role : `${role} · ${n().chips.notChecked}`;
 }
 
+/** «المزوّد: Evolution»: the number's driver, read-only (changed on the web's «الأرقام»). */
+export function driverLine(view: Pick<NumberView, 'provider'>): string {
+  return `${n().fields.provider}: ${n().provider[view.provider]}`;
+}
+
 /** «مفعّل» ok / «متوقف» neutral struck, then «الافتراضي لدوره» when it is. */
 export function stateChips(view: Pick<NumberView, 'enabled' | 'is_default'>): ChipWords[] {
   const chips: ChipWords[] = [

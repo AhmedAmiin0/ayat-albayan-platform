@@ -6841,7 +6841,9 @@
         "unknown": "Unknown"
       },
       "stateAt": "Updated: {{at}}",
-      "failed": "Could not reach Evolution. Check the URL and the instance token."
+      "failed": "Could not reach Evolution. Check the URL and the instance token.",
+      "refresh": "Refresh code",
+      "checking": "Checking…"
     }
   },
   "settingsHub": {

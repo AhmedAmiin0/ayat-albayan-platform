@@ -1,19 +1,22 @@
-import { formatPhone, NUMBER_SECRET_NAMES, type NumberView } from '@ab/shared';
+import { formatPhone, type NumberView } from '@ab/shared';
 import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
+import { EvolutionStatus } from '@/features/messaging/numbers/evolution/EvolutionStatus';
 import { FallbackRankField } from '@/features/messaging/numbers/form/FallbackRankField';
 import { NumberActions } from './NumberActions';
 import { NumberDetails } from './NumberDetails';
 import { NumberHealthLine } from './NumberHealthLine';
 import { NumberSecretRow } from '@/features/messaging/numbers/form/NumberSecretRow';
 import { NumberTemplateSync } from './NumberTemplateSync';
+import { secretsOf } from './number-secrets';
 
 const n = t.numbers;
 
 /**
  * One number as a card: its name, role and provider, the phone (LTR island), on / off and default
- * chips, the last check, the two secrets (set / not set), «ترتيب البديل» (editable with numbers.manage),
+ * chips, the last check, an Evolution number's engine, state, check and QR, its driver's secrets
+ * (set / not set), «ترتيب البديل» (editable with numbers.manage),
  * «مزامنة القوالب مع هذا الرقم» (templates.manage), the raw ids folded, and — with numbers.manage — its buttons.
  */
 export function NumberCard({ view, manage }: { view: NumberView; manage: boolean }) {
@@ -43,8 +46,9 @@ export function NumberCard({ view, manage }: { view: NumberView; manage: boolean
         </p>
         <NumberHealthLine view={view} />
       </header>
+      {view.evolution && <EvolutionStatus view={view} evolution={view.evolution} manage={manage} />}
       <div className="grid">
-        {NUMBER_SECRET_NAMES.map((name) => (
+        {secretsOf(view.provider).map((name) => (
           <NumberSecretRow key={name} view={view} name={name} manage={manage} />
         ))}
       </div>

@@ -3,10 +3,10 @@ import { View } from 'react-native';
 import { Note } from '@/core/ui/feedback/Note';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { checkedLine, healthChip, numberSubtitle, stateChips } from './numbers-words';
+import { checkedLine, driverLine, healthChip, numberSubtitle, stateChips } from './numbers-words';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
-/** One number, read-only: label, role and phone, state chips, last check; the health at the end. */
+/** One number, read-only: label, role and phone, state chips, driver, last check; health at the end. */
 export function NumberRow({ number }: { number: NumberView }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
@@ -21,6 +21,7 @@ export function NumberRow({ number }: { number: NumberView }) {
           {stateChips(number).map((chip) => (
             <StatusChip key={chip.label} {...chip} size="sm" />
           ))}
+          <Note>{driverLine(number)}</Note>
           {checked ? <Note>{checked}</Note> : null}
         </View>
       }
