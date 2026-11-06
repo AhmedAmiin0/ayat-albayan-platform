@@ -14,7 +14,7 @@ export function searchFold(text: string): string {
 }
 
 /** A page's end: the last hit's time and id (keyset; the hits are newest first). */
-const cursorSchema = z
+export const cursorSchema = z
   .string()
   .max(80)
   .refine((c) => {
@@ -53,6 +53,15 @@ export function parseSearchCursor(cursor: string): { at: number; id: string } | 
   const cut = cursor.lastIndexOf('_');
   const at = Date.parse(cursor.slice(0, cut));
   return cut < 0 || Number.isNaN(at) ? null : { at, id: cursor.slice(cut + 1) };
+}
+
+/**
+ * The cursor's time as sent (the raw ISO string, microseconds kept) and id, for a SQL keyset:
+ * parseSearchCursor's Date.parse drops created_at's microseconds and would skip or repeat rows.
+ */
+export function splitSearchCursor(cursor: string): { at: string; id: string } {
+  const cut = cursor.lastIndexOf('_');
+  return { at: cursor.slice(0, cut), id: cursor.slice(cut + 1) };
 }
 
 /** Does any of the message's texts (body / caption, document name) contain the folded query? */

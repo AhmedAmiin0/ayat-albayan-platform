@@ -6,12 +6,21 @@ import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 
-/** GET /threads/:phone's page: `before` = created_at of the oldest loaded message (the page before it). */
+/**
+ * GET /threads/:phone's page: `before` (+ `before_id`) = the oldest loaded message (the page before
+ * it), or `around` = the window around one message (a search hit, docs/37).
+ */
 export interface ThreadPageQuery {
   phone: string;
   before?: string;
+  before_id?: string;
+  around?: string;
   limit: number;
 }
+
+/** The newest page: only it stamps reads and carries people, lessons and lists (never a window). */
+export const isFirstPage = (q: Pick<ThreadPageQuery, 'before' | 'around'>): boolean =>
+  !q.before && !q.around;
 
 /** Where a page comes from: the thread row and who a phone is, and the phone's messages. */
 interface PageRepos {
@@ -35,7 +44,7 @@ interface PageRows {
 export async function pageRows(repos: PageRepos, q: ThreadPageQuery): Promise<PageRows> {
   const { threads, messages } = repos;
   const [found, rows] = await Promise.all([threads.thread(q.phone), messages.messages(q)]);
-  const who = found ?? (q.before ? null : await threads.known(q.phone));
+  const who = found ?? (isFirstPage(q) ? await threads.known(q.phone) : null);
   return { found, who, rows };
 }
 
@@ -45,7 +54,7 @@ export async function pageRows(repos: PageRepos, q: ThreadPageQuery): Promise<Pa
  */
 export async function stampRead(receipts: ReadReceipts, input: { q: ThreadPageQuery; page: PageRows; now: Date }): Promise<boolean> {
   const { q, page, now } = input;
-  if (q.before || !page.found || page.found.unread_count === 0) return false;
+  if (!isFirstPage(q) || !page.found || page.found.unread_count === 0) return false;
   return (await receipts.open(q.phone, { now, upTo: page.rows[0]?.created_at })).stamped;
 }
 

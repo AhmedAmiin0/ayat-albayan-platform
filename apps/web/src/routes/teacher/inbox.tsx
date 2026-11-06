@@ -14,7 +14,10 @@ function TeacherInboxRoute() {
   const navigate = Route.useNavigate();
   return (
     <InboxModeContext.Provider value="teacher">
-      <InboxPage search={search} onSearch={(next) => void navigate({ search: next })} />
+      <InboxPage
+        search={search}
+        onSearch={(next, how) => void navigate({ search: next, ...how })}
+      />
     </InboxModeContext.Provider>
   );
 }

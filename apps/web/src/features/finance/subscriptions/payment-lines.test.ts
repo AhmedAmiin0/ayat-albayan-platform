@@ -12,3 +12,14 @@ describe('partPaidText', () => {
     expect(partPaidText({ paid: 81, price: 81, currency: 'SAR' })).toBeNull();
   });
 });
+
+describe('partPaidText: a stopped course against its stored owed amount (owedFor)', () => {
+  const stopped = { price: 400, currency: 'SAR', cancel_kind: 'stopped' };
+  it('owes 150 with 100 paid: 50 left, never 300', () => {
+    expect(partPaidText({ ...stopped, stop_owed_amount: 150, paid: 100 })).toBe('مدفوعة جزئيًا: 100 من 150 ر.س · الباقي 50');
+  });
+
+  it('after a refund stop (owed = what stays paid): no line', () => {
+    expect(partPaidText({ ...stopped, stop_owed_amount: 100, paid: 100 })).toBeNull();
+  });
+});

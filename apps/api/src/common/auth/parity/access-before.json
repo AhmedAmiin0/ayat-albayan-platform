@@ -446,6 +446,7 @@
   "ThreadMediaController.list": ["admin"],
   "ThreadReactionController.react": ["admin","sales","teacher"],
   "ChatSearchController.search": ["admin","sales","teacher"],
+  "MessageSearchController.search": ["admin","sales","teacher"],
   "MessageHideController.hide": ["admin","sales","teacher"],
   "MessageHideController.unhide": ["admin","sales","teacher"],
   "StickersController.favourite": ["admin","sales","teacher"],

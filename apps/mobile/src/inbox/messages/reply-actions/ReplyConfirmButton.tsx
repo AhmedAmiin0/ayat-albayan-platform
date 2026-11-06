@@ -7,7 +7,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { confirmFailureText } from '@/sales/sales';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { threadKey } from '@/inbox/thread/hooks/thread-cache';
+import { refreshChat } from '@/inbox/thread/hooks/inbox-sync';
 
 interface ReplyConfirmButtonProps {
   phone: string;
@@ -29,9 +29,10 @@ export function ReplyConfirmButton({ phone, lessonId, route, label }: ReplyConfi
   const confirm = useMutation({
     mutationFn: () => apiSend('POST', replyConfirmPath(lessonId, route)),
     onSettled: () =>
-      Promise.all(
-        [threadKey(phone), pathKey('/sales/schedule'), pathKey('/lessons')].map((queryKey) => client.invalidateQueries({ queryKey })),
-      ),
+      Promise.all([
+        refreshChat(client, phone),
+        ...[pathKey('/sales/schedule'), pathKey('/lessons')].map((queryKey) => client.invalidateQueries({ queryKey })),
+      ]),
   });
   return (
     <>

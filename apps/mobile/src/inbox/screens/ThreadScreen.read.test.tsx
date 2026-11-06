@@ -121,7 +121,7 @@ test('reaching the top pages back from the oldest loaded message, with no button
   expect(await screen.findByText('رسالة قديمة')).toBeTruthy();
   // The last thread fetch (a new bubble may re-read /auth/me for messages.manage after it).
   const threadCalls = mockApiFetch.mock.calls.filter(([p]) => String(p).startsWith('/threads'));
-  expect(threadCalls.at(-1)).toEqual([`/threads/%2B966552147730?before=${encodeURIComponent(inbound.created_at)}`]);
+  expect(threadCalls.at(-1)).toEqual([`/threads/%2B966552147730?before=${encodeURIComponent(inbound.created_at)}&before_id=${inbound.id}`]);
   await fireEvent(screen.getByTestId('message-list'), 'endReached');
   expect(mockApiFetch.mock.calls.filter(([p]) => String(p).startsWith('/threads'))).toHaveLength(threadCalls.length);
 });

@@ -11,7 +11,7 @@ import type {
   ThreadText,
   ThreadView,
 } from '@ab/shared';
-import { liveInterval } from '@ab/client-core';
+import { liveInterval, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import { infiniteQueryOptions, keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { LeadRow, Page } from '@/features/sales/leads/types';
 import { apiFetch, apiSend } from '@/lib/http/api';
@@ -47,8 +47,11 @@ export const threadsQuery = (s: InboxSearch) => {
 /** `+` must not reach the path raw (docs/12 H2: url-encoded E.164). */
 export const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
 
+/** One page of a chat (live or anchored, docs/37): GET /threads/:phone with its page's query. */
+export const threadPage = (path: string) => apiFetch<ThreadDetail>(path);
+
 /**
- * One page per `before` (the oldest loaded message), newest page first. Opening stamps read_at, so the
+ * One page per `before` + `before_id` (the oldest loaded message), newest page first. Opening stamps read_at, so the
  * open chat polls only while its window has focus: a chat left open in a background window must not
  * mark new messages read for everyone. TanStack's refetchOnWindowFocus follows visibilitychange only,
  * so a click into another (still visible) window stops the poll with no event to restart it:
@@ -59,10 +62,10 @@ export const threadPath = (phone: string) => `/threads/${encodeURIComponent(phon
 export const threadQuery = (phone: string) =>
   infiniteQueryOptions({
     queryKey: ['threads', 'detail', phone],
-    queryFn: ({ pageParam }) =>
-      apiFetch<ThreadDetail>(pageParam ? `${threadPath(phone)}?before=${encodeURIComponent(pageParam)}` : threadPath(phone)),
-    initialPageParam: '',
-    getNextPageParam: (last) => (last.has_more ? last.messages[0]?.created_at : undefined),
+    queryFn: ({ pageParam }) => threadPage(`${threadPath(phone)}${threadPageQuery(pageParam)}`),
+    initialPageParam: null as ThreadPageParam,
+    // Time and id (docs/37 NEW 4): rows sharing the oldest row's time are never skipped.
+    getNextPageParam: threadNextParam,
     refetchInterval: () => (document.hasFocus() ? env.threadFullRefreshMs : false),
   });
 

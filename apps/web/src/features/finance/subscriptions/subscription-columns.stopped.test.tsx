@@ -27,10 +27,12 @@ const STOPPED = {
   student: student('stu-s', 'ياسمين'),
 };
 const UNUSED = { ...STOPPED, id: 'sub-unused', cancel_kind: 'unused', student: student('stu-u', 'مريم') };
+// Owner 2026-11-06: a refund stop stored owed = the net paid left, so nothing more is due.
+const SETTLED = { ...STOPPED, id: 'sub-settled', stop_owed_amount: 50, student: student('stu-r', 'هدى') };
 
 async function rowOf(name: string) {
   apiFetch.mockImplementation(async (path: string) =>
-    path.startsWith('/subscriptions') ? page([STOPPED, UNUSED]) : page([]),
+    path.startsWith('/subscriptions') ? page([STOPPED, UNUSED, SETTLED]) : page([]),
   );
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -47,6 +49,12 @@ describe('subscription rows: a stopped package keeps its money', () => {
     expect(row.getByRole('button', { name: t.finance.refund })).toBeTruthy();
     expect(row.queryByRole('button', { name: t.coursePause.action })).toBeNull();
     expect(row.queryByRole('button', { name: t.subscriptions.cancel.action })).toBeNull();
+  });
+
+  it('a stopped package that owes nothing more (owedFor): no «سجّل دفعة», the refund stays', async () => {
+    const row = await rowOf('هدى');
+    expect(row.queryByRole('button', { name: t.payments.record })).toBeNull();
+    expect(row.getByRole('button', { name: t.finance.refund })).toBeTruthy();
   });
 
   it('an unused cancel: no payment, refund or pause', async () => {

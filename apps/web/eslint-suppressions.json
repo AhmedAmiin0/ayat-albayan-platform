@@ -2543,9 +2543,6 @@
     },
     "no-nested-ternary": {
       "count": 2
-    },
-    "no-restricted-syntax": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/components/MessageLog.wrap.test.tsx": {
@@ -2627,9 +2624,6 @@
   "src/features/messaging/inbox/messages/lib/day-groups.ts": {
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/lib/message-notes.test.ts": {
@@ -2681,7 +2675,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/inbox/messages/reply-actions/ReplyActionsProvider.tsx": {
@@ -3077,7 +3071,7 @@
   },
   "src/features/messaging/inbox/threads/list/ThreadList.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/inbox/threads/list/ThreadRow.tsx": {

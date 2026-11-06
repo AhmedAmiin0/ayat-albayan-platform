@@ -1,3 +1,4 @@
+import type { TablesUpdate } from '@ab/db';
 import type { CallPermissionReply, MessageView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../../common/db/db.module';
@@ -110,7 +111,7 @@ export class CallsNumberRepo {
     return this.views.view(row);
   }
 
-  private async finish(id: string, patch: Partial<MessageRow>): Promise<MessageRow | null> {
+  private async finish(id: string, patch: TablesUpdate<'messages'>): Promise<MessageRow | null> {
     const { data, error } = await this.db
       .from('messages')
       .update(patch)

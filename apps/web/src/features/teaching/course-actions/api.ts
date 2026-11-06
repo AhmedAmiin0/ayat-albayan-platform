@@ -8,6 +8,7 @@ import {
   courseStopPreviewPath,
   courseTeacherOptionsPath,
   type CourseMoveKind,
+  type StopMoneyAsk,
 } from '@ab/client-core';
 import type {
   BookingTeacherOption,
@@ -107,8 +108,8 @@ export function useInvalidateCourseActions(studentId: string): () => Promise<voi
 
 type StopInput = Course & {
   reason: string;
-  /** null = «إلغاء فقط»; else «إلغاء مع استرداد» of this amount. */
-  refund: number | null;
+  /** The money choice: `refund` («إلغاء مع استرداد») or `owe` («إلغاء فقط»). */
+  ask: StopMoneyAsk;
   onDone: (message: string) => void;
 };
 
@@ -130,7 +131,7 @@ export function useStopCourse(input: StopInput & { currency: string }) {
     subscriptionId,
     reason: input.reason,
     clientRequestId: requestId,
-    refund: input.refund,
+    ask: input.ask,
   };
   return useMutation({
     mutationFn: () => stopCourse(studentId, courseStopBody(body)),

@@ -10,7 +10,7 @@ import { DeliveryTicks } from '@/features/messaging/inbox/messages/components/De
 import { fullTime, listTime, previewText, threadKind, threadTitle, unreadLabel } from '@/features/messaging/inbox/format';
 import { LineBadge } from '@/features/messaging/inbox/shared/LineBadge';
 import { inboxBase, showsPhone, useInboxMode } from '@/features/messaging/inbox/shared/mode';
-import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
+import { openChat, type InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { leadChip } from '@/features/messaging/inbox/sales/subscription';
 import { SubscriptionChip } from '@/features/messaging/inbox/sales/SubscriptionChip';
 import { useClock } from '@/lib/clock';
@@ -75,7 +75,7 @@ export function ThreadRow({ thread: th, search, active, now }: ThreadRowProps) {
     <li>
       <Link
         to={inboxBase(mode)}
-        search={{ ...search, phone: th.phone_e164 }}
+        search={openChat(search, th.phone_e164)}
         aria-label={label}
         aria-current={active ? 'page' : undefined}
         className={cn(

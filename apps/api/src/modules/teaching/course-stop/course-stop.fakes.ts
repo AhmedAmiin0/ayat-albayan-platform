@@ -31,6 +31,9 @@ const subRow = (over: Partial<StopSub> = {}): StopSub => ({
   cancelled_at: null,
   cancelled_by: null,
   cancel_reason: null,
+  stop_request_id: null,
+  stop_owed_amount: null,
+  stop_owed_choice: null,
   ...over,
 });
 export const stamped = subRow({
@@ -38,6 +41,7 @@ export const stamped = subRow({
   cancelled_at: NOW.toISOString(),
   cancelled_by: SALES,
   cancel_reason: 'سفر',
+  stop_request_id: REQ,
 });
 
 /** stop_course's answer to a first stop: 2 rules ended, 3 lessons cancelled, student churned. */

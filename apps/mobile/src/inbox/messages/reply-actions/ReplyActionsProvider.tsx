@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState, type ReactNode } from 'react';
 import { useHolds, usePermissions } from '@/core/auth';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
-import { threadKey } from '@/inbox/thread/hooks/thread-cache';
+import { refreshChat } from '@/inbox/thread/hooks/inbox-sync';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { ReplyActionsContext, replyMovedKey, type ReplyActionsValue, type ReplyMove } from './reply-actions-context';
 import { ReplyRescheduleSheet } from './ReplyRescheduleSheet';
@@ -46,7 +46,7 @@ export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsP
   // Closed by a swipe too (even after a move): the chat re-reads, so a moved lesson's button goes.
   const close = () => {
     setMove(null);
-    void client.invalidateQueries({ queryKey: threadKey(phone) });
+    void refreshChat(client, phone);
   };
   const done = () => {
     if (move) client.setQueryData<string[]>(replyMovedKey(phone), (ids = []) => [...ids, move.messageId]);
