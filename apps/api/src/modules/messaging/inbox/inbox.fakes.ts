@@ -24,6 +24,8 @@ export function threadRow(over: Partial<ThreadRow> = {}): ThreadRow {
     last_inbound_line: null,
     last_chat_inbound_at: null,
     last_notifications_inbound_at: inboundAt,
+    last_family_read_at: null,
+    last_activity_at: '2026-10-02T08:00:00Z',
     unread_count: 1,
     lead_id: 'l0000000-0000-4000-8000-000000000001',
     lead_name: 'أم ياسمين',

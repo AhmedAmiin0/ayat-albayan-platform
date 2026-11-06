@@ -559,6 +559,7 @@
     "teaching/teacher-meeting-mode.sql.spec.ts",
     "finance/teacher-payments.sql.spec.ts",
     "people/teacher-rls.sql.spec.ts",
+    "messaging/thread-activity.sql.spec.ts",
     "messaging/thread-summaries.race.sql.spec.ts",
     "messaging/thread-summaries.sql.spec.ts",
     "messaging/trial-no-teacher-chat.sql.spec.ts",
