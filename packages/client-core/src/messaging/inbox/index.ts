@@ -19,6 +19,7 @@ export {
 export { connectInboxLive, type LiveChannel, type LiveClient } from './live-connect.js';
 export { createLiveSession, type LiveSession } from './live-session.js';
 export { createInboxLive, type InboxLive, type InboxLiveOptions, type LiveTargets } from './live-store.js';
+export { createThrottle, type Throttle } from './throttle.js';
 export {
   patchMessage,
   type PillItem,
