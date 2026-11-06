@@ -10,7 +10,7 @@ import type { ThreadListCache } from '@/inbox/thread/hooks/thread-list-cache';
 // along.
 
 /** The tick the cached chat holds for a list row's last message (undefined: chat not loaded). */
-export const chatTicks =
+const chatTicks =
   (client: QueryClient): StatusOf =>
   (row) =>
     chatStatus(client.getQueryData<ThreadCache>(threadKey(row.phone_e164)), row.last_message_id);
