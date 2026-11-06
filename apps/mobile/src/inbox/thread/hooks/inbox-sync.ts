@@ -67,12 +67,25 @@ export async function resumeInbox(client: QueryClient): Promise<void> {
  */
 export async function touchInbox(client: QueryClient, row: MessageView): Promise<void> {
   await client.cancelQueries({ queryKey: threadListKey });
-  client.setQueriesData<ThreadListCache>({ queryKey: threadListKey }, (old) => touchList(old, row));
+  editLists(client, (old) => touchList(old, row));
+}
+
+type ListEdit = (old: ThreadListCache | undefined) => ThreadListCache | undefined;
+
+/**
+ * Every cached list edited in place, keeping its read time: an edit is not a read, so it never
+ * hides a change a hidden list missed (list-marks.ts compares that time with its mark).
+ */
+function editLists(client: QueryClient, edit: ListEdit): void {
+  for (const [queryKey] of client.getQueriesData<ThreadListCache>({ queryKey: threadListKey })) {
+    const updatedAt = client.getQueryState(queryKey)?.dataUpdatedAt;
+    client.setQueryData<ThreadListCache>(queryKey, edit, { updatedAt });
+  }
 }
 
 /** The API stamped the chat read: its badge goes at once, the counts refetch (not the thread). */
 function markInboxRead(client: QueryClient, phone: string): void {
-  client.setQueriesData<ThreadListCache>({ queryKey: threadListKey }, (old) => clearUnread(old, phone));
+  editLists(client, (old) => clearUnread(old, phone));
   refreshLists(client);
 }
 

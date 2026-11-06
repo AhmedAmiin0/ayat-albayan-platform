@@ -61,6 +61,22 @@ test('shown: a read in flight is joined (never aborted), then one more read has 
   release();
 });
 
+test('a change during a read rereadList itself started gets one follow-up (never lost)', async () => {
+  const { client, signals, answer, data } = slowList();
+  const release = showList(KEY);
+  changeLists(client); // an idle list: this starts the read
+  expect(signals).toHaveLength(1);
+  changeLists(client); // the throttle's tail, a push: during that read
+  changeLists(client);
+  expect(signals).toHaveLength(1);
+  await answer(0, 'old tick');
+  expect(signals).toHaveLength(2);
+  await answer(1, 'fresh');
+  expect(data()).toBe('fresh');
+  expect(signals.map((s) => s.aborted)).toEqual([false, false]);
+  release();
+});
+
 test('no starvation: a stream of events during a slow read never cancels it; one follow-up only', async () => {
   const { client, signals, answer, data } = slowList();
   const release = showList(KEY);
