@@ -1,4 +1,4 @@
-import { numberCreateSchema, numberUpdateSchema } from '@ab/shared';
+import { evolutionConfigOf, numberCreateSchema, numberUpdateSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { evolutionView, numberView } from '@/features/messaging/numbers/numbers.fixture';
 import { createBody, draftErrors, draftOf, updateBody } from './number-form';
@@ -7,7 +7,8 @@ const evolutionDraft = { ...draftOf(), label: 'Staff', provider: 'evolution' as 
 
 describe('number-form on Evolution (docs/19 «Evolution driver»)', () => {
   it('an edit starts from the record’s engine and switch', () => {
-    const view = evolutionView({ evolution: { mode: 'cloud', auto_sends: false, state: null, state_at: null } });
+    const cloud = { mode: 'cloud' as const, auto_sends: false, state: null, state_at: null };
+    const view = evolutionView({ evolution: { ...cloud, config: evolutionConfigOf({}), sync: null } });
     expect(draftOf(view)).toMatchObject({ provider: 'evolution', evolution_mode: 'cloud', phone_number_id: 'academy-staff' });
   });
 

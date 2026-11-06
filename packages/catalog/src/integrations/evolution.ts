@@ -59,14 +59,14 @@ const SCHEME_RULES: Readonly<Record<string, SchemeRule>> = {
 export function evolutionBaseAllowed(raw: string, internal: readonly string[]): boolean {
   const p = partsOf(raw);
   const rule = p ? SCHEME_RULES[p.scheme] : undefined;
-  return p !== null && rule !== undefined && rule(p.host, internal);
+  return p !== null && rule?.(p.host, internal) === true;
 }
 
 /** Shape only (the list is another key): https, or http to the VPS or a one-word host. */
 const shapeOk = (raw: string): boolean => {
   const p = partsOf(raw);
-  const oneWord = p !== null && INTERNAL_RE.test(p.host);
-  return evolutionBaseAllowed(raw, oneWord && p ? [p.host] : []);
+  const internal = p && INTERNAL_RE.test(p.host) ? [p.host] : [];
+  return evolutionBaseAllowed(raw, internal);
 };
 
 /**

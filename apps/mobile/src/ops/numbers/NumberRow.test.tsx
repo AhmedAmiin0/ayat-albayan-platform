@@ -1,4 +1,4 @@
-import type { NumberView } from '@ab/shared';
+import { evolutionConfigOf, type NumberView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
@@ -13,7 +13,10 @@ const evolution: NumberView = {
   ...main,
   provider: 'evolution',
   phone_number_id: 'academy-staff',
-  evolution: { mode: 'baileys', auto_sends: false, state: 'open', state_at: null },
+  evolution: {
+    mode: 'baileys', auto_sends: false, state: 'open', state_at: null,
+    config: evolutionConfigOf({}), sync: null,
+  },
 };
 
 test('the row names its driver, read-only', async () => {

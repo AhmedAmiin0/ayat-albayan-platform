@@ -4,6 +4,8 @@ const secrets = {
   access_token: { set: true, updated_at: null },
   app_secret: { set: false, updated_at: null },
   evolution_token: { set: false, updated_at: null },
+  evolution_cloud_token: { set: false, updated_at: null },
+  evolution_proxy_password: { set: false, updated_at: null },
 };
 
 /** Two fake numbers: a checked, default notifications line and a disabled, unchecked chat line. */

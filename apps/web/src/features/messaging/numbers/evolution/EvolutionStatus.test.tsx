@@ -1,4 +1,4 @@
-import type { NumberEvolutionView } from '@ab/shared';
+import { evolutionConfigOf, type NumberEvolutionView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
@@ -13,6 +13,7 @@ vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch
 const e = t.numbers.evolution;
 const BAILEYS: NumberEvolutionView = {
   mode: 'baileys', auto_sends: false, state: 'close', state_at: null,
+  config: evolutionConfigOf({}), sync: null,
 };
 
 function show(evolution: NumberEvolutionView, manage = true) {

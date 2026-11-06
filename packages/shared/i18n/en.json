@@ -5982,9 +5982,9 @@
         "label": "Evolution global API key",
         "hint": "Used for the connection check and the QR when no instance token is saved. Never shown once saved."
       },
-      "EVOLUTION_SEND_GAP_MS": {
-        "label": "Gap between Baileys sends (ms)",
-        "hint": "Minimum gap between two sends of one Baileys number to different recipients (ban risk). Default 3000. Messages wait their turn; none is dropped."
+      "EVOLUTION_INTERNAL_HOSTS": {
+        "label": "Evolution internal hosts",
+        "hint": "Comma-separated internal host names allowed over http (e.g. the Evolution container on the same server). Any other base stays https only."
       }
     },
     "developer": "For developers",
@@ -6688,7 +6688,9 @@
       "api_base": "Server address",
       "api_version": "API version",
       "webhook_phone_number_id": "Number whose messages are received",
-      "evolution_token": "Instance token"
+      "evolution_token": "Instance token",
+      "evolution_cloud_token": "Cloud instance Meta token",
+      "evolution_proxy_password": "Proxy password"
     },
     "chips": {
       "enabled": "On",

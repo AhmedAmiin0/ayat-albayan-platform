@@ -1,4 +1,4 @@
-import type { ImportResult, NumberView, ParityView } from '@ab/shared';
+import { evolutionConfigOf, type ImportResult, type NumberView, type ParityView } from '@ab/shared';
 
 // Test fixtures for «الأرقام» (not app code). Fake ids and a 555 phone only.
 
@@ -24,6 +24,8 @@ export function numberView(patch: Partial<NumberView> = {}): NumberView {
       access_token: { set: true, updated_at: AT },
       app_secret: { set: false, updated_at: null },
       evolution_token: { set: false, updated_at: null },
+      evolution_cloud_token: { set: false, updated_at: null },
+      evolution_proxy_password: { set: false, updated_at: null },
     },
     evolution: null,
     ...patch,
@@ -47,8 +49,13 @@ export const evolutionView = (patch: Partial<NumberView> = {}): NumberView =>
       access_token: { set: false, updated_at: null },
       app_secret: { set: false, updated_at: null },
       evolution_token: { set: true, updated_at: AT },
+      evolution_cloud_token: { set: false, updated_at: null },
+      evolution_proxy_password: { set: false, updated_at: null },
     },
-    evolution: { mode: 'baileys', auto_sends: false, state: 'open', state_at: AT },
+    evolution: {
+      mode: 'baileys', auto_sends: false, state: 'open', state_at: AT,
+      config: evolutionConfigOf({}), sync: null,
+    },
     ...patch,
   });
 
