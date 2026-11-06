@@ -113,16 +113,28 @@ describe(`migration ${FILE}: v_threads on thread_summaries`, () => {
     expect(update).toContain("(n.direction = 'inbound' and (o.read_at, o.line) is distinct from");
     expect(update).toContain('(o.status, o.body, o.template_key, o.media_mime) is distinct from');
     expect(update).not.toContain('thread_summaries s');
+    // A row turning into / out of a hidden marker or reaction leaves / joins preview and unread.
+    expect(update.replace(/\s+/g, ' ')).toContain(
+      'or public.message_is_reaction(o.interactive_payload) ' +
+        'is distinct from public.message_is_reaction(n.interactive_payload)',
+    );
   });
 
-  it('backfills every phone set-based with the same tiebreak, after locking messages', () => {
+  it('columns, then new bodies, then the backfill, then views; no table lock, no begin', () => {
     expect(NEW).toContain('order by phone_e164, created_at desc, id desc');
-    expect(NEW.indexOf('lock table public.messages in share row exclusive mode')).toBeLessThan(
-      NEW.indexOf('alter table public.thread_summaries'),
-    );
-    expect(NEW.indexOf('function public.thread_summary_refresh(')).toBeLessThan(
-      NEW.lastIndexOf('insert into public.thread_summaries as s'),
-    );
+    // The Supabase CLI runs a file outside one transaction: lock table fails there (25P01).
+    expect(NEW).not.toMatch(/lock table|^\s*(begin|commit)\s*;/im);
+    const order = [
+      'add column if not exists last_activity_at',
+      'create index if not exists messages_family_read_idx',
+      'function public.thread_summary_refresh(',
+      'function public.thread_summaries_on_update(',
+      'insert into public.thread_summaries as s',
+      'create or replace view public.v_threads',
+      'create or replace view public.v_list_threads',
+    ].map((s) => NEW.lastIndexOf(s));
+    expect(order.every((at) => at >= 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
     expect(NEW).toMatch(/on conflict \(phone_e164\) do update set/);
     expect(NEW).not.toMatch(/concurrently|drop (table|column|view)/i);
   });

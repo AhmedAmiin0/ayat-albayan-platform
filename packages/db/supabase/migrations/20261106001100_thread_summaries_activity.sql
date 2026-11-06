@@ -14,14 +14,15 @@
 --   * thread_summary_refresh = migration 992's body plus the two columns; the update trigger now also
 --     fires when only an outbound read_at changes, or a row turns into / out of a hidden marker.
 --   * Backfill: every summary recomputed set-based from the same rules (also the rows migration 992
---     left to tools/scripts/chat-markers). messages is locked against writes first (share row
---     exclusive, before thread_summaries: the triggers' order, no deadlock), so no write runs the old
---     refresh between the backfill and commit.
+--     left to tools/scripts/chat-markers), in one statement.
+--   * Order, safe without a table lock (the Supabase CLI does not run a migration file in one
+--     transaction, so lock table is refused): (1) the columns and the index; (2) the new refresh and
+--     update trigger bodies, so every write from then on refreshes with them; (3) THEN the backfill,
+--     which recomputes any summary a concurrent write produced under the old body; (4) the views,
+--     last, once the columns they append are filled.
 -- Idempotent.
 
 set local lock_timeout = '5s';
-
-lock table public.messages in share row exclusive mode;
 
 alter table public.thread_summaries add column if not exists last_family_read_at timestamptz;
 alter table public.thread_summaries add column if not exists last_activity_at timestamptz;
