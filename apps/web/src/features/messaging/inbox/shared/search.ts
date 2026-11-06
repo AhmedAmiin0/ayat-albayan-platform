@@ -20,12 +20,18 @@ export type InboxSearch = {
   list?: string;
   /** «المكالمات» (docs/28): the calls log instead of the chats list. */
   calls?: true;
+  /** A search hit to open the chat at (docs/37): only with `phone`; removed = the live chat. */
+  msg?: string;
   /** «احجز أيام الحلقات» (owner 2026-11-06): a student id whose course wizard opens on the chat. */
   course?: string;
   page: number;
 };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** The anchor survives only as a message id inside an open chat. */
+const anchorOf = (msg: unknown, phone: string | undefined): { msg?: string } =>
+  phone && typeof msg === 'string' && UUID.test(msg) ? { msg } : {};
 
 const pick = <T extends string>(all: readonly T[], v: unknown): T | undefined => all.find((x) => x === v);
 
@@ -51,5 +57,11 @@ export function parseInboxSearch(s: Record<string, unknown>): InboxSearch {
   if (status) out.f_status = status;
   if (typeof s['list'] === 'string' && UUID.test(s['list'])) out.list = s['list'];
   if (s['calls'] === true || s['calls'] === 'true') out.calls = true;
-  return { ...out, ...courseParam(s) };
+  return { ...out, ...anchorOf(s.msg, out.phone), ...courseParam(s) };
+}
+
+/** Another chat opens live: the list's state without the old chat's anchor (docs/37). */
+export function openChat(search: InboxSearch, phone: string): InboxSearch {
+  const { msg: _anchor, ...list } = search;
+  return { ...list, phone };
 }

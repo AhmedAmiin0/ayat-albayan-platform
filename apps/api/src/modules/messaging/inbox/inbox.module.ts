@@ -40,7 +40,10 @@ import { DeltaRepo } from './delta/delta.repo';
 import { ThreadDeltaService } from './delta/thread-delta.service';
 import { MessageHideController, MessageHideRepo, MessageHideService } from './hide';
 import { GifService, StickerRepo, StickersController, StickersService } from './stickers';
-import { ChatSearchController, ChatSearchRepo, ChatSearchService } from './reads/search';
+import {
+  ChatSearchController, ChatSearchRepo, ChatSearchService,
+  MessageSearchController, MessageSearchRepo, MessageSearchService,
+} from './reads/search';
 
 /**
  * The WhatsApp inbox routes H1–H4 (docs/12 §4). The webhook lives in WebhookModule and the lead
@@ -59,11 +62,12 @@ import { ChatSearchController, ChatSearchRepo, ChatSearchService } from './reads
  * «حذف من المنصة» (owner 2026-10-30): MessageHideController (staff only; nothing goes to WhatsApp).
  * Delta refresh (owner 2026-10-27): ThreadDeltaService answers GET /threads/:phone?after=.
  * Stickers and GIFs (owner 2026-11-01): StickersController (GIPHY through GifService).
- * «بحث» inside a chat (owner 2026-11-02): ChatSearchController.
+ * «بحث» inside a chat (owner 2026-11-02): ChatSearchController; in every chat (2026-11-06,
+ * docs/37): MessageSearchController (GET /threads/search beside GET /threads/:phone).
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule, SalesModule, ChatListsModule],
-  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController, ThreadReactionController, MessageHideController, StickersController, ChatSearchController],
+  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController, ThreadReactionController, MessageHideController, StickersController, ChatSearchController, MessageSearchController],
   providers: [
     ThreadsRepo,
     ThreadMessagesRepo,
@@ -101,6 +105,8 @@ import { ChatSearchController, ChatSearchRepo, ChatSearchService } from './reads
     GifService,
     ChatSearchRepo,
     ChatSearchService,
+    MessageSearchRepo,
+    MessageSearchService,
   ],
   // The feedback module sends «ابعت طلب الرأي» through the same send-now path; meeting invitations
   // (ClassroomModule) read the thread and queue their chat text (R-MEET-02), a teacher only to the

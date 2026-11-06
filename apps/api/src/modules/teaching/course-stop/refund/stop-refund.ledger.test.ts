@@ -19,6 +19,7 @@ const plan = (rows = [cardRow(), row({ method: 'cash' })]): RefundPlan => ({
   requestId: REQ,
   amount: 250,
   split: { cards: [{ id: 'p-card', amount: 200 }], manual: 50 },
+  owed: { amount: 40, choice: 'refund_custom' },
 });
 
 function ledger() {
@@ -70,6 +71,13 @@ describe('StopRefundLedger', () => {
     expect(payments.create.mock.calls[0]?.[0].method).toBe('bank');
   });
 
+  it('a card payment recorded by hand never stamps the manual refund card', async () => {
+    const { l, payments } = ledger();
+    const rows = [row({ method: 'wallet' }), row({ id: 'p-hand', method: 'card' })];
+    await l.manual({ plan: plan(rows), amount: 5, actor: { id: 'a1', reason: 'سفر' } });
+    expect(payments.create.mock.calls[0]?.[0].method).toBe('wallet');
+  });
+
   it('audits the Stripe refunds the stop created', async () => {
     const { l, audits } = ledger();
     const result = { amount: 250, card: 200, manual: 50 };
@@ -80,6 +88,21 @@ describe('StopRefundLedger', () => {
         entityId: SUB.id,
         action: 'stop_refund',
         after: { ...result, stripe_refunds: ['re_1'], client_request_id: REQ },
+      }),
+    );
+  });
+});
+
+describe('StopRefundLedger.failed', () => {
+  it('the admins’ bell names the refund that did not finish, keyed per stop', async () => {
+    const { l, push } = ledger();
+    await l.failed(plan());
+    expect(push.notifyAdmins).toHaveBeenCalledWith(
+      'payment_due',
+      expect.objectContaining({
+        subject: `course_stop_refund_failed:${REQ}`,
+        title: expect.stringContaining('250 SAR'),
+        bellOnly: true,
       }),
     );
   });

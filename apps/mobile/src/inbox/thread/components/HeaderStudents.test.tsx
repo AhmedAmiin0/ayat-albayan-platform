@@ -8,7 +8,10 @@ import { ChatHeader } from './ChatHeader';
 import { studentLine, useHeaderStudents } from './HeaderStudents';
 
 // Owner 2026-10-29: tapping the chat's name or number opens the student's details, as WhatsApp's contact.
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+// docs/37 NEW 2: the details screen gets the chat's phone (`?phone=`) for «بحث في الرسائل».
+const mockParams = jest.fn(() => ({ phone: '+966500000123' }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn() }, useLocalSearchParams: () => mockParams() }));
+const Q = `?phone=${encodeURIComponent('+966500000123')}`;
 
 function Header({ students }: { students: ThreadStudentView[] }) {
   const who = useHeaderStudents(students);
@@ -35,13 +38,13 @@ test('one student: the name opens «تفاصيل الطالب» above the sales 
   await show([child()]);
   expect(names().props.accessibilityHint).toBe(t.inbox.studentDetails);
   await fireEvent.press(names());
-  expect(router.push).toHaveBeenCalledWith(`/sales/inbox/student/${CHILD_ID}`);
+  expect(router.push).toHaveBeenCalledWith(`/sales/inbox/student/${CHILD_ID}${Q}`);
 });
 
 test('in the admin tree it opens the student file above the chat', async () => {
   await show([child()], '');
   await fireEvent.press(names());
-  expect(router.push).toHaveBeenCalledWith(`/inbox/student/${CHILD_ID}`);
+  expect(router.push).toHaveBeenCalledWith(`/inbox/student/${CHILD_ID}${Q}`);
 });
 
 test('several students: a sheet of «name · code · status · teacher», each opens its own', async () => {
@@ -52,7 +55,7 @@ test('several students: a sheet of «name · code · status · teacher», each o
   expect(studentLine(second)).toBe(label);
   expect(studentLine(child())).toBe(`${child().name} · ${child().code} · ${t.enums.studentStatus.active} · مريم المعلمة`);
   await fireEvent.press(within(screen.getByTestId('thread-menu')).getByRole('button', { name: label }));
-  await waitFor(() => expect(router.push).toHaveBeenCalledWith('/sales/inbox/student/s-2'));
+  await waitFor(() => expect(router.push).toHaveBeenCalledWith(`/sales/inbox/student/s-2${Q}`));
 });
 
 test('no student (a lead) or the assistant tree: the name is not a button', async () => {
@@ -60,4 +63,11 @@ test('no student (a lead) or the assistant tree: the name is not a button', asyn
   expect(names().props.accessibilityRole).toBeUndefined();
   await show([child()], '/assistant');
   expect(screen.getAllByTestId('chat-names').at(-1)?.props.accessibilityRole).toBeUndefined();
+});
+
+test('outside a chat route (no phone param) the href carries no phone', async () => {
+  mockParams.mockReturnValueOnce({ phone: '' });
+  await show([child()], '');
+  await fireEvent.press(names());
+  expect(router.push).toHaveBeenCalledWith(`/inbox/student/${CHILD_ID}`);
 });

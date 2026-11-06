@@ -2,7 +2,7 @@ import type { MessageView, ThreadLesson, ThreadPeople, ThreadView } from '@ab/sh
 import type { ThreadMessageRow } from '../../whatsapp/messages/message.mapper';
 
 /** Templates whose template_params.button is a signed link (a feedback answer, a classroom entry): never shown to sales (migration 187). */
-const LINK_TEMPLATES: ReadonlySet<string> = new Set(['lesson_feedback_request', 'lesson_join_link']);
+export const LINK_TEMPLATES: ReadonlySet<string> = new Set(['lesson_feedback_request', 'lesson_join_link']);
 
 /** Rows a salesperson may see: every message of any chat except those two templates (plain text has no key). */
 export const visibleToSales = (row: Pick<ThreadMessageRow, 'template_key'>): boolean =>

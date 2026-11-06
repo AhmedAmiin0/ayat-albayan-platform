@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { parseAmount, westernDigits } from './amount.js';
+import { parseAmount, parseAmountFromZero, westernDigits } from './amount.js';
 
 test.each([
   ['145', 145],
@@ -23,4 +23,11 @@ test.each(['', ' ', '0', '0.00', '-5', 'abc', '1,500', '12.345', '1.2.3', '1e3',
 
 test('westernDigits keeps Western text as is', () => {
   expect(westernDigits('AB-12')).toBe('AB-12');
+});
+
+test('parseAmountFromZero: 0 is an amount, the rest as parseAmount', () => {
+  expect(['0', '٠', '0.00', ' 0 '].map(parseAmountFromZero)).toEqual([0, 0, 0, 0]);
+  expect(parseAmountFromZero('12.5')).toBe(12.5);
+  expect(parseAmountFromZero('-1')).toBeNull();
+  expect(parseAmountFromZero('0.001')).toBeNull();
 });

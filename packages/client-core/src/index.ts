@@ -17,3 +17,5 @@ export * from './messaging/chat-send/index.js';
 export * from './people/people-edit/index.js';
 export * from './teaching/lessons/index.js';
 export * from './messaging/chat-search/index.js';
+export * from './messaging/message-search/index.js';
+export * from './messaging/thread-pages/index.js';

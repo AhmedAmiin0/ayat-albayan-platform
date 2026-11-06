@@ -30,6 +30,8 @@ export type ChatEntry<M, C> = { kind: 'message'; at: string; message: M } | { ki
 export interface MergeOptions {
   /** Calls before this time are left out (the log's older pages are not loaded yet). */
   from?: string | null;
+  /** Calls after this time are left out too (an anchored window of an old part of the chat). */
+  to?: string | null;
 }
 
 /**
@@ -42,9 +44,11 @@ export function mergeChat<M extends { created_at: string }, C extends { started_
   opts: MergeOptions = {},
 ): ChatEntry<M, C>[] {
   const from = opts.from ? Date.parse(opts.from) : Number.NEGATIVE_INFINITY;
+  const to = opts.to ? Date.parse(opts.to) : Number.POSITIVE_INFINITY;
+  const inWindow = (c: C) => Date.parse(c.started_at) >= from && Date.parse(c.started_at) <= to;
   const entries: ChatEntry<M, C>[] = [
     ...messages.map((message) => ({ kind: 'message' as const, at: message.created_at, message })),
-    ...calls.filter((c) => Date.parse(c.started_at) >= from).map((call) => ({ kind: 'call' as const, at: call.started_at, call })),
+    ...calls.filter(inWindow).map((call) => ({ kind: 'call' as const, at: call.started_at, call })),
   ];
   const order = (e: ChatEntry<M, C>) => (e.kind === 'message' ? 0 : 1);
   return entries

@@ -19,3 +19,7 @@ export function parseAmount(text: string): number | null {
   const parsed = moneyAmount.safeParse(Number(western));
   return parsed.success ? parsed.data : null;
 }
+
+/** parseAmount with 0 accepted (the stop sheet's «مبلغ مخصص» runs from 0). */
+export const parseAmountFromZero = (text: string): number | null =>
+  /^0+(\.0{1,2})?$/.test(westernDigits(text)) ? 0 : parseAmount(text);

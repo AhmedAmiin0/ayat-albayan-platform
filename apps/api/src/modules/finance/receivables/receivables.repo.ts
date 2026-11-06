@@ -1,11 +1,10 @@
-import { netPaid, type SubscriptionStatus } from '@ab/shared';
+import { netPaid, type ReceivableIn, type SubscriptionStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll, readChunked } from '@/common/db/read-all';
-import type { ReceivablePkg } from './receivables.stopped';
 
 const SUB =
-  'id, price, currency, starts_on, status, cancel_kind, lessons_total, lessons_used_at_stop, student:students(id, code, name, guardian:guardians(name, phone_e164))';
+  'id, price, currency, starts_on, status, cancel_kind, stop_owed_amount, student:students(id, code, name, guardian:guardians(name, phone_e164))';
 /**
  * A trial package never owes, nor an unused-cancelled one (owner 2026-10-28: a mistake, nothing
  * paid); every other status can (an expired package may still be unpaid), and so can a STOPPED one
@@ -14,22 +13,12 @@ const SUB =
 const OWING = ['unpaid', 'active', 'paused', 'expired'] as const satisfies readonly Exclude<SubscriptionStatus, 'trial' | 'cancelled'>[];
 const OWING_FILTER = `status.in.(${OWING.join(',')}),cancel_kind.eq.stopped`;
 
-/** A stopped package's lessons (migration 991 stamps lessons_used_at_stop); null for any other. */
-const stopOf = (r: {
-  cancel_kind: string | null;
-  lessons_total: number;
-  lessons_used_at_stop: number | null;
-}) =>
-  r.cancel_kind === 'stopped'
-    ? { lessonsTotal: r.lessons_total, attended: r.lessons_used_at_stop ?? r.lessons_total }
-    : null;
-
 /** Packages and their net paid for «مستحق على الطلاب» (service role; admin-only routes). */
 @Injectable()
 export class ReceivablesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async packages(): Promise<ReceivablePkg[]> {
+  async packages(): Promise<ReceivableIn[]> {
     const rows = await readAll((from, to) =>
       this.db
         .from('subscriptions')
@@ -51,7 +40,8 @@ export class ReceivablesRepo {
               currency: r.currency,
               starts_on: r.starts_on,
               status: r.status,
-              stop: stopOf(r),
+              cancel_kind: r.cancel_kind,
+              stop_owed_amount: r.stop_owed_amount,
             },
           ]
         : [],

@@ -1,5 +1,6 @@
-import type { MessageView, ThreadLesson } from '@ab/shared';
-import { useLayoutEffect, useRef, useState } from 'react';
+import type { CallView, MessageView, ThreadLesson } from '@ab/shared';
+import { windowEnd } from '@ab/client-core';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
@@ -7,14 +8,15 @@ import { withDays, type LogItem } from '@/features/messaging/inbox/messages/lib/
 import { JumpToLatest } from './JumpToLatest';
 import { MessageBubble } from './MessageBubble';
 import { HiddenBubble } from '@/features/messaging/inbox/messages/hide/HiddenBubble';
-import { CallEntry } from '@/features/messaging/calls';
-import type { CallView } from '@ab/shared';
-import { WithThreadCalls } from '@/features/messaging/calls';
-import { useCallsEnabled } from '@/features/messaging/calls';
+import { CallEntry, useCallsEnabled, WithThreadCalls } from '@/features/messaging/calls';
 import { useLastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { isNearBottom } from '@/features/messaging/inbox/messages/lib/stick-to-bottom';
 import { logNow } from '@/features/messaging/inbox/messages/lib/log-now';
 import { ReplyActionsProvider } from '@/features/messaging/inbox/messages/reply-actions';
+import {
+  useAnchorScroll,
+  type LogAnchor,
+} from '@/features/messaging/inbox/messages/lib/use-anchor-scroll';
 
 export interface MessageLogProps {
   /** The chat's number: her own last send in it (own-send) snaps the log down. */
@@ -37,6 +39,8 @@ export interface MessageLogProps {
   canCall?: boolean;
   /** The family's next open lessons (ThreadDetail.lessons): the reply notes' «تأكيد الحلقة» / «تغيير الموعد»; none = no actions. */
   lessons?: readonly ThreadLesson[];
+  /** The window around a search hit (docs/37): never pinned, «الأحدث» always shown. */
+  anchor?: LogAnchor | undefined;
 }
 
 const BOX = {
@@ -60,14 +64,13 @@ function Day({ label }: { label: string }) {
  * counts what came in below. Her own send (the id her composer recorded) always snaps to the bottom; «رسائل أقدم» pages back.
  * A separator before each day's first message, at every width (the bubbles show the clock only).
  */
-export function MessageLog({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell', canCall = false, lessons }: MessageLogProps) {
+export function MessageLog({ lessons, ...props }: MessageLogProps) {
   // The chat's WhatsApp calls (docs/28), at their time among the messages; nothing asked while calls are off.
-  const props = { phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill, canCall };
-  const log = useCallsEnabled() ? <WithThreadCalls phone={phone}>{(calls) => <LogView {...props} calls={calls} />}</WithThreadCalls> : <LogView {...props} />;
-  return lessons ? <ReplyActionsProvider phone={phone} lessons={lessons}>{log}</ReplyActionsProvider> : log;
+  const log = useCallsEnabled() ? <WithThreadCalls phone={props.phone}>{(calls) => <LogView {...props} calls={calls} />}</WithThreadCalls> : <LogView {...props} />;
+  return lessons ? <ReplyActionsProvider phone={props.phone} lessons={lessons}>{log}</ReplyActionsProvider> : log;
 }
 
-function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell', canCall = false, calls }: MessageLogProps & { calls?: readonly CallView[] | undefined }) {
+function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell', canCall = false, calls, anchor }: MessageLogProps & { calls?: readonly CallView[] | undefined }) {
   const box = useRef<HTMLDivElement>(null);
   const pinned = useRef(true);
   const newest = messages.at(-1)?.id;
@@ -81,13 +84,8 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
     setPrev({ newest, own });
     if (own) setAwayAt(null);
   }
-  // Only a new newest row (or it turning out to be hers) moves the reader, never a status change.
-  useLayoutEffect(() => {
-    const el = box.current;
-    if (!el || !(pinned.current || own)) return;
-    el.scrollTop = el.scrollHeight;
-    pinned.current = true;
-  }, [newest, own]);
+  const shows = (id: string) => messages.some((m) => m.id === id);
+  useAnchorScroll({ boxRef: box, pinnedRef: pinned, newest, own, anchor, shows });
   const jump = () => {
     const el = box.current;
     if (el) el.scrollTop = el.scrollHeight;
@@ -99,7 +97,8 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
   const stamps = [messages.at(-1)?.created_at, ...(calls ?? []).map((c) => c.started_at)];
   const now = logNow(useNow(), stamps);
   const from = hasMore ? (messages[0]?.created_at ?? null) : null;
-  const items: LogItem[] = withDays(messages, now, calls && { list: calls, from });
+  const to = anchor ? windowEnd(messages) : null; // a window's later calls belong to later days
+  const items: LogItem[] = withDays(messages, now, calls && { list: calls, from, to });
   const seen = awayAt === null ? -1 : messages.findIndex((m) => m.id === awayAt);
   const unseen = seen < 0 ? 0 : messages.length - 1 - seen;
 
@@ -142,7 +141,9 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
           )}
         </ol>
       </div>
-      {awayAt !== null && <JumpToLatest count={unseen} onJump={jump} />}
+      {(anchor !== undefined || awayAt !== null) && (
+        <JumpToLatest count={anchor ? 0 : unseen} onJump={anchor?.onNewest ?? jump} />
+      )}
     </div>
   );
 }

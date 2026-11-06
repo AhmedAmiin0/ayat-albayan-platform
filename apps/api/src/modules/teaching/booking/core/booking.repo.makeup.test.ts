@@ -36,7 +36,7 @@ describe('BookingQueries.createBooking — makeup and invoice errors (R-SCH-10)'
     expect(await failure(run())).toMatchObject({ status: 409, body: { code: 'makeup_not_eligible' } });
   });
 
-  it('P0001 course_exists (the package got its course meanwhile, migration 20261106000201) → 409', async () => {
+  it('P0001 course_exists (the package got its course meanwhile, migration 20261106000501) → 409', async () => {
     const { run } = book([{ error: { code: 'P0001', message: 'course_exists' } }]);
     expect(await failure(run())).toMatchObject({ status: 409, body: { code: 'course_exists' } });
   });

@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import type { LessonStatus, StudentStatus, SubscriptionStatus } from '@ab/catalog';
-import { moneyAmount } from '@ab/money';
 import { OPEN_LESSON_STATUSES, wallParts } from '@ab/schedule';
 import type { StopRefund } from './stop-refund.js';
+import { stopOweAskSchema, stopRefundAskSchema, type StopOwe } from './stop-choices.js';
 
 // «إلغاء الاشتراك» from the student's profile (owner 2026-10-30): STOP THE COURSE, KEEP THE MONEY.
 // Every future lesson of the subscription's course is cancelled, its weekly rules end on the cancel
@@ -15,15 +15,19 @@ export const COURSE_STOP_REASON_MAX = 300;
 
 /**
  * POST /students/:id/course-stop: idempotent on clientRequestId (rule 8); the reason is required.
- * `refund` (owner 2026-11-02, subscriptions.refund): «إلغاء مع استرداد», at most the preview's
- * refund; absent = «إلغاء فقط».
+ * `refund` (subscriptions.refund): «إلغاء مع استرداد» and the chosen refund (owner 2026-11-06);
+ * absent = «إلغاء فقط», with `owe`: what the family still owes (absent = attended × rate). Never
+ * both.
  */
-export const courseStopSchema = z.strictObject({
-  subscriptionId: z.uuid(),
-  reason: z.string().trim().min(2).max(COURSE_STOP_REASON_MAX),
-  clientRequestId: z.uuid(),
-  refund: z.strictObject({ amount: moneyAmount }).optional(),
-});
+export const courseStopSchema = z
+  .strictObject({
+    subscriptionId: z.uuid(),
+    reason: z.string().trim().min(2).max(COURSE_STOP_REASON_MAX),
+    clientRequestId: z.uuid(),
+    refund: stopRefundAskSchema.optional(),
+    owe: stopOweAskSchema.optional(),
+  })
+  .refine((b) => !(b.refund && b.owe), { message: 'refund_or_owe', path: ['owe'] });
 export type CourseStopRequest = z.infer<typeof courseStopSchema>;
 
 /**
@@ -52,6 +56,13 @@ export interface CourseStopPreview {
    * for a caller without subscriptions.refund.
    */
   refund: StopRefund | null;
+  /**
+   * The person may refund but the refund could not be computed now (Stripe down for a card
+   * payment): the sheet says so instead of hiding the choice silently.
+   */
+  refundUnavailable: boolean;
+  /** «إلغاء فقط»'s numbers: attended × rate (capped at the price) and the price. */
+  owe: StopOwe;
   /** Set once the package is cancelled (either kind): the sheet shows it instead of the button. */
   stopped: CourseStopped | null;
 }

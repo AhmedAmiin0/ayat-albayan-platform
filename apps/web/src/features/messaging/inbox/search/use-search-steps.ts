@@ -11,7 +11,7 @@ interface Steps {
 }
 
 /**
- * The bar's shown hit, followed: a new one is sought in the chat (useSeekMessage); one past the
+ * The bar's shown hit, followed: a new one becomes the chat's anchor (useThreadLog); one past the
  * loaded hits loads the search's next page first.
  */
 export function useSearchSteps({ hits, index, more, seek }: Steps): void {

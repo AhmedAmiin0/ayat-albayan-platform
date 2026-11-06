@@ -19,6 +19,7 @@ import { threadMessages } from '../../thread/hooks/thread-cache';
 import { useJump } from '../../thread/hooks/use-jump';
 import type { useThread } from '../../thread/hooks/use-thread';
 import { useSearchJump } from '@/inbox/thread/search';
+import { BackToNewest, useAnchorJump, useThreadLog } from '@/inbox/thread/anchor';
 
 type ThreadQuery = ReturnType<typeof useThread>;
 
@@ -50,8 +51,10 @@ function useOlder(query: ThreadQuery) {
  * ponytail: a file goes up with no optimistic row, so it follows in only near the newest; key the send
  * mutations and read useMutationState if it must always follow.
  */
-export function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
+export function MessageList({ phone, query: live }: { phone: string; query: ThreadQuery }) {
   const { color } = useTheme();
+  // `?msg=` (a search hit): the live chat, or the window around the hit (docs/37).
+  const { query, anchored, target, to } = useThreadLog(phone, live);
   const list = useRef<FlatList<LogRow>>(null);
   // Her own pull only: a background refetch (open, send, push) must not spin over the newest bubble.
   const [pulling, setPulling] = useState(false);
@@ -60,7 +63,7 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
   const calls = useThreadCalls(phone);
   const callBack = useCallBack({ phone, thread: query.data?.pages[0]?.thread ?? null });
   const more = query.hasNextPage;
-  const rows = useMemo(() => logRows(threadMessages(query.data), { calls, hasMore: more }), [query.data, calls, more]);
+  const rows = useMemo(() => logRows(threadMessages(query.data), { calls, hasMore: more, to }), [query.data, calls, more, to]);
   const newest = rows[0]?.message;
   const ours = newest?.direction === 'outbound' && !senderLine(newest) ? newest.id : undefined;
   useEffect(() => {
@@ -69,7 +72,8 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
   // A tap on a quote scrolls to the original (owner 2026-10-25 «رد»), loading older pages if needed.
   const { lit, jump, cancel, onScrollToIndexFailed } = useJump(list, rows, query);
   const onJump = useStableHandler(jump);
-  useSearchJump(list, { jump, cancel });
+  useSearchJump(list, { jump, cancel, rows });
+  useAnchorJump(list, { jump, target, anchored });
   const callBackNow = useStableHandler((call: CallView) => callBack?.(call));
   const onCallBack = callBack ? callBackNow : undefined;
   // Rows get primitives and the cached message objects: memo MessageRow redraws only what changed.
@@ -134,6 +138,7 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
             }
           />
           <FloatingDay label={top.label} opacity={top.opacity} onChip={top.onChip} />
+          <BackToNewest shown={anchored} />
         </View>
       </CellFrames.Provider>
     </SeenRowsContext>

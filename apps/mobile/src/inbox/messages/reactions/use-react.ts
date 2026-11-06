@@ -1,4 +1,4 @@
-import { reactionMutation, reactionPath, withReactions } from '@ab/client-core';
+import { anchoredThreadPrefix, reactionMutation, reactionPath, withReactions } from '@ab/client-core';
 import type { ReactionResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiError, apiSend } from '@/core/lib/http/api';
@@ -20,7 +20,12 @@ export function useReact(phone: string, say: (text: string) => void) {
     reactionMutation({
       send: ({ message, emoji }) => apiSend<ReactionResult>('PUT', reactionPath(phone, message.id), { emoji, clientRequestId: requestId() }),
       cancel: () => client.cancelQueries({ queryKey }),
-      patch: (id, reactions) => client.setQueryData<ThreadCache>(queryKey, (old) => withReactions(old, { id, reactions })),
+      // The live chat and any window around an old search hit (docs/37): the pill shows in both.
+      patch: (id, reactions) => {
+        const edit = (old: ThreadCache | undefined) => withReactions(old, { id, reactions });
+        client.setQueryData<ThreadCache>(queryKey, edit);
+        client.setQueriesData<ThreadCache>({ queryKey: anchoredThreadPrefix(phone) }, edit);
+      },
       fail: (e) => say(reactionError(e)),
     }),
   );

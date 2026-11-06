@@ -10,6 +10,7 @@ import { teacherListFilter } from '@/modules/messaging/inbox/threads/threads.lis
 import { ThreadsRepo, type ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import type { ThreadPageQuery } from '@/modules/messaging/inbox/threads/threads.service';
+import { isFirstPage } from '@/modules/messaging/inbox/reads/thread-page';
 
 const NO_READS: ReadonlyMap<string, number> = new Map();
 const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
@@ -45,7 +46,7 @@ export class TeacherThreadsService {
   /** One page, oldest → newest; the first page also carries people and lessons (as the admin's). */
   async detail(q: ThreadPageQuery, scope: TeacherScope, now = new Date()): Promise<ThreadDetail> {
     assertPhone(scope, q.phone);
-    const first = !q.before;
+    const first = isFirstPage(q);
     if (first) await this.teacher.stampRead({ teacherId: scope.teacherId, phone: q.phone, at: now });
     const page = Promise.all([this.queries.thread(q.phone), this.messages.messages(q)]);
     const [row, rows] = await page;

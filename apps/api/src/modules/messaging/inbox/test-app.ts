@@ -29,7 +29,7 @@ import { ReopenRepo } from './reopen/reopen.repo';
 import { DeltaRepo } from './delta/delta.repo';
 import { MessageHideRepo } from './hide/message-hide.repo';
 import { StickerRepo } from '@/modules/messaging/inbox/stickers/sticker.repo';
-import { ChatSearchRepo } from './reads/search';
+import { ChatSearchRepo, MessageSearchRepo } from './reads/search';
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
@@ -85,6 +85,7 @@ function mocks() {
     hides: { target: vi.fn(), set: vi.fn(async () => true) },
     delta: { newer: vi.fn(), pending: vi.fn() },
     search: { rows: vi.fn() },
+    messageSearch: { search: vi.fn() },
     stickers: {
       ...{ recent: vi.fn(), messages: vi.fn(), favourites: vi.fn() },
       ...{ save: vi.fn(), drop: vi.fn() },
@@ -118,6 +119,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(DeltaRepo).useValue(m.delta)
     .overrideProvider(StickerRepo).useValue(m.stickers)
     .overrideProvider(ChatSearchRepo).useValue(m.search)
+    .overrideProvider(MessageSearchRepo).useValue(m.messageSearch)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

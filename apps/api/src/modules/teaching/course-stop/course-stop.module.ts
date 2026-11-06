@@ -10,6 +10,7 @@ import {
   CourseStopSettings,
   StopRefundCards,
   StopRefundGate,
+  StopOwedCalc,
   StopRefundLedger,
   StopRefundRepo,
   StopRefunds,
@@ -28,7 +29,7 @@ import {
     // «إلغاء مع استرداد» (owner 2026-11-02): its own Stripe client (the keys of «التكاملات»).
     { provide: STRIPE_FACTORY, useValue: stripeFactory },
     ...[StripeClients, StopRefundCards, StopRefundLedger, StopRefundRepo, StopRefunds],
-    ...[CourseStopSettings, StopRefundGate],
+    ...[CourseStopSettings, StopRefundGate, StopOwedCalc],
   ],
 })
 export class CourseStopModule {}

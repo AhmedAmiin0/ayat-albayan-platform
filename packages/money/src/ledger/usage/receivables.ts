@@ -2,7 +2,8 @@ import { calendarDaysBetween } from '@ab/time';
 // Receivables («مستحق على الطلاب», owner 2026-10-05): who still owes on a package, how much and
 // for how long. Pure; the API reads the packages and their net paid, the dashboard converts.
 
-import { round2, toCents } from '@ab/core';
+import { toCents } from '@ab/core';
+import { dueOf } from './owed.js';
 
 export const AGING_BUCKETS = ['0_30', '31_60', '61_90', '90_plus'] as const;
 export type AgingBucket = (typeof AGING_BUCKETS)[number];
@@ -16,11 +17,10 @@ export interface ReceivableIn {
   /** The package's first day (YYYY-MM-DD): what is owed is due from then. */
   starts_on: string;
   status: string;
-  /**
-   * What the package is owed for when not its price: a STOPPED course's attended lessons at the
-   * refund rate (owner 2026-11-05), so a «إلغاء مع استرداد» never lists the refund as owed.
-   */
-  owed_for?: number;
+  /** 'stopped' for «إلغاء الاشتراك»: it owes stop_owed_amount, not its price (owedFor). */
+  cancel_kind?: string | null;
+  /** The stop's stored decision (migration 20261106000100); null for a package not stopped. */
+  stop_owed_amount?: number | null;
 }
 
 export interface ReceivableRow extends ReceivableIn {
@@ -41,7 +41,7 @@ export function daysSince(startsOn: string, today: string): number {
   return Math.max(0, calendarDaysBetween(startsOn, today));
 }
 
-/** Packages that still owe (owed = (owed_for ?? price) − net paid > 0), the oldest debt first. */
+/** Packages that still owe (owed = owedFor − net paid > 0), the oldest debt first. */
 export function receivablesOf(input: {
   subs: readonly ReceivableIn[];
   paid: ReadonlyMap<string, number>;
@@ -50,7 +50,7 @@ export function receivablesOf(input: {
   return input.subs
     .flatMap((s) => {
       const paid = input.paid.get(s.id) ?? 0;
-      const owed = round2(Number(s.owed_for ?? s.price) - paid);
+      const owed = dueOf(s, paid);
       if (owed <= 0) return [];
       const days = daysSince(s.starts_on, input.today);
       return [{ ...s, paid, owed, days_overdue: days, bucket: agingBucket(days) }];

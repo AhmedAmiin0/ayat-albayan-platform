@@ -23,7 +23,10 @@ const DETAILS_SELECT =
   'id, code, name, status, program, tz, contact_is_self, teacher:teachers(display_name_ar), guardian:guardians(phone_e164, name, students(id, code, name, status))' as const;
 
 /** «مدفوعة جزئيًا» (owner 2026-10-28): only for self.sales_money. */
-export type PriceRow = Pick<Tables<'subscriptions'>, 'id' | 'price' | 'currency'>;
+export type PriceRow = Pick<
+  Tables<'subscriptions'>,
+  'id' | 'price' | 'currency' | 'cancel_kind' | 'stop_owed_amount'
+>;
 
 /** A past lesson of the student with every student's attendance (the mapper keeps the student's own). */
 export interface AttendanceRow {
@@ -77,7 +80,7 @@ export class SalesStudentRepo {
 
   /** The price and currency of her student's packages: read ONLY for a viewer with self.sales_money (part_paid). */
   async prices(studentId: string): Promise<PriceRow[]> {
-    const { data, error } = await this.db.from('subscriptions').select('id, price, currency').eq('student_id', studentId);
+    const { data, error } = await this.db.from('subscriptions').select('id, price, currency, cancel_kind, stop_owed_amount').eq('student_id', studentId);
     if (error) throw dbError(error);
     return data;
   }
