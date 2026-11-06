@@ -1,6 +1,12 @@
 import { memoryPort } from '@/test/node-sql';
 import { answer, A, id, row, threadRow } from '@/inbox/thread/store/store-fixtures';
-import { nudgeInboxStore, startInboxStore, stopInboxStore, storeReader } from './store-session';
+import {
+  nudgeInboxStore,
+  putInboxReads,
+  startInboxStore,
+  stopInboxStore,
+  storeReader,
+} from './store-session';
 
 // The app's one store session (docs/43 43-7): started per user, wiped on sign-out.
 
@@ -47,6 +53,7 @@ test('the same user again keeps the session; a nudge syncs (throttled)', async (
 });
 
 test('sign-out: the rows are wiped and the screens read nothing; no session deletes the file', async () => {
+  jest.spyOn(mockPort, 'close').mockResolvedValue(); // the next sign-in opens the same file again
   await startInboxStore('user-a');
   await settle();
   await stopInboxStore();
@@ -64,4 +71,22 @@ test('sign-out: the rows are wiped and the screens read nothing; no session dele
 
 test('without a session a nudge does nothing', () => {
   expect(() => nudgeInboxStore()).not.toThrow();
+});
+
+test('a chat read goes into the store (queued rows wait for the sync); none without a session', async () => {
+  putInboxReads([row({ n: 8 })]);
+  mockFetch.mockReturnValue(new Promise(() => undefined));
+  await startInboxStore('user-a');
+  const release = storeReader.watchChat(A);
+  putInboxReads([row({ n: 2 }), row({ n: 3, status: 'queued' })]);
+  await settle();
+  expect(storeReader.chat(A).map((m) => m.id)).toEqual([id(2)]);
+  release();
+});
+
+test('stop closes the connection', async () => {
+  const close = jest.spyOn(mockPort, 'close');
+  await startInboxStore('user-a');
+  await stopInboxStore();
+  expect(close).toHaveBeenCalledTimes(1);
 });

@@ -17,8 +17,18 @@ const mockAnswer = async () => {
   await mockGate;
   return { data: { session: mockUser ? { user: { id: mockUser } } : null } };
 };
+const mockAuth: { listener?: (event: string, s: { user: { id: string } } | null) => void } = {};
+const mockOff = jest.fn();
 jest.mock('@/core/lib/http/supabase', () => ({
-  supabase: { auth: { getSession: () => mockAnswer() } },
+  supabase: {
+    auth: {
+      getSession: () => mockAnswer(),
+      onAuthStateChange: (cb: (event: string, s: { user: { id: string } } | null) => void) => {
+        mockAuth.listener = cb;
+        return { data: { subscription: { unsubscribe: mockOff } } };
+      },
+    },
+  },
 }));
 
 beforeEach(() => {
@@ -52,4 +62,15 @@ test('unmounted before the session was read: never started after', async () => {
   await act(async () => open());
   expect(mockStart).not.toHaveBeenCalled();
   expect(mockStop).toHaveBeenCalledTimes(1);
+});
+
+test('no session at first (offline cold start): a later auth event starts it; unmount unsubscribes', async () => {
+  mockUser = null;
+  const hook = await renderHook(() => useInboxStore(true));
+  await act(async () => undefined);
+  expect(mockStart).not.toHaveBeenCalled();
+  await act(async () => mockAuth.listener?.('TOKEN_REFRESHED', { user: { id: 'user-a' } }));
+  expect(mockStart).toHaveBeenCalledWith('user-a');
+  await hook.unmount();
+  expect(mockOff).toHaveBeenCalled();
 });

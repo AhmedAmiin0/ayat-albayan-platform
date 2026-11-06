@@ -95,6 +95,8 @@ function markInboxRead(client: QueryClient, phone: string): void {
 /** The open chat's useThread: its pages, and whether the server answered since the chat opened. */
 interface ReadState {
   data: ThreadCache | undefined;
+  /** The server's pages alone (useStoredView): a row the phone store brought was never stamped. */
+  httpData?: ThreadCache | undefined;
   isFetchedAfterMount: boolean;
   isSuccess: boolean;
 }
@@ -103,12 +105,13 @@ interface ReadState {
  * markInboxRead once the open chat's GET answered, then again only when a newer received message
  * arrives in it: a refetch with nothing new (a poll) refetches no list.
  */
-export function useInboxRead(phone: string, { data, isFetchedAfterMount, isSuccess }: ReadState): void {
+export function useInboxRead(phone: string, state: ReadState): void {
+  const { data, httpData, isFetchedAfterMount, isSuccess } = state;
   const client = useQueryClient();
   // The saved copy on disk shows before the GET: it read nothing on the server yet.
   const answered = isFetchedAfterMount && isSuccess;
   const seen = useRef('');
-  const inbound = newestInbound(data);
+  const inbound = newestInbound(httpData ?? data);
   useEffect(() => {
     if (!answered || !inbound || seen.current === inbound) return;
     seen.current = inbound;

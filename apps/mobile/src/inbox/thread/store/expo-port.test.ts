@@ -8,6 +8,7 @@ const db = {
   runAsync: jest.fn(async () => ({ changes: 1, lastInsertRowId: 1 })),
   getAllAsync: jest.fn(async () => [{ x: 1 }]),
   withTransactionAsync: jest.fn(async (work: () => Promise<void>) => work()),
+  closeAsync: jest.fn(async () => undefined),
 };
 
 test('the store file through expo-sqlite: exec, run, all and a transaction', async () => {
@@ -23,6 +24,8 @@ test('the store file through expo-sqlite: exec, run, all and a transaction', asy
   expect(db.runAsync).toHaveBeenCalledWith('insert', ['a', 1]);
   expect(db.getAllAsync).toHaveBeenCalledWith('select', [null]);
   expect(work).toHaveBeenCalledTimes(1);
+  await port.close();
+  expect(db.closeAsync).toHaveBeenCalledTimes(1);
 });
 
 test('sign-out deletes the whole file', async () => {

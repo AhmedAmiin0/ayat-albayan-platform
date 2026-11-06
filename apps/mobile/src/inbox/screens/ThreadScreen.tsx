@@ -47,7 +47,7 @@ const contactAvatar = (thread: ThreadView | null, phone: string) => (
 /** Offline: when the saved thread was fetched. Else who the number is, then the number if named. */
 function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle; tz: string }): string {
   const { teacher, cycle, tz } = who;
-  if (query.isError && query.data) {
+  if (query.isError && query.dataUpdatedAt > 0) {
     return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle, tz));
   }
   const thread = query.data?.pages[0]?.thread;

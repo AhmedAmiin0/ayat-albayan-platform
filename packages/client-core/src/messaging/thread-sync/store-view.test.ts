@@ -33,6 +33,15 @@ describe('withStoredTicks / withStoredRows: the chat over the phone store (docs/
     expect(out.pages[1]).toBe(d.pages[1]);
   });
 
+  it('a send on the page (not in the store): stored outgoing rows wait, incoming ones join', () => {
+    const local = { ...msg(5, 'queued'), id: 'client-id', direction: 'outbound' } as MessageView;
+    const d = data(page(msg(2), local));
+    const server = { ...synced(6), direction: 'outbound' } as SyncMessage;
+    const inbound = { ...synced(7), direction: 'inbound' } as SyncMessage;
+    const out = withStoredRows(d, [server, inbound]);
+    expect(out.pages[0]?.messages.map((m) => m.id)).toEqual(['m2', 'client-id', 'm7']);
+  });
+
   it('no page yet: unchanged (the screen shows the stored rows itself)', () => {
     const d = data();
     expect(withStoredRows(d, [synced(1)])).toBe(d);

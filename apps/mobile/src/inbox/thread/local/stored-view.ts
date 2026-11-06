@@ -2,7 +2,7 @@ import { withStoredRows, withStoredTicks } from '@ab/client-core';
 import type { SyncMessage, ThreadDetail, ThreadView } from '@ab/shared';
 import type { InfiniteData } from '@tanstack/react-query';
 import { withTracked } from '@/core/lib/query/paged-result';
-import { useStoredChat, useStoredThreads } from './use-stored';
+import { useStoredChat, useStoredThreads, useStoreReads } from './use-stored';
 
 type Pages = InfiniteData<ThreadDetail>;
 const NO_PEOPLE: ThreadDetail['people'] = { guardian: null, lead: null, students: [] };
@@ -30,13 +30,18 @@ export function viewOf(
 
 /**
  * The live chat's query with the store over it (useThread): one source for every tick, a sync's
- * new rows at once, and the chat on screen before its GET answers. Without a store (no session,
- * a test), `data` is the query's own.
+ * new rows at once, and the chat on screen before its GET answers; its HTTP rows go into the
+ * store. Without a store (no session, a test), `data` is the query's own.
  */
-export function useStoredView<Q extends { data: Pages | undefined }>(phone: string, query: Q): Q {
+export function useStoredView<Q extends { data: Pages | undefined }>(
+  phone: string,
+  query: Q,
+): Q & { httpData?: Pages | undefined } {
   const rows = useStoredChat(phone);
   const thread = useStoredThreads().get(phone) ?? null;
-  return withTracked(query, { data: viewOf(query.data, rows, thread) });
+  useStoreReads(query.data?.pages[0]?.messages);
+  // httpData: what the server answered (useInboxRead marks a chat read only on that).
+  return withTracked(query, { data: viewOf(query.data, rows, thread), httpData: query.data });
 }
 
 /** An anchored window (docs/37) with the stored ticks only: its rows are old, none is added. */

@@ -41,7 +41,8 @@ export function createMessageStore(port: SqlPort): MessageStore {
   const tell = (change: StoreChange) => listeners.forEach((l) => l(change));
   const serial = createQueue();
   const commit = (change: StoreChange | null) => {
-    if (change) tell(change);
+    // Nothing moved (a read equal to the stored rows): no reader reads again.
+    if (change && (change === 'all' || change.size > 0)) tell(change);
     return change !== null;
   };
   const clear = async (owner: string | null) => {

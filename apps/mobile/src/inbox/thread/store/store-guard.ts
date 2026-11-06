@@ -1,5 +1,5 @@
 import { mergeRead, type SyncPlan, type SyncState } from '@ab/client-core';
-import type { MessageView } from '@ab/shared';
+import type { MessageView, SyncMessage } from '@ab/shared';
 import type { SqlPort } from './sql-port';
 import { changedPhones, type StoreChange } from './store-change';
 import { readHeld, readRows, readState } from './store-read';
@@ -46,6 +46,14 @@ export async function writeFor(
   return changedPhones(plan, removed);
 }
 
+/** Field by field, whatever the key order (a stored row comes back through its schema). */
+function sameRow(a: SyncMessage, b: SyncMessage | undefined): boolean {
+  const other = new Map(Object.entries(b ?? {}));
+  const fields = Object.entries(a);
+  const equal = ([k, v]: [string, unknown]) => JSON.stringify(v) === JSON.stringify(other.get(k));
+  return b !== undefined && fields.length === other.size && fields.every(equal);
+}
+
 /** Chat-read rows merged by id for `owner`; a tombstoned id is never written back. */
 export async function putFor(
   port: SqlPort,
@@ -55,7 +63,8 @@ export async function putFor(
   if (!(await owns(port, at.owner))) return null;
   const live = rows.filter((m) => !at.gone.has(m.id));
   const held = await readRows(port, live.map((m) => m.id));
-  const merged = live.map((m) => mergeRead(held.get(m.id), m));
+  const same = (m: SyncMessage) => sameRow(m, held.get(m.id));
+  const merged = live.map((m) => mergeRead(held.get(m.id), m)).filter((m) => !same(m));
   await port.transaction(() => writeRows(port, merged));
   return new Set(merged.map((m) => m.phone_e164));
 }

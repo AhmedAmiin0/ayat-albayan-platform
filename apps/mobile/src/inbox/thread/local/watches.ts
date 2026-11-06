@@ -20,8 +20,9 @@ export function createWatches(dropped: (key: string) => void) {
       counts.set(key, (counts.get(key) ?? 0) + 1);
       let released = false;
       return () => {
-        const left = (counts.get(key) ?? 1) - (released ? 0 : 1);
+        if (released) return;
         released = true;
+        const left = (counts.get(key) ?? 1) - 1;
         counts.set(key, left);
         if (left > 0) return;
         counts.delete(key);

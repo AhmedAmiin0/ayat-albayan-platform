@@ -24,11 +24,23 @@ export function withStoredTicks<P extends { messages: MessageView[] }, T extends
   return pages.every((p, i) => p === data.pages[i]) ? data : { ...data, pages };
 }
 
-/** Stored rows newer than every row of the newest page, that no page holds (a sync was first). */
+/** A queued outgoing row the store does not hold: this phone's send (not the server's id). */
+const localSend = (m: MessageView, stored: ReadonlySet<string>) =>
+  m.direction === 'outbound' && m.status === 'queued' && !stored.has(m.id);
+
+/**
+ * Stored rows newer than every row of the newest page, that no page holds (a sync was first).
+ * While a send of this phone is on the page, stored outgoing rows wait for the HTTP answer:
+ * the server's copy of that send has another id and would show twice.
+ */
 function arrivals(pages: readonly { messages: MessageView[] }[], stored: readonly SyncMessage[]) {
+  const head = pages[0]?.messages ?? [];
   const known = new Set(pages.flatMap((p) => p.messages.map((m) => m.id)));
-  const newest = Math.max(Number.NEGATIVE_INFINITY, ...(pages[0]?.messages ?? []).map(time));
-  return stored.filter((m) => !known.has(m.id) && time(m) > newest);
+  const ids = new Set(stored.map((m) => m.id));
+  const sending = head.some((m) => localSend(m, ids));
+  const newest = Math.max(Number.NEGATIVE_INFINITY, ...head.map(time));
+  const fits = (m: SyncMessage) => !known.has(m.id) && time(m) > newest;
+  return stored.filter((m) => fits(m) && !(sending && m.direction === 'outbound'));
 }
 
 /**

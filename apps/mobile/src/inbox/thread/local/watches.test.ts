@@ -9,7 +9,10 @@ test('a key stays while watched; the last release drops it once; a double releas
   a();
   expect([w.has('x'), w.keys()]).toEqual([true, ['x']]);
   b();
+  b();
   expect([w.has('x'), dropped.mock.calls]).toEqual([false, [['x']]]);
+  a(); // a stale release after the drop never brings the key back
+  expect(w.has('x')).toBe(false);
 });
 
 test('listeners: each told until it leaves', () => {

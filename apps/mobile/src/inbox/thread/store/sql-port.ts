@@ -12,4 +12,6 @@ export interface SqlPort {
   all(sql: string, params: readonly SqlValue[]): Promise<unknown[]>;
   /** Runs `work` in one transaction: all of its writes land, or none. */
   transaction(work: () => Promise<void>): Promise<void>;
+  /** The connection closed (a stopped session). */
+  close(): Promise<void>;
 }
