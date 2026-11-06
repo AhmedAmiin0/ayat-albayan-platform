@@ -22,7 +22,7 @@ export function whatsappSendUrl(target: WhatsAppTarget, to: { phone: string; tex
 }
 
 /** The two steps: mark it sent from WhatsApp on the server, then open WhatsApp. */
-export interface WhatsAppSendSteps<R> {
+interface WhatsAppSendSteps<R> {
   /** POST /messages/:id/sent-manually; throws when the server refused (nothing is opened). */
   mark: () => Promise<R>;
   /** Opens WhatsApp; false or a throw = it did not open. */

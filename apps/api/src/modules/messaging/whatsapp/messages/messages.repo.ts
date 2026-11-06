@@ -1,3 +1,4 @@
+import { AWAITING_REPLY } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { MESSAGE_SELECT, type ThreadMessageRow } from './message.mapper';
@@ -8,6 +9,9 @@ import { HANDED_OFF, SENDING } from '@/modules/messaging/whatsapp/sender/send-pl
 const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
 /** No next try and no error: due now. */
 const CLEAR = { next_attempt_at: null, error_code: null, error_text: null } as const;
+
+const heldAgain = (at: Date) =>
+  ({ error_code: AWAITING_REPLY, scheduled_for: at.toISOString(), expires_at: null }) as const;
 
 /**
  * M1–M3 (docs/12 §4): the admin's retry, «I sent it myself» and the hand-off, all compare-and-set.
@@ -26,11 +30,14 @@ export class MessagesRepo {
   /**
    * failed → queued with a fresh attempt budget; null when it is no longer failed, or it was never
    * ours to send: a message sent outside the app or imported (created_by null, attempts 0, a wamid).
+   * `restart` (a held text's retry): held again (AWAITING_REPLY, never tried as free text), its
+   * 7 days from then (scheduled_for), no old deadline.
    */
-  async requeue(id: string): Promise<ThreadMessageRow | null> {
+  async requeue(id: string, restart: Date | null = null): Promise<ThreadMessageRow | null> {
+    const fresh = restart ? heldAgain(restart) : {};
     const { data, error } = await this.db
       .from('messages')
-      .update({ status: 'queued', attempts: 0, next_attempt_at: null, error_code: null, error_text: null })
+      .update({ status: 'queued', attempts: 0, next_attempt_at: null, error_code: null, error_text: null, ...fresh })
       .eq('id', id)
       .eq('status', 'failed')
       .or('attempts.gt.0,wa_message_id.is.null,created_by.not.is.null')
@@ -80,21 +87,20 @@ export class MessagesRepo {
 
   /**
    * «تراجع» of «أرسل عبر واتساب» (WhatsApp did not open): sent_manually → queued, a fresh attempt
-   * budget, compare-and-set on a staff row with no app echo attached (wa_message_id null), marked
-   * since `since`. The sender then sends it, or holds it again when the window is still closed.
+   * budget, compare-and-set on a staff row still holding the wamid it was read with (no app echo
+   * attached since), marked since `since`. The sender then sends it, or holds it again.
    */
-  async unsend(id: string, since: Date): Promise<ThreadMessageRow | null> {
-    const { data, error } = await this.db
+  async unsend(id: string, at: { since: Date; wamid: string | null }): Promise<ThreadMessageRow | null> {
+    const query = this.db
       .from('messages')
       .update({ status: 'queued', sent_manually_at: null, attempts: 0, ...CLEAR })
       .eq('id', id)
       .eq('direction', 'outbound')
       .eq('status', 'sent_manually')
-      .is('wa_message_id', null)
       .not('created_by', 'is', null)
-      .gte('sent_manually_at', since.toISOString())
-      .select(MESSAGE_SELECT)
-      .maybeSingle();
+      .gte('sent_manually_at', at.since.toISOString());
+    const same = at.wamid === null ? query.is('wa_message_id', null) : query.eq('wa_message_id', at.wamid);
+    const { data, error } = await same.select(MESSAGE_SELECT).maybeSingle();
     if (error) throw new Error(`message undo failed: ${error.message}`);
     return data;
   }

@@ -49,35 +49,61 @@ describe('MessagesService.sentManually: the reopen cancel', () => {
   });
 });
 
-describe('MessagesService.retry of a sent_manually row («تراجع»)', () => {
+describe('MessagesService.retry of a sent_manually row («تراجع», ?undo=whatsapp)', () => {
+  const undo = { automaticOn: true, undo: true };
+  const marked = (over: Partial<Row> = {}) =>
+    messageRow({ status: 'sent_manually', sent_manually_at: new Date().toISOString(), ...over });
+
   it('back to the queue through unsend, the sender kicked', async () => {
-    const row = messageRow({ status: 'sent_manually', sent_manually_at: new Date().toISOString() });
+    const row = marked();
     const s = setup(row);
-    await expect(s.svc.retry(row.id, { automaticOn: true })).resolves.toMatchObject({ view: { status: 'queued' } });
-    expect(s.queries.unsend).toHaveBeenCalledWith(row.id, expect.any(Date));
+    await expect(s.svc.retry(row.id, undo)).resolves.toMatchObject({ view: { status: 'queued' } });
+    expect(s.queries.unsend).toHaveBeenCalledWith(row.id, { since: expect.any(Date), wamid: null });
     expect(s.queries.requeue).not.toHaveBeenCalled();
     expect(s.sender.kick).toHaveBeenCalled();
   });
 
-  it('echo attached or too late (unsend null): 409 not_retryable, no kick', async () => {
-    const row = messageRow({ status: 'sent_manually' });
+  it('a stale plain retry (another screen) never undoes a manual send: 409', async () => {
+    const s = setup(marked());
+    await expect(s.svc.retry('m1', { automaticOn: true })).rejects.toMatchObject({ status: 409 });
+    expect(s.queries.unsend).not.toHaveBeenCalled();
+  });
+
+  it('the app echo is on it, or a calls-line row: 409, nothing read back', async () => {
+    const echoed = marked({ wa_message_id: 'wamid.APP1', sent_at: new Date(Date.now() + 1000).toISOString() });
+    for (const row of [echoed, marked({ line: 'calls' })]) {
+      const s = setup(row);
+      await expect(s.svc.retry(row.id, undo)).rejects.toMatchObject({ status: 409 });
+      expect(s.queries.unsend).not.toHaveBeenCalled();
+    }
+  });
+
+  it('an old wamid from before the mark (failed after WhatsApp took it): undone on that wamid', async () => {
+    const row = marked({ wa_message_id: 'wamid.OLD', sent_at: '2026-11-01T09:00:00.000Z' });
+    const s = setup(row);
+    await s.svc.retry(row.id, undo);
+    expect(s.queries.unsend).toHaveBeenCalledWith(row.id, expect.objectContaining({ wamid: 'wamid.OLD' }));
+  });
+
+  it('too late or the echo landed meanwhile (unsend null): 409 not_retryable, no kick', async () => {
+    const row = marked();
     const s = setup(row, null);
-    await expect(s.svc.retry(row.id, { automaticOn: true })).rejects.toMatchObject({ status: 409 });
+    await expect(s.svc.retry(row.id, undo)).rejects.toMatchObject({ status: 409 });
     expect(s.sender.kick).not.toHaveBeenCalled();
   });
 
-  it('a sent or queued row is still not retryable', async () => {
-    for (const status of ['sent', 'queued'] as const) {
+  it('undo on a failed or queued row: 409', async () => {
+    for (const status of ['failed', 'queued'] as const) {
       const s = setup(messageRow({ status }));
-      await expect(s.svc.retry('m1', { automaticOn: true })).rejects.toMatchObject({ status: 409 });
+      await expect(s.svc.retry('m1', undo)).rejects.toMatchObject({ status: 409 });
     }
   });
 });
 
 describe('MessagesRepo.unsend', () => {
-  it('compare-and-set: still sent_manually, no wamid, a staff row, marked since', async () => {
+  it('compare-and-set: still sent_manually, the same (no) wamid, a staff row, marked since', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: null }] });
-    await new MessagesRepo(db).unsend('m1', new Date('2026-11-06T10:00:00Z'));
+    await new MessagesRepo(db).unsend('m1', { since: new Date('2026-11-06T10:00:00Z'), wamid: null });
     const f = calls.map((c) => [c.method, ...c.args]);
     expect(f).toContainEqual(['update', expect.objectContaining({ status: 'queued', sent_manually_at: null, attempts: 0 })]);
     expect(f).toContainEqual(['eq', 'status', 'sent_manually']);

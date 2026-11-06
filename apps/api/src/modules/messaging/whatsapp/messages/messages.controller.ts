@@ -1,4 +1,9 @@
-import type { MessageView, SendGateView } from '@ab/shared';
+import {
+  type MessageRetryQuery,
+  messageRetryQuerySchema,
+  type MessageView,
+  type SendGateView,
+} from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../../../common/audit/audit.service';
@@ -6,6 +11,7 @@ import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { MessagesService, type MessageChange } from './messages.service';
 import { SendGate } from '../gate/send-gate';
+import { ZodQuery } from '@/common/http/zod-inputs';
 
 /** M1–M3 (docs/12 §4): what the admin does with an outbound message that did not go out. */
 @ApiTags('messaging')
@@ -29,11 +35,19 @@ export class MessagesController {
     return this.sendGate.view();
   }
 
-  /** failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while OFF). */
+  /**
+   * failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while OFF).
+   * ?undo=whatsapp: «تراجع» of «أرسل عبر واتساب», sent_manually → queued (no app echo, ≤ 30 min).
+   */
   @Post(':id/retry')
   @HttpCode(200)
-  async retry(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
-    const change = await this.messages.retry(id, { automaticOn: await this.sendGate.automaticOn() });
+  async retry(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ZodQuery(messageRetryQuerySchema) query: MessageRetryQuery,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MessageView> {
+    const opts = { automaticOn: await this.sendGate.automaticOn(), undo: query.undo === 'whatsapp' };
+    const change = await this.messages.retry(id, opts);
     return this.audited({ change, action: 'message_retry', user });
   }
 

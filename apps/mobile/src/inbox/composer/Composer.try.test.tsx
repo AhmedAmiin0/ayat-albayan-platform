@@ -39,6 +39,13 @@ test('a Kapso chat line after the window: the reopen note, the box, the papercli
   expect(screen.queryByTestId('closed-row')).toBeNull();
 });
 
+test('«بدون قالب» (owner 2026-11-06): the reopen-and-wait note instead', async () => {
+  await open({ ...CLOSED, try_after_window: true, reopen_choice: 'wait' });
+  expect(screen.getByText(t.inbox.tryAfterWindowWait)).toBeTruthy();
+  expect(screen.queryByText(t.inbox.tryAfterWindow)).toBeNull();
+  expect(screen.getByLabelText(t.inbox.composer.placeholder)).toBeTruthy();
+});
+
 test('a meta chat line after the window: the closed row, as before', async () => {
   await open(CLOSED);
   expect(screen.queryByText(t.inbox.tryAfterWindow)).toBeNull();

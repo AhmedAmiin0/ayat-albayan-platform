@@ -16,7 +16,15 @@ const ev = (status: StatusEvent['status']): StatusEvent => ({
   conversationId: null,
   pricingCategory: null,
 });
-const manual = { status: 'sent_manually' as const, sent_at: null, delivered_at: null, read_at: null };
+const MARKED = '2026-11-06T10:00:00.000Z';
+const ECHOED = '2026-11-06T10:01:00.000Z';
+const manual = {
+  status: 'sent_manually' as const,
+  sent_at: null as string | null,
+  delivered_at: null,
+  read_at: null,
+  sent_manually_at: MARKED,
+};
 
 describe('nextStatus: sent_manually', () => {
   it('attached: delivered and read move it; sent and failed do not', () => {
@@ -34,22 +42,23 @@ describe('nextStatus: sent_manually', () => {
 });
 
 describe('statusPatch: an attached sent_manually row', () => {
-  it('read fills sent_at and delivered_at with the same instant', () => {
-    const patch = statusPatch({ ...manual, wa_message_id: 'wamid.APP1' }, ev('read'));
+  it('read keeps the echo\'s sent_at and fills delivered_at', () => {
+    const row = { ...manual, sent_at: ECHOED, wa_message_id: 'wamid.APP1' };
     const at = AT.toISOString();
-    expect(patch).toEqual({ status: 'read', sent_at: at, delivered_at: at, read_at: at });
+    expect(statusPatch(row, ev('read'))).toEqual({ status: 'read', sent_at: ECHOED, delivered_at: at, read_at: at });
   });
 
-  it('no wamid (never attached): no change', () => {
+  it('no echo: no wamid, or an old wamid from before the mark (131047 after the fact)', () => {
     expect(statusPatch({ ...manual, wa_message_id: null }, ev('delivered'))).toBeNull();
-    expect(statusPatch(manual, ev('read'))).toBeNull();
+    const old = { ...manual, wa_message_id: 'wamid.OLD', sent_at: '2026-11-05T09:00:00.000Z' };
+    expect(statusPatch(old, ev('read'))).toBeNull();
   });
 });
 
 describe('StatusService on a sent_manually row', () => {
   it('attached: moved to delivered by compare-and-set from sent_manually', async () => {
     const s = services();
-    const row = outbound({ status: 'sent_manually', sent_at: null, wa_message_id: 'wamid.APP1' });
+    const row = outbound({ status: 'sent_manually', sent_at: ECHOED, sent_manually_at: MARKED, wa_message_id: 'wamid.APP1' });
     s.queries.outboundByWaId.mockResolvedValue(row);
     await s.statuses.handle(ev('delivered'));
     expect(s.queries.moveStatus).toHaveBeenCalledWith({
@@ -61,7 +70,7 @@ describe('StatusService on a sent_manually row', () => {
 
   it('a failed status never fails a sent_manually row, and never pushes', async () => {
     const s = services();
-    const row = outbound({ status: 'sent_manually', wa_message_id: 'wamid.APP1' });
+    const row = outbound({ status: 'sent_manually', sent_at: ECHOED, sent_manually_at: MARKED });
     s.queries.outboundByWaId.mockResolvedValue(row);
     await s.statuses.handle(ev('failed'));
     expect(s.queries.moveStatus).not.toHaveBeenCalled();

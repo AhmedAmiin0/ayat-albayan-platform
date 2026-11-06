@@ -92,3 +92,14 @@ test('each tree has its own bell screen, and it exists', () => {
     expect(routeExists(href.startsWith('/more') ? `/(tabs)${href}` : href)).toBe(true);
   }
 });
+
+test('«احجز أيام الحلقات» (owner 2026-11-06): the course wizard of that student, an existing route', () => {
+  for (const kind of ['payment_received', 'payment_due'] as const) {
+    const href = routeIn('sales', { kind, studentId: 's-1', open: 'course' }) ?? '';
+    expect(href).toBe('/sales/inbox/sales-course?studentId=s-1');
+    expect(routeExists(href.split('?')[0] ?? '', 'sales')).toBe(true);
+  }
+  // Without the inbox, or a bad id: the kind's own screen.
+  expect(salesRouteFor({ kind: 'payment_received', studentId: 's-1', open: 'course' }, only())).toBe('/sales/more');
+  expect(salesRouteFor({ kind: 'payment_received', studentId: '../x', open: 'course' })).toBe('/sales/students');
+});

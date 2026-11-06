@@ -1,5 +1,5 @@
 import { sendViaWhatsApp, type WhatsAppSendResult, whatsappSendUrl } from '@ab/client-core';
-import type { MessageView } from '@ab/shared';
+import { type MessageView, WHATSAPP_SEND_MS } from '@ab/shared';
 import { type MutationState, useMutation, useMutationState } from '@tanstack/react-query';
 import { Linking } from 'react-native';
 import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
@@ -16,7 +16,7 @@ const KEY = ['whatsapp-send'] as const;
  * wa.me with the family's digits and the text filled in: Android asks which WhatsApp opens it, so
  * staff pick WhatsApp Business (the academy number, linked on this phone as a companion device).
  */
-export const whatsappLink = (m: MessageView): string =>
+const whatsappLink = (m: MessageView): string =>
   whatsappSendUrl('mobile', { phone: m.phone_e164, text: m.body ?? '' });
 
 /** Opens WhatsApp; Linking throws when nothing can open the link. */
@@ -35,6 +35,8 @@ export function useWhatsAppSend(phone: string): (m: MessageView) => void {
   const manual = useMessageAction(phone, 'sent-manually');
   const send = useMutation({
     mutationKey: KEY,
+    // Kept as long as the server allows «تراجع» (WHATSAPP_SEND_MS), not TanStack's 5 minutes.
+    gcTime: WHATSAPP_SEND_MS,
     mutationFn: ({ message }: SendVars) =>
       sendViaWhatsApp({
         mark: () => manual.mutateAsync(message.id),

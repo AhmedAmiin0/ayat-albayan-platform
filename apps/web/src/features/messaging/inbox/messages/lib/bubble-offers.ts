@@ -27,7 +27,7 @@ export interface OfferOptions {
 
 /** «أرسل عبر واتساب»: admin mode only (the sent-manually endpoint's permission). */
 const whatsappOffer = (m: MessageView, opts: OfferOptions): boolean =>
-  opts.admin === true && canSendViaWhatsApp(m);
+  opts.admin === true && !m.hidden && canSendViaWhatsApp(m);
 
 /**
  * «نسخ» for a message with text; «تنزيل» only for a file this viewer may open today (MessageMedia's

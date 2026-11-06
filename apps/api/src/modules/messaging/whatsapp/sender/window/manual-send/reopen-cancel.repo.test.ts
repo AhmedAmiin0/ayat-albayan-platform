@@ -22,7 +22,7 @@ const cancels = (r: Row): boolean =>
 describe('ReopenCancelRepo.cancelQueued', () => {
   it('one compare-and-set: queued, not claimed, the phone’s reopen keys → failed reopen_not_needed', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'r1' }] }] });
-    await expect(new ReopenCancelRepo(db).cancelQueued(PHONE)).resolves.toBe(1);
+    await expect(new ReopenCancelRepo(db).cancelQueued(PHONE)).resolves.toEqual(['r1']);
     const f = filters(calls);
     expect(f).toContainEqual(['update', expect.objectContaining({ status: 'failed', error_code: 'reopen_not_needed' })]);
     expect(f).toContainEqual(['eq', 'status', 'queued']);
@@ -43,23 +43,34 @@ describe('ReopenCancelRepo.cancelQueued', () => {
     expect(cancels({ phone: PHONE, dedup: `reopen:${PHONE}:2026-11-06`, status: 'queued', code: null })).toBe(true);
   });
 
-  it('nothing left to cancel (claimed meanwhile): 0, no error', async () => {
+  it('nothing left to cancel (claimed meanwhile): none, no error', async () => {
     const { db } = fakeDb({ messages: [{ data: [] }] });
-    await expect(new ReopenCancelRepo(db).cancelQueued(PHONE)).resolves.toBe(0);
+    await expect(new ReopenCancelRepo(db).cancelQueued(PHONE)).resolves.toEqual([]);
   });
 });
 
-describe('ReopenCancelRepo.othersHeld', () => {
-  it('another queued awaiting_reply row of the phone, not this one', async () => {
+describe('ReopenCancelRepo.othersPending', () => {
+  it('any other queued outbound row of the phone (held, claimed or waiting), not a reopen', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'm2' }] }] });
-    await expect(new ReopenCancelRepo(db).othersHeld(PHONE, 'm1')).resolves.toBe(true);
+    await expect(new ReopenCancelRepo(db).othersPending(PHONE, 'm1')).resolves.toBe(true);
     const f = filters(calls);
-    expect(f).toContainEqual(['eq', 'error_code', 'awaiting_reply']);
+    expect(f).toContainEqual(['eq', 'status', 'queued']);
+    expect(f).toContainEqual(['or', 'dedup_key.is.null,dedup_key.not.like.reopen:*']);
     expect(f).toContainEqual(['neq', 'id', 'm1']);
   });
 
   it('none: false', async () => {
     const { db } = fakeDb({ messages: [{ data: [] }] });
-    await expect(new ReopenCancelRepo(db).othersHeld(PHONE, 'm1')).resolves.toBe(false);
+    await expect(new ReopenCancelRepo(db).othersPending(PHONE, 'm1')).resolves.toBe(false);
+  });
+});
+
+describe('ReopenCancelRepo.restore', () => {
+  it('only rows still failed reopen_not_needed go back to queued', async () => {
+    const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'r1' }] }] });
+    await expect(new ReopenCancelRepo(db).restore(['r1'])).resolves.toBe(1);
+    const f = filters(calls);
+    expect(f).toContainEqual(['eq', 'error_code', 'reopen_not_needed']);
+    expect(f).toContainEqual(['update', { status: 'queued', error_code: null, error_text: null }]);
   });
 });

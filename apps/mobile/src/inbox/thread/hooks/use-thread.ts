@@ -91,7 +91,8 @@ export function useSendMessage(phone: string) {
   });
 }
 
-type MessageAction = 'retry' | 'sent-manually' | 'hand-off';
+/** retry?undo=whatsapp: «تراجع» of «أرسل عبر واتساب» (sent_manually → queued). */
+type MessageAction = 'retry' | 'sent-manually' | 'hand-off' | 'retry?undo=whatsapp';
 
 /**
  * POST /messages/:id/retry (failed → queued), /sent-manually (the admin sent it from WhatsApp, so

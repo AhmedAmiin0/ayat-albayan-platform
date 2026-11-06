@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { ManualEchoRepo } from './manual-echo.repo';
 
-const W = { id: 'm1', waMessageId: 'wamid.APP1', at: new Date('2026-11-06T10:20:00Z') };
+const W = { id: 'm1', from: null, waMessageId: 'wamid.APP1', at: new Date('2026-11-06T10:20:00Z') };
 
 describe('ManualEchoRepo', () => {
-  it('candidates: the phone, outbound sent_manually, no wamid, marked within the span', async () => {
+  it('candidates: the phone, outbound sent_manually, marked within the span', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: [] }] });
     const span = { since: new Date('2026-11-06T09:50:00Z'), until: new Date('2026-11-06T10:22:00Z') };
     await new ManualEchoRepo(db).candidates('+966500000001', span);
@@ -15,7 +15,6 @@ describe('ManualEchoRepo', () => {
         ['eq', 'phone_e164', '+966500000001'],
         ['eq', 'direction', 'outbound'],
         ['eq', 'status', 'sent_manually'],
-        ['is', 'wa_message_id', null],
         ['gte', 'sent_manually_at', '2026-11-06T09:50:00.000Z'],
         ['lte', 'sent_manually_at', '2026-11-06T10:22:00.000Z'],
       ]),
@@ -29,6 +28,12 @@ describe('ManualEchoRepo', () => {
     expect(sets).toContainEqual(['update', { wa_message_id: 'wamid.APP1', sent_at: '2026-11-06T10:20:00.000Z' }]);
     expect(sets).toContainEqual(['eq', 'status', 'sent_manually']);
     expect(sets).toContainEqual(['is', 'wa_message_id', null]);
+  });
+
+  it('attach over an old wamid: compare-and-set on that wamid', async () => {
+    const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'm1' }] }] });
+    await new ManualEchoRepo(db).attach({ ...W, from: 'wamid.OLD' });
+    expect(calls.map((c) => [c.method, ...c.args])).toContainEqual(['eq', 'wa_message_id', 'wamid.OLD']);
   });
 
   it('attach: lost the race (no row) or the wamid is already stored: false', async () => {

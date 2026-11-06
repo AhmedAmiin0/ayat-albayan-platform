@@ -1,20 +1,20 @@
 import type { Tables } from '@ab/db';
-import { WHATSAPP_SEND_MS } from '@ab/shared';
+import { echoAttached, WHATSAPP_SEND_MS } from '@ab/shared';
 
 // «أرسل عبر واتساب» (owner 2026-11-06): staff marked a held text sent_manually, then sent it from
 // the WhatsApp Business app; the app's echo (smb_message_echoes) is that same message. Pure rules
 // for which row it is: same phone (the read), same line / number, the same text after folding
-// whitespace, marked within MANUAL_ECHO_MS before the echo, and no wamid yet.
+// whitespace, marked within MANUAL_ECHO_MS before the echo, and no echo on it yet (echoAttached).
 
 /** How long after «أرسل عبر واتساب» the app's echo is still taken as that message. */
-export const MANUAL_ECHO_MS = WHATSAPP_SEND_MS;
+const MANUAL_ECHO_MS = WHATSAPP_SEND_MS;
 /** WhatsApp's whole-second time may run a little behind our mark. */
-export const MANUAL_ECHO_SKEW_MS = 2 * 60_000;
+const MANUAL_ECHO_SKEW_MS = 2 * 60_000;
 
-/** A sent_manually row with no wamid yet, as the attach reads it. */
+/** A sent_manually row, as the attach reads it (an old wamid stays on a row WhatsApp failed). */
 export type ManualRow = Pick<
   Tables<'messages'>,
-  'id' | 'body' | 'line' | 'number_id' | 'sent_manually_at'
+  'id' | 'body' | 'line' | 'number_id' | 'sent_manually_at' | 'wa_message_id' | 'sent_at'
 >;
 
 /** Where the echo came from: its line and wa_numbers row, when known. */
@@ -44,7 +44,7 @@ export function manualMatches(
 ): ManualRow[] {
   const text = foldText(echo.body);
   const matches = rows.filter(
-    (r) => text !== '' && foldText(r.body ?? '') === text && sameOrigin(r, echo.from),
+    (r) => text !== '' && !echoAttached(r) && foldText(r.body ?? '') === text && sameOrigin(r, echo.from),
   );
   return matches.sort((a, b) => markedAt(a) - markedAt(b));
 }

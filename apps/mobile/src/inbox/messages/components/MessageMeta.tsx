@@ -1,4 +1,4 @@
-import type { ClockCycle, MessageView } from '@ab/shared';
+import { canSendViaWhatsApp, type ClockCycle, type MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -33,6 +33,10 @@ export function useSmall() {
 const timeOf = (m: MessageView, cycle: ClockCycle): string =>
   m.edited ? `${t.inbox.edited} · ${clock(m.created_at, cycle)}` : clock(m.created_at, cycle);
 
+/** A held text's sheet offers «أرسل عبر واتساب»; any other queued row the wa.me hand-off. */
+const queuedAction = (m: MessageView): string =>
+  canSendViaWhatsApp(m) ? t.messages.whatsappSend.action : t.messages.clickToChat;
+
 export function MessageMeta({ message: m, onTicksPress }: { message: MessageView; onTicksPress?: () => void }) {
   const cycle = useClockCycle();
   const small = useSmall();
@@ -54,7 +58,7 @@ export function MessageMeta({ message: m, onTicksPress }: { message: MessageView
               times={times}
               onLongPress={() => setOpen((v) => !v)}
               onPress={onTicksPress}
-              actionLabel={onTicksPress ? (m.status === 'failed' ? errorLine(m) : t.messages.clickToChat) : undefined}
+              actionLabel={onTicksPress ? (m.status === 'failed' ? errorLine(m) : queuedAction(m)) : undefined}
             />
           ) : null}
         </View>
@@ -65,8 +69,8 @@ export function MessageMeta({ message: m, onTicksPress }: { message: MessageView
         </AppText>
       ) : null}
       {later ? <AppText style={small}>{later}</AppText> : null}
-      {/* «أرسل عبر واتساب»: a text the 24 h window stopped (the admin's, 2026-11-06). */}
-      <WhatsAppStatusLine message={m} phone={m.phone_e164} />
+      {/* «أرسل عبر واتساب» (2026-11-06): a failed row's comes after its reason (FailReason). */}
+      {m.status === 'failed' ? null : <WhatsAppStatusLine message={m} phone={m.phone_e164} />}
     </>
   );
 }
@@ -83,10 +87,15 @@ export function FailReason({ message: m, onPress }: { message: MessageView; onPr
       {errorLine(m)}
     </AppText>
   );
-  if (!onPress) return text;
-  return (
+  const reason = onPress ? (
     <Pressable accessibilityRole="button" hitSlop={{ top: 8, bottom: 8 }} onPress={onPress}>
       {text}
     </Pressable>
+  ) : text;
+  return (
+    <>
+      {reason}
+      <WhatsAppStatusLine message={m} phone={m.phone_e164} />
+    </>
   );
 }

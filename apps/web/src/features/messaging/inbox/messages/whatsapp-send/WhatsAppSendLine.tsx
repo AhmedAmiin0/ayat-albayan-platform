@@ -1,4 +1,4 @@
-import { canSendViaWhatsApp, type MessageView } from '@ab/shared';
+import { canSendViaWhatsApp, type MessageView, stoppedByWindow } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { errorCode } from '@/features/teaching/schedule';
@@ -8,15 +8,18 @@ import { WhatsAppOpenFailed } from './WhatsAppOpenFailed';
 
 type Line = 'offer' | 'undo' | 'none';
 
-/** Marked by this action but WhatsApp did not open, and still not echoed back by the app. */
+/**
+ * Marked by this action but WhatsApp did not open: the row is sent_manually, or still shows held
+ * until the thread is read again (the mark already stands on the server).
+ */
 const openFailed = (m: MessageView, opened: boolean | undefined): boolean =>
-  opened === false && m.status === 'sent_manually';
+  opened === false && (m.status === 'sent_manually' || stoppedByWindow(m));
 
 const offerOrNone = (m: MessageView): Line => (canSendViaWhatsApp(m) ? 'offer' : 'none');
 
 /** The line may have something to say: the offer, or the undo after a sent_manually mark. */
 export const hasWhatsAppLine = (m: MessageView): boolean =>
-  canSendViaWhatsApp(m) || (m.direction === 'outbound' && m.status === 'sent_manually');
+  !m.hidden && (canSendViaWhatsApp(m) || (m.direction === 'outbound' && m.status === 'sent_manually'));
 
 /** A refused mark in words: the sender claimed it (409 not_manual), or any other error. */
 const markError = (e: Error | null): string | null =>

@@ -47,7 +47,7 @@ it('blocked tab: after the mark, «افتح واتساب» and «تراجع» (r
   expect(link.getAttribute('href')).toContain('%0A');
   vi.mocked(apiSend).mockResolvedValue({ ...marked, status: 'queued' });
   fireEvent.click(screen.getByRole('button', { name: t.messages.whatsappSend.undo }));
-  await waitFor(() => expect(apiSend).toHaveBeenLastCalledWith('POST', '/messages/m-held/retry'));
+  await waitFor(() => expect(apiSend).toHaveBeenLastCalledWith('POST', '/messages/m-held/retry?undo=whatsapp'));
 });
 
 it('a sent_manually row this session did not mark: no undo line', () => {

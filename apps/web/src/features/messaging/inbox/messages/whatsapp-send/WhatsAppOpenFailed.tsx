@@ -10,8 +10,8 @@ import { useWhatsAppUndo, whatsappWebUrl } from './use-whatsapp-send';
 export function WhatsAppOpenFailed({ message: m }: { message: MessageView }) {
   const undo = useWhatsAppUndo();
   return (
-    <div role="alert" className="mt-2 grid gap-2 border-t border-rule pt-2 text-2xs text-danger">
-      <span>{t.messages.whatsappSend.openFailed}</span>
+    <div className="mt-2 grid gap-2 border-t border-rule pt-2 text-2xs text-danger">
+      <span role="alert">{t.messages.whatsappSend.openFailed}</span>
       <span className="flex flex-wrap gap-2">
         <a
           href={whatsappWebUrl(m)}
@@ -25,7 +25,7 @@ export function WhatsAppOpenFailed({ message: m }: { message: MessageView }) {
           {t.messages.whatsappSend.undo}
         </Button>
       </span>
-      {undo.isError && <span>{t.messages.whatsappSend.undoFailed}</span>}
+      {undo.isError && <span role="alert">{t.messages.whatsappSend.undoFailed}</span>}
     </div>
   );
 }

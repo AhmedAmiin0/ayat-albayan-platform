@@ -4,7 +4,7 @@ import { type EchoOrigin, manualMatches, markSpan } from './manual-echo';
 import { ManualEchoRepo } from './manual-echo.repo';
 
 /** The echo as the attach reads it: the message, its customer's E.164 phone, where it came from. */
-export interface EchoInput {
+interface EchoInput {
   msg: ExternalMessage;
   phone: string;
   from: EchoOrigin;
@@ -27,7 +27,8 @@ export class ManualEcho {
     if (!plainText(msg)) return false;
     const rows = await this.repo.candidates(phone, markSpan(msg.at));
     for (const row of manualMatches(rows, { body: msg.body, from })) {
-      const write = { id: row.id, waMessageId: msg.waMessageId, at: msg.at };
+      const at = new Date(Math.max(msg.at.getTime(), Date.parse(row.sent_manually_at ?? '') || 0));
+      const write = { id: row.id, from: row.wa_message_id, waMessageId: msg.waMessageId, at };
       if (await this.repo.attach(write)) return true;
     }
     return false;

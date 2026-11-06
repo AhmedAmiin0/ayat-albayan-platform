@@ -8,7 +8,7 @@ const PHONE = '+966500000001';
 const ECHO_AT = new Date('2026-11-06T10:20:00Z');
 const CHAT = { line: 'chat', numberId: 'num-chat' };
 
-type MemRow = ManualRow & { phone: string; wamid: string | null };
+type MemRow = ManualRow & { phone: string };
 const row = (over: Partial<MemRow> = {}): MemRow => ({
   id: 'm1',
   body: 'السلام عليكم\nموعد الحلقة غدًا',
@@ -16,7 +16,8 @@ const row = (over: Partial<MemRow> = {}): MemRow => ({
   number_id: 'num-chat',
   sent_manually_at: '2026-11-06T10:10:00.000Z',
   phone: PHONE,
-  wamid: null,
+  wa_message_id: null,
+  sent_at: null,
   ...over,
 });
 
@@ -46,12 +47,12 @@ function memoryRepo(rows: ReturnType<typeof row>[]) {
   };
   return {
     candidates: async (phone: string, span: { since: Date; until: Date }) =>
-      rows.filter((r) => r.phone === phone && r.wamid === null && inSpan(r, span)),
+      rows.filter((r) => r.phone === phone && inSpan(r, span)),
     attach: async (w: AttachWrite) => {
-      const hit = rows.find((r) => r.id === w.id && r.wamid === null);
-      const taken = rows.some((r) => r.wamid === w.waMessageId);
+      const hit = rows.find((r) => r.id === w.id && r.wa_message_id === w.from);
+      const taken = rows.some((r) => r.wa_message_id === w.waMessageId);
       if (!hit || taken) return false;
-      hit.wamid = w.waMessageId;
+      Object.assign(hit, { wa_message_id: w.waMessageId, sent_at: w.at.toISOString() });
       return true;
     },
   };
@@ -94,14 +95,14 @@ describe('ManualEcho.attach', () => {
   it('the same text within 30 minutes: attached (whitespace folded)', async () => {
     const rows = [row()];
     await expect(attachOf(rows).attach(input)).resolves.toBe(true);
-    expect(rows[0]?.wamid).toBe('wamid.APP1');
+    expect(rows[0]?.wa_message_id).toBe('wamid.APP1');
   });
 
   it('no match: another text, another phone, a mark older than 30 minutes', async () => {
     const rows = [row({ body: 'نص آخر' }), row({ id: 'm2', phone: '+966500000002' })];
     rows.push(row({ id: 'm3', sent_manually_at: '2026-11-06T09:49:59.000Z' }));
     await expect(attachOf(rows).attach(input)).resolves.toBe(false);
-    expect(rows.every((r) => r.wamid === null)).toBe(true);
+    expect(rows.every((r) => r.wa_message_id === null)).toBe(true);
   });
 
   it('a file, a template or a marker never attaches', async () => {
@@ -110,7 +111,7 @@ describe('ManualEcho.attach', () => {
     for (const over of [{ mediaId: 'media-1' }, { templateName: 'welcome' }, { payload: { kind: 'edit' } }]) {
       await expect(svc.attach({ msg: echo(over), phone: PHONE, from: CHAT })).resolves.toBe(false);
     }
-    expect(rows[0]?.wamid).toBeNull();
+    expect(rows[0]?.wa_message_id).toBeNull();
   });
 
   it('replayed: the row already has its wamid, nothing more is attached', async () => {
@@ -118,7 +119,7 @@ describe('ManualEcho.attach', () => {
     const svc = attachOf(rows);
     await svc.attach({ msg: echo(), phone: PHONE, from: CHAT });
     await expect(svc.attach({ msg: echo(), phone: PHONE, from: CHAT })).resolves.toBe(false);
-    expect(rows.map((r) => r.wamid)).toEqual(['wamid.APP1', null]);
+    expect(rows.map((r) => r.wa_message_id)).toEqual(['wamid.APP1', null]);
   });
 
   it('two identical texts: each echo takes the next row', async () => {
@@ -126,6 +127,20 @@ describe('ManualEcho.attach', () => {
     const svc = attachOf(rows);
     await svc.attach({ msg: echo(), phone: PHONE, from: CHAT });
     await svc.attach({ msg: echo({ waMessageId: 'wamid.APP2' }), phone: PHONE, from: CHAT });
-    expect(rows.map((r) => r.wamid)).toEqual(['wamid.APP1', 'wamid.APP2']);
+    expect(rows.map((r) => r.wa_message_id)).toEqual(['wamid.APP1', 'wamid.APP2']);
+  });
+});
+
+describe('ManualEcho.attach: a row WhatsApp took and then failed (131047 after the fact)', () => {
+  it('its old wamid is replaced by the app\'s, sent_at never before the mark', async () => {
+    const rows = [row({ wa_message_id: 'wamid.OLD', sent_at: '2026-11-05T09:00:00.000Z' })];
+    await expect(attachOf(rows).attach(input)).resolves.toBe(true);
+    expect(rows[0]).toMatchObject({ wa_message_id: 'wamid.APP1', sent_at: ECHO_AT.toISOString() });
+  });
+
+  it('an echo already on the row (sent_at at or after the mark): never taken again', async () => {
+    const rows = [row({ wa_message_id: 'wamid.APP0', sent_at: '2026-11-06T10:10:00.000Z' })];
+    await expect(attachOf(rows).attach(input)).resolves.toBe(false);
+    expect(rows[0]?.wa_message_id).toBe('wamid.APP0');
   });
 });

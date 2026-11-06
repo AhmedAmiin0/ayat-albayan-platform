@@ -15,6 +15,7 @@ import { canRegisterFrom, useMaySend } from '@/features/messaging/inbox';
 import { salesFamilyQuery } from './api';
 import { ChildChoiceDialog } from './ChildChoiceDialog';
 import { SalesCourseDialog } from './course/SalesCourseDialog';
+import { useLinkedCourse } from './course/linked-course';
 import { SalesMoneyFlow, type FlowStart } from './SalesMoneyFlow';
 import { SalesPrimaryAction } from './SalesPrimaryAction';
 import { hasCourse } from './SalesSubscribeAction';
@@ -55,7 +56,7 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const { can } = usePermissions();
   const check = can('students.check_registration');
   const [opened, setOpened] = useState<Opened | null>(null);
-  const [course, setCourse] = useState<string | null>(null);
+  const [course, setCourse] = useLinkedCourse();
   const [registering, setRegistering] = useState<LeadThread | null>(null);
   const [checking, setChecking] = useState(false);
   const [trialFor, setTrialFor] = useState<SalesStudentRef | null>(null);

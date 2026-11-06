@@ -1,5 +1,5 @@
 import type { TablesUpdate } from '@ab/db';
-import type { MessageStatus } from '@ab/shared';
+import { echoAttached, type MessageStatus } from '@ab/shared';
 import type { StatusEvent } from '../webhook.events';
 
 // R-MSG-05: Meta delivery statuses move an outbound row forward only. Webhooks arrive out of
@@ -17,8 +17,8 @@ function forward(current: MessageStatus, incoming: StatusEvent['status']): Messa
 }
 
 /**
- * «أرسل عبر واتساب» (owner 2026-11-06): a sent_manually row WhatsApp's echo was attached to (it has
- * a wamid) takes the app message's delivered / read; never failed, and never one with no wamid.
+ * «أرسل عبر واتساب» (owner 2026-11-06): a sent_manually row the app's echo was attached to takes
+ * the app message's delivered / read; never failed, and never one with no echo (an old wamid).
  */
 const MANUAL_NEXT: Partial<Record<StatusEvent['status'], MessageStatus>> = {
   delivered: 'delivered',
@@ -46,16 +46,24 @@ export interface StatusRow {
   sent_at: string | null;
   delivered_at: string | null;
   read_at: string | null;
-  /** Set on a sent_manually row an app echo was attached to (it then moves on, nextStatus). */
+  /** A sent_manually row the app's echo was attached to (echoAttached) moves on (nextStatus). */
   wa_message_id?: string | null;
+  sent_manually_at?: string | null;
 }
+
+const attached = (row: StatusRow): boolean =>
+  echoAttached({
+    wa_message_id: row.wa_message_id ?? null,
+    sent_at: row.sent_at,
+    sent_manually_at: row.sent_manually_at ?? null,
+  });
 
 /**
  * The messages patch for one status event, or null when nothing changes. A skipped step
  * («read» before «delivered») fills the earlier *_at with the same instant.
  */
 export function statusPatch(row: StatusRow, e: StatusEvent): TablesUpdate<'messages'> | null {
-  const to = nextStatus(row.status, e.status, Boolean(row.wa_message_id));
+  const to = nextStatus(row.status, e.status, attached(row));
   if (!to) return null;
   const at = e.at.toISOString();
   const patch: TablesUpdate<'messages'> = { status: to };

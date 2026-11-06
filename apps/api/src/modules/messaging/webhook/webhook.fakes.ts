@@ -54,6 +54,7 @@ export function outbound(over: Partial<OutboundRow> = {}): OutboundRow {
     delivered_at: null,
     read_at: null,
     wa_message_id: 'wamid.OUT1',
+    sent_manually_at: null,
     attempts: 1,
     guardians: { name: 'أم سهيلة' },
     leads: null,

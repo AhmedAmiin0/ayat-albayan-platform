@@ -11,7 +11,7 @@ import { openWhatsApp } from './use-whatsapp-send';
  * back in the queue (retry: sent_manually → queued, while the app's echo has not come back).
  */
 export function WhatsAppOpenFailed({ message: m, phone }: { message: MessageView; phone: string }) {
-  const undo = useMessageAction(phone, 'retry');
+  const undo = useMessageAction(phone, 'retry?undo=whatsapp');
   return (
     <View style={{ gap: 6, marginTop: 4 }} testID="whatsapp-open-failed">
       <ErrorLine message={t.messages.whatsappSend.openFailed} />

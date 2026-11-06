@@ -3,6 +3,7 @@ import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '@/comm
 import type { PushTransport } from '@/common/push/push.service';
 import { PaymentReceived, type PaymentReceivedRepo } from '@/modules/finance/payments';
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
+import type { CourseDue } from '@/modules/finance/subscriptions';
 import { LinkAlerts } from './link-alerts';
 
 // A paid link is «تم استلام دفعة» (payment_received, bell + push); admins' alerts stay payment_due.
@@ -11,10 +12,11 @@ const LINK = {
   id: 'l1',
   created_by: 's1',
   student_id: 'st1',
+  subscription_id: 'sub1',
   student: { id: 'st1', code: null, name: 'سهيلة' },
 } as unknown as LinkRow;
 
-function setup(owners: string[] = []) {
+function setup(owners: string[] = [], book?: Awaited<ReturnType<CourseDue['paidNotice']>>) {
   const { db, writes } = fakePushDb([
     { id: 's1', role: 'sales', push_tokens: ['ExponentPushToken[s]'] },
     { id: 's2', role: 'sales', push_tokens: [] },
@@ -25,7 +27,8 @@ function setup(owners: string[] = []) {
   const push = pushService(db, { transport, web });
   const repo = { adminIds: vi.fn(async () => ['a1']), ownerIds: vi.fn(async () => owners) };
   const received = new PaymentReceived(repo as unknown as PaymentReceivedRepo, push);
-  const alerts = new LinkAlerts(push, received);
+  const courseDue = { paidNotice: vi.fn(async () => book) } as unknown as CourseDue;
+  const alerts = new LinkAlerts(push, received, courseDue);
   const rows = () =>
     writes.filter((w) => w.op === 'upsert').map((w) => w.value as Record<string, unknown>);
   return { alerts, transport, send, rows };
@@ -52,5 +55,18 @@ describe('LinkAlerts', () => {
     expect(s.transport).toHaveBeenCalledWith([
       expect.objectContaining({ to: 'ExponentPushToken[a]' }),
     ]);
+  });
+
+  it('paid with no weekly course: the link’s assistant reads «تم الدفع: احجز أيام الحلقات», opening the wizard', async () => {
+    const data = { studentId: 'st1', open: 'course', phone: '+966500000000' };
+    const s = setup(['s2'], { profileId: 's1', title: 'تم الدفع: احجز أيام الحلقات', data });
+    s.alerts.paid(LINK, { id: 'p1', amount: 50, currency: 'USD' });
+    for (let i = 0; i < 4; i += 1) await flushPushes();
+    const mine = s.rows().filter((r) => r.profile_id === 's1');
+    expect(mine).toEqual([
+      expect.objectContaining({ title: 'تم الدفع: احجز أيام الحلقات', data: { kind: 'payment_received', ...data } }),
+    ]);
+    const others = s.rows().filter((r) => r.profile_id !== 's1').map((r) => String(r.profile_id));
+    expect(others.sort()).toEqual(['a1', 's2']);
   });
 });

@@ -96,5 +96,5 @@ test('WhatsApp did not open: «تراجع» puts it back through retry', async (
   expect(await screen.findByText(t.messages.whatsappSend.openFailed)).toBeTruthy();
   send.mockResolvedValue({ ...marked, status: 'queued' });
   await fireEvent.press(screen.getByRole('button', { name: t.messages.whatsappSend.undo }));
-  await waitFor(() => expect(send).toHaveBeenLastCalledWith('POST', '/messages/m-held/retry'));
+  await waitFor(() => expect(send).toHaveBeenLastCalledWith('POST', '/messages/m-held/retry?undo=whatsapp'));
 });

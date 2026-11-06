@@ -1,4 +1,4 @@
-import { canSendViaWhatsApp, type MessageView } from '@ab/shared';
+import { canSendViaWhatsApp, type MessageView, stoppedByWindow } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
@@ -29,7 +29,7 @@ const markError = (e: Error | null): string | null =>
 const offerOrNone = (m: MessageView): Line => (canSendViaWhatsApp(m) ? 'offer' : 'none');
 
 /** The line may have something to say: the offer, or the undo after a sent_manually mark. */
-export const hasWhatsAppLine = (m: MessageView): boolean =>
+const hasWhatsAppLine = (m: MessageView): boolean =>
   canSendViaWhatsApp(m) || (m.direction === 'outbound' && m.status === 'sent_manually');
 
 function Offer({ message: m, phone }: LineProps) {
@@ -68,9 +68,11 @@ const LINES: Record<Line, (p: LineProps) => ReactNode> = {
  * «أرسل عبر واتساب» under a staff text the 24 h window stopped (owner 2026-11-06), admin only: why,
  * and the action; after it, when WhatsApp did not open, «افتح واتساب» or «تراجع».
  */
-export function WhatsAppSendLine(p: LineProps) {
+function WhatsAppSendLine(p: LineProps) {
   const opened = useWhatsAppSendState(p.message.id)?.data?.opened;
-  const failedOpen = opened === false && p.message.status === 'sent_manually';
+  // The mark stands on the server even while the cached row still shows held.
+  const marked = p.message.status === 'sent_manually' || stoppedByWindow(p.message);
+  const failedOpen = opened === false && marked;
   return LINES[failedOpen ? 'undo' : offerOrNone(p.message)](p);
 }
 

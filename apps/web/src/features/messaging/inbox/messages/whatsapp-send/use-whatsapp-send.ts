@@ -1,12 +1,12 @@
 import { sendViaWhatsApp, type WhatsAppSendResult, whatsappSendUrl } from '@ab/client-core';
-import type { MessageView } from '@ab/shared';
+import { type MessageView, WHATSAPP_SEND_MS } from '@ab/shared';
 import {
   type MutationState,
   useMutation,
   useMutationState,
   useQueryClient,
 } from '@tanstack/react-query';
-import { markSentManually, retryMessage } from '@/features/messaging/inbox/api/api';
+import { markSentManually, undoWhatsAppSend } from '@/features/messaging/inbox/api/api';
 
 /** One «أرسل عبر واتساب»: the row, and the tab opened in the click (null: blocked). */
 interface SendVars {
@@ -47,6 +47,8 @@ export function useWhatsAppSend(): (m: MessageView) => void {
   const client = useQueryClient();
   const send = useMutation({
     mutationKey: KEY,
+    // Kept as long as the server allows «تراجع» (WHATSAPP_SEND_MS), not TanStack's 5 minutes.
+    gcTime: WHATSAPP_SEND_MS,
     mutationFn: ({ message, tab }: SendVars) =>
       sendViaWhatsApp({
         mark: () => markSentManually(message.id),
@@ -68,11 +70,11 @@ export function useWhatsAppSendState(id: string): SendState | undefined {
   return states.at(-1);
 }
 
-/** «تراجع»: the row back to the queue through the retry endpoint (sent_manually → queued). */
+/** «تراجع»: the row back to the queue (retry?undo=whatsapp: sent_manually → queued). */
 export function useWhatsAppUndo() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: retryMessage,
+    mutationFn: undoWhatsAppSend,
     onSettled: () => client.invalidateQueries({ queryKey: ['threads'] }),
   });
 }

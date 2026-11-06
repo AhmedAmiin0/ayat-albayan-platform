@@ -7,10 +7,13 @@ const UNIQUE = '23505';
 
 const fail = (what: string, message: string): Error => new Error(`${what} failed: ${message}`);
 
-/** One echo's attach: the row, the app's wamid and WhatsApp's time. */
+/** One echo's attach: the row, the wamid it holds now (compare-and-set), the app's wamid, when. */
 export interface AttachWrite {
   id: string;
+  /** null, or the old wamid of a send WhatsApp took and then failed (131047 after the fact). */
+  from: string | null;
   waMessageId: string;
+  /** sent_at: never before the mark, so echoAttached reads the row as attached. */
   at: Date;
 }
 
@@ -19,15 +22,14 @@ export interface AttachWrite {
 export class ManualEchoRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** This phone's outbound sent_manually rows with no wamid, marked within [since, until]. */
+  /** This phone's outbound sent_manually rows marked within [since, until]. */
   async candidates(phone: string, span: { since: Date; until: Date }): Promise<ManualRow[]> {
     const { data, error } = await this.db
       .from('messages')
-      .select('id, body, line, number_id, sent_manually_at')
+      .select('id, body, line, number_id, sent_manually_at, wa_message_id, sent_at')
       .eq('phone_e164', phone)
       .eq('direction', 'outbound')
       .eq('status', 'sent_manually')
-      .is('wa_message_id', null)
       .gte('sent_manually_at', span.since.toISOString())
       .lte('sent_manually_at', span.until.toISOString());
     if (error) throw fail('manual rows read', error.message);
@@ -35,17 +37,19 @@ export class ManualEchoRepo {
   }
 
   /**
-   * The app's wamid on the row, compare-and-set (still sent_manually, still no wamid): false when
-   * another echo took it, or the wamid is already stored on another row (unique wa_message_id).
+   * The app's wamid on the row, compare-and-set (still sent_manually, still the wamid it was read
+   * with): false when another echo took it, or the wamid is already on another row (unique).
    */
   async attach(w: AttachWrite): Promise<boolean> {
-    const { data, error } = await this.db
+    const query = this.db
       .from('messages')
       .update({ wa_message_id: w.waMessageId, sent_at: w.at.toISOString() })
       .eq('id', w.id)
-      .eq('status', 'sent_manually')
-      .is('wa_message_id', null)
-      .select('id');
+      .eq('status', 'sent_manually');
+    const { data, error } = await (w.from === null
+      ? query.is('wa_message_id', null)
+      : query.eq('wa_message_id', w.from)
+    ).select('id');
     if (error?.code === UNIQUE) return false;
     if (error) throw fail('manual echo attach', error.message);
     return data.length > 0;

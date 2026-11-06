@@ -1,9 +1,11 @@
 import { WA_ERROR as E } from '@ab/catalog';
+import { z } from 'zod';
 import type { MessageView } from '../chat/views.js';
 import {
   AWAITING_REPLY,
   HOLD_EXPIRED,
   REOPEN_FAILED,
+  REOPEN_TRIES_USED,
   REOPEN_UNAVAILABLE,
   WINDOW_CLOSED,
 } from '../chat/thread-reopen.js';
@@ -12,14 +14,11 @@ import {
 // 24 h window stopped is sent by staff from the WhatsApp Business app (coexistence: app sends have
 // no window). The platform marks it sent_manually FIRST, so it can never send it too.
 
-/** Today's reopen tries are all used (PR #643's REOPEN_TRIES_USED). */
-const TRIES_USED = 'reopen_tries_used';
-
 /** Failed codes that mean «stopped by the 24 h window», never another failure. */
 const WINDOW_FAILURES: ReadonlySet<string> = new Set([
   REOPEN_UNAVAILABLE,
   REOPEN_FAILED,
-  TRIES_USED,
+  REOPEN_TRIES_USED,
   HOLD_EXPIRED,
   WINDOW_CLOSED,
   String(E.reEngagement),
@@ -60,3 +59,27 @@ export const REOPEN_NOT_NEEDED = 'reopen_not_needed';
 
 /** How long after «أرسل عبر واتساب» its undo (WhatsApp did not open) and the app's echo count. */
 export const WHATSAPP_SEND_MS = 30 * 60_000;
+
+/**
+ * POST /messages/:id/retry?undo=whatsapp: «تراجع» of «أرسل عبر واتساب» (sent_manually → queued).
+ * Without it a retry only takes a failed row, so a stale «حاول مرة أخرى» never undoes a manual send.
+ */
+export const messageRetryQuerySchema = z.object({ undo: z.literal('whatsapp').optional() });
+export type MessageRetryQuery = z.infer<typeof messageRetryQuerySchema>;
+
+/** A sent_manually row as the echo attach and the undo read it. */
+export interface ManualSendStamp {
+  wa_message_id: string | null;
+  sent_at: string | null;
+  sent_manually_at: string | null;
+}
+
+/**
+ * The app's echo is on the row: it carries a wamid stamped at or after the mark (sent_at ≥
+ * sent_manually_at). A row that failed after WhatsApp took it keeps its old wamid and sent_at from
+ * before the mark: no echo yet.
+ */
+export function echoAttached(r: ManualSendStamp): boolean {
+  const sent = Date.parse(r.sent_at ?? '');
+  return r.wa_message_id !== null && sent >= Date.parse(r.sent_manually_at ?? '');
+}
