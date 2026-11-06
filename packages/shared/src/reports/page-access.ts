@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { loginCode } from '../people/users/index.js';
+import { asciiDigits } from '@ab/core';
 
 // The report page's WhatsApp code (owner 2026-11-06): a viewer who is not signed in asks for a code
 // sent to a phone ON FILE (the lesson's teacher or the student's family), never a typed number.
@@ -9,8 +9,14 @@ export type ReportCodeTarget = (typeof REPORT_CODE_TARGETS)[number];
 
 /** POST /public/report-pages/:publicId/code */
 export const reportCodeRequestSchema = z.object({ to: z.enum(REPORT_CODE_TARGETS) });
+/** The 6-digit WhatsApp code; Arabic-Indic digits and spaces folded (as sign-in's loginCode). */
+const reportCode = z
+  .string()
+  .transform((s) => asciiDigits(s).replace(/\s/g, ''))
+  .pipe(z.string().regex(/^\d{6}$/, 'invalid_code'));
+
 /** POST /public/report-pages/:publicId/verify */
-export const reportCodeVerifySchema = z.object({ code: loginCode });
+export const reportCodeVerifySchema = z.object({ code: reportCode });
 
 /** GET /public/report-pages/:publicId/access: where a code may go, each number masked. */
 export const reportAccessViewSchema = z.object({
