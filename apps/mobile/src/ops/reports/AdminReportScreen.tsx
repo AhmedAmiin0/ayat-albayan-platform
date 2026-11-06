@@ -1,6 +1,6 @@
 import type { ReportView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
