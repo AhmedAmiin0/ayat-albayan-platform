@@ -1,13 +1,13 @@
+import type { ReceivableIn } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { FxConverter } from '@/modules/reporting/dashboard/finance/fx-converter';
 import type { ReceivablesRepo } from './receivables.repo';
 import { ReceivablesService } from './receivables.service';
 import { ReceivablesSettings } from './receivables.settings';
-import type { ReceivablePkg } from './receivables.stopped';
 
-// A course of 10 lessons for 1000 SAR stopped after 3 (lessons_used_at_stop): attended value 300.
-const stopped = (id: string, attended = 3): ReceivablePkg => ({
+// A 1000 SAR course stopped: it owes what the stop stored (stop_owed_amount, owner 2026-11-06).
+const stopped = (id: string, owed: number | null): ReceivableIn => ({
   id,
   student: { id: `s-${id}`, code: 'AB-0001', name: id },
   guardian: null,
@@ -15,10 +15,11 @@ const stopped = (id: string, attended = 3): ReceivablePkg => ({
   currency: 'SAR',
   starts_on: '2026-09-01',
   status: 'cancelled',
-  stop: { lessonsTotal: 10, attended },
+  cancel_kind: 'stopped',
+  stop_owed_amount: owed,
 });
 
-async function owedOf(pkgs: ReceivablePkg[], netPaid: [string, number][], rate = 100) {
+async function owedOf(pkgs: ReceivableIn[], netPaid: [string, number][], rate = 100) {
   const queries = {
     packages: vi.fn().mockResolvedValue(pkgs),
     paid: vi.fn().mockResolvedValue(new Map(netPaid)),
@@ -32,33 +33,32 @@ async function owedOf(pkgs: ReceivablePkg[], netPaid: [string, number][], rate =
   return { rows: view.rows.map((r) => [r.id, r.owed]), total: view.total };
 }
 
-describe('GET /receivables: a stopped course («إلغاء مع استرداد») never owes its refund', () => {
-  it('full refund (paid 1000, refunded 700): not listed, the KPI total 0', async () => {
-    expect(await owedOf([stopped('full')], [['full', 300]])).toEqual({ rows: [], total: 0 });
+describe('GET /receivables: a stopped course owes its stored decision', () => {
+  it('after any refund (owed = net paid after it): not listed, the KPI total 0', async () => {
+    expect(await owedOf([stopped('full', 0)], [['full', 0]])).toEqual({ rows: [], total: 0 });
+    expect((await owedOf([stopped('part', 600)], [['part', 600]])).rows).toEqual([]);
   });
 
-  it('partial refund (paid 1000, refunded 400): not listed', async () => {
-    expect((await owedOf([stopped('part')], [['part', 600]])).rows).toEqual([]);
+  it('a plain stop owes the chosen amount minus net paid', async () => {
+    expect(await owedOf([stopped('att', 300)], [['att', 100]])).toEqual({
+      rows: [['att', 200]],
+      total: 200,
+    });
+    expect((await owedOf([stopped('none', 0)], [])).rows).toEqual([]);
   });
 
-  it('a refund of 0 (paid exactly the 300 attended): not listed', async () => {
-    expect((await owedOf([stopped('zero')], [['zero', 300]])).rows).toEqual([]);
+  it('an old stop (backfilled with its price) owes as it did before #623', async () => {
+    expect((await owedOf([stopped('old', 1000)], [['old', 400]])).rows).toEqual([['old', 600]]);
   });
 
-  it('nothing attended, fully refunded (net paid 0): not listed', async () => {
-    expect((await owedOf([stopped('none', 0)], [['none', 0]])).rows).toEqual([]);
+  it('a settings rate change never changes an existing stop’s due', async () => {
+    const at = (rate: number) => owedOf([stopped('s', 300)], [['s', 100]], rate);
+    expect(await at(50)).toEqual(await at(300));
+    expect((await at(50)).rows).toEqual([['s', 200]]);
   });
 
-  it('a stop with no refund and nothing paid owes the attended value, not the price', async () => {
-    expect(await owedOf([stopped('unpaid')], [])).toEqual({ rows: [['unpaid', 300]], total: 300 });
-  });
-
-  it('owes at the attended-lesson rate setting; a running package still owes its price', async () => {
-    const running = { ...stopped('run'), status: 'unpaid', stop: null };
-    const out = await owedOf([stopped('half'), running], [['half', 100]], 50);
-    expect(out.rows).toEqual([
-      ['half', 50],
-      ['run', 1000],
-    ]);
+  it('a running package still owes its price', async () => {
+    const running = { ...stopped('run', null), status: 'unpaid', cancel_kind: null };
+    expect((await owedOf([running], [])).rows).toEqual([['run', 1000]]);
   });
 });

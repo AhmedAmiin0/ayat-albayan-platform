@@ -1,4 +1,5 @@
 import {
+  dueOf,
   familyUnpaid,
   livePackages,
   studentRemaining,
@@ -13,7 +14,6 @@ import {
   type ThreadSubscriptionView,
 } from '@ab/shared';
 import type { BalanceRow } from '@/modules/finance/subscriptions/money/balance.repo';
-import { cents } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 export interface PeopleStudentRow {
   id: string;
@@ -37,7 +37,7 @@ function subscriptionOf({ current, packages, remaining }: StudentBalanceView): T
     price: current.price,
     currency: current.currency,
     paid_amount: current.paid,
-    due_amount: Math.max(0, cents(current.price, -current.paid)),
+    due_amount: dueOf(current, current.paid),
     renews_on: current.renews_on,
     starts_on: current.starts_on,
   };

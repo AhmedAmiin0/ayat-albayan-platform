@@ -46,6 +46,7 @@ describe('refundAmountProblem', () => {
     expect(refundAmountProblem(250, 250, 'SAR')).toBeNull();
     expect(refundAmountProblem(100, 250, 'SAR')).toBeNull();
     expect(refundAmountProblem(250.01, 250, 'SAR')).toBe('refund_exceeds_allowed');
-    expect(refundAmountProblem(0, 250, 'SAR')).toBe('refund_exceeds_allowed');
+    expect(refundAmountProblem(0, 250, 'SAR')).toBeNull();
+    expect(refundAmountProblem(-1, 250, 'SAR')).toBe('refund_exceeds_allowed');
   });
 });

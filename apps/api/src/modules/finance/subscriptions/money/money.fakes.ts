@@ -45,6 +45,8 @@ export function subRow(patch: Partial<SubRow> = {}): SubRow {
     cancel_kind: null,
     cancel_reason: null,
     stop_request_id: null,
+    stop_owed_amount: null,
+    stop_owed_choice: null,
     lessons_used_at_stop: null,
     ...patch,
   };

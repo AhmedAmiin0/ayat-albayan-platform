@@ -6,7 +6,8 @@ import { t } from '@/lib/i18n/i18n';
 import { SUB } from './course-actions-fixture';
 import { StopCourseDialog } from './StopCourseDialog';
 
-// «إلغاء فقط» / «إلغاء مع استرداد» (owner 2026-11-02): the choice is the person's, never automatic.
+// The stop sheet's money (owner 2026-11-06): «إلغاء فقط» with what is still owed, or «إلغاء مع
+// استرداد» with the refund amount; the person chooses, a summary line says the outcome.
 const perms = vi.hoisted(() => ({ list: [] as string[] }));
 vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),
@@ -32,6 +33,8 @@ const PREVIEW = {
   paid: 290,
   currency: 'SAR',
   refund,
+  refundUnavailable: false,
+  owe: { charged: 150, price: 400 },
   stopped: null,
 };
 const BASE = { subscriptionId: SUB, reason: 'سفر', clientRequestId: expect.any(String) };
@@ -51,74 +54,97 @@ async function open(keys: string[], preview: object = PREVIEW) {
 
 const confirm = () => screen.getByRole<HTMLButtonElement>('button', { name: words.confirm });
 
-describe('StopCourseDialog: the refund choice', () => {
+const KEYS = ['subscriptions.stop', 'subscriptions.refund'];
+const money = (n: number) => moneyText(n, 'SAR');
+const summary = (refund: number, due: number) =>
+  words.summary.replace('{refund}', money(refund)).replace('{due}', money(due));
+const sent = async (extra: object) =>
+  vi.waitFor(() =>
+    expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-stop', { ...BASE, ...extra }),
+  );
+
+describe('StopCourseDialog: the money choices', () => {
   beforeEach(() => {
     apiFetch.mockReset();
     apiSend.mockReset();
+    apiSend.mockResolvedValue({ subscriptionId: SUB, refund: null });
   });
 
-  it('with subscriptions.refund: «إلغاء فقط» by default, the money kept, no refund sent', async () => {
-    const { dialog } = await open(['subscriptions.stop', 'subscriptions.refund']);
+  it('«إلغاء فقط» by default, attended × rate owed (shown), the summary says 0 back / 0 due', async () => {
+    const { dialog } = await open(KEYS);
     expect(dialog.getByRole<HTMLInputElement>('radio', { name: words.cancelOnly }).checked).toBe(
       true,
     );
-    apiSend.mockResolvedValue({ subscriptionId: SUB, refund: null });
+    const attended = words.oweAttended.replace('{amount}', money(150));
+    expect(dialog.getByRole<HTMLInputElement>('radio', { name: attended }).checked).toBe(true);
+    expect(dialog.getByText(summary(0, 0))).toBeTruthy();
     fireEvent.click(confirm());
-    await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-stop', BASE),
-    );
+    await sent({ owe: { choice: 'attended' } });
   });
 
-  it('«إلغاء مع استرداد»: the lines, the computed amount by default, the toast names it', async () => {
-    const { dialog, onDone } = await open(['subscriptions.stop', 'subscriptions.refund']);
+  it('«إلغاء فقط» with the full price: the summary shows what remains owed', async () => {
+    const { dialog } = await open(KEYS);
+    fireEvent.click(
+      dialog.getByRole('radio', { name: words.owePrice.replace('{amount}', money(400)) }),
+    );
+    expect(dialog.getByText(summary(0, 110))).toBeTruthy();
+    fireEvent.click(confirm());
+    await sent({ owe: { choice: 'price' } });
+  });
+
+  it('«إلغاء مع استرداد»: unattended by default, everything paid offered, nothing left owed', async () => {
+    const { dialog, onDone } = await open(KEYS);
     fireEvent.click(dialog.getByRole('radio', { name: words.withRefund }));
-    const money = (n: number) => moneyText(n, 'SAR');
-    expect(dialog.getByText(words.refundTotal.replace('{amount}', money(140)))).toBeTruthy();
-    expect(dialog.getByText(words.refundPaid.replace('{amount}', money(290)))).toBeTruthy();
+    const unattended = words.refundUnattended.replace('{amount}', money(140));
+    expect(dialog.getByRole<HTMLInputElement>('radio', { name: unattended }).checked).toBe(true);
+    expect(dialog.getByText(summary(140, 0))).toBeTruthy();
+    fireEvent.click(
+      dialog.getByRole('radio', { name: words.refundAll.replace('{amount}', money(290)) }),
+    );
+    expect(dialog.getByText(summary(290, 0))).toBeTruthy();
     apiSend.mockResolvedValue({
       subscriptionId: SUB,
-      refund: { amount: 140, card: 0, manual: 140 },
+      refund: { amount: 290, card: 0, manual: 290 },
     });
     fireEvent.click(confirm());
+    await sent({ refund: { choice: 'paid' } });
     await vi.waitFor(() =>
-      expect(onDone).toHaveBeenCalledWith(words.doneRefund.replace('{amount}', money(140))),
+      expect(onDone).toHaveBeenCalledWith(words.doneRefund.replace('{amount}', money(290))),
     );
-    expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-stop', {
-      ...BASE,
-      refund: { amount: 140 },
-    });
   });
 
-  it('the amount may be lowered, never raised above the refund', async () => {
-    const { dialog } = await open(['subscriptions.stop', 'subscriptions.refund']);
+  it('a custom refund: 0 .. net paid; above it the confirm is off', async () => {
+    const { dialog } = await open(KEYS);
     fireEvent.click(dialog.getByRole('radio', { name: words.withRefund }));
-    const field = dialog.getByLabelText(words.refundAmount);
-    fireEvent.change(field, { target: { value: '200' } });
+    fireEvent.click(dialog.getByRole('radio', { name: words.refundCustom }));
+    const field = dialog.getByLabelText(words.customAmount);
+    fireEvent.change(field, { target: { value: '290.01' } });
     expect(confirm().disabled).toBe(true);
     expect(dialog.getByText(t.courseActions.errors.refund_exceeds_allowed)).toBeTruthy();
     fireEvent.change(field, { target: { value: '100' } });
-    apiSend.mockResolvedValue({
-      subscriptionId: SUB,
-      refund: { amount: 100, card: 0, manual: 100 },
-    });
     fireEvent.click(confirm());
-    await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-stop', {
-        ...BASE,
-        refund: { amount: 100 },
-      }),
-    );
+    await sent({ refund: { choice: 'custom', amount: 100 } });
   });
 
-  it('without subscriptions.refund (sales by default) or with nothing to refund: no choice', async () => {
+  it('without subscriptions.refund (sales by default): no refund, never below attended × rate', async () => {
     const { dialog } = await open(['subscriptions.stop']);
     expect(dialog.queryByRole('radio', { name: words.withRefund })).toBeNull();
-    expect(dialog.getByText(words.money.split('{amount}')[0] ?? '', { exact: false })).toBeTruthy();
+    expect(dialog.queryByRole('radio', { name: words.oweNothing })).toBeNull();
+    expect(dialog.queryByRole('radio', { name: words.oweCustom })).toBeNull();
+    const price = words.owePrice.replace('{amount}', money(400));
+    expect(dialog.getByRole('radio', { name: price })).toBeTruthy();
   });
 
-  it('a package with nothing left to refund offers «إلغاء فقط» only', async () => {
-    const none = { ...PREVIEW, refund: { ...refund, charged: 400, refund: 0 } };
-    const { dialog } = await open(['subscriptions.stop', 'subscriptions.refund'], none);
+  it('a refund holder may lower what is owed: «لا شيء» and «مبلغ مخصص» offered', async () => {
+    const { dialog } = await open(KEYS);
+    expect(dialog.getByRole('radio', { name: words.oweNothing })).toBeTruthy();
+    expect(dialog.getByRole('radio', { name: words.oweCustom })).toBeTruthy();
+  });
+
+  it('the refund unreadable now: the sheet says why instead of hiding it silently', async () => {
+    const preview = { ...PREVIEW, refund: null, refundUnavailable: true };
+    const { dialog } = await open(KEYS, preview);
     expect(dialog.queryByRole('radio', { name: words.withRefund })).toBeNull();
+    expect(dialog.getByText(words.refundUnavailable)).toBeTruthy();
   });
 });

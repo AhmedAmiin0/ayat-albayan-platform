@@ -12,7 +12,10 @@ import { StopRefundCards, type CardState } from './stop-refund.cards';
 import { StopRefundRepo, type MoneyRow, type RefundPackage } from './stop-refund.repo';
 import {
   manualRefundKey,
+  refundDecision,
   replayMismatch,
+  type OwedDecision,
+  type RefundChoiceAsk,
   type RefundPlan,
   type RefundSub,
 } from './stop-refund.plan';
@@ -32,15 +35,18 @@ interface Allowed {
 const net = (rows: readonly MoneyRow[]): number =>
   rows.reduce((sum, r) => sum + (r.kind === 'refund' ? -r.amount : r.amount), 0);
 
+export type { RefundChoiceAsk } from './stop-refund.plan';
+
 /**
- * «إلغاء مع استرداد» (owner 2026-11-02): refund = net paid − attended × (price / lessons) × the
- * rate setting, floored at 0 (stopRefund). The person may lower it. Card payments of a payment
- * link are refunded through Stripe first (the webhook records their rows), the rest is one manual
- * refund row plus an admin bell «حوّل … للعائلة». Every leg is idempotent on the stop's
- * clientRequestId: this stop's own refunds are left out of «net paid» (other refunds still
- * pending in Stripe are taken off it), so a replay plans the same split and creates nothing twice;
- * a replay asking another split is 409 refund_mismatch. A converted or 3-decimal card payment is
- * refunded by hand (the manual leg).
+ * «إلغاء مع استرداد» (owner 2026-11-02, choices 2026-11-06): the unattended lessons (net paid −
+ * attended × price / lessons × rate, floored at 0: stopRefund), everything paid, or a custom
+ * amount; each at most the net paid (pending Stripe refunds off); then the course owes the net
+ * paid left (plan.owed). Payment-link card payments go back through Stripe first (the webhook
+ * records their rows), the rest is one manual refund row and an admin bell «حوّل … للعائلة».
+ * Idempotent on the stop's clientRequestId: its own refunds are left out of «net paid», so a
+ * replay plans the same split (another split: 409 refund_mismatch) from the STORED decision
+ * (refundDecision: never live lessons or rate; another one: 409 stop_mismatch). A converted or
+ * 3-decimal card payment is refunded by hand (the manual leg).
  */
 @Injectable()
 export class StopRefunds {
@@ -59,19 +65,25 @@ export class StopRefunds {
     return (await this.allowed(sub, PREVIEW_REQUEST)).calc;
   }
 
-  /** 409 refund_exceeds_allowed above the computed refund; 503 stripe_not_configured with cards. */
-  async plan(input: { sub: RefundSub; requestId: string; amount: number }): Promise<RefundPlan> {
-    const { sub, requestId } = input;
+  /** 409 refund_exceeds_allowed above the net paid; 503 stripe_not_configured with cards. */
+  async plan(input: {
+    sub: RefundSub;
+    requestId: string;
+    ask: RefundChoiceAsk;
+    stored?: OwedDecision | null;
+  }): Promise<RefundPlan> {
+    const { sub, requestId, ask } = input;
     const { currency } = sub;
     const { pkg, rows, cards, calc } = await this.allowed(sub, requestId);
-    if (refundAmountProblem(input.amount, calc.refund, currency))
-      throw conflict('refund_exceeds_allowed');
+    const stored = input.stored ?? null;
+    const { amount, owed } = refundDecision({ ask, calc, stored, currency });
+    if (refundAmountProblem(amount, calc.paid, currency)) throw conflict('refund_exceeds_allowed');
     const manualKey = manualRefundKey(requestId);
     const legs = cards.map((c) => ({ id: c.paymentId, refundable: c.refundable }));
-    const split = splitRefund({ amount: input.amount, cards: legs, currency });
+    const split = splitRefund({ amount, cards: legs, currency });
     const manualRow = rows.find((r) => r.client_request_id === manualKey)?.amount ?? null;
     if (replayMismatch({ cards, split, manualRow, currency })) throw conflict('refund_mismatch');
-    return { sub, pkg, calc, cards, rows, requestId, amount: input.amount, split };
+    return { sub, pkg, calc, cards, rows, requestId, amount, split, owed };
   }
 
   /** After the stop committed (again on a replay): card legs, then the manual leg, audited. */

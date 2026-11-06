@@ -20,6 +20,8 @@ export const stopPreview = (over: Partial<CourseStopPreview> = {}): CourseStopPr
     ...{ paid: 300, perLesson: 37.5, attended: 3 },
     ...{ ratePercent: 100, charged: 112.5, refund: 187.5 },
   },
+  refundUnavailable: false,
+  owe: { charged: 112.5, price: 300 },
   stopped: null,
   ...over,
 });

@@ -45,6 +45,8 @@ export interface SubscriptionView {
   status: SubscriptionStatus;
   /** A cancelled package's kind, 'unused' or 'stopped' (still owed: countsForMoney). */
   cancel_kind?: string | null;
+  /** A stopped course's stored decision: what it is owed for (owedFor); null otherwise. */
+  stop_owed_amount?: number | null;
   renews_on: string | null;
   notes: string | null;
   /** Sum of payments in `currency`. */

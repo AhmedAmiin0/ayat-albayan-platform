@@ -58,24 +58,34 @@ describe('receivablesOf / receivableTotals', () => {
   });
 });
 
-describe('receivablesOf: a stopped course is owed for owed_for, never its price', () => {
-  const stopped = (paid: number) =>
+describe('receivablesOf: a stopped course owes its stored decision (owedFor), never its price', () => {
+  const stopped = (paid: number, owed: number | null = 300) =>
     receivablesOf({
-      subs: [sub('s', { status: 'cancelled', price: 1000, owed_for: 300 })],
+      subs: [sub('s', { status: 'cancelled', cancel_kind: 'stopped', price: 1000, stop_owed_amount: owed })],
       paid: new Map([['s', paid]]),
       today: '2026-10-05',
     }).map((r) => r.owed);
 
-  it('a full or partial refund (net paid at or above the attended value) owes nothing', () => {
-    expect(stopped(0 + 300)).toEqual([]);
+  it('a refund stop (owed = net paid after it) owes nothing', () => {
+    expect(stopped(300)).toEqual([]);
     expect(stopped(500)).toEqual([]);
   });
 
-  it('a stop that refunded nothing beyond the attended value owes nothing', () => {
-    expect(stopped(300)).toEqual([]);
+  it('a plain stop owes the chosen amount minus what was paid', () => {
+    expect(stopped(0)).toEqual([300]);
+    expect(stopped(100)).toEqual([200]);
   });
 
-  it('a stop with no payment owes the attended value only', () => {
-    expect(stopped(0)).toEqual([300]);
+  it('an old stop (backfilled with its price) owes as before the change', () => {
+    expect(stopped(100, 1000)).toEqual([900]);
+  });
+
+  it('stop_owed_amount on a package that is not stopped is ignored', () => {
+    const rows = receivablesOf({
+      subs: [sub('s', { status: 'active', price: 1000, stop_owed_amount: 0 })],
+      paid: new Map([['s', 0]]),
+      today: '2026-10-05',
+    });
+    expect(rows.map((r) => r.owed)).toEqual([1000]);
   });
 });

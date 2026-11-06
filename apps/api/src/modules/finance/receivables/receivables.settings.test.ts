@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { readerOf } from '../../../common/settings/settings.fakes';
 import { ReceivablesSettings } from './receivables.settings';
 
-/** The reporting currency; the stopped course's attended-lesson rate (owner 2026-11-05). */
-const BEFORE = ['reporting_currency', 'refund_attended_rate_percent'] as const;
+/** The reporting currency only: a stopped course never reads the live refund rate (2026-11-06). */
+const BEFORE = ['reporting_currency'] as const;
 
 describe('ReceivablesSettings', () => {
   it('reads exactly its keys, with the registry defaults', async () => {

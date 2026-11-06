@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYMENT, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
+import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { RecordPaymentDialog } from './RecordPaymentDialog';
 
@@ -63,6 +64,13 @@ describe('RecordPaymentDialog (R-PAY-01)', () => {
     apiSend.mockResolvedValue(PAYMENT);
     fireEvent.click(within(dialog).getByRole('button', { name: t.payments.record }));
     await vi.waitFor(() => expect(posts()[0]?.[2]).toMatchObject({ invoiceId: 'inv-1', receiptPath: null, kind: 'payment' }));
+  });
+
+  it('a stopped package: «دُفع X من Y» of what it is owed for, not its price (review 2026-11-06)', () => {
+    const stopped = { ...WEEKLY, status: 'cancelled' as const, cancel_kind: 'stopped' as const, stop_owed_amount: 70, paid: 50 };
+    const { dialog } = open(stopped);
+    const line = t.payments.paidOf.replace('{paid}', moneyText(50, 'SAR')).replace('{price}', moneyText(70, 'SAR'));
+    expect(dialog.textContent).toContain(line);
   });
 
   it('Arabic digits are read («١٤٥» → 145)', async () => {

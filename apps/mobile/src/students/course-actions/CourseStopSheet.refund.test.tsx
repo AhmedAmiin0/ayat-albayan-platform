@@ -6,7 +6,8 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { CourseActionsSection } from './CourseActionsSection';
 import { BASE, serve, stopPreview, SUB } from './fixtures';
 
-// «إلغاء فقط» / «إلغاء مع استرداد» on mobile (owner 2026-11-02), as on web: the person's choice.
+// The stop sheet's money on mobile (owner 2026-11-06), as on web: the person chooses what is still
+// owed or the refund amount; one summary line. 300 SAR paid, 3 of 8 attended (charge 112.5).
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -37,64 +38,67 @@ const openSheet = async (client = createTestQueryClient()) => {
   await fireEvent.changeText(await screen.findByPlaceholderText(s.reasonHint), 'سفر');
 };
 
-test('«إلغاء فقط» is the default: the money kept, no refund sent', async () => {
+const sar = (n: number) => money(n, 'SAR');
+const summary = (refund: number, due: number) =>
+  s.summary.replace('{refund}', sar(refund)).replace('{due}', sar(due));
+const checked = (name: string) =>
+  screen.getByRole('radio', { name }).props.accessibilityState as { checked?: boolean };
+const sent = (extra: object) =>
+  waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('POST', `${BASE}/course-stop`, { ...BODY, ...extra }),
+  );
+
+test('«إلغاء فقط» by default, attended × rate owed: nothing more due on 300 paid', async () => {
   mockApiSend.mockResolvedValue(stopped(null));
   await openSheet();
-  expect(screen.getByRole('radio', { name: s.cancelOnly }).props.accessibilityState).toMatchObject({
-    checked: true,
-  });
+  expect(checked(s.cancelOnly).checked).toBe(true);
+  expect(checked(s.oweAttended.replace('{amount}', sar(112.5))).checked).toBe(true);
+  expect(screen.getByText(summary(0, 0))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
-  await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', `${BASE}/course-stop`, BODY),
-  );
+  await sent({ owe: { choice: 'attended' } });
   expect(await screen.findByText(s.done)).toBeTruthy();
 });
 
-test('«إلغاء مع استرداد»: the lines, the computed amount by default, the notice names it', async () => {
-  mockApiSend.mockResolvedValue(stopped({ amount: 187.5, card: 0, manual: 187.5 }));
+test('«إلغاء فقط» with a custom owed amount: 0 .. the price', async () => {
+  mockApiSend.mockResolvedValue(stopped(null));
   await openSheet();
-  await fireEvent.press(screen.getByRole('radio', { name: s.withRefund }));
-  expect(screen.getByText(s.refundTotal.replace('{amount}', money(187.5, 'SAR')))).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
-  await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', `${BASE}/course-stop`, {
-      ...BODY,
-      refund: { amount: 187.5 },
-    }),
-  );
-  expect(
-    await screen.findByText(s.doneRefund.replace('{amount}', money(187.5, 'SAR'))),
-  ).toBeTruthy();
-});
-
-test('the amount may be lowered, never raised', async () => {
-  mockApiSend.mockResolvedValue(stopped({ amount: 100, card: 0, manual: 100 }));
-  await openSheet();
-  await fireEvent.press(screen.getByRole('radio', { name: s.withRefund }));
-  await fireEvent.changeText(screen.getByPlaceholderText('187.5'), '200');
+  await fireEvent.press(screen.getByRole('radio', { name: s.oweCustom }));
+  const hint = s.customHint.replace('{amount}', sar(300));
+  await fireEvent.changeText(screen.getByPlaceholderText(hint), '300.01');
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   expect(mockApiSend).not.toHaveBeenCalled();
-  expect(screen.getByText(t.courseActions.errors.refund_exceeds_allowed)).toBeTruthy();
-  await fireEvent.changeText(screen.getByPlaceholderText('187.5'), '100');
+  expect(screen.getByText(t.courseActions.errors.owed_exceeds_price)).toBeTruthy();
+  await fireEvent.changeText(screen.getByPlaceholderText(hint), '0');
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
-  await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', `${BASE}/course-stop`, {
-      ...BODY,
-      refund: { amount: 100 },
-    }),
-  );
+  await sent({ owe: { choice: 'custom', amount: 0 } });
 });
 
-test('without subscriptions.refund (sales by default): no choice', async () => {
+test('«إلغاء مع استرداد»: unattended by default, everything paid offered, nothing left owed', async () => {
+  mockApiSend.mockResolvedValue(stopped({ amount: 300, card: 0, manual: 300 }));
+  await openSheet();
+  await fireEvent.press(screen.getByRole('radio', { name: s.withRefund }));
+  expect(checked(s.refundUnattended.replace('{amount}', sar(187.5))).checked).toBe(true);
+  expect(screen.getByText(summary(187.5, 0))).toBeTruthy();
+  await fireEvent.press(screen.getByRole('radio', { name: s.refundAll.replace('{amount}', sar(300)) }));
+  expect(screen.getByText(summary(300, 0))).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
+  await sent({ refund: { choice: 'paid' } });
+  expect(await screen.findByText(s.doneRefund.replace('{amount}', sar(300)))).toBeTruthy();
+});
+
+test('without subscriptions.refund (sales by default): never below attended × rate', async () => {
   const client = createTestQueryClient();
   client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions: ['subscriptions.stop'] });
   await openSheet(client);
   expect(screen.queryByRole('radio', { name: s.withRefund })).toBeNull();
+  expect(screen.queryByRole('radio', { name: s.oweNothing })).toBeNull();
+  expect(screen.queryByRole('radio', { name: s.oweCustom })).toBeNull();
+  expect(screen.getByRole('radio', { name: s.owePrice.replace('{amount}', sar(300)) })).toBeTruthy();
 });
 
-test('nothing left to refund: «إلغاء فقط» only', async () => {
-  const refund = { paid: 300, perLesson: 37.5, attended: 8, ratePercent: 100, charged: 300 };
-  mockApiFetch.mockImplementation(serve(stopPreview({ refund: { ...refund, refund: 0 } })));
+test('the refund unreadable now: the sheet says why', async () => {
+  mockApiFetch.mockImplementation(serve(stopPreview({ refund: null, refundUnavailable: true })));
   await openSheet();
   expect(screen.queryByRole('radio', { name: s.withRefund })).toBeNull();
+  expect(screen.getByText(s.refundUnavailable)).toBeTruthy();
 });
