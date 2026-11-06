@@ -25,8 +25,10 @@ describe('20261106000100: the stop stores what it is owed for', () => {
 
   it('stop_course writes the decision in the stop’s own update and audit row', () => {
     const fn = owed.slice(owed.indexOf('function public.stop_course('));
-    expect(fn).toMatch(/stop_owed_amount = coalesce\(v_owed, s\.price\), stop_owed_choice = /);
-    expect(fn).toMatch(/'owed_amount', coalesce\(v_owed, s\.price\)/);
+    // Without owed_amount (the old API during the deploy) both stay NULL: the backfill's job.
+    expect(fn).toMatch(/stop_owed_amount = v_owed,\s+stop_owed_choice = case when v_owed is null then null/);
+    expect(fn).toMatch(/'owed_amount', v_owed, 'owed_choice', case when v_owed is null then null/);
+    expect(fn).not.toMatch(/coalesce\(v_owed, s\.price\)/);
     expect(fn).toMatch(/if v_owed < 0 then/);
     // A retry with another decision never runs against the stored one.
     expect(fn).toMatch(/raise exception 'stop_mismatch'/);

@@ -126,10 +126,19 @@ describe('StopCourseDialog: the money choices', () => {
     await sent({ refund: { choice: 'custom', amount: 100 } });
   });
 
-  it('without subscriptions.refund (sales by default): owe choices only, no refund', async () => {
+  it('without subscriptions.refund (sales by default): no refund, never below attended × rate', async () => {
     const { dialog } = await open(['subscriptions.stop']);
     expect(dialog.queryByRole('radio', { name: words.withRefund })).toBeNull();
+    expect(dialog.queryByRole('radio', { name: words.oweNothing })).toBeNull();
+    expect(dialog.queryByRole('radio', { name: words.oweCustom })).toBeNull();
+    const price = words.owePrice.replace('{amount}', money(400));
+    expect(dialog.getByRole('radio', { name: price })).toBeTruthy();
+  });
+
+  it('a refund holder may lower what is owed: «لا شيء» and «مبلغ مخصص» offered', async () => {
+    const { dialog } = await open(KEYS);
     expect(dialog.getByRole('radio', { name: words.oweNothing })).toBeTruthy();
+    expect(dialog.getByRole('radio', { name: words.oweCustom })).toBeTruthy();
   });
 
   it('the refund unreadable now: the sheet says why instead of hiding it silently', async () => {

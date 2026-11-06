@@ -5,6 +5,18 @@ import { CourseStopSettings } from './course-stop.settings';
 import type { OwedDecision, RefundSub } from './stop-refund.plan';
 import { StopRefundRepo } from './stop-refund.repo';
 
+/** choose()'s input: the package, the ask, the sheet's numbers, a replay's stored decision. */
+interface ChooseIn {
+  sub: RefundSub;
+  ask: StopOweAsk | undefined;
+  owe: StopOwe;
+  stored: OwedDecision | null;
+}
+
+/** The same option (and the same typed amount for custom) as the stored decision. */
+const keepsStored = (stored: OwedDecision, ask: StopOweAsk): boolean =>
+  stored.choice === ask.choice && (ask.choice !== 'custom' || stored.amount === ask.amount);
+
 /** No `owe` in the body (an older client): the sheet's default, attended × rate. */
 const DEFAULT_ASK: StopOweAsk = { choice: 'attended' };
 
@@ -29,11 +41,17 @@ export class StopOwedCalc {
     return { charged: calc.charged, price: pkg.price };
   }
 
-  async decide(sub: RefundSub, ask: StopOweAsk | undefined): Promise<OwedDecision> {
-    const { choice, amount: custom } = ask ?? DEFAULT_ASK;
-    const owe = await this.owe(sub);
-    const amount = owedByChoice(choice, owe, custom ?? 0);
-    const problem = owedAmountProblem(amount, owe.price, sub.currency);
+  /**
+   * The decision for `ask` against `owe` (the sheet's numbers). A retry of a stop that already
+   * committed with the same option keeps what it stored (never a live recompute); another option
+   * goes on to stop_course, which answers 409 stop_mismatch.
+   */
+  choose(input: ChooseIn): OwedDecision {
+    const { choice, amount: custom } = input.ask ?? DEFAULT_ASK;
+    const { stored } = input;
+    if (stored && keepsStored(stored, { choice, amount: custom })) return stored;
+    const amount = owedByChoice(choice, input.owe, custom ?? 0);
+    const problem = owedAmountProblem(amount, input.owe.price, input.sub.currency);
     if (problem) throw conflict(problem);
     return { amount, choice };
   }

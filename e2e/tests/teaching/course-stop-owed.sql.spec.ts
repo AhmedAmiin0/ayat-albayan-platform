@@ -27,7 +27,7 @@ test.describe('stop owed amount and commission (20261106000100 / 101)', () => {
     test.skip(test.info().project.name !== 'desktop', 'database only: one run'),
   );
 
-  test('the stop stores the chosen owed amount; an old caller stores the price', async () => {
+  test('the stop stores the chosen owed amount; an old caller stores nothing (backfill)', async () => {
     await rolledBack(async (tx) => {
       const a = await assistant(tx, 'owed-store', PERCENT);
       const c = await importedCourse(tx, { phone: '+966500000921' });
@@ -35,7 +35,8 @@ test.describe('stop owed amount and commission (20261106000100 / 101)', () => {
       expect(await owedOf(tx, c.sub)).toEqual({ amount: '75.00', choice: 'attended' });
       const old = await importedCourse(tx, { phone: '+966500000922', price: 300 });
       await stop(tx, { ...old, actor: a });
-      expect(await owedOf(tx, old.sub)).toEqual({ amount: '300.00', choice: 'price' });
+      // The old API during the deploy: nothing stored, owedFor falls back to the price.
+      expect(await owedOf(tx, old.sub)).toEqual({ amount: null, choice: null });
     });
   });
 

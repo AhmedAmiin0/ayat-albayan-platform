@@ -86,12 +86,14 @@ test('«إلغاء مع استرداد»: unattended by default, everything paid
   expect(await screen.findByText(s.doneRefund.replace('{amount}', sar(300)))).toBeTruthy();
 });
 
-test('without subscriptions.refund (sales by default): owe choices only', async () => {
+test('without subscriptions.refund (sales by default): never below attended × rate', async () => {
   const client = createTestQueryClient();
   client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions: ['subscriptions.stop'] });
   await openSheet(client);
   expect(screen.queryByRole('radio', { name: s.withRefund })).toBeNull();
-  expect(screen.getByRole('radio', { name: s.oweNothing })).toBeTruthy();
+  expect(screen.queryByRole('radio', { name: s.oweNothing })).toBeNull();
+  expect(screen.queryByRole('radio', { name: s.oweCustom })).toBeNull();
+  expect(screen.getByRole('radio', { name: s.owePrice.replace('{amount}', sar(300)) })).toBeTruthy();
 });
 
 test('the refund unreadable now: the sheet says why', async () => {

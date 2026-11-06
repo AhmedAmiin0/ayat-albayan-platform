@@ -1,4 +1,6 @@
 import {
+  mayLowerOwe,
+  offeredOwe,
   offeredRefund,
   oweOptions,
   refundOptions,
@@ -24,12 +26,15 @@ type Fmt = (n: number) => string;
 /** The sheet's money choice (owner 2026-11-06), the same rules as web (@ab/client-core). */
 export function useStopMoney(preview: CourseStopPreview | undefined) {
   const [state, setState] = useState<StopMoneyState>(STOP_MONEY_START);
-  const breakdown = offeredRefund(useHolds('subscriptions.refund'), preview?.refund);
+  const holds = useHolds('subscriptions.refund');
+  const breakdown = offeredRefund(holds, preview?.refund);
+  const mayLower = mayLowerOwe(holds, preview);
   const result = preview ? stopMoney({ state, preview, breakdown }) : null;
   const set: Set = (patch) => setState((s) => ({ ...s, ...patch }));
   const ready = result?.valid === true;
   const problem = result?.problem ?? null;
-  return { state, set, breakdown, result, ready, ask: result?.ask ?? {}, problem };
+  const ask = result?.ask ?? {};
+  return { state, set, breakdown, result, ready, ask, problem, mayLower };
 }
 type MoneyView = ReturnType<typeof useStopMoney>;
 
@@ -82,7 +87,7 @@ function OwePart({
   return (
     <View style={{ gap: 12 }}>
       <FilterPills
-        items={oweOptions(s, preview.owe, fmt)}
+        items={offeredOwe(oweOptions(s, preview.owe, fmt), view.mayLower)}
         value={view.state.oweChoice}
         onChange={(oweChoice) => view.set({ oweChoice })}
         accessibilityLabel={s.oweChoice}

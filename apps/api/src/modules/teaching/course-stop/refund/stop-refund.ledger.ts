@@ -66,6 +66,21 @@ export class StopRefundLedger {
     });
   }
 
+  /**
+   * The stop committed but its refund did not finish (Stripe error, crash; review 2026-11-06):
+   * the admins' bell «تعذّر إتمام استرداد …», so a half-done refund is seen and retried.
+   */
+  async failed(plan: RefundPlan): Promise<void> {
+    const left = `${plan.amount} ${plan.sub.currency}`;
+    await this.push.notifyAdmins('payment_due', {
+      subject: `course_stop_refund_failed:${plan.requestId}`,
+      title: ar.courseActions.stop.refundFailedBell.replace('{amount}', left),
+      vars: { student: plan.pkg.studentName, left },
+      data: { studentId: plan.sub.studentId },
+      bellOnly: true,
+    });
+  }
+
   async audit(input: {
     plan: RefundPlan;
     result: CourseStopRefunded;

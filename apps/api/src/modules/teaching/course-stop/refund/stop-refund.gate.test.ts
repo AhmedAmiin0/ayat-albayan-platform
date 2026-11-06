@@ -1,10 +1,7 @@
 import type { Permission } from '@ab/shared';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
-import type { SalesOwnershipRule } from '@/modules/sales/sales';
-import { StopRefundGate } from './stop-refund.gate';
-import type { StopOwedCalc } from './stop-owed';
-import type { StopRefunds } from './stop-refund.service';
+import { gateKit as gate } from './stop-refund.fakes';
 
 // Review 2026-11-05: «إلغاء مع استرداد» follows SalesOwnershipRule like «إلغاء الباقة» (#612).
 const SUB = { id: 'sub1', studentId: 'hers', currency: 'SAR' };
@@ -13,22 +10,11 @@ const REFUND: Permission[] = ['subscriptions.stop', 'subscriptions.refund'];
 const sales: AuthUser = { id: 's1', email: null, role: 'sales', permissions: REFUND };
 const admin: AuthUser = { id: 'a1', email: null, role: 'admin', permissions: REFUND };
 
-function gate(enforced: boolean) {
-  const refunds = {
-    preview: vi.fn().mockResolvedValue({ refund: 10 }),
-    plan: vi.fn().mockResolvedValue('plan'),
-  };
-  const own = enforced ? { studentIds: ['hers'] } : null;
-  const rule = { scope: vi.fn().mockResolvedValue(own) };
-  const ownership = rule as unknown as SalesOwnershipRule;
-  const owed = {} as unknown as StopOwedCalc;
-  const g = new StopRefundGate(refunds as unknown as StopRefunds, ownership, owed);
-  return { g, refunds, rule };
-}
 const ask = (sub: typeof SUB) => ({
   sub,
   requestId: 'r1',
   ask: { choice: 'custom' as const, amount: 5 },
+  stored: null,
 });
 const LINES = { refund: { refund: 10 }, unavailable: false };
 const NONE = { refund: null, unavailable: false };

@@ -92,3 +92,18 @@ describe('StopRefundLedger', () => {
     );
   });
 });
+
+describe('StopRefundLedger.failed', () => {
+  it('the admins’ bell names the refund that did not finish, keyed per stop', async () => {
+    const { l, push } = ledger();
+    await l.failed(plan());
+    expect(push.notifyAdmins).toHaveBeenCalledWith(
+      'payment_due',
+      expect.objectContaining({
+        subject: `course_stop_refund_failed:${REQ}`,
+        title: expect.stringContaining('250 SAR'),
+        bellOnly: true,
+      }),
+    );
+  });
+});

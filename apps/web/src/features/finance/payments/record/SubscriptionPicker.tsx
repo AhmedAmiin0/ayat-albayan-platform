@@ -1,4 +1,4 @@
-import { countsForMoney, dueOf } from '@ab/shared';
+import { countsForMoney, dueOf, owedFor } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Field } from '@/components/ui/form/field';
@@ -19,7 +19,7 @@ const owed = (s: SubscriptionView) => dueOf(s, s.paid);
 const optionText = (s: SubscriptionView) =>
   `${packageName(s)} · ${t.enums.subscriptionStatus[s.status]} · ${t.payments.paidOf
     .replace('{paid}', moneyText(s.paid, s.currency))
-    .replace('{price}', moneyText(s.price, s.currency))}`;
+    .replace('{price}', moneyText(owedFor(s), s.currency))}`;
 
 /**
  * Any package of any student, not only the first 100 unpaid ones: search the student (name, phone

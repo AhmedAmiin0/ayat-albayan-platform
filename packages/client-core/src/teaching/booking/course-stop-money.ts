@@ -58,6 +58,17 @@ export function offeredRefund(
   return holds && refund && refund.paid > 0 ? refund : null;
 }
 
+type RefundLines = Pick<CourseStopPreview, 'refund' | 'refundUnavailable'>;
+/** The server shows refund lines (or says they are unreadable) only to whom may refund here. */
+const refundsHere = (p: RefundLines): boolean => p.refund !== null || p.refundUnavailable;
+
+/**
+ * May this person lower what is owed below attended × rate (nothing, a smaller custom amount)?
+ * subscriptions.refund on this student, as «إلغاء مع استرداد» (StopRefundGate).
+ */
+export const mayLowerOwe = (holds: boolean, preview: RefundLines | undefined): boolean =>
+  holds && preview !== undefined && refundsHere(preview);
+
 const typed = (text: string): number | null =>
   text.trim() === '' ? null : parseAmountFromZero(text);
 const isCustom = (choice: string): boolean => choice === 'custom';

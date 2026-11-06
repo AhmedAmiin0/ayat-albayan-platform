@@ -6,6 +6,7 @@ import {
 } from '@ab/shared';
 import { z } from 'zod';
 import type { StopSub } from './course-stop.repo';
+import type { OwedDecision } from './refund';
 
 /** course_stop_plan (migration 991): what a stop would take now. */
 const planSchema = z.object({
@@ -31,6 +32,20 @@ export const stopRow = (data: unknown): StopRow => rowSchema.parse(data);
 export function toStopped(sub: StopSub): CourseStopped | null {
   if (sub.status !== 'cancelled' || sub.cancelled_at === null) return null;
   return { at: sub.cancelled_at, by: sub.cancelled_by, reason: sub.cancel_reason };
+}
+
+const isThisStop = (sub: StopSub, requestId: string): boolean =>
+  sub.status === 'cancelled' && sub.stop_request_id === requestId;
+
+/**
+ * What the stop with `requestId` stored (review 2026-11-06): a retry after a failed refund or a
+ * crash plans from it, never from live lessons or the live rate; null before that stop commits
+ * (or for a stop that stored nothing: an old API's, the backfill's job).
+ */
+export function storedOwed(sub: StopSub, requestId: string): OwedDecision | null {
+  const { stop_owed_amount: amount, stop_owed_choice: choice } = sub;
+  const known = amount !== null && choice !== null && isThisStop(sub, requestId);
+  return known ? { amount: Number(amount), choice } : null;
 }
 
 /** The answer of a stop (a replay answers the first stop). */

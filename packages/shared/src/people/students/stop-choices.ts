@@ -80,3 +80,29 @@ export const owedAmountProblem = (
   currency: string,
 ): 'owed_exceeds_price' | null =>
   amount < 0 || toMinor(amount, currency) > toMinor(price, currency) ? 'owed_exceeds_price' : null;
+
+/**
+ * A replay of a stop that already committed (owner review 2026-11-06): the refund is what the stop
+ * stored, never a live recompute: the net paid (this stop's own refunds left out) − the stored
+ * owed amount, never below 0.
+ */
+export const replayRefund = (paid: number, storedOwed: number, currency: string): number =>
+  fromMinor(Math.max(0, toMinor(paid, currency) - toMinor(storedOwed, currency)), currency);
+
+type Lowers = (amount: number, owe: StopOwe, currency: string) => boolean;
+const LOWERS: Readonly<Record<StopOweChoice, Lowers>> = {
+  attended: () => false,
+  price: () => false,
+  nothing: () => true,
+  custom: (amount, owe, currency) => toMinor(amount, currency) < toMinor(owe.charged, currency),
+};
+
+/**
+ * «إلغاء فقط» below the default (nothing, or a custom amount under attended × rate) forgives
+ * money: only a holder of subscriptions.refund on this student may choose it (403 otherwise).
+ */
+export const oweLowersDefault = (
+  ask: { choice: StopOweChoice; amount?: number | undefined } | undefined,
+  owe: StopOwe,
+  currency: string,
+): boolean => LOWERS[ask?.choice ?? 'attended'](ask?.amount ?? 0, owe, currency);

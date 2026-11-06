@@ -2,7 +2,7 @@ export { StopRefundCards } from './stop-refund.cards';
 export { StopRefundLedger } from './stop-refund.ledger';
 export { StopRefundRepo } from './stop-refund.repo';
 export { CourseStopSettings } from './course-stop.settings';
-export { type RefundSub } from './stop-refund.plan';
+export { type OwedDecision, type RefundSub } from './stop-refund.plan';
 export { StopRefunds } from './stop-refund.service';
 export { StopRefundGate } from './stop-refund.gate';
 export { StopOwedCalc } from './stop-owed';

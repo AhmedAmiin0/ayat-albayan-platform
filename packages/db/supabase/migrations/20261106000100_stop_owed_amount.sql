@@ -7,7 +7,8 @@
 --   subscriptions.stop_owed_choice: the option chosen (who and when are the stop's cancelled_by / cancelled_at, and
 --     the stop's audit row carries both values too).
 -- stop_course v2 (991's body) writes both in the stop's ONE transaction from p.owed_amount / p.owed_choice; a caller
--- without them (SQL, an old API) stores the price, as before.
+-- without owed_amount (SQL, the old API still running during the deploy) leaves both NULL: owedFor falls back to the
+-- price, and the backfill below (idempotent: a re-run of this file) settles them by the same rule as older stops.
 -- BACKFILL: every existing stop keeps the behaviour from before PR #623 (owes its price), so no debt changes on
 -- deploy; a stop already followed by a refund row (a «إلغاء مع استرداد» made since #623) owes the net paid after
 -- it (nothing more), never the refunded amount (second precision: a Stripe refund row's paid_at is cut to whole
@@ -121,7 +122,8 @@ begin
   update public.subscriptions
      set status = 'cancelled', cancel_kind = 'stopped', cancelled_at = v_at, cancelled_by = v_actor,
          cancel_reason = v_reason, stop_request_id = v_request, lessons_used_at_stop = coalesce(v_used, lessons_used_before),
-         stop_owed_amount = coalesce(v_owed, s.price), stop_owed_choice = coalesce(v_choice, 'price')
+         stop_owed_amount = v_owed,
+         stop_owed_choice = case when v_owed is null then null else coalesce(v_choice, 'price') end
    where id = v_sub;
 
   -- «توقف» unless another package still runs (a later one, or an active one).
@@ -147,7 +149,7 @@ begin
     'status', 'cancelled', 'kind', 'stopped', 'reason', v_reason, 'client_request_id', v_request,
     'cancelled_lessons', (select coalesce(jsonb_agg(l -> 'id'), '[]'::jsonb) from jsonb_array_elements(v_plan -> 'lessons') l),
     'ended_rules', to_jsonb(v_rules), 'student_status', v_to, 'closed_pause', v_pause,
-    'owed_amount', coalesce(v_owed, s.price), 'owed_choice', coalesce(v_choice, 'price'));
+    'owed_amount', v_owed, 'owed_choice', case when v_owed is null then null else coalesce(v_choice, 'price') end);
   perform public.course_pause_audit(v_actor, 'subscriptions', v_sub, 'cancel', jsonb_build_object(
     'before', jsonb_build_object('status', s.status, 'cancelled_at', null), 'after', v_after));
   return v_after || jsonb_build_object('replayed', false, 'stopped_at', v_at);

@@ -7750,6 +7750,7 @@
       "doneRefund": "أُلغي الاشتراك وسُجّل استرداد {amount}",
       "refundNote": "إلغاء مع استرداد: {reason}",
       "refundBell": "حوّل {amount} للأسرة (إلغاء مع استرداد)",
+      "refundFailedBell": "تعذّر إتمام استرداد {amount} بعد إلغاء الاشتراك: أعد المحاولة أو حوّله يدويًا",
       "refundChoice": "مبلغ الاسترداد",
       "refundUnattended": "الحلقات غير المحضورة فقط: {amount}",
       "refundAll": "المبلغ المدفوع كاملًا: {amount}",

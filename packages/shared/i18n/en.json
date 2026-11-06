@@ -7750,6 +7750,7 @@
       "doneRefund": "Subscription cancelled and a {amount} refund recorded",
       "refundNote": "Cancel and refund: {reason}",
       "refundBell": "Transfer {amount} to the family (cancel and refund)",
+      "refundFailedBell": "Refunding {amount} did not finish after the course stop: retry or transfer it by hand",
       "refundChoice": "Refund amount",
       "refundUnattended": "Unattended lessons only: {amount}",
       "refundAll": "Everything paid: {amount}",

@@ -5,8 +5,8 @@ import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { conflict } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions';
 import { CourseStopRepo } from './course-stop.repo';
-import { toResult, toStopped } from './course-stop.mapper';
-import { StopRefundGate, type RefundSub } from './refund';
+import { storedOwed, toResult, toStopped } from './course-stop.mapper';
+import { StopRefundGate, type OwedDecision, type RefundSub } from './refund';
 
 interface PreviewInput {
   studentId: string;
@@ -82,8 +82,10 @@ export class CourseStop {
   async stop({ studentId, body, actor }: StopInput): Promise<CourseStopResult> {
     const sub = await this.repo.subscription(body.subscriptionId, studentId);
     const ref = { id: sub.id, studentId, currency: sub.currency };
-    const plan = body.refund ? await this.refundPlan({ ref, body, actor }) : null;
-    const owed = plan?.owed ?? (await this.refunds.decide(ref, body.owe));
+    const stored = storedOwed(sub, body.clientRequestId);
+    const plan = body.refund ? await this.refundPlan({ ref, body, actor, stored }) : null;
+    const owe = { sub: ref, ask: body.owe, stored };
+    const owed = plan?.owed ?? (await this.refunds.decide(actor, owe));
     const row = await this.repo.stop({
       subscriptionId: body.subscriptionId,
       studentId,
@@ -104,9 +106,14 @@ export class CourseStop {
   }
 
   /** «إلغاء مع استرداد»: StopRefundGate's checks; the chosen amount at most the net paid. */
-  private refundPlan(input: { ref: RefundSub; body: CourseStopRequest; actor: AuthUser }) {
-    const { ref, body, actor } = input;
+  private refundPlan(input: {
+    ref: RefundSub;
+    body: CourseStopRequest;
+    actor: AuthUser;
+    stored: OwedDecision | null;
+  }) {
+    const { ref, body, actor, stored } = input;
     const ask = body.refund ?? { choice: 'unattended' as const };
-    return this.refunds.plan(actor, { sub: ref, requestId: body.clientRequestId, ask });
+    return this.refunds.plan(actor, { sub: ref, requestId: body.clientRequestId, ask, stored });
   }
 }

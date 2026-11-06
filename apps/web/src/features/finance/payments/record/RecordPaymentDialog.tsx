@@ -88,7 +88,7 @@ export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment',
         {picked && (
           <p className="text-sm text-ink-2">
             {packageName(picked)} ·{' '}
-            {t.payments.paidOf.replace('{paid}', moneyText(picked.paid, picked.currency)).replace('{price}', moneyText(picked.price, picked.currency))}
+            {t.payments.paidOf.replace('{paid}', moneyText(picked.paid, picked.currency)).replace('{price}', moneyText(owedFor(picked), picked.currency))}
           </p>
         )}
         <PaymentFields form={form} set={setFields} currency={currency} today={paidAtDay()} amountError={amountError} />

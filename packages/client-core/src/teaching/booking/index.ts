@@ -29,6 +29,7 @@ export {
   type StopWords,
 } from './course-actions.js';
 export {
+  offeredOwe,
   oweOptions,
   type RefundChoice,
   refundOptions,
@@ -39,6 +40,7 @@ export {
 } from './course-refund.js';
 export {
   courseStopBody,
+  mayLowerOwe,
   offeredRefund,
   STOP_MONEY_START,
   stopMoney,

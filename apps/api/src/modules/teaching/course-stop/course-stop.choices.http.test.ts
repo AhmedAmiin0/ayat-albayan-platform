@@ -35,12 +35,23 @@ describe('POST /students/:id/course-stop: the money choices', () => {
   it.each([
     [{ choice: 'attended' }, 150],
     [{ choice: 'price' }, 400],
-    [{ choice: 'nothing' }, 0],
-    [{ choice: 'custom', amount: 0 }, 0],
+    [{ choice: 'custom', amount: 150 }, 150],
     [{ choice: 'custom', amount: 400 }, 400],
   ])('«إلغاء فقط» owe %o → stores %d (sales may choose it too)', async (owe, amount) => {
     const res = await post({ ...BODY, owe }, 'sales');
     expect(res.statusCode).toBe(201);
+    expect(owedSent()).toEqual({ amount, choice: owe.choice });
+  });
+
+  it.each([
+    [{ choice: 'nothing' }, 0],
+    [{ choice: 'custom', amount: 0 }, 0],
+    [{ choice: 'custom', amount: 149.99 }, 149.99],
+  ])('below the default %o: the admin stores %d; sales (no refund key) 403, nothing stopped', async (owe, amount) => {
+    const denied = await post({ ...BODY, owe }, 'sales');
+    expect([denied.statusCode, denied.json().code]).toEqual([403, 'refund_not_allowed']);
+    expect(t.m.repo.stop).not.toHaveBeenCalled();
+    expect((await post({ ...BODY, owe })).statusCode).toBe(201);
     expect(owedSent()).toEqual({ amount, choice: owe.choice });
   });
 

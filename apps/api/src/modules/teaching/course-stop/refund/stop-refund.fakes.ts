@@ -1,8 +1,11 @@
 // Test kit of «إلغاء مع استرداد» (test-only, excluded from the build by *.fakes.ts).
 import { vi } from 'vitest';
+import type { SalesOwnershipRule } from '@/modules/sales/sales';
 import type { StripeClients } from '@/modules/finance/stripe';
 import type { CourseStopSettings } from './course-stop.settings';
+import type { StopOwedCalc } from './stop-owed';
 import { StopRefundCards } from './stop-refund.cards';
+import { StopRefundGate } from './stop-refund.gate';
 import type { StopRefundLedger } from './stop-refund.ledger';
 import type { MoneyRow, StopRefundRepo } from './stop-refund.repo';
 import { StopRefunds } from './stop-refund.service';
@@ -59,4 +62,30 @@ export function kit(input: { attended?: number; rate?: number } = {}) {
     settings as unknown as CourseStopSettings,
   );
   return { service, stripe, repo, clients, ledger };
+}
+
+/**
+ * StopRefundGate over fakes: the sales rule enforcing (her student 'hers') or off; «إلغاء فقط»'s
+ * numbers 150 charged of 400.
+ */
+export function gateKit(enforced: boolean) {
+  const refunds = {
+    preview: vi.fn().mockResolvedValue({ refund: 10 }),
+    plan: vi.fn().mockResolvedValue('plan'),
+    execute: vi.fn(),
+  };
+  const own = enforced ? { studentIds: ['hers'] } : null;
+  const rule = { scope: vi.fn().mockResolvedValue(own) };
+  const owed = {
+    owe: vi.fn().mockResolvedValue({ charged: 150, price: 400 }),
+    choose: vi.fn().mockReturnValue('decision'),
+  };
+  const ledger = { failed: vi.fn() };
+  const g = new StopRefundGate(
+    refunds as unknown as StopRefunds,
+    rule as unknown as SalesOwnershipRule,
+    owed as unknown as StopOwedCalc,
+    ledger as unknown as StopRefundLedger,
+  );
+  return { g, refunds, rule, owed, ledger };
 }

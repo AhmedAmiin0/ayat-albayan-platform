@@ -1,4 +1,5 @@
 import {
+  offeredOwe,
   oweOptions,
   refundOptions,
   stopRefundLines,
@@ -71,7 +72,7 @@ function OwePart({ view, preview, fmt }: OweProps) {
       <RadioChips
         name="course-stop-owe"
         legend={words.oweChoice}
-        options={oweOptions(words, preview.owe, fmt)}
+        options={offeredOwe(oweOptions(words, preview.owe, fmt), view.mayLower)}
         value={view.state.oweChoice}
         onChange={(oweChoice) => view.set({ oweChoice })}
       />

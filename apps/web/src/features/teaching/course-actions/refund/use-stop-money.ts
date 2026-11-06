@@ -1,4 +1,5 @@
 import {
+  mayLowerOwe,
   offeredRefund,
   STOP_MONEY_START,
   stopMoney,
@@ -16,6 +17,8 @@ export interface StopMoneyView {
   /** «إلغاء مع استرداد»'s lines; null = not offered (no key, nothing paid, or unreadable). */
   breakdown: StopRefund | null;
   money: StopMoney | null;
+  /** «لا شيء» / «مبلغ مخصص» offered: subscriptions.refund on this student (mayLowerOwe). */
+  mayLower: boolean;
 }
 
 /**
@@ -25,8 +28,10 @@ export interface StopMoneyView {
 export function useStopMoney(preview: CourseStopPreview | undefined): StopMoneyView {
   const [state, setState] = useState<StopMoneyState>(STOP_MONEY_START);
   const { can } = usePermissions();
-  const breakdown = offeredRefund(can('subscriptions.refund'), preview?.refund);
+  const holds = can('subscriptions.refund');
+  const breakdown = offeredRefund(holds, preview?.refund);
+  const mayLower = mayLowerOwe(holds, preview);
   const money = preview ? stopMoney({ state, preview, breakdown }) : null;
   const set = (patch: Partial<StopMoneyState>) => setState((s) => ({ ...s, ...patch }));
-  return { state, set, breakdown, money };
+  return { state, set, breakdown, money, mayLower };
 }
