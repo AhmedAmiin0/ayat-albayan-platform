@@ -1,8 +1,8 @@
 import { deltaSearch } from '@ab/client-core';
 import type { QueryClient } from '@tanstack/react-query';
 import { deltaWasEmpty, forgetDelta } from './delta-news';
-import { threadKey, type ThreadCache } from './thread-cache';
-import { threadDeltaKey, threadPollKey } from './thread-poll';
+import { threadKey, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
+import { threadDeltaKey, threadPollKey } from '@/inbox/thread/hooks/thread-poll';
 
 const navCountKey = ['threads', 'nav-count'];
 

@@ -1,5 +1,5 @@
 import type { MessageView, ThreadDelta } from '@ab/shared';
-import type { ThreadCache } from './thread-cache';
+import type { ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 
 // Whether the open chat's last delta brought anything (docs/43 AU5, review of #673). A realtime
 // event runs the delta first; a delta with nothing new means the change is one a delta never

@@ -3,7 +3,7 @@ import { createTestQueryClient } from '@/test/query';
 import { cachedThread, delivered, detail, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 import { noteDelta } from './delta-news';
 import { refreshOpenChat } from './live-refresh';
-import { threadKey } from './thread-cache';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 
 // A realtime event for the open chat (docs/43 AU5): a delta first, the page only when it was empty.
 

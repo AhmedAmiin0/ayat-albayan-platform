@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { AppState } from 'react-native';
 import { supabase } from '@/core/lib/http/supabase';
 import { queryClient as client } from '@/core/lib/query/query-client';
-import { refreshOpenChat } from '@/inbox/thread/hooks/live-refresh';
+import { refreshOpenChat } from './live-refresh';
 import { inboxLive } from './inbox-live';
 import { changeLists } from './list-marks';
 
