@@ -1,34 +1,11 @@
 import { router } from 'expo-router';
-import { act, renderRouter, screen } from 'expo-router/testing-library';
-import { Text } from 'react-native';
-import { TabStack, tabStackSettings } from '@/core/nav/TabStack';
-import { AppNativeTabs } from '@/core/ui/layout/AppNativeTabs';
+import { act, screen } from 'expo-router/testing-library';
 import { trackBackPress } from '@/test/back-press';
+import { openTabApp, tabApp, TabsLayout } from '@/test/tab-app';
 
 // Android's back on the real tabs and tab stacks (stub screens).
-const stub = (label: string) => () => <Text>{label}</Text>;
-const TABS = [
-  { name: 'index', title: 'today', icon: 'today' },
-  { name: 'students', title: 'students', icon: 'students' },
-  { name: 'more', title: 'more', icon: 'more' },
-] as const;
-const tabStack = { default: TabStack, unstable_settings: tabStackSettings };
-const app = {
-  _layout: () => <AppNativeTabs tabs={TABS} />,
-  index: stub('today-screen'),
-  'students/_layout': tabStack,
-  'students/index': stub('students-list'),
-  'students/[id]': stub('student-detail'),
-  'more/_layout': tabStack,
-  'more/index': stub('more-list'),
-  'more/teachers/[id]': stub('teacher-detail'),
-};
-
-async function open(initialUrl: string) {
-  const pending = renderRouter(app, { initialUrl });
-  await pending;
-  return () => pending.getPathname();
-}
+const app = tabApp(TabsLayout);
+const open = (initialUrl: string) => openTabApp(app, initialUrl);
 
 let pressBack: () => void = () => undefined;
 const go = (move: () => void) => act(async () => move());

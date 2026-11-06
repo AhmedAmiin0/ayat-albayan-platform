@@ -1,4 +1,4 @@
-import { backOr, backWithin, pushInTab } from './back-within';
+import { backOr, backWithin, openPushed, pushInTab } from './back-within';
 
 const mockRouter = { canDismiss: jest.fn(), back: jest.fn(), replace: jest.fn(), push: jest.fn() };
 jest.mock('expo-router', () => ({
@@ -37,4 +37,13 @@ test('backOr: a function fallback runs only when nothing is beneath', () => {
 test('pushInTab anchors the tab list beneath the pushed screen', () => {
   pushInTab('/students/s1');
   expect(mockRouter.push).toHaveBeenCalledWith('/students/s1', { withAnchor: true });
+});
+
+test('openPushed: a chat is pushed as is (no anchor in its group), a tab screen anchored', () => {
+  openPushed('/inbox/thread/x');
+  openPushed('/teacher/chats/x');
+  expect(mockRouter.push).toHaveBeenNthCalledWith(1, '/inbox/thread/x');
+  expect(mockRouter.push).toHaveBeenNthCalledWith(2, '/teacher/chats/x');
+  openPushed('/students/s1');
+  expect(mockRouter.push).toHaveBeenLastCalledWith('/students/s1', { withAnchor: true });
 });

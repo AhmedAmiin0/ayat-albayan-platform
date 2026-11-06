@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
 import { router, useNavigationContainerRef } from 'expo-router';
-import { pushInTab } from '@/core/nav/back-within';
+import { openPushed } from '@/core/nav/back-within';
 import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 import { usePermissions } from '@/core/auth/use-permissions';
@@ -82,7 +82,7 @@ export function useNotificationHandling(tree: PushTree = 'admin'): void {
       if (overChat(nav.isReady() ? nav.getRootState() : undefined) && !isThreadHref(href)) {
         router.dismissTo(href, { withAnchor: true });
       } else {
-        pushInTab(href);
+        openPushed(href);
       }
     };
     open(takeLastResponse()); // the tap that started the app, if any

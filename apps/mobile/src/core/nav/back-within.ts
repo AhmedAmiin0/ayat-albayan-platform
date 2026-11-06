@@ -1,4 +1,5 @@
 import { type Href, router } from 'expo-router';
+import { isThreadHref } from './chat-groups';
 
 /**
  * Back inside the current stack when a screen sits beneath (canDismiss), else `fallback`. Never
@@ -18,3 +19,10 @@ export const backWithin = (list: Href): void => backOr(() => router.replace(list
  * loaded beneath, so back shows the list and not Today.
  */
 export const pushInTab = (href: Href): void => router.push(href, { withAnchor: true });
+
+/**
+ * A tapped push's or bell row's screen: a chat as is (a chat group has no list to anchor, so an
+ * anchor would put its first route, e.g. «book», under the chat), a tab's screen with its list.
+ */
+export const openPushed = (href: string): void =>
+  isThreadHref(href) ? router.push(href) : pushInTab(href);

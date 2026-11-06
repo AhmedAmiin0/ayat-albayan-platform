@@ -14,7 +14,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('expo-router', () => ({
-  router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
+  router: { back: jest.fn(), canDismiss: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
 jest.mock('expo-image-picker', () => ({}));

@@ -1,6 +1,8 @@
-import { BackHandler } from 'react-native';
+import { BackHandler, type HardwareBackPressEvent } from 'react-native';
 
-type BackListener = () => boolean | null | undefined;
+type BackListener = (event: HardwareBackPressEvent) => boolean | null | undefined;
+
+const PRESS: HardwareBackPressEvent = { type: 'hardwareBackPress', timeStamp: 0 };
 
 /**
  * Android's back in a test: every hardwareBackPress listener is kept, and a press runs them newest
@@ -17,6 +19,6 @@ export function trackBackPress(): () => void {
     };
   });
   return () => {
-    [...listeners].reverse().some((listener) => listener() === true);
+    [...listeners].reverse().some((listener) => listener(PRESS) === true);
   };
 }

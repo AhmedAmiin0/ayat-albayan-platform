@@ -1,13 +1,11 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { act, fireEvent, renderRouter, screen } from 'expo-router/testing-library';
-import { Text } from 'react-native';
+import { act, fireEvent, screen } from 'expo-router/testing-library';
 import { t } from '@/core/lib/i18n/i18n';
 import { pushInTab } from '@/core/nav/back-within';
-import { TabStack, tabStackSettings } from '@/core/nav/TabStack';
-import { AppNativeTabs } from '@/core/ui/layout/AppNativeTabs';
 import { StudentScreen } from '@/students/screens/StudentScreen';
 import { createTestQueryClient } from '@/test/query';
+import { openTabApp, tabApp, TabsLayout } from '@/test/tab-app';
 
 // The real tab stacks and StudentScreen (its profile still loading) under the real tabs.
 jest.mock('@/core/lib/http/api', () => ({
@@ -16,33 +14,13 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 
 const client = createTestQueryClient();
-const stub = (label: string) => () => <Text>{label}</Text>;
-const TABS = [
-  { name: 'index', title: 'today', icon: 'today' },
-  { name: 'students', title: 'students', icon: 'students' },
-  { name: 'more', title: 'more', icon: 'more' },
-] as const;
-const tabStack = { default: TabStack, unstable_settings: tabStackSettings };
-const app = {
-  _layout: () => (
-    <QueryClientProvider client={client}>
-      <AppNativeTabs tabs={TABS} />
-    </QueryClientProvider>
-  ),
-  index: stub('today-screen'),
-  'students/_layout': tabStack,
-  'students/index': stub('students-list'),
-  'students/[id]': StudentScreen,
-  'more/_layout': tabStack,
-  'more/index': stub('more-list'),
-  'more/teachers/[id]': stub('teacher-detail'),
-};
-
-async function open(initialUrl: string) {
-  const pending = renderRouter(app, { initialUrl });
-  await pending;
-  return () => pending.getPathname();
-}
+const WithQuery = () => (
+  <QueryClientProvider client={client}>
+    <TabsLayout />
+  </QueryClientProvider>
+);
+const app = tabApp(WithQuery, StudentScreen);
+const open = (initialUrl: string) => openTabApp(app, initialUrl);
 
 const go = (move: () => void) => act(async () => move());
 const pressHeaderBack = () => fireEvent.press(screen.getByRole('button', { name: t.common.back }));

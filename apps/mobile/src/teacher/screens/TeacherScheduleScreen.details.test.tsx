@@ -36,5 +36,5 @@ test('a tap opens my lesson: no confirm, cancel, move or time edit; «ادخل �
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(2);
   expect(screen.getByText(t.lessons.sheet.report.none)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.reports.open }));
-  expect(router.push).toHaveBeenCalledWith('/teacher/reports/l1');
+  expect(router.push).toHaveBeenCalledWith('/teacher/reports/l1', { withAnchor: true });
 });

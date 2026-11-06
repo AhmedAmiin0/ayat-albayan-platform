@@ -13,7 +13,9 @@ const replaced = (list: string): true => {
 /**
  * Android's back on a tab's lone detail screen (opened from another tab, a push or a link with
  * nothing beneath) goes to the tab's own list, as the header's back (backWithin), never to Today.
- * Mounted once per tab stack (TabStack): a screen's own handler, added later, still runs first.
+ * Mounted once per tab stack (TabStack). Android runs the newest handler first: a screen's handler
+ * added after the tab stack mounted (useSearchBack) runs before this one; one a lone detail screen
+ * adds on the stack's first mount runs after it (none does today).
  */
 export function useTabListBack(): void {
   const navigation = use(NavigationContext);

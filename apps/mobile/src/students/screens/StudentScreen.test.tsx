@@ -19,7 +19,7 @@ jest.mock('expo-router', () => ({
   router: {
     push: (mockHref: string) => mockPush(mockHref),
     back: () => mockBack(),
-    canGoBack: () => true,
+    canDismiss: () => true,
   },
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
