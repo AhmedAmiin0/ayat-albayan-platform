@@ -5,10 +5,11 @@ import {
   salesPackageCancelKey,
   salesPackageCancelPath,
 } from '@ab/client-core';
-import type { SalesStudentDetails } from '@ab/shared';
+import type { SalesCourseView, SalesStudentDetails } from '@ab/shared';
 import { useQuery, type QueryKey } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
+import { useSalesCourse } from '@/sales-course';
 import { openSigned } from '@/teacher';
 
 /** GET /sales/students/:id — one of my students: subscriptions, attendance and sent reports (404 otherwise). */
@@ -18,6 +19,41 @@ export const useSalesStudent = (id: string) =>
     queryFn: () => apiFetch<SalesStudentDetails>(`/sales/students/${id}`),
     enabled: id !== '',
   });
+
+/** The weekly course on the student file (owner 2026-11-06: a link sale left unbooked). */
+interface CourseState {
+  /** «أيام الحلقات»: the package may be booked now (GET /sales/booking/course: blocked null). */
+  book: boolean;
+  /**
+   * «تغيير المعلم» / «تغيير موعد الحلقات»: a course runs or is booked ahead (`current`), or an
+   * imported one blocks the wizard (course_exists without `current`).
+   */
+  moves: boolean;
+  /** The package of `current`: the moves change that course, not a newer unbooked package. */
+  movesOf: string | null;
+}
+
+/**
+ * From the assistant's course view: nothing to change before a course exists (no more
+ * course_not_found); while it loads nothing shows, a failed read keeps the moves (as before).
+ */
+export const courseState = (
+  view: SalesCourseView | undefined,
+  failed: boolean,
+): CourseState => ({
+  book: view?.blocked === null,
+  moves: view ? hasCourse(view) : failed,
+  movesOf: view?.current?.subscriptionId ?? null,
+});
+
+const hasCourse = (view: SalesCourseView): boolean =>
+  Boolean(view.current) || view.blocked === 'course_exists';
+
+/** The course view of a student she acts on (owner 2026-11-06): «أيام الحلقات», or its moves. */
+export function useCourseState(studentId: string, acts: boolean): CourseState {
+  const course = useSalesCourse(acts ? studentId : '');
+  return courseState(course.data, course.isError);
+}
 
 /** «تحميل PDF» of one of my student's sent reports: a 1 h signed URL opened in the browser. */
 export const openStudentReportPdf = (studentId: string, reportId: string): Promise<void> =>

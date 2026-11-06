@@ -17,3 +17,4 @@ export {
   type SalesSubscriptionBody,
   uploadSalesReceipt,
 } from './api';
+export { LinkedCourseContext } from './course/linked-course';

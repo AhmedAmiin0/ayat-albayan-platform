@@ -7794,7 +7794,7 @@
       "subscription_not_found": "Subscription not found",
       "conflict": "The time clashes with the teacher's or the student's time",
       "course_finished": "No lessons left in the course to move",
-      "course_not_found": "This subscription has no weekly schedule",
+      "course_not_found": "The lesson days of this subscription are not booked yet, so there is no schedule to change. Book the lesson days first.",
       "course_exists": "The new days overlap another course of the student",
       "course_changed": "The schedule changed since you opened this, reopen it",
       "custom_count_admin": "Custom lesson count: only an admin can change it",
@@ -7912,5 +7912,10 @@
   },
   "shortLinks": {
     "notFound": "This link is not valid or has expired."
+  },
+  "courseDue": {
+    "paidTitle": "Paid: book the lesson days",
+    "unbookedTitle": "Lesson days not booked",
+    "unbookedText": "the package was paid at least two hours ago and its lesson days are not booked yet"
   }
 }

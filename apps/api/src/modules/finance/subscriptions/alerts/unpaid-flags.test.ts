@@ -9,6 +9,7 @@ import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import type { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
 import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
 import { UnpaidFlags } from './unpaid-flags.service';
+import type { CourseDue } from '@/modules/finance/subscriptions/course-due/course-due';
 
 const bal = (id: string, studentId: string, remaining: number): BalanceRow => ({
   subscription_id: id, student_id: studentId, lessons_total: 4, lessons_used: 4 - remaining, remaining,
@@ -50,8 +51,10 @@ describe('AlertsJob', () => {
     const queries = { studentsWithPackages: vi.fn(students) };
     const alerts = { evaluateStudents: vi.fn(async () => 1), evaluateLessons: vi.fn(async () => undefined) };
     const events = new LessonEvents();
-    const j = new AlertsJob(queries as unknown as AlertsRepo, alerts as unknown as SubscriptionAlertsService, events);
-    return { j, alerts, events };
+    const courseDue = { sweep: vi.fn(async () => 0) };
+    const asAlerts = alerts as unknown as SubscriptionAlertsService;
+    const j = new AlertsJob(queries as unknown as AlertsRepo, asAlerts, events, courseDue as unknown as CourseDue);
+    return { j, alerts, events, courseDue };
   }
 
   it('a lesson change evaluates the lessons right away (report submit, status, cancel)', async () => {
@@ -66,6 +69,8 @@ describe('AlertsJob', () => {
     const ok = job(async () => ['s1', 's2']);
     expect(await ok.j.runOnce(now)).toEqual({ students: 2, failed: 1 });
     expect(ok.alerts.evaluateStudents).toHaveBeenCalledWith(['s1', 's2'], { now, cause: { via: 'sweep' } });
+    // The packages paid 2 h ago with no weekly course (owner 2026-11-06).
+    expect(ok.courseDue.sweep).toHaveBeenCalledWith(now);
     const broken = job(async () => Promise.reject(new Error('db down')));
     expect(await broken.j.runOnce(now)).toEqual({ students: 0, failed: 0 });
   });

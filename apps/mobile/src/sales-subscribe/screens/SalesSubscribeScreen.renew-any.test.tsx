@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { courseView } from '@/sales-course/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { familyOf, KID, kid, openSub, PHONE, salesQuote } from '../testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
@@ -23,7 +24,10 @@ const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockResolvedValue(familyOf(kid({ mine: false, renew_due: true })));
+  const family = familyOf(kid({ mine: false, renew_due: true }));
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path.startsWith('/sales/booking/course') ? courseView() : family,
+  );
   mockApiSend.mockImplementation(async (_m: string, path: string) => (path === '/sales/subscriptions/quote' ? salesQuote : openSub()));
 });
 
@@ -31,7 +35,7 @@ beforeEach(() => {
 test('the quote and the package carry the chat phone; «أيام الحلقات»; saved → its weekly days', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
   await waitFor(() => expect(sent('/sales/subscriptions/quote').at(-1)?.[2]).toMatchObject({ studentId: KID, phone: PHONE }));
-  expect(screen.getByRole('button', { name: t.booking.courseDays })).toBeTruthy();
+  expect(await screen.findByRole('button', { name: t.booking.courseDays })).toBeTruthy();
   await fireEvent.press(await screen.findByRole('button', { name: t.salesMoney.saveSubscription }));
   await waitFor(() => expect(sent('/sales/subscriptions')[0]?.[2]).toMatchObject({ studentId: KID, phone: PHONE }));
   const course = { pathname: '/inbox/sales-course', params: { studentId: KID, phone: PHONE, subscriptionId: openSub().id } };
