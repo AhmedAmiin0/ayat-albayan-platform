@@ -56,7 +56,7 @@ test('the sales tree: hers (`mine`) and another family\'s student both open «ت
   await renderWithQuery(<TreeBaseProvider value="/sales"><AllStudentsScreen /></TreeBaseProvider>);
   await screen.findByText('يوسف أحمد');
   await fireEvent.press(screen.getByText('جنى علي'));
-  expect(router.push).toHaveBeenCalledWith('/sales/students/st2');
+  expect(router.push).toHaveBeenCalledWith('/sales/students/st2', { withAnchor: true });
   await fireEvent.press(screen.getByText('يوسف أحمد'));
-  expect(router.push).toHaveBeenCalledWith('/sales/students/st1');
+  expect(router.push).toHaveBeenCalledWith('/sales/students/st1', { withAnchor: true });
 });

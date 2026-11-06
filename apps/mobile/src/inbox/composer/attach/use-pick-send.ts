@@ -1,7 +1,7 @@
 import { requestId } from '@/core/lib/http/request-id';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
-import { useChatActions } from '../../thread/hooks/chat-actions';
-import { type ChatFileSource, fileError, pickChatFile, useSendFile } from '../send-file';
+import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { type ChatFileSource, fileError, pickChatFile, useSendFile } from '@/inbox/composer/send-file';
 
 /**
  * Pick a photo (gallery or camera) or a PDF and send it at once, as the family's message (owner

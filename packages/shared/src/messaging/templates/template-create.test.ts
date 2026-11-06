@@ -37,13 +37,16 @@ describe('templateCreateSchema', () => {
     expect(ok({ params: Array.from({ length: 10 }, () => p) })).toBe(false);
   });
 
-  it('buttons: https URL with at most a {{1}} suffix, one URL button, three in all, a known reply action', () => {
+  it('buttons: https URL with at most a {{1}} suffix, two URL buttons, three in all, a known reply action', () => {
     const url = { type: 'url', text: 'Open', url: 'https://example.com/join/{{1}}' };
     const reply = { type: 'quick_reply', text: 'Yes', intent: 'confirm' };
     expect(ok({ buttons: [url, reply] })).toBe(true);
     expect(ok({ buttons: [{ ...url, url: 'http://example.com' }] })).toBe(false);
     expect(ok({ buttons: [{ ...url, url: 'https://example.com/{{1}}/x' }] })).toBe(false);
-    expect(ok({ buttons: [url, url] })).toBe(false);
+    expect(ok({ buttons: [url, url] })).toBe(true);
+    expect(ok({ buttons: [url, url, url] })).toBe(false);
+    expect(ok({ buttons: [{ ...url, example: 'tok-123' }] })).toBe(true);
+    expect(ok({ buttons: [{ ...url, example: 'two words' }] })).toBe(false);
     expect(ok({ buttons: [reply, reply, reply, reply] })).toBe(false);
     expect(ok({ buttons: [{ ...reply, intent: 'rate_good' }] })).toBe(false);
     expect(ok({ buttons: [{ ...reply, text: 'x'.repeat(26) }] })).toBe(false);

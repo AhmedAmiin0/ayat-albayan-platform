@@ -3,7 +3,7 @@ import { Animated, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import { ConnectingDots } from '../connecting/ConnectingDots';
+import { ConnectingDots } from '@/core/ui/connecting/ConnectingDots';
 import { RetryButton } from './RetryButton';
 import type { StartupStage } from './startup-mode';
 

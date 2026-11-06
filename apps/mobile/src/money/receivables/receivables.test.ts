@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { receivable } from '../shared/fixtures';
+import { receivable } from '@/money/shared/fixtures';
 import { daysLateText, filterReceivables, fxMissingText, isSevere } from './receivables';
 
 const rows = [

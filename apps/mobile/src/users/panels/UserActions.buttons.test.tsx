@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { palette } from '@/theme';
-import { DETAIL } from '../shared/fixtures';
+import { DETAIL } from '@/users/shared/fixtures';
 import { UserActions } from './UserActions';
 
 const styleOf = (name: string) => StyleSheet.flatten(screen.getByRole('button', { name }).props.style);

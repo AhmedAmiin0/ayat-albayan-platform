@@ -4,7 +4,7 @@ import { useStudentHref } from '@/core/nav/tree-base';
 import { useStudentBalance } from '@/payments/hooks/queries';
 import { Button } from '@/core/ui/primitives/Button';
 import { renewHref } from './renew';
-import type { StudentRef } from '../shared/types';
+import type { StudentRef } from '@/students/shared/types';
 
 /**
  * «جدّد الاشتراك» (owner 2026-10-15): on a pending_renewal or expired student only, the subscribe

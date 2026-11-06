@@ -2,7 +2,7 @@ import { emptyContent } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { formResponseV2 } from '../testing/fixtures';
+import { formResponseV2 } from '@/teacher/report/testing/fixtures';
 import { ReportEntryCardV2 } from './ReportEntryCardV2';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).

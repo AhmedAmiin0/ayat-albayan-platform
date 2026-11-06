@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { dayLabel, opensDay, rowTime } from './day-label';
-import { clock, deviceTimeZone } from '../hooks/message-text';
+import { clock, deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 
 // Day separators as WhatsApp (owner 2026-10-27), in the device's zone, as `stamp` counts days.
 const now = new Date('2026-10-27T09:00:00Z'); // Tuesday, 12:00 in Riyadh

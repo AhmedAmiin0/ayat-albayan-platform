@@ -3,9 +3,9 @@ import { fireEvent, screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ChatActionsProvider } from '../../thread/components/ChatActionsProvider';
-import { MessageBubble } from '../components/MessageBubble';
-import { message, PHONE, thread } from '../../shared/thread-fixtures';
+import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
+import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
+import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;

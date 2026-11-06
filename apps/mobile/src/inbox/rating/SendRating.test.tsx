@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { meetReminder, message, PHONE } from '../shared/thread-fixtures';
+import { meetReminder, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import * as ownSend from '@/inbox/thread/anchor/own-send';
 import { SendRating } from './SendRating';
 
@@ -88,7 +88,8 @@ test('a queued send says it waits for the send gate and refetches the threads', 
   await confirm();
   expect(await screen.findByText(t.inbox.rating.queued)).toBeTruthy();
   expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', guardian.phone_e164] });
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] }); // the chats list too
+  // the chats list too: only marked stale when none is on screen (docs/43 AU2)
+  expect(invalidate).toHaveBeenCalledWith(expect.objectContaining({ queryKey: ['threads', 'list'] }));
 });
 
 test('a row Meta refused (201, failed) is shown as an error and may be asked again with a new id', async () => {

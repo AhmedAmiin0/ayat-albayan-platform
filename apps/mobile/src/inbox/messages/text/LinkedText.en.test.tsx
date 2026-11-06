@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import type { BubbleActions } from '../hooks/bubble-actions';
+import type { BubbleActions } from '@/inbox/messages/hooks/bubble-actions';
 import { LinkedText } from './LinkedText';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

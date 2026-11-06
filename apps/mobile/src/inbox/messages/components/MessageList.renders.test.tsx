@@ -2,8 +2,8 @@ import type { MessageView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
 import { MessageList } from './MessageList';
-import { cachedThread, detail, message, PHONE } from '../../shared/thread-fixtures';
-import type { useThread } from '../../thread/hooks/use-thread';
+import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
+import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),

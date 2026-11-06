@@ -2,10 +2,10 @@ import en from '@ab/shared/i18n/en.json';
 import type { ThreadView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
-import { readable, SHOWN } from '../screens/privacy.helpers';
-import { ThreadModeProvider } from '../thread/hooks/thread-mode';
+import { readable, SHOWN } from '@/inbox/screens/privacy.helpers';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadsList } from './ThreadsList';
-import { thread } from '../shared/thread-fixtures';
+import { thread } from '@/inbox/shared/thread-fixtures';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

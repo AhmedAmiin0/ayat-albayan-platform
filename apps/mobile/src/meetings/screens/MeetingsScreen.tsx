@@ -7,9 +7,9 @@ import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useMeetings } from '../manage/api';
-import { CreateMeeting } from '../create/CreateMeeting';
-import { MeetingRow } from '../manage/MeetingRow';
+import { useMeetings } from '@/meetings/manage/api';
+import { CreateMeeting } from '@/meetings/create/CreateMeeting';
+import { MeetingRow } from '@/meetings/manage/MeetingRow';
 import { useViewerTz } from '@/core/lib/clock';
 
 /**

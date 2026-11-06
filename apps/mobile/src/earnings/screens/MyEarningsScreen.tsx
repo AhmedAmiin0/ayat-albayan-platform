@@ -6,9 +6,9 @@ import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { EarningsHeader, type Tab } from '../components/EarningsHeader';
-import { PaymentsList, SessionsList } from '../components/EarningsList';
-import { useEarningsBalance, type SessionFilter } from '../hooks/queries';
+import { EarningsHeader, type Tab } from '@/earnings/components/EarningsHeader';
+import { PaymentsList, SessionsList } from '@/earnings/components/EarningsList';
+import { useEarningsBalance, type SessionFilter } from '@/earnings/hooks/queries';
 
 const MINE = {};
 

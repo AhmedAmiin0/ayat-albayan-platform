@@ -1,6 +1,7 @@
 import type { ReportSummaryView, TeacherMe } from '@ab/shared';
 import { useViewerTz } from '@/core/lib/clock';
 import { type Href, router, useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useStudentHref } from '@/core/nav/tree-base';
 
@@ -69,7 +70,7 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
     ({ item }: { item: ReportSummaryView }) => <ReportItem row={item} tz={tz} who={who} onPdfFailed={pdfFailed} />,
     [tz, who, pdfFailed],
   );
-  const back = () => (router.canGoBack() ? router.back() : router.replace(admin ? `/students/${id}` : '/teacher/reports'));
+  const back = () => backWithin(admin ? `/students/${id}` : '/teacher/reports');
   return (
     <Screen>
       <ScreenHeader

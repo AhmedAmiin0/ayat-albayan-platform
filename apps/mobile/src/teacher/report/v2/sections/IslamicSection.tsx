@@ -1,12 +1,12 @@
 import { ISLAMIC_DOMAINS, ISLAMIC_RATES } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { ReportTextField } from '../../components/ReportTextField';
-import { gradeRate, withIslamic } from '../hooks/content-edit';
-import type { V2EntryState } from '../hooks/use-v2-entry';
-import { Card } from '../ui/Card';
-import { GradePills } from '../ui/GradePills';
-import { Pills } from '../ui/Pills';
+import { ReportTextField } from '@/teacher/report/components/ReportTextField';
+import { gradeRate, withIslamic } from '@/teacher/report/v2/hooks/content-edit';
+import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
+import { Card } from '@/teacher/report/v2/ui/Card';
+import { GradePills } from '@/teacher/report/v2/ui/GradePills';
+import { Pills } from '@/teacher/report/v2/ui/Pills';
 
 /** Islamic studies (attended): «المجال», «موضوع الدرس», «المحفوظ (اختياري)», then the two graded rows. */
 export function IslamicSection({ s }: { s: V2EntryState }) {

@@ -3,8 +3,8 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { detail, failed, inbound, message, NOW, thread } from '../shared/thread-fixtures';
-import { ThreadModeProvider } from '../thread/hooks/thread-mode';
+import { detail, failed, inbound, message, NOW, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from './ThreadScreen';
 
 const mockApiFetch = jest.fn();
@@ -15,7 +15,7 @@ jest.mock('@/core/lib/http/api', () => ({
 const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),
-  router: { back: jest.fn(), canGoBack: () => false, replace: (h: string) => mockReplace(h), push: jest.fn() },
+  router: { back: jest.fn(), canDismiss: () => false, replace: (h: string) => mockReplace(h), push: jest.fn() },
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
 

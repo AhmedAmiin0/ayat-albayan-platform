@@ -2,7 +2,7 @@ import type { LessonView, OverviewTeacher } from '@ab/shared';
 import { SLOTS } from '@/teaching/reschedule/fixtures';
 import { muscat, pending } from '@/today/testing/fixtures';
 import { FakeBackend } from '@/test/fake-backend';
-import { abrar, omar } from '../overview/overview-fixtures';
+import { abrar, omar } from '@/calendar/overview/overview-fixtures';
 
 // The teachers + lessons API for the calendar and reschedule flows. Week 26 Sep – 2 Oct 2026
 // (Riyadh, UTC+3); «now» is Thursday 1 Oct 16:20 (tests set fake timers to it). Two lessons of

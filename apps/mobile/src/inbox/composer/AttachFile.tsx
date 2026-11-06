@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
-import { AttachIcon } from '../shared/chat-icons';
+import { AttachIcon } from '@/inbox/shared/chat-icons';
 import { AttachSheet } from './attach/AttachSheet';
 import { usePickSend } from './attach/use-pick-send';
-import { useThreadMode } from '../thread/hooks/thread-mode';
+import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 
 interface AttachFileProps {
   phone: string;

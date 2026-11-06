@@ -111,7 +111,8 @@ test('a message push also refreshes the chats list and the tab badge count (thei
   const spy = jest.spyOn(client, 'invalidateQueries');
   await act(async () => mockListeners.received?.(notification({ kind: 'new_message', phone: PHONE })));
   expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
-  expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] });
+  // No list on screen: it is marked stale and re-reads when it shows (docs/43 AU2).
+  expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'list'], refetchType: 'none' });
 });
 
 test('a tap into a hidden tab falls back to «المزيد» (a hidden tab goes nowhere)', async () => {
@@ -136,6 +137,6 @@ test('a message push without a phone refreshes the lists, never every open threa
   const { client } = await mount();
   const spy = jest.spyOn(client, 'invalidateQueries');
   await act(async () => mockListeners.received?.(notification({ kind: 'new_lead' })));
-  expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] });
+  expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'list'], refetchType: 'none' });
   expect(spy).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
 });

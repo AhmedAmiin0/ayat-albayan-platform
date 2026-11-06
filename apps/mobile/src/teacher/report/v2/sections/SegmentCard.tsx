@@ -5,11 +5,11 @@ import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import { Button } from '@/core/ui/primitives/Button';
 import { Note } from '@/more';
-import { gradePart } from '../hooks/content-edit';
-import type { V2EntryState } from '../hooks/use-v2-entry';
-import { Card } from '../ui/Card';
-import { GradePills } from '../ui/GradePills';
-import { RangeButton } from '../ui/RangeButton';
+import { gradePart } from '@/teacher/report/v2/hooks/content-edit';
+import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
+import { Card } from '@/teacher/report/v2/ui/Card';
+import { GradePills } from '@/teacher/report/v2/ui/GradePills';
+import { RangeButton } from '@/teacher/report/v2/ui/RangeButton';
 
 interface SegmentCardProps {
   s: V2EntryState;

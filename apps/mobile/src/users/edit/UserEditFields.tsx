@@ -1,10 +1,10 @@
 import { tzChoices, tzOptionLabel, type UserRoleOption } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { Choice } from '../shared/Choice';
+import { Choice } from '@/users/shared/Choice';
 import type { EditForm } from './edit-form';
-import { RolePicker } from '../create/RolePicker';
-import { TextField } from '../shared/TextField';
-import type { FormErrors } from '../shared/validation';
+import { RolePicker } from '@/users/create/RolePicker';
+import { TextField } from '@/users/shared/TextField';
+import type { FormErrors } from '@/users/shared/validation';
 
 export interface UserEditFieldsProps {
   form: EditForm;

@@ -1,4 +1,4 @@
-import { ASSISTANT } from '../api/fixtures';
+import { ASSISTANT } from '@/assistants/api/fixtures';
 import { formOf, shiftDay, startMins, TERM_CURRENCIES, todayDay, toInput, type TermsForm } from './terms-form';
 
 const TODAY = '2026-10-06';

@@ -1,11 +1,11 @@
 import { DEFAULT_PASSWORD_MIN } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
-import { changePassword } from '../hooks/account-api';
-import { AccountCard } from '../components/AccountCard';
-import { AccountField, passwordInput } from '../components/AccountField';
-import { passwordChecks } from '../lib/password-checks';
-import { useAccountAction } from '../hooks/use-account-action';
+import { changePassword } from '@/account/hooks/account-api';
+import { AccountCard } from '@/account/components/AccountCard';
+import { AccountField, passwordInput } from '@/account/components/AccountField';
+import { passwordChecks } from '@/account/lib/password-checks';
+import { useAccountAction } from '@/account/hooks/use-account-action';
 
 const hint = t.account.password.hint.replace('{n}', String(DEFAULT_PASSWORD_MIN));
 

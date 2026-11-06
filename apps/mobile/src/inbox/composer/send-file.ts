@@ -6,9 +6,10 @@ import { t } from '@/core/lib/i18n/i18n';
 import { supabase } from '@/core/lib/http/supabase';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { ensureCameraPermission, pickReceipt } from '@/payments';
-import { sendError } from '../messages/hooks/message-text';
-import { refreshInbox, touchInbox } from '../thread/hooks/inbox-sync';
-import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '../thread/hooks/thread-cache';
+import { sendError } from '@/inbox/messages/hooks/message-text';
+import { touchInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { refreshSent } from '@/inbox/thread/hooks/use-thread';
+import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '@/inbox/thread/hooks/thread-cache';
 
 // The assistant sends a photo or a PDF from the chat (owner 2026-10-19 #1/#2), inside the 24 h
 // window: the API signs an upload into wa-media, then queues the file as her message.
@@ -122,7 +123,7 @@ export function fileSendSteps(client: QueryClient, phone: string) {
       client.setQueryData<ThreadCache>(threadKey(phone), add(row));
       await touchInbox(client, row);
     },
-    onSettled: () => refreshInbox(client, phone),
+    onSettled: () => refreshSent(client, phone),
   };
 }
 

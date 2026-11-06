@@ -3,7 +3,7 @@ import { Vibration } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { CallButton } from '../entries/CallButton';
+import { CallButton } from '@/inbox/thread/calls/entries/CallButton';
 import { CallProvider } from './CallProvider';
 import { fakeRtc, OFF, ON, ringing, routes } from './call-test-kit';
 
@@ -14,7 +14,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (...a: unknown[]) => mockFetch(...a),
   apiSend: (...a: unknown[]) => mockSend(...a),
 }));
-jest.mock('../rtc/audio-route', () => ({ routeCallAudio: jest.fn(async () => undefined), restorePlayback: jest.fn(async () => undefined) }));
+jest.mock('@/inbox/thread/calls/rtc/audio-route', () => ({ routeCallAudio: jest.fn(async () => undefined), restorePlayback: jest.fn(async () => undefined) }));
 
 const metrics = { frame: { x: 0, y: 0, width: 390, height: 844 }, insets: { top: 47, left: 0, right: 0, bottom: 34 } };
 const ui = () => (

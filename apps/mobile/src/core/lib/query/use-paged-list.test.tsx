@@ -3,8 +3,8 @@ import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { usePagedList } from './use-paged-list';
 
 const mockApiFetch = jest.fn();
-jest.mock('../http/api', () => ({
-  ...jest.requireActual('../http/api'),
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
 }));
 

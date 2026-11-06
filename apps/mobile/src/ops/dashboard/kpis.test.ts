@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { summary } from '../shared/fixtures';
+import { summary } from '@/ops/shared/fixtures';
 import { kpisOf } from './kpis';
 
 test('the web strip: needs-confirmation, reports, unpaid, tasks, then the active students', () => {

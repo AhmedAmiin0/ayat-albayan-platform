@@ -31,7 +31,7 @@ export function evolutionLineEnv(
   return {
     provider: 'evolution', base: at.base, instance: row.phone_number_id, token: at.token,
     mode: at.mode, autoSends: row.evolution_auto_sends, gapMs: limits.gap_ms,
-    dailyCap: limits.daily_cap, delayMs: sending.delay_ms, linkPreview: sending.link_preview,
+    dailyCap: limits.daily_cap, linkPreview: sending.link_preview,
   };
 }
 

@@ -2,13 +2,13 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
-import { salesPayment, SUB } from '../testing/fixtures';
+import { salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from './SalesTransferScreen';
 
 // Owner 2026-10-28: a transfer of 80 on a package of 81 leaves it «غير مدفوعة»; she is told before saving.
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => {
-  const f = jest.requireActual('../testing/fixtures');
+  const f = jest.requireActual('@/sales-subscribe/testing/fixtures');
   return {
     ...jest.requireActual('@/core/lib/http/api'),
     apiFetch: async () => f.familyOf(f.kid({ open: [f.openSub({ price: 81, due: 81 })] })),

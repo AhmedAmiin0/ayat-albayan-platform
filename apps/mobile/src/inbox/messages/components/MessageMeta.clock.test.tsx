@@ -1,7 +1,7 @@
 import { act, render, screen } from '@testing-library/react-native';
 import { setClockPref } from '@/core/lib/clock';
 import { MessageMeta } from './MessageMeta';
-import { inbound } from '../../shared/thread-fixtures';
+import { inbound } from '@/inbox/shared/thread-fixtures';
 
 // The bubble reads the device's zone (UTC under jest).
 

@@ -40,6 +40,16 @@ describe('«إعدادات Evolution»', () => {
     expect(within(dialog).queryByText(c.sections.cloud)).toBeNull();
   });
 
+  it('no typing delay and no «always online» field (owner 2026-11-06)', () => {
+    const dialog = open();
+    const sending = within(dialog).getByRole('group', { name: c.sections.sending });
+    expect(within(sending).queryByRole('textbox')).toBeNull();
+    expect(within(sending).getAllByRole('checkbox')).toHaveLength(1);
+    const behaviour = within(dialog).getByRole('group', { name: c.sections.behaviour });
+    expect(within(behaviour).getAllByRole('checkbox')).toHaveLength(5);
+    expect(within(dialog).queryByText(/يكتب|متصلًا دائمًا/)).toBeNull();
+  });
+
   it('Cloud: the Meta ids and the access token row; empty ids are refused before any call', () => {
     const dialog = open(evolutionPart({ mode: 'cloud' }));
     fireEvent.click(within(dialog).getByRole('button', { name: c.save }));

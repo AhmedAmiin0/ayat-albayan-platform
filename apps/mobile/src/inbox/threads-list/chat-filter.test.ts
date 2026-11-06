@@ -1,6 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { thread } from '../shared/thread-fixtures';
+import { thread } from '@/inbox/shared/thread-fixtures';
 import { choiceQuery, threadsEmptyTitle, waitingForReply } from './chat-filter';
 
 const list = { list: 'l-1' };

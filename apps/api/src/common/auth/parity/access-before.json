@@ -460,6 +460,7 @@
   "ThreadReactionController.react": ["admin","sales","teacher"],
   "ChatSearchController.search": ["admin","sales","teacher"],
   "MessageSearchController.search": ["admin","sales","teacher"],
+  "ThreadSyncController.sync": ["admin","sales","teacher"],
   "MessageHideController.hide": ["admin","sales","teacher"],
   "MessageHideController.unhide": ["admin","sales","teacher"],
   "StickersController.favourite": ["admin","sales","teacher"],
@@ -503,5 +504,7 @@
   "TeacherLinkController.submit": "public",
   "TeacherLinkController.draftV2": "public",
   "TeacherLinkController.submitV2": "public",
-  "ShortLinksController.go": "public"
+  "ShortLinksController.go": "public",
+  "TeacherJoinController.go": "public",
+  "LegacyReportLinkController.go": "public"
 }

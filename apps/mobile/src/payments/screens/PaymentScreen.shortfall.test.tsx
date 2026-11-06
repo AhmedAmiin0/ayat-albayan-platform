@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
-import { balanceOf, payment, subscription } from '../fixtures';
+import { balanceOf, payment, subscription } from '@/payments/fixtures';
 import { PaymentScreen } from './PaymentScreen';
 
 // Owner 2026-10-28: 80 recorded on a package of 81 leaves it «غير مدفوعة»; the admin is told, never stopped.
@@ -14,7 +14,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('expo-router', () => ({
-  router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
+  router: { back: jest.fn(), canDismiss: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
 jest.mock('expo-image-picker', () => ({}));

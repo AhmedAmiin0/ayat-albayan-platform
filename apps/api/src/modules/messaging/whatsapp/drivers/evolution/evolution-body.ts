@@ -68,13 +68,14 @@ export function templateSend(to: string, t: WabaTemplate): EvolutionSend {
 
 /** The number's sending options (wa_numbers.evolution_config.sending), as Evolution names them. */
 interface SendOptions {
-  delayMs: number;
   linkPreview: boolean;
 }
 
-/** `delay` (typing shown first) on every send; `linkPreview` on a text only. */
+/**
+ * `linkPreview` on a text only. Never `delay` or `presence` (owner 2026-11-06: «dont make the
+ * family see typing»): Evolution shows «يكتب…» to the recipient for the delay before sending.
+ */
 export function withOptions(send: EvolutionSend, opts: SendOptions): EvolutionSend {
-  const delay = opts.delayMs > 0 ? { delay: opts.delayMs } : {};
   const preview = send.path === 'message/sendText' ? { linkPreview: opts.linkPreview } : {};
-  return { path: send.path, body: { ...send.body, ...delay, ...preview } };
+  return { path: send.path, body: { ...send.body, ...preview } };
 }

@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { useClockCycle } from '@/core/lib/clock';
-import { slotRange, weekdayName, type WeekdaySlots } from '../schedule';
+import { slotRange, weekdayName, type WeekdaySlots } from '@/more/schedule';
 import { AppText } from '@/core/ui/primitives/AppText';
 
 /**

@@ -1,5 +1,5 @@
 import type { CreateMeeting, UpdateMeeting } from '@ab/shared';
-import type { DraftInvitee } from '../invite/invitee-draft';
+import type { DraftInvitee } from '@/meetings/invite/invitee-draft';
 import { startsAtUtc, type Slot } from './schedule-time';
 
 interface CreateDraft {

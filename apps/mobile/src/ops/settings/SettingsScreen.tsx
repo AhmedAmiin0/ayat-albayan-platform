@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import type { ReactNode } from 'react';
 import { useHolds, useIsAdmin } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
@@ -15,7 +16,7 @@ import { StripeSwitchRow } from './stripe/StripeSwitchRow';
 import { useSettings } from './use-settings';
 import { InsetGroup } from '@/core/ui/surface/inset';
 
-const back = () => (router.canGoBack() ? router.back() : router.replace('/more'));
+const back = () => backWithin('/more');
 
 export const SETTINGS_HREF = {
   values: '/more/ops/settings/values',

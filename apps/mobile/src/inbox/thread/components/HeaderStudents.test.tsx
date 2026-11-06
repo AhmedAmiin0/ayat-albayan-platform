@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { type TreeBase, TreeBaseProvider } from '@/core/nav/tree-base';
-import { child, CHILD_ID } from '../../subscription/people-fixtures';
+import { child, CHILD_ID } from '@/inbox/subscription/people-fixtures';
 import { ChatHeader } from './ChatHeader';
 import { studentLine, useHeaderStudents } from './HeaderStudents';
 

@@ -23,7 +23,7 @@ jest.mock('@/inbox/composer/send-file', () => ({
 }));
 const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { replace: (h: unknown) => mockReplace(h), back: jest.fn(), canGoBack: () => false },
+  router: { replace: (h: unknown) => mockReplace(h), back: jest.fn(), canDismiss: () => false },
 }));
 
 const s = t.inbox.share;

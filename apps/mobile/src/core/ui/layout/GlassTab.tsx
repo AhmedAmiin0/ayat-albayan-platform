@@ -1,7 +1,7 @@
 import { Image, Platform, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
-import { AppText } from '../primitives/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { TabBadge } from './TabBadge';
 import { TAB_ICONS, type TabIconName } from './tab-icons';
 

@@ -1,5 +1,5 @@
 import { toBookingRequest } from './booking-body';
-import { draft, UPLOADED } from '../../testing/fixtures';
+import { draft, UPLOADED } from '@/booking/testing/fixtures';
 import { kindPatch } from './package-choice';
 
 const REQ = '99999999-9999-4999-8999-999999999999';

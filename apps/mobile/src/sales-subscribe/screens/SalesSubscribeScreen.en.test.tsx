@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { familyOf, kid, salesQuote } from '../testing/fixtures';
+import { familyOf, kid, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -12,8 +12,8 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
-  apiFetch: async () => jest.requireActual('../testing/fixtures').familyOf(jest.requireActual('../testing/fixtures').kid()),
-  apiSend: async () => jest.requireActual('../testing/fixtures').salesQuote,
+  apiFetch: async () => jest.requireActual('@/sales-subscribe/testing/fixtures').familyOf(jest.requireActual('@/sales-subscribe/testing/fixtures').kid()),
+  apiSend: async () => jest.requireActual('@/sales-subscribe/testing/fixtures').salesQuote,
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },

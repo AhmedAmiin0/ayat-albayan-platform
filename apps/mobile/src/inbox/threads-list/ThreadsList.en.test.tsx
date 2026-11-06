@@ -2,8 +2,8 @@ import en from '@ab/shared/i18n/en.json';
 import type { ThreadView } from '@ab/shared';
 import { screen, within } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
-import { InboxScreen } from '../screens/InboxScreen';
-import { thread } from '../shared/thread-fixtures';
+import { InboxScreen } from '@/inbox/screens/InboxScreen';
+import { thread } from '@/inbox/shared/thread-fixtures';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

@@ -2,7 +2,7 @@ import { Switch, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import type { RowControl } from '../lib/rule-words';
+import type { RowControl } from '@/ops/notif-rules/lib/rule-words';
 
 interface RuleControlProps {
   control: RowControl;

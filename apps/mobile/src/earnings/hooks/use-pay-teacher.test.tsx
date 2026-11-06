@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { PAYMENT } from '../testing/fixtures';
-import type { PayInput } from '../lib/pay-draft';
+import { PAYMENT } from '@/earnings/testing/fixtures';
+import type { PayInput } from '@/earnings/lib/pay-draft';
 import { usePayTeacher } from './use-pay-teacher';
 
 const mockApiSend = jest.fn();

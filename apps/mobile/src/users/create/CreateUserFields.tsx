@@ -1,13 +1,13 @@
 import { isLinkedRole, type UserRoleOption } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { Choice } from '../shared/Choice';
+import { Choice } from '@/users/shared/Choice';
 import type { CreateForm } from './create-form';
 import { CredentialPicker } from './CredentialPicker';
 import { LinkPicker } from './LinkPicker';
 import { NewTeacherFields } from './NewTeacherFields';
 import { RolePicker } from './RolePicker';
-import { TextField } from '../shared/TextField';
-import type { FormErrors } from '../shared/validation';
+import { TextField } from '@/users/shared/TextField';
+import type { FormErrors } from '@/users/shared/validation';
 
 export interface CreateUserFieldsProps {
   form: CreateForm;

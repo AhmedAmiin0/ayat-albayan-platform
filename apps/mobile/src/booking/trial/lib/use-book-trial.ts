@@ -6,7 +6,7 @@ import { apiSend } from '@/core/lib/http/api';
 import { patchCached } from '@/core/lib/query/paging';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { toBookingRequest } from './booking-body';
-import { bookingPath, useBookingMode } from '../../shared/booking-mode';
+import { bookingPath, useBookingMode } from '@/booking/shared/booking-mode';
 import type { StudentChoice, TrialDraft } from './draft';
 
 interface BookTrialInput {

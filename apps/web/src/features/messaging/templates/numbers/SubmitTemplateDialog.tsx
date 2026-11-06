@@ -69,7 +69,16 @@ export function SubmitTemplateDialog({ template: tpl, phone, facts, busy, onConf
           <div className="grid gap-1">
             <dt className="text-xs font-semibold text-ink-3">{t.templates.buttons}</dt>
             <dd className="flex flex-wrap gap-x-3 gap-y-1">
-              {tpl.buttons.map((b) => (b.type === 'url' ? <Ltr key={b.url}>{b.url}</Ltr> : <span key={b.text}>{b.text}</span>))}
+              {tpl.buttons.map((b) =>
+                b.type === 'url' ? (
+                  <span key={b.url}>
+                    {b.text ? `${b.text}: ` : ''}
+                    <Ltr>{b.url}</Ltr>
+                  </span>
+                ) : (
+                  <span key={b.text}>{b.text}</span>
+                ),
+              )}
             </dd>
           </div>
         )}

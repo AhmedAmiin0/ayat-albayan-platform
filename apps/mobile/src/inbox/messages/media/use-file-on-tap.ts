@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { signedStaleTime, type ThreadFile, useThreadFile } from '../hooks/thread-file';
-import { mediaProblem, type MediaProblem } from '../photo/media-problem';
+import { signedStaleTime, type ThreadFile, useThreadFile } from '@/inbox/messages/hooks/thread-file';
+import { mediaProblem, type MediaProblem } from '@/inbox/messages/photo/media-problem';
 
 type TapFile =
   | { step: 'idle' }

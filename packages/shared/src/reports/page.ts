@@ -6,7 +6,7 @@ import { reportContentSchema } from './v2/content.js';
 // The report's live page (owner 2026-11-06): https://app.ayatalbayan.com/report/<public_id>, read
 // from the SAVED report (never the PDF), with the teacher's files and the PDF download.
 
-/** lesson_reports.public_id: 32 hex characters (migration 20261106000900). */
+/** lesson_reports.public_id: 32 hex characters (migration 20261106001400). */
 export const reportPublicIdSchema = z.string().regex(/^[0-9a-f]{32}$/);
 
 const text = z.string().nullable();

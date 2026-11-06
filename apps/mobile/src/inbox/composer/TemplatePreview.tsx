@@ -4,8 +4,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import { TemplateButtons } from '../messages/template/TemplateButtons';
-import { TemplateFrame } from '../messages/template/TemplateFrame';
+import { TemplateButtons } from '@/inbox/messages/template/TemplateButtons';
+import { TemplateFrame } from '@/inbox/messages/template/TemplateFrame';
 
 const PAD = { x: 12, bottom: 12 };
 

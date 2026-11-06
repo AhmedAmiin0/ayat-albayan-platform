@@ -1,7 +1,7 @@
 import type { PaymentView, SubscriptionView } from '@ab/shared';
 import { listItem, profile } from '@/students/shared/test-data';
 import { FakeBackend } from '@/test/fake-backend';
-import { balanceOf, page, payment, SUB_ID, subscription } from '../fixtures';
+import { balanceOf, page, payment, SUB_ID, subscription } from '@/payments/fixtures';
 
 // The students + money API for the student → payment flow. POST /payments adds to the package's
 // `paid`, and a package paid in full turns `active`, so the balance card shows the truth on refetch.

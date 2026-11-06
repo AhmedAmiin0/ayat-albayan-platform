@@ -3,9 +3,9 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { StudentScreen } from '../screens/StudentScreen';
+import { StudentScreen } from '@/students/screens/StudentScreen';
 import { historyOf } from '@/trial-date/testing/fixtures';
-import { profile } from '../shared/test-data';
+import { profile } from '@/students/shared/test-data';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

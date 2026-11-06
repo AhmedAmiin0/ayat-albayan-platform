@@ -5,8 +5,8 @@ import { ActivityIndicator, Image, Pressable, StyleSheet, View } from 'react-nat
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { DownloadLink } from '../copy-download/DownloadLink';
-import { threadFileQuery } from '../hooks/thread-file';
+import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
+import { threadFileQuery } from '@/inbox/messages/hooks/thread-file';
 import { MediaNote, problemText } from './MediaNote';
 import { mediaProblem, type PhotoBox } from './media-problem';
 import { PhotoViewer } from './PhotoViewer';

@@ -27,16 +27,13 @@ interface EvolutionClientOpts {
   pacer?: EvolutionPacer;
 }
 
+/** The send deadline (no typing delay is ever sent, so nothing waits inside the call). */
 const DEFAULT_TIMEOUT_MS = 20_000;
-const AFTER_DELAY_MS = 15_000;
-/** The send deadline (Evolution waits `delay`, typing shown, inside the call): ≥ delay + 15 s. */
-export const sendTimeoutMs = (env: Pick<EvolutionLineEnv, 'delayMs'>): number =>
-  Math.max(DEFAULT_TIMEOUT_MS, env.delayMs + AFTER_DELAY_MS);
 
 /** The connection of a configured client (the fetch only when a test passes one). */
 const connOf = (env: EvolutionLineEnv, opts: EvolutionClientOpts): EvolutionConn => ({
   env,
-  timeoutMs: opts.timeoutMs ?? sendTimeoutMs(env),
+  timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS,
   ...(opts.fetch ? { fetch: opts.fetch } : {}),
 });
 

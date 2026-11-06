@@ -2,7 +2,7 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { useSmall } from '../components/MessageMeta';
+import { useSmall } from '@/inbox/messages/components/MessageMeta';
 import { VoiceButton } from './VoiceButton';
 import { type WaveSeek, Waveform } from './Waveform';
 import { type Rate, rateLabel } from './voice-math';

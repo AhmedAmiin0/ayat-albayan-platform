@@ -1,5 +1,5 @@
 import type { MyStudentRow } from '@ab/shared';
-import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { View } from 'react-native';
 import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
 import { t } from '@/core/lib/i18n/i18n';
@@ -25,10 +25,10 @@ export function MyStudentItem({ student }: { student: MyStudentRow }) {
   const tz = useViewerTz();
   const c = student.commission;
   const base = useTreeBase();
-  const open = () => router.push(studentDetailsHref(base, student.id));
+  const open = () => pushInTab(studentDetailsHref(base, student.id));
   return (
     <ListRow
-      {...(base === '/sales' && { onPress: () => router.push(`/sales/students/channel/${student.id}`) })}
+      {...(base === '/sales' && { onPress: () => pushInTab(`/sales/students/channel/${student.id}`) })}
       titleLink={{ onPress: open, label: t.sales.allStudents.openStudent.replace('{name}', student.name) }}
       title={student.name}
       meta={student.code}

@@ -5,8 +5,8 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { type, useTheme } from '@/theme';
-import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '../lib/lesson-text';
-import type { TodayLesson } from '../lib/today-lesson';
+import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '@/today/lib/lesson-text';
+import type { TodayLesson } from '@/today/lib/today-lesson';
 
 interface LessonRowProps<L extends TodayLesson> {
   lesson: L;

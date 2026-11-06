@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Note } from '@/core/ui/feedback/Note';
@@ -14,7 +14,7 @@ const s = t.inbox.share;
 /** Reading, or the read failed (the grant is gone, reopened from Recents): back to the chats. */
 function NotReady({ failed }: { failed: boolean }) {
   const list = inTree(useTreeBase(), threadBase(useThreadMode()));
-  const back = () => (router.canGoBack() ? router.back() : router.replace(list));
+  const back = () => backWithin(list);
   return (
     <>
       <Note alert={failed}>{failed ? s.readFailed : s.preparing}</Note>

@@ -1,7 +1,7 @@
 import { reportDate, reportReadyDedupKey } from '@/modules/reporting/report-pdf/report-ready';
 import type { ReportSource } from '@/modules/reporting/report-pdf/report-pdf.source';
 
-/** The two link templates (migration 20261106000900): the live page's URL button, no document. */
+/** The two link templates (migration 20261106001400): the live page's URL button, no document. */
 export type ReportLinkKey = 'report_ready_teacher' | 'report_ready_family';
 
 /** One `messages` insert of a link template. Shape of the columns the PDF job writes. */

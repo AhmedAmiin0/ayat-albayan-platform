@@ -1,6 +1,6 @@
 import { DURATIONS, teacherName, type Duration, type LessonView } from '@ab/shared';
-import type { InvoiceDraft } from '../shared/contract';
-import { DEFAULT_MINUTES } from '../trial/lib/package-choice';
+import type { InvoiceDraft } from '@/booking/shared/contract';
+import { DEFAULT_MINUTES } from '@/booking/trial/lib/package-choice';
 import { locale } from '@/core/lib/i18n/locale';
 
 /** The missed lesson a makeup is for, as the schedule row hands it over (route params). */

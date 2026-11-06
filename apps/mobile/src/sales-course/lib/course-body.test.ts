@@ -3,7 +3,7 @@ import { maryam, SUN_17, THU_18, TUE_17 } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { courseBlock, courseEnd, courseRequest } from './course-body';
 import { courseFixedText, courseRows } from './course-summary';
-import { courseView, STUDENT_ID } from '../testing/fixtures';
+import { courseView, STUDENT_ID } from '@/sales-course/testing/fixtures';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 

@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { INVOICE } from '../shared/fixtures';
+import { INVOICE } from '@/finance/shared/fixtures';
 import { InvoicesScreen } from './InvoicesScreen';
 
 const mockApiFetch = jest.fn();

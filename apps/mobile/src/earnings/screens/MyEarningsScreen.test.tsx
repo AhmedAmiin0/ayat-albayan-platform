@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { BALANCE, page, PAYMENT, SESSIONS } from '../testing/fixtures';
+import { BALANCE, page, PAYMENT, SESSIONS } from '@/earnings/testing/fixtures';
 import { MyEarningsScreen } from './MyEarningsScreen';
 
 const mockApiFetch = jest.fn();

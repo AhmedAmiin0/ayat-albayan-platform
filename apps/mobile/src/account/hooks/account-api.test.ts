@@ -1,7 +1,7 @@
 import { apiSend } from '@/core/lib/http/api';
 import { profileFixture } from '@/test/account';
 import { AvatarUploadError, uploadAvatar } from './account-api';
-import type { PickedAvatar } from '../lib/avatar';
+import type { PickedAvatar } from '@/account/lib/avatar';
 
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiSend: jest.fn() }));
 const mockUpload = jest.fn();

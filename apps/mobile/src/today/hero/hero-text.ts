@@ -1,9 +1,9 @@
 import { counted, teacherName, type ClockCycle } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
-import { durationLabel, studentTimes } from '../lib/lesson-text';
-import type { TodayLesson } from '../lib/today-lesson';
-import type { Hero } from '../lib/today-plan';
+import { durationLabel, studentTimes } from '@/today/lib/lesson-text';
+import type { TodayLesson } from '@/today/lib/today-lesson';
+import type { Hero } from '@/today/lib/today-plan';
 
 /** «الحلقة التالية · بعد 12 دقيقة» under an hour, «الحلقة التالية» later on, «جارية الآن» when under way. */
 export function heroLead(hero: Hero): string {

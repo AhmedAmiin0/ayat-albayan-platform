@@ -1,6 +1,7 @@
 import type { ReportView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
@@ -18,7 +19,7 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { ReportFieldRow } from './ReportFieldRow';
 import { adminReportFields } from './report-v2-fields';
 
-const back = () => (router.canGoBack() ? router.back() : router.replace('/students'));
+const back = () => backWithin('/students');
 
 /** One lesson report, read-only, from GET /reports/:id (admin may read any); its PDF opens when ready. */
 export function AdminReportScreen() {
