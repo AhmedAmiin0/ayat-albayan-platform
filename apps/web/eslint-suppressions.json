@@ -3105,7 +3105,7 @@
   },
   "src/features/messaging/inbox/threads/pane/NewThread.tsx": {
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "no-nested-ternary": {
       "count": 1
@@ -8039,7 +8039,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/features/sales/sales-money/course/SalesCourseDialog.change.test.tsx": {
