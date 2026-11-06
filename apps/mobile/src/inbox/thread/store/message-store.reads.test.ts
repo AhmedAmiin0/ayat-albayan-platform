@@ -21,18 +21,25 @@ test('a row never synced is stored with the unsynced stamp; listeners hear its c
   expect(heard).toEqual([[A]]);
 });
 
-test('an older read never takes ✓✓ back to ✓, and keeps the sync stamp', async () => {
+test('a synced row keeps its fields and stamp over an older read; ✓✓ never goes back', async () => {
   const store = await opened();
-  const synced = row({ n: 1, s: 9, status: 'read' });
+  const synced = { ...row({ n: 1, s: 9, status: 'read' }), body: 'synced' };
   await applyAs(store, plan([synced]), 'user-a');
-  await store.putReads([{ ...row({ n: 1 }), status: 'delivered', body: 'edited' }], 'user-a');
-  const [kept] = await store.chat('user-a', A, 1);
-  expect([kept?.status, kept?.body, kept?.updated_at]).toEqual(['read', 'edited', synced.updated_at]);
+  await store.putReads([{ ...row({ n: 1 }), status: 'delivered', body: 'old read' }], 'user-a');
+  expect(await store.chat('user-a', A, 1)).toEqual([synced]);
 });
 
-test('failed comes through over a ranked tick (the server moved it on purpose)', async () => {
+test('a read lifts a synced tick further along (the next sync decides the rest)', async () => {
   const store = await opened();
-  await applyAs(store, plan([row({ n: 1, status: 'delivered' })]), 'user-a');
-  await store.putReads([{ ...row({ n: 1 }), status: 'failed' }], 'user-a');
+  await applyAs(store, plan([row({ n: 1, status: 'sent' })]), 'user-a');
+  await store.putReads([{ ...row({ n: 1 }), status: 'read' }], 'user-a');
+  expect((await store.chat('user-a', A, 1))[0]?.status).toBe('read');
+});
+
+test('failed comes through over a ranked tick held only from reads', async () => {
+  const store = await opened();
+  const { updated_at: _, ...view } = row({ n: 1, status: 'delivered' });
+  await store.putReads([view], 'user-a');
+  await store.putReads([{ ...view, status: 'failed' }], 'user-a');
   expect((await store.chat('user-a', A, 1))[0]?.status).toBe('failed');
 });
