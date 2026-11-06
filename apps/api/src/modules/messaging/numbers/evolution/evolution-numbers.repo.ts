@@ -2,7 +2,7 @@ import type { EvolutionConfig, EvolutionSyncView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 
-// An Evolution number's own columns (migration 20261106000300, docs/19 «Evolution driver»): its
+// An Evolution number's own columns (migration 20261106000500, docs/19 «Evolution driver»): its
 // options, the last push read back, and the restriction switch-off. Never a secret.
 
 /** messages.error_code of a row its Evolution number can no longer send (staff resend it). */

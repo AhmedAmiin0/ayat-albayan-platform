@@ -8,7 +8,7 @@ export type NumberPatch = Omit<NumberUpdate, 'is_default'> & { is_default?: fals
 >;
 
 /**
- * The engine follows the provider (migration 20261106000300): leaving Evolution clears it;
+ * The engine follows the provider (migration 20261106000500): leaving Evolution clears it;
  * moving to Evolution without one is refused (400 evolution_mode_needed).
  */
 function evolutionFields(before: NumberRow, body: Omit<NumberUpdate, 'is_default'>): Partial<NumberPatch> {

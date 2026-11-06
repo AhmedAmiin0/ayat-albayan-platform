@@ -3,10 +3,10 @@ import { join } from 'node:path';
 import { INTEGRATION_SECRET_KEYS, NUMBER_SECRET_NAMES } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 
-// Migration 20261106000300 (docs/19 «Evolution driver»): expand-only, no row switched.
+// Migration 20261106000500 (docs/19 «Evolution driver»): expand-only, no row switched.
 
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
-const sql = readFileSync(join(dir, '20261106000300_evolution_driver.sql'), 'utf8');
+const sql = readFileSync(join(dir, '20261106000500_evolution_driver.sql'), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 
 describe('migration: the Evolution driver', () => {

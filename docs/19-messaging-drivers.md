@@ -527,7 +527,7 @@ host NAME (never an IP literal), or plain http only to localhost / 127.0.0.1 / [
 redirects are refused. A base off the list leaves the line unconfigured (gap `EVOLUTION_API_BASE`).
 
 **Config (per number, «الأرقام», owner 2026-11-06 «make all the evolution api options configurable»).** Migration
-`20261106000300`: `provider = 'evolution'`, the **instance name in `phone_number_id`**, the engine `evolution_mode`
+`20261106000500`: `provider = 'evolution'`, the **instance name in `phone_number_id`**, the engine `evolution_mode`
 (`baileys` | `cloud`), `evolution_auto_sends` (default false), `evolution_config` (jsonb, zod
 `evolutionConfigSchema` in `@ab/shared`, no secret) and `evolution_sync` (the last push read back). Secrets (Vault,
 `wa_number:<id>:<name>`, shown as «محفوظ» only): `evolution_token` (the instance key), `evolution_cloud_token` (a
