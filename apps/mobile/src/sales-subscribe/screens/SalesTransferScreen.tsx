@@ -12,10 +12,10 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { chosenOpen, familyKey, openPackages, useSalesFamily } from '../lib/family';
-import { OpenPackagePicker } from '../components/OpenPackagePicker';
-import { TransferDone } from '../components/TransferDone';
-import { TransferForm } from '../components/TransferForm';
+import { chosenOpen, familyKey, openPackages, useSalesFamily } from '@/sales-subscribe/lib/family';
+import { OpenPackagePicker } from '@/sales-subscribe/components/OpenPackagePicker';
+import { TransferDone } from '@/sales-subscribe/components/TransferDone';
+import { TransferForm } from '@/sales-subscribe/components/TransferForm';
 
 /** The chat's number; the package (right after «احفظ الاشتراك»). */
 type Params = { phone?: string; subscriptionId?: string };

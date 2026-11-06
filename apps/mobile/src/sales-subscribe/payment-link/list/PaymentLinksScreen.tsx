@@ -6,9 +6,9 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { Note } from '@/more';
-import { STRIPE_FEATURE } from '../flag';
-import { useLinks } from '../link-api';
-import { useStripeOn } from '../use-stripe';
+import { STRIPE_FEATURE } from '@/sales-subscribe/payment-link/flag';
+import { useLinks } from '@/sales-subscribe/payment-link/link-api';
+import { useStripeOn } from '@/sales-subscribe/payment-link/use-stripe';
 import { PaymentLinkItem } from './PaymentLinkItem';
 
 function LinksList() {

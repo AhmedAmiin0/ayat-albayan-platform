@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { DashboardScreen } from './DashboardScreen';
-import { summary as mockSummary, work as mockWork } from '../shared/fixtures';
+import { summary as mockSummary, work as mockWork } from '@/ops/shared/fixtures';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

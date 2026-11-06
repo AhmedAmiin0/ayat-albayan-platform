@@ -3,7 +3,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { useSmall } from '../components/MessageMeta';
+import { useSmall } from '@/inbox/messages/components/MessageMeta';
 
 /** «PDF», white on the brand green: beside the name, and large where page 1 is not shown (WhatsApp's document glyph). */
 export function PdfBadge({ large = false }: { large?: boolean }) {

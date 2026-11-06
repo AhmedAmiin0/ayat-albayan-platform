@@ -136,6 +136,7 @@ export function ThreadScreen() {
                 thread={thread}
                 lessons={query.data.pages[0]?.lessons ?? []}
                 student={query.data.pages[0]?.people?.students[0]?.name ?? null}
+                fresh={query.isFetchedAfterMount && thread === null}
               />
             )}
           </KeyboardFrame>

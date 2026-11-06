@@ -4,7 +4,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { DETAIL, usersGet, YOUSEF } from '../shared/fixtures';
+import { DETAIL, usersGet, YOUSEF } from '@/users/shared/fixtures';
 import { UserDetailScreen } from './UserDetailScreen';
 
 const mockApiFetch = jest.fn();

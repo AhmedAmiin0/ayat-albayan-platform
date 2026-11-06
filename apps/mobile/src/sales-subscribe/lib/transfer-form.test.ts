@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { openSub, SUB } from '../testing/fixtures';
+import { openSub, SUB } from '@/sales-subscribe/testing/fixtures';
 import { checkTransfer, draftFor, type ReceiptChoice } from './transfer-form';
 
 const NOW = new Date('2026-10-12T09:00:00Z');

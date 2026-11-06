@@ -2,9 +2,9 @@ import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { leftToRight } from '../shared/physical-row.helpers';
-import { detail, inbound, thread } from '../shared/thread-fixtures';
-import { ThreadScreen } from '../screens/ThreadScreen';
+import { leftToRight } from '@/inbox/shared/physical-row.helpers';
+import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 // An English phone (LTR): the box on the left, the price tag and paperclip, the round button on the right.
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { commissionPage, earnings, myCommission } from '../testing/fixtures';
+import { commissionPage, earnings, myCommission } from '@/sales-money/testing/fixtures';
 import { MyMoneyScreen } from './MyMoneyScreen';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

@@ -2,7 +2,7 @@ import { formatPhone } from '@ab/shared';
 import { render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { myStudent } from '../testing/fixtures';
+import { myStudent } from '@/sales-money/testing/fixtures';
 import { MyStudentItem } from './MyStudentItem';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));

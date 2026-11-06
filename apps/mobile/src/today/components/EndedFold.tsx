@@ -5,7 +5,7 @@ import Svg, { Path } from 'react-native-svg';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import type { TodayLesson } from '../lib/today-lesson';
+import type { TodayLesson } from '@/today/lib/today-lesson';
 import { RowsCard } from './RowsCard';
 
 interface EndedFoldProps<L extends TodayLesson> {

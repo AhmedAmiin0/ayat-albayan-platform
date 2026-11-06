@@ -1,4 +1,4 @@
-import { APPROVED, PAID, PAYOUT } from '../shared/fixtures';
+import { APPROVED, PAID, PAYOUT } from '@/finance/shared/fixtures';
 import { dueOf, payBody, payoutActions } from './payout-actions';
 
 test('actions follow the state like the web page', () => {

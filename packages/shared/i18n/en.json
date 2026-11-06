@@ -3134,7 +3134,10 @@
       "open": "Open the chat",
       "hint": "Type the number with its country code, then send a template to start the chat",
       "firstTemplate": "To start the chat, send an approved template; WhatsApp allows no plain message before the family replies.",
-      "noAllowed": "You can't start a chat now: no template is available to you. Ask the admin to enable a template."
+      "noAllowed": "You can't start a chat now: no template is available to you. Ask the admin to enable a template.",
+      "next": "Next",
+      "checking": "Checking the number…",
+      "sending": "Sending…"
     },
     "playMedia": "Play {kind}",
     "pauseMedia": "Pause",

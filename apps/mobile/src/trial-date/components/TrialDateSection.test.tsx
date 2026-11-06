@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { profile } from '@/students/shared/test-data';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { historyOf, trialRow } from '../testing/fixtures';
+import { historyOf, trialRow } from '@/trial-date/testing/fixtures';
 import { TrialDateSection } from './TrialDateSection';
 
 // The admin student file: «موعد تجريبي جديد» + «مواعيد الحلقة التجريبية» (R-STU-05).

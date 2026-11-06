@@ -5,8 +5,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { lessonClock } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import type { JoinableLesson } from '../links/JoinClassroomButton';
-import { JoinClassroomButton } from '../links/JoinClassroomButton';
+import type { JoinableLesson } from '@/classroom/links/JoinClassroomButton';
+import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 
 const A = t.classroom.assistants;
 

@@ -3,9 +3,9 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { bubbleSide } from '../../../messages/hooks/bubble-side';
-import { clockAt } from '../../../shared/format';
-import { CallArrowIcon, PhoneIcon } from '../screen/call-icons';
+import { bubbleSide } from '@/inbox/messages/hooks/bubble-side';
+import { clockAt } from '@/inbox/shared/format';
+import { CallArrowIcon, PhoneIcon } from '@/inbox/thread/calls/screen/call-icons';
 import { callEntryText, callInk } from './call-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

@@ -2,8 +2,8 @@ import type { ThreadView } from '@ab/shared';
 import { screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { InboxScreen } from '../screens/InboxScreen';
-import { thread } from '../shared/thread-fixtures';
+import { InboxScreen } from '@/inbox/screens/InboxScreen';
+import { thread } from '@/inbox/shared/thread-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

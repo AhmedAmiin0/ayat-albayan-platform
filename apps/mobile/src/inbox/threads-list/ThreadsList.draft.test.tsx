@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { palette } from '@/theme';
-import { clearComposerDrafts } from '../composer/draft-store';
-import { ThreadScreen } from '../screens/ThreadScreen';
-import { detail, inbound, thread } from '../shared/thread-fixtures';
+import { clearComposerDrafts } from '@/inbox/composer/draft-store';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
+import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadsList } from './ThreadsList';
 
 // Review 2026-10-29 #4 / C3: a half-written reply survives leaving the chat and shows on its row.

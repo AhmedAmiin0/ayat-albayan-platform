@@ -3,12 +3,12 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 import { FlatList } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ChatActionsProvider } from '../../thread/components/ChatActionsProvider';
-import { ChatNotice } from '../../thread/components/ChatNotice';
+import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
+import { ChatNotice } from '@/inbox/thread/components/ChatNotice';
 import { MessageList } from './MessageList';
-import { cachedThread, detail, inbound, message, PHONE, thread } from '../../shared/thread-fixtures';
-import { JUMP_PAGES } from '../../thread/hooks/use-jump';
-import type { useThread } from '../../thread/hooks/use-thread';
+import { cachedThread, detail, inbound, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import { JUMP_PAGES } from '@/inbox/thread/hooks/use-jump';
+import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
 // A tap on a quote whose original is on a page not loaded yet: older pages load until it is there.
 jest.mock('@/core/lib/http/api', () => ({

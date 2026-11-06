@@ -5,11 +5,11 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 import type { AppTextNode } from '@/core/ui/primitives/AppText';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useValueSheet } from '../hooks/use-value-sheet';
+import { useValueSheet } from '@/ops/values/hooks/use-value-sheet';
 import { DescriptionEditor } from './DescriptionEditor';
-import { useSheetDescription, type SheetDescription } from '../hooks/use-description-editor';
+import { useSheetDescription, type SheetDescription } from '@/ops/values/hooks/use-description-editor';
 import { ValueSheetBody } from './ValueSheetBody';
-import { labelOf } from '../lib/value-text';
+import { labelOf } from '@/ops/values/lib/value-text';
 
 interface ValueSheetProps {
   valueKey: SettingKey;

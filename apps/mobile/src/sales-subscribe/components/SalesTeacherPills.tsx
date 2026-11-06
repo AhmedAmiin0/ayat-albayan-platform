@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { Note, Section } from '@/more';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { useSalesTeachers } from '../hooks/use-sales-teachers';
+import { useSalesTeachers } from '@/sales-subscribe/hooks/use-sales-teachers';
 
 /** Her pick kept per student; teacherChoice (@ab/client-core) gives the pill to mark and the body to send. */
 export function useTeacherPick(students: readonly SalesFamilyStudent[], studentId: string) {

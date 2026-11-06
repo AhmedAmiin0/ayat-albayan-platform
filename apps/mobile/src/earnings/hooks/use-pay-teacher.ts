@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { apiSend } from '@/core/lib/http/api';
 import { requestId } from '@/core/lib/http/request-id';
-import type { PayInput } from '../lib/pay-draft';
+import type { PayInput } from '@/earnings/lib/pay-draft';
 import { uploadTeacherReceipt } from './upload-receipt';
 
 /**

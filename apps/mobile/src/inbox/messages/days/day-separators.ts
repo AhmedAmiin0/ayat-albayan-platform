@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import type { ViewToken } from 'react-native';
-import { messageGap } from '../hooks/list-gap';
+import { messageGap } from '@/inbox/messages/hooks/list-gap';
 import { dayLabel, hasDayChip } from './day-label';
 import { CHIP_MARGIN, type Separator } from './top-band';
 

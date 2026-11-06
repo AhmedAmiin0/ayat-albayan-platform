@@ -16,7 +16,7 @@ import { paymentParams } from './filters';
 import { PaymentFilters } from './PaymentFilters';
 import { PaymentItem } from './PaymentItem';
 import { PaymentTotals } from './PaymentTotals';
-import { periodTotals } from '../shared/queries';
+import { periodTotals } from '@/money/shared/queries';
 
 const keyOf = (p: PaymentView) => p.id;
 // Keyed by the payment: its receipt viewers hold state (open, loading) that a recycled row must not carry over.

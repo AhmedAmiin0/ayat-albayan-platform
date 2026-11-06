@@ -10,7 +10,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
 jest.mock('@/core/lib/http/api', () => {
-  const f = jest.requireActual('../testing/fixtures');
+  const f = jest.requireActual('@/sales-subscribe/testing/fixtures');
   return { ...jest.requireActual('@/core/lib/http/api'), apiFetch: async () => f.familyOf(f.kid({ open: [f.openSub()] })) };
 });
 jest.mock('expo-router', () => ({

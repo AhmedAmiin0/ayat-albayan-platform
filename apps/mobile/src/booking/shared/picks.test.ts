@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { SUN_17, THU_18 } from '../testing/fixtures';
+import { SUN_17, THU_18 } from '@/booking/testing/fixtures';
 import { dayAtText, dayLine } from './picks';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;

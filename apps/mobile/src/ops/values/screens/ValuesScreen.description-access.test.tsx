@@ -2,10 +2,10 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { entriesAnswer, entryOf, type EntriesAnswer } from '../testing/entries-fixtures';
-import { groupLabel } from '../lib/value-groups';
-import { labelOf } from '../lib/value-text';
-import { READER, WRITER } from '../testing/values-fixtures';
+import { entriesAnswer, entryOf, type EntriesAnswer } from '@/ops/values/testing/entries-fixtures';
+import { groupLabel } from '@/ops/values/lib/value-groups';
+import { labelOf } from '@/ops/values/lib/value-text';
+import { READER, WRITER } from '@/ops/values/testing/values-fixtures';
 import { ValuesScreen } from './ValuesScreen';
 
 const mockApiFetch = jest.fn();

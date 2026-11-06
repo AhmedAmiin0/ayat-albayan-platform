@@ -4,9 +4,9 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { studentNames } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { lengthOf } from '../lib/edit-time-body';
-import { lengthText } from '../lib/edit-time-text';
-import type { EditableLesson, TimeEditMode } from '../lib/types';
+import { lengthOf } from '@/edit-time/lib/edit-time-body';
+import { lengthText } from '@/edit-time/lib/edit-time-text';
+import type { EditableLesson, TimeEditMode } from '@/edit-time/lib/types';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface EditTimeHeaderProps {

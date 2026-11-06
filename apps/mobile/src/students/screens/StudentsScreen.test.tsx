@@ -4,7 +4,7 @@ import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { StudentsScreen } from './StudentsScreen';
-import { listItem, page } from '../shared/test-data';
+import { listItem, page } from '@/students/shared/test-data';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

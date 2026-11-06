@@ -1,5 +1,5 @@
 import { catalogueViews, SETTING_DEFAULTS, type AcademySettings, type ActivityView, type NotificationsOverview, type ReportView } from '@ab/shared';
-import type { DashboardWork, Summary } from '../dashboard/dashboard-types';
+import type { DashboardWork, Summary } from '@/ops/dashboard/dashboard-types';
 
 export const summary: Summary = {
   active_students: 41,

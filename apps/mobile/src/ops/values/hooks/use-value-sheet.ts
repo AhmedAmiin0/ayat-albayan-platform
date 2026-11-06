@@ -2,8 +2,8 @@ import { SETTING_DEFAULTS, type SettingKey } from '@ab/shared';
 import { useState } from 'react';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { ascii } from '../../shared/ascii-digits';
-import { confirmOf, draftOf, parseDraft, sameValue, type Draft } from '../lib/value-draft';
+import { ascii } from '@/ops/shared/ascii-digits';
+import { confirmOf, draftOf, parseDraft, sameValue, type Draft } from '@/ops/values/lib/value-draft';
 import { useSaveValue } from './use-save-value';
 
 /** edit: the editor; confirm: «احفظ» asked its question; closing: closing would drop the edit. */

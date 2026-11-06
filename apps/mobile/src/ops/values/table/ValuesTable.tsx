@@ -5,9 +5,9 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { InsetGroup } from '@/core/ui/surface/inset';
-import { useSavingKeys } from '../hooks/use-save-value';
-import { editorOf } from '../lib/value-draft';
-import { labelOf, valueText } from '../lib/value-text';
+import { useSavingKeys } from '@/ops/values/hooks/use-save-value';
+import { editorOf } from '@/ops/values/lib/value-draft';
+import { labelOf, valueText } from '@/ops/values/lib/value-text';
 import { ValueRow } from './ValueRow';
 
 export interface ValuesTableProps {

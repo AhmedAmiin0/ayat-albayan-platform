@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import { MoneyCard } from '../components/MoneyCard';
-import { byCurrency, walletMoney } from '../lib/money-text';
+import { MoneyCard } from '@/sales-money/components/MoneyCard';
+import { byCurrency, walletMoney } from '@/sales-money/lib/money-text';
 
 const W = t.assistantPortal.wallet;
 

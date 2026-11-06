@@ -2,8 +2,8 @@ import type { ThreadView } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { selectedLine } from '../thread/hooks/forward-text';
-import { detail, message, thread } from '../shared/thread-fixtures';
+import { selectedLine } from '@/inbox/thread/hooks/forward-text';
+import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 
 // «إعادة توجيه» (owner 2026-10-25): the menu → a picker of up to five chats → POST /threads/forward.

@@ -4,7 +4,7 @@ import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { useSyncExternalStore } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { message, PHONE } from '../../shared/thread-fixtures';
+import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { VoiceNote } from './VoiceNote';
 
 // Shared by the VoiceNote tests: one mocked player per signed URL, the status set per test.

@@ -3,7 +3,7 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import { useState } from 'react';
 import { apiSend } from '@/core/lib/http/api';
 import { requestId } from '@/core/lib/http/request-id';
-import { familyKey, refreshFamily, withOpenPackage } from '../lib/family';
+import { familyKey, refreshFamily, withOpenPackage } from '@/sales-subscribe/lib/family';
 
 /** POST /sales/subscriptions/quote: the price she tells the family (no fx details). Keyed by its body. */
 export function useSalesQuote(studentId: string, pricing: SubscriptionPricing, bind: { phone?: string } = {}) {

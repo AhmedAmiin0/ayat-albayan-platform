@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import type { MakeupSource } from './makeup-draft';
-import { whenText } from '../shared/slots';
+import { whenText } from '@/booking/shared/slots';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** What the makeup is for, over every step: «للطالب يوسف» and the lesson he missed, with its time. */

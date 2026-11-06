@@ -1,6 +1,6 @@
 import { emptyContent } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { report } from '../shared/fixtures';
+import { report } from '@/ops/shared/fixtures';
 import { reportFields } from './report-fields';
 import { adminReportFields } from './report-v2-fields';
 

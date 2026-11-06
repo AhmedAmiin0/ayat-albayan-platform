@@ -15,16 +15,16 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { CoursePauseSection } from '../course-pause/CoursePauseSection';
+import { CoursePauseSection } from '@/students/course-pause/CoursePauseSection';
 import { CourseActionsSection } from '@/students/course-actions/CourseActionsSection';
 import { PeopleEditSection } from '@/students/people-edit/PeopleEditSection';
-import { BalanceCard } from '../profile/BalanceCard';
-import { GuardianCard } from '../profile/GuardianCard';
-import { RenewButton } from '../profile/RenewButton';
-import { SiblingsList } from '../profile/SiblingsList';
-import { StatusChanger } from '../profile/StatusChanger';
-import { StudentFacts } from '../profile/StudentFacts';
-import type { StudentProfile } from '../shared/types';
+import { BalanceCard } from '@/students/profile/BalanceCard';
+import { GuardianCard } from '@/students/profile/GuardianCard';
+import { RenewButton } from '@/students/profile/RenewButton';
+import { SiblingsList } from '@/students/profile/SiblingsList';
+import { StatusChanger } from '@/students/profile/StatusChanger';
+import { StudentFacts } from '@/students/profile/StudentFacts';
+import type { StudentProfile } from '@/students/shared/types';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/students'));
 

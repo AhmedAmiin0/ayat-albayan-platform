@@ -3,7 +3,7 @@ import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { pdfPageRetryable } from '@ab/client-core';
 import { ApiError, apiFetch } from '@/core/lib/http/api';
-import { threadPath } from '../../thread/hooks/thread-cache';
+import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 
 /** W6's answer: a signed URL of our own copy of the file, and its type. */
 export interface ThreadFile {

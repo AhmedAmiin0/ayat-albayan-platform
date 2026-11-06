@@ -6,8 +6,8 @@ import { appOpenUrl, STRIPE_FEATURE } from '@/core/lib/stripe-flag';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import type { BubbleActions } from '../hooks/bubble-actions';
-import { useSmall } from '../components/MessageMeta';
+import type { BubbleActions } from '@/inbox/messages/hooks/bubble-actions';
+import { useSmall } from '@/inbox/messages/components/MessageMeta';
 import { useHoldPress } from './use-hold-press';
 import { SearchMarks, useChatSearch } from '@/inbox/thread/search';
 

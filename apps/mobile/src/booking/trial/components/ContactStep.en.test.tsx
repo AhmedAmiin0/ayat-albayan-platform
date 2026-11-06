@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
 import { huda } from '@/inbox/shared/fixtures';
 import { ContactStep } from './ContactStep';
-import { draftFromLead } from '../lib/draft';
+import { draftFromLead } from '@/booking/trial/lib/draft';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

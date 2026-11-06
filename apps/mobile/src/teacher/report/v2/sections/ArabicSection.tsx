@@ -1,11 +1,11 @@
 import { ARABIC_SKILLS } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { ReportTextField } from '../../components/ReportTextField';
-import { gradeSkill, withArabic } from '../hooks/content-edit';
-import type { V2EntryState } from '../hooks/use-v2-entry';
-import { Card } from '../ui/Card';
-import { GradePills } from '../ui/GradePills';
+import { ReportTextField } from '@/teacher/report/components/ReportTextField';
+import { gradeSkill, withArabic } from '@/teacher/report/v2/hooks/content-edit';
+import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
+import { Card } from '@/teacher/report/v2/ui/Card';
+import { GradePills } from '@/teacher/report/v2/ui/GradePills';
 
 /** The Arabic lesson (attended): «موضوع الدرس», then the four skills, each graded. */
 export function ArabicSection({ s }: { s: V2EntryState }) {

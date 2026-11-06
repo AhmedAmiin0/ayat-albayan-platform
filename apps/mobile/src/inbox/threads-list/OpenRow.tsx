@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { shape, useTheme } from '@/theme';
-import { PillContents, type PillProps } from '../composer/pill/ComposerPill';
-import { RoundAction } from '../composer/pill/RoundAction';
-import { MicHold } from '../composer/voice/MicHold';
-import { RecordingBar } from '../composer/voice/RecordingBar';
-import type { VoiceUi } from '../composer/voice/use-voice';
-import { IDLE, roundMode } from '../composer/voice/voice-machine';
-import { VoiceNoteLine } from '../composer/voice/VoiceNoteLine';
-import { VoiceSlot } from '../composer/voice/VoiceSlot';
-import { voiceSupported } from '../composer/voice/voice-support';
+import { PillContents, type PillProps } from '@/inbox/composer/pill/ComposerPill';
+import { RoundAction } from '@/inbox/composer/pill/RoundAction';
+import { MicHold } from '@/inbox/composer/voice/MicHold';
+import { RecordingBar } from '@/inbox/composer/voice/RecordingBar';
+import type { VoiceUi } from '@/inbox/composer/voice/use-voice';
+import { IDLE, roundMode } from '@/inbox/composer/voice/voice-machine';
+import { VoiceNoteLine } from '@/inbox/composer/voice/VoiceNoteLine';
+import { VoiceSlot } from '@/inbox/composer/voice/VoiceSlot';
+import { voiceSupported } from '@/inbox/composer/voice/voice-support';
 
 interface OpenRowProps extends PillProps {
   /** A saved reply's file waits in its chip: «أرسل», never the microphone. */

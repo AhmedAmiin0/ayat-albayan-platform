@@ -2,9 +2,9 @@ import { screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { leftToRight } from '../shared/physical-row.helpers';
-import { detail, inbound, thread } from '../shared/thread-fixtures';
-import { ThreadScreen } from '../screens/ThreadScreen';
+import { leftToRight } from '@/inbox/shared/physical-row.helpers';
+import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 // The typing bar on an Arabic phone (jest.setup: RTL): the row is mirrored, the round button on the
 // physical left, the box on the right. Owner 2026-10-27: only the price tag and the paperclip stay in it.

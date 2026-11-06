@@ -1,8 +1,8 @@
 import type { Glyph, Tone } from '@ab/shared';
 import { View } from 'react-native';
 import { type Palette, shape, type, useTheme } from '@/theme';
-import { NuqtaGlyph } from '../primitives/NuqtaGlyph';
-import { AppText } from '../primitives/AppText';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /**
  * Foreground + soft background per tone (docs/07 §6). There is no neutral ink: it is ink-2. An unknown tone

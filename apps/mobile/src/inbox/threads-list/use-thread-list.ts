@@ -6,7 +6,7 @@ import { apiFetch, toQueryString } from '@/core/lib/http/api';
 import { nextPageParam, type Page } from '@/core/lib/query/paging';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
-import { useInboxLive, useLiveWatch } from '../thread/live';
+import { useInboxLive, useLiveWatch } from '@/inbox/thread/live';
 import { waitingForReply } from './chat-filter';
 
 const PAGE_SIZE = 25;
