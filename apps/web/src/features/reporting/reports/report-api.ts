@@ -1,8 +1,36 @@
-import type { DraftBody, ReportV2DraftBody, ReportV2SubmitBody, ReportView, SubmitBody } from '@ab/shared';
+import type {
+  DraftBody,
+  ReportAttachmentView,
+  ReportV2DraftBody,
+  ReportV2SubmitBody,
+  ReportView,
+  SignedDownload,
+  SubmitBody,
+} from '@ab/shared';
 import { createContext, use } from 'react';
-import { reportErrorText, saveDraft, saveDraftV2, submitReport, submitReportV2 } from './api';
+import {
+  attachmentUrl,
+  removeAttachment,
+  reportErrorText,
+  saveDraft,
+  saveDraftV2,
+  submitReport,
+  submitReportV2,
+  uploadAttachment,
+} from './api';
 
 type Call<B> = (input: { id: string; body: B }) => Promise<ReportView>;
+interface FileRef {
+  id: string;
+  attachmentId: string;
+}
+
+/** A report's attachments: signed Storage upload, then registered; remove; open (signed URL). */
+export interface AttachmentCalls {
+  upload: (input: { id: string; file: File }) => Promise<ReportAttachmentView>;
+  remove: (input: FileRef) => Promise<unknown>;
+  url: (input: FileRef) => Promise<SignedDownload>;
+}
 
 /**
  * The calls one report form makes: the signed-in routes (/reports/:id/…) by default, or the ones
@@ -15,8 +43,9 @@ export interface ReportApi {
   submitReportV2: Call<ReportV2SubmitBody>;
   /** A failed call in the form's words. */
   errorText: (error: unknown) => string;
-  /** Attachments need a session (signed Storage upload): hidden on the link. */
+  /** Whether the form shows «المرفقات» (the link too since 2026-11-06). */
   attachments: boolean;
+  files: AttachmentCalls;
 }
 
 const SESSION_REPORT_API: ReportApi = {
@@ -26,6 +55,7 @@ const SESSION_REPORT_API: ReportApi = {
   submitReportV2,
   errorText: reportErrorText,
   attachments: true,
+  files: { upload: uploadAttachment, remove: removeAttachment, url: attachmentUrl },
 };
 
 export const ReportApiContext = createContext<ReportApi>(SESSION_REPORT_API);

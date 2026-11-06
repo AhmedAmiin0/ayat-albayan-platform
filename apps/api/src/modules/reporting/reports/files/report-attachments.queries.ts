@@ -10,7 +10,8 @@ type NewAttachment = {
   storage_path: string;
   mime: string;
   size: number;
-  created_by: string;
+  /** null: the teacher wrote through their no-login link and has no account. */
+  created_by: string | null;
 };
 
 type PdfNameInput = { code: string; startsAt: Date; tz: string };

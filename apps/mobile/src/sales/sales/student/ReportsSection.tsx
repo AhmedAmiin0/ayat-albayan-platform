@@ -1,5 +1,6 @@
 import type { SalesStudentDetails } from '@ab/shared';
 import { useViewerTz } from '@/core/lib/clock';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
@@ -18,7 +19,8 @@ const pdfError = (e: unknown): string =>
 
 /**
  * «التقارير»: the student's sent reports exactly as the teacher's «سجل التقارير» lists them (date,
- * lesson number, grade, «تحميل PDF» once ready), read-only: a row opens nothing else.
+ * lesson number, grade, «تحميل PDF» once ready). A row opens the report read-only (owner
+ * 2026-11-06): the API shows it to the student's owning assistant only (404 for another one).
  */
 export function ReportsSection({ studentId, reports }: { studentId: string; reports: SalesStudentDetails['reports'] }) {
   const tz = useViewerTz();
@@ -37,6 +39,7 @@ export function ReportsSection({ studentId, reports }: { studentId: string; repo
             row={row}
             tz={tz}
             onPdf={() => void openStudentReportPdf(studentId, row.id).catch((e: unknown) => setError(pdfError(e)))}
+            onPress={() => router.push(`/sales/students/report/${row.id}`)}
           />
         ))}
       </InsetGroup>

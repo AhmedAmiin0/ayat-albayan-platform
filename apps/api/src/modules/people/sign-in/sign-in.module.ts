@@ -1,9 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
+import { REPORT_CODES } from '@/common/http/report-codes';
 import { loadEnv } from '@/config/env/env';
 import { SupabaseAuthGate } from './accounts/auth-gate.supabase';
 import { Provisioner } from './accounts/provision';
 import { SubjectsRepo } from './accounts/subjects.repo';
 import { CodeIssuer } from './codes/code-issuer';
+import { ReportCodesAdapter } from './codes/report-codes.adapter';
 import { SignInLimits } from './codes/code-limits';
 import { CodesRepo } from './codes/codes.repo';
 import { LIMIT_STORE } from './codes/limit-store';
@@ -22,6 +24,7 @@ import { SignInSettings } from './sign-in.settings';
  * forgot password for everyone. CodeSend comes from the global WhatsappModule, AuditService and
  * SettingsService from their global modules.
  */
+@Global()
 @Module({
   controllers: [SignInController],
   providers: [
@@ -34,6 +37,8 @@ import { SignInSettings } from './sign-in.settings';
     SignInLimits,
     Provisioner,
     SignInSettings,
+    ReportCodesAdapter,
+    { provide: REPORT_CODES, useExisting: ReportCodesAdapter },
     { provide: CODE_STORE, useClass: CodesRepo },
     { provide: LIMIT_STORE, useClass: DbLimitStore },
     { provide: SUBJECT_STORE, useClass: SubjectsRepo },
@@ -51,5 +56,7 @@ import { SignInSettings } from './sign-in.settings';
       },
     },
   ],
+  // Global: the report page's codes (owner 2026-11-06) through REPORT_CODES, no module import.
+  exports: [REPORT_CODES],
 })
 export class SignInModule {}

@@ -24,7 +24,8 @@ function setup(found = true, store = fakeSettings()) {
   );
   // The settings arrive by property injection (the constructor stays at three parameters).
   const feedback = { url: vi.fn(async () => 'https://api.example/r/Ab12Cd34Ef') };
-  Object.assign(publisher, { settings: new ReportPdfSettings(store), feedback });
+  const templates = { approved: vi.fn(async () => new Set<string>()) };
+  Object.assign(publisher, { settings: new ReportPdfSettings(store), feedback, templates });
   return { publisher, renderer, storage, source, feedback };
 }
 
@@ -47,10 +48,14 @@ describe('ReportPdfPublisher — render and store one report', () => {
       contentType: 'application/pdf',
     });
     expect(out.path).toBe('s1/l1.pdf');
-    expect(out.message.dedup_key).toBe('report_ready:r1');
-    expect(out.message.template_params.document.path).toBe('s1/l1.pdf');
-    // session_report_pdf's {{3}} the teacher and {{4}} the family's feedback link (shortened).
-    expect(out.message.template_params['4']).toBe('https://api.example/r/Ab12Cd34Ef');
+    // No link template approved: the family's report_ready (session_report_pdf) only.
+    expect(out.messages).toHaveLength(1);
+    expect(out.messages[0]).toMatchObject({
+      template_key: 'report_ready',
+      dedup_key: 'report_ready:r1',
+      // session_report_pdf's {{4}}: the family's feedback link (shortened).
+      template_params: { '4': 'https://api.example/r/Ab12Cd34Ef', document: { path: 's1/l1.pdf' } },
+    });
   });
 
   it('a report deleted since the claim is an error (the job marks it failed, a no-op)', async () => {

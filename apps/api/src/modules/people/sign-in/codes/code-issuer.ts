@@ -50,6 +50,11 @@ export class CodeIssuer {
     return this.send.available();
   }
 
+  /** The report page's codes (owner 2026-11-06): the pepper and the send, not the family flag. */
+  async sendable(): Promise<boolean> {
+    return Boolean(this.settings.config.pepper) && this.send.available();
+  }
+
   /**
    * false = not sent (unavailable, or the phone is over its limits). Never throws for a send
    * failure.

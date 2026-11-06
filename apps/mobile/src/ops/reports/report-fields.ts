@@ -1,5 +1,8 @@
-import { REPORT_RUBRICS, type ReportView } from '@ab/shared';
+import { REPORT_RUBRICS, type ReportPageReport } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
+
+/** What the fields read: a ReportView (GET /reports/:id) or the live page's saved report. */
+export type FieldsReport = Omit<ReportPageReport, 'version' | 'submitted_at' | 'edited_at'>;
 
 export interface ReportField {
   /** Unique: the rubric repeats the words «الحفظ الجديد» and «المراجعة». */
@@ -10,9 +13,9 @@ export interface ReportField {
 }
 
 /** The report's text in the form's order and words (the web's form, read-only); blank stays visible. */
-export function reportFields(r: ReportView): ReportField[] {
+export function reportFields(r: FieldsReport): ReportField[] {
   const m = t.reports;
-  const grade = (g: ReportView['grade_overall']) => (g ? t.enums.grade[g] : null);
+  const grade = (g: FieldsReport['grade_overall']) => (g ? t.enums.grade[g] : null);
   return [
     {
       key: 'attendance',

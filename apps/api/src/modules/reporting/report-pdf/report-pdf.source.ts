@@ -7,7 +7,7 @@ import { loadFamilyExtras, type FamilyExtras } from './v2/family-source';
 const REPORT_COLUMNS =
   'id, lesson_id, student_id, teacher_id, attendance, program, recited, new_memorization, revision, theory, ' +
   'grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, ' +
-  'grade_commitment, grade_overall, notes, homework, next_plan, version, form_version, content, submitted_at';
+  'grade_commitment, grade_overall, notes, homework, next_plan, version, form_version, content, submitted_at, public_id';
 
 export interface ReportRow {
   id: string;
@@ -35,6 +35,8 @@ export interface ReportRow {
   form_version: number;
   content: unknown;
   submitted_at: string | null;
+  /** The live page's opaque id (/report/<public_id>), the link templates' button. */
+  public_id: string;
 }
 
 /** Everything one report PDF and its message need, read with the service role. */
@@ -44,7 +46,8 @@ export interface ReportSource {
   lesson: { starts_at: string; ends_at: string; trial?: boolean };
   student: { name: string; code: string; program: Program };
   guardian: { id: string; phone_e164: string; tz: string };
-  teacher: { display_name_ar: string };
+  /** phone_e164 / tz: report_ready_teacher (no phone: none sent). */
+  teacher: { display_name_ar: string; phone_e164: string | null; tz: string };
   /** v_lesson_sequence.seq: set once the lesson is completed. */
   seq: number | null;
   /** Completed lessons before this one, read only when seq is null (lesson number fallback). */
@@ -83,7 +86,7 @@ export class ReportPdfSource {
         .select('name, code, program, guardians(id, phone_e164, tz)')
         .eq('id', report.student_id)
         .maybeSingle(),
-      this.db.from('teachers').select('display_name_ar').eq('id', report.teacher_id).maybeSingle(),
+      this.db.from('teachers').select('display_name_ar, phone_e164, tz').eq('id', report.teacher_id).maybeSingle(),
       this.db.from('v_lesson_sequence').select('seq').match(pair).maybeSingle(),
       this.db.from('v_package_lessons').select('n').match(pair).maybeSingle(),
       // An unused cancel holds no slot; a stopped one holds what it used (v_package_lessons, 991).
