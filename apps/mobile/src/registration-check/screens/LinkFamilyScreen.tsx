@@ -1,5 +1,6 @@
 import { formatPhone, type RegistrationMatch } from '@ab/shared';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { usePermissions } from '@/core/auth';
@@ -59,7 +60,7 @@ export function LinkFamilyScreen() {
   const [picked, setPicked] = useState<RegistrationMatch | null>(null);
   const check = useRegistrationCheck(search);
   const link = useLinkFamily(leadId);
-  const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
+  const back = () => backWithin(inTree(base, '/inbox'));
   const find = (q: string) => {
     setQuery(q);
     const next = searchOf('name', q);

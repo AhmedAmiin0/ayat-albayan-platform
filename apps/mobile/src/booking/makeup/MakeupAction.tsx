@@ -1,5 +1,5 @@
 import { makeupOffer, type LessonView } from '@ab/shared';
-import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePublicConfig } from '@/core/lib/query/public-config';
@@ -36,7 +36,7 @@ export function MakeupAction({ lesson, onLeave }: { lesson: LessonView; onLeave?
             onPress={() => {
               // From inside the lesson details sheet: close it first, or the wizard opens under it.
               onLeave?.();
-              router.push({
+              pushInTab({
                 pathname: '/students/makeup/[lessonId]',
                 params: makeupParams(lesson, student),
               });

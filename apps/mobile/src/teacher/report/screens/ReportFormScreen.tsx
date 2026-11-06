@@ -1,4 +1,5 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useRef, type ComponentProps } from 'react';
 import { ScrollView, View } from 'react-native';
 import { clockAt } from '@/inbox/shared/format';
@@ -20,7 +21,7 @@ function EntryForm(p: ComponentProps<typeof ReportEntryCard>) {
   return p.entry.report.form_version === 2 ? <ReportEntryCardV2 form={p.form} entry={p.entry} tz={p.tz} /> : <ReportEntryCard {...p} />;
 }
 
-const back = () => (router.canGoBack() ? router.back() : router.replace('/teacher/reports'));
+const back = () => backWithin('/teacher/reports');
 
 /**
  * «تقرير الحلقة» on the phone (R-REP-01/02, R-MOB-02): GET /lessons/:id/report-form, one card per

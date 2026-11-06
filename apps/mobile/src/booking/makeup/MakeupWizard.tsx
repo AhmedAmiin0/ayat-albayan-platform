@@ -1,6 +1,6 @@
 import { teacherName } from '@ab/shared';
 import type { Gender, Program } from '@ab/shared';
-import { router } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { ScrollView, View } from 'react-native';
@@ -48,7 +48,7 @@ export function MakeupWizard({ source }: { source: MakeupSource }) {
     setStep(next);
   };
   const onward = () => go(steps[at + 1] ?? 'confirm');
-  const leave = () => (router.canGoBack() ? router.back() : router.replace(toSchedule ? '/schedule' : '/more'));
+  const leave = () => backWithin(toSchedule ? '/schedule' : '/more');
   const back = () => (book.isSuccess || at === 0 ? leave() : go(steps[at - 1] ?? 'teacher'));
   const position = t.booking.stepOf
     .replace('{n}', String(at + 1))

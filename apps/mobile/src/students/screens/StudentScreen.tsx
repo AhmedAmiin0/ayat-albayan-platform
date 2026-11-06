@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { ScrollView } from 'react-native';
 import { AssistantsSection } from '@/classroom/assistants/AssistantsSection';
 import { ApiError, apiFetch } from '@/core/lib/http/api';
@@ -26,7 +27,7 @@ import { StatusChanger } from '@/students/profile/StatusChanger';
 import { StudentFacts } from '@/students/profile/StudentFacts';
 import type { StudentProfile } from '@/students/shared/types';
 
-const back = () => (router.canGoBack() ? router.back() : router.replace('/students'));
+const back = () => backWithin('/students');
 
 /**
  * Student quick view (R-MOB-02) on GET /students/:id. The status changes here, and a payment is

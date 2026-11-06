@@ -1,5 +1,6 @@
 import { formatPhone } from '@ab/shared';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { usePermissions } from '@/core/auth/use-permissions';
@@ -31,7 +32,7 @@ export function RegistrationCheckScreen() {
   const [search, setSearch] = useState<CheckSearch | null>('search' in first ? first.search : null);
   const [invalid, setInvalid] = useState<string>();
   const check = useRegistrationCheck(search);
-  const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
+  const back = () => backWithin(inTree(base, '/inbox'));
 
   const submit = () => {
     const next = searchOf(by, text[by]);

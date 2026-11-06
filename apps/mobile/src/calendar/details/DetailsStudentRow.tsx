@@ -1,5 +1,5 @@
 import { subscriptionStatusStyle, type Glyph, type Tone } from '@ab/shared';
-import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { Pressable, View } from 'react-native';
 import { useNow } from '@/core/lib/time/use-now';
 import { useStudentHref, useTreeBase } from '@/core/nav/tree-base';
@@ -61,7 +61,7 @@ export function DetailsStudentRow({ lesson, student, role, onLeave, here = false
   const href = here ? null : studentHref(role, student, base);
   const go = (to: string) => {
     onLeave();
-    router.push(inStack(to));
+    pushInTab(inStack(to));
   };
   // The unpaid flag is the admin's (no teacher screen shows it today).
   const unpaid = role === 'admin' && student.unpaid === true;
