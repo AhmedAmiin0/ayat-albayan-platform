@@ -29,7 +29,7 @@ interface SubmitDeps {
  * call; the row's line must be configured (503 not_configured). A document header (report_ready) first
  * uploads the sample PDF for Meta's reviewer: that needs the line's app id (409 needs_app_id without it;
  * 409 needs_meta_driver on a kapso line), both naming the row's line. A rejected row is edited in place
- * by the driver (Kapso: hsm_id). A crm line's document row: 409 crm_managed before anything.else.
+ * by the driver (Kapso: hsm_id). A crm line's document row: 409 crm_managed before anything else.
  */
 export async function submitTemplate(deps: SubmitDeps, key: string, actorId: string): Promise<TemplateView> {
   requireSync();
