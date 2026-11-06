@@ -52,11 +52,11 @@ export class ExternalStore {
     const { msg, phone } = read;
     if ((await this.queries.existing([msg.waMessageId])).size > 0) return 'known';
     const numberId = from.numberId ?? (from.phoneNumberId ? await this.webhook.numberIdFor(from.phoneNumberId) : null);
-    // Every external path (echo, Kapso's status, the catch-up job) first tries the «أرسل عبر
-    // واتساب» row it confirms; a row the sender claimed is never attached, so this runs first.
+    // Never while our own send to the phone is unrecorded: its status may be this very message
+    // (the catch-up retries). Then every external path tries the «أرسل عبر واتساب» row first.
+    if (await this.queries.inFlight(phone)) return 'skipped';
     const origin = { line: from.line, numberId };
     if (await this.manual.attach({ msg, phone, from: origin, event })) return this.attached(phone, msg.at);
-    if (await this.queries.inFlight(phone)) return 'skipped';
     const who = await this.webhook.identify(phone);
     const at = orderedAt(msg.at, await this.webhook.latestInSecond(phone, msg.at));
     const row = externalRow({ msg, phone, who, from: { line: from.line, numberId }, at, ...(event ? { event } : {}) });

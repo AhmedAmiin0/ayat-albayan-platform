@@ -15,7 +15,7 @@ describe('ManualEcho.attach', () => {
   });
 
   it('a window that just ended (no echo in time): still attached within the grace', async () => {
-    const rows = [row({ app_send_until: '2026-11-06T10:00:00.000Z' })];
+    const rows = [row({ app_send_until: '2026-11-06T09:50:00.000Z' })];
     await expect(attachOf(rows).svc.attach(input())).resolves.toBe(true);
   });
 
@@ -29,7 +29,7 @@ describe('ManualEcho.attach', () => {
       row({ id: 'text', body: 'نص آخر' }),
       row({ id: 'phone', phone: '+966500000002' }),
       row({ id: 'number', number_id: 'num-2' }),
-      row({ id: 'old', app_send_until: '2026-11-06T09:59:59.000Z' }),
+      row({ id: 'old', app_send_until: '2026-11-06T09:49:59.000Z' }),
       row({ id: 'untapped', app_send_until: null }),
       row({ id: 'job', staff: false }),
     ];

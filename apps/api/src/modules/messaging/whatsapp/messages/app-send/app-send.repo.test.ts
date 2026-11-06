@@ -19,6 +19,7 @@ describe('AppSendRepo.start', () => {
     expect(f).toContainEqual(['eq', 'error_code', 'awaiting_reply']);
     expect(f).toContainEqual(['eq', 'direction', 'outbound']);
     expect(f).toContainEqual(['not', 'created_by', 'is', null]);
+    expect(f).toContainEqual(['is', 'wa_message_id', null]);
   });
 
   it('moved meanwhile: null', async () => {

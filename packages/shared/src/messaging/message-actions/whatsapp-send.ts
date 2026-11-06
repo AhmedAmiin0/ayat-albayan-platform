@@ -41,15 +41,21 @@ export function stoppedByWindow(m: WindowRow): boolean {
 
 type SendRow = Pick<
   MessageView,
-  'direction' | 'status' | 'error_code' | 'body' | 'template_key' | 'media_mime'
+  'direction' | 'status' | 'error_code' | 'body' | 'template_key' | 'media_mime' | 'replyable'
 >;
 
 const plainText = (m: SendRow): boolean =>
   Boolean(m.body?.trim()) && m.template_key === null && m.media_mime === null;
 
+/**
+ * A row WhatsApp accepted and then refused (131047 by status) keeps its wamid: the app's echo
+ * could never attach to it (a wamid is never overwritten), so it has no button (review 2026-11-06).
+ */
+const noWamid = (m: SendRow): boolean => m.replyable !== true;
+
 /** «أرسل عبر واتساب» shows: our text (no template, no file, v1) stopped by the 24 h window. */
 export function canSendViaWhatsApp(m: SendRow): boolean {
-  return m.direction === 'outbound' && plainText(m) && stoppedByWindow(m);
+  return m.direction === 'outbound' && plainText(m) && noWamid(m) && stoppedByWindow(m);
 }
 
 /**
@@ -60,8 +66,12 @@ export const REOPEN_NOT_NEEDED = 'reopen_not_needed';
 
 /** How long one tap keeps the platform from sending the row (app_send_until = now + this). */
 export const APP_SEND_MS = 10 * 60_000;
-/** An echo still attaches this long after the window passed (15 min after the tap in all). */
-export const APP_SEND_GRACE_MS = 5 * 60_000;
+/**
+ * After the window passed the platform still waits this long before it may send the row, and a
+ * message (echo, status, catch-up every 10 min) still attaches within it: whatever confirms the
+ * app send lands before the platform could send it too (review 2026-11-06).
+ */
+export const APP_SEND_GRACE_MS = 15 * 60_000;
 
 /** «جارٍ الإرسال من واتساب…»: the tap's window is still open at `now`. */
 export function appSendPending(m: Pick<MessageView, 'app_send_until'>, now: Date): boolean {

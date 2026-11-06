@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { LessonStatus, WaLine } from '@ab/shared';
+import { APP_SEND_GRACE_MS, type LessonStatus, type WaLine } from '@ab/shared';
 import type { Db } from '@/common/db/db.module';
 import type { StaleLead } from './send-stale';
 
@@ -64,8 +64,12 @@ export async function anyDue(db: Db, input: { now: Date; allowed: readonly strin
 }
 
 /**
- * PostgREST filter: no «أرسل عبر واتساب» pending at `now` (docs/19): app_send_until unset or
- * passed. The sender's read and claim and the held-text release all carry it.
+ * PostgREST filter: no «أرسل عبر واتساب» to wait for at `now` (docs/19): app_send_until unset, or
+ * passed more than APP_SEND_GRACE_MS ago, so a late echo / status / catch-up of the app's message
+ * attaches before the platform may send the row. The sender's read and claim and the held-text
+ * release all carry it.
  */
-export const notAppSending = (now: Date): string =>
-  `app_send_until.is.null,app_send_until.lte.${now.toISOString()}`;
+export const notAppSending = (now: Date): string => {
+  const settled = new Date(now.getTime() - APP_SEND_GRACE_MS).toISOString();
+  return `app_send_until.is.null,app_send_until.lte.${settled}`;
+};

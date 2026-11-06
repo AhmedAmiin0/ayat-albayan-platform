@@ -13,6 +13,7 @@ export type AppSendRow = Pick<
   | 'media_path'
   | 'created_by'
   | 'line'
+  | 'wa_message_id'
 >;
 
 /** Written by staff in the inbox (the API stamps created_by), never a job or history row. */
@@ -23,8 +24,10 @@ const textOnly = (r: AppSendRow): boolean => r.media_path === null && r.media_mi
 
 /**
  * «أرسل عبر واتساب» may start on this row: a staff text, held after the window (awaiting_reply)
- * or failed for a window reason (canSendViaWhatsApp), on the chat line (never the calls number).
+ * or failed for a window reason (canSendViaWhatsApp), on the chat line (never the calls number),
+ * with no wamid: WhatsApp's echo is never attached over one, so such a row would be sent twice.
  */
 export function appSendable(r: AppSendRow): boolean {
-  return byStaff(r) && textOnly(r) && r.line !== 'calls' && canSendViaWhatsApp(r);
+  const view = { ...r, replyable: r.wa_message_id !== null };
+  return byStaff(r) && textOnly(r) && r.line !== 'calls' && canSendViaWhatsApp(view);
 }

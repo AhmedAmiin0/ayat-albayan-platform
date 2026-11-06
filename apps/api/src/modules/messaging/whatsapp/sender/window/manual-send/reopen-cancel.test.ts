@@ -65,6 +65,13 @@ describe('ReopenCancel.dropLost (a hold that missed after its reopen was queued)
     expect(repo.cancelQueued).not.toHaveBeenCalled();
   });
 
+  it('race: a text queued between the read and the cancel gets that reopen back', async () => {
+    const { repo, svc } = setup();
+    repo.othersPending.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+    await expect(svc.dropLost(PHONE, KEY)).resolves.toBe('kept');
+    expect(repo.restore).toHaveBeenCalledWith(['r1']);
+  });
+
   it('never throws', async () => {
     const { repo, svc } = setup();
     repo.othersPending.mockRejectedValue(new Error('db down'));

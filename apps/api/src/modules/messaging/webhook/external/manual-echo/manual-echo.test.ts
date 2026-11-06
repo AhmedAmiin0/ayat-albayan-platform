@@ -20,10 +20,10 @@ describe('app send attach rules', () => {
     expect(foldText('  a \n\n b\tc ')).toBe('a b c');
   });
 
-  it('the span: a window that ended up to 5 min before, or opened up to 5 min after', () => {
+  it('the span: a window that ended up to 15 min before, or opened up to 15 min after', () => {
     expect(appSendSpan(SENT_AT)).toEqual({
-      since: new Date('2026-11-06T10:00:00Z'),
-      until: new Date('2026-11-06T10:20:00Z'),
+      since: new Date('2026-11-06T09:50:00Z'),
+      until: new Date('2026-11-06T10:30:00Z'),
     });
   });
 

@@ -40,7 +40,13 @@ describe('ExternalStore: a «أرسل عبر واتساب» text on every extern
     );
     expect(s.stored).toHaveLength(0);
     expect(s.ext.markAnsweredRead).toHaveBeenCalled();
-    expect(s.ext.inFlight).not.toHaveBeenCalled();
+  });
+
+  it('our own send to the phone is unrecorded: skipped, never attached (it may be ours)', async () => {
+    const s = setup();
+    s.ext.inFlight.mockResolvedValue(true);
+    await expect(s.store.store({ message: text(), from, event: delivered })).resolves.toBe('skipped');
+    expect(s.manual.attach).not.toHaveBeenCalled();
   });
 
   it('the status event reaches the attach (its status and time)', async () => {

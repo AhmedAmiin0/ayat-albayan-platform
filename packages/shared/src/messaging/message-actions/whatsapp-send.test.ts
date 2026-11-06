@@ -51,6 +51,13 @@ describe('canSendViaWhatsApp: only a staff text the 24 h window stopped', () => 
     expect(canSendViaWhatsApp({ ...text, direction: 'inbound' })).toBe(false);
   });
 
+  it('a row with a wamid (WhatsApp accepted it, then 131047): not shown, no echo could attach', () => {
+    expect(canSendViaWhatsApp({ ...text, status: 'failed', error_code: '131047', replyable: true })).toBe(
+      false,
+    );
+    expect(canSendViaWhatsApp({ ...text, replyable: false })).toBe(true);
+  });
+
   it('sent, delivered or already sent by hand: not shown', () => {
     for (const status of ['sent', 'delivered', 'read', 'sent_manually'] as const) {
       expect(stoppedByWindow({ status, error_code: 'awaiting_reply' })).toBe(false);
@@ -67,9 +74,9 @@ describe('appSendPending: the tap keeps the platform off the row until app_send_
     expect(appSendPending({}, now)).toBe(false);
   });
 
-  it('one tap is 10 minutes; an echo still attaches 5 minutes after', () => {
+  it('one tap is 10 minutes; the platform waits, and a message attaches, 15 more', () => {
     expect(APP_SEND_MS).toBe(600_000);
-    expect(APP_SEND_GRACE_MS).toBe(300_000);
+    expect(APP_SEND_GRACE_MS).toBe(900_000);
   });
 });
 

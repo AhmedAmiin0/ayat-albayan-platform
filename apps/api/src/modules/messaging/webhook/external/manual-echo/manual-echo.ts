@@ -6,7 +6,7 @@ import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 // the text from the WhatsApp Business app. The message comes back on any external path (the echo,
 // Kapso's status of an unknown wamid, the catch-up job): pure rules for which row it confirms.
 // Same phone (the read), same line / number, the same text after folding whitespace, a window set
-// within APP_SEND_MS + APP_SEND_GRACE_MS of the message, and no wamid on the row yet.
+// around the message (appSendSpan), and no wamid on the row yet.
 
 /** A row the tap opened a window on, as the attach reads it. */
 export type AppSendRow = Pick<
@@ -47,7 +47,7 @@ export function appSendMatches(
 
 /**
  * The windows a message sent at `at` may answer: one still open, or one that ended at most
- * APP_SEND_GRACE_MS before it (15 min after the tap); a tap no later than the grace after it.
+ * APP_SEND_GRACE_MS before it (the platform waits as long); a tap no later than that after it.
  */
 export function appSendSpan(at: Date): { since: Date; until: Date } {
   return {

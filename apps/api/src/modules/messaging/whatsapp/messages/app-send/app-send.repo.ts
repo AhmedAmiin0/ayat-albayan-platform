@@ -32,7 +32,7 @@ export class AppSendRepo {
 
   /**
    * app_send_until = until, compare-and-set on the status and error_code the row was read with
-   * (still held or failed for the window, never claimed by the sender) and no wamid change. Only
+   * (still held or failed for the window, never claimed by the sender) and still no wamid. Only
    * that column moves: with no echo the row is as it was once the window passes. null = moved.
    */
   async start(w: AppSendWrite): Promise<ThreadMessageRow | null> {
@@ -44,6 +44,7 @@ export class AppSendRepo {
       .eq('status', w.status)
       .eq('error_code', w.errorCode)
       .not('created_by', 'is', null)
+      .is('wa_message_id', null)
       .select(MESSAGE_SELECT)
       .maybeSingle();
     if (error) throw fail('app send start', error.message);

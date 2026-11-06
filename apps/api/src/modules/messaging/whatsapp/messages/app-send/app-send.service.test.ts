@@ -48,6 +48,7 @@ describe('appSendable: only a staff text the window stopped', () => {
     ['failed for another reason', { status: 'failed', error_code: 'network' }],
     ['the calls number', { line: 'calls' }],
     ['inbound', { direction: 'inbound' }],
+    ['a wamid (131047 after WhatsApp took it)', { status: 'failed', error_code: '131047', wa_message_id: 'wamid.X' }],
   ])('%s: refused', (_name, over) => {
     expect(appSendable(staffText(over))).toBe(false);
   });

@@ -14,7 +14,7 @@ describe('WindowRepo.waiting — a pending app send is not read', () => {
     const { db, calls } = fakeDb({ messages: [{ data: [] }] });
     await new WindowRepo(db).waiting(null, NOW);
     const ors = calls.filter((c) => c.method === 'or').map((c) => c.args[0]);
-    expect(ors).toEqual(['app_send_until.is.null,app_send_until.lte.2026-11-06T10:00:00.000Z']);
+    expect(ors).toEqual(['app_send_until.is.null,app_send_until.lte.2026-11-06T09:45:00.000Z']);
   });
 });
 

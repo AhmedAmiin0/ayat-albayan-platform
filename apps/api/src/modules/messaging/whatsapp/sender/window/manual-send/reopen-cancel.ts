@@ -37,8 +37,10 @@ export class ReopenCancel {
    */
   async dropLost(phone: string, key: string): Promise<CancelOutcome> {
     return this.safely(phone, async () => {
-      if (await this.repo.othersPending(phone, null)) return 'kept';
-      return { cancelled: (await this.repo.cancelQueued(phone, key)).length };
+      const pending = () => this.repo.othersPending(phone, null);
+      if (await pending()) return 'kept';
+      const ids = await this.repo.cancelQueued(phone, key);
+      return ids.length > 0 && (await pending()) ? this.restore(ids) : { cancelled: ids.length };
     });
   }
 
