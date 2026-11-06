@@ -3,7 +3,7 @@ import type { WhatsappEnv } from '@/config/env/env';
 // What each driver can do (docs/19), read by capability instead of by driver name: the 24 h rule
 // (the #629 hold, the reopen template, Kapso's reopen), reactions, and a WABA template list.
 
-export interface DriverCaps {
+interface DriverCaps {
   /** WhatsApp's 24 h customer-service window applies: free text only after the family wrote. */
   window24h: boolean;
   /** The driver can send a message reaction. */

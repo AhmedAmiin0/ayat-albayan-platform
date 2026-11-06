@@ -8,7 +8,7 @@ interface Last {
   at: number;
 }
 
-export interface PacerClock {
+interface PacerClock {
   now: () => number;
   sleep: (ms: number) => Promise<void>;
 }

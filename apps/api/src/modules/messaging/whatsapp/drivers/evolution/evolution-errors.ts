@@ -68,7 +68,7 @@ const RULES: readonly { test: (s: Said) => boolean; info: Info }[] = [
 ];
 
 /** Evolution's non-2xx answer → WaError. Never the URL, a header or the body sent. */
-export function evolutionError(f: HttpFailure): WaError {
+function evolutionError(f: HttpFailure): WaError {
   const s = saidOf(f);
   const info = RULES.find((r) => r.test(s))?.info ?? {};
   const message = `Evolution HTTP ${s.status}${s.words ? `: ${s.words}` : ''}`;

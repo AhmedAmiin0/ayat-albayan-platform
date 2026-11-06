@@ -17,7 +17,7 @@ import { templateAsText } from './evolution-template-text';
 // instance. Baileys (WhatsApp Web): no 24 h window and no templates (a template goes as text),
 // paced per number, automatic sends off unless the admin allows them. Cloud: Meta's own rules.
 
-export interface EvolutionClientOpts {
+interface EvolutionClientOpts {
   fetch?: FetchLike;
   timeoutMs?: number;
   allowed?: readonly string[] | null;
@@ -27,7 +27,7 @@ export interface EvolutionClientOpts {
 const DEFAULT_TIMEOUT_MS = 20_000;
 
 /** What Evolution cannot do from here: the template list, submit, samples (and cloud media). */
-export const evolutionUnsupported = (what: string): WaError =>
+const evolutionUnsupported = (what: string): WaError =>
   new WaError(`${what} is not supported by the Evolution driver`, {
     code: null, status: 0, unsupported: 'evolution',
   });

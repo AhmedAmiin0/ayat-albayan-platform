@@ -30,7 +30,7 @@ async function stateOf(call: InstanceCall): Promise<{ state: string | null; erro
   }
 }
 
-export async function evolutionLineCheck(input: EvolutionCheckInput): Promise<LineCheckView> {
+async function evolutionLineCheck(input: EvolutionCheckInput): Promise<LineCheckView> {
   const { state, error } = await stateOf(input.call);
   return {
     line: input.line,

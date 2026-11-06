@@ -33,7 +33,9 @@ describe('migration 380: the bell and browser push', () => {
   it('integration_secret_key_ok lists the shared secret keys of its day (Kapso came in 450, Google in 20261022000610, the CRM in 640, the TURN password in 740)', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(bell)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
-    expect(listed.sort()).toEqual(INTEGRATION_SECRET_KEYS.filter((k) => !k.startsWith('KAPSO_') && !k.startsWith('GOOGLE_') && !k.startsWith('WACRM_') && !k.startsWith('CALLS_') && !k.startsWith('STRIPE_') && !k.startsWith('GIPHY_') && !k.startsWith('EVOLUTION_')).sort());
+    const later = ['KAPSO_', 'GOOGLE_', 'WACRM_', 'CALLS_', 'STRIPE_', 'GIPHY_', 'EVOLUTION_'];
+    const ofItsDay = INTEGRATION_SECRET_KEYS.filter((k) => !later.some((p) => k.startsWith(p)));
+    expect(listed.sort()).toEqual(ofItsDay.sort());
   });
 
   it('grants notifications.push to the teacher, assistant and sales system roles', () => {

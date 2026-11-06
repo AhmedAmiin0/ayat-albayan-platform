@@ -487,3 +487,115 @@ is the only one.
 retry those rows. 4) **Only once the old CRM no
 longer needs to show its chat history**, in the old CRM's Supabase dashboard: Storage → `chat-media` → make the
 bucket private. We never change the old CRM or its storage settings: it is live and uses those links.
+
+## Evolution driver (owner 2026-11-06: «add Evolution API as a WhatsApp driver»)
+
+A fourth driver, `evolution`. A **number** (module mode, «الأرقام») sends through a self-hosted
+[Evolution API](https://github.com/evolution-foundation/evolution-api) instance (Apache-2.0, REST + webhooks).
+It is meant for a **separate secondary number**: Evolution's Baileys mode is WhatsApp Web, so it has **no 24 h
+window and no templates**, but it carries a **ban risk**. Evolution can also run Meta's Cloud API (`WHATSAPP-BUSINESS`),
+where Meta's rules apply unchanged. **Default off.** No number or line switches on merge. The legacy per-line selects
+(`WA_PROVIDER`, `WA_CHAT_PROVIDER` in «التكاملات») never offer it (`WA_LINE_PROVIDERS`). An Evolution line exists only
+as a role's default number in module mode (`env.evolution.ts` `evolutionLine`).
+
+**Read from Evolution's source at commit `fa09d37892cdbb1d65a250155d293d92230c5b30` (v2.3.7, 2026-05-06).** The driver
+relies on these points only:
+
+| What | Evolution v2 | Where we use it |
+| --- | --- | --- |
+| Auth | header `apikey`: the global `AUTHENTICATION_API_KEY`, or the instance's own `token` on any `/…/:instanceName` route (`auth.guard.ts`) | every send uses the **instance token**; «افحص الاتصال» / QR fall back to the global key when the number has no token yet |
+| Errors | `{status, error, response:{message}}` (`main.ts`); not on WhatsApp = 400 with `message: [{exists:false, jid}]`; unknown instance = 404 | `evolution-errors.ts` (table below) |
+| Text | `POST /message/sendText/{instance}` `{number, text, quoted?:{key:{id}}}` | `sendText`; a reply quotes by message id (Evolution looks the id up in its own store; without it the text goes unquoted) |
+| Media | `POST /message/sendMedia/{instance}` `{number, mediatype: image\|video\|document, media: <url>, caption?, fileName?}` | `sendDocument` (by our 7-day signed link; a sticker goes as an image) |
+| Voice | `POST /message/sendWhatsAppAudio/{instance}` `{number, audio: <url>}` (re-encoded to ogg/opus, `ptt`) | `sendDocument` with kind `audio` |
+| Template (Cloud only) | `POST /message/sendTemplate/{instance}` `{number, name, language, components}` (Meta's components) | `sendTemplate` on a Cloud instance |
+| Send answer | the stored message: `{key:{id, remoteJid, fromMe}, status, …}`; `key.id` = WhatsApp's id (Cloud: the wamid) | the row's `wa_message_id`; a 2xx without it = `uncertain` |
+| State | `GET /instance/connectionState/{instance}` → `{instance:{instanceName, state: open\|connecting\|close}}` | «افحص الاتصال», «افحص الخطوط» |
+| QR | `GET /instance/connect/{instance}` → `{pairingCode, code, base64 (PNG data URL), count}`, or the state shape once open | QR panel (only a `data:image/png;base64,…` is shown) |
+| Inbound media | `POST /chat/getBase64FromMediaMessage/{instance}` `{message:{key:{id}}, convertToMp4:false}` → `{base64, mimetype, …}` (Baileys reads the message from its own store) | `getMedia(id)`; Cloud needs the whole Meta message, so it answers 409 `evolution_no_media` |
+| Webhook | per instance (`instance/create` `webhook` or `POST /webhook/set/{instance}`): `{url, headers, byEvents, base64, events[]}`; each POST is `{event, instance, data, date_time, sender, server_url, apikey}` with the configured **headers**; Evolution signs nothing (a `jwt_key` header becomes a Bearer JWT, unused here) | `POST /webhooks/evolution/:instance` |
+| `MESSAGES_UPSERT` | `data` = `{key:{id, remoteJid, fromMe, remoteJidAlt?}, pushName, message:{conversation \| imageMessage \| videoMessage \| audioMessage \| documentMessage \| documentWithCaptionMessage \| stickerMessage \| reactionMessage …}, contextInfo?:{stanzaId}, messageType, messageTimestamp}` | inbound (below) |
+| `MESSAGES_UPDATE` | `data` = `{keyId, remoteJid, fromMe, status: SERVER_ACK \| DELIVERY_ACK \| READ \| PLAYED \| ERROR}` | ticks |
+| `CONNECTION_UPDATE` / `QRCODE_UPDATED` | `{state, statusReason, …}` / `{qrcode:{base64, pairingCode}}` | the number's `evolution_state` |
+
+**Config.** «التكاملات» › Evolution: `EVOLUTION_API_BASE` (plain; **https anywhere, or http on
+localhost / 127.0.0.1 / [::1] only**; no credentials, query or fragment: `@ab/catalog` `evolutionBase`, the SSRF guard),
+`EVOLUTION_API_KEY` (secret, Vault; the global key, admin checks only), and `EVOLUTION_SEND_GAP_MS` (plain, 0–60000,
+default 3000). Per number (migration `20261106000300`): `provider = 'evolution'`, the **instance name in
+`phone_number_id`**, the engine `evolution_mode` (`baileys` | `cloud`, required exactly when the provider is
+evolution), `evolution_auto_sends` (default false), and the **instance token** as the number secret `evolution_token`
+(Vault, `wa_number:<id>:evolution_token`). No value is ever logged or returned. Every call goes through the runtime
+HTTP client with `redirect: 'error'`: a 3xx is never followed, so the base is the only host the API ever calls.
+
+**Errors** (`evolution-errors.ts`, first match wins): 401 / 403 → `credential: 'evolution'` (the queue is held 15 min,
+uncounted, rows read `evolution_auth`); 404 or «Connection Closed» / «not connected» → the same (the instance is gone or
+logged out: nothing was sent); 400 `[{exists:false}]` → 131026 (fails at once); a Cloud instance's 131047 /
+re-engagement words → 131047 (`window_closed`, the window rules below); 408 / 425 / 429 → retried with backoff; any other
+5xx, a timeout or a lost connection → `uncertain` (failed, **never resent**, there is no idempotency key); any other
+4xx → fails at once (#100). Unsupported: the template list, submit and samples (`evolution_no_templates`: the sync
+writes nothing), reactions (driver capability), `markRead` (a no-op: Evolution needs the chat jid), login codes (an
+Evolution number never sends one, like the CRM).
+
+**Templates.** Baileys has none. A template send renders the registry row as **plain text**: `body_ar` with its
+values (a value is never re-expanded), the footer, then each button as a line («• تأكيد» for a quick reply, «text: link»
+for a link button; the family types their answer). A document header goes as the file with that text as its caption.
+The row's own checks run first (a missing value fails as 132000, like Meta). The row is flagged
+`messages.sent_as_text = true`. A Cloud instance passes the WABA template through (`waba-template.ts`, Meta's
+components).
+
+**The 24 h window (#629) by capability, not by driver name** (`drivers/driver-caps.ts`: `window24h`, `reactions`,
+`templateList`). An Evolution **Baileys** chat number is `windowless`: after the window a staff send (text, reply, file,
+sticker, GIF, forward, teacher mode too) goes out as free text from that number, with no 409, no `awaiting_reply` hold,
+no reopen template and no Kapso call, and the thread view reads `session_open: true`. A thread that does not exist yet
+still answers 409. An Evolution **Cloud** number keeps Meta's rule (409 `session_closed`, like a meta chat line).
+Kapso keeps its own path.
+
+**Inbound + ticks: `POST /webhooks/evolution/:instance`** (public, `EvolutionWebhookController`).
+1. Rate limit: 1 200 deliveries a minute per known instance, 60 shared by unknown names (429: Evolution retries).
+2. The instance must be one of our evolution numbers that has a token (module mode; enabled or not), else **404** with
+   no hint. A malformed name is 404 too.
+3. Auth: the `x-evolution-token` header the instance's webhook sends must equal the number's token (SHA-256 digests
+   compared with `timingSafeEqual`), else **401** (debug log of the verdict only, never a value).
+4. The body is zod-parsed, and a body naming another instance is dropped. `MESSAGES_UPSERT` (never `fromMe`, never a
+   group, broadcast or channel; a `@lid` chat uses `remoteJidAlt`) becomes Meta's message object
+   (`webhook.evolution-message.ts`) and goes through the **same** `toInbound` → `InboundService.handle` as Meta's and
+   Kapso's: row, line and number, lead or guardian, quick reply, reaction marker, unread, thread summary, broadcast,
+   push. The media id is the Evolution message id, downloaded later through the usual wa-media path.
+   `MESSAGES_UPDATE` (ours only) moves ticks through `StatusService.handle`. `CONNECTION_UPDATE` / `QRCODE_UPDATED` set
+   `wa_numbers.evolution_state` / `_state_at` (an older report never overwrites a newer one).
+5. **Idempotent**: a replayed message id stores nothing new (unique `wa_message_id`), and ticks are compare-and-set. A
+   failed item answers 500, so Evolution re-sends it. The route is in `SKIPPED_ROUTES` (never the activity log) and
+   `access-before.json` (`public`).
+
+**Baileys safety (ban risk).**
+- **Pacing**: one Baileys number waits at least `EVOLUTION_SEND_GAP_MS` (default 3 s) between two sends to
+  **different** recipients. Replies in one chat are not delayed. Sends wait their turn in order and are never dropped
+  (`evolution-pacer.ts`, in memory, one sender).
+- **Staff chat only by default**: a row with no author (a job's: reminders, reports, notifications, bulk) on a Baileys
+  number with `evolution_auto_sends` off is refused before any call (`automaticOff`, fails `evolution_auto_off`). An
+  admin turns the number's switch on to allow it.
+- The send gate (`messaging_enabled`, the kill switch), `WA_ALLOWED_RECIPIENTS` and the dedup keys apply unchanged.
+- **Ban risk, in the admin hint** («numbers.evolution.banRisk»): Baileys is an unofficial WhatsApp Web connection, and
+  WhatsApp may ban the number. Use it for a separate secondary number only, keep automatic notifications off, and keep
+  the gap.
+
+**Admin.** «الأرقام»: driver «Evolution», instance name, connection type, the automatic-sends switch (Baileys), the
+instance token secret, «افحص الاتصال» (`GET /admin/numbers/:id/evolution/state`) and, for Baileys, the QR panel
+(`GET /admin/numbers/:id/evolution/qr`). Both need `numbers.manage` and are two read calls to the instance, never a send.
+Errors: 409 `not_evolution` / `evolution_not_configured`, 502 `evolution_auth` / `evolution_unreachable`. «افحص الخطوط»
+on an Evolution line shows the instance and its state. Mobile shows the number's driver read-only.
+
+**Deploy kit (not started):** `deploy/evolution/` (`docker-compose.yml` with its own Postgres and Redis, memory limits,
+port bound to 127.0.0.1 behind the host Caddy; `.env.example`; README with the owner steps). No workflow references it.
+
+### Going live on Evolution (owner steps)
+
+1. Run the kit on the VPS and add the Caddy site (`deploy/evolution/README.md` §1).
+2. Create the instance with its own token and its webhook to `https://<api-host>/webhooks/evolution/<instance>`, with
+   header `x-evolution-token: <instance token>` and events `MESSAGES_UPSERT`, `MESSAGES_UPDATE`, `CONNECTION_UPDATE`,
+   `QRCODE_UPDATED` (README §2).
+3. «التكاملات» › Evolution: `EVOLUTION_API_BASE`, `EVOLUTION_API_KEY`.
+4. «الأرقام»: add the secondary number (role chat, driver Evolution, instance name, Baileys), save its token, keep it
+   disabled, press **QR** and scan it with the secondary phone, then «افحص الاتصال» → «متصل».
+5. Test one message to a number in `WA_ALLOWED_RECIPIENTS`, then enable the number (make it the default only on purpose).
+6. To go back: disable the number or switch its driver. Nothing else changes.

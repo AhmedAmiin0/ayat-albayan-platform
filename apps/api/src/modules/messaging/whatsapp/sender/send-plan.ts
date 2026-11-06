@@ -5,7 +5,7 @@ import {
 } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
 import { crmPlan } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
-import { driverCode } from './driver-codes';
+import { driverCode } from '@/modules/messaging/whatsapp/drivers/driver-codes';
 import { paymentHold, type HoldRow } from './hold/payment-hold';
 import { isWindowClosedError } from './window/window-rules';
 import { templateParams } from '@/modules/messaging/whatsapp/messages/wa-json';
@@ -23,7 +23,9 @@ export const UNCERTAIN = 'uncertain';
 export const HANDED_OFF = 'handed_off';
 /** An expired / revoked token holds the queue this long before the next try (no attempt counted). */
 export const AUTH_HOLD_MS = 15 * 60_000;
-export { KAPSO_AUTH, CRM_AUTH, EVOLUTION_AUTH, EVOLUTION_AUTO_OFF } from './driver-codes';
+export {
+  KAPSO_AUTH, CRM_AUTH, EVOLUTION_AUTH,
+} from '@/modules/messaging/whatsapp/drivers/driver-codes';
 export { CRM_RATE_LIMITED } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 const ERROR_TEXT_MAX = 500;
 

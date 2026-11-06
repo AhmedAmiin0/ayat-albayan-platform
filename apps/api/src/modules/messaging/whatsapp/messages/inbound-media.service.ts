@@ -7,11 +7,10 @@ import { isCrmHistoryRow } from './crm-history/crm-history-url';
 import { InboundMediaRepo, type MediaMessage } from './inbound-media.repo';
 import { mediaSource } from '@/modules/messaging/whatsapp/numbers/media-client';
 import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clients';
-import { mediaHttpError } from './media-errors';
+import { CRM_NO_MEDIA, mediaHttpError } from '@/modules/messaging/whatsapp/drivers/media-errors';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { WHATSAPP_LINES, WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-import { CRM_NO_MEDIA } from './media-errors';
 export { CRM_NO_MEDIA };
 
 /** Meta keeps a media id about 30 days; a day less, so a download never races the deadline. */

@@ -10,7 +10,7 @@ import { EvolutionStateRepo } from './evolution-state.repo';
 // InboundService.handle (row, thread summary, broadcast, push; idempotent by message id) and
 // StatusService.handle (ticks, compare-and-set). A failed item answers 500 so Evolution re-sends.
 
-export type Applied = Exclude<EvolutionDelivery, { kind: 'ignored' }>;
+type Applied = Exclude<EvolutionDelivery, { kind: 'ignored' }>;
 interface At {
   numberId: string;
   now: Date;

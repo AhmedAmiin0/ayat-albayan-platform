@@ -34,7 +34,7 @@ const contentSchema = z.object({
     .nullish(),
 });
 
-export const baileysMessageSchema = z.object({
+const baileysMessageSchema = z.object({
   key: keySchema,
   pushName: z.string().max(200).nullish(),
   message: contentSchema.nullish(),
@@ -98,7 +98,7 @@ function bodyOf(content: Content | null | undefined, id: string): MetaBody {
   return found ?? { type: 'unsupported' };
 }
 
-export interface MetaShaped {
+interface MetaShaped {
   from: string;
   name: string | null;
   message: MetaBody;

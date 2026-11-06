@@ -25,7 +25,7 @@ export class NumbersEvolution {
     private readonly secrets: NumbersSecrets,
   ) {}
 
-  /** 404 unknown number, 409 not_evolution / evolution_not_configured. Holds a secret: never log. */
+  /** 404 unknown, 409 not_evolution / evolution_not_configured. Holds a secret: never log. */
   async instanceEnv(id: string): Promise<EvolutionLineEnv> {
     const row = await this.repo.byId(id);
     if (!row) throw new NotFoundException();

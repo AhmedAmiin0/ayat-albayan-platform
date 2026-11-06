@@ -10,7 +10,7 @@ export const CRM_AUTH = 'crm_auth';
 /** Evolution refused the instance token, or the instance is gone / logged out: held too. */
 export const EVOLUTION_AUTH = 'evolution_auth';
 /** A job's row refused on an Evolution Baileys number with automatic sends off. */
-export const EVOLUTION_AUTO_OFF = 'evolution_auto_off';
+const EVOLUTION_AUTO_OFF = 'evolution_auto_off';
 
 type Own = NonNullable<WaError['info']['credential'] | WaError['info']['blocked']>;
 

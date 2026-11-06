@@ -17,8 +17,9 @@ export const callsNeedKapso = (row: { purpose?: string; provider?: string }): bo
   row.purpose === 'calls' && row.provider !== 'kapso';
 
 /** An Evolution number names its engine (baileys | cloud); any other provider carries none. */
-export const evolutionModeFits = (v: { provider?: string; evolution_mode?: string | null }): boolean =>
-  (v.provider === 'evolution') === (v.evolution_mode !== undefined && v.evolution_mode !== null);
+interface ModeRow { provider?: string; evolution_mode?: string | null }
+export const evolutionModeFits = (v: ModeRow): boolean =>
+  (v.provider === 'evolution') === Boolean(v.evolution_mode);
 
 /** POST /admin/numbers. A new number starts disabled unless asked. */
 export const numberCreateSchema = z

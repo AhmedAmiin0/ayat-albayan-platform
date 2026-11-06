@@ -1,0 +1,58 @@
+# Evolution API (docs/19 «Evolution driver») for the academy's SECONDARY WhatsApp number. A kit only:
+# nothing here is started by the repo's deploy workflows, and no academy line uses it until an admin
+# picks the «Evolution» driver for a number in «الأرقام». The owner decides when and where it runs.
+#
+# Lives in its own folder (e.g. /opt/evolution) with its OWN Postgres and Redis, so it never touches
+# the platform's stack or the CRM's. Only the API is published, on localhost: put the host Caddy in
+# front of it (README) for HTTPS. Memory (8 GB VPS shared with the platform and the CRM):
+# 512 MB API + 256 MB Postgres + 64 MB Redis ≈ 0.8 GB. Measure with `docker stats` and adjust.
+name: ayat-evolution
+
+x-log: &log
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
+
+services:
+  evolution-api:
+    # Pinned: the version docs/19 was written against (Evolution 2.3.7). Upgrade on purpose only.
+    image: evoapicloud/evolution-api:v2.3.7
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - evolution-postgres
+      - evolution-redis
+    # Localhost only: Caddy terminates TLS and proxies https://<evolution-host> to it.
+    ports:
+      - "127.0.0.1:8085:8080"
+    volumes:
+      - evolution_instances:/evolution/instances
+    mem_limit: 512m
+    logging: *log
+
+  evolution-postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: evolution
+      POSTGRES_USER: evolution
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - evolution_postgres:/var/lib/postgresql/data
+    mem_limit: 256m
+    logging: *log
+
+  evolution-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "48mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - evolution_redis:/data
+    mem_limit: 64m
+    logging: *log
+
+volumes:
+  evolution_instances:
+  evolution_postgres:
+  evolution_redis:

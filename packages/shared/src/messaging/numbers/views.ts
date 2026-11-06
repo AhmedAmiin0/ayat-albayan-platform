@@ -5,7 +5,6 @@ import type { NumberEvolutionView } from './evolution.js';
 // «الأرقام» (docs/23 §3 phase 3): a WhatsApp number as a record. Ids and labels only: no view here ever
 // carries a token or secret value (secrets are «set / not set» with a date).
 
-/** evolution_token: an Evolution number's instance token (docs/19 «Evolution driver»). */
 export const NUMBER_SECRET_NAMES = ['access_token', 'app_secret', 'evolution_token'] as const;
 export type NumberSecretName = (typeof NUMBER_SECRET_NAMES)[number];
 

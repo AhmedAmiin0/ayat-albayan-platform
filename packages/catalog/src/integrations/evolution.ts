@@ -10,7 +10,7 @@ const LOCAL_HOSTS: ReadonlySet<string> = new Set(['localhost', '127.0.0.1', '[::
  * scheme://host[:port][/path], nothing else: no user:password, query or fragment (a plain base).
  * The catalog has no URL global (no DOM / node lib), hence the pattern.
  */
-const BASE_RE = /^(https?):\/\/(\[::1\]|[A-Za-z0-9.-]+)(?::(\d{1,5}))?(\/[A-Za-z0-9._~\/-]*)?$/;
+const BASE_RE = /^(https?):\/\/(\[::1\]|[A-Za-z0-9.-]+)(?::(\d{1,5}))?(\/[A-Za-z0-9._~/-]*)?$/;
 
 function allowed(raw: string): boolean {
   const m = BASE_RE.exec(raw);

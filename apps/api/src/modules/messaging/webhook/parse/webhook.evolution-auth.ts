@@ -6,7 +6,7 @@ import { createHash, timingSafeEqual } from 'node:crypto';
 // {"x-evolution-token": "<instance token>"} and every delivery carries the token as is.
 // Constant-time compare over digests (no length leak); no token = every POST is refused.
 
-export const EVOLUTION_TOKEN_HEADER = 'x-evolution-token';
+const EVOLUTION_TOKEN_HEADER = 'x-evolution-token';
 
 /** Equal strings, compared in constant time over their SHA-256 digests. */
 function same(a: string, b: string): boolean {
@@ -14,13 +14,13 @@ function same(a: string, b: string): boolean {
   return timingSafeEqual(d(a), d(b));
 }
 
-export interface EvolutionAuthInput {
+interface EvolutionAuthInput {
   headers: { [EVOLUTION_TOKEN_HEADER]?: string };
   /** The instance token (Vault); undefined = not configured: refused. */
   token: string | undefined;
 }
 
-export type EvolutionVerdict = 'ok' | 'no_token' | 'missing' | 'bad';
+type EvolutionVerdict = 'ok' | 'no_token' | 'missing' | 'bad';
 
 const VERDICT = (input: EvolutionAuthInput): EvolutionVerdict => {
   const sent = input.headers[EVOLUTION_TOKEN_HEADER];

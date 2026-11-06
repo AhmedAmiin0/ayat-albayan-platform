@@ -128,12 +128,12 @@ describe('system-role parity with the old @Roles table', () => {
   });
 
   // docs/23 phase 3: numbers.manage gates the numbers writes and the comms_source switch; reads are settings.read.
-  it('numbers.manage gates the numbers writes, the source switch and the Evolution QR / state, for the system admin only', () => {
+  it('numbers.manage gates the numbers writes and the source switch only, for the system admin only', () => {
     const gated = routes.filter((r) => r.permission === 'numbers.manage').map((r) => r.key).sort();
     expect(gated).toEqual([
       'CommunicationsController.setSource', 'NumbersController.clearSecret', 'NumbersController.create', 'NumbersController.import',
       'NumbersController.remove', 'NumbersController.setSecret', 'NumbersController.update',
-      // docs/19 «Evolution driver»: the QR links a WhatsApp account, so even the state is a manage read.
+      // docs/19 «Evolution driver»: the QR links a WhatsApp account (state: a manage read too).
       'NumbersEvolutionController.qr', 'NumbersEvolutionController.state',
     ]);
     const reads = routes.filter((r) => r.key === 'NumbersController.list' || r.key === 'CommunicationsController.parity');
