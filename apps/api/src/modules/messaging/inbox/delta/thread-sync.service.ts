@@ -7,15 +7,15 @@ import {
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { OwnNumbers } from '@/modules/messaging/numbers';
-import type { ThreadMessageRow } from '@/modules/messaging/whatsapp';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
 import { SYNC_START, SyncRepo } from './sync.repo';
+import { syncScan, type SyncScan } from './sync-scan';
 import { syncScope, visibleTo, type SyncScope } from './sync-scope';
 import { SyncThreads } from './sync-threads';
 import { SyncViews } from './sync-views';
 import type { DeltaCaller } from './thread-delta.service';
 
-const stampOf = (r: ThreadMessageRow): SyncCursor => ({ at: r.updated_at, id: r.id });
+const EMPTY_SCAN: SyncScan = { rows: [], deleted: [], last: null, more: false };
 /** The last scanned row's stamp; nothing scanned = the asked cursor back (null on a first sync). */
 const cursorOf = (c: SyncCursor | undefined): string | null => (c ? encodeSyncCursor(c) : null);
 
@@ -24,9 +24,9 @@ const cursorOf = (c: SyncCursor | undefined): string | null => (c ? encodeSyncCu
  * the cursor, oldest change first, in the caller's scope — the same as reading each chat (rule 9):
  * the admin every chat, a salesperson every chat without the signed-link templates (redacted), a
  * teacher her scope's phones; the academy's own numbers never. A scanned row the caller can't hold
- * comes back as a `gone` id. The answer's `scope` key changes with role, chats and own numbers, so
- * the phone wipes rows it should no longer hold. Writes nothing (no read stamp: that stays with
- * opening a chat).
+ * comes back as a `gone` id, and so does a DELETEd row (message_tombstones). The answer's `scope`
+ * key changes with role, chats and own numbers, so the phone wipes rows it should no longer hold.
+ * Writes nothing (no read stamp: that stays with opening a chat).
  */
 @Injectable()
 export class ThreadSyncService {
@@ -44,27 +44,35 @@ export class ThreadSyncService {
     const caller = await this.callerOf(user);
     const scope = syncScope(caller, await this.ownPhones());
     const after = q.since ?? SYNC_START;
-    const rows =
-      scope.phones?.length === 0 ? [] : await this.page(scope, { after, limit: q.limit });
-    const page = rows.slice(0, q.limit);
-    const end = page.at(-1) ?? null;
-    const shown = page.filter((r) => visibleTo(caller.kind, r));
+    const scan =
+      scope.phones?.length === 0 ? EMPTY_SCAN : await this.scan(scope, { after, limit: q.limit });
+    const shown = scan.rows.filter((r) => visibleTo(caller.kind, r));
     const [messages, threads] = await Promise.all([
       this.views.render(shown, caller.kind),
       this.threads.of({ phones: shown.map((r) => r.phone_e164), hide: scope.hide, caller }),
     ]);
+    const hidden = scan.rows.filter((r) => !visibleTo(caller.kind, r)).map((r) => r.id);
     return {
       messages,
       threads,
-      gone: page.filter((r) => !visibleTo(caller.kind, r)).map((r) => r.id),
-      cursor: cursorOf(end ? stampOf(end) : q.since),
-      has_more: rows.length > q.limit,
+      gone: [...hidden, ...scan.deleted],
+      cursor: cursorOf(scan.last ?? q.since),
+      has_more: scan.more,
       scope: scope.key,
     };
   }
 
-  private page(scope: SyncScope, at: { after: SyncCursor; limit: number }) {
-    return this.repo.page({ ...at, phones: scope.phones, hide: scope.hide });
+  /** The live rows and the tombstones after the cursor, side by side, merged into one page. */
+  private async scan(
+    scope: SyncScope,
+    at: { after: SyncCursor; limit: number },
+  ): Promise<SyncScan> {
+    const input = { ...at, phones: scope.phones, hide: scope.hide };
+    const [rows, tombstones] = await Promise.all([
+      this.repo.page(input),
+      this.repo.tombstones(input),
+    ]);
+    return syncScan({ rows, tombstones }, at.limit);
   }
 
   /** The same three scopes as GET /threads/:phone?after=, resolved in ThreadReads' order. */

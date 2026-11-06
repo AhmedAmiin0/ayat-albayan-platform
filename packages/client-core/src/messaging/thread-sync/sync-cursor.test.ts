@@ -1,6 +1,6 @@
-import { encodeSyncCursor, NIL_UUID } from '@ab/shared';
+import { compareCursors, encodeSyncCursor, NIL_UUID, stampMicros } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { compareCursors, EMPTY_SYNC, laterCursor, nextSince, stampMicros } from './sync-cursor.js';
+import { EMPTY_SYNC, laterCursor, nextSince } from './sync-cursor.js';
 
 const A = 'c0000000-0000-4000-8000-0000000000a1';
 const B = 'c0000000-0000-4000-8000-0000000000b2';

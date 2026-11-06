@@ -2702,6 +2702,24 @@ export type Database = {
           },
         ];
       };
+      message_tombstones: {
+        Row: {
+          deleted_at: string;
+          id: string;
+          phone_e164: string;
+        };
+        Insert: {
+          deleted_at?: string;
+          id: string;
+          phone_e164: string;
+        };
+        Update: {
+          deleted_at?: string;
+          id?: string;
+          phone_e164?: string;
+        };
+        Relationships: [];
+      };
       messages: {
         Row: {
           app_send_until: string | null;

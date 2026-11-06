@@ -29,6 +29,7 @@ describe('GET /threads/sync — cursor and page cap', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     t.sync.page.mockResolvedValue([]);
+    t.sync.tombstones.mockResolvedValue([]);
     t.queries.list.mockResolvedValue({ items: [threadRow()], total: 1 });
     t.queries.familyTags.mockResolvedValue(new Map());
     t.queries.unsupported.mockImplementation(async (rows: unknown[]) => rows);
@@ -85,5 +86,16 @@ describe('GET /threads/sync — cursor and page cap', () => {
     await t.call({ method: 'GET', url: '/threads/sync' });
     expect(t.queries.thread).not.toHaveBeenCalled();
     expect(t.sync.page).toHaveBeenCalledTimes(1);
+  });
+
+  it('a guardian is 403; an unlinked teacher 404', async () => {
+    expect(
+      (await t.call({ method: 'GET', url: '/threads/sync', token: 'guardian' })).statusCode,
+    ).toBe(403);
+    t.teacher.teacher.mockResolvedValue(null);
+    expect(
+      (await t.call({ method: 'GET', url: '/threads/sync', token: 'unlinked' })).statusCode,
+    ).toBe(404);
+    expect(t.sync.page).not.toHaveBeenCalled();
   });
 });

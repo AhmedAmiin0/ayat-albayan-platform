@@ -25,11 +25,14 @@ describe(`migration ${FILE}`, () => {
     expect(SQL).not.toMatch(/concurrently/i);
   });
 
-  it('backfill = the latest own timestamp, else created_at; only rows that differ', () => {
+  it('backfill once: only while the stamp trigger is absent (a re-run never moves rows back)', () => {
     expect(SQL).toMatch(
-      /coalesce\(\s*greatest\(sent_at, delivered_at, read_at, edited_at, deleted_at, our_reaction_at, hidden_at\),\s*created_at\)/,
+      /if not exists \(\s*select 1 from pg_trigger[\s\S]*tgname = 'messages_set_updated_at'/,
     );
-    expect(SQL).toMatch(/where updated_at is distinct from/);
+    const backfill =
+      /coalesce\(\s*greatest\(sent_at, delivered_at, read_at, edited_at, deleted_at, our_reaction_at, hidden_at\),\s*created_at\)/;
+    expect(SQL).toMatch(backfill);
+    expect(at('if not exists')).toBeLessThan(at('update public.messages'));
   });
 
   it('the realtime and summary triggers are off only around the backfill', () => {
@@ -41,17 +44,35 @@ describe(`migration ${FILE}`, () => {
     }
   });
 
-  it('the BEFORE UPDATE trigger goes live after the backfill (it keeps its values); re-runnable', () => {
-    expect(SQL).toContain('drop trigger if exists messages_set_updated_at on public.messages');
-    const create = at('create trigger messages_set_updated_at before update on public.messages');
+  it('a monotonic BEFORE UPDATE stamp (clock time, never at or before the old one), after the backfill', () => {
+    expect(SQL).toContain(
+      "new.updated_at := greatest(pg_catalog.clock_timestamp(), old.updated_at + interval '1 microsecond')",
+    );
+    const create = at(
+      'create or replace trigger messages_set_updated_at before update on public.messages',
+    );
     expect(create).toBeGreaterThan(at('update public.messages'));
-    expect(SQL).toContain('for each row execute function public.set_updated_at()');
+    expect(SQL).toContain('for each row execute function public.messages_touch_updated_at()');
   });
 
-  it('the keyset index (updated_at, id); RLS untouched', () => {
+  it('the keyset indexes on both tables', () => {
     expect(SQL).toContain(
       'create index if not exists messages_updated_at_id_idx on public.messages (updated_at, id)',
     );
-    expect(SQL).not.toMatch(/policy|row level security|create table/i);
+    expect(SQL).toMatch(
+      /message_tombstones_deleted_at_id_idx\s+on public\.message_tombstones \(deleted_at, id\)/,
+    );
+  });
+
+  it('tombstones: every DELETE recorded by a statement trigger; service role only (RLS, no policy)', () => {
+    expect(SQL).toContain('create table if not exists public.message_tombstones');
+    expect(SQL).toMatch(
+      /create or replace trigger messages_tombstones after delete on public\.messages\s+referencing old table as old_rows for each statement/,
+    );
+    expect(SQL).toContain('on conflict (id) do update');
+    expect(SQL).toContain('alter table public.message_tombstones enable row level security');
+    expect(SQL).toContain('revoke all on public.message_tombstones from anon, authenticated');
+    expect(SQL).not.toMatch(/create policy/);
+    expect(SQL.match(/security definer set search_path = ''/g)).toHaveLength(1);
   });
 });

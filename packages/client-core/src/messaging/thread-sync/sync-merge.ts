@@ -1,5 +1,5 @@
-import type { SyncMessage, ThreadSync, ThreadView } from '@ab/shared';
-import { compareCursors, laterCursor, type SyncState } from './sync-cursor.js';
+import { compareCursors, type SyncMessage, type ThreadSync, type ThreadView } from '@ab/shared';
+import { laterCursor, type SyncState } from './sync-cursor.js';
 
 /** What one sync answer asks the store to do (the SQLite engine runs it in one transaction). */
 export interface SyncPlan {
@@ -44,9 +44,16 @@ export function planSync(state: SyncState, res: ThreadSync, held: HeldStamp): Sy
     upsert,
     remove: [...gone],
     threads: res.threads,
-    state: { cursor: laterCursor(state.cursor, res.cursor), more: res.has_more, scope: res.scope },
+    state: { cursor: cursorAfter(state, res), more: res.has_more, scope: res.scope },
   };
 }
+
+/**
+ * A full page continues from its own tail, even behind the mark (a rewound window holding more than
+ * one page is read to its end, never cut short); a last page never moves the mark back.
+ */
+const cursorAfter = (state: SyncState, res: ThreadSync): string | null =>
+  res.has_more ? res.cursor : laterCursor(state.cursor, res.cursor);
 
 /** The store was filled under another scope (a chat left the teacher's families, say). */
 const scopeChanged = (state: SyncState, res: ThreadSync): boolean =>

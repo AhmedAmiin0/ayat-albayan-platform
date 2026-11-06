@@ -72,6 +72,12 @@ describe('planSync (the phone store merge, docs/43 §5)', () => {
     expect(plan.state.cursor).toBe(ahead.cursor);
   });
 
+  it('a full page behind the mark (a rewound window over one page) continues from its own tail', () => {
+    const ahead: SyncState = { ...synced, cursor: encodeSyncCursor({ at: T2, id: id(9) }) };
+    const plan = planSync(ahead, answer({ cursor: synced.cursor, has_more: true }), none);
+    expect(plan.state).toMatchObject({ cursor: synced.cursor, more: true });
+  });
+
   it('an empty answer (null cursor) keeps the mark', () => {
     expect(planSync(synced, answer({ cursor: null }), none).state.cursor).toBe(synced.cursor);
   });

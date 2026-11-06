@@ -33,6 +33,7 @@ describe('GET /threads/sync — the phone store delta', () => {
     vi.resetAllMocks();
     vi.spyOn(t.app.get(OwnNumbers), 'phones').mockResolvedValue(new Set([OWN]));
     t.sync.page.mockResolvedValue([]);
+    t.sync.tombstones.mockResolvedValue([]);
     t.queries.list.mockResolvedValue({ items: [threadRow()], total: 1 });
     t.queries.familyTags.mockResolvedValue(new Map());
     t.queries.unsupported.mockImplementation(async (rows: unknown[]) => rows);
@@ -80,6 +81,20 @@ describe('GET /threads/sync — the phone store delta', () => {
     );
   });
 
+  it('a DELETEd row (tombstone) is gone for every role, read in the same scope', async () => {
+    t.sync.page.mockResolvedValue([row(1)]);
+    t.sync.tombstones.mockResolvedValue([
+      { id: id(9), phone_e164: PHONE, deleted_at: '2026-11-06T10:00:01Z' },
+    ]);
+    for (const token of ['admin', 'sales', 'teacher']) {
+      const body = (await t.call({ method: 'GET', url: '/threads/sync', token })).json();
+      expect([ids(body.messages), body.gone]).toEqual([[id(1)], [id(9)]]);
+      expect(body.cursor).toBe(`2026-11-06T10:00:01Z~${id(9)}`);
+    }
+    const scoped = expect.objectContaining({ phones: [PHONE], hide: [OWN] });
+    expect(t.sync.tombstones).toHaveBeenLastCalledWith(scoped);
+  });
+
   it('every role: reaction / edit / revoke marker rows are tombstones', async () => {
     t.sync.page.mockResolvedValue([
       row(1, { interactive_payload: { type: 'reaction', target: 'x', emoji: '👍' } }),
@@ -125,16 +140,5 @@ describe('GET /threads/sync — the phone store delta', () => {
     vi.spyOn(t.app.get(OwnNumbers), 'phones').mockResolvedValue(new Set());
     expect(await key('admin')).not.toBe(admin);
     expect(JSON.stringify(admin)).not.toContain(OWN.slice(1));
-  });
-
-  it('a guardian is 403; an unlinked teacher 404', async () => {
-    expect(
-      (await t.call({ method: 'GET', url: '/threads/sync', token: 'guardian' })).statusCode,
-    ).toBe(403);
-    t.teacher.teacher.mockResolvedValue(null);
-    expect(
-      (await t.call({ method: 'GET', url: '/threads/sync', token: 'unlinked' })).statusCode,
-    ).toBe(404);
-    expect(t.sync.page).not.toHaveBeenCalled();
   });
 });

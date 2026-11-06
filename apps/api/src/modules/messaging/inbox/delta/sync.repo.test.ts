@@ -29,6 +29,21 @@ describe('SyncRepo (GET /threads/sync keyset read)', () => {
     expect(f.argsOf('messages', 'in')).toEqual(['phone_e164', [PHONE]]);
   });
 
+  it('tombstones: the same keyset on deleted_at, the same scope', async () => {
+    const f = fakeDb({ message_tombstones: [{ data: [] }] });
+    await new SyncRepo(f.db).tombstones({
+      after: { at: AT, id: ID },
+      limit: 5,
+      phones: [PHONE],
+      hide: [OWN],
+    });
+    expect(f.argsOf('message_tombstones', 'gte')).toEqual(['deleted_at', AT]);
+    expect(f.argsOf('message_tombstones', 'or')).toEqual([`deleted_at.gt."${AT}",id.gt.${ID}`]);
+    expect(f.argsOf('message_tombstones', 'in')).toEqual(['phone_e164', [PHONE]]);
+    expect(f.argsOf('message_tombstones', 'not')).toEqual(['phone_e164', 'in', `("${OWN}")`]);
+    expect(f.argsOf('message_tombstones', 'limit')).toEqual([6]);
+  });
+
   it('a failed read throws', async () => {
     const f = fakeDb({ messages: [{ error: { message: 'boom' } }] });
     const page = new SyncRepo(f.db).page({ after: SYNC_START, limit: 1, phones: null, hide: [] });

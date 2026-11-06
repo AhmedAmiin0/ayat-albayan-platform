@@ -33,3 +33,18 @@ export function rewindSyncCursor(cursor: string): string {
   const back = new Date(Date.parse(at) - SYNC_OVERLAP_MS).toISOString();
   return encodeSyncCursor({ at: back, id: NIL_UUID });
 }
+
+/** Microseconds since the epoch: Postgres keeps six digits, Date only three. */
+export function stampMicros(at: string): bigint {
+  const frac = /\.(\d+)/.exec(at)?.[1] ?? '';
+  const micro = BigInt(frac.padEnd(6, '0').slice(3, 6));
+  return BigInt(Date.parse(at)) * 1000n + micro;
+}
+
+/** -1 / 0 / 1 by (updated_at, id): the server's keyset order. */
+export function compareCursors(a: SyncCursor, b: SyncCursor): number {
+  const da = stampMicros(a.at);
+  const db = stampMicros(b.at);
+  const byTime = Number(da > db) - Number(da < db);
+  return byTime !== 0 ? byTime : a.id.localeCompare(b.id);
+}

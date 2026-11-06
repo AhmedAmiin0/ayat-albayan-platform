@@ -94,7 +94,7 @@ function mocks() {
     },
     hides: { target: vi.fn(), set: vi.fn(async () => true) },
     delta: { newer: vi.fn(), pending: vi.fn() },
-    sync: { page: vi.fn() },
+    sync: { page: vi.fn(), tombstones: vi.fn() },
     search: { rows: vi.fn() },
     messageSearch: { search: vi.fn() },
     stickers: {
