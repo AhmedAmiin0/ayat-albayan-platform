@@ -78,7 +78,10 @@ function mocks() {
     audit: { record: vi.fn() },
     reopens: { nextKey: vi.fn(async (): Promise<string | null> => null), templateKey: vi.fn(async () => 'inquiry_followup_ar_v2') },
     kapso: { reopen: vi.fn(async () => false) },
-    reopenRequest: { usable: vi.fn(async () => true), nextKey: vi.fn() },
+    reopenRequest: {
+      usable: vi.fn(async (): Promise<string | null> => 'template'),
+      nextKey: vi.fn(),
+    },
     hides: { target: vi.fn(), set: vi.fn(async () => true) },
     delta: { newer: vi.fn(), pending: vi.fn() },
     search: { rows: vi.fn() },
