@@ -19,6 +19,8 @@ type Props = {
   /** A text may go in this chat now (useMaySend): the same rule as the box itself. */
   canSend: boolean;
   onClose: () => void;
+  /** «اختر أيام الحلقات» (owner 2026-11-06): the course dialog over this one, kept until paid. */
+  onBookCourse?: (() => void) | undefined;
 };
 
 /**
@@ -26,9 +28,10 @@ type Props = {
  * box (she sends it herself; nothing leaves on its own) and it leaves as any text (owner
  * 2026-11-01): after the 24 h window too on a Kapso chat line, WhatsApp's refusal (131047)
  * shown on its bubble. Where no text can go at all only «نسخ» works (inbox.sessionClosed).
- * The amount agreed sits beside the calculator price it came from.
+ * The amount agreed sits beside the calculator price it came from. «اختر أيام الحلقات» (owner
+ * 2026-11-06) opens the course dialog: the picks wait as a draft and are booked once paid.
  */
-export function CreatedLink({ link, phone, canSend, onClose }: Props) {
+export function CreatedLink({ link, phone, canSend, onClose, onBookCourse }: Props) {
   const [copied, setCopied] = useState<'ok' | 'failed' | null>(null);
   const text = linkMessage(link);
   const insert = () => {
@@ -45,6 +48,11 @@ export function CreatedLink({ link, phone, canSend, onClose }: Props) {
   };
   const actions = (
     <>
+      {onBookCourse && (
+        <Button variant="secondary" onClick={onBookCourse}>
+          {t.courseDraft.pick}
+        </Button>
+      )}
       <Button variant="secondary" onClick={() => void copy()}>
         {P.copy}
       </Button>

@@ -7,11 +7,13 @@ import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { BackButton } from '@/core/ui/navigation';
+import { Note } from '@/more';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { courseRequest } from '@/sales-course/lib/course-body';
 import { useBookCourse } from '@/sales-course/hooks/course-queries';
 import { CourseConfirm } from './CourseConfirm';
 import { CourseDone } from './CourseDone';
+import { CourseHeld } from './CourseHeld';
 import { CourseOpening, type CourseChangeEntry } from './CourseOpening';
 import { CourseStarts } from './CourseStarts';
 import { COURSE_STEPS, firstStep, stepBack, stepNumber, type CourseStep } from '@/sales-course/lib/course-steps';
@@ -50,7 +52,7 @@ export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardPr
   const [picks, setPicks] = useState<string[]>([]);
   const [prefilled, setPrefilled] = useState<PrefilledPick[]>([]);
   const [requestId] = useState(newRequestId);
-  const book = useBookCourse();
+  const book = useBookCourse(view.hold === true);
   const known = useKnownTeacher(view.student.program, previous?.teacherId);
   const body = courseRequest({ view, teacherId: teacher.id, picks, requestId, prefilled });
   const sub = view.subscription;
@@ -88,6 +90,7 @@ export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardPr
   const shownName = teacher.name || known.name;
   const content = () => {
     if (book.isSuccess && body) {
+      if (book.data === null) return <CourseHeld onDone={onLeave} />;
       return <CourseDone result={book.data} body={body} view={view} onDone={onLeave} transfer={transfer} />;
     }
     if (step === 'continue' || step === 'teacher') {
@@ -129,6 +132,7 @@ export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardPr
         leading={<BackButton busy={book.isPending} onPress={back} />}
       />
       <CourseStarts subscription={sub} />
+      {view.hold ? <Note>{t.courseDraft.held}</Note> : null}
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
         {content()}
       </ScrollView>

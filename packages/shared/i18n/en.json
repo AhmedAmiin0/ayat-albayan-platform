@@ -7911,5 +7911,13 @@
     "paidTitle": "Paid: book the lesson days",
     "unbookedTitle": "Lesson days not booked",
     "unbookedText": "the package was paid at least two hours ago and its lesson days are not booked yet"
+  },
+  "courseDraft": {
+    "pick": "Pick the lesson days",
+    "held": "The subscription awaits payment: the picked days are saved and booked only after the payment.",
+    "saved": "The lesson days are saved and will be booked automatically after the payment. You can edit them until then.",
+    "save": "Save the days",
+    "clashTitle": "The lesson days could not be booked after the payment",
+    "clashText": "one of the picked times is now taken, so pick the lesson days again"
   }
 }

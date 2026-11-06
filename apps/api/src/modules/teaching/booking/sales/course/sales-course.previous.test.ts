@@ -5,7 +5,11 @@ import type { CourseRuleRow } from '@/modules/teaching/booking/core/course-read'
 import type { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 import type { SalesCourseRepo } from './sales-course.repo';
 import type { CourseRule } from './sales-course.rules';
+import type { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { SalesCourse } from './sales-course.service';
+
+/** No payment link held and no draft (owner 2026-11-06). */
+const noDrafts = { held: async () => false, get: async () => null };
 
 // A renewal continues the course on the same days (owner 2026-10-18, «تابِع بنفس الأيام»).
 const S1 = 'c0000000-0000-4000-8000-000000000001';
@@ -29,7 +33,7 @@ function setup(booked = false) {
     requested: vi.fn().mockResolvedValue(false),
   };
   const scope = { of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }) };
-  return new SalesCourse(queries as unknown as SalesCourseRepo, scope as unknown as SalesBookingScope);
+  return new SalesCourse(queries as unknown as SalesCourseRepo, scope as unknown as SalesBookingScope, noDrafts as unknown as CourseDraftRepo);
 }
 
 describe('SalesCourse — the renewal of a running course', () => {

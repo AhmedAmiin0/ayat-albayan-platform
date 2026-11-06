@@ -8,6 +8,7 @@ const row = (id: string, rules: { id: string }[] = []) => ({
   student_id: `st-${id}`,
   created_by: 's1',
   rules,
+  draft: null as { subscription_id: string } | null,
   student: { name: 'سهيلة', guardian: { phone_e164: '+966500000000' } },
 });
 
@@ -21,6 +22,18 @@ describe('CourseDueRepo (owner 2026-11-06)', () => {
     expect(await repo.unbooked('a')).toEqual({ subscriptionId: 'a', studentId: 'st-a', student: 'سهيلة', phone: '+966500000000', soldBy: 's1' });
     expect(await repo.unbooked('b')).toBeNull();
     expect(await repo.unbooked('x')).toBeNull();
+  });
+
+  it('unbooked: a package with a draft (days picked before the payment) is not told to book', async () => {
+    const t = fakeDb({ subscriptions: [{ data: { ...row('a'), draft: { subscription_id: 'a' } } }] });
+    expect(await new CourseDueRepo(t.db).unbooked('a', NOW)).toBeNull();
+  });
+
+  it('package: whom a draft clash concerns, booked or not; null when unknown', async () => {
+    const t = fakeDb({ subscriptions: [{ data: row('a', [{ id: 'r' }]) }, { data: null }] });
+    const repo = new CourseDueRepo(t.db);
+    expect((await repo.package('a'))?.studentId).toBe('st-a');
+    expect(await repo.package('x')).toBeNull();
   });
 
   it('unbooked: a student on a running imported course is not told to book', async () => {

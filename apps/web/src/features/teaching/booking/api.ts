@@ -1,4 +1,5 @@
 import {
+  courseDraftSavedSchema,
   PACKAGE_SIZES,
   type BookingResult,
   type BookingTeacherOption,
@@ -33,9 +34,21 @@ export const guardianQuery = (id: string) =>
     queryFn: () => apiFetch<GuardianRow>(`/guardians/${id}`),
   });
 
-/** POST /booking: one transaction (rule + lessons + queued confirmations). 409 = conflicts. */
-export const createBooking = (body: BookingBody, mode: BookingMode = 'admin') =>
-  apiSend<BookingResult>('POST', bookingBase(mode), body);
+/** apiSend with its reply left unknown, for the schema to parse. */
+const put: (method: 'PUT', path: string, body: unknown) => Promise<unknown> = apiSend;
+
+/** PUT /sales/booking/course/draft (owner 2026-11-06): null = kept until the payment. */
+async function saveCourseDraft(body: BookingBody): Promise<BookingResult | null> {
+  const saved = courseDraftSavedSchema.parse(await put('PUT', '/sales/booking/course/draft', body));
+  return saved.state === 'booked' ? saved.booking : null;
+}
+
+/**
+ * POST /booking: one transaction (rule + lessons + queued confirmations). 409 = conflicts. A held
+ * course (`hold`) is saved as a draft instead: null.
+ */
+export const createBooking = (body: BookingBody, mode: BookingMode = 'admin', hold = false) =>
+  hold ? saveCourseDraft(body) : apiSend<BookingResult>('POST', bookingBase(mode), body);
 
 /**
  * POST /booking/check — the whole series' clashes for the slot step, before «احجز» (R-SCH-04),

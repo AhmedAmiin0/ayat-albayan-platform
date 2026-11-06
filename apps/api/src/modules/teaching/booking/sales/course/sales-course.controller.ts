@@ -1,5 +1,10 @@
 import { courseChangeCheckSchema, courseChangeSchema, type CourseChangeCheck, type CourseChangeResult, type SalesCourseView } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import type { BookingRequest, CourseDraftSaved } from '@ab/shared';
+import { Body, Controller, Get, HttpCode, Post, Put, Query } from '@nestjs/common';
+import { ZodBody } from '@/common/http/zod-inputs';
+import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
+import { bookingBodySchema } from '@/modules/teaching/booking/plan/package-size';
+import { CourseDrafts } from '@/modules/teaching/booking/sales/course-draft/course-draft.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../../../../common/auth/decorators';
 import { can } from '../../../../../common/auth/permissions';
@@ -25,6 +30,7 @@ export class SalesCourseController {
   constructor(
     private readonly course: SalesCourse,
     private readonly changes: CourseChange,
+    private readonly drafts: CourseDrafts,
   ) {}
 
   /** 200 SalesCourseView; 403 not_your_student; 404 student_not_found. */
@@ -40,6 +46,19 @@ export class SalesCourseController {
   check(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CourseChangeCheck> {
     if (!can(user, 'self.sales')) throw forbidden('forbidden');
     return this.changes.check(parseOrThrow(courseChangeCheckSchema, body), salesActor(user));
+  }
+
+  /**
+   * 200 CourseDraftSaved (owner 2026-11-06): the picks of a package unpaid with an open payment
+   * link kept until its payment (saved again = edited), else booked at once; codes as «احجز».
+   */
+  @Put('course/draft')
+  draft(
+    @ZodBody(bookingBodySchema) req: BookingRequest,
+    @CurrentUser() user: AuthUser,
+  ): Promise<CourseDraftSaved> {
+    if (!can(user, 'self.sales')) throw forbidden('forbidden');
+    return this.drafts.save(clientRequest(req, user.role), user);
   }
 
   /** 201 CourseChangeResult; codes: CourseChange.change (a clash is always 409 conflict). */

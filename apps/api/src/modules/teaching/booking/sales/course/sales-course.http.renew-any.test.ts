@@ -11,7 +11,11 @@ import { SettingsService } from '@/common/settings/settings.service';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
+import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { SalesCourseRepo } from './sales-course.repo';
+
+/** No payment link held, no draft (owner 2026-11-06). */
+const NO_DRAFTS = { held: async () => false, get: async () => null };
 
 // «أيام الحلقات» with sales.renew_any (owner 2026-11-01, docs/16 row 38): the course of ANY
 // student, another assistant's (S1, salesA's) or nobody's (S2). sales_auto_assign ON: the slot
@@ -73,6 +77,7 @@ describe('/sales/booking course routes with sales.renew_any', () => {
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(SlotsService).useValue(slots)
       .overrideProvider(SalesCourseRepo).useValue(queries)
+      .overrideProvider(CourseDraftRepo).useValue(NO_DRAFTS)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

@@ -4132,6 +4132,42 @@ export type Database = {
           },
         ];
       };
+      subscription_course_drafts: {
+        Row: {
+          request: Json;
+          saved_at: string;
+          saved_by: string;
+          subscription_id: string;
+        };
+        Insert: {
+          request: Json;
+          saved_at?: string;
+          saved_by: string;
+          subscription_id: string;
+        };
+        Update: {
+          request?: Json;
+          saved_at?: string;
+          saved_by?: string;
+          subscription_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'subscription_course_drafts_saved_by_fkey';
+            columns: ['saved_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'subscription_course_drafts_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: true;
+            referencedRelation: 'subscriptions';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       subscriptions: {
         Row: {
           cancel_kind: string | null;

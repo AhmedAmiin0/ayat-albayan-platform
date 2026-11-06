@@ -12,7 +12,7 @@ import { createBooking } from '@/features/teaching/booking/api';
 import { CourseCheckNotice } from './CourseCheckNotice';
 import { toBookingRequest, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { DuplicateNotice } from './DuplicateNotice';
-import { useBookingMode } from '@/features/teaching/booking/mode';
+import { useBookingMode, useCourseHeld } from '@/features/teaching/booking/mode';
 import { ReviewSummary } from './ReviewSummary';
 import { isSeriesClean, useSeriesCheck } from './SeriesCheck';
 
@@ -38,15 +38,17 @@ export interface ReviewStepProps {
 export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBooked, onPatch }: ReviewStepProps) {
   const queryClient = useQueryClient();
   const mode = useBookingMode();
+  const held = useCourseHeld();
   const book = useMutation({
     mutationFn: (override?: string) => {
       const body = toBookingRequest(draft, override);
       if (!body) throw new Error('incomplete draft');
-      return createBooking(body, mode);
+      return createBooking(body, mode, draft.course?.hold === true);
     },
     onSuccess: async (result) => {
       await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
-      onBooked(result);
+      if (result) onBooked(result);
+      else held?.();
     },
   });
   // The assistant's course books only over a clean series check: she never books over a clash. Only

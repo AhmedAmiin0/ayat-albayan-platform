@@ -5,13 +5,14 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { BookingWizard } from '@/features/teaching/booking/BookingWizard';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
-import { BookingModeContext, ChatReturnContext } from '@/features/teaching/booking/mode';
+import { BookingModeContext, ChatReturnContext, CourseHeldContext } from '@/features/teaching/booking/mode';
 import { lessonErrorText } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { refreshAfterSalesWrite, salesCourseQuery } from '@/features/sales/sales-money/api';
 import { continuePlan, type ContinuePlan } from './course-continue';
 import { courseDraft, courseFixedText, courseHint, courseTitle, subscriptionStartsText } from './course-draft';
 import { ContinueChoice } from './ContinueChoice';
+import { CourseSaved } from './CourseSaved';
 import { SalesPackageCancel } from './SalesPackageCancel';
 import { SalesRunningCourse } from './SalesRunningCourse';
 
@@ -43,8 +44,11 @@ type BookingProps = { view: SalesCourseView; draft: BookingDraft; onClose: () =>
  */
 function CourseBooking({ view, draft, onClose }: BookingProps) {
   const [choice, setChoice] = useState<Choice>(null);
+  // Hold mode (owner 2026-11-06): «احجز» kept the picks as a draft, booked after the payment.
+  const [saved, setSaved] = useState(false);
   const [now] = useState(() => new Date().toISOString());
   const plan = continuePlan(view, now);
+  if (saved) return <CourseSaved onClose={onClose} />;
   if (plan && choice === null) {
     return (
       <ContinueChoice view={view} draft={draft} now={now} onContinue={() => setChoice('continue')} onOther={() => setChoice('other')} />
@@ -55,7 +59,16 @@ function CourseBooking({ view, draft, onClose }: BookingProps) {
   return (
     <BookingModeContext.Provider value="sales">
       <ChatReturnContext.Provider value={onClose}>
-        <BookingWizard initial={start.draft} primary={null} siblings={[]} onOpenStudent={noop} hint={start.hint} exit={exit} />
+        <CourseHeldContext.Provider value={() => setSaved(true)}>
+          <BookingWizard
+            initial={start.draft}
+            primary={null}
+            siblings={[]}
+            onOpenStudent={noop}
+            hint={start.hint}
+            exit={exit}
+          />
+        </CourseHeldContext.Provider>
       </ChatReturnContext.Provider>
     </BookingModeContext.Provider>
   );
@@ -112,6 +125,9 @@ export function SalesCourseDialog({ studentId, onClose }: Props) {
     <Dialog title={courseTitle(view)} description={description} onClose={close} wide>
       {!view && course.isError && <FormAlert>{lessonErrorText(course.error)}</FormAlert>}
       {!view && course.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
+      {view?.hold && (
+        <p className="rounded-md bg-gold-wash px-3 py-2 text-xs text-ink">{t.courseDraft.held}</p>
+      )}
       {view && <CourseBody view={view} onClose={close} />}
       {view?.subscription && (
         <SalesPackageCancel

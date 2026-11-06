@@ -53,6 +53,27 @@ export class CourseDue {
     }
   }
 
+  /**
+   * A draft's days clashed at payment (owner 2026-11-06): nothing was booked, the draft stays as
+   * the wizard's prefill; its assistant and the admins pick again (once per saved version).
+   */
+  async clash(subscriptionId: string, draft: { savedBy: string; savedAt: string }): Promise<void> {
+    try {
+      const p = await this.repo.package(subscriptionId);
+      if (!p) return;
+      const event = {
+        subject: `course_draft_clash:${subscriptionId}:${draft.savedAt}`,
+        title: ar.courseDraft.clashTitle,
+        vars: { student: p.student, left: ar.courseDraft.clashText },
+        data: noticeData(p),
+      };
+      await this.push.notifyAdmins('payment_due', event);
+      await this.push.notifyProfiles({ ...event, kind: 'payment_due', profileIds: [draft.savedBy] });
+    } catch (e) {
+      this.log.error(`course draft clash ${subscriptionId}: ${errText(e)}`);
+    }
+  }
+
   private async tell(p: UnbookedPackage): Promise<void> {
     const event = {
       subject: `course_unbooked:${p.subscriptionId}`,

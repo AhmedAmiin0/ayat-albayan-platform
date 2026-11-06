@@ -48,8 +48,11 @@ export class SalesBookingService {
     return this.scoped(own, () => (opts ? this.booking.book(req, user.id, opts) : this.booking.book(req, user.id)));
   }
 
-  /** The scope, then for a course its guard: the options it is booked with (undefined for a trial). */
-  private async allowed(req: BookingRequest, user: AuthUser): Promise<{ own: BookingOwnership; opts?: PrepareOptions }> {
+  /**
+   * The scope, then for a course its guard: the options it is booked with (undefined for a trial).
+   * Also a course draft's check (CourseDrafts.save, owner 2026-11-06).
+   */
+  async allowed(req: BookingRequest, user: AuthUser): Promise<{ own: BookingOwnership; opts?: PrepareOptions }> {
     const own = await this.ownership(req, user);
     const opts = await this.courseOptions(req);
     return opts ? { own, opts } : { own };

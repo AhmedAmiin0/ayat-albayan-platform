@@ -59,8 +59,10 @@ export class SalesCourseRepo {
    * for a student with an imported course (a rule with no subscription_id): its old packages were
    * taught on that course and look unbooked. null without any.
    */
-  async subscription(studentId: string): Promise<CourseSubscription | null> {
-    const [subs, imported] = await Promise.all([this.openPackages(studentId), this.imported(studentId)]);
+  async subscription(studentId: string, only?: string): Promise<CourseSubscription | null> {
+    const [all, imported] = await Promise.all([this.openPackages(studentId), this.imported(studentId)]);
+    // `only`: that package (a draft booked on its payment, owner 2026-11-06).
+    const subs = only === undefined ? all : all.filter((r) => r.id === only);
     const row = (imported ? undefined : subs.find((r) => r.rules.length === 0)) ?? subs[0];
     if (!row) return null;
     const { rules, ...sub } = row;
