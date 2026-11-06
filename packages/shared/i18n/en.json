@@ -8175,6 +8175,19 @@
     "pdfPending": "The PDF is being prepared; open the page again shortly.",
     "notFound": "We could not find this report, or you may not view it.",
     "view": "View report",
-    "edited": "The report was edited after it was sent"
+    "edited": "The report was edited after it was sent",
+    "gate": {
+      "title": "WhatsApp verification",
+      "intro": "To view the report we send a verification code by WhatsApp to one of the numbers we have on file for this lesson.",
+      "sendTo": "Send the code to {masked}",
+      "sent": "If the number is on file, the code arrives in a moment. Enter it here.",
+      "code": "Verification code",
+      "verify": "Verify",
+      "invalid": "The code is wrong or has expired.",
+      "tooMany": "Too many attempts; please try again shortly.",
+      "unavailable": "Verification codes are unavailable right now.",
+      "failed": "We could not complete the request; please try again.",
+      "noPhone": "There is no number on file to send the code to."
+    }
   }
 }

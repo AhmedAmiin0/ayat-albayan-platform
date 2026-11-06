@@ -44,8 +44,8 @@ describe('ReportPage (/report/:publicId)', () => {
     expect(screen.queryByRole('link', { name: t.reportPage.downloadPdf })).toBeNull();
   });
 
-  it.each([401, 404])('%i: «not found», never whose report it is', async (status) => {
-    fetchMock.mockImplementation(() => json(status, { code: 'report_not_found' }));
+  it('signed out, unknown report (404 on both): «not found», never whose report it is', async () => {
+    fetchMock.mockImplementation(() => json(404, { code: 'report_not_found' }));
     open();
     expect(await screen.findByText(t.reportPage.notFound)).toBeTruthy();
     expect(screen.queryByText('سهيلة')).toBeNull();

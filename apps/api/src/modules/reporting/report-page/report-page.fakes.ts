@@ -72,8 +72,8 @@ export function pageFacts(): PageFacts {
       code: 'AB-0001',
       tz: 'Asia/Riyadh',
       profile_id: 'student-profile',
-      guardian: { id: 'g1', profile_id: 'guardian-profile' },
+      guardian: { id: 'g1', profile_id: 'guardian-profile', phone_e164: '+15550000001' },
     },
-    teacher: { display_name_ar: 'أبرار', profile_id: 'teacher-profile' },
+    teacher: { display_name_ar: 'أبرار', profile_id: 'teacher-profile', phone_e164: '+15550000002' },
   };
 }

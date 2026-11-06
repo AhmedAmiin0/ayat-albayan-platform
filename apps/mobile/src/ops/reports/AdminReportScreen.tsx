@@ -45,6 +45,11 @@ export function AdminReportScreen() {
           {adminReportFields(report).map((f) => (
             <ReportFieldRow key={f.key} field={f} />
           ))}
+          <Button
+            variant="secondary"
+            label={t.reportPage.view}
+            onPress={() => router.push(`/report/id/${report.id}`)}
+          />
           {report.pdf_status === 'ready' ? (
             <View style={{ gap: 8 }}>
               <Button

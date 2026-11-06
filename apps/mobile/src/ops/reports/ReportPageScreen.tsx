@@ -23,8 +23,8 @@ const back = () => (router.canGoBack() ? router.back() : router.replace('/'));
  * the PDF. No edit here, ever.
  */
 export function ReportPageScreen() {
-  const { reportId } = useLocalSearchParams<{ reportId: string }>();
-  const query = useReportPage(reportId);
+  const params = useLocalSearchParams<{ reportId?: string; publicId?: string }>();
+  const query = useReportPage(params);
   const cycle = useClockCycle();
   const view = query.data;
   const s = t.reportPage;

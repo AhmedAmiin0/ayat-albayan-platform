@@ -5,5 +5,6 @@ export * from './teacher-list.js';
 export type * from './views.js';
 export type * from './teacher-views.js';
 export * from './page.js';
+export * from './page-access.js';
 export * from './quran/index.js';
 export * from './v2/index.js';
