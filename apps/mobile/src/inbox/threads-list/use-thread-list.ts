@@ -50,7 +50,7 @@ export function useThreadList({ search, unread, list, status, live: liveTab = fa
     getNextPageParam: nextPageParam,
     refetchInterval: liveTab && focused ? liveInterval(live, INBOX_LIST_REFRESH_MS) : false,
     // A list answer never shows a tick behind the one its chat already merged (docs/43 43-1).
-    select: withChatTicks(client),
+    select: withChatTicks(client, queryKey),
   });
   const pages = query.data?.pages;
   const items = useMemo(() => {

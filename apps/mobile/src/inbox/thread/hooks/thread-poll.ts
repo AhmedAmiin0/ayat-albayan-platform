@@ -17,12 +17,17 @@ const busy = (client: QueryClient, phone: string) =>
 /** Polls that run on their own timer while on screen; no fetch on open (the thread query just read the page). */
 const POLL = { initialData: 0, staleTime: Infinity, gcTime: 0, meta: { noPersist: true } } as const;
 
+/** The chat's cache changed after `at` (a delta or a send landed while a read was out). */
+const movedSince = (client: QueryClient, phone: string, at: number) =>
+  (client.getQueryState(threadKey(phone))?.dataUpdatedAt ?? 0) > at;
+
 /**
- * A page poll's answer folded in (docs/43 AU12): it may have left before a delta brought ✓✓, so a
- * cached tick further along stays (failed / sent by hand / a retry always come through).
+ * A page poll's answer folded in (docs/43 AU12): when the cache moved after it was asked, a cached
+ * tick further along stays (failed / sent by hand / a retry always come through); otherwise the
+ * full read is the newest truth and replaces every tick (docs/43 43-1).
  */
-const foldPage = (fresh: ThreadDetail) => (old: ThreadCache | undefined) =>
-  mergeNewest(old, laterTicks(old, fresh));
+const foldPage = (fresh: ThreadDetail, moved: boolean) => (old: ThreadCache | undefined) =>
+  mergeNewest(old, moved ? laterTicks(old, fresh) : fresh);
 
 /**
  * An open chat shows new messages and ticks (owner 2026-10-27) while its screen is focused and the app
@@ -60,10 +65,12 @@ export function useThreadPoll(phone: string, loaded: boolean) {
   useQuery({
     queryKey: threadPollKey(phone),
     queryFn: async () => {
+      const asked = Date.now();
       const fresh = await apiFetch<ThreadDetail>(threadPath(phone));
       if (busy(client, phone)) return Date.now();
+      const fold = foldPage(fresh, movedSince(client, phone, asked));
       if (leavesGap(client.getQueryData<ThreadCache>(queryKey), fresh)) void client.invalidateQueries({ queryKey });
-      else client.setQueryData<ThreadCache>(queryKey, foldPage(fresh));
+      else client.setQueryData<ThreadCache>(queryKey, fold);
       return Date.now();
     },
     ...POLL,
