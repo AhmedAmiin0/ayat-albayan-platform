@@ -81,4 +81,15 @@ describe('SenderWake: the sender behind wakeSender()', () => {
     await flush();
     expect(gate.open).not.toHaveBeenCalled();
   });
+
+  it('app A closing after app B registered keeps the kick of B (identity check)', async () => {
+    vi.stubEnv('APP_ROLE', 'worker');
+    const a = new SenderWake(sender());
+    a.onModuleInit();
+    new SenderWake(sender()).onModuleInit();
+    a.onModuleDestroy();
+    wakeSender();
+    await flush();
+    expect(worker.process).toHaveBeenCalledTimes(3);
+  });
 });

@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { onSenderWake, resetSenderWake, wakeOn, wakeSender } from './sender-wake';
+import { forgetSenderWake, onSenderWake, resetSenderWake, wakeOn, wakeSender } from './sender-wake';
 
 // docs/42 42-1: jobs that queue rows wake the sender at once; fire and forget, coalesced.
 
@@ -82,12 +82,24 @@ describe('wakeSender (docs/42 42-1)', () => {
     expect(kick).toHaveBeenCalledTimes(1);
   });
 
-  it('onSenderWake(null) forgets the kick (shutdown)', async () => {
+  it('forgetSenderWake(own) forgets the kick (shutdown)', async () => {
     const kick = vi.fn(async () => undefined);
     onSenderWake(kick);
-    onSenderWake(null);
+    forgetSenderWake(kick);
     wakeSender();
     await flush();
     expect(kick).not.toHaveBeenCalled();
+  });
+
+  it('an app closing after another registered never wipes the newer kick', async () => {
+    const a = vi.fn(async () => undefined);
+    const b = vi.fn(async () => undefined);
+    onSenderWake(a);
+    onSenderWake(b);
+    forgetSenderWake(a);
+    wakeSender();
+    await flush();
+    expect(a).not.toHaveBeenCalled();
+    expect(b).toHaveBeenCalledTimes(1);
   });
 });

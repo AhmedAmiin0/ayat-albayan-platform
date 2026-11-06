@@ -14,9 +14,17 @@ let kick: Kick | null = null;
 let inflight = false;
 let again = false;
 
-/** The sender registers its kick at boot (null: forget it, e.g. on shutdown). */
-export function onSenderWake(next: Kick | null): void {
+/** The sender registers its kick at boot (the latest registration wins). */
+export function onSenderWake(next: Kick): void {
   kick = next;
+}
+
+/**
+ * On shutdown: forgets `own` only while it is still the registered kick, so an app closing after
+ * another one registered (tests, a re-init) never wipes that app's kick.
+ */
+export function forgetSenderWake(own: Kick): void {
+  if (kick === own) kick = null;
 }
 
 const warn = (e: unknown): void => {

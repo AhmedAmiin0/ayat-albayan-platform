@@ -1,5 +1,5 @@
 import { Injectable, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
-import { onSenderWake } from '@/common/jobs';
+import { forgetSenderWake, onSenderWake } from '@/common/jobs';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 
 /**
@@ -10,13 +10,16 @@ import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sende
  */
 @Injectable()
 export class SenderWake implements OnModuleInit, OnModuleDestroy {
+  /** This app's own kick: destroy forgets only it (another app may have registered since). */
+  private readonly kick = (): Promise<void> => this.sender.kick();
+
   constructor(private readonly sender: MessageSender) {}
 
   onModuleInit(): void {
-    onSenderWake(() => this.sender.kick());
+    onSenderWake(this.kick);
   }
 
   onModuleDestroy(): void {
-    onSenderWake(null);
+    forgetSenderWake(this.kick);
   }
 }

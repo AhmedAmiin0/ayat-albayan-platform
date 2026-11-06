@@ -1,2 +1,2 @@
 export { Ticker } from './ticker';
-export { onSenderWake, resetSenderWake, wakeOn, wakeSender } from './sender-wake';
+export { forgetSenderWake, onSenderWake, resetSenderWake, wakeOn, wakeSender } from './sender-wake';
