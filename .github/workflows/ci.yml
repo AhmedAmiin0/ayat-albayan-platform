@@ -111,7 +111,8 @@ jobs:
   # web in quarters and api in thirds (vitest --shard). Vitest's persistent transform cache (fsModuleCache:
   # <repo>/node_modules/.vitest-cache) is restored per shard (`vcache`): vitest keys every entry by the module's
   # path, its content, the config files' content and its own version, and empties the folder when pnpm-lock.yaml
-  # changes; it holds transformed code only, never a test result, so every test still runs. Turborepo's remote cache lives in the GitHub Actions cache
+  # changes; it holds transformed code only, never a test result, so every test still runs. Turborepo's remote
+  # cache lives in the GitHub Actions cache
   # (rharkor/caching-for-turbo: a local cache server, one cache entry per task hash, no token or outside service),
   # shared by every job and run, so a task a change did not touch is replayed instead of re-run.
   # Lint: Oxlint first (seconds, the rules of .oxlintrc.json), then ESLint for the type-aware, custom and
@@ -155,25 +156,45 @@ jobs:
         run: pnpm lint:ox --format github
       - name: Turbo cache (GitHub Actions cache)
         uses: rharkor/caching-for-turbo@760158c05c47e7a764f78e9a22ca3b5a6ed8c52e # v2.5.2
-      # A new lockfile or vitest config starts empty; otherwise the newest cache of this shard (this branch's, else
-      # the base branch's).
+      # A new lockfile, vitest config or tsconfig (swc and oxc read compilerOptions) starts empty; otherwise the
+      # newest cache of this shard (this branch's, else the base branch's).
+      - name: Vitest transform cache key
+        id: vkey
+        if: matrix.vcache
+        env:
+          LOCK: ${{ hashFiles('pnpm-lock.yaml') }}
+          CONF: >-
+            ${{ hashFiles('*/*/vitest.config.mts', 'apps/web/vite.config.ts', 'tsconfig*.json',
+            '*/*/tsconfig*.json', 'packages/config/tsconfig/**') }}
+          SHARD: ${{ matrix.vcache }}
+        run: echo "prefix=vitest-$RUNNER_OS-$LOCK-$CONF-$SHARD-" >> "$GITHUB_OUTPUT"
       - name: Restore the vitest transform cache
         id: vcache
         if: matrix.vcache
         uses: actions/cache/restore@v4
         with:
           path: node_modules/.vitest-cache
-          key: vitest-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('*/*/vitest.config.mts', 'apps/web/vite.config.ts') }}-${{ matrix.vcache }}-${{ github.run_id }}
-          restore-keys: vitest-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('*/*/vitest.config.mts', 'apps/web/vite.config.ts') }}-${{ matrix.vcache }}-
+          key: ${{ steps.vkey.outputs.prefix }}${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: ${{ steps.vkey.outputs.prefix }}
+      - name: Mark the restored vitest cache
+        if: matrix.vcache
+        run: touch "$RUNNER_TEMP/vitest-start"
       - id: turbo
         run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} ${{ matrix.opts }} --cache-dir=.turbo/cache ${{ matrix.args }}
         env:
           NODE_OPTIONS: ${{ matrix.heap }}
-      # Also after a red test (the transforms are still right); not when turbo replayed the task (no folder). A PR
-      # saves only when it restored nothing (~50 MB per shard), so the Actions cache holds develop's newest set.
+      # Saved only when vitest wrote new transforms (not when turbo replayed the task), also after a red test (the
+      # transforms are still right). A PR saves only when it restored nothing (~50 MB per shard), so the Actions
+      # cache holds develop's newest set.
+      - name: New vitest transforms?
+        id: vwrote
+        if: ${{ !cancelled() && matrix.vcache }}
+        run: |
+          new=$(find node_modules/.vitest-cache -type f -newer "$RUNNER_TEMP/vitest-start" -print -quit 2>/dev/null || true)
+          [ -z "$new" ] || echo "new=true" >> "$GITHUB_OUTPUT"
       - name: Save the vitest transform cache
         if: >-
-          ${{ !cancelled() && matrix.vcache && hashFiles('node_modules/.vitest-cache/**') != ''
+          ${{ !cancelled() && steps.vwrote.outputs.new == 'true'
           && (github.event_name != 'pull_request' || steps.vcache.outputs.cache-matched-key == '') }}
         uses: actions/cache/save@v4
         with:
