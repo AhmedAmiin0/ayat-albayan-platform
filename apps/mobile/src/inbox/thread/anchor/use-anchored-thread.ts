@@ -5,6 +5,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { threadGet } from '@/inbox/thread/hooks/use-thread';
+import { useStoredTicks } from '@/inbox/thread/local';
 import { leaveAnchor } from './use-anchor-param';
 
 /** The hit is not in this chat any more (hidden, deleted, another phone): 404 message_not_found. */
@@ -67,5 +68,5 @@ export function useAnchoredThread(phone: string, id: string | undefined) {
   useEffect(() => {
     if (failure) lost(failure);
   }, [failure]);
-  return query;
+  return useStoredTicks(phone, query);
 }

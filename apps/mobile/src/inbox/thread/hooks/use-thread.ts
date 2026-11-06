@@ -9,6 +9,7 @@ import {
 } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
+import { useStoredView } from '@/inbox/thread/local/stored-view';
 import { rollback, unanswered } from '@/inbox/thread/send/after-send';
 import { failPinned, pinGeneration, pinnedOf, settlePinned } from '@/inbox/thread/send/pinned-outcome';
 import { carried, type SendDone, sendBody, type SendInput } from '@/inbox/thread/send/outgoing';
@@ -39,20 +40,18 @@ export const threadQuery = (phone: string) =>
       threadGet(`${threadPath(phone)}${threadPageQuery(pageParam)}`, { signal }),
     initialPageParam: null as ThreadPageParam,
     getNextPageParam: threadNextParam,
+    meta: { noPersist: true },
   });
 
 /**
- * GET /threads/:phone (docs/12 H2): the newest page first, `before` + `before_id` (the oldest
- * loaded row's time and id: a compound keyset, docs/37) pages back. The API stamps the inbound
- * rows read when it answers. The persisted client keeps the last answer on disk, so an opened
- * thread reads offline (R-MOB-03). While on screen, useThreadPoll keeps it live: a delta every
- * INBOX_REFRESH_MS, the newest page every THREAD_FULL_MS (pull-to-refresh and opening read the
- * whole thread).
+ * GET /threads/:phone (docs/12 H2): newest page first, `before` + `before_id` page back (docs/37);
+ * the API stamps inbound rows read. Pages stay off disk: the phone store opens a chat offline and
+ * keeps its ticks (docs/43 43-7, useStoredView). On screen useThreadPoll keeps it live.
  */
 export function useThread(phone: string) {
   const query = useInfiniteQuery(threadQuery(phone));
   useThreadPoll(phone, query.data !== undefined);
-  return query;
+  return useStoredView(phone, query);
 }
 
 /**

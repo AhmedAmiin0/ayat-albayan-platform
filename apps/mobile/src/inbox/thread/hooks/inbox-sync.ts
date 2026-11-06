@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { listsKey } from '@/inbox/lists/lib/use-chat-lists';
 import { changeLists } from '@/inbox/thread/live/list-marks';
+import { nudgeInboxStore } from '@/inbox/thread/local/store-session';
 import { type ThreadCache, threadKey } from './thread-cache';
 import { clearUnread, newestInbound, type ThreadListCache, touchList } from './thread-list-cache';
 
@@ -23,6 +24,7 @@ const navCountKey = ['threads', 'nav-count'];
  * it when it shows again; a list on screen re-reads now (changeLists).
  */
 export function refreshLists(client: QueryClient): void {
+  nudgeInboxStore(); // the phone store syncs too (docs/43 43-7)
   changeLists(client);
   for (const queryKey of [navCountKey, listsKey]) void client.invalidateQueries({ queryKey });
 }
@@ -57,6 +59,7 @@ export async function refreshChat(client: QueryClient, phone: string): Promise<v
  */
 export async function resumeInbox(client: QueryClient): Promise<void> {
   await client.cancelQueries({ queryKey: ['threads'] });
+  nudgeInboxStore();
   await refreshInbox(client);
 }
 

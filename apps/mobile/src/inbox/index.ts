@@ -10,10 +10,12 @@ export { threadHref } from './thread/hooks/thread-cache';
 export { clockAt } from './shared/format';
 export { StaffCalls } from './thread/calls/state/StaffCalls';
 export { useInboxRealtime } from './thread/live';
+export { useInboxStore } from './thread/local';
+export { clearInboxOnSignOut } from './sign-out';
 // A screen over the chat (sales-subscribe «رابط دفع») fills its reply box wherever a text goes (chatMaySend).
 export { appendComposerText } from './composer/draft-store';
-// «بحث في الرسائل» on a student's details opened from a chat (docs/37); a sign-out's cleanup.
-export { clearChatMemory, MessageSearchRow } from './thread/anchor';
+// «بحث في الرسائل» on a student's details opened from a chat (docs/37).
+export { MessageSearchRow } from './thread/anchor';
 export { chatMaySend } from './thread/hooks/chat-window';
 // The meetings room (classroom/room, docs/35) wears the calls' round controls and icons.
 export { RoundButton } from './thread/calls/screen/RoundButton';

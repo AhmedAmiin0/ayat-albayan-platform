@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { AppState } from 'react-native';
 import { supabase } from '@/core/lib/http/supabase';
 import { queryClient as client } from '@/core/lib/query/query-client';
+import { nudgeInboxStore } from '@/inbox/thread/local/store-session';
 import { refreshOpenChat } from './live-refresh';
 import { inboxLive } from './inbox-live';
 import { changeLists } from './list-marks';
@@ -10,16 +11,20 @@ import { changeLists } from './list-marks';
 const active = () => AppState.currentState === 'active';
 
 /** An event re-reads the open chat, the chats list and the badge; never while the app is not active. */
+// Every event also syncs the phone store (docs/43 43-7; its engine throttles to one a second).
 const targets: LiveTargets = {
   chat: (phone) => {
+    nudgeInboxStore();
     if (active()) void refreshOpenChat(client, phone);
   },
   // Shown lists re-read with the last word (a read in flight is followed by a fresh one, docs/43
   // AU1); hidden ones are only marked (list-marks.ts). Throttled to one per 3 s.
   list: () => {
+    nudgeInboxStore();
     if (active()) changeLists(client);
   },
   badge: () => {
+    nudgeInboxStore();
     if (active()) void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false });
   },
 };
