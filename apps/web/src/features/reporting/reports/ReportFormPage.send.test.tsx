@@ -28,7 +28,7 @@ describe('the report form: one send, then read-only, edit on demand', () => {
   });
 
   it('a double tap while pending sends one request; the button is disabled with a spinner', async () => {
-    let answer = (_: unknown) => undefined as void;
+    let answer: (value: unknown) => void = () => undefined;
     apiSend.mockImplementation((method: string) =>
       method === 'POST' ? new Promise((resolve) => (answer = resolve)) : Promise.resolve(reportView()));
     renderReportForm(apiFetch, formResponse());

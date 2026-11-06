@@ -30,6 +30,6 @@ export function gradeEverything() {
   }
   pick(t.reports.overall, t.enums.grade.excellent);
   for (const k of ['recited', 'newMemorization', 'revision', 'notes', 'homework'] as const) {
-    fireEvent.change(screen.getByLabelText(t.reports[k]), { target: { value: 'تمام' } });
+    fireEvent.change(screen.getByLabelText(t.reports[k]), { target: { value: 'done' } });
   }
 }

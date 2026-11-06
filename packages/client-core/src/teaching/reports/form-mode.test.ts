@@ -47,7 +47,7 @@ describe('sentMoment', () => {
 
 describe('singleFlight', () => {
   it('a double tap runs the send once; after it settles the next tap runs again', () => {
-    let settle = () => undefined as void;
+    let settle: () => void = () => undefined;
     const run = vi.fn((done: () => void) => {
       settle = done;
     });

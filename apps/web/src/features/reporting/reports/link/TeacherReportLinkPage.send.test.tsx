@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { formResponse, reportView } from '@/features/reporting/reports/report-fixture';
@@ -23,7 +23,7 @@ afterEach(() => {
 
 describe('TeacherReportLinkPage: sending', () => {
   it('a double tap sends once; then «تم إرسال التقرير بنجاح», read-only, «تعديل التقرير»', async () => {
-    let answer = (_: Response) => undefined as void;
+    let answer: (value: Response) => void = () => undefined;
     fetchMock.mockImplementation((_url, init) =>
       init?.method === 'POST'
         ? new Promise<Response>((resolve) => (answer = resolve))

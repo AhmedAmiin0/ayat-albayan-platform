@@ -33,7 +33,7 @@ async function open(report: Partial<ReportView>) {
 beforeEach(() => jest.clearAllMocks());
 
 test('a double tap while pending sends once, with a spinner; then the confirmation, read-only', async () => {
-  let answer = (_: ReportView) => undefined as void;
+  let answer: (value: ReportView) => void = () => undefined;
   mockApiSend.mockImplementation((m: string) =>
     m === 'POST' ? new Promise((resolve) => (answer = resolve)) : Promise.resolve(reportView({ form_version: 2 })));
   await open({ content: graded });

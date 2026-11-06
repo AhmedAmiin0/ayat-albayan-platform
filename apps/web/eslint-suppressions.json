@@ -7468,11 +7468,6 @@
       "count": 2
     }
   },
-  "src/features/reporting/reports/entry-v2/V2Footer.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/reporting/reports/entry-v2/V2Header.tsx": {
     "max-len": {
       "count": 2
@@ -7612,11 +7607,6 @@
       "count": 1
     },
     "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/features/reporting/reports/entry/ReportEntryFooter.tsx": {
-    "max-len": {
       "count": 1
     }
   },
