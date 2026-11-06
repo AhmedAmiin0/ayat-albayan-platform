@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { EVOLUTION_MODES, type EvolutionMode } from '@ab/catalog';
-import type { EvolutionConfig, EvolutionSyncView } from './evolution-config.js';
+import type { EvolutionConfig } from './evolution-config.js';
+import type { EvolutionSyncView } from './evolution-sync.js';
 
 // An Evolution number (docs/19 «Evolution driver»): its instance name is the row's
 // phone_number_id, its token the number secret `evolution_token`; these are the rest.

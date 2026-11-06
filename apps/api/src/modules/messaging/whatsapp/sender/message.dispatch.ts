@@ -69,7 +69,7 @@ export class MessageDispatch {
   }
 
   /** An Evolution Baileys number's pace for this row (docs/19); null = no pacing. */
-  pace(row: DueMessage, via: SendVia): { waitMs: number; dailyCap: number } | null {
+  pace(row: DueMessage, via: SendVia): { waitMs: number; dailyCap: number; gapMs: number } | null {
     return this.client(via).pace?.(row.phone_e164) ?? null;
   }
 

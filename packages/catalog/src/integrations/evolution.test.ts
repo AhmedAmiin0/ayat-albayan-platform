@@ -39,6 +39,16 @@ describe('Evolution config', () => {
     expect(evolutionBase.safeParse('http://evolution-api:8080').success).toBe(true);
   });
 
+  it('refuses every other IP spelling (security review): decimal, hex, short, trailing dot', () => {
+    for (const host of ['2130706433', '0x7f000001', '127.1', '10.0.0.1.', '0']) {
+      expect(evolutionBaseAllowed(`https://${host}`, [])).toBe(false);
+      expect(evolutionBaseAllowed(`http://${host}`, [host])).toBe(false);
+    }
+    expect(evolutionInternalHosts.safeParse('2852039166').success).toBe(false);
+    expect(evolutionInternalHosts.safeParse('0x7f000001').success).toBe(false);
+    expect(evolutionBaseAllowed('https://evo.example.com', [])).toBe(true);
+  });
+
   it('keeps the internal list to one-word host names', () => {
     expect(evolutionInternalHosts.safeParse('evolution-api, evo2').success).toBe(true);
     expect(evolutionInternalList('Evo-API , ')).toEqual(['evo-api']);

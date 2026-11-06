@@ -28,7 +28,7 @@ export const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   WACRM_API_BASE: 'wacrm',
   WACRM_API_KEY: 'wacrm',
   WACRM_WEBHOOK_SECRET: 'wacrm',
-  // A self-hosted Evolution API (docs/19 «Evolution driver»): base, global key, internal http hosts.
+  // A self-hosted Evolution API (docs/19 «Evolution driver»): base, global key, internal hosts.
   EVOLUTION_API_BASE: 'evolution',
   EVOLUTION_API_KEY: 'evolution',
   EVOLUTION_INTERNAL_HOSTS: 'evolution',

@@ -29,7 +29,7 @@ describe('EvolutionWhatsappClient — sending options and pace', () => {
 
   it('answers the wait after a send to another recipient, and the daily cap', async () => {
     const { client, move } = setup();
-    expect(client.pace(TO)).toEqual({ waitMs: 0, dailyCap: 60 });
+    expect(client.pace(TO)).toEqual({ waitMs: 0, dailyCap: 60, gapMs: 3_000 });
     await client.sendText({ to: TO, text: 'أ' });
     expect(client.pace(TO)?.waitMs).toBe(0);
     expect(client.pace('+966500000002')?.waitMs).toBe(3_000);

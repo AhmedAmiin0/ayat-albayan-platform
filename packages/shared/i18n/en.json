@@ -3758,7 +3758,9 @@
       "window_closed": "More than 24 hours since the family's last message; only a template can be sent",
       "reopen_unavailable": "Not sent: the chat reopen template is not set or not valid — an admin picks it in Settings from the approved templates allowed for restricted roles with no variables",
       "reopen_failed": "Not sent: the chat reopen template did not reach the family — resend the message to send the template again",
-      "reopen_tries_used": "Not sent: today's chat reopen template tries are used up — resend the message tomorrow"
+      "reopen_tries_used": "Not sent: today's chat reopen template tries are used up — resend the message tomorrow",
+      "evolution_restricted": "WhatsApp restricted the Evolution number (463/475), so it was switched off — resend from another number; only an admin turns it back on",
+      "evolution_number_off": "The Evolution number is off or removed, so the message was not sent — resend it from another number"
     },
     "cancelManual": "Not yet",
     "failedMenu": "Message not sent",
@@ -5976,15 +5978,15 @@
       },
       "EVOLUTION_API_BASE": {
         "label": "Evolution server URL",
-        "hint": "https, or http on localhost only. Each number sets its instance name and token under «Numbers»."
+        "hint": "Starts with https, or http on localhost or on an internal host listed in «Internal hosts» (e.g. http://evolution-api:8080). A private IP is never accepted. Each number's instance name and token are set in «Numbers»."
       },
       "EVOLUTION_API_KEY": {
         "label": "Evolution global API key",
         "hint": "Used for the connection check and the QR when no instance token is saved. Never shown once saved."
       },
-      "EVOLUTION_SEND_GAP_MS": {
-        "label": "Gap between Baileys sends (ms)",
-        "hint": "Minimum gap between two sends of one Baileys number to different recipients (ban risk). Default 3000. Messages wait their turn; none is dropped."
+      "EVOLUTION_INTERNAL_HOSTS": {
+        "label": "Internal hosts allowed over http",
+        "hint": "Docker service names on the server network, comma separated (one word, no dots). Default evolution-api. Anything else must be https."
       }
     },
     "developer": "For developers",
@@ -6688,7 +6690,9 @@
       "api_base": "Server address",
       "api_version": "API version",
       "webhook_phone_number_id": "Number whose messages are received",
-      "evolution_token": "Instance token"
+      "evolution_token": "Instance token",
+      "evolution_cloud_token": "Meta Cloud API access token",
+      "evolution_proxy_password": "Proxy password"
     },
     "chips": {
       "enabled": "On",
@@ -6850,7 +6854,107 @@
       "stateAt": "Updated: {{at}}",
       "failed": "Could not reach Evolution. Check the URL and the instance token.",
       "refresh": "Refresh code",
-      "checking": "Checking…"
+      "checking": "Checking…",
+      "qrWarning": "Do not link the academy's main chat number. An unofficial link may get the number banned.",
+      "autoSendsHint": "Off: this number sends only what staff type in chats. On: higher risk of a ban.",
+      "enabledHint": "«Disable» on the number's card stops every send from this number at once; receiving continues.",
+      "configOpen": "Evolution settings",
+      "config": {
+        "title": "Evolution settings",
+        "intro": "These settings are saved here, sent to Evolution, then read back to check they match.",
+        "save": "Save and sync",
+        "saving": "Saving…",
+        "saved": "Settings saved and sent to Evolution.",
+        "invalid": "Check the marked fields before saving.",
+        "sections": {
+          "behaviour": "Instance behaviour",
+          "webhook": "Event notifications (webhook)",
+          "proxy": "Proxy",
+          "sending": "Sending",
+          "limits": "Sending limits",
+          "cloud": "Meta Cloud API"
+        },
+        "behaviour": {
+          "reject_call": "Reject incoming calls",
+          "msg_call": "Reply to a rejected call",
+          "msg_callHint": "Sent to the caller when the call is rejected. Leave empty for no reply.",
+          "groups_ignore": "Ignore group messages",
+          "always_online": "Always show as online",
+          "read_messages": "Mark incoming messages as read automatically",
+          "read_status": "Read status updates automatically",
+          "sync_full_history": "Sync the full chat history when linking"
+        },
+        "webhook": {
+          "enabled": "Send events to the platform",
+          "url": "Event URL",
+          "urlHint": "The platform's address ending in the path {{path}}. Use https, or http for a one-word internal host.",
+          "by_events": "A separate URL per event",
+          "base64": "Attach media as base64",
+          "events": "Events sent",
+          "eventsHint": "The default events are what the platform needs: incoming messages and their ticks, sends, the connection and the QR code.",
+          "defaults": "Restore the default events"
+        },
+        "proxy": {
+          "enabled": "Connect through a proxy",
+          "host": "Proxy host",
+          "port": "Port",
+          "protocol": "Protocol",
+          "username": "Username",
+          "passwordHint": "The password is saved in the «Proxy password» row below and never shown again."
+        },
+        "sending": {
+          "delay_ms": "Typing time before each message (ms)",
+          "delayHint": "The recipient sees «typing…» for this long first. 0 = no wait.",
+          "link_preview": "Show link previews"
+        },
+        "limits": {
+          "gap_ms": "Gap between two messages (ms)",
+          "gapHint": "Default 3000. A shorter gap raises the risk of a ban.",
+          "daily_cap": "Most messages per day",
+          "daily_capHint": "Default 60. Anything over it waits for the next day."
+        },
+        "cloud": {
+          "phone_number_id": "Meta phone number ID",
+          "business_id": "WhatsApp Business account ID",
+          "tokenHint": "The access token is saved in the «Meta Cloud API access token» row below."
+        },
+        "errors": {
+          "webhook_url": "Invalid URL: use https, or http for an internal host, with the full path.",
+          "proxy_host": "Invalid proxy host: a host name or IP address only.",
+          "proxy_needed": "A proxy needs its host and port when it is on.",
+          "invalid_id": "Digits only.",
+          "invalid": "Invalid value."
+        }
+      },
+      "sync": {
+        "label": "Sync with Evolution",
+        "synced": "In sync",
+        "unsynced": "Out of sync",
+        "never": "Never synced",
+        "at": "Last checked: {{at}}",
+        "parts": {
+          "instance": "Instance",
+          "settings": "Behaviour",
+          "webhook": "Event notifications",
+          "proxy": "Proxy"
+        },
+        "states": {
+          "synced": "Matches",
+          "drift": "Differs",
+          "failed": "Failed",
+          "skipped": "Skipped"
+        },
+        "push": "Sync now",
+        "verify": "Verify",
+        "pushed": "Settings sent to Evolution."
+      },
+      "errors": {
+        "not_evolution": "This number does not run through Evolution.",
+        "evolution_not_configured": "The Evolution address or the instance token is not set yet.",
+        "evolution_auth": "Evolution refused the key. Check the instance token or the global key.",
+        "evolution_unreachable": "Could not reach Evolution. Check the address and that the server is running.",
+        "generic": "That did not work. Try again."
+      }
     }
   },
   "settingsHub": {

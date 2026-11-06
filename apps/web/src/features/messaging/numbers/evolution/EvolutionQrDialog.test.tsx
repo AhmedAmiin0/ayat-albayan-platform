@@ -33,6 +33,14 @@ describe('«اربط الرقم بمسح الرمز»', () => {
     expect(within(dialog).getByText(e.state.connecting)).toBeTruthy();
   });
 
+  it('warns first, in words: never link the academy’s main chat number', async () => {
+    const dialog = await open({ state: 'connecting', qr: PNG, pairing_code: null });
+    expect(e.qrWarning).toBe(
+      'لا تربط رقم المحادثات الرئيسي للأكاديمية. الربط غير الرسمي قد يؤدي إلى حظر الرقم.',
+    );
+    expect(within(dialog).getAllByRole('alert')[0]?.textContent).toBe(e.qrWarning);
+  });
+
   it('never shows a QR that is not a PNG data URL (a link to another host)', async () => {
     const dialog = await open({ state: 'connecting', qr: 'https://evil.example/qr.png', pairing_code: null });
     expect(await within(dialog).findByText(e.qrNone)).toBeTruthy();

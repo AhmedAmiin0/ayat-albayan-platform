@@ -42,10 +42,12 @@ export function EvolutionFields({ draft, onChange }: EvolutionFieldsProps) {
       {mode === 'baileys' && (
         <CheckField
           label={e.autoSends}
+          hint={e.autoSendsHint}
           checked={draft.evolution_auto_sends}
           onChange={(checked) => onChange({ evolution_auto_sends: checked })}
         />
       )}
+      <p className="text-xs text-ink-3">{e.enabledHint}</p>
     </>
   );
 }

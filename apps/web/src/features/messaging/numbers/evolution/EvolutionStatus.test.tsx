@@ -4,16 +4,14 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { evolutionView } from '@/features/messaging/numbers/numbers.fixture';
+import { evolutionPart, evolutionView } from '@/features/messaging/numbers/numbers.fixture';
 import { EvolutionStatus } from './EvolutionStatus';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const e = t.numbers.evolution;
-const BAILEYS: NumberEvolutionView = {
-  mode: 'baileys', auto_sends: false, state: 'close', state_at: null,
-};
+const BAILEYS: NumberEvolutionView = evolutionPart({ state: 'close', state_at: null });
 
 function show(evolution: NumberEvolutionView, manage = true) {
   const view = evolutionView();
@@ -51,6 +49,13 @@ describe('an Evolution number on its card', () => {
     expect(screen.getByText(e.state.unknown)).toBeTruthy();
     expect(screen.queryByRole('button', { name: e.qr })).toBeNull();
     expect(screen.getByRole('button', { name: e.check })).toBeTruthy();
+  });
+
+  it('«إعدادات Evolution» opens the settings; the sync line shows on the card', () => {
+    show(BAILEYS);
+    expect(screen.getByText(e.sync.never)).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: e.configOpen }));
+    expect(screen.getByRole('dialog', { name: e.config.title })).toBeTruthy();
   });
 
   it('read-only: the state without the buttons', () => {

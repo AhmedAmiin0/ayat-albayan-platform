@@ -4,7 +4,7 @@ import type { PushService } from '@/common/push/push.service';
 import { EvolutionPacer } from '@/modules/messaging/whatsapp/drivers/evolution/evolution-pacer';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
-import type { EvolutionPaceRepo } from './pace';
+import { resetPaceSlots, type EvolutionPaceRepo } from './pace';
 import { dueMessage } from './sender.fakes';
 import type { SenderRepo } from './sender.repo';
 
@@ -28,14 +28,14 @@ function harness() {
   });
   const waitMs = (row: Row) => pacer.waitMs({ key: 'evo', to: row.phone_e164, gapMs: 3_000 });
   const pace = (row: Row, via: { numberId: string }) =>
-    (isEvo(via) ? { waitMs: waitMs(row), dailyCap: 60 } : null);
+    (isEvo(via) ? { waitMs: waitMs(row), dailyCap: 60, gapMs: 3_000 } : null);
   const dispatch = { send, ready: () => true, multi: true, pace };
   const queries = {
     claim: vi.fn(async () => 1), sent: vi.fn(async () => true),
     staffAtSend: vi.fn(async () => null),
   };
   const repo = {
-    defer: vi.fn(async () => undefined), sentSince: vi.fn(async () => 0),
+    defer: vi.fn(async (_id: string, _at: Date) => undefined), sentSince: vi.fn(async () => 0),
     failOff: vi.fn(async () => undefined),
   };
   const push = { notifyAdmins: vi.fn() } as unknown as PushService;
@@ -51,18 +51,22 @@ const text = (id: string, phone: string) =>
   dueMessage({ id, phone_e164: phone, template_key: null, template_params: null, body: 'نص', created_by: STAFF, lesson_id: null });
 
 describe('MessageWorker — Evolution pacing never blocks other lines', () => {
-  beforeEach(() => vi.useRealTimers());
-  afterEach(() => setNumbersOverlay(null));
+  beforeEach(() => vi.useFakeTimers({ now: NOW }));
+  afterEach(() => {
+    setNumbersOverlay(null);
+    resetPaceSlots();
+    vi.useRealTimers();
+  });
 
   it('sends E1, moves E2 to later (3 s), and sends the Kapso row at once', async () => {
     const { w, send, repo } = harness();
-    const started = Date.now();
+    const started = performance.now();
     const go = (row: ReturnType<typeof text>, route: typeof EVO | typeof KAPSO) =>
       w.process({ row, template: null, now: NOW, autoOn: true, route });
     expect(await go(text('e1', '+966500000001'), EVO)).toBe('sent');
     expect(await go(text('e2', '+966500000002'), EVO)).toBe('skipped');
     expect(await go(text('k1', '+966500000003'), KAPSO)).toBe('sent');
-    expect(Date.now() - started).toBeLessThan(1_000);
+    expect(performance.now() - started).toBeLessThan(1_000);
     expect(repo.defer).toHaveBeenCalledWith('e2', new Date(NOW.getTime() + 3_000));
     expect(send.mock.calls.map((c) => c[0].phone_e164)).toEqual(['+966500000001', '+966500000003']);
   });
@@ -73,6 +77,17 @@ describe('MessageWorker — Evolution pacing never blocks other lines', () => {
     expect(await w.process({ row: text('e3', '+966500000004'), template: null, now: NOW, autoOn: true, route: EVO })).toBe('skipped');
     expect(repo.sentSince).toHaveBeenCalledWith('evo-1', new Date('2026-11-06T00:00:00Z'));
     expect(repo.defer).toHaveBeenCalledWith('e3', new Date('2026-11-07T00:00:00Z'));
+  });
+
+  it('a backlog spreads over its own slots, one gap apart (never one crowded batch)', async () => {
+    const { w, repo } = harness();
+    const go = (id: string, phone: string) =>
+      w.process({ row: text(id, phone), template: null, now: NOW, autoOn: true, route: EVO });
+    await go('a', '+966500000011');
+    await go('b', '+966500000012');
+    await go('c', '+966500000013');
+    const offsets = repo.defer.mock.calls.map((c: unknown[]) => Number(c[1]) - NOW.getTime());
+    expect(offsets).toEqual([3_000, 6_000]);
   });
 
   it('a row pinned to an Evolution number that is off fails visibly (evolution_number_off)', async () => {

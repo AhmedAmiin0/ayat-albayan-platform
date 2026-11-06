@@ -48,7 +48,7 @@ export function NumberCard({ view, manage }: { view: NumberView; manage: boolean
       </header>
       {view.evolution && <EvolutionStatus view={view} evolution={view.evolution} manage={manage} />}
       <div className="grid">
-        {secretsOf(view.provider).map((name) => (
+        {secretsOf(view).map((name) => (
           <NumberSecretRow key={name} view={view} name={name} manage={manage} />
         ))}
       </div>

@@ -29,8 +29,19 @@ export const EVOLUTION_DAILY_CAP_DEFAULT = 60;
 
 /** A host name or IPv4 (no scheme, no port, no path). */
 const HOST_RE = /^[A-Za-z0-9.-]{1,100}$/;
-/** A webhook URL: https anywhere; http only to localhost or a one-word host (a docker service). */
-const HOOK_RE = /^(https:\/\/[A-Za-z0-9.-]+|http:\/\/(localhost|127\.0\.0\.1|[A-Za-z0-9_-]+))(:\d{1,5})?\/[A-Za-z0-9._~/-]*$/;
+/**
+ * A webhook URL: https to a host NAME (never an IP spelling), or http to localhost or a one-word
+ * docker service (a letter, never `0x…`). The API also requires our own path (evolutionHookPath).
+ */
+const HOOK_RE = /^(https:\/\/([a-z0-9-]{1,63}\.)+[a-z][a-z0-9-]{0,62}|http:\/\/(localhost|127\.0\.0\.1|(?!0x)(?=[a-z0-9_-]*[a-z])[a-z0-9_-]{1,63}))(:\d{1,5})?\/[A-Za-z0-9._~/-]*$/;
+
+/** The only path a number's webhook may point at: our route for its own instance. */
+export const evolutionHookPath = (instance: string): string =>
+  `/webhooks/evolution/${encodeURIComponent(instance)}`;
+
+/** The URL ends with our route for this instance (no other path receives its token). */
+export const hookIsOurs = (url: string | null, instance: string): boolean =>
+  url === null || /^https?:\/\/[^/]+(\/.*)$/.exec(url)?.[1] === evolutionHookPath(instance);
 
 /** /settings/set: Evolution's instance behaviour (groups ignored, nothing automatic). */
 export const evolutionBehaviourSchema = z.object({
@@ -100,20 +111,3 @@ export type EvolutionConfig = z.infer<typeof evolutionConfigSchema>;
 /** A stored value read back: anything unreadable falls back to the safe defaults. */
 export const evolutionConfigOf = (raw: unknown): EvolutionConfig =>
   evolutionConfigSchema.safeParse(raw ?? {}).data ?? evolutionConfigSchema.parse({});
-
-/** The four things pushed to Evolution, each read back after the push. */
-export const EVOLUTION_SYNC_PARTS = ['instance', 'settings', 'webhook', 'proxy'] as const;
-export type EvolutionSyncPart = (typeof EVOLUTION_SYNC_PARTS)[number];
-/** synced = read back equal; drift = read back different; failed = Evolution refused / unreachable. */
-export const EVOLUTION_SYNC_STATES = ['synced', 'drift', 'failed', 'skipped'] as const;
-export type EvolutionSyncState = (typeof EVOLUTION_SYNC_STATES)[number];
-
-/** The last push (wa_numbers.evolution_sync): «متزامن / غير متزامن» per part. */
-export const evolutionSyncSchema = z.object({
-  synced: z.boolean(),
-  checked_at: z.string(),
-  parts: z.record(z.enum(EVOLUTION_SYNC_PARTS), z.enum(EVOLUTION_SYNC_STATES)),
-});
-export type EvolutionSyncView = z.infer<typeof evolutionSyncSchema>;
-export const evolutionSyncOf = (raw: unknown): EvolutionSyncView | null =>
-  evolutionSyncSchema.safeParse(raw).data ?? null;

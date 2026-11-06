@@ -13,10 +13,16 @@ const LOCAL_HOSTS: ReadonlySet<string> = new Set(['localhost', '127.0.0.1', '[::
  */
 const BASE_RE = /^(https?):\/\/(\[::1\]|[A-Za-z0-9.-]+)(?::(\d{1,5}))?(\/[A-Za-z0-9._~/-]*)?$/;
 
-/** A docker service name: one word, no dot, so never an IP address or a public name. */
-const INTERNAL_RE = /^[a-z0-9][a-z0-9_-]{0,62}$/;
-/** An IPv4 literal (any range): an https base names a host, never a raw address. */
-const IPV4_RE = /^\d{1,3}(\.\d{1,3}){3}$/;
+/**
+ * A docker service name: one word with a letter, no dot, never `0x…`: so never an IP in any
+ * spelling (2130706433, 0x7f000001, 0) and never a public name.
+ */
+const INTERNAL_RE = /^(?!0x)(?=[a-z0-9_-]*[a-z])[a-z0-9][a-z0-9_-]{0,62}$/;
+/**
+ * An https host NAME: two labels or more, the last one starting with a letter, no trailing dot.
+ * Refuses every IP spelling (10.0.0.1, 127.1, 2130706433, 0x7f000001, [::1], «10.0.0.1.»).
+ */
+const PUBLIC_NAME_RE = /^([a-z0-9-]{1,63}\.)+[a-z][a-z0-9-]{0,62}$/;
 
 /** The internal http hosts allowed by default: the kit's service on the stack network. */
 export const EVOLUTION_INTERNAL_DEFAULT = 'evolution-api';
@@ -50,7 +56,7 @@ type SchemeRule = (host: string, internal: readonly string[]) => boolean;
 
 /** https: a host name (never an IP literal); http: the VPS, or a listed internal host. */
 const SCHEME_RULES: Readonly<Record<string, SchemeRule>> = {
-  https: (host) => !IPV4_RE.test(host) && !host.startsWith('['),
+  https: (host) => PUBLIC_NAME_RE.test(host),
   http: (host, internal) =>
     LOCAL_HOSTS.has(host) || (INTERNAL_RE.test(host) && internal.includes(host)),
 };
@@ -59,14 +65,13 @@ const SCHEME_RULES: Readonly<Record<string, SchemeRule>> = {
 export function evolutionBaseAllowed(raw: string, internal: readonly string[]): boolean {
   const p = partsOf(raw);
   const rule = p ? SCHEME_RULES[p.scheme] : undefined;
-  return p !== null && rule !== undefined && rule(p.host, internal);
+  return p !== null && rule?.(p.host, internal) === true;
 }
 
 /** Shape only (the list is another key): https, or http to the VPS or a one-word host. */
 const shapeOk = (raw: string): boolean => {
-  const p = partsOf(raw);
-  const oneWord = p !== null && INTERNAL_RE.test(p.host);
-  return evolutionBaseAllowed(raw, oneWord && p ? [p.host] : []);
+  const host = partsOf(raw)?.host ?? '';
+  return evolutionBaseAllowed(raw, INTERNAL_RE.test(host) ? [host] : []);
 };
 
 /**

@@ -120,11 +120,11 @@ export class EvolutionWhatsappClient implements WhatsappClient {
    * Baileys: how long `to` must wait (the sender reschedules the row, never sleeps) and the
    * number's daily cap. Cloud: Meta's own limits, no pacing.
    */
-  pace(to: string): { waitMs: number; dailyCap: number } | null {
+  pace(to: string): { waitMs: number; dailyCap: number; gapMs: number } | null {
     const env = this.conn?.env;
     if (env?.mode !== 'baileys') return null;
     const waitMs = this.pacer.waitMs({ key: paceKey(env), to, gapMs: env.gapMs });
-    return { waitMs, dailyCap: env.dailyCap };
+    return { waitMs, dailyCap: env.dailyCap, gapMs: env.gapMs };
   }
 
   /** The allow-list, then one call (the pace slot taken first); the message id or `uncertain`. */

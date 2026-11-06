@@ -1,3 +1,4 @@
+import { evolutionConfigSchema } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { setIntegrationOverlay } from '@/common/configuration/integrations/integration-overlay';
 import type { NumbersSecrets } from '@/modules/messaging/numbers/config/numbers.secrets';
@@ -44,14 +45,22 @@ describe('NumbersEvolution', () => {
     await expect(setup().svc.instanceEnv(evo.id)).rejects.toMatchObject({ response: { code: 'evolution_not_configured' } });
   });
 
+  it('a webhook URL off our route for this instance is refused before anything is saved', async () => {
+    const { svc, evolution } = setup();
+    const config = evolutionConfigSchema.parse({ webhook: { url: 'https://evil.example.test/x' } });
+    await expect(svc.saveConfig({ id: evo.id, config, actorId: 'a1' }))
+      .rejects.toMatchObject({ response: { code: 'webhook_url' } });
+    expect(evolution.saveConfig).not.toHaveBeenCalled();
+  });
+
   it('a restriction switches the number off, fails its queued rows and is audited once', async () => {
     const { svc, evolution, effects } = setup();
     const now = new Date('2026-11-06T10:00:00Z');
-    await expect(svc.restrict(evo.id, now)).resolves.toBe(true);
+    await expect(svc.restrict(evo.id, { now, sentAt: '2026-11-06T09:59:00Z' })).resolves.toBe(true);
     expect(evolution.failQueued).toHaveBeenCalledWith(evo.id);
     expect(effects.after).toHaveBeenCalledWith(expect.objectContaining({ action: 'evolution_restricted', actorId: null }));
     evolution.restrict.mockResolvedValueOnce(false);
-    await expect(svc.restrict(evo.id, now)).resolves.toBe(false);
+    await expect(svc.restrict(evo.id, { now, sentAt: '2026-11-06T09:59:00Z' })).resolves.toBe(false);
     expect(effects.after).toHaveBeenCalledTimes(1);
   });
 });

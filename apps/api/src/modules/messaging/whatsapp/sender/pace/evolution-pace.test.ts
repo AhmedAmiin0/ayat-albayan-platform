@@ -13,11 +13,14 @@ const overlay = (n: OverlayNumber) =>
 describe('evolutionOff', () => {
   afterEach(() => setNumbersOverlay(null));
 
-  it('an Evolution number disabled or without a working config is off', () => {
+  it('an Evolution number switched off is off', () => {
     overlay(num({ evolution: true, enabled: false }));
     expect(evolutionOff(row)).toBe(true);
+  });
+
+  it('an enabled number without a working config is a gap to fix, not a reason to fail rows', () => {
     overlay(num({ evolution: true }));
-    expect(evolutionOff(row)).toBe(true);
+    expect(evolutionOff(row)).toBe(false);
   });
 
   it('never for another driver, a template row, an unknown number or legacy mode', () => {

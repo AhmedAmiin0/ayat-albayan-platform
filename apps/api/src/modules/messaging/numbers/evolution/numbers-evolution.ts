@@ -1,7 +1,10 @@
 import {
-  evolutionConfigOf, type EvolutionConfig, type EvolutionSyncView, type NumberSecretName,
+  evolutionConfigOf, hookIsOurs, type EvolutionConfig, type EvolutionSyncView,
+  type NumberSecretName,
 } from '@ab/shared';
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException, ConflictException, Injectable, NotFoundException,
+} from '@nestjs/common';
 import { loadEnv, type Env, type EvolutionLineEnv } from '@/config/env/env';
 import { evolutionBaseOf } from '@/config/env/whatsapp/env.evolution';
 import {
@@ -17,9 +20,10 @@ import { EvolutionNumbersRepo } from './evolution-numbers.repo';
 // Every value returned here holds a secret: used server-side only, never logged or returned.
 
 const conflict = (code: string) => new ConflictException({ code, message: code });
+const badHook = () => new BadRequestException({ code: 'webhook_url', message: 'webhook_url' });
 
 /** What the push needs besides the instance env: options, global key, proxy password. */
-export interface EvolutionPushInput {
+interface EvolutionPushInput {
   env: EvolutionLineEnv;
   config: EvolutionConfig;
   globalKey: string | null;
@@ -48,6 +52,9 @@ export class NumbersEvolution {
   /** Saves the options (zod-checked by the controller), audited; the line config reloads. */
   async saveConfig(input: { id: string; config: EvolutionConfig; actorId: string }): Promise<void> {
     const { id, config, actorId } = input;
+    const row = (await this.repo.byId(id)) ?? notFound();
+    // The webhook carries the instance token: only our own route for this instance may get it.
+    if (!hookIsOurs(config.webhook.url, row.phone_number_id)) throw badHook();
     if (!(await this.evolution.saveConfig(id, config))) throw conflict('not_evolution');
     const entry = { actorId, entity: 'wa_numbers', entityId: id, action: 'evolution_config' };
     await this.effects.after({ ...entry, after: { evolution_config: config } });
@@ -61,8 +68,8 @@ export class NumbersEvolution {
    * WhatsApp restricted the number (a late 463 / 475): switched off, its queued rows failed so
    * staff resend them elsewhere. true = switched off now (the bell rings once).
    */
-  async restrict(id: string, now: Date): Promise<boolean> {
-    if (!(await this.evolution.restrict(id, now))) return false;
+  async restrict(id: string, at: { now: Date; sentAt: string }): Promise<boolean> {
+    if (!(await this.evolution.restrict(id, at))) return false;
     await this.evolution.failQueued(id);
     const entry = { actorId: null, entity: 'wa_numbers', entityId: id, action: 'evolution_restricted' };
     await this.effects.after({ ...entry, after: { enabled: false, evolution_state: 'refused' } });

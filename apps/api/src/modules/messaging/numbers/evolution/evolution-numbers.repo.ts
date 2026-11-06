@@ -7,6 +7,8 @@ import { DB, type Db } from '@/common/db/db.module';
 
 /** messages.error_code of a row its Evolution number can no longer send (staff resend it). */
 export const EVOLUTION_NUMBER_OFF = 'evolution_number_off';
+/** The sender's claim marker (whatsapp sender/send-plan SENDING): a row being sent right now. */
+const SENDING_MARK = 'sending';
 
 @Injectable()
 export class EvolutionNumbersRepo {
@@ -27,14 +29,17 @@ export class EvolutionNumbersRepo {
 
   /**
    * WhatsApp restricted the number (463 / 475): off, no longer the default, state `refused`.
-   * Only an enabled row changes (true = it was switched off now); only an admin turns it back on.
+   * Only an enabled row last changed before the refused message was sent (`sentAt`): an old
+   * webhook replayed after an admin turned it back on changes nothing. true = switched off now.
    */
-  async restrict(id: string, at: Date): Promise<boolean> {
+  async restrict(id: string, at: { now: Date; sentAt: string }): Promise<boolean> {
     const patch = {
-      enabled: false, is_default: false, evolution_state: 'refused', evolution_state_at: at.toISOString(),
+      enabled: false, is_default: false, evolution_state: 'refused',
+      evolution_state_at: at.now.toISOString(),
     };
     const { data, error } = await this.db.from('wa_numbers').update(patch)
-      .eq('id', id).eq('provider', 'evolution').eq('enabled', true).select('id');
+      .eq('id', id).eq('provider', 'evolution').eq('enabled', true).lte('updated_at', at.sentAt)
+      .select('id');
     if (error) throw new Error(`evolution restrict failed: ${error.message}`);
     return data.length > 0;
   }
@@ -46,7 +51,10 @@ export class EvolutionNumbersRepo {
         status: 'failed', error_code: EVOLUTION_NUMBER_OFF, next_attempt_at: null,
         error_text: 'The Evolution number was removed or switched off; resend from another number.',
       })
-      .eq('number_id', numberId).eq('status', 'queued').select('id');
+      .eq('number_id', numberId).eq('direction', 'outbound').eq('status', 'queued')
+      // Never a row mid-send (claimed: error_code 'sending'): the sender records its outcome.
+      .or(`error_code.is.null,error_code.neq.${SENDING_MARK}`)
+      .select('id');
     if (error) throw new Error(`evolution queued rows not failed: ${error.message}`);
     return data.length;
   }

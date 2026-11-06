@@ -1,13 +1,13 @@
 import { numberCreateSchema, numberUpdateSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { evolutionView, numberView } from '@/features/messaging/numbers/numbers.fixture';
+import { evolutionPart, evolutionView, numberView } from '@/features/messaging/numbers/numbers.fixture';
 import { createBody, draftErrors, draftOf, updateBody } from './number-form';
 
 const evolutionDraft = { ...draftOf(), label: 'Staff', provider: 'evolution' as const, phone_number_id: 'staff-1' };
 
 describe('number-form on Evolution (docs/19 «Evolution driver»)', () => {
   it('an edit starts from the record’s engine and switch', () => {
-    const view = evolutionView({ evolution: { mode: 'cloud', auto_sends: false, state: null, state_at: null } });
+    const view = evolutionView({ evolution: evolutionPart({ mode: 'cloud', state: null, state_at: null }) });
     expect(draftOf(view)).toMatchObject({ provider: 'evolution', evolution_mode: 'cloud', phone_number_id: 'academy-staff' });
   });
 

@@ -5,10 +5,8 @@ import type { NumberEvolutionView } from './evolution.js';
 // «الأرقام» (docs/23 §3 phase 3): a WhatsApp number as a record. Ids and labels only: no view here ever
 // carries a token or secret value (secrets are «set / not set» with a date).
 
-export const NUMBER_SECRET_NAMES = [
-  'access_token', 'app_secret', 'evolution_token', 'evolution_cloud_token', 'evolution_proxy_password',
-] as const;
-export type NumberSecretName = (typeof NUMBER_SECRET_NAMES)[number];
+export { NUMBER_SECRET_NAMES, type NumberSecretName } from './secret-names.js';
+import type { NumberSecretName } from './secret-names.js';
 
 /** The last line check of the number's phone_number_id (never a token). */
 export interface NumberHealth {

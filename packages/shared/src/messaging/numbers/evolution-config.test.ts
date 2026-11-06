@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-  EVOLUTION_DEFAULT_EVENTS, evolutionConfigOf, evolutionConfigSchema, evolutionSyncOf,
+  EVOLUTION_DEFAULT_EVENTS, evolutionConfigOf, evolutionConfigSchema, hookIsOurs,
 } from './evolution-config.js';
+import { evolutionSyncOf } from './evolution-sync.js';
 
 // Owner 2026-11-06: every Evolution option of a number, validated with zod, safe by default.
 
@@ -13,17 +14,29 @@ describe('evolutionConfigSchema', () => {
       read_messages: false, read_status: false, sync_full_history: false,
     });
     expect(c.limits).toEqual({ gap_ms: 3_000, daily_cap: 60 });
-    expect(c.webhook).toMatchObject({ enabled: false, url: null, events: [...EVOLUTION_DEFAULT_EVENTS] });
+    const events = [...EVOLUTION_DEFAULT_EVENTS];
+    expect(c.webhook).toMatchObject({ enabled: false, url: null, events });
     expect(c.proxy.enabled).toBe(false);
   });
 
   it('a webhook needs a URL: https, or http to localhost or a docker service name', () => {
-    const hook = (url: string | null) => evolutionConfigSchema.safeParse({ webhook: { url } }).success;
+    const hook = (url: string | null) =>
+      evolutionConfigSchema.safeParse({ webhook: { url } }).success;
     expect(hook(null)).toBe(false);
     expect(hook('https://api.example.test/webhooks/evolution/x')).toBe(true);
     expect(hook('http://api:3000/webhooks/evolution/x')).toBe(true);
     expect(hook('http://10.0.0.5/webhooks/evolution/x')).toBe(false);
     expect(hook('http://evil.example.test/x')).toBe(false);
+  });
+
+  it('only our route for the instance may receive the token; no IP spelling as a host', () => {
+    expect(hookIsOurs('https://api.example.test/webhooks/evolution/sec-1', 'sec-1')).toBe(true);
+    expect(hookIsOurs('http://api:3000/webhooks/evolution/sec-1', 'sec-1')).toBe(true);
+    expect(hookIsOurs('https://api.example.test/webhooks/evolution/other', 'sec-1')).toBe(false);
+    expect(hookIsOurs('https://evil.example.test/steal', 'sec-1')).toBe(false);
+    const hook = (url: string) => evolutionConfigSchema.safeParse({ webhook: { url } }).success;
+    expect(hook('http://2852039166/webhooks/evolution/x')).toBe(false);
+    expect(hook('https://127.1/webhooks/evolution/x')).toBe(false);
   });
 
   it('a proxy on needs host and port; limits and events are bounded', () => {

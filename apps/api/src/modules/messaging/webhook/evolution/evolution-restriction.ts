@@ -4,6 +4,7 @@ import { overlayNumbers } from '@/common/configuration/integrations/numbers-over
 import { NumbersEvolution } from '@/modules/messaging/numbers';
 import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 import { EVOLUTION_RESTRICTED } from '@/modules/messaging/webhook/parse/webhook.evolution';
+import { WebhookRepo } from '@/modules/messaging/webhook/webhook.repo';
 
 // WhatsApp restricted an Evolution number (a late 463 / 475 ERROR, docs/19 «Evolution driver»):
 // the number is switched off at once (only an admin turns it back on), its queued rows fail so
@@ -21,12 +22,25 @@ export class EvolutionRestriction {
   constructor(
     private readonly numbers: NumbersEvolution,
     private readonly push: PushService,
+    private readonly rows: WebhookRepo,
   ) {}
 
   /** Switches the number off when any of these statuses says it was restricted. */
   async check(events: readonly StatusEvent[], at: { numberId: string; now: Date }): Promise<void> {
-    if (!events.some(restricted)) return;
-    if (!(await this.numbers.restrict(at.numberId, at.now))) return;
+    const sentAt = await this.sentAt(events);
+    if (!sentAt) return;
+    if (!(await this.numbers.restrict(at.numberId, { now: at.now, sentAt }))) return;
+    await this.ring(at);
+  }
+
+  /** When the refused message went out: a replay older than the admin's re-enable is ignored. */
+  private async sentAt(events: readonly StatusEvent[]): Promise<string | null> {
+    const event = events.find(restricted);
+    if (!event) return null;
+    return (await this.rows.outboundByWaId(event.waMessageId))?.sent_at ?? null;
+  }
+
+  private async ring(at: { numberId: string; now: Date }): Promise<void> {
     const label = overlayNumbers()?.find((n) => n.id === at.numberId)?.label ?? 'Evolution';
     this.log.error(`evolution number ${at.numberId} restricted by WhatsApp: switched off`);
     await this.push.notifyAdmins('reminder_failed', {

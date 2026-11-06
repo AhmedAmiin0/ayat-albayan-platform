@@ -98,7 +98,7 @@ export interface WhatsappClient {
   /** Staff chat only (Evolution Baileys, automatic sends off): a job's row is refused. */
   automaticOff?(): boolean;
   /** Evolution Baileys: ms before `to` may go (pacing) and the daily cap; absent = no pacing. */
-  pace?(to: string): { waitMs: number; dailyCap: number } | null;
+  pace?(to: string): { waitMs: number; dailyCap: number; gapMs: number } | null;
   /** Blue ticks for an inbound wamid (POST /messages {status:'read'}). */
   markRead(waMessageId: string): Promise<void>;
   /** All pages of the WABA's templates. Read-only: safe for the health check. */

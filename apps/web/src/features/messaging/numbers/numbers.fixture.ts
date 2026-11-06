@@ -1,4 +1,10 @@
-import type { ImportResult, NumberView, ParityView } from '@ab/shared';
+import {
+  evolutionConfigSchema,
+  type ImportResult,
+  type NumberEvolutionView,
+  type NumberView,
+  type ParityView,
+} from '@ab/shared';
 
 // Test fixtures for «الأرقام» (not app code). Fake ids and a 555 phone only.
 
@@ -24,11 +30,24 @@ export function numberView(patch: Partial<NumberView> = {}): NumberView {
       access_token: { set: true, updated_at: AT },
       app_secret: { set: false, updated_at: null },
       evolution_token: { set: false, updated_at: null },
+      evolution_cloud_token: { set: false, updated_at: null },
+      evolution_proxy_password: { set: false, updated_at: null },
     },
     evolution: null,
     ...patch,
   };
 }
+
+/** An Evolution number's own part: Baileys, connected, the default options, never synced. */
+export const evolutionPart = (patch: Partial<NumberEvolutionView> = {}): NumberEvolutionView => ({
+  mode: 'baileys',
+  auto_sends: false,
+  state: 'open',
+  state_at: AT,
+  config: evolutionConfigSchema.parse({}),
+  sync: null,
+  ...patch,
+});
 
 /** An Evolution (Baileys) number: its instance name in phone_number_id, its token secret saved. */
 export const evolutionView = (patch: Partial<NumberView> = {}): NumberView =>
@@ -47,8 +66,10 @@ export const evolutionView = (patch: Partial<NumberView> = {}): NumberView =>
       access_token: { set: false, updated_at: null },
       app_secret: { set: false, updated_at: null },
       evolution_token: { set: true, updated_at: AT },
+      evolution_cloud_token: { set: false, updated_at: null },
+      evolution_proxy_password: { set: false, updated_at: null },
     },
-    evolution: { mode: 'baileys', auto_sends: false, state: 'open', state_at: AT },
+    evolution: evolutionPart(),
     ...patch,
   });
 
