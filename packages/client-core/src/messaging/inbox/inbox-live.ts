@@ -2,6 +2,8 @@
 // closed, a slow poll as the fallback). The database broadcasts ONE event per changed phone on a
 // private topic; a client never reads data from it, it only re-reads the same API routes sooner.
 
+import { THREAD_FULL_MS } from '../channels/index.js';
+
 /** The private Broadcast topic (realtime.messages policy: admin and sales with inbox.read). */
 export const INBOX_LIVE_TOPIC = 'inbox:staff';
 /** Sent once per phone per insert / update statement on messages (migration 20261028000860). */
@@ -41,16 +43,31 @@ export function changedPhone(payload: unknown): string | null {
 }
 
 /**
- * The event → refresh decision: the unread badge always; the chats list always; the chat of that phone
- * (it refreshes only if it is open, see createLiveRegistry). Another phone's chat never.
+ * The event → refresh decision: the chats list always; the chat of that phone (it refreshes
+ * only if it is open, see createLiveRegistry), another phone's chat never; the unread badge
+ * unless `chatOwnsBadge` (docs/43 AU6: the open chat's own re-read stamps a new message read
+ * and refreshes the badge itself, so its outgoing ticks never re-read the badge).
  */
-export function refreshPlan(phone: string): LiveKey[] {
-  return ['badge', 'list', chatLiveKey(phone)];
+export function refreshPlan(phone: string, chatOwnsBadge = false): LiveKey[] {
+  const chat = chatLiveKey(phone);
+  return chatOwnsBadge ? ['list', chat] : ['badge', 'list', chat];
 }
 
 /** A refresh interval: the slow fallback while realtime is connected, the caller's poll while it is not. */
 export function liveInterval(live: boolean, offline: number): number {
   return live ? INBOX_FALLBACK_MS : offline;
+}
+
+/**
+ * While realtime is connected an open chat re-reads its whole newest page only this often (docs/43
+ * AU5): events and the INBOX_FALLBACK_MS delta carry new rows, ticks, edits and deletes; this slow
+ * read only catches what a delta never carries (a customer's reaction, an old row's tick, people).
+ */
+export const THREAD_FULL_LIVE_MS = 5 * 60_000;
+
+/** The open chat's whole-page re-read: slow while realtime is up, THREAD_FULL_MS otherwise. */
+export function fullReadInterval(live: boolean): number {
+  return live ? THREAD_FULL_LIVE_MS : THREAD_FULL_MS;
 }
 
 /** How far apart one key's fetches stay. */

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { AppState } from 'react-native';
 import { supabase } from '@/core/lib/http/supabase';
 import { queryClient as client } from '@/core/lib/query/query-client';
-import { threadPollKey } from '@/inbox/thread/hooks/thread-poll';
+import { refreshOpenChat } from './live-refresh';
 import { inboxLive } from './inbox-live';
 import { changeLists } from './list-marks';
 
@@ -12,7 +12,7 @@ const active = () => AppState.currentState === 'active';
 /** An event re-reads the open chat, the chats list and the badge; never while the app is not active. */
 const targets: LiveTargets = {
   chat: (phone) => {
-    if (active()) void client.refetchQueries({ queryKey: threadPollKey(phone) });
+    if (active()) void refreshOpenChat(client, phone);
   },
   // Shown lists re-read with the last word (a read in flight is followed by a fresh one, docs/43
   // AU1); hidden ones are only marked (list-marks.ts). Throttled to one per 3 s.
@@ -23,6 +23,13 @@ const targets: LiveTargets = {
     if (active()) void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false });
   },
 };
+
+/**
+ * Back to 'active' with the channel still joined, nothing re-reads here: resumeInbox (mounted
+ * by the same trees, useNotificationHandling) already re-reads every chat, list and the badge
+ * then (docs/43 AU3: one resume path). A fresh join still resyncs on SUBSCRIBED.
+ */
+const noResync = (): void => undefined;
 
 /**
  * The staff inbox's realtime nudge (owner 2026-10-27), mounted once by the admin and sales tab trees
@@ -36,7 +43,8 @@ const targets: LiveTargets = {
 export function useInboxRealtime(enabled: boolean): void {
   useEffect(() => {
     if (!enabled) return undefined;
-    const session = createLiveSession(() => connectInboxLive(supabase, inboxLive, targets), inboxLive.resync);
+    const open = () => connectInboxLive(supabase, inboxLive, targets);
+    const session = createLiveSession(open, noResync);
     const at = AppState.currentState; // 'unknown' at an iOS cold start counts as open
     if (at !== 'background') session.resume();
     if (at === 'inactive') session.pause(INBOX_INACTIVE_LEAVE_MS);

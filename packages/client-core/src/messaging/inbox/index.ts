@@ -3,6 +3,7 @@ export { deltaSearch, mergeDelta, needsFullRead, type ThreadPages } from './thre
 export {
   changedPhone,
   chatLiveKey,
+  fullReadInterval,
   INBOX_FALLBACK_MS,
   INBOX_HIDDEN_LEAVE_MS,
   INBOX_INACTIVE_LEAVE_MS,
@@ -13,10 +14,11 @@ export {
   liveInterval,
   type LiveKey,
   refreshPlan,
+  THREAD_FULL_LIVE_MS,
 } from './inbox-live.js';
 export { connectInboxLive, type LiveChannel, type LiveClient } from './live-connect.js';
 export { createLiveSession, type LiveSession } from './live-session.js';
-export { createInboxLive, type InboxLive, type LiveTargets } from './live-store.js';
+export { createInboxLive, type InboxLive, type InboxLiveOptions, type LiveTargets } from './live-store.js';
 export {
   patchMessage,
   type PillItem,

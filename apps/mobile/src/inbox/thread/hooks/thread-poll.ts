@@ -1,14 +1,15 @@
-import { chatLiveKey, deltaSearch, freshRow, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead, THREAD_FULL_MS } from '@ab/client-core';
+import { chatLiveKey, deltaSearch, freshRow, fullReadInterval, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead } from '@ab/client-core';
 import type { ThreadDelta, ThreadDetail } from '@ab/shared';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import { useInboxLive, useLiveWatch } from '@/inbox/thread/live/inbox-live';
+import { noteDelta } from '@/inbox/thread/live/delta-news';
 import { leavesGap, mergeNewest, sendKey, threadKey, threadPath, type ThreadCache } from './thread-cache';
 
 /** The polls' own keys: outside threadKey, so a push's invalidation never runs them too. */
 export const threadPollKey = (phone: string) => ['thread-poll', phone];
-const threadDeltaKey = (phone: string) => ['thread-delta', phone];
+export const threadDeltaKey = (phone: string) => ['thread-delta', phone];
 
 /** A send or a thread fetch in flight wins: its answer would overwrite a merge, or show a sent row twice. */
 const busy = (client: QueryClient, phone: string) =>
@@ -36,8 +37,9 @@ const foldPage = (fresh: ThreadDetail, moved: boolean) => (old: ThreadCache | un
  *   every THREAD_FULL_MS    the newest page (GET /threads/:phone), folded in by mergeNewest; the loaded
  *                           older pages are not re-read.
  * Too many new rows for one answer (a gap) re-read the whole thread instead.
- * Realtime (docs/12 §15) runs the page poll sooner on an event; while it is connected the delta slows to
- * INBOX_FALLBACK_MS (a safety net for a socket that died quietly); a change under another screen re-reads it on return.
+ * Realtime (docs/12 §15) runs the delta sooner on an event (docs/43 AU5, refreshOpenChat); while it is
+ * connected the delta slows to INBOX_FALLBACK_MS (the one safety net for a socket that died quietly) and
+ * the page to THREAD_FULL_LIVE_MS; a change under another screen re-reads it on return.
  */
 export function useThreadPoll(phone: string, loaded: boolean) {
   const client = useQueryClient();
@@ -52,6 +54,7 @@ export function useThreadPoll(phone: string, loaded: boolean) {
       if (!search) return Date.now();
       const asked = client.getQueryState(queryKey)?.dataUpdatedAt;
       const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`, { signal });
+      noteDelta(phone, client.getQueryData<ThreadCache>(queryKey), delta);
       // The cache moved meanwhile (a full read, the page poll): this answer may be older than it.
       if (busy(client, phone) || client.getQueryState(queryKey)?.dataUpdatedAt !== asked) return Date.now();
       if (needsFullRead(delta)) void client.invalidateQueries({ queryKey });
@@ -75,6 +78,6 @@ export function useThreadPoll(phone: string, loaded: boolean) {
     },
     ...POLL,
     enabled: onScreen,
-    refetchInterval: onScreen ? THREAD_FULL_MS : false,
+    refetchInterval: onScreen ? fullReadInterval(live) : false,
   });
 }

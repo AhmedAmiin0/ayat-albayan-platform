@@ -5682,11 +5682,8 @@
     }
   },
   "src/inbox/thread/live/use-inbox-realtime.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/inbox/threads-list/ClosedRow.tsx": {

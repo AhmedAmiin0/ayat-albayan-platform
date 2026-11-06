@@ -13,6 +13,8 @@ export function createLiveRegistry() {
   return {
     /** Keys on screen now. */
     watched: () => [...watched.keys()],
+    /** This key is on screen now. */
+    isWatched: (key: LiveKey) => watched.has(key),
     /** On screen again: true when a change came meanwhile (refresh it now). */
     watch(key: LiveKey): boolean {
       watched.set(key, (watched.get(key) ?? 0) + 1);
