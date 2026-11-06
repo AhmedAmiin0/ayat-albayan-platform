@@ -9,6 +9,7 @@ import type { BubbleOffers } from '@/features/messaging/inbox/messages/lib/bubbl
 import type { BubbleTools } from '@/features/messaging/inbox/messages/lib/use-bubble-tools';
 import { ReactionRow } from '@/features/messaging/inbox/messages/reactions/ReactionRow';
 import { HideItems } from '@/features/messaging/inbox/messages/hide/HideItems';
+import { WhatsAppSendItem } from '@/features/messaging/inbox/messages/whatsapp-send';
 
 export interface BubbleMenuProps {
   message: MessageView;
@@ -88,6 +89,7 @@ export function BubbleMenu(props: BubbleMenuProps) {
           {t.inbox.download.action}
         </button>
       )}
+      {offers.whatsapp && <WhatsAppSendItem message={m} pick={pick} className={item} />}
       <HideItems offers={offers} onPick={pick(() => onHide?.())} />
     </div>
   );

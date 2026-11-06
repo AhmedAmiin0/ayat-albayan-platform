@@ -15,6 +15,7 @@ import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } fr
 import { useClock } from '@/lib/clock';
 import { TemplateButtons } from '@/features/messaging/inbox/messages/template/TemplateButtons';
 import { stickerOrGif } from '@/features/messaging/inbox/messages/sticker/StickerMedia';
+import { hasWhatsAppLine, WhatsAppSendLine } from '@/features/messaging/inbox/messages/whatsapp-send';
 
 /** Some of the bubble's text is selected with the mouse. */
 function selectedIn(el: HTMLElement): boolean {
@@ -105,6 +106,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
             </p>
           ))}
           {admin && (canRetry(m) || canSendByHand(m) || isHandedOff(m)) && <MessageActions message={m} />}
+          {admin && hasWhatsAppLine(m) && <WhatsAppSendLine message={m} now={now} />}
           <ReactionPill message={m} outbound={outbound} />
         </div>
       </article>

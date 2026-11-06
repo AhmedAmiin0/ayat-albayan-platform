@@ -96,7 +96,6 @@ const reactionsOf = (row: ThreadMessageRow): MessageReactions => ({
 
 /** An old-CRM file's body is only its storage link: never shown, the row is a file with no caption. */
 const shownBody = (row: ThreadMessageRow): string | null => (isCrmHistoryRow(row) ? null : row.body);
-
 /**
  * messages row → MessageView (R-MSG-05): a template row shows its rendered text; a queued or
  * failed outbound row carries the wa.me link with the same text pre-filled (R-MSG-03).
@@ -139,6 +138,7 @@ export function toMessageView(input: MessageViewInput): MessageView {
     delivered_at: row.delivered_at,
     read_at: row.read_at,
     sent_manually_at: row.sent_manually_at,
+    app_send_until: row.app_send_until,
     sent_by_teacher_name: senderName(row),
     sender_name: staffName(row),
     automatic: isAutomatic(row),

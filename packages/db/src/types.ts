@@ -2704,6 +2704,7 @@ export type Database = {
       };
       messages: {
         Row: {
+          app_send_until: string | null;
           attempts: number;
           body: string | null;
           channel: string;
@@ -2755,6 +2756,7 @@ export type Database = {
           wa_pricing_category: string | null;
         };
         Insert: {
+          app_send_until?: string | null;
           attempts?: number;
           body?: string | null;
           channel?: string;
@@ -2806,6 +2808,7 @@ export type Database = {
           wa_pricing_category?: string | null;
         };
         Update: {
+          app_send_until?: string | null;
           attempts?: number;
           body?: string | null;
           channel?: string;
@@ -5469,6 +5472,7 @@ export type Database = {
         }[];
       };
       auth_user_id_by_email: { Args: { p_email: string }; Returns: string };
+      app_send_adopt: { Args: { p_held: string; p_external: string }; Returns: boolean };
       apply_lesson_changes: { Args: { p: Json }; Returns: undefined };
       approve_assistant_statement: {
         Args: { p_actor: string; p_statement: string };

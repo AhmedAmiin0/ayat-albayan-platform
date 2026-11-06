@@ -29,12 +29,14 @@ import { ReopenRequest } from './sender/window/reopen-request';
 import { WindowHold } from './sender/window/window-hold';
 import { WindowRelease } from './sender/window/window-release';
 import { WindowRepo } from './sender/window/window.repo';
+import * as manualSend from './sender/window/manual-send';
 import { WindowSettings } from './sender/window/window.settings';
 import { PaymentHoldRepo } from './sender/hold/payment-hold.repo';
 import { PaymentHolds } from './sender/hold/payment-holds';
 import { MessagesController } from './messages/messages.controller';
 import { MessagesRepo } from './messages/messages.repo';
 import { MessagesService } from './messages/messages.service';
+import { AppSend, AppSendRepo } from './messages/app-send';
 import { SendGate } from './gate/send-gate';
 import { NumberRoutes } from './numbers/number-routes';
 import { RouteRepo } from './numbers/route.repo';
@@ -103,6 +105,9 @@ function lines(): WhatsappLines {
     PaymentHoldRepo,
     PaymentHolds,
     WindowRepo,
+    manualSend.ReopenCancelRepo, manualSend.ReopenCancel,
+    manualSend.AppSendAdoptRepo, manualSend.AppSendAdopt,
+    manualSend.AppSendExpiryRepo, manualSend.AppSendExpiry,
     WindowSettings,
     ReopenRequest,
     WindowRelease,
@@ -114,6 +119,8 @@ function lines(): WhatsappLines {
     MessageViews,
     TemplateNames,
     MessagesService,
+    AppSendRepo,
+    AppSend,
     InboundMediaRepo,
     CrmMediaSettings,
     CrmHistoryMedia,
@@ -125,7 +132,7 @@ function lines(): WhatsappLines {
     InboundMedia,
     WaMediaRetentionJob,
   ],
-  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore, ReopenRequest],
+  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore, ReopenRequest, manualSend.ReopenCancel],
 })
 export class WhatsappModule implements OnModuleInit {
   /**

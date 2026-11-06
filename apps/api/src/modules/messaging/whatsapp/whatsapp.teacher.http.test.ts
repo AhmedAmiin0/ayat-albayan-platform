@@ -39,12 +39,13 @@ describe('WhatsApp routes in teacher mode (R-MSG-05, R-TCH-03)', () => {
     expect([res.statusCode, res.json()]).toEqual([200, GATE]);
   });
 
-  it('health, submit, retry, sent-manually and hand-off stay admin only', async () => {
+  it('health, submit, retry, sent-manually, app-send and hand-off stay admin only', async () => {
     for (const [method, url] of [
       ['POST', '/messaging/templates/health'],
       ['POST', '/messaging/templates/lesson_reminder/submit'],
       ['POST', `/messages/${ID}/retry`],
       ['POST', `/messages/${ID}/sent-manually`],
+      ['POST', `/messages/${ID}/app-send`],
       ['POST', `/messages/${ID}/hand-off`],
     ] as const) {
       expect((await t.call({ method, url, token: 'teacher' })).statusCode).toBe(403);

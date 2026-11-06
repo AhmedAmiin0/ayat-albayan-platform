@@ -59,7 +59,7 @@ describe('outbound notes (R-MSG-05)', () => {
       now: NOW,
       clock: C24,
     });
-    expect(notes[0]).toMatch(/^أُرسلت يدويًا /);
+    expect(notes[0]).toMatch(/^أُرسلت من واتساب /);
   });
 });
 

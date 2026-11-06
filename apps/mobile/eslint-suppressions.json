@@ -5429,9 +5429,6 @@
     }
   },
   "src/inbox/messages/resend/FailedSheet.tsx": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     },

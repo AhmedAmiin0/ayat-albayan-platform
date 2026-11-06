@@ -35,6 +35,25 @@ describe('MessagesService.retry: a held text restarts its hold', () => {
   });
 });
 
+describe('app_send_unconfirmed is never retried (docs/19)', () => {
+  it('409 not_retryable with its status, nothing requeued', async () => {
+    const { svc, queries, row } = serviceOf('app_send_unconfirmed');
+    await expect(svc.retry(row.id, { automaticOn: true })).rejects.toMatchObject({
+      response: { code: 'not_retryable', status: 'failed' },
+    });
+    expect(queries.requeue).not.toHaveBeenCalled();
+  });
+
+  it('the repo never requeues one (a stale read): compare-and-set off that code', async () => {
+    const { db, calls } = fakeDb({ messages: [{ data: null }] });
+    await new MessagesRepo(db).requeue('m1');
+    const ors = calls.filter((c) => c.method === 'or').map((c) => c.args[0]);
+    expect(ors).toContain('error_code.is.null,error_code.neq.app_send_unconfirmed');
+    const update = calls.find((c) => c.method === 'update')?.args[0];
+    expect(update).not.toHaveProperty('app_send_until');
+  });
+});
+
 describe('MessagesRepo.requeue with a restart', () => {
   const update = (calls: { method: string; args: unknown[] }[]) =>
     calls.find((c) => c.method === 'update')?.args[0];

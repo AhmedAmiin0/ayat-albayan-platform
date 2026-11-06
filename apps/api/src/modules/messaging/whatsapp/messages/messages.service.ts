@@ -1,4 +1,4 @@
-import { isHoldFailure, type MessageView } from '@ab/shared';
+import { APP_SEND_UNCONFIRMED, isHoldFailure, type MessageView } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { MessageViews } from './message.views';
@@ -9,6 +9,15 @@ import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/temp
 
 /** A held text that failed (reopen_*): its 7-day hold starts again from this retry (11-06). */
 const restartOf = (code: string | null): Date | null => (isHoldFailure(code) ? new Date() : null);
+/**
+ * app_send_unconfirmed (docs/19): the platform handed the text to WhatsApp and staff did not
+ * confirm. It may have gone out from the app (an echo can still come), so it is never put back
+ * to automatic sending: staff answer «نعم، أرسلتها» or tap «أرسل عبر واتساب» again.
+ */
+const handedToWhatsApp = (code: string | null): boolean => code === APP_SEND_UNCONFIRMED;
+/** Not failed, a calls-number row (docs/28 §10: staff ask again) or handed to WhatsApp. */
+const closed = (r: MessageRow): boolean =>
+  r.status !== 'failed' || r.line === 'calls' || handedToWhatsApp(r.error_code);
 
 export interface MessageChange {
   before: MessageRow;
@@ -31,8 +40,7 @@ export class MessagesService {
   async retry(id: string, opts: { automaticOn: boolean }): Promise<MessageChange> {
     const before = await this.row(id);
     const notRetryable = () => waHttpError('not_retryable', 409, { status: before.status });
-    // A calls-number row (docs/28 §10) is never queued: staff tap «اطلب إذن الاتصال» again instead.
-    if (before.status !== 'failed' || before.line === 'calls') throw notRetryable();
+    if (closed(before)) throw notRetryable();
     if (before.error_code === AUTO_OFF.code && !opts.automaticOn) throw waHttpError(AUTO_OFF.code, 409);
     const after = await this.queries.requeue(id, restartOf(before.error_code));
     if (!after) throw notRetryable();

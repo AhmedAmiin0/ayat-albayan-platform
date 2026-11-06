@@ -49,6 +49,11 @@ export const REOPEN_UNAVAILABLE = 'reopen_unavailable';
 export const REOPEN_FAILED = 'reopen_failed';
 /** Today's reopen template tries are all used: the text fails, staff may send it again tomorrow. */
 export const REOPEN_TRIES_USED = 'reopen_tries_used';
+/**
+ * «أرسل عبر واتساب» (docs/19): the tap's window and its grace passed with no echo attached. Never
+ * sent by the platform: staff answer «هل أرسلتها من واتساب؟» (yes: sent-manually; no: held again).
+ */
+export const APP_SEND_UNCONFIRMED = 'app_send_unconfirmed';
 /** How long a held text waits for the family's reply. */
 export const HOLD_DAYS = 7;
 

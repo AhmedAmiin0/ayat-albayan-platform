@@ -14,6 +14,7 @@ import {
 import { reopenUsable } from './window-rules';
 import { WindowRepo } from './window.repo';
 import { WindowSettings } from './window.settings';
+import { ReopenCancel } from './manual-send';
 
 const last4 = (phone: string): string => `…${phone.slice(-4)}`;
 const HELD: HoldPlan = { note: null };
@@ -35,6 +36,7 @@ export class ReopenRequest {
     private readonly repo: WindowRepo,
     private readonly templates: TemplateRegistry,
     private readonly settings: WindowSettings,
+    private readonly cancels: ReopenCancel,
   ) {}
 
   /** The admin's choice (owner 2026-11-06): a starter template, or «بدون قالب» (wait). */
@@ -84,7 +86,12 @@ export class ReopenRequest {
     if (!template || !dedup) return failNow(template ? TRIES_USED : UNAVAILABLE);
     await this.repo.queueReopen(reopenRow(row, { key: template.key, dedup, now }));
     this.log.log(`reopen template ${template.key} queued for ${last4(phone)}`);
-    return HELD;
+    return { ...HELD, queued: dedup };
+  }
+
+  /** The hold this plan was for missed: the reopen it queued goes unless a text still waits. */
+  async drop(phone: string, plan: HoldPlan): Promise<void> {
+    if (plan.queued) await this.cancels.dropLost(phone, plan.queued);
   }
 
   private lastDay(phone: string, now: Date): Promise<ReopenRow[]> {

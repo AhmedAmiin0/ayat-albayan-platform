@@ -96,10 +96,11 @@ export interface MessageView extends TemplatedMessage, MessageMarks {
   delivered_at: string | null;
   read_at: string | null;
   sent_manually_at: string | null;
+  /** «أرسل عبر واتساب» pending until then (appSendPending); absent in an old cache. */
+  app_send_until?: string | null;
   /** @deprecated Read sender_name (D4); still filled for old mobile builds and cached rows. */
   sent_by_teacher_name?: string | null;
-  /** A sent file's name (D2); null for inbound, text and template rows. */
-  media_name?: string | null;
+  media_name?: string | null; // a sent file's name (D2); null for inbound, text and templates
   /** Staff who sent it: the teacher's display_name_ar, else profiles.full_name; null = automatic, history or inbound (D4). */
   sender_name?: string | null;
   /** Outbound queued by the platform with no staff behind it (created_by null, dedup_key set). Not send-stale's isAutomatic. */
@@ -143,8 +144,7 @@ export interface ThreadLesson {
   student_names: string[];
   /** The recipient's tz (the guardian's, or the teacher's). */
   tz: string;
-  /** scheduled | confirmed (the reply note's «تأكيد الحلقة»). Absent in an old cache. */
+  /** scheduled | confirmed (the reply note's «تأكيد الحلقة»). Both absent in an old cache. */
   status?: LessonStatus;
-  /** Absent in an old cache. */
   ends_at?: string;
 }

@@ -8,6 +8,7 @@ import { ExternalStatus } from './external-status';
 import type { ExternalRepo } from './external.repo';
 import { ExternalStore } from './external.store';
 import type { KapsoHistory } from './kapso-history';
+import type { ManualEcho } from './manual-echo';
 
 export const KAPSO_PHONE_ID = 'kapso-chat-1';
 export const KAPSO_NUMBER_ID = '00000000-0000-4000-8000-0000000000d1';
@@ -81,7 +82,12 @@ export const fakeKapso = () => ({
 export function externalServices(queries: { stored: TablesInsert<'messages'>[] }) {
   const ext = fakeExternalQueries(queries.stored);
   const kapso = fakeKapso();
-  const store = new ExternalStore(ext as unknown as ExternalRepo, queries as unknown as WebhookRepo);
+  const manual = { attach: vi.fn().mockResolvedValue(false) };
+  const store = new ExternalStore(
+    ext as unknown as ExternalRepo,
+    queries as unknown as WebhookRepo,
+    manual as unknown as ManualEcho,
+  );
   const status = new ExternalStatus(store, kapso as unknown as KapsoHistory);
-  return { ext, kapso, store, status };
+  return { ext, kapso, store, status, manual };
 }

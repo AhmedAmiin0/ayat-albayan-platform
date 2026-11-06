@@ -1,4 +1,4 @@
-import { canRetryCode, type MessageView } from '@ab/shared';
+import { canRetryCode, canSendViaWhatsApp, type MessageView } from '@ab/shared';
 import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -6,8 +6,10 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
-import { useMessageAction } from '../../thread/hooks/use-thread';
-import { errorLine } from '../hooks/message-text';
+import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
+import { errorLine } from '@/inbox/messages/hooks/message-text';
+import { SheetAnswers } from './AppSendAnswers';
+import { useWhatsAppSend } from './use-whatsapp-send';
 
 interface FailedSheetProps {
   phone: string;
@@ -26,22 +28,29 @@ const claimed = (e: unknown) => e instanceof ApiError && (e.body as { code?: unk
  * «حاول مرة أخرى» only where trying again can help (canRetryCode: not while the WhatsApp Business
  * account is blocked, 131042…), «أرسلها بنفسك من واتساب» (the API's wa.me link with the text filled
  * in), which first tells the server: it holds the row so the sender never sends it too, and the
- * row then asks «هل أرسلتها؟» itself. WhatsApp opens only once the server holds the row. Drawn once
+ * row then asks «هل أرسلتها؟» itself. WhatsApp opens only once the server holds the row. A
+ * «أرسل عبر واتساب» row pending or unconfirmed adds «أرسلتها» / «نعم، أرسلتها» (SheetAnswers:
+ * the platform's stop path, docs/19; never put back to automatic sending). Drawn once
  * per chat and always mounted: a hand-off answered after the sheet closed still opens WhatsApp.
  */
 export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheetProps) {
   const { color } = useTheme();
   const retry = useMessageAction(phone, 'retry');
   const handOff = useMessageAction(phone, 'hand-off');
+  const sentManually = useMessageAction(phone, 'sent-manually');
   const failed = m?.status === 'failed';
   // Why, for a queued row too once it has a reason (an auth hold: 190, kapso_auth…); 'sending' is the
   // sender's claim, not a reason.
   const why = failed || (!!m?.error_code && m.error_code !== 'sending');
-  const link = m?.click_to_chat ?? null;
+  // A text the 24 h window stopped has «أرسل عبر واتساب» instead of the wa.me hand-off.
+  const viaWhatsApp = m !== null && canSendViaWhatsApp(m);
+  const link = viaWhatsApp ? null : (m?.click_to_chat ?? null);
+  const sendViaWhatsApp = useWhatsAppSend(phone);
   const fail = (e: unknown) => onError(claimed(e) ? t.messages.alreadySending : t.common.error);
-  const tryAgain = (row: MessageView) => {
+  /** The sheet closes; the action runs from these hooks (always mounted): errors still show. */
+  const closeThen = (action: typeof retry, row: MessageView) => {
     onClose();
-    retry.mutate(row.id, { onError: fail });
+    action.mutate(row.id, { onError: fail });
   };
   const byHand = (row: MessageView, url: string) => {
     onClose();
@@ -56,9 +65,22 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
         </AppText>
       ) : null}
       {m && failed && canRetryCode(m.error_code) ? (
-        <Button variant="secondary" label={t.messages.retry} onPress={() => tryAgain(m)} />
+        <Button variant="secondary" label={t.messages.retry} onPress={() => closeThen(retry, m)} />
       ) : null}
       {m && link ? <Button variant="secondary" label={t.messages.clickToChat} onPress={() => byHand(m, link)} /> : null}
+      {m && viaWhatsApp ? (
+        <Button
+          variant="primary"
+          label={t.messages.whatsappSend.action}
+          onPress={() => {
+            onClose();
+            sendViaWhatsApp(m, { onError });
+          }}
+        />
+      ) : null}
+      {m && viaWhatsApp ? (
+        <SheetAnswers message={m} onAnswer={() => closeThen(sentManually, m)} />
+      ) : null}
       <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
     </MenuSheet>
   );

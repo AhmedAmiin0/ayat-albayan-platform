@@ -3,16 +3,15 @@ import { AWAITING_REPLY } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { UNCERTAIN } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { NOT_APP_SENT } from '@/modules/messaging/whatsapp/sender/sender.due';
 import type { ReopenRow } from './reopen-state';
 import type { FailWhy } from './window-reopen';
 import type { WaitingRow } from './window-rules';
 
 /** Waiting rows are read in pages of this many (oldest first, by created_at). */
 export const RELEASE_BATCH = 200;
-/** The reopen rows' dedup prefix: `reopen:<E.164>:<Riyadh day>` (reopenDedupKey, shared). */
-const REOPEN_PREFIX = 'reopen:%';
-/** Not failed, or failed `uncertain` (it may have reached the family: reopenLive). */
-const NOT_DEAD = `status.neq.failed,error_code.eq.${UNCERTAIN}`;
+const REOPEN_PREFIX = 'reopen:%'; // `reopen:<E.164>:<Riyadh day>` (reopenDedupKey, shared)
+const NOT_DEAD = `status.neq.failed,error_code.eq.${UNCERTAIN}`; // or uncertain: reopenLive
 
 /** A held row: from when it waits, until when (next_attempt_at = expires_at = the deadline). */
 interface HoldWrite {
@@ -93,26 +92,23 @@ export class WindowRepo {
     if (ids.length === 0) return;
     const { error } = await this.db
       .from('messages')
-      .update({
-        status: 'failed',
-        error_code: why.code,
-        error_text: why.text,
-        next_attempt_at: null,
-      })
+      .update({ status: 'failed', error_code: why.code, error_text: why.text, next_attempt_at: null })
       .in('id', [...ids])
       .eq('status', 'queued')
-      .eq('error_code', why.from);
+      .eq('error_code', why.from)
+      .or(NOT_APP_SENT); // a tap meanwhile: the row stays held for the app (docs/19)
     if (error) throw fail('message hold failure', error.message);
   }
 
-  /** One page of queued AWAITING_REPLY rows (held, or just queued), oldest first, after `after`. */
+  /** A page of queued AWAITING_REPLY rows, oldest first, after `after`; none app-sent. */
   async waiting(after: string | null): Promise<WaitingRow[]> {
     const query = this.db
       .from('messages')
       .select('id, phone_e164, created_at, scheduled_for, error_text, expires_at')
       .eq('direction', 'outbound')
       .eq('status', 'queued')
-      .eq('error_code', AWAITING_REPLY);
+      .eq('error_code', AWAITING_REPLY)
+      .or(NOT_APP_SENT);
     const { data, error } = await (after ? query.gt('created_at', after) : query)
       .order('created_at', { ascending: true })
       .limit(RELEASE_BATCH);
@@ -134,7 +130,7 @@ export class WindowRepo {
     return new Map(pairs);
   }
 
-  /** Released: due now, in written order (scheduled_for cleared); its deadline is kept. */
+  /** Released: due now (scheduled_for cleared), deadline kept; never a row tapped meanwhile. */
   async release(ids: readonly string[]): Promise<number> {
     if (ids.length === 0) return 0;
     const { data, error } = await this.db
@@ -143,6 +139,7 @@ export class WindowRepo {
       .in('id', [...ids])
       .eq('status', 'queued')
       .eq('error_code', AWAITING_REPLY)
+      .or(NOT_APP_SENT)
       .select('id');
     if (error) throw fail('held messages release', error.message);
     return data.length;

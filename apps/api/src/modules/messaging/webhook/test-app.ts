@@ -12,6 +12,7 @@ import { LessonStatusService } from '../../teaching/lessons/status/lesson-status
 import { fakeExternalQueries, fakeKapso } from './external/external.fakes';
 import { KAPSO_HISTORY } from './external/external-status';
 import { ExternalRepo } from './external/external.repo';
+import { ManualEchoRepo } from './external/manual-echo';
 import { fakeDeps } from './webhook.fakes';
 import { PHONE_NUMBER_ID } from './meta.fakes';
 import { WebhookModule } from './webhook.module';
@@ -61,6 +62,9 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
     .useValue(external)
     .overrideProvider(KAPSO_HISTORY)
     .useValue(kapso)
+    // «أرسل عبر واتساب» attach (docs/19): no tapped row here, every external message is stored.
+    .overrideProvider(ManualEchoRepo)
+    .useValue({ candidates: async () => [], attach: async () => false })
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   await app.init();

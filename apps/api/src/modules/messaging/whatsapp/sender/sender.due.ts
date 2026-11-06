@@ -62,3 +62,12 @@ export async function anyDue(db: Db, input: { now: Date; allowed: readonly strin
   if (error) throw new Error(`outbound queue probe failed: ${error.message}`);
   return data.length > 0;
 }
+
+/**
+ * PostgREST filter: the row never had a «أرسل عبر واتساب» left open (docs/19): app_send_until is
+ * null. A tap sets it; an attached echo or «نعم» / «أرسلتها» (no longer queued) end it; nothing
+ * clears it to send again. With no echo, AppSendExpiry fails the row
+ * app_send_unconfirmed once the window and its grace pass: the platform never sends a row staff
+ * may have sent from the app. The sender's read and claim and the held-text release carry it.
+ */
+export const NOT_APP_SENT = 'app_send_until.is.null';
