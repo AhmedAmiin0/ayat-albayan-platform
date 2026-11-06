@@ -13,7 +13,6 @@ import { BookingService } from '@/modules/teaching/booking/core/booking.service'
 import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { SalesCourseRepo } from './sales-course.repo';
 
-/** No payment link held, no draft (owner 2026-11-06). */
 const NO_DRAFTS = { held: async () => false, get: async () => null };
 
 // The assistant's course over HTTP (owner 2026-10-18): «اشتراط التعيين» and auto-assign ON

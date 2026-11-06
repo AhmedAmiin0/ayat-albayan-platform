@@ -8097,7 +8097,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 11
+      "count": 10
     },
     "no-nested-ternary": {
       "count": 1
@@ -8140,7 +8140,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/sales/sales-money/course/course-fixture.ts": {

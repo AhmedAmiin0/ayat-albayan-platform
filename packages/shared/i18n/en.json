@@ -7918,6 +7918,7 @@
     "saved": "The lesson days are saved and will be booked automatically after the payment. You can edit them until then.",
     "save": "Save the days",
     "clashTitle": "The lesson days could not be booked after the payment",
-    "clashText": "one of the picked times is now taken, so pick the lesson days again"
+    "clashText": "one of the picked times is now taken, so pick the lesson days again",
+    "failText": "the picked lesson days could not be booked after the payment, so open the lesson days and book them"
   }
 }

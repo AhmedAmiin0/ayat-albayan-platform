@@ -11,6 +11,19 @@ interface CourseBook {
   data: Record<string, string>;
 }
 
+/** Who saved the draft that could not be booked, its version, and why (default: a clash). */
+interface DraftMiss {
+  savedBy: string;
+  savedAt: string;
+  reason?: 'clash' | 'failed';
+}
+
+/** The alert's line per reason (read at send time: admins' text overrides apply). */
+const MISS_TEXT: Record<NonNullable<DraftMiss['reason']>, () => string> = {
+  clash: () => ar.courseDraft.clashText,
+  failed: () => ar.courseDraft.failText,
+};
+
 const errText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
@@ -57,14 +70,14 @@ export class CourseDue {
    * A draft's days clashed at payment (owner 2026-11-06): nothing was booked, the draft stays as
    * the wizard's prefill; its assistant and the admins pick again (once per saved version).
    */
-  async clash(subscriptionId: string, draft: { savedBy: string; savedAt: string }): Promise<void> {
+  async clash(subscriptionId: string, draft: DraftMiss): Promise<void> {
     try {
       const p = await this.repo.package(subscriptionId);
       if (!p) return;
       const event = {
         subject: `course_draft_clash:${subscriptionId}:${draft.savedAt}`,
         title: ar.courseDraft.clashTitle,
-        vars: { student: p.student, left: ar.courseDraft.clashText },
+        vars: { student: p.student, left: MISS_TEXT[draft.reason ?? 'clash']() },
         data: noticeData(p),
       };
       await this.push.notifyAdmins('payment_due', event);

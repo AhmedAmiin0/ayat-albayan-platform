@@ -88,7 +88,8 @@ export class SalesCourse {
       subscription: sub,
       perWeek: sub && courseDaysPerWeek(sub),
       blocked: courseBlock({ sub, rules, today: from, booked }),
-      previous: previous ?? held.prefill,
+      // A saved draft first: its picks, never the older course's, are the ones to edit.
+      previous: held.prefill ?? previous,
       current,
       hold: held.hold,
       draft: held.draft,
@@ -104,6 +105,11 @@ export class SalesCourse {
     const [hold, draft] = await Promise.all([this.drafts.held(sub.id), this.drafts.get(sub.id)]);
     const prefill = draft ? draftCourse(draft.request, sub) : null;
     return { hold, draft: draft ? { saved_at: draft.savedAt } : null, prefill };
+  }
+
+  /** Has the package its course already (any rule with its subscription_id)? */
+  isBooked(subscriptionId: string): Promise<boolean> {
+    return this.queries.subscriptionBooked(subscriptionId);
   }
 
   private booked(sub: CourseSubscription | null): Promise<boolean> {

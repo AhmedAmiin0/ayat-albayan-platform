@@ -73,17 +73,6 @@ export class CourseDraftRepo {
     return status === 'unpaid' && links.data.length > 0;
   }
 
-  /** Has the package its course already (any rule with its subscription_id)? */
-  async booked(subscriptionId: string): Promise<boolean> {
-    const { data, error } = await this.db
-      .from('schedule_rules')
-      .select('id')
-      .eq('subscription_id', subscriptionId)
-      .limit(1);
-    if (error) throw dbError(error);
-    return data.length > 0;
-  }
-
   /** The package's status (null when unknown). */
   async status(subscriptionId: string): Promise<string | null> {
     const { data, error } = await this.db.from('subscriptions').select('status').eq('id', subscriptionId).maybeSingle();

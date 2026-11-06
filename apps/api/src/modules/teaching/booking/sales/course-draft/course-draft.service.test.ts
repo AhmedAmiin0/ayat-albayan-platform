@@ -56,13 +56,31 @@ describe('CourseDrafts', () => {
     expect(t.env.due.clash).toHaveBeenCalledWith(SUB, who);
   });
 
-  it('a server failure is not a clash: it throws (the event logs it), the draft stays', async () => {
+  it('a server failure: the draft stays and the staff are told it failed (never silent)', async () => {
     const t = setup({ held: [true, true] });
     await t.drafts.save(REQ, USER);
     t.env.booking.book.mockRejectedValueOnce(new Error('db down'));
-    await expect(t.drafts.confirm(SUB)).rejects.toThrow('db down');
+    expect(await t.drafts.confirm(SUB)).toBe('failed');
     expect(t.rows.size).toBe(1);
+    const failed = expect.objectContaining({ reason: 'failed' });
+    expect(t.env.due.clash).toHaveBeenCalledWith(SUB, failed);
+  });
+
+  it('a redelivered event lost to a concurrent confirm that booked it: done, no false alert', async () => {
+    const t = setup({ held: [true, true] });
+    await t.drafts.save(REQ, USER);
+    t.env.booking.book.mockRejectedValueOnce(domainError(HttpStatus.CONFLICT, 'duplicate'));
+    t.env.course.isBooked.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+    expect(await t.drafts.confirm(SUB)).toBe('booked');
     expect(t.env.due.clash).not.toHaveBeenCalled();
+    expect(t.rows.size).toBe(0);
+  });
+
+  it('a retried PUT after «booked at once»: the booking replays, never course_exists', async () => {
+    const t = setup({ held: [] });
+    t.env.course.isReplay.mockResolvedValueOnce(true);
+    expect(await t.drafts.save(REQ, USER)).toEqual({ state: 'booked', booking: BOOKING });
+    expect(t.env.sales.allowed).not.toHaveBeenCalled();
   });
 
   it('still unpaid (a part payment): held, nothing booked', async () => {

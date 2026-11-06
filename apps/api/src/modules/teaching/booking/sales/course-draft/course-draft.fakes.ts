@@ -25,7 +25,6 @@ export function setup(state: { held: boolean[]; status?: string; booked?: boolea
   const repo = {
     held: vi.fn(async () => held.shift() ?? false),
     status: vi.fn(async () => state.status ?? 'active'),
-    booked: vi.fn(async () => state.booked ?? false),
     get: vi.fn(async (id: string) => rows.get(id) ?? null),
     save: vi.fn(async (d: Omit<CourseDraft, 'savedAt'>) => {
       const savedAt = new Date(Date.now() + rows.size).toISOString();
@@ -37,7 +36,11 @@ export function setup(state: { held: boolean[]; status?: string; booked?: boolea
   const opts = { invoiceWaived: true, endsOn: '2026-12-03', course: { package: '8', subscriptionId: SUB } };
   const env = {
     sales: { allowed: vi.fn(async () => ({ own: {}, opts })), book: vi.fn(async () => BOOKING) },
-    course: { options: vi.fn(async () => opts) },
+    course: {
+      options: vi.fn(async () => opts),
+      isBooked: vi.fn(async () => state.booked ?? false),
+      isReplay: vi.fn(async () => false),
+    },
     booking: { book: vi.fn(async () => BOOKING) },
     due: { clash: vi.fn(async () => undefined) },
   };

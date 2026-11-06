@@ -8,7 +8,7 @@ import { CourseDraftRepo } from './course-draft.repo';
 import { confirmRequest, type CourseDraft } from './course-draft.rules';
 
 /** A confirm: nothing to book, still unpaid, booked (now or before), or a clash kept the draft. */
-type ConfirmOutcome = 'none' | 'held' | 'booked' | 'clash';
+type ConfirmOutcome = 'none' | 'held' | 'booked' | 'clash' | 'failed';
 
 
 /**
@@ -42,6 +42,12 @@ export class CourseDrafts implements OnModuleInit {
 
   /** PUT /sales/booking/course/draft: the same scope and course guard as «احجز». */
   async save(req: BookingRequest, user: AuthUser): Promise<CourseDraftSaved> {
+    // A retry after «booked at once» replays that booking (POST's rule), never course_exists.
+    if (await this.env.course.isReplay(req)) return this.bookNow(req, user);
+    return this.draftOrBook(req, user);
+  }
+
+  private async draftOrBook(req: BookingRequest, user: AuthUser): Promise<CourseDraftSaved> {
     const { opts } = await this.env.sales.allowed(req, user);
     const subscriptionId = opts?.course?.subscriptionId;
     if (!subscriptionId) throw domainError(HttpStatus.BAD_REQUEST, 'course_required');
@@ -53,12 +59,12 @@ export class CourseDrafts implements OnModuleInit {
     return this.bookNow(req, user);
   }
 
-  /** Books the package's draft once it is active; idempotent. Throws only on a server failure. */
+  /** Books the package's draft once it is active; idempotent; a miss tells the staff. */
   async confirm(subscriptionId: string, now = new Date()): Promise<ConfirmOutcome> {
     const draft = await this.repo.get(subscriptionId);
     if (!draft) return 'none';
     if ((await this.repo.status(subscriptionId)) !== 'active') return 'held';
-    if (await this.repo.booked(subscriptionId)) return this.done(subscriptionId);
+    if (await this.env.course.isBooked(subscriptionId)) return this.done(subscriptionId);
     return this.book(draft, now);
   }
 
@@ -72,13 +78,23 @@ export class CourseDrafts implements OnModuleInit {
       const opts = await this.env.course.options(req, draft.subscriptionId);
       await this.env.booking.book(req, draft.savedBy, opts);
     } catch (e) {
-      // A refusal she can act on (409 conflict, course_exists, 400 date…); else a failure.
-      if (!(e instanceof HttpException) || e.getStatus() >= 500) throw e;
-      const who = { savedBy: draft.savedBy, savedAt: draft.savedAt };
-      await this.env.due.clash(draft.subscriptionId, who);
-      return 'clash';
+      return this.missed(draft, e);
     }
     return this.done(draft.subscriptionId);
+  }
+
+  /**
+   * Not booked. Booked meanwhile by a concurrent confirm (a redelivered event): done, no alert.
+   * Else the draft stays (the prefill) and the assistant and admins are told: a refusal she can act
+   * on (409 conflict, 400 date…) is a clash; anything else a failure (logged).
+   */
+  private async missed(draft: CourseDraft, e: unknown): Promise<ConfirmOutcome> {
+    const id = draft.subscriptionId;
+    if (await this.env.course.isBooked(id)) return this.done(id);
+    const reason = e instanceof HttpException && e.getStatus() < 500 ? 'clash' : 'failed';
+    this.log.warn(`course draft ${id} ${reason}: ${String(e)}`);
+    await this.env.due.clash(id, { savedBy: draft.savedBy, savedAt: draft.savedAt, reason });
+    return reason;
   }
 
   private async done(subscriptionId: string): Promise<ConfirmOutcome> {

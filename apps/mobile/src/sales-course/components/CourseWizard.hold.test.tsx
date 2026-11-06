@@ -20,6 +20,9 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams.current,
 }));
 
+// The whole walk (teacher, two days, review, save) runs past jest's 5 s default on CI.
+jest.setTimeout(30_000);
+
 const BOOKING = booked(SUN_17);
 const reply = (draft: unknown) => async (_m: string, path: string) =>
   path === '/sales/booking/check' ? { conflicts: [] } : draft;
@@ -36,7 +39,7 @@ test('the picks are saved as a draft (PUT), nothing booked; «تم» leaves', as
   expect(await screen.findByText(t.courseDraft.held)).toBeTruthy();
   await walkToReview();
   await press('button', t.booking.submit);
-  expect(await screen.findByText(t.courseDraft.saved)).toBeTruthy();
+  expect(await screen.findByText(t.courseDraft.saved, {}, { timeout: 10_000 })).toBeTruthy();
   const methods = mockApiSend.mock.calls.map((c: unknown[]) => `${String(c[0])} ${String(c[1])}`);
   expect(methods).toContain('PUT /sales/booking/course/draft');
   expect(methods).not.toContain('POST /sales/booking');
@@ -47,6 +50,8 @@ test('paid meanwhile: the draft endpoint booked it, the usual booked panel shows
   await renderWithQuery(<CourseScreen />);
   await walkToReview();
   await press('button', t.booking.submit);
-  await waitFor(() => expect(screen.queryByText(t.courseDraft.saved)).toBeNull());
-  expect(screen.queryByRole('button', { name: t.booking.submit })).toBeNull();
+  const gone = () => expect(screen.queryByRole('button', { name: t.booking.submit })).toBeNull();
+  await waitFor(gone, { timeout: 10_000 });
+  expect(mockApiSend).toHaveBeenCalledWith('PUT', '/sales/booking/course/draft', expect.anything());
+  expect(screen.queryByText(t.courseDraft.saved)).toBeNull();
 });

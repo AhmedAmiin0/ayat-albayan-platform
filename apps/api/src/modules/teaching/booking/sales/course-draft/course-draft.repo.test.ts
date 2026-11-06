@@ -41,11 +41,4 @@ describe('CourseDraftRepo (owner 2026-11-06)', () => {
     expect(await repo.held(SUB, NOW)).toBe(false);
     expect(t.argsOf('payment_links', 'gt')).toEqual(['expires_at', NOW.toISOString()]);
   });
-
-  it('booked: any rule of the package', async () => {
-    const t = fakeDb({ schedule_rules: [{ data: [{ id: 'r1' }] }, { data: [] }] });
-    const repo = new CourseDraftRepo(t.db);
-    expect(await repo.booked(SUB)).toBe(true);
-    expect(await repo.booked(SUB)).toBe(false);
-  });
 });
