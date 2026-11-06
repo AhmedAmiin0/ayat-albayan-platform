@@ -79,7 +79,7 @@
   },
   "app/_layout.tsx": {
     "max-len": {
-      "count": 10
+      "count": 6
     },
     "no-restricted-syntax": {
       "count": 2
@@ -6590,7 +6590,7 @@
   },
   "src/inbox/thread/components/ForwardPicker.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1

@@ -59,7 +59,7 @@ test('the stripe-test profile: the flag and its variant; an internal APK on its 
   expect(flagged.map(([name]) => name)).toEqual(['preview', 'stripe-test']);
 });
 
-test('APP_VARIANT=stripetest: the .stripetest ids and the test name; nothing else changes', () => {
+test('APP_VARIANT=stripetest: .stripetest ids, the test name, no share target; nothing else', () => {
   const normal = configFor(undefined);
   const test = configFor('stripetest');
   expect(test.android?.package).toBe(`${app.expo.android.package}.stripetest`);
@@ -67,7 +67,10 @@ test('APP_VARIANT=stripetest: the .stripetest ids and the test name; nothing els
   expect(test.name).toBe('Ayat – Stripe test');
   // The API's pay page names this package to bring the payer back into the test app (pay-return.ts).
   expect(test.android?.package).toBe(STRIPE_TEST_APP_PACKAGE);
-  expect({ ...test, name: normal.name, android: normal.android, ios: normal.ios }).toEqual(normal);
+  // docs/38: expo-sharing is off in the test app (app-config.share.test.ts): one share target.
+  const { name, android, ios, plugins } = normal;
+  const same = { name, android, ios, plugins };
+  expect({ ...test, ...same }).toEqual(normal);
 });
 
 test('the default config is app.json’s (plus the FCM file)', () => {

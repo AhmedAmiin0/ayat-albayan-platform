@@ -16,8 +16,11 @@ const NATIVE_KEYS = ['version', 'sdkVersion', 'plugins', 'android', 'ios', 'sche
 // Bundled into the binary (app.json icon/adaptive icon/splash = top-level assets) or deciding how it is
 // built: a change needs an APK. Images in assets/<folder>/ (tabs, brand) are imported from JS and travel
 // inside the OTA bundle, so they are not native.
-const NATIVE_PATHS = [`${MOBILE}/assets`, `${MOBILE}/eas.json`];
+const NATIVE_PATHS = [`${MOBILE}/assets`, `${MOBILE}/eas.json`, `${MOBILE}/plugins`, 'patches'];
 const isNativeAsset = (f) => /^apps\/mobile\/assets\/[^/]+$/.test(f);
+// docs/38: config plugins write native code at prebuild, pnpm patches native sources (not tests).
+const isNativeSource = (f) =>
+  /^(apps\/mobile\/plugins|patches)\//.test(f) && !/(\.test\.|__snapshots__)/.test(f);
 // eas.json profiles that never build the normal app (docs/30: the separate Stripe test app): editing one is no
 // reason for a new preview / production APK. Every other part of eas.json still is. For a side profile's own
 // OTA it is the reverse: only that profile (and the non-build parts) decide.
@@ -60,13 +63,16 @@ export function nativeChanges(before, after, { files: changedFiles = [], profile
   const evaluated = typeof before.configOut === 'string' && typeof after.configOut === 'string';
   const configSame = before.appConfig === after.appConfig || (evaluated && before.configOut === after.configOut);
   if (!configSame) found.push('app.config.ts changed (dynamic config)');
-  const da = JSON.parse(before.pkg || '{}').dependencies ?? {};
-  const db = JSON.parse(after.pkg || '{}').dependencies ?? {};
+  const [pa, pb] = [JSON.parse(before.pkg || '{}'), JSON.parse(after.pkg || '{}')];
+  const da = pa.dependencies ?? {};
+  const db = pb.dependencies ?? {};
   for (const name of new Set([...Object.keys(da), ...Object.keys(db)])) {
     if (da[name] === db[name] || jsOnly(name, db[name] ?? da[name])) continue;
     found.push(`dependency ${name}: ${da[name] ?? '(none)'} -> ${db[name] ?? '(removed)'}`);
   }
-  for (const f of changedFiles) if (isNativeAsset(f)) found.push(`${f} changed`);
+  // package.json "expo": autolinking (buildFromSource: a module compiled from its patched source).
+  if (!same(pa.expo, pb.expo)) found.push('package.json: expo (autolinking)');
+  for (const f of changedFiles) if (isNativeAsset(f) || isNativeSource(f)) found.push(`${f} changed`);
   const easKnown = typeof before.eas === 'string' && typeof after.eas === 'string';
   const easChanged = easKnown ? easCore(before.eas, profile) !== easCore(after.eas, profile) : changedFiles.includes(`${MOBILE}/eas.json`);
   if (easChanged) found.push(`${MOBILE}/eas.json changed`);

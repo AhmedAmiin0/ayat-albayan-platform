@@ -4,19 +4,14 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { LazyList } from '@/core/ui/lists/LazyList';
-import { SearchField } from '@/core/ui/form/SearchField';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { ForwardRow } from './ForwardRow';
+import { ChatPickList } from '@/inbox/thread/pick/ChatPickList';
 import { chatName, forwardNotice, selectedLine } from '@/inbox/thread/hooks/forward-text';
 import { useForward, useForwardId } from '@/inbox/thread/hooks/use-forward';
-import { useThreadList } from '@/inbox/threads-list/use-thread-list';
 
 const MAX = FORWARD_MAX_TARGETS;
-const keyOf = (th: ThreadView) => th.phone_e164;
 
 interface ForwardPickerProps {
   message: MessageView;
@@ -33,9 +28,7 @@ interface ForwardPickerProps {
  */
 export function ForwardPicker({ message, from, onDone }: ForwardPickerProps) {
   const { say } = useChatActions();
-  const [search, setSearch] = useState('');
   const [picked, setPicked] = useState<ThreadView[]>([]);
-  const list = useThreadList({ search, unread: false });
   const forward = useForward();
   const idFor = useForwardId();
   const full = picked.length >= MAX;
@@ -53,7 +46,6 @@ export function ForwardPicker({ message, from, onDone }: ForwardPickerProps) {
       ),
     [],
   );
-  const chats = useMemo(() => list.items.filter((th) => th.phone_e164 !== from), [list.items, from]);
   const renderItem = useCallback(
     ({ item }: { item: ThreadView }) => {
       const on = pickedPhones.has(item.phone_e164);
@@ -77,33 +69,14 @@ export function ForwardPicker({ message, from, onDone }: ForwardPickerProps) {
 
   return (
     <View style={{ flex: 1, gap: 8 }}>
-      <SearchField label={t.inbox.forward.search} onSearch={setSearch} />
-      <Note>
-        {full
-          ? t.inbox.forward.max.replace('{max}', String(MAX))
-          : selectedLine(picked.length, MAX)}
-      </Note>
-      <LazyList
-        testID="forward-list"
-        keyboardShouldPersistTaps="handled"
-        tabBar={false}
-        data={chats}
-        keyExtractor={keyOf}
+      <ChatPickList
         renderItem={renderItem}
+        exclude={(th) => th.phone_e164 === from}
         extraData={pickedPhones}
-        onEndReached={list.loadMore}
-        ListEmptyComponent={
-          list.isError ? (
-            <ErrorState onRetry={list.refresh} />
-          ) : (
-            <View style={{ padding: 16 }}>
-              {list.isPending ? (
-                <Note>{t.inbox.forward.loading}</Note>
-              ) : (
-                <EmptyState title={t.inbox.forward.empty} />
-              )}
-            </View>
-          )
+        note={
+          <Note>
+            {full ? t.inbox.forward.max.replace('{max}', String(MAX)) : selectedLine(picked.length, MAX)}
+          </Note>
         }
       />
       {forward.isError ? <ErrorLine message={t.inbox.forward.error} /> : null}
