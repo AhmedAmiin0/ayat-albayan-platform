@@ -4,6 +4,7 @@ import { ReopenRequest } from '@/modules/messaging/whatsapp';
 import type { Page } from '@/common/http/http';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
+import { InboxSettings, renewalThreshold } from '@/modules/messaging/inbox/inbox.settings';
 import { familyTag, type FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { asRead, isFirstPage, pageRows, stampRead, type ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-page';
@@ -17,6 +18,8 @@ export type { ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-pag
 export class ThreadsService {
   /** Property-injected (the constructor is at its limit); absent (unit tests): no reopen note. */
   @Optional() @Inject(ReopenRequest) private readonly reopen?: ReopenRequest;
+  /** The ring's renewal threshold (inbox.settings.ts); absent (unit tests): the default. */
+  @Optional() @Inject(InboxSettings) private readonly settings?: InboxSettings;
 
   constructor(
     private readonly queries: ThreadsRepo,
@@ -27,9 +30,13 @@ export class ThreadsService {
 
   /** Each row's family tags come from its guardian's students (one read for the whole page, beside the unsupported marks). */
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
-    const { items: rows, total } = await this.queries.list(f);
+    const [{ items: rows, total }, threshold] = await Promise.all([
+      this.queries.list(f), renewalThreshold(this.settings),
+    ]);
     const [items, tags, reopenUsable] = await Promise.all([
-      this.queries.unsupported(rows), this.queries.familyTags(guardiansOf(rows)), this.reopenUsable(),
+      this.queries.unsupported(rows),
+      this.queries.familyTags(guardiansOf(rows), threshold),
+      this.reopenUsable(),
     ]);
     const tagOf = (r: ThreadRow) => (r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null);
     const view = (r: ThreadRow) => toThreadView(r, now, { tag: tagOf(r), reopenUsable });
@@ -44,17 +51,19 @@ export class ThreadsService {
    */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     const first = isFirstPage(q);
-    const at = await pageRows({ threads: this.queries, messages: this.messages }, q);
+    const [at, threshold] = await Promise.all([
+      pageRows({ threads: this.queries, messages: this.messages }, q), renewalThreshold(this.settings),
+    ]);
     const page = at.rows.slice(0, q.limit).reverse();
     const [people, lessons, messages, tag, read, reopenUsable] = await Promise.all([
       first ? this.queries.people(at.who) : NO_PEOPLE,
       first && at.who ? this.queries.lessons(at.who, now) : [],
       Promise.all(page.map((m) => this.views.view(m))),
-      first ? null : this.tagOf(at.found),
+      first ? null : this.tagOf(at.found, threshold),
       stampRead(this.receipts, { q, page: at, now }),
       this.reopenUsable(),
     ]);
-    const opts = { tag: first ? familyTag(people.students) : tag, reopenUsable };
+    const opts = { tag: first ? familyTag(people.students, threshold) : tag, reopenUsable };
     const thread = at.found ? toThreadView(at.found, now, opts) : null;
     const detail: ThreadDetail = { thread, messages, has_more: at.rows.length > q.limit, lessons, people };
     return read ? asRead(detail, now) : detail;
@@ -66,9 +75,10 @@ export class ThreadsService {
     return (await this.reopen?.usable().catch(() => null)) ?? null;
   }
 
-  private async tagOf(row: ThreadRow | null): Promise<FamilyTag | null> {
+  private async tagOf(row: ThreadRow | null, threshold: number): Promise<FamilyTag | null> {
     if (!row?.guardian_id) return null;
-    return (await this.queries.familyTags([row.guardian_id])).get(row.guardian_id) ?? null;
+    const tags = await this.queries.familyTags([row.guardian_id], threshold);
+    return tags.get(row.guardian_id) ?? null;
   }
 }
 

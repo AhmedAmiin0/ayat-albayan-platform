@@ -19,40 +19,38 @@ function Row({ item, mode = ADMIN }: { item: ThreadView; mode?: ThreadMode }) {
 const draw = (item: Partial<ThreadView>, mode?: ThreadMode) =>
   render(<Row item={{ ...thread, ...item }} mode={mode} />);
 
-/** The body's direct lines (name+time, preview+badge, meta). */
+/** The body's direct lines (name+time, preview+badge). */
 const lines = () => screen.getByTestId('chat-row-title').parent?.parent?.children ?? [];
 
-test('a named contact: the name alone on line 1, the phone LTR-isolated on the meta line', async () => {
+test('a named contact: two lines, the name alone, no phone and no tags', async () => {
   await draw({ display_name: 'سارة المنصور', lead_source: 'facebook_ad' });
   expect(screen.getByTestId('chat-row-title').props.children).toBe('سارة المنصور');
-  const meta = within(screen.getByTestId('thread-meta'));
-  expect(meta.getByText(ltr(formatPhone(thread.phone_e164)))).toBeTruthy();
-  expect(meta.getByText(t.enums.leadStatus.new)).toBeTruthy();
-  expect(meta.getByText(t.enums.leadSource.facebook_ad)).toBeTruthy();
-  expect(lines()).toHaveLength(3);
+  expect(screen.queryByText(ltr(formatPhone(thread.phone_e164)))).toBeNull();
+  expect(screen.queryByText(t.enums.leadStatus.new)).toBeNull();
+  expect(screen.queryByText(t.enums.leadSource.facebook_ad)).toBeNull();
+  expect(screen.queryByTestId('thread-meta')).toBeNull();
+  expect(lines()).toHaveLength(2);
 });
 
-test('no name: the LTR phone takes line 1 and leaves the meta line', async () => {
+test('no name: the LTR phone takes line 1', async () => {
   await draw({ display_name: null });
   const title = screen.getByTestId('chat-row-title');
   expect(title.props.children).toBe(ltr(formatPhone(thread.phone_e164)));
   expect(title.props.numberOfLines).toBe(1);
-  expect(within(screen.getByTestId('thread-meta')).queryByText(/⁦/)).toBeNull();
+  expect(lines()).toHaveLength(2);
 });
 
-test('a guardian on file: the role word, no lead chip, one unwrapped meta line', async () => {
-  await draw({ guardian_id: 'g-1', lead_source: null, subscribed: true, badge: 'subscribed' });
-  const meta = screen.getByTestId('thread-meta');
-  expect(within(meta).getByText(t.inbox.kind.guardian)).toBeTruthy();
-  expect(within(meta).queryByText(t.enums.leadStatus.new)).toBeNull();
-  expect(within(meta).getByText(t.inbox.subscription.badge.subscribed)).toBeTruthy();
-  expect(meta.props.style).not.toHaveProperty('flexWrap', 'wrap');
+test('a subscribed guardian: no role word or chip, the ring says it', async () => {
+  await draw({ guardian_id: 'g-1', lead_source: null, subscribed: true, badge: 'subscribed', ring: 'subscribed' });
+  expect(screen.queryByText(t.inbox.kind.guardian)).toBeNull();
+  expect(screen.queryByText(t.inbox.subscription.badge.subscribed)).toBeNull();
+  expect(screen.getByTestId('avatar-ring-subscribed')).toBeTruthy();
 });
 
-test('a teacher sees two lines: no meta line, no phone', async () => {
+test('a teacher sees two lines: no phone, no ring', async () => {
   await draw({ display_name: null }, { kind: 'teacher', teacherId: 't-1' });
-  expect(screen.queryByTestId('thread-meta')).toBeNull();
   expect(screen.queryByText(/⁦/)).toBeNull();
+  expect(screen.getByTestId('avatar-ring-none')).toBeTruthy();
   expect(lines()).toHaveLength(2);
 });
 

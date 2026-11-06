@@ -49,7 +49,7 @@ describe('ThreadsService — independent reads in parallel (owner 2026-10-27: en
   it('GET /threads: 2 rounds, the unsupported marks beside the family tags (was 3 when a page has an empty last message)', async () => {
     const { svc, queries } = service();
     expect(await rounds(() => svc.list({ page: 1, pageSize: 20 }))).toBe(2);
-    expect(queries.familyTags).toHaveBeenCalledWith(['g1']);
+    expect(queries.familyTags).toHaveBeenCalledWith(['g1'], 2);
   });
 
   it('GET /threads/:phone, first page: 2 rounds (was 5: stamp, thread, messages + people, views, lessons, the stamp beside them)', async () => {

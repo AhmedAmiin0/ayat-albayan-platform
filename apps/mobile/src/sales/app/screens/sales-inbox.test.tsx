@@ -35,21 +35,21 @@ async function open(base: '' | '/sales') {
 
 beforeEach(() => jest.clearAllMocks());
 
-test('sales tree: no leads switcher; rows show the lead stage + source, never «غير مدفوع»; a row opens /sales/inbox/thread', async () => {
+test('sales tree: no leads switcher; rows carry no tags, never «غير مدفوع»; a row opens /sales/inbox/thread', async () => {
   await open('/sales');
   expect(screen.queryByRole('tab', { name: t.nav.leads })).toBeNull();
   const lead = rowOf(thread.display_name ?? '');
-  expect(lead.getByText(t.enums.leadStatus.new)).toBeTruthy();
-  expect(lead.getByText(t.enums.leadSource.facebook_ad)).toBeTruthy();
-  expect(rowOf('أم إيمان').getByText(t.inbox.kind.guardian)).toBeTruthy();
+  expect(lead.queryByText(t.enums.leadStatus.new)).toBeNull();
+  expect(lead.queryByText(t.enums.leadSource.facebook_ad)).toBeNull();
+  expect(rowOf('أم إيمان').queryByText(t.inbox.kind.guardian)).toBeNull();
   expect(screen.queryByText(t.enums.subscriptionStatus.unpaid)).toBeNull();
   await fireEvent.press(screen.getByText(thread.display_name ?? ''));
   expect(router.push).toHaveBeenCalledWith(expect.stringMatching(/^\/sales\/inbox\/thread\//));
 });
 
-test('admin tree (a double-role admin): the leads switcher and the tags stay', async () => {
+test('admin tree (a double-role admin): the leads switcher stays, the rows carry no tags', async () => {
   await open('');
   expect(await screen.findByRole('tab', { name: t.nav.leads })).toBeTruthy();
-  expect(rowOf(thread.display_name ?? '').getByText(t.enums.leadStatus.new)).toBeTruthy();
-  expect(rowOf('أم إيمان').getByText(t.enums.subscriptionStatus.unpaid)).toBeTruthy();
+  expect(rowOf(thread.display_name ?? '').queryByText(t.enums.leadStatus.new)).toBeNull();
+  expect(rowOf('أم إيمان').queryByText(t.enums.subscriptionStatus.unpaid)).toBeNull();
 });

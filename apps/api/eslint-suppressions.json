@@ -4250,7 +4250,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/inbox/people/thread-people.test.ts": {
@@ -4269,7 +4269,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/inbox/reactions/reaction-line.ts": {
@@ -4896,7 +4896,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/inbox/threads/threads.sales.http.test.ts": {

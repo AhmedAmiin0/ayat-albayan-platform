@@ -39,13 +39,13 @@ describe('threadPeople (R-SUB-01)', () => {
 describe('familyTagsOf (H1)', () => {
   it('no guardians on the page → no read (an empty in() is a PostgREST error)', async () => {
     const t = deps({});
-    expect(await familyTagsOf(t.deps, [])).toEqual(new Map());
+    expect(await familyTagsOf(t.deps, [], 2)).toEqual(new Map());
     expect(t.calls).toEqual([]);
   });
 
   it('one read for the page’s distinct guardians, then their balances', async () => {
     const t = deps({ students: [{ data: [{ id: 's1', guardian_id: 'g1', subscriptions: [] }] }] });
-    await familyTagsOf(t.deps, ['g1', 'g1', 'g2']);
+    await familyTagsOf(t.deps, ['g1', 'g1', 'g2'], 2);
     expect(t.argsOf('students', 'in')).toEqual(['guardian_id', ['g1', 'g2']]);
     expect(t.balances.forStudents).toHaveBeenCalledWith(['s1']);
   });

@@ -3080,12 +3080,6 @@
     },
     "max-len": {
       "count": 2
-    },
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 2
     }
   },
   "src/features/messaging/inbox/threads/list/thread-filters.ts": {

@@ -2776,6 +2776,10 @@
       "guardian": "Guardian",
       "teacher": "Teacher"
     },
+    "ring": {
+      "subscribed": "Subscribed",
+      "renewal": "Needs renewal"
+    },
     "you": "You:",
     "failedLast": "Last message wasn't sent",
     "templateLine": "Template: {name}",
