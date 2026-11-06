@@ -50,7 +50,7 @@ test('a blurred chats tab and the forward picker never poll', async () => {
   expect(mockApiFetch).toHaveBeenCalledTimes(2);
 });
 
-test('realtime SUBSCRIBED: the chats tab re-reads every 60 s only; dropped: every 30 s again', async () => {
+test('realtime SUBSCRIBED: the chats tab re-reads at the safety net only; dropped: its own rate', async () => {
   await act(async () => inboxLive.setLive(true));
   await mount(true);
   await tick();
