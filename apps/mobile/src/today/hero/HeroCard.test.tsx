@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { allowedLessonEvents } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { confirmingQueryClient, noConfirmQueryClient, renderWithQuery } from '@/test/query';
-import { lesson, muscat, pending } from '../testing/fixtures';
+import { lesson, muscat, pending } from '@/today/testing/fixtures';
 import { HeroCard } from './HeroCard';
 
 jest.mock('@/core/lib/http/api', () => ({

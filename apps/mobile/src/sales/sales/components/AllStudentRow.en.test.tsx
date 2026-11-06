@@ -29,5 +29,5 @@ test('an English (LTR) row with no phone in the admin tree: the same details hin
   await render(<AllStudentRow student={student({ guardian_phone: null })} />);
   expect(screen.getByRole('button').props.accessibilityHint).toBe(en.sales.allStudents.detailsHint);
   await fireEvent.press(screen.getByRole('button'));
-  expect(router.push).toHaveBeenCalledWith('/students/st1');
+  expect(router.push).toHaveBeenCalledWith('/students/st1', { withAnchor: true });
 });

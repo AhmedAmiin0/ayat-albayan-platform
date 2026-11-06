@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { cancelOffered, countsForMoney, isCancelled, owesMore, packageProgress, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
-import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { View } from 'react-native';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { apiSend } from '@/core/lib/http/api';
@@ -37,7 +37,7 @@ function SubscriptionActions({ sub, pay }: { sub: SubscriptionView; pay: boolean
           variant="secondary"
           label={t.mobileMoney.recordPayment}
           accessibilityLabel={`${t.mobileMoney.recordPayment} · ${sub.student.name}`}
-          onPress={() => router.push(`/students/payment/${sub.student.id}`)}
+          onPress={() => pushInTab(`/students/payment/${sub.student.id}`)}
         />
       ) : null}
       {cancel ? (
@@ -67,7 +67,7 @@ export const SubscriptionItem = memo(function SubscriptionItem({ sub, threshold 
       title={sub.student.name}
       meta={sub.student.code}
       subtitle={`${packageName(sub)} · ${money(sub.price, sub.currency)}`}
-      onPress={toStudents ? () => router.push(`/students/${sub.student.id}`) : undefined}
+      onPress={toStudents ? () => pushInTab(`/students/${sub.student.id}`) : undefined}
       tags={
         <>
           <AppText

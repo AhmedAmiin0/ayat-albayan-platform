@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
-import { work } from '../shared/fixtures';
+import { work } from '@/ops/shared/fixtures';
 import { currencyLabel, packageText, pendingSubtitle, taskText, unpaidSubtitle } from './work-text';
 
 test('a renewal task names the student and what is left', () => {

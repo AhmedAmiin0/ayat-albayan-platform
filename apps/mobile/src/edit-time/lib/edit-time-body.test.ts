@@ -1,6 +1,6 @@
 import { lesson, yusuf } from '@/today/testing/fixtures';
 import { canSubmit, correctStarts, editBody, willNotify, type EditState } from './edit-time-body';
-import { held, NOW, SAT_17, SUN_17, upcoming } from '../testing/fixtures';
+import { held, NOW, SAT_17, SUN_17, upcoming } from '@/edit-time/testing/fixtures';
 
 const state = (over: Partial<EditState> = {}): EditState => ({ picked: null, durationMin: 45, reason: '', notify: true, ...over });
 

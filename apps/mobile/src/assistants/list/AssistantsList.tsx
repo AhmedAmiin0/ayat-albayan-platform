@@ -2,7 +2,7 @@ import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { LoadState } from '@/sales-money/components/LoadState';
-import { type AssistantRow, useAssistants } from '../api/api';
+import { type AssistantRow, useAssistants } from '@/assistants/api/api';
 import { AssistantItem } from './AssistantItem';
 
 const renderRow = ({ item }: ListRenderItemInfo<AssistantRow>) => <AssistantItem assistant={item} />;

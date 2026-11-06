@@ -1,10 +1,10 @@
 import type { CallPlatform, PeerMaker } from '@ab/client-core';
 import { requestId } from '@/core/lib/http/request-id';
 import { t } from '@/core/lib/i18n/i18n';
-import { callApi } from '../api/calls-api';
-import { restorePlayback, routeCallAudio } from '../rtc/audio-route';
-import { createCallPeer } from '../rtc/call-peer';
-import type { RtcDeps } from '../rtc/media';
+import { callApi } from '@/inbox/thread/calls/api/calls-api';
+import { restorePlayback, routeCallAudio } from '@/inbox/thread/calls/rtc/audio-route';
+import { createCallPeer } from '@/inbox/thread/calls/rtc/call-peer';
+import type { RtcDeps } from '@/inbox/thread/calls/rtc/media';
 
 /** Mobile's side of the shared call steps: its API, ids and words, and the earpiece / speaker route. */
 export const mobileCalls: CallPlatform = {

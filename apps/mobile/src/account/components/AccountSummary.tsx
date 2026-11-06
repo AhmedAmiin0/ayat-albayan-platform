@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { roleLabel } from '../hooks/queries';
+import { roleLabel } from '@/account/hooks/queries';
 
 /** Who is signed in (R-ACC-01): the role, and that the name families see is the admin's to change. */
 export function AccountSummary({ profile }: { profile: AccountProfile }) {

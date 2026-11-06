@@ -4,8 +4,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
-import { SendIcon } from '../../shared/chat-icons';
-import { MicIcon } from '../../shared/composer-icons';
+import { SendIcon } from '@/inbox/shared/chat-icons';
+import { MicIcon } from '@/inbox/shared/composer-icons';
 
 interface RoundActionProps {
   mode: 'mic' | 'send';

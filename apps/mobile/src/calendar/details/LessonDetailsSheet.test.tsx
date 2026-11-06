@@ -64,19 +64,19 @@ test('admin: a student opens the file, a sent report opens the report; the sheet
   const onClose = jest.fn();
   await renderWithQuery(<LessonDetailsSheet lesson={held} role="admin" onClose={onClose} />);
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }));
-  expect(router.push).toHaveBeenCalledWith('/students/s2');
+  expect(router.push).toHaveBeenCalledWith('/students/s2', { withAnchor: true });
   expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(jest.mocked(router.push).mock.invocationCallOrder[0] ?? 0);
   await fireEvent.press(screen.getByRole('button', { name: `${t.reports.view} — جنى وليد` }));
-  expect(router.push).toHaveBeenCalledWith('/students/reports/view/r1');
+  expect(router.push).toHaveBeenCalledWith('/students/reports/view/r1', { withAnchor: true });
 });
 
 test('teacher: her students’ reports page and one report button; no package read', async () => {
   await show('teacher', { ...held, students: [{ ...jana, report: { id: 'r1', status: 'draft' } }] });
   expect(screen.getByText(t.lessons.sheet.report.draft)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.reports.resume }));
-  expect(router.push).toHaveBeenCalledWith('/teacher/reports/l-held');
+  expect(router.push).toHaveBeenCalledWith('/teacher/reports/l-held', { withAnchor: true });
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }));
-  expect(router.push).toHaveBeenCalledWith('/teacher/reports/student/s2');
+  expect(router.push).toHaveBeenCalledWith('/teacher/reports/student/s2', { withAnchor: true });
   expect(mockApiFetch).not.toHaveBeenCalledWith('/students/s2/balance');
   // Admin-only today: the unpaid flag, the override reason and the generated clashes.
   for (const word of [t.subscriptions.unpaidFlag, 'موافقة ولي الأمر', t.schedule.generatedConflict]) {
@@ -93,7 +93,7 @@ test('sales: read-only, the lesson link (owner 2026-10-26), no report, no packag
   expect(mockApiFetch).not.toHaveBeenCalledWith('/students/s2/balance');
   // Outside the sales tree (the admin's «المزيد» › «المبيعات») the admin's student file; studentHref covers the sales tree.
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }));
-  expect(router.push).toHaveBeenCalledWith('/students/s2');
+  expect(router.push).toHaveBeenCalledWith('/students/s2', { withAnchor: true });
 });
 
 test('a running lesson says «جارية الآن»; the actions slot renders the role’s buttons; «إغلاق» closes', async () => {

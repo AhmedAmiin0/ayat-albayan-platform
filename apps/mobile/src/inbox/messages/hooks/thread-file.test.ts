@@ -1,7 +1,7 @@
 import { ApiError } from '@/core/lib/http/api';
 import { createTestQueryClient } from '@/test/query';
 import { pdfPagePath, pdfPageQuery, signedStaleTime, threadFilePath, threadFileQuery } from './thread-file';
-import { PHONE } from '../../shared/thread-fixtures';
+import { PHONE } from '@/inbox/shared/thread-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

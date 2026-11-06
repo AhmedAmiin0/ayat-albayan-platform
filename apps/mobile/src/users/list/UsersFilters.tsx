@@ -1,8 +1,8 @@
 import { USER_ROLES, USER_STATUSES } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import type { UsersView } from '../shared/api';
-import { roleText, statusStyle } from '../shared/format';
+import type { UsersView } from '@/users/shared/api';
+import { roleText, statusStyle } from '@/users/shared/format';
 
 interface UsersFiltersProps {
   view: UsersView;

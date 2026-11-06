@@ -2,9 +2,9 @@ import { fireEvent, screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { Composer } from '../Composer';
-import { threadKey } from '../../thread/hooks/thread-cache';
-import { cachedThread, detail, PHONE, thread } from '../../shared/thread-fixtures';
+import { Composer } from '@/inbox/composer/Composer';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
+import { cachedThread, detail, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
 // The paperclip's sheet (owner 2026-10-27): everything that left the bar, most used first.
 jest.mock('@/core/lib/http/api', () => ({

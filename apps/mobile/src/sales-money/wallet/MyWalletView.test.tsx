@@ -2,8 +2,8 @@ import type { NotificationItem } from '@ab/shared';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { commissionDay, commissionLine } from '../lib/money-text';
-import { commissionPage, earnings, myCommission } from '../testing/fixtures';
+import { commissionDay, commissionLine } from '@/sales-money/lib/money-text';
+import { commissionPage, earnings, myCommission } from '@/sales-money/testing/fixtures';
 import { MyWalletView } from './MyWalletView';
 
 const mockApiFetch = jest.fn();

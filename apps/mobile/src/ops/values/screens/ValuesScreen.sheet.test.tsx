@@ -2,10 +2,10 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { settings } from '../../shared/fixtures';
-import { groupLabel } from '../lib/value-groups';
-import { labelOf } from '../lib/value-text';
-import { meta, WRITER } from '../testing/values-fixtures';
+import { settings } from '@/ops/shared/fixtures';
+import { groupLabel } from '@/ops/values/lib/value-groups';
+import { labelOf } from '@/ops/values/lib/value-text';
+import { meta, WRITER } from '@/ops/values/testing/values-fixtures';
 import { ValuesScreen } from './ValuesScreen';
 
 const mockApiFetch = jest.fn();

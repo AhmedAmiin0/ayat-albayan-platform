@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { egp, sessionDetail, sessionWhen } from '../lib/format';
+import { egp, sessionDetail, sessionWhen } from '@/earnings/lib/format';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface SessionItemProps {

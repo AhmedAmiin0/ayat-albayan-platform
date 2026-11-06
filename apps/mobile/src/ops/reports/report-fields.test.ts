@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { report } from '../shared/fixtures';
+import { report } from '@/ops/shared/fixtures';
 import { reportFields } from './report-fields';
 
 test('the form’s order and words; a blank field stays a null value', () => {

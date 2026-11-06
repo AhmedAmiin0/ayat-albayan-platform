@@ -2,8 +2,8 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, message, thread } from '../shared/thread-fixtures';
-import { ThreadModeProvider } from '../thread/hooks/thread-mode';
+import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from './ThreadScreen';
 
 // «رد» (owner 2026-10-25): a long press on a bubble → the menu → the composer's one-line quote strip.

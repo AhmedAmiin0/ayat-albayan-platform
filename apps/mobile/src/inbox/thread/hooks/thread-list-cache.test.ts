@@ -1,5 +1,5 @@
 import type { ThreadView } from '@ab/shared';
-import { cachedThread, delivered, detail, inbound, listCache, message, PHONE, thread } from '../../shared/thread-fixtures';
+import { cachedThread, delivered, detail, inbound, listCache, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { clearUnread, newestInbound, type ThreadListCache, touchList } from './thread-list-cache';
 
 const other: ThreadView = { ...thread, phone_e164: '+966500000001', display_name: 'سارة' };

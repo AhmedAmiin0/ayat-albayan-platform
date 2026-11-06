@@ -1,4 +1,4 @@
-import { message } from '../../shared/thread-fixtures';
+import { message } from '@/inbox/shared/thread-fixtures';
 import { bubbleOffers, downloadLabel, offersAny } from './bubble-offers';
 import { t } from '@/core/lib/i18n/i18n';
 

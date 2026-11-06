@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ChatMediaSheet } from './ChatMediaSheet';
-import type { ThreadMediaItem } from '../shared/contract';
+import type { ThreadMediaItem } from '@/booking/shared/contract';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

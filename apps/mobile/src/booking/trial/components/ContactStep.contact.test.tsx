@@ -3,9 +3,9 @@ import { bookingRequestSchema } from '@ab/shared';
 import { huda } from '@/inbox/shared/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { ContactStep } from './ContactStep';
-import { draftFromLead } from '../lib/draft';
-import { toBookingRequest } from '../lib/booking-body';
-import { draft } from '../../testing/fixtures';
+import { draftFromLead } from '@/booking/trial/lib/draft';
+import { toBookingRequest } from '@/booking/trial/lib/booking-body';
+import { draft } from '@/booking/testing/fixtures';
 
 // «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1, a docs/13 deviation) on step 1.
 

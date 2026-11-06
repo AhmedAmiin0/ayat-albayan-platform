@@ -22,6 +22,7 @@ import { LinesCheck } from './lines/lines.check';
 import { LinesController } from './lines/lines.controller';
 import { MessageDispatch } from './sender/message.dispatch';
 import { MessageSender } from './sender/message.sender';
+import { SenderWake } from './sender/wake/sender-wake.registrar';
 import { MessageViews } from './messages/message.views';
 import { TemplateNames } from './templates/names/template-names';
 import { MessageWorker } from './sender/message.worker';
@@ -113,8 +114,7 @@ function lines(): WhatsappLines {
     WindowRelease,
     WindowHold,
     KapsoHold,
-    MessageWorker,
-    MessageSender,
+    MessageWorker, MessageSender, SenderWake,
     MessagesRepo,
     MessageViews,
     TemplateNames,

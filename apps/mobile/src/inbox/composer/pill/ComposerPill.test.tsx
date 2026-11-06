@@ -2,11 +2,11 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import * as ImagePicker from 'expo-image-picker';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { Composer } from '../Composer';
-import { threadKey } from '../../thread/hooks/thread-cache';
-import { cachedThread, detail, PHONE, thread } from '../../shared/thread-fixtures';
-import { type ThreadMode, ThreadModeProvider } from '../../thread/hooks/thread-mode';
-import { clearComposerDrafts } from '../draft-store';
+import { Composer } from '@/inbox/composer/Composer';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
+import { cachedThread, detail, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
+import { clearComposerDrafts } from '@/inbox/composer/draft-store';
 
 // The pill: the emoji in the bar as WhatsApp (owner 2026-10-29; no camera since 2026-11-01), the paperclip's sheet's tiles, and the teacher's own pill.
 const mockApiSend = jest.fn();

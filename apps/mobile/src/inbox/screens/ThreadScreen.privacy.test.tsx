@@ -3,8 +3,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { readable, SHOWN } from './privacy.helpers';
-import { detail, inbound, NOW, thread } from '../shared/thread-fixtures';
-import { ThreadModeProvider } from '../thread/hooks/thread-mode';
+import { detail, inbound, NOW, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from './ThreadScreen';
 
 const mockApiFetch = jest.fn();

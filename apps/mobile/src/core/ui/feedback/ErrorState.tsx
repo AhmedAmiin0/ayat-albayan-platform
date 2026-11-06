@@ -1,9 +1,9 @@
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
-import { Button } from '../primitives/Button';
-import { NuqtaGlyph } from '../primitives/NuqtaGlyph';
-import { AppText } from '../primitives/AppText';
+import { Button } from '@/core/ui/primitives/Button';
+import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 interface ErrorStateProps {
   /** Usually the query's `refetch`. */

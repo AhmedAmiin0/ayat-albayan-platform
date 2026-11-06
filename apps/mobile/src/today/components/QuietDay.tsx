@@ -6,11 +6,11 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import { lessonClock } from '../lib/lesson-text';
+import { lessonClock } from '@/today/lib/lesson-text';
 import { raisedCard } from '@/core/ui/surface/surface';
-import { localDate, visibleLessons } from '../lib/timeline';
-import type { TodayLesson } from '../lib/today-lesson';
-import type { TodaySource } from '../lib/today-source';
+import { localDate, visibleLessons } from '@/today/lib/timeline';
+import type { TodayLesson } from '@/today/lib/today-lesson';
+import type { TodaySource } from '@/today/lib/today-source';
 
 /**
  * Nothing left today (docs/29 §6): a check in a lapis-wash circle, «انتهت حلقات اليوم», tomorrow's

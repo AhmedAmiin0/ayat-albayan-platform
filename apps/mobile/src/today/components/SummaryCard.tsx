@@ -5,7 +5,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import { raisedCard } from '@/core/ui/surface/surface';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
-import { TODAY_FILTERS, type TodayFilter } from '../lib/timeline';
+import { TODAY_FILTERS, type TodayFilter } from '@/today/lib/timeline';
 
 interface SummaryCardProps {
   counts: Record<TodayFilter, number>;

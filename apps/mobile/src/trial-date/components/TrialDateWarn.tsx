@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { warnLine } from '../lib/trial-date-text';
+import { warnLine } from '@/trial-date/lib/trial-date-text';
 
 /**
  * From the 3rd date on (warnsTrialDate): «سيكون هذا الموعد التجريبي رقم {n}…» as a hamish line in

@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { familyOf, KID, KID2, kid, PHONE, salesQuote } from '../testing/fixtures';
+import { familyOf, KID, KID2, kid, PHONE, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 const mockApiFetch = jest.fn();

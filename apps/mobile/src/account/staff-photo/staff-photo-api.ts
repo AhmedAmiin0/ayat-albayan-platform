@@ -1,8 +1,8 @@
 import { ACCOUNT_ERRORS, type StaffPhotoView } from '@ab/shared';
 import { ApiError, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { uploadPhoto } from '../hooks/account-api';
-import type { PickedAvatar } from '../lib/avatar';
+import { uploadPhoto } from '@/account/hooks/account-api';
+import type { PickedAvatar } from '@/account/lib/avatar';
 
 // An admin's write of a staff member's photo: `/teachers/:id/avatar` (admin) or `/users/:id/avatar`
 // (users.write). The same three steps as «حسابي» (uploadPhoto); PUT and DELETE answer StaffPhotoView.

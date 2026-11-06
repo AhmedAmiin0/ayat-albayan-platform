@@ -2,6 +2,7 @@ import type { PushKind, TemplateKey } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
+import { wakeOn } from '@/common/jobs';
 import { dbError } from '@/common/http/http';
 import type { QueuedMessage } from './queued-row';
 import type { RoomCandidate } from './plan/reminders.links';
@@ -71,8 +72,9 @@ export class RemindersRepo {
     return approvedTemplates(this.db, keys);
   }
 
-  queue(rows: readonly QueuedMessage[]): Promise<number> {
-    return queueMessages(this.db, rows);
+  /** New rows wake the sender once per batch (docs/42 42-1) instead of its 30 s poll. */
+  async queue(rows: readonly QueuedMessage[]): Promise<number> {
+    return wakeOn(await queueMessages(this.db, rows));
   }
 
   /** lesson_join_link rows for the candidates not queued yet, each token saved first (reminders.room.ts). */

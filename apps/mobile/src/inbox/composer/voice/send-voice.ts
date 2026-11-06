@@ -1,7 +1,7 @@
 import { CHAT_VOICE_MIME } from '@ab/shared';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
-import { useChatActions } from '../../thread/hooks/chat-actions';
-import { type ChatFilePick, useSendFile } from '../send-file';
+import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { type ChatFilePick, useSendFile } from '@/inbox/composer/send-file';
 import type { Take } from './voice-machine';
 
 /** The recorded m4a's bytes (fetch on the local file, as a picked PDF is read: no file-system module). */

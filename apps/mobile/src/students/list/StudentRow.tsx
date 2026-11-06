@@ -5,9 +5,9 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { studentNote } from '../profile/student-note';
-import { StudentNote } from '../profile/StudentNote';
-import type { StudentListItem } from '../shared/types';
+import { studentNote } from '@/students/profile/student-note';
+import { StudentNote } from '@/students/profile/StudentNote';
+import type { StudentListItem } from '@/students/shared/types';
 
 /** Name + AB-code, guardian under it; status chip and the «دورك» note at the inline-end. */
 export const StudentRow = memo(function StudentRow({ student }: { student: StudentListItem }) {

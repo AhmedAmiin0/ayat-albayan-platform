@@ -1,9 +1,9 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ChatActionsProvider } from '../../thread/components/ChatActionsProvider';
-import { MessageBubble } from '../components/MessageBubble';
-import { PHONE, thread } from '../../shared/thread-fixtures';
+import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
+import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
+import { PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { PATH, photo, SIGNED, signed } from './photo-test-kit';
 
 const mockApiFetch = jest.fn();

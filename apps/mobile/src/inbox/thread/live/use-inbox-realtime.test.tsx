@@ -2,7 +2,7 @@ import { chatLiveKey } from '@ab/client-core';
 import { act, renderHook } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 import { queryClient as client } from '@/core/lib/query/query-client';
-import { threadPollKey } from '../hooks/thread-poll';
+import { threadPollKey } from '@/inbox/thread/hooks/thread-poll';
 import { inboxLive } from './inbox-live';
 import { useInboxRealtime } from './use-inbox-realtime';
 
@@ -79,6 +79,16 @@ test('an event for the open chat re-reads its newest page once; another phone on
   expect(m.lists()).toBe(2);
   expect(threadPollKey(OPEN)).toEqual(['thread-poll', OPEN]);
   release.forEach((r) => r());
+  await m.hook.unmount();
+});
+
+test('an event re-reads the list cancelling an older read in flight, never joining it (docs/43 AU1)', async () => {
+  const release = inboxLive.watch('list');
+  const m = await mount();
+  await send(OTHER);
+  const calls = jest.mocked(client.refetchQueries).mock.calls.filter(([f]) => f?.queryKey?.[1] === 'list');
+  expect(calls).toEqual([[{ queryKey: ['threads', 'list'], type: 'active' }, { cancelRefetch: true }]]);
+  release();
   await m.hook.unmount();
 });
 

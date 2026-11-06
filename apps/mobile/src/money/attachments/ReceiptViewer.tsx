@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
-import { useReceiptUrl } from '../shared/queries';
+import { useReceiptUrl } from '@/money/shared/queries';
 import { isPdfReceipt } from './receipt-file';
 
 /** The opened receipt: a spinner, the failure, a PDF button, or the image whole (contain, nothing cropped). */

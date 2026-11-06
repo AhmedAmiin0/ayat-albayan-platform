@@ -2,7 +2,7 @@ import { RESTRICTED_TEMPLATE_DEFAULTS, type TemplateView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { plainReminder } from '../shared/thread-fixtures';
+import { plainReminder } from '@/inbox/shared/thread-fixtures';
 import { TemplatePicker } from './TemplatePicker';
 
 // Owner 2026-10-12: every role without templates.manage / templates.send_all gets only the allow-list.

@@ -1,13 +1,14 @@
 import { INBOX_LIST_REFRESH_MS, liveInterval } from '@ab/client-core';
 import type { LeadStatus, ThreadView } from '@ab/shared';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { apiFetch, toQueryString } from '@/core/lib/http/api';
 import { nextPageParam, type Page } from '@/core/lib/query/paging';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
-import { useInboxLive, useLiveWatch } from '../thread/live';
+import { useInboxLive, useLiveWatch } from '@/inbox/thread/live';
 import { waitingForReply } from './chat-filter';
+import { useListCatchUp, withChatTicks } from './list-catch-up';
 
 const PAGE_SIZE = 25;
 
@@ -34,8 +35,11 @@ export function useThreadList({ search, unread, list, status, live: liveTab = fa
   const focused = useScreenFocused();
   const live = useInboxLive();
   useLiveWatch(liveTab ? 'list' : null, focused);
+  const client = useQueryClient();
+  const queryKey = ['threads', 'list', { search, unread, list, status }];
+  useListCatchUp(queryKey, focused);
   const query = useInfiniteQuery({
-    queryKey: ['threads', 'list', { search, unread, list, status }],
+    queryKey,
     // TanStack's signal: a list nobody shows drops its read, so a later mount starts a new one.
     queryFn: ({ pageParam, signal }) =>
       apiFetch<Page<ThreadView>>(
@@ -45,6 +49,8 @@ export function useThreadList({ search, unread, list, status, live: liveTab = fa
     initialPageParam: 1,
     getNextPageParam: nextPageParam,
     refetchInterval: liveTab && focused ? liveInterval(live, INBOX_LIST_REFRESH_MS) : false,
+    // A list answer never shows a tick behind the one its chat already merged (docs/43 43-1).
+    select: withChatTicks(client),
   });
   const pages = query.data?.pages;
   const items = useMemo(() => {

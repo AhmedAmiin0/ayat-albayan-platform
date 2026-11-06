@@ -50,7 +50,7 @@ test('her student\'s lesson: «تغيير الموعد» and «إلغاء الح
   expect(screen.getByRole('button', { name: a.cancel })).toBeTruthy();
   expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') }));
-  expect(router.push).toHaveBeenCalledWith('/sales/students/st3');
+  expect(router.push).toHaveBeenCalledWith('/sales/students/st3', { withAnchor: true });
 });
 
 test('another family\'s lesson (owner 2026-10-28): both actions, no «للاطلاع فقط», the name opens «تفاصيل الطالب»', async () => {
@@ -59,7 +59,7 @@ test('another family\'s lesson (owner 2026-10-28): both actions, no «للاطل
   expect(screen.getByRole('button', { name: a.cancel })).toBeTruthy();
   expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'يوسف أحمد') }));
-  expect(router.push).toHaveBeenCalledWith(expect.stringMatching(/^\/sales\/students\//));
+  expect(router.push).toHaveBeenCalledWith(expect.stringMatching(/^\/sales\/students\//), { withAnchor: true });
 });
 
 test('cancel without a reason posts {} to her route; the lesson reads cancelled', async () => {

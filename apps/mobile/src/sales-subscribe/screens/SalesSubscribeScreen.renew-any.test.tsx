@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { courseView } from '@/sales-course/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
-import { familyOf, KID, kid, openSub, PHONE, salesQuote } from '../testing/fixtures';
+import { familyOf, KID, kid, openSub, PHONE, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 // sales.renew_any (owner 2026-10-29, docs/16 row 38): «جدّد الاشتراك» for a child not hers (mine: false).

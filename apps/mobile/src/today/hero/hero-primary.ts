@@ -1,5 +1,5 @@
 import { applyLessonEvent } from '@ab/shared';
-import type { TodayLesson } from '../lib/today-lesson';
+import type { TodayLesson } from '@/today/lib/today-lesson';
 
 interface HeroState {
   /** The hero is under way («جارية الآن»). */

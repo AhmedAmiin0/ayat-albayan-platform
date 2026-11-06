@@ -1,6 +1,6 @@
 import { bookingRequestSchema } from '@ab/shared';
 import { toBookingRequest } from './booking-body';
-import { draft, LEAD_ID, maryam, SUN_17 } from '../../testing/fixtures';
+import { draft, LEAD_ID, maryam, SUN_17 } from '@/booking/testing/fixtures';
 
 const REQ = '99999999-9999-4999-8999-999999999999';
 

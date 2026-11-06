@@ -1,6 +1,6 @@
 import { onlineManager } from '@tanstack/react-query';
 import { AppState } from 'react-native';
-import { env } from '../http/env';
+import { env } from '@/core/lib/http/env';
 import { createConnectivity } from './connectivity-store';
 import { probeApi } from './probe';
 

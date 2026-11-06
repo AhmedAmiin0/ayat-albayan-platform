@@ -1,8 +1,8 @@
 import { type ReactNode, useMemo, useState } from 'react';
 import { Animated, I18nManager, PanResponder, View } from 'react-native';
 import { useTheme } from '@/theme';
-import { ReplyIcon } from '../../shared/chat-icons';
-import { SWIPE_MAX as MAX, swipeAnswers, swipeClaims, swipeOffset } from '../hooks/swipe';
+import { ReplyIcon } from '@/inbox/shared/chat-icons';
+import { SWIPE_MAX as MAX, swipeAnswers, swipeClaims, swipeOffset } from '@/inbox/messages/hooks/swipe';
 
 /** The translateX sign of the inline-end (gestures and transforms are physical): right in English, left in Arabic. */
 const dir = I18nManager.isRTL ? -1 : 1;

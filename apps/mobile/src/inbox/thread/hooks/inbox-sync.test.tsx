@@ -1,7 +1,7 @@
 import type { ThreadView } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { delivered, detail, inbound, listCache, message, PHONE, thread } from '../../shared/thread-fixtures';
+import { delivered, detail, inbound, listCache, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { refreshInbox, threadListKey, useInboxRead } from './inbox-sync';
 import type { ThreadListCache } from './thread-list-cache';
 import { useSendMessage, useThread } from './use-thread';
@@ -17,6 +17,7 @@ jest.mock('@/core/lib/http/api', () => ({
 const other: ThreadView = { ...thread, phone_e164: '+966500000001', display_name: 'سارة' };
 const ALL = ['threads', 'list', { search: '', unread: false }];
 const UNREAD = ['threads', 'list', { search: '', unread: true }];
+const HIDDEN_LISTS = { queryKey: threadListKey, refetchType: 'none' };
 const top = (client: ReturnType<typeof createTestQueryClient>, key: unknown[]) =>
   client.getQueryData<ThreadListCache>(key)?.pages[0]?.items[0];
 
@@ -33,7 +34,7 @@ test('refreshInbox: the thread (and its search window), every chats list, the ta
   expect(spy.mock.calls.map(([filters]) => filters?.queryKey)).toEqual([['chat-lists'], ['threads']]);
 });
 
-test('a send moves the chat to the top of every cached list at once, then the list refetches', async () => {
+test('a send moves the chat to the top of every cached list at once, then marks the lists stale', async () => {
   let answer: (row: unknown) => void = () => undefined;
   mockApiSend.mockReturnValue(new Promise((resolve) => (answer = resolve)));
   const client = createTestQueryClient();
@@ -45,9 +46,10 @@ test('a send moves the chat to the top of every cached list at once, then the li
   // Before the API answers: on top, with the provisional row as its last message.
   await waitFor(() => expect(top(client, ALL)).toMatchObject({ phone_e164: PHONE, last_body: 'وصلت', last_status: 'queued' }));
   expect(top(client, UNREAD)).toBe(other); // a list without the chat waits for its refetch
-  expect(spy).not.toHaveBeenCalledWith({ queryKey: threadListKey });
+  expect(spy).not.toHaveBeenCalledWith(expect.objectContaining({ queryKey: threadListKey }));
   await act(async () => answer(message({ id: 'p1', body: 'وصلت', status: 'sent' })));
-  await waitFor(() => expect(spy).toHaveBeenCalledWith({ queryKey: threadListKey }));
+  // The list is under the chat: marked stale, not read again until it shows (docs/43 AU2).
+  await waitFor(() => expect(spy).toHaveBeenCalledWith(HIDDEN_LISTS));
   expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', PHONE] });
 });
 
@@ -73,7 +75,7 @@ test('opening a chat clears its unread badge once the API answered; a refetch wi
   const later = message({ id: 'm4', direction: 'inbound', body: 'تمام', created_at: '2026-10-02T08:20:00Z' });
   mockApiFetch.mockResolvedValue(detail([inbound, delivered, later]));
   await act(async () => void (await result.current.refetch()));
-  await waitFor(() => expect(spy).toHaveBeenCalledWith({ queryKey: threadListKey }));
+  await waitFor(() => expect(spy).toHaveBeenCalledWith(HIDDEN_LISTS));
 });
 
 test('a saved copy shown before the API answers reads nothing', async () => {

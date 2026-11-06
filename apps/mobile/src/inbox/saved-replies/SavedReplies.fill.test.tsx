@@ -2,10 +2,10 @@ import { fireEvent, screen, within } from '@testing-library/react-native';
 import type { SavedReply } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, inbound, thread } from '../shared/thread-fixtures';
-import { ThreadScreen } from '../screens/ThreadScreen';
+import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { REPLIES, WELCOME } from './testing/fixtures';
-import { clearComposerDrafts } from '../composer/draft-store';
+import { clearComposerDrafts } from '@/inbox/composer/draft-store';
 
 // «أكمل الرد» (owner 2026-10-27): a reply with blanks asks for them before it goes into the box.
 

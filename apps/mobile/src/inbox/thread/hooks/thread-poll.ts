@@ -1,9 +1,9 @@
-import { chatLiveKey, deltaSearch, INBOX_REFRESH_MS, liveInterval, mergeDelta, needsFullRead, THREAD_FULL_MS } from '@ab/client-core';
+import { chatLiveKey, deltaSearch, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead, THREAD_FULL_MS } from '@ab/client-core';
 import type { ThreadDelta, ThreadDetail } from '@ab/shared';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
-import { useInboxLive, useLiveWatch } from '../live/inbox-live';
+import { useInboxLive, useLiveWatch } from '@/inbox/thread/live/inbox-live';
 import { leavesGap, mergeNewest, sendKey, threadKey, threadPath, type ThreadCache } from './thread-cache';
 
 /** The polls' own keys: outside threadKey, so a push's invalidation never runs them too. */
@@ -16,6 +16,13 @@ const busy = (client: QueryClient, phone: string) =>
 
 /** Polls that run on their own timer while on screen; no fetch on open (the thread query just read the page). */
 const POLL = { initialData: 0, staleTime: Infinity, gcTime: 0, meta: { noPersist: true } } as const;
+
+/**
+ * A page poll's answer folded in (docs/43 AU12): it may have left before a delta brought ✓✓, so a
+ * cached tick further along stays (failed / sent by hand / a retry always come through).
+ */
+const foldPage = (fresh: ThreadDetail) => (old: ThreadCache | undefined) =>
+  mergeNewest(old, laterTicks(old, fresh));
 
 /**
  * An open chat shows new messages and ticks (owner 2026-10-27) while its screen is focused and the app
@@ -56,7 +63,7 @@ export function useThreadPoll(phone: string, loaded: boolean) {
       const fresh = await apiFetch<ThreadDetail>(threadPath(phone));
       if (busy(client, phone)) return Date.now();
       if (leavesGap(client.getQueryData<ThreadCache>(queryKey), fresh)) void client.invalidateQueries({ queryKey });
-      else client.setQueryData<ThreadCache>(queryKey, (old) => mergeNewest(old, fresh));
+      else client.setQueryData<ThreadCache>(queryKey, foldPage(fresh));
       return Date.now();
     },
     ...POLL,

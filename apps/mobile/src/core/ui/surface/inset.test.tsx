@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
-import { ListRow } from '../layout/ListRow';
+import { ListRow } from '@/core/ui/layout/ListRow';
 import { InsetGroup, useInset } from './inset';
-import { AppText } from '../primitives/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 function Probe() {
   return <AppText>{useInset() ? 'inset' : 'alone'}</AppText>;

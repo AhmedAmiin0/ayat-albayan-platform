@@ -4,7 +4,7 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { AdminReportScreen } from './AdminReportScreen';
-import { report } from '../shared/fixtures';
+import { report } from '@/ops/shared/fixtures';
 
 // An English run: the native flag is LTR, so `t` is en.json and surah names are English.
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

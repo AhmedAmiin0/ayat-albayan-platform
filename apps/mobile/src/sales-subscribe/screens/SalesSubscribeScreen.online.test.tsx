@@ -2,14 +2,14 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { familyKey } from '../lib/family';
-import { linkMessage, referenceLine } from '../payment-link/link-text';
-import { familyOf, KID, kid, PHONE, salesQuote } from '../testing/fixtures';
-import { linkQuote, paymentLink } from '../testing/link-fixtures';
+import { familyKey } from '@/sales-subscribe/lib/family';
+import { linkMessage, referenceLine } from '@/sales-subscribe/payment-link/link-text';
+import { familyOf, KID, kid, PHONE, salesQuote } from '@/sales-subscribe/testing/fixtures';
+import { linkQuote, paymentLink } from '@/sales-subscribe/testing/link-fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 // «اشتراك جديد» → «دفع إلكتروني» (owner 2026-10-29, docs/30): the Stripe test build with the API's switch on.
-jest.mock('../payment-link/flag', () => ({ STRIPE_FEATURE: true }));
+jest.mock('@/sales-subscribe/payment-link/flag', () => ({ STRIPE_FEATURE: true }));
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -19,7 +19,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 const mockBack = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
+  router: { back: () => mockBack(), canDismiss: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ phone: '+966501112223' }),
 }));
 const mockWindow = { open: true };

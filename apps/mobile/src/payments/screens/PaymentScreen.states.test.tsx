@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { balanceOf, OLD_SUB_ID, subscription } from '../fixtures';
+import { balanceOf, OLD_SUB_ID, subscription } from '@/payments/fixtures';
 import { PaymentScreen } from './PaymentScreen';
 
 const mockApiFetch = jest.fn();
@@ -14,7 +14,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 const mockBack = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
+  router: { back: () => mockBack(), canDismiss: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
 

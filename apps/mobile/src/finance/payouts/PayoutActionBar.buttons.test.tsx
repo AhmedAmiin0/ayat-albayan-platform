@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
 import { renderWithQuery } from '@/test/query';
-import { APPROVED, PAID } from '../shared/fixtures';
+import { APPROVED, PAID } from '@/finance/shared/fixtures';
 import { PayoutActionBar } from './PayoutActionBar';
 
 jest.mock('@/core/lib/http/api', () => ({

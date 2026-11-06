@@ -30,7 +30,7 @@ test.each([
   await inSales(<AllStudentRow student={row} />);
   expect(screen.getByRole('button').props.accessibilityHint).toBe(S.detailsHint);
   await fireEvent.press(screen.getByRole('button'));
-  expect(router.push).toHaveBeenCalledWith('/sales/students/st1');
+  expect(router.push).toHaveBeenCalledWith('/sales/students/st1', { withAnchor: true });
 });
 
 test.each([
@@ -41,5 +41,5 @@ test.each([
   expect(screen.getByRole('button').props.accessibilityHint).toBe(S.detailsHint);
   await fireEvent.press(screen.getByRole('button'));
   expect(router.push).toHaveBeenCalledTimes(1);
-  expect(router.push).toHaveBeenCalledWith('/students/st1');
+  expect(router.push).toHaveBeenCalledWith('/students/st1', { withAnchor: true });
 });

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { EarningsSummary } from './EarningsSummary';
-import type { SessionFilter } from '../hooks/queries';
+import type { SessionFilter } from '@/earnings/hooks/queries';
 
 export type Tab = 'sessions' | 'payments';
 

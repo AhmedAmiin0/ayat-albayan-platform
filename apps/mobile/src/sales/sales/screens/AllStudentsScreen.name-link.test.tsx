@@ -35,7 +35,7 @@ test('«كل الطلاب» (owner 2026-10-30): the name is the header, a link t
   expect(flat(name.props.style)).toMatchObject(header);
   expect(name.props.numberOfLines).toBe(1);
   await fireEvent.press(screen.getByRole('link', { name: label('يوسف أحمد') }));
-  expect(router.push).toHaveBeenCalledWith('/sales/students/st1');
+  expect(router.push).toHaveBeenCalledWith('/sales/students/st1', { withAnchor: true });
 });
 
 test('«طلابي»: the name opens the student file, the row still opens the family channel', async () => {
@@ -45,6 +45,6 @@ test('«طلابي»: the name opens the student file, the row still opens the f
   expect(flat(name.props.style)).toMatchObject({ fontSize: type.size.lg });
   await fireEvent.press(screen.getByRole('link', { name: label('سهيلة') }));
   expect(router.push).toHaveBeenCalledTimes(1);
-  expect(router.push).toHaveBeenCalledWith(`/sales/students/${myStudent().id}`);
+  expect(router.push).toHaveBeenCalledWith(`/sales/students/${myStudent().id}`, { withAnchor: true });
   expect(screen.getByText(t.assistantPortal.students.paid)).toBeTruthy();
 });

@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { SARA, usersGet, YOUSEF } from '../shared/fixtures';
+import { SARA, usersGet, YOUSEF } from '@/users/shared/fixtures';
 import { UsersScreen } from './UsersScreen';
 
 const mockApiFetch = jest.fn();

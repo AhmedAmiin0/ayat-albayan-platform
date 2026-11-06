@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { googleLive } from '../google-sync/google-status.fixtures';
-import { GoogleSyncScreen } from '../google-sync/GoogleSyncScreen';
+import { googleLive } from '@/ops/google-sync/google-status.fixtures';
+import { GoogleSyncScreen } from '@/ops/google-sync/GoogleSyncScreen';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

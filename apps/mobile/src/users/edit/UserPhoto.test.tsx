@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { DETAIL } from '../shared/fixtures';
+import { DETAIL } from '@/users/shared/fixtures';
 import { UserPhoto } from './UserPhoto';
 
 const change = () => screen.queryByRole('button', { name: t.staffPhoto.change });

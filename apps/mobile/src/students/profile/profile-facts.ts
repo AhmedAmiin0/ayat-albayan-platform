@@ -1,6 +1,6 @@
 import { teacherName } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import type { StudentProfile } from '../shared/types';
+import type { StudentProfile } from '@/students/shared/types';
 import { locale } from '@/core/lib/i18n/locale';
 
 interface Fact {

@@ -3,7 +3,7 @@ import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { TemplatePreview } from './TemplatePreview';
-import { meetReminder, plainReminder } from '../shared/thread-fixtures';
+import { meetReminder, plainReminder } from '@/inbox/shared/thread-fixtures';
 
 // The composer's preview draws the template like WhatsApp (owner 2026-10-28).
 

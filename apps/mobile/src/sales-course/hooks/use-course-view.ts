@@ -1,6 +1,6 @@
 import type { CourseBlock, SalesCourseView } from '@ab/shared';
 import { useState } from 'react';
-import { courseBlock } from '../lib/course-body';
+import { courseBlock } from '@/sales-course/lib/course-body';
 import { useSalesCourse } from './course-queries';
 
 export interface CourseViewState {

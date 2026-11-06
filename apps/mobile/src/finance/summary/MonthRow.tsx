@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { wholeText } from '../shared/format';
+import { wholeText } from '@/finance/shared/format';
 import type { MonthFinance } from './summary-types';
 
 /**

@@ -1,9 +1,9 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, inbound, message, thread } from '../shared/thread-fixtures';
-import { ThreadModeProvider } from '../thread/hooks/thread-mode';
-import { ThreadScreen } from '../screens/ThreadScreen';
+import { detail, inbound, message, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { REPLIES } from './testing/fixtures';
 
 const mockApiFetch = jest.fn();

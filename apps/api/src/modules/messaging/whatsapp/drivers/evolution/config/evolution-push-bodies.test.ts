@@ -1,4 +1,4 @@
-import { evolutionConfigSchema } from '@ab/shared';
+import { evolutionConfigOf, evolutionConfigSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { createBody, proxyBody, settingsBody, webhookBody } from './evolution-push-bodies';
 import { proxyMatch, settingsMatch, webhookMatch } from './evolution-readback';
@@ -15,6 +15,13 @@ describe('Evolution push bodies', () => {
       rejectCall: false, msgCall: '', groupsIgnore: true, alwaysOnline: false, readMessages: false,
       readStatus: false, syncFullHistory: false,
     });
+  });
+
+  it('always online is pushed off, even when an old stored config says on (owner 2026-11-06)', () => {
+    const old = evolutionConfigOf({ behaviour: { always_online: true, groups_ignore: true } });
+    expect(settingsBody(old)).toMatchObject({ alwaysOnline: false });
+    const made = createBody({ instance: 'b-1', mode: 'baileys', token: 'fake', config: old });
+    expect(made).toMatchObject({ alwaysOnline: false });
   });
 
   it('proxy: the port as a string and the password only in the body; off sends placeholders', () => {

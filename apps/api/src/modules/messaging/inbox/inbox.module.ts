@@ -38,6 +38,7 @@ import { ThreadReactionController } from './reactions/thread-reaction.controller
 import { ThreadReactionService } from './reactions/thread-reaction.service';
 import { DeltaRepo } from './delta/delta.repo';
 import { ThreadDeltaService } from './delta/thread-delta.service';
+import { SyncRepo, SyncThreads, SyncViews, ThreadSyncController, ThreadSyncService } from './delta';
 import { MessageHideController, MessageHideRepo, MessageHideService } from './hide';
 import { GifService, StickerRepo, StickersController, StickersService } from './stickers';
 import {
@@ -61,13 +62,14 @@ import {
  * «تفاعل» (owner 2026-10-27): ThreadReactionController (WhatsApp message reactions, migration 930).
  * «حذف من المنصة» (owner 2026-10-30): MessageHideController (staff only; nothing goes to WhatsApp).
  * Delta refresh (owner 2026-10-27): ThreadDeltaService answers GET /threads/:phone?after=.
+ * Phone store sync (owner 2026-11-06, docs/43 §5): ThreadSyncController, GET /threads/sync.
  * Stickers and GIFs (owner 2026-11-01): StickersController (GIPHY through GifService).
  * «بحث» inside a chat (owner 2026-11-02): ChatSearchController; in every chat (2026-11-06,
  * docs/37): MessageSearchController (GET /threads/search beside GET /threads/:phone).
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule, SalesModule, ChatListsModule],
-  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController, ThreadReactionController, MessageHideController, StickersController, ChatSearchController, MessageSearchController],
+  controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController, ThreadReactionController, MessageHideController, StickersController, ChatSearchController, MessageSearchController, ThreadSyncController],
   providers: [
     ThreadsRepo,
     ThreadMessagesRepo,
@@ -98,6 +100,10 @@ import {
     ThreadReactionService,
     DeltaRepo,
     ThreadDeltaService,
+    SyncRepo,
+    SyncThreads,
+    SyncViews,
+    ThreadSyncService,
     MessageHideRepo,
     MessageHideService,
     StickerRepo,

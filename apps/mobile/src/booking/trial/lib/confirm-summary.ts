@@ -2,10 +2,10 @@ import { formatPhone, normalizePhone, teacherName } from '@ab/shared';
 import type { ViewerClock } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import type { InvoiceDraft } from '../../shared/contract';
+import type { InvoiceDraft } from '@/booking/shared/contract';
 import type { TrialDraft } from './draft';
-import type { MakeupDraft } from '../../makeup/makeup-draft';
-import { whenText } from '../../shared/slots';
+import type { MakeupDraft } from '@/booking/makeup/makeup-draft';
+import { whenText } from '@/booking/shared/slots';
 import { locale } from '@/core/lib/i18n/locale';
 
 export type SummaryRow = [label: string, value: string];

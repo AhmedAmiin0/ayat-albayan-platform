@@ -2,10 +2,10 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { maryam, SUN_17 } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { historyOf, STUDENT, trialResult, trialRow, UPCOMING } from '../testing/fixtures';
-import { effectLine } from '../lib/trial-date-text';
+import { historyOf, STUDENT, trialResult, trialRow, UPCOMING } from '@/trial-date/testing/fixtures';
+import { effectLine } from '@/trial-date/lib/trial-date-text';
 import { TrialDateScreen } from './TrialDateScreen';
-import { fakeTrialApi, fakeTrialSend, walkToReview } from '../testing/test-utils';
+import { fakeTrialApi, fakeTrialSend, walkToReview } from '@/trial-date/testing/test-utils';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
@@ -18,7 +18,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 const mockBack = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
+  router: { back: () => mockBack(), canDismiss: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ studentId: '44444444-4444-4444-8444-444444444444', name: 'ريم' }),
 }));
 

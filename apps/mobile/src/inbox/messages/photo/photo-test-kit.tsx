@@ -1,5 +1,5 @@
 import type { MessageView, ThreadPdfPage } from '@ab/shared';
-import { message } from '../../shared/thread-fixtures';
+import { message } from '@/inbox/shared/thread-fixtures';
 
 // The photo and PDF tests' shared rows and answers (PhotoPreview, PhotoViewer, PdfPreview, PdfViewer).
 export const PATH = '/threads/%2B966552147730/messages/p1/file';

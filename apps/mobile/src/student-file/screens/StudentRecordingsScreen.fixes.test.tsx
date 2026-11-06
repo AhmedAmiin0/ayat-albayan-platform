@@ -3,7 +3,7 @@ import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { recording, recordingsPage } from '../testing/fixtures';
+import { recording, recordingsPage } from '@/student-file/testing/fixtures';
 import { StudentRecordingsScreen } from './StudentRecordingsScreen';
 
 const R = t.mobileStudentFile.recordings;

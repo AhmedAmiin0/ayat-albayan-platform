@@ -3,8 +3,8 @@ import type { Href } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDate } from '@/today/lib/timeline';
 import type { TrialDraft } from './draft';
-import { NO_PICKS, picksOf } from '../../shared/picks';
-import { ruleFromSlot } from '../../shared/slots';
+import { NO_PICKS, picksOf } from '@/booking/shared/picks';
+import { ruleFromSlot } from '@/booking/shared/slots';
 
 // The booking's package (R-SCH-06, R-SUB-01): the lead screen books a trial; the chat's «اشترك»
 // may book a paid package instead, which repeats weekly on the picked days (R-SCH-02 byday).

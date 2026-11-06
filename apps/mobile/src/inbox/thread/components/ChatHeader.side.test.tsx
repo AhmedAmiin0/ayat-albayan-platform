@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react-native';
 import { StyleSheet, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { leftToRight } from '../../shared/physical-row.helpers';
+import { leftToRight } from '@/inbox/shared/physical-row.helpers';
 import { ChatHeader } from './ChatHeader';
 
 // Arabic (jest.setup: RTL). As WhatsApp in Arabic (owner 2026-10-27): back on the right, the icons on the left.

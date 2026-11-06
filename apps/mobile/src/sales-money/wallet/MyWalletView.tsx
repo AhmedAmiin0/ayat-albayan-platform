@@ -3,8 +3,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { useBellSignal } from '@/notifications';
-import { LoadState } from '../components/LoadState';
-import { useMyEarnings } from '../lib/my-api';
+import { LoadState } from '@/sales-money/components/LoadState';
+import { useMyEarnings } from '@/sales-money/lib/my-api';
 import { CommissionEntry } from './CommissionEntry';
 import { WalletCard } from './WalletCard';
 

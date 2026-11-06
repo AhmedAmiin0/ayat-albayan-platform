@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { DashboardScreen } from './DashboardScreen';
-import { summary, work } from '../shared/fixtures';
+import { summary, work } from '@/ops/shared/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
