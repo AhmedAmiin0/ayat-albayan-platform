@@ -35,7 +35,7 @@ describe('SalesCourseQueries', () => {
     const older = { ...SUB, id: 'sub0', rules: [] };
     const t = fakeDb({
       subscriptions: [{ data: [{ ...SUB, rules: [{ id: 'r1' }] }, older] }],
-      schedule_rule_students: [{ data: [{ rule: { id: 'legacy' } }] }],
+      schedule_rule_students: [{ data: [{ rule: { starts_on: '2026-01-01', ends_on: null, package: null } }] }],
     });
     expect(await new SalesCourseRepo(t.db).subscription('s1')).toEqual(SUB);
   });

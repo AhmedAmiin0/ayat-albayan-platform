@@ -3,14 +3,17 @@ import type { AuditService } from '../../../../common/audit/audit.service';
 import type { SubscriptionAlertsService } from '../alerts/alerts.service';
 import type { MoneyFollowUps } from './money-follow-ups';
 import { causeOf, MoneyWrites } from './money-writes';
+import type { PackageEvents } from '@/common/infra/events/lesson-events';
 
 function setup() {
   const order: string[] = [];
   const audit = { record: vi.fn(async () => void order.push('audit')) };
   const alerts = { evaluateStudents: vi.fn(async () => void order.push('evaluate')), closeTasksOf: vi.fn() };
   const follow = { after: vi.fn(async () => void order.push('follow')) };
-  const w = new MoneyWrites(audit as unknown as AuditService, alerts as unknown as SubscriptionAlertsService, follow as unknown as MoneyFollowUps);
-  return { order, audit, alerts, follow, w };
+  const packages = { paid: vi.fn(async () => void order.push('paid')) };
+  const asAlerts = alerts as unknown as SubscriptionAlertsService;
+  const w = new MoneyWrites(audit as unknown as AuditService, asAlerts, follow as unknown as MoneyFollowUps, packages as unknown as PackageEvents);
+  return { order, audit, alerts, follow, w, packages };
 }
 const CREATE = { actorId: 'a1', entity: 'payments', entityId: 'p1', action: 'create', after: { kind: 'payment', amount: 290 } };
 
@@ -51,5 +54,15 @@ describe('MoneyWrites: audit → follow-ups (flip / revert) → recompute + the 
     expect(causeOf({ ...CREATE, after: { kind: 'refund', amount: 1 } })).toEqual({ via: 'event' });
     expect(causeOf({ ...CREATE, action: 'delete' })).toEqual({ via: 'event' });
     expect(causeOf({ ...CREATE, entity: 'subscriptions' })).toEqual({ via: 'event' });
+  });
+
+  it('an incoming payment on a package tells PackageEvents last (its drafted days are booked, owner 2026-11-06)', async () => {
+    const t = setup();
+    const sub = '0c000000-0000-4000-8000-000000000001';
+    await t.w.done({ ...CREATE, after: { ...CREATE.after, subscription_id: sub } }, 's1');
+    expect(t.order).toEqual(['audit', 'follow', 'evaluate', 'paid']);
+    expect(t.packages.paid).toHaveBeenCalledWith(sub);
+    await t.w.done({ ...CREATE, after: { kind: 'refund', amount: 10, subscription_id: sub } }, 's1');
+    expect(t.packages.paid).toHaveBeenCalledTimes(1);
   });
 });

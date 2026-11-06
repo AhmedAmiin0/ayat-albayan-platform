@@ -218,11 +218,6 @@
       "count": 5
     }
   },
-  "src/ledger/usage/receivables.ts": {
-    "@typescript-eslint/no-unnecessary-type-conversion": {
-      "count": 1
-    }
-  },
   "src/ledger/usage/tiers.ts": {
     "ab/module-boundaries": {
       "count": 1

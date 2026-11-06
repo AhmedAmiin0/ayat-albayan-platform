@@ -59,7 +59,7 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
   });
 
   it('paid with no weekly course yet: the link’s assistant reads «تم الدفع: احجز أيام الحلقات» (owner 2026-11-06)', async () => {
-    const pkg = { subscriptionId: SUB_ID, studentId: STUDENT_ID, student: 'سهيلة', phone: null, soldBy: SALES_A.id };
+    const pkg = { subscriptionId: SUB_ID, studentId: STUDENT_ID, student: 'سهيلة', phone: null, soldBy: SALES_A.id, package: '8' as const, lessonsTotal: 8 };
     m.courseDue.unbooked.mockResolvedValue(pkg);
     expect((await post(sessionEvent('checkout.session.completed'))).statusCode).toBe(200);
     await vi.waitFor(() =>

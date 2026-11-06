@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
 import { requestId } from '@/core/lib/http/request-id';
 import { sendError } from '@/inbox/messages/hooks/message-text';
+import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { refreshInbox, touchInbox } from '@/inbox/thread/hooks/inbox-sync';
 import {
   appendMessage,
@@ -60,6 +61,7 @@ export function usePanelSend(phone: string, onError: (message: string) => void) 
       });
       return row;
     },
+    onMutate: () => markOwnSend(phone),
     onSuccess: async (row) => {
       const add = (old: ThreadCache | undefined) => appendMessage(removeMessage(old, row.id), row);
       client.setQueryData<ThreadCache>(threadKey(phone), add);

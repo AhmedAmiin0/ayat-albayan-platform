@@ -22,12 +22,12 @@ const top = (client: ReturnType<typeof createTestQueryClient>, key: unknown[]) =
 
 beforeEach(() => jest.clearAllMocks());
 
-test('refreshInbox: the thread, every chats list, the tab badge and «القوائم»; no phone → every chat', async () => {
+test('refreshInbox: the thread (and its search window), every chats list, the tab badge and «القوائم»; no phone → every chat', async () => {
   const client = createTestQueryClient();
   const spy = jest.spyOn(client, 'invalidateQueries');
   await refreshInbox(client, PHONE);
   const keys = spy.mock.calls.map(([filters]) => filters?.queryKey);
-  expect(keys).toEqual([threadListKey, ['threads', 'nav-count'], ['chat-lists'], ['threads', PHONE]]);
+  expect(keys).toEqual([threadListKey, ['threads', 'nav-count'], ['chat-lists'], ['threads', PHONE], ['thread-at', PHONE]]);
   spy.mockClear();
   await refreshInbox(client);
   expect(spy.mock.calls.map(([filters]) => filters?.queryKey)).toEqual([['chat-lists'], ['threads']]);

@@ -1,6 +1,7 @@
 import { counted, type BookedCourse } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { localDay } from '@/core/lib/money/format';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { daysText } from '../lib/course-days';
@@ -84,4 +85,14 @@ test('3 → 1 day a week: one day, in the singular', async () => {
   expect(screen.getByText(hint)).toBeTruthy();
   expect(hint).toMatch(/الباقة الجديدة يوم واحد في الأسبوع، فعدّل الأيام السابقة لتصبح يومًا واحدًا$/);
   expect(hint).not.toContain('أضف');
+});
+
+test('the days saved before the payment: their own line and «عدّل الأيام المحفوظة»', async () => {
+  const previous = bookedCourse();
+  const props = { previous, opensOn: '2026-10-11', teacher, adjustTo: null, onSame: jest.fn(), onOther: jest.fn() };
+  await renderWithQuery(<CourseContinue {...props} saved />);
+  const days = daysText(previous.days, previous.tz, R24);
+  expect(screen.getByText(t.booking.courseChange.draftHint.replace('{days}', days).replace('{date}', localDay('2026-10-11')))).toBeTruthy();
+  expect(screen.getByText(t.booking.courseChange.draftEdit)).toBeTruthy();
+  expect(screen.queryByText(t.booking.courseChange.continueSameDays)).toBeNull();
 });

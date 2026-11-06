@@ -14,6 +14,11 @@ export const ChatReturnContext = createContext<(() => void) | null>(null);
 
 export const useChatReturn = (): (() => void) | null => useContext(ChatReturnContext);
 
+/** A course's picks kept as a draft until the payment (owner 2026-11-06): the dialog says so. */
+export const CourseHeldContext = createContext<(() => void) | null>(null);
+
+export const useCourseHeld = (): (() => void) | null => useContext(CourseHeldContext);
+
 /**
  * The booking routes of each mode (the one place to adjust at integration). The sales mirror takes
  * the same bodies and answers the same shapes as the admin's, scoped to the assistant:

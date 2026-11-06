@@ -26,13 +26,13 @@ const keyOf = (r: SearchRow): Key => ({ at: Date.parse(r.created_at), id: r.id }
 const newerFirst = (a: Key, b: Key): number => b.at - a.at || b.id.localeCompare(a.id);
 
 /** What the chat shows as text: an old-CRM file's body is only its storage link (never shown). */
-const texts = (r: SearchRow): (string | null)[] => [
+export const texts = (r: SearchRow): (string | null)[] => [
   looksCrmHistory(r) ? null : r.body,
   r.media_name,
 ];
 
 /** The first of the row's texts that matches: its snippet. */
-function hitOf(r: SearchRow, q: string): ChatSearchHit {
+export function hitOf(r: SearchRow, q: string): ChatSearchHit {
   const text = texts(r).find((t) => t !== null && messageMatches([t], q)) ?? '';
   return { id: r.id, created_at: r.created_at, snippet: searchSnippet(text, q) };
 }

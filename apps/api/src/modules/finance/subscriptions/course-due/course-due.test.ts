@@ -3,7 +3,7 @@ import type { PushService } from '@/common/push/push.service';
 import { CourseDue } from './course-due';
 import type { CourseDueRepo, UnbookedPackage } from './course-due.repo';
 
-const PKG: UnbookedPackage = { subscriptionId: 'sub1', studentId: 'st1', student: 'سهيلة', phone: '+966500000000', soldBy: 's1' };
+const PKG: UnbookedPackage = { subscriptionId: 'sub1', studentId: 'st1', student: 'سهيلة', phone: '+966500000000', soldBy: 's1', package: '8', lessonsTotal: 8 };
 const DATA = { studentId: 'st1', open: 'course', phone: '+966500000000' };
 
 function setup(repo: Partial<Record<keyof CourseDueRepo, () => Promise<unknown>>>) {
@@ -43,5 +43,28 @@ describe('CourseDue (owner 2026-11-06)', () => {
   it('the sweep never throws', async () => {
     const { due } = setup({ overdue: () => Promise.reject(new Error('db down')) });
     expect(await due.sweep(new Date())).toBe(0);
+  });
+
+  it('a draft that clashed at payment: the admins and its assistant pick again (once per version)', async () => {
+    const { due, push } = setup({ package: async () => PKG });
+    await due.clash('sub1', { savedBy: 's9', savedAt: '2026-11-06T10:00:00.000Z' });
+    const subject = 'course_draft_clash:sub1:2026-11-06T10:00:00.000Z';
+    expect(push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ subject, data: DATA }));
+    expect(push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ subject, profileIds: ['s9'] }));
+  });
+
+  it('the clash alert never throws', async () => {
+    const { due } = setup({ package: () => Promise.reject(new Error('db down')) });
+    await expect(due.clash('sub1', { savedBy: 's9', savedAt: 'x' })).resolves.toBeUndefined();
+  });
+
+  it('a custom-count package (custom_count_admin): the plain notice, the sweep tells the admins only', async () => {
+    const custom = { ...PKG, package: null, lessonsTotal: 10 };
+    expect(await setup({ unbooked: async () => custom }).due.paidNotice('sub1', 's1')).toBeUndefined();
+    const { due, push } = setup({ overdue: async () => [custom] });
+    expect(await due.sweep(new Date())).toBe(1);
+    const left = 'الباقة مدفوعة ولم تُحجز أيام الحلقات بعد، وعدد حلقاتها خاص فيحجزها المشرف';
+    expect(push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ vars: { student: 'سهيلة', left } }));
+    expect(push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ profileIds: [] }));
   });
 });

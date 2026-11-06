@@ -13,6 +13,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { refreshInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 import { ratingApproved, ratingDone, ratingError } from './rating-words';
 
@@ -38,6 +39,7 @@ export function SendRating({ thread }: { thread: Pick<ThreadView, 'phone_e164' |
   const id = useRef(requestId());
   const send = useMutation({
     mutationFn: () => apiSend<MessageView>('POST', `${threadPath(thread.phone_e164)}/rating`, { clientRequestId: id.current }),
+    onMutate: () => markOwnSend(thread.phone_e164),
     onSuccess: (row) => {
       // A row Meta refused is a finished attempt: asking again is a new one.
       if (row.status === 'failed') id.current = requestId();

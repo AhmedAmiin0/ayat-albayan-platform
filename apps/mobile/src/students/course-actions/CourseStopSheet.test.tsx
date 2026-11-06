@@ -48,6 +48,7 @@ test('the reason is required; the stop sends it trimmed with one request id, the
       subscriptionId: SUB,
       reason: 'سفر',
       clientRequestId: expect.any(String),
+      owe: { choice: 'attended' },
     }),
   );
   expect(await screen.findByText(s.done)).toBeTruthy();

@@ -2,9 +2,13 @@ import { formatPhone, type ThreadLesson } from '@ab/shared';
 import { EmptyState } from '@/components/ui/display/empty-state';
 import { Ltr } from '@/components/ui/display/ltr';
 import { t } from '@/lib/i18n/i18n';
-import { noneAllowedText, useNoneAllowed } from '@/features/messaging/inbox/composer/lib/allowed-templates';
+import {
+  noneAllowedText,
+  useNoneAllowed,
+} from '@/features/messaging/inbox/composer/lib/allowed-templates';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { TemplateComposer } from '@/features/messaging/inbox/composer/components/TemplateComposer';
+import { LinkedCourseDialog } from '@/features/sales/sales-money';
 
 /**
  * A number with no message yet: opened from a lead, a booking or «محادثة جديدة» (admin and sales, same
@@ -12,6 +16,7 @@ import { TemplateComposer } from '@/features/messaging/inbox/composer/components
  * template; once it is queued the thread exists and the normal pane takes over. A teacher only reads.
  * Sales with no template allowed reads why she cannot start it (W7), not an empty composer.
  * `lessons`: the family's next lessons (the API finds a booked family by its number), for rule 6.
+ * Sales: a «احجز أيام الحلقات» link (?course=) to a number with no chat yet opens its «أيام الحلقات».
  */
 export function NewThread({ phone, lessons }: { phone: string; lessons: readonly ThreadLesson[] }) {
   const mode = useInboxMode();
@@ -25,8 +30,21 @@ export function NewThread({ phone, lessons }: { phone: string; lessons: readonly
       <h2 className="text-lg font-semibold">
         {writes ? <Ltr>{formatPhone(phone)}</Ltr> : t.inbox.newChat.title}
       </h2>
-      <EmptyState title={t.inbox.noThread}>{noneAllowed ? noneAllowedText(noneAllowed, t.inbox.newChat.noAllowed) : composes ? t.inbox.newChat.firstTemplate : null}</EmptyState>
-      {composes && <TemplateComposer phone={phone} context={{ studentName: null, teacherName: null, lessons }} teacher={false} />}
+      <EmptyState title={t.inbox.noThread}>
+        {noneAllowed
+          ? noneAllowedText(noneAllowed, t.inbox.newChat.noAllowed)
+          : composes
+            ? t.inbox.newChat.firstTemplate
+            : null}
+      </EmptyState>
+      {composes && (
+        <TemplateComposer
+          phone={phone}
+          context={{ studentName: null, teacherName: null, lessons }}
+          teacher={false}
+        />
+      )}
+      {mode === 'sales' && <LinkedCourseDialog />}
     </section>
   );
 }

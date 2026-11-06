@@ -33,6 +33,9 @@ import { SalesBookingController, SalesBookingOptionsController } from './sales/b
 import { SalesBookingScope } from './sales/booking/sales-booking.ownership';
 import { SalesBookingOptions, SalesBookingService } from './sales/booking/sales-booking.service';
 import { SalesCourseController } from './sales/course/sales-course.controller';
+import { CourseDraftEnv } from './sales/course-draft/course-draft.env';
+import { CourseDraftRepo } from './sales/course-draft/course-draft.repo';
+import { CourseDrafts } from './sales/course-draft/course-draft.service';
 import { SalesCourseRepo } from './sales/course/sales-course.repo';
 import { SalesCourse } from './sales/course/sales-course.service';
 import { SlotsService } from './plan/slots.service';
@@ -77,6 +80,9 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     SalesBookingOptions,
     SalesCourse,
     SalesCourseRepo,
+    CourseDraftEnv,
+    CourseDraftRepo,
+    CourseDrafts,
     CourseChange,
     CourseChangeRepo,
     CourseLessonRepo,

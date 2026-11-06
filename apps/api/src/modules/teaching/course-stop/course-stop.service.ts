@@ -5,8 +5,8 @@ import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { conflict } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions';
 import { CourseStopRepo } from './course-stop.repo';
-import { toResult, toStopped } from './course-stop.mapper';
-import { StopRefundGate, type RefundPlan } from './refund';
+import { storedOwed, toResult, toStopped } from './course-stop.mapper';
+import { StopRefundGate, type OwedDecision, type RefundSub } from './refund';
 
 interface PreviewInput {
   studentId: string;
@@ -62,26 +62,37 @@ export class CourseStop {
     if (stopped === null && plan.unattributed) throw conflict('course_unattributed');
     const live = stopped === null;
     const subRef = { id: sub.id, studentId, currency: sub.currency };
-    const refund = await this.refunds.preview(input.user, subRef);
+    const [refund, owe] = await Promise.all([
+      this.refunds.preview(input.user, subRef),
+      this.refunds.owe(subRef),
+    ]);
     return {
       subscriptionId: sub.id,
       futureLessons: live ? plan.lessons.length : 0,
       activeRules: live ? plan.rule_ids.length : 0,
       paid,
       currency: sub.currency,
-      refund,
+      refund: refund.refund,
+      refundUnavailable: refund.unavailable,
+      owe,
       stopped,
     };
   }
 
   async stop({ studentId, body, actor }: StopInput): Promise<CourseStopResult> {
-    const plan = body.refund ? await this.refundPlan({ studentId, body, actor }) : null;
+    const sub = await this.repo.subscription(body.subscriptionId, studentId);
+    const ref = { id: sub.id, studentId, currency: sub.currency };
+    const stored = storedOwed(sub, body.clientRequestId);
+    const plan = body.refund ? await this.refundPlan({ ref, body, actor, stored }) : null;
+    const owe = { sub: ref, ask: body.owe, stored };
+    const owed = plan?.owed ?? (await this.refunds.decide(actor, owe));
     const row = await this.repo.stop({
       subscriptionId: body.subscriptionId,
       studentId,
       requestId: body.clientRequestId,
       actorId: actor.id,
       reason: body.reason,
+      owed,
     });
     // Again on a replay (all idempotent): a crash after the commit never loses the follow-ups.
     await this.events.changed(row.cancelled_lessons);
@@ -94,13 +105,15 @@ export class CourseStop {
     return toResult(body.subscriptionId, row, refund);
   }
 
-  /** «إلغاء مع استرداد»: StopRefundGate's checks; the amount at most the computed refund. */
-  private async refundPlan({ studentId, body, actor }: StopInput): Promise<RefundPlan> {
-    const sub = await this.repo.subscription(body.subscriptionId, studentId);
-    return this.refunds.plan(actor, {
-      sub: { id: sub.id, studentId, currency: sub.currency },
-      requestId: body.clientRequestId,
-      amount: body.refund?.amount ?? 0,
-    });
+  /** «إلغاء مع استرداد»: StopRefundGate's checks; the chosen amount at most the net paid. */
+  private refundPlan(input: {
+    ref: RefundSub;
+    body: CourseStopRequest;
+    actor: AuthUser;
+    stored: OwedDecision | null;
+  }) {
+    const { ref, body, actor, stored } = input;
+    const ask = body.refund ?? { choice: 'unattended' as const };
+    return this.refunds.plan(actor, { sub: ref, requestId: body.clientRequestId, ask, stored });
   }
 }

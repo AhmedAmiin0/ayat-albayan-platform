@@ -39,6 +39,8 @@ describe('POST /students/:id/course-stop', () => {
       requestId: REQ,
       actorId: actor,
       reason: 'سفر الأسرة',
+      // No `owe` sent: the sheet's default, 3 attended × 50 × 100 %.
+      owed: { amount: 150, choice: 'attended' },
     });
   });
 

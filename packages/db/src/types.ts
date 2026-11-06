@@ -2742,6 +2742,7 @@ export type Database = {
           reply_to_message_id: string | null;
           reply_to_wa_id: string | null;
           scheduled_for: string | null;
+          search_text: string | null;
           sent_at: string | null;
           sent_as_text: boolean;
           sent_by_teacher_id: string | null;
@@ -2793,6 +2794,7 @@ export type Database = {
           reply_to_message_id?: string | null;
           reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
+          search_text?: never;
           sent_at?: string | null;
           sent_as_text?: boolean;
           sent_by_teacher_id?: string | null;
@@ -2844,6 +2846,7 @@ export type Database = {
           reply_to_message_id?: string | null;
           reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
+          search_text?: never;
           sent_at?: string | null;
           sent_as_text?: boolean;
           sent_by_teacher_id?: string | null;
@@ -4135,6 +4138,42 @@ export type Database = {
           },
         ];
       };
+      subscription_course_drafts: {
+        Row: {
+          request: Json;
+          saved_at: string;
+          saved_by: string;
+          subscription_id: string;
+        };
+        Insert: {
+          request: Json;
+          saved_at?: string;
+          saved_by: string;
+          subscription_id: string;
+        };
+        Update: {
+          request?: Json;
+          saved_at?: string;
+          saved_by?: string;
+          subscription_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'subscription_course_drafts_saved_by_fkey';
+            columns: ['saved_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'subscription_course_drafts_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: true;
+            referencedRelation: 'subscriptions';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       subscriptions: {
         Row: {
           cancel_kind: string | null;
@@ -4159,6 +4198,8 @@ export type Database = {
           renews_on: string | null;
           starts_on: string;
           status: Database['public']['Enums']['subscription_status'];
+          stop_owed_amount: number | null;
+          stop_owed_choice: string | null;
           stop_request_id: string | null;
           student_id: string;
           updated_at: string;
@@ -4186,6 +4227,8 @@ export type Database = {
           renews_on?: string | null;
           starts_on: string;
           status?: Database['public']['Enums']['subscription_status'];
+          stop_owed_amount?: number | null;
+          stop_owed_choice?: string | null;
           stop_request_id?: string | null;
           student_id: string;
           updated_at?: string;
@@ -4213,6 +4256,8 @@ export type Database = {
           renews_on?: string | null;
           starts_on?: string;
           status?: Database['public']['Enums']['subscription_status'];
+          stop_owed_amount?: number | null;
+          stop_owed_choice?: string | null;
           stop_request_id?: string | null;
           student_id?: string;
           updated_at?: string;
@@ -5775,6 +5820,29 @@ export type Database = {
         }[];
       };
       message_is_reaction: { Args: { p: Json }; Returns: boolean };
+      search_fold: { Args: { t: string }; Returns: string };
+      search_messages: {
+        Args: {
+          p_q: string;
+          p_phones: string[] | null;
+          p_hide: string[];
+          p_skip_templates: string[];
+          p_before_at: string | null;
+          p_before_id: string | null;
+          p_limit: number;
+        };
+        Returns: {
+          id: string;
+          phone_e164: string;
+          created_at: string;
+          body: string | null;
+          media_name: string | null;
+          template_key: string | null;
+          direction: Database['public']['Enums']['message_direction'];
+          media_mime: string | null;
+          display_name: string | null;
+        }[];
+      };
       message_markers_apply: {
         Args: { p_phone: string; p_since: string; p_wamid: string };
         Returns: number;

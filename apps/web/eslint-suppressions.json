@@ -2543,9 +2543,6 @@
     },
     "no-nested-ternary": {
       "count": 2
-    },
-    "no-restricted-syntax": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/components/MessageLog.wrap.test.tsx": {
@@ -2627,9 +2624,6 @@
   "src/features/messaging/inbox/messages/lib/day-groups.ts": {
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/lib/message-notes.test.ts": {
@@ -2681,7 +2675,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/inbox/messages/reply-actions/ReplyActionsProvider.tsx": {
@@ -3077,7 +3071,7 @@
   },
   "src/features/messaging/inbox/threads/list/ThreadList.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/inbox/threads/list/ThreadRow.tsx": {
@@ -3111,7 +3105,7 @@
   },
   "src/features/messaging/inbox/threads/pane/NewThread.tsx": {
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "no-nested-ternary": {
       "count": 1
@@ -8040,7 +8034,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/features/sales/sales-money/course/SalesCourseDialog.change.test.tsx": {
@@ -8092,7 +8086,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 11
+      "count": 10
     },
     "no-nested-ternary": {
       "count": 1
@@ -8135,7 +8129,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/sales/sales-money/course/course-fixture.ts": {

@@ -4,7 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { notFound } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
 import type { CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
-import type { CourseRule } from './sales-course.rules';
+import { isCourseRule, type CourseRule } from './sales-course.rules';
 
 type SubscriptionRow = Omit<CourseSubscription, 'duration'> & { duration: number };
 
@@ -59,8 +59,10 @@ export class SalesCourseRepo {
    * for a student with an imported course (a rule with no subscription_id): its old packages were
    * taught on that course and look unbooked. null without any.
    */
-  async subscription(studentId: string): Promise<CourseSubscription | null> {
-    const [subs, imported] = await Promise.all([this.openPackages(studentId), this.imported(studentId)]);
+  async subscription(studentId: string, only?: string): Promise<CourseSubscription | null> {
+    const [all, imported] = await Promise.all([this.openPackages(studentId), this.imported(studentId)]);
+    // `only`: that package (a draft booked on its payment, owner 2026-11-06).
+    const subs = only === undefined ? all : all.filter((r) => r.id === only);
     const row = (imported ? undefined : subs.find((r) => r.rules.length === 0)) ?? subs[0];
     if (!row) return null;
     const { rules, ...sub } = row;
@@ -79,16 +81,18 @@ export class SalesCourseRepo {
     return data;
   }
 
-  /** Has the student any rule not tied to a package (imported, admin-booked)? */
+  /**
+   * Has the student a weekly course not tied to a package (imported, admin-booked), any status?
+   * Trials, makeups and single lessons (isCourseRule) do not count (PR #642 review).
+   */
   private async imported(studentId: string): Promise<boolean> {
     const { data, error } = await this.db
       .from('schedule_rule_students')
-      .select('rule:schedule_rules!inner(id)')
+      .select('rule:schedule_rules!inner(starts_on, ends_on, package)')
       .eq('student_id', studentId)
-      .is('rule.subscription_id', null)
-      .limit(1);
+      .is('rule.subscription_id', null);
     if (error) throw dbError(error);
-    return data.length > 0;
+    return data.some(({ rule }) => isCourseRule(rule));
   }
 
   /** The student's active rules (schedule_rule_students → schedule_rules.status = 'active'). */

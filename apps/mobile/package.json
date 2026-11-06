@@ -13,6 +13,15 @@
     "bundle": "expo export --platform android --output-dir dist/bundle",
     "eas-build-post-install": "pnpm --dir ../.. --filter \"mobile^...\" build"
   },
+  "expo": {
+    "autolinking": {
+      "android": {
+        "buildFromSource": [
+          "expo-sharing"
+        ]
+      }
+    }
+  },
   "dependencies": {
     "@ab/client-core": "workspace:*",
     "@ab/shared": "workspace:*",
@@ -35,6 +44,7 @@
     "expo-device": "~57.0.2",
     "expo-document-picker": "~57.0.3",
     "expo-font": "~57.0.4",
+    "expo-image-manipulator": "~57.0.21",
     "expo-image-picker": "~57.0.20",
     "expo-linking": "~57.0.11",
     "expo-localization": "~57.0.2",

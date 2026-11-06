@@ -11,6 +11,7 @@ export * from './usage/package-progress.js';
 export * from './earnings/pay-rule.js';
 export * from './usage/package-cancel.js';
 export * from './usage/payment-state.js';
+export * from './usage/owed.js';
 export * from './usage/receivables.js';
 export * from './earnings/payout.js';
 export * from './schemas.js';

@@ -1,4 +1,4 @@
-import { courseNoticeData } from '@ab/shared';
+import { courseDaysPerWeek, courseNoticeData } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
@@ -10,6 +10,19 @@ interface CourseBook {
   title: string;
   data: Record<string, string>;
 }
+
+/** Who saved the draft that could not be booked, its version, and why (default: a clash). */
+interface DraftMiss {
+  savedBy: string;
+  savedAt: string;
+  reason?: 'clash' | 'failed';
+}
+
+/** The alert's line per reason (read at send time: admins' text overrides apply). */
+const MISS_TEXT: Record<NonNullable<DraftMiss['reason']>, () => string> = {
+  clash: () => ar.courseDraft.clashText,
+  failed: () => ar.courseDraft.failText,
+};
 
 const errText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
@@ -34,7 +47,8 @@ export class CourseDue {
     try {
       const p = await this.repo.unbooked(subscriptionId);
       const title = ar.courseDue.paidTitle;
-      return p ? { profileId: assistantId, title, data: noticeData(p) } : undefined;
+      const notice = p && selfBooked(p) ? p : null;
+      return notice ? { profileId: assistantId, title, data: noticeData(notice) } : undefined;
     } catch (e) {
       this.log.warn(`course due ${subscriptionId}: ${errText(e)}`);
       return undefined;
@@ -53,17 +67,44 @@ export class CourseDue {
     }
   }
 
+  /**
+   * A draft's days clashed at payment (owner 2026-11-06): nothing was booked, the draft stays as
+   * the wizard's prefill; its assistant and the admins pick again (once per saved version).
+   */
+  async clash(subscriptionId: string, draft: DraftMiss): Promise<void> {
+    try {
+      const p = await this.repo.package(subscriptionId);
+      if (!p) return;
+      const event = {
+        subject: `course_draft_clash:${subscriptionId}:${draft.savedAt}`,
+        title: ar.courseDraft.clashTitle,
+        vars: { student: p.student, left: MISS_TEXT[draft.reason ?? 'clash']() },
+        data: noticeData(p),
+      };
+      await this.push.notifyAdmins('payment_due', event);
+      await this.push.notifyProfiles({ ...event, kind: 'payment_due', profileIds: [draft.savedBy] });
+    } catch (e) {
+      this.log.error(`course draft clash ${subscriptionId}: ${errText(e)}`);
+    }
+  }
+
+  /** A custom-count package (the wizard refuses it): the admins only, who book it. */
   private async tell(p: UnbookedPackage): Promise<void> {
+    const own = selfBooked(p);
     const event = {
       subject: `course_unbooked:${p.subscriptionId}`,
       title: ar.courseDue.unbookedTitle,
-      vars: { student: p.student, left: ar.courseDue.unbookedText },
+      vars: { student: p.student, left: own ? ar.courseDue.unbookedText : ar.courseDue.customText },
       data: noticeData(p),
     };
     await this.push.notifyAdmins('payment_due', event);
-    const sellers = p.soldBy ? [p.soldBy] : [];
+    const sellers = own && p.soldBy ? [p.soldBy] : [];
     await this.push.notifyProfiles({ ...event, kind: 'payment_due', profileIds: sellers });
   }
 }
 
 const noticeData = (p: UnbookedPackage) => courseNoticeData(p.studentId, p.phone);
+
+/** The assistant's wizard books it: not a custom count only an admin books (PR #642 review). */
+const selfBooked = (p: UnbookedPackage): boolean =>
+  courseDaysPerWeek({ package: p.package, lessons_total: p.lessonsTotal }) !== null;

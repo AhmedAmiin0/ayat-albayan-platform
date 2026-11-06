@@ -8,6 +8,8 @@ import { LinkCreated } from './LinkCreated';
 import { linkMessage } from './link-text';
 
 jest.mock('./flag', () => ({ STRIPE_FEATURE: true }));
+const mockPush = jest.fn();
+jest.mock('expo-router', () => ({ router: { push: (h: unknown) => mockPush(h) } }));
 
 const link = paymentLink({ url: `https://api.example.test/pay/${'k'.repeat(32)}` });
 const openURL = jest.spyOn(Linking, 'openURL');
@@ -32,4 +34,10 @@ test('a page the phone cannot open says so, never a crash', async () => {
   await show();
   await fireEvent.press(screen.getByRole('button', { name: t.studentLists.openLink }));
   expect(await screen.findByText(t.common.error)).toBeTruthy();
+});
+
+test('«اختر أيام الحلقات» (owner 2026-11-06): the course wizard pushed over the link (its picks kept until paid)', async () => {
+  await show();
+  await fireEvent.press(screen.getByRole('button', { name: t.courseDraft.pick }));
+  expect(mockPush).toHaveBeenCalledWith({ pathname: '/inbox/sales-course', params: { studentId: link.student.id } });
 });

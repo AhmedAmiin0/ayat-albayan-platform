@@ -7,7 +7,10 @@ const row = (id: string, rules: { id: string }[] = []) => ({
   id,
   student_id: `st-${id}`,
   created_by: 's1',
+  package: '8' as const,
+  lessons_total: 8,
   rules,
+  draft: null as { subscription_id: string } | null,
   student: { name: 'سهيلة', guardian: { phone_e164: '+966500000000' } },
 });
 
@@ -18,9 +21,21 @@ describe('CourseDueRepo (owner 2026-11-06)', () => {
       schedule_rule_students: [{ data: [] }],
     });
     const repo = new CourseDueRepo(t.db);
-    expect(await repo.unbooked('a')).toEqual({ subscriptionId: 'a', studentId: 'st-a', student: 'سهيلة', phone: '+966500000000', soldBy: 's1' });
+    expect(await repo.unbooked('a')).toEqual({ subscriptionId: 'a', studentId: 'st-a', student: 'سهيلة', phone: '+966500000000', soldBy: 's1', package: '8', lessonsTotal: 8 });
     expect(await repo.unbooked('b')).toBeNull();
     expect(await repo.unbooked('x')).toBeNull();
+  });
+
+  it('unbooked: a package with a draft (days picked before the payment) is not told to book', async () => {
+    const t = fakeDb({ subscriptions: [{ data: { ...row('a'), draft: { subscription_id: 'a' } } }] });
+    expect(await new CourseDueRepo(t.db).unbooked('a', NOW)).toBeNull();
+  });
+
+  it('package: whom a draft clash concerns, booked or not; null when unknown', async () => {
+    const t = fakeDb({ subscriptions: [{ data: row('a', [{ id: 'r' }]) }, { data: null }] });
+    const repo = new CourseDueRepo(t.db);
+    expect((await repo.package('a'))?.studentId).toBe('st-a');
+    expect(await repo.package('x')).toBeNull();
   });
 
   it('unbooked: a student on a running imported course is not told to book', async () => {
@@ -56,5 +71,16 @@ describe('CourseDueRepo (owner 2026-11-06)', () => {
     const t = fakeDb({ audit_log: [{ data: [] }] });
     expect(await new CourseDueRepo(t.db).overdue(NOW)).toEqual([]);
     expect(t.argsOf('subscriptions', 'in')).toBeUndefined();
+  });
+
+  it('legacy: a PAUSED imported course counts too (the wizard would answer course_exists)', async () => {
+    const paused = { starts_on: '2026-01-01', ends_on: null, package: '8', status: 'paused', subscription_id: null };
+    const t = fakeDb({
+      subscriptions: [{ data: row('a') }],
+      schedule_rule_students: [{ data: [{ student_id: 'st-a', rule: paused }] }],
+    });
+    expect(await new CourseDueRepo(t.db).unbooked('a', NOW)).toBeNull();
+    const statuses = { table: 'schedule_rule_students', method: 'in', args: ['rule.status', ['active', 'paused']] };
+    expect(t.calls).toContainEqual(expect.objectContaining(statuses));
   });
 });

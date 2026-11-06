@@ -1,11 +1,11 @@
 import type { ChatSearchControls } from '@ab/client-core';
 import { createContext, use } from 'react';
 
-/** The open chat's «بحث» (ChatSearchProvider): its bar, its hits and the words to light up. */
-export interface ChatSearchValue extends ChatSearchControls {
-  /** The shown hit could not be reached in the chat's pages (the bar says so). */
-  lost: boolean;
-}
+/**
+ * The open chat's «بحث» (ChatSearchProvider): its bar, its hits and the words to light up. A hit
+ * the chat cannot reach is said in the log's status line (useThreadLog's `lost`, docs/37).
+ */
+export type ChatSearchValue = ChatSearchControls;
 
 export const ChatSearchContext = createContext<ChatSearchValue | null>(null);
 

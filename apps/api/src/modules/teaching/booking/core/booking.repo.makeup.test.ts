@@ -36,6 +36,11 @@ describe('BookingQueries.createBooking — makeup and invoice errors (R-SCH-10)'
     expect(await failure(run())).toMatchObject({ status: 409, body: { code: 'makeup_not_eligible' } });
   });
 
+  it('P0001 course_exists (the package got its course meanwhile, migration 20261106000501) → 409', async () => {
+    const { run } = book([{ error: { code: 'P0001', message: 'course_exists' } }]);
+    expect(await failure(run())).toMatchObject({ status: 409, body: { code: 'course_exists' } });
+  });
+
   it('23505 lessons_makeup_of_key (another admin booked it a moment ago) → 409 makeup_exists', async () => {
     const message = 'duplicate key value violates unique constraint "lessons_makeup_of_key"';
     const { run, calls } = book([{ error: { code: '23505', message } }]);

@@ -1,4 +1,4 @@
-import { PAYMENT_METHODS, type PaymentMethod, type StudentBalanceView } from '@ab/shared';
+import { dueOf, PAYMENT_METHODS, type PaymentMethod, type StudentBalanceView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
@@ -78,7 +78,7 @@ export function PaymentForm({ studentId, balance, offline, onRetry, onDone }: Pa
         currency={sub.currency}
         error={errors.amount}
       />
-      <ShortfallNote amountText={draft.amountText} due={sub.price - sub.paid} currency={sub.currency} />
+      <ShortfallNote amountText={draft.amountText} due={dueOf(sub, sub.paid)} currency={sub.currency} />
       <View style={{ gap: 6 }}>
         <FormLabel>{t.payments.method}</FormLabel>
         <FilterPills

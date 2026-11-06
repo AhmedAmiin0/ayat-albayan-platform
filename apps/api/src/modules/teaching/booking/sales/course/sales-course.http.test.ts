@@ -10,7 +10,10 @@ import { SettingsService } from '@/common/settings/settings.service';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
+import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { SalesCourseRepo } from './sales-course.repo';
+
+const NO_DRAFTS = { held: async () => false, get: async () => null };
 
 // The assistant's course over HTTP (owner 2026-10-18): «اشتراط التعيين» and auto-assign ON
 // here, so the ownership rule enforces (docs/16 row 39): every 403 not_your_student below is
@@ -58,6 +61,7 @@ describe('/sales/booking — the assistant books the course of her subscription'
       .overrideProvider(SettingsService).useValue(fakeSettings({ sales_require_assignee: true }))
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(SalesCourseRepo).useValue(course)
+      .overrideProvider(CourseDraftRepo).useValue(NO_DRAFTS)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -137,7 +141,7 @@ describe('/sales/booking — the assistant books the course of her subscription'
 
   it('GET course: her student → the view with perWeek 2; another’s 403; no self.sales_money or admin 403', async () => {
     const res = await call({ url: `/sales/booking/course?studentId=${S1}`, token: 'salesA' });
-    expect([res.statusCode, res.json()]).toEqual([200, { student: STUDENT, subscription: SUB, perWeek: 2, blocked: null, previous: null, current: null }]);
+    expect([res.statusCode, res.json()]).toEqual([200, { student: STUDENT, subscription: SUB, perWeek: 2, blocked: null, previous: null, current: null, hold: false, draft: null }]);
     expect((await call({ url: `/sales/booking/course?studentId=${S1}`, token: 'salesB' })).json().code).toBe('not_your_student');
     expect((await call({ url: `/sales/booking/course?studentId=${S1}`, token: 'noMoney' })).statusCode).toBe(403);
     expect((await call({ url: `/sales/booking/course?studentId=${S1}`, token: 'admin' })).statusCode).toBe(403);

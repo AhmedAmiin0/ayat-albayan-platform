@@ -851,7 +851,8 @@
       "trial_date_invalid": "A new trial date is booked for one registered student only.",
       "trial_changed": "The upcoming trial date just changed; go back and pick the date once more.",
       "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first.",
-      "meeting_link_invalid": "The lesson link is not valid; it must start with https://"
+      "meeting_link_invalid": "The lesson link is not valid; it must start with https://",
+      "course_held": "The subscription awaits payment: update the app or reload the page so the lesson days are saved; they are booked only after the payment"
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -903,6 +904,8 @@
       "continueSameDays": "Continue on the same days",
       "pickOtherDays": "Pick other days",
       "continueHint": "The previous package's lessons: {days}. The new package starts on the same days and times from {date}.",
+      "draftHint": "Days saved until the payment: {days}. Starting {date}.",
+      "draftEdit": "Edit the saved days",
       "continueAdjust": {
         "one": "Previous package's lessons: {days}. The new package is one day a week, so edit the previous days to one day",
         "two": "Previous package's lessons: {days}. The new package is two days a week, so edit the previous days to two days",
@@ -2749,7 +2752,7 @@
     "dayYesterday": "Yesterday",
     "noticeMore": "Show the full notice",
     "title": "Messages",
-    "searchPlaceholder": "Search by name or number",
+    "searchPlaceholder": "Search by name, number or message text",
     "filterAll": "All",
     "filterUnread": "Unread",
     "filterRow": "Filter chats",
@@ -2866,6 +2869,28 @@
         "files_forbidden": "Sending files is not available to you",
         "send_failed": "Could not send"
       }
+    },
+    "share": {
+      "title": "Share to…",
+      "preparing": "Preparing the shared content…",
+      "files": {
+        "one": "1 file",
+        "two": "2 files",
+        "few": "{n} files",
+        "other": "{n} files"
+      },
+      "openChat": "Open chat",
+      "sendTo": "Send to {name}",
+      "sending": "Sending {n} of {m}",
+      "noChats": "This account has no chats to share into",
+      "teacherFiles": "Teachers can share text and links only, not files.",
+      "unsupported": "This type is not supported. You can share text, links, photos and PDF files.",
+      "tooMany": "You can share at most {max} files at a time.",
+      "readFailed": "Could not read the shared content. Share it again.",
+      "empty": "Nothing that can be shared arrived. Share it again.",
+      "someFailed": "Some files could not be sent:",
+      "retry": "Try again",
+      "pickHint": "Pick one chat"
     },
     "copy": {
       "action": "Copy",
@@ -3233,7 +3258,16 @@
       "counter": "{n} of {m}",
       "empty": "No results",
       "searching": "Searching…",
-      "unreachable": "This message could not be reached in the chat"
+      "unreachable": "This message could not be reached in the chat",
+      "fromProfile": "Search messages"
+    },
+    "messageSearch": {
+      "section": "Messages",
+      "chats": "Chats",
+      "empty": "No matching messages",
+      "more": "Show more messages",
+      "failed": "Could not search the messages. Please try again.",
+      "hint": "Type at least three characters to search message text"
     }
   },
   "mobileFinance": {
@@ -7896,13 +7930,24 @@
       "withRefund": "Cancel and refund",
       "refundPaid": "Paid: {amount}",
       "refundCharged": "Attended lessons: {n} × {price} × {rate}% = {amount}",
-      "refundTotal": "Refund due: {amount}",
-      "refundAmount": "Refund amount",
-      "refundAmountHint": "You may lower it; at most {amount}",
       "refundWhere": "What was paid by a payment link goes back to the card; the rest is recorded as a manual refund the admin transfers to the family",
       "doneRefund": "Subscription cancelled and a {amount} refund recorded",
       "refundNote": "Cancel and refund: {reason}",
-      "refundBell": "Transfer {amount} to the family (cancel and refund)"
+      "refundBell": "Transfer {amount} to the family (cancel and refund)",
+      "refundFailedBell": "Refunding {amount} did not finish after the course stop: retry or transfer it by hand",
+      "refundChoice": "Refund amount",
+      "refundUnattended": "Unattended lessons only: {amount}",
+      "refundAll": "Everything paid: {amount}",
+      "refundCustom": "Custom amount",
+      "oweChoice": "What the family still owes",
+      "oweAttended": "Attended lessons: {amount}",
+      "owePrice": "The full package price: {amount}",
+      "oweNothing": "Nothing",
+      "oweCustom": "Custom amount",
+      "customAmount": "Amount",
+      "customHint": "From 0 to {amount}",
+      "summary": "Refund: {refund} · Still owed by the family: {due}",
+      "refundUnavailable": "The refund cannot be computed right now, so «Cancel and refund» is not shown. Reopen the sheet shortly."
     },
     "teacher": {
       "action": "Change teacher",
@@ -7962,7 +8007,10 @@
       "refund_exceeds_allowed": "The amount is above the refund due",
       "refund_not_allowed": "You are not allowed to refund",
       "stripe_not_configured": "Online payment is not set up, so the card cannot be refunded",
-      "refund_mismatch": "This retry differs from an earlier refund of the same request: reopen the sheet"
+      "refund_mismatch": "This retry differs from an earlier refund of the same request: reopen the sheet",
+      "not_your_student": "This student is not one of yours, so you cannot refund them",
+      "owed_exceeds_price": "The amount still owed must be between 0 and the package price",
+      "stop_mismatch": "This attempt differs from the stop already recorded for the same request; reopen the sheet"
     }
   },
   "coursePause": {
@@ -8066,6 +8114,16 @@
   "courseDue": {
     "paidTitle": "Paid: book the lesson days",
     "unbookedTitle": "Lesson days not booked",
-    "unbookedText": "the package was paid at least two hours ago and its lesson days are not booked yet"
+    "unbookedText": "the package was paid at least two hours ago and its lesson days are not booked yet",
+    "customText": "the package is paid with no lesson days booked yet; its lesson count is custom, so an admin books them"
+  },
+  "courseDraft": {
+    "pick": "Pick the lesson days",
+    "held": "The subscription awaits payment: the picked days are saved and booked only after the payment.",
+    "saved": "The lesson days are saved and will be booked automatically after the payment. You can edit them until then.",
+    "save": "Save the days",
+    "clashTitle": "The lesson days could not be booked after the payment",
+    "clashText": "one of the picked times is now taken, so pick the lesson days again",
+    "failText": "the picked lesson days could not be booked after the payment, so open the lesson days and book them"
   }
 }

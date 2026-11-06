@@ -1,4 +1,4 @@
-import { cancelOffered, countsForMoney, isCancelled, PACKAGE_SIZES, subscriptionStatusStyle } from '@ab/shared';
+import { cancelOffered, countsForMoney, isCancelled, owedFor, owesMore, PACKAGE_SIZES, subscriptionStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button } from '@/components/ui/form/button';
@@ -59,11 +59,11 @@ export function subscriptionColumns({ onPay, onPause, onResume, canPause, onCanc
         return (
           <div className="grid">
             <Amount amount={s.price} currency={s.currency} className="font-semibold" />
-            {s.paid < s.price && countsForMoney(s) && (
+            {owesMore(s) && countsForMoney(s) && (
               <span className="text-2xs text-ink-3">
                 {t.payments.paidOf
                   .replace('{paid}', moneyText(s.paid, s.currency))
-                  .replace('{price}', moneyText(s.price, s.currency))}
+                  .replace('{price}', moneyText(owedFor(s), s.currency))}
               </span>
             )}
           </div>
@@ -104,7 +104,8 @@ export function subscriptionColumns({ onPay, onPause, onResume, canPause, onCanc
         if (!countsForMoney(s)) return null;
         return (
           <div className="flex gap-2">
-            {s.paid < s.price && (
+            {/* A stopped course owes its stored decision (owedFor), never price − paid. */}
+            {owesMore(s) && (
               <Button type="button" variant="secondary" size="sm" onClick={() => onPay(s, 'payment')}>
                 {t.payments.record}
               </Button>

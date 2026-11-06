@@ -45,6 +45,7 @@ export function CourseOpening(props: CourseOpeningProps) {
           opensOn={opensOn}
           teacher={known}
           adjustTo={continueFits(view) ? null : view.perWeek}
+          saved={Boolean(view.draft)}
           onSame={() => props.onSame(previous, opensOn)}
           onOther={props.onOther}
           transfer={transfer}

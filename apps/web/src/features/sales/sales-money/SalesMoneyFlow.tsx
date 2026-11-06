@@ -64,7 +64,11 @@ function FlowStep({ step, setStep, onCourse, studentId, renew, students, phone =
     const onLinked = (link: PaymentLinkView) => setStep({ kind: 'link', link });
     return <SalesSubscribeStep {...{ students, phone, renew, onClose, onSaved, onLinked }} picked={studentId} />;
   }
-  if (step.kind === 'link') return <CreatedLink link={step.link} phone={phone} canSend={canSend} onClose={onClose} />;
+  if (step.kind === 'link') {
+    const book = course(step.link.student.id);
+    const props = { link: step.link, phone, canSend, onClose };
+    return <CreatedLink {...props} onBookCourse={book} />;
+  }
   if (step.kind === 'transfer') {
     const sub = step.sub;
     return (

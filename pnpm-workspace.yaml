@@ -39,3 +39,5 @@ minimumReleaseAgeExclude:
 overrides:
   react-dom: 19.2.3
   '@types/react-dom': ~19.2.3
+patchedDependencies:
+  expo-sharing@57.0.24: patches/expo-sharing@57.0.24.patch

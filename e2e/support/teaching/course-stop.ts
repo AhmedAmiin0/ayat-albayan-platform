@@ -74,6 +74,8 @@ interface Stop {
   /** A profile (audit_log / course_pauses.resumed_by point at it). */
   actor: string;
   requestId?: string;
+  /** The stop sheet's decision (migration 20261106000100); absent = an old caller (the price). */
+  owed?: { amount: number; choice: string };
 }
 
 /** stop_course as the API calls it; a fresh clientRequestId unless given. */
@@ -93,6 +95,7 @@ export async function stop(tx: Tx, c: Stop): Promise<StopRow> {
     client_request_id: c.requestId ?? randomUUID(),
     actor: c.actor,
     reason: 'سفر',
+    ...(c.owed ? { owed_amount: c.owed.amount, owed_choice: c.owed.choice } : {}),
   };
   const rows = await tx<{ r: StopRow }[]>`select public.stop_course(${tx.json(p)}) as r`;
   return one(rows).r;

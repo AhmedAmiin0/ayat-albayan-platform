@@ -14,7 +14,14 @@ function chain(result: unknown) {
 const repoOf = (q: ReturnType<typeof chain>, rpc = vi.fn()) =>
   new CourseStopRepo({ from: vi.fn(() => q), rpc } as unknown as Db);
 const NOW = new Date('2026-10-30T09:00:00Z');
-const CALL = { subscriptionId: 's1', studentId: 'st1', requestId: 'req', actorId: 'a1', reason: 'سفر' };
+const CALL = {
+  subscriptionId: 's1',
+  studentId: 'st1',
+  requestId: 'req',
+  actorId: 'a1',
+  reason: 'سفر',
+  owed: { amount: 75, choice: 'attended' },
+};
 const ROW = {
   cancelled_lessons: ['l1'],
   ended_rules: ['r1'],
@@ -61,7 +68,15 @@ describe('CourseStopRepo', () => {
       replayed: false,
     });
     expect(rpc).toHaveBeenCalledWith('stop_course', {
-      p: { subscription_id: 's1', student_id: 'st1', client_request_id: 'req', actor: 'a1', reason: 'سفر' },
+      p: {
+        subscription_id: 's1',
+        student_id: 'st1',
+        client_request_id: 'req',
+        actor: 'a1',
+        reason: 'سفر',
+        owed_amount: 75,
+        owed_choice: 'attended',
+      },
     });
   });
 
@@ -69,6 +84,7 @@ describe('CourseStopRepo', () => {
     { message: 'subscription_not_found', code: 'P0001', expected: 'subscription_not_found', status: 404 },
     { message: 'already_cancelled', code: 'P0001', expected: 'already_cancelled', status: 409 },
     { message: 'course_unattributed', code: 'P0001', expected: 'course_unattributed', status: 409 },
+    { message: 'stop_mismatch', code: 'P0001', expected: 'stop_mismatch', status: 409 },
     { message: 'has_future_lessons: s1', code: '23514', expected: 'has_future_lessons', status: 409 },
   ])('stop: $message → $status', async ({ message, code, expected, status }) => {
     const err = await repoOf(chain({}), failing({ code, message }))

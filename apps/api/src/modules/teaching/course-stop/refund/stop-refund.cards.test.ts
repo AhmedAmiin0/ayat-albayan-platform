@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { uuidFor } from '@/modules/finance/stripe';
-import { cardRow, kit, listed, REQ, row, SUB } from './stop-refund.fakes';
+import { cardRow, kit, listed, planOf, REQ, row } from './stop-refund.fakes';
 
 // Reviewed money cases (owner 2026-11-02): pending refunds, converted / 3-decimal cards, replays.
 const actor = { id: 'a1', reason: 'سفر' };
@@ -10,10 +10,10 @@ describe('StopRefunds: what the cards can still give back', () => {
     const { service, stripe } = kit();
     const pending = { id: 're_p', amount: 4000, status: 'pending', metadata: {} };
     stripe.refunds.list.mockReturnValue(listed([pending]));
-    await expect(service.plan({ sub: SUB, requestId: REQ, amount: 251 })).rejects.toMatchObject({
+    await expect(service.plan(planOf(251))).rejects.toMatchObject({
       status: 409,
     });
-    const plan = await service.plan({ sub: SUB, requestId: REQ, amount: 250 });
+    const plan = await service.plan(planOf(250));
     expect(plan.calc.paid).toBe(250);
     expect(plan.split).toEqual({ cards: [{ id: 'p-card', amount: 160 }], manual: 90 });
   });
@@ -29,7 +29,7 @@ describe('StopRefunds: what the cards can still give back', () => {
       client_request_id: uuidFor('re_d'),
     });
     repo.money.mockResolvedValue([cardRow(), row(), recorded]);
-    const plan = await service.plan({ sub: SUB, requestId: REQ, amount: 250 });
+    const plan = await service.plan(planOf(250));
     expect(plan.calc.paid).toBe(250);
   });
 
@@ -37,7 +37,7 @@ describe('StopRefunds: what the cards can still give back', () => {
     const { service, stripe } = kit();
     const failed = { id: 're_f', amount: 20000, status: 'failed', metadata: {} };
     stripe.refunds.list.mockReturnValue(listed([failed]));
-    const plan = await service.plan({ sub: SUB, requestId: REQ, amount: 290 });
+    const plan = await service.plan(planOf(290));
     expect(plan.split.cards).toEqual([{ id: 'p-card', amount: 200 }]);
   });
 
@@ -47,7 +47,7 @@ describe('StopRefunds: what the cards can still give back', () => {
   ])('a card payment %s is refunded by hand, never through Stripe', async (_what, over) => {
     const k = kit();
     k.repo.money.mockResolvedValue([cardRow(over), row()]);
-    const plan = await k.service.plan({ sub: SUB, requestId: REQ, amount: 100 });
+    const plan = await k.service.plan(planOf(100));
     expect(await k.service.execute({ plan, actor })).toEqual({ amount: 100, card: 0, manual: 100 });
     expect(k.stripe.refunds.create).not.toHaveBeenCalled();
   });
@@ -58,10 +58,10 @@ describe('StopRefunds: a replay of the same stop', () => {
     const { service, stripe } = kit();
     const mine = { id: 're_m', amount: 10000, status: 'succeeded', metadata: { course_stop: REQ } };
     stripe.refunds.list.mockReturnValue(listed([mine]));
-    await expect(service.plan({ sub: SUB, requestId: REQ, amount: 250 })).rejects.toMatchObject({
+    await expect(service.plan(planOf(250))).rejects.toMatchObject({
       status: 409,
     });
-    const same = await service.plan({ sub: SUB, requestId: REQ, amount: 100 });
+    const same = await service.plan(planOf(100));
     expect(await service.execute({ plan: same, actor })).toEqual({
       amount: 100,
       card: 100,
