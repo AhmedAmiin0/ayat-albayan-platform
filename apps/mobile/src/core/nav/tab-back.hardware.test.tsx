@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { act, screen } from 'expo-router/testing-library';
-import { trackBackPress } from '@/test/back-press';
-import { openTabApp, tabApp, TabsLayout } from '@/test/tab-app';
+import { trackBackPress } from '@/test/nav/back-press';
+import { openTabApp, tabApp, TabsLayout } from '@/test/nav/tab-app';
 
 // Android's back on the real tabs and tab stacks (stub screens).
 const app = tabApp(TabsLayout);

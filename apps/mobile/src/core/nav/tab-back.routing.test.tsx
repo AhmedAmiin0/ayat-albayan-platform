@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { pushInTab } from '@/core/nav/back-within';
 import { StudentScreen } from '@/students/screens/StudentScreen';
 import { createTestQueryClient } from '@/test/query';
-import { openTabApp, tabApp, TabsLayout } from '@/test/tab-app';
+import { openTabApp, tabApp, TabsLayout } from '@/test/nav/tab-app';
 
 // The real tab stacks and StudentScreen (its profile still loading) under the real tabs.
 jest.mock('@/core/lib/http/api', () => ({
