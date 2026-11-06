@@ -1,6 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen, waitFor } from '@testing-library/react-native';
-import { hold, lift, moveTo, openChat, rec, resetVoice, tick } from './voice-test-kit';
+import { hold, lift, moveTo, openChat, rec, resetVoice, tick, voiceRow } from './voice-test-kit';
 
 // An English phone (LTR): the start is on the LEFT, so the slide to cancel goes left (dx < 0).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -50,7 +50,7 @@ test('slide left (dx < 0) past the line cancels; nothing sent', async () => {
 });
 
 test('slide right (toward the end) never cancels: the lift sends', async () => {
-  mockApiSend.mockResolvedValueOnce({ bucket: 'wa-media', path: 'out/u1/r1/a.m4a', token: 't', signed_url: 'u' }).mockResolvedValueOnce({ id: 'v1' });
+  mockApiSend.mockResolvedValueOnce({ bucket: 'wa-media', path: 'out/u1/r1/a.m4a', token: 't', signed_url: 'u' }).mockResolvedValueOnce(voiceRow);
   await openChat(mockApiFetch);
   await hold(100);
   await moveTo(100 + 400);

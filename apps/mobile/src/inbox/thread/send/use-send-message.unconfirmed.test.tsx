@@ -106,7 +106,8 @@ test('a 4xx answer releases the pin and rolls the bubble back; a 5xx pins it', a
   await send(box('req-5', 'وصلت'));
   expect(PINS.box.pinned(PHONE)).toBeUndefined();
   expect(rows().map((m) => m.id)).toEqual(['m0']);
-  expect(refreshInbox).toHaveBeenCalled();
+  // An answer: refreshSent (the lists, and the newest page when the chat is shown).
+  expect(refreshLists).toHaveBeenCalled();
 });
 
 test('no answer pins even when the bubble is no longer in the cache', async () => {

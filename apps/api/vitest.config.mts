@@ -9,6 +9,8 @@ export default defineConfig({
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   test: {
     include: ['src/**/*.test.ts'],
+    // Transforms persist across runs in <repo>/node_modules/.vitest-cache (ci.yml restores it).
+    fsModuleCache: true,
     // Dummy values so AppModule boots in tests; createClient makes no network call on construction.
     env: {
       SUPABASE_URL: 'http://127.0.0.1:54321',

@@ -6,4 +6,4 @@ export {
   triesAfterWindow,
 } from './chat-send.js';
 export { createPinStore, type PinStore } from './pin-store.js';
-export { replayedOther, SEND_REPLAYED, SEND_UNCONFIRMED } from './unconfirmed.js';
+export { markUnconfirmed, replayedOther, SEND_REPLAYED, SEND_UNCONFIRMED } from './unconfirmed.js';

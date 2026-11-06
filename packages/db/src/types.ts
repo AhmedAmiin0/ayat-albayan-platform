@@ -2702,6 +2702,24 @@ export type Database = {
           },
         ];
       };
+      message_tombstones: {
+        Row: {
+          deleted_at: string;
+          id: string;
+          phone_e164: string;
+        };
+        Insert: {
+          deleted_at?: string;
+          id: string;
+          phone_e164: string;
+        };
+        Update: {
+          deleted_at?: string;
+          id?: string;
+          phone_e164?: string;
+        };
+        Relationships: [];
+      };
       messages: {
         Row: {
           app_send_until: string | null;
@@ -2752,6 +2770,7 @@ export type Database = {
           template_key: string | null;
           template_params: Json | null;
           their_reaction: string | null;
+          updated_at: string;
           wa_conversation_id: string | null;
           wa_message_id: string | null;
           wa_pricing_category: string | null;
@@ -2805,6 +2824,7 @@ export type Database = {
           template_key?: string | null;
           template_params?: Json | null;
           their_reaction?: string | null;
+          updated_at?: string;
           wa_conversation_id?: string | null;
           wa_message_id?: string | null;
           wa_pricing_category?: string | null;
@@ -2858,6 +2878,7 @@ export type Database = {
           template_key?: string | null;
           template_params?: Json | null;
           their_reaction?: string | null;
+          updated_at?: string;
           wa_conversation_id?: string | null;
           wa_message_id?: string | null;
           wa_pricing_category?: string | null;
@@ -4765,9 +4786,11 @@ export type Database = {
       };
       thread_summaries: {
         Row: {
+          last_activity_at: string | null;
           last_body: string | null;
           last_chat_inbound_at: string | null;
           last_direction: Database['public']['Enums']['message_direction'];
+          last_family_read_at: string | null;
           last_inbound_at: string | null;
           last_inbound_line: Database['public']['Enums']['wa_line'] | null;
           last_media_mime: string | null;
@@ -4781,9 +4804,11 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          last_activity_at?: string | null;
           last_body?: string | null;
           last_chat_inbound_at?: string | null;
           last_direction: Database['public']['Enums']['message_direction'];
+          last_family_read_at?: string | null;
           last_inbound_at?: string | null;
           last_inbound_line?: Database['public']['Enums']['wa_line'] | null;
           last_media_mime?: string | null;
@@ -4797,9 +4822,11 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          last_activity_at?: string | null;
           last_body?: string | null;
           last_chat_inbound_at?: string | null;
           last_direction?: Database['public']['Enums']['message_direction'];
+          last_family_read_at?: string | null;
           last_inbound_at?: string | null;
           last_inbound_line?: Database['public']['Enums']['wa_line'] | null;
           last_media_mime?: string | null;
@@ -5386,9 +5413,11 @@ export type Database = {
           guardian_id: string | null;
           guardian_name: string | null;
           guardian_tz: string | null;
+          last_activity_at: string | null;
           last_body: string | null;
           last_chat_inbound_at: string | null;
           last_direction: Database['public']['Enums']['message_direction'] | null;
+          last_family_read_at: string | null;
           last_inbound_at: string | null;
           last_inbound_line: Database['public']['Enums']['wa_line'] | null;
           last_media_mime: string | null;
@@ -5432,9 +5461,11 @@ export type Database = {
           guardian_id: string | null;
           guardian_name: string | null;
           guardian_tz: string | null;
+          last_activity_at: string | null;
           last_body: string | null;
           last_chat_inbound_at: string | null;
           last_direction: Database['public']['Enums']['message_direction'] | null;
+          last_family_read_at: string | null;
           last_inbound_at: string | null;
           last_inbound_line: Database['public']['Enums']['wa_line'] | null;
           last_media_mime: string | null;

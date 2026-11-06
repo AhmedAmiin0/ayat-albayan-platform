@@ -1,6 +1,4 @@
 import { isNoAnswer } from '@ab/client-core';
-import type { QueryClient } from '@tanstack/react-query';
-import { refreshInbox, refreshLists } from '@/inbox/thread/hooks/inbox-sync';
 import { removeMessage, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 import { markUnconfirmed } from './unconfirmed';
 
@@ -13,14 +11,3 @@ export const unanswered = (error: unknown): boolean => error !== null && isNoAns
  */
 export const rollback = (error: unknown, id: string) => (old: ThreadCache | undefined) =>
   unanswered(error) ? markUnconfirmed(old, id) : removeMessage(old, id);
-
-/**
- * After a send: an answer (the row or a refusal) re-reads the chat and the lists. No answer
- * re-reads only the lists: a full chat read now would drop the «unconfirmed» bubble (the polls'
- * merges keep it).
- */
-export function afterSend(client: QueryClient, phone: string, error: unknown): Promise<void> {
-  if (!unanswered(error)) return refreshInbox(client, phone);
-  refreshLists(client);
-  return Promise.resolve();
-}

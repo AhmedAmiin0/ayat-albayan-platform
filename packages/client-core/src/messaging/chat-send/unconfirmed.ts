@@ -1,4 +1,5 @@
 import type { MessageView } from '@ab/shared';
+import type { ThreadPages } from '../inbox/index.js';
 
 // docs/44 BUG7, shared by web and mobile. The server dedups `who:phone:clientRequestId` with no
 // kind and no expiry, and a replay returns the FIRST row (201) whatever the new body. The rule:
@@ -20,3 +21,14 @@ export const SEND_REPLAYED = 'send_replayed';
  */
 export const replayedOther = (row: Pick<MessageView, 'body'>, sentBody: string): boolean =>
   (row.body ?? '').trim() !== sentBody.trim();
+
+/** The provisional row with this id marked «unconfirmed» (kept on screen, never rolled back). */
+export function markUnconfirmed<T extends ThreadPages>(
+  data: T | undefined,
+  id: string,
+): T | undefined {
+  if (!data) return data;
+  const mark = (m: MessageView): MessageView =>
+    m.id === id ? { ...m, error_code: SEND_UNCONFIRMED } : m;
+  return { ...data, pages: data.pages.map((p) => ({ ...p, messages: p.messages.map(mark) })) };
+}

@@ -3,6 +3,7 @@ import type { ThreadDelta } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/http/api';
 import { INBOX_REFRESH_MS, threadPath } from './api';
+import { useTicksInLists } from './list-ticks';
 import { threadQuery } from './thread-query';
 import { inboxLive, useLiveChat } from './live';
 
@@ -19,6 +20,7 @@ export function useLiveThread(phone: string) {
   const detail = useInfiniteQuery(options);
   const client = useQueryClient();
   useLiveChat(phone);
+  useTicksInLists(detail.data); // the list beside it shows the same tick (docs/43 43-1)
   const queryKey = options.queryKey;
   useQuery({
     // Outside ['threads']: a send's or an opened chat's invalidation never runs it.

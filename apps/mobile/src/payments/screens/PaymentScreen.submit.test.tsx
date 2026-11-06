@@ -18,7 +18,7 @@ jest.mock('@/core/lib/http/supabase', () => ({
 }));
 const mockBack = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
+  router: { back: () => mockBack(), canDismiss: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
 jest.mock('expo-image-picker', () => ({

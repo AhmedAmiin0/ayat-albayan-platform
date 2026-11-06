@@ -6,7 +6,7 @@ import { t } from '@/lib/i18n/i18n';
 import { clearAllDrafts, draftGeneration, getDraft, keepsFailed, keptFailed, requestIdFor, setDraft } from './draft-store';
 import { ReplayedSend, rereadsAfter, sendErrorCode, sendErrorText } from './send-error';
 import { settleOwnSend } from './send-start';
-import { settleTextSend, textSentOf } from './unconfirmed';
+import { settleTextSend, textSentOf } from './use-text-send';
 
 // docs/44 BUG7 on web, the final rule: after no answer the box owns a pinned id; every next text
 // reuses it until a send with it gets an ANSWER (2xx or 4xx). Nothing is released by reads.
@@ -19,7 +19,7 @@ const refused = { text: 'وصلت', id: 'req-2', code: 'send_failed' };
 const row = (body: string) => ({ id: 'srv', body }) as MessageView;
 const sentOf = (text: string) => ({
   ...textSentOf(PHONE, getDraft(PHONE), text),
-  gen: { draft: draftGeneration() },
+  gen: { draft: draftGeneration(), own: 0 },
 });
 
 describe('a send that ended with no answer', () => {

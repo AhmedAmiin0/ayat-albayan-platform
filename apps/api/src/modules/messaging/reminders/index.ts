@@ -19,6 +19,7 @@ export {
   staffTeacherId,
 } from './plan/staff-reachable';
 export { teacherLessonCrm } from './plan/teacher-lesson.crm';
+export { teacherLessonV3 } from './plan/teacher-lesson.v3';
 export {
   type QueuedMessage,
   type QueuedParams,

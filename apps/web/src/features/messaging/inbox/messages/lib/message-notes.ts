@@ -1,4 +1,5 @@
 import { canRetryCode, canSendViaWhatsApp, isAwaitingReply, MAX_SEND_ATTEMPTS, type MessageView } from '@ab/shared';
+import { SEND_UNCONFIRMED } from '@ab/client-core';
 import type { Clock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { errorText, fullTime } from '@/features/messaging/inbox/format';
@@ -24,9 +25,17 @@ export function outboundNotes(m: MessageView, o: NotesInput): string[] {
   return m.status === 'queued' ? queuedNotes(m, o) : [];
 }
 
+const HELD: readonly [(m: MessageView) => boolean, () => string][] = [
+  [isAwaitingReply, () => t.messages.awaitingReply],
+  [(m) => m.error_code === SEND_UNCONFIRMED, () => t.messages.sendUnconfirmed],
+];
+const heldNote = (m: MessageView): string | undefined => HELD.find(([is]) => is(m))?.[1]();
+
 function queuedNotes(m: MessageView, o: NotesInput): string[] {
-  // Held behind the reopen template (owner 2026-11-03): no tries, no next try, until they reply.
-  if (isAwaitingReply(m)) return [t.messages.awaitingReply];
+  // Held behind the reopen template (owner 2026-11-03), or our send with no answer (docs/44
+  // BUG7, «لم يتأكد الإرسال بعد»): no tries, no next try.
+  const held = heldNote(m);
+  if (held) return [held];
   const notes: string[] = [];
   if (o.waitingTemplate) notes.push(t.messages.waitingTemplate);
   else if (m.scheduled_for && Date.parse(m.scheduled_for) > o.now.getTime()) {

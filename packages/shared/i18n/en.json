@@ -3453,6 +3453,7 @@
       "lesson_join_link": "Online classroom link",
       "lesson_rating": "Lesson rating (buttons)",
       "teacher_new_student": "Teacher: new student alert",
+      "teacher_lesson_v3": "Teacher lesson notice — join and report buttons",
       "lesson_rescheduled": "Lesson time changed",
       "lesson_cancelled": "Lesson cancelled",
       "course_paused": "Lessons paused",
@@ -3643,7 +3644,7 @@
       "variableGeneric": "A value the sender types",
       "sample": "Example for variable {n}",
       "buttons": "Buttons (optional)",
-      "buttonsHint": "Up to {max} buttons, at most one of them a link button.",
+      "buttonsHint": "Up to {max} buttons, at most two of them link buttons.",
       "addUrl": "Add a link button",
       "addReply": "Add a quick-reply button",
       "buttonText": "Button {n} text",
@@ -6940,7 +6941,6 @@
           "msg_call": "Reply to a rejected call",
           "msg_callHint": "Sent to the caller when the call is rejected. Leave empty for no reply.",
           "groups_ignore": "Ignore group messages",
-          "always_online": "Always show as online",
           "read_messages": "Mark incoming messages as read automatically",
           "read_status": "Read status updates automatically",
           "sync_full_history": "Sync the full chat history when linking"
@@ -6969,8 +6969,6 @@
           "passwordHint": "The password is saved in the «Proxy password» row below and never shown again."
         },
         "sending": {
-          "delay_ms": "Typing time before each message (ms)",
-          "delayHint": "The recipient sees «typing…» this long before the message, at most 2000. 0 = no wait.",
           "link_preview": "Show link previews"
         },
         "limits": {

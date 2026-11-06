@@ -1,5 +1,5 @@
 import { WA_TEXT_MAX } from '@ab/shared';
-import { useIsMutating, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useIsMutating } from '@tanstack/react-query';
 import { useId, useLayoutEffect, useRef, useSyncExternalStore, type ReactNode } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
@@ -7,19 +7,15 @@ import { controlClass } from '@/components/ui/form/input';
 import { usePhone } from '@/components/ui/layout/use-narrow';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { sendText } from '@/features/messaging/inbox/api/api';
 import type { ComposerExtras } from '@/features/messaging/inbox/composer/lib/composer-extras';
 import { sendsOnKey } from '@/features/messaging/inbox/composer/lib/composer-keys';
 import { ComposerError } from './ComposerError';
 import { draftGeneration, getDraft, keepsFailed, keptFailed, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
-import { settleTextSend, textSentOf, type TextSent } from '@/features/messaging/inbox/composer/lib/unconfirmed';
-import { ownSendGeneration, recordOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
+import { textSentOf, useTextSend } from '@/features/messaging/inbox/composer/lib/use-text-send';
+import { ownSendGeneration } from '@/features/messaging/inbox/composer/lib/own-send';
 import { ReplyStrip } from './ReplyStrip';
-import { rereadsAfter, sendErrorCode, sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
+import { sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { useReplyTarget } from '@/features/messaging/inbox/composer/lib/use-reply-target';
-
-/** A send, the message it answers («رد»), the tab-memory generations it started in and what follows it (never sent). */
-type Sent = TextSent & { replyTo?: string | undefined; gen: { draft: number; own: number }; after?: () => void };
 
 /** The box's tallest height (about five lines), then it scrolls. */
 const COMPACT_MAX_PX = 128;
@@ -41,9 +37,9 @@ export interface TextComposerProps {
  * meanwhile is never wiped. While this chat's send is in flight no box for it can send (mutationKey),
  * even one mounted since. A send settling after a sign-out writes nothing back (generations).
  * «رد» (owner 2026-10-25): the quoted strip above the box; a sent answer clears it, a failed one keeps it.
+ * The send itself (optimistic bubble, newest-page refresh) is useTextSend.
  */
 export function TextComposer({ phone, leading, extras }: TextComposerProps) {
-  const queryClient = useQueryClient();
   const errorId = useId();
   const area = useRef<HTMLTextAreaElement>(null);
   const desktop = !usePhone();
@@ -55,27 +51,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
     setDraft(phone, { text: next, failed: keepsFailed(failed, next) ? failed : null });
   };
   const mutationKey = ['inbox-send', phone];
-  const send = useMutation({
-    mutationKey,
-    mutationFn: ({ phone: to, text: body, clientRequestId, replyTo }: Sent) =>
-      sendText({ phone: to, text: body, clientRequestId, ...(replyTo ? { replyToMessageId: replyTo } : {}) }),
-    onSuccess: async (view, sent) => {
-      recordOwnSend(sent.phone, view.id, sent.gen.own);
-      if (sent.replyTo) reply.done(sent.replyTo);
-      settleTextSend(view, sent);
-      sent.after?.();
-      await queryClient.invalidateQueries({ queryKey: ['threads'] });
-    },
-    onError: async (e, sent) => {
-      // Put the message back with its key, unless she has typed a new one since (that one gets its own).
-      const now = getDraft(sent.phone);
-      const failed = { text: sent.text, id: sent.clientRequestId, code: sendErrorCode(e) };
-      setDraft(sent.phone, { text: now.text || sent.text, failed }, sent.gen.draft);
-      // The window may have closed (the composer switches), or a send with no answer may have gone.
-      if (rereadsAfter(e)) await queryClient.invalidateQueries({ queryKey: ['threads'] });
-    },
-    onSettled: () => area.current?.focus(),
-  });
+  const send = useTextSend(phone, { replyDone: reply.done, settled: () => area.current?.focus() });
   const pending = useIsMutating({ mutationKey }) > 0;
   // The box grows with its text (1 line → about 5), also where `field-sizing` is missing.
   useLayoutEffect(() => {

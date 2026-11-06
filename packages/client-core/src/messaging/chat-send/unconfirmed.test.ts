@@ -1,6 +1,7 @@
+import type { MessageView, ThreadDetail } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { createPinStore } from './pin-store.js';
-import { replayedOther } from './unconfirmed.js';
+import { markUnconfirmed, replayedOther, SEND_UNCONFIRMED } from './unconfirmed.js';
 
 const A = '+966501234567';
 
@@ -53,4 +54,12 @@ it('a replay answered with another body is the first message, not the edit', () 
   // The server only trims: a real send echoes the same words.
   expect(replayedOther({ body: 'وصلت' }, '  وصلت\n')).toBe(false);
   expect(replayedOther({ body: null }, 'وصلت')).toBe(true);
+});
+
+it('markUnconfirmed marks only that row and keeps it on its page', () => {
+  const rows = [{ id: 'm1', error_code: null }, { id: 'req-1', error_code: null }] as MessageView[];
+  const data = { pages: [{ messages: rows } as ThreadDetail], pageParams: [null] };
+  const out = markUnconfirmed(data, 'req-1')?.pages[0]?.messages ?? [];
+  expect(out.map((m) => m.error_code)).toEqual([null, SEND_UNCONFIRMED]);
+  expect(markUnconfirmed(undefined, 'req-1')).toBeUndefined();
 });

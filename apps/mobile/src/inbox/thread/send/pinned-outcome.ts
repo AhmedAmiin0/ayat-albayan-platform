@@ -2,6 +2,7 @@ import { replayedOther } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { unanswered } from './after-send';
+import { carried, type SendInput } from './outgoing';
 import { PINS, type PinKind } from './pinned-send';
 
 /** A send of the chat with its pin kind (none: templates, resend, new chat) and generation. */
@@ -50,6 +51,15 @@ export function failPinned(s: PinnedSend, error: unknown): void {
   store[keep](s.phone, s.id, s.generation);
   restoreBox(s);
 }
+
+/** A send of useSendMessage as the pin rule sees it. */
+export const pinnedOf = (phone: string, input: SendInput, generation: number): PinnedSend => ({
+  phone,
+  id: input.id,
+  body: carried(input.out),
+  pin: input.pin,
+  generation,
+});
 
 /** The generation a send of this kind starts in. */
 export const pinGeneration = (pin: PinKind | undefined): number => PINS[pin ?? 'box'].generation();

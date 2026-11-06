@@ -87,12 +87,14 @@ test.describe('v_threads.last_inbound_line (migration 290, R-MSG-04)', () => {
     });
   });
 
+  // Migration 20261106001100 appends the two activity columns after them (docs/44 §3).
   test('the 20 old columns are intact, in order, and the three line columns are appended after them', async () => {
     await rolledBack(async (tx) => {
       const cols = await tx<{ column_name: string }[]>`
         select column_name from information_schema.columns
         where table_schema = 'public' and table_name = 'v_threads' order by ordinal_position`;
-      expect(cols.map((c) => c.column_name)).toEqual([...OLD_COLUMNS, 'last_inbound_line', 'last_chat_inbound_at', 'last_notifications_inbound_at']);
+      const activity = ['last_family_read_at', 'last_activity_at'];
+      expect(cols.map((c) => c.column_name)).toEqual([...OLD_COLUMNS, 'last_inbound_line', 'last_chat_inbound_at', 'last_notifications_inbound_at', ...activity]);
       const [type] = await tx<{ udt_name: string; is_nullable: string; column_default: string | null }[]>`
         select udt_name, is_nullable, column_default from information_schema.columns
         where table_schema = 'public' and table_name = 'messages' and column_name = 'line'`;

@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { clockAt } from '@/inbox/shared/format';
@@ -18,7 +18,7 @@ import { KpiTile } from './KpiTile';
 import { WorkPanel } from './WorkPanel';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
-const back = () => (router.canGoBack() ? router.back() : router.replace('/more'));
+const back = () => backWithin('/more');
 
 /**
  * «لوحة المتابعة» (R-RPT-01, R-RPT-02): the web's KPI strip for the current Riyadh week, then the

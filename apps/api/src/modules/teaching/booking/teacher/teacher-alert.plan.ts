@@ -3,7 +3,8 @@ import { ar } from '@/common/infra/i18n/server-text';
 import type { PushTarget } from '@/common/push/push.service';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import { staffReachable, type StaffOnRecord } from '@/modules/messaging/reminders/plan/staff-reachable';
-import { teacherLessonCrm } from '@/modules/messaging/reminders';
+import { teacherLessonCrm, teacherLessonV3 } from '@/modules/messaging/reminders';
+import type { TeacherLessonTokens } from '@/modules/teaching/lesson-links';
 
 // R-NOT-03 (owner 2026-10-12): after a booking, the teacher hears about the new student in the bell
 // (always) and on WhatsApp (teacher_new_student, only while settings.teacher_whatsapp_new_student
@@ -25,7 +26,15 @@ export interface AlertLesson {
   starts_at: string;
   /** The CRM alert's duration. */
   ends_at?: string | null;
+  /** The lesson's own link: a Meet one fills the v2 join button with its code. */
+  meeting_link?: string | null;
   teacher: AlertTeacher | null;
+}
+
+/** teacher_lesson_v3's parts of one lesson (owner 2026-11-06): its room and its signed links. */
+export interface AlertV3 {
+  room: string;
+  links: TeacherLessonTokens;
 }
 
 interface AlertInput {
@@ -33,6 +42,8 @@ interface AlertInput {
   students: readonly { id: string; name: string; code?: string | null }[];
   kind: BookingKind;
   now: Date;
+  /** Per lesson, when teacher_lesson_v3 is approved: the alert goes as it. */
+  v3?: ReadonlyMap<string, AlertV3>;
 }
 
 /** One teacher's alert: the bell row (a profile to show it to) and the WhatsApp row (a phone to send to). */
@@ -63,6 +74,30 @@ function teacherNewStudentMessage(input: { names: readonly string[]; startsAt: D
   };
 }
 
+interface AlertParts {
+  teacher: AlertTeacher;
+  lesson: AlertLesson;
+  input: AlertInput;
+  names: readonly string[];
+}
+
+/** teacher_lesson_v3 when it is approved and the lesson's values are complete. */
+function v3Template({ teacher, lesson, input }: AlertParts): OutboundTemplate | null {
+  const v3 = input.v3?.get(lesson.id);
+  return v3 ? teacherLessonV3({ teacher, lesson, students: input.students, ...v3 }) : null;
+}
+
+/** teacher_new_student with the CRM's teacher_lesson_v2 values beside Meta's. */
+function olderTemplate({ teacher, lesson, input, names }: AlertParts): OutboundTemplate {
+  const startsAt = new Date(lesson.starts_at);
+  const meta = teacherNewStudentMessage({ names, startsAt, tz: teacher.tz, kind: input.kind });
+  const crm = teacherLessonCrm({ teacher, lesson, students: input.students });
+  return crm ? { ...meta, params: { ...meta.params, crm } } : meta;
+}
+
+const alertTemplate = (parts: AlertParts): OutboundTemplate =>
+  v3Template(parts) ?? olderTemplate(parts);
+
 export function teacherAlerts(input: AlertInput): TeacherAlertPlan[] {
   const names = input.students.map((s) => s.name).filter((n) => n.trim() !== '');
   const studentId = input.students[0]?.id;
@@ -77,14 +112,13 @@ export function teacherAlerts(input: AlertInput): TeacherAlertPlan[] {
           profileIds: [teacher.profile_id],
         }
       : null;
-    const meta = teacherNewStudentMessage({ names, startsAt, tz: teacher.tz, kind: input.kind });
-    const crm = teacherLessonCrm({ teacher, lesson, students: input.students });
+    const template = alertTemplate({ teacher, lesson, input, names });
     // Only the lesson's teacher's number on record, and only while they are still on staff.
     const message = teacher.phone_e164 && staffReachable(teacher)
       ? queuedRow({
           phone: teacher.phone_e164,
           lessonId: lesson.id,
-          template: crm ? { ...meta, params: { ...meta.params, crm } } : meta,
+          template,
           dedupKey: `teacher_new_student:${lesson.id}:${teacher.id}`,
           now: input.now,
           // About an upcoming lesson: never sent once it started (a send gate closed until then).

@@ -1,5 +1,5 @@
 import { teacherName } from '@ab/shared';
-import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { Pressable, View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
@@ -38,7 +38,7 @@ export function TeacherHeader({ agenda, showWindows }: TeacherHeaderProps) {
       <Pressable
         accessibilityRole="button"
         accessibilityHint={t.teachers.profile}
-        onPress={() => router.push(`/more/teachers/${teacher.id}`)}
+        onPress={() => pushInTab(`/more/teachers/${teacher.id}`)}
         style={{
           minHeight: shape.control.touch,
           flexDirection: 'row',

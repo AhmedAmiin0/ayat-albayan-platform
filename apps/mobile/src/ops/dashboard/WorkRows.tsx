@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
@@ -7,7 +7,7 @@ import { pendingSubtitle, taskText, unpaidSubtitle } from './work-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 // Taps go into the Students tab: a role without it gets plain rows (a hidden tab goes nowhere).
-const openStudent = (id: string, open: boolean) => (open ? () => router.push(`/students/${id}`) : undefined);
+const openStudent = (id: string, open: boolean) => (open ? () => pushInTab(`/students/${id}`) : undefined);
 
 /** A started lesson with no sent report: opens that student's report history. */
 export function PendingRow({ row }: { row: PendingReportRow }) {
@@ -20,7 +20,7 @@ export function PendingRow({ row }: { row: PendingReportRow }) {
       meta={row.student.code}
       subtitle={pendingSubtitle(row, cycle, tz)}
       trailing={<LessonStatusChip status={row.status} size="sm" />}
-      onPress={toStudents ? () => router.push(`/students/reports/${row.student.id}`) : undefined}
+      onPress={toStudents ? () => pushInTab(`/students/reports/${row.student.id}`) : undefined}
     />
   );
 }

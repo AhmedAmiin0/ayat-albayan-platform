@@ -1,5 +1,5 @@
 import type { Program } from '@ab/shared';
-import { router } from 'expo-router';
+import { backOr } from '@/core/nav/back-within';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
@@ -29,7 +29,7 @@ export function TrialDateFlow({ studentId, name, program, fallback }: TrialDateF
   if (history.data?.allowed) {
     return <TrialDateWizard history={history.data} title={title} program={program} fallback={fallback} />;
   }
-  const back = () => (router.canGoBack() ? router.back() : fallback());
+  const back = () => backOr(fallback);
   return (
     <>
       <ScreenHeader title={title} leading={<BackButton onPress={back} />} />

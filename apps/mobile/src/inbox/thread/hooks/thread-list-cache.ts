@@ -1,3 +1,4 @@
+import { touchedThread } from '@ab/client-core';
 import type { MessageView, ThreadView } from '@ab/shared';
 import type { InfiniteData } from '@tanstack/react-query';
 import type { Page } from '@/core/lib/query/paging';
@@ -15,17 +16,7 @@ export function touchList(data: ThreadListCache | undefined, row: MessageView): 
   const phone = row.phone_e164;
   const found = data?.pages.flatMap((p) => p.items).find((th) => th.phone_e164 === phone);
   if (!data || !found) return data;
-  const moved: ThreadView = {
-    ...found,
-    last_message_id: row.id,
-    last_direction: row.direction,
-    last_body: row.body,
-    last_template_key: row.template_key,
-    last_status: row.status,
-    last_media_mime: row.media_mime,
-    last_unsupported: false,
-    last_message_at: row.created_at,
-  };
+  const moved = touchedThread(found, row);
   const pages = data.pages.map((p, i) => {
     const items = p.items.filter((th) => th.phone_e164 !== phone);
     return { ...p, items: i === 0 ? [moved, ...items] : items };

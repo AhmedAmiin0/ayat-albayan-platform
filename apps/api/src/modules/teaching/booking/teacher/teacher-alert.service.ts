@@ -8,16 +8,21 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { firstOrigin } from '@/common/http/public-origin';
+import { TeacherLessonLinks } from '@/modules/teaching/lesson-links';
+import { loadEnv } from '@/config/env/env';
 import { teacherAlerts } from './teacher-alert.plan';
-import { TeacherAlertRepo } from './teacher-alert.repo';
+import { TeacherAlertRepo, type AlertLessonRow } from './teacher-alert.repo';
+import { alertV3 } from './teacher-alert.v3';
 
-/** The shared services TeacherAlert talks to (one injectable, so constructors stay at ≤ 3 params). */
+/** The shared services TeacherAlert talks to (one injectable: constructors stay at ≤ 4 params). */
 @Injectable()
 export class TeacherAlertDeps {
   constructor(
     readonly push: PushService,
     readonly policy: NotificationPolicy,
     readonly sender: MessageSender,
+    readonly links: TeacherLessonLinks,
   ) {}
 }
 
@@ -69,10 +74,22 @@ export class TeacherAlert {
       this.queries.lessons(lessonIds),
       this.queries.students(studentIds),
     ]);
-    const plans = teacherAlerts({ lessons, students, kind, now: new Date() });
-    for (const { push } of plans) if (push) await this.deps.push.notifyProfiles(push);
-    const rows = plans.flatMap((p) => (p.message ? [p.message] : []));
-    if (rows.length === 0 || !(await this.deps.policy.isOn('teacher_new_student'))) return;
-    if (await this.queries.approved()) await this.queries.queue(rows);
+    const base = { lessons, students, kind, now: new Date() };
+    for (const { push } of teacherAlerts(base)) if (push) await this.deps.push.notifyProfiles(push);
+    if (!(await this.deps.policy.isOn('teacher_new_student'))) return;
+    const sendable = await this.queries.sendable();
+    const v3 = sendable.has('teacher_lesson_v3') ? await this.v3(lessons) : undefined;
+    // Only rows whose template can go (teacher_lesson_v3 or teacher_new_student, as the sender).
+    const rows = teacherAlerts({ ...base, v3 }).flatMap((p) =>
+      p.message && sendable.has(p.message.template_key) ? [p.message] : [],
+    );
+    if (rows.length > 0) await this.queries.queue(rows);
+  }
+
+  /** teacher_lesson_v3's room and signed links per first lesson (owner 2026-11-06). */
+  private async v3(lessons: readonly AlertLessonRow[]) {
+    const auto = await this.queries.academyAuto();
+    const origin = firstOrigin(loadEnv().WEB_ORIGIN);
+    return alertV3(lessons, { links: this.deps.links, auto, origin });
   }
 }

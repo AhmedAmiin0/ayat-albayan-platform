@@ -15,7 +15,7 @@ jest.mock('@/core/lib/http/api', () => ({
 const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),
-  router: { back: jest.fn(), canGoBack: () => false, replace: (h: string) => mockReplace(h) },
+  router: { back: jest.fn(), canDismiss: () => false, replace: (h: string) => mockReplace(h) },
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
 

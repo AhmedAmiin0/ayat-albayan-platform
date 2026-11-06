@@ -20,7 +20,7 @@ jest.mock('expo-router', () => ({
     back: () => mockBack(),
     push: (h: string) => mockPush(h),
     dismissTo: (h: string) => mockDismissTo(h),
-    canGoBack: () => true,
+    canDismiss: () => true,
     replace: jest.fn(),
   },
   useLocalSearchParams: () => ({ phone: '+966501112223', subscriptionId: '88888888-8888-4888-8888-888888888888' }),

@@ -1,12 +1,18 @@
-import type { MessageQuote, TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
-import { threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
-import { infiniteQueryOptions, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import type { MessageView, ThreadDetail } from '@ab/shared';
+import { refreshNewest, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
+import {
+  infiniteQueryOptions,
+  type QueryClient,
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
-import { afterSend, rollback } from '@/inbox/thread/send/after-send';
-import { failPinned, pinGeneration, settlePinned } from '@/inbox/thread/send/pinned-outcome';
-import type { PinKind } from '@/inbox/thread/send/pinned-send';
-import { refreshInbox, touchInbox } from './inbox-sync';
+import { rollback, unanswered } from '@/inbox/thread/send/after-send';
+import { failPinned, pinGeneration, pinnedOf, settlePinned } from '@/inbox/thread/send/pinned-outcome';
+import { carried, type SendDone, sendBody, type SendInput } from '@/inbox/thread/send/outgoing';
+import { refreshInbox, refreshLists, touchInbox } from './inbox-sync';
 import {
   appendMessage,
   provisionalMessage,
@@ -50,38 +56,40 @@ export function useThread(phone: string) {
 }
 
 /**
- * What the composer sends: session text, or an approved template with its params (H3 / H4). Any
- * registry key: a producer's, or a chat starter imported from Meta (owner 2026-10-12).
+ * After a send (docs/43 AU4): every list that shows the chat, and ONE read of the chat's newest
+ * page folded in (mergeNewest), however far up she scrolled; older pages are not re-read one by
+ * one. A chat query without an active observer is only marked stale (a GET stamps it read); a
+ * read in flight is replaced by a full one. `own`: this send's ids (provisional and the API's).
  */
-export type Outgoing =
-  | { kind: 'text'; text: string; replyTo?: MessageQuote }
-  | { kind: 'template'; key: ThreadTemplate['key']; params: TemplateParamsInput; preview: string; lessonId?: string };
-
-interface SendInput {
-  out: Outgoing;
-  /** The provisional row's id and the clientRequestId (rule 8: a retried send returns the first row). */
-  id: string;
-  /** The sender that owns a pinned id after no answer: the box or «عرض سعر» (send/pinned-send). */
-  pin?: PinKind;
+export function refreshSent(client: QueryClient, phone: string, own: string[] = []) {
+  refreshLists(client);
+  const queryKey = threadKey(phone);
+  return refreshNewest<ThreadCache>({
+    own,
+    shown: () => client.getQueryCache().find({ queryKey, exact: true })?.isActive() === true,
+    busy: () => client.isFetching({ queryKey }) > 0,
+    read: () => client.getQueryData<ThreadCache>(queryKey),
+    write: (edit) => client.setQueryData<ThreadCache>(queryKey, edit),
+    newest: () => threadGet(threadPath(phone)),
+    reload: () => client.invalidateQueries({ queryKey }),
+  });
 }
 
-/** What the send carries: its text, or a template's preview. */
-const carried = (out: Outgoing): string => (out.kind === 'text' ? out.text : out.preview);
-
-function body({ out, id }: SendInput) {
-  if (out.kind === 'text') {
-    const reply = out.replyTo ? { replyToMessageId: out.replyTo.id } : {};
-    return { text: out.text, clientRequestId: id, ...reply };
-  }
-  const lesson = out.lessonId ? { lessonId: out.lessonId } : {};
-  return { key: out.key, params: out.params, clientRequestId: id, ...lesson };
+/** An answer refreshes the newest page (refreshSent); no answer only the lists: a full read now
+ *  would drop the «unconfirmed» bubble (docs/44 BUG7), the polls' merges keep it. */
+function afterSend(client: QueryClient, phone: string, done: SendDone): Promise<void> {
+  if (!unanswered(done.error)) return refreshSent(client, phone, [done.id, done.row?.id ?? done.id]);
+  refreshLists(client);
+  return Promise.resolve();
 }
+
+export type { Outgoing } from '@/inbox/thread/send/outgoing'; // what the composer sends
 
 /**
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
- * it out again (the caller shows `sendError`). No answer keeps it «unconfirmed» and pins its id
- * for its sender until an answer (docs/44 BUG7, send/pinned-outcome: hook-level, so it settles
- * after the screen closed too).
+ * it out again (the caller shows `sendError`); either answer refetches the newest page. No answer
+ * keeps it «unconfirmed» and pins its id for its sender until an answer (docs/44 BUG7,
+ * send/pinned-outcome: hook-level, so it settles after the screen closed too).
  */
 export { sendKey } from './thread-cache';
 
@@ -90,13 +98,12 @@ export function useSendMessage(phone: string) {
   const queryKey = threadKey(phone);
   const edit = (fn: (old: ThreadCache | undefined) => ThreadCache | undefined) =>
     client.setQueryData<ThreadCache>(queryKey, fn);
-  const pinned = (input: SendInput, generation = -1) =>
-    ({ phone, id: input.id, body: carried(input.out), pin: input.pin, generation });
+  const pinned = (input: SendInput, generation = -1) => pinnedOf(phone, input, generation);
   return useMutation({
     // One key per chat: the composer and «عرض سعر» see each other's send in flight (useIsMutating).
     mutationKey: sendKey(phone),
     mutationFn: (input: SendInput) =>
-      apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, body(input)),
+      apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, sendBody(input)),
     onMutate: async ({ out, id, pin }) => {
       const generation = pinGeneration(pin);
       markOwnSend(phone);
@@ -119,7 +126,7 @@ export function useSendMessage(phone: string) {
       edit(rollback(error, input.id));
       failPinned(pinned(input, context?.generation), error);
     },
-    onSettled: (_row, error) => afterSend(client, phone, error),
+    onSettled: (row, error, { id }) => afterSend(client, phone, { row, error, id }),
   });
 }
 

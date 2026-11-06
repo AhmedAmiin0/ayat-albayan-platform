@@ -1,5 +1,5 @@
 import type { ActivityView } from '@ab/shared';
-import { router } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { clockAt } from '@/inbox/shared/format';
 import { t } from '@/core/lib/i18n/i18n';
@@ -17,7 +17,7 @@ import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (r: ActivityView) => r.id;
 const renderRow = ({ item }: { item: ActivityView }) => <ActivityRow row={item} />;
-const back = () => (router.canGoBack() ? router.back() : router.replace('/more'));
+const back = () => backWithin('/more');
 
 /**
  * «سجل النشاط» (R-NFR-08, admin only): GET /activity, newest first, 25 a page. Filters are the API's
