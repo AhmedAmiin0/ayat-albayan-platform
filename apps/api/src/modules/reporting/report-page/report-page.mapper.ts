@@ -27,23 +27,20 @@ export function pageReport(row: PageReportRow): ReportPageReport {
   const grades = Object.fromEntries(
     REPORT_RUBRICS.map((r) => [r, row[RUBRIC_COLUMN[r]]]),
   ) as Record<Rubric, Grade | null>;
+  const { attendance, program, recited, new_memorization, revision, theory } = row;
+  const { grade_overall, notes, homework, next_plan, version, submitted_at, edited_at } = row;
+  const form_version = row.form_version === 2 ? 2 : 1;
+  const texts = { recited, new_memorization, revision, theory, notes, homework, next_plan };
+  const when = { version, submitted_at, edited_at };
   return {
-    form_version: row.form_version === 2 ? 2 : 1,
-    attendance: row.attendance,
-    program: row.program,
-    recited: row.recited,
-    new_memorization: row.new_memorization,
-    revision: row.revision,
-    theory: row.theory,
+    form_version,
+    attendance,
+    program,
+    ...texts,
     grades,
-    grade_overall: row.grade_overall,
-    notes: row.notes,
-    homework: row.homework,
-    next_plan: row.next_plan,
+    grade_overall,
+    ...when,
     content: content(row.content),
-    version: row.version,
-    submitted_at: row.submitted_at,
-    edited_at: row.edited_at,
   };
 }
 

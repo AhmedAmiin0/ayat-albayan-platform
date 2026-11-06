@@ -1,5 +1,4 @@
-import type { Json } from '@ab/db';
-import type { Attendance, Grade, PdfStatus, Program, ReportStatus } from '@ab/shared';
+import type { Tables } from '@ab/db';
 
 /** How a page is asked for: the link's public id, or a signed-in app's report uuid. */
 export interface PageKey {
@@ -15,39 +14,42 @@ export interface PageFileRow {
   created_at: string;
 }
 
-/** The submitted report the page shows (report-page.repo's select). */
-export interface PageReportRow {
-  id: string;
-  public_id: string;
-  lesson_id: string;
-  student_id: string;
-  teacher_id: string;
-  status: ReportStatus;
-  version: number;
-  form_version: number;
-  attendance: Attendance | null;
-  program: Program | null;
-  recited: string | null;
-  new_memorization: string | null;
-  revision: string | null;
-  theory: string | null;
-  grade_recitation: Grade | null;
-  grade_memorization: Grade | null;
-  grade_revision: Grade | null;
-  grade_tajweed: Grade | null;
-  grade_engagement: Grade | null;
-  grade_commitment: Grade | null;
-  grade_overall: Grade | null;
-  notes: string | null;
-  homework: string | null;
-  next_plan: string | null;
-  content: Json | null;
-  submitted_at: string | null;
-  edited_at: string | null;
-  /** The family's report message went (report_ready / report_ready_family). */
-  sent_at: string | null;
-  pdf_status: PdfStatus | null;
-  pdf_path: string | null;
+/** The lesson_reports columns the page reads (report-page.repo's select). */
+type ReportColumns = Pick<
+  Tables<'lesson_reports'>,
+  | 'id'
+  | 'public_id'
+  | 'lesson_id'
+  | 'student_id'
+  | 'teacher_id'
+  | 'status'
+  | 'version'
+  | 'form_version'
+  | 'attendance'
+  | 'program'
+  | 'recited'
+  | 'new_memorization'
+  | 'revision'
+  | 'theory'
+  | Rubric
+  | 'grade_overall'
+  | 'notes'
+  | 'homework'
+  | 'next_plan'
+  | 'content'
+  | 'submitted_at'
+  | 'edited_at'
+  | 'sent_at'
+  | 'pdf_status'
+  | 'pdf_path'
+>;
+
+/** The rubric grade columns (grade_recitation …). */
+type Rubric =
+  `grade_${'recitation' | 'memorization' | 'revision' | 'tajweed' | 'engagement' | 'commitment'}`;
+
+/** The submitted report the page shows, with its teacher's files. */
+export interface PageReportRow extends ReportColumns {
   attachments: PageFileRow[];
 }
 
