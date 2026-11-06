@@ -18,6 +18,8 @@ interface CourseActionsSectionProps {
    * ownership rule holds: the API would refuse not_your_student); «إلغاء الاشتراك» stays.
    */
   moves?: boolean;
+  /** The package whose course the moves change (owner 2026-11-06); absent = the package. */
+  movesOf?: string | null | undefined;
 }
 
 type Keys = ReturnType<typeof useActionKeys>;
@@ -33,6 +35,9 @@ const KEYS_OF: Record<'true' | 'false', (keys: Keys) => Keys> = {
   false: withoutMoves,
 };
 
+/** The key filter of `moves` (absent = true). */
+const keysOf = (moves: boolean | undefined) => KEYS_OF[moves === false ? 'false' : 'true'];
+
 const isMove = (open: Open): open is CourseMoveKind => open === 'teacher' || open === 'times';
 
 /**
@@ -41,8 +46,8 @@ const isMove = (open: Open): open is CourseMoveKind => open === 'teacher' || ope
  * package or a key.
  */
 export function CourseActionsSection(props: CourseActionsSectionProps) {
-  const { studentId, subscriptionId } = props;
-  const keys = KEYS_OF[props.moves === false ? 'false' : 'true'](useActionKeys());
+  const { studentId, subscriptionId, movesOf } = props;
+  const keys = keysOf(props.moves)(useActionKeys());
   const sub = useCurrentSubscription({ studentId, given: subscriptionId, keys });
   const [open, setOpen] = useState<Open>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -69,7 +74,7 @@ export function CourseActionsSection(props: CourseActionsSectionProps) {
       </PauseSheetFrame>
       {isMove(open) ? (
         <CourseMoveSheet
-          sub={{ studentId, subscriptionId: sub }}
+          sub={{ studentId, subscriptionId: movesOf ?? sub }}
           kind={open}
           onClose={close}
           onDone={() => done(moveDone)}

@@ -1,4 +1,5 @@
 import { E164_RE, LEAD_STATUSES, type LeadStatus } from '@ab/shared';
+import { z } from 'zod';
 
 /** The list's orders: no `sort` = newest message first; «غير المقروءة أولًا»; by name. */
 export const THREAD_SORTS = ['unread', 'name'] as const;
@@ -21,6 +22,8 @@ export type InboxSearch = {
   calls?: true;
   /** A search hit to open the chat at (docs/37): only with `phone`; removed = the live chat. */
   msg?: string;
+  /** «احجز أيام الحلقات» (owner 2026-11-06): a student id whose course wizard opens on the chat. */
+  course?: string;
   page: number;
 };
 
@@ -31,6 +34,13 @@ const anchorOf = (msg: unknown, phone: string | undefined): { msg?: string } =>
   phone && typeof msg === 'string' && UUID.test(msg) ? { msg } : {};
 
 const pick = <T extends string>(all: readonly T[], v: unknown): T | undefined => all.find((x) => x === v);
+
+/** `course`: a student id (uuid) only, else nothing. */
+const courseSchema = z.object({ course: z.uuid().optional().catch(undefined) });
+const courseParam = (s: Record<string, unknown>): Pick<InboxSearch, 'course'> => {
+  const { course } = courseSchema.parse(s);
+  return course ? { course } : {};
+};
 
 /** Route `validateSearch`: a bad phone closes the thread; blank search, unknown sort/status, a non-id list drop; bad page → 1. */
 export function parseInboxSearch(s: Record<string, unknown>): InboxSearch {
@@ -47,7 +57,7 @@ export function parseInboxSearch(s: Record<string, unknown>): InboxSearch {
   if (status) out.f_status = status;
   if (typeof s['list'] === 'string' && UUID.test(s['list'])) out.list = s['list'];
   if (s['calls'] === true || s['calls'] === 'true') out.calls = true;
-  return { ...out, ...anchorOf(s.msg, out.phone) };
+  return { ...out, ...anchorOf(s.msg, out.phone), ...courseParam(s) };
 }
 
 /** Another chat opens live: the list's state without the old chat's anchor (docs/37). */
