@@ -87,9 +87,10 @@ export class ThreadsRepo {
     return knownNumber(this.db, phone);
   }
 
-  /** The page's guardians' «مشترك» / «اشتراكه خلص» / «مش مدفوع» tags (thread-people.ts). */
-  familyTags(guardianIds: readonly string[]): Promise<Map<string, FamilyTag>> {
-    return familyTagsOf({ db: this.db, packages: this.packages, balances: this.balances }, guardianIds);
+  /** The page's guardians' «مشترك» / «مش مدفوع» tags and ring at `threshold` (thread-people.ts). */
+  familyTags(guardianIds: readonly string[], threshold: number): Promise<Map<string, FamilyTag>> {
+    const deps = { db: this.db, packages: this.packages, balances: this.balances };
+    return familyTagsOf(deps, guardianIds, threshold);
   }
 
   /** The lesson's teacher (teacher-mode template sends); null for an unknown lesson. */

@@ -17,6 +17,7 @@ export function forTeacher(view: ThreadView, unread: ReadonlyMap<string, number>
     subscribed: false,
     badge: null,
     unpaid: false,
+    ring: null,
     unread_count: unread.get(view.phone_e164) ?? 0,
   };
 }

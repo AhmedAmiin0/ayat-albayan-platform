@@ -64,7 +64,7 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     teacher_id: row.teacher_id,
     teacher_name: row.teacher_name,
     session_open: messagingWindowOpen(row, now),
-    ...familyFields(row.guardian_id ? (tag ?? { badge: 'none', unpaid: false }) : null),
+    ...familyFields(row.guardian_id ? (tag ?? NO_TAG) : null),
   };
 }
 
@@ -114,9 +114,16 @@ function shownReplyLine(row: ThreadRow, at: { chatConfigured: boolean; now: Date
   return at.chatConfigured || line === 'chat' ? line : null;
 }
 
+const NO_TAG: FamilyTag = { badge: 'none', unpaid: false, ring: null };
+
 /** A guardian's tags («مش مشترك» without students); none for a lead, a teacher or a stranger. */
-function familyFields(tag: FamilyTag | null): Pick<ThreadView, 'subscribed' | 'badge' | 'unpaid'> {
-  return { subscribed: tag?.badge === 'subscribed', badge: tag?.badge ?? null, unpaid: tag?.unpaid ?? false };
+function familyFields(tag: FamilyTag | null): Pick<ThreadView, 'subscribed' | 'badge' | 'unpaid' | 'ring'> {
+  return {
+    subscribed: tag?.badge === 'subscribed',
+    badge: tag?.badge ?? null,
+    unpaid: tag?.unpaid ?? false,
+    ring: tag?.ring ?? null,
+  };
 }
 
 /** H1 search: a phone in any format → its digits; else the display name. */

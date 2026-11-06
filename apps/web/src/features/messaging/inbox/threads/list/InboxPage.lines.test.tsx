@@ -21,15 +21,11 @@ const fresh = new Date(Date.now() - 3_600_000).toISOString();
 afterEach(() => apiFetch.mockReset());
 
 describe('two WhatsApp lines in the inbox (docs/12 §13.10, R-LEAD-02 / R-MSG-05)', () => {
-  it('a thread row shows the line of the newest inbound; a null line shows nothing', async () => {
+  it('a thread row draws no line badge (owner 2026-11-06: no tags); its label names the line', async () => {
     routeFetch(apiFetch, [['/threads?', { items: [CHAT, OLD], total: 2, page: 1, pageSize: 30 }]]);
     renderWithClient(<InboxPage search={{ page: 1 }} onSearch={vi.fn()} />);
     const chat = await screen.findByRole('link', { name: new RegExp(t.inbox.openThread.replace('{name}', 'أم سهيلة')) });
-    const badge = within(chat).getByTestId('line-badge');
-    expect(badge.textContent).toBe(t.enums.waLine.chat);
-    expect(badge.getAttribute('data-line')).toBe('chat');
-    // The badge sits after the lead source, in the same tag line.
-    expect(within(chat).getByText(t.enums.leadSource.facebook_ad).nextElementSibling).toBe(badge);
+    expect(within(chat).queryByTestId('line-badge')).toBeNull();
     const old = screen.getByRole('link', { name: new RegExp(t.inbox.openThread.replace('{name}', 'أم عمر')) });
     expect(within(old).queryByTestId('line-badge')).toBeNull();
     // Screen readers hear the line too (review W6): appended, the «open thread» prefix unchanged.

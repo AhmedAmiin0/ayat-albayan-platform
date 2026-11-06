@@ -98,3 +98,31 @@ export function packageChip(sub: Pick<ThreadSubscriptionView, 'status' | 'lesson
 export function subscribeKind(sub: BadgeStudent['subscription']): 'renew' | 'new' {
   return subscriptionBadge([{ subscription: sub }]) === 'expired' ? 'renew' : 'new';
 }
+
+/** The chat list's avatar ring (owner 2026-11-06): green while subscribed, gray when a renewal is due. */
+export type FamilyRing = 'subscribed' | 'renewal';
+
+/** Packages that count down to a renewal alert (alertFor: paused, trial and cancelled raise none). */
+const COUNTING: ReadonlySet<SubscriptionStatus> = new Set(['active', 'unpaid']);
+
+const nearEnd = (sub: BadgeStudent['subscription'], threshold: number): boolean =>
+  sub !== null &&
+  COUNTING.has(sub.status) &&
+  sub.lessons_remaining > 0 &&
+  sub.lessons_remaining <= threshold;
+
+const RING: Record<SubscriptionBadge, (low: boolean) => FamilyRing | null> = {
+  subscribed: (low) => (low ? 'renewal' : 'subscribed'),
+  expired: () => 'renewal',
+  none: () => null,
+};
+
+/**
+ * The family's ring from subscriptionBadge and the renewal_due threshold
+ * (settings.renewal_alert_remaining): every package ended → renewal; a running package of a child
+ * at or below the threshold → renewal; else subscribed. No package (or trial / cancelled only) → none.
+ */
+export function familyRing(students: readonly BadgeStudent[], threshold: number): FamilyRing | null {
+  const low = students.some((s) => nearEnd(s.subscription, threshold));
+  return RING[subscriptionBadge(students)](low);
+}

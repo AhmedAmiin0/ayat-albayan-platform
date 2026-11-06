@@ -26,17 +26,19 @@ const teacher: ThreadView = {
   lead_source: null,
 };
 
-test('an LTR run tags threads with the en.json words', async () => {
+test('an LTR run: no tags on the rows, the unread count and the ring in en.json words', async () => {
   const lead: ThreadView = { ...thread, lead_status: 'interested_no_slot', unread_count: 1 };
-  mockApiFetch.mockResolvedValue({ items: [lead, teacher], total: 2, page: 1, pageSize: 25 });
+  const parent: ThreadView = { ...teacher, display_name: 'Umm Ali', teacher_id: null, ring: 'renewal' };
+  mockApiFetch.mockResolvedValue({ items: [lead, teacher, parent], total: 3, page: 1, pageSize: 25 });
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('هدى سالم');
 
   const row = within(screen.getByRole('button', { name: /هدى سالم/ }));
-  expect(row.getByText(en.enums.leadStatus.interested_no_slot)).toBeTruthy();
-  expect(row.getByText(en.enums.leadSource.facebook_ad)).toBeTruthy();
+  expect(row.queryByText(en.enums.leadStatus.interested_no_slot)).toBeNull();
+  expect(row.queryByText(en.enums.leadSource.facebook_ad)).toBeNull();
   expect(row.getByLabelText(en.inbox.unread.one)).toBeTruthy();
-  expect(screen.getByText(en.inbox.kind.teacher)).toBeTruthy();
+  expect(screen.queryByText(en.inbox.kind.teacher)).toBeNull();
+  expect(screen.getByLabelText(en.inbox.ring.renewal)).toBeTruthy();
 });
 
 test('an LTR run: the compact top reads «Chats» on one line, a pill search, one row All · Unread', async () => {

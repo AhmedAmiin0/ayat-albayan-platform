@@ -2776,6 +2776,10 @@
       "guardian": "ولي أمر",
       "teacher": "معلم/ة"
     },
+    "ring": {
+      "subscribed": "مشترك",
+      "renewal": "يحتاج إلى تجديد"
+    },
     "you": "أنت:",
     "failedLast": "لم تُرسل آخر رسالة",
     "templateLine": "قالب: {name}",

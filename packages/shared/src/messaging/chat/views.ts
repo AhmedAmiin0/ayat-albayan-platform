@@ -5,7 +5,7 @@ import type { MessageReactions } from '../reactions/reactions.js';
 import type { MessageMarks, ThreadNote } from '../markers/marker-notes.js';
 import type { TemplatedMessage } from '../templates/template-block.js';
 import type { TemplateParams } from '../templates/templates.js';
-import type { SubscriptionBadge, ThreadPeople } from './thread-people.js';
+import type { FamilyRing, SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
 // Phase 4 responses (docs/12 §4): snake_case rows like every API response; instants ISO-8601 UTC.
 /** GET /threads item: one v_threads row plus the 24 h window at response time. */
@@ -45,6 +45,8 @@ export interface ThreadView extends ThreadNote {
   badge?: SubscriptionBadge | null;
   /** familyUnpaid: a running package still owes money, the «مش مدفوع» tag. Absent like `badge`. */
   unpaid?: boolean;
+  /** familyRing: the list avatar's ring (green subscribed, gray renewal); null/absent = none. */
+  ring?: FamilyRing | null;
   /** Line of the newest inbound (docs/12 §13; `calls` = the calls number, docs/28 §10); null = history or a single line. Absent in an old cache. */
   last_inbound_line?: NumberPurpose | null;
   /** Newest inbound on the chat line (docs/12 §13.7). Absent in an old cache. */

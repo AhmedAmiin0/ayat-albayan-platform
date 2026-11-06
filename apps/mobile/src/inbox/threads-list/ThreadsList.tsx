@@ -25,8 +25,8 @@ import { useToday } from '@/core/lib/time/use-today';
  * «المحادثات» (R-MOB-02): every WhatsApp thread — a guardian's reschedule request or a teacher's
  * «هتأخر» is found here, not only through its push. Tap → the thread (reply, send a template).
  * A teacher (R-TCH-03) gets only her own threads from the API, without the lead tags. The admin and
- * sales (the same tabs) start a chat by number: «محادثة جديدة». Both trees show the lead / family tags
- * (sales without «غير مدفوع», review 2026-10-29 #2) and filter by «بانتظار ردّك», the lead stage and
+ * sales (the same tabs) start a chat by number: «محادثة جديدة». Rows carry no tags (owner 2026-11-06),
+ * only the family's avatar ring; both trees filter by «بانتظار ردّك», the lead stage and
  * the academy's chat lists «القوائم» (docs/22); a teacher gets none of them.
  * The top is compact as WhatsApp's (owner 2026-10-27, «This topbar takes alot of space»): a one-line
  * h2 title with its icon actions, a pill search, ONE chip row (All · Unread · Waiting · stages · lists · ＋), 8pt apart.

@@ -17,8 +17,6 @@ interface ChatRowProps {
   preview: ReactNode;
   /** At the far end of line 2: the unread count or the failed chip. */
   badge: ReactNode;
-  /** Line 3, only when there is something to show: role · source · status · phone, one line. */
-  meta?: ReactNode;
   onPress: () => void;
 }
 
@@ -67,9 +65,9 @@ function RowTitle({ title, ltr }: { title: string; ltr: boolean }) {
 }
 
 /**
- * One chat in «المحادثات» as WhatsApp's chat list (owner 2026-11-06: «enhance the look»): at most
- * three lines, the name and time, the preview and badge, then one quiet meta line. The name is a
- * Text of its own (its own bidi paragraph: a long Arabic name ellipsizes at its own end and never
+ * One chat in «المحادثات» as WhatsApp's chat list (owner 2026-11-06: «remove the tags»): two
+ * lines, the name and time, then the preview and badge; the family's state is the avatar ring.
+ * The name is a Text of its own (its own bidi paragraph: a long Arabic name ellipsizes at its own end and never
  * mixes with the phone); the ends follow the reading direction, so the row mirrors with the phone.
  */
 export function ChatRow(p: ChatRowProps) {
@@ -92,7 +90,6 @@ export function ChatRow(p: ChatRowProps) {
           </View>
           {p.badge}
         </View>
-        {p.meta}
       </View>
     </Pressable>
   );
