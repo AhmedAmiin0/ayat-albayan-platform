@@ -42,11 +42,18 @@ left join public.leads l on l.phone_e164 = m.phone_e164
 left join public.guardians g on g.phone_e164 = m.phone_e164
 left join public.teachers t on t.phone_e164 = m.phone_e164`;
 
+/** Migration 290's 23 columns (migration 20261106001100 appends two more to v_threads). */
+const NEW = `select phone_e164, last_message_id, last_direction, last_body, last_template_key,
+  last_status, last_media_mime, last_message_at, last_inbound_at, unread_count, lead_id, lead_name,
+  lead_status, lead_source, guardian_id, guardian_name, guardian_tz, teacher_id, teacher_name,
+  display_name, last_inbound_line, last_chat_inbound_at, last_notifications_inbound_at
+  from public.v_threads`;
+
 /** Rows in one and not the other, both ways (0 and 0 = the same rows, duplicates included). */
 async function differ(tx: Tx): Promise<{ missing: number; extra: number; rows: number }> {
   const [r] = await tx.unsafe<{ missing: number; extra: number; rows: number }[]>(`select
-    (select count(*)::int from ((${OLD}) except all (select * from public.v_threads)) x) as missing,
-    (select count(*)::int from ((select * from public.v_threads) except all (${OLD})) y) as extra,
+    (select count(*)::int from ((${OLD}) except all (${NEW})) x) as missing,
+    (select count(*)::int from ((${NEW}) except all (${OLD})) y) as extra,
     (select count(*)::int from public.v_threads) as rows`);
   if (!r) throw new Error('no comparison row');
   return r;
