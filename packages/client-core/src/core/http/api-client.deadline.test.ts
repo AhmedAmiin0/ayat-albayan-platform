@@ -36,15 +36,12 @@ test('apiSend with no answer rejects as no answer at 30 s and aborts its fetch',
   expect(sentSignal()?.aborted).toBe(true);
 });
 
-test("apiRequest forwards the caller's signal: an abort ends the write at once", async () => {
+test('an Outbox-waiting write (a join link) keeps waiting past 30 s', async () => {
   fetchMock.mockImplementation(never);
-  const caller = new AbortController();
-  const req = { method: 'POST' as const, path: '/x', body: { a: 1 }, signal: caller.signal };
-  const send = client().apiRequest(req);
-  await vi.advanceTimersByTimeAsync(0);
-  caller.abort();
-  await expect(send).rejects.toMatchObject({ name: 'AbortError' });
-  expect(sentSignal()?.aborted).toBe(true);
+  const onDone = vi.fn();
+  void client().apiSend('POST', '/lessons/l1/join-link').then(onDone, onDone);
+  await vi.advanceTimersByTimeAsync(SEND_TIMEOUT_MS * 2);
+  expect(onDone).not.toHaveBeenCalled();
 });
 
 test('an answer in time resolves; a 4xx is the API refusal, not «no answer»', async () => {
@@ -56,9 +53,13 @@ test('an answer in time resolves; a 4xx is the API refusal, not «no answer»', 
   expect(isNoAnswer(refused)).toBe(false);
 });
 
-test('a deadline, a network error or an abort is «no answer»', () => {
+test('a deadline, a network error, an abort or a 5xx is «no answer»; a 4xx is a refusal', () => {
   const abort = Object.assign(new Error('Aborted'), { name: 'AbortError' });
   const errors = [new TypeError('Network request failed'), new TypeError('Failed to fetch'), abort];
   expect(errors.map(isNoAnswer)).toEqual([true, true, true]);
-  expect(isNoAnswer(new ApiError(500, null))).toBe(false);
+  // A 502/504 from the load balancer or a 500 after the outbox commit may have the row.
+  const fivexx = [500, 502, 504].map((status) => new ApiError(status, null));
+  expect(fivexx.map(isNoAnswer)).toEqual([true, true, true]);
+  const fourxx = [400, 403, 409, 499].map((status) => new ApiError(status, null));
+  expect(fourxx.map(isNoAnswer)).toEqual([false, false, false, false]);
 });

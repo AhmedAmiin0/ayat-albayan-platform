@@ -3020,6 +3020,7 @@
       "invalid_phone": "This number isn't valid",
       "send_failed": "The message wasn't sent. Try again or send it yourself from WhatsApp",
       "send_unconfirmed": "The connection dropped before the send was confirmed. Send again: the family will not get it twice",
+      "send_replayed": "The first message was sent before the connection dropped; your edit was not. Send it again if you want",
       "forbidden": "You are not allowed to send",
       "not_your_thread": "This chat isn't one of yours",
       "own_thread_read_only": "This is your chat with the academy; it's read-only",

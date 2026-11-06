@@ -19,28 +19,15 @@ export interface ApiClientOptions {
   onStall?: (stage: StallStage) => void;
 }
 
-/** One write: apiSend's arguments plus the caller's signal (its abort ends the write at once). */
-export interface SendRequest {
-  method: SendMethod;
-  path: string;
-  body?: unknown;
-  signal?: AbortSignal | null | undefined;
-}
-
 export interface ApiClient {
   apiFetch<T>(path: string, init?: RequestInit): Promise<T>;
   apiSend<T = void>(method: SendMethod, path: string, body?: unknown): Promise<T>;
 }
 
-/** apiSend with the caller's signal (an abort ends the write at once). */
-type SendWithSignal = <T = void>(req: SendRequest) => Promise<T>;
-
 const ignore = (): void => undefined;
 
 /** fetch against the Nest API with the access token and the client tag (`X-AB-Client`). */
-export function createApiClient(
-  opts: ApiClientOptions,
-): ApiClient & { apiRequest: SendWithSignal } {
+export function createApiClient(opts: ApiClientOptions): ApiClient {
   async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
     const token = await opts.accessToken();
     const headers = new Headers(init.headers);
@@ -58,19 +45,16 @@ export function createApiClient(
    * (docs/43 AU10): no answer within sendTimeoutFor(path), token included, rejects as no answer
    * (`TypeError`) and aborts the fetch; isNoAnswer tells that from the API's refusal.
    */
-  function apiRequest<T = void>(req: SendRequest): Promise<T> {
-    const init: RequestInit = { method: req.method };
-    if (req.body !== undefined) {
+  function apiSend<T = void>(method: SendMethod, path: string, body?: unknown): Promise<T> {
+    const init: RequestInit = { method };
+    if (body !== undefined) {
       init.headers = { 'Content-Type': 'application/json' };
-      init.body = JSON.stringify(req.body);
+      init.body = JSON.stringify(body);
     }
-    const send = (signal: AbortSignal) => apiFetch<T>(req.path, { ...init, signal });
-    const timeoutMs = sendTimeoutFor(req.path);
-    return withDeadline(send, { signal: req.signal, onTimeout: opts.onStall ?? ignore, timeoutMs });
+    const send = (signal: AbortSignal) => apiFetch<T>(path, { ...init, signal });
+    const timeoutMs = sendTimeoutFor(path);
+    return withDeadline(send, { onTimeout: opts.onStall ?? ignore, timeoutMs });
   }
 
-  const apiSend = <T = void>(method: SendMethod, path: string, body?: unknown): Promise<T> =>
-    apiRequest<T>({ method, path, body });
-
-  return { apiFetch, apiSend, apiRequest };
+  return { apiFetch, apiSend };
 }

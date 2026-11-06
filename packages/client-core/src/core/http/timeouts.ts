@@ -23,11 +23,21 @@ const SLOW_READS = [
  */
 export const SEND_TIMEOUT_MS = 30_000;
 
-/** Admin batch writes that call Google, Meta or walk every row: the slow deadline. */
+/**
+ * The slow deadline: writes that wait for a sender pass (Outbox.send: up to 30 s + 5 s), a chat
+ * file (ffmpeg and a Storage check: a retry with its id fails on the existing object), and admin
+ * writes that call Meta or Google or walk every row. Cutting them at 30 s would report a send that
+ * is still going, and a retry could send twice (the join link's dedup bucket is 5 minutes).
+ */
 export const SLOW_SEND_TIMEOUT_MS = 120_000;
 const SLOW_SENDS = [
-  /^\/admin\/google\/(reconcile|discover|drive)$/,
-  /^\/admin\/numbers\/(import|[^/]+\/templates\/sync)$/,
+  /^\/lessons\/[^/]+\/(join-link|feedback-request)$/,
+  /^\/threads\/[^/]+\/(file|messages\/[^/]+\/reaction)$/,
+  /^\/calls\/permission\/[^/]+\/request$/,
+  /^\/messaging\/templates(\/[^/]+\/submit)?$/,
+  /^\/admin\/google\/(reconcile|discover|drive|items\/[^/]+\/retry)$/,
+  /^\/admin\/google\/teachers\/[^/]+\/calendar-owner$/,
+  /^\/admin\/numbers(\/import|\/[^/]+\/templates\/sync)?$/,
   /^\/payouts\/[^/]+\/generate$/,
   /^\/(leads\/assign-unassigned|schedule-rules\/refresh)$/,
 ];

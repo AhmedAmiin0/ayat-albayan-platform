@@ -37,6 +37,19 @@ test('a chat send gets 30 s; the admin batch writes get the slow deadline', () =
     '/payouts/2026-09/generate',
     '/leads/assign-unassigned',
     '/schedule-rules/refresh',
+    // Outbox-waiting writes, a chat file, Meta and Google calls (review of PR #667).
+    '/lessons/l1/join-link',
+    '/lessons/l1/feedback-request',
+    '/threads/%2B9665/file',
+    '/threads/%2B9665/messages/m1/reaction',
+    '/calls/permission/%2B9665/request',
+    '/messaging/templates',
+    '/messaging/templates/renewal_due/submit',
+    '/admin/numbers',
+    '/admin/google/teachers/t1/calendar-owner',
+    '/admin/google/items/i1/retry',
   ];
-  expect(batch.map(sendTimeoutFor)).toEqual(Array<number>(6).fill(SLOW_SEND_TIMEOUT_MS));
+  expect(batch.map(sendTimeoutFor)).toEqual(Array<number>(16).fill(SLOW_SEND_TIMEOUT_MS));
+  const normal = ['/lessons/l1/join-link/url', '/messaging/templates/k/line', '/admin/numbers/n1'];
+  expect(normal.map(sendTimeoutFor)).toEqual(Array<number>(3).fill(SEND_TIMEOUT_MS));
 });
