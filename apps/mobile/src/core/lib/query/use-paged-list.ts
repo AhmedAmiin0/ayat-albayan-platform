@@ -25,8 +25,11 @@ export function usePagedList<T extends WithId>({
 }: PagedListOptions) {
   const query = useInfiniteQuery({
     queryKey: listKey(path, params),
-    queryFn: ({ pageParam }) =>
-      apiFetch<Page<T>>(`${path}${toQueryString({ ...params, page: pageParam, pageSize })}`),
+    // TanStack's signal (docs/43 AU8): a superseded search or a closed screen frees its read.
+    queryFn: ({ pageParam, signal }) => {
+      const query = toQueryString({ ...params, page: pageParam, pageSize });
+      return apiFetch<Page<T>>(`${path}${query}`, { signal });
+    },
     initialPageParam: 1,
     getNextPageParam: nextPageParam,
   });

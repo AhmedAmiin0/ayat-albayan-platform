@@ -3,6 +3,9 @@ import { threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/clie
 import { infiniteQueryOptions, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
+import { afterSend, rollback } from '@/inbox/thread/send/after-send';
+import { sendConfirmed } from '@/inbox/thread/send/confirm-send';
+import { sendIdFor, unpinSend } from '@/inbox/thread/send/pinned-send';
 import { refreshInbox, touchInbox } from './inbox-sync';
 import {
   appendMessage,
@@ -71,7 +74,8 @@ function body({ out, id }: SendInput) {
 
 /**
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
- * it out again (the caller shows `sendError`). Either way the thread refetches.
+ * it out again (the caller shows `sendError`). No answer keeps it «unconfirmed» and re-reads the
+ * chat first; the chat's next send reuses its id (docs/44 BUG7, send/confirm-send).
  */
 export { sendKey } from './thread-cache';
 
@@ -80,11 +84,12 @@ export function useSendMessage(phone: string) {
   const queryKey = threadKey(phone);
   const edit = (fn: (old: ThreadCache | undefined) => ThreadCache | undefined) =>
     client.setQueryData<ThreadCache>(queryKey, fn);
-  return useMutation({
+  const mutation = useMutation({
     // One key per chat: the composer and «عرض سعر» see each other's send in flight (useIsMutating).
     mutationKey: sendKey(phone),
     mutationFn: (input: SendInput) =>
-      apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, body(input)),
+      sendConfirmed({ client, phone, id: input.id, read: threadGet }, () =>
+        apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, body(input))),
     onMutate: async ({ out, id }) => {
       markOwnSend(phone);
       await client.cancelQueries({ queryKey });
@@ -93,13 +98,20 @@ export function useSendMessage(phone: string) {
       // An answer shows its quote at once (owner 2026-10-25 «رد»), as the API's row will.
       const quote = out.kind === 'text' && out.replyTo ? { reply_to_message_id: out.replyTo.id, reply_to: out.replyTo } : {};
       const row = { ...provisionalMessage({ id, phone, body: text, templateKey: key }), ...quote };
-      edit((old) => appendMessage(old, row));
+      edit((old) => appendMessage(removeMessage(old, id), row));
       await touchInbox(client, row);
     },
-    onSuccess: (row, { id }) => edit((old) => replaceMessage(old, id, row)),
-    onError: (_error, { id }) => edit((old) => removeMessage(old, id)),
-    onSettled: () => refreshInbox(client, phone),
+    onSuccess: (row, { id }) => {
+      unpinSend(phone, id);
+      edit((old) => replaceMessage(old, id, row));
+    },
+    onError: (error, { id }) => edit(rollback(error, id)),
+    onSettled: (_row, error) => afterSend(client, phone, error),
   });
+  // While a send of this chat is unconfirmed, every send of it reuses that id (pinned-send).
+  const mutate: typeof mutation.mutate = (input, options) =>
+    mutation.mutate({ ...input, id: sendIdFor(phone, input.id) }, options);
+  return { ...mutation, mutate };
 }
 
 /** app-send: «أرسل عبر واتساب», the row's short pending window (docs/19). */

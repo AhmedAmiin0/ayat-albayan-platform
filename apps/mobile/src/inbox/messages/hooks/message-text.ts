@@ -2,7 +2,6 @@ import { sendErrorReason } from '@ab/client-core';
 import {
   type ClockCycle,
   dayParts,
-  isAwaitingReply,
   isUnavailableMessage,
   isUnsupportedMessage,
   type MessageView,
@@ -15,6 +14,7 @@ import {
 import { clockIn, phoneTz } from '@/core/lib/clock';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
+import { heldLine } from './held-line';
 
 // The words a thread shows (R-MOB-02): media labels, template names, times, send errors.
 // All Arabic comes from ar.json; times are the device's zone, Western digits.
@@ -107,11 +107,12 @@ export function clock(iso: string, cycle: ClockCycle, tz = deviceTimeZone()): st
   return clockIn(new Date(iso), tz, cycle);
 }
 
-/** «بانتظار رد العائلة» for a held text; «ستُرسل …» for a row scheduled later; else null. */
+/** heldLine (a held text, an unconfirmed send); «ستُرسل …» for a row scheduled later; else null. */
 type QueuedRow = Pick<MessageView, 'status' | 'scheduled_for' | 'error_code'>;
 
 export function queuedLine(m: QueuedRow, options: StampOptions) {
-  if (isAwaitingReply(m)) return t.messages.awaitingReply;
+  const held = heldLine(m);
+  if (held) return held;
   const now = options.now ?? new Date();
   if (m.status !== 'queued' || !m.scheduled_for || Date.parse(m.scheduled_for) <= now.getTime()) {
     return null;

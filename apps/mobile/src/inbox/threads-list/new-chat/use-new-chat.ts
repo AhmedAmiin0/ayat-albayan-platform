@@ -2,7 +2,7 @@ import type { ThreadDetail, ThreadLesson } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { useTemplateId } from '@/inbox/composer/use-composer-send';
-import { sendError } from '@/inbox/messages/hooks/message-text';
+import { chatSendError } from '@/inbox/thread/send/send-error';
 import { sendKey } from '@/inbox/thread/hooks/thread-cache';
 import { type Outgoing, threadQuery, useSendMessage } from '@/inbox/thread/hooks/use-thread';
 
@@ -58,6 +58,6 @@ export function useFirstTemplate(phone: string, onSent: () => void) {
     };
     send.mutate({ out, id: templateId.of(out) }, { onSuccess: done, onSettled: settle });
   };
-  const error = send.isError ? sendError(send.error) : null;
+  const error = send.isError ? chatSendError(send.error) : null;
   return { sendTemplate, pending: send.isPending, error };
 }

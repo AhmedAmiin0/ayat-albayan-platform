@@ -4,6 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { plainReminder } from '@/inbox/shared/thread-fixtures';
 import { NewChatSheet } from '@/inbox/threads-list/NewChatSheet';
+import { ApiError } from '@ab/client-core';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -71,7 +72,7 @@ test('a number that has a chat opens it, as WhatsApp: no template step, nothing 
 
 test('a refused send stays on the form in words; nothing opens', async () => {
   serve(EMPTY);
-  mockApiSend.mockRejectedValue(new Error('down'));
+  mockApiSend.mockRejectedValue(new ApiError(500, null));
   await typeNumber();
   await fireEvent.press(await screen.findByText(t.templates.names.follow_up_slots));
   await fireEvent.changeText(screen.getByLabelText(t.inbox.composer.paramNames.student_name), 'سهيلة');

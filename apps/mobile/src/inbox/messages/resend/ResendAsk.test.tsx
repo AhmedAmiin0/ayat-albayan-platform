@@ -7,6 +7,7 @@ import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvid
 import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
+import { ApiError } from '@ab/client-core';
 
 // Meta's 131060 on a new number's first message (owner 2026-10-27): clearer words and «اطلب إعادة الإرسال».
 const mockApiSend = jest.fn();
@@ -76,7 +77,7 @@ test('the sheet shows the exact Arabic text; «أرسل» sends it once through 
 });
 
 test('a refused send stays on the sheet with the reason; asking again reuses the bubble’s clientRequestId', async () => {
-  mockApiSend.mockRejectedValue(new Error('offline'));
+  mockApiSend.mockRejectedValue(new ApiError(500, null));
   await show(unavailable);
   await fireEvent.press(ask() ?? screen.getByText('missing'));
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.resend.send }));

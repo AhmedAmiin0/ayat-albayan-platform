@@ -50,7 +50,7 @@ const failureOf = (id: string | undefined, q: WindowRead): Failure | null => {
 export function useAnchoredThread(phone: string, id: string | undefined) {
   const { say } = useChatActions();
   const query = useInfiniteQuery({
-    ...anchoredThreadPages(phone, id ?? '', (path) => threadGet(path)),
+    ...anchoredThreadPages(phone, id ?? '', threadGet),
     enabled: id !== undefined,
     meta: { noPersist: true },
     refetchInterval: false,

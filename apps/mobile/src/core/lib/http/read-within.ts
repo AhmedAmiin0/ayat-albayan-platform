@@ -1,17 +1,13 @@
-import { isRead, READ_TIMEOUT_MS, withDeadline } from './read-deadline';
+import { withReadDeadline as readWithin } from '@ab/client-core';
 import { reportStall } from './stall-report';
 
 /**
- * The read deadline around a transport: a read (GET) that has not settled within the deadline,
- * token included, rejects as no answer (`TypeError`) and tells the connection state once; writes
- * and uploads keep no deadline. apiFetch uses it, and the flow tests' fake backend too.
+ * The read deadline around a transport (client-core's, shared with web, docs/43 AU9): a read (GET)
+ * that has not settled within the deadline, token included, rejects as no answer (`TypeError`) and
+ * tells the connection state once (stall-report). apiFetch uses it, so do the flow tests.
  */
-export function withReadDeadline<T>(
+export const withReadDeadline = <T>(
   send: (init: RequestInit) => Promise<T>,
-  init: RequestInit = {},
-  timeoutMs = READ_TIMEOUT_MS,
-): Promise<T> {
-  if (!isRead(init)) return send(init);
-  const read = (signal: AbortSignal) => send({ ...init, signal });
-  return withDeadline(read, { signal: init.signal, onTimeout: reportStall, timeoutMs });
-}
+  init?: RequestInit,
+  timeoutMs?: number,
+): Promise<T> => readWithin(send, init, { timeoutMs, onTimeout: reportStall });

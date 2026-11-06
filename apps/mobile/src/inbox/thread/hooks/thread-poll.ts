@@ -35,11 +35,11 @@ export function useThreadPoll(phone: string, loaded: boolean) {
   const queryKey = threadKey(phone);
   useQuery({
     queryKey: threadDeltaKey(phone),
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       const search = deltaSearch(client.getQueryData<ThreadCache>(queryKey), Date.now());
       if (!search) return Date.now();
       const asked = client.getQueryState(queryKey)?.dataUpdatedAt;
-      const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`);
+      const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`, { signal });
       // The cache moved meanwhile (a full read, the page poll): this answer may be older than it.
       if (busy(client, phone) || client.getQueryState(queryKey)?.dataUpdatedAt !== asked) return Date.now();
       if (needsFullRead(delta)) void client.invalidateQueries({ queryKey });
@@ -52,8 +52,8 @@ export function useThreadPoll(phone: string, loaded: boolean) {
   });
   useQuery({
     queryKey: threadPollKey(phone),
-    queryFn: async () => {
-      const fresh = await apiFetch<ThreadDetail>(threadPath(phone));
+    queryFn: async ({ signal }) => {
+      const fresh = await apiFetch<ThreadDetail>(threadPath(phone), { signal });
       if (busy(client, phone)) return Date.now();
       if (leavesGap(client.getQueryData<ThreadCache>(queryKey), fresh)) void client.invalidateQueries({ queryKey });
       else client.setQueryData<ThreadCache>(queryKey, (old) => mergeNewest(old, fresh));

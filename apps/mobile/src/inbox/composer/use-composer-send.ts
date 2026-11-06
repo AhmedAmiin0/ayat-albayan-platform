@@ -2,7 +2,7 @@ import { useIsMutating } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
-import { sendError } from '@/inbox/messages/hooks/message-text';
+import { chatSendError } from '@/inbox/thread/send/send-error';
 import { quoteOf } from '@/inbox/messages/hooks/quote-text';
 import { useSendStagedFile } from '@/inbox/saved-replies/hooks/send-staged';
 import type { StagedFile } from '@/inbox/saved-replies/hooks/use-saved-reply';
@@ -94,7 +94,7 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
       },
     );
   };
-  const errors = [send.isError ? sendError(send.error) : null, sendStaged.isError ? fileError(sendStaged.error) : null];
+  const errors = [send.isError ? chatSendError(send.error) : null, sendStaged.isError ? fileError(sendStaged.error) : null];
   return { sendTemplate, sendText, renew: () => setDraftId(requestId()), errors, pending: inFlight || send.isPending || sendStaged.isPending };
 }
 

@@ -1,6 +1,6 @@
 import { connectivity } from '@/core/lib/connectivity/connectivity';
 import { logWarning } from '@/core/lib/log';
-import type { StallStage } from './read-deadline';
+import type { StallStage } from '@ab/client-core';
 import type * as StallReport from './stall-report';
 
 // jest.setup.cjs mocks connectivity; the log is mocked here. Each test loads a fresh module: the

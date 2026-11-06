@@ -9,7 +9,7 @@ import { ButtonRow } from '@/core/ui/actions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { useSendMessage } from '@/inbox/thread/hooks/use-thread';
-import { sendError } from '@/inbox/messages/hooks/message-text';
+import { chatSendError } from '@/inbox/thread/send/send-error';
 
 /** What goes to the family: always the Arabic text, whatever the UI language (parent-facing output). */
 const RESEND_TEXT = ar.inbox.resend.text;
@@ -50,7 +50,7 @@ export function ResendSheet({ phone, id, onClose }: { phone: string; id: string;
         <ContentText testID="resend-text" source={RESEND_TEXT} style={{ ...words, color: color.ink, padding: 12, borderRadius: shape.radius.md, backgroundColor: color.sunk }}>
           {RESEND_TEXT}
         </ContentText>
-        {send.isError ? <ErrorLine message={sendError(send.error)} /> : null}
+        {send.isError ? <ErrorLine message={chatSendError(send.error)} /> : null}
         <ButtonRow>
           <Button label={send.isPending ? t.inbox.resend.sending : t.inbox.resend.send} busy={send.isPending} onPress={confirm} />
           <Button variant="secondary" label={t.common.cancel} onPress={close} />
