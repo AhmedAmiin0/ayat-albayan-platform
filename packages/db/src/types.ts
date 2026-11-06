@@ -2752,6 +2752,7 @@ export type Database = {
           template_key: string | null;
           template_params: Json | null;
           their_reaction: string | null;
+          updated_at: string;
           wa_conversation_id: string | null;
           wa_message_id: string | null;
           wa_pricing_category: string | null;
@@ -2805,6 +2806,7 @@ export type Database = {
           template_key?: string | null;
           template_params?: Json | null;
           their_reaction?: string | null;
+          updated_at?: string;
           wa_conversation_id?: string | null;
           wa_message_id?: string | null;
           wa_pricing_category?: string | null;
@@ -2858,6 +2860,7 @@ export type Database = {
           template_key?: string | null;
           template_params?: Json | null;
           their_reaction?: string | null;
+          updated_at?: string;
           wa_conversation_id?: string | null;
           wa_message_id?: string | null;
           wa_pricing_category?: string | null;

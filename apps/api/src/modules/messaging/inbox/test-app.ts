@@ -27,6 +27,7 @@ import { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
 import { KapsoReopener } from './reopen/kapso-reopener';
 import { ReopenRepo } from './reopen/reopen.repo';
 import { DeltaRepo } from './delta/delta.repo';
+import { SyncRepo } from './delta/sync.repo';
 import { MessageHideRepo } from './hide/message-hide.repo';
 import { StickerRepo } from '@/modules/messaging/inbox/stickers/sticker.repo';
 import { ChatSearchRepo, MessageSearchRepo } from './reads/search';
@@ -93,6 +94,7 @@ function mocks() {
     },
     hides: { target: vi.fn(), set: vi.fn(async () => true) },
     delta: { newer: vi.fn(), pending: vi.fn() },
+    sync: { page: vi.fn() },
     search: { rows: vi.fn() },
     messageSearch: { search: vi.fn() },
     stickers: {
@@ -127,6 +129,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(InboxSettings).useValue(inboxSettings())
     .overrideProvider(MessageHideRepo).useValue(m.hides)
     .overrideProvider(DeltaRepo).useValue(m.delta)
+    .overrideProvider(SyncRepo).useValue(m.sync)
     .overrideProvider(StickerRepo).useValue(m.stickers)
     .overrideProvider(ChatSearchRepo).useValue(m.search)
     .overrideProvider(MessageSearchRepo).useValue(m.messageSearch)
