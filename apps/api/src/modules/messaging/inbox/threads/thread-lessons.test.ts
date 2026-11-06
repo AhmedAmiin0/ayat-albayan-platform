@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { callsOf, chainDb } from '../../reminders/chain-db.fake';
-import { threadRow } from '../inbox.fakes';
+import { callsOf, chainDb } from '@/modules/messaging/reminders/chain-db.fake';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { upcomingLessons } from './thread-lessons';
 import { toThreadView } from './threads.mapper';
 

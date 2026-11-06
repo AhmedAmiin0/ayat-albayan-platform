@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import { MemoryLimitStore, type LimitStore, type LimitTake } from './limit-store';
 
 /** The bucket as stored: a digest, never a raw IP address or phone number. */

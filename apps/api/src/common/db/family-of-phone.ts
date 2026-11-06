@@ -1,4 +1,4 @@
-import { dbError } from '../http/http';
+import { dbError } from '@/common/http/http';
 import type { Db } from './db.module';
 
 /** A family found by one of its numbers. `phone_e164` is its MAIN number: notifications and sign-in codes go there. */

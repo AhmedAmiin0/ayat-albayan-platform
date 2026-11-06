@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import type { ReportReadyMessage } from './report-ready';
 
 export type Finish =

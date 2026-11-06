@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { searchDigits, type GuardianCreate, type GuardianUpdate } from '@ab/shared';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import { guardianSearchFilter, toGuardianInsert, toGuardianPatch } from './guardians.mapper';
 import { dbError, pageRange, type ListQuery, type Page } from './http';
 

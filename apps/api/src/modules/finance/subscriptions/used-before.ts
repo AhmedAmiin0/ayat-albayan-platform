@@ -1,7 +1,7 @@
 import { riyadhToday, usedBeforeMax, usedBeforeProblem } from '@ab/shared';
-import { can } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { badRequest, forbidden } from '../../../common/http/errors';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, forbidden } from '@/common/http/errors';
 
 // «حلقات مستخدمة من الباقة» (owner 2026-10-28, migration 932): lessons taken before the platform.
 // Accepted only with a start before the academy's today (Riyadh) and subscriptions.set_start_date:

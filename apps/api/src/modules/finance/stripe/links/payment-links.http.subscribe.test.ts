@@ -1,11 +1,11 @@
 import { daysBefore, riyadhToday } from '@ab/shared';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { badRequest } from '../../../../common/http/errors';
-import { STUDENT_ID, subRow, WEEKLY_SA } from '../../subscriptions/money/money.fakes';
-import { resetMocks, SALES_A, type Mocks } from '../../subscriptions/test-app';
-import { stripeApp } from '../testing/stripe-app.fakes';
-import { linkRow, REQ, stripeDefaults, type StripeMocks } from '../testing/stripe-mocks.fakes';
+import { badRequest } from '@/common/http/errors';
+import { STUDENT_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/money.fakes';
+import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { stripeApp } from '@/modules/finance/stripe/testing/stripe-app.fakes';
+import { linkRow, REQ, stripeDefaults, type StripeMocks } from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
 
 vi.hoisted(() => {
   process.env.FEATURE_STRIPE = 'test';

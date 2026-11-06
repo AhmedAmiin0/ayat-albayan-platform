@@ -1,5 +1,5 @@
 import { BODY_SLOTS, type TemplateParamsInput, type TemplateView } from '@ab/shared';
-import type { ThreadRow } from '../threads/threads.mapper';
+import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 /**
  * The reopen template's variables from what the thread knows, as the composer prefills them

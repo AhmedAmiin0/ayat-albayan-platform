@@ -1,9 +1,9 @@
 import type { PaymentLinkView } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import type Stripe from 'stripe';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { conflict, notFound } from '../../../../common/http/errors';
-import { StripeClients, type StripeApi } from '../gate/stripe-clients';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { conflict, notFound } from '@/common/http/errors';
+import { StripeClients, type StripeApi } from '@/modules/finance/stripe/gate/stripe-clients';
 import { LinkDeps } from './link-deps';
 import { LinkPackages } from './link-packages';
 

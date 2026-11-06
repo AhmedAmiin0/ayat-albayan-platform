@@ -1,8 +1,8 @@
 import type { PortalFileUrl, PortalHome, PortalLessons, PortalPackageView, PortalReports, RoomJoinResult } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import type { AuthUser } from '../../../common/auth/verify-token';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { PortalHomeService } from './home/portal-home.service';
 import { PortalLessonsService } from './lessons/portal-lessons.service';
 import { PortalPackageService } from './package/portal-package.service';

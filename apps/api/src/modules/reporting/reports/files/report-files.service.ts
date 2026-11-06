@@ -6,14 +6,14 @@ import type {
   SignedUpload,
 } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { attachmentPath, BUCKETS, isPathOf } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { reportFileName } from '../../report-pdf/report-ready';
-import { badRequest, conflict } from '../../../../common/http/errors';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { attachmentPath, BUCKETS, isPathOf } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { reportFileName } from '@/modules/reporting/report-pdf/report-ready';
+import { badRequest, conflict } from '@/common/http/errors';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
-import type { ReportRow } from '../report-row';
-import { ReportGate } from '../submit/report-gate';
+import type { ReportRow } from '@/modules/reporting/reports/report-row';
+import { ReportGate } from '@/modules/reporting/reports/submit/report-gate';
 
 type FileRef = { id: string; user: AuthUser };
 type AttachmentRef = FileRef & { attachmentId: string };

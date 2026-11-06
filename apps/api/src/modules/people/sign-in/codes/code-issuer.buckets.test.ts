@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { signInWorld } from '../sign-in.world';
+import { signInWorld } from '@/modules/people/sign-in/sign-in.world';
 import type { CodeTarget } from './code-issuer';
 
 const TARGET: CodeTarget = { purpose: 'sign_in', subject: { kind: 'guardian', id: 'g-1' }, phone: '+966500000001' };

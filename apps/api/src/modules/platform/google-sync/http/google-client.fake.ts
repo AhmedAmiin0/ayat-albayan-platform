@@ -1,4 +1,4 @@
-import { parseA1 } from '../writers/sheets/a1-range';
+import { parseA1 } from '@/modules/platform/google-sync/writers/sheets/a1-range';
 import {
   GoogleApiError,
   type CellValue,
@@ -11,8 +11,8 @@ import {
   type GoogleListedEvent,
   type GoogleOAuth,
   type Rows,
-} from '../google-client.port';
-import { MIME } from '../google-format';
+} from '@/modules/platform/google-sync/google-client.port';
+import { MIME } from '@/modules/platform/google-sync/google-format';
 
 type StoredEvent = GoogleEventBody & { id: string; status: string };
 type StoredFile = GoogleFileMeta & { parentId: string | null; bytes?: Uint8Array };

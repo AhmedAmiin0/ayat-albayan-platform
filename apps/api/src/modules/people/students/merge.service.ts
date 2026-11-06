@@ -1,6 +1,6 @@
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../guardians/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/modules/people/guardians/http';
 
 type MergeOptions = { keptId: string; mergedId: string; actorId: string };
 

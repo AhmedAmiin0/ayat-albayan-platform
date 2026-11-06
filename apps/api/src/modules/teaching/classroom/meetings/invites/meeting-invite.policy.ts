@@ -1,7 +1,7 @@
 import { mayInvitePhones, systemPermissionsOf, type MeetingInviteeView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { assertCanSend, TeacherScopes, type TeacherScope } from '../../../../messaging/inbox/teacher-threads/teacher-scope';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { assertCanSend, TeacherScopes, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 
 /**
  * Who may send WhatsApp through meeting invitations (owner policy 2026-10-13, R-MEET-02):

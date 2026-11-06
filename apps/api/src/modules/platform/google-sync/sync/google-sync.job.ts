@@ -1,9 +1,9 @@
 import { localDateIn, wallToUtc } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { loadEnv } from '../../../../config/env/env';
+import { loadEnv } from '@/config/env/env';
 import { GoogleItemsQueries } from './google-items.queries';
 import { GoogleSyncProcessor } from './google-sync.processor';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 const POLL_MS = 60_000;
 /** Soon after boot, not at once: every API test boots AppModule (as HorizonJob notes). */

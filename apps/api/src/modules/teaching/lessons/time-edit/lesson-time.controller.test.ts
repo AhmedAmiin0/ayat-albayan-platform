@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict } from '../../../../common/http/errors';
-import { LESSON_ID, lessonRow } from '../lessons.fakes';
-import { lessonsApp } from '../test-app';
+import { conflict } from '@/common/http/errors';
+import { LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
+import { lessonsApp } from '@/modules/teaching/lessons/test-app';
 
 type Harness = Awaited<ReturnType<typeof lessonsApp>>;
 const url = `/lessons/${LESSON_ID}/time`;

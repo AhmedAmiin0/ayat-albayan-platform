@@ -1,11 +1,11 @@
 import { reopenDedupKey } from '@ab/shared';
 import { Logger } from '@nestjs/common';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { KAPSO_ENV } from '../../whatsapp/drivers/kapso/kapso.fakes';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { templateRow } from '../../whatsapp/whatsapp.fakes';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { inboxApp } from '../test-app';
+import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 import { kapsoReopen } from './kapso-reopener';
 
 // Owner 2026-10-27: the reopen template never went out. Kapso (step 3) ran before the template and

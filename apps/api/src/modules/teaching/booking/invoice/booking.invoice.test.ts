@@ -1,8 +1,8 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { bookingRequest, IDS } from '../booking.fakes';
+import { bookingRequest, IDS } from '@/modules/teaching/booking/booking.fakes';
 import { chat, code, MSG, paid, SCOPE, REQ, setup, upload } from './booking.invoice.fakes';
-import { makeupRequest } from '../makeup/booking.makeup.fakes';
+import { makeupRequest } from '@/modules/teaching/booking/makeup/booking.makeup.fakes';
 
 describe('BookingInvoices.resolve — required unless trial (R-PAY-03)', () => {
   it.each([

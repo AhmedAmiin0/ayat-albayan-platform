@@ -1,7 +1,7 @@
 import { parseIdentifier } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { AUTH_GATE, isStaff, SUBJECT_STORE, type AuthGate, type ProfileRec, type StudentRec, type SubjectStore } from '../sign-in.ports';
-import type { CodeTarget } from '../codes/code-issuer';
+import { AUTH_GATE, isStaff, SUBJECT_STORE, type AuthGate, type ProfileRec, type StudentRec, type SubjectStore } from '@/modules/people/sign-in/sign-in.ports';
+import type { CodeTarget } from '@/modules/people/sign-in/codes/code-issuer';
 
 /** Whose password a forgot / reset identifier names, and where its code goes (a phone ON FILE only). */
 export type PasswordTarget =

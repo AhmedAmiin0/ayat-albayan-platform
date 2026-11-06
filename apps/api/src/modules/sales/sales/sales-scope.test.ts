@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { AuthUser } from '../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { SalesScopes } from './sales-scope';
 
 const user = (role: AuthUser['role']): AuthUser => ({ id: 'p1', email: null, role });

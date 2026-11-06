@@ -9,10 +9,10 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../common/auth/decorators';
-import { can } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { parseOrThrow, sentOnly, type Page } from '../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow, sentOnly, type Page } from '@/common/http/http';
 import { SubscriptionCancel } from './cancel/subscription-cancel.service';
 import { toTeacherBalance } from './money/balance.teacher';
 import { PackagesService } from './money/packages.service';

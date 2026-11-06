@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { FollowUpsModule } from '../follow-ups/follow-ups.module';
-import { PushReceiptsModule } from '../push/push-receipts.module';
-import { RemindersModule } from '../reminders/reminders.module';
+import { FollowUpsModule } from '@/modules/messaging/follow-ups/follow-ups.module';
+import { PushReceiptsModule } from '@/modules/messaging/push/push-receipts.module';
+import { RemindersModule } from '@/modules/messaging/reminders/reminders.module';
 
 /**
  * B3 (docs/12 §7): lesson reminders (24 h, same day, teacher), lead follow-ups and the Expo

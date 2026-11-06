@@ -1,10 +1,10 @@
 import type { SalesChatReceipt, SalesChatReceiptFile } from '@ab/shared';
 import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { BUCKETS, extFor } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { ThreadMediaService } from '../../../messaging/inbox/files/thread-media.service';
-import { badRequest } from '../../../../common/http/errors';
+import { BUCKETS, extFor } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
+import { badRequest } from '@/common/http/errors';
 
 /**
  * The photos and PDFs ONE family sent in its chat, as receipt candidates (docs/16 row 18: the

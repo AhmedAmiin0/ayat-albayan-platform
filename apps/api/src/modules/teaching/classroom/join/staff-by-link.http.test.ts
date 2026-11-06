@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { LESSON_ID, LINK_TOKEN } from '../classroom.fakes';
-import { MEETING_ID, MEETING_TOKEN } from '../internal-meetings/internal-meetings.fakes';
-import { classroomApp } from '../test-app';
+import { LESSON_ID, LINK_TOKEN } from '@/modules/teaching/classroom/classroom.fakes';
+import { MEETING_ID, MEETING_TOKEN } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import { classroomApp } from '@/modules/teaching/classroom/test-app';
 
 // Root cause of «السبورة للعرض فقط» (owner, 2026-10-05): staff who opened a shared link entered as
 // guests. These routes let a signed-in staff member find their own staff room behind the link.

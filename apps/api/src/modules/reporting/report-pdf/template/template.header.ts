@@ -1,6 +1,6 @@
 import { attendanceStyle } from '@ab/shared';
-import type { ReportPdfModel } from '../render/pdf-model';
-import { AR, durationText, esc, fill, localDate, ltr, timeWithZone, weekdayName } from '../render/pdf-text';
+import type { ReportPdfModel } from '@/modules/reporting/report-pdf/render/pdf-model';
+import { AR, durationText, esc, fill, localDate, ltr, timeWithZone, weekdayName } from '@/modules/reporting/report-pdf/render/pdf-text';
 
 const r = AR.reports;
 const MINUTE = 60_000;

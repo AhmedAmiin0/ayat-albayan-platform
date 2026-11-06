@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import { CrmWhatsappClient } from '../drivers/crm/crm.client';
-import { KAPSO_ENV } from '../drivers/kapso/kapso.fakes';
-import { HttpWhatsappClient } from '../whatsapp.client';
-import { RECORDED, scriptedFetch, STUB_ENV } from '../whatsapp.fakes';
-import type { WhatsappLines } from '../whatsapp.types';
+import type { StorageService } from '@/common/storage/storage.service';
+import { CrmWhatsappClient } from '@/modules/messaging/whatsapp/drivers/crm/crm.client';
+import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
+import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
+import { RECORDED, scriptedFetch, STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { MessageDispatch } from './message.dispatch';
 import { dueMessage } from './sender.fakes';
 

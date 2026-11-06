@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import type { MessageViews } from '../../whatsapp/messages/message.views';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import type { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { CallsNumberRepo } from './calls-number.repo';
 
 const views = {} as MessageViews;

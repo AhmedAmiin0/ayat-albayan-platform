@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { EXP, GUARDIAN_PHONE, NOW, publicContext, SECRET, tokenFor } from '../feedback.fakes';
+import { EXP, GUARDIAN_PHONE, NOW, publicContext, SECRET, tokenFor } from '@/modules/teaching/feedback/feedback.fakes';
 import { hashToken } from './feedback.token';
-import { feedbackApp } from '../test-app';
+import { feedbackApp } from '@/modules/teaching/feedback/test-app';
 
 const url = (token = tokenFor()) => `/public/feedback/${token}`;
 const ANSWER = { rating: 5, recommend: 'yes', note: 'جزاكم الله خيرًا' };

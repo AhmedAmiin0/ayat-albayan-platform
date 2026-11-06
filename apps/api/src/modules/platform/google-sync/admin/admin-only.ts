@@ -1,5 +1,5 @@
 import { ForbiddenException } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 
 /**
  * Defence in depth on top of @Permissions('settings.*'): the Google account is the academy's own,

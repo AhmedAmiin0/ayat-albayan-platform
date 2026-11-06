@@ -1,5 +1,5 @@
-import type { Db } from '../../../../common/db/db.module';
-import { reportIdOf } from '../sender/send-plan';
+import type { Db } from '@/common/db/db.module';
+import { reportIdOf } from '@/modules/messaging/whatsapp/sender/send-plan';
 
 /**
  * The delivery side effects, for a send and for the admin's manual send (R-MSG-03): the lead's

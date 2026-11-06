@@ -1,5 +1,5 @@
-import type { MetaLineEnv } from '../../../../../config/env/env';
-import { STUB_ENV, templateRow } from '../../whatsapp.fakes';
+import type { MetaLineEnv } from '@/config/env/env';
+import { STUB_ENV, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // Test-only (excluded from the build). The four templates migration 141 seeds as not_submitted,
 // copied byte for byte (template-review.test.ts checks them against the SQL), and the Resumable

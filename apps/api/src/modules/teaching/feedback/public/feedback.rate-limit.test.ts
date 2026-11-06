@@ -1,8 +1,8 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { PublicFeedbackLimit, WindowCounter } from './feedback.rate-limit';
-import { FeedbackSettings } from '../feedback.settings';
+import { FeedbackSettings } from '@/modules/teaching/feedback/feedback.settings';
 
 const MIN = 60_000;
 

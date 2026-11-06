@@ -1,8 +1,8 @@
 import type { TablesInsert } from '@ab/db';
 import { Injectable } from '@nestjs/common';
-import { Outbox, type Sent } from '../../../messaging/inbox/send/outbox';
-import { waHttpError } from '../../../messaging/whatsapp/templates/catalog/template.mapper';
-import { TemplateRegistry } from '../../../messaging/whatsapp/templates/catalog/template.registry';
+import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 
 export const FEEDBACK_TEMPLATE = 'lesson_feedback_request';
 

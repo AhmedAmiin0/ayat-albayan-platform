@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { DashboardSettings } from '../dashboard.settings';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { DashboardSettings } from '@/modules/reporting/dashboard/dashboard.settings';
 import type { FinanceQueries } from './finance.queries';
 import { FinanceService } from './finance.service';
 import type { FxConverter } from './fx-converter';

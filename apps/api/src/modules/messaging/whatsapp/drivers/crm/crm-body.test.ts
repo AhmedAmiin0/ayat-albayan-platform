@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { crmMediaBody, crmTemplateBody, crmTextBody } from './crm-body';
-import { REMINDER_24H, REPORT_READY, templateRow } from '../../whatsapp.fakes';
-import { WaError } from '../../whatsapp.types';
+import { REMINDER_24H, REPORT_READY, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // docs/19 «crm driver»: the CRM's POST /messages bodies, built from the same TemplateSend the meta driver gets.
 

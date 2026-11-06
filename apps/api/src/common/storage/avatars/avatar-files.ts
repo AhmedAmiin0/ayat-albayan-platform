@@ -1,7 +1,7 @@
 import type { SignedUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { BUCKETS } from '../storage.paths';
-import { StorageService } from '../storage.service';
+import { BUCKETS } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
 
 /** Photo URLs live for 15 minutes: the page asks again on its next load. */
 const AVATAR_URL_SECONDS = 15 * 60;

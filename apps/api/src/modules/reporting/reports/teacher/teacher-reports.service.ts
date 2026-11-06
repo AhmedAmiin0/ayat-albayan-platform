@@ -1,9 +1,9 @@
 import type { TeacherReportView, TeacherReportsQuery } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import type { Page, PageQuery } from '../../../../common/http/http';
-import { ReportGate } from '../submit/report-gate';
-import { ReportHistoryQueries } from '../history/report-history.queries';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { Page, PageQuery } from '@/common/http/http';
+import { ReportGate } from '@/modules/reporting/reports/submit/report-gate';
+import { ReportHistoryQueries } from '@/modules/reporting/reports/history/report-history.queries';
 import { toTeacherReportView } from './teacher-reports.mapper';
 import { TeacherReportsQueries } from './teacher-reports.queries';
 

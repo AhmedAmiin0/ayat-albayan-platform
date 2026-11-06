@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { classify, errorText, MAX_ATTEMPTS, retryDelayMs } from '../http/backoff';
-import { GoogleConnection } from '../oauth/google-connection';
-import { GoogleData } from '../google-data';
+import { classify, errorText, MAX_ATTEMPTS, retryDelayMs } from '@/modules/platform/google-sync/http/backoff';
+import { GoogleConnection } from '@/modules/platform/google-sync/oauth/google-connection';
+import { GoogleData } from '@/modules/platform/google-sync/google-data';
 import type { ItemResult, SyncItem } from './google-items.queries';
 import { GoogleWriters } from './google-writers';
 import type { WriteCtx } from './write-context';

@@ -1,9 +1,9 @@
 import { NotFoundException } from '@nestjs/common';
 import type { Json } from '@ab/db';
 import type { PostgrestError } from '@supabase/supabase-js';
-import type { Db } from '../../../../common/db/db.module';
-import { conflict } from '../../../../common/http/errors';
-import { rpcError } from '../../../teaching/scheduling/rpc';
+import type { Db } from '@/common/db/db.module';
+import { conflict } from '@/common/http/errors';
+import { rpcError } from '@/modules/teaching/scheduling/rpc';
 import type { SubmitPayload } from './submit-plan';
 
 /** `raise exception '<code>'` in submit_report (migration 130) → 409 domain errors. */

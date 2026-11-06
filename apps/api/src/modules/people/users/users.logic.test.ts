@@ -1,7 +1,7 @@
 import { GRANTABLE_PERMISSIONS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { systemRoles } from '../roles/roles.fakes';
-import type { RoleRecord } from '../roles/roles.store';
+import { systemRoles } from '@/modules/people/roles/roles.fakes';
+import type { RoleRecord } from '@/modules/people/roles/roles.store';
 import { adminProblem, assertOutranks, assertRoleAssignable, chooseRole, isAssignable, lockedOutOfUsers, profilePatch, roleChangeBlocked, type UserState } from './users.logic';
 import type { StaffProfile } from './store/users.store';
 

@@ -7,11 +7,11 @@ import { SETTING_DEFAULTS, type ChatListRef, type ThreadLesson, type ThreadPeopl
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';

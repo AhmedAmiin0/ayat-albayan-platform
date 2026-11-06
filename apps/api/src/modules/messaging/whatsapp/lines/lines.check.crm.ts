@@ -1,8 +1,8 @@
 import type { LineCheckView, WaLine } from '@ab/shared';
 import { z } from 'zod';
-import type { CrmLineEnv } from '../../../../config/env/env';
-import { crmJson, type CrmConn } from '../drivers/crm/crm-http';
-import { WaError } from '../whatsapp.types';
+import type { CrmLineEnv } from '@/config/env/env';
+import { crmJson, type CrmConn } from '@/modules/messaging/whatsapp/drivers/crm/crm-http';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // «افحص الخطوط» on a crm line (docs/19 «crm driver»): one read-only GET /me with the line's key. Never a
 // test message. The number, its WABA and its phone facts are the CRM's: every Meta field stays null.

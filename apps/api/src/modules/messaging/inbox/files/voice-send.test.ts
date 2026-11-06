@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
+import type { StorageService } from '@/common/storage/storage.service';
 import { voiceMedia, voiceOggPath } from './voice-send';
 
 const M4A = { bucket: 'wa-media' as const, path: 'out/actor/req/5b0f.m4a' };

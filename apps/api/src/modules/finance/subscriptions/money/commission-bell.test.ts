@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../../common/push/push.service';
-import { fakeDb, type FakeResult } from '../../../people/guardians/fake-db';
+import type { PushService } from '@/common/push/push.service';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { CommissionBell } from './commission-bell';
 
 const NOW = new Date('2026-10-29T16:42:20Z');

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, ASSISTANT, TEACHER } from '../../classroom.fakes';
-import { MEETING_ID, NOW, scheduledRow } from '../../internal-meetings/internal-meetings.fakes';
+import { ADMIN, ASSISTANT, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import { MEETING_ID, NOW, scheduledRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
 import { CLOSED_PHONE, OPEN_PHONE, openThread, STUDENT_A, stored } from './meeting-invites.fakes';
-import { meetingServices, type MeetingServices } from '../schedule/meeting-services.fakes';
+import { meetingServices, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
 // The WhatsApp policy of invitations (owner 2026-10-13): who may queue a chat text, what the others get.
 let s: MeetingServices;

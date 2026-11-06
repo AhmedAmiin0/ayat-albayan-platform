@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { CrmWhatsappClient } from './crm.client';
 import { CRM_ENV, CRM_SENT, crmFailure } from './crm.fakes';
-import { scriptedFetch, templateRow } from '../../whatsapp.fakes';
-import { WaError } from '../../whatsapp.types';
+import { scriptedFetch, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // docs/19 «crm driver»: CrmWhatsappClient over the CRM's REST API. No network.
 

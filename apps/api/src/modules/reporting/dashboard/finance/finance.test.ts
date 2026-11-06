@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Conversion } from '../work/conversion';
+import type { Conversion } from '@/modules/reporting/dashboard/work/conversion';
 import { financeTotals, type FinanceFacts } from './finance';
 
 // 1 SAR = 13 EGP; USD has no rate stored.

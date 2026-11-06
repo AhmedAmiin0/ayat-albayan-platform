@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { kapsoText, SENT_AT } from '../external/external.fakes';
-import { PHONE_NUMBER_ID, TS_DATE } from '../meta.fakes';
-import { services } from '../webhook.fakes';
-import { WebhookService } from '../webhook.service';
+import { kapsoText, SENT_AT } from '@/modules/messaging/webhook/external/external.fakes';
+import { PHONE_NUMBER_ID, TS_DATE } from '@/modules/messaging/webhook/meta.fakes';
+import { services } from '@/modules/messaging/webhook/webhook.fakes';
+import { WebhookService } from '@/modules/messaging/webhook/webhook.service';
 import { parseWebhook } from './webhook.parse';
 
 // Meta's smb_message_echoes (WhatsApp Business app coexistence): the business's own messages, with content.

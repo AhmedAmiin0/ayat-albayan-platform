@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PHONE } from '../inbox.fakes';
-import { inboxApp } from '../test-app';
+import { PHONE } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}`;

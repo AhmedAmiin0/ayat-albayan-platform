@@ -1,6 +1,6 @@
 import { notificationEntry, type NotificationKey, type PushKind } from '@ab/shared';
-import type { RulesSnapshot } from '../../../modules/messaging/notification-rules/store/rules.reader';
-import { ruleOf } from '../../rules/rule-of';
+import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
+import { ruleOf } from '@/common/rules/rule-of';
 
 /** Each push kind's catalogue row (docs/23a §B3 P1–P9; catalogue.test.ts keeps them in step). */
 const ROW_OF: Record<PushKind, NotificationKey> = {

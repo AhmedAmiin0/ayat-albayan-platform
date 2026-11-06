@@ -1,5 +1,5 @@
 import type { PushKind } from '@ab/shared';
-import { pushText, type PushText } from '../expo/expo-push';
+import { pushText, type PushText } from '@/common/push/expo/expo-push';
 
 // What a device shows on its lock screen (owner 2026-10-25): no more personal data than the alert
 // needs. The bell row keeps the full text: it is read only inside the app, after sign-in.

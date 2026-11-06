@@ -1,9 +1,9 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { FollowUpsJob } from '../follow-ups/follow-ups.job';
-import { RemindersJob } from '../reminders/reminders.job';
+import { AppModule } from '@/app.module';
+import { FollowUpsJob } from '@/modules/messaging/follow-ups/follow-ups.job';
+import { RemindersJob } from '@/modules/messaging/reminders/reminders.job';
 import { PushReceiptsJob } from './push-receipts.job';
 
 // The three job modules as registered (AppModule → MessagingJobsModule): DI resolves, and

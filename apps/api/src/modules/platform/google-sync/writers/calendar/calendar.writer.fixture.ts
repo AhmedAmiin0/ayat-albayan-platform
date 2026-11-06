@@ -1,11 +1,11 @@
 import { vi } from 'vitest';
 import { CalendarWriter } from './calendar.writer';
 import type { EventLesson } from './event-format';
-import type { GoogleAlerts } from '../../google-alerts';
-import { FakeGoogle } from '../../http/google-client.fake';
-import type { GoogleMapQueries } from '../../map/google-map.queries';
-import type { GoogleSyncSource, LessonSource } from '../../sync/google-sync.source';
-import { eventLesson, TEACHER_ID } from '../../google-sync.fakes';
+import type { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts';
+import { FakeGoogle } from '@/modules/platform/google-sync/http/google-client.fake';
+import type { GoogleMapQueries } from '@/modules/platform/google-sync/map/google-map.queries';
+import type { GoogleSyncSource, LessonSource } from '@/modules/platform/google-sync/sync/google-sync.source';
+import { eventLesson, TEACHER_ID } from '@/modules/platform/google-sync/google-sync.fakes';
 
 // Test-only: a CalendarWriter over a FakeGoogle with one mapped teacher calendar. Never Google.
 

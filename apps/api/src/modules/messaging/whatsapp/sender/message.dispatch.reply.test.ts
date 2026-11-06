@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import { crmMediaBody } from '../drivers/crm/crm-body';
+import type { StorageService } from '@/common/storage/storage.service';
+import { crmMediaBody } from '@/modules/messaging/whatsapp/drivers/crm/crm-body';
 import { MessageDispatch } from './message.dispatch';
 import { dueMessage } from './sender.fakes';
-import { mediaMessage } from '../messages/wa-components';
-import type { WhatsappLines } from '../whatsapp.types';
+import { mediaMessage } from '@/modules/messaging/whatsapp/messages/wa-components';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // «رد» / «إعادة توجيه» (owner 2026-10-25): the quoted wamid rides a text AND a file; a forwarded voice
 // note or video goes as its own type on Meta / Kapso, as a document on the crm driver.

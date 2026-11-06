@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
-import { ADMIN_PAY, attachment as file, JPEG, PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '../../sales/sales-money/sales-money.pay.fakes';
+import { ADMIN, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { ADMIN_PAY, attachment as file, JPEG, PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/sales/sales-money/sales-money.pay.fakes';
 
 const post = (body: object) => ({ method: 'POST' as const, url: '/payments', body: { ...ADMIN_PAY, ...body } });
 

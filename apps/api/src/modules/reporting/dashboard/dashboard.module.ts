@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { FxModule } from '../../finance/fx/fx.module';
+import { FxModule } from '@/modules/finance/fx/fx.module';
 import { DashboardController } from './dashboard.controller';
 import { DashboardQueries } from './dashboard.queries';
 import { DashboardService } from './dashboard.service';

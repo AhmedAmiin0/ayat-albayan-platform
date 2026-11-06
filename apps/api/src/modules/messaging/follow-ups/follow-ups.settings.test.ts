@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { FollowUpsSettings } from './follow-ups.settings';
 
 /** What FollowUpsJob reads through the reader (the stages and slot window moved to NotificationPolicy). */

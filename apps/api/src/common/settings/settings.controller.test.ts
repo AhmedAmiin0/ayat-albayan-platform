@@ -2,11 +2,11 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../app.module';
-import { AuditService } from '../audit/audit.service';
-import { SINGLETON_ENTITY_ID } from '../audit/singleton-entity';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../auth/auth.guard';
-import type { AuthUser } from '../auth/verify-token';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { SettingsService } from './settings.service';
 
 const USERS: Record<string, AuthUser> = {

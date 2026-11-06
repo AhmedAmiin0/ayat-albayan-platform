@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { crmErrorFrom, crmJson } from './crm-http';
 import { CRM_ENV, crmFailure } from './crm.fakes';
-import { failurePlan, CRM_AUTH } from '../../sender/send-plan';
-import { scriptedFetch } from '../../whatsapp.fakes';
-import { WaError } from '../../whatsapp.types';
+import { failurePlan, CRM_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // docs/19 «crm driver»: the CRM's answers that are about the line, not the message. No network.
 

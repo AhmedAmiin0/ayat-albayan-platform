@@ -1,9 +1,9 @@
 import type { GooglePlannedRequest, GoogleSkipReason, GoogleSyncItemView, GoogleSyncKind, GoogleSyncState } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { localDate } from '../writers/sheets/sheet-dates';
-import { TZ } from '../google-format';
+import { DB, type Db } from '@/common/db/db.module';
+import { localDate } from '@/modules/platform/google-sync/writers/sheets/sheet-dates';
+import { TZ } from '@/modules/platform/google-sync/google-format';
 
 const planned = z.object({ method: z.string(), target: z.string(), summary: z.string() });
 type Raw = {

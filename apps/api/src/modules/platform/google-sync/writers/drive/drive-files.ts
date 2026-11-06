@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { GoogleAccountQueries } from '../../oauth/google-account.queries';
-import type { GoogleClient } from '../../google-client.port';
-import { ATTENDANCE_HEADER, MIME } from '../../google-format';
-import { GoogleMapQueries } from '../../map/google-map.queries';
+import { GoogleAccountQueries } from '@/modules/platform/google-sync/oauth/google-account.queries';
+import type { GoogleClient } from '@/modules/platform/google-sync/google-client.port';
+import { ATTENDANCE_HEADER, MIME } from '@/modules/platform/google-sync/google-format';
+import { GoogleMapQueries } from '@/modules/platform/google-sync/map/google-map.queries';
 import { attendanceSheetName, studentFolderName } from './pdf-name';
-import { brandStyle } from '../sheets/sheet-style';
+import { brandStyle } from '@/modules/platform/google-sync/writers/sheets/sheet-style';
 
 /** A confirmed student's folder and attendance sheet; `null` = not confirmed / no Drive root. */
 type StudentDrive = { folderId: string; sheetId: string };

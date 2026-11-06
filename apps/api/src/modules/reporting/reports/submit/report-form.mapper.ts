@@ -1,6 +1,6 @@
 import type { BalanceView, MemoryView, ReportFormEntry, ReportFormResponse } from '@ab/shared';
-import { reportView, type ViewContext } from '../report.mapper';
-import type { ReportLessonRow, ReportLessonStudent, ReportRow } from '../report-row';
+import { reportView, type ViewContext } from '@/modules/reporting/reports/report.mapper';
+import type { ReportLessonRow, ReportLessonStudent, ReportRow } from '@/modules/reporting/reports/report-row';
 
 export const iso = (at: string) => new Date(at).toISOString();
 

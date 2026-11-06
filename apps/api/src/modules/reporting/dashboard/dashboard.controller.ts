@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '../../../common/auth/decorators';
+import { Permissions } from '@/common/auth/decorators';
 import { DashboardService } from './dashboard.service';
 import { parseRange } from './range';
 

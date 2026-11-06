@@ -1,7 +1,7 @@
-import type { Db } from '../../../../common/db/db.module';
-import { fakeDb, type FakeResult } from '../../../people/guardians/fake-db';
+import type { Db } from '@/common/db/db.module';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { SendGate } from './send-gate';
-import { WhatsappSettings } from '../whatsapp.settings';
+import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
 
 // Test helper (not a test): a SendGate over a fake DB. Each `settings` result answers one uncached gate read.
 

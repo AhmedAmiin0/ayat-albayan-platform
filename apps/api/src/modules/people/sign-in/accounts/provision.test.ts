@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { FakeAudit } from '../sign-in.fakes';
-import { FakeAuth, FakeSubjects, PHONES } from '../sign-in.fakes.accounts';
+import { FakeAudit } from '@/modules/people/sign-in/sign-in.fakes';
+import { FakeAuth, FakeSubjects, PHONES } from '@/modules/people/sign-in/sign-in.fakes.accounts';
 import { familyEmail, Provisioner } from './provision';
 
 const setup = () => {

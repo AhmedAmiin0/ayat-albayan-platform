@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS, type AcademySettings } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../audit/audit.service';
-import type { AuthUser } from '../auth/verify-token';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from './settings.fakes';
 import { SettingsController } from './settings.controller';
 import type { SettingsRulesPort } from './settings-rules.port';

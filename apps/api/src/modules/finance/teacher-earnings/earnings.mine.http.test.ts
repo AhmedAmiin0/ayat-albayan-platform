@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { earning, OTHER_TEACHER, PAYMENT, paymentRow, session, TEACHER } from './earnings.fakes';
 
 describe('teachers/me/earnings (a teacher reads only their own)', () => {

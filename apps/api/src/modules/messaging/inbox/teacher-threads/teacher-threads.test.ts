@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { PHONE, threadRow } from '../inbox.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { forTeacher, teacherPeople } from './teacher-threads';
-import { toThreadView } from '../threads/threads.mapper';
+import { toThreadView } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 const NOW = new Date('2026-10-02T09:00:00Z');
 const kid = (id: string, code: string | null = 'AB-0101') =>

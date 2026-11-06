@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { CAL, lessonSource, setup } from './calendar.writer.fixture';
 import { eventBody } from './event-format';
-import { EVENT } from '../../google-format';
-import { eventLesson, item, TEACHER_ID } from '../../google-sync.fakes';
+import { EVENT } from '@/modules/platform/google-sync/google-format';
+import { eventLesson, item, TEACHER_ID } from '@/modules/platform/google-sync/google-sync.fakes';
 
 // The per-teacher calendar handover (docs/24 «نقل تقويم معلم إلى المنصة»). FakeGoogle only.
 

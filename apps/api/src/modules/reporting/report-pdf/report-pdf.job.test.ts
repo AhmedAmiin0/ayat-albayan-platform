@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fakePolicy } from '../../messaging/notification-rules/policy/policy.fakes';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { ReportPdfJob } from './report-pdf.job';
 import type { ReportPdfPublisher } from './report-pdf.publisher';
 import type { ReportPdfQueries } from './report-pdf.queries';

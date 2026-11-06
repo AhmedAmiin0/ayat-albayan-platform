@@ -1,6 +1,6 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { applicant, APPLICANT_ID, fakeDeps } from '../leads/leads.fakes';
+import { applicant, APPLICANT_ID, fakeDeps } from '@/modules/sales/leads/leads.fakes';
 import { JobApplicantsService } from './job-applicants.service';
 
 const ACTOR = 'admin-1';

@@ -1,5 +1,5 @@
 import { clockTime, RIYADH_TZ } from '@ab/shared';
-import { riyadhDate } from '../dashboard/range';
+import { riyadhDate } from '@/modules/reporting/dashboard/range';
 
 // CSV for Excel (R-RPT-03, docs/11 §9): UTF-8 with a BOM so Excel opens Arabic correctly,
 // RFC 4180 (every field quoted, quotes doubled, CRLF rows; line breaks stay inside the quotes).

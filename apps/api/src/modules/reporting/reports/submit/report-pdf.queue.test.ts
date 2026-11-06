@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ReportPdfJob } from '../../report-pdf/report-pdf.job';
+import type { ReportPdfJob } from '@/modules/reporting/report-pdf/report-pdf.job';
 import { PendingPdfQueue } from './report-pdf.queue';
-import type { ReportsQueries } from '../reports.queries';
+import type { ReportsQueries } from '@/modules/reporting/reports/reports.queries';
 
 describe('PendingPdfQueue', () => {
   it('marks the report pending, then kicks the PDF job', async () => {

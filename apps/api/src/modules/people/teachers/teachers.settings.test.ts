@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { fakeSettings, readerOf } from '../../../common/settings/settings.fakes';
+import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
 import { TeachersSettings, type TeachersSettingsValues } from './teachers.settings';
 
 /** Pinned by hand: every key TeachersController and AvailabilityQueries read. */

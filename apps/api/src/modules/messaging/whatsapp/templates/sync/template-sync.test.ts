@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { toMetaTemplate } from '../../drivers/meta/meta-shapes';
+import { toMetaTemplate } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
 import { findMeta, ourStatus, syncPatch } from './template-sync';
-import { RECORDED, REMINDER_24H, templateRow } from '../../whatsapp.fakes';
-import type { MetaTemplate } from '../../whatsapp.types';
+import { RECORDED, REMINDER_24H, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const NOW = new Date('2026-10-02T08:00:00Z');
 const recorded = RECORDED.templates.body.data.map((t) => toMetaTemplate({ ...t, components: [...t.components] }));

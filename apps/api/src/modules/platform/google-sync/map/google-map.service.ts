@@ -1,8 +1,8 @@
 import type { GoogleStudentMapInput, GoogleStudentMapRow, GoogleTeacherMapRow } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { readDiscovery } from './discovery';
-import { GoogleData } from '../google-data';
-import { GoogleRuntime } from '../google-runtime';
+import { GoogleData } from '@/modules/platform/google-sync/google-data';
+import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
 import { GoogleMapQueries, type StudentRow } from './google-map.queries';
 import { suggestCalendar, suggestFolder, type SummaryLink } from './suggest';
 

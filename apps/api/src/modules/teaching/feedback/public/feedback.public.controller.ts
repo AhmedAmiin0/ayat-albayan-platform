@@ -1,7 +1,7 @@
 import type { FeedbackFormView } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Ip, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from '../../../../common/auth/decorators';
+import { Public } from '@/common/auth/decorators';
 import { FeedbackPublicService } from './feedback.public.service';
 
 /**

@@ -1,6 +1,6 @@
 import type { Locale } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 export interface OverrideRow {
   key: string;

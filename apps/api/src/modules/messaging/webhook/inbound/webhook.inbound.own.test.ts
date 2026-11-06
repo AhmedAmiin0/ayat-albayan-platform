@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { OwnNumbers } from '../../numbers';
-import { event, services } from '../webhook.fakes';
+import type { OwnNumbers } from '@/modules/messaging/numbers';
+import { event, services } from '@/modules/messaging/webhook/webhook.fakes';
 
 // Example numbers only: the academy's chat line and a family.
 const OWN = '+966500000009';

@@ -1,6 +1,6 @@
 import { NUMBER_SECRET_NAMES, type NumberSecretName } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 interface SecretTarget {
   id: string;

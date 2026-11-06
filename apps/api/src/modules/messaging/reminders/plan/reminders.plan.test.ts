@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { at, RIYADH_GUARDIAN, sampleLesson, STARTS_AT } from '../reminders.fakes';
+import { at, RIYADH_GUARDIAN, sampleLesson, STARTS_AT } from '@/modules/messaging/reminders/reminders.fakes';
 import { planReminders, type ReminderPlanInput } from './reminders.plan';
 
 const plan = (over: Partial<ReminderPlanInput> = {}) =>

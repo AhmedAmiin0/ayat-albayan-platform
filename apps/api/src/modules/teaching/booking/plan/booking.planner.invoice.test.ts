@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { bookingRequest, fakePlanner, IDS, leadRequest, NOW } from '../booking.fakes';
+import { bookingRequest, fakePlanner, IDS, leadRequest, NOW } from '@/modules/teaching/booking/booking.fakes';
 
 const T1 = { id: 'T1', starts_at: new Date('2026-10-04T14:00:00Z'), ends_at: new Date('2026-10-04T14:45:00Z') };
 const failure = async (p: Promise<unknown>) => {

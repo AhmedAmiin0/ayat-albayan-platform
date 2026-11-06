@@ -1,8 +1,8 @@
 import type { SalesTeacherOption } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { badRequest } from '../../../../common/http/errors';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { badRequest } from '@/common/http/errors';
+import { dbError } from '@/common/http/http';
 
 /**
  * «المعلم/ة» of the assistant's subscribe step (owner 2026-10-29, docs/31 §2, docs/16 row 16): the active

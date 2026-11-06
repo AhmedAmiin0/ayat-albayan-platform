@@ -1,6 +1,6 @@
 import { gradeStyle, REPORT_RUBRICS, type Grade } from '@ab/shared';
-import type { ReportPdfModel } from '../render/pdf-model';
-import { AR, EMPTY, esc } from '../render/pdf-text';
+import type { ReportPdfModel } from '@/modules/reporting/report-pdf/render/pdf-model';
+import { AR, EMPTY, esc } from '@/modules/reporting/report-pdf/render/pdf-text';
 
 const PIPS = 5;
 

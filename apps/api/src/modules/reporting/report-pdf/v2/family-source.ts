@@ -1,5 +1,5 @@
 import { reportContentSchema, type ReportContent, type SurahRange } from '@ab/shared';
-import type { Db } from '../../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 
 /** What the v2 family report reads beyond the v1 source (form_version 2 only). */
 export interface FamilyExtras {

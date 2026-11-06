@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { EXP, LESSON_ID, NOW, SECRET, STUDENT_ID, tokenFor } from '../feedback.fakes';
+import { EXP, LESSON_ID, NOW, SECRET, STUDENT_ID, tokenFor } from '@/modules/teaching/feedback/feedback.fakes';
 import { expiryOf, hashToken, signToken, verifyToken } from './feedback.token';
 
 const flip = (s: string) => (s.endsWith('A') ? `${s.slice(0, -1)}B` : `${s.slice(0, -1)}A`);

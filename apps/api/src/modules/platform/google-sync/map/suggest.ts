@@ -1,5 +1,5 @@
 import { normalizeArabic, type GoogleFound } from '@ab/shared';
-import { DRIVE } from '../google-format';
+import { DRIVE } from '@/modules/platform/google-sync/google-format';
 
 // Mapping suggestions (docs/24 §3 Discovery). Nothing is used until an admin confirms it.
 

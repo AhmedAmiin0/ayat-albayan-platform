@@ -1,4 +1,4 @@
-import type { CellValue, Rows, ValueRender } from '../google-client.port';
+import type { CellValue, Rows, ValueRender } from '@/modules/platform/google-sync/google-client.port';
 import type { GoogleHttp } from './google-http';
 
 const enc = encodeURIComponent;

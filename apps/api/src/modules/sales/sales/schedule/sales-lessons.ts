@@ -1,7 +1,7 @@
 import type { LessonStatus } from '@ab/shared';
-import type { Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { ownershipOf, type SalesOwnership } from '../sales-ownership';
+import type { Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { ownershipOf, type SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
 /** Lessons that are still to come or were held; cancelled / rescheduled / no-show ones are not meetings. */
 export const MEETING_STATUSES: readonly LessonStatus[] = ['scheduled', 'confirmed', 'completed', 'late'];

@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { SUB_ID, subRow } from '../../finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, SALES_A, type Mocks } from '../../finance/subscriptions/test-app';
+import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { moneyApp, resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { salesDefaults } from './sales-money.fakes';
 
 // POST /sales/subscriptions/:id/cancel (owner 2026-10-28): her own student's package only, the admin's rules.

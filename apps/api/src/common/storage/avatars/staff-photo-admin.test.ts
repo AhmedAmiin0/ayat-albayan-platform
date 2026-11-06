@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../audit/audit.service';
-import { fakeDb, type FakeResult } from '../../../modules/people/guardians/fake-db';
-import { PNG } from '../../../modules/people/me/account/account.fakes';
+import type { AuditService } from '@/common/audit/audit.service';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { PNG } from '@/modules/people/me/account/account.fakes';
 import { AvatarWriter } from './avatar-writer';
 import { FakeAvatarFiles } from './avatars.fakes';
 import { StaffPhotoAdmin } from './staff-photo-admin';

@@ -1,8 +1,8 @@
 import { FAMILY_EMAIL_DOMAIN } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { conflict, forbidden } from '../../../../common/http/errors';
-import { AUTH_GATE, SUBJECT_STORE, type AuthGate, type GuardianRec, type NewProfile, type StudentRec, type SubjectStore } from '../sign-in.ports';
+import { AuditService } from '@/common/audit/audit.service';
+import { conflict, forbidden } from '@/common/http/errors';
+import { AUTH_GATE, SUBJECT_STORE, type AuthGate, type GuardianRec, type NewProfile, type StudentRec, type SubjectStore } from '@/modules/people/sign-in/sign-in.ports';
 
 /** The synthetic, never-delivered auth email of a family login (docs/30 §2). */
 export const familyEmail = (kind: 'g' | 's', id: string): string => `${kind}-${id}@${FAMILY_EMAIL_DOMAIN}`;

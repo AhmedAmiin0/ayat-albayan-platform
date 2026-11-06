@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import type { ReportAttachmentRow } from '../report-row';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import type { ReportAttachmentRow } from '@/modules/reporting/reports/report-row';
 
 const COLUMNS = 'id, storage_path, mime, size, created_at' as const;
 

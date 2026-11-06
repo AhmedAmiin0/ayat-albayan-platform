@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { NOW, publicContext, tokenFor } from '../feedback.fakes';
-import { feedbackApp } from '../test-app';
+import { NOW, publicContext, tokenFor } from '@/modules/teaching/feedback/feedback.fakes';
+import { feedbackApp } from '@/modules/teaching/feedback/test-app';
 
 describe('public feedback rate limit (own app: the limiter is per instance)', () => {
   let h: Awaited<ReturnType<typeof feedbackApp>>;

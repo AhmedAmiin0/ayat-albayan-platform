@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { StatusEvent } from '../webhook.events';
+import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 import { nextStatus, statusPatch, type StatusRow } from './webhook.status';
 
 const AT = new Date('2026-10-02T15:00:00Z');

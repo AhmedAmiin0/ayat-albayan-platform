@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { CrmHistoryMedia } from './crm-history-media';
 import { CrmMediaSettings } from './crm-media.settings';
 import { CRM_HOST, crmLink, crmResponse, crmRow, stubFetch } from './crm-history.fakes';

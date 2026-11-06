@@ -1,6 +1,6 @@
 import { COUNTS_FOR_MONEY, type Attendance, type Grade, type Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import type { SlotPackage } from './render/pdf-model';
 import { loadFamilyExtras, type FamilyExtras } from './v2/family-source';
 

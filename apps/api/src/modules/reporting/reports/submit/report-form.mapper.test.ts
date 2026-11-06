@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { formResponse } from './report-form.mapper';
-import { AFTER, lessonRow, reportRow, STUDENT_ID } from '../reports.fakes';
+import { AFTER, lessonRow, reportRow, STUDENT_ID } from '@/modules/reporting/reports/reports.fakes';
 
 const ctx = { role: 'teacher' as const, now: AFTER, hours: 24 };
 

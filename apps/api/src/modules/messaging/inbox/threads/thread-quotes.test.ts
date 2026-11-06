@@ -1,6 +1,6 @@
 import { QUOTE_BODY_MAX, UNAVAILABLE_QUOTE, type MessageView } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { quoteOf, sameNumber, ThreadQuotes, withQuotes, type QuotedRow } from './thread-quotes';
 
 const row = (over: Partial<QuotedRow> = {}): QuotedRow => ({

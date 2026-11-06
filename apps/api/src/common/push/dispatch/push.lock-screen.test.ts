@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '../push.fakes';
+import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '@/common/push/push.fakes';
 import { lockScreenText, PREVIEW_MAX, redact } from './push.lock-screen';
-import type { PushTransport } from '../push.service';
+import type { PushTransport } from '@/common/push/push.service';
 
 // Synthetic values only (the repo is public).
 const PHONE = '+201000000123';

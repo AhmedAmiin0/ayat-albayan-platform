@@ -1,8 +1,8 @@
 import type { RuleParityDiff, RuleSettings } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { RulesJournal } from '../store/rules.journal';
+import { RulesJournal } from '@/modules/messaging/notification-rules/store/rules.journal';
 import { moduleLegacyValues, ruleDifferences } from './rules.mirror';
-import { RulesPersist } from '../store/rules.persist';
+import { RulesPersist } from '@/modules/messaging/notification-rules/store/rules.persist';
 
 /**
  * The rules' side of parity and the read switch (docs/23b decision 5), used by CommunicationsService:

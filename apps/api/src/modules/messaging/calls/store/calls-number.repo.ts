@@ -1,9 +1,9 @@
 import type { TablesUpdate } from '@ab/db';
 import type { CallPermissionReply, MessageView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { MessageViews, type MessageRow } from '../../whatsapp';
-import type { CallPermissionReplyEvent } from '../../webhook';
+import { DB, type Db } from '@/common/db/db.module';
+import { MessageViews, type MessageRow } from '@/modules/messaging/whatsapp';
+import type { CallPermissionReplyEvent } from '@/modules/messaging/webhook';
 
 function check(error: { message: string } | null, what: string): asserts error is null {
   if (error) throw new Error(`${what} failed: ${error.message}`);

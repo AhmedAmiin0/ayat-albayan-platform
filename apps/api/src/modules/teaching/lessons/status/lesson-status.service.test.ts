@@ -1,12 +1,12 @@
 import { ForbiddenException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { conflict } from '../../../../common/http/errors';
-import type { LessonAccess } from '../store/lesson-access';
-import type { LessonRow } from '../store/lesson-row';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { conflict } from '@/common/http/errors';
+import type { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
+import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 import { LessonStatusService } from './lesson-status.service';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, TEACHER } from '../lessons.fakes';
-import { LessonsSettings } from '../lessons.settings';
+import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, TEACHER } from '@/modules/teaching/lessons/lessons.fakes';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 
 const access = { assertCanTouch: vi.fn() };
 const AFTER = new Date('2026-10-04T15:00:00Z');

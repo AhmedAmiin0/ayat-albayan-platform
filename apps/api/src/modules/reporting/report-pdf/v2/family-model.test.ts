@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { sampleSource } from '../report-pdf.fakes';
+import { sampleSource } from '@/modules/reporting/report-pdf/report-pdf.fakes';
 import { familySource, QURAN_CONTENT } from './family.fakes';
 import { toFamilyModel } from './family-model';
 

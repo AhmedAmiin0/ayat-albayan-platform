@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { LESSON_ID, REPORT_ID, STUDENT_ID, TEACHER_ID } from '../reports.fakes';
-import { reportsApp } from '../test-app';
+import { LESSON_ID, REPORT_ID, STUDENT_ID, TEACHER_ID } from '@/modules/reporting/reports/reports.fakes';
+import { reportsApp } from '@/modules/reporting/reports/test-app';
 import type { TeacherReportRow } from './teacher-reports.queries';
 
 const HOUR = 3_600_000;

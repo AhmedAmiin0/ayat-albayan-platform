@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { crmLink } from './crm-history/crm-history.fakes';
 import { toMessageView } from './message.mapper';
-import { messageRow } from '../sender/sender.fakes';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 
 // Owner 2026-10-27: an imported CRM file's body is only its storage link; the bubble is a photo /
 // voice note with no caption, never the raw link. The stored row is not edited.

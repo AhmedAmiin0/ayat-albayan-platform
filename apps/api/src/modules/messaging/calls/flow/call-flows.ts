@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../../../common/audit/audit.service';
+import { AuditService } from '@/common/audit/audit.service';
 import { InboundCalls } from './inbound.service';
 import { OutboundCalls } from './outbound.service';
 

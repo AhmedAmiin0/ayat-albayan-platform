@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { MEETING_ID, scheduledRow } from '../../internal-meetings/internal-meetings.fakes';
+import { MEETING_ID, scheduledRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
 import { STAFF_ID, stored } from './meeting-invites.fakes';
-import { classroomApp } from '../../test-app';
+import { classroomApp } from '@/modules/teaching/classroom/test-app';
 
 const base = `/meetings/${MEETING_ID}`;
 const INVITEE = stored({ meeting_id: MEETING_ID, kind: 'staff', profile_id: STAFF_ID, display_name: 'مريم', channel: 'in_app', status: 'sent' });

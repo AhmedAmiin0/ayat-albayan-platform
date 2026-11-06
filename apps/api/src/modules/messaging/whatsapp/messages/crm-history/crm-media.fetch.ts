@@ -1,6 +1,6 @@
 import { baseMime } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
-import { waHttpError } from '../../templates/catalog/template.mapper';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 
 /** The old CRM's storage gets this long for the whole file (headers and body). */
 export const CRM_FETCH_TIMEOUT_MS = 10_000;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { ReportsQueries } from './reports.queries';
 import { lessonRow, STUDENT_ID } from './reports.fakes';
 

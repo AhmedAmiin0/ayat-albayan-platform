@@ -1,5 +1,5 @@
 import { baseMime, cleanFileName, isPdfMime } from '@ab/shared';
-import { extFor } from '../../../../common/storage/storage.paths';
+import { extFor } from '@/common/storage/storage.paths';
 
 /** The columns a saved file is named from. */
 interface NamedFile {

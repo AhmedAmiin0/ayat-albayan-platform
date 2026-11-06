@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { lead } from '../../../sales/leads/leads.fakes';
-import { AT, event, GUARDIAN_ID, LESSON_ID, NEW_LEAD_ID, nobody, services } from '../webhook.fakes';
+import { lead } from '@/modules/sales/leads/leads.fakes';
+import { AT, event, GUARDIAN_ID, LESSON_ID, NEW_LEAD_ID, nobody, services } from '@/modules/messaging/webhook/webhook.fakes';
 
 const PHONE = '+966501234567';
 const LEAD_ID = '00000000-0000-4000-8000-0000000000c2';

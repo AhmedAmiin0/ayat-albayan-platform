@@ -10,8 +10,8 @@ import {
   type LessonStatus,
   type OutboundTemplate,
 } from '@ab/shared';
-import type { PushEvent } from '../../../../common/push/push.service';
-import { queuedRow, type QueuedMessage } from '../queued-row';
+import type { PushEvent } from '@/common/push/push.service';
+import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import type { StaffOnRecord } from './staff-reachable';
 import { teacherReminderDue } from './teacher-due';
 import { teacherReminderCrm, type TeacherLinks } from './teacher-lesson.crm';

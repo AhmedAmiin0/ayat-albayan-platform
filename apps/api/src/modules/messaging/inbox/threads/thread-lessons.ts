@@ -1,5 +1,5 @@
 import { RIYADH_TZ, type LessonStatus, type ThreadLesson, type ThreadView } from '@ab/shared';
-import type { Db } from '../../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 
 /** How many upcoming lessons the template composer offers. */
 const LIMIT = 10;

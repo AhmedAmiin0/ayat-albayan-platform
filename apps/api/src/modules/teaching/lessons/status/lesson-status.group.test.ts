@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import type { LessonAccess } from '../store/lesson-access';
+import { readerOf } from '@/common/settings/settings.fakes';
+import type { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
 import { LessonStatusService } from './lesson-status.service';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, STUDENT_ID } from '../lessons.fakes';
-import { LessonsSettings } from '../lessons.settings';
+import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, STUDENT_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 
 const SISTER = '00000000-0000-4000-8000-0000000000c2';
 const STRANGER = '00000000-0000-4000-8000-0000000000c9';
