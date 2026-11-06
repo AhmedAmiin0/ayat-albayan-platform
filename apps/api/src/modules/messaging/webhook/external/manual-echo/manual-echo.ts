@@ -11,7 +11,7 @@ import type { DeliveryStatus, StatusEvent } from '@/modules/messaging/webhook/we
 /** A row the tap opened a window on, as the attach reads it. */
 export type AppSendRow = Pick<
   Tables<'messages'>,
-  'id' | 'body' | 'line' | 'number_id' | 'app_send_until' | 'lead_id' | 'dedup_key'
+  'id' | 'body' | 'line' | 'number_id' | 'app_send_until' | 'lead_id' | 'dedup_key' | 'status'
 >;
 
 /** Where the message came from: its line and wa_numbers row, when known. */
@@ -27,10 +27,15 @@ const sameOrigin = (row: AppSendRow, from: EchoOrigin): boolean =>
   agrees(row.number_id, from.numberId) && agrees(row.line, from.line);
 
 const untilOf = (row: AppSendRow): number => Date.parse(row.app_send_until ?? '');
+/** A row marked «نعم، أرسلتها» earlier comes after every queued / failed one (the tap's own). */
+const markedRank = (row: AppSendRow): number => (row.status === 'sent_manually' ? 1 : 0);
+const byOrder = (a: AppSendRow, b: AppSendRow): number =>
+  markedRank(a) - markedRank(b) || untilOf(a) - untilOf(b);
 
 /**
- * The rows the message may be, earliest window first (two identical texts: the first takes the
- * first message). Never a row with another text or from another line / number. Empty: insert.
+ * The rows the message may be: queued / failed first, a row already marked sent by hand only when
+ * none matches; earliest window first (two identical texts: the first takes the first message).
+ * Never a row with another text or from another line / number. Empty: insert.
  */
 export function appSendMatches(
   rows: readonly AppSendRow[],
@@ -39,7 +44,7 @@ export function appSendMatches(
   const text = foldText(message.body);
   const same = (r: AppSendRow): boolean =>
     text !== '' && foldText(r.body ?? '') === text && sameOrigin(r, message.from);
-  return rows.filter(same).sort((a, b) => untilOf(a) - untilOf(b));
+  return rows.filter(same).sort(byOrder);
 }
 
 /**

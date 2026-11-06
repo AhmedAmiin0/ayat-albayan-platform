@@ -34,20 +34,19 @@ describe('appSendLineOf', () => {
 });
 
 describe('the answers', () => {
-  it('none on the offer; «أرسلتها» pending; «نعم» / «لا» unconfirmed', () => {
+  it('none on the offer; «أرسلتها» pending; only «نعم» unconfirmed (never put back)', () => {
     expect(APP_SEND_ANSWERS).toEqual({
       offer: [],
       pending: ['sentIt'],
-      unconfirmed: ['yes', 'hold'],
+      unconfirmed: ['yes'],
     });
   });
 
-  it('yes and «أرسلتها» stop the platform (sent-manually); no holds it again (retry)', () => {
+  it('yes and «أرسلتها» stop the platform (sent-manually); no retry answer', () => {
     expect(APP_SEND_ANSWER_ACTIONS).toEqual({
       sentIt: 'sent-manually',
       yes: 'sent-manually',
-      hold: 'retry',
     });
-    expect(APP_SEND_ANSWER_KEYS.hold).toBe('backToHold');
+    expect(APP_SEND_ANSWER_KEYS).toEqual({ sentIt: 'sentIt', yes: 'yes' });
   });
 });

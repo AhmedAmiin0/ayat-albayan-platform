@@ -92,15 +92,11 @@ export class WindowRepo {
     if (ids.length === 0) return;
     const { error } = await this.db
       .from('messages')
-      .update({
-        status: 'failed',
-        error_code: why.code,
-        error_text: why.text,
-        next_attempt_at: null,
-      })
+      .update({ status: 'failed', error_code: why.code, error_text: why.text, next_attempt_at: null })
       .in('id', [...ids])
       .eq('status', 'queued')
-      .eq('error_code', why.from);
+      .eq('error_code', why.from)
+      .or(NOT_APP_SENT); // a tap meanwhile: the row stays held for the app (docs/19)
     if (error) throw fail('message hold failure', error.message);
   }
 
@@ -134,7 +130,7 @@ export class WindowRepo {
     return new Map(pairs);
   }
 
-  /** Released: due now, in written order (scheduled_for cleared); its deadline is kept. */
+  /** Released: due now (scheduled_for cleared), deadline kept; never a row tapped meanwhile. */
   async release(ids: readonly string[]): Promise<number> {
     if (ids.length === 0) return 0;
     const { data, error } = await this.db
@@ -143,6 +139,7 @@ export class WindowRepo {
       .in('id', [...ids])
       .eq('status', 'queued')
       .eq('error_code', AWAITING_REPLY)
+      .or(NOT_APP_SENT)
       .select('id');
     if (error) throw fail('held messages release', error.message);
     return data.length;

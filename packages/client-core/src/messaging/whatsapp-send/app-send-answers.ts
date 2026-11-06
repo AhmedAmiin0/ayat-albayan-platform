@@ -6,28 +6,29 @@ import { APP_SEND_GRACE_MS, appSendUnconfirmed, type MessageView } from '@ab/sha
 /** What a «أرسل عبر واتساب» row shows: the offer, its open window, or the question. */
 export type AppSendLine = 'offer' | 'pending' | 'unconfirmed';
 
-/** «أرسلتها» / «نعم»: sent-manually (never sent again); «لا، أعدها للانتظار»: the retry (held). */
-export type AppSendAnswer = 'sentIt' | 'yes' | 'hold';
+/**
+ * «أرسلتها» / «نعم»: sent-manually (never sent again). A row handed to WhatsApp is never put back
+ * to automatic sending (the server refuses its retry): «أرسل عبر واتساب» again is the other way.
+ */
+export type AppSendAnswer = 'sentIt' | 'yes';
 
 /** Staff's answers per state: none on the offer. */
 export const APP_SEND_ANSWERS: Record<AppSendLine, readonly AppSendAnswer[]> = {
   offer: [],
   pending: ['sentIt'],
-  unconfirmed: ['yes', 'hold'],
+  unconfirmed: ['yes'],
 };
 
 /** Each answer's words: the key under `messages.whatsappSend` in the i18n files. */
 export const APP_SEND_ANSWER_KEYS = {
   sentIt: 'sentIt',
   yes: 'yes',
-  hold: 'backToHold',
 } as const satisfies Record<AppSendAnswer, string>;
 
-/** Each answer's endpoint: POST /messages/:id/<action> (sent-manually, or the retry). */
+/** Each answer's endpoint: POST /messages/:id/<action>. */
 export const APP_SEND_ANSWER_ACTIONS = {
   sentIt: 'sent-manually',
   yes: 'sent-manually',
-  hold: 'retry',
 } as const satisfies Record<AppSendAnswer, string>;
 
 type LineRow = Pick<MessageView, 'status' | 'error_code' | 'app_send_until'>;

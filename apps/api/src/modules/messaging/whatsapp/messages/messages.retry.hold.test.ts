@@ -25,30 +25,32 @@ describe('MessagesService.retry: a held text restarts its hold', () => {
   it.each(['reopen_failed', 'reopen_tries_used', 'reopen_unavailable'])('%s: requeued with a restart time', async (code) => {
     const { svc, queries, row } = serviceOf(code);
     await svc.retry(row.id, { automaticOn: true });
-    expect(queries.requeue).toHaveBeenCalledWith(row.id, expect.any(Date), false);
+    expect(queries.requeue).toHaveBeenCalledWith(row.id, expect.any(Date));
   });
 
   it('any other failure: a plain requeue (no restart)', async () => {
     const { svc, queries, row } = serviceOf('network');
     await svc.retry(row.id, { automaticOn: true });
-    expect(queries.requeue).toHaveBeenCalledWith(row.id, null, false);
+    expect(queries.requeue).toHaveBeenCalledWith(row.id, null);
   });
 });
 
-describe('«لا، أعدها للانتظار» on app_send_unconfirmed (docs/19)', () => {
-  it('held again with a restart, and its app send ended', async () => {
+describe('app_send_unconfirmed is never retried (docs/19)', () => {
+  it('409 not_retryable with its status, nothing requeued', async () => {
     const { svc, queries, row } = serviceOf('app_send_unconfirmed');
-    await svc.retry(row.id, { automaticOn: true });
-    expect(queries.requeue).toHaveBeenCalledWith(row.id, expect.any(Date), true);
+    await expect(svc.retry(row.id, { automaticOn: true })).rejects.toMatchObject({
+      response: { code: 'not_retryable', status: 'failed' },
+    });
+    expect(queries.requeue).not.toHaveBeenCalled();
   });
 
-  it('the repo clears app_send_until, compare-and-set on that code, held (never free text)', async () => {
+  it('the repo never requeues one (a stale read): compare-and-set off that code', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: null }] });
-    await new MessagesRepo(db).requeue('m1', new Date('2026-11-20T10:00:00Z'), true);
+    await new MessagesRepo(db).requeue('m1');
+    const ors = calls.filter((c) => c.method === 'or').map((c) => c.args[0]);
+    expect(ors).toContain('error_code.is.null,error_code.neq.app_send_unconfirmed');
     const update = calls.find((c) => c.method === 'update')?.args[0];
-    expect(update).toMatchObject({ error_code: 'awaiting_reply', app_send_until: null });
-    const eqs = calls.filter((c) => c.method === 'eq').map((c) => c.args);
-    expect(eqs).toContainEqual(['error_code', 'app_send_unconfirmed']);
+    expect(update).not.toHaveProperty('app_send_until');
   });
 });
 

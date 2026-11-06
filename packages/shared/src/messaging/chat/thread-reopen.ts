@@ -82,7 +82,6 @@ const HOLD_FAILURES: ReadonlySet<string> = new Set([
   REOPEN_FAILED,
   REOPEN_UNAVAILABLE,
   REOPEN_TRIES_USED,
-  APP_SEND_UNCONFIRMED, // «لا، أعدها للانتظار»: held again, never sent as free text
 ]);
 
 export const isHoldFailure = (code: string | null | undefined): boolean =>

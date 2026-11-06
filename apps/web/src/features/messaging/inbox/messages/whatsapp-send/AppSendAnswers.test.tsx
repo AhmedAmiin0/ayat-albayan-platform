@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
-import { action, button, held, renderBubble } from './whatsapp-send.test-util';
+import { action, button, fakeTab, held, renderBubble } from './whatsapp-send.test-util';
 
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
@@ -31,27 +31,20 @@ describe('«أرسلتها» while pending', () => {
 describe('unconfirmed: «هل أرسلتها من واتساب؟»', () => {
   beforeEach(() => vi.mocked(apiSend).mockReset());
 
-  it('asks, with «نعم», «لا، أعدها للانتظار» and «أرسل عبر واتساب»; no plain retry', () => {
+  it('asks, with «نعم، أرسلتها» and «أرسل عبر واتساب» only: never put back (no «لا», no retry)', () => {
     renderBubble(unconfirmed);
     expect(screen.getByText(t.messages.whatsappSend.askSent)).toBeTruthy();
     expect(button(t.messages.whatsappSend.yes)).toBeTruthy();
-    expect(button(t.messages.whatsappSend.backToHold)).toBeTruthy();
     expect(action()).toBeTruthy();
     expect(button(t.messages.retry)).toBeNull();
   });
 
-  it('«نعم»: sent-manually', async () => {
+  it('«نعم، أرسلتها»: sent-manually', async () => {
     vi.mocked(apiSend).mockResolvedValue(message({ ...held, status: 'sent_manually' }));
     renderBubble(unconfirmed);
     fireEvent.click(button(t.messages.whatsappSend.yes) as HTMLElement);
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-held/sent-manually'));
-  });
-
-  it('«لا، أعدها للانتظار»: the retry (the server holds it again)', async () => {
-    vi.mocked(apiSend).mockResolvedValue(message({ ...held }));
-    renderBubble(unconfirmed);
-    fireEvent.click(button(t.messages.whatsappSend.backToHold) as HTMLElement);
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-held/retry'));
+    expect(apiSend).not.toHaveBeenCalledWith('POST', '/messages/m-held/retry');
   });
 
   it('tapped again (pending): «جارٍ الإرسال من واتساب…» with «أرسلتها», no question', () => {
@@ -63,5 +56,19 @@ describe('unconfirmed: «هل أرسلتها من واتساب؟»', () => {
   it('a row on the notifications line: no line at all', () => {
     renderBubble({ line: 'notifications' });
     expect(action()).toBeNull();
+  });
+});
+
+describe('a stale tap error after a later answer (docs/19)', () => {
+  it('«نعم، أرسلتها» succeeded: the earlier tap error under the line goes', async () => {
+    const open = vi.spyOn(window, 'open').mockReturnValue(fakeTab() as unknown as Window);
+    vi.mocked(apiSend).mockReset().mockRejectedValueOnce(new Error('offline'));
+    renderBubble(unconfirmed);
+    fireEvent.click(action() as HTMLElement);
+    expect((await screen.findByRole('alert')).textContent).toBe(t.common.error);
+    vi.mocked(apiSend).mockResolvedValue(message({ ...held, status: 'sent_manually' }));
+    fireEvent.click(button(t.messages.whatsappSend.yes) as HTMLElement);
+    await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
+    open.mockRestore();
   });
 });

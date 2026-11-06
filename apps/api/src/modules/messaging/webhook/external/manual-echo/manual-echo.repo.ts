@@ -39,7 +39,7 @@ export class ManualEchoRepo {
   async candidates(phone: string, span: { since: Date; until: Date }): Promise<AppSendRow[]> {
     const { data, error } = await this.db
       .from('messages')
-      .select('id, body, line, number_id, app_send_until, lead_id, dedup_key')
+      .select('id, body, line, number_id, app_send_until, lead_id, dedup_key, status')
       .eq('phone_e164', phone)
       .eq('direction', 'outbound')
       .not('created_by', 'is', null)

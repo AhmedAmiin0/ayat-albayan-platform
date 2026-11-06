@@ -1,8 +1,10 @@
 -- «أرسل عبر واتساب» when staff sent the held text from WhatsApp Business BEFORE tapping (docs/19):
 -- the app's echo was stored as its own external row (created_by null) and nothing attached it.
 -- The tap (AppSend.start) now finds that row first and adopts it in ONE transaction:
---   the external row is deleted (its wamid is unique) and the held row takes its wamid, status
---   and times, with its window and every hold field cleared: one bubble, never sent again.
+--   replies to / forwards of the external row are moved onto the held row, the external row is
+--   deleted (its wamid is unique) and the held row takes its wamid, status, times and the
+--   contact's reaction (kept when the held row has one), with its window and every hold field
+--   cleared: one bubble, never sent again.
 -- Compare-and-set on both rows: the held row still has no wamid, is staff-written, queued or failed
 -- and not claimed by the sender; the external row is still an outbound, staff-less, sent row,
 -- never older than the held row (an earlier identical message is never taken).
@@ -45,6 +47,10 @@ begin
   if not found then
     return false;
   end if;
+  update public.messages set reply_to_message_id = p_held
+    where reply_to_message_id = ext.id and id <> p_held;
+  update public.messages set forwarded_from_id = p_held
+    where forwarded_from_id = ext.id and id <> p_held;
   delete from public.messages where id = ext.id;
   update public.messages set
       wa_message_id = ext.wa_message_id,
@@ -52,6 +58,7 @@ begin
       sent_at = coalesce(ext.sent_at, ext.created_at),
       delivered_at = ext.delivered_at,
       read_at = ext.read_at,
+      their_reaction = coalesce(their_reaction, ext.their_reaction),
       sent_manually_at = now(),
       app_send_until = null,
       error_code = null,

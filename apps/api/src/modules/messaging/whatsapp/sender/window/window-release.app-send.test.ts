@@ -45,3 +45,21 @@ describe('WindowRelease and the app-send expiry', () => {
     expect(f.repo.release).not.toHaveBeenCalled();
   });
 });
+
+describe('WindowRepo writes: a tap racing them keeps the row held (docs/19)', () => {
+  const orsOf = (calls: { method: string; args: unknown[] }[]) =>
+    calls.filter((c) => c.method === 'or').map((c) => c.args[0]);
+
+  it('release is compare-and-set on no app_send_until, as SenderRepo.claim', async () => {
+    const { db, calls } = fakeDb({ messages: [{ data: [] }] });
+    await new WindowRepo(db).release(['h1']);
+    expect(orsOf(calls)).toEqual(['app_send_until.is.null']);
+  });
+
+  it('fail never fails a row tapped meanwhile', async () => {
+    const { db, calls } = fakeDb({ messages: [{ data: null }] });
+    const why = { code: 'reopen_failed', text: 'x', from: 'awaiting_reply' };
+    await new WindowRepo(db).fail(['h1'], why);
+    expect(orsOf(calls)).toEqual(['app_send_until.is.null']);
+  });
+});

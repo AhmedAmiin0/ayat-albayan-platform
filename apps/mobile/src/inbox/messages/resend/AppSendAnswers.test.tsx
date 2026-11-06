@@ -1,4 +1,5 @@
 import type { MessageView } from '@ab/shared';
+import { useState } from 'react';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -14,7 +15,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 
 // Staff's answers about a «أرسل عبر واتساب» (docs/19): the platform never sends such a row itself,
-// so the bubble's line and the «!» sheet give the stop path back (sent-manually) and the hold.
+// so the bubble's line and the «!» sheet give the stop path back (sent-manually), never a retry.
 
 const held = message({
   id: 'm-held',
@@ -52,10 +53,10 @@ test('unconfirmed: the question, «نعم» = sent-manually, and the action agai
   await waitFor(() => expect(send).toHaveBeenCalledWith('POST', '/messages/m-held/sent-manually'));
 });
 
-test('unconfirmed: «لا، أعدها للانتظار» = the retry (held again by the server)', async () => {
+test('unconfirmed: never put back to sending (no «لا», no retry)', async () => {
   await show(unconfirmed);
-  await fireEvent.press(button(t.messages.whatsappSend.backToHold) as never);
-  await waitFor(() => expect(send).toHaveBeenCalledWith('POST', '/messages/m-held/retry'));
+  expect(button(t.messages.retry)).toBeNull();
+  expect(button(t.messages.whatsappSend.yes)).toBeTruthy();
 });
 
 test('the «!» sheet of an unconfirmed row: «نعم» closes it and records the send; no retry', async () => {
@@ -63,10 +64,23 @@ test('the «!» sheet of an unconfirmed row: «نعم» closes it and records th
   await renderWithQuery(<FailedSheet {...props} message={unconfirmed} />);
   const s = within(screen.getByTestId('failed-sheet'));
   expect(s.queryByRole('button', { name: t.messages.retry })).toBeNull();
-  expect(s.getByRole('button', { name: t.messages.whatsappSend.backToHold })).toBeTruthy();
   await fireEvent.press(s.getByRole('button', { name: t.messages.whatsappSend.yes }));
   expect(props.onClose).toHaveBeenCalled();
   await waitFor(() => expect(send).toHaveBeenCalledWith('POST', '/messages/m-held/sent-manually'));
+});
+
+test('the «!» sheet: a failed «نعم» shows in the chat notice after the sheet closed', async () => {
+  send.mockReset().mockRejectedValue(new Error('offline'));
+  const onError = jest.fn();
+  function Chat() {
+    const [row, setRow] = useState<MessageView | null>(unconfirmed);
+    const close = () => setRow(null);
+    return <FailedSheet phone={PHONE} message={row} onClose={close} onError={onError} />;
+  }
+  await renderWithQuery(<Chat />);
+  const s = within(screen.getByTestId('failed-sheet'));
+  await fireEvent.press(s.getByRole('button', { name: t.messages.whatsappSend.yes }));
+  await waitFor(() => expect(onError).toHaveBeenCalledWith(t.common.error));
 });
 
 test('the «!» sheet of a pending row: «أرسلتها»', async () => {

@@ -35,7 +35,7 @@ const COPY: Record<Line, { text: () => string; button: () => string }> = {
  * text the 24 h window stopped says why and offers the action; while its window is open it says
  * it is being sent from WhatsApp and offers «افتح واتساب مجددًا» (the same call: it extends it)
  * and «أرسلتها». With no echo once it passes, the platform never sends it: the line asks «هل
- * أرسلتها من واتساب؟» (نعم / لا، أعدها للانتظار) and offers the action again.
+ * أرسلتها من واتساب؟» («نعم، أرسلتها») and offers the action again (never put back to sending).
  */
 export function WhatsAppSendLine({ message: m, now }: LineProps) {
   const send = useWhatsAppSend();

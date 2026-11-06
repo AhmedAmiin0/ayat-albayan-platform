@@ -3805,9 +3805,8 @@
       "pending": "Sending from WhatsApp…",
       "pendingHint": "Send it unchanged from WhatsApp Business on the academy number. The platform will not send it; it shows as sent once it arrives from WhatsApp.",
       "sentIt": "I sent it",
-      "askSent": "Did you send it from WhatsApp? It has not reached us from there, and the platform will not send it until you answer.",
-      "yes": "Yes",
-      "backToHold": "No, put it back on hold",
+      "askSent": "Did you send it from WhatsApp? It has not reached us from there, and the platform will never send it automatically. If you did not, send it via WhatsApp.",
+      "yes": "Yes, I sent it",
       "openAgain": "Open WhatsApp again",
       "alreadySent": "This message was already sent, so there is no need to send it from WhatsApp.",
       "notNow": "This message can no longer be sent from WhatsApp. Refresh the chat."

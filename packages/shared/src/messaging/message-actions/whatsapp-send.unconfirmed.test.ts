@@ -39,8 +39,8 @@ describe('app_send_unconfirmed: the tap passed with no echo', () => {
     expect(appSendUnconfirmed({ status: 'failed', error_code: 'reopen_failed' })).toBe(false);
   });
 
-  it('«لا» holds it again (a hold failure); the plain retry button never shows', () => {
-    expect(isHoldFailure(APP_SEND_UNCONFIRMED)).toBe(true);
+  it('never put back to automatic sending: no hold failure, no plain retry button', () => {
+    expect(isHoldFailure(APP_SEND_UNCONFIRMED)).toBe(false);
     expect(canRetryCode(APP_SEND_UNCONFIRMED)).toBe(false);
   });
 });

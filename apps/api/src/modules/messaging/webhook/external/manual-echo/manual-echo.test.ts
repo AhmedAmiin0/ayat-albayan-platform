@@ -48,6 +48,16 @@ describe('app send attach rules', () => {
     expect(appSendMatches(rows, { body: BODY, from: CHAT })[0]?.id).toBe('early');
   });
 
+  it('the queued / failed row just tapped before an earlier row marked sent by hand', () => {
+    const rows = [
+      row({ id: 'marked', status: 'sent_manually', app_send_until: '2026-11-06T10:02:00Z' }),
+      row({ id: 'failed', status: 'failed', app_send_until: '2026-11-06T10:12:00Z' }),
+      row({ id: 'queued', app_send_until: '2026-11-06T10:11:00Z' }),
+    ];
+    const ids = appSendMatches(rows, { body: BODY, from: CHAT }).map((r) => r.id);
+    expect(ids).toEqual(['queued', 'failed', 'marked']);
+  });
+
   it('status: sent for an echo; the event as it says; never on a failed one', () => {
     expect(attachPatch(SENT)).toEqual({ status: 'sent', sent_at: SENT_AT.toISOString() });
     expect(attachPatch(SENT, event('delivered'))).toMatchObject({

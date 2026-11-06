@@ -13,7 +13,6 @@ export const CHAT = { line: 'chat', numberId: 'num-chat' };
 type MemRow = AppSendRow & {
   phone: string;
   wa_message_id: string | null;
-  status: string;
   error_code: string | null;
   staff: boolean;
 };

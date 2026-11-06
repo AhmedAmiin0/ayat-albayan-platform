@@ -2,6 +2,7 @@ import { sendViaWhatsApp, type WhatsAppSendResult, whatsappSendUrl } from '@ab/c
 import type { MessageView } from '@ab/shared';
 import {
   type MutationState,
+  type QueryClient,
   useMutation,
   useMutationState,
   useQueryClient,
@@ -63,11 +64,26 @@ export function useWhatsAppSend(): (m: MessageView) => void {
   return (message) => send.mutate({ message, tab: blankTab() });
 }
 
+const isRow = (vars: unknown, id: string): boolean =>
+  (vars as SendVars | undefined)?.message.id === id;
+
+/**
+ * The row's «أرسل عبر واتساب» taps leave the cache once staff answered (sent-manually): an
+ * earlier tap's error no longer describes the row, so it stops showing under the line.
+ */
+export function clearWhatsAppSend(client: QueryClient, id: string): void {
+  const cache = client.getMutationCache();
+  const mine = cache.findAll({
+    mutationKey: KEY,
+    predicate: (m) => isRow(m.state.variables, id),
+  });
+  for (const m of mine) cache.remove(m);
+}
+
 /** The last «أرسل عبر واتساب» of this row in this session (busy and error only). */
 export function useWhatsAppSendState(id: string): SendState | undefined {
-  const mine = (vars: unknown): boolean => (vars as SendVars | undefined)?.message.id === id;
   const states = useMutationState({
-    filters: { mutationKey: KEY, predicate: (m) => mine(m.state.variables) },
+    filters: { mutationKey: KEY, predicate: (m) => isRow(m.state.variables, id) },
     select: (m) => m.state as SendState,
   });
   return states.at(-1);
