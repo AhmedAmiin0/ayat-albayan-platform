@@ -69,3 +69,25 @@ describe('«القيم» editors by type', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/reporting_currency', { value: 'USD', expectedVersion: 1 }));
   });
 });
+
+describe('«قالب إعادة فتح المحادثة»: a template or «بدون قالب» (owner 2026-11-06)', () => {
+  const choice = (row: HTMLElement) => within(row).getByRole('combobox', { name: t.settings.chatReopenTemplate });
+
+  it('«بدون قالب» saves none and hides the name box; «قالب ترحيب» brings back the default', async () => {
+    apiSend.mockImplementation(answerPatch);
+    renderValues(apiFetch, { search: { group: 'messages' } });
+    const row = await findRow(t.settings.chatReopenTemplate);
+    expect((choice(row) as HTMLSelectElement).value).toBe('template');
+    fireEvent.change(choice(row), { target: { value: 'wait' } });
+    expect(within(row).queryByRole('textbox')).toBeNull();
+    fireEvent.click(within(row).getByRole('button', { name: `${t.common.save}: ${t.settings.chatReopenTemplate}` }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/chat_reopen_template', { value: 'none', expectedVersion: 1 }));
+  });
+
+  it('the template choice keeps the name box', async () => {
+    renderValues(apiFetch, { search: { group: 'messages' } });
+    const row = await findRow(t.settings.chatReopenTemplate);
+    expect(within(row).getByRole('textbox')).toBeTruthy();
+    expect(within(row).getByRole('option', { name: t.settingsValues.reopenChoice.wait })).toBeTruthy();
+  });
+});

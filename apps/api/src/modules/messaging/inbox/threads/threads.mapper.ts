@@ -4,6 +4,7 @@ import {
   searchDigits,
   sessionWindowOpen,
   type BodySlot,
+  type ReopenChoice,
   type TemplateParamsInput,
   type TemplateView,
   type ThreadNote,
@@ -17,10 +18,10 @@ import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.m
 
 export type ThreadRow = Tables<'v_threads'>;
 
-/** The family tags (null: none), and can a closed chat be reopened (ReopenRequest.usable)? */
+/** The family tags (null: none), and how a closed chat reopens (ReopenRequest.usable). */
 interface ThreadViewOpts {
   tag?: FamilyTag | null;
-  reopenUsable?: boolean;
+  reopenUsable?: ReopenChoice | null;
 }
 
 /**
@@ -49,9 +50,9 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     last_chat_inbound_at: row.last_chat_inbound_at,
     last_notifications_inbound_at: row.last_notifications_inbound_at,
     reply_line: shownReplyLine(row, { chatConfigured: Boolean(chat), now }),
-    // Owner 2026-11-03: a Kapso chat line holds a late text behind the reopen template (textLine),
-    // only while that template is usable: else nothing asks the family to reply (review 11-05).
-    ...(chat?.provider === 'kapso' && opts.reopenUsable ? { try_after_window: true } : {}),
+    // Owner 2026-11-03: a Kapso chat line holds a late text (textLine) while it can reopen: the
+    // template is usable, or the admin chose «بدون قالب» (11-06); reopen_choice picks the note.
+    ...tryAfterWindow(chat?.provider === 'kapso' ? (opts.reopenUsable ?? null) : null),
     unread_count: row.unread_count ?? 0,
     lead_id: row.lead_id,
     lead_name: row.lead_name,
@@ -66,6 +67,9 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     ...familyFields(row.guardian_id ? (tag ?? { badge: 'none', unpaid: false }) : null),
   };
 }
+
+const tryAfterWindow = (choice: ReopenChoice | null) =>
+  choice ? { try_after_window: true, reopen_choice: choice } : {};
 
 /** An old-CRM file's last body is only its storage link: the list shows the media label instead. */
 function lastBody(row: ThreadRow): string | null {

@@ -3,8 +3,7 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { Chevron } from '@/core/ui/primitives/Chevron';
-import { IconButton } from '@/core/ui/primitives/IconButton';
+import { BackButton } from '@/core/ui/navigation';
 import { PresenceLabel } from '@/core/ui/feedback/PresenceLabel';
 import { ChatSearchBar, useChatSearch } from '@/inbox/thread/search';
 
@@ -49,9 +48,7 @@ export function ChatHeader(props: ChatHeaderProps) {
         marginStart: -10,
       }}
     >
-      <IconButton label={t.common.back} onPress={onBack}>
-        <Chevron to="prev" color={color.ink} size={22} />
-      </IconButton>
+      <BackButton onPress={onBack} />
       {avatar}
       {/* Hugs the chevron at the inline-start. */}
       <Pressable

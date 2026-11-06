@@ -4,7 +4,7 @@ import { ActivityIndicator, ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Section } from '@/core/ui/surface/Section';
 import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -23,14 +23,14 @@ export function PricingScreen() {
   const [selection, setSelection] = useState<Selection>(DEFAULT_SELECTION);
   const quote = useQuote(selection);
   const data = quote.data;
-  const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
+  const back = <BackButton onPress={() => router.back()} />;
   return (
     <Screen>
       <ScrollView
         style={{ flex: 1, marginHorizontal: -16 }}
         contentContainerStyle={{ gap: 20, paddingHorizontal: 16, paddingBottom: 32 }}
       >
-        <ScreenHeader title={t.pricing.title} subtitle={t.pricing.subtitle} trailing={back} />
+        <ScreenHeader title={t.pricing.title} subtitle={t.pricing.subtitle} leading={back} />
         <PricingSteps
           selection={selection}
           onChange={(patch) => setSelection((s) => ({ ...s, ...patch }))}

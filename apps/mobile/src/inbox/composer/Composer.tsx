@@ -1,4 +1,4 @@
-import { triesAfterWindow } from '@ab/client-core';
+import { afterWindowNote, triesAfterWindow } from '@ab/client-core';
 import type { ThreadLesson, ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -81,7 +81,7 @@ export function Composer({
       ))}
       <GateNote />
       <ReopenNote phone={phone} closed={thread !== null && !open} />
-      {trying ? <ClosedNote known note={t.inbox.tryAfterWindow} /> : null}
+      {trying ? <ClosedNote known note={t.inbox[afterWindowNote(thread?.reopen_choice)]} /> : null}
       {may ? <QuoteStrip /> : null}
       {may && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
       {may && replies.search !== null ? (

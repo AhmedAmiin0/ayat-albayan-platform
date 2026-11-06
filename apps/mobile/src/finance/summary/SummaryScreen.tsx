@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { RefreshControl, ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -25,7 +25,10 @@ export function SummaryScreen() {
   const finance = summary.data?.finance;
   return (
     <Screen>
-      <ScreenHeader title={t.mobileFinance.rows.summary} trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />} />
+      <ScreenHeader
+        title={t.mobileFinance.rows.summary}
+        leading={<BackButton onPress={() => router.back()} />}
+      />
       <FilterPills accessibilityLabel={t.finance.year} items={years.map((y) => ({ value: y, label: y }))} value={year} onChange={setYear} />
       <StaleNote isError={summary.isError} hasData={!!finance} />
       <ScrollView

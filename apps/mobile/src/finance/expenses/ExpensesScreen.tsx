@@ -5,6 +5,7 @@ import { FlatList, type ListRenderItemInfo, ScrollView, View } from 'react-nativ
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
@@ -34,11 +35,11 @@ export function ExpensesScreen() {
     [cats],
   );
   const cells = useInsetRows(renderRow, rows.length);
-  const back = <Button variant="ghost" label={t.common.back} onPress={() => (adding ? setAdding(false) : router.back())} />;
+  const back = <BackButton onPress={() => (adding ? setAdding(false) : router.back())} />;
   if (adding) {
     return (
       <Screen>
-        <ScreenHeader title={t.mobileFinance.expenses.addTitle} trailing={back} />
+        <ScreenHeader title={t.mobileFinance.expenses.addTitle} leading={back} />
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
           <ExpenseForm
             categories={categories.data}
@@ -53,7 +54,7 @@ export function ExpensesScreen() {
   }
   return (
     <Screen>
-      <ScreenHeader title={t.mobileFinance.rows.expenses} trailing={back} />
+      <ScreenHeader title={t.mobileFinance.rows.expenses} leading={back} />
       {saved ? <Note>{t.expenses.saved}</Note> : null}
       <MonthPicker month={month} onChange={setMonth} />
       <StaleNote isError={expenses.isError} hasData={!!expenses.data} />

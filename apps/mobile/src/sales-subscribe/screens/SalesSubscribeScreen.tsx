@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -58,7 +59,7 @@ export function SalesSubscribeScreen() {
       >
         <ScreenHeader
           title={renewing ? t.students.renew : t.salesMoney.newSubscription}
-          trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+          leading={<BackButton onPress={back} />}
         />
         {family.isError ? (
           <ErrorState onRetry={() => void family.refetch()} />

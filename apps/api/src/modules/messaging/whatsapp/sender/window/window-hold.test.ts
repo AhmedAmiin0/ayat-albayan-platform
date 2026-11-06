@@ -34,6 +34,7 @@ describe('WindowHold.due — a text queued after the window', () => {
       from: 'awaiting_reply',
       since: expect.any(Date),
       until,
+      note: null,
     });
     const [queued] = f.repo.queueReopen.mock.invocationCallOrder;
     const [held] = f.repo.hold.mock.invocationCallOrder;

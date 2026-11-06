@@ -1,6 +1,5 @@
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/more/ops/settings'));
@@ -11,7 +10,7 @@ export function SubScreenHeader({ title, subtitle }: { title: string; subtitle?:
     <ScreenHeader
       title={title}
       subtitle={subtitle}
-      trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+      leading={<BackButton onPress={back} />}
     />
   );
 }

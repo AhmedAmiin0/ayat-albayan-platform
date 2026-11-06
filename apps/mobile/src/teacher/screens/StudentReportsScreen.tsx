@@ -7,7 +7,7 @@ import { useStudentHref } from '@/core/nav/tree-base';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
@@ -77,7 +77,7 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
         size="h2"
         connecting
         subtitle={t.reports.history}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+        leading={<BackButton onPress={back} />}
       />
       {/* A teacher's trial student (the admin's view reads no /teachers/me, so never). */}
       <TrialChatNote status={teacherStudentStatus(me.data, id)} />

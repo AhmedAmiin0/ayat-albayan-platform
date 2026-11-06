@@ -4920,7 +4920,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/messaging/inbox/threads/threads.teacher-send.http.test.ts": {

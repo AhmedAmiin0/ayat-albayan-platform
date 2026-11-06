@@ -1,6 +1,6 @@
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { CreateUserForm } from '../create/CreateUserForm';
@@ -18,7 +18,7 @@ export function CreateUserScreen() {
       >
         <ScreenHeader
           title={t.users.create.title}
-          trailing={<Button variant="ghost" label={t.common.back} onPress={backToUsers} />}
+          leading={<BackButton onPress={backToUsers} />}
         />
         <CreateUserForm onClose={backToUsers} />
       </ScrollView>

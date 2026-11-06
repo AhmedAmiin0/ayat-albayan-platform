@@ -65,6 +65,7 @@
           "cameraPermission": "نحتاج إلى الكاميرا لتصوير إيصال التحويل وتسجيله مع الدفعة، وللظهور بالفيديو في الحلقات والاجتماعات من داخل التطبيق."
         }
       ],
+      "./plugins/okhttp-timeouts/app.plugin.ts",
       [
         "@livekit/react-native-expo-plugin",
         {

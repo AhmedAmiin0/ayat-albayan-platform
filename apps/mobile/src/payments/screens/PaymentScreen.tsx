@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -31,7 +31,7 @@ export function PaymentScreen() {
       <ScreenHeader
         title={current ? t.payments.mobile.recordFor.replace('{student}', current.student.name) : t.payments.record}
         subtitle={current ? ltr(current.student.code) : undefined}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+        leading={<BackButton onPress={back} />}
       />
       {data && current ? (
         <ScrollView

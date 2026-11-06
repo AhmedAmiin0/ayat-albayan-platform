@@ -19,13 +19,15 @@ const props = { context: {}, gateNote: null, mode: 'text' as const, onMode: vi.f
 const box = () => screen.queryByRole('textbox', { name: t.inbox.composer.messageLabel });
 const toggle = () => screen.queryByRole('button', { name: t.inbox.composer.modeTemplate });
 
-function show(mode: InboxMode, tries: boolean) {
+function show(mode: InboxMode, tries: boolean, choice?: 'template' | 'wait') {
   const me = { id: 'u1', email: null, role: mode, permissions: ['messages.read', 'templates.manage'] };
   routeFetch(apiFetch, [
     ['/auth/me', me],
     ['/messaging/templates', [template({ key: 'free_trial_invite' })]],
   ]);
-  const closed = thread({ session_open: false, ...(tries ? { try_after_window: true } : {}) });
+  const picked = choice ? { reopen_choice: choice } : {};
+  const flag = tries ? { try_after_window: true, ...picked } : {};
+  const closed = thread({ session_open: false, ...flag });
   renderWithClient(
     <InboxModeContext.Provider value={mode}>
       <ComposerPhone thread={closed} {...props} />
@@ -44,6 +46,18 @@ describe('ComposerPhone after the 24 h window', () => {
     await waitFor(() => expect(toggle()).toBeTruthy());
     expect(toggle()?.getAttribute('aria-pressed')).toBe('false');
     expect(toggle()?.className).not.toContain('bg-lapis-wash');
+  });
+
+  it('«بدون قالب» (owner 2026-11-06): the reopen-and-wait note, the box', () => {
+    show('admin', true, 'wait');
+    expect(screen.getByText(t.inbox.tryAfterWindowWait)).toBeTruthy();
+    expect(screen.queryByText(t.inbox.tryAfterWindow)).toBeNull();
+    expect(box()).toBeTruthy();
+  });
+
+  it('a template chosen: the welcome template note', () => {
+    show('sales', true, 'template');
+    expect(screen.getByText(t.inbox.tryAfterWindow)).toBeTruthy();
   });
 
   it('a meta chat line (no flag): templates only, as before', () => {
