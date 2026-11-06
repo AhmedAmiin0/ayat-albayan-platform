@@ -51,10 +51,13 @@ export async function crmTemplates(conn: CrmConn): Promise<MetaTemplate[]> {
 }
 
 const PARAM = '{{1}}';
-const urlExample = (url: string) => (url.includes(PARAM) ? { example: url.replace(PARAM, 'sample') } : {});
+type UrlButton = Extract<TemplateButton, { type: 'url' }>;
+/** The {{1}} suffix's sample: the row's own (teacher_lesson_v3), else «sample». */
+const urlExample = (b: UrlButton) =>
+  (b.url.includes(PARAM) ? { example: b.url.replace(PARAM, b.example ?? 'sample') } : {});
 
-const urlButton = (b: Extract<TemplateButton, { type: 'url' }>) =>
-  ({ type: 'URL', text: b.text ?? '', url: b.url, ...urlExample(b.url) });
+const urlButton = (b: UrlButton) =>
+  ({ type: 'URL', text: b.text ?? '', url: b.url, ...urlExample(b) });
 const crmButton = (b: TemplateButton): object =>
   (b.type === 'url' ? urlButton(b) : { type: 'QUICK_REPLY', text: b.text });
 

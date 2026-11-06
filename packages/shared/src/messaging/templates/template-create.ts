@@ -18,6 +18,8 @@ export const TEMPLATE_LIMITS = {
   buttonText: 25,
   sample: 200,
   buttons: 3,
+  /** Meta takes at most two link buttons on one template. */
+  urlButtons: 2,
 } as const;
 
 /**
@@ -39,11 +41,15 @@ const fixedText = (max: number) =>
 
 const buttonText = z.string().trim().min(1).max(TEMPLATE_LIMITS.buttonText);
 
-/** A URL button: https, its only variable a {{1}} suffix (the composers fill one value). */
+/**
+ * A URL button: https, its only variable a {{1}} suffix (params.buttons fills each by order);
+ * `example` is that suffix's sample for Meta's reviewer.
+ */
 const urlButton = z.object({
   type: z.literal('url'),
   text: buttonText,
   url: z.string().trim().max(2000).regex(/^https:\/\/[^\s{}]+(\{\{1\}\})?$/),
+  example: z.string().trim().min(1).max(TEMPLATE_LIMITS.sample).regex(/^\S+$/).optional(),
 });
 
 const replyButton = z.object({
@@ -60,7 +66,8 @@ const param = z.object({
   sample: z.string().trim().min(1).max(TEMPLATE_LIMITS.sample),
 });
 
-const oneUrl = (list: readonly { type: string }[]) => list.filter((b) => b.type === 'url').length <= 1;
+const fewUrls = (list: readonly { type: string }[]) =>
+  list.filter((b) => b.type === 'url').length <= TEMPLATE_LIMITS.urlButtons;
 
 /** POST /messaging/templates: one new row, not submitted; params[i] is {{i+1}}. */
 export const templateCreateSchema = z.object({
@@ -75,7 +82,7 @@ export const templateCreateSchema = z.object({
   buttons: z
     .array(z.discriminatedUnion('type', [urlButton, replyButton]))
     .max(TEMPLATE_LIMITS.buttons)
-    .refine(oneUrl, 'one_url_button')
+    .refine(fewUrls, 'url_buttons')
     .default([]),
 });
 

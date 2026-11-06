@@ -16,7 +16,7 @@ import { z } from 'zod';
 // messages.template_params), parsed instead of cast: a malformed row reads as empty, never crashes.
 
 const buttonSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('url'), url: z.string(), text: z.string().optional() }),
+  z.object({ type: z.literal('url'), url: z.string(), text: z.string().optional(), example: z.string().optional() }),
   z.object({ type: z.literal('quick_reply'), text: z.string(), intent: z.enum(QUICK_REPLY_INTENTS) }),
 ]);
 
@@ -33,6 +33,7 @@ const slots = Object.fromEntries(BODY_SLOTS.map((s) => [s, slot])) as Record<Bod
 const paramsSchema = z.object({
   ...slots,
   button: z.string().optional(),
+  buttons: z.array(z.string()).optional(),
   payloads: z.array(z.string()).optional(),
   document: z.object({ bucket: z.string(), path: z.string(), filename: z.string() }).optional(),
   // A malformed crm part is dropped, never the whole row's values (the meta and kapso drivers never read it).

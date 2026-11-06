@@ -9,4 +9,5 @@ export {
 } from './history/report-history.queries';
 export { ReportsModule } from './reports.module';
 export { ReportsSettings, type ReportsSettingsValues } from './reports.settings';
-export { TeacherReportLinks } from './teacher-link/teacher-link.issuer';
+export { TEACHER_LINK_CONFIG, type TeacherLinkConfig } from './teacher-link/teacher-link.config';
+export { type TeacherReportLink, TeacherReportLinks } from './teacher-link/teacher-link.issuer';
