@@ -10295,11 +10295,6 @@
       "count": 5
     }
   },
-  "src/modules/reporting/report-pdf/report-pdf.module.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/reporting/report-pdf/report-pdf.publisher.test.ts": {
     "ab/no-parent-imports": {
       "count": 2

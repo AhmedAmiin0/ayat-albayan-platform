@@ -10,7 +10,7 @@ const queries = {
   pendingIds: vi.fn(),
   claim: vi.fn(),
   finish: vi.fn(),
-  queueMessage: vi.fn(),
+  queueMessages: vi.fn(),
 };
 const publisher = { publish: vi.fn(), close: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
@@ -30,8 +30,8 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
     queries.pendingIds.mockResolvedValue(['r1', 'r2']);
     queries.claim.mockResolvedValue(3);
     queries.finish.mockResolvedValue(true);
-    queries.queueMessage.mockResolvedValue(undefined);
-    publisher.publish.mockImplementation(async (id: string) => ({ path: `s/${id}.pdf`, message }));
+    queries.queueMessages.mockResolvedValue(undefined);
+    publisher.publish.mockImplementation(async (id: string) => ({ path: `s/${id}.pdf`, messages: [message] }));
     publisher.close.mockResolvedValue(undefined);
   });
 
@@ -40,9 +40,9 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
     expect(summary).toEqual({ recovered: 0, rendered: 2, failed: 0, skipped: 0, held: 0 });
     expect(queries.pendingIds).toHaveBeenCalledWith(20);
     expect(queries.claim.mock.calls).toEqual([['r1'], ['r2']]);
-    expect(queries.queueMessage).toHaveBeenCalledWith(message);
+    expect(queries.queueMessages).toHaveBeenCalledWith([message]);
     expect(queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 3, status: 'ready', path: 's/r1.pdf' });
-    const order = [publisher.publish, queries.queueMessage, queries.finish].map((f) => f.mock.invocationCallOrder[0]);
+    const order = [publisher.publish, queries.queueMessages, queries.finish].map((f) => f.mock.invocationCallOrder[0]);
     expect(order).toEqual([...order].sort((a = 0, b = 0) => a - b));
   });
 
@@ -76,18 +76,18 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
   it('after three failed attempts marks the claimed version failed with the error, and goes on', async () => {
     publisher.publish.mockImplementation(async (id: string) => {
       if (id === 'r1') throw new Error('x'.repeat(600));
-      return { path: 's/r2.pdf', message };
+      return { path: 's/r2.pdf', messages: [message] };
     });
     const summary = await job().runOnce(NOW);
     expect(summary).toEqual({ recovered: 0, rendered: 1, failed: 1, skipped: 0, held: 0 });
     expect(publisher.publish).toHaveBeenCalledTimes(4);
     expect(queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 3, status: 'failed', error: 'x'.repeat(500) });
-    expect(queries.queueMessage).toHaveBeenCalledTimes(1);
+    expect(queries.queueMessages).toHaveBeenCalledTimes(1);
   });
 
   it('a failing message queue counts as a failed publish (retried, then failed)', async () => {
     queries.pendingIds.mockResolvedValue(['r1']);
-    queries.queueMessage.mockRejectedValue(new Error('messages down'));
+    queries.queueMessages.mockRejectedValue(new Error('messages down'));
     const summary = await job().runOnce(NOW);
     expect(summary.failed).toBe(1);
     expect(queries.finish).toHaveBeenCalledWith(expect.objectContaining({ status: 'failed', error: 'messages down' }));
@@ -113,14 +113,14 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
   it('module mode, the report_ready row off: the PDF is stored and ready, no message queued', async () => {
     const summary = await job(fakePolicy({ mode: 'module', rows: [{ key: 'report_ready', enabled: false }] })).runOnce(NOW);
     expect(summary).toEqual({ recovered: 0, rendered: 2, failed: 0, skipped: 0, held: 0 });
-    expect(queries.queueMessage).not.toHaveBeenCalled();
+    expect(queries.queueMessages).not.toHaveBeenCalled();
     expect(queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 3, status: 'ready', path: 's/r1.pdf' });
   });
 
   it('rules unreadable: no message and not ready, so the report is retried (an essential row is never dropped)', async () => {
     const summary = await job(fakePolicy({ fail: true })).runOnce(NOW);
     expect(summary.rendered).toBe(0);
-    expect(queries.queueMessage).not.toHaveBeenCalled();
+    expect(queries.queueMessages).not.toHaveBeenCalled();
     expect(queries.finish).not.toHaveBeenCalledWith(expect.objectContaining({ status: 'ready' }));
   });
 

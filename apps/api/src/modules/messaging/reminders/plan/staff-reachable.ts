@@ -20,6 +20,7 @@ export const STAFF_ALERT_KEYS: readonly string[] = [
   'teacher_new_student',
   'teacher_lesson_reminder',
   'teacher_lesson_reminder_meet',
+  'report_ready_teacher',
   'teacher_lesson_v3',
 ];
 

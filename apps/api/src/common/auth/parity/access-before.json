@@ -270,6 +270,8 @@
   "PortalRecordsController.reportUrl": ["guardian","student"],
   "PresenceController.me": "signed-in",
   "PresenceController.staff": ["admin"],
+  "ReportPageController.byPublicId": "signed-in",
+  "ReportPageController.byReportId": "signed-in",
   "PricingController.catalog": ["admin","sales"],
   "PricingController.quote": ["admin","sales"],
   "PublicConfigController.get": "public",

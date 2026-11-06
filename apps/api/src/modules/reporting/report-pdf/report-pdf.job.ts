@@ -34,8 +34,9 @@ export class RulesUnreadError extends Error {
 /**
  * R-REP-03 report PDF worker (docs/11 §5): claims `pending` reports one by one, renders the
  * template with Chromium, uploads reports/{student_id}/{lesson_id}.pdf (overwrite), queues the
- * guardian's report_ready message, then marks the claimed version `ready`. Idempotent by report
- * id + version: every state change is a compare-and-set, the message is deduped per report.
+ * report messages (the guardian's; the teacher's link once approved), then marks the claimed
+ * version `ready`. Idempotent by report id + version: every state change is a compare-and-set,
+ * each message is deduped per report.
  * In-process and single-flight; safe across instances because the claim is atomic per row.
  */
 @BackgroundJob({ name: 'report-pdf', kick: 'kick' })
@@ -133,10 +134,10 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
    * so a later run renders and sends it once the rules read: an essential row is never dropped.
    */
   private async publish(id: string, version: number): Promise<void> {
-    const { path, message } = await this.publisher.publish(id, new Date());
+    const { path, messages } = await this.publisher.publish(id, new Date());
     const rule = await this.policy.known('report_ready');
     if (!rule) throw new RulesUnreadError();
-    if (rule.enabled) await this.queries.queueMessage(message);
+    if (rule.enabled) await this.queries.queueMessages(messages);
     else this.log.log(`report_ready off: report ${id} v${version} not sent to the guardian`);
     if (!(await this.queries.finish({ id, version, status: 'ready', path }))) {
       this.log.log(`report ${id} changed while v${version} rendered; the newer version renders next`);

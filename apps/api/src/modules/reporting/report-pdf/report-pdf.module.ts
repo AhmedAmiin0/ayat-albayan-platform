@@ -7,6 +7,7 @@ import { ReportPdfPublisher } from './report-pdf.publisher';
 import { ReportPdfQueries } from './report-pdf.queries';
 import { ReportPdfSettings } from './report-pdf.settings';
 import { ReportPdfSource } from './report-pdf.source';
+import { ReportReadyRepo } from './ready/report-ready.repo';
 
 /**
  * ReportPdfJob: HTML template → Chromium PDF → reports bucket → queued report_ready message.
@@ -15,7 +16,16 @@ import { ReportPdfSource } from './report-pdf.source';
  */
 @Module({
   imports: [ShortLinksModule],
-  providers: [ReportPdfQueries, ReportPdfSettings, ReportPdfSource, PdfRenderer, ReportFeedbackLink, ReportPdfPublisher, ReportPdfJob],
+  providers: [
+    ReportPdfQueries,
+    ReportPdfSettings,
+    ReportPdfSource,
+    PdfRenderer,
+    ReportFeedbackLink,
+    ReportReadyRepo,
+    ReportPdfPublisher,
+    ReportPdfJob,
+  ],
   exports: [ReportPdfJob],
 })
 export class ReportPdfModule {}

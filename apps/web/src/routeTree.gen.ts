@@ -52,6 +52,7 @@ import { Route as publicFeedbackTokenRouteImport } from './routes/(public)/feedb
 import { Route as publicJoinLinkTokenRouteImport } from './routes/(public)/join.$linkToken'
 import { Route as publicMTokenRouteImport } from './routes/(public)/m.$token'
 import { Route as publicPayTokenRouteImport } from './routes/(public)/pay.$token'
+import { Route as publicReportPublicIdRouteImport } from './routes/(public)/report.$publicId'
 import { Route as publicSTokenRouteImport } from './routes/(public)/s.$token'
 import { Route as publicTeacherReportTokenRouteImport } from './routes/(public)/teacher-report.$token'
 import { Route as AdminfinanceExpensesRouteImport } from './routes/admin/(finance)/expenses'
@@ -303,6 +304,11 @@ const publicPayTokenRoute = publicPayTokenRouteImport.update({
   path: '/pay/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const publicReportPublicIdRoute = publicReportPublicIdRouteImport.update({
+  id: '/(public)/report/$publicId',
+  path: '/report/$publicId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const publicSTokenRoute = publicSTokenRouteImport.update({
   id: '/(public)/s/$token',
   path: '/s/$token',
@@ -532,6 +538,7 @@ export interface FileRoutesByFullPath {
   '/join/$linkToken': typeof publicJoinLinkTokenRoute
   '/m/$token': typeof publicMTokenRoute
   '/pay/$token': typeof publicPayTokenRoute
+  '/report/$publicId': typeof publicReportPublicIdRoute
   '/s/$token': typeof publicSTokenRoute
   '/teacher-report/$token': typeof publicTeacherReportTokenRoute
   '/admin/expenses': typeof AdminfinanceExpensesRoute
@@ -607,6 +614,7 @@ export interface FileRoutesByTo {
   '/join/$linkToken': typeof publicJoinLinkTokenRoute
   '/m/$token': typeof publicMTokenRoute
   '/pay/$token': typeof publicPayTokenRoute
+  '/report/$publicId': typeof publicReportPublicIdRoute
   '/s/$token': typeof publicSTokenRoute
   '/teacher-report/$token': typeof publicTeacherReportTokenRoute
   '/admin/expenses': typeof AdminfinanceExpensesRoute
@@ -688,6 +696,7 @@ export interface FileRoutesById {
   '/(public)/join/$linkToken': typeof publicJoinLinkTokenRoute
   '/(public)/m/$token': typeof publicMTokenRoute
   '/(public)/pay/$token': typeof publicPayTokenRoute
+  '/(public)/report/$publicId': typeof publicReportPublicIdRoute
   '/(public)/s/$token': typeof publicSTokenRoute
   '/(public)/teacher-report/$token': typeof publicTeacherReportTokenRoute
   '/admin/(finance)/expenses': typeof AdminfinanceExpensesRoute
@@ -770,6 +779,7 @@ export interface FileRouteTypes {
     | '/join/$linkToken'
     | '/m/$token'
     | '/pay/$token'
+    | '/report/$publicId'
     | '/s/$token'
     | '/teacher-report/$token'
     | '/admin/expenses'
@@ -845,6 +855,7 @@ export interface FileRouteTypes {
     | '/join/$linkToken'
     | '/m/$token'
     | '/pay/$token'
+    | '/report/$publicId'
     | '/s/$token'
     | '/teacher-report/$token'
     | '/admin/expenses'
@@ -925,6 +936,7 @@ export interface FileRouteTypes {
     | '/(public)/join/$linkToken'
     | '/(public)/m/$token'
     | '/(public)/pay/$token'
+    | '/(public)/report/$publicId'
     | '/(public)/s/$token'
     | '/(public)/teacher-report/$token'
     | '/admin/(finance)/expenses'
@@ -978,6 +990,7 @@ export interface RootRouteChildren {
   publicJoinLinkTokenRoute: typeof publicJoinLinkTokenRoute
   publicMTokenRoute: typeof publicMTokenRoute
   publicPayTokenRoute: typeof publicPayTokenRoute
+  publicReportPublicIdRoute: typeof publicReportPublicIdRoute
   publicSTokenRoute: typeof publicSTokenRoute
   publicTeacherReportTokenRoute: typeof publicTeacherReportTokenRoute
 }
@@ -1283,6 +1296,13 @@ declare module '@tanstack/react-router' {
       path: '/pay/$token'
       fullPath: '/pay/$token'
       preLoaderRoute: typeof publicPayTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(public)/report/$publicId': {
+      id: '/(public)/report/$publicId'
+      path: '/report/$publicId'
+      fullPath: '/report/$publicId'
+      preLoaderRoute: typeof publicReportPublicIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(public)/s/$token': {
@@ -1766,6 +1786,7 @@ const rootRouteChildren: RootRouteChildren = {
   publicJoinLinkTokenRoute: publicJoinLinkTokenRoute,
   publicMTokenRoute: publicMTokenRoute,
   publicPayTokenRoute: publicPayTokenRoute,
+  publicReportPublicIdRoute: publicReportPublicIdRoute,
   publicSTokenRoute: publicSTokenRoute,
   publicTeacherReportTokenRoute: publicTeacherReportTokenRoute,
 }
