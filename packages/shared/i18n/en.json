@@ -3445,6 +3445,8 @@
       "teacher_lesson_reminder_meet": "Teacher reminder — Meet",
       "lesson_reminder_24h": "Reminder one day before the lesson",
       "report_ready": "Lesson report (PDF)",
+      "report_ready_teacher": "Lesson report for the teacher (link)",
+      "report_ready_family": "Lesson report for the guardian (link)",
       "renewal_due": "Renewal reminder",
       "follow_up_slots": "Follow-up with two suggested times",
       "lesson_feedback_request": "Lesson feedback request",
@@ -8162,5 +8164,17 @@
     "clashTitle": "The lesson days could not be booked after the payment",
     "clashText": "one of the picked times is now taken, so pick the lesson days again",
     "failText": "the picked lesson days could not be booked after the payment, so open the lesson days and book them"
+  },
+  "reportPage": {
+    "title": "Lesson report",
+    "lesson": "{student}'s lesson on {date}",
+    "teacher": "Teacher: {name}",
+    "files": "Teacher's attachments",
+    "file": "Attachment {n}",
+    "downloadPdf": "Download the report (PDF)",
+    "pdfPending": "The PDF is being prepared; open the page again shortly.",
+    "notFound": "We could not find this report, or you may not view it.",
+    "view": "View report",
+    "edited": "The report was edited after it was sent"
   }
 }

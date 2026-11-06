@@ -5,6 +5,7 @@ import type { ReportReadyMessage } from './report-ready';
 
 const T = 'lesson_reports';
 const message = {
+  template_key: 'report_ready',
   dedup_key: 'report_ready:r1',
   template_params: { '1': 'سلمى', '2': 'x', document: { bucket: 'reports', path: 's/l.pdf', filename: 'f.pdf' } },
 } as ReportReadyMessage;
@@ -72,9 +73,9 @@ describe('ReportPdfQueries — the pdf_status queue, compare-and-set (docs/11 §
     expect(eqs(calls)).toEqual([['id', 'r1'], ['pdf_status', 'rendering'], ['version', 4]]);
   });
 
-  it('queueMessage: insert-or-ignore on dedup_key, then fill the document of a still-queued row', async () => {
+  it('queueMessages: insert-or-ignore on dedup_key, then fill a still-queued row of its template', async () => {
     const { db, calls } = fakeDb({ messages: [{}, {}] });
-    await new ReportPdfQueries(db).queueMessage(message);
+    await new ReportPdfQueries(db).queueMessages([message]);
     const m = calls.filter((c) => c.table === 'messages');
     expect(m[0]).toEqual({
       table: 'messages',
@@ -84,6 +85,8 @@ describe('ReportPdfQueries — the pdf_status queue, compare-and-set (docs/11 §
     expect(m[1]?.args).toEqual([{ template_params: message.template_params }]);
     expect(eqs(calls, 'messages')).toEqual([
       ['dedup_key', 'report_ready:r1'],
+      // A row queued as report_ready_family keeps its own params (never a document it lacks).
+      ['template_key', 'report_ready'],
       ['status', 'queued'],
     ]);
   });
@@ -92,6 +95,6 @@ describe('ReportPdfQueries — the pdf_status queue, compare-and-set (docs/11 §
     const { db } = fakeDb({ [T]: [{ error: { message: 'down' } }], messages: [{ error: { message: 'x' } }] });
     const q = new ReportPdfQueries(db);
     await expect(q.claim('r1')).rejects.toThrow('PDF claim failed: down');
-    await expect(q.queueMessage(message)).rejects.toThrow('report_ready queue failed: x');
+    await expect(q.queueMessages([message])).rejects.toThrow('report_ready queue failed: x');
   });
 });

@@ -18,6 +18,12 @@ import {
 } from '@ab/shared';
 import { rangeLabel, type RangeWords } from './v2-text.js';
 
+/** What the lines read: a ReportView, or the live page's report (ReportPageReport). */
+export type LinesReport = Pick<
+  ReportView,
+  'attendance' | 'program' | 'content' | 'grade_overall' | 'homework' | 'next_plan' | 'notes'
+>;
+
 // A v2 report read by the admin (web and mobile): its lines in the form's order and words, so
 // both apps show the same thing. Each app injects its `t` pieces (read per call).
 
@@ -101,7 +107,7 @@ const CONTENT_LINES: Record<Program, (c: ReportContent, text: ReportV2Text) => R
 };
 
 /** «ملاحظة للأسرة»: the quick notes then the teacher's words. */
-function noteLine(r: ReportView, text: ReportV2Text): ReportLine {
+function noteLine(r: LinesReport, text: ReportV2Text): ReportLine {
   const quick = (r.content?.quick ?? []).map((q) => text.v2.quick[q]);
   const parts = [...quick, ...(r.notes ? [r.notes] : [])];
   return { key: 'note', label: text.v2.note, value: parts.length > 0 ? parts.join('. ') : null };
@@ -112,7 +118,7 @@ function noteLine(r: ReportView, text: ReportV2Text): ReportLine {
  * its content per track, the overall grade, homework, next plan and note. Absent / excused: the
  * attendance and the note only, as the family receives it.
  */
-export function reportV2Lines(r: ReportView, text: ReportV2Text): ReportLine[] {
+export function reportV2Lines(r: LinesReport, text: ReportV2Text): ReportLine[] {
   const { v2 } = text;
   const attendance = { key: 'attendance', label: v2.attendanceTitle, value: r.attendance ? v2.attendance[r.attendance] : null };
   if (r.attendance && !attended(r.attendance)) return [attendance, noteLine(r, text)];

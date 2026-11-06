@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
 import { RateLimitRepo } from '@/common/http/rate-limit.repo';
 import { ShortLinksModule } from '@/modules/platform/short-links';
+import { ReportPageModule } from '@/modules/reporting/report-page';
 import { ReportPdfModule } from '../report-pdf/report-pdf.module';
 import { TeachersModule } from '../../people/teachers/teachers.module';
 import { ReportAccess } from './report-access';
@@ -41,10 +42,10 @@ const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_
  * ReportPdfQueue marks a report pending and kicks ReportPdfJob (R-REP-03). v2/: the new form
  * (report_form_v2).
  * teacher-link/: the teacher's no-login report link for one lesson (docs/19), and its issuer for
- * the reminders.
+ * the reminders. ReportPageModule: the report's live page (/report/<public_id>).
  */
 @Module({
-  imports: [TeachersModule, ReportPdfModule, ShortLinksModule],
+  imports: [TeachersModule, ReportPdfModule, ShortLinksModule, ReportPageModule],
   controllers: [
     ReportsController,
     ReportAttachmentsController,

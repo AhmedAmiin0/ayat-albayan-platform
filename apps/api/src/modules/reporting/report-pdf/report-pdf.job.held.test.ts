@@ -28,12 +28,12 @@ function world() {
       r.status = f.status;
       return true;
     }),
-    queueMessage: vi.fn(async (m: { dedup_key: string }) => {
-      sent.add(m.dedup_key);
+    queueMessages: vi.fn(async (list: { dedup_key: string }[]) => {
+      for (const m of list) sent.add(m.dedup_key);
     }),
   };
   const publisher = {
-    publish: vi.fn(async (id: string) => ({ path: `s/${id}.pdf`, message: { dedup_key: `report_ready:${id}` } })),
+    publish: vi.fn(async (id: string) => ({ path: `s/${id}.pdf`, messages: [{ dedup_key: `report_ready:${id}` }] })),
     close: vi.fn(async () => undefined),
   };
   const rules: FakePolicyInput = { fail: true };
@@ -54,7 +54,7 @@ describe('ReportPdfJob — unread rules hold the report (never failed, never sen
     expect(w.queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 1, status: 'pending' });
     expect(w.queries.finish).not.toHaveBeenCalledWith(expect.objectContaining({ status: 'failed' }));
     expect(w.rows.get('r1')?.status).toBe('pending');
-    expect(w.queries.queueMessage).not.toHaveBeenCalled();
+    expect(w.queries.queueMessages).not.toHaveBeenCalled();
     expect(w.publisher.publish).toHaveBeenCalledTimes(1);
     expect(w.job.wait).not.toHaveBeenCalled();
     expect(w.publisher.close).toHaveBeenCalledTimes(1);
@@ -68,17 +68,17 @@ describe('ReportPdfJob — unread rules hold the report (never failed, never sen
     const summary = await w.job.runOnce(NOW);
     expect(summary).toEqual({ recovered: 0, rendered: 1, failed: 0, skipped: 0, held: 0 });
     expect(w.rows.get('r1')?.status).toBe('ready');
-    expect(w.queries.queueMessage).toHaveBeenCalledTimes(1);
+    expect(w.queries.queueMessages).toHaveBeenCalledTimes(1);
     expect([...w.sent]).toEqual(['report_ready:r1']);
     await expect(w.job.runOnce(NOW)).resolves.toEqual({ recovered: 0, rendered: 0, failed: 0, skipped: 0, held: 0 });
-    expect(w.queries.queueMessage).toHaveBeenCalledTimes(1);
+    expect(w.queries.queueMessages).toHaveBeenCalledTimes(1);
   });
 
   it('a resubmit during a held render (version changed) is left to its own pending row', async () => {
     const w = world();
     w.publisher.publish.mockImplementationOnce(async (id: string) => {
       w.rows.set(id, { status: 'pending', version: 2 });
-      return { path: `s/${id}.pdf`, message: { dedup_key: `report_ready:${id}` } };
+      return { path: `s/${id}.pdf`, messages: [{ dedup_key: `report_ready:${id}` }] };
     });
     await w.job.runOnce(NOW);
     expect(w.rows.get('r1')).toEqual({ status: 'pending', version: 2 });

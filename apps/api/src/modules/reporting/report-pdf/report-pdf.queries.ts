@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
-import type { ReportReadyMessage } from './report-ready';
+import type { TablesInsert } from '@ab/db';
+import type { ReadyMessage } from './ready/report-ready-choice';
 
 export type Finish =
   | { id: string; version: number; status: 'ready'; path: string }
@@ -89,19 +90,26 @@ export class ReportPdfQueries {
   }
 
   /**
-   * Queue report_ready once per report (dedup_key), and point a still-queued one at the document:
-   * a message someone queued earlier gets its path; one already sent is left alone.
+   * Queue each message once per report (dedup_key), and point a still-queued one of the SAME
+   * template at the document: a message someone queued earlier gets its path; one already sent,
+   * or queued as the other family template, is left alone.
    */
-  async queueMessage(message: ReportReadyMessage): Promise<void> {
+  async queueMessages(messages: readonly ReadyMessage[]): Promise<void> {
+    for (const message of messages) await this.queueMessage(message);
+  }
+
+  private async queueMessage(message: ReadyMessage): Promise<void> {
+    const row: TablesInsert<'messages'> = message;
     const insert = await this.db
       .from('messages')
-      .upsert(message, { onConflict: 'dedup_key', ignoreDuplicates: true });
-    if (insert.error) throw new Error(`report_ready queue failed: ${insert.error.message}`);
+      .upsert(row, { onConflict: 'dedup_key', ignoreDuplicates: true });
+    if (insert.error) throw new Error(`${message.template_key} queue failed: ${insert.error.message}`);
     const update = await this.db
       .from('messages')
       .update({ template_params: message.template_params })
       .eq('dedup_key', message.dedup_key)
+      .eq('template_key', message.template_key)
       .eq('status', 'queued');
-    if (update.error) throw new Error(`report_ready update failed: ${update.error.message}`);
+    if (update.error) throw new Error(`${message.template_key} update failed: ${update.error.message}`);
   }
 }
