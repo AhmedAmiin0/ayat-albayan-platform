@@ -27,7 +27,7 @@ const whatsappLink = (m: MessageView): string =>
   whatsappSendUrl('mobile', { phone: m.phone_e164, text: m.body ?? '' });
 
 /** Opens WhatsApp; Linking throws when nothing can open the link. */
-export async function openWhatsApp(m: MessageView): Promise<boolean> {
+async function openWhatsApp(m: MessageView): Promise<boolean> {
   await Linking.openURL(whatsappLink(m));
   return true;
 }

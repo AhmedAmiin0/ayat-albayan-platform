@@ -6,7 +6,7 @@ import {
 } from '@/modules/messaging/whatsapp/messages/message.mapper';
 
 /** The tap's write: the row, the state it was read in (compare-and-set), the window's end. */
-export interface AppSendWrite {
+interface AppSendWrite {
   id: string;
   status: ThreadMessageRow['status'];
   errorCode: string;
