@@ -1,6 +1,6 @@
 import type { MessageQuote, TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
 import { threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { infiniteQueryOptions, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { refreshInbox, touchInbox } from './inbox-sync';
@@ -20,6 +20,18 @@ import { useThreadPoll } from './thread-poll';
 export const threadGet = (path: string, init?: { signal?: AbortSignal }) =>
   apiFetch<ThreadDetail>(path, init);
 
+/** The chat's infinite query: useThread, and «محادثة جديدة» reading a number before it opens it. */
+export const threadQuery = (phone: string) =>
+  infiniteQueryOptions({
+    queryKey: threadKey(phone),
+    // TanStack's signal: closing the chat drops its read, so a later push tap never joins it.
+    // Older builds persisted a bare `before` string: threadPageQuery still pages back from it.
+    queryFn: ({ pageParam, signal }) =>
+      threadGet(`${threadPath(phone)}${threadPageQuery(pageParam)}`, { signal }),
+    initialPageParam: null as ThreadPageParam,
+    getNextPageParam: threadNextParam,
+  });
+
 /**
  * GET /threads/:phone (docs/12 H2): the newest page first, `before` + `before_id` (the oldest
  * loaded row's time and id: a compound keyset, docs/37) pages back. The API stamps the inbound
@@ -29,15 +41,7 @@ export const threadGet = (path: string, init?: { signal?: AbortSignal }) =>
  * whole thread).
  */
 export function useThread(phone: string) {
-  const query = useInfiniteQuery({
-    queryKey: threadKey(phone),
-    // TanStack's signal: closing the chat drops its read, so a later push tap never joins it.
-    // Older builds persisted a bare `before` string: threadPageQuery still pages back from it.
-    queryFn: ({ pageParam, signal }) =>
-      threadGet(`${threadPath(phone)}${threadPageQuery(pageParam)}`, { signal }),
-    initialPageParam: null as ThreadPageParam,
-    getNextPageParam: threadNextParam,
-  });
+  const query = useInfiniteQuery(threadQuery(phone));
   useThreadPoll(phone, query.data !== undefined);
   return query;
 }

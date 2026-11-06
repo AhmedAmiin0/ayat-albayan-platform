@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
@@ -54,30 +54,36 @@ test('the header keeps only the sales bell: no «محادثة جديدة» up th
 });
 
 // Owner report 2026-10-12 («it is not able to start the conversation»): the same path as the web.
-test('«محادثة جديدة»: a bad number is refused in words; a local Saudi number opens its thread as E.164', async () => {
+test('«محادثة جديدة»: a bad number is refused in words; a local Saudi number is read as E.164', async () => {
+  mockApiFetch.mockResolvedValue({ ...EMPTY, messages: [{ id: 'm1' }] });
   await renderWithQuery(<NewChatSheet />);
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.title }));
   const box = screen.getByLabelText(t.inbox.newChat.phone);
   await fireEvent.changeText(box, 'abc');
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.open }));
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.next }));
   expect(screen.getByRole('alert').props.children).toBe(t.common.phoneErrors.not_a_number);
-  expect(router.push).not.toHaveBeenCalled();
+  expect(mockApiFetch).not.toHaveBeenCalled();
   await fireEvent.changeText(box, '0501234567');
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.open }));
-  expect(router.push).toHaveBeenCalledWith('/inbox/thread/%2B966501234567');
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.next }));
+  expect(mockApiFetch).toHaveBeenCalledWith('/threads/%2B966501234567');
+  await waitFor(() => expect(router.push).toHaveBeenCalledWith('/inbox/thread/%2B966501234567'));
 });
 
-test('a number with no message yet: the first-template note, the approved templates, the send queues it', async () => {
+function newNumber() {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/messaging/templates') return [OPENER];
     if (path === '/messages/gate') return { open: true, reason: null, queued: 0 };
     return EMPTY;
   });
+}
+
+// Owner 2026-11-06: «open the conversation with the allowed templates if its a new chat».
+test('a number with no message yet opens on its templates by itself; the send queues the one picked', async () => {
+  newNumber();
   mockApiSend.mockReturnValue(new Promise(() => undefined));
   await renderWithQuery(<ThreadScreen />);
   expect(await screen.findByText(t.inbox.newChat.firstTemplate)).toBeTruthy();
   expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
   await fireEvent.press(await screen.findByText(t.templates.names.follow_up_slots));
   await fireEvent.changeText(screen.getByLabelText(t.inbox.composer.paramNames.student_name), 'سهيلة');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
@@ -86,4 +92,14 @@ test('a number with no message yet: the first-template note, the approved templa
     params: { '1': 'سهيلة' },
     clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
   });
+});
+
+test('closed, the templates stay closed; «أرسل قالبًا» opens them again', async () => {
+  newNumber();
+  await renderWithQuery(<ThreadScreen />);
+  expect(await screen.findByText(t.templates.names.follow_up_slots)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: t.common.close }));
+  expect(screen.queryByText(t.templates.names.follow_up_slots)).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
+  expect(await screen.findByText(t.templates.names.follow_up_slots)).toBeTruthy();
 });

@@ -13,6 +13,24 @@ import { type Outgoing, sendKey, useSendMessage } from '../thread/hooks/use-thre
 const draftOf = (out: Outgoing): string =>
   out.kind === 'template' ? JSON.stringify([out.key, out.params, out.lessonId]) : '';
 
+/**
+ * A template's clientRequestId: the same template + params sent again (after «جرّب تاني») reuses
+ * its id, so a lost answer never sends twice; `sent` forgets it once the API took the row.
+ */
+export function useTemplateId() {
+  const last = useRef<{ draft: string; id: string } | null>(null);
+  const of = (out: Outgoing): string => {
+    const draft = draftOf(out);
+    const id = last.current?.draft === draft ? last.current.id : requestId();
+    last.current = { draft, id };
+    return id;
+  };
+  const sent = () => {
+    last.current = null;
+  };
+  return { of, sent };
+}
+
 interface ComposerSendInput {
   phone: string;
   text: string;
@@ -38,14 +56,9 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   const draftReply = useRef<string | undefined>(undefined);
   // The text that id was minted for: a box filled from outside since (a quote, a saved reply) is a new request.
   const draftText = useRef<string | null>(null);
-  // The same for a template: the same template + params sent again (after «جرّب تاني») reuses its id.
-  const templateDraft = useRef<{ draft: string; id: string } | null>(null);
+  const templateId = useTemplateId();
   const sendTemplate = (out: Outgoing) => {
-    const draft = draftOf(out);
-    const last = templateDraft.current;
-    const id = last?.draft === draft ? last.id : requestId();
-    templateDraft.current = { draft, id };
-    send.mutate({ out, id }, { onSuccess: () => (templateDraft.current = null) });
+    send.mutate({ out, id: templateId.of(out) }, { onSuccess: templateId.sent });
   };
   // The chip as it is now, not as it was at the tap: removed or replaced meanwhile → not this file.
   const stagedNow = useRef(staged);

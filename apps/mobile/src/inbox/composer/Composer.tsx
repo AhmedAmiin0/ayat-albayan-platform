@@ -43,12 +43,15 @@ export function Composer({
   thread,
   lessons,
   student,
+  fresh = false,
 }: {
   phone: string;
   thread: ThreadView | null;
   lessons: ThreadLesson[];
   /** The family's first student: a saved reply's {student}. */
   student?: string | null;
+  /** No message yet (the server answered since the chat opened): the first one is a template. */
+  fresh?: boolean;
 }) {
   const staff = useThreadMode().kind !== 'teacher';
   const can = usePermissions();
@@ -59,6 +62,13 @@ export function Composer({
   useForgetDraftOnLeave(phone, replies.staged !== null);
   const { sendTemplate, sendText, renew, errors, pending } = useComposerSend({ phone, text, setText, ...replies });
   const [picking, setPicking] = useState(false);
+  // A new chat opens on its allowed templates (owner 2026-11-06), until closed or one is sent.
+  const [dismissed, setDismissed] = useState(false);
+  const picker = picking || (fresh && staff && !dismissed);
+  const closePicker = () => {
+    setPicking(false);
+    setDismissed(true);
+  };
   // Why a photo / PDF did not go (AttachFile), until the next pick.
   const [fileError, setFileError] = useState<string | null>(null);
   const chat = sendState(thread, new Date());
@@ -118,13 +128,13 @@ export function Composer({
       ) : null}
       {quoting ? <QuoteSheet phone={phone} open={may} onClose={() => setQuoting(false)} /> : null}
       <TemplatePicker
-        visible={picking}
+        visible={picker}
         lessons={lessons}
         contactName={thread?.display_name}
         teacher={!!thread?.teacher_id && !thread.guardian_id}
-        onClose={() => setPicking(false)}
+        onClose={closePicker}
         onSend={(out) => {
-          setPicking(false);
+          closePicker();
           sendTemplate(out);
         }}
       />

@@ -3854,13 +3854,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
-    },
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "no-restricted-syntax": {
-      "count": 1
+      "count": 2
     }
   },
   "src/inbox/composer/TemplatePreview.test.tsx": {
@@ -4074,10 +4068,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
-    },
-    "max-lines-per-function": {
-      "count": 1
+      "count": 7
     }
   },
   "src/inbox/composer/use-thread-reopen.ts": {
@@ -6896,9 +6887,6 @@
   },
   "src/inbox/threads-list/NewChatSheet.tsx": {
     "max-len": {
-      "count": 4
-    },
-    "max-lines-per-function": {
       "count": 1
     }
   },
