@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
-import { statement } from '../../api/fixtures';
+import { statement } from '@/assistants/api/fixtures';
 import { StatementButtons } from './StatementButtons';
 
 const CAN = { read: true, write: true, approve: true };

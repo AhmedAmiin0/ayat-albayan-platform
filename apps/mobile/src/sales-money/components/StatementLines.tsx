@@ -4,7 +4,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Ltr } from '@/core/ui/primitives/Ltr';
 import { AmountText } from './AmountText';
-import { lineText } from '../lib/money-text';
+import { lineText } from '@/sales-money/lib/money-text';
 
 /** What a statement is made of: the salary, each commission (student and code), each adjustment (reason). */
 export function StatementLines({ lines }: { lines: readonly AssistantStatementLineView[] }) {

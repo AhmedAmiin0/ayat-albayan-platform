@@ -1,5 +1,5 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { muscat, pending } from '../testing/fixtures';
+import { muscat, pending } from '@/today/testing/fixtures';
 import { heroLead, heroSubtitle } from './hero-text';
 
 test('the lead: minutes to go under an hour, just «التالية» later, «جارية الآن» when under way', () => {

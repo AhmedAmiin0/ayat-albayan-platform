@@ -1,4 +1,4 @@
-import { ApiError } from '../http/api';
+import { ApiError } from '@/core/lib/http/api';
 import { isNetworkError } from './network-error';
 
 test('only a fetch with no response is a network error', () => {

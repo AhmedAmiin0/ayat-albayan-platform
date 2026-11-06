@@ -10,8 +10,8 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
-import { threadLink, useThreadMode } from '../../hooks/thread-mode';
-import { callListQuery } from '../api/calls-api';
+import { threadLink, useThreadMode } from '@/inbox/thread/hooks/thread-mode';
+import { callListQuery } from '@/inbox/thread/calls/api/calls-api';
 import { CallsLogRow } from './CallsLogRow';
 
 /**

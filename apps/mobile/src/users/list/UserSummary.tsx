@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { lastSignIn, recordText, statusStyle } from '../shared/format';
+import { lastSignIn, recordText, statusStyle } from '@/users/shared/format';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** Status (and why it is disabled), the linked record and the last sign-in, above the edit fields. */

@@ -8,7 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { AssignUnassigned } from '../detail/AssignUnassigned';
+import { AssignUnassigned } from '@/inbox/leads/detail/AssignUnassigned';
 import { activeFilterCount, NO_FILTERS, type LeadFilters } from './lead-filters';
 import { leadSortChoices, leadSortFromValue, leadSortValue } from './lead-sort';
 

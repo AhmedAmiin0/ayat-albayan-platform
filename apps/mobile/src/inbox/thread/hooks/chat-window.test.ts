@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import { thread } from '../../shared/thread-fixtures';
+import { thread } from '@/inbox/shared/thread-fixtures';
 import { chatMaySend, sendState } from './chat-window';
 import { threadKey } from './thread-cache';
 

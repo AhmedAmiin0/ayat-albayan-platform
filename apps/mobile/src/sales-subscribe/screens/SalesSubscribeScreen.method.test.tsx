@@ -2,12 +2,12 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { familyOf, kid, openSub, salesQuote } from '../testing/fixtures';
-import { linkQuote } from '../testing/link-fixtures';
+import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
+import { linkQuote } from '@/sales-subscribe/testing/link-fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 // «طريقة الدفع» (owner 2026-10-29): «تحويل بنكي» or «دفع إلكتروني», inside «اشتراك جديد» (the Stripe test build).
-jest.mock('../payment-link/flag', () => ({ STRIPE_FEATURE: true }));
+jest.mock('@/sales-subscribe/payment-link/flag', () => ({ STRIPE_FEATURE: true }));
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

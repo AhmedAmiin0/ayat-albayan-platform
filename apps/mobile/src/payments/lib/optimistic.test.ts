@@ -1,4 +1,4 @@
-import { balanceOf, OLD_SUB_ID, page, payment, STUDENT, SUB_ID, subscription } from '../fixtures';
+import { balanceOf, OLD_SUB_ID, page, payment, STUDENT, SUB_ID, subscription } from '@/payments/fixtures';
 import { isPending, pendingPayment, withPaid, withPayment, type PaymentInput } from './optimistic';
 
 const input: PaymentInput = {

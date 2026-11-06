@@ -14,8 +14,8 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 jest.mock('expo-audio', () => jest.requireActual<typeof import('./voice-test-kit')>('./voice-test-kit').audioMock());
 jest.mock('./voice-support', () => ({ voiceSupported: () => true }));
-jest.mock('../../thread/calls/state/call-context', () => ({
-  ...jest.requireActual('../../thread/calls/state/call-context'),
+jest.mock('@/inbox/thread/calls/state/call-context', () => ({
+  ...jest.requireActual('@/inbox/thread/calls/state/call-context'),
   useCalls: () => (mockInCall ? { busy: true, call: jest.fn(), config: {} } : null),
 }));
 jest.mock('expo-router', () => ({

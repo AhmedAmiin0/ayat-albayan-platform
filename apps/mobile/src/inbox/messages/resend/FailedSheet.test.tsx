@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { failed, PHONE } from '../../shared/thread-fixtures';
+import { failed, PHONE } from '@/inbox/shared/thread-fixtures';
 import { FailedSheet } from './FailedSheet';
 
 const mockApiSend = jest.fn();

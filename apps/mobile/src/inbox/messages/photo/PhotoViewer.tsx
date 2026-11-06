@@ -4,7 +4,7 @@ import { Animated, Image, Modal, StatusBar, useWindowDimensions, View } from 're
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { shape, useTheme } from '@/theme';
 import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
-import { DownloadLink } from '../copy-download/DownloadLink';
+import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
 import { useZoom } from './use-zoom';
 import { ViewerClose } from './ViewerClose';
 

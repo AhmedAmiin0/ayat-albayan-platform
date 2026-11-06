@@ -4,7 +4,7 @@ import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { profileFixture, savedProfile } from '@/test/account';
 import { renderWithQuery } from '@/test/query';
-import { PROFILE_KEY } from '../hooks/queries';
+import { PROFILE_KEY } from '@/account/hooks/queries';
 import { AccountScreen } from './AccountScreen';
 
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: jest.fn(), apiSend: jest.fn() }));

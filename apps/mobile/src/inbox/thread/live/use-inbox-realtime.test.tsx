@@ -2,7 +2,7 @@ import { chatLiveKey } from '@ab/client-core';
 import { act, renderHook } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 import { queryClient as client } from '@/core/lib/query/query-client';
-import { threadPollKey } from '../hooks/thread-poll';
+import { threadPollKey } from '@/inbox/thread/hooks/thread-poll';
 import { inboxLive } from './inbox-live';
 import { useInboxRealtime } from './use-inbox-realtime';
 

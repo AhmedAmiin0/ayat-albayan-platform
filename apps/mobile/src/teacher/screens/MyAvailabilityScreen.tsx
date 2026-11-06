@@ -6,7 +6,7 @@ import { WeeklyAvailability } from '@/more/availability/WeeklyAvailability';
 import { BackButton } from '@/core/ui/navigation';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTeacherMe } from '../lib/queries';
+import { useTeacherMe } from '@/teacher/lib/queries';
 
 /** My weekly availability and upcoming time-off, read-only (R-TCH-02): the admin edits them. */
 export function MyAvailabilityScreen() {

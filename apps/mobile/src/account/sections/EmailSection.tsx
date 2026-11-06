@@ -4,11 +4,11 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { changeEmail } from '../hooks/account-api';
-import { accountMessage } from '../lib/account-errors';
-import { AccountCard } from '../components/AccountCard';
-import { AccountField, passwordInput } from '../components/AccountField';
-import { useAccountAction } from '../hooks/use-account-action';
+import { changeEmail } from '@/account/hooks/account-api';
+import { accountMessage } from '@/account/lib/account-errors';
+import { AccountCard } from '@/account/components/AccountCard';
+import { AccountField, passwordInput } from '@/account/components/AccountField';
+import { useAccountAction } from '@/account/hooks/use-account-action';
 
 /** «البريد الإلكتروني» (R-ACC-03): the sign-in email, changed at once, with the current password. */
 export function EmailSection({ profile }: { profile: AccountProfile }) {

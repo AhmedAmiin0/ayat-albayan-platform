@@ -1,10 +1,10 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { settings } from '../../shared/fixtures';
-import { groupLabel } from '../lib/value-groups';
-import { labelOf } from '../lib/value-text';
-import { valuesAnswer, WRITER } from '../testing/values-fixtures';
+import { settings } from '@/ops/shared/fixtures';
+import { groupLabel } from '@/ops/values/lib/value-groups';
+import { labelOf } from '@/ops/values/lib/value-text';
+import { valuesAnswer, WRITER } from '@/ops/values/testing/values-fixtures';
 import { ValuesScreen } from './ValuesScreen';
 
 const mockApiFetch = jest.fn();

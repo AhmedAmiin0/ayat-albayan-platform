@@ -6,7 +6,7 @@ import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { programOf } from '../lib/trial-href';
+import { programOf } from '@/trial-date/lib/trial-href';
 import { TrialDateFlow } from './TrialDateFlow';
 
 type Params = { studentId?: string; name?: string; program?: string };

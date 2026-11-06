@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { palette } from '@/theme';
-import { paymentLink } from '../../testing/link-fixtures';
+import { paymentLink } from '@/sales-subscribe/testing/link-fixtures';
 import { PaymentLinkItem } from './PaymentLinkItem';
 
 test('docs/07 «الأزرار»: «إلغاء الرابط» on an open link is the outlined danger button', async () => {

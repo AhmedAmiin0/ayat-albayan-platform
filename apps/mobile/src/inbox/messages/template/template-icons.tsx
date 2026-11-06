@@ -1,5 +1,5 @@
 import type { TemplateButtonKind } from '@ab/shared';
-import { CopyIcon, Line, ReplyIcon } from '../../shared/chat-icons';
+import { CopyIcon, Line, ReplyIcon } from '@/inbox/shared/chat-icons';
 
 interface IconProps {
   color: string;

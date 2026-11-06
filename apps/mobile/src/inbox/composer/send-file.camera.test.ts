@@ -2,7 +2,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ChatFileError, pickChatFile, sendChatFile } from './send-file';
-import { PHONE } from '../shared/thread-fixtures';
+import { PHONE } from '@/inbox/shared/thread-fixtures';
 
 // The pill's camera and a recorded voice note (owner 2026-10-27).
 const mockApiSend = jest.fn();

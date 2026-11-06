@@ -4,7 +4,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { EditTimeForm } from './EditTimeForm';
-import { editMode, type EditableLesson } from '../lib/types';
+import { editMode, type EditableLesson } from '@/edit-time/lib/types';
 
 interface EditTimeSheetProps {
   /** The lesson to edit; null = closed. */

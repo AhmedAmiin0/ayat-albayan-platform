@@ -4,7 +4,7 @@ import { useNow } from '@/core/lib/time/use-now';
 import { t } from '@/core/lib/i18n/i18n';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
-import { Tag } from '../agenda/Tag';
+import { Tag } from '@/calendar/agenda/Tag';
 import type { DetailsLesson } from './details-text';
 
 /**

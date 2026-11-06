@@ -3,7 +3,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { DayScheduleScreen } from './DayScheduleScreen';
-import { OVERVIEW, THIS_WEEK } from '../overview/overview-fixtures';
+import { OVERVIEW, THIS_WEEK } from '@/calendar/overview/overview-fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

@@ -2,7 +2,7 @@ import { ActivityIndicator, Image, Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { shape, type, useTheme } from '@/theme';
-import type { ThreadMediaItem } from '../shared/contract';
+import type { ThreadMediaItem } from '@/booking/shared/contract';
 import { useMediaUrl } from './invoice-queries';
 import { ReceiptIcon } from './ReceiptIcon';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';

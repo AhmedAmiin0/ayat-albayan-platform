@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { riyadhToday } from '@/calendar';
 import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { monthLabel, recentMonths } from '../shared/months';
+import { monthLabel, recentMonths } from '@/money/shared/months';
 
 interface PaymentFiltersProps {
   kind: PaymentKind | 'all';

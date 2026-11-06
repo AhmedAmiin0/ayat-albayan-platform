@@ -8,7 +8,7 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { Ltr, ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Avatar } from '@/core/ui/primitives/Avatar';
-import { lastSignIn, recordText, roleText, statusStyle } from '../shared/format';
+import { lastSignIn, recordText, roleText, statusStyle } from '@/users/shared/format';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface UserItemProps {

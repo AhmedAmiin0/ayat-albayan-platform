@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { profileFacts } from './profile-facts';
-import { profile as base } from '../shared/test-data';
+import { profile as base } from '@/students/shared/test-data';
 
 test('program, tz and «no teacher» when everything else is empty', () => {
   expect(profileFacts({ ...base, level: '  ', goal: '' })).toEqual([

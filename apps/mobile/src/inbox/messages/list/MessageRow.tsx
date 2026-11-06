@@ -1,9 +1,9 @@
 import type { CallView, MessageView } from '@ab/shared';
 import { memo } from 'react';
 import { View } from 'react-native';
-import { CallEntry } from '../../thread/calls/entries/CallEntry';
-import { DayChip } from '../days/DayChip';
-import { MessageBubble } from '../components/MessageBubble';
+import { CallEntry } from '@/inbox/thread/calls/entries/CallEntry';
+import { DayChip } from '@/inbox/messages/days/DayChip';
+import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 
 interface MessageRowProps {
   id: string;

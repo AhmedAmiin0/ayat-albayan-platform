@@ -1,6 +1,6 @@
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { mediaProgress, mediaTime } from '../hooks/media-time';
+import { mediaProgress, mediaTime } from '@/inbox/messages/hooks/media-time';
 import { claimPlayback, releasePlayback } from './playback';
 import { atEnd, nextRate, type Rate, stepTo, voiceClock } from './voice-math';
 import { VoiceRow } from './VoiceRow';

@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { familyOf, familyThread, KID, KID2, kid, openSub, PHONE } from '../testing/fixtures';
+import { familyOf, familyThread, KID, KID2, kid, openSub, PHONE } from '@/sales-subscribe/testing/fixtures';
 import { SalesChatMoney } from './SalesChatMoney';
 
 const mockApiFetch = jest.fn();

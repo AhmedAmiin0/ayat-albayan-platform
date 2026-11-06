@@ -3,7 +3,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
-import { ALL, ASSISTANT, routes, statement } from '../../api/fixtures';
+import { ALL, ASSISTANT, routes, statement } from '@/assistants/api/fixtures';
 import { StatementsPanel } from './StatementsPanel';
 
 const mockApiFetch = jest.fn();

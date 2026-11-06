@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
 import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
-import { ViewerClose } from '../photo/ViewerClose';
+import { ViewerClose } from '@/inbox/messages/photo/ViewerClose';
 import { claimPlayback, releasePlayback } from './playback';
 import { Spinner } from './Spinner';
 

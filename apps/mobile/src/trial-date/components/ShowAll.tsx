@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
-import { HISTORY_CAP } from '../lib/history-cap';
+import { HISTORY_CAP } from '@/trial-date/lib/history-cap';
 
 interface ShowAllProps {
   total: number;

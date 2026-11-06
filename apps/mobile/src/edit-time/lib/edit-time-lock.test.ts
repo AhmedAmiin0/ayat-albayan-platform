@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { lengthLocked, lockedText, payoutLockOf } from './edit-time-lock';
 import { lengthText } from './edit-time-text';
-import { held, upcoming } from '../testing/fixtures';
+import { held, upcoming } from '@/edit-time/testing/fixtures';
 
 const state = (durationMin: number) => ({ picked: null, durationMin, reason: '', notify: true });
 

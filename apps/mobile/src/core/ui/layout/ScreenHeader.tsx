@@ -1,9 +1,9 @@
 import type { ReactNode, Ref } from 'react';
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
-import { HeaderConnectingBar } from '../connecting/HeaderConnectingBar';
-import { Mark } from '../primitives/Mark';
-import { AppText, type AppTextNode } from '../primitives/AppText';
+import { HeaderConnectingBar } from '@/core/ui/connecting/HeaderConnectingBar';
+import { Mark } from '@/core/ui/primitives/Mark';
+import { AppText, type AppTextNode } from '@/core/ui/primitives/AppText';
 
 /**
  * The title's size (owner 2026-10-27: «Header is oversized in all sections»; 2026-10-28: «still a big

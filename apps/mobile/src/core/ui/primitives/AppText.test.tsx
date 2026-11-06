@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from './AppText';
-import { Field } from '../form/Field';
+import { Field } from '@/core/ui/form/Field';
 
 test('aligns to the start (textAlign left, swapped in RTL); a caller style still wins', async () => {
   await render(

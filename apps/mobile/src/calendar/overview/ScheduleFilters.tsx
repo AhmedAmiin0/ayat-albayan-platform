@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import type { ScheduleView, TeacherFilter } from './overview';
-import { dayLabel } from '../lib/week';
+import { dayLabel } from '@/calendar/lib/week';
 
 export interface ScheduleFiltersProps {
   view: ScheduleView;

@@ -2,10 +2,10 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderApp, resetApp } from '@/test/app-router';
-import { maryam, SUN_17 } from '../testing/fixtures';
-import { bookingBackend } from '../testing/flow-backend';
-import { slot } from '../testing/fixtures';
-import { walkToConfirm } from '../testing/test-utils';
+import { maryam, SUN_17 } from '@/booking/testing/fixtures';
+import { bookingBackend } from '@/booking/testing/flow-backend';
+import { slot } from '@/booking/testing/fixtures';
+import { walkToConfirm } from '@/booking/testing/test-utils';
 
 beforeEach(resetApp);
 

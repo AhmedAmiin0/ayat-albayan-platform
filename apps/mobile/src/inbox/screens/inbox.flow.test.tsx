@@ -1,9 +1,9 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderApp, resetApp } from '@/test/app-router';
-import { GUARDIAN_PHONE, inboxBackend } from '../shared/flow-backend';
-import { inbound, PHONE } from '../shared/thread-fixtures';
-import { ticksLabel } from '../shared/ticks.helpers';
+import { GUARDIAN_PHONE, inboxBackend } from '@/inbox/shared/flow-backend';
+import { inbound, PHONE } from '@/inbox/shared/thread-fixtures';
+import { ticksLabel } from '@/inbox/shared/ticks.helpers';
 
 beforeEach(resetApp);
 

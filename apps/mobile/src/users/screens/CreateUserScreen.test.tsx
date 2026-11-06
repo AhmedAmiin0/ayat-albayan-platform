@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { CreateUserScreen } from './CreateUserScreen';
-import { CANDIDATES, DETAIL, usersGet } from '../shared/fixtures';
+import { CANDIDATES, DETAIL, usersGet } from '@/users/shared/fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

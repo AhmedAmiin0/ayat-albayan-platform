@@ -1,5 +1,5 @@
 import { allowedLessonEvents } from '@ab/shared';
-import { lesson } from '../testing/fixtures';
+import { lesson } from '@/today/testing/fixtures';
 import { heroPrimary } from './hero-primary';
 
 const scheduled = lesson({ id: 's' });

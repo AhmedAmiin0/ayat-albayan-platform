@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { AssistantsScreen } from './AssistantsScreen';
-import { ALL, ASSISTANT, commission, routes, statement, termsRowOf } from '../api/fixtures';
+import { ALL, ASSISTANT, commission, routes, statement, termsRowOf } from '@/assistants/api/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

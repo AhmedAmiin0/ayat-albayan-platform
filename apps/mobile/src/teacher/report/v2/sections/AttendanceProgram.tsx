@@ -2,8 +2,8 @@ import { ATTENDANCES, PROGRAMS } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Section } from '@/more';
-import type { V2EntryState } from '../hooks/use-v2-entry';
-import { Pills } from '../ui/Pills';
+import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
+import { Pills } from '@/teacher/report/v2/ui/Pills';
 
 /** «الحضور» (a 2×2 grid) and «البرنامج» (three equal buttons), the first two questions. */
 export function AttendanceProgram({ s }: { s: V2EntryState }) {

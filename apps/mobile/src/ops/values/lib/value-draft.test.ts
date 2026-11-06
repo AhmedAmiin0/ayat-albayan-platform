@@ -1,7 +1,7 @@
 import { CURRENCY_ISOS } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { choicesOf, confirmOf, draftOf, editorOf, parseDraft, sameValue } from './value-draft';
-import { outcomeOf } from '../hooks/use-save-value';
+import { outcomeOf } from '@/ops/values/hooks/use-save-value';
 
 describe('editorOf: scalars are edited on the phone, the rest stays on the web', () => {
   test.each([

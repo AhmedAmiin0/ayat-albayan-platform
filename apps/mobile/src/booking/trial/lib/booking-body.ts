@@ -1,9 +1,9 @@
 import { bookingInvoiceInput } from '@ab/client-core';
 import { dayTimesFromPicks, normalizePhone, registrationStatus } from '@ab/shared';
-import type { BookingBody, InvoiceDraft, InvoiceInput } from '../../shared/contract';
+import type { BookingBody, InvoiceDraft, InvoiceInput } from '@/booking/shared/contract';
 import type { StudentChoice, TrialDraft } from './draft';
-import { picksOf } from '../../shared/picks';
-import { ruleFromSlot } from '../../shared/slots';
+import { picksOf } from '@/booking/shared/picks';
+import { ruleFromSlot } from '@/booking/shared/slots';
 
 interface BodyOptions {
   /** Idempotency key, the same on every retry of this wizard (rule 8). */

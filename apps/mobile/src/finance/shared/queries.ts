@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { listKey, pathKey } from '@/core/lib/query/query-keys';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import type { FinanceSummary } from '../summary/summary-types';
+import type { FinanceSummary } from '@/finance/summary/summary-types';
 
 // Admin finance reads. Keys are the API path's segments, so invalidating ['payouts'] reaches a month.
 

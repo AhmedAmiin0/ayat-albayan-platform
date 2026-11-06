@@ -3,9 +3,9 @@ import { screen } from '@testing-library/react-native';
 import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { renderWithQuery } from '@/test/query';
-import { ChatActionsContext } from '../../thread/hooks/chat-actions';
-import { message } from '../../shared/thread-fixtures';
-import { quoteOf } from '../hooks/quote-text';
+import { ChatActionsContext } from '@/inbox/thread/hooks/chat-actions';
+import { message } from '@/inbox/shared/thread-fixtures';
+import { quoteOf } from '@/inbox/messages/hooks/quote-text';
 import { QuoteBlock } from './QuoteBlock';
 import { QuoteStrip } from './QuoteStrip';
 

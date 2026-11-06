@@ -6,10 +6,10 @@ import { shape, space, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
-import { callErrorText } from '../api/call-error';
-import { callApi } from '../api/calls-api';
-import { threadKey } from '../../hooks/thread-cache';
-import { leadAge } from '../../../shared/format';
+import { callErrorText } from '@/inbox/thread/calls/api/call-error';
+import { callApi } from '@/inbox/thread/calls/api/calls-api';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
+import { leadAge } from '@/inbox/shared/format';
 
 interface PermissionDialogProps {
   ask: PermissionAsk;

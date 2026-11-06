@@ -1,8 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { StudentsScreen } from '../screens/StudentsScreen';
-import { listItem, page } from '../shared/test-data';
+import { StudentsScreen } from '@/students/screens/StudentsScreen';
+import { listItem, page } from '@/students/shared/test-data';
 
 const L = t.mobileStudentFile.list;
 const mockApiFetch = jest.fn();

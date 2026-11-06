@@ -3,9 +3,9 @@ import { SUN_17 } from '@/booking/testing/fixtures';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { historyOf, trialRow } from '../testing/fixtures';
+import { historyOf, trialRow } from '@/trial-date/testing/fixtures';
 import { TrialDateScreen } from './TrialDateScreen';
-import { fakeTrialApi, fakeTrialSend, walkToReview } from '../testing/test-utils';
+import { fakeTrialApi, fakeTrialSend, walkToReview } from '@/trial-date/testing/test-utils';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

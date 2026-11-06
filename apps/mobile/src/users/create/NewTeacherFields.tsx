@@ -1,7 +1,7 @@
 import { t } from '@/core/lib/i18n/i18n';
-import { Choice } from '../shared/Choice';
+import { Choice } from '@/users/shared/Choice';
 import type { NewTeacherForm } from './create-form';
-import { TextField } from '../shared/TextField';
+import { TextField } from '@/users/shared/TextField';
 
 export interface NewTeacherFieldsProps {
   value: NewTeacherForm;

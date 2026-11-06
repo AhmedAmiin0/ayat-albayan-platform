@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { historyOf, OLD, trialRow } from '../testing/fixtures';
+import { historyOf, OLD, trialRow } from '@/trial-date/testing/fixtures';
 import { TrialDateScreen } from './TrialDateScreen';
 
 const mockApiFetch = jest.fn();

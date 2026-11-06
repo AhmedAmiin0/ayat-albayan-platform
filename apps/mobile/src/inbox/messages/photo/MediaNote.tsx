@@ -2,7 +2,7 @@ import { Pressable } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { useSmall } from '../components/MessageMeta';
+import { useSmall } from '@/inbox/messages/components/MessageMeta';
 import type { MediaProblem } from './media-problem';
 
 /** A short line in place of a file the bubble cannot show. */

@@ -7,7 +7,7 @@ import { palette, shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
-import { DownloadLink } from '../copy-download/DownloadLink';
+import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
 import { PdfPage } from './PdfPage';
 import { PhotoViewer } from './PhotoViewer';
 import { ViewerClose } from './ViewerClose';

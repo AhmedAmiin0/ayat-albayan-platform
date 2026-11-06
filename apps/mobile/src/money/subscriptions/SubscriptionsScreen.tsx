@@ -6,7 +6,7 @@ import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SubscriptionsList } from './SubscriptionsList';
-import { TasksList } from '../tasks/TasksList';
+import { TasksList } from '@/money/tasks/TasksList';
 
 type View = 'packages' | 'tasks';
 

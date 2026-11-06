@@ -3,8 +3,8 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
-import { lockedText, type PayoutLock } from '../lib/edit-time-lock';
-import { lengthText } from '../lib/edit-time-text';
+import { lockedText, type PayoutLock } from '@/edit-time/lib/edit-time-lock';
+import { lengthText } from '@/edit-time/lib/edit-time-text';
 
 interface PayoutLockNoticeProps {
   lock: PayoutLock;

@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
 import { ActivityScreen } from './ActivityScreen';
-import { activityRow } from '../shared/fixtures';
+import { activityRow } from '@/ops/shared/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

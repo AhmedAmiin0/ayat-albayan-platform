@@ -3,17 +3,17 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { callErrorText } from '../api/call-error';
-import { callConfigQuery, callPermissionQuery } from '../api/calls-api';
-import { useCallsRealtime } from '../api/use-calls-realtime';
-import { useForeground } from '../api/use-foreground';
-import type { RtcDeps } from '../rtc/media';
-import { nativeRtc } from '../rtc/native-rtc';
-import { CallNotice } from '../screen/CallNotice';
-import { CallOverlay } from '../screen/CallOverlay';
+import { callErrorText } from '@/inbox/thread/calls/api/call-error';
+import { callConfigQuery, callPermissionQuery } from '@/inbox/thread/calls/api/calls-api';
+import { useCallsRealtime } from '@/inbox/thread/calls/api/use-calls-realtime';
+import { useForeground } from '@/inbox/thread/calls/api/use-foreground';
+import type { RtcDeps } from '@/inbox/thread/calls/rtc/media';
+import { nativeRtc } from '@/inbox/thread/calls/rtc/native-rtc';
+import { CallNotice } from '@/inbox/thread/calls/screen/CallNotice';
+import { CallOverlay } from '@/inbox/thread/calls/screen/CallOverlay';
 import { CallsContext } from './call-context';
 import { useCallSession, type CallSessionApi } from './use-call-session';
-import { startRingtone } from '../rtc/ringtone';
+import { startRingtone } from '@/inbox/thread/calls/rtc/ringtone';
 
 /** Calls are on for this user: the setting, and allowed to call (inbox.send). */
 const callsOn = (config: CallsUi['config'] | undefined): boolean => config?.enabled === true && config.canCall;

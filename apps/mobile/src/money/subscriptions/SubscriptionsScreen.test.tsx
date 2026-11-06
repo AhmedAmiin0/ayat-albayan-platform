@@ -3,7 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { page, STUDENT, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { adminTask } from '../shared/fixtures';
+import { adminTask } from '@/money/shared/fixtures';
 import { SubscriptionsScreen } from './SubscriptionsScreen';
 
 const mockApiFetch = jest.fn();
