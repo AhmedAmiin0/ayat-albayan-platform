@@ -4,6 +4,7 @@ import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { listsKey } from '@/inbox/lists/lib/use-chat-lists';
+import { changeLists } from '@/inbox/thread/live/list-marks';
 import { type ThreadCache, threadKey } from './thread-cache';
 import { clearUnread, newestInbound, type ThreadListCache, touchList } from './thread-list-cache';
 
@@ -16,22 +17,13 @@ import { clearUnread, newestInbound, type ThreadListCache, touchList } from './t
 export const threadListKey = ['threads', 'list'];
 const navCountKey = ['threads', 'nav-count'];
 
-let listsShown = 0;
-
-/** A chats list is on screen until the release (useListCatchUp). */
-export function showList(): () => void {
-  listsShown += 1;
-  return () => void (listsShown -= 1);
-}
-
 /**
  * Every chats list, the tab badge and «القوائم»: a push that names no chat refetches no thread. A
- * list under a chat (a send, an opened chat) is only marked stale (docs/43 AU2): useListCatchUp
- * re-reads it when it shows again; a list on screen re-reads now.
+ * list under a chat (a send, an opened chat) is only marked (docs/43 AU2): useListCatchUp re-reads
+ * it when it shows again; a list on screen re-reads now (changeLists).
  */
 export function refreshLists(client: QueryClient): void {
-  const refetchType = listsShown > 0 ? 'active' : 'none';
-  void client.invalidateQueries({ queryKey: threadListKey, refetchType });
+  changeLists(client);
   for (const queryKey of [navCountKey, listsKey]) void client.invalidateQueries({ queryKey });
 }
 

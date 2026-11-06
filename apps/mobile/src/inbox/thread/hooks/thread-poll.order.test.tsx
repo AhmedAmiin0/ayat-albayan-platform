@@ -6,8 +6,9 @@ import { cachedThread, delivered, detail, inbound, PHONE } from '@/inbox/shared/
 import { threadKey, threadMessages, threadPath } from './thread-cache';
 import { useThread } from './use-thread';
 
-// docs/43 AU12 (BUG8): the page poll may answer with an older status than a delta already merged;
-// a tick never goes back (✓✓ → ✓), while failed / a retry back to queued always come through.
+// docs/43 AU12 (BUG8): a page poll may answer with an older status than a delta merged while it
+// was out; that tick never goes back (✓✓ → ✓). A poll asked after the cache last moved is the
+// newest truth and replaces it (43-1); failed / a retry back to queued always come through.
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -32,8 +33,9 @@ async function openWith(cached: MessageStatus) {
   await waitFor(() => expect(hook.result.current.data).toBeDefined());
   const page = detail([inbound, { ...delivered, status: cached }]);
   await act(async () => void client.setQueryData(threadKey(PHONE), cachedThread(page)));
-  const m2 = () => threadMessages(hook.result.current.data).find((m) => m.id === 'm2');
-  return { m2 };
+  // The cache itself (what every screen reads), not a render of it.
+  const m2 = () => threadMessages(client.getQueryData(threadKey(PHONE))).find((m) => m.id === 'm2');
+  return { client, m2 };
 }
 
 beforeEach(() => {
@@ -42,12 +44,25 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('a page poll answering ✓ after a delta brought ✓✓ read keeps ✓✓ read', async () => {
-  const { m2 } = await openWith('read');
-  servePage('sent');
-  await act(() => jest.advanceTimersByTimeAsync(THREAD_FULL_MS));
-  expect(mockApiFetch.mock.calls.filter((c: unknown[]) => c[0] === PATH).length).toBe(2);
+test('a delta that lands while the page poll is out keeps its ✓✓ read over the older answer', async () => {
+  const { client, m2 } = await openWith('delivered');
+  let answer: (page: unknown) => void = () => undefined;
+  mockApiFetch.mockImplementation((path: string) =>
+    path === PATH ? new Promise((resolve) => (answer = resolve)) : Promise.resolve(EMPTY_DELTA),
+  );
+  await act(() => jest.advanceTimersByTimeAsync(THREAD_FULL_MS)); // the page poll is out
+  await act(() => jest.advanceTimersByTimeAsync(5));
+  const read = detail([inbound, { ...delivered, status: 'read' }]);
+  await act(async () => void client.setQueryData(threadKey(PHONE), cachedThread(read)));
+  await act(async () => answer(detail([inbound, { ...delivered, status: 'sent' }])));
   expect(m2()?.status).toBe('read');
+});
+
+test('a page poll asked after the cache last moved replaces the tick, even a lower one', async () => {
+  const { m2 } = await openWith('delivered');
+  servePage('queued'); // the server re-queued it (a retry after failed)
+  await act(() => jest.advanceTimersByTimeAsync(THREAD_FULL_MS));
+  await waitFor(() => expect(m2()?.status).toBe('queued'));
 });
 
 test('a page poll further along wins', async () => {
