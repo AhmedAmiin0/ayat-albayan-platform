@@ -4,12 +4,17 @@ import { recipientAllowed, type CrmLineEnv } from '@/config/env/env';
 import { crmMediaBody, crmTemplateBody, crmTextBody, type CrmBody } from './crm-body';
 import { crmJson, type CrmConn } from './crm-http';
 import { crmReportBodies } from './crm-report';
+import { crmSubmit, crmTemplates } from './crm-templates';
 import { sendReport } from '@/modules/messaging/whatsapp/drivers/waba/waba-report';
 import type { FetchLike } from '@/modules/messaging/whatsapp/drivers/meta/graph';
-import { WaError, type MediaSend, type MetaTemplate, type TemplateSend, type WaSent, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
+import {
+  WaError, type MediaSend, type MetaTemplate, type TemplateRow, type TemplateSend, type WaSent,
+  type WhatsappClient,
+} from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// The crm driver (docs/19 «crm driver»): a line that sends through the academy CRM's POST /messages. The
-// CRM owns the number, its templates and its conversations, so only sending is supported here.
+// The crm driver (docs/19 «crm driver»): a line that sends through the academy CRM's POST
+// /messages. The CRM owns the number and its conversations; its templates are listed and
+// submitted through the CRM's /templates (docs/39). Samples, inbound media and editing a rejected template stay in the CRM.
 
 interface CrmClientOpts {
   fetch?: FetchLike;
@@ -28,6 +33,12 @@ const sentSchema = z.object({ whatsapp_message_id: z.string().min(1) });
 /** What callers recognise as «not supported by the crm driver» (template-env, inbound media, number sync). */
 export const crmUnsupported = (what: string): WaError =>
   new WaError(`${what} is not supported by the crm driver (templates and media live in the CRM)`, { code: null, status: 0, unsupported: 'crm' });
+
+const notFound = (e: unknown): boolean => e instanceof WaError && e.info.status === 404;
+/** A CRM without /templates (404: overlay not deployed) answers as before: crmUnsupported. */
+const older = (what: string) => (e: unknown): never => {
+  throw notFound(e) ? crmUnsupported(what) : e;
+};
 
 /** A refused template send keeps the name the CRM was asked for (a fallback is not the key's). */
 const sentAs = (e: unknown, body: CrmBody): unknown => {
@@ -84,12 +95,15 @@ export class CrmWhatsappClient implements WhatsappClient {
     this.connection();
   }
 
-  getTemplates(): Promise<MetaTemplate[]> {
-    return Promise.reject(crmUnsupported('the template list'));
+  /** The CRM's rows after it re-syncs them from Meta (GET templates?sync=1). */
+  async getTemplates(): Promise<MetaTemplate[]> {
+    return crmTemplates(this.connection()).catch(older('the template list'));
   }
 
-  submitTemplate(): Promise<{ metaId: string; status: string }> {
-    return Promise.reject(crmUnsupported('template submit'));
+  /** Created through the CRM's submit. A rejected one is edited in the CRM (no edit in its API). */
+  async submitTemplate(template: TemplateRow): Promise<{ metaId: string; status: string }> {
+    if (template.status === 'rejected' && template.meta_id) throw crmUnsupported('editing a rejected template');
+    return crmSubmit(this.connection(), template).catch(older('template submit'));
   }
 
   canUploadSamples(): boolean {

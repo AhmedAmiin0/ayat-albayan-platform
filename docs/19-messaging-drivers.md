@@ -151,23 +151,22 @@ no Meta call): key = the Meta name (`[a-z0-9_]`), line, category utility / marke
 text header (kept in `display.header`, sent by the submit as a TEXT header) and footer, the body with {{1}}…{{9}},
 each variable's name (one the composers label and prefill, or `var_n`) and its review sample (`samples`, migration
 `20261031000994_template_samples.sql`, expand-only), up to three buttons (one URL with an optional `{{1}}` suffix;
-quick replies that confirm / ask to reschedule / stop). The row is `not_submitted`. On a meta / kapso line the web
-opens the existing «إرسال إلى ميتا» confirm next: the same submit, then the same line sync. On a crm line it stays
-`not_submitted` here: create it in the CRM (Settings → Templates → New template, then sync from Meta) with the same
-name, language, text and buttons, then «علِّمه معتمدًا». Not built: editing or deleting a row, authentication
+quick replies that confirm / ask to reschedule / stop). The row is `not_submitted`. On every line the web opens the
+existing «إرسال إلى ميتا» confirm next: the same submit, then the same line sync. On a crm line the submit goes
+through the CRM (docs/39, below). Not built: editing or deleting a row, authentication
 templates, a variable in the header, a media header on a new row, admin template screens on mobile.
 
-**What the CRM would need for real create / sync from here.** wacrm's public API (pinned 98b5bd26, and main at
-c81299d1 on 2026-10-30) has no templates resource and no `templates:*` scope (`src/lib/api-keys/scopes.ts`), and its
-outbound webhooks carry no template event. Its dashboard does it all through session-cookie routes for a CRM admin:
-`POST /api/whatsapp/templates/submit` (creates on Meta with the CRM's token), `POST /api/whatsapp/templates/sync`
-(pulls from Meta, upserts by name + language), `PATCH` / `DELETE /api/whatsapp/templates/{id}`; the list is a direct
-read of its `message_templates` table. Calling those from our API would need a CRM admin's password and Supabase
-cookies: not done. The clean path is a wacrm change (upstream PR, then a pin bump, or a local patch; the owner's
-go): scopes `templates:read` / `templates:write`, `GET /api/v1/templates` (the account's rows, paged), `POST
-/api/v1/templates` (the submit route's core), `POST /api/v1/templates/sync`, `DELETE /api/v1/templates/{id}`, the
-key's minter (`createdBy`) as the row's `user_id` (409 when there is none), then a key minted with those scopes.
-`crm.client.ts` `getTemplates` / `submitTemplate` would then map onto it and the crm line would sync like the others.
+**Templates through the CRM (docs/39, 2026-11-06).** The CRM overlay adds `GET /api/v1/templates` (scope
+`templates:read`; `?sync=1` pulls from Meta first) and `POST /api/v1/templates` (scope `templates:write`; the
+dashboard's TemplatePayload). `crm.client.ts` maps `getTemplates` / `submitTemplate` onto them
+(`drivers/crm/crm-templates.ts`); a CRM without them (404) still answers `crm_managed`, and a key without the
+scope is `crm_auth` on the line. A crm line's «مزامنة» is status only (`crmSyncPatch`): each row is found by
+`crmTemplateName` / `crmTemplateLanguage`, its body, footer and display stay ours, nothing is imported, and a row
+the CRM lacks is never marked missing (only `last_checked_at` moves; a real absence is caught on send by
+132001). Saving a line as crm syncs it once. «إرسال إلى ميتا» on a crm line submits through the CRM under the
+same name and language; a document header (no sample upload) and a rejected row (the CRM API has no edit) are
+still made in the CRM dashboard (409 `crm_managed`). The manual «علِّمه معتمدًا / مفقود» marks stay as a
+fallback; the next sync overwrites them whenever the CRM has the template.
 
 **Webhook `POST /webhooks/wacrm`** (public, raw body, never in the activity log). `X-Wacrm-Signature:
 t=<unix>,v1=<hex>` with v1 = HMAC-SHA256(`WACRM_WEBHOOK_SECRET`, `${t}.${rawBody}`), constant-time; `t` more

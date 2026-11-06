@@ -34,20 +34,17 @@ function NumberFacts({ facts, phone }: Pick<TemplateLineBlockProps, 'facts' | 'p
   );
 }
 
-/** A configured number: its facts, then its last sync, or (crm, docs/19) that the CRM manages its templates. */
+/** A configured number: its facts and last sync; a crm one (docs/39) also notes the CRM. */
 function LineBody({ line, facts, phone, shown, crm }: Pick<TemplateLineBlockProps, 'line' | 'facts' | 'phone'> & { shown: TemplateLineSync | null; crm: boolean }) {
   return (
     <>
       <NumberFacts facts={facts} phone={phone} />
-      {crm ? (
+      <LastSync at={shown?.checked_at} />
+      {shown && <LineSyncResult sync={shown} />}
+      {crm && (
         <>
           <p className="text-xs text-ink-2">{t.templates.perNumber.crmManaged}</p>
           <CrmTemplateCheck line={line} />
-        </>
-      ) : (
-        <>
-          <LastSync at={shown?.checked_at} />
-          {shown && <LineSyncResult sync={shown} />}
         </>
       )}
     </>
@@ -82,13 +79,13 @@ export function TemplateLineBlock({ line, facts, phone, onNotice }: TemplateLine
   const shown = newerSync(result, facts?.last_sync ?? null);
   const name = t.enums.waLine[line];
   const off = facts?.configured === false;
-  // A crm line (docs/19): its templates live in the CRM, so it offers no sync with Meta.
+  // A crm line (docs/39) syncs too: it reads the statuses the CRM synced from Meta.
   const crm = facts?.provider === 'crm';
   return (
     <section data-testid="template-line" data-line={line} aria-busy={syncing} className="grid min-w-0 content-start gap-2 rounded-md border border-rule p-3">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <h4 className="text-sm font-bold">{name}</h4>
-        {!off && !crm && (
+        {!off && (
           <Button variant="secondary" size="sm" className="ms-auto" aria-label={(syncing ? p.syncingFor : p.syncFor).replace('{line}', name)} disabled={syncing} onClick={sync}>
             {syncing ? p.syncing : p.sync}
           </Button>
