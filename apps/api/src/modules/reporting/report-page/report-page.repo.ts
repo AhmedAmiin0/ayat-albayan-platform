@@ -5,7 +5,7 @@ import { ownershipOf } from '@/modules/sales/sales';
 import type { PageFacts, PageKey, PageReportRow } from './report-page.types';
 
 const REPORT =
-  'id, public_id, lesson_id, student_id, teacher_id, status, version, form_version, attendance, program, recited, new_memorization, revision, theory, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, notes, homework, next_plan, content, submitted_at, edited_at, pdf_status, pdf_path, attachments:report_attachments(id, storage_path, mime, size, created_at)' as const;
+  'id, public_id, lesson_id, student_id, teacher_id, status, version, form_version, attendance, program, recited, new_memorization, revision, theory, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, notes, homework, next_plan, content, submitted_at, edited_at, sent_at, pdf_status, pdf_path, attachments:report_attachments(id, storage_path, mime, size, created_at)' as const;
 
 /**
  * The live page's reads (service role; ReportReaders decides who sees what). Separate reads, not

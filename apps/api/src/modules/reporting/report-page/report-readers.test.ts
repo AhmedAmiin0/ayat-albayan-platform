@@ -8,8 +8,8 @@ function readers(owned: readonly string[] = []) {
   const repo = { owns: vi.fn(async (profileId: string) => owned.includes(profileId)) };
   return { r: new ReportReaders(repo as unknown as ReportPageRepo), repo };
 }
-const read = (r: ReportReaders, u: AuthUser) =>
-  r.canRead({ user: u, studentId: STUDENT_ID, facts: pageFacts() });
+const read = (r: ReportReaders, u: AuthUser, sent = true) =>
+  r.canRead({ user: u, studentId: STUDENT_ID, facts: pageFacts(), sent });
 
 describe('ReportReaders — who reads a submitted report while signed in', () => {
   it("admin, the lesson's teacher, the guardian and the student's own account", async () => {
@@ -38,5 +38,13 @@ describe('ReportReaders — who reads a submitted report while signed in', () =>
     expect(await read(r, user('sales', 'other'))).toBe(false);
     expect(await read(r, user('assistant', 'other'))).toBe(false);
     expect(repo.owns).toHaveBeenCalledWith('owner-1', STUDENT_ID);
+  });
+
+  it('the family only once the report was sent to them (as the portal); staff any time', async () => {
+    const { r } = readers();
+    expect(await read(r, user('guardian'), false)).toBe(false);
+    expect(await read(r, user('student'), false)).toBe(false);
+    expect(await read(r, user('teacher'), false)).toBe(true);
+    expect(await read(r, user('admin'), false)).toBe(true);
   });
 });

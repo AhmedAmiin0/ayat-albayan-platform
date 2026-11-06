@@ -73,7 +73,7 @@ describe('ReportPdfQueries — the pdf_status queue, compare-and-set (docs/11 §
     expect(eqs(calls)).toEqual([['id', 'r1'], ['pdf_status', 'rendering'], ['version', 4]]);
   });
 
-  it('queueMessages: insert-or-ignore on dedup_key, then fill a still-queued row of its template', async () => {
+  it('queueMessages: insert-or-ignore on dedup_key, then point a still-queued row at this render', async () => {
     const { db, calls } = fakeDb({ messages: [{}, {}] });
     await new ReportPdfQueries(db).queueMessages([message]);
     const m = calls.filter((c) => c.table === 'messages');
@@ -82,11 +82,9 @@ describe('ReportPdfQueries — the pdf_status queue, compare-and-set (docs/11 §
       method: 'upsert',
       args: [message, { onConflict: 'dedup_key', ignoreDuplicates: true }],
     });
-    expect(m[1]?.args).toEqual([{ template_params: message.template_params }]);
+    expect(m[1]?.args).toEqual([{ template_key: 'report_ready', template_params: message.template_params }]);
     expect(eqs(calls, 'messages')).toEqual([
       ['dedup_key', 'report_ready:r1'],
-      // A row queued as report_ready_family keeps its own params (never a document it lacks).
-      ['template_key', 'report_ready'],
       ['status', 'queued'],
     ]);
   });

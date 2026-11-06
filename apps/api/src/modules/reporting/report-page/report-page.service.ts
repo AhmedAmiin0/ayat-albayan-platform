@@ -37,6 +37,7 @@ export class ReportPageService {
     const allowed = await this.readers.canRead({
       user,
       studentId: found.row.student_id,
+      sent: found.row.sent_at !== null,
       facts: found.facts,
     });
     if (!allowed) throw missing();

@@ -18,6 +18,10 @@ export interface ChoiceInput extends LinkInput {
 
 type FamilyWay = 'link' | 'document';
 
+/** The teacher hears of the first version only: an edit's re-render days later says nothing new. */
+const teacherDue = (i: ChoiceInput): boolean =>
+  i.approved.has('report_ready_teacher') && i.source.report.version === 1;
+
 /** The family's one message: the live page's link once approved, today's PDF document before. */
 const FAMILY: Record<FamilyWay, (input: ChoiceInput) => ReadyMessage> = {
   link: familyLinkMessage,
@@ -32,6 +36,6 @@ const FAMILY: Record<FamilyWay, (input: ChoiceInput) => ReadyMessage> = {
  */
 export function readyMessages(input: ChoiceInput): ReadyMessage[] {
   const way: FamilyWay = input.approved.has('report_ready_family') ? 'link' : 'document';
-  const teacher = input.approved.has('report_ready_teacher') ? teacherLinkMessage(input) : null;
+  const teacher = teacherDue(input) ? teacherLinkMessage(input) : null;
   return [FAMILY[way](input), ...(teacher ? [teacher] : [])];
 }

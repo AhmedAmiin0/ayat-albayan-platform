@@ -1,8 +1,8 @@
 -- The report's live page and its two link templates (owner 2026-11-06, docs/19 «Report flow»).
 --
 -- 1. lesson_reports.public_id: the opaque id in https://app.ayatalbayan.com/report/<public_id>.
---    128 random bits (gen_random_uuid's 122 random bits, hex without dashes, plus nothing derived
---    from any other row), so it is never another row's uuid and never guessable. Unique. The page
+--    gen_random_uuid's 122 random bits as hex without dashes, a fresh value derived from no other
+--    row, so it is never another row's uuid and never guessable. Unique. The page
 --    still asks a viewer who is not signed in for a WhatsApp code (the id alone shows nothing).
 --    lesson_reports holds a few dozen rows a day: the volatile default rewrites it under a short lock.
 -- 2. Two UTILITY templates on the notifications line, Arabic, POSITIONAL, status not_submitted: the

@@ -7,18 +7,22 @@ import type { PageFacts } from './report-page.types';
 interface ReaderInput {
   user: AuthUser;
   studentId: string;
+  /** lesson_reports.sent_at set: the family was sent it (as the portal, never before). */
+  sent: boolean;
   facts: PageFacts;
 }
 type Check = (input: ReaderInput) => boolean | Promise<boolean>;
 
 const isTeacherOf: Check = ({ user, facts }) => facts.teacher.profile_id === user.id;
-const isGuardianOf: Check = ({ user, facts }) => facts.student.guardian?.profile_id === user.id;
-const isStudent: Check = ({ user, facts }) => facts.student.profile_id === user.id;
+const isGuardianOf: Check = ({ user, facts, sent }) =>
+  sent && facts.student.guardian?.profile_id === user.id;
+const isStudent: Check = ({ user, facts, sent }) => sent && facts.student.profile_id === user.id;
 
 /**
  * Who reads a submitted report while signed in (owner 2026-11-06): an admin; the lesson's teacher;
- * the student's guardian (or the student's own account); and the student's OWNING assistant
- * (sales or classroom assistant: her leads' families and the students she brought), read-only.
+ * the student's guardian (or the student's own account) once the report was sent to them; and
+ * the student's OWNING assistant (sales or classroom assistant: her leads' families and the
+ * students she brought), read-only.
  * Nobody else: another assistant, teacher or family is refused.
  */
 @Injectable()

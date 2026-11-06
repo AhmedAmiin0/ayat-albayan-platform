@@ -90,9 +90,9 @@ export class ReportPdfQueries {
   }
 
   /**
-   * Queue each message once per report (dedup_key), and point a still-queued one of the SAME
-   * template at the document: a message someone queued earlier gets its path; one already sent,
-   * or queued as the other family template, is left alone.
+   * Queue each message once per report (dedup_key), and point a still-queued one at this render:
+   * its template and params (the family's PDF or link, whichever is approved NOW, so a row of a
+   * template that lost its approval is not stuck); one already sent is left alone.
    */
   async queueMessages(messages: readonly ReadyMessage[]): Promise<void> {
     for (const message of messages) await this.queueMessage(message);
@@ -106,9 +106,8 @@ export class ReportPdfQueries {
     if (insert.error) throw new Error(`${message.template_key} queue failed: ${insert.error.message}`);
     const update = await this.db
       .from('messages')
-      .update({ template_params: message.template_params })
+      .update({ template_key: message.template_key, template_params: message.template_params })
       .eq('dedup_key', message.dedup_key)
-      .eq('template_key', message.template_key)
       .eq('status', 'queued');
     if (update.error) throw new Error(`${message.template_key} update failed: ${update.error.message}`);
   }

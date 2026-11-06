@@ -41,6 +41,7 @@ export function pageRow(over: Partial<PageReportRow> = {}): PageReportRow {
     content: { segments: [{ kind: 'recited', surah: 67, from: 1, to: 15, grade: 'very_good' }] },
     submitted_at: '2026-10-04T15:00:00Z',
     edited_at: null,
+    sent_at: '2026-10-04T15:20:00Z',
     pdf_status: 'ready',
     pdf_path: 's1/l1.pdf',
     attachments: [

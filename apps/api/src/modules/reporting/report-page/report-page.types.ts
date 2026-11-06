@@ -44,6 +44,8 @@ export interface PageReportRow {
   content: Json | null;
   submitted_at: string | null;
   edited_at: string | null;
+  /** The family's report message went (report_ready / report_ready_family). */
+  sent_at: string | null;
   pdf_status: PdfStatus | null;
   pdf_path: string | null;
   attachments: PageFileRow[];

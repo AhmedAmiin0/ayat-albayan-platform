@@ -5,7 +5,7 @@ import { readyMessages } from './report-ready-choice';
 // Invented data (report-pdf.fakes): no real student, teacher or phone.
 const NOW = new Date('2026-09-29T15:12:00Z');
 const base = {
-  source: sampleSource(),
+  source: sampleSource({ report: { ...sampleSource().report, version: 1 } }),
   feedbackUrl: 'https://api.example/r/Ab12Cd34Ef',
   now: NOW,
   pdfPath: 's1/l1.pdf',
@@ -65,12 +65,17 @@ describe('readyMessages — which templates go after the PDF', () => {
       'report_ready_family',
       'report_ready_teacher',
     ]);
-    const source = sampleSource({
-      teacher: { display_name_ar: 'هدى سامي', phone_e164: null, tz: 'Africa/Cairo' },
-    });
+    const teacher = { display_name_ar: 'هدى سامي', phone_e164: null, tz: 'Africa/Cairo' };
+    const source = { ...base.source, teacher };
     expect(readyMessages({ ...base, source, approved: both }).map((m) => m.template_key)).toEqual([
       'report_ready_family',
     ]);
+  });
+
+  it("an edit (version 2) never queues the teacher's message (a late one says nothing new)", () => {
+    const source = { ...base.source, report: { ...base.source.report, version: 2 } };
+    const out = readyMessages({ ...base, source, approved: new Set(['report_ready_teacher']) });
+    expect(out.map((m) => m.template_key)).toEqual(['report_ready']);
   });
 
   it('the same report renders twice (an edit): the same dedup keys, so nothing is sent twice', () => {
