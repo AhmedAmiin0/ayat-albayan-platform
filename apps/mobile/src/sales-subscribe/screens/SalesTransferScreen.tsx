@@ -1,5 +1,6 @@
 import { cancelOffered, chatBinding, type SalesPaymentView } from '@ab/shared';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { apiSend } from '@/core/lib/http/api';
@@ -37,7 +38,7 @@ export function SalesTransferScreen() {
   // A child not hers (sales.renew_any, docs/16 row 38): the transfer only, never «إلغاء الباقة» (hers only).
   const bind = sub ? chatBinding(family.data?.students ?? [], { studentId: sub.student.id, phone }) : {};
   const base = useTreeBase();
-  const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
+  const back = () => backWithin(inTree(base, '/inbox'));
   return (
     <Screen>
       <ScrollView

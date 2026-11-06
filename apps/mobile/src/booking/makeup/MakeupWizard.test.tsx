@@ -24,7 +24,7 @@ jest.mock('@/booking/invoice/invoice-upload', () => ({ uploadInvoice: jest.fn() 
 const mockBack = jest.fn();
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack(), canGoBack: () => true, replace: jest.fn(), push: (h: unknown) => mockPush(h) },
+  router: { back: () => mockBack(), canDismiss: () => true, replace: jest.fn(), push: (h: unknown) => mockPush(h) },
 }));
 
 const source: MakeupSource = {

@@ -15,13 +15,13 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 const mockParams = { token: '', r: 'done' };
-const mockRouter = { back: jest.fn(), replace: jest.fn(), push: jest.fn(), canGoBack: jest.fn(() => true) };
+const mockRouter = { back: jest.fn(), replace: jest.fn(), push: jest.fn(), canDismiss: jest.fn(() => true) };
 jest.mock('expo-router', () => ({
   router: {
     back: () => mockRouter.back(),
     replace: (href: unknown) => mockRouter.replace(href),
     push: (href: unknown) => mockRouter.push(href),
-    canGoBack: () => mockRouter.canGoBack(),
+    canDismiss: () => mockRouter.canDismiss(),
   },
   useLocalSearchParams: () => mockParams,
 }));
@@ -45,7 +45,7 @@ function answer(...lists: PaymentLinkView[][]) {
 beforeEach(() => {
   jest.clearAllMocks();
   Object.assign(mockParams, { token: TOKEN, r: 'done' });
-  mockRouter.canGoBack.mockReturnValue(true);
+  mockRouter.canDismiss.mockReturnValue(true);
 });
 afterEach(() => {
   focusManager.setFocused(undefined);
@@ -112,7 +112,7 @@ test.each<[UserRole, string]>([
   ['admin', ''],
   ['sales', '/sales'],
 ])('%s: «فتح ملف الطالب» opens the student in her tree (it reaches the chat); after a cold start «رجوع» opens her inbox', async (role, base) => {
-  mockRouter.canGoBack.mockReturnValue(false);
+  mockRouter.canDismiss.mockReturnValue(false);
   answer([mine({ status: 'paid' })]);
   const client = createTestQueryClient({ meFromApi: true });
   seedFullAccess(client, role);

@@ -1,4 +1,5 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { BackButton } from '@/core/ui/navigation';
@@ -11,7 +12,7 @@ import { isOffline } from '@/core/lib/money/payment-errors';
 import { PaymentForm } from '@/payments/components/PaymentForm';
 import { useStudentBalance } from '@/payments/hooks/queries';
 
-const back = () => (router.canGoBack() ? router.back() : router.replace('/students'));
+const back = () => backWithin('/students');
 
 /**
  * /students/payment/:id (R-MOB-02 «record payment with camera»), opened from the student's balance

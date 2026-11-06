@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
@@ -27,7 +27,7 @@ export interface AccountScreenProps {
 export function AccountScreen({ home }: AccountScreenProps) {
   const { color } = useTheme();
   const profile = useMyProfile();
-  const back = () => (router.canGoBack() ? router.back() : router.replace(home));
+  const back = () => backWithin(home);
   const data = profile.data;
   return (
     <Screen>

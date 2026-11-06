@@ -14,9 +14,9 @@ beforeEach(() => jest.mocked(router.push).mockClear());
 test('the row opens the student\'s details in each tree (owner 2026-10-28)', async () => {
   const view = await renderWithQuery(<TreeBaseProvider value="/sales"><SalesSubscriptionRow sub={sub} withHistory={false} /></TreeBaseProvider>);
   await fireEvent.press(screen.getByText('يوسف أحمد'));
-  expect(router.push).toHaveBeenCalledWith('/sales/students/st1');
+  expect(router.push).toHaveBeenCalledWith('/sales/students/st1', { withAnchor: true });
   await view.unmount();
   await renderWithQuery(<SalesSubscriptionRow sub={sub} withHistory={false} />);
   await fireEvent.press(screen.getByText('يوسف أحمد'));
-  expect(router.push).toHaveBeenCalledWith('/students/st1');
+  expect(router.push).toHaveBeenCalledWith('/students/st1', { withAnchor: true });
 });

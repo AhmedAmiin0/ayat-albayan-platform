@@ -1,5 +1,6 @@
 import { formatPhone, sessionWindowOpen, type ThreadView } from '@ab/shared';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
@@ -86,8 +87,7 @@ export function ThreadScreen() {
   const title = thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)));
   const call = <CallButton phone={phone} name={title} canSend={callable(mode, thread)} />;
   const students = useHeaderStudents(mode.kind === 'admin' ? (query.data?.pages[0]?.people?.students ?? []) : []);
-  const back = () =>
-    router.canGoBack() ? router.back() : router.replace(inTree(base, threadBase(mode)));
+  const back = () => backWithin(inTree(base, threadBase(mode)));
   return (
     // «رد» / «إعادة توجيه» (owner 2026-10-25): its state is this chat's; another chat starts clean.
     <ChatActionsProvider key={phone} phone={phone} thread={thread}>

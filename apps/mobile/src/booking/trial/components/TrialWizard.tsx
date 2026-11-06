@@ -1,5 +1,5 @@
 import { teacherName } from '@ab/shared';
-import { router } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -58,7 +58,7 @@ export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
   const title = useBookingMode() === 'sales' ? t.inbox.registerNew : draft.kind === 'trial' ? t.booking.trialTitle : t.subscriptions.new;
   const patch = (p: Partial<TrialDraft>) => setDraft((d) => ({ ...d, ...p }));
   const at = steps.indexOf(step);
-  const leave = () => (router.canGoBack() ? router.back() : router.replace(base ? `${base}/inbox` : `/inbox/${lead.id}`));
+  const leave = () => backWithin(base ? `${base}/inbox` : `/inbox/${lead.id}`);
   const go = (next: Step) => {
     book.reset();
     setStep(next);

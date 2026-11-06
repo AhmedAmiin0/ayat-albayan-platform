@@ -1,5 +1,5 @@
 import { FullScreenProvider } from '@/core/ui/layout/Screen';
-import { TabStack } from './TabStack';
+import { PlainStack } from './TabStack';
 import { InChatProvider } from './tree-base';
 
 /**
@@ -12,7 +12,7 @@ export function ChatStack() {
   return (
     <FullScreenProvider value>
       <InChatProvider>
-        <TabStack />
+        <PlainStack />
       </InChatProvider>
     </FullScreenProvider>
   );
