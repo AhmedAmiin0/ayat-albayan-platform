@@ -108,7 +108,7 @@ export const handOffMessage = (id: string) => apiSend<MessageView>('POST', `/mes
 
 /** «تراجع» of «أرسل عبر واتساب»: sent_manually → queued while no app echo came back (≤ 30 min). */
 export const undoWhatsAppSend = (id: string) =>
-  apiSend<MessageView>('POST', `/messages/${id}/retry?undo=whatsapp`);
+  apiSend('POST', `/messages/${id}/retry?undo=whatsapp`);
 /** M2: the admin sent it from WhatsApp by hand (R-MSG-03); the sender never resends it. */
 export const markSentManually = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/sent-manually`);
 
