@@ -21,7 +21,9 @@ describe('a failed send in words', () => {
     expect(sendErrorText(new ApiError(409, { code: 'session_closed' }))).toBe(
       t.inbox.error.session_closed,
     );
-    expect(sendErrorText(new ApiError(500, null))).toBe(t.inbox.error.send_failed);
+    expect(sendErrorText(new ApiError(422, null))).toBe(t.inbox.error.send_failed);
+    // A 5xx may have committed the row (a 502 from the load balancer): unconfirmed too.
+    expect(sendErrorText(new ApiError(500, null))).toBe(t.inbox.error.send_unconfirmed);
     // docs/44 BUG7: a network error or the deadline is no answer: the send may have gone.
     expect(sendErrorText(new Error('network'))).toBe(t.inbox.error.send_unconfirmed);
   });

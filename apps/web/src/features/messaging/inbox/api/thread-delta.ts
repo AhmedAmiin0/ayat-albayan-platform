@@ -4,6 +4,7 @@ import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-quer
 import { apiFetch } from '@/lib/http/api';
 import { INBOX_REFRESH_MS, threadPath } from './api';
 import { threadQuery } from './thread-query';
+import { useUnconfirmedWatch } from './unconfirmed-watch';
 import { inboxLive, useLiveChat } from './live';
 
 /**
@@ -19,6 +20,7 @@ export function useLiveThread(phone: string) {
   const detail = useInfiniteQuery(options);
   const client = useQueryClient();
   useLiveChat(phone);
+  useUnconfirmedWatch(phone);
   const queryKey = options.queryKey;
   useQuery({
     // Outside ['threads']: a send's or an opened chat's invalidation never runs it.

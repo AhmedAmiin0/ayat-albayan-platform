@@ -4,10 +4,16 @@
 // fresh one. Subscribable, so a remounted composer sees a failure restored by the old one. A
 // sign-out bumps the generation: a send settling after it, started before, writes nothing back.
 
+import { SEND_UNCONFIRMED } from '@ab/client-core';
+
 export interface Draft {
   text: string;
-  /** The last failed send and why (`code`, an inbox.error key), so a remounted box can say so. */
-  failed: { text: string; id: string; code: string } | null;
+  /**
+   * The last failed send and why (`code`, an inbox.error key), so a remounted box can say so. A
+   * send with no answer also keeps when it started (`at`) and the chat's row ids then (`known`):
+   * a read showing its server row confirms it (composer/lib/unconfirmed).
+   */
+  failed: { text: string; id: string; code: string; at?: string; known?: readonly string[] } | null;
 }
 
 const EMPTY: Draft = { text: '', failed: null };
@@ -48,8 +54,6 @@ export function subscribeDrafts(listener: () => void): () => void {
   return () => listeners.delete(listener);
 }
 
-/** A send that ended with no answer (lib/send-error): the server may have it. */
-export const SEND_UNCONFIRMED = 'send_unconfirmed';
 
 /**
  * The failed attempt still owns the box's next send: the same text (rule 8), or any text after a
@@ -58,6 +62,14 @@ export const SEND_UNCONFIRMED = 'send_unconfirmed';
 type Failed = Draft['failed'];
 export const keepsFailed = (failed: Failed, text: string): failed is NonNullable<Failed> =>
   failed !== null && (failed.code === SEND_UNCONFIRMED || failed.text === text.trim());
+
+/**
+ * What another send or a fill of the box (a template, a rating, a file, a saved reply, the quote
+ * calculator) leaves of the failure: an unconfirmed one stays until a read or its own retry
+ * confirms it (docs/44 H2: dropping it would give the edited retry a new id, a second message).
+ */
+export const keptFailed = (failed: Failed): Failed =>
+  failed?.code === SEND_UNCONFIRMED ? failed : null;
 
 /** The key for sending `text`: the failed attempt's when it still owns the box, else a new one. */
 export function requestIdFor(draft: Draft, text: string): string {

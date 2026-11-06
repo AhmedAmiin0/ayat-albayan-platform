@@ -64,7 +64,7 @@ describe('ResendAsk', () => {
   });
 
   it('a refused send keeps the dialog with the reason, and the same clientRequestId on «أرسل» again', async () => {
-    apiSend.mockRejectedValue(new ApiError(500, null));
+    apiSend.mockRejectedValue(new ApiError(422, null));
     show(unavailable);
     fireEvent.click(ask() ?? document.body);
     fireEvent.click(screen.getByRole('button', { name: t.inbox.resend.send }));

@@ -11,14 +11,16 @@ import { sendText } from '@/features/messaging/inbox/api/api';
 import type { ComposerExtras } from '@/features/messaging/inbox/composer/lib/composer-extras';
 import { sendsOnKey } from '@/features/messaging/inbox/composer/lib/composer-keys';
 import { ComposerError } from './ComposerError';
-import { draftGeneration, getDraft, keepsFailed, requestIdFor, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { draftGeneration, getDraft, keepsFailed, keptFailed, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { failedOf, settleTextSend, textSentOf, type TextSent } from '@/features/messaging/inbox/composer/lib/unconfirmed';
+import { chatRows } from '@/features/messaging/inbox/api/unconfirmed-watch';
 import { ownSendGeneration, recordOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { ReplyStrip } from './ReplyStrip';
 import { rereadsAfter, sendErrorCode, sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { useReplyTarget } from '@/features/messaging/inbox/composer/lib/use-reply-target';
 
 /** A send, the message it answers («رد»), the tab-memory generations it started in and what follows it (never sent). */
-type Sent = { phone: string; text: string; clientRequestId: string; replyTo?: string | undefined; gen: { draft: number; own: number }; after?: () => void };
+type Sent = TextSent & { replyTo?: string | undefined; gen: { draft: number; own: number }; after?: () => void };
 
 /** The box's tallest height (about five lines), then it scrolls. */
 const COMPACT_MAX_PX = 128;
@@ -61,15 +63,14 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
     onSuccess: async (view, sent) => {
       recordOwnSend(sent.phone, view.id, sent.gen.own);
       if (sent.replyTo) reply.done(sent.replyTo);
-      const now = getDraft(sent.phone);
-      if (now.failed) setDraft(sent.phone, { ...now, failed: null }, sent.gen.draft);
+      settleTextSend(view, sent);
       sent.after?.();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
     onError: async (e, sent) => {
       // Put the message back with its key, unless she has typed a new one since (that one gets its own).
       const now = getDraft(sent.phone);
-      const failed = { text: sent.text, id: sent.clientRequestId, code: sendErrorCode(e) };
+      const failed = failedOf(sent, sendErrorCode(e), chatRows(queryClient, sent.phone));
       setDraft(sent.phone, { text: now.text || sent.text, failed }, sent.gen.draft);
       // The window may have closed (the composer switches), or a send with no answer may have gone.
       if (rereadsAfter(e)) await queryClient.invalidateQueries({ queryKey: ['threads'] });
@@ -97,8 +98,8 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
     if (blocked) return;
     const gen = { draft: draftGeneration(), own: ownSendGeneration() };
     const body = text.trim();
-    const sent = { phone, text: body, clientRequestId: requestIdFor(draft, body), replyTo: reply.replyTo, gen, after: extras?.onSubmit?.() };
-    setDraft(phone, { text: '', failed: null });
+    const sent = { ...textSentOf(phone, draft, body), replyTo: reply.replyTo, gen, after: extras?.onSubmit?.() };
+    setDraft(phone, { text: '', failed: keptFailed(draft.failed) });
     send.mutate(sent);
   };
 

@@ -2,9 +2,12 @@ import { offerText, pricingCountryOfPhone } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { useIsMutating, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
+import { quoteIdOf, quoteSent, quoteUnconfirmed } from './quote-id';
 import { INITIAL_SELECTION, OTHER, quoteQuery, type Selection, useDebounced } from '@/features/finance/pricing';
 import { sendText } from '@/features/messaging/inbox/api/api';
-import { sendErrorCode } from '@/features/messaging/inbox/composer/lib/send-error';
+import { replayedOther, SEND_UNCONFIRMED } from '@ab/client-core';
+import { chatRows } from '@/features/messaging/inbox/api/unconfirmed-watch';
+import { ReplayedSend, rereadsAfter, sendErrorCode } from '@/features/messaging/inbox/composer/lib/send-error';
 import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
 
 /** The calculator's default choice, with the country of the chat's number (+966 → SA …, else USD). */
@@ -30,31 +33,46 @@ export function useQuoteOffer(phone: string) {
   };
 }
 
+/** An offer as sent: its text, when, and the chat's row ids then (for the read match). */
+interface Offer {
+  text: string;
+  at: string;
+  known: ReadonlySet<string>;
+}
+
 /**
- * «أرسل العرض»: the chat's own POST /threads/:phone/text, one clientRequestId per sent offer. It
- * shares the composer's mutation key, so neither sends while the other is in flight, and a second
- * tap before the re-render sends nothing (the ref). `onSent` closes the sheet. Like a template, a sent
- * offer settles a failed text attempt (settleOwnSend).
+ * «أرسل العرض»: the chat's own POST /threads/:phone/text with the chat's quote id (quote-id: kept
+ * until an offer goes or a read shows it, docs/44 BUG7). No answer re-reads the chat; a retry
+ * answered with the FIRST offer says this one did not go (a new id next). It shares the
+ * composer's mutation key, so neither sends while the other is in flight, and a second tap before
+ * the re-render sends nothing (the ref). `onSent` closes the sheet. Like a template, a sent offer
+ * settles a refused text attempt (settleOwnSend).
  */
 export function useQuoteSend(phone: string, onSent: () => void) {
   const queryClient = useQueryClient();
   const mutationKey = ['inbox-send', phone];
   const busy = useRef(false);
-  const requestId = useRef(crypto.randomUUID());
   const send = useMutation({
     mutationKey,
-    // One id until an offer goes (docs/44 BUG7): a retry after no answer is never a second message.
-    mutationFn: (text: string) => sendText({ phone, text, clientRequestId: requestId.current }),
+    mutationFn: async ({ text }: Offer) => {
+      const quote = quoteIdOf(phone);
+      const view = await sendText({ phone, text, clientRequestId: quote.id });
+      if (quote.unconfirmed && replayedOther(view, text)) throw new ReplayedSend();
+      return view;
+    },
     onMutate: sendStart,
-    onSuccess: async (view, _text, start) => {
-      requestId.current = crypto.randomUUID();
+    onSuccess: async (view, _offer, start) => {
+      quoteSent(phone);
       settleOwnSend(phone, view.id, start);
       onSent();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
-    // The window closed since the page loaded: refetch so the sheet disables send and edit.
-    onError: async (e) => {
-      if (sendErrorCode(e) === 'session_closed') await queryClient.invalidateQueries({ queryKey: ['threads'] });
+    onError: async (e, offer) => {
+      const code = sendErrorCode(e);
+      if (code === SEND_UNCONFIRMED) quoteUnconfirmed(phone, offer);
+      else quoteSent(phone);
+      // The window closed (the sheet disables send and edit), or the offer may have gone.
+      if (rereadsAfter(e)) await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
     onSettled: () => {
       busy.current = false;
@@ -67,7 +85,8 @@ export function useQuoteSend(phone: string, onSent: () => void) {
     send: (text: string) => {
       if (busy.current || pending) return;
       busy.current = true;
-      send.mutate(text);
+      const known = new Set(chatRows(queryClient, phone).map((m) => m.id));
+      send.mutate({ text, at: new Date().toISOString(), known });
     },
   };
 }
