@@ -109,9 +109,6 @@ export const retryMessage = (id: string) => apiSend<MessageView>('POST', `/messa
 /** M3: the admin opened wa.me; the sender holds the row until they confirm (M2) or put it back (M1). */
 export const handOffMessage = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/hand-off`);
 
-/** «تراجع» of «أرسل عبر واتساب»: sent_manually → queued while no app echo came back (≤ 30 min). */
-export const undoWhatsAppSend = (id: string) =>
-  apiSend('POST', `/messages/${id}/retry?undo=whatsapp`);
 /** M2: the admin sent it from WhatsApp by hand (R-MSG-03); the sender never resends it. */
 export const markSentManually = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/sent-manually`);
 

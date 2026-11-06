@@ -6,7 +6,8 @@ import {
   useMutationState,
   useQueryClient,
 } from '@tanstack/react-query';
-import { markSentManually, undoWhatsAppSend } from '@/features/messaging/inbox/api/api';
+import { markSentManually } from '@/features/messaging/inbox/api/api';
+import { apiSend } from '@/lib/http/api';
 
 /** One «أرسل عبر واتساب»: the row, and the tab opened in the click (null: blocked). */
 interface SendVars {
@@ -17,6 +18,9 @@ interface SendVars {
 type SendState = MutationState<WhatsAppSendResult<MessageView>, Error, SendVars>;
 
 const KEY = ['whatsapp-send'] as const;
+
+/** «تراجع»: sent_manually → queued while no app echo came back (≤ 30 min, retry?undo=whatsapp). */
+const undoWhatsAppSend = (id: string) => apiSend('POST', `/messages/${id}/retry?undo=whatsapp`);
 
 /** WhatsApp Web (never the Windows app: coexistence does not support it), the text filled in. */
 export const whatsappWebUrl = (m: MessageView): string =>
