@@ -117,11 +117,9 @@ export class SenderRepo {
   /** false = the admin marked it sent by hand meanwhile: their status stands. */
   async sent(input: { row: DueMessage; sent: WaSent; at: Date }): Promise<boolean> {
     const at = input.at.toISOString();
-    // A template the Evolution driver sent as plain text (Baileys) is flagged (docs/19).
-    const asText = input.sent.asText ? { sent_as_text: true } : {};
     const { data, error } = await this.db
       .from('messages')
-      .update({ status: 'sent', sent_at: at, wa_message_id: input.sent.waMessageId, next_attempt_at: null, error_code: null, error_text: null, ...asText })
+      .update({ status: 'sent', sent_at: at, wa_message_id: input.sent.waMessageId, next_attempt_at: null, error_code: null, error_text: null, ...(input.sent.asText ? { sent_as_text: true } : {}) })
       .eq('id', input.row.id)
       .eq('status', 'queued')
       .select('id');

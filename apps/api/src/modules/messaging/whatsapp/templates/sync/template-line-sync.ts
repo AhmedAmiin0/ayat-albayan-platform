@@ -36,7 +36,7 @@ async function readList(deps: LineSyncDeps, line: WaLine): Promise<MetaTemplate[
   }
 }
 
-/** The drivers whose templates are not ours to list (docs/19): Evolution's (the CRM's now are, docs/39). */
+/** Drivers whose templates we never list: Evolution's (docs/19); the CRM's we do (docs/39). */
 const NO_LIST: Partial<Record<WaProvider, string>> = {
   evolution: EVOLUTION_NO_TEMPLATES,
 };
