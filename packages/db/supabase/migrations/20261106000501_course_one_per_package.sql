@@ -42,7 +42,7 @@ begin
     end if;
   end if;
 
-  -- One course per package: serialise its bookings, then replay or refuse (migration 20261106000201).
+  -- One course per package: serialise its bookings, then replay or refuse (migration 20261106000501).
   if v_sub is not null then
     perform pg_advisory_xact_lock(hashtextextended('course:' || v_sub::text, 0));
     select id into v_rule from public.schedule_rules where client_request_id = v_request;

@@ -11,7 +11,7 @@ import { confirmRequest, type CourseDraft } from './course-draft.rules';
 /** A confirm: nothing to book, still unpaid, booked (now or before), or a clash kept the draft. */
 type ConfirmOutcome = 'none' | 'held' | 'booked' | 'clash' | 'failed';
 
-/** create_booking's refusal: the package got its course meanwhile (migration 20261106000201). */
+/** create_booking's refusal: the package got its course meanwhile (migration 20261106000501). */
 const courseExists = z.object({ code: z.literal('course_exists') });
 const isCourseExists = (e: unknown): boolean =>
   e instanceof HttpException && courseExists.safeParse(e.getResponse()).success;

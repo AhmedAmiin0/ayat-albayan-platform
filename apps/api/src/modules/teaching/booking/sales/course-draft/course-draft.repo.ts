@@ -14,7 +14,7 @@ const rowSchema = z.object({
 });
 
 /**
- * subscription_course_drafts (migration 20261106000200; service role only): one draft per package,
+ * subscription_course_drafts (migration 20261106000500; service role only): one draft per package,
  * and whether the package is held (unpaid with an open payment link) or active.
  */
 @Injectable()
