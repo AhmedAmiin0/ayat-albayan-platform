@@ -1,6 +1,8 @@
 import type { MessageQuote, TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
+import { threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { refreshInbox, touchInbox } from './inbox-sync';
 import {
   appendMessage,
@@ -14,23 +16,27 @@ import {
 } from './thread-cache';
 import { useThreadPoll } from './thread-poll';
 
+/** One page of a chat (the live pages and the window around a search hit, docs/37). */
+export const threadGet = (path: string, init?: { signal?: AbortSignal }) =>
+  apiFetch<ThreadDetail>(path, init);
+
 /**
- * GET /threads/:phone (docs/12 H2): the newest page first, `before` the oldest loaded row pages
- * back. The API stamps the inbound rows read when it answers. The persisted client keeps the last
- * answer on disk, so an opened thread reads offline (R-MOB-03). While on screen, useThreadPoll keeps
- * it live: a delta every INBOX_REFRESH_MS, the newest page every THREAD_FULL_MS (pull-to-refresh and
- * opening read the whole thread).
+ * GET /threads/:phone (docs/12 H2): the newest page first, `before` + `before_id` (the oldest
+ * loaded row's time and id: a compound keyset, docs/37) pages back. The API stamps the inbound
+ * rows read when it answers. The persisted client keeps the last answer on disk, so an opened
+ * thread reads offline (R-MOB-03). While on screen, useThreadPoll keeps it live: a delta every
+ * INBOX_REFRESH_MS, the newest page every THREAD_FULL_MS (pull-to-refresh and opening read the
+ * whole thread).
  */
 export function useThread(phone: string) {
   const query = useInfiniteQuery({
     queryKey: threadKey(phone),
     // TanStack's signal: closing the chat drops its read, so a later push tap never joins it.
+    // Older builds persisted a bare `before` string: threadPageQuery still pages back from it.
     queryFn: ({ pageParam, signal }) =>
-      apiFetch<ThreadDetail>(`${threadPath(phone)}${toQueryString({ before: pageParam })}`, {
-        signal,
-      }),
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (last) => (last.has_more ? last.messages[0]?.created_at : undefined),
+      threadGet(`${threadPath(phone)}${threadPageQuery(pageParam)}`, { signal }),
+    initialPageParam: null as ThreadPageParam,
+    getNextPageParam: threadNextParam,
   });
   useThreadPoll(phone, query.data !== undefined);
   return query;
@@ -76,6 +82,7 @@ export function useSendMessage(phone: string) {
     mutationFn: (input: SendInput) =>
       apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, body(input)),
     onMutate: async ({ out, id }) => {
+      markOwnSend(phone);
       await client.cancelQueries({ queryKey });
       const text = out.kind === 'text' ? out.text : out.preview;
       const key = out.kind === 'template' ? out.key : undefined;

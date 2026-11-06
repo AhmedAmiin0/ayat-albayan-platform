@@ -16,6 +16,8 @@ export function routeChat(apiFetch: Mock, found: (typeof NEW)[]) {
   routeFetch(apiFetch, [
     [`${PATH}/search?`, { items: found.map(hit), total: found.length, next_cursor: null }],
     [`${PATH}?before=`, detail([OLD])],
+    // The window around an older hit (docs/37): one request, the hit and the rows after it.
+    [`${PATH}?around=${id(1)}`, detail([OLD, NEW, MID])],
     [PATH, { ...detail([NEW, MID]), has_more: true }],
     ['/messaging/templates', []],
     ['/settings', {}],

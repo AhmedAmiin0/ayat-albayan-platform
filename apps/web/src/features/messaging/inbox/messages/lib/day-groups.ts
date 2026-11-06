@@ -20,6 +20,13 @@ export type LogItem =
   | { kind: 'message'; message: MessageView }
   | { kind: 'call'; call: CallView };
 
+/** The chat's calls and the loaded span they are merged into. */
+interface LogCalls {
+  list: readonly CallView[];
+  from: string | null;
+  to?: string | null;
+}
+
 /** «2026-10-01»: the viewer's local day (the browser's zone). */
 const dayKey = (at: Date): string => chatDayKey(at, viewerZone());
 
@@ -33,12 +40,14 @@ export function dayLabel(at: Date, now: Date): string {
 
 /**
  * The messages (oldest → newest) and the chat's calls (docs/28), merged by time, with a separator
- * before the first entry of each day. `from`: calls before the oldest loaded page wait for it.
+ * before the first entry of each day. `from`: calls before the oldest loaded page wait for it;
+ * `to` (an anchored window, docs/37): calls after its newest message are left out.
  */
-export function withDays(messages: readonly MessageView[], now: Date, calls?: { list: readonly CallView[]; from: string | null }): LogItem[] {
+export function withDays(messages: readonly MessageView[], now: Date, calls?: LogCalls): LogItem[] {
   const items: LogItem[] = [];
   let last = '';
-  for (const entry of mergeChat(messages, calls?.list ?? [], { from: calls?.from ?? null })) {
+  const bounds = { from: calls?.from ?? null, to: calls?.to ?? null };
+  for (const entry of mergeChat(messages, calls?.list ?? [], bounds)) {
     const at = new Date(entry.at);
     const key = dayKey(at);
     if (key !== last) items.push({ kind: 'day', key, label: dayLabel(at, now) });

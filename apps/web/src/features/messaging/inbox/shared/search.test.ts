@@ -51,6 +51,14 @@ describe('parseInboxSearch', () => {
     expect(parseInboxSearch({ calls: 'no' }).calls).toBeUndefined();
   });
 
+  it('keeps a search hit (msg, docs/37) only as an id inside an open chat', () => {
+    const msg = '0c000000-0000-4000-8000-000000000002';
+    const phone = '+966501234567';
+    expect(parseInboxSearch({ phone, msg })).toEqual({ phone, msg, page: 1 });
+    expect(parseInboxSearch({ msg })).toEqual({ page: 1 });
+    expect(parseInboxSearch({ phone, msg: 'x' })).toEqual({ phone, page: 1 });
+  });
+
   it('keeps a student id `course` (a «احجز أيام الحلقات» notice, owner 2026-11-06) and drops anything else', () => {
     const course = '0c000000-0000-4000-8000-000000000002';
     expect(parseInboxSearch({ course })).toEqual({ course, page: 1 });

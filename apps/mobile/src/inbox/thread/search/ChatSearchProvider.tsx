@@ -4,6 +4,7 @@ import {
   type SearchStep,
 } from '@ab/client-core';
 import { type ReactNode, useReducer, useState } from 'react';
+import { useSearchRequest } from '@/inbox/thread/anchor';
 import { useChatSearchResults } from './chat-search-api';
 import { ChatSearchContext, type ChatSearchValue } from './search-context';
 import { useSearchBack } from './use-search-back';
@@ -29,6 +30,8 @@ export function ChatSearchProvider({ phone, children }: { phone: string; childre
     setClosed((n) => n + 1);
   };
   useSearchBack(state.open, close);
+  // «بحث في الرسائل» on the student's details: the bar opens here (docs/37 NEW 2).
+  useSearchRequest(phone, () => dispatch({ type: 'open' }));
   const value: ChatSearchValue = {
     ...found,
     ...{ state, q, closed, step, close },

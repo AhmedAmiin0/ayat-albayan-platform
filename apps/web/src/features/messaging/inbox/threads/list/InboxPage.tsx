@@ -14,6 +14,7 @@ import { chatListsQuery } from '@/features/messaging/inbox/lists/lib/api';
 import { ChatListsBar } from '@/features/messaging/inbox/lists/components/ChatListsBar';
 import { useListsAccess } from '@/features/messaging/inbox/lists/lib/use-lists-access';
 import { parseInboxSearch, type InboxSearch } from '@/features/messaging/inbox/shared/search';
+import { ChatAnchorContext, type ChatAnchor } from '@/features/messaging/inbox/shared/chat-anchor';
 import { ThreadList } from './ThreadList';
 import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane';
 import { CallsLog } from '@/features/messaging/calls';
@@ -22,7 +23,8 @@ import { useCallsEnabled } from '@/features/messaging/calls';
 
 export interface InboxPageProps {
   search: InboxSearch;
-  onSearch: (next: InboxSearch) => void;
+  /** `replace`: a chat's anchor moves without a history entry (docs/37). */
+  onSearch: (next: InboxSearch, how?: { replace: boolean }) => void;
   /** Extra items in the list column's head row, before «محادثة جديدة» (sales: the running lessons chip). */
   head?: ReactNode;
 }
@@ -46,13 +48,19 @@ export function InboxPage({ search, onSearch, head }: InboxPageProps) {
   const threads = useQuery(threadsQuery(shown));
   // «المكالمات» (docs/28) replaces the chats list only while calls are on.
   const callsLog = useCallsEnabled() && !!shown.calls;
-  const { phone, ...listSearch } = shown;
+  const { phone, msg, ...listSearch } = shown;
   const filter = (patch: Record<string, unknown>) =>
     onSearch(parseInboxSearch({ ...shown, ...patch, page: 1 }));
+  const anchor: ChatAnchor = {
+    msg,
+    anchor: (id) => onSearch({ ...listSearch, phone, msg: id }, { replace: true }),
+    open: (to) => onSearch({ ...listSearch, ...to }),
+  };
 
   return (
     /* From 900px the inbox is exactly the frame's height: the browser page never scrolls, the
        list, the log and the side panel each scroll on their own. Phones: one pane, it flows. */
+    <ChatAnchorContext value={anchor}>
     <div
       data-testid="inbox-layout"
       className="grid flex-auto gap-4 shell:h-0 shell:min-h-[400px] shell:grid-cols-[clamp(300px,30%,400px)_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]"
@@ -66,7 +74,7 @@ export function InboxPage({ search, onSearch, head }: InboxPageProps) {
         )}
         aria-busy={threads.isPlaceholderData || undefined}
       >
-        <InboxListHead total={threads.data?.total} head={head} onOpen={(next) => onSearch({ ...shown, phone: next })} />
+        <InboxListHead total={threads.data?.total} head={head} onOpen={(next) => onSearch({ ...listSearch, phone: next })} />
         <CallsTabs calls={callsLog} onPick={(calls) => filter({ calls: calls || undefined })} />
         {callsLog && <CallsLog />}
         {!callsLog && lists && <ChatListsBar active={list} onPick={(next) => filter({ list: next })} />}
@@ -92,5 +100,6 @@ export function InboxPage({ search, onSearch, head }: InboxPageProps) {
         </EmptyState>
       )}
     </div>
+    </ChatAnchorContext>
   );
 }

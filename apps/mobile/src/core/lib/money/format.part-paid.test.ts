@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { partPaidLine, shortfallLine } from './format';
+import { paidLine, paidOf, partPaidLine, shortfallLine } from './format';
 
 // Owner 2026-10-28 («Why is this unpaid»): 81 SAR with 80 received stays unpaid; the line says why.
 const SAR = t.pricing.currencies.SAR;
@@ -28,4 +28,17 @@ test('a receipt of 80 against 81 due warns by 1; one that covers it, or no amoun
   expect(shortfallLine({ amount: 81, due: 81, currency: 'SAR' })).toBeNull();
   expect(shortfallLine({ amount: 100, due: 81, currency: 'SAR' })).toBeNull();
   expect(shortfallLine({ amount: null, due: 81, currency: 'SAR' })).toBeNull();
+});
+
+test('a stopped course: «دُفع X من Y» names what it is owed for, never its price (review 2026-11-06)', () => {
+  const stopped = {
+    paid: 290,
+    price: 400,
+    currency: 'SAR',
+    cancel_kind: 'stopped',
+    stop_owed_amount: 290,
+  };
+  expect(paidOf(stopped)).toBe(`دُفع ${ltr('290')} من ${ltr('290')} ${SAR}`);
+  expect(paidLine(stopped)).toBe(paidOf(stopped));
+  expect(paidOf({ ...stopped, cancel_kind: null })).toContain(ltr('400'));
 });

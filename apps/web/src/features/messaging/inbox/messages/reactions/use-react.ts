@@ -1,4 +1,9 @@
-import { reactionMutation, reactionPath, withReactions } from '@ab/client-core';
+import {
+  anchoredThreadPrefix,
+  reactionMutation,
+  reactionPath,
+  withReactions,
+} from '@ab/client-core';
 import type { ReactionResult, ThreadDetail } from '@ab/shared';
 import { useMutation, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { ApiError, apiSend } from '@/lib/http/api';
@@ -20,7 +25,13 @@ export function useReact(phone: string, onFail: (text: string) => void) {
     reactionMutation({
       send: ({ message, emoji }) => apiSend<ReactionResult>('PUT', reactionPath(phone, message.id), { emoji, clientRequestId: crypto.randomUUID() }),
       cancel: () => client.cancelQueries({ queryKey }),
-      patch: (id, reactions) => client.setQueryData<InfiniteData<ThreadDetail>>(queryKey, (old) => withReactions(old, { id, reactions })),
+      // The live chat and any anchored window of it (docs/37 review 1) show the same reactions.
+      patch: (id, reactions) => {
+        type Pages = InfiniteData<ThreadDetail> | undefined;
+        const edit = (old: Pages) => withReactions(old, { id, reactions });
+        client.setQueryData(queryKey, edit);
+        client.setQueriesData({ queryKey: anchoredThreadPrefix(phone) }, edit);
+      },
       fail: (e) => onFail(reactionProblem(e)),
     }),
   );

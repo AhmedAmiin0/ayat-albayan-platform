@@ -4,6 +4,7 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { meetReminder, message, PHONE } from '../shared/thread-fixtures';
+import * as ownSend from '@/inbox/thread/anchor/own-send';
 import { SendRating } from './SendRating';
 
 const mockApiFetch = jest.fn();
@@ -65,6 +66,17 @@ test('once it went out the button is off: no second tap, no second request', asy
   expect((await send()).props.accessibilityState?.disabled).toBe(true);
   await fireEvent.press(await send());
   expect(mockApiSend).toHaveBeenCalledTimes(1);
+});
+
+test('a rating ask is a send from this device: an anchored chat goes live (docs/37)', async () => {
+  const sends = jest.spyOn(ownSend, 'markOwnSend');
+  mockApiSend.mockResolvedValue(message({ id: 'm9', status: 'sent' }));
+  const client = createTestQueryClient({ meFromApi: true });
+  await renderWithQuery(<SendRating thread={guardian} />, client);
+  await ask();
+  await confirm();
+  await screen.findByText(t.inbox.rating.sent);
+  expect(sends).toHaveBeenCalledWith(PHONE);
 });
 
 test('a queued send says it waits for the send gate and refetches the threads', async () => {

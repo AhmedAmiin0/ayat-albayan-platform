@@ -4247,7 +4247,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 6
@@ -4356,7 +4356,7 @@
   },
   "src/modules/messaging/inbox/reads/thread-page.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/reads/thread-reads.ts": {

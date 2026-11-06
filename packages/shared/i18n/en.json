@@ -2749,7 +2749,7 @@
     "dayYesterday": "Yesterday",
     "noticeMore": "Show the full notice",
     "title": "Messages",
-    "searchPlaceholder": "Search by name or number",
+    "searchPlaceholder": "Search by name, number or message text",
     "filterAll": "All",
     "filterUnread": "Unread",
     "filterRow": "Filter chats",
@@ -3255,7 +3255,16 @@
       "counter": "{n} of {m}",
       "empty": "No results",
       "searching": "Searching…",
-      "unreachable": "This message could not be reached in the chat"
+      "unreachable": "This message could not be reached in the chat",
+      "fromProfile": "Search messages"
+    },
+    "messageSearch": {
+      "section": "Messages",
+      "chats": "Chats",
+      "empty": "No matching messages",
+      "more": "Show more messages",
+      "failed": "Could not search the messages. Please try again.",
+      "hint": "Type at least three characters to search message text"
     }
   },
   "mobileFinance": {
@@ -7777,13 +7786,24 @@
       "withRefund": "Cancel and refund",
       "refundPaid": "Paid: {amount}",
       "refundCharged": "Attended lessons: {n} × {price} × {rate}% = {amount}",
-      "refundTotal": "Refund due: {amount}",
-      "refundAmount": "Refund amount",
-      "refundAmountHint": "You may lower it; at most {amount}",
       "refundWhere": "What was paid by a payment link goes back to the card; the rest is recorded as a manual refund the admin transfers to the family",
       "doneRefund": "Subscription cancelled and a {amount} refund recorded",
       "refundNote": "Cancel and refund: {reason}",
-      "refundBell": "Transfer {amount} to the family (cancel and refund)"
+      "refundBell": "Transfer {amount} to the family (cancel and refund)",
+      "refundFailedBell": "Refunding {amount} did not finish after the course stop: retry or transfer it by hand",
+      "refundChoice": "Refund amount",
+      "refundUnattended": "Unattended lessons only: {amount}",
+      "refundAll": "Everything paid: {amount}",
+      "refundCustom": "Custom amount",
+      "oweChoice": "What the family still owes",
+      "oweAttended": "Attended lessons: {amount}",
+      "owePrice": "The full package price: {amount}",
+      "oweNothing": "Nothing",
+      "oweCustom": "Custom amount",
+      "customAmount": "Amount",
+      "customHint": "From 0 to {amount}",
+      "summary": "Refund: {refund} · Still owed by the family: {due}",
+      "refundUnavailable": "The refund cannot be computed right now, so «Cancel and refund» is not shown. Reopen the sheet shortly."
     },
     "teacher": {
       "action": "Change teacher",
@@ -7843,7 +7863,10 @@
       "refund_exceeds_allowed": "The amount is above the refund due",
       "refund_not_allowed": "You are not allowed to refund",
       "stripe_not_configured": "Online payment is not set up, so the card cannot be refunded",
-      "refund_mismatch": "This retry differs from an earlier refund of the same request: reopen the sheet"
+      "refund_mismatch": "This retry differs from an earlier refund of the same request: reopen the sheet",
+      "not_your_student": "This student is not one of yours, so you cannot refund them",
+      "owed_exceeds_price": "The amount still owed must be between 0 and the package price",
+      "stop_mismatch": "This attempt differs from the stop already recorded for the same request; reopen the sheet"
     }
   },
   "coursePause": {

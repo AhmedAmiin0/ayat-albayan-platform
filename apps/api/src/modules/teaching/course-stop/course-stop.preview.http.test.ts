@@ -23,6 +23,9 @@ describe('GET /students/:id/course-stop', () => {
       currency: 'SAR',
       // owner 2026-11-02: sales hold no subscriptions.refund, so no refund lines.
       refund: null,
+      refundUnavailable: false,
+      // «إلغاء فقط»'s numbers for everyone who may stop: 3 × 50 × 100 % and the price.
+      owe: { charged: 150, price: 400 },
       stopped: null,
     });
   });

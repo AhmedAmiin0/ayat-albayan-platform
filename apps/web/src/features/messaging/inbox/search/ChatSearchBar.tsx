@@ -53,7 +53,7 @@ export function ChatSearchBar() {
         />
       </div>
       <span role="status" className="shrink-0 text-xs whitespace-nowrap text-ink-3 tabular-nums">
-        {s.lost ? WORDS.unreachable : searchStatus({ ...s, index: s.state.index }, WORDS)}
+        {searchStatus({ ...s, index: s.state.index }, WORDS)}
       </span>
       {ARROWS.map((a) => (
         <IconButton

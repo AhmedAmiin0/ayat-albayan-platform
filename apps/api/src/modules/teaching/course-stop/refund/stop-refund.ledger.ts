@@ -10,10 +10,16 @@ import { manualRefundKey, type RefundPlan } from './stop-refund.plan';
 const METHODS = ['bank', 'wallet', 'cash', 'other', 'card'] as const;
 type Method = (typeof METHODS)[number];
 
-/** The method of the newest payment no payment link recorded; bank when there is none. */
+/** A manual refund is never stamped 'card': only a Stripe refund is (its webhook writes it). */
+const isManualMethod = (r: MoneyRow): boolean => r.method !== 'card';
+
+/**
+ * The method of the newest payment no payment link recorded and not stamped card (a card payment
+ * recorded by hand is refunded by transfer); bank when there is none.
+ */
 function manualMethod(rows: readonly MoneyRow[], cardIds: ReadonlySet<string>): Method {
   const manual = rows.filter((r) => r.kind === 'payment' && !cardIds.has(r.id));
-  return manual.at(-1)?.method ?? 'bank';
+  return manual.filter(isManualMethod).at(-1)?.method ?? 'bank';
 }
 
 /**
@@ -54,6 +60,21 @@ export class StopRefundLedger {
     await this.push.notifyAdmins('payment_due', {
       subject: `course_stop_refund:${plan.requestId}`,
       title: words.refundBell.replace('{amount}', left),
+      vars: { student: plan.pkg.studentName, left },
+      data: { studentId: plan.sub.studentId },
+      bellOnly: true,
+    });
+  }
+
+  /**
+   * The stop committed but its refund did not finish (Stripe error, crash; review 2026-11-06):
+   * the admins' bell «تعذّر إتمام استرداد …», so a half-done refund is seen and retried.
+   */
+  async failed(plan: RefundPlan): Promise<void> {
+    const left = `${plan.amount} ${plan.sub.currency}`;
+    await this.push.notifyAdmins('payment_due', {
+      subject: `course_stop_refund_failed:${plan.requestId}`,
+      title: ar.courseActions.stop.refundFailedBell.replace('{amount}', left),
       vars: { student: plan.pkg.studentName, left },
       data: { studentId: plan.sub.studentId },
       bellOnly: true,

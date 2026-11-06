@@ -45,7 +45,7 @@ export interface StopRefund {
   perLesson: number;
   attended: number;
   ratePercent: number;
-  /** What the attended lessons cost at the rate. */
+  /** What the attended lessons cost at the rate, never above the price. */
   charged: number;
   /** The most that may be refunded: paid − charged, never below 0. */
   refund: number;
@@ -61,8 +61,10 @@ export function stopRefund(input: StopRefundInput): StopRefund {
   // Never more lessons than the package holds (a stopped package caps them the same way).
   const attended = Math.min(input.attended, Math.max(input.lessonsTotal, 0));
   const priceMinor = toMinor(input.price, currency);
-  const chargedMinor = Math.round(
-    (attended * priceMinor * input.ratePercent) / (100 * total),
+  // Never above the price (a rate above 100 % never charges beyond the package), as receivables.
+  const chargedMinor = Math.min(
+    Math.round((attended * priceMinor * input.ratePercent) / (100 * total)),
+    Math.max(priceMinor, 0),
   );
   const paidMinor = Math.max(0, toMinor(input.paid, currency));
   return {
@@ -102,12 +104,15 @@ export function splitRefund(input: {
   return { cards: cards.filter((c) => c.amount > 0), manual: fromMinor(left, currency) };
 }
 
-/** 409 refund_exceeds_allowed: the amount asked is above the computed refund (or not positive). */
+/**
+ * 409 refund_exceeds_allowed: the amount asked is above the allowed maximum or negative. 0 is a
+ * stop that refunds nothing (owner 2026-11-06: «مبلغ مخصص» from 0).
+ */
 export const refundAmountProblem = (
   amount: number,
   allowed: number,
   currency: string,
 ): 'refund_exceeds_allowed' | null =>
-  amount <= 0 || toMinor(amount, currency) > toMinor(allowed, currency)
+  amount < 0 || toMinor(amount, currency) > toMinor(allowed, currency)
     ? 'refund_exceeds_allowed'
     : null;

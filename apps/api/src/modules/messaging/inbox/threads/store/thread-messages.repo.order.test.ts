@@ -24,4 +24,17 @@ describe('ThreadMessagesRepo.messages order', () => {
     expect(calls.find((c) => c.method === 'lt')?.args).toEqual(['created_at', '2026-10-22T10:00:00.000Z']);
     expect(calls.filter((c) => c.method === 'order')).toHaveLength(2);
   });
+
+  it('before + before_id: the quoted compound keyset, so rows sharing the time are never skipped', async () => {
+    const { db, calls } = fakeDb({ messages: [{ data: [] }] });
+    const at = '2026-10-22T10:00:00.123456+00:00';
+    const id = 'b1111111-1111-4111-8111-111111111111';
+    await queriesOn(db).messages({ phone: '+966501234567', before: at, before_id: id, limit: 50 });
+    expect(calls.find((c) => c.method === 'lte')?.args).toEqual(['created_at', at]);
+    expect(calls.filter((c) => c.method === 'or').map((c) => c.args[0])).toContain(
+      `created_at.lt."${at}",and(created_at.eq."${at}",id.lt.${id})`,
+    );
+    expect(calls.find((c) => c.method === 'lt')).toBeUndefined();
+  });
 });
+

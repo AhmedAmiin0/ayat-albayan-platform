@@ -26,11 +26,6 @@ export function stub(pages: MessageView[][], fetchNextPage: jest.Mock, hasNextPa
   return q as unknown as ThreadQuery;
 }
 
-export const page = (pages: MessageView[][], hasNextPage: boolean) => ({
-  data: cachedThread(...pages.map((m) => detail(m))),
-  hasNextPage,
-});
-
 export const chat = (query: ThreadQuery) => (
   <ChatActionsProvider phone={PHONE} thread={thread}>
     <ChatHeader title={TITLE} onBack={jest.fn()} trailing={<ChatSearchButton />} />

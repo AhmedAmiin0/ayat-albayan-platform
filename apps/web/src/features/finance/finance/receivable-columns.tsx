@@ -1,4 +1,4 @@
-import { AGING_BUCKETS, type ReceivableRow } from '@ab/shared';
+import { AGING_BUCKETS, owedFor, type ReceivableRow } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
@@ -39,7 +39,7 @@ export const receivableColumns = col.columns([
     header: () => t.finance.paid,
     cell: (c) => (
       <span className="text-ink-3">
-        {t.payments.paidOf.replace('{paid}', String(c.getValue())).replace('{price}', String(c.row.original.price))}
+        {t.payments.paidOf.replace('{paid}', String(c.getValue())).replace('{price}', String(owedFor(c.row.original)))}
       </span>
     ),
     meta: { className: 'max-sm:order-4 max-sm:text-xs' },

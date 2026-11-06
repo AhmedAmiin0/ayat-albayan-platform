@@ -15,20 +15,33 @@ export interface StopSub {
   cancelled_at: string | null;
   cancelled_by: string | null;
   cancel_reason: string | null;
+  /** The stop's clientRequestId and its stored money decision (a replay plans from them). */
+  stop_request_id: string | null;
+  stop_owed_amount: number | null;
+  stop_owed_choice: string | null;
 }
 
-/** stop_course's input (migration 991). */
+/** stop_course's input (migration 991, the owed amount 20261106000100). */
 interface StopCall {
   subscriptionId: string;
   studentId: string;
   requestId: string;
   actorId: string;
   reason: string;
+  /** What the stopped course is owed for, as chosen (stored with the stamp). */
+  owed: { amount: number; choice: string };
 }
 
-const SUB = 'id, student_id, status, currency, cancelled_at, cancelled_by, cancel_reason';
+const STAMP = 'cancelled_at, cancelled_by, cancel_reason';
+const STORED = 'stop_request_id, stop_owed_amount, stop_owed_choice';
+const SUB = `id, student_id, status, currency, ${STAMP}, ${STORED}` as const;
 /** stop_course's raised codes (P0001) and the 409s among them; the rest is 404. */
-const RAISED = new Set(['subscription_not_found', 'already_cancelled', 'course_unattributed']);
+const RAISED = new Set([
+  'subscription_not_found',
+  'already_cancelled',
+  'course_unattributed',
+  'stop_mismatch',
+]);
 
 /** stop_course / the guard's errors → HTTP. */
 function stopError(error: PostgrestError): Error {
@@ -102,6 +115,8 @@ export class CourseStopRepo {
       client_request_id: c.requestId,
       actor: c.actorId,
       reason: c.reason,
+      owed_amount: c.owed.amount,
+      owed_choice: c.owed.choice,
     };
     const { data, error } = await this.db.rpc('stop_course', { p });
     if (error) throw stopError(error);
