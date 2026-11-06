@@ -77,7 +77,7 @@ export function fakeJob(opts: JobOpts = {}) {
     push as unknown as PushService,
     fakePolicy({ ...opts.rules, settings: ruleSettingsOf(opts.settings) }),
   );
-  // The property-injected short links: none made unless a test gives some (the long pages go).
+  // The property-injected signed links: none made unless a test gives some (signed-in pages go).
   const teacherLinks = { build: vi.fn(async () => opts.teacherLinks ?? new Map<string, TeacherLinks>()) };
   Object.assign(job, { teacherLinks });
   return { job, queries, queued, push, teacherLinks };

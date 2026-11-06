@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
 import { RateLimitRepo } from '@/common/http/rate-limit.repo';
-import { ShortLinksModule } from '@/modules/platform/short-links';
 import { ReportPdfModule } from '../report-pdf/report-pdf.module';
 import { TeachersModule } from '../../people/teachers/teachers.module';
 import { ReportAccess } from './report-access';
@@ -44,7 +43,7 @@ const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_
  * the reminders.
  */
 @Module({
-  imports: [TeachersModule, ReportPdfModule, ShortLinksModule],
+  imports: [TeachersModule, ReportPdfModule],
   controllers: [
     ReportsController,
     ReportAttachmentsController,
@@ -83,6 +82,7 @@ const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_
     ReportPdfQueue,
     ReportsQueries,
     TeacherReportLinks,
+    TEACHER_LINK_CONFIG,
   ],
 })
 export class ReportsModule {}

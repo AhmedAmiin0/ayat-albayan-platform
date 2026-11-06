@@ -92,6 +92,9 @@ describe('dropReason (before the claim)', () => {
     };
     expect(dropReason(moved, NOW)).toEqual({ code: 'stale', text: 'lesson retimed' });
     // Only the alert: a reminder's expires_at is not its lesson's start.
-    expect(dropReason({ ...moved, template_key: 'lesson_reminder' }, NOW)).toBeNull();
+    const reminder = { ...moved, template_key: 'lesson_reminder', dedup_key: 'lesson_reminder:l1:g1' };
+    expect(dropReason(reminder, NOW)).toBeNull();
+    // The alert sent as teacher_lesson_v3 (owner 2026-11-06): its dedup key still names it.
+    expect(dropReason({ ...moved, template_key: 'teacher_lesson_v3' }, NOW)).toMatchObject({ code: 'stale' });
   });
 });

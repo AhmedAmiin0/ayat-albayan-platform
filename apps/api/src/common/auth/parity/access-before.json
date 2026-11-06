@@ -494,5 +494,7 @@
   "TeacherLinkController.submit": "public",
   "TeacherLinkController.draftV2": "public",
   "TeacherLinkController.submitV2": "public",
-  "ShortLinksController.go": "public"
+  "ShortLinksController.go": "public",
+  "TeacherJoinController.go": "public",
+  "LegacyReportLinkController.go": "public"
 }

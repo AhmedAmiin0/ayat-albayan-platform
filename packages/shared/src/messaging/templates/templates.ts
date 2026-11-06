@@ -22,6 +22,7 @@ export const TEMPLATE_KEYS = [
   'lesson_join_link',
   'lesson_rating',
   'teacher_new_student',
+  'teacher_lesson_v3',
   'lesson_rescheduled',
   'lesson_cancelled',
   'course_paused',
@@ -44,6 +45,8 @@ export interface TemplateDocument {
 export interface TemplateParams extends Partial<Record<BodySlot, string>> {
   /** URL-button suffix: the Meet code, the Jitsi room slug, the signed feedback token or the classroom guest token. */
   button?: string;
+  /** Each URL button's {{1}} suffix in the buttons' order (a template with two link buttons). */
+  buttons?: string[];
   /** Quick-reply payloads by button index, each quickReplyPayload(intent, ref). */
   payloads?: string[];
   document?: TemplateDocument;
@@ -53,7 +56,7 @@ export interface TemplateParams extends Partial<Record<BodySlot, string>> {
 
 /** message_templates.buttons entries. `text` of an approved URL button comes from Meta's sync. */
 export type TemplateButton =
-  | { type: 'url'; url: string; text?: string }
+  | { type: 'url'; url: string; text?: string; example?: string }
   | { type: 'quick_reply'; text: string; intent: QuickReplyIntent };
 
 /** What a producer queues: the registry key and its params. */
@@ -102,6 +105,7 @@ const LESSON_TIMED: ReadonlySet<string> = new Set<TemplateKey>([
   'lesson_reminder_24h',
   'lesson_join_link',
   'teacher_new_student',
+  'teacher_lesson_v3',
 ]);
 
 /** A template about an upcoming lesson: a booking confirmation or a reminder. */
