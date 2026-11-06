@@ -5807,6 +5807,7 @@
       "fx": "Exchange rates",
       "google": "Google (Calendar, Drive and Sheets)",
       "giphy": "Chat GIFs (GIPHY)",
+      "storage": "File storage (MinIO)",
       "stripe": "Online payments (Stripe)",
       "evolution": "Evolution API (self-hosted WhatsApp server)"
     },
@@ -5845,6 +5846,17 @@
         "unknown": "Linking failed. Try again."
       }
     },
+    "storageProbe": {
+      "button": "Test connection",
+      "pending": "Testing…",
+      "hint": "Uploads a small test file to MinIO with the saved settings, reads it back and deletes it, without changing where files are saved. Save the integrations first.",
+      "done": "MinIO answered: upload, read and delete worked",
+      "errors": {
+        "storage_not_configured": "MinIO settings are incomplete: internal address, public address, access key and secret key.",
+        "storage_probe_failed": "Could not upload, read or delete on MinIO. Check the address and keys, then try again.",
+        "unknown": "The test failed. Try again."
+      }
+    },
     "invalid": "Not a valid value for this field",
     "options": {
       "meta": "Meta direct",
@@ -5852,7 +5864,9 @@
       "crm": "CRM",
       "true": "On",
       "false": "Off",
-      "evolution": "Evolution"
+      "evolution": "Evolution",
+      "supabase": "Supabase Storage (current)",
+      "minio": "MinIO (academy server)"
     },
     "enumDefault": "Default: {value}",
     "enumServer": "Server value: {value}",
@@ -6042,6 +6056,34 @@
       "EVOLUTION_INTERNAL_HOSTS": {
         "label": "Internal hosts allowed over http",
         "hint": "Docker service names on the server network, comma separated (one word, no dots). Default evolution-api. Anything else must be https."
+      },
+      "STORAGE_DRIVER": {
+        "label": "Where new files are saved",
+        "hint": "«Supabase Storage» saves as today; «MinIO» saves every new file on the academy server. Old files stay where they are and keep opening. Set up MinIO and test the connection before switching."
+      },
+      "MINIO_ENDPOINT": {
+        "label": "MinIO internal address",
+        "hint": "How the server reaches MinIO on the Docker network, e.g. http://ayat-minio:9000."
+      },
+      "MINIO_PUBLIC_URL": {
+        "label": "Public files address",
+        "hint": "Signed download and upload links (browser, phone, WhatsApp) use it, e.g. https://files.ayatalbayan.com. Must start with https."
+      },
+      "MINIO_REGION": {
+        "label": "Region",
+        "hint": "Leave empty for us-east-1, MinIO’s default."
+      },
+      "MINIO_BUCKET_PREFIX": {
+        "label": "Bucket name prefix",
+        "hint": "Added before every bucket name (ab- makes ab-reports). Leave empty to use the names as they are."
+      },
+      "MINIO_ACCESS_KEY": {
+        "label": "Access key",
+        "hint": "The app user’s key in MinIO, not the root key."
+      },
+      "MINIO_SECRET_KEY": {
+        "label": "Secret key",
+        "hint": "The app user’s secret in MinIO. Kept in the vault and never shown after saving."
       }
     },
     "developer": "For developers",

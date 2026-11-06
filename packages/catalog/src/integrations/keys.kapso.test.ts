@@ -19,7 +19,7 @@ describe('WhatsApp driver keys', () => {
 
   it('the provider keys are enums valued meta | kapso | crm; the template sync is a true | false switch', () => {
     expect(WA_PROVIDERS).toEqual(['meta', 'kapso', 'crm', 'evolution']);
-    expect(Object.keys(INTEGRATION_ENUMS).sort()).toEqual(['STRIPE_ENABLED', 'WA_CHAT_PROVIDER', 'WA_PROVIDER', 'WA_TEMPLATE_SYNC']);
+    expect(Object.keys(INTEGRATION_ENUMS).sort()).toEqual(['STORAGE_DRIVER', 'STRIPE_ENABLED', 'WA_CHAT_PROVIDER', 'WA_PROVIDER', 'WA_TEMPLATE_SYNC']);
     expect(integrationEnum('WA_TEMPLATE_SYNC')).toEqual(['true', 'false']);
     expect(integrationEnum('WA_PROVIDER')).toEqual(['meta', 'kapso', 'crm']);
     expect(integrationEnum('WA_API_BASE')).toBeNull();

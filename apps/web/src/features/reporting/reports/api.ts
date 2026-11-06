@@ -15,7 +15,7 @@ import { reportErrorWords } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { supabase } from '@/lib/http/supabase';
+import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // Report routes (docs/11 §4 R1–R12). Commands camelCase, responses snake_case.
 
@@ -72,7 +72,7 @@ export const removeAttachment = ({ id, attachmentId }: { id: string; attachmentI
 export async function uploadAttachment({ id, file }: { id: string; file: File }): Promise<ReportAttachmentView> {
   const meta = { mime: file.type, size: file.size };
   const slot = await apiSend<SignedUpload>('POST', `/reports/${id}/attachments/upload-url`, meta);
-  const { error } = await supabase.storage.from(slot.bucket).uploadToSignedUrl(slot.path, slot.token, file);
+  const { error } = await uploadSigned(slot, { body: file, contentType: file.type });
   if (error) throw new ApiError(400, { code: 'attachment_path' });
   return apiSend<ReportAttachmentView>('POST', `/reports/${id}/attachments`, { ...meta, path: slot.path });
 }

@@ -87,6 +87,14 @@ The chat's PDF previews (owner 2026-10-29, `apps/api/src/modules/messaging/inbox
 - **Every chat PDF previews by itself** (owner 2026-11-01, «for the pdf do it like WhatsApp»): the web and mobile apps show page 1 of every PDF (a family's, an echo, an import, a forward, one staff sent) with no tap first. The tap gate the apps had until then (only staff-sent PDFs rendered unasked) is gone: the sandbox above is the boundary, since no API process parses PDF bytes. What keeps the load down instead: page 1 is asked only once its bubble has been on screen (mobile: the list's `onViewableItemsChanged`; web: an `IntersectionObserver`), once per bubble (the apps' query cache, then the stored `wa-media/pdf/{id}/1.jpg` and `messages.media_pages`), and concurrent asks for one message share one probe or render per API copy (`InFlight`; pdfinfo's answer is stored only after page 1, so a second ask joins the running probe). Every render still queues behind the one slot per copy and the sandbox's own one-at-a-time queue (8 waiting, then 503 `pdf_busy`, retried by the apps with back-off). With no socket the API answers 503 `pdf_unavailable` before the slot and before reading the PDF, and the apps do not retry it; a failed page is not asked again on focus or reconnect. The web signs the PDF itself only on a click (W6).
 - **Name:** an inbound document's file name (Meta's `document.filename`, Kapso's `media_data.filename`) is stored in `messages.media_name` (control and bidi characters removed, trimmed, at most 200 code points: `cleanFileName`); a download saves it with the same cleaning, a PDF always ending `.pdf`; the card falls back to the caption's first line when it reads as a `.pdf` name, then «ملف PDF»; a caption that is only that name is not shown a second time under the card.
 
+### Object storage (`ayat-minio`, profile `minio`)
+
+New files go to MinIO once an admin switches `STORAGE_DRIVER` in «التكاملات» › «التخزين»; old files stay in Supabase
+Storage (owner 2026-11-06). `ayat-minio` (512 MB, internal only) and the one-shot `ayat-minio-init` (64 MB, buckets,
+app user, policy) start only with `COMPOSE_PROFILES=minio` and the `MINIO_*` keys in `.env`; `ayat-lb` serves
+`files.ayatalbayan.com` from it (signed URLs). Design, config keys, the owner's VPS steps, cut-over, rollback and
+backups: **[docs/45-minio-storage.md](45-minio-storage.md)**; guards in `tools/scripts/ci-checks/compose/compose-minio.test.mjs`.
+
 ## Redeploy
 
 From GitHub only (below). `tools/scripts/env/deploy-staging.sh` (the laptop deploy) now refuses and points there: it had no deploy lock and no rollback for the two-copies layout, so it could race the workflow or leave `127.0.0.1:3110` down.

@@ -79,9 +79,11 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
     expect(of('not')).toEqual([
       ['media_id', 'is', null],
       ['media_path', 'like', 'out/%'],
+      ['media_path', 'like', 'minio:out/%'],
       ['media_path', 'is', null],
       ['media_id', 'is', null],
       ['media_path', 'like', 'out/%'],
+      ['media_path', 'like', 'minio:out/%'],
     ]);
   });
 });

@@ -31,7 +31,7 @@ function setup(row: MediaMessage) {
   const queries = { message: vi.fn().mockResolvedValue(row), setPath: vi.fn().mockResolvedValue(undefined) };
   const notifications = fakeClient();
   const chat = fakeClient();
-  const storage = { upload: vi.fn().mockResolvedValue(undefined) };
+  const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
   const media = new InboundMedia(
     queries as unknown as InboundMediaRepo,
     { notifications, chat } as unknown as WhatsappLines,

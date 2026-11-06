@@ -37,6 +37,7 @@ export const INTEGRATIONS_PAGE_GROUPS: readonly IntegrationGroup[] = [
   'fx',
   'google',
   'giphy',
+  'storage',
   'stripe',
 ];
 

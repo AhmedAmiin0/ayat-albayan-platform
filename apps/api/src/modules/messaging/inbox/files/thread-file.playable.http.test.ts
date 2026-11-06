@@ -31,7 +31,7 @@ describe('W6 bubble files: audio, video and sent files (docs/21 §4)', () => {
   const queries = { message: vi.fn(), recent: vi.fn(), setPath: vi.fn() };
   const teachers = { teacher: vi.fn(), phones: vi.fn() };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
-  const storage = { upload: vi.fn(), signedDownload: vi.fn() };
+  const storage = { upload: vi.fn(async (r: { path: string }) => r.path), signedDownload: vi.fn() };
   const call = (token: string, url = URL) => app.inject({ method: 'GET', url, headers: { authorization: `Bearer ${token}` } });
 
   beforeAll(async () => {

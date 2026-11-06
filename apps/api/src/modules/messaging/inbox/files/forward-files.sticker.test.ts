@@ -14,7 +14,7 @@ const sticker = messageRow({
 });
 
 const files = (queue = vi.fn()) => {
-  const storage = { copy: vi.fn().mockResolvedValue(undefined) };
+  const storage = { copy: vi.fn(async (c: { to: { path: string } }) => c.to.path) };
   const queries = { thread: vi.fn().mockResolvedValue(null), numberWindows: vi.fn() };
   const outbox = { queue };
   const repo = queries as unknown as ThreadsRepo;

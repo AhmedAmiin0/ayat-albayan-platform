@@ -3,8 +3,9 @@
 # shared with the CRM) keeps proxying the API domain to 127.0.0.1:3110 unchanged.
 # Never touches the CRM stack in /opt/wacrm. Roll it with roll.sh (one build, one container at a time).
 # Memory (8 GB VPS shared with the CRM): 2 × 512 MB API + 1 GB worker (512 MB Node heap + Chromium PDFs) + 128 MB
-# PDF sandbox + 64 MB LB + 96 MB Redis = 2336 MB ≈ 2.3 GB. After a deploy, measure (docker stats) the worker's RSS
-# during a report PDF, and ayat-pdf's and an API copy's while a scanned 10 MB chat PDF previews, and adjust.
+# PDF sandbox + 64 MB LB + 96 MB Redis = 2336 MB ≈ 2.3 GB; with the minio profile (docs/45) + 512 MB MinIO + 64 MB
+# for its one-shot init = 2912 MB. After a deploy, measure (docker stats) the worker's RSS during a report PDF, and
+# ayat-pdf's and an API copy's while a scanned 10 MB chat PDF previews, and adjust.
 name: ayat-albayan-staging
 
 # Every container's log rotates here, not in the daemon (shared with the CRM): never the whole disk.
@@ -179,7 +180,74 @@ services:
         limits:
           memory: 96M
 
+  # Object storage for every new file (owner 2026-11-06, docs/45). Off until the owner puts COMPOSE_PROFILES=minio
+  # (and the MINIO_* keys) in .env: merging never starts it on a server not ready for it. Internal network only:
+  # the API on ayat-minio:9000, browsers and WhatsApp through ayat-lb (files.ayatalbayan.com, signed URLs).
+  # No env_file: .env holds the app's secrets; only its own keys, by interpolation.
+  ayat-minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    profiles: ["minio"]
+    # Refuses to start without real root credentials: never MinIO's default minioadmin.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        [ "$${#MINIO_ROOT_USER}" -ge 3 ] && [ "$${#MINIO_ROOT_PASSWORD}" -ge 16 ] || {
+          echo 'ayat-minio: set MINIO_ROOT_USER and MINIO_ROOT_PASSWORD (16+ characters) in .env' >&2
+          exit 1
+        }
+        exec minio server /data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-}
+      # S3 API only: no web console to attack.
+      MINIO_BROWSER: "off"
+      # The Go GC works to stay under the container limit instead of being OOM-killed at it.
+      GOMEMLIMIT: 400MiB
+    volumes:
+      - minio-data:/data
+    restart: unless-stopped
+    logging: *log
+    # mc ships in the image; `local` is its built-in alias for localhost:9000 (no credentials needed).
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # One shot (docs/45): the private buckets, the app's own user and its policy. Idempotent: roll.sh's last
+  # `up -d` starts it again on every deploy. It waits for ayat-minio itself (init.sh), not through
+  # service_healthy, so a MinIO that will not start never fails the API's deploy.
+  ayat-minio-init:
+    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+    profiles: ["minio"]
+    depends_on:
+      ayat-minio:
+        condition: service_started
+    entrypoint: ["/bin/sh", "/ayat-minio/init.sh"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-}
+      MINIO_APP_ACCESS_KEY: ${MINIO_APP_ACCESS_KEY:-}
+      MINIO_APP_SECRET_KEY: ${MINIO_APP_SECRET_KEY:-}
+      MINIO_BUCKET_PREFIX: ${MINIO_BUCKET_PREFIX:-}
+    volumes:
+      # The shipped checkout (deploy-staging puts HEAD in src/): the script is versioned with this file.
+      - ./src/deploy/staging/minio:/ayat-minio:ro
+    restart: "no"
+    logging: *log
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+
 volumes:
+  # Every object MinIO holds (docs/45 «Backups»): on the host disk, no quota; the API caps each file.
+  minio-data:
   # The PDF sandbox's socket only (no data). tmpfs, 64 KB: the one path ayat-pdf can write that is not its own
   # /tmp can never fill the disk the CRM shares; owned by node (uid 1000, apps/api/Dockerfile), owner only.
   pdf-sock:

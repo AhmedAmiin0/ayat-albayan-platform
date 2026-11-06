@@ -1,7 +1,7 @@
 import type { SignedDownload, SignedUpload } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
-import { supabase } from '@/lib/http/supabase';
+import { uploadSigned } from '@/lib/storage/upload-slot';
 import type { InvoiceView, MakeupCandidate, ThreadMediaItem } from '@/features/teaching/booking/draft/contract';
 import { invoiceMime } from './invoice-file';
 
@@ -19,9 +19,7 @@ export async function uploadInvoiceFile(input: { requestId: string; file: File }
   const { file } = input;
   const mime = invoiceMime(file);
   const signed = await invoiceUploadUrl({ clientRequestId: input.requestId, mime, size: file.size });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, file, { contentType: mime });
+  const { error } = await uploadSigned(signed, { body: file, contentType: mime });
   if (error) throw error;
   return signed.path;
 }

@@ -1,6 +1,6 @@
 import type { AccountProfile, SignedUpload } from '@ab/shared';
 import { apiSend } from '@/core/lib/http/api';
-import { supabase } from '@/core/lib/http/supabase';
+import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { PickedAvatar } from '../lib/avatar';
 
 // The /me writes (R-ACC-02..05). Each answers the fresh profile, except the password (204).
@@ -34,9 +34,7 @@ export async function uploadPhoto<T>(base: string, avatar: PickedAvatar): Promis
     mime: avatar.mime,
     size: avatar.size,
   });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, avatar.bytes, { contentType: avatar.mime });
+  const { error } = await uploadSigned(signed, { body: avatar.bytes, contentType: avatar.mime });
   if (error) throw new AvatarUploadError(error.message);
   return apiSend<T>('PUT', base, { path: signed.path });
 }

@@ -456,6 +456,7 @@
   "MessageSearchController.search": ["admin","sales","teacher"],
   "MessageHideController.hide": ["admin","sales","teacher"],
   "MessageHideController.unhide": ["admin","sales","teacher"],
+  "StorageProbeController.run": ["admin"],
   "StickersController.favourite": ["admin","sales","teacher"],
   "StickersController.gif": ["admin","sales","teacher"],
   "StickersController.gifList": ["admin","sales","teacher"],

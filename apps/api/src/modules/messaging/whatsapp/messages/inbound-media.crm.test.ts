@@ -19,7 +19,7 @@ function setup(msg: MediaMessage, host = CRM_HOST) {
     setPath: vi.fn(async (_id: string, path: string) => void (stored = { ...stored, media_path: path })),
   };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
-  const storage = { upload: vi.fn().mockResolvedValue(undefined) };
+  const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
   const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
   const media = new InboundMedia(queries as unknown as InboundMediaRepo, lines, storage as unknown as StorageService);
   Object.assign(media, { crm: new CrmHistoryMedia(readerOf(CrmMediaSettings, { crm_media_host: host })) });

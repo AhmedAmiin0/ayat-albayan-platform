@@ -16,7 +16,7 @@ function setup(found = true, store = fakeSettings()) {
     render: vi.fn<(html: string, footer?: string) => Promise<Uint8Array>>(async () => new Uint8Array([37, 80, 68, 70])),
     close: vi.fn(async () => undefined),
   };
-  const storage = { upload: vi.fn(async () => undefined) };
+  const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
   const publisher = new ReportPdfPublisher(
     source as unknown as ReportPdfSource,
     renderer as unknown as PdfRenderer,

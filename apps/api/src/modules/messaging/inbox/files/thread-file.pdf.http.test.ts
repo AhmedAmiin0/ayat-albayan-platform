@@ -44,7 +44,13 @@ describe('GET /threads/:phone/messages/:id/pdf/:page: a PDF page under the file 
   const pdfs = { doc: vi.fn(), setDoc: vi.fn() };
   const teachers = { teacher: vi.fn(), phones: vi.fn() };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
-  const storage = { upload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), download: vi.fn() };
+  const storage = {
+    upload: vi.fn(async (r: { path: string }) => r.path),
+    signedDownload: vi.fn(),
+    exists: vi.fn(),
+    download: vi.fn(),
+    storedPathFor: (p: string) => p,
+  };
   const call = (token: string, url = `${BASE}/pdf/1`) => app.inject({ method: 'GET', url, headers: { authorization: `Bearer ${token}` } });
 
   beforeAll(async () => {

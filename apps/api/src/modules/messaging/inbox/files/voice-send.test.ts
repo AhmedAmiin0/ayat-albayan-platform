@@ -7,7 +7,8 @@ const BYTES = new Uint8Array([1, 2, 3]);
 const OGG = new TextEncoder().encode('OggS');
 
 const fakeStorage = (bytes: Uint8Array | null = BYTES) => {
-  const storage = { download: vi.fn(async () => bytes), upload: vi.fn(async () => undefined) };
+  const upload = vi.fn(async (r: { path: string }) => r.path);
+  const storage = { download: vi.fn(async () => bytes), upload };
   return { storage, as: storage as unknown as StorageService };
 };
 

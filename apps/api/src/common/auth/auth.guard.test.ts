@@ -54,7 +54,7 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
   it('GET /health is public', async () => {
     const res = await get('/health');
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ status: 'ok' });
+    expect(res.json()).toEqual({ status: 'ok', storage: { driver: 'supabase', status: expect.any(String) } });
   });
 
   it('GET /auth/me without a token is 401', async () => {

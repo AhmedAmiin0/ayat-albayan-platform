@@ -13,7 +13,7 @@ import { Linking } from 'react-native';
 import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { supabase } from '@/core/lib/http/supabase';
+import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 
 // The web form's report routes (docs/11 §4 R1–R12), same bodies: the API checks that the report
@@ -57,9 +57,7 @@ export const submitReport = (id: string, body: SubmitBody) => apiSend<ReportView
 export async function uploadAttachment(id: string, file: Receipt): Promise<ReportAttachmentView> {
   const meta = { mime: file.mime, size: file.size };
   const slot = await apiSend<SignedUpload>('POST', `/reports/${id}/attachments/upload-url`, meta);
-  const { error } = await supabase.storage
-    .from(slot.bucket)
-    .uploadToSignedUrl(slot.path, slot.token, file.bytes, { contentType: file.mime });
+  const { error } = await uploadSigned(slot, { body: file.bytes, contentType: file.mime });
   if (error) throw new ApiError(400, { code: 'attachment_path' });
   return apiSend<ReportAttachmentView>('POST', `/reports/${id}/attachments`, { ...meta, path: slot.path });
 }
