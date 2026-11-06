@@ -35,6 +35,11 @@ const TICK: Readonly<Record<string, StatusEvent['status']>> = {
   ERROR: 'failed',
 };
 
+/** A table entry for a name the sender chose: own keys only (never «constructor», «__proto__»). */
+function own<T>(table: Readonly<Record<string, T>>, key: string): T | undefined {
+  return Object.hasOwn(table, key) ? table[key] : undefined;
+}
+
 const connectionSchema = z.object({ state: z.string().optional() });
 
 export type EvolutionDelivery =
@@ -58,7 +63,7 @@ function inbound(data: unknown, at: { now: Date; where: Receiving }): EvolutionD
 function statuses(data: unknown, at: { now: Date; where: Receiving }): EvolutionDelivery {
   const events = asList(data).flatMap((raw): StatusEvent[] => {
     const u = updateSchema.safeParse(raw);
-    const status = u.success && u.data.fromMe !== false ? TICK[u.data.status] : undefined;
+    const status = u.success && u.data.fromMe !== false ? own(TICK, u.data.status) : undefined;
     if (!u.success || !status) return [];
     const base = { waMessageId: u.data.keyId, status, at: at.now, errorCode: null };
     return [{ ...base, errorText: null, conversationId: null, pricingCategory: null, ...at.where }];
@@ -93,6 +98,6 @@ export function parseEvolution(
   const env = envelopeSchema.safeParse(body);
   if (!env.success || !sameInstance(env.data.instance, at.instance)) return null;
   const event = eventName(env.data.event);
-  const read = READERS[event];
+  const read = own(READERS, event);
   return read ? read(env.data.data, at) : { kind: 'ignored', event };
 }

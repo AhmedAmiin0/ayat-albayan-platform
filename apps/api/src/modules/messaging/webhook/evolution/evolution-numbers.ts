@@ -12,6 +12,12 @@ export interface EvolutionNumber {
 const isEvolution = (n: OverlayNumber, instance: string): boolean =>
   n.phone_number_id === instance && n.evolutionToken !== undefined && isWaLine(n.purpose);
 
+/**
+ * Module mode with no number loaded: the config read failed at boot (numbers.config.ts installs
+ * an empty overlay). The webhook answers 503 then, so Evolution re-sends instead of dropping.
+ */
+export const numbersNotLoaded = (): boolean => overlayNumbers()?.length === 0;
+
 /** Read per call: an admin's change in «الأرقام» applies to the next delivery. */
 export function evolutionNumber(instance: string): EvolutionNumber | null {
   const n = overlayNumbers()?.find((x) => isEvolution(x, instance));

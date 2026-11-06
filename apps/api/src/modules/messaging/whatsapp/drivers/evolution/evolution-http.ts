@@ -29,7 +29,7 @@ export function evolutionHttp(conn: EvolutionConn, sent = false): Http {
     timeoutMs: conn.timeoutMs,
     redirect: 'error',
     errorBody: evolutionErrorSchema,
-    errors: evolutionTable(sent),
+    errors: evolutionTable({ sent, cloud: conn.env.mode === 'cloud' }),
     ...(conn.fetch ? { fetch: conn.fetch } : {}),
   });
 }

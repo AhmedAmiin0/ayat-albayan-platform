@@ -18,7 +18,8 @@ const cloudMedia = (): WaError =>
     code: null, status: 0, unsupported: 'evolution',
   });
 
-const tooLarge = (): WaError => new WaError('media too large', { code: null, status: 413 });
+/** Status 0: not a 4xx answer (which the media route would read as «expired»). */
+const tooLarge = (): WaError => new WaError('media too large', { code: null, status: 0 });
 
 export async function evolutionMedia(
   conn: EvolutionConn,

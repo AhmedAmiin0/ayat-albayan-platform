@@ -84,4 +84,15 @@ describe('parseEvolution — ticks, state, envelope', () => {
     expect(parseEvolution('junk', at)).toBeNull();
     expect(parseEvolution({ event: 'chats.update', data: {} }, at)).toEqual({ kind: 'ignored', event: 'chats.update' });
   });
+
+  it('an event or status named after an Object property is never a reader (security review)', () => {
+    for (const event of ['constructor', '__proto__', 'toString', 'hasOwnProperty']) {
+      const events = [{ waMessageId: 'x', numberId: 'other' }];
+      const forged = { event, data: { kind: 'inbound', events } };
+      expect(parseEvolution(forged, at)).toMatchObject({ kind: 'ignored' });
+    }
+    const tick = [{ keyId: 'a', fromMe: true, status: 'constructor' }];
+    const d = parseEvolution({ event: 'messages.update', data: tick }, at);
+    expect(d).toEqual({ kind: 'status', events: [] });
+  });
 });

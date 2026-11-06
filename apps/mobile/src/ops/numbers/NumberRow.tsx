@@ -6,7 +6,7 @@ import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { checkedLine, driverLine, healthChip, numberSubtitle, stateChips } from './numbers-words';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
-/** One number, read-only: label, role and phone, state chips, driver, last check; health at the end. */
+/** One number, read-only: label, role, phone, state chips, driver, last check; health last. */
 export function NumberRow({ number }: { number: NumberView }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

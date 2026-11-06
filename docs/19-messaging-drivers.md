@@ -529,8 +529,8 @@ HTTP client with `redirect: 'error'`: a 3xx is never followed, so the base is th
 
 **Errors** (`evolution-errors.ts`, first match wins): 401 / 403 → `credential: 'evolution'` (the queue is held 15 min,
 uncounted, rows read `evolution_auth`); 404 or «Connection Closed» / «not connected» → the same (the instance is gone or
-logged out: nothing was sent); 400 `[{exists:false}]` → 131026 (fails at once); a Cloud instance's 131047 /
-re-engagement words → 131047 (`window_closed`, the window rules below); 408 / 425 / 429 → retried with backoff; any other
+logged out: nothing was sent); 400 `[{exists:false}]` → 131026 (fails at once); on a **Cloud** instance only,
+Meta's 131047 / re-engagement words → 131047 (`window_closed`, the window rules below; a Baileys 4xx never is); 408 / 425 / 429 → retried with backoff; any other
 5xx, a timeout or a lost connection → `uncertain` (failed, **never resent**, there is no idempotency key); any other
 4xx → fails at once (#100). Unsupported: the template list, submit and samples (`evolution_no_templates`: the sync
 writes nothing), reactions (driver capability), `markRead` (a no-op: Evolution needs the chat jid), login codes (an
@@ -551,11 +551,14 @@ still answers 409. An Evolution **Cloud** number keeps Meta's rule (409 `session
 Kapso keeps its own path.
 
 **Inbound + ticks: `POST /webhooks/evolution/:instance`** (public, `EvolutionWebhookController`).
-1. Rate limit: 1 200 deliveries a minute per known instance, 60 shared by unknown names (429: Evolution retries).
-2. The instance must be one of our evolution numbers that has a token (module mode; enabled or not), else **404** with
-   no hint. A malformed name is 404 too.
-3. Auth: the `x-evolution-token` header the instance's webhook sends must equal the number's token (SHA-256 digests
+1. The instance must be one of our evolution numbers that has a token (module mode; enabled or not), else **404** with
+   no hint. A malformed name is 404 too. While module mode has no number loaded (the config read failed at boot), the
+   answer is **503** instead, so Evolution re-sends the delivery rather than dropping it.
+2. Auth: the `x-evolution-token` header the instance's webhook sends must equal the number's token (SHA-256 digests
    compared with `timingSafeEqual`), else **401** (debug log of the verdict only, never a value).
+3. Rate limit: 1 200 authenticated deliveries a minute per instance. Every refused request (404, 401) counts against
+   one shared bucket of 60, so a flood without the token can never starve the real instance (429: Evolution retries).
+   Event and status names are looked up as own keys only (never `constructor` or `__proto__`).
 4. The body is zod-parsed, and a body naming another instance is dropped. `MESSAGES_UPSERT` (never `fromMe`, never a
    group, broadcast or channel; a `@lid` chat uses `remoteJidAlt`) becomes Meta's message object
    (`webhook.evolution-message.ts`) and goes through the **same** `toInbound` → `InboundService.handle` as Meta's and

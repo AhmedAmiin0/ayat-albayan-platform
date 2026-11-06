@@ -95,4 +95,20 @@ describe('EvolutionWebhookController', () => {
     h.handle.mockRejectedValueOnce(new Error('db down'));
     expect(status(await h.controller.receive('secondary-1', req(text)).catch((e: unknown) => e))).toBe(500);
   });
+
+  it('a flood without the token never starves the real instance (security review)', async () => {
+    setNumbersOverlay({ values: {}, numberIds: {}, numbers: [NUMBER] });
+    const h = harness();
+    const flood = Array.from({ length: 1_300 }, () => h.controller.receive('secondary-1', req(text, 'nope')));
+    const codes = await Promise.all(flood.map((p) => p.catch((e: unknown) => status(e))));
+    expect(codes).toContain(429);
+    await h.controller.receive('secondary-1', req(text));
+    expect(h.handle).toHaveBeenCalledTimes(1);
+  });
+
+  it('503 (Evolution re-sends) while module mode has no number loaded yet', async () => {
+    setNumbersOverlay({ values: {}, numberIds: {}, numbers: [] });
+    const h = harness();
+    expect(status(await h.controller.receive('secondary-1', req(text)).catch((e: unknown) => e))).toBe(503);
+  });
 });

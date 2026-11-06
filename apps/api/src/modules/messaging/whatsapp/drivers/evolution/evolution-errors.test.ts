@@ -4,17 +4,17 @@ import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { failurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { EvolutionWhatsappClient } from './evolution.client';
-import { EVO_BAILEYS, evoFailure, noWait } from './evolution.fakes';
+import { EVO_BAILEYS, EVO_CLOUD, evoFailure, noWait } from './evolution.fakes';
 
 // docs/19 «Evolution driver»: Evolution's answers → WaError, and what the sender then does.
 
 const NOW = new Date('2026-11-06T10:00:00Z');
 type Reply = Parameters<typeof scriptedFetch>[number];
 
-async function info(reply: Reply): Promise<WaError['info']> {
+async function info(reply: Reply, env = EVO_BAILEYS): Promise<WaError['info']> {
   const f = scriptedFetch(reply);
   const opts = { fetch: f.fetch, timeoutMs: 1_000, pacer: noWait() };
-  const c = new EvolutionWhatsappClient(EVO_BAILEYS, opts);
+  const c = new EvolutionWhatsappClient(env, opts);
   const e = await c.sendText({ to: '+966500000001', text: 'x' }).catch((x: unknown) => x);
   if (!(e instanceof WaError)) throw new Error('expected a WaError');
   return e.info;
@@ -43,8 +43,10 @@ describe('Evolution error mapping', () => {
     expect(plan(i)).toMatchObject({ status: 'failed', error_code: '131026' });
   });
 
-  it("a Cloud instance's 24 h refusal reads as Meta's 131047 (the window rules)", async () => {
-    const i = await info(evoFailure(400, 'Message failed: (#131047) Re-engagement message'));
+  it("a Cloud instance's 24 h refusal reads as Meta's 131047; never on Baileys", async () => {
+    const refusal = evoFailure(400, 'Message failed: (#131047) Re-engagement message');
+    expect((await info(refusal)).code).toBe(WA_ERROR.invalidParameter);
+    const i = await info(refusal, EVO_CLOUD);
     expect(i.code).toBe(WA_ERROR.reEngagement);
     expect(plan(i).error_code).toBe('window_closed');
   });

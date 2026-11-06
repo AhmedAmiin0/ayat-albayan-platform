@@ -21,9 +21,11 @@ const notOnWhatsapp = (raw: unknown): boolean => notOnWhatsappSchema.safeParse(r
 /** The instance itself is down (no session): the line, not the message. Nothing was sent. */
 const LINE_DOWN = /connection closed|not connected|does not exist/i;
 /** A Cloud instance passes Meta's 24 h refusal on in its words (131047, re-engagement). */
-const WINDOW = /131047|re-?engagement|24[- ]hour/i;
+const WINDOW = /\b131047\b|re-?engagement|24[- ]hour window/i;
 
 interface Said {
+  /** A Cloud instance: Meta's own rules (the 24 h window) can apply. */
+  cloud: boolean;
   status: number;
   words: string;
   raw: unknown;
@@ -42,13 +44,16 @@ function rawOf(body: unknown): unknown {
   return parsed.data?.response?.message ?? parsed.data?.error;
 }
 
-function saidOf(f: HttpFailure): Said {
+function saidOf(f: HttpFailure, cloud: boolean): Said {
   const { status, body } = statusOf(f);
   const raw = rawOf(body);
-  return { status, words: raw === undefined ? '' : wordsOf(raw).slice(0, 300), raw };
+  return { cloud, status, words: raw === undefined ? '' : wordsOf(raw).slice(0, 300), raw };
 }
 
 type Info = Partial<WaError['info']>;
+
+/** Meta's 24 h refusal passed on by a Cloud instance (Baileys has no window). */
+const windowClosed = (s: Said): boolean => s.cloud && s.status < 500 && WINDOW.test(s.words);
 
 /** The first rule that matches adds its fields; the rest keep code null (retried). */
 const RULES: readonly { test: (s: Said) => boolean; info: Info }[] = [
@@ -58,7 +63,7 @@ const RULES: readonly { test: (s: Said) => boolean; info: Info }[] = [
   { test: (s) => s.status === 404 || LINE_DOWN.test(s.words), info: { credential: 'evolution' } },
   { test: (s) => notOnWhatsapp(s.raw), info: { code: WA_ERROR.undeliverable } },
   // Meta's own code: the #629 window rules see the window closing (Cloud mode only).
-  { test: (s) => s.status < 500 && WINDOW.test(s.words), info: { code: WA_ERROR.reEngagement } },
+  { test: windowClosed, info: { code: WA_ERROR.reEngagement } },
   // A proxy's «try later»: nothing was sent; retried with backoff.
   { test: (s) => [408, 425, 429].includes(s.status), info: {} },
   // Baileys may have handed the message to WhatsApp before failing: never resent automatically.
@@ -68,8 +73,8 @@ const RULES: readonly { test: (s: Said) => boolean; info: Info }[] = [
 ];
 
 /** Evolution's non-2xx answer → WaError. Never the URL, a header or the body sent. */
-function evolutionError(f: HttpFailure): WaError {
-  const s = saidOf(f);
+function evolutionError(f: HttpFailure, cloud: boolean): WaError {
+  const s = saidOf(f, cloud);
   const info = RULES.find((r) => r.test(s))?.info ?? {};
   const message = `Evolution HTTP ${s.status}${s.words ? `: ${s.words}` : ''}`;
   const details = s.words || undefined;
@@ -81,7 +86,7 @@ const shape = (uncertain: boolean) => (): WaError =>
   new WaError('Unexpected Evolution response', { code: null, status: 200, uncertain });
 
 /** The table of every Evolution call; `sent` = a message send (an odd 2xx is uncertain). */
-export function evolutionTable(sent: boolean): ErrorTable<WaError> {
+export function evolutionTable(at: { sent: boolean; cloud: boolean }): ErrorTable<WaError> {
   return {
     network: (f) =>
       new WaError('Evolution request failed', {
@@ -91,7 +96,7 @@ export function evolutionTable(sent: boolean): ErrorTable<WaError> {
       }),
     timeout: () =>
       new WaError('Evolution request timed out', { code: null, status: 0, uncertain: true }),
-    shape: shape(sent),
-    default: evolutionError,
+    shape: shape(at.sent),
+    default: (f) => evolutionError(f, at.cloud),
   };
 }

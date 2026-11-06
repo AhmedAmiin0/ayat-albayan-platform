@@ -37,7 +37,10 @@ export function qrOf(body: z.infer<typeof connectSchema>): EvolutionQr {
 }
 
 /** POST /chat/getBase64FromMediaMessage/{instance} → {base64, mimetype, …}. */
+/** base64 of WhatsApp's 100 MB limit (4 chars per 3 bytes), refused before it is decoded. */
+const MAX_BASE64 = Math.ceil((100 * 1024 * 1024) / 3) * 4;
+
 export const mediaSchema = z.looseObject({
-  base64: z.string().min(1),
+  base64: z.string().min(1).max(MAX_BASE64),
   mimetype: z.string().nullish(),
 });
