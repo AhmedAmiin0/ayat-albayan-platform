@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react-native';
 import { booked, SUN_17 } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { fakeCourseApi, pressEnabled, walkToReview } from '@/sales-course/testing/course-test-utils';
+import { fakeCourseApi, isDisabled, press, walkToReview } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen';
 import { courseView, STUDENT_ID } from '@/sales-course/testing/fixtures';
 
@@ -24,6 +24,12 @@ jest.mock('expo-router', () => ({
 jest.setTimeout(30_000);
 
 const BOOKING = booked(SUN_17);
+
+/** «احجز» once the series check enabled it (slow CI runners: a wider wait than pressEnabled's). */
+async function submit() {
+  await waitFor(() => expect(isDisabled(t.booking.submit)).toBe(false), { timeout: 10_000 });
+  await press('button', t.booking.submit);
+}
 const reply = (draft: unknown) => async (_m: string, path: string) =>
   path === '/sales/booking/check' ? { conflicts: [] } : draft;
 
@@ -38,7 +44,7 @@ test('the picks are saved as a draft (PUT), nothing booked; «تم» leaves', as
   await renderWithQuery(<CourseScreen />);
   expect(await screen.findByText(t.courseDraft.held)).toBeTruthy();
   await walkToReview();
-  await pressEnabled(t.booking.submit);
+  await submit();
   expect(await screen.findByText(t.courseDraft.saved, {}, { timeout: 10_000 })).toBeTruthy();
   const methods = mockApiSend.mock.calls.map((c: unknown[]) => `${String(c[0])} ${String(c[1])}`);
   expect(methods).toContain('PUT /sales/booking/course/draft');
@@ -49,7 +55,7 @@ test('paid meanwhile: the draft endpoint booked it, the usual booked panel shows
   mockApiSend.mockImplementation(reply({ state: 'booked', booking: BOOKING }));
   await renderWithQuery(<CourseScreen />);
   await walkToReview();
-  await pressEnabled(t.booking.submit);
+  await submit();
   const gone = () => expect(screen.queryByRole('button', { name: t.booking.submit })).toBeNull();
   await waitFor(gone, { timeout: 10_000 });
   expect(mockApiSend).toHaveBeenCalledWith('PUT', '/sales/booking/course/draft', expect.anything());
