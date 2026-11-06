@@ -35,6 +35,7 @@ export function NumberSecretRow({ view, name, manage }: NumberSecretRowProps) {
   const clear = useNumbersMutation(clearNumberSecret, { onDone: () => setConfirming(false), note: s.cleared });
   const label = t.numbers.fields[name];
   const state = view.secrets[name];
+  const hint = warningOf(name, state.set);
   if (!manage) {
     return (
       <div className="flex flex-wrap items-center justify-between gap-2 py-2">
@@ -44,11 +45,7 @@ export function NumberSecretRow({ view, name, manage }: NumberSecretRowProps) {
     );
   }
   return (
-    <SettingRow
-      label={label}
-      hint={warningOf(name, state.set)}
-      extra={<SecretChip state={state} />}
-    >
+    <SettingRow label={label} hint={hint} extra={<SecretChip state={state} />}>
       {(p) => (
         <div className="flex flex-wrap items-center gap-2">
           <Input
