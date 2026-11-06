@@ -69,7 +69,7 @@ export {
 export { useReplyDialogs } from './saved-replies/hooks/use-reply-dialogs';
 export { clearTabMemories } from './shared/tab-memory';
 export { BUBBLE_ROW } from './messages/lib/bubble-side';
-export { getDraft, setDraft } from './composer/lib/draft-store';
+export { getDraft, keptFailed, setDraft } from './composer/lib/draft-store';
 export { fillComposer } from './saved-replies/lib/filter';
 export { useMaySend } from './shared/may-send';
 export { LinkFamilyDialog } from './lead/LinkFamilyDialog';

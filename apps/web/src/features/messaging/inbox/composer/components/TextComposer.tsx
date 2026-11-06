@@ -12,8 +12,7 @@ import type { ComposerExtras } from '@/features/messaging/inbox/composer/lib/com
 import { sendsOnKey } from '@/features/messaging/inbox/composer/lib/composer-keys';
 import { ComposerError } from './ComposerError';
 import { draftGeneration, getDraft, keepsFailed, keptFailed, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
-import { failedOf, settleTextSend, textSentOf, type TextSent } from '@/features/messaging/inbox/composer/lib/unconfirmed';
-import { chatRows } from '@/features/messaging/inbox/api/unconfirmed-watch';
+import { settleTextSend, textSentOf, type TextSent } from '@/features/messaging/inbox/composer/lib/unconfirmed';
 import { ownSendGeneration, recordOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { ReplyStrip } from './ReplyStrip';
 import { rereadsAfter, sendErrorCode, sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
@@ -70,7 +69,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
     onError: async (e, sent) => {
       // Put the message back with its key, unless she has typed a new one since (that one gets its own).
       const now = getDraft(sent.phone);
-      const failed = failedOf(sent, sendErrorCode(e), chatRows(queryClient, sent.phone));
+      const failed = { text: sent.text, id: sent.clientRequestId, code: sendErrorCode(e) };
       setDraft(sent.phone, { text: now.text || sent.text, failed }, sent.gen.draft);
       // The window may have closed (the composer switches), or a send with no answer may have gone.
       if (rereadsAfter(e)) await queryClient.invalidateQueries({ queryKey: ['threads'] });

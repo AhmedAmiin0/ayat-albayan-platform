@@ -10,10 +10,10 @@ export interface Draft {
   text: string;
   /**
    * The last failed send and why (`code`, an inbox.error key), so a remounted box can say so. A
-   * send with no answer also keeps when it started (`at`) and the chat's row ids then (`known`):
-   * a read showing its server row confirms it (composer/lib/unconfirmed).
+   * send with no answer (`send_unconfirmed`) pins its id for every next text of the box until a
+   * send with it gets an answer (docs/44 BUG7).
    */
-  failed: { text: string; id: string; code: string; at?: string; known?: readonly string[] } | null;
+  failed: { text: string; id: string; code: string } | null;
 }
 
 const EMPTY: Draft = { text: '', failed: null };
@@ -65,8 +65,8 @@ export const keepsFailed = (failed: Failed, text: string): failed is NonNullable
 
 /**
  * What another send or a fill of the box (a template, a rating, a file, a saved reply, the quote
- * calculator) leaves of the failure: an unconfirmed one stays until a read or its own retry
- * confirms it (docs/44 H2: dropping it would give the edited retry a new id, a second message).
+ * calculator, a payment link) leaves of the failure: an unconfirmed one stays until a send with its
+ * id gets an answer (docs/44 H2: dropping it would give the retry a new id, a second message).
  */
 export const keptFailed = (failed: Failed): Failed =>
   failed?.code === SEND_UNCONFIRMED ? failed : null;

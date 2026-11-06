@@ -2,12 +2,15 @@ import { offerText, pricingCountryOfPhone } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { useIsMutating, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { quoteIdOf, quoteSent, quoteUnconfirmed } from './quote-id';
+import { quotePins } from './quote-id';
 import { INITIAL_SELECTION, OTHER, quoteQuery, type Selection, useDebounced } from '@/features/finance/pricing';
 import { sendText } from '@/features/messaging/inbox/api/api';
 import { replayedOther, SEND_UNCONFIRMED } from '@ab/client-core';
-import { chatRows } from '@/features/messaging/inbox/api/unconfirmed-watch';
-import { ReplayedSend, rereadsAfter, sendErrorCode } from '@/features/messaging/inbox/composer/lib/send-error';
+import {
+  ReplayedSend,
+  rereadsAfter,
+  sendErrorCode,
+} from '@/features/messaging/inbox/composer/lib/send-error';
 import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
 
 /** The calculator's default choice, with the country of the chat's number (+966 → SA …, else USD). */
@@ -33,17 +36,18 @@ export function useQuoteOffer(phone: string) {
   };
 }
 
-/** An offer as sent: its text, when, and the chat's row ids then (for the read match). */
+/** An offer as sent: its text, its id, whether that id was pinned, the pins' generation. */
 interface Offer {
   text: string;
-  at: string;
-  known: ReadonlySet<string>;
+  id: string;
+  pinned: boolean;
+  generation: number;
 }
 
 /**
- * «أرسل العرض»: the chat's own POST /threads/:phone/text with the chat's quote id (quote-id: kept
- * until an offer goes or a read shows it, docs/44 BUG7). No answer re-reads the chat; a retry
- * answered with the FIRST offer says this one did not go (a new id next). It shares the
+ * «أرسل العرض»: the chat's own POST /threads/:phone/text. After no answer its id is pinned per
+ * chat (quote-id) until a send with it gets an answer, 2xx or 4xx (docs/44 BUG7); no answer
+ * re-reads the chat; a retry answered with the FIRST offer says this one did not go. It shares the
  * composer's mutation key, so neither sends while the other is in flight, and a second tap before
  * the re-render sends nothing (the ref). `onSent` closes the sheet. Like a template, a sent offer
  * settles a refused text attempt (settleOwnSend).
@@ -54,23 +58,22 @@ export function useQuoteSend(phone: string, onSent: () => void) {
   const busy = useRef(false);
   const send = useMutation({
     mutationKey,
-    mutationFn: async ({ text }: Offer) => {
-      const quote = quoteIdOf(phone);
-      const view = await sendText({ phone, text, clientRequestId: quote.id });
-      if (quote.unconfirmed && replayedOther(view, text)) throw new ReplayedSend();
+    mutationFn: async ({ text, id, pinned }: Offer) => {
+      const view = await sendText({ phone, text, clientRequestId: id });
+      if (pinned && replayedOther(view, text)) throw new ReplayedSend();
       return view;
     },
     onMutate: sendStart,
-    onSuccess: async (view, _offer, start) => {
-      quoteSent(phone);
+    onSuccess: async (view, offer, start) => {
+      quotePins.release(phone, offer.id, offer.generation);
       settleOwnSend(phone, view.id, start);
       onSent();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
     onError: async (e, offer) => {
-      const code = sendErrorCode(e);
-      if (code === SEND_UNCONFIRMED) quoteUnconfirmed(phone, offer);
-      else quoteSent(phone);
+      // No answer pins the id; an answer (a 4xx, or the first offer replayed) releases it.
+      const keep = sendErrorCode(e) === SEND_UNCONFIRMED ? 'pin' : 'release';
+      quotePins[keep](phone, offer.id, offer.generation);
       // The window closed (the sheet disables send and edit), or the offer may have gone.
       if (rereadsAfter(e)) await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
@@ -85,8 +88,10 @@ export function useQuoteSend(phone: string, onSent: () => void) {
     send: (text: string) => {
       if (busy.current || pending) return;
       busy.current = true;
-      const known = new Set(chatRows(queryClient, phone).map((m) => m.id));
-      send.mutate({ text, at: new Date().toISOString(), known });
+      const pinned = quotePins.pinned(phone);
+      const generation = quotePins.generation();
+      const id = pinned ?? crypto.randomUUID();
+      send.mutate({ text, id, pinned: pinned !== undefined, generation });
     },
   };
 }

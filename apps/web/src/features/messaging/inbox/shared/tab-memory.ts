@@ -1,6 +1,6 @@
 import { clearAllDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { clearOwnSends } from '@/features/messaging/inbox/composer/lib/own-send';
-import { clearQuoteIds } from '@/features/messaging/inbox/composer/quote/quote-id';
+import { quotePins } from '@/features/messaging/inbox/composer/quote/quote-id';
 import { registerDrafts } from '@/features/messaging/inbox/sales/register-drafts';
 import { clearAllStaged } from '@/features/messaging/inbox/saved-replies/lib/staged-store';
 
@@ -13,6 +13,6 @@ export function clearTabMemories(): void {
   clearAllDrafts();
   clearAllStaged();
   clearOwnSends();
-  clearQuoteIds();
+  quotePins.clear();
   registerDrafts.clearAll();
 }
