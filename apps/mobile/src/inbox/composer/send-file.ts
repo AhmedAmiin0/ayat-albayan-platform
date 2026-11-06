@@ -1,5 +1,5 @@
 import { CHAT_FILE_MIMES, chatFileProblem, type MessageView, type SignedUpload } from '@ab/shared';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as DocumentPicker from 'expo-document-picker';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -106,16 +106,24 @@ export async function sendChatFile({ phone, file, id, maxBytes, replyToMessageId
 /** sendChatFile as a mutation: the API's row joins the thread at once, then it refetches (a text send). */
 export function useSendFile(phone: string) {
   const client = useQueryClient();
-  const queryKey = threadKey(phone);
-  return useMutation({
-    mutationFn: sendChatFile,
+  return useMutation({ mutationFn: sendChatFile, ...fileSendSteps(client, phone) });
+}
+
+/**
+ * A chat file send's cache steps (this chat's file, a saved reply's file): a send from this device
+ * (an anchored window goes live, docs/37), the API's row in the thread, then the refetch.
+ */
+export function fileSendSteps(client: QueryClient, phone: string) {
+  const add = (row: MessageView) => (old: ThreadCache | undefined) =>
+    appendMessage(removeMessage(old, row.id), row);
+  return {
     onMutate: () => markOwnSend(phone),
-    onSuccess: async (row) => {
-      client.setQueryData<ThreadCache>(queryKey, (old) => appendMessage(removeMessage(old, row.id), row));
+    onSuccess: async (row: MessageView) => {
+      client.setQueryData<ThreadCache>(threadKey(phone), add(row));
       await touchInbox(client, row);
     },
     onSettled: () => refreshInbox(client, phone),
-  });
+  };
 }
 
 /** inbox.error.<code> for a refused file, as sendError does for the API's codes. */

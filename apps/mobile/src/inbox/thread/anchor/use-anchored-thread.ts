@@ -13,11 +13,34 @@ const isGone = (e: unknown): boolean => e instanceof ApiError && e.status === 40
 /** A failed window read retries twice, a gone hit never. */
 const retry = (count: number, e: Error): boolean => !isGone(e) && count < 2;
 
+type Failure = 'gone' | 'error';
+
+/** What the chat says when the window cannot open (a failed older page inside it is no exit). */
+const SAY: Record<Failure, () => string> = {
+  gone: () => t.inbox.chatSearch.unreachable,
+  error: () => t.common.error,
+};
+
+interface WindowRead {
+  isError: boolean;
+  error: Error | null;
+  data: unknown;
+}
+
+const failureOf = (id: string | undefined, q: WindowRead): Failure | null => {
+  const failed = id !== undefined && q.isError && q.data === undefined;
+  const kinds: [boolean, Failure][] = [
+    [failed && isGone(q.error), 'gone'],
+    [failed, 'error'],
+  ];
+  return kinds.find(([on]) => on)?.[1] ?? null;
+};
+
 /**
  * The window around message `id` (GET /threads/:phone?around=, docs/37 NEW 3): 20 newer, the hit,
  * older ones to fill the page, then older pages inside it. Static: no poll, no refetch on focus,
  * never on disk (noPersist); the live chat stays mounted for the header, composer and read stamp.
- * A gone hit says so in the chat and goes back to the live chat.
+ * A gone hit, or a window that failed after its retries, says so and goes back to the live chat.
  */
 export function useAnchoredThread(phone: string, id: string | undefined) {
   const { say } = useChatActions();
@@ -30,13 +53,13 @@ export function useAnchoredThread(phone: string, id: string | undefined) {
     gcTime: 60_000,
     retry,
   });
-  const gone = id !== undefined && isGone(query.error);
-  const lost = useEffectEvent(() => {
-    say({ text: t.inbox.chatSearch.unreachable });
+  const failure = failureOf(id, query);
+  const lost = useEffectEvent((kind: Failure) => {
+    say({ text: SAY[kind]() });
     leaveAnchor();
   });
   useEffect(() => {
-    if (gone) lost();
-  }, [gone]);
+    if (failure) lost(failure);
+  }, [failure]);
   return query;
 }

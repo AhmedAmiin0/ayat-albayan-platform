@@ -16,7 +16,7 @@ import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { choiceQuery, threadsEmptyTitle } from './chat-filter';
 import { LeadChips } from './LeadChips';
 import { useThreadRow } from './ThreadRow';
-import { MessageHits, useMessageHits } from './message-hits';
+import { useSearchSections } from './message-hits';
 import { useChoiceRows, useThreadList } from './use-thread-list';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { useToday } from '@/core/lib/time/use-today';
@@ -44,16 +44,15 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const [choice, setChoice] = useState<ChatChoice>('all');
   const list = useThreadList({ search, ...choiceQuery(choice), live: true });
   const { rows, seeking } = useChoiceRows(list, choice === 'waiting');
-  const found = useMessageHits(search);
-  const quiet = list.isPending || seeking || found.hits.length > 0;
+  const today = useToday();
+  const hits = useSearchSections({ q: search, mode, base, now: today, chats: rows.items.length });
+  const quiet = list.isPending || seeking || hits.found;
   const loaded = list.data !== undefined;
   const stale = list.isError && loaded;
   const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt, cycle, tz)) : undefined;
   const admin = mode.kind === 'admin';
   // One clock for the whole list (not a timer per row), new only at midnight.
-  const today = useToday();
   const renderItem = useThreadRow(mode, base, today);
-  const hits = <MessageHits q={search} found={found} mode={mode} base={base} now={today} />;
 
   return (
     <View testID="chats-list" style={{ flex: 1, gap: 8 }}>
@@ -74,7 +73,8 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
         keyExtractor={keyOf}
         renderItem={renderItem}
         endSpace={admin ? FAB + 16 : 0}
-        ListFooterComponent={hits}
+        ListHeaderComponent={hits.header}
+        ListFooterComponent={hits.footer}
         ListEmptyComponent={
           quiet ? null : loaded ? (
             <EmptyState title={threadsEmptyTitle(choice, search)} />

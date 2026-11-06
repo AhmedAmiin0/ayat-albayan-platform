@@ -35,6 +35,8 @@ interface ThreadLog {
  */
 function useDecision(msg: string | undefined, live: ThreadQuery): JumpPlan | null {
   const [decided, setDecided] = useState<Decision | null>(null);
+  // Back on the live chat: the next tap on the same hit decides again (it may now be loaded).
+  if (msg === undefined && decided !== null) setDecided(null);
   if (isDue(msg, live, decided)) setDecided({ msg, plan: jumpPlan(msg, shownIds(live)) });
   return decided !== null && decided.msg === msg ? decided.plan : null;
 }
@@ -57,14 +59,19 @@ export function useThreadLog(phone: string, live: ThreadQuery): ThreadLog {
   const plan = useDecision(msg, live);
   const anchoredId = plan === 'anchor' ? msg : undefined;
   const around = useAnchoredThread(phone, anchoredId);
-  const anchored = anchoredId !== undefined;
-  useLeaveOnSend(phone, anchored);
-  const query = anchored ? around : live;
-  const ready = query.data !== undefined;
+  useLeaveOnSend(phone, anchoredId !== undefined);
+  // The live chat stays on screen until the window's rows are in (no empty flash meanwhile).
+  const anchored = anchoredId !== undefined && around.data !== undefined;
   return {
-    query,
+    query: anchored ? around : live,
     anchored,
-    target: msg !== undefined && plan !== null ? { id: msg, ready } : null,
+    target: targetOf(msg, { plan, anchored }),
     to: anchored ? windowEnd(threadMessages(around.data)) : null,
   };
+}
+
+/** The hit to jump to: ready once its rows show (the live chat's, or the window's). */
+function targetOf(msg: string | undefined, at: { plan: JumpPlan | null; anchored: boolean }) {
+  const ready = at.plan === 'scroll' || at.anchored;
+  return msg !== undefined && at.plan !== null ? { id: msg, ready } : null;
 }

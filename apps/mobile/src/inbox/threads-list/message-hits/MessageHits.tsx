@@ -5,6 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { inTree, type TreeBase } from '@/core/nav/tree-base';
 import { Button } from '@/core/ui/primitives/Button';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { InsetGroup } from '@/core/ui/surface/inset';
 import { threadLink, type ThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { type, useTheme } from '@/theme';
 import { MessageHitRow } from './MessageHitRow';
@@ -43,19 +44,16 @@ const LINE: Record<Exclude<Phase, 'found'>, () => string> = {
 
 /**
  * «الرسائل» under the chats (docs/37 NEW 1): from 3 characters, the messages holding the words,
- * newest first, «عرض مزيد من الرسائل» while older ones remain; at 1–2 characters a hint. The chips
- * filter the chats only: the hits follow the role's scope alone.
+ * newest first, «عرض مزيد من الرسائل» while older ones remain (the 1–2-character hint is the list's
+ * header, SearchHead). The hits sit in one inset card, as the chats. The chips filter the chats
+ * only: the hits follow the role's scope alone.
  */
 export function MessageHits({ q, found, mode, base, now }: MessageHitsProps) {
   const { color } = useTheme();
   const phase = phaseOf(found);
   const note = { fontSize: type.size.xs, color: color.ink3, paddingHorizontal: 16 };
-  const hint = (
-    <AppText testID="message-hits-hint" style={note}>
-      {t.inbox.messageSearch.hint}
-    </AppText>
-  );
-  if (!found.asked) return q === '' ? null : hint;
+  if (!found.asked) return null;
+  const teacher = mode.kind === 'teacher';
   const open = (hit: MessageSearchHit) => router.push(hitHref(hit, { mode, base }));
   return (
     <View testID="message-hits" style={{ gap: 8, paddingTop: 12 }}>
@@ -66,9 +64,11 @@ export function MessageHits({ q, found, mode, base, now }: MessageHitsProps) {
         {t.inbox.messageSearch.section}
       </AppText>
       {phase === 'found' ? null : <AppText style={note}>{LINE[phase]()}</AppText>}
-      {found.hits.map((hit) => (
-        <MessageHitRow key={hit.id} hit={hit} q={q} now={now} onOpen={open} />
-      ))}
+      <InsetGroup testID="message-hits-card">
+        {found.hits.map((hit) => (
+          <MessageHitRow key={hit.id} hit={hit} q={q} now={now} onOpen={open} teacher={teacher} />
+        ))}
+      </InsetGroup>
       {found.more ? (
         <Button variant="ghost" label={t.inbox.messageSearch.more} onPress={found.loadMore} />
       ) : null}

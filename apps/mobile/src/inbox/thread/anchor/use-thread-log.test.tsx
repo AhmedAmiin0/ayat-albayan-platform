@@ -1,6 +1,4 @@
-import { ApiError } from '@ab/client-core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
@@ -9,7 +7,8 @@ import { markOwnSend } from './own-send';
 import { useThreadLog } from './use-thread-log';
 
 // docs/37 NEW 3: `?msg=` opens the chat at a search hit: a loaded one scrolls, any other opens
-// the window around it with one request; decided once per msg; a send or a gone hit leaves it.
+// the window around it with one request; decided once per msg; a send leaves it
+// (a gone or failed window: use-anchored-thread.test).
 
 const mockParams = jest.fn((): { msg?: string } => ({}));
 const mockSetParams = jest.fn();
@@ -17,9 +16,8 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams(),
   router: { setParams: (p: unknown) => mockSetParams(p) },
 }));
-const mockSay = jest.fn();
 jest.mock('@/inbox/thread/hooks/chat-actions', () => ({
-  useChatActions: () => ({ say: mockSay }),
+  useChatActions: () => ({ say: jest.fn() }),
 }));
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -84,6 +82,22 @@ test('decided once: the live chat later holding the hit never flips the window',
   expect(result.current.anchored).toBe(true);
 });
 
+test('back on the live chat the decision resets: the same hit, now loaded, scrolls', async () => {
+  mockParams.mockReturnValue({ msg: OLD });
+  const { result, client, rerender } = await render();
+  await waitFor(() => expect(result.current.anchored).toBe(true));
+  mockParams.mockReturnValue({});
+  await rerender({});
+  expect(result.current.anchored).toBe(false);
+  const loaded = { pages: [detail([shown]), detail([old])], pageParams: [null, null] };
+  await act(() => client.setQueryData(threadKey(PHONE), loaded));
+  mockParams.mockReturnValue({ msg: OLD });
+  await rerender({});
+  expect(result.current.anchored).toBe(false);
+  expect(result.current.target).toEqual({ id: OLD, ready: true });
+  expect(aroundCalls()).toHaveLength(1);
+});
+
 test('no msg, or not a uuid: the live chat', async () => {
   mockParams.mockReturnValue({ msg: 'x' });
   const { result } = await render();
@@ -99,17 +113,14 @@ test('a send from this device leaves the window', async () => {
   expect(mockSetParams).toHaveBeenCalledWith({ msg: undefined });
 });
 
-test('a gone hit (404) says so and goes back to the live chat', async () => {
+test('while the window loads the live chat stays on screen (no empty flash), not yet ready', async () => {
   mockParams.mockReturnValue({ msg: OLD });
   mockApiFetch.mockImplementation((path: string) =>
-    path.includes('?around=')
-      ? Promise.reject(new ApiError(404, { code: 'message_not_found' }))
-      : answer(path),
+    path.includes('?around=') ? new Promise(() => undefined) : answer(path),
   );
-  await render();
-  await waitFor(() =>
-    expect(mockSay).toHaveBeenCalledWith({ text: t.inbox.chatSearch.unreachable }),
-  );
-  expect(mockSetParams).toHaveBeenCalledWith({ msg: undefined });
-  expect(aroundCalls()).toHaveLength(1);
+  const { result } = await render();
+  await waitFor(() => expect(aroundCalls()).toHaveLength(1));
+  expect(result.current.anchored).toBe(false);
+  expect(result.current.query.data?.pages[0]?.messages.map((m) => m.id)).toEqual([SHOWN]);
+  expect(result.current.target).toEqual({ id: OLD, ready: false });
 });

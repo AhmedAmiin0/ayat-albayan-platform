@@ -1,8 +1,9 @@
-import type { MessageSearchHit } from '@ab/shared';
+import { formatPhone, type MessageSearchHit } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { hitHref, MessageHits } from './MessageHits';
+import type { ThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import type { MessageHitsState } from './use-message-hits';
 
 // docs/37 NEW 1: «الرسائل» under the chats, a hit opens its chat at the message (`?msg=`).
@@ -28,9 +29,11 @@ const state = (patch: Partial<MessageHitsState> = {}): MessageHitsState => ({
   ...patch,
 });
 
-const show = (q: string, found: MessageHitsState) =>
+const TEACHER = { kind: 'teacher', teacherId: 't1' } as const;
+
+const show = (q: string, found: MessageHitsState, mode: ThreadMode = ADMIN) =>
   render(
-    <MessageHits q={q} found={found} mode={ADMIN} base="" now={new Date('2026-03-02T09:00:00Z')} />,
+    <MessageHits q={q} found={found} mode={mode} base="" now={new Date('2026-03-02T09:00:00Z')} />,
   );
 
 beforeEach(() => jest.clearAllMocks());
@@ -59,16 +62,30 @@ test('the href per tree: admin, sales and teacher', () => {
   expect(hitHref(HIT, { mode: ADMIN, base: '/sales' })).toBe(
     `/sales/inbox/thread/${phone}?msg=${HIT.id}`,
   );
-  const teacher = { kind: 'teacher', teacherId: 't1' } as const;
-  expect(hitHref(HIT, { mode: teacher, base: '' })).toBe(`/teacher/chats/${phone}?msg=${HIT.id}`);
+  expect(hitHref(HIT, { mode: TEACHER, base: '' })).toBe(`/teacher/chats/${phone}?msg=${HIT.id}`);
 });
 
-test('1–2 characters: the hint only; empty box: nothing', async () => {
+test('1–2 characters: no section under the chats (the hint is the list header)', async () => {
   await show('در', state({ asked: false, hits: [] }));
-  expect(screen.getByText(t.inbox.messageSearch.hint)).toBeTruthy();
   expect(screen.queryByText(t.inbox.messageSearch.section)).toBeNull();
-  await show('', state({ asked: false, hits: [] }));
-  expect(screen.queryAllByText(t.inbox.messageSearch.hint)).toHaveLength(0);
+  expect(screen.queryByText(t.inbox.messageSearch.hint)).toBeNull();
+});
+
+test('the hits sit in one inset card; a row reads its name, date and snippet', async () => {
+  await show('درس', state());
+  expect(screen.getByTestId('message-hits-card')).toBeTruthy();
+  const label = screen.getByTestId('message-hit').props.accessibilityLabel as string;
+  expect(label.split(' · ')).toHaveLength(3);
+  expect(label).toContain('أم سلمى');
+  expect(label).toContain(HIT.snippet);
+});
+
+test('a teacher never sees the family number: an unnamed chat reads «رقم غير مسجل»', async () => {
+  await show('درس', state({ hits: [{ ...HIT, display_name: null }] }), TEACHER);
+  expect(screen.getByText(t.inbox.unknownNumber)).toBeTruthy();
+  expect(screen.queryByText(formatPhone(HIT.phone_e164), { exact: false })).toBeNull();
+  await show('درس', state({ hits: [{ ...HIT, display_name: null }] }));
+  expect(screen.getByText(formatPhone(HIT.phone_e164), { exact: false })).toBeTruthy();
 });
 
 test('searching, empty and failed lines; no «عرض مزيد» at the end', async () => {

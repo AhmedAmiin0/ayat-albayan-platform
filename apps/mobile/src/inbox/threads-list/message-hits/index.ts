@@ -1,2 +1,1 @@
-export { MessageHits } from './MessageHits';
-export { useMessageHits } from './use-message-hits';
+export { useSearchSections } from './use-search-sections';
