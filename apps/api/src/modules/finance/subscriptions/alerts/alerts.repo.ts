@@ -3,6 +3,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
 import { readAll, readChunked } from '@/common/db/read-all';
+import { wakeOn } from '@/common/jobs';
 import { dbError } from '@/common/http/http';
 
 export interface Recipient {
@@ -110,7 +111,7 @@ export class AlertsRepo {
       this.log.log(`renewal_due off: ${m.dedupKey} not queued`);
       return;
     }
-    const { error } = await this.db.from('messages').upsert(
+    const { data, error } = await this.db.from('messages').upsert(
       {
         direction: 'outbound',
         status: 'queued',
@@ -122,7 +123,8 @@ export class AlertsRepo {
         scheduled_for: m.now.toISOString(),
       },
       { onConflict: 'dedup_key', ignoreDuplicates: true },
-    );
+    ).select('id');
     if (error) throw dbError(error);
+    wakeOn(data.length); // a new row wakes the sender (docs/42 42-1); a duplicate does not
   }
 }

@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
+import { wakeOn } from '@/common/jobs';
 import type { ReportReadyMessage } from './report-ready';
 
 export type Finish =
@@ -101,7 +102,9 @@ export class ReportPdfQueries {
       .from('messages')
       .update({ template_params: message.template_params })
       .eq('dedup_key', message.dedup_key)
-      .eq('status', 'queued');
+      .eq('status', 'queued')
+      .select('id');
     if (update.error) throw new Error(`report_ready update failed: ${update.error.message}`);
+    wakeOn(update.data.length); // still queued (new or earlier): wake the sender (docs/42 42-1)
   }
 }

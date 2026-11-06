@@ -5,6 +5,7 @@ import { OwnNumbers } from '@/modules/messaging/numbers';
 import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.repo';
 import { readAll } from '@/common/db/read-all';
+import { wakeOn } from '@/common/jobs';
 import { dbError } from '@/common/http/http';
 import type { FollowUpLeadRow, StageRow } from './follow-ups.plan';
 
@@ -52,8 +53,9 @@ export class FollowUpsRepo {
     return (await approvedTemplates(this.db, ['follow_up_slots'])).has('follow_up_slots');
   }
 
-  queue(row: QueuedMessage): Promise<number> {
-    return queueMessages(this.db, [row]);
+  /** A new row wakes the sender (docs/42 42-1); a tick's wakes coalesce into one extra pass. */
+  async queue(row: QueuedMessage): Promise<number> {
+    return wakeOn(await queueMessages(this.db, [row]));
   }
 
   /** Active teachers: whose free slots are proposed (the lead has no program / teacher yet). */
