@@ -5,7 +5,7 @@ import { ActivityIndicator, Image, Pressable, StyleSheet, useWindowDimensions } 
 import { t } from '@/core/lib/i18n/i18n';
 import { palette, shape, type } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { pdfPageQuery } from '../hooks/thread-file';
+import { pdfPageQuery } from '@/inbox/messages/hooks/thread-file';
 
 /** An A4 page's height over its width: the page's box until its image says its own. */
 export const A4 = 1.414;

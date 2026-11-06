@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { renderWithQuery } from '@/test/query';
 import { MessageBubble } from './MessageBubble';
-import { delivered, inbound, PHONE } from '../../shared/thread-fixtures';
+import { delivered, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;

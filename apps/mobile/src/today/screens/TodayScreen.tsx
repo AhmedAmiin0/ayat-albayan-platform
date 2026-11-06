@@ -5,10 +5,10 @@ import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
 import { JoinAround } from '@/classroom';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
-import { HeroCard } from '../hero/HeroCard';
-import type { TodaySource } from '../lib/today-source';
-import { useDayLessons } from '../lib/use-day-lessons';
-import { useLessonAction } from '../lib/use-lesson-action';
+import { HeroCard } from '@/today/hero/HeroCard';
+import type { TodaySource } from '@/today/lib/today-source';
+import { useDayLessons } from '@/today/lib/use-day-lessons';
+import { useLessonAction } from '@/today/lib/use-lesson-action';
 import { TodayLayout } from './TodayLayout';
 
 /** The admin's day: GET /lessons/day, every teacher; «جدول الغد» to «الجدول». */

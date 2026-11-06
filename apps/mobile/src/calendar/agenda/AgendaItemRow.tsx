@@ -5,9 +5,9 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
-import type { AgendaItem } from '../overview/overview';
-import { freeLabel } from '../overview/overview-text';
-import { dayLabel } from '../lib/week';
+import type { AgendaItem } from '@/calendar/overview/overview';
+import { freeLabel } from '@/calendar/overview/overview-text';
+import { dayLabel } from '@/calendar/lib/week';
 
 interface AgendaItemRowProps {
   item: AgendaItem;

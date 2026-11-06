@@ -1,7 +1,7 @@
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { paymentLink } from '../testing/link-fixtures';
+import { paymentLink } from '@/sales-subscribe/testing/link-fixtures';
 import { agreedLine, checkAmount, linkErrorText, linkMessage, minLine, referenceLine } from './link-text';
 
 const pl = t.paymentLinks;

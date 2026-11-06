@@ -1,5 +1,6 @@
 import type { NotificationItem } from '@ab/shared';
 import { router } from 'expo-router';
+import { openPushed } from '@/core/nav/back-within';
 import { useCallback } from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
 import { usePermissions } from '@/core/auth/use-permissions';
@@ -40,7 +41,7 @@ export function NotificationsScreen({ tree }: NotificationsScreenProps) {
     (item: NotificationItem) => {
       if (!item.read_at) mutate([item.id]);
       const href = routeIn(tree, { ...item.data, kind: item.kind }, can);
-      if (href) router.push(href);
+      if (href) openPushed(href);
     },
     [mutate, tree, can],
   );

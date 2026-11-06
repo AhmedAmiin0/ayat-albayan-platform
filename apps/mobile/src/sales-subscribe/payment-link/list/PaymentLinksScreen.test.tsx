@@ -2,10 +2,10 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { paymentLink } from '../../testing/link-fixtures';
+import { paymentLink } from '@/sales-subscribe/testing/link-fixtures';
 import { PaymentLinksScreen } from './PaymentLinksScreen';
 
-jest.mock('../flag', () => ({ STRIPE_FEATURE: true }));
+jest.mock('@/sales-subscribe/payment-link/flag', () => ({ STRIPE_FEATURE: true }));
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

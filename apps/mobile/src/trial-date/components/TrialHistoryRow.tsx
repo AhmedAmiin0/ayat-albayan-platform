@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { pickedLine, trialOutcomeStyle, whenLines } from '../lib/trial-date-text';
+import { pickedLine, trialOutcomeStyle, whenLines } from '@/trial-date/lib/trial-date-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface TrialHistoryRowProps {

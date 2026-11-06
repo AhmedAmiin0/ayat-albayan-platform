@@ -2,7 +2,7 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import type { TodayLesson } from '../lib/today-lesson';
+import type { TodayLesson } from '@/today/lib/today-lesson';
 import { RowsCard } from './RowsCard';
 
 interface RestSectionProps<L extends TodayLesson> {

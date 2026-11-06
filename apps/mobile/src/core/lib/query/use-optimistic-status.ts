@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend, type SendMethod } from '../http/api';
+import { apiSend, type SendMethod } from '@/core/lib/http/api';
 import { patchCached } from './paging';
 import { pathKey } from './query-keys';
 

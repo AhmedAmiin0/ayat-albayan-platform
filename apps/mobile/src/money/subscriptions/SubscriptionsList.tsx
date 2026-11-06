@@ -10,7 +10,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { subscriptionParams, type SubscriptionFilter } from '../payments/filters';
+import { subscriptionParams, type SubscriptionFilter } from '@/money/payments/filters';
 import { SubscriptionItem } from './SubscriptionItem';
 
 const PILLS: FilterPill<SubscriptionFilter>[] = [

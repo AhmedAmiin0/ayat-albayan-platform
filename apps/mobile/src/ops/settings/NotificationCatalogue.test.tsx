@@ -2,10 +2,10 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { catalogue, settings } from '../shared/fixtures';
+import { catalogue, settings } from '@/ops/shared/fixtures';
 import { NotificationCatalogue } from './NotificationCatalogue';
 import { whenOf } from './catalogue-words';
-import { openAudience } from '../notif-rules/testing/rules-fixtures';
+import { openAudience } from '@/ops/notif-rules/testing/rules-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

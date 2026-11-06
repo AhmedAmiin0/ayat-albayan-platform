@@ -6,7 +6,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { IconButton } from '@/core/ui/primitives/IconButton';
-import { CloseIcon } from '../../../shared/chat-icons';
+import { CloseIcon } from '@/inbox/shared/chat-icons';
 
 /** A notice goes by itself after this long (ms), like the chat's; one with an action stays until closed. */
 const CALL_NOTICE_MS = 6000;

@@ -1,6 +1,6 @@
 import { createApiClient } from '@ab/client-core';
-import { connectivity } from '../connectivity/connectivity';
-import { isNetworkError } from '../connectivity/network-error';
+import { connectivity } from '@/core/lib/connectivity/connectivity';
+import { isNetworkError } from '@/core/lib/connectivity/network-error';
 import { mobileClientTag } from './client-tag';
 import { env } from './env';
 import { accessToken } from './access-token';

@@ -3,7 +3,7 @@ import { useVideoPlayer } from 'expo-video';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { message, PHONE } from '../../shared/thread-fixtures';
+import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { VideoTile, VIDEO_TILE } from './VideoTile';
 
 // The ring and the unloaded waveform are hidden from screen readers (their button speaks): still queried.

@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
-import { commissionPage, earnings, myCommission, myPayment } from '../testing/fixtures';
+import { commissionPage, earnings, myCommission, myPayment } from '@/sales-money/testing/fixtures';
 import { MyMoneyScreen } from './MyMoneyScreen';
 
 const mockApiFetch = jest.fn();

@@ -2,11 +2,11 @@ import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { catalogue as mockCatalogue, settings as mockSettings } from '../shared/fixtures';
-import { numbersAnswer as mockNumbersAnswer } from '../numbers/numbers-fixtures';
+import { catalogue as mockCatalogue, settings as mockSettings } from '@/ops/shared/fixtures';
+import { numbersAnswer as mockNumbersAnswer } from '@/ops/numbers/numbers-fixtures';
 import { CommunicationsScreen } from './CommunicationsScreen';
 import { SettingsScreen } from './SettingsScreen';
-import { ValuesScreen } from '../values/screens/ValuesScreen';
+import { ValuesScreen } from '@/ops/values/screens/ValuesScreen';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;

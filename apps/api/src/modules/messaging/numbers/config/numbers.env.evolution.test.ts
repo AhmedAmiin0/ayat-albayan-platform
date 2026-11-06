@@ -18,7 +18,7 @@ describe('numberEnv: an Evolution number', () => {
     expect(numberEnv({ row: row(), secrets: TOKEN }, env)).toEqual({
       provider: 'evolution', base: 'https://evo.example.test', instance: 'secondary-1',
       token: 'fake-instance-token', mode: 'baileys', autoSends: false, gapMs: 3_000,
-      dailyCap: 60, delayMs: 0, linkPreview: false,
+      dailyCap: 60, linkPreview: false,
     });
   });
 
@@ -48,13 +48,14 @@ describe('the Evolution config keys', () => {
     expect(() => loadEnv({ ...LEGACY_ENV, EVOLUTION_INTERNAL_HOSTS: '10.0.0.5' })).toThrow();
   });
 
-  it('reads the gap, cap, typing delay and link preview from the number', () => {
+  it('reads the gap, cap and link preview; a stored typing delay is ignored (no «يكتب…»)', () => {
     const env = loadEnv({ ...LEGACY_ENV, ...BASE });
     const config = {
-      limits: { gap_ms: 8_000, daily_cap: 20 }, sending: { delay_ms: 1_200, link_preview: true },
+      limits: { gap_ms: 8_000, daily_cap: 20 }, sending: { delay_ms: 1_500, link_preview: true },
     };
     const got = numberEnv({ row: row({ evolution_config: config }), secrets: TOKEN }, env);
-    expect(got).toMatchObject({ gapMs: 8_000, dailyCap: 20, delayMs: 1_200, linkPreview: true });
+    expect(got).toMatchObject({ gapMs: 8_000, dailyCap: 20, linkPreview: true });
+    expect(got).not.toHaveProperty('delayMs');
   });
 });
 

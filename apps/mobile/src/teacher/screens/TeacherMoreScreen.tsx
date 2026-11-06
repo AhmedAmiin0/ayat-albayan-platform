@@ -10,8 +10,8 @@ import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { InsetGroup } from '@/core/ui/surface/inset';
-import { useTeacherMe } from '../lib/queries';
-import { SignOutButton } from '../components/SignOutButton';
+import { useTeacherMe } from '@/teacher/lib/queries';
+import { SignOutButton } from '@/teacher/components/SignOutButton';
 import { locale } from '@/core/lib/i18n/locale';
 
 /**

@@ -1,5 +1,6 @@
 import type { StudentRecordingView } from '@ab/shared';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { usePermissions } from '@/core/auth/use-permissions';
@@ -43,7 +44,7 @@ export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
   const teachers = useTeacherChoices(list.items, admin);
   const manage = can('recordings.manage');
   const renderItem = useRecordingRow({ studentId: id, manage, admin, freshUrl: list.freshUrl });
-  const back = () => (router.canGoBack() ? router.back() : router.replace(admin ? `/students/${id}` : '/teacher/reports'));
+  const back = () => backWithin(admin ? `/students/${id}` : '/teacher/reports');
   return (
     <Screen list>
       <ScreenHeader

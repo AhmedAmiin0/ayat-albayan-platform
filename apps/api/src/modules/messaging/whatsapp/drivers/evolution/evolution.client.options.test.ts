@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import { EvolutionWhatsappClient, sendTimeoutMs } from './evolution.client';
+import { EvolutionWhatsappClient } from './evolution.client';
 import { EvolutionPacer } from './evolution-pacer';
 import { EVO_BAILEYS, EVO_CLOUD, evoSent } from './evolution.fakes';
 
-// Owner 2026-11-06: the number's own sending options (typing delay, link preview) ride on each
-// send, and the Baileys pace is asked, never slept on (docs/19 «Evolution driver»).
+// Owner 2026-11-06: the number's own sending option (link preview) rides on each send, never a
+// typing delay («dont make the family see typing»), and the Baileys pace is asked, never slept on
+// (docs/19 «Evolution driver»).
 
 const TO = '+966500000001';
 
@@ -18,13 +19,16 @@ function setup(env = EVO_BAILEYS) {
 }
 
 describe('EvolutionWhatsappClient — sending options and pace', () => {
-  it('adds delay to every send and linkPreview to a text only', async () => {
-    const { f, client } = setup({ ...EVO_BAILEYS, delayMs: 1_200, linkPreview: true });
+  it('adds linkPreview to a text only, and never a typing delay or presence', async () => {
+    const { f, client } = setup({ ...EVO_BAILEYS, linkPreview: true });
     await client.sendText({ to: TO, text: 'https://example.test' });
     await client.sendDocument({ to: TO, kind: 'image', url: 'https://files.example.test/x' });
-    expect(f.requests[0]?.body).toMatchObject({ delay: 1_200, linkPreview: true });
-    expect(f.requests[1]?.body).toMatchObject({ delay: 1_200 });
+    expect(f.requests[0]?.body).toMatchObject({ linkPreview: true });
     expect(f.requests[1]?.body).not.toHaveProperty('linkPreview');
+    for (const r of f.requests) {
+      expect(r.body).not.toHaveProperty('delay');
+      expect(r.body).not.toHaveProperty('presence');
+    }
   });
 
   it('answers the wait after a send to another recipient, and the daily cap', async () => {
@@ -35,12 +39,6 @@ describe('EvolutionWhatsappClient — sending options and pace', () => {
     expect(client.pace('+966500000002')?.waitMs).toBe(3_000);
     move(3_000);
     expect(client.pace('+966500000002')?.waitMs).toBe(0);
-  });
-
-  it('the send deadline always covers the typing delay (never near-timeout «uncertain»)', () => {
-    expect(sendTimeoutMs({ delayMs: 0 })).toBe(20_000);
-    expect(sendTimeoutMs({ delayMs: 2_000 })).toBe(20_000);
-    expect(sendTimeoutMs({ delayMs: 9_000 })).toBe(24_000);
   });
 
   it('a Cloud instance is not paced (Meta keeps its own limits)', () => {

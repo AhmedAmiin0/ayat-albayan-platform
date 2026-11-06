@@ -1,7 +1,7 @@
 import { t } from '@/core/lib/i18n/i18n';
 import type { ScheduleView } from './overview';
 import { PeriodSwitcher } from './PeriodSwitcher';
-import { addDays, dayLabel, weekLabel, weekStart } from '../lib/week';
+import { addDays, dayLabel, weekLabel, weekStart } from '@/calendar/lib/week';
 
 interface SchedulePeriodProps {
   view: ScheduleView;

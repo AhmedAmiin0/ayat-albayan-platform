@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { tableLabel } from '../shared/errors';
+import { tableLabel } from '@/users/shared/errors';
 
 /** The tables that keep a user from being deleted, with how many rows each holds. */
 export function HistoryReferences({ references }: { references: readonly UserReference[] }) {

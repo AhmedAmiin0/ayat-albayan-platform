@@ -3,8 +3,8 @@ import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { MessageFile } from './MessageFile';
-import { message, PHONE } from '../../shared/thread-fixtures';
-import { ThreadModeProvider } from '../../thread/hooks/thread-mode';
+import { message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 
 // «تنزيل» on the file chip (owner 2026-10-26).
 const mockApiFetch = jest.fn();

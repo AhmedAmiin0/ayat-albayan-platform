@@ -3,9 +3,9 @@ import { maryam } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
-import { historyOf, OLD, STUDENT, trialResult, trialRow } from '../testing/fixtures';
+import { historyOf, OLD, STUDENT, trialResult, trialRow } from '@/trial-date/testing/fixtures';
 import { TrialDateScreen } from './TrialDateScreen';
-import { fakeTrialApi, fakeTrialSend, walkToReview } from '../testing/test-utils';
+import { fakeTrialApi, fakeTrialSend, walkToReview } from '@/trial-date/testing/test-utils';
 
 // A salesperson, from her family chat (/sales/inbox/trial-date): everything under /sales/booking.
 const mockApiFetch = jest.fn();
@@ -17,7 +17,7 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: jest.fn(), canGoBack: () => false, replace: (h: unknown) => mockReplace(h), push: jest.fn() },
+  router: { back: jest.fn(), canDismiss: () => false, replace: (h: unknown) => mockReplace(h), push: jest.fn() },
   useLocalSearchParams: () => ({ studentId: '44444444-4444-4444-8444-444444444444', name: 'ريم' }),
 }));
 

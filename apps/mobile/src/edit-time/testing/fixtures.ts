@@ -1,6 +1,6 @@
 import { SLOTS, SUN_17 } from '@/teaching/reschedule/fixtures';
 import { done, lesson } from '@/today/testing/fixtures';
-import type { EditableLesson, TimeEditResult } from '../lib/types';
+import type { EditableLesson, TimeEditResult } from '@/edit-time/lib/types';
 
 export { NOW, SLOTS, SAT_17, SUN_17 } from '@/teaching/reschedule/fixtures';
 

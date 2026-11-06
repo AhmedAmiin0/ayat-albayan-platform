@@ -3,7 +3,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { bookedCourse, courseView } from '@/sales-course/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
-import { familyOf, KID, kid, PHONE } from '../testing/fixtures';
+import { familyOf, KID, kid, PHONE } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 
 // «أيام الحلقات» on the chat's «اشتراك جديد» (owner 2026-11-06): for the resolved child (picked,
@@ -12,7 +12,7 @@ const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: () => Promise.resolve(jest.requireActual('../testing/fixtures').salesQuote),
+  apiSend: () => Promise.resolve(jest.requireActual('@/sales-subscribe/testing/fixtures').salesQuote),
 }));
 const mockPush = jest.fn();
 const mockParams: { current: Record<string, string> } = { current: {} };

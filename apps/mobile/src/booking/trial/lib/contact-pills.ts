@@ -1,7 +1,7 @@
 import { GENDERS, LEAD_SOURCES, TZ_OPTIONS, type Gender, type LeadSource } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import type { FilterPill } from '@/core/ui/form/FilterPills';
-import { cityOf } from '../../shared/slots';
+import { cityOf } from '@/booking/shared/slots';
 
 const NONE = { value: '', label: t.common.unset } as const;
 

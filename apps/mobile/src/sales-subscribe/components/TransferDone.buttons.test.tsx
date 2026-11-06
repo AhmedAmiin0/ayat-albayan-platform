@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
-import { salesPayment } from '../testing/fixtures';
+import { salesPayment } from '@/sales-subscribe/testing/fixtures';
 import { TransferDone } from './TransferDone';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), dismissTo: jest.fn() } }));

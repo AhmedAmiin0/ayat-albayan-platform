@@ -4,9 +4,9 @@ import { Pressable, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { downloadLabel } from '../hooks/bubble-offers';
+import { downloadLabel } from '@/inbox/messages/hooks/bubble-offers';
 import { downloadFile, downloadProblem } from './chat-tools';
-import { useSmall } from '../components/MessageMeta';
+import { useSmall } from '@/inbox/messages/components/MessageMeta';
 
 /**
  * «تنزيل» on a file chip (owner 2026-10-26): a fresh signed URL, handed to the phone's browser to save

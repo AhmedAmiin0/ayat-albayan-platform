@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiError, apiSend } from '@/core/lib/http/api';
 import { requestId } from '@/core/lib/http/request-id';
 import { t } from '@/core/lib/i18n/i18n';
-import { threadKey, type ThreadCache } from '../../thread/hooks/thread-cache';
+import { threadKey, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 
 /** Why a reaction did not go, in words (the CRM line has no reaction call: 409 reaction_unsupported). */
 function reactionError(e: unknown): string {

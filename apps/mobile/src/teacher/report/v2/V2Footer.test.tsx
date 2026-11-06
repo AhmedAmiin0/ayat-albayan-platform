@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { formResponseV2, reportView } from '../testing/fixtures';
+import { formResponseV2, reportView } from '@/teacher/report/testing/fixtures';
 import { ReportEntryCardV2 } from './ReportEntryCardV2';
 
 const mockApiSend = jest.fn();

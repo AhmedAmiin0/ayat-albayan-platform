@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
-import { myPayment } from '../testing/fixtures';
+import { myPayment } from '@/sales-money/testing/fixtures';
 import { MyPaymentItem } from './MyPaymentItem';
 
 test('Arabic: the Arabic note is isolated inside the «note:» line', async () => {

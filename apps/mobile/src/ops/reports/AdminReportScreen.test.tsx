@@ -3,7 +3,7 @@ import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { AdminReportScreen } from './AdminReportScreen';
-import { report } from '../shared/fixtures';
+import { report } from '@/ops/shared/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

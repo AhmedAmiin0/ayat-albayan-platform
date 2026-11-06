@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { pushInTab } from '@/core/nav/back-within';
 import { Fragment } from 'react';
 import { View } from 'react-native';
 import { useNow } from '@/core/lib/time/use-now';
@@ -60,7 +60,7 @@ export function DetailsStudents({ lesson, role, onLeave, hereStudentId }: Detail
             label={TEACHER_LABEL[mine]}
             onPress={() => {
               onLeave();
-              router.push(href);
+              pushInTab(href);
             }}
           />
         </View>

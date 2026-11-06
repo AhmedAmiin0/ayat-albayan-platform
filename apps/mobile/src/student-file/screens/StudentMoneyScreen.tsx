@@ -1,4 +1,5 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
@@ -26,7 +27,7 @@ export function StudentMoneyScreen() {
     ...(can('invoices.read') ? [{ value: 'invoices' as const, label: M.tabInvoices }] : []),
   ];
   const shown = tabs.some((x) => x.value === tab) ? tab : tabs[0]?.value;
-  const back = () => (router.canGoBack() ? router.back() : router.replace(`/students/${id}`));
+  const back = () => backWithin(`/students/${id}`);
   return (
     <Screen>
       <ScreenHeader title={M.title} subtitle={name} leading={<BackButton onPress={back} />} />

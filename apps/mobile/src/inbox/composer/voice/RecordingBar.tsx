@@ -7,8 +7,8 @@ import { Chevron } from '@/core/ui/primitives/Chevron';
 import { IconButton } from '@/core/ui/primitives/IconButton';
 import { Ltr } from '@/core/ui/primitives/Ltr';
 import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
-import { mediaTime } from '../../messages/hooks/media-time';
-import { TrashIcon } from '../../shared/chat-icons';
+import { mediaTime } from '@/inbox/messages/hooks/media-time';
+import { TrashIcon } from '@/inbox/shared/chat-icons';
 import { keptTake, meterLevel } from './voice-machine';
 import type { VoiceUi } from './use-voice';
 

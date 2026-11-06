@@ -3,10 +3,10 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
-import type { BookFailure } from '../shared/booking-errors';
-import { makeupSummary } from '../trial/lib/confirm-summary';
-import { FailureNotice } from '../trial/components/ConfirmNotices';
-import { SummaryList } from '../trial/components/ConfirmStep';
+import type { BookFailure } from '@/booking/shared/booking-errors';
+import { makeupSummary } from '@/booking/trial/lib/confirm-summary';
+import { FailureNotice } from '@/booking/trial/components/ConfirmNotices';
+import { SummaryList } from '@/booking/trial/components/ConfirmStep';
 import type { MakeupDraft } from './makeup-draft';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

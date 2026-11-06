@@ -2090,14 +2090,11 @@
     }
   },
   "src/features/messaging/inbox/composer/components/TextComposer.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
     "max-len": {
-      "count": 12
+      "count": 8
     },
     "max-lines-per-function": {
       "count": 1

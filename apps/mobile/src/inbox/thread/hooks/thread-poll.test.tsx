@@ -3,7 +3,7 @@ import type { ThreadDelta } from '@ab/shared';
 import { focusManager } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { cachedThread, delivered, detail, failed, inbound, PHONE } from '../../shared/thread-fixtures';
+import { cachedThread, delivered, detail, failed, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 import { provisionalMessage, sendKey, threadKey, threadMessages, threadPath } from './thread-cache';
 import { useThread } from './use-thread';
 

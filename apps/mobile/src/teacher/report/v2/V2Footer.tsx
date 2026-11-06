@@ -6,8 +6,8 @@ import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
-import { reportErrorText } from '../hooks/api';
-import { SentNote, saveLine } from '../components/ReportFooter';
+import { reportErrorText } from '@/teacher/report/hooks/api';
+import { SentNote, saveLine } from '@/teacher/report/components/ReportFooter';
 import type { V2EntryState } from './hooks/use-v2-entry';
 
 const ERRORS: Record<string, string> = t.reports.error;

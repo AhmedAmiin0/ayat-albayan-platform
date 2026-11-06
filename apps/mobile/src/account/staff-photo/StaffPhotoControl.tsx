@@ -6,7 +6,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
-import { AccountCard } from '../components/AccountCard';
+import { AccountCard } from '@/account/components/AccountCard';
 import { useConfirmFocus } from './use-confirm-focus';
 import { type StaffPhotoOptions, useStaffPhoto } from './use-staff-photo';
 

@@ -6,7 +6,7 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { paneScroll } from '@/components/ui/layout/rail';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { threadsQuery } from '@/features/messaging/inbox/api/api';
+import { useThreads } from '@/features/messaging/inbox/api/list-ticks';
 import { useInboxLive } from '@/features/messaging/inbox/api/live';
 import { InboxListHead } from './InboxListHead';
 import { activeList } from '@/features/messaging/inbox/lists/lib/active-list';
@@ -45,7 +45,7 @@ export function InboxPage({ search, onSearch, head }: InboxPageProps) {
   const list = lists ? activeList(search.list, all.isError ? [] : all.data) : undefined;
   const shown = parseInboxSearch({ ...search, list });
   useInboxLive(); // a realtime connect / drop re-reads the poll interval (docs/12 §15)
-  const threads = useQuery(threadsQuery(shown));
+  const threads = useThreads(shown); // ticks never behind the open chat's (docs/43 43-1)
   // «المكالمات» (docs/28) replaces the chats list only while calls are on.
   const callsLog = useCallsEnabled() && !!shown.calls;
   const { phone, msg, ...listSearch } = shown;

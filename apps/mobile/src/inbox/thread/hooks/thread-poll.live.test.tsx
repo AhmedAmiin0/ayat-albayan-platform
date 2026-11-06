@@ -1,8 +1,8 @@
 import { INBOX_FALLBACK_MS, INBOX_REFRESH_MS } from '@ab/client-core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { detail, inbound, PHONE } from '../../shared/thread-fixtures';
-import { inboxLive } from '../live/inbox-live';
+import { detail, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
+import { inboxLive } from '@/inbox/thread/live/inbox-live';
 import { useThread } from './use-thread';
 
 // docs/12 §15: while realtime is SUBSCRIBED the open chat's delta slows to INBOX_FALLBACK_MS, a safety

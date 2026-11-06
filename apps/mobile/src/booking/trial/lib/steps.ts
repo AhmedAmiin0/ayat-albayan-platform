@@ -1,4 +1,4 @@
-import type { BookingKind } from '../../shared/contract';
+import type { BookingKind } from '@/booking/shared/contract';
 
 export type Step = 'contact' | 'teacher' | 'package' | 'slot' | 'invoice' | 'confirm';
 

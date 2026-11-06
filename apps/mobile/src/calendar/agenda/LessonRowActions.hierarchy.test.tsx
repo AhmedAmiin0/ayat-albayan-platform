@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { OVERVIEW } from '../overview/overview-fixtures';
+import { OVERVIEW } from '@/calendar/overview/overview-fixtures';
 import { LessonRowActions } from './LessonRowActions';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';

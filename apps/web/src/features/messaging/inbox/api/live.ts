@@ -45,10 +45,11 @@ export function useInboxRealtime(enabled: boolean): void {
           const filters = { queryKey: ['threads', 'detail', phone], type: 'active' } as const;
           if (document.hasFocus()) void client.refetchQueries(filters, { cancelRefetch: false });
         },
-        // A hidden tab waits: TanStack re-reads the stale list when it is shown again.
+        // A hidden tab waits: TanStack re-reads the stale list when it is shown again. A read in
+        // flight started before this change: cancelled, never joined (docs/43 AU1; throttled 3 s).
         list: () => {
           const filters = { queryKey: ['threads', 'list'], type: 'active' } as const;
-          if (document.visibilityState === 'visible') void client.refetchQueries(filters, { cancelRefetch: false });
+          if (document.visibilityState === 'visible') void client.refetchQueries(filters, { cancelRefetch: true });
         },
         badge: () => void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false }),
       });

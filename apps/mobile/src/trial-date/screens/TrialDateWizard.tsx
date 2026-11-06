@@ -1,5 +1,5 @@
 import type { Program, TrialHistory } from '@ab/shared';
-import { router } from 'expo-router';
+import { backOr } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { bookFailure } from '@/booking';
@@ -47,7 +47,7 @@ export function TrialDateWizard({ history, title, program, fallback }: TrialDate
     book.reset();
     setStep(next);
   };
-  const leave = () => (router.canGoBack() ? router.back() : fallback());
+  const leave = () => backOr(fallback);
   const back = () => (book.isSuccess || at === 0 ? leave() : go(STEPS[at - 1] ?? 'teacher'));
   const body = trialDateBody(draft, requestId);
   const position = t.booking.stepOf.replace('{n}', String(at + 1)).replace('{total}', String(STEPS.length));

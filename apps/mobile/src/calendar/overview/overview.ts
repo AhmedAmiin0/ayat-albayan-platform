@@ -1,8 +1,8 @@
 import type { Gender, LessonView, OverviewTeacher, OverviewTimeOff, Program } from '@ab/shared';
 import type { ScheduleOverview, Span } from '@ab/shared';
 import { localDate, visibleLessons } from '@/today/lib/timeline';
-import { agendaDays } from '../agenda/agenda';
-import { addDays, zonedMidnight } from '../lib/week';
+import { agendaDays } from '@/calendar/agenda/agenda';
+import { addDays, zonedMidnight } from '@/calendar/lib/week';
 import { clip, clipAll, freeAhead, joined } from './spans';
 
 // «الجدول» for every teacher (R-SCH-01, R-TCH-02): the overview cut to one day of the viewer's

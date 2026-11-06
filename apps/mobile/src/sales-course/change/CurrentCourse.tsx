@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { type, useTheme } from '@/theme';
-import { daysText } from '../lib/course-days';
+import { daysText } from '@/sales-course/lib/course-days';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CurrentCourseProps {

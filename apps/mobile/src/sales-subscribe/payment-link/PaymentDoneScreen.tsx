@@ -1,4 +1,5 @@
 import { type Href, Redirect, router, useLocalSearchParams } from 'expo-router';
+import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { useIsAdmin } from '@/core/auth';
@@ -62,7 +63,7 @@ function DoneScreen() {
   const on = useStripeOn();
   const base: TreeBase = useIsAdmin() ? '' : '/sales';
   // Back where she opened the link (the chat, or the link she made); after a cold start, her inbox.
-  const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
+  const back = () => backWithin(inTree(base, '/inbox'));
   return (
     <Screen scroll>
       <ScreenHeader title={pl.title} subtitle={pl.testBadge} />

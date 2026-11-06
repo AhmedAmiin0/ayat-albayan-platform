@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { DayScheduleScreen } from './DayScheduleScreen';
-import { OVERVIEW, overviewPath, THIS_WEEK } from '../overview/overview-fixtures';
+import { OVERVIEW, overviewPath, THIS_WEEK } from '@/calendar/overview/overview-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -60,7 +60,7 @@ test('«الجدول» today: every teacher, the free one too, with load, window
   expect(screen.getByRole('tab', { name: 'الخميس 1 أكتوبر 3', selected: true })).toBeTruthy();
 
   await fireEvent.press(screen.getByRole('header', { name: 'سارة' }));
-  expect(router.push).toHaveBeenCalledWith('/more/teachers/t2');
+  expect(router.push).toHaveBeenCalledWith('/more/teachers/t2', { withAnchor: true });
   // Each teacher's name stays on top while their day scrolls (Android's default is off).
   const [list] = container.queryAll((n) => Array.isArray(n.props['stickyHeaderIndices']));
   expect(list?.props['stickyHeaderIndices']).toHaveLength(3);

@@ -6,7 +6,7 @@ import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { palette } from '@/theme';
 import { lesson } from '@/today/testing/fixtures';
-import type { ReportAction } from '../lib/day';
+import type { ReportAction } from '@/teacher/lib/day';
 import { TeacherLessonCard } from './TeacherLessonCard';
 
 jest.mock('@/core/lib/http/api', () => ({

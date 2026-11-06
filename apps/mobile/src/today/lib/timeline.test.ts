@@ -1,4 +1,4 @@
-import { cancelled, done, lesson, muscat, pending } from '../testing/fixtures';
+import { cancelled, done, lesson, muscat, pending } from '@/today/testing/fixtures';
 import { applyFilter, filterCounts, localDate, visibleLessons } from './timeline';
 
 const at = (iso: string) => new Date(iso);

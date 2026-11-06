@@ -3,7 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { familyOf, KID2, kid, openSub, salesPayment, SUB } from '../testing/fixtures';
+import { familyOf, KID2, kid, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from './SalesTransferScreen';
 
 const mockApiFetch = jest.fn();

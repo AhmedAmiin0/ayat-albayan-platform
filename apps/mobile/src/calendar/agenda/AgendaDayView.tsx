@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { InsetGroup } from '@/core/ui/surface/inset';
 import type { AgendaDay } from './agenda';
 import { AgendaLessonRow } from './AgendaLessonRow';
-import { dayLabel } from '../lib/week';
+import { dayLabel } from '@/calendar/lib/week';
 
 interface AgendaDayViewProps {
   day: AgendaDay;

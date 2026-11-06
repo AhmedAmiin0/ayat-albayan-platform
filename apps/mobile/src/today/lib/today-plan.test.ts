@@ -1,4 +1,4 @@
-import { done, lesson, muscat, pending } from '../testing/fixtures';
+import { done, lesson, muscat, pending } from '@/today/testing/fixtures';
 import { firstName, greetingPart, pickHero, todayPlan } from './today-plan';
 
 // Thursday 1 Oct 2026; Riyadh is UTC+3. pending 16:00–16:45, muscat 17:00–18:00, done 10:00–10:45.

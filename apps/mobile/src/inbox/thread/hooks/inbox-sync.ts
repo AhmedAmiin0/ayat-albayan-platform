@@ -16,9 +16,23 @@ import { clearUnread, newestInbound, type ThreadListCache, touchList } from './t
 export const threadListKey = ['threads', 'list'];
 const navCountKey = ['threads', 'nav-count'];
 
-/** Every chats list, the tab badge and «القوائم»: a push that names no chat refetches no thread. */
+let listsShown = 0;
+
+/** A chats list is on screen until the release (useListCatchUp). */
+export function showList(): () => void {
+  listsShown += 1;
+  return () => void (listsShown -= 1);
+}
+
+/**
+ * Every chats list, the tab badge and «القوائم»: a push that names no chat refetches no thread. A
+ * list under a chat (a send, an opened chat) is only marked stale (docs/43 AU2): useListCatchUp
+ * re-reads it when it shows again; a list on screen re-reads now.
+ */
 export function refreshLists(client: QueryClient): void {
-  for (const queryKey of [threadListKey, navCountKey, listsKey]) void client.invalidateQueries({ queryKey });
+  const refetchType = listsShown > 0 ? 'active' : 'none';
+  void client.invalidateQueries({ queryKey: threadListKey, refetchType });
+  for (const queryKey of [navCountKey, listsKey]) void client.invalidateQueries({ queryKey });
 }
 
 /**

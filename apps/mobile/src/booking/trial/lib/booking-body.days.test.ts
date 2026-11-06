@@ -1,7 +1,7 @@
 import { bookingRequestSchema } from '@ab/shared';
 import { toBookingRequest } from './booking-body';
-import { draft, SUN_17, THU_18, TUE_17 } from '../../testing/fixtures';
-import { fromPicks, picksOf } from '../../shared/picks';
+import { draft, SUN_17, THU_18, TUE_17 } from '@/booking/testing/fixtures';
+import { fromPicks, picksOf } from '@/booking/shared/picks';
 
 const REQ = '99999999-9999-4999-8999-999999999999';
 const riyadh = { pkg: '12' as const, tz: 'Asia/Riyadh' };

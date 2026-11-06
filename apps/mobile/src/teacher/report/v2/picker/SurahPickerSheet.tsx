@@ -7,7 +7,7 @@ import { locale } from '@/core/lib/i18n/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
-import { Pills } from '../ui/Pills';
+import { Pills } from '@/teacher/report/v2/ui/Pills';
 import { applyTyped, pickSurah, rangeOf, type PendingText, type PickerStart } from './picker-state';
 import { RangeSteppers } from './RangeSteppers';
 import { SurahList } from './SurahList';

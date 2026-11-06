@@ -5,9 +5,9 @@ import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { BookingModeProvider } from '../shared/booking-mode';
-import { isLeadSource, type BookingLead } from '../trial/lib/draft';
-import { TrialWizard } from '../trial/components/TrialWizard';
+import { BookingModeProvider } from '@/booking/shared/booking-mode';
+import { isLeadSource, type BookingLead } from '@/booking/trial/lib/draft';
+import { TrialWizard } from '@/booking/trial/components/TrialWizard';
 
 type Params = {
   leadId?: string;

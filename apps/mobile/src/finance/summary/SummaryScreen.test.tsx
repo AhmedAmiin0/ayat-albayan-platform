@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { SummaryScreen } from './SummaryScreen';
-import { summaryYears } from '../shared/month';
+import { summaryYears } from '@/finance/shared/month';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));

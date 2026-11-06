@@ -1,7 +1,7 @@
 import { lessonWhenText } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
-import { trialRow } from '../testing/fixtures';
+import { trialRow } from '@/trial-date/testing/fixtures';
 import { pickedLine } from './trial-date-text';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;

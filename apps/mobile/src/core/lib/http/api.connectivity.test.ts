@@ -1,4 +1,4 @@
-import { connectivity } from '../connectivity/connectivity';
+import { connectivity } from '@/core/lib/connectivity/connectivity';
 import { ApiError, apiFetch } from './api';
 
 // apiFetch tells the connection state what happened (jest.setup.cjs gives a still store with spies).

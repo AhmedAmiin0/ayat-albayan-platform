@@ -1,13 +1,13 @@
 import { useIsMutating } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
-import { useChatActions } from '../thread/hooks/chat-actions';
-import { sendError } from '../messages/hooks/message-text';
-import { quoteOf } from '../messages/hooks/quote-text';
-import { useSendStagedFile } from '../saved-replies/hooks/send-staged';
-import type { StagedFile } from '../saved-replies/hooks/use-saved-reply';
+import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { sendError } from '@/inbox/messages/hooks/message-text';
+import { quoteOf } from '@/inbox/messages/hooks/quote-text';
+import { useSendStagedFile } from '@/inbox/saved-replies/hooks/send-staged';
+import type { StagedFile } from '@/inbox/saved-replies/hooks/use-saved-reply';
 import { fileError } from './send-file';
-import { type Outgoing, sendKey, useSendMessage } from '../thread/hooks/use-thread';
+import { type Outgoing, sendKey, useSendMessage } from '@/inbox/thread/hooks/use-thread';
 
 /** One template draft = one key + params: re-sending it after an error keeps its clientRequestId. */
 const draftOf = (out: Outgoing): string =>

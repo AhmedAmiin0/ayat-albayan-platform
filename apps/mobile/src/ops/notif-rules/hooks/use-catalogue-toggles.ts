@@ -2,7 +2,7 @@ import type { NotificationEntryView } from '@ab/shared';
 import { useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { askOf, nameOf, needsTypedWord, ruleErrorText } from '../lib/rule-words';
+import { askOf, nameOf, needsTypedWord, ruleErrorText } from '@/ops/notif-rules/lib/rule-words';
 import { useToggleRule } from './use-toggle-rule';
 
 type Key = NotificationEntryView['key'];

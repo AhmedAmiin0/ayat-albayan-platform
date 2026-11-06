@@ -7,7 +7,7 @@ import { useNow } from '@/core/lib/time/use-now';
 import { type } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
-import { useSmall } from '../components/MessageMeta';
+import { useSmall } from '@/inbox/messages/components/MessageMeta';
 import { useReplyActions } from './reply-actions-context';
 import { ReplyConfirmButton } from './ReplyConfirmButton';
 

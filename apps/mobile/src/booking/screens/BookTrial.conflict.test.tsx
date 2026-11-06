@@ -3,9 +3,9 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { BookTrialScreen } from './BookTrialScreen';
-import { booked, MON_19, slot, SUN_17 } from '../testing/fixtures';
-import { whenText } from '../shared/slots';
-import { fakeBookingApi, seededClient, walkToConfirm } from '../testing/test-utils';
+import { booked, MON_19, slot, SUN_17 } from '@/booking/testing/fixtures';
+import { whenText } from '@/booking/shared/slots';
+import { fakeBookingApi, seededClient, walkToConfirm } from '@/booking/testing/test-utils';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 

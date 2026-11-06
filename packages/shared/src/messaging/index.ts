@@ -39,6 +39,8 @@ export * from './markers/echo-payload.js';
 export * from './markers/message-marks.js';
 export * from './wa.js';
 export * from './thread-delta.js';
+export * from './sync-cursor.js';
+export * from './thread-sync.js';
 export type * from './chat/views.js';
 export type * from './templates/template-views.js';
 export type * from './chat/line-views.js';

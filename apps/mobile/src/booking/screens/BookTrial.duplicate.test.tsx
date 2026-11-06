@@ -3,8 +3,8 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { BookTrialScreen } from './BookTrialScreen';
-import { booked, SUN_17 } from '../testing/fixtures';
-import { fakeBookingApi, seededClient, walkToConfirm } from '../testing/test-utils';
+import { booked, SUN_17 } from '@/booking/testing/fixtures';
+import { fakeBookingApi, seededClient, walkToConfirm } from '@/booking/testing/test-utils';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

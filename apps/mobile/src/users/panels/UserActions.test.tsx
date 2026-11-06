@@ -4,8 +4,8 @@ import { Share } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { DETAIL, usersGet } from '../shared/fixtures';
-import { UserDetailScreen } from '../screens/UserDetailScreen';
+import { DETAIL, usersGet } from '@/users/shared/fixtures';
+import { UserDetailScreen } from '@/users/screens/UserDetailScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -15,7 +15,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiSend: (mockMethod: string, mockPath: string, mockBody?: unknown) => mockApiSend(mockMethod, mockPath, mockBody),
 }));
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn(), replace: jest.fn(), canGoBack: () => true },
+  router: { push: jest.fn(), back: jest.fn(), replace: jest.fn(), canDismiss: () => true },
   useLocalSearchParams: () => ({ id: 'u1' }),
 }));
 
