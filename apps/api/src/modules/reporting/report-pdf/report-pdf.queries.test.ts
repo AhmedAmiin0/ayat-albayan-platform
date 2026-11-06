@@ -73,7 +73,7 @@ describe('ReportPdfQueries — the pdf_status queue, compare-and-set (docs/11 §
   });
 
   it('queueMessage: insert-or-ignore on dedup_key, then fill the document of a still-queued row', async () => {
-    const { db, calls } = fakeDb({ messages: [{}, {}] });
+    const { db, calls } = fakeDb({ messages: [{}, { data: [] }] });
     await new ReportPdfQueries(db).queueMessage(message);
     const m = calls.filter((c) => c.table === 'messages');
     expect(m[0]).toEqual({
