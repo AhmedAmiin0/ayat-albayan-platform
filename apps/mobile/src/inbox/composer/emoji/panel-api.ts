@@ -4,7 +4,8 @@ import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
 import { requestId } from '@/core/lib/http/request-id';
 import { sendError } from '@/inbox/messages/hooks/message-text';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
-import { refreshInbox, touchInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { touchInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { refreshSent } from '@/inbox/thread/hooks/use-thread';
 import {
   appendMessage,
   removeMessage,
@@ -68,7 +69,7 @@ export function usePanelSend(phone: string, onError: (message: string) => void) 
       await touchInbox(client, row);
     },
     onError: (e) => onError(sendError(e)),
-    onSettled: () => refreshInbox(client, phone),
+    onSettled: () => refreshSent(client, phone),
   });
 }
 

@@ -5587,14 +5587,6 @@
       "count": 2
     }
   },
-  "src/inbox/thread/hooks/thread-cache.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/inbox/thread/hooks/thread-list-cache.test.ts": {
     "max-len": {
       "count": 1

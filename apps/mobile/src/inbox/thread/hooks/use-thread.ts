@@ -1,9 +1,15 @@
 import type { MessageQuote, TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
-import { threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
-import { infiniteQueryOptions, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { refreshNewest, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
+import {
+  infiniteQueryOptions,
+  type QueryClient,
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
-import { refreshInbox, touchInbox } from './inbox-sync';
+import { refreshInbox, refreshLists, touchInbox } from './inbox-sync';
 import {
   appendMessage,
   provisionalMessage,
@@ -47,6 +53,23 @@ export function useThread(phone: string) {
 }
 
 /**
+ * After a send (docs/43 AU4): every list that shows the chat, and ONE read of the chat's newest
+ * page folded in (mergeNewest), however far up she scrolled; older pages are not re-read one by
+ * one. A chat not on screen is only marked stale (its GET would stamp it read).
+ */
+export function refreshSent(client: QueryClient, phone: string): Promise<void> {
+  refreshLists(client);
+  const queryKey = threadKey(phone);
+  return refreshNewest<ThreadCache>({
+    shown: () => client.getQueryCache().find({ queryKey, exact: true })?.isActive() === true,
+    read: () => client.getQueryData<ThreadCache>(queryKey),
+    write: (edit) => client.setQueryData<ThreadCache>(queryKey, edit),
+    newest: () => threadGet(threadPath(phone)),
+    reload: () => client.invalidateQueries({ queryKey }),
+  });
+}
+
+/**
  * What the composer sends: session text, or an approved template with its params (H3 / H4). Any
  * registry key: a producer's, or a chat starter imported from Meta (owner 2026-10-12).
  */
@@ -71,7 +94,7 @@ function body({ out, id }: SendInput) {
 
 /**
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
- * it out again (the caller shows `sendError`). Either way the thread refetches.
+ * it out again (the caller shows `sendError`). Either way the newest page refetches.
  */
 export { sendKey } from './thread-cache';
 
@@ -98,7 +121,7 @@ export function useSendMessage(phone: string) {
     },
     onSuccess: (row, { id }) => edit((old) => replaceMessage(old, id, row)),
     onError: (_error, { id }) => edit((old) => removeMessage(old, id)),
-    onSettled: () => refreshInbox(client, phone),
+    onSettled: () => refreshSent(client, phone),
   });
 }
 
