@@ -60,6 +60,12 @@ describe('isAutomatic: job-made reminders, classroom links, follow-ups, renewals
     expect([...AUTOMATIC_KEYS, ...onAction].sort()).toEqual([...TEMPLATE_KEYS].sort());
   });
 
+  it('teacher_lesson_v3: automatic as the same-day reminder, never as the new-student alert', () => {
+    const v3 = { template_key: 'teacher_lesson_v3', created_by: null };
+    expect(isAutomatic({ ...v3, dedup_key: 'teacher_lesson_reminder:l1:t1' })).toBe(true);
+    expect(isAutomatic({ ...v3, dedup_key: 'teacher_new_student:l1:t1' })).toBe(false);
+  });
+
   it('the schedule-change notices are not automatic, even job-made (a resume by the daily job)', () => {
     for (const key of ['lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed']) {
       expect(isAutomatic({ template_key: key, created_by: null }), key).toBe(false);

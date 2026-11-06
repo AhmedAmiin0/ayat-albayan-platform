@@ -119,12 +119,26 @@ const AUTOMATIC: ReadonlySet<string> = new Set(AUTOMATIC_KEYS);
 /** The hold of an automatic row while the switch is OFF (failed, no push). */
 export const AUTO_OFF = { code: 'auto_off', text: 'automatic messages are off in settings' } as const;
 
+interface AutoRow {
+  template_key: string | null;
+  created_by: string | null;
+  dedup_key?: string | null;
+}
+
+/**
+ * teacher_lesson_v3 carries the same-day reminder (automatic) and the new-student alert (a booking):
+ * the reminder's dedup key names it, so only that one is held while the switch is OFF.
+ */
+const isV3Reminder = (row: AutoRow): boolean =>
+  row.template_key === 'teacher_lesson_v3' &&
+  (row.dedup_key ?? '').startsWith('teacher_lesson_reminder:');
+
 /**
  * A job-made row of an automatic kind, held (failed 'auto_off') while settings.auto_messages_enabled
  * is OFF. created_by tells them apart: the jobs leave it null; an admin's inbox send of the same
  * template carries the admin (ThreadSendService) and goes. Booking confirmations and report_ready
  * are never automatic here.
  */
-export function isAutomatic(row: { template_key: string | null; created_by: string | null }): boolean {
-  return row.created_by === null && AUTOMATIC.has(row.template_key ?? '');
+export function isAutomatic(row: AutoRow): boolean {
+  return row.created_by === null && (AUTOMATIC.has(row.template_key ?? '') || isV3Reminder(row));
 }

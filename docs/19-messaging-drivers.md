@@ -335,8 +335,8 @@ room (its stored http(s) link, or `/classroom/<id>` for a platform lesson or non
 still the token's teacher's and not cancelled/moved; else the `shortLinks.notFound` page. `GET <API>/report-link/
 legacy/*` (the old Vercel redirector forwards `/r/<path>` there): `teacher/report/<lessonId>` or the old Apps
 Script's `<AB-code>/<teacher name>/<…>` (the pair's lesson started in the last 24 h, else its next one today) →
-302 to that lesson's no-login report page; anything else the same «invalid link» page. Both rate-limited (60 a
-minute per IP, 20 per IP and link). Code: `apps/api/src/modules/teaching/lesson-links/`.
+302 to that lesson's no-login report page; anything else the same «invalid link» page. Rate-limited per IP a
+minute (/join 60, legacy 10: its old shape is not signed) and 20 per IP and link. Code: `apps/api/src/modules/teaching/lesson-links/`.
 
 ### Report flow: report_ready → session_report_pdf (owner 2026-11-05)
 
