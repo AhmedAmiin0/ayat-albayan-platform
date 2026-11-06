@@ -1,43 +1,49 @@
-import type { MessageView } from '@ab/shared';
-import { describe, expect, it } from 'vitest';
-import { replayedOther, type SentOriginal, sentRowOf } from './unconfirmed.js';
+import { describe, expect, it, vi } from 'vitest';
+import { createPinStore } from './pin-store.js';
+import { replayedOther } from './unconfirmed.js';
 
-const AT = '2026-10-02T09:00:00.000Z';
-const sent: SentOriginal = { body: 'وصلت', template_key: null, created_at: AT };
-const row = (over: Partial<MessageView> = {}): MessageView =>
-  ({
-    id: 'srv-1',
-    direction: 'outbound',
-    body: 'وصلت',
-    template_key: null,
-    created_at: '2026-10-02T09:00:05Z',
-    ...over,
-  }) as MessageView;
+const A = '+966501234567';
 
-describe('sentRowOf: the server row of an unconfirmed send', () => {
-  it('ours, new since the send, the same ORIGINAL words', () => {
-    const server = row();
-    expect(sentRowOf([server], sent, new Set())).toBe(server);
+describe('createPinStore: the pinned id is released only by an answer', () => {
+  it('pins on no answer, keeps it for every next send, releases it for that id only', () => {
+    const s = createPinStore();
+    const gen = s.generation();
+    expect(s.pinned(A)).toBeUndefined();
+    s.pin(A, 'req-1', gen);
+    expect(s.pinned(A)).toBe('req-1');
+    expect(s.pinned('+966507654321')).toBeUndefined();
+    s.release(A, 'other', gen);
+    expect(s.pinned(A)).toBe('req-1');
+    s.release(A, 'req-1', gen);
+    expect(s.pinned(A)).toBeUndefined();
   });
 
-  it('a row held before, an inbound row or other words (an edit) is not it', () => {
-    expect(sentRowOf([row()], sent, new Set(['srv-1']))).toBeUndefined();
-    expect(sentRowOf([row({ direction: 'inbound' })], sent, new Set())).toBeUndefined();
-    expect(sentRowOf([row({ body: 'وصلت الآن' })], sent, new Set())).toBeUndefined();
+  it('a send that settles after sign-out neither pins nor releases', () => {
+    const s = createPinStore();
+    const before = s.generation();
+    s.pin(A, 'req-1', before);
+    s.clear();
+    expect(s.pinned(A)).toBeUndefined();
+    s.pin(A, 'req-2', before);
+    expect(s.pinned(A)).toBeUndefined();
+    s.pin(A, 'req-3', s.generation());
+    s.release(A, 'req-3', before);
+    expect(s.pinned(A)).toBe('req-3');
   });
 
-  it("allows the client's clock 5 minutes ahead, not more", () => {
-    const early = (min: number) =>
-      row({ created_at: new Date(Date.parse(AT) - min * 60_000).toISOString() });
-    expect(sentRowOf([early(4)], sent, new Set())).toBeDefined();
-    expect(sentRowOf([early(6)], sent, new Set())).toBeUndefined();
-  });
-
-  it('a template matches by its key (the server renders its own body)', () => {
-    const tpl = { body: 'عرض سعر', template_key: 'renewal_due', created_at: AT };
-    const server = row({ template_key: 'renewal_due', body: 'نص القالب' });
-    expect(sentRowOf([server], tpl, new Set())).toBe(server);
-    expect(sentRowOf([row({ template_key: 'other' })], tpl, new Set())).toBeUndefined();
+  it('the replay note is per chat, tells its listeners, and goes on sign-out', () => {
+    const s = createPinStore();
+    const heard = vi.fn();
+    const stop = s.subscribe(heard);
+    s.setReplayed(A, true);
+    expect([s.replayed(A), s.replayed('+966507654321')]).toEqual([true, false]);
+    s.setReplayed(A, false);
+    expect(s.replayed(A)).toBe(false);
+    s.setReplayed(A, true);
+    s.clear();
+    expect(s.replayed(A)).toBe(false);
+    expect(heard).toHaveBeenCalledTimes(4);
+    stop();
   });
 });
 

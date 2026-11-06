@@ -5,10 +5,5 @@ export {
   staffMaySend,
   triesAfterWindow,
 } from './chat-send.js';
-export {
-  replayedOther,
-  SEND_REPLAYED,
-  SEND_UNCONFIRMED,
-  type SentOriginal,
-  sentRowOf,
-} from './unconfirmed.js';
+export { createPinStore, type PinStore } from './pin-store.js';
+export { replayedOther, SEND_REPLAYED, SEND_UNCONFIRMED } from './unconfirmed.js';
