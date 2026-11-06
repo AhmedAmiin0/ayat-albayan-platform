@@ -8,7 +8,8 @@ const evolutionDraft = { ...draftOf(), label: 'Staff', provider: 'evolution' as 
 describe('number-form on Evolution (docs/19 «Evolution driver»)', () => {
   it('an edit starts from the record’s engine and switch', () => {
     const cloud = { mode: 'cloud' as const, auto_sends: false, state: null, state_at: null };
-    const view = evolutionView({ evolution: { ...cloud, config: evolutionConfigOf({}), sync: null } });
+    const evolution = { ...cloud, config: evolutionConfigOf({}), sync: null };
+    const view = evolutionView({ evolution });
     expect(draftOf(view)).toMatchObject({ provider: 'evolution', evolution_mode: 'cloud', phone_number_id: 'academy-staff' });
   });
 
