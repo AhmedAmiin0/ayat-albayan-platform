@@ -71,8 +71,8 @@ test('memory limits fit the 8 GB VPS beside the CRM', () => {
     'ayat-minio-init': 64,
   });
   // ≈ 2.3 GB of the 8 GB beside the CRM (the worker's 1 GB: Node heap + Chromium; the PDF sandbox's own 128 MB on
-  // top: the copies keep 512 MB, they hold each preview's PDF and JPEGs, docs/09), + MinIO and its one-shot init
-  // (docs/45): ≈ 2.9 GB, well inside the ~4.6 GB the VPS has free.
+  // top: the copies keep 512 MB, they hold each preview's PDF and JPEGs, docs/09).
+  // + MinIO and its one-shot init (docs/45): ≈ 2.9 GB, inside the ~4.6 GB the VPS has free.
   assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 2912);
 });
 
