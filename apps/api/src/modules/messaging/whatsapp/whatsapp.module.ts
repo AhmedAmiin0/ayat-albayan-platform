@@ -24,6 +24,7 @@ import { MessageSender } from './sender/message.sender';
 import { MessageViews } from './messages/message.views';
 import { TemplateNames } from './templates/names/template-names';
 import { MessageWorker } from './sender/message.worker';
+import { KapsoHold } from './sender/window/kapso-hold';
 import { ReopenRequest } from './sender/window/reopen-request';
 import { WindowHold } from './sender/window/window-hold';
 import { WindowRelease } from './sender/window/window-release';
@@ -106,6 +107,7 @@ function lines(): WhatsappLines {
     ReopenRequest,
     WindowRelease,
     WindowHold,
+    KapsoHold,
     MessageWorker,
     MessageSender,
     MessagesRepo,

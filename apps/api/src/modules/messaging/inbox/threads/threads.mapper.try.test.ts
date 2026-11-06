@@ -24,17 +24,26 @@ describe('toThreadView try_after_window', () => {
 
   it('a Kapso chat line with a usable reopen template: true, whatever the window', () => {
     chatOn('kapso');
-    expect(toThreadView(threadRow(), NOW, { reopenUsable: true }).try_after_window).toBe(true);
+    const view = toThreadView(threadRow(), NOW, { reopenUsable: 'template' });
+    expect(view).toMatchObject({ try_after_window: true, reopen_choice: 'template' });
+  });
+
+  it('a Kapso chat line set to «بدون قالب»: true, and the note says it waits (owner 11-06)', () => {
+    chatOn('kapso');
+    const view = toThreadView(threadRow(), NOW, { reopenUsable: 'wait' });
+    expect(view).toMatchObject({ try_after_window: true, reopen_choice: 'wait' });
   });
 
   it('a Kapso chat line with no usable reopen template: absent (nothing would be sent)', () => {
     chatOn('kapso');
-    expect(toThreadView(threadRow(), NOW, { reopenUsable: false })).not.toHaveProperty('try_after_window');
+    expect(toThreadView(threadRow(), NOW, { reopenUsable: null })).not.toHaveProperty('try_after_window');
     expect(toThreadView(threadRow(), NOW)).not.toHaveProperty('try_after_window');
   });
 
   it('a meta chat line: absent (templates only after the window, as before)', () => {
     chatOn('meta');
-    expect(toThreadView(threadRow(), NOW, { reopenUsable: true })).not.toHaveProperty('try_after_window');
+    const view = toThreadView(threadRow(), NOW, { reopenUsable: 'wait' });
+    expect(view).not.toHaveProperty('try_after_window');
+    expect(view).not.toHaveProperty('reopen_choice');
   });
 });

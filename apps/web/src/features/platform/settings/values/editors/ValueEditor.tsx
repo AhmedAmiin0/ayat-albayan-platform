@@ -1,10 +1,11 @@
-import { SETTING_FIELD_OF, settingDef, type SettingDef } from '@ab/shared';
+import { SETTING_FIELD_OF, settingDef, type SettingDef, type SettingKey } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { flag } from '@/features/platform/settings/registry-form/settings-form';
 import { useValues } from '@/features/platform/settings/values/values-context';
 import { ChoiceEditor } from './ChoiceEditor';
 import type { EditorProps } from './editor-props';
 import { NumberEditor } from './NumberEditor';
+import { ReopenTemplateEditor } from './ReopenTemplateEditor';
 import { RowMessage } from './RowMessage';
 import { ShapeEditor } from './ShapeEditor';
 import { ShapeFields } from './ShapeFields';
@@ -60,8 +61,13 @@ const EDITORS = {
   e164: TextEditor,
 } satisfies Record<SettingDef['type'], (props: EditorProps) => ReactNode>;
 
+/** A key with its own control instead of its type's (owner 2026-11-06: the reopen choice). */
+const KEY_EDITORS: Partial<Record<SettingKey, (props: EditorProps) => ReactNode>> = {
+  chat_reopen_template: ReopenTemplateEditor,
+};
+
 function Control(props: EditorProps) {
-  const Editor = EDITORS[settingDef(props.settingKey).type];
+  const Editor = KEY_EDITORS[props.settingKey] ?? EDITORS[settingDef(props.settingKey).type];
   return <Editor {...props} />;
 }
 

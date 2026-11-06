@@ -1,4 +1,4 @@
-import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
+import type { ReopenChoice, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { ReopenRequest } from '@/modules/messaging/whatsapp';
 import type { Page } from '@/common/http/http';
@@ -60,10 +60,10 @@ export class ThreadsService {
     return read ? asRead(detail, now) : detail;
   }
 
-  /** A closed Kapso chat is offered only while the reopen template is usable (review 2026-11-05). */
-  private async reopenUsable(): Promise<boolean> {
+  /** A closed Kapso chat is offered only while it can reopen (review 11-05): template or wait. */
+  private async reopenUsable(): Promise<ReopenChoice | null> {
     // A failed settings or registry read only drops the note: the chat list still answers.
-    return (await this.reopen?.usable().catch(() => false)) ?? false;
+    return (await this.reopen?.usable().catch(() => null)) ?? null;
   }
 
   private async tagOf(row: ThreadRow | null): Promise<FamilyTag | null> {
