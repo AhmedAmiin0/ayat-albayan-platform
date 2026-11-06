@@ -69,6 +69,13 @@ describe('«تابِع بنفس الأيام»: a renewal’s plan (owner 2026-1
     );
   });
 
+  it('the days saved before the payment (view.draft): their own line, never «the previous package»', () => {
+    const saved = { ...RENEWAL_VIEW, draft: { saved_at: '2026-10-02T09:00:00.000Z' } };
+    expect(continueText(saved, C24)).toBe(
+      t.booking.courseChange.draftHint.replace('{days}', previousDays).replace('{date}', dateLabel('2026-10-11')),
+    );
+  });
+
   it('another day count than before: the previous days and the new count, with Arabic number agreement', () => {
     const forms = t.booking.courseChange.continueAdjust;
     expect(adjustText({ ...RENEWAL_VIEW, perWeek: 3 }, C24)).toBe(forms.few.replaceAll('{n}', '3').replace('{days}', previousDays));

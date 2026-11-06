@@ -90,13 +90,6 @@ describe('CourseDrafts', () => {
     expect(t.env.booking.book).not.toHaveBeenCalled();
   });
 
-  it('saved after the payment landed (race): booked at once, no draft left', async () => {
-    const t = setup({ held: [true, false] });
-    expect(await t.drafts.save(REQ, USER)).toEqual({ state: 'booked', booking: BOOKING });
-    expect(t.rows.size).toBe(0);
-    expect(t.env.sales.book).toHaveBeenCalledWith(REQ, USER);
-  });
-
   it('not held (paid, a bank transfer on a link package, or no open link): booked normally', async () => {
     const t = setup({ held: [false] });
     expect(await t.drafts.save(REQ, USER)).toEqual({ state: 'booked', booking: BOOKING });

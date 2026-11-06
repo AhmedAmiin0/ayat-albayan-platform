@@ -2,6 +2,7 @@ import { bookingKindOf, type BookingRequest, type BookingResult, type BookingTea
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { can } from '../../../../../common/auth/permissions';
 import type { AuthUser } from '../../../../../common/auth/verify-token';
+import { ar } from '@/common/infra/i18n/server-text';
 import { domainError } from '../../booking.errors';
 import type { PrepareOptions } from '../../plan/booking.planner';
 import type { SlotsQuery, TeacherOptionsQuery } from '../../booking.dto';
@@ -35,7 +36,7 @@ export class SalesBookingService {
 
   /**
    * 201 BookingResult; 409 conflict (never overridden) or duplicate_student; 403 (while the rule enforces)
-   * not_your_lead / not_your_student / not_your_family; 400 date_in_past (a trial whose first lesson
+   * not_your_lead / not_your_student / not_your_family; 409 course_held (save it as the draft); 400 date_in_past (a trial whose first lesson
    * already passed: the planner would book next week's occurrence instead, review M3); a course's codes: SalesCourse.options.
    */
   async book(req: BookingRequest, user: AuthUser): Promise<BookingResult> {
@@ -45,7 +46,18 @@ export class SalesBookingService {
     // A retry after a booked course returns that booking (BookingService replays it), not course_exists.
     if (course && (await this.course.isReplay(req))) return this.scoped(own, () => this.booking.book(req, user.id));
     const opts = await this.courseOptions(req);
+    await this.assertNotHeld(opts);
     return this.scoped(own, () => (opts ? this.booking.book(req, user.id, opts) : this.booking.book(req, user.id)));
+  }
+
+  /**
+   * A held package (unpaid, open link) is never booked before its payment, whatever the client
+   * (an old app build, a stale web tab: PR #648 review): 409 course_held, its text in the body.
+   */
+  private async assertNotHeld(opts: PrepareOptions | undefined): Promise<void> {
+    const id = opts?.course?.subscriptionId;
+    if (!id || !(await this.course.held(id))) return;
+    throw domainError(HttpStatus.CONFLICT, 'course_held', { message: ar.booking.error.course_held });
   }
 
   /**

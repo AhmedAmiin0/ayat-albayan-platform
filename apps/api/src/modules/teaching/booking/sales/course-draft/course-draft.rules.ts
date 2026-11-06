@@ -57,9 +57,15 @@ function daysOf(req: BookingRequest): DayTime[] {
 
 /**
  * The draft as SalesCourseView.previous: the wizard («تابِع بنفس الأيام») prefills its teacher and
- * days from its first day (ending the day before, so the course opens on it), old clients too.
+ * days, old clients too. It never decides the opening day (PR #648 review: an edit may move the
+ * first lesson earlier): it ends where the real previous course ends, else the day before the
+ * package starts, so the slot grid opens as without a draft.
  */
-export function draftCourse(req: BookingRequest, sub: CourseSubscription): BookedCourse {
+export function draftCourse(
+  req: BookingRequest,
+  sub: CourseSubscription,
+  previous: Pick<BookedCourse, 'endsOn'> | null,
+): BookedCourse {
   return {
     subscriptionId: sub.id,
     teacherId: req.teacherId,
@@ -67,7 +73,7 @@ export function draftCourse(req: BookingRequest, sub: CourseSubscription): Booke
     durationMin: sub.duration,
     tz: req.tz,
     startsOn: req.startsOn,
-    endsOn: addLocalDays(req.startsOn, -1),
+    endsOn: previous?.endsOn ?? addLocalDays(sub.starts_on, -1),
     running: false,
     opensOn: req.startsOn,
     days: daysOf(req),

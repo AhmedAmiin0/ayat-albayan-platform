@@ -36,6 +36,7 @@ export function ContinueChoice({ view, draft, now, onContinue, onOther }: Contin
   // isSuccess, not data: a failed refetch keeps the last list, never an enabled «تابِع» beside the error.
   const bookable = teachers.isSuccess && teachers.data.some((o) => o.id === view.previous?.teacherId && o.has_availability);
   const unavailable = teachers.isSuccess && !bookable;
+  const same = view.draft ? t.booking.courseChange.draftEdit : t.booking.courseChange.continueSameDays;
   return (
     <div className="grid gap-4">
       <p className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">{fits ? continueText(view, clock, now) : adjustText(view, clock)}</p>
@@ -59,7 +60,7 @@ export function ContinueChoice({ view, draft, now, onContinue, onOther }: Contin
       )}
       <div className="flex flex-wrap gap-2.5">
         <Button type="button" disabled={!bookable} onClick={onContinue}>
-          {fits ? t.booking.courseChange.continueSameDays : t.booking.courseChange.adjustDays}
+          {fits ? same : t.booking.courseChange.adjustDays}
         </Button>
         <Button type="button" variant="secondary" onClick={onOther}>
           {t.booking.courseChange.pickOtherDays}

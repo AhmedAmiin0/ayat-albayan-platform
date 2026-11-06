@@ -36,7 +36,7 @@ export class CourseDraftRepo {
     return row.success ? toDraft(row.data) : null;
   }
 
-  /** Saves (or replaces: an edit) the draft; its new saved_at. */
+  /** Saves (or replaces: an edit) the draft; its new saved_at as stored (PostgREST's format). */
   async save(input: Omit<CourseDraft, 'savedAt'>): Promise<string> {
     const savedAt = new Date().toISOString();
     const row = {
@@ -45,15 +45,22 @@ export class CourseDraftRepo {
       saved_by: input.savedBy,
       saved_at: savedAt,
     };
-    const { error } = await this.db
+    const { data, error } = await this.db
       .from('subscription_course_drafts')
-      .upsert(row, { onConflict: 'subscription_id' });
+      .upsert(row, { onConflict: 'subscription_id' })
+      .select('saved_at')
+      .single();
     if (error) throw dbError(error);
-    return savedAt;
+    return data.saved_at;
   }
 
-  async remove(subscriptionId: string): Promise<void> {
-    const { error } = await this.db.from('subscription_course_drafts').delete().eq('subscription_id', subscriptionId);
+  /** Deletes that saved version only (saved_at as read): an edit saved since stays. */
+  async remove(draft: Pick<CourseDraft, 'subscriptionId' | 'savedAt'>): Promise<void> {
+    const { error } = await this.db
+      .from('subscription_course_drafts')
+      .delete()
+      .eq('subscription_id', draft.subscriptionId)
+      .eq('saved_at', draft.savedAt);
     if (error) throw dbError(error);
   }
 

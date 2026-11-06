@@ -1,3 +1,4 @@
+import type { CourseSubscription } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
@@ -12,6 +13,9 @@ export interface UnbookedPackage {
   phone: string | null;
   /** Who sold it (subscriptions.created_by): the package's assistant. */
   soldBy: string | null;
+  /** The plan: courseDaysPerWeek null = a custom count only an admin books (custom_count_admin). */
+  package: CourseSubscription['package'];
+  lessonsTotal: number;
 }
 
 /**
@@ -19,12 +23,14 @@ export interface UnbookedPackage {
  * 2026-11-06) and the student's name and family number.
  */
 const PACKAGE_SELECT =
-  'id, student_id, created_by, rules:schedule_rules(id), draft:subscription_course_drafts(subscription_id), student:students(name, guardian:guardians(phone_e164))' as const;
+  'id, student_id, created_by, package, lessons_total, rules:schedule_rules(id), draft:subscription_course_drafts(subscription_id), student:students(name, guardian:guardians(phone_e164))' as const;
 
 interface PackageRow {
   id: string;
   student_id: string;
   created_by: string | null;
+  package: CourseSubscription['package'];
+  lessons_total: number;
   rules: { id: string }[];
   draft: { subscription_id: string } | null;
   student: { name: string; guardian: { phone_e164: string } | null } | null;
@@ -36,6 +42,8 @@ const toUnbooked = (r: PackageRow): UnbookedPackage => ({
   student: r.student?.name ?? '',
   phone: r.student?.guardian?.phone_e164 ?? null,
   soldBy: r.created_by,
+  package: r.package,
+  lessonsTotal: r.lessons_total,
 });
 
 const unbooked = (rows: readonly PackageRow[]): UnbookedPackage[] =>
@@ -112,14 +120,14 @@ export class CourseDueRepo {
     return data;
   }
 
-  /** The students among `studentIds` with an imported weekly course still running. */
+  /** The students among `studentIds` with an imported weekly course still running (or paused). */
   private async legacy(studentIds: readonly string[], now: Date): Promise<Set<string>> {
     if (studentIds.length === 0) return new Set();
     const { data, error } = await this.db
       .from('schedule_rule_students')
       .select('student_id, rule:schedule_rules!inner(starts_on, ends_on, package, status, subscription_id)')
       .in('student_id', [...studentIds])
-      .eq('rule.status', 'active')
+      .in('rule.status', ['active', 'paused'])
       .is('rule.subscription_id', null);
     if (error) throw dbError(error);
     const rules = data.map(({ student_id, rule }) => ({ student_id, ...rule }));

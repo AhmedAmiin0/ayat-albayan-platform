@@ -31,7 +31,9 @@ export function setup(state: { held: boolean[]; status?: string; booked?: boolea
       rows.set(d.subscriptionId, { ...d, savedAt });
       return savedAt;
     }),
-    remove: vi.fn(async (id: string) => void rows.delete(id)),
+    remove: vi.fn(async (d: Pick<CourseDraft, 'subscriptionId' | 'savedAt'>) => {
+      if (rows.get(d.subscriptionId)?.savedAt === d.savedAt) rows.delete(d.subscriptionId);
+    }),
   };
   const opts = { invoiceWaived: true, endsOn: '2026-12-03', course: { package: '8', subscriptionId: SUB } };
   const env = {

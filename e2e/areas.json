@@ -523,6 +523,7 @@
     "messaging/chat-lists.sql.spec.ts",
     "platform/config-expand.sql.spec.ts",
     "platform/config-seed.sql.spec.ts",
+    "sales/course-one-per-package.sql.spec.ts",
     "finance/course-pause-resume.sql.spec.ts",
     "finance/course-pause.sql.spec.ts",
     "teaching/edit-time.sql.spec.ts",

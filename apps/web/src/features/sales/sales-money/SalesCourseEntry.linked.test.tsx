@@ -17,9 +17,13 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
 const BLOCKED = { ...COURSE_VIEW, blocked: 'course_exists' as const };
 
-function openChat(linked: string | null) {
+const NO_CHAT = { thread: null, messages: [], has_more: false, lessons: [], people: { guardian: null, lead: null, students: [] } };
+
+function openChat(linked: string | null, chat: object = detail([], FAMILY)) {
   routeFetch(apiFetch, [
-    ['/threads/%2B966501234567', detail([], FAMILY)],
+    ['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: ['messages.read'] }],
+    ['/messages/gate', { open: true, reason: null, queued: 0 }],
+    ['/threads/%2B966501234567', chat],
     ['/messaging/templates', []],
     ['/leads?', { items: [], total: 0, page: 1, pageSize: 5 }],
     ['/settings', {}],
@@ -43,6 +47,12 @@ describe('a «احجز أيام الحلقات» notice on the web', () => {
     openChat(student().id);
     expect(await screen.findByText(t.booking.courseBlocked.course_exists)).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith(`/sales/booking/course?studentId=${student().id}`);
+  });
+
+  it('a number with no chat yet (PR #642 review): the dialog still opens', async () => {
+    openChat(student().id, NO_CHAT);
+    expect(await screen.findByText(t.booking.courseBlocked.course_exists)).toBeTruthy();
+    expect(screen.getByText(t.inbox.noThread)).toBeTruthy();
   });
 
   it('without it the chat opens as usual', async () => {

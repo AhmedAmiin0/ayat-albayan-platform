@@ -32,9 +32,10 @@ describe('course draft rules (owner 2026-11-06)', () => {
     expect(req.startsAt).toBeUndefined();
   });
 
-  it('as `previous`: its teacher and each day with its own time, opening on its first day', () => {
-    expect(draftCourse(REQ, SUB)).toMatchObject({
-      subscriptionId: 'sub1', teacherId: T1, startsOn: '2026-11-08', endsOn: '2026-11-07', opensOn: '2026-11-08',
+  it('as `previous`: its days prefilled, never its opening day (the package’s, or after the real course)', () => {
+    expect(draftCourse(REQ, SUB, { endsOn: '2026-11-03' }).endsOn).toBe('2026-11-03');
+    expect(draftCourse(REQ, SUB, null)).toMatchObject({
+      subscriptionId: 'sub1', teacherId: T1, startsOn: '2026-11-08', endsOn: '2026-10-31', opensOn: '2026-11-08',
       days: [{ weekday: 0, startTimeLocal: '17:00' }, { weekday: 4, startTimeLocal: '18:00' }], lessonsTotal: 8, perWeek: 2,
     });
   });

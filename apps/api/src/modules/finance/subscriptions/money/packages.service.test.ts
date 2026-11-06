@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
+import { PackageEvents } from '@/common/infra/events/lesson-events';
 import type { BalanceRepo, BalanceRow } from './balance.repo';
 import { PackagesService } from './packages.service';
 import type { SubRow, SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
@@ -43,12 +44,16 @@ function setup(rows: SubRow[], paid: Map<string, number>) {
   };
   const balances = { forSubscriptions: vi.fn(async () => new Map(rows.map((r) => [r.id, balance(r.id, 1)]))) };
   const audit = { record: vi.fn(async () => undefined) };
+  const events = new PackageEvents();
+  const paidIds: string[] = [];
+  events.onPaid(async (id) => void paidIds.push(id));
   const service = new PackagesService(
     subs as unknown as SubscriptionsRepo,
     balances as unknown as BalanceRepo,
     audit as unknown as AuditService,
+    events,
   );
-  return { service, subs, audit };
+  return { service, subs, audit, paidIds };
 }
 
 describe('PackagesService.recompute (journey 3: a full payment → active)', () => {
@@ -60,6 +65,15 @@ describe('PackagesService.recompute (journey 3: a full payment → active)', () 
       expect.objectContaining({ actorId: 'admin-1', entityId: 'a', action: 'status_change', after: { status: 'active' } }),
     );
     expect(rows[0]?.status).toBe('active');
+  });
+
+  it('a package moved to active tells PackageEvents (its course draft is booked); no change → nothing', async () => {
+    const moved = setup([sub('a')], new Map([['a', 145]]));
+    await moved.service.recompute('s1', null);
+    expect(moved.paidIds).toEqual(['a']);
+    const same = setup([sub('a', { status: 'active' })], new Map([['a', 145]]));
+    await same.service.recompute('s1', null);
+    expect(same.paidIds).toEqual([]);
   });
 
   it('nothing changes → no write, no audit (idempotent)', async () => {

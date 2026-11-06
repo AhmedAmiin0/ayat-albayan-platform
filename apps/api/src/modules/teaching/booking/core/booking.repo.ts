@@ -131,6 +131,8 @@ export class BookingRepo {
     if (error?.code === 'P0001' && error.message.includes('makeup_not_eligible')) {
       throw domainError(HttpStatus.CONFLICT, 'makeup_not_eligible');
     }
+    // The package got its course a moment ago (a draft booked on payment, migration 20261106000201).
+    if (error?.code === 'P0001' && error.message.includes('course_exists')) throw domainError(HttpStatus.CONFLICT, 'course_exists');
     // Another admin booked the same missed lesson a moment ago (lessons_makeup_of_key).
     if (error?.code === '23505' && error.message.includes('lessons_makeup_of_key')) {
       throw domainError(HttpStatus.CONFLICT, 'makeup_exists');

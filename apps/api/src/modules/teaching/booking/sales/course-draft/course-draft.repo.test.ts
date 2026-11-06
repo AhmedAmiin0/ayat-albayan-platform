@@ -19,15 +19,22 @@ describe('CourseDraftRepo (owner 2026-11-06)', () => {
     expect(await repo.get(SUB)).toBeNull();
   });
 
-  it('save: one row per package (upsert on subscription_id), its new saved_at', async () => {
-    const t = fakeDb({ subscription_course_drafts: [{ data: null }] });
+  it('save: one row per package (upsert on subscription_id), saved_at as stored (the draft key)', async () => {
+    const stored = '2026-11-06T09:00:00.123+00:00';
+    const t = fakeDb({ subscription_course_drafts: [{ data: { saved_at: stored } }] });
     const draft = { subscriptionId: SUB, request: REQ, savedBy: ROW.saved_by };
-    const at = await new CourseDraftRepo(t.db).save(draft);
-    expect(Number.isNaN(Date.parse(at))).toBe(false);
-    expect(t.argsOf('subscription_course_drafts', 'upsert')).toEqual([
-      { subscription_id: SUB, request: REQ, saved_by: ROW.saved_by, saved_at: at },
-      { onConflict: 'subscription_id' },
-    ]);
+    expect(await new CourseDraftRepo(t.db).save(draft)).toBe(stored);
+    const [row, opts] = t.argsOf('subscription_course_drafts', 'upsert') ?? [];
+    expect(row).toMatchObject({ subscription_id: SUB, request: REQ, saved_by: ROW.saved_by });
+    expect(opts).toEqual({ onConflict: 'subscription_id' });
+    expect(t.argsOf('subscription_course_drafts', 'select')).toEqual(['saved_at']);
+  });
+
+  it('remove: only that saved version (subscription_id AND saved_at)', async () => {
+    const t = fakeDb({ subscription_course_drafts: [{ data: null }] });
+    await new CourseDraftRepo(t.db).remove({ subscriptionId: SUB, savedAt: ROW.saved_at });
+    const eqs = t.calls.filter((c) => c.method === 'eq').map((c) => c.args);
+    expect(eqs).toEqual([['subscription_id', SUB], ['saved_at', ROW.saved_at]]);
   });
 
   it('held: unpaid AND an open, unexpired link; paid or no link → not held', async () => {

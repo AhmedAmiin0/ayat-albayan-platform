@@ -1,4 +1,4 @@
-import { addLocalDays, courseDaysPerWeek, courseLessonCount, wallParts, type BookingRequest, type CourseSubscription, type SalesCourseView } from '@ab/shared';
+import { addLocalDays, courseDaysPerWeek, type BookedCourse, courseLessonCount, wallParts, type BookingRequest, type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -82,7 +82,7 @@ export class SalesCourse {
     const { previous, current } = courseFacts({ rows, now, subscriptionId: sub?.id ?? null, booked });
     const after = previous ? addLocalDays(previous.endsOn, 1) : today;
     const from = after > today ? after : today;
-    const held = await this.holdOf(sub);
+    const held = await this.holdOf(sub, previous);
     return {
       student,
       subscription: sub,
@@ -100,11 +100,16 @@ export class SalesCourse {
    * Hold mode and the draft (owner 2026-11-06): unpaid with an open link → «احجز» saves a draft;
    * a saved draft comes back as `previous` too, so every wizard prefills its picks.
    */
-  private async holdOf(sub: CourseSubscription | null) {
+  private async holdOf(sub: CourseSubscription | null, previous: BookedCourse | null) {
     if (!sub) return { hold: false, draft: null, prefill: null };
     const [hold, draft] = await Promise.all([this.drafts.held(sub.id), this.drafts.get(sub.id)]);
-    const prefill = draft ? draftCourse(draft.request, sub) : null;
+    const prefill = draft ? draftCourse(draft.request, sub, previous) : null;
     return { hold, draft: draft ? { saved_at: draft.savedAt } : null, prefill };
+  }
+
+  /** Is the package held (unpaid with an open link): booked only after its payment? */
+  held(subscriptionId: string): Promise<boolean> {
+    return this.drafts.held(subscriptionId);
   }
 
   /** Has the package its course already (any rule with its subscription_id)? */

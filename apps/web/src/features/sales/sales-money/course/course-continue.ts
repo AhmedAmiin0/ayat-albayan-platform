@@ -44,10 +44,14 @@ const previousDays = (view: SalesCourseView, clock: ZonedClock): string =>
     .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, clock, view.student.tz))
     .join(t.common.listSeparator);
 
-/** «حلقات الباقة السابقة: السبت الساعة 17:00، الثلاثاء الساعة 19:30. تبدأ … من 3 نوفمبر 2026.» */
+/**
+ * «حلقات الباقة السابقة: السبت الساعة 17:00، الثلاثاء الساعة 19:30. تبدأ … من 3 نوفمبر 2026.»; for
+ * the days saved before the payment (view.draft) «الأيام المحفوظة بانتظار الدفع: …».
+ */
 export function continueText(view: SalesCourseView, clock: ZonedClock, now?: string): string {
   const from = courseOpensOn(view, now);
-  return t.booking.courseChange.continueHint.replace('{days}', previousDays(view, clock)).replace('{date}', from ? dateLabel(from) : '');
+  const line = view.draft ? t.booking.courseChange.draftHint : t.booking.courseChange.continueHint;
+  return line.replace('{days}', previousDays(view, clock)).replace('{date}', from ? dateLabel(from) : '');
 }
 
 /** Another day count than before (!continueFits): «حلقات الباقة السابقة: …. الباقة الجديدة 3 أيام في الأسبوع، فعدّل الأيام السابقة لتصبح 3 أيام». */

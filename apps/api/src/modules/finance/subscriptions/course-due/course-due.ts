@@ -1,4 +1,4 @@
-import { courseNoticeData } from '@ab/shared';
+import { courseDaysPerWeek, courseNoticeData } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
@@ -47,7 +47,7 @@ export class CourseDue {
     try {
       const p = await this.repo.unbooked(subscriptionId);
       const title = ar.courseDue.paidTitle;
-      return p ? { profileId: assistantId, title, data: noticeData(p) } : undefined;
+      return p && selfBooked(p) ? { profileId: assistantId, title, data: noticeData(p) } : undefined;
     } catch (e) {
       this.log.warn(`course due ${subscriptionId}: ${errText(e)}`);
       return undefined;
@@ -87,17 +87,23 @@ export class CourseDue {
     }
   }
 
+  /** A custom-count package (the wizard refuses it): the admins only, who book it. */
   private async tell(p: UnbookedPackage): Promise<void> {
+    const own = selfBooked(p);
     const event = {
       subject: `course_unbooked:${p.subscriptionId}`,
       title: ar.courseDue.unbookedTitle,
-      vars: { student: p.student, left: ar.courseDue.unbookedText },
+      vars: { student: p.student, left: own ? ar.courseDue.unbookedText : ar.courseDue.customText },
       data: noticeData(p),
     };
     await this.push.notifyAdmins('payment_due', event);
-    const sellers = p.soldBy ? [p.soldBy] : [];
+    const sellers = own && p.soldBy ? [p.soldBy] : [];
     await this.push.notifyProfiles({ ...event, kind: 'payment_due', profileIds: sellers });
   }
 }
 
 const noticeData = (p: UnbookedPackage) => courseNoticeData(p.studentId, p.phone);
+
+/** The assistant's wizard books it: not a custom count only an admin books (PR #642 review). */
+const selfBooked = (p: UnbookedPackage): boolean =>
+  courseDaysPerWeek({ package: p.package, lessons_total: p.lessonsTotal }) !== null;
