@@ -1,20 +1,15 @@
-import { forAudience, RATING_TEMPLATE, type TemplateView, type ThreadLesson } from '@ab/shared';
+import { RATING_TEMPLATE, type TemplateView, type ThreadLesson } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
-import { FlatList, type ListRenderItemInfo, Modal, View } from 'react-native';
-import { useSendsAllTemplates } from '@/core/auth/use-permissions';
+import { useState } from 'react';
+import { Modal } from 'react-native';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
-import { Note } from '@/core/ui/feedback/Note';
 import { Button } from '@/core/ui/primitives/Button';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { ListRow } from '@/core/ui/layout/ListRow';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { TemplateForm } from './TemplateForm';
+import { TemplateList, templateName } from './TemplateList';
 import type { Outgoing } from '@/inbox/thread/hooks/use-thread';
 
 const PATH = '/messaging/templates';
@@ -31,8 +26,6 @@ export function useApprovedTemplates(enabled: boolean) {
     enabled,
   });
 }
-
-const names: Record<string, string> = t.templates.names;
 
 interface TemplatePickerProps {
   visible: boolean;
@@ -52,19 +45,7 @@ interface TemplatePickerProps {
  */
 export function TemplatePicker(props: TemplatePickerProps) {
   const templates = useApprovedTemplates(props.visible);
-  // Without templates.manage or templates.send_all, and always for sales, an assistant or a teacher, only
-  // the admin's allow-list (owner 2026-10-12 / 10-15 / 10-18): none ticked (or not imported yet) is not «nothing approved».
-  const restricted = !useSendsAllTemplates();
-  const offered = (templates.data ?? []).filter((row) => forAudience(row.key, props.teacher));
   const [chosen, setChosen] = useState<TemplateView | null>(null);
-  // The templates sit in one inset card inside the sheet's gutter (owner 2026-10-28: one container rule).
-  const row = useCallback(
-    ({ item }: ListRenderItemInfo<TemplateView>) => (
-      <ListRow title={names[item.key] ?? item.key} subtitle={item.body_ar} onPress={() => setChosen(item)} />
-    ),
-    [],
-  );
-  const cells = useInsetRows(row, offered.length);
   const close = () => {
     setChosen(null);
     props.onClose();
@@ -78,7 +59,7 @@ export function TemplatePicker(props: TemplatePickerProps) {
     >
       <Screen sheet>
         <ScreenHeader
-          title={chosen ? (names[chosen.key] ?? chosen.key) : t.inbox.composer.chooseTemplate}
+          title={chosen ? templateName(chosen) : t.inbox.composer.chooseTemplate}
           trailing={<Button variant="ghost" label={t.common.close} onPress={close} />}
         />
         {chosen ? (
@@ -93,27 +74,7 @@ export function TemplatePicker(props: TemplatePickerProps) {
             }}
           />
         ) : (
-          <FlatList
-            style={{ flex: 1 }}
-            contentContainerStyle={{ paddingBottom: 16 }}
-            data={offered}
-            keyExtractor={(tpl) => tpl.key}
-            {...cells}
-            // While the list loads, say so: a slow answer is not an empty white sheet.
-            ListEmptyComponent={
-              templates.isError ? (
-                <ErrorState onRetry={() => void templates.refetch()} />
-              ) : (
-                <View style={{ paddingVertical: 16 }}>
-                  {templates.isPending ? (
-                    <Note>{t.common.loading}</Note>
-                  ) : (
-                    <EmptyState title={restricted ? t.inbox.composer.noAllowed : t.inbox.composer.noApproved} />
-                  )}
-                </View>
-              )
-            }
-          />
+          <TemplateList templates={templates} teacher={props.teacher} onPick={setChosen} />
         )}
       </Screen>
     </Modal>

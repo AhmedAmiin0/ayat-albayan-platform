@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
@@ -54,17 +54,19 @@ test('the header keeps only the sales bell: no «محادثة جديدة» up th
 });
 
 // Owner report 2026-10-12 («it is not able to start the conversation»): the same path as the web.
-test('«محادثة جديدة»: a bad number is refused in words; a local Saudi number opens its thread as E.164', async () => {
+test('«محادثة جديدة»: a bad number is refused in words; a local Saudi number is read as E.164', async () => {
+  mockApiFetch.mockResolvedValue({ ...EMPTY, messages: [{ id: 'm1' }] });
   await renderWithQuery(<NewChatSheet />);
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.title }));
   const box = screen.getByLabelText(t.inbox.newChat.phone);
   await fireEvent.changeText(box, 'abc');
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.open }));
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.next }));
   expect(screen.getByRole('alert').props.children).toBe(t.common.phoneErrors.not_a_number);
-  expect(router.push).not.toHaveBeenCalled();
+  expect(mockApiFetch).not.toHaveBeenCalled();
   await fireEvent.changeText(box, '0501234567');
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.open }));
-  expect(router.push).toHaveBeenCalledWith('/inbox/thread/%2B966501234567');
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.next }));
+  expect(mockApiFetch).toHaveBeenCalledWith('/threads/%2B966501234567');
+  await waitFor(() => expect(router.push).toHaveBeenCalledWith('/inbox/thread/%2B966501234567'));
 });
 
 function newNumber() {
