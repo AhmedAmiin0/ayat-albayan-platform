@@ -3,7 +3,7 @@ import { AWAITING_REPLY } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { UNCERTAIN } from '@/modules/messaging/whatsapp/sender/send-plan';
-import { notAppSending } from '@/modules/messaging/whatsapp/sender/sender.due';
+import { NOT_APP_SENT } from '@/modules/messaging/whatsapp/sender/sender.due';
 import type { ReopenRow } from './reopen-state';
 import type { FailWhy } from './window-reopen';
 import type { WaitingRow } from './window-rules';
@@ -104,15 +104,15 @@ export class WindowRepo {
     if (error) throw fail('message hold failure', error.message);
   }
 
-  /** A page of queued AWAITING_REPLY rows, oldest first, after `after`; none app-sending. */
-  async waiting(after: string | null, now: Date): Promise<WaitingRow[]> {
+  /** A page of queued AWAITING_REPLY rows, oldest first, after `after`; none app-sent. */
+  async waiting(after: string | null): Promise<WaitingRow[]> {
     const query = this.db
       .from('messages')
       .select('id, phone_e164, created_at, scheduled_for, error_text, expires_at')
       .eq('direction', 'outbound')
       .eq('status', 'queued')
       .eq('error_code', AWAITING_REPLY)
-      .or(notAppSending(now));
+      .or(NOT_APP_SENT);
     const { data, error } = await (after ? query.gt('created_at', after) : query)
       .order('created_at', { ascending: true })
       .limit(RELEASE_BATCH);

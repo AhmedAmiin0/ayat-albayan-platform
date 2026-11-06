@@ -1,4 +1,4 @@
-import { appSendPending, canSendViaWhatsApp, type MessageView } from '@ab/shared';
+import { canSendViaWhatsApp, type MessageView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useNow } from '@/core/lib/time/use-now';
@@ -8,17 +8,23 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { useHolds } from '@/core/auth/use-permissions';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
+import { APP_SEND_ANSWERS, type AppSendLine as Line, appSendLineOf } from '@ab/client-core';
+import { AppSendAnswers } from './AppSendAnswers';
 import { sendErrorText, useWhatsAppSend, useWhatsAppSendState } from './use-whatsapp-send';
-
-type Line = 'offer' | 'pending';
 
 interface LineProps {
   message: MessageView;
   phone: string;
 }
 
+interface LineCopy {
+  texts: () => string[];
+  label: () => string;
+  testID: string;
+}
+
 /** What each state says, and the button that (re)starts the send (app-send, then wa.me). */
-const LINES: Record<Line, { texts: () => string[]; label: () => string; testID: string }> = {
+const LINES: Record<Line, LineCopy> = {
   offer: {
     texts: () => [t.messages.whatsappSend.hint],
     label: () => t.messages.whatsappSend.action,
@@ -28,6 +34,11 @@ const LINES: Record<Line, { texts: () => string[]; label: () => string; testID: 
     texts: () => [t.messages.whatsappSend.pending, t.messages.whatsappSend.pendingHint],
     label: () => t.messages.whatsappSend.openAgain,
     testID: 'whatsapp-send-pending',
+  },
+  unconfirmed: {
+    texts: () => [t.messages.whatsappSend.askSent],
+    label: () => t.messages.whatsappSend.action,
+    testID: 'whatsapp-send-unconfirmed',
   },
 };
 
@@ -51,6 +62,7 @@ function SendLine({ message: m, phone, line }: LineProps & { line: Line }) {
           {text}
         </AppText>
       ))}
+      <AppSendAnswers message={m} phone={phone} answers={APP_SEND_ANSWERS[line]} />
       <Button
         variant="secondary"
         label={shown.label()}
@@ -65,11 +77,12 @@ function SendLine({ message: m, phone, line }: LineProps & { line: Line }) {
 /**
  * «أرسل عبر واتساب» under a staff text the 24 h window stopped (owner 2026-11-06), admin only: why,
  * and the action; while its window is open (app_send_until, re-read every minute) «جارٍ الإرسال من
- * واتساب…» and «افتح واتساب مجددًا», which extends it. No undo: nothing was marked sent.
+ * واتساب…», «افتح واتساب مجددًا» (extends it) and «أرسلتها». With no echo once it passes, the
+ * platform never sends it: «هل أرسلتها من واتساب؟» with «نعم» / «لا، أعدها للانتظار».
  */
 function WhatsAppSendLine(p: LineProps) {
   const now = useNow();
-  return <SendLine {...p} line={appSendPending(p.message, now) ? 'pending' : 'offer'} />;
+  return <SendLine {...p} line={appSendLineOf(p.message, now)} />;
 }
 
 /** The admin's (admin mode with messages.manage, the app-send endpoint's permission). */

@@ -1,33 +1,6 @@
-import { describe, expect, it, vi } from 'vitest';
-import type { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
-import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { describe, expect, it } from 'vitest';
 import { appSendable } from './app-send.rules';
-import type { AppSendRepo } from './app-send.repo';
-import { AppSend } from './app-send.service';
-
-const ID = 'b0000000-0000-4000-8000-000000000009';
-const NOW = new Date('2026-11-06T10:00:00Z');
-const staffText = (over = {}) =>
-  messageRow({
-    id: ID,
-    status: 'queued',
-    error_code: 'awaiting_reply',
-    created_by: 'u0000000-0000-4000-8000-000000000001',
-    template_key: null,
-    template_params: null,
-    body: 'السلام عليكم',
-    ...over,
-  });
-
-function setup(row: ReturnType<typeof messageRow>) {
-  const repo = {
-    get: vi.fn().mockResolvedValue(row),
-    start: vi.fn(async (w: { until: Date }) => ({ ...row, app_send_until: w.until.toISOString() })),
-  };
-  const views = { view: vi.fn(async (r: unknown) => r) };
-  const svc = new AppSend(repo as unknown as AppSendRepo, views as unknown as MessageViews);
-  return { svc, repo };
-}
+import { ID, NOW, setup, staffText } from './app-send.test-util';
 
 describe('appSendable: only a staff text the window stopped', () => {
   it.each([
@@ -35,6 +8,8 @@ describe('appSendable: only a staff text the window stopped', () => {
     ['failed reopen_failed', { status: 'failed', error_code: 'reopen_failed' }],
     ['failed hold_expired', { status: 'failed', error_code: 'hold_expired' }],
     ['failed 131047', { status: 'failed', error_code: '131047' }],
+    ['unconfirmed (send it again)', { status: 'failed', error_code: 'app_send_unconfirmed' }],
+    ['a row never routed (line null)', { line: null }],
   ])('%s: allowed', (_name, over) => {
     expect(appSendable(staffText(over))).toBe(true);
   });
@@ -47,6 +22,8 @@ describe('appSendable: only a staff text the window stopped', () => {
     ['sent', { status: 'sent', error_code: null }],
     ['failed for another reason', { status: 'failed', error_code: 'network' }],
     ['the calls number', { line: 'calls' }],
+    ['the notifications line (no echo comes back)', { line: 'notifications' }],
+    ['the crm line', { line: 'crm' }],
     ['inbound', { direction: 'inbound' }],
     ['a wamid (131047 after WhatsApp took it)', { status: 'failed', error_code: '131047', wa_message_id: 'wamid.X' }],
   ])('%s: refused', (_name, over) => {
@@ -95,5 +72,25 @@ describe('AppSend.start', () => {
     const { svc, repo } = setup(staffText());
     repo.get.mockResolvedValue(null);
     await expect(svc.start(ID, NOW)).rejects.toMatchObject({ status: 404 });
+  });
+
+  it('sent from the app before the tap: adopted, no window, 409 with the row now sent', async () => {
+    const { svc, repo, adopts } = setup(staffText());
+    adopts.adopt.mockResolvedValue(true);
+    repo.get
+      .mockResolvedValueOnce(staffText())
+      .mockResolvedValueOnce(staffText({ status: 'sent', error_code: null }));
+    await expect(svc.start(ID, NOW)).rejects.toMatchObject({
+      status: 409,
+      response: { code: 'not_app_send', status: 'sent' },
+    });
+    expect(adopts.adopt).toHaveBeenCalledWith(expect.objectContaining({ id: ID }), NOW);
+    expect(repo.start).not.toHaveBeenCalled();
+  });
+
+  it('a refused row never looks for the app message', async () => {
+    const { svc, adopts } = setup(staffText({ line: 'notifications' }));
+    await expect(svc.start(ID, NOW)).rejects.toMatchObject({ status: 409 });
+    expect(adopts.adopt).not.toHaveBeenCalled();
   });
 });

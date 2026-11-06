@@ -5472,6 +5472,7 @@ export type Database = {
         }[];
       };
       auth_user_id_by_email: { Args: { p_email: string }; Returns: string };
+      app_send_adopt: { Args: { p_held: string; p_external: string }; Returns: boolean };
       apply_lesson_changes: { Args: { p: Json }; Returns: undefined };
       approve_assistant_statement: {
         Args: { p_actor: string; p_statement: string };

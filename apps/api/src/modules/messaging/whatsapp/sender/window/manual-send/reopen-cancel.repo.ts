@@ -1,4 +1,4 @@
-import { REOPEN_NOT_NEEDED } from '@ab/shared';
+import { AWAITING_REPLY, REOPEN_NOT_NEEDED } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
@@ -10,8 +10,8 @@ const fail = (what: string, message: string): Error => new Error(`${what} failed
 
 /** The reopen rows' dedup keys of one phone: `reopen:<E.164>:<day>[:<try>]` (reopenDedupKey). */
 const reopenKeys = (phone: string): string => `reopen:${phone}:%`;
-/** Not a reopen template row (its dedup key, if any, is not `reopen:…`). */
-const NOT_REOPEN = 'dedup_key.is.null,dedup_key.not.like.reopen:*';
+/** A text that may still need the reopen: held for the reply, or claimed (it may be refused). */
+const NEEDS_REOPEN = [AWAITING_REPLY, SENDING];
 
 /** The reads and the compare-and-set of the reopen cancel (reopen-cancel.ts). */
 @Injectable()
@@ -19,8 +19,9 @@ export class ReopenCancelRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /**
-   * Is any other message to this family still queued (held for their reply, claimed by the sender
-   * right now, or waiting its turn)? Any of them may need the reopen: it is kept.
+   * Is any other text to this family still queued that depends on the reopen: held for their
+   * reply (AWAITING_REPLY) or claimed by the sender right now (SENDING, it may be refused for the
+   * window and held)? Templates (a reminder, the reopen itself) and texts due anyway never count.
    */
   async othersPending(phone: string, except: string | null): Promise<boolean> {
     const query = this.db
@@ -29,7 +30,8 @@ export class ReopenCancelRepo {
       .eq('phone_e164', phone)
       .eq('direction', 'outbound')
       .eq('status', 'queued')
-      .or(NOT_REOPEN);
+      .is('template_key', null)
+      .in('error_code', NEEDS_REOPEN);
     const { data, error } = await (except ? query.neq('id', except) : query).limit(1);
     if (error) throw fail('held messages read', error.message);
     return data.length > 0;

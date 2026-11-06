@@ -27,7 +27,7 @@ describe('WindowHold.release', () => {
     expect(f.repo.fail).toHaveBeenCalledWith([], expect.anything());
     expect(f.repo.lastChatInbound).toHaveBeenCalledWith([A, B]);
     expect(f.repo.release).toHaveBeenCalledExactlyOnceWith(['a1', 'a2']);
-    expect(f.repo.waiting).toHaveBeenCalledExactlyOnceWith(null, expect.any(Date));
+    expect(f.repo.waiting).toHaveBeenCalledExactlyOnceWith(null);
   });
 
   it('a full page reads the next one after its last row: no family starves behind 200 others', async () => {
@@ -40,7 +40,7 @@ describe('WindowHold.release', () => {
       .mockResolvedValueOnce([row('late', A, '2026-11-01T09:00:00Z')] as never);
     f.repo.lastChatInbound.mockResolvedValue(new Map([[A, '2026-11-02T10:00:00Z']]));
     await f.hold.release();
-    expect(f.repo.waiting).toHaveBeenNthCalledWith(2, page.at(-1)?.created_at, expect.any(Date));
+    expect(f.repo.waiting).toHaveBeenNthCalledWith(2, page.at(-1)?.created_at);
     expect(f.repo.release).toHaveBeenLastCalledWith(['late']);
   });
 

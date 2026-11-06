@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { AppSendAdopt } from '@/modules/messaging/whatsapp/sender/window/manual-send';
 import { whatsappApp } from '@/modules/messaging/whatsapp/test-app';
 
 // POST /messages/:id/app-send (docs/19): admin only (messages.manage), zod on the id, audited.
@@ -22,7 +23,11 @@ describe('POST /messages/:id/app-send', () => {
     t = await whatsappApp();
   });
   afterAll(() => t.app.close());
-  beforeEach(() => vi.resetAllMocks());
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.resetAllMocks();
+    vi.spyOn(t.app.get(AppSendAdopt), 'adopt').mockResolvedValue(false);
+  });
 
   it('a held staff text: 200 with the pending window, audited', async () => {
     const until = '2026-11-06T10:10:00.000Z';
@@ -50,5 +55,14 @@ describe('POST /messages/:id/app-send', () => {
   it('a teacher: 403', async () => {
     const res = await t.call({ method: 'POST', url: `/messages/${ID}/app-send`, token: 'teacher' });
     expect(res.statusCode).toBe(403);
+  });
+
+  it('sent from the app before the tap: adopted, 409 with the row now sent', async () => {
+    t.appSend.get.mockResolvedValueOnce(held).mockResolvedValueOnce({ ...held, status: 'sent' });
+    const adopt = vi.spyOn(t.app.get(AppSendAdopt), 'adopt').mockResolvedValue(true);
+    const res = await t.call({ method: 'POST', url: `/messages/${ID}/app-send` });
+    expect([res.statusCode, res.json()]).toMatchObject([409, { code: 'not_app_send', status: 'sent' }]);
+    expect(adopt).toHaveBeenCalledWith(expect.objectContaining({ id: ID }), expect.any(Date));
+    expect(t.appSend.start).not.toHaveBeenCalled();
   });
 });

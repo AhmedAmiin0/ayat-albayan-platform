@@ -50,12 +50,13 @@ describe('ReopenCancelRepo.cancelQueued', () => {
 });
 
 describe('ReopenCancelRepo.othersPending', () => {
-  it('any other queued outbound row of the phone (held, claimed or waiting), not a reopen', async () => {
+  it('another queued TEXT of the phone held for the reply or claimed (never a template)', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'm2' }] }] });
     await expect(new ReopenCancelRepo(db).othersPending(PHONE, 'm1')).resolves.toBe(true);
     const f = filters(calls);
     expect(f).toContainEqual(['eq', 'status', 'queued']);
-    expect(f).toContainEqual(['or', 'dedup_key.is.null,dedup_key.not.like.reopen:*']);
+    expect(f).toContainEqual(['is', 'template_key', null]);
+    expect(f).toContainEqual(['in', 'error_code', ['awaiting_reply', 'sending']]);
     expect(f).toContainEqual(['neq', 'id', 'm1']);
   });
 
@@ -75,7 +76,7 @@ describe('ReopenCancelRepo — a missed hold drops only its own reopen', () => {
     expect(f).toContainEqual(['eq', 'status', 'queued']);
   });
 
-  it('othersPending with no row to skip: any queued text of the phone counts', async () => {
+  it('othersPending with no row to skip: any held text of the phone counts', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'm1' }] }] });
     await expect(new ReopenCancelRepo(db).othersPending(PHONE, null)).resolves.toBe(true);
     expect(filters(calls).some((c) => c[0] === 'neq')).toBe(false);

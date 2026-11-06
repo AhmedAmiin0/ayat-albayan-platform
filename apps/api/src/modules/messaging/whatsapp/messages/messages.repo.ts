@@ -1,4 +1,4 @@
-import { AWAITING_REPLY } from '@ab/shared';
+import { APP_SEND_UNCONFIRMED, AWAITING_REPLY } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { MESSAGE_SELECT, type ThreadMessageRow } from './message.mapper';
@@ -8,8 +8,14 @@ import { HANDED_OFF, SENDING } from '@/modules/messaging/whatsapp/sender/send-pl
 /** Not while the sender holds the row (its claim): Meta may be sending it right now. */
 const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
 
+const NO_APP_SEND = { app_send_until: null } as const;
 const heldAgain = (at: Date) =>
   ({ error_code: AWAITING_REPLY, scheduled_for: at.toISOString(), expires_at: null }) as const;
+/** The retry's extra fields: held again from `restart`; app_send_until cleared (endAppSend). */
+const retryFields = (restart: Date | null, endAppSend: boolean) => ({
+  ...(restart ? heldAgain(restart) : {}),
+  ...(endAppSend ? NO_APP_SEND : {}),
+});
 
 /**
  * M1–M3 (docs/12 §4): the admin's retry, «I sent it myself» and the hand-off, all compare-and-set.
@@ -29,18 +35,23 @@ export class MessagesRepo {
    * failed → queued with a fresh attempt budget; null when it is no longer failed, or it was never
    * ours to send: a message sent outside the app or imported (created_by null, attempts 0, a wamid).
    * `restart` (a held text's retry): held again (AWAITING_REPLY, never tried as free text), its
-   * 7 days from then (scheduled_for), no old deadline.
+   * 7 days from then (scheduled_for), no old deadline. `endAppSend`: app_send_until cleared (the
+   * sender skips any row that has one), only from app_send_unconfirmed (compare-and-set).
    */
-  async requeue(id: string, restart: Date | null = null): Promise<ThreadMessageRow | null> {
-    const fresh = restart ? heldAgain(restart) : {};
-    const { data, error } = await this.db
+  async requeue(
+    id: string,
+    restart: Date | null = null,
+    endAppSend = false,
+  ): Promise<ThreadMessageRow | null> {
+    const fresh = retryFields(restart, endAppSend);
+    const base = this.db
       .from('messages')
       .update({ status: 'queued', attempts: 0, next_attempt_at: null, error_code: null, error_text: null, ...fresh })
       .eq('id', id)
       .eq('status', 'failed')
-      .or('attempts.gt.0,wa_message_id.is.null,created_by.not.is.null')
-      .select(MESSAGE_SELECT)
-      .maybeSingle();
+      .or('attempts.gt.0,wa_message_id.is.null,created_by.not.is.null');
+    const query = endAppSend ? base.eq('error_code', APP_SEND_UNCONFIRMED) : base;
+    const { data, error } = await query.select(MESSAGE_SELECT).maybeSingle();
     if (error) throw new Error(`message retry failed: ${error.message}`);
     return data;
   }

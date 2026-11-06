@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { appSendMatches, appSendSpan, attachPatch, foldText } from './manual-echo';
+import { foldText } from '@ab/shared';
+import { appSendMatches, appSendSpan, attachPatch } from './manual-echo';
 import { CHAT, row, SENT_AT } from './manual-echo.fixtures.test-util';
 
 // The pure rules of the «أرسل عبر واتساب» attach (docs/19): which row an external text confirms.
 
 const BODY = 'السلام عليكم موعد الحلقة غدًا';
+const SENT = { at: SENT_AT, status: null };
 const event = (status: 'sent' | 'delivered' | 'read' | 'failed') => ({
   waMessageId: 'wamid.APP1',
   status,
@@ -47,16 +49,28 @@ describe('app send attach rules', () => {
   });
 
   it('status: sent for an echo; the event as it says; never on a failed one', () => {
-    expect(attachPatch(SENT_AT)).toEqual({ status: 'sent', sent_at: SENT_AT.toISOString() });
-    expect(attachPatch(SENT_AT, event('delivered'))).toMatchObject({
+    expect(attachPatch(SENT)).toEqual({ status: 'sent', sent_at: SENT_AT.toISOString() });
+    expect(attachPatch(SENT, event('delivered'))).toMatchObject({
       status: 'delivered',
       delivered_at: '2026-11-06T10:06:00.000Z',
     });
-    expect(attachPatch(SENT_AT, event('read'))).toMatchObject({
+    expect(attachPatch(SENT, event('read'))).toMatchObject({
       status: 'read',
       delivered_at: '2026-11-06T10:06:00.000Z',
       read_at: '2026-11-06T10:06:00.000Z',
     });
-    expect(attachPatch(SENT_AT, event('failed'))).toBeNull();
+    expect(attachPatch(SENT, event('failed'))).toBeNull();
+  });
+
+  it('no event: the status Kapso stored for the message, else sent; never a failed one', () => {
+    expect(attachPatch({ at: SENT_AT, status: 'read' })).toMatchObject({ status: 'read' });
+    expect(attachPatch({ at: SENT_AT, status: 'delivered' })).toMatchObject({
+      status: 'delivered',
+      delivered_at: SENT_AT.toISOString(),
+    });
+    expect(attachPatch({ at: SENT_AT, status: 'failed' })).toBeNull();
+    expect(attachPatch({ at: SENT_AT, status: 'failed' }, event('sent'))).toMatchObject({
+      status: 'sent',
+    });
   });
 });

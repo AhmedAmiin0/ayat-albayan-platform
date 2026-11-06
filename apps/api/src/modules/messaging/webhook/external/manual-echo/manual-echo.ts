@@ -1,6 +1,6 @@
 import type { Tables, TablesUpdate } from '@ab/db';
-import { APP_SEND_GRACE_MS, APP_SEND_MS } from '@ab/shared';
-import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
+import { APP_SEND_GRACE_MS, APP_SEND_MS, foldText } from '@ab/shared';
+import type { DeliveryStatus, StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 
 // «أرسل عبر واتساب» (owner 2026-11-06, docs/19): staff tapped it (app_send_until set), then sent
 // the text from the WhatsApp Business app. The message comes back on any external path (the echo,
@@ -19,9 +19,6 @@ export interface EchoOrigin {
   line: string | null;
   numberId: string | null;
 }
-
-/** Runs of spaces, tabs and line breaks become one space; the ends are trimmed. */
-export const foldText = (text: string): string => text.replace(/\s+/g, ' ').trim();
 
 /** Two known values must agree; an unknown one (a single line, a row never routed) does not. */
 const agrees = (a: string | null, b: string | null): boolean => a === null || b === null || a === b;
@@ -64,13 +61,23 @@ const PATCHES: Partial<Record<StatusEvent['status'], (sent: string, at: string) 
   read: (sent, at) => ({ status: 'read', sent_at: sent, delivered_at: at, read_at: at }),
 };
 
+/** The message as the attach reads it: WhatsApp's time and Kapso's stored status, if any. */
+interface SentMessage {
+  at: Date;
+  status: DeliveryStatus | null;
+}
+
 /**
- * The attached row's status and times: sent at the message's time (an echo, the catch-up), or
- * as the status event says (delivered / read fill the earlier steps). A failed event: null, the
- * message is stored as its own row and the held text stays as it is.
+ * The attached row's status and times: the status event's, else Kapso's stored status of the
+ * message (an echo or a catch-up item may carry one), else sent; sent at the message's time
+ * (delivered / read fill the earlier steps). Failed: null, never attached (stored as its own row,
+ * the held text stays as it is).
  */
-export function attachPatch(sentAt: Date, event?: StatusEvent): Patch | null {
-  const patch = PATCHES[event?.status ?? 'sent'];
-  const at = (event?.at ?? sentAt).toISOString();
-  return patch ? patch(sentAt.toISOString(), at) : null;
+const statusOf = (msg: SentMessage, event?: StatusEvent): DeliveryStatus =>
+  event?.status ?? msg.status ?? 'sent';
+
+export function attachPatch(msg: SentMessage, event?: StatusEvent): Patch | null {
+  const patch = PATCHES[statusOf(msg, event)];
+  const at = (event?.at ?? msg.at).toISOString();
+  return patch ? patch(msg.at.toISOString(), at) : null;
 }

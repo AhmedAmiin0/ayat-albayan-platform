@@ -1,5 +1,6 @@
 import { backoffDelay, normalizePhone } from '@ab/core';
 import { WA_ERROR as E } from '@ab/catalog';
+import { APP_SEND_UNCONFIRMED } from './chat/thread-reopen.js';
 import { REOPEN_NOT_NEEDED } from './message-actions/whatsapp-send.js';
 
 // WhatsApp Cloud API rules the sender, the webhook and the inbox share (docs/12 §3).
@@ -119,6 +120,8 @@ const RETRY_POINTLESS = new Set<string>([
   'hold_expired',
   // A reopen template cancelled because staff sent the held text from WhatsApp themselves.
   REOPEN_NOT_NEEDED,
+  // «هل أرسلتها من واتساب؟» answers it (yes / no, docs/19), never a plain retry.
+  APP_SEND_UNCONFIRMED,
   // The account, until an admin fixes it in Meta: payment (131042), locked (131031), policy block
   // (368), number not registered (131045, 133010), display name (131037).
   ...[E.paymentIssue, E.accountLocked, E.policyBlocked, E.certificateError].map(String),

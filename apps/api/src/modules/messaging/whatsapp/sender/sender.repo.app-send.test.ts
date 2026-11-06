@@ -1,46 +1,38 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
-import { notAppSending } from './sender.due';
+import { NOT_APP_SENT } from './sender.due';
 import { SenderRepo } from './sender.repo';
 
-// «أرسل عبر واتساب» (docs/19): until 15 min after app_send_until the sender never reads nor
-// claims the row (a late echo / catch-up attaches first); then it is due again as before the tap.
+// «أرسل عبر واتساب» (docs/19): a row with app_send_until set is never read nor claimed by the
+// sender, during the window or after it: staff may have sent it from the app (edited, late,
+// personal WhatsApp). The sweep fails it app_send_unconfirmed; only staff's answer moves it.
 
 const M = 'messages';
 const NOW = new Date('2026-11-06T10:00:00Z');
-const PENDING = 'app_send_until.is.null,app_send_until.lte.2026-11-06T09:45:00.000Z';
 const ors = (calls: { method: string; args: unknown[] }[]) =>
   calls.filter((c) => c.method === 'or').map((c) => c.args[0]);
 
-/** The filter as Postgres applies it to one row's app_send_until. */
-const passes = (until: string | null): boolean =>
-  until === null || Date.parse(until) <= NOW.getTime() - 15 * 60_000;
-
-describe('the sender and a pending «أرسل عبر واتساب»', () => {
-  it('the filter: no window, or one that ended over 15 min ago (a late echo attaches first)', () => {
-    expect(notAppSending(NOW)).toBe(PENDING);
-    expect(passes(null)).toBe(true);
-    expect(passes('2026-11-06T10:09:59Z')).toBe(false);
-    expect(passes('2026-11-06T09:50:00Z')).toBe(false);
-    expect(passes('2026-11-06T09:44:00Z')).toBe(true);
+describe('the sender and a «أرسل عبر واتساب» row', () => {
+  it('the filter: app_send_until unset only, whatever the time', () => {
+    expect(NOT_APP_SENT).toBe('app_send_until.is.null');
   });
 
-  it('due() never reads a row inside the window', async () => {
+  it('due() never reads a row that had a tap', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
     await new SenderRepo(db).due({ keys: [], now: NOW, limit: 50 });
-    expect(ors(calls)).toContain(PENDING);
+    expect(ors(calls)).toContain(NOT_APP_SENT);
   });
 
   it('claim() is compare-and-set on it too: a tap between the read and the claim wins', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
     await expect(new SenderRepo(db).claim({ id: 'm1', attempts: 0, now: NOW })).resolves.toBeNull();
-    expect(ors(calls)).toEqual([PENDING]);
+    expect(ors(calls)).toEqual([NOT_APP_SENT]);
   });
 
-  it('after the window: read and claimed as before the tap', async () => {
-    const later = new Date('2026-11-06T10:26:00Z');
+  it('hours after the window: still the same filter (never auto-sent)', async () => {
+    const later = new Date('2026-11-06T18:00:00Z');
     const { db, calls } = fakeDb({ [M]: [{ data: [{ id: 'm1' }] }] });
     await expect(new SenderRepo(db).claim({ id: 'm1', attempts: 0, now: later })).resolves.toBe(1);
-    expect(ors(calls)).toEqual([notAppSending(later)]);
+    expect(ors(calls)).toEqual([NOT_APP_SENT]);
   });
 });

@@ -38,7 +38,7 @@ export class ManualEcho {
   ) {}
 
   async attach({ msg, phone, from, event }: ExternalInput): Promise<boolean> {
-    const patch = attachPatch(msg.at, event);
+    const patch = attachPatch(msg, event);
     if (!plainText(msg) || patch === null) return false;
     const rows = await this.repo.candidates(phone, appSendSpan(msg.at));
     for (const row of appSendMatches(rows, { body: msg.body, from })) {

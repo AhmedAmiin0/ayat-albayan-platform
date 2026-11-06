@@ -3003,8 +3003,8 @@
       "stickerSend": "Send sticker"
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
-    "tryAfterWindow": "We will send the welcome template and send your message when the family replies. After sending it here, you can also send it from WhatsApp Business.",
-    "tryAfterWindowWait": "We will reopen the conversation and send your message when the family replies. After sending it here, you can also send it from WhatsApp Business.",
+    "tryAfterWindow": "We will send the welcome template and send your message when the family replies. To send it now, tap «Send via WhatsApp» on the message after sending it.",
+    "tryAfterWindowWait": "We will reopen the conversation and send your message when the family replies. To send it now, tap «Send via WhatsApp» on the message after sending it.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
@@ -3793,16 +3793,21 @@
       "reopen_unavailable": "Not sent: the chat reopen template is not set or not valid — an admin picks it in Settings from the approved templates allowed for restricted roles with no variables",
       "reopen_failed": "Not sent: the chat reopen template did not reach the family — resend the message to send the template again",
       "reopen_tries_used": "Not sent: today's chat reopen template tries are used up — resend the message tomorrow",
-      "reopen_not_needed": "Cancelled: the message was sent from WhatsApp, so the template is no longer needed"
+      "reopen_not_needed": "Cancelled: the message was sent from WhatsApp, so the template is no longer needed",
+      "app_send_unconfirmed": "We could not confirm it was sent from WhatsApp, so the platform will not send it until you answer"
     },
     "cancelManual": "Not yet",
     "failedMenu": "Message not sent",
     "awaitingReply": "Waiting for the family's reply",
     "whatsappSend": {
       "action": "Send via WhatsApp",
-      "hint": "Not sent: 24 hours have passed since the family's last message. Send it now from WhatsApp Business.",
+      "hint": "Not sent: 24 hours have passed since the family's last message. Send it now, unchanged, from WhatsApp Business on the academy number.",
       "pending": "Sending from WhatsApp…",
-      "pendingHint": "The platform will not send it during these minutes. It shows as sent once it arrives from WhatsApp.",
+      "pendingHint": "Send it unchanged from WhatsApp Business on the academy number. The platform will not send it; it shows as sent once it arrives from WhatsApp.",
+      "sentIt": "I sent it",
+      "askSent": "Did you send it from WhatsApp? It has not reached us from there, and the platform will not send it until you answer.",
+      "yes": "Yes",
+      "backToHold": "No, put it back on hold",
       "openAgain": "Open WhatsApp again",
       "alreadySent": "This message was already sent, so there is no need to send it from WhatsApp.",
       "notNow": "This message can no longer be sent from WhatsApp. Refresh the chat."

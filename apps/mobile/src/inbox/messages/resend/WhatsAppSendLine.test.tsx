@@ -107,8 +107,8 @@ test('pending: «جارٍ الإرسال من واتساب…», re-open posts a
   expect(send).toHaveBeenCalledWith('POST', '/messages/m-held/app-send');
 });
 
-test('a window that passed: the offer again, as before the tap', async () => {
-  await show({ ...held, app_send_until: new Date(Date.now() - 60_000).toISOString() });
+test('a window and its grace that passed: the offer again (the sweep asks next)', async () => {
+  await show({ ...held, app_send_until: new Date(Date.now() - 20 * 60_000).toISOString() });
   expect(action()).toBeTruthy();
   expect(screen.queryByText(t.messages.whatsappSend.pending)).toBeNull();
 });

@@ -7,7 +7,7 @@ import { toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/t
 import type { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { KapsoHold } from './kapso-hold';
-import type { ReopenCancel } from './manual-send';
+import type { AppSendExpiry, ReopenCancel } from './manual-send';
 import type { ReopenRow } from './reopen-state';
 import { ReopenRequest } from './reopen-request';
 import { WindowHold } from './window-hold';
@@ -72,7 +72,8 @@ export function windowFakes() {
     settings as unknown as WindowSettings,
     cancels as unknown as ReopenCancel,
   );
-  const release = new WindowRelease(asRepo);
+  const expiry = { run: vi.fn(async () => 0) };
+  const release = new WindowRelease(asRepo, expiry as unknown as AppSendExpiry);
   const hold = new WindowHold(
     asRepo,
     request,
@@ -81,7 +82,7 @@ export function windowFakes() {
   );
   const kapso = { reopen: vi.fn(async (): Promise<string | null> => null) };
   hold.kapso = kapso as unknown as KapsoHold;
-  return { repo, approved, settings, dispatch, hold, request, release, kapso, cancels };
+  return { repo, approved, settings, dispatch, hold, request, release, kapso, cancels, expiry };
 }
 
 /** A reopen template row of PHONE (today, 2026-11-03 in Riyadh), as WindowRepo.reopens reads it. */

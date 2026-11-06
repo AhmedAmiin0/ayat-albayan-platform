@@ -2,6 +2,7 @@ import { WA_ERROR as E } from '@ab/catalog';
 import { z } from 'zod';
 import type { MessageView } from '../chat/views.js';
 import {
+  APP_SEND_UNCONFIRMED,
   AWAITING_REPLY,
   HOLD_EXPIRED,
   REOPEN_FAILED,
@@ -22,6 +23,7 @@ const WINDOW_FAILURES: ReadonlySet<string> = new Set([
   REOPEN_TRIES_USED,
   HOLD_EXPIRED,
   WINDOW_CLOSED,
+  APP_SEND_UNCONFIRMED,
   String(E.reEngagement),
   String(E.outsideWindow),
 ]);
@@ -41,7 +43,7 @@ export function stoppedByWindow(m: WindowRow): boolean {
 
 type SendRow = Pick<
   MessageView,
-  'direction' | 'status' | 'error_code' | 'body' | 'template_key' | 'media_mime' | 'replyable'
+  'direction' | 'status' | 'error_code' | 'body' | 'template_key' | 'media_mime' | 'replyable' | 'line'
 >;
 
 const plainText = (m: SendRow): boolean =>
@@ -53,10 +55,24 @@ const plainText = (m: SendRow): boolean =>
  */
 const noWamid = (m: SendRow): boolean => m.replyable !== true;
 
+/**
+ * The academy's chat number (or a row never routed: null / absent): the only line in the WhatsApp
+ * Business app, so the only one whose echo comes back. Never notifications, crm or calls.
+ */
+const onChatLine = (m: SendRow): boolean => (m.line ?? 'chat') === 'chat';
+
 /** «أرسل عبر واتساب» shows: our text (no template, no file, v1) stopped by the 24 h window. */
 export function canSendViaWhatsApp(m: SendRow): boolean {
-  return m.direction === 'outbound' && plainText(m) && noWamid(m) && stoppedByWindow(m);
+  const ours = m.direction === 'outbound' && plainText(m) && noWamid(m);
+  return ours && onChatLine(m) && stoppedByWindow(m);
 }
+
+/** Runs of spaces, tabs and line breaks become one space; the ends are trimmed (echo matching). */
+export const foldText = (text: string): string => text.replace(/\s+/g, ' ').trim();
+
+/** The tap's window passed with no echo: the bubble asks «هل أرسلتها من واتساب؟». */
+export const appSendUnconfirmed = (m: Pick<MessageView, 'status' | 'error_code'>): boolean =>
+  m.status === 'failed' && m.error_code === APP_SEND_UNCONFIRMED;
 
 /**
  * messages.error_code of a reopen template that was still queued when the app's echo confirmed

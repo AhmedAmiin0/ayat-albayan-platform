@@ -56,8 +56,8 @@ describe('«أرسل عبر واتساب»: the pending window', () => {
     expect(screen.queryByText('تراجع')).toBeNull();
   });
 
-  it('the window passed with no echo: the offer again, as before the tap', () => {
-    renderBubble({ app_send_until: '2026-11-06T11:59:00Z' });
+  it('the window and its grace passed (sweep not run yet): the offer again', () => {
+    renderBubble({ app_send_until: '2026-11-06T11:40:00Z' });
     expect(action()).toBeTruthy();
     expect(button(t.messages.whatsappSend.openAgain)).toBeNull();
   });

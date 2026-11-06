@@ -29,7 +29,7 @@ import { ReopenRequest } from './sender/window/reopen-request';
 import { WindowHold } from './sender/window/window-hold';
 import { WindowRelease } from './sender/window/window-release';
 import { WindowRepo } from './sender/window/window.repo';
-import { ReopenCancel, ReopenCancelRepo } from './sender/window/manual-send';
+import * as manualSend from './sender/window/manual-send';
 import { WindowSettings } from './sender/window/window.settings';
 import { PaymentHoldRepo } from './sender/hold/payment-hold.repo';
 import { PaymentHolds } from './sender/hold/payment-holds';
@@ -105,8 +105,9 @@ function lines(): WhatsappLines {
     PaymentHoldRepo,
     PaymentHolds,
     WindowRepo,
-    ReopenCancelRepo,
-    ReopenCancel,
+    manualSend.ReopenCancelRepo, manualSend.ReopenCancel,
+    manualSend.AppSendAdoptRepo, manualSend.AppSendAdopt,
+    manualSend.AppSendExpiryRepo, manualSend.AppSendExpiry,
     WindowSettings,
     ReopenRequest,
     WindowRelease,
@@ -131,7 +132,7 @@ function lines(): WhatsappLines {
     InboundMedia,
     WaMediaRetentionJob,
   ],
-  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore, ReopenRequest, ReopenCancel],
+  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore, ReopenRequest, manualSend.ReopenCancel],
 })
 export class WhatsappModule implements OnModuleInit {
   /**

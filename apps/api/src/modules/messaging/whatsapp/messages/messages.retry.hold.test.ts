@@ -25,13 +25,30 @@ describe('MessagesService.retry: a held text restarts its hold', () => {
   it.each(['reopen_failed', 'reopen_tries_used', 'reopen_unavailable'])('%s: requeued with a restart time', async (code) => {
     const { svc, queries, row } = serviceOf(code);
     await svc.retry(row.id, { automaticOn: true });
-    expect(queries.requeue).toHaveBeenCalledWith(row.id, expect.any(Date));
+    expect(queries.requeue).toHaveBeenCalledWith(row.id, expect.any(Date), false);
   });
 
   it('any other failure: a plain requeue (no restart)', async () => {
     const { svc, queries, row } = serviceOf('network');
     await svc.retry(row.id, { automaticOn: true });
-    expect(queries.requeue).toHaveBeenCalledWith(row.id, null);
+    expect(queries.requeue).toHaveBeenCalledWith(row.id, null, false);
+  });
+});
+
+describe('«لا، أعدها للانتظار» on app_send_unconfirmed (docs/19)', () => {
+  it('held again with a restart, and its app send ended', async () => {
+    const { svc, queries, row } = serviceOf('app_send_unconfirmed');
+    await svc.retry(row.id, { automaticOn: true });
+    expect(queries.requeue).toHaveBeenCalledWith(row.id, expect.any(Date), true);
+  });
+
+  it('the repo clears app_send_until, compare-and-set on that code, held (never free text)', async () => {
+    const { db, calls } = fakeDb({ messages: [{ data: null }] });
+    await new MessagesRepo(db).requeue('m1', new Date('2026-11-20T10:00:00Z'), true);
+    const update = calls.find((c) => c.method === 'update')?.args[0];
+    expect(update).toMatchObject({ error_code: 'awaiting_reply', app_send_until: null });
+    const eqs = calls.filter((c) => c.method === 'eq').map((c) => c.args);
+    expect(eqs).toContainEqual(['error_code', 'app_send_unconfirmed']);
   });
 });
 

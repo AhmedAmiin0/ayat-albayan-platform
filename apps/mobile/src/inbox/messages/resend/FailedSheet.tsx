@@ -8,6 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
 import { errorLine } from '@/inbox/messages/hooks/message-text';
+import { SheetAnswers } from './AppSendAnswers';
 import { useWhatsAppSend } from './use-whatsapp-send';
 
 interface FailedSheetProps {
@@ -27,7 +28,9 @@ const claimed = (e: unknown) => e instanceof ApiError && (e.body as { code?: unk
  * «حاول مرة أخرى» only where trying again can help (canRetryCode: not while the WhatsApp Business
  * account is blocked, 131042…), «أرسلها بنفسك من واتساب» (the API's wa.me link with the text filled
  * in), which first tells the server: it holds the row so the sender never sends it too, and the
- * row then asks «هل أرسلتها؟» itself. WhatsApp opens only once the server holds the row. Drawn once
+ * row then asks «هل أرسلتها؟» itself. WhatsApp opens only once the server holds the row. A
+ * «أرسل عبر واتساب» row pending or unconfirmed adds «أرسلتها» / «نعم» / «لا، أعدها للانتظار»
+ * (SheetAnswers: the platform's stop path, docs/19). Drawn once
  * per chat and always mounted: a hand-off answered after the sheet closed still opens WhatsApp.
  */
 export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheetProps) {
@@ -72,6 +75,9 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
             sendViaWhatsApp(m, { onError });
           }}
         />
+      ) : null}
+      {m && viaWhatsApp ? (
+        <SheetAnswers message={m} phone={phone} onClose={onClose} onError={onError} />
       ) : null}
       <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
     </MenuSheet>

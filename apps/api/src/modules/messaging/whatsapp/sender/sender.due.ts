@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { APP_SEND_GRACE_MS, type LessonStatus, type WaLine } from '@ab/shared';
+import type { LessonStatus, WaLine } from '@ab/shared';
 import type { Db } from '@/common/db/db.module';
 import type { StaleLead } from './send-stale';
 
@@ -64,12 +64,10 @@ export async function anyDue(db: Db, input: { now: Date; allowed: readonly strin
 }
 
 /**
- * PostgREST filter: no «أرسل عبر واتساب» to wait for at `now` (docs/19): app_send_until unset, or
- * passed more than APP_SEND_GRACE_MS ago, so a late echo / status / catch-up of the app's message
- * attaches before the platform may send the row. The sender's read and claim and the held-text
- * release all carry it.
+ * PostgREST filter: the row never had a «أرسل عبر واتساب» left open (docs/19): app_send_until is
+ * null. A tap sets it; an attached echo, «نعم» / «أرسلتها» (no longer queued) or «لا، أعدها
+ * للانتظار» (the retry clears it) end it. With no echo, AppSendExpiry fails the row
+ * app_send_unconfirmed once the window and its grace pass: the platform never sends a row staff
+ * may have sent from the app. The sender's read and claim and the held-text release carry it.
  */
-export const notAppSending = (now: Date): string => {
-  const settled = new Date(now.getTime() - APP_SEND_GRACE_MS).toISOString();
-  return `app_send_until.is.null,app_send_until.lte.${settled}`;
-};
+export const NOT_APP_SENT = 'app_send_until.is.null';
