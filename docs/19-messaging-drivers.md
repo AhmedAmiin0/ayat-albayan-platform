@@ -323,7 +323,7 @@ itself (no short link). Code: `apps/api/src/modules/reporting/reports/teacher-li
 
 «now we no more need url shortener»: the teacher's links are no longer shortened (`GET /r/<code>` keeps
 answering links already sent; `short_links` stays; the report PDF's feedback link still uses it).
-`teacher_lesson_v3` (migration `20261106000800`, UTILITY, ar, notifications line, not_submitted until the admin
+`teacher_lesson_v3` (migration `20261106001300`, UTILITY, ar, notifications line, not_submitted until the admin
 submits it): body {{1}} teacher, {{2}} students, {{3}} codes, {{4}} time in the teacher's tz, {{5}} duration,
 {{6}} the meeting link (also in the text); URL buttons «ادخل الحلقة» `https://api.ayatalbayan.com/join/{{1}}` and
 «تقرير الحلقة» `https://app.ayatalbayan.com/teacher-report/{{1}}` (the report link is a button only). Definition:

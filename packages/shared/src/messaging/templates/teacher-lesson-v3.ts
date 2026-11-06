@@ -2,7 +2,7 @@ import type { TemplateCreateInput } from './template-create.js';
 
 // teacher_lesson_v3 (owner 2026-11-06): the teacher's lesson notice with two link buttons on our
 // own domains. The meeting link is written in the text as well; the report link is a button only.
-// Seeded by migration 20261106000800 (status not_submitted: the admin submits it from «القوالب»).
+// Seeded by migration 20261106001300 (status not_submitted: the admin submits it from «القوالب»).
 
 /** The join button's page: GET /join/<token> on the API (a signed, expiring 302 to the room). */
 export const TEACHER_JOIN_BUTTON_URL = 'https://api.ayatalbayan.com/join/{{1}}';
