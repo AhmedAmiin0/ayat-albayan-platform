@@ -55,13 +55,16 @@ export function useThread(phone: string) {
 /**
  * After a send (docs/43 AU4): every list that shows the chat, and ONE read of the chat's newest
  * page folded in (mergeNewest), however far up she scrolled; older pages are not re-read one by
- * one. A chat not on screen is only marked stale (its GET would stamp it read).
+ * one. A chat query without an active observer is only marked stale (a GET stamps it read); a
+ * read in flight is replaced by a full one. `own`: this send's ids (provisional and the API's).
  */
-export function refreshSent(client: QueryClient, phone: string): Promise<void> {
+export function refreshSent(client: QueryClient, phone: string, own: string[] = []) {
   refreshLists(client);
   const queryKey = threadKey(phone);
   return refreshNewest<ThreadCache>({
+    own,
     shown: () => client.getQueryCache().find({ queryKey, exact: true })?.isActive() === true,
+    busy: () => client.isFetching({ queryKey }) > 0,
     read: () => client.getQueryData<ThreadCache>(queryKey),
     write: (edit) => client.setQueryData<ThreadCache>(queryKey, edit),
     newest: () => threadGet(threadPath(phone)),
@@ -121,7 +124,7 @@ export function useSendMessage(phone: string) {
     },
     onSuccess: (row, { id }) => edit((old) => replaceMessage(old, id, row)),
     onError: (_error, { id }) => edit((old) => removeMessage(old, id)),
-    onSettled: () => refreshSent(client, phone),
+    onSettled: (row, _error, { id }) => refreshSent(client, phone, [id, row?.id ?? id]),
   });
 }
 

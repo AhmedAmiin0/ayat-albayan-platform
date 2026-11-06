@@ -30,6 +30,13 @@ describe('an optimistic send', () => {
     expect(ids(replaceMessage(data, 'tmp', server))).toEqual([['m5', 's9']]);
   });
 
+  it('the POST\'s queued answer never undoes a newer tick a read brought first', () => {
+    const data = cache(page([msg(5), temp, { ...server, status: 'delivered' }]));
+    const next = replaceMessage(data, 'tmp', server);
+    expect(ids(next)).toEqual([['m5', 's9']]);
+    expect(next?.pages[0]?.messages[1]?.status).toBe('delivered');
+  });
+
   it('a refused send is rolled back', () => {
     expect(ids(removeMessage(cache(page([msg(5), temp])), 'tmp'))).toEqual([['m5']]);
   });
@@ -51,6 +58,21 @@ describe('mergeNewest: a fresh newest page', () => {
     expect(next?.pages[0]?.messages[0]?.status).toBe('delivered');
     expect(ids(mergeNewest(data, page([])))).toEqual([['m5', 'tmp']]);
     expect(mergeNewest(undefined, page([]))).toBeUndefined();
+  });
+
+  it('an older answer never sets a newer tick back; failed always replaces', () => {
+    const data = cache(page([msg(5, { status: 'read' }), msg(6, { status: 'sent' })]));
+    const fresh = page([msg(5, { status: 'delivered' }), msg(6, { status: 'failed' })]);
+    expect(mergeNewest(data, fresh)?.pages[0]?.messages.map((m) => m.status)).toEqual([
+      'read',
+      'failed',
+    ]);
+  });
+
+  it('own rows in both pages prove no overlap', () => {
+    const data = cache(page([msg(1), server]));
+    expect(leavesGap(data, page([msg(7), server], true))).toBe(false);
+    expect(leavesGap(data, page([msg(7), server], true), new Set(['s9']))).toBe(true);
   });
 
   it('a gap is a fresh page with more behind it and nothing in common', () => {

@@ -71,3 +71,36 @@ test('the provisional row shows at once and leaves no double when the server row
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   expect(ids().filter((id) => id === 's1' || id === 'p1')).toEqual(['s1']);
 });
+
+/** The open chat's query too, to page back while the send is in flight. */
+function useScrollingSend() {
+  const chat = useInfiniteQuery({ ...threadQuery(PHONE), staleTime: Infinity });
+  return { chat, send: useSendMessage(PHONE) };
+}
+
+test('an older page read in flight never brings the queued row back: the chat reads again', async () => {
+  let answer: (value: unknown) => void = () => undefined;
+  mockApiSend.mockReturnValue(new Promise((resolve) => (answer = resolve)));
+  const server = message({ id: 's1', body: 'وصلت', status: 'sent', created_at: at(50) });
+  let older: (value: unknown) => void = () => undefined;
+  const page = (path: string) => (path.includes('before=') ? detail([row('m00', 0)]) : detail([server]));
+  const held = () => new Promise((resolve) => (older = resolve));
+  mockApiFetch.mockImplementation((path: string) =>
+    path.includes('before_id=m01') ? held() : Promise.resolve(page(path)),
+  );
+  const client = createTestQueryClient();
+  const five = fivePages();
+  const pages = five.pages.map((p) => ({ ...p, has_more: true }));
+  client.setQueryData(threadKey(PHONE), { ...five, pages });
+  const { result } = await renderHook(useScrollingSend, { wrapper: queryWrapper(client) });
+  await act(async () => result.current.send.mutate({ id: 'p1', out: { kind: 'text', text: 'وصلت' } }));
+  // She scrolls up while the POST is in flight: that read holds the pages with the queued row.
+  await act(async () => void result.current.chat.fetchNextPage());
+  await act(async () => answer(server));
+  await waitFor(() => expect(result.current.send.isSuccess).toBe(true));
+  await act(async () => older(detail([row('m00', 0)])));
+  await waitFor(() => expect(client.isFetching({ queryKey: threadKey(PHONE) })).toBe(0));
+  const shown = threadMessages(client.getQueryData<ThreadCache>(threadKey(PHONE)));
+  expect(shown.map((m) => m.id)).not.toContain('p1');
+  expect(shown.filter((m) => m.id === 's1')).toHaveLength(1);
+});

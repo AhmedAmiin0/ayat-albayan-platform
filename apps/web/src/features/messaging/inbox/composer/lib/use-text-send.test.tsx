@@ -110,4 +110,21 @@ describe('useTextSend: an optimistic send', () => {
     expect(getDraft(PHONE)).toMatchObject({ text: 'وصلت', failed: { text: 'وصلت', id: ID } });
     expect(paths()).toEqual([]);
   });
+
+  it('a read in flight at the answer is replaced by a full one; the badge refreshes too', async () => {
+    let answer: (v: MessageView) => void = () => undefined;
+    apiSend.mockReturnValue(new Promise<MessageView>((resolve) => (answer = resolve)));
+    const s = setup();
+    act(() => s.hook.result.current.mutate(sending()));
+    await waitFor(() => expect(s.ids().at(-1)).toBe(ID));
+    // A focus refetch starts while the POST is in flight: it holds the queued row.
+    apiFetch.mockReturnValue(new Promise(() => undefined));
+    void act(() => s.client.refetchQueries({ queryKey: threadQuery(PHONE).queryKey }));
+    const spy = vi.spyOn(s.client, 'invalidateQueries');
+    act(() => answer(server));
+    const detailKey = threadQuery(PHONE).queryKey;
+    await waitFor(() => expect(spy).toHaveBeenCalledWith({ queryKey: detailKey }));
+    expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
+    expect(spy).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
+  });
 });

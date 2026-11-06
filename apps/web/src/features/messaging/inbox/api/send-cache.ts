@@ -15,6 +15,12 @@ import { threadPage, threadPath, threadQuery } from './api';
 // open chat's newest page (docs/43 AU4) and the lists; never a reload of every ['threads'] query.
 
 const listKey = ['threads', 'list'];
+/** The lists and the nav badge (a send no longer re-reads every ['threads'] query). */
+const refreshLists = (client: QueryClient): void => {
+  for (const queryKey of [listKey, ['threads', 'nav-count']]) {
+    void client.invalidateQueries({ queryKey });
+  }
+};
 
 /** The chat's row in every cached list takes `row` as its last message, where it already is. */
 function touchLists(client: QueryClient, row: MessageView): void {
@@ -26,14 +32,16 @@ function touchLists(client: QueryClient, row: MessageView): void {
 }
 
 /** The open chat's newest page (one GET, merged), and the lists in the background. */
-function refreshSentChat(client: QueryClient, phone: string): Promise<void> {
-  void client.invalidateQueries({ queryKey: listKey });
-  const { queryKey } = threadQuery(phone);
+function refreshSentChat(client: QueryClient, row: MessageView, own: string[]): Promise<void> {
+  refreshLists(client);
+  const { queryKey } = threadQuery(row.phone_e164);
   return refreshNewest({
+    own,
+    busy: () => client.isFetching({ queryKey }) > 0,
     shown: () => client.getQueryCache().find({ queryKey, exact: true })?.isActive() === true,
     read: () => client.getQueryData(queryKey),
     write: (edit) => client.setQueryData(queryKey, edit),
-    newest: () => threadPage(threadPath(phone)),
+    newest: () => threadPage(threadPath(row.phone_e164)),
     reload: () => client.invalidateQueries({ queryKey }),
   });
 }
@@ -50,11 +58,11 @@ export async function showSending(client: QueryClient, row: MessageView): Promis
 export function showSent(client: QueryClient, id: string, row: MessageView): void {
   client.setQueryData(threadQuery(row.phone_e164).queryKey, (old) => replaceMessage(old, id, row));
   touchLists(client, row);
-  void refreshSentChat(client, row.phone_e164);
+  void refreshSentChat(client, row, [id, row.id]);
 }
 
 /** A refused send: its bubble goes (the text is back in the box), the lists read the truth. */
 export function dropSending(client: QueryClient, phone: string, id: string): void {
   client.setQueryData(threadQuery(phone).queryKey, (old) => removeMessage(old, id));
-  void client.invalidateQueries({ queryKey: listKey });
+  refreshLists(client);
 }
