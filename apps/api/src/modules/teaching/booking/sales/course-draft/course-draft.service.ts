@@ -8,7 +8,7 @@ import { CourseDraftRepo } from './course-draft.repo';
 import { confirmRequest, type CourseDraft } from './course-draft.rules';
 
 /** A confirm: nothing to book, still unpaid, booked (now or before), or a clash kept the draft. */
-export type ConfirmOutcome = 'none' | 'held' | 'booked' | 'clash';
+type ConfirmOutcome = 'none' | 'held' | 'booked' | 'clash';
 
 
 /**

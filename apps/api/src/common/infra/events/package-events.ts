@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 
-export type PackagePaidListener = (subscriptionId: string) => Promise<void>;
+type PackagePaidListener = (subscriptionId: string) => Promise<void>;
 
 /**
  * "A payment was recorded on this package" (owner 2026-11-06): the money writes (a transfer, a
