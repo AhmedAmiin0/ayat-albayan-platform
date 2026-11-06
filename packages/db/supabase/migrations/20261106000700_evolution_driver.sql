@@ -16,7 +16,7 @@
 --    proxy password are number secrets (evolution_cloud_token, evolution_proxy_password).
 -- 6. messages.sent_as_text: a template the Evolution driver sent as plain text (Baileys has no templates).
 -- 7. wa_numbers.evolution_enabled_at: when the number was last switched on (a trigger sets it on
---    the off → on edge only; state, sync and health writes never touch it). The ERROR auto-disable
+--    the off → on edge, or a driver change while enabled; state, sync and health writes never touch it). The ERROR auto-disable
 --    ignores errors of sends made before it, so a replayed webhook never undoes an admin's enable.
 -- 8. wa_number_delete removes every Vault entry of the number (wa_number:<id>:%), the Evolution
 --    secrets included.
@@ -63,11 +63,12 @@ alter table public.messages add column if not exists sent_as_text boolean not nu
 
 alter table public.wa_numbers add column if not exists evolution_enabled_at timestamptz;
 
--- Set only when the row becomes enabled (insert enabled, or off → on); every other write keeps it.
+-- Set only when the row becomes enabled (insert enabled, or off → on) or, while enabled, moves to
+-- another driver (e.g. an enabled number switched to Evolution); every other write keeps it.
 create or replace function public.wa_numbers_evolution_enabled_at() returns trigger
   language plpgsql set search_path = '' as $$
 begin
-  if new.enabled and (tg_op = 'INSERT' or not old.enabled) then
+  if new.enabled and (tg_op = 'INSERT' or not old.enabled or new.provider is distinct from old.provider) then
     new.evolution_enabled_at := now();
   end if;
   return new;
@@ -78,7 +79,7 @@ revoke execute on function public.wa_numbers_evolution_enabled_at() from public,
 
 drop trigger if exists wa_numbers_evolution_enabled_at on public.wa_numbers;
 create trigger wa_numbers_evolution_enabled_at
-  before insert or update of enabled on public.wa_numbers
+  before insert or update of enabled, provider on public.wa_numbers
   for each row execute function public.wa_numbers_evolution_enabled_at();
 
 create or replace function public.wa_number_secret_name_ok(p_name text) returns boolean

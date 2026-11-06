@@ -18,11 +18,17 @@ interface SlotAt {
   now: number;
 }
 
-/** The recipient's slot ahead, else the next free slot of the number (one gap after its last). */
+/** Recipients whose slot has passed are forgotten (the map never grows without bound). */
+function prune(now: number): void {
+  for (const [key, slot] of phones) if (slot <= now) phones.delete(key);
+}
+
+/** The recipient's slot ahead (not before `earliest`), else the number's next free slot. */
 export function reserveSlot(numberId: string, at: SlotAt): number {
   const key = `${numberId}|${at.phone}`;
   const ahead = phones.get(key) ?? 0;
-  if (ahead > at.now) return ahead;
+  if (ahead >= at.earliest) return ahead;
+  prune(at.now);
   const slot = Math.max(at.earliest, (tails.get(numberId) ?? 0) + at.gapMs);
   tails.set(numberId, slot);
   phones.set(key, slot);

@@ -26,6 +26,10 @@ const bad = (code: string) => new BadRequestException({ code, message: code });
 const cloudIdsMissing = (mode: string | null, c: EvolutionConfig): boolean =>
   mode === 'cloud' && (c.cloud.phone_number_id === null || c.cloud.business_id === null);
 
+/** A webhook that is on but whose origin is not configured (public without API_PUBLIC_URL). */
+const hookUnbuildable = (c: EvolutionConfig, instance: string): boolean =>
+  c.webhook.enabled && evolutionHookOf(c, instance) === null;
+
 /** What the push needs besides the instance env: options, hook URL, global key, proxy password. */
 interface EvolutionPushInput {
   env: EvolutionLineEnv;
@@ -59,7 +63,7 @@ export class NumbersEvolution {
     const { id, config, actorId } = input;
     const row = (await this.repo.byId(id)) ?? notFound();
     // The URL is the server's: a public origin needs API_PUBLIC_URL (https) to be set.
-    if (evolutionHookOf(config, row.phone_number_id) === null) throw bad('webhook_origin');
+    if (hookUnbuildable(config, row.phone_number_id)) throw bad('webhook_origin');
     if (cloudIdsMissing(row.evolution_mode, config)) throw bad('cloud_ids_needed');
     if (!(await this.evolution.saveConfig(id, config))) throw conflict('not_evolution');
     const entry = { actorId, entity: 'wa_numbers', entityId: id, action: 'evolution_config' };

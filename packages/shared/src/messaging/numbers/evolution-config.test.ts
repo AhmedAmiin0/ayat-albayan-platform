@@ -48,6 +48,10 @@ describe('evolutionConfigSchema', () => {
 
   it('a stored value that no longer reads falls back to the defaults', () => {
     expect(evolutionConfigOf({ limits: { gap_ms: 'x' } })).toEqual(evolutionConfigSchema.parse({}));
+    const proxy = { enabled: true, host: 'p.example.test', port: 3128 };
+    const kept = evolutionConfigOf({ proxy, sending: { delay_ms: 15_000 } });
+    expect(kept.proxy).toMatchObject(proxy);
+    expect(kept.sending.delay_ms).toBe(0);
     expect(evolutionConfigOf(null).limits.daily_cap).toBe(60);
     expect(evolutionSyncOf({ synced: 'yes' })).toBeNull();
   });

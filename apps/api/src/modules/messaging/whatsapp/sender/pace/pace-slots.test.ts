@@ -21,10 +21,11 @@ describe('Evolution pace slots', () => {
     expect(reserveSlot('n1', at('d', 50_000))).toBe(50_000);
   });
 
-  it('a recipient keeps its slot while it is ahead; once passed it takes a new one', () => {
+  it('a recipient keeps its slot while it is not earlier than allowed; else a new one', () => {
     expect(reserveSlot('n1', at('a'))).toBe(10_000);
     expect(reserveSlot('n1', at('b'))).toBe(13_000);
-    expect(reserveSlot('n1', at('a', 12_000, 5_000))).toBe(10_000);
+    expect(reserveSlot('n1', at('a', 9_000, 5_000))).toBe(10_000);
+    expect(reserveSlot('n1', at('a', 12_000, 5_000))).toBe(16_000);
     expect(reserveSlot('n1', at('a', 20_000, 10_001))).toBe(20_000);
   });
 

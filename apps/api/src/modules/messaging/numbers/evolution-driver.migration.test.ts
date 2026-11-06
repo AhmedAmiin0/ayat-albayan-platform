@@ -50,9 +50,10 @@ describe('migration: the Evolution driver', () => {
     expect(code).toContain('grant execute on function public.wa_number_delete(uuid) to service_role;');
   });
 
-  it('evolution_enabled_at is set by a trigger on the off → on edge only', () => {
+  it('evolution_enabled_at is set on the off → on edge or a driver change while enabled', () => {
     expect(code).toContain('add column if not exists evolution_enabled_at timestamptz');
-    expect(code).toContain("if new.enabled and (tg_op = 'INSERT' or not old.enabled) then");
-    expect(code).toContain('before insert or update of enabled on public.wa_numbers');
+    const edge = "if new.enabled and (tg_op = 'INSERT' or not old.enabled or new.provider is distinct from old.provider)";
+    expect(code).toContain(edge);
+    expect(code).toContain('before insert or update of enabled, provider on public.wa_numbers');
   });
 });

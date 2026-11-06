@@ -120,6 +120,21 @@ export const evolutionConfigSchema = z.object({
 });
 export type EvolutionConfig = z.infer<typeof evolutionConfigSchema>;
 
-/** A stored value read back: anything unreadable falls back to the safe defaults. */
-export const evolutionConfigOf = (raw: unknown): EvolutionConfig =>
-  evolutionConfigSchema.safeParse(raw ?? {}).data ?? evolutionConfigSchema.parse({});
+const storedSchema = z.record(z.string(), z.unknown());
+/** One section read back; unreadable = that section's defaults only. */
+const sectionOf = <S extends z.ZodType>(schema: S, raw: unknown): z.output<S> =>
+  schema.safeParse(raw).data ?? schema.parse(undefined);
+
+/**
+ * A stored value read back section by section: one unreadable section (e.g. a delay over the
+ * new cap) falls back to its own defaults, never resetting the proxy or the others.
+ */
+export function evolutionConfigOf(raw: unknown): EvolutionConfig {
+  const o = storedSchema.safeParse(raw).data ?? {};
+  const s = evolutionConfigSchema.shape;
+  return {
+    behaviour: sectionOf(s.behaviour, o.behaviour), webhook: sectionOf(s.webhook, o.webhook),
+    proxy: sectionOf(s.proxy, o.proxy), sending: sectionOf(s.sending, o.sending),
+    limits: sectionOf(s.limits, o.limits), cloud: sectionOf(s.cloud, o.cloud),
+  };
+}

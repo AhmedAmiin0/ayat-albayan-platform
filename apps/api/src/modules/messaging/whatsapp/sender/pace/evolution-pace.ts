@@ -56,7 +56,8 @@ export async function pacedLater(deps: PaceDeps, at: PaceAt): Promise<boolean> {
   if (!pace || !repo) return false;
   const later = await laterOf(repo, { ...at, ...pace });
   if (!later) return false;
-  await repo.deferRecipient({ numberId: at.route.numberId, phone: at.row.phone_e164, at: later });
+  const { numberId } = at.route;
+  await repo.deferRecipient({ id: at.row.id, numberId, phone: at.row.phone_e164, at: later });
   wakeAt(later.getTime());
   return true;
 }

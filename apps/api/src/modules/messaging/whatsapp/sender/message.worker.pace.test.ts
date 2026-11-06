@@ -35,7 +35,8 @@ function harness() {
     staffAtSend: vi.fn(async () => null),
   };
   const repo = {
-    deferRecipient: vi.fn(async (_at: { numberId: string; phone: string; at: Date }) => undefined),
+    deferRecipient: vi.fn(async (_at: { id: string; numberId: string; phone: string; at: Date }) =>
+      undefined),
     sentSince: vi.fn(async () => 0),
     failOff: vi.fn(async () => undefined),
   };
@@ -69,7 +70,8 @@ describe('MessageWorker — Evolution pacing never blocks other lines', () => {
     expect(await go(text('k1', '+966500000003'), KAPSO)).toBe('sent');
     expect(performance.now() - started).toBeLessThan(1_000);
     const at = new Date(NOW.getTime() + 3_000);
-    expect(repo.deferRecipient).toHaveBeenCalledWith({ numberId: 'evo-1', phone: '+966500000002', at });
+    const e2 = { id: 'e2', numberId: 'evo-1', phone: '+966500000002', at };
+    expect(repo.deferRecipient).toHaveBeenCalledWith(e2);
     expect(send.mock.calls.map((c) => c[0].phone_e164)).toEqual(['+966500000001', '+966500000003']);
   });
 
@@ -79,7 +81,8 @@ describe('MessageWorker — Evolution pacing never blocks other lines', () => {
     expect(await w.process({ row: text('e3', '+966500000004'), template: null, now: NOW, autoOn: true, route: EVO })).toBe('skipped');
     expect(repo.sentSince).toHaveBeenCalledWith('evo-1', new Date('2026-11-06T00:00:00Z'));
     const at = new Date('2026-11-07T00:00:00Z');
-    expect(repo.deferRecipient).toHaveBeenCalledWith({ numberId: 'evo-1', phone: '+966500000004', at });
+    const e3 = { id: 'e3', numberId: 'evo-1', phone: '+966500000004', at };
+    expect(repo.deferRecipient).toHaveBeenCalledWith(e3);
   });
 
   it('a backlog spreads over its own slots, one gap apart (never one crowded batch)', async () => {
