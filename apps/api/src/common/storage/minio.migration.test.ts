@@ -6,8 +6,8 @@ import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 // docs/45: the MinIO secret joins the Vault allow-list; three path checks accept «minio:». No
 // database in unit tests: the SQL is read as text.
 const sql = (file: string) => readFileSync(join(MIGRATIONS_DIR, file), 'utf8');
-const secret = sql('20261106001000_minio_storage_secret.sql');
-const paths = sql('20261106001001_minio_stored_paths.sql');
+const secret = sql('20261106001500_minio_storage_secret.sql');
+const paths = sql('20261106001501_minio_stored_paths.sql');
 
 describe('MinIO migrations', () => {
   it('the secret key is allowed in Vault, service role only', () => {
