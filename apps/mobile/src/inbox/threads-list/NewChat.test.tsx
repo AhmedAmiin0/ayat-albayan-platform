@@ -67,17 +67,21 @@ test('«محادثة جديدة»: a bad number is refused in words; a local Sau
   expect(router.push).toHaveBeenCalledWith('/inbox/thread/%2B966501234567');
 });
 
-test('a number with no message yet: the first-template note, the approved templates, the send queues it', async () => {
+function newNumber() {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/messaging/templates') return [OPENER];
     if (path === '/messages/gate') return { open: true, reason: null, queued: 0 };
     return EMPTY;
   });
+}
+
+// Owner 2026-11-06: «open the conversation with the allowed templates if its a new chat».
+test('a number with no message yet opens on its templates by itself; the send queues the one picked', async () => {
+  newNumber();
   mockApiSend.mockReturnValue(new Promise(() => undefined));
   await renderWithQuery(<ThreadScreen />);
   expect(await screen.findByText(t.inbox.newChat.firstTemplate)).toBeTruthy();
   expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
   await fireEvent.press(await screen.findByText(t.templates.names.follow_up_slots));
   await fireEvent.changeText(screen.getByLabelText(t.inbox.composer.paramNames.student_name), 'سهيلة');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
@@ -86,4 +90,14 @@ test('a number with no message yet: the first-template note, the approved templa
     params: { '1': 'سهيلة' },
     clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
   });
+});
+
+test('closed, the templates stay closed; «أرسل قالبًا» opens them again', async () => {
+  newNumber();
+  await renderWithQuery(<ThreadScreen />);
+  expect(await screen.findByText(t.templates.names.follow_up_slots)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: t.common.close }));
+  expect(screen.queryByText(t.templates.names.follow_up_slots)).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
+  expect(await screen.findByText(t.templates.names.follow_up_slots)).toBeTruthy();
 });
