@@ -3,9 +3,9 @@ import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { LoadState } from '../components/LoadState';
-import { useMyStudents } from '../lib/my-api';
-import { MyStudentItem } from '../components/MyStudentItem';
+import { LoadState } from '@/sales-money/components/LoadState';
+import { useMyStudents } from '@/sales-money/lib/my-api';
+import { MyStudentItem } from '@/sales-money/components/MyStudentItem';
 
 const renderRow = ({ item }: ListRenderItemInfo<MyStudentRow>) => <MyStudentItem student={item} />;
 

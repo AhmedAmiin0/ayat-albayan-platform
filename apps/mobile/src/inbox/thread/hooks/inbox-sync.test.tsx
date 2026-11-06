@@ -1,7 +1,7 @@
 import type { ThreadView } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { delivered, detail, inbound, listCache, message, PHONE, thread } from '../../shared/thread-fixtures';
+import { delivered, detail, inbound, listCache, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { refreshInbox, threadListKey, useInboxRead } from './inbox-sync';
 import type { ThreadListCache } from './thread-list-cache';
 import { useSendMessage, useThread } from './use-thread';

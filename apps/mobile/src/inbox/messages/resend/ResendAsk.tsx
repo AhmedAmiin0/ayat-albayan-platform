@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
-import { useBubbleChatActions } from '../../thread/hooks/chat-actions';
+import { useBubbleChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { ResendSheet } from './ResendSheet';
 
 /**

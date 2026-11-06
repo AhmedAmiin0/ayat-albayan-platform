@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { DayScheduleScreen } from './DayScheduleScreen';
-import { OVERVIEW, overviewPath, THIS_WEEK } from '../overview/overview-fixtures';
+import { OVERVIEW, overviewPath, THIS_WEEK } from '@/calendar/overview/overview-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

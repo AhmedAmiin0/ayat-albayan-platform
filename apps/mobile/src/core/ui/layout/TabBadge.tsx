@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
-import { AppText } from '../primitives/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 
 /**
  * The count at the icon's top end (the left in Arabic), ringed in the capsule's colour (on the active

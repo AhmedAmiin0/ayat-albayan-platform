@@ -2,8 +2,8 @@ import { emptyContent } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { formResponseV2 } from '../../testing/fixtures';
-import { ReportEntryCardV2 } from '../ReportEntryCardV2';
+import { formResponseV2 } from '@/teacher/report/testing/fixtures';
+import { ReportEntryCardV2 } from '@/teacher/report/v2/ReportEntryCardV2';
 
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),

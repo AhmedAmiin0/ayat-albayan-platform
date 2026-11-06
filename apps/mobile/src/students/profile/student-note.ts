@@ -1,6 +1,6 @@
 import { isCurrentStudent } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import type { StudentListItem } from '../shared/types';
+import type { StudentListItem } from '@/students/shared/types';
 
 /**
  * The row's one «دورك» note, same rule as the web list (apps/web …/student-note.ts): a current

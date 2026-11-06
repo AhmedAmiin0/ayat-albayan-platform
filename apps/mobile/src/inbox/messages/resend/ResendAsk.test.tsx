@@ -3,10 +3,10 @@ import ar from '@ab/shared/i18n/ar.json';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { ChatActionsProvider } from '../../thread/components/ChatActionsProvider';
-import { MessageBubble } from '../components/MessageBubble';
-import { message, PHONE, thread } from '../../shared/thread-fixtures';
-import { type ThreadMode, ThreadModeProvider } from '../../thread/hooks/thread-mode';
+import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
+import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
+import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 
 // Meta's 131060 on a new number's first message (owner 2026-10-27): clearer words and «اطلب إعادة الإرسال».
 const mockApiSend = jest.fn();

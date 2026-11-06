@@ -9,7 +9,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { ThreadMenu } from '../thread/components/ThreadMenu';
+import { ThreadMenu } from '@/inbox/thread/components/ThreadMenu';
 import { ChildLines, FamilyList, LINE } from './ChildLines';
 import { type FamilySummary, familySummary } from './subscription-summary';
 import { badgeChip, subscribeAction, type SubscribeAction } from './subscription-words';

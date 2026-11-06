@@ -11,8 +11,8 @@ import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useSalesFamily } from '../lib/family';
-import { SalesSubscribeForm } from '../components/SalesSubscribeForm';
+import { useSalesFamily } from '@/sales-subscribe/lib/family';
+import { SalesSubscribeForm } from '@/sales-subscribe/components/SalesSubscribeForm';
 
 /**
  * The chat's number; a child to preselect (any zone the link carries is ignored: the academy's day rules);

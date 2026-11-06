@@ -2,9 +2,9 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { huda } from '../../shared/fixtures';
+import { huda } from '@/inbox/shared/fixtures';
 import { LeadAssign } from './LeadAssign';
-import { free, leadsBackend, owned } from '../list/leads-fixtures';
+import { free, leadsBackend, owned } from '@/inbox/leads/list/leads-fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

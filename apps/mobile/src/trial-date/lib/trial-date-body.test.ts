@@ -1,6 +1,6 @@
 import { trialLength } from '@ab/shared';
 import { maryam, SUN_17 } from '@/booking/testing/fixtures';
-import { historyOf, STUDENT, trialRow } from '../testing/fixtures';
+import { historyOf, STUDENT, trialRow } from '@/trial-date/testing/fixtures';
 import { trialDateBody, trialDateDraft } from './trial-date-body';
 
 test('the draft starts with the last trial’s teacher, the family’s zone and the last length', () => {

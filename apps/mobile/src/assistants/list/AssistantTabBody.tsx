@@ -1,9 +1,9 @@
-import type { AssistantRow } from '../api/api';
-import { CommissionLedger } from '../commission/CommissionLedger';
-import type { StatementCan } from '../statements/hooks/statement-can';
-import { StatementsPanel } from '../statements/components/StatementsPanel';
-import { TermsEditor } from '../terms/TermsEditor';
-import { TermsView } from '../terms/TermsView';
+import type { AssistantRow } from '@/assistants/api/api';
+import { CommissionLedger } from '@/assistants/commission/CommissionLedger';
+import type { StatementCan } from '@/assistants/statements/hooks/statement-can';
+import { StatementsPanel } from '@/assistants/statements/components/StatementsPanel';
+import { TermsEditor } from '@/assistants/terms/TermsEditor';
+import { TermsView } from '@/assistants/terms/TermsView';
 
 export type AssistantTab = 'terms' | 'commissions' | 'statements';
 

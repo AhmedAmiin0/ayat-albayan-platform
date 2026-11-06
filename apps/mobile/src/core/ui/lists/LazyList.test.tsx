@@ -1,6 +1,6 @@
 import { BottomTabBarHeightContext } from 'expo-router/js-tabs';
 import { act, render, screen } from '@testing-library/react-native';
-import { AppText } from '../primitives/AppText';
+import { AppText } from '@/core/ui/primitives/AppText';
 import { LazyList } from './LazyList';
 
 interface Row { id: string; name: string }

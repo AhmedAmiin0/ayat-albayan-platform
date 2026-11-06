@@ -5,7 +5,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { ButtonRow } from '@/core/ui/actions';
 import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
-import type { ReportAction } from '../lib/day';
+import type { ReportAction } from '@/teacher/lib/day';
 
 const reportLabel: Record<ReportAction, string> = { open: t.reports.open, edit: t.reports.resume, view: t.reports.view };
 

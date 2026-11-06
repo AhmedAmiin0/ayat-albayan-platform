@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { renderWithQuery } from '@/test/query';
-import { SARA, usersGet } from '../shared/fixtures';
+import { SARA, usersGet } from '@/users/shared/fixtures';
 import { UsersScreen } from './UsersScreen';
 
 // The users list shows a teacher's sign-in username (docs/30 §7).

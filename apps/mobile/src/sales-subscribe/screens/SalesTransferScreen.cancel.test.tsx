@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { familyOf, kid, openSub } from '../testing/fixtures';
+import { familyOf, kid, openSub } from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from './SalesTransferScreen';
 
 // «إلغاء الباقة» from her transfer screen (owner 2026-10-28): her package made by mistake, nothing paid.

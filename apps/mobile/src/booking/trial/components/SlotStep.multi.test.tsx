@@ -3,9 +3,9 @@ import { pickProgress } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
-import { maryam, slot, SUN_17, TUE_17 } from '../../testing/fixtures';
+import { maryam, slot, SUN_17, TUE_17 } from '@/booking/testing/fixtures';
 import { SlotStep } from './SlotStep';
-import { fakeBookingApi } from '../../testing/test-utils';
+import { fakeBookingApi } from '@/booking/testing/test-utils';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

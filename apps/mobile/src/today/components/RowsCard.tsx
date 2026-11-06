@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@/theme';
 import { raisedCard } from '@/core/ui/surface/surface';
-import type { TodayLesson } from '../lib/today-lesson';
+import type { TodayLesson } from '@/today/lib/today-lesson';
 import { LessonRow } from './LessonRow';
 
 interface RowsCardProps<L extends TodayLesson> {

@@ -6,9 +6,9 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { BackButton } from '@/core/ui/navigation';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTrialHistory } from '../lib/queries';
+import { useTrialHistory } from '@/trial-date/lib/queries';
 import { TrialDateWizard } from './TrialDateWizard';
-import { TrialHistoryList } from '../components/TrialHistoryList';
+import { TrialHistoryList } from '@/trial-date/components/TrialHistoryList';
 
 interface TrialDateFlowProps {
   studentId: string;

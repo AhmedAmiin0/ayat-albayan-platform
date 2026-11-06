@@ -4,9 +4,9 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { Composer } from './Composer';
-import { threadKey, threadMessages, type ThreadCache } from '../thread/hooks/thread-cache';
-import { cachedThread, detail, message, PHONE, thread } from '../shared/thread-fixtures';
-import { type ThreadMode, ThreadModeProvider } from '../thread/hooks/thread-mode';
+import { threadKey, threadMessages, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
+import { cachedThread, detail, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

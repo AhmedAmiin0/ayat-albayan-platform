@@ -12,7 +12,7 @@ import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
-import { useReceivables } from '../shared/queries';
+import { useReceivables } from '@/money/shared/queries';
 import { ReceivableItem } from './ReceivableItem';
 import { filterReceivables } from './receivables';
 import { ReceivablesSummary } from './ReceivablesSummary';

@@ -1,6 +1,6 @@
 import { t } from '@/core/lib/i18n/i18n';
 import { isolate } from '@/core/ui/primitives/Ltr';
-import { work } from '../shared/fixtures';
+import { work } from '@/ops/shared/fixtures';
 import { taskText } from './work-text';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).

@@ -1,4 +1,4 @@
-import { MON_19, slot, SUN_17 } from '../testing/fixtures';
+import { MON_19, slot, SUN_17 } from '@/booking/testing/fixtures';
 import { freeSlotDays, ruleFromSlot, slotTimes, slotWindow, whenText } from './slots';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;

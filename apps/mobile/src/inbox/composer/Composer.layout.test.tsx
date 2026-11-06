@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { shape, type } from '@/theme';
-import { detail, inbound, thread } from '../shared/thread-fixtures';
-import { ThreadScreen } from '../screens/ThreadScreen';
+import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 // The one-row composer (owner 2026-10-18; 2026-10-27 as WhatsApp): [pill] [round], notes never cut, a compact closed state.
 const mockApiFetch = jest.fn();

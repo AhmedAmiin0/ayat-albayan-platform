@@ -4,9 +4,9 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Avatar } from '@/core/ui/primitives/Avatar';
 import { ListRow } from '@/core/ui/layout/ListRow';
-import { clockAt } from '../../../shared/format';
-import { CallArrowIcon } from '../screen/call-icons';
-import { callEntryText, callerName, callInk } from '../entries/call-text';
+import { clockAt } from '@/inbox/shared/format';
+import { CallArrowIcon } from '@/inbox/thread/calls/screen/call-icons';
+import { callEntryText, callerName, callInk } from '@/inbox/thread/calls/entries/call-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CallsLogRowProps {

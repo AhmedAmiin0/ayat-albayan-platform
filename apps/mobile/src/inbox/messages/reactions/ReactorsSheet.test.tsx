@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { palette } from '@/theme';
-import { message } from '../../shared/thread-fixtures';
+import { message } from '@/inbox/shared/thread-fixtures';
 import { ReactorsSheet } from './ReactorsSheet';
 
 test('docs/07 «الأزرار»: «إزالة» on our reaction is the outlined danger button, «إغلاق» outlined', async () => {

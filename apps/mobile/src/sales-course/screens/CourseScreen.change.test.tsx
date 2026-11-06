@@ -4,11 +4,11 @@ import { maryam } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { changeApi, runningCourse, TZ } from '../change/change-test-setup';
-import { daysText } from '../lib/course-days';
-import { press } from '../testing/course-test-utils';
+import { changeApi, runningCourse, TZ } from '@/sales-course/change/change-test-setup';
+import { daysText } from '@/sales-course/lib/course-days';
+import { press } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from './CourseScreen';
-import { courseView } from '../testing/fixtures';
+import { courseView } from '@/sales-course/testing/fixtures';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 

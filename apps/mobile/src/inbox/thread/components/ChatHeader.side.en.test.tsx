@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react-native';
 import { StyleSheet, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { leftToRight } from '../../shared/physical-row.helpers';
+import { leftToRight } from '@/inbox/shared/physical-row.helpers';
 import { ChatHeader } from './ChatHeader';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).

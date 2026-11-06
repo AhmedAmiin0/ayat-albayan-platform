@@ -5,8 +5,8 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { NewChatSheet } from './NewChatSheet';
 import { InboxHeaderActions } from './InboxHeaderActions';
-import { plainReminder } from '../shared/thread-fixtures';
-import { ThreadScreen } from '../screens/ThreadScreen';
+import { plainReminder } from '@/inbox/shared/thread-fixtures';
+import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

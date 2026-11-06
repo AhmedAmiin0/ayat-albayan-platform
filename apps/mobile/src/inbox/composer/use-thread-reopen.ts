@@ -4,8 +4,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { refreshInbox } from '../thread/hooks/inbox-sync';
-import { threadPath } from '../thread/hooks/thread-cache';
+import { refreshInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 
 // «إعادة فتح المحادثة» (owner 2026-10-26): opening a chat whose 24 h window is closed asks the server
 // once per thread per app session (it dedupes per day anyway). Lives in the composer, which mounts

@@ -2,10 +2,10 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
-import { threadKey } from '../thread/hooks/thread-cache';
-import { cachedThread, delivered, detail, inbound, message, PHONE, thread } from '../shared/thread-fixtures';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
+import { cachedThread, delivered, detail, inbound, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
-import { ticksLabel } from '../shared/ticks.helpers';
+import { ticksLabel } from '@/inbox/shared/ticks.helpers';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({

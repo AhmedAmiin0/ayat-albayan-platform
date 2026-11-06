@@ -6,7 +6,7 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { AttachmentItem } from './AttachmentItem';
 import { attachmentRows } from './attachments';
-import { usePaymentAttachments } from '../shared/queries';
+import { usePaymentAttachments } from '@/money/shared/queries';
 
 interface AttachmentsViewerProps {
   /** The API path to GET: /payments/:id/attachments, or /sales/me/payments/:id/attachments. */

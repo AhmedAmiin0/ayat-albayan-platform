@@ -5,9 +5,9 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { IconButton } from '@/core/ui/primitives/IconButton';
-import { useChatActions } from '../../thread/hooks/chat-actions';
-import { CloseIcon } from '../../shared/chat-icons';
-import { quoteOf, quoteSender, quoteText } from '../hooks/quote-text';
+import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { CloseIcon } from '@/inbox/shared/chat-icons';
+import { quoteOf, quoteSender, quoteText } from '@/inbox/messages/hooks/quote-text';
 
 /**
  * Over the composer while she answers a message: ONE line (sender · first line) and ✕, 44pt in all,

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
-import { KID, salesPayment } from '../testing/fixtures';
+import { KID, salesPayment } from '@/sales-subscribe/testing/fixtures';
 import { TransferDone } from './TransferDone';
 
 const mockPush = jest.fn();

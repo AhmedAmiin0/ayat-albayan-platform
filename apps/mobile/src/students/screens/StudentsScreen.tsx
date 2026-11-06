@@ -8,10 +8,10 @@ import { LazyList } from '@/core/ui/lists/LazyList';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { StudentFilterBar } from '../list/StudentFilterBar';
-import { activeCount, listParams, NO_FILTERS, type StudentFilters } from '../list/student-filters';
-import { StudentRow } from '../list/StudentRow';
-import type { StudentListItem } from '../shared/types';
+import { StudentFilterBar } from '@/students/list/StudentFilterBar';
+import { activeCount, listParams, NO_FILTERS, type StudentFilters } from '@/students/list/student-filters';
+import { StudentRow } from '@/students/list/StudentRow';
+import type { StudentListItem } from '@/students/shared/types';
 
 const keyOf = (s: StudentListItem) => s.id;
 const renderRow = ({ item }: { item: StudentListItem }) => <StudentRow student={item} />;

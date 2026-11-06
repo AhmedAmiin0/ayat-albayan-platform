@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { isolate } from '@/core/ui/primitives/Ltr';
-import { AttachIcon } from '../../shared/chat-icons';
+import { AttachIcon } from '@/inbox/shared/chat-icons';
 import { HighlightText } from './HighlightText';
 
 interface QuickReplyRowProps {

@@ -1,5 +1,5 @@
 import { chosenOpen, familyPath, openPackages, ownStudents, withOpenPackage } from './family';
-import { familyOf, KID2, kid, openSub, SUB } from '../testing/fixtures';
+import { familyOf, KID2, kid, openSub, SUB } from '@/sales-subscribe/testing/fixtures';
 
 test('the family path carries the E.164 number url-encoded', () => {
   expect(familyPath('+966501112223')).toBe('/sales/money/family?phone=%2B966501112223');

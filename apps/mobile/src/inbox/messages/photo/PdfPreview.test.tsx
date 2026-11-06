@@ -5,8 +5,8 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { shape } from '@/theme';
-import { MessageFile } from '../components/MessageFile';
-import { PHONE } from '../../shared/thread-fixtures';
+import { MessageFile } from '@/inbox/messages/components/MessageFile';
+import { PHONE } from '@/inbox/shared/thread-fixtures';
 import { pageUrl, pdfDoc, pdfPage, pdfPath } from './photo-test-kit';
 
 const mockApiFetch = jest.fn();

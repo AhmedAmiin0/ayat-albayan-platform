@@ -4,10 +4,10 @@ import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
-import { CommsOverview } from '../comms/CommsOverview';
+import { CommsOverview } from '@/ops/comms/CommsOverview';
 import { NotificationCatalogue } from './NotificationCatalogue';
-import { NumbersList } from '../numbers/NumbersList';
-import { SubScreenHeader } from '../shared/SubScreenHeader';
+import { NumbersList } from '@/ops/numbers/NumbersList';
+import { SubScreenHeader } from '@/ops/shared/SubScreenHeader';
 
 export type CommsTab = 'overview' | 'notifications' | 'numbers';
 

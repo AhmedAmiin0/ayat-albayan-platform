@@ -1,10 +1,10 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { catalogue } from '../../shared/fixtures';
+import { catalogue } from '@/ops/shared/fixtures';
 import { askOf, controlOf, heldLine, nameOf, needsTypedWord, partialLine, reachLine, ruleErrorText, ruleOf } from './rule-words';
-import { catalogueV2 } from '../testing/rules-fixtures';
-import { holdsIn } from '../hooks/use-toggle-rule';
+import { catalogueV2 } from '@/ops/notif-rules/testing/rules-fixtures';
+import { holdsIn } from '@/ops/notif-rules/hooks/use-toggle-rule';
 
 const r = t.mobileNotificationRules;
 const v2 = (key: string): NotificationEntryView => {

@@ -1,9 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { forgetReopens, useThreadReopen } from '../../composer/use-thread-reopen';
-import { useSendFile } from '../../composer/send-file';
-import { useSendStagedFile } from '../../saved-replies/hooks/send-staged';
-import { message, PHONE } from '../../shared/thread-fixtures';
+import { forgetReopens, useThreadReopen } from '@/inbox/composer/use-thread-reopen';
+import { useSendFile } from '@/inbox/composer/send-file';
+import { useSendStagedFile } from '@/inbox/saved-replies/hooks/send-staged';
+import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { refreshInbox, touchInbox } from './inbox-sync';
 import { useForward } from './use-forward';
 import { useMessageAction, useSendMessage } from './use-thread';

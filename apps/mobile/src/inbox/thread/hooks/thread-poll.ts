@@ -3,7 +3,7 @@ import type { ThreadDelta, ThreadDetail } from '@ab/shared';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
-import { useInboxLive, useLiveWatch } from '../live/inbox-live';
+import { useInboxLive, useLiveWatch } from '@/inbox/thread/live/inbox-live';
 import { leavesGap, mergeNewest, sendKey, threadKey, threadPath, type ThreadCache } from './thread-cache';
 
 /** The polls' own keys: outside threadKey, so a push's invalidation never runs them too. */

@@ -1,7 +1,7 @@
 import type { AccountProfile } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { type AccountField, type AccountFieldErrors, accountErrors } from '../lib/account-errors';
+import { type AccountField, type AccountFieldErrors, accountErrors } from '@/account/lib/account-errors';
 import { PROFILE_KEY } from './queries';
 
 interface AccountActionOptions<V> {

@@ -1,5 +1,5 @@
 import { AppText } from '@/core/ui/primitives/AppText';
-import { useNoteStyle } from '../shared/note-style';
+import { useNoteStyle } from '@/inbox/shared/note-style';
 import { reopenNote, useThreadReopen } from './use-thread-reopen';
 
 /** Over the closed chat's composer: the reopen request went (or went earlier today). Nothing otherwise. */

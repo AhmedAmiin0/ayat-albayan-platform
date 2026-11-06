@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { MessageBubble } from '../components/MessageBubble';
-import { PHONE } from '../../shared/thread-fixtures';
-import { ThreadModeProvider } from '../../thread/hooks/thread-mode';
+import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
+import { PHONE } from '@/inbox/shared/thread-fixtures';
+import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { PATH, photo, SIGNED, signed } from './photo-test-kit';
 
 const mockApiFetch = jest.fn();

@@ -1,11 +1,11 @@
 import { QUICK_NOTES } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
-import { AttachmentsField } from '../../components/AttachmentsField';
-import { ReportTextField } from '../../components/ReportTextField';
-import { toggleQuick } from '../hooks/content-edit';
-import type { V2EntryState } from '../hooks/use-v2-entry';
-import { Card } from '../ui/Card';
-import { Pills } from '../ui/Pills';
+import { AttachmentsField } from '@/teacher/report/components/AttachmentsField';
+import { ReportTextField } from '@/teacher/report/components/ReportTextField';
+import { toggleQuick } from '@/teacher/report/v2/hooks/content-edit';
+import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
+import { Card } from '@/teacher/report/v2/ui/Card';
+import { Pills } from '@/teacher/report/v2/ui/Pills';
 
 /** «ملاحظة للأسرة (اختياري)»: quick-note chips (any number), the note itself, and attachments. */
 export function FamilyNoteCard({ s }: { s: V2EntryState }) {

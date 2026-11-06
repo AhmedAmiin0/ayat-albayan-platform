@@ -4,8 +4,8 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { seedFullAccess } from '@/test/staff-me';
-import { KID } from '../testing/fixtures';
-import { paymentLink } from '../testing/link-fixtures';
+import { KID } from '@/sales-subscribe/testing/fixtures';
+import { paymentLink } from '@/sales-subscribe/testing/link-fixtures';
 import { PaymentDoneScreen } from './PaymentDoneScreen';
 
 jest.mock('./flag', () => ({ STRIPE_FEATURE: true }));

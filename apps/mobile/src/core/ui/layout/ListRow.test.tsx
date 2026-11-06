@@ -2,8 +2,8 @@ import { studentStatusStyle } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { ListRow } from './ListRow';
-import { ltr } from '../primitives/Ltr';
-import { StatusChip } from '../feedback/StatusChip';
+import { ltr } from '@/core/ui/primitives/Ltr';
+import { StatusChip } from '@/core/ui/feedback/StatusChip';
 
 test('title, isolated LTR code, subtitle and trailing chip', async () => {
   await render(
