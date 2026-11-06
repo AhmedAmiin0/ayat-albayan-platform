@@ -36,11 +36,10 @@ export function useQuoteOffer(phone: string) {
   };
 }
 
-/** An offer as sent: its text, its id, whether that id was pinned, the pins' generation. */
+/** An offer as sent: its text, its id (the pinned one first) and the pins' generation. */
 interface Offer {
   text: string;
   id: string;
-  pinned: boolean;
   generation: number;
 }
 
@@ -58,9 +57,10 @@ export function useQuoteSend(phone: string, onSent: () => void) {
   const busy = useRef(false);
   const send = useMutation({
     mutationKey,
-    mutationFn: async ({ text, id, pinned }: Offer) => {
+    mutationFn: async ({ text, id }: Offer) => {
       const view = await sendText({ phone, text, clientRequestId: id });
-      if (pinned && replayedOther(view, text)) throw new ReplayedSend();
+      // Every 2xx: a kept id may replay the first offer even after a 4xx released it.
+      if (replayedOther(view, text)) throw new ReplayedSend();
       return view;
     },
     onMutate: sendStart,
@@ -88,10 +88,8 @@ export function useQuoteSend(phone: string, onSent: () => void) {
     send: (text: string) => {
       if (busy.current || pending) return;
       busy.current = true;
-      const pinned = quotePins.pinned(phone);
-      const generation = quotePins.generation();
-      const id = pinned ?? crypto.randomUUID();
-      send.mutate({ text, id, pinned: pinned !== undefined, generation });
+      const id = quotePins.pinned(phone) ?? crypto.randomUUID();
+      send.mutate({ text, id, generation: quotePins.generation() });
     },
   };
 }

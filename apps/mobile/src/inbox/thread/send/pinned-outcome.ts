@@ -24,14 +24,16 @@ function restoreBox(s: PinnedSend): void {
 }
 
 /**
- * A 2xx (hook-level onSuccess: it runs after the screen closed too). The pin is released. A send
- * with the pinned id answered with another body is the FIRST message: the note shows and the box
- * gets the edit back (docs/44 M1); its next send has a fresh id.
+ * A 2xx (hook-level onSuccess: it runs after the screen closed too). The pin is released. An
+ * answer with another body is the FIRST message replayed under this id (docs/44 M1): the note
+ * shows and the box gets the edit back; its next send has a fresh id. Checked on EVERY 2xx: a 4xx
+ * (session_closed, reply_not_in_thread) is decided before the dedup lookup, so an id it released
+ * and a same-text resend reused may still replay the first message.
  */
 export function settlePinned(s: PinnedSend, row: MessageView): void {
   const store = storeOf(s);
   if (!store) return;
-  const lost = store.pinned(s.phone) === s.id && replayedOther(row, s.body);
+  const lost = replayedOther(row, s.body);
   store.release(s.phone, s.id, s.generation);
   if (lost && store.generation() === s.generation) store.setReplayed(s.phone, true);
   if (lost) restoreBox(s);

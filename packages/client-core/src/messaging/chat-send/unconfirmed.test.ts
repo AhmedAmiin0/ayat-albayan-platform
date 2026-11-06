@@ -50,4 +50,7 @@ describe('createPinStore: the pinned id is released only by an answer', () => {
 it('a replay answered with another body is the first message, not the edit', () => {
   expect(replayedOther({ body: 'وصلت' }, 'وصلت الآن')).toBe(true);
   expect(replayedOther({ body: 'وصلت' }, 'وصلت')).toBe(false);
+  // The server only trims: a real send echoes the same words.
+  expect(replayedOther({ body: 'وصلت' }, '  وصلت\n')).toBe(false);
+  expect(replayedOther({ body: null }, 'وصلت')).toBe(true);
 });

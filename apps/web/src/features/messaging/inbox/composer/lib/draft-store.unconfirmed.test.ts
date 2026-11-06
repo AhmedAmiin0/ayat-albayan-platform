@@ -39,7 +39,7 @@ describe('a send that ended with no answer', () => {
 
   it('EVERY next text of the box reuses the pinned id; a refused one only for the same text', () => {
     setDraft(PHONE, { text: '', failed: unconfirmed });
-    expect(sentOf('وصلت الآن')).toMatchObject({ clientRequestId: 'req-1', replay: true });
+    expect(sentOf('وصلت الآن').clientRequestId).toBe('req-1');
     expect(sentOf('نص آخر تمامًا').clientRequestId).toBe('req-1');
     expect(keepsFailed(unconfirmed, 'نص آخر')).toBe(true);
     expect(requestIdFor({ text: 'وصلت', failed: refused }, 'وصلت')).toBe('req-2');
@@ -78,6 +78,17 @@ describe('a 2xx with the pinned id releases it', () => {
     expect(after.text).toBe('وصلت الآن');
     expect(after.failed?.code).toBe(SEND_REPLAYED);
     expect(requestIdFor(after, 'وصلت الآن')).not.toBe('req-1');
+  });
+
+  it('a 2xx after a 4xx released the pin still catches a replay (session_closed before dedup)', () => {
+    // A pinned retry got 409: the pin went, but the same text keeps the refused id (rule 8).
+    const closed = { text: 'وصلت الآن', id: 'req-1', code: 'session_closed' };
+    setDraft(PHONE, { text: 'وصلت الآن', failed: closed });
+    const sent = sentOf('وصلت الآن');
+    expect(sent.clientRequestId).toBe('req-1');
+    settleTextSend(row('وصلت'), sent);
+    expect(getDraft(PHONE).failed?.code).toBe(SEND_REPLAYED);
+    expect(getDraft(PHONE).text).toBe('وصلت الآن');
   });
 
   it('a send settling after a sign-out writes nothing back', () => {

@@ -50,10 +50,19 @@ it('«أرسل العرض» posts the offer once through the chat text route, ev
 });
 
 it('a sent offer closes the sheet', async () => {
-  apiSend.mockResolvedValue({ id: 'm1' });
+  // The API echoes the offer it sent (another body would be a replay of a first offer).
+  apiSend.mockImplementation(async (_m: string, _p: string, b: { text: string }) => ({ id: 'm1', body: b.text }));
   const { onClose } = await show();
   fireEvent.click(button(q.send));
   await waitFor(() => expect(onClose).toHaveBeenCalled());
+});
+
+it('a 2xx carrying another offer (a replay of the first) keeps the sheet open with the note', async () => {
+  apiSend.mockResolvedValue({ id: 'm0', body: 'عرض سابق' });
+  const { onClose } = await show();
+  fireEvent.click(button(q.send));
+  expect(await screen.findByText(t.inbox.error.send_replayed)).toBeTruthy();
+  expect(onClose).not.toHaveBeenCalled();
 });
 
 it('«عدّل قبل الإرسال» puts the offer in the box after what was typed, and sends nothing', async () => {
