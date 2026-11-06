@@ -1,7 +1,8 @@
 import type { ThreadDetail } from '@ab/shared';
 import { useInfiniteQuery, type InfiniteData } from '@tanstack/react-query';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
-import { anchoredThreadQuery } from '@/features/messaging/inbox/api/anchored';
+import { t } from '@/lib/i18n/i18n';
+import { anchoredThreadQuery, hitGone } from '@/features/messaging/inbox/api/anchored';
 import { useLastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { jumpToMessage } from '@/features/messaging/inbox/messages/lib/jump-to-message';
 import type { LogAnchor } from '@/features/messaging/inbox/messages/lib/use-anchor-scroll';
@@ -35,12 +36,28 @@ function useLeaveOnSend(phone: string, leave: (() => void) | null): void {
   }, [mine]);
 }
 
-/** The window around `id` (null: none): asked once, shown once it answered, lost on a 404. */
+/** Only from one window to the next: the old one stays on screen while the next loads. */
+const keepWindow = <T,>(prev: T | undefined, prevQuery?: { queryKey: readonly unknown[] }) =>
+  prevQuery?.queryKey[2] ? prev : undefined;
+
+/** The window's problem in the log's status line: gone (404) or a failed read. */
+const problemOf = (error: Error | null): string | null =>
+  error && (hitGone(error) ? t.inbox.chatSearch.unreachable : t.common.error);
+
+/**
+ * The window around `id` (null: none): shown once it answered, the previous window kept while
+ * the next loads (never a flash of the live chat between two windows).
+ */
 function useWindow(phone: string, id: string | null) {
-  const at = useInfiniteQuery({ ...anchoredThreadQuery(phone, id ?? ''), enabled: id !== null });
+  const at = useInfiniteQuery({
+    ...anchoredThreadQuery(phone, id ?? ''),
+    enabled: id !== null,
+    placeholderData: keepWindow,
+  });
   const open = id !== null;
-  const shown = open && at.data !== undefined;
-  return { at, shown, waiting: open && at.isPending, lost: open && at.isError };
+  const waiting = open && (at.isPending || at.isPlaceholderData);
+  const problem = open ? problemOf(at.error) : null;
+  return { at, shown: open && at.data !== undefined, waiting, problem };
 }
 
 /** The log's anchor while the window shows: its hit and the way back to the live chat. */
@@ -74,7 +91,7 @@ export function useThreadLog(phone: string, live: Pages) {
     loadingOlder: source.isFetchingNextPage,
     onOlder: () => void source.fetchNextPage(),
     anchor: logAnchor(w.shown ? view.window : null, leave),
-    /** The hit is not in this chat any more (the window's read answered 404). */
-    lost: w.lost,
+    /** The log's status line for the window: the hit is gone (404) or the read failed. */
+    problem: w.problem,
   };
 }

@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@/lib/http/api';
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { AnchorHarness } from '@/features/messaging/inbox/testing/anchor-harness';
@@ -56,7 +57,7 @@ it('a hit the chat no longer holds (the window read fails): the log says it cann
   const routed = apiFetch.getMockImplementation();
   // The API answers 404 message_not_found for a hit that is gone.
   apiFetch.mockImplementation((path: string) =>
-    path.includes(`around=${id(9)}`) ? Promise.reject(new Error('404')) : routed?.(path),
+    path.includes(`around=${id(9)}`) ? Promise.reject(new ApiError(404)) : routed?.(path),
   );
   await openAndType('اسلام');
   expect(await screen.findByText(search.unreachable, {}, { timeout: 5000 })).toBeTruthy();

@@ -1,3 +1,4 @@
+import { formatPhone } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
@@ -84,5 +85,12 @@ describe('«الرسائل» in the chats list (docs/37 NEW 1)', () => {
     apiFetch.mockRejectedValue(new Error('down'));
     show('وداعا');
     expect(await screen.findByText(W.failed)).toBeTruthy();
+  });
+
+  it('a chat without a name shows its number as an LTR island', async () => {
+    apiFetch.mockResolvedValue({ items: [{ ...HIT, display_name: null }], next_cursor: null });
+    show('اسلام');
+    const phone = await screen.findByText(formatPhone(HIT.phone_e164));
+    expect(phone.closest('bdi')?.getAttribute('dir')).toBe('ltr');
   });
 });

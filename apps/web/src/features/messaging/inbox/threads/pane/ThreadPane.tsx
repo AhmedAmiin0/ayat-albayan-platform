@@ -98,9 +98,9 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const headerProps = { thread: th, listSearch, headingId, badge: admin && people ? threadBadge(people) : null, line, lists: first?.lists, callable: !readOnly };
   const log = (fill: 'shell' | 'xl' | 'phone') => (
     <>
-      {(detail.isError || chat.lost) && (
+      {(detail.isError || chat.problem) && (
         <p role="status" className="shrink-0 px-3 py-1 text-xs text-danger shell:px-0">
-          {chat.lost ? t.inbox.chatSearch.unreachable : t.common.error}
+          {chat.problem ?? t.common.error}
         </p>
       )}
       <MessageLog

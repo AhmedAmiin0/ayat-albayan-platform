@@ -5,9 +5,17 @@ import { useSideSheetClose } from '@/features/messaging/inbox/shared/side-sheet'
 import { useChatSearch } from './search-context';
 import { SEARCH_BAR_ID } from './to-newest';
 
-/** The bar's field, when the bar is already open (it focuses itself when it opens). */
+/** The bar's field (the bar also focuses itself when it opens). */
 const focusBar = (): void =>
   document.querySelector<HTMLInputElement>(`#${SEARCH_BAR_ID} input`)?.focus();
+
+/**
+ * After this click has committed: closing the phone sheet hands focus back to its trigger (the
+ * Dialog's focus trap), so the field is focused once the sheet is gone.
+ */
+const focusBarSoon = (): void => {
+  setTimeout(focusBar, 0);
+};
 
 /**
  * «بحث في الرسائل» at the top of the contact's panel (docs/37 NEW 2): opens the chat's search
@@ -21,7 +29,7 @@ export function SearchFromProfile() {
   const go = () => {
     closeSheet?.();
     search.open();
-    focusBar();
+    focusBarSoon();
   };
   return (
     <Button type="button" variant="secondary" className="w-full justify-start gap-2" onClick={go}>
