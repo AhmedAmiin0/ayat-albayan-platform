@@ -65,3 +65,16 @@ export function templateSend(to: string, t: WabaTemplate): EvolutionSend {
   const body = { number: waTo(to), name: t.name, language: t.language, components };
   return { path: 'message/sendTemplate', body };
 }
+
+/** The number's sending options (wa_numbers.evolution_config.sending), as Evolution names them. */
+interface SendOptions {
+  delayMs: number;
+  linkPreview: boolean;
+}
+
+/** `delay` (typing shown first) on every send; `linkPreview` on a text only. */
+export function withOptions(send: EvolutionSend, opts: SendOptions): EvolutionSend {
+  const delay = opts.delayMs > 0 ? { delay: opts.delayMs } : {};
+  const preview = send.path === 'message/sendText' ? { linkPreview: opts.linkPreview } : {};
+  return { path: send.path, body: { ...send.body, ...delay, ...preview } };
+}

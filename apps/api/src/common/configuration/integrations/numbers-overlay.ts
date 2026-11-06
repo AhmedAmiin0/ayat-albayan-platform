@@ -33,6 +33,8 @@ export interface OverlayNumber {
    * against it, enabled or not (docs/19). Absent on any other provider.
    */
   evolutionToken?: string;
+  /** An Evolution number (enabled or not): a row pinned to it fails while it cannot send. */
+  evolution?: true;
 }
 
 export interface NumbersOverlay {

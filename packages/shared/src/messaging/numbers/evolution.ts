@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { EVOLUTION_MODES, type EvolutionMode } from '@ab/catalog';
+import type { EvolutionConfig, EvolutionSyncView } from './evolution-config.js';
 
 // An Evolution number (docs/19 «Evolution driver»): its instance name is the row's
 // phone_number_id, its token the number secret `evolution_token`; these are the rest.
@@ -24,6 +25,9 @@ export interface NumberEvolutionView {
   /** Last state Evolution reported by webhook, and when (null = never). */
   state: EvolutionState | null;
   state_at: string | null;
+  /** Every option of the number (no secret), and the last push read back (null = never). */
+  config: EvolutionConfig;
+  sync: EvolutionSyncView | null;
 }
 
 /** GET /admin/numbers/:id/evolution/state («افحص الاتصال»): Evolution's connectionState now. */

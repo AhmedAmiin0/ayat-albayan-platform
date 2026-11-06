@@ -12,6 +12,8 @@ import { WacrmWebhookController } from './providers/webhook.wacrm.controller';
 import { EvolutionWebhookController } from './evolution/evolution-webhook.controller';
 import { EvolutionWebhookService } from './evolution/evolution-webhook.service';
 import { EvolutionStateRepo } from './evolution/evolution-state.repo';
+import { EvolutionRestriction } from './evolution/evolution-restriction';
+import { NumbersModule } from '@/modules/messaging/numbers';
 import { CrmWebhookController } from './crm-register/crm-webhook.controller';
 import {
   CRM_WEBHOOK_SOURCE,
@@ -42,7 +44,7 @@ import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inb
  * the send gate. PushService and AuditService are global.
  */
 @Module({
-  imports: [LeadsModule, LessonsModule, LessonRatingModule, CallsModule],
+  imports: [LeadsModule, LessonsModule, LessonRatingModule, CallsModule, NumbersModule],
   controllers: [
     WebhookController,
     KapsoWebhookController,
@@ -82,6 +84,7 @@ import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inb
     // Evolution API numbers (docs/19 «Evolution driver»): inbound, ticks, connection state.
     EvolutionWebhookService,
     EvolutionStateRepo,
+    EvolutionRestriction,
   ],
 })
 export class WebhookModule {}

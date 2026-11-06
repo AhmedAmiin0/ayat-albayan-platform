@@ -2,12 +2,22 @@
 
 The **Evolution** driver is described in `docs/19-messaging-drivers.md` («Evolution driver»).
 This folder is a **kit only**. It is not part of any deploy workflow. Nothing starts until the
-owner runs it. No academy line uses it until an admin chooses «Evolution» for a number.
+owner runs it. The kit creates **no** WhatsApp instance: an instance exists only after an admin
+saves the number in «الأرقام» and scans its QR.
 
 > **Ban risk (Baileys mode).** Baileys is an unofficial WhatsApp Web connection, and WhatsApp
 > may ban a number that uses it. Use it only for a **separate secondary number**, never the
 > academy's main or notifications number. Keep «السماح بالإشعارات التلقائية» off, so that only
 > staff chat messages go out. Keep the send gap (`EVOLUTION_SEND_GAP_MS`, default 3 s).
+
+## Image pin (why not 2.3.7)
+
+Released images `v2.3.7` and `2.4.0-rc2` ship Baileys `7.0.0-rc.9`, which lacks the
+trusted-contact token: sends from a fresh session fail with WhatsApp error **463**. The kit pins
+`homolog@sha256:1e656f95…a549`, built from `develop` commit `e273b904` (image label
+`org.opencontainers.image.revision`), whose `package-lock.json` resolves Baileys `7.0.0-rc13`.
+That build is Evolution **2.4.0**: it answers `503 LICENSE_REQUIRED` until activated once (§1)
+and then sends a licensing heartbeat. Move to a release tag with Baileys ≥ rc13 once one ships.
 
 ## 1. Run it on the VPS (owner)
 
@@ -16,57 +26,38 @@ sudo mkdir -p /opt/evolution && cd /opt/evolution
 # copy docker-compose.yml and .env.example from this folder, then:
 cp .env.example .env && chmod 600 .env   # fill in the placeholders
 docker compose up -d
-docker compose ps                          # evolution-api healthy, port 127.0.0.1:8085
+docker compose ps                          # evolution-api up, port 127.0.0.1:8085
 ```
 
-Add a site to the host Caddy (the shared Caddyfile, outside this repo). Then reload Caddy:
+- **Network.** The kit creates the docker network `ayat-evolution`. The platform API container
+  must join it (in the platform's compose: `networks: { evolution: { external: true,
+  name: ayat-evolution } }` on the API service). The API then reaches the service name:
+  `http://evolution-api:8080`. The kit's Postgres and Redis stay on its private network.
+- **Host port.** `127.0.0.1:8085` only, never public. Reach the manager UI with an SSH tunnel
+  (`ssh -L 8085:127.0.0.1:8085 <vps>`, then `http://localhost:8085/manager`).
+- **Activation (2.4.0).** Open `/manager` once through the tunnel and complete the license
+  registration. Until then every API call answers 503.
+- **Memory.** `mem_limit` 512 MB API + 256 MB Postgres + 64 MB Redis (Redis capped at 48 MB).
+  Check with `docker stats` after the first QR scan and raise the API limit only if it nears it.
 
-```
-evolution.<your-domain> {
-  reverse_proxy 127.0.0.1:8085
-}
-```
+## 2. Connect it in the platform (admin)
 
-The platform accepts only an `https://` base, or `http://localhost` / `127.0.0.1`.
-
-## 2. Create the instance (owner, once per number)
-
-Use the global key from `.env`. Create the instance with its own token and its webhook to the
-platform. The webhook sends the token in a header, which the platform checks in constant time:
-
-```sh
-curl -sS https://evolution.<your-domain>/instance/create \
-  -H "apikey: <AUTHENTICATION_API_KEY>" -H 'content-type: application/json' \
-  -d '{
-    "instanceName": "secondary-1",
-    "token": "<a long random instance token>",
-    "integration": "WHATSAPP-BAILEYS",
-    "qrcode": true,
-    "groupsIgnore": true,
-    "webhook": {
-      "enabled": true,
-      "url": "https://<api-host>/webhooks/evolution/secondary-1",
-      "headers": { "x-evolution-token": "<the same instance token>" },
-      "byEvents": false,
-      "base64": false,
-      "events": ["MESSAGES_UPSERT", "MESSAGES_UPDATE", "CONNECTION_UPDATE", "QRCODE_UPDATED"]
-    }
-  }'
-```
-
-For Meta's Cloud API through Evolution, use `"integration": "WHATSAPP-BUSINESS"` with Meta's ids
-and token. That mode keeps Meta's 24 h window and templates.
-
-## 3. Connect the number in the platform (admin)
-
-1. «التكاملات» › Evolution: set `EVOLUTION_API_BASE` (`https://evolution.<your-domain>`). Save
-   `EVOLUTION_API_KEY` (the global key) as a secret. `EVOLUTION_SEND_GAP_MS` is optional.
-2. «الأرقام» › add a number: role «المحادثات», driver **Evolution**. The instance name
-   (`secondary-1`) goes in the instance field. Pick the connection type (Baileys or Cloud). Save
-   the **instance token** as the number's secret. Leave the number **disabled** for now.
+1. «التكاملات» › Evolution: set `EVOLUTION_API_BASE` to `http://evolution-api:8080`, and add
+   `evolution-api` to the allowed internal http hosts (plain http is refused otherwise). Save
+   `EVOLUTION_API_KEY` (the `AUTHENTICATION_API_KEY` from `.env`) as a secret.
+   `EVOLUTION_SEND_GAP_MS` is optional.
+2. «الأرقام» › add a number: role «المحادثات», driver **Evolution**, an instance name (for
+   example `secondary-1`), the connection type (Baileys or Cloud), and the **instance token** as
+   the number's secret. Leave the number **disabled** for now. On save, the platform API creates
+   the instance and pushes its webhook, settings and proxy itself:
+   - webhook URL `https://<api-host>/webhooks/evolution/<instance>`;
+   - header `x-evolution-token: <instance token>`, checked in constant time.
 3. On the number's card, press **QR** and scan it with the secondary phone (WhatsApp › Linked
    devices › Link a device). Then press «افحص الاتصال»: it must say «متصل».
 4. Send one test message to a number in `WA_ALLOWED_RECIPIENTS`. Then enable the number. Make it
    the role's default only if every chat should go out from it.
+
+For Meta's Cloud API through Evolution, pick the Cloud connection type with Meta's ids and token.
+That mode keeps Meta's 24 h window and templates.
 
 To go back, disable the number, or switch its driver back. Nothing else changes.

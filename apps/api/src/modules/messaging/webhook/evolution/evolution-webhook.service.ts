@@ -4,6 +4,7 @@ import { InboundService } from '@/modules/messaging/webhook/inbound/webhook.inbo
 import { StatusService } from '@/modules/messaging/webhook/status/webhook.status.service';
 import type { EvolutionDelivery } from '@/modules/messaging/webhook/parse/webhook.evolution';
 import { RESPONSE_BUDGET_MS } from '@/modules/messaging/webhook/webhook.service';
+import { EvolutionRestriction } from './evolution-restriction';
 import { EvolutionStateRepo } from './evolution-state.repo';
 
 // One authenticated Evolution delivery into the SAME paths as Meta's and Kapso's (docs/19):
@@ -24,10 +25,13 @@ export class EvolutionWebhookService {
     private readonly inbound: InboundService,
     private readonly statuses: StatusService,
     private readonly states: EvolutionStateRepo,
+    private readonly restriction: EvolutionRestriction,
   ) {}
 
   async apply(delivery: Applied, at: At): Promise<void> {
     const failed = await this.items(delivery, at);
+    // A late 463 / 475 (after the rows are marked failed): the number goes off at once.
+    if (delivery.kind === 'status') await this.restriction.check(delivery.events, at);
     if (failed > 0) throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
   }
 

@@ -17,6 +17,8 @@ export function numberRow(over: Partial<NumberRow> = {}): NumberRow {
     evolution_auto_sends: false,
     evolution_state: null,
     evolution_state_at: null,
+    evolution_config: {},
+    evolution_sync: null,
     is_default: true,
     fallback_rank: 100,
     health: null,

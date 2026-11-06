@@ -4,6 +4,7 @@ import type { InboundService } from '@/modules/messaging/webhook/inbound/webhook
 import type { StatusService } from '@/modules/messaging/webhook/status/webhook.status.service';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { EvolutionWebhookController } from './evolution-webhook.controller';
+import type { EvolutionRestriction } from './evolution-restriction';
 import type { EvolutionStateRepo } from './evolution-state.repo';
 import { EvolutionWebhookService } from './evolution-webhook.service';
 
@@ -26,10 +27,12 @@ function harness() {
   });
   const statuses = { handle: vi.fn(() => Promise.resolve()) };
   const states = { set: vi.fn(() => Promise.resolve()) };
+  const restriction = { check: vi.fn(() => Promise.resolve()) };
   const service = new EvolutionWebhookService(
     { handle } as unknown as InboundService,
     statuses as unknown as StatusService,
     states as unknown as EvolutionStateRepo,
+    restriction as unknown as EvolutionRestriction,
   );
   return { controller: new EvolutionWebhookController(service), handle, stored, statuses, states };
 }

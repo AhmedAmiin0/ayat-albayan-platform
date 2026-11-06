@@ -1,4 +1,4 @@
-import { WA_ERROR, type EvolutionMode } from '@ab/shared';
+import type { EvolutionMode } from '@ab/shared';
 import { recipientAllowed, type EvolutionLineEnv } from '@/config/env/env';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { documentHeader } from '@/modules/messaging/whatsapp/messages/wa-components';
@@ -6,10 +6,13 @@ import { wabaTemplate } from '@/modules/messaging/whatsapp/drivers/waba/waba-tem
 import {
   WaError, type MediaSend, type MetaTemplate, type TemplateSend, type WaSent, type WhatsappClient,
 } from '@/modules/messaging/whatsapp/whatsapp.types';
-import { mediaSend, templateSend, textSend, type EvolutionSend } from './evolution-body';
+import { mediaSend, templateSend, textSend, withOptions, type EvolutionSend } from './evolution-body';
 import { evolutionHttp, evolutionPath, type EvolutionConn } from './evolution-http';
 import { evolutionMedia } from './evolution-media';
 import { evolutionPacer, type EvolutionPacer } from './evolution-pacer';
+import { evolutionUnsupported, notAllowed } from './evolution-refusals';
+
+export { evolutionAutoOff } from './evolution-refusals';
 import { sentSchema } from './evolution-shapes';
 import { templateAsText } from './evolution-template-text';
 
@@ -26,27 +29,15 @@ interface EvolutionClientOpts {
 
 const DEFAULT_TIMEOUT_MS = 20_000;
 
-/** What Evolution cannot do from here: the template list, submit, samples (and cloud media). */
-const evolutionUnsupported = (what: string): WaError =>
-  new WaError(`${what} is not supported by the Evolution driver`, {
-    code: null, status: 0, unsupported: 'evolution',
-  });
-
-/** A Baileys number with automatic sends off refuses a job's row (docs/19): fails, never sent. */
-export const evolutionAutoOff = (): WaError =>
-  new WaError('automatic sends are off on this Baileys number', {
-    code: WA_ERROR.invalidParameter, status: 0, unsupported: 'evolution', blocked: 'evolution_auto_off',
-  });
-
-const notAllowed = (): WaError =>
-  new WaError('recipient not allowed', { code: WA_ERROR.recipientNotAllowed, status: 0 });
-
 /** The connection of a configured client (the fetch only when a test passes one). */
 const connOf = (env: EvolutionLineEnv, opts: EvolutionClientOpts): EvolutionConn => ({
   env,
   timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS,
   ...(opts.fetch ? { fetch: opts.fetch } : {}),
 });
+
+/** One pacing slot per instance of one Evolution server. */
+const paceKey = (env: EvolutionLineEnv): string => `${env.base}|${env.instance}`;
 
 type TemplateWay = (c: EvolutionWhatsappClient, input: TemplateSend) => Promise<WaSent>;
 
@@ -125,21 +116,27 @@ export class EvolutionWhatsappClient implements WhatsappClient {
     return this.post(input.to, send).then((sent) => ({ ...sent, asText: true }));
   }
 
-  /** The allow-list, the Baileys pace, then one call; the message id or `uncertain`. */
+  /**
+   * Baileys: how long `to` must wait (the sender reschedules the row, never sleeps) and the
+   * number's daily cap. Cloud: Meta's own limits, no pacing.
+   */
+  pace(to: string): { waitMs: number; dailyCap: number } | null {
+    const env = this.conn?.env;
+    if (env?.mode !== 'baileys') return null;
+    const waitMs = this.pacer.waitMs({ key: paceKey(env), to, gapMs: env.gapMs });
+    return { waitMs, dailyCap: env.dailyCap };
+  }
+
+  /** The allow-list, then one call (the pace slot taken first); the message id or `uncertain`. */
   async post(to: string, build: () => EvolutionSend): Promise<WaSent> {
     const c = this.connection();
     if (!recipientAllowed(this.allowed, to)) throw notAllowed();
-    const send = build();
-    await this.pace(c, to);
+    const send = withOptions(build(), c.env);
+    this.pacer.mark({ key: paceKey(c.env), to });
     const path = evolutionPath(c.env, send.path);
-    const sent = await evolutionHttp(c, true).json({ path, method: 'POST', json: send.body, schema: sentSchema });
+    const json = send.body;
+    const sent = await evolutionHttp(c, true).json({ path, method: 'POST', json, schema: sentSchema });
     return { waMessageId: sent.key.id };
-  }
-
-  private pace(c: EvolutionConn, to: string): Promise<void> {
-    const key = `${c.env.base}|${c.env.instance}`;
-    const gapMs = c.env.mode === 'baileys' ? c.env.gapMs : 0;
-    return this.pacer.turn(key, { to, gapMs });
   }
 
   private connection(): EvolutionConn {

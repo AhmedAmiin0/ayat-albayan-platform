@@ -5,7 +5,7 @@ import {
   type IntegrationPlainKey,
   type IntegrationSecretKey,
 } from './keys.js';
-import { evolutionBase, evolutionGapMs } from './evolution.js';
+import { evolutionBase, evolutionInternalHosts } from './evolution.js';
 import { parseAllowedRecipients } from './recipients.js';
 
 // The value checks of the plain keys, consistent with apps/api/src/config/env/env.ts (the API also re-checks
@@ -66,7 +66,7 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   KAPSO_API_VERSION: version,
   WACRM_API_BASE: url,
   EVOLUTION_API_BASE: evolutionBase,
-  EVOLUTION_SEND_GAP_MS: evolutionGapMs,
+  EVOLUTION_INTERNAL_HOSTS: evolutionInternalHosts,
   WA_ALLOWED_RECIPIENTS: recipients,
   WA_TEMPLATE_SYNC: z.stringbool(),
   CALLS_STUN_URLS: iceUrls,

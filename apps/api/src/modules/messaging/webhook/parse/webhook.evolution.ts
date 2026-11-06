@@ -19,12 +19,37 @@ const envelopeSchema = z.object({
 /** Evolution's event names: «messages.upsert» (and the MESSAGES_UPSERT spelling of byEvents). */
 const eventName = (raw: string): string => raw.toLowerCase().replace(/[_-]/g, '.');
 
+/** WhatsApp's refusal codes, given later as stub parameters (ERROR after an accepted send). */
+const stubSchema = z.array(z.union([z.string(), z.number()])).max(20).optional();
+
 /** MESSAGES_UPDATE item: one message's new status (fromMe = our outbound). */
 const updateSchema = z.object({
   keyId: z.string().min(1).max(200),
   fromMe: z.boolean().optional(),
   status: z.string(),
+  messageStubParameters: stubSchema.catch(undefined),
+  update: z.looseObject({ messageStubParameters: stubSchema.catch(undefined) })
+    .optional().catch(undefined),
 });
+type Update = z.infer<typeof updateSchema>;
+
+/**
+ * 463 / 475: WhatsApp restricted the number (the trusted-contact / spam rules). It arrives as a
+ * late ERROR, never as an HTTP error: the row fails `evolution_restricted` and the number goes off.
+ */
+export const EVOLUTION_RESTRICTED = 'evolution_restricted';
+const RESTRICTION_CODES: ReadonlySet<string> = new Set(['463', '475']);
+
+const stubOf = (u: Update): (string | number)[] =>
+  [...(u.messageStubParameters ?? []), ...(u.update?.messageStubParameters ?? [])];
+
+const NO_FAILURE = { errorCode: null, errorText: null };
+
+function failureOf(u: Update): Pick<StatusEvent, 'errorCode' | 'errorText'> {
+  const code = stubOf(u).map(String).find((c) => RESTRICTION_CODES.has(c));
+  if (!code || u.status !== 'ERROR') return NO_FAILURE;
+  return { errorCode: EVOLUTION_RESTRICTED, errorText: `WhatsApp refused the send (${code}): restricted` };
+}
 
 /** Evolution's (Baileys') status spelling → our delivery ticks. */
 const TICK: Readonly<Record<string, StatusEvent['status']>> = {
@@ -65,8 +90,8 @@ function statuses(data: unknown, at: { now: Date; where: Receiving }): Evolution
     const u = updateSchema.safeParse(raw);
     const status = u.success && u.data.fromMe !== false ? own(TICK, u.data.status) : undefined;
     if (!u.success || !status) return [];
-    const base = { waMessageId: u.data.keyId, status, at: at.now, errorCode: null };
-    return [{ ...base, errorText: null, conversationId: null, pricingCategory: null, ...at.where }];
+    const base = { waMessageId: u.data.keyId, status, at: at.now, ...failureOf(u.data) };
+    return [{ ...base, conversationId: null, pricingCategory: null, ...at.where }];
   });
   return { kind: 'status', events };
 }

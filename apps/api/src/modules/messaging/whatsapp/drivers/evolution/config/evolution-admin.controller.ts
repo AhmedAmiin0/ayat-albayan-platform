@@ -5,17 +5,10 @@ import { z } from 'zod';
 import { Permissions } from '@/common/auth/decorators';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { NumbersEvolution } from '@/modules/messaging/numbers';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
-import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
-import { instanceQr, instanceState } from './evolution-instance';
+import { evolutionFailure as failure } from './evolution-failure';
+import { instanceQr, instanceState } from '@/modules/messaging/whatsapp/drivers/evolution/evolution-instance';
 
 const ID = z.uuid();
-
-/** Evolution's failure in words: the token refused, or Evolution not reachable (502). */
-function failure(e: unknown): unknown {
-  if (!(e instanceof WaError)) return e;
-  return waHttpError(e.info.credential === 'evolution' ? 'evolution_auth' : 'evolution_unreachable', 502);
-}
 
 /**
  * An Evolution number's connection (docs/19 «Evolution driver»): its state («افحص الاتصال») and

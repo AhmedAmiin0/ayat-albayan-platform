@@ -56,11 +56,7 @@ export interface TemplateSend {
 }
 
 /** A sample file Meta shows the template reviewer (report_ready's PDF header). */
-export interface SampleFile {
-  name: string;
-  mime: string;
-  bytes: Uint8Array<ArrayBuffer>;
-}
+export interface SampleFile { name: string; mime: string; bytes: Uint8Array<ArrayBuffer> }
 
 /**
  * A session file by link; `kind` defaults to document, `filename` is a document's only, an audio
@@ -101,6 +97,8 @@ export interface WhatsappClient {
   sendReaction?(input: ReactionSend): Promise<WaSent>;
   /** Staff chat only (Evolution Baileys, automatic sends off): a job's row is refused. */
   automaticOff?(): boolean;
+  /** Evolution Baileys: ms before `to` may go (pacing) and the daily cap; absent = no pacing. */
+  pace?(to: string): { waitMs: number; dailyCap: number } | null;
   /** Blue ticks for an inbound wamid (POST /messages {status:'read'}). */
   markRead(waMessageId: string): Promise<void>;
   /** All pages of the WABA's templates. Read-only: safe for the health check. */

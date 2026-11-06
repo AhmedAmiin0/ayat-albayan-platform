@@ -3,6 +3,7 @@ import type { NumbersEffects } from './numbers.effects';
 import { numberRow } from './numbers.fakes';
 import type { NumbersRepo } from './numbers.repo';
 import type { NumbersSecrets } from './config/numbers.secrets';
+import type { EvolutionNumbersRepo } from './evolution/evolution-numbers.repo';
 import { NumbersService } from './numbers.service';
 
 // A calls number is Kapso only (docs/28 §10): a PATCH that would make a non-Kapso calls number is
@@ -20,6 +21,7 @@ function setup(row = numberRow()) {
     queries as unknown as NumbersRepo,
     secrets as unknown as NumbersSecrets,
     effects as unknown as NumbersEffects,
+    { failQueued: vi.fn(async () => 0) } as unknown as EvolutionNumbersRepo,
   );
   return { svc, queries };
 }

@@ -1,6 +1,6 @@
 import {
-  EVOLUTION_MODES, evolutionStateOf, WA_PROVIDERS, type LineCheckView, type NumberEvolutionView,
-  type NumberHealth, type NumberView, type WaProvider,
+  EVOLUTION_MODES, evolutionConfigOf, evolutionStateOf, evolutionSyncOf, WA_PROVIDERS,
+  type LineCheckView, type NumberEvolutionView, type NumberHealth, type NumberView, type WaProvider,
 } from '@ab/shared';
 import type { Json } from '@ab/db';
 import { displayE164 } from '@/modules/messaging/whatsapp/lines/line-health.store';
@@ -14,7 +14,10 @@ function evolutionOf(row: NumberRow): NumberEvolutionView | null {
   const mode = EVOLUTION_MODES.find((m) => m === row.evolution_mode);
   if (row.provider !== 'evolution' || !mode) return null;
   const state = evolutionStateOf(row.evolution_state);
-  return { mode, auto_sends: row.evolution_auto_sends, state, state_at: row.evolution_state_at };
+  return {
+    mode, auto_sends: row.evolution_auto_sends, state, state_at: row.evolution_state_at,
+    config: evolutionConfigOf(row.evolution_config), sync: evolutionSyncOf(row.evolution_sync),
+  };
 }
 
 const isRecord = (v: Json | null): v is Record<string, Json | undefined> => typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -56,6 +59,8 @@ export function numberView(row: NumberRow, status: SecretStatus): NumberView {
       access_token: state(s.access_token),
       app_secret: state(s.app_secret),
       evolution_token: state(s.evolution_token),
+      evolution_cloud_token: state(s.evolution_cloud_token),
+      evolution_proxy_password: state(s.evolution_proxy_password),
     },
     evolution: evolutionOf(row),
   };

@@ -3,8 +3,9 @@
 # picks the «Evolution» driver for a number in «الأرقام». The owner decides when and where it runs.
 #
 # Lives in its own folder (e.g. /opt/evolution) with its OWN Postgres and Redis, so it never touches
-# the platform's stack or the CRM's. Only the API is published, on localhost: put the host Caddy in
-# front of it (README) for HTTPS. Memory (8 GB VPS shared with the platform and the CRM):
+# the platform's stack or the CRM's. The platform API reaches it at http://evolution-api:8080 on the
+# shared network `ayat-evolution` (README §1). The host port is bound to 127.0.0.1 only. The kit
+# creates no WhatsApp instance. Memory (8 GB VPS shared with the platform and the CRM):
 # 512 MB API + 256 MB Postgres + 64 MB Redis ≈ 0.8 GB. Measure with `docker stats` and adjust.
 name: ayat-evolution
 
@@ -16,16 +17,22 @@ x-log: &log
 
 services:
   evolution-api:
-    # Pinned: the version docs/19 was written against (Evolution 2.3.7). Upgrade on purpose only.
-    image: evoapicloud/evolution-api:v2.3.7
+    # Pinned by digest. 2.3.7 and 2.4.0-rc2 ship Baileys 7.0.0-rc.9, which lacks the
+    # trusted-contact token, so sends from fresh sessions fail with WhatsApp error 463.
+    # `homolog`, built from develop e273b904 on 2026-07-14 (OCI label image.revision),
+    # bundles Baileys 7.0.0-rc13 (package-lock.json). It is Evolution 2.4.0: license activation
+    # is required once (README §1). Move to a release tag with Baileys >= rc13 when one ships.
+    image: evoapicloud/evolution-api:homolog@sha256:1e656f95aa1a2b7c2455a6a36d654637ddc2658c263794a5074ada798412a549
     restart: unless-stopped
     env_file: .env
     depends_on:
       - evolution-postgres
       - evolution-redis
-    # Localhost only: Caddy terminates TLS and proxies https://<evolution-host> to it.
+    # Host port on localhost only (QR/manager over an SSH tunnel, or Caddy). Never 0.0.0.0.
     ports:
       - "127.0.0.1:8085:8080"
+    # `default`: this kit's Postgres/Redis. `shared`: the API calls http://evolution-api:8080.
+    networks: [default, shared]
     volumes:
       - evolution_instances:/evolution/instances
     mem_limit: 512m
@@ -51,6 +58,12 @@ services:
       - evolution_redis:/data
     mem_limit: 64m
     logging: *log
+
+networks:
+  default: {}
+  # Fixed name, so the platform's compose can join it as an external network (README §1).
+  shared:
+    name: ayat-evolution
 
 volumes:
   evolution_instances:

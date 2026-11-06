@@ -19,7 +19,7 @@ describe('EvolutionWhatsappClient — session messages', () => {
     expect(f.requests[0]?.url).toBe('https://evo.example.test/message/sendText/secondary-1');
     expect(f.requests[0]?.init.method).toBe('POST');
     expect(f.requests[0]?.init.headers).toMatchObject({ apikey: 'fake-instance-token' });
-    expect(f.requests[0]?.body).toEqual({ number: '966500000001', text: 'السلام عليكم' });
+    expect(f.requests[0]?.body).toEqual({ number: '966500000001', text: 'السلام عليكم', linkPreview: false });
   });
 
   it('a reply quotes the message by its id', async () => {
@@ -69,6 +69,7 @@ describe('EvolutionWhatsappClient — templates', () => {
     expect(f.requests[0]?.body).toEqual({
       number: '966500000001',
       text: 'تم حجز حلقة سارة — الأحد\n\nأكاديمية آيات البيان\nhttps://meet.jit.si/room-1',
+      linkPreview: false,
     });
   });
 

@@ -10,7 +10,10 @@
 -- 4. integration_secret_key_ok: the full list of migration 998 plus EVOLUTION_API_KEY (the server's
 --    global key, Vault name integration:EVOLUTION_API_KEY). EVOLUTION_API_BASE / EVOLUTION_SEND_GAP_MS
 --    are plain integration_config keys (validated by the API).
--- 5. messages.sent_as_text: a template the Evolution driver sent as plain text (Baileys has no templates).
+-- 5. wa_numbers.evolution_config (every Evolution option of the number, no secret; zod-validated by the
+--    API, an object here) and evolution_sync (the last push read back). The Cloud access token and the
+--    proxy password are number secrets (evolution_cloud_token, evolution_proxy_password).
+-- 6. messages.sent_as_text: a template the Evolution driver sent as plain text (Baileys has no templates).
 --
 -- Expand-only and idempotent. RLS is unchanged (no new table; wa_numbers and messages keep theirs).
 
@@ -25,6 +28,14 @@ alter table public.wa_numbers add column if not exists evolution_mode text;
 alter table public.wa_numbers add column if not exists evolution_auto_sends boolean not null default false;
 alter table public.wa_numbers add column if not exists evolution_state text;
 alter table public.wa_numbers add column if not exists evolution_state_at timestamptz;
+
+alter table public.wa_numbers add column if not exists evolution_config jsonb not null default '{}'::jsonb;
+alter table public.wa_numbers add column if not exists evolution_sync jsonb;
+
+alter table public.wa_numbers drop constraint if exists wa_numbers_evolution_config_object;
+alter table public.wa_numbers add constraint wa_numbers_evolution_config_object
+  check (jsonb_typeof(evolution_config) = 'object') not valid;
+alter table public.wa_numbers validate constraint wa_numbers_evolution_config_object;
 
 alter table public.wa_numbers drop constraint if exists wa_numbers_evolution_mode_check;
 alter table public.wa_numbers add constraint wa_numbers_evolution_mode_check
@@ -46,7 +57,9 @@ alter table public.messages add column if not exists sent_as_text boolean not nu
 
 create or replace function public.wa_number_secret_name_ok(p_name text) returns boolean
   language sql immutable set search_path = '' as $$
-  select p_name = any (array['access_token', 'app_secret', 'evolution_token']);
+  select p_name = any (array[
+    'access_token', 'app_secret', 'evolution_token', 'evolution_cloud_token', 'evolution_proxy_password'
+  ]);
 $$;
 
 -- One number's decrypted values, for the API's in-memory line config only (service role).
@@ -59,7 +72,9 @@ create or replace function public.wa_number_secret_read(p_id uuid) returns table
     and s.name in (
       'wa_number:' || p_id::text || ':access_token',
       'wa_number:' || p_id::text || ':app_secret',
-      'wa_number:' || p_id::text || ':evolution_token'
+      'wa_number:' || p_id::text || ':evolution_token',
+      'wa_number:' || p_id::text || ':evolution_cloud_token',
+      'wa_number:' || p_id::text || ':evolution_proxy_password'
     );
 $$;
 
@@ -89,6 +104,8 @@ grant execute on function public.integration_secret_key_ok(text) to service_role
 --   alter table public.wa_numbers drop constraint wa_numbers_evolution_mode_needed;
 --   alter table public.wa_numbers drop constraint wa_numbers_evolution_mode_check;
 --   alter table public.wa_numbers drop constraint wa_numbers_evolution_state_check;
+--   alter table public.wa_numbers drop constraint wa_numbers_evolution_config_object;
+--   alter table public.wa_numbers drop column evolution_config, drop column evolution_sync;
 --   alter table public.wa_numbers drop column evolution_mode, drop column evolution_auto_sends,
 --     drop column evolution_state, drop column evolution_state_at;
 --   alter table public.messages drop column sent_as_text;

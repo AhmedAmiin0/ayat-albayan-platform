@@ -1,43 +1,43 @@
-// Baileys pacing (docs/19 «Evolution driver», ban risk): one Baileys number waits at least `gapMs`
-// between two sends to DIFFERENT recipients. A send waits its turn; it is never dropped. Replies
-// in one conversation (same recipient) go without the gap. In memory, per instance: the API runs
-// one sender, and a restart only forgets the last send time (the next send waits nothing).
+// Baileys pacing (docs/19 «Evolution driver», ban risk): one Baileys number leaves at least `gapMs`
+// between two sends to DIFFERENT recipients; replies in one conversation (same recipient) go
+// without the gap. It never sleeps: the sender asks `waitMs` before the claim and, while a number
+// must wait, reschedules that row (next_attempt_at) and goes on with the others, so one paced
+// number never delays a Kapso, CRM or Meta row. In memory, per instance: the API runs one sender,
+// and a restart only forgets the last send time (the next send waits nothing).
 
 interface Last {
   to: string;
   at: number;
 }
 
-interface PacerClock {
+export interface PacerClock {
   now: () => number;
-  sleep: (ms: number) => Promise<void>;
 }
 
-const realClock: PacerClock = {
-  now: () => Date.now(),
-  sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
-};
+const realClock: PacerClock = { now: () => Date.now() };
 
-/** One instance's queue: sends are chained so two concurrent sends never share a slot. */
+/** Where one send leaves from and goes to, and the number's gap. */
+export interface PaceAt {
+  key: string;
+  to: string;
+  gapMs: number;
+}
+
 export class EvolutionPacer {
   private readonly last = new Map<string, Last>();
-  private readonly tail = new Map<string, Promise<void>>();
 
   constructor(private readonly clock: PacerClock = realClock) {}
 
-  /** Resolves when `to` may be sent from `key`; the slot is taken when it resolves. */
-  turn(key: string, at: { to: string; gapMs: number }): Promise<void> {
-    const prev = this.tail.get(key) ?? Promise.resolve();
-    const mine = prev.then(() => this.wait(key, at));
-    this.tail.set(key, mine.catch(() => undefined));
-    return mine;
+  /** Milliseconds before `to` may be sent from `key` (0 = now). Reads only; takes no slot. */
+  waitMs(at: PaceAt): number {
+    const last = this.last.get(at.key);
+    const due = last && last.to !== at.to ? last.at + at.gapMs - this.clock.now() : 0;
+    return Math.max(0, due);
   }
 
-  private async wait(key: string, at: { to: string; gapMs: number }): Promise<void> {
-    const last = this.last.get(key);
-    const due = last && last.to !== at.to ? last.at + at.gapMs - this.clock.now() : 0;
-    if (due > 0) await this.clock.sleep(due);
-    this.last.set(key, { to: at.to, at: this.clock.now() });
+  /** The send went out (or was handed to Evolution): the next one to another recipient waits. */
+  mark(at: Pick<PaceAt, 'key' | 'to'>): void {
+    this.last.set(at.key, { to: at.to, at: this.clock.now() });
   }
 }
 

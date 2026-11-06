@@ -12,6 +12,9 @@ export const EVO_BAILEYS: EvolutionLineEnv = {
   mode: 'baileys',
   autoSends: false,
   gapMs: 3_000,
+  dailyCap: 60,
+  delayMs: 0,
+  linkPreview: false,
 };
 
 export const EVO_CLOUD: EvolutionLineEnv = { ...EVO_BAILEYS, mode: 'cloud', instance: 'cloud-1' };
@@ -28,5 +31,5 @@ export const evoFailure = (status: number, message: unknown) => ({
   body: { status, error: 'Error', response: { message } },
 });
 
-/** A pacer that never waits (its own tests use a fake clock). */
-export const noWait = () => new EvolutionPacer({ now: () => 0, sleep: () => Promise.resolve() });
+/** A pacer whose clock stands still (its own tests move the clock). */
+export const noWait = () => new EvolutionPacer({ now: () => 0 });

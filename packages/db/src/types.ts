@@ -4941,9 +4941,11 @@ export type Database = {
           display_phone_e164: string | null;
           enabled: boolean;
           evolution_auto_sends: boolean;
+          evolution_config: Json;
           evolution_mode: string | null;
           evolution_state: string | null;
           evolution_state_at: string | null;
+          evolution_sync: Json | null;
           fallback_rank: number;
           health: Json | null;
           id: string;
@@ -4963,9 +4965,11 @@ export type Database = {
           display_phone_e164?: string | null;
           enabled?: boolean;
           evolution_auto_sends?: boolean;
+          evolution_config?: Json;
           evolution_mode?: string | null;
           evolution_state?: string | null;
           evolution_state_at?: string | null;
+          evolution_sync?: Json | null;
           fallback_rank?: number;
           health?: Json | null;
           id?: string;
@@ -4985,9 +4989,11 @@ export type Database = {
           display_phone_e164?: string | null;
           enabled?: boolean;
           evolution_auto_sends?: boolean;
+          evolution_config?: Json;
           evolution_mode?: string | null;
           evolution_state?: string | null;
           evolution_state_at?: string | null;
+          evolution_sync?: Json | null;
           fallback_rank?: number;
           health?: Json | null;
           id?: string;

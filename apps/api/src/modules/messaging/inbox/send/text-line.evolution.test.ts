@@ -17,7 +17,8 @@ const at = { now: NOW, windows: noWindows };
 
 const evo = (mode: EvolutionLineEnv['mode']): EvolutionLineEnv => ({
   provider: 'evolution', base: 'https://evo.example.test', instance: 'secondary-1',
-  token: 'fake-instance-token', mode, autoSends: false, gapMs: 3_000,
+  token: 'fake-instance-token', mode, autoSends: false, gapMs: 3_000, dailyCap: 60, delayMs: 0,
+  linkPreview: false,
 });
 
 function chatOnEvolution(mode: EvolutionLineEnv['mode']): void {

@@ -28,10 +28,10 @@ export const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   WACRM_API_BASE: 'wacrm',
   WACRM_API_KEY: 'wacrm',
   WACRM_WEBHOOK_SECRET: 'wacrm',
-  // A self-hosted Evolution API (docs/19 «Evolution driver»): base, global key, Baileys pacing.
+  // A self-hosted Evolution API (docs/19 «Evolution driver»): base, global key, internal http hosts.
   EVOLUTION_API_BASE: 'evolution',
   EVOLUTION_API_KEY: 'evolution',
-  EVOLUTION_SEND_GAP_MS: 'evolution',
+  EVOLUTION_INTERNAL_HOSTS: 'evolution',
   WA_ALLOWED_RECIPIENTS: 'wa_safety',
   WA_TEMPLATE_SYNC: 'wa_safety',
   // WhatsApp voice calls (docs/28): the staff device is the WebRTC peer; STUN (default a public

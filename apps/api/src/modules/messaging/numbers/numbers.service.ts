@@ -6,6 +6,7 @@ import { NumbersEffects } from './numbers.effects';
 import { numberPatch } from './numbers.patch';
 import { NumbersRepo, type NumberRow } from './numbers.repo';
 import { NumbersSecrets } from './config/numbers.secrets';
+import { EvolutionNumbersRepo } from './evolution/evolution-numbers.repo';
 
 /** What the audit keeps of a number: no health, no secret (secrets are not on the row anyway). */
 function audited(row: NumberRow | null): Json {
@@ -33,6 +34,8 @@ export class NumbersService {
     private readonly queries: NumbersRepo,
     private readonly secrets: NumbersSecrets,
     private readonly effects: NumbersEffects,
+    /** Rows pinned to a removed Evolution number fail visibly instead of waiting forever. */
+    private readonly evolution: EvolutionNumbersRepo,
   ) {}
 
   async list(): Promise<NumberView[]> {
@@ -84,7 +87,9 @@ export class NumbersService {
   /** Only a disabled number (409 number_enabled); its Vault entries go with it. */
   async remove(id: string, actorId: string): Promise<void> {
     const before = (await this.queries.byId(id)) ?? missing();
-    if (before.enabled || !(await this.queries.remove(id))) throw new ConflictException({ message: 'number_enabled' });
+    if (before.enabled) throw new ConflictException({ message: 'number_enabled' });
+    if (before.provider === 'evolution') await this.evolution.failQueued(id);
+    if (!(await this.queries.remove(id))) throw new ConflictException({ message: 'number_enabled' });
     await this.effects.after({ actorId, entity: 'wa_numbers', entityId: id, action: 'delete', before: audited(before) });
   }
 

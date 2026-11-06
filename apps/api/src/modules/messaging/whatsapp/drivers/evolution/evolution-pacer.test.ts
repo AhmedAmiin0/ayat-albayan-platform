@@ -1,48 +1,42 @@
 import { describe, expect, it } from 'vitest';
 import { EvolutionPacer } from './evolution-pacer';
 
-// docs/19 «Evolution driver»: a Baileys number waits a gap between different recipients.
+// docs/19 «Evolution driver»: a Baileys number keeps a gap between different recipients, and the
+// pacer never sleeps (the sender reschedules the row instead).
 
 function clock() {
   let t = 0;
-  const slept: number[] = [];
-  return {
-    slept,
-    now: () => t,
-    sleep: (ms: number) => {
-      slept.push(ms);
-      t += ms;
-      return Promise.resolve();
-    },
-  };
+  return { now: () => t, move: (ms: number) => (t += ms) };
 }
 
+const at = (key: string, to: string, gapMs = 3_000) => ({ key, to, gapMs });
+
 describe('EvolutionPacer', () => {
-  it('waits the gap before a different recipient; the same recipient goes at once', async () => {
+  it('answers the wait before a different recipient; the same recipient goes at once', () => {
     const c = clock();
     const p = new EvolutionPacer(c);
-    await p.turn('n1', { to: '+1', gapMs: 3_000 });
-    await p.turn('n1', { to: '+1', gapMs: 3_000 });
-    await p.turn('n1', { to: '+2', gapMs: 3_000 });
-    expect(c.slept).toEqual([3_000]);
+    expect(p.waitMs(at('n1', '+1'))).toBe(0);
+    p.mark(at('n1', '+1'));
+    expect(p.waitMs(at('n1', '+1'))).toBe(0);
+    expect(p.waitMs(at('n1', '+2'))).toBe(3_000);
+    c.move(1_000);
+    expect(p.waitMs(at('n1', '+2'))).toBe(2_000);
+    c.move(2_500);
+    expect(p.waitMs(at('n1', '+2'))).toBe(0);
   });
 
-  it('queues concurrent sends in order: none is dropped, each waits its turn', async () => {
-    const c = clock();
-    const p = new EvolutionPacer(c);
-    const done: string[] = [];
-    await Promise.all(['+1', '+2', '+3'].map((to) => p.turn('n1', { to, gapMs: 1_000 }).then(() => done.push(to))));
-    expect(done).toEqual(['+1', '+2', '+3']);
-    expect(c.slept).toEqual([1_000, 1_000]);
+  it('only reads: asking twice takes no slot', () => {
+    const p = new EvolutionPacer(clock());
+    p.mark(at('n1', '+1'));
+    expect(p.waitMs(at('n1', '+2'))).toBe(3_000);
+    expect(p.waitMs(at('n1', '+3'))).toBe(3_000);
   });
 
-  it('numbers are paced apart; a zero gap never waits', async () => {
-    const c = clock();
-    const p = new EvolutionPacer(c);
-    await p.turn('n1', { to: '+1', gapMs: 3_000 });
-    await p.turn('n2', { to: '+2', gapMs: 3_000 });
-    await p.turn('n3', { to: '+1', gapMs: 0 });
-    await p.turn('n3', { to: '+2', gapMs: 0 });
-    expect(c.slept).toEqual([]);
+  it('keeps numbers apart and a zero gap never waits', () => {
+    const p = new EvolutionPacer(clock());
+    p.mark(at('n1', '+1'));
+    expect(p.waitMs(at('n2', '+2'))).toBe(0);
+    p.mark(at('n3', '+1'));
+    expect(p.waitMs(at('n3', '+2', 0))).toBe(0);
   });
 });

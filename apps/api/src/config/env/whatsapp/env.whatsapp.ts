@@ -50,8 +50,13 @@ export interface EvolutionLineEnv {
   mode: EvolutionMode;
   /** Baileys: automatic notifications / templates allowed (default false: staff chat only). */
   autoSends: boolean;
-  /** Baileys: minimum gap between sends to different recipients (EVOLUTION_SEND_GAP_MS). */
+  /** Baileys: minimum gap between sends to different recipients (the number's limits.gap_ms). */
   gapMs: number;
+  /** Baileys: at most this many sends a UTC day from the number (limits.daily_cap). */
+  dailyCap: number;
+  /** sendText `delay` (typing shown) and `linkPreview` (sending.*). */
+  delayMs: number;
+  linkPreview: boolean;
 }
 /** A line the Graph client (graph.ts) can reach: Meta's Cloud API or Kapso's Meta proxy (or the stub). */
 export type GraphEnv = MetaLineEnv | KapsoLineEnv;

@@ -68,6 +68,11 @@ export class MessageDispatch {
     return this.client(via).configured() && recipientAllowed(this.allowed, row.phone_e164);
   }
 
+  /** An Evolution Baileys number's pace for this row (docs/19); null = no pacing. */
+  pace(row: DueMessage, via: SendVia): { waitMs: number; dailyCap: number } | null {
+    return this.client(via).pace?.(row.phone_e164) ?? null;
+  }
+
   /** Two lines in use: only then does the claim stamp `messages.line` (docs/12 §13.2). */
   get multi(): boolean {
     return this.lines.chat.configured();

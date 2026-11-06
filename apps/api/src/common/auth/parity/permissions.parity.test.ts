@@ -131,7 +131,10 @@ describe('system-role parity with the old @Roles table', () => {
   it('numbers.manage gates the numbers writes and the source switch only, for the system admin only', () => {
     const gated = routes.filter((r) => r.permission === 'numbers.manage').map((r) => r.key).sort();
     expect(gated).toEqual([
-      'CommunicationsController.setSource', 'NumbersController.clearSecret', 'NumbersController.create', 'NumbersController.import',
+      'CommunicationsController.setSource',
+      // owner 2026-11-06: every Evolution option, saved and pushed to the instance.
+      'EvolutionConfigController.config', 'EvolutionConfigController.push', 'EvolutionConfigController.verify',
+      'NumbersController.clearSecret', 'NumbersController.create', 'NumbersController.import',
       'NumbersController.remove', 'NumbersController.setSecret', 'NumbersController.update',
       // docs/19 «Evolution driver»: the QR links a WhatsApp account (state: a manage read too).
       'NumbersEvolutionController.qr', 'NumbersEvolutionController.state',
