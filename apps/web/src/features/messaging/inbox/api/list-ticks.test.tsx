@@ -36,46 +36,68 @@ const listed = (client: QueryClient) => client.getQueryData(LIST)?.items[0]?.las
 
 afterEach(() => apiFetch.mockReset());
 
-describe('useThreads: the inbox list never shows a tick behind its chat', () => {
-  it('a list answer still saying pending shows the ✓✓ the chat already merged', async () => {
+const CHAT = threadQuery(PHONE).queryKey;
+const never = () => new Promise(() => undefined);
+
+describe('useThreads: the inbox list never shows a tick behind a newer chat read', () => {
+  it('a list answer still saying pending shows the ✓✓ the chat merged after it', async () => {
     const { client, wrapper } = setup();
-    client.setQueryData(threadQuery(PHONE).queryKey, chat('delivered'));
-    apiFetch.mockResolvedValue(page('queued'));
+    client.setQueryData(LIST, page('queued'), { updatedAt: 1000 });
+    client.setQueryData(CHAT, chat('delivered'));
+    apiFetch.mockImplementation(never);
     const { result } = renderHook(() => useThreads({ page: 1 }), { wrapper });
     await waitFor(() => expect(result.current.data?.items[0]?.last_status).toBe('delivered'));
   });
 
+  it('a chat copy older than the list never lifts it (a message the server re-queued)', async () => {
+    const { client, wrapper } = setup();
+    client.setQueryData(CHAT, chat('delivered'), { updatedAt: 500 });
+    client.setQueryData(LIST, page('queued'), { updatedAt: 1000 });
+    apiFetch.mockImplementation(never);
+    const { result } = renderHook(() => useThreads({ page: 1 }), { wrapper });
+    await waitFor(() => expect(result.current.data?.items).toHaveLength(1));
+    expect(result.current.data?.items[0]?.last_status).toBe('queued');
+  });
+
   it('a list answer further along, or failed, wins', async () => {
     const { client, wrapper } = setup();
-    client.setQueryData(threadQuery(PHONE).queryKey, chat('sent'));
+    client.setQueryData(CHAT, chat('sent'));
     apiFetch.mockResolvedValue(page('failed'));
     const { result } = renderHook(() => useThreads({ page: 1 }), { wrapper });
     await waitFor(() => expect(result.current.data?.items[0]?.last_status).toBe('failed'));
   });
 });
 
-describe('useTicksInLists: the open chat writes its ticks into every cached list', () => {
+describe('useTicksInLists: the open chat writes its ticks into every older cached list', () => {
+  const mount = (client: QueryClient, wrapper: ReturnType<typeof setup>['wrapper']) =>
+    renderHook(({ data }) => useTicksInLists(PHONE, data), {
+      wrapper,
+      initialProps: { data: chat('queued') },
+    });
+
   it('lifts the row at once, keeping the list\'s time and its stale mark', async () => {
     const { client, wrapper } = setup();
     client.setQueryData(LIST, page('queued'), { updatedAt: 1000 });
     await client.invalidateQueries({ queryKey: LIST, refetchType: 'none' });
-    const { rerender } = renderHook(({ data }) => useTicksInLists(data), {
-      wrapper,
-      initialProps: { data: chat('queued') },
-    });
+    const { rerender } = mount(client, wrapper);
     expect(listed(client)).toBe('queued');
+    client.setQueryData(CHAT, chat('read'));
     rerender({ data: chat('read') });
     expect(listed(client)).toBe('read');
     expect(client.getQueryState(LIST)?.dataUpdatedAt).toBe(1000);
     expect(client.getQueryState(LIST)?.isInvalidated).toBe(true);
   });
 
-  it('never lowers a row and leaves an unchanged list untouched', () => {
+  it('never lowers a row, nor writes into a list read after the chat', () => {
     const { client, wrapper } = setup();
     const kept = page('read');
     client.setQueryData(LIST, kept);
-    renderHook(() => useTicksInLists(chat('sent')), { wrapper });
-    renderHook(() => useTicksInLists(undefined), { wrapper });
+    client.setQueryData(CHAT, chat('sent'));
+    mount(client, wrapper).rerender({ data: chat('sent') });
     expect(client.getQueryData(LIST)).toBe(kept);
+    client.setQueryData(CHAT, chat('delivered'), { updatedAt: 500 });
+    client.setQueryData(LIST, page('queued'), { updatedAt: 1000 });
+    mount(client, wrapper).rerender({ data: chat('delivered') });
+    expect(listed(client)).toBe('queued'); // re-queued by the server after that chat copy
   });
 });

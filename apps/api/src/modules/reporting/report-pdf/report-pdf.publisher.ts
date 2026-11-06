@@ -6,9 +6,10 @@ import type { PdfContact } from './render/pdf-model';
 import { pdfAssets } from './pdf-assets';
 import { footerLabel } from './render/pdf-pages';
 import { PdfRenderer } from './render/pdf-renderer';
-import { toMessage, toModel } from './report-pdf.mapper';
+import { toModel } from './report-pdf.mapper';
 import { ReportPdfSource } from './report-pdf.source';
-import type { ReportReadyMessage } from './report-ready';
+import { readyMessages, type ReadyMessage } from './ready/report-ready-choice';
+import { ReportReadyRepo } from './ready/report-ready.repo';
 import { ReportPdfSettings } from './report-pdf.settings';
 import { ReportFeedbackLink } from './report-feedback-link';
 import { reportHtml } from './template/template';
@@ -17,7 +18,8 @@ import { familyHtml } from './v2/family-template';
 
 export interface Published {
   path: string;
-  message: ReportReadyMessage;
+  /** The family's message, then the teacher's when report_ready_teacher is approved. */
+  messages: ReadyMessage[];
 }
 
 /** One report: read it, render the PDF, store it at reports/{student_id}/{lesson_id}.pdf. */
@@ -37,10 +39,11 @@ export class ReportPdfPublisher {
    */
   @Inject(ReportPdfSettings) private readonly settings!: ReportPdfSettings;
   @Inject(ReportFeedbackLink) private readonly feedback!: ReportFeedbackLink;
+  @Inject(ReportReadyRepo) private readonly templates!: ReportReadyRepo;
 
   /**
    * Overwrites the object: a re-rendered (edited) report keeps its path (R-REP-04). Same path and
-   * message for v1 and v2.
+   * messages for v1 and v2 (readyMessages: the link templates once approved).
    */
   async publish(reportId: string, now: Date): Promise<Published> {
     const source = await this.source.load(reportId, now);
@@ -54,7 +57,9 @@ export class ReportPdfPublisher {
     const path = reportPdfPath({ studentId, lessonId });
     await this.storage.upload({ bucket: BUCKETS.reports, path, body, contentType: 'application/pdf' });
     const feedbackUrl = await this.feedback.url({ lessonId, studentId }, now);
-    return { path, message: toMessage(source, { pdfPath: path, feedbackUrl }, now) };
+    const approved = await this.templates.approved();
+    const messages = readyMessages({ source, feedbackUrl, now, pdfPath: path, approved });
+    return { path, messages };
   }
 
   /**

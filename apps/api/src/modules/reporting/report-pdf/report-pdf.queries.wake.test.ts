@@ -19,7 +19,7 @@ describe('ReportPdfQueries.queueMessage wakes the sender', () => {
 
   it('a queued report_ready row (new or earlier): one wake', async () => {
     const { db, calls } = fakeDb({ messages: [{}, { data: [{ id: 'm1' }] }] });
-    await new ReportPdfQueries(db).queueMessage(message);
+    await new ReportPdfQueries(db).queueMessages([message]);
     await flush();
     expect(kick).toHaveBeenCalledTimes(1);
     expect(calls.filter((c) => c.method === 'select').map((c) => c.args)).toEqual([['id']]);
@@ -27,7 +27,7 @@ describe('ReportPdfQueries.queueMessage wakes the sender', () => {
 
   it('already sent (no still-queued row): no wake', async () => {
     const { db } = fakeDb({ messages: [{}, { data: [] }] });
-    await new ReportPdfQueries(db).queueMessage(message);
+    await new ReportPdfQueries(db).queueMessages([message]);
     await flush();
     expect(kick).not.toHaveBeenCalled();
   });
@@ -35,7 +35,7 @@ describe('ReportPdfQueries.queueMessage wakes the sender', () => {
   it('a failed kick never fails the write', async () => {
     kick.mockRejectedValueOnce(new Error('worker down'));
     const { db } = fakeDb({ messages: [{}, { data: [{ id: 'm1' }] }] });
-    await expect(new ReportPdfQueries(db).queueMessage(message)).resolves.toBeUndefined();
+    await expect(new ReportPdfQueries(db).queueMessages([message])).resolves.toBeUndefined();
     await flush();
     expect(kick).toHaveBeenCalledTimes(1);
   });

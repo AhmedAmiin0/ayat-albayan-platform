@@ -20,7 +20,7 @@ export function useLiveThread(phone: string) {
   const detail = useInfiniteQuery(options);
   const client = useQueryClient();
   useLiveChat(phone);
-  useTicksInLists(detail.data); // the list beside it shows the same tick (docs/43 43-1)
+  useTicksInLists(phone, detail.data); // the list beside it shows the same tick (docs/43 43-1)
   const queryKey = options.queryKey;
   useQuery({
     // Outside ['threads']: a send's or an opened chat's invalidation never runs it.

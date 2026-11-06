@@ -5,6 +5,7 @@ import { supabase } from '@/core/lib/http/supabase';
 import { queryClient as client } from '@/core/lib/query/query-client';
 import { threadPollKey } from '@/inbox/thread/hooks/thread-poll';
 import { inboxLive } from './inbox-live';
+import { changeLists } from './list-marks';
 
 const active = () => AppState.currentState === 'active';
 
@@ -13,10 +14,10 @@ const targets: LiveTargets = {
   chat: (phone) => {
     if (active()) void client.refetchQueries({ queryKey: threadPollKey(phone) });
   },
-  // A read in flight started before this change: it is cancelled, never joined (its older answer
-  // would show a stale tick, docs/43 AU1); the list throttle still caps these at one per 3 s.
+  // Shown lists re-read with the last word (a read in flight is followed by a fresh one, docs/43
+  // AU1); hidden ones are only marked (list-marks.ts). Throttled to one per 3 s.
   list: () => {
-    if (active()) void client.refetchQueries({ queryKey: ['threads', 'list'], type: 'active' }, { cancelRefetch: true });
+    if (active()) changeLists(client);
   },
   badge: () => {
     if (active()) void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false });

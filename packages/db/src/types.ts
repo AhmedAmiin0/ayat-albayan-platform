@@ -2147,6 +2147,7 @@ export type Database = {
           pdf_path: string | null;
           pdf_status: Database['public']['Enums']['pdf_status'] | null;
           program: Database['public']['Enums']['program'] | null;
+          public_id: string;
           recited: string | null;
           revision: string | null;
           sent_at: string | null;
@@ -2182,6 +2183,7 @@ export type Database = {
           pdf_path?: string | null;
           pdf_status?: Database['public']['Enums']['pdf_status'] | null;
           program?: Database['public']['Enums']['program'] | null;
+          public_id?: string;
           recited?: string | null;
           revision?: string | null;
           sent_at?: string | null;
@@ -2217,6 +2219,7 @@ export type Database = {
           pdf_path?: string | null;
           pdf_status?: Database['public']['Enums']['pdf_status'] | null;
           program?: Database['public']['Enums']['program'] | null;
+          public_id?: string;
           recited?: string | null;
           revision?: string | null;
           sent_at?: string | null;

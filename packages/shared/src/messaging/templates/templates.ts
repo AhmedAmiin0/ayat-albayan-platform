@@ -16,6 +16,8 @@ export const TEMPLATE_KEYS = [
   'teacher_lesson_reminder_meet',
   'lesson_reminder_24h',
   'report_ready',
+  'report_ready_teacher',
+  'report_ready_family',
   'renewal_due',
   'follow_up_slots',
   'lesson_feedback_request',

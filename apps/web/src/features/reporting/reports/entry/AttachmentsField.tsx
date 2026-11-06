@@ -4,7 +4,8 @@ import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { attachmentUrl, removeAttachment, reportErrorText, uploadAttachment } from '@/features/reporting/reports/api';
+import { reportErrorText } from '@/features/reporting/reports/api';
+import { useReportApi } from '@/features/reporting/reports/report-api';
 
 export interface AttachmentsFieldProps {
   reportId: string;
@@ -25,14 +26,15 @@ export function fileLabel(file: Pick<ReportAttachmentView, 'mime' | 'size'>): st
 
 /** «المرفقات (اختياري)» (R-REP-02): signed upload to Storage, then registered on the report. */
 export function AttachmentsField({ reportId, files, onChange, editable, addLabel = t.reports.attach }: AttachmentsFieldProps) {
+  const { files: calls } = useReportApi();
   const input = useRef<HTMLInputElement>(null);
   const [local, setLocal] = useState<string | null>(null);
   const upload = useMutation({
-    mutationFn: uploadAttachment,
+    mutationFn: calls.upload,
     onSuccess: (file) => onChange((list) => [...list, file]),
   });
   const remove = useMutation({
-    mutationFn: removeAttachment,
+    mutationFn: calls.remove,
     onSuccess: (_v, { attachmentId }) => onChange((list) => list.filter((f) => f.id !== attachmentId)),
   });
   const pick = (file: File | undefined) => {
@@ -43,7 +45,7 @@ export function AttachmentsField({ reportId, files, onChange, editable, addLabel
     if (input.current) input.current.value = '';
   };
   const open = async (attachmentId: string) => {
-    const { url } = await attachmentUrl({ id: reportId, attachmentId });
+    const { url } = await calls.url({ id: reportId, attachmentId });
     window.open(url, '_blank', 'noopener');
   };
   const error = local ? (t.reports.error as Record<string, string>)[local] : upload.error ?? remove.error;
