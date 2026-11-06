@@ -53,8 +53,6 @@ export function outbound(over: Partial<OutboundRow> = {}): OutboundRow {
     sent_at: '2026-10-03T12:00:00.000Z',
     delivered_at: null,
     read_at: null,
-    wa_message_id: 'wamid.OUT1',
-    sent_manually_at: null,
     attempts: 1,
     guardians: { name: 'أم سهيلة' },
     leads: null,

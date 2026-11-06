@@ -22,16 +22,15 @@ export class ReopenCancelRepo {
    * Is any other message to this family still queued (held for their reply, claimed by the sender
    * right now, or waiting its turn)? Any of them may need the reopen: it is kept.
    */
-  async othersPending(phone: string, except: string): Promise<boolean> {
-    const { data, error } = await this.db
+  async othersPending(phone: string, except: string | null): Promise<boolean> {
+    const query = this.db
       .from('messages')
       .select('id')
       .eq('phone_e164', phone)
       .eq('direction', 'outbound')
       .eq('status', 'queued')
-      .or(NOT_REOPEN)
-      .neq('id', except)
-      .limit(1);
+      .or(NOT_REOPEN);
+    const { data, error } = await (except ? query.neq('id', except) : query).limit(1);
     if (error) throw fail('held messages read', error.message);
     return data.length > 0;
   }
@@ -39,22 +38,23 @@ export class ReopenCancelRepo {
   /**
    * This phone's reopen template rows still QUEUED and not claimed → failed REOPEN_NOT_NEEDED, in
    * one compare-and-set: a row the sender claimed, sent or failed meanwhile is never touched.
+   * `only`: just the row of that dedup key (the one a missed hold queued).
    */
-  async cancelQueued(phone: string): Promise<string[]> {
-    const { data, error } = await this.db
+  async cancelQueued(phone: string, only: string | null): Promise<string[]> {
+    const query = this.db
       .from('messages')
       .update({
         status: 'failed',
         error_code: REOPEN_NOT_NEEDED,
-        error_text: 'staff sent the held text from WhatsApp, so no reply needs asking for',
+        error_text: 'no held text of this family needs the reply any more',
         next_attempt_at: null,
       })
       .eq('phone_e164', phone)
       .eq('direction', 'outbound')
       .like('dedup_key', reopenKeys(phone))
       .eq('status', 'queued')
-      .or(NOT_CLAIMED)
-      .select('id');
+      .or(NOT_CLAIMED);
+    const { data, error } = await (only ? query.eq('dedup_key', only) : query).select('id');
     if (error) throw fail('reopen cancel', error.message);
     return data.map((r) => r.id);
   }

@@ -27,10 +27,10 @@ const held = message({
   phone_e164: PHONE,
 });
 
-it('the menu item marks the row, then opens WhatsApp Web', async () => {
+it('the menu item calls app-send, then opens WhatsApp Web', async () => {
   const tab = { opener: {}, location: { replace: vi.fn() }, close: vi.fn() };
   const open = vi.spyOn(window, 'open').mockReturnValue(tab as unknown as Window);
-  vi.mocked(apiSend).mockResolvedValue({ ...held, status: 'sent_manually' });
+  vi.mocked(apiSend).mockResolvedValue({ ...held, app_send_until: '2026-11-06T12:10:00Z' });
   renderWithClient(
     <ChatActionsProvider thread={thread()} enabled>
       <MessageLog {...base} messages={[held]} />
@@ -40,7 +40,7 @@ it('the menu item marks the row, then opens WhatsApp Web', async () => {
   const menu = screen.getByRole('button', { name: t.inbox.copy.label }).parentElement;
   fireEvent.click(within(menu as HTMLElement).getByRole('button', { name: t.messages.whatsappSend.action }));
   await waitFor(() => expect(tab.location.replace).toHaveBeenCalled());
-  expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-held/sent-manually');
+  expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-held/app-send');
   expect(String(tab.location.replace.mock.calls[0]?.[0])).toMatch(/^https:\/\/web\.whatsapp\.com\/send\?phone=/);
   open.mockRestore();
 });

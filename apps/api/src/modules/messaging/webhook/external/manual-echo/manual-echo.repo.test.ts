@@ -1,39 +1,56 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { ManualEchoRepo } from './manual-echo.repo';
+import { row } from './manual-echo.fixtures.test-util';
 
-const W = { id: 'm1', from: null, waMessageId: 'wamid.APP1', at: new Date('2026-11-06T10:20:00Z') };
+const W = {
+  row: row({ lead_id: 'lead-1' }),
+  waMessageId: 'wamid.APP1',
+  patch: { status: 'sent' as const, sent_at: '2026-11-06T10:05:00.000Z' },
+};
+const recorded = (calls: { method: string; args: unknown[] }[]) =>
+  calls.map((c) => [c.method, ...c.args]);
 
 describe('ManualEchoRepo', () => {
-  it('candidates: the phone, outbound sent_manually, marked within the span', async () => {
+  it('candidates: the phone, staff outbound, no wamid, a window in the span', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: [] }] });
-    const span = { since: new Date('2026-11-06T09:50:00Z'), until: new Date('2026-11-06T10:22:00Z') };
+    const span = { since: new Date('2026-11-06T10:00:00Z'), until: new Date('2026-11-06T10:20:00Z') };
     await new ManualEchoRepo(db).candidates('+966500000001', span);
-    const filters = calls.filter((c) => c.method !== 'select').map((c) => [c.method, ...c.args]);
-    expect(filters).toEqual(
+    expect(recorded(calls)).toEqual(
       expect.arrayContaining([
         ['eq', 'phone_e164', '+966500000001'],
         ['eq', 'direction', 'outbound'],
-        ['eq', 'status', 'sent_manually'],
-        ['gte', 'sent_manually_at', '2026-11-06T09:50:00.000Z'],
-        ['lte', 'sent_manually_at', '2026-11-06T10:22:00.000Z'],
+        ['not', 'created_by', 'is', null],
+        ['is', 'wa_message_id', null],
+        ['gte', 'app_send_until', '2026-11-06T10:00:00.000Z'],
+        ['lte', 'app_send_until', '2026-11-06T10:20:00.000Z'],
       ]),
     );
   });
 
-  it('attach: compare-and-set on still sent_manually with no wamid', async () => {
-    const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'm1' }] }] });
+  it('attach: wamid and status set, window and hold cleared, compare-and-set', async () => {
+    const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'm1' }] }], leads: [{}] });
     await expect(new ManualEchoRepo(db).attach(W)).resolves.toBe(true);
-    const sets = calls.map((c) => [c.method, ...c.args]);
-    expect(sets).toContainEqual(['update', { wa_message_id: 'wamid.APP1', sent_at: '2026-11-06T10:20:00.000Z' }]);
-    expect(sets).toContainEqual(['eq', 'status', 'sent_manually']);
+    const sets = recorded(calls);
+    expect(sets).toContainEqual([
+      'update',
+      expect.objectContaining({
+        wa_message_id: 'wamid.APP1',
+        status: 'sent',
+        sent_at: '2026-11-06T10:05:00.000Z',
+        app_send_until: null,
+        error_code: null,
+        expires_at: null,
+        next_attempt_at: null,
+        sent_manually_at: expect.any(String),
+      }),
+    ]);
     expect(sets).toContainEqual(['is', 'wa_message_id', null]);
-  });
-
-  it('attach over an old wamid: compare-and-set on that wamid', async () => {
-    const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'm1' }] }] });
-    await new ManualEchoRepo(db).attach({ ...W, from: 'wamid.OLD' });
-    expect(calls.map((c) => [c.method, ...c.args])).toContainEqual(['eq', 'wa_message_id', 'wamid.OLD']);
+    expect(sets).toContainEqual(['not', 'app_send_until', 'is', null]);
+    expect(sets).toContainEqual(['in', 'status', ['queued', 'failed', 'sent_manually']]);
+    expect(sets).toContainEqual(['or', 'error_code.is.null,error_code.neq.sending']);
+    expect(sets.some((s) => s[0] === 'eq' && s[1] === 'wa_message_id')).toBe(false);
+    expect(sets).toContainEqual(['update', { last_outbound_at: '2026-11-06T10:05:00.000Z' }]);
   });
 
   it('attach: lost the race (no row) or the wamid is already stored: false', async () => {

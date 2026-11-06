@@ -30,26 +30,26 @@ describe('whatsappSendUrl', () => {
   });
 });
 
-describe('sendViaWhatsApp: mark first, then open', () => {
-  it('marks, then opens: opened', async () => {
+describe('sendViaWhatsApp: the pending window first, then open', () => {
+  it('app-send, then opens: opened', async () => {
     const order: string[] = [];
-    const mark = vi.fn(async () => (order.push('mark'), 'row'));
+    const start = vi.fn(async () => (order.push('app-send'), 'row'));
     const open = vi.fn(async () => (order.push('open'), true));
-    await expect(sendViaWhatsApp({ mark, open })).resolves.toEqual({ row: 'row', opened: true });
-    expect(order).toEqual(['mark', 'open']);
+    await expect(sendViaWhatsApp({ start, open })).resolves.toEqual({ row: 'row', opened: true });
+    expect(order).toEqual(['app-send', 'open']);
   });
 
-  it('a refused mark throws and never opens WhatsApp', async () => {
+  it('a refused app-send (409) throws and never opens WhatsApp', async () => {
     const open = vi.fn(() => true);
-    const mark = vi.fn(() => Promise.reject(new Error('not_manual')));
-    await expect(sendViaWhatsApp({ mark, open })).rejects.toThrow('not_manual');
+    const start = vi.fn(() => Promise.reject(new Error('not_app_send')));
+    await expect(sendViaWhatsApp({ start, open })).rejects.toThrow('not_app_send');
     expect(open).not.toHaveBeenCalled();
   });
 
-  it('WhatsApp did not open (false or a throw): the marked row, opened false', async () => {
-    const mark = async () => 'row';
-    await expect(sendViaWhatsApp({ mark, open: () => false })).resolves.toEqual({ row: 'row', opened: false });
+  it('WhatsApp did not open (false or a throw): the pending row, opened false', async () => {
+    const start = async () => 'row';
+    await expect(sendViaWhatsApp({ start, open: () => false })).resolves.toEqual({ row: 'row', opened: false });
     const boom = () => Promise.reject(new Error('no handler'));
-    await expect(sendViaWhatsApp({ mark, open: boom })).resolves.toEqual({ row: 'row', opened: false });
+    await expect(sendViaWhatsApp({ start, open: boom })).resolves.toEqual({ row: 'row', opened: false });
   });
 });

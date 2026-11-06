@@ -12,7 +12,8 @@ import {
 
 // «أرسل عبر واتساب» (owner 2026-11-06, «I don't want this 24h limitation»): a staff text that the
 // 24 h window stopped is sent by staff from the WhatsApp Business app (coexistence: app sends have
-// no window). The platform marks it sent_manually FIRST, so it can never send it too.
+// no window). The tap only opens a short pending window (app_send_until): the platform never sends
+// the row meanwhile, and the app's echo, when it comes, confirms the send (docs/19).
 
 /** Failed codes that mean «stopped by the 24 h window», never another failure. */
 const WINDOW_FAILURES: ReadonlySet<string> = new Set([
@@ -52,34 +53,39 @@ export function canSendViaWhatsApp(m: SendRow): boolean {
 }
 
 /**
- * messages.error_code of a reopen template that was still queued when staff sent the held text
- * from WhatsApp themselves (no other text waited for that family): never sent, never retried.
+ * messages.error_code of a reopen template that was still queued when the app's echo confirmed
+ * the held text (no other text waited for that family), or that a lost hold queued: never sent.
  */
 export const REOPEN_NOT_NEEDED = 'reopen_not_needed';
 
-/** How long after «أرسل عبر واتساب» its undo (WhatsApp did not open) and the app's echo count. */
-export const WHATSAPP_SEND_MS = 30 * 60_000;
+/** How long one tap keeps the platform from sending the row (app_send_until = now + this). */
+export const APP_SEND_MS = 10 * 60_000;
+/** An echo still attaches this long after the window passed (15 min after the tap in all). */
+export const APP_SEND_GRACE_MS = 5 * 60_000;
 
-/**
- * POST /messages/:id/retry?undo=whatsapp: «تراجع» of «أرسل عبر واتساب» (sent_manually → queued).
- * Without it a retry only takes a failed row: a stale «حاول مرة أخرى» never undoes a manual send.
- */
-export const messageRetryQuerySchema = z.object({ undo: z.literal('whatsapp').optional() });
-export type MessageRetryQuery = z.infer<typeof messageRetryQuerySchema>;
-
-/** A sent_manually row as the echo attach and the undo read it. */
-export interface ManualSendStamp {
-  wa_message_id: string | null;
-  sent_at: string | null;
-  sent_manually_at: string | null;
+/** «جارٍ الإرسال من واتساب…»: the tap's window is still open at `now`. */
+export function appSendPending(m: Pick<MessageView, 'app_send_until'>, now: Date): boolean {
+  return Date.parse(m.app_send_until ?? '') > now.getTime();
 }
 
-/**
- * The app's echo is on the row: it carries a wamid stamped at or after the mark (sent_at ≥
- * sent_manually_at). A row that failed after WhatsApp took it keeps its old wamid and sent_at from
- * before the mark: no echo yet.
- */
-export function echoAttached(r: ManualSendStamp): boolean {
-  const sent = Date.parse(r.sent_at ?? '');
-  return r.wa_message_id !== null && sent >= Date.parse(r.sent_manually_at ?? '');
+/** 409 of POST /messages/:id/app-send: the row as it is now (never a held text any more). */
+export const appSendRefusalSchema = z.object({
+  code: z.literal('not_app_send'),
+  status: z.string(),
+  error_code: z.string().nullable().optional(),
+});
+
+/** What a refused tap says: the platform is sending it, it was sent already, or neither. */
+export type AppSendRefusal = 'sending' | 'sent' | 'other';
+
+const SENT: ReadonlySet<string> = new Set(['sent', 'delivered', 'read', 'sent_manually']);
+const sentOrOther = (status: string): AppSendRefusal => (SENT.has(status) ? 'sent' : 'other');
+
+/** The refusal of a 409 body; null for any other error (a network or server error). */
+export function appSendRefusal(body: unknown): AppSendRefusal | null {
+  const parsed = appSendRefusalSchema.safeParse(body);
+  if (!parsed.success) return null;
+  const { status, error_code } = parsed.data;
+  const claimed = status === 'queued' && error_code === 'sending';
+  return claimed ? 'sending' : sentOrOther(status);
 }

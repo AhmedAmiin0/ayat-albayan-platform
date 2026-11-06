@@ -24,28 +24,30 @@ export function whatsappSendUrl(
   return LINKS[target](whatsappDigits(to.phone), encodeURIComponent(to.text));
 }
 
-/** The two steps: mark it sent from WhatsApp on the server, then open WhatsApp. */
+/** The two steps: open the pending window on the server, then open WhatsApp. */
 interface WhatsAppSendSteps<R> {
-  /** POST /messages/:id/sent-manually; throws when the server refused (nothing is opened). */
-  mark: () => Promise<R>;
+  /** POST /messages/:id/app-send; throws when the server refused (nothing is opened). */
+  start: () => Promise<R>;
   /** Opens WhatsApp; false or a throw = it did not open. */
   open: () => Promise<boolean> | boolean;
 }
 
-/** What happened: the marked row, and whether WhatsApp opened (false: offer «تراجع»). */
+/** What happened: the pending row, and whether WhatsApp opened (false: «افتح واتساب مجددًا»). */
 export interface WhatsAppSendResult<R> {
   row: R;
   opened: boolean;
 }
 
 /**
- * Marks first, so the platform can never send the text too (no duplicate), and opens WhatsApp
- * only once the server agreed. A refused mark throws and opens nothing.
+ * The pending window first, so the platform never sends the text while staff send it (no
+ * duplicate), and WhatsApp opens only once the server agreed. Nothing is marked sent: the app's
+ * echo confirms it, and with no echo the row is as before once the window passes (nothing
+ * lost). A refused start throws and opens nothing.
  */
 export async function sendViaWhatsApp<R>(
   steps: WhatsAppSendSteps<R>,
 ): Promise<WhatsAppSendResult<R>> {
-  const row = await steps.mark();
+  const row = await steps.start();
   try {
     return { row, opened: await steps.open() };
   } catch {

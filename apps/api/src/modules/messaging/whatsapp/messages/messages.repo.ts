@@ -7,8 +7,6 @@ import { HANDED_OFF, SENDING } from '@/modules/messaging/whatsapp/sender/send-pl
 
 /** Not while the sender holds the row (its claim): Meta may be sending it right now. */
 const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
-/** No next try and no error: due now. */
-const CLEAR = { next_attempt_at: null, error_code: null, error_text: null } as const;
 
 const heldAgain = (at: Date) =>
   ({ error_code: AWAITING_REPLY, scheduled_for: at.toISOString(), expires_at: null }) as const;
@@ -82,26 +80,6 @@ export class MessagesRepo {
       .select(MESSAGE_SELECT)
       .maybeSingle();
     if (error) throw new Error(`message hand-off failed: ${error.message}`);
-    return data;
-  }
-
-  /**
-   * «تراجع» of «أرسل عبر واتساب» (WhatsApp did not open): sent_manually → queued, a fresh attempt
-   * budget, compare-and-set on a staff row still holding the wamid it was read with (no app echo
-   * attached since), marked since `since`. The sender then sends it, or holds it again.
-   */
-  async unsend(id: string, at: { since: Date; wamid: string | null }): Promise<ThreadMessageRow | null> {
-    const query = this.db
-      .from('messages')
-      .update({ status: 'queued', sent_manually_at: null, attempts: 0, ...CLEAR })
-      .eq('id', id)
-      .eq('direction', 'outbound')
-      .eq('status', 'sent_manually')
-      .not('created_by', 'is', null)
-      .gte('sent_manually_at', at.since.toISOString());
-    const same = at.wamid === null ? query.is('wa_message_id', null) : query.eq('wa_message_id', at.wamid);
-    const { data, error } = await same.select(MESSAGE_SELECT).maybeSingle();
-    if (error) throw new Error(`message undo failed: ${error.message}`);
     return data;
   }
 }

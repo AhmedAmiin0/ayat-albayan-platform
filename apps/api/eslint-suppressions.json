@@ -7016,7 +7016,7 @@
   },
   "src/modules/messaging/whatsapp/messages/messages.service.ts": {
     "max-len": {
-      "count": 1
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/messages/receipts/receipt-candidates.ts": {

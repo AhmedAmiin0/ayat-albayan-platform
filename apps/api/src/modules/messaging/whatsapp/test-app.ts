@@ -13,6 +13,7 @@ import { LineHealthStore } from './lines/line-health.store';
 import { LinesCheck } from './lines/lines.check';
 import { MessageSender } from './sender/message.sender';
 import { MessagesRepo } from './messages/messages.repo';
+import { AppSendRepo } from './messages/app-send';
 import { SendGate } from './gate/send-gate';
 import { TemplatesRepo, type ApprovalRow } from './templates/catalog/templates.repo';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from './whatsapp.types';
@@ -44,6 +45,7 @@ function mocks() {
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), create: vi.fn(), approvals: vi.fn(async (): Promise<ApprovalRow[]> => []), upsertApprovals: vi.fn(), numberRef: vi.fn(),
       saveLineSync: vi.fn(async (s: { line: string }) => void synced.set(s.line, s)), lineSyncs: vi.fn(async () => new Map(synced)) },
     messages: { get: vi.fn(), requeue: vi.fn(), markSentManually: vi.fn(), handOff: vi.fn() },
+    appSend: { get: vi.fn(), start: vi.fn() },
     gate: { view: vi.fn(), open: vi.fn(), automaticOn: vi.fn(async () => true) },
     client: clientMock(),
     /** A SEPARATE object (docs/12 §13.16): per-line calls can be told apart. */
@@ -64,6 +66,7 @@ export async function whatsappApp(resolver: PermissionResolver = systemResolver)
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(TemplatesRepo).useValue(templates)
     .overrideProvider(MessagesRepo).useValue(m.messages)
+    .overrideProvider(AppSendRepo).useValue(m.appSend)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
     .overrideProvider(LinesCheck).useValue(m.lines)

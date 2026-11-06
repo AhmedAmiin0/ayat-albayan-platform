@@ -2704,6 +2704,7 @@ export type Database = {
       };
       messages: {
         Row: {
+          app_send_until: string | null;
           attempts: number;
           body: string | null;
           channel: string;
@@ -2755,6 +2756,7 @@ export type Database = {
           wa_pricing_category: string | null;
         };
         Insert: {
+          app_send_until?: string | null;
           attempts?: number;
           body?: string | null;
           channel?: string;
@@ -2806,6 +2808,7 @@ export type Database = {
           wa_pricing_category?: string | null;
         };
         Update: {
+          app_send_until?: string | null;
           attempts?: number;
           body?: string | null;
           channel?: string;

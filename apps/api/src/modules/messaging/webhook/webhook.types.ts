@@ -19,8 +19,6 @@ export interface OutboundRow {
   sent_at: string | null;
   delivered_at: string | null;
   read_at: string | null;
-  wa_message_id: string | null;
-  sent_manually_at: string | null;
   /** The sender's tries; 0 = never sent by us (a message sent outside the app, or imported history). */
   attempts: number;
   guardians: { name: string } | null;

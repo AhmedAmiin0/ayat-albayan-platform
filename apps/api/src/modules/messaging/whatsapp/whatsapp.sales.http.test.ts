@@ -48,13 +48,14 @@ describe('WhatsApp templates for a salesperson (messages.read, docs/16)', () => 
     expect([res.statusCode, res.json()]).toEqual([200, GATE]);
   });
 
-  it('health, submit, the starter flag, retry, sent-manually and hand-off stay admin only', async () => {
+  it('health, submit, the starter flag, retry, sent-manually, app-send, hand-off: admin only', async () => {
     for (const [method, url] of [
       ['POST', '/messaging/templates/health'],
       ['POST', '/messaging/templates/follow_up_slots/submit'],
       ['PATCH', '/messaging/templates/follow_up_slots/starter'],
       ['POST', `/messages/${ID}/retry`],
       ['POST', `/messages/${ID}/sent-manually`],
+      ['POST', `/messages/${ID}/app-send`],
       ['POST', `/messages/${ID}/hand-off`],
     ] as const) {
       expect([url, (await t.call({ method, url, token: 'sales' })).statusCode]).toEqual([url, 403]);

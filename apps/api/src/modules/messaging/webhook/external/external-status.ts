@@ -27,7 +27,7 @@ export class ExternalStatus {
 
   /** An smb_message_echoes item: its content is in the payload, so nothing is read from Kapso. */
   async echo({ message, ...from }: EchoEvent): Promise<void> {
-    await this.store.store({ message, from, echo: true });
+    await this.store.store({ message, from });
   }
 
   /** True when a row for the wamid now exists (stored now, or by a concurrent run). */

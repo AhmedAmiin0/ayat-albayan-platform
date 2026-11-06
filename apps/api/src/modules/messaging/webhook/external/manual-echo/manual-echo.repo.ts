@@ -1,57 +1,76 @@
+import type { TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import type { ManualRow } from './manual-echo';
+import { SENDING, stampDelivered } from '@/modules/messaging/whatsapp';
+import type { AppSendRow } from './manual-echo';
 
 /** Postgres unique_violation: the wamid is already on another row (a concurrent store). */
 const UNIQUE = '23505';
+/** Not claimed by the sender (its claim writes SENDING): it may be sending that row right now. */
+const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
+/** Held, failed, or marked by hand meanwhile: never a row the platform sent (it has a wamid). */
+const ATTACHABLE = ['queued', 'failed', 'sent_manually'] as const;
+
+/** The window and every hold / retry field: the row is a sent message now. */
+const CLEARED = {
+  app_send_until: null,
+  error_code: null,
+  error_text: null,
+  next_attempt_at: null,
+  expires_at: null,
+  scheduled_for: null,
+} as const;
 
 const fail = (what: string, message: string): Error => new Error(`${what} failed: ${message}`);
 
-/** One echo's attach: the row, the wamid it holds now (compare-and-set), the app's wamid, when. */
+/** One attach: the row, the external message's wamid, its status and times (attachPatch). */
 export interface AttachWrite {
-  id: string;
-  /** null, or the old wamid of a send WhatsApp took and then failed (131047 after the fact). */
-  from: string | null;
+  row: AppSendRow;
   waMessageId: string;
-  /** sent_at: never before the mark, so echoAttached reads the row as attached. */
-  at: Date;
+  patch: TablesUpdate<'messages'>;
 }
 
-/** The reads and the compare-and-set of the echo attach (manual-echo.service.ts). */
+/** The read and the compare-and-set of the «أرسل عبر واتساب» attach (manual-echo.service.ts). */
 @Injectable()
 export class ManualEchoRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** This phone's outbound sent_manually rows marked within [since, until]. */
-  async candidates(phone: string, span: { since: Date; until: Date }): Promise<ManualRow[]> {
+  /** This phone's staff outbound rows with no wamid whose app_send_until falls in the span. */
+  async candidates(phone: string, span: { since: Date; until: Date }): Promise<AppSendRow[]> {
     const { data, error } = await this.db
       .from('messages')
-      .select('id, body, line, number_id, sent_manually_at, wa_message_id, sent_at')
+      .select('id, body, line, number_id, app_send_until, lead_id, dedup_key')
       .eq('phone_e164', phone)
       .eq('direction', 'outbound')
-      .eq('status', 'sent_manually')
-      .gte('sent_manually_at', span.since.toISOString())
-      .lte('sent_manually_at', span.until.toISOString());
-    if (error) throw fail('manual rows read', error.message);
+      .not('created_by', 'is', null)
+      .is('wa_message_id', null)
+      .gte('app_send_until', span.since.toISOString())
+      .lte('app_send_until', span.until.toISOString());
+    if (error) throw fail('app send rows read', error.message);
     return data;
   }
 
   /**
-   * The app's wamid on the row, compare-and-set (still sent_manually, still the wamid it was read
-   * with): false when another echo took it, or the wamid is already on another row (unique).
+   * The message's wamid and status on the row, its window and hold cleared, compare-and-set: still
+   * no wamid (never overwritten), a window still set, not claimed by the sender. false when
+   * another message took it, the sender claimed it, or the wamid is on another row (unique).
    */
   async attach(w: AttachWrite): Promise<boolean> {
-    const query = this.db
+    const now = new Date().toISOString();
+    const { data, error } = await this.db
       .from('messages')
-      .update({ wa_message_id: w.waMessageId, sent_at: w.at.toISOString() })
-      .eq('id', w.id)
-      .eq('status', 'sent_manually');
-    const { data, error } = await (w.from === null
-      ? query.is('wa_message_id', null)
-      : query.eq('wa_message_id', w.from)
-    ).select('id');
+      .update({ ...w.patch, ...CLEARED, wa_message_id: w.waMessageId, sent_manually_at: now })
+      .eq('id', w.row.id)
+      .is('wa_message_id', null)
+      .not('app_send_until', 'is', null)
+      .in('status', [...ATTACHABLE])
+      .or(NOT_CLAIMED)
+      .select('id');
     if (error?.code === UNIQUE) return false;
-    if (error) throw fail('manual echo attach', error.message);
-    return data.length > 0;
+    if (error) throw fail('app send attach', error.message);
+    if (data.length === 0) return false;
+    const at = w.patch.sent_at ?? now;
+    await stampDelivered(this.db, { leadId: w.row.lead_id, dedupKey: w.row.dedup_key, at });
+    return true;
   }
 }

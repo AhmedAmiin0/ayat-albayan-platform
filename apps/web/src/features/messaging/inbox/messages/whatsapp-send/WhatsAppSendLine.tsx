@@ -1,59 +1,46 @@
-import { canSendViaWhatsApp, type MessageView, stoppedByWindow } from '@ab/shared';
-import type { ReactNode } from 'react';
+import { appSendPending, canSendViaWhatsApp, type MessageView } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
-import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { useWhatsAppSend, useWhatsAppSendState } from './use-whatsapp-send';
-import { WhatsAppOpenFailed } from './WhatsAppOpenFailed';
+import { appSendError } from './whatsapp-send.api';
 
-type Line = 'offer' | 'undo' | 'none';
+interface LineProps {
+  message: MessageView;
+  now: Date;
+}
+
+/** The line has something to say: a staff text the 24 h window stopped (pending or not). */
+export const hasWhatsAppLine = (m: MessageView): boolean => !m.hidden && canSendViaWhatsApp(m);
+
+/** What the line says: the offer, or «جارٍ الإرسال من واتساب…» while the tap's window is open. */
+const COPY = {
+  offer: { text: () => t.messages.whatsappSend.hint, button: () => t.messages.whatsappSend.action },
+  pending: {
+    text: () => `${t.messages.whatsappSend.pending} ${t.messages.whatsappSend.pendingHint}`,
+    button: () => t.messages.whatsappSend.openAgain,
+  },
+} as const;
 
 /**
- * Marked by this action but WhatsApp did not open: the row is sent_manually, or still shows held
- * until the thread is read again (the mark already stands on the server).
+ * «أرسل عبر واتساب» in the bubble's status lines (owner 2026-11-06, docs/19), admin only: a staff
+ * text the 24 h window stopped says why and offers the action; while its window is open it says
+ * it is being sent from WhatsApp and offers «افتح واتساب مجددًا» (the same call: it extends it).
+ * Nothing is undone: with no echo the row is as before once the window passes.
  */
-const openFailed = (m: MessageView, opened: boolean | undefined): boolean =>
-  opened === false && (m.status === 'sent_manually' || stoppedByWindow(m));
-
-const offerOrNone = (m: MessageView): Line => (canSendViaWhatsApp(m) ? 'offer' : 'none');
-
-/** The line may have something to say: the offer, or the undo after a sent_manually mark. */
-export const hasWhatsAppLine = (m: MessageView): boolean =>
-  !m.hidden && (canSendViaWhatsApp(m) || (m.direction === 'outbound' && m.status === 'sent_manually'));
-
-/** A refused mark in words: the sender claimed it (409 not_manual), or any other error. */
-const markError = (e: Error | null): string | null =>
-  e && (errorCode(e) === 'not_manual' ? t.messages.alreadySending : t.common.error);
-
-function Offer({ message: m }: { message: MessageView }) {
+export function WhatsAppSendLine({ message: m, now }: LineProps) {
   const send = useWhatsAppSend();
   const state = useWhatsAppSendState(m.id);
-  const error = markError(state?.error ?? null);
+  const error = appSendError(state?.error ?? null);
+  const copy = COPY[appSendPending(m, now) ? 'pending' : 'offer'];
   return (
     <div className="mt-2 grid gap-2 border-t border-rule pt-2 text-2xs text-ink-2">
-      <p>{t.messages.whatsappSend.hint}</p>
+      <p>{copy.text()}</p>
       <span>
         <Button size="sm" variant="secondary" disabled={state?.status === 'pending'} onClick={() => send(m)}>
-          {t.messages.whatsappSend.action}
+          {copy.button()}
         </Button>
       </span>
       {error && <p role="alert" className="text-danger">{error}</p>}
     </div>
   );
-}
-
-const LINES: Record<Line, (m: MessageView) => ReactNode> = {
-  offer: (m) => <Offer message={m} />,
-  undo: (m) => <WhatsAppOpenFailed message={m} />,
-  none: () => null,
-};
-
-/**
- * «أرسل عبر واتساب» in the bubble's status lines (owner 2026-11-06), admin only: a staff text the
- * 24 h window stopped says why and offers the action; after it, when WhatsApp did not open, the
- * way to open it again or «تراجع».
- */
-export function WhatsAppSendLine({ message: m }: { message: MessageView }) {
-  const opened = useWhatsAppSendState(m.id)?.data?.opened;
-  return LINES[openFailed(m, opened) ? 'undo' : offerOrNone(m)](m);
 }

@@ -106,7 +106,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
             </p>
           ))}
           {admin && (canRetry(m) || canSendByHand(m) || isHandedOff(m)) && <MessageActions message={m} />}
-          {admin && hasWhatsAppLine(m) && <WhatsAppSendLine message={m} />}
+          {admin && hasWhatsAppLine(m) && <WhatsAppSendLine message={m} now={now} />}
           <ReactionPill message={m} outbound={outbound} />
         </div>
       </article>

@@ -1,17 +1,17 @@
-import {
-  type MessageRetryQuery,
-  messageRetryQuerySchema,
-  type MessageView,
-  type SendGateView,
-} from '@ab/shared';
+import type { MessageView, SendGateView } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../../../common/audit/audit.service';
 import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
 import type { AuthUser } from '../../../../common/auth/verify-token';
 import { MessagesService, type MessageChange } from './messages.service';
+import { AppSend } from './app-send';
 import { SendGate } from '../gate/send-gate';
-import { ZodQuery } from '@/common/http/zod-inputs';
+import { ZodParam } from '@/common/http/zod-inputs';
+import { z } from 'zod';
+
+/** The row's id (rule 12: zod at the boundary). */
+const messageId = z.uuid();
 
 /** M1–M3 (docs/12 §4): what the admin does with an outbound message that did not go out. */
 @ApiTags('messaging')
@@ -23,6 +23,7 @@ export class MessagesController {
     private readonly messages: MessagesService,
     private readonly audit: AuditService,
     private readonly sendGate: SendGate,
+    private readonly appSends: AppSend,
   ) {}
 
   /**
@@ -35,19 +36,11 @@ export class MessagesController {
     return this.sendGate.view();
   }
 
-  /**
-   * failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while OFF).
-   * ?undo=whatsapp: «تراجع» of «أرسل عبر واتساب», sent_manually → queued (no app echo, ≤ 30 min).
-   */
+  /** failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while OFF). */
   @Post(':id/retry')
   @HttpCode(200)
-  async retry(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodQuery(messageRetryQuerySchema) query: MessageRetryQuery,
-    @CurrentUser() user: AuthUser,
-  ): Promise<MessageView> {
-    const opts = { automaticOn: await this.sendGate.automaticOn(), undo: query.undo === 'whatsapp' };
-    const change = await this.messages.retry(id, opts);
+  async retry(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
+    const change = await this.messages.retry(id, { automaticOn: await this.sendGate.automaticOn() });
     return this.audited({ change, action: 'message_retry', user });
   }
 
@@ -56,6 +49,17 @@ export class MessagesController {
   @HttpCode(200)
   async sentManually(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
     return this.audited({ change: await this.messages.sentManually(id), action: 'message_sent_manually', user });
+  }
+
+  /**
+   * «أرسل عبر واتساب» (docs/19): a staff text held after the window or failed for it is never sent
+   * by the platform for 10 minutes (app_send_until); the app's echo then confirms it. Idempotent:
+   * a second tap extends the window. 409 not_app_send (with the row's status) otherwise.
+   */
+  @Post(':id/app-send')
+  @HttpCode(200)
+  async appSend(@ZodParam('id', messageId) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
+    return this.audited({ change: await this.appSends.start(id), action: 'message_app_send', user });
   }
 
   /** M3: the admin opened wa.me; held (failed «handed_off») until M2 or M1. 409 not_manual otherwise. */

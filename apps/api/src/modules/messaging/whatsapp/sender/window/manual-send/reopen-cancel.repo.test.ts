@@ -22,7 +22,7 @@ const cancels = (r: Row): boolean =>
 describe('ReopenCancelRepo.cancelQueued', () => {
   it('one compare-and-set: queued, not claimed, the phone’s reopen keys → failed reopen_not_needed', async () => {
     const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'r1' }] }] });
-    await expect(new ReopenCancelRepo(db).cancelQueued(PHONE)).resolves.toEqual(['r1']);
+    await expect(new ReopenCancelRepo(db).cancelQueued(PHONE, null)).resolves.toEqual(['r1']);
     const f = filters(calls);
     expect(f).toContainEqual(['update', expect.objectContaining({ status: 'failed', error_code: 'reopen_not_needed' })]);
     expect(f).toContainEqual(['eq', 'status', 'queued']);
@@ -45,7 +45,7 @@ describe('ReopenCancelRepo.cancelQueued', () => {
 
   it('nothing left to cancel (claimed meanwhile): none, no error', async () => {
     const { db } = fakeDb({ messages: [{ data: [] }] });
-    await expect(new ReopenCancelRepo(db).cancelQueued(PHONE)).resolves.toEqual([]);
+    await expect(new ReopenCancelRepo(db).cancelQueued(PHONE, null)).resolves.toEqual([]);
   });
 });
 
@@ -62,6 +62,23 @@ describe('ReopenCancelRepo.othersPending', () => {
   it('none: false', async () => {
     const { db } = fakeDb({ messages: [{ data: [] }] });
     await expect(new ReopenCancelRepo(db).othersPending(PHONE, 'm1')).resolves.toBe(false);
+  });
+});
+
+describe('ReopenCancelRepo — a missed hold drops only its own reopen', () => {
+  it('cancelQueued with a key: that dedup key only, still queued and not claimed', async () => {
+    const key = `reopen:${PHONE}:2026-11-06:2`;
+    const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'r2' }] }] });
+    await expect(new ReopenCancelRepo(db).cancelQueued(PHONE, key)).resolves.toEqual(['r2']);
+    const f = filters(calls);
+    expect(f).toContainEqual(['eq', 'dedup_key', key]);
+    expect(f).toContainEqual(['eq', 'status', 'queued']);
+  });
+
+  it('othersPending with no row to skip: any queued text of the phone counts', async () => {
+    const { db, calls } = fakeDb({ messages: [{ data: [{ id: 'm1' }] }] });
+    await expect(new ReopenCancelRepo(db).othersPending(PHONE, null)).resolves.toBe(true);
+    expect(filters(calls).some((c) => c[0] === 'neq')).toBe(false);
   });
 });
 

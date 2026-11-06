@@ -1,22 +1,23 @@
-import { stoppedByWindow } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import type { Tables } from '@ab/db';
 import { ReopenCancelRepo } from './reopen-cancel.repo';
 
-/** The row as it was before staff marked it sent from WhatsApp. */
-export type ManualBefore = Pick<Tables<'messages'>, 'id' | 'phone_e164' | 'status' | 'error_code'>;
+/** cancelled: n queued reopens stopped; kept: another text of the family still waits. */
+export type CancelOutcome = { cancelled: number } | 'kept';
 
-/** cancelled: n queued reopens stopped; kept: another text waits; none: not a held text. */
-type CancelOutcome = { cancelled: number } | 'kept' | 'none';
+/** The row whose send made the reopen unneeded (its own id is not «another text»). */
+export interface SentRow {
+  id: string;
+  phone_e164: string;
+}
 
 const last4 = (phone: string): string => `…${phone.slice(-4)}`;
 const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
- * «أرسل عبر واتساب» (owner 2026-11-06): once staff sent a held text from WhatsApp themselves and no
- * other message to that family is queued, the reopen template still queued for them is not needed: it is
- * cancelled (compare-and-set: one the sender claimed, sent or failed is never touched). Never
- * throws: the manual send already stands; a template left queued only asks the family to reply.
+ * The reopen template a family no longer needs (owner 2026-11-06, docs/19): one still QUEUED and
+ * not claimed is failed REOPEN_NOT_NEEDED in a compare-and-set (a sending, sent or failed one is
+ * never touched), and only while no other text of that family is queued. Never throws: a template
+ * left queued only asks the family to reply.
  */
 @Injectable()
 export class ReopenCancel {
@@ -24,12 +25,28 @@ export class ReopenCancel {
 
   constructor(private readonly repo: ReopenCancelRepo) {}
 
-  async afterManualSend(before: ManualBefore): Promise<CancelOutcome> {
-    if (!stoppedByWindow(before)) return 'none';
+  /** The app's echo confirmed a «أرسل عبر واتساب» text (ManualEcho): its reopen is not needed. */
+  async afterAttach(row: SentRow): Promise<CancelOutcome> {
+    return this.safely(row.phone_e164, () => this.cancel(row));
+  }
+
+  /**
+   * The hold missed after ReopenRequest queued `key` for it (the row moved meanwhile, review
+   * 2026-11-06): that reopen goes too, unless a text of the family is still queued (even this one,
+   * held by another pass).
+   */
+  async dropLost(phone: string, key: string): Promise<CancelOutcome> {
+    return this.safely(phone, async () => {
+      if (await this.repo.othersPending(phone, null)) return 'kept';
+      return { cancelled: (await this.repo.cancelQueued(phone, key)).length };
+    });
+  }
+
+  private async safely(phone: string, run: () => Promise<CancelOutcome>): Promise<CancelOutcome> {
     try {
-      return await this.cancel(before);
+      return await run();
     } catch (e) {
-      this.log.warn(`reopen cancel failed for ${last4(before.phone_e164)}: ${messageOf(e)}`);
+      this.log.warn(`reopen cancel failed for ${last4(phone)}: ${messageOf(e)}`);
       return 'kept';
     }
   }
@@ -38,13 +55,13 @@ export class ReopenCancel {
    * Kept while another message to the family is queued. Re-read after the cancel: one queued
    * meanwhile (it may count on this reopen: ReopenRequest saw it live) gets the reopen back.
    */
-  private async cancel(before: ManualBefore): Promise<CancelOutcome> {
-    const phone = before.phone_e164;
-    const pending = () => this.repo.othersPending(phone, before.id);
+  private async cancel(row: SentRow): Promise<CancelOutcome> {
+    const phone = row.phone_e164;
+    const pending = () => this.repo.othersPending(phone, row.id);
     if (await pending()) return 'kept';
-    const ids = await this.repo.cancelQueued(phone);
+    const ids = await this.repo.cancelQueued(phone, null);
     if (ids.length > 0 && (await pending())) return this.restore(ids);
-    if (ids.length > 0) this.log.log(`reopen template cancelled for ${last4(phone)}: sent from WhatsApp`);
+    if (ids.length > 0) this.log.log(`reopen template cancelled for ${last4(phone)}: app send`);
     return { cancelled: ids.length };
   }
 

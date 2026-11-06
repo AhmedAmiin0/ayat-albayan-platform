@@ -5,7 +5,6 @@ import { fakeDb } from '@/modules/people/guardians/fake-db';
 import type { MessageViews } from './message.views';
 import { MessagesRepo } from './messages.repo';
 import { MessagesService } from './messages.service';
-import type { ReopenCancel } from '@/modules/messaging/whatsapp/sender/window/manual-send';
 
 // Owner 2026-11-06: a staff retry of a held text that failed (reopen_*) starts its 7-day hold
 // again from the retry, held at once (never tried as free text), not from the old created_at.
@@ -18,7 +17,6 @@ function serviceOf(errorCode: string) {
     queries as unknown as MessagesRepo,
     views as unknown as MessageViews,
     { kick: vi.fn(async () => undefined) } as unknown as MessageSender,
-    { afterManualSend: vi.fn() } as unknown as ReopenCancel,
   );
   return { svc, queries, row };
 }

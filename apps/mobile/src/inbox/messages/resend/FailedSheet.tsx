@@ -6,8 +6,8 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
-import { useMessageAction } from '../../thread/hooks/use-thread';
-import { errorLine } from '../hooks/message-text';
+import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
+import { errorLine } from '@/inbox/messages/hooks/message-text';
 import { useWhatsAppSend } from './use-whatsapp-send';
 
 interface FailedSheetProps {
@@ -69,7 +69,7 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
           label={t.messages.whatsappSend.action}
           onPress={() => {
             onClose();
-            sendViaWhatsApp(m);
+            sendViaWhatsApp(m, { onError });
           }}
         />
       ) : null}

@@ -36,6 +36,7 @@ import { PaymentHolds } from './sender/hold/payment-holds';
 import { MessagesController } from './messages/messages.controller';
 import { MessagesRepo } from './messages/messages.repo';
 import { MessagesService } from './messages/messages.service';
+import { AppSend, AppSendRepo } from './messages/app-send';
 import { SendGate } from './gate/send-gate';
 import { NumberRoutes } from './numbers/number-routes';
 import { RouteRepo } from './numbers/route.repo';
@@ -117,6 +118,8 @@ function lines(): WhatsappLines {
     MessageViews,
     TemplateNames,
     MessagesService,
+    AppSendRepo,
+    AppSend,
     InboundMediaRepo,
     CrmMediaSettings,
     CrmHistoryMedia,
@@ -128,7 +131,7 @@ function lines(): WhatsappLines {
     InboundMedia,
     WaMediaRetentionJob,
   ],
-  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore, ReopenRequest],
+  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore, ReopenRequest, ReopenCancel],
 })
 export class WhatsappModule implements OnModuleInit {
   /**

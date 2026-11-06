@@ -62,3 +62,10 @@ export async function anyDue(db: Db, input: { now: Date; allowed: readonly strin
   if (error) throw new Error(`outbound queue probe failed: ${error.message}`);
   return data.length > 0;
 }
+
+/**
+ * PostgREST filter: no «أرسل عبر واتساب» pending at `now` (docs/19): app_send_until unset or
+ * passed. The sender's read and claim and the held-text release all carry it.
+ */
+export const notAppSending = (now: Date): string =>
+  `app_send_until.is.null,app_send_until.lte.${now.toISOString()}`;

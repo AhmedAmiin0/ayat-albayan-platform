@@ -7,6 +7,7 @@ import { toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/t
 import type { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { KapsoHold } from './kapso-hold';
+import type { ReopenCancel } from './manual-send';
 import type { ReopenRow } from './reopen-state';
 import { ReopenRequest } from './reopen-request';
 import { WindowHold } from './window-hold';
@@ -64,10 +65,12 @@ export function windowFakes() {
   const settings = { read: vi.fn(async () => ({ chat_reopen_template: 'welcome_greeting' })) };
   const dispatch = { ready: vi.fn(() => true) };
   const asRepo = repo as unknown as WindowRepo;
+  const cancels = { dropLost: vi.fn(async () => ({ cancelled: 1 })) };
   const request = new ReopenRequest(
     asRepo,
     { approved } as unknown as TemplateRegistry,
     settings as unknown as WindowSettings,
+    cancels as unknown as ReopenCancel,
   );
   const release = new WindowRelease(asRepo);
   const hold = new WindowHold(
@@ -78,7 +81,7 @@ export function windowFakes() {
   );
   const kapso = { reopen: vi.fn(async (): Promise<string | null> => null) };
   hold.kapso = kapso as unknown as KapsoHold;
-  return { repo, approved, settings, dispatch, hold, request, release, kapso };
+  return { repo, approved, settings, dispatch, hold, request, release, kapso, cancels };
 }
 
 /** A reopen template row of PHONE (today, 2026-11-03 in Riyadh), as WindowRepo.reopens reads it. */

@@ -3798,10 +3798,11 @@
     "whatsappSend": {
       "action": "Send via WhatsApp",
       "hint": "Not sent: 24 hours have passed since the family's last message. Send it now from WhatsApp Business.",
-      "openFailed": "The message is recorded as sent from WhatsApp, but WhatsApp could not be opened.",
-      "openAgain": "Open WhatsApp",
-      "undo": "Undo",
-      "undoFailed": "Could not undo: the message may have been sent from WhatsApp, or the time to undo has passed."
+      "pending": "Sending from WhatsApp…",
+      "pendingHint": "The platform will not send it during these minutes. It shows as sent once it arrives from WhatsApp.",
+      "openAgain": "Open WhatsApp again",
+      "alreadySent": "This message was already sent, so there is no need to send it from WhatsApp.",
+      "notNow": "This message can no longer be sent from WhatsApp. Refresh the chat."
     }
   },
   "mobileLeads": {

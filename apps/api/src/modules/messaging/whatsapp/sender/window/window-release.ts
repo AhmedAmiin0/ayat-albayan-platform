@@ -42,7 +42,7 @@ export class WindowRelease {
 
   /** One page (after `after`), then the next while pages are full: at most `pages` per pass. */
   private async page(at: { after: string | null; pages: number; now: Date }): Promise<number> {
-    const rows = await this.repo.waiting(at.after);
+    const rows = await this.repo.waiting(at.after, at.now);
     // Held (a deadline) behind a template; one under «بدون قالب» asked for none: never orphaned.
     const held = rows.filter((r) => r.expires_at !== null && !heldWithoutTemplate(r.error_text));
     const [inbound, reopens] = await Promise.all([

@@ -3,7 +3,6 @@ import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { MessageViews } from './message.views';
 import { MessagesService } from './messages.service';
-import type { ReopenCancel } from '@/modules/messaging/whatsapp/sender/window/manual-send';
 import type { MessagesRepo } from './messages.repo';
 
 // A failed request from the calls number (docs/28 §10) is never re-queued: staff tap again instead.
@@ -17,7 +16,6 @@ describe('MessagesService.retry and the calls number', () => {
       queries as unknown as MessagesRepo,
       {} as MessageViews,
       sender as unknown as MessageSender,
-      { afterManualSend: vi.fn() } as unknown as ReopenCancel,
     );
     await expect(svc.retry(row.id, { automaticOn: true })).rejects.toMatchObject({ status: 409 });
     expect(queries.requeue).not.toHaveBeenCalled();

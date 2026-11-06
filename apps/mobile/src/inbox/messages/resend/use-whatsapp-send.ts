@@ -1,7 +1,9 @@
 import { sendViaWhatsApp, type WhatsAppSendResult, whatsappSendUrl } from '@ab/client-core';
-import { type MessageView, WHATSAPP_SEND_MS } from '@ab/shared';
+import { type AppSendRefusal, appSendRefusal, type MessageView } from '@ab/shared';
 import { type MutationState, useMutation, useMutationState } from '@tanstack/react-query';
 import { Linking } from 'react-native';
+import { ApiError } from '@/core/lib/http/api';
+import { t } from '@/core/lib/i18n/i18n';
 import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
 
 interface SendVars {
@@ -9,6 +11,11 @@ interface SendVars {
 }
 
 type SendState = MutationState<WhatsAppSendResult<MessageView>, Error, SendVars>;
+
+/** A caller that reports a refused tap itself (the «!» sheet closes before the answer). */
+interface SendOpts {
+  onError?: (text: string) => void;
+}
 
 const KEY = ['whatsapp-send'] as const;
 
@@ -25,25 +32,37 @@ export async function openWhatsApp(m: MessageView): Promise<boolean> {
   return true;
 }
 
+/** A 409's words come from the row's status in its body: never «تُرسل الآن» for a sent row. */
+const REFUSALS: Record<AppSendRefusal, () => string> = {
+  sending: () => t.messages.alreadySending,
+  sent: () => t.messages.whatsappSend.alreadySent,
+  other: () => t.messages.whatsappSend.notNow,
+};
+
+/** A refused or failed tap in words: the 409 by its status, anything else the generic error. */
+export function sendErrorText(e: unknown): string {
+  const refusal = e instanceof ApiError ? appSendRefusal(e.body) : null;
+  return refusal ? REFUSALS[refusal]() : t.common.error;
+}
+
 /**
- * «أرسل عبر واتساب» (owner 2026-11-06): marks the row sent from WhatsApp FIRST (sent-manually: the
- * platform can then never send it too), and only then opens WhatsApp. The result stays in the
- * mutation cache, so the bubble offers «تراجع» when WhatsApp did not open.
+ * «أرسل عبر واتساب» (owner 2026-11-06, docs/19): POST /messages/:id/app-send first (the platform
+ * then never sends the row for a few minutes), then wa.me. Nothing is marked sent: the app's echo
+ * confirms it. The app-send action puts the pending row in the thread cache and, settled, re-reads
+ * the chat and its anchored windows (refreshInbox with the phone). A second tap extends the window.
  */
-export function useWhatsAppSend(phone: string): (m: MessageView) => void {
-  // POST /messages/:id/sent-manually: it also puts the marked row in the thread cache.
-  const manual = useMessageAction(phone, 'sent-manually');
+export function useWhatsAppSend(phone: string): (m: MessageView, opts?: SendOpts) => void {
+  const appSend = useMessageAction(phone, 'app-send');
   const send = useMutation({
     mutationKey: KEY,
-    // Kept as long as the server allows «تراجع» (WHATSAPP_SEND_MS), not TanStack's 5 minutes.
-    gcTime: WHATSAPP_SEND_MS,
     mutationFn: ({ message }: SendVars) =>
       sendViaWhatsApp({
-        mark: () => manual.mutateAsync(message.id),
+        start: () => appSend.mutateAsync(message.id),
         open: () => openWhatsApp(message),
       }),
   });
-  return (message) => send.mutate({ message });
+  return (message, opts) =>
+    send.mutate({ message }, { onError: (e) => opts?.onError?.(sendErrorText(e)) });
 }
 
 /** The last «أرسل عبر واتساب» of this row in this session (the bubble's line or the sheet). */

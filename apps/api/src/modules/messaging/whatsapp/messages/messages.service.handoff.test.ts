@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import type { MessageViews } from './message.views';
 import { MessagesService } from './messages.service';
-import type { ReopenCancel } from '@/modules/messaging/whatsapp/sender/window/manual-send';
 import type { MessagesRepo } from './messages.repo';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 
@@ -22,7 +21,6 @@ function service(row: ReturnType<typeof messageRow>) {
     queries as unknown as MessagesRepo,
     views as unknown as MessageViews,
     sender as unknown as MessageSender,
-    { afterManualSend: vi.fn() } as unknown as ReopenCancel,
   );
   return { svc, queries };
 }
