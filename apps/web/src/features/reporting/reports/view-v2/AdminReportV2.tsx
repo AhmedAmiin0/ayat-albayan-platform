@@ -18,7 +18,7 @@ interface AdminReportV2Props {
  */
 export function AdminReportV2({ form, entry, titled, tz }: AdminReportV2Props) {
   const [editing, setEditing] = useState(entry.report.status === 'draft');
-  if (editing) return <ReportEntryV2 form={form} entry={entry} titled={titled} tz={tz} />;
+  if (editing) return <ReportEntryV2 form={form} entry={entry} titled={titled} tz={tz} opened />;
   return (
     <div className="grid gap-3">
       <ReportV2View lesson={form.lesson} entry={entry} tz={tz} />

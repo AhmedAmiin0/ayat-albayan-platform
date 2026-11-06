@@ -6,8 +6,10 @@ import { ButtonRow } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
-import { reportErrorText } from '../hooks/api';
-import { SentNote, saveLine } from '../components/ReportFooter';
+import { reportErrorText } from '@/teacher/report/hooks/api';
+import { SentNote, saveLine } from '@/teacher/report/components/ReportFooter';
+import { SendButton } from '@/teacher/report/components/SendButton';
+import { SentPanel } from '@/teacher/report/components/SentPanel';
 import type { V2EntryState } from './hooks/use-v2-entry';
 
 const ERRORS: Record<string, string> = t.reports.error;
@@ -24,7 +26,7 @@ function Problems({ s, block }: { s: V2EntryState; block: ReportFormResponse['su
 
 /**
  * The end of a v2 report: what stops the send, the sent state with its edit window, then
- * «أرسل التقرير إلى الأسرة» (after a send «احفظ التعديل») and «احفظ مسودة» while a draft as ONE ButtonRow
+ * «أرسل التقرير إلى الأسرة» (an edit: «حفظ التعديل», after «تعديل التقرير») and «احفظ مسودة» while a draft as ONE ButtonRow
  * (send first; docs/07 §6, stacked full width when the labels do not fit), and the save line.
  */
 export function V2Footer({
@@ -40,17 +42,24 @@ export function V2Footer({
   const v2 = t.reports.v2;
   const { report } = s;
   const sent = report.status === 'submitted';
-  const draft = report.status === 'draft' && report.can_edit;
+  const draft = s.mode.mode === 'draft';
   const saved = report.status === 'draft' ? saveLine(s.saveState, tz, cycle) : null;
-  const label = s.submit.isPending ? t.reports.submitting : sent ? v2.saveEdit : v2.send;
+  const label = sent ? t.reports.resubmit : v2.send;
   return (
     <View style={{ gap: 8 }}>
       <Problems s={s} block={block} />
       {sent ? <SentNote report={report} tz={tz} /> : null}
-      {report.can_edit ? (
+      <SentPanel report={report} mode={s.mode.mode} onEdit={s.mode.startEdit} tz={tz}
+        busy={s.submit.isPending} />
+      {s.locked ? null : (
         <>
           <ButtonRow testID="report-footer-actions">
-            <Button label={label} busy={s.submit.isPending || block !== null} onPress={s.send} />
+            <SendButton
+              label={label}
+              pending={s.submit.isPending}
+              disabled={block !== null}
+              onPress={s.send}
+            />
             {draft ? (
               <Button
                 variant="secondary"
@@ -62,7 +71,7 @@ export function V2Footer({
           </ButtonRow>
           <Note>{v2.sendHint}</Note>
         </>
-      ) : null}
+      )}
       {saved ? <Note>{saved}</Note> : null}
     </View>
   );

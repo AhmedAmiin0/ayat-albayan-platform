@@ -1,3 +1,4 @@
+import { sendChecked } from '@ab/client-core';
 import {
   v2DraftBody,
   v2Problem,
@@ -13,8 +14,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import arBundle from '@ab/shared/i18n/ar.json';
 import { t } from '@/core/lib/i18n/i18n';
-import { refreshAfterSubmit } from '../../hooks/api';
-import { useDraftAutosave } from '../../hooks/use-autosave';
+import { refreshAfterSubmit } from '@/teacher/report/hooks/api';
+import { useDraftAutosave } from '@/teacher/report/hooks/use-autosave';
+import { useFormMode } from '@/teacher/report/hooks/use-form-mode';
 import { saveDraftV2, submitReportV2 } from './api';
 
 /** The suggestion templates, read per call (t can be overridden after boot). */
@@ -35,11 +37,13 @@ export function useV2Entry(entry: ReportFormEntry) {
     v2ValuesOf(entry.report, studentProgram, storedWords()),
   );
   const [problem, setProblem] = useState<string | null>(null);
+  const mode = useFormMode(report);
   const submit = useMutation({
     mutationFn: (version: number) =>
       submitReportV2(report.id, v2SubmitBody(values, { version, words: words() })),
     onSuccess: async (view) => {
       setReport(view);
+      mode.sent();
       setValues(v2ValuesOf(view, studentProgram, storedWords()));
       await refreshAfterSubmit(client);
     },
@@ -57,19 +61,21 @@ export function useV2Entry(entry: ReportFormEntry) {
     setProblem(null);
     setValues((v) => ({ ...v, content: change(v.content) }));
   };
-  const send = () => {
-    const found = v2Problem(values, { version: report.version, words: words() });
-    setProblem(found);
-    if (!found) submit.mutate(report.version);
-  };
+  // One request at a time: a second tap while pending does nothing (the guard, not the button).
+  const send = () =>
+    sendChecked(mode.guard, {
+      check: () => v2Problem(values, { version: report.version, words: words() }),
+      show: setProblem,
+      request: (done) => submit.mutate(report.version, { onSettled: done }),
+    });
   const setAttachments = (next: (files: ReportAttachmentView[]) => ReportAttachmentView[]) =>
     setReport((r) => ({ ...r, attachments: next(r.attachments) }));
-  const locked = !report.can_edit;
   return {
     entry,
     report,
     values,
-    locked,
+    locked: mode.locked,
+    mode,
     update,
     edit,
     send,

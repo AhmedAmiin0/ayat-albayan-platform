@@ -4,11 +4,12 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { reportErrorText } from '@/teacher/report/hooks/api';
 import type { SaveState } from '@/teacher/report/hooks/use-autosave';
 import type { ReportEntryState } from '@/teacher/report/hooks/use-report-entry';
+import { SendButton } from './SendButton';
+import { SentPanel } from './SentPanel';
 
 const ERRORS: Record<string, string> = t.reports.error;
 
@@ -56,16 +57,18 @@ export function ReportFooter({ s, block, tz }: { s: ReportEntryState; block: Rep
   const { report } = s;
   const sent = report.status === 'submitted';
   const saved = report.status === 'draft' ? saveLine(s.saveState, tz, cycle) : null;
-  const label = s.submit.isPending ? t.reports.submitting : sent ? t.reports.resubmit : t.reports.submit;
+  const label = sent ? t.reports.resubmit : t.reports.submit;
   return (
     <View style={{ gap: 8 }}>
       {s.problem ? <ErrorLine message={ERRORS[s.problem] ?? t.common.error} /> : null}
       {s.submit.error ? <ErrorLine message={reportErrorText(s.submit.error)} /> : null}
       {block ? <ErrorLine message={ERRORS[block] ?? t.common.error} /> : null}
       {sent ? <SentNote report={report} tz={tz} /> : null}
-      {report.can_edit ? (
-        <Button label={label} busy={s.submit.isPending || block !== null} onPress={s.send} />
-      ) : null}
+      <SentPanel report={report} mode={s.mode.mode} onEdit={s.mode.startEdit} tz={tz}
+        busy={s.submit.isPending} />
+      {s.mode.locked ? null : (
+        <SendButton label={label} pending={s.submit.isPending} disabled={block !== null} onPress={s.send} />
+      )}
       {saved ? <Note>{saved}</Note> : null}
     </View>
   );

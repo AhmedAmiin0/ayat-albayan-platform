@@ -68,6 +68,11 @@ describe('the new report form: send and autosave', () => {
       }),
     );
     expect(apiSend.mock.calls.find((c) => c[0] === 'POST')?.[2]).not.toHaveProperty('homework');
+    // Sent: read-only until «تعديل التقرير», which re-opens the same report («حفظ التعديل»).
+    expect(screen.queryByRole('button', { name: v2.send })).toBeNull();
+    expect(screen.getByRole('radio', { name: v2.attendance.on_time }).matches(':disabled')).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: t.reports.edit }));
+    expect(screen.getByRole('button', { name: t.reports.resubmit })).toBeTruthy();
   });
 
   it('a refusal reads in the API words', async () => {

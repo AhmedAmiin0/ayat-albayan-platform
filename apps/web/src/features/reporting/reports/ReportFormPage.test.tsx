@@ -1,37 +1,15 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { formResponse, FULL_GRADES, reportView } from './report-fixture';
-import { ReportFormPage } from './ReportFormPage';
+import { formResponse, reportView } from './report-fixture';
+import { gradeEverything, pick, renderReportForm } from './report-form-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
-function renderForm(form = formResponse()) {
-  apiFetch.mockImplementation((path: string) => (path === '/lessons/l-1/report-form' ? Promise.resolve(form) : Promise.resolve([])));
-  render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-      <ReportFormPage lessonId="l-1" role="teacher" />
-    </QueryClientProvider>,
-  );
-}
-
-const pick = (group: string, option: string) =>
-  fireEvent.click(within(screen.getByRole('group', { name: group })).getByRole('radio', { name: option }));
-
-function gradeEverything() {
-  pick(t.reports.attendance, t.enums.attendance.on_time);
-  for (const [rubric, grade] of Object.entries(FULL_GRADES)) {
-    pick(t.reports.rubric[rubric as keyof typeof FULL_GRADES], t.enums.grade[grade]);
-  }
-  pick(t.reports.overall, t.enums.grade.excellent);
-  for (const k of ['recited', 'newMemorization', 'revision', 'notes', 'homework'] as const) {
-    fireEvent.change(screen.getByLabelText(t.reports[k]), { target: { value: 'تمام' } });
-  }
-}
+const renderForm = (form = formResponse()) => renderReportForm(apiFetch, form);
 
 describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
   beforeEach(() => {
@@ -97,7 +75,9 @@ describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
     fireEvent.click(screen.getByRole('button', { name: t.reports.submit }));
     expect(await screen.findByText(t.reports.submitted)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledWith('POST', '/reports/r-1/submit', expect.objectContaining({ attendance: 'on_time', overall: 'excellent', expectedVersion: 0 }));
-    expect(screen.getByRole('button', { name: t.reports.resubmit })).toBeTruthy();
+    // Sent: read-only; editing is «تعديل التقرير» (report-entry.send.test.tsx).
+    expect(screen.queryByRole('button', { name: t.reports.resubmit })).toBeNull();
+    expect(screen.getByRole('button', { name: t.reports.edit })).toBeTruthy();
     expect(screen.getByText(/يمكنك تعديل التقرير حتى/)).toBeTruthy();
     // A reopened form must load the sent version, so the cached form is refetched.
     const formLoads = () => apiFetch.mock.calls.filter(([path]) => path === '/lessons/l-1/report-form').length;

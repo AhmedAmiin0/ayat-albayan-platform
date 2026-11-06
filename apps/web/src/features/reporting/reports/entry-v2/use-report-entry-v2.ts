@@ -1,3 +1,4 @@
+import { sendChecked } from '@ab/client-core';
 import {
   effective,
   v2DraftBody,
@@ -18,6 +19,7 @@ import { BUNDLES, t } from '@/lib/i18n/i18n';
 import { REPORTS_KEY } from '@/features/reporting/reports/api';
 import { useReportApi } from '@/features/reporting/reports/report-api';
 import { useDraftSave } from '@/features/reporting/reports/entry/use-autosave';
+import { useReportMode } from '@/features/reporting/reports/send/use-report-mode';
 
 const words = () => t.reports.v2.suggest;
 // A sent report stores untouched suggestions in Arabic (the bundle, or its overrides).
@@ -27,16 +29,18 @@ const storedWords = () => [BUNDLES.ar.reports.v2.suggest, t.reports.v2.suggest];
  * One student's v2 report (docs/design/report-form): local values, debounced autosave to
  * /reports/:id/v2/draft while a draft, and the send with the API's own check first (v2Problem).
  */
-export function useReportEntryV2(initial: ReportView, studentProgram: Program) {
+export function useReportEntryV2(initial: ReportView, studentProgram: Program, opened = false) {
   const queryClient = useQueryClient();
   const api = useReportApi();
   const [report, setReport] = useState(initial);
   const [values, setValues] = useState<V2Values>(() => v2ValuesOf(initial, studentProgram, storedWords()));
   const [problem, setProblem] = useState<string | null>(null);
+  const mode = useReportMode(report, opened);
   const submit = useMutation({
     mutationFn: api.submitReportV2,
     onSuccess: async (view) => {
       setReport(view);
+      mode.sent();
       setValues(v2ValuesOf(view, studentProgram, storedWords()));
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: LESSONS_KEY }),
@@ -58,11 +62,17 @@ export function useReportEntryV2(initial: ReportView, studentProgram: Program) {
     setProblem(null);
     setValues((v) => ({ ...v, content: change(v.content) }));
   };
+  // One request at a time: a second tap or Enter while pending does nothing (the guard).
   const send = () => {
     const opts = { version: report.version, words: words() };
-    const found = v2Problem(values, opts);
-    setProblem(found);
-    if (!found) submit.mutate({ id: report.id, body: v2SubmitBody(values, opts) });
+    return sendChecked(mode.guard, {
+      check: () => v2Problem(values, opts),
+      show: setProblem,
+      request: (done) => {
+        const body = v2SubmitBody(values, opts);
+        submit.mutate({ id: report.id, body }, { onSettled: done });
+      },
+    });
   };
   const setAttachments = (next: (files: ReportAttachmentView[]) => ReportAttachmentView[]) =>
     setReport((r) => ({ ...r, attachments: next(r.attachments) }));
@@ -79,6 +89,7 @@ export function useReportEntryV2(initial: ReportView, studentProgram: Program) {
     saveState: draft.state,
     saveNow: draft.saveNow,
     setAttachments,
+    mode,
   };
 }
 

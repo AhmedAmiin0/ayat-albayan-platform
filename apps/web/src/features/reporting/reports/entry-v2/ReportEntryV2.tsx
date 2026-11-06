@@ -19,6 +19,8 @@ export interface ReportEntryV2Props {
   titled: boolean;
   /** The viewer's zone for the autosave line and the edit window. */
   tz: string;
+  /** Opens a sent report straight in an edit (the admin pressed «تعديل التقرير» on its view). */
+  opened?: boolean;
 }
 
 /**
@@ -26,8 +28,8 @@ export interface ReportEntryV2Props {
  * the program's content (surah parts, Arabic skills or Islamic studies) and the lesson's end, or
  * one card when the student was absent; autosaved while a draft, then sent.
  */
-export function ReportEntryV2({ form, entry, titled, tz }: ReportEntryV2Props) {
-  const s = useReportEntryV2(entry.report, entry.student.program);
+export function ReportEntryV2({ form, entry, titled, tz, opened }: ReportEntryV2Props) {
+  const s = useReportEntryV2(entry.report, entry.student.program, opened);
   const { report, values } = s;
   const v2 = t.reports.v2;
   const article = useRef<HTMLElement>(null);
@@ -40,7 +42,7 @@ export function ReportEntryV2({ form, entry, titled, tz }: ReportEntryV2Props) {
     <article ref={article} aria-label={title} className="grid max-w-3xl gap-4">
       {titled && <h2 className="font-display text-h3 font-bold">{title}</h2>}
       <V2Header lesson={form.lesson} entry={entry} />
-      <fieldset disabled={!report.can_edit} className="grid min-w-0 gap-4">
+      <fieldset disabled={s.mode.locked} className="grid min-w-0 gap-4">
         <RadioChips name={`${report.id}-attendance`} legend={v2.attendanceTitle} options={attendance} value={values.attendance}
           onChange={(a) => s.set('attendance', a)} invalid={s.problem === 'missing_attendance'} required />
         <RadioChips name={`${report.id}-program`} legend={v2.programTitle} options={programs} value={values.program}

@@ -7401,11 +7401,6 @@
       "count": 1
     }
   },
-  "src/features/reporting/reports/ReportFormPage.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/reporting/reports/ReportFormPage.tsx": {
     "max-len": {
       "count": 1
@@ -7475,7 +7470,7 @@
   },
   "src/features/reporting/reports/entry-v2/V2Footer.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/reporting/reports/entry-v2/V2Header.tsx": {

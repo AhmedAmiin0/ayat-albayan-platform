@@ -1,4 +1,4 @@
-import { reportEntryValues } from '@ab/client-core';
+import { reportEntryValues, sendChecked } from '@ab/client-core';
 import {
   submitBody,
   submitProblem,
@@ -15,6 +15,7 @@ import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { REPORTS_KEY } from '@/features/reporting/reports/api';
 import { useReportApi } from '@/features/reporting/reports/report-api';
 import { useAutosave } from './use-autosave';
+import { useReportMode } from '@/features/reporting/reports/send/use-report-mode';
 
 /** Form values; «البرنامج *» is the report's own, else the student's (the prefill; @ab/client-core). */
 const entryValuesOf = reportEntryValues;
@@ -30,10 +31,12 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const [report, setReport] = useState(initial);
   const [values, setValues] = useState<FormValues>(() => entryValuesOf(initial, studentProgram));
   const [problem, setProblem] = useState<string | null>(null);
+  const mode = useReportMode(report);
   const submit = useMutation({
     mutationFn: api.submitReport,
     onSuccess: async (view) => {
       setReport(view);
+      mode.sent();
       setValues(entryValuesOf(view, studentProgram));
       // The lesson moved (completed …), the pending list shrank, and a reopened form must load the
       // sent version (this entry keeps its own state: it is keyed by report id, seeded once).
@@ -50,15 +53,20 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
     setValues((v) => ({ ...v, [key]: value }));
   };
   const setGrade = (rubric: Rubric, grade: Grade) => set('grades', { ...values.grades, [rubric]: grade });
-  const send = () => {
-    const found = submitProblem(values, report.version);
-    setProblem(found);
-    if (!found) submit.mutate({ id: report.id, body: submitBody(values, report.version) });
-  };
+  // One request at a time: a second tap or Enter while pending does nothing (the guard).
+  const send = () =>
+    sendChecked(mode.guard, {
+      check: () => submitProblem(values, report.version),
+      show: setProblem,
+      request: (done) => {
+        const body = submitBody(values, report.version);
+        submit.mutate({ id: report.id, body }, { onSettled: done });
+      },
+    });
   const setAttachments = (next: (files: ReportAttachmentView[]) => ReportAttachmentView[]) =>
     setReport((r) => ({ ...r, attachments: next(r.attachments) }));
 
-  return { report, values, set, setGrade, send, problem, submit, saveState, setAttachments };
+  return { report, values, set, setGrade, send, problem, submit, saveState, setAttachments, mode };
 }
 
 export type ReportEntryState = ReturnType<typeof useReportEntry>;

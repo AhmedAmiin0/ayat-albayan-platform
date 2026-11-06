@@ -42,7 +42,7 @@ export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
   const s = useReportEntry(entry.report, entry.student.program);
   const { attachments } = useReportApi();
   const { report, values } = s;
-  const locked = !report.can_edit;
+  const { locked } = s.mode;
   const title = t.reports.entryFor.replace('{name}', entry.student.name);
   const article = useRef<HTMLElement>(null);
   useFocusInvalid(article, s.problem);

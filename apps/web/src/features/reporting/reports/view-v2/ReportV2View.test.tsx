@@ -52,9 +52,9 @@ describe('the admin reads a new-form report (read-only)', () => {
 
   it('«تعديل التقرير» opens the new form for the admin (admins correct any report); a draft opens in the form', async () => {
     await openV2({ apiFetch, role: 'admin', report: { ...sent, can_edit: true, content: v2Content({}) } });
-    expect(screen.queryByRole('button', { name: v2.saveEdit })).toBeNull();
+    expect(screen.queryByRole('button', { name: t.reports.resubmit })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t.reports.edit }));
-    expect(await screen.findByRole('button', { name: v2.saveEdit })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: t.reports.resubmit })).toBeTruthy();
     expect(screen.queryByText(v2.admin.v2Badge)).toBeNull();
   });
 });
