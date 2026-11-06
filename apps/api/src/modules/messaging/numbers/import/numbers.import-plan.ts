@@ -49,7 +49,11 @@ function sourceOf(input: PlanInput, key: IntegrationKey): IntegrationSource {
 }
 
 /** The legacy key a secret is read from: the chat token falls back to the notifications one (as chatEnv). */
-function secretKey(input: PlanInput, role: WaLine, name: NumberSecretName): IntegrationKey {
+/** The secrets a legacy line key holds (an Evolution token has no legacy key). */
+type LegacySecret = Extract<NumberSecretName, ImportField>;
+const LEGACY_SECRETS: readonly LegacySecret[] = ['access_token', 'app_secret'];
+
+function secretKey(input: PlanInput, role: WaLine, name: LegacySecret): IntegrationKey {
   const own = ROLE_KEYS[role][name];
   if (role !== 'chat' || name !== 'access_token' || sourceOf(input, own) !== 'unset') return own;
   return ROLE_KEYS.notifications.access_token;
@@ -57,7 +61,7 @@ function secretKey(input: PlanInput, role: WaLine, name: NumberSecretName): Inte
 
 function fieldView(input: PlanInput, role: WaLine, field: ImportField): ImportFieldView {
   const secret = NUMBER_SECRET_NAMES.some((n) => n === field);
-  const key = secret ? secretKey(input, role, field as NumberSecretName) : ROLE_KEYS[role][field];
+  const key = secret ? secretKey(input, role, field as LegacySecret) : ROLE_KEYS[role][field];
   const raw = input.legacy[key];
   const value = field === 'provider' ? lineProvider(input.legacy, role) : !secret && typeof raw === 'string' ? raw : null;
   return { field, secret, source: sourceOf(input, key), value };
@@ -78,7 +82,7 @@ function planRole(input: PlanInput, role: WaLine): RolePlan {
     return { role, action: 'create', number_id: null, fields, secrets_to_copy: [], copies: [], row: null, not_importable };
   }
   const have = existing ? (input.status.get(existing.id) ?? {}) : {};
-  const copies = NUMBER_SECRET_NAMES.flatMap((name) => {
+  const copies = LEGACY_SECRETS.flatMap((name) => {
     const key = secretKey(input, role, name);
     const source = sourceOf(input, key);
     return source === 'unset' || have[name] !== undefined ? [] : [{ name, key, source }];

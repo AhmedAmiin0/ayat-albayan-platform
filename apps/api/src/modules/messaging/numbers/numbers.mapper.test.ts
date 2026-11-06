@@ -14,7 +14,11 @@ describe('numbers mapper', () => {
   it('a row → its view: secrets as set / not set only', () => {
     const row = numberRow();
     const view = numberView(row, new Map([[row.id, { access_token: '2026-10-23T09:00:00Z' }]]));
-    expect(view.secrets).toEqual({ access_token: { set: true, updated_at: '2026-10-23T09:00:00Z' }, app_secret: { set: false, updated_at: null } });
+    const unset = { set: false, updated_at: null };
+    expect(view.secrets).toEqual({
+      access_token: { set: true, updated_at: '2026-10-23T09:00:00Z' }, app_secret: unset,
+      evolution_token: unset, evolution_cloud_token: unset, evolution_proxy_password: unset,
+    });
     expect(view).toMatchObject({ provider: 'meta', purpose: 'notifications', health: null, fallback_rank: 100 });
     expect(numberView(numberRow({ fallback_rank: 3 }), new Map()).fallback_rank).toBe(3);
   });

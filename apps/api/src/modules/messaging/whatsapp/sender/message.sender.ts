@@ -9,6 +9,7 @@ import { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes
 import { lineOf } from './send-line';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { SenderRepo } from './sender.repo';
+import { onPaceDue } from './pace';
 import { SENDER_FIRST_RUN_MS, SENDER_POLL_MS, senderTiming } from './sender-timing';
 import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
@@ -38,11 +39,8 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(MessageSender.name);
   /** Timers kick too: a tick during a run queues one more, as an enqueue does. */
   private readonly ticker = new Ticker({
-    name: MessageSender.name,
-    firstMs: SENDER_FIRST_RUN_MS,
-    everyMs: SENDER_POLL_MS,
-    run: () => this.runOnce(),
-    timer: 'kick',
+    name: MessageSender.name, firstMs: SENDER_FIRST_RUN_MS, everyMs: SENDER_POLL_MS,
+    run: () => this.runOnce(), timer: 'kick',
   });
 
   constructor(
@@ -55,6 +53,7 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
 
   onApplicationBootstrap(): void {
     this.ticker.start(senderTiming(loadEnv().MESSAGE_SENDER_POLL_MS));
+    onPaceDue(() => void this.kick()); // an Evolution row's own slot (pace/): due before the poll
   }
 
   onModuleDestroy(): void {

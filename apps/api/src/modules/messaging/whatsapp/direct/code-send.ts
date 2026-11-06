@@ -22,6 +22,12 @@ type CodeSendResult = { status: 'sent' } | { status: 'unavailable' } | { status:
  * a `messages` row would keep the code in template_params, readable by staff in the chat. Respects the
  * send gate and WA_ALLOWED_RECIPIENTS (dispatch.ready). Never retried: the user asks again.
  */
+/**
+ * Drivers a login code never leaves from: the CRM (its inbox shows the code) and Evolution (an
+ * Evolution Baileys number is unofficial; a code must come from the academy's official number).
+ */
+const NO_CODES: ReadonlySet<string | undefined> = new Set(['crm', 'evolution']);
+
 @Injectable()
 export class CodeSend {
   constructor(
@@ -67,10 +73,10 @@ export class CodeSend {
     const numbers = overlayNumbers();
     if (numbers === null) {
       if (!this.queries.chatConfigured) return null;
-      return lineProvider(loadEnv(), CODE_LINE) === 'crm' ? null : CODE_LINE;
+      return NO_CODES.has(lineProvider(loadEnv(), CODE_LINE)) ? null : CODE_LINE;
     }
     if (!this.routes) return null;
-    const chat = numbers.filter((n) => n.purpose === CODE_LINE && n.env?.provider !== 'crm');
+    const chat = numbers.filter((n) => n.purpose === CODE_LINE && !NO_CODES.has(n.env?.provider));
     const { pass } = await this.routes.pass(chat);
     const route = routeOf(pass, { row, template: { ...template, line: CODE_LINE, number_id: null } });
     return route?.line === CODE_LINE ? route : null;

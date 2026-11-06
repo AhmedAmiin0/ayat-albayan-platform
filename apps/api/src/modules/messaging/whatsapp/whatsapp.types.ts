@@ -3,9 +3,8 @@ import {
   isWaLine, type NumberPurpose, type TemplateParams, type WaLine, type WaSendKind,
 } from '@ab/shared';
 
-// WhatsappClient contract (docs/12 §3). B1 implements it over WA_API_BASE (tools/wa-stub locally
-// and in e2e); B2/B3 inject it with `@Inject(WHATSAPP_CLIENT)` and fake it in unit tests.
-// Foundation-owned: change it only through the contract doc.
+// WhatsappClient contract (docs/12 §3): B1 implements it over WA_API_BASE (wa-stub locally, e2e);
+// B2/B3 inject it with `@Inject(WHATSAPP_CLIENT)`. Foundation-owned: change it via the contract.
 
 export const WHATSAPP_CLIENT = Symbol('WHATSAPP_CLIENT');
 /** One client per line (docs/12 §13.4); WHATSAPP_CLIENT = its notifications client. */
@@ -27,8 +26,8 @@ export const templateRow = <T extends { line: NumberPurpose }>(
 ): (T & { line: WaLine }) | null => (row ? (templateRows([row])[0] ?? null) : null);
 
 export interface WaSent {
-  /** Meta's wamid; stored in messages.wa_message_id. */
-  waMessageId: string;
+  waMessageId: string; // Meta's wamid (messages.wa_message_id)
+  asText?: true; // the Evolution driver sent a template as plain text (Baileys has no templates)
 }
 
 /** A template as Meta lists it (GET /{waba}/message_templates). Statuses are Meta's spelling. */
@@ -57,17 +56,12 @@ export interface TemplateSend {
 }
 
 /** A sample file Meta shows the template reviewer (report_ready's PDF header). */
-export interface SampleFile {
-  name: string;
-  mime: string;
-  bytes: Uint8Array<ArrayBuffer>;
-}
+export interface SampleFile { name: string; mime: string; bytes: Uint8Array<ArrayBuffer> }
 
 /**
  * A session file by link; `kind` defaults to document, `filename` is a document's only, an audio
- * takes no caption. `replyTo` = the quoted wamid (Meta's context; the crm driver drops it, and
- * `voice` too: a CRM line sends files as documents only).
- */
+ * takes no caption. `replyTo` = the quoted wamid (Meta's context; the crm driver drops it and
+ * `voice`: a CRM line sends files as documents only). */
 export interface MediaSend {
   to: string;
   kind?: WaSendKind;
@@ -101,6 +95,10 @@ export interface WhatsappClient {
   sendCallPermissionRequest?(input: { to: string; text: string }): Promise<WaSent>;
   /** A message reaction (Meta and Kapso); absent = this driver cannot (the CRM). */
   sendReaction?(input: ReactionSend): Promise<WaSent>;
+  /** Staff chat only (Evolution Baileys, automatic sends off): a job's row is refused. */
+  automaticOff?(): boolean;
+  /** Evolution Baileys: ms before `to` may go (pacing) and the daily cap; absent = no pacing. */
+  pace?(to: string): { waitMs: number; dailyCap: number; gapMs: number } | null;
   /** Blue ticks for an inbound wamid (POST /messages {status:'read'}). */
   markRead(waMessageId: string): Promise<void>;
   /** All pages of the WABA's templates. Read-only: safe for the health check. */
@@ -132,13 +130,14 @@ export class WaError extends Error {
       /** The request may have reached Meta (timeout, connection lost mid-call): a resend could duplicate it. */
       uncertain?: boolean;
       /** Kapso refused the line's project key, or the CRM its API key (docs/19): held like Meta's 190, in its own words. */
-      credential?: 'kapso' | 'crm';
+      credential?: 'kapso' | 'crm' | 'evolution';
       /** The crm driver's error code («meta_error», «template_malformed», «bad_request», …): fails at once, never retried. */
       crmCode?: string;
       /** The CRM's rate limit (429): try again after this long, the try not counted. */
       retryAfterMs?: number;
       /** The call is not supported by this line's driver (the crm driver: template list / submit / samples / media). */
-      unsupported?: 'crm';
+      unsupported?: 'crm' | 'evolution';
+      blocked?: 'evolution_auto_off'; // the number's own safety rule, before any call (docs/19)
       /** The crm driver: the template name sent (a 132001 marks only the key's own name). */
       template?: string;
     },

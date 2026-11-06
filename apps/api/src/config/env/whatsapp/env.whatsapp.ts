@@ -1,6 +1,7 @@
-import type { WaLine, WaProvider } from '@ab/shared';
+import type { EvolutionMode, WaLine, WaProvider } from '@ab/shared';
 import type { Env } from '../env';
 import { crmLine } from './env.crm';
+import { evolutionLine } from './env.evolution';
 import { kapsoLine } from './env.kapso';
 import { chatEnv, metaNotifications } from './env.meta';
 
@@ -37,10 +38,35 @@ export interface CrmLineEnv {
   base: string;
   apiKey: string;
 }
+/**
+ * A number on a self-hosted Evolution API instance (docs/19 «Evolution driver»): the shared base,
+ * the instance name and ITS token (`apikey`), the engine, and the Baileys safety settings.
+ */
+export interface EvolutionLineEnv {
+  provider: 'evolution';
+  base: string;
+  instance: string;
+  token: string;
+  mode: EvolutionMode;
+  /** Baileys: automatic notifications / templates allowed (default false: staff chat only). */
+  autoSends: boolean;
+  /** Baileys: minimum gap between sends to different recipients (the number's limits.gap_ms). */
+  gapMs: number;
+  /** Baileys: at most this many sends a UTC day from the number (limits.daily_cap). */
+  dailyCap: number;
+  /** sendText `delay` (typing shown) and `linkPreview` (sending.*). */
+  delayMs: number;
+  linkPreview: boolean;
+}
 /** A line the Graph client (graph.ts) can reach: Meta's Cloud API or Kapso's Meta proxy (or the stub). */
 export type GraphEnv = MetaLineEnv | KapsoLineEnv;
 /** What a line's WhatsappClient needs (client-factory.ts picks the client by provider). */
-export type WhatsappEnv = GraphEnv | CrmLineEnv;
+export type WhatsappEnv = GraphEnv | CrmLineEnv | EvolutionLineEnv;
+
+/** The drivers with no Graph ids of ours (no phone_number_id / WABA / version). */
+const OFF_GRAPH: ReadonlySet<string | undefined> = new Set(['crm', 'evolution']);
+/** A meta or kapso line: Graph's paths and ids apply. */
+export const isGraphEnv = (e: WhatsappEnv): e is GraphEnv => !OFF_GRAPH.has(e.provider);
 
 /** What each line needs to SEND; null = that line is not configured. */
 export type LineEnvs = Record<WaLine, WhatsappEnv | null>;
@@ -69,8 +95,12 @@ export function lineEnvs(env: Env): LineEnvs {
   const base = env.WA_API_BASE?.replace(/\/+$/, '');
   const of = (line: WaLine, meta: () => MetaLineEnv | null): WhatsappEnv | null => {
     const provider = lineProvider(env, line);
-    if (provider === 'crm') return crmLine(env, line);
-    return provider === 'kapso' ? kapsoLine(env, line) : meta();
+    const other: Partial<Record<WaProvider, () => WhatsappEnv | null>> = {
+      crm: () => crmLine(env, line),
+      kapso: () => kapsoLine(env, line),
+      evolution: () => evolutionLine(line),
+    };
+    return (other[provider] ?? meta)();
   };
   return { notifications: of('notifications', () => metaNotifications(env, base)), chat: of('chat', () => chatEnv(env, base)) };
 }

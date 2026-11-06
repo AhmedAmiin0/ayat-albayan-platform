@@ -9,7 +9,7 @@ import { AUTO_OFF, AUTOMATIC_KEYS } from './send-stale';
 import { anyDue, DUE_COLUMNS, NOT_APP_SENT, type DueMessage } from './sender.due';
 import { staffAtSend } from './staff-at-send';
 import { sendableTemplates } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
-import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
+import type { TemplateRow, WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 export type { DueMessage } from './sender.due';
 
@@ -115,11 +115,11 @@ export class SenderRepo {
   }
 
   /** false = the admin marked it sent by hand meanwhile: their status stands. */
-  async sent(input: { row: DueMessage; waMessageId: string; at: Date }): Promise<boolean> {
+  async sent(input: { row: DueMessage; sent: WaSent; at: Date }): Promise<boolean> {
     const at = input.at.toISOString();
     const { data, error } = await this.db
       .from('messages')
-      .update({ status: 'sent', sent_at: at, wa_message_id: input.waMessageId, next_attempt_at: null, error_code: null, error_text: null })
+      .update({ status: 'sent', sent_at: at, wa_message_id: input.sent.waMessageId, next_attempt_at: null, error_code: null, error_text: null, ...(input.sent.asText ? { sent_as_text: true } : {}) })
       .eq('id', input.row.id)
       .eq('status', 'queued')
       .select('id');

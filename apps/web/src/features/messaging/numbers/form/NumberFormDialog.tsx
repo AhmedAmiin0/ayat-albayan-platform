@@ -5,7 +5,9 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
 import { numberErrorCode, numberErrorText } from './number-errors';
-import { createBody, draftErrors, draftOf, updateBody, type DraftErrors } from './number-form';
+import {
+  createBody, draftErrors, draftOf, switchErrors, updateBody, type DraftErrors,
+} from './number-form';
 import { createNumber, updateNumber } from '@/features/messaging/numbers/numbers-api';
 import { NumberFormFields } from './NumberFormFields';
 import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mutation';
@@ -32,7 +34,7 @@ export function NumberFormDialog({ view, onClose }: { view?: NumberView; onClose
   const shown: DraftErrors = serverCode === 'phone_taken' ? { ...errors, phone_number_id: s.errors.phone_taken } : errors;
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
-    const found = draftErrors(draft);
+    const found = { ...draftErrors(draft), ...switchErrors(view, draft) };
     setErrors(found);
     if (Object.keys(found).length === 0) save.mutate({ view, draft });
   };

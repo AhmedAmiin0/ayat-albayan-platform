@@ -1,9 +1,10 @@
-import type { TemplateLineFacts, TemplateLineSync, WaLine } from '@ab/shared';
+import type { TemplateLineFacts, TemplateLineSync, WaLine, WaProvider } from '@ab/shared';
 import { lineFacts, readError } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { newStarters } from './template-import';
 import {
   crmSyncPatch, wabaSyncPatch,
 } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
+import { EVOLUTION_NO_TEMPLATES } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { TemplatePatch } from './template-sync';
 import {
@@ -34,6 +35,11 @@ async function readList(deps: LineSyncDeps, line: WaLine): Promise<MetaTemplate[
     return readError(e);
   }
 }
+
+/** Drivers whose templates we never list: Evolution's (docs/19); the CRM's we do (docs/39). */
+const NO_LIST: Partial<Record<WaProvider, string>> = {
+  evolution: EVOLUTION_NO_TEMPLATES,
+};
 
 interface LineRead {
   line: WaLine;
@@ -70,6 +76,8 @@ async function importNew(deps: LineSyncDeps, read: LineRead, known: TemplateRow[
  */
 export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Promise<TemplateLineSync> {
   const facts = lineFacts(line, deps.lines[line]);
+  const elsewhere = NO_LIST[facts.provider];
+  if (elsewhere) return { ...empty(facts, now), ok: false, error: elsewhere };
   if (!facts.configured) return { ...empty(facts, now), ok: false, error: 'not_configured' };
   const list = await readList(deps, line);
   if (!Array.isArray(list)) return { ...empty(facts, now), ok: false, ...list };

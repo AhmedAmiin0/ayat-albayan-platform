@@ -1,8 +1,8 @@
 import { WA_LINES, type LineCheckView, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { lineEnvs, loadEnv, type WhatsappEnv } from '@/config/env/env';
+import { isGraphEnv, lineEnvs, loadEnv, type WhatsappEnv } from '@/config/env/env';
 import { graphHttp, type FetchLike, type GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';
-import { crmConn, crmLineCheck } from './lines.check.crm';
+import { offGraphCheck } from './lines.check.evolution';
 import { driverOf, type LineDriver } from './lines.check.driver';
 import { withMetaReady } from './lines.check.meta';
 import { phoneNumberSchema, subscribedAppsSchema } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
@@ -105,9 +105,8 @@ export class LinesCheck {
   private async one(input: LineInput): Promise<LineCheckView> {
     const { line, env, checkedAt } = input;
     if (!env) return { ...unconfigured(line, checkedAt), ...input.driver };
-    // A crm line: GET /me only (docs/19); the number is the CRM's, so no Graph call at all.
-    if (env.provider === 'crm')
-      return crmLineCheck({ line, conn: crmConn(env, this), checkedAt, driver: input.driver });
+    // crm (GET /me) and evolution (connectionState): no Graph call at all (docs/19).
+    if (!isGraphEnv(env)) return offGraphCheck({ ...input, env, at: this });
     const conn: GraphConn = { env, fetch: this.fetch, timeoutMs: this.timeoutMs };
     // Kapso's Meta proxy has no /{waba}/subscribed_apps (404 on staging, 2026-10-18): its inbound comes
     // through the Kapso webhook, so a kapso line is not asked (subscribed_apps stays null).

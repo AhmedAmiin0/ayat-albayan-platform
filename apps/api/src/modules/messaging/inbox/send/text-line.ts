@@ -1,7 +1,7 @@
 import { AWAITING_REPLY, type WaLine } from '@ab/shared';
 import { activeNumberId } from '@/common/configuration/integrations/numbers-overlay';
 import { lineEnvs, loadEnv } from '@/config/env/env';
-import { waHttpError } from '@/modules/messaging/whatsapp';
+import { waHttpError, windowless } from '@/modules/messaging/whatsapp';
 import { pickSend, type ThreadWindow } from './send-number';
 import type { SendLineCode } from './send-line';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
@@ -25,6 +25,22 @@ interface LineAt {
  */
 const chatOnKapso = (): boolean => lineEnvs(loadEnv()).chat?.provider === 'kapso';
 
+/**
+ * The chat line is an Evolution Baileys number (docs/19 «Evolution driver»): WhatsApp Web has no
+ * 24 h window, so a closed window never refuses or holds a send there.
+ */
+const chatWindowless = (): boolean => windowless(lineEnvs(loadEnv()).chat);
+
+/** The chat line, stamped with its default number in module mode, sent as is (no hold). */
+function freeChat(): SendFromLine {
+  const numberId = activeNumberId('chat');
+  return { line: 'chat', ...(numberId ? { number_id: numberId } : {}) };
+}
+
+/** A closed window of a thread that exists, on a windowless chat line: it goes as free text. */
+const goesFree = (thread: ThreadRow | null, code: SendLineCode): boolean =>
+  thread !== null && code === 'session_closed' && chatWindowless();
+
 const lineError = (code: SendLineCode) =>
   code === 'line_not_configured' ? waHttpError('line_not_configured', 503) : waHttpError('session_closed', 409);
 
@@ -35,8 +51,9 @@ const lineError = (code: SendLineCode) =>
  */
 export async function sendLine(thread: ThreadRow | null, at: LineAt): Promise<SendFromLine> {
   const picked = await pickSend({ thread, now: at.now, windows: at.windows });
-  if ('code' in picked) throw lineError(picked.code);
-  return picked;
+  if (!('code' in picked)) return picked;
+  if (goesFree(thread, picked.code)) return freeChat();
+  throw lineError(picked.code);
 }
 
 /**
@@ -50,6 +67,7 @@ export async function sendLine(thread: ThreadRow | null, at: LineAt): Promise<Se
 export async function textLine(thread: ThreadRow | null, at: LineAt): Promise<SendFromLine> {
   const picked = await pickSend({ thread, now: at.now, windows: at.windows });
   if (!('code' in picked)) return picked;
+  if (goesFree(thread, picked.code)) return freeChat();
   if (picked.code !== 'session_closed' || !chatOnKapso()) throw lineError(picked.code);
   const numberId = activeNumberId('chat');
   return { line: 'chat', ...(numberId ? { number_id: numberId } : {}), error_code: AWAITING_REPLY };

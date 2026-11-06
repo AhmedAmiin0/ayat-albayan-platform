@@ -7,6 +7,7 @@ import {
   type KapsoLineEnv,
   type WhatsappEnv,
 } from '@/config/env/env';
+import { evolutionEnv, evolutionTokenOf } from './numbers.env.evolution';
 import { ROLE_KEYS } from '@/modules/messaging/numbers/lines/numbers.lines';
 import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 
@@ -16,7 +17,7 @@ import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 // KAPSO_API_VERSION and the project-wide KAPSO_API_KEY (env.kapso.ts kapsoLine); crm = WACRM_API_BASE and
 // WACRM_API_KEY (env.crm.ts crmLine). Never logs a value.
 
-interface NumberSource {
+export interface NumberSource {
   row: NumberRow;
   secrets: Partial<Record<NumberSecretName, string>>;
 }
@@ -50,8 +51,9 @@ export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
   const v = source.row.enabled ? checked(source, line) : null;
   if (!v) return null;
   const k = ROLE_KEYS[line];
-  // crm: the CRM's base + key (env.crm.ts crmLine); the row's ids only name it, they are never sent.
-  if (v[k.provider] === 'crm') return crmEnv(env);
+  // crm: the CRM's base + key; evolution: the instance (docs/19). Neither sends a Meta id.
+  const own = OWN_ENV[v[k.provider] ?? ''];
+  if (own) return own(source, env);
   const phoneNumberId = v[k.phone_number_id];
   const wabaId = v[k.waba_id];
   if (!phoneNumberId || !wabaId) return null;
@@ -60,6 +62,12 @@ export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
 }
 
 type Ids = { phoneNumberId: string; wabaId: string };
+
+/** The drivers whose number config is not Graph ids + a credential. */
+const OWN_ENV: Partial<Record<string, (s: NumberSource, env: Env) => WhatsappEnv | null>> = {
+  crm: (_s, env) => crmEnv(env),
+  evolution: evolutionEnv,
+};
 
 /** Kapso: its base and version, the project key; never a Meta token or app id. */
 function kapsoEnv(ids: Ids, env: Env): KapsoLineEnv | null {
@@ -109,6 +117,7 @@ export function overlayNumber(source: NumberSource, env: Env): OverlayNumber {
     created_at: row.created_at,
     env: numberEnv(source, env),
     appSecret: appSecretOf(source),
+    ...evolutionTokenOf(source),
   };
 }
 

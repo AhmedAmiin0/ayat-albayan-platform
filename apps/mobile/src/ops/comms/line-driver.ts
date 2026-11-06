@@ -1,14 +1,19 @@
-import { WA_PROVIDERS, type IntegrationConfigItem, type WaLine, type WaProvider } from '@ab/shared';
+import { WA_LINE_PROVIDERS, type IntegrationConfigItem, type WaLine, type WaProvider } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 
 // The per-line driver switch on the phone (docs/19), the same key the web's «التكاملات» saves.
 
 const LINE_DRIVER_KEY = { notifications: 'WA_PROVIDER', chat: 'WA_CHAT_PROVIDER' } as const satisfies Record<WaLine, string>;
 
-const isProvider = (v: string | null | undefined): v is WaProvider => WA_PROVIDERS.some((p) => p === v);
+/** The drivers a line may be switched to by hand (never evolution: a number's driver only). */
+export type LineProvider = (typeof WA_LINE_PROVIDERS)[number];
+export const LINE_PROVIDERS: readonly LineProvider[] = WA_LINE_PROVIDERS;
+
+const isProvider = (v: string | null | undefined): v is LineProvider =>
+  WA_LINE_PROVIDERS.some((p) => p === v);
 
 /** The line's driver in use (the database's value, else the server's, else meta: the default). */
-export function lineDriver(items: readonly Pick<IntegrationConfigItem, 'key' | 'value'>[], line: WaLine): WaProvider {
+export function lineDriver(items: readonly Pick<IntegrationConfigItem, 'key' | 'value'>[], line: WaLine): LineProvider {
   const value = items.find((i) => i.key === LINE_DRIVER_KEY[line])?.value;
   return isProvider(value) ? value : 'meta';
 }

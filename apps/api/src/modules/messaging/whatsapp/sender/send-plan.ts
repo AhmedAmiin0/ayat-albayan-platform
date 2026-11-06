@@ -5,6 +5,7 @@ import {
 } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
 import { crmPlan } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
+import { driverCode } from '@/modules/messaging/whatsapp/drivers/driver-codes';
 import { paymentHold, type HoldRow } from './hold/payment-hold';
 import { isWindowClosedError } from './window/window-rules';
 import { templateParams } from '@/modules/messaging/whatsapp/messages/wa-json';
@@ -22,10 +23,9 @@ export const UNCERTAIN = 'uncertain';
 export const HANDED_OFF = 'handed_off';
 /** An expired / revoked token holds the queue this long before the next try (no attempt counted). */
 export const AUTH_HOLD_MS = 15 * 60_000;
-/** messages.error_code when Kapso refused the line's project key (docs/19): held like an auth error. */
-export const KAPSO_AUTH = 'kapso_auth';
-/** messages.error_code when the CRM refused its API key or it lacks messages:send (docs/19): held the same way. */
-export const CRM_AUTH = 'crm_auth';
+export {
+  KAPSO_AUTH, CRM_AUTH, EVOLUTION_AUTH,
+} from '@/modules/messaging/whatsapp/drivers/driver-codes';
 export { CRM_RATE_LIMITED } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 const ERROR_TEXT_MAX = 500;
 
@@ -44,8 +44,8 @@ interface PlanInput { error: unknown; attempts: number; now: Date; row?: HoldRow
 /** messages.error_code: Meta's code («131026»), else what kind of failure it was. */
 export function errorCode(error: unknown): string {
   if (!(error instanceof WaError)) return 'internal';
-  if (error.info.credential === 'kapso') return KAPSO_AUTH;
-  if (error.info.credential === 'crm') return CRM_AUTH;
+  const own = driverCode(error.info);
+  if (own) return own;
   if (error.info.crmCode) return `crm_${error.info.crmCode}`;
   if (error.info.code !== null) return String(error.info.code);
   return error.info.status ? `http_${error.info.status}` : 'network';

@@ -8,6 +8,7 @@ describe('numberPatch: a PATCH never leaves a row saying something false', () =>
   it('a new phone id drops the old id\'s phone, health and check time', () => {
     expect(numberPatch(checked, { phone_number_id: '1000000009' })).toEqual({
       phone_number_id: '1000000009', display_phone_e164: null, health: null, checked_at: null,
+      evolution_sync: null,
     });
   });
 

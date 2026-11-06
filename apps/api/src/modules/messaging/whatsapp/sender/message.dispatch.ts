@@ -5,6 +5,7 @@ import { StorageService } from '@/common/storage/storage.service';
 import { allowedRecipients, loadEnv, recipientAllowed } from '@/config/env/env';
 import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
 import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clients';
+import { evolutionAutoOff } from '@/modules/messaging/whatsapp/drivers/evolution/evolution.client';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { quickReplyPayloads } from './send-plan';
 import type { DueMessage } from './sender.repo';
@@ -67,12 +68,19 @@ export class MessageDispatch {
     return this.client(via).configured() && recipientAllowed(this.allowed, row.phone_e164);
   }
 
+  /** An Evolution Baileys number's pace for this row (docs/19); null = no pacing. */
+  pace(row: DueMessage, via: SendVia): { waitMs: number; dailyCap: number; gapMs: number } | null {
+    return this.client(via).pace?.(row.phone_e164) ?? null;
+  }
+
   /** Two lines in use: only then does the claim stamp `messages.line` (docs/12 §13.2). */
   get multi(): boolean {
     return this.lines.chat.configured();
   }
 
   async send(row: DueMessage, template: TemplateRow | null, via: SendVia): Promise<WaSent> {
+    // A job's row (no author) on a staff-only number (Evolution Baileys, docs/19): never sent.
+    if (row.created_by === null && this.client(via).automaticOff?.()) throw evolutionAutoOff();
     if (row.template_key && template) {
       const params = templateParams(row.template_params);
       const documentUrl = template.header_format === 'document' ? await documentLink(this.storage, params.document) : null;

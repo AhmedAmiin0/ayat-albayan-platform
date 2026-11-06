@@ -2,6 +2,7 @@ import { WA_LINES } from '@ab/shared';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '@/common/configuration/integrations/integration-config.module';
 import { NumbersModule } from '@/modules/messaging/numbers/numbers.module';
+import { EvolutionConfigController, NumbersEvolutionController } from './drivers/evolution/config';
 import { bootGaps, lineProvider, loadEnv } from '@/config/env/env';
 import { CodeSend } from './direct/code-send';
 import { GateController } from './gate/gate.controller';
@@ -24,6 +25,7 @@ import { MessageSender } from './sender/message.sender';
 import { MessageViews } from './messages/message.views';
 import { TemplateNames } from './templates/names/template-names';
 import { MessageWorker } from './sender/message.worker';
+import { EvolutionPaceRepo } from './sender/pace';
 import { KapsoHold } from './sender/window/kapso-hold';
 import { ReopenRequest } from './sender/window/reopen-request';
 import { WindowHold } from './sender/window/window-hold';
@@ -80,21 +82,19 @@ function lines(): WhatsappLines {
   controllers: [
     TemplatesController, TemplateEditsController, MessagesController, GateController,
     LinesController, TemplateNumbersController,
+    NumbersEvolutionController, EvolutionConfigController,
   ],
   providers: [
     { provide: WHATSAPP_LINES, useFactory: lines },
     { provide: WHATSAPP_CLIENT, useFactory: (l: WhatsappLines): WhatsappClient => l.notifications, inject: [WHATSAPP_LINES] },
-    LinesCheck,
-    LineHealthStore,
-    TemplatesRepo,
-    TemplateRegistry,
-    TemplateVerifier,
-    TemplateAdmin,
+    LinesCheck, LineHealthStore,
+    TemplatesRepo, TemplateRegistry,
+    TemplateVerifier, TemplateAdmin,
     TemplateStarters,
     TemplateNumbers,
     TemplateCreator,
     TemplateMissing,
-    WhatsappSettings,
+    EvolutionPaceRepo, WhatsappSettings,
     GateSettings,
     SendGate,
     SenderRepo,

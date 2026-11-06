@@ -1,10 +1,11 @@
 import { z } from 'zod';
 import {
   isIntegrationPlainKey,
-  WA_PROVIDERS,
+  WA_LINE_PROVIDERS,
   type IntegrationPlainKey,
   type IntegrationSecretKey,
 } from './keys.js';
+import { evolutionBase, evolutionInternalHosts } from './evolution.js';
 import { parseAllowedRecipients } from './recipients.js';
 
 // The value checks of the plain keys, consistent with apps/api/src/config/env/env.ts (the API also re-checks
@@ -47,7 +48,8 @@ export const stripeWebhookSecret = z.string().regex(/^whsec_[A-Za-z0-9+/=]+$/, '
 export const stripeMaxDiscountPct = z.coerce.number().min(0).max(100);
 
 const version = z.string().regex(/^v\d+\.\d+$/);
-const provider = z.enum(WA_PROVIDERS);
+/** A line key is switched by hand among the line drivers only (Evolution is a number's driver). */
+const provider = z.enum(WA_LINE_PROVIDERS);
 
 export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = {
   WA_PROVIDER: provider,
@@ -63,6 +65,8 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   KAPSO_API_BASE: url,
   KAPSO_API_VERSION: version,
   WACRM_API_BASE: url,
+  EVOLUTION_API_BASE: evolutionBase,
+  EVOLUTION_INTERNAL_HOSTS: evolutionInternalHosts,
   WA_ALLOWED_RECIPIENTS: recipients,
   WA_TEMPLATE_SYNC: z.stringbool(),
   CALLS_STUN_URLS: iceUrls,

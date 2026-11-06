@@ -3,6 +3,7 @@ import { activeNumberId } from '@/common/configuration/integrations/numbers-over
 import type { MessageDispatch, SendVia } from './message.dispatch';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { lineOf } from './send-line';
+import { evolutionOff, pacedLater, type EvolutionPaceRepo } from './pace';
 import type { DueMessage } from './sender.due';
 import type { SenderRepo } from './sender.repo';
 import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -76,6 +77,8 @@ export function sendingAt(job: PassJob, multi: boolean): { line: WaLine; via: Se
 interface ClaimDeps {
   dispatch: MessageDispatch;
   queries: SenderRepo;
+  /** Evolution pacing, cap and off-number writes; absent (unit tests) = none. */
+  pace?: EvolutionPaceRepo;
 }
 
 interface ClaimInput {
@@ -105,13 +108,26 @@ export async function claimRow(deps: ClaimDeps, input: ClaimInput): Promise<numb
   });
 }
 
-/** Module mode (decision 8): only a number that can send now; stamps number_id, line = its role. */
-function claimNumber(
+/** No number can send the row: one pinned to an Evolution number that cannot send fails now. */
+async function failIfOff(deps: ClaimDeps, row: DueMessage): Promise<null> {
+  if (evolutionOff(row)) await deps.pace?.failOff(row.id);
+  return null;
+}
+
+/**
+ * Module mode (decision 8): only a number that can send now; stamps number_id, line = its role. A
+ * row pinned to an Evolution number that cannot send fails (never skipped forever); a paced
+ * Evolution row moves to later (docs/19).
+ */
+async function claimNumber(
   deps: ClaimDeps,
   input: { row: DueMessage; now: Date; route: NumberRoute | null },
 ): Promise<number | null> {
   const { row, now, route } = input;
-  if (!route || !deps.dispatch.ready(row, route)) return Promise.resolve(null);
+  if (!route) return failIfOff(deps, row);
+  if (!deps.dispatch.ready(row, route)) return null;
+  const paced = { dispatch: deps.dispatch, repo: deps.pace };
+  if (await pacedLater(paced, { row, route, now })) return null;
   const { line, numberId } = route;
   return deps.queries.claim({ id: row.id, attempts: row.attempts, now, line, numberId });
 }

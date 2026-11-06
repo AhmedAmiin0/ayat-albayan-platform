@@ -10,6 +10,8 @@ import { NumbersRepo } from './numbers.repo';
 import { NumbersSecrets } from './config/numbers.secrets';
 import { NumbersService } from './numbers.service';
 import { NumbersSettings } from './numbers.settings';
+import { NumbersEvolution } from './evolution/numbers-evolution';
+import { EvolutionNumbersRepo } from './evolution/evolution-numbers.repo';
 
 /**
  * Academy numbers (docs/23 §2c, phase 3): wa_numbers, the per-number Vault secrets, the import, parity
@@ -19,7 +21,7 @@ import { NumbersSettings } from './numbers.settings';
  */
 @Module({
   controllers: [NumbersController, CommunicationsController],
-  providers: [NumbersSettings, NumbersRepo, NumbersSecrets, NumbersConfig, NumbersEffects, NumbersService, NumbersImport, CommunicationsService, NumbersHealth],
-  exports: [NumbersConfig, NumbersHealth],
+  providers: [NumbersSettings, NumbersRepo, NumbersSecrets, NumbersConfig, NumbersEffects, NumbersService, NumbersImport, CommunicationsService, NumbersHealth, NumbersEvolution, EvolutionNumbersRepo],
+  exports: [NumbersConfig, NumbersHealth, NumbersEvolution],
 })
 export class NumbersModule {}

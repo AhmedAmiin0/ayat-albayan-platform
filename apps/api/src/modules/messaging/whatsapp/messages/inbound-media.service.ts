@@ -1,4 +1,4 @@
-import { INVOICE_MIMES, baseMime, chatFileMaxBytes, isChatViewMime, isWaAuthError } from '@ab/shared';
+import { INVOICE_MIMES, baseMime, chatFileMaxBytes, isChatViewMime } from '@ab/shared';
 import { HttpStatus, Inject, Injectable, Optional } from '@nestjs/common';
 import { BUCKETS, waMediaPath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
@@ -7,12 +7,11 @@ import { isCrmHistoryRow } from './crm-history/crm-history-url';
 import { InboundMediaRepo, type MediaMessage } from './inbound-media.repo';
 import { mediaSource } from '@/modules/messaging/whatsapp/numbers/media-client';
 import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clients';
-import { KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { CRM_NO_MEDIA, mediaHttpError } from '@/modules/messaging/whatsapp/drivers/media-errors';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { WHATSAPP_LINES, WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-/** 409 for inbound media on a crm line: the CRM holds that number's files (docs/19). */
-export const CRM_NO_MEDIA = 'crm_no_media';
+export { CRM_NO_MEDIA };
 
 /** Meta keeps a media id about 30 days; a day less, so a download never races the deadline. */
 export const MEDIA_FETCH_DAYS = 29;
@@ -135,14 +134,4 @@ export class InboundMedia {
       throw e instanceof WaError ? mediaHttpError(e) : e;
     }
   }
-}
-
-/** A failed media fetch in words: crm_no_media, kapso_auth, a dead Meta token, or gone (410); else as is. */
-function mediaHttpError(e: WaError): Error {
-  // The crm driver cannot fetch Meta media: that number's files are in the CRM (docs/19).
-  if (e.info.unsupported === 'crm') return waHttpError(CRM_NO_MEDIA, HttpStatus.CONFLICT);
-  if (e.info.credential === 'kapso') return waHttpError(KAPSO_AUTH, HttpStatus.BAD_GATEWAY);
-  if (isWaAuthError(e.info.code)) return waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
-  if (e.info.status >= 400 && e.info.status < 500) return waHttpError('media_expired', HttpStatus.GONE);
-  return e;
 }

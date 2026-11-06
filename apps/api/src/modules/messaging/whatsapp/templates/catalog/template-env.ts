@@ -1,5 +1,5 @@
 import type { TemplateLineFacts, WaLine } from '@ab/shared';
-import { lineEnvs, lineProvider, loadEnv } from '../../../../../config/env/env';
+import { isGraphEnv, lineEnvs, lineProvider, loadEnv } from '../../../../../config/env/env';
 import { graphHttpError, waHttpError } from './template.mapper';
 import { WaError, type WhatsappClient } from '../../whatsapp.types';
 
@@ -26,7 +26,7 @@ export function lineFacts(line: WaLine, client: Pick<WhatsappClient, 'configured
   const env = loadEnv();
   const ids = lineEnvs(env)[line];
   // A crm line has no ids of ours: the number and its WABA are the CRM's (docs/19).
-  const graph = ids && ids.provider !== 'crm' ? ids : null;
+  const graph = ids && isGraphEnv(ids) ? ids : null;
   return {
     line,
     configured: client.configured(),

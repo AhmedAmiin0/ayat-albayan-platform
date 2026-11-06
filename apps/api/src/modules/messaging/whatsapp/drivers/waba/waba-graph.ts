@@ -18,7 +18,7 @@ function buttonComponent({ index, kind, value }: WabaButton): GraphBody {
 }
 
 /** The template's components in Meta's order: header, body, buttons by index. */
-function components(t: WabaTemplate): GraphBody[] {
+export function wabaComponents(t: WabaTemplate): GraphBody[] {
   const header = t.header ? [{ type: 'header', parameters: [{ type: 'document', document: t.header }] }] : [];
   const parameters = t.body.map((text) => ({ type: 'text', text }));
   const body = parameters.length ? [{ type: 'body', parameters }] : [];
@@ -30,7 +30,7 @@ export function graphTemplate(to: string, t: WabaTemplate): GraphBody {
   return {
     ...envelope(to),
     type: 'template',
-    template: { name: t.name, language: { code: t.language }, components: components(t) },
+    template: { name: t.name, language: { code: t.language }, components: wabaComponents(t) },
   };
 }
 

@@ -1,5 +1,6 @@
 export { IntegrationsPanel, type IntegrationsPanelProps } from './IntegrationsPanel';
 export {
+  EVOLUTION_GROUPS,
   groupsMatch,
   INTEGRATIONS_PAGE_GROUPS,
   KAPSO_GROUPS,

@@ -7,6 +7,8 @@ import type { IntegrationConfigItem } from './views.js';
 
 const CRM_KEYS: readonly IntegrationKey[] = ['WACRM_API_BASE', 'WACRM_API_KEY'];
 const KAPSO_KEYS: readonly IntegrationKey[] = ['KAPSO_API_BASE', 'KAPSO_API_KEY'];
+/** An Evolution number's instance and token live on the number («الأرقام»); only the base here. */
+const EVOLUTION_KEYS: readonly IntegrationKey[] = ['EVOLUTION_API_BASE'];
 const NOTIFICATION_IDS: readonly IntegrationKey[] = ['WA_PHONE_NUMBER_ID', 'WA_WABA_ID'];
 const CHAT_IDS: readonly IntegrationKey[] = ['WA_CHAT_PHONE_NUMBER_ID', 'WA_CHAT_WABA_ID'];
 
@@ -14,6 +16,7 @@ const CHAT_IDS: readonly IntegrationKey[] = ['WA_CHAT_PHONE_NUMBER_ID', 'WA_CHAT
 export function driverKeys(provider: WaProvider, line: WaLine): IntegrationKey[] {
   const ids = line === 'chat' ? CHAT_IDS : NOTIFICATION_IDS;
   if (provider === 'crm') return [...CRM_KEYS];
+  if (provider === 'evolution') return [...EVOLUTION_KEYS];
   if (provider === 'kapso') return [...ids, ...KAPSO_KEYS];
   return ['WA_API_BASE', ...ids, line === 'chat' ? 'WA_CHAT_ACCESS_TOKEN' : 'WA_ACCESS_TOKEN'];
 }

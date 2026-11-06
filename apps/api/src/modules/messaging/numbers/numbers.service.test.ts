@@ -3,6 +3,7 @@ import type { NumbersEffects } from './numbers.effects';
 import { numberRow } from './numbers.fakes';
 import type { NumbersRepo } from './numbers.repo';
 import type { NumbersSecrets } from './config/numbers.secrets';
+import type { EvolutionNumbersRepo } from './evolution/evolution-numbers.repo';
 import { NumbersService } from './numbers.service';
 
 function setup(row = numberRow()) {
@@ -12,8 +13,12 @@ function setup(row = numberRow()) {
   };
   const secrets = { status: vi.fn(async () => new Map()), set: vi.fn(async () => undefined), clear: vi.fn(async () => true) };
   const effects = { after: vi.fn(async () => undefined) };
-  const svc = new NumbersService(queries as unknown as NumbersRepo, secrets as unknown as NumbersSecrets, effects as unknown as NumbersEffects);
-  return { svc, queries, secrets, effects };
+  const evolution = { failQueued: vi.fn(async () => 0) };
+  const svc = new NumbersService(
+    queries as unknown as NumbersRepo, secrets as unknown as NumbersSecrets, effects as unknown as NumbersEffects,
+    evolution as unknown as EvolutionNumbersRepo,
+  );
+  return { svc, queries, secrets, effects, evolution };
 }
 
 describe('NumbersService', () => {

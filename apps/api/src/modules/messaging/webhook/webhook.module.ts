@@ -9,6 +9,11 @@ import { WebhookConfigReload } from './lines/webhook.reload';
 import { WebhookController } from './webhook.controller';
 import { KapsoWebhookController } from './providers/webhook.kapso.controller';
 import { WacrmWebhookController } from './providers/webhook.wacrm.controller';
+import { EvolutionWebhookController } from './evolution/evolution-webhook.controller';
+import { EvolutionWebhookService } from './evolution/evolution-webhook.service';
+import { EvolutionStateRepo } from './evolution/evolution-state.repo';
+import { EvolutionRestriction } from './evolution/evolution-restriction';
+import { NumbersModule } from '@/modules/messaging/numbers';
 import { CrmWebhookController } from './crm-register/crm-webhook.controller';
 import {
   CRM_WEBHOOK_SOURCE,
@@ -40,11 +45,12 @@ import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inb
  * the send gate. PushService and AuditService are global.
  */
 @Module({
-  imports: [LeadsModule, LessonsModule, LessonRatingModule, CallsModule],
+  imports: [LeadsModule, LessonsModule, LessonRatingModule, CallsModule, NumbersModule],
   controllers: [
     WebhookController,
     KapsoWebhookController,
     WacrmWebhookController,
+    EvolutionWebhookController,
     CrmWebhookController,
   ],
   providers: [
@@ -78,6 +84,10 @@ import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inb
     // «التكاملات» › the CRM's delivery-ticks webhook in one click (docs/19 «crm driver»).
     { provide: CRM_WEBHOOK_SOURCE, useFactory: liveCrmWebhookSource },
     CrmWebhookRegistrar,
+    // Evolution API numbers (docs/19 «Evolution driver»): inbound, ticks, connection state.
+    EvolutionWebhookService,
+    EvolutionStateRepo,
+    EvolutionRestriction,
   ],
 })
 export class WebhookModule {}

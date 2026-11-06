@@ -4,7 +4,9 @@ import type { WhatsappEnv } from '@/config/env/env';
 import { readError, requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { wabaSyncPatch } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
 import type { TemplatePatch } from './template-sync';
-import { CRM_MANAGED, waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import {
+  CRM_MANAGED, EVOLUTION_NO_TEMPLATES, waHttpError,
+} from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { ApprovalRow, ApprovalWrite, TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { WaError, type MetaTemplate, type TemplateRow, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
 
@@ -64,6 +66,8 @@ export async function syncNumber(deps: NumberSyncDeps, numberId: string, now: Da
   if (!n.env) return { ...base, ok: false, error: 'not_configured' };
   // A crm number's templates live in the CRM (docs/19): no call, no approval written.
   if (n.env.provider === 'crm') return { ...base, ok: false, error: CRM_MANAGED };
+  // Nor an Evolution number's (no template list from Evolution): no call, no approval written.
+  if (n.env.provider === 'evolution') return { ...base, ok: false, error: EVOLUTION_NO_TEMPLATES };
   const list = await readList(deps, { ...n, env: n.env });
   if (!Array.isArray(list)) return { ...base, ok: false, ...list };
   // A crm number on the same waba_id keeps its hand-set status (docs/19): Meta's view is never written to it.

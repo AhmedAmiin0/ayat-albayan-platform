@@ -1,4 +1,4 @@
-import { driverMissing, WA_PROVIDERS, type IntegrationConfigItem, type WaLine, type WaProvider } from '@ab/shared';
+import { driverMissing, type IntegrationConfigItem, type WaLine, type WaProvider } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -6,7 +6,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { Ltr } from '@/core/ui/primitives/Ltr';
-import { driverName, lineDriver } from './line-driver';
+import { driverName, LINE_PROVIDERS, lineDriver, type LineProvider } from './line-driver';
 
 interface LineDriverRowProps {
   line: WaLine;
@@ -26,14 +26,14 @@ interface LineDriverRowProps {
 export function LineDriverRow({ line, items, canWrite, busy, onSave }: LineDriverRowProps) {
   const h = t.communicationsHub;
   const current = lineDriver(items, line);
-  const [picked, setPicked] = useState<WaProvider | null>(null);
+  const [picked, setPicked] = useState<LineProvider | null>(null);
   // Cleared once the save lands (the cache then reads the new driver), so a later change elsewhere never
   // reopens it; a failed save keeps the confirm to retry.
   if (picked !== null && picked === current) setPicked(null);
   const lineName = t.enums.waLine[line];
-  const options = WA_PROVIDERS.map((p) => ({ value: p, label: driverName(p), disabled: !canWrite || busy }));
+  const options = LINE_PROVIDERS.map((p) => ({ value: p, label: driverName(p), disabled: !canWrite || busy }));
   const missing = picked ? driverMissing({ provider: picked, line, items }) : [];
-  const choose = (p: WaProvider) => setPicked(p === current ? null : p);
+  const choose = (p: LineProvider) => setPicked(p === current ? null : p);
   const confirm = () => {
     if (picked) onSave(line, picked);
   };

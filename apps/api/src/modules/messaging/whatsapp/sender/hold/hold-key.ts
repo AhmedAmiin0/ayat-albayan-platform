@@ -14,6 +14,7 @@ export interface HoldPlace {
 function withConn(base: string, env: WhatsappEnv | null): string | null {
   if (!env) return base;
   if (env.provider === 'crm') return null;
+  if (env.provider === 'evolution') return `${base}:evolution:${env.instance}`;
   return `${base}:${env.provider ?? 'meta'}:${env.wabaId}:${env.phoneNumberId}`;
 }
 

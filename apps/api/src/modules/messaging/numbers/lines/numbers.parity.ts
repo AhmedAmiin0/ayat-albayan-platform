@@ -1,5 +1,5 @@
 import { SECRET_PARITY_FIELDS, WA_LINES, type ParityCell, type ParityField, type ParityRoleView, type ParityView, type WaLine } from '@ab/shared';
-import { lineEnvs, lineNumbers, lineProvider, type Env, type WhatsappEnv } from '../../../../config/env/env';
+import { lineEnvs, lineNumbers, lineProvider, type Env, type GraphEnv, type WhatsappEnv } from '../../../../config/env/env';
 
 // GET /admin/communications/parity (docs/23 §2e step 4): per role, the effective config the legacy path
 // and the module path would use, field by field. Secrets are compared in memory and shown only as
@@ -7,7 +7,7 @@ import { lineEnvs, lineNumbers, lineProvider, type Env, type WhatsappEnv } from 
 
 type Facts = Record<ParityField, string | null>;
 
-function tokenOf(line: WhatsappEnv): string {
+function tokenOf(line: GraphEnv): string {
   return 'accessToken' in line ? line.accessToken : line.apiKey;
 }
 
@@ -15,8 +15,10 @@ type LineFacts = Pick<Facts, 'phone_number_id' | 'waba_id' | 'app_id' | 'api_bas
 
 function lineFacts(line: WhatsappEnv | null): LineFacts {
   if (!line) return { phone_number_id: null, waba_id: null, app_id: null, api_base: null, api_version: null, access_token: null };
-  // A crm line has no ids or version of ours (docs/19): its base and key only.
+  // A crm line has no ids or version of ours (docs/19): its base and key only; an evolution line
+  // its base, instance name (as the phone id) and instance token.
   if (line.provider === 'crm') return { phone_number_id: null, waba_id: null, app_id: null, api_base: line.base, api_version: null, access_token: line.apiKey };
+  if (line.provider === 'evolution') return { phone_number_id: line.instance, waba_id: null, app_id: null, api_base: line.base, api_version: null, access_token: line.token };
   return {
     phone_number_id: line.phoneNumberId,
     waba_id: line.wabaId,

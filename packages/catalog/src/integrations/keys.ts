@@ -6,7 +6,7 @@
 import { GROUP_OF } from './keys.groups.js';
 
 /** The form's groups, in page order. */
-export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google', 'giphy', 'stripe'] as const;
+export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'evolution', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google', 'giphy', 'stripe'] as const;
 export type IntegrationGroup = (typeof INTEGRATION_GROUPS)[number];
 
 export const INTEGRATION_PLAIN_KEYS = [
@@ -23,6 +23,8 @@ export const INTEGRATION_PLAIN_KEYS = [
   'KAPSO_API_BASE',
   'KAPSO_API_VERSION',
   'WACRM_API_BASE',
+  'EVOLUTION_API_BASE',
+  'EVOLUTION_INTERNAL_HOSTS',
   'WA_ALLOWED_RECIPIENTS',
   'WA_TEMPLATE_SYNC',
   'CALLS_STUN_URLS',
@@ -52,6 +54,7 @@ export const INTEGRATION_SECRET_KEYS = [
   'KAPSO_WEBHOOK_SECRET',
   'WACRM_API_KEY',
   'WACRM_WEBHOOK_SECRET',
+  'EVOLUTION_API_KEY',
   'GOOGLE_CLIENT_SECRET',
   'CALLS_TURN_SECRET',
   'GIPHY_API_KEY',
@@ -83,14 +86,22 @@ export const INTEGRATION_KEYS: readonly IntegrationKeyDef[] = (Object.keys(GROUP
   .map((key) => ({ key, group: GROUP_OF[key], secret: SECRET_SET.has(key), i18n: `integrations.keys.${key}` as const }))
   .sort((a, b) => INTEGRATION_GROUPS.indexOf(a.group) - INTEGRATION_GROUPS.indexOf(b.group));
 
-/** WhatsApp drivers (docs/19): Meta's Cloud API directly, through Kapso's Meta proxy, or the academy CRM's API. */
-export const WA_PROVIDERS = ['meta', 'kapso', 'crm'] as const;
+/**
+ * WhatsApp drivers (docs/19): Meta's Cloud API directly, Kapso's Meta proxy, the academy CRM's API,
+ * or a self-hosted Evolution API instance (a number's driver only: module mode).
+ */
+export const WA_PROVIDERS = ['meta', 'kapso', 'crm', 'evolution'] as const;
 export type WaProvider = (typeof WA_PROVIDERS)[number];
+/** The drivers a legacy line key (WA_PROVIDER / WA_CHAT_PROVIDER) may be switched to by hand. */
+export const WA_LINE_PROVIDERS = ['meta', 'kapso', 'crm'] as const;
+/** An Evolution instance's engine: Baileys (WhatsApp Web, no 24 h window) or Meta's Cloud API. */
+export const EVOLUTION_MODES = ['baileys', 'cloud'] as const;
+export type EvolutionMode = (typeof EVOLUTION_MODES)[number];
 
 /** Plain keys with a fixed set of values: the form renders a select, the API refuses anything else. */
 export const INTEGRATION_ENUMS: Partial<Record<IntegrationPlainKey, readonly string[]>> = {
-  WA_PROVIDER: WA_PROVIDERS,
-  WA_CHAT_PROVIDER: WA_PROVIDERS,
+  WA_PROVIDER: WA_LINE_PROVIDERS,
+  WA_CHAT_PROVIDER: WA_LINE_PROVIDERS,
   // A switch, not a word to type (docs/23a §E H3): the select shows «مفعّلة» / «متوقفة».
   WA_TEMPLATE_SYNC: ['true', 'false'],
   STRIPE_ENABLED: ['false', 'true'], // «الدفع الإلكتروني» (docs/30): off by default.

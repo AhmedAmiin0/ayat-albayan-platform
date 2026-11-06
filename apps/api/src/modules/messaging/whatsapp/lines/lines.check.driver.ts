@@ -16,6 +16,8 @@ const DRIVER_EXTRAS = {
   meta: () => ({}),
   kapso: (env) => ({ kapso_webhook_secret: env.KAPSO_WEBHOOK_SECRET !== undefined }),
   crm: (env) => ({ crm_webhook_secret: env.WACRM_WEBHOOK_SECRET !== undefined }),
+  // Inbound arrives per instance on /webhooks/evolution/:instance, checked by its own token.
+  evolution: () => ({}),
 } satisfies Record<WaProvider, (env: Env) => Extras>;
 
 export function driverOf(env: Env, line: WaLine): LineDriver {

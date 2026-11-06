@@ -7903,7 +7903,7 @@
   },
   "src/ops/comms/line-driver.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/ops/comms/sent-counts.test.ts": {
@@ -8162,11 +8162,6 @@
   },
   "src/ops/numbers/NumbersList.tsx": {
     "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/ops/numbers/numbers-fixtures.ts": {
-    "max-len": {
       "count": 1
     }
   },

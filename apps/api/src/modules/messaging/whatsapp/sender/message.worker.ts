@@ -11,6 +11,7 @@ import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderRepo, type DueMessage } from './sender.repo';
 import { TemplateMissing } from '@/modules/messaging/whatsapp/templates/check/template-missing';
 import { isWindowClosedError, WindowHold } from './window/window-hold';
+import { EvolutionPaceRepo } from './pace';
 import type { WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 export type { PassJob, SendJob, SendOutcome } from './message.job';
@@ -21,12 +22,12 @@ export type { PassJob, SendJob, SendOutcome } from './message.job';
 @Injectable()
 export class MessageWorker {
   private readonly log = new Logger(MessageWorker.name);
-  /** Backoff wait for the «sent» write; tests replace it. */
-  wait: (ms: number) => Promise<void> = sleep;
+  wait: (ms: number) => Promise<void> = sleep; // backoff of the «sent» write; tests replace it
   /** Meta #132001 on a crm send marks its template missing (templates/check); unit tests: none. */
   @Optional() @Inject(TemplateMissing) missing?: TemplateMissing;
   /** The chat window (window/): held texts, window refusals, release(); unit tests: none. */
   @Optional() @Inject(WindowHold) private readonly window?: WindowHold;
+  @Optional() @Inject(EvolutionPaceRepo) private readonly pace?: EvolutionPaceRepo; // docs/19
 
   constructor(
     private readonly queries: SenderRepo,
@@ -59,7 +60,7 @@ export class MessageWorker {
     if (row.error_code === SENDING) return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now, line, route });
     const wait = await this.notNow(job, { line, route, now });
     if (wait) return wait;
-    const deps = { dispatch: this.dispatch, queries: this.queries };
+    const deps = { dispatch: this.dispatch, queries: this.queries, pace: this.pace };
     const attempts = await claimRow(deps, { row, now, line, route });
     if (attempts === null) return 'skipped';
     let sent: WaSent;
@@ -68,7 +69,7 @@ export class MessageWorker {
     } catch (error) {
       return this.refused({ row, error, attempts, now, line, route });
     }
-    const record = () => this.queries.sent({ row, waMessageId: sent.waMessageId, at: new Date() });
+    const record = () => this.queries.sent({ row, sent, at: new Date() });
     if (!(await retry(record, { delays: RECORD_DELAYS_MS, sleep: this.wait }))) {
       this.log.log(`message ${row.id} was marked sent by hand while it was sending`);
     }
@@ -132,7 +133,6 @@ export class MessageWorker {
   }
 
   release = (): Promise<number> => this.window?.release() ?? Promise.resolve(0);
-
   /** The pass's later rows of a paused line: deferred in one write while it is 131042-held. */
   async deferRest(probe: PassJob, rest: readonly DueMessage[]): Promise<void> {
     const { line } = sendingAt(probe, this.dispatch.multi);
