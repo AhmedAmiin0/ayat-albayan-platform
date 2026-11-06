@@ -13,9 +13,10 @@ const targets: LiveTargets = {
   chat: (phone) => {
     if (active()) void client.refetchQueries({ queryKey: threadPollKey(phone) });
   },
-  // An in-flight read (the foreground refetch, the fallback) is joined, not repeated.
+  // A read in flight started before this change: it is cancelled, never joined (its older answer
+  // would show a stale tick, docs/43 AU1); the list throttle still caps these at one per 3 s.
   list: () => {
-    if (active()) void client.refetchQueries({ queryKey: ['threads', 'list'], type: 'active' }, { cancelRefetch: false });
+    if (active()) void client.refetchQueries({ queryKey: ['threads', 'list'], type: 'active' }, { cancelRefetch: true });
   },
   badge: () => {
     if (active()) void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false });

@@ -34,7 +34,8 @@ async function mount(enabled = true) {
   const hook = renderHook(() => useInboxRealtime(enabled), { wrapper });
   await act(async () => undefined);
   const keys = () => refetch.mock.calls.map(([f]) => f?.queryKey?.slice(1).join(' '));
-  return { hook, keys, badges: () => invalidate.mock.calls.length };
+  const calls = () => refetch.mock.calls;
+  return { hook, keys, calls, badges: () => invalidate.mock.calls.length };
 }
 const send = (phone: string) => act(async () => rt.hooks.event?.({ payload: { phone } }));
 
@@ -69,6 +70,14 @@ describe('useInboxRealtime (web)', () => {
     await send(OTHER);
     expect(m.keys()).toEqual(['list', `detail ${OPEN}`, 'list']);
     release();
+    m.hook.unmount();
+  });
+
+  it('an event re-reads the list cancelling an older read in flight, never joining it (AU1)', async () => {
+    const m = await mount();
+    await send(OTHER);
+    const list = { queryKey: ['threads', 'list'], type: 'active' };
+    expect(m.calls()).toEqual([[list, { cancelRefetch: true }]]);
     m.hook.unmount();
   });
 
