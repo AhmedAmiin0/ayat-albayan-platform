@@ -60,10 +60,12 @@ describe('CreateTemplateDialog', () => {
     expect(apiSend).not.toHaveBeenCalled();
   });
 
-  it('one link button at most: «إضافة زر رابط» waits once there is one', () => {
+  it('two link buttons at most: «إضافة زر رابط» waits once there are two', () => {
     open();
     fireEvent.click(screen.getByRole('button', { name: S.addUrl }));
     expect(field(nth(S.buttonUrl, 1)).value).toBe('https://');
+    expect(screen.getByRole('button', { name: S.addUrl })).toHaveProperty('disabled', false);
+    fireEvent.click(screen.getByRole('button', { name: S.addUrl }));
     expect(screen.getByRole('button', { name: S.addUrl })).toHaveProperty('disabled', true);
     fireEvent.click(screen.getByRole('button', { name: nth(S.removeFor, 1) }));
     expect(screen.getByRole('button', { name: S.addUrl })).toHaveProperty('disabled', false);

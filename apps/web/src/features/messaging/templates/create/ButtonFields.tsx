@@ -63,7 +63,7 @@ function ButtonRow({ n, button, onChange, onRemove }: RowProps) {
   );
 }
 
-/** Up to three buttons under the bubble, at most one link (the composers fill one {{1}} suffix). */
+/** Up to three buttons under the bubble, at most two links (each fills its own {{1}} suffix). */
 export function ButtonFields({ draft, set, error }: DraftFieldsProps) {
   const { buttons } = draft;
   const put = (list: DraftButton[]) => set({ buttons: list });
@@ -72,7 +72,7 @@ export function ButtonFields({ draft, set, error }: DraftFieldsProps) {
   };
   const remove = (i: number) => () => put(buttons.filter((_, j) => j !== i));
   const full = buttons.length >= TEMPLATE_LIMITS.buttons;
-  const hasUrl = buttons.some((b) => b.type === 'url');
+  const urlsFull = buttons.filter((b) => b.type === 'url').length >= TEMPLATE_LIMITS.urlButtons;
   const refused = error('buttons');
   return (
     <fieldset className="grid gap-3">
@@ -88,7 +88,7 @@ export function ButtonFields({ draft, set, error }: DraftFieldsProps) {
         <ButtonRow key={i} n={i + 1} button={b} onChange={replace(i)} onRemove={remove(i)} />
       ))}
       <div className="flex flex-wrap gap-2">
-        <Button type="button" size="sm" variant="secondary" disabled={full || hasUrl} onClick={() => put([...buttons, newButton('url')])}>
+        <Button type="button" size="sm" variant="secondary" disabled={full || urlsFull} onClick={() => put([...buttons, newButton('url')])}>
           {S.addUrl}
         </Button>
         <Button type="button" size="sm" variant="secondary" disabled={full} onClick={() => put([...buttons, newButton('quick_reply')])}>

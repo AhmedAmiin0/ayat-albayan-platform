@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { teacherReminderCrm } from './teacher-lesson.crm';
 
-// owner 2026-11-05: the reminder carries the teacher's no-login report link, shortened, next to the
-// meeting link; a Meet link stays as it is, only our own classroom page is shortened (docs/19).
+// owner 2026-11-06: no short links any more. The reminder's one-line {{2}} carries the lesson's own
+// meeting link and the teacher's no-login report page, both as they are.
 
 const TEACHER = { display_name_ar: 'أ. خالد', tz: 'Africa/Cairo' };
 const STUDENTS = [{ name: 'سهيلة', code: 'AB-0101' }];
@@ -13,38 +13,28 @@ const LESSON = {
   students: STUDENTS,
 };
 const ORIGIN = 'https://app.example';
-const REPORT = 'https://api.example/r/Ab12Cd34Ef';
-const ROOM = 'https://api.example/r/Zz98Yx76Wv';
+const PAGE = `${ORIGIN}/teacher-report/tok`;
+const links = { join: 'join-tok', report: { token: 'tok', url: PAGE, exp: 0 } };
 
-describe('teacherReminderCrm with the short links (crm values = the WABA {{2}} on either driver)', () => {
-  it('«تقرير الحلقة: <short>» next to the Meet link, still one line', () => {
+describe('teacherReminderCrm with direct links (the WABA {{2}} on either driver)', () => {
+  it('«تقرير الحلقة: <the no-login page>» next to the Meet link, still one line', () => {
     const line =
-      teacherReminderCrm({
-        teacher: TEACHER,
-        lesson: LESSON,
-        origin: ORIGIN,
-        links: { report: REPORT },
-      })?.body?.[1] ?? '';
+      teacherReminderCrm({ teacher: TEACHER, lesson: LESSON, origin: ORIGIN, links })?.body?.[1] ??
+      '';
     expect(line).toBe(
-      `الأحد 4 أكتوبر 17:00 · سهيلة (AB-0101) · رابط الحلقة: https://meet.google.com/abc-defg-hij · تقرير الحلقة: ${REPORT}`,
+      `الأحد 4 أكتوبر 17:00 · سهيلة (AB-0101) · رابط الحلقة: https://meet.google.com/abc-defg-hij · تقرير الحلقة: ${PAGE}`,
     );
-    expect(line).not.toMatch(/[\n\t]| {4}/);
-    expect(line).not.toContain('/teacher/report/');
+    expect(line).not.toMatch(/[\n\t]| {4}|\/r\//);
   });
 
-  it('our classroom page goes as its short link', () => {
+  it('our classroom page goes as it is (never shortened)', () => {
     const lesson = { ...LESSON, meeting_link: `${ORIGIN}/classroom/L1` };
-    const line = teacherReminderCrm({
-      teacher: TEACHER,
-      lesson,
-      origin: ORIGIN,
-      links: { report: REPORT, join: ROOM },
-    })?.body?.[1];
-    expect(line).toContain(`رابط الحلقة: ${ROOM} · تقرير الحلقة: ${REPORT}`);
+    const line = teacherReminderCrm({ teacher: TEACHER, lesson, origin: ORIGIN, links })?.body?.[1];
+    expect(line).toContain(`رابط الحلقة: ${ORIGIN}/classroom/L1 · تقرير الحلقة: ${PAGE}`);
   });
 
-  it('no short link made (no secret, a failure): the signed-in report page, as before', () => {
-    const line = teacherReminderCrm({ teacher: TEACHER, lesson: LESSON, origin: ORIGIN, links: {} })
+  it('no signed links (no secret, a failure): the signed-in report page, as before', () => {
+    const line = teacherReminderCrm({ teacher: TEACHER, lesson: LESSON, origin: ORIGIN })
       ?.body?.[1];
     expect(line).toContain(`تقرير الحلقة: ${ORIGIN}/teacher/report/L1`);
   });

@@ -50,7 +50,7 @@ export const WHATSAPP_ENTRIES = [
     ...ROW,
     key: 'teacher_new_student',
     audience: 'teacher',
-    templates: ['teacher_new_student'],
+    templates: ['teacher_new_student', 'teacher_lesson_v3'],
     automatic: false,
     rowSwitch: { key: 'teacher_whatsapp_new_student', isOn: (s) => s.teacher_whatsapp_new_student },
   },

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ReportsModule } from '@/modules/reporting/reports';
+import { LessonLinksModule } from '@/modules/teaching/lesson-links';
 import { RemindersJob } from './reminders.job';
 import { RemindersRepo } from './reminders.repo';
 import { RemindersSettings } from './reminders.settings';
@@ -11,7 +11,7 @@ import { ReminderTeacherLinks } from './reminders.teacher-links';
  * store. Register in app.module.ts.
  */
 @Module({
-  imports: [ReportsModule],
+  imports: [LessonLinksModule],
   providers: [RemindersRepo, RemindersSettings, ReminderTeacherLinks, RemindersJob],
   exports: [RemindersJob],
 })

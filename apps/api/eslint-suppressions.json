@@ -12777,7 +12777,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/booking/teacher/teacher-alert.paths.test.ts": {
@@ -12820,7 +12820,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/booking/teacher/teacher-options.repo.test.ts": {
