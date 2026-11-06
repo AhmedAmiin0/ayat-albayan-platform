@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ReopenCancelRepo } from './reopen-cancel.repo';
 
 /** cancelled: n queued reopens stopped; kept: another text of the family still waits. */
-export type CancelOutcome = { cancelled: number } | 'kept';
+type CancelOutcome = { cancelled: number } | 'kept';
 
 /** The row whose send made the reopen unneeded (its own id is not «another text»). */
 export interface SentRow {

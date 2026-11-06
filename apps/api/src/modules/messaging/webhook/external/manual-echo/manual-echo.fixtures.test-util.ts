@@ -10,7 +10,7 @@ export const SENT_AT = new Date('2026-11-06T10:05:00Z');
 export const CHAT = { line: 'chat', numberId: 'num-chat' };
 
 /** A row in memory: the attach's columns plus what its compare-and-set reads. */
-export type MemRow = AppSendRow & {
+type MemRow = AppSendRow & {
   phone: string;
   wa_message_id: string | null;
   status: string;
@@ -59,7 +59,7 @@ const inSpan = (r: MemRow, s: { since: Date; until: Date }): boolean => {
 };
 
 /** ManualEchoRepo over rows in memory: the read and the compare-and-set as the real one. */
-export function memoryRepo(rows: MemRow[]) {
+function memoryRepo(rows: MemRow[]) {
   const open = (r: MemRow) => r.wa_message_id === null && r.app_send_until !== null;
   const attachable = (r: MemRow) =>
     ['queued', 'failed', 'sent_manually'].includes(r.status) && r.error_code !== 'sending';

@@ -2,7 +2,7 @@ import type { MessageRow } from '@/modules/messaging/whatsapp/messages/message.m
 import { canSendViaWhatsApp } from '@ab/shared';
 
 /** The row as the tap reads it: what makes it a staff text the 24 h window stopped. */
-export type AppSendRow = Pick<
+type AppSendRow = Pick<
   MessageRow,
   | 'direction'
   | 'status'
