@@ -10,8 +10,8 @@ export interface SentRow {
   phone_e164: string;
 }
 
-const last4 = (phone: string): string => `…${phone.slice(-4)}`;
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
+/** The phone in a log line: its last 4 digits only. */
+const masked = (phone: string): string => `…${phone.slice(-4)}`;
 
 /**
  * The reopen template a family no longer needs (owner 2026-11-06, docs/19): one still QUEUED and
@@ -48,7 +48,7 @@ export class ReopenCancel {
     try {
       return await run();
     } catch (e) {
-      this.log.warn(`reopen cancel failed for ${last4(phone)}: ${messageOf(e)}`);
+      this.log.warn(`reopen cancel failed for ${masked(phone)}: ${String(e)}`);
       return 'kept';
     }
   }
@@ -63,7 +63,7 @@ export class ReopenCancel {
     if (await pending()) return 'kept';
     const ids = await this.repo.cancelQueued(phone, null);
     if (ids.length > 0 && (await pending())) return this.restore(ids);
-    if (ids.length > 0) this.log.log(`reopen template cancelled for ${last4(phone)}: app send`);
+    if (ids.length > 0) this.log.log(`reopen template cancelled for ${masked(phone)}: app send`);
     return { cancelled: ids.length };
   }
 

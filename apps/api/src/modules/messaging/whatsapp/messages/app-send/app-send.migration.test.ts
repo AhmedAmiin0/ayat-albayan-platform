@@ -3,14 +3,14 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261106000500 (docs/19) read as text: one nullable column and a partial index.
-const FILE = '20261106000500_app_send_pending.sql';
+// Migration 20261106000600 (docs/19) read as text: one nullable column and a partial index.
+const FILE = '20261106000600_app_send_pending.sql';
 const SQL = readFileSync(join(MIGRATIONS_DIR, FILE), 'utf8').replace(/--.*$/gm, '');
 
-describe('migration 20261106000500: app send pending window', () => {
-  it('sorts after 20261106000400 and starts with the lock timeout', () => {
+describe('migration 20261106000600: app send pending window', () => {
+  it('sorts right after 20261106000501 and starts with the lock timeout', () => {
     const all = readdirSync(MIGRATIONS_DIR).filter((f) => f.endsWith('.sql')).sort();
-    expect(all.indexOf(FILE)).toBe(all.indexOf('20261106000400_message_search.sql') + 1);
+    expect(all.indexOf(FILE)).toBe(all.indexOf('20261106000501_course_one_per_package.sql') + 1);
     expect(SQL.trim().startsWith("set local lock_timeout = '5s';")).toBe(true);
   });
 

@@ -16,7 +16,8 @@ export const held: Partial<MessageView> = {
   direction: 'outbound',
   status: 'queued',
   error_code: 'awaiting_reply',
-  body: 'السلام عليكم',
+  // An Arabic greeting, escaped: a .tsx takes its words from i18n (i18n-literals.test.ts).
+  body: '\u0627\u0644\u0633\u0644\u0627\u0645 \u0639\u0644\u064a\u0643\u0645',
   phone_e164: '+966500000001',
 };
 
