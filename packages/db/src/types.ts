@@ -2702,6 +2702,24 @@ export type Database = {
           },
         ];
       };
+      message_tombstones: {
+        Row: {
+          deleted_at: string;
+          id: string;
+          phone_e164: string;
+        };
+        Insert: {
+          deleted_at?: string;
+          id: string;
+          phone_e164: string;
+        };
+        Update: {
+          deleted_at?: string;
+          id?: string;
+          phone_e164?: string;
+        };
+        Relationships: [];
+      };
       messages: {
         Row: {
           app_send_until: string | null;
@@ -2752,6 +2770,7 @@ export type Database = {
           template_key: string | null;
           template_params: Json | null;
           their_reaction: string | null;
+          updated_at: string;
           wa_conversation_id: string | null;
           wa_message_id: string | null;
           wa_pricing_category: string | null;
@@ -2805,6 +2824,7 @@ export type Database = {
           template_key?: string | null;
           template_params?: Json | null;
           their_reaction?: string | null;
+          updated_at?: string;
           wa_conversation_id?: string | null;
           wa_message_id?: string | null;
           wa_pricing_category?: string | null;
@@ -2858,6 +2878,7 @@ export type Database = {
           template_key?: string | null;
           template_params?: Json | null;
           their_reaction?: string | null;
+          updated_at?: string;
           wa_conversation_id?: string | null;
           wa_message_id?: string | null;
           wa_pricing_category?: string | null;
