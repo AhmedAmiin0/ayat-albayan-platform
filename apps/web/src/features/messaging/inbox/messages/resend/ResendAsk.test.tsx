@@ -1,4 +1,5 @@
 import type { MessageView } from '@ab/shared';
+import { ApiError } from '@ab/client-core';
 import ar from '@ab/shared/i18n/ar.json';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -63,7 +64,7 @@ describe('ResendAsk', () => {
   });
 
   it('a refused send keeps the dialog with the reason, and the same clientRequestId on «أرسل» again', async () => {
-    apiSend.mockRejectedValue(new Error('offline'));
+    apiSend.mockRejectedValue(new ApiError(500, null));
     show(unavailable);
     fireEvent.click(ask() ?? document.body);
     fireEvent.click(screen.getByRole('button', { name: t.inbox.resend.send }));

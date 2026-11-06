@@ -48,7 +48,18 @@ export function subscribeDrafts(listener: () => void): () => void {
   return () => listeners.delete(listener);
 }
 
-/** The key for sending `text`: the failed attempt's when it is the same text (rule 8), else a new one. */
+/** A send that ended with no answer (lib/send-error): the server may have it. */
+export const SEND_UNCONFIRMED = 'send_unconfirmed';
+
+/**
+ * The failed attempt still owns the box's next send: the same text (rule 8), or any text after a
+ * send with no answer (docs/44 BUG7: an edited retry must not become a second message).
+ */
+type Failed = Draft['failed'];
+export const keepsFailed = (failed: Failed, text: string): failed is NonNullable<Failed> =>
+  failed !== null && (failed.code === SEND_UNCONFIRMED || failed.text === text.trim());
+
+/** The key for sending `text`: the failed attempt's when it still owns the box, else a new one. */
 export function requestIdFor(draft: Draft, text: string): string {
-  return draft.failed?.text === text ? draft.failed.id : crypto.randomUUID();
+  return keepsFailed(draft.failed, text) ? draft.failed.id : crypto.randomUUID();
 }

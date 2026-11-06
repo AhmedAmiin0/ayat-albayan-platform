@@ -5,17 +5,16 @@ import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { controlClass } from '@/components/ui/form/input';
 import { usePhone } from '@/components/ui/layout/use-narrow';
-import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { sendText } from '@/features/messaging/inbox/api/api';
 import type { ComposerExtras } from '@/features/messaging/inbox/composer/lib/composer-extras';
 import { sendsOnKey } from '@/features/messaging/inbox/composer/lib/composer-keys';
 import { ComposerError } from './ComposerError';
-import { draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { draftGeneration, getDraft, keepsFailed, requestIdFor, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { ownSendGeneration, recordOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { ReplyStrip } from './ReplyStrip';
-import { sendErrorCode, sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
+import { rereadsAfter, sendErrorCode, sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { useReplyTarget } from '@/features/messaging/inbox/composer/lib/use-reply-target';
 
 /** A send, the message it answers («رد»), the tab-memory generations it started in and what follows it (never sent). */
@@ -52,7 +51,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const text = draft.text;
   const write = (next: string) => {
     const { failed } = getDraft(phone);
-    setDraft(phone, { text: next, failed: failed?.text === next.trim() ? failed : null });
+    setDraft(phone, { text: next, failed: keepsFailed(failed, next) ? failed : null });
   };
   const mutationKey = ['inbox-send', phone];
   const send = useMutation({
@@ -72,8 +71,8 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
       const now = getDraft(sent.phone);
       const failed = { text: sent.text, id: sent.clientRequestId, code: sendErrorCode(e) };
       setDraft(sent.phone, { text: now.text || sent.text, failed }, sent.gen.draft);
-      // The window may have closed since the page loaded: refetch so the composer switches.
-      if (errorCode(e) === 'session_closed') await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      // The window may have closed (the composer switches), or a send with no answer may have gone.
+      if (rereadsAfter(e)) await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
     onSettled: () => area.current?.focus(),
   });
@@ -90,7 +89,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   // Not a stored session_closed: this box mounts only where a text goes (ComposerPhone), and the
   // closed-window notice replaces it where none can (round 3).
   const stored = draft.failed?.code === 'session_closed' ? null : draft.failed;
-  const failedHere = !pending && stored?.text === text.trim() ? sendErrorCodeText(stored.code) : null;
+  const failedHere = !pending && keepsFailed(stored, text) ? sendErrorCodeText(stored.code) : null;
   const local = send.isError && !pending ? sendErrorText(send.error) : null;
   const error = tooLong ? t.inbox.composer.tooLong : (failedHere ?? local);
   const blocked = !text.trim() || tooLong || pending;

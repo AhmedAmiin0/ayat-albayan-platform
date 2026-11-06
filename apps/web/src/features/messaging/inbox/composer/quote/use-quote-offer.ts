@@ -31,7 +31,7 @@ export function useQuoteOffer(phone: string) {
 }
 
 /**
- * «أرسل العرض»: the chat's own POST /threads/:phone/text with a new clientRequestId per tap. It
+ * «أرسل العرض»: the chat's own POST /threads/:phone/text, one clientRequestId per sent offer. It
  * shares the composer's mutation key, so neither sends while the other is in flight, and a second
  * tap before the re-render sends nothing (the ref). `onSent` closes the sheet. Like a template, a sent
  * offer settles a failed text attempt (settleOwnSend).
@@ -40,11 +40,14 @@ export function useQuoteSend(phone: string, onSent: () => void) {
   const queryClient = useQueryClient();
   const mutationKey = ['inbox-send', phone];
   const busy = useRef(false);
+  const requestId = useRef(crypto.randomUUID());
   const send = useMutation({
     mutationKey,
-    mutationFn: (text: string) => sendText({ phone, text, clientRequestId: crypto.randomUUID() }),
+    // One id until an offer goes (docs/44 BUG7): a retry after no answer is never a second message.
+    mutationFn: (text: string) => sendText({ phone, text, clientRequestId: requestId.current }),
     onMutate: sendStart,
     onSuccess: async (view, _text, start) => {
+      requestId.current = crypto.randomUUID();
       settleOwnSend(phone, view.id, start);
       onSent();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });

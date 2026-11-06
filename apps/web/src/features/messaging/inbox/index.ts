@@ -14,10 +14,10 @@ export {
   setFollowUpPaused,
   type ThreadFile,
   threadFileQuery,
-  threadQuery,
   THREADS_PAGE_SIZE,
   threadsQuery,
 } from './api/api';
+export { threadQuery } from './api/thread-query';
 export {
   clockText,
   errorText,

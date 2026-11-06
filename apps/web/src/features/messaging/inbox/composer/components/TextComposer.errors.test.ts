@@ -17,11 +17,12 @@ describe('a failed send in words', () => {
     );
   });
 
-  it('409 session_closed is unchanged; anything else is send_failed', () => {
+  it('409 session_closed is unchanged; any other answer is send_failed; no answer is unconfirmed', () => {
     expect(sendErrorText(new ApiError(409, { code: 'session_closed' }))).toBe(
       t.inbox.error.session_closed,
     );
     expect(sendErrorText(new ApiError(500, null))).toBe(t.inbox.error.send_failed);
-    expect(sendErrorText(new Error('network'))).toBe(t.inbox.error.send_failed);
+    // docs/44 BUG7: a network error or the deadline is no answer: the send may have gone.
+    expect(sendErrorText(new Error('network'))).toBe(t.inbox.error.send_unconfirmed);
   });
 });

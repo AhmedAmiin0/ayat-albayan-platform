@@ -58,7 +58,9 @@ describe('«إعادة توجيه» (owner 2026-10-25)', () => {
   it('the search asks GET /threads with it (debounced)', async () => {
     const { dialog } = await openDialog();
     fireEvent.change(within(dialog).getByRole('searchbox', { name: t.inbox.forward.search }), { target: { value: 'خالد' } });
-    await waitFor(() => expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining(`search=${encodeURIComponent('خالد')}`)));
+    const search = expect.stringContaining(`search=${encodeURIComponent('خالد')}`);
+    const signal = { signal: expect.any(AbortSignal) };
+    await waitFor(() => expect(apiFetch).toHaveBeenCalledWith(search, signal));
   });
 
   it('sends the POST body in pick order and toasts sent / skipped with the reason', async () => {
