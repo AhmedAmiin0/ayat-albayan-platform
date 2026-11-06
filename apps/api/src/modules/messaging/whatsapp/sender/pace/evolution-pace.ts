@@ -8,11 +8,11 @@ import type { EvolutionPaceRepo } from './evolution-pace.repo';
 // on with the next row, so a paced number never delays another line's (Kapso, CRM, Meta) rows.
 
 /** What the claim asks the number's client (absent / null = no pacing: every other driver). */
-export interface PaceSource {
+interface PaceSource {
   pace(row: DueMessage, via: NumberRoute): { waitMs: number; dailyCap: number } | null;
 }
 
-export interface PaceDeps {
+interface PaceDeps {
   dispatch: PaceSource;
   repo: EvolutionPaceRepo | undefined;
 }

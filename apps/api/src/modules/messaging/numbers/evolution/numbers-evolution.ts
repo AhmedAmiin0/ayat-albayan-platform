@@ -19,7 +19,7 @@ import { EvolutionNumbersRepo } from './evolution-numbers.repo';
 const conflict = (code: string) => new ConflictException({ code, message: code });
 
 /** What the push needs besides the instance env: options, global key, proxy password. */
-export interface EvolutionPushInput {
+interface EvolutionPushInput {
   env: EvolutionLineEnv;
   config: EvolutionConfig;
   globalKey: string | null;

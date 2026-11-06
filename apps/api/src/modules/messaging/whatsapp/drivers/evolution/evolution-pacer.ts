@@ -10,14 +10,14 @@ interface Last {
   at: number;
 }
 
-export interface PacerClock {
+interface PacerClock {
   now: () => number;
 }
 
 const realClock: PacerClock = { now: () => Date.now() };
 
 /** Where one send leaves from and goes to, and the number's gap. */
-export interface PaceAt {
+interface PaceAt {
   key: string;
   to: string;
   gapMs: number;
