@@ -62,7 +62,7 @@ export const WHATSAPP_SEND_MS = 30 * 60_000;
 
 /**
  * POST /messages/:id/retry?undo=whatsapp: «تراجع» of «أرسل عبر واتساب» (sent_manually → queued).
- * Without it a retry only takes a failed row, so a stale «حاول مرة أخرى» never undoes a manual send.
+ * Without it a retry only takes a failed row: a stale «حاول مرة أخرى» never undoes a manual send.
  */
 export const messageRetryQuerySchema = z.object({ undo: z.literal('whatsapp').optional() });
 export type MessageRetryQuery = z.infer<typeof messageRetryQuerySchema>;

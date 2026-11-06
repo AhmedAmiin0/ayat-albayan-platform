@@ -13,11 +13,14 @@ const LINKS: Record<WhatsAppTarget, LinkOf> = {
   mobile: (digits, text) => `https://wa.me/${digits}?text=${text}`,
 };
 
-/** E.164 without the + (and anything else that is not a digit): «+966501234567» → «966501234567». */
+/** E.164 without the + (or anything else not a digit): «+966500000001» → «966500000001». */
 export const whatsappDigits = (e164: string): string => e164.replace(/\D/g, '');
 
 /** The family's chat with `text` filled in (any script, line breaks and emoji, URL-encoded). */
-export function whatsappSendUrl(target: WhatsAppTarget, to: { phone: string; text: string }): string {
+export function whatsappSendUrl(
+  target: WhatsAppTarget,
+  to: { phone: string; text: string },
+): string {
   return LINKS[target](whatsappDigits(to.phone), encodeURIComponent(to.text));
 }
 
@@ -39,7 +42,9 @@ export interface WhatsAppSendResult<R> {
  * Marks first, so the platform can never send the text too (no duplicate), and opens WhatsApp
  * only once the server agreed. A refused mark throws and opens nothing.
  */
-export async function sendViaWhatsApp<R>(steps: WhatsAppSendSteps<R>): Promise<WhatsAppSendResult<R>> {
+export async function sendViaWhatsApp<R>(
+  steps: WhatsAppSendSteps<R>,
+): Promise<WhatsAppSendResult<R>> {
   const row = await steps.mark();
   try {
     return { row, opened: await steps.open() };
