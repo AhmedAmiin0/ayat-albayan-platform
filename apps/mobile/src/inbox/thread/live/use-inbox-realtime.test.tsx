@@ -4,7 +4,10 @@ import { AppState, type AppStateStatus } from 'react-native';
 import { queryClient as client } from '@/core/lib/query/query-client';
 import { threadPollKey } from '@/inbox/thread/hooks/thread-poll';
 import { inboxLive } from './inbox-live';
+import { changeLists } from './list-marks';
 import { useInboxRealtime } from './use-inbox-realtime';
+
+jest.mock('./list-marks', () => ({ changeLists: jest.fn() }));
 
 // The staff inbox's realtime nudge (docs/12 §15): events trigger the same reads the polls run, throttled.
 
@@ -35,7 +38,7 @@ async function mount(enabled = true) {
   const hook = await renderHook(() => useInboxRealtime(enabled));
   await act(async () => undefined); // setAuth, then the join
   const chats = () => refetch.mock.calls.filter(([f]) => f?.queryKey?.[0] === 'thread-poll').map(([f]) => f?.queryKey?.[1]);
-  const lists = () => refetch.mock.calls.filter(([f]) => f?.queryKey?.[1] === 'list').length;
+  const lists = () => jest.mocked(changeLists).mock.calls.length;
   return { hook, chats, lists, badges: () => invalidate.mock.calls.length };
 }
 const send = (phone: string) => act(async () => mockHooks.event?.({ payload: { phone } }));
@@ -82,12 +85,11 @@ test('an event for the open chat re-reads its newest page once; another phone on
   await m.hook.unmount();
 });
 
-test('an event re-reads the list cancelling an older read in flight, never joining it (docs/43 AU1)', async () => {
+test('an event hands the lists to changeLists with the app client (docs/43 AU1, list-marks)', async () => {
   const release = inboxLive.watch('list');
   const m = await mount();
   await send(OTHER);
-  const calls = jest.mocked(client.refetchQueries).mock.calls.filter(([f]) => f?.queryKey?.[1] === 'list');
-  expect(calls).toEqual([[{ queryKey: ['threads', 'list'], type: 'active' }, { cancelRefetch: true }]]);
+  expect(jest.mocked(changeLists).mock.calls).toEqual([[client]]);
   release();
   await m.hook.unmount();
 });

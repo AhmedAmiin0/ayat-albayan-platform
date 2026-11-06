@@ -53,15 +53,23 @@ export function removeMessage<T extends ThreadPages>(
 const at = (m: Pick<MessageView, 'created_at'> | undefined): number =>
   Date.parse(m?.created_at ?? '') || -Infinity;
 
+/** Which of two copies of one message the chat keeps. */
+export type RowPick = (held: MessageView, incoming: MessageView) => MessageView;
+
+/** The fresh copy always: for a read that is the newest truth (docs/43 43-1). */
+export const freshRow: RowPick = (_held, incoming) => incoming;
+
 /**
  * A fresh newest page folded into pages[0] (older pages untouched, so nothing shifts): its rows
  * win; older rows it no longer covers stay before them, rows it does not know yet (a send still in
  * flight, an answer that came back first) stay after them, so a refetch never drops a provisional
- * row.
+ * row. `pick` chooses between a held copy and the fresh one (default laterRow: an older answer from
+ * two quick sends never sets a newer tick back); a read known to be the newest passes `freshRow`.
  */
 export function mergeNewest<T extends ThreadPages>(
   data: T | undefined,
   fresh: ThreadDetail,
+  pick: RowPick = laterRow,
 ): T | undefined {
   const head = data?.pages[0];
   if (!data || !head) return data;
@@ -70,8 +78,7 @@ export function mergeNewest<T extends ThreadPages>(
   const rest = head.messages.filter((m) => !fresh.messages.some((f) => f.id === m.id));
   const before = rest.filter((m) => at(m) < from);
   const after = rest.filter((m) => at(m) >= from);
-  // An older answer (two quick sends) never sets a newer tick back.
-  const rows = fresh.messages.map((m) => laterRow(held.get(m.id) ?? m, m));
+  const rows = fresh.messages.map((m) => pick(held.get(m.id) ?? m, m));
   const messages = [...before, ...rows, ...after];
   const page = { ...fresh, messages, has_more: before.length > 0 ? head.has_more : fresh.has_more };
   return { ...data, pages: [page, ...data.pages.slice(1)] };

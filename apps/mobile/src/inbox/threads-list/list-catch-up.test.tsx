@@ -31,14 +31,26 @@ beforeEach(() => {
   mockApiFetch.mockReset();
 });
 
-test('a list answer still saying pending shows the ✓ its chat already merged', async () => {
-  mockApiFetch.mockResolvedValue(page('queued'));
+const mountList = (client: Client) =>
+  renderHook(() => useThreadList({ search: '', unread: false }), { wrapper: queryWrapper(client) });
+
+test('a list answer still saying pending shows the ✓ a newer chat read already merged', async () => {
+  mockApiFetch.mockReturnValue(new Promise(() => undefined)); // its own refetch never answers
   const client = createTestQueryClient();
+  client.setQueryData(KEY, listCache([row('queued')]), { updatedAt: 1000 });
   client.setQueryData(threadKey(PHONE), chatWith('sent'));
-  const { result } = await renderHook(() => useThreadList({ search: '', unread: false }), {
-    wrapper: queryWrapper(client),
-  });
+  const { result } = await mountList(client);
   await waitFor(() => expect(result.current.items[0]?.last_status).toBe('sent'));
+});
+
+test('a chat copy older than the list never lifts it (a delivered message the server re-queued)', async () => {
+  mockApiFetch.mockReturnValue(new Promise(() => undefined));
+  const client = createTestQueryClient();
+  client.setQueryData(threadKey(PHONE), chatWith('delivered'), { updatedAt: 500 });
+  client.setQueryData(KEY, listCache([row('queued')]), { updatedAt: 1000 });
+  const { result } = await mountList(client);
+  await waitFor(() => expect(result.current.items).toHaveLength(1));
+  expect(result.current.items[0]?.last_status).toBe('queued');
 });
 
 test('the list answer wins when it is further along, or failed', async () => {
@@ -77,24 +89,27 @@ test('back on screen: the chat\'s tick lands in the cache at once, keeping the l
   expect(refetch).not.toHaveBeenCalled(); // not stale: no read
 });
 
-test('a list marked stale while hidden (a send) reads again when it shows, joining a read in flight', async () => {
+test('a list that missed a change while hidden reads again when it shows; shown, it reads at once', async () => {
   const client = createTestQueryClient();
-  client.setQueryData(KEY, listCache([row('queued')]));
+  client.setQueryData(KEY, listCache([row('queued')]), { updatedAt: 1000 });
   const refetch = jest.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);
   const invalidate = jest.spyOn(client, 'invalidateQueries');
+  const listReads = () => refetch.mock.calls.filter(([f]) => f?.queryKey?.[1] === 'list');
+  const read = [{ queryKey: KEY, exact: true }, { cancelRefetch: false }];
   const hook = await catchUp(client);
-  refreshLists(client); // nothing on screen: marked stale only (docs/43 AU2)
+  refreshLists(client); // nothing on screen: marked only (docs/43 AU2)
   expect(invalidate).toHaveBeenCalledWith({ queryKey: threadListKey, refetchType: 'none' });
-  expect(refetch.mock.calls.filter(([f]) => f?.queryKey?.[1] === 'list')).toEqual([]);
+  expect(listReads()).toEqual([]);
+  client.setQueryData(threadKey(PHONE), chatWith('sent')); // the lift on return keeps the time
   await hook.rerender({ focused: true });
-  expect(refetch).toHaveBeenCalledWith({ queryKey: KEY, exact: true }, { cancelRefetch: false });
-  // On screen, a refresh re-reads at once; hidden again, it waits.
-  refreshLists(client);
-  expect(invalidate).toHaveBeenLastCalledWith({ queryKey: ['chat-lists'] });
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: threadListKey, refetchType: 'active' });
+  expect(listed(client)?.last_status).toBe('sent');
+  expect(listReads()).toEqual([read]);
+  refetch.mockClear();
+  refreshLists(client); // on screen: read now
+  expect(listReads()).toEqual([read]);
   await hook.rerender({ focused: false });
-  invalidate.mockClear();
-  refreshLists(client);
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: threadListKey, refetchType: 'none' });
+  refetch.mockClear();
+  refreshLists(client); // hidden again: it waits
+  expect(listReads()).toEqual([]);
   await hook.unmount();
 });

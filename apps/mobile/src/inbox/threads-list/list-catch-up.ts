@@ -1,7 +1,7 @@
 import { chatStatus, overlayPages, type StatusOf } from '@ab/client-core';
 import { type QueryClient, type QueryKey, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { showList } from '@/inbox/thread/hooks/inbox-sync';
+import { missedChange, rereadList, showList } from '@/inbox/thread/live';
 import { type ThreadCache, threadKey } from '@/inbox/thread/hooks/thread-cache';
 import type { ThreadListCache } from '@/inbox/thread/hooks/thread-list-cache';
 
@@ -9,38 +9,50 @@ import type { ThreadListCache } from '@/inbox/thread/hooks/thread-list-cache';
 // waits. The list row takes the tick the chat holds for the same last message when it is further
 // along.
 
-/** The tick the cached chat holds for a list row's last message (undefined: chat not loaded). */
-const chatTicks =
-  (client: QueryClient): StatusOf =>
-  (row) =>
-    chatStatus(client.getQueryData<ThreadCache>(threadKey(row.phone_e164)), row.last_message_id);
+const updatedAt = (client: QueryClient, queryKey: QueryKey) =>
+  client.getQueryState(queryKey)?.dataUpdatedAt ?? 0;
 
-/** The list query's select: a list answer never shows a tick behind its chat's. */
-export const withChatTicks = (client: QueryClient) => (data: ThreadListCache) =>
-  overlayPages(data, chatTicks(client));
+/**
+ * The tick a chat cache holds for a list row's last message, only from a chat read after the list
+ * (`since`): an older chat copy (a closed chat on disk) never overrides a newer list answer, e.g.
+ * a retry that took a delivered message back to queued.
+ */
+const chatTicks =
+  (client: QueryClient, since: number): StatusOf =>
+  (row) => {
+    const key = threadKey(row.phone_e164);
+    const newer = updatedAt(client, key) > since;
+    const chat = newer ? client.getQueryData<ThreadCache>(key) : undefined;
+    return chatStatus(chat, row.last_message_id);
+  };
+
+/** The list query's select: a list answer never shows a tick behind a newer chat read's. */
+export const withChatTicks = (client: QueryClient, queryKey: QueryKey) => (data: ThreadListCache) =>
+  overlayPages(data, chatTicks(client, updatedAt(client, queryKey)));
 
 /** The chats' ticks written into this list's cache, keeping its time (it was not read again). */
 function liftTicks(client: QueryClient, queryKey: QueryKey): void {
-  const updatedAt = client.getQueryState(queryKey)?.dataUpdatedAt;
+  const at = updatedAt(client, queryKey);
   const lift = (old: ThreadListCache | undefined) => {
-    const next = old && overlayPages(old, chatTicks(client));
+    const next = old && overlayPages(old, chatTicks(client, at));
     return next === old ? undefined : next;
   };
-  client.setQueryData<ThreadListCache>(queryKey, lift, { updatedAt });
+  client.setQueryData<ThreadListCache>(queryKey, lift, { updatedAt: at });
 }
 
 /**
- * Back on screen (the chat closed): the ticks the chat merged show at once, and a list marked stale
- * while hidden (a send, an opened chat: refreshLists, docs/43 AU2) reads again. A read already in
- * flight was just started by the realtime catch-up (cancelling the older one), so it is joined.
+ * Back on screen (the chat closed): the ticks the chat merged show at once, and a list that missed
+ * a change while hidden (a send, an opened chat, an event: list-marks.ts, docs/43 AU2) reads again.
+ * The mark is a time, not TanStack's isInvalidated, so a read that lands or fails meanwhile and the
+ * lift above never clear it.
  */
 export function useListCatchUp(queryKey: QueryKey, focused: boolean): void {
   const client = useQueryClient();
   useEffect(() => {
     if (!focused) return undefined;
-    const stale = client.getQueryState(queryKey)?.isInvalidated === true;
+    const missed = missedChange(client, queryKey);
     liftTicks(client, queryKey);
-    if (stale) void client.refetchQueries({ queryKey, exact: true }, { cancelRefetch: false });
-    return showList();
+    if (missed) void rereadList(client, queryKey);
+    return showList(queryKey);
   }, [client, queryKey, focused]);
 }
