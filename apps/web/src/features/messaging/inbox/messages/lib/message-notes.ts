@@ -1,4 +1,4 @@
-import { canRetryCode, isAwaitingReply, MAX_SEND_ATTEMPTS, type MessageView } from '@ab/shared';
+import { canRetryCode, canSendViaWhatsApp, isAwaitingReply, MAX_SEND_ATTEMPTS, type MessageView } from '@ab/shared';
 import type { Clock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { errorText, fullTime } from '@/features/messaging/inbox/format';
@@ -65,4 +65,4 @@ export const isHandedOff = (m: MessageView): boolean => m.status === 'failed' &&
 export const canRetry = (m: MessageView): boolean =>
   m.direction === 'outbound' && m.status === 'failed' && canRetryCode(m.error_code);
 export const canSendByHand = (m: MessageView): boolean =>
-  m.direction === 'outbound' && (m.status === 'failed' || m.status === 'queued') && !!m.click_to_chat;
+  m.direction === 'outbound' && (m.status === 'failed' || m.status === 'queued') && !!m.click_to_chat && !canSendViaWhatsApp(m);

@@ -6,6 +6,7 @@ import { WebhookRepo } from '@/modules/messaging/webhook/webhook.repo';
 import { externalMessage, type ExternalMessage } from './external-message';
 import { externalRow } from './external-row';
 import { ExternalRepo } from './external.repo';
+import { ManualEcho } from './manual-echo';
 
 interface ExternalInput {
   /** Meta's message object (an echo, or an item of Kapso's history). */
@@ -13,9 +14,14 @@ interface ExternalInput {
   from: { line: NumberPurpose | null; numberId?: string | null; phoneNumberId?: string | null };
   /** The delivery status that revealed it (webhook); none for an echo or the catch-up job. */
   event?: StatusEvent;
+  /** An smb_message_echoes item (the WhatsApp Business app): it may be a «أرسل عبر واتساب» text. */
+  echo?: boolean;
 }
 
-/** stored = a new row; known = the wamid was already there; skipped = not an outbound message we can read. */
+/**
+ * stored = a new row; known = the wamid was already there, or the app's echo took the row staff
+ * marked «أرسل عبر واتساب» (ManualEcho); skipped = not an outbound message we can read.
+ */
 export type ExternalOutcome = 'stored' | 'known' | 'skipped';
 
 /** An outbound message we can read, with its customer's E.164 phone; null otherwise. */
@@ -39,15 +45,19 @@ export class ExternalStore {
   constructor(
     private readonly queries: ExternalRepo,
     private readonly webhook: WebhookRepo,
+    private readonly manual: ManualEcho,
   ) {}
 
-  async store({ message, from, event }: ExternalInput): Promise<ExternalOutcome> {
+  async store({ message, from, event, echo }: ExternalInput): Promise<ExternalOutcome> {
     const read = outboundOf(message);
     if (!read) return 'skipped';
     const { msg, phone } = read;
     if ((await this.queries.existing([msg.waMessageId])).size > 0) return 'known';
-    if (await this.queries.inFlight(phone)) return 'skipped';
     const numberId = from.numberId ?? (from.phoneNumberId ? await this.webhook.numberIdFor(from.phoneNumberId) : null);
+    // An app echo is never our sender's own send, so it is matched before the in-flight check.
+    const mine = echo === true && (await this.manual.attach({ msg, phone, from: { line: from.line, numberId } }));
+    if (mine) return this.attached(phone, msg.at);
+    if (await this.queries.inFlight(phone)) return 'skipped';
     const who = await this.webhook.identify(phone);
     const at = orderedAt(msg.at, await this.webhook.latestInSecond(phone, msg.at));
     const row = externalRow({ msg, phone, who, from: { line: from.line, numberId }, at, ...(event ? { event } : {}) });
@@ -56,6 +66,12 @@ export class ExternalStore {
     const marker = isHiddenPayload(row.interactive_payload);
     if (row.template_key !== ACCOUNT_CODE_TEMPLATE && !marker) await this.answered(phone, at);
     return 'stored';
+  }
+
+  /** The attached row answers the chat as a stored one does; the message is known now. */
+  private async attached(phone: string, at: Date): Promise<ExternalOutcome> {
+    await this.answered(phone, at);
+    return 'known';
   }
 
   /**

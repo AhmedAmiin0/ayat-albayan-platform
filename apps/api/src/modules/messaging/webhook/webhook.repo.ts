@@ -85,7 +85,7 @@ export class WebhookRepo {
     const { data, error } = await this.db
       .from('messages')
       .select(
-        'id, status, phone_e164, lesson_id, template_key, body, sent_at, delivered_at, read_at, attempts, guardians(name), leads(name)',
+        'id, status, phone_e164, lesson_id, template_key, body, sent_at, delivered_at, read_at, wa_message_id, attempts, guardians(name), leads(name)',
       )
       .eq('wa_message_id', waMessageId)
       .eq('direction', 'outbound')

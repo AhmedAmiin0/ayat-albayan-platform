@@ -1,6 +1,7 @@
-import type { MessageView } from '@ab/shared';
+import { type MessageStatus, type MessageView, WHATSAPP_SEND_MS } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { ReopenCancel } from '@/modules/messaging/whatsapp/sender/window/manual-send';
 import { MessageViews } from './message.views';
 import { needsManualSend, type MessageRow } from './message.mapper';
 import { MessagesRepo } from './messages.repo';
@@ -12,6 +13,11 @@ export interface MessageChange {
   view: MessageView;
 }
 
+interface RetryOpts {
+  automaticOn: boolean;
+}
+type Retry = (before: MessageRow, opts: RetryOpts) => Promise<MessageChange>;
+
 /** M1 retry, M2 sent-manually, M3 hand-off (R-MSG-03, docs/12 §4); the controller audits them. */
 @Injectable()
 export class MessagesService {
@@ -19,17 +25,33 @@ export class MessagesService {
     private readonly queries: MessagesRepo,
     private readonly views: MessageViews,
     private readonly sender: MessageSender,
+    private readonly reopens: ReopenCancel,
   ) {}
 
+  /** What a retry does by the row's status; any other status: 409 not_retryable. */
+  private readonly retries: Partial<Record<MessageStatus, Retry>> = {
+    failed: (before, opts) => this.requeue(before, opts),
+    sent_manually: (before) => this.unsend(before),
+  };
+
   /**
-   * Only a failed row goes back to the queue (attempts 0, error cleared); the sender runs now.
-   * A held row (auto_off) while automatic messages are still OFF: 409 auto_off, it would be held again.
+   * A failed row goes back to the queue (attempts 0, error cleared); the sender runs now. A
+   * «أرسل عبر واتساب» whose WhatsApp did not open (sent_manually, no app echo yet, marked within
+   * WHATSAPP_SEND_MS) goes back too: its «تراجع». Anything else: 409 not_retryable.
    */
-  async retry(id: string, opts: { automaticOn: boolean }): Promise<MessageChange> {
+  async retry(id: string, opts: RetryOpts): Promise<MessageChange> {
     const before = await this.row(id);
+    const step = this.retries[before.status];
+    if (!step) throw waHttpError('not_retryable', 409, { status: before.status });
+    return step(before, opts);
+  }
+
+  /** A held row (auto_off) while automatic messages are still OFF: 409 auto_off (held again). */
+  private async requeue(before: MessageRow, opts: RetryOpts): Promise<MessageChange> {
+    const id = before.id;
     const notRetryable = () => waHttpError('not_retryable', 409, { status: before.status });
     // A calls-number row (docs/28 §10) is never queued: staff tap «اطلب إذن الاتصال» again instead.
-    if (before.status !== 'failed' || before.line === 'calls') throw notRetryable();
+    if (before.line === 'calls') throw notRetryable();
     if (before.error_code === AUTO_OFF.code && !opts.automaticOn) throw waHttpError(AUTO_OFF.code, 409);
     const after = await this.queries.requeue(id);
     if (!after) throw notRetryable();
@@ -44,6 +66,17 @@ export class MessagesService {
     if (!needsManualSend(before)) throw notManual();
     const after = await this.queries.markSentManually(id, new Date());
     if (!after) throw notManual();
+    // A held text sent from WhatsApp: its family's queued reopen template is not needed now.
+    await this.reopens.afterManualSend(before);
+    return { before, view: await this.views.view(after) };
+  }
+
+  /** «تراجع» of «أرسل عبر واتساب»: back to the queue; 409 not_retryable once echoed or too late. */
+  private async unsend(before: MessageRow): Promise<MessageChange> {
+    const since = new Date(Date.now() - WHATSAPP_SEND_MS);
+    const after = await this.queries.unsend(before.id, since);
+    if (!after) throw waHttpError('not_retryable', 409, { status: before.status });
+    void this.sender.kick();
     return { before, view: await this.views.view(after) };
   }
 

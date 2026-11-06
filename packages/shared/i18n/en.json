@@ -2978,7 +2978,7 @@
       "stickerSend": "Send sticker"
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
-    "tryAfterWindow": "More than 24 hours since the family's last message: your message waits for their reply, and the welcome template invites them to reply unless it already reached them.",
+    "tryAfterWindow": "More than 24 hours since the family's last message: your message waits for their reply, and the welcome template invites them to reply unless it already reached them. After sending it here, you can also send it from WhatsApp Business.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
@@ -3695,7 +3695,7 @@
     "sentManuallyConfirm": "Did you send this message yourself from WhatsApp? We won't send it again.",
     "handedOff": "You opened WhatsApp to send it yourself. Did you send it? Until you answer, we won't send it.",
     "undoHandOff": "No, put it back in the queue",
-    "sentManuallyAt": "Sent manually {time}",
+    "sentManuallyAt": "Sent from WhatsApp {time}",
     "queuedFor": "Will be sent {time}",
     "sentAt": "Sent {time}",
     "deliveredAt": "Delivered {time}",
@@ -3756,11 +3756,20 @@
       "hold_expired": "The wait ended with no reply",
       "window_closed": "More than 24 hours since the family's last message; only a template can be sent",
       "reopen_unavailable": "Not sent: the chat reopen template is not set or not valid — an admin picks it in Settings from the approved templates allowed for restricted roles with no variables",
-      "reopen_failed": "Not sent: the chat reopen template did not reach the family — resend the message to send the template again"
+      "reopen_failed": "Not sent: the chat reopen template did not reach the family — resend the message to send the template again",
+      "reopen_not_needed": "Cancelled: the message was sent from WhatsApp, so the template is no longer needed"
     },
     "cancelManual": "Not yet",
     "failedMenu": "Message not sent",
-    "awaitingReply": "Waiting for the family's reply"
+    "awaitingReply": "Waiting for the family's reply",
+    "whatsappSend": {
+      "action": "Send via WhatsApp",
+      "hint": "Not sent: 24 hours have passed since the family's last message. Send it now from WhatsApp Business.",
+      "openFailed": "The message is recorded as sent from WhatsApp, but WhatsApp could not be opened.",
+      "openAgain": "Open WhatsApp",
+      "undo": "Undo",
+      "undoFailed": "Could not undo: the message may have arrived from WhatsApp, or too much time has passed."
+    }
   },
   "mobileLeads": {
     "filter": "Filter",

@@ -22,9 +22,11 @@ export interface BubbleActionsProps {
 
 /** What this bubble's menu offers here (teacher mode: never «تنزيل», as MessageMedia). */
 export function useBubbleOffers(m: MessageView): BubbleOffers {
-  const teacher = useInboxMode() === 'teacher';
+  const mode = useInboxMode();
+  const teacher = mode === 'teacher';
   const { hide } = useHideRights();
-  return bubbleOffers(m, { teacher, react: useChatActions().reactable(m), hide: hide && !teacher });
+  const react = useChatActions().reactable(m);
+  return bubbleOffers(m, { teacher, react, hide: hide && !teacher, admin: mode === 'admin' });
 }
 
 /** The bubble offers «رد», «نسخ», «إعادة توجيه» or «تنزيل» in this chat. */

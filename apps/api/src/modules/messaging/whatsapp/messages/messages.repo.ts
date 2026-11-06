@@ -6,6 +6,8 @@ import { HANDED_OFF, SENDING } from '@/modules/messaging/whatsapp/sender/send-pl
 
 /** Not while the sender holds the row (its claim): Meta may be sending it right now. */
 const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
+/** No next try and no error: due now. */
+const CLEAR = { next_attempt_at: null, error_code: null, error_text: null } as const;
 
 /**
  * M1–M3 (docs/12 §4): the admin's retry, «I sent it myself» and the hand-off, all compare-and-set.
@@ -73,6 +75,27 @@ export class MessagesRepo {
       .select(MESSAGE_SELECT)
       .maybeSingle();
     if (error) throw new Error(`message hand-off failed: ${error.message}`);
+    return data;
+  }
+
+  /**
+   * «تراجع» of «أرسل عبر واتساب» (WhatsApp did not open): sent_manually → queued, a fresh attempt
+   * budget, compare-and-set on a staff row with no app echo attached (wa_message_id null), marked
+   * since `since`. The sender then sends it, or holds it again when the window is still closed.
+   */
+  async unsend(id: string, since: Date): Promise<ThreadMessageRow | null> {
+    const { data, error } = await this.db
+      .from('messages')
+      .update({ status: 'queued', sent_manually_at: null, attempts: 0, ...CLEAR })
+      .eq('id', id)
+      .eq('direction', 'outbound')
+      .eq('status', 'sent_manually')
+      .is('wa_message_id', null)
+      .not('created_by', 'is', null)
+      .gte('sent_manually_at', since.toISOString())
+      .select(MESSAGE_SELECT)
+      .maybeSingle();
+    if (error) throw new Error(`message undo failed: ${error.message}`);
     return data;
   }
 }

@@ -1,4 +1,4 @@
-import { canRetryCode, type MessageView } from '@ab/shared';
+import { canRetryCode, canSendViaWhatsApp, type MessageView } from '@ab/shared';
 import { Linking } from 'react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
@@ -8,6 +8,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 import { useMessageAction } from '../../thread/hooks/use-thread';
 import { errorLine } from '../hooks/message-text';
+import { useWhatsAppSend } from './use-whatsapp-send';
 
 interface FailedSheetProps {
   phone: string;
@@ -37,7 +38,10 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
   // Why, for a queued row too once it has a reason (an auth hold: 190, kapso_auth…); 'sending' is the
   // sender's claim, not a reason.
   const why = failed || (!!m?.error_code && m.error_code !== 'sending');
-  const link = m?.click_to_chat ?? null;
+  // A text the 24 h window stopped has «أرسل عبر واتساب» instead of the wa.me hand-off.
+  const viaWhatsApp = m !== null && canSendViaWhatsApp(m);
+  const link = viaWhatsApp ? null : (m?.click_to_chat ?? null);
+  const sendViaWhatsApp = useWhatsAppSend(phone);
   const fail = (e: unknown) => onError(claimed(e) ? t.messages.alreadySending : t.common.error);
   const tryAgain = (row: MessageView) => {
     onClose();
@@ -59,6 +63,16 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
         <Button variant="secondary" label={t.messages.retry} onPress={() => tryAgain(m)} />
       ) : null}
       {m && link ? <Button variant="secondary" label={t.messages.clickToChat} onPress={() => byHand(m, link)} /> : null}
+      {m && viaWhatsApp ? (
+        <Button
+          variant="primary"
+          label={t.messages.whatsappSend.action}
+          onPress={() => {
+            onClose();
+            sendViaWhatsApp(m);
+          }}
+        />
+      ) : null}
       <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
     </MenuSheet>
   );

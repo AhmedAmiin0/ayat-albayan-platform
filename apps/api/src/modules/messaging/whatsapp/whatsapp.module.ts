@@ -28,6 +28,7 @@ import { ReopenRequest } from './sender/window/reopen-request';
 import { WindowHold } from './sender/window/window-hold';
 import { WindowRelease } from './sender/window/window-release';
 import { WindowRepo } from './sender/window/window.repo';
+import { ReopenCancel, ReopenCancelRepo } from './sender/window/manual-send';
 import { WindowSettings } from './sender/window/window.settings';
 import { PaymentHoldRepo } from './sender/hold/payment-hold.repo';
 import { PaymentHolds } from './sender/hold/payment-holds';
@@ -102,6 +103,8 @@ function lines(): WhatsappLines {
     PaymentHoldRepo,
     PaymentHolds,
     WindowRepo,
+    ReopenCancelRepo,
+    ReopenCancel,
     WindowSettings,
     ReopenRequest,
     WindowRelease,

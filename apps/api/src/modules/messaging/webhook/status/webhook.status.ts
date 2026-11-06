@@ -7,11 +7,8 @@ import type { StatusEvent } from '../webhook.events';
 
 const RANK: Partial<Record<MessageStatus, number>> = { queued: 0, sent: 1, delivered: 2, read: 3 };
 
-/**
- * The status the row should take, or null for no change: forward along queued < sent <
- * delivered < read; failed from anything but read. A failed or sent_manually row stays as it is.
- */
-export function nextStatus(current: MessageStatus, incoming: StatusEvent['status']): MessageStatus | null {
+/** forward along queued < sent < delivered < read; failed from anything but read. */
+function forward(current: MessageStatus, incoming: StatusEvent['status']): MessageStatus | null {
   const from = RANK[current];
   if (from === undefined) return null;
   if (incoming === 'failed') return current === 'read' ? null : 'failed';
@@ -19,11 +16,38 @@ export function nextStatus(current: MessageStatus, incoming: StatusEvent['status
   return to > from ? incoming : null;
 }
 
+/**
+ * «أرسل عبر واتساب» (owner 2026-11-06): a sent_manually row WhatsApp's echo was attached to (it has
+ * a wamid) takes the app message's delivered / read; never failed, and never one with no wamid.
+ */
+const MANUAL_NEXT: Partial<Record<StatusEvent['status'], MessageStatus>> = {
+  delivered: 'delivered',
+  read: 'read',
+};
+
+const manualNext = (incoming: StatusEvent['status'], attached: boolean): MessageStatus | null =>
+  attached ? (MANUAL_NEXT[incoming] ?? null) : null;
+
+/**
+ * The status the row should take, or null for no change: forward along queued < sent <
+ * delivered < read; failed from anything but read. A failed row stays as it is; a sent_manually
+ * row too, unless `attached` (it carries the WhatsApp Business app's wamid): delivered / read.
+ */
+export function nextStatus(
+  current: MessageStatus,
+  incoming: StatusEvent['status'],
+  attached = false,
+): MessageStatus | null {
+  return current === 'sent_manually' ? manualNext(incoming, attached) : forward(current, incoming);
+}
+
 export interface StatusRow {
   status: MessageStatus;
   sent_at: string | null;
   delivered_at: string | null;
   read_at: string | null;
+  /** Set on a sent_manually row an app echo was attached to (it then moves on, nextStatus). */
+  wa_message_id?: string | null;
 }
 
 /**
@@ -31,7 +55,7 @@ export interface StatusRow {
  * («read» before «delivered») fills the earlier *_at with the same instant.
  */
 export function statusPatch(row: StatusRow, e: StatusEvent): TablesUpdate<'messages'> | null {
-  const to = nextStatus(row.status, e.status);
+  const to = nextStatus(row.status, e.status, Boolean(row.wa_message_id));
   if (!to) return null;
   const at = e.at.toISOString();
   const patch: TablesUpdate<'messages'> = { status: to };

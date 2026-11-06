@@ -61,6 +61,37 @@ Owner: «try to send a request to the chat on message if last conversation was o
 - **Payment links.** «إرسال في المحادثة» (web `CreatedLink`, mobile `LinkCreated`) puts the link's message into the chat's box, which sends it as any text: after the window too on a Kapso chat line, its refusal (131047) on its own bubble. There is no separate 24 h check and no «send a template first» note: only where no text can go at all (a meta or crm chat line after the window, or teacher mode) is the button off, with the composer's own `inbox.sessionClosed` note.
 - **Clients.** One predicate, `staffMaySend` (`@ab/client-core`), read by the web `useMaySend` / `useTriesAfterWindow` and the mobile `sendState` / `chatMaySend`: the composer (paperclip, saved replies, «رد» strip), «عرض سعر», the forward picker's hint, «رد» on a bubble and the payment link all use it.
 
+## The 24 h window: hold → reopen → release, and «أرسل عبر واتساب» (owner 2026-11-06)
+
+Owner: «I don't want to have this limitation of 24h» → «go build it» (the official path).
+
+**The rule.** Every Cloud API send on our chat number (Kapso) needs an open 24 h window for free text: the family's last message on the chat line must be under 24 h old. Meta: messages sent from the WhatsApp Business app are not subject to the customer service window and do not create, extend or affect Cloud API windows or pricing. Our chat number runs in **coexistence**: the same number is also in the WhatsApp Business app on a phone.
+
+**Hold → reopen → release (the platform).** `apps/api/src/modules/messaging/whatsapp/sender/window/`.
+
+1. A staff text after the window is never sent as free text. It is **held**: `status = queued`, `error_code = awaiting_reply` («بانتظار رد العائلة»), up to 7 days (`HOLD_DAYS`).
+2. One **reopen template** (`chat_reopen_template`, an approved chat-line starter with no variables; dedup key `reopen:<E.164>:<Riyadh day>[:<try>]`) asks the family to reply, at most one live per phone per 24 h (`ReopenRequest`).
+3. When the family writes on the chat line, the held text is **released** (`WindowRelease`) and sent through the normal sender and its gates.
+4. Failures carry their reason: `reopen_unavailable` (no usable template), `reopen_failed` (it failed or expired unsent), `reopen_tries_used` (today's tries are used), `hold_expired` (7 days without a reply), and `window_closed` / 131047 / 470 for a row WhatsApp refused outside the window.
+
+**«أرسل عبر واتساب» (staff send it from the app).** On a staff **text** bubble that is held (`awaiting_reply`) or failed for one of the window reasons above (`canSendViaWhatsApp`, `packages/shared/src/messaging/message-actions/whatsapp-send.ts`), web and mobile show «لم تُرسل لانقضاء ٢٤ ساعة على آخر رسالة من الأسرة. أرسلها الآن من واتساب للأعمال.» and the action «أرسل عبر واتساب» (in the bubble's status lines and in its menu: the web ⋯ menu, the mobile «!» sheet). Admin mode only (the `messages.manage` permission of the endpoint); teacher mode unchanged. Files and templates have no button (v1: text rows only).
+
+1. **Mark first.** The client calls `POST /messages/:id/sent-manually` (queued / failed → `sent_manually`, compare-and-set, never while the sender holds a claim). From then on the platform can never send it: the release loop and the sender only read `queued` rows. A refused mark (409 `not_manual`: the sender claimed it) opens nothing.
+2. **Then open WhatsApp** with the family's chat and the text filled in (`whatsappSendUrl`, `@ab/client-core`; the phone as digits only, E.164 without the +; the text URL-encoded, Arabic, line breaks and emoji included):
+   - web: a tab opened inside the click (no opener) goes to `https://web.whatsapp.com/send?phone=<digits>&text=<text>` (WhatsApp Web, never the Windows app);
+   - mobile: `Linking.openURL('https://wa.me/<digits>?text=<text>')`; Android asks which app opens it, so staff pick WhatsApp Business (the academy number).
+3. **Did not open** (the browser blocked the tab, or no app handled the link): the bubble says so and offers «افتح واتساب» and «تراجع». «تراجع» calls `POST /messages/:id/retry`, which for a `sent_manually` row with no app echo attached, marked in the last 30 minutes (`WHATSAPP_SEND_MS`), puts it back to `queued` (`MessagesRepo.unsend`); the sender then sends it, or holds it again while the window is still closed.
+4. **No reopen template after it.** When a held text becomes `sent_manually` and no other text of that phone is still held, that phone's reopen template rows that are still **queued and not claimed** are failed with `reopen_not_needed` in one compare-and-set (`ReopenCancel`, `sender/window/manual-send/`). A template the sender already claimed (`sending`), sent or failed is never touched.
+5. **One bubble, not two.** The app's message comes back as an `smb_message_echoes` echo. When an echo's plain text, after folding whitespace, matches a `sent_manually` row of the same phone with no `wa_message_id`, marked within 30 minutes before the echo (2 minutes after for clock skew), and the line / number agree, the echo's wamid is **attached** to that row (compare-and-set on `wa_message_id is null`; `ManualEcho`, `webhook/external/manual-echo/`) instead of a new row. Anything else is stored as before. Idempotent on the wamid; two different texts never merge; a Kapso-inbox status or the catch-up job never attaches.
+6. **Its ticks.** A `sent_manually` row that carries the app's wamid moves to `delivered` / `read` with WhatsApp's statuses (`nextStatus(..., attached)` in `webhook/status/webhook.status.ts`); one without a wamid stays `sent_manually`, and a failed status never fails it. The bubble reads «أُرسلت من واتساب {time}» until then.
+
+**Owner steps (coexistence).**
+
+- Keep the academy number in the **WhatsApp Business app** on its primary phone, and keep that phone **active**: open the app at least about every **14 days**, or the linked devices sign out.
+- Link each staff phone as a **companion device** of the academy number (WhatsApp Business → Linked devices → Link a device; at most **4** linked devices). A companion stays linked while it is used at least about every **30 days**.
+- On a computer, use **WhatsApp Web** (web.whatsapp.com) linked the same way. **WhatsApp for Windows is not supported** with coexistence: do not use it for the academy number.
+- Messages sent from the app have **no 24 h window and cost nothing** on the Cloud API; they come back to the platform as echoes and show in the chat.
+
 ## Keys
 
 | Key | Kind | Group in «التكاملات» |

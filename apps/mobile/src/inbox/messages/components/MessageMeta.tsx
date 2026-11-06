@@ -9,6 +9,7 @@ import { lineWord } from '@/inbox/shared/line-words';
 import { clock, deliveryTimes, errorLine, queuedLine } from '@/inbox/messages/hooks/message-text';
 import { senderText } from '@/inbox/thread/hooks/thread-mode';
 import { useClockCycle } from '@/core/lib/clock';
+import { WhatsAppStatusLine } from '@/inbox/messages/resend/WhatsAppSendLine';
 
 export function useSmall() {
   const { color } = useTheme();
@@ -64,6 +65,8 @@ export function MessageMeta({ message: m, onTicksPress }: { message: MessageView
         </AppText>
       ) : null}
       {later ? <AppText style={small}>{later}</AppText> : null}
+      {/* «أرسل عبر واتساب»: a text the 24 h window stopped (the admin's, 2026-11-06). */}
+      <WhatsAppStatusLine message={m} phone={m.phone_e164} />
     </>
   );
 }
