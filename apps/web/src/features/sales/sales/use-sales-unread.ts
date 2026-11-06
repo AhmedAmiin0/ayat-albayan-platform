@@ -10,15 +10,18 @@ type Total = { total: number };
 /** A signed-out session (401) is not retried: the next poll, or the sign-in, asks again. */
 export const unreadRetry = (count: number, error: unknown): boolean => !(error instanceof ApiError && error.status === 401) && count < 3;
 
-/** No interval while realtime is up (docs/43 AU6): its events and resyncs re-read the count. */
-export const salesUnreadPollMs = (): number | false =>
-  inboxLive.isLive() ? false : INBOX_REFRESH_MS;
+/** While realtime is up its events re-read the count: a 5 min net for a quietly dead socket. */
+export const SALES_UNREAD_LIVE_MS = 5 * 60_000;
+
+/** The poll (docs/43 AU6): the slow net while realtime is up, INBOX_REFRESH_MS otherwise. */
+export const salesUnreadPollMs = (): number =>
+  inboxLive.isLive() ? SALES_UNREAD_LIVE_MS : INBOX_REFRESH_MS;
 
 /**
  * The academy's unread chats (the same number the admin sees), at pageSize=1. Under ['threads'], so
  * ThreadPane's invalidation after opening a chat refreshes it. A hidden tab does not poll (owner
  * 2026-10-27, «the API gets slowed»): the count catches up the moment the tab is shown again.
- * While realtime is connected it does not poll, like the admin's count (docs/43 AU6).
+ * While realtime is connected only every 5 min (docs/43 AU6).
  */
 export const salesUnreadQuery = (enabled: boolean) => ({
   enabled,

@@ -12,7 +12,7 @@ const active = () => AppState.currentState === 'active';
 /** An event re-reads the open chat, the chats list and the badge; never while the app is not active. */
 const targets: LiveTargets = {
   chat: (phone) => {
-    if (active()) refreshOpenChat(client, phone);
+    if (active()) void refreshOpenChat(client, phone);
   },
   // Shown lists re-read with the last word (a read in flight is followed by a fresh one, docs/43
   // AU1); hidden ones are only marked (list-marks.ts). Throttled to one per 3 s.

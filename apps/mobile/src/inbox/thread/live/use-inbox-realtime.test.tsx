@@ -2,6 +2,8 @@ import { chatLiveKey } from '@ab/client-core';
 import { act, renderHook } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 import { queryClient as client } from '@/core/lib/query/query-client';
+import { cachedThread, detail, inbound } from '@/inbox/shared/thread-fixtures';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { threadPollKey } from '@/inbox/thread/hooks/thread-poll';
 import { inboxLive } from './inbox-live';
 import { changeLists } from './list-marks';
@@ -46,6 +48,8 @@ async function mount(enabled = true) {
 const send = (phone: string) => act(async () => mockHooks.event?.({ payload: { phone } }));
 
 beforeEach(() => {
+  // The open chat holds a row: an event runs its delta (live-refresh.ts), never the badge.
+  client.setQueryData(threadKey(OPEN), cachedThread(detail([{ ...inbound, phone_e164: OPEN }])));
   jest.useFakeTimers();
   jest.restoreAllMocks();
   jest.clearAllMocks();

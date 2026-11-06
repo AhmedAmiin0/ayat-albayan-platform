@@ -4,6 +4,7 @@ import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-quer
 import { apiFetch } from '@/core/lib/http/api';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import { useInboxLive, useLiveWatch } from '@/inbox/thread/live/inbox-live';
+import { noteDelta } from './delta-news';
 import { leavesGap, mergeNewest, sendKey, threadKey, threadPath, type ThreadCache } from './thread-cache';
 
 /** The polls' own keys: outside threadKey, so a push's invalidation never runs them too. */
@@ -53,6 +54,7 @@ export function useThreadPoll(phone: string, loaded: boolean) {
       if (!search) return Date.now();
       const asked = client.getQueryState(queryKey)?.dataUpdatedAt;
       const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`, { signal });
+      noteDelta(phone, client.getQueryData<ThreadCache>(queryKey), delta);
       // The cache moved meanwhile (a full read, the page poll): this answer may be older than it.
       if (busy(client, phone) || client.getQueryState(queryKey)?.dataUpdatedAt !== asked) return Date.now();
       if (needsFullRead(delta)) void client.invalidateQueries({ queryKey });

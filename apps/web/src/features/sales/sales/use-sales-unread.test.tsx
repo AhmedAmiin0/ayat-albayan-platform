@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { INBOX_REFRESH_MS, inboxLive } from '@/features/messaging/inbox';
 import { t } from '@/lib/i18n/i18n';
 import { ApiError } from '@/lib/http/api';
-import { salesUnreadPollMs, salesUnreadQuery, unreadRetry, unreadTitle, useSalesUnread } from './use-sales-unread';
+import { SALES_UNREAD_LIVE_MS, salesUnreadPollMs, salesUnreadQuery, unreadRetry, unreadTitle, useSalesUnread } from './use-sales-unread';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -70,7 +70,7 @@ describe('salesUnreadQuery', () => {
     expect(q.refetchInterval).toBe(salesUnreadPollMs);
     expect(salesUnreadPollMs()).toBe(INBOX_REFRESH_MS);
     inboxLive.setLive(true);
-    expect(salesUnreadPollMs()).toBe(false); // connected: its events re-read it (docs/43 AU6)
+    expect(salesUnreadPollMs()).toBe(SALES_UNREAD_LIVE_MS); // connected: events + a 5 min net
     inboxLive.setLive(false);
     expect('refetchIntervalInBackground' in q).toBe(false);
     expect(salesUnreadQuery(false).enabled).toBe(false);
