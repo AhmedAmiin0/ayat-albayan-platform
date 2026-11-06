@@ -9,6 +9,7 @@ import type { StagedFile } from '@/inbox/saved-replies/hooks/use-saved-reply';
 import { fileError } from './send-file';
 import { type Outgoing, sendKey, useSendMessage } from '@/inbox/thread/hooks/use-thread';
 import { useBoxId } from '@/inbox/thread/send/box-id';
+import { PINS, useReplayed } from '@/inbox/thread/send/pinned-send';
 import { t } from '@/core/lib/i18n/i18n';
 
 /** One template draft = one key + params: re-sending it after an error keeps its clientRequestId. */
@@ -53,6 +54,7 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   const inFlight = useIsMutating({ mutationKey: sendKey(phone) }) > 0;
   const sendStaged = useSendStagedFile(phone);
   const boxId = useBoxId(phone);
+  const replayed = useReplayed('box', phone);
   // «رد» (owner 2026-10-25): the message the next text answers; another target is another send.
   const { reply, setReply } = useChatActions();
   const templateId = useTemplateId();
@@ -76,26 +78,24 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
     if (!body) return sendFile(staged);
     setText('');
     const replyTo = reply ? quoteOf(reply) : undefined;
-    const box = boxId.take(body, replyTo?.id);
+    const id = boxId.take(body, replyTo?.id);
+    // Hook-level (useSendMessage) puts the text back after no answer or a refusal, pins or
+    // releases the id, and on a replay of the first message brings the edit back (docs/44 M1).
     send.mutate(
-      { out: { kind: 'text', text: body, ...(replyTo ? { replyTo } : {}) }, id: box.id, box: true },
+      { out: { kind: 'text', text: body, ...(replyTo ? { replyTo } : {}) }, id, pin: 'box' },
       {
-        onSuccess: (row) => {
-          // The first message went, not this edit (docs/44 M1): it comes back to send again.
-          if (boxId.sent(row, body, box)) {
-            setText((now) => now || body);
-            return;
-          }
+        onSuccess: () => {
+          boxId.sent();
+          if (PINS.box.replayed(phone)) return;
           if (replyTo) setReply((now) => (now?.id === replyTo.id ? null : now));
           const now = stagedNow.current;
           if (now && now.requestId === tapped) sendFile(now);
         },
-        onError: () => setText((now) => now || body),
       },
     );
   };
   const sendLine = send.isError ? chatSendError(send.error) : null;
-  const textLine = boxId.replayed ? t.inbox.error.send_replayed : sendLine;
+  const textLine = replayed ? t.inbox.error.send_replayed : sendLine;
   const errors = [textLine, sendStaged.isError ? fileError(sendStaged.error) : null];
   return { sendTemplate, sendText, renew: boxId.renew, errors, pending: inFlight || send.isPending || sendStaged.isPending };
 }

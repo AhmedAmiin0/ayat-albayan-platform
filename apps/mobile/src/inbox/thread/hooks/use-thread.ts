@@ -4,9 +4,8 @@ import { infiniteQueryOptions, useInfiniteQuery, useMutation, useQueryClient } f
 import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { afterSend, rollback } from '@/inbox/thread/send/after-send';
-import { sendConfirmed } from '@/inbox/thread/send/confirm-send';
-import { releaseSend } from '@/inbox/thread/send/pinned-send';
-import { useResolveHeld } from '@/inbox/thread/send/resolve-held';
+import { failPinned, pinGeneration, settlePinned } from '@/inbox/thread/send/pinned-outcome';
+import type { PinKind } from '@/inbox/thread/send/pinned-send';
 import { refreshInbox, touchInbox } from './inbox-sync';
 import {
   appendMessage,
@@ -47,8 +46,6 @@ export const threadQuery = (phone: string) =>
 export function useThread(phone: string) {
   const query = useInfiniteQuery(threadQuery(phone));
   useThreadPoll(phone, query.data !== undefined);
-  // docs/44 BUG7: a read showing a held send's row releases it and its «unconfirmed» bubble.
-  useResolveHeld(phone);
   return query;
 }
 
@@ -64,9 +61,12 @@ interface SendInput {
   out: Outgoing;
   /** The provisional row's id and the clientRequestId (rule 8: a retried send returns the first row). */
   id: string;
-  /** A text from the chat box: only its retry may reuse an unconfirmed id (send/pinned-send). */
-  box?: boolean;
+  /** The sender that owns a pinned id after no answer: the box or «عرض سعر» (send/pinned-send). */
+  pin?: PinKind;
 }
+
+/** What the send carries: its text, or a template's preview. */
+const carried = (out: Outgoing): string => (out.kind === 'text' ? out.text : out.preview);
 
 function body({ out, id }: SendInput) {
   if (out.kind === 'text') {
@@ -79,8 +79,9 @@ function body({ out, id }: SendInput) {
 
 /**
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
- * it out again (the caller shows `sendError`). No answer keeps it «unconfirmed» and re-reads the
- * chat first; only the box's retry of that text reuses its id (docs/44 BUG7, send/pinned-send).
+ * it out again (the caller shows `sendError`). No answer keeps it «unconfirmed» and pins its id
+ * for its sender until an answer (docs/44 BUG7, send/pinned-outcome: hook-level, so it settles
+ * after the screen closed too).
  */
 export { sendKey } from './thread-cache';
 
@@ -89,31 +90,37 @@ export function useSendMessage(phone: string) {
   const queryKey = threadKey(phone);
   const edit = (fn: (old: ThreadCache | undefined) => ThreadCache | undefined) =>
     client.setQueryData<ThreadCache>(queryKey, fn);
-  const mutation = useMutation({
+  const pinned = (input: SendInput, generation = -1) =>
+    ({ phone, id: input.id, body: carried(input.out), pin: input.pin, generation });
+  return useMutation({
     // One key per chat: the composer and «عرض سعر» see each other's send in flight (useIsMutating).
     mutationKey: sendKey(phone),
     mutationFn: (input: SendInput) =>
-      sendConfirmed({ client, phone, id: input.id, read: threadGet, box: input.box === true }, () =>
-        apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, body(input))),
-    onMutate: async ({ out, id }) => {
+      apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, body(input)),
+    onMutate: async ({ out, id, pin }) => {
+      const generation = pinGeneration(pin);
       markOwnSend(phone);
       await client.cancelQueries({ queryKey });
-      const text = out.kind === 'text' ? out.text : out.preview;
+      const text = carried(out);
       const key = out.kind === 'template' ? out.key : undefined;
       // An answer shows its quote at once (owner 2026-10-25 «رد»), as the API's row will.
       const quote = out.kind === 'text' && out.replyTo ? { reply_to_message_id: out.replyTo.id, reply_to: out.replyTo } : {};
       const row = { ...provisionalMessage({ id, phone, body: text, templateKey: key }), ...quote };
       edit((old) => appendMessage(removeMessage(old, id), row));
       await touchInbox(client, row);
+      return { generation };
     },
-    onSuccess: (row, { id }) => {
-      releaseSend(phone, id);
-      edit((old) => replaceMessage(old, id, row));
+    // The server row replaces the provisional one (a retry's provisional replaced the older one).
+    onSuccess: (row, input, context) => {
+      edit((old) => replaceMessage(old, input.id, row));
+      settlePinned(pinned(input, context.generation), row);
     },
-    onError: (error, { id }) => edit(rollback(error, id)),
+    onError: (error, input, context) => {
+      edit(rollback(error, input.id));
+      failPinned(pinned(input, context?.generation), error);
+    },
     onSettled: (_row, error) => afterSend(client, phone, error),
   });
-  return mutation;
 }
 
 /** app-send: «أرسل عبر واتساب», the row's short pending window (docs/19). */

@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react-native';
-import { useState } from 'react';
 import { ApiError } from '@/core/lib/http/api';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
+import { setComposerText, useComposerText } from './draft-store';
 import { useComposerSend } from './use-composer-send';
 
 const mockApiSend = jest.fn();
@@ -16,14 +16,18 @@ const ids = () => mockApiSend.mock.calls.map((c: unknown[]) => (c[2] as { client
 async function setup() {
   return renderHook(
     () => {
-      const [text, setText] = useState('مرحبًا');
+      // The box's text lives in draft-store: a failed send puts it back there (hook-level).
+      const [text, setText] = useComposerText(PHONE);
       return { ...useComposerSend({ phone: PHONE, text, setText, staged: null, clearStaged: () => undefined }), text, setText };
     },
     { wrapper: queryWrapper(createTestQueryClient()) },
   );
 }
 
-beforeEach(() => mockApiSend.mockReset().mockRejectedValue(new ApiError(422, null)));
+beforeEach(() => {
+  mockApiSend.mockReset().mockRejectedValue(new ApiError(422, null));
+  setComposerText(PHONE, 'مرحبًا');
+});
 
 test('the same text retried after a failure keeps its request id (rule 8)', async () => {
   const { result } = await setup();

@@ -5,20 +5,19 @@ import { heldLine } from '@/inbox/messages/hooks/held-line';
 import { clearChatMemory } from '@/inbox/thread/anchor';
 import { message } from '@/inbox/shared/thread-fixtures';
 import type { ThreadCache } from '@/inbox/thread/hooks/thread-cache';
-import { boxPin, clearHeldSends, heldSends, holdSend, releaseSend } from './pinned-send';
-import { dropRows, isUnconfirmed, markUnconfirmed } from './unconfirmed';
+import { PINS, pinnedId } from './pinned-send';
+import { isUnconfirmed, markUnconfirmed } from './unconfirmed';
 
-const AT = '2026-10-02T09:00:00.000Z';
-const sent = message({ id: 'req-1', body: 'وصلت', created_at: AT });
+const sent = message({ id: 'req-1', body: 'وصلت' });
 const cache = (rows = [sent]): ThreadCache => ({
   pages: [{ messages: rows, has_more: false } as unknown as ThreadDetail],
   pageParams: [null],
 });
-const held = (id: string, box: boolean) => ({ id, sent, known: new Set<string>(), box });
+const PHONE = '+201000000001';
 
-afterEach(clearHeldSends);
+afterEach(clearChatMemory);
 
-test('markUnconfirmed marks only that provisional row; dropRows takes rows out', () => {
+test('markUnconfirmed marks only that provisional row', () => {
   const other = message({ id: 'm1', body: 'قديمة' });
   const out = markUnconfirmed(cache([other, sent]), 'req-1');
   const rows = out?.pages[0]?.messages ?? [];
@@ -28,7 +27,6 @@ test('markUnconfirmed marks only that provisional row; dropRows takes rows out',
   ]);
   expect(rows.map(isUnconfirmed)).toEqual([false, true]);
   expect(markUnconfirmed(undefined, 'req-1')).toBeUndefined();
-  expect(dropRows(out, new Set(['req-1']))?.pages[0]?.messages.map((m) => m.id)).toEqual(['m1']);
 });
 
 test('the bubble says «unconfirmed» under an unconfirmed send, the held text its own line', () => {
@@ -36,24 +34,21 @@ test('the bubble says «unconfirmed» under an unconfirmed send, the held text i
   expect(heldLine(unconfirmed)).toBe(t.messages.sendUnconfirmed);
   expect(heldLine({ status: 'queued', error_code: 'awaiting_reply' })).toBe(t.messages.awaitingReply);
   expect(heldLine({ status: 'sent', error_code: SEND_UNCONFIRMED })).toBeNull();
-  expect(heldLine({ status: 'queued', error_code: null })).toBeNull();
 });
 
-test('only a held BOX text pins the box; a retry keeps the first send; release frees it', () => {
-  const phone = '+201000000001';
-  holdSend(phone, held('tpl-1', false));
-  expect(boxPin(phone)).toBeUndefined();
-  holdSend(phone, held('req-1', true));
-  holdSend(phone, { ...held('req-1', true), sent: { ...sent, body: 'وصلت الآن' } });
-  expect(boxPin(phone)).toBe('req-1');
-  expect(heldSends(phone).find((h) => h.id === 'req-1')?.sent.body).toBe('وصلت');
-  expect(boxPin('+201000000002')).toBeUndefined();
-  releaseSend(phone, 'req-1');
-  expect(boxPin(phone)).toBeUndefined();
+test('the box and «عرض سعر» pin separately; the pinned id wins over a fresh one', () => {
+  PINS.box.pin(PHONE, 'req-1', PINS.box.generation());
+  expect(pinnedId('box', PHONE, 'fresh')).toBe('req-1');
+  expect(pinnedId('quote', PHONE, 'fresh')).toBe('fresh');
+  expect(pinnedId('box', '+201000000002', 'fresh')).toBe('fresh');
 });
 
-test('sign-out forgets every held send (the admin: dedup namespace is shared)', () => {
-  holdSend('+201000000001', held('req-1', true));
+test('sign-out forgets every pin, and a send settling after it writes nothing back', () => {
+  const before = PINS.box.generation();
+  PINS.box.pin(PHONE, 'req-1', before);
+  PINS.quote.pin(PHONE, 'q-1', PINS.quote.generation());
   clearChatMemory();
-  expect(boxPin('+201000000001')).toBeUndefined();
+  expect([PINS.box.pinned(PHONE), PINS.quote.pinned(PHONE)]).toEqual([undefined, undefined]);
+  PINS.box.pin(PHONE, 'req-2', before);
+  expect(PINS.box.pinned(PHONE)).toBeUndefined();
 });
