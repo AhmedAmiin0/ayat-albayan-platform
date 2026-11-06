@@ -40,9 +40,9 @@ test('teacher: an unnamed thread says who it is, never the number', async () => 
   for (const s of [...SHOWN, '7731']) expect(readable()).not.toContain(s);
 });
 
-test('admin: the number stays beside the name and instead of a missing one', async () => {
+test('admin: a named row shows only the name (no tags), the number stands in for a missing one', async () => {
   await renderAs(false, [named, unnamed]);
   await screen.findByText('أم يوسف');
-  expect(readable()).toContain('+966 55 214 7730');
+  expect(readable()).not.toContain('+966 55 214 7730');
   expect(readable()).toContain('+966 55 214 7731');
 });

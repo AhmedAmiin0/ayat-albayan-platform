@@ -23,8 +23,6 @@ const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
 export class SalesThreadsService {
   /** Property-injected (the constructor is at its limit); absent (unit tests): no reopen note. */
   @Optional() @Inject(ReopenRequest) private readonly reopen?: ReopenRequest;
-  /** The ring's renewal threshold (inbox.settings.ts); absent (unit tests): the default. */
-  @Optional() @Inject(InboxSettings) private readonly settings?: InboxSettings;
 
   constructor(
     private readonly queries: ThreadsRepo,
@@ -32,6 +30,9 @@ export class SalesThreadsService {
     private readonly receipts: ReadReceipts,
     private readonly messages: ThreadMessagesRepo,
   ) {}
+
+  /** Property-injected like `reopen`: the ring's threshold (inbox.settings.ts); absent: default. */
+  @Optional() @Inject(InboxSettings) private readonly settings?: InboxSettings;
 
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
     const [{ items: rows, total }, threshold] = await Promise.all([

@@ -50,9 +50,9 @@ test('teacher mode: her threads with their unread count, no tags, rows open /tea
   expect(mockApiFetch).toHaveBeenCalledWith('/threads?page=1&pageSize=25');
 });
 
-test('admin mode keeps the tags and the admin thread route', async () => {
+test('admin mode: no tags either (owner 2026-11-06), the admin thread route', async () => {
   await renderAs(false);
   await fireEvent.press(await screen.findByText('أم يوسف'));
   expect(mockPush).toHaveBeenCalledWith('/inbox/thread/%2B966552147730');
-  expect(screen.getByText(t.inbox.kind.guardian)).toBeTruthy();
+  expect(screen.queryByText(t.inbox.kind.guardian)).toBeNull();
 });
