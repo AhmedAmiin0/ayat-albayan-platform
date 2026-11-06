@@ -1,5 +1,6 @@
 // HTTP test harness for the lessons + scheduling controllers (test-only, excluded from the build).
 // Real controllers, guards, services and LessonAccess; every DB-facing class is a mock.
+import type { AuthUser } from '@/common/auth/verify-token';
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -7,7 +8,6 @@ import { vi } from 'vitest';
 import { AppModule } from '@/app.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
-import type { AuthUser } from '@/common/auth/verify-token';
 import { SettingsService } from '@/common/settings/settings.service';
 import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
