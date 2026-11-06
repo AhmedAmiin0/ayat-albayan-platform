@@ -1,6 +1,6 @@
 import { memoryPort } from '@/test/node-sql';
 import { createMessageStore } from './message-store';
-import { A, plan, row } from './store-fixtures';
+import { A, plan, row, applyAs } from './store-fixtures';
 import { migrateStore, STORE_VERSION } from './store-schema';
 
 const version = (db: ReturnType<typeof memoryPort>['db']) =>
@@ -20,11 +20,11 @@ test('the same version keeps the rows; another version starts empty (a full resy
   const { port, db } = memoryPort();
   const store = createMessageStore(port);
   await store.open('user-a');
-  await store.apply(plan([row({ n: 1 })]), 'user-a');
+  await applyAs(store, plan([row({ n: 1 })]), 'user-a');
   await migrateStore(port);
-  expect(await store.chat(A, 10)).toHaveLength(1);
+  expect(await store.chat('user-a', A, 10)).toHaveLength(1);
   db.exec('pragma user_version = 0');
   await store.open('user-a');
-  expect(await store.chat(A, 10)).toEqual([]);
+  expect(await store.chat('user-a', A, 10)).toEqual([]);
   expect(await store.state()).toEqual({ cursor: null, more: false, scope: null });
 });

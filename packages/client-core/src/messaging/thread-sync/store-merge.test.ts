@@ -17,14 +17,21 @@ describe('mergeRead: a chat read over the stored row of the same id (docs/43 43-
     expect(mergeRead(undefined, view('sent'))).toEqual({ ...view('sent'), updated_at: UNSYNCED_AT });
   });
 
-  it('keeps the stored sync stamp, so a later sync still decides by it', () => {
-    expect(mergeRead(held('sent'), view('delivered')).updated_at).toBe(T);
+  it('a synced row keeps its fields and stamp; a read only lifts its tick', () => {
+    const out = mergeRead(held('sent', { body: 'synced' }), view('delivered', { body: 'old read' }));
+    expect([out.status, out.body, out.updated_at]).toEqual(['delivered', 'synced', T]);
   });
 
   it('a further-along stored tick stays, with its stamps (an older read never undoes ✓✓)', () => {
     const read_at = '2026-11-06T10:05:00Z';
-    const out = mergeRead(held('read', { read_at }), view('delivered', { body: 'edited' }));
-    expect([out.status, out.read_at, out.body]).toEqual(['read', read_at, 'edited']);
+    const out = mergeRead(held('read', { read_at }), view('delivered'));
+    expect([out.status, out.read_at]).toEqual(['read', read_at]);
+  });
+
+  it('a row held only from reads takes the newer read, the tick by rank', () => {
+    const unsynced = { ...view('read'), updated_at: UNSYNCED_AT };
+    const out = mergeRead(unsynced, view('delivered', { body: 'edited' }));
+    expect([out.status, out.body, out.updated_at]).toEqual(['read', 'edited', UNSYNCED_AT]);
   });
 
   it.each<[MessageStatus, MessageStatus, MessageStatus]>([
@@ -33,7 +40,11 @@ describe('mergeRead: a chat read over the stored row of the same id (docs/43 43-
     ['failed', 'queued', 'queued'],
     ['failed', 'sent_manually', 'sent_manually'],
     ['read', 'failed', 'failed'],
-  ])('stored %s, read %s → %s', (was, got, kept) => {
-    expect(mergeRead(held(was), view(got)).status).toBe(kept);
+  ])('held from reads %s, read %s → %s', (was, got, kept) => {
+    expect(mergeRead({ ...held(was), updated_at: UNSYNCED_AT }, view(got)).status).toBe(kept);
+  });
+
+  it('a synced failed row stays failed over a read: its next sync brings the retry', () => {
+    expect(mergeRead(held('failed'), view('queued')).status).toBe('failed');
   });
 });

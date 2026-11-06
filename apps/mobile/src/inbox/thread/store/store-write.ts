@@ -1,18 +1,21 @@
 import type { SyncPlan } from '@ab/client-core';
-import type { SyncMessage, ThreadView } from '@ab/shared';
+import { stampMicros, type SyncMessage, type ThreadView } from '@ab/shared';
 import type { SqlPort, SqlValue } from './sql-port';
 
 // The store's writes (docs/43 43-6); the caller runs them inside one transaction.
 
 const UPSERT_MESSAGE = `insert or replace into messages
-  (id, phone, created_at, updated_at, status, direction, json) values (?, ?, ?, ?, ?, ?, ?)`;
+  (id, phone, created_us, updated_at, status, direction, json) values (?, ?, ?, ?, ?, ?, ?)`;
 const UPSERT_THREAD = `insert or replace into threads
-  (phone, last_message_id, last_at, unread, json) values (?, ?, ?, ?, ?)`;
+  (phone, last_message_id, last_us, unread, json) values (?, ?, ?, ?, ?)`;
+
+/** Microseconds since the epoch: a safe integer until the year 2255. */
+const micros = (at: string): number => Number(stampMicros(at));
 
 const messageValues = (m: SyncMessage): SqlValue[] => [
   m.id,
   m.phone_e164,
-  m.created_at,
+  micros(m.created_at),
   m.updated_at,
   m.status,
   m.direction,
@@ -22,7 +25,7 @@ const messageValues = (m: SyncMessage): SqlValue[] => [
 const threadValues = (t: ThreadView): SqlValue[] => [
   t.phone_e164,
   t.last_message_id,
-  t.last_message_at,
+  micros(t.last_message_at),
   t.unread_count,
   JSON.stringify(t),
 ];
@@ -37,7 +40,11 @@ export async function clearRows(port: SqlPort, owner: string | null): Promise<vo
 /** One sync answer's plan (planSync): reset, tombstones, rows, chats-list rows, the mark. */
 export async function writePlan(port: SqlPort, plan: SyncPlan): Promise<void> {
   if (plan.reset) await port.exec('delete from messages; delete from threads;');
-  for (const id of plan.remove) await port.run('delete from messages where id = ?', [id]);
+  // A chats-list row whose last message is gone goes too: the list falls back to its HTTP row.
+  for (const id of plan.remove) {
+    await port.run('delete from messages where id = ?', [id]);
+    await port.run('delete from threads where last_message_id = ?', [id]);
+  }
   for (const m of plan.upsert) await port.run(UPSERT_MESSAGE, messageValues(m));
   for (const t of plan.threads) await port.run(UPSERT_THREAD, threadValues(t));
   const { cursor, more, scope } = plan.state;

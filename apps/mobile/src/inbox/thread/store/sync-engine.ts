@@ -30,6 +30,16 @@ interface SyncEngine {
   stop(): void;
 }
 
+/** One page: ask, plan from the mark held, write it over that mark; true = ask again at once. */
+async function syncPage(deps: SyncEngineDeps, signal: AbortSignal): Promise<boolean> {
+  const { store, owner, fetchPage } = deps;
+  const state = await store.state();
+  const res = await fetchPage(nextSince(state), signal);
+  const plan = planSync(state, res, await store.held(res.messages.map((m) => m.id)));
+  const kept = !signal.aborted && (await store.apply(plan, { owner, base: state }));
+  return kept && plan.state.more;
+}
+
 /**
  * The phone's sync loop (docs/43 §5, 43-6): ask from nextSince(state), plan with planSync (by
  * id and stamp; tombstones; a new scope wipes and starts over), write the plan for this owner,
@@ -37,25 +47,23 @@ interface SyncEngine {
  * or the fallback asks again from it (upsert by id, so a repeat is harmless).
  */
 export function createSyncEngine(deps: SyncEngineDeps): SyncEngine {
-  const { store, owner, fetchPage } = deps;
+  const { store, owner } = deps;
   const abort = new AbortController();
   let ready: Promise<void> | null = null;
   let running: Promise<void> | null = null;
   let again = false;
   let timer: ReturnType<typeof setInterval> | null = null;
   const live = () => !abort.signal.aborted;
-  const page = async (): Promise<boolean> => {
-    const state = await store.state();
-    const res = await fetchPage(nextSince(state), abort.signal);
-    const plan = planSync(state, res, await store.held(res.messages.map((m) => m.id)));
-    const kept = live() && (await store.apply(plan, owner));
-    return kept && plan.state.more;
+  // A failed open (a busy file) is tried again on the next run, never kept.
+  const forgetOpen = (error: unknown): never => {
+    ready = null;
+    throw error;
   };
   const drain = async () => {
-    ready ??= store.open(owner);
+    ready ??= store.open(owner).catch(forgetOpen);
     await ready;
     let pages = 0;
-    while (live() && pages < SYNC_MAX_PAGES && (await page())) pages += 1;
+    while (live() && pages < SYNC_MAX_PAGES && (await syncPage(deps, abort.signal))) pages += 1;
   };
   const settle = () => {
     running = null;

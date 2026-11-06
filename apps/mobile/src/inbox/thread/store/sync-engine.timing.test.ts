@@ -71,7 +71,7 @@ test('stop() while a page is out: the request is aborted, nothing is written', a
   expect(t.fetchPage.mock.calls[0]?.[1].aborted).toBe(true);
   await t.answerNow();
   await run;
-  expect(await t.store.chat(A, 10)).toEqual([]);
+  expect(await t.store.chat('user-a', A, 10)).toEqual([]);
 });
 
 test('an answer that lands after the account switched is dropped by the store', async () => {
@@ -82,5 +82,5 @@ test('an answer that lands after the account switched is dropped by the store', 
   await t.store.open('user-b');
   await t.answerNow();
   await run;
-  expect(await t.store.chat(A, 10)).toEqual([]);
+  expect(await t.store.chat('user-a', A, 10)).toEqual([]);
 });

@@ -1,4 +1,5 @@
 import { EMPTY_SYNC, type SyncPlan } from '@ab/client-core';
+import type { MessageStore } from './message-store';
 import type { MessageStatus, SyncMessage, ThreadSync, ThreadView } from '@ab/shared';
 import { message, thread } from '@/inbox/shared/thread-fixtures';
 
@@ -49,3 +50,7 @@ export const plan = (upsert: SyncMessage[], over: Partial<SyncPlan> = {}): SyncP
   state: { ...EMPTY_SYNC, scope: 'admin:1' },
   ...over,
 });
+
+/** store.apply from the mark the store holds now (as the engine plans from store.state()). */
+export const applyAs = async (store: MessageStore, p: SyncPlan, owner = 'user-a') =>
+  store.apply(p, { owner, base: await store.state() });

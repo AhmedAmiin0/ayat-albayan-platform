@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import type { SqlPort } from './sql-port';
 
+// Times are ordered as integers (microseconds, stampMicros): text order breaks between
+// Postgres' «+00:00» and a «Z» time.
+
 /**
  * The store's schema version (PRAGMA user_version). A bump drops every table and resyncs
  * from the first row (docs/43 §6: a full resync on a user_version bump).
@@ -11,12 +14,12 @@ const TABLES = ['messages', 'threads', 'sync_state'] as const;
 
 const CREATE = `
 create table if not exists messages (
-  id text primary key, phone text not null, created_at text not null,
+  id text primary key, phone text not null, created_us integer not null,
   updated_at text not null, status text not null, direction text not null, json text not null
 );
-create index if not exists messages_chat on messages (phone, created_at desc, id desc);
+create index if not exists messages_chat on messages (phone, created_us desc, id desc);
 create table if not exists threads (
-  phone text primary key, last_message_id text not null, last_at text not null,
+  phone text primary key, last_message_id text not null, last_us integer not null,
   unread integer not null, json text not null
 );
 create table if not exists sync_state (

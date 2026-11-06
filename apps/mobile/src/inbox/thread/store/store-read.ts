@@ -55,13 +55,13 @@ export async function readChat(
   limit: number,
 ): Promise<SyncMessage[]> {
   const sql = `select json from messages where phone = ?
-    order by created_at desc, id desc limit ?`;
+    order by created_us desc, id desc limit ?`;
   return messageRows.parse(await port.all(sql, [phone, limit])).map((r) => r.json);
 }
 
 /** Every stored chats-list row, the latest activity first. */
 export async function readThreads(port: SqlPort): Promise<ThreadView[]> {
-  const sql = 'select json from threads order by last_at desc, phone';
+  const sql = 'select json from threads order by last_us desc, phone';
   return threadRows.parse(await port.all(sql, [])).map((r) => r.json);
 }
 
