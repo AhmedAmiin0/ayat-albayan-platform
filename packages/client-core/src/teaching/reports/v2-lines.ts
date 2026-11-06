@@ -19,7 +19,7 @@ import {
 import { rangeLabel, type RangeWords } from './v2-text.js';
 
 /** What the lines read: a ReportView, or the live page's report (ReportPageReport). */
-export type LinesReport = Pick<
+type LinesReport = Pick<
   ReportView,
   'attendance' | 'program' | 'content' | 'grade_overall' | 'homework' | 'next_plan' | 'notes'
 >;

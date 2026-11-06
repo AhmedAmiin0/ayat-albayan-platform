@@ -104,6 +104,17 @@ describe("ReportCodeService — the report page's WhatsApp code", () => {
     expect((await svc.access(PUBLIC_ID)).available).toBe(false);
   });
 
+  it('a report not yet sent to the family: no family code, the session URLs last 30 min', async () => {
+    const { svc, codes, pages } = setup();
+    pages.find.mockResolvedValue({ row: pageRow({ sent_at: null }), facts: pageFacts() });
+    expect((await svc.access(PUBLIC_ID)).to.map((c) => c.to)).toEqual(['teacher']);
+    await svc.request({ ...call, to: 'family' });
+    expect(codes.issue).not.toHaveBeenCalled();
+    const set = await svc.verify({ ...call, code: '123456' }, NOW);
+    await svc.view({ publicId: PUBLIC_ID, cookie: cookieOf(set) }, NOW);
+    expect(pages.view).toHaveBeenCalledWith(expect.anything(), 1800);
+  });
+
   it('an unknown or draft report: 404 at every step', async () => {
     const { svc, pages } = setup();
     pages.find.mockRejectedValue(notFound('report_not_found'));

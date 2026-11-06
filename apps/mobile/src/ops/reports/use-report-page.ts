@@ -5,13 +5,13 @@ import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 
 /** Which page: a link's public id (ayatalbayan://report/<id>), or a list's report uuid. */
-export interface PageParams {
+interface PageParams {
   publicId?: string;
   reportId?: string;
 }
 
 /** The API path of a report's live page. */
-export const reportPagePath = ({ publicId, reportId = '' }: PageParams): string =>
+const reportPagePath = ({ publicId, reportId = '' }: PageParams): string =>
   publicId ? `/report-pages/${publicId}` : `/report-pages/by-report/${reportId}`;
 
 /**

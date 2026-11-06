@@ -10,7 +10,7 @@ import { ReportFilesService } from '@/modules/reporting/reports/files/report-fil
 import { TeacherLinkAccess } from './teacher-link.access';
 
 /** One file call through the link: its token, the report (of the link's lesson). */
-export interface LinkFileCall {
+interface LinkFileCall {
   token: string;
   reportId: string;
 }

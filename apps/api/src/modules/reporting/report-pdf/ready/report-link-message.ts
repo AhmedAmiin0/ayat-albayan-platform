@@ -25,7 +25,7 @@ export interface LinkInput {
 }
 
 /** One teacher message per report, whatever its version (an edit re-renders, never re-sends). */
-export const reportTeacherDedupKey = (reportId: string): string =>
+const reportTeacherDedupKey = (reportId: string): string =>
   `report_ready_teacher:${reportId}`;
 
 /**

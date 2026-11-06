@@ -10,7 +10,7 @@ import {
 /** What the PDF job queues for one report. */
 export type ReadyMessage = ReportReadyMessage | ReportLinkMessage;
 
-export interface ChoiceInput extends LinkInput {
+interface ChoiceInput extends LinkInput {
   pdfPath: string;
   /** The approved keys among report_ready_family / report_ready_teacher (ReportReadyRepo). */
   approved: ReadonlySet<string>;

@@ -14,6 +14,7 @@ import {
 } from '@/modules/reporting/report-page/report-page.service';
 import { phoneChoices, phoneOf } from './report-phones';
 import {
+  REPORT_SESSION_SECONDS,
   reportSessionCookie,
   reportSessionToken,
   sessionFromCookie,
@@ -54,7 +55,7 @@ export class ReportCodeService {
   /** Where a code may go, masked; 404 report_not_found for an unknown id or a draft. */
   async access(publicId: string): Promise<ReportAccessView> {
     const found = await this.find(publicId);
-    return { available: await this.codes.sendable(), to: phoneChoices(found.facts) };
+    return { available: await this.codes.sendable(), to: phoneChoices(sourceOf(found)) };
   }
 
   /** 202 whatever happens next: the send runs after the answer (limits, one at a time). */
@@ -62,7 +63,7 @@ export class ReportCodeService {
     await this.codes.limit('request', { ip: call.ip, identifier: bucket(call.publicId) });
     const found = await this.find(call.publicId);
     if (!(await this.codes.sendable())) throw unavailable();
-    const phone = phoneOf(found.facts, call.to);
+    const phone = phoneOf(sourceOf(found), call.to);
     if (!phone) return;
     const failed = (e: unknown) => this.log.warn(`report code not sent: ${String(e)}`);
     void this.codes.issue({ reportId: found.row.id, phone }).catch(failed);
@@ -89,7 +90,8 @@ export class ReportCodeService {
     const token = sessionFromCookie(input.cookie);
     const valid = validReportSession({ pepper, reportId: found.row.id, token, now });
     if (!pepper || !valid) throw codeRequired();
-    return this.pages.view(found);
+    // The files' signed URLs last no longer than the session.
+    return this.pages.view(found, REPORT_SESSION_SECONDS);
   }
 
   private find(publicId: string): Promise<PageFound> {
@@ -98,3 +100,4 @@ export class ReportCodeService {
 }
 
 const bucket = (publicId: string): string => `report:${publicId}`;
+const sourceOf = (found: PageFound) => ({ facts: found.facts, sent: found.row.sent_at !== null });

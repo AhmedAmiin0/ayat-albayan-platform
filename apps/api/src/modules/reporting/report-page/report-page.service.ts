@@ -52,13 +52,13 @@ export class ReportPageService {
     return { row, facts };
   }
 
-  async view(found: PageFound): Promise<ReportPageView> {
-    return toPageView({ ...found, urls: await this.urls(found) });
+  /** seconds: how long the files' signed URLs last (the public page: its session's 30 min). */
+  async view(found: PageFound, seconds: number = SIGNED_URL_SECONDS.ui): Promise<ReportPageView> {
+    return toPageView({ ...found, urls: await this.urls(found, seconds) });
   }
 
-  private async urls({ row, facts }: PageFound): Promise<PageUrls> {
+  private async urls({ row, facts }: PageFound, seconds: number): Promise<PageUrls> {
     const paths = row.attachments.map((f) => f.storage_path);
-    const seconds = SIGNED_URL_SECONDS.ui;
     const files = await this.storage.signedDownloads({
       bucket: BUCKETS.attachments,
       paths,
@@ -74,6 +74,7 @@ export class ReportPageService {
     const pdf = await this.storage.signedDownload({
       bucket: BUCKETS.reports,
       path,
+      seconds,
       download: reportFileName(name),
     });
     return { files, pdf: pdf.url };

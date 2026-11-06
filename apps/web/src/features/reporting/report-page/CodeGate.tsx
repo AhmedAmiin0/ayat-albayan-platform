@@ -62,7 +62,7 @@ function CodeChoices({
             key={c.to}
             type="button"
             variant="secondary"
-            disabled={send.isPending}
+            disabled={send.isPending || sent}
             onClick={() => ask(c.to)}
           >
             {g.sendTo.replace('{masked}', c.masked)}
