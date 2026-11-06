@@ -35,7 +35,7 @@ const fetching = (client: QueryClient, queryKey: QueryKey) =>
 /**
  * Re-reads one list without starving it: a read in flight is joined, then one more read follows it;
  * with nothing in flight, one read, followed by one more only when a change came during it. Calls
- * meanwhile are folded into that one follow-up.
+ * during the first read fold into that follow-up; a call during the follow-up starts its own round.
  */
 export async function rereadList(client: QueryClient, queryKey: QueryKey): Promise<void> {
   const hash = hashKey(queryKey);
