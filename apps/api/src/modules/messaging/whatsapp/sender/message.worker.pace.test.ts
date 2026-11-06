@@ -35,8 +35,8 @@ function harness() {
     staffAtSend: vi.fn(async () => null),
   };
   const repo = {
-    deferRecipient: vi.fn(async (_at: { id: string; numberId: string; phone: string; at: Date }) =>
-      undefined),
+    deferRecipient: vi.fn(async (_at: { id: string; phone: string; at: Date }) => undefined),
+    heldUntil: vi.fn(async (_at: { phone: string; now: Date }): Promise<Date | null> => null),
     sentSince: vi.fn(async () => 0),
     failOff: vi.fn(async () => undefined),
   };
@@ -70,7 +70,7 @@ describe('MessageWorker — Evolution pacing never blocks other lines', () => {
     expect(await go(text('k1', '+966500000003'), KAPSO)).toBe('sent');
     expect(performance.now() - started).toBeLessThan(1_000);
     const at = new Date(NOW.getTime() + 3_000);
-    const e2 = { id: 'e2', numberId: 'evo-1', phone: '+966500000002', at };
+    const e2 = { id: 'e2', numberId: 'evo-1', phone: '+966500000002', at, defaultLine: null };
     expect(repo.deferRecipient).toHaveBeenCalledWith(e2);
     expect(send.mock.calls.map((c) => c[0].phone_e164)).toEqual(['+966500000001', '+966500000003']);
   });
@@ -81,7 +81,7 @@ describe('MessageWorker — Evolution pacing never blocks other lines', () => {
     expect(await w.process({ row: text('e3', '+966500000004'), template: null, now: NOW, autoOn: true, route: EVO })).toBe('skipped');
     expect(repo.sentSince).toHaveBeenCalledWith('evo-1', new Date('2026-11-06T00:00:00Z'));
     const at = new Date('2026-11-07T00:00:00Z');
-    const e3 = { id: 'e3', numberId: 'evo-1', phone: '+966500000004', at };
+    const e3 = { id: 'e3', numberId: 'evo-1', phone: '+966500000004', at, defaultLine: null };
     expect(repo.deferRecipient).toHaveBeenCalledWith(e3);
   });
 
@@ -107,6 +107,17 @@ describe('MessageWorker — Evolution pacing never blocks other lines', () => {
     const slots = repo.deferRecipient.mock.calls
       .map((c) => [c[0].phone, c[0].at.getTime() - NOW.getTime()]);
     expect(slots).toEqual([['+966500000022', 3_000], ['+966500000023', 6_000], ['+966500000022', 3_000]]);
+  });
+
+  it('after a restart (empty pacer), a newer row waits behind its recipient\'s older deferred row', async () => {
+    const { w, repo, send } = harness();
+    const older = new Date(NOW.getTime() + 9_000);
+    repo.heldUntil.mockResolvedValue(older);
+    const row = { ...text('n2', '+966500000006'), created_at: '2026-11-06T07:59:00Z' };
+    expect(await w.process({ row, template: null, now: NOW, autoOn: true, route: EVO })).toBe('skipped');
+    expect(repo.heldUntil.mock.calls[0]?.[0]).toMatchObject({ phone: '+966500000006', createdAt: row.created_at });
+    expect(repo.deferRecipient).toHaveBeenCalledWith(expect.objectContaining({ id: 'n2', at: older }));
+    expect(send).not.toHaveBeenCalled();
   });
 
   it('a row pinned to an Evolution number that is off fails visibly (evolution_number_off)', async () => {

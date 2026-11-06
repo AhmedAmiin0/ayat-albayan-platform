@@ -1,3 +1,4 @@
+import type { WaLine } from '@ab/shared';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
@@ -36,9 +37,29 @@ const dayStart = (now: Date): Date => new Date(Math.floor(now.getTime() / DAY_MS
 
 type Pace = NonNullable<ReturnType<PaceSource['pace']>>;
 
-/** When the row may go: null = now; else its recipient's slot after the gap, or the next day. */
+/** The line whose unstamped session texts leave from this number (routeSession's default). */
+export function defaultLineOf(route: NumberRoute): WaLine | null {
+  const n = overlayNumbers()?.find((x) => x.id === route.numberId);
+  const isDefault = n?.is_default === true && n.enabled && n.purpose === route.line;
+  return isDefault ? route.line : null;
+}
+
+const scopeOf = (at: PaceAt) => ({
+  numberId: at.route.numberId,
+  phone: at.row.phone_e164,
+  defaultLine: defaultLineOf(at.route),
+});
+
+/**
+ * When the row may go: null = now; else behind an older row of its recipient already moved to
+ * later (read from the DB, whatever the pacer says: final review 2), its slot after the gap, or
+ * the next day.
+ */
 async function laterOf(repo: EvolutionPaceRepo, at: PaceAt & Pace) {
   const now = Math.max(at.now.getTime(), Date.now());
+  const createdAt = at.row.created_at ?? null;
+  const held = await repo.heldUntil({ ...scopeOf(at), createdAt, now: new Date(now) });
+  if (held) return held;
   const slotAt = { earliest: now + at.waitMs, gapMs: at.gapMs, phone: at.row.phone_e164, now };
   if (at.waitMs > 0) return new Date(reserveSlot(at.route.numberId, slotAt));
   const start = dayStart(at.now);
@@ -56,8 +77,7 @@ export async function pacedLater(deps: PaceDeps, at: PaceAt): Promise<boolean> {
   if (!pace || !repo) return false;
   const later = await laterOf(repo, { ...at, ...pace });
   if (!later) return false;
-  const { numberId } = at.route;
-  await repo.deferRecipient({ id: at.row.id, numberId, phone: at.row.phone_e164, at: later });
+  await repo.deferRecipient({ id: at.row.id, ...scopeOf(at), at: later });
   wakeAt(later.getTime());
   return true;
 }

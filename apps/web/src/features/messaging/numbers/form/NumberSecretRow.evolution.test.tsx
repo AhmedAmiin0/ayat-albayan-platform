@@ -38,6 +38,17 @@ describe('a number’s secret rows follow its driver', () => {
     expect(within(card).getByLabelText(f.evolution_cloud_token)).toBeTruthy();
   });
 
+  it('Cloud mode: the warning follows the key in use (the saved Cloud token)', async () => {
+    const evolution = evolutionPart({ mode: 'cloud' });
+    const base = evolutionView({ evolution });
+    const secrets = { ...base.secrets, evolution_cloud_token: { set: true, updated_at: null } };
+    renderPanel(apiFetch, { numbers: [{ ...base, secrets }] });
+    const card = await screen.findByRole('article', { name: 'Staff chat line' });
+    expect(within(card).getAllByText(t.numbers.secret.evolutionTokenWarning)).toHaveLength(1);
+    const row = within(card).getByLabelText(f.evolution_cloud_token).closest('div[class*="grid"]');
+    expect(row?.textContent).toContain(t.numbers.secret.evolutionTokenWarning);
+  });
+
   it('Meta and Kapso: the access token and app secret, never the instance token', async () => {
     renderPanel(apiFetch, { numbers: NUMBERS });
     for (const name of ['Notifications line', 'Spare line']) {

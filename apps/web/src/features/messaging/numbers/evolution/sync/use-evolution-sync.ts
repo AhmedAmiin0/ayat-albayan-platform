@@ -9,11 +9,18 @@ const e = t.numbers.evolution;
 
 /**
  * «مزامنة الآن» (POST, the numbers refetch) and «تحقق» (GET, reads only): the latest answer of
- * either, whether one runs, and the last failure (a new press clears the other's).
+ * either, whether one runs, and the last failure (a new press clears the other's). A failed push
+ * drops the earlier answer, so the server's stored state shows (final review 4: never a stale
+ * «متزامن»).
  */
 export function useEvolutionSync(id: string) {
   const [last, setLast] = useState<EvolutionSyncView | null>(null);
-  const push = useNumbersMutation(pushEvolutionSync, { onDone: setLast, note: e.sync.pushed });
+  const clear = () => setLast(null);
+  const push = useNumbersMutation(pushEvolutionSync, {
+    onDone: setLast,
+    note: e.sync.pushed,
+    onFail: clear,
+  });
   const verify = useMutation({ mutationFn: readEvolutionSync, onSuccess: setLast });
   return {
     last,

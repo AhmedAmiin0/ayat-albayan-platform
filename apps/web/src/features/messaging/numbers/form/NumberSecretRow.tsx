@@ -13,9 +13,20 @@ import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mut
 
 const s = t.numbers.secret;
 
+/**
+ * The instance key the number's mode uses (the API's instanceToken): a Cloud-mode number uses its
+ * Cloud token when saved, else the instance token.
+ */
+const instanceKey = (view: NumberView): NumberSecretName =>
+  view.evolution?.mode === 'cloud' && view.secrets.evolution_cloud_token.set
+    ? 'evolution_cloud_token'
+    : 'evolution_token';
+
 /** The instance key cannot be changed from here (review fix 11): replacing it cuts the instance. */
-const warningOf = (name: NumberSecretName, set: boolean): string | undefined =>
-  name === 'evolution_token' && set ? s.evolutionTokenWarning : undefined;
+const warningOf = (view: NumberView, name: NumberSecretName): string | undefined =>
+  view.evolution !== null && name === instanceKey(view) && view.secrets[name].set
+    ? s.evolutionTokenWarning
+    : undefined;
 
 export interface NumberSecretRowProps {
   view: NumberView;
@@ -35,7 +46,7 @@ export function NumberSecretRow({ view, name, manage }: NumberSecretRowProps) {
   const clear = useNumbersMutation(clearNumberSecret, { onDone: () => setConfirming(false), note: s.cleared });
   const label = t.numbers.fields[name];
   const state = view.secrets[name];
-  const hint = warningOf(name, state.set);
+  const hint = warningOf(view, name);
   if (!manage) {
     return (
       <div className="flex flex-wrap items-center justify-between gap-2 py-2">

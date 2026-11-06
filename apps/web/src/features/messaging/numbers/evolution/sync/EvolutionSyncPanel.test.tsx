@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
+import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
 import { evolutionPart, evolutionView } from '@/features/messaging/numbers/numbers.fixture';
 import { EvolutionSyncPanel } from './EvolutionSyncPanel';
 import { syncView } from './sync.fixture';
@@ -19,7 +20,7 @@ type Sync = EvolutionSyncView | null;
 function show(sync: Sync = syncView(), manage = true) {
   const evolution = evolutionPart({ sync });
   const view = evolutionView({ evolution });
-  renderWithClient(<EvolutionSyncPanel view={view} evolution={evolution} manage={manage} />);
+  return renderWithClient(<EvolutionSyncPanel view={view} evolution={evolution} manage={manage} />);
 }
 
 afterEach(() => apiFetch.mockReset());
@@ -62,6 +63,19 @@ describe('«المزامنة مع Evolution» on the card', () => {
     await waitFor(() =>
       expect(screen.getByRole('alert').textContent).toBe(t.numbers.evolution.errors.evolution_auth),
     );
+  });
+
+  it('a failed push drops the earlier «متزامن» and refetches the numbers (final review 4)', async () => {
+    const client = show();
+    const refetch = vi.spyOn(client, 'invalidateQueries');
+    apiFetch.mockResolvedValueOnce(syncView({ synced: true }));
+    fireEvent.click(screen.getByRole('button', { name: s.verify }));
+    expect(await screen.findByText(s.synced)).toBeTruthy();
+    apiFetch.mockRejectedValueOnce(new ApiError(502, { code: 'evolution_auth' }));
+    fireEvent.click(screen.getByRole('button', { name: s.push }));
+    expect(await screen.findByText(s.unsynced)).toBeTruthy();
+    expect(screen.queryByText(s.synced)).toBeNull();
+    expect(refetch).toHaveBeenCalledWith({ queryKey: NUMBERS_QUERY_KEYS.numbers });
   });
 
   it('read-only: the words without the buttons', () => {

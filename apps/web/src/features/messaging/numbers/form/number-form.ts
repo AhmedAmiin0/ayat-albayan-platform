@@ -68,6 +68,15 @@ export function draftErrors(draft: NumberDraft): DraftErrors {
   return out;
 }
 
+/**
+ * Final review 5: an ENABLED number switched to Evolution would send (and expect inbound) before
+ * its Evolution settings were saved and synced, skipping the unsynced-enable confirm: refused.
+ */
+export function switchErrors(view: NumberView | undefined, draft: NumberDraft): DraftErrors {
+  const switching = view?.enabled === true && view.provider !== 'evolution' && isEvolution(draft);
+  return switching ? { provider: t.numbers.errors.evolution_switch_enabled } : {};
+}
+
 const optional = (v: string): string | null => (v.trim() === '' ? null : v.trim());
 
 /** Automatic sends are a Baileys switch only: a Cloud-mode number follows Meta's rules. */

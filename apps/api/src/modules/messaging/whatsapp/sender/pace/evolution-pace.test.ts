@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
-import { evolutionOff } from './evolution-pace';
+import { defaultLineOf, evolutionOff } from './evolution-pace';
 
 // docs/19: only a session row pinned to an Evolution number that cannot send counts as «off».
 
@@ -30,5 +30,21 @@ describe('evolutionOff', () => {
     overlay(num({ evolution: true, enabled: false }));
     expect(evolutionOff({ number_id: 'n1', template_key: 'booking_confirmation' })).toBe(false);
     expect(evolutionOff({ number_id: 'n2', template_key: null })).toBe(false);
+  });
+});
+
+describe('defaultLineOf (final review 1: which unstamped rows leave from this number)', () => {
+  afterEach(() => setNumbersOverlay(null));
+  const route = { numberId: 'n1', line: 'chat' as const };
+
+  it('the enabled default of its line takes that line\'s unstamped session texts', () => {
+    overlay(num({ evolution: true, is_default: true }));
+    expect(defaultLineOf(route)).toBe('chat');
+  });
+
+  it('a number that is no default (or unknown) takes none: those rows route elsewhere', () => {
+    expect(defaultLineOf(route)).toBeNull();
+    overlay(num({ evolution: true, is_default: false }));
+    expect(defaultLineOf(route)).toBeNull();
   });
 });

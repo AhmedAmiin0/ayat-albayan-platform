@@ -6783,6 +6783,7 @@
       "number_enabled": "Turn the number off first, then delete it.",
       "not_enabled": "Turn the number on first to make it the default.",
       "calls_need_kapso": "A calls number works through Kapso only: choose the Kapso provider.",
+      "evolution_switch_enabled": "An enabled number cannot be switched to Evolution directly: disable it first, then save the Evolution settings and sync them, then enable it.",
       "generic": "Something went wrong. Try again."
     },
     "import": {
