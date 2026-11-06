@@ -1,19 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
-import { NumbersEvolution } from '@/modules/messaging/numbers';
+import { EVOLUTION_SEND_ERROR, NumbersEvolution } from '@/modules/messaging/numbers';
 import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
-import { EVOLUTION_RESTRICTED } from '@/modules/messaging/webhook/parse/webhook.evolution';
 import { WebhookRepo } from '@/modules/messaging/webhook/webhook.repo';
 
-// WhatsApp restricted an Evolution number (a late 463 / 475 ERROR, docs/19 «Evolution driver»):
-// the number is switched off at once (only an admin turns it back on), its queued rows fail so
-// staff resend them, and the admins' bell rings once. A 401 / 403 from Evolution is an auth
-// problem and never lands here.
+// Too many WhatsApp ERRORs on an Evolution number (review fix 3, docs/19 «Evolution driver»): an
+// ERROR status on one of OUR sends (key.id = the row's wa_message_id) fails only that row; the
+// number's `limits.error_trip` of them (default 3) within 15 min switch it off at once (only an
+// admin turns it back on), its queued rows fail so staff resend them, and the admins' bell rings
+// once. A 401 / 403 from Evolution is an auth problem (the queue is held) and never lands here.
 
-const WORDS = 'قيّد واتساب هذا الرقم (463/475) فأُوقف تلقائيًا. لا يُعاد تشغيله إلا يدويًا';
+const WORDS = 'رفض واتساب عدة رسائل من هذا الرقم خلال 15 دقيقة فأُوقف تلقائيًا. لا يُعاد تشغيله إلا يدويًا';
 
-const restricted = (e: StatusEvent): boolean => e.errorCode === EVOLUTION_RESTRICTED;
+const sendError = (e: StatusEvent): boolean => e.errorCode === EVOLUTION_SEND_ERROR;
 
 @Injectable()
 export class EvolutionRestriction {
@@ -25,24 +25,24 @@ export class EvolutionRestriction {
     private readonly rows: WebhookRepo,
   ) {}
 
-  /** Switches the number off when any of these statuses says it was restricted. */
+  /** After the statuses moved their rows: counts the number's ERRORs and maybe switches it off. */
   async check(events: readonly StatusEvent[], at: { numberId: string; now: Date }): Promise<void> {
     const sentAt = await this.sentAt(events);
     if (!sentAt) return;
-    if (!(await this.numbers.restrict(at.numberId, { now: at.now, sentAt }))) return;
+    if (!(await this.numbers.tripOnErrors(at.numberId, { now: at.now, sentAt }))) return;
     await this.ring(at);
   }
 
-  /** When the refused message went out: a replay older than the admin's re-enable is ignored. */
+  /** When our ERRORed message went out; null = no ERROR, or not one of our sends. */
   private async sentAt(events: readonly StatusEvent[]): Promise<string | null> {
-    const event = events.find(restricted);
+    const event = events.find(sendError);
     if (!event) return null;
     return (await this.rows.outboundByWaId(event.waMessageId))?.sent_at ?? null;
   }
 
   private async ring(at: { numberId: string; now: Date }): Promise<void> {
     const label = overlayNumbers()?.find((n) => n.id === at.numberId)?.label ?? 'Evolution';
-    this.log.error(`evolution number ${at.numberId} restricted by WhatsApp: switched off`);
+    this.log.error(`evolution number ${at.numberId}: too many WhatsApp errors, switched off`);
     await this.push.notifyAdmins('reminder_failed', {
       subject: `evolution_restricted:${at.numberId}:${at.now.toISOString().slice(0, 10)}`,
       vars: { template: WORDS, name: label },

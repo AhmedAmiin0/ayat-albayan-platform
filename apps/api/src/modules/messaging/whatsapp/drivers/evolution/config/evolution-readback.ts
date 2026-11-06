@@ -26,17 +26,23 @@ const sorted = (events: unknown): string[] =>
 
 type Check<F> = (f: NonNullable<F>, c: EvolutionConfig) => boolean;
 
-/** The webhook as set: on/off, our URL, the events and both flags. */
-const WEBHOOK_CHECKS: readonly Check<Webhook>[] = [
-  (f, c) => (f.enabled ?? false) === c.webhook.enabled,
-  (f, c) => (f.url ?? null) === c.webhook.url,
-  (f, c) => same(sorted(f.events), [...c.webhook.events].sort()),
-  (f, c) => (f.webhookByEvents ?? false) === c.webhook.by_events,
-  (f, c) => (f.webhookBase64 ?? false) === c.webhook.base64,
+/** What the webhook was pushed with: the options and the server-built URL. */
+interface HookWant {
+  config: EvolutionConfig;
+  url: string;
+}
+
+/** The webhook as set: on/off, our URL, the events, and both flags pinned off. */
+const WEBHOOK_CHECKS: readonly ((f: NonNullable<Webhook>, w: HookWant) => boolean)[] = [
+  (f, w) => (f.enabled ?? false) === w.config.webhook.enabled,
+  (f, w) => (f.url ?? null) === w.url,
+  (f, w) => same(sorted(f.events), [...w.config.webhook.events].sort()),
+  (f) => !(f.webhookByEvents ?? false),
+  (f) => !(f.webhookBase64 ?? false),
 ];
 
-export const webhookMatch = (found: Webhook, c: EvolutionConfig): boolean =>
-  found !== null && WEBHOOK_CHECKS.every((check) => check(found, c));
+export const webhookMatch = (found: Webhook, want: HookWant): boolean =>
+  found !== null && WEBHOOK_CHECKS.every((check) => check(found, want));
 
 /** The proxy on: host, port, protocol and username equal (never the password). */
 const PROXY_CHECKS: readonly Check<Proxy>[] = [

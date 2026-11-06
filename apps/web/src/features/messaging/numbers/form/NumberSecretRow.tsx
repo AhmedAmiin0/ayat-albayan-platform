@@ -13,6 +13,10 @@ import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mut
 
 const s = t.numbers.secret;
 
+/** The instance key cannot be changed from here (review fix 11): replacing it cuts the instance. */
+const warningOf = (name: NumberSecretName, set: boolean): string | undefined =>
+  name === 'evolution_token' && set ? s.evolutionTokenWarning : undefined;
+
 export interface NumberSecretRowProps {
   view: NumberView;
   name: NumberSecretName;
@@ -40,7 +44,11 @@ export function NumberSecretRow({ view, name, manage }: NumberSecretRowProps) {
     );
   }
   return (
-    <SettingRow label={label} extra={<SecretChip state={state} />}>
+    <SettingRow
+      label={label}
+      hint={warningOf(name, state.set)}
+      extra={<SecretChip state={state} />}
+    >
       {(p) => (
         <div className="flex flex-wrap items-center gap-2">
           <Input

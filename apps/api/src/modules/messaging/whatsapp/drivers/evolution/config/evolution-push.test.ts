@@ -22,7 +22,7 @@ function routed(routes: Record<string, Reply>) {
 }
 
 const URL_OK = 'http://api:3000/webhooks/evolution/secondary-1';
-const config = evolutionConfigSchema.parse({ webhook: { url: URL_OK } });
+const config = evolutionConfigSchema.parse({});
 const OPEN = { status: 200, body: { instance: { state: 'open' } } };
 const OK = { status: 201, body: {} };
 const SETTINGS = {
@@ -41,7 +41,10 @@ const finds = (over: Record<string, Reply> = {}): Record<string, Reply> => ({
   ...over,
 });
 const target = (f: ReturnType<typeof routed>, over: Partial<PushTarget> = {}): PushTarget =>
-  ({ env: EVO_BAILEYS, config, globalKey: 'fake-global', proxyPassword: null, fetch: f.fetch, ...over });
+  ({
+    env: EVO_BAILEYS, config, hookUrl: URL_OK, globalKey: 'fake-global', proxyPassword: null,
+    fetch: f.fetch, ...over,
+  });
 const NOW = new Date('2026-11-06T10:00:00Z');
 
 describe('syncEvolution', () => {
@@ -53,7 +56,12 @@ describe('syncEvolution', () => {
       parts: { instance: 'synced', settings: 'synced', webhook: 'synced', proxy: 'synced' },
     });
     const hook = f.calls.find((c) => c.key === 'POST /webhook/set/secondary-1');
-    expect(hook?.body).toMatchObject({ webhook: { url: URL_OK, headers: { 'x-evolution-token': 'fake-instance-token' } } });
+    expect(hook?.body).toMatchObject({
+      webhook: {
+        url: URL_OK, byEvents: false, base64: false,
+        headers: { 'x-evolution-token': 'fake-instance-token' },
+      },
+    });
     expect(f.calls.every((c) => c.apikey === 'fake-instance-token')).toBe(true);
     expect(f.calls.find((c) => c.key === 'POST /proxy/set/secondary-1')?.body).toMatchObject({ enabled: false });
   });
@@ -81,14 +89,33 @@ describe('syncEvolution', () => {
     });
   });
 
-  it('a read back writes nothing; no webhook URL yet = skipped; the token refused throws', async () => {
+  it('a read back writes nothing; no webhook origin = failed; the token refused throws', async () => {
     const f = routed(finds());
-    const noHook = evolutionConfigSchema.parse({});
-    const view = await syncEvolution(target(f, { config: noHook }), { push: false, now: NOW });
-    expect(view.parts.webhook).toBe('skipped');
+    const view = await syncEvolution(target(f, { hookUrl: null }), { push: false, now: NOW });
+    expect(view.parts.webhook).toBe('failed');
+    expect(view.synced).toBe(false);
     expect(f.calls.some((c) => c.key.startsWith('POST'))).toBe(false);
     const denied = routed({ 'GET /instance/connectionState/secondary-1': { status: 401, body: {} } });
     await expect(syncEvolution(target(denied), { push: true, now: NOW }))
       .rejects.toMatchObject({ info: { credential: 'evolution' } });
+  });
+
+  it('a webhook pushed off reads back as disabled: never «متزامن»', async () => {
+    const off = evolutionConfigSchema.parse({ webhook: { enabled: false } });
+    const f = routed(finds({
+      'GET /webhook/find/secondary-1': { status: 200, body: { ...HOOK, enabled: false } },
+    }));
+    const view = await syncEvolution(target(f, { config: off }), { push: true, now: NOW });
+    expect(view.parts.webhook).toBe('disabled');
+    expect(view.synced).toBe(false);
+  });
+
+  it('the instance unknown and no global key: every other part skipped, not synced', async () => {
+    const f = routed(finds({
+      'GET /instance/connectionState/secondary-1': { status: 404, body: {} },
+    }));
+    const view = await syncEvolution(target(f, { globalKey: null }), { push: true, now: NOW });
+    expect(view.parts).toEqual({ instance: 'failed', settings: 'skipped', webhook: 'skipped', proxy: 'skipped' });
+    expect(view.synced).toBe(false);
   });
 });

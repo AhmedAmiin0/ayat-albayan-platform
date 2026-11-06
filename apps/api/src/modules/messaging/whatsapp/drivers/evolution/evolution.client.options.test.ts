@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import { EvolutionWhatsappClient } from './evolution.client';
+import { EvolutionWhatsappClient, sendTimeoutMs } from './evolution.client';
 import { EvolutionPacer } from './evolution-pacer';
 import { EVO_BAILEYS, EVO_CLOUD, evoSent } from './evolution.fakes';
 
@@ -35,6 +35,12 @@ describe('EvolutionWhatsappClient — sending options and pace', () => {
     expect(client.pace('+966500000002')?.waitMs).toBe(3_000);
     move(3_000);
     expect(client.pace('+966500000002')?.waitMs).toBe(0);
+  });
+
+  it('the send deadline always covers the typing delay (never near-timeout «uncertain»)', () => {
+    expect(sendTimeoutMs({ delayMs: 0 })).toBe(20_000);
+    expect(sendTimeoutMs({ delayMs: 2_000 })).toBe(20_000);
+    expect(sendTimeoutMs({ delayMs: 9_000 })).toBe(24_000);
   });
 
   it('a Cloud instance is not paced (Meta keeps its own limits)', () => {

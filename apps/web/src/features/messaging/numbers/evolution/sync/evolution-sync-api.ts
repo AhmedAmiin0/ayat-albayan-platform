@@ -29,15 +29,24 @@ export const pushEvolutionSync = (id: string) => sendFor('POST', `${base(id)}/sy
 export const readEvolutionSync = async (id: string) =>
   viewOf(await apiFetch(`${base(id)}/sync`));
 
-/** The codes these routes answer (409 / 502); anything else is said generically. */
+/** The codes these routes answer (400 / 409 / 502); anything else is said generically. */
 export const EVOLUTION_CALL_ERRORS = [
   'not_evolution', 'evolution_not_configured', 'evolution_auth', 'evolution_unreachable',
+  'evolution_rejected', 'evolution_cloud_ids', 'webhook_origin', 'cloud_ids_needed',
 ] as const;
-const errorBodySchema = z.object({ code: z.enum(EVOLUTION_CALL_ERRORS) });
+const errorBodySchema = z.object({
+  code: z.enum(EVOLUTION_CALL_ERRORS),
+  /** Evolution's own words for a refused value (evolution_rejected). */
+  detail: z.string().max(300).optional(),
+  /** PUT …/config: the options were saved, only the push failed. */
+  saved: z.literal(true).optional(),
+});
 
-/** A failed call in words: the known code, else «تعذّرت العملية». */
+/** A failed call in words: «saved but not pushed» first when so, Evolution's words last. */
 export function evolutionErrorText(error: unknown): string {
   const errors = t.numbers.evolution.errors;
   const body = error instanceof ApiError ? errorBodySchema.safeParse(error.body).data : undefined;
-  return body ? errors[body.code] : errors.generic;
+  if (!body) return errors.generic;
+  const words = [body.saved ? errors.savedNotPushed : '', errors[body.code], body.detail ?? ''];
+  return words.filter((x) => x !== '').join(' ');
 }

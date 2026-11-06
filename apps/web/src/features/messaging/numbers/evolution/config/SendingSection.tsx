@@ -47,6 +47,14 @@ export function LimitsSection({ value, errors, onChange }: SectionProps<'limits'
         value={value.daily_cap}
         onChange={(daily_cap) => onChange({ daily_cap })}
       />
+      <ConfigTextField
+        numeric
+        label={c.limits.error_trip}
+        hint={c.limits.error_tripHint}
+        error={errors['limits.error_trip']}
+        value={value.error_trip}
+        onChange={(error_trip) => onChange({ error_trip })}
+      />
     </ConfigFieldset>
   );
 }

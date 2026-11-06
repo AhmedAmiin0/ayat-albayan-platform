@@ -4987,6 +4987,7 @@ export type Database = {
           enabled: boolean;
           evolution_auto_sends: boolean;
           evolution_config: Json;
+          evolution_enabled_at: string | null;
           evolution_mode: string | null;
           evolution_state: string | null;
           evolution_state_at: string | null;
@@ -5011,6 +5012,7 @@ export type Database = {
           enabled?: boolean;
           evolution_auto_sends?: boolean;
           evolution_config?: Json;
+          evolution_enabled_at?: string | null;
           evolution_mode?: string | null;
           evolution_state?: string | null;
           evolution_state_at?: string | null;
@@ -5035,6 +5037,7 @@ export type Database = {
           enabled?: boolean;
           evolution_auto_sends?: boolean;
           evolution_config?: Json;
+          evolution_enabled_at?: string | null;
           evolution_mode?: string | null;
           evolution_state?: string | null;
           evolution_state_at?: string | null;

@@ -1,6 +1,6 @@
 import { evolutionConfigSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { createBody, proxyBody, settingsBody } from './evolution-push-bodies';
+import { createBody, proxyBody, settingsBody, webhookBody } from './evolution-push-bodies';
 import { proxyMatch, settingsMatch, webhookMatch } from './evolution-readback';
 
 // Evolution v2's bodies (DTOs at fa09d37) and the read-back comparisons, pure.
@@ -42,10 +42,24 @@ describe('Evolution read-back', () => {
     expect(proxyMatch(null, plain)).toBe(true);
   });
 
-  it('a webhook matches on url, events (any order) and both flags', () => {
-    const c = evolutionConfigSchema.parse({ webhook: { url: 'https://api.example.test/webhooks/evolution/x' } });
-    const events = [...c.webhook.events].reverse();
-    expect(webhookMatch({ enabled: true, url: c.webhook.url, events }, c)).toBe(true);
-    expect(webhookMatch({ enabled: true, url: 'https://elsewhere.test/x', events }, c)).toBe(false);
+  it('a webhook matches on the server URL, events (any order) and both flags off', () => {
+    const want = { config: plain, url: 'http://ayat-lb:8080/webhooks/evolution/x' };
+    const events = [...plain.webhook.events].reverse();
+    const found = { enabled: true, url: want.url, events };
+    expect(webhookMatch(found, want)).toBe(true);
+    expect(webhookMatch({ ...found, url: 'https://elsewhere.test/x' }, want)).toBe(false);
+    expect(webhookMatch({ ...found, webhookByEvents: true }, want)).toBe(false);
+    expect(webhookMatch({ ...found, webhookBase64: true }, want)).toBe(false);
+  });
+
+  it('the webhook body pins byEvents and base64 off and carries the server URL', () => {
+    const body = webhookBody(plain, { url: 'http://ayat-lb:8080/webhooks/evolution/x', token: 'fake' });
+    expect(body).toEqual({
+      webhook: {
+        enabled: true, url: 'http://ayat-lb:8080/webhooks/evolution/x',
+        headers: { 'x-evolution-token': 'fake' }, byEvents: false, base64: false,
+        events: [...plain.webhook.events],
+      },
+    });
   });
 });

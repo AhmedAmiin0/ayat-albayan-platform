@@ -10,10 +10,17 @@ import { EVOLUTION_NUMBER_OFF } from '@/modules/messaging/numbers';
 export class EvolutionPaceRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Due again at `at`; still queued, no attempt counted (only a queued, unclaimed row moves). */
-  async defer(id: string, at: Date): Promise<void> {
-    const { error } = await this.db.from('messages').update({ next_attempt_at: at.toISOString() })
-      .eq('id', id).eq('status', 'queued');
+  /**
+   * Every queued row to `phone` on this number due before `at` is due again at `at`, no attempt
+   * counted: one conversation moves together, and the pass's created_at order keeps it in order.
+   * A row already due later (a retry backoff) keeps its own time.
+   */
+  async deferRecipient(input: { numberId: string; phone: string; at: Date }): Promise<void> {
+    const at = input.at.toISOString();
+    const { error } = await this.db.from('messages').update({ next_attempt_at: at })
+      .eq('number_id', input.numberId).eq('phone_e164', input.phone)
+      .eq('direction', 'outbound').eq('status', 'queued')
+      .or(`next_attempt_at.is.null,next_attempt_at.lt.${at}`);
     if (error) throw new Error(`message defer failed: ${error.message}`);
   }
 

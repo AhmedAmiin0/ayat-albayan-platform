@@ -527,7 +527,7 @@ host NAME (never an IP literal), or plain http only to localhost / 127.0.0.1 / [
 redirects are refused. A base off the list leaves the line unconfigured (gap `EVOLUTION_API_BASE`).
 
 **Config (per number, «الأرقام», owner 2026-11-06 «make all the evolution api options configurable»).** Migration
-`20261106000500`: `provider = 'evolution'`, the **instance name in `phone_number_id`**, the engine `evolution_mode`
+`20261106000700`: `provider = 'evolution'`, the **instance name in `phone_number_id`**, the engine `evolution_mode`
 (`baileys` | `cloud`), `evolution_auto_sends` (default false), `evolution_config` (jsonb, zod
 `evolutionConfigSchema` in `@ab/shared`, no secret) and `evolution_sync` (the last push read back). Secrets (Vault,
 `wa_number:<id>:<name>`, shown as «محفوظ» only): `evolution_token` (the instance key), `evolution_cloud_token` (a
@@ -535,19 +535,33 @@ Cloud instance's Meta access token, which Evolution also uses as that instance's
 `evolution_config` sections, each pushed on save with Evolution's own endpoint and read back:
 - `behaviour` → `/settings/set` + `/settings/find`: reject_call + msg_call, groups_ignore (default **true**),
   always_online, read_messages, read_status, sync_full_history (all default **false**).
-- `webhook` → `/webhook/set` + `/webhook/find`: enabled, url (https, or http to localhost / a docker service; our
-  `/webhooks/evolution/<instance>`), by_events, base64, events (default MESSAGES_UPSERT, MESSAGES_UPDATE,
-  SEND_MESSAGE, CONNECTION_UPDATE, QRCODE_UPDATED). The header `x-evolution-token` is always the instance key.
+- `webhook` → `/webhook/set` + `/webhook/find`: enabled (default **on**), origin and events (default MESSAGES_UPSERT,
+  MESSAGES_UPDATE, SEND_MESSAGE, CONNECTION_UPDATE, QRCODE_UPDATED). **The URL is never typed** (security review: it
+  receives the instance token): the server builds it on every push from the origin (`internal` = `http://ayat-lb:8080`,
+  the stack's load balancer on the docker network; `public` = `API_PUBLIC_URL`, https only) and the CURRENT instance
+  name (`/webhooks/evolution/<instance>`); the UI shows it read-only (`NumberEvolutionView.hook_url`). `byEvents` and
+  `base64` are pinned **false** (a per-event path would 404 on our route; base64 media passes Fastify's 1 MiB body
+  limit, 413): media keeps the download path. The header `x-evolution-token` is always the instance key.
 - `proxy` → `/proxy/set` + `/proxy/find`: enabled, host, port, protocol (http, https, socks4, socks5), username;
   the password only ever travels in the set body, never read back or compared.
-- `sending`: `delay_ms` (sendText/sendMedia `delay`, the typing shown) and `link_preview` (sendText).
-- `limits`: `gap_ms` (default 3000, was the global `EVOLUTION_SEND_GAP_MS`) and `daily_cap` (default 60 sends a UTC day).
-- `cloud`: phone_number_id and business_id (used when the instance is created).
+- `sending`: `delay_ms` (sendText/sendMedia `delay`, the typing shown; **at most 2000**: Evolution waits it inside the
+  send call, which holds the one sender loop; the send deadline is max(20 s, delay + 15 s)) and `link_preview` (sendText).
+- `limits`: `gap_ms` (default 3000; there is no global gap key), `daily_cap` (default 60 sends a UTC day) and
+  `error_trip` (default 3: WhatsApp ERRORs within 15 min that switch the number off, below).
+- `cloud`: phone_number_id and business_id, **required on a Cloud instance** (400 `cloud_ids_needed` on save, 409
+  `evolution_cloud_ids` on a push): the instance is created with them.
 `PUT /admin/numbers/:id/evolution/config` saves (audited, the line config reloads), then pushes; `POST …/sync`
 pushes again; `GET …/sync` only reads back. The instance is checked first with its own key; when Evolution does not
 know it (404) it is created with the global key (`/instance/create`, `qrcode: false`: nothing is linked until an
-admin scans the QR). Each part answers `synced`, `drift` (read back different), `failed` or `skipped`; the number
-shows «متزامن» only when every part is synced or skipped. The kill switch is the number's `enabled`; the lines are
+admin scans the QR). Each part answers `synced`, `drift` (read back different), `failed`, `skipped` (not pushed: the
+instance failed first) or `disabled` (the webhook pushed as off: no inbound); the number shows «متزامن» only when
+**every part is `synced`**. A push or read-back that throws first stores `synced: false` with every part `failed`, so
+an older «متزامن» never outlives it; after a save the 409 / 502 body carries `saved: true` («حُفظت الإعدادات ولم تُرسل»).
+Renaming the instance (`phone_number_id`) clears `evolution_sync`. Enabling a number whose webhook part is not
+`synced` is confirmed first. The instance token cannot be changed from the platform (Evolution keeps the one it was
+created with): the token row says so; to change it, delete the instance in Evolution's manager and save again (it is
+recreated with the global key). Admin errors: 502 `evolution_auth` (401 / 403), 502 `evolution_rejected` (any other
+4xx, with Evolution's own message as `detail`), 502 `evolution_unreachable` (5xx, timeout, network). The kill switch is the number's `enabled`; the lines are
 its `purpose`; automatic sends are `evolution_auto_sends`. No value is ever logged or returned. Every call goes through the runtime
 HTTP client with `redirect: 'error'`: a 3xx is never followed, so the base is the only host the API ever calls.
 
@@ -599,12 +613,19 @@ Kapso keeps its own path.
   line's rows): one Baileys number keeps at least its `limits.gap_ms` between two sends to **different** recipients.
   At claim time (`sender/pace/`) a row that must wait is moved to later (`next_attempt_at`, no attempt counted) and the
   pass goes on, so Kapso, CRM and Meta rows are never delayed. Replies in one chat are not delayed. Nothing is dropped.
+  A deferral moves **every** queued row to that recipient on that number together (one conversation keeps its
+  created_at order) and a recipient keeps its slot while it is ahead; every slot is a wake-up, re-armed after each
+  fires, so a backlog drains one gap apart instead of waiting for the 30 s poll.
 - **Daily cap**: past `limits.daily_cap` sends in a UTC day the row moves to the next UTC midnight.
-- **Restriction (463 / 475)**: WhatsApp refuses a fresh or flagged number LATER, as a `MESSAGES_UPDATE` with status
-  `ERROR` and `messageStubParameters` `["463"]` (or 475), after Evolution accepted the send. That row fails
-  `evolution_restricted`, the number is **switched off** at once (not default, state `refused`; only an admin turns it
-  back on), its queued rows fail `evolution_number_off`, and the admins' bell rings once a day. A 401 / 403 from
-  Evolution stays an auth problem (`evolution_auth`, the queue held) and never switches a number off.
+- **Too many ERRORs (restriction)**: WhatsApp refuses a fresh or flagged number LATER, after Evolution accepted the
+  send. Evolution's `MESSAGES_UPDATE` carries no WhatsApp code (no `messageStubParameters`), so the signal is an
+  `ERROR` status on a `fromMe` update for one of OUR sends (`keyId` = the row's `wa_message_id`): that row fails
+  `evolution_error`. `limits.error_trip` of them (default 3) sent within 15 min, none sent before the number was last
+  enabled, switch the number **off** at once (not default, state `refused`; only an admin turns it back on), its queued
+  rows fail `evolution_number_off`, and the admins' bell rings once a day. The guard is `wa_numbers.evolution_enabled_at`
+  (a trigger sets it only on the off → on edge), never `updated_at`, so a state, sync or health write between the send
+  and its ERROR cannot cancel it, and a replayed webhook never undoes an admin's enable. A 401 / 403 from Evolution
+  stays an auth problem (`evolution_auth`, the queue held) and never switches a number off.
 - **A number that cannot send**: a session row pinned to an Evolution number that is off (disabled, restricted, no
   config) fails `evolution_number_off` instead of waiting forever; removing an Evolution number fails its queued rows
   the same way. Staff resend them.
@@ -635,9 +656,9 @@ instance. No workflow references it.
 2. «التكاملات» › Evolution: `EVOLUTION_API_BASE` (`http://evolution-api:8080`), `EVOLUTION_INTERNAL_HOSTS`
    (`evolution-api`), `EVOLUTION_API_KEY`.
 3. «الأرقام»: add the **secondary** number (never the academy's main chat number), driver Evolution, instance name,
-   Baileys; save its token; keep it disabled. «إعدادات Evolution»: the webhook URL (our
-   `/webhooks/evolution/<instance>`), keep the safe defaults, save → the API creates the instance and pushes everything
-   («متزامن»).
+   Baileys; save its token; keep it disabled. «إعدادات Evolution»: keep the webhook on with the internal origin
+   (`http://ayat-lb:8080`: `ayat-lb` must join the `ayat-evolution` network, `deploy/evolution/README.md` §1) or pick the
+   public one, keep the safe defaults, save → the API creates the instance and pushes everything («متزامن»).
 4. Press **QR** and scan it with the secondary phone, then «افحص الاتصال» → «متصل».
 5. Test one message to a number in `WA_ALLOWED_RECIPIENTS`, then enable the number (make it the default only on purpose).
 6. To go back: disable the number or switch its driver. Nothing else changes.

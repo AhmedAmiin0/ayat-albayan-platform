@@ -46,6 +46,7 @@ export const evolutionPart = (patch: Partial<NumberEvolutionView> = {}): NumberE
   state_at: AT,
   config: evolutionConfigSchema.parse({}),
   sync: null,
+  hook_url: 'http://ayat-lb:8080/webhooks/evolution/academy-staff',
   ...patch,
 });
 

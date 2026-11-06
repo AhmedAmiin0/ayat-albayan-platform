@@ -29,19 +29,30 @@ export const EVOLUTION_DAILY_CAP_DEFAULT = 60;
 
 /** A host name or IPv4 (no scheme, no port, no path). */
 const HOST_RE = /^[A-Za-z0-9.-]{1,100}$/;
-/**
- * A webhook URL: https to a host NAME (never an IP spelling), or http to localhost or a one-word
- * docker service (a letter, never `0x…`). The API also requires our own path (evolutionHookPath).
- */
-const HOOK_RE = /^(https:\/\/([a-z0-9-]{1,63}\.)+[a-z][a-z0-9-]{0,62}|http:\/\/(localhost|127\.0\.0\.1|(?!0x)(?=[a-z0-9_-]*[a-z])[a-z0-9_-]{1,63}))(:\d{1,5})?\/[A-Za-z0-9._~/-]*$/;
 
-/** The only path a number's webhook may point at: our route for its own instance. */
+/** The typing delay's cap: it runs inside the send call, which holds the one sender loop. */
+export const EVOLUTION_DELAY_MAX = 2_000;
+/** WhatsApp ERRORs on our sends within this window that switch the number off (default 3). */
+export const EVOLUTION_ERROR_WINDOW_MS = 15 * 60_000;
+export const EVOLUTION_ERROR_TRIP_DEFAULT = 3;
+
+/**
+ * Where Evolution posts a number's events: never typed by an admin (the header carries the
+ * instance token). `internal` = the stack's load balancer on the docker network, `public` = the
+ * API's public origin (API_PUBLIC_URL). The server builds the URL; the UI only shows it.
+ */
+export const EVOLUTION_HOOK_ORIGINS = ['internal', 'public'] as const;
+export type EvolutionHookOrigin = (typeof EVOLUTION_HOOK_ORIGINS)[number];
+/** deploy/staging: ayat-lb listens on :8080 and balances the API copies (docs/09). */
+export const EVOLUTION_HOOK_INTERNAL = 'http://ayat-lb:8080';
+
+/** The only path a number's webhook points at: our route for its own instance. */
 export const evolutionHookPath = (instance: string): string =>
   `/webhooks/evolution/${encodeURIComponent(instance)}`;
 
-/** The URL ends with our route for this instance (no other path receives its token). */
-export const hookIsOurs = (url: string | null, instance: string): boolean =>
-  url === null || /^https?:\/\/[^/]+(\/.*)$/.exec(url)?.[1] === evolutionHookPath(instance);
+/** The webhook URL for an origin (null = that origin is not configured: nothing is pushed). */
+export const evolutionHookUrl = (origin: string | null, instance: string): string | null =>
+  (origin === null ? null : `${origin}${evolutionHookPath(instance)}`);
 
 /** /settings/set: Evolution's instance behaviour (groups ignored, nothing automatic). */
 export const evolutionBehaviourSchema = z.object({
@@ -54,17 +65,17 @@ export const evolutionBehaviourSchema = z.object({
   sync_full_history: z.boolean().default(false),
 });
 
-/** /webhook/set. url null = not pushed yet (the form names our path). */
-export const evolutionWebhookSchema = z
-  .object({
-    enabled: z.boolean().default(true),
-    url: z.string().trim().max(500).regex(HOOK_RE, 'webhook_url').nullable().default(null),
-    by_events: z.boolean().default(false),
-    base64: z.boolean().default(false),
-    events: z.array(z.enum(EVOLUTION_EVENTS)).min(1).max(EVOLUTION_EVENTS.length)
-      .default([...EVOLUTION_DEFAULT_EVENTS]),
-  })
-  .refine((w) => !w.enabled || w.url !== null, { message: 'webhook_url', path: ['url'] });
+/**
+ * /webhook/set: on by default (no inbound without it). The URL is the server's (origin + our
+ * path); byEvents and base64 are always false (a per-event path is 404 here, base64 media passes
+ * the body limit), so neither is an option.
+ */
+export const evolutionWebhookSchema = z.object({
+  enabled: z.boolean().default(true),
+  origin: z.enum(EVOLUTION_HOOK_ORIGINS).default('internal'),
+  events: z.array(z.enum(EVOLUTION_EVENTS)).min(1).max(EVOLUTION_EVENTS.length)
+    .default([...EVOLUTION_DEFAULT_EVENTS]),
+});
 
 /** /proxy/set (the password is the number secret evolution_proxy_password). */
 export const evolutionProxySchema = z
@@ -79,16 +90,17 @@ export const evolutionProxySchema = z
     message: 'proxy_needed', path: ['host'],
   });
 
-/** Each send: the typing delay (sendText `delay`) and the link preview. */
+/** Each send: the typing delay (sendText `delay`, capped) and the link preview. */
 export const evolutionSendingSchema = z.object({
-  delay_ms: z.number().int().min(0).max(15_000).default(0),
+  delay_ms: z.number().int().min(0).max(EVOLUTION_DELAY_MAX).default(0),
   link_preview: z.boolean().default(false),
 });
 
-/** The platform's own knobs: pacing gap and daily cap of sends (Baileys). */
+/** The platform's own knobs: pacing gap, daily cap (Baileys), ERRORs that switch it off. */
 export const evolutionLimitsSchema = z.object({
   gap_ms: z.number().int().min(0).max(60_000).default(EVOLUTION_GAP_DEFAULT),
   daily_cap: z.number().int().min(1).max(10_000).default(EVOLUTION_DAILY_CAP_DEFAULT),
+  error_trip: z.number().int().min(1).max(50).default(EVOLUTION_ERROR_TRIP_DEFAULT),
 });
 
 /** A Cloud instance's Meta ids (its access token is the secret evolution_cloud_token). */
@@ -100,7 +112,7 @@ export const evolutionCloudSchema = z.object({
 /** PUT /admin/numbers/:id/evolution/config, and wa_numbers.evolution_config. */
 export const evolutionConfigSchema = z.object({
   behaviour: evolutionBehaviourSchema.default(evolutionBehaviourSchema.parse({})),
-  webhook: evolutionWebhookSchema.default(evolutionWebhookSchema.parse({ enabled: false })),
+  webhook: evolutionWebhookSchema.default(evolutionWebhookSchema.parse({})),
   proxy: evolutionProxySchema.default(evolutionProxySchema.parse({})),
   sending: evolutionSendingSchema.default(evolutionSendingSchema.parse({})),
   limits: evolutionLimitsSchema.default(evolutionLimitsSchema.parse({})),

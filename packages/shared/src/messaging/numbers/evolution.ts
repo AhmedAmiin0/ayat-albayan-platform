@@ -29,6 +29,8 @@ export interface NumberEvolutionView {
   /** Every option of the number (no secret), and the last push read back (null = never). */
   config: EvolutionConfig;
   sync: EvolutionSyncView | null;
+  /** The webhook URL the server pushes (read-only; null = its origin is not configured). */
+  hook_url: string | null;
 }
 
 /** GET /admin/numbers/:id/evolution/state («افحص الاتصال»): Evolution's connectionState now. */

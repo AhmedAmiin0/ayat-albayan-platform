@@ -34,13 +34,17 @@ describe('«إعدادات Evolution»', () => {
     expect(field(dialog, c.behaviour.groups_ignore).checked).toBe(true);
     expect(field(dialog, 'MESSAGES_UPSERT').checked).toBe(true);
     expect(field(dialog, 'CHATS_SET').checked).toBe(false);
-    expect(within(dialog).getByText(c.webhook.urlHint.replace('{{path}}', '/webhooks/evolution/academy-staff'))).toBeTruthy();
+    expect(field(dialog, c.webhook.url).value).toBe('http://ayat-lb:8080/webhooks/evolution/academy-staff');
+    expect(field(dialog, c.webhook.url).readOnly).toBe(true);
     expect(within(dialog).getByLabelText(t.numbers.fields.evolution_proxy_password)).toBeTruthy();
     expect(within(dialog).queryByText(c.sections.cloud)).toBeNull();
   });
 
-  it('Cloud: the Meta ids and the access token row', () => {
+  it('Cloud: the Meta ids and the access token row; empty ids are refused before any call', () => {
     const dialog = open(evolutionPart({ mode: 'cloud' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: c.save }));
+    expect(within(dialog).getAllByText(c.errors.cloud_needed)).toHaveLength(2);
+    expect(apiFetch).not.toHaveBeenCalled();
     expect(within(dialog).getByText(c.sections.cloud)).toBeTruthy();
     expect(field(dialog, c.cloud.phone_number_id)).toBeTruthy();
     expect(within(dialog).getByLabelText(t.numbers.fields.evolution_cloud_token)).toBeTruthy();
@@ -71,20 +75,18 @@ describe('«إعدادات Evolution»', () => {
     expect(apiFetch).not.toHaveBeenCalled();
   });
 
-  it('turning events on fills our suggested URL; a bad URL is said under the field', () => {
-    const dialog = open();
+  it('no public origin configured: the URL says so; turning events off explains the cost', () => {
+    const dialog = open(evolutionPart({ hook_url: null }));
+    expect(within(dialog).getByText(c.webhook.urlNone)).toBeTruthy();
     fireEvent.click(field(dialog, c.webhook.enabled));
-    expect(field(dialog, c.webhook.url).value).toBe('http://api.test/webhooks/evolution/academy-staff');
-    fireEvent.change(field(dialog, c.webhook.url), { target: { value: 'not a url' } });
-    fireEvent.click(within(dialog).getByRole('button', { name: c.save }));
-    expect(within(dialog).getByText(c.errors.webhook_url)).toBeTruthy();
-    expect(apiFetch).not.toHaveBeenCalled();
+    expect(within(dialog).getByText(c.webhook.offHint)).toBeTruthy();
   });
 
   it('a refusal from Evolution is said in words (502 evolution_unreachable)', async () => {
     const dialog = open();
-    apiFetch.mockRejectedValue(new ApiError(502, { code: 'evolution_unreachable' }));
+    apiFetch.mockRejectedValue(new ApiError(502, { code: 'evolution_unreachable', saved: true }));
     fireEvent.click(within(dialog).getByRole('button', { name: c.save }));
-    expect(await within(dialog).findByText(e.errors.evolution_unreachable)).toBeTruthy();
+    const words = `${e.errors.savedNotPushed} ${e.errors.evolution_unreachable}`;
+    expect(await within(dialog).findByText(words)).toBeTruthy();
   });
 });

@@ -8,6 +8,7 @@ import { numberErrorText } from '@/features/messaging/numbers/form/number-errors
 import { deleteNumber, updateNumber } from '@/features/messaging/numbers/numbers-api';
 import { NumberFormDialog } from '@/features/messaging/numbers/form/NumberFormDialog';
 import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mutation';
+import { toggleAsk } from './enable-ask';
 
 const a = t.numbers.actions;
 
@@ -29,7 +30,12 @@ export function NumberActions({ view }: { view: NumberView }) {
     patch.reset();
     setAsking({ body, text });
   };
-  const toggle = () => (view.enabled && view.is_default ? ask({ enabled: false }, a.confirmDisableDefault) : set({ enabled: !view.enabled }));
+  const toggle = () => {
+    const text = toggleAsk(view);
+    const body = { enabled: !view.enabled };
+    if (text === null) set(body);
+    else ask(body, text);
+  };
   return (
     <div className="grid gap-2">
       <div className="flex flex-wrap items-center gap-2">

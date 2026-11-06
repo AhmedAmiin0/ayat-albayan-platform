@@ -1,5 +1,6 @@
-import type {
-  EvolutionConfig, EvolutionSyncPart, EvolutionSyncState, EvolutionSyncView,
+import {
+  evolutionSynced, type EvolutionConfig, type EvolutionSyncPart, type EvolutionSyncState,
+  type EvolutionSyncView,
 } from '@ab/shared';
 import { z } from 'zod';
 import type { EvolutionLineEnv } from '@/config/env/env';
@@ -24,6 +25,8 @@ export interface PushTarget {
   /** token = the instance key (Vault). Holds secrets: never log. */
   env: EvolutionLineEnv;
   config: EvolutionConfig;
+  /** The webhook URL the server built for the CURRENT instance (null = its origin is unset). */
+  hookUrl: string | null;
   /** The server's global key: only to create a missing instance. */
   globalKey: string | null;
   proxyPassword: string | null;
@@ -63,23 +66,29 @@ async function ensureInstance(t: PushTarget): Promise<EvolutionSyncState> {
 
 interface Part<S extends z.ZodType> {
   route: string;
+  /** null = nothing to push (the webhook's origin is unset): the part failed. */
   body: () => B.Body | null;
   found: S;
-  match: (found: z.output<S>, c: EvolutionConfig) => boolean;
+  match: (found: z.output<S>) => boolean;
 }
+
+/** The webhook body, only with the server-built URL. */
+const hookBody = (t: PushTarget): B.Body | null =>
+  (t.hookUrl === null ? null : B.webhookBody(t.config, { url: t.hookUrl, token: t.env.token }));
 
 const PARTS = (t: PushTarget) => ({
   settings: {
-    route: 'settings', found: B.settingsFound, match: settingsMatch,
-    body: () => B.settingsBody(t.config),
+    route: 'settings', found: B.settingsFound, body: () => B.settingsBody(t.config),
+    match: (f: z.output<typeof B.settingsFound>) => settingsMatch(f, t.config),
   },
   webhook: {
-    route: 'webhook', found: B.webhookFound, match: webhookMatch,
-    body: () => (t.config.webhook.url === null ? null : B.webhookBody(t.config, t.env.token)),
+    route: 'webhook', found: B.webhookFound, body: () => hookBody(t),
+    match: (f: z.output<typeof B.webhookFound>) =>
+      t.hookUrl !== null && webhookMatch(f, { config: t.config, url: t.hookUrl }),
   },
   proxy: {
-    route: 'proxy', found: B.proxyFound, match: proxyMatch,
-    body: () => B.proxyBody(t.config, t.proxyPassword),
+    route: 'proxy', found: B.proxyFound, body: () => B.proxyBody(t.config, t.proxyPassword),
+    match: (f: z.output<typeof B.proxyFound>) => proxyMatch(f, t.config),
   },
 });
 
@@ -90,12 +99,12 @@ async function part<S extends z.ZodType>(
   push: boolean,
 ): Promise<EvolutionSyncState> {
   const json = p.body();
-  if (json === null) return 'skipped';
+  if (json === null) return 'failed';
   try {
     const set = { path: path(t, `${p.route}/set`), method: 'POST' as const, json, schema: anyBody };
     if (push) await http(t).json(set);
     const found = await http(t).json({ path: path(t, `${p.route}/find`), schema: p.found });
-    return p.match(found, t.config) ? 'synced' : 'drift';
+    return p.match(found) ? 'synced' : 'drift';
   } catch {
     return 'failed';
   }
@@ -103,10 +112,14 @@ async function part<S extends z.ZodType>(
 
 type Parts = Record<EvolutionSyncPart, EvolutionSyncState>;
 const viewOf = (parts: Parts, now: Date): EvolutionSyncView => ({
-  synced: Object.values(parts).every((s) => s === 'synced' || s === 'skipped'),
+  synced: evolutionSynced(parts),
   checked_at: now.toISOString(),
   parts,
 });
+
+/** A webhook read back as pushed but switched off: no inbound, so never «متزامن». */
+const hookState = (state: EvolutionSyncState, c: EvolutionConfig): EvolutionSyncState =>
+  (state === 'synced' && !c.webhook.enabled ? 'disabled' : state);
 
 /** push = set then read back; otherwise read back only (GET …/evolution/sync). */
 export async function syncEvolution(
@@ -120,5 +133,5 @@ export async function syncEvolution(
   const [settings, webhook, proxy] = await Promise.all([
     run(parts.settings), run(parts.webhook), run(parts.proxy),
   ]);
-  return viewOf({ instance, settings, webhook, proxy }, at.now);
+  return viewOf({ instance, settings, webhook: hookState(webhook, t.config), proxy }, at.now);
 }

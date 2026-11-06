@@ -36,24 +36,27 @@ const dayStart = (now: Date): Date => new Date(Math.floor(now.getTime() / DAY_MS
 
 type Pace = NonNullable<ReturnType<PaceSource['pace']>>;
 
-/** When the row may go: null = now; else its own slot after the gap, or the next UTC day. */
+/** When the row may go: null = now; else its recipient's slot after the gap, or the next day. */
 async function laterOf(repo: EvolutionPaceRepo, at: PaceAt & Pace) {
-  const earliest = Math.max(at.now.getTime(), Date.now()) + at.waitMs;
-  const slot = (): Date => new Date(reserveSlot(at.route.numberId, { earliest, gapMs: at.gapMs }));
-  if (at.waitMs > 0) return slot();
+  const now = Math.max(at.now.getTime(), Date.now());
+  const slotAt = { earliest: now + at.waitMs, gapMs: at.gapMs, phone: at.row.phone_e164, now };
+  if (at.waitMs > 0) return new Date(reserveSlot(at.route.numberId, slotAt));
   const start = dayStart(at.now);
   const sent = await repo.sentSince(at.route.numberId, start);
   return sent >= at.dailyCap ? new Date(start.getTime() + DAY_MS) : null;
 }
 
-/** true = the row was moved to later (not claimed, not sent this pass). */
+/**
+ * true = the row was moved to later (not claimed, not sent this pass), together with every other
+ * queued row to the same recipient on this number (review fix 7: one conversation keeps its order).
+ */
 export async function pacedLater(deps: PaceDeps, at: PaceAt): Promise<boolean> {
   const { repo } = deps;
   const pace = repo ? deps.dispatch.pace(at.row, at.route) : null;
   if (!pace || !repo) return false;
   const later = await laterOf(repo, { ...at, ...pace });
   if (!later) return false;
-  await repo.defer(at.row.id, later);
+  await repo.deferRecipient({ numberId: at.route.numberId, phone: at.row.phone_e164, at: later });
   wakeAt(later.getTime());
   return true;
 }

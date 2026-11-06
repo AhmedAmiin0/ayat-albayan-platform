@@ -25,7 +25,7 @@ describe('migration 998: sticker favourites and the GIPHY key', () => {
   it('integration_secret_key_ok lists the shared secret keys of its day, GIPHY_API_KEY included', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(sql)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
-    // EVOLUTION_API_KEY came later (20261106000500).
+    // EVOLUTION_API_KEY came later (20261106000700).
     const ofItsDay = INTEGRATION_SECRET_KEYS.filter((k) => !k.startsWith('EVOLUTION_'));
     expect(listed.sort()).toEqual([...ofItsDay].sort());
     expect(code).toContain('revoke execute on function public.integration_secret_key_ok(text) from public, anon, authenticated;');

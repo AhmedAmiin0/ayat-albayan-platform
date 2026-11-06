@@ -4,6 +4,7 @@ import type { InboundEvent, StatusEvent } from '@/modules/messaging/webhook/webh
 import type { Receiving } from '@/modules/messaging/webhook/lines/webhook.lines';
 import { evolutionMetaMessage } from './webhook.evolution-message';
 import { toInbound } from './webhook.parse';
+import { EVOLUTION_SEND_ERROR } from '@/modules/messaging/numbers';
 
 // What POST /webhooks/evolution/:instance reads out of Evolution API v2's webhook (docs/19
 // «Evolution driver», src/api/integrations/event/webhook/webhook.controller.ts):
@@ -19,37 +20,26 @@ const envelopeSchema = z.object({
 /** Evolution's event names: «messages.upsert» (and the MESSAGES_UPSERT spelling of byEvents). */
 const eventName = (raw: string): string => raw.toLowerCase().replace(/[_-]/g, '.');
 
-/** WhatsApp's refusal codes, given later as stub parameters (ERROR after an accepted send). */
-const stubSchema = z.array(z.union([z.string(), z.number()])).max(20).optional();
-
 /** MESSAGES_UPDATE item: one message's new status (fromMe = our outbound). */
 const updateSchema = z.object({
   keyId: z.string().min(1).max(200),
   fromMe: z.boolean().optional(),
   status: z.string(),
-  messageStubParameters: stubSchema.catch(undefined),
-  update: z.looseObject({ messageStubParameters: stubSchema.catch(undefined) })
-    .optional().catch(undefined),
 });
 type Update = z.infer<typeof updateSchema>;
 
-/**
- * 463 / 475: WhatsApp restricted the number (the trusted-contact / spam rules). It arrives as a
- * late ERROR, never as an HTTP error: the row fails `evolution_restricted` and the number goes off.
- */
-export const EVOLUTION_RESTRICTED = 'evolution_restricted';
-const RESTRICTION_CODES: ReadonlySet<string> = new Set(['463', '475']);
-
-const stubOf = (u: Update): (string | number)[] =>
-  [...(u.messageStubParameters ?? []), ...(u.update?.messageStubParameters ?? [])];
-
 const NO_FAILURE = { errorCode: null, errorText: null };
+const SEND_ERROR = {
+  errorCode: EVOLUTION_SEND_ERROR,
+  errorText: 'WhatsApp answered ERROR for this message (not delivered); resend it',
+};
 
-function failureOf(u: Update): Pick<StatusEvent, 'errorCode' | 'errorText'> {
-  const code = stubOf(u).map(String).find((c) => RESTRICTION_CODES.has(c));
-  if (!code || u.status !== 'ERROR') return NO_FAILURE;
-  return { errorCode: EVOLUTION_RESTRICTED, errorText: `WhatsApp refused the send (${code}): restricted` };
-}
+/**
+ * ERROR on one of our sends (review fix 3: Evolution's MESSAGES_UPDATE carries no WhatsApp code):
+ * that row fails `evolution_error`; too many in 15 min switch the number off (restriction).
+ */
+const failureOf = (u: Update): Pick<StatusEvent, 'errorCode' | 'errorText'> =>
+  (u.status === 'ERROR' ? SEND_ERROR : NO_FAILURE);
 
 /** Evolution's (Baileys') status spelling → our delivery ticks. */
 const TICK: Readonly<Record<string, StatusEvent['status']>> = {
@@ -64,6 +54,13 @@ const TICK: Readonly<Record<string, StatusEvent['status']>> = {
 function own<T>(table: Readonly<Record<string, T>>, key: string): T | undefined {
   return Object.hasOwn(table, key) ? table[key] : undefined;
 }
+
+/** An ERROR only on a message marked ours (fromMe true): it may switch the number off. */
+const errorOfOurs = (u: Update): boolean => u.status !== 'ERROR' || u.fromMe === true;
+
+/** The tick of an update about our message (never fromMe false); undefined = not read. */
+const tickOf = (u: Update): StatusEvent['status'] | undefined =>
+  (u.fromMe !== false && errorOfOurs(u) ? own(TICK, u.status) : undefined);
 
 const connectionSchema = z.object({ state: z.string().optional() });
 
@@ -88,7 +85,7 @@ function inbound(data: unknown, at: { now: Date; where: Receiving }): EvolutionD
 function statuses(data: unknown, at: { now: Date; where: Receiving }): EvolutionDelivery {
   const events = asList(data).flatMap((raw): StatusEvent[] => {
     const u = updateSchema.safeParse(raw);
-    const status = u.success && u.data.fromMe !== false ? own(TICK, u.data.status) : undefined;
+    const status = u.success ? tickOf(u.data) : undefined;
     if (!u.success || !status) return [];
     const base = { waMessageId: u.data.keyId, status, at: at.now, ...failureOf(u.data) };
     return [{ ...base, conversationId: null, pricingCategory: null, ...at.where }];

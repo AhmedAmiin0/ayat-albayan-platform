@@ -54,8 +54,7 @@ export function EvolutionConfigDialog({ view, evolution, onClose }: EvolutionCon
           value={draft.webhook}
           errors={errors}
           onChange={set('webhook')}
-          path={form.path}
-          suggestion={form.suggestion}
+          hookUrl={evolution.hook_url}
         />
         <ProxySection value={draft.proxy} errors={errors} onChange={set('proxy')} view={view} />
         <SendingSection value={draft.sending} errors={errors} onChange={set('sending')} />

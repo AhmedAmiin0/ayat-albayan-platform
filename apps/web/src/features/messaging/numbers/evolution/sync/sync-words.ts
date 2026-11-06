@@ -26,6 +26,7 @@ export const SYNC_STATE_STYLE: Record<EvolutionSyncState, { tone: Tone; glyph: G
   drift: { tone: 'act', glyph: 'half' },
   failed: { tone: 'bad', glyph: 'struck' },
   skipped: { tone: 'neutral', glyph: 'hollow' },
+  disabled: { tone: 'act', glyph: 'hollow' },
 };
 
 /** Each part pushed (instance, settings, webhook, proxy) with its state, in a fixed order. */

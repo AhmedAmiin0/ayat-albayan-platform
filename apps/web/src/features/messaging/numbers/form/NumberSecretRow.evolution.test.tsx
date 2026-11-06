@@ -25,6 +25,12 @@ describe('a number’s secret rows follow its driver', () => {
     expect(within(card).queryByLabelText(f.app_secret)).toBeNull();
   });
 
+  it('a saved instance token warns that replacing it cuts the instance', async () => {
+    renderPanel(apiFetch, { numbers: [evolutionView()] });
+    const card = await screen.findByRole('article', { name: 'Staff chat line' });
+    expect(within(card).getByText(t.numbers.secret.evolutionTokenWarning)).toBeTruthy();
+  });
+
   it('Evolution Cloud: the Cloud access token too', async () => {
     const evolution = evolutionPart({ mode: 'cloud' });
     renderPanel(apiFetch, { numbers: [evolutionView({ evolution })] });

@@ -1,15 +1,16 @@
 import { EVOLUTION_DEFAULT_EVENTS, type EvolutionConfig, type NumberView } from '@ab/shared';
 
 // «إعدادات Evolution» as typed: numbers stay text until submit (an emptied field is null, so the
-// schema names it), ids and the URL are text ('' = null). config-check.ts parses it with zod.
+// schema names it), ids are text ('' = null). config-check.ts parses it with zod. The webhook URL
+// is never typed: the server builds it (NumberEvolutionView.hook_url, shown read-only).
 
 type Cfg = EvolutionConfig;
 export interface ConfigDraft {
   behaviour: Cfg['behaviour'];
-  webhook: Omit<Cfg['webhook'], 'url'> & { url: string };
+  webhook: Cfg['webhook'];
   proxy: Omit<Cfg['proxy'], 'port'> & { port: string };
   sending: { delay_ms: string; link_preview: boolean };
-  limits: { gap_ms: string; daily_cap: string };
+  limits: { gap_ms: string; daily_cap: string; error_trip: string };
   cloud: { phone_number_id: string; business_id: string };
 }
 export type ConfigSection = keyof ConfigDraft;
@@ -30,25 +31,20 @@ export interface SecretSectionProps<K extends ConfigSection> extends SectionProp
   view: NumberView;
 }
 
-/** Our inbound route for this instance: what Evolution must POST its events to. */
-export const hookPathOf = (instance: string) => `/webhooks/evolution/${encodeURIComponent(instance)}`;
-
-/** The suggested webhook URL: the API's address with our path (offered only on an empty field). */
-export const suggestedHookUrl = (apiUrl: string, instance: string) =>
-  `${apiUrl.replace(/\/+$/, '')}${hookPathOf(instance)}`;
-
 const text = (n: number | null): string => (n === null ? '' : String(n));
 
-/** The saved options as the form shows them; a missing URL is suggested only when events go out. */
-export function draftOfConfig(config: Cfg, suggestion: string): ConfigDraft {
+/** The saved options as the form shows them. */
+export function draftOfConfig(config: Cfg): ConfigDraft {
   const { webhook, proxy, sending, limits, cloud } = config;
-  const url = webhook.url ?? (webhook.enabled ? suggestion : '');
   return {
     behaviour: config.behaviour,
-    webhook: { ...webhook, url },
+    webhook,
     proxy: { ...proxy, port: text(proxy.port) },
     sending: { delay_ms: text(sending.delay_ms), link_preview: sending.link_preview },
-    limits: { gap_ms: text(limits.gap_ms), daily_cap: text(limits.daily_cap) },
+    limits: {
+      gap_ms: text(limits.gap_ms), daily_cap: text(limits.daily_cap),
+      error_trip: text(limits.error_trip),
+    },
     cloud: { phone_number_id: cloud.phone_number_id ?? '', business_id: cloud.business_id ?? '' },
   };
 }
@@ -59,13 +55,6 @@ export const patchSection = <K extends ConfigSection>(
   key: K,
   patch: Partial<ConfigDraft[K]>,
 ): ConfigDraft => ({ ...draft, [key]: { ...draft[key], ...patch } });
-
-/** Turning the webhook on with an empty URL fills in our suggested one; off keeps the URL typed. */
-export function toggleHook(webhook: ConfigDraft['webhook'], suggestion: string) {
-  const enabled = !webhook.enabled;
-  const url = enabled && webhook.url.trim() === '' ? suggestion : webhook.url;
-  return { enabled, url };
-}
 
 /** «استعادة الأحداث الافتراضية»: what the platform reads. */
 export const defaultEvents = () => [...EVOLUTION_DEFAULT_EVENTS];

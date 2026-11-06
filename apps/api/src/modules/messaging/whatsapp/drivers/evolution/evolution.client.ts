@@ -11,10 +11,10 @@ import { evolutionHttp, evolutionPath, type EvolutionConn } from './evolution-ht
 import { evolutionMedia } from './evolution-media';
 import { evolutionPacer, type EvolutionPacer } from './evolution-pacer';
 import { evolutionUnsupported, notAllowed } from './evolution-refusals';
-
-export { evolutionAutoOff } from './evolution-refusals';
 import { sentSchema } from './evolution-shapes';
 import { templateAsText } from './evolution-template-text';
+
+export { evolutionAutoOff } from './evolution-refusals';
 
 // The Evolution driver (docs/19 «Evolution driver»): a number on a self-hosted Evolution API
 // instance. Baileys (WhatsApp Web): no 24 h window and no templates (a template goes as text),
@@ -28,11 +28,15 @@ interface EvolutionClientOpts {
 }
 
 const DEFAULT_TIMEOUT_MS = 20_000;
+const AFTER_DELAY_MS = 15_000;
+/** The send deadline (Evolution waits `delay`, typing shown, inside the call): ≥ delay + 15 s. */
+export const sendTimeoutMs = (env: Pick<EvolutionLineEnv, 'delayMs'>): number =>
+  Math.max(DEFAULT_TIMEOUT_MS, env.delayMs + AFTER_DELAY_MS);
 
 /** The connection of a configured client (the fetch only when a test passes one). */
 const connOf = (env: EvolutionLineEnv, opts: EvolutionClientOpts): EvolutionConn => ({
   env,
-  timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS,
+  timeoutMs: opts.timeoutMs ?? sendTimeoutMs(env),
   ...(opts.fetch ? { fetch: opts.fetch } : {}),
 });
 

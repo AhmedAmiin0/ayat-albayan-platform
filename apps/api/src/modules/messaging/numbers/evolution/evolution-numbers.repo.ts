@@ -1,12 +1,14 @@
-import type { EvolutionConfig, EvolutionSyncView } from '@ab/shared';
+import { evolutionConfigOf, type EvolutionConfig, type EvolutionSyncView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 
-// An Evolution number's own columns (migration 20261106000500, docs/19 «Evolution driver»): its
+// An Evolution number's own columns (migration 20261106000700, docs/19 «Evolution driver»): its
 // options, the last push read back, and the restriction switch-off. Never a secret.
 
 /** messages.error_code of a row its Evolution number can no longer send (staff resend it). */
 export const EVOLUTION_NUMBER_OFF = 'evolution_number_off';
+/** messages.error_code of one of our sends WhatsApp answered ERROR (MESSAGES_UPDATE). */
+export const EVOLUTION_SEND_ERROR = 'evolution_error';
 /** The sender's claim marker (whatsapp sender/send-plan SENDING): a row being sent right now. */
 const SENDING_MARK = 'sending';
 
@@ -27,10 +29,30 @@ export class EvolutionNumbersRepo {
     if (error) throw new Error(`evolution sync write failed: ${error.message}`);
   }
 
+  /** An enabled Evolution number's ERROR trip and when it was last enabled; null otherwise. */
+  async errorWindow(id: string): Promise<{ trip: number; enabledAt: string } | null> {
+    const { data, error } = await this.db.from('wa_numbers')
+      .select('evolution_config, evolution_enabled_at')
+      .eq('id', id).eq('provider', 'evolution').eq('enabled', true).maybeSingle();
+    if (error) throw new Error(`evolution error window read failed: ${error.message}`);
+    const enabledAt = data?.evolution_enabled_at;
+    if (!data || !enabledAt) return null;
+    return { trip: evolutionConfigOf(data.evolution_config).limits.error_trip, enabledAt };
+  }
+
+  /** Our sends from this number since `since` that WhatsApp answered ERROR. */
+  async countErrors(numberId: string, since: Date): Promise<number> {
+    const { count, error } = await this.db.from('messages').select('id', { count: 'exact', head: true })
+      .eq('number_id', numberId).eq('direction', 'outbound').eq('error_code', EVOLUTION_SEND_ERROR)
+      .gte('sent_at', since.toISOString());
+    if (error) throw new Error(`evolution error count failed: ${error.message}`);
+    return count ?? 0;
+  }
+
   /**
-   * WhatsApp restricted the number (463 / 475): off, no longer the default, state `refused`.
-   * Only an enabled row last changed before the refused message was sent (`sentAt`): an old
-   * webhook replayed after an admin turned it back on changes nothing. true = switched off now.
+   * Too many ERRORs: off, no longer the default, state `refused`. Only an enabled row last
+   * ENABLED (evolution_enabled_at: never bumped by a state, sync or health write) before the
+   * failed send (`sentAt`): a webhook replayed after an admin re-enabled it changes nothing.
    */
   async restrict(id: string, at: { now: Date; sentAt: string }): Promise<boolean> {
     const patch = {
@@ -38,7 +60,8 @@ export class EvolutionNumbersRepo {
       evolution_state_at: at.now.toISOString(),
     };
     const { data, error } = await this.db.from('wa_numbers').update(patch)
-      .eq('id', id).eq('provider', 'evolution').eq('enabled', true).lte('updated_at', at.sentAt)
+      .eq('id', id).eq('provider', 'evolution').eq('enabled', true)
+      .lte('evolution_enabled_at', at.sentAt)
       .select('id');
     if (error) throw new Error(`evolution restrict failed: ${error.message}`);
     return data.length > 0;

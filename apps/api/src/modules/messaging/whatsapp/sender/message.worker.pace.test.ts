@@ -35,7 +35,8 @@ function harness() {
     staffAtSend: vi.fn(async () => null),
   };
   const repo = {
-    defer: vi.fn(async (_id: string, _at: Date) => undefined), sentSince: vi.fn(async () => 0),
+    deferRecipient: vi.fn(async (_at: { numberId: string; phone: string; at: Date }) => undefined),
+    sentSince: vi.fn(async () => 0),
     failOff: vi.fn(async () => undefined),
   };
   const push = { notifyAdmins: vi.fn() } as unknown as PushService;
@@ -67,7 +68,8 @@ describe('MessageWorker — Evolution pacing never blocks other lines', () => {
     expect(await go(text('e2', '+966500000002'), EVO)).toBe('skipped');
     expect(await go(text('k1', '+966500000003'), KAPSO)).toBe('sent');
     expect(performance.now() - started).toBeLessThan(1_000);
-    expect(repo.defer).toHaveBeenCalledWith('e2', new Date(NOW.getTime() + 3_000));
+    const at = new Date(NOW.getTime() + 3_000);
+    expect(repo.deferRecipient).toHaveBeenCalledWith({ numberId: 'evo-1', phone: '+966500000002', at });
     expect(send.mock.calls.map((c) => c[0].phone_e164)).toEqual(['+966500000001', '+966500000003']);
   });
 
@@ -76,7 +78,8 @@ describe('MessageWorker — Evolution pacing never blocks other lines', () => {
     repo.sentSince.mockResolvedValue(60);
     expect(await w.process({ row: text('e3', '+966500000004'), template: null, now: NOW, autoOn: true, route: EVO })).toBe('skipped');
     expect(repo.sentSince).toHaveBeenCalledWith('evo-1', new Date('2026-11-06T00:00:00Z'));
-    expect(repo.defer).toHaveBeenCalledWith('e3', new Date('2026-11-07T00:00:00Z'));
+    const at = new Date('2026-11-07T00:00:00Z');
+    expect(repo.deferRecipient).toHaveBeenCalledWith({ numberId: 'evo-1', phone: '+966500000004', at });
   });
 
   it('a backlog spreads over its own slots, one gap apart (never one crowded batch)', async () => {
@@ -86,8 +89,21 @@ describe('MessageWorker — Evolution pacing never blocks other lines', () => {
     await go('a', '+966500000011');
     await go('b', '+966500000012');
     await go('c', '+966500000013');
-    const offsets = repo.defer.mock.calls.map((c: unknown[]) => Number(c[1]) - NOW.getTime());
+    const offsets = repo.deferRecipient.mock.calls.map((c) => c[0].at.getTime() - NOW.getTime());
     expect(offsets).toEqual([3_000, 6_000]);
+  });
+
+  it('one conversation moves together: its later rows reuse its slot (order kept)', async () => {
+    const { w, repo } = harness();
+    const go = (id: string, phone: string) =>
+      w.process({ row: text(id, phone), template: null, now: NOW, autoOn: true, route: EVO });
+    await go('a', '+966500000021');
+    await go('b1', '+966500000022');
+    await go('c', '+966500000023');
+    await go('b2', '+966500000022');
+    const slots = repo.deferRecipient.mock.calls
+      .map((c) => [c[0].phone, c[0].at.getTime() - NOW.getTime()]);
+    expect(slots).toEqual([['+966500000022', 3_000], ['+966500000023', 6_000], ['+966500000022', 3_000]]);
   });
 
   it('a row pinned to an Evolution number that is off fails visibly (evolution_number_off)', async () => {

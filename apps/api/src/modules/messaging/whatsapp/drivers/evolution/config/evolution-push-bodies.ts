@@ -18,13 +18,16 @@ export function settingsBody(c: EvolutionConfig): Body {
   };
 }
 
-/** POST /webhook/set/{instance}: our route, with the instance key as x-evolution-token. */
-export function webhookBody(c: EvolutionConfig, token: string): Body {
-  const w = c.webhook;
+/**
+ * POST /webhook/set/{instance}: the server-built URL (our route), the instance key as
+ * x-evolution-token. byEvents and base64 are pinned off: a per-event path is 404 on our route
+ * and base64 media passes the API's body limit (413); media keeps the download path.
+ */
+export function webhookBody(c: EvolutionConfig, at: { url: string; token: string }): Body {
   return {
     webhook: {
-      enabled: w.enabled, url: w.url, headers: { 'x-evolution-token': token },
-      byEvents: w.by_events, base64: w.base64, events: [...w.events],
+      enabled: c.webhook.enabled, url: at.url, headers: { 'x-evolution-token': at.token },
+      byEvents: false, base64: false, events: [...c.webhook.events],
     },
   };
 }

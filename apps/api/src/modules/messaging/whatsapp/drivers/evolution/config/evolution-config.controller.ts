@@ -1,4 +1,6 @@
-import { evolutionConfigSchema, type EvolutionConfig, type EvolutionSyncView } from '@ab/shared';
+import {
+  evolutionConfigSchema, evolutionSyncFailed, type EvolutionConfig, type EvolutionSyncView,
+} from '@ab/shared';
 import { Controller, Get, HttpCode, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -31,7 +33,7 @@ export class EvolutionConfigController {
     @CurrentUser() user: AuthUser,
   ): Promise<EvolutionSyncView> {
     await this.numbers.saveConfig({ id, config, actorId: user.id });
-    return this.sync(id, true);
+    return this.sync(id, { push: true, saved: true });
   }
 
   /** Push the saved options again («مزامنة الآن»). */
@@ -39,22 +41,32 @@ export class EvolutionConfigController {
   @HttpCode(200)
   @Permissions('numbers.manage')
   push(@ZodParam('id', ID) id: string): Promise<EvolutionSyncView> {
-    return this.sync(id, true);
+    return this.sync(id, { push: true, saved: false });
   }
 
   /** Read back only («تحقق»): nothing is written to Evolution. */
   @Get('sync')
   @Permissions('numbers.manage')
   verify(@ZodParam('id', ID) id: string): Promise<EvolutionSyncView> {
-    return this.sync(id, false);
+    return this.sync(id, { push: false, saved: false });
   }
 
-  private async sync(id: string, push: boolean): Promise<EvolutionSyncView> {
-    const input = await this.numbers.pushInput(id);
-    const view = await syncEvolution(input, { push, now: new Date() }).catch((e: unknown) => {
-      throw evolutionFailure(e);
-    });
-    await this.numbers.saveSync(id, view);
-    return view;
+  /**
+   * Push (or read back) and keep the answer. Any failure (not configured, refused, unreachable)
+   * first stores «غير متزامن» with every part failed, so an older «متزامن» never outlives it.
+   */
+  private async sync(
+    id: string,
+    at: { push: boolean; saved: boolean },
+  ): Promise<EvolutionSyncView> {
+    const now = new Date();
+    try {
+      const view = await syncEvolution(await this.numbers.pushInput(id), { push: at.push, now });
+      await this.numbers.saveSync(id, view);
+      return view;
+    } catch (e) {
+      await this.numbers.saveSync(id, evolutionSyncFailed(now)).catch(() => undefined);
+      throw evolutionFailure(e, at.saved);
+    }
   }
 }

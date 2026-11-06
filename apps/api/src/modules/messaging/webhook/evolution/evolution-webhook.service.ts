@@ -30,7 +30,7 @@ export class EvolutionWebhookService {
 
   async apply(delivery: Applied, at: At): Promise<void> {
     const failed = await this.items(delivery, at);
-    // A late 463 / 475 (after the rows are marked failed): the number goes off at once.
+    // ERRORs on our sends (after the rows are marked failed): too many switch the number off.
     if (delivery.kind === 'status') await this.restriction.check(delivery.events, at);
     if (failed > 0) throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
   }

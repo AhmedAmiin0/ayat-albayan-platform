@@ -8,12 +8,18 @@
 --    webhook (evolution_state / evolution_state_at). All nullable or defaulted: metadata-only adds.
 -- 3. A number's Vault secrets accept 'evolution_token' (wa_number:<id>:evolution_token).
 -- 4. integration_secret_key_ok: the full list of migration 998 plus EVOLUTION_API_KEY (the server's
---    global key, Vault name integration:EVOLUTION_API_KEY). EVOLUTION_API_BASE / EVOLUTION_SEND_GAP_MS
---    are plain integration_config keys (validated by the API).
+--    global key, Vault name integration:EVOLUTION_API_KEY). EVOLUTION_API_BASE is a plain
+--    integration_config key (validated by the API); the pacing gap is per number
+--    (evolution_config.limits.gap_ms, default 3000).
 -- 5. wa_numbers.evolution_config (every Evolution option of the number, no secret; zod-validated by the
 --    API, an object here) and evolution_sync (the last push read back). The Cloud access token and the
 --    proxy password are number secrets (evolution_cloud_token, evolution_proxy_password).
 -- 6. messages.sent_as_text: a template the Evolution driver sent as plain text (Baileys has no templates).
+-- 7. wa_numbers.evolution_enabled_at: when the number was last switched on (a trigger sets it on
+--    the off → on edge only; state, sync and health writes never touch it). The ERROR auto-disable
+--    ignores errors of sends made before it, so a replayed webhook never undoes an admin's enable.
+-- 8. wa_number_delete removes every Vault entry of the number (wa_number:<id>:%), the Evolution
+--    secrets included.
 --
 -- Expand-only and idempotent. RLS is unchanged (no new table; wa_numbers and messages keep theirs).
 
@@ -54,6 +60,26 @@ alter table public.wa_numbers add constraint wa_numbers_evolution_state_check
 alter table public.wa_numbers validate constraint wa_numbers_evolution_state_check;
 
 alter table public.messages add column if not exists sent_as_text boolean not null default false;
+
+alter table public.wa_numbers add column if not exists evolution_enabled_at timestamptz;
+
+-- Set only when the row becomes enabled (insert enabled, or off → on); every other write keeps it.
+create or replace function public.wa_numbers_evolution_enabled_at() returns trigger
+  language plpgsql set search_path = '' as $$
+begin
+  if new.enabled and (tg_op = 'INSERT' or not old.enabled) then
+    new.evolution_enabled_at := now();
+  end if;
+  return new;
+end;
+$$;
+
+revoke execute on function public.wa_numbers_evolution_enabled_at() from public, anon, authenticated;
+
+drop trigger if exists wa_numbers_evolution_enabled_at on public.wa_numbers;
+create trigger wa_numbers_evolution_enabled_at
+  before insert or update of enabled on public.wa_numbers
+  for each row execute function public.wa_numbers_evolution_enabled_at();
 
 create or replace function public.wa_number_secret_name_ok(p_name text) returns boolean
   language sql immutable set search_path = '' as $$
@@ -98,6 +124,26 @@ $$;
 revoke execute on function public.integration_secret_key_ok(text) from public, anon, authenticated;
 grant execute on function public.integration_secret_key_ok(text) to service_role;
 
+-- Delete a DISABLED number and EVERY Vault entry of it (access_token, app_secret and the Evolution
+-- secrets: any wa_number:<id>:<name>). False = missing or still enabled.
+create or replace function public.wa_number_delete(p_id uuid) returns boolean
+  language plpgsql security definer set search_path = '' as $$
+declare
+  n int;
+begin
+  delete from public.wa_numbers where id = p_id and not enabled;
+  get diagnostics n = row_count;
+  if n = 0 then
+    return false;
+  end if;
+  delete from vault.secrets where name like 'wa_number:' || p_id::text || ':%';
+  return true;
+end;
+$$;
+
+revoke execute on function public.wa_number_delete(uuid) from public, anon, authenticated;
+grant execute on function public.wa_number_delete(uuid) to service_role;
+
 -- MANUAL ROLLBACK (only after the code rollback, and after moving every evolution number off it):
 --   update public.wa_numbers set provider = 'meta', enabled = false, evolution_mode = null
 --     where provider = 'evolution';
@@ -109,4 +155,8 @@ grant execute on function public.integration_secret_key_ok(text) to service_role
 --   alter table public.wa_numbers drop column evolution_mode, drop column evolution_auto_sends,
 --     drop column evolution_state, drop column evolution_state_at;
 --   alter table public.messages drop column sent_as_text;
---   (then re-create wa_numbers_provider_check with 'meta', 'kapso', 'crm', and the functions of 621 / 998)
+--   drop trigger wa_numbers_evolution_enabled_at on public.wa_numbers;
+--   drop function public.wa_numbers_evolution_enabled_at();
+--   alter table public.wa_numbers drop column evolution_enabled_at;
+--   (then re-create wa_numbers_provider_check with 'meta', 'kapso', 'crm', and the functions of 621 / 998;
+--   wa_number_delete of 621 is safe to keep: it only deletes more Vault entries of a deleted number)

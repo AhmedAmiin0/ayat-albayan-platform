@@ -3,6 +3,7 @@ import {
   type LineCheckView, type NumberEvolutionView, type NumberHealth, type NumberView, type WaProvider,
 } from '@ab/shared';
 import type { Json } from '@ab/db';
+import { evolutionHookOf } from '@/config/env/whatsapp/env.evolution';
 import { displayE164 } from '@/modules/messaging/whatsapp/lines/line-health.store';
 import type { NumberRow } from './numbers.repo';
 import type { SecretStatus } from './config/numbers.secrets';
@@ -14,9 +15,11 @@ function evolutionOf(row: NumberRow): NumberEvolutionView | null {
   const mode = EVOLUTION_MODES.find((m) => m === row.evolution_mode);
   if (row.provider !== 'evolution' || !mode) return null;
   const state = evolutionStateOf(row.evolution_state);
+  const config = evolutionConfigOf(row.evolution_config);
   return {
     mode, auto_sends: row.evolution_auto_sends, state, state_at: row.evolution_state_at,
-    config: evolutionConfigOf(row.evolution_config), sync: evolutionSyncOf(row.evolution_sync),
+    config, sync: evolutionSyncOf(row.evolution_sync),
+    hook_url: evolutionHookOf(config, row.phone_number_id),
   };
 }
 

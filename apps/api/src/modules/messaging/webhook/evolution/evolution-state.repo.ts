@@ -2,7 +2,7 @@ import type { EvolutionState } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 
-/** wa_numbers.evolution_state (migration 20261106000500): the last state Evolution reported. */
+/** wa_numbers.evolution_state (migration 20261106000700): the last state Evolution reported. */
 @Injectable()
 export class EvolutionStateRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

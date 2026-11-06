@@ -15,7 +15,7 @@ const evolution: NumberView = {
   phone_number_id: 'academy-staff',
   evolution: {
     mode: 'baileys', auto_sends: false, state: 'open', state_at: null,
-    config: evolutionConfigSchema.parse({}), sync: null,
+    config: evolutionConfigSchema.parse({}), sync: null, hook_url: null,
   },
 };
 
