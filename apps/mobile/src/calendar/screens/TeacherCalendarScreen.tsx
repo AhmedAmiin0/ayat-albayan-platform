@@ -10,7 +10,7 @@ import { locale } from '@/core/lib/i18n/locale';
 import { Note } from '@/core/ui/feedback/Note';
 import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
 import { useNow } from '@/core/lib/time/use-now';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -54,7 +54,7 @@ export function TeacherCalendarScreen() {
       <ScreenHeader
         title={(teacher.data && teacherName(teacher.data, locale)) ?? t.calendar.teacherCalendar}
         subtitle={subtitle}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        leading={<BackButton onPress={() => router.back()} />}
       />
       <PeriodSwitcher
         label={weekLabel(start)}

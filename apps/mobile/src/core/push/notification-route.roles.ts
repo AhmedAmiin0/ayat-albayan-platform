@@ -1,7 +1,7 @@
-import type { PushKind } from '@ab/shared';
+import { OPEN_COURSE, type PushKind } from '@ab/shared';
 import { canOpen } from '@/core/auth/route-permissions';
 import type { Can } from '@/core/auth/use-permissions';
-import { pushKind, pushPhone } from './push-data';
+import { pushField, pushKind, pushPhone } from './push-data';
 
 // The sales and classroom-assistant trees (owner 2026-10-12: a bell in every staff portal). Each
 // map returns only its own tree's routes: never an admin URL, and never a tab the role cannot see.
@@ -53,10 +53,20 @@ const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   payment_received: toSalesStudents,
 };
 
+/**
+ * «احجز أيام الحلقات» (owner 2026-11-06: a package paid with no course): the course wizard of that
+ * student (data `open: 'course'`), from her chats; null when the push is not one.
+ */
+function toSalesCourse(data: unknown, can: Can): string | null {
+  const student = pushField(data, 'studentId');
+  const wizard = pushField(data, 'open') === OPEN_COURSE && student && /^[\w-]+$/.test(student);
+  return wizard && canOpen(can, 'inbox') ? `/sales/inbox/sales-course?studentId=${student}` : null;
+}
+
 /** The sales screen a tapped push opens; null for anything that is not one of our pushes. */
 export function salesRouteFor(data: unknown, can: Can = () => true): string | null {
   const kind = pushKind(data);
-  return kind ? SALES_ROUTES[kind](data, can) : null;
+  return kind ? (toSalesCourse(data, can) ?? SALES_ROUTES[kind](data, can)) : null;
 }
 
 const assistantHome = (can: Can) => (canOpen(can, 'assistantLessons') ? '/assistant/lessons' : '/assistant/more');

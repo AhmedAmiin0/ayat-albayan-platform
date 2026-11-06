@@ -3,6 +3,7 @@ export { AlertsRepo, type Recipient, type RenewalMessage } from './alerts/alerts
 export { UnpaidFlags } from './alerts/unpaid-flags.service';
 export { BalanceRepo, type BalanceRow, emptyBalance, toBalance } from './money/balance.repo';
 export { CommissionBell } from './money/commission-bell';
+export { CourseDue } from './course-due/course-due';
 export { causeOf, MoneyWrites } from './money/money-writes';
 export { PackagesService, type StudentState } from './money/packages.service';
 export { SubscriptionCancelRepo } from './cancel/subscription-cancel.repo';

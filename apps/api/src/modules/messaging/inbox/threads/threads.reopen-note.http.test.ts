@@ -35,15 +35,21 @@ describe('GET /threads, /threads/:phone — try_after_window', () => {
   });
 
   it.each(['admin', 'sales'])('%s: the reopen template usable → offered', async (token) => {
-    t.reopenRequest.usable.mockResolvedValue(true);
+    t.reopenRequest.usable.mockResolvedValue('template');
     const one = (await t.call({ method: 'GET', url: URL, token })).json();
-    expect(one.thread.try_after_window).toBe(true);
+    expect(one.thread).toMatchObject({ try_after_window: true, reopen_choice: 'template' });
     const list = (await t.call({ method: 'GET', url: '/threads', token })).json();
-    expect(list.items[0].try_after_window).toBe(true);
+    expect(list.items[0]).toMatchObject({ try_after_window: true, reopen_choice: 'template' });
+  });
+
+  it.each(['admin', 'sales'])('%s: «بدون قالب» → offered, the note says it waits', async (token) => {
+    t.reopenRequest.usable.mockResolvedValue('wait');
+    const one = (await t.call({ method: 'GET', url: URL, token })).json();
+    expect(one.thread).toMatchObject({ try_after_window: true, reopen_choice: 'wait' });
   });
 
   it.each(['admin', 'sales'])('%s: not usable (unset, not approved) → no note', async (token) => {
-    t.reopenRequest.usable.mockResolvedValue(false);
+    t.reopenRequest.usable.mockResolvedValue(null);
     const one = (await t.call({ method: 'GET', url: URL, token })).json();
     expect(one.thread).not.toHaveProperty('try_after_window');
   });

@@ -29,6 +29,7 @@ import { SubscriptionCancelRepo } from './cancel/subscription-cancel.repo';
 import { AlertsRepo } from './alerts/alerts.repo';
 import { BalanceRepo } from './money/balance.repo';
 import { CommissionBell } from './money/commission-bell';
+import { CourseDueRepo } from './course-due/course-due.repo';
 import { LeadConversion } from './student-lifecycle/lead-conversion';
 import { StudentAccess } from './student-lifecycle/student-access';
 import { StudentActivation } from './student-lifecycle/student-activation';
@@ -67,6 +68,7 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver, mo
     .overrideProvider(LeadConversion).useValue(m.leads)
     .overrideProvider(StudentActivation).useValue(m.activation)
     .overrideProvider(CommissionBell).useValue(m.commissionBell)
+    .overrideProvider(CourseDueRepo).useValue(m.courseDue)
     .overrideProvider(StudentStatusRepo).useValue(m.statuses)
     .overrideProvider(StudentTrialRepo).useValue(m.trials)
     .overrideProvider(AlertsRepo).useValue(m.alerts)

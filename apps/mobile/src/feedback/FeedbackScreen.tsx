@@ -3,7 +3,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
@@ -29,7 +29,7 @@ export function FeedbackScreen() {
     <Screen>
       <ScreenHeader
         title={t.mobile.feedback.title}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        leading={<BackButton onPress={() => router.back()} />}
       />
       <LazyList
         inset={false}

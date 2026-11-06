@@ -2945,6 +2945,11 @@
       "gallery": "Gallery",
       "document": "Document",
       "emojiDone": "Done",
+      "tileShort": {
+        "document": "Document",
+        "replies": "Replies",
+        "emoji": "Emoji"
+      },
       "voice": {
         "record": "Record a voice message",
         "hint": "Hold to record, release to send",
@@ -2973,7 +2978,8 @@
       "stickerSend": "Send sticker"
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
-    "tryAfterWindow": "More than 24 hours since the family's last message: your message waits for their reply, and the welcome template invites them to reply unless it already reached them.",
+    "tryAfterWindow": "We will send the welcome template and send your message when the family replies.",
+    "tryAfterWindowWait": "We will reopen the conversation and send your message when the family replies.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
@@ -3751,7 +3757,8 @@
       "hold_expired": "The wait ended with no reply",
       "window_closed": "More than 24 hours since the family's last message; only a template can be sent",
       "reopen_unavailable": "Not sent: the chat reopen template is not set or not valid — an admin picks it in Settings from the approved templates allowed for restricted roles with no variables",
-      "reopen_failed": "Not sent: the chat reopen template did not reach the family — resend the message to send the template again"
+      "reopen_failed": "Not sent: the chat reopen template did not reach the family — resend the message to send the template again",
+      "reopen_tries_used": "Not sent: today's chat reopen template tries are used up — resend the message tomorrow"
     },
     "cancelManual": "Not yet",
     "failedMenu": "Message not sent",
@@ -4171,7 +4178,7 @@
       "followUpSlotsFromHours": "No slot sooner than this is offered to the lead.",
       "followUpSlotsToDays": "Free slots are offered up to this many days ahead.",
       "quickReplyWindowHours": "A guardian’s typed reply confirms only a lesson we messaged them about within this many hours.",
-      "chatReopenTemplate": "The template sent once per 24 hours before a message to a family whose last message is more than 24 hours old; the message is sent after they reply. It must be approved on the chat number, allowed for restricted roles, and have no variables (for example welcome_greeting). Empty or not valid: nothing is sent and the message fails with that reason.",
+      "chatReopenTemplate": "What happens to a message to a family whose last message is more than 24 hours old. «Welcome template»: type the name of a template sent once per 24 hours before the message; the message is sent after they reply. It must be approved on the chat number, allowed for restricted roles, and have no variables (for example welcome_greeting); empty or not valid, the message fails with that reason. «No template»: no template is sent; the conversation is reopened in Kapso and the message waits for the family's reply, then is sent (7 days at most).",
       "crmMediaHost": "The old CRM storage host only (no https:// and no path). Photos and voice notes imported from the old CRM chats are fetched from it once and kept here. Left empty, these files do not open.",
       "crmMediaCopyAll": "When on, every photo and voice note imported from the old CRM is copied in the background, in small batches, into our private storage, not only the ones that are opened. Needs the old CRM files host to be set, and turns itself off when the copy is done. These copies are not deleted after 30 days.",
       "makeupWindowDays": "After this, the makeup button no longer shows for the lesson.",
@@ -7126,6 +7133,10 @@
       "keepMine": "Save my value",
       "takeTheirs": "Use the new value",
       "phoneLine": "Newer value from {name}"
+    },
+    "reopenChoice": {
+      "template": "Welcome template",
+      "wait": "No template: wait for the family's reply"
     }
   },
   "settingsPages": {
@@ -7829,7 +7840,7 @@
       "subscription_not_found": "Subscription not found",
       "conflict": "The time clashes with the teacher's or the student's time",
       "course_finished": "No lessons left in the course to move",
-      "course_not_found": "This subscription has no weekly schedule",
+      "course_not_found": "The lesson days of this subscription are not booked yet, so there is no schedule to change. Book the lesson days first.",
       "course_exists": "The new days overlap another course of the student",
       "course_changed": "The schedule changed since you opened this, reopen it",
       "custom_count_admin": "Custom lesson count: only an admin can change it",
@@ -7947,5 +7958,10 @@
   },
   "shortLinks": {
     "notFound": "This link is not valid or has expired."
+  },
+  "courseDue": {
+    "paidTitle": "Paid: book the lesson days",
+    "unbookedTitle": "Lesson days not booked",
+    "unbookedText": "the package was paid at least two hours ago and its lesson days are not booked yet"
   }
 }

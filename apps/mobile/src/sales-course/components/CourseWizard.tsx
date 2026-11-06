@@ -6,7 +6,7 @@ import { SlotStep } from '@/booking/trial/components/SlotStep';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { courseRequest } from '@/sales-course/lib/course-body';
 import { useBookCourse } from '@/sales-course/hooks/course-queries';
@@ -126,7 +126,7 @@ export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardPr
       <ScreenHeader
         title={t.booking.courseDays}
         subtitle={book.isSuccess ? view.student.name : `${view.student.name} · ${position}`}
-        trailing={<Button variant="ghost" label={t.common.back} busy={book.isPending} onPress={back} />}
+        leading={<BackButton busy={book.isPending} onPress={back} />}
       />
       <CourseStarts subscription={sub} />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>

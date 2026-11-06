@@ -37,7 +37,7 @@ describe('MessagesService.handOff — sent files', () => {
   it('the same row can still be retried', async () => {
     const { svc, queries } = service(messageRow({ id: ID, status: 'failed', error_code: '131047', ...media }));
     await expect(svc.retry(ID, { automaticOn: true })).resolves.toMatchObject({ view: { status: 'queued' } });
-    expect(queries.requeue).toHaveBeenCalledWith(ID);
+    expect(queries.requeue).toHaveBeenCalledWith(ID, null);
   });
 
   it('a text row is still handed off', async () => {

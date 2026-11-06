@@ -4,9 +4,10 @@ import { ScrollView, View } from 'react-native';
 import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
-import { CourseActionsSection, CoursePauseSection, PeopleEditSection } from '@/students';
+import { CoursePauseSection, PeopleEditSection } from '@/students';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -19,6 +20,7 @@ import { FamilySection } from '@/sales/sales/family/FamilySection';
 import { PackageCancelAction } from './PackageCancelAction';
 import { ReportsSection } from './ReportsSection';
 import { ScheduleSection } from './ScheduleSection';
+import { StudentCourseSection } from './course/StudentCourseSection';
 import { SubscriptionSection } from './SubscriptionSection';
 import { TrialSection } from './TrialSection';
 import { useSalesStudent } from './student-api';
@@ -38,8 +40,8 @@ function headLines({ code, guardian_phone: phone, program, teacher_name: teacher
  * sees them. Under the name: the code · the guardian's phone, and «فتح المحادثة» opens that family's chat;
  * under it (it loads after the page: nothing shifts) the one money action, on HER students only (`mine`,
  * absent in an old cache = hers; UX review #9: «تسجيل تحويل» / «تجديد»), ANY with sales.renew_any.
- * «تغيير المعلم» / «تغيير موعد الحلقات» like the money action; «تعديل الموعد التجريبي» on her
- * trial.
+ * «تغيير المعلم» / «تغيير موعد الحلقات» like the money action, once a course exists (before it
+ * «أيام الحلقات», StudentCourseSection); «تعديل الموعد التجريبي» on her trial.
  * An unknown id answers 404: «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner
  * for ANY student.
  */
@@ -62,7 +64,7 @@ export function SalesStudentScreen() {
       <ScreenHeader
         title={data.student.name}
         subtitle={subtitle}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        leading={<BackButton onPress={() => router.back()} />}
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
         <View style={{ gap: 20 }}>
@@ -76,10 +78,10 @@ export function SalesStudentScreen() {
           {acts ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
           <FamilySection family={data.family} phone={phone} />
           <CoursePauseSection studentId={data.student.id} />
-          <CourseActionsSection
+          <StudentCourseSection
             studentId={data.student.id}
             subscriptionId={data.current_id}
-            moves={acts}
+            acts={acts}
           />
           <PeopleEditSection studentId={data.student.id} onRemoved={() => router.back()} />
           <PackageCancelAction studentId={data.student.id} subscriptionId={data.current_id} />

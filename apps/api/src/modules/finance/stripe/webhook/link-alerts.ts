@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { PaymentReceived } from '@/modules/finance/payments';
+import { CourseDue } from '@/modules/finance/subscriptions';
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 
 /**
@@ -15,14 +16,24 @@ export class LinkAlerts {
   constructor(
     private readonly push: PushService,
     private readonly received: PaymentReceived,
+    private readonly courseDue: CourseDue,
   ) {}
 
   /**
    * The payment recorded from the link (not awaited: off the webhook's path). Nobody recorded it
    * by hand, so nobody is left out: PaymentsService's own notice skips the link's assistant.
+   * While the package has no weekly course, the link's assistant reads «تم الدفع: احجز أيام
+   * الحلقات» and the tap opens the course wizard (owner 2026-11-06).
    */
   paid(link: LinkRow, payment: { id: string; amount: number; currency: string }): void {
+    void this.tellPaid(link, payment);
+  }
+
+  private async tellPaid(link: LinkRow, payment: { id: string; amount: number; currency: string }) {
+    const sub = link.subscription_id;
+    const book = sub ? await this.courseDue.paidNotice(sub, link.created_by) : undefined;
     this.received.fire({
+      book,
       payment: {
         ...payment,
         kind: 'payment',

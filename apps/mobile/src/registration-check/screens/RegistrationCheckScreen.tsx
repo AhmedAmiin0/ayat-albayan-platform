@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native';
 import { usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -58,7 +58,7 @@ export function RegistrationCheckScreen() {
       >
         <ScreenHeader
           title={t.registrationCheck.title}
-          trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+          leading={<BackButton onPress={back} />}
         />
         {can('students.check_registration') ? (
           <>

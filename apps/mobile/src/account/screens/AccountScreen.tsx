@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -34,7 +34,7 @@ export function AccountScreen({ home }: AccountScreenProps) {
       <ScreenHeader
         title={t.account.title}
         subtitle={t.account.subtitle}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+        leading={<BackButton onPress={back} />}
       />
       {data ? (
         <ScrollView

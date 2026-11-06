@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
@@ -23,7 +23,7 @@ export function MakeupScreen() {
         <>
           <ScreenHeader
             title={t.booking.makeup.title}
-            trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+            leading={<BackButton onPress={() => router.back()} />}
           />
           <EmptyState title={t.common.notFound} />
         </>

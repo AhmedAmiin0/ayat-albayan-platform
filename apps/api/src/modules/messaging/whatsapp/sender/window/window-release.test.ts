@@ -10,6 +10,7 @@ const row = (id: string, phone: string, at: string) => ({
   phone_e164: phone,
   created_at: at,
   scheduled_for: at,
+  expires_at: '2026-11-10T00:00:00Z',
 });
 
 describe('WindowHold.release', () => {
@@ -92,7 +93,7 @@ describe('WindowRelease — a held text never waits behind a dead reopen (review
 
   it('a row not held yet (just queued by the inbox): no reopen read, nothing failed', async () => {
     const f = windowFakes();
-    f.repo.waiting.mockResolvedValue([{ ...held, scheduled_for: null }] as never);
+    f.repo.waiting.mockResolvedValue([{ ...held, scheduled_for: null, expires_at: null }] as never);
     await f.release.run(NOW);
     expect(f.repo.reopens).toHaveBeenCalledWith([], expect.anything(), true);
     expect(f.repo.fail).toHaveBeenCalledWith([], expect.anything());

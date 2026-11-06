@@ -6,7 +6,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { egp } from '@/earnings/lib/format';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
@@ -48,7 +48,7 @@ export function MyPayoutsScreen() {
     <Screen>
       <ScreenHeader
         title={t.earnings.monthly}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        leading={<BackButton onPress={() => router.back()} />}
       />
       <FlatList
         style={{ flex: 1 }}

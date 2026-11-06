@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
+import { BackButton } from '@/core/ui/navigation';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
@@ -41,7 +41,7 @@ export function PayoutsScreen() {
     <Screen>
       <ScreenHeader
         title={open ? open.teacher.display_name_ar : t.mobileFinance.rows.payouts}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+        leading={<BackButton onPress={back} />}
       />
       {notice ? <Note>{notice}</Note> : null}
       {open ? (

@@ -1,7 +1,7 @@
 import { AWAITING_REPLY } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { DAY_MS, orphaned } from './reopen-state';
-import { LOST } from './window-reopen';
+import { heldWithoutTemplate, LOST } from './window-reopen';
 import { answered, type WaitingRow } from './window-rules';
 import { RELEASE_BATCH, WindowRepo } from './window.repo';
 
@@ -43,7 +43,8 @@ export class WindowRelease {
   /** One page (after `after`), then the next while pages are full: at most `pages` per pass. */
   private async page(at: { after: string | null; pages: number; now: Date }): Promise<number> {
     const rows = await this.repo.waiting(at.after);
-    const held = rows.filter((r) => r.scheduled_for !== null);
+    // Held (a deadline) behind a template; one under «بدون قالب» asked for none: never orphaned.
+    const held = rows.filter((r) => r.expires_at !== null && !heldWithoutTemplate(r.error_text));
     const [inbound, reopens] = await Promise.all([
       this.repo.lastChatInbound(phonesOf(rows)),
       this.repo.reopens(phonesOf(held), reopenSince(held), true),

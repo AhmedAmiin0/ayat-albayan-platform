@@ -54,14 +54,14 @@ describe('WindowHold — which reopen template counts', () => {
     );
   });
 
-  it("today's three tries all failed: fails reopen_failed at once, no fourth template call", async () => {
+  it("today's three tries all failed: fails reopen_tries_used (try tomorrow), no fourth template", async () => {
     const tries = [DAY, `${DAY}:2`, `${DAY}:3`].map((k) => reopenOf({ status: 'failed', dedup_key: k }));
     f.repo.reopens.mockResolvedValue(tries);
     await expect(f.hold.due(at())).resolves.toBe('failed');
     expect(f.repo.queueReopen).not.toHaveBeenCalled();
     expect(f.repo.fail).toHaveBeenCalledWith(
       [staffText().id],
-      expect.objectContaining({ code: 'reopen_failed' }),
+      expect.objectContaining({ code: 'reopen_tries_used', text: expect.stringContaining('tomorrow') }),
     );
   });
 

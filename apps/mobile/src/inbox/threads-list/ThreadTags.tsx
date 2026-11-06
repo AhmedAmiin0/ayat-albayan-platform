@@ -1,8 +1,10 @@
 import { subscriptionStatusStyle, type ThreadView } from '@ab/shared';
-import type { TextStyle } from 'react-native';
+import { Fragment, type ReactNode } from 'react';
+import { View, type TextStyle } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
+import { Ltr } from '@/core/ui/primitives/Ltr';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { leadSourceWord, leadStatusChip } from '../leads/detail/lead-words';
 import { badgeChip } from '../subscription/subscription-words';
@@ -14,51 +16,111 @@ function kindWord(th: ThreadView): string {
   return th.lead_id ? t.inbox.kind.lead : t.inbox.unknownNumber;
 }
 
-/** A converted lead with no guardian on this number: «اتحول لطالب» (neutral), never the «مشترك» of a package. */
+/** A converted lead with no guardian on this number: «تحوّل إلى طالب» (neutral), never «مشترك». */
 const statusChip = (status: string) =>
-  status === 'converted' ? { tone: 'neutral' as const, glyph: 'fill' as const, label: t.inbox.convertedLead } : leadStatusChip(status);
+  status === 'converted'
+    ? { tone: 'neutral' as const, glyph: 'fill' as const, label: t.inbox.convertedLead }
+    : leadStatusChip(status);
 
-/**
- * A thread row's tags, like the web inbox row: a lead's status chip, else who the number is
- * («ولي أمر», «معلم/ة»); then the family's package tags; then where the lead came from. ListRow's
- * tags line wraps them. `money` false (the sales tree, docs/16): never «غير مدفوع», whatever the payload says.
- */
-export function ThreadTags({ thread: th, money = true }: { thread: ThreadView; money?: boolean }) {
-  const { color } = useTheme();
-  const word: TextStyle = { fontFamily: type.ui[500], fontSize: type.size['2xs'], color: color.ink3 };
-  // A guardian / teacher on file outranks the lead row they once came from.
-  const status = th.guardian_id || th.teacher_id ? null : th.lead_status;
-  return (
-    <>
-      {status ? (
-        <StatusChip {...statusChip(status)} size="sm" />
-      ) : (
+/** A guardian / teacher on file outranks the lead row they once came from. */
+const leadStatusOf = (th: ThreadView): string | null =>
+  th.guardian_id || th.teacher_id ? null : th.lead_status;
+
+type Item = [key: string, node: ReactNode];
+
+/** «مشترك» or «انتهت الباقة», and «غير مدفوع» while a running package owes money (admin only). */
+function familyChips(th: ThreadView, money: boolean): Item[] {
+  const badge = th.badge ?? (th.subscribed ? 'subscribed' : null);
+  const known = badge === 'subscribed' || badge === 'expired';
+  const unpaid = { ...subscriptionStatusStyle.unpaid, label: t.enums.subscriptionStatus.unpaid };
+  return [
+    ['badge', known ? <StatusChip {...badgeChip(badge)} size="sm" /> : null],
+    ['unpaid', money && th.unpaid ? <StatusChip {...unpaid} size="sm" /> : null],
+  ];
+}
+
+interface MetaOptions {
+  money: boolean;
+  phone: string | undefined;
+  word: TextStyle;
+}
+
+/** Line 3's items in order; a null node is skipped. */
+function metaItems(th: ThreadView, { money, phone, word }: MetaOptions): Item[] {
+  const status = leadStatusOf(th);
+  const words = [
+    status ? null : kindWord(th),
+    th.lead_source ? leadSourceWord(th.lead_source) : null,
+  ];
+  const phoneStyle: TextStyle = { ...word, flexShrink: 0, fontFamily: type.ui[400] };
+  return [
+    ['status', status ? <StatusChip {...statusChip(status)} size="sm" /> : null],
+    ...words.map((w): Item => [
+      `w${String(w)}`,
+      w ? (
         <AppText numberOfLines={1} style={word}>
-          {kindWord(th)}
+          {w}
         </AppText>
-      )}
-      <FamilyTags thread={th} money={money} />
-      {th.lead_source ? (
-        <AppText numberOfLines={1} style={word}>
-          {leadSourceWord(th.lead_source)}
-        </AppText>
-      ) : null}
-    </>
-  );
+      ) : null,
+    ]),
+    ...familyChips(th, money),
+    ['phone', phone ? <Ltr style={phoneStyle}>{phone}</Ltr> : null],
+  ];
+}
+
+interface ThreadMetaProps {
+  thread: ThreadView;
+  /** False in the sales tree (docs/16): never «غير مدفوع», whatever the payload says. */
+  money: boolean;
+  /** The formatted phone when the name took line 1; drawn last, LTR-isolated. */
+  phone: string | undefined;
 }
 
 /**
- * «مشترك» or «الباقة خلصت» (renew, the admin's turn), and «مش مدفوع» while a running package owes
- * money. A list cached before `badge` existed falls back to `subscribed`.
+ * The row's third line, one line that never wraps (owner 2026-11-06): role (or the lead's status
+ * chip) · source · package chips · phone. The phone keeps its size; words and chips ellipsize.
  */
-function FamilyTags({ thread: th, money }: { thread: ThreadView; money: boolean }) {
-  const badge = th.badge ?? (th.subscribed ? 'subscribed' : null);
+export function ThreadMeta({ thread: th, money, phone }: ThreadMetaProps) {
+  const { color } = useTheme();
+  const word: TextStyle = {
+    flexShrink: 1,
+    fontFamily: type.ui[500],
+    fontSize: type.size['2xs'],
+    color: color.ink3,
+  };
+  const items = metaItems(th, { money, phone, word });
   return (
-    <>
-      {badge === 'subscribed' || badge === 'expired' ? <StatusChip {...badgeChip(badge)} size="sm" /> : null}
-      {money && th.unpaid ? (
-        <StatusChip {...subscriptionStatusStyle.unpaid} label={t.enums.subscriptionStatus.unpaid} size="sm" />
-      ) : null}
-    </>
+    <View
+      testID="thread-meta"
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        minHeight: 22,
+        overflow: 'hidden',
+      }}
+    >
+      {items
+        .filter(([, node]) => node !== null)
+        .map(([key, node], at) => (
+          <Fragment key={key}>
+            {at > 0 ? <Dot style={word} /> : null}
+            {node}
+          </Fragment>
+        ))}
+    </View>
+  );
+}
+
+/** «·» between two meta items: drawn, not read. */
+function Dot({ style }: { style: TextStyle }) {
+  return (
+    <AppText
+      accessibilityElementsHidden
+      importantForAccessibility="no"
+      style={{ ...style, flexShrink: 0 }}
+    >
+      ·
+    </AppText>
   );
 }
