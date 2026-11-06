@@ -52,3 +52,49 @@ export function uploadToSlot(
 ): Promise<void> {
   return UPLOADERS[storageProviderOf(signed.path)](signed, file, supabase);
 }
+
+/** Same shape as supabase-js: `error` is set when the storage refused the file. */
+export interface SlotUploadResult {
+  error: Error | null;
+}
+
+/**
+ * A bucket of the app's supabase-js client (web and mobile pass `(b) => supabase.storage.from(b)`).
+ * supabase-js's own four parameters, as a tuple: they are not ours to merge into one object.
+ */
+export type SlotBucket = (bucket: string) => {
+  uploadToSignedUrl(
+    ...args: [
+      path: string,
+      token: string,
+      body: UploadFile['body'],
+      options: { contentType: string },
+    ]
+  ): Promise<{ error: Error | null }>;
+};
+
+const asError = (e: unknown): Error => (e instanceof Error ? e : new Error(String(e)));
+
+/**
+ * The app's one upload function over its own supabase-js client: resolves `{ error }` and never
+ * rejects, so each call site keeps its own `if (error) throw …`.
+ */
+export function slotUploader(bucketOf: SlotBucket) {
+  const supabase: SupabaseSlotUpload = async (signed, file) => {
+    const { error } = await bucketOf(signed.bucket).uploadToSignedUrl(
+      signed.path,
+      signed.token,
+      file.body,
+      { contentType: file.contentType },
+    );
+    if (error) throw error;
+  };
+  return async (signed: SignedUpload, file: UploadFile): Promise<SlotUploadResult> => {
+    try {
+      await uploadToSlot(signed, file, supabase);
+      return { error: null };
+    } catch (e) {
+      return { error: asError(e) };
+    }
+  };
+}
