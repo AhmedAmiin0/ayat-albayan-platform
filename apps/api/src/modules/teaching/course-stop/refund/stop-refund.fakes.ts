@@ -80,7 +80,7 @@ export function gateKit(enforced: boolean) {
     owe: vi.fn().mockResolvedValue({ charged: 150, price: 400 }),
     choose: vi.fn().mockReturnValue('decision'),
   };
-  const ledger = { failed: vi.fn() };
+  const ledger = { failed: vi.fn().mockResolvedValue(undefined) };
   const g = new StopRefundGate(
     refunds as unknown as StopRefunds,
     rule as unknown as SalesOwnershipRule,

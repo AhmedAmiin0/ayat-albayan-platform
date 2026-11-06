@@ -45,7 +45,7 @@ const isThisStop = (sub: StopSub, requestId: string): boolean =>
 export function storedOwed(sub: StopSub, requestId: string): OwedDecision | null {
   const { stop_owed_amount: amount, stop_owed_choice: choice } = sub;
   const known = amount !== null && choice !== null && isThisStop(sub, requestId);
-  return known ? { amount: Number(amount), choice } : null;
+  return known ? { amount, choice } : null;
 }
 
 /** The answer of a stop (a replay answers the first stop). */
