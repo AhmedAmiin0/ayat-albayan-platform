@@ -5,7 +5,8 @@ import { apiFetch, apiSend } from '@/core/lib/http/api';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { afterSend, rollback } from '@/inbox/thread/send/after-send';
 import { sendConfirmed } from '@/inbox/thread/send/confirm-send';
-import { sendIdFor, unpinSend } from '@/inbox/thread/send/pinned-send';
+import { releaseSend } from '@/inbox/thread/send/pinned-send';
+import { useResolveHeld } from '@/inbox/thread/send/resolve-held';
 import { refreshInbox, touchInbox } from './inbox-sync';
 import {
   appendMessage,
@@ -46,6 +47,8 @@ export const threadQuery = (phone: string) =>
 export function useThread(phone: string) {
   const query = useInfiniteQuery(threadQuery(phone));
   useThreadPoll(phone, query.data !== undefined);
+  // docs/44 BUG7: a read showing a held send's row releases it and its «unconfirmed» bubble.
+  useResolveHeld(phone);
   return query;
 }
 
@@ -61,6 +64,8 @@ interface SendInput {
   out: Outgoing;
   /** The provisional row's id and the clientRequestId (rule 8: a retried send returns the first row). */
   id: string;
+  /** A text from the chat box: only its retry may reuse an unconfirmed id (send/pinned-send). */
+  box?: boolean;
 }
 
 function body({ out, id }: SendInput) {
@@ -75,7 +80,7 @@ function body({ out, id }: SendInput) {
 /**
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
  * it out again (the caller shows `sendError`). No answer keeps it «unconfirmed» and re-reads the
- * chat first; the chat's next send reuses its id (docs/44 BUG7, send/confirm-send).
+ * chat first; only the box's retry of that text reuses its id (docs/44 BUG7, send/pinned-send).
  */
 export { sendKey } from './thread-cache';
 
@@ -88,7 +93,7 @@ export function useSendMessage(phone: string) {
     // One key per chat: the composer and «عرض سعر» see each other's send in flight (useIsMutating).
     mutationKey: sendKey(phone),
     mutationFn: (input: SendInput) =>
-      sendConfirmed({ client, phone, id: input.id, read: threadGet }, () =>
+      sendConfirmed({ client, phone, id: input.id, read: threadGet, box: input.box === true }, () =>
         apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, body(input))),
     onMutate: async ({ out, id }) => {
       markOwnSend(phone);
@@ -102,16 +107,13 @@ export function useSendMessage(phone: string) {
       await touchInbox(client, row);
     },
     onSuccess: (row, { id }) => {
-      unpinSend(phone, id);
+      releaseSend(phone, id);
       edit((old) => replaceMessage(old, id, row));
     },
     onError: (error, { id }) => edit(rollback(error, id)),
     onSettled: (_row, error) => afterSend(client, phone, error),
   });
-  // While a send of this chat is unconfirmed, every send of it reuses that id (pinned-send).
-  const mutate: typeof mutation.mutate = (input, options) =>
-    mutation.mutate({ ...input, id: sendIdFor(phone, input.id) }, options);
-  return { ...mutation, mutate };
+  return mutation;
 }
 
 /** app-send: «أرسل عبر واتساب», the row's short pending window (docs/19). */

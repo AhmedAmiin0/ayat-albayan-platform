@@ -75,7 +75,7 @@ test('a refused send rolls back: the row goes, the text comes back, the reason s
 });
 
 test('a refused text sent again keeps its clientRequestId; an edited one gets a new one', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(500, null));
+  mockApiSend.mockRejectedValue(new ApiError(422, null));
   await open();
   await fireEvent.changeText(box(), 'تمام');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));

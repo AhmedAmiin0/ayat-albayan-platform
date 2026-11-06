@@ -3478,7 +3478,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "src/inbox/composer/use-thread-reopen.ts": {

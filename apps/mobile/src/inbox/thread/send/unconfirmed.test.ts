@@ -1,10 +1,12 @@
+import { SEND_UNCONFIRMED } from '@ab/client-core';
 import type { ThreadDetail } from '@ab/shared';
+import { t } from '@/core/lib/i18n/i18n';
+import { heldLine } from '@/inbox/messages/hooks/held-line';
+import { clearChatMemory } from '@/inbox/thread/anchor';
 import { message } from '@/inbox/shared/thread-fixtures';
 import type { ThreadCache } from '@/inbox/thread/hooks/thread-cache';
-import { heldLine } from '@/inbox/messages/hooks/held-line';
-import { t } from '@/core/lib/i18n/i18n';
-import { isUnconfirmed, markUnconfirmed, SEND_UNCONFIRMED, sentRowOf } from './unconfirmed';
-import { sendIdFor, pinSend, unpinSend } from './pinned-send';
+import { boxPin, clearHeldSends, heldSends, holdSend, releaseSend } from './pinned-send';
+import { dropRows, isUnconfirmed, markUnconfirmed } from './unconfirmed';
 
 const AT = '2026-10-02T09:00:00.000Z';
 const sent = message({ id: 'req-1', body: 'وصلت', created_at: AT });
@@ -12,8 +14,11 @@ const cache = (rows = [sent]): ThreadCache => ({
   pages: [{ messages: rows, has_more: false } as unknown as ThreadDetail],
   pageParams: [null],
 });
+const held = (id: string, box: boolean) => ({ id, sent, known: new Set<string>(), box });
 
-test('markUnconfirmed marks only that provisional row, kept on its page', () => {
+afterEach(clearHeldSends);
+
+test('markUnconfirmed marks only that provisional row; dropRows takes rows out', () => {
   const other = message({ id: 'm1', body: 'قديمة' });
   const out = markUnconfirmed(cache([other, sent]), 'req-1');
   const rows = out?.pages[0]?.messages ?? [];
@@ -23,54 +28,32 @@ test('markUnconfirmed marks only that provisional row, kept on its page', () => 
   ]);
   expect(rows.map(isUnconfirmed)).toEqual([false, true]);
   expect(markUnconfirmed(undefined, 'req-1')).toBeUndefined();
+  expect(dropRows(out, new Set(['req-1']))?.pages[0]?.messages.map((m) => m.id)).toEqual(['m1']);
 });
 
 test('the bubble says «unconfirmed» under an unconfirmed send, the held text its own line', () => {
-  expect(heldLine({ status: 'queued', error_code: SEND_UNCONFIRMED })).toBe(t.messages.sendUnconfirmed);
+  const unconfirmed = { status: 'queued' as const, error_code: SEND_UNCONFIRMED };
+  expect(heldLine(unconfirmed)).toBe(t.messages.sendUnconfirmed);
   expect(heldLine({ status: 'queued', error_code: 'awaiting_reply' })).toBe(t.messages.awaitingReply);
   expect(heldLine({ status: 'sent', error_code: SEND_UNCONFIRMED })).toBeNull();
   expect(heldLine({ status: 'queued', error_code: null })).toBeNull();
 });
 
-describe('sentRowOf: the server row of an unconfirmed send in a fresh page', () => {
-  const server = message({ id: 'srv-1', body: 'وصلت', created_at: '2026-10-02T09:00:05Z' });
-
-  test('ours, new since the send, the same words', () => {
-    expect(sentRowOf([server], sent, new Set())).toBe(server);
-  });
-
-  test('a row held before the send, an inbound row or other words is not it', () => {
-    expect(sentRowOf([server], sent, new Set(['srv-1']))).toBeUndefined();
-    const inbound = { ...server, direction: 'inbound' as const };
-    expect(sentRowOf([inbound], sent, new Set())).toBeUndefined();
-    expect(sentRowOf([{ ...server, body: 'أخرى' }], sent, new Set())).toBeUndefined();
-  });
-
-  test("allows the phone's clock 5 minutes ahead, not more", () => {
-    const early = (min: number) => ({
-      ...server,
-      created_at: new Date(Date.parse(AT) - min * 60_000).toISOString(),
-    });
-    expect(sentRowOf([early(4)], sent, new Set())).toBeDefined();
-    expect(sentRowOf([early(6)], sent, new Set())).toBeUndefined();
-  });
-
-  test('a template matches by its key (the server renders its own body)', () => {
-    const tpl = { ...sent, template_key: 'renewal_due', body: 'عرض سعر' };
-    const row = { ...server, template_key: 'renewal_due', body: 'نص القالب' };
-    expect(sentRowOf([row], tpl, new Set())).toBe(row);
-    expect(sentRowOf([{ ...row, template_key: 'other' }], tpl, new Set())).toBeUndefined();
-  });
+test('only a held BOX text pins the box; a retry keeps the first send; release frees it', () => {
+  const phone = '+201000000001';
+  holdSend(phone, held('tpl-1', false));
+  expect(boxPin(phone)).toBeUndefined();
+  holdSend(phone, held('req-1', true));
+  holdSend(phone, { ...held('req-1', true), sent: { ...sent, body: 'وصلت الآن' } });
+  expect(boxPin(phone)).toBe('req-1');
+  expect(heldSends(phone).find((h) => h.id === 'req-1')?.sent.body).toBe('وصلت');
+  expect(boxPin('+201000000002')).toBeUndefined();
+  releaseSend(phone, 'req-1');
+  expect(boxPin(phone)).toBeUndefined();
 });
 
-test('a pinned id wins for every send of that chat until a send with it succeeds', () => {
-  const phone = '+201000000001';
-  expect(sendIdFor(phone, 'new')).toBe('new');
-  pinSend(phone, 'req-1');
-  expect(sendIdFor(phone, 'edited-text-id')).toBe('req-1');
-  expect(sendIdFor('+201000000002', 'x')).toBe('x');
-  unpinSend(phone, 'other');
-  expect(sendIdFor(phone, 'new')).toBe('req-1');
-  unpinSend(phone, 'req-1');
-  expect(sendIdFor(phone, 'new')).toBe('new');
+test('sign-out forgets every held send (the admin: dedup namespace is shared)', () => {
+  holdSend('+201000000001', held('req-1', true));
+  clearChatMemory();
+  expect(boxPin('+201000000001')).toBeUndefined();
 });

@@ -23,7 +23,7 @@ async function setup() {
   );
 }
 
-beforeEach(() => mockApiSend.mockReset().mockRejectedValue(new ApiError(500, null)));
+beforeEach(() => mockApiSend.mockReset().mockRejectedValue(new ApiError(422, null)));
 
 test('the same text retried after a failure keeps its request id (rule 8)', async () => {
   const { result } = await setup();

@@ -77,7 +77,7 @@ test('the sheet shows the exact Arabic text; «أرسل» sends it once through 
 });
 
 test('a refused send stays on the sheet with the reason; asking again reuses the bubble’s clientRequestId', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(500, null));
+  mockApiSend.mockRejectedValue(new ApiError(422, null));
   await show(unavailable);
   await fireEvent.press(ask() ?? screen.getByText('missing'));
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.resend.send }));

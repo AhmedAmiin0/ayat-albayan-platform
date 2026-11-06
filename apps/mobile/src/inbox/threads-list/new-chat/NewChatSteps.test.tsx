@@ -72,7 +72,7 @@ test('a number that has a chat opens it, as WhatsApp: no template step, nothing 
 
 test('a refused send stays on the form in words; nothing opens', async () => {
   serve(EMPTY);
-  mockApiSend.mockRejectedValue(new ApiError(500, null));
+  mockApiSend.mockRejectedValue(new ApiError(422, null));
   await typeNumber();
   await fireEvent.press(await screen.findByText(t.templates.names.follow_up_slots));
   await fireEvent.changeText(screen.getByLabelText(t.inbox.composer.paramNames.student_name), 'سهيلة');
