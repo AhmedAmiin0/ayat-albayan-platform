@@ -70,7 +70,7 @@ describe('salesUnreadQuery', () => {
     expect(q.refetchInterval).toBe(inboxPollMs);
     expect(inboxPollMs()).toBe(INBOX_REFRESH_MS);
     inboxLive.setLive(true);
-    expect(inboxPollMs()).toBe(60_000); // realtime connected: its events refresh the count sooner
+    expect(inboxPollMs()).toBe(20_000); // connected: the safety net; its events refresh it sooner
     inboxLive.setLive(false);
     expect('refetchIntervalInBackground' in q).toBe(false);
     expect(salesUnreadQuery(false).enabled).toBe(false);

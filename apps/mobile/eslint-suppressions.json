@@ -6771,7 +6771,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/thread/hooks/thread-poll.test.tsx": {

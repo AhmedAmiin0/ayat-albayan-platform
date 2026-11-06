@@ -222,7 +222,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/messaging/inbox/live-connect.test.ts": {
