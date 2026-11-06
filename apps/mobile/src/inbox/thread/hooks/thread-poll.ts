@@ -1,4 +1,4 @@
-import { chatLiveKey, deltaSearch, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead, THREAD_FULL_MS } from '@ab/client-core';
+import { chatLiveKey, deltaSearch, freshRow, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead, THREAD_FULL_MS } from '@ab/client-core';
 import type { ThreadDelta, ThreadDetail } from '@ab/shared';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
@@ -27,7 +27,7 @@ const movedSince = (client: QueryClient, phone: string, at: number) =>
  * full read is the newest truth and replaces every tick (docs/43 43-1).
  */
 const foldPage = (fresh: ThreadDetail, moved: boolean) => (old: ThreadCache | undefined) =>
-  mergeNewest(old, moved ? laterTicks(old, fresh) : fresh);
+  moved ? mergeNewest(old, laterTicks(old, fresh)) : mergeNewest(old, fresh, freshRow);
 
 /**
  * An open chat shows new messages and ticks (owner 2026-10-27) while its screen is focused and the app

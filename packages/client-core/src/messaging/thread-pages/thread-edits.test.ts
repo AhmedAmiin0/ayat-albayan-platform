@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { provisionalMessage, touchedThread } from './provisional.js';
 import {
   appendMessage,
+  freshRow,
   leavesGap,
   mergeNewest,
   removeMessage,
@@ -67,6 +68,12 @@ describe('mergeNewest: a fresh newest page', () => {
       'read',
       'failed',
     ]);
+  });
+
+  it('a read known to be the newest (freshRow) replaces every tick, even a lower one', () => {
+    const data = cache(page([msg(5, { status: 'delivered' })]));
+    const fresh = page([msg(5, { status: 'queued' })]);
+    expect(mergeNewest(data, fresh, freshRow)?.pages[0]?.messages[0]?.status).toBe('queued');
   });
 
   it('own rows in both pages prove no overlap', () => {
