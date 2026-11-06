@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261106000901, read as text: no database here.
-const sql = readFileSync(migrationPath('20261106000901_report_view_codes.sql'), 'utf8')
+// Migration 20261106001401, read as text: no database here.
+const sql = readFileSync(migrationPath('20261106001401_report_view_codes.sql'), 'utf8')
   .split('\n')
   .filter((l) => !l.trim().startsWith('--'))
   .join('\n');
