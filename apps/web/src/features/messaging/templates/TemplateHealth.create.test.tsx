@@ -46,9 +46,9 @@ describe('template health — «قالب جديد»', () => {
     expect(apiSend).toHaveBeenCalledTimes(1);
   });
 
-  it('a crm number: saved, and no submit dialog (the template is made in the CRM)', async () => {
+  it('a crm number (docs/39): saved, then the same submit confirm (it goes through the CRM)', async () => {
     await createOne([lineView('notifications', { provider: 'crm', waba_id: null }), lineView('chat')]);
     expect(await screen.findByText(S.saved.replace('{name}', 'welcome_back'))).toBeTruthy();
-    expect(screen.queryByText(t.templates.submitConfirm.replace('{name}', 'welcome_back'))).toBeNull();
+    expect(await screen.findByText(t.templates.submitConfirm.replace('{name}', 'welcome_back'))).toBeTruthy();
   });
 });

@@ -26,7 +26,10 @@ describe('POST /threads/:phone/file-upload-url and /file (owner 2026-10-19 #2)',
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.spyOn(settings, 'read').mockResolvedValue({ upload_max_mb: SETTING_DEFAULTS.upload_max_mb });
+    vi.spyOn(settings, 'read').mockResolvedValue({
+      upload_max_mb: SETTING_DEFAULTS.upload_max_mb,
+      renewal_alert_remaining: SETTING_DEFAULTS.renewal_alert_remaining,
+    });
     vi.spyOn(storage, 'info').mockResolvedValue({ size: 2048, contentType: 'image/png' });
     vi.spyOn(storage, 'head').mockResolvedValue(PNG);
     vi.spyOn(storage, 'signedUpload').mockResolvedValue({ bucket: 'wa-media', path: PATH, token: 't', signed_url: 'http://up' });

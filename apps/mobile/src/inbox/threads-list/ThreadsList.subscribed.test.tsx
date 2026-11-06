@@ -2,6 +2,7 @@ import type { ThreadView } from '@ab/shared';
 import { screen, within } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
+import { palette } from '@/theme';
 import { InboxScreen } from '../screens/InboxScreen';
 import { thread } from '../shared/thread-fixtures';
 
@@ -12,42 +13,41 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-const subscribed: ThreadView = {
+// Invented families: one subscribed, one due for renewal, and a lead (no ring).
+const family = (phone: string, name: string, ring: ThreadView['ring']): ThreadView => ({
   ...thread,
-  phone_e164: '+966552147731',
-  display_name: 'أم يوسف',
-  guardian_id: 'g-1',
+  phone_e164: phone,
+  display_name: name,
+  guardian_id: `g-${phone}`,
   lead_status: null,
-  subscribed: true,
-};
-
-test('a subscribed family’s row says «مشترك» beside its tags; others do not', async () => {
-  mockApiFetch.mockResolvedValue({ items: [subscribed, thread], total: 2, page: 1, pageSize: 25 });
-  await renderWithQuery(<InboxScreen />);
-  await screen.findByText('هدى سالم');
-  const row = within(screen.getByRole('button', { name: /أم يوسف/ }));
-  expect(row.getByText(t.inbox.subscription.badge.subscribed)).toBeTruthy();
-  expect(row.getByText(t.inbox.kind.guardian)).toBeTruthy();
-  const lead = within(screen.getByRole('button', { name: /هدى سالم/ }));
-  expect(lead.queryByText(t.inbox.subscription.badge.subscribed)).toBeNull();
+  ring,
 });
 
-test('rows also say what needs the admin: «انتهت الباقة» and «غير مدفوع» (act); a converted lead is «تحوّل إلى طالب», not «مشترك»', async () => {
-  const ended: ThreadView = { ...subscribed, phone_e164: '+966552147732', display_name: 'أم ليان', subscribed: false, badge: 'expired', unpaid: false };
-  const owes: ThreadView = { ...subscribed, phone_e164: '+966552147733', display_name: 'أم جود', badge: 'subscribed', unpaid: true };
-  const converted: ThreadView = { ...thread, phone_e164: '+966551234008', display_name: 'أبو مالك', lead_status: 'converted' };
-  mockApiFetch.mockResolvedValue({ items: [ended, owes, converted], total: 3, page: 1, pageSize: 25 });
-  await renderWithQuery(<InboxScreen />);
-  const row = async (name: string) => within(await screen.findByRole('button', { name: new RegExp(name) }));
-  const tone = (r: Awaited<ReturnType<typeof row>>, label: string) => {
-    let node = r.getByText(label).parent;
-    while (node && !String(node.props.testID ?? '').startsWith('chip-')) node = node.parent;
-    return node?.props.testID;
-  };
+const rowOf = (name: string) => screen.getByRole('button', { name: new RegExp(name) });
+const ringOf = (name: string) => within(rowOf(name)).getByTestId(/^avatar-ring-/);
 
-  expect(tone(await row('أم ليان'), t.inbox.subscription.badge.expired)).toBe('chip-act');
-  expect(tone(await row('أم جود'), t.enums.subscriptionStatus.unpaid)).toBe('chip-act');
-  const malik = await row('أبو مالك');
-  expect(malik.queryByText(t.enums.leadStatus.converted)).toBeNull();
-  expect(tone(malik, t.inbox.convertedLead)).toBe('chip-neutral');
+test('the avatar ring: green subscribed, gray renewal, none for the rest; read as the hint', async () => {
+  const items = [
+    family('+966552147731', 'أم يوسف', 'subscribed'),
+    family('+966552147732', 'أم ليان', 'renewal'),
+    thread,
+  ];
+  mockApiFetch.mockResolvedValue({ items, total: 3, page: 1, pageSize: 25 });
+  await renderWithQuery(<InboxScreen />);
+  await screen.findByText('هدى سالم');
+
+  const green = ringOf('أم يوسف');
+  expect(green.props.testID).toBe('avatar-ring-subscribed');
+  expect(green.props.style).toMatchObject({ borderWidth: 2, padding: 2, borderColor: palette.light.ok });
+  expect(rowOf('أم يوسف').props.accessibilityHint).toBe(t.inbox.ring.subscribed);
+
+  const gray = ringOf('أم ليان');
+  expect(gray.props.testID).toBe('avatar-ring-renewal');
+  expect(gray.props.style).toMatchObject({ borderColor: palette.light.ruleInput });
+  expect(rowOf('أم ليان').props.accessibilityHint).toBe(t.inbox.ring.renewal);
+
+  const none = ringOf('هدى سالم');
+  expect(none.props.testID).toBe('avatar-ring-none');
+  expect(none.props.style).toMatchObject({ borderColor: 'transparent' });
+  expect(rowOf('هدى سالم').props.accessibilityHint).toBeUndefined();
 });

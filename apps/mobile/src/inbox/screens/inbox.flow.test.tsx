@@ -11,15 +11,15 @@ const UUID = expect.stringMatching(/^[0-9a-f-]{36}$/);
 const names = t.templates.names;
 const labels = t.inbox.composer.paramNames;
 
-test('list → lead thread → reply → back: tags show, the reply is sent once, the list row follows', async () => {
+test('list → lead thread → reply → back: no row tags, the reply is sent once, the list row follows', async () => {
   const { backend } = inboxBackend();
   const app = await renderApp({ url: '/inbox', backend });
   const row = within(await screen.findByRole('button', { name: /هدى سالم/ }));
-  // Tags: lead status chip, where she came from; the guardian row says «ولي أمر» and «مشترك».
-  expect(row.getByText(t.enums.leadStatus.new)).toBeTruthy();
-  expect(row.getByText(t.enums.leadSource.facebook_ad)).toBeTruthy();
+  // No tags (owner 2026-11-06): no lead status, source or «ولي أمر» on the rows.
+  expect(row.queryByText(t.enums.leadStatus.new)).toBeNull();
+  expect(row.queryByText(t.enums.leadSource.facebook_ad)).toBeNull();
   const other = within(screen.getByRole('button', { name: /أم يوسف/ }));
-  expect(other.getByText(t.inbox.kind.guardian)).toBeTruthy();
+  expect(other.queryByText(t.inbox.kind.guardian)).toBeNull();
 
   await fireEvent.press(screen.getByRole('button', { name: /هدى سالم/ }));
   expect(await screen.findByText(inbound.body ?? '')).toBeTruthy();

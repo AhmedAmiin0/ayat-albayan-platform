@@ -32,12 +32,16 @@ export async function threadPeople(deps: PeopleDeps, row: PeopleOf | null): Prom
   return { guardian, lead, students };
 }
 
-/** H1: the page's guardians' tags (familyTags), one read for the page. */
-export async function familyTagsOf(deps: PeopleDeps, guardianIds: readonly string[]): Promise<Map<string, FamilyTag>> {
+/** H1: the page's guardians' tags (familyTags, ring at `threshold`), one read for the page. */
+export async function familyTagsOf(
+  deps: PeopleDeps,
+  guardianIds: readonly string[],
+  threshold: number,
+): Promise<Map<string, FamilyTag>> {
   const ids = [...new Set(guardianIds)];
   if (ids.length === 0) return new Map(); // .in() with no ids is a PostgREST error
   const { data, error } = await deps.db.from('students').select('id, guardian_id, subscriptions(id, status)').in('guardian_id', ids);
   if (error) throw dbError(error);
   const balances = await deps.balances.forStudents(data.map((s) => s.id));
-  return familyTags(data, balances);
+  return familyTags(data, balances, threshold);
 }

@@ -3,7 +3,7 @@
 // the sender are mocks. `client` = notifications, `chatClient` = chat (docs/12 §13.16): both
 // configured by default; files that reset all mocks re-prime `configured` in beforeEach.
 import type { ThreadWindow } from './send/send-number';
-import type { ChatListRef, ThreadLesson, ThreadPeople } from '@ab/shared';
+import { SETTING_DEFAULTS, type ChatListRef, type ThreadLesson, type ThreadPeople } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
@@ -30,6 +30,15 @@ import { DeltaRepo } from './delta/delta.repo';
 import { MessageHideRepo } from './hide/message-hide.repo';
 import { StickerRepo } from '@/modules/messaging/inbox/stickers/sticker.repo';
 import { ChatSearchRepo, MessageSearchRepo } from './reads/search';
+import { InboxSettings, type InboxSettingsValues } from './inbox.settings';
+
+/** The inbox settings at the registry defaults, no DB read (the ring threshold, file size). */
+const inboxSettings = () => ({
+  read: async (): Promise<InboxSettingsValues> => ({
+    upload_max_mb: SETTING_DEFAULTS.upload_max_mb,
+    renewal_alert_remaining: SETTING_DEFAULTS.renewal_alert_remaining,
+  }),
+});
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
@@ -115,6 +124,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(ReopenRepo).useValue(m.reopens)
     .overrideProvider(KapsoReopener).useValue(m.kapso)
     .overrideProvider(ReopenRequest).useValue(m.reopenRequest)
+    .overrideProvider(InboxSettings).useValue(inboxSettings())
     .overrideProvider(MessageHideRepo).useValue(m.hides)
     .overrideProvider(DeltaRepo).useValue(m.delta)
     .overrideProvider(StickerRepo).useValue(m.stickers)

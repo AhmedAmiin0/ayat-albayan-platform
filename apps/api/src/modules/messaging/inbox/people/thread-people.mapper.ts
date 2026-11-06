@@ -1,11 +1,13 @@
 import {
   dueOf,
+  familyRing,
   familyUnpaid,
   livePackages,
   studentRemaining,
   subscriptionBadge,
   type BadgeStudent,
   type BalanceView,
+  type FamilyRing,
   type StudentBalanceView,
   type StudentStatus,
   type SubscriptionBadge,
@@ -61,20 +63,28 @@ interface BadgeStudentRow {
   subscriptions: { id: string; status: SubscriptionStatus }[];
 }
 
-/** A list row's family tags: the badge («مشترك» / «اشتراكه خلص») and «مش مدفوع». */
-export type FamilyTag = { badge: SubscriptionBadge; unpaid: boolean };
+/** A list row's family tags: the badge, «مش مدفوع» and the avatar ring (absent = none). */
+export type FamilyTag = { badge: SubscriptionBadge; unpaid: boolean; ring?: FamilyRing | null };
 
-/** The chat's people → the same tags the list computes (subscriptionBadge, familyUnpaid). */
-export const familyTag = (kids: readonly BadgeStudent[]): FamilyTag => ({
+/**
+ * The chat's people → the same tags the list computes (subscriptionBadge, familyUnpaid, familyRing
+ * at `threshold` = settings.renewal_alert_remaining).
+ */
+export const familyTag = (kids: readonly BadgeStudent[], threshold: number): FamilyTag => ({
   badge: subscriptionBadge(kids),
   unpaid: familyUnpaid(kids),
+  ring: familyRing(kids, threshold),
 });
 
 /**
  * H1 tags per guardian, the same rule as the chat's people: each child's newest package (is_last)
  * and units left (studentRemaining).
  */
-export function familyTags(students: readonly BadgeStudentRow[], balances: readonly BalanceRow[]): Map<string, FamilyTag> {
+export function familyTags(
+  students: readonly BadgeStudentRow[],
+  balances: readonly BalanceRow[],
+  threshold: number,
+): Map<string, FamilyTag> {
   const families = new Map<string, BadgeStudent[]>();
   for (const s of students) {
     const own = balances.filter((b) => b.student_id === s.id);
@@ -83,5 +93,5 @@ export function familyTags(students: readonly BadgeStudentRow[], balances: reado
     const kid = { subscription: newest ? { status: newest.status, lessons_remaining: studentRemaining(own) } : null };
     families.set(s.guardian_id, [...(families.get(s.guardian_id) ?? []), kid]);
   }
-  return new Map([...families].map(([id, kids]) => [id, familyTag(kids)]));
+  return new Map([...families].map(([id, kids]) => [id, familyTag(kids, threshold)]));
 }

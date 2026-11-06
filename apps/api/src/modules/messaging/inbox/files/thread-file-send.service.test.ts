@@ -19,7 +19,7 @@ const outbox = { queue: vi.fn() };
 const storage = { info: vi.fn(), head: vi.fn(), signedUpload: vi.fn() };
 const sender = (maxMb?: number) => {
   const s = new ThreadFileSender(queries as unknown as ThreadsRepo, outbox as unknown as Outbox, storage as unknown as StorageService);
-  if (maxMb !== undefined) Object.assign(s, { settings: { read: async () => ({ upload_max_mb: maxMb }) } satisfies Pick<InboxSettings, 'read'> });
+  if (maxMb !== undefined) Object.assign(s, { settings: { read: async () => ({ upload_max_mb: maxMb, renewal_alert_remaining: 2 }) } satisfies Pick<InboxSettings, 'read'> });
   return s;
 };
 const input = (over: object = {}) => ({ clientRequestId: REQ, path: PATH, filename: 'الواجب.png', ...over });
