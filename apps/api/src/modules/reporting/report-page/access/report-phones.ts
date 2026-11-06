@@ -2,7 +2,7 @@ import type { ReportAccessView, ReportCodeTarget } from '@ab/shared';
 import type { PageFacts } from '@/modules/reporting/report-page/report-page.types';
 
 /** Who the report is about, and whether it was sent to the family (lesson_reports.sent_at). */
-export interface PhoneSource {
+interface PhoneSource {
   facts: PageFacts;
   sent: boolean;
 }
