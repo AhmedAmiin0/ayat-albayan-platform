@@ -25,7 +25,7 @@ afterEach(() => {
 });
 
 describe('TeacherReportLinkPage (signed link, no login)', () => {
-  it('opens the lesson report form from the link, without history or attachments', async () => {
+  it('opens the lesson report form from the link with attachments, without history', async () => {
     fetchMock.mockImplementation(() => json(200, formResponse()));
     open();
     const identity = await screen.findByRole('region', { name: t.reports.identity });
@@ -33,7 +33,7 @@ describe('TeacherReportLinkPage (signed link, no login)', () => {
     expect(screen.getByText(tl().subtitle)).toBeTruthy();
     expect(screen.getByRole('button', { name: t.reports.submit })).toBeTruthy();
     expect(screen.queryByRole('link', { name: t.reports.history })).toBeNull();
-    expect(screen.queryByRole('region', { name: t.reports.attachments })).toBeNull();
+    expect(screen.getByRole('region', { name: t.reports.attachments })).toBeTruthy();
     const [url, init] = fetchMock.mock.calls[0] ?? [];
     expect(url).toBe('http://api.test/public/teacher-report/tok');
     expect(new Headers(init?.headers).has('Authorization')).toBe(false);

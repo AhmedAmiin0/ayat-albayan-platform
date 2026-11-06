@@ -7,13 +7,14 @@ import { ReportPageScreen } from './ReportPageScreen';
 
 // Invented data: no real student, teacher or family.
 const mockApiFetch = jest.fn();
+const mockParams = jest.fn((): object => ({ reportId: '00000000-0000-4000-8000-0000000000f1' }));
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
-  useLocalSearchParams: () => ({ reportId: '00000000-0000-4000-8000-0000000000f1' }),
+  useLocalSearchParams: () => mockParams(),
 }));
 
 const grades = {
@@ -90,4 +91,12 @@ test('not a reader (404): the not-found words with a retry', async () => {
   mockApiFetch.mockRejectedValue(new Error('404'));
   await renderWithQuery(<ReportPageScreen />);
   expect(await screen.findByText(t.reportPage.notFound)).toBeTruthy();
+});
+
+test('opened from a link (ayatalbayan://report/<public id>): read by its public id', async () => {
+  mockParams.mockReturnValue({ publicId: 'aaaabbbbccccddddeeeeffff00001111' });
+  mockApiFetch.mockResolvedValue(view());
+  await renderWithQuery(<ReportPageScreen />);
+  expect(await screen.findByText('أداء ممتاز')).toBeTruthy();
+  expect(mockApiFetch).toHaveBeenCalledWith('/report-pages/aaaabbbbccccddddeeeeffff00001111');
 });

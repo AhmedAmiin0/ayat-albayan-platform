@@ -6,7 +6,6 @@ import type {
   SignedUpload,
 } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
 import { attachmentPath, BUCKETS, isPathOf } from '../../../../common/storage/storage.paths';
 import { StorageService } from '../../../../common/storage/storage.service';
 import { reportFileName } from '../../report-pdf/report-ready';
@@ -14,8 +13,10 @@ import { badRequest, conflict } from '../../../../common/http/errors';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
 import type { ReportRow } from '../report-row';
 import { ReportGate } from '../submit/report-gate';
+import { callerActor, type ReportCaller } from '../report-access';
 
-type FileRef = { id: string; user: AuthUser };
+/** A signed-in user, or the lesson's teacher through their report link (owner 2026-11-06). */
+type FileRef = { id: string; user: ReportCaller };
 type AttachmentRef = FileRef & { attachmentId: string };
 
 /** Report files through signed URLs: the PDF (R6) and attachments (R7–R10; R-REP-02/03). */
@@ -60,7 +61,7 @@ export class ReportFilesService {
     await this.gate.editable(id, user);
     const ref = { bucket: BUCKETS.attachments, path: file.path };
     if (!isPathOf(file.path, id) || !(await this.storage.exists(ref))) throw badRequest('attachment_path');
-    return this.files.add({ report_id: id, storage_path: file.path, mime: file.mime, size: file.size, created_by: user.id });
+    return this.files.add({ report_id: id, storage_path: file.path, mime: file.mime, size: file.size, created_by: callerActor(user) });
   }
 
   /** R9: the row and its object. */

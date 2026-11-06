@@ -62,7 +62,9 @@ export interface PageFacts {
     code: string | null;
     tz: string;
     profile_id: string | null;
-    guardian: { id: string; profile_id: string | null } | null;
+    /** phone_e164: where the family's report code goes (never in a response). */
+    guardian: { id: string; profile_id: string | null; phone_e164: string | null } | null;
   };
-  teacher: { display_name_ar: string; profile_id: string | null };
+  /** phone_e164: where the teacher's report code goes (never in a response). */
+  teacher: { display_name_ar: string; profile_id: string | null; phone_e164: string | null };
 }

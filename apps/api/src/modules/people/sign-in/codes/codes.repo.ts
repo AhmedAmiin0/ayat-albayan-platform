@@ -5,7 +5,7 @@ import type { CodePurpose, CodeStore, LiveCode, NewCode, PhoneStats, Subject } f
 
 const DAY_MS = 24 * 3600_000;
 const QUARTER_MS = 15 * 60_000;
-const PURPOSES: readonly CodePurpose[] = ['sign_in', 'reset_password', 'set_password'];
+const PURPOSES: readonly CodePurpose[] = ['sign_in', 'reset_password', 'set_password', 'report_view'];
 const asPurpose = (p: string): CodePurpose => PURPOSES.find((x) => x === p) ?? 'sign_in';
 
 /** CodeStore on the service-role client (migration 771: login_codes, login_code_take / _spend). */

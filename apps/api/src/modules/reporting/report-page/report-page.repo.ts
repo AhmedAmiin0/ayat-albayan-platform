@@ -36,12 +36,12 @@ export class ReportPageRepo {
       this.db.from('lessons').select('starts_at, ends_at').eq('id', row.lesson_id).maybeSingle(),
       this.db
         .from('students')
-        .select('name, code, tz, profile_id, guardian:guardians(id, profile_id)')
+        .select('name, code, tz, profile_id, guardian:guardians(id, profile_id, phone_e164)')
         .eq('id', row.student_id)
         .maybeSingle(),
       this.db
         .from('teachers')
-        .select('display_name_ar, profile_id')
+        .select('display_name_ar, profile_id, phone_e164')
         .eq('id', row.teacher_id)
         .maybeSingle(),
     ]);

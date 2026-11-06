@@ -4,20 +4,27 @@ import { Linking } from 'react-native';
 import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 
-/** The API path of a report's live page, by the report's uuid (the lists hold it). */
-const reportPagePath = (reportId: string): string => `/report-pages/by-report/${reportId}`;
+/** Which page: a link's public id (ayatalbayan://report/<id>), or a list's report uuid. */
+interface PageParams {
+  publicId?: string;
+  reportId?: string;
+}
+
+/** The API path of a report's live page. */
+const reportPagePath = ({ publicId, reportId = '' }: PageParams): string =>
+  publicId ? `/report-pages/${publicId}` : `/report-pages/by-report/${reportId}`;
 
 /**
  * The report's live page (owner 2026-11-06), read-only: the saved report, the teacher's files and
  * the PDF, each a 1 h signed URL. Readers only (admin, the teacher, the owning assistant); anyone
  * else gets 404. The answer is parsed with the shared schema (rule 12).
  */
-export function useReportPage(reportId: string) {
-  const path = reportPagePath(reportId);
+export function useReportPage(params: PageParams) {
+  const path = reportPagePath(params);
   return useQuery<ReportPageView>({
     queryKey: pathKey(path),
     queryFn: async () => reportPageViewSchema.parse(await apiFetch(path)),
-    enabled: reportId !== '',
+    enabled: Boolean(params.publicId ?? params.reportId),
     retry: false,
   });
 }

@@ -27,6 +27,8 @@ import { ReportV2Service } from './v2/report-v2.service';
 import { TEACHER_LINK_CONFIG, type TeacherLinkConfig } from './teacher-link/teacher-link.config';
 import { TeacherLinkAccess } from './teacher-link/teacher-link.access';
 import { TeacherLinkController } from './teacher-link/teacher-link.controller';
+import { TeacherLinkFiles } from './teacher-link/teacher-link.files';
+import { TeacherLinkFilesController } from './teacher-link/teacher-link-files.controller';
 import { TeacherReportLinks } from './teacher-link/teacher-link.issuer';
 import { TeacherLinkLimit } from './teacher-link/teacher-link.limit';
 import { TeacherLinkReports } from './teacher-link/teacher-link.reports';
@@ -51,6 +53,7 @@ const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_
     ReportEntryController,
     ReportV2Controller,
     TeacherLinkController,
+    TeacherLinkFilesController,
   ],
   providers: [
     ReportAccess,
@@ -75,6 +78,7 @@ const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_
     TeacherLinkAccess,
     TeacherLinkLimit,
     TeacherLinkReports,
+    TeacherLinkFiles,
     TeacherReportLinks,
   ],
   exports: [
