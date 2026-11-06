@@ -1,6 +1,7 @@
 import { livePackages, type StudentBalanceView, type SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
+import { PackageEvents } from '@/common/infra/events/lesson-events';
 import { BalanceRepo } from './balance.repo';
 import { statusChanges, withChanges } from './packages.plan';
 import { toStudentBalance, toSubscriptionView, type SubContext } from '@/modules/finance/subscriptions/subscriptions.mapper';
@@ -22,6 +23,7 @@ export class PackagesService {
     private readonly subs: SubscriptionsRepo,
     private readonly balances: BalanceRepo,
     private readonly audit: AuditService,
+    private readonly events: PackageEvents,
   ) {}
 
   async context(rows: readonly SubRow[]): Promise<SubContext> {
@@ -40,6 +42,8 @@ export class PackagesService {
   /**
    * Writes subscriptionStatusFor for each of the student's packages; audited as the actor. A cancelled
    * package is left out of everything here (statuses, alerts, renewal): never rewritten, never the newest.
+   * Each package moved to 'active' (a payment, an amount correction, a price or discount edit, the
+   * sweep) tells PackageEvents, so its course draft is booked (idempotent, PR #648 review).
    */
   async recompute(studentId: string, actorId: string | null): Promise<StudentState> {
     const rows = livePackages(await this.subs.forStudent(studentId));
@@ -56,6 +60,7 @@ export class PackagesService {
         after: { status: c.to },
       });
     }
+    for (const c of changes.filter(isActivation)) await this.events.paid(c.id);
     return { rows: withChanges(rows, changes), ctx };
   }
 
@@ -64,3 +69,5 @@ export class PackagesService {
     return toStudentBalance(studentId, await this.views(await this.subs.forStudent(studentId)));
   }
 }
+
+const isActivation = (c: { to: string }): boolean => c.to === 'active';

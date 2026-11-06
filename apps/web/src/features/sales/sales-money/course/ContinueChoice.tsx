@@ -29,16 +29,27 @@ export interface ContinueChoiceProps {
  * teacher still bookable here (in the wizard's teacher list, with availability). While the list loads the
  * status line says so; a failed read (or refetch) is the error alert with a retry, never «unavailable».
  */
+/** The primary label: the days saved before the payment are edited, a previous course continued. */
+const sameLabel = (view: SalesCourseView): string =>
+  view.draft ? t.booking.courseChange.draftEdit : t.booking.courseChange.continueSameDays;
+
 export function ContinueChoice({ view, draft, now, onContinue, onOther }: ContinueChoiceProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
-  const teachers = useQuery(bookingTeachersQuery({ program: draft.program, gender: draft.genderPref }, 'sales'));
+  const teachers = useQuery(
+    bookingTeachersQuery({ program: draft.program, gender: draft.genderPref }, 'sales'),
+  );
   const fits = continueFits(view);
   // isSuccess, not data: a failed refetch keeps the last list, never an enabled «تابِع» beside the error.
-  const bookable = teachers.isSuccess && teachers.data.some((o) => o.id === view.previous?.teacherId && o.has_availability);
+  const bookable =
+    teachers.isSuccess &&
+    teachers.data.some((o) => o.id === view.previous?.teacherId && o.has_availability);
   const unavailable = teachers.isSuccess && !bookable;
+  const same = sameLabel(view);
   return (
     <div className="grid gap-4">
-      <p className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">{fits ? continueText(view, clock, now) : adjustText(view, clock)}</p>
+      <p className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">
+        {fits ? continueText(view, clock, now) : adjustText(view, clock)}
+      </p>
       {teachers.isPending && (
         <p role="status" className="text-sm text-ink-2">
           {t.common.loading}
@@ -47,7 +58,12 @@ export function ContinueChoice({ view, draft, now, onContinue, onOther }: Contin
       {teachers.isError && (
         <div className="grid justify-items-start gap-2">
           <FormAlert>{t.common.error}</FormAlert>
-          <Button type="button" variant="secondary" size="sm" onClick={() => void teachers.refetch()}>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={() => void teachers.refetch()}
+          >
             {t.sales.retry}
           </Button>
         </div>
@@ -59,7 +75,7 @@ export function ContinueChoice({ view, draft, now, onContinue, onOther }: Contin
       )}
       <div className="flex flex-wrap gap-2.5">
         <Button type="button" disabled={!bookable} onClick={onContinue}>
-          {fits ? t.booking.courseChange.continueSameDays : t.booking.courseChange.adjustDays}
+          {fits ? same : t.booking.courseChange.adjustDays}
         </Button>
         <Button type="button" variant="secondary" onClick={onOther}>
           {t.booking.courseChange.pickOtherDays}

@@ -851,7 +851,8 @@
       "trial_date_invalid": "A new trial date is booked for one registered student only.",
       "trial_changed": "The upcoming trial date just changed; go back and pick the date once more.",
       "course_unattributed": "The student has weekly lessons shared with other students or running into the next package; they cannot be attributed to this package. Change them from the schedule first.",
-      "meeting_link_invalid": "The lesson link is not valid; it must start with https://"
+      "meeting_link_invalid": "The lesson link is not valid; it must start with https://",
+      "course_held": "The subscription awaits payment: update the app or reload the page so the lesson days are saved; they are booked only after the payment"
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -903,6 +904,8 @@
       "continueSameDays": "Continue on the same days",
       "pickOtherDays": "Pick other days",
       "continueHint": "The previous package's lessons: {days}. The new package starts on the same days and times from {date}.",
+      "draftHint": "Days saved until the payment: {days}. Starting {date}.",
+      "draftEdit": "Edit the saved days",
       "continueAdjust": {
         "one": "Previous package's lessons: {days}. The new package is one day a week, so edit the previous days to one day",
         "two": "Previous package's lessons: {days}. The new package is two days a week, so edit the previous days to two days",
@@ -7961,6 +7964,16 @@
   "courseDue": {
     "paidTitle": "Paid: book the lesson days",
     "unbookedTitle": "Lesson days not booked",
-    "unbookedText": "the package was paid at least two hours ago and its lesson days are not booked yet"
+    "unbookedText": "the package was paid at least two hours ago and its lesson days are not booked yet",
+    "customText": "the package is paid with no lesson days booked yet; its lesson count is custom, so an admin books them"
+  },
+  "courseDraft": {
+    "pick": "Pick the lesson days",
+    "held": "The subscription awaits payment: the picked days are saved and booked only after the payment.",
+    "saved": "The lesson days are saved and will be booked automatically after the payment. You can edit them until then.",
+    "save": "Save the days",
+    "clashTitle": "The lesson days could not be booked after the payment",
+    "clashText": "one of the picked times is now taken, so pick the lesson days again",
+    "failText": "the picked lesson days could not be booked after the payment, so open the lesson days and book them"
   }
 }

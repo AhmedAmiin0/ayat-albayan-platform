@@ -57,6 +57,9 @@ export class LinkFulfilment {
       return `refused:${errorCode(e) ?? e.getStatus()}`;
     }
     await this.deps.links.markPaid(link.id, { paymentId: payment.id, paidAt: payment.paid_at, paymentIntent: idOf(session.payment_intent) });
+    // The weekly days picked before the payment (owner 2026-11-06): re-read and booked now, after
+    // markPaid (a draft saved meanwhile books at once). A retry replays the same booking.
+    await this.deps.packages.paid(link.subscription_id);
     this.deps.alerts.paid(link, { id: payment.id, amount, currency });
     return 'paid';
   }

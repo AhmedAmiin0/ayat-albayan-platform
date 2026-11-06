@@ -1,7 +1,9 @@
 import { Global, Injectable, Logger, Module } from '@nestjs/common';
+import { PackageEvents } from './package-events';
 import type { ScheduleChange, ScheduleChangeListener } from './schedule-change';
 
 export type { ScheduleChange } from './schedule-change';
+export { PackageEvents } from './package-events';
 
 export type LessonsChangedListener = (lessonIds: readonly string[]) => Promise<void>;
 
@@ -51,6 +53,7 @@ export class LessonEvents {
   }
 }
 
+/** Global: the lesson events and the package-paid event (PackageEvents, owner 2026-11-06). */
 @Global()
-@Module({ providers: [LessonEvents], exports: [LessonEvents] })
+@Module({ providers: [LessonEvents, PackageEvents], exports: [LessonEvents, PackageEvents] })
 export class LessonEventsModule {}

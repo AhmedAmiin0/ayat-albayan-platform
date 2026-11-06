@@ -1,6 +1,7 @@
 import type { Duration, Gender, PackageSize, Program } from '@ab/catalog';
 import { packagePerWeek } from '@ab/money';
 import { wallParts } from '@ab/schedule';
+import type { CourseDraftInfo } from './course-draft.js';
 import { continueFrom, type BookedCourse } from './course-follow.js';
 
 // The assistant books the weekly course of a subscription she sold (owner 2026-10-18, R-ASST-01):
@@ -70,6 +71,13 @@ export interface SalesCourseView {
    * ends_on null or ≥ today), else the earliest-starting upcoming one (a renewal booked ahead). null = none.
    */
   current?: BookedCourse | null;
+  /**
+   * Hold mode (owner 2026-11-06): the package is unpaid with an open payment link, so «احجز» saves
+   * the picks as a draft (PUT /sales/booking/course/draft) booked on payment. Absent = false.
+   */
+  hold?: boolean;
+  /** The draft saved for it (its picks also come as `previous` to prefill), else null / absent. */
+  draft?: CourseDraftInfo | null;
 }
 
 /**

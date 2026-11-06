@@ -1,10 +1,12 @@
 import type { PaymentLinkView } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Linking, View } from 'react-native';
 import { copyOrShare } from '@/core/lib/clipboard';
 import { t } from '@/core/lib/i18n/i18n';
 import { appOpenUrl } from '@/core/lib/stripe-flag';
+import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -34,9 +36,14 @@ const pl = t.paymentLinks;
  * where no text can go at all, the box's own closed note)
  * and «نسخ» (the clipboard, else the share sheet). «افتح الرابط» opens the page here, marked as from the app
  * (?from=<platform>): after Stripe it brings her back to /pay-done (owner 2026-10-29). The sent text stays unmarked.
+ * «اختر أيام الحلقات» (owner 2026-11-06) pushes the course wizard over this screen: the picks
+ * are kept as a draft and booked once the family pays.
  */
 export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
   const tz = useViewerTz();
+  const base = useTreeBase();
+  const course = { pathname: '/inbox/sales-course', params: { studentId: link.student.id } };
+  const wizard = inTree(base, course);
   const { color } = useTheme();
   const client = useQueryClient();
   // Read at render, as the web dialog: the button is off (with the box's note) where no text goes.
@@ -65,6 +72,7 @@ export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
       <Button label={pl.sendInChat} onPress={send} disabled={closed} />
       <Button variant="secondary" label={pl.copy} onPress={() => void copyOrShare(link.url).then(setCopy)} />
       <Button variant="secondary" label={t.studentLists.openLink} onPress={open} />
+      <Button variant="secondary" label={t.courseDraft.pick} onPress={() => router.push(wizard)} />
       {copy === 'copied' ? <Note>{pl.copied}</Note> : null}
       {copy === 'failed' ? <ErrorLine message={t.classroom.copyFailed} /> : null}
       {openFailed ? <ErrorLine message={t.common.error} /> : null}

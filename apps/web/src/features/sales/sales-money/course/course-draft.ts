@@ -28,9 +28,18 @@ export function courseDraft(view: SalesCourseView, now?: string): BookingDraft |
     genderPref: student.teacher_gender_pref,
     durationMin: sub.duration,
     ...(sub.package ? { pkg: sub.package } : {}),
-    course: { perWeek, lessonsTotal: courseLessonCount(sub), package: sub.package, startsOn: courseOpensOn(view, now) ?? sub.starts_on },
+    course: {
+      perWeek,
+      lessonsTotal: courseLessonCount(sub),
+      package: sub.package,
+      startsOn: courseOpensOn(view, now) ?? sub.starts_on,
+      ...holdOf(view),
+    },
   };
 }
+
+/** Hold mode (owner 2026-11-06): the course's picks are saved as a draft until the payment. */
+const holdOf = (view: SalesCourseView): { hold?: true } => (view.hold ? { hold: true } : {});
 
 /** The student's own teacher, preselected on the teacher step when available. */
 export const courseHint = (view: SalesCourseView): BookHint | null =>

@@ -56,5 +56,12 @@ describe('«رابط دفع»: the link made', () => {
     expect(writeText).toHaveBeenCalledWith('https://app.example.com/pay/tok_1');
     expect(await screen.findByText(P.copied)).toBeTruthy();
   });
-});
 
+  it('«اختر أيام الحلقات» (owner 2026-11-06): opens the course dialog; absent without the handler', () => {
+    const onBookCourse = vi.fn();
+    const props = { link: CREATED, phone: PHONE, canSend: true, onClose: vi.fn() };
+    renderWithClient(<CreatedLink {...props} onBookCourse={onBookCourse} />);
+    fireEvent.click(screen.getByRole('button', { name: t.courseDraft.pick }));
+    expect(onBookCourse).toHaveBeenCalled();
+  });
+});
