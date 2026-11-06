@@ -11,7 +11,7 @@ import type { PageFacts, PageKey, PageReportRow } from './report-page.types';
 import { ReportReaders } from './report-readers';
 
 /** A submitted report and who it is about. */
-export interface PageFound {
+interface PageFound {
   row: PageReportRow;
   facts: PageFacts;
 }

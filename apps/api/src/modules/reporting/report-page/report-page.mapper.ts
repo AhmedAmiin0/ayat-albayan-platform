@@ -23,7 +23,7 @@ const content = (raw: unknown): ReportPageReport['content'] => {
 };
 
 /** The saved answers only: never the PDF error, the storage paths or the edit window. */
-export function pageReport(row: PageReportRow): ReportPageReport {
+function pageReport(row: PageReportRow): ReportPageReport {
   const grades = Object.fromEntries(
     REPORT_RUBRICS.map((r) => [r, row[RUBRIC_COLUMN[r]]]),
   ) as Record<Rubric, Grade | null>;

@@ -5,7 +5,7 @@ import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 
 /** The API path of a report's live page, by the report's uuid (the lists hold it). */
-export const reportPagePath = (reportId: string): string => `/report-pages/by-report/${reportId}`;
+const reportPagePath = (reportId: string): string => `/report-pages/by-report/${reportId}`;
 
 /**
  * The report's live page (owner 2026-11-06), read-only: the saved report, the teacher's files and
