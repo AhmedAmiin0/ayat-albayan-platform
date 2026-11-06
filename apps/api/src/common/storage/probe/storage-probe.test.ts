@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { fakeS3 } from '@/common/storage/store/s3.fakes';
 import type { MinioEnv } from '@/config/env/env.storage';
-import { StorageHealth } from './storage-health';
+import { StorageHealth, STORAGE_PING_MS } from './storage-health';
 import { StorageProbe } from './storage-probe';
 import type { StorageService } from '@/common/storage/storage.service';
 
@@ -49,6 +49,15 @@ describe('«اختبار الاتصال» (docs/45)', () => {
 });
 
 describe('/health storage view', () => {
+  it('a store that hangs is «down» after 1.5 s, never holding /health', async () => {
+    vi.useFakeTimers();
+    const health = new StorageHealth(storage(() => new Promise<void>(() => undefined)));
+    const view = health.view(0);
+    await vi.advanceTimersByTimeAsync(STORAGE_PING_MS);
+    expect(await view).toEqual({ driver: 'minio', status: 'down' });
+    vi.useRealTimers();
+  });
+
   const storage = (ping: () => Promise<void>) =>
     ({ writesTo: () => 'minio', ping }) as unknown as StorageService;
 

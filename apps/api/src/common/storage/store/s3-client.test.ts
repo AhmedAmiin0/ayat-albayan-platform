@@ -32,11 +32,12 @@ describe('MinIO signed URLs (docs/45)', () => {
     expect(url.toString()).not.toContain('ayat-minio');
   });
 
-  it('a PUT slot lives 2 hours and has no Supabase token', async () => {
+  it('a PUT slot lives 15 minutes, one upload per key (If-None-Match signed) and has no Supabase token', async () => {
     const slot = await minioStore(ENV).signedPut({ bucket: 'receipts', key: 's1/a.jpg' });
     const url = new URL(slot.signedUrl);
     expect(slot.token).toBe('');
     expect(url.pathname).toBe('/ab-receipts/s1/a.jpg');
-    expect(url.searchParams.get('X-Amz-Expires')).toBe('7200');
+    expect(url.searchParams.get('X-Amz-Expires')).toBe('900');
+    expect(url.searchParams.get('X-Amz-SignedHeaders')).toContain('if-none-match');
   });
 });

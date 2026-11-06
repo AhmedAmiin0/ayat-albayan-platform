@@ -61,4 +61,17 @@ describe('storage-copy (docs/45)', () => {
     expect((await copyToMinio(plan))[0]).toMatchObject({ copied: 0, present: 2 });
     expect(to.objects.has('ab-reports/_probe/x.txt')).toBe(false);
   });
+
+  it('never overwrites a newer MinIO object under the same key (a report re-rendered after the switch)', async () => {
+    const { from, to } = await stores();
+    const newer = new TextEncoder().encode('%PDF-1.7 re-rendered');
+    await to.store.put({
+      bucket: 'reports',
+      key: 's/b.pdf',
+      body: newer,
+      contentType: 'application/pdf',
+    });
+    await copyToMinio({ from: from.store, to: to.store, buckets: ['reports'], apply: true });
+    expect(await to.store.get({ bucket: 'reports', key: 's/b.pdf' })).toEqual(newer);
+  });
 });

@@ -3,8 +3,9 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { caddy, compose, root, services } from './compose.fixture.mjs';
+import { caddy, compose, composePath, root, services } from './compose.fixture.mjs';
 
+const composeText = readFileSync(composePath, 'utf8');
 const minio = services['ayat-minio'];
 const init = services['ayat-minio-init'];
 const initSh = readFileSync(root('deploy/staging/minio/init.sh'), 'utf8');
@@ -33,11 +34,18 @@ test('internal only: no published port, no host network, no console', () => {
   assert.equal(minio.environment.MINIO_BROWSER, 'off');
 });
 
-test('no app secrets: no env_file, the root keys by interpolation from .env only', () => {
-  for (const s of [minio, init]) assert.equal(s.env_file, undefined);
-  assert.equal(minio.environment.MINIO_ROOT_USER, '${MINIO_ROOT_USER:-}');
-  assert.equal(minio.environment.MINIO_ROOT_PASSWORD, '${MINIO_ROOT_PASSWORD:-}');
-  for (const [key, value] of Object.entries(init.environment)) assert.equal(value, `\${${key}:-}`, key);
+test('the keys in minio.env, read by the two MinIO services only, never through the app\'s .env', () => {
+  // Optional: the file still parses on a server without minio.env (the start guard then refuses).
+  for (const s of [minio, init]) assert.deepEqual(s.env_file, [{ path: './minio.env', required: false }]);
+  // Never interpolated from .env (the app's env_file): no copy of the root password in an API container.
+  assert.doesNotMatch(composeText, /\$\{MINIO_(ROOT|APP)_/);
+  assert.deepEqual(Object.keys(minio.environment).sort(), ['GOMEMLIMIT', 'MINIO_BROWSER']);
+  assert.deepEqual(init.environment, { MINIO_BUCKET_PREFIX: '${MINIO_BUCKET_PREFIX:-}' });
+  for (const [name, s] of Object.entries(services)) {
+    if (name.startsWith('ayat-minio')) continue;
+    assert.ok(!JSON.stringify(s.env_file ?? '').includes('minio.env'), name);
+    assert.ok(!Object.keys(s.environment ?? {}).some((k) => k.startsWith('MINIO_')), name);
+  }
   assert.doesNotMatch(JSON.stringify([minio, init]), /minioadmin/);
 });
 
@@ -76,6 +84,9 @@ test('init.sh: private buckets, an app user limited to object calls, refuses wea
   assert.match(initSh, /mc anonymous set none "\$ALIAS\/\$PREFIX\$b"/);
   assert.match(initSh, /\[ "\$\{#MINIO_ROOT_PASSWORD\}" -ge 16 \] \|\| fail/);
   assert.match(initSh, /\[ "\$\{#MINIO_APP_SECRET_KEY\}" -ge 16 \]/);
+  // The root password via MC_HOST_* (environment), never `mc alias set` on a command line.
+  assert.match(initSh, /export "MC_HOST_\$ALIAS=http:\/\/\$MINIO_ROOT_USER:\$MINIO_ROOT_PASSWORD@ayat-minio:9000"/);
+  assert.doesNotMatch(initSh, /mc alias set/);
   const actions = [...initSh.matchAll(/"(s3:\w+)"/g)].map((m) => m[1]).sort();
   assert.deepEqual(actions, [
     's3:DeleteObject',
@@ -91,7 +102,9 @@ test('init.sh: private buckets, an app user limited to object calls, refuses wea
 test('the backup reads with the app keys, never root, and touches only this project', () => {
   assert.doesNotMatch(backupSh, /MINIO_ROOT_/);
   assert.match(backupSh, /NETWORK=ayat-albayan-staging_default/);
-  assert.match(backupSh, /-e MINIO_APP_ACCESS_KEY -e MINIO_APP_SECRET_KEY/);
+  assert.match(backupSh, /\$\(val minio\.env MINIO_APP_SECRET_KEY\)/);
+  assert.match(backupSh, /-e MC_HOST_ayat /);
+  assert.doesNotMatch(backupSh, /mc alias set/);
   assert.doesNotMatch(backupSh, /mc mirror[^\n]*--remove|docker (system|volume) prune|\/opt\/wacrm\//);
 });
 
@@ -107,5 +120,7 @@ test('ayat-lb: files.ayatalbayan.com → ayat-minio:9000 after the API site, adm
   assert.ok(site.indexOf('respond @minio_internal 404') < site.indexOf('reverse_proxy'));
   // The Host header is what MinIO checks the signature against: never rewritten.
   assert.doesNotMatch(site, /header_up\s+Host/);
-  assert.doesNotMatch(site, /request_body|max_size/);
+  // The outer wall above the API's own caps (25 MiB at most) and LiveKit's multipart parts.
+  assert.match(site, /request_body \{\n\s*max_size 64MB\n\s*\}/);
+  assert.ok(site.indexOf('max_size 64MB') < site.indexOf('reverse_proxy'));
 });

@@ -12,6 +12,14 @@ export interface StorageHealthView {
 const STORAGE_HEALTH_MS = 30_000;
 
 /**
+ * A store that does not answer in time is «down»: /health answers well inside the load balancer's
+ * 2 s health timeout whatever the store does (never a reason to take a copy out).
+ */
+export const STORAGE_PING_MS = 1_500;
+const slow = (): Promise<'down'> =>
+  new Promise((resolve) => setTimeout(() => resolve('down'), STORAGE_PING_MS).unref());
+
+/**
  * Storage reachability for /health. Reported, never fatal: a down store must not take the API
  * copies out of the load balancer (uploads fail with their own error; old files still open).
  */
@@ -29,10 +37,10 @@ export class StorageHealth {
 
   private async check(): Promise<StorageHealthView> {
     const driver = this.storage.writesTo();
-    const status = await this.storage.ping().then(
+    const ping = this.storage.ping().then(
       () => 'ok' as const,
       () => 'down' as const,
     );
-    return { driver, status };
+    return { driver, status: await Promise.race([ping, slow()]) };
   }
 }

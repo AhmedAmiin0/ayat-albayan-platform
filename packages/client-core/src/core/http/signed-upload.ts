@@ -32,7 +32,8 @@ export class SignedUploadError extends Error {
 async function putToSignedUrl(signed: SignedUpload, file: UploadFile): Promise<void> {
   const res = await fetch(signed.signed_url, {
     method: 'PUT',
-    headers: { 'Content-Type': file.contentType },
+    // Signed by the API (one upload per key): MinIO refuses the PUT without it.
+    headers: { 'Content-Type': file.contentType, 'If-None-Match': '*' },
     body: file.body,
   });
   if (!res.ok) throw new SignedUploadError(res.status);

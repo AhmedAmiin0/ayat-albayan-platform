@@ -13,6 +13,8 @@ function client(m: MinioEnv, endpoint: string): S3Client {
     requestChecksumCalculation: 'WHEN_REQUIRED',
     responseChecksumValidation: 'WHEN_REQUIRED',
     maxAttempts: 2,
+    // A stalled MinIO fails the call (error surfaced) instead of holding a request open.
+    requestHandler: { connectionTimeout: 3_000, requestTimeout: 60_000 },
   });
 }
 

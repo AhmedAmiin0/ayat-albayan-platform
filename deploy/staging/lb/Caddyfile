@@ -46,7 +46,12 @@ http://files.ayatalbayan.com:8080 {
 	}
 	respond @minio_internal 404
 
-	# No request body limit here: the API caps each file's size and type when it signs the upload.
+	# The API caps each file (25 MiB at most) when it signs the upload; this is the outer wall. LiveKit's
+	# recordings go up in multipart parts well under it.
+	request_body {
+		max_size 64MB
+	}
+
 	reverse_proxy ayat-minio:9000 {
 		# Replace MinIO's own: a stored file is never sniffed into HTML, runs no script and sends no Referer.
 		# No CSP sandbox: Chrome refuses to show a PDF in a sandboxed page (the report links).

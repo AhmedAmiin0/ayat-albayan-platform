@@ -1,7 +1,7 @@
 # 45 — MinIO object storage
 
 Owner 2026-11-06: MinIO keeps every **new** file. Old files stay in Supabase Storage and keep working. Nothing
-moves at merge: the MinIO containers start only once the owner prepares `.env` (§4), and the API writes to MinIO
+moves at merge: the MinIO containers start only once the owner prepares `.env` and `minio.env` (§4), and the API writes to MinIO
 only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «التخزين».
 
 ## 1. Design
@@ -22,10 +22,18 @@ only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «ا�
   marker (`minio:` → a `PUT` to the signed URL, anything else → Supabase as before).
 - **Limits.** MinIO has no per-bucket size or type limit: when the API checks a client-uploaded object (`exists`), the
   MinIO adapter applies the Supabase bucket's own size cap and MIME list (`store/bucket-rules.ts`), so an oversize
-  or wrong-type upload is refused at registration as before. `ayat-lb` sets no body limit of its own.
+  or wrong-type upload is refused at registration as before. `ayat-lb` adds an outer wall of 64 MB per request
+  (the largest bucket cap is 25 MiB; LiveKit's recording uploads go up in multipart parts well under it).
+- **Client upload slots** (MinIO) are signed `PUT` URLs valid for **15 minutes**, with `If-None-Match: *`: one
+  upload per key, so an object the API has already checked can never be overwritten through the same slot.
 - **Failure** is an error the caller sees, never a silent fallback to the other store.
 - **Health.** `/health` stays 200 and reports `storage: { driver: supabase | minio, status: ok | down }` (a
-  list under an unused prefix in the active store, cached 30 s).
+  list under an unused prefix in the active store, cached 30 s). It answers within ~1.5 s even when the storage
+  hangs (the probe is time-boxed; a hung store reads `down`).
+- **Recordings:** LiveKit egress uploads to `MINIO_PUBLIC_URL` with the app user's key in the egress request. A
+  dedicated put-only user for recordings is a later hardening.
+- **Old reports re-rendered** after the cut-over get a new MinIO copy; their old Supabase copy stays in place
+  (cleaning those up is a later step).
   «اختبار الاتصال» in «التخزين» puts, reads and deletes a probe object under `_probe/` in the reports bucket.
 
 ## 2. Config keys («التكاملات» › «التخزين»; database + Vault, `.env` only bootstraps)
@@ -37,21 +45,32 @@ only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «ا�
 | `MINIO_PUBLIC_URL` | `https://files.ayatalbayan.com` | host of every signed URL (https only, except localhost) |
 | `MINIO_REGION` | `us-east-1` | MinIO's default |
 | `MINIO_BUCKET_PREFIX` | empty | if set, the same value in `.env` (§4, `ayat-minio-init` creates the buckets) |
-| `MINIO_ACCESS_KEY` | `.env` `MINIO_APP_ACCESS_KEY` | the app user, never the root user |
-| `MINIO_SECRET_KEY` | `.env` `MINIO_APP_SECRET_KEY` | Vault secret |
+| `MINIO_ACCESS_KEY` | `minio.env` `MINIO_APP_ACCESS_KEY` | the app user, never the root user |
+| `MINIO_SECRET_KEY` | `minio.env` `MINIO_APP_SECRET_KEY` | Vault secret |
+
+**Never change these once `minio:` rows exist.** A stored path records neither the bucket prefix, the endpoint
+nor the server: changing `MINIO_BUCKET_PREFIX`, or pointing `MINIO_ENDPOINT` / the keys at another MinIO, orphans
+every `minio:` file already stored, and clearing the MinIO config while such rows exist makes them unreadable.
+Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes: every write would fail with
+`storage_not_configured`.
 
 ## 3. What runs (`deploy/staging/`)
 
 - **`ayat-minio`** (`minio/minio:RELEASE.2025-04-22T22-12-26Z`, profile `minio`): `server /data` on the named
   volume `minio-data`, no published port, console off (`MINIO_BROWSER=off`), 512 MB, healthcheck `mc ready local`,
-  rotated logs. No `env_file`: only `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD`, interpolated from `.env`. It refuses
+  rotated logs. Its keys come from `/opt/ayat-albayan-staging/minio.env` (`env_file`, `required: false` so the compose
+  file parses without it), **never** from `.env`, the app's `env_file`: no API container sees MinIO's root password
+  (`compose-minio.test.mjs` guards it). It refuses
   to start (exit 1, the reason in its log) when the user is under 3 or the password under 16 characters, so it
   never runs on MinIO's default credentials.
 - **`ayat-minio-init`** (`minio/mc:RELEASE.2025-04-16T18-13-26Z`, profile `minio`, one shot, 64 MB): runs
   `deploy/staging/minio/init.sh` from the shipped checkout (`src/`). It waits up to 2 minutes for MinIO, creates
   each bucket (`mc mb --ignore-existing`), makes it private (`mc anonymous set none`), writes the policy `ayat-app`
   (`s3:GetObject`, `PutObject`, `DeleteObject` on objects, `ListBucket`, `GetBucketLocation` on the buckets, nothing
-  else) and creates the app user `MINIO_APP_ACCESS_KEY` with it. Every step is idempotent: `roll.sh`'s last
+  else) and creates the app user `MINIO_APP_ACCESS_KEY` with it. The root credentials reach `mc` through the
+  `MC_HOST_ayat` environment variable, not its command line; `mc admin user add` has no such alternative, so the
+  app secret is a command-line argument inside that one-shot container only. All four values must be URL-safe
+  (`A-Z a-z 0-9 . _ ~ -`, hence `openssl rand -hex`); `init.sh` refuses others. Every step is idempotent: `roll.sh`'s last
   `up -d` starts it again on every deploy. It depends on `ayat-minio` *started*, not *healthy*, so a MinIO that
   will not start never fails the API's deploy (the init then fails on its own, in its log).
 - **`ayat-lb`** (`lb/Caddyfile`): a site `http://files.ayatalbayan.com:8080` → `ayat-minio:9000`, after the API's
@@ -69,25 +88,28 @@ only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «ا�
    (check: `dig +short files.ayatalbayan.com` shows the VPS address).
 2. **Deploy this change** (merge → `deploy-staging`). The compose file, `lb/Caddyfile` and
    `src/deploy/staging/minio/` reach the server; nothing new starts (the profile is off).
-3. **Add the keys to `/opt/ayat-albayan-staging/.env`** (generated on the server, never pasted anywhere else):
+3. **Write `/opt/ayat-albayan-staging/minio.env`** (the keys, generated on the server, never pasted anywhere else)
+   and switch the profile on in `.env`:
    ```bash
    cd /opt/ayat-albayan-staging
-   grep -E '^(COMPOSE_PROFILES|MINIO_)' .env    # must print nothing; else edit those lines instead
-   cp .env .env.bak-$(date +%F-%H%M%S)
+   test ! -e minio.env && ! grep -q '^COMPOSE_PROFILES=' .env && echo ok   # must print ok
    umask 077
    {
-     echo 'COMPOSE_PROFILES=minio'
      echo 'MINIO_ROOT_USER=ayat-root'
-     echo "MINIO_ROOT_PASSWORD=$(openssl rand -base64 32)"
+     echo "MINIO_ROOT_PASSWORD=$(openssl rand -hex 24)"
      echo 'MINIO_APP_ACCESS_KEY=ayat-app'
      echo "MINIO_APP_SECRET_KEY=$(openssl rand -hex 20)"
-   } >> .env
+   } > minio.env
+   chmod 600 minio.env
+   cp .env .env.bak-$(date +%F-%H%M%S)
+   echo 'COMPOSE_PROFILES=minio' >> .env
    ```
-   The app secret is 40 hex characters: MinIO caps a user's secret at 40, and `init.sh` refuses one outside 16–40.
-   `.env` is also the app's `env_file`: the API containers see these lines after their next recreate (harmless; the
-   API reads its MinIO settings from «التكاملات»). Keep `COMPOSE_PROFILES=minio` from now on: it is what makes
-   `roll.sh` keep the two services.
+   Hex, not base64: the values go into a URL (`MC_HOST_*`), and MinIO caps a user's secret at 40 characters
+   (`init.sh` refuses one outside 16–40). `minio.env` is read only by `ayat-minio` and `ayat-minio-init`; the
+   deploy never writes it. Keep `COMPOSE_PROFILES=minio` in `.env` from now on: it is what makes `roll.sh` keep
+   the two services.
 4. **Start them:** `docker compose -p ayat-albayan-staging up -d ayat-minio ayat-minio-init`
+   (`env_file` with `required: false` needs Docker Compose 2.24 or newer: `docker compose version`).
 5. **Check the logs:**
    ```bash
    docker compose -p ayat-albayan-staging ps -a ayat-minio ayat-minio-init  # ayat-minio healthy, init Exited (0)
@@ -106,8 +128,10 @@ only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «ا�
 8. **«التكاملات» › «التخزين»** in /admin: `MINIO_ENDPOINT=http://ayat-minio:9000`,
    `MINIO_PUBLIC_URL=https://files.ayatalbayan.com`, `MINIO_REGION=us-east-1`, `MINIO_ACCESS_KEY` = the
    `MINIO_APP_ACCESS_KEY` value, `MINIO_SECRET_KEY` = the `MINIO_APP_SECRET_KEY` value
-   (`grep ^MINIO_APP_ .env`). Save, then press **«اختبار الاتصال»**: it must pass.
-9. **Cut over:** set `STORAGE_DRIVER` to `minio` and save. Check: `/health` shows `storage.status: ok`; submit a lesson
+   (`cat minio.env`). Save, then press **«اختبار الاتصال»**: it must pass before the next step.
+9. **Cut over** only once the apps can upload to MinIO: the mobile OTA with this change is adopted (the phones
+   restarted onto it) and open web tabs are reloaded. Older clients upload through Supabase's
+   `uploadToSignedUrl` and fail on a `minio:` slot. Then set `STORAGE_DRIVER` to `minio` and save. Check: `/health` shows `storage.status: ok`; submit a lesson
    report and open its PDF link (it is a `https://files.ayatalbayan.com/…` URL and shows inline in Chrome); upload a
    receipt from the web and from the phone.
 10. **Rollback:** set `STORAGE_DRIVER` back to `supabase`. New files go to Supabase again; files written to MinIO
@@ -117,7 +141,7 @@ only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «ا�
 ## 5. Backups
 
 Daily copy of every bucket to `/var/backups/ayat-minio` with `deploy/staging/minio/backup.sh`: a one-shot
-`minio/mc` container (the init's pinned image) on the project network, with the app user's keys from `.env` (read
+`minio/mc` container (the init's pinned image) on the project network, with the app user's keys from `minio.env` (read
 and list is all it needs; never root). Host crontab (`crontab -e` as root):
 
 ```cron
@@ -142,7 +166,7 @@ docker run --rm -v ayat-albayan-staging_minio-data:/data:ro -v /var/backups:/bac
 
 `tools/scripts/storage/copy-to-minio.sh` wraps
 `docker compose -p ayat-albayan-staging exec ayat-worker node dist/scripts/storage-copy.js`: a dry run by default
-(what would be copied), `--apply` to copy. Idempotent: safe to run again. It copies objects
+(what would be copied), `--apply` to copy. Idempotent: safe to run again, and it never overwrites an object MinIO already holds. It copies objects
 only: the stored paths keep pointing at Supabase until a later change rewrites them, so it can run at any time,
 and again.
 
@@ -157,7 +181,7 @@ and again.
   keeps them equal) to real `RELEASE.*` tags, deploy, then
   `docker compose -p ayat-albayan-staging up -d ayat-minio ayat-minio-init` by hand: `roll.sh` ends with
   `up -d --no-recreate`, which never recreates a running MinIO.
-- **New app secret:** a new `MINIO_APP_SECRET_KEY` in `.env`,
+- **New app secret:** a new `MINIO_APP_SECRET_KEY` (`openssl rand -hex 20`) in `minio.env`,
   `docker compose -p ayat-albayan-staging up -d ayat-minio-init`, then the new value in «التكاملات» right away
   (the old one stops working when the init runs). Do not change the root credentials casually.
 - **A failed first deploy:** the rollback restores a compose file without these services and removes `ayat-minio`

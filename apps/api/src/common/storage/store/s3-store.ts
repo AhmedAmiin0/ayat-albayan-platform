@@ -129,11 +129,14 @@ export class S3Store implements ObjectStore {
 
   async signedPut(o: ObjectKey): Promise<SignedPut> {
     const signedUrl = await orFail('signed upload', () =>
-      this.s3.sign(new PutObjectCommand(this.at(o)), UPLOAD_SECONDS),
+      this.s3.sign(new PutObjectCommand({ ...this.at(o), IfNoneMatch: '*' }), UPLOAD_SECONDS),
     );
     return { token: '', signedUrl };
   }
 }
 
-/** A signed upload slot lives 2 hours, like Supabase's createSignedUploadUrl. */
-const UPLOAD_SECONDS = 2 * 3600;
+/**
+ * A signed upload slot lives 15 minutes and carries If-None-Match: * (signed): one upload per key,
+ * so a file the API already checked can never be replaced through the same URL (docs/45).
+ */
+const UPLOAD_SECONDS = 15 * 60;

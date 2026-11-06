@@ -24,7 +24,7 @@ describe('uploadToSlot (docs/45)', () => {
     expect(supabase).not.toHaveBeenCalled();
     expect(fetch).toHaveBeenCalledWith('https://files.example/put?sig=1', {
       method: 'PUT',
-      headers: { 'Content-Type': 'image/png' },
+      headers: { 'Content-Type': 'image/png', 'If-None-Match': '*' },
       body: file.body,
     });
   });

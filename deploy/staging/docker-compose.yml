@@ -181,9 +181,10 @@ services:
           memory: 96M
 
   # Object storage for every new file (owner 2026-11-06, docs/45). Off until the owner puts COMPOSE_PROFILES=minio
-  # (and the MINIO_* keys) in .env: merging never starts it on a server not ready for it. Internal network only:
+  # in .env and writes minio.env: merging never starts it on a server not ready for it. Internal network only:
   # the API on ayat-minio:9000, browsers and WhatsApp through ayat-lb (files.ayatalbayan.com, signed URLs).
-  # No env_file: .env holds the app's secrets; only its own keys, by interpolation.
+  # Its keys live in minio.env (root only), never in .env: that is the app's env_file, so the API copies would
+  # see MinIO's root password. Optional, so the file parses on a server without it (the guard below refuses).
   ayat-minio:
     image: minio/minio:RELEASE.2025-04-22T22-12-26Z
     profiles: ["minio"]
@@ -192,13 +193,14 @@ services:
     command:
       - |
         [ "$${#MINIO_ROOT_USER}" -ge 3 ] && [ "$${#MINIO_ROOT_PASSWORD}" -ge 16 ] || {
-          echo 'ayat-minio: set MINIO_ROOT_USER and MINIO_ROOT_PASSWORD (16+ characters) in .env' >&2
+          echo 'ayat-minio: set MINIO_ROOT_USER and MINIO_ROOT_PASSWORD (16+ characters) in minio.env' >&2
           exit 1
         }
         exec minio server /data
+    env_file:
+      - path: ./minio.env
+        required: false
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-}
       # S3 API only: no web console to attack.
       MINIO_BROWSER: "off"
       # The Go GC works to stay under the container limit instead of being OOM-killed at it.
@@ -229,11 +231,11 @@ services:
       ayat-minio:
         condition: service_started
     entrypoint: ["/bin/sh", "/ayat-minio/init.sh"]
+    # The root keys and the app user's (minio.env); only the bucket prefix comes from .env (the API reads it too).
+    env_file:
+      - path: ./minio.env
+        required: false
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-}
-      MINIO_APP_ACCESS_KEY: ${MINIO_APP_ACCESS_KEY:-}
-      MINIO_APP_SECRET_KEY: ${MINIO_APP_SECRET_KEY:-}
       MINIO_BUCKET_PREFIX: ${MINIO_BUCKET_PREFIX:-}
     volumes:
       # The shipped checkout (deploy-staging puts HEAD in src/): the script is versioned with this file.

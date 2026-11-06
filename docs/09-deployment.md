@@ -91,7 +91,8 @@ The chat's PDF previews (owner 2026-10-29, `apps/api/src/modules/messaging/inbox
 
 New files go to MinIO once an admin switches `STORAGE_DRIVER` in «التكاملات» › «التخزين»; old files stay in Supabase
 Storage (owner 2026-11-06). `ayat-minio` (512 MB, internal only) and the one-shot `ayat-minio-init` (64 MB, buckets,
-app user, policy) start only with `COMPOSE_PROFILES=minio` and the `MINIO_*` keys in `.env`; `ayat-lb` serves
+app user, policy) start only with `COMPOSE_PROFILES=minio` in `.env` and their keys in `minio.env` (never in `.env`, the app's
+`env_file`); `ayat-lb` serves
 `files.ayatalbayan.com` from it (signed URLs). Design, config keys, the owner's VPS steps, cut-over, rollback and
 backups: **[docs/45-minio-storage.md](45-minio-storage.md)**; guards in `tools/scripts/ci-checks/compose/compose-minio.test.mjs`.
 

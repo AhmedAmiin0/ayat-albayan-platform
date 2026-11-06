@@ -30,7 +30,7 @@ test('a «minio:» path is a PUT to its signed URL; Supabase is not called', asy
   expect(await uploadSigned(MINIO, FILE)).toEqual({ error: null });
   expect(mockFetch).toHaveBeenCalledWith(MINIO.signed_url, {
     method: 'PUT',
-    headers: { 'Content-Type': 'image/jpeg' },
+    headers: { 'Content-Type': 'image/jpeg', 'If-None-Match': '*' },
     body: FILE.body,
   });
   expect(mockFrom).not.toHaveBeenCalled();

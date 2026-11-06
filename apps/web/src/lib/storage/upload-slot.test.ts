@@ -28,7 +28,7 @@ describe('uploadSigned', () => {
     expect(await uploadSigned(MINIO, FILE)).toEqual({ error: null });
     expect(fetchMock).toHaveBeenCalledWith(MINIO.signed_url, {
       method: 'PUT',
-      headers: { 'Content-Type': 'image/jpeg' },
+      headers: { 'Content-Type': 'image/jpeg', 'If-None-Match': '*' },
       body: FILE.body,
     });
     expect(from).not.toHaveBeenCalled();

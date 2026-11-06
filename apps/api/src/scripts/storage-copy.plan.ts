@@ -2,7 +2,7 @@ import type { Bucket } from '@/common/storage/storage.paths';
 import type { ObjectStore } from '@/common/storage/store/object-store';
 
 // The later bulk copy (docs/45 «Bulk copy»): every Supabase object into MinIO under the same key.
-// Dry-run unless `apply`; idempotent (an object MinIO already holds with the same size is skipped).
+// Dry-run unless `apply`; idempotent: an object MinIO already holds is never touched.
 // Objects only: the stored paths keep pointing at Supabase until a later change marks them.
 
 export interface CopyPlan {
@@ -29,7 +29,9 @@ type Outcome = 'present' | 'copied' | 'pending' | 'failed';
 async function copyOne(plan: CopyPlan, o: { bucket: Bucket; key: string }): Promise<Outcome> {
   const [src, dst] = await Promise.all([plan.from.info(o), plan.to.info(o)]);
   if (!src) return 'failed';
-  if (dst?.size === src.size) return 'present';
+  // Never overwrite: MinIO may hold a NEWER object under the same key (a report re-rendered after
+  // the switch); an old copy must not replace it.
+  if (dst) return 'present';
   if (!plan.apply) return 'pending';
   const body = await plan.from.get(o);
   if (!body) return 'failed';
