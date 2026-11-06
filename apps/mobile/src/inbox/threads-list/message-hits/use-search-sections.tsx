@@ -1,7 +1,7 @@
 import type { TreeBase } from '@/core/nav/tree-base';
 import type { ThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { MessageHits } from './MessageHits';
-import { SearchHead } from './SearchHead';
+import { hasSearchHead, SearchHead } from './SearchHead';
 import { useMessageHits } from './use-message-hits';
 
 interface SectionsInput {
@@ -21,9 +21,11 @@ interface SectionsInput {
 export function useSearchSections({ q, mode, base, now, chats }: SectionsInput) {
   const found = useMessageHits(q);
   const hits = found.hits.length > 0;
+  const head = { q, asked: found.asked, both: hits && chats > 0 };
   return {
     found: hits,
-    header: <SearchHead q={q} asked={found.asked} both={hits && chats > 0} />,
+    /** Null when the head shows nothing: no header, so no header gap over the chats. */
+    header: hasSearchHead(head) ? <SearchHead {...head} /> : null,
     footer: <MessageHits q={q} found={found} mode={mode} base={base} now={now} />,
   };
 }

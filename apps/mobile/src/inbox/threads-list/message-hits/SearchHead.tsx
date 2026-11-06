@@ -21,6 +21,9 @@ const headOf = ({ q, asked, both }: SearchHeadProps): Head => {
   return heads.find(([on]) => on)?.[1] ?? 'none';
 };
 
+/** The head shows something (an empty box shows none: the list then gets no header gap). */
+export const hasSearchHead = (props: SearchHeadProps): boolean => headOf(props) !== 'none';
+
 /**
  * Above the chats while searching (docs/37, as the web's SearchHead): at 1–2 characters the hint
  * that the message search needs three; once both sections show, «المحادثات» over the chats.

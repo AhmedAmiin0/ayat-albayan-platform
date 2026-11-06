@@ -15,6 +15,10 @@ const retry = (count: number, e: Error): boolean => !isGone(e) && count < 2;
 
 type Failure = 'gone' | 'error';
 
+/** Only from one window to the next: the old one stays on screen while the next loads. */
+const keepWindow = <T,>(prev: T | undefined, prevQuery?: { queryKey: readonly unknown[] }) =>
+  prevQuery?.queryKey[2] ? prev : undefined;
+
 /** What the chat says when the window cannot open (a failed older page inside it is no exit). */
 const SAY: Record<Failure, () => string> = {
   gone: () => t.inbox.chatSearch.unreachable,
@@ -40,6 +44,7 @@ const failureOf = (id: string | undefined, q: WindowRead): Failure | null => {
  * The window around message `id` (GET /threads/:phone?around=, docs/37 NEW 3): 20 newer, the hit,
  * older ones to fill the page, then older pages inside it. Static: no poll, no refetch on focus,
  * never on disk (noPersist); the live chat stays mounted for the header, composer and read stamp.
+ * From one window to the next the old one stays meanwhile (placeholder, never a live flash).
  * A gone hit, or a window that failed after its retries, says so and goes back to the live chat.
  */
 export function useAnchoredThread(phone: string, id: string | undefined) {
@@ -52,6 +57,7 @@ export function useAnchoredThread(phone: string, id: string | undefined) {
     refetchOnWindowFocus: false,
     gcTime: 60_000,
     retry,
+    placeholderData: keepWindow,
   });
   const failure = failureOf(id, query);
   const lost = useEffectEvent((kind: Failure) => {

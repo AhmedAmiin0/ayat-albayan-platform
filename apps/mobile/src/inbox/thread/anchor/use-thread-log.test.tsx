@@ -124,3 +124,18 @@ test('while the window loads the live chat stays on screen (no empty flash), not
   expect(result.current.query.data?.pages[0]?.messages.map((m) => m.id)).toEqual([SHOWN]);
   expect(result.current.target).toEqual({ id: OLD, ready: false });
 });
+
+test('from one window to the next: the old window stays, anchored, until the next loads', async () => {
+  const OTHER = 'd4444444-4444-4444-8444-444444444444';
+  mockParams.mockReturnValue({ msg: OLD });
+  const { result, rerender } = await render();
+  await waitFor(() => expect(result.current.target).toEqual({ id: OLD, ready: true }));
+  mockApiFetch.mockImplementation((path: string) =>
+    path.includes(OTHER) ? new Promise(() => undefined) : answer(path),
+  );
+  mockParams.mockReturnValue({ msg: OTHER });
+  await rerender({});
+  await waitFor(() => expect(result.current.target).toEqual({ id: OTHER, ready: false }));
+  expect(result.current.anchored).toBe(true);
+  expect(result.current.query.data?.pages[0]?.messages.map((m) => m.id)).toEqual([OLD, 'c3']);
+});

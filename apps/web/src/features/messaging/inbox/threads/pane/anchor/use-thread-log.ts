@@ -7,7 +7,7 @@ import { useLastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send
 import { jumpToMessage } from '@/features/messaging/inbox/messages/lib/jump-to-message';
 import type { LogAnchor } from '@/features/messaging/inbox/messages/lib/use-anchor-scroll';
 import { useChatAnchor } from '@/features/messaging/inbox/shared/chat-anchor';
-import { decideView, LIVE_VIEW, pageRows } from './anchor-view';
+import { decideView, LIVE_VIEW, pageRows, type AnchorView } from './anchor-view';
 
 /** A chat query (the live useLiveThread or the window): what the log reads of it. */
 interface Pages {
@@ -60,6 +60,10 @@ function useWindow(phone: string, id: string | null) {
   return { at, shown: open && at.data !== undefined, waiting, problem };
 }
 
+/** The window's problem shows only while its hit is the one asked for (a later scroll hides it). */
+const problemFor = (view: AnchorView, problem: string | null): string | null =>
+  view.msg === view.window ? problem : null;
+
 /** The log's anchor while the window shows: its hit and the way back to the live chat. */
 const logAnchor = (id: string | null, onNewest: () => void): LogAnchor | undefined =>
   id === null ? undefined : { id, onNewest };
@@ -92,6 +96,6 @@ export function useThreadLog(phone: string, live: Pages) {
     onOlder: () => void source.fetchNextPage(),
     anchor: logAnchor(w.shown ? view.window : null, leave),
     /** The log's status line for the window: the hit is gone (404) or the read failed. */
-    problem: w.problem,
+    problem: problemFor(view, w.problem),
   };
 }

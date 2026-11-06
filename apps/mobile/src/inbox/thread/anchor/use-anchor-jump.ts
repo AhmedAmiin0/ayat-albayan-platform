@@ -13,7 +13,8 @@ interface AnchorJump {
 /**
  * The list's side of the anchor: the hit is centred and lit once its rows render (the live
  * chat's, or the window's: about row 20 of the inverted list), once per hit; leaving the window
- * (BackToNewest, a send, the search closed, a gone hit) returns to the newest message.
+ * (BackToNewest, a send, the search closed, a gone hit) returns to the newest message, unless the
+ * step lands on a hit the live chat shows (that jump wins).
  */
 export function useAnchorJump<T>(list: RefObject<FlatList<T> | null>, input: AnchorJump): void {
   const { target, anchored } = input;
@@ -23,7 +24,9 @@ export function useAnchorJump<T>(list: RefObject<FlatList<T> | null>, input: Anc
     if (id) go(id);
   }, [id]);
   const was = useRef(anchored);
+  // Leaving to a hit shown in the live chat jumps to it (effect above): no scroll home over it.
   const toNewest = useEffectEvent(() => {
+    if (input.target?.ready) return;
     list.current?.scrollToOffset({ offset: 0, animated: false });
   });
   useEffect(() => {

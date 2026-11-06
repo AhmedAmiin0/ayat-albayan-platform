@@ -60,12 +60,14 @@ export function useThreadLog(phone: string, live: ThreadQuery): ThreadLog {
   const anchoredId = plan === 'anchor' ? msg : undefined;
   const around = useAnchoredThread(phone, anchoredId);
   useLeaveOnSend(phone, anchoredId !== undefined);
-  // The live chat stays on screen until the window's rows are in (no empty flash meanwhile).
+  // The live chat stays on screen until the window's rows are in (no empty flash meanwhile);
+  // between two windows the previous one stays (a placeholder: anchored, the hit not ready).
   const anchored = anchoredId !== undefined && around.data !== undefined;
+  const loaded = anchored && !around.isPlaceholderData;
   return {
     query: anchored ? around : live,
     anchored,
-    target: targetOf(msg, { plan, anchored }),
+    target: targetOf(msg, { plan, anchored: loaded }),
     to: anchored ? windowEnd(threadMessages(around.data)) : null,
   };
 }

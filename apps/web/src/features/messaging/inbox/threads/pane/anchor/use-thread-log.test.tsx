@@ -112,6 +112,14 @@ describe('useThreadLog', () => {
     expect(result.current.messages.map((m) => m.id)).toEqual([ID(1)]);
   });
 
+  it('after a failed window, a hit in the live chat scrolls and clears the problem', async () => {
+    const { result } = setup(ID(3));
+    await waitFor(() => expect(result.current.problem).toBe(t.inbox.chatSearch.unreachable));
+    act(() => result.current.move(ID(1)));
+    await waitFor(() => expect(jump).toHaveBeenCalledWith(ID(1), false));
+    expect(result.current.problem).toBeNull();
+  });
+
   it('any other failed read is retried, then shows the common error (not «unreachable»)', async () => {
     const { result } = setup(ID(5));
     await waitFor(() => expect(result.current.problem).toBe(t.common.error), { timeout: 8000 });

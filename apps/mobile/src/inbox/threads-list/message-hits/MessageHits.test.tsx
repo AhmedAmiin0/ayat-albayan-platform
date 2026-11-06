@@ -97,3 +97,9 @@ test('searching, empty and failed lines; no «عرض مزيد» at the end', asy
   expect(screen.getByText(t.inbox.messageSearch.failed)).toBeTruthy();
   expect(screen.queryByText(t.inbox.messageSearch.more)).toBeNull();
 });
+
+test('no hit on this page but older ones remain: «عرض مزيد», not the empty line', async () => {
+  await show('درس', state({ hits: [], more: true }));
+  expect(screen.queryByText(t.inbox.messageSearch.empty)).toBeNull();
+  expect(screen.getByRole('button', { name: t.inbox.messageSearch.more })).toBeTruthy();
+});

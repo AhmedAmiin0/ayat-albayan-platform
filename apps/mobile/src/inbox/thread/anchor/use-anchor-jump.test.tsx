@@ -7,6 +7,11 @@ import type { LogTarget } from './use-thread-log';
 
 // The list's side of the anchor: the hit is lit once its rows are in, once; leaving scrolls home.
 
+interface Jump {
+  anchored: boolean;
+  target: LogTarget | null;
+}
+
 const ID = 'b2222222-2222-4222-8222-222222222222';
 
 function setup() {
@@ -38,5 +43,25 @@ test('leaving the window returns the list to the newest message', async () => {
   );
   expect(scrollToOffset).not.toHaveBeenCalled();
   await hook.rerender({ anchored: false });
+  expect(scrollToOffset).toHaveBeenCalledWith({ offset: 0, animated: false });
+});
+
+test('from the window to a hit in the live chat: jumps to it, no scroll to the newest', async () => {
+  const { list, jump, scrollToOffset } = setup();
+  const LIVE = 'a1111111-1111-4111-8111-111111111111';
+  const hook = await renderHook((p: Jump) => useAnchorJump(list, { jump, ...p }), {
+    initialProps: { anchored: true, target: { id: ID, ready: true } },
+  });
+  await hook.rerender({ anchored: false, target: { id: LIVE, ready: true } });
+  expect(jump).toHaveBeenLastCalledWith(LIVE, t.inbox.chatSearch.unreachable);
+  expect(scrollToOffset).not.toHaveBeenCalled();
+});
+
+test('leaving to a hit not yet decided (target pending) still returns to the newest', async () => {
+  const { list, jump, scrollToOffset } = setup();
+  const hook = await renderHook((p: Jump) => useAnchorJump(list, { jump, ...p }), {
+    initialProps: { anchored: true, target: { id: ID, ready: true } },
+  });
+  await hook.rerender({ anchored: false, target: { id: ID, ready: false } });
   expect(scrollToOffset).toHaveBeenCalledWith({ offset: 0, animated: false });
 });

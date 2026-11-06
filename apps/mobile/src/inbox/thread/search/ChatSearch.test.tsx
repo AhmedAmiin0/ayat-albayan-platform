@@ -11,15 +11,12 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (path: string) => mockApiFetch(path),
 }));
 
-// docs/37: a hit outside the shown rows re-anchors (`?msg=`, one request); a close leaves it.
+// docs/37: a hit outside the shown rows re-anchors (`?msg=`, one request); the real anchor
+// (window, back to a live hit, close): ChatSearch.anchor.test.
 const mockAnchorAt = jest.fn();
-const mockLeave = jest.fn();
-const mockMsg = jest.fn((): string | undefined => undefined);
 jest.mock('@/inbox/thread/anchor', () => ({
   ...jest.requireActual('@/inbox/thread/anchor'),
   anchorAt: (id: string) => mockAnchorAt(id),
-  leaveAnchor: () => mockLeave(),
-  useAnchorParam: () => mockMsg(),
 }));
 
 const words = t.inbox.chatSearch;
@@ -91,17 +88,4 @@ test('no hit: «لا توجد نتائج», both arrows off', async () => {
   for (const name of [words.older, words.newer]) {
     expect(screen.getByRole('button', { name })).toBeDisabled();
   }
-});
-
-test('closing while the chat shows the window around a hit: back to the live chat', async () => {
-  const listen = jest.spyOn(BackHandler, 'addEventListener');
-  mockApiFetch.mockImplementation(answer(found([NEW, OLD])));
-  mockMsg.mockReturnValue(OLD.id);
-  await openAndType(jest.fn(), 'اسلام');
-  await screen.findByText(counter(1, 2), {}, { timeout: 5000 });
-  await act(async () => {
-    listen.mock.calls.at(-1)?.[1]?.(undefined as never);
-  });
-  expect(mockLeave).toHaveBeenCalledTimes(1);
-  mockMsg.mockReturnValue(undefined);
 });

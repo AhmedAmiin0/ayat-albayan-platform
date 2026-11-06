@@ -31,7 +31,7 @@ const phaseOf = (found: MessageHitsState): Phase => {
   const phases: [boolean, Phase][] = [
     [found.searching, 'searching'],
     [found.failed && found.hits.length === 0, 'failed'],
-    [found.hits.length === 0, 'empty'],
+    [found.hits.length === 0 && !found.more, 'empty'],
   ];
   return phases.find(([on]) => on)?.[1] ?? 'found';
 };
