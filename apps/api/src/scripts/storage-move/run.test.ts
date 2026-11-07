@@ -69,3 +69,29 @@ describe('moveColumns: --apply (docs/45 §6)', () => {
     expect(naps).toEqual([250, 250, 250]);
   });
 });
+
+describe('moveColumns: stopping early (docs/45 §6)', () => {
+  it('a failing guard (driver switched back) stops before the next batch, with the counts so far', async () => {
+    let calls = 0;
+    const guard = (): Promise<void> => {
+      calls += 1;
+      return calls > 1 ? Promise.reject(new Error('STORAGE_DRIVER is not minio')) : Promise.resolve();
+    };
+    const { job: j, table } = await job({ guard });
+    const out = await moveColumns(j);
+    expect(out.error).toBe('STORAGE_DRIVER is not minio');
+    expect(out.totals.rewritten).toBe(2);
+    expect(out.columns[0]?.cursor).toBe(id(2));
+    expect(table.get(id(3))).toBe('s/3.pdf');
+  });
+
+  it('a database error mid-run still reports the cursor to resume from', async () => {
+    const { job: j, db } = await job();
+    const page = db.page.bind(db);
+    db.page = (input) =>
+      input.after === id(4) ? Promise.reject(new Error('timeout')) : page(input);
+    const out = await moveColumns(j);
+    expect(out).toMatchObject({ error: 'timeout', totals: { rewritten: 4 } });
+    expect(out.columns[0]?.cursor).toBe(id(4));
+  });
+});
