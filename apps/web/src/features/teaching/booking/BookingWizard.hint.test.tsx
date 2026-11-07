@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import type { BookSearch } from './api';
 import { BookingPage } from './BookingPage';
-import { ABRAR, next, NOOR, respond, routeSend, SLOT, STUDENT_ID } from './wizard-fixture';
+import { ABRAR, next, NOOR, respond, routeSend, rowInputs, SLOT, STUDENT_ID } from './wizard-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -47,8 +47,9 @@ describe('booking from a calendar free gap (R-SCH-06)', () => {
     expect(abrar).toHaveProperty('checked', true);
     next();
     next();
-    const step = await screen.findByRole('region', { name: t.booking.steps.slot });
-    expect(within(step).getByRole('status').textContent).toContain('17:00');
+    const row = await rowInputs(1);
+    expect(row.date).toHaveProperty('value', '2026-10-04');
+    expect(row.time).toHaveProperty('value', '17:00');
   });
 
   it('picking another teacher drops the hinted start', async () => {
@@ -59,7 +60,9 @@ describe('booking from a calendar free gap (R-SCH-06)', () => {
     fireEvent.click(screen.getByRole('radio', { name: new RegExp(NOOR.display_name_ar) }));
     next();
     next();
-    expect(await screen.findByText(t.booking.pickSlotFirst)).toBeTruthy();
+    const row = await rowInputs(1);
+    expect(row.date).toHaveProperty('value', '');
+    expect(row.time).toHaveProperty('value', '');
   });
 
   it('a teacher the filters leave out is ignored', async () => {

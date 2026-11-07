@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { fillStable } from '../../support/core/fill';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
+import { fillLessonRow } from '../../support/teaching/lesson-rows';
 import { STUB_URL, stubInbound, stubReset } from '../../support/core/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';
 // Booking types and the invoice (R-SCH-10, R-PAY-03, R-MSG-06): a trial needs none; a package and a makeup do
@@ -37,21 +38,22 @@ async function upload(admin: Page): Promise<void> {
   await admin.getByLabel(ar.booking.invoice.upload).setInputFiles({ name: 'inv.png', mimeType: 'image/png', buffer: PNG });
   await expect(admin.getByRole('button', { name: ar.booking.invoice.remove })).toBeVisible();
 }
-/** On the slot step: next week's Sunday 16:00, then on. */
-async function pickSunday(admin: Page): Promise<void> {
+/** On the slot step: next week's Sunday 16:00 (a package: its first lesson row), then on. */
+async function pickSunday(admin: Page, pkg = false): Promise<void> {
   const step = admin.getByRole('region', { name: ar.booking.steps.slot });
+  if (pkg) return fillLessonRow(step, 1, { weekday: 0, time: '16:00' }).then(() => next(admin));
   await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
   await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: /16:00/ }).click();
   await next(admin);
 }
 /** A lead's wizard: the new student → teacher «أبرار» → package → the Sunday slot → on. */
-async function toSlot(admin: Page, student: string): Promise<void> {
+async function toSlot(admin: Page, student: string, pkg = false): Promise<void> {
   await fillStable(admin.getByLabel(ar.leads.studentName, { exact: true }), student);
   await next(admin);
   await admin.getByRole('radio', { name: /أبرار/ }).check();
   await next(admin);
   await next(admin);
-  await pickSunday(admin);
+  await pickSunday(admin, pkg);
 }
 
 const invoiceOf = (student: string) => withSql((sql) => sql<{ id: string; source: string; kind: string }[]>`
@@ -78,7 +80,7 @@ test.describe('booking types and the invoice (R-SCH-10, R-PAY-03, R-MSG-06)', ()
     const student = `مريم${digits().slice(-3)}`;
     await openLead(admin, { name: `أم ${student}`, from: digits(1) });
     await (await sidePanel(admin, 'lead')).getByRole('link', { name: ar.inbox.subscription.subscribe, exact: true }).click();
-    await toSlot(admin, student);
+    await toSlot(admin, student, true);
     await expect(admin.getByText(ar.booking.invoice.hint)).toBeVisible();
     await expect(admin.getByRole('button', { name: ar.booking.next })).toBeDisabled();
     await upload(admin);

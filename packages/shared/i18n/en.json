@@ -8258,6 +8258,7 @@
     "dateRequired": "Pick the date",
     "timeRequired": "Pick the time",
     "addDay": "Add a day",
+    "farDay": "Pick the days within one week of the first lesson",
     "removeRow": "Remove day {n}"
   }
 }

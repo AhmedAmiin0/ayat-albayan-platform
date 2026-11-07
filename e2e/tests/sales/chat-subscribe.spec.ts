@@ -5,13 +5,13 @@ import { fillStable } from '../../support/core/fill';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { stubInbound, stubReset } from '../../support/core/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';
+import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
 // Subscribe from the chat (R-SUB-01, R-LEAD-02, R-LEAD-06): a new lead writes on WhatsApp → the
 // thread says «غير مشترك» → «اشترك» books a regular package (new guardian + student) → «اعمل
 // الاشتراك» → back in the thread it says «مشترك». A guardian's thread offers «اشتراك جديد» per
 // child. «Meta» is tools/wa-stub; messaging stays off (journeys 2–4 assert `queued`).
 
-const SUNDAY = ar.enums.weekday['0'];
 const badge = ar.inbox.subscription.badge;
 const openThread = (name: string) => ar.inbox.openThread.replace('{name}', name);
 
@@ -60,8 +60,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     await expect(admin.getByRole('radio', { name: new RegExp(ar.enums.packageSize['8']) })).toBeChecked();
     await admin.getByRole('button', { name: ar.booking.next }).click();
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
-    await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-    await step.getByRole('region', { name: new RegExp(`^${SUNDAY} `) }).getByRole('button', { name: /16:00/ }).click();
+    await fillLessonRow(step, 1, { weekday: 0, time: '16:00' });
     await admin.getByRole('button', { name: ar.booking.next }).click();
     await uploadInvoice(admin);
     await admin.getByLabel(ar.booking.meetingLink).fill('https://meet.jit.si/ayat-e2e-subscribe');
