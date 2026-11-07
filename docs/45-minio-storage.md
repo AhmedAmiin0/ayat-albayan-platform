@@ -260,8 +260,8 @@ update moves **no money** and changes **no status**. It sets `updated_at` where 
   `paid_at`, `created_at` or `id` changes (what the evaluation reads); insert and delete as before. A receipt
   move, a note or a method edit re-applies none of today's commission rules. A cancelled package's payment
   (frozen, migration 934) now moves too: the guard lets through exactly `receipt_path` → `minio:` + the same
-  path with every other column equal; every money change, another receipt, a move back and a delete are still
-  refused.
+  path, or the rollback below (the exact inverse), with every other column equal; every money change, another
+  receipt and a delete are still refused.
 - `messages`: a row whose only change is `media_path` → `minio:` + the same path sends no inbox live update
   (media arriving, null → a path, still does); its `updated_at` (the mobile sync cursor) moves, so phones pick
   up the new path. `thread_summaries` ignore `media_path` as before. Running it outside working hours is no

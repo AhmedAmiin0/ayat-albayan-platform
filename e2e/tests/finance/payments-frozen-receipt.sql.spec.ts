@@ -4,7 +4,7 @@ import { code, pay, student, subscription } from '../../support/sales/assistant'
 
 // Migration 20261107000100: a cancelled package's payments stay frozen (migrations 934 / 991); the
 // one update let through is storage-move's (docs/45 §6): the receipt relocated to the same key in
-// MinIO («minio:» + the old path) with every other column equal. Rolled back.
+// MinIO («minio:» + the old path), or its rollback, with every other column equal. Rolled back.
 
 /** A payment on a package cancelled without a stop (an old row: the guards refuse it today). */
 async function frozenPayment(tx: Tx, phone: string): Promise<{ id: string; sub: string }> {
@@ -28,7 +28,7 @@ test.describe('payments of a cancelled package: frozen except a receipt move (20
     test.skip(test.info().project.name !== 'desktop', 'database only: one run'),
   );
 
-  test('every money column, another receipt, a move back and a delete are still refused', async () => {
+  test('every money column, another receipt and a delete are still refused', async () => {
     await rolledBack(async (tx) => {
       const { id, sub } = await frozenPayment(tx, '+966500001073');
       const refused = [
@@ -48,14 +48,16 @@ test.describe('payments of a cancelled package: frozen except a receipt move (20
     });
   });
 
-  test('the receipt relocated to MinIO under the same key goes through, once', async () => {
+  test('the receipt relocated to MinIO under the same key goes through, and its rollback', async () => {
     await rolledBack(async (tx) => {
       const { id, sub } = await frozenPayment(tx, '+966500001074');
       expect(await code(tx, update(tx, id, `receipt_path = 'minio:${sub}/r.jpg'`))).toBe('ok');
-      const back = update(tx, id, `receipt_path = '${sub}/r.jpg'`);
-      expect(await code(tx, back)).toBe('23514');
       const twice = update(tx, id, `receipt_path = 'minio:minio:${sub}/r.jpg'`);
       expect(await code(tx, twice)).toBe('23514');
+      const elsewhere = update(tx, id, `receipt_path = '${sub}/r2.jpg'`);
+      expect(await code(tx, elsewhere)).toBe('23514');
+      const back = update(tx, id, `receipt_path = '${sub}/r.jpg'`);
+      expect(await code(tx, back)).toBe('ok'); // the docs/45 §6 rollback
     });
   });
 });

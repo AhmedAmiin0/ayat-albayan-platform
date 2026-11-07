@@ -12,15 +12,16 @@
 --   2. payments_frozen_when_cancelled (934 / 991) refused ANY update of a cancelled package's payment, so
 --      its receipt could never be moved. Its intent (934: «a cancelled package is never paid into …
 --      its payments are frozen») is the money: it now lets through exactly one change, the receipt
---      relocated to the same key in MinIO (old path unmarked, new = 'minio:' || old) with every other
---      column equal. Amount, kind, dates, package, method, a different receipt, a move back and a delete
---      are refused exactly as before.
+--      relocated to the same key in MinIO (old path unmarked, new = 'minio:' || old) or its runbook
+--      rollback (the exact inverse), with every other column equal. Amount, kind, dates, package,
+--      method, a different receipt and a delete are refused exactly as before.
 --   3. messages_inbox_live_update (860) broadcast 'thread_changed' for every updated message. It now
---      skips a row whose only change is media_path relocated to MinIO (a first media_path, null → path,
+--      skips a row whose only change is media_path relocated to MinIO or back (a first media_path, null → path,
 --      still broadcasts: the media just arrived). updated_at still moves (the sync cursor re-sends the
 --      row with its new path, as wanted).
 -- Deploy: function bodies and triggers only; no row is read, evaluated or changed.
--- SQL test plan: e2e/tests/storage/storage-move-triggers.*.sql.spec.ts.
+-- SQL test plan: e2e/tests/finance/payments-path-only.sql.spec.ts,
+--   e2e/tests/finance/payments-frozen-receipt.sql.spec.ts, e2e/tests/messaging/inbox-media-moved.sql.spec.ts.
 -- Rollback: re-run 272's trigger (after insert or update or delete, no when), drop trigger
 --   payments_assistant_commission_upd; re-run 991's payments_frozen_when_cancelled; re-run 860's
 --   messages_inbox_live_update; drop functions storage_relocated, only_path_moved,
@@ -33,10 +34,12 @@ create or replace function public.storage_relocated(p_old text, p_new text) retu
   select coalesce(p_old not like 'minio:%' and p_new = 'minio:' || p_old, false)
 $$;
 
--- Two versions of one row (to_jsonb) differ only by p_column relocated to MinIO (updated_at aside).
+-- Two versions of one row (to_jsonb) differ only by p_column relocated to MinIO, or moved back by the
+-- docs/45 §6 rollback (updated_at aside).
 create or replace function public.only_path_moved(p_old jsonb, p_new jsonb, p_column text)
   returns boolean language sql immutable set search_path = '' as $$
-  select coalesce(public.storage_relocated(p_old ->> p_column, p_new ->> p_column)
+  select coalesce((public.storage_relocated(p_old ->> p_column, p_new ->> p_column)
+                   or public.storage_relocated(p_new ->> p_column, p_old ->> p_column))
     and (p_old - p_column - 'updated_at') = (p_new - p_column - 'updated_at'), false)
 $$;
 -- Both stay executable by every role: pure functions of their arguments (no table read), and the
