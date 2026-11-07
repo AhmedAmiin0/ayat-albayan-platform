@@ -43,7 +43,7 @@ function mocks() {
   const synced = new Map<string, unknown>();
   return {
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), create: vi.fn(), approvals: vi.fn(async (): Promise<ApprovalRow[]> => []), upsertApprovals: vi.fn(), numberRef: vi.fn(),
-      saveLineSync: vi.fn(async (s: { line: string }) => void synced.set(s.line, s)), lineSyncs: vi.fn(async () => new Map(synced)) },
+      saveLineSync: vi.fn(async (s: { line: string }) => void synced.set(s.line, s)), lineSyncs: vi.fn(async () => new Map(synced)), relaneQueued: vi.fn(async () => 0) },
     messages: { get: vi.fn(), requeue: vi.fn(), markSentManually: vi.fn(), handOff: vi.fn() },
     appSend: { get: vi.fn(), start: vi.fn() },
     gate: { view: vi.fn(), open: vi.fn(), automaticOn: vi.fn(async () => true) },

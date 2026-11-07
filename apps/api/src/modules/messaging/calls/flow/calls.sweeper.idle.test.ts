@@ -92,7 +92,7 @@ describe('CallsSweeper.tick — idle costs', () => {
     vi.stubGlobal('fetch', (url: string) => (urls.push(url), Promise.resolve(new Response(null, { status: 204 }))));
     const { sweeper, live } = setup();
     await sweeper.wake();
-    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/calls-sweeper/kick']);
+    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/calls-sweeper/kick?wait=0']);
     expect(live).not.toHaveBeenCalled();
   });
 });

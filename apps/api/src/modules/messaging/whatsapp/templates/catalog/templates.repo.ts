@@ -7,17 +7,15 @@ import type { ImportRow } from '@/modules/messaging/whatsapp/templates/sync/temp
 import type { TemplatePatch } from '@/modules/messaging/whatsapp/templates/sync/template-sync';
 import { templateRow, templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { sendableCache } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
-
+import { relaneQueued, type RelaneInput } from '@/modules/messaging/whatsapp/sender/drain';
 /** One (template, number) approval (docs/23c decision 4). */
 export type ApprovalRow = Tables<'message_template_numbers'>;
 export type ApprovalWrite = TablesInsert<'message_template_numbers'>;
 /** What the per-number routes need of a wa_numbers row (ids only, never a secret). */
 export type NumberRef = Pick<Tables<'wa_numbers'>, 'id' | 'purpose' | 'is_default' | 'waba_id'>;
 
-/** How long cached() trusts its copy of a template (another API copy may have written since). */
-const TEMPLATE_COPY_MS = 60_000;
-/** A row, or null when none matched. */
-type MaybeRow = TemplateRow | null;
+const TEMPLATE_COPY_MS = 60_000; // cached() trusts its copy this long (another copy may write)
+type MaybeRow = TemplateRow | null; // a row, or null when none matched
 
 /** message_templates (R-MSG-01): the API is its only writer (sync and import, create, submit, starter flag). */
 @Injectable()
@@ -35,10 +33,8 @@ export class TemplatesRepo {
   }
 
   /**
-   * A thread's bubbles render each templated row (≤ 50 a page, mostly the same few keys): an in-memory
-   * copy instead of a read per row. Dropped on update / insert here (template sync, submit, edits);
-   * another API copy's write (Redis: `templates`) drops it at once, else within TEMPLATE_COPY_MS.
-   * Display and the composer's reopen note only: the reopen queue and other sends read get().
+   * A thread's bubbles (≤ 50 a page, few keys): a copy, not a read per row; dropped by writes here
+   * and (Redis: `templates`) other copies', else in TEMPLATE_COPY_MS. Display and the reopen note.
    */
   cached(key: string, now = Date.now()): Promise<TemplateRow | null> {
     const hit = this.copies.get(key);
@@ -138,6 +134,11 @@ export class TemplatesRepo {
     if (error) throw new Error(`template line syncs read failed: ${error.message}`);
     const rows = data.flatMap((r) => (isWaLine(r.line) ? [[r.line, r] as const] : []));
     return new Map(rows.map(([line, r]) => [line, r.result as unknown as TemplateLineSync]));
+  }
+
+  /** A moved template's queued, unclaimed rows take its new lane stamp (sender/drain/relane.repo.ts). */
+  relaneQueued(input: RelaneInput): Promise<number> {
+    return relaneQueued(this.db, input);
   }
 
   /** null = no such wa_numbers row. */

@@ -109,6 +109,6 @@ describe('MessageWorker — the line of a row', () => {
     const row = { ...chatText, error_code: 'sending', attempts: 1 };
     await expect(worker().process({ row, template: null, now: NOW, autoOn: true })).resolves.toBe('failed');
     expect(dispatch.ready).not.toHaveBeenCalled();
-    expect(queries.failure).toHaveBeenCalledWith(row.id, expect.objectContaining({ error_code: 'uncertain' }));
+    expect(queries.failure).toHaveBeenCalledWith(row.id, expect.objectContaining({ error_code: 'uncertain' }), { attempts: 1 });
   });
 });

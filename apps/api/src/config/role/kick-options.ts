@@ -16,18 +16,25 @@ export type KickOptions = z.infer<typeof kickOptionsSchema>;
 export const kickOptionsOf = (given: unknown): KickOptions =>
   kickOptionsSchema.safeParse(given ?? {}).data ?? {};
 
-/** The internal route's query: `?lane=chat&wait=1` (jobs.controller parses it with @ZodQuery). */
-export const kickQuerySchema = z.object({ lane: laneName.optional(), wait: z.literal('1').optional() });
+/**
+ * The internal route's query: `?lane=chat&wait=1|0` (jobs.controller parses it with @ZodQuery). An
+ * API copy of this release always says `wait`; one from before 42-8 (a rolling deploy) sends none
+ * and expected the answer after the pass, so no `wait` = wait (the 202 is only for `wait=0`).
+ */
+export const kickQuerySchema = z.object({
+  lane: laneName.optional(),
+  wait: z.enum(['0', '1']).optional(),
+});
 export type KickQuery = z.infer<typeof kickQuerySchema>;
 
 /** The route's parsed query as options. */
 export const kickOptionsOfQuery = (query: KickQuery): KickOptions => ({
   ...(query.lane ? { lane: query.lane } : {}),
-  wait: query.wait === '1',
+  wait: query.wait !== '0',
 });
 
 /** Options as the route's query (undefined values are left out of the URL). */
 export const kickQueryOf = (o: KickOptions): Record<string, string | undefined> => ({
   lane: o.lane,
-  wait: o.wait ? '1' : undefined,
+  wait: o.wait ? '1' : '0',
 });

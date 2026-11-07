@@ -25,7 +25,7 @@ describe('kickWorker', () => {
     vi.stubGlobal('fetch', fetch);
     await kickWorker('sender');
     const [url, init] = fetch.mock.calls[0] as [string, RequestInit];
-    expect(url).toBe('http://worker.invalid:3001/internal/jobs/sender/kick');
+    expect(url).toBe('http://worker.invalid:3001/internal/jobs/sender/kick?wait=0');
     expect(init.method).toBe('POST');
     expect(Object.keys(init.headers ?? {})).toEqual(['x-ab-internal']);
     expect(warn).not.toHaveBeenCalled();

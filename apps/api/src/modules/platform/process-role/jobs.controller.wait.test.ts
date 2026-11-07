@@ -34,10 +34,23 @@ function route() {
 describe('POST /internal/jobs/:name/kick — 202 (docs/42 42-8)', () => {
   it('answers before the pass ends, with the lane passed on', async () => {
     const { job, controller } = route();
-    await controller.kick('test-kick-wait', internalToken(), { lane: 'chat' });
+    await controller.kick('test-kick-wait', internalToken(), { lane: 'chat', wait: '0' });
     expect(job.done).toBe(false);
     expect(job.options).toEqual([{ lane: 'chat' }]);
     job.release();
+  });
+
+  it('no `wait` (an API copy from before 42-8, mid rolling deploy) answers after the pass', async () => {
+    const { job, controller } = route();
+    let answered = false;
+    const res = controller.kick('test-kick-wait', internalToken()).then(() => {
+      answered = true;
+    });
+    await Promise.resolve();
+    expect(answered).toBe(false);
+    job.release();
+    await res;
+    expect(answered).toBe(true);
   });
 
   it('?wait=1 answers once the pass is done', async () => {

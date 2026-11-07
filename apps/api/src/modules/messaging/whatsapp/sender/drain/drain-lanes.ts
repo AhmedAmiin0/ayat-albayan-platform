@@ -17,9 +17,12 @@ interface DrainDeps {
   /** Lane keys that may run `size` rows at once (pooled.ts); every other lane runs one. */
   pooled: ReadonlySet<string>;
   size: number;
+  /** ms clock (tests replace it); absent = Date.now. */
+  clock?: () => number;
 }
 
-interface Lane { run: PassRun; key: string; items: PassItem[] }
+/** `shift`: the job's now → the row's now (the time since the pass read its rows). */
+interface Lane { run: PassRun; key: string; items: PassItem[]; shift: () => number }
 
 /** Rows with no pause key (module mode, no number can send them now) share one lane. */
 const NO_PAUSE = '';
@@ -48,12 +51,15 @@ function switchesOf(gate: SendGate): Promise<Switches> {
 /**
  * One row: the switches (one UNCACHED read, docs/09, docs/26 26-P4) right before it, so OFF stops
  * every lane at its next row; then the worker. A broken token (or Meta's 131042) stops ITS lane.
+ * The row's now is read here, not at the pass start: a lane that waited on its lock (or on earlier
+ * rows) still claims with a lease in the future (#695 review, item 1).
  */
-async function rowStep(deps: DrainDeps, run: PassRun, item: PassItem): Promise<Step> {
+async function rowStep(deps: DrainDeps, lane: Lane, item: PassItem): Promise<Step> {
   const gate = await switchesOf(deps.gate);
   if (!gate.open) return 'closed';
-  const outcome = await deps.worker.process({ ...item.job, autoOn: gate.automaticOn });
-  run.summary[outcome] += 1;
+  const now = new Date(item.job.now.getTime() + lane.shift());
+  const outcome = await deps.worker.process({ ...item.job, now, autoOn: gate.automaticOn });
+  lane.run.summary[outcome] += 1;
   return outcome === 'paused' && item.pause !== null ? 'paused' : 'next';
 }
 
@@ -69,7 +75,7 @@ async function drainLane(deps: DrainDeps, lane: Lane): Promise<void> {
     items: lane.items,
     size: deps.pooled.has(lane.key) ? deps.size : 1,
     phoneOf: (item) => item.job.row.phone_e164,
-    step: (item) => rowStep(deps, lane.run, item),
+    step: (item) => rowStep(deps, lane, item),
   });
   if (stop?.why === 'paused') await onPaused(deps, lane, stop);
 }
@@ -84,6 +90,10 @@ export async function drainLanes(
   run: PassRun,
   items: readonly PassItem[],
 ): Promise<void> {
-  const lanes = [...lanesOf(items)].map(([key, rows]) => ({ run, key, items: rows }));
+  const clock = deps.clock ?? Date.now;
+  const read = clock();
+  // Whole seconds: a row read straight away keeps the pass's now exactly.
+  const shift = (): number => Math.max(0, Math.floor((clock() - read) / 1000) * 1000);
+  const lanes = [...lanesOf(items)].map(([key, rows]) => ({ run, key, items: rows, shift }));
   await allEnded(lanes.map((lane) => deps.locks.run(lane.key, () => drainLane(deps, lane))));
 }

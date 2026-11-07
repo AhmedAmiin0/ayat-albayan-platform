@@ -14,10 +14,9 @@ import type { TemplateRow, WaSent } from '@/modules/messaging/whatsapp/whatsapp.
 
 export type { DueMessage } from './sender.due';
 
-/** due(): the approved keys, now, the batch and (a lane's pass) its lane. */
 /** Without a chat client, chat-stamped texts are never read (they would fill the batch forever). */
 const NOT_CHAT_TEXT = 'template_key.not.is.null,line.is.null,line.neq.chat';
-
+/** due(): the approved keys, now, the batch and (a lane's pass) its lane. */
 interface DueInput { keys: readonly string[]; now: Date; limit: number; lane?: Lane }
 
 /** The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set. */
@@ -45,8 +44,7 @@ export class SenderRepo {
 
   /**
    * Approved rows; a crm line's teacher_new_student by its CRM template (template-gate.repo).
-   * Through TemplatesRepo's 60 s copy, cleared on every template write (docs/42 42-3); absent:
-   * read each time.
+   * TemplatesRepo's 60 s copy, cleared on every template write (docs/42 42-3); absent: each time.
    */
   approvedTemplates(): Promise<TemplateRow[]> {
     return this.templates ? this.templates.sendable() : sendableTemplates(this.db);
@@ -128,8 +126,11 @@ export class SenderRepo {
     return true;
   }
 
-  async failure(id: string, plan: FailurePlan): Promise<void> {
-    const { error } = await this.db.from('messages').update(plan).eq('id', id).eq('status', 'queued');
+  /** `unrecorded`: only while still SENDING at that attempt (a stale copy never overwrites). */
+  async failure(id: string, plan: FailurePlan, unrecorded?: { attempts: number }): Promise<void> {
+    const base = this.db.from('messages').update(plan).eq('id', id).eq('status', 'queued');
+    const at = unrecorded ? base.eq('error_code', SENDING).eq('attempts', unrecorded.attempts) : base;
+    const { error } = await at;
     if (error) throw new Error(`message failure write failed: ${error.message}`);
   }
 

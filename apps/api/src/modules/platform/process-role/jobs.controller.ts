@@ -23,8 +23,8 @@ const forbidden = () => new ForbiddenException({ code: 'forbidden', message: 'fo
 /**
  * The worker's kick route: an API copy's «run now» (kickWorker). Served only by the worker (role-http:
  * the API copies answer 404 for /internal/*, but for the peer reload below), and only with the internal
- * token. Answers 202 as soon as the kick is queued; `?wait=1` (Outbox.send) answers once the job's
- * pass is done, as the local kick resolved (docs/42 42-8). `?lane=` names the job's lane (42-7).
+ * token. `?wait=0` answers 202 as soon as the kick is queued; `?wait=1` (Outbox.send) or no `wait`
+ * (an API copy from before 42-8) answers once the pass is done (docs/42 42-8). `?lane=`: 42-7.
  */
 @ApiExcludeController()
 @Controller('internal/jobs')

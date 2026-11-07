@@ -3,3 +3,4 @@ export { LaneLocks } from './lane-locks';
 export { LANE_ROWS, laneOfRow, type Lane } from './lanes';
 export { pooledKeys } from './pooled';
 export { LaneTickers } from './lane-tickers';
+export { relaneQueued, type RelaneInput } from './relane.repo';
