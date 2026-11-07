@@ -11,11 +11,11 @@ describe('LiveDot (docs/44 K2)', () => {
     render(<LiveDot />);
     const dot = screen.getByTestId('live-dot');
     expect(dot.dataset.state).toBe('off');
-    expect(screen.getByRole('status').textContent).toBe(t.inbox.liveOff);
+    expect(screen.getByRole('img', { name: t.inbox.liveOff })).toBe(dot);
     expect(dot.querySelector('.bg-danger')).not.toBeNull();
     act(() => inboxLive.setLive(true));
     expect(dot.dataset.state).toBe('on');
-    expect(screen.getByRole('status').textContent).toBe(t.inbox.liveOn);
+    expect(screen.getByRole('img', { name: t.inbox.liveOn })).toBe(dot);
     expect(dot.querySelector('.bg-ok')).not.toBeNull();
     expect(dot.getAttribute('title')).toBe(t.inbox.liveOn);
   });

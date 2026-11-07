@@ -12,15 +12,15 @@ const looks: Record<LiveDotState, { tone: string; label: string }> = {
 /**
  * The live dot beside the chats list's title (docs/44 K2, like Kapso): green while the realtime
  * channel is SUBSCRIBED, red while it is down (it rejoins with backoff meanwhile and the polls keep
- * the inbox current). Its name («متصل» / «غير متصل») is in its title and for screen readers.
+ * the inbox current). Its name («متصل» / «غير متصل») is its title and accessible name (an image,
+ * not a live region: the page's toasts own role=status).
  */
 export function LiveDot() {
   const state = liveDotState(useInboxLive());
   const { tone, label } = looks[state];
   return (
-    <span role="status" data-testid="live-dot" data-state={state} title={label} className="inline-flex p-1">
-      <span aria-hidden className={cn('size-2 rounded-full', tone)} />
-      <span className="sr-only">{label}</span>
+    <span role="img" aria-label={label} data-testid="live-dot" data-state={state} title={label} className="inline-flex p-1">
+      <span className={cn('size-2 rounded-full', tone)} />
     </span>
   );
 }
