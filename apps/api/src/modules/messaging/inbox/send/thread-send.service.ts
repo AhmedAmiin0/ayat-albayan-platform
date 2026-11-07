@@ -2,6 +2,7 @@ import { ACCOUNT_CODE_TEMPLATE, restrictedMay, type ThreadTemplate, type ThreadT
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { templateStamp } from '@/modules/messaging/whatsapp';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
@@ -9,6 +10,7 @@ import { chatLine } from './text-line';
 import { ThreadQuotes, type ReplyFields, type SendFrom } from '@/modules/messaging/inbox/threads/thread-quotes';
 import { missingParams, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { assertRepliesToOriginal, CorrectionRepo, correctionOf, withSameRequest } from './correction';
 
 export { chatLine, sendLine } from './text-line';
 
@@ -20,10 +22,7 @@ export interface ThreadSend<T> {
   scope?: TeacherScope | null;
   /** Sales mode: the sending salesperson (any chat, her own dedup space and audit). */
   sales?: SalesScope | null;
-  /**
-   * Neither templates.manage nor templates.send_all (owner 2026-10-12): only the restricted allow-list
-   * (restrictedMay, like GET /messaging/templates). Absent = every template (the admin).
-   */
+  /** No templates.send_all (owner 2026-10-12): the allow-list only (restrictedMay); absent: all. */
   restricted?: boolean;
   /** «إعادة توجيه»: the message this copy was forwarded from (messages.forwarded_from_id). */
   forwardedFrom?: string;
@@ -31,6 +30,7 @@ export interface ThreadSend<T> {
   dedup?: string;
   /** A server-made send that must not go out late (the reopen template: 24 h). */
   expiresAt?: string;
+  role?: string | null; // the sender's base role («تعديل»: an admin corrects anyone's text)
 }
 
 /**
@@ -75,8 +75,8 @@ export async function replyOf(
  */
 @Injectable()
 export class ThreadSendService {
-  /** «رد» (property-injected: the constructor is at the 3-parameter limit). */
-  @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
+  @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes; // «رد» (the constructor is full)
+  @Inject(CorrectionRepo) private readonly corrections?: CorrectionRepo; // «تعديل» = a correction
 
   constructor(
     private readonly queries: ThreadsRepo,
@@ -85,26 +85,31 @@ export class ThreadSendService {
   ) {}
 
   /**
-   * H3: free text from the chat line when its window is open, else from notifications; after
-   * every window, a staff member's text (a forward too) is held behind the reopen template
-   * (chatLine, owner 2026-11-03). Teacher mode (docs/19) keeps 409 session_closed (sendLine).
+   * H3: free text from the chat line (window open) or notifications; after every window it is held
+   * behind the reopen template (chatLine, 2026-11-03). Teacher mode keeps 409 (sendLine).
    */
   async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<Sent> {
     if (s.scope) assertCanSend(s.scope, s.phone);
     const key = dedupKey(s);
+    const again = s.input.correctsId ? await this.outbox.replayOf(key) : null;
+    if (again) return withSameRequest(again, s.input); // «تعديل»: a retry's first row (#694)
     const thread = await this.queries.thread(s.phone);
     const at = { now, windows: () => this.queries.numberWindows(s.phone) };
-    const teacher = !!s.scope;
-    const from = await chatLine(thread, { ...at, teacher });
-    const reply = await replyOf(this.quotes, s, from);
-    return this.outbox.queue({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...from, ...reply });
+    const fix = await correctionOf(this.corrections, s);
+    const from = await chatLine(thread, { ...at, teacher: !!s.scope });
+    const reply = await replyOf(this.quotes, fix.send, from);
+    assertRepliesToOriginal(fix.row.corrects_id, reply);
+    const body = fix.send.input.text;
+    const row = { ...outboundBase(s, thread), dedup_key: key, body, ...from, ...reply };
+    return withSameRequest(await this.outbox.queue({ ...row, ...fix.row }), s.input);
   }
 
   /**
    * H4: an approved template with every variable filled; a PDF template comes only from the PDF job.
    * A restricted role (teacher, sales, any role without templates.send_all) sends only the allow-list
-   * (owner 2026-10-12): 403 template_not_allowed for any other. No line stamp here: the
-   * sender picks the template's own line and stamps it at claim (docs/12 §13.3).
+   * (owner 2026-10-12): 403 template_not_allowed for any other. The sender picks the template's own
+   * line at claim (docs/12 §13.3); a chat-line starter is stamped chat now (templateStamp), so the
+   * chat lane sends it before the chat's next text (docs/42 42-7).
    */
   async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
@@ -130,6 +135,7 @@ export class ThreadSendService {
       template_key: s.input.key,
       template_params: s.input.params,
       lesson_id: s.input.lessonId ?? null,
+      ...templateStamp(template),
       ...(s.expiresAt ? { expires_at: s.expiresAt } : {}),
     });
   }

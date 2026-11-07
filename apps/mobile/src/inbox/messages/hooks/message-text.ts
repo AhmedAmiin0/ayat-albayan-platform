@@ -138,9 +138,12 @@ export function errorLine(m: Pick<MessageView, 'error_code'>): string {
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 
-/** A refused send in Arabic: inbox.error.<code> (session_closed…), else «الرسالة متبعتتش…». */
+/**
+ * A refused send in Arabic: inbox.error.<code> (session_closed…) or a correction's refusal
+ * (inbox.correction.errors), else «الرسالة متبعتتش…».
+ */
 export function sendError(error: unknown): string {
   const code = error instanceof ApiError && isRecord(error.body) ? error.body['code'] : undefined;
-  const errors: Record<string, string> = t.inbox.error;
+  const errors: Record<string, string> = { ...t.inbox.correction.errors, ...t.inbox.error };
   return (typeof code === 'string' ? errors[code] : undefined) ?? t.inbox.error.send_failed;
 }

@@ -22,6 +22,7 @@ import { ForwardFiles } from './files/forward-files';
 import { ThreadForwardController } from './files/thread-forward.controller';
 import { ThreadForwardService } from './files/thread-forward.service';
 import { ThreadQuotes } from './threads/thread-quotes';
+import { CorrectionRepo } from './send/correction';
 import { ThreadSendService } from './send/thread-send.service';
 import { ThreadsController } from './threads/threads.controller';
 import { ThreadsRepo } from './threads/threads.repo';
@@ -86,6 +87,7 @@ import {
     ThreadFileSender,
     InboxSettings,
     ThreadQuotes,
+    CorrectionRepo,
     ForwardFiles,
     ThreadForwardService,
     ThreadReopenService,

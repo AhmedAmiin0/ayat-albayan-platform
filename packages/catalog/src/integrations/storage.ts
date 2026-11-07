@@ -17,6 +17,7 @@ export const STORAGE_PLAIN_KEYS = [
   'MINIO_BUCKET_PREFIX',
   'MINIO_ACCESS_KEY',
   'MINIO_RECORDINGS',
+  'MINIO_DRIVE_BACKUP',
 ] as const;
 
 /** The docker services an http MinIO endpoint may name (deploy/staging: the stack's MinIO). */
@@ -59,4 +60,5 @@ export const STORAGE_VALUE_CHECKS: Record<(typeof STORAGE_PLAIN_KEYS)[number], z
   MINIO_BUCKET_PREFIX: minioBucketPrefix,
   MINIO_ACCESS_KEY: minioAccessKey,
   MINIO_RECORDINGS: z.enum(['false', 'true']),
+  MINIO_DRIVE_BACKUP: z.enum(['false', 'true']),
 };

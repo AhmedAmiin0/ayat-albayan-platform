@@ -10,13 +10,12 @@ const crmOf = (over: Partial<Parameters<typeof teacherLessonCrm>[0]> = {}) =>
   teacherLessonCrm({ teacher: TEACHER, lesson: LESSON, students: STUDENTS, ...over });
 
 describe('teacherLessonCrm (teacher_new_student → teacher_lesson_v2)', () => {
-  it('teacher, students, codes, the time in the teacher\'s tz, the duration; join and report suffixes', () => {
+  it('the 4 slots: teacher, students with codes, the time in the teacher\'s tz, the duration', () => {
     const crm = crmOf();
     expect(crm?.body).toEqual([
       'أ. خالد',
-      'سهيلة ومريم',
-      'AB-0101، AB-0102',
-      expect.stringContaining('17:00'),
+      'سهيلة (AB-0101) ومريم (AB-0102)',
+      'الأحد 4 أكتوبر 17:00',
       '45 دقيقة',
     ]);
     expect(crm?.buttons).toEqual(['classroom/L1', 'teacher/report/L1']);

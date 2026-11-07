@@ -1,4 +1,5 @@
 import { appRole, runsJobs } from './app-role';
+import { kickOptionsOf } from './kick-options';
 import { kickWorker } from './worker-kick';
 
 type Method = (this: unknown, ...args: unknown[]) => unknown;
@@ -22,12 +23,12 @@ const JOBS = new Map<string, JobClass>();
 
 export const backgroundJobs = (): ReadonlyMap<string, JobClass> => JOBS;
 
-function wrap(proto: Record<string, unknown>, key: string, elsewhere: () => unknown): void {
+function wrap(proto: Record<string, unknown>, key: string, elsewhere: Method): void {
   const own = proto[key];
   if (typeof own !== 'function') throw new Error(`@BackgroundJob: ${key}() is missing`);
   const local = own as Method;
   proto[key] = function gated(this: unknown, ...args: unknown[]): unknown {
-    return runsJobs(appRole()) ? local.apply(this, args) : elsewhere();
+    return runsJobs(appRole()) ? local.apply(this, args) : elsewhere.apply(this, args);
   };
 }
 
@@ -46,7 +47,8 @@ export function BackgroundJob(opts: BackgroundJobOptions): (job: JobClass) => vo
     wrap(proto, 'onApplicationBootstrap', () => undefined);
     JOBS.set(opts.name, job);
     if (!opts.kick) return;
-    wrap(proto, opts.kick, () => kickWorker(opts.name));
+    // A kick's options (lane, wait) travel to the worker's route (docs/42 42-7, 42-8).
+    wrap(proto, opts.kick, (options) => kickWorker(opts.name, kickOptionsOf(options)));
     KICKABLE.set(opts.name, { job, method: opts.kick });
   };
 }

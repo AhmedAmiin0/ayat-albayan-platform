@@ -2580,9 +2580,6 @@
     }
   },
   "src/features/messaging/inbox/messages/lib/bubble-offers.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -3852,11 +3849,6 @@
   },
   "src/features/messaging/numbers/form/SecretChip.tsx": {
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/numbers/form/fallback-rank.ts": {
-    "max-len": {
       "count": 1
     }
   },

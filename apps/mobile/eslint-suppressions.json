@@ -3240,7 +3240,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 11
+      "count": 10
     },
     "max-lines-per-function": {
       "count": 1
@@ -3321,7 +3321,7 @@
   },
   "src/inbox/composer/draft-store.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "no-restricted-syntax": {
       "count": 1
@@ -3446,9 +3446,6 @@
   },
   "src/inbox/composer/use-composer-send.ts": {
     "@typescript-eslint/no-confusing-void-expression": {
-      "count": 1
-    },
-    "complexity": {
       "count": 1
     },
     "max-len": {
@@ -4101,7 +4098,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/messages/hooks/bubble-side.ts": {

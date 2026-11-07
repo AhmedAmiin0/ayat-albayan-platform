@@ -60,7 +60,7 @@ export function useQuoteSend(phone: string, onSent: () => void) {
     mutationFn: async ({ text, id }: Offer) => {
       const view = await sendText({ phone, text, clientRequestId: id });
       // Every 2xx: a kept id may replay the first offer even after a 4xx released it.
-      if (replayedOther(view, text)) throw new ReplayedSend();
+      if (replayedOther(view, { text })) throw new ReplayedSend();
       return view;
     },
     onMutate: sendStart,

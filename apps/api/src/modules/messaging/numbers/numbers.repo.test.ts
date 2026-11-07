@@ -25,9 +25,14 @@ describe('NumbersQueries', () => {
     await expect(q.all()).rejects.toThrow('numbers read failed');
   });
 
-  it('saveHealth updates by phone id', async () => {
-    const { db, calls } = fakeDb({ wa_numbers: [{}] });
-    await new NumbersRepo(db).saveHealth('1000000001', { health: { ok: true }, checked_at: 't' });
-    expect(calls.find((c) => c.method === 'eq')?.args).toEqual(['phone_number_id', '1000000001']);
+  it('saveHealth matches a phone id, or a crm role (one number when named)', async () => {
+    const { db, calls } = fakeDb({ wa_numbers: [{}, {}] });
+    const repo = new NumbersRepo(db);
+    const health = { health: { ok: true }, checked_at: 't' };
+    await repo.saveHealth({ phone_number_id: '1000000001' }, health);
+    await repo.saveHealth({ purpose: 'chat', provider: 'crm', id: 'n1' }, health);
+    expect(calls.filter((c) => c.method === 'match').map((c) => c.args[0])).toEqual([
+      { phone_number_id: '1000000001' }, { purpose: 'chat', provider: 'crm', id: 'n1' },
+    ]);
   });
 });

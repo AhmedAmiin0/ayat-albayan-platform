@@ -1,7 +1,7 @@
 {
   "src/app.module.ts": {
     "ab/module-boundaries": {
-      "count": 42
+      "count": 41
     }
   },
   "src/common/audit/audit.service.ts": {
@@ -1305,7 +1305,7 @@
   },
   "src/config/role/worker-kick.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/main.ts": {
@@ -4287,7 +4287,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 12
+      "count": 10
     },
     "ab/module-boundaries": {
       "count": 3
@@ -4989,11 +4989,8 @@
     "typescript/consistent-type-imports": {
       "count": 2
     },
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/numbers/lines/numbers.lines.ts": {
@@ -6762,10 +6759,10 @@
       "count": 3
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/sender/message.worker.auto.test.ts": {
@@ -6865,7 +6862,7 @@
   },
   "src/modules/messaging/whatsapp/sender/sender.due.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -6883,7 +6880,7 @@
   },
   "src/modules/messaging/whatsapp/sender/sender.repo.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     },
     "ab/module-boundaries": {
       "count": 1
@@ -7086,7 +7083,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.restricted.http.test.ts": {
@@ -7175,7 +7172,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 13
+      "count": 9
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.controller.ts": {
@@ -7194,7 +7191,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-submit.ts": {

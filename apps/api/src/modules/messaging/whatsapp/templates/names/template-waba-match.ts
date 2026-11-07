@@ -36,7 +36,7 @@ export function wabaMatch(row: TemplateRow, list: readonly MetaTemplate[]): Waba
 
 /**
  * Status, quality and the rejection reason only: the WABA template's own body, buttons and id
- * belong to another name (teacher_lesson_v2 has five values), so the row keeps its own shapes and
+ * belong to another name (teacher_lesson_v2 has four values), so the row keeps its own shapes and
  * its meta_id (a resubmit edits the platform's template, never the WABA's other one).
  */
 function mappedPatch(meta: MetaTemplate, now: Date): TemplatePatch {

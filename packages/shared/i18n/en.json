@@ -3243,14 +3243,14 @@
     "hide": {
       "action": "Remove from platform",
       "title": "Remove this message from the platform?",
-      "body": "The message will be hidden for all staff on the platform only. It is NOT deleted from the customer's phone: they still see it in WhatsApp.",
+      "body": "The message will be hidden for all staff on the platform only. It is NOT deleted for the family: they still have it in WhatsApp.",
       "confirm": "Remove from platform",
       "placeholder": "Hidden on the platform — still visible to the customer",
       "by": "Hidden by {name} · {time}",
       "byUnknown": "Hidden · {time}",
       "unhide": "Show",
       "failed": "Could not complete the action, please try again.",
-      "noEdit": "WhatsApp messages cannot be edited from the platform; edit them in the WhatsApp Business app."
+      "noEdit": "This message cannot be edited from the platform; only a text you sent can be corrected, with a new correction message."
     },
     "sticker": {
       "favourite": "Add to favourites",
@@ -3276,6 +3276,23 @@
       "more": "Show more messages",
       "failed": "Could not search the messages. Please try again.",
       "hint": "Type at least three characters to search message text"
+    },
+    "correction": {
+      "action": "Edit",
+      "bar": "Edit message",
+      "cancel": "Cancel edit",
+      "prefix": "Correction: ",
+      "note": "A sent WhatsApp message cannot be edited; the family gets a new reply to it that starts with the Arabic word for «Correction:».",
+      "mark": "Corrected",
+      "jump": "Go to the correction",
+      "errors": {
+        "correction_not_in_thread": "The message to correct is not in this chat",
+        "not_correctable": "This message cannot be corrected",
+        "empty_correction": "Write the corrected text after «Correction:»",
+        "not_your_message": "You can only correct your own messages",
+        "correction_other_number": "This correction would go from another academy number, so it cannot reply to the original; send it as a new message",
+        "too_long": "The correction with «Correction:» is longer than WhatsApp allows; shorten it"
+      }
     }
   },
   "mobileFinance": {
@@ -6101,13 +6118,58 @@
       "MINIO_RECORDINGS": {
         "label": "Keep lesson and meeting recordings in MinIO",
         "hint": "Off by default. On, with MinIO keeping new files: lesson and meeting recordings go to the academy server; they are large and uncapped, so watch the free disk space. Off: recordings never go to MinIO; they are kept as today where a place is set up."
+      },
+      "MINIO_DRIVE_BACKUP": {
+        "label": "Back up MinIO files to Google Drive",
+        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO that are not backed up yet, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The backup never deletes any file from Drive: when space runs low, do not delete single archives (files held only in them drop out of the backup and are not sent again); add Drive storage, or move the whole folder to the trash and empty the trash (no space is freed before that); the next night starts a fresh complete copy, and there is no backup until it finishes. PDFs and images are already compressed, so most of the saving comes from other files."
       }
     },
     "developer": "For developers",
     "developerKey": "Server key name: {key}",
     "allowListEmptyTitle": "Remove the allowed-numbers limit",
     "allowListEmptyConfirm": "With this list empty, the server’s own list applies if it has one; otherwise messages may go to every number, real guardians included. Save?",
-    "allowListEmptyYes": "Yes, save with no limit"
+    "allowListEmptyYes": "Yes, save with no limit",
+    "driveBackup": {
+      "title": "Backup to Google Drive",
+      "off": "Off. Turn it on above, then save.",
+      "needsMinio": "Waiting for complete MinIO settings.",
+      "needsGoogle": "Waiting for the Google account to be linked in the Google section.",
+      "none": "No archive uploaded yet. The job runs every night at 4:00 Riyadh time.",
+      "last": "Last archive: night of {day} ({objects}), {raw} before compression → {compressed} after.",
+      "files": {
+        "one": "1 file",
+        "two": "2 files",
+        "few": "{n} files",
+        "other": "{n} files"
+      },
+      "error": "Last error: {error}",
+      "quota": "Free space on Drive: {free} of {limit}.",
+      "quotaUnlimited": "Drive space is unlimited.",
+      "lowQuota": "Less than 2 GB is free on Drive, so nothing is uploaded until there is room. Do not delete single archives: files held only in them drop out of the backup and are not sent again. Add Drive storage, or move the whole backup folder to the trash and empty the trash (no space is freed before that); the next night starts a fresh complete copy, and there is no backup until it finishes.",
+      "note": "PDFs and images are already compressed, so they barely shrink.",
+      "loadError": "Could not load the backup status.",
+      "sizeGb": "{n} GB",
+      "sizeMb": "{n} MB",
+      "skipped": {
+        "one": "1 file was not backed up last night; it is tried again every night:",
+        "two": "2 files were not backed up last night; they are tried again every night:",
+        "few": "{n} files were not backed up last night; they are tried again every night:",
+        "other": "{n} files were not backed up last night; they are tried again every night:"
+      },
+      "skippedItem": "{name} ({size}, {why})",
+      "waiting": {
+        "one": "1 file is waiting for room in Google Drive.",
+        "two": "2 files are waiting for room in Google Drive.",
+        "few": "{n} files are waiting for room in Google Drive.",
+        "other": "{n} files are waiting for room in Google Drive."
+      },
+      "skipReasons": {
+        "too_large": "larger than the 1 GB archive cap",
+        "read_failed": "could not be read from MinIO",
+        "changed": "changed while being read",
+        "upload_failed": "could not be uploaded to Google Drive or recorded"
+      }
+    }
   },
   "account": {
     "title": "My account",
@@ -6391,7 +6453,16 @@
     "alerts": {
       "disconnected": "The Google account link expired, so sync stopped. Reconnect it from the settings.",
       "teacherUnmapped": "{name}'s lessons go to the main calendar only until their calendar is mapped.",
-      "scriptEventPresent": "{name}'s calendar is still built from the sheet: stop the script for this teacher first"
+      "scriptEventPresent": "{name}'s calendar is still built from the sheet: stop the script for this teacher first",
+      "backupFailed": "The platform files backup to Google Drive failed: {error}. It will run again next night.",
+      "backupSkipped": {
+        "one": "Tonight's backup did not copy 1 file: {names}. The other files are still copied, and it is tried again every night.",
+        "two": "Tonight's backup did not copy 2 files: {names}. The other files are still copied, and they are tried again every night.",
+        "few": "Tonight's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every night.",
+        "other": "Tonight's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every night."
+      },
+      "backupSkippedItem": "{name} ({size}, {why})",
+      "backupDriveFull": "Google Drive is nearly full: tonight's backup could not upload everything, because the free space does not exceed the kept reserve (2 GB). Do not delete single archives: files held only in them drop out of the backup and are not sent again. Adding Drive storage is best. Otherwise move the whole backup folder to the trash and empty the trash (no space is freed before that); the next night starts a fresh complete copy, and there is no backup until it finishes."
     },
     "web": {
       "updated": "Updated {at}",
@@ -6927,12 +6998,22 @@
       "button": "Sync templates with this number",
       "busy": "Syncing templates…",
       "done": "Sync complete. Templates on the number’s account: {{meta}}; updated for this number: {{synced}}.",
+      "doneLine": "{{line}} templates synced. Templates on the line’s account: {{meta}}; updated in the registry: {{synced}}.",
       "failed": "Template sync failed: {{error}}",
       "errors": {
         "not_configured": "This number’s credentials are incomplete, so its templates cannot be read.",
         "meta_error": "Meta returned an error ({{message}}).",
         "kapso_auth": "Kapso refused this number’s credentials.",
-        "crm_managed": "This number's templates are managed in the CRM, so they are not read from here."
+        "crm_managed": "This number’s templates are managed in the CRM, so this button does not read them. Check their status on the Templates page.",
+        "crm_auth": "The CRM refused its API key. Update the CRM API key in Communications → Security, then try again.",
+        "crm_scope_missing": "The CRM API key lacks the {{message}} scope. Create a key that has it, save it, then try again.",
+        "evolution_no_templates": "An Evolution number has no templates, so there is nothing to sync.",
+        "calls_no_templates": "This number is for calls only, so it has no templates.",
+        "module_mode_only": "This sync works when the setup source is Numbers. Sync templates from the Templates page.",
+        "template_sync_off": "Template sync with WhatsApp is off in this environment.",
+        "unknown_number": "This number no longer exists. Refresh the page and try again.",
+        "allow_list_only": "Template sync is available to the administrator only.",
+        "forbidden": "You do not have permission to manage templates."
       }
     },
     "fallbackRank": {

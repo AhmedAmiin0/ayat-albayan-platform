@@ -110,10 +110,14 @@ describe('templates on a crm line', () => {
     expect(audit.record).not.toHaveBeenCalled();
   });
 
-  it('a crm number in module mode: its sync answers crm_managed and writes no approval', async () => {
-    const n = { id: 'n1', waba_id: null, env: CRM_ENV } as unknown as OverlayNumber;
+  it('module mode, a crm number not its role\'s number: crm_managed, no approval', async () => {
+    const raw = { id: 'n1', purpose: 'chat', waba_id: null, env: CRM_ENV };
+    const n = raw as unknown as OverlayNumber;
     const clientOf = vi.fn();
-    const res = await syncNumber({ queries: queries, numbers: () => [n], clientOf, log: { warn: vi.fn() } }, 'n1', NOW);
+    const log = { warn: vi.fn() };
+    const deps = { queries: { ...queries, numberRef: vi.fn() }, numbers: () => [n], clientOf, log };
+    const syncLine = vi.fn();
+    const res = await syncNumber({ ...deps, syncLine, activeNumberId: () => 'other' }, 'n1', NOW);
     expect(res).toMatchObject({ ok: false, error: 'crm_managed', number_id: 'n1' });
     expect(clientOf).not.toHaveBeenCalled();
     expect(queries.upsertApprovals).not.toHaveBeenCalled();

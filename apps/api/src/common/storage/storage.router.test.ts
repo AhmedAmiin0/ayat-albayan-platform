@@ -31,7 +31,7 @@ function setup(config: StorageEnv) {
 
 describe('StorageService routes by the stored path’s marker (docs/45)', () => {
   it('before the switch: writes to Supabase and keeps the bare path', async () => {
-    const t = setup({ driver: 'supabase', minio: MINIO, recordings: false });
+    const t = setup({ driver: 'supabase', minio: MINIO, recordings: false, driveBackup: false });
     expect(
       await t.storage.upload({
         bucket: 'reports',
@@ -45,7 +45,7 @@ describe('StorageService routes by the stored path’s marker (docs/45)', () => 
   });
 
   it('after the switch: every write goes to MinIO and the path to keep is «minio:…»', async () => {
-    const t = setup({ driver: 'minio', minio: MINIO, recordings: false });
+    const t = setup({ driver: 'minio', minio: MINIO, recordings: false, driveBackup: false });
     expect(
       await t.storage.upload({
         bucket: 'reports',
@@ -62,14 +62,14 @@ describe('StorageService routes by the stored path’s marker (docs/45)', () => 
   });
 
   it('an old Supabase file stays readable after the switch; a new one is read from MinIO', async () => {
-    const t = setup({ driver: 'supabase', minio: MINIO, recordings: false });
+    const t = setup({ driver: 'supabase', minio: MINIO, recordings: false, driveBackup: false });
     const old = await t.storage.upload({
       bucket: 'reports',
       path: 'old.pdf',
       body: PDF,
       contentType: 'application/pdf',
     });
-    t.env.config = { driver: 'minio', minio: MINIO, recordings: false };
+    t.env.config = { driver: 'minio', minio: MINIO, recordings: false, driveBackup: false };
     const fresh = await t.storage.upload({
       bucket: 'reports',
       path: 'new.pdf',
@@ -90,14 +90,14 @@ describe('StorageService routes by the stored path’s marker (docs/45)', () => 
   });
 
   it('copies an old Supabase file into MinIO (read, write) and is idempotent', async () => {
-    const t = setup({ driver: 'supabase', minio: MINIO, recordings: false });
+    const t = setup({ driver: 'supabase', minio: MINIO, recordings: false, driveBackup: false });
     await t.storage.upload({
       bucket: 'wa-media',
       path: 'm1.pdf',
       body: PDF,
       contentType: 'application/pdf',
     });
-    t.env.config = { driver: 'minio', minio: MINIO, recordings: false };
+    t.env.config = { driver: 'minio', minio: MINIO, recordings: false, driveBackup: false };
     const to = { bucket: 'invoices', path: 'req/wa-m1.pdf' } as const;
     expect(await t.storage.copy({ from: { bucket: 'wa-media', path: 'm1.pdf' }, to })).toBe(
       'minio:req/wa-m1.pdf',
@@ -112,7 +112,7 @@ describe('StorageService routes by the stored path’s marker (docs/45)', () => 
   });
 
   it('switched to MinIO without its config: a write fails loudly, never falls back to Supabase', async () => {
-    const t = setup({ driver: 'minio', minio: null, recordings: false });
+    const t = setup({ driver: 'minio', minio: null, recordings: false, driveBackup: false });
     await expect(
       t.storage.upload({
         bucket: 'reports',

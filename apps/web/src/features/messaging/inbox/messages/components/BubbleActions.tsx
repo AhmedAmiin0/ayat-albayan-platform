@@ -11,7 +11,10 @@ import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { bubbleOffers, offersAny, type BubbleOffers } from '@/features/messaging/inbox/messages/lib/bubble-offers';
 import { useBubbleTools } from '@/features/messaging/inbox/messages/lib/use-bubble-tools';
 import { HideConfirm } from '@/features/messaging/inbox/messages/hide/HideConfirm';
-import { useHideRights } from '@/features/messaging/inbox/messages/hide/use-hide-rights';
+import {
+  useHideRights,
+  useSignedIn,
+} from '@/features/messaging/inbox/messages/hide/use-hide-rights';
 
 export interface BubbleActionsProps {
   message: MessageView;
@@ -26,7 +29,8 @@ export function useBubbleOffers(m: MessageView): BubbleOffers {
   const teacher = mode === 'teacher';
   const { hide } = useHideRights();
   const react = useChatActions().reactable(m);
-  return bubbleOffers(m, { teacher, react, hide: hide && !teacher, admin: mode === 'admin' });
+  const me = useSignedIn();
+  return bubbleOffers(m, { teacher, react, hide: hide && !teacher, admin: mode === 'admin', me });
 }
 
 /** The bubble offers «رد», «نسخ», «إعادة توجيه» or «تنزيل» in this chat. */

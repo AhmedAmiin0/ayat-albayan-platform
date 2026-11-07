@@ -18,6 +18,9 @@ import { WindowSettings } from './window.settings';
 import { ReopenCancel } from './manual-send';
 import { ReopenAudit } from './reopen-audit';
 
+/** One way to read the reopen template by key: fresh (a send) or the 60 s copy (the note). */
+type ReadTemplate = (key: string) => Promise<TemplateView | null>;
+
 const last4 = (phone: string): string => `…${phone.slice(-4)}`;
 const HELD: HoldPlan = { note: null };
 const WAIT: HoldPlan = { note: NO_TEMPLATE_NOTE };
@@ -49,16 +52,25 @@ export class ReopenRequest {
   }
 
   /** The `chat_reopen_template` when usable (reopenUsable: an approved chat-line starter). */
-  async template(): Promise<TemplateView | null> {
+  template(): Promise<TemplateView | null> {
+    return this.usableBy((key) => this.templates.approved(key));
+  }
+
+  /** The composer's note reads the 60 s copy (docs/42 42-3); the queue reads it fresh. */
+  private noteTemplate(): Promise<TemplateView | null> {
+    return this.usableBy((key) => this.templates.approvedCached(key));
+  }
+
+  private async usableBy(read: ReadTemplate): Promise<TemplateView | null> {
     const key = (await this.settings.read()).chat_reopen_template.trim();
-    const template = key ? await this.templates.approved(key) : null;
+    const template = key ? await read(key) : null;
     return reopenUsable(template) ? template : null;
   }
 
   /** What a closed chat does after the window (the composer's note); null = it cannot reopen. */
   async usable(): Promise<ReopenChoice | null> {
     const usable: Record<ReopenChoice, () => Promise<boolean>> = {
-      template: async () => (await this.template()) !== null,
+      template: async () => (await this.noteTemplate()) !== null,
       wait: () => Promise.resolve(true),
     };
     const choice = await this.choice();
@@ -82,7 +94,7 @@ export class ReopenRequest {
     const template = await this.template();
     const dedup = nextReopenKey(phone, rows, now);
     if (!template || !dedup) return failNow(template ? TRIES_USED : UNAVAILABLE);
-    await this.queue(reopenRow(row, { key: template.key, dedup, now }));
+    await this.queue(reopenRow(row, { key: template.key, line: template.line, dedup, now }));
     return { ...HELD, queued: dedup };
   }
 

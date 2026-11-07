@@ -55,6 +55,11 @@ export const UNRECORDED = new WaError('the last try was never recorded; check Wh
   uncertain: true,
 });
 
+/** UNRECORDED's write: only while still SENDING at that attempt (a stale copy never overwrites). */
+type Unrecorded = [] | [{ attempts: number }];
+export const unrecordedAt = (input: Pick<FailedInput, 'error' | 'attempts'>): Unrecorded =>
+  input.error === UNRECORDED ? [{ attempts: input.attempts }] : [];
+
 /**
  * The token-broken push subject, one per day: per line under legacy (the notifications subject is
  * unchanged), per number in module mode (docs/23c decision 8).

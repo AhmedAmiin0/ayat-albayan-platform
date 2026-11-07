@@ -3,7 +3,11 @@ import { errorCode } from '@/features/teaching/schedule';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 
-const ERRORS: Record<string, string | undefined> = t.inbox.error;
+/** The send's codes, and «تعديل»'s refusals (400 not_correctable, 403 not_your_message…). */
+const ERRORS: Record<string, string | undefined> = {
+  ...t.inbox.error,
+  ...t.inbox.correction.errors,
+};
 
 /** A retry with the kept id was answered with the FIRST message: this one did not go. */
 export class ReplayedSend extends Error {}

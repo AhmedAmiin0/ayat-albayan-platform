@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/edit-time';
+import { captureEvents } from './inbox-live.helpers';
 
 // Message reactions (migration 20261028000930, owner 2026-10-27): their_reaction / our_reaction are columns
 // of the reacted message; reaction ROWS (stored before, and our reaction sends) are never a preview or
@@ -78,12 +79,10 @@ test.describe('message reactions (migration 900)', () => {
   test('a reaction change is broadcast through the existing update trigger (phone only)', async () => {
     await rolledBack(async (tx) => {
       const x = await message(tx, { phone: A, wamid: 'wamid.rx-L', at: '2026-10-20T10:00:00Z' });
-      await tx.unsafe(`create temp table live_sent (id serial, phones text[]) on commit drop;
-        create or replace function public.inbox_live_send(p_phones text[]) returns void
-          language sql set search_path = '' as $$ insert into pg_temp.live_sent (phones) values (p_phones) $$;`);
+      const events = await captureEvents(tx);
       await tx`update public.messages set their_reaction = '🙏' where id = ${x}`;
-      const sent = await tx<{ phones: string[] }[]>`select phones from pg_temp.live_sent order by id`;
-      expect(sent.map((r) => r.phones)).toEqual([[A]]);
+      // A reaction is not a tick (migration 20261107000500): the phone alone, no row ids.
+      expect(await events()).toEqual([[{ phone: A }]]);
     });
   });
 });

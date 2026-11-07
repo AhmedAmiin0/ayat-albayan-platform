@@ -26,6 +26,8 @@ export const STORAGE_SHAPE = {
   MINIO_SECRET_KEY: optionalSecret,
   /** Lesson and meeting recordings into MinIO: its own switch, off by default (docs/45 §1). */
   MINIO_RECORDINGS: z.preprocess(blankIsUnset, z.stringbool().default(false)),
+  /** A nightly compressed copy of the MinIO buckets on Google Drive: off by default (docs/45). */
+  MINIO_DRIVE_BACKUP: z.preprocess(blankIsUnset, z.stringbool().default(false)),
 };
 
 const minioSchema = z.object({
@@ -53,6 +55,8 @@ export interface StorageEnv {
   minio: MinioEnv | null;
   /** MINIO_RECORDINGS: LiveKit egress writes into MinIO (driver on minio) only when set. */
   recordings: boolean;
+  /** MINIO_DRIVE_BACKUP: the worker uploads compressed archives of MinIO to Google Drive. */
+  driveBackup: boolean;
 }
 
 type StorageSource = Partial<Record<keyof typeof STORAGE_SHAPE, unknown>>;
@@ -73,6 +77,7 @@ export function storageEnv(env: StorageSource): StorageEnv {
         secretKey: m.MINIO_SECRET_KEY,
       }
     : null;
-  const recordings = z.boolean().catch(false).parse(env.MINIO_RECORDINGS);
-  return { driver, minio, recordings };
+  const flag = z.boolean().catch(false);
+  const recordings = flag.parse(env.MINIO_RECORDINGS);
+  return { driver, minio, recordings, driveBackup: flag.parse(env.MINIO_DRIVE_BACKUP) };
 }

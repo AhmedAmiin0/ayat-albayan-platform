@@ -2,6 +2,7 @@
 import type { MessageView, Permission, UserRole } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { vi } from 'vitest';
 import { type Me, meQuery } from '@/features/people/auth';
 import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog';
@@ -16,8 +17,13 @@ const base = {
   waitingKeys: new Set<string>(),
 };
 
-/** Who is signed in: role and permissions as /auth/me answers. */
-export function showLog(m: MessageView, who: { role: UserRole; permissions: Permission[] }) {
+export interface Who {
+  role: UserRole;
+  permissions: Permission[];
+}
+
+/** `ui` in the open chat, signed in as `who` (id p1): role and permissions as /auth/me answers. */
+export function renderAs(who: Who, ui: ReactNode) {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
@@ -26,10 +32,15 @@ export function showLog(m: MessageView, who: { role: UserRole; permissions: Perm
   render(
     <QueryClientProvider client={client}>
       <ChatActionsProvider thread={thread()} enabled>
-        <MessageLog {...base} messages={[m]} />
+        {ui}
       </ChatActionsProvider>
     </QueryClientProvider>,
   );
+}
+
+/** The log of `messages` (or one) as `who`. */
+export function showLog(m: MessageView | MessageView[], who: Who) {
+  renderAs(who, <MessageLog {...base} messages={Array.isArray(m) ? m : [m]} />);
 }
 
 export const ADMIN = {

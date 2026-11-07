@@ -57,7 +57,7 @@ describe('@BackgroundJob: the one role switch', () => {
     await job.kick();
     expect([job.booted, job.kicked]).toEqual([0, 0]);
     expect(calls.map((c) => [c.url, c.init?.method])).toEqual([
-      ['http://ayat-worker:3000/internal/jobs/test-sender/kick', 'POST'],
+      ['http://ayat-worker:3000/internal/jobs/test-sender/kick?wait=0', 'POST'],
     ]);
     expect(new Headers(calls[0]?.init?.headers).get(INTERNAL_HEADER)).toBe(internalToken());
   });

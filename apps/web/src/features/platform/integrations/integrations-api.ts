@@ -27,3 +27,7 @@ export const registerCrmWebhook = (): Promise<unknown> =>
 /** POST /settings/integrations/storage-probe: put, read, delete a probe object (docs/45). */
 export const probeStorage = (): Promise<unknown> =>
   apiSend('POST', '/settings/integrations/storage-probe');
+
+/** GET /settings/integrations/storage-backup: the Drive backup's status line (docs/45 §5). */
+export const fetchStorageBackup = (): Promise<unknown> =>
+  apiFetch('/settings/integrations/storage-backup');

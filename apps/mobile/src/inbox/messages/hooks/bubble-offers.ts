@@ -1,4 +1,11 @@
-import { canForward, canReply, isChatViewMime, type MessageView } from '@ab/shared';
+import {
+  canCorrect,
+  canForward,
+  canReply,
+  type CorrectionActor,
+  isChatViewMime,
+  type MessageView,
+} from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { mediaKind } from './message-text';
 
@@ -14,7 +21,9 @@ export interface BubbleOffers {
   hide: boolean;
   /** «إظهار» on a hidden message: the admin. */
   unhide: boolean;
-  /** «لا يمكن تعديل رسائل واتساب من المنصة»: our text, which only the Business app can edit. */
+  /** «تعديل» (owner 2026-11-07): a correction of our sent text (canCorrect). */
+  correct: boolean;
+  /** «لا يمكن تعديل…»: our other messages (a file, a failed or someone else's text). */
   noEdit: boolean;
 }
 
@@ -25,11 +34,13 @@ interface OfferOptions {
   /** canHideMessages / canUnhideMessages of the signed-in user (useHideRights). */
   hide?: boolean;
   unhide?: boolean;
+  /** The signed-in staff member (useMeActor): who may correct. */
+  me?: CorrectionActor | null;
 }
 
 const NONE: BubbleOffers = {
   ...{ reply: false, copy: false, forward: false, download: false, react: false },
-  ...{ hide: false, unhide: false, noEdit: false },
+  ...{ hide: false, unhide: false, correct: false, noEdit: false },
 };
 
 /**
@@ -56,21 +67,28 @@ const hiddenOffers = (opts: OfferOptions): BubbleOffers => ({
   unhide: opts.enabled && opts.unhide === true,
 });
 
-/** «حذف من المنصة» for staff who may, and why our own text has no «تعديل» (WhatsApp Business app). */
+/** «حذف من المنصة» for staff who may, and «تعديل» (a correction) or why there is none. */
 function hideOffers(
   m: MessageView,
   opts: OfferOptions,
-): Pick<BubbleOffers, 'hide' | 'unhide' | 'noEdit'> {
+): Pick<BubbleOffers, 'hide' | 'unhide' | 'correct' | 'noEdit'> {
   const live = opts.enabled && m.deleted !== true;
-  return {
-    hide: live && opts.hide === true,
-    unhide: false,
-    noEdit: live && m.direction === 'outbound' && !m.template_key,
-  };
+  return { hide: live && opts.hide === true, unhide: false, ...editOffers(m, opts, live) };
+}
+
+/** «تعديل» when this viewer may correct it; the note on our other non-template messages. */
+function editOffers(
+  m: MessageView,
+  opts: OfferOptions,
+  live: boolean,
+): Pick<BubbleOffers, 'correct' | 'noEdit'> {
+  const correct = live && canCorrect(m, opts.me);
+  const ours = m.direction === 'outbound' && !m.template_key;
+  return { correct, noEdit: live && ours && !correct };
 }
 
 export const offersAny = (o: BubbleOffers): boolean =>
-  o.reply || o.copy || o.forward || o.download || o.react || o.hide || o.unhide;
+  o.reply || o.copy || o.forward || o.download || o.react || o.hide || o.unhide || o.correct;
 
 /** «تنزيل الملف — خطة الحفظ.pdf», or the file's kind when it has no name. */
 export const downloadLabel = (m: Pick<MessageView, 'media_name' | 'media_mime'>): string =>

@@ -2,6 +2,7 @@ import { meLoaded, permissionsOf, permissionsView, type Can } from '@ab/client-c
 import {
   canHideMessages,
   canUnhideMessages,
+  type CorrectionActor,
   sendsAllTemplates,
   type Permission,
 } from '@ab/shared';
@@ -77,4 +78,11 @@ export function useHideRights(): { hide: boolean; unhide: boolean } {
   const me = useQuery(meQuery());
   const who = { role: roleOf(me.data), permissions: permissionsOf(me.data) };
   return { hide: canHideMessages(who), unhide: canUnhideMessages(who) };
+}
+
+/** The signed-in staff member as «تعديل» reads them (canCorrect); null until /auth/me answers. */
+export function useMeActor(): CorrectionActor | null {
+  const me = useQuery(meQuery());
+  const id: unknown = meLoaded(me.data) ? Reflect.get(me.data, 'id') : null;
+  return typeof id === 'string' ? { id, role: roleOf(me.data) } : null;
 }

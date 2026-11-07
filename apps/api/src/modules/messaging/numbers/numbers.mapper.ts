@@ -74,11 +74,19 @@ export function healthJson(h: NumberHealth): Json {
   return { ok: h.ok, status: h.status, quality_rating: h.quality_rating, verified_name: h.verified_name, gaps: [...h.gaps], errors: h.errors };
 }
 
+/**
+ * A crm line has no phone call to answer: its GET /me did (no error) and the key may send.
+ * Every other driver: the phone call answered with a display number.
+ */
+const ANSWERED: Partial<Record<WaProvider, (v: LineCheckView) => boolean>> = {
+  crm: (v) => v.errors.length === 0 && v.crm_send_scope !== false,
+};
+
 /** One line check → what its phone id's rows keep (no token; the number only when the call answered). */
 export function healthFromCheck(v: LineCheckView): { health: NumberHealth; checked_at: string; display_phone_e164?: string } {
   const e164 = displayE164(v.display_phone_number);
   const health: NumberHealth = {
-    ok: e164 !== null,
+    ok: (ANSWERED[v.provider] ?? (() => e164 !== null))(v),
     status: v.status,
     quality_rating: v.quality_rating,
     verified_name: v.verified_name?.slice(0, 200) ?? null,

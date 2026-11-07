@@ -1,7 +1,8 @@
-import { WA_TEXT_MAX } from '@ab/shared';
 import type { RefObject } from 'react';
 import { Platform, TextInput } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { textMax } from '@/inbox/composer/edit/text-target';
+import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { shape, type, useTheme } from '@/theme';
 
 export interface Selection {
@@ -46,12 +47,13 @@ export const inputLine = (os: string): InputLine => LINES[os === 'android' ? 'an
  */
 export function ComposerInput({ value, onChange, onBlur, onSelection, inputRef }: ComposerInputProps) {
   const { color } = useTheme();
+  const { editing } = useChatActions();
   return (
     <TextInput
       ref={inputRef}
       multiline
       value={value}
-      maxLength={WA_TEXT_MAX}
+      maxLength={textMax(editing)}
       onChangeText={onChange}
       onBlur={onBlur}
       onSelectionChange={(e) => onSelection?.(e.nativeEvent.selection)}

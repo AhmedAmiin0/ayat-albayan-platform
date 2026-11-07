@@ -1,0 +1,79 @@
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { ar } from '@/common/infra/i18n/server-text';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
+import { ThreadQuotes } from '@/modules/messaging/inbox/threads/thread-quotes';
+import { CorrectionRepo } from './correction.repo';
+import { target } from './correction.fakes';
+
+// Review of PR #694 (2): the text answer says whether its request id was a replay (the FIRST row
+// came back, nothing new queued), so a client never takes an earlier row for its correction.
+type App = Awaited<ReturnType<typeof inboxApp>>;
+const URL = `/threads/${encodeURIComponent(PHONE)}/text`;
+const ORIGINAL = 'a0000000-0000-4000-8000-0000000000c1';
+const FRESH = new Date(Date.now() - 3_600_000).toISOString();
+const body = { text: 'الخامسة', clientRequestId: 'c0000000-0000-4000-8000-0000000000c8' };
+
+describe('POST /threads/:phone/text answers `replayed`', () => {
+  let t: App;
+  beforeAll(async () => {
+    t = await inboxApp();
+  });
+  afterAll(() => t.app.close());
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.resetAllMocks();
+    t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH }));
+    t.queries.get.mockResolvedValue(null);
+    vi.spyOn(t.app.get(CorrectionRepo), 'target').mockResolvedValue(target());
+    vi.spyOn(t.app.get(ThreadQuotes), 'target').mockResolvedValue({
+      reply_to_message_id: ORIGINAL,
+      reply_to_wa_id: 'wamid.O',
+    });
+  });
+
+  it.each([
+    ['a new row', false],
+    ['the first row of this request id', true],
+  ])('%s: replayed %s (a replay is not audited again)', async (_, replayed) => {
+    t.queries.enqueue.mockImplementation(async (row: object) => ({
+      ...messageRow({ ...row, id: 'm9', template_key: null, template_params: null }),
+      replayed,
+    }));
+    const res = await t.call({ method: 'POST', url: URL, token: 'admin', body: { ...body, correctsId: ORIGINAL } });
+    expect([res.statusCode, res.json().replayed]).toEqual([201, replayed]);
+    expect(t.audit.record).toHaveBeenCalledTimes(replayed ? 0 : 1);
+  });
+
+  it('a retried correction gets its first row back before its checks (round 3, item 4)', async () => {
+    const first = messageRow({ id: 'm9', body: 'تصحيح: الخامسة', template_key: null, template_params: null });
+    t.queries.byDedupKey.mockResolvedValue(first);
+    const gone = vi.spyOn(t.app.get(CorrectionRepo), 'target').mockResolvedValue(null);
+    const res = await t.call({ method: 'POST', url: URL, token: 'admin', body: { ...body, correctsId: ORIGINAL } });
+    expect([res.statusCode, res.json().id, res.json().replayed]).toEqual([201, 'm9', true]);
+    expect(gone).not.toHaveBeenCalled();
+    expect(t.queries.enqueue).not.toHaveBeenCalled();
+    expect(t.queries.byDedupKey).toHaveBeenCalledWith(`admin:${PHONE}:${body.clientRequestId}`);
+  });
+
+  it.each([
+    ['the exact retry (any client wording): same_request true', 'الخامسة', true],
+    ['another text under the pinned id: same_request false', 'السادسة', false],
+  ])('an admin-reworded prefix, %s (round 4, item 1)', async (_, text, same) => {
+    const bundled = ar.inbox.correction.prefix;
+    ar.inbox.correction.prefix = 'تعديل: ';
+    const first = { id: 'm9', body: 'تعديل: الخامسة', corrects_id: ORIGINAL };
+    t.queries.byDedupKey.mockResolvedValue(
+      messageRow({ ...first, template_key: null, template_params: null }),
+    );
+    const res = await t.call({
+      method: 'POST',
+      url: URL,
+      token: 'admin',
+      body: { ...body, text, correctsId: ORIGINAL },
+    });
+    ar.inbox.correction.prefix = bundled;
+    expect([res.json().replayed, res.json().same_request]).toEqual([true, same]);
+  });
+});

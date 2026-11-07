@@ -27,7 +27,7 @@ function setup(config: StorageEnv) {
   return { supabase, minio, storage: new StorageService({} as Db, source) };
 }
 
-const ON: StorageEnv = { driver: 'minio', minio: MINIO, recordings: false };
+const ON: StorageEnv = { driver: 'minio', minio: MINIO, recordings: false, driveBackup: false };
 
 // Pre-cut-over review items 1 and 9 (docs/45 §4 step 9).
 describe('upload slots after the switch', () => {
@@ -46,7 +46,7 @@ describe('upload slots after the switch', () => {
   });
 
   it('before the switch every client gets a Supabase slot, as before', async () => {
-    const t = setup({ driver: 'supabase', minio: MINIO, recordings: false });
+    const t = setup({ driver: 'supabase', minio: MINIO, recordings: false, driveBackup: false });
     const signed = await withUploadClient('slot-v2', () => t.storage.signedUpload(SLOT as never));
     expect(signed.path).toBe('sub/a.jpg');
   });
@@ -67,7 +67,7 @@ describe('a «minio:» path without a MinIO config', () => {
   const ref = { bucket: 'receipts', path: 'minio:sub/a.jpg' } as const;
 
   it('exists → false, info / head → null, remove rejects (no synchronous throw)', async () => {
-    const t = setup({ driver: 'supabase', minio: null, recordings: false });
+    const t = setup({ driver: 'supabase', minio: null, recordings: false, driveBackup: false });
     expect(await t.storage.exists(ref)).toBe(false);
     expect(await t.storage.info(ref)).toBeNull();
     expect(await t.storage.head(ref, 8)).toBeNull();

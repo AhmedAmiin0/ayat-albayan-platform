@@ -1,20 +1,20 @@
-import { retry } from '@ab/shared';
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { sleep } from '@/common/infra/cache/sleep';
 import { PushService } from '@/common/push/push.service';
 import { PAYMENT_HOLD_EXPIRED, paymentSubject, WA_PAYMENT_HOLD } from './hold/payment-hold';
 import { PaymentHolds, type HoldAt } from './hold/payment-holds';
 import { MessageDispatch } from './message.dispatch';
-import { authSubject, claimRow, RECORD_DELAYS_MS, sendingAt, UNRECORDED, type FailedInput, type PassJob, type SendJob, type SendOutcome } from './message.job';
+import { authSubject, claimRow, sendingAt, UNRECORDED, unrecordedAt, type FailedInput, type PassJob, type SendJob, type SendOutcome } from './message.job';
 import { CRM_RATE_LIMITED, failurePlan, messageLabel, readyToSend, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderRepo, type DueMessage } from './sender.repo';
 import { TemplateMissing } from '@/modules/messaging/whatsapp/templates/check/template-missing';
 import { isWindowClosedError, WindowHold } from './window/window-hold';
 import { EvolutionPaceRepo } from './pace';
+import { recordSent, SendClock } from './pass';
 import type { WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-export type { PassJob, SendJob, SendOutcome } from './message.job';
+export type { PassJob, SendJob } from './message.job';
 /**
  * One queued row (docs/12 §3.3): the window hold (window/), expiry, staleness, auto_off, the 131042
  * hold (hold/), claim, send, outcome. Never throws; claimed by compare-and-set: never sent twice.
@@ -63,18 +63,17 @@ export class MessageWorker {
     const deps = { dispatch: this.dispatch, queries: this.queries, pace: this.pace };
     const attempts = await claimRow(deps, { row, now, line, route });
     if (attempts === null) return 'skipped';
+    const clock = new SendClock({ row, line }); // the `wa_send` timing line (docs/42 42-2)
     let sent: WaSent;
     try {
-      sent = await this.dispatch.send(row, template, via);
+      sent = await clock.provider(() => this.dispatch.send(row, template, via));
     } catch (error) {
-      return this.refused({ row, error, attempts, now, line, route });
+      return clock.end(await this.refused({ row, error, attempts, now, line, route }));
     }
-    const record = () => this.queries.sent({ row, sent, at: new Date() });
-    if (!(await retry(record, { delays: RECORD_DELAYS_MS, sleep: this.wait }))) {
-      this.log.log(`message ${row.id} was marked sent by hand while it was sending`);
-    }
+    const recordDeps = { queries: this.queries, wait: this.wait, log: this.log };
+    await clock.record(() => recordSent(recordDeps, { row, sent }));
     await this.holds?.lift({ line, route, now });
-    return 'sent';
+    return clock.end('sent');
   }
 
   private async refused(input: FailedInput): Promise<SendOutcome> {
@@ -85,7 +84,7 @@ export class MessageWorker {
   private async failed(input: FailedInput): Promise<SendOutcome> {
     const { row, now, line, route } = input;
     const plan = await this.plan(input);
-    await this.queries.failure(row.id, plan);
+    await this.queries.failure(row.id, plan, ...unrecordedAt(input));
     await this.missing?.check({ key: row.template_key, line, error: input.error, now });
     // The CRM's rate limit (per key): the line waits for Retry-After this pass; not a token failure, no push.
     if (plan.error_code === CRM_RATE_LIMITED) return 'paused';

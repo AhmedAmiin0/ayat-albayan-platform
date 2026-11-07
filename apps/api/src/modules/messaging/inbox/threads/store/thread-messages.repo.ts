@@ -2,13 +2,13 @@ import type { TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import {
-  MESSAGE_SELECT, NOT_A_REACTION, type MessageRow, type ThreadMessageRow,
+  MESSAGE_SELECT, NOT_A_REACTION, type ThreadMessageRow,
 } from '@/modules/messaging/whatsapp';
 import { check } from './check';
 import { aroundRows, PAGE_SELECT, quoted } from './thread-around.repo';
 
 /** The queued row; `replayed` = its dedup_key was already queued (nothing written). */
-type Queued = MessageRow & { replayed?: boolean };
+type Queued = ThreadMessageRow & { replayed?: boolean };
 
 /**
  * One page of a phone's messages: `before` (+ `before_id`) = the oldest loaded one, or `around` =
@@ -61,22 +61,35 @@ export class ThreadMessagesRepo {
     return data;
   }
 
-  /** Rule 8: a replayed dedup_key returns the first row, flagged `replayed` (nothing written). */
+  /**
+   * Rule 8: a replayed dedup_key returns the first row, flagged `replayed` (nothing written). A new
+   * row comes back from the write itself (docs/42 42-5); only a replay reads the stored row again.
+   */
   async enqueue(row: TablesInsert<'messages'>): Promise<Queued> {
     if (!row.dedup_key) return this.insert(row);
     const { data: created, error } = await this.db
       .from('messages')
       .upsert(row, { onConflict: 'dedup_key', ignoreDuplicates: true })
-      .select('id');
+      .select(MESSAGE_SELECT);
     check(error, 'message enqueue');
+    const [fresh] = created;
+    if (fresh) return { ...fresh, replayed: false };
     const { data, error: readError } = await this.db
-      .from('messages').select('*').eq('dedup_key', row.dedup_key).single();
+      .from('messages').select(MESSAGE_SELECT).eq('dedup_key', row.dedup_key).single();
     check(readError, 'message enqueue read');
-    return { ...data, replayed: created.length === 0 };
+    return { ...data, replayed: true };
   }
 
-  private async insert(row: TablesInsert<'messages'>): Promise<MessageRow> {
-    const { data, error } = await this.db.from('messages').insert(row).select('*').single();
+  /** The row a dedup_key already queued (rule 8), or null. */
+  async byDedupKey(key: string): Promise<ThreadMessageRow | null> {
+    const { data, error } = await this.db
+      .from('messages').select(MESSAGE_SELECT).eq('dedup_key', key).maybeSingle();
+    check(error, 'message dedup read');
+    return data;
+  }
+
+  private async insert(row: TablesInsert<'messages'>): Promise<ThreadMessageRow> {
+    const { data, error } = await this.db.from('messages').insert(row).select(MESSAGE_SELECT).single();
     check(error, 'message enqueue');
     return data;
   }
