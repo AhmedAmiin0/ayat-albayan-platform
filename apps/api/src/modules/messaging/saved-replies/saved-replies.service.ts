@@ -1,4 +1,5 @@
 import type { SavedReply, SavedReplyCreate, SavedReplyStaged, SavedReplyUpdate, SignedUpload, SavedReplyUpload } from '@ab/shared';
+import { sameStoredObject } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
@@ -60,7 +61,10 @@ export class SavedRepliesService {
     const patch: ReplyPatch = { updated_by: user.id };
     if (input.title !== undefined) patch.title = input.title;
     if (input.body !== undefined) patch.body = input.body;
-    const replaced = input.attachment !== undefined && input.attachment?.path !== oldPath;
+    const sentPath = input.attachment?.path;
+    // A path sent back for the reply's own moved file (docs/45 §6) is no replacement.
+    const changed = sentPath !== oldPath && !sameStoredObject(sentPath, oldPath);
+    const replaced = input.attachment !== undefined && changed;
     Object.assign(patch, await this.attachmentPatch({ attachment: input.attachment, replaced, actorId: user.id }));
     const next = await this.queries.update(id, patch);
     if (!next) throw gone();
