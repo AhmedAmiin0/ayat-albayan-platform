@@ -34,7 +34,7 @@ Repeat-fix chains seen in git (root cause still open): chat liveness ef719398 �
 | Failed bubble stays with retry | mobile removes it, web never showed one | **K3** |
 | List from a summary table | list re-aggregates all of `messages` (`v_threads`, 984); 30 biggest phones took 430 ms (docs/37) | **K4** |
 
-**K1 payload** (built: migration `20261107000300_inbox_live_rows.sql`): the statement trigger aggregates per phone
+**K1 payload** (built: migration `20261107000500_inbox_live_rows.sql`): the statement trigger aggregates per phone
 `{phone, rows:[{id, s:status, d:direction, at:created_at}]}`, ≤20 rows, else `{phone}` only. No body, no names, no
 params. Rows that NOT every `inbox:staff` reader may see are sent as `{phone}` only (no id): link templates
 (`template_key` in `LINK_TEMPLATES`, hidden from sales — `sales-threads.ts:5-9`), staff-hidden rows (`hidden_at`),
@@ -47,8 +47,14 @@ and ignores phones not in a loaded list. The patch is VISUAL ONLY (owner, 2026-1
 `{phone}`, still runs the same throttled re-read (web chat + list, mobile sync nudge), which brings replyable,
 stamps, re-queues and bodies. No read is ever folded (owner, 2026-11-07, third round): a read or a sync
 result is written exactly as the server sent it. The re-read STARTS AFTER the event: on the web the patch
-cancels the chat's and lists' reads in flight (reverted to the patched data, never committed after it) and the
-re-reads run with `cancelRefetch: true`; on mobile the sync engine joins the run in flight and runs exactly one
+cancels the chat's read in flight only when it moved that chat (reverted to the patched data, never committed
+after it; a page load «تحميل الأقدم» and a first load are never cancelled) and the re-reads run with
+`cancelRefetch: true`. A LIST read is never cancelled by the patch (round 4: a burst of events would starve
+GET /threads); the throttled list re-read supersedes a stale one, so a stale tick shows for one throttle window
+at most. The chat re-read waits for a page load or a first load in flight and runs after it (`chat-reread.ts`).
+Meta's delivered webhook (`wa_conversation_id`, `wa_pricing_category`) is tick-only too. On mobile a patch moves
+a stored tick forward only (`liveTick`): it lands failed / by hand only when newer than the row's sync stamp, so
+a late event never undoes a synced failure; on mobile the sync engine joins the run in flight and runs exactly one
 more after it, and a shown list's `rereadList` follows a joined read with a second one. Supabase's broadcast payload limit must be checked for our plan before merge.
 
 ## 3. «آخر نشاط» (last seen) — what is possible

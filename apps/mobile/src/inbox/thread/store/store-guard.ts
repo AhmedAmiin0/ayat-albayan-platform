@@ -1,7 +1,6 @@
 import {
-  applyLiveRows,
-  laterStatus,
   type LiveRow,
+  liveTick,
   mergeRead,
   type SyncPlan,
   type SyncState,
@@ -81,9 +80,11 @@ export async function putFor(
 
 /**
  * A realtime event's ticks (docs/44 K1, a visual patch) for `owner`: each stored row of chat
- * `phone` among `rows` takes the incoming status by laterStatus, and so does a chats-list row
- * whose last message it is. Only the tick moves (updated_at stays: the next sync lands the
- * server's row over it as sent, no fold). The chats it changed; null when not `owner`'s.
+ * `phone` among `rows` takes the event's tick by liveTick (forward only; failed / by hand only
+ * when the event is newer than the row's sync stamp: a late event never undoes a synced failure),
+ * and so does a chats-list row whose last message it is. Only the tick moves (updated_at stays:
+ * the next sync lands the server's row over it as sent, no fold). The chats it changed; null when
+ * not `owner`'s.
  */
 export async function liveFor(
   port: SqlPort,
@@ -91,15 +92,16 @@ export async function liveFor(
   at: { owner: string; phone: string },
 ): Promise<StoreChange | null> {
   if (!(await owns(port, at.owner))) return null;
-  const incoming = applyLiveRows(rows);
-  const held = await readRows(port, [...incoming.keys()]);
-  const ours = [...held.values()].filter((m) => m.phone_e164 === at.phone);
-  const next = (id: string, status: MessageStatus) =>
-    laterStatus(status, incoming.get(id) ?? status);
-  const moved = ours
-    .filter((m) => next(m.id, m.status) !== m.status)
+  const events = new Map(rows.map((r) => [r.id, r]));
+  const held = await readRows(port, [...events.keys()]);
+  const next = (id: string, status: MessageStatus) => {
+    const event = events.get(id);
+    return event ? liveTick({ status, stamp: held.get(id)?.updated_at }, event) : status;
+  };
+  const moved = [...held.values()]
+    .filter((m) => m.phone_e164 === at.phone && next(m.id, m.status) !== m.status)
     .map((m) => ({ ...m, status: next(m.id, m.status) }));
-  const lists = (await readThreadsOf(port, [...incoming.keys()]))
+  const lists = (await readThreadsOf(port, [...events.keys()]))
     .filter((t) => next(t.last_message_id, t.last_status) !== t.last_status)
     .map((t) => ({ ...t, last_status: next(t.last_message_id, t.last_status) }));
   await port.transaction(async () => {

@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/core/rls';
 import { captureEvents, type LiveEvent } from './inbox-live.helpers';
 
-// Migration 20261107000300 (docs/44 P1-2 / K1): the push carries the tick, {phone, rows:[{id, s,
+// Migration 20261107000500 (docs/44 P1-2 / K1): the push carries the tick, {phone, rows:[{id, s,
 // d, at}]}, and {phone} alone for anything not every 'inbox:staff' reader may see, anything the
 // tick cannot describe, and more than 20 rows. Real database, rolled back.
 
@@ -23,7 +23,7 @@ const firstRow = (all: LiveEvent[][], n: number) => all[n]?.[0]?.rows?.[0];
 const shape = (events: LiveEvent[]) =>
   events.map((e) => [e.phone, e.rows?.map((r) => `${r.s}:${r.d}`) ?? null]);
 
-test.describe('inbox live rows (20261107000300)', () => {
+test.describe('inbox live rows (20261107000500)', () => {
   test.beforeEach(() =>
     test.skip(test.info().project.name !== 'desktop', 'database only: one run'),
   );
@@ -50,6 +50,17 @@ test.describe('inbox live rows (20261107000300)', () => {
       expect(Object.keys(row ?? {}).sort()).toEqual(['at', 'd', 'id', 's']);
       expect(row?.id).toBe(id);
       expect(JSON.stringify(all)).not.toContain('secret body');
+    });
+  });
+
+  test('a Meta delivered webhook (conversation, pricing) is a tick: rows event', async () => {
+    await rolledBack(async (tx) => {
+      await tx`insert into public.messages (direction, phone_e164, body, status, sent_at)
+        values ('outbound', ${A}, 'x', 'sent', now())`;
+      const events = await captureEvents(tx);
+      await tx`update public.messages set status = 'delivered', delivered_at = now(),
+        wa_pricing_category = 'utility', wa_conversation_id = 'c1' where phone_e164 = ${A}`;
+      expect((await events()).map(shape)).toEqual([[[A, ['delivered:outbound']]]]);
     });
   });
 

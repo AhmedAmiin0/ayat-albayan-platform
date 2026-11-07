@@ -42,10 +42,12 @@ $$;
 create or replace function public.inbox_tick_columns() returns text[]
   language sql immutable set search_path = '' as $$
   select array['status', 'sent_at', 'delivered_at', 'read_at', 'wa_message_id', 'attempts',
-               'next_attempt_at', 'error_code', 'error_text', 'sent_as_text', 'updated_at']
+               'next_attempt_at', 'error_code', 'error_text', 'sent_as_text', 'updated_at',
+               'wa_conversation_id', 'wa_pricing_category']
 $$;
 
--- Columns a tick moves (the sender's claim and «sent», the status webhook); any other change needs a
+-- Columns a tick moves (the sender's claim and «sent», the status webhook with Meta's conversation
+-- and pricing, which no client view shows); any other change needs a
 -- body re-read. A failure, or an error code other than the sender's 'sending' lease, re-reads too (its
 -- text is shown); so does an inbound row (a staff read mark moves the unread count).
 create or replace function public.inbox_tick_only(p_old jsonb, p_new jsonb) returns boolean

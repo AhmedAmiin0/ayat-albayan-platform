@@ -8,6 +8,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useSyncExternalStore } from 'react';
 import { supabase } from '@/lib/http/supabase';
+import { rereadChat } from './chat-reread';
 import { patchLiveCaches } from './live-patch';
 
 /**
@@ -47,10 +48,10 @@ export function useInboxRealtime(enabled: boolean): void {
     const list = inboxLive.watch('list');
     const open = () =>
       connectInboxLive(supabase, inboxLive, {
+        // docs/44 K1: a read in flight started before this event: cancelled, never joined (a
+        // page load or a first load is waited for instead: chat-reread.ts).
         chat: (phone) => {
-          // docs/44 K1: a read in flight started before this event: cancelled, never joined.
-          const filters = { queryKey: ['threads', 'detail', phone], type: 'active' } as const;
-          if (document.hasFocus()) void client.refetchQueries(filters, { cancelRefetch: true });
+          if (document.hasFocus()) rereadChat(client, phone);
         },
         // A hidden tab waits: TanStack re-reads the stale list when it is shown again. A read in
         // flight started before this change: cancelled, never joined (docs/43 AU1; throttled 3 s).

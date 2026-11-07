@@ -1,10 +1,10 @@
 import type { Tx } from '../../support/core/rls';
 
-// Shared by the inbox realtime SQL specs (migrations 860, 20261107000100, 20261107000300). The e2e
+// Shared by the inbox realtime SQL specs (migrations 860, 20261107000100, 20261107000500). The e2e
 // stack runs without the Realtime service, so the sender public.inbox_live_send_events is replaced
 // inside the rolled-back transaction by one that records the events the trigger hands it.
 
-/** One tellable row of an event (migration 20261107000300). */
+/** One tellable row of an event (migration 20261107000500). */
 export interface LiveRow {
   id: string;
   s: string;

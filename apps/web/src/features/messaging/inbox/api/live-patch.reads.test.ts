@@ -7,9 +7,9 @@ import { patchLiveCaches } from './live-patch';
 import { heldRead, live, msg, PHONE, thread } from './patch-fixtures';
 import { threadQuery } from './thread-query';
 
-// docs/44 K1: the live patch is visual only and no read is folded. A read in flight when the
-// event lands is cancelled (never committed after the patch); the event's re-read starts after
-// it (cancelRefetch: true, as live.ts) and lands exactly what the server sent.
+// docs/44 K1: the live patch is visual only and no read is folded. A chat read in flight when the
+// event moves that chat is cancelled (never committed after the patch); a list read never is. The
+// event's re-read (cancelRefetch: true, as live.ts) lands exactly what the server sent.
 
 const mockApiFetch = vi.fn();
 vi.mock('@/lib/http/api', async (importOriginal) => ({
@@ -59,18 +59,30 @@ it('an older chat read in flight is cancelled by the patch; the fresh read lands
   expect(first(client)).toEqual(fresh.messages[0]);
 });
 
-it('an older list read in flight is cancelled too; the fresh read is the truth', async () => {
+it('a list read in flight is never cancelled by a patch; the re-read supersedes it', async () => {
   const client = new QueryClient();
   mockApiFetch.mockResolvedValueOnce(list(thread('a', 'sent')));
   await client.query(LIST);
   const old = await inFlight(client, LIST.queryKey);
+  const cancel = vi.spyOn(client, 'cancelQueries');
   patchLiveCaches(client, PHONE, [live('a', 'delivered')]);
-  old.resolve(list(thread('a', 'sent')));
-  await old.done;
-  expect(listed(client)).toBe('delivered');
+  expect(cancel).not.toHaveBeenCalled();
   mockApiFetch.mockResolvedValueOnce(list(thread('a', 'read')));
-  await reread(client, LIST.queryKey);
+  const fresh = reread(client, LIST.queryKey);
+  old.resolve(list(thread('a', 'sent')));
+  await Promise.all([fresh, old.done]);
   expect(listed(client)).toBe('read');
+});
+
+it('an event that moves nothing (an inbound insert) cancels nothing', async () => {
+  const client = await opened(msg('a', 'sent'));
+  const old = await inFlight(client, KEY);
+  const cancel = vi.spyOn(client, 'cancelQueries');
+  patchLiveCaches(client, PHONE, [{ ...live('new', 'delivered'), d: 'inbound' }]);
+  expect(cancel).not.toHaveBeenCalled();
+  old.resolve(page(msg('a', 'sent'), msg('new', 'delivered')));
+  await old.done;
+  expect(client.getQueryData(KEY)?.pages[0]?.messages).toHaveLength(2);
 });
 
 it('a {phone}-only re-read never joins an older read: it starts after the event', async () => {

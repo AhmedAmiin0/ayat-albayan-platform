@@ -50,10 +50,10 @@ test('patch, an older sync in flight lands, the extra sync lands the newest: the
   expect(t.fetchPage).toHaveBeenCalledTimes(3); // exactly one extra run
 });
 
-test('a re-queue (failed → queued): the patch and the next sync both show queued', async () => {
+test('a re-queue (failed → queued): the patch never takes a row off failed; the sync does', async () => {
   const t = await setup({ status: 'failed' });
   await t.store.live([live('queued')], ON);
-  expect((await t.stored())?.status).toBe('queued');
+  expect((await t.stored())?.status).toBe('failed');
   t.next(synced(2, { status: 'queued' }));
   await t.engine.syncNow();
   expect([(await t.stored())?.status, await t.listed()]).toEqual(['queued', 'queued']);

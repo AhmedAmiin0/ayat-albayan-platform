@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { laterStatus, type TickRow } from '../ticks/index.js';
 import { changedPhone } from './inbox-live.js';
 
-// docs/44 P1-2 / K1 (migration 20261107000300): a 'thread_changed' event carries the rows its
+// docs/44 P1-2 / K1 (migration 20261107000500): a 'thread_changed' event carries the rows its
 // statement touched when every staff reader may see them — {phone, rows:[{id, s, d, at}]}, at most
 // 20 — else {phone} alone. A client moves the ticks it holds at once (a visual patch); every event,
 // rows or not, still runs the throttled re-read: the reads stay the truth.

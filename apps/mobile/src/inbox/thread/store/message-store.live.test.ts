@@ -2,7 +2,7 @@ import type { LiveRow } from '@ab/client-core';
 import type { MessageStatus } from '@ab/shared';
 import { memoryPort } from '@/test/node-sql';
 import { createMessageStore } from './message-store';
-import { A, B, applyAs, id, plan, row, threadRow } from './store-fixtures';
+import { A, at as at0, B, applyAs, id, plan, row, threadRow } from './store-fixtures';
 
 // docs/44 K1: a realtime event's ticks straight into the phone store (a visual patch); the same
 // owner guard as every write; the server's sync stamp untouched. Syncs around a patch:
@@ -61,8 +61,22 @@ test('another owner writes nothing and gets false', async () => {
   expect(heard).toEqual([]);
 });
 
-test('failed replaces any tick (laterStatus)', async () => {
+test('a failed event lands only when newer than the stored row (liveTick)', async () => {
   const { store, statuses } = await filled();
-  expect(await store.live([live(2, 'failed')], { owner: 'user-a', phone: A })).toBe(true);
+  const at = { owner: 'user-a', phone: A };
+  await store.live([{ ...live(2, 'failed'), at: at0(0) }], at);
+  expect(await statuses()).toEqual(['read', 'queued']);
+  await store.live([{ ...live(2, 'failed'), at: at0(9) }], at);
   expect(await statuses()).toEqual(['failed', 'queued']);
+});
+
+test('a synced failure is never undone by a late tick; a sent row still moves forward', async () => {
+  const { store, statuses } = await filled();
+  await applyAs(store, plan([row({ n: 1, s: 5, status: 'failed' })]));
+  const at = { owner: 'user-a', phone: A };
+  await store.live([live(1, 'sent')], at);
+  expect(await statuses()).toEqual(['failed', 'read']);
+  await applyAs(store, plan([row({ n: 1, s: 6, status: 'sent' })]));
+  await store.live([live(1, 'delivered')], at);
+  expect(await statuses()).toEqual(['delivered', 'read']);
 });
