@@ -3,13 +3,14 @@ import {
 } from '@nestjs/common';
 import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { loadEnv } from '@/config/env/env';
-import { MessageWorker, type PassJob, type SendOutcome } from './message.worker';
+import { MessageWorker, type PassJob } from './message.worker';
 import { routeOf } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
 import { lineOf } from './send-line';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { SenderRepo } from './sender.repo';
 import { onPaceDue } from './pace';
+import { emptySummary, KickFlag, reportPass, type SendSummary } from './pass';
 import { SENDER_FIRST_RUN_MS, SENDER_POLL_MS, senderTiming } from './sender-timing';
 import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
@@ -17,10 +18,7 @@ import { BackgroundJob } from '@/config/role/background-job';
 /** ponytail: 50 per pass, one at a time; batch the Graph calls if volume ever needs it. */
 const BATCH = 50;
 
-export type SendSummary = Record<SendOutcome, number>;
-const EMPTY: SendSummary = {
-  sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0, waiting: 0,
-};
+export type { SendSummary } from './pass';
 
 /** One due row of a pass and the line (legacy) or number (module mode) a pause applies to. */
 interface PassItem { job: PassJob; pause: string | null }
@@ -40,8 +38,9 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
   /** Timers kick too: a tick during a run queues one more, as an enqueue does. */
   private readonly ticker = new Ticker({
     name: MessageSender.name, firstMs: SENDER_FIRST_RUN_MS, everyMs: SENDER_POLL_MS,
-    run: () => this.runOnce(), timer: 'kick',
+    run: () => this.runOnce(new Date(), this.kicked.take()), timer: 'kick',
   });
+  private readonly kicked = new KickFlag();
 
   constructor(
     private readonly gate: SendGate,
@@ -62,12 +61,13 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
 
   /** Run now (after an enqueue or an admin retry); a kick during a run queues exactly one more. */
   kick(): Promise<void> {
+    this.kicked.set();
     return this.ticker.kick();
   }
 
-  /** One pass over the due rows. Never throws. */
-  async runOnce(now = new Date()): Promise<SendSummary> {
-    const summary: SendSummary = { ...EMPTY };
+  /** One pass over the due rows. Never throws. `kicked`: skip the idle probe (docs/42 42-4). */
+  async runOnce(now = new Date(), kicked = false): Promise<SendSummary> {
+    const summary = emptySummary();
     try {
       const gate = await this.gate.switches();
       if (!gate.open) return summary;
@@ -75,7 +75,7 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
       if (!gate.automaticOn) summary.held += await this.queries.holdAutomatic();
       await this.worker.release(); // held texts the family answered (window/): due again
       // Idle (the usual tick): one cheap read instead of the templates + the queue (+ the routes).
-      if (!(await this.queries.anyDue(now))) return this.report(summary);
+      if (!kicked && !(await this.queries.anyDue(now))) return this.report(summary);
       const run: PassRun = { summary, paused: new Set<string>() };
       await this.pass(run, now);
       // A text just held queued its reopen template: one more pass sends it now, not next tick.
@@ -139,11 +139,7 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
     }
   }
 
-  /** Logged only when a pass did something (skipped rows alone stay quiet). */
   private report(summary: SendSummary): SendSummary {
-    if (Object.entries(summary).some(([outcome, n]) => outcome !== 'skipped' && n > 0)) {
-      this.log.log(`outbound messages: ${JSON.stringify(summary)}`);
-    }
-    return summary;
+    return reportPass(this.log, summary);
   }
 }
