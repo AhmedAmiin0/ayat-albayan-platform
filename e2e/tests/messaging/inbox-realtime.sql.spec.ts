@@ -7,7 +7,7 @@ import { USERS } from '../../support/core/users';
 // Migration 20261028000860: messages broadcast ONE phone-only 'thread_changed' per phone per statement
 // on the private topic 'inbox:staff'; only admin / sales with inbox.read may join it. The e2e stack runs
 // without the Realtime service (its schema belongs to supabase_admin), so the sender
-// public.inbox_live_send is replaced inside the rolled-back transaction by one that records what the
+// public.inbox_live_send_events is replaced inside the rolled-back transaction by one that records what the
 // trigger hands it, and the policy's rule is read through its helper, public.inbox_live_reader().
 
 const A = '+966500000861';
