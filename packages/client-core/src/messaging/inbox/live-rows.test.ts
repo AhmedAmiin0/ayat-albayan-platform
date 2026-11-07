@@ -33,8 +33,8 @@ describe('liveEvent: the payload, parsed (zod)', () => {
   });
 });
 
-describe('applyLiveRows: what is held moves, the rest re-reads', () => {
-  it('complete when every row is held', () => {
+describe('applyLiveRows: tick moves of the open chat settle, everything else re-reads', () => {
+  it('complete when every row is an outbound tick the open chat holds', () => {
     const out = applyLiveRows(
       [row('a', 'sent'), row('b', 'read')],
       held({ a: 'queued', b: 'sent' }),
@@ -46,10 +46,22 @@ describe('applyLiveRows: what is held moves, the rest re-reads', () => {
     ]);
   });
 
-  it('an unknown id leaves it incomplete (the fallback read), the known one still moves', () => {
-    const out = applyLiveRows([row('a', 'delivered'), row('new', 'queued')], held({ a: 'sent' }));
+  it('a row the chat does not show (a new message) re-reads; every row still patches', () => {
+    const out = applyLiveRows([row('a', 'delivered'), row('new', 'sent')], held({ a: 'sent' }));
     expect(out.complete).toBe(false);
-    expect([...out.incoming]).toEqual([['a', 'delivered']]);
+    expect([...out.incoming]).toEqual([
+      ['a', 'delivered'],
+      ['new', 'sent'],
+    ]);
+  });
+
+  it('an inbound row re-reads even when already held (a list/sync read landed it first)', () => {
+    const inbound: LiveRow = { ...row('m', 'delivered'), d: 'inbound' };
+    expect(applyLiveRows([inbound], held({ m: 'delivered' })).complete).toBe(false);
+  });
+
+  it('a queued row (insert, or a retry of a failed one) re-reads even when held', () => {
+    expect(applyLiveRows([row('a', 'queued')], held({ a: 'failed' })).complete).toBe(false);
   });
 
   it('no rows: incomplete, nothing to move', () => {

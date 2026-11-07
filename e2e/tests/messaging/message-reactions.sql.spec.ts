@@ -81,7 +81,7 @@ test.describe('message reactions (migration 900)', () => {
       const x = await message(tx, { phone: A, wamid: 'wamid.rx-L', at: '2026-10-20T10:00:00Z' });
       const events = await captureEvents(tx);
       await tx`update public.messages set their_reaction = '🙏' where id = ${x}`;
-      // A reaction is not a tick (migration 20261107000200): the phone alone, no row ids.
+      // A reaction is not a tick (migration 20261107000300): the phone alone, no row ids.
       expect(await events()).toEqual([[{ phone: A }]]);
     });
   });

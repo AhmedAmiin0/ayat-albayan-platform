@@ -1,6 +1,8 @@
 import {
   applyLiveRows,
   laterStatus,
+  laterListTicks,
+  laterTick,
   type LiveRow,
   mergeRead,
   type SyncPlan,
@@ -38,6 +40,25 @@ export function rememberGone(gone: Set<string>, ids: readonly string[]): void {
 }
 
 /**
+ * The plan's rows with any stored tick further along (laterTick, docs/44 K1): a live event moved
+ * the tick but kept updated_at, so a sync read in flight is still «newer» and must not take ✓✓
+ * back to ✓ (chat rows and chats-list rows alike). failed / by hand / a retry always land.
+ */
+async function keepTicks(port: SqlPort, plan: SyncPlan): Promise<SyncPlan> {
+  const held = await readRows(
+    port,
+    plan.upsert.map((m) => m.id),
+  );
+  const lists = await readThreadsOf(
+    port,
+    plan.threads.map((t) => t.last_message_id),
+  );
+  const upsert = plan.upsert.map((m) => laterTick(held.get(m.id), m));
+  const threads = laterListTicks({ items: lists }, { items: plan.threads }).items;
+  return { ...plan, upsert, threads };
+}
+
+/**
  * A sync plan, written only when the store is still `owner`'s and still holds the mark it was
  * planned from (a wipe, a scope reset or another run moved it: the plan is stale, dropped).
  */
@@ -49,7 +70,8 @@ export async function writeFor(
   const now = await readState(port);
   if (now.owner !== owner || !sameMark(now.sync, base)) return null;
   const removed = await readHeld(port, plan.remove);
-  await port.transaction(() => writePlan(port, plan));
+  const kept = await keepTicks(port, plan);
+  await port.transaction(() => writePlan(port, kept));
   return changedPhones(plan, removed);
 }
 

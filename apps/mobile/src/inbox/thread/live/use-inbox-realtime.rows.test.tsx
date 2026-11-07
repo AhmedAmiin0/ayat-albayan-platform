@@ -2,6 +2,7 @@ import { chatLiveKey, type LiveRow } from '@ab/client-core';
 import { act, renderHook } from '@testing-library/react-native';
 import { AppState } from 'react-native';
 import { queryClient as client } from '@/core/lib/query/query-client';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { nudgeInboxStore, patchInboxStore } from '@/inbox/thread/local/store-session';
 import { inboxLive } from './inbox-live';
 import { changeLists } from './list-marks';
@@ -55,19 +56,28 @@ async function mount() {
   return { hook, http };
 }
 
+/** The open chat's read cache holds these ids (what is on screen). */
+const showing = (...ids: string[]) =>
+  client.setQueryData(threadKey(OPEN), {
+    pages: [{ messages: ids.map((id) => ({ id, status: 'sent' })), has_more: false }],
+    pageParams: [null],
+  });
+
 const push = (rows: LiveRow[]) =>
   act(async () => mockHooks.event?.({ payload: { phone: OPEN, rows } }));
 
 beforeEach(() => jest.useFakeTimers());
 afterEach(() => {
+  client.removeQueries({ queryKey: threadKey(OPEN) });
   inboxLive.forget(chatLiveKey(OPEN));
   inboxLive.forget('list');
   jest.useRealTimers();
   jest.restoreAllMocks();
 });
 
-test('every row held by the store: the tick moves with no request and no sync nudge', async () => {
+test('an outbound tick the open chat shows: the tick moves with no request, no nudge', async () => {
   jest.mocked(patchInboxStore).mockResolvedValue(true);
+  showing('m1');
   const { hook, http } = await mount();
   await push([ROW]);
   await act(async () => jest.runAllTimersAsync());
@@ -84,6 +94,21 @@ test.each([
   jest.mocked(patchInboxStore).mockResolvedValue(held);
   const { hook } = await mount();
   await push([{ ...ROW, s }]);
+  await act(async () => jest.runAllTimersAsync());
+  expect(nudgeInboxStore).toHaveBeenCalled();
+  expect(changeLists).toHaveBeenCalled();
+  await act(async () => hook.unmount());
+});
+
+test.each<[string, LiveRow, string[]]>([
+  ['a new message a sync stored first (the open chat lacks it)', ROW, []],
+  ['an inbound row the chat shows (the read stamps it)', { ...ROW, d: 'inbound' }, ['m1']],
+  ['a retry: failed → queued (the overlay ignores unranked)', { ...ROW, s: 'queued' }, ['m1']],
+])('%s: the store says held, the open chat still re-reads', async (_, row, shown) => {
+  jest.mocked(patchInboxStore).mockResolvedValue(true);
+  showing(...shown);
+  const { hook } = await mount();
+  await push([row]);
   await act(async () => jest.runAllTimersAsync());
   expect(nudgeInboxStore).toHaveBeenCalled();
   expect(changeLists).toHaveBeenCalled();

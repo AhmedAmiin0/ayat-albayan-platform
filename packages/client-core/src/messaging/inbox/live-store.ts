@@ -39,6 +39,8 @@ export interface InboxLive {
   watch(key: LiveKey): () => void;
   /** Its screen unmounted. */
   forget(key: LiveKey): void;
+  /** Whether `key` is on screen now (an event's rows settle only against the watched chat). */
+  isWatched(key: LiveKey): boolean;
   /** A thread_changed event's payload. */
   changed(payload: unknown): void;
   /** (Re)connected or back in the foreground: the badge and everything on screen once. */
@@ -91,6 +93,7 @@ export function createInboxLive({ chatOwnsBadge = false }: InboxLiveOptions = {}
       throttles.get(key)?.cancel();
       throttles.delete(key);
     },
+    isWatched: (key) => registry.isWatched(key),
     changed(payload) {
       const event = liveEvent(payload);
       if (!event) return;

@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { LINK_TEMPLATES } from './sales-threads';
 
 // docs/44 K1: the realtime push hides a link template's id from every staff reader through the SQL
-// twin public.inbox_link_templates() (migration 20261107000200 or a later one). No database runs
+// twin public.inbox_link_templates() (migration 20261107000300 or a later one). No database runs
 // in unit tests: the latest definition is read from the migrations and must list LINK_TEMPLATES.
 const dir = join(__dirname, '../../../../../../../packages/db/supabase/migrations');
 const DEFINES = 'function public.inbox_link_templates()';

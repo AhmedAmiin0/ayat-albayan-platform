@@ -8,10 +8,10 @@ import { z } from 'zod';
 import { laterStatus, type TickRow } from '../ticks/index.js';
 import { changedPhone } from './inbox-live.js';
 
-// docs/44 P1-2 / K1 (migration 20261107000200): a 'thread_changed' event carries the rows its
+// docs/44 P1-2 / K1 (migration 20261107000300): a 'thread_changed' event carries the rows its
 // statement touched when every staff reader may see them — {phone, rows:[{id, s, d, at}]}, at most
-// 20 — else {phone} alone. A client moves the tick of a row it already holds with no request; an
-// unknown id, a {phone}-only event or anything it cannot apply still re-reads (the throttled read).
+// 20 — else {phone} alone. A client moves the tick of an outbound row its open chat holds with no
+// request; any other row, a {phone}-only event or anything it cannot apply still re-reads.
 
 /** Most rows one event carries (the trigger sends {phone} alone above it). */
 export const LIVE_ROWS_MAX = 20;
@@ -48,25 +48,32 @@ export function liveEvent(payload: unknown): LiveEvent | null {
 
 /** What an event does to a client's copies (applyLiveRows). */
 export interface LivePatch {
-  /** The incoming status of every row the client holds, by id (patch with laterStatus). */
+  /** The incoming status of every row of the event, by id (patch held copies with laterStatus). */
   incoming: ReadonlyMap<string, MessageStatus>;
-  /** Every row was held: nothing is left to re-read over HTTP. */
+  /** Only tick moves of rows the open chat already shows: nothing is left to re-read over HTTP. */
   complete: boolean;
 }
 
 /**
- * The rows of an event against what a client holds (`statusOf`: the held status, undefined for an
- * id it does not hold). Complete only when there were rows and every one is held; otherwise the
- * caller still applies `incoming` (the known ticks move at once) and re-reads for the rest.
+ * A row an event can settle with no read: an outbound row's tick past queued. An inbound row (new,
+ * unread: the read stamps it) or a queued one (a first insert, or a retry from failed) re-reads.
+ */
+const tickOnly = (r: LiveRow): boolean => r.d === 'outbound' && r.s !== 'queued';
+
+/**
+ * The rows of an event against the WATCHED CHAT (`statusOf`: its status, undefined for an id it
+ * does not show; a list cache never counts). Complete only when there were rows and each is a tick
+ * move of an outbound row that chat holds; otherwise the caller still applies `incoming` (every
+ * cache moves the ticks it holds at once) and re-reads for the rest (the throttled read).
  */
 export function applyLiveRows(
   rows: readonly LiveRow[] | undefined,
   statusOf: (id: string) => MessageStatus | undefined,
 ): LivePatch {
   const list = rows ?? [];
-  const held = list.filter((r) => statusOf(r.id) !== undefined);
-  const incoming = new Map(held.map((r) => [r.id, r.s]));
-  return { incoming, complete: list.length > 0 && held.length === list.length };
+  const settled = (r: LiveRow) => tickOnly(r) && statusOf(r.id) !== undefined;
+  const incoming = new Map(list.map((r) => [r.id, r.s]));
+  return { incoming, complete: list.length > 0 && list.every(settled) };
 }
 
 /** `cached` moved by its incoming status (laterStatus: ✓✓ never goes back to ✓). */

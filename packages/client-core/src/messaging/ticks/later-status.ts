@@ -33,7 +33,7 @@ export function laterStatus(cached: MessageStatus, incoming: MessageStatus): Mes
 }
 
 /** `fresh` with the cached row's tick (and its stamps) when the cached one is further along. */
-export function laterTick(cached: MessageView | undefined, fresh: MessageView): MessageView {
+export function laterTick<M extends MessageView>(cached: MessageView | undefined, fresh: M): M {
   if (!cached || !ranksAbove(cached.status, fresh.status)) return fresh;
   const { status, sent_at, delivered_at, read_at } = cached;
   return { ...fresh, status, sent_at, delivered_at, read_at };

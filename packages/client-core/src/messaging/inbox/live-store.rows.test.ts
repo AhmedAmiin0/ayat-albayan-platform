@@ -68,4 +68,12 @@ describe('createInboxLive: an event with rows (docs/44 K1)', () => {
     await vi.runAllTimersAsync();
     expect(targets.chat).toHaveBeenCalledTimes(1);
   });
+
+  it('isWatched follows watch / release (the apps settle rows only against the open chat)', () => {
+    const live = createInboxLive();
+    const release = live.watch(chatLiveKey(OPEN));
+    expect(live.isWatched(chatLiveKey(OPEN))).toBe(true);
+    release();
+    expect(live.isWatched(chatLiveKey(OPEN))).toBe(false);
+  });
 });

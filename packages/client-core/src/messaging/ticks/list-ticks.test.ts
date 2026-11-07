@@ -1,6 +1,13 @@
 import type { MessageStatus, MessageView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { chatStatus, overlayPage, overlayPages, overlayTicks, type TickRow } from './list-ticks.js';
+import {
+  chatStatus,
+  laterListTicks,
+  overlayPage,
+  overlayPages,
+  overlayTicks,
+  type TickRow,
+} from './list-ticks.js';
 
 const row = (phone: string, id: string, last_status: MessageStatus): TickRow => ({
   phone_e164: phone,
@@ -13,7 +20,9 @@ const statusOf = (r: TickRow) => chats[r.last_message_id];
 
 describe('chatStatus: the status a chat cache holds for one message', () => {
   it('finds the id on any page, the newest page first', () => {
-    const cache = { pages: [{ messages: [msg('x', 'read')] }, { messages: [msg('y', 'sent'), msg('x', 'sent')] }] };
+    const cache = {
+      pages: [{ messages: [msg('x', 'read')] }, { messages: [msg('y', 'sent'), msg('x', 'sent')] }],
+    };
     expect(chatStatus(cache, 'x')).toBe('read');
     expect(chatStatus(cache, 'y')).toBe('sent');
   });
@@ -24,14 +33,19 @@ describe('chatStatus: the status a chat cache holds for one message', () => {
   });
 });
 
-describe('overlayTicks: the list row follows the chat (docs/43 §2, the owner\'s pending tick)', () => {
-  it('lifts a queued row to the chat\'s ✓ and a ✓ row to ✓✓', () => {
+describe("overlayTicks: the list row follows the chat (docs/43 §2, the owner's pending tick)", () => {
+  it("lifts a queued row to the chat's ✓ and a ✓ row to ✓✓", () => {
     const out = overlayTicks([row('+1', 'm1', 'queued'), row('+2', 'm2', 'delivered')], statusOf);
     expect(out.map((r) => r.last_status)).toEqual(['sent', 'read']);
   });
 
   it('never lowers a row, never takes failed over it, ignores chats not loaded', () => {
-    const items = [row('+1', 'm1', 'read'), row('+3', 'm3', 'sent'), row('+4', 'm4', 'queued'), row('+5', 'm9', 'queued')];
+    const items = [
+      row('+1', 'm1', 'read'),
+      row('+3', 'm3', 'sent'),
+      row('+4', 'm4', 'queued'),
+      row('+5', 'm9', 'queued'),
+    ];
     expect(overlayTicks(items, statusOf)).toBe(items);
   });
 
@@ -60,5 +74,27 @@ describe('overlayPage / overlayPages: whole list caches', () => {
     expect(out.pages[0]?.total).toBe(1);
     expect(out.pages[1]).toBe(still);
     expect(out.pageParams).toBe(data.pageParams);
+  });
+});
+
+describe('laterListTicks: a fresh list page never lowers a cached tick (docs/44 K1)', () => {
+  const page = (status: MessageStatus) => ({
+    items: [{ phone_e164: '+966500000001', last_message_id: 'a', last_status: status }],
+  });
+
+  it.each<[MessageStatus, MessageStatus, MessageStatus]>([
+    ['delivered', 'sent', 'delivered'],
+    ['sent', 'read', 'read'],
+    ['delivered', 'failed', 'failed'],
+    ['failed', 'queued', 'queued'],
+  ])('cached %s, fresh %s → %s', (cached, fresh, kept) => {
+    expect(laterListTicks(page(cached), page(fresh)).items[0]?.last_status).toBe(kept);
+  });
+
+  it('nothing cached, or another last message: the fresh page as is', () => {
+    const fresh = page('sent');
+    expect(laterListTicks(undefined, fresh)).toBe(fresh);
+    const other = { items: [row('+966500000001', 'b', 'read')] };
+    expect(laterListTicks(other, fresh)).toBe(fresh);
   });
 });

@@ -46,3 +46,16 @@ export function overlayPages<D extends { pages: { items: TickRow[] }[] }>(
   const pages = data.pages.map((p) => overlayPage(p, statusOf));
   return pages.every((p, i) => p === data.pages[i]) ? data : { ...data, pages };
 }
+
+/**
+ * A fresh list page whose rows keep the cached tick for the SAME last message when it is further
+ * along (docs/44 K1): a read in flight before a live tick never takes ✓✓ back to ✓; failed, by
+ * hand and a retry (unranked) always come from `fresh`.
+ */
+export function laterListTicks<P extends { items: TickRow[] }>(
+  cached: { items: readonly TickRow[] } | undefined,
+  fresh: P,
+): P {
+  const held = new Map((cached?.items ?? []).map((r) => [r.last_message_id, r.last_status]));
+  return overlayPage(fresh, (row) => held.get(row.last_message_id));
+}
