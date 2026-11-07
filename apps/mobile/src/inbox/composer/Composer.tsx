@@ -8,7 +8,6 @@ import { t } from '@/core/lib/i18n/i18n';
 import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { useComposerText, useForgetDraftOnLeave } from './draft-store';
 import { QuoteSheet } from './quote/QuoteSheet';
-import { ReopenNote } from './ReopenNote';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { GateNote } from '@/inbox/thread/components/GateNote';
 import { OpenRow } from '@/inbox/threads-list/OpenRow';
@@ -34,7 +33,8 @@ import { errorLines, useComposerSend } from './use-composer-send';
  * the list over the row, its tile in the paperclip's sheet opens the sheet; a pick fills the box and stages its file (the
  * chip). «أرسل» sends the text, then the file.
  * «رد» (owner 2026-10-25): the quoted strip over the row; the text answers it (useComposerSend).
- * A closed chat, once opened, asks the server to reopen it (ReopenNote, owner 2026-10-26).
+ * Opening a closed chat sends nothing (owner 2026-11-07): the starter template goes on the first
+ * send, which is held until the family replies; the «try» note (ClosedNote) says so.
  * «عرض سعر» (owner 2026-10-26, staff with pricing.read): its sheet sends the offer or fills the box; the
  * box's text lives in draft-store for that.
  */
@@ -90,7 +90,6 @@ export function Composer({
         <ErrorLine key={line} message={line} />
       ))}
       <GateNote />
-      <ReopenNote phone={phone} closed={thread !== null && !open} />
       {trying ? <ClosedNote known note={t.inbox[afterWindowNote(thread?.reopen_choice)]} /> : null}
       {may ? <QuoteStrip /> : null}
       {may && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}

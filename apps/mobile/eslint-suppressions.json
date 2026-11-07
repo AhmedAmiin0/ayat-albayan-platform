@@ -3267,16 +3267,6 @@
       "count": 1
     }
   },
-  "src/inbox/composer/ReopenNote.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/inbox/composer/ReopenNote.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/inbox/composer/TemplateForm.contact.test.tsx": {
     "max-len": {
       "count": 1
@@ -3479,14 +3469,6 @@
     },
     "max-len": {
       "count": 4
-    }
-  },
-  "src/inbox/composer/use-thread-reopen.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/inbox/composer/voice/MicHold.access.test.tsx": {

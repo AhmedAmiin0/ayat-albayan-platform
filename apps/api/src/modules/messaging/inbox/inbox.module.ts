@@ -27,10 +27,6 @@ import { ThreadsController } from './threads/threads.controller';
 import { ThreadsRepo } from './threads/threads.repo';
 import { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
 import { ThreadsService } from './threads/threads.service';
-import { KapsoReopener } from './reopen/kapso-reopener';
-import { ReopenRepo } from './reopen/reopen.repo';
-import { ReopenTemplate } from './reopen/reopen-template';
-import { ReopenSettings } from './reopen/reopen.settings';
 import { ThreadReopenController } from './reopen/thread-reopen.controller';
 import { ThreadReopenService } from './reopen/thread-reopen.service';
 import { ReactionRepo } from './reactions/reaction.repo';
@@ -58,7 +54,8 @@ import {
  * PDF preview like WhatsApp (owner 2026-10-29): PdfPreviewService renders a bubble PDF's pages (poppler).
  * ChatListsModule: GET /threads?list= and the open chat's «القوائم» (docs/22).
  * «رد» / «إعادة توجيه» (owner 2026-10-25): ThreadQuotes, ThreadForwardController.
- * «إعادة فتح المحادثة» (owner 2026-10-26): ThreadReopenController (Kapso's record + the reopen template).
+ * «إعادة فتح المحادثة» (owner 2026-10-26): ThreadReopenController; since 2026-11-07 it
+ * only answers the window state: the starter template goes on the first send (window/*).
  * «تفاعل» (owner 2026-10-27): ThreadReactionController (WhatsApp message reactions, migration 930).
  * «حذف من المنصة» (owner 2026-10-30): MessageHideController (staff only; nothing goes to WhatsApp).
  * Delta refresh (owner 2026-10-27): ThreadDeltaService answers GET /threads/:phone?after=.
@@ -91,10 +88,6 @@ import {
     ThreadQuotes,
     ForwardFiles,
     ThreadForwardService,
-    KapsoReopener,
-    ReopenRepo,
-    ReopenTemplate,
-    ReopenSettings,
     ThreadReopenService,
     ReactionRepo,
     ThreadReactionService,

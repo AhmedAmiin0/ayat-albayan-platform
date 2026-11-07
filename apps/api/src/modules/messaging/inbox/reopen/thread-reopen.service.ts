@@ -1,68 +1,35 @@
 import type { ThreadReopenView } from '@ab/shared';
-import { Injectable, Logger } from '@nestjs/common';
-import type { SalesScope } from '@/modules/sales/sales/sales-scope';
+import { Injectable } from '@nestjs/common';
 import { assertCanSend, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { messagingWindowOpen } from '@/modules/messaging/inbox/threads/threads.mapper';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
-import { KapsoReopener, last4 } from './kapso-reopener';
-import type { Sent } from '@/modules/messaging/inbox/send/outbox';
-import { ReopenTemplate, type Queued } from './reopen-template';
 
-interface ReopenRequest {
+interface ReopenAsk {
   phone: string;
-  actorId: string;
   /** Teacher mode: the teacher's scope (own families only, like a send). */
   scope: TeacherScope | null;
-  sales: SalesScope | null;
-  /** No templates.send_all (teachers, sales, assistants): Kapso's record only, never the template (owner 2026-10-12). */
-  restricted: boolean;
 }
 
-type Reopened = { view: ThreadReopenView; sent?: Sent };
+const OPEN: ThreadReopenView = { kapso_reopened: false, template: 'window_open' };
+/** Old clients show no note for an outcome they do not know (reopenNoteKey: null). */
+const ON_SEND: ThreadReopenView = { kapso_reopened: false, template: 'on_send' };
 
 /**
- * «إعادة فتح المحادثة» (owner 2026-10-26): a staff member opened a thread whose 24 h window is closed.
- * (a) Kapso's conversation record back to active (chat line on kapso; bounded and never failing) and
- * (b) the reopen template, queued once a day (ReopenTemplate), run side by side (owner 2026-10-27: a
- * slow or failing Kapso never holds the template). An open window, or a phone with no thread yet, does
- * nothing. Every outcome but template_queued logs one warn line (the phone's last 4 digits only).
- * `sent` = the queued row, for the controller's audit.
+ * POST /threads/:phone/reopen, answer only (owner 2026-11-07, option 1). Opening a chat sends
+ * nothing: an admin opened a closed chat at night and the family got the welcome template. The
+ * starter template now goes only when a staff member presses send in a closed window (inbox
+ * textLine marks the row AWAITING_REPLY; the sender's WindowHold queues the template once per
+ * phone per Riyadh day and holds the message until the family replies). The route stays, with
+ * its response shape, because phones keep calling it on open until their OTA update arrives:
+ * it never queues a template and never calls Kapso.
  */
 @Injectable()
 export class ThreadReopenService {
-  private readonly log = new Logger('ThreadReopen');
+  constructor(private readonly queries: ThreadsRepo) {}
 
-  constructor(
-    private readonly queries: ThreadsRepo,
-    private readonly kapso: KapsoReopener,
-    private readonly template: ReopenTemplate,
-  ) {}
-
-  async reopen(r: ReopenRequest, now = new Date()): Promise<Reopened> {
-    try {
-      const out = await this.run(r, now);
-      if (out.view.template !== 'template_queued') this.warn(r.phone, out.view.template);
-      return out;
-    } catch (e) {
-      this.warn(r.phone, 'failed');
-      throw e;
-    }
-  }
-
-  private async run(r: ReopenRequest, now: Date): Promise<Reopened> {
+  async reopen(r: ReopenAsk, now = new Date()): Promise<ThreadReopenView> {
     if (r.scope) assertCanSend(r.scope, r.phone);
     const thread = await this.queries.thread(r.phone);
-    if (!thread) return { view: { kapso_reopened: false, template: 'not_sent' } };
-    if (messagingWindowOpen(thread, now)) return { view: { kapso_reopened: false, template: 'window_open' } };
-    const kapso = this.kapso.reopen(r.phone);
-    const queued: Promise<Queued> = r.restricted
-      ? Promise.resolve({ outcome: 'not_allowed' })
-      : this.template.queue({ phone: r.phone, thread, actorId: r.actorId, scope: r.scope, sales: r.sales, now });
-    const [kapso_reopened, q] = await Promise.all([kapso, queued]);
-    return { view: { kapso_reopened, template: q.outcome }, ...(q.sent ? { sent: q.sent } : {}) };
-  }
-
-  private warn(phone: string, outcome: string): void {
-    this.log.warn(`reopen for ${last4(phone)}: ${outcome}`);
+    return thread && messagingWindowOpen(thread, now) ? OPEN : ON_SEND;
   }
 }

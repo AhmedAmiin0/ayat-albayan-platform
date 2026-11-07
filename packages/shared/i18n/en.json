@@ -3010,7 +3010,7 @@
       "stickerSend": "Send sticker"
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
-    "tryAfterWindow": "We will send the welcome template and send your message when the family replies. To send it now, tap «Send via WhatsApp» on the message after sending it.",
+    "tryAfterWindow": "The 24-hour window has ended: when you send, the welcome message goes first and your message goes after the family replies. To send it yourself now, tap «Send via WhatsApp» on the message after sending it.",
     "tryAfterWindowWait": "We will reopen the conversation and send your message when the family replies. To send it now, tap «Send via WhatsApp» on the message after sending it.",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
@@ -3107,12 +3107,6 @@
       "minutes": "{n}m",
       "closed": "Chat closed — send a template or a rating to reopen it",
       "closedStaff": "Chat closed — it reopens when the guardian messages you, or with a template available to you"
-    },
-    "reopen": {
-      "requested": "A request to reopen the chat was sent — waiting for the other side to reply",
-      "requestedToday": "Today’s request was already sent",
-      "unavailable": "Chat reopened — the reopen template is not available yet",
-      "failed": "The reopen request could not be sent — send the template yourself from «Send template»"
     },
     "rating": {
       "send": "Send lesson rating",
