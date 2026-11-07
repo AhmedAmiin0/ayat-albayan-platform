@@ -98,11 +98,6 @@
       "count": 1
     }
   },
-  "eslint.config.js": {
-    "max-len": {
-      "count": 5
-    }
-  },
   "src/account/components/AccountCard.tsx": {
     "ab/module-boundaries": {
       "count": 1

@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "workspaces": {
     ".": {
-      "entry": ["tools/livekit/token-server.mjs"],
+      "entry": ["tools/livekit/token-server.mjs", "oxlint.full.config.ts"],
       "ignoreBinaries": ["supabase"]
     },
     "docs/design/brand/tools": {

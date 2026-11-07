@@ -1,9 +1,4 @@
 {
-  "eslint.config.js": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/core/auth/permissions.ts": {
     "ab/no-shape-checks": {
       "count": 2

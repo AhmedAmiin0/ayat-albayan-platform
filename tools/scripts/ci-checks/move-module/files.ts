@@ -42,13 +42,15 @@ const RELATIVE_TO: Record<string, string> = {
   'e2e/shard-durations.json': 'e2e',
 };
 
+const SUPPRESSIONS = ['eslint-suppressions.json', 'oxlint-suppressions.json'];
+
 /**
- * The pairs a text file may name: repo paths, and in a package's `eslint-suppressions.json` (ESLint bulk
- * suppressions are keyed by package-relative paths) the moves inside that package, relative to it;
- * the same for the e2e spec lists, relative to their folder.
+ * The pairs a text file may name: repo paths, and in a package's `eslint-suppressions.json` or
+ * `oxlint-suppressions.json` (keyed by package-relative paths, docs/31b §4) the moves inside that
+ * package, relative to it; the same for the e2e spec lists, relative to their folder.
  */
 export function textPairs(file: string, pairs: [string, string][]): [string, string][] {
-  const suppressions = posix.basename(file) === 'eslint-suppressions.json';
+  const suppressions = SUPPRESSIONS.includes(posix.basename(file));
   const dir = suppressions ? posix.dirname(file) : RELATIVE_TO[file];
   if (dir === undefined || dir === '.') return pairs;
   const pre = `${dir}/`;

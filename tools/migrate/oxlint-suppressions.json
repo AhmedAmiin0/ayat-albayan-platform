@@ -1,0 +1,910 @@
+{
+  "src/cache.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/cli.args.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "typescript/no-unnecessary-boolean-literal-compare": {
+      "count": 2
+    }
+  },
+  "src/cli.commands.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/cli.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/config.ts": {
+    "max-lines-per-function": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/switch-exhaustiveness-check": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 7
+    }
+  },
+  "src/db/config-seed.test.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/db/sql.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/db/target.ts": {
+    "max-lines-per-function": {
+      "count": 1
+    },
+    "no-empty-function": {
+      "count": 1
+    },
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/db/unqueue-imported.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/delta/only.test.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/delta/only.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/delta/orphans.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "max-depth": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    },
+    "typescript/prefer-optional-chain": {
+      "count": 1
+    }
+  },
+  "src/delta/scope.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/delta/staging-delta.test.ts": {
+    "typescript/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/entities/contract.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/hash.ts": {
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/keys.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/map/applicants/applicants.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 7
+    }
+  },
+  "src/map/expenses/expenses.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/map/leads/contacts.test.ts": {
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/leads/contacts.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/map/leads/fixtures.ts": {
+    "typescript/no-redundant-type-constituents": {
+      "count": 3
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/leads/leads.test.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/map/leads/leads.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/leads/links.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/leads/record.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/map/leads/sheet-leads.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "max-depth": {
+      "count": 1
+    }
+  },
+  "src/map/lessons/lessons.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/no-base-to-string": {
+      "count": 2
+    },
+    "typescript/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/map/messages/messages.test.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/map/messages/messages.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/map/money/fin.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/money/heart.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 10
+    },
+    "typescript/no-base-to-string": {
+      "count": 1
+    },
+    "typescript/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/map/money/money.test.ts": {
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/money/subscriptions.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/map/people/collect.heart.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/people/collect.merge.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/map/people/collect.merge.ts": {
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/map/people/collect.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 3
+    },
+    "typescript/restrict-template-expressions": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/map/people/match.test.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/map/people/match.ts": {
+    "complexity": {
+      "count": 3
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    },
+    "typescript/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/map/people/rows.ts": {
+    "max-lines-per-function": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 22
+    },
+    "typescript/prefer-includes": {
+      "count": 1
+    }
+  },
+  "src/map/people/status/bookings.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 2
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/people/status/downgrade.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/map/people/status/facts.ts": {
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/people/status/payments.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/map/people/students.facts.test.ts": {
+    "typescript/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/map/people/students.status.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "typescript/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/map/people/students.test.ts": {
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/people/students.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/people/students.write.test.ts": {
+    "no-empty-function": {
+      "count": 1
+    }
+  },
+  "src/map/people/students.write.ts": {
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/people/subs.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "typescript/dot-notation": {
+      "count": 6
+    }
+  },
+  "src/map/people/taught.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/people/translit.ts": {
+    "typescript/no-misused-spread": {
+      "count": 1
+    },
+    "typescript/prefer-find": {
+      "count": 1
+    }
+  },
+  "src/map/reports/collect.ts": {
+    "typescript/dot-notation": {
+      "count": 4
+    }
+  },
+  "src/map/reports/dedupe.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/map/reports/fields.ts": {
+    "typescript/dot-notation": {
+      "count": 4
+    },
+    "typescript/prefer-includes": {
+      "count": 2
+    }
+  },
+  "src/map/reports/parse.ts": {
+    "max-lines-per-function": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 8
+    }
+  },
+  "src/map/reports/parse.who.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/reports/reports.test.ts": {
+    "no-empty-function": {
+      "count": 1
+    }
+  },
+  "src/map/reports/times.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 8
+    }
+  },
+  "src/map/schedule/booking-row.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 6
+    }
+  },
+  "src/map/schedule/booking-slot.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 7
+    }
+  },
+  "src/map/schedule/bookings.from.test.ts": {
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/schedule/bookings.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/schedule/heart.rules.test.ts": {
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/schedule/heart.rules.ts": {
+    "max-lines-per-function": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 7
+    }
+  },
+  "src/map/schedule/one-offs.test.ts": {
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/map/schedule/one-offs.ts": {
+    "ab/no-shape-checks": {
+      "count": 3
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/schedule/rules.test.ts": {
+    "typescript/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/map/schedule/rules.ts": {
+    "ab/no-shape-checks": {
+      "count": 4
+    }
+  },
+  "src/map/teachers/teachers.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 9
+    },
+    "typescript/prefer-includes": {
+      "count": 1
+    }
+  },
+  "src/map/templates/buttons.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/map/templates/templates.test.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/map/templates/templates.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/pdf-import/files.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pdf-import/match.test.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/pdf-import/match.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 5
+    },
+    "typescript/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/plan/apply.batch.test.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/plan/apply.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 3
+    },
+    "typescript/unbound-method": {
+      "count": 1
+    }
+  },
+  "src/plan/changes.test.ts": {
+    "typescript/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/plan/changes.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "max-depth": {
+      "count": 1
+    }
+  },
+  "src/plan/codes.test.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/plan/codes.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    },
+    "typescript/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/plan/creates-only.test.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/plan/fake-db.ts": {
+    "typescript/require-await": {
+      "count": 11
+    }
+  },
+  "src/plan/match/match.target.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/plan/match/match.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/plan/match/similar.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/plan/match/templates.target.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    },
+    "typescript/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/plan/plan.test.ts": {
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/plan/resolve.ts": {
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/plan/stale-refs.test.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/plan/stale-refs.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 2
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "src/report/report.ts": {
+    "max-lines-per-function": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/report/review.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/sources/crm.schema.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/sources/crm.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/sources/crm.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 4
+    },
+    "typescript/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/sources/crm/rows.ts": {
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "typescript/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/sources/extract-crm.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/sources/extract-sheets.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 2
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/sources/headers/headers.hub.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/sources/headers/headers.ops.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/sources/headers/headers.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/sources/rows.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/no-base-to-string": {
+      "count": 2
+    },
+    "typescript/no-misused-spread": {
+      "count": 1
+    }
+  },
+  "src/sources/sheets/cells.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/restrict-template-expressions": {
+      "count": 2
+    }
+  },
+  "src/sources/sheets/fixtures.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/sources/sheets/issues.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/sources/sheets/siblings.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/sources/teachers.dir.ts": {
+    "typescript/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/sources/values.schedule.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/sources/values.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/sources/zip.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/time.ts": {
+    "no-restricted-properties": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "typescript/restrict-template-expressions": {
+      "count": 3
+    },
+    "typescript/dot-notation": {
+      "count": 5
+    }
+  },
+  "src/types.ts": {
+    "typescript/consistent-indexed-object-style": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "src/validate.sources.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/validate.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  }
+}

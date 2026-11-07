@@ -4,6 +4,8 @@
   "type": "module",
   "exports": {
     "./eslint": "./eslint.js",
+    "./lint": "./lint.js",
+    "./oxlint": "./oxlint/config.js",
     "./prettier": "./prettier.json",
     "./tsconfig/*": "./tsconfig/*"
   },
@@ -13,11 +15,12 @@
   },
   "dependencies": {
     "@eslint/js": "^10.0.0",
-    "eslint-plugin-oxlint": "1.88.0",
+    "@stylistic/eslint-plugin": "5.10.0",
+    "eslint-plugin-oxlint": "1.90.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^16.0.0",
     "typescript-eslint": "^8.71.0"
   },
   "peerDependencies": { "eslint": "^10.0.0" },
-  "devDependencies": { "eslint": "^10.0.0" }
+  "devDependencies": { "eslint": "^10.0.0", "oxlint": "1.90.0" }
 }

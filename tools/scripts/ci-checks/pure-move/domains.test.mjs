@@ -30,6 +30,11 @@ test('anything but plain quoted names on the line stays as it is', () => {
   stays('', "'sales',");
 });
 
+test('the lint blocks (docs/31b) follow too', () => {
+  const blocks = 'apps/mobile/lint.blocks.mjs';
+  assert.equal(followDomains(cfg(''), cfg("'sales'"), { file: blocks, renames: R }), cfg(''));
+});
+
 test('only eslint configs; other edits in the file still show', () => {
   const metro = 'apps/mobile/metro.config.js';
   assert.equal(followDomains(cfg(''), cfg("'sales'"), { file: metro, renames: R }), cfg("'sales'"));

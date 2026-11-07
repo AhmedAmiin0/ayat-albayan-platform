@@ -21,7 +21,7 @@ const FULL = [
 ];
 /** Unit tests, lint and code-health baselines, env examples: nothing e2e runs. */
 const UNIT =
-  /\.test\.(ts|tsx|mjs)$|\/__snapshots__\/|^apps\/web\/src\/(test\/|test-setup\.ts$|i18n-literals\.allow\.json$)|(^|\/)(eslint-suppressions\.json|eslint\.config\.(js|mjs)|\.env\.example)$|^refactor\/|^knip\.json$/;
+  /\.test\.(ts|tsx|mjs)$|\/__snapshots__\/|^apps\/web\/src\/(test\/|test-setup\.ts$|i18n-literals\.allow\.json$)|(^|\/)((eslint|oxlint)-suppressions\.json|eslint\.config\.(js|mjs)|lint\.blocks\.mjs|\.env\.example)$|^refactor\/|^knip\.json$/;
 /** Code followed through the import graph. */
 const GRAPHED =
   /^(apps\/web\/src\/(features|components|routes)\/|apps\/api\/src\/modules\/|packages\/(core|i18n|time|catalog|settings|money|schedule|shared|client-core)\/src\/)/;

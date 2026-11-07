@@ -1,0 +1,250 @@
+{
+  "src/classroom/internal-meetings.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "src/classroom/join-window.config.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/classroom/join-window.ts": {
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 6
+    }
+  },
+  "src/classroom/meeting-invites.ts": {
+    "stylistic/max-len": {
+      "count": 9
+    }
+  },
+  "src/classroom/meeting-mode.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/classroom/meetings.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/classroom/moderation.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "typescript/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/classroom/room.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/classroom/schemas.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/classroom/student-lesson.test.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "src/classroom/student-lesson.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/classroom/student-recordings.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "typescript/no-deprecated": {
+      "count": 1
+    }
+  },
+  "src/engine/conflicts.always.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/engine/conflicts.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 3
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/engine/dst-probe.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    }
+  },
+  "src/engine/free-slots.always.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/engine/free-slots.time-off.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/engine/free-slots.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 3
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    }
+  },
+  "src/engine/horizon.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "src/engine/intervals.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 2
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/engine/occurrences.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 3
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/lessons/chargeable.ts": {
+    "typescript/switch-exhaustiveness-check": {
+      "count": 1
+    }
+  },
+  "src/lessons/makeup-offer.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/lessons/makeup-views.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/lessons/overview.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/lessons/pick-progress.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/lessons/series/day-times.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/lessons/series/day-times.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/lessons/series/time-edit.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/lessons/state-machine.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/lessons/teacher-name.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/lessons/views.ts": {
+    "stylistic/max-len": {
+      "count": 13
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/schemas/booking-extras.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 6
+    }
+  },
+  "src/schemas/course-change.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/schemas/day-times.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/schemas/lesson-time.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/schemas/scheduling.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  }
+}

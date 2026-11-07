@@ -1,11 +1,11 @@
 // docs/32 g1 + c-rows: a domain move PR adds its domain to the app's `const DOMAINS = [...]`
-// in eslint.config.js (packages/config/eslint-domains.js). The pure-move gate accepts that one
-// line, written as plain quoted names, when every added domain regroups files into
-// `<app>/src/<domain>/<module>/` from outside that module in the same diff and no domain is
-// dropped.
+// in its lint.blocks.mjs (eslint.config.js before docs/31b; packages/config/eslint-domains.js).
+// The pure-move gate accepts that one line, written as plain quoted names, when every added domain
+// regroups files into `<app>/src/<domain>/<module>/` from outside that module in the same diff and
+// no domain is dropped.
 import { posix } from 'node:path';
 
-const ESLINT = /(^|\/)eslint\.config\.[cm]?js$/;
+const ESLINT = /(^|\/)(eslint\.config\.[cm]?js|lint\.blocks\.mjs)$/;
 const LINE = /^const DOMAINS = \[([^\]\n]*)\];$/m;
 const namesOf = (text) => [...(LINE.exec(text)?.[1] ?? '').matchAll(/'([\w-]+)'/g)].map((m) => m[1]);
 const canonical = (names) => `const DOMAINS = [${names.map((d) => `'${d}'`).join(', ')}];`;

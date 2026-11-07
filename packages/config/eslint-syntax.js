@@ -2,7 +2,7 @@
 // `ab/*` rule built on ESLint's no-restricted-syntax, so a package's no-restricted-syntax block
 // (the React list, eslint-react.js) can never replace or drop them (docs/32 critic #17), and each
 // group has its own baseline and count (pnpm guard:lint).
-import { builtinRules } from 'eslint/use-at-your-own-risk';
+import { restrictedSyntaxRule } from './restricted-syntax.js';
 
 const H1 = 'H-1: call other services through the runtime HTTP client (docs/36 §3), not fetch.';
 const H2 = 'H-2: parse the response with a zod schema, not `await res.json() as T`.';
@@ -39,11 +39,9 @@ export const SYNTAX = {
   ],
 };
 
-const core = builtinRules.get('no-restricted-syntax');
-
-/** The rules for the `ab` plugin: every SYNTAX group runs ESLint's own selector rule. */
+/** The `ab` plugin's rules: every SYNTAX group runs the selector rule (restricted-syntax.js). */
 export const syntaxRules = Object.fromEntries(
-  Object.keys(SYNTAX).map((name) => [name.replace(/^ab\//, ''), core]),
+  Object.keys(SYNTAX).map((name) => [name.replace(/^ab\//, ''), restrictedSyntaxRule]),
 );
 
 /** Every group as an error, plus H-1's `fetch` global. */

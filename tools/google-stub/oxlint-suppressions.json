@@ -1,0 +1,75 @@
+{
+  "src/calendar.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/require-await": {
+      "count": 4
+    }
+  },
+  "src/drive.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "typescript/require-await": {
+      "count": 2
+    }
+  },
+  "src/oauth.ts": {
+    "typescript/require-await": {
+      "count": 3
+    }
+  },
+  "src/server.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "src/sheets.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/no-misused-spread": {
+      "count": 1
+    },
+    "typescript/require-await": {
+      "count": 2
+    }
+  },
+  "src/state.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/stub.test.ts": {
+    "ab/no-unchecked-json": {
+      "count": 9
+    },
+    "typescript/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/stub.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "typescript/require-await": {
+      "count": 3
+    }
+  }
+}

@@ -1,9 +1,4 @@
 {
-  "eslint.config.js": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "public/sw.js": {
     "ab/no-shape-checks": {
       "count": 1
