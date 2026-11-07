@@ -48,12 +48,14 @@ export class WindowRepo {
     return data;
   }
 
-  /** The reopen template row; a replayed dedup_key inserts nothing. */
-  async queueReopen(row: TablesInsert<'messages'>): Promise<void> {
-    const { error } = await this.db
+  /** The reopen template row's id; null = a replayed dedup_key, nothing inserted. */
+  async queueReopen(row: TablesInsert<'messages'>): Promise<string | null> {
+    const { data, error } = await this.db
       .from('messages')
-      .upsert(row, { onConflict: 'dedup_key', ignoreDuplicates: true });
+      .upsert(row, { onConflict: 'dedup_key', ignoreDuplicates: true })
+      .select('id');
     if (error) throw fail('reopen enqueue', error.message);
+    return data[0]?.id ?? null;
   }
 
   /** Held: AWAITING_REPLY, due again only at its deadline. false = another worker got it first. */

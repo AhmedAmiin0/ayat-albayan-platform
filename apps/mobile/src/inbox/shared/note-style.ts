@@ -1,6 +1,6 @@
 import { type, useTheme } from '@/theme';
 
-/** One quiet line under or over the reply box (GateNote, ReopenNote): 2xs ink-2. */
+/** One quiet line under or over the reply box (GateNote): 2xs ink-2. */
 export function useNoteStyle() {
   const { color } = useTheme();
   return {

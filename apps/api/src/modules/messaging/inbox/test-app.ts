@@ -2,7 +2,6 @@
 // guards, services, registry and MessageViews; the DB-facing queries, the line clients, the gate and
 // the sender are mocks. `client` = notifications, `chatClient` = chat (docs/12 §13.16): both
 // configured by default; files that reset all mocks re-prime `configured` in beforeEach.
-import type { AuthUser } from '@/common/auth/verify-token';
 import type { ThreadWindow } from './send/send-number';
 import { SETTING_DEFAULTS, type ChatListRef, type ThreadLesson, type ThreadPeople } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -12,6 +11,7 @@ import { AppModule } from '@/app.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
@@ -24,8 +24,6 @@ import type { FamilyTag } from './people/thread-people.mapper';
 import { TeacherThreadsRepo } from './teacher-threads/teacher-threads.repo';
 import { ThreadsRepo } from './threads/threads.repo';
 import { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
-import { KapsoReopener } from './reopen/kapso-reopener';
-import { ReopenRepo } from './reopen/reopen.repo';
 import { DeltaRepo } from './delta/delta.repo';
 import { SyncRepo } from './delta/sync.repo';
 import { MessageHideRepo } from './hide/message-hide.repo';
@@ -86,11 +84,8 @@ function mocks() {
     gate: { open: vi.fn() },
     sender: { kick: vi.fn() },
     audit: { record: vi.fn() },
-    reopens: { nextKey: vi.fn(async (): Promise<string | null> => null), templateKey: vi.fn(async () => 'inquiry_followup_ar_v2') },
-    kapso: { reopen: vi.fn(async () => false) },
     reopenRequest: {
       usable: vi.fn(async (): Promise<string | null> => 'template'),
-      nextKey: vi.fn(),
     },
     hides: { target: vi.fn(), set: vi.fn(async () => true) },
     delta: { newer: vi.fn(), pending: vi.fn() },
@@ -123,8 +118,6 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(SendGate).useValue(m.gate)
     .overrideProvider(MessageSender).useValue(m.sender)
     .overrideProvider(AuditService).useValue(m.audit)
-    .overrideProvider(ReopenRepo).useValue(m.reopens)
-    .overrideProvider(KapsoReopener).useValue(m.kapso)
     .overrideProvider(ReopenRequest).useValue(m.reopenRequest)
     .overrideProvider(InboxSettings).useValue(inboxSettings())
     .overrideProvider(MessageHideRepo).useValue(m.hides)
