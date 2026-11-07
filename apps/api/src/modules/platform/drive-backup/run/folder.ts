@@ -2,7 +2,7 @@ import type { DriveBackupApi } from '@/modules/platform/drive-backup/drive/drive
 import type { BackupState } from '@/modules/platform/drive-backup/db/backup-state.repo';
 
 /** The Drive folder's name (owner 2026-11-07): a data name on Drive, not UI copy. */
-export const FOLDER_NAME = 'نسخ احتياطي — ملفات المنصة';
+const FOLDER_NAME = 'نسخ احتياطي — ملفات المنصة';
 
 interface StateIo {
   read(): Promise<BackupState>;

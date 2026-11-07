@@ -10,6 +10,11 @@ import { DriveBackupRunner, type RunOutcome } from './drive-backup.runner';
 
 /** 01:00 UTC = 04:00 Riyadh: the quiet hour, before the Google sync's 02:00 UTC reconcile. */
 const RUN_UTC_HOUR = 1;
+/** A run that hangs (a stalled stream) is let go after this: the next night runs again. */
+const RUN_DEADLINE_MS = 8 * 3_600_000;
+
+const deadline = (ms: number): Promise<'failed'> =>
+  new Promise((resolve) => setTimeout(() => resolve('failed'), ms).unref());
 
 /**
  * The MinIO → Drive backup worker (docs/45 §5): once a night in the worker process (the Google
@@ -38,8 +43,7 @@ export class DriveBackupJob implements OnApplicationBootstrap, OnModuleDestroy {
 
   /** Runs now; a kick during a run joins it. Never throws. */
   kick(): Promise<RunOutcome> {
-    this.running ??= this.runner
-      .runOnce()
+    this.running ??= Promise.race([this.runner.runOnce(), deadline(RUN_DEADLINE_MS)])
       .catch((e: unknown) => {
         this.log.warn(`drive backup run failed: ${e instanceof Error ? e.message : String(e)}`);
         return 'failed' as const;

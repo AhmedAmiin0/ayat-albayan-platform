@@ -28,7 +28,7 @@ export async function setup(caps: Caps = DEFAULT_CAPS) {
   return { drive, minio, store, folderId, deps, night };
 }
 
-export interface Entry {
+interface Entry {
   path: string;
   records: Readonly<Record<string, string>>;
   text: string;

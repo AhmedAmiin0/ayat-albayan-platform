@@ -8,7 +8,7 @@ const file = (props: Record<string, string>): BackupFile => {
   const createdTime = new Date(Date.UTC(2026, 10, 1) + seq * 1000).toISOString();
   return {
     id: `f${seq}`,
-    name: `${props.kind}-${props.label}.p${props.part}`,
+    name: Object.values(props).join('-'),
     size: 1,
     createdTime,
     appProperties: { ab_backup: 'minio', ...props },
@@ -29,6 +29,7 @@ describe('restoreChain', () => {
     };
     const all = [f1, i1, p1, p2, i2, i3, stray];
     expect(restoreChain(all, '2026-11-08').map((f) => f.id)).toEqual([i2.id, p2.id, p1.id]);
-    expect(restoreChain(all, '2026-11-06').map((f) => f.id)).toEqual([i1.id, f1.id]);
+    // W45 not sealed by then: its first part still holds the newest copies.
+    expect(restoreChain(all, '2026-11-06').map((f) => f.id)).toEqual([p1.id, i1.id, f1.id]);
   });
 });

@@ -29,15 +29,23 @@ export class DriveBackupRepo implements BackupStore {
     if (error) throw fail('abandon', error);
   }
 
+  /** Every page (PostgREST caps one answer at 1000 rows). */
   async archives(folderId: string): Promise<ArchiveRow[]> {
-    const { data, error } = await this.db
-      .from('drive_backup_archives')
-      .select(ARCHIVE_COLUMNS)
-      .eq('folder_id', folderId)
-      .neq('status', 'trashed')
-      .order('started_at');
-    if (error) throw fail('archives read', error);
-    return archiveRowSchema.array().parse(data);
+    const out: ArchiveRow[] = [];
+    for (let from = 0, more = true; more; from += PAGE) {
+      const { data, error } = await this.db
+        .from('drive_backup_archives')
+        .select(ARCHIVE_COLUMNS)
+        .eq('folder_id', folderId)
+        .neq('status', 'trashed')
+        .order('started_at')
+        .order('id')
+        .range(from, from + PAGE - 1);
+      if (error) throw fail('archives read', error);
+      out.push(...archiveRowSchema.array().parse(data));
+      more = data.length === PAGE;
+    }
+    return out;
   }
 
   /** Archive by archive, oldest first, page by page: a later ETag replaces an earlier one. */

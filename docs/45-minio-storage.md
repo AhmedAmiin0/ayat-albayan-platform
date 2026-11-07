@@ -237,7 +237,10 @@ Google project, client or credential.
   `failed`) with its objects and ETags in `drive_backup_objects`. A part counts only once `done`: a
   run killed mid-upload leaves `uploading`, the next run marks it `failed` and archives those objects
   again; parts already uploaded are not redone. An object that vanished or cannot be read is skipped
-  and reported (manifest, alert), never stops the run, and is tried again the next night.
+  and reported (manifest, alert), never stops the run, and is tried again the next night. An object
+  over 64 MiB streams in a part of its own: if that read fails, only that object is skipped. A
+  network failure or 429 / 5xx on a chunk is resent from what Drive holds (5 tries); a run that
+  hangs is let go after 8 hours. The restore also uses the parts of a full not yet sealed.
 - **Retention:** the last **4 fulls** and the incrementals after the oldest of them. Older archives go
   to Drive's trash, only right after a newer full was sealed (all its parts uploaded).
 - **Expected size:** PDFs, JPEG/PNG photos, voice notes and videos are already compressed: they barely
@@ -257,7 +260,8 @@ Drive's free space. Off again: set it to «متوقفة» (archives already on D
 user's keys):
 
 1. **Dry run** (the default; writes nothing): lists the archives that rebuild the given day, newest
-   first: `docker compose -p ayat-albayan-staging exec -T ayat-worker node dist/scripts/minio-drive-restore.js --to 2026-11-07`
+   first. `--to D` restores what the archives uploaded up to the night of D (01:00 UTC) hold,
+   i.e. MinIO as it was at the end of D−1; for the end of D, use D+1: `docker compose -p ayat-albayan-staging exec -T ayat-worker node dist/scripts/minio-drive-restore.js --to 2026-11-07`
 2. **Apply:** add `--apply`. The newest copy of each key wins (the incrementals, then the full);
    an object MinIO already holds is **kept** (`If-None-Match: *`) unless `--overwrite` is added.
    The JSON summary gives `put`, `kept`, `older` (an older copy of a key already restored) and

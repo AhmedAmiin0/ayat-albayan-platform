@@ -10,7 +10,7 @@ export interface Caps {
 /** 1 GiB raw per part, 4 GiB raw per night (the server also runs the live CRM). */
 export const DEFAULT_CAPS: Caps = { part: 1024 ** 3, run: 4 * 1024 ** 3 };
 
-export interface PartsPlan {
+interface PartsPlan {
   parts: ListedObject[][];
   /** Objects left for the next run (the run's byte cap). */
   left: number;
@@ -28,14 +28,30 @@ function forRun(todo: readonly ListedObject[], cap: number): ListedObject[] {
   return taken;
 }
 
-/** Splits the objects to archive into parts, in order; one object always fits (even a big one). */
+/** Objects read as a stream (not buffered first): each gets a part of its own (see isSolo). */
+export const STREAMED_MIN = 64 * 1024 * 1024;
+
+/** A part holding one streamed object: its failure skips that object only (backup-run.ts). */
+export const isSolo = (objects: readonly ListedObject[]): boolean =>
+  objects.length === 1 && (objects[0]?.size ?? 0) > STREAMED_MIN;
+
+interface Open {
+  current: readonly ListedObject[];
+  bytes: number;
+  caps: Caps;
+}
+const startsNew = (p: Open, o: ListedObject): boolean =>
+  p.current.length > 0 &&
+  (o.size > STREAMED_MIN || isSolo(p.current) || p.bytes + o.size > p.caps.part);
+
+/** Splits the objects into parts, in order, under the part cap; a big object gets its own part. */
 export function planParts(todo: readonly ListedObject[], caps: Caps): PartsPlan {
   const taken = forRun(todo, caps.run);
   const parts: ListedObject[][] = [];
   let current: ListedObject[] = [];
   let bytes = 0;
   for (const o of taken) {
-    if (current.length > 0 && bytes + o.size > caps.part) {
+    if (startsNew({ current, bytes, caps }, o)) {
       parts.push(current);
       current = [];
       bytes = 0;

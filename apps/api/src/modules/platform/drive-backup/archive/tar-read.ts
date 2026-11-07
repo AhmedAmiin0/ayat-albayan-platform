@@ -27,14 +27,17 @@ const octalField = (h: Buffer, at: number, len: number): number =>
 const paxSchema = z.record(z.string(), z.string());
 
 /** «<length> <key>=<value>\n» records → a map. */
-export function parsePax(bytes: Buffer): Record<string, string> {
-  const pairs = bytes
-    .toString('utf8')
-    .split('\n')
-    .flatMap((line) => {
-      const m = /^\d+ ([^=]+)=(.*)$/s.exec(line);
-      return m ? [[m[1], m[2]]] : [];
-    });
+function parsePax(bytes: Buffer): Record<string, string> {
+  const pairs: [string, string][] = [];
+  for (let at = 0; at < bytes.length;) {
+    const space = bytes.indexOf(0x20, at);
+    const len = Number(bytes.subarray(at, space).toString('ascii'));
+    if (space < 0 || !(len > 0)) throw new Error('tar_corrupt');
+    const record = bytes.subarray(space + 1, at + len - 1).toString('utf8');
+    const eq = record.indexOf('=');
+    pairs.push([record.slice(0, eq), record.slice(eq + 1)]);
+    at += len;
+  }
   return paxSchema.parse(Object.fromEntries(pairs));
 }
 
@@ -103,9 +106,11 @@ const skipStep: Step = (r, h, s) => {
 
 const STEPS: Readonly<Record<string, Step>> = { x: paxStep, '0': fileStep, '': fileStep };
 
+/** null at the end blocks; a stream that stops before them is a cut-off archive. */
 async function header(r: ByteReader): Promise<Buffer | null> {
   const h = await r.take(BLOCK);
-  return h === null || isEnd(h) ? null : checked(h);
+  if (h === null) throw new Error('tar_truncated');
+  return isEnd(h) ? null : checked(h);
 }
 
 /** The archive's file entries, in order. */

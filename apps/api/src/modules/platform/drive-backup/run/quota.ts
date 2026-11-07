@@ -2,9 +2,9 @@ import type { DriveQuota } from '@/modules/platform/drive-backup/drive/drive-bac
 
 const GB = 1024 ** 3;
 /** Under this a warning (a free Gmail account has 15 GB shared with Gmail and Photos). */
-export const LOW_QUOTA_BYTES = 2 * GB;
+const LOW_QUOTA_BYTES = 2 * GB;
 /** Under this no run starts: an upload would fail half way. */
-export const MIN_FREE_BYTES = GB / 2;
+const MIN_FREE_BYTES = GB / 2;
 
 /** Bytes left; null: no limit. */
 export const freeOf = (q: Pick<DriveQuota, 'limit' | 'usage'>): number | null =>

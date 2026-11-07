@@ -1,7 +1,7 @@
 import type { ArchiveRow } from './archive.types';
 
 /** Fulls kept on Drive (owner 2026-11-07): the last 4, and the incrementals after the oldest. */
-export const KEEP_FULLS = 4;
+const KEEP_FULLS = 4;
 
 /**
  * The archives to move to Drive's trash once a newer full is sealed: everything that started

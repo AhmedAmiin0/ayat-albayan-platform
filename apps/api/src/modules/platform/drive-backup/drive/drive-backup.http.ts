@@ -11,8 +11,9 @@ interface Answer {
   headers: Headers;
 }
 
-/** A chunk (8 MiB) on a slow uplink; a download streams for as long as it takes. */
+/** A chunk (8 MiB) on a slow uplink; one archive download, long but never forever. */
 const CHUNK_TIMEOUT_MS = 180_000;
+const DOWNLOAD_TIMEOUT_MS = 2 * 3_600_000;
 const DONE_OR_MORE = (status: number): boolean => status < 300 || status === 308;
 
 /**
@@ -139,7 +140,7 @@ export class DriveBackupHttp implements P.DriveBackupApi {
       url,
       params: { alt: 'media' },
       responseType: 'stream',
-      timeout: 0,
+      timeout: DOWNLOAD_TIMEOUT_MS,
     });
     return S.streamSchema.parse(res.data);
   }

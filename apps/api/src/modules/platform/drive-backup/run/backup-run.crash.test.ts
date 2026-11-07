@@ -70,4 +70,15 @@ describe('a bad object', () => {
     t.minio.unreadable.clear();
     expect(await t.night('2026-11-08')).toMatchObject({ kind: 'incr', objects: 1 });
   });
+
+  it('a big streamed object that fails mid-read costs only its own part', async () => {
+    const t = await setup();
+    t.minio.set({ bucket: B.reports, key: 'a.pdf', body: 'a' });
+    t.minio.set({ bucket: B.reports, key: 'big.mp4', body: Buffer.alloc(65 * 1024 * 1024) });
+    t.minio.set({ bucket: B.reports, key: 'c.pdf', body: 'c' });
+    t.minio.unreadable.add('reports/big.mp4');
+    const sum = await t.night('2026-11-07');
+    expect(sum).toMatchObject({ parts: 2, objects: 2, skipped: 1, sealed: true });
+    expect(t.store.rows.map((r) => r.status)).toEqual(['done', 'failed', 'done']);
+  });
 });

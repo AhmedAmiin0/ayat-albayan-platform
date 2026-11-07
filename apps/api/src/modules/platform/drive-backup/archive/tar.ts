@@ -57,7 +57,7 @@ export function paxRecord(key: string, value: string): string {
   return `${n} ${key}=${value}\n`;
 }
 
-export interface EntryInput {
+interface EntryInput {
   /** The path inside the archive (`<bucket>/<key>`). */
   path: string;
   size: number;

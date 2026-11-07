@@ -6,7 +6,7 @@
   },
   "src/app.module.ts": {
     "ab/module-boundaries": {
-      "count": 42
+      "count": 41
     }
   },
   "src/common/audit/audit.service.ts": {

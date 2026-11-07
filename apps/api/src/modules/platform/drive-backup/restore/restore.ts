@@ -11,7 +11,7 @@ import type {
 import { restoreChain } from '@/modules/platform/drive-backup/plan/restore-chain';
 import type { BackupSource } from '@/modules/platform/drive-backup/source/backup-source.port';
 
-export interface RestoreInput {
+interface RestoreInput {
   api: DriveBackupApi;
   source: BackupSource;
   folderId: string;

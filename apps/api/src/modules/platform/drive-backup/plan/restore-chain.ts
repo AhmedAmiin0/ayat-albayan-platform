@@ -22,7 +22,7 @@ const metaOf = (file: BackupFile): Meta[] => {
 };
 const newestFirst = (a: Meta, b: Meta) => b.file.createdTime.localeCompare(a.file.createdTime);
 
-export class NoFullBackup extends Error {
+class NoFullBackup extends Error {
   constructor() {
     super('no_full_backup');
   }
@@ -37,7 +37,9 @@ export function restoreChain(files: readonly BackupFile[], to: string): BackupFi
   const seal = metas.filter((m) => m.kind === 'full' && m.sealed).sort(newestFirst)[0];
   if (!seal) throw new NoFullBackup();
   const full = metas.filter((m) => m.kind === 'full' && m.label === seal.label);
-  const after = (m: Meta) => m.kind === 'incr' && m.file.createdTime > seal.file.createdTime;
+  // Incrementals, and the parts of a newer full not sealed yet (no incrementals run meanwhile).
+  const later = (m: Meta) => m.kind === 'incr' || m.label !== seal.label;
+  const after = (m: Meta) => later(m) && m.file.createdTime > seal.file.createdTime;
   const incr = metas.filter(after).sort(newestFirst);
   return [...incr, ...full.sort((a, b) => b.part - a.part)].map((m) => m.file);
 }

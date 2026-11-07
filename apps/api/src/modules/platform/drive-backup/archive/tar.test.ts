@@ -71,4 +71,19 @@ describe('tar (pax) writer and reader', () => {
     await expect(read(bad)).rejects.toThrow('tar_corrupt');
     await expect(read(bytes.subarray(0, 1600))).rejects.toThrow('tar_truncated');
   });
+
+  it('an archive cut at a header boundary (no end blocks) is refused, not half-restored', async () => {
+    const bytes = archive([
+      { path: 'a', body: Buffer.from('a') },
+      { path: 'b', body: Buffer.from('b') },
+    ]);
+    await expect(read(bytes.subarray(0, 2048))).rejects.toThrow('tar_truncated');
+  });
+
+  it('a key with a newline survives (pax records read by their length)', async () => {
+    const out = await read(
+      archive([{ path: 'r/a\nb.pdf', body: Buffer.from('x'), records: { 'AB.key': 'a\nb.pdf' } }]),
+    );
+    expect(out[0]).toMatchObject({ path: 'r/a\nb.pdf', records: { 'AB.key': 'a\nb.pdf' } });
+  });
 });

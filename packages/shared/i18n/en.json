@@ -6102,7 +6102,7 @@
       },
       "MINIO_DRIVE_BACKUP": {
         "label": "Back up MinIO files to Google Drive",
-        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO, and a full archive every week, to the folder «نسخ احتياطي — ملفات المنصة» in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The last four full archives are kept. PDFs and images are already compressed, so most of the saving comes from other files."
+        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO, and a full archive every week, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The last four full archives are kept. PDFs and images are already compressed, so most of the saving comes from other files."
       }
     },
     "developer": "For developers",

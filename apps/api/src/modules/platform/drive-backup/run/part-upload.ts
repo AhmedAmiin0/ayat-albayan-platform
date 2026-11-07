@@ -13,16 +13,16 @@ import { emptyReport, partBytes, type PartInput, type PartReport } from './part-
  * checksum so a damaged download fails the restore instead of restoring bad bytes. Node's own
  * zlib has zstd since 22.15 / 23.8 (the image runs Node 24): no native module, no package.
  */
-export const ZSTD_LEVEL = 3;
+const ZSTD_LEVEL = 3;
 
-export interface PartUpload {
+interface PartUpload {
   api: DriveBackupApi;
   target: UploadTarget;
   part: Omit<PartInput, 'report'>;
   wait?: (ms: number) => Promise<unknown>;
 }
 
-export interface PartResult {
+interface PartResult {
   fileId: string;
   compressedBytes: number;
   report: PartReport;

@@ -4,10 +4,11 @@ import type {
   ListedObject,
   OpenedObject,
 } from '@/modules/platform/drive-backup/source/backup-source.port';
+import { STREAMED_MIN } from '@/modules/platform/drive-backup/plan/parts';
 import { entryHead, padding, TAR_END } from '@/modules/platform/drive-backup/archive/tar';
 
 /** Objects up to this size are read whole first (a failed read skips them cleanly). */
-export const BUFFER_MAX = 64 * 1024 * 1024;
+const BUFFER_MAX = STREAMED_MIN;
 
 export interface PartEntry {
   bucket: string;

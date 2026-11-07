@@ -96,7 +96,7 @@ export class FakeDrive implements P.DriveBackupApi {
   putChunk(input: P.ChunkInput): Promise<P.ChunkResult> {
     this.call('putChunk');
     const s = this.sessions.get(input.session);
-    if (!s || input.offset !== s.committed) throw new GoogleApiError(400, 'badContentRange');
+    if (s?.committed !== input.offset) throw new GoogleApiError(400, 'badContentRange');
     s.chunks.push(input.bytes);
     s.committed += input.bytes.length;
     if (input.total === null) return Promise.resolve({ committed: s.committed, fileId: null });

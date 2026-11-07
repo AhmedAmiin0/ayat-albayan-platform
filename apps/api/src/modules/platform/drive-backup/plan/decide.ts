@@ -16,7 +16,7 @@ const fullParts = (rows: readonly ArchiveRow[], label: string) =>
   done(rows).filter((r) => r.kind === 'full' && r.label === label);
 
 /** The newest sealed full: the chain's base. */
-export function lastSealed(rows: readonly ArchiveRow[]): ArchiveRow | null {
+function lastSealed(rows: readonly ArchiveRow[]): ArchiveRow | null {
   return (
     done(rows)
       .filter((r) => r.kind === 'full' && r.sealed)
