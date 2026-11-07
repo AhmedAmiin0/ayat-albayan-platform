@@ -5,7 +5,7 @@ import type { IntegrationDraft } from '@/features/platform/integrations/integrat
 import { PlainIntegrationRow } from './PlainIntegrationRow';
 import { SecretIntegrationRow } from './SecretIntegrationRow';
 import { CrmWebhookButton } from './CrmWebhookButton';
-import { StorageProbeButton } from './StorageProbeButton';
+import { StorageExtras } from './StorageExtras';
 
 interface Props {
   group: Group;
@@ -16,10 +16,10 @@ interface Props {
   onNote: (message: string) => void;
 }
 
-/** Under a group's rows: the CRM's delivery ticks (docs/19), MinIO's probe (docs/45). */
+/** Under a group's rows: the CRM's delivery ticks (docs/19), MinIO (docs/45). */
 const GROUP_EXTRAS: Partial<Record<Group, ComponentType<{ onNote: (message: string) => void }>>> = {
   wacrm: CrmWebhookButton,
-  storage: StorageProbeButton,
+  storage: StorageExtras,
 };
 
 /** One group of «التكاملات» (a WhatsApp line, LiveKit, …): its heading, then its rows in registry order. */

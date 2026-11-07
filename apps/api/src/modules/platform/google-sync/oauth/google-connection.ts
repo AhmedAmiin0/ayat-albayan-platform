@@ -39,6 +39,11 @@ export class GoogleConnection {
     return this.cached.client;
   }
 
+  /** The token for the Drive backup's own uploader (docs/45 §5); null: none. Never logged. */
+  async refreshToken(): Promise<string | null> {
+    return this.factory.oauth() ? this.token.get() : null;
+  }
+
   forget(): void {
     this.cached = null;
     this.token.clear();

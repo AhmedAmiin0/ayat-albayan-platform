@@ -81,15 +81,11 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
     await expect(sender().runOnce(NOW)).resolves.toEqual({ sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0, waiting: 0 });
   });
 
-  it('kick is single-flight: a kick during a run queues exactly one more run', async () => {
+  it('kick is single-flight per lane: a kick during a run queues exactly one more run', async () => {
     queries.due.mockResolvedValue([]);
     const s = sender();
-    const first = s.kick();
-    const second = s.kick();
-    const third = s.kick();
-    expect(second).toBe(first);
-    expect(third).toBe(first);
-    await first;
+    const kicks = [s.kick({ lane: 'main' }), s.kick({ lane: 'main' }), s.kick({ lane: 'main' })];
+    await Promise.all(kicks);
     expect(queries.due).toHaveBeenCalledTimes(2);
   });
 

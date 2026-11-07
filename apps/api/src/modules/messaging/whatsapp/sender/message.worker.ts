@@ -4,7 +4,7 @@ import { PushService } from '@/common/push/push.service';
 import { PAYMENT_HOLD_EXPIRED, paymentSubject, WA_PAYMENT_HOLD } from './hold/payment-hold';
 import { PaymentHolds, type HoldAt } from './hold/payment-holds';
 import { MessageDispatch } from './message.dispatch';
-import { authSubject, claimRow, sendingAt, UNRECORDED, type FailedInput, type PassJob, type SendJob, type SendOutcome } from './message.job';
+import { authSubject, claimRow, sendingAt, UNRECORDED, unrecordedAt, type FailedInput, type PassJob, type SendJob, type SendOutcome } from './message.job';
 import { CRM_RATE_LIMITED, failurePlan, messageLabel, readyToSend, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderRepo, type DueMessage } from './sender.repo';
@@ -84,7 +84,7 @@ export class MessageWorker {
   private async failed(input: FailedInput): Promise<SendOutcome> {
     const { row, now, line, route } = input;
     const plan = await this.plan(input);
-    await this.queries.failure(row.id, plan);
+    await this.queries.failure(row.id, plan, ...unrecordedAt(input));
     await this.missing?.check({ key: row.template_key, line, error: input.error, now });
     // The CRM's rate limit (per key): the line waits for Retry-After this pass; not a token failure, no push.
     if (plan.error_code === CRM_RATE_LIMITED) return 'paused';

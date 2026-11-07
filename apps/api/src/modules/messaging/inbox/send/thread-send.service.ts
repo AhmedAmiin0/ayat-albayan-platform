@@ -2,6 +2,7 @@ import { ACCOUNT_CODE_TEMPLATE, restrictedMay, type ThreadTemplate, type ThreadT
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { templateStamp } from '@/modules/messaging/whatsapp';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
@@ -109,8 +110,9 @@ export class ThreadSendService {
   /**
    * H4: an approved template with every variable filled; a PDF template comes only from the PDF job.
    * A restricted role (teacher, sales, any role without templates.send_all) sends only the allow-list
-   * (owner 2026-10-12): 403 template_not_allowed for any other. No line stamp here: the
-   * sender picks the template's own line and stamps it at claim (docs/12 §13.3).
+   * (owner 2026-10-12): 403 template_not_allowed for any other. The sender picks the template's own
+   * line at claim (docs/12 §13.3); a chat-line starter is stamped chat now (templateStamp), so the
+   * chat lane sends it before the chat's next text (docs/42 42-7).
    */
   async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
@@ -136,6 +138,7 @@ export class ThreadSendService {
       template_key: s.input.key,
       template_params: s.input.params,
       lesson_id: s.input.lessonId ?? null,
+      ...templateStamp(template),
       ...(s.expiresAt ? { expires_at: s.expiresAt } : {}),
     });
   }

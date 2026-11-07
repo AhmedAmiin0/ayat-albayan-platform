@@ -125,7 +125,7 @@ describe('MessageWorker — one queued row (docs/12 §3.3)', () => {
     await expect(worker().process({ row, template, now: NOW, autoOn: true })).resolves.toBe('failed');
     expect(dispatch.send).not.toHaveBeenCalled();
     expect(queries.claim).not.toHaveBeenCalled();
-    expect(queries.failure).toHaveBeenCalledWith(row.id, expect.objectContaining({ status: 'failed', error_code: 'uncertain' }));
+    expect(queries.failure).toHaveBeenCalledWith(row.id, expect.objectContaining({ status: 'failed', error_code: 'uncertain' }), { attempts: 1 });
   });
 
   it('an expired token: the row waits uncounted, one push a day, the pass pauses', async () => {

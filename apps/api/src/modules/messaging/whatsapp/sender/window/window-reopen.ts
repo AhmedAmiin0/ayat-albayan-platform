@@ -1,4 +1,5 @@
 import type { TablesInsert } from '@ab/db';
+import type { WaLine } from '@ab/shared';
 import {
   AWAITING_REPLY,
   HOLD_EXPIRED,
@@ -8,12 +9,15 @@ import {
 } from '@ab/shared';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { templateStamp } from '@/modules/messaging/whatsapp/sender/send-line';
 import { DAY_MS } from './reopen-state';
 import { HOLD_MS } from './window-rules';
 
 /** The reopen row's template, its dedup key (nextReopenKey: one per try per day) and the time. */
 interface ReopenAt {
   key: string;
+  /** The template's registry line (reopenUsable: always chat); absent = chat. */
+  line?: WaLine;
   dedup: string;
   now: Date;
 }
@@ -21,7 +25,8 @@ interface ReopenAt {
 /**
  * The reopen template row for a held text's phone, as the staff member who wrote the text (not a
  * job's row: never auto_off). It expires after 24 h, so a template paused meanwhile never goes out
- * late and never blocks the next reopen. Deduped per phone, day and try (rule 8).
+ * late and never blocks the next reopen. Deduped per phone, day and try (rule 8). Stamped with the
+ * chat line (templateStamp), so the chat lane's pass that held the text sends it (docs/42 42-7).
  */
 export function reopenRow(row: DueMessage, at: ReopenAt): TablesInsert<'messages'> {
   return {
@@ -34,6 +39,7 @@ export function reopenRow(row: DueMessage, at: ReopenAt): TablesInsert<'messages
     template_key: at.key,
     template_params: {},
     dedup_key: at.dedup,
+    ...templateStamp({ line: at.line ?? 'chat' }),
     expires_at: new Date(at.now.getTime() + DAY_MS).toISOString(),
   };
 }

@@ -54,16 +54,17 @@ only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «ا�
 
 ## 2. Config keys («التكاملات» › «التخزين»; database + Vault, `.env` only bootstraps)
 
-| Key | Value on production | Notes |
-|---|---|---|
-| `STORAGE_DRIVER` | `supabase` → `minio` | where new files go; switching it is the cut-over |
-| `MINIO_ENDPOINT` | `http://ayat-minio:9000` | internal; the API's own reads and writes |
-| `MINIO_PUBLIC_URL` | `https://files.ayatalbayan.com` | host of every signed URL (https only, except localhost) |
-| `MINIO_REGION` | `us-east-1` | MinIO's default |
-| `MINIO_BUCKET_PREFIX` | empty | if set, the same value in `.env` (§4, `ayat-minio-init` creates the buckets) |
-| `MINIO_ACCESS_KEY` | `minio.env` `MINIO_APP_ACCESS_KEY` | the app user, never the root user |
-| `MINIO_SECRET_KEY` | `minio.env` `MINIO_APP_SECRET_KEY` | Vault secret |
-| `MINIO_RECORDINGS` | `false` | recordings into MinIO (with the driver on `minio`); uncapped, §7 |
+| Key                   | Value on production                | Notes                                                                        |
+| --------------------- | ---------------------------------- | ---------------------------------------------------------------------------- |
+| `STORAGE_DRIVER`      | `supabase` → `minio`               | where new files go; switching it is the cut-over                             |
+| `MINIO_ENDPOINT`      | `http://ayat-minio:9000`           | internal; the API's own reads and writes                                     |
+| `MINIO_PUBLIC_URL`    | `https://files.ayatalbayan.com`    | host of every signed URL (https only, except localhost)                      |
+| `MINIO_REGION`        | `us-east-1`                        | MinIO's default                                                              |
+| `MINIO_BUCKET_PREFIX` | empty                              | if set, the same value in `.env` (§4, `ayat-minio-init` creates the buckets) |
+| `MINIO_ACCESS_KEY`    | `minio.env` `MINIO_APP_ACCESS_KEY` | the app user, never the root user                                            |
+| `MINIO_SECRET_KEY`    | `minio.env` `MINIO_APP_SECRET_KEY` | Vault secret                                                                 |
+| `MINIO_RECORDINGS`    | `false`                            | recordings into MinIO (with the driver on `minio`); uncapped, §7             |
+| `MINIO_DRIVE_BACKUP`  | `false` → `true`                   | nightly compressed archives to Google Drive (§5.1)                           |
 
 `MINIO_ENDPOINT` and `MINIO_PUBLIC_URL` refuse an IP literal (the Evolution base's SSRF rules): `http://` only
 to `localhost` or the listed docker service `ayat-minio`, `https://` only to a public host name.
@@ -95,13 +96,13 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
   `MC_HOST_ayat` environment variable, not its command line; `mc admin user add` has no such alternative, so the
   app secret is a command-line argument inside that one-shot container only. All four values must be URL-safe
   (`A-Z a-z 0-9 . _ ~ -`, hence `openssl rand -hex`); `init.sh` refuses others. Every step is idempotent: `roll.sh`'s last
-  `up -d` starts it again on every deploy. It depends on `ayat-minio` *started*, not *healthy*, so a MinIO that
+  `up -d` starts it again on every deploy. It depends on `ayat-minio` _started_, not _healthy_, so a MinIO that
   will not start never fails the API's deploy (the init then fails on its own, in its log).
 - **`ayat-lb`** (`lb/Caddyfile`): a site `http://files.ayatalbayan.com:8080` → `ayat-minio:9000`, after the API's
   `:8080` site (every other host still reaches the API). `/minio/*` except `/minio/health/*` answers 404 (MinIO's
   admin and metrics routes stay on the project network). Response headers: `X-Content-Type-Options: nosniff`,
   `Referrer-Policy: no-referrer`, `Content-Security-Policy: default-src 'none'; img-src 'self' data:; media-src
-  'self'; style-src 'unsafe-inline'; form-action 'none'; base-uri 'none'`. **No `sandbox`**: Chrome refuses to
+'self'; style-src 'unsafe-inline'; form-action 'none'; base-uri 'none'`. **No `sandbox`**: Chrome refuses to
   show a PDF in a sandboxed page and the report links open PDFs; `default-src 'none'` already blocks every script.
   Caddy resolves upstreams per request, so without the profile the LB starts and this host answers 502.
 - **CORS:** MinIO answers preflights for any origin by default (the web's direct `PUT`); the signature is the gate.
@@ -164,7 +165,7 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
 9. **Cut over.** Preconditions, every one checked first:
    - **Backups:** the cron line of §5 is installed (`crontab -l`), one `backup.sh` run succeeded (run it by hand
      once; `/var/log/ayat-minio-backup.log` ends without an error and `/var/backups/ayat-minio` has the buckets),
-     and the off-host copy of that folder is scheduled.
+     and the off-host copy (§5.1, the Drive backup) is switched on.
    - **Phones:** every staff phone runs **APK 0.5.0** with the OTA of this change (the phones restarted onto it),
      and open web tabs are reloaded. An older client still gets Supabase slots (`X-AB-Upload`, §1) so it keeps
      working, but only the new ones write to MinIO.
@@ -174,6 +175,7 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
    this disk (§1, §7). Check: `/health` shows `storage.status: ok`; submit a lesson report and open its PDF link (it
    is a `https://files.ayatalbayan.com/…` URL and shows inline in Chrome); upload a receipt from the web and from
    the phone.
+
 10. **Rollback: only through `STORAGE_DRIVER`.** Set it back to `supabase`: new files go to Supabase again; files
     written to MinIO meanwhile keep their `minio:` paths and stay readable **as long as `ayat-minio` runs**, so
     never stop it while such rows exist. Once any `minio:` row exists, **never** revert the code of this feature
@@ -194,8 +196,7 @@ and list is all it needs; never root). Host crontab (`crontab -e` as root):
 `mc mirror --overwrite` adds new and changed files and never deletes: a file removed in MinIO stays in the backup,
 so an accidental delete can be restored. Retention: nothing is pruned automatically; the reports and receipts are
 write-once and small. When the folder grows, delete old per-bucket files by hand or empty the folder and let the
-next run copy everything again. The backup sits on the same disk: copy it off the server too (e.g. `rsync` of the
-folder to another machine) for a disk failure. Restore: the same container with the root keys,
+next run copy everything again. The backup sits on the same disk; the off-host copy is the Google Drive backup below (§5.1). Restore: the same container with the root keys,
 `mc mirror /backup/<bucket> ayat/<bucket>`.
 
 Alternative, sparingly (a raw copy of MinIO's own format, only consistent with `ayat-minio` stopped):
@@ -204,6 +205,89 @@ Alternative, sparingly (a raw copy of MinIO's own format, only consistent with `
 docker run --rm -v ayat-albayan-staging_minio-data:/data:ro -v /var/backups:/backup busybox:1.37 \
   tar czf /backup/minio-data-$(date +%F).tgz -C /data .
 ```
+
+### 5.1 Off-host: compressed archives on Google Drive (owner 2026-11-07, add-only)
+
+«use google drive», «but compress it first». The worker uploads compressed archives of the MinIO
+buckets to the academy's Google Drive, on the Google connection «التكاملات» › Google already holds
+(docs/24: same OAuth client, same refresh token in Vault, same `invalid_grant` handling). No new
+Google project, client or credential.
+
+**Add-only (owner decision 2026-11-07, PR #690):** the backup **only adds files** to Drive. It
+never deletes, trashes or changes a file there, not even its own failed uploads. There are no
+weekly fulls, no sealing and no retention: freeing space on Drive is done by hand (below).
+
+- **What is uploaded:** every object of the buckets `reports`, `report-attachments`, `receipts`,
+  `invoices`, `wa-media`, `avatars` (`recordings` only while `MINIO_RECORDINGS` is on) whose
+  **(bucket, key, ETag)** is not yet recorded as backed up (`drive_backup_objects`). The first night
+  therefore sends everything; later nights send only new and changed objects. An object is recorded
+  only after its part's upload is confirmed by Drive **and** its row is written; until then it is
+  simply sent again the next night.
+- **Where:** the folder «نسخ احتياطي — ملفات المنصة» in My Drive of the connected account, created
+  once (marked with the app property `ab_backup=minio`; its id and the account's address in
+  `drive_backup_state`). The account is Drive's own answer (`about.user`): after a reconnect to
+  another account, nothing goes to the old folder; a new folder starts and everything is sent again.
+- **When:** every night at 01:00 UTC (04:00 Riyadh) in `ayat-worker` (`drive-backup` job, the Google
+  sync's single-flight pattern; a run is aborted after 8 hours and the next one waits for it to end).
+- **Format:** `add-YYYY-MM-DD.pN.tar.zst` (the night's UTC day, part N = 1, 2, …; a part number is
+  never reused, failed parts included): a POSIX (pax) tar, entries `<bucket>/<key>` with the
+  object's Content-Type and ETag in pax records (`AB.*`; GNU tar warns «unknown extended header
+  keyword» and extracts normally), and `manifest.json` last. Each file carries `ab_backup=minio`,
+  `label` (the day), `part` and `ab_row` in its appProperties. Compressed with **zstd level 3 from
+  Node's own `node:zlib`** with zstd's checksum, so a damaged archive fails the restore; the restore
+  also checks each object against its MD5 ETag before MinIO keeps it.
+- **Streamed:** MinIO → tar → zstd → a Drive resumable upload, 8 MiB chunks: nothing on disk, about
+  one chunk plus one object (≤ 64 MiB read into one buffer; larger ones stream in a part of their
+  own) in memory. A part is cut at **1 GiB** of cost (raw bytes plus the tar's and zstd's overhead).
+  A failed chunk is resent from what Drive last confirmed (5 tries).
+- **Failures:** a failed or interrupted part is marked `failed` in `drive_backup_archives` and its
+  objects are retried the next night under a new part name. If Drive did create the file (the
+  answer was lost, the deadline hit), that **orphan file stays on Drive**: it is never deleted
+  automatically, and the restore tolerates it (a duplicate copy of a key only counts as `older`).
+  Drive's `storageQuotaExceeded`, a refused Google token or the deadline stop the night.
+- **Skipped objects:** an object larger than the 1 GiB part cap, one that cannot be read from
+  MinIO, or one that changed while being read (a new ETag or size: a re-rendered PDF) is skipped
+  that night and **named** (`bucket/key`, size, reason) on the status line and in the alert. It is
+  tried again every night and never blocks the other objects. A vanished object is not named.
+- **Quota (the account is shared with Gmail and the Google sync):** the night's budget is **free
+  space − 2 GB reserve**, read at the start and **again before each part**; no part is uploaded
+  past it (nor past what the night has left of its starting budget). A part that does not fit
+  waits; a smaller later one may still go. When the room is too low the night uploads nothing.
+  The objects that waited are counted on the status line, and the admins get the alert «مساحة
+  Google Drive توشك على النفاد» asking them to delete old archives by hand.
+- **Alerts** (admins, bell only, the Google sync's `google_sync_alert`), once per day each: a failed
+  night; skipped objects (the first 5 named with size and reason, the rest counted); Drive nearly
+  full. Never WhatsApp, push or email.
+
+**Freeing space by hand** (the backup never does it): in Drive, open «نسخ احتياطي — ملفات المنصة»,
+delete the oldest `add-…` archives, then **empty Drive's trash** (a trashed file still counts
+against the quota for 30 days). Know what this costs: an object version that lived only in the
+deleted archives is no longer backed up, and the backup does **not** send it again (it is still
+recorded as backed up) unless it changes. To take a fresh complete copy instead, move the **whole
+folder** to the trash (and empty it when space is needed): the next night creates a new folder and
+uploads everything again (`drive_backup_objects` is per folder).
+
+**Turning it on** (owner): «التكاملات» › Google is connected (docs/24) and «التكاملات» › «التخزين»
+has a passing «اختبار الاتصال»; then set «نسخ احتياطي لملفات MinIO إلى Google Drive» to «مفعّلة» and
+save. The status line under «التخزين» (admins only) shows the last night (raw → compressed size),
+the skipped objects by name, the objects waiting for room, the last error and Drive's free space.
+Off again: set it to «متوقفة» (archives already on Drive stay).
+
+**Restore** (owner, on the VPS, inside the worker container; reads Drive, writes MinIO with the app
+user's keys). Every archive counts: they are applied in name order (night, then part) and for the
+same key **the newest copy wins** (the script reads them newest first and keeps the first copy of
+each key, so a key is written once and duplicates are harmless):
+
+1. **Dry run** (the default; writes nothing): lists the archives, newest first. `--to D` uses the
+   archives of the nights up to D (01:00 UTC), i.e. MinIO as it was at the end of D−1; for the end
+   of D, use D+1: `docker compose -p ayat-albayan-staging exec -T ayat-worker node dist/scripts/minio-drive-restore.js --to 2026-11-07`
+2. **Apply:** add `--apply`. An object MinIO already holds is **kept** (`If-None-Match: *`) unless
+   `--overwrite` is added. The JSON summary gives `put`, `kept`, `older` (an older or duplicate
+   copy of a key already restored) and `failed` (the keys that could not be written).
+3. Deleted objects come back too (archives never record deletes), as with `backup.sh`.
+4. Without the platform (a new server): download the folder's archives from Drive and
+   `zstd -dc <file> | tar -x` each one **oldest first** (by night, then part number: `p10` after
+   `p9`), so later copies overwrite older ones; then `mc mirror` the folders into the buckets.
 
 ## 6. Moving the old files (served from MinIO)
 
@@ -219,7 +303,7 @@ Owner 2026-11-07: «move all the old files in minio to be served». `tools/scrip
 3. it is **verified**: size and Content-Type as both stores report them, and a SHA-256 of the bytes read back from
    MinIO against the bytes read from Supabase. Any difference = `mismatch`, the row is not touched;
 4. the row is rewritten to `minio:<key>` with a **compare-and-set** on the old path (`… where id = $id and col =
-   $old`): a row that changed meanwhile (a re-render, an edit, a delete) is left as it is (`changed`);
+$old`): a row that changed meanwhile (a re-render, an edit, a delete) is left as it is (`changed`);
 5. one `audit_log` row per batch (`entity = storage_move`, `before.rows` = each rewritten row id and its old path).
 
 Rows already `minio:` are skipped; a second run does nothing new. **Nothing is ever deleted from Supabase**: links
