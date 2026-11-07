@@ -30,9 +30,13 @@ const textOf = (copy: readonly Component[], type: string): string | null =>
 const filledBody = (body: string, values: readonly string[]): string =>
   body.replace(/\{\{(\d+)\}\}/g, (whole, n: string) => values[Number(n) - 1] ?? whole);
 
+/** A URL button whose link takes the sent {{1}} suffix. */
+const fillable = (b: TemplateDisplayButton): boolean =>
+  b.type === 'url' && !!b.url?.includes('{{1}}');
+
 /** A URL button's {{1}} from the value sent at its index; no link while none, or when hidden. */
 function filledButton(b: TemplateDisplayButton, value: string | undefined, hide: boolean) {
-  if (b.type !== 'url' || !b.url?.includes('{{1}}')) return b;
+  if (!fillable(b)) return b;
   const { url = '', ...rest } = b;
   return value === undefined || hide ? rest : { ...rest, url: url.replace('{{1}}', value) };
 }
