@@ -3,9 +3,8 @@ import { ar } from '@/common/infra/i18n/server-text';
 import type { TeacherLessonTokens } from '@/modules/teaching/lesson-links';
 import { classroomUrl, teacherReportUrl } from './reminders.links';
 
-// A teacher's lesson as the CRM's own templates (the old Apps Script's, docs/19 «crm driver»), put
-// beside the Meta values in template_params.crm (only the crm driver reads it): the new-student
-// alert's teacher_lesson_v2 (teacher-alert.plan.ts) and the same-day reminder's
+// A teacher's lesson as the CRM's own templates (docs/19 «crm driver»), in template_params.crm:
+// the new-student alert's teacher_lesson_v2 (teacher-alert.plan.ts), the same-day reminder's
 // teacher_lesson_reminder (reminders.plan.ts).
 
 /**
@@ -55,7 +54,7 @@ function coded(input: Pick<TeacherLessonInput, 'teacher' | 'students'>): Coded |
   return name && all ? { teacher: name, students: ok } : null;
 }
 
-/** The lesson's values in the teacher's words: v2's body, and v3's {{1}}…{{5}}. */
+/** The lesson's values in the teacher's words: v3's {{1}}…{{5}} (v2 sends four of them). */
 interface LessonValues {
   teacher: string;
   names: string;
@@ -80,16 +79,22 @@ export function lessonValues(input: TeacherLessonInput): LessonValues | null {
   };
 }
 
+/** «سهيلة (AB-0101) ومريم (AB-0102)»: each student with their code, joined. */
+const namesWithCodes = (students: readonly { name: string; code: string }[]): string =>
+  joinNames(students.map((s) => fill(ar.templates.teacherReminderCrmStudent, s)));
+
 /**
- * teacher_new_student's teacher_lesson_v2: body [teacher, students, their codes, the lesson time in
- * the teacher's tz, its duration]; buttons [«ادخل الحلقة» the Meet code or our classroom path,
- * «تقرير الحلقة» teacher/report/<id>]. null when a value is missing: Meta values only.
+ * teacher_new_student's teacher_lesson_v2, its FOUR body slots: [teacher, students with their
+ * codes «سهيلة (AB-0101)», the lesson time in the teacher's tz, its duration]; buttons [«ادخل
+ * الحلقة» the Meet code or our classroom path, «تقرير الحلقة» teacher/report/<id>]. null when a
+ * value is missing: Meta values only.
  */
 export function teacherLessonCrm(input: TeacherLessonInput): CrmValues | null {
   const v = lessonValues(input);
-  if (!v) return null;
+  const who = coded(input);
+  if (!v || !who) return null;
   return {
-    body: [v.teacher, v.names, v.codes, v.when, v.duration],
+    body: [v.teacher, namesWithCodes(who.students), v.when, v.duration],
     buttons: [joinSuffix(input.lesson), suffix(teacherReportUrl('', input.lesson.id))],
   };
 }
@@ -136,11 +141,9 @@ export function teacherReminderCrm(input: TeacherReminderInput): CrmValues | nul
   const { lesson, origin } = input;
   const who = coded({ teacher: input.teacher, students: lesson.students });
   if (!who || !origin) return null;
-  const text = ar.templates;
-  const students = who.students.map((s) => fill(text.teacherReminderCrmStudent, s));
-  const line = fill(text.teacherReminderCrm, {
+  const line = fill(ar.templates.teacherReminderCrm, {
     when: lessonWhenText(new Date(lesson.starts_at), input.teacher.tz),
-    students: joinNames(students),
+    students: namesWithCodes(who.students),
     ...lineLinks(input),
   });
   return { body: [oneLine(who.teacher), oneLine(line)], buttons: [] };
