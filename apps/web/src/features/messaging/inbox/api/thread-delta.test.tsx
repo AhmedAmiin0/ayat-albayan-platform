@@ -8,8 +8,12 @@ import { useLiveThread } from './thread-delta';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-// A fast delta tick for the test; the real one is 10 s (INBOX_REFRESH_MS).
-vi.mock('./api', async (orig) => ({ ...(await orig<object>()), INBOX_REFRESH_MS: 40 }));
+// A fast delta tick for the test; the real one is 10 s down / 20 s live (inboxPollMs).
+vi.mock('./api', async (orig) => ({
+  ...(await orig<object>()),
+  INBOX_REFRESH_MS: 40,
+  inboxPollMs: () => 40,
+}));
 
 const PATH = '/threads/%2B966501234567';
 const first = message({ id: 'm1', created_at: '2026-10-27T10:00:00Z' });
