@@ -73,7 +73,7 @@ const CREDENTIAL_CODE: Record<NonNullable<WaError['info']['credential']>, string
 };
 
 /** The CRM's 403 naming a scope its key lacks (templates:read on «مزامنة», docs/39). */
-export const CRM_SCOPE_MISSING = 'crm_scope_missing';
+const CRM_SCOPE_MISSING = 'crm_scope_missing';
 
 type ToHttp = (e: WaError) => HttpException | undefined;
 
