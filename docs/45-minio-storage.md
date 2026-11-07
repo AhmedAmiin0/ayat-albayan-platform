@@ -76,14 +76,18 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
 
 ## 3. What runs (`deploy/staging/`)
 
-- **`ayat-minio`** (`minio/minio:RELEASE.2025-04-22T22-12-26Z`, profile `minio`): `server /data` on the named
+- **Image (owner 2026-11-07):** MinIO stopped publishing images (Docker Hub `minio/minio` and `minio/mc` deleted
+  in 2026-09, the community edition is source-only). Every MinIO container uses Chainguard's rebuild from source,
+  `cgr.dev/chainguard/minio@sha256:…`, pinned by digest (its free tier tags only `:latest`). It ships `mc` and a
+  shell, runs as uid 65532, so the server, the init and the backup all use this one image.
+- **`ayat-minio`** (the pinned Chainguard image, profile `minio`): `server /data` on the named
   volume `minio-data`, no published port, console off (`MINIO_BROWSER=off`), 512 MB, healthcheck `mc ready local`,
   rotated logs. Its keys come from `/opt/ayat-albayan-staging/minio.env` (`env_file`, `required: false` so the compose
   file parses without it), **never** from `.env`, the app's `env_file`: no API container sees MinIO's root password
   (`compose-minio.test.mjs` guards it). It refuses
   to start (exit 1, the reason in its log) when the user is under 3 or the password under 16 characters, so it
   never runs on MinIO's default credentials.
-- **`ayat-minio-init`** (`minio/mc:RELEASE.2025-04-16T18-13-26Z`, profile `minio`, one shot, 64 MB): runs
+- **`ayat-minio-init`** (the same pinned image, profile `minio`, one shot, 64 MB): runs
   `deploy/staging/minio/init.sh` from the shipped checkout (`src/`). It waits up to 2 minutes for MinIO, creates
   each bucket (`mc mb --ignore-existing`), makes it private (`mc anonymous set none`), writes the policy `ayat-app`
   (`s3:GetObject`, `PutObject`, `DeleteObject` on objects, `ListBucket`, `GetBucketLocation` on the buckets, nothing
@@ -180,7 +184,7 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
 ## 5. Backups
 
 Daily copy of every bucket to `/var/backups/ayat-minio` with `deploy/staging/minio/backup.sh`: a one-shot
-`minio/mc` container (the init's pinned image) on the project network, with the app user's keys from `minio.env` (read
+container of the pinned MinIO image (it ships `mc`; run as uid 0 only to write the root-only folder) on the project network, with the app user's keys from `minio.env` (read
 and list is all it needs; never root). Host crontab (`crontab -e` as root):
 
 ```cron
@@ -220,8 +224,9 @@ MinIO copy (§1 «Deletes»), so the copies never outlive their rows.
   meeting recordings are **not** capped, which is why they stay off until `MINIO_RECORDINGS` is switched on
   deliberately. The backup doubles the use. Watch it:
   `du -sh /var/lib/docker/volumes/ayat-albayan-staging_minio-data /var/backups/ayat-minio`.
-- **Upgrade:** change both tags in `docker-compose.yml` (and `MC_IMAGE` in `backup.sh`; `compose-minio.test.mjs`
-  keeps them equal) to real `RELEASE.*` tags, deploy, then
+- **Upgrade:** take the current digest (`docker buildx imagetools inspect cgr.dev/chainguard/minio:latest`), put it
+  in both services of `docker-compose.yml` and in `MC_IMAGE` of `backup.sh` (`compose-minio.test.mjs` keeps the three
+  equal and refuses a tag), deploy, then
   `docker compose -p ayat-albayan-staging up -d ayat-minio ayat-minio-init` by hand: `roll.sh` ends with
   `up -d --no-recreate`, which never recreates a running MinIO.
 - **New app secret:** in a quiet window (no lesson reports being sent, nobody uploading): a new
