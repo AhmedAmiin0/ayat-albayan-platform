@@ -6,8 +6,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import type { ImportRow } from '@/modules/messaging/whatsapp/templates/sync/template-import';
 import type { TemplatePatch } from '@/modules/messaging/whatsapp/templates/sync/template-sync';
 import { templateRow, templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
-import { sendableTemplates } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
-import { TtlCache } from '@/common/infra/cache/ttl-cache';
+import { sendableCache } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
 
 /** One (template, number) approval (docs/23c decision 4). */
 export type ApprovalRow = Tables<'message_template_numbers'>;
@@ -25,8 +24,8 @@ type MaybeRow = TemplateRow | null;
 export class TemplatesRepo {
   /** cached(): one read per key a minute, shared by concurrent callers; cleared by every write here. */
   private readonly copies = new Map<string, { row: Promise<TemplateRow | null>; at: number }>();
-  /** sendable(): the sender pass's templates; same minute, same clears (docs/42 42-3). */
-  private readonly sendables = new TtlCache(TEMPLATE_COPY_MS, () => sendableTemplates(this.db));
+  /** sendable(): the sender pass's templates; same minute, same clears, crm gate live (42-3). */
+  private readonly sendables = sendableCache(() => this.db);
 
   constructor(
     @Inject(DB) private readonly db: Db,
