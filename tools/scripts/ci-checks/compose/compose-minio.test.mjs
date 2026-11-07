@@ -58,7 +58,7 @@ test('refuses to start without real root credentials (never the default)', () =>
   assert.match(script, /"\$\$\{#MINIO_ROOT_PASSWORD\}" -ge 16/);
   assert.match(script, /"\$\$\{#MINIO_ROOT_USER\}" -ge 3/);
   assert.match(script, /exit 1/);
-  assert.match(script, /exec minio server \/data\s*$/);
+  assert.match(script, /exec minio server \/data --console-address :9001\s*$/);
 });
 
 test('its data on a named volume, a health check, rotated logs, 512 MB', () => {
