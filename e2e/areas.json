@@ -531,6 +531,7 @@
     "teaching/edit-time.sql.spec.ts",
     "platform/google-calendar-handover.sql.spec.ts",
     "platform/google-sync.sql.spec.ts",
+    "messaging/inbox-live-rows.sql.spec.ts",
     "messaging/inbox-media-moved.sql.spec.ts",
     "messaging/inbox-realtime.sql.spec.ts",
     "platform/integration-config.sql.spec.ts",
