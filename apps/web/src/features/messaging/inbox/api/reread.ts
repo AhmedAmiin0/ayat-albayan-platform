@@ -42,12 +42,19 @@ export function rereadChat(client: QueryClient, phone: string): void {
     client.getQueryCache().find({ queryKey: threadQuery(phone).queryKey, exact: true });
   // A page load started during the re-read cancels it (fetchNextPage's cancelRefetch) and commits
   // pages built on the old ones: the re-read runs once more after it (one per «تحميل الأقدم»).
-  const replaced = () => Boolean(find()?.state.fetchMeta?.fetchMore);
+  // Only a NEW page load counts (each fetchNextPage dispatches its own fetchMeta object; an older
+  // one stays in state, and leaving the chat reverts to it), and only while the chat is shown.
+  const metaNow = () => find()?.state.fetchMeta;
+  const replacedSince = (before: unknown) => {
+    const meta = metaNow();
+    return Boolean(find()?.isActive() && meta?.fetchMore && meta !== before);
+  };
   const read = () => client.refetchQueries(filters, { cancelRefetch: true });
-  const reread = (): Promise<unknown> =>
-    document.hasFocus()
-      ? read().then(() => (replaced() ? reread() : undefined))
-      : Promise.resolve();
+  const reread = (): Promise<unknown> => {
+    if (!document.hasFocus()) return Promise.resolve();
+    const before = metaNow();
+    return read().then(() => (replacedSince(before) ? reread() : undefined));
+  };
   const query = find();
   if (query && mustWait(query)) after(query.promise, reread);
   else void reread();

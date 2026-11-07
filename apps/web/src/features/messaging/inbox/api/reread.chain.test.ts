@@ -82,6 +82,21 @@ it('focus lost before a deferred re-read starts: no GET; with focus back the nex
   await vi.waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(3));
 });
 
+it('the chat left during a re-read after an older page: the chain stops (no endless loop)', async () => {
+  const { client, chat } = await opened();
+  const p1 = await held(() => void chat.fetchNextPage());
+  p1.resolve(page(false, msg('b', 'sent')));
+  await chat.getCurrentQuery().promise; // P1's fetchMeta (fetchMore) stays in state
+  const r = await held(() => rereadChat(client, PHONE));
+  const query = client.getQueryCache().find({ queryKey: KEY, exact: true });
+  if (!query) throw new Error('no chat query');
+  vi.spyOn(query, 'isActive').mockReturnValue(false);
+  await query.cancel({ revert: true }); // what removing the last observer does: back to P1's meta
+  r.resolve(page(true, msg('a', 'read')));
+  await new Promise((done) => setTimeout(done, 20)); // never runs while a re-read loop spins
+  expect(mockApiFetch).toHaveBeenCalledTimes(3);
+});
+
 it('a page load that already landed holds no later event back: each event re-reads', async () => {
   const { client, chat } = await opened();
   const p1 = await held(() => void chat.fetchNextPage());
