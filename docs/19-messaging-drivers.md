@@ -141,7 +141,7 @@ line stays off (`duplicate_chat_phone`, boot log `WA_CHAT_PROVIDER (crm, same as
 | Text / files | `type:"text"` (reply-to dropped: the CRM wants its own uuid) · `type:"document"\|"image"` with `media_url`, `filename`, caption as `text` |
 | wamid | `data.whatsapp_message_id` (a 2xx without it = `uncertain`) |
 | markRead | no-op (the CRM owns the conversation) |
-| Template list / submit | through the CRM's `/templates` (docs/39, «Templates through the CRM» below): status only, nothing imported, never marked missing by the sync; a document header or a rejected row with a `meta_id` is 409 `crm_managed`; a CRM without `/templates` (404) answers `crm_managed` and touches no row; a number's sync (module mode) still `crm_managed` |
+| Template list / submit | through the CRM's `/templates` (docs/39, «Templates through the CRM» below): status only, nothing imported, never marked missing by the sync; a document header, a row the CRM knows by another name, or a rejected row with a `meta_id` is 409 `crm_managed`; a CRM without `/templates` (404) answers `crm_managed` and touches no row; a number's sync (module mode) still `crm_managed` |
 | Samples / inbound media | `WaError {unsupported:'crm'}`: inbound media 409 `crm_no_media`; `canUploadSamples()` false |
 | 401 / 403, 400 `whatsapp_not_configured` | `credential: 'crm'` (the key, or the CRM's own WhatsApp connection, is down: the line, not the message): the queue is held 15 min, uncounted, line paused, one push a day; rows read `crm_auth` («رفض نظام CRM مفتاح الواجهة…»). A 403 naming a scope («missing the 'templates:read' scope») also keeps it as `missingScope`: «مزامنة» / «إرسال إلى ميتا» read `crm_scope_missing` with that scope (docs/39) |
 | 429 | queued until `Retry-After` (default 1 min, max 1 h), uncounted, `crm_rate_limited` (120 req/min per key); the line pauses for the rest of the pass, **no** «token refused» push |
@@ -211,7 +211,9 @@ templates, a variable in the header, a media header on a new row, admin template
 - **«إرسال إلى ميتا» on a crm row** (`POST /messaging/templates/:key/submit`) goes through the CRM under the
   same name and language and is saved pending with the returned `meta_id`. The web shows the button exactly
   when the API accepts it (`crm/crm-submit.ts`): not_submitted, missing, or rejected **without** a `meta_id`,
-  never a document header. A document header (the CRM uploads no sample PDF) reads «تُنشأ في لوحة CRM» and a
+  never a document header, never a row the CRM knows by another name or language (teacher_new_student →
+  teacher_lesson_v2, or a crm_name / crm_language: «تُدار في لوحة CRM», so our body is never posted under the
+  CRM's own template). A document header (the CRM uploads no sample PDF) reads «تُنشأ في لوحة CRM» and a
   rejected row Meta already holds (the CRM API has no edit) «تُعدَّل في لوحة CRM», each with its reason
   (the API answers 409 `crm_managed` for both, before any call).
 - **A key without the template scopes:** the CRM answers 403 «missing the 'templates:read' scope»; the line's

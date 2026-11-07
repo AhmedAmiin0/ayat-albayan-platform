@@ -66,6 +66,16 @@ describe('templates on a crm line', () => {
     expect(queries.update).not.toHaveBeenCalled();
   });
 
+  it('a row the CRM knows by another name is 409 crm_managed before any call', async () => {
+    const g = scriptedFetch();
+    for (const row of [templateRow({ key: 'teacher_new_student', meta_name: 'teacher_new_student', status: 'rejected' }),
+      templateRow({ status: 'not_submitted', crm_name: 'booking_v2' })]) {
+      queries.get.mockResolvedValue(row);
+      expect((await rejected(services(g).admin.submit(row.key, 'admin-1')))?.[0]).toBe(409);
+    }
+    expect(g.requests).toHaveLength(0);
+  });
+
   it('any other submit goes through the CRM and is saved pending', async () => {
     queries.get.mockResolvedValue(templateRow({ status: 'not_submitted', body_ar: 'حلقة {{1}} يوم {{2}}.' }));
     const g = scriptedFetch({ status: 201, body: { data: { meta_template_id: 'mt-9', status: 'PENDING' } } });

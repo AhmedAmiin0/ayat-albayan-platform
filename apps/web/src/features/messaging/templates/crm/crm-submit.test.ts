@@ -4,8 +4,15 @@ import { crmCanSubmit, crmOnly } from './crm-submit';
 
 // docs/39: the crm row's «إرسال إلى ميتا» shows exactly when the API would submit it via the CRM.
 
-const row = (status: TemplateStatus, over: { header_format?: 'document' | null; meta_id?: string | null } = {}) =>
-  ({ status, header_format: null, meta_id: null, ...over });
+interface Over {
+  header_format?: 'document' | null;
+  meta_id?: string | null;
+  key?: string;
+  crm_name?: string | null;
+  crm_language?: string | null;
+}
+const BASE = { key: 'renewal_due', meta_name: 'renewal_due', language: 'ar', header_format: null, meta_id: null };
+const row = (status: TemplateStatus, over: Over = {}) => ({ ...BASE, status, ...over });
 
 describe('crmCanSubmit', () => {
   it.each(['not_submitted', 'missing', 'rejected'] as const)('%s without a meta_id: yes', (status) => {
@@ -31,5 +38,20 @@ describe('crmCanSubmit', () => {
   it.each(['approved', 'pending', 'paused', 'disabled'] as const)('%s: no button and no reason', (status) => {
     expect(crmCanSubmit(row(status))).toBe(false);
     expect(crmOnly(row(status, { header_format: 'document' }))).toBeNull();
+  });
+
+  it.each([
+    ['the old script\'s default (teacher_lesson_v2)', { key: 'teacher_new_student', meta_name: 'teacher_new_student' }],
+    ['an admin\'s crm_name', { crm_name: 'renewal_v2' }],
+    ['another crm_language', { crm_language: 'ar_EG' }],
+  ] as const)('known in the CRM by another name, %s: never, managed in the CRM', (_, over) => {
+    const named = { ...row('rejected'), ...over };
+    expect(crmCanSubmit(named)).toBe(false);
+    expect(crmOnly(named)).toBe('named');
+    expect(crmCanSubmit({ ...named, status: 'not_submitted' })).toBe(false);
+  });
+
+  it('a crm_name equal to meta_name is the row\'s own name: shown', () => {
+    expect(crmCanSubmit(row('not_submitted', { crm_name: 'renewal_due' }))).toBe(true);
   });
 });

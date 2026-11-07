@@ -3389,6 +3389,7 @@
     },
     "crmSubmit": {
       "document": "Made in the CRM dashboard: the CRM uploads no sample PDF for Meta's review",
+      "named": "Managed in the CRM dashboard: the CRM knows this template by another name or language, so our text is never sent under it",
       "rejected": "Edited in the CRM dashboard: the CRM API cannot edit a template Meta rejected"
     },
     "moveTitle": "Move the template to the other number",

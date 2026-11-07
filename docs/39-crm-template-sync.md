@@ -11,7 +11,8 @@ The CRM (github.com/AhmedAmiin0/ayat-crm, private; hosted at crm.ayatalbayan.com
   «إرسال إلى ميتا» on a crm line.
 - «القوالب» rows (this PR): an existing crm row shows «إرسال إلى ميتا» exactly when the API accepts it
   (`apps/web/.../templates/crm/crm-submit.ts`: not_submitted, missing, or rejected without a `meta_id`; never a
-  document header). Otherwise it says why: «تُنشأ في لوحة CRM» (document header: no sample PDF upload) or
+  document header, never a row the CRM knows by another name or language, e.g. teacher_new_student →
+  teacher_lesson_v2: «تُدار في لوحة CRM», and the API answers 409 `crm_managed` before any call). Otherwise it says why: «تُنشأ في لوحة CRM» (document header: no sample PDF upload) or
   «تُعدَّل في لوحة CRM» (rejected on Meta: the CRM API has no edit). The hand-set «علِّمه معتمدًا / غير متاح»
   and the CRM name buttons stay as the fallback; the status note reads «عبر نظام CRM».
 - «مزامنة»: unchanged route (`POST /messaging/templates/health {line}`). A row found under its OWN name
