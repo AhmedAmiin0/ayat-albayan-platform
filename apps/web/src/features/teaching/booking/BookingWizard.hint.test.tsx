@@ -2,7 +2,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
 import type { BookSearch } from './api';
 import { BookingPage } from './BookingPage';
 import { ABRAR, next, NOOR, respond, routeSend, rowInputs, SLOT, STUDENT_ID } from './wizard-fixture';
