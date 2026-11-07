@@ -2,13 +2,20 @@ import type { SignedUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS } from '../storage.paths';
 import { StorageService } from '../storage.service';
+import type { SlotFile } from '@/common/storage/store/object-store';
+
+/** A photo's upload slot: its path and the file it admits (size and type signed in MinIO). */
+export interface PhotoSlot {
+  path: string;
+  file: SlotFile;
+}
 
 /** Photo URLs live for 15 minutes: the page asks again on its next load. */
 const AVATAR_URL_SECONDS = 15 * 60;
 
 /** What a photo needs from Storage (the account page, an admin's teacher / user photo, every list). */
 export interface AvatarFiles {
-  uploadUrl(path: string): Promise<SignedUpload>;
+  uploadUrl(slot: PhotoSlot): Promise<SignedUpload>;
   info(path: string): Promise<{ size: number; contentType: string } | null>;
   head(path: string, bytes: number): Promise<Uint8Array | null>;
   /** A short-lived signed GET URL, or null when it cannot be signed (missing object). */
@@ -25,8 +32,8 @@ export const AVATAR_FILES = Symbol('AVATAR_FILES');
 export class StorageAvatarFiles implements AvatarFiles {
   constructor(private readonly storage: StorageService) {}
 
-  uploadUrl(path: string): Promise<SignedUpload> {
-    return this.storage.signedUpload({ bucket: BUCKETS.avatars, path });
+  uploadUrl(slot: PhotoSlot): Promise<SignedUpload> {
+    return this.storage.signedUpload({ bucket: BUCKETS.avatars, ...slot });
   }
 
   info(path: string) {

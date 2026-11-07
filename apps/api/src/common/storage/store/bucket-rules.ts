@@ -38,7 +38,7 @@ export const BUCKET_RULES: Record<Bucket, BucketRule> = {
 };
 
 /** «image/jpeg; charset=…» → «image/jpeg». */
-const baseMime = (contentType: string): string =>
+export const baseMime = (contentType: string): string =>
   contentType.split(';')[0]?.trim().toLowerCase() ?? '';
 
 /** Would the Supabase bucket have taken this object? */

@@ -2,6 +2,8 @@ import { RECEIPT_MAX_BYTES, RECEIPT_MIMES, type PaymentAttachmentView } from '@a
 import { Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, isPathOf } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
+import { baseMime } from '@/common/storage/store/bucket-rules';
+import type { ObjectInfo } from '@/common/storage/store/object-store';
 import { SNIFF_BYTES, sniffMime } from '@/modules/teaching/booking/invoice/invoice-sniff';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { PaymentAttachmentsRepo } from './payment-attachments.repo';
@@ -23,8 +25,15 @@ const MIMES: ReadonlySet<string> = new Set(RECEIPT_MIMES);
  * receipt_path is shown as the first file (legacy). Rows cascade with the payment; objects are discarded.
  */
 /** There, and within the receipts bucket's own cap (MinIO has none, docs/45). */
-const fits = (info: { size: number } | null): info is { size: number } =>
+const fits = (info: ObjectInfo | null): info is ObjectInfo =>
   info !== null && info.size <= RECEIPT_MAX_BYTES;
+
+/**
+ * Sniffed as a receipt type AND served by the store as one (never a JPEG served as text/html).
+ * Not equality: Android's picker re-encodes a PNG as JPEG yet labels it image/png (both safe).
+ */
+const servedAsSniffed = (mime: string | null, info: ObjectInfo): mime is string =>
+  mime !== null && MIMES.has(mime) && MIMES.has(baseMime(info.contentType));
 
 @Injectable()
 export class PaymentAttachments {
@@ -91,7 +100,7 @@ export class PaymentAttachments {
     const info = await this.storage.info(ref);
     if (!fits(info)) throw badRequest('attachment_path', { path });
     const mime = sniffMime((await this.storage.head(ref, SNIFF_BYTES)) ?? new Uint8Array());
-    if (!mime || !MIMES.has(mime)) throw badRequest('attachment_type', { path });
+    if (!servedAsSniffed(mime, info)) throw badRequest('attachment_type', { path });
     return { path, mime, size: info.size > 0 ? info.size : null };
   }
 }

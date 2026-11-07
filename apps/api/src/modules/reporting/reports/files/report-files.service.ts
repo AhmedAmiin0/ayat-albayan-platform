@@ -53,7 +53,7 @@ export class ReportFilesService {
   /** R7: a signed upload URL for a new object under the report (the bucket enforces type and size). */
   async uploadUrl({ id, user, file }: FileRef & { file: AttachmentUpload }): Promise<SignedUpload> {
     await this.gate.editable(id, user);
-    return this.storage.signedUpload({ bucket: BUCKETS.attachments, path: attachmentPath({ reportId: id, mime: file.mime }) });
+    return this.storage.signedUpload({ bucket: BUCKETS.attachments, path: attachmentPath({ reportId: id, mime: file.mime }), file });
   }
 
   /** R8: registers an uploaded object; the path must be under this report and exist (400 attachment_path). */

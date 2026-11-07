@@ -5864,6 +5864,7 @@
       "errors": {
         "storage_not_configured": "MinIO settings are incomplete: internal address, public address, access key and secret key.",
         "storage_probe_failed": "Could not upload, read or delete on MinIO. Check the address and keys, then try again.",
+        "storage_public_failed": "MinIO answers on the internal address, but uploading or reading through the public file address failed. Check the public address and the Caddy site, then try again.",
         "unknown": "The test failed. Try again."
       }
     },
@@ -6094,6 +6095,10 @@
       "MINIO_SECRET_KEY": {
         "label": "Secret key",
         "hint": "The app user’s secret in MinIO. Kept in the vault and never shown after saving."
+      },
+      "MINIO_RECORDINGS": {
+        "label": "Keep lesson and meeting recordings in MinIO",
+        "hint": "Off by default. On, with MinIO keeping new files: lesson and meeting recordings go to the academy server; they are large and uncapped, so watch the free disk space. Off: recordings never go to MinIO; they are kept as today where a place is set up."
       }
     },
     "developer": "For developers",

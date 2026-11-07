@@ -2,6 +2,7 @@ import type { SignedDownload, SignedUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, isPathOf, uploadName } from '../../../common/storage/storage.paths';
 import { StorageService } from '../../../common/storage/storage.service';
+import type { SlotFile } from '@/common/storage/store/object-store';
 import { badRequest, notFound } from '../../../common/http/errors';
 
 /** Expense receipts live in the private receipts bucket under receipts/expenses/{uuid}.{ext}. */
@@ -12,8 +13,10 @@ const EXPENSE_FOLDER = 'expenses';
 export class ExpenseReceipts {
   constructor(private readonly storage: StorageService) {}
 
-  uploadUrl(mime: string): Promise<SignedUpload> {
-    return this.storage.signedUpload({ bucket: BUCKETS.receipts, path: `${EXPENSE_FOLDER}/${uploadName(mime)}` });
+  /** The slot admits exactly this file (its size and type are signed in MinIO, docs/45). */
+  uploadUrl(file: SlotFile): Promise<SignedUpload> {
+    const path = `${EXPENSE_FOLDER}/${uploadName(file.mime)}`;
+    return this.storage.signedUpload({ bucket: BUCKETS.receipts, path, file });
   }
 
   async check(path: string): Promise<void> {

@@ -54,6 +54,15 @@ describe('POST /payments «المرفقات» (bank transfers only, docs/11 §7)
     expect(m.attachments.save).not.toHaveBeenCalled();
   });
 
+  it('stored as a non-receipt type (a JPEG served as text/html) → 400 attachment_type', async () => {
+    m.storage.info.mockResolvedValue({ size: 2048, contentType: 'text/html' });
+    const res = await call(post({ attachments: [file(1)] }));
+    expect([res.statusCode, res.json().code]).toEqual([400, 'attachment_type']);
+    expect(m.attachments.save).not.toHaveBeenCalled();
+    m.storage.info.mockResolvedValue({ size: 2048, contentType: 'image/png; charset=binary' });
+    expect((await call(post({ attachments: [file(1)] }))).statusCode).toBe(201);
+  });
+
   it('first bytes not an image / PDF → 400 attachment_type', async () => {
     m.storage.head.mockResolvedValue(new TextEncoder().encode('<html><body>x'));
     const res = await call(post({ attachments: [file(1)] }));

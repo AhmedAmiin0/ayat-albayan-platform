@@ -32,12 +32,29 @@ describe('MinIO signed URLs (docs/45)', () => {
     expect(url.toString()).not.toContain('ayat-minio');
   });
 
-  it('a PUT slot lives 15 minutes, one upload per key (If-None-Match signed) and has no Supabase token', async () => {
-    const slot = await minioStore(ENV).signedPut({ bucket: 'receipts', key: 's1/a.jpg' });
+  it('a PUT slot lives 15 minutes, one upload of exactly the declared file, no Supabase token', async () => {
+    const file = { size: 900, mime: 'image/jpeg' };
+    const slot = await minioStore(ENV).signedPut({ bucket: 'receipts', key: 's1/a.jpg', file });
     const url = new URL(slot.signedUrl);
     expect(slot.token).toBe('');
     expect(url.pathname).toBe('/ab-receipts/s1/a.jpg');
     expect(url.searchParams.get('X-Amz-Expires')).toBe('900');
-    expect(url.searchParams.get('X-Amz-SignedHeaders')).toContain('if-none-match');
+    const signed = (url.searchParams.get('X-Amz-SignedHeaders') ?? '').split(';');
+    expect(signed).toEqual(expect.arrayContaining(['content-length', 'content-type', 'host']));
+    expect(signed).toContain('if-none-match');
+    // Size and type stay request headers the PUT must carry, never query values.
+    expect(url.searchParams.has('Content-Length')).toBe(false);
+    expect(url.searchParams.has('Content-Type')).toBe(false);
+  });
+
+  it('a PUT slot carries no checksum the browser or phone could not send', async () => {
+    const file = { size: 900, mime: 'image/jpeg' };
+    const slot = await minioStore(ENV).signedPut({ bucket: 'receipts', key: 's1/a.jpg', file });
+    const url = new URL(slot.signedUrl);
+    const keys = [...url.searchParams.keys()].map((k) => k.toLowerCase());
+    expect(keys.filter((k) => k.startsWith('x-amz-checksum'))).toEqual([]);
+    expect(keys).not.toContain('x-amz-sdk-checksum-algorithm');
+    const signed = url.searchParams.get('X-Amz-SignedHeaders') ?? '';
+    expect(signed).not.toMatch(/checksum/);
   });
 });

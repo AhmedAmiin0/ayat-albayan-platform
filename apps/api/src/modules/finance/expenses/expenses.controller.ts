@@ -52,7 +52,7 @@ export class ExpensesController {
   @Post('receipt-upload-url')
   @HttpCode(200)
   receiptUploadUrl(@Body() body: unknown): Promise<SignedUpload> {
-    return this.service.receipts.uploadUrl(parseOrThrow(expenseReceiptUploadSchema, body).mime);
+    return this.service.receipts.uploadUrl(parseOrThrow(expenseReceiptUploadSchema, body));
   }
 
   @Post()

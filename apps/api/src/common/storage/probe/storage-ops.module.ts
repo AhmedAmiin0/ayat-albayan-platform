@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { StorageModule } from '@/common/storage/storage.service';
+import { StorageModule } from '@/common/storage/storage.module';
 import { StorageHealth } from './storage-health';
 import { StorageProbe } from './storage-probe';
 import { StorageProbeController } from './storage-probe.controller';

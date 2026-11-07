@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ObjectExists } from './object-store';
 
 // What the S3 API answers (zod at the boundary, rule 12): only the fields the adapter reads.
 
@@ -49,6 +50,19 @@ export async function orFail<T>(what: string, call: () => Promise<T>): Promise<T
   try {
     return await call();
   } catch (e) {
+    throw s3Failure(what, e);
+  }
+}
+
+/** A conditional put (If-None-Match: *) that found the key taken: 412 → ObjectExists. */
+const TAKEN = 412;
+
+/** The answer; 412 throws ObjectExists, any other failure throws with S3's error name. */
+export async function orExists<T>(what: string, call: () => Promise<T>): Promise<T> {
+  try {
+    return await call();
+  } catch (e) {
+    if (statusOf(e) === TAKEN) throw new ObjectExists();
     throw s3Failure(what, e);
   }
 }

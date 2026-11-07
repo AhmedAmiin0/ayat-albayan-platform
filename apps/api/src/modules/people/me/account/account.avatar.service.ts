@@ -23,7 +23,8 @@ export class AccountAvatarService {
   ) {}
 
   uploadUrl(user: AuthUser, input: AvatarUpload): Promise<SignedUpload> {
-    return this.files.uploadUrl(avatarPath({ userId: user.id, mime: input.mime }));
+    const path = avatarPath({ userId: user.id, mime: input.mime });
+    return this.files.uploadUrl({ path, file: input });
   }
 
   /** 400 avatar_path / avatar_type / avatar_too_large; a refused object is deleted. The previous photo goes. */
