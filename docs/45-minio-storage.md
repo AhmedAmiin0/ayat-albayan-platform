@@ -87,7 +87,7 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
   (`compose-minio.test.mjs` guards it). It refuses
   to start (exit 1, the reason in its log) when the user is under 3 or the password under 16 characters, so it
   never runs on MinIO's default credentials.
-- **`ayat-minio-init`** (the same pinned image, profile `minio`, one shot, 64 MB): runs
+- **`ayat-minio-init`** (the same pinned image, profile `minio`, one shot, 192 MB: Chainguard's mc is killed at 64 MB on `mc admin user add`): runs
   `deploy/staging/minio/init.sh` from the shipped checkout (`src/`). It waits up to 2 minutes for MinIO, creates
   each bucket (`mc mb --ignore-existing`), makes it private (`mc anonymous set none`), writes the policy `ayat-app`
   (`s3:GetObject`, `PutObject`, `DeleteObject` on objects, `ListBucket`, `GetBucketLocation` on the buckets, nothing
