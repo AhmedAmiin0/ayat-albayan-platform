@@ -3248,7 +3248,7 @@
       "byUnknown": "Hidden · {time}",
       "unhide": "Show",
       "failed": "Could not complete the action, please try again.",
-      "noEdit": "This message cannot be edited from the platform; only a text you sent can be corrected, with a new «تصحيح» (correction) message."
+      "noEdit": "This message cannot be edited from the platform; only a text you sent can be corrected, with a new correction message."
     },
     "sticker": {
       "favourite": "Add to favourites",
@@ -3279,8 +3279,8 @@
       "action": "Edit",
       "bar": "Edit message",
       "cancel": "Cancel edit",
-      "prefix": "تصحيح: ",
-      "note": "A sent WhatsApp message cannot be edited; the family gets a new reply to it that starts with «تصحيح:» (correction).",
+      "prefix": "Correction: ",
+      "note": "A sent WhatsApp message cannot be edited; the family gets a new reply to it that starts with the Arabic word for «Correction:».",
       "mark": "Corrected",
       "jump": "Go to the correction",
       "errors": {
