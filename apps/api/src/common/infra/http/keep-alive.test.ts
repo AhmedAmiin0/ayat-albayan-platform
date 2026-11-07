@@ -10,7 +10,11 @@ afterEach(() => {
 
 describe('keep-alive dispatcher (docs/42 42-6)', () => {
   it('keeps idle sockets 20 s, below a 60 s server idle timeout', () => {
-    expect(KEEP_ALIVE).toEqual({ keepAliveTimeout: 20_000, keepAliveMaxTimeout: 60_000, connections: 32 });
+    expect(KEEP_ALIVE).toEqual({
+      keepAliveTimeout: 20_000,
+      keepAliveMaxTimeout: 60_000,
+      connections: 32,
+    });
     expect(keepAliveAgent()).toBeInstanceOf(Agent);
   });
 
