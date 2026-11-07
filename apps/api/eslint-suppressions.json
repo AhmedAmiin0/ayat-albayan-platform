@@ -4383,11 +4383,8 @@
     }
   },
   "src/modules/messaging/numbers/lines/numbers.health.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/numbers/lines/numbers.lines.ts": {
@@ -6254,7 +6251,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 13
+      "count": 9
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.controller.ts": {
@@ -6267,7 +6264,7 @@
   },
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.service.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-submit.ts": {
