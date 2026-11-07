@@ -15,7 +15,7 @@ const row = messageRow({
 
 describe('ForwardFiles.copy — an old-CRM file', () => {
   it('is cached through InboundMedia, copied to out/…, with no caption', async () => {
-    const storage = { copy: vi.fn().mockResolvedValue(undefined) };
+    const storage = { copy: vi.fn(async (c: { to: { path: string } }) => c.to.path) };
     const inbound = {
       loadChat: vi.fn().mockResolvedValue(row),
       cache: vi.fn().mockResolvedValue({ bucket: 'wa-media', path: 'm-crm-1.webp', mime: 'image/webp' }),

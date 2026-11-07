@@ -1,6 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { forgetReopens, useThreadReopen } from '@/inbox/composer/use-thread-reopen';
 import { useSendFile } from '@/inbox/composer/send-file';
 import { useSendStagedFile } from '@/inbox/saved-replies/hooks/send-staged';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
@@ -9,7 +8,7 @@ import { useForward } from './use-forward';
 import { useMessageAction, useSendMessage } from './use-thread';
 import { ApiError } from '@ab/client-core';
 
-// Every way a chat sends (text, template, quote, file, saved reply, forward, retry, reopen) goes
+// Every way a chat sends (text, template, quote, file, saved reply, forward, retry) goes
 // through the inbox refresh (owner 2026-10-27), and the ones that know their row touch the list. A
 // send into one chat refreshes its lists and its newest page only (refreshSent, docs/43 AU4).
 
@@ -85,12 +84,4 @@ test('a forward refreshes every chat; a retry refreshes its own', async () => {
   mockApiSend.mockResolvedValue(row);
   await run(() => useMessageAction(PHONE, 'retry'), 'm3');
   expect(refreshed).toHaveBeenCalledWith(expect.anything(), PHONE);
-});
-
-test('a queued reopen template refreshes the inbox like a send', async () => {
-  forgetReopens();
-  mockApiSend.mockResolvedValue({ template: 'template_queued' });
-  const client = createTestQueryClient();
-  await renderHook(() => useThreadReopen(PHONE, true), { wrapper: queryWrapper(client) });
-  await waitFor(() => expect(refreshed).toHaveBeenCalledWith(client, PHONE));
 });

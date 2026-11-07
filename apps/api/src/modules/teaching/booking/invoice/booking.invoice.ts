@@ -94,8 +94,9 @@ export class BookingInvoices {
     // Only the booked family's own chat: never copy another family's file (R-NFR-02).
     if (!a.phones.includes(msg.phone_e164)) throw bad('invoice_message');
     const from = await this.media.cache(msg);
-    const path = invoicePath({ requestId: a.requestId, name: chatName(msg.id, from.mime) });
-    await this.storage.copy({ from: { bucket: from.bucket, path: from.path }, to: { bucket: BUCKETS.invoices, path } });
+    const key = invoicePath({ requestId: a.requestId, name: chatName(msg.id, from.mime) });
+    const to = { bucket: BUCKETS.invoices, path: key };
+    const path = await this.storage.copy({ from: { bucket: from.bucket, path: from.path }, to });
     const info = await this.storage.info({ bucket: BUCKETS.invoices, path });
     if (!info) throw new Error('invoice copy is missing after copy');
     const saved = this.checked({ path, mime: from.mime, size_bytes: info.size }, a.maxBytes);

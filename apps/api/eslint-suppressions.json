@@ -984,17 +984,6 @@
       "count": 1
     }
   },
-  "src/common/storage/storage.service.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 10
-    }
-  },
   "src/common/student-ids.ts": {
     "ab/forbidden-imports": {
       "count": 1
@@ -3309,7 +3298,7 @@
   },
   "src/modules/messaging/inbox/files/pdf/pdf-preview.service.ts": {
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-render.spawn.test.ts": {
@@ -3565,7 +3554,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/people/thread-people.mapper.test.ts": {
@@ -3698,80 +3687,6 @@
       "count": 7
     },
     "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/kapso-reopener.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/kapso-reopener.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/messaging/inbox/reopen/reopen-params.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/reopen-template.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/modules/messaging/inbox/reopen/reopen.settings.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/thread-reopen.controller.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/messaging/inbox/reopen/thread-reopen.http.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/thread-reopen.kapso.http.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/thread-reopen.service.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/modules/messaging/inbox/reopen/thread-reopen.template.http.test.ts": {
-    "max-len": {
       "count": 1
     }
   },
@@ -10052,7 +9967,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/teaching/booking/invoice/invoice-sniff.ts": {
@@ -11294,7 +11209,7 @@
   },
   "src/modules/teaching/classroom/recordings/recording.starter.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/recordings/recordings.controller.ts": {

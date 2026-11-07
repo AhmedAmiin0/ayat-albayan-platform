@@ -1,6 +1,6 @@
 import type { SignedUpload } from '@ab/shared';
 import { apiSend } from '@/core/lib/http/api';
-import { supabase } from '@/core/lib/http/supabase';
+import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 
 /** The API signed the upload but Storage did not take the file. */
@@ -18,9 +18,7 @@ export async function uploadInvoice(requestId: string, receipt: Receipt): Promis
     mime: receipt.mime,
     size: receipt.size,
   });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, receipt.bytes, { contentType: receipt.mime });
+  const { error } = await uploadSigned(signed, { body: receipt.bytes, contentType: receipt.mime });
   if (error) throw new InvoiceUploadError(error.message);
   return signed.path;
 }

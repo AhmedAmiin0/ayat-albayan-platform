@@ -12,7 +12,7 @@ import { LessonEventsModule } from './common/infra/events/lesson-events';
 import { PublicConfigModule } from './common/configuration/public-config/public-config.module';
 import { PushModule } from './common/push/push.module';
 import { SettingsModule } from './common/settings/settings.module';
-import { StorageModule } from './common/storage/storage.service';
+import { StorageOpsModule } from '@/common/storage/probe';
 import { AvatarsModule } from './common/storage/avatars/avatars.module';
 import { BookingModule } from './modules/teaching/booking/booking.module';
 import { CoursePauseModule } from './modules/teaching/course-pause';
@@ -86,7 +86,7 @@ import { ScriptRelayModule } from './modules/messaging/whatsapp';
     CustomConfigModule,
     PublicConfigModule,
     TranslationsModule,
-    StorageModule,
+    StorageOpsModule,
     AvatarsModule,
     LessonEventsModule,
     PushModule,

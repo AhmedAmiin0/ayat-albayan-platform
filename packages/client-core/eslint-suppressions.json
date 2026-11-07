@@ -279,11 +279,6 @@
       "count": 8
     }
   },
-  "src/messaging/inbox/reopen-note.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/messaging/inbox/template-button.ts": {
     "max-len": {
       "count": 1

@@ -67,6 +67,8 @@ Owner: «I don't want to have this limitation of 24h» → «go build it» (the 
 
 **The rule.** Every Cloud API send on our chat number (Kapso) needs an open 24 h window for free text: the family's last message on the chat line must be under 24 h old. Meta: messages sent from the WhatsApp Business app are not subject to the customer service window and do not create, extend or affect Cloud API windows or pricing. Our chat number runs in **coexistence**: the same number is also in the WhatsApp Business app on a phone.
 
+**Only a send reopens (owner 2026-11-07, option 1).** Opening, scrolling, prefetching or reading a closed chat sends nothing: the reopen template is queued only by step 2 below, after a staff member pressed send (text, file, voice, quote, forward), and is audited as `thread_reopen_template` under that staff member (`ReopenAudit`). `POST /threads/:phone/reopen` (the old «إعادة فتح المحادثة» on open) stays for app builds that call it until their OTA update arrives, but only answers `window_open` / `on_send` and never queues a template or calls Kapso. Teacher mode keeps 409 `session_closed` after the window (unchanged).
+
 **Hold → reopen → release (the platform).** `apps/api/src/modules/messaging/whatsapp/sender/window/`.
 
 1. A staff text after the window is never sent as free text. It is **held**: `status = queued`, `error_code = awaiting_reply` («بانتظار رد العائلة»), up to 7 days (`HOLD_DAYS`).

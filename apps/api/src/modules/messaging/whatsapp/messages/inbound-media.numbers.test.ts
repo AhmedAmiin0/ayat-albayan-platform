@@ -15,7 +15,7 @@ const lineClient = () => ({ configured: vi.fn(() => true), getMedia: vi.fn().moc
 function setup(msg: MediaMessage) {
   const queries = { message: vi.fn().mockResolvedValue(msg), setPath: vi.fn().mockResolvedValue(undefined) };
   const lines = { notifications: lineClient(), chat: lineClient() };
-  const storage = { upload: vi.fn().mockResolvedValue(undefined) };
+  const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
   const media = new InboundMedia(queries as unknown as InboundMediaRepo, lines as unknown as WhatsappLines, storage as unknown as StorageService);
   return { media, lines, storage, queries };
 }

@@ -726,7 +726,7 @@
       "count": 9
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/finance/expenses/expense-columns.tsx": {
@@ -1897,13 +1897,13 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 15
+      "count": 14
     },
     "complexity": {
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/features/messaging/inbox/api/live.lifecycle.test.tsx": {
@@ -1965,11 +1965,8 @@
     "ab/module-boundaries": {
       "count": 2
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "no-nested-ternary": {
       "count": 2
@@ -2137,11 +2134,6 @@
   "src/features/messaging/inbox/composer/lib/use-reply-target.ts": {
     "max-len": {
       "count": 1
-    }
-  },
-  "src/features/messaging/inbox/composer/lib/use-thread-reopen.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/features/messaging/inbox/composer/quote/QuoteButton.tsx": {
@@ -3186,11 +3178,6 @@
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.reopen.test.tsx": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane.reply.test.tsx": {
@@ -4335,7 +4322,7 @@
       "count": 11
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/features/people/assistants/attribution.test.tsx": {
@@ -7403,7 +7390,7 @@
       "count": 12
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/reporting/reports/chart/ChartPoints.tsx": {

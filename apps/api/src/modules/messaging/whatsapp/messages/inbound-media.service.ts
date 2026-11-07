@@ -110,8 +110,8 @@ export class InboundMedia {
     if (file.bytes.byteLength > chatFileMaxBytes(mime)) {
       throw waHttpError('invoice_too_large', HttpStatus.PAYLOAD_TOO_LARGE);
     }
-    const path = waMediaPath({ messageId: msg.id, mime });
-    await this.storage.upload({ bucket: BUCKETS.waMedia, path, body: file.bytes, contentType: mime });
+    const key = waMediaPath({ messageId: msg.id, mime });
+    const path = await this.storage.upload({ bucket: BUCKETS.waMedia, path: key, body: file.bytes, contentType: mime });
     await this.queries.setPath(msg.id, path);
     return { bucket: BUCKETS.waMedia, path, mime };
   }

@@ -14,6 +14,7 @@ import { CALLS_SHAPE } from './env.calls';
 import { LOGIN_CODE_SHAPE } from './env.login-code';
 import { LIVEKIT_SHAPE } from './env.livekit';
 import { STRIPE_SHAPE } from './env.stripe';
+import { STORAGE_SHAPE } from './env.storage';
 
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider, isGraphEnv } from './whatsapp/env.whatsapp';
 export { lineGaps, duplicatePhone, bootGaps, DUPLICATE_CHAT_PHONE } from './env.gaps';
@@ -77,14 +78,13 @@ const schema = z.object({
    */
   EXPO_API_BASE: z.preprocess(blankIsUnset, z.url().optional()),
   ...WEB_PUSH_SHAPE,
-  ...CALLS_SHAPE,
-  ...GOOGLE_SHAPE,
+  ...CALLS_SHAPE, ...GOOGLE_SHAPE,
   /** HMAC key of the «رأيك يهمّنا» links (>= 32 chars, Vault). Unset = 503 not_configured, every public link refused. */
   FEEDBACK_TOKEN_SECRET: z.preprocess(blankIsUnset, z.string().min(32).optional()),
-  ...LOGIN_CODE_SHAPE,
-  ...LIVEKIT_SHAPE,
+  ...LOGIN_CODE_SHAPE, ...LIVEKIT_SHAPE,
   GIPHY_API_KEY: optionalSecret,
   ...STRIPE_SHAPE,
+  ...STORAGE_SHAPE,
   /** The outbound sender's tick in ms (default 30 s); e2e sets ~1 s, production leaves it unset. */
   MESSAGE_SENDER_POLL_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(200).optional()),
   /**

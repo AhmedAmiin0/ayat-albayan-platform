@@ -1,4 +1,4 @@
-import { RECEIPT_MIMES, type PaymentAttachmentView } from '@ab/shared';
+import { RECEIPT_MAX_BYTES, RECEIPT_MIMES, type PaymentAttachmentView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, isPathOf } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
@@ -22,6 +22,10 @@ const MIMES: ReadonlySet<string> = new Set(RECEIPT_MIMES);
  * attachment_in_use: one file, one payment). The older payments' single
  * receipt_path is shown as the first file (legacy). Rows cascade with the payment; objects are discarded.
  */
+/** There, and within the receipts bucket's own cap (MinIO has none, docs/45). */
+const fits = (info: { size: number } | null): info is { size: number } =>
+  info !== null && info.size <= RECEIPT_MAX_BYTES;
+
 @Injectable()
 export class PaymentAttachments {
   private readonly log = new Logger(PaymentAttachments.name);
@@ -85,7 +89,7 @@ export class PaymentAttachments {
   private async checkOne(path: string): Promise<CheckedAttachment> {
     const ref = { bucket: BUCKETS.receipts, path };
     const info = await this.storage.info(ref);
-    if (!info) throw badRequest('attachment_path', { path });
+    if (!fits(info)) throw badRequest('attachment_path', { path });
     const mime = sniffMime((await this.storage.head(ref, SNIFF_BYTES)) ?? new Uint8Array());
     if (!mime || !MIMES.has(mime)) throw badRequest('attachment_type', { path });
     return { path, mime, size: info.size > 0 ? info.size : null };

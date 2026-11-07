@@ -8,6 +8,7 @@ import type { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/ca
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { KapsoHold } from './kapso-hold';
 import type { AppSendExpiry, ReopenCancel } from './manual-send';
+import type { ReopenAudit } from './reopen-audit';
 import type { ReopenRow } from './reopen-state';
 import { ReopenRequest } from './reopen-request';
 import { WindowHold } from './window-hold';
@@ -51,7 +52,7 @@ const WELCOME = toTemplateView(templateRow(STARTER));
 export function windowFakes() {
   const repo = {
     reopens: vi.fn(async (): Promise<ReopenRow[]> => []),
-    queueReopen: vi.fn(async () => undefined),
+    queueReopen: vi.fn(async (): Promise<string | null> => 'reopen-1'),
     hold: vi.fn(async () => true),
     note: vi.fn(async () => undefined),
     fail: vi.fn(async () => undefined),
@@ -72,6 +73,8 @@ export function windowFakes() {
     settings as unknown as WindowSettings,
     cancels as unknown as ReopenCancel,
   );
+  const audit = { record: vi.fn(async () => undefined) };
+  request.audit = audit as unknown as ReopenAudit;
   const expiry = { run: vi.fn(async () => 0) };
   const release = new WindowRelease(asRepo, expiry as unknown as AppSendExpiry);
   const hold = new WindowHold(
@@ -82,7 +85,8 @@ export function windowFakes() {
   );
   const kapso = { reopen: vi.fn(async (): Promise<string | null> => null) };
   hold.kapso = kapso as unknown as KapsoHold;
-  return { repo, approved, settings, dispatch, hold, request, release, kapso, cancels, expiry };
+  const parts = { repo, approved, settings, dispatch, cancels, expiry, audit };
+  return { ...parts, hold, request, release, kapso };
 }
 
 /** A reopen template row of PHONE (today, 2026-11-03 in Riyadh), as WindowRepo.reopens reads it. */

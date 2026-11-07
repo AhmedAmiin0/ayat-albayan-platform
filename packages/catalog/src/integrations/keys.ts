@@ -4,9 +4,10 @@
 // server env, which stays the fallback. Every other env key (PORT, SUPABASE_*, …) stays in env.
 
 import { GROUP_OF } from './keys.groups.js';
+import { STORAGE_DRIVERS, STORAGE_PLAIN_KEYS } from './storage.js';
 
 /** The form's groups, in page order. */
-export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'evolution', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google', 'giphy', 'stripe'] as const;
+export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'evolution', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google', 'giphy', 'storage', 'stripe'] as const;
 export type IntegrationGroup = (typeof INTEGRATION_GROUPS)[number];
 
 export const INTEGRATION_PLAIN_KEYS = [
@@ -37,6 +38,7 @@ export const INTEGRATION_PLAIN_KEYS = [
   'GOOGLE_CLIENT_ID',
   'STRIPE_ENABLED',
   'STRIPE_MAX_DISCOUNT_PCT',
+  ...STORAGE_PLAIN_KEYS,
 ] as const;
 
 /** Never returned, logged or audited: only their names and whether they are set. */
@@ -60,6 +62,7 @@ export const INTEGRATION_SECRET_KEYS = [
   'GIPHY_API_KEY',
   'STRIPE_API_KEY',
   'STRIPE_WEBHOOK_SECRET',
+  'MINIO_SECRET_KEY',
 ] as const;
 
 export type IntegrationPlainKey = (typeof INTEGRATION_PLAIN_KEYS)[number];
@@ -105,6 +108,7 @@ export const INTEGRATION_ENUMS: Partial<Record<IntegrationPlainKey, readonly str
   // A switch, not a word to type (docs/23a §E H3): the select shows «مفعّلة» / «متوقفة».
   WA_TEMPLATE_SYNC: ['true', 'false'],
   STRIPE_ENABLED: ['false', 'true'], // «الدفع الإلكتروني» (docs/30): off by default.
+  STORAGE_DRIVER: STORAGE_DRIVERS, // docs/45: supabase until an admin switches (the cut-over).
 };
 
 /** The allowed values of an enum key, or null for a free-text key. */

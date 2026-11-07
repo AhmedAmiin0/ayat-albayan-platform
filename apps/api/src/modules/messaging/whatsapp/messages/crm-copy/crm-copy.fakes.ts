@@ -81,7 +81,7 @@ export function copyWorld(seed: MediaMessage[], values: Partial<AcademySettings>
     }),
   };
   const objects = new Map<string, number>();
-  const storage = { upload: vi.fn(async (o: { path: string; body: Uint8Array }) => void objects.set(o.path, o.body.byteLength)) };
+  const storage = { upload: vi.fn(async (o: { path: string; body: Uint8Array }) => (objects.set(o.path, o.body.byteLength), o.path)) };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
   const settings = liveStore({ crm_media_copy_all: true, crm_media_host: CRM_HOST, ...values });

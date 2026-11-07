@@ -1,6 +1,6 @@
 import { baseMime, isReactionPayload, reactionRef, waSendKind, type TemplateDocument, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { BUCKETS, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
+import { BUCKETS, isSentFilePath, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { allowedRecipients, loadEnv, recipientAllowed } from '@/config/env/env';
 import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
@@ -37,7 +37,7 @@ export async function documentLink(storage: StorageService, doc: TemplateDocumen
  * every try. Only wa-media paths under out/ are ever signed: never an inbound cache, never a report.
  */
 export async function mediaLink(storage: StorageService, path: string): Promise<string> {
-  if (!path.startsWith('out/') || path.split('/').includes('..')) throw new WaError(`media path ${path} is not a sent file`, { code: 100, status: 0 });
+  if (!isSentFilePath(path)) throw new WaError(`media path ${path} is not a sent file`, { code: 100, status: 0 });
   const signed = await storage.signedDownload({ bucket: BUCKETS.waMedia, path, seconds: SIGNED_URL_SECONDS.whatsapp });
   return signed.url;
 }

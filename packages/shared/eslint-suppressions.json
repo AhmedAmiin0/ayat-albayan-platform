@@ -112,7 +112,7 @@
   },
   "src/messaging/chat/thread-reopen.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/messaging/chat/ticks.ts": {

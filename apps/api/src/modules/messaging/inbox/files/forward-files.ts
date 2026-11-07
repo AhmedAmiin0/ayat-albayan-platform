@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
 import { baseMime, isChatViewMime, isStickerMessage, stickerPayloadOf } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { BUCKETS, forwardOutPath } from '@/common/storage/storage.paths';
+import { BUCKETS, forwardOutPath, isSentFilePath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { isCrmHistoryRow } from '@/modules/messaging/whatsapp';
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
@@ -60,8 +60,9 @@ export class ForwardFiles {
   async copy(row: ThreadMessageRow, at: { actorId: string; requestId: string }): Promise<ForwardFile> {
     const from = await this.source(row);
     const mime = baseMime(from.mime);
-    const path = forwardOutPath({ ...at, messageId: row.id, mime });
-    await this.storage.copy({ from: { bucket: BUCKETS.waMedia, path: from.path }, to: { bucket: BUCKETS.waMedia, path } });
+    const key = forwardOutPath({ ...at, messageId: row.id, mime });
+    const to = { bucket: BUCKETS.waMedia, path: key };
+    const path = await this.storage.copy({ from: { bucket: BUCKETS.waMedia, path: from.path }, to });
     return { path, mime, name: fileName(row, path), caption: caption(row), ...stickerOf(row) };
   }
 
@@ -85,7 +86,7 @@ export class ForwardFiles {
 
   /** Ours as sent (out/…); else theirs or an echo of the WhatsApp Business app (Meta's media id), cached first. */
   private async source(row: ThreadMessageRow): Promise<{ path: string; mime: string | null }> {
-    if (row.direction === 'outbound' && row.media_path?.startsWith('out/')) return { path: row.media_path, mime: row.media_mime };
+    if (row.direction === 'outbound' && row.media_path && isSentFilePath(row.media_path)) return { path: row.media_path, mime: row.media_mime };
     if (row.direction === 'outbound' && (!row.media_id || !isChatViewMime(row.media_mime))) throw notForwardable();
     if (!this.inbound) throw new Error('InboundMedia is not provided');
     const file = await this.inbound.cache(await this.inbound.loadChat(row.id));

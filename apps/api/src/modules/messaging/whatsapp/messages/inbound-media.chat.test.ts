@@ -25,7 +25,7 @@ const msg = (over: Partial<MediaMessage> = {}): MediaMessage => ({
 function setup(row: MediaMessage, size = 3) {
   const queries = { message: vi.fn().mockResolvedValue(row), setPath: vi.fn().mockResolvedValue(undefined) };
   const client = { getMedia: vi.fn().mockResolvedValue({ bytes: new Uint8Array(size), mime: 'x' }) };
-  const storage = { upload: vi.fn().mockResolvedValue(undefined) };
+  const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
   const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
   const media = new InboundMedia(queries as unknown as InboundMediaRepo, lines, storage as unknown as StorageService);
   return { media, storage, queries };
