@@ -91,3 +91,12 @@ export async function readRows(
   });
   return new Map((await Promise.all(pages)).flat().map((m) => [m.id, m]));
 }
+
+/** The chats-list rows whose last message is one of `ids` (a live tick moves their tick). */
+export async function readThreadsOf(port: SqlPort, ids: readonly string[]): Promise<ThreadView[]> {
+  const pages = chunks(ids).map(async (part) => {
+    const sql = `select json from threads where last_message_id in (${part.map(() => '?').join(',')})`;
+    return threadRows.parse(await port.all(sql, part)).map((r) => r.json);
+  });
+  return (await Promise.all(pages)).flat();
+}

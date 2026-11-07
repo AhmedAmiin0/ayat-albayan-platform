@@ -1,9 +1,16 @@
-import { mergeRead, type SyncPlan, type SyncState } from '@ab/client-core';
-import type { MessageView, SyncMessage } from '@ab/shared';
+import {
+  applyLiveRows,
+  laterStatus,
+  type LiveRow,
+  mergeRead,
+  type SyncPlan,
+  type SyncState,
+} from '@ab/client-core';
+import type { MessageStatus, MessageView, SyncMessage } from '@ab/shared';
 import type { SqlPort } from './sql-port';
 import { changedPhones, type StoreChange } from './store-change';
-import { readHeld, readRows, readState } from './store-read';
-import { writePlan, writeRows } from './store-write';
+import { readHeld, readRows, readState, readThreadsOf } from './store-read';
+import { writePlan, writeRows, writeThreads } from './store-write';
 
 // The store's guarded writes (docs/43 43-6): each runs only for the owner it was made for, and a
 // sync plan only over the mark it was planned from (compare-and-set).
@@ -62,9 +69,51 @@ export async function putFor(
 ): Promise<StoreChange | null> {
   if (!(await owns(port, at.owner))) return null;
   const live = rows.filter((m) => !at.gone.has(m.id));
-  const held = await readRows(port, live.map((m) => m.id));
+  const held = await readRows(
+    port,
+    live.map((m) => m.id),
+  );
   const same = (m: SyncMessage) => sameRow(m, held.get(m.id));
   const merged = live.map((m) => mergeRead(held.get(m.id), m)).filter((m) => !same(m));
   await port.transaction(() => writeRows(port, merged));
   return new Set(merged.map((m) => m.phone_e164));
+}
+
+/** A live write: the chats it changed (null: not `owner`'s), and whether it held every row. */
+export interface LiveWrite {
+  change: StoreChange | null;
+  complete: boolean;
+}
+
+/**
+ * A realtime event's ticks (docs/44 K1) for `owner`: each stored row of chat `phone` among `rows`
+ * takes the incoming status by laterStatus, and so does a chats-list row whose last message it is.
+ * Only the tick moves (updated_at stays: the next sync still lands the server's row over it).
+ */
+export async function liveFor(
+  port: SqlPort,
+  rows: readonly LiveRow[],
+  at: { owner: string; phone: string },
+): Promise<LiveWrite> {
+  if (!(await owns(port, at.owner))) return { change: null, complete: false };
+  const held = await readRows(
+    port,
+    rows.map((r) => r.id),
+  );
+  const ours = [...held.values()].filter((m) => m.phone_e164 === at.phone);
+  const statuses = new Map(ours.map((m) => [m.id, m.status]));
+  const { incoming, complete } = applyLiveRows(rows, (id) => statuses.get(id));
+  const next = (id: string, status: MessageStatus) =>
+    laterStatus(status, incoming.get(id) ?? status);
+  const moved = ours
+    .filter((m) => next(m.id, m.status) !== m.status)
+    .map((m) => ({ ...m, status: next(m.id, m.status) }));
+  const lists = (await readThreadsOf(port, [...incoming.keys()]))
+    .filter((t) => next(t.last_message_id, t.last_status) !== t.last_status)
+    .map((t) => ({ ...t, last_status: next(t.last_message_id, t.last_status) }));
+  await port.transaction(async () => {
+    await writeRows(port, moved);
+    await writeThreads(port, lists);
+  });
+  return { change: new Set([...moved, ...lists].map((r) => r.phone_e164)), complete };
 }

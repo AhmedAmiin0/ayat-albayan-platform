@@ -56,3 +56,8 @@ export async function writePlan(port: SqlPort, plan: SyncPlan): Promise<void> {
 export async function writeRows(port: SqlPort, rows: readonly SyncMessage[]): Promise<void> {
   for (const m of rows) await port.run(UPSERT_MESSAGE, messageValues(m));
 }
+
+/** Chats-list rows (a live tick on their last message): inserted or replaced by phone. */
+export async function writeThreads(port: SqlPort, threads: readonly ThreadView[]): Promise<void> {
+  for (const t of threads) await port.run(UPSERT_THREAD, threadValues(t));
+}

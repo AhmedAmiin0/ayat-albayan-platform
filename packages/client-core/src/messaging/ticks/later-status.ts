@@ -13,6 +13,9 @@ const RANK: Record<MessageStatus, number | null> = {
   sent_manually: null,
 };
 
+/** On the ranked path (queued < sent < delivered < read): not failed, not sent by hand. */
+export const isRanked = (status: MessageStatus): boolean => RANK[status] !== null;
+
 /** Both statuses are on the ranked path and `status` is further along it than `than`. */
 export function ranksAbove(status: MessageStatus, than: MessageStatus): boolean {
   const a = RANK[status];

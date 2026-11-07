@@ -1,7 +1,14 @@
-import { chatLiveKey, connectInboxLive, createInboxLive, createLiveSession, INBOX_HIDDEN_LEAVE_MS } from '@ab/client-core';
+import {
+  chatLiveKey,
+  connectInboxLive,
+  createInboxLive,
+  createLiveSession,
+  INBOX_HIDDEN_LEAVE_MS,
+} from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useSyncExternalStore } from 'react';
 import { supabase } from '@/lib/http/supabase';
+import { patchLiveCaches } from './live-patch';
 
 /**
  * The inbox's realtime nudge on the web (docs/12 §15), shared logic in @ab/client-core: the private
@@ -49,12 +56,22 @@ export function useInboxRealtime(enabled: boolean): void {
         // flight started before this change: cancelled, never joined (docs/43 AU1; throttled 3 s).
         list: () => {
           const filters = { queryKey: ['threads', 'list'], type: 'active' } as const;
-          if (document.visibilityState === 'visible') void client.refetchQueries(filters, { cancelRefetch: true });
+          if (document.visibilityState === 'visible')
+            void client.refetchQueries(filters, { cancelRefetch: true });
         },
-        badge: () => void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false }),
+        badge: () =>
+          void client.invalidateQueries(
+            { queryKey: ['threads', 'nav-count'] },
+            { cancelRefetch: false },
+          ),
+        // docs/44 K1: the event's ticks straight into the caches; an unknown id still re-reads.
+        rows: (phone, rows) => patchLiveCaches(client, phone, rows),
       });
     const session = createLiveSession(open, inboxLive.resync);
-    const shown = () => (document.visibilityState === 'hidden' ? session.pause(INBOX_HIDDEN_LEAVE_MS) : session.resume());
+    const shown = () =>
+      document.visibilityState === 'hidden'
+        ? session.pause(INBOX_HIDDEN_LEAVE_MS)
+        : session.resume();
     if (document.visibilityState !== 'hidden') session.resume(); // a tab opened in the background joins when shown
     document.addEventListener('visibilitychange', shown);
     return () => {

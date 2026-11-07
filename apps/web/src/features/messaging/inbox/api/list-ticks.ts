@@ -39,11 +39,12 @@ export function useThreads(s: InboxSearch) {
   return useQuery({ ...options, select: (page) => overlayPage(page, chatTicks(client, since())) });
 }
 
-/** A list's ticks written in place: its time and its «stale» mark stay (it was not read again). */
-function writeTicks(client: QueryClient, queryKey: QueryKey, page: ListPage): void {
+/** Ticks written in place: the cache's time and its «stale» mark stay (it was not read again). */
+export function writeTicks(client: QueryClient, queryKey: QueryKey, data: unknown): void {
   const state = client.getQueryState(queryKey);
-  client.setQueryData(queryKey, page, { updatedAt: state?.dataUpdatedAt });
-  if (state?.isInvalidated) void client.invalidateQueries({ queryKey, exact: true, refetchType: 'none' });
+  client.setQueryData(queryKey, data, { updatedAt: state?.dataUpdatedAt });
+  if (state?.isInvalidated)
+    void client.invalidateQueries({ queryKey, exact: true, refetchType: 'none' });
 }
 
 /**

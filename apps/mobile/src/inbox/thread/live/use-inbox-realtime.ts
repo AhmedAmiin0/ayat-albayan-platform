@@ -1,14 +1,31 @@
-import { connectInboxLive, createLiveSession, INBOX_INACTIVE_LEAVE_MS, type LiveTargets } from '@ab/client-core';
+import {
+  connectInboxLive,
+  createLiveSession,
+  INBOX_INACTIVE_LEAVE_MS,
+  isRanked,
+  type LiveRow,
+  type LiveTargets,
+} from '@ab/client-core';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 import { supabase } from '@/core/lib/http/supabase';
 import { queryClient as client } from '@/core/lib/query/query-client';
-import { nudgeInboxStore } from '@/inbox/thread/local/store-session';
+import { nudgeInboxStore, patchInboxStore } from '@/inbox/thread/local/store-session';
 import { refreshOpenChat } from './live-refresh';
 import { inboxLive } from './inbox-live';
 import { changeLists } from './list-marks';
 
 const active = () => AppState.currentState === 'active';
+
+/**
+ * docs/44 K1: an event's ticks go straight into the phone store, which the chat and the list read
+ * (their ranked overlay: no HTTP). failed / sent by hand are written too but still re-read: the
+ * overlay shows only the ranked path. An unknown id (a new message) re-reads as before.
+ */
+async function patchStore(phone: string, rows: readonly LiveRow[]): Promise<boolean> {
+  const whole = await patchInboxStore(phone, rows);
+  return whole && rows.every((r) => isRanked(r.s));
+}
 
 /** An event re-reads the open chat, the chats list and the badge; never while the app is not active. */
 // Every event also syncs the phone store (docs/43 43-7; its engine throttles to one a second).
@@ -25,8 +42,13 @@ const targets: LiveTargets = {
   },
   badge: () => {
     nudgeInboxStore();
-    if (active()) void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false });
+    if (active())
+      void client.invalidateQueries(
+        { queryKey: ['threads', 'nav-count'] },
+        { cancelRefetch: false },
+      );
   },
+  rows: patchStore,
 };
 
 /**

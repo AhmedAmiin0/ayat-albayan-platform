@@ -9225,15 +9225,12 @@
   },
   "src/features/teaching/booking/steps/slots/SlotDays.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/teaching/booking/steps/slots/SlotStep.tsx": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1

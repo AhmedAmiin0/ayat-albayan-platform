@@ -34,7 +34,7 @@ Repeat-fix chains seen in git (root cause still open): chat liveness ef719398 �
 | Failed bubble stays with retry | mobile removes it, web never showed one | **K3** |
 | List from a summary table | list re-aggregates all of `messages` (`v_threads`, 984); 30 biggest phones took 430 ms (docs/37) | **K4** |
 
-**K1 payload** (migration `20261106000810_inbox_live_rows.sql`): the statement trigger aggregates per phone
+**K1 payload** (built: migration `20261107000200_inbox_live_rows.sql`): the statement trigger aggregates per phone
 `{phone, rows:[{id, s:status, d:direction, at:created_at}]}`, ≤20 rows, else `{phone}` only. No body, no names, no
 params. Rows that NOT every `inbox:staff` reader may see are sent as `{phone}` only (no id): link templates
 (`template_key` in `LINK_TEMPLATES`, hidden from sales — `sales-threads.ts:5-9`), staff-hidden rows (`hidden_at`),

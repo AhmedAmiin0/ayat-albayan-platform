@@ -1,4 +1,11 @@
-export { type ChatPages, laterStatus, laterTick, laterTicks, ranksAbove } from './later-status.js';
+export {
+  type ChatPages,
+  isRanked,
+  laterStatus,
+  laterTick,
+  laterTicks,
+  ranksAbove,
+} from './later-status.js';
 export {
   chatStatus,
   overlayPage,
