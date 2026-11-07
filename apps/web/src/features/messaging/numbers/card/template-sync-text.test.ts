@@ -36,7 +36,11 @@ describe('the number card’s sync in words', () => {
     expect(syncErrorText(new ApiError(403, { code: 'allow_list_only' }))).toBe(
       failed(s.errors.allow_list_only),
     );
-    expect(syncErrorText(new ApiError(403, { message: 'forbidden' }))).toBe(
+    // Nest's real body for a missing permission (AuthGuard's bare ForbiddenException).
+    expect(syncErrorText(new ApiError(403, { statusCode: 403, message: 'Forbidden' }))).toBe(
+      failed(s.errors.forbidden),
+    );
+    expect(syncErrorText(new ApiError(403, { code: 'account_disabled' }))).toBe(
       failed(s.errors.forbidden),
     );
     expect(

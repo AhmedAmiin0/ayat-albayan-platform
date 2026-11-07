@@ -36,10 +36,15 @@ export function syncCodeText(code: string | undefined, detail?: string): string 
   return s.failed.replace('{{error}}', text.replace('{{message}}', detail ?? '—'));
 }
 
+/** Nest's bare 403 (`{ message: 'Forbidden' }`, a permission lost mid-session): «forbidden». */
+const refusedAs = (error: unknown, code: string | undefined): string | undefined =>
+  ERRORS[code ?? ''] || !(error instanceof ApiError && error.status === 403) ? code : 'forbidden';
+
 /** A refused sync call (403 guard, 404, 409, 502…) in words. */
 export function syncErrorText(error: unknown): string {
   const body = bodyOf(error);
-  return syncCodeText(body.code ?? body.message, body.scope ?? body.meta_message);
+  const code = refusedAs(error, body.code ?? body.message);
+  return syncCodeText(code, body.scope ?? body.meta_message);
 }
 
 /** A sync's answer: what it found (naming the line when the line's sync ran), or why it failed. */
