@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { B, names, roomOf, setup } from './backup-run.fakes';
 
 // docs/45 §5.1, verification item 1: one object larger than the night's room never blocks the
-// objects after it, and never seals a full that lacks it.
+// objects after it; it is named every night and does not keep a full from sealing (round 4).
 
 const MB = 1024 ** 2;
 
 describe('an object larger than tonight’s room', () => {
-  it('is skipped and named; later objects still go; the full stays open', async () => {
+  it('is skipped and named; later objects still go; the full seals without it', async () => {
     const t = await setup();
     let room = 3 * MB;
     roomOf(t.drive, () => room);
@@ -15,16 +15,14 @@ describe('an object larger than tonight’s room', () => {
     t.minio.set({ bucket: B.reports, key: 'big.pdf', body: Buffer.alloc(4 * MB, 7) });
     t.minio.set({ bucket: B.reports, key: 'c.pdf', body: 'c' });
     const first = await t.night('2026-11-07');
-    expect(first).toMatchObject({ objects: 2, tooLarge: ['reports/big.pdf'], sealed: false });
-    const again = await t.night('2026-11-08');
-    expect(again).toMatchObject({ kind: 'full', label: '2026-W45', objects: 0, sealed: false });
-    expect(again.tooLarge).toEqual(['reports/big.pdf']);
+    expect(first).toMatchObject({ kind: 'full', objects: 2, sealed: true });
+    expect(first.tooLarge).toEqual([{ id: 'reports/big.pdf', size: 4 * MB, why: 'room' }]);
     room = 50 * MB;
-    const done = await t.night('2026-11-09');
-    expect(done).toMatchObject({ kind: 'full', objects: 1, tooLarge: [], sealed: true });
+    const next = await t.night('2026-11-08');
+    expect(next).toMatchObject({ kind: 'incr', objects: 1, tooLarge: [] });
     expect(names(t.drive, t.folderId)).toEqual([
       'full-2026-W45.tar.zst',
-      'full-2026-W45.p2.tar.zst',
+      'incr-2026-11-08.tar.zst',
     ]);
   });
 

@@ -15,7 +15,8 @@ import { partOrSkip } from './one-part';
 import { DriveFull } from './quota';
 import { fitsNow, roomFor } from './room';
 import { finishFull } from '@/modules/platform/drive-backup/run/cleanup/seal';
-import { added, emptySummary, sealable, soloFailed, type RunSummary } from './summary';
+import { added, emptySummary, sealable, soloFailed, tooLargeItems } from './summary';
+import type { RunSummary } from './summary';
 
 export type { RunSummary } from './summary';
 
@@ -68,7 +69,7 @@ async function uploadAll(
 /**
  * The night after its clean-up: decide the archive, list what is new or changed against the base,
  * make room (an open full retires the oldest sealed full early), skip what is larger than the
- * room, upload the rest in parts, then seal a complete full and apply retention.
+ * room or the night's cap, upload the rest in parts, then seal a complete full and apply retention.
  */
 async function backUp(deps: RunDeps, input: { folderId: string; now: Date }) {
   const { folderId } = input;
@@ -79,7 +80,7 @@ async function backUp(deps: RunDeps, input: { folderId: string; now: Date }) {
   if (room < partCost([])) throw new DriveFull();
   const { parts, left, tooLarge } = planParts(todo, deps.caps, room);
   const last = await deps.store.lastPart({ folderId, kind: plan.kind, label: plan.label });
-  const ids = { left: left.map(objectId), tooLarge: tooLarge.map(objectId) };
+  const ids = { left: left.map(objectId), tooLarge: tooLargeItems(tooLarge) };
   const start = { ...emptySummary(plan), ...ids, trashed };
   const night = { ...input, plan, first: last + 1 };
   const sum = await uploadAll(deps, night, { work: workOf(plan, parts), sum: start });

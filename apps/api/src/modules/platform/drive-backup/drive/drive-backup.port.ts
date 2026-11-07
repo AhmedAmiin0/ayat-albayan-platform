@@ -44,9 +44,14 @@ export interface ChunkInput {
 export interface RemoveInput {
   fileId: string;
   folderId: string;
+  /** Retention only: a file a person moved to Drive's trash is deleted too (else it is kept). */
+  trashedToo?: boolean;
 }
-/** gone: already not on Drive (404); foreign: not the backup's own archive, left alone. */
-export type Removed = 'deleted' | 'gone' | 'foreign';
+/**
+ * gone: already not on Drive (404); foreign: not the backup's own archive, left alone; kept: in
+ * Drive's trash (a person may restore it for 30 days), left alone outside retention.
+ */
+export type Removed = 'deleted' | 'gone' | 'foreign' | 'kept';
 
 export interface DriveBackupApi {
   quota(): Promise<DriveQuota>;

@@ -1,6 +1,22 @@
 import type { RunPlan } from '@/modules/platform/drive-backup/plan/archive.types';
+import {
+  objectId,
+  type TooLarge,
+  type TooLargeWhy,
+} from '@/modules/platform/drive-backup/plan/parts';
 import type { PartDone } from './one-part';
 import type { SkipReason } from './part-stream';
+
+/** An object never sent tonight (plan/parts.ts): named in the alert with its size and why. */
+export interface TooLargeItem {
+  /** `bucket/key`. */
+  id: string;
+  size: number;
+  why: TooLargeWhy;
+}
+
+export const tooLargeItems = (list: readonly TooLarge[]): TooLargeItem[] =>
+  list.map((t) => ({ id: objectId(t.object), size: t.object.size, why: t.why }));
 
 export interface RunSummary {
   kind: RunPlan['kind'];
@@ -10,8 +26,8 @@ export interface RunSummary {
   skipped: number;
   /** Skipped objects that still exist (a failed read, a new version): their full stays open. */
   unread: number;
-  /** `bucket/key` of the objects larger than tonight's room (skipped; named in the alert). */
-  tooLarge: string[];
+  /** Objects above tonight's room or the night's cap (skipped; named in the alert). */
+  tooLarge: TooLargeItem[];
   rawBytes: number;
   compressedBytes: number;
   /** `bucket/key` of the objects left for the next night (the run's cap, or no room). */
@@ -57,10 +73,10 @@ export const soloFailed = (sum: RunSummary): RunSummary => ({
 });
 
 /**
- * A full is sealed only when it holds every object: nothing left for the next night, nothing too
- * large for the room and no object skipped while it still exists (a vanished one is fine).
- * Otherwise it stays open and the next night continues it, so the restore never takes a full that
- * lacks an object it should hold (one open too long is reported as frozen: plan/frozen.ts).
+ * A full is sealed when nothing is left for the next night and no object was skipped while it
+ * still exists (a vanished one is fine). A too-large object does not keep it open: it is named in
+ * the alert every night instead, so the backup of everything else keeps moving. Otherwise the
+ * full stays open and the next night continues it (one open too long: plan/frozen.ts).
  */
 export const sealable = (plan: Pick<RunPlan, 'kind'>, sum: RunSummary): boolean =>
-  plan.kind === 'full' && sum.left.length === 0 && sum.unread === 0 && sum.tooLarge.length === 0;
+  plan.kind === 'full' && sum.left.length === 0 && sum.unread === 0;

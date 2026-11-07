@@ -31,6 +31,7 @@ describe('a frozen backup (verification item 1)', () => {
   it.each([
     [{ tooLarge: 1, unread: 0, error: null }, 'too_large'],
     [{ tooLarge: 0, unread: 2, error: null }, 'unread'],
+    [{ tooLarge: 1, unread: 2, error: null }, 'unread'],
     [{ tooLarge: 1, unread: 0, error: 'drive_full' }, 'drive_full'],
     [{ tooLarge: 0, unread: 0, error: 'other' }, 'failed'],
     [{ tooLarge: 0, unread: 0, error: null }, 'incomplete'],

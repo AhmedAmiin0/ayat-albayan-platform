@@ -39,7 +39,7 @@ export async function reportNight(
   await data.state.save({ last_run_at: now.toISOString(), last_error: null });
   await reportLeft(data, { now, left: sum.left });
   if (sum.skipped > 0) await data.alerts.skipped({ count: sum.skipped, now });
-  if (sum.tooLarge.length > 0) await data.alerts.tooLarge({ names: sum.tooLarge, now });
+  if (sum.tooLarge.length > 0) await data.alerts.tooLarge({ items: sum.tooLarge, now });
   const outcome = { tooLarge: sum.tooLarge.length, unread: sum.unread, error: null };
   await reportFrozen(data, { folderId: input.folderId, now, outcome });
 }

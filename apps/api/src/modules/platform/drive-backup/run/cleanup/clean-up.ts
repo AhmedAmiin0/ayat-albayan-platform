@@ -12,11 +12,13 @@ export async function cleanUp(deps: RunDeps, night: { folderId: string; now: Dat
   const { folderId } = night;
   await deps.store.abandon(folderId);
   const failed = await retire(deps, night, orphans(await deps.store.archives(folderId)));
-  const due = await retire(deps, { folderId }, toTrash(await deps.store.archives(folderId)));
+  const retention = { folderId, retention: true };
+  const due = await retire(deps, retention, toTrash(await deps.store.archives(folderId)));
   return failed + due;
 }
 
 /** The oldest sealed full and its chain, retired early (retention.ts retireEarly); 0: none. */
 export async function retireOldest(deps: RunDeps, folderId: string): Promise<number> {
-  return retire(deps, { folderId }, retireEarly(await deps.store.archives(folderId)));
+  const retention = { folderId, retention: true };
+  return retire(deps, retention, retireEarly(await deps.store.archives(folderId)));
 }

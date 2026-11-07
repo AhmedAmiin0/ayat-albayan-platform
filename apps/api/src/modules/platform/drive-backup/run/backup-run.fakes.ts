@@ -1,6 +1,6 @@
 import { Readable } from 'node:stream';
 import { zstdDecompressSync } from 'node:zlib';
-import { BUCKETS } from '@/common/storage/storage.paths';
+import { BUCKETS, type Bucket } from '@/common/storage/storage.paths';
 import { readTar } from '@/modules/platform/drive-backup/archive/tar-read';
 import { FakeDrive } from '@/modules/platform/drive-backup/drive/drive-backup.fakes';
 import { partCost } from '@/modules/platform/drive-backup/plan/cost';
@@ -23,7 +23,7 @@ export async function setup(caps: Caps = DEFAULT_CAPS) {
   const minio = new FakeMinio();
   const store = new MemoryStore();
   const folderId = await drive.createFolder('backup');
-  const buckets = [B.reports, B.receipts, B.avatars];
+  const buckets: Bucket[] = [B.reports, B.receipts, B.avatars];
   const deps = { store, api: drive, source: minio, buckets, caps, wait: () => Promise.resolve() };
   /** Runs the backup of the night of `day` (01:00 UTC). */
   const night = (day: string) => {

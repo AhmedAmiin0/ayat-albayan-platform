@@ -30,7 +30,7 @@ describe('a write whose answer was lost', () => {
     expect(t.drive.live(t.folderId)).toHaveLength(1);
   });
 
-  it('a part whose Drive file is gone is not sealed on: retired, sent again, then sealed', async () => {
+  it('a part whose Drive file is gone is not sealed on: marked, sent again, then sealed', async () => {
     const t = await setup();
     t.minio.set({ bucket: B.reports, key: 'a.pdf', body: 'a' });
     const finish = t.store.finish.bind(t.store);
@@ -38,7 +38,9 @@ describe('a write whose answer was lost', () => {
       await finish(input);
       t.drive.files.delete(input.fileId); // the file vanished after the row was done
     };
-    expect(await t.night('2026-11-07')).toMatchObject({ kind: 'full', sealed: false, trashed: 1 });
+    expect(await t.night('2026-11-07')).toMatchObject({ kind: 'full', sealed: false, trashed: 0 });
+    expect(t.store.rows[0]?.status).toBe('trashed');
+    expect(t.drive.log).not.toContain('remove');
     t.store.finish = finish;
     expect(await t.night('2026-11-08')).toMatchObject({ kind: 'full', objects: 1, sealed: true });
   });

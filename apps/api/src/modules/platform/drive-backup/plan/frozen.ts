@@ -15,7 +15,7 @@ export type FrozenReason = (typeof FROZEN_REASONS)[number];
 
 /**
  * When the open full started (its first part), if that is more than 3 nights ago; else null. A
- * full that cannot seal (an object larger than the room, unreadable objects, Drive full) never
+ * full that cannot seal (unreadable objects, Drive full, failing nights) never
  * goes quiet: the status line and the alert say so.
  */
 export function frozenSince(rows: readonly ArchiveRow[], now: Date): string | null {
@@ -39,8 +39,9 @@ export interface NightOutcome {
 const WHY: [(n: NightOutcome) => boolean, FrozenReason][] = [
   [(n) => n.error === 'drive_full', 'drive_full'],
   [(n) => n.error === 'other', 'failed'],
-  [(n) => n.tooLarge > 0, 'too_large'],
+  // An unread object keeps a full open; a too-large one does not (round 4): unread is named first.
   [(n) => n.unread > 0, 'unread'],
+  [(n) => n.tooLarge > 0, 'too_large'],
 ];
 
 /** Why the open full did not seal tonight: the first that applies, else «not finished yet». */

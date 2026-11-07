@@ -5,9 +5,18 @@ import { PushService } from '@/common/push/push.service';
 import type { FrozenReason } from '@/modules/platform/drive-backup/plan/frozen';
 import { dayLabel } from '@/modules/platform/drive-backup/plan/labels';
 import type { OldestLeft } from '@/modules/platform/drive-backup/plan/left';
+import { gbText } from '@/modules/platform/drive-backup/run/quota';
+import type { TooLargeItem } from '@/modules/platform/drive-backup/run/summary';
 
 /** At most this many names in the too-large alert (the rest only counted). */
 const NAMES_SHOWN = 5;
+
+/** «bucket/key (size، why)»: why from the plan (larger than Drive's room or the night's cap). */
+const itemText = (t: TooLargeItem): string =>
+  ar.googleSync.alerts.backupTooLargeItem
+    .replace('{name}', t.id)
+    .replace('{size}', gbText(t.size))
+    .replace('{why}', ar.integrations.driveBackup.tooLargeReasons[t.why]);
 
 /**
  * The backup's admin alerts: the Google sync's bell pattern (google_sync_alert, bell only, never
@@ -38,10 +47,10 @@ export class DriveBackupAlerts {
     return this.tell(`skipped:${dayLabel(input.now)}`, reason);
   }
 
-  /** Objects larger than tonight's room, by name (the first few). */
-  tooLarge(input: { names: readonly string[]; now: Date }): Promise<void> {
-    const names = input.names.slice(0, NAMES_SHOWN).join('، ');
-    const text = counted(ar.googleSync.alerts.backupTooLarge, input.names.length);
+  /** Objects never sent (above Drive's room or the night's cap): the first few, size and why. */
+  tooLarge(input: { items: readonly TooLargeItem[]; now: Date }): Promise<void> {
+    const names = input.items.slice(0, NAMES_SHOWN).map(itemText).join('، ');
+    const text = counted(ar.googleSync.alerts.backupTooLarge, input.items.length);
     return this.tell(`too_large:${dayLabel(input.now)}`, text.replace('{names}', names));
   }
 

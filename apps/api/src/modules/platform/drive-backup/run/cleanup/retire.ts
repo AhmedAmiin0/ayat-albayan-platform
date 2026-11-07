@@ -8,6 +8,8 @@ interface RetireScope {
   folderId: string;
   /** The night: a lost-id row younger than LOOK_MS with no file found yet is kept (seal.ts). */
   now?: Date;
+  /** Retention (and early retirement): a file in Drive's trash is deleted too (drive-remove.ts). */
+  retention?: boolean;
 }
 
 /**
@@ -41,7 +43,8 @@ export async function retire(deps: RunDeps, scope: RetireScope, rows: readonly A
   const done: string[] = [];
   for (const r of rows) {
     const files = await filesOf(deps, folderId, r);
-    for (const fileId of files) await deps.api.remove({ fileId, folderId });
+    const trashedToo = scope.retention === true;
+    for (const fileId of files) await deps.api.remove({ fileId, folderId, trashedToo });
     if (!stillLooking(r, files.length, scope.now)) done.push(r.id);
   }
   await deps.store.trashed(done);

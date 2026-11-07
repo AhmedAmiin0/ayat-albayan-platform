@@ -11,12 +11,19 @@ export interface Caps {
 /** 1 GiB per part, 4 GiB per night (the server also runs the live CRM). */
 export const DEFAULT_CAPS: Caps = { part: 1024 ** 3, run: 4 * 1024 ** 3 };
 
+/** Why an object is never sent tonight: larger than Drive's room, or than the night's cap. */
+export type TooLargeWhy = 'room' | 'night';
+export interface TooLarge {
+  object: ListedObject;
+  why: TooLargeWhy;
+}
+
 interface PartsPlan {
   parts: ListedObject[][];
   /** Objects left for the next run (the run's byte cap), in order. */
   left: ListedObject[];
-  /** Objects whose own part is larger than tonight's room: skipped tonight, named in the alert. */
-  tooLarge: ListedObject[];
+  /** Objects whose own part is above the room or the night's cap: skipped, named in the alert. */
+  tooLarge: TooLarge[];
 }
 
 /** Objects read as a stream (not buffered first): each gets a part of its own (see isSolo). */
@@ -53,45 +60,37 @@ function split(todo: readonly ListedObject[], limit: number): ListedObject[][] {
   return parts;
 }
 
-/**
- * The first part above the night's cap on its own (one streamed object), moved to the front: the
- * first part always goes (it fits the room), so such an object is sent alone on a night of its own
- * instead of being left behind every night by the smaller parts listed before it.
- */
-function bigFirst(parts: readonly ListedObject[][], cap: number): ListedObject[][] {
-  const i = parts.findIndex((p) => partCost(p) > cap);
-  return i < 1 ? [...parts] : [...parts.slice(i, i + 1), ...parts.filter((_, j) => j !== i)];
-}
-
-/** The parts the night's cap takes (the first always): one that does not fit is passed over. */
+/** The parts the night's cap takes, in order: one that does not fit is passed over (continue). */
 function forRun(parts: readonly ListedObject[][], cap: number): ListedObject[][] {
   const taken: ListedObject[][] = [];
   let spent = 0;
   for (const p of parts) {
     const cost = partCost(p);
-    if (taken.length > 0 && spent + cost > cap) continue;
+    if (spent + cost > cap) continue;
     spent += cost;
     taken.push(p);
   }
   return taken;
 }
 
+const whyOf = (o: ListedObject, room: number): TooLargeWhy =>
+  partCost([o]) > room ? 'room' : 'night';
+
 /**
- * Tonight's parts: an object larger than the room on its own is skipped (not the night's end: the
- * later ones still go), the rest split under the part cap and the room, one above the night's cap
- * put first (bigFirst), then taken up to the run's cap; a part over it waits, the smaller ones
- * after it still go. Every part planned fits the room it was planned for.
+ * Tonight's parts: an object whose own part is above the room or the night's cap is too large
+ * (skipped, never sent, named in the alert; the later ones still go), the rest split under the
+ * part cap and taken up to the night's cap; a part over what is left waits, the smaller ones after
+ * it still go. Every part planned fits the room and the cap it was planned for.
  */
 export function planParts(
   todo: readonly ListedObject[],
   caps: Caps,
   room = Number.POSITIVE_INFINITY,
 ): PartsPlan {
-  const fits = (o: ListedObject) => partCost([o]) <= room;
-  const tooLarge = todo.filter((o) => !fits(o));
   const cap = Math.min(caps.run, room);
-  const parts = bigFirst(split(todo.filter(fits), Math.min(caps.part, room)), cap);
-  const taken = forRun(parts, cap);
+  const fits = (o: ListedObject) => partCost([o]) <= cap;
+  const tooLarge = todo.filter((o) => !fits(o)).map((o) => ({ object: o, why: whyOf(o, room) }));
+  const taken = forRun(split(todo.filter(fits), Math.min(caps.part, cap)), cap);
   const sent = new Set(taken.flat());
   return { parts: taken, left: todo.filter((o) => fits(o) && !sent.has(o)), tooLarge };
 }

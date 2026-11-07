@@ -68,13 +68,15 @@ describe('parts and pending', () => {
     expect(lengths({ part: partCost(three.slice(0, 2)), run: GB })).toEqual([2, 1]);
     const one = partCost([o('a', MB)]);
     expect(planParts(three, { part: one, run: 2 * one }).left).toHaveLength(1);
-    expect(planParts([o('huge', GB)], { part: MB, run: MB }).parts).toEqual([[o('huge', GB)]]);
+    const huge = planParts([o('huge', GB)], { part: MB, run: MB });
+    expect(huge.parts).toEqual([]);
+    expect(huge.tooLarge).toEqual([{ object: o('huge', GB), why: 'night' }]);
   });
 
   it('an object larger than the room is skipped; the later ones still go (no freeze)', () => {
     const todo = [o('big', 2 * GB), o('a', MB), o('b', MB)];
     const plan = planParts(todo, DEFAULT_CAPS, GB);
-    expect(plan.tooLarge.map((x) => x.key)).toEqual(['big']);
+    expect(plan.tooLarge).toEqual([{ object: o('big', 2 * GB), why: 'room' }]);
     expect(plan.parts).toEqual([[o('a', MB), o('b', MB)]]);
     expect(plan.left).toEqual([]);
   });

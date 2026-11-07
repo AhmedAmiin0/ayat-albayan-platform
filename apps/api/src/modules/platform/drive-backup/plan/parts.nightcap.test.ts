@@ -4,7 +4,8 @@ import type { ListedObject } from '@/modules/platform/drive-backup/source/backup
 import { partCost } from './cost';
 import { DEFAULT_CAPS, planParts } from './parts';
 
-// Round 3, item 2: an object above the night's cap is never starved by the smaller ones before it.
+// Round 4, item 1: a part above the night's cap is too large (never sent, named), like one above
+// the room; every other part still goes the same night.
 
 const MB = 1024 ** 2;
 const GB = 1024 ** 3;
@@ -18,16 +19,17 @@ const keys = (parts: readonly ListedObject[][]) => parts.map((p) => p.map((x) =>
 const day = Array.from({ length: 6 }, (_, i) => o(`new-${i}`, 900 * MB));
 
 describe('the night cap and a recording larger than it', () => {
-  it('goes first, alone, when it fits the room; the small ones wait one night', () => {
-    const plan = planParts([...day, o('rec', 5 * GB)], DEFAULT_CAPS, 20 * GB);
-    expect(keys(plan.parts)).toEqual([['rec']]);
-    expect(plan.left.map((x) => x.key)).toEqual(day.map((x) => x.key));
-    expect(plan.tooLarge).toEqual([]);
+  it('fits the room but not the cap: too large («night»); the small ones go tonight', () => {
+    const rec = o('rec', 5 * GB);
+    const plan = planParts([rec, ...day], DEFAULT_CAPS, 20 * GB);
+    expect(plan.tooLarge).toEqual([{ object: rec, why: 'night' }]);
+    expect(keys(plan.parts)).toEqual([['new-0'], ['new-1'], ['new-2'], ['new-3']]);
+    expect(plan.left.map((x) => x.key)).toEqual(['new-4', 'new-5']);
   });
 
-  it('larger than the room: too large (named), the rest still goes', () => {
+  it('larger than the room: too large («room»), the rest still goes', () => {
     const plan = planParts([...day.slice(0, 2), o('rec', 5 * GB)], DEFAULT_CAPS, 4.5 * GB);
-    expect(plan.tooLarge.map((x) => x.key)).toEqual(['rec']);
+    expect(plan.tooLarge.map((x) => [x.object.key, x.why])).toEqual([['rec', 'room']]);
     expect(keys(plan.parts)).toEqual([['new-0'], ['new-1']]);
   });
 
@@ -40,9 +42,17 @@ describe('the night cap and a recording larger than it', () => {
     expect(spent).toBeLessThanOrEqual(DEFAULT_CAPS.run);
   });
 
-  it('two recordings above the cap: one per night, the other left (not too large)', () => {
+  it('two recordings above the cap: both too large, none left, none sent', () => {
     const plan = planParts([o('rec-a', 5 * GB), o('rec-b', 5 * GB)], DEFAULT_CAPS);
-    expect(keys(plan.parts)).toEqual([['rec-a']]);
-    expect(plan.left.map((x) => x.key)).toEqual(['rec-b']);
+    expect(plan.parts).toEqual([]);
+    expect(plan.left).toEqual([]);
+    expect(plan.tooLarge.map((x) => x.why)).toEqual(['night', 'night']);
+  });
+
+  it('no part planned is above the night cap', () => {
+    const todo = [o('a', 3 * GB), o('b', 5 * GB), ...day, o('c', 4 * GB)];
+    const plan = planParts(todo, DEFAULT_CAPS);
+    expect(plan.parts.every((p) => partCost(p) <= DEFAULT_CAPS.run)).toBe(true);
+    expect(plan.tooLarge.map((x) => x.object.key)).toEqual(['b', 'c']);
   });
 });

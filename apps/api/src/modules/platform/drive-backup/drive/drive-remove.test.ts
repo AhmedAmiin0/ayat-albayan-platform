@@ -50,6 +50,16 @@ describe('removeArchive', () => {
     expect(await removeArchive(raced.call, input)).toBe('gone');
   });
 
+  it('in Drive’s trash: kept (a person may restore it), deleted only by retention', async () => {
+    const trashed = { parents: ['folder_1'], appProperties: MARK, trashed: true };
+    const kept = drive(trashed);
+    expect(await removeArchive(kept.call, input)).toBe('kept');
+    expect(kept.calls).toEqual(['GET']);
+    const retention = drive(trashed);
+    expect(await removeArchive(retention.call, { ...input, trashedToo: true })).toBe('deleted');
+    expect(retention.calls).toEqual(['GET', 'DELETE']);
+  });
+
   it('any other failure is thrown', async () => {
     const d = drive({ parents: ['folder_1'], appProperties: MARK }, new GoogleApiError(500, 'x'));
     await expect(removeArchive(d.call, input)).rejects.toThrow('500');

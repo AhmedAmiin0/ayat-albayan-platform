@@ -50,7 +50,7 @@ describe('weekly full archive', () => {
   });
 
   it('nothing is deleted while a newer full has not been sealed', async () => {
-    const t = await setup({ part: 10, run: 10 });
+    const t = await setup({ part: fit(1, 8), run: fit(1, 8) }); // one object a night
     for (let week = 0; week < 4; week += 1) {
       t.minio.set({ bucket: B.reports, key: `w${week}.pdf`, body: 'x'.repeat(8) });
       await t.night(day('2026-11-13', 7 * week));

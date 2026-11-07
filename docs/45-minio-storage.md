@@ -54,17 +54,17 @@ only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «ا�
 
 ## 2. Config keys («التكاملات» › «التخزين»; database + Vault, `.env` only bootstraps)
 
-| Key | Value on production | Notes |
-|---|---|---|
-| `STORAGE_DRIVER` | `supabase` → `minio` | where new files go; switching it is the cut-over |
-| `MINIO_ENDPOINT` | `http://ayat-minio:9000` | internal; the API's own reads and writes |
-| `MINIO_PUBLIC_URL` | `https://files.ayatalbayan.com` | host of every signed URL (https only, except localhost) |
-| `MINIO_REGION` | `us-east-1` | MinIO's default |
-| `MINIO_BUCKET_PREFIX` | empty | if set, the same value in `.env` (§4, `ayat-minio-init` creates the buckets) |
-| `MINIO_ACCESS_KEY` | `minio.env` `MINIO_APP_ACCESS_KEY` | the app user, never the root user |
-| `MINIO_SECRET_KEY` | `minio.env` `MINIO_APP_SECRET_KEY` | Vault secret |
-| `MINIO_RECORDINGS` | `false` | recordings into MinIO (with the driver on `minio`); uncapped, §7 |
-| `MINIO_DRIVE_BACKUP` | `false` → `true` | nightly compressed archives to Google Drive (§5.1) |
+| Key                   | Value on production                | Notes                                                                        |
+| --------------------- | ---------------------------------- | ---------------------------------------------------------------------------- |
+| `STORAGE_DRIVER`      | `supabase` → `minio`               | where new files go; switching it is the cut-over                             |
+| `MINIO_ENDPOINT`      | `http://ayat-minio:9000`           | internal; the API's own reads and writes                                     |
+| `MINIO_PUBLIC_URL`    | `https://files.ayatalbayan.com`    | host of every signed URL (https only, except localhost)                      |
+| `MINIO_REGION`        | `us-east-1`                        | MinIO's default                                                              |
+| `MINIO_BUCKET_PREFIX` | empty                              | if set, the same value in `.env` (§4, `ayat-minio-init` creates the buckets) |
+| `MINIO_ACCESS_KEY`    | `minio.env` `MINIO_APP_ACCESS_KEY` | the app user, never the root user                                            |
+| `MINIO_SECRET_KEY`    | `minio.env` `MINIO_APP_SECRET_KEY` | Vault secret                                                                 |
+| `MINIO_RECORDINGS`    | `false`                            | recordings into MinIO (with the driver on `minio`); uncapped, §7             |
+| `MINIO_DRIVE_BACKUP`  | `false` → `true`                   | nightly compressed archives to Google Drive (§5.1)                           |
 
 `MINIO_ENDPOINT` and `MINIO_PUBLIC_URL` refuse an IP literal (the Evolution base's SSRF rules): `http://` only
 to `localhost` or the listed docker service `ayat-minio`, `https://` only to a public host name.
@@ -96,13 +96,13 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
   `MC_HOST_ayat` environment variable, not its command line; `mc admin user add` has no such alternative, so the
   app secret is a command-line argument inside that one-shot container only. All four values must be URL-safe
   (`A-Z a-z 0-9 . _ ~ -`, hence `openssl rand -hex`); `init.sh` refuses others. Every step is idempotent: `roll.sh`'s last
-  `up -d` starts it again on every deploy. It depends on `ayat-minio` *started*, not *healthy*, so a MinIO that
+  `up -d` starts it again on every deploy. It depends on `ayat-minio` _started_, not _healthy_, so a MinIO that
   will not start never fails the API's deploy (the init then fails on its own, in its log).
 - **`ayat-lb`** (`lb/Caddyfile`): a site `http://files.ayatalbayan.com:8080` → `ayat-minio:9000`, after the API's
   `:8080` site (every other host still reaches the API). `/minio/*` except `/minio/health/*` answers 404 (MinIO's
   admin and metrics routes stay on the project network). Response headers: `X-Content-Type-Options: nosniff`,
   `Referrer-Policy: no-referrer`, `Content-Security-Policy: default-src 'none'; img-src 'self' data:; media-src
-  'self'; style-src 'unsafe-inline'; form-action 'none'; base-uri 'none'`. **No `sandbox`**: Chrome refuses to
+'self'; style-src 'unsafe-inline'; form-action 'none'; base-uri 'none'`. **No `sandbox`**: Chrome refuses to
   show a PDF in a sandboxed page and the report links open PDFs; `default-src 'none'` already blocks every script.
   Caddy resolves upstreams per request, so without the profile the LB starts and this host answers 502.
 - **CORS:** MinIO answers preflights for any origin by default (the web's direct `PUT`); the signature is the gate.
@@ -175,6 +175,7 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
    this disk (§1, §7). Check: `/health` shows `storage.status: ok`; submit a lesson report and open its PDF link (it
    is a `https://files.ayatalbayan.com/…` URL and shows inline in Chrome); upload a receipt from the web and from
    the phone.
+
 10. **Rollback: only through `STORAGE_DRIVER`.** Set it back to `supabase`: new files go to Supabase again; files
     written to MinIO meanwhile keep their `minio:` paths and stay readable **as long as `ayat-minio` runs**, so
     never stop it while such rows exist. Once any `minio:` row exists, **never** revert the code of this feature
@@ -255,13 +256,18 @@ Google project, client or credential.
   listing (a report PDF re-rendered in place) is skipped as `changed` and taken the next night: it
   is never streamed past the cost charged for it. The restore also uses the parts of a full not
   yet sealed.
-- **Sealing:** a full is sealed only when it holds every object that still exists: nothing left by
-  the byte cap, nothing too large for the night's room and no object skipped for a failed read or
-  a new version (a vanished one is fine). Otherwise it stays open and the next night continues the
-  same full; until then the restore uses the previous sealed full plus the parts and incrementals
-  after it. A full open for **more than 3 nights** is reported as frozen: «النسخ الاحتياطي متوقف»
-  on the status line and in an alert, with the reason (an object larger than Drive's free space,
-  Drive full, unreadable objects, failing nights, or simply not finished).
+- **Sealing:** a full is sealed when nothing is left by the byte cap and no object was skipped for
+  a failed read or a new version (a vanished one is fine). A **too-large** object (its own part
+  above Drive's room or the night's cap) does **not** keep a full open: it is named in the alert
+  every night instead, so the backup of everything else keeps moving (round 4). Before sealing,
+  **every done part** of the full is checked on Drive (one GET by id each, never a listing): a part
+  whose file is gone, or that a person moved to Drive's trash, has its row marked `trashed`
+  **without any delete** (a trashed file may still be restored from Drive's trash, which Drive
+  empties after 30 days), its objects go again the next night and the full stays open. Otherwise
+  the full stays open and the next night continues it; until then the restore uses the previous
+  sealed full plus the parts and incrementals after it. A full open for **more than 3 nights** is
+  reported as frozen: «النسخ الاحتياطي متوقف» on the status line and in an alert, with the reason
+  (Drive full, failing nights, a too-large object, unreadable objects, or simply not finished).
 - **Retention:** the last **4 fulls** and the incrementals after the oldest of them. Older archives are
   **deleted from Drive for good** (`DELETE drive/v3/files/{id}`, not Drive's trash, which keeps counting
   against the shared quota for 30 days), right after a newer full was sealed (and at the start of a
@@ -270,14 +276,19 @@ Google project, client or credential.
   next one are retired early, again while needed, as long as one sealed full and its chain stay. The backup deletes
   only file ids from its own `drive_backup_archives` rows of its own folder, and only after reading
   the file and finding it in that folder with the backup's marker (`ab_backup=minio`); a file that
-  is gone (404) or not the backup's own is left alone. It never lists Drive to delete anything,
+  is gone (404) or not the backup's own is left alone. A file in Drive's trash is deleted only by
+  retention and early retirement (it still counts against the quota); every other path leaves it
+  where a person may restore it. It never lists Drive to delete anything,
   but for one narrow case below.
 - **Orphans:** every archive file carries its row's id (`ab_row` in appProperties), set before the
   upload starts. The Drive file id is kept on the row the moment Drive answers with it, even when
   the run fails right after (the deadline, the bookkeeping). The next night first deletes the file
   of every `failed` row (same checks) and marks the row `trashed`; a failed row whose file id never
   came back is resolved by asking Drive for the files **in the backup's folder that carry
-  `ab_backup=minio` and that row's `ab_row`**: nothing else is ever looked up for deletion. A part
+  `ab_backup=minio` and that row's `ab_row`**: nothing else is ever looked up for deletion. Such a
+  row (failed, no file id) whose search finds nothing yet is **kept `failed` for up to 7 days** and
+  searched again each night (Drive's search may lag, and an abort in the last chunk can lose the id
+  of a file Drive did make); after that it is marked `trashed`. A part
   number is never reused: the next part follows every row of that archive, trashed ones included.
 - **Expected size:** PDFs, JPEG/PNG photos, voice notes and videos are already compressed: they barely
   shrink (a few %). The gain is on the rest (CSV, JSON, text, some old PDFs): often 3× to 10×. Plan
@@ -290,14 +301,22 @@ Google project, client or credential.
   `about.storageQuota` and gets a **byte budget = free − 2 GB reserve**, read **after** the night's
   clean-up (failed parts' files, due retention: they only free space). Under 2 GB free → a bell
   alert to the admins; nothing is uploaded while no part fits above the reserve; otherwise the night
-  uploads at most that budget (and at most 4 GiB). An object whose own part is larger than the
-  budget is skipped for the night and named in an alert (the objects after it still go). Before
+  uploads at most that budget (and at most 4 GiB). **No part above the night's cap (the smaller of
+  the budget and 4 GiB) is ever sent:** an object whose own part is larger than either is **too
+  large**: skipped, never opened nor uploaded, named in an alert with its size and why («أكبر من
+  المساحة المتاحة في Google Drive» / «أكبر من حدّ الليلة»), and the objects after it still go the
+  same night (a part that only overflows what is left of the cap waits, the smaller ones after it
+  still go). Before
   **each part** the quota is read again: a part that would eat into the reserve waits for the next
   night while a later part still fits; when none does, the run stops (`drive_full`). Drive's `storageQuotaExceeded` always stops the run (it is
   never treated as «skip this object»).
-- **Alerts** (admins, bell only, the Google sync's `google_sync_alert`): a failed night, low quota,
-  skipped objects, objects too large for the night's room (by name), a frozen backup; once per day
-  each.
+- **Alerts** (admins, bell only, the Google sync's `google_sync_alert`), once per day each: a failed
+  night; low quota; skipped objects; **too large** objects (the first 5 as `bucket/key (size، why)`,
+  the rest counted; named every night while they stay too large); objects **left** by the cap or
+  the room 3 nights running (`drive_backup_state.left_watch` keeps the night each `bucket/key` was
+  first left, `left_count` how many are left now; the alert gives the count and the oldest by name
+  and night); a **frozen** backup (a full open more than 3 nights, with its frozen reason:
+  `drive_full`, `failed`, `too_large`, `unread` or `incomplete`).
 
 **Turning it on** (owner): «التكاملات» › Google is connected (docs/24) and «التكاملات» › «التخزين»
 has a passing «اختبار الاتصال»; then set «نسخ احتياطي لملفات MinIO إلى Google Drive» to «مفعّلة» and
@@ -333,7 +352,7 @@ Owner 2026-11-07: «move all the old files in minio to be served». `tools/scrip
 3. it is **verified**: size and Content-Type as both stores report them, and a SHA-256 of the bytes read back from
    MinIO against the bytes read from Supabase. Any difference = `mismatch`, the row is not touched;
 4. the row is rewritten to `minio:<key>` with a **compare-and-set** on the old path (`… where id = $id and col =
-   $old`): a row that changed meanwhile (a re-render, an edit, a delete) is left as it is (`changed`);
+$old`): a row that changed meanwhile (a re-render, an edit, a delete) is left as it is (`changed`);
 5. one `audit_log` row per batch (`entity = storage_move`, `before.rows` = each rewritten row id and its old path).
 
 Rows already `minio:` are skipped; a second run does nothing new. **Nothing is ever deleted from Supabase**: links

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { PushService } from '@/common/push/push.service';
 import { ar } from '@/common/infra/i18n/server-text';
 import { DriveBackupAlerts } from './drive-backup.alerts';
+import type { TooLargeItem } from './run/summary';
 
 const now = new Date('2026-11-10T01:00:00Z');
 
@@ -13,14 +14,20 @@ function setup() {
 }
 
 describe('the backup’s alerts (bell only, once a day per subject)', () => {
-  it('too large: counted in Arabic forms, the first names given', async () => {
+  it('too large: counted in Arabic forms, the first names given with size and why', async () => {
     const t = setup();
-    const names = ['reports/a', 'reports/b', 'reports/c', 'reports/d', 'reports/e', 'reports/f'];
-    await t.alerts.tooLarge({ names, now });
+    const keys = ['reports/a', 'reports/b', 'reports/c', 'reports/d', 'reports/e', 'reports/f'];
+    const items: TooLargeItem[] = keys.map((id) => ({ id, size: 1024 ** 3, why: 'room' }));
+    items[0] = { id: 'recordings/r.mp4', size: 5 * 1024 ** 3, why: 'night' };
+    await t.alerts.tooLarge({ items, now });
     expect(t.said().subject).toBe('drive_backup:too_large:2026-11-10');
-    expect(t.said().vars.reason).toContain('reports/e');
-    expect(t.said().vars.reason).not.toContain('reports/f');
-    expect(t.said().vars.reason).toContain('6');
+    const text = t.said().vars.reason;
+    expect(text).toContain('recordings/r.mp4 (5.0 GB، أكبر من حدّ الليلة)');
+    expect(text).toContain(
+      `reports/e (1.0 GB، ${ar.integrations.driveBackup.tooLargeReasons.room})`,
+    );
+    expect(text).not.toContain('reports/f');
+    expect(text).toContain('6');
   });
 
   it('frozen: «النسخ الاحتياطي متوقف» with the day it started and the reason', async () => {

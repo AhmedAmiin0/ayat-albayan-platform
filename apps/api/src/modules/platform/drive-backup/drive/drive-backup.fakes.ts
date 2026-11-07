@@ -2,7 +2,7 @@ import { Readable } from 'node:stream';
 import { GoogleApiError } from '@/modules/platform/google-sync';
 import type * as P from './drive-backup.port';
 import { BACKUP_MARK, FOLDER_MIME, isMarked } from './drive-files.schema';
-import type { Session, Stored } from './drive-backup.fakes.types';
+import { leftAlone, ownFile, type Session, type Stored } from './drive-backup.fakes.types';
 
 // An in-memory Drive for the backup's tests: folders, resumable sessions, files, deletes. Never
 // Google. Obviously fake ids and an example.test account.
@@ -115,13 +115,10 @@ export class FakeDrive implements P.DriveBackupApi {
     return Promise.resolve();
   }
 
-  /** Like drive-remove.ts: only a marked file in that folder; a missing one is gone. */
   remove(input: P.RemoveInput): Promise<P.Removed> {
     this.call('remove');
-    const f = this.files.get(input.fileId);
-    const own = f?.meta.appProperties.ab_backup === 'minio' && f.parentId === input.folderId;
-    const outcome: P.Removed = f ? 'foreign' : 'gone';
-    if (!own) return Promise.resolve(outcome);
+    const left = leftAlone(this.files, input);
+    if (left !== null) return Promise.resolve(left);
     this.files.delete(input.fileId);
     this.deleted.push(input.fileId);
     return Promise.resolve('deleted');
@@ -129,9 +126,7 @@ export class FakeDrive implements P.DriveBackupApi {
 
   present(input: P.RemoveInput): Promise<boolean> {
     this.call('present');
-    const f = this.files.get(input.fileId);
-    const own = f?.meta.appProperties.ab_backup === 'minio' && f.parentId === input.folderId;
-    return Promise.resolve(own && !this.files.get(input.fileId)?.trashed);
+    return Promise.resolve(ownFile(this.files, input)?.trashed === false);
   }
 
   download(fileId: string) {

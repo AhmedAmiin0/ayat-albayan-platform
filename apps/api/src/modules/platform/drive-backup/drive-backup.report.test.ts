@@ -43,9 +43,10 @@ describe('the frozen report', () => {
 
   it('a night that ran: too-large objects are named in their own alert', async () => {
     const t = await setup(false);
-    const sum = { ...emptySummary({ kind: 'full', label: '2026-W45' }), tooLarge: ['reports/big'] };
+    const items = [{ id: 'reports/big', size: 5, why: 'night' as const }];
+    const sum = { ...emptySummary({ kind: 'full', label: '2026-W45' }), tooLarge: items };
     await reportNight(t.data, { folderId: 'f', now, sum });
-    expect(t.alerts.tooLarge).toHaveBeenCalledWith({ names: ['reports/big'], now });
+    expect(t.alerts.tooLarge).toHaveBeenCalledWith({ items, now });
     expect(t.alerts.skipped).not.toHaveBeenCalled();
   });
 

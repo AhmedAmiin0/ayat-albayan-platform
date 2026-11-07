@@ -6137,8 +6137,12 @@
       "sizeMb": "{n} MB",
       "frozen": "The backup is frozen since {since}: {reason}",
       "left": "Waiting for later nights: {count}, the oldest {name} since {since}.",
+      "tooLargeReasons": {
+        "room": "larger than the free space in Google Drive",
+        "night": "larger than the nightly cap"
+      },
       "frozenReasons": {
-        "too_large": "One or more files are larger than the free space in Google Drive.",
+        "too_large": "One or more files are larger than the free space in Google Drive or the nightly cap.",
         "drive_full": "There is not enough free space in Google Drive.",
         "unread": "Some files could not be read from MinIO.",
         "incomplete": "Not every file has been uploaded yet.",
@@ -6438,11 +6442,12 @@
         "other": "Tonight's backup skipped {n} files it could not read from MinIO; it will try them again next night."
       },
       "backupTooLarge": {
-        "one": "Tonight's backup did not copy 1 file because it is larger than the free space in Google Drive: {names}. Free up space in Drive so it is copied on a later night.",
-        "two": "Tonight's backup did not copy 2 files because they are larger than the free space in Google Drive: {names}. Free up space in Drive so they are copied on a later night.",
-        "few": "Tonight's backup did not copy {n} files because they are larger than the free space in Google Drive: {names}. Free up space in Drive so they are copied on a later night.",
-        "other": "Tonight's backup did not copy {n} files because they are larger than the free space in Google Drive: {names}. Free up space in Drive so they are copied on a later night."
+        "one": "Tonight's backup did not copy 1 file, and it will not be uploaded while this lasts: {names}. The other files are still copied, and this file is named every night.",
+        "two": "Tonight's backup did not copy 2 files, and they will not be uploaded while this lasts: {names}. The other files are still copied, and these files are named every night.",
+        "few": "Tonight's backup did not copy {n} files, and they will not be uploaded while this lasts: {names}. The other files are still copied, and these files are named every night.",
+        "other": "Tonight's backup did not copy {n} files, and they will not be uploaded while this lasts: {names}. The other files are still copied, and these files are named every night."
       },
+      "backupTooLargeItem": "{name} ({size}, {why})",
       "backupLeft": {
         "one": "1 file has been left out of the backup for three nights in a row by the nightly transfer cap or the free space in Google Drive: {name} (since {since}).",
         "two": "2 files are left out of the backup; the oldest for three nights in a row by the nightly transfer cap or the free space in Google Drive: {name} (since {since}).",
