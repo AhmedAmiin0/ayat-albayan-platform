@@ -3,12 +3,11 @@ import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { message } from '@/inbox/shared/thread-fixtures';
 import { useComposeTarget } from './use-compose-target';
 
-// Review of PR #694 (1, 4, 5): an edit that ends without a send gives the box its draft back; a
-// correction is edited without its prefix.
+// Review of PR #694 (1, 4, 5): an edit that ends without a send gives the box its draft back.
 const A = '+966552147730';
 const B = '+966552147731';
 const own = message({ id: 'o1', body: 'الساعة الخامسة' });
-const fix = message({ id: 'c1', body: 'تصحيح: الساعة السادسة', corrects_id: 'o1' });
+const other = message({ id: 'o2', body: 'الساعة السادسة' });
 
 async function editing(phone = A) {
   setComposerText(phone, 'مسودتي');
@@ -53,9 +52,9 @@ test('its sent correction ends it with no draft back', async () => {
   expect([result.current.editing, getComposerText(A)]).toEqual([null, '']);
 });
 
-test('a correction is edited without its prefix; the first draft is kept', async () => {
+test('a second «تعديل» puts the other text in the box; the first draft is kept', async () => {
   const { result } = await editing();
-  await act(async () => result.current.startEdit(fix));
+  await act(async () => result.current.startEdit(other));
   expect(getComposerText(A)).toBe('الساعة السادسة');
   await act(async () => result.current.cancelEdit());
   expect(getComposerText(A)).toBe('مسودتي');

@@ -5,7 +5,7 @@ import { replayedOther } from './unconfirmed.js';
 // corrects_id, and says `replayed` when the request id gave back its FIRST row (review of #694).
 const P = 'تصحيح: ';
 const O1 = 'o1';
-const fix = (text: string, id = O1) => ({ text, correction: { id, prefix: P } });
+const fix = (text: string, id = O1) => ({ text, correction: { id, prefixes: [P] } });
 
 describe('a new row (replayed false)', () => {
   it('is this send when it corrects the same original and ends with the text', () => {
@@ -44,6 +44,22 @@ describe('a replayed row (the pinned id gave back its FIRST send)', () => {
   it('a retry of this very correction after a lost answer IS this send', () => {
     const same = { body: 'تصحيح: الساعة الخامسة', corrects_id: O1, replayed: true };
     expect(replayedOther(same, fix(' الساعة الخامسة '))).toBe(false);
+  });
+});
+
+describe('an admin-reworded prefix (round 3, item 2)', () => {
+  const reworded = (text: string) => ({ text, correction: { id: O1, prefixes: ['تعديل: ', P] } });
+
+  it('a retry of this correction under the new wording IS this send', () => {
+    const same = { body: 'تعديل: الساعة الخامسة', corrects_id: O1, replayed: true };
+    expect(replayedOther(same, reworded('الساعة الخامسة'))).toBe(false);
+    expect(replayedOther(same, reworded('تصحيح: الساعة الخامسة'))).toBe(false);
+  });
+
+  it('a row under the bundled prefix still is; another text is not', () => {
+    const old = { body: 'تصحيح: الساعة الخامسة', corrects_id: O1, replayed: true };
+    expect(replayedOther(old, reworded('الساعة الخامسة'))).toBe(false);
+    expect(replayedOther(old, reworded('الخامسة'))).toBe(true);
   });
 });
 

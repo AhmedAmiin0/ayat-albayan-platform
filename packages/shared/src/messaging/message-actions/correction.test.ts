@@ -25,6 +25,7 @@ describe('isCorrectable: an outbound, sent staff text WhatsApp knows', () => {
     ['not known to WhatsApp yet', { replyable: false }],
     ['hidden', { hidden: { by_name: null, at: 'x' } }],
     ['deleted', { deleted: true }],
+    ['a correction (staff correct the original again)', { corrects_id: 'o1' }],
   ])('%s is not', (_, over) => expect(isCorrectable({ ...sent, ...over })).toBe(false));
 });
 

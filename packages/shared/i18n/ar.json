@@ -3286,6 +3286,7 @@
       "errors": {
         "correction_not_in_thread": "لم يُعثر على الرسالة المراد تصحيحها في هذه المحادثة",
         "not_correctable": "لا يمكن تصحيح هذه الرسالة",
+        "empty_correction": "اكتب نص التصحيح بعد «تصحيح:»",
         "not_your_message": "يمكن تصحيح رسائلك فقط"
       }
     }

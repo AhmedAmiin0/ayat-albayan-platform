@@ -3286,6 +3286,7 @@
       "errors": {
         "correction_not_in_thread": "The message to correct is not in this chat",
         "not_correctable": "This message cannot be corrected",
+        "empty_correction": "Write the corrected text after «Correction:»",
         "not_your_message": "You can only correct your own messages"
       }
     }

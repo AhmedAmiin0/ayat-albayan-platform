@@ -1,19 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import { correctionBody, correctionsOf, stripCorrectionPrefix } from './correction.js';
 
-// Review of PR #694: one prefix only, and only a correction that reached the family marks its
-// original.
+// Review of PR #694: one prefix only (the admins' wording or the bundled one), and only a
+// correction that reached the family marks its original.
 const P = 'تصحيح: ';
 
-describe('one prefix only (a correction of a correction, or a typed prefix)', () => {
+describe('one prefix only (a typed prefix, an admin-reworded one)', () => {
   it('strips the leading prefix(es) before prefixing', () => {
     expect(correctionBody(P, 'تصحيح: الساعة الخامسة')).toBe('تصحيح: الساعة الخامسة');
     expect(correctionBody(P, '  تصحيح:تصحيح:  الساعة الخامسة')).toBe('تصحيح: الساعة الخامسة');
   });
 
   it('keeps the prefix inside the text, and an empty prefix strips nothing', () => {
-    expect(stripCorrectionPrefix(P, 'الساعة تصحيح: الخامسة')).toBe('الساعة تصحيح: الخامسة');
-    expect(stripCorrectionPrefix('', ' نص ')).toBe('نص');
+    expect(stripCorrectionPrefix([P], 'الساعة تصحيح: الخامسة')).toBe('الساعة تصحيح: الخامسة');
+    expect(stripCorrectionPrefix(['', ' '], ' نص ')).toBe('نص');
+  });
+
+  it('strips the bundled prefix under an admin-reworded one, and a bare prefix is empty', () => {
+    expect(correctionBody('تعديل: ', 'تصحيح: الخامسة', [P])).toBe('تعديل: الخامسة');
+    expect(stripCorrectionPrefix(['تعديل: ', P], ' تصحيح: ')).toBe('');
   });
 });
 

@@ -15,7 +15,7 @@ export interface CorrectionTarget {
   hidden_at: string | null;
   deleted_at: string | null;
   created_by: string | null;
-  /** A correction itself: the original it corrects (a correction of it targets that one). */
+  /** A correction itself: the original it corrects (never corrected again: not_correctable). */
   corrects_id: string | null;
 }
 

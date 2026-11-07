@@ -1,5 +1,4 @@
-import { stripCorrectionPrefix, type MessageView } from '@ab/shared';
-import ar from '@ab/shared/i18n/ar.json';
+import type { MessageView } from '@ab/shared';
 import { type Dispatch, type RefObject, type SetStateAction, useEffect, useRef, useState } from 'react';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 
@@ -15,10 +14,6 @@ interface ComposeTarget {
 
 /** The box's own draft from before «تعديل», and the message being corrected. */
 type Saved = { id: string; text: string } | null;
-
-/** «تعديل» on a correction: its text without the prefix (the API adds it once, to the original). */
-const editText = (m: MessageView): string =>
-  m.corrects_id ? stripCorrectionPrefix(ar.inbox.correction.prefix, m.body ?? '') : (m.body ?? '');
 
 /** An edit that ends without a send: the box's own draft comes back. */
 function restore(phone: string, saved: RefObject<Saved>): void {
@@ -59,7 +54,7 @@ export function useComposeTarget(phone: string): ComposeTarget {
     saved.current = { id: m.id, text: saved.current?.text ?? getComposerText(phone) };
     setReplyNow(null);
     setEdit({ phone, m });
-    setComposerText(phone, editText(m));
+    setComposerText(phone, m.body ?? ''); // only ever an original (isCorrectable)
   };
   const editSent = (id: string) => {
     saved.current = saved.current?.id === id ? null : saved.current;

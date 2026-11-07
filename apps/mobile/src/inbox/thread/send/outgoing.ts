@@ -5,7 +5,9 @@ import {
   type TemplateParamsInput,
   type ThreadTemplate,
 } from '@ab/shared';
-import ar from '@ab/shared/i18n/ar.json';
+import bundled from '@ab/shared/i18n/ar.json';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import type { PinKind } from './pinned-send';
 
 /**
@@ -42,13 +44,21 @@ export interface SendDone {
 export const carried = (out: Outgoing): string => (out.kind === 'text' ? out.text : out.preview);
 
 /**
- * What the API's row will say: a correction (owner 2026-11-07) after «تصحيح: », which the API adds
- * in Arabic whatever the app's language; else what it carries.
+ * The Arabic prefixes the API may put before a correction (it adds Arabic whatever the app's
+ * language): the admins' wording (this run's override-merged `t`, when it is the Arabic one), then
+ * the bundled default, which the API strips too.
  */
-export const echoed = (out: Outgoing): string =>
-  out.kind === 'text' && out.correctsId
-    ? correctionBody(ar.inbox.correction.prefix, out.text)
-    : carried(out);
+export const correctionPrefixes = (): [string, string] => {
+  const fallback = bundled.inbox.correction.prefix;
+  return [locale === 'ar' ? t.inbox.correction.prefix : fallback, fallback];
+};
+
+/** What the API's row will say: a correction (owner 2026-11-07) after its prefix; else the text. */
+export function echoed(out: Outgoing): string {
+  const [prefix, fallback] = correctionPrefixes();
+  const fixes = out.kind === 'text' && out.correctsId;
+  return fixes ? correctionBody(prefix, out.text, [fallback]) : carried(out);
+}
 
 /** The POST body of a text or template send, with its clientRequestId. */
 export function sendBody({ out, id }: SendInput) {

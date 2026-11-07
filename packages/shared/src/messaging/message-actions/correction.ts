@@ -23,6 +23,8 @@ export interface Correctable {
   replyable?: boolean;
   hidden?: unknown;
   deleted?: boolean;
+  /** A correction itself: never corrected again (staff correct the original once more). */
+  corrects_id?: string | null;
 }
 
 /** The signed-in staff member as the rule reads them. */
@@ -39,11 +41,13 @@ const kindOk: ((m: Correctable) => boolean)[] = [
   (m) => Boolean(m.body?.trim()),
   (m) => m.replyable === true,
   (m) => !m.hidden && !m.deleted,
+  (m) => !m.corrects_id,
 ];
 
 /**
  * An outbound, sent staff text WhatsApp knows (a wamid): never a template, a file, a marker, a
- * hidden, deleted or failed message.
+ * hidden, deleted or failed message, nor a correction (review of #694: «تعديل» stays on the
+ * original, and each new correction links to it).
  */
 export const isCorrectable = (m: Correctable): boolean => kindOk.every((ok) => ok(m));
 
@@ -57,20 +61,25 @@ export const canCorrect = (
   who: CorrectionActor | null | undefined,
 ): boolean => !!who && isCorrectable(m) && mayCorrect(m.sent_by_id, who);
 
+/** The prefix that starts `t` (any of `prefixes`, a blank one never does), or undefined. */
+const leading = (prefixes: readonly string[], t: string): string | undefined =>
+  prefixes.map((p) => p.trim()).find((p) => p !== '' && t.startsWith(p));
+
 /**
- * The text without its leading prefix(es) (trimmed): a correction's own body, or a prefix staff
- * typed themselves, never reaches the family twice («تصحيح: تصحيح: …»).
+ * The text without its leading prefix(es) (trimmed): a prefix staff typed themselves never
+ * reaches the family twice («تصحيح: تصحيح: …»). `prefixes`: the admins' current wording and the
+ * bundled one (ar.json inbox.correction.prefix).
  */
-export function stripCorrectionPrefix(prefix: string, text: string): string {
-  const p = prefix.trim();
+export function stripCorrectionPrefix(prefixes: readonly string[], text: string): string {
   const t = text.trim();
-  const starts = p !== '' && t.startsWith(p);
-  return starts ? stripCorrectionPrefix(p, t.slice(p.length)) : t;
+  const p = leading(prefixes, t);
+  return p === undefined ? t : stripCorrectionPrefix(prefixes, t.slice(p.length));
 }
 
-/** The text the family gets: the prefix (ar.json inbox.correction.prefix) once, then the text. */
-export const correctionBody = (prefix: string, text: string): string =>
-  `${prefix}${stripCorrectionPrefix(prefix, text)}`;
+/** The text the family gets: `prefix` once, then the text without any of `also` in front. */
+export function correctionBody(prefix: string, text: string, also: readonly string[] = []): string {
+  return `${prefix}${stripCorrectionPrefix([prefix, ...also], text)}`;
+}
 
 /** A correction that counts: not failed, hidden or deleted (it never greys its original). */
 const counts = (m: CorrectionRow): boolean =>

@@ -32,8 +32,7 @@ export interface ThreadSend<T> {
   dedup?: string;
   /** A server-made send that must not go out late (the reopen template: 24 h). */
   expiresAt?: string;
-  /** The sender's base role («تعديل»: an admin corrects anyone's text). */
-  role?: string | null;
+  role?: string | null; // the sender's base role («تعديل»: an admin corrects anyone's text)
 }
 
 /**
@@ -78,8 +77,7 @@ export async function replyOf(
  */
 @Injectable()
 export class ThreadSendService {
-  /** «رد» (property-injected: the constructor is at the 3-parameter limit). */
-  @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
+  @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes; // «رد» (the constructor is full)
   @Inject(CorrectionRepo) private readonly corrections?: CorrectionRepo; // «تعديل» = a correction
 
   constructor(
@@ -96,6 +94,8 @@ export class ThreadSendService {
   async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<Sent> {
     if (s.scope) assertCanSend(s.scope, s.phone);
     const key = dedupKey(s);
+    const again = s.input.correctsId ? await this.outbox.replayOf(key) : null;
+    if (again) return again; // «تعديل»: a retry's first row, before its checks (#694)
     const thread = await this.queries.thread(s.phone);
     const at = { now, windows: () => this.queries.numberWindows(s.phone) };
     const fix = await correctionOf(this.corrections, s);

@@ -6,8 +6,9 @@ import {
   type SentText,
   type TextAnswer,
 } from '@ab/client-core';
-import ar from '@ab/shared/i18n/ar.json';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { BUNDLES, t } from '@/lib/i18n/i18n';
+import { locale } from '@/lib/i18n/locale';
 import { errorCode } from '@/features/teaching/schedule';
 import { sendText } from '@/features/messaging/inbox/api/api';
 import { dropSending, holdSending, showSending, showSent } from '@/features/messaging/inbox/api/send-cache';
@@ -61,10 +62,19 @@ export const textSentOf = (phone: string, draft: Draft, text: string) => ({
 /** What settleTextSend reads of the answer. */
 type Answer = Pick<TextAnswer, 'body' | 'corrects_id' | 'replayed'>;
 
-/** What the answer is checked against: the text, and a correction's original and prefix. */
+/**
+ * The Arabic prefixes the API may put before a correction: the admins' wording (this run's `t`,
+ * override-merged, when it is the Arabic one), then the bundled default the API also strips.
+ */
+export const correctionPrefixes = (): string[] => [
+  ...(locale === 'ar' ? [t.inbox.correction.prefix] : []),
+  BUNDLES.ar.inbox.correction.prefix,
+];
+
+/** What the answer is checked against: the text, and a correction's original and prefixes. */
 const sentText = ({ text, correctsId }: Sent): SentText => ({
   text,
-  correction: correctsId ? { id: correctsId, prefix: ar.inbox.correction.prefix } : undefined,
+  correction: correctsId ? { id: correctsId, prefixes: correctionPrefixes() } : undefined,
 });
 
 /**

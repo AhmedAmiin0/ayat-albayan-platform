@@ -72,13 +72,14 @@ describe('«تعديل» = a correction: POST /threads/:phone/text with corrects
     expect((await t.call(correct('sales'))).statusCode).toBe(201);
   });
 
-  it('another chat, a template, a file or a hidden message is refused before anything is queued', async () => {
+  it('another chat, a template, a file, a hidden message or a correction is refused before anything is queued', async () => {
     const cases = [
       [target({ phone_e164: '+966559999999' }), 400, 'correction_not_in_thread'],
       [null, 400, 'correction_not_in_thread'],
       [target({ template_key: 'lesson_reminder' }), 400, 'not_correctable'],
       [target({ media_mime: 'image/jpeg' }), 400, 'not_correctable'],
       [target({ hidden_at: FRESH }), 400, 'not_correctable'],
+      [target({ corrects_id: 'a0000000-0000-4000-8000-0000000000c0' }), 400, 'not_correctable'],
     ] as const;
     for (const [row, status, code] of cases) {
       vi.spyOn(repo, 'target').mockResolvedValue(row);

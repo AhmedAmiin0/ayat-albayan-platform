@@ -44,4 +44,15 @@ describe('POST /threads/:phone/text answers `replayed`', () => {
     expect([res.statusCode, res.json().replayed]).toEqual([201, replayed]);
     expect(t.audit.record).toHaveBeenCalledTimes(replayed ? 0 : 1);
   });
+
+  it('a retried correction gets its first row back before its checks (round 3, item 4)', async () => {
+    const first = messageRow({ id: 'm9', body: 'تصحيح: الخامسة', template_key: null, template_params: null });
+    t.queries.byDedupKey.mockResolvedValue(first);
+    const gone = vi.spyOn(t.app.get(CorrectionRepo), 'target').mockResolvedValue(null);
+    const res = await t.call({ method: 'POST', url: URL, token: 'admin', body: { ...body, correctsId: ORIGINAL } });
+    expect([res.statusCode, res.json().id, res.json().replayed]).toEqual([201, 'm9', true]);
+    expect(gone).not.toHaveBeenCalled();
+    expect(t.queries.enqueue).not.toHaveBeenCalled();
+    expect(t.queries.byDedupKey).toHaveBeenCalledWith(`admin:${PHONE}:${body.clientRequestId}`);
+  });
 });

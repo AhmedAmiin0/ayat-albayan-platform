@@ -1,4 +1,4 @@
-import { WA_TEXT_MAX } from '@ab/shared';
+import { stripCorrectionPrefix, WA_TEXT_MAX } from '@ab/shared';
 import { useIsMutating } from '@tanstack/react-query';
 import { useId, useLayoutEffect, useRef, useSyncExternalStore, type ReactNode } from 'react';
 import { Icon } from '@/components/ui/display/icon';
@@ -11,7 +11,7 @@ import type { ComposerExtras } from '@/features/messaging/inbox/composer/lib/com
 import { sendsOnKey } from '@/features/messaging/inbox/composer/lib/composer-keys';
 import { ComposerError } from './ComposerError';
 import { draftGeneration, getDraft, keepsFailed, keptFailed, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
-import { textSentOf, useTextSend } from '@/features/messaging/inbox/composer/lib/use-text-send';
+import { correctionPrefixes, textSentOf, useTextSend } from '@/features/messaging/inbox/composer/lib/use-text-send';
 import { ownSendGeneration } from '@/features/messaging/inbox/composer/lib/own-send';
 import { ReplyStrip } from './ReplyStrip';
 import { EditStrip } from './EditStrip';
@@ -78,7 +78,9 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const failedHere = !pending && keepsFailed(stored, text) ? sendErrorCodeText(stored.code) : null;
   const local = send.isError && !pending ? sendErrorText(send.error) : null;
   const error = tooLong ? t.inbox.composer.tooLong : (failedHere ?? local);
-  const blocked = !text.trim() || tooLong || pending;
+  // In edit mode a text that is only «تصحيح:» has nothing to send (the API's 400 empty_correction).
+  const words = stripCorrectionPrefix(fix.correctsId ? correctionPrefixes() : [], text);
+  const blocked = !words || tooLong || pending;
   const submit = () => {
     if (blocked) return;
     const gen = { draft: draftGeneration(), own: ownSendGeneration() };

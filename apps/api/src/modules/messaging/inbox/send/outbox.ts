@@ -44,6 +44,12 @@ export class Outbox {
     return this.write(row, false);
   }
 
+  /** Rule 8 before a send's own checks: the row this key already queued (replayed), else null. */
+  async replayOf(key: string): Promise<Sent | null> {
+    const row = await this.queries.byDedupKey(key);
+    return row ? { view: await this.views.view(row), replayed: true } : null;
+  }
+
   private async write(row: Outbound, wait: boolean): Promise<Sent> {
     const queued = await this.queries.enqueue({ ...row, direction: 'outbound', status: 'queued' });
     if (queued.status === 'queued') {

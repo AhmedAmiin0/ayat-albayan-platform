@@ -16,10 +16,13 @@ export const SEND_REPLAYED = 'send_replayed';
 /** A text send's 2xx: its row, and from the API whether its request id replayed the FIRST row. */
 export type TextAnswer = MessageView & { replayed?: boolean | undefined };
 
-/** What a send carried: its text; a correction («تعديل») also its original and the app's prefix. */
+/**
+ * What a send carried: its text; a correction («تعديل») also its original and the Arabic prefixes
+ * the API may have put in front: the admins' wording this app knows, then the bundled default.
+ */
 export interface SentText {
   text: string;
-  correction?: { id: string; prefix: string } | undefined;
+  correction?: { id: string; prefixes: readonly string[] } | undefined;
 }
 
 type Answer = Pick<TextAnswer, 'body' | 'corrects_id' | 'replayed'>;
@@ -28,15 +31,16 @@ type Correction = NonNullable<SentText['correction']>;
 const bodyOf = (row: Answer): string => (row.body ?? '').trim();
 
 /**
- * A correction (owner 2026-11-07) is this send only when it corrects the same original. A new row
- * ends with the text (the prefix may be reworded by the admins); a replayed one is this send only
- * when it IS this correction (the app's prefix + the same text: a retry after a lost answer), so a
- * shortened resend or another text under the pinned id is never taken for it.
+ * A correction (owner 2026-11-07) is this send only when it corrects the same original (the picked
+ * one: a correction is never corrected again). A new row ends with the text; a replayed one is
+ * this send only when it IS this correction (one of the prefixes + the same text: a retry after a
+ * lost answer), so a shortened resend or another text under the pinned id is never taken for it.
  */
 function correctionEchoes(row: Answer, sent: SentText, c: Correction): boolean {
-  const own = stripCorrectionPrefix(c.prefix, sent.text);
+  const own = stripCorrectionPrefix(c.prefixes, sent.text);
   const body = bodyOf(row);
-  const same = row.replayed ? body === correctionBody(c.prefix, own) : body.endsWith(own);
+  const exact = c.prefixes.some((p) => body === correctionBody(p, own));
+  const same = row.replayed ? exact : body.endsWith(own);
   return row.corrects_id === c.id && same;
 }
 

@@ -1,7 +1,8 @@
 import { message } from '@/inbox/shared/thread-fixtures';
 import { carried, echoed, sendBody } from '@/inbox/thread/send/outgoing';
 import ar from '@ab/shared/i18n/ar.json';
-import { targetKey, textOut } from './text-target';
+import { t } from '@/core/lib/i18n/i18n';
+import { bareText, targetKey, textOut } from './text-target';
 
 // The box's text send (owner 2026-11-07): a correction carries correctsId, never a reply.
 const original = message({ id: 'o1', direction: 'outbound', body: 'الحلقة غدًا' });
@@ -43,4 +44,24 @@ test("the row is expected with the API's Arabic prefix; the box keeps the typed 
   expect(echoed(out)).toBe(`${ar.inbox.correction.prefix}الحلقة بعد غد`);
   expect(carried(out)).toBe('الحلقة بعد غد');
   expect(echoed(textOut('مرحبًا', { reply: asked, editing: null }))).toBe('مرحبًا');
+});
+
+describe('round 3 of #694: the admins\' prefix, a bare prefix', () => {
+  const DEFAULT_PREFIX = t.inbox.correction.prefix;
+  afterEach(() => {
+    t.inbox.correction.prefix = DEFAULT_PREFIX;
+  });
+
+  it('the row is expected with the override-merged prefix, never the bundled one', () => {
+    t.inbox.correction.prefix = 'تعديل: ';
+    const out = textOut('تصحيح: الحلقة بعد غد', { reply: null, editing: original });
+    expect(echoed(out)).toBe('تعديل: الحلقة بعد غد');
+  });
+
+  it('in edit mode only the prefix is nothing to send; outside it, a plain text', () => {
+    expect(bareText(' تصحيح: ', original)).toBe(true);
+    expect(bareText('تصحيح: غدًا', original)).toBe(false);
+    expect(bareText('تصحيح:', null)).toBe(false);
+    expect(bareText('  ', null)).toBe(true);
+  });
 });

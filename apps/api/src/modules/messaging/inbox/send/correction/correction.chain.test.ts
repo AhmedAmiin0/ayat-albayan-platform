@@ -1,13 +1,15 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ar } from '@/common/infra/i18n/server-text';
 import { correctionOf } from './correction';
 import type { CorrectionRepo, CorrectionTarget } from './correction.repo';
 import { target } from './correction.fakes';
 import { PHONE } from '@/modules/messaging/inbox/inbox.fakes';
 
-// Review of PR #694 (1): a correction of a correction reaches the family with ONE prefix and is
-// linked to the original, so the chain stays one level.
+// Review of PR #694 (round 3): a correction is never corrected again (staff correct the original
+// once more), the prefix goes once whatever the admins call it, and a bare prefix is refused.
 const ORIGINAL = 'a0000000-0000-4000-8000-0000000000c1';
 const FIRST_FIX = 'a0000000-0000-4000-8000-0000000000c2';
+const DEFAULT_PREFIX = ar.inbox.correction.prefix;
 const rows: Record<string, CorrectionTarget> = {
   [ORIGINAL]: target({ created_by: 'u1' }),
   [FIRST_FIX]: target({
@@ -17,36 +19,53 @@ const rows: Record<string, CorrectionTarget> = {
     corrects_id: ORIGINAL,
   }),
 };
-const repo = (over: Record<string, CorrectionTarget> = {}) => {
-  const all = { ...rows, ...over };
-  return { target: vi.fn(async (id: string) => all[id] ?? null) } as unknown as CorrectionRepo;
-};
-const send = (text: string, correctsId = FIRST_FIX) => ({
+const repo = { target: vi.fn(async (id: string) => rows[id] ?? null) } as unknown as CorrectionRepo;
+const send = (text: string, correctsId = ORIGINAL) => ({
   phone: PHONE,
   actorId: 'u1',
-  role: 'sales',
+  role: 'admin',
   input: { text, correctsId },
 });
 
-describe('correctionOf: a correction of a correction', () => {
-  it('targets the original: one prefix, replying to it and linked to it', async () => {
-    const out = await correctionOf(repo(), send('تصحيح: الحلقة الساعة السادسة'));
+afterEach(() => {
+  ar.inbox.correction.prefix = DEFAULT_PREFIX;
+});
+
+describe('correctionOf: one level only', () => {
+  it('a correction as the target: 400 not_correctable (even for an admin)', async () => {
+    await expect(correctionOf(repo, send('السادسة', FIRST_FIX))).rejects.toMatchObject({
+      response: { code: 'not_correctable' },
+    });
+  });
+
+  it('a second correction of the original replies to it and links it', async () => {
+    const out = await correctionOf(repo, send('الحلقة الساعة السادسة'));
     expect(out.send.input).toMatchObject({
       text: 'تصحيح: الحلقة الساعة السادسة',
       replyToMessageId: ORIGINAL,
     });
     expect(out.row).toEqual({ corrects_id: ORIGINAL });
   });
+});
 
-  it('a prefix typed on a first correction is sent once', async () => {
-    const out = await correctionOf(repo(), send(' تصحيح: تصحيح: السادسة', ORIGINAL));
+describe('correctionOf: the prefix', () => {
+  it('a typed prefix is sent once', async () => {
+    const out = await correctionOf(repo, send(' تصحيح: تصحيح: السادسة'));
     expect(out.send.input.text).toBe('تصحيح: السادسة');
   });
 
-  it('an original in another chat (or gone): 400 correction_not_in_thread', async () => {
-    const elsewhere = { [ORIGINAL]: target({ phone_e164: '+201000000099' }) };
-    await expect(correctionOf(repo(elsewhere), send('نص'))).rejects.toMatchObject({
-      response: { code: 'correction_not_in_thread' },
-    });
+  it('an admin-reworded prefix: the new one once, the bundled one dropped', async () => {
+    ar.inbox.correction.prefix = 'تعديل: ';
+    const out = await correctionOf(repo, send('تصحيح: تعديل: السادسة'));
+    expect(out.send.input.text).toBe('تعديل: السادسة');
   });
+
+  it.each(['تصحيح:', '  تصحيح:  ', 'تصحيح: تصحيح:'])(
+    'only the prefix (%j): 400 empty_correction',
+    async (text) => {
+      await expect(correctionOf(repo, send(text))).rejects.toMatchObject({
+        response: { code: 'empty_correction' },
+      });
+    },
+  );
 });

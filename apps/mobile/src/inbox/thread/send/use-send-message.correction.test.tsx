@@ -6,6 +6,7 @@ import { clearChatMemory } from '@/inbox/thread/anchor';
 import { type ThreadCache, threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { useSendMessage } from '@/inbox/thread/hooks/use-thread';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
+import { t } from '@/core/lib/i18n/i18n';
 import { PINS } from './pinned-send';
 
 // Review of PR #694 (2): the API says `replayed` when the pinned id gave back its FIRST row; a
@@ -61,4 +62,20 @@ test('a retry of this very correction after a lost answer is this send', async (
   await sendFix('الخامسة');
   expect(PINS.box.replayed(PHONE)).toBe(false);
   expect(getComposerText(PHONE)).toBe('');
+});
+
+test('a second correction of the original goes once and is reported sent (round 3)', async () => {
+  mockApiSend.mockResolvedValue(answer({ body: 'تصحيح: السادسة', corrects_id: 'o1', replayed: false }));
+  await sendFix('السادسة');
+  expect(mockApiSend).toHaveBeenCalledTimes(1);
+  expect(PINS.box.replayed(PHONE)).toBe(false);
+});
+
+test('an admin-reworded prefix: a retry after a lost answer is this send (round 3)', async () => {
+  const before = t.inbox.correction.prefix;
+  t.inbox.correction.prefix = 'تعديل: ';
+  mockApiSend.mockResolvedValue(answer({ body: 'تعديل: الخامسة', corrects_id: 'o1', replayed: true }));
+  await sendFix('الخامسة');
+  t.inbox.correction.prefix = before;
+  expect(PINS.box.replayed(PHONE)).toBe(false);
 });

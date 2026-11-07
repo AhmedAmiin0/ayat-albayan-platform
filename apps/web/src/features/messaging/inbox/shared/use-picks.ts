@@ -1,5 +1,4 @@
-import { stripCorrectionPrefix, type MessageQuote, type MessageView } from '@ab/shared';
-import ar from '@ab/shared/i18n/ar.json';
+import type { MessageQuote, MessageView } from '@ab/shared';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { getDraft, keptFailed, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { quoteOf } from '@/features/messaging/inbox/messages/lib/quote';
@@ -10,13 +9,6 @@ type Saved = { id: string; text: string } | null;
 /** The box gets `text` (an unconfirmed send keeps its pinned id). */
 const putBox = (phone: string, text: string) =>
   setDraft(phone, { text, failed: keptFailed(getDraft(phone).failed) });
-
-/**
- * «تعديل»: the box holds the text to correct. A correction's own body comes without its prefix
- * (the API adds it once; the send targets the original).
- */
-const editText = (m: MessageView): string =>
-  m.corrects_id ? stripCorrectionPrefix(ar.inbox.correction.prefix, m.body ?? '') : (m.body ?? '');
 
 /** An edit that ends without a send: the box's own draft comes back. */
 function restore(phone: string, saved: RefObject<Saved>): void {
@@ -58,7 +50,7 @@ export function usePicks(phone: string) {
     saved.current = { id: m.id, text: saved.current?.text ?? getDraft(phone).text };
     setTarget(null);
     setEditing(m);
-    putBox(phone, editText(m));
+    putBox(phone, m.body ?? ''); // «تعديل» is only ever on an original (isCorrectable)
   };
   const editSent = (id: string) => {
     saved.current = saved.current?.id === id ? null : saved.current;

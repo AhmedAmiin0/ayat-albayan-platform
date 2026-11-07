@@ -62,7 +62,8 @@ export function Composer({
   const [text, setText] = useComposerText(phone);
   const replies = useSavedReplyDraft({ text, setText, enabled: staff });
   useForgetDraftOnLeave(phone, replies.staged !== null);
-  const { sendTemplate, sendText, renew, errors, pending } = useComposerSend({ phone, text, setText, ...replies });
+  const send = useComposerSend({ phone, text, setText, ...replies });
+  const { sendTemplate, sendText, renew, errors, pending } = send;
   const [picking, setPicking] = useState(false);
   // A new chat opens on its allowed templates (owner 2026-11-06), until closed or one is sent.
   const [dismissed, setDismissed] = useState(false);
@@ -117,6 +118,7 @@ export function Composer({
           }}
           staged={replies.staged !== null}
           sending={pending}
+          blocked={send.blocked}
         />
       ) : (
         <ClosedRow known={thread !== null} staff={staff} onTemplate={pick} onQuote={quote ? () => setQuoting(true) : undefined} />

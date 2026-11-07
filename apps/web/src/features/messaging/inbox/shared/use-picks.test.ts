@@ -4,10 +4,9 @@ import { clearAllDrafts, getDraft, setDraft } from '@/features/messaging/inbox/c
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { usePicks } from './use-picks';
 
-// Review of PR #694 (1, 4, 5): an edit that ends without a send gives the box its draft back; a
-// correction is edited without its prefix.
+// Review of PR #694 (1, 4, 5): an edit that ends without a send gives the box its draft back.
 const OWN = message({ id: 'own', direction: 'outbound', status: 'sent', body: 'الساعة الخامسة' });
-const FIX = message({ id: 'fix', direction: 'outbound', body: 'تصحيح: الساعة السادسة' });
+const OTHER = message({ id: 'other', direction: 'outbound', body: 'الساعة السادسة' });
 const typed = () => getDraft(PHONE).text;
 
 const start = () => {
@@ -51,9 +50,9 @@ describe('usePicks: the box around «تعديل»', () => {
     expect([result.current.editing, typed()]).toEqual([null, '']);
   });
 
-  it('a second «تعديل» keeps the first draft; a correction is edited without its prefix', () => {
+  it('a second «تعديل» keeps the first draft and puts the other text in the box', () => {
     const { result } = start();
-    act(() => result.current.edit({ ...FIX, corrects_id: OWN.id }));
+    act(() => result.current.edit(OTHER));
     expect(typed()).toBe('الساعة السادسة');
     act(() => result.current.cancelEdit());
     expect(typed()).toBe('مسودتي');

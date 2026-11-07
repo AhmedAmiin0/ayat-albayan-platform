@@ -1,5 +1,6 @@
 import { SEND_REPLAYED } from '@ab/client-core';
 import { afterEach, expect, it } from 'vitest';
+import { t } from '@/lib/i18n/i18n';
 import { clearAllDrafts, draftGeneration, getDraft, setDraft } from './draft-store';
 import { settleTextSend, type Sent } from './use-text-send';
 
@@ -15,7 +16,11 @@ const sent = (over: Partial<Sent> = {}): Sent => ({
   ...over,
 });
 
-afterEach(clearAllDrafts);
+const DEFAULT_PREFIX = t.inbox.correction.prefix;
+afterEach(() => {
+  clearAllDrafts();
+  t.inbox.correction.prefix = DEFAULT_PREFIX;
+});
 
 it('a correction answered with the prefixed body settles with no replay note', () => {
   setDraft(PHONE, { text: '', failed: null });
@@ -35,4 +40,12 @@ it('a replayed row correcting another message is the replay too (review of #694)
   const row = { body: 'تصحيح: الساعة الخامسة', corrects_id: 'o2', replayed: true };
   expect(settleTextSend(row, sent())).toBe(true);
   expect(getDraft(PHONE).text).toBe('الساعة الخامسة');
+});
+
+it('an admin-reworded prefix: a retry after a lost answer is this send (round 3, item 2)', () => {
+  t.inbox.correction.prefix = 'تعديل: ';
+  setDraft(PHONE, { text: '', failed: null });
+  const row = { body: 'تعديل: الساعة الخامسة', corrects_id: 'o1', replayed: true };
+  expect(settleTextSend(row, sent())).toBe(false);
+  expect(getDraft(PHONE).failed).toBeNull();
 });

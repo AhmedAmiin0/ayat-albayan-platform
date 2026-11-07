@@ -96,3 +96,12 @@ test('✕ ends edit mode and empties the box; «رد» replaces an edit', async 
   expect(screen.queryByTestId('edit-strip')).toBeNull();
   expect(screen.getByTestId('reply-strip')).toBeTruthy();
 });
+
+test('only «تصحيح:» in the box: «أرسل» is off, nothing is sent (round 3 of #694)', async () => {
+  await editOwn();
+  await fireEvent.changeText(box(), 'تصحيح: ');
+  const send = screen.getByRole('button', { name: t.inbox.composer.send });
+  expect(send.props.accessibilityState?.disabled).toBe(true);
+  await fireEvent.press(send);
+  expect(mockApiSend).not.toHaveBeenCalled();
+});

@@ -74,7 +74,7 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
     if (inFlight || send.isPending || sendStaged.isPending) return;
     const body = text.trim();
     const tapped = staged?.requestId;
-    if (!body) return sendFile(staged);
+    if (target.bare(body)) return sendFile(staged);
     setText('');
     const out = target.out(body);
     const id = boxId.take(body, targetKey(out));
@@ -96,7 +96,9 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   const sendLine = send.isError ? chatSendError(send.error) : null;
   const textLine = replayed ? t.inbox.error.send_replayed : sendLine;
   const errors = [textLine, sendStaged.isError ? fileError(sendStaged.error) : null];
-  return { sendTemplate, sendText, renew: boxId.renew, errors, pending: inFlight || send.isPending || sendStaged.isPending };
+  const pending = inFlight || send.isPending || sendStaged.isPending;
+  // In edit mode a box holding only «تصحيح:» has nothing to send (round 3 of #694).
+  return { sendTemplate, sendText, renew: boxId.renew, errors, pending, blocked: target.bare(text) };
 }
 
 /** The failures under the box: the text's always; the file's only while the window is open. */

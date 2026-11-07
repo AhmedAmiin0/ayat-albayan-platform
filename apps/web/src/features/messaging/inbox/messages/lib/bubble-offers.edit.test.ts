@@ -36,6 +36,12 @@ describe('bubbleOffers: «تعديل» (a «تصحيح:» reply, owner 2026-11-0
     expect(bubbleOffers({ ...OWN, status: 'failed' }, as(SALES)).edit).toBe(false);
   });
 
+  it('never a correction: staff correct the original again (review of #694, round 3)', () => {
+    const fix = { ...OWN, id: 'c1', body: 'تصحيح: الساعة السادسة', corrects_id: 'm0' };
+    expect(bubbleOffers(fix, as(SALES)).edit).toBe(false);
+    expect(bubbleOffers(fix, as({ id: 'p9', role: 'admin' })).edit).toBe(false);
+  });
+
   it('never theirs, never in teacher mode, never without a signed-in user', () => {
     expect(bubbleOffers({ ...OWN, direction: 'inbound' }, as(SALES))).toMatchObject({
       edit: false,

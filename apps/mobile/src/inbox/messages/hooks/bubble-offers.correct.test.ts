@@ -43,3 +43,9 @@ test('off outside a staff chat (a teacher) and before /auth/me answers', () => {
   expect(offers(own, { enabled: false, teacher: true, me: sales }).correct).toBe(false);
   expect(offers(own, { ...on, me: null })).toMatchObject({ correct: false, noEdit: true });
 });
+
+test('never a correction: staff correct the original again (review of #694, round 3)', () => {
+  const fix = { ...own, id: 'c1', body: 'تصحيح: الحلقة الساعة 6', corrects_id: 'o1' };
+  expect(offers(fix).correct).toBe(false);
+  expect(offers(fix, { ...on, me: admin }).correct).toBe(false);
+});
