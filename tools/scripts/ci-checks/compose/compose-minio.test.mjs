@@ -71,7 +71,7 @@ test('its data on a named volume, a health check, rotated logs, 512 MB', () => {
 
 test('init: one shot, after MinIO, its script read-only from the shipped checkout', () => {
   assert.equal(init.restart, 'no');
-  assert.equal(init.deploy.resources.limits.memory, '64M');
+  assert.equal(init.deploy.resources.limits.memory, '192M');
   // service_started, not service_healthy: a MinIO that will not start must never fail roll.sh's
   // last `up -d`.
   assert.deepEqual(init.depends_on, { 'ayat-minio': { condition: 'service_started' } });
