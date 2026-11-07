@@ -59,4 +59,14 @@ describe('createInboxLive({ chatOwnsBadge }): the badge on an event (docs/43 AU6
     expect(targets.badge).toHaveBeenCalledTimes(1);
     expect(targets.chat).toHaveBeenCalledTimes(1);
   });
+
+  it('the list back on screen after a change it missed brings the badge with it (docs/44 BUG4)', () => {
+    const { live, targets } = setup(true);
+    live.watch(chatLiveKey(OPEN));
+    live.watch('list')();
+    live.changed({ phone: OPEN });
+    expect([targets.list.mock.calls.length, targets.badge.mock.calls.length]).toEqual([0, 0]);
+    live.watch('list');
+    expect([targets.list.mock.calls.length, targets.badge.mock.calls.length]).toEqual([1, 1]);
+  });
 });

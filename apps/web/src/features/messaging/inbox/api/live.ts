@@ -31,7 +31,9 @@ export function useLiveChat(phone: string): void {
  * Mounted once by a staff shell. A web page shows only mounted queries, so the list and the badge
  * always count as on screen: an event re-reads the mounted ['threads', 'list'] and nav counts.
  * A tab hidden for INBOX_HIDDEN_LEAVE_MS leaves the channel (the polls take over); shown again it
- * rejoins (or, still joined, resyncs once). Sign-out / unmount leaves at once.
+ * rejoins (or, still joined, rejoins a dropped channel at once and resyncs). A dropped channel
+ * rejoins with backoff (client-core live-rejoin.ts), at once when the network comes back.
+ * Sign-out / unmount leaves at once.
  */
 export function useInboxRealtime(enabled: boolean): void {
   const client = useQueryClient();
@@ -56,8 +58,12 @@ export function useInboxRealtime(enabled: boolean): void {
     const session = createLiveSession(open, inboxLive.resync);
     const shown = () => (document.visibilityState === 'hidden' ? session.pause(INBOX_HIDDEN_LEAVE_MS) : session.resume());
     if (document.visibilityState !== 'hidden') session.resume(); // a tab opened in the background joins when shown
+    // The network is back (Wi-Fi switch, laptop wake): a dropped channel rejoins now, then resyncs.
+    const online = () => (document.visibilityState === 'hidden' ? undefined : session.resume());
     document.addEventListener('visibilitychange', shown);
+    window.addEventListener('online', online);
     return () => {
+      window.removeEventListener('online', online);
       document.removeEventListener('visibilitychange', shown);
       session.end();
       list();

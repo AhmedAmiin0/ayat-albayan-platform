@@ -1,5 +1,6 @@
 export { deltaSearch, mergeDelta, needsFullRead, type ThreadPages } from './thread-delta.js';
 export {
+  catchUpPlan,
   changedPhone,
   chatLiveKey,
   fullReadInterval,
@@ -14,8 +15,12 @@ export {
   type LiveKey,
   refreshPlan,
   THREAD_FULL_LIVE_MS,
+  UNREAD_COUNT_KEY,
+  UNREAD_COUNT_PATH,
+  unreadTotal,
 } from './inbox-live.js';
-export { connectInboxLive, type LiveChannel, type LiveClient } from './live-connect.js';
+export { connectInboxLive, type LiveChannel, type LiveClient, type LiveConnection } from './live-connect.js';
+export { liveDotState, type LiveDotState } from './live-rejoin.js';
 export { createLiveSession, type LiveSession } from './live-session.js';
 export { createInboxLive, type InboxLive, type InboxLiveOptions, type LiveTargets } from './live-store.js';
 export { createThrottle, type Throttle } from './throttle.js';

@@ -3,6 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { detail, message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { inboxLive } from './live';
 import { useLiveThread } from './thread-delta';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -59,5 +60,12 @@ describe('useLiveThread: the open chat polls a delta between full reads', () => 
     await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
     await new Promise((r) => setTimeout(r, 150));
     expect(deltaCalls()).toEqual([]);
+  });
+
+  it('keeps polling the delta while realtime reads SUBSCRIBED (a quietly dead socket, docs/44 BUG5)', async () => {
+    vi.spyOn(document, 'hasFocus').mockReturnValue(true);
+    vi.spyOn(inboxLive, 'isLive').mockReturnValue(true);
+    setup({ messages: [], has_more: false, pending: [] });
+    await waitFor(() => expect(deltaCalls().length).toBeGreaterThan(1));
   });
 });

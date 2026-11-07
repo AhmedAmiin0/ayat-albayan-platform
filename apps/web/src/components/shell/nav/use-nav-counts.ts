@@ -1,6 +1,7 @@
 import type { Permission } from '@ab/shared';
 import { useQueries } from '@tanstack/react-query';
 import type { AdminNavProps } from '@/components/shell/nav/AdminNav';
+import { unreadCountQuery, useInboxLive } from '@/features/messaging/inbox';
 import { apiFetch } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 
@@ -22,6 +23,7 @@ const countQuery = (prefix: string, path: string, enabled: boolean) => ({
  * TODO(R-SCH-03, R-REP-05, R-SUB-02): الجدول / التقارير / الاشتراكات counts when those land.
  */
 export function useNavCounts(can: (p: Permission) => boolean = () => true): NonNullable<AdminNavProps['counts']> {
+  useInboxLive(); // a realtime connect / drop re-reads the badge's poll interval
   const [students, teachers, newLeads, applicants, unread] = useQueries({
     queries: [
       // Only what the user may read (dynamic roles): no 403s for a custom role.
@@ -29,8 +31,9 @@ export function useNavCounts(can: (p: Permission) => boolean = () => true): NonN
       countQuery('teachers', '/teachers?page=1&pageSize=1', can('teachers.read')),
       countQuery('leads', '/leads?status=new&page=1&pageSize=1', can('leads.read')),
       countQuery('job-applicants', '/job-applicants?page=1&pageSize=1', can('applicants.read')),
-      // Threads with a message no admin has opened (Phase 4 H1), also the admin's turn.
-      countQuery('threads', '/threads?unread=true&page=1&pageSize=1', can('inbox.read')),
+      // Threads with a message no admin has opened (Phase 4 H1), also the admin's turn: the chats
+      // list's own summary, polled like the list (docs/44 BUG4).
+      unreadCountQuery(can('inbox.read')),
     ],
   });
   const counts: NonNullable<AdminNavProps['counts']> = {};

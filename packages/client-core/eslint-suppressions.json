@@ -217,7 +217,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 2
     }
   },
   "src/messaging/inbox/live-connect.test.ts": {
@@ -240,7 +240,7 @@
   },
   "src/messaging/inbox/live-session.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/messaging/inbox/live-store.test.ts": {

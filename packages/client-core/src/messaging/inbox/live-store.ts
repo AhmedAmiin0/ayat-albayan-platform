@@ -1,4 +1,5 @@
 import {
+  catchUpPlan,
   changedPhone,
   chatLiveKey,
   phoneOfKey,
@@ -70,7 +71,7 @@ export function createInboxLive({ chatOwnsBadge = false }: InboxLiveOptions = {}
       return () => void listeners.delete(listener);
     },
     watch(key) {
-      if (registry.watch(key)) fire(key);
+      if (registry.watch(key)) catchUpPlan(key).forEach(fire);
       return () => registry.unwatch(key);
     },
     forget(key) {

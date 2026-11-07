@@ -41,9 +41,13 @@ describe('connectInboxLive', () => {
     hooks.status?.('SUBSCRIBED');
     expect([live.isLive(), t.badge.mock.calls.length]).toEqual([true, 1]);
     for (const s of ['CHANNEL_ERROR', 'TIMED_OUT', 'CLOSED']) {
-      hooks.status?.('SUBSCRIBED');
-      hooks.status?.(s);
+      const other = fakeClient();
+      const conn = connectInboxLive(other.client, live, t);
+      await flush();
+      other.hooks.status?.('SUBSCRIBED');
+      other.hooks.status?.(s);
       expect(live.isLive()).toBe(false);
+      conn.stop();
     }
   });
 
@@ -51,7 +55,7 @@ describe('connectInboxLive', () => {
     const { client, channel, hooks } = fakeClient();
     const live = createInboxLive();
     const t = targets();
-    const stop = connectInboxLive(client, live, t);
+    const { stop } = connectInboxLive(client, live, t);
     await flush();
     hooks.event?.({ payload: { phone: '+966500000001' } });
     expect(t.badge).toHaveBeenCalledTimes(1);
@@ -63,7 +67,7 @@ describe('connectInboxLive', () => {
 
   it('stopped before the auth settles: never joins; a failed setAuth still joins (the policy decides)', async () => {
     const early = fakeClient();
-    connectInboxLive(early.client, createInboxLive(), targets())();
+    connectInboxLive(early.client, createInboxLive(), targets()).stop();
     await flush();
     expect(early.client.channel).not.toHaveBeenCalled();
     const failed = fakeClient(Promise.reject(new Error('no session')));
@@ -76,7 +80,7 @@ describe('connectInboxLive', () => {
     const first = fakeClient();
     let left: (v: string) => void = () => undefined;
     first.client.removeChannel.mockImplementation(() => new Promise<string>((r) => (left = r)));
-    const stop = connectInboxLive(first.client, createInboxLive(), targets());
+    const { stop } = connectInboxLive(first.client, createInboxLive(), targets());
     await flush();
     stop();
     const second = fakeClient();
@@ -92,16 +96,16 @@ describe('connectInboxLive', () => {
     const alone = fakeClient();
     connectInboxLive(alone.client, createInboxLive(), targets());
     await flush();
-    connectInboxLive(alone.client, createInboxLive(), targets())(); // never joined: nothing to leave
+    connectInboxLive(alone.client, createInboxLive(), targets()).stop(); // never joined: nothing to leave
     expect(alone.client.realtime.disconnect).not.toHaveBeenCalled();
     const calls = fakeClient(undefined, [{ topic: 'realtime:wa_calls:x' }]);
-    const stop = connectInboxLive(calls.client, createInboxLive(), targets());
+    const { stop } = connectInboxLive(calls.client, createInboxLive(), targets());
     await flush();
     stop();
     await flush();
     expect(calls.client.removeChannel).toHaveBeenCalledTimes(1);
     expect(calls.client.realtime.disconnect).not.toHaveBeenCalled();
-    const stopAlone = connectInboxLive(alone.client, createInboxLive(), targets());
+    const { stop: stopAlone } = connectInboxLive(alone.client, createInboxLive(), targets());
     await flush();
     stopAlone();
     await flush();
@@ -112,7 +116,7 @@ describe('connectInboxLive', () => {
     const { client } = fakeClient();
     let closed: (v: string) => void = () => undefined;
     client.realtime.disconnect.mockImplementation(() => new Promise<string>((r) => (closed = r)));
-    const stop = connectInboxLive(client, createInboxLive(), targets());
+    const { stop } = connectInboxLive(client, createInboxLive(), targets());
     await flush();
     stop();
     connectInboxLive(client, createInboxLive(), targets());
@@ -123,8 +127,8 @@ describe('connectInboxLive', () => {
     expect(client.channel).toHaveBeenCalledTimes(2);
     const failing = fakeClient();
     failing.client.removeChannel.mockImplementation(() => Promise.reject(new Error('down')));
-    connectInboxLive(failing.client, createInboxLive(), targets())();
-    const again = connectInboxLive(failing.client, createInboxLive(), targets());
+    connectInboxLive(failing.client, createInboxLive(), targets()).stop();
+    const { stop: again } = connectInboxLive(failing.client, createInboxLive(), targets());
     await flush();
     again();
     connectInboxLive(failing.client, createInboxLive(), targets());

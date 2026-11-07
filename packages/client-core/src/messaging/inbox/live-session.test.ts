@@ -3,15 +3,18 @@ import { createLiveSession } from './live-session.js';
 
 function fake() {
   const stops: ReturnType<typeof vi.fn>[] = [];
+  const retries: ReturnType<typeof vi.fn>[] = [];
   const open = vi.fn(() => {
     const stop = vi.fn();
+    const retryNow = vi.fn();
     stops.push(stop);
-    return stop;
+    retries.push(retryNow);
+    return { stop, retryNow };
   });
   const resync = vi.fn();
   /** Connections opened and not stopped. */
   const joined = () => stops.filter((s) => s.mock.calls.length === 0).length;
-  return { session: createLiveSession(open, resync), open, resync, joined };
+  return { session: createLiveSession(open, resync), open, resync, joined, retries };
 }
 
 beforeEach(() => void vi.useFakeTimers());
@@ -23,6 +26,14 @@ describe('createLiveSession', () => {
     f.session.resume();
     f.session.resume();
     expect([f.open.mock.calls.length, f.resync.mock.calls.length, f.joined()]).toEqual([1, 1, 1]);
+  });
+
+  it('resumed while joined (online again, back to the app) a dropped channel rejoins at once (K2)', () => {
+    const f = fake();
+    f.session.resume();
+    expect(f.retries[0]).not.toHaveBeenCalled();
+    f.session.resume();
+    expect(f.retries[0]).toHaveBeenCalledTimes(1);
   });
 
   it('pause(0) leaves at once; pause(ms) leaves when it ends, unless resumed first (no timer left)', () => {

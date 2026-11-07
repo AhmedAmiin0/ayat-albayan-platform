@@ -2,10 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { INBOX_REFRESH_MS, inboxLive } from '@/features/messaging/inbox';
 import { t } from '@/lib/i18n/i18n';
-import { ApiError } from '@/lib/http/api';
-import { SALES_UNREAD_LIVE_MS, salesUnreadPollMs, salesUnreadQuery, unreadRetry, unreadTitle, useSalesUnread } from './use-sales-unread';
+import { unreadTitle, useSalesUnread } from './use-sales-unread';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -25,7 +23,7 @@ describe('useSalesUnread (W8)', () => {
     total(3);
     const { result } = renderHook(() => useSalesUnread(() => true), { wrapper });
     await waitFor(() => expect(result.current).toBe(3));
-    expect(apiFetch).toHaveBeenCalledWith('/threads?unread=true&page=1&pageSize=1');
+    expect(apiFetch.mock.calls[0]?.[0]).toBe('/threads?unread=true&page=1&pageSize=1');
     expect(document.title).toBe(`(3) ${t.app.name}`);
     total(0);
     await act(() => client.invalidateQueries({ queryKey: ['threads'] }));
@@ -63,27 +61,8 @@ describe('useSalesUnread (W8)', () => {
   });
 });
 
-describe('salesUnreadQuery', () => {
-  it('lives under ["threads"] and never polls from a hidden tab', () => {
-    const q = salesUnreadQuery(true);
-    expect(q.queryKey).toEqual(['threads', 'nav-count', 'unread']);
-    expect(q.refetchInterval).toBe(salesUnreadPollMs);
-    expect(salesUnreadPollMs()).toBe(INBOX_REFRESH_MS);
-    inboxLive.setLive(true);
-    expect(salesUnreadPollMs()).toBe(SALES_UNREAD_LIVE_MS); // connected: events + a 5 min net
-    inboxLive.setLive(false);
-    expect('refetchIntervalInBackground' in q).toBe(false);
-    expect(salesUnreadQuery(false).enabled).toBe(false);
-  });
-
-  it('never retries a 401; other failures up to 3 times', () => {
-    expect(salesUnreadQuery(true).retry).toBe(unreadRetry);
-    expect(unreadRetry(0, new ApiError(401, null))).toBe(false);
-    expect(unreadRetry(0, new ApiError(500, null))).toBe(true);
-    expect(unreadRetry(3, new ApiError(500, null))).toBe(false);
-  });
-
-  it('unreadTitle', () => {
+describe('unreadTitle', () => {
+  it('the count before the academy name while there is something unread', () => {
     expect(unreadTitle(12)).toBe(`(12) ${t.app.name}`);
     expect(unreadTitle(0)).toBe(t.app.name);
   });

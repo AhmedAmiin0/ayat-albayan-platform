@@ -24,6 +24,14 @@ test('messages run oldest → newest across pages, each row once', () => {
   expect(threadMessages(undefined)).toEqual([]);
 });
 
+test('a row on two pages shows as the newest page has it: no stale tick at the boundary (docs/44 BUG10)', () => {
+  const stale = { ...delivered, status: 'sent' as const };
+  const data = cachedThread(detail([delivered]), detail([older, inbound, stale]));
+  const rows = threadMessages(data);
+  expect(rows.map((m) => m.id)).toEqual(['m0', 'm1', 'm2']);
+  expect(rows.find((m) => m.id === delivered.id)?.status).toBe('delivered');
+});
+
 test('append goes to the end of the newest page only', () => {
   const data = cachedThread(detail([inbound]), detail([older]));
   const next = appendMessage(data, delivered);

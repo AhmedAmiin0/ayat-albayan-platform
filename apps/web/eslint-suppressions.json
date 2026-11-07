@@ -8781,14 +8781,8 @@
     }
   },
   "src/features/sales/sales/use-sales-unread.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/booking/BookingPage.tsx": {

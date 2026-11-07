@@ -17,16 +17,16 @@ export const threadKey = (phone: string) => pathKey(`/threads/${phone}`);
 /** The mutation key of a chat's text / template send. */
 export const sendKey = (phone: string) => ['inbox-send', phone];
 
-/** Oldest → newest across the loaded pages; a row a refetch already brought in shows once. */
+/**
+ * Oldest → newest across the loaded pages; a row a refetch already brought in shows once, as the
+ * NEWEST page holding it has it (docs/44 BUG10): mergeNewest refreshes pages[0] only, so an older
+ * page's copy of a row at the page boundary can be stale (an old tick).
+ */
 export function threadMessages(data: ThreadCache | undefined): MessageView[] {
-  const seen = new Set<string>();
-  const out: MessageView[] = [];
-  for (const m of [...(data?.pages ?? [])].reverse().flatMap((p) => p.messages)) {
-    if (seen.has(m.id)) continue;
-    seen.add(m.id);
-    out.push(m);
-  }
-  return out;
+  const rows = [...(data?.pages ?? [])].reverse().flatMap((p) => p.messages);
+  // A Map keeps a key where it was first set (its oldest place) and the value set last (newest
+  // page).
+  return [...new Map(rows.map((m) => [m.id, m])).values()];
 }
 
 // The cache edits themselves are shared with web (client-core thread-pages): an optimistic send's

@@ -5,7 +5,7 @@ import { apiFetch } from '@/lib/http/api';
 import { INBOX_REFRESH_MS, threadPath } from './api';
 import { useTicksInLists } from './list-ticks';
 import { threadQuery } from './thread-query';
-import { inboxLive, useLiveChat } from './live';
+import { useLiveChat } from './live';
 
 /**
  * The open chat, live (owner 2026-10-27): threadQuery (a full read on open, on window focus and every
@@ -13,7 +13,9 @@ import { inboxLive, useLiveChat } from './live';
  * gating: a chat open in a background window never stamps new rows read) — GET /threads/:phone?after=…
  * (~2 reads), folded into the cache by mergeDelta. A thread fetch or a send in flight wins (its answer
  * would overwrite the merge); more new rows than one page re-read the whole thread instead.
- * Realtime (docs/12 §15) re-reads it on a change; while connected the delta pauses (the full read every 60 s stays).
+ * Realtime (docs/12 §15) re-reads it sooner on a change. The delta keeps its pace while connected too
+ * (docs/44 BUG5): a socket that died quietly (laptop sleep, a Wi-Fi switch) still reads SUBSCRIBED,
+ * and the 60 s full read alone left the chat up to a minute late.
  */
 export function useLiveThread(phone: string) {
   const options = threadQuery(phone);
@@ -42,7 +44,7 @@ export function useLiveThread(phone: string) {
     initialData: 0,
     staleTime: Infinity,
     gcTime: 0,
-    refetchInterval: () => (inboxLive.isLive() ? false : INBOX_REFRESH_MS),
+    refetchInterval: INBOX_REFRESH_MS,
   });
   return detail;
 }

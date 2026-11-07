@@ -35,6 +35,7 @@ export {
   unreadLabel,
 } from './format';
 export { inboxLive, useInboxLive, useInboxRealtime } from './api/live';
+export { unreadCountQuery } from './api/unread-count';
 export { CallProvider, type CallProviderProps } from '@/features/messaging/calls';
 export { DeliveryTicks, type DeliveryTicksProps } from './messages/components/DeliveryTicks';
 export {

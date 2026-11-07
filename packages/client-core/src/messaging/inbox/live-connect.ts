@@ -1,4 +1,5 @@
 import { INBOX_LIVE_EVENT, INBOX_LIVE_TOPIC } from './inbox-live.js';
+import { createRejoin, isDropped } from './live-rejoin.js';
 import type { InboxLive, LiveTargets } from './live-store.js';
 
 /** The slice of a SupabaseClient this uses (no dependency on supabase-js here). */
@@ -34,42 +35,67 @@ async function leave(client: LiveClient, channel: LiveChannel): Promise<void> {
   }
 }
 
+/** A joined (or joining) inbox channel: `stop` leaves for good, `retryNow` rejoins a dropped one. */
+export interface LiveConnection {
+  stop(): void;
+  retryNow(): void;
+}
+
 /**
- * Joins the private topic as the signed-in user and feeds `live`; returns the stop (unmount, sign-out).
- * setAuth() first: the join carries the session's JWT (the policy reads it), not the anon key a join
- * could otherwise go out with before supabase-js has read the session. supabase-js keeps it current
- * itself afterwards (TOKEN_REFRESHED → realtime.setAuth → access_token pushed to joined channels).
- * Never throws: without realtime the apps simply keep polling at their old rate.
+ * Joins the private topic as the signed-in user and feeds `live`; returns the connection (unmount,
+ * sign-out: stop). setAuth() before every join: the join carries the session's JWT (the policy reads
+ * it), not the anon key a join could otherwise go out with before supabase-js has read the session.
+ * supabase-js keeps it current itself afterwards (TOKEN_REFRESHED → realtime.setAuth).
+ * A drop (CHANNEL_ERROR, TIMED_OUT, CLOSED) leaves that channel and joins a fresh one with backoff
+ * (live-rejoin.ts); SUBSCRIBED again resyncs what is on screen. Statuses of a channel already left
+ * are ignored. Never throws: without realtime the apps simply keep polling at their old rate.
  */
-export function connectInboxLive(client: LiveClient, live: InboxLive, targets: LiveTargets): () => void {
+export function connectInboxLive(client: LiveClient, live: InboxLive, targets: LiveTargets): LiveConnection {
   let stopped = false;
   let channel: LiveChannel | null = null;
   const unbind = live.bind(targets);
-  const status = (s: string) => {
-    if (stopped) return;
+  const drop = () => {
+    if (channel) leaving = leave(client, channel);
+    channel = null;
+  };
+  const status = (s: string, from: LiveChannel) => {
+    if (stopped || from !== channel) return;
     live.setLive(s === 'SUBSCRIBED');
-    if (s === 'SUBSCRIBED') live.resync();
+    if (s === 'SUBSCRIBED') {
+      rejoin.joined();
+      live.resync();
+      return;
+    }
+    if (!isDropped(s)) return;
+    drop();
+    rejoin.dropped();
   };
   const join = () => {
     if (stopped) return;
     try {
-      channel = client
-        .channel(INBOX_LIVE_TOPIC, { config: { private: true } })
-        .on('broadcast', { event: INBOX_LIVE_EVENT }, (message) => {
-          if (!stopped) live.changed(message.payload);
-        })
-        .subscribe(status);
+      const next = client.channel(INBOX_LIVE_TOPIC, { config: { private: true } });
+      channel = next;
+      next.on('broadcast', { event: INBOX_LIVE_EVENT }, (message) => {
+        if (!stopped) live.changed(message.payload);
+      });
+      next.subscribe((s) => status(s, next));
     } catch {
       channel = null;
+      rejoin.dropped();
     }
   };
-  leaving
-    .then(() => client.realtime.setAuth())
-    .then(join, join);
-  return () => {
-    stopped = true;
-    unbind();
-    if (channel) leaving = leave(client, channel);
-    channel = null;
+  const start = () => {
+    void leaving.then(() => client.realtime.setAuth()).then(join, join);
+  };
+  const rejoin = createRejoin(start);
+  start();
+  return {
+    stop() {
+      stopped = true;
+      rejoin.cancel();
+      unbind();
+      drop();
+    },
+    retryNow: () => rejoin.now(),
   };
 }

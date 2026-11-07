@@ -1,4 +1,5 @@
 import { connectInboxLive, createLiveSession, INBOX_INACTIVE_LEAVE_MS, type LiveTargets } from '@ab/client-core';
+import { onlineManager } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 import { supabase } from '@/core/lib/http/supabase';
@@ -43,6 +44,9 @@ const noResync = (): void => undefined;
  * its yield to a send, its gap rule). In the background the channel is left (and the socket closed when
  * nothing else uses it), so the polls take over and nothing of the inbox stays awake; 'inactive' (iOS)
  * leaves after INBOX_INACTIVE_LEAVE_MS. Back to 'active': one rejoin, one resync on SUBSCRIBED.
+ * A dropped channel (CHANNEL_ERROR, TIMED_OUT, CLOSED) rejoins with backoff 1 s, 2 s, 5 s, 10 s,
+ * then every 30 s (client-core live-rejoin.ts), at once on 'active' or the network coming back;
+ * SUBSCRIBED again resyncs (every target nudges the phone store's sync).
  * Unmount (sign-out flips the tree) leaves at once. The app's one (persisted) query client.
  */
 export function useInboxRealtime(enabled: boolean): void {
@@ -57,7 +61,10 @@ export function useInboxRealtime(enabled: boolean): void {
       if (state === 'active') session.resume();
       else session.pause(state === 'inactive' ? INBOX_INACTIVE_LEAVE_MS : 0);
     });
+    // The network is back (connectivity's probe answered): a dropped channel rejoins now (K2).
+    const online = onlineManager.subscribe((up) => (up && active() ? session.resume() : undefined));
     return () => {
+      online();
       change.remove();
       session.end();
     };

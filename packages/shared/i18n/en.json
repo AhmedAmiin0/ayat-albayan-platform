@@ -2755,6 +2755,8 @@
     "dayYesterday": "Yesterday",
     "noticeMore": "Show the full notice",
     "title": "Messages",
+    "liveOn": "Connected",
+    "liveOff": "Not connected",
     "searchPlaceholder": "Search by name, number or message text",
     "filterAll": "All",
     "filterUnread": "Unread",
