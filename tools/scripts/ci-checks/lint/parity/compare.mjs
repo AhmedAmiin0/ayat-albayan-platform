@@ -18,12 +18,22 @@ function minus(a, b) {
   });
 }
 
-/** Pairs leftovers of the same file + rule in line order: { moved, rest of each side }. */
+// The widest shift seen: a decorated method's complexity (decorators above it), an arrow's `=>`,
+// a multi-line JSX element's attribute. Wider: a miss next to an unrelated extra, never paired.
+const MAX_SHIFT = 3;
+
+/** Pairs leftovers of the same file + rule within MAX_SHIFT lines: { moved, rest of each side }. */
 function pairUp(lostOnes, extraOnes) {
   const pool = Map.groupBy(extraOnes, group);
   const moved = [];
+  const near = (finding) => (other) => Math.abs(other.line - finding.line) <= MAX_SHIFT;
+  const take = (finding) => {
+    const list = pool.get(group(finding)) ?? [];
+    const at = list.findIndex(near(finding));
+    return at === -1 ? undefined : list.splice(at, 1)[0];
+  };
   const missing = lostOnes.filter((finding) => {
-    const partner = pool.get(group(finding))?.shift();
+    const partner = take(finding);
     if (partner) moved.push({ eslint: finding, oxlint: partner });
     return !partner;
   });
@@ -48,16 +58,18 @@ export function perRule(findings) {
 }
 
 /**
- * The failures: a missing finding of a rule not in `gaps` (docs/31b §3: rules that cannot move
- * yet), and a gap that has nothing missing any more (drop it from gaps.json).
+ * The failures: more missing findings of a rule than gaps.json allows it (docs/31b §3.1: rules
+ * that cannot move yet, each with its reviewed count; none listed: 0), and a gap whose count is
+ * above what it misses now (lower it in gaps.json: the list only shrinks).
  */
 export function failures(missing, gaps) {
   const counts = perRule(missing);
+  const allowed = (rule) => gaps[rule]?.missed ?? 0;
   const lost = Object.entries(counts)
-    .filter(([rule]) => !Object.hasOwn(gaps, rule))
-    .map(([rule, n]) => `missing: ${rule} ×${n} (Oxlint does not report what ESLint does)`);
+    .filter(([rule, n]) => n > allowed(rule))
+    .map(([rule, n]) => `missing: ${rule} ×${n}, allowed ${allowed(rule)} (Oxlint misses it)`);
   const stale = Object.keys(gaps)
-    .filter((rule) => !counts[rule])
-    .map((rule) => `stale gap: ${rule} misses nothing now (remove it from gaps.json)`);
+    .filter((rule) => (counts[rule] ?? 0) < allowed(rule))
+    .map((rule) => `stale gap: ${rule} misses ${counts[rule] ?? 0} < ${allowed(rule)} (gaps.json)`);
   return [...lost, ...stale];
 }

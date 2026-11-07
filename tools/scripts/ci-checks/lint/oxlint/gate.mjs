@@ -20,6 +20,16 @@ export const packageDirs = (root) =>
     .map(dirname)
     .sort();
 
+/** ESLint-linted packages with no lint.blocks.mjs: Oxlint and the parity check would skip them. */
+export const unlistedDirs = (root) =>
+  globSync(
+    DIRS.map((dir) => `${dir}/eslint.config.{js,mjs,cjs}`),
+    { cwd: root },
+  )
+    .map(dirname)
+    .filter((dir) => !existsSync(join(root, dir, 'lint.blocks.mjs')))
+    .map((dir) => `no lint.blocks.mjs: ${dir} (Oxlint does not lint it, docs/31b §1)`);
+
 const readBaseline = (path) => (existsSync(path) ? readJson(path, baselineFile) : {});
 const writeJson = (path, value) => writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
 
@@ -45,7 +55,7 @@ export function oxlintGate({ root, report, mode = 'check' }) {
       ...below.map((line) => `fixed: ${line} (pnpm lint:oxfull -- --prune, commit ${BASELINE})`),
     ];
   });
-  return [...outside, ...lines];
+  return [...unlistedDirs(root), ...outside, ...lines];
 }
 
 const MODES = ['prune', 'suppress-all'];

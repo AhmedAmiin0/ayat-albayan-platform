@@ -47,3 +47,11 @@ test('toOverrides: files and ignores scoped to the package, ignores-only blocks 
     ],
   });
 });
+
+test('toOverrides: a block key Oxlint would drop fails; ESLint\'s `ab` registration is fine', () => {
+  const ab = { files: ['src/**'], plugins: { ab: {} }, rules: {} };
+  assert.equal(toOverrides('e2e', [ab]).overrides.length, 1);
+  const globals = { files: ['src/**'], languageOptions: { globals: {} }, rules: {} };
+  assert.throws(() => toOverrides('e2e', [globals]), /languageOptions/);
+  assert.throws(() => toOverrides('e2e', [{ plugins: { x: {} }, rules: {} }]), /plugins/);
+});

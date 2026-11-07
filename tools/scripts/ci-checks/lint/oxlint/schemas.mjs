@@ -28,8 +28,11 @@ export const eslintReport = z.array(
   }),
 );
 
-/** parity/gaps.json: rule → why Oxlint cannot report what ESLint does yet. */
-export const gapsFile = z.record(z.string(), z.string());
+/** parity/gaps.json: rule → its reviewed missed count and why Oxlint cannot report it yet. */
+export const gapsFile = z.record(
+  z.string(),
+  z.object({ missed: z.number().int().positive(), why: z.string() }),
+);
 
 const ruleMap = z.record(z.string(), z.unknown());
 

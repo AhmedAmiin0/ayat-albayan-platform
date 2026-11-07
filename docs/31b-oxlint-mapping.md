@@ -97,7 +97,8 @@ violation, fix it); below it fails until pruned (`pnpm lint:oxfull -- --prune`, 
 baselines: a count only goes down, an entry never appears); a finding outside every package or a
 parse error always fails. On a PR, `pnpm guard:lint` also refuses any per-rule total above the base
 branch's (a count raised by hand), as it does for ESLint. The carried-over baseline (PR 1) is
-today's ESLint suppressions under Oxlint names: 10 534 of 10 599 entries identical; the rest are the
+today's ESLint suppressions under Oxlint names: 9 736 of 9 801 entries identical (after develop's
+absolute-import sweep); the rest are the
 §3.1 misses (lower) and §3.2 extras (higher). `--suppress-all` wrote it once; nothing else may.
 
 ## 5. Parity check (`pnpm lint:parity`, CI «lint parity (oxlint)»)
@@ -106,10 +107,18 @@ Runs ESLint over every package with no suppressions and Oxlint with `oxlint.full
 timed (job summary). Fails when:
 
 - **findings**: a finding ESLint reports is not one Oxlint reports (same file + line + rule after §2;
-  same file + rule on another line pairs as `moved`), unless its rule is in `parity/gaps.json` (§3.1);
-  a gap with nothing missing fails too (drop it);
+  same file + rule at most 3 lines away pairs as `moved`), beyond the reviewed count its rule has in
+  `parity/gaps.json` (§3.1; unlisted: 0); a gap whose count is above what it misses fails too (lower
+  it: the list only shrinks);
 - **config**: for any file ESLint lints, a rule ESLint turns on is off in Oxlint's config for that file
-  or has other options, or Oxlint does not lint the file at all (`oxlint --debug=files`).
+  or has other options, or Oxlint does not lint the file at all (`oxlint --debug=files`);
+- **packages**: a folder with an `eslint.config.*` and no `lint.blocks.mjs` (also in `pnpm lint:oxfull`),
+  and a lint block key Oxlint would drop (`languageOptions`, a plugin other than `ab`: `convert.js` throws).
+
+Known limits: config parity resolves Oxlint's overrides itself (`matchesGlob`, in order, as Oxlint
+documents them), and compares written options only: a tsgolint port whose built-in defaults differ
+from typescript-eslint's shows only through findings (§3). The `.oxlintrc.json` rules are outside it
+(ESLint turns them off); `pnpm lint:ox` still runs them.
 
 Details land in `lint-parity-report.json` (an artifact when the job fails).
 

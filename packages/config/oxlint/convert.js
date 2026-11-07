@@ -35,8 +35,16 @@ const scoped = (dir, pattern) => `${dir}/${pattern}`;
 
 const isGlobalIgnore = (block) => Boolean(block.ignores) && !block.files && !block.rules;
 
+// What a block may carry: anything else (languageOptions, another plugin) would be lost in
+// Oxlint. `plugins: { ab }` is ESLint's registration; config.js registers `ab` for every file.
+const KEYS = new Set(['name', 'files', 'ignores', 'rules', 'env']);
+const isAbOnly = (plugins) => Object.keys(plugins).every((name) => name === 'ab');
+const kept = (block) => (key) => KEYS.has(key) || (key === 'plugins' && isAbOnly(block.plugins));
+
 /** One block → an override (`files` default: every file of the package). */
 function toOverride(dir, block) {
+  const unknown = Object.keys(block).filter((key) => !kept(block)(key));
+  if (unknown.length > 0) throw new Error(`${dir}: lint block key(s) Oxlint drops: ${unknown}`);
   const files = (block.files ?? ['**/*']).map((pattern) => scoped(dir, pattern));
   const exclude = (block.ignores ?? []).map((pattern) => scoped(dir, pattern));
   const env = block.env ? { env: block.env } : {};
