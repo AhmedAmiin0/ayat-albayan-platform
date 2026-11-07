@@ -16,6 +16,7 @@ describe('storage config (docs/45)', () => {
       driver: 'supabase',
       minio: null,
       recordings: false,
+      driveBackup: false,
     });
   });
 
@@ -32,6 +33,7 @@ describe('storage config (docs/45)', () => {
         secretKey: 'not-a-real-secret',
       },
       recordings: false,
+      driveBackup: false,
     });
   });
 
@@ -39,6 +41,11 @@ describe('storage config (docs/45)', () => {
     const on = { ...BASE, ...MINIO, STORAGE_DRIVER: 'minio', MINIO_RECORDINGS: 'true' };
     expect(storageEnv(loadEnv(on)).recordings).toBe(true);
     expect(storageEnv(loadEnv({ ...on, MINIO_RECORDINGS: '' })).recordings).toBe(false);
+  });
+
+  it('the Drive backup is its own switch, off unless MINIO_DRIVE_BACKUP=true (docs/45 §5)', () => {
+    expect(storageEnv(loadEnv({ ...BASE, ...MINIO })).driveBackup).toBe(false);
+    expect(storageEnv(loadEnv({ ...BASE, ...MINIO, MINIO_DRIVE_BACKUP: 'true' })).driveBackup).toBe(true);
   });
 
   it('a missing secret leaves MinIO unconfigured (a write then fails, never silently)', () => {

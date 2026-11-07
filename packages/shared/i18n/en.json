@@ -6099,13 +6099,57 @@
       "MINIO_RECORDINGS": {
         "label": "Keep lesson and meeting recordings in MinIO",
         "hint": "Off by default. On, with MinIO keeping new files: lesson and meeting recordings go to the academy server; they are large and uncapped, so watch the free disk space. Off: recordings never go to MinIO; they are kept as today where a place is set up."
+      },
+      "MINIO_DRIVE_BACKUP": {
+        "label": "Back up MinIO files to Google Drive",
+        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO that are not backed up yet, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The backup never deletes any file from Drive: when space runs low, delete old archives by hand. PDFs and images are already compressed, so most of the saving comes from other files."
       }
     },
     "developer": "For developers",
     "developerKey": "Server key name: {key}",
     "allowListEmptyTitle": "Remove the allowed-numbers limit",
     "allowListEmptyConfirm": "With this list empty, the server’s own list applies if it has one; otherwise messages may go to every number, real guardians included. Save?",
-    "allowListEmptyYes": "Yes, save with no limit"
+    "allowListEmptyYes": "Yes, save with no limit",
+    "driveBackup": {
+      "title": "Backup to Google Drive",
+      "off": "Off. Turn it on above, then save.",
+      "needsMinio": "Waiting for complete MinIO settings.",
+      "needsGoogle": "Waiting for the Google account to be linked in the Google section.",
+      "none": "No archive uploaded yet. The job runs every night at 4:00 Riyadh time.",
+      "last": "Last archive: night of {day} ({objects}), {raw} before compression → {compressed} after.",
+      "files": {
+        "one": "1 file",
+        "two": "2 files",
+        "few": "{n} files",
+        "other": "{n} files"
+      },
+      "error": "Last error: {error}",
+      "quota": "Free space on Drive: {free} of {limit}.",
+      "quotaUnlimited": "Drive space is unlimited.",
+      "lowQuota": "Less than 2 GB is free on Drive, so nothing is uploaded until there is room: delete old archives from the backup folder by hand and empty the trash, or add space.",
+      "note": "PDFs and images are already compressed, so they barely shrink.",
+      "loadError": "Could not load the backup status.",
+      "sizeGb": "{n} GB",
+      "sizeMb": "{n} MB",
+      "skipped": {
+        "one": "1 file was not backed up last night; it is tried again every night:",
+        "two": "2 files were not backed up last night; they are tried again every night:",
+        "few": "{n} files were not backed up last night; they are tried again every night:",
+        "other": "{n} files were not backed up last night; they are tried again every night:"
+      },
+      "skippedItem": "{name} ({size}, {why})",
+      "waiting": {
+        "one": "1 file is waiting for room in Google Drive.",
+        "two": "2 files are waiting for room in Google Drive.",
+        "few": "{n} files are waiting for room in Google Drive.",
+        "other": "{n} files are waiting for room in Google Drive."
+      },
+      "skipReasons": {
+        "too_large": "larger than the 1 GB archive cap",
+        "read_failed": "could not be read from MinIO",
+        "changed": "changed while being read"
+      }
+    }
   },
   "account": {
     "title": "My account",
@@ -6389,7 +6433,16 @@
     "alerts": {
       "disconnected": "The Google account link expired, so sync stopped. Reconnect it from the settings.",
       "teacherUnmapped": "{name}'s lessons go to the main calendar only until their calendar is mapped.",
-      "scriptEventPresent": "{name}'s calendar is still built from the sheet: stop the script for this teacher first"
+      "scriptEventPresent": "{name}'s calendar is still built from the sheet: stop the script for this teacher first",
+      "backupFailed": "The platform files backup to Google Drive failed: {error}. It will run again next night.",
+      "backupSkipped": {
+        "one": "Tonight's backup did not copy 1 file: {names}. The other files are still copied, and it is tried again every night.",
+        "two": "Tonight's backup did not copy 2 files: {names}. The other files are still copied, and they are tried again every night.",
+        "few": "Tonight's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every night.",
+        "other": "Tonight's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every night."
+      },
+      "backupSkippedItem": "{name} ({size}, {why})",
+      "backupDriveFull": "Google Drive is nearly full: tonight's backup could not upload everything, because the free space does not exceed the kept reserve (2 GB). The backup never deletes anything from Drive: delete old archives from the backup folder by hand and empty the trash, and the backup continues on the following nights."
     },
     "web": {
       "updated": "Updated {at}",

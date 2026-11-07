@@ -48,7 +48,7 @@ import { StripeTestModule } from './modules/finance/stripe';
 import { TeacherEarningsModule } from './modules/finance/teacher-earnings/earnings.module';
 import { PricingModule } from './modules/finance/pricing/pricing.module';
 import { ReceivablesModule } from './modules/finance/receivables/receivables.module';
-import { GoogleSyncModule } from './modules/platform/google-sync/google-sync.module';
+import { DriveBackupModule } from '@/modules/platform/drive-backup';
 import { ReportPdfModule } from './modules/reporting/report-pdf/report-pdf.module';
 import { ReportsModule } from './modules/reporting/reports/reports.module';
 import { RolesModule } from './modules/people/roles/roles.module';
@@ -117,7 +117,7 @@ import { ScriptRelayModule } from './modules/messaging/whatsapp';
     UsersModule,
     SignInModule,
     ReportPdfModule,
-    GoogleSyncModule,
+    DriveBackupModule, // imports GoogleSyncModule (docs/24) and reuses its connection
     SubscriptionsModule,
     PaymentsModule,
     SalesMoneyModule,

@@ -43,5 +43,7 @@ import { TeacherCalendarService } from './map/teacher-calendar.service';
     GoogleData, GoogleRuntime, GoogleAlerts, GoogleConnection, DriveFiles, CalendarWriter, ReportPdfWriter, SheetRowsWriter, GoogleWriters,
     GoogleSyncProcessor, GoogleSyncJob, GoogleOAuthService, GoogleStatusService, GoogleAdminService, GoogleMapService, TeacherCalendarService,
   ],
+  // The MinIO → Drive backup (docs/45 §5) reuses the connection: its token, invalid_grant handling.
+  exports: [GoogleConnection],
 })
 export class GoogleSyncModule {}

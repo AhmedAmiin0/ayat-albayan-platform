@@ -1012,6 +1012,137 @@ export type Database = {
         };
         Relationships: [];
       };
+      drive_backup_archives: {
+        Row: {
+          bytes_compressed: number;
+          bytes_raw: number;
+          drive_file_id: string | null;
+          error: string | null;
+          finished_at: string | null;
+          folder_id: string;
+          id: string;
+          label: string;
+          name: string;
+          objects: number;
+          part: number;
+          skipped: number;
+          started_at: string;
+          status: string;
+        };
+        Insert: {
+          bytes_compressed?: number;
+          bytes_raw?: number;
+          drive_file_id?: string | null;
+          error?: string | null;
+          finished_at?: string | null;
+          folder_id: string;
+          id?: string;
+          label: string;
+          name: string;
+          objects?: number;
+          part: number;
+          skipped?: number;
+          started_at?: string;
+          status?: string;
+        };
+        Update: {
+          bytes_compressed?: number;
+          bytes_raw?: number;
+          drive_file_id?: string | null;
+          error?: string | null;
+          finished_at?: string | null;
+          folder_id?: string;
+          id?: string;
+          label?: string;
+          name?: string;
+          objects?: number;
+          part?: number;
+          skipped?: number;
+          started_at?: string;
+          status?: string;
+        };
+        Relationships: [];
+      };
+      drive_backup_objects: {
+        Row: {
+          archive_id: string;
+          bucket: string;
+          etag: string;
+          folder_id: string;
+          key: string;
+          size: number;
+        };
+        Insert: {
+          archive_id: string;
+          bucket: string;
+          etag: string;
+          folder_id: string;
+          key: string;
+          size: number;
+        };
+        Update: {
+          archive_id?: string;
+          bucket?: string;
+          etag?: string;
+          folder_id?: string;
+          key?: string;
+          size?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'drive_backup_objects_archive_id_fkey';
+            columns: ['archive_id'];
+            isOneToOne: false;
+            referencedRelation: 'drive_backup_archives';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      drive_backup_state: {
+        Row: {
+          account_email: string | null;
+          folder_id: string | null;
+          id: boolean;
+          last_error: string | null;
+          last_run_at: string | null;
+          quota_at: string | null;
+          quota_limit: number | null;
+          quota_usage: number | null;
+          skipped: Json;
+          skipped_count: number;
+          updated_at: string;
+          waiting: number;
+        };
+        Insert: {
+          account_email?: string | null;
+          folder_id?: string | null;
+          id?: boolean;
+          last_error?: string | null;
+          last_run_at?: string | null;
+          quota_at?: string | null;
+          quota_limit?: number | null;
+          quota_usage?: number | null;
+          skipped?: Json;
+          skipped_count?: number;
+          updated_at?: string;
+          waiting?: number;
+        };
+        Update: {
+          account_email?: string | null;
+          folder_id?: string | null;
+          id?: boolean;
+          last_error?: string | null;
+          last_run_at?: string | null;
+          quota_at?: string | null;
+          quota_limit?: number | null;
+          quota_usage?: number | null;
+          skipped?: Json;
+          skipped_count?: number;
+          updated_at?: string;
+          waiting?: number;
+        };
+        Relationships: [];
+      };
       expense_categories: {
         Row: {
           active: boolean;
@@ -5545,7 +5676,13 @@ export type Database = {
       build_assistant_statement: { Args: { p_statement: string }; Returns: Json };
       change_course: { Args: { p: Json }; Returns: Json };
       claim_push_device: {
-        Args: { p_new_hash: string; p_presented?: string; p_profile: string; p_session: string; p_token: string };
+        Args: {
+          p_new_hash: string;
+          p_presented?: string;
+          p_profile: string;
+          p_session: string;
+          p_token: string;
+        };
         Returns: string;
       };
       config_describe: {
@@ -5577,7 +5714,10 @@ export type Database = {
         Returns: { id: string }[];
       };
       crm_media_copy_counts: { Args: { p_host: string }; Returns: Json };
-      crm_media_copy_mark: { Args: { p_error: string; p_message: string; p_skip: boolean }; Returns: number };
+      crm_media_copy_mark: {
+        Args: { p_error: string; p_message: string; p_skip: boolean };
+        Returns: number;
+      };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       earning_status: {
         Args: { p_amount: number; p_paid: number };
@@ -5644,11 +5784,20 @@ export type Database = {
       wa_number_delete: { Args: { p_id: string }; Returns: boolean };
       wa_number_make_default: { Args: { p_id: string; p_actor: string | null }; Returns: boolean };
       wa_number_secret_clear: { Args: { p_id: string; p_name: string }; Returns: boolean };
-      wa_number_secret_copy: { Args: { p_id: string; p_name: string; p_key: string }; Returns: boolean };
+      wa_number_secret_copy: {
+        Args: { p_id: string; p_name: string; p_key: string };
+        Returns: boolean;
+      };
       wa_number_secret_name_ok: { Args: { p_name: string }; Returns: boolean };
       wa_number_secret_read: { Args: { p_id: string }; Returns: { name: string; value: string }[] };
-      wa_number_secret_set: { Args: { p_id: string; p_name: string; p_value: string }; Returns: undefined };
-      wa_number_secret_status: { Args: Record<PropertyKey, never>; Returns: { number_id: string; name: string; updated_at: string }[] };
+      wa_number_secret_set: {
+        Args: { p_id: string; p_name: string; p_value: string };
+        Returns: undefined;
+      };
+      wa_number_secret_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: { number_id: string; name: string; updated_at: string }[];
+      };
       wa_number_secret_vault_name: { Args: { p_id: string; p_name: string }; Returns: string };
       integration_secret_key_ok: { Args: { p_key: string }; Returns: boolean };
       integration_secret_set: { Args: { p_key: string; p_value: string }; Returns: undefined };
@@ -5764,7 +5913,10 @@ export type Database = {
       presence_topic_profile: { Args: { p_topic: string }; Returns: string };
       presence_touch: { Args: { p_profiles: string[] }; Returns: undefined };
       push_live_sessions: { Args: { p_ids: string[] }; Returns: string[] };
-      rate_limit_take: { Args: { p_buckets: string[]; p_maxes: number[]; p_window_ms: number }; Returns: boolean };
+      rate_limit_take: {
+        Args: { p_buckets: string[]; p_maxes: number[]; p_window_ms: number };
+        Returns: boolean;
+      };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
       reopen_assistant_statement: { Args: { p_actor: string; p_statement: string }; Returns: Json };
       report_of_path: { Args: { p_name: string }; Returns: string };
@@ -5774,7 +5926,10 @@ export type Database = {
         Args: { p: Json; p_actor: string; p_assistant: string };
         Returns: undefined;
       };
-      revoke_other_user_sessions: { Args: { p_keep: string | null; p_user: string }; Returns: number };
+      revoke_other_user_sessions: {
+        Args: { p_keep: string | null; p_user: string };
+        Returns: number;
+      };
       revoke_user_sessions: { Args: { p_user: string }; Returns: number };
       login_code_spend: { Args: { p_id: string }; Returns: boolean };
       login_code_take: { Args: { p_id: string }; Returns: string | null };
@@ -5848,10 +6003,22 @@ export type Database = {
         }[];
       };
       channel_teacher_ids: { Args: { p_student_id: string }; Returns: string[] };
-      assign_student_teacher: { Args: { p_student: string; p_teacher: string; p_actor: string }; Returns: boolean };
-      payment_amount_set: { Args: { p_payment: string; p_amount: number; p_expected: number }; Returns: boolean };
-      link_family_phone: { Args: { p_lead: string; p_code: string; p_actor: string }; Returns: boolean };
-      remove_family_phone: { Args: { p_guardian: string; p_phone: string; p_actor: string }; Returns: undefined };
+      assign_student_teacher: {
+        Args: { p_student: string; p_teacher: string; p_actor: string };
+        Returns: boolean;
+      };
+      payment_amount_set: {
+        Args: { p_payment: string; p_amount: number; p_expected: number };
+        Returns: boolean;
+      };
+      link_family_phone: {
+        Args: { p_lead: string; p_code: string; p_actor: string };
+        Returns: boolean;
+      };
+      remove_family_phone: {
+        Args: { p_guardian: string; p_phone: string; p_actor: string };
+        Returns: undefined;
+      };
       teacher_channel_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_thread_phones: {
