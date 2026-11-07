@@ -87,13 +87,20 @@ it('the chat left during a re-read after an older page: the chain stops (no endl
   const p1 = await held(() => void chat.fetchNextPage());
   p1.resolve(page(false, msg('b', 'sent')));
   await chat.getCurrentQuery().promise; // P1's fetchMeta (fetchMore) stays in state
+  // A microtask loop would never let a timer run: fail it fast instead of hanging the worker.
+  const refetch = client.refetchQueries.bind(client);
+  const reads = vi.spyOn(client, 'refetchQueries').mockImplementation((...args) => {
+    if (reads.mock.calls.length > 5) throw new Error('re-read loop');
+    return refetch(...args);
+  });
   const r = await held(() => rereadChat(client, PHONE));
   const query = client.getQueryCache().find({ queryKey: KEY, exact: true });
   if (!query) throw new Error('no chat query');
   vi.spyOn(query, 'isActive').mockReturnValue(false);
   await query.cancel({ revert: true }); // what removing the last observer does: back to P1's meta
   r.resolve(page(true, msg('a', 'read')));
-  await new Promise((done) => setTimeout(done, 20)); // never runs while a re-read loop spins
+  await new Promise((done) => setTimeout(done, 20));
+  expect(reads).toHaveBeenCalledTimes(1);
   expect(mockApiFetch).toHaveBeenCalledTimes(3);
 });
 
