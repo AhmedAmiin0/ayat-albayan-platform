@@ -1,6 +1,6 @@
 import { NOTIFICATION_CATALOGUE, notificationEntry, resolveRule, type EffectiveRule, type NotificationChannel, type NotificationKey } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { RulesReader, type RulesSnapshot } from '../store/rules.reader';
+import { RulesReader, type RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
 
 /** A row as producers see it when the rules cannot be read: off (fail closed), except locked rows. */
 function closed(key: NotificationKey): EffectiveRule {

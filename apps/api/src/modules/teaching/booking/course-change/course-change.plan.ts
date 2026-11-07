@@ -6,10 +6,10 @@ import {
   type Duration,
 } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
-import { plannedCourseEnd } from '../core/booking.course-end';
-import { domainError } from '../booking.errors';
-import type { Plan } from '../plan/booking.plan';
-import { planSeries, type SeriesRule } from '../plan/booking.series-plan';
+import { plannedCourseEnd } from '@/modules/teaching/booking/core/booking.course-end';
+import { domainError } from '@/modules/teaching/booking/booking.errors';
+import type { Plan } from '@/modules/teaching/booking/plan/booking.plan';
+import { planSeries, type SeriesRule } from '@/modules/teaching/booking/plan/booking.series-plan';
 
 // «تغيير أيام الحلقات» (owner 2026-10-18): the remaining lessons of a course on new days. Pure.
 

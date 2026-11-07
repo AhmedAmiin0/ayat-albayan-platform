@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AT, event, services } from '../webhook.fakes';
+import { AT, event, services } from '@/modules/messaging/webhook/webhook.fakes';
 import { orderedAt } from './webhook.inbound';
 
 describe('orderedAt: two messages in one Meta second keep their arrival order', () => {

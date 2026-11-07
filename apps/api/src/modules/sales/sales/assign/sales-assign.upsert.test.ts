@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDeps, lead } from '../../leads/leads.fakes';
-import { LeadsService } from '../../leads/leads.service';
+import { fakeDeps, lead } from '@/modules/sales/leads/leads.fakes';
+import { LeadsService } from '@/modules/sales/leads/leads.service';
 import type { SalesAssignService } from './sales-assign.service';
 import { world } from './sales-assign.fakes';
 

@@ -1,5 +1,5 @@
 import type { LinkCandidate, LinkedRecord, LinkKind, UserRole, UsersListQuery } from '@ab/shared';
-import type { ProfileRecord } from '../../roles/roles.store';
+import type { ProfileRecord } from '@/modules/people/roles/roles.store';
 
 // What the users module needs from the DB and from the Supabase Auth Admin API. UsersQueries and
 // SupabaseAuthAdmin implement them; the unit tests use the in-memory fakes (users.fakes.ts).

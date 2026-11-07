@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import type { TeacherNames } from './suggest';
 
 export type TeacherRow = TeacherNames & { id: string; calendar: { calendar_id: string; calendar_name: string | null; confirmed_at: string } | null };

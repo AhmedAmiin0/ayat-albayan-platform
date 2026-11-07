@@ -1,4 +1,4 @@
-import { WindowCounter } from '../../../teaching/feedback';
+import { WindowCounter } from '@/modules/teaching/feedback';
 
 /** One bucket of a limit: its key (kind + who) and how many hits the window allows. */
 export interface LimitBucket {

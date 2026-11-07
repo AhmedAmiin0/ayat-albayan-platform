@@ -1,6 +1,6 @@
 import { roleOfMeta } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { CONFIG, decode } from '../classroom.fakes';
+import { CONFIG, decode } from '@/modules/teaching/classroom/classroom.fakes';
 import { grantsFor, mintServerToken, mintToken, signJwt } from './livekit-token';
 
 const NOW = new Date('2026-10-05T16:00:00Z');

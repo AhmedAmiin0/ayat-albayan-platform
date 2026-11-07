@@ -6,13 +6,13 @@ import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
 import { bookingBodySchema } from '@/modules/teaching/booking/plan/package-size';
 import { CourseDrafts } from '@/modules/teaching/booking/sales/course-draft/course-draft.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../../common/auth/decorators';
-import { can } from '../../../../../common/auth/permissions';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { forbidden } from '../../../../../common/http/errors';
-import { parseOrThrow } from '../../../../../common/http/http';
-import { courseQuerySchema } from '../../booking.dto';
-import { CourseChange, type ChangeActor } from '../../course-change/course-change.service';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { forbidden } from '@/common/http/errors';
+import { parseOrThrow } from '@/common/http/http';
+import { courseQuerySchema } from '@/modules/teaching/booking/booking.dto';
+import { CourseChange, type ChangeActor } from '@/modules/teaching/booking/course-change/course-change.service';
 import { SalesCourse } from './sales-course.service';
 
 /**

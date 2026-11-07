@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { fakeSettings, readerOf } from '../../../common/settings/settings.fakes';
+import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
 import { LessonsSettings, type LessonsSettingsValues } from './lessons.settings';
 
 /** Pinned by hand: every key the lessons consumers read (RulePlanner … TimeEditPayout). */

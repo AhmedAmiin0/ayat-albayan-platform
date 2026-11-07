@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
-import type { AppRole } from '../../../config/role/app-role';
-import { PEER_RELOAD_PATH } from '../../../config/role/worker-kick';
+import type { AppRole } from '@/config/role/app-role';
+import { PEER_RELOAD_PATH } from '@/config/role/worker-kick';
 
 const WORKER_PATHS = ['/health', '/internal/jobs/'];
 

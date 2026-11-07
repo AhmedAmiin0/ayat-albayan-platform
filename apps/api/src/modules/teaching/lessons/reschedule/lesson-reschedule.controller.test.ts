@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict } from '../../../../common/http/errors';
-import { RULE_ID } from '../../scheduling/scheduling.fakes';
-import { LESSON_ID, TEACHER_ID } from '../lessons.fakes';
-import { lessonsApp } from '../test-app';
+import { conflict } from '@/common/http/errors';
+import { RULE_ID } from '@/modules/teaching/scheduling/scheduling.fakes';
+import { LESSON_ID, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import { lessonsApp } from '@/modules/teaching/lessons/test-app';
 
 type Harness = Awaited<ReturnType<typeof lessonsApp>>;
 const ONE = { scope: 'one', startsAt: '2026-10-05T17:00:00+03:00' };

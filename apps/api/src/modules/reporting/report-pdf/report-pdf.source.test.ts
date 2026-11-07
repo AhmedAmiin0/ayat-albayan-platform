@@ -1,6 +1,6 @@
 import { COUNTS_FOR_MONEY } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { fakeDb, type FakeResult } from '../../people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { ReportPdfSource } from './report-pdf.source';
 
 /** A clock before every fixture lesson: «الحلقة القادمة» is read after the lesson itself. */

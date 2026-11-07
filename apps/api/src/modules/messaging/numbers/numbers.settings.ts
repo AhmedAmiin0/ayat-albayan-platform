@@ -1,7 +1,7 @@
 import type { CommsSource, SettingKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /** Where the line config comes from (docs/23 §2e). An unknown or malformed row reads as legacy. */
 const KEYS = ['comms_source'] as const satisfies readonly SettingKey[];

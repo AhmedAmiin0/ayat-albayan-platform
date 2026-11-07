@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { TrialLessonRead } from '../../../teaching/booking';
-import { trialRows } from '../sales-students.fakes';
+import type { TrialLessonRead } from '@/modules/teaching/booking';
+import { trialRows } from '@/modules/sales/sales-students/sales-students.fakes';
 import { toTrialLessons } from './sales-student-trial.mapper';
 
 const NOW = new Date('2026-10-28T12:00:00Z');

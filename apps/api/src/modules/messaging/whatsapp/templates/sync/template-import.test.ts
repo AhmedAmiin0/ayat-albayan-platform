@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { newStarters, starterRow } from './template-import';
-import { templateRow } from '../../whatsapp.fakes';
-import type { MetaTemplate } from '../../whatsapp.types';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The chat line's import (owner 2026-10-12, docs/12 §3.4): invented Meta templates, Meta's shapes.
 

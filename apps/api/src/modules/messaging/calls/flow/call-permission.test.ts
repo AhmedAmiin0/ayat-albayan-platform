@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Outbox } from '../../inbox/send/outbox';
-import { pickSend } from '../../inbox/send/send-number';
-import { ADMIN_ACTOR, FAMILY, LINE, fakeApi, fakeGate, fakeKit, teacherActor } from '../calls.fakes';
+import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
+import { pickSend } from '@/modules/messaging/inbox/send/send-number';
+import { ADMIN_ACTOR, FAMILY, LINE, fakeApi, fakeGate, fakeKit, teacherActor } from '@/modules/messaging/calls/calls.fakes';
 import { CallPermissions, fromCallingNumber } from './call-permission.service';
 import type { CallsNumberPermission } from './calls-number-permission';
 
-vi.mock('../../inbox/send/send-number', () => ({ pickSend: vi.fn(async () => ({ line: 'chat' })) }));
+vi.mock('@/modules/messaging/inbox/send/send-number', () => ({ pickSend: vi.fn(async () => ({ line: 'chat' })) }));
 const REQ = '44444444-4444-4444-8444-444444444444';
 
 function setup(facts: { canCall: boolean; canRequest: boolean }) {

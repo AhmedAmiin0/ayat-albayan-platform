@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakePolicy } from '../../../messaging/notification-rules/policy/policy.fakes';
-import type { ConflictChecker } from '../conflicts/conflict-checker';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { LessonWriter } from './lesson-writer';
 import { OccurrenceGenerator } from './occurrence-generator';
-import { fakeAudit, fakeLessonsDb, ruleRow, STUDENT_ID } from '../scheduling.fakes';
+import { fakeAudit, fakeLessonsDb, ruleRow, STUDENT_ID } from '@/modules/teaching/scheduling/scheduling.fakes';
 
 // Friday 2026-10-02 13:00 Riyadh. The Sun/Tue 17:00 rule starts Sunday 4 Oct.
 const NOW = new Date('2026-10-02T10:00:00Z');

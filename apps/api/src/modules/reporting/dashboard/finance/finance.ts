@@ -1,5 +1,5 @@
-import { convert, round2, type Conversion } from '../work/conversion';
-import type { MonthFinance, SourceKey } from '../dashboard.types';
+import { convert, round2, type Conversion } from '@/modules/reporting/dashboard/work/conversion';
+import type { MonthFinance, SourceKey } from '@/modules/reporting/dashboard/dashboard.types';
 
 // Range finance in the reporting currency (R-RPT-02, docs/11 D1): revenue = payments by paid_at,
 // teacher cost = paid lessons × rate (EGP), expenses by their month. Amounts in a currency with

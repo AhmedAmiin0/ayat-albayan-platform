@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { CrmWhatsappClient } from './crm.client';
 import { CRM_ENV, CRM_SENT, crmFailure } from './crm.fakes';
 import { crmReportBodies } from './crm-report';
-import { REPORT_READY, scriptedFetch, templateRow } from '../../whatsapp.fakes';
-import { WaError } from '../../whatsapp.types';
+import { REPORT_READY, scriptedFetch, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // docs/19 «crm driver»: the lesson report like the old script — the PDF as a document, then
 // report_trial_session (trial) or report_session (regular) — once report_ready's crm_name says so.

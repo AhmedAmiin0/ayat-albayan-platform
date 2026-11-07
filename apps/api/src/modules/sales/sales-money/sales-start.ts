@@ -1,8 +1,8 @@
 import { daysBefore, salesStartDate } from '@ab/shared';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { badRequest, forbidden } from '../../../common/http/errors';
-import { assertUsedBefore } from '../../finance/subscriptions';
-import { riyadhToday } from '../sales';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, forbidden } from '@/common/http/errors';
+import { assertUsedBefore } from '@/modules/finance/subscriptions';
+import { riyadhToday } from '@/modules/sales/sales';
 
 type StartInput = { startsOn?: string | undefined; alreadyStarted?: boolean | undefined; lessonsUsedBefore?: number | undefined };
 

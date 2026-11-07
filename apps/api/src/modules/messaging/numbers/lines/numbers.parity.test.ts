@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { loadEnv } from '../../../../config/env/env';
-import { LEGACY_ENV } from '../numbers.fakes';
+import { loadEnv } from '@/config/env/env';
+import { LEGACY_ENV } from '@/modules/messaging/numbers/numbers.fakes';
 import { differences, parityRoles } from './numbers.parity';
 
 const env = (over: Record<string, string> = {}) => loadEnv({ ...LEGACY_ENV, ...over });

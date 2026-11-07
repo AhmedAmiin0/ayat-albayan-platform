@@ -1,10 +1,10 @@
 import { SETTING_DEFAULTS, type AcademySettings, type NotificationRuleRow } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { RulesSettingsBridge } from './rules.bridge';
-import type { RulesSnapshot } from '../store/rules.reader';
-import type { DbRulesReader } from '../store/rules.store';
-import type { RulesWriter } from '../store/rules.writer';
+import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
+import type { DbRulesReader } from '@/modules/messaging/notification-rules/store/rules.store';
+import type { RulesWriter } from '@/modules/messaging/notification-rules/store/rules.writer';
 
 const row = (r: Partial<NotificationRuleRow>): NotificationRuleRow => ({
   key: r.key ?? '', enabled: true, channels: null, timing: null, number_id: null, updated_at: 'x', updated_by: null, ...r,

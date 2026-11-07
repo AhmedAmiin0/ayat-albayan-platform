@@ -1,6 +1,6 @@
 import { managesTemplates } from '@ab/shared';
 import { Injectable, type CanActivate, type ExecutionContext } from '@nestjs/common';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { waHttpError } from './template.mapper';
 
 /**

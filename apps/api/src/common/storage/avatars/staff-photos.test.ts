@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../modules/people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { FakeAvatarFiles } from './avatars.fakes';
 import { StaffPhotos, staffPhotoPath } from './staff-photos';
 

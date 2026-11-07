@@ -1,6 +1,6 @@
 import { juzProgress, type Attendance, type Grade, type JuzProgress, type Program, type ReportContent } from '@ab/shared';
-import { packageSlot, type PackageSlot, type PdfContact } from '../render/pdf-model';
-import type { ReportSource } from '../report-pdf.source';
+import { packageSlot, type PackageSlot, type PdfContact } from '@/modules/reporting/report-pdf/render/pdf-model';
+import type { ReportSource } from '@/modules/reporting/report-pdf/report-pdf.source';
 
 /**
  * What the v2 family report shows (docs/design/report-form/ParentReport.dc.html): done today with

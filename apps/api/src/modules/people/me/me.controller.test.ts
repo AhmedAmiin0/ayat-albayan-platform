@@ -1,11 +1,11 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { DB } from '../../../common/db/db.module';
-import { fakeDb, type FakeResult } from '../guardians/fake-db';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { DB } from '@/common/db/db.module';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'admin-1', email: 'a@x.com', role: 'admin', sessionId: 'sess-1' },

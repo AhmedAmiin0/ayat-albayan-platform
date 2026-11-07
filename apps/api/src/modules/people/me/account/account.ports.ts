@@ -1,5 +1,5 @@
 import type { AccountRole } from '@ab/shared';
-import type { AvatarFiles } from '../../../../common/storage/avatars/avatar-files';
+import type { AvatarFiles } from '@/common/storage/avatars/avatar-files';
 
 // What «حسابي» (R-ACC-01..05) needs from the DB, the Auth API and Storage. account.queries.ts,
 // account.auth.ts and common/storage/avatars implement them; the unit tests use account.fakes.ts.

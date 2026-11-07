@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { CRM_HOST, crmLink, crmResponse, crmRow, stubFetch } from '../crm-history/crm-history.fakes';
+import { CRM_HOST, crmLink, crmResponse, crmRow, stubFetch } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history.fakes';
 import { BATCH, MAX_ATTEMPTS, UNREACHABLE_PATIENCE } from './crm-media-copier';
 import { copyWorld, crmRows } from './crm-copy.fakes';
 

@@ -1,10 +1,10 @@
 import { googleStudentMapSchema, googleTeacherMapSchema, teacherCalendarOwnerSchema, type GoogleStudentMapRow, type GoogleTeacherMapRow, type TeacherCalendarView } from '@ab/shared';
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
-import { requireAdmin } from '../admin/admin-only';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { requireAdmin } from '@/modules/platform/google-sync/admin/admin-only';
 import { GoogleMapService } from './google-map.service';
 import { TeacherCalendarService } from './teacher-calendar.service';
 

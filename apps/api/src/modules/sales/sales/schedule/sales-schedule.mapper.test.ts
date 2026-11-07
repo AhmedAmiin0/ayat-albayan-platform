@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { scheduleRow } from '../academy/sales-academy.fakes';
+import { scheduleRow } from '@/modules/sales/sales/academy/sales-academy.fakes';
 import { nextLessons, riyadhDayRange, riyadhToday, teacherDayFacts, toScheduleLesson, upcomingRange } from './sales-schedule.mapper';
 
 const NOW = new Date('2026-10-11T16:10:00.000Z');

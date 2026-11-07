@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { ReportLessonQueries } from '../report-lesson.queries';
-import { ReportsQueries } from '../reports.queries';
-import { lessonRow, LESSON_ID, STUDENT_ID } from '../reports.fakes';
-import { callSubmitReport } from '../submit/report-rpc';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { ReportLessonQueries } from '@/modules/reporting/reports/report-lesson.queries';
+import { ReportsQueries } from '@/modules/reporting/reports/reports.queries';
+import { lessonRow, LESSON_ID, STUDENT_ID } from '@/modules/reporting/reports/reports.fakes';
+import { callSubmitReport } from '@/modules/reporting/reports/submit/report-rpc';
 
 const content = (surah: number, to: number) => ({ segments: [{ kind: 'new', surah, from: 1, to, grade: 'good' }] });
 

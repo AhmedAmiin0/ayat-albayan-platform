@@ -1,10 +1,10 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { forbidden, notFound } from '../../../../common/http/errors';
-import { allowedRecipients, loadEnv, recipientAllowed } from '../../../../config/env/env';
-import { CallsSettings } from '../calls.settings';
-import { callingLine, type CallingLine } from '../kapso/calling-line';
-import { permissionTemplate } from '../kapso/permission-body';
-import { SendGate } from '../../whatsapp';
+import { forbidden, notFound } from '@/common/http/errors';
+import { allowedRecipients, loadEnv, recipientAllowed } from '@/config/env/env';
+import { CallsSettings } from '@/modules/messaging/calls/calls.settings';
+import { callingLine, type CallingLine } from '@/modules/messaging/calls/kapso/calling-line';
+import { permissionTemplate } from '@/modules/messaging/calls/kapso/permission-body';
+import { SendGate } from '@/modules/messaging/whatsapp';
 
 /**
  * The feature's gates (docs/28 §6), checked by every call route before anything else: the setting

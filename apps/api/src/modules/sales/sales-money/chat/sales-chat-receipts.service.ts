@@ -1,9 +1,9 @@
 import type { SalesChatReceipt, SalesChatReceiptCopy, SalesChatReceiptFile, SalesReceiptCopied } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { SalesChatFiles } from './sales-chat-files';
-import { SalesMoneyScope } from '../sales-money.scope';
-import { SalesMoneyServices } from '../sales-money.services';
+import { SalesMoneyScope } from '@/modules/sales/sales-money/sales-money.scope';
+import { SalesMoneyServices } from '@/modules/sales/sales-money/sales-money.services';
 
 /**
  * «اختر صورة الإيصال من المحادثة» (owner 2026-10-12, docs/16 row 18): the receipt the family sent in its

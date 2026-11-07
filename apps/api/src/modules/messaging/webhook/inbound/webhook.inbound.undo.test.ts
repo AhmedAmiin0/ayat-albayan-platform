@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { event, GUARDIAN_ID, LESSON_ID, nobody, services } from '../webhook.fakes';
+import { event, GUARDIAN_ID, LESSON_ID, nobody, services } from '@/modules/messaging/webhook/webhook.fakes';
 
 // A quick reply that fails: unstore the row only while Meta still waits for the answer.
 function guardianYes() {

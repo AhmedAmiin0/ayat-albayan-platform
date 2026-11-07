@@ -1,5 +1,5 @@
 import { effectivePermissions, type Permission } from '@ab/shared';
-import type { Db } from '../db/db.module';
+import type { Db } from '@/common/db/db.module';
 import type { PermissionCache } from './permission.cache';
 import { AccountDisabledError, type PermissionResolver } from './permissions';
 import type { AuthUser } from './verify-token';

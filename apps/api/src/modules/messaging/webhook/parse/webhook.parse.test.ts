@@ -1,6 +1,6 @@
 import { waIdToE164 } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { LineNumbers } from '../../../../config/env/env';
+import type { LineNumbers } from '@/config/env/env';
 import {
   buttonPart,
   CHAT_PHONE_NUMBER_ID,
@@ -12,7 +12,7 @@ import {
   statusValue,
   textPart,
   TS_DATE,
-} from '../meta.fakes';
+} from '@/modules/messaging/webhook/meta.fakes';
 import { metaTime, parseWebhook } from './webhook.parse';
 
 const NOW = new Date('2026-10-03T13:05:00Z');

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { LinesCheck, PHONE_FIELDS } from './lines.check';
-import { CHAT_ENV, LINES_RECORDED as R, routedFetch, stubEnvs, TWO_LINES_ENV } from '../whatsapp.lines.fakes';
-import { STUB_ENV, type Recorded } from '../whatsapp.fakes';
+import { CHAT_ENV, LINES_RECORDED as R, routedFetch, stubEnvs, TWO_LINES_ENV } from '@/modules/messaging/whatsapp/whatsapp.lines.fakes';
+import { STUB_ENV, type Recorded } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 const N = STUB_ENV.phoneNumberId;
 const C = CHAT_ENV.phoneNumberId;

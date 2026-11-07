@@ -1,6 +1,6 @@
 import type { Json } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 export type AccountRow = {
   status: 'disconnected' | 'connected' | 'error';

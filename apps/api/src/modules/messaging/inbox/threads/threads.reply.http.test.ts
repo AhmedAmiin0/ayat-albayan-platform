@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { inboxApp } from '../test-app';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 import { ThreadQuotes } from './thread-quotes';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;

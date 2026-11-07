@@ -1,7 +1,7 @@
 import { clickToChatLink, type PortalHome } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { PortalScopes } from '../scope/portal-scope';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { ChatNumber } from './chat-number';
 
 /** GET /portal/me: the switcher (my students, or myself) and the renewal chat link. */

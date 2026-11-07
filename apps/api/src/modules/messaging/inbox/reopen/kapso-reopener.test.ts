@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import { KAPSO_ENV } from '../../whatsapp/drivers/kapso/kapso.fakes';
-import { STUB_ENV } from '../../whatsapp/whatsapp.fakes';
+import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
+import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { kapsoReopen, last4 } from './kapso-reopener';
 
 // Fakes only: never Kapso.

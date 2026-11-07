@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { LineNumbers } from '../../../../config/env/env';
-import { CHAT_PHONE_NUMBER_ID, PHONE_NUMBER_ID } from '../meta.fakes';
+import type { LineNumbers } from '@/config/env/env';
+import { CHAT_PHONE_NUMBER_ID, PHONE_NUMBER_ID } from '@/modules/messaging/webhook/meta.fakes';
 import { parseWebhook } from './webhook.parse';
 
 // Meta Cloud API Calling payloads (field `calls`), as Kapso's meta-kind webhook forwards them raw.

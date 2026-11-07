@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { A, LESSON, lessonFacts, MINE, OTHER, studentsApp } from '../sales-students.fakes';
+import { A, LESSON, lessonFacts, MINE, OTHER, studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
 const NOW = new Date('2026-10-27T10:00:00Z');

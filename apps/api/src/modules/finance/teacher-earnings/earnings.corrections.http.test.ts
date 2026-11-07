@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { conflict } from '../../../common/http/errors';
-import { ADMIN, moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
+import { conflict } from '@/common/http/errors';
+import { ADMIN, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { PAYMENT, paymentRow, TEACHER } from './earnings.fakes';
 
 describe('teacher earnings corrections and summary (admin)', () => {

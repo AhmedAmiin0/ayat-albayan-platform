@@ -1,6 +1,6 @@
 import { createECDH, randomBytes } from 'node:crypto';
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../../db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { decryptPayload } from './web-push.crypto';
 import { WebPushSender, type WebPushTransport } from './web-push.sender';
 import type { VapidKeys } from './web-push.vapid';

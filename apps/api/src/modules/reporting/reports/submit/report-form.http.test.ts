@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AFTER, BEFORE, LESSON_ID, lessonRow, reportRow, STUDENT_ID, SIBLING_ID, TEACHER } from '../reports.fakes';
-import { reportsApp } from '../test-app';
+import { AFTER, BEFORE, LESSON_ID, lessonRow, reportRow, STUDENT_ID, SIBLING_ID, TEACHER } from '@/modules/reporting/reports/reports.fakes';
+import { reportsApp } from '@/modules/reporting/reports/test-app';
 
 const URL = `/lessons/${LESSON_ID}/report-form`;
 const BALANCE = {

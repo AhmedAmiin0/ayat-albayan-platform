@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { LESSON_ID, lessonRow, STUDENT_ID } from '../lessons.fakes';
-import { toLessonView } from '../lessons.mapper';
+import { LESSON_ID, lessonRow, STUDENT_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';
 import { markUnpaid, upcomingStudentIds } from './unpaid-mark';
 
 const NOW = Date.parse('2026-10-02T09:00:00Z');

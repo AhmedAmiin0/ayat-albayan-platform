@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { MergeService } from './merge.service';
 
 const OPTS = { keptId: 'a', mergedId: 'b', actorId: 'u1' };

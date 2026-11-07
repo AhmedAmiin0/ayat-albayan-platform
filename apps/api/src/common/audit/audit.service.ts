@@ -1,6 +1,6 @@
 import type { Json } from '@ab/db';
 import { Global, Inject, Injectable, Module } from '@nestjs/common';
-import { DB, type Db } from '../db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 export interface AuditEntry {
   /** auth.users id of the acting user; null for system jobs. */

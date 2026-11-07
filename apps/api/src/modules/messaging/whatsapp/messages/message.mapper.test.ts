@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { needsManualSend, toMessageView } from './message.mapper';
-import { messageRow } from '../sender/sender.fakes';
-import { renderable, toTemplateView } from '../templates/catalog/template.mapper';
-import { REPORT_READY, templateRow } from '../whatsapp.fakes';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { renderable, toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { REPORT_READY, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 const booking = renderable(templateRow());
 

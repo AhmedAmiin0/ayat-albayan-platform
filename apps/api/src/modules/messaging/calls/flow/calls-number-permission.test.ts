@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ADMIN_ACTOR, FAMILY, fakeGate } from '../calls.fakes';
+import { ADMIN_ACTOR, FAMILY, fakeGate } from '@/modules/messaging/calls/calls.fakes';
 import { CALLS, REQ, TEMPLATE, setup, tap } from './calls-number-permission.fakes';
 
-vi.mock('../kapso/calling-line', () => ({ callingLine: vi.fn() }));
+vi.mock('@/modules/messaging/calls/kapso/calling-line', () => ({ callingLine: vi.fn() }));
 
 describe('«اطلب إذن الاتصال» from the calls number: only on a tap, through the gates', () => {
   it('the interactive request goes FROM the calls number (one request), its row stamped line calls and sent', async () => {

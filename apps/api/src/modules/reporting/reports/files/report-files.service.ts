@@ -6,14 +6,14 @@ import type {
   SignedUpload,
 } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { attachmentPath, BUCKETS, isPathOf } from '../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { reportFileName } from '../../report-pdf/report-ready';
-import { badRequest, conflict } from '../../../../common/http/errors';
+import { attachmentPath, BUCKETS, isPathOf } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { reportFileName } from '@/modules/reporting/report-pdf/report-ready';
+import { badRequest, conflict } from '@/common/http/errors';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
-import type { ReportRow } from '../report-row';
-import { ReportGate } from '../submit/report-gate';
-import { callerActor, type ReportCaller } from '../report-access';
+import type { ReportRow } from '@/modules/reporting/reports/report-row';
+import { ReportGate } from '@/modules/reporting/reports/submit/report-gate';
+import { callerActor, type ReportCaller } from '@/modules/reporting/reports/report-access';
 
 /** A signed-in user, or the lesson's teacher through their report link (owner 2026-11-06). */
 type FileRef = { id: string; user: ReportCaller };

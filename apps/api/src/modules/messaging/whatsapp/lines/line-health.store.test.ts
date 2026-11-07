@@ -1,6 +1,6 @@
 import type { LineCheckView } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { currentRows, displayE164, healthRows, LineHealthStore } from './line-health.store';
 
 const view = (patch: Partial<LineCheckView>): LineCheckView => ({

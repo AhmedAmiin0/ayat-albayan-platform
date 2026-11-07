@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { StorageService } from './storage.service';
 
 function fakeStorage(bucketApi: Record<string, ReturnType<typeof vi.fn>>) {

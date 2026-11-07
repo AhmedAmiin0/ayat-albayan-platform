@@ -1,4 +1,4 @@
-import type { AuthAdmin, AuthPatch } from '../store/users.store';
+import type { AuthAdmin, AuthPatch } from '@/modules/people/users/store/users.store';
 
 /** In-memory Auth Admin API; `calls` records what was asked, never a secret beyond the fake's own state. */
 export class FakeAuthAdmin implements AuthAdmin {

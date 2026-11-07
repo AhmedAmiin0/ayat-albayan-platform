@@ -1,4 +1,4 @@
-import type { Db } from '../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 
 // Test-only supabase-js double: every builder call is recorded per `from(table)`, and awaiting the
 // chain resolves to the next queued result for that table ({ data: [], error: null } by default).

@@ -1,6 +1,6 @@
 import { defaultGrantsOf, USER_ROLES } from '@ab/shared';
-import type { AuditEntry, AuditService } from '../../../common/audit/audit.service';
-import { PermissionCache } from '../../../common/auth/permission.cache';
+import type { AuditEntry, AuditService } from '@/common/audit/audit.service';
+import { PermissionCache } from '@/common/auth/permission.cache';
 import { RolesService } from './roles.service';
 import type { NewRole, ProfileRecord, RoleNames, RoleRecord, RoleStore } from './roles.store';
 

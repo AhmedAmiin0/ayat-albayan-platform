@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ADMIN, LESSON_ID } from '../lessons.fakes';
+import { ADMIN, LESSON_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import { CLASH, correction, heldRow, NOW, retimed, timeSetup } from './time-edit.fakes';
 
 describe('LessonTimeService — correct a held lesson (R-SCH-11)', () => {

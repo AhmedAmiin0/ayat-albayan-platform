@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import { callPermissionMessage } from '../messages/wa-call-permission';
+import type { StorageService } from '@/common/storage/storage.service';
+import { callPermissionMessage } from '@/modules/messaging/whatsapp/messages/wa-call-permission';
 import { MessageDispatch } from './message.dispatch';
 import { dueMessage } from './sender.fakes';
-import type { WhatsappLines } from '../whatsapp.types';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const permissionRow = () =>
   dueMessage({ template_key: null, template_params: null, body: 'هل تسمحون لنا بالاتصال؟', line: 'chat', interactive_payload: { type: 'call_permission_request' } });

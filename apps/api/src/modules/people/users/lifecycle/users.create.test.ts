@@ -1,8 +1,8 @@
 import type { UserCreate } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { errorCode } from '../../../../common/http/errors';
-import { ADMIN_ACTOR, row, setupUsers, type Link } from '../users.fakes';
-import type { Actor } from '../users.service';
+import { errorCode } from '@/common/http/errors';
+import { ADMIN_ACTOR, row, setupUsers, type Link } from '@/modules/people/users/users.fakes';
+import type { Actor } from '@/modules/people/users/users.service';
 
 const base: UserCreate = { email: 'new@example.com', full_name: 'علي أحمد', role: 'sales', credential: 'generate' };
 const codeOf = async (p: Promise<unknown>) => errorCode(await p.catch((e: unknown) => e));

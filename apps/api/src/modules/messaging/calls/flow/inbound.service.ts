@@ -1,10 +1,10 @@
 import type { ActiveCallView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { conflict, notFound } from '../../../../common/http/errors';
-import { maySee, type CallActor } from '../access/call-access';
-import { CallsGate } from '../access/calls-gate';
-import { toActiveView } from '../store/calls.mapper';
-import type { CallRow } from '../store/call-row';
+import { conflict, notFound } from '@/common/http/errors';
+import { maySee, type CallActor } from '@/modules/messaging/calls/access/call-access';
+import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
+import { toActiveView } from '@/modules/messaging/calls/store/calls.mapper';
+import type { CallRow } from '@/modules/messaging/calls/store/call-row';
 import { callFailed, logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
 import { isPartyOf } from './outbound.service';

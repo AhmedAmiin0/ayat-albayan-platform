@@ -1,13 +1,13 @@
 import { waIdToE164, type CallEvent } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
-import type { CallPermissionReplyEvent, CallWebhookEvent } from '../../webhook/webhook.events';
-import { CallsGate } from '../access/calls-gate';
-import { callingLine, type CallingLine } from '../kapso/calling-line';
-import type { CallRow } from '../store/call-row';
+import type { CallPermissionReplyEvent, CallWebhookEvent } from '@/modules/messaging/webhook/webhook.events';
+import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
+import { callingLine, type CallingLine } from '@/modules/messaging/calls/kapso/calling-line';
+import type { CallRow } from '@/modules/messaging/calls/store/call-row';
 import { logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
-import { CallsNumberRepo } from '../store/calls-number.repo';
+import { CallsNumberRepo } from '@/modules/messaging/calls/store/calls-number.repo';
 import { CallsSweeper } from './calls.sweeper';
 
 /** The port WebhookService calls for every parsed `calls` item (docs/28 §2). */

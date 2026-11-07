@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { OwnNumbers } from '../numbers';
+import { OwnNumbers } from '@/modules/messaging/numbers';
 import { envelope, inboundValue, textPart } from './meta.fakes';
 import { kapsoSign, sign, webhookApp } from './test-app';
 

@@ -1,10 +1,10 @@
 import { RULE_SETTING_KEYS, notificationEntry, resolveRule, type AcademySettings, type RuleSettings } from '@ab/shared';
 import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
-import { SettingsRulesPort } from '../../../../common/settings/settings-rules.port';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import { SettingsRulesPort } from '@/common/settings/settings-rules.port';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { moduleLegacyValues } from './rules.mirror';
-import { DbRulesReader } from '../store/rules.store';
-import { RulesWriter } from '../store/rules.writer';
+import { DbRulesReader } from '@/modules/messaging/notification-rules/store/rules.store';
+import { RulesWriter } from '@/modules/messaging/notification-rules/store/rules.writer';
 
 const ruleSettingsOf = (s: AcademySettings): RuleSettings =>
   Object.fromEntries(RULE_SETTING_KEYS.map((k) => [k, s[k]])) as RuleSettings;

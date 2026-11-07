@@ -1,4 +1,4 @@
-import type { Db } from '../../db/db.module';
+import type { Db } from '@/common/db/db.module';
 
 /**
  * The given auth sessions that are still live (migration 700's push_live_sessions: not ended, not

@@ -1,12 +1,12 @@
 import type { HttpException } from '@nestjs/common';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, OPEN, queries, SALES } from '../classroom.fakes';
-import { grantsFor } from '../livekit/livekit-token';
-import { admissionOf, rolesOf } from '../moderation/moderation.fakes';
+import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, OPEN, queries, SALES } from '@/modules/teaching/classroom/classroom.fakes';
+import { grantsFor } from '@/modules/teaching/classroom/livekit/livekit-token';
+import { admissionOf, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RoomJoinService } from './room-join.service';
-import { classroomApp } from '../test-app';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { ClassroomSettings } from '../classroom.settings';
+import { classroomApp } from '@/modules/teaching/classroom/test-app';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 
 let q: ReturnType<typeof queries>;
 const join = (now: Date) =>

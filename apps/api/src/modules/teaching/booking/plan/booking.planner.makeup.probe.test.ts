@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type * as Shared from '@ab/shared';
 import { probeOccurrences } from '@ab/shared';
-import { bookingRequest, fakePlanner, IDS, NOW } from '../booking.fakes';
-import { makeupRequest, missedLessonRow } from '../makeup/booking.makeup.fakes';
+import { bookingRequest, fakePlanner, IDS, NOW } from '@/modules/teaching/booking/booking.fakes';
+import { makeupRequest, missedLessonRow } from '@/modules/teaching/booking/makeup/booking.makeup.fakes';
 
 vi.mock('@ab/shared', async (load) => ({
   ...(await load<typeof Shared>()),

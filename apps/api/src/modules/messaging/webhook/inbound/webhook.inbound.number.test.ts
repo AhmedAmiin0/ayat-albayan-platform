@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { event, services } from '../webhook.fakes';
+import { event, services } from '@/modules/messaging/webhook/webhook.fakes';
 
 // number_id on inbound rows: module mode stamps the overlay's row; legacy looks the receiving
 // phone_number_id up in wa_numbers, as the chat import of 2026-10-25 stamped it.

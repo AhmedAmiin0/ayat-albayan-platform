@@ -1,4 +1,4 @@
-import type { EventRef, GoogleEvent, GoogleEventBody, GoogleListedEvent } from '../google-client.port';
+import type { EventRef, GoogleEvent, GoogleEventBody, GoogleListedEvent } from '@/modules/platform/google-sync/google-client.port';
 import type { GoogleHttp } from './google-http';
 
 const enc = encodeURIComponent;

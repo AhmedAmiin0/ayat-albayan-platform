@@ -1,11 +1,11 @@
 import { applyLessonEvent, type LessonStatusRequest, type StatusRouteEvent } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { badRequest, conflict, errorCode } from '../../../../common/http/errors';
-import { LessonAccess } from '../store/lesson-access';
-import { studentIdsOf, type LessonRow } from '../store/lesson-row';
-import { LessonStore } from '../store/lesson-store';
-import { LessonsSettings } from '../lessons.settings';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, conflict, errorCode } from '@/common/http/errors';
+import { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
+import { studentIdsOf, type LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
+import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
+import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { outcomeChange } from './outcomes';
 import { invalidTransition } from './transition';
 

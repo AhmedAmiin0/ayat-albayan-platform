@@ -1,7 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import { ADMIN, SALES, TEACHER } from '../test-app';
+import type { AuditService } from '@/common/audit/audit.service';
+import { ADMIN, SALES, TEACHER } from '@/modules/messaging/inbox/test-app';
 import { recordSend } from './send-audit';
 
 const view = { id: 'm9', phone_e164: '+966501234567', template_key: 'booking_confirmation', status: 'sent', media_mime: null } as MessageView;

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DELIVERY_STATUSES, type StatusEvent } from '../webhook.events';
+import { DELIVERY_STATUSES, type StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 
 // What POST /webhooks/wacrm reads out of the CRM's delivery envelope (docs/19 «crm driver»):
 // {id, event, occurred_at, account_id, data}. Only message.status_updated moves our rows (ticks).

@@ -1,6 +1,6 @@
 import type { AcademySettings } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { SettingsService } from '../../../../common/settings/settings.service';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /** The keys only the gate routes write (docs/26 §5; PATCH /settings moves them). */
 export type GateKey = 'messaging_enabled' | 'auto_messages_enabled' | 'crm_cutover_done';

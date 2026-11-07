@@ -1,9 +1,9 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { systemResolver } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import { STUDENT_ID, SUB_ID } from '../../finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type InjectArgs, type Mocks } from '../../finance/subscriptions/test-app';
+import { systemResolver } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import { STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { moneyApp, resetMocks, type InjectArgs, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { CREATE, FAMILY_PHONE, MSG, NONE, PAY, salesDefaults } from './sales-money.fakes';
 
 // «تجديد اشتراك أي طالب» (docs/16 row 38; owner 2026-11-01: «renew to any one without

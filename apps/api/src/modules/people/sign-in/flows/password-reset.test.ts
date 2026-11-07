@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { PHONES } from '../sign-in.fakes.accounts';
-import { signInWorld } from '../sign-in.world';
+import { PHONES } from '@/modules/people/sign-in/sign-in.fakes.accounts';
+import { signInWorld } from '@/modules/people/sign-in/sign-in.world';
 
 const IP = '203.0.113.4';
 type World = ReturnType<typeof signInWorld>;

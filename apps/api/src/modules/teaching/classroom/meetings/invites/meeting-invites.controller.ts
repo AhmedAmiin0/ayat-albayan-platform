@@ -2,11 +2,11 @@ import type { MeetingInviteeOption, MeetingInviteeView, MeetingInviteResult } fr
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '../../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
 import { MeetingInvitesService } from './meeting-invites.service';
-import { MeetingScheduleService } from '../schedule/meeting-schedule.service';
+import { MeetingScheduleService } from '@/modules/teaching/classroom/meetings/schedule/meeting-schedule.service';
 
 const RESEND_PARAMS = z.object({ id: z.uuid(), inviteeId: z.uuid() });
 

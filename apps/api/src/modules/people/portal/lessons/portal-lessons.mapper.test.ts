@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { lessonRow, S2 } from '../portal.fakes';
+import { lessonRow, S2 } from '@/modules/people/portal/portal.fakes';
 import { externalLink, toPortalLesson, wayIn } from './portal-lessons.mapper';
 
 const win = { opensBeforeMin: 10, closesAfterMin: 15 };

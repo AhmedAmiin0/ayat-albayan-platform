@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { MEETING_ID, MEETING_TOKEN, meetingRow } from './internal-meetings.fakes';
-import { classroomApp } from '../test-app';
+import { classroomApp } from '@/modules/teaching/classroom/test-app';
 
 const base = `/meetings/${MEETING_ID}`;
 const pub = `/public/meetings/${MEETING_TOKEN}`;

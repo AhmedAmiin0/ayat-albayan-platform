@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import type { GoogleSyncKind } from '@ab/shared';
-import { CalendarWriter } from '../writers/calendar/calendar.writer';
-import { ReportPdfWriter } from '../writers/drive/report-pdf.writer';
-import { SheetRowsWriter } from '../writers/sheets/sheet-rows.writer';
+import { CalendarWriter } from '@/modules/platform/google-sync/writers/calendar/calendar.writer';
+import { ReportPdfWriter } from '@/modules/platform/google-sync/writers/drive/report-pdf.writer';
+import { SheetRowsWriter } from '@/modules/platform/google-sync/writers/sheets/sheet-rows.writer';
 import type { ItemWriter } from './write-context';
 
 /** The writer of each item kind. */

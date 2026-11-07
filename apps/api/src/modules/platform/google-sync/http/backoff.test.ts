@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { classify, errorText, MAX_ATTEMPTS, retryDelayMs } from './backoff';
-import { GoogleApiError } from '../google-client.port';
+import { GoogleApiError } from '@/modules/platform/google-sync/google-client.port';
 
 describe('retry policy', () => {
   it('backs off exponentially with jitter, capped', () => {

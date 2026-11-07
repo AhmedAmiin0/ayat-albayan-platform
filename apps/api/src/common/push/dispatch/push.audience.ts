@@ -4,9 +4,9 @@ import {
   AccountDisabledError,
   PERMISSION_RESOLVER,
   type PermissionResolver,
-} from '../../auth/permissions';
-import { NotificationPolicy } from '../../../modules/messaging/notification-rules/policy/policy';
-import { DB, type Db } from '../../db/db.module';
+} from '@/common/auth/permissions';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { DB, type Db } from '@/common/db/db.module';
 import { pushRoute, type PushRoute } from './push.rules';
 import { liveTokens } from './push.sessions';
 

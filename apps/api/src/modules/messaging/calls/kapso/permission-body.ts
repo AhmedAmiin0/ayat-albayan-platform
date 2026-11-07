@@ -1,4 +1,4 @@
-import { callPermissionMessage, waTo, type GraphBody } from '../../whatsapp';
+import { callPermissionMessage, waTo, type GraphBody } from '@/modules/messaging/whatsapp';
 import type { PermissionRequest } from './calls-api';
 
 // The body of «اطلب إذن الاتصال» from the calls number (docs/28 §10): the interactive

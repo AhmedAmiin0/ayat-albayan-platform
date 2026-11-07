@@ -1,5 +1,5 @@
-import type { QueuedMessage } from '../../scheduling/change-set';
-import { confirmationMessages, type ConfirmedLesson, type Contact } from '../status/confirmation-messages';
+import type { QueuedMessage } from '@/modules/teaching/scheduling/change-set';
+import { confirmationMessages, type ConfirmedLesson, type Contact } from '@/modules/teaching/lessons/status/confirmation-messages';
 
 /**
  * The guardian's confirmation of an edited lesson time (R-SCH-11): the same booking_confirmation*

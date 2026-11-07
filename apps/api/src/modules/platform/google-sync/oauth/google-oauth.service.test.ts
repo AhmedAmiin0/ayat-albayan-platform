@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { GoogleData } from '../google-data';
-import { GoogleApiError, type GoogleClientFactory, type GoogleOAuth } from '../google-client.port';
-import { fakeFactory } from '../http/google-client.fake';
+import type { GoogleData } from '@/modules/platform/google-sync/google-data';
+import { GoogleApiError, type GoogleClientFactory, type GoogleOAuth } from '@/modules/platform/google-sync/google-client.port';
+import { fakeFactory } from '@/modules/platform/google-sync/http/google-client.fake';
 import { GoogleConnection } from './google-connection';
 import { GoogleOAuthService, REQUIRED_SCOPES } from './google-oauth.service';
-import type { GoogleRuntime } from '../google-runtime';
-import { fakeData } from '../google-sync.fakes';
+import type { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
+import { fakeData } from '@/modules/platform/google-sync/google-sync.fakes';
 import { nonceHash } from './oauth-state';
 import type { GoogleAccountQueries } from './google-account.queries';
-import type { GoogleAlerts } from '../google-alerts';
+import type { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts';
 
 function setup(exchange = vi.fn().mockResolvedValue({ refreshToken: 'fake-refresh', scopes: [...REQUIRED_SCOPES, 'openid'], accessToken: 'fake-access' })) {
   const data = fakeData();

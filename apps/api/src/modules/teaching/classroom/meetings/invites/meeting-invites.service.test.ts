@@ -1,10 +1,10 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, ASSISTANT, OTHER_TEACHER, SALES, TEACHER } from '../../classroom.fakes';
-import { MEETING_ID, NOW, scheduledRow } from '../../internal-meetings/internal-meetings.fakes';
-import { hashMeetingToken } from '../../internal-meetings/internal-meetings.token';
+import { ADMIN, ASSISTANT, OTHER_TEACHER, SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import { MEETING_ID, NOW, scheduledRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import { hashMeetingToken } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 import { CLOSED_PHONE, OPEN_PHONE, openThread, STAFF_ID, STUDENT_A, stored } from './meeting-invites.fakes';
-import { meetingServices, ORIGIN, type MeetingServices } from '../schedule/meeting-services.fakes';
+import { meetingServices, ORIGIN, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
 let s: MeetingServices;
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;

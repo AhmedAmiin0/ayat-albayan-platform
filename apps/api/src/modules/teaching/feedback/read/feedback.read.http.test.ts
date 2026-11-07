@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { listRow, TEACHER_ID } from '../feedback.fakes';
-import { feedbackApp } from '../test-app';
+import { listRow, TEACHER_ID } from '@/modules/teaching/feedback/feedback.fakes';
+import { feedbackApp } from '@/modules/teaching/feedback/test-app';
 
 describe('feedback lists', () => {
   let h: Awaited<ReturnType<typeof feedbackApp>>;

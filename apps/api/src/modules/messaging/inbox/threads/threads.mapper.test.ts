@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { toTemplateView } from '../../whatsapp/templates/catalog/template.mapper';
-import { REMINDER_24H, templateRow } from '../../whatsapp/whatsapp.fakes';
-import { threadRow } from '../inbox.fakes';
+import { toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { REMINDER_24H, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { missingParams, threadSearchFilter, toThreadView } from './threads.mapper';
 
 const AT = new Date('2026-10-02T08:00:00Z');

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { SalesTeacherAssign } from './sales-teacher-assign';
 
 const dbWith = (result: { data: unknown; error: { message: string; code: string } | null }) => {

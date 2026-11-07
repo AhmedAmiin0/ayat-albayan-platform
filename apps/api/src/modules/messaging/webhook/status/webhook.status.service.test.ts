@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { CHAT_PHONE_NUMBER_ID, envelope, PHONE_NUMBER_ID, statusValue } from '../meta.fakes';
-import type { StatusEvent } from '../webhook.events';
-import { outbound, services } from '../webhook.fakes';
-import { parseWebhook } from '../parse/webhook.parse';
+import { CHAT_PHONE_NUMBER_ID, envelope, PHONE_NUMBER_ID, statusValue } from '@/modules/messaging/webhook/meta.fakes';
+import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
+import { outbound, services } from '@/modules/messaging/webhook/webhook.fakes';
+import { parseWebhook } from '@/modules/messaging/webhook/parse/webhook.parse';
 import { failedLabel } from './webhook.status.service';
 
 const AT = new Date('2026-10-03T13:00:00Z');

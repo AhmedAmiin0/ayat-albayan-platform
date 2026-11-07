@@ -1,7 +1,7 @@
 import { memoryOf, type BalanceView, type MemoryView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 import { storedContent } from './v2/report-v2.mapper';
 
 /** Enough submitted v2 reports per student to find each track's last range. */

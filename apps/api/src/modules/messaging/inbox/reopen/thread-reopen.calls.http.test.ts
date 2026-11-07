@@ -1,9 +1,9 @@
 import { reopenDedupKey } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { templateRow } from '../../whatsapp/whatsapp.fakes';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { inboxApp } from '../test-app';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
 // A family's only recent message went to the calls number (docs/28 §10): no messaging window is
 // open, so «إعادة فتح» still reopens with the template (never `window_open`), whatever line the

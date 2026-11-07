@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { crmTemplateBody } from './crm-body';
 import { templateMessage } from '@/modules/messaging/whatsapp/drivers/waba/waba-graph';
-import { templateRow } from '../../whatsapp.fakes';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver»: the CRM's own name (crm_name, the old script's default) and the producer's CRM values,
 // used only by the crm driver; the meta driver keeps meta_name and its own values.

@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { bookingRequest, fakePlanner, IDS, NOW } from '../booking.fakes';
+import { bookingRequest, fakePlanner, IDS, NOW } from '@/modules/teaching/booking/booking.fakes';
 
 const lesson = (id: string, start: string, end: string) => ({
   id,

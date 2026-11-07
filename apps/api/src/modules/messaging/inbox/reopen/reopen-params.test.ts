@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { threadRow } from '../inbox.fakes';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { reopenParams } from './reopen-params';
 
 describe('reopenParams', () => {

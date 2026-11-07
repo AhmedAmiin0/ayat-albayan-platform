@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ADMIN, whatsappApp } from '../../test-app';
-import { templateRow } from '../../whatsapp.fakes';
+import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // PATCH /messaging/templates/:key/starter «متاح للمعلمين والمبيعات» (the restricted allow-list) (owner 2026-10-12, docs/16).
 

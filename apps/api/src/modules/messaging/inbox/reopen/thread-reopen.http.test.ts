@@ -1,9 +1,9 @@
 import { reopenDedupKey } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { templateRow } from '../../whatsapp/whatsapp.fakes';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { ADMIN, inboxApp } from '../test-app';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { ADMIN, inboxApp } from '@/modules/messaging/inbox/test-app';
 
 // POST /threads/:phone/reopen (owner 2026-10-26). Fakes only: Kapso is the KapsoReopener mock, the
 // sender is mocked, nothing leaves the process.

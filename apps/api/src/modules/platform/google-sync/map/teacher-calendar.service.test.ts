@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../../../../common/db/db.module';
-import type { GoogleRuntime } from '../google-runtime';
-import { TEACHER_ID } from '../google-sync.fakes';
+import type { Db } from '@/common/db/db.module';
+import type { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
+import { TEACHER_ID } from '@/modules/platform/google-sync/google-sync.fakes';
 import { TeacherCalendarService } from './teacher-calendar.service';
 
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';

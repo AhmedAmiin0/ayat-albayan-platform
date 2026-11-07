@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { EXPENSE_ID, expenseRow } from '../subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
+import { EXPENSE_ID, expenseRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
 describe('expenses routes (X1–X4, R-RPT-02)', () => {
   let app: NestFastifyApplication;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Db } from '../../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { bucketDigest, DbLimitStore } from './limit-store.db';
 
 type Answer = { data: unknown; error: { message: string } | null };

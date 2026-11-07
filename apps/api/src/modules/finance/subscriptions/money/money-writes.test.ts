@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import type { SubscriptionAlertsService } from '../alerts/alerts.service';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { SubscriptionAlertsService } from '@/modules/finance/subscriptions/alerts/alerts.service';
 import type { MoneyFollowUps } from './money-follow-ups';
 import { causeOf, MoneyWrites } from './money-writes';
 import type { PackageEvents } from '@/common/infra/events/lesson-events';

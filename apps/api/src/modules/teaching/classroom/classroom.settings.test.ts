@@ -1,6 +1,6 @@
 import { joinWindowConfig, SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { ClassroomSettings } from './classroom.settings';
 
 /** What the four classroom consumers read before the reader existed: the reader lists exactly these. */

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ReceivablesModule } from '../../finance/receivables/receivables.module';
+import { ReceivablesModule } from '@/modules/finance/receivables/receivables.module';
 import { ExportsController } from './exports.controller';
 import { ExportsQueries } from './exports.queries';
 import { ExportsService } from './exports.service';

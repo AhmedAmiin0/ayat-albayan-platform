@@ -1,9 +1,9 @@
 import type { ModuleRef } from '@nestjs/core';
 import { describe, expect, it, vi } from 'vitest';
-import { BackgroundJob } from '../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 import { ConfigReloadJob } from './config-reload.job';
 import { InternalJobsController } from './jobs.controller';
-import { internalToken } from '../../../config/role/worker-kick';
+import { internalToken } from '@/config/role/worker-kick';
 
 @BackgroundJob({ name: 'test-kick-route', kick: 'kick' })
 class KickedJob {

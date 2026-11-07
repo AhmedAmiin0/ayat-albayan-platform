@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { FAMILY, LINE, fakeKit } from '../calls.fakes';
-import type { CallsGate } from '../access/calls-gate';
+import { FAMILY, LINE, fakeKit } from '@/modules/messaging/calls/calls.fakes';
+import type { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
 import { CallsSweeper, IDLE_MS } from './calls.sweeper';
 
-vi.mock('../kapso/calling-line', () => ({ callingLine: vi.fn(() => LINE) }));
+vi.mock('@/modules/messaging/calls/kapso/calling-line', () => ({ callingLine: vi.fn(() => LINE) }));
 
 const T0 = Date.parse('2026-10-26T10:00:00.000Z');
 const at = (ms: number) => new Date(T0 + ms);

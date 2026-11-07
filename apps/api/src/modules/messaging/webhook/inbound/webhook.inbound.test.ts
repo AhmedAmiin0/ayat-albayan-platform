@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AT, event, GUARDIAN_ID, LESSON_ID, nobody } from '../webhook.fakes';
+import { AT, event, GUARDIAN_ID, LESSON_ID, nobody } from '@/modules/messaging/webhook/webhook.fakes';
 import { inboundPush, inboundRow, intentOf, payloadLesson, pushPreview, PUSH_BUCKET_MS } from './webhook.inbound';
 
 const PHONE = '+966501234567';

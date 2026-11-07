@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { BUCKETS } from '../../../../../common/storage/storage.paths';
-import { StorageService } from '../../../../../common/storage/storage.service';
-import { matchDate } from '../sheets/attendance-row';
-import { contentHash } from '../calendar/content-hash';
+import { BUCKETS } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { matchDate } from '@/modules/platform/google-sync/writers/sheets/attendance-row';
+import { contentHash } from '@/modules/platform/google-sync/writers/calendar/content-hash';
 import { DriveFiles } from './drive-files';
-import { TZ } from '../../google-format';
-import type { ItemResult, SyncItem } from '../../sync/google-items.queries';
-import { GoogleSyncSource } from '../../sync/google-sync.source';
+import { TZ } from '@/modules/platform/google-sync/google-format';
+import type { ItemResult, SyncItem } from '@/modules/platform/google-sync/sync/google-items.queries';
+import { GoogleSyncSource } from '@/modules/platform/google-sync/sync/google-sync.source';
 import { pdfName } from './pdf-name';
-import { localDate } from '../sheets/sheet-dates';
-import { later, planned, synced, type ItemWriter, type WriteCtx } from '../../sync/write-context';
+import { localDate } from '@/modules/platform/google-sync/writers/sheets/sheet-dates';
+import { later, planned, synced, type ItemWriter, type WriteCtx } from '@/modules/platform/google-sync/sync/write-context';
 
 /**
  * report_pdf (docs/24 §3, §2.5): the platform's report PDF into the student's Drive folder, named

@@ -1,5 +1,5 @@
-import type { FailurePlan } from '../../sender/send-plan';
-import type { WaError } from '../../whatsapp.types';
+import type { FailurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
+import type { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** messages.error_code while the CRM's rate limit (429) holds the row until its Retry-After. */
 export const CRM_RATE_LIMITED = 'crm_rate_limited';
