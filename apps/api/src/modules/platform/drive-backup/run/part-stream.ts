@@ -1,4 +1,3 @@
-import { buffer } from 'node:stream/consumers';
 import type {
   BackupSource,
   ListedObject,
@@ -7,7 +6,10 @@ import type {
 import { STREAMED_MIN } from '@/modules/platform/drive-backup/plan/parts';
 import { entryHead, padding, TAR_END } from '@/modules/platform/drive-backup/archive/tar';
 
-/** Objects up to this size are read whole first (a failed read skips them cleanly). */
+/**
+ * Objects up to this size are read whole first (a failed read skips them cleanly), into one buffer
+ * of their size: 1x the object in memory. Larger ones stream in a part of their own (parts.ts).
+ */
 const BUFFER_MAX = STREAMED_MIN;
 
 export interface PartEntry {
@@ -36,14 +38,26 @@ function skip(report: PartReport, o: ListedObject, reason: SkipReason): null {
   return null;
 }
 
+/** Exactly `size` bytes into one buffer; a longer or shorter read fails (the object is skipped). */
+async function readWhole(opened: OpenedObject): Promise<Buffer> {
+  const out = Buffer.allocUnsafe(opened.size);
+  let at = 0;
+  for await (const c of opened.body) {
+    if (at + c.length > out.length) throw new Error('object_size_changed');
+    out.set(c, at);
+    at += c.length;
+  }
+  if (at !== out.length) throw new Error('object_cut_off');
+  return out;
+}
+
 /** Open (and read, when small) one object; a missing or unreadable one is skipped and reported. */
 async function ready(source: BackupSource, o: ListedObject, report: PartReport) {
   try {
     const opened = await source.open(o);
     if (!opened) return skip(report, o, 'missing');
     if (opened.size > BUFFER_MAX) return { opened, bytes: null };
-    const bytes = await buffer(opened.body);
-    return { opened: { ...opened, size: bytes.length }, bytes };
+    return { opened, bytes: await readWhole(opened) };
   } catch {
     return skip(report, o, 'read_failed');
   }

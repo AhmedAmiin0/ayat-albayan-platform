@@ -228,9 +228,12 @@ Google project, client or credential.
   `manifest.json` last (bucket, key, ETag, size, Content-Type of each object, and the skipped ones).
   Compressed with **zstd level 3 from Node's own `node:zlib`** (Node ≥ 22.15; the image runs Node
   24): no native module and no package; with zstd's checksum, so a damaged archive fails the
-  restore instead of restoring bad bytes. By hand: `zstd -dc full-2026-W45.tar.zst | tar -x`.
+  restore. The restore also checks each object against its recorded MD5 ETag before MinIO keeps
+  it (the last chunk is held back until the digest matches), so a damaged object is never restored;
+  objects with a multipart ETag rely on the zstd checksum alone. By hand: `zstd -dc full-2026-W45.tar.zst | tar -x`.
 - **Streamed:** MinIO → tar → zstd → a Drive resumable upload, 8 MiB chunks: nothing on disk, about
-  one chunk plus one object (≤ 64 MiB; larger objects stream) in memory. A part is cut at 1 GiB raw;
+  one chunk plus one object (≤ 64 MiB, read into one buffer of its size; larger objects stream)
+  in memory. A part is cut at 1 GiB raw;
   a night stops after 4 GiB raw (the rest continues the next night; a full stays open until done).
   Concurrency 1. A failed chunk (429, 5xx, network) is resent from what Drive holds, 5 tries.
 - **Crash and resume:** each part is a row in `drive_backup_archives` (`uploading` → `done` |
@@ -240,14 +243,32 @@ Google project, client or credential.
   and reported (manifest, alert), never stops the run, and is tried again the next night. An object
   over 64 MiB streams in a part of its own: if that read fails, only that object is skipped. A
   network failure or 429 / 5xx on a chunk is resent from what Drive holds (5 tries); a run that
-  hangs is let go after 8 hours. The restore also uses the parts of a full not yet sealed.
-- **Retention:** the last **4 fulls** and the incrementals after the oldest of them. Older archives go
-  to Drive's trash, only right after a newer full was sealed (all its parts uploaded).
+  hangs is aborted after 8 hours (its MinIO requests and the part's pipeline get the abort, so its
+  memory and sockets are freed). The restore also uses the parts of a full not yet sealed.
+- **Sealing:** a full is sealed only when it holds every object that still exists: nothing left by
+  the byte cap and no object skipped for a failed read (a vanished one is fine). Otherwise it stays
+  open and the next night continues the same full; until then the restore uses the previous sealed
+  full plus the parts and incrementals after it.
+- **Retention:** the last **4 fulls** and the incrementals after the oldest of them. Older archives are
+  **deleted from Drive for good** (`DELETE drive/v3/files/{id}`, not Drive's trash, which keeps counting
+  against the shared quota for 30 days), only right after a newer full was sealed. The backup deletes
+  only file ids from its own `drive_backup_archives` rows of its own folder, and only after reading
+  the file and finding it in that folder with the backup's marker (`ab_backup=minio`); a file that
+  is gone (404) or not the backup's own is left alone. It never lists Drive to delete anything.
+- **Orphans:** the Drive file id is stored on the row as soon as the upload returns, before the
+  objects are written. A part whose bookkeeping then fails (or a crash right after) is `failed`
+  with its file id: the next run deletes that file (same checks) before planning anything else.
 - **Expected size:** PDFs, JPEG/PNG photos, voice notes and videos are already compressed: they barely
   shrink (a few %). The gain is on the rest (CSV, JSON, text, some old PDFs): often 3× to 10×. Plan
-  Drive space as about the raw size of 4 fulls plus a week of incrementals.
-- **Quota:** a free Gmail account has 15 GB shared with Gmail and Photos. Each run reads
-  `about.storageQuota`: under 2 GB free → a bell alert to the admins; under 512 MiB → no upload.
+  Drive space as about the raw size of 4 fulls plus a week of incrementals (nothing
+  waits in Drive's trash).
+- **Quota (the top priority: the account is shared with Gmail, the old Apps Script and the Google
+  sync's report PDFs and Sheets):** a free Gmail account has 15 GB. Each run reads
+  `about.storageQuota` and gets a **byte budget = free − 2 GB reserve**: under 2 GB free → a bell
+  alert to the admins and no upload at all; otherwise the night uploads at most that budget (and at
+  most 4 GiB raw). Before **each part** the quota is read again and a part that would eat into the
+  reserve stops the run (`drive_full`). Drive's `storageQuotaExceeded` always stops the run (it is
+  never treated as «skip this object»).
 - **Alerts** (admins, bell only, the Google sync's `google_sync_alert`): a failed night, low quota,
   skipped objects; once per day each.
 

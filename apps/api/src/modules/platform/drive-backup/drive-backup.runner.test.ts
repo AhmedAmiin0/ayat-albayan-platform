@@ -59,7 +59,7 @@ describe('DriveBackupRunner (docs/45 §5)', () => {
   it('runs: the folder of the token’s own account, then the archive; state saved', async () => {
     const t = setup();
     t.minio.set({ bucket: 'reports', key: 'a.pdf', body: 'a' });
-    expect(await t.runner.runOnce(new Date('2026-11-07T01:00:00Z'))).toBe('ran');
+    expect(await t.runner.runOnce({ now: new Date('2026-11-07T01:00:00Z') })).toBe('ran');
     expect(t.state.save).toHaveBeenCalledWith(
       expect.objectContaining({ account_email: 'academy@example.test' }),
     );
@@ -71,11 +71,13 @@ describe('DriveBackupRunner (docs/45 §5)', () => {
     expect(t.alerts.lowQuota).not.toHaveBeenCalled();
   });
 
-  it('under 2 GB free: warns the admins, still runs', async () => {
+  it('under the 2 GB reserve: warns the admins and uploads nothing', async () => {
     const t = setup();
+    t.minio.set({ bucket: 'reports', key: 'a.pdf', body: 'a' });
     t.drive.quotaAnswer = { limit: 15 * GB, usage: 14 * GB, email: 'academy@example.test' };
-    expect(await t.runner.runOnce()).toBe('ran');
+    expect(await t.runner.runOnce()).toBe('failed');
     expect(t.alerts.lowQuota).toHaveBeenCalledWith(expect.objectContaining({ free: '1.0 GB' }));
+    expect(t.drive.log).not.toContain('startUpload');
   });
 
   it('Drive almost full: no upload, the error recorded and told', async () => {

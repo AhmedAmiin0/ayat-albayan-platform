@@ -55,7 +55,7 @@ describe('a bad object', () => {
     t.minio.vanish.add('reports/gone.pdf');
     t.minio.unreadable.add('reports/bad.pdf');
     const sum = await t.night('2026-11-07');
-    expect(sum).toMatchObject({ objects: 1, skipped: 2, sealed: true });
+    expect(sum).toMatchObject({ objects: 1, skipped: 2, unread: 1, sealed: false });
     const entries = await contents(
       t.drive,
       fileNamed(t.drive, t.folderId, 'full-2026-W45.tar.zst'),
@@ -68,7 +68,12 @@ describe('a bad object', () => {
       { bucket: 'reports', key: 'gone.pdf', reason: 'missing' },
     ]);
     t.minio.unreadable.clear();
-    expect(await t.night('2026-11-08')).toMatchObject({ kind: 'incr', objects: 1 });
+    expect(await t.night('2026-11-08')).toMatchObject({
+      kind: 'full',
+      label: '2026-W45',
+      objects: 1,
+      sealed: true,
+    });
   });
 
   it('a big streamed object that fails mid-read costs only its own part', async () => {
@@ -78,7 +83,7 @@ describe('a bad object', () => {
     t.minio.set({ bucket: B.reports, key: 'c.pdf', body: 'c' });
     t.minio.unreadable.add('reports/big.mp4');
     const sum = await t.night('2026-11-07');
-    expect(sum).toMatchObject({ parts: 2, objects: 2, skipped: 1, sealed: true });
+    expect(sum).toMatchObject({ parts: 2, objects: 2, skipped: 1, unread: 1, sealed: false });
     expect(t.store.rows.map((r) => r.status)).toEqual(['done', 'failed', 'done']);
   });
 });

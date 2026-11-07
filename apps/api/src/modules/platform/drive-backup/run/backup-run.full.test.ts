@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { B, names, setup } from './backup-run.fakes';
 
 // docs/45 §5: a weekly full (Friday or later, UTC), parts under a size cap, a per-run byte cap,
-// and retention: the last 4 fulls and the incrementals after the oldest, trashed only after a
-// newer full is sealed.
+// and retention: the last 4 fulls and the incrementals after the oldest, deleted from Drive for
+// good (not its trash) only after a newer full is sealed.
 
 const day = (base: string, plus: number): string =>
   new Date(Date.parse(`${base}T00:00:00Z`) + plus * 86_400_000).toISOString().slice(0, 10);
@@ -27,7 +27,7 @@ describe('weekly full archive', () => {
     expect(full?.objects.map((o) => o.key)).toEqual(['a.pdf', 'n0.pdf', 'n1.pdf', 'n2.pdf']);
   });
 
-  it('keeps the last 4 fulls and the incrementals after the oldest; trashes the rest', async () => {
+  it('keeps the last 4 fulls and the incrementals after the oldest; deletes the rest', async () => {
     const t = await setup();
     for (let week = 0; week < 6; week += 1) {
       t.minio.set({ bucket: B.reports, key: `w${week}.pdf`, body: `w${week}` });
@@ -45,10 +45,11 @@ describe('weekly full archive', () => {
     expect(names(t.drive, t.folderId)).not.toContain('incr-2026-11-21.tar.zst');
     expect(names(t.drive, t.folderId)).toContain('incr-2026-11-28.tar.zst');
     expect(t.store.rows.filter((r) => r.status === 'trashed')).toHaveLength(4);
-    expect([...t.drive.files.values()].filter((f) => f.trashed)).toHaveLength(4);
+    expect(t.drive.deleted).toHaveLength(4);
+    expect([...t.drive.files.values()].filter((f) => f.trashed)).toHaveLength(0);
   });
 
-  it('nothing is trashed while a newer full has not been sealed', async () => {
+  it('nothing is deleted while a newer full has not been sealed', async () => {
     const t = await setup({ part: 10, run: 10 });
     for (let week = 0; week < 4; week += 1) {
       t.minio.set({ bucket: B.reports, key: `w${week}.pdf`, body: 'x'.repeat(8) });

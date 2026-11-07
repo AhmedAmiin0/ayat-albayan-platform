@@ -43,37 +43,41 @@ interface Chunk {
   bytes: Buffer;
   total: number | null;
 }
-type Try = { result: ChunkResult } | { result: null; at: number };
 
 /** 429 / 5xx, and a network error or timeout (status 0) or 408: resend. */
 const retryable = (e: unknown): boolean =>
   classify(e) === 'retry' || (e instanceof GoogleApiError && [0, 408].includes(e.status));
 
-/** One attempt from `at`; a 429 / 5xx / network failure waits, then asks Drive what it holds. */
-async function attempt(s: Send, c: Chunk & { at: number; n: number }): Promise<Try> {
+/**
+ * One attempt from `at`. A 429 / 5xx / network failure waits, then answers with what Drive holds
+ * (the file itself when the last chunk did land); the chunk is resent whole when Drive cannot say.
+ */
+async function attempt(s: Send, c: Chunk & { at: number; n: number }): Promise<ChunkResult> {
   try {
     const bytes = c.bytes.subarray(c.at - c.offset);
-    const input = { session: s.session, offset: c.at, bytes, total: c.total };
-    return { result: await s.api.putChunk(input) };
+    return await s.api.putChunk({ session: s.session, offset: c.at, bytes, total: c.total });
   } catch (e) {
     if (c.n >= ATTEMPTS || !retryable(e)) throw e;
     await s.wait(baseDelayMs * 2 ** (c.n - 1));
-    return { result: null, at: await resumeAt(s, c.offset) };
+    const unknown: ChunkResult = { committed: c.offset, fileId: null };
+    return s.api.progress(s.session).catch(() => unknown);
   }
 }
 
 /** The file is made, or Drive holds the whole chunk (a 308 can hold less: resend the rest). */
 const complete = (r: ChunkResult, end: number): boolean => r.fileId !== null || r.committed >= end;
 
-/** One chunk, resent from what Drive already holds after a failure (backoff, 5 attempts). */
+/**
+ * One chunk, resent from what Drive already holds after a failure (backoff, 5 attempts). Drive
+ * holding the whole chunk already (it landed, the answer was lost) ends it: nothing is resent.
+ */
 async function sendChunk(s: Send, chunk: Chunk): Promise<ChunkResult> {
   const end = chunk.offset + chunk.bytes.length;
   let at = chunk.offset;
   for (let n = 1; ; n += 1) {
-    const r = await attempt(s, { ...chunk, at, n });
-    const result = r.result;
-    if (result && complete(result, end)) return result;
-    at = result ? held(result.committed, chunk.offset) : r.at;
+    const result = await attempt(s, { ...chunk, at, n });
+    if (complete(result, end)) return result;
+    at = held(result.committed, chunk.offset);
   }
 }
 
@@ -81,13 +85,6 @@ async function sendChunk(s: Send, chunk: Chunk): Promise<ChunkResult> {
 function held(committed: number, offset: number): number {
   if (committed < offset) throw new Error('drive_upload_gap');
   return committed;
-}
-
-/** Where to resend from (Drive's Range); the chunk is resent whole when Drive cannot say. */
-async function resumeAt(s: Send, offset: number): Promise<number> {
-  const unknown: ChunkResult = { committed: offset, fileId: null };
-  const p = await s.api.progress(s.session).catch(() => unknown);
-  return held(p.fileId ? offset : p.committed, offset);
 }
 
 /** Each item with whether it is the last (one item of lookahead). */

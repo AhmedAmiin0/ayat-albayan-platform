@@ -1,3 +1,4 @@
+import { counted } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { backupLines, bytesText, type DriveBackupView } from './use-drive-backup';
@@ -44,5 +45,11 @@ describe('the Drive backup status line (docs/45 §5)', () => {
     expect(lines).toContain(b.none);
     expect(lines).toContain(b.error.replace('{error}', '403 storageQuotaExceeded'));
     expect(lines).toContain(b.quotaUnlimited);
+  });
+
+  it.each([1, 2, 5, 12, 100])('the file count in Arabic count forms: %i', (objects) => {
+    const sizes = { bytes_raw: GB, bytes_compressed: GB };
+    const last = { kind: 'full' as const, label: '2026-W45', objects, ...sizes };
+    expect(backupLines(view({ last }))[0]).toContain(`(${counted(b.files, objects)})`);
   });
 });

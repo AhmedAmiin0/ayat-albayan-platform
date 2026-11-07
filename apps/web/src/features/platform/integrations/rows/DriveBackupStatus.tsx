@@ -4,10 +4,14 @@ import { backupLines, useDriveBackup } from '@/features/platform/integrations/us
 
 const b = t.integrations.driveBackup;
 
-/** Under «التخزين» (docs/45 §5): last archive, raw → compressed, errors, Drive's free space. */
+/**
+ * Under «التخزين» (docs/45 §5): last archive, raw → compressed, errors, Drive's free space. Only
+ * for a user who may read it (the API's permission); nothing for the others.
+ */
 export function DriveBackupStatus() {
   const status = useDriveBackup();
   const view = status.data;
+  if (!status.allowed) return null;
   return (
     <section aria-label={b.title} className="grid gap-1 border-t border-rule py-2">
       <h4 className="text-xs font-bold text-ink-2">{b.title}</h4>

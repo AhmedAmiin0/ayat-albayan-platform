@@ -1,5 +1,5 @@
 import { Readable } from 'node:stream';
-import { pipeline } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
 import { createZstdDecompress } from 'node:zlib';
 import { z } from 'zod';
 import { BUCKETS } from '@/common/storage/storage.paths';
@@ -10,6 +10,7 @@ import type {
 } from '@/modules/platform/drive-backup/drive/drive-backup.port';
 import { restoreChain } from '@/modules/platform/drive-backup/plan/restore-chain';
 import type { BackupSource } from '@/modules/platform/drive-backup/source/backup-source.port';
+import { verified } from './verified';
 
 interface RestoreInput {
   api: DriveBackupApi;
@@ -32,14 +33,8 @@ const objectSchema = z.object({
   'AB.bucket': z.enum(Object.values(BUCKETS)),
   'AB.key': z.string().min(1),
   'AB.contenttype': z.string().default('application/octet-stream'),
+  'AB.etag': z.string().default(''),
 });
-
-/** The archive's plain tar: Drive → zstd (its checksum fails a damaged file) → bytes. */
-async function entries(api: DriveBackupApi, file: BackupFile): Promise<AsyncIterable<TarEntry>> {
-  const zst = createZstdDecompress();
-  const plain = pipeline(Readable.from(await api.download(file.id)), zst, () => undefined);
-  return readTar(plain);
-}
 
 interface Ctx {
   input: RestoreInput;
@@ -52,7 +47,8 @@ async function putOne(ctx: Ctx, e: TarEntry): Promise<void> {
   const id = `${o['AB.bucket']}/${o['AB.key']}`;
   if (ctx.seen.has(id)) return void (ctx.tally.older += 1);
   ctx.seen.add(id);
-  const object = { bucket: o['AB.bucket'], key: o['AB.key'], size: e.size, body: e.body };
+  const body = verified(e.body, o['AB.etag']);
+  const object = { bucket: o['AB.bucket'], key: o['AB.key'], size: e.size, body };
   const contentType = o['AB.contenttype'];
   const done = await ctx.input.source
     .restore({ ...object, contentType, overwrite: ctx.input.overwrite })
@@ -61,10 +57,22 @@ async function putOne(ctx: Ctx, e: TarEntry): Promise<void> {
   else ctx.tally.failed.push(id);
 }
 
+/**
+ * One archive: Drive → zstd → tar → MinIO. After the tar's end the rest is drained and the whole
+ * pipeline awaited, so zstd's checksum (at the frame's end) fails the restore, never swallowed.
+ */
 async function applyArchive(ctx: Ctx, file: BackupFile): Promise<void> {
-  for await (const e of await entries(ctx.input.api, file)) {
-    if (e.path !== 'manifest.json') await putOne(ctx, e);
-  }
+  const download = Readable.from(await ctx.input.api.download(file.id));
+  await pipeline(download, createZstdDecompress(), async (plain: AsyncIterable<Buffer>) => {
+    const it = plain[Symbol.asyncIterator]();
+    const once = { [Symbol.asyncIterator]: () => it };
+    for await (const e of readTar(once)) {
+      if (e.path !== 'manifest.json') await putOne(ctx, e);
+    }
+    let tail = 0;
+    for await (const rest of once) tail += rest.length;
+    return tail;
+  });
 }
 
 /**

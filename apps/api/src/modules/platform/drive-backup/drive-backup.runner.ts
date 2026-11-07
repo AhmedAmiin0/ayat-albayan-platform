@@ -15,10 +15,18 @@ import {
 import { DEFAULT_CAPS } from './plan/parts';
 import { runBackup, type RunSummary } from './run/backup-run';
 import { ensureFolder } from './run/folder';
-import { DriveFull, freeOf, gbText, isFull, isLow } from './run/quota';
+import { budgetOf, DriveFull, freeOf, gbText, isLow } from './run/quota';
 import { DriveBackupData } from './drive-backup.data';
 
 export type RunOutcome = 'off' | 'not_connected' | 'ran' | 'failed';
+
+interface RunInput {
+  api: DriveBackupApi;
+  cfg: StorageEnv;
+  minio: MinioEnv;
+  now: Date;
+  signal: AbortSignal | undefined;
+}
 
 /** Every bucket; recordings only while they are written to MinIO at all (MINIO_RECORDINGS). */
 export const bucketsOf = (cfg: Pick<StorageEnv, 'recordings'>): Bucket[] =>
@@ -27,7 +35,8 @@ export const bucketsOf = (cfg: Pick<StorageEnv, 'recordings'>): Bucket[] =>
 /**
  * One backup night (docs/45 §5): only with MINIO_DRIVE_BACKUP on, MinIO configured and the Google
  * account connected. Any failure is recorded on the status line and told to the admins once; a
- * refused token goes through the Google sync's own handling (disconnect + its alert).
+ * refused token goes through the Google sync's own handling (disconnect + its alert), but only
+ * while that token is still the connection's (a reconnect meanwhile is never undone by this run).
  */
 @Injectable()
 export class DriveBackupRunner {
@@ -48,39 +57,54 @@ export class DriveBackupRunner {
     };
   }
 
-  async runOnce(now = new Date()): Promise<RunOutcome> {
+  async runOnce(input: { now?: Date; signal?: AbortSignal } = {}): Promise<RunOutcome> {
+    const now = input.now ?? new Date();
     const cfg = this.factory.config();
     const minio = cfg.driveBackup ? cfg.minio : null;
     if (!minio) return 'off';
-    const token = await this.connection.refreshToken();
-    const api = token ? this.factory.drive(token) : null;
-    if (!api) return 'not_connected';
-    return this.run({ api, cfg, minio, now }).then(
+    const drive = await this.connect();
+    if (!drive) return 'not_connected';
+    const { api, token } = drive;
+    return this.run({ api, cfg, minio, now, signal: input.signal }).then(
       () => 'ran' as const,
-      (e: unknown) => this.failed(e, now).then(() => 'failed' as const),
+      (e: unknown) => this.failed({ e, now, token }).then(() => 'failed' as const),
     );
   }
 
-  private async run(input: { api: DriveBackupApi; cfg: StorageEnv; minio: MinioEnv; now: Date }) {
-    const { api, cfg, now } = input;
+  /** Drive on the connection's token now (kept: a failure checks it is still the current one). */
+  private async connect(): Promise<{ api: DriveBackupApi; token: string } | null> {
+    const token = await this.connection.refreshToken();
+    const api = token ? this.factory.drive(token) : null;
+    return api && token ? { api, token } : null;
+  }
+
+  /**
+   * The night's byte budget: Drive's free space minus the reserve (2 GB, the low-quota line): no
+   * run under it, and never more than that budget raw (each part checks Drive again: room.ts).
+   */
+  private async budget(api: DriveBackupApi, now: Date) {
     const quota = await api.quota();
     const free = freeOf(quota);
-    const quotaAt = {
-      quota_limit: quota.limit,
-      quota_usage: quota.usage,
-      quota_at: now.toISOString(),
-    };
-    await this.data.state.save(quotaAt);
-    if (isFull(free)) throw new DriveFull();
+    const at = { quota_limit: quota.limit, quota_usage: quota.usage, quota_at: now.toISOString() };
+    await this.data.state.save(at);
     if (isLow(free)) await this.data.alerts.lowQuota({ free: gbText(free ?? 0), now });
-    const folderId = await ensureFolder(api, this.data.state, quota.email);
-    const source = this.factory.source(input.minio);
+    const budget = budgetOf(free);
+    if (budget <= 0) throw new DriveFull();
+    return { budget, email: quota.email };
+  }
+
+  private async run(input: RunInput) {
+    const { api, cfg, now } = input;
+    const { budget, email } = await this.budget(api, now);
+    const folderId = await ensureFolder(api, this.data.state, email);
+    const source = this.factory.source(input.minio, input.signal);
     const deps = {
       store: this.data.store,
       api,
       source,
       buckets: bucketsOf(cfg),
-      caps: DEFAULT_CAPS,
+      caps: { ...DEFAULT_CAPS, run: Math.min(DEFAULT_CAPS.run, budget) },
+      ...(input.signal && { signal: input.signal }),
     };
     const sum = await runBackup(deps, { folderId, now });
     await this.data.state.save({ last_run_at: now.toISOString(), last_error: null });
@@ -88,10 +112,13 @@ export class DriveBackupRunner {
     this.log.log(summaryLine(sum));
   }
 
-  private async failed(e: unknown, now: Date): Promise<void> {
+  private async failed(input: { e: unknown; now: Date; token: string }): Promise<void> {
+    const { e, now } = input;
     const error = errorText(e);
     this.log.warn(`drive backup failed: ${error}`);
-    await this.onError[classify(e)]();
+    const held = await this.connection.refreshToken().catch(() => null);
+    const current = held === input.token;
+    await (current ? this.onError[classify(e)] : this.onError.fatal)();
     await this.data.state.save({ last_run_at: now.toISOString(), last_error: error });
     await this.data.alerts.failed({ error, now });
   }

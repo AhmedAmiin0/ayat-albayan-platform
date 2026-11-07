@@ -6,6 +6,10 @@ import { DriveBackupStatus } from './DriveBackupStatus';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const granted = vi.hoisted(() => new Set<string>(['settings.write']));
+vi.mock('@/features/people/auth/use-permissions', () => ({
+  usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }),
+}));
 
 const b = t.integrations.driveBackup;
 const GB = 1024 ** 3;
@@ -19,7 +23,11 @@ const answer = {
   last_run_at: '2026-11-07T01:00:00Z',
 };
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => {
+  apiFetch.mockReset();
+  granted.clear();
+  granted.add('settings.write');
+});
 
 describe('<DriveBackupStatus> under «التخزين»', () => {
   it('reads GET /settings/integrations/storage-backup and warns under 2 GB free', async () => {
@@ -34,5 +42,14 @@ describe('<DriveBackupStatus> under «التخزين»', () => {
     apiFetch.mockRejectedValue(new Error('network'));
     renderWithClient(<DriveBackupStatus />);
     expect((await screen.findByRole('alert')).textContent).toContain(b.loadError);
+  });
+
+  it('a user the API would refuse: no row, no request, no false load error', () => {
+    granted.clear();
+    apiFetch.mockRejectedValue(new Error('403'));
+    renderWithClient(<DriveBackupStatus />);
+    expect(screen.queryByRole('region', { name: b.title })).toBeNull();
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(apiFetch).not.toHaveBeenCalled();
   });
 });

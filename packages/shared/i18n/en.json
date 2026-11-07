@@ -6116,7 +6116,13 @@
       "needsMinio": "Waiting for complete MinIO settings.",
       "needsGoogle": "Waiting for the Google account to be linked in the Google section.",
       "none": "No archive uploaded yet. The job runs every night at 4:00 Riyadh time.",
-      "last": "Last archive: {name} ({objects} files), {raw} before compression → {compressed} after.",
+      "last": "Last archive: {name} ({objects}), {raw} before compression → {compressed} after.",
+      "files": {
+        "one": "1 file",
+        "two": "2 files",
+        "few": "{n} files",
+        "other": "{n} files"
+      },
       "kinds": {
         "full": "full",
         "incr": "incremental"
@@ -6416,7 +6422,12 @@
       "scriptEventPresent": "{name}'s calendar is still built from the sheet: stop the script for this teacher first",
       "backupFailed": "The platform files backup to Google Drive failed: {error}. It will run again next night.",
       "backupLowQuota": "Less than 2 GB is free in Google Drive ({free} left). Empty the Drive trash or add space before the backup stops.",
-      "backupSkipped": "Tonight's backup skipped {count} files it could not read from MinIO; it will try them again next night."
+      "backupSkipped": {
+        "one": "Tonight's backup skipped 1 file it could not read from MinIO; it will try it again next night.",
+        "two": "Tonight's backup skipped 2 files it could not read from MinIO; it will try them again next night.",
+        "few": "Tonight's backup skipped {n} files it could not read from MinIO; it will try them again next night.",
+        "other": "Tonight's backup skipped {n} files it could not read from MinIO; it will try them again next night."
+      }
     },
     "web": {
       "updated": "Updated {at}",

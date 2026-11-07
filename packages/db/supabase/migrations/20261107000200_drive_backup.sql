@@ -3,7 +3,8 @@
 -- service role only (the worker's job), read by admins («التكاملات» › «التخزين» status line).
 --   * drive_backup_state: one row, the Drive folder (and the account it belongs to), the quota.
 --   * drive_backup_archives: one row per archive file on Drive (a part of a nightly incremental or
---     a weekly full); status uploading → done | failed, then trashed by retention.
+--     a weekly full); status uploading → done | failed, then trashed by retention (the file is
+--     deleted from Drive for good, not moved to its trash).
 --   * drive_backup_objects: the objects (with ETags) each archive holds: what later runs count as
 --     covered, so runs are idempotent and resume after a crash. Rows go with their archive.
 -- Expand-only and re-runnable; nothing runs until an admin switches MINIO_DRIVE_BACKUP on.

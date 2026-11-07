@@ -1,3 +1,4 @@
+import { counted } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
@@ -27,7 +28,7 @@ export class DriveBackupAlerts {
   }
 
   skipped(input: { count: number; now: Date }): Promise<void> {
-    const reason = ar.googleSync.alerts.backupSkipped.replace('{count}', String(input.count));
+    const reason = counted(ar.googleSync.alerts.backupSkipped, input.count);
     return this.tell(`skipped:${dayLabel(input.now)}`, reason);
   }
 }

@@ -23,7 +23,7 @@ export const httpBackupFactory: DriveBackupFactory = {
     auth.setCredentials({ refresh_token: refreshToken });
     return new DriveBackupHttp(auth, env.endpoints);
   },
-  source: (minio) => new MinioSource(minio),
+  source: (minio, signal) => new MinioSource(minio, signal),
   config: () => storageEnv(loadEnv()),
 };
 

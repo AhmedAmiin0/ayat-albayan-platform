@@ -30,12 +30,20 @@ const getSchema = z.object({
   ETag: z.string().optional(),
 });
 
-/** MinIO over the S3 API on the internal endpoint, with the app user's keys (read, list, put). */
+/**
+ * MinIO over the S3 API on the internal endpoint, with the app user's keys (read, list, put).
+ * `signal` (the backup job's deadline) aborts every request and open body of this source.
+ */
 export class MinioSource implements BackupSource {
   private readonly s3: S3Client;
+  private readonly opts: { abortSignal?: AbortSignal };
 
-  constructor(private readonly m: MinioEnv) {
+  constructor(
+    private readonly m: MinioEnv,
+    signal?: AbortSignal,
+  ) {
     this.s3 = s3Client(m, m.endpoint);
+    this.opts = signal ? { abortSignal: signal } : {};
   }
 
   private at(o: { bucket: Bucket; key: string }) {
@@ -47,7 +55,7 @@ export class MinioSource implements BackupSource {
     let token: string | undefined;
     do {
       const cmd = new ListObjectsV2Command({ Bucket, ContinuationToken: token });
-      const page = pageSchema.parse(await orFail('list', () => this.s3.send(cmd)));
+      const page = pageSchema.parse(await orFail('list', () => this.s3.send(cmd, this.opts)));
       for (const o of page.Contents ?? []) {
         yield { bucket, key: o.Key, etag: unquote(o.ETag), size: o.Size ?? 0 };
       }
@@ -57,7 +65,7 @@ export class MinioSource implements BackupSource {
 
   async open(o: { bucket: Bucket; key: string }): Promise<OpenedObject | null> {
     const cmd = new GetObjectCommand(this.at(o));
-    const out = await orMissing('download', () => this.s3.send(cmd));
+    const out = await orMissing('download', () => this.s3.send(cmd, this.opts));
     const got = out === null ? null : getSchema.parse(out);
     return (
       got && {
@@ -71,13 +79,13 @@ export class MinioSource implements BackupSource {
 
   /** ifAbsent unless overwrite: a held key is kept (HEAD first, then If-None-Match: *). */
   async restore(o: RestoreObject): Promise<'put' | 'kept'> {
-    const head = () => this.s3.send(new HeadObjectCommand(this.at(o)));
+    const head = () => this.s3.send(new HeadObjectCommand(this.at(o)), this.opts);
     const held = !o.overwrite && (await orMissing('info', head)) !== null;
     if (held) return 'kept';
     const only = o.overwrite ? {} : { IfNoneMatch: '*' };
     const input = { ...this.at(o), Body: Readable.from(o.body), ContentLength: o.size, ...only };
     const cmd = new PutObjectCommand({ ...input, ContentType: o.contentType });
-    return orExists('upload', () => this.s3.send(cmd)).then(
+    return orExists('upload', () => this.s3.send(cmd, this.opts)).then(
       () => 'put' as const,
       (e: unknown) => (e instanceof ObjectExists ? 'kept' : Promise.reject(e as Error)),
     );

@@ -3,13 +3,7 @@ import type { GoogleEndpoints } from '@/config/env/env';
 import { toGoogleError } from '@/modules/platform/google-sync';
 import type * as P from './drive-backup.port';
 import * as S from './drive-files.schema';
-
-type Options = Parameters<OAuth2Client['request']>[0];
-interface Answer {
-  data: unknown;
-  status: number;
-  headers: Headers;
-}
+import { goneAsNull, removeArchive, type Answer, type Options } from './drive-remove';
 
 /** A chunk (8 MiB) on a slow uplink; one archive download, long but never forever. */
 const CHUNK_TIMEOUT_MS = 180_000;
@@ -47,10 +41,7 @@ export class DriveBackupHttp implements P.DriveBackupApi {
 
   async folder(id: string): Promise<P.BackupFile | null> {
     const url = `${this.files}/${encodeURIComponent(id)}`;
-    const res = await this.call({ url, params: { fields: S.FILE_FIELDS } }).catch((e: unknown) => {
-      if (toGoogleError(e).status === 404) return null;
-      throw e;
-    });
+    const res = await this.call({ url, params: { fields: S.FILE_FIELDS } }).catch(goneAsNull);
     const f = res === null ? null : S.oneFileSchema.parse(res.data);
     return f && S.isBackupOwn(f) ? S.toFile(f) : null;
   }
@@ -129,9 +120,9 @@ export class DriveBackupHttp implements P.DriveBackupApi {
     await this.call({ method: 'PATCH', url, data: { appProperties: input.appProperties } });
   }
 
-  async trash(fileId: string): Promise<void> {
-    const url = `${this.files}/${encodeURIComponent(fileId)}`;
-    await this.call({ method: 'PATCH', url, data: { trashed: true } });
+  /** DELETE, not trash: a trashed file keeps using the shared quota for 30 days. */
+  remove(input: P.RemoveInput): Promise<P.Removed> {
+    return removeArchive((o) => this.call(o), { ...input, files: this.files });
   }
 
   async download(fileId: string): Promise<AsyncIterable<Uint8Array>> {

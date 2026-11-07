@@ -4,8 +4,8 @@ import type { ArchiveRow } from './archive.types';
 const KEEP_FULLS = 4;
 
 /**
- * The archives to move to Drive's trash once a newer full is sealed: everything that started
- * before the oldest kept full's first part. Nothing while fewer than KEEP_FULLS fulls are sealed.
+ * The archives to delete from Drive once a newer full is sealed: everything that started before
+ * the oldest kept full's first part. Nothing while fewer than KEEP_FULLS fulls are sealed.
  */
 export function toTrash(rows: readonly ArchiveRow[], keep = KEEP_FULLS): ArchiveRow[] {
   const live = rows.filter((r) => r.status === 'done');
@@ -18,3 +18,10 @@ export function toTrash(rows: readonly ArchiveRow[], keep = KEEP_FULLS): Archive
   const cutoff = starts.sort()[0];
   return cutoff === undefined ? [] : live.filter((r) => r.started_at < cutoff);
 }
+
+/**
+ * Failed parts whose file reached Drive (the upload finished, the bookkeeping after it did not):
+ * their objects are not counted as backed up, so the file only uses quota. Removed every run.
+ */
+export const orphans = (rows: readonly ArchiveRow[]): ArchiveRow[] =>
+  rows.filter((r) => r.status === 'failed' && r.drive_file_id !== null);

@@ -56,22 +56,28 @@ async function* bodyOf(r: ByteReader, left: { n: number }): AsyncGenerator<Buffe
   }
 }
 
-/** An entry's data not read yet (`left`) and its full size (for the padding). */
+/** An entry's data not read yet (`left`), its full size (for the padding), its body if a file. */
 interface Pending {
   size: number;
   left: { n: number };
+  body: AsyncGenerator<Buffer> | null;
 }
 interface State {
   records: Record<string, string>;
   pending: Pending;
 }
-const NOTHING: Pending = { size: 0, left: { n: 0 } };
+const NOTHING: Pending = { size: 0, left: { n: 0 }, body: null };
 const pad = (size: number): number => (BLOCK - (size % BLOCK)) % BLOCK;
 
-/** Skips what the consumer left unread, then the padding to the next block. */
+/**
+ * Closes the entry's body first (an async generator's return() waits behind a read still in
+ * flight, e.g. a failed PUT that stopped consuming mid-chunk), so no read of it can interleave
+ * with what follows; then skips what was left unread, then the padding to the next block.
+ */
 async function settle(r: ByteReader, s: State): Promise<void> {
   const p = s.pending;
   s.pending = NOTHING;
+  await p.body?.return(undefined);
   await r.skip(p.left.n);
   p.left.n = 0;
   await r.take(pad(p.size));
@@ -92,15 +98,17 @@ const fileStep: Step = (r, h, s) => {
   const path = s.records.path ?? fieldText(h, 0, 100);
   const records = s.records;
   s.records = {};
-  s.pending = { size, left: { n: size } };
-  return Promise.resolve({ path, size, records, body: bodyOf(r, s.pending.left) });
+  const left = { n: size };
+  const body = bodyOf(r, left);
+  s.pending = { size, left, body };
+  return Promise.resolve({ path, size, records, body });
 };
 
 /** Directories, links, …: their data (if any) is skipped. */
 const skipStep: Step = (r, h, s) => {
   const size = octalField(h, 124, 12);
   s.records = {};
-  s.pending = { size, left: { n: size } };
+  s.pending = { size, left: { n: size }, body: null };
   return Promise.resolve(null);
 };
 

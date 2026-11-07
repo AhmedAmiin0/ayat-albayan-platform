@@ -3,7 +3,7 @@ import { GoogleApiError } from '@/modules/platform/google-sync';
 import type * as P from './drive-backup.port';
 import { BACKUP_MARK, FOLDER_MIME } from './drive-files.schema';
 
-// An in-memory Drive for the backup's tests: folders, resumable sessions, files, trash. Never
+// An in-memory Drive for the backup's tests: folders, resumable sessions, files, deletes. Never
 // Google. Obviously fake ids and an example.test account.
 
 interface Stored {
@@ -17,6 +17,7 @@ interface Session {
   target: P.UploadTarget;
   chunks: Buffer[];
   committed: number;
+  fileId: string | null;
 }
 
 const GB = 1024 ** 3;
@@ -26,6 +27,8 @@ export class FakeDrive implements P.DriveBackupApi {
   readonly files = new Map<string, Stored>();
   readonly sessions = new Map<string, Session>();
   readonly log: string[] = [];
+  /** Ids deleted for good (remove). */
+  readonly deleted: string[] = [];
   /** The next call of that method throws this error once. */
   readonly failNext = new Map<string, Error>();
   quotaAnswer: P.DriveQuota = { limit: 15 * GB, usage: GB, email: 'academy@example.test' };
@@ -89,7 +92,7 @@ export class FakeDrive implements P.DriveBackupApi {
   startUpload(target: P.UploadTarget) {
     this.call('startUpload');
     const session = `https://upload.example.test/session/${this.sessions.size + 1}`;
-    this.sessions.set(session, { target, chunks: [], committed: 0 });
+    this.sessions.set(session, { target, chunks: [], committed: 0, fileId: null });
     return Promise.resolve(session);
   }
 
@@ -102,19 +105,15 @@ export class FakeDrive implements P.DriveBackupApi {
     if (input.total === null) return Promise.resolve({ committed: s.committed, fileId: null });
     const { name, parentId, appProperties } = s.target;
     const bytes = Buffer.concat(s.chunks);
-    const fileId = this.add({
-      name,
-      parentId,
-      mimeType: 'application/zstd',
-      bytes,
-      props: appProperties,
-    });
-    return Promise.resolve({ committed: 0, fileId });
+    const mimeType = 'application/zstd';
+    s.fileId = this.add({ name, parentId, mimeType, bytes, props: appProperties });
+    return Promise.resolve({ committed: 0, fileId: s.fileId });
   }
 
   progress(session: string): Promise<P.ChunkResult> {
     this.call('progress');
-    return Promise.resolve({ committed: this.sessions.get(session)?.committed ?? 0, fileId: null });
+    const s = this.sessions.get(session);
+    return Promise.resolve({ committed: s?.committed ?? 0, fileId: s?.fileId ?? null });
   }
 
   setProperties(input: { fileId: string; appProperties: Record<string, string> }) {
@@ -124,10 +123,16 @@ export class FakeDrive implements P.DriveBackupApi {
     return Promise.resolve();
   }
 
-  trash(fileId: string) {
-    this.call('trash');
-    this.found(fileId).trashed = true;
-    return Promise.resolve();
+  /** Like drive-remove.ts: only a marked file in that folder; a missing one is gone. */
+  remove(input: P.RemoveInput): Promise<P.Removed> {
+    this.call('remove');
+    const f = this.files.get(input.fileId);
+    const own = f?.meta.appProperties.ab_backup === 'minio' && f.parentId === input.folderId;
+    const outcome: P.Removed = f ? 'foreign' : 'gone';
+    if (!own) return Promise.resolve(outcome);
+    this.files.delete(input.fileId);
+    this.deleted.push(input.fileId);
+    return Promise.resolve('deleted');
   }
 
   download(fileId: string) {

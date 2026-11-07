@@ -85,7 +85,11 @@ export class DriveBackupRepo implements BackupStore {
     return data.id;
   }
 
-  /** The objects first, then `done` with the file id: a crash between leaves it uploading. */
+  uploaded(input: { id: string; fileId: string }): Promise<void> {
+    return this.patch([input.id], { drive_file_id: input.fileId });
+  }
+
+  /** The objects first, then `done`: a crash between leaves it uploading (its file id is kept). */
   async finish(input: FinishedArchive): Promise<void> {
     const rows = input.entries.map((e) => ({
       archive_id: input.id,

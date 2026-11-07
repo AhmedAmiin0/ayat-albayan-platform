@@ -31,13 +31,22 @@ export class MemoryStore implements BackupStore {
     return Promise.resolve(out);
   }
 
+  /** Like the table's unique (folder_id, kind, label, part), trashed rows included. */
   start(input: NewArchive) {
+    const same = (r: Row) =>
+      r.folderId === input.folderId && r.kind === input.kind && r.label === input.label;
+    if (this.rows.some((r) => same(r) && r.part === input.part)) throw new Error('duplicate part');
     this.seq += 1;
     const id = `archive-${this.seq}`;
     const started_at = new Date(this.today.getTime() + this.seq).toISOString();
     const base = { status: 'uploading' as const, sealed: false, drive_file_id: null, error: null };
     this.rows.push({ ...input, ...base, id, started_at, objects: [] });
     return Promise.resolve(id);
+  }
+
+  uploaded(input: { id: string; fileId: string }) {
+    this.row(input.id).drive_file_id = input.fileId;
+    return Promise.resolve();
   }
 
   finish(input: FinishedArchive) {

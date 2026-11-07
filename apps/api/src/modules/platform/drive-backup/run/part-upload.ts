@@ -20,6 +20,8 @@ interface PartUpload {
   target: UploadTarget;
   part: Omit<PartInput, 'report'>;
   wait?: (ms: number) => Promise<unknown>;
+  /** Aborts the pipeline: the MinIO read and the tar/zstd streams are destroyed (job deadline). */
+  signal?: AbortSignal;
 }
 
 interface PartResult {
@@ -38,8 +40,10 @@ export async function uploadPart(input: PartUpload): Promise<PartResult> {
   const tar = Readable.from(partBytes({ ...input.part, report }));
   let up = { fileId: '', bytes: 0 };
   const wait = input.wait ? { wait: input.wait } : {};
-  await pipeline(tar, createZstdCompress({ params }), async (compressed: AsyncIterable<Buffer>) => {
+  const upload = async (compressed: AsyncIterable<Buffer>) => {
     up = await uploadStream({ api: input.api, target: input.target, source: compressed, ...wait });
-  });
+  };
+  const options = input.signal ? { signal: input.signal } : {};
+  await pipeline(tar, createZstdCompress({ params }), upload, options);
   return { fileId: up.fileId, compressedBytes: up.bytes, report };
 }

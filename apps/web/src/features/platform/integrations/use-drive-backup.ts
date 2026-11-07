@@ -1,5 +1,7 @@
+import { counted } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
+import { usePermissions } from '@/features/people/auth';
 import { t } from '@/lib/i18n/i18n';
 import { fetchStorageBackup } from './integrations-api';
 
@@ -44,7 +46,7 @@ function lastLine(v: DriveBackupView): string {
   if (!last) return b.none;
   return b.last
     .replace('{name}', `${b.kinds[last.kind]} ${last.label}`)
-    .replace('{objects}', String(last.objects))
+    .replace('{objects}', counted(b.files, last.objects))
     .replace('{raw}', bytesText(last.bytes_raw))
     .replace('{compressed}', bytesText(last.bytes_compressed));
 }
@@ -64,10 +66,20 @@ export function backupLines(v: DriveBackupView): string[] {
   return lines.filter((l): l is string => l !== null);
 }
 
-/** The status under «التخزين»; read once when the page opens. */
+/** The API's gate on GET /settings/integrations/storage-backup (backup-status.controller.ts). */
+const READ_PERMISSION = 'settings.write';
+
+/**
+ * The status under «التخزين»; read once when the page opens, and only by a user the API lets read
+ * it (`allowed`): no request, and no false load error, for the others. A 4xx is not retried.
+ */
 export function useDriveBackup() {
-  return useQuery({
+  const allowed = usePermissions().can(READ_PERMISSION);
+  const query = useQuery({
     queryKey: ['settings', 'integrations', 'storage-backup'],
     queryFn: async () => viewSchema.parse(await fetchStorageBackup()),
+    enabled: allowed,
+    retry: false,
   });
+  return { ...query, allowed };
 }

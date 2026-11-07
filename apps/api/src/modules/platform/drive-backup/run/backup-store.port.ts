@@ -33,9 +33,13 @@ export interface BackupStore {
   /** `bucket/key` → ETag held by these archives (later archives win). */
   covered(archives: readonly ArchiveRow[]): Promise<Map<string, string>>;
   start(input: NewArchive): Promise<string>;
+  /** The Drive file id, as soon as the upload returns (before the objects are written). */
+  uploaded(input: { id: string; fileId: string }): Promise<void>;
   finish(input: FinishedArchive): Promise<void>;
+  /** `failed`, keeping a Drive file id already stored (retention deletes that file). */
   fail(input: { id: string; error: string }): Promise<void>;
   seal(id: string): Promise<void>;
+  /** Status `trashed`: the file is deleted from Drive (or was gone); its objects are dropped. */
   trashed(ids: readonly string[]): Promise<void>;
 }
 
@@ -47,4 +51,6 @@ export interface RunDeps {
   buckets: readonly Bucket[];
   caps: Caps;
   wait?: (ms: number) => Promise<unknown>;
+  /** The job's deadline: aborts the MinIO → Drive pipeline of the part in flight. */
+  signal?: AbortSignal;
 }

@@ -41,6 +41,13 @@ export interface ChunkInput {
   total: number | null;
 }
 
+export interface RemoveInput {
+  fileId: string;
+  folderId: string;
+}
+/** gone: already not on Drive (404); foreign: not the backup's own archive, left alone. */
+export type Removed = 'deleted' | 'gone' | 'foreign';
+
 export interface DriveBackupApi {
   quota(): Promise<DriveQuota>;
   /** The folder if it exists, is not trashed and is the backup's own (appProperties). */
@@ -56,14 +63,19 @@ export interface DriveBackupApi {
   /** What Drive holds of a session (after a failed chunk). */
   progress(session: string): Promise<ChunkResult>;
   setProperties(input: { fileId: string; appProperties: Record<string, string> }): Promise<void>;
-  trash(fileId: string): Promise<void>;
+  /**
+   * Deletes an archive for good (Drive's trash would keep counting against the shared quota for 30
+   * days), but only a file in `folderId` that carries the backup's marker: anything else is left.
+   */
+  remove(input: RemoveInput): Promise<Removed>;
   download(fileId: string): Promise<AsyncIterable<Uint8Array>>;
 }
 
 /** The outside world: Drive for the connected token (null: no OAuth client), MinIO, config. */
 export interface DriveBackupFactory {
   drive(refreshToken: string): DriveBackupApi | null;
-  source(minio: MinioEnv): BackupSource;
+  /** `signal` aborts every MinIO read of the run (the job's deadline). */
+  source(minio: MinioEnv, signal?: AbortSignal): BackupSource;
   /** The storage config now («التكاملات» overlay or env). */
   config(): StorageEnv;
 }

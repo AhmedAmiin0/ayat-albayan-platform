@@ -48,6 +48,17 @@ export const toFile = (f: RawFile): BackupFile => ({
 export const isBackupOwn = (f: RawFile): boolean =>
   f.trashed !== true && f.appProperties?.ab_backup === BACKUP_MARK.ab_backup;
 
+/** What the permanent delete checks first: the parents and the marker. */
+export const OWNER_FIELDS = 'id,parents,appProperties';
+export const ownerSchema = z.object({
+  parents: z.array(z.string()).default([]),
+  appProperties: z.record(z.string(), z.string()).optional(),
+});
+
+/** An archive the backup itself made, in its own folder: the only files it ever deletes. */
+export const isOwnArchive = (f: z.infer<typeof ownerSchema>, folderId: string): boolean =>
+  f.appProperties?.ab_backup === BACKUP_MARK.ab_backup && f.parents.includes(folderId);
+
 /** A Drive query string literal: backslash and quote escaped. */
 export const lit = (s: string): string => `'${s.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 
