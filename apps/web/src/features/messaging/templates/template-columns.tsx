@@ -39,7 +39,7 @@ export interface TemplateColumnsInput {
   saving: string | null;
   /** «يُرسل من» (docs/23c decision 9): the numbers, templates.manage, and a pick (confirmed by the caller). */
   sendFrom: Omit<SendFromCellProps, 'tpl'>;
-  /** crm rows (docs/19): the status by hand (`busy` = the key being saved) and the WABA name (meta too). */
+  /** crm rows (docs/39): the status by hand as the fallback (`busy` = the key being saved) and the WABA name (meta too). */
   crmStatus: { busyKey: string | null; onSet: CrmStatusActionsProps['onSet']; onEditName: (tpl: TemplateView) => void };
 }
 

@@ -28,6 +28,14 @@ const NOT_SENT_5XX = new Set(['meta_error', 'template_malformed']);
 const LINE_DOWN = 'whatsapp_not_configured';
 const RETRY_DEFAULT_MS = 60_000;
 const RETRY_MAX_MS = 60 * 60_000;
+/** A scope as the CRM names it in a 403 («missing the 'templates:read' scope»). */
+const SCOPE_IN = /\b([a-z_]+:[a-z_]+)\b/;
+
+/** The scope a 403 says the key lacks; none when the CRM names none (a plain refusal). */
+const missingScope = (status: number, said: string | undefined): { missingScope?: string } => {
+  const scope = status === 403 ? SCOPE_IN.exec(said ?? '')?.[1] : undefined;
+  return scope ? { missingScope: scope } : {};
+};
 
 function json(text: string): unknown {
   try {
@@ -45,7 +53,8 @@ function retryAfterMs(header: string | null, now: Date = new Date()): number {
 }
 
 /**
- * The CRM's failure → WaError. 401 / 403: the key is refused or lacks messages:send, and 400
+ * The CRM's failure → WaError. 401 / 403: the key is refused or lacks a scope (a 403 naming
+ * one keeps it as missingScope: templates:read on «مزامنة», docs/39), and 400
  * whatsapp_not_configured: the CRM lost its own WhatsApp connection (credential 'crm': the line is held, rows stay queued). 429: retryAfterMs. 502 meta_error / 500 template_malformed / any other
  * 4xx: fails with crmCode (nothing was sent). Any other 5xx: uncertain (the CRM may have sent to Meta
  * before failing its own insert).
@@ -54,7 +63,8 @@ export function crmErrorFrom(res: { status: number; text: string; retryAfter: st
   const { crmCode, said } = envelopeOf(res);
   const base = { code: null, status: res.status, crmCode, details: said };
   const message = `CRM HTTP ${res.status} ${crmCode}${said ? `: ${said}` : ''}`;
-  if (res.status === 401 || res.status === 403) return new WaError(`CRM refused the API key: ${message}`, { ...base, credential: 'crm' });
+  const refused = { ...base, credential: 'crm' as const, ...missingScope(res.status, said) };
+  if (res.status === 401 || res.status === 403) return new WaError(`CRM refused the API key: ${message}`, refused);
   if (crmCode === LINE_DOWN) return new WaError(`CRM has no WhatsApp connection: ${message}`, { ...base, credential: 'crm' });
   if (res.status === 429) return new WaError(message, { ...base, retryAfterMs: retryAfterMs(res.retryAfter) });
   if (res.status >= 500 && !NOT_SENT_5XX.has(crmCode)) return new WaError(message, { ...base, uncertain: true });
