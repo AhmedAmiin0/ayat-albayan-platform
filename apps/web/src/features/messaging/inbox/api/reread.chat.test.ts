@@ -1,9 +1,9 @@
 import type { MessageView, ThreadDetail } from '@ab/shared';
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, expect, it, vi } from 'vitest';
-import { rereadChat } from './chat-reread';
 import { patchLiveCaches } from './live-patch';
 import { heldRead, live, msg, PHONE } from './patch-fixtures';
+import { rereadChat } from './reread';
 import { threadQuery } from './thread-query';
 
 // docs/44 K1: a live event never drops «تحميل الأقدم» (a page load in flight) and never joins a
@@ -47,7 +47,10 @@ async function pageLoad(client: QueryClient) {
   return { resolve: older.resolve, done };
 }
 
-beforeEach(() => mockApiFetch.mockReset());
+beforeEach(() => {
+  mockApiFetch.mockReset();
+  vi.spyOn(document, 'hasFocus').mockReturnValue(true);
+});
 
 it('a patch during a page load moves the tick and lets the page land', async () => {
   const client = await opened();

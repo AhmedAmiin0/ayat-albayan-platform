@@ -8,8 +8,8 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useSyncExternalStore } from 'react';
 import { supabase } from '@/lib/http/supabase';
-import { rereadChat } from './chat-reread';
 import { patchLiveCaches } from './live-patch';
+import { rereadChat, rereadList } from './reread';
 
 /**
  * The inbox's realtime nudge on the web (docs/12 §15), shared logic in @ab/client-core: the private
@@ -23,7 +23,7 @@ export function useInboxLive(): boolean {
   return useSyncExternalStore(inboxLive.subscribe, inboxLive.isLive);
 }
 
-/** The open chat: its events re-read it (only while this window has focus: opening marks it read). */
+/** The open chat: its events re-read it (only while this window has focus: reading marks it read). */
 export function useLiveChat(phone: string): void {
   useInboxLive();
   useEffect(() => {
@@ -51,16 +51,13 @@ export function useInboxRealtime(enabled: boolean): void {
     const open = () =>
       connectInboxLive(supabase, inboxLive, {
         // docs/44 K1: a read in flight started before this event: cancelled, never joined (a
-        // page load or a first load is waited for instead: chat-reread.ts).
-        chat: (phone) => {
-          if (document.hasFocus()) rereadChat(client, phone);
-        },
+        // page load or a first load is waited for instead; only while focused: reread.ts).
+        chat: (phone) => rereadChat(client, phone),
         // A hidden tab waits: TanStack re-reads the stale list when it is shown again. A read in
-        // flight started before this change: cancelled, never joined (docs/43 AU1; throttled 3 s).
+        // flight started before this change: cancelled, never joined (docs/43 AU1; throttled 3 s);
+        // a first load is followed by one more read (reread.ts).
         list: () => {
-          const filters = { queryKey: ['threads', 'list'], type: 'active' } as const;
-          if (document.visibilityState === 'visible')
-            void client.refetchQueries(filters, { cancelRefetch: true });
+          if (document.visibilityState === 'visible') rereadList(client);
         },
         badge: () =>
           void client.invalidateQueries(
