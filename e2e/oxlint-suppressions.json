@@ -1,0 +1,1448 @@
+{
+  "playwright.config.ts": {
+    "stylistic/max-len": {
+      "count": 6
+    },
+    "typescript/dot-notation": {
+      "count": 9
+    }
+  },
+  "scripts/screens.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 2
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/restrict-template-expressions": {
+      "count": 2
+    }
+  },
+  "support/account.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/api-boot.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "typescript/no-confusing-void-expression": {
+      "count": 1
+    },
+    "typescript/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "support/auto-lists.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "support/core/db.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/core/messages.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/core/rls.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/core/schedule.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "support/core/wa-stub.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "support/durations-reporter.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "support/edit-time.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "support/finance/assistant-money.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "support/finance/change-course.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 4
+    },
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "support/finance/course-pause.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 6
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "support/finance/course-renew.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "support/finance/earnings.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "support/finance/exports-csv.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    },
+    "ab/no-if-chains": {
+      "count": 3
+    }
+  },
+  "support/finance/invoice.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/finance/money-dashboard.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "support/finance/money-extra.ts": {
+    "no-restricted-properties": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
+    "typescript/no-misused-spread": {
+      "count": 1
+    }
+  },
+  "support/finance/money.ts": {
+    "no-restricted-properties": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "typescript/no-unsafe-argument": {
+      "count": 1
+    }
+  },
+  "support/finance/pay-rule.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "support/messaging/chat-lists.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/messaging/chat-more.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "support/messaging/inbox.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "support/messaging/kapso.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "support/messaging/message-queue.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/messaging/reschedule-template.ts": {
+    "stylistic/max-len": {
+      "count": 6
+    }
+  },
+  "support/messaging/restricted-templates.ts": {
+    "stylistic/max-len": {
+      "count": 6
+    },
+    "ab/no-unchecked-json": {
+      "count": 2
+    }
+  },
+  "support/messaging/template-registry.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "support/messaging/thread-panel.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/messaging/wa-lines.ts": {
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "support/people/admin-extra-phone.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/people/admin-extra.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/people/family-sign-in.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "support/people/student-statuses.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
+    "typescript/no-unsafe-argument": {
+      "count": 1
+    }
+  },
+  "support/people/teacher-isolation.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/people/users-control.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "support/platform/config-seed.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "support/platform/google.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "support/platform/settings.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "support/reporting/feedback.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 6
+    }
+  },
+  "support/reporting/lesson-rating.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "support/reporting/teacher-extra.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "support/reporting/teacher-templates.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "support/sales/assistant-api.ts": {
+    "stylistic/max-len": {
+      "count": 8
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    },
+    "typescript/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "support/sales/assistant-course.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "support/sales/assistant-journey-ui.ts": {
+    "stylistic/max-len": {
+      "count": 9
+    }
+  },
+  "support/sales/assistant-journey.ts": {
+    "stylistic/max-len": {
+      "count": 12
+    }
+  },
+  "support/sales/assistant.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 3
+    },
+    "stylistic/max-len": {
+      "count": 13
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "support/sales/sales-money.ts": {
+    "stylistic/max-len": {
+      "count": 6
+    }
+  },
+  "support/sales/sales-options.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "support/sales/sales-portal.ts": {
+    "stylistic/max-len": {
+      "count": 10
+    }
+  },
+  "support/sales/trial-date.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "support/teaching/classroom-live.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 8
+    },
+    "ab/max-params": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "support/teaching/day-times.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 3
+    },
+    "stylistic/max-len": {
+      "count": 9
+    }
+  },
+  "support/teaching/schedule-extra.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "tests/finance/assistant-commission-retro.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/finance/assistant-commission-started.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/finance/assistant-commission.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/finance/assistant-money.api.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "tests/finance/assistant-renewal-commission.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/finance/assistant-statement.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "typescript/dot-notation": {
+      "count": 4
+    }
+  },
+  "tests/finance/assistant-statements.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "tests/finance/change-course.sql.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 6
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 3
+    }
+  },
+  "tests/finance/course-pause-resume.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 8
+    },
+    "typescript/dot-notation": {
+      "count": 3
+    }
+  },
+  "tests/finance/course-pause.sql.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 8
+    },
+    "typescript/dot-notation": {
+      "count": 10
+    }
+  },
+  "tests/finance/expenses.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/finance/exports.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 7
+    },
+    "typescript/restrict-template-expressions": {
+      "count": 2
+    }
+  },
+  "tests/finance/finance-money.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/finance/pay-rule.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/finance/payment-attachments.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 8
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "tests/finance/payments-receipt.spec.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "tests/finance/payouts.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "tests/finance/pricing-offer.spec.ts": {
+    "typescript/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "tests/finance/subscriptions.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/finance/teacher-corrections.sql.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 5
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "typescript/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "tests/finance/teacher-earnings-rls.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 2
+    }
+  },
+  "tests/finance/teacher-earnings-ui.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/finance/teacher-earnings.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/finance/teacher-payments.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/messaging/chat-files.sql.spec.ts": {
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/messaging/chat-list-auto-rules.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 2
+    }
+  },
+  "tests/messaging/chat-list-auto-triggers.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "tests/messaging/chat-lists.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/messaging/chat-lists.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 3
+    }
+  },
+  "tests/messaging/inbound-new-lead.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/messaging/inbound-quick-reply.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/messaging/inbox-failures.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/messaging/inbox-media.spec.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "tests/messaging/inbox-push-owner.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/messaging/inbox-realtime.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/messaging/inbox-send-file.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/messaging/inbox-template-status.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/messaging/kapso-driver.spec.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "tests/messaging/message-reactions.sql.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/messaging/notification-bell.spec.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "tests/messaging/numbers-routing.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/messaging/push-device-claim.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 11
+    }
+  },
+  "tests/messaging/push-notifications-rls.sql.spec.ts": {
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/messaging/reply-forward.sql.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/messaging/saved-replies.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/messaging/send-gate-boot.api.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/messaging/teacher-restricted-templates.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/messaging/template-numbers.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/messaging/templates.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/messaging/thread-summaries.race.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/messaging/thread-summaries.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "tests/messaging/trial-no-teacher-chat.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/messaging/wa-line-health.sql.spec.ts": {
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/messaging/wa-lines-check.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/messaging/wa-two-lines.reply.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/messaging/whatsapp-lines.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/messaging/whatsapp-lines.windows.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/people/account.api.spec.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "tests/people/assistants-admin.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 6
+    }
+  },
+  "tests/people/avatars.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 3
+    }
+  },
+  "tests/people/family-sign-in.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "ab/no-unchecked-json": {
+      "count": 3
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "tests/people/journey-6-duplicate-student.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "tests/people/phone-search.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "tests/people/portal-views.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/people/profiles-disabled.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/people/rate-limit-take.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/people/roles-permissions.sql.spec.ts": {
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/people/student-lists.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/people/student-profile.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/people/student-statuses.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/people/teacher-isolation.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/people/teacher-isolation.sql.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/people/teacher-mode.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/people/teacher-rls.sql.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 5
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/people/users-control.delete.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/people/users-control.invite.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/people/users-control.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/people/users-control.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/platform/config-expand.sql.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 2
+    },
+    "stylistic/max-len": {
+      "count": 5
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "typescript/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "tests/platform/config-parity.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 7
+    }
+  },
+  "tests/platform/config-seed.sql.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "tests/platform/dashboard.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 9
+    }
+  },
+  "tests/platform/forms-parity.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/platform/google-calendar-handover.sql.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/platform/google-sync.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "typescript/restrict-template-expressions": {
+      "count": 3
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "tests/platform/google-sync.sql.spec.ts": {
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/platform/integration-config.sql.spec.ts": {
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "tests/platform/locale.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/platform/mobile-form-sheets.spec.ts": {
+    "complexity": {
+      "count": 2
+    }
+  },
+  "tests/platform/responsive-dashboard.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/platform/responsive-frame.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/platform/responsive.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/platform/settings-academy.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/platform/settings-gate.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 6
+    }
+  },
+  "tests/platform/settings-switches.spec.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "tests/platform/shell-focus.spec.ts": {
+    "typescript/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "tests/reporting/feedback.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/reporting/guardian-deliveries.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/reporting/lesson-rating.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/reporting/report-admin.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "tests/reporting/report-outcome.sql.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/reporting/teacher-report-attachments.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "tests/reporting/teacher-report-edit-window.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "tests/reporting/teacher-week-history.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/sales/assistant-auto-assign-off.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/sales/assistant-course-renew.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/sales/assistant-course-subscription.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "tests/sales/assistant-course.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/sales/assistant-portal.spec.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "tests/sales/assistant-reopen.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 6
+    }
+  },
+  "tests/sales/assistant-scope.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/sales/assistant-scope.sql.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "tests/sales/assistant-terms.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/sales/channel-after-subscribe.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "tests/sales/journey-7-assistant-cycle.spec.ts": {
+    "stylistic/max-len": {
+      "count": 16
+    }
+  },
+  "tests/sales/lead-register.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "tests/sales/leads-applicants.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "tests/sales/pick-trial-date.guards.sql.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/sales/pick-trial-date.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/sales/sales-check-start.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "typescript/dot-notation": {
+      "count": 1
+    }
+  },
+  "tests/sales/sales-double-role.spec.ts": {
+    "stylistic/max-len": {
+      "count": 13
+    }
+  },
+  "tests/sales/sales-meetings.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "ab/no-unchecked-json": {
+      "count": 2
+    }
+  },
+  "tests/sales/sales-start-date-revoke.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/sales/sales-starter.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/sales/sales-subscribe.api.spec.ts": {
+    "stylistic/max-len": {
+      "count": 6
+    },
+    "typescript/dot-notation": {
+      "count": 2
+    }
+  },
+  "tests/teaching/apply-lesson-changes-v3.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/teaching/booking-day-times.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/teaching/booking-day-times.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "tests/teaching/booking-group.spec.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "tests/teaching/booking-makeup-group.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/teaching/booking-makeup-invoice.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    },
+    "typescript/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "tests/teaching/booking-override.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/teaching/classroom-live-phone.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/teaching/classroom-live.moderation.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/teaching/classroom-live.spec.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "tests/teaching/edit-session-time.held.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/teaching/edit-session-time.helpers.ts": {
+    "no-restricted-properties": {
+      "count": 1
+    },
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "tests/teaching/edit-session-time.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/teaching/journey-5-availability-wizard.spec.ts": {
+    "typescript/no-unnecessary-template-expression": {
+      "count": 1
+    }
+  },
+  "tests/teaching/meeting-link-auto.spec.ts": {
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "tests/teaching/meeting-recordings-rls.sql.spec.ts": {
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/teaching/meetings.spec.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "tests/teaching/proposals-reject.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "tests/teaching/proposals.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    }
+  },
+  "tests/teaching/schedule-all-teachers.spec.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/teaching/schedule-cancel.spec.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "tests/teaching/schedule-overview.spec.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "tests/teaching/schedule-series.spec.ts": {
+    "stylistic/max-len": {
+      "count": 6
+    }
+  },
+  "tests/teaching/schedule-stale.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "ab/no-unchecked-json": {
+      "count": 1
+    }
+  },
+  "tests/teaching/student-recordings-api.spec.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "tests/teaching/student-recordings-rls.sql.spec.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    }
+  },
+  "tests/teaching/teacher-meeting-mode.sql.spec.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "typescript/use-unknown-in-catch-callback-variable": {
+      "count": 1
+    },
+    "typescript/restrict-template-expressions": {
+      "count": 2
+    }
+  }
+}

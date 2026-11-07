@@ -1,0 +1,45 @@
+{
+  "build.mjs": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "check.mjs": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "image.mjs": {
+    "max-depth": {
+      "count": 3
+    },
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 6
+    }
+  },
+  "png.mjs": {
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "resample.mjs": {
+    "complexity": {
+      "count": 1
+    },
+    "max-depth": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  }
+}

@@ -1,9 +1,4 @@
 {
-  "eslint.config.js": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "playwright.config.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 9

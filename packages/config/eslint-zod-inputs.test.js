@@ -1,13 +1,11 @@
-import { RuleTester } from 'eslint';
-import tseslint from 'typescript-eslint';
 import { zodInputsRule } from './eslint-zod-inputs.js';
+import { testRule } from './rule-testers.js';
 
-// Parameter decorators need the typescript-eslint parser.
-const tester = new RuleTester({ languageOptions: { parser: tseslint.parser } });
+// Parameter decorators need a TypeScript parser.
 const raw = (name, replacement) => ({ messageId: 'raw', data: { name, replacement } });
 const nest = (names) => `import { ${names} } from '@nestjs/common';\n`;
 
-tester.run('zod-inputs', zodInputsRule, {
+testRule({ name: 'zod-inputs', rule: zodInputsRule, lang: 'ts' }, {
   valid: [
     // The zod decorators, and the factories they call as plain functions.
     `${nest('Body, Query')}const ZodBody = (s) => Body(s); class C { m(@ZodBody(s) b, @ZodQuery(s) q) {} }`,

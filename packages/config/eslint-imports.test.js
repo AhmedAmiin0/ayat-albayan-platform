@@ -1,15 +1,15 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { Linter, RuleTester } from 'eslint';
+import { Linter } from 'eslint';
 import { forbiddenImports } from './eslint-boundaries.js';
 import { forbiddenImportsRule } from './eslint-imports.js';
+import { testRule } from './rule-testers.js';
 
-const tester = new RuleTester({ languageOptions: { ecmaVersion: 2024, sourceType: 'module' } });
 const db = [{ bans: [{ regex: '(^|/)db\\.module(\\.js)?$', names: ['DB', 'Db'], message: 'repo only' }] }];
 const all = [{ bans: [{ regex: '^lodash$', message: 'no lodash' }] }];
 const banned = (message) => ({ messageId: 'banned', data: { message } });
 
-tester.run('forbidden-imports', forbiddenImportsRule, {
+testRule({ name: 'forbidden-imports', rule: forbiddenImportsRule }, {
   valid: [
     { code: "import { DbModule } from '../common/db/db.module.js';", options: db },
     { code: "import { DB } from './db.modules.js';", options: db },

@@ -1,0 +1,137 @@
+{
+  "src/enums/feedback.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/enums/finance.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/enums/messaging.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "src/google/enums.ts": {
+    "stylistic/max-len": {
+      "count": 9
+    }
+  },
+  "src/google/errors.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/google/index.ts": {
+    "typescript/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/google/schemas.test.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/google/schemas.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/google/views.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/integrations/checks.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/integrations/driver-keys.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/integrations/index.ts": {
+    "typescript/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/integrations/keys.kapso.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/integrations/keys.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/integrations/keys.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/permissions/catalog.data.ts": {
+    "stylistic/max-len": {
+      "count": 23
+    }
+  },
+  "src/permissions/catalog.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    }
+  },
+  "src/permissions/roles.ts": {
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/theme/avatar-tones.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/theme/avatar-tones.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/theme/theme.brand.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/theme/theme.contrast.test.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/theme/theme.glass.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/theme/theme.ts": {
+    "typescript/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 8
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "eslint-boundaries.js": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "eslint-domains.js": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "eslint-parent-imports.js": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "eslint-react.js": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "eslint.js": {
+    "stylistic/max-len": {
+      "count": 9
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  }
+}
