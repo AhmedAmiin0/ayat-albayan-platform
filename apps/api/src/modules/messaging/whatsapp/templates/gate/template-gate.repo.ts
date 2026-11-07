@@ -9,7 +9,7 @@ import { onCrm } from '@/modules/messaging/whatsapp/templates/catalog/template-e
 const SENDABLE_COPY_MS = 60_000;
 
 /** 0 (no copy) when SETTINGS_CACHE_MS is 0: e2e approves templates by SQL and sends at once. */
-export const sendableCopyMs = (): number =>
+const sendableCopyMs = (): number =>
   loadEnv().SETTINGS_CACHE_MS === 0 ? 0 : SENDABLE_COPY_MS;
 
 /** The rows a send may use before the crm gate: approved ones, and every CRM_GATED_KEYS key. */
@@ -25,7 +25,7 @@ async function sendableRows(db: Db): Promise<TemplateRow[]> {
  * (teacher_new_student → teacher_lesson_v2) is approved, whatever its own Meta status. Read live on
  * every call: a line's driver can change at runtime («التكاملات»), a cached copy never keeps it.
  */
-export function gateSendable(rows: TemplateRow[]): TemplateRow[] {
+function gateSendable(rows: TemplateRow[]): TemplateRow[] {
   const keys = gateApprovedKeys(rows, (r) => onCrm(r.line));
   return rows.filter((r) => keys.has(r.key));
 }
