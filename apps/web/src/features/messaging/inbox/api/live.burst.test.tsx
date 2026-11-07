@@ -1,14 +1,21 @@
-import type { ThreadView } from '@ab/shared';
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import type { ThreadDetail, ThreadView } from '@ab/shared';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useInfiniteQuery,
+  useQuery,
+} from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { useInboxRealtime } from './live';
-import { live, thread } from './patch-fixtures';
+import { useInboxRealtime, useLiveChat } from './live';
+import { live, msg, PHONE, thread } from './patch-fixtures';
+import { threadQuery } from './thread-query';
 
-// docs/44 K1 (round 4): a reminder batch (insert + claim + sent + delivered + read per message)
-// must not starve GET /threads: a rows event never cancels a list read, so the throttled re-read
-// lands during the burst. Real live layer and query client; the socket and the API are fakes.
+// docs/44 K1 (rounds 4-5): a reminder batch (insert + claim + sent + delivered + read per message)
+// must not starve GET /threads nor the open chat's GET /threads/:phone: a rows event never cancels
+// a read, so the throttled re-read lands during the burst. Real live layer and query client; the
+// socket and the API are fakes.
 
 const rt = vi.hoisted(() => {
   const hooks: { event?: (m: { payload: unknown }) => void } = {};
@@ -69,5 +76,42 @@ it('a burst of 20 rows events over 6 s with a slow list read: list reads still l
     landed.push(client.getQueryState(['threads', 'list', ''])?.dataUpdatedAt ?? 0);
   }
   expect(landed.filter((at) => at > first).length).toBeGreaterThan(0);
+  view.unmount();
+});
+
+/** GET /threads/:phone: 400 ms per read, every message still ✓ (each event moves one tick). */
+const slowChat = vi.fn(
+  () =>
+    new Promise<ThreadDetail>((resolve) => {
+      const messages = ids.map((id) => msg(id, 'sent'));
+      setTimeout(() => resolve({ messages, has_more: false } as ThreadDetail), 400);
+    }),
+);
+
+it('15 tick events over 8 s on the open chat with a 400 ms read: chat reads land', async () => {
+  const client = new QueryClient();
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
+  const chat = { ...threadQuery(PHONE), queryFn: slowChat, refetchInterval: false } as const;
+  const view = renderHook(
+    () => {
+      useInboxRealtime(true);
+      useLiveChat(PHONE);
+      return useInfiniteQuery(chat);
+    },
+    { wrapper },
+  );
+  await act(() => vi.advanceTimersByTimeAsync(400));
+  const first = client.getQueryState(chat.queryKey)?.dataUpdatedAt ?? 0;
+  const landed: number[] = [];
+  for (const id of ids.slice(0, 15)) {
+    await act(async () =>
+      rt.hooks.event?.({ payload: { phone: PHONE, rows: [live(id, 'read')] } }),
+    );
+    await act(() => vi.advanceTimersByTimeAsync(533));
+    landed.push(client.getQueryState(chat.queryKey)?.dataUpdatedAt ?? 0);
+  }
+  expect(new Set(landed.filter((at) => at > first)).size).toBeGreaterThan(3);
   view.unmount();
 });

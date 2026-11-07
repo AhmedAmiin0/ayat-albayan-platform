@@ -7,9 +7,9 @@ import { patchLiveCaches } from './live-patch';
 import { heldRead, live, msg, PHONE, thread } from './patch-fixtures';
 import { threadQuery } from './thread-query';
 
-// docs/44 K1: the live patch is visual only and no read is folded. A chat read in flight when the
-// event moves that chat is cancelled (never committed after the patch); a list read never is. The
-// event's re-read (cancelRefetch: true, as live.ts) lands exactly what the server sent.
+// docs/44 K1: the live patch is visual only and no read is folded. The patch cancels no read (a
+// burst would starve them); the event's re-read (cancelRefetch: true, as live.ts) supersedes a
+// stale one in flight and lands exactly what the server sent.
 
 const mockApiFetch = vi.fn();
 vi.mock('@/lib/http/api', async (importOriginal) => ({
@@ -46,16 +46,17 @@ async function inFlight(client: QueryClient, queryKey: QueryKey) {
 
 beforeEach(() => mockApiFetch.mockReset());
 
-it('an older chat read in flight is cancelled by the patch; the fresh read lands the server', async () => {
+it('an older chat read in flight is never cancelled by a patch; the re-read supersedes it', async () => {
   const client = await opened(msg('a', 'sent'));
   const old = await inFlight(client, KEY);
+  const cancel = vi.spyOn(client, 'cancelQueries');
   patchLiveCaches(client, PHONE, [live('a', 'delivered')]);
-  old.resolve(page(msg('a', 'sent')));
-  await old.done;
-  expect(first(client)?.status).toBe('delivered');
+  expect([cancel.mock.calls.length, first(client)?.status]).toEqual([0, 'delivered']);
   const fresh = page(msg('a', 'delivered', { delivered_at: '2026-11-07T10:01' }));
   mockApiFetch.mockResolvedValueOnce(fresh);
-  await reread(client, KEY);
+  const next = reread(client, KEY);
+  old.resolve(page(msg('a', 'sent')));
+  await Promise.all([next, old.done]);
   expect(first(client)).toEqual(fresh.messages[0]);
 });
 
