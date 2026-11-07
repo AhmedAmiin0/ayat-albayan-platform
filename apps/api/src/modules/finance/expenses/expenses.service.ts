@@ -1,4 +1,4 @@
-import type { ExpenseCreate, ExpenseUpdate, ExpenseView } from '@ab/shared';
+import { sameStoredObject, type ExpenseCreate, type ExpenseUpdate, type ExpenseView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { notFound } from '@/common/http/errors';
@@ -22,8 +22,10 @@ export class ExpensesService {
     return toExpenseView(row);
   }
 
-  async update(id: string, patch: Partial<ExpenseUpdate>, actorId: string): Promise<ExpenseView> {
+  async update(id: string, sent: Partial<ExpenseUpdate>, actorId: string): Promise<ExpenseView> {
     const before = await this.row(id);
+    const own = sameStoredObject(before.receipt_path, sent.receiptPath); // moved: docs/45 §6
+    const patch = own ? { ...sent, receiptPath: before.receipt_path } : sent;
     if (patch.receiptPath) await this.receipts.check(patch.receiptPath);
     const write = expensePatch(patch);
     const after = Object.keys(write).length > 0 ? await this.expenses.update(id, write) : before;

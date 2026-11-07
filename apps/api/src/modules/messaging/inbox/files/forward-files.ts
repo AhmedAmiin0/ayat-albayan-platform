@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { baseMime, isChatViewMime, isStickerMessage, stickerPayloadOf } from '@ab/shared';
+import { baseMime, isChatViewMime, isStickerMessage, stickerPayloadOf, storageKeyOf } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, forwardOutPath, isSentFilePath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
@@ -28,7 +28,7 @@ const stickerOf = (row: ThreadMessageRow): { payload?: Json } =>
 const notForwardable = () => waHttpError('not_forwardable', HttpStatus.BAD_REQUEST);
 
 /** The name a forwarded file reaches the family with: ours as sent, else the copy's own (fwd-….ext). */
-const fileName = (row: ThreadMessageRow, path: string): string => row.media_name ?? path.split('/').at(-1) ?? 'file';
+const fileName = (row: ThreadMessageRow, path: string): string => row.media_name ?? storageKeyOf(path).split('/').at(-1) ?? 'file';
 
 /**
  * The caption it goes with; an echo's type marker («[video]», webhook external-row) is no caption, nor
