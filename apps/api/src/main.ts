@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
-import { installKeepAlive } from './common/infra/http/keep-alive';
 import { registerClientUsage } from './common/telemetry/client-usage/client-usage.hook';
 import { ClientUsageService } from './common/telemetry/client-usage/client-usage.service';
 import { loadEnv } from './config/env/env';
@@ -12,8 +11,6 @@ import { registerLivekitWebhookParser } from './modules/teaching/classroom/livek
 import { setupOpenApi } from './openapi';
 
 async function bootstrap(): Promise<void> {
-  // Outbound fetch reuses sockets 20 s (docs/42 42-6): no new TLS handshake per chat send.
-  installKeepAlive();
   const env = loadEnv();
   const role = appRole();
   // trustProxy: the proxies in front (TRUST_PROXY_HOPS: 1 = the host Caddy, 2 = it + deploy/staging's load
