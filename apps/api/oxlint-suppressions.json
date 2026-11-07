@@ -4989,11 +4989,8 @@
     "typescript/consistent-type-imports": {
       "count": 2
     },
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/numbers/lines/numbers.lines.ts": {
@@ -7175,7 +7172,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 13
+      "count": 9
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.controller.ts": {
@@ -7194,7 +7191,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-submit.ts": {

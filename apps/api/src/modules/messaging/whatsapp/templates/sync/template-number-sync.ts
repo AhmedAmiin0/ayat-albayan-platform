@@ -1,22 +1,26 @@
-import type { TemplateNumberSyncView } from '@ab/shared';
+import type { TemplateNumberSyncView, WaProvider } from '@ab/shared';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import type { WhatsappEnv } from '@/config/env/env';
 import { readError, requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { wabaSyncPatch } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
 import type { TemplatePatch } from './template-sync';
 import {
-  CRM_MANAGED, EVOLUTION_NO_TEMPLATES, waHttpError,
+  EVOLUTION_NO_TEMPLATES, waHttpError,
 } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import {
+  syncByLine, syncCrmNumber, unread, type NumberLineDeps,
+} from '@/modules/messaging/whatsapp/templates/sync/number-line/template-number-line';
 import type { ApprovalRow, ApprovalWrite, TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { WaError, type MetaTemplate, type TemplateRow, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // One number's template sync (docs/23 phase 5, docs/23c decision 4): read THAT number's WABA list with a
-// client built from its own row + Vault secrets (the numbers overlay, module mode only) and write the
+// client built from its own row + Vault secrets (the numbers overlay, module mode) and write the
 // approval of every registry key to it and to every other number on the same waba_id (one Meta template
-// per WABA). Read-only on Meta; never inserts a message_templates row, never sends.
+// per WABA). Under legacy the number syncs its line (number-line/). Read-only on Meta;
+// never inserts a message_templates row, never sends.
 
-export interface NumberSyncDeps {
-  queries: Pick<TemplatesRepo, 'all' | 'approvals' | 'upsertApprovals'>;
+export interface NumberSyncDeps extends NumberLineDeps {
+  queries: Pick<TemplatesRepo, 'all' | 'approvals' | 'upsertApprovals' | 'numberRef'>;
   /** overlayNumbers(): null under legacy. */
   numbers: () => readonly OverlayNumber[] | null;
   clientOf: (env: WhatsappEnv) => Pick<WhatsappClient, 'getTemplates'>;
@@ -51,23 +55,35 @@ function approval(input: { row: TemplateRow; prev: ApprovalRow | undefined; meta
   return { template_key: row.key, number_id: numberId, status: p.status ?? 'not_submitted', ...meta, last_checked_at: now.toISOString() };
 }
 
+type Elsewhere = (
+  deps: NumberSyncDeps, n: OverlayNumber, now: Date,
+) => Promise<TemplateNumberSyncView>;
+const noList = (n: OverlayNumber, now: Date): TemplateNumberSyncView =>
+  ({ ...unread(n.id, now), ok: false, error: EVOLUTION_NO_TEMPLATES });
+
+/** No WABA list of the number's own: the CRM's line sync; Evolution none (no call). */
+const NOT_A_WABA_LIST: Partial<Record<WaProvider, Elsewhere>> = {
+  crm: syncCrmNumber,
+  evolution: (_deps, n, now) => Promise.resolve(noList(n, now)),
+};
+
 /**
- * POST /admin/numbers/:id/templates/sync. 409 template_sync_off, 409 module_mode_only (legacy: numbers
- * have no client of their own), 404 unknown_number. A number that cannot send (disabled, no token)
- * answers not_configured without a Meta call, a crm number crm_managed; a failed read is that number's error (200).
+ * POST /admin/numbers/:id/templates/sync. 409 template_sync_off, 404 unknown_number. Under
+ * legacy the number's role syncs its line (syncByLine). A number that cannot send (disabled,
+ * no token) answers not_configured without a Meta call, an Evolution number
+ * evolution_no_templates, a crm number its line's CRM sync (syncCrmNumber); a failed read is
+ * that number's error (200).
  */
 export async function syncNumber(deps: NumberSyncDeps, numberId: string, now: Date): Promise<TemplateNumberSyncView> {
   requireSync();
   const all = deps.numbers();
-  if (all === null) throw waHttpError('module_mode_only', 409);
+  if (all === null) return syncByLine(deps, numberId, now);
   const n = all.find((x) => x.id === numberId);
   if (!n) throw waHttpError('unknown_number', 404);
-  const base = { number_id: n.id, checked_at: now.toISOString(), meta_count: 0, synced: 0, number_ids: [] };
+  const base = unread(n.id, now);
   if (!n.env) return { ...base, ok: false, error: 'not_configured' };
-  // A crm number's templates live in the CRM (docs/19): no call, no approval written.
-  if (n.env.provider === 'crm') return { ...base, ok: false, error: CRM_MANAGED };
-  // Nor an Evolution number's (no template list from Evolution): no call, no approval written.
-  if (n.env.provider === 'evolution') return { ...base, ok: false, error: EVOLUTION_NO_TEMPLATES };
+  const elsewhere = NOT_A_WABA_LIST[n.env.provider ?? 'meta'];
+  if (elsewhere) return elsewhere(deps, n, now);
   const list = await readList(deps, { ...n, env: n.env });
   if (!Array.isArray(list)) return { ...base, ok: false, ...list };
   // A crm number on the same waba_id keeps its hand-set status (docs/19): Meta's view is never written to it.

@@ -40,10 +40,15 @@ describe('syncNumber: a crm number on the same waba_id', () => {
     const META: MetaTemplate = { id: 'm1', name: 'booking_confirmation', language: 'ar', status: 'APPROVED', category: 'UTILITY', quality: 'GREEN', components: [], rejectedReason: null };
     const upsertApprovals = vi.fn(async (rows: readonly ApprovalWrite[]) => rows.length);
     const deps: NumberSyncDeps = {
-      queries: { all: async () => [templateRow()], approvals: async () => [], upsertApprovals },
+      queries: {
+        all: async () => [templateRow()], approvals: async () => [], upsertApprovals,
+        numberRef: async () => null,
+      },
       numbers: (): readonly OverlayNumber[] => [meta, crm],
       clientOf: () => ({ getTemplates: async () => [META] }),
       log: { warn: vi.fn() },
+      syncLine: vi.fn(),
+      activeNumberId: () => undefined,
     };
     vi.stubEnv('WA_TEMPLATE_SYNC', 'true');
     const out = await syncNumber(deps, 'meta', new Date('2026-10-24T09:00:00Z'));

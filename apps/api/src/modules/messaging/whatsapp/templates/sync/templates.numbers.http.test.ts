@@ -72,9 +72,20 @@ describe('templates per number (HTTP)', () => {
     expect(t.templates.upsertApprovals).not.toHaveBeenCalled();
   });
 
-  it('sync: legacy 409 module_mode_only; a number that cannot send → ok:false not_configured, no Meta call', async () => {
+  it('sync under legacy: the number’s role runs its line’s sync', async () => {
+    const ref = { id: NUM, purpose: 'chat' as const, is_default: true, waba_id: 'w1' };
+    t.templates.numberRef.mockResolvedValue(ref);
+    t.chatClient.configured.mockReturnValue(true);
+    t.chatClient.getTemplates.mockResolvedValue([]);
     const legacy = await t.call({ method: 'POST', url: URL_SYNC });
-    expect([legacy.statusCode, legacy.json().code]).toEqual([409, 'module_mode_only']);
+    expect(legacy.statusCode).toBe(200);
+    expect(legacy.json()).toMatchObject({ number_id: NUM, line: 'chat', ok: true, meta_count: 0 });
+    expect(t.chatClient.getTemplates).toHaveBeenCalledTimes(1);
+    expect(t.client.getTemplates).not.toHaveBeenCalled();
+    expect(t.templates.upsertApprovals).not.toHaveBeenCalled();
+  });
+
+  it('sync in module mode: a number that cannot send → not_configured, no Meta call', async () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [unsendable] });
     const res = await t.call({ method: 'POST', url: URL_SYNC });
     expect(res.statusCode).toBe(200);
