@@ -1,8 +1,8 @@
 import type { TemplateNumberSyncView } from '@ab/shared';
 import { Controller, HttpCode, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '../../../../../common/auth/decorators';
-import { TemplateManagerGuard } from '../catalog/template-manager.guard';
+import { Permissions } from '@/common/auth/decorators';
+import { TemplateManagerGuard } from '@/modules/messaging/whatsapp/templates/catalog/template-manager.guard';
 import { TemplateNumbers } from './template-numbers.service';
 
 /**

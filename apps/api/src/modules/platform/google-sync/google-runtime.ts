@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../../common/audit/audit.service';
+import { AuditService } from '@/common/audit/audit.service';
 import { GoogleConnection } from './oauth/google-connection';
 import { GoogleSyncJob } from './sync/google-sync.job';
 

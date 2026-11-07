@@ -1,6 +1,6 @@
 import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { at, sampleLesson } from '../reminders.fakes';
+import { at, sampleLesson } from '@/modules/messaging/reminders/reminders.fakes';
 import { joinCandidates, roomFor, sentLinks, type RoomContext } from './reminders.links';
 
 // settings.meeting_link_auto (owner 2026-10-12): which link the reminders carry, and which families

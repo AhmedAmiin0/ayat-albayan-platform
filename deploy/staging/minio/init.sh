@@ -1,6 +1,6 @@
 #!/bin/sh
 # ayat-minio-init (docs/45-minio-storage.md): the API's private buckets, its own MinIO user and the policy that
-# limits that user to them. Runs in a one-shot minio/mc container on every deploy: each step is idempotent.
+# limits that user to them. Runs in a one-shot container of the pinned MinIO image (it ships mc) on every deploy: each step is idempotent.
 # Credentials come from minio.env (the service's env_file, root only), never from this file or the app's .env.
 set -eu
 MINIO_ROOT_USER="${MINIO_ROOT_USER:-}"

@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import { lead } from '../../leads/leads.fakes';
+import { lead } from '@/modules/sales/leads/leads.fakes';
 import { world } from './sales-assign.fakes';
 
 describe('SalesAssignService.autoAssign', () => {

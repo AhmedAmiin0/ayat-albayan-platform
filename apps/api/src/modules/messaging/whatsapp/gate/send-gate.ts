@@ -1,8 +1,8 @@
 import type { SendGateView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv, type Env } from '../../../../config/env/env';
-import { WhatsappSettings } from '../whatsapp.settings';
+import { DB, type Db } from '@/common/db/db.module';
+import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv, type Env } from '@/config/env/env';
+import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
 
 /**
  * The one send gate (docs/12 §3.1): WhatsApp configured and the admin's kill switch

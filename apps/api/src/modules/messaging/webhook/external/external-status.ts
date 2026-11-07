@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import type { EchoEvent, StatusEvent } from '../webhook.events';
+import type { EchoEvent, StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 import { ExternalStore } from './external.store';
 import { KapsoHistory } from './kapso-history';
 import { kapsoNumberFor } from './kapso-numbers';

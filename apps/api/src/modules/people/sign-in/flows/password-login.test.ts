@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { signInWorld } from '../sign-in.world';
+import { signInWorld } from '@/modules/people/sign-in/sign-in.world';
 
 const IP = '203.0.113.3';
 

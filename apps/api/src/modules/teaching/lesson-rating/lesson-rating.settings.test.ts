@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { LessonRatingSettings } from './lesson-rating.settings';
 
 /** What RatingQueue reads through the reader (feedback_mode moved to the lesson_rating rule). */

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { readerOf } from '../../../../common/settings/settings.fakes';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { IDS } from '../booking.fakes';
-import { BookingSettings } from '../booking.settings';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { IDS } from '@/modules/teaching/booking/booking.fakes';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { MakeupCandidates } from './makeup-candidates.service';
 
 const NOW = new Date('2026-10-03T10:00:00Z');

@@ -1,8 +1,8 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { pdfContact } from './pdf-contact';
-import { sampleModel } from '../report-pdf.fakes';
-import { footerHtml } from '../template/template.body';
+import { sampleModel } from '@/modules/reporting/report-pdf/report-pdf.fakes';
+import { footerHtml } from '@/modules/reporting/report-pdf/template/template.body';
 
 const settings = (contact: Record<string, string>, whatsapp = '+966566101447') => ({ academy_contact: contact, academy_whatsapp_e164: whatsapp });
 

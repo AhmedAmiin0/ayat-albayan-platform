@@ -1,5 +1,5 @@
-import type { GoogleClient, GoogleListedEvent } from '../../google-client.port';
-import { EVENT, PLATFORM_SOURCE } from '../../google-format';
+import type { GoogleClient, GoogleListedEvent } from '@/modules/platform/google-sync/google-client.port';
+import { EVENT, PLATFORM_SOURCE } from '@/modules/platform/google-sync/google-format';
 
 /** «حلقة —»: the script's titles (and ours) start with it; the tag tells ours apart. */
 const TITLE = EVENT.titlePrefix.trim();

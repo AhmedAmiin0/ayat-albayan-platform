@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { moneyApp } from '../../subscriptions/test-app';
+import { moneyApp } from '@/modules/finance/subscriptions/test-app';
 
 // The normal build: FEATURE_STRIPE unset, so StripeTestModule mounts NOTHING.
 vi.hoisted(() => {

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CommissionBell } from './commission-bell';
-import { LeadConversion } from '../student-lifecycle/lead-conversion';
-import { activatesStudent, StudentActivation } from '../student-lifecycle/student-activation';
-import { StudentDeactivation, type DeletedPayment } from '../student-lifecycle/student-deactivation';
+import { LeadConversion } from '@/modules/finance/subscriptions/student-lifecycle/lead-conversion';
+import { activatesStudent, StudentActivation } from '@/modules/finance/subscriptions/student-lifecycle/student-activation';
+import { StudentDeactivation, type DeletedPayment } from '@/modules/finance/subscriptions/student-lifecycle/student-deactivation';
 
 type Write = { entity: string; entityId?: string; action: string; before?: unknown; after?: unknown };
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ruleRow, STUDENT_ID, TEACHER_ID } from '../../scheduling/scheduling.fakes';
+import { ruleRow, STUDENT_ID, TEACHER_ID } from '@/modules/teaching/scheduling/scheduling.fakes';
 import { planLessons, planNewRule } from './rule-plan';
 
 const NOW = new Date('2026-10-02T10:00:00Z');

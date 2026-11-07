@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { CALLS_LINE_ENV } from '../calls-number.fakes';
+import { CALLS_LINE_ENV } from '@/modules/messaging/calls/calls-number.fakes';
 import { KapsoCallsApi } from './kapso-calls';
 import { permissionRequestBody, permissionTemplate } from './permission-body';
 

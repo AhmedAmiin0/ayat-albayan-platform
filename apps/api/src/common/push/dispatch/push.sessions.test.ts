@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '../push.fakes';
-import type { PushTransport } from '../push.service';
+import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '@/common/push/push.fakes';
+import type { PushTransport } from '@/common/push/push.service';
 import { liveSessions } from './push.sessions';
 
 const T = 'ExponentPushToken[t]';

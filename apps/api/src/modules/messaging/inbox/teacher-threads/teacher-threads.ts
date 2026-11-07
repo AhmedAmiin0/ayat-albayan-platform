@@ -1,6 +1,6 @@
 import type { ThreadPeople, ThreadView } from '@ab/shared';
-import type { PeopleStudentRow } from '../people/thread-people.mapper';
-import type { ThreadRow } from '../threads/threads.mapper';
+import type { PeopleStudentRow } from '@/modules/messaging/inbox/people/thread-people.mapper';
+import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 /**
  * A thread as a teacher sees it: no lead (the admin's pipeline), no family tags («مشترك»,

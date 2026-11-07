@@ -1,12 +1,12 @@
 import type { MessageView, SendGateView } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import { AuditService } from '@/common/audit/audit.service';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { MessagesService, type MessageChange } from './messages.service';
 import { AppSend } from './app-send';
-import { SendGate } from '../gate/send-gate';
+import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { z } from 'zod';
 

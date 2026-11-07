@@ -12,19 +12,19 @@ const init = services['ayat-minio-init'];
 const initSh = readFileSync(root('deploy/staging/minio/init.sh'), 'utf8');
 const backupSh = readFileSync(root('deploy/staging/minio/backup.sh'), 'utf8');
 const BUCKETS = 'reports report-attachments receipts invoices wa-media recordings avatars';
-const RELEASE = /:RELEASE\.\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z$/;
+// MinIO stopped publishing images (Docker Hub repos deleted 2026-09); Chainguard rebuilds it from
+// source. Pinned by digest: its free tier tags only :latest, which must never reach a deploy.
+const PINNED = /^cgr\.dev\/chainguard\/minio@sha256:[0-9a-f]{64}$/;
 
 test('both behind the minio profile: merging never starts them on a server whose .env is not ready', () => {
   assert.deepEqual(minio.profiles, ['minio']);
   assert.deepEqual(init.profiles, ['minio']);
 });
 
-test('pinned release images, never :latest', () => {
-  assert.match(minio.image, /^minio\/minio:RELEASE\./);
-  assert.match(minio.image, RELEASE);
-  assert.match(init.image, /^minio\/mc:RELEASE\./);
-  assert.match(init.image, RELEASE);
-  assert.equal(/^MC_IMAGE=(.+)$/m.exec(backupSh)?.[1], init.image, 'the backup uses the same mc');
+test('one image pinned by digest for the server, the init and the backup (it ships mc)', () => {
+  assert.match(minio.image, PINNED);
+  assert.equal(init.image, minio.image, 'the init runs mc from the same image');
+  assert.equal(/^MC_IMAGE=(.+)$/m.exec(backupSh)?.[1], minio.image, 'the backup uses the same image');
 });
 
 test('internal only: no published port, no host network, no console', () => {
@@ -71,7 +71,7 @@ test('its data on a named volume, a health check, rotated logs, 512 MB', () => {
 
 test('init: one shot, after MinIO, its script read-only from the shipped checkout', () => {
   assert.equal(init.restart, 'no');
-  assert.equal(init.deploy.resources.limits.memory, '64M');
+  assert.equal(init.deploy.resources.limits.memory, '192M');
   // service_started, not service_healthy: a MinIO that will not start must never fail roll.sh's
   // last `up -d`.
   assert.deepEqual(init.depends_on, { 'ayat-minio': { condition: 'service_started' } });

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TEACHER_ID } from '../lessons.fakes';
+import { TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import { body, correction, heldRow, NOW, retimed, timeSetup } from './time-edit.fakes';
 
 describe('LessonTimeService — payout lock (E3, R-PAY-02)', () => {

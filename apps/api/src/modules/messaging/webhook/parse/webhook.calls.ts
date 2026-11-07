@@ -1,4 +1,4 @@
-import type { CallWebhookEvent, WebhookBatch } from '../webhook.events';
+import type { CallWebhookEvent, WebhookBatch } from '@/modules/messaging/webhook/webhook.events';
 import { field, get, metaTime } from './webhook.parse';
 
 // A `calls` change (Meta Cloud API Calling, forwarded raw by Kapso's meta-kind webhook) → flat call

@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { crmFailure } from '../drivers/crm/crm.fakes';
+import { crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { LinesCheck } from './lines.check';
-import { scriptedFetch } from '../whatsapp.fakes';
+import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver»: «افحص الخطوط» on a crm line = GET /me only, never a test message, never a Graph call.
 

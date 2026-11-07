@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DB, type Db } from '../../db/db.module';
-import { expoDeliver, type PushTransport } from '../expo/expo-deliver';
-import type { PushText } from '../expo/expo-push';
-import { WebPushSender, type WebPushPayload } from '../web/web-push.sender';
+import { DB, type Db } from '@/common/db/db.module';
+import { expoDeliver, type PushTransport } from '@/common/push/expo/expo-deliver';
+import type { PushText } from '@/common/push/expo/expo-push';
+import { WebPushSender, type WebPushPayload } from '@/common/push/web/web-push.sender';
 
 export const PUSH_TRANSPORT = Symbol('PUSH_TRANSPORT');
 

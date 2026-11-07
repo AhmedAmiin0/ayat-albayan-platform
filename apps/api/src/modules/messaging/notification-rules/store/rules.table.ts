@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
 import type { NotificationRuleRow } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 /** The writable part of a row (updated_at is set by the database). */
 export type RuleRowWrite = Pick<NotificationRuleRow, 'key' | 'enabled' | 'channels' | 'timing' | 'number_id'>;

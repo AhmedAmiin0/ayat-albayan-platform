@@ -1,8 +1,8 @@
 import type { RuleSettings } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { kickConfigReload } from '../../../../config/role/worker-kick';
+import { kickConfigReload } from '@/config/role/worker-kick';
 import type { RulesSnapshot } from './rules.reader';
-import { RulesSourceSettings } from '../rules-source.settings';
+import { RulesSourceSettings } from '@/modules/messaging/notification-rules/rules-source.settings';
 import { DbRulesReader } from './rules.store';
 import { RulesTable, type RuleRowWrite } from './rules.table';
 

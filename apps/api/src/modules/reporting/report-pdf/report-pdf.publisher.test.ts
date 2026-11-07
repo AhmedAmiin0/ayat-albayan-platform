@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import type { StorageService } from '../../../common/storage/storage.service';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import type { StorageService } from '@/common/storage/storage.service';
 import type { PdfRenderer } from './render/pdf-renderer';
 import { sampleSource } from './report-pdf.fakes';
 import { ReportPdfPublisher } from './report-pdf.publisher';

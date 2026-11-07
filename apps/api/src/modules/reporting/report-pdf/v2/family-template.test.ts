@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { STUB_ASSETS } from '../report-pdf.fakes';
+import { STUB_ASSETS } from '@/modules/reporting/report-pdf/report-pdf.fakes';
 import { FAMILY_CSS } from './family-css';
 import { content, familyModel } from './family.fakes';
 import { familyHtml } from './family-template';

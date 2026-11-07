@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { studentsApp } from '../sales-students.fakes';
+import { studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
 import { NOW, TEACHER } from './sales-teacher-overview.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;

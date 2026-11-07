@@ -1,6 +1,6 @@
 import type { WaLine } from '@ab/shared';
 import type { DueMessage } from './sender.due';
-import type { TemplateRow } from '../whatsapp.types';
+import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /**
  * The line a queued row leaves from (docs/12 §13.3, owner 2026-10-12): a template from its registry

@@ -1,5 +1,5 @@
 import { addCalendarDays, asciiDigits, localDateIn } from '@ab/shared';
-import type { CellValue } from '../../google-client.port';
+import type { CellValue } from '@/modules/platform/google-sync/google-client.port';
 
 // Column A of «سجل حضور — <student>» holds the lesson date as the script wrote it. Read with
 // UNFORMATTED_VALUE a real date is a serial number (days since 1899-12-30); text dates are parsed

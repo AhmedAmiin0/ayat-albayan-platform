@@ -2,9 +2,9 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
 import type { SalesLiveRow, SalesStudentRow, SalesTeacherRow } from './sales-academy.repo';
 import { SalesAcademyRepo } from './sales-academy.repo';
 import { type RosterBalanceRow, type RosterLessonRow, type RosterPackageRow, type RosterRuleRow, SalesRosterRepo } from './sales-roster.repo';
@@ -13,9 +13,9 @@ import { SalesHistoryRepo } from '@/modules/sales/sales/history/sales-history.re
 import type { SalesScheduleRow } from '@/modules/sales/sales/schedule/sales-schedule.repo';
 import { SalesScheduleRepo } from '@/modules/sales/sales/schedule/sales-schedule.repo';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
-import { A, B, NONE, OWN_A } from '../sales.fakes';
-import { fakeSettings } from '../../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../../common/settings/settings.service';
+import { A, B, NONE, OWN_A } from '@/modules/sales/sales/sales.fakes';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
 
 export const SUB = 'c1000000-0000-4000-8000-0000000000c1';
 export const USERS: Record<string, AuthUser> = {

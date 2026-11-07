@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { errorCode } from '../../../../common/http/errors';
-import { ADMIN_ACTOR, row, setupUsers, type Link } from '../users.fakes';
-import type { Actor } from '../users.service';
+import { errorCode } from '@/common/http/errors';
+import { ADMIN_ACTOR, row, setupUsers, type Link } from '@/modules/people/users/users.fakes';
+import type { Actor } from '@/modules/people/users/users.service';
 
 const codeOf = async (p: Promise<unknown>) => errorCode(await p.catch((e: unknown) => e));
 const people = () => [row('admin1', 'admin'), row('admin2', 'admin'), row('t1', 'teacher'), row('s1', 'student')];

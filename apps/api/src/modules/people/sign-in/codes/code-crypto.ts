@@ -1,6 +1,6 @@
 import { LOGIN_CODE_LENGTH } from '@ab/shared';
 import { createHmac, randomInt, timingSafeEqual } from 'node:crypto';
-import type { CodePurpose, Subject } from '../sign-in.ports';
+import type { CodePurpose, Subject } from '@/modules/people/sign-in/sign-in.ports';
 
 /** A 6-digit code from the CSPRNG (leading zeros kept). Never logged, never stored in clear. */
 export function newCode(pick: (max: number) => number = randomInt): string {

@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { inTempDir } from '../temp-dir';
+import { inTempDir } from '@/modules/messaging/inbox/files/temp-dir';
 import { pageOfFile, pdfinfoPages, pdftoppmArgs, type PageRange } from './pdf-pages';
 
 type PopplerTool = 'pdfinfo' | 'pdftoppm';

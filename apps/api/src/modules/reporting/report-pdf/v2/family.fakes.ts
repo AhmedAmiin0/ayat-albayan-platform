@@ -1,7 +1,7 @@
 // Invented sample data for the v2 family report tests: no real student, teacher or guardian.
 import { reportContentSchema, type ReportContentInput } from '@ab/shared';
-import { sampleSource } from '../report-pdf.fakes';
-import type { ReportSource } from '../report-pdf.source';
+import { sampleSource } from '@/modules/reporting/report-pdf/report-pdf.fakes';
+import type { ReportSource } from '@/modules/reporting/report-pdf/report-pdf.source';
 import type { FamilyModel } from './family-model';
 
 export const QURAN_CONTENT = reportContentSchema.parse({

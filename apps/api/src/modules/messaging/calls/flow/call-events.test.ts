@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { CallWebhookEvent } from '../../webhook/webhook.events';
-import { ADMIN_ACTOR, FAMILY, LINE, fakeGate, fakeKit } from '../calls.fakes';
+import type { CallWebhookEvent } from '@/modules/messaging/webhook/webhook.events';
+import { ADMIN_ACTOR, FAMILY, LINE, fakeGate, fakeKit } from '@/modules/messaging/calls/calls.fakes';
 import { CallEvents, machineEvent } from './call-events.service';
-import { fakeNumberStore } from '../calls-number.fakes';
+import { fakeNumberStore } from '@/modules/messaging/calls/calls-number.fakes';
 import { CallsSweeper } from './calls.sweeper';
 import { OutboundCalls } from './outbound.service';
 
-vi.mock('../kapso/calling-line', () => ({ callingLine: vi.fn(() => LINE) }));
+vi.mock('@/modules/messaging/calls/kapso/calling-line', () => ({ callingLine: vi.fn(() => LINE) }));
 
 const AT = new Date('2026-10-26T10:00:00Z');
 const ev = (over: Partial<CallWebhookEvent>): CallWebhookEvent => ({

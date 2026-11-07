@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { plannedCourseEnd } from './booking.course-end';
-import type { SeriesRule } from '../plan/booking.series-plan';
+import type { SeriesRule } from '@/modules/teaching/booking/plan/booking.series-plan';
 
 // Sun 17:00 + Tue 19:30 Riyadh (14:00Z / 16:30Z).
 const rule: SeriesRule = {

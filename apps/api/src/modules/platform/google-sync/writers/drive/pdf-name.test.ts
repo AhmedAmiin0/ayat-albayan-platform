@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { contentHash } from '../calendar/content-hash';
+import { contentHash } from '@/modules/platform/google-sync/writers/calendar/content-hash';
 import { attendanceSheetName, pdfName, studentFolderName } from './pdf-name';
 
 describe('PDF name (docs/24 §1, §2.5)', () => {

@@ -1,7 +1,7 @@
 import type { SettingKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /** The 12-month table's currency (ExpenseYearService) and the zone «تكرار شهري» counts months in (ExpensesJob). */
 const KEYS = ['reporting_currency', 'academy_timezone'] as const satisfies readonly SettingKey[];

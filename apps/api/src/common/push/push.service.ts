@@ -1,6 +1,6 @@
 import { webNotificationPath, type PushKind } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DB, type Db } from '../db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import { pushText, type PushText } from './expo/expo-push';
 import { PushAudience, type Recipient } from './dispatch/push.audience';
 import { PushChannels } from './dispatch/push.channels';

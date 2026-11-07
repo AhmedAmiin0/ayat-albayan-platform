@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { WaError } from '../../whatsapp/whatsapp.types';
-import { ADMIN_ACTOR, FAMILY, SALES_ACTOR, fakeGate, fakeKit, teacherActor } from '../calls.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { ADMIN_ACTOR, FAMILY, SALES_ACTOR, fakeGate, fakeKit, teacherActor } from '@/modules/messaging/calls/calls.fakes';
 import { CallReads } from './call-reads.service';
 import { InboundCalls } from './inbound.service';
 

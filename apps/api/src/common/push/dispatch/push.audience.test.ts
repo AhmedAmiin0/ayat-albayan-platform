@@ -1,7 +1,7 @@
 import { systemPermissionsOf } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { AccountDisabledError, systemResolver, type PermissionResolver } from '../../auth/permissions';
-import { fakePushDb, fakeWeb, flushPushes, pushService } from '../push.fakes';
+import { AccountDisabledError, systemResolver, type PermissionResolver } from '@/common/auth/permissions';
+import { fakePushDb, fakeWeb, flushPushes, pushService } from '@/common/push/push.fakes';
 
 const event = {
   subject: 'lead-1',

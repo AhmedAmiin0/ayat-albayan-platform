@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { OwnNumbers } from '../../numbers';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { inboxApp } from '../test-app';
+import { OwnNumbers } from '@/modules/messaging/numbers';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
 // GET /threads for every role hides the academy's own numbers (owner 2026-10-27). Example numbers only.
 type App = Awaited<ReturnType<typeof inboxApp>>;

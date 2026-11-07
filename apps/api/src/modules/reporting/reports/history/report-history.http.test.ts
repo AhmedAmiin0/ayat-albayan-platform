@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { STUDENT_ID, TEACHER_ID } from '../reports.fakes';
-import { reportsApp } from '../test-app';
+import { STUDENT_ID, TEACHER_ID } from '@/modules/reporting/reports/reports.fakes';
+import { reportsApp } from '@/modules/reporting/reports/test-app';
 
 const URL = `/students/${STUDENT_ID}/reports`;
 

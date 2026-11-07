@@ -1,7 +1,7 @@
 import { lessonWhenText } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { confirmationMessages, forMessages } from './confirmation-messages';
-import { CONTACT, GUARDIAN_ID } from '../lessons.fakes';
+import { CONTACT, GUARDIAN_ID } from '@/modules/teaching/lessons/lessons.fakes';
 
 const LESSON = { id: 'l1', starts_at: '2026-10-04T14:00:00.000Z', meeting_link: 'https://meet.jit.si/abrar' };
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { loadEnv } from '../../../../config/env/env';
-import { LEGACY_ENV, numberRow } from '../numbers.fakes';
+import { loadEnv } from '@/config/env/env';
+import { LEGACY_ENV, numberRow } from '@/modules/messaging/numbers/numbers.fakes';
 import { planAll, type PlanInput } from './numbers.import-plan';
 
 const input = (over: Partial<PlanInput> = {}): PlanInput => ({

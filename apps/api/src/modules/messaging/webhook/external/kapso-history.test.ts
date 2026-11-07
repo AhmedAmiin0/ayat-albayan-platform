@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { FetchLike } from '../../whatsapp/drivers/meta/graph';
+import type { FetchLike } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { KAPSO_FIELDS, KapsoHistory, PAGE_LIMIT } from './kapso-history';
 import { kapsoEnv, kapsoText } from './external.fakes';
 

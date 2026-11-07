@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AFTER, LESSON_ID, REPORT_ID, reportRow, submittedRow, TEACHER } from '../reports.fakes';
-import { reportsApp } from '../test-app';
+import { AFTER, LESSON_ID, REPORT_ID, reportRow, submittedRow, TEACHER } from '@/modules/reporting/reports/reports.fakes';
+import { reportsApp } from '@/modules/reporting/reports/test-app';
 
 const URL = `/reports/${REPORT_ID}/v2/submit`;
 const seg = (kind: string, [surah, from, to]: [number, number, number]) => ({ kind, surah, from, to, grade: 'very_good' });

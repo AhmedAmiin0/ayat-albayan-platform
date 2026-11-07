@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { recentFilter } from '../invoices/invoices.dto';
+import { recentFilter } from '@/modules/finance/invoices/invoices.dto';
 import { utcWindow } from './payments.dto';
 
 describe('date ranges follow settings.academy_timezone (docs/11 §3)', () => {

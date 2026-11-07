@@ -79,14 +79,39 @@ async function catchUp(client: Client) {
 test('back on screen: the chat\'s tick lands in the cache at once, keeping the list\'s time', async () => {
   const client = createTestQueryClient();
   client.setQueryData(KEY, listCache([row('queued')]), { updatedAt: 1000 });
-  const refetch = jest.spyOn(client, 'refetchQueries');
+  const refetch = jest.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);
   const hook = await catchUp(client);
   client.setQueryData(threadKey(PHONE), chatWith('delivered'));
   expect(listed(client)?.last_status).toBe('queued'); // hidden: nothing written
   await hook.rerender({ focused: true });
   expect(listed(client)?.last_status).toBe('delivered');
   expect(client.getQueryState(KEY)?.dataUpdatedAt).toBe(1000);
-  expect(refetch).not.toHaveBeenCalled(); // not stale: no read
+  expect(refetch).toHaveBeenCalledTimes(1); // back from hidden: one read (owner 2026-11-07)
+});
+
+test('back on screen it reads though no mark was set while hidden (a lost event)', async () => {
+  const client = createTestQueryClient();
+  const refetch = jest.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);
+  const listReads = () => refetch.mock.calls.filter(([f]) => f?.queryKey?.[1] === 'list');
+  const t0 = Date.now();
+  const now = jest.spyOn(Date, 'now').mockReturnValue(t0);
+  const hook = await catchUp(client); // hidden: chat A on top
+  refreshLists(client); // opening A marks the hidden list at t0…
+  // …a hidden read (resume / reconnect) lands after the mark: nothing is missed any more…
+  client.setQueryData(KEY, listCache([row('queued')]), { updatedAt: t0 + 1_000 });
+  now.mockReturnValue(t0 + 5_000); // …then B's event is lost, and she goes back 4 s later
+  await hook.rerender({ focused: true });
+  expect(listReads()).toEqual([[{ queryKey: KEY, exact: true }, { cancelRefetch: false }]]);
+  now.mockRestore();
+});
+
+test('a return right after a read adds no second read', async () => {
+  const client = createTestQueryClient();
+  const refetch = jest.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);
+  const hook = await catchUp(client);
+  client.setQueryData(KEY, listCache([row('queued')]), { updatedAt: Date.now() });
+  await hook.rerender({ focused: true });
+  expect(refetch).not.toHaveBeenCalled();
 });
 
 test('a list that missed a change while hidden reads again when it shows; shown, it reads at once', async () => {

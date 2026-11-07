@@ -1,13 +1,13 @@
 import { Global, Module } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PERMISSION_RESOLVER, systemResolver } from '../../../common/auth/permissions';
-import { DB } from '../../../common/db/db.module';
-import { expoMessages, type ExpoMessage } from '../../../common/push/expo/expo-push';
-import { PushModule } from '../../../common/push/push.module';
-import { PUSH_TRANSPORT, type PushTransport } from '../../../common/push/push.service';
-import { NotificationPolicy } from '../notification-rules/policy/policy';
-import { fakePolicy } from '../notification-rules/policy/policy.fakes';
+import { PERMISSION_RESOLVER, systemResolver } from '@/common/auth/permissions';
+import { DB } from '@/common/db/db.module';
+import { expoMessages, type ExpoMessage } from '@/common/push/expo/expo-push';
+import { PushModule } from '@/common/push/push.module';
+import { PUSH_TRANSPORT, type PushTransport } from '@/common/push/push.service';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 
 // The Expo transport PushModule provides (common/push): batching + the access token.
 // fetch is stubbed: no test ever reaches exp.host.

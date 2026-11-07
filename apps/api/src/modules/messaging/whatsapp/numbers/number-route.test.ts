@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { approvedOn, messagingNumbers, routable, routeOf, ruleNumbers } from './number-route';
 import { C1, N1, N2, overlayNum, routePass, THREE } from './number-route.fakes';
-import { dueMessage } from '../sender/sender.fakes';
-import { templateRow } from '../whatsapp.fakes';
+import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/23c decisions 3–5: rule number → template number → role default → role fallbacks; sessions never fall back.
 

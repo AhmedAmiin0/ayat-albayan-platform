@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { AuditService } from './audit.service';
 
 function fakeDb(error: { message: string } | null) {

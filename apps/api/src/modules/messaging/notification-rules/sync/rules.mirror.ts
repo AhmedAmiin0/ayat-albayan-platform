@@ -7,7 +7,7 @@ import {
   type RuleParityDiff,
   type RuleSettings,
 } from '@ab/shared';
-import type { RulesSnapshot } from '../store/rules.reader';
+import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
 
 // The rules ↔ legacy keys mirror (docs/23b decisions 3, 5, 6): parity, the flip back to legacy and the
 // GET /settings overlay in module mode. Pure.

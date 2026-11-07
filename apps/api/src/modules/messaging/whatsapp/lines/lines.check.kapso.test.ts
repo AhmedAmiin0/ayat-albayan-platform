@@ -1,9 +1,9 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { DUPLICATE_CHAT_PHONE } from '../../../../config/env/env';
+import { DUPLICATE_CHAT_PHONE } from '@/config/env/env';
 import { LinesCheck } from './lines.check';
-import { LINES_RECORDED as R, stubEnvs } from '../whatsapp.lines.fakes';
-import { WhatsappModule } from '../whatsapp.module';
+import { LINES_RECORDED as R, stubEnvs } from '@/modules/messaging/whatsapp/whatsapp.lines.fakes';
+import { WhatsappModule } from '@/modules/messaging/whatsapp/whatsapp.module';
 
 // docs/19: «افحص الخطوط» and the boot log show each line's driver and NAME what a kapso line lacks.
 

@@ -1,6 +1,6 @@
 import { lessonWhenText } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CONTACT, GUARDIAN_ID, STUDENT_ID } from '../lessons.fakes';
+import { CONTACT, GUARDIAN_ID, STUDENT_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import { body, correction, heldRow, lessonRow, NOW, retimed, timeSetup } from './time-edit.fakes';
 import { timeEditMessages } from './time-edit.messages';
 

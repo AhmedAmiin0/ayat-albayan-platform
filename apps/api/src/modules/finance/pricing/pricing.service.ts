@@ -8,7 +8,7 @@ import {
   type QuoteResponse,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { FxService } from '../fx/fx.service';
+import { FxService } from '@/modules/finance/fx/fx.service';
 import type { CatalogQuery, QuoteQuery } from './pricing.dto';
 
 /** Site prices in the guardian's currency (docs/08); USD goes through FxService. */

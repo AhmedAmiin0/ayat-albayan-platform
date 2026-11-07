@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { GoogleConnection } from '../oauth/google-connection';
-import { GoogleApiError } from '../google-client.port';
-import { FakeGoogle } from '../http/google-client.fake';
-import type { GoogleData } from '../google-data';
+import type { GoogleConnection } from '@/modules/platform/google-sync/oauth/google-connection';
+import { GoogleApiError } from '@/modules/platform/google-sync/google-client.port';
+import { FakeGoogle } from '@/modules/platform/google-sync/http/google-client.fake';
+import type { GoogleData } from '@/modules/platform/google-sync/google-data';
 import { msUntilReconcile } from './google-sync.job';
 import { GoogleSyncProcessor } from './google-sync.processor';
-import { fakeData, item } from '../google-sync.fakes';
+import { fakeData, item } from '@/modules/platform/google-sync/google-sync.fakes';
 import type { GoogleWriters } from './google-writers';
 
 function setup(write: ReturnType<typeof vi.fn>) {

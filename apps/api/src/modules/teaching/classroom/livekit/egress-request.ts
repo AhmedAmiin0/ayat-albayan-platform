@@ -1,5 +1,5 @@
-import type { RecordingEnv } from '../../../../config/env/env.recording';
-import type { RoomTarget } from '../recordings/recording-target';
+import type { RecordingEnv } from '@/config/env/env.recording';
+import type { RoomTarget } from '@/modules/teaching/classroom/recordings/recording-target';
 
 /**
  * Object name of a recording in the `recordings` bucket: lessons/<lesson id>/<UTC timestamp>.mp3,

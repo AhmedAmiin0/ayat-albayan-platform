@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { toMessageView } from './message.mapper';
-import { messageRow } from '../sender/sender.fakes';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 
 // «رد» / «إعادة توجيه» flags on a MessageView (owner 2026-10-25).
 

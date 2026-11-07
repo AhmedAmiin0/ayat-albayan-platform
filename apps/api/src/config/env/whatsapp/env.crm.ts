@@ -1,7 +1,7 @@
 import type { WaLine } from '@ab/shared';
 import { z } from 'zod';
-import type { Env } from '../env';
-import { blankIsUnset, optionalSecret } from '../env.blank';
+import type { Env } from '@/config/env/env';
+import { blankIsUnset, optionalSecret } from '@/config/env/env.blank';
 import type { CrmLineEnv } from './env.whatsapp';
 
 /**

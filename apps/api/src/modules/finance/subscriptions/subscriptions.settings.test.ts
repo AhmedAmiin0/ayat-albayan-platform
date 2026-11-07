@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { fakeSettings, readerOf } from '../../../common/settings/settings.fakes';
+import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
 import { SubscriptionsSettings, type SubscriptionsSettingsValues } from './subscriptions.settings';
 
 /** Pinned by hand: every key AlertsEnv, StudentExpiryJob and UnpaidFlags read. */

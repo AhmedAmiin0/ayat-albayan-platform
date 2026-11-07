@@ -68,12 +68,14 @@ test('memory limits fit the 8 GB VPS beside the CRM', () => {
     'ayat-lb': 64,
     'ayat-redis': 96,
     'ayat-minio': 512,
-    'ayat-minio-init': 64,
+    'ayat-minio-init': 192,
   });
   // ≈ 2.3 GB of the 8 GB beside the CRM (the worker's 1 GB: Node heap + Chromium; the PDF sandbox's own 128 MB on
   // top: the copies keep 512 MB, they hold each preview's PDF and JPEGs, docs/09).
-  // + MinIO and its one-shot init (docs/45): ≈ 2.9 GB, inside the ~4.6 GB the VPS has free.
-  assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 2912);
+  // + MinIO and its one-shot init (docs/45; the init needs 192 MB:
+  // Chainguard's mc is OOM-killed at 64 MB):
+  // ≈ 3.0 GB, inside the ~4.6 GB the VPS has free.
+  assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 3040);
 });
 
 test('every container log rotates (json-file, size-capped): never the disk the CRM shares', () => {

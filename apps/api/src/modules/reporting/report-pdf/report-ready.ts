@@ -1,5 +1,5 @@
 import type { CrmReportKind } from '@ab/shared';
-import { BUCKETS } from '../../../common/storage/storage.paths';
+import { BUCKETS } from '@/common/storage/storage.paths';
 import { AR, localDate } from './render/pdf-text';
 
 /** «AB-0183_2026-09-29_تقرير-الحلقة.pdf»: code, the lesson's local date, reports.pdfFileSuffix. */

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { loadEnv } from '../../../../config/env/env';
+import { loadEnv } from '@/config/env/env';
 import { numberEnv } from './numbers.env';
-import { LEGACY_ENV, numberRow } from '../numbers.fakes';
-import { differences, parityRoles } from '../lines/numbers.parity';
+import { LEGACY_ENV, numberRow } from '@/modules/messaging/numbers/numbers.fakes';
+import { differences, parityRoles } from '@/modules/messaging/numbers/lines/numbers.parity';
 
 // docs/19 «crm driver» in module mode: a crm number sends with WACRM_API_BASE / WACRM_API_KEY, like a kapso
 // number with Kapso's project key; its ids only name it and no Meta token is needed.

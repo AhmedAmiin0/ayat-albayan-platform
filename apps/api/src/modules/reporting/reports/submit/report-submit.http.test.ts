@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { conflict } from '../../../../common/http/errors';
+import { conflict } from '@/common/http/errors';
 import {
   AFTER,
   BEFORE,
@@ -11,8 +11,8 @@ import {
   STUDENT_ID,
   submittedRow,
   TEACHER,
-} from '../reports.fakes';
-import { reportsApp } from '../test-app';
+} from '@/modules/reporting/reports/reports.fakes';
+import { reportsApp } from '@/modules/reporting/reports/test-app';
 
 const URL = `/reports/${REPORT_ID}/submit`;
 /** The five texts the Google Form required when the student attended (research-forms 12). */

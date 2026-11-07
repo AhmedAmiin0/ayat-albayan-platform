@@ -1,10 +1,10 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { InboxSettings } from '../inbox.settings';
-import { SALES, TEACHER, inboxApp } from '../test-app';
+import { StorageService } from '@/common/storage/storage.service';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { InboxSettings } from '@/modules/messaging/inbox/inbox.settings';
+import { SALES, TEACHER, inboxApp } from '@/modules/messaging/inbox/test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}`;

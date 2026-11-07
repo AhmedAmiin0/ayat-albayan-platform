@@ -1,8 +1,8 @@
 import type { OutboundTemplate } from '@ab/shared';
-import type { Db } from '../../../../common/db/db.module';
-import { hashLinkToken, newLinkToken } from '../../../teaching/classroom/join/join-link.token';
-import { dbError } from '../../../../common/http/http';
-import { queuedRow, type QueuedMessage } from '../queued-row';
+import type { Db } from '@/common/db/db.module';
+import { hashLinkToken, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import { dbError } from '@/common/http/http';
+import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import type { RoomCandidate } from './reminders.links';
 
 // The family's classroom link minted by the reminders job (a platform lesson, reminders.links.ts). It lives in

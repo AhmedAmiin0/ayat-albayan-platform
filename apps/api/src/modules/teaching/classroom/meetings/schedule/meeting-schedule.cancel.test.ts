@@ -1,8 +1,8 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, ASSISTANT, OTHER_TEACHER, TEACHER } from '../../classroom.fakes';
-import { MEETING_ID, NOW, scheduledRow } from '../../internal-meetings/internal-meetings.fakes';
-import { CLOSED_PHONE, OPEN_PHONE, openThread, STAFF_ID, stored } from '../invites/meeting-invites.fakes';
+import { ADMIN, ASSISTANT, OTHER_TEACHER, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import { MEETING_ID, NOW, scheduledRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import { CLOSED_PHONE, OPEN_PHONE, openThread, STAFF_ID, stored } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
 import { meetingServices, type MeetingServices } from './meeting-services.fakes';
 
 let s: MeetingServices;

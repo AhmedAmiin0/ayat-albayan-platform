@@ -1,4 +1,4 @@
-import { BRAND } from '../../google-format';
+import { BRAND } from '@/modules/platform/google-sync/google-format';
 
 // Brand styleSheet («آيات البيان — الهوية (Brand)», docs/24 §1) as one Sheets batchUpdate: RTL,
 // hidden gridlines, frozen header, green header with white bold text and a thick gold bottom

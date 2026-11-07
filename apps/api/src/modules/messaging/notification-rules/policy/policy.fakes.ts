@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS, RULE_SETTING_KEYS, type NotificationRuleRow, type RuleSettings, type RulesMode } from '@ab/shared';
 import { NotificationPolicy } from './policy';
-import { RulesReader, type RulesSnapshot } from '../store/rules.reader';
+import { RulesReader, type RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
 
 const defaults = (): RuleSettings => Object.fromEntries(RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]])) as RuleSettings;
 

@@ -1,7 +1,7 @@
 import { identifierKey } from '@ab/shared';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { LIMIT_STORE, type LimitStore } from './limit-store';
-import type { PhoneStats } from '../sign-in.ports';
+import type { PhoneStats } from '@/modules/people/sign-in/sign-in.ports';
 
 const WINDOW_MS = 15 * 60_000;
 const DAY_MS = 24 * 3_600_000;

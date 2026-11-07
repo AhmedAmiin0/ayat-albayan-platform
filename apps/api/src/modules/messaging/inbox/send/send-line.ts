@@ -1,6 +1,6 @@
 import type { WaLine } from '@ab/shared';
-import { lineEnvs, loadEnv } from '../../../../config/env/env';
-import { threadReplyLine, type ThreadRow } from '../threads/threads.mapper';
+import { lineEnvs, loadEnv } from '@/config/env/env';
+import { threadReplyLine, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 export type SendLineCode = 'session_closed' | 'line_not_configured' | 'no_thread';
 

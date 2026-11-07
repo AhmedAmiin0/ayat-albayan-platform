@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { pickSendLine } from './send-line';
-import type { ThreadRow } from '../threads/threads.mapper';
+import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 const NOW = new Date('2026-10-12T10:00:00Z');
 const hoursAgo = (h: number) => new Date(NOW.getTime() - h * 3_600_000).toISOString();

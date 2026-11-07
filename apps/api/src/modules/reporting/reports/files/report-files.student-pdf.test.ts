@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { REPORT_ID, STUDENT_ID, SIBLING_ID, submittedRow } from '../reports.fakes';
-import { reportsApp } from '../test-app';
+import { REPORT_ID, STUDENT_ID, SIBLING_ID, submittedRow } from '@/modules/reporting/reports/reports.fakes';
+import { reportsApp } from '@/modules/reporting/reports/test-app';
 import { ReportFilesService } from './report-files.service';
 
 const SIGNED = { url: 'https://storage/signed', expires_at: '2026-10-04T16:00:00.000Z' };

@@ -1,5 +1,5 @@
 import { bookingConfirmationTemplate, lessonWhenText } from '@ab/shared';
-import type { QueuedMessage } from '../../scheduling/change-set';
+import type { QueuedMessage } from '@/modules/teaching/scheduling/change-set';
 
 /** A booked student and their guardian (students → guardians). */
 export type Contact = {

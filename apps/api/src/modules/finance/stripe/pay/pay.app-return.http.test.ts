@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { stripeApp } from '../testing/stripe-app.fakes';
-import { stripeDefaults, TOKEN, type StripeMocks } from '../testing/stripe-mocks.fakes';
+import { stripeApp } from '@/modules/finance/stripe/testing/stripe-app.fakes';
+import { stripeDefaults, TOKEN, type StripeMocks } from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
 
 vi.hoisted(() => {
   process.env.FEATURE_STRIPE = 'test';

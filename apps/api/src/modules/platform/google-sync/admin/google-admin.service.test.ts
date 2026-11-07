@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { GoogleData } from '../google-data';
-import type { GoogleRuntime } from '../google-runtime';
+import type { GoogleData } from '@/modules/platform/google-sync/google-data';
+import type { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
 import { GoogleAdminService } from './google-admin.service';
 
 describe('GoogleAdminService.discover', () => {

@@ -76,14 +76,18 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
 
 ## 3. What runs (`deploy/staging/`)
 
-- **`ayat-minio`** (`minio/minio:RELEASE.2025-04-22T22-12-26Z`, profile `minio`): `server /data` on the named
+- **Image (owner 2026-11-07):** MinIO stopped publishing images (Docker Hub `minio/minio` and `minio/mc` deleted
+  in 2026-09, the community edition is source-only). Every MinIO container uses Chainguard's rebuild from source,
+  `cgr.dev/chainguard/minio@sha256:…`, pinned by digest (its free tier tags only `:latest`). It ships `mc` and a
+  shell, runs as uid 65532, so the server, the init and the backup all use this one image.
+- **`ayat-minio`** (the pinned Chainguard image, profile `minio`): `server /data` on the named
   volume `minio-data`, no published port, console off (`MINIO_BROWSER=off`), 512 MB, healthcheck `mc ready local`,
   rotated logs. Its keys come from `/opt/ayat-albayan-staging/minio.env` (`env_file`, `required: false` so the compose
   file parses without it), **never** from `.env`, the app's `env_file`: no API container sees MinIO's root password
   (`compose-minio.test.mjs` guards it). It refuses
   to start (exit 1, the reason in its log) when the user is under 3 or the password under 16 characters, so it
   never runs on MinIO's default credentials.
-- **`ayat-minio-init`** (`minio/mc:RELEASE.2025-04-16T18-13-26Z`, profile `minio`, one shot, 64 MB): runs
+- **`ayat-minio-init`** (the same pinned image, profile `minio`, one shot, 192 MB: Chainguard's mc is killed at 64 MB on `mc admin user add`): runs
   `deploy/staging/minio/init.sh` from the shipped checkout (`src/`). It waits up to 2 minutes for MinIO, creates
   each bucket (`mc mb --ignore-existing`), makes it private (`mc anonymous set none`), writes the policy `ayat-app`
   (`s3:GetObject`, `PutObject`, `DeleteObject` on objects, `ListBucket`, `GetBucketLocation` on the buckets, nothing
@@ -180,7 +184,7 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
 ## 5. Backups
 
 Daily copy of every bucket to `/var/backups/ayat-minio` with `deploy/staging/minio/backup.sh`: a one-shot
-`minio/mc` container (the init's pinned image) on the project network, with the app user's keys from `minio.env` (read
+container of the pinned MinIO image (it ships `mc`; run as uid 0 only to write the root-only folder) on the project network, with the app user's keys from `minio.env` (read
 and list is all it needs; never root). Host crontab (`crontab -e` as root):
 
 ```cron
@@ -201,15 +205,97 @@ docker run --rm -v ayat-albayan-staging_minio-data:/data:ro -v /var/backups:/bac
   tar czf /backup/minio-data-$(date +%F).tgz -C /data .
 ```
 
-## 6. Later: copy the old files
+## 6. Moving the old files (served from MinIO)
 
-`tools/scripts/storage/copy-to-minio.sh` wraps
-`docker compose -p ayat-albayan-staging exec ayat-worker node dist/scripts/storage-copy.js`: a dry run by default
-(what would be copied), `--apply` to copy. Idempotent: safe to run again, and it never overwrites an object MinIO
-already holds, not even one the app writes while the copy runs (each write is `If-None-Match: *`; a taken key
-counts as «already in MinIO»). It copies objects only: the stored paths keep pointing at Supabase until a later
-change rewrites them, so it can run at any time, and again. A delete of such a (Supabase) path also removes its
-MinIO copy (§1 «Deletes»), so the copies never outlive their rows.
+Owner 2026-11-07: «move all the old files in minio to be served». `tools/scripts/storage/move-to-minio.sh` wraps
+`docker compose -p ayat-albayan-staging exec -T ayat-worker node dist/scripts/storage-move.js` (code:
+`apps/api/src/scripts/storage-move/`). For every row whose path has no marker, one at a time, by id:
+
+1. the object is read from Supabase (a missing one is **reported**, never invented; one over `--max-mb` (at most
+   64: each object is held in memory a few times, inside the live worker's 1 GB container) is left alone and
+   reported as `too_large`, still served from Supabase);
+2. it is put into MinIO under the **same key** with its Content-Type, `If-None-Match: *` (the storage-copy code: an
+   object MinIO already holds is never overwritten);
+3. it is **verified**: size and Content-Type as both stores report them, and a SHA-256 of the bytes read back from
+   MinIO against the bytes read from Supabase. Any difference = `mismatch`, the row is not touched;
+4. the row is rewritten to `minio:<key>` with a **compare-and-set** on the old path (`… where id = $id and col =
+   $old`): a row that changed meanwhile (a re-render, an edit, a delete) is left as it is (`changed`);
+5. one `audit_log` row per batch (`entity = storage_move`, `before.rows` = each rewritten row id and its old path).
+
+Rows already `minio:` are skipped; a second run does nothing new. **Nothing is ever deleted from Supabase**: links
+already sent (WhatsApp report PDFs, 7 days) keep working, and so do queued sends that carry an old path.
+
+**The columns** (`storage-move/columns.ts`; `columns.test.ts` fails when a migration adds a `*_path` column that is
+in neither list): `lesson_reports.pdf_path` (reports), `report_attachments.storage_path` (report-attachments),
+`payments.receipt_path`, `payment_attachments.path`, `expenses.receipt_path`, `teacher_payments.receipt_path`,
+`teacher_payouts.receipt_path`, `assistant_statements.receipt_path` (receipts), `invoices.storage_path` (invoices),
+`saved_replies.attachment_path`, `messages.media_path` (wa-media), `profiles.avatar_path`, `teachers.avatar_path`
+(avatars), and `lesson_recordings.file_path` (recordings) **only when named** with `--table lesson_recordings`
+(big files on the shared disk, §7). Not moved: `import_items.target_path` (the import tool's bookkeeping),
+`messages.template_params.document.path` (a queued send's PDF, still served from Supabase), the audit history,
+and the chat PDF page previews (no column; rendered again on demand).
+
+**Procedure** (owner, on the VPS, after the cut-over of §4 step 9 and a backup run of §5):
+
+1. **Dry run** (the default; writes nothing): `sh src/tools/scripts/storage/move-to-minio.sh`. It refuses to run
+   unless `STORAGE_DRIVER` is `minio` and «اختبار الاتصال» passes; it prints, per column, `inMinio` (already moved),
+   `toMove`, and a sample of rows checked in both stores (`inSupabase: false` = a missing object).
+2. **One table:** `sh src/tools/scripts/storage/move-to-minio.sh --apply --table teachers` (small: a few photos).
+   The JSON summary gives `copied`, `rewritten`, `skipped`, `missing`, `mismatch`, `too_large`, `changed`, `failed`
+   and the `cursor` (last row id reached).
+3. **Check in the app:** open a few teachers' photos in /admin and on a phone; they load from
+   `https://files.ayatalbayan.com/…`.
+4. **The rest**, table by table, in a quiet hour (one row at a time with a pause between batches; `messages` fires
+   the inbox's live updates, so run it outside working hours): `lesson_reports`, `report_attachments`, `payments`,
+   `payment_attachments`, `expenses`, `teacher_payments`, `teacher_payouts`, `assistant_statements`, `invoices`,
+   `saved_replies`, `profiles`, `messages`. `--limit N` stops after N rows; `--table <t> --after <cursor>` resumes
+   after a cursor (a plain re-run also works: moved rows drop out). Recordings last, if at all, after checking
+   the disk (§7); recordings over 64 MB stay in Supabase.
+   Before every batch the run reads `STORAGE_DRIVER` again: switched back to `supabase`, it stops (a re-render
+   would write Supabase under a key it just copied). On any stop it still prints the summary with `error` and each
+   column's `cursor`, and exits 1.
+5. Re-run the dry run: `toMove` left over = the `missing` / `mismatch` / `failed` rows (still served from
+   Supabase).
+
+**What a path rewrite fires** (migration `20261107000100`, every trigger on the 14 tables audited): a path-only
+update moves **no money** and changes **no status**. It sets `updated_at` where the table has one, and nothing else:
+
+- `payments`: the assistant commission is re-evaluated on an update only when `subscription_id`, `amount`, `kind`,
+  `paid_at`, `created_at` or `id` changes (what the evaluation reads); insert and delete as before. A receipt
+  move, a note or a method edit re-applies none of today's commission rules. A cancelled package's payment
+  (frozen, migration 934) now moves too: the guard lets through exactly `receipt_path` → `minio:` + the same
+  path, or the rollback below (the exact inverse), with every other column equal; every money change, another
+  receipt and a delete are still refused.
+- `messages`: a row whose only change is `media_path` → `minio:` + the same path sends no inbox live update
+  (media arriving, null → a path, still does); its `updated_at` (the mobile sync cursor) moves, so phones pick
+  up the new path. `thread_summaries` ignore `media_path` as before. Running it outside working hours is no
+  longer needed for the inbox, only for the load.
+- `lesson_reports`: the Google sync outbox fires on `pdf_status` only, never on `pdf_path`.
+- `payment_attachments`: the folder check accepts the `minio:` marker (migration 1501).
+- `profiles`, `teachers`: their other triggers are `update of` other columns (role, push tokens, rates, meeting
+  link, calendar owner, phone, status); the move's `update … set <column>` fires none of them.
+- `expenses`, `teacher_payouts`, `assistant_statements`, `saved_replies`: `updated_at` only;
+  `teacher_payments`, `invoices`, `report_attachments`, `lesson_recordings`: no trigger.
+
+Nothing is excluded any more for a trigger reason.
+
+**Load.** One row and one `UPDATE` at a time, with a pause between batches; run `messages` in `--limit` slices.
+
+**Old paths still in clients.** A form opened before the move may send back the old unmarked path of a moved
+file: the API treats it as the same file (`sameStoredObject`: receipts, expenses, saved replies, payment
+attachments), keeps the row's `minio:` path and deletes nothing.
+
+**Rollback** of a moved row: set its column back to the unmarked path (`before.rows` of its `storage_move` audit
+row has it) while the Supabase object still exists; reads follow the path again. Never needed for the files:
+both copies exist.
+
+**Later (not in this change): clean up Supabase.** Once every table is moved and checked, a separate flag in a
+future change (`--delete-supabase`, owner's decision) removes the Supabase objects whose rows are all `minio:`;
+until then both copies stay (deleting a moved row's file removes its MinIO object only; its old Supabase copy
+waits for that clean-up).
+
+`tools/scripts/storage/copy-to-minio.sh` (`storage-copy.js`, objects only, rows untouched) stays for a bulk copy
+of every bucket; the move above is what makes MinIO serve the old files.
 
 ## 7. Disk, memory, operations
 
@@ -220,8 +306,9 @@ MinIO copy (§1 «Deletes»), so the copies never outlive their rows.
   meeting recordings are **not** capped, which is why they stay off until `MINIO_RECORDINGS` is switched on
   deliberately. The backup doubles the use. Watch it:
   `du -sh /var/lib/docker/volumes/ayat-albayan-staging_minio-data /var/backups/ayat-minio`.
-- **Upgrade:** change both tags in `docker-compose.yml` (and `MC_IMAGE` in `backup.sh`; `compose-minio.test.mjs`
-  keeps them equal) to real `RELEASE.*` tags, deploy, then
+- **Upgrade:** take the current digest (`docker buildx imagetools inspect cgr.dev/chainguard/minio:latest`), put it
+  in both services of `docker-compose.yml` and in `MC_IMAGE` of `backup.sh` (`compose-minio.test.mjs` keeps the three
+  equal and refuses a tag), deploy, then
   `docker compose -p ayat-albayan-staging up -d ayat-minio ayat-minio-init` by hand: `roll.sh` ends with
   `up -d --no-recreate`, which never recreates a running MinIO.
 - **New app secret:** in a quiet window (no lesson reports being sent, nobody uploading): a new

@@ -70,9 +70,9 @@ export class PaymentsService {
     return this.get(row.id);
   }
 
-  async update(id: string, patch: Partial<PaymentUpdate>, actorId: string): Promise<PaymentView> {
+  async update(id: string, sent: Partial<PaymentUpdate>, actorId: string): Promise<PaymentView> {
     const before = notCancelled(await this.row(id));
-    await this.files.checkPatch(before, patch);
+    const patch = await this.files.checkPatch(before, sent);
     const amount = await amountChange(this.payments, before, patch);
     const write: TablesUpdate<'payments'> = {};
     if (patch.method !== undefined) write.method = patch.method;

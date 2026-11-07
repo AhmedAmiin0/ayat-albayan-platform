@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import { fakeDb, type FakeResult } from '../../../people/guardians/fake-db';
+import type { AuditService } from '@/common/audit/audit.service';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { LeadConversion } from './lead-conversion';
 
 const GUARDIAN = { id: 'g1', phone_e164: '+966501234567' };

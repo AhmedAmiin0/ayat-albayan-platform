@@ -121,7 +121,7 @@ test.describe('renewal commission (20261027000750-751)', () => {
       const merged = await brought(tx, { by: a, phone: '+966500000409', price: 400 });
       const payment = await pay(tx, merged.sub, 400); // its own first: 40, dropped by the merge below
       await tx`select public.merge_students(${kept.student}, ${merged.student}, null)`;
-      await tx`update public.payments set method = 'cash' where id = ${payment ?? ''}`; // any later touch re-runs the rule
+      await tx`update public.payments set paid_at = paid_at + interval '1 second' where id = ${payment ?? ''}`; // a later money edit re-runs the rule
       expect(await renewalOf(tx, merged.sub)).toBeUndefined();
       expect(await rows(tx, kept.student)).toEqual([{ kind: 'first', amount: '40.00' }]);
     });

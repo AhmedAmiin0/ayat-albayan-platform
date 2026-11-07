@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MESSAGE_SELECT, toMessageView, type ThreadMessageRow } from './message.mapper';
-import { messageRow } from '../sender/sender.fakes';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 
 // D4 (docs/21 §3): who sent an outbound bubble; D2 (§5.9): a sent file's name and no wa.me link.
 

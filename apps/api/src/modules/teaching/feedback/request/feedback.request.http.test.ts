@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { EXP, feedbackRow, LESSON_ID, NOW, requestContext, STUDENT_ID, tokenFor } from '../feedback.fakes';
-import { hashToken } from '../public/feedback.token';
-import { feedbackApp } from '../test-app';
+import { EXP, feedbackRow, LESSON_ID, NOW, requestContext, STUDENT_ID, tokenFor } from '@/modules/teaching/feedback/feedback.fakes';
+import { hashToken } from '@/modules/teaching/feedback/public/feedback.token';
+import { feedbackApp } from '@/modules/teaching/feedback/test-app';
 
 const URL = `/lessons/${LESSON_ID}/feedback-request`;
 const BODY = { studentId: STUDENT_ID };

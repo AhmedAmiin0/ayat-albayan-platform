@@ -1,9 +1,9 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { systemResolver } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import { subRow } from '../../finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '../../finance/subscriptions/test-app';
+import { systemResolver } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 
 // «حلقات مستخدمة من الباقة» (owner 2026-10-28, migration 932). The weekly package has 4 lessons.

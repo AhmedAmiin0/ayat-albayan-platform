@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ApiExcludeController } from '@nestjs/swagger';
-import { Public } from '../../../common/auth/decorators';
-import { kickable } from '../../../config/role/background-job';
-import { INTERNAL_HEADER, validInternalToken } from '../../../config/role/worker-kick';
+import { Public } from '@/common/auth/decorators';
+import { kickable } from '@/config/role/background-job';
+import { INTERNAL_HEADER, validInternalToken } from '@/config/role/worker-kick';
 import { ConfigReloadJob } from './config-reload.job';
 
 const forbidden = () => new ForbiddenException({ code: 'forbidden', message: 'forbidden' });

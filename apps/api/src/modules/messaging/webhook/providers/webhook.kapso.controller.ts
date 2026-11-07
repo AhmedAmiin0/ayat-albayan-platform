@@ -1,8 +1,8 @@
 import { Controller, Headers, HttpCode, Inject, Logger, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from '../../../../common/auth/decorators';
-import { presentSignatureHeaders, verifyKapsoSignature, type KapsoSignedRequest } from '../parse/webhook.kapso-signature';
-import { RESPONSE_BUDGET_MS, WEBHOOK_CONFIG, WebhookService, within, type WebhookConfig } from '../webhook.service';
+import { Public } from '@/common/auth/decorators';
+import { presentSignatureHeaders, verifyKapsoSignature, type KapsoSignedRequest } from '@/modules/messaging/webhook/parse/webhook.kapso-signature';
+import { RESPONSE_BUDGET_MS, WEBHOOK_CONFIG, WebhookService, within, type WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
 
 /** The bits of the Fastify request used here (no direct `fastify` dependency). */
 interface RawRequest {

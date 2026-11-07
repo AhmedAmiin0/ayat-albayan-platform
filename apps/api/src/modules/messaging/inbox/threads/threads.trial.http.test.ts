@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { threadRow } from '../inbox.fakes';
-import { inboxApp, TEACHER } from '../test-app';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp, TEACHER } from '@/modules/messaging/inbox/test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 type Status = 'trial' | 'active' | 'paused' | 'churned';

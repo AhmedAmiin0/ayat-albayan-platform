@@ -1,10 +1,10 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { STUDENT_ID } from '../../../finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, SALES_A, type Mocks } from '../../../finance/subscriptions/test-app';
-import { badRequest } from '../../../../common/http/errors';
-import { CREATE, salesDefaults } from '../sales-money.fakes';
-import { SalesMoney } from '../sales-money.service';
+import { STUDENT_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { moneyApp, resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { badRequest } from '@/common/http/errors';
+import { CREATE, salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { SalesMoney } from '@/modules/sales/sales-money/sales-money.service';
 import { SalesTeacherAssign } from './sales-teacher-assign';
 
 const TEACHER = '7a000000-0000-4000-8000-000000000001';

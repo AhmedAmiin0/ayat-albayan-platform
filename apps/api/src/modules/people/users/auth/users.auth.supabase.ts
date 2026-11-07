@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { createAuthUser } from '../../../../common/auth/auth-users';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { badRequest, conflict } from '../../../../common/http/errors';
-import { dbError } from '../../../../common/http/http';
-import { USERS_CONFIG, type AuthAdmin, type AuthPatch, type UsersConfig } from '../store/users.store';
+import { createAuthUser } from '@/common/auth/auth-users';
+import { DB, type Db } from '@/common/db/db.module';
+import { badRequest, conflict } from '@/common/http/errors';
+import { dbError } from '@/common/http/http';
+import { USERS_CONFIG, type AuthAdmin, type AuthPatch, type UsersConfig } from '@/modules/people/users/store/users.store';
 
 /** ~100 years: GoTrue has no "ban forever", and `none` lifts it. */
 const BAN_FOREVER = '876000h';

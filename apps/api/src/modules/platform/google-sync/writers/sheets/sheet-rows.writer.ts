@@ -2,15 +2,15 @@ import { folderIdIn, GOOGLE_SKIP_REASONS, type GoogleSkipReason } from '@ab/shar
 import { Injectable } from '@nestjs/common';
 import { colLetter, rowOf } from './a1-range';
 import { attendanceRow, attendanceStats, matchDate } from './attendance-row';
-import { contentHash } from '../calendar/content-hash';
-import { DriveFiles } from '../drive/drive-files';
-import { GoogleData } from '../../google-data';
-import { TZ } from '../../google-format';
-import type { ItemResult, SyncItem } from '../../sync/google-items.queries';
-import { GoogleSyncSource } from '../../sync/google-sync.source';
+import { contentHash } from '@/modules/platform/google-sync/writers/calendar/content-hash';
+import { DriveFiles } from '@/modules/platform/google-sync/writers/drive/drive-files';
+import { GoogleData } from '@/modules/platform/google-sync/google-data';
+import { TZ } from '@/modules/platform/google-sync/google-format';
+import type { ItemResult, SyncItem } from '@/modules/platform/google-sync/sync/google-items.queries';
+import { GoogleSyncSource } from '@/modules/platform/google-sync/sync/google-sync.source';
 import { localDate } from './sheet-dates';
 import { findSummaryRow, newSummaryRow, summaryUpdates } from './summary-row';
-import { later, planned, synced, type ItemWriter, type WriteCtx } from '../../sync/write-context';
+import { later, planned, synced, type ItemWriter, type WriteCtx } from '@/modules/platform/google-sync/sync/write-context';
 
 const isSkipReason = (r: string | null): r is GoogleSkipReason => GOOGLE_SKIP_REASONS.some((x) => x === r);
 

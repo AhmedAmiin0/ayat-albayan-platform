@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AUTOMATIC_KEYS, isAutomatic } from '../../messaging/whatsapp/sender/send-stale';
+import { AUTOMATIC_KEYS, isAutomatic } from '@/modules/messaging/whatsapp/sender/send-stale';
 import { JOIN_LINK_TEMPLATE } from './join/join-link.service';
 
 describe('lesson_join_link: the admin send and the reminders job (settings.meeting_link_auto)', () => {

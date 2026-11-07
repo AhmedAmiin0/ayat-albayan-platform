@@ -1,9 +1,9 @@
 import { LEAD_FAMILY_LINK_ERRORS, type LeadFamilyLinked } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { DB, type Db } from '../../../common/db/db.module';
-import { conflict, notFound } from '../../../common/http/errors';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { conflict, notFound } from '@/common/http/errors';
+import { dbError } from '@/common/http/http';
 
 type LinkInput = { leadId: string; code: string; actorId: string };
 

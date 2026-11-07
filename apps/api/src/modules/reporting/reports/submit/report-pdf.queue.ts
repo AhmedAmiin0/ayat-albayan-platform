@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ReportPdfJob } from '../../report-pdf/report-pdf.job';
-import { ReportsQueries } from '../reports.queries';
+import { ReportPdfJob } from '@/modules/reporting/report-pdf/report-pdf.job';
+import { ReportsQueries } from '@/modules/reporting/reports/reports.queries';
 
 /**
  * "report.submitted" → the PDF builder (R-REP-03). The submit transaction already wrote

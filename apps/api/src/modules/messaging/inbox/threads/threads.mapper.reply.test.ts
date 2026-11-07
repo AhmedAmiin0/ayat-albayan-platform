@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { threadRow } from '../inbox.fakes';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { threadReplyLine, toThreadView } from './threads.mapper';
 
 // docs/12 §13.3 rule 2 / §13.7: reply_line = the line ThreadSendService.text would stamp.

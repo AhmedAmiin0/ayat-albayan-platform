@@ -1,7 +1,7 @@
 import { TEACHER_CALENDAR_OWNERS, type TeacherCalendarOwner, type TeacherCalendarView } from '@ab/shared';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { GoogleRuntime } from '../google-runtime';
+import { DB, type Db } from '@/common/db/db.module';
+import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
 
 const fail = (what: string, error: { message: string }) => new Error(`google ${what} failed: ${error.message}`);
 const ownerOf = (v: string): TeacherCalendarOwner => (TEACHER_CALENDAR_OWNERS as readonly string[]).includes(v) ? (v as TeacherCalendarOwner) : 'script';

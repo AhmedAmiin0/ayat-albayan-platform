@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../common/audit/audit.service';
-import { fakeDb, type FakeResult } from '../guardians/fake-db';
+import type { AuditService } from '@/common/audit/audit.service';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { LeadLink, type LinkedLead } from './lead-link';
 
 function setup(leads: FakeResult[]) {

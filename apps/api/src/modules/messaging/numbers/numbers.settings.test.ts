@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeSettings, readerOf } from '../../../common/settings/settings.fakes';
+import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
 import { NumbersSettings } from './numbers.settings';
 
 describe('NumbersSettings', () => {

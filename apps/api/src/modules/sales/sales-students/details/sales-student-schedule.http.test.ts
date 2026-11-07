@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { MINE, OTHER, studentsApp } from '../sales-students.fakes';
+import { MINE, OTHER, studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
 const DAY = 86_400_000;

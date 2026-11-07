@@ -1,13 +1,13 @@
 import type { Json } from '@ab/db';
 import { reportBlock, type Attendance, type Program, type ReportSubmit, type ReportView } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { badRequest, conflict } from '../../../../common/http/errors';
+import { badRequest, conflict } from '@/common/http/errors';
 import { ReportFollowUp } from './report-follow-up';
 import { ReportGate } from './report-gate';
-import { callerActor, type ReportCaller } from '../report-access';
-import { reportView, submitColumns, type FormColumns } from '../report.mapper';
-import type { ReportRow } from '../report-row';
-import { ReportsQueries } from '../reports.queries';
+import { callerActor, type ReportCaller } from '@/modules/reporting/reports/report-access';
+import { reportView, submitColumns, type FormColumns } from '@/modules/reporting/reports/report.mapper';
+import type { ReportRow } from '@/modules/reporting/reports/report-row';
+import { ReportsQueries } from '@/modules/reporting/reports/reports.queries';
 import { submitPayload } from './submit-plan';
 
 type SubmitInput = { id: string; form: ReportSubmit; user: ReportCaller };

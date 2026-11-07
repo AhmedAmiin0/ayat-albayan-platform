@@ -1,6 +1,6 @@
 import { reportBlock, type ReportDraft, type ReportFormResponse, type ReportView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../../../common/http/errors';
+import { conflict, notFound } from '@/common/http/errors';
 import { formResponse } from './submit/report-form.mapper';
 import { ReportGate } from './submit/report-gate';
 import { assertForm } from './submit/report-submit.service';

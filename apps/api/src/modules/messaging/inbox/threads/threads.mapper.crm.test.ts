@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { threadRow } from '../inbox.fakes';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { toThreadView } from './threads.mapper';
 
 // Owner 2026-10-27: the chats list shows the media label (the clients' preview of a file with no

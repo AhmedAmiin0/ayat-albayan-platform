@@ -1,7 +1,7 @@
 import { Controller, Headers, HttpCode, Post, Req } from '@nestjs/common';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from '../../../../common/auth/decorators';
+import { Public } from '@/common/auth/decorators';
 import { LivekitWebhookService } from './livekit-webhook.service';
 
 /** LiveKit posts `application/webhook+json`, which Fastify does not parse: kept as the raw bytes. */

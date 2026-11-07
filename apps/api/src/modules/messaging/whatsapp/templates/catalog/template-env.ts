@@ -1,7 +1,7 @@
 import type { TemplateLineFacts, WaLine } from '@ab/shared';
-import { isGraphEnv, lineEnvs, lineProvider, loadEnv } from '../../../../../config/env/env';
+import { isGraphEnv, lineEnvs, lineProvider, loadEnv } from '@/config/env/env';
 import { graphHttpError, waHttpError } from './template.mapper';
-import { WaError, type WhatsappClient } from '../../whatsapp.types';
+import { WaError, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // What every registry action checks first (docs/12 §3.4, §13.9), out of template.registry.ts (150-line cap).
 

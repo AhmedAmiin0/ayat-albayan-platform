@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { threadStudent } from '../inbox.fakes';
+import { threadStudent } from '@/modules/messaging/inbox/inbox.fakes';
 import { salesPeople, visibleToSales } from './sales-threads';
 
 describe('sales thread helpers', () => {

@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../../common/storage/storage.service';
+import type { StorageService } from '@/common/storage/storage.service';
 import type { DriveFiles } from './drive-files';
-import { FakeGoogle } from '../../http/google-client.fake';
-import type { GoogleData } from '../../google-data';
-import type { GoogleSyncSource } from '../../sync/google-sync.source';
-import { fakeData, item, REPORT_ID, reportSource, STUDENT_ID } from '../../google-sync.fakes';
+import { FakeGoogle } from '@/modules/platform/google-sync/http/google-client.fake';
+import type { GoogleData } from '@/modules/platform/google-sync/google-data';
+import type { GoogleSyncSource } from '@/modules/platform/google-sync/sync/google-sync.source';
+import { fakeData, item, REPORT_ID, reportSource, STUDENT_ID } from '@/modules/platform/google-sync/google-sync.fakes';
 import { ReportPdfWriter } from './report-pdf.writer';
-import { SheetRowsWriter } from '../sheets/sheet-rows.writer';
+import { SheetRowsWriter } from '@/modules/platform/google-sync/writers/sheets/sheet-rows.writer';
 
 // No endless 15-second polling: a wait that can never end becomes a counted retry or a failure.
 

@@ -1,7 +1,7 @@
 import type { SignedUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { BUCKETS } from '../storage.paths';
-import { StorageService } from '../storage.service';
+import { BUCKETS } from '@/common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
 import type { SlotFile } from '@/common/storage/store/object-store';
 
 /** A photo's upload slot: its path and the file it admits (size and type signed in MinIO). */

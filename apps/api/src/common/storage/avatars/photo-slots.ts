@@ -1,7 +1,7 @@
-import type { Db } from '../../db/db.module';
-import { dbError } from '../../http/http';
-import { notFound } from '../../http/errors';
-import { isTeacherAvatarPathOf, isUserAvatarPathOf } from '../storage.paths';
+import type { Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { notFound } from '@/common/http/errors';
+import { isTeacherAvatarPathOf, isUserAvatarPathOf } from '@/common/storage/storage.paths';
 import type { AvatarSlot } from './avatar-writer';
 
 // The two places a staff photo is stored, as AvatarWriter slots, for the admin's photo endpoints
