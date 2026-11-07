@@ -55,7 +55,7 @@ test.describe('renewal commission switch (20261101000996)', () => {
       expect(await reason(tx, partial)).toBeUndefined();
 
       await setOn(tx, true);
-      await tx`update public.payments set method = 'cash' where id = ${payment ?? ''}`; // a later touch re-runs the rule
+      await tx`update public.payments set paid_at = paid_at + interval '1 second' where id = ${payment ?? ''}`; // a later money edit re-runs the rule
       await tx`select public.evaluate_assistant_commission(${renewal})`; // as the API does after new terms
       expect(await renewalOf(tx, renewal)).toBeUndefined();
       await pay(tx, partial, 200); // fully paid while on: earns at the share

@@ -251,8 +251,29 @@ and the chat PDF page previews (no column; rendered again on demand).
    after a cursor (a plain re-run also works: moved rows drop out). Recordings last, if at all, after checking
    the disk (§7), with `--max-mb` raised.
 5. Re-run the dry run: `toMove` left over = the `missing` / `mismatch` / `failed` rows (still served from
-   Supabase). A `payments` row of a cancelled package is `failed`: the database freezes that row (its receipt
-   stays served from Supabase). Updating a `payments` row re-runs its assistant commission check, as any edit does.
+   Supabase).
+
+**What a path rewrite fires** (migration `20261107000100`, every trigger on the 14 tables audited): a path-only
+update moves **no money** and changes **no status**. It sets `updated_at` where the table has one, and nothing else:
+
+- `payments`: the assistant commission is re-evaluated on an update only when `subscription_id`, `amount`, `kind`,
+  `paid_at`, `created_at` or `id` changes (what the evaluation reads); insert and delete as before. A receipt
+  move, a note or a method edit re-applies none of today's commission rules. A cancelled package's payment
+  (frozen, migration 934) now moves too: the guard lets through exactly `receipt_path` → `minio:` + the same
+  path with every other column equal; every money change, another receipt, a move back and a delete are still
+  refused.
+- `messages`: a row whose only change is `media_path` → `minio:` + the same path sends no inbox live update
+  (media arriving, null → a path, still does); its `updated_at` (the mobile sync cursor) moves, so phones pick
+  up the new path. `thread_summaries` ignore `media_path` as before. Running it outside working hours is no
+  longer needed for the inbox, only for the load.
+- `lesson_reports`: the Google sync outbox fires on `pdf_status` only, never on `pdf_path`.
+- `payment_attachments`: the folder check accepts the `minio:` marker (migration 1501).
+- `profiles`, `teachers`: their other triggers are `update of` other columns (role, push tokens, rates, meeting
+  link, calendar owner, phone, status); the move's `update … set <column>` fires none of them.
+- `expenses`, `teacher_payouts`, `assistant_statements`, `saved_replies`: `updated_at` only;
+  `teacher_payments`, `invoices`, `report_attachments`, `lesson_recordings`: no trigger.
+
+Nothing is excluded any more for a trigger reason.
 
 **Rollback** of a moved row: set its column back to the unmarked path (`before.rows` of its `storage_move` audit
 row has it) while the Supabase object still exists; reads follow the path again. Never needed for the files:
