@@ -1,6 +1,7 @@
 import type { BackupState } from '@/modules/platform/drive-backup/db/backup-state.repo';
 import type { RecentRow } from '@/modules/platform/drive-backup/db/archive-row.schema';
 import type { FrozenReason } from '@/modules/platform/drive-backup/plan/frozen';
+import { oldestLeft, type OldestLeft } from '@/modules/platform/drive-backup/plan/left';
 import { freeOf, isLow } from '@/modules/platform/drive-backup/run/quota';
 
 /** GET /admin/storage-backup/status: the status line under «التخزين» (docs/45 §5). */
@@ -23,6 +24,8 @@ export interface BackupStatusView {
   low_quota: boolean;
   /** «النسخ الاحتياطي متوقف»: a full open for more than 3 nights, since when and why. */
   frozen: { since: string; reason: FrozenReason } | null;
+  /** Objects left for later nights (the night's cap, Drive's room): how many, the oldest. */
+  left: OldestLeft | null;
 }
 
 /** The newest done archive's label, its parts summed. */
@@ -56,3 +59,5 @@ export const frozenView = (s: BackupState): BackupStatusView['frozen'] =>
   s.frozen_since === null || s.frozen_reason === null
     ? null
     : { since: s.frozen_since, reason: s.frozen_reason };
+
+export const leftView = (s: BackupState): BackupStatusView['left'] => oldestLeft(s);

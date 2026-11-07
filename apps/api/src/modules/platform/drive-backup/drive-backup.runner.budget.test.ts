@@ -23,7 +23,7 @@ function setup(tokens: string[]) {
   const drive = new FakeDrive();
   const minio = new FakeMinio();
   const store = new MemoryStore();
-  const read = vi.fn().mockResolvedValue({ folder_id: null, account_email: null });
+  const read = vi.fn().mockResolvedValue({ folder_id: null, account_email: null, left_watch: {} });
   const state = { read, save: vi.fn() };
   const alerts = {
     failed: vi.fn(),

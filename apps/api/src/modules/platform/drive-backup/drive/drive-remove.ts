@@ -17,6 +17,14 @@ export function goneAsNull(e: unknown): null {
   throw e;
 }
 
+/** One metadata GET by id (no listing, which may lag): the backup's own file, not trashed. */
+export async function archivePresent(call: Call, input: RemoveInput & { files: string }) {
+  const url = `${input.files}/${encodeURIComponent(input.fileId)}`;
+  const res = await call({ url, params: { fields: `${OWNER_FIELDS},trashed` } }).catch(goneAsNull);
+  const f = res === null ? null : ownerSchema.parse(res.data);
+  return f !== null && !f.trashed && isOwnArchive(f, input.folderId);
+}
+
 /**
  * The permanent delete of one archive (docs/45 §5.1): the file is read first and deleted only when
  * it sits in the backup's folder and carries its marker (`ab_backup=minio`). Never a listing.

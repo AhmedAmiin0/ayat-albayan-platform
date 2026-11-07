@@ -13,8 +13,8 @@ async function setup(open: boolean) {
   const id = await store.start(row);
   await store.finish({ id, fileId: 'd', rawBytes: 1, compressedBytes: 1, skipped: 0, entries: [] });
   if (!open) await store.seal(id);
-  const state = { save: vi.fn() };
-  const alerts = { frozen: vi.fn(), skipped: vi.fn(), tooLarge: vi.fn() };
+  const state = { save: vi.fn(), read: vi.fn().mockResolvedValue({ left_watch: {} }) };
+  const alerts = { frozen: vi.fn(), skipped: vi.fn(), tooLarge: vi.fn(), left: vi.fn() };
   const data = { store, state, alerts } as unknown as DriveBackupData;
   return { data, state, alerts };
 }
@@ -47,5 +47,18 @@ describe('the frozen report', () => {
     await reportNight(t.data, { folderId: 'f', now, sum });
     expect(t.alerts.tooLarge).toHaveBeenCalledWith({ names: ['reports/big'], now });
     expect(t.alerts.skipped).not.toHaveBeenCalled();
+  });
+
+  it('the same object left 3 nights running: the count saved and the oldest told', async () => {
+    const t = await setup(false);
+    const since = '2026-11-08T01:00:00.000Z';
+    t.state.read.mockResolvedValue({ left_watch: { 'recordings/r': since } });
+    const base = emptySummary({ kind: 'incr', label: '2026-11-10' });
+    const sum = { ...base, left: ['wa-media/new', 'recordings/r'] };
+    await reportNight(t.data, { folderId: 'f', now, sum });
+    const watch = { 'recordings/r': since, 'wa-media/new': now.toISOString() };
+    expect(t.state.save).toHaveBeenCalledWith({ left_count: 2, left_watch: watch });
+    const told = { count: 2, key: 'recordings/r', since, now };
+    expect(t.alerts.left).toHaveBeenCalledWith(told);
   });
 });

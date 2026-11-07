@@ -13,8 +13,8 @@ export const DEFAULT_CAPS: Caps = { part: 1024 ** 3, run: 4 * 1024 ** 3 };
 
 interface PartsPlan {
   parts: ListedObject[][];
-  /** Objects left for the next run (the run's byte cap). */
-  left: number;
+  /** Objects left for the next run (the run's byte cap), in order. */
+  left: ListedObject[];
   /** Objects whose own part is larger than tonight's room: skipped tonight, named in the alert. */
   tooLarge: ListedObject[];
 }
@@ -53,25 +53,34 @@ function split(todo: readonly ListedObject[], limit: number): ListedObject[][] {
   return parts;
 }
 
-/** How many parts, in order, the night's cap takes (the first always: it fits the room). */
-function forRun(parts: readonly ListedObject[][], cap: number): number {
-  let spent = 0;
-  let n = 0;
-  for (const p of parts) {
-    const cost = partCost(p);
-    if (n > 0 && spent + cost > cap) break;
-    spent += cost;
-    n += 1;
-  }
-  return n;
+/**
+ * The first part above the night's cap on its own (one streamed object), moved to the front: the
+ * first part always goes (it fits the room), so such an object is sent alone on a night of its own
+ * instead of being left behind every night by the smaller parts listed before it.
+ */
+function bigFirst(parts: readonly ListedObject[][], cap: number): ListedObject[][] {
+  const i = parts.findIndex((p) => partCost(p) > cap);
+  return i < 1 ? [...parts] : [...parts.slice(i, i + 1), ...parts.filter((_, j) => j !== i)];
 }
 
-const count = (parts: readonly ListedObject[][]): number => parts.reduce((n, p) => n + p.length, 0);
+/** The parts the night's cap takes (the first always): one that does not fit is passed over. */
+function forRun(parts: readonly ListedObject[][], cap: number): ListedObject[][] {
+  const taken: ListedObject[][] = [];
+  let spent = 0;
+  for (const p of parts) {
+    const cost = partCost(p);
+    if (taken.length > 0 && spent + cost > cap) continue;
+    spent += cost;
+    taken.push(p);
+  }
+  return taken;
+}
 
 /**
  * Tonight's parts: an object larger than the room on its own is skipped (not the night's end: the
- * later ones still go), the rest split under the part cap and the room, then taken in order up to
- * the run's cap. Every part planned fits the room it was planned for.
+ * later ones still go), the rest split under the part cap and the room, one above the night's cap
+ * put first (bigFirst), then taken up to the run's cap; a part over it waits, the smaller ones
+ * after it still go. Every part planned fits the room it was planned for.
  */
 export function planParts(
   todo: readonly ListedObject[],
@@ -80,9 +89,11 @@ export function planParts(
 ): PartsPlan {
   const fits = (o: ListedObject) => partCost([o]) <= room;
   const tooLarge = todo.filter((o) => !fits(o));
-  const parts = split(todo.filter(fits), Math.min(caps.part, room));
-  const taken = parts.slice(0, forRun(parts, Math.min(caps.run, room)));
-  return { parts: taken, left: todo.length - tooLarge.length - count(taken), tooLarge };
+  const cap = Math.min(caps.run, room);
+  const parts = bigFirst(split(todo.filter(fits), Math.min(caps.part, room)), cap);
+  const taken = forRun(parts, cap);
+  const sent = new Set(taken.flat());
+  return { parts: taken, left: todo.filter((o) => fits(o) && !sent.has(o)), tooLarge };
 }
 
 /** `bucket/key` → ETag of every object the base archives already hold. */

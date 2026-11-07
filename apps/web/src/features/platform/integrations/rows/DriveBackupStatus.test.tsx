@@ -21,6 +21,7 @@ const answer = {
   quota: { limit: 15 * GB, free: GB, usage: 14 * GB, at: '2026-11-07T01:00:00Z' },
   low_quota: true,
   frozen: null,
+  left: null,
   last_run_at: '2026-11-07T01:00:00Z',
 };
 

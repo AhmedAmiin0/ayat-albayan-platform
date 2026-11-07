@@ -14,8 +14,8 @@ export interface RunSummary {
   tooLarge: string[];
   rawBytes: number;
   compressedBytes: number;
-  /** Objects left for the next night (the run's byte cap, or a part that no longer fit). */
-  left: number;
+  /** `bucket/key` of the objects left for the next night (the run's cap, or no room). */
+  left: string[];
   sealed: boolean;
   /** Archives deleted from Drive: failed parts, retention, early retirement. */
   trashed: number;
@@ -31,7 +31,7 @@ export const emptySummary = (plan: Pick<RunPlan, 'kind' | 'label'>): RunSummary 
   tooLarge: [],
   rawBytes: 0,
   compressedBytes: 0,
-  left: 0,
+  left: [],
   sealed: false,
   trashed: 0,
 });
@@ -63,4 +63,4 @@ export const soloFailed = (sum: RunSummary): RunSummary => ({
  * lacks an object it should hold (one open too long is reported as frozen: plan/frozen.ts).
  */
 export const sealable = (plan: Pick<RunPlan, 'kind'>, sum: RunSummary): boolean =>
-  plan.kind === 'full' && sum.left === 0 && sum.unread === 0 && sum.tooLarge.length === 0;
+  plan.kind === 'full' && sum.left.length === 0 && sum.unread === 0 && sum.tooLarge.length === 0;

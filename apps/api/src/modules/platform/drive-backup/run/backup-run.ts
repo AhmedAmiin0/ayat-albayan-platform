@@ -55,7 +55,7 @@ async function uploadAll(
   for (const [i, objects] of input.work.entries()) {
     const fits = await fitsNow(deps, { part: objects, later: input.work.slice(i + 1) });
     if (!fits) {
-      sum = { ...sum, left: sum.left + objects.length };
+      sum = { ...sum, left: [...sum.left, ...objects.map(objectId)] };
       continue;
     }
     const r = await partOrSkip({ deps, folderId, now }, { ...plan, part }, objects);
@@ -79,7 +79,8 @@ async function backUp(deps: RunDeps, input: { folderId: string; now: Date }) {
   if (room < partCost([])) throw new DriveFull();
   const { parts, left, tooLarge } = planParts(todo, deps.caps, room);
   const last = await deps.store.lastPart({ folderId, kind: plan.kind, label: plan.label });
-  const start = { ...emptySummary(plan), left, trashed, tooLarge: tooLarge.map(objectId) };
+  const ids = { left: left.map(objectId), tooLarge: tooLarge.map(objectId) };
+  const start = { ...emptySummary(plan), ...ids, trashed };
   const night = { ...input, plan, first: last + 1 };
   const sum = await uploadAll(deps, night, { work: workOf(plan, parts), sum: start });
   if (!sealable(plan, sum)) return sum;
@@ -89,7 +90,7 @@ async function backUp(deps: RunDeps, input: { folderId: string; now: Date }) {
 
 /** One night (docs/45 §5): the clean-up (it only frees space), then the backup itself. */
 export async function runBackup(deps: RunDeps, input: { folderId: string; now: Date }) {
-  const removed = await cleanUp(deps, input.folderId);
+  const removed = await cleanUp(deps, input);
   const sum = await backUp(deps, input);
   return { ...sum, trashed: sum.trashed + removed };
 }

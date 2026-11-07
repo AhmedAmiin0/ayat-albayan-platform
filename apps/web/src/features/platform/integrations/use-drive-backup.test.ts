@@ -14,6 +14,7 @@ const view = (over: Partial<DriveBackupView> = {}): DriveBackupView => ({
   quota: { limit: 15 * GB, free: 9 * GB },
   low_quota: false,
   frozen: null,
+  left: null,
   ...over,
 });
 
@@ -66,5 +67,14 @@ describe('the Drive backup status line (docs/45 §5)', () => {
       b.frozen.replace('{since}', '2026-11-03').replace('{reason}', b.frozenReasons.too_large),
     );
     expect(frozenLine(view())).toBeNull();
+  });
+
+  it('objects left for later nights: the count and the oldest, with its day', () => {
+    const left = { count: 3, key: 'recordings/r.mp4', since: '2026-11-05T01:00:00Z' };
+    const line = backupLines(view({ left }))[1];
+    expect(line).toContain(counted(b.files, 3));
+    expect(line).toContain('recordings/r.mp4');
+    expect(line).toContain('2026-11-05');
+    expect(backupLines(view()).some((l) => l.includes('recordings/'))).toBe(false);
   });
 });

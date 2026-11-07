@@ -15,6 +15,9 @@ const stateSchema = z.object({
   /** The open full's first part, when it has been open for more than 3 nights (plan/frozen.ts). */
   frozen_since: z.string().nullable(),
   frozen_reason: z.enum(FROZEN_REASONS).nullable(),
+  /** Objects the night's cap left for later, and the oldest with the night first left (left.ts). */
+  left_count: z.number().int(),
+  left_watch: z.record(z.string(), z.string()),
 });
 export type BackupState = z.infer<typeof stateSchema>;
 
@@ -28,9 +31,11 @@ const EMPTY: BackupState = {
   last_error: null,
   frozen_since: null,
   frozen_reason: null,
+  left_count: 0,
+  left_watch: {},
 };
 const COLUMNS =
-  'folder_id, account_email, quota_limit, quota_usage, quota_at, last_run_at, last_error, frozen_since, frozen_reason';
+  'folder_id, account_email, quota_limit, quota_usage, quota_at, last_run_at, last_error, frozen_since, frozen_reason, left_count, left_watch';
 
 /** drive_backup_state (one row) and the status line's recent archives, with the service role. */
 @Injectable()

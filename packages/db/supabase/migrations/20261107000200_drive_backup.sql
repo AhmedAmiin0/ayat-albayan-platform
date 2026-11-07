@@ -25,6 +25,10 @@ create table if not exists public.drive_backup_state (
   frozen_since timestamptz,
   frozen_reason text
     check (frozen_reason in ('too_large', 'drive_full', 'unread', 'incomplete', 'failed')),
+  -- Objects the night's cap left for later: how many, and the oldest (at most 100) with the night
+  -- each was first left (`bucket/key` → ISO time): one left 3 nights running is told to admins.
+  left_count integer not null default 0 check (left_count >= 0),
+  left_watch jsonb not null default '{}'::jsonb check (jsonb_typeof(left_watch) = 'object'),
   updated_at timestamptz not null default now()
 );
 

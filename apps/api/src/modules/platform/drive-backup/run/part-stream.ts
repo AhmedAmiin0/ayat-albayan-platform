@@ -1,6 +1,7 @@
 import type {
   BackupSource,
   ListedObject,
+  ObjectBody,
   OpenedObject,
 } from '@/modules/platform/drive-backup/source/backup-source.port';
 import { STREAMED_MIN } from '@/modules/platform/drive-backup/plan/parts';
@@ -80,9 +81,15 @@ async function* streamed(opened: OpenedObject): AsyncGenerator<Buffer> {
   if (n !== opened.size) throw new Error('object_cut_off');
 }
 
-/** Drops an opened body unread (a stream's iterator return() destroys it), then answers `out`. */
+/** A stream is destroyed (an unstarted iterator's return() does not); else its return(). */
+function drop(body: ObjectBody): void {
+  const close = body.destroy ?? (() => void body[Symbol.asyncIterator]().return?.());
+  close.call(body);
+}
+
+/** Drops an opened body unread, then answers `out`. */
 function closed<T>(opened: OpenedObject, out: T): T {
-  void opened.body[Symbol.asyncIterator]().return?.();
+  drop(opened.body);
   return out;
 }
 
@@ -108,18 +115,29 @@ export interface PartInput {
   now: Date;
 }
 
-/** The part's tar: each object (pax header, data, padding), then manifest.json, then the end. */
+/**
+ * One object's entry (pax header, data, padding), then it is counted. Its body is dropped however
+ * the entry ends: a pipeline aborted before a streamed body started reading never leaves it open.
+ */
+async function* entry(r: Ready, o: ListedObject, input: PartInput): AsyncGenerator<Buffer> {
+  try {
+    yield head(r, o, input.now);
+    yield* r.bytes ? [r.bytes] : streamed(r.opened);
+    yield padding(r.opened.size);
+  } finally {
+    drop(r.opened.body);
+  }
+  const { size, etag, contentType } = r.opened;
+  input.report.entries.push({ bucket: o.bucket, key: o.key, etag, size, contentType });
+  input.report.rawBytes += size;
+}
+
+/** The part's tar: each object's entry, then manifest.json, then the end. */
 export async function* partBytes(input: PartInput): AsyncGenerator<Buffer> {
   const { report, now } = input;
   for (const o of input.objects) {
     const r: Ready | null = await ready(input.source, o, report);
-    if (!r) continue;
-    yield head(r, o, now);
-    yield* r.bytes ? [r.bytes] : streamed(r.opened);
-    yield padding(r.opened.size);
-    const { size, etag, contentType } = r.opened;
-    report.entries.push({ bucket: o.bucket, key: o.key, etag, size, contentType });
-    report.rawBytes += size;
+    if (r) yield* entry(r, o, input);
   }
   const manifest = Buffer.from(JSON.stringify({ ...input.meta, ...report }), 'utf8');
   const path = 'manifest.json';

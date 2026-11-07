@@ -32,6 +32,8 @@ const viewSchema = z.object({
       reason: z.enum(['too_large', 'drive_full', 'unread', 'incomplete', 'failed']),
     })
     .nullable(),
+  /** Objects left for later nights (api plan/left.ts): how many, the oldest and since when. */
+  left: z.object({ count: z.number(), key: z.string(), since: z.string() }).nullable(),
 });
 export type DriveBackupView = z.infer<typeof viewSchema>;
 
@@ -74,11 +76,20 @@ export function frozenLine(v: DriveBackupView): string | null {
     .replace('{reason}', b.frozenReasons[f.reason]);
 }
 
+/** «تنتظر النسخ في الليالي التالية: …», or null when nothing is left. */
+function leftLine(l: DriveBackupView['left']): string | null {
+  if (!l) return null;
+  return b.left
+    .replace('{count}', counted(b.files, l.count))
+    .replace('{name}', l.key)
+    .replace('{since}', l.since.slice(0, 10));
+}
+
 /** The status line's sentences, in order (empty ones dropped). */
 export function backupLines(v: DriveBackupView): string[] {
   const blocked = STATE.find(([when]) => when(v))?.[1] ?? null;
   const error = v.last_error ? b.error.replace('{error}', v.last_error) : null;
-  const lines = [blocked, lastLine(v), error, quotaLine(v.quota), b.note];
+  const lines = [blocked, lastLine(v), leftLine(v.left), error, quotaLine(v.quota), b.note];
   return lines.filter((l): l is string => l !== null);
 }
 

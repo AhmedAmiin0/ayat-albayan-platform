@@ -67,7 +67,7 @@ describe('parts and pending', () => {
     expect(lengths({ part: partCost([o('a', MB)]), run: GB })).toEqual([1, 1, 1]);
     expect(lengths({ part: partCost(three.slice(0, 2)), run: GB })).toEqual([2, 1]);
     const one = partCost([o('a', MB)]);
-    expect(planParts(three, { part: one, run: 2 * one })).toMatchObject({ left: 1 });
+    expect(planParts(three, { part: one, run: 2 * one }).left).toHaveLength(1);
     expect(planParts([o('huge', GB)], { part: MB, run: MB }).parts).toEqual([[o('huge', GB)]]);
   });
 
@@ -76,7 +76,7 @@ describe('parts and pending', () => {
     const plan = planParts(todo, DEFAULT_CAPS, GB);
     expect(plan.tooLarge.map((x) => x.key)).toEqual(['big']);
     expect(plan.parts).toEqual([[o('a', MB), o('b', MB)]]);
-    expect(plan.left).toBe(0);
+    expect(plan.left).toEqual([]);
   });
 
   it('every part planned fits the room it was planned for', () => {
@@ -85,7 +85,7 @@ describe('parts and pending', () => {
     const plan = planParts(todo, DEFAULT_CAPS, room);
     expect(plan.parts.every((p) => partCost(p) <= room)).toBe(true);
     expect(plan.parts.reduce((n, p) => n + partCost(p), 0)).toBeLessThanOrEqual(room);
-    expect(plan.left).toBeGreaterThan(0);
+    expect(plan.left.length).toBeGreaterThan(0);
   });
 
   it('the cost charges the tar and zstd overhead, never just the raw bytes', () => {

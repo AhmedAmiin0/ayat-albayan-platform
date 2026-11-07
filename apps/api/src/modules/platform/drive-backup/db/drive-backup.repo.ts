@@ -1,12 +1,13 @@
 import type { Database } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import type { ArchiveRow } from '@/modules/platform/drive-backup/plan/archive.types';
+import type { ArchiveRow, ArchiveStatus } from '@/modules/platform/drive-backup/plan/archive.types';
 import type {
   BackupStore,
   FinishedArchive,
   NewArchive,
 } from '@/modules/platform/drive-backup/run/backup-store.port';
+import { ArchiveReadsRepo } from './archive-reads.repo';
 import { ARCHIVE_COLUMNS, archiveRowSchema, fail } from './archive-row.schema';
 import { ArchiveObjectsRepo } from './archive-objects.repo';
 
@@ -20,6 +21,7 @@ export class DriveBackupRepo implements BackupStore {
   constructor(
     @Inject(DB) private readonly db: Db,
     @Inject(ArchiveObjectsRepo) private readonly objects: ArchiveObjectsRepo,
+    @Inject(ArchiveReadsRepo) private readonly reads: ArchiveReadsRepo,
   ) {}
 
   async abandon(folderId: string): Promise<void> {
@@ -55,18 +57,12 @@ export class DriveBackupRepo implements BackupStore {
     return this.objects.covered(archives);
   }
 
-  async lastPart(input: Pick<NewArchive, 'folderId' | 'kind' | 'label'>): Promise<number> {
-    const { data, error } = await this.db
-      .from('drive_backup_archives')
-      .select('part')
-      .eq('folder_id', input.folderId)
-      .eq('kind', input.kind)
-      .eq('label', input.label)
-      .order('part', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (error) throw fail('last part read', error);
-    return data?.part ?? 0;
+  lastPart(input: Pick<NewArchive, 'folderId' | 'kind' | 'label'>): Promise<number> {
+    return this.reads.lastPart(input);
+  }
+
+  status(id: string): Promise<ArchiveStatus | null> {
+    return this.reads.status(id);
   }
 
   async start(input: NewArchive): Promise<string> {

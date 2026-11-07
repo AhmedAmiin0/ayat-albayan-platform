@@ -52,6 +52,7 @@ export const isBackupOwn = (f: RawFile): boolean =>
 export const OWNER_FIELDS = 'id,parents,appProperties';
 export const ownerSchema = z.object({
   parents: z.array(z.string()).default([]),
+  trashed: z.boolean().default(false),
   appProperties: z.record(z.string(), z.string()).optional(),
 });
 

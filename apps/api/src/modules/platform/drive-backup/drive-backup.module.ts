@@ -5,6 +5,7 @@ import { GoogleSyncModule, oauthClient } from '@/modules/platform/google-sync';
 import { BackupStatusController } from './admin/backup-status.controller';
 import { BackupStatusService } from './admin/backup-status.service';
 import { ArchiveObjectsRepo } from './db/archive-objects.repo';
+import { ArchiveReadsRepo } from './db/archive-reads.repo';
 import { BackupStateRepo } from './db/backup-state.repo';
 import { DriveBackupRepo } from './db/drive-backup.repo';
 import { DRIVE_BACKUP_FACTORY, type DriveBackupFactory } from './drive/drive-backup.port';
@@ -35,6 +36,7 @@ export const httpBackupFactory: DriveBackupFactory = {
   providers: [
     { provide: DRIVE_BACKUP_FACTORY, useValue: httpBackupFactory },
     ArchiveObjectsRepo,
+    ArchiveReadsRepo,
     DriveBackupRepo,
     BackupStateRepo,
     DriveBackupAlerts,

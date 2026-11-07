@@ -1,6 +1,10 @@
 import type { Bucket } from '@/common/storage/storage.paths';
 import type { DriveBackupApi } from '@/modules/platform/drive-backup/drive/drive-backup.port';
-import type { ArchiveKind, ArchiveRow } from '@/modules/platform/drive-backup/plan/archive.types';
+import type {
+  ArchiveKind,
+  ArchiveRow,
+  ArchiveStatus,
+} from '@/modules/platform/drive-backup/plan/archive.types';
 import type { Caps } from '@/modules/platform/drive-backup/plan/parts';
 import type { BackupSource } from '@/modules/platform/drive-backup/source/backup-source.port';
 import type { PartEntry } from './part-stream';
@@ -34,6 +38,8 @@ export interface BackupStore {
   covered(archives: readonly ArchiveRow[]): Promise<Map<string, string>>;
   /** The highest part number of that archive over EVERY row, trashed ones included; 0: none. */
   lastPart(input: Pick<NewArchive, 'folderId' | 'kind' | 'label'>): Promise<number>;
+  /** A row's status now (null: no such row): what a write whose answer was lost really did. */
+  status(id: string): Promise<ArchiveStatus | null>;
   start(input: NewArchive): Promise<string>;
   // uploaded / finish / fail change a row only while it is `uploading` (this run's): zero rows
   // changed (another run abandoned it) is an error, never a silent success.

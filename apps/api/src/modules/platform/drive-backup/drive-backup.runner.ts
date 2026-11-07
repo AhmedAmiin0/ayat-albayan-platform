@@ -135,4 +135,4 @@ export class DriveBackupRunner {
 const summaryLine = (s: RunSummary): string =>
   `drive backup ${s.kind} ${s.label}: ${s.parts} part(s), ${s.objects} object(s), ` +
   `${s.rawBytes} → ${s.compressedBytes} bytes, ${s.skipped} skipped, ` +
-  `${s.tooLarge.length} too large, ${s.left} left`;
+  `${s.tooLarge.length} too large, ${s.left.length} left`;

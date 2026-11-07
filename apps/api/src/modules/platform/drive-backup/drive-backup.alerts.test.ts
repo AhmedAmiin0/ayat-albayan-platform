@@ -31,4 +31,14 @@ describe('the backup’s alerts (bell only, once a day per subject)', () => {
     expect(text).toContain('2026-11-06');
     expect(text).toContain(ar.integrations.driveBackup.frozenReasons.drive_full);
   });
+
+  it('left 3 nights: counted, the oldest named with its day', async () => {
+    const t = setup();
+    await t.alerts.left({ count: 7, key: 'recordings/r.mp4', since: '2026-11-08T01:00:00Z', now });
+    expect(t.said().subject).toBe('drive_backup:left:2026-11-10');
+    const text = t.said().vars.reason;
+    expect(text).toContain('recordings/r.mp4');
+    expect(text).toContain('2026-11-08');
+    expect(text).toContain('7');
+  });
 });

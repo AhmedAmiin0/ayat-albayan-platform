@@ -40,8 +40,9 @@ describe('resume after a crash mid-upload', () => {
       name: 'x',
     });
     const sum = await t.night('2026-11-08');
-    // Abandoned, then removed with its file (none here) and trashed; its part number stays taken.
-    expect(t.store.rows[1]).toMatchObject({ status: 'trashed', error: 'interrupted' });
+    // Abandoned; no file found by its marker yet, so kept failed (searched again for a week:
+    // retire.ts); its part number stays taken.
+    expect(t.store.rows[1]).toMatchObject({ status: 'failed', error: 'interrupted' });
     expect(sum).toMatchObject({ kind: 'incr', objects: 1 });
     expect(names(t.drive, t.folderId)).toContain('incr-2026-11-08.p2.tar.zst');
   });

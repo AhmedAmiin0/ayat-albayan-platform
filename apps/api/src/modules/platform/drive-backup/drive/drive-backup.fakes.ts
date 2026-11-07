@@ -127,6 +127,13 @@ export class FakeDrive implements P.DriveBackupApi {
     return Promise.resolve('deleted');
   }
 
+  present(input: P.RemoveInput): Promise<boolean> {
+    this.call('present');
+    const f = this.files.get(input.fileId);
+    const own = f?.meta.appProperties.ab_backup === 'minio' && f.parentId === input.folderId;
+    return Promise.resolve(own && !this.files.get(input.fileId)?.trashed);
+  }
+
   download(fileId: string) {
     this.call('download');
     return Promise.resolve(Readable.from([this.found(fileId).bytes]));

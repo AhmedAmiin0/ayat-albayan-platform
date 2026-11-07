@@ -11,11 +11,14 @@ export interface ListedObject {
   size: number;
 }
 
+/** A MinIO body: a Node stream in the real adapter (destroy() frees its socket). */
+export type ObjectBody = AsyncIterable<Uint8Array> & { destroy?: () => unknown };
+
 export interface OpenedObject {
   size: number;
   etag: string;
   contentType: string;
-  body: AsyncIterable<Uint8Array>;
+  body: ObjectBody;
 }
 
 export interface RestoreObject {

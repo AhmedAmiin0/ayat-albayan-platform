@@ -6136,6 +6136,7 @@
       "sizeGb": "{n} GB",
       "sizeMb": "{n} MB",
       "frozen": "The backup is frozen since {since}: {reason}",
+      "left": "Waiting for later nights: {count}, the oldest {name} since {since}.",
       "frozenReasons": {
         "too_large": "One or more files are larger than the free space in Google Drive.",
         "drive_full": "There is not enough free space in Google Drive.",
@@ -6441,6 +6442,12 @@
         "two": "Tonight's backup did not copy 2 files because they are larger than the free space in Google Drive: {names}. Free up space in Drive so they are copied on a later night.",
         "few": "Tonight's backup did not copy {n} files because they are larger than the free space in Google Drive: {names}. Free up space in Drive so they are copied on a later night.",
         "other": "Tonight's backup did not copy {n} files because they are larger than the free space in Google Drive: {names}. Free up space in Drive so they are copied on a later night."
+      },
+      "backupLeft": {
+        "one": "1 file has been left out of the backup for three nights in a row by the nightly transfer cap or the free space in Google Drive: {name} (since {since}).",
+        "two": "2 files are left out of the backup; the oldest for three nights in a row by the nightly transfer cap or the free space in Google Drive: {name} (since {since}).",
+        "few": "{n} files are left out of the backup; the oldest for three nights in a row by the nightly transfer cap or the free space in Google Drive: {name} (since {since}).",
+        "other": "{n} files are left out of the backup; the oldest for three nights in a row by the nightly transfer cap or the free space in Google Drive: {name} (since {since})."
       },
       "backupFrozen": "The backup is frozen: the full backup started on {since} has not finished for more than three nights. Reason: {reason}"
     },

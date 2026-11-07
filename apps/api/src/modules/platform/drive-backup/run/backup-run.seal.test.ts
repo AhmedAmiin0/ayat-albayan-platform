@@ -19,11 +19,19 @@ describe('sealing a full', () => {
     await t.night('2026-11-07'); // full W45, sealed
     t.minio.unreadable.add('reports/a.pdf');
     t.minio.set({ bucket: B.reports, key: 'a.pdf', body: 'a2' });
-    expect(await t.night('2026-11-13')).toMatchObject({ kind: 'full', label: '2026-W46', sealed: false });
+    expect(await t.night('2026-11-13')).toMatchObject({
+      kind: 'full',
+      label: '2026-W46',
+      sealed: false,
+    });
     const files = [...t.drive.files.values()].map((f) => f.meta);
     const chain = restoreChain(files, '2026-11-13').map((f) => f.name);
     expect(chain).toContain('full-2026-W45.tar.zst');
     t.minio.unreadable.clear();
-    expect(await t.night('2026-11-14')).toMatchObject({ kind: 'full', label: '2026-W46', sealed: true });
+    expect(await t.night('2026-11-14')).toMatchObject({
+      kind: 'full',
+      label: '2026-W46',
+      sealed: true,
+    });
   });
 });

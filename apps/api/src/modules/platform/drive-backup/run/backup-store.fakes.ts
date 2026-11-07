@@ -37,6 +37,10 @@ export class MemoryStore implements BackupStore {
     return Promise.resolve(Math.max(0, ...this.rows.filter(same).map((r) => r.part)));
   }
 
+  status(id: string) {
+    return Promise.resolve(this.rows.find((r) => r.id === id)?.status ?? null);
+  }
+
   /** Like the table's unique (folder_id, kind, label, part), trashed rows included. */
   start(input: NewArchive) {
     const same = (r: Row) =>

@@ -87,7 +87,7 @@ describe('caps', () => {
     expect(await t.night('2026-11-07')).toMatchObject({
       kind: 'full',
       objects: 2,
-      left: 2,
+      left: ['reports/c', 'reports/d'],
       sealed: false,
     });
     expect(await t.night('2026-11-08')).toMatchObject({

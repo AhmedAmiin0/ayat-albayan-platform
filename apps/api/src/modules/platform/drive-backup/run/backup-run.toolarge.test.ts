@@ -43,6 +43,6 @@ describe('an object larger than tonight’s room', () => {
     t.minio.set({ bucket: B.reports, key: 'a.pdf', body: Buffer.alloc(2 * MB, 1) });
     t.minio.set({ bucket: B.reports, key: 'b.pdf', body: 'b' });
     const sum = await t.night('2026-11-07');
-    expect(sum).toMatchObject({ objects: 1, left: 1, sealed: false });
+    expect(sum).toMatchObject({ objects: 1, left: ['reports/a.pdf'], sealed: false });
   });
 });

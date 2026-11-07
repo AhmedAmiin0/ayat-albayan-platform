@@ -4,6 +4,7 @@ import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
 import type { FrozenReason } from '@/modules/platform/drive-backup/plan/frozen';
 import { dayLabel } from '@/modules/platform/drive-backup/plan/labels';
+import type { OldestLeft } from '@/modules/platform/drive-backup/plan/left';
 
 /** At most this many names in the too-large alert (the rest only counted). */
 const NAMES_SHOWN = 5;
@@ -42,6 +43,14 @@ export class DriveBackupAlerts {
     const names = input.names.slice(0, NAMES_SHOWN).join('، ');
     const text = counted(ar.googleSync.alerts.backupTooLarge, input.names.length);
     return this.tell(`too_large:${dayLabel(input.now)}`, text.replace('{names}', names));
+  }
+
+  /** Objects the night's cap left 3 nights running: how many, the oldest by name and night. */
+  left(input: OldestLeft & { now: Date }): Promise<void> {
+    const text = counted(ar.googleSync.alerts.backupLeft, input.count)
+      .replace('{name}', input.key)
+      .replace('{since}', input.since.slice(0, 10));
+    return this.tell(`left:${dayLabel(input.now)}`, text);
   }
 
   /** «النسخ الاحتياطي متوقف»: a full open for more than 3 nights, and why. */

@@ -73,6 +73,8 @@ export interface DriveBackupApi {
    * days), but only a file in `folderId` that carries the backup's marker: anything else is left.
    */
   remove(input: RemoveInput): Promise<Removed>;
+  /** The backup's own file in `folderId`, not trashed (one GET by id): a part to seal on. */
+  present(input: RemoveInput): Promise<boolean>;
   download(fileId: string): Promise<AsyncIterable<Uint8Array>>;
 }
 

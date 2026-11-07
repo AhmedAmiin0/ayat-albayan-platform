@@ -1,5 +1,5 @@
 import { classify, errorText } from '@/modules/platform/google-sync';
-import type { RunPlan } from '@/modules/platform/drive-backup/plan/archive.types';
+import type { ArchiveStatus, RunPlan } from '@/modules/platform/drive-backup/plan/archive.types';
 import { archiveName, archiveProps, dayLabel } from '@/modules/platform/drive-backup/plan/labels';
 import { isSolo } from '@/modules/platform/drive-backup/plan/parts';
 import type { ListedObject } from '@/modules/platform/drive-backup/source/backup-source.port';
@@ -65,10 +65,23 @@ const dropFile = (ctx: OnePart, fileId: string): Promise<void> =>
     () => undefined,
   );
 
+/** Rows another run took over (abandon, then maybe its clean-up): the file is no row's now. */
+const ABANDONED: readonly (ArchiveStatus | null)[] = ['failed', 'trashed'];
+
+/**
+ * fail() did not go through: the row is read again, and the file is deleted only when the row
+ * was taken over. A `done` row (finish() committed, its answer lost) keeps its file; a re-read
+ * that fails too leaves it as well (the next night's clean-up finds a real orphan: seal.ts).
+ */
+async function dropIfAbandoned(ctx: OnePart, at: { id: string; fileId: string }) {
+  const status = await ctx.deps.store.status(at.id).catch(() => null);
+  if (ABANDONED.includes(status)) await dropFile(ctx, at.fileId);
+}
+
 /**
  * The row `failed`, with the Drive file id when the file exists (the next run deletes it). When
- * that write fails too (the database, or the row is no longer this run's: zero rows updated), the
- * file is deleted now; one whose id never came back is found later by its `ab_row` marker.
+ * that write fails (the database, or the row is no longer `uploading`), see dropIfAbandoned; a
+ * file whose id never came back is found later by its `ab_row` marker.
  */
 async function failed(ctx: OnePart, at: Reached, e: unknown): Promise<void> {
   const { id, fileId } = at;
@@ -76,8 +89,12 @@ async function failed(ctx: OnePart, at: Reached, e: unknown): Promise<void> {
   const fail = { id, error: errorText(e), ...(fileId !== null && { fileId }) };
   await ctx.deps.store
     .fail(fail)
-    .catch(() => (fileId === null ? undefined : dropFile(ctx, fileId)));
+    .catch(() => (fileId === null ? undefined : dropIfAbandoned(ctx, { id, fileId })));
 }
+
+/** What a failure really was: the job's deadline (its reason) once the run is aborted. */
+const causeOf = (ctx: OnePart, e: unknown): unknown =>
+  ctx.deps.signal?.aborted === true ? ctx.deps.signal.reason : e;
 
 /** One archive file; on any failure (its row start included) the row is failed and kept honest. */
 async function onePart(ctx: OnePart, plan: PartPlan, objects: ListedObject[]) {
@@ -85,21 +102,28 @@ async function onePart(ctx: OnePart, plan: PartPlan, objects: ListedObject[]) {
   try {
     return await upload(ctx, { plan, objects }, at);
   } catch (e) {
-    await failed(ctx, at, e);
-    throw e;
+    const cause = causeOf(ctx, e);
+    await failed(ctx, at, cause);
+    throw cause;
   }
 }
 
-/** The Google connection refused, or Drive is full: no later part can succeed either. */
-const fatalForRun = (e: unknown): boolean =>
-  ['auth', 'config'].includes(classify(e)) || isStorageFull(e);
+/**
+ * No later part can succeed either: the job's deadline, the Google connection refused, or Drive
+ * full; and a part of several objects (not one big streamed object).
+ */
+const stopsRun = (ctx: OnePart, e: unknown, objects: readonly ListedObject[]): boolean =>
+  ctx.deps.signal?.aborted === true ||
+  ['auth', 'config'].includes(classify(e)) ||
+  isStorageFull(e) ||
+  !isSolo(objects);
 
 /** A failed part of one big streamed object skips that object (retried next night); else stop. */
 export async function partOrSkip(ctx: OnePart, plan: PartPlan, objects: ListedObject[]) {
   try {
     return await onePart(ctx, plan, objects);
   } catch (e) {
-    if (fatalForRun(e) || !isSolo(objects)) throw e;
+    if (stopsRun(ctx, e, objects)) throw e;
     return null;
   }
 }

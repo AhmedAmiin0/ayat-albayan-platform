@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { GoogleApiError } from '@/modules/platform/google-sync';
-import { removeArchive, type Answer, type Options } from './drive-remove';
+import { archivePresent, removeArchive, type Answer, type Options } from './drive-remove';
 
 // The real adapter's permanent delete (docs/45 §5.1): read first, delete only the backup's own.
 
@@ -12,9 +12,14 @@ function drive(file: object | null, deleteFails?: Error) {
   const call = (o: Options): Promise<Answer> => {
     const method = o.method ?? 'GET';
     calls.push(method);
-    const fail = method === 'GET' ? file === null && new GoogleApiError(404, 'notFound') : deleteFails;
+    const fail =
+      method === 'GET' ? file === null && new GoogleApiError(404, 'notFound') : deleteFails;
     if (fail) return Promise.reject(fail);
-    return Promise.resolve({ data: method === 'GET' ? file : '', status: 200, headers: new Headers() });
+    return Promise.resolve({
+      data: method === 'GET' ? file : '',
+      status: 200,
+      headers: new Headers(),
+    });
   };
   return { call, calls };
 }
@@ -38,12 +43,29 @@ describe('removeArchive', () => {
 
   it('already gone (404 on read or on delete): gone, not an error', async () => {
     expect(await removeArchive(drive(null).call, input)).toBe('gone');
-    const raced = drive({ parents: ['folder_1'], appProperties: MARK }, new GoogleApiError(404, 'x'));
+    const raced = drive(
+      { parents: ['folder_1'], appProperties: MARK },
+      new GoogleApiError(404, 'x'),
+    );
     expect(await removeArchive(raced.call, input)).toBe('gone');
   });
 
   it('any other failure is thrown', async () => {
     const d = drive({ parents: ['folder_1'], appProperties: MARK }, new GoogleApiError(500, 'x'));
     await expect(removeArchive(d.call, input)).rejects.toThrow('500');
+  });
+});
+
+describe('archivePresent (before a full is sealed)', () => {
+  const own = { parents: ['folder_1'], appProperties: MARK };
+  it.each([
+    ['the backup’s own file', own, true],
+    ['trashed', { ...own, trashed: true }, false],
+    ['another folder', { ...own, parents: ['folder_2'] }, false],
+    ['gone (404)', null, false],
+  ])('%s', async (_, file, present) => {
+    const d = drive(file);
+    expect(await archivePresent(d.call, input)).toBe(present);
+    expect(d.calls).toEqual(['GET']);
   });
 });

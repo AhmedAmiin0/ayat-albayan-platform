@@ -1,4 +1,5 @@
 import { frozenReason, frozenSince, type NightOutcome } from './plan/frozen';
+import { leftStuck, leftWatch, oldestLeft } from './plan/left';
 import type { RunSummary } from './run/backup-run';
 import type { DriveBackupData } from './drive-backup.data';
 
@@ -17,13 +18,26 @@ export async function reportFrozen(
   await data.alerts.frozen({ reason, since, now: input.now });
 }
 
-/** A night that ran: the status line, the skipped and too-large alerts, the frozen check. */
+/** Objects left again keep the night they were first left; 3 nights: the admins are told. */
+async function reportLeft(data: DriveBackupData, input: { now: Date; left: readonly string[] }) {
+  const prev = await data.state.read();
+  const left = leftWatch(prev.left_watch, input);
+  await data.state.save(left);
+  const oldest = oldestLeft(left);
+  if (leftStuck(oldest, input.now)) await data.alerts.left({ ...oldest, now: input.now });
+}
+
+/**
+ * A night that ran: the status line, the objects left for later, the skipped and too-large
+ * alerts, the frozen check.
+ */
 export async function reportNight(
   data: DriveBackupData,
   input: { folderId: string; now: Date; sum: RunSummary },
 ): Promise<void> {
   const { now, sum } = input;
   await data.state.save({ last_run_at: now.toISOString(), last_error: null });
+  await reportLeft(data, { now, left: sum.left });
   if (sum.skipped > 0) await data.alerts.skipped({ count: sum.skipped, now });
   if (sum.tooLarge.length > 0) await data.alerts.tooLarge({ names: sum.tooLarge, now });
   const outcome = { tooLarge: sum.tooLarge.length, unread: sum.unread, error: null };

@@ -3,7 +3,7 @@ import type { GoogleEndpoints } from '@/config/env/env';
 import { toGoogleError } from '@/modules/platform/google-sync';
 import type * as P from './drive-backup.port';
 import * as S from './drive-files.schema';
-import { goneAsNull, removeArchive, type Answer, type Options } from './drive-remove';
+import * as R from './drive-remove';
 
 /** A chunk (8 MiB) on a slow uplink; one archive download, long but never forever. */
 const CHUNK_TIMEOUT_MS = 180_000;
@@ -25,7 +25,7 @@ export class DriveBackupHttp implements P.DriveBackupApi {
     return `${this.endpoints.api}/drive/v3/files`;
   }
 
-  private async call(options: Options): Promise<Answer> {
+  private async call(options: R.Options): Promise<R.Answer> {
     try {
       const base = { timeout: 30_000, retry: false, ...(this.signal && { signal: this.signal }) };
       return await this.auth.request<unknown>({ ...base, ...options });
@@ -43,7 +43,7 @@ export class DriveBackupHttp implements P.DriveBackupApi {
 
   async folder(id: string): Promise<P.BackupFile | null> {
     const url = `${this.files}/${encodeURIComponent(id)}`;
-    const res = await this.call({ url, params: { fields: S.FILE_FIELDS } }).catch(goneAsNull);
+    const res = await this.call({ url, params: { fields: S.FILE_FIELDS } }).catch(R.goneAsNull);
     const f = res === null ? null : S.oneFileSchema.parse(res.data);
     return f && S.isBackupOwn(f) ? S.toFile(f) : null;
   }
@@ -115,7 +115,7 @@ export class DriveBackupHttp implements P.DriveBackupApi {
     return this.chunk(session, { headers: { 'Content-Range': 'bytes */*' } });
   }
 
-  private async chunk(session: string, options: Options): Promise<P.ChunkResult> {
+  private async chunk(session: string, options: R.Options): Promise<P.ChunkResult> {
     const base = { method: 'PUT' as const, url: session, timeout: CHUNK_TIMEOUT_MS };
     const res = await this.call({ ...base, ...options, validateStatus: DONE_OR_MORE });
     if (res.status === 308)
@@ -130,7 +130,11 @@ export class DriveBackupHttp implements P.DriveBackupApi {
 
   /** DELETE, not trash: a trashed file keeps using the shared quota for 30 days. */
   remove(input: P.RemoveInput): Promise<P.Removed> {
-    return removeArchive((o) => this.call(o), { ...input, files: this.files });
+    return R.removeArchive((o) => this.call(o), { ...input, files: this.files });
+  }
+
+  present(input: P.RemoveInput): Promise<boolean> {
+    return R.archivePresent((o) => this.call(o), { ...input, files: this.files });
   }
 
   async download(fileId: string): Promise<AsyncIterable<Uint8Array>> {
