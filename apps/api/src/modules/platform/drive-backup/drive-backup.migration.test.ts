@@ -3,10 +3,10 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261107000100 read as text (no database in unit tests).
-const sql = readFileSync(join(MIGRATIONS_DIR, '20261107000100_drive_backup.sql'), 'utf8');
+// Migration 20261107000200 read as text (no database in unit tests).
+const sql = readFileSync(join(MIGRATIONS_DIR, '20261107000200_drive_backup.sql'), 'utf8');
 
-describe('migration 20261107000100: the Drive backup tables', () => {
+describe('migration 20261107000200: the Drive backup tables', () => {
   it('RLS on all three, admin read only, no client writes', () => {
     expect(sql).toContain(
       "array['drive_backup_state', 'drive_backup_archives', 'drive_backup_objects']",
