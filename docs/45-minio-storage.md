@@ -255,14 +255,31 @@ and the chat PDF page previews (no column; rendered again on demand).
    would write Supabase under a key it just copied). On any stop it still prints the summary with `error` and each
    column's `cursor`, and exits 1.
 5. Re-run the dry run: `toMove` left over = the `missing` / `mismatch` / `failed` rows (still served from
-   Supabase). A `payments` row of a cancelled package is `failed`: the database freezes that row (its receipt
-   stays served from Supabase). Updating a `payments` row re-runs its assistant commission check (today's rules), as
-   any edit does: run `payments` when the commission rules have not changed since those packages were paid, or
-   ask for the follow-up (a path-only rewrite that skips that trigger) first.
+   Supabase).
 
-**Load.** One row and one `UPDATE` at a time. `messages`: each rewritten row fires the inbox's live update and
-bumps its `updated_at`, so open inboxes refresh and phones download those messages again on their next sync;
-run it out of hours, with `--limit` in slices.
+**What a path rewrite fires** (migration `20261107000100`, every trigger on the 14 tables audited): a path-only
+update moves **no money** and changes **no status**. It sets `updated_at` where the table has one, and nothing else:
+
+- `payments`: the assistant commission is re-evaluated on an update only when `subscription_id`, `amount`, `kind`,
+  `paid_at`, `created_at` or `id` changes (what the evaluation reads); insert and delete as before. A receipt
+  move, a note or a method edit re-applies none of today's commission rules. A cancelled package's payment
+  (frozen, migration 934) now moves too: the guard lets through exactly `receipt_path` → `minio:` + the same
+  path, or the rollback below (the exact inverse), with every other column equal; every money change, another
+  receipt and a delete are still refused.
+- `messages`: a row whose only change is `media_path` → `minio:` + the same path sends no inbox live update
+  (media arriving, null → a path, still does); its `updated_at` (the mobile sync cursor) moves, so phones pick
+  up the new path. `thread_summaries` ignore `media_path` as before. Running it outside working hours is no
+  longer needed for the inbox, only for the load.
+- `lesson_reports`: the Google sync outbox fires on `pdf_status` only, never on `pdf_path`.
+- `payment_attachments`: the folder check accepts the `minio:` marker (migration 1501).
+- `profiles`, `teachers`: their other triggers are `update of` other columns (role, push tokens, rates, meeting
+  link, calendar owner, phone, status); the move's `update … set <column>` fires none of them.
+- `expenses`, `teacher_payouts`, `assistant_statements`, `saved_replies`: `updated_at` only;
+  `teacher_payments`, `invoices`, `report_attachments`, `lesson_recordings`: no trigger.
+
+Nothing is excluded any more for a trigger reason.
+
+**Load.** One row and one `UPDATE` at a time, with a pause between batches; run `messages` in `--limit` slices.
 
 **Old paths still in clients.** A form opened before the move may send back the old unmarked path of a moved
 file: the API treats it as the same file (`sameStoredObject`: receipts, expenses, saved replies, payment
