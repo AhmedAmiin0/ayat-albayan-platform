@@ -12,7 +12,7 @@ export const UPLOAD_SECONDS = 15 * 60;
 export const SLOT_SIGNED_HEADERS = new Set(['content-type', 'content-length']);
 
 /** A slot the bucket would never take (Supabase's own cap and type list, bucket-rules.ts). */
-export class SlotRefused extends Error {
+class SlotRefused extends Error {
   constructor() {
     super('storage slot refused: size or type outside the bucket rule');
   }
