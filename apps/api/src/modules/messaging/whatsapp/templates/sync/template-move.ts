@@ -3,6 +3,7 @@ import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
 import { requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { syncLine, type LineSyncDeps } from './template-line-sync';
+import { templateStamp } from '@/modules/messaging/whatsapp/sender/send-line';
 import { REGISTRY_ENTITY_ID, toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 
@@ -11,7 +12,7 @@ import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catal
 // and the new line is synced at once: approved if the template is there, else the admin submits it.
 
 interface MoveDeps extends LineSyncDeps {
-  queries: Pick<TemplatesRepo, 'all' | 'get' | 'update' | 'insert'>;
+  queries: Pick<TemplatesRepo, 'all' | 'get' | 'update' | 'insert' | 'relaneQueued'>;
   audit: Pick<AuditService, 'record'>;
   /** The registry keeps each line's last sync (GET /messaging/templates/lines). */
   remember: (sync: TemplateLineSync) => Promise<void>;
@@ -27,6 +28,8 @@ export async function moveTemplate(deps: MoveDeps, input: { key: string; line: W
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
   if (row.line === line) return { template: toTemplateView(row), sync: null };
   const moved = await deps.queries.update(key, { line, ...FRESH });
+  // Its queued rows follow it to the new line's lane (docs/42 42-7, #695 review item 2).
+  await deps.queries.relaneQueued({ key, line: templateStamp({ line }).line ?? null });
   await deps.audit.record({
     actorId,
     entity: 'message_templates',

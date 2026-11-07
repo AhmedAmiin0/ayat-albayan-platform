@@ -10,8 +10,11 @@ import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sende
  */
 @Injectable()
 export class SenderWake implements OnModuleInit, OnModuleDestroy {
-  /** This app's own kick: destroy forgets only it (another app may have registered since). */
-  private readonly kick = (): Promise<void> => this.sender.kick();
+  /**
+   * This app's own kick: destroy forgets only it (another app may have registered since). The jobs
+   * queue notifications rows: the main lane (docs/42 42-7); a chat text never waits behind them.
+   */
+  private readonly kick = (): Promise<void> => this.sender.kick({ lane: 'main' });
 
   constructor(private readonly sender: MessageSender) {}
 

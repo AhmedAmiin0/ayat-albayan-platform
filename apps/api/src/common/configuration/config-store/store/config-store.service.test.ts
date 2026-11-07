@@ -127,6 +127,6 @@ describe('ConfigStore.describe on an API copy (docs/09)', () => {
     const urls: string[] = [];
     vi.stubGlobal('fetch', (url: string) => (urls.push(url), Promise.resolve(new Response(null, { status: 204 }))));
     await store({ refresh: vi.fn(async () => true) }).s.describe({ key: 'upload_max_mb', text: 'وصف', actorId: 'u1' });
-    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick']);
+    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick?wait=0']);
   });
 });

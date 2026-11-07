@@ -4,8 +4,9 @@ import { createHttp } from '@/common/infra/http/http';
 import type { HttpFailure } from '@/common/infra/http/failure';
 import { loadEnv } from '@/config/env/env';
 import { appRole, peerUrls, workerUrl } from './app-role';
+import { kickQueryOf, type KickOptions } from './kick-options';
 
-/** The longest a request waits for the worker's pass (the inbox «send now» awaits one sender pass). */
+/** The longest a request waits: the kick's 202, or with `wait` (Outbox.send) the worker's pass. */
 const KICK_TIMEOUT_MS = 30_000;
 export const INTERNAL_HEADER = 'x-ab-internal';
 
@@ -26,6 +27,8 @@ export function validInternalToken(given: string | undefined): boolean {
 /** The peer route: an API copy's own config reload (jobs.controller), served on API copies too. */
 export const PEER_RELOAD_PATH = '/internal/jobs/config-reload/here';
 
+type KickQuery = Record<string, string | undefined>;
+
 const failed = (f: HttpFailure): Error => new Error(`${f.where}: ${f.kind}`);
 const ok = (status: number): boolean => status >= 200 && status < 300;
 
@@ -42,11 +45,11 @@ const internalHttp = (url: string) =>
   });
 
 /** One authenticated POST to an internal route. Never throws: a refused or slow target is only logged. */
-async function postInternal(url: string, what: string): Promise<void> {
+async function postInternal(url: string, what: string, query?: KickQuery): Promise<void> {
   try {
     // The token first: an env read that fails is logged with its own message, as before.
     const headers = { [INTERNAL_HEADER]: internalToken() };
-    const status = await internalHttp(url).status({ path: '', method: 'POST', headers });
+    const status = await internalHttp(url).status({ path: '', method: 'POST', headers, query });
     if (!ok(status)) log.warn(`${what}: answered ${status}, left for its next poll`);
   } catch (e) {
     log.warn(`${what}: failed (${e instanceof Error ? e.message : String(e)}), left for its next poll`);
@@ -54,16 +57,18 @@ async function postInternal(url: string, what: string): Promise<void> {
 }
 
 /**
- * «Run now» from an `api` process: asks the worker to kick the job and waits for its pass. Never throws
- * (as a local kick): no WORKER_URL, a refused or slow worker only means the job's own poll picks it up.
+ * «Run now» from an `api` process: asks the worker to kick the job (its `lane`). The worker answers
+ * 202 at once; with `wait` it answers once the pass is done (docs/42 42-8). Never throws (as a local
+ * kick): no WORKER_URL, a refused or slow worker only means the job's own poll picks it up.
  */
-export async function kickWorker(name: string): Promise<void> {
+export async function kickWorker(name: string, options: KickOptions = {}): Promise<void> {
   const base = workerUrl();
   if (!base) {
     log.warn(`${name}: no WORKER_URL, left for the worker's next poll`);
     return;
   }
-  await postInternal(`${base}/internal/jobs/${encodeURIComponent(name)}/kick`, `${name}: worker kick`);
+  const url = `${base}/internal/jobs/${encodeURIComponent(name)}/kick`;
+  await postInternal(url, `${name}: worker kick`, kickQueryOf(options));
 }
 
 /**

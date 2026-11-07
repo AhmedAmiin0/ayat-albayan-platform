@@ -33,13 +33,13 @@ describe('MessageSender — a kicked pass (docs/42 42-4)', () => {
     const due = [dueMessage({ template_key: null, body: 'نص' })];
     const db = { settings: [ON, ON], messages: [{ data: due }], message_templates: [{ data: [] }] };
     const { sender: s, trips } = sender(db);
-    await expect(s.runOnce(NOW, true)).resolves.toMatchObject({ sent: 1 });
+    await expect(s.runOnce(NOW, { kicked: true })).resolves.toMatchObject({ sent: 1 });
     expect(trips).toEqual(['settings', 'message_templates', 'messages', 'settings']);
   });
 
   it('gate closed: still one settings read and nothing else', async () => {
     const { sender: s, trips } = sender({ settings: [rows({ messaging_enabled: false })] });
-    await s.runOnce(NOW, true);
+    await s.runOnce(NOW, { kicked: true });
     expect(trips).toEqual(['settings']);
   });
 
@@ -49,7 +49,7 @@ describe('MessageSender — a kicked pass (docs/42 42-4)', () => {
     const db = { settings: [off], messages: [empty, empty], message_templates: [empty] };
     const { sender: s, trips } = sender(db);
     worker.release.mockClear();
-    await s.runOnce(NOW, true);
+    await s.runOnce(NOW, { kicked: true });
     expect(trips).toEqual(['settings', 'messages', 'message_templates', 'messages']);
     expect(worker.release).toHaveBeenCalledTimes(1);
   });
@@ -58,6 +58,6 @@ describe('MessageSender — a kicked pass (docs/42 42-4)', () => {
     const { sender: s } = sender({});
     const run = vi.spyOn(s, 'runOnce').mockResolvedValue(emptySummary());
     await s.kick();
-    expect(run.mock.calls[0]?.[1]).toBe(true);
+    expect(run.mock.calls[0]?.[1]).toMatchObject({ kicked: true });
   });
 });
