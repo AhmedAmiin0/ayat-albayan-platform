@@ -1,9 +1,9 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { SALES, TEACHER } from '../../classroom.fakes';
-import { MEETING_ID, meetingRow, NOW } from '../../internal-meetings/internal-meetings.fakes';
-import { hashMeetingToken } from '../../internal-meetings/internal-meetings.token';
-import { CLOSED_PHONE, OPEN_PHONE, openThread, STAFF_ID, STUDENT_A, STUDENT_B } from '../invites/meeting-invites.fakes';
+import { SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import { MEETING_ID, meetingRow, NOW } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import { hashMeetingToken } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
+import { CLOSED_PHONE, OPEN_PHONE, openThread, STAFF_ID, STUDENT_A, STUDENT_B } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
 import { meetingServices, ORIGIN, type MeetingServices } from './meeting-services.fakes';
 
 let s: MeetingServices;

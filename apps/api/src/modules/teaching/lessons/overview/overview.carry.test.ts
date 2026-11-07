@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { TEACHER_ID } from '../lessons.fakes';
+import { TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import { toOverview } from './overview.mapper';
 
 // Riyadh Sunday 2026-10-04 from 00:00 (21:00Z). Abrar's window is 22:00-24:00 Cairo summer time

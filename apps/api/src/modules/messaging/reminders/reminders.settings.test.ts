@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { RemindersSettings } from './reminders.settings';
 
 /** What RemindersJob reads through the reader (the reminder switches and timing moved to NotificationPolicy). */

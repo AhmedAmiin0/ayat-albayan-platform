@@ -1,6 +1,6 @@
 import type { OAuth2Client } from 'google-auth-library';
-import type { GoogleEndpoints } from '../../../../config/env/env';
-import { GoogleApiError } from '../google-client.port';
+import type { GoogleEndpoints } from '@/config/env/env';
+import { GoogleApiError } from '@/modules/platform/google-sync/google-client.port';
 
 type RequestOpts = Parameters<OAuth2Client['request']>[0];
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';

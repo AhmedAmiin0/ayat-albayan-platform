@@ -1,6 +1,6 @@
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { MeService } from './me.service';
 
 const A = 'ExponentPushToken[aaaaaaaaaaaaaaaaaaaaaa]';

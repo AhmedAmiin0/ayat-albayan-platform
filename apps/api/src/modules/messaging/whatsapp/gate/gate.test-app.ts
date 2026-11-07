@@ -2,11 +2,11 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { AuditService } from '../../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { SettingsService } from '../../../../common/settings/settings.service';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SettingsService } from '@/common/settings/settings.service';
 
 export const ADMIN_ID = 'a0000000-0000-4000-8000-000000000001';
 const USERS: Record<string, AuthUser> = {

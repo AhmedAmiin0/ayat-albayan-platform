@@ -1,6 +1,6 @@
-import type { PdfAssets } from '../pdf-assets';
-import type { ReportPdfModel } from '../render/pdf-model';
-import { AR, esc } from '../render/pdf-text';
+import type { PdfAssets } from '@/modules/reporting/report-pdf/pdf-assets';
+import type { ReportPdfModel } from '@/modules/reporting/report-pdf/render/pdf-model';
+import { AR, esc } from '@/modules/reporting/report-pdf/render/pdf-text';
 import { closingHtml, contentHtml, footerHtml, notesHtml, sectionHtml } from './template.body';
 import { REPORT_CSS } from './template.css';
 import { gradesHtml } from './template.grades';

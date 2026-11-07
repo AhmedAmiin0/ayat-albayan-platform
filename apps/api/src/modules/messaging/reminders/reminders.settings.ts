@@ -1,7 +1,7 @@
 import type { SettingKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /**
  * The lookahead, the automatic-messages switch, the academy's default meeting link and the lesson join

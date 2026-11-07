@@ -1,7 +1,7 @@
 import type { SettingKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /** The teacher's report edit window (R-REP-02), the late-cancel policy shown with a report, and the v2 form flag. */
 const KEYS = ['report_teacher_edit_hours', 'late_cancel_hours', 'report_form_v2'] as const satisfies readonly SettingKey[];

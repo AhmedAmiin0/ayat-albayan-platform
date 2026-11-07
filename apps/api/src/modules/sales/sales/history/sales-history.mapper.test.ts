@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bundle, SUB } from '../academy/sales-academy.fakes';
+import { bundle, SUB } from '@/modules/sales/sales/academy/sales-academy.fakes';
 import { statusChanges, toSalesHistory } from './sales-history.mapper';
 
 describe('sales subscription history mapper', () => {

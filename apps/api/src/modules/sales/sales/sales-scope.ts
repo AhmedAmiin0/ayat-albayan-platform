@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 
 /**
  * A signed-in salesperson in the inbox. Owner, 2026-10-11 («sales are playing double roles: sales and

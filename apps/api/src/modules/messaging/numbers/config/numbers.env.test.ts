@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { loadEnv } from '../../../../config/env/env';
+import { loadEnv } from '@/config/env/env';
 import { numberEnv, overlayNumber } from './numbers.env';
-import { LEGACY_ENV, numberRow } from '../numbers.fakes';
+import { LEGACY_ENV, numberRow } from '@/modules/messaging/numbers/numbers.fakes';
 
 // docs/23c: each number sends with its own ids and ITS Vault token only; never a legacy key or another number's.
 

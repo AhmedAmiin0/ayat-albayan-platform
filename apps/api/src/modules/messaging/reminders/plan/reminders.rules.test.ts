@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { at, fakeJob } from '../reminders.fakes';
+import { at, fakeJob } from '@/modules/messaging/reminders/reminders.fakes';
 
 // docs/23 §2c: the reminder rows as notification_rules decide them (module mode), and fail closed.
 

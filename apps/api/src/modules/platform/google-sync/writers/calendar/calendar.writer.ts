@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { contentHash } from './content-hash';
 import { eventBody, eventWanted, isOurEvent, type EventCopy } from './event-format';
 import { scriptEventAt } from './script-guard';
-import { GoogleAlerts } from '../../google-alerts';
-import { GoogleApiError, type EventRef, type GoogleClient, type GoogleEventBody } from '../../google-client.port';
-import type { ItemResult, SyncItem } from '../../sync/google-items.queries';
-import { GoogleMapQueries } from '../../map/google-map.queries';
-import { GoogleSyncSource, type LessonSource } from '../../sync/google-sync.source';
-import { planned, synced, type ItemWriter, type WriteCtx } from '../../sync/write-context';
+import { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts';
+import { GoogleApiError, type EventRef, type GoogleClient, type GoogleEventBody } from '@/modules/platform/google-sync/google-client.port';
+import type { ItemResult, SyncItem } from '@/modules/platform/google-sync/sync/google-items.queries';
+import { GoogleMapQueries } from '@/modules/platform/google-sync/map/google-map.queries';
+import { GoogleSyncSource, type LessonSource } from '@/modules/platform/google-sync/sync/google-sync.source';
+import { planned, synced, type ItemWriter, type WriteCtx } from '@/modules/platform/google-sync/sync/write-context';
 
 const MAIN_CALENDAR = 'primary';
 

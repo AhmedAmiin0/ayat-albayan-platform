@@ -1,5 +1,5 @@
-import type { KapsoLineEnv } from '../../../../../config/env/env';
-import { STUB_ENV } from '../../whatsapp.fakes';
+import type { KapsoLineEnv } from '@/config/env/env';
+import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // Test-only (excluded from the build). A line on Kapso's Meta proxy (docs/19) pointed at
 // tools/wa-stub's kapso prefix, and the bodies Kapso answers that differ from Meta's. Ids invented.

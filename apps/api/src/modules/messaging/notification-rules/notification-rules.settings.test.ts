@@ -1,6 +1,6 @@
 import { CATALOGUE_SETTING_KEYS, SETTING_DEFAULTS, type CatalogueSettings } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { NotificationRulesSettings } from './notification-rules.settings';
 
 /** RulesService handed its settings to catalogueViews, which reads only CatalogueSettings: exactly these keys. */

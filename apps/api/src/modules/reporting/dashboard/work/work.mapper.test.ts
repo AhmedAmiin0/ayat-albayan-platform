@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { WORK_ITEMS } from '../dashboard.types';
+import { WORK_ITEMS } from '@/modules/reporting/dashboard/dashboard.types';
 import { pendingList, taskList, unpaidList, type PendingIn, type TaskIn } from './work.mapper';
 
 const SUHAILA = { id: 's1', code: 'AB-0183', name: 'سهيلة' };

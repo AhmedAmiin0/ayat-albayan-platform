@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { submitColumns } from '../report.mapper';
-import { ADMIN, AFTER, FULL_GRADES, LESSON_ID, REPORT_ID, reportRow, STARTS_AT, STUDENT_ID, submittedRow } from '../reports.fakes';
+import { submitColumns } from '@/modules/reporting/reports/report.mapper';
+import { ADMIN, AFTER, FULL_GRADES, LESSON_ID, REPORT_ID, reportRow, STARTS_AT, STUDENT_ID, submittedRow } from '@/modules/reporting/reports/reports.fakes';
 import { lessonOutcome, submitPayload, type SubmitPlanInput } from './submit-plan';
 
 function input(over: Partial<SubmitPlanInput> = {}): SubmitPlanInput {

@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../../common/storage/storage.service';
+import type { StorageService } from '@/common/storage/storage.service';
 import { DriveFiles } from './drive-files';
-import type { ItemResult } from '../../sync/google-items.queries';
-import { SUMMARY_HEADER } from '../../google-format';
-import type { GoogleAccountQueries } from '../../oauth/google-account.queries';
-import { FakeGoogle } from '../../http/google-client.fake';
-import type { GoogleData } from '../../google-data';
-import type { GoogleMapQueries, StudentFiles } from '../../map/google-map.queries';
-import type { GoogleSyncSource } from '../../sync/google-sync.source';
-import { fakeData, item, REPORT_ID, reportSource, STUDENT_ID } from '../../google-sync.fakes';
+import type { ItemResult } from '@/modules/platform/google-sync/sync/google-items.queries';
+import { SUMMARY_HEADER } from '@/modules/platform/google-sync/google-format';
+import type { GoogleAccountQueries } from '@/modules/platform/google-sync/oauth/google-account.queries';
+import { FakeGoogle } from '@/modules/platform/google-sync/http/google-client.fake';
+import type { GoogleData } from '@/modules/platform/google-sync/google-data';
+import type { GoogleMapQueries, StudentFiles } from '@/modules/platform/google-sync/map/google-map.queries';
+import type { GoogleSyncSource } from '@/modules/platform/google-sync/sync/google-sync.source';
+import { fakeData, item, REPORT_ID, reportSource, STUDENT_ID } from '@/modules/platform/google-sync/google-sync.fakes';
 import { ReportPdfWriter } from './report-pdf.writer';
-import { SheetRowsWriter } from '../sheets/sheet-rows.writer';
+import { SheetRowsWriter } from '@/modules/platform/google-sync/writers/sheets/sheet-rows.writer';
 
 const ROOT = 'Root_ABCDEFGHIJ';
 const SUMMARY = 'Summary_ABCDEFGHIJ';

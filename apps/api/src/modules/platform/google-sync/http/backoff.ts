@@ -1,5 +1,5 @@
 import { backoffDelay, withJitter } from '@ab/shared';
-import { GoogleApiError } from '../google-client.port';
+import { GoogleApiError } from '@/modules/platform/google-sync/google-client.port';
 
 /** Five attempts in all (docs/24 §3), then `failed` until an admin retries (or, for lessons, the daily reconcile). */
 export const MAX_ATTEMPTS = 5;

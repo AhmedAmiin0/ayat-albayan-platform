@@ -1,9 +1,9 @@
 import type { MessageView } from '@ab/shared';
-import type { AuditService } from '../../../../common/audit/audit.service';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import type { SalesScope } from '../../../sales/sales/sales-scope';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { AuthUser } from '@/common/auth/verify-token';
+import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import type { Sent } from './outbox';
-import type { TeacherScope } from '../teacher-threads/teacher-scope';
+import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 
 export interface SendAudit {
   sent: Sent;

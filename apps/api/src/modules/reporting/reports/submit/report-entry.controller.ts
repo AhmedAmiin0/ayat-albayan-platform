@@ -1,12 +1,12 @@
 import { teacherReportsQuerySchema, type PendingReportView, type ReportFormResponse, type StudentReportsResponse, type TeacherReportView } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { pageQuerySchema, parseOrThrow, type Page } from '../../../../common/http/http';
-import { ReportHistoryService } from '../history/report-history.service';
-import { ReportsService } from '../reports.service';
-import { TeacherReportsService } from '../teacher/teacher-reports.service';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { pageQuerySchema, parseOrThrow, type Page } from '@/common/http/http';
+import { ReportHistoryService } from '@/modules/reporting/reports/history/report-history.service';
+import { ReportsService } from '@/modules/reporting/reports/reports.service';
+import { TeacherReportsService } from '@/modules/reporting/reports/teacher/teacher-reports.service';
 
 /**
  * Where reports are reached from (docs/11 §4 R1, R5, R11): the lesson, the student, the teacher's

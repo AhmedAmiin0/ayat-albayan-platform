@@ -1,9 +1,9 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { systemResolver } from '../../../common/auth/auth.guard';
-import type { PermissionResolver } from '../../../common/auth/permissions';
-import { STUDENT_ID } from '../../finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '../../finance/subscriptions/test-app';
+import { systemResolver } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import { STUDENT_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { salesDefaults } from './sales-money.fakes';
 
 // GET /sales/money/family with sales.renew_any (owner 2026-10-29, docs/16 row 38): every child, `mine` says whose.

@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ADMIN_ACTOR, FAMILY } from '../calls.fakes';
+import { ADMIN_ACTOR, FAMILY } from '@/modules/messaging/calls/calls.fakes';
 import { NOW, setup } from './calls-number-permission.fakes';
 
-vi.mock('../kapso/calling-line', () => ({ callingLine: vi.fn() }));
+vi.mock('@/modules/messaging/calls/kapso/calling-line', () => ({ callingLine: vi.fn() }));
 
 describe('call permission on the calls number: the state (docs/28 §10)', () => {
   it("granted shows the stored grant's expiry when Kapso gives none, and the family's last answer", async () => {

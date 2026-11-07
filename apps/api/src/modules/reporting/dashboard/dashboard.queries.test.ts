@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { DashboardQueries } from './dashboard.queries';
 import { FinanceQueries } from './finance/finance.queries';
 import { WorkQueries } from './work/work.queries';

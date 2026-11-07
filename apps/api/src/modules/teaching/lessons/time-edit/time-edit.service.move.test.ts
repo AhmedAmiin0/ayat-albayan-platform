@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { body, CLASH, LESSON_ID, lessonRow, NOW, retimed, timeSetup } from './time-edit.fakes';
-import { ADMIN, STUDENT_ID, TEACHER_ID } from '../lessons.fakes';
+import { ADMIN, STUDENT_ID, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
 
 const STUDENT_CLASH = { kind: 'student_busy', startsAt: '2026-10-05T14:00:00.000Z', endsAt: '2026-10-05T14:45:00.000Z', studentId: STUDENT_ID };
 

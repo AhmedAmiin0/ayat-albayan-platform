@@ -1,9 +1,9 @@
 import { reportV2DraftSchema, reportV2SubmitSchema, type ReportView } from '@ab/shared';
 import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow, sentOnly } from '../../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow, sentOnly } from '@/common/http/http';
 import { ReportV2Service } from './report-v2.service';
 
 /**

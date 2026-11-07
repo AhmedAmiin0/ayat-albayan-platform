@@ -1,9 +1,9 @@
 import { NOTIFICATION_KEYS, notificationEntry, rulePatchSchema, type NotificationKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { ruleError, unknownRule } from '../rules.errors';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ruleError, unknownRule } from '@/modules/messaging/notification-rules/rules.errors';
 import { RulesJournal } from './rules.journal';
-import { planPatch, type PatchPlan } from '../rules.patch';
+import { planPatch, type PatchPlan } from '@/modules/messaging/notification-rules/rules.patch';
 import { RulesPersist } from './rules.persist';
 
 interface RuleWrite {

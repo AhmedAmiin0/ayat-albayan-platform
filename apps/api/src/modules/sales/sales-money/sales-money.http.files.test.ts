@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { moneyApp, resetMocks, SALES_A, SALES_B, type Mocks } from '../../finance/subscriptions/test-app';
+import { moneyApp, resetMocks, SALES_A, SALES_B, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { PAY, salesDefaults } from './sales-money.fakes';
 import { attachment, JPEG, PAYMENT_ID, paymentRow } from './sales-money.pay.fakes';
 

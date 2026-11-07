@@ -1,11 +1,11 @@
 import type { GoogleDriveInput, GoogleSettingsInput } from '@ab/shared';
 import { ConflictException, Injectable } from '@nestjs/common';
 import type { Json } from '@ab/db';
-import { classify } from '../http/backoff';
-import { discover, readDiscovery } from '../map/discovery';
-import { GoogleData } from '../google-data';
-import { GoogleRuntime } from '../google-runtime';
-import { GOOGLE_ENTITY_ID } from '../oauth/google-oauth.service';
+import { classify } from '@/modules/platform/google-sync/http/backoff';
+import { discover, readDiscovery } from '@/modules/platform/google-sync/map/discovery';
+import { GoogleData } from '@/modules/platform/google-sync/google-data';
+import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
+import { GOOGLE_ENTITY_ID } from '@/modules/platform/google-sync/oauth/google-oauth.service';
 
 /** The admin's actions on the sync: settings, discovery, the Drive root. Each one re-queues what it unblocks. */
 @Injectable()

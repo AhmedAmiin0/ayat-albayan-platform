@@ -1,12 +1,12 @@
 import type { GoogleSyncItemView } from '@ab/shared';
 import { ConflictException, Controller, Get, NotFoundException, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { requireAdmin } from './admin-only';
-import { GoogleItemsQueries } from '../sync/google-items.queries';
+import { GoogleItemsQueries } from '@/modules/platform/google-sync/sync/google-items.queries';
 import { GoogleLogQueries } from './google-log.queries';
-import { GoogleSyncJob } from '../sync/google-sync.job';
+import { GoogleSyncJob } from '@/modules/platform/google-sync/sync/google-sync.job';
 
 /** The sync log, «إعادة المحاولة» and «زامن الآن» (docs/24 §3). */
 @ApiTags('google-sync')

@@ -1,8 +1,8 @@
 import type { MakeupCandidate } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { dbError } from '../../../../common/http/http';
-import { BookingSettings } from '../booking.settings';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 
 const DAY_MS = 86_400_000;
 const LIMIT = 20;

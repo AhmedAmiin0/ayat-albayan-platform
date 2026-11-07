@@ -1,5 +1,5 @@
 import type { AcademySettings } from '@ab/shared';
-import type { AuthUser } from '../auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 
 /**
  * What GET/PATCH /settings ask the notification rules (docs/26b m1/m3, docs/26 §2f), provided by the

@@ -1,4 +1,4 @@
-import type { Db } from '../db/db.module';
+import type { Db } from '@/common/db/db.module';
 
 /** A GoTrue Admin API failure as supabase-js reports it. */
 interface AuthFailure {

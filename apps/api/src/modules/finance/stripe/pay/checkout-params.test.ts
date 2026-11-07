@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { toPublicLink } from '../links/payment-links.mapper';
-import { linkRow } from '../testing/stripe-mocks.fakes';
+import { toPublicLink } from '@/modules/finance/stripe/links/payment-links.mapper';
+import { linkRow } from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
 import { checkoutParams, sessionExpiry } from './checkout-params';
 
 const NOW = new Date('2026-10-28T10:00:00Z');

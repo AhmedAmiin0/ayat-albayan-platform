@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 import type { TablesInsert } from '@ab/db';
 import { wakeOn } from '@/common/jobs';
 import type { ReadyMessage } from './ready/report-ready-choice';

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { PHONE, threadRow, threadStudent } from '../inbox.fakes';
-import { inboxApp, NO_PEOPLE } from '../test-app';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { PHONE, threadRow, threadStudent } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp, NO_PEOPLE } from '@/modules/messaging/inbox/test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}`;

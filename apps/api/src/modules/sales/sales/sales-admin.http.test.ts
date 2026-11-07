@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lead } from '../leads/leads.fakes';
+import { lead } from '@/modules/sales/leads/leads.fakes';
 import { A, salesApp } from './sales.fakes';
 
 type App = Awaited<ReturnType<typeof salesApp>>;

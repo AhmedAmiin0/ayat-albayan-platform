@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS, type SettingKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /**
  * ThreadFileSender: the size limit of a file sent from the chat (owner 2026-10-19 #2); the chat

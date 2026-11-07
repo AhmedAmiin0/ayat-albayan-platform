@@ -1,7 +1,7 @@
 import type { LeadSource } from '@ab/shared';
-import type { SourceKey } from '../dashboard.types';
+import type { SourceKey } from '@/modules/reporting/dashboard/dashboard.types';
 import type { CostFact, ExpenseFact, PaymentFact } from './finance';
-import { riyadhMonth } from '../range';
+import { riyadhMonth } from '@/modules/reporting/dashboard/range';
 
 // DB rows → finance facts (pure). A lesson's cost is its ledger amount (EGP): the ONE pay rule of
 // v_teacher_payable_lessons, the rate frozen when the lesson counted, the same amount the monthly

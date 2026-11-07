@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, OTHER_TEACHER, SALES, TEACHER } from '../../classroom.fakes';
-import { meetingRow, NOW, scheduledRow } from '../../internal-meetings/internal-meetings.fakes';
+import { ADMIN, OTHER_TEACHER, SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import { meetingRow, NOW, scheduledRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
 import { meetingServices, type MeetingServices } from './meeting-services.fakes';
 
 let s: MeetingServices;

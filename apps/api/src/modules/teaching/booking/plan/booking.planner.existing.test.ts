@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { bookingRequest, fakePlanner, IDS, NOW } from '../booking.fakes';
+import { bookingRequest, fakePlanner, IDS, NOW } from '@/modules/teaching/booking/booking.fakes';
 
 describe('BookingPlanner — existing students (R-SCH-06, docs/10 §5 #14)', () => {
   beforeEach(() => vi.useFakeTimers({ now: NOW, toFake: ['Date'] }));

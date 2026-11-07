@@ -1,6 +1,6 @@
 import { packageProgress } from '@ab/shared';
-import type { ReportPdfModel } from '../render/pdf-model';
-import { AR, esc, ltr, para, stamp } from '../render/pdf-text';
+import type { ReportPdfModel } from '@/modules/reporting/report-pdf/render/pdf-model';
+import { AR, esc, ltr, para, stamp } from '@/modules/reporting/report-pdf/render/pdf-text';
 import { ornament } from './template.header';
 
 const r = AR.reports;

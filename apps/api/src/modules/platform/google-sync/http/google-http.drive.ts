@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
-import type { GoogleFileMeta } from '../google-client.port';
-import { MIME } from '../google-format';
+import type { GoogleFileMeta } from '@/modules/platform/google-sync/google-client.port';
+import { MIME } from '@/modules/platform/google-sync/google-format';
 import type { GoogleHttp } from './google-http';
 
 const FIELDS = 'id,name,mimeType,trashed,appProperties';

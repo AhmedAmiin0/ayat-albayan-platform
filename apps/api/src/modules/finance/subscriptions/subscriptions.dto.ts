@@ -7,8 +7,8 @@ import {
   type SubscriptionPricing,
 } from '@ab/shared';
 import { z } from 'zod';
-import { pageQuerySchema } from '../../../common/http/http';
-import type { QuoteQuery } from '../pricing/pricing.dto';
+import { pageQuerySchema } from '@/common/http/http';
+import type { QuoteQuery } from '@/modules/finance/pricing/pricing.dto';
 
 /**
  * GET /subscriptions?status&studentId&paid&student&package&sort&dir&page&pageSize (S1, R-NFR-08).

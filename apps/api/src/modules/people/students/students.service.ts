@@ -7,10 +7,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AuditService } from '../../../common/audit/audit.service';
-import { DB, type Db } from '../../../common/db/db.module';
-import { GuardiansService } from '../guardians/guardians.service';
-import { dbError } from '../guardians/http';
+import { AuditService } from '@/common/audit/audit.service';
+import { DB, type Db } from '@/common/db/db.module';
+import { GuardiansService } from '@/modules/people/guardians/guardians.service';
+import { dbError } from '@/modules/people/guardians/http';
 import { detectDuplicates } from './duplicate-detector';
 import { LeadLink } from './lead-link';
 import type { StudentCreateRequest } from './students.dto';

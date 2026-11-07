@@ -1,12 +1,12 @@
 import type { Conflict } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { gateConfirmations } from '../../../../common/rules/confirmations';
-import { NotificationPolicy } from '../../../messaging/notification-rules/policy/policy';
-import type { ChangeSet, TimeEditChange } from '../change-set';
-import { callRpc } from '../rpc';
-import { dbError } from '../../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { gateConfirmations } from '@/common/rules/confirmations';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import type { ChangeSet, TimeEditChange } from '@/modules/teaching/scheduling/change-set';
+import { callRpc } from '@/modules/teaching/scheduling/rpc';
+import { dbError } from '@/common/http/http';
 
 /** One occurrence to persist for a rule (UTC ISO instants + the link copied onto the lesson). */
 export type OccurrenceRow = { starts_at: string; ends_at: string; meeting_link: string | null };

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { academyApp, scheduleRow } from '../academy/sales-academy.fakes';
+import { academyApp, scheduleRow } from '@/modules/sales/sales/academy/sales-academy.fakes';
 
 type App = Awaited<ReturnType<typeof academyApp>>;
 // The lesson's meeting_link and platform_classroom are in since owner 2026-10-26; nothing else secret.

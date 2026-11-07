@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { LinesCheck } from './lines.check';
-import { LINES_RECORDED as R, routedFetch, stubEnvs, TWO_LINES_ENV } from '../whatsapp.lines.fakes';
-import { STUB_ENV } from '../whatsapp.fakes';
+import { LINES_RECORDED as R, routedFetch, stubEnvs, TWO_LINES_ENV } from '@/modules/messaging/whatsapp/whatsapp.lines.fakes';
+import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 in «افحص الخطوط»: gaps are key NAMES only; a duplicate chat id is its own flag.
 

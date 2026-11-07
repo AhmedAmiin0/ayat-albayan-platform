@@ -3,12 +3,12 @@
 import { createHmac } from 'node:crypto';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '../../../common/auth/auth.guard';
-import { PushService } from '../../../common/push/push.service';
-import { LeadsService } from '../../sales/leads/leads.service';
-import { LessonStatusService } from '../../teaching/lessons/status/lesson-status.service';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '@/common/auth/auth.guard';
+import { PushService } from '@/common/push/push.service';
+import { LeadsService } from '@/modules/sales/leads/leads.service';
+import { LessonStatusService } from '@/modules/teaching/lessons/status/lesson-status.service';
 import { fakeExternalQueries, fakeKapso } from './external/external.fakes';
 import { KAPSO_HISTORY } from './external/external-status';
 import { ExternalRepo } from './external/external.repo';

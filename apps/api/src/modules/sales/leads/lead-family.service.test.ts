@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { errorCode } from '../../../common/http/errors';
-import { fakeDb, type FakeResult } from '../../people/guardians/fake-db';
+import { errorCode } from '@/common/http/errors';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { LeadFamilyService } from './lead-family.service';
 
 const RPC = 'rpc:link_family_phone';

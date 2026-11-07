@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { crmResponse, stubFetch } from '../crm-history/crm-history.fakes';
+import { crmResponse, stubFetch } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history.fakes';
 import { BATCH } from './crm-media-copier';
 import { copyWorld, crmRows } from './crm-copy.fakes';
 import { copyHost } from './crm-media-copy.job';

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { GoogleItemsQueries } from './google-items.queries';
-import { item } from '../google-sync.fakes';
+import { item } from '@/modules/platform/google-sync/google-sync.fakes';
 
 describe('GoogleItemsQueries.claim', () => {
   it('hands a pass its items events → PDF → attendance → summary, whatever order RETURNING gave', async () => {

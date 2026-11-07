@@ -9,12 +9,12 @@ import {
 } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow, type Page } from '../../../../common/http/http';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow, type Page } from '@/common/http/http';
 import { SalesAcademyService } from './sales-academy.service';
-import { withMine } from '../schedule/sales-schedule.mapper';
-import { SalesScheduleService } from '../schedule/sales-schedule.service';
+import { withMine } from '@/modules/sales/sales/schedule/sales-schedule.mapper';
+import { SalesScheduleService } from '@/modules/sales/sales/schedule/sales-schedule.service';
 
 /**
  * Sales as the academy's assistant too (docs/16): teachers, every student and the lessons running now

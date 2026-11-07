@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { systemResolver } from '../../auth/permissions';
-import { fakePolicy } from '../../../modules/messaging/notification-rules/policy/policy.fakes';
+import { systemResolver } from '@/common/auth/permissions';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { PushAudience } from './push.audience';
-import { fakePushDb } from '../push.fakes';
+import { fakePushDb } from '@/common/push/push.fakes';
 
 const profiles = [
   { id: 's1', role: 'sales', push_tokens: [] },

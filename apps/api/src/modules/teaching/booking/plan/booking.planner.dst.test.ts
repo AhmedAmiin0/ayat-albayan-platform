@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { bookingRequest, fakePlanner, IDS } from '../booking.fakes';
+import { bookingRequest, fakePlanner, IDS } from '@/modules/teaching/booking/booking.fakes';
 
 // Booked on Tue 1 Sep 2026: the 5-week horizon ends before Cairo leaves DST (end of Thu 29 Oct).
 // Riyadh family, Cairo teacher (issue B3): 18:00 Riyadh is 15:00Z all year; 17:00 Cairo is 14:00Z

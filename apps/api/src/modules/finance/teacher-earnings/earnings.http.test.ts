@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { earning, eid, OTHER_TEACHER, PAYMENT, paymentRow, REQUEST, session, TEACHER } from './earnings.fakes';
 
 const BODY = { amount: 70, method: 'cash', paidAt: '2026-10-01T09:00:00Z', clientRequestId: REQUEST };

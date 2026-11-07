@@ -1,10 +1,10 @@
 import { meetingModeOf, usesPlatform, type Attendance, type Grade, type LessonStatus, type Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { loadEnv } from '../../../../config/env/env';
-import { firstWebOrigin } from '../../../teaching/classroom/classroom.config';
-import { classroomUrl } from '../../../messaging/reminders/plan/reminders.links';
-import type { EventLesson, LessonKind } from '../writers/calendar/event-format';
+import { DB, type Db } from '@/common/db/db.module';
+import { loadEnv } from '@/config/env/env';
+import { firstWebOrigin } from '@/modules/teaching/classroom/classroom.config';
+import { classroomUrl } from '@/modules/messaging/reminders/plan/reminders.links';
+import type { EventLesson, LessonKind } from '@/modules/platform/google-sync/writers/calendar/event-format';
 import { GoogleSyncAcademySettings } from './google-sync.settings';
 
 /**

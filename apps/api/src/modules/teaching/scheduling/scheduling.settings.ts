@@ -1,7 +1,7 @@
 import type { SettingKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /** HorizonJob and RuleExtendService: how many weeks ahead a rule is topped up (R-SCH-02). */
 const KEYS = ['booking_horizon_weeks'] as const satisfies readonly SettingKey[];

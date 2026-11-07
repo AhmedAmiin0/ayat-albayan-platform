@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { inboxApp } from '../test-app';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const LIST = '0c000000-0000-4000-8000-000000000001';

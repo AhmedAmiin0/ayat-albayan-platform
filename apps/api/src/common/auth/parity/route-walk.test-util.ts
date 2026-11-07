@@ -3,9 +3,9 @@ import { join } from 'node:path';
 import { METHOD_METADATA } from '@nestjs/common/constants';
 import { DiscoveryModule, DiscoveryService, MetadataScanner, Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { AppModule } from '../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver } from '../auth.guard';
-import { IS_PUBLIC, PERMISSION, SIGNED_IN } from '../decorators';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver } from '@/common/auth/auth.guard';
+import { IS_PUBLIC, PERMISSION, SIGNED_IN } from '@/common/auth/decorators';
 
 /** One controller handler as the AuthGuard sees it. key = 'StudentsController.list'. */
 export interface RouteAccess {

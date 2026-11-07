@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { LESSON_ID, lessonRow, OTHER_TEACHER_ID } from '../lessons.fakes';
-import { lessonsApp } from '../test-app';
+import { LESSON_ID, lessonRow, OTHER_TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import { lessonsApp } from '@/modules/teaching/lessons/test-app';
 
 type Harness = Awaited<ReturnType<typeof lessonsApp>>;
 const url = (action: string, id = LESSON_ID) => `/lessons/${id}/${action}`;

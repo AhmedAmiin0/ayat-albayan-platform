@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AFTER, ATTACHMENT_ID, REPORT_ID, submittedRow } from '../reports.fakes';
-import { reportsApp } from '../test-app';
+import { AFTER, ATTACHMENT_ID, REPORT_ID, submittedRow } from '@/modules/reporting/reports/reports.fakes';
+import { reportsApp } from '@/modules/reporting/reports/test-app';
 
 const BASE = `/reports/${REPORT_ID}`;
 const FILE = { id: ATTACHMENT_ID, storage_path: `${REPORT_ID}/x.png`, mime: 'image/png', size: 900, created_at: AFTER.toISOString() };

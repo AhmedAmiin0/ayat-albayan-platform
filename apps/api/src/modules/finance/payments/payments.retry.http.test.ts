@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '../subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
+import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
 const REQUEST = '7d1c6a52-3b7e-4f0e-9a51-2f7c3e9b8a10';
 const INVOICE = '1f000000-0000-4000-8000-000000000001';

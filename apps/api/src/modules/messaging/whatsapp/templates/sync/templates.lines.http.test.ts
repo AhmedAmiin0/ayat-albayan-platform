@@ -1,8 +1,8 @@
 import { systemPermissionsOf } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PermissionResolver } from '../../../../../common/auth/permissions';
-import { whatsappApp } from '../../test-app';
-import { templateRow } from '../../whatsapp.fakes';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import { whatsappApp } from '@/modules/messaging/whatsapp/test-app';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 

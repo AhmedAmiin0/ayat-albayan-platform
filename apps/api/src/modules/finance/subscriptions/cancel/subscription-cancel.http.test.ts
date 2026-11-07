@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { STUDENT_ID, SUB_ID, subRow } from '../money/money.fakes';
-import { ADMIN, moneyApp, resetMocks, type Mocks } from '../test-app';
+import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { ADMIN, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
 // POST /subscriptions/:id/cancel «إلغاء الباقة» (owner 2026-10-28): never a delete; only a package nothing hangs on.
 

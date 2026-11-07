@@ -1,9 +1,9 @@
 import { systemPermissionsOf, type Permission } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PermissionResolver } from '../../../../common/auth/permissions';
-import { templateRow } from '../../whatsapp/whatsapp.fakes';
-import { PHONE } from '../inbox.fakes';
-import { inboxApp } from '../test-app';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { PHONE } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
 // Owner 2026-10-15: «only allowed templates should be listed to the assistants». A sales role edited in
 // the database to hold templates.manage / templates.send_all still lists and sends only the allow-list.

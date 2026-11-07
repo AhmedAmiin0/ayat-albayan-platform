@@ -1,7 +1,7 @@
 import { systemPermissionsOf } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { systemResolver, type PermissionResolver } from '../auth/permissions';
-import type { Db } from '../db/db.module';
+import { systemResolver, type PermissionResolver } from '@/common/auth/permissions';
+import type { Db } from '@/common/db/db.module';
 import { fakePushDb, flushPushes, pushService } from './push.fakes';
 
 const event = { subject: 'msg-1', vars: { name: 'أم سهيلة', text: 'السلام عليكم' }, data: { phone: '+966500000001' } };

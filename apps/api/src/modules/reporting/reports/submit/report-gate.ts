@@ -1,11 +1,11 @@
 import { canEditReport } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { conflict } from '../../../../common/http/errors';
-import { callerRole, ReportAccess, type ReportCaller } from '../report-access';
-import type { ViewContext } from '../report.mapper';
-import type { ReportRow } from '../report-row';
-import { ReportsQueries } from '../reports.queries';
-import { ReportsSettings } from '../reports.settings';
+import { conflict } from '@/common/http/errors';
+import { callerRole, ReportAccess, type ReportCaller } from '@/modules/reporting/reports/report-access';
+import type { ViewContext } from '@/modules/reporting/reports/report.mapper';
+import type { ReportRow } from '@/modules/reporting/reports/report-row';
+import { ReportsQueries } from '@/modules/reporting/reports/reports.queries';
+import { ReportsSettings } from '@/modules/reporting/reports/reports.settings';
 
 /** The caller, now, the teacher's edit window, the late-cancel policy and report_form_v2. */
 type ReportContext = ViewContext & { lateCancelHours: number | null; formV2: boolean };

@@ -1,5 +1,5 @@
 import { trialOutcome, type SalesTrialLesson } from '@ab/shared';
-import { type TrialLessonRead, trialLessonsOf } from '../../../teaching/booking';
+import { type TrialLessonRead, trialLessonsOf } from '@/modules/teaching/booking';
 
 /**
  * «الحلقة التجريبية» (owner 2026-10-28): the trial lessons as «مواعيد الحلقة التجريبية» finds them (a

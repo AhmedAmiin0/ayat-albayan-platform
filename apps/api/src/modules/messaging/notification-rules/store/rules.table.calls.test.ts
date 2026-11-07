@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { RulesTable } from './rules.table';
 
 // A notification rule can never pick the calls number (docs/28 §10): it is no number to route by.

@@ -2,11 +2,11 @@
 // code crypto on AppModule; the stores, GoTrue, the WhatsApp send and the settings are the in-memory fakes.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../common/settings/settings.service';
-import { CodeSend } from '../../messaging/whatsapp';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
+import { CodeSend } from '@/modules/messaging/whatsapp';
 import { FakeAudit, FakeCodes, FakeCodeSend, PEPPER } from './sign-in.fakes';
 import { FakeAuth, FakeSubjects } from './sign-in.fakes.accounts';
 import { LIMIT_STORE, MemoryLimitStore } from './codes/limit-store';

@@ -1,5 +1,5 @@
 import { defaultGrantsOf, isEditableSystemRole, type Permission } from '@ab/shared';
-import type { AuditEntry } from '../../../common/audit/audit.service';
+import type { AuditEntry } from '@/common/audit/audit.service';
 import { isSystemAdmin, type RoleState } from './roles.logic';
 import type { RoleRecord } from './roles.store';
 

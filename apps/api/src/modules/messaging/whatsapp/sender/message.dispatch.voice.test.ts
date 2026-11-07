@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
+import type { StorageService } from '@/common/storage/storage.service';
 import { MessageDispatch } from './message.dispatch';
 import { dueMessage } from './sender.fakes';
-import type { WhatsappLines } from '../whatsapp.types';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // A voice note recorded in the app (owner 2026-10-27): the API's ogg/opus copy goes as voice:true.
 const client = { sendTemplate: vi.fn(), sendText: vi.fn(), sendDocument: vi.fn() };

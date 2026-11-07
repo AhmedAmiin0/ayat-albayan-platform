@@ -1,6 +1,6 @@
 import type { TablesUpdate } from '@ab/db';
 import type { MessageStatus } from '@ab/shared';
-import type { StatusEvent } from '../webhook.events';
+import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 
 // R-MSG-05: Meta delivery statuses move an outbound row forward only. Webhooks arrive out of
 // order and are retried, so «delivered» after «read» or a repeated «sent» changes nothing.

@@ -2,16 +2,16 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../common/auth/verify-token';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { SalesAssignRepo } from './assign/sales-assign.repo';
 import type { SalesLessonRow } from './schedule/sales-lessons';
 import type { SalesOwnership } from './sales-ownership';
 import { SalesRepo, type SalesSubscriptionRow } from './sales.repo';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
 
 export const A = 'a1000000-0000-4000-8000-00000000000a';
 export const B = 'b1000000-0000-4000-8000-00000000000b';

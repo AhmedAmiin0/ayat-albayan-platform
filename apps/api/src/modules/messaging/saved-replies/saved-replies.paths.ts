@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { storageKeyOf } from '@ab/shared';
-import { extFor } from '../../../common/storage/storage.paths';
+import { extFor } from '@/common/storage/storage.paths';
 
 // A saved reply's attachment lives in the chat's own bucket (wa-media) under saved/{actor}/: the
 // person who uploaded it. Sending it copies it to out/{sender}/{request}/ (chatOutPath), so the chat's

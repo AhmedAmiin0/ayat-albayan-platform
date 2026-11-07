@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { hashLinkToken, looksLikeLinkToken } from '../../../teaching/classroom/join/join-link.token';
-import { callsOf, chainDb } from '../chain-db.fake';
+import { hashLinkToken, looksLikeLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import { callsOf, chainDb } from '@/modules/messaging/reminders/chain-db.fake';
 import type { RoomCandidate } from './reminders.links';
 import { roomLinkRows } from './reminders.room';
 

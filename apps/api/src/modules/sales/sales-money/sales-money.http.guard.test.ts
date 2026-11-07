@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { STUDENT_ID, SUB_ID } from '../../finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type InjectArgs, type Mocks } from '../../finance/subscriptions/test-app';
+import { STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { moneyApp, resetMocks, type InjectArgs, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { AUTO_ASSIGN_OFF, CREATE, MSG, PAY, salesDefaults } from './sales-money.fakes';
 
 const ROUTES: InjectArgs[] = [

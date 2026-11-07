@@ -1,11 +1,11 @@
 import { GOOGLE_SCOPES } from '@ab/shared';
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
-import { loadEnv } from '../../../../config/env/env';
-import { kickConfigReload } from '../../../../config/role/worker-kick';
+import { loadEnv } from '@/config/env/env';
+import { kickConfigReload } from '@/config/role/worker-kick';
 import { GoogleAccountQueries } from './google-account.queries';
-import { GOOGLE_CLIENT_FACTORY, type GoogleClientFactory } from '../google-client.port';
-import { GoogleData } from '../google-data';
-import { GoogleRuntime } from '../google-runtime';
+import { GOOGLE_CLIENT_FACTORY, type GoogleClientFactory } from '@/modules/platform/google-sync/google-client.port';
+import { GoogleData } from '@/modules/platform/google-sync/google-data';
+import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
 import { newState, nonceHash, readState, stateKey } from './oauth-state';
 
 /** The callback's outcome, shown by the web as a toast (?google=connected | ?google=error&reason=…). */

@@ -1,15 +1,15 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../app.module';
-import { AuditService } from '../../../common/audit/audit.service';
-import { fakePhotos } from '../../../common/storage/avatars/avatars.fakes';
-import { StaffPhotos } from '../../../common/storage/avatars/staff-photos';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../common/auth/auth.guard';
-import { AccountDisabledError, type PermissionResolver } from '../../../common/auth/permissions';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { FakeRoleStore } from '../roles/roles.fakes';
-import { ROLE_STORE } from '../roles/roles.store';
+import { AppModule } from '@/app.module';
+import { AuditService } from '@/common/audit/audit.service';
+import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
+import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import { AccountDisabledError, type PermissionResolver } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { FakeRoleStore } from '@/modules/people/roles/roles.fakes';
+import { ROLE_STORE } from '@/modules/people/roles/roles.store';
 import { FakeAuthAdmin, FakeUserStore, row } from './users.fakes';
 import { AUTH_ADMIN, USER_STORE } from './store/users.store';
 

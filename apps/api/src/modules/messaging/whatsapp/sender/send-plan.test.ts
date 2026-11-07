@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { byDriver } from '../drivers/meta/graph';
-import { KAPSO_ENV } from '../drivers/kapso/kapso.fakes';
+import { byDriver } from '@/modules/messaging/whatsapp/drivers/meta/graph';
+import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
 import { errorCode, failurePlan, messageLabel, quickReplyPayloads, readyToSend, reportIdOf } from './send-plan';
-import { REMINDER_24H, REPORT_READY, STUB_ENV, templateRow } from '../whatsapp.fakes';
-import { WaError } from '../whatsapp.types';
+import { REMINDER_24H, REPORT_READY, STUB_ENV, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const NOW = new Date('2026-10-02T08:00:00Z');
 const meta = (code: number | null, status = 400) => new WaError('(#x) meta says no', { code, status, details: 'why' });

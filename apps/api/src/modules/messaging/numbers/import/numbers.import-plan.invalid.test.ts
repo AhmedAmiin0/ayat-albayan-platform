@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { loadEnv } from '../../../../config/env/env';
-import { LEGACY_ENV, numberRow } from '../numbers.fakes';
+import { loadEnv } from '@/config/env/env';
+import { LEGACY_ENV, numberRow } from '@/modules/messaging/numbers/numbers.fakes';
 import { planAll, type PlanInput } from './numbers.import-plan';
 
 // PR #142 item 16: an id that would fail a wa_numbers check (migration 620, ^[A-Za-z0-9_-]{1,64}$) makes

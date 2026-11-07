@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ADMIN, ASSISTANT, GUARDIAN, OTHER_TEACHER, SALES, TEACHER } from '../classroom.fakes';
+import { ADMIN, ASSISTANT, GUARDIAN, OTHER_TEACHER, SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { meetingRow } from './internal-meetings.fakes';
 import { canManageMeeting, hashMeetingToken, looksLikeMeetingToken, meetingRoleOf, newMeetingToken, roleOfIdentity } from './internal-meetings.token';
 

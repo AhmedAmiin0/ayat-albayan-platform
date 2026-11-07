@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CAL, lessonSource, setup } from './calendar.writer.fixture';
 import { eventBody } from './event-format';
-import { eventLesson, item, LESSON_ID, TEACHER_ID } from '../../google-sync.fakes';
+import { eventLesson, item, LESSON_ID, TEACHER_ID } from '@/modules/platform/google-sync/google-sync.fakes';
 
 const origin = (over = {}) => lessonSource({}, over);
 

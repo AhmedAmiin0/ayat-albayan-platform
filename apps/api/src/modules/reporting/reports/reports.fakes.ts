@@ -1,5 +1,5 @@
 // Test fixtures for the reports tests (not shipped; excluded from the build by *.fakes.ts).
-import type { AuthUser } from '../../../common/auth/verify-token';
+import type { AuthUser } from '@/common/auth/verify-token';
 import type { ReportLessonRow, ReportRow } from './report-row';
 
 export const TEACHER_ID = '00000000-0000-4000-8000-0000000000b1';

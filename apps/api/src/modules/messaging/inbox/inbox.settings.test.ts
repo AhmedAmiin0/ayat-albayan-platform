@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { fakeSettings, readerOf } from '../../../common/settings/settings.fakes';
+import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
 import { InboxSettings, renewalThreshold, type InboxSettingsValues } from './inbox.settings';
 
 /** Pinned by hand: every key ThreadFileSender and the list ring (renewalThreshold) read. */

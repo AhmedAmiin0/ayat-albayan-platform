@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AFTER, LESSON_ID, lessonRow, REPORT_ID, reportRow, STUDENT_ID, TEACHER } from '../reports.fakes';
-import { reportsApp } from '../test-app';
+import { AFTER, LESSON_ID, lessonRow, REPORT_ID, reportRow, STUDENT_ID, TEACHER } from '@/modules/reporting/reports/reports.fakes';
+import { reportsApp } from '@/modules/reporting/reports/test-app';
 
 const FORM_URL = `/lessons/${LESSON_ID}/report-form`;
 const DRAFT_URL = `/reports/${REPORT_ID}/v2/draft`;
