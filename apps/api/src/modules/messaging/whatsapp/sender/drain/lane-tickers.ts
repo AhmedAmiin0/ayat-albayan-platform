@@ -7,29 +7,30 @@ import { lanesOf, type Lane } from './lanes';
 type LaneRun = (lane: Lane, kicked: boolean) => Promise<unknown>;
 
 /**
- * docs/42 42-7: a single-flight ticker per lane. `main` has the timers (30 s; a tick during a run
- * queues one more, as an enqueue does); `chat` runs on kicks only (the main tick kicks it when rows
- * are due). A kick names its lane, or both.
+ * docs/42 42-7: a single-flight ticker per lane, each with its own timers (30 s; a tick in a run
+ * queues one more, as an enqueue does), so a chat retry, an expired lease or a released held text
+ * never waits behind a main run. A kick names its lane, or both.
  */
 export class LaneTickers {
   private readonly kicked: Record<Lane, KickFlag> = { chat: new KickFlag(), main: new KickFlag() };
   private readonly tickers: Record<Lane, Ticker>;
+  private readonly lanes: readonly Lane[] = ['chat', 'main'];
 
   constructor(name: string, run: LaneRun) {
-    const ticker = (lane: Lane, everyMs?: number) =>
+    const ticker = (lane: Lane) =>
       new Ticker({
-        name: `${name}:${lane}`, firstMs: SENDER_FIRST_RUN_MS, everyMs, timer: 'kick',
+        name: `${name}:${lane}`, firstMs: SENDER_FIRST_RUN_MS, everyMs: SENDER_POLL_MS, timer: 'kick',
         run: () => run(lane, this.kicked[lane].take()),
       });
-    this.tickers = { main: ticker('main', SENDER_POLL_MS), chat: ticker('chat') };
+    this.tickers = { main: ticker('main'), chat: ticker('chat') };
   }
 
   start(timing: { firstMs: number; everyMs: number }): void {
-    this.tickers.main.start(timing);
+    this.lanes.forEach((lane) => this.tickers[lane].start(timing));
   }
 
   stop(): void {
-    this.tickers.main.stop();
+    this.lanes.forEach((lane) => this.tickers[lane].stop());
   }
 
   /** The named lane (or both); settles once each kicked lane's queued run is done. */

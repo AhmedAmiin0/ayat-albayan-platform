@@ -5,8 +5,8 @@ import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { dueMessage, fakeSwitches } from './sender.fakes';
 import type { SenderRepo } from './sender.repo';
 
-// docs/42 42-7: a kick names its lane; each lane's pass reads only its rows; the main timer pass
-// that finds due rows also wakes the chat lane.
+// docs/42 42-7: a kick names its lane; each lane's pass reads only its rows; each lane's timer
+// pass probes only its own lane (the chat lane has its own timer).
 
 const gate = fakeSwitches();
 const queries = {
@@ -44,15 +44,20 @@ describe('MessageSender lanes (docs/42 42-7)', () => {
     expect(lanes).toEqual(['chat', 'main']);
   });
 
-  it('a main timer pass with due rows wakes the chat lane; an idle one does not', async () => {
+  it('a timer pass probes its own lane only and wakes no other lane', async () => {
     const s = sender();
     const kick = vi.spyOn(s, 'kick').mockResolvedValue(undefined);
-    await s.runOnce(NOW, { lane: 'main' });
-    expect(kick).toHaveBeenCalledWith({ lane: 'chat' });
-    kick.mockClear();
-    queries.anyDue.mockResolvedValue(false);
-    await s.runOnce(NOW, { lane: 'main' });
+    await s.runOnce(NOW, { lane: 'chat' });
+    expect(queries.anyDue).toHaveBeenCalledWith(NOW, 'chat');
+    expect(queries.due).toHaveBeenCalledWith(expect.objectContaining({ lane: 'chat' }));
     expect(kick).not.toHaveBeenCalled();
+  });
+
+  it('an idle timer pass of a lane reads nothing more', async () => {
+    queries.anyDue.mockResolvedValue(false);
+    await sender().runOnce(NOW, { lane: 'main' });
+    expect(queries.anyDue).toHaveBeenCalledWith(NOW, 'main');
+    expect(queries.due).not.toHaveBeenCalled();
   });
 
   it('a lane pass still reads the gate first and before the row', async () => {

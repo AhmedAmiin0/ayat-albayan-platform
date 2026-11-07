@@ -6865,7 +6865,7 @@
   },
   "src/modules/messaging/whatsapp/sender/sender.due.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "ab/forbidden-imports": {
       "count": 1

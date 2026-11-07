@@ -52,9 +52,9 @@ export class SenderRepo {
     return this.templates ? this.templates.sendable() : sendableTemplates(this.db);
   }
 
-  /** One cheap read: is anything due now (sender.due.ts)? false = the pass reads nothing more. */
-  anyDue(now: Date): Promise<boolean> {
-    return anyDue(this.db, { now, allowed: this.allowed });
+  /** One cheap read: is anything (of `lane`) due now (sender.due.ts)? false = nothing more read. */
+  anyDue(now: Date, lane?: Lane): Promise<boolean> {
+    return anyDue(this.db, { now, allowed: this.allowed, ...(lane ? { lane } : {}) });
   }
 
   /**

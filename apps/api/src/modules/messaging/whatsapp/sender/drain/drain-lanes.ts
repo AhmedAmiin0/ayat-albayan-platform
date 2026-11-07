@@ -1,8 +1,9 @@
+import { Logger } from '@nestjs/common';
 import type { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import type { MessageWorker, PassJob } from '@/modules/messaging/whatsapp/sender/message.worker';
 import type { SendSummary } from '@/modules/messaging/whatsapp/sender/pass';
 import type { LaneLocks } from './lane-locks';
-import { phonePool, type PoolStop, type Step } from './phone-pool';
+import { allEnded, phonePool, type PoolStop, type Step } from './phone-pool';
 
 /** One due row of a pass and the line (legacy) or number (module mode) a pause applies to. */
 export interface PassItem { job: PassJob; pause: string | null }
@@ -32,12 +33,24 @@ function lanesOf(items: readonly PassItem[]): Map<string, PassItem[]> {
   return lanes;
 }
 
+type Switches = Awaited<ReturnType<SendGate['switches']>>;
+const CLOSED: Switches = { open: false, automaticOn: false };
+const log = new Logger('MessageSender');
+
+/** The switches; an unreadable read fails CLOSED (the lane stops as on OFF, nothing is sent). */
+function switchesOf(gate: SendGate): Promise<Switches> {
+  return gate.switches().catch((e: unknown) => {
+    log.error(`send switches unreadable, lane stopped: ${e instanceof Error ? e.message : String(e)}`);
+    return CLOSED;
+  });
+}
+
 /**
  * One row: the switches (one UNCACHED read, docs/09, docs/26 26-P4) right before it, so OFF stops
  * every lane at its next row; then the worker. A broken token (or Meta's 131042) stops ITS lane.
  */
 async function rowStep(deps: DrainDeps, run: PassRun, item: PassItem): Promise<Step> {
-  const gate = await deps.gate.switches();
+  const gate = await switchesOf(deps.gate);
   if (!gate.open) return 'closed';
   const outcome = await deps.worker.process({ ...item.job, autoOn: gate.automaticOn });
   run.summary[outcome] += 1;
@@ -64,7 +77,7 @@ async function drainLane(deps: DrainDeps, lane: Lane): Promise<void> {
 /**
  * docs/42 42-7: the pass's rows by lane key (a line, or a number), the lanes in parallel, each
  * under its lock (one drain per key across the tickers). Within a lane: queue order, one phone at a
- * time.
+ * time. Every started lane ends before this settles (allEnded), so no lock is let go early.
  */
 export async function drainLanes(
   deps: DrainDeps,
@@ -72,5 +85,5 @@ export async function drainLanes(
   items: readonly PassItem[],
 ): Promise<void> {
   const lanes = [...lanesOf(items)].map(([key, rows]) => ({ run, key, items: rows }));
-  await Promise.all(lanes.map((lane) => deps.locks.run(lane.key, () => drainLane(deps, lane))));
+  await allEnded(lanes.map((lane) => deps.locks.run(lane.key, () => drainLane(deps, lane))));
 }

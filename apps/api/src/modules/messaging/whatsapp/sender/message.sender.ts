@@ -28,9 +28,6 @@ interface PassOptions { lane?: Lane; kicked?: boolean }
 type SenderRun = PassRun & { lane?: Lane };
 type Numbers = readonly OverlayNumber[] | null;
 
-/** A timer pass that found due rows also kicks these lanes (they have no timers of their own). */
-const TIMER_ALSO: Record<Lane | 'all', readonly Lane[]> = { main: ['chat'], chat: [], all: [] };
-
 /**
  * The outbound sender (R-MSG-01/02, docs/12 §3.3): drains due queued `messages` (a session text or
  * an approved template). Gate closed (config or kill switch) → nothing is read, rows wait; it is
@@ -91,12 +88,10 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
     return this.report(summary);
   }
 
-  /** Idle (the usual tick): one cheap read instead of the templates + the queue (+ the routes). */
+  /** Idle (the usual tick): one cheap read (of its lane) instead of the templates + the queue. */
   private async anyWork(options: PassOptions, now: Date): Promise<boolean> {
     if (options.kicked) return true;
-    const due = await this.queries.anyDue(now);
-    if (due) TIMER_ALSO[options.lane ?? 'all'].forEach((lane) => void this.kick({ lane }));
-    return due;
+    return this.queries.anyDue(now, options.lane);
   }
 
   private pass(run: SenderRun, now: Date): Promise<void> {

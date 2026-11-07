@@ -20,13 +20,19 @@ export interface PoolStop<T> {
 
 interface PoolState<T> {
   stop: { why: Exclude<Step, 'next'>; item: T } | null;
+  /** A row's step threw: nothing more starts; phonePool rethrows once every row has ended. */
+  failed: boolean;
   started: Set<T>;
   running: Set<Promise<void>>;
+  /** Every launched row (the final wait). */
+  all: Promise<void>[];
   last: Map<string, Promise<void>>;
 }
 
+const halted = <T>(state: PoolState<T>): boolean => state.stop !== null || state.failed;
+
 async function start<T>(input: PoolInput<T>, state: PoolState<T>, item: T): Promise<void> {
-  if (state.stop) return;
+  if (halted(state)) return;
   state.started.add(item);
   const why = await input.step(item);
   if (why !== 'next') state.stop ??= { why, item };
@@ -38,24 +44,43 @@ function launch<T>(input: PoolInput<T>, state: PoolState<T>, item: T): void {
   const task = (state.last.get(phone) ?? Promise.resolve()).then(() => start(input, state, item));
   state.last.set(phone, task);
   state.running.add(task);
-  void task.finally(() => state.running.delete(task)).catch(() => undefined);
+  state.all.push(task);
+  const ended = (ok: boolean): void => {
+    state.failed ||= !ok;
+    state.running.delete(task);
+  };
+  void task.then(() => ended(true), () => ended(false));
 }
 
+/**
+ * Waits for every task, then rethrows the first rejection: a failed row never lets the caller (and
+ * its lane lock) go while sibling rows are still in flight.
+ */
+export async function allEnded(tasks: Iterable<Promise<unknown>>): Promise<void> {
+  const failed = (await Promise.allSettled(tasks)).find((r) => r.status === 'rejected');
+  if (failed) throw failed.reason;
+}
+
+/** A slot frees when any task ends, failed or not (a failure is rethrown by the final wait). */
+const anyEnded = (tasks: Set<Promise<void>>): Promise<unknown> =>
+  Promise.race([...tasks].map((t) => t.then(settledOk, settledOk)));
+const settledOk = (): void => undefined;
+
 async function freeSlot<T>(input: PoolInput<T>, state: PoolState<T>): Promise<void> {
-  while (state.running.size >= input.size) await Promise.race(state.running);
+  while (state.running.size >= input.size && !halted(state)) await anyEnded(state.running);
 }
 
 /** Runs the lane; null = every row ran. */
 export async function phonePool<T>(input: PoolInput<T>): Promise<PoolStop<T> | null> {
   const state: PoolState<T> = {
-    stop: null, started: new Set(), running: new Set(), last: new Map(),
+    stop: null, failed: false, started: new Set(), running: new Set(), all: [], last: new Map(),
   };
   for (const item of input.items) {
     await freeSlot(input, state);
-    if (state.stop) break;
+    if (halted(state)) break;
     launch(input, state, item);
   }
-  await Promise.all(state.running);
+  await allEnded(state.all);
   const { stop } = state;
   return stop && { ...stop, rest: input.items.filter((i) => !state.started.has(i)) };
 }

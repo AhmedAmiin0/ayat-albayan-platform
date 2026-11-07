@@ -6032,7 +6032,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/whatsapp/sender/sender.fakes.ts": {

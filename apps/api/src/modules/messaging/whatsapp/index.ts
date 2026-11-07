@@ -46,6 +46,7 @@ export {
 } from './sender/message.job';
 export { MessageSender, type SendSummary } from './sender/message.sender';
 export { laneOfRow } from './sender/drain';
+export { templateStamp } from './sender/send-line';
 export {
   AUTH_HOLD_MS,
   CLAIM_LEASE_MS,
