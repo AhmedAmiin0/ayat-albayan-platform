@@ -6,7 +6,7 @@ import { http, recordingQueries } from '@/modules/teaching/classroom/moderation/
 import type { StorageService } from '@/common/storage/storage.service';
 import type { RecordingRepo } from './recording.repo';
 import { RecordingStarter } from './recording.starter';
-import { MINIO_STORAGE, MINIO_TARGET } from './recording.storage.fakes';
+import { MINIO_NO_RECORDINGS, MINIO_STORAGE, MINIO_TARGET } from './recording.storage.fakes';
 import { lessonTarget } from './recording-target';
 
 let q: ReturnType<typeof recordingQueries>;
@@ -38,11 +38,20 @@ describe('recordings once MinIO keeps new files (docs/45)', () => {
   it('MinIO switched on but not configured: the start fails loudly, nothing goes to Supabase', async () => {
     const broken = {
       writesTo: () => 'minio',
+      recordsToMinio: () => true,
       egressTarget: () => {
         throw new Error('storage_not_configured');
       },
     } as unknown as StorageService;
     expect(await starter(broken).startFor(lessonTarget(LESSON_ID), OPEN)).toBe('failed');
     expect(q.claim).not.toHaveBeenCalled();
+  });
+
+  it('STORAGE_DRIVER=minio alone never records (MINIO_RECORDINGS off): off, no claim, no egress', async () => {
+    const s = starter(MINIO_NO_RECORDINGS);
+    expect(s.configured).toBe(false);
+    expect(await s.startFor(lessonTarget(LESSON_ID), OPEN)).toBe('off');
+    expect(q.claim).not.toHaveBeenCalled();
+    expect(h).not.toHaveBeenCalled();
   });
 });

@@ -3,6 +3,7 @@ import { fakeS3 } from '@/common/storage/store/s3.fakes';
 import type { MinioEnv } from '@/config/env/env.storage';
 import { StorageHealth, STORAGE_PING_MS } from './storage-health';
 import { StorageProbe } from './storage-probe';
+import { publicHttp } from './storage-probe.fakes';
 import type { StorageService } from '@/common/storage/storage.service';
 
 const MINIO: MinioEnv = {
@@ -17,11 +18,14 @@ const MINIO: MinioEnv = {
 describe('«اختبار الاتصال» (docs/45)', () => {
   it('puts, reads back and deletes a probe object, leaving nothing behind', async () => {
     const s3 = fakeS3();
-    const out = await new StorageProbe().run({ config: MINIO, storeOf: () => s3.store });
+    const http = publicHttp();
+    const run = { config: MINIO, storeOf: () => s3.store, fetch: http };
+    const out = await new StorageProbe().run(run);
     expect(out.ok).toBe(true);
     expect(s3.sent.map((c) => c.constructor.name)).toEqual([
       'PutObjectCommand',
       'GetObjectCommand',
+      'DeleteObjectCommand',
       'DeleteObjectCommand',
     ]);
     expect(s3.objects.size).toBe(0);

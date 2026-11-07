@@ -67,7 +67,7 @@ export class ThreadFileSender {
     const teacher = !!s.scope;
     await chatLine(await this.queries.thread(s.phone), { now, windows, teacher });
     const path = chatOutPath({ actorId: s.actorId, requestId: s.input.clientRequestId, mime: s.input.mime });
-    return this.storage.signedUpload({ bucket: BUCKETS.waMedia, path });
+    return this.storage.signedUpload({ bucket: BUCKETS.waMedia, path, file: s.input });
   }
 
   /**

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { evolutionBaseAllowed } from './evolution.js';
 
 // Object storage in «التكاملات» (owner 2026-11-06, docs/45): Supabase Storage keeps today's
 // files; MinIO (S3 API, self-hosted) keeps every new one once an admin switches STORAGE_DRIVER.
@@ -15,10 +16,22 @@ export const STORAGE_PLAIN_KEYS = [
   'MINIO_REGION',
   'MINIO_BUCKET_PREFIX',
   'MINIO_ACCESS_KEY',
+  'MINIO_RECORDINGS',
 ] as const;
 
-/** An S3 endpoint: http(s), a host and port only (path-style buckets go after it). */
-export const minioUrl = z.string().max(200).regex(/^https?:\/\/[A-Za-z0-9.-]+(:\d{1,5})?\/?$/, 'minio_url');
+/** The docker services an http MinIO endpoint may name (deploy/staging: the stack's MinIO). */
+export const MINIO_INTERNAL_HOSTS: readonly string[] = ['ayat-minio'];
+
+/**
+ * An S3 endpoint: http(s), a host and port only (path-style buckets go after it). SSRF guard, the
+ * Evolution base's rules (evolution.ts): http only to the VPS itself or a listed docker service,
+ * https only to a public host name; never an IP literal (no internal address or port scan).
+ */
+export const minioUrl = z
+  .string()
+  .max(200)
+  .regex(/^https?:\/\/[A-Za-z0-9.-]+(:\d{1,5})?\/?$/, 'minio_url')
+  .refine((raw) => evolutionBaseAllowed(raw.replace(/\/$/, ''), MINIO_INTERNAL_HOSTS), 'minio_url');
 
 const LOCAL = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/?$/;
 
@@ -45,4 +58,5 @@ export const STORAGE_VALUE_CHECKS: Record<(typeof STORAGE_PLAIN_KEYS)[number], z
   MINIO_REGION: minioRegion,
   MINIO_BUCKET_PREFIX: minioBucketPrefix,
   MINIO_ACCESS_KEY: minioAccessKey,
+  MINIO_RECORDINGS: z.enum(['false', 'true']),
 };

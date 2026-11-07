@@ -74,4 +74,19 @@ describe('storage-copy (docs/45)', () => {
     await copyToMinio({ from: from.store, to: to.store, buckets: ['reports'], apply: true });
     expect(await to.store.get({ bucket: 'reports', key: 's/b.pdf' })).toEqual(newer);
   });
+
+  it('a newer object written between the check and the put wins: If-None-Match, 412 → present', async () => {
+    const { from, to } = await stores();
+    const newer = new TextEncoder().encode('%PDF-1.7 written meanwhile');
+    const info = to.store.info.bind(to.store);
+    // The app renders s/b.pdf into MinIO right after the copy saw the key free.
+    to.store.info = async (o) => {
+      const seen = await info(o);
+      if (o.key === 's/b.pdf') to.objects.set('ab-reports/s/b.pdf', { body: newer, type: 'application/pdf' });
+      return seen;
+    };
+    const [t] = await copyToMinio({ from: from.store, to: to.store, buckets: ['reports'], apply: true });
+    expect(t).toMatchObject({ present: 2, copied: 0, failed: 0 });
+    expect(await to.store.get({ bucket: 'reports', key: 's/b.pdf' })).toEqual(newer);
+  });
 });

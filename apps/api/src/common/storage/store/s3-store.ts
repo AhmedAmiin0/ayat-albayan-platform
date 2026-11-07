@@ -15,8 +15,10 @@ import type {
   PutObject,
   SignedGet,
   SignedPut,
+  SlotKey,
 } from './object-store';
-import { getOutput, headOutput, listOutput, orFail, orMissing } from './s3-outputs';
+import { getOutput, headOutput, listOutput, orExists, orFail, orMissing } from './s3-outputs';
+import { slotCommand, UPLOAD_SECONDS } from './s3-slot';
 
 export type S3Command =
   | GetObjectCommand
@@ -49,9 +51,11 @@ export class S3Store implements ObjectStore {
     return { Bucket: this.s3.bucketOf(o.bucket), Key: o.key };
   }
 
+  /** ifAbsent: If-None-Match: * (a present key answers 412 → ObjectExists, the object kept). */
   async put(o: PutObject): Promise<void> {
-    const cmd = new PutObjectCommand({ ...this.at(o), Body: o.body, ContentType: o.contentType });
-    await orFail('upload', () => this.s3.send(cmd));
+    const only = o.ifAbsent ? { IfNoneMatch: '*' } : {};
+    const input = { ...this.at(o), Body: o.body, ContentType: o.contentType, ...only };
+    await orExists('upload', () => this.s3.send(new PutObjectCommand(input)));
   }
 
   async get(o: ObjectKey): Promise<Uint8Array | null> {
@@ -127,16 +131,10 @@ export class S3Store implements ObjectStore {
     return new Map(signed);
   }
 
-  async signedPut(o: ObjectKey): Promise<SignedPut> {
-    const signedUrl = await orFail('signed upload', () =>
-      this.s3.sign(new PutObjectCommand({ ...this.at(o), IfNoneMatch: '*' }), UPLOAD_SECONDS),
-    );
+  /** A slot for exactly this file (signed size and type, one upload); outside the rule throws. */
+  async signedPut(o: SlotKey): Promise<SignedPut> {
+    const cmd = slotCommand(o, this.s3.bucketOf(o.bucket));
+    const signedUrl = await orFail('signed upload', () => this.s3.sign(cmd, UPLOAD_SECONDS));
     return { token: '', signedUrl };
   }
 }
-
-/**
- * A signed upload slot lives 15 minutes and carries If-None-Match: * (signed): one upload per key,
- * so a file the API already checked can never be replaced through the same URL (docs/45).
- */
-const UPLOAD_SECONDS = 15 * 60;

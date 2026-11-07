@@ -12,7 +12,11 @@ const MINIO = {
 
 describe('storage config (docs/45)', () => {
   it('defaults to supabase with no MinIO (nothing changes until the cut-over)', () => {
-    expect(storageEnv(loadEnv(BASE))).toEqual({ driver: 'supabase', minio: null });
+    expect(storageEnv(loadEnv(BASE))).toEqual({
+      driver: 'supabase',
+      minio: null,
+      recordings: false,
+    });
   });
 
   it('a full MinIO config: endpoint trimmed, region and prefix defaulted', () => {
@@ -27,7 +31,14 @@ describe('storage config (docs/45)', () => {
         accessKey: 'ayat-app',
         secretKey: 'not-a-real-secret',
       },
+      recordings: false,
     });
+  });
+
+  it('recordings into MinIO are their own switch, off unless MINIO_RECORDINGS=true', () => {
+    const on = { ...BASE, ...MINIO, STORAGE_DRIVER: 'minio', MINIO_RECORDINGS: 'true' };
+    expect(storageEnv(loadEnv(on)).recordings).toBe(true);
+    expect(storageEnv(loadEnv({ ...on, MINIO_RECORDINGS: '' })).recordings).toBe(false);
   });
 
   it('a missing secret leaves MinIO unconfigured (a write then fails, never silently)', () => {

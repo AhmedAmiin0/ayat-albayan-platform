@@ -29,11 +29,12 @@ export class RecordingStarter {
   ) {}
 
   /**
-   * LIVEKIT_* and a place to upload to: RECORDING_S3_* (Supabase), or MinIO once it keeps new
-   * files (docs/45). Whether LiveKit runs Egress shows on the first start.
+   * LIVEKIT_* and a place to upload to: RECORDING_S3_* (Supabase), or MinIO only with its own
+   * switch (MINIO_RECORDINGS on and the driver on minio, docs/45 §1): STORAGE_DRIVER=minio alone
+   * never starts recording onto the shared disk. Whether LiveKit runs Egress shows at first start.
    */
   get configured(): boolean {
-    return (this.s3 !== null || this.storage.writesTo() === 'minio') && this.livekit.configured;
+    return (this.s3 !== null || this.storage.recordsToMinio()) && this.livekit.configured;
   }
 
   /** Where this recording goes: MinIO (its row keeps the «minio:» path) or RECORDING_S3_*. */

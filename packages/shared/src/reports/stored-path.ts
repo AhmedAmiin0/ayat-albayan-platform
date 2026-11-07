@@ -25,3 +25,11 @@ export function storageKeyOf(path: string): string {
 export function storedPath(input: { provider: StorageProvider; key: string }): string {
   return `${MARKS[input.provider]}${storageKeyOf(input.key)}`;
 }
+
+/**
+ * The header a client sends when it can upload to a MinIO slot (client-core slotUploader, docs/45
+ * §4 step 9): the API signs a MinIO slot only for it; a client without it (an older OTA bundle, a
+ * stale web tab) still gets a Supabase slot, which it knows how to fill.
+ */
+export const UPLOAD_CAPABILITY_HEADER = 'X-AB-Upload';
+export const UPLOAD_SLOT_V2 = 'slot-v2';

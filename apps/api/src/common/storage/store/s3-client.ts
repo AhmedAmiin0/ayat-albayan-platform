@@ -1,6 +1,7 @@
 import { S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import type { MinioEnv } from '@/config/env/env.storage';
+import { SLOT_SIGNED_HEADERS } from './s3-slot';
 import { S3Store, type S3Command } from './s3-store';
 
 /** One S3 client per host: path-style (MinIO), checksums only where S3 requires them. */
@@ -28,7 +29,11 @@ export function minioStore(m: MinioEnv): S3Store {
   const publicHost = client(m, m.publicUrl);
   return new S3Store({
     send: (command: S3Command) => internal.send(command as Parameters<S3Client['send']>[0]),
-    sign: (command, seconds) => getSignedUrl(publicHost, command, { expiresIn: seconds }),
+    // A slot's size and type stay request headers MinIO checks (absent on a GET: nothing to sign).
+    sign: (command, seconds) => {
+      const options = { expiresIn: seconds, signableHeaders: SLOT_SIGNED_HEADERS };
+      return getSignedUrl(publicHost, command, options);
+    },
     bucketOf: (bucket) => `${m.bucketPrefix}${bucket}`,
   });
 }

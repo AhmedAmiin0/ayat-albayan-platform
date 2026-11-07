@@ -7,7 +7,7 @@ export class FakeAvatarFiles implements AvatarFiles {
   objects = new Map<string, { size: number; contentType: string; bytes: Uint8Array }>();
   removed: string[] = [];
 
-  async uploadUrl(path: string) {
+  async uploadUrl({ path }: { path: string }) {
     return { bucket: 'avatars', path, token: 'tok', signed_url: `https://storage.test/${path}` };
   }
   async info(path: string) {

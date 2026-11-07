@@ -57,7 +57,7 @@ export class StaffPhotoAdmin {
     const path = owner.kind === 'teacher'
       ? teacherAvatarPath({ teacherId: owner.id, mime: input.mime })
       : avatarPath({ userId: owner.id, mime: input.mime });
-    return this.writer.files.uploadUrl(path);
+    return this.writer.files.uploadUrl({ path, file: input });
   }
 
   /** 400 avatar_path / avatar_type / avatar_too_large / avatar_not_staff; 404 for an unknown id. */

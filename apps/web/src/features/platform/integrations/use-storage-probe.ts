@@ -7,7 +7,9 @@ import { probeStorage } from './integrations-api';
 const s = t.integrations.storageProbe;
 
 /** The refusals of POST /settings/integrations/storage-probe (api storage-probe.ts). */
-const refusalSchema = z.object({ message: z.enum(['storage_not_configured', 'storage_probe_failed']) });
+const refusalSchema = z.object({
+  message: z.enum(['storage_not_configured', 'storage_probe_failed', 'storage_public_failed']),
+});
 const answerSchema = z.object({ data: z.object({ ok: z.literal(true), ms: z.number() }) });
 
 /** The API's refusal in words; anything else is «try again». */

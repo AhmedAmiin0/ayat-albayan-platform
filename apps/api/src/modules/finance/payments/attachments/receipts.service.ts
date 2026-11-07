@@ -25,6 +25,7 @@ export class ReceiptsService {
     return this.storage.signedUpload({
       bucket: BUCKETS.receipts,
       path: receiptPath({ subscriptionId: sub.id, mime: input.mime }),
+      file: input,
     });
   }
 

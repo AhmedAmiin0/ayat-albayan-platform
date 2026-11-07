@@ -28,7 +28,7 @@ describe('«اختبار الاتصال» (MinIO, docs/45)', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/settings/integrations/storage-probe');
   });
 
-  it.each(['storage_not_configured', 'storage_probe_failed'] as const)('%s has its own words', async (code) => {
+  it.each(['storage_not_configured', 'storage_probe_failed', 'storage_public_failed'] as const)('%s has its own words', async (code) => {
     apiSend.mockRejectedValue(new ApiError(409, { message: code }));
     const { onNote } = renderButton();
     fireEvent.click(screen.getByRole('button', { name: s.button }));

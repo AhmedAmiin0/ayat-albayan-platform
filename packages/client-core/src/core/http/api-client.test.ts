@@ -34,6 +34,8 @@ describe('createApiClient', () => {
     expect(headers.get('Content-Type')).toBe('application/json');
     expect(headers.get('Authorization')).toBe('Bearer tok');
     expect(headers.get('X-AB-Client')).toBe('web/dev');
+    // It can fill a MinIO upload slot: older builds without it keep getting Supabase slots.
+    expect(headers.get('X-AB-Upload')).toBe('slot-v2');
   });
 
   it('keeps caller headers and sends no Authorization when signed out', async () => {
