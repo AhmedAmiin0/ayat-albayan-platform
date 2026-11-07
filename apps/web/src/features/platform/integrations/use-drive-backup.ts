@@ -31,7 +31,7 @@ const viewSchema = z.object({
       z.object({
         id: z.string(),
         size: z.number(),
-        reason: z.enum(['too_large', 'read_failed', 'changed']),
+        reason: z.enum(['too_large', 'read_failed', 'changed', 'upload_failed']),
       }),
     ),
   }),

@@ -35,6 +35,23 @@ describe('the 2 GB reserve', () => {
     expect(t.drive.log).not.toContain('startUpload');
   });
 
+  it('many objects, no room: one quota read for the whole night, all of them wait', async () => {
+    const t = await setup();
+    roomOf(t.drive, () => MB / 2);
+    for (let i = 0; i < 300; i += 1) t.minio.set({ bucket: B.reports, key: `k${i}`, body: 'k' });
+    expect(await t.night('2026-11-07')).toMatchObject({ parts: 0, waiting: 300 });
+    expect(t.drive.log.filter((m) => m === 'quota')).toHaveLength(1);
+  });
+
+  it('a part past what the night has left waits without asking Drive again', async () => {
+    const t = await setup();
+    roomOf(t.drive, () => 3 * MB);
+    for (const k of ['a', 'b', 'c', 'd'])
+      t.minio.set({ bucket: B.reports, key: k, body: Buffer.alloc(1.5 * MB, 1) });
+    expect(await t.night('2026-11-07')).toMatchObject({ objects: 1, waiting: 3 });
+    expect(t.drive.log.filter((m) => m === 'quota')).toHaveLength(2); // tonight, the first part
+  });
+
   it('a large part waits while a smaller later one still fits', async () => {
     const t = await setup({ part: 8 * MB });
     roomOf(t.drive, () => 2 * MB);

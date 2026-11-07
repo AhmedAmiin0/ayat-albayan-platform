@@ -53,6 +53,14 @@ describe('<DriveBackupStatus> under «التخزين»', () => {
     expect(screen.getByText(/reports\/bad\.pdf/).textContent).toContain(b.skipReasons.read_failed);
   });
 
+  it('a big object Drive refused is named as an upload failure, not a MinIO one', async () => {
+    const items = [{ id: 'recordings/r.mp4', size: 2 * GB, reason: 'upload_failed' }];
+    apiFetch.mockResolvedValue({ ...answer, low_quota: false, skipped: { count: 1, items } });
+    renderWithClient(<DriveBackupStatus />);
+    const line = await screen.findByText(/recordings\/r\.mp4/);
+    expect(line.textContent).toContain(b.skipReasons.upload_failed);
+  });
+
   it('a failed read says so', async () => {
     apiFetch.mockRejectedValue(new Error('network'));
     renderWithClient(<DriveBackupStatus />);

@@ -6102,7 +6102,7 @@
       },
       "MINIO_DRIVE_BACKUP": {
         "label": "Back up MinIO files to Google Drive",
-        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO that are not backed up yet, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The backup never deletes any file from Drive: when space runs low, delete old archives by hand. PDFs and images are already compressed, so most of the saving comes from other files."
+        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO that are not backed up yet, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The backup never deletes any file from Drive: when space runs low, do not delete single archives (files held only in them drop out of the backup and are not sent again); add Drive storage, or move the whole folder to the trash so the next night starts a fresh complete copy. PDFs and images are already compressed, so most of the saving comes from other files."
       }
     },
     "developer": "For developers",
@@ -6126,7 +6126,7 @@
       "error": "Last error: {error}",
       "quota": "Free space on Drive: {free} of {limit}.",
       "quotaUnlimited": "Drive space is unlimited.",
-      "lowQuota": "Less than 2 GB is free on Drive, so nothing is uploaded until there is room: delete old archives from the backup folder by hand and empty the trash, or add space.",
+      "lowQuota": "Less than 2 GB is free on Drive, so nothing is uploaded until there is room. Do not delete single archives: files held only in them drop out of the backup and are not sent again. Add Drive storage, or move the whole backup folder to the trash, so the next night starts a fresh complete copy.",
       "note": "PDFs and images are already compressed, so they barely shrink.",
       "loadError": "Could not load the backup status.",
       "sizeGb": "{n} GB",
@@ -6147,7 +6147,8 @@
       "skipReasons": {
         "too_large": "larger than the 1 GB archive cap",
         "read_failed": "could not be read from MinIO",
-        "changed": "changed while being read"
+        "changed": "changed while being read",
+        "upload_failed": "could not be uploaded to Google Drive or recorded"
       }
     }
   },
@@ -6442,7 +6443,7 @@
         "other": "Tonight's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every night."
       },
       "backupSkippedItem": "{name} ({size}, {why})",
-      "backupDriveFull": "Google Drive is nearly full: tonight's backup could not upload everything, because the free space does not exceed the kept reserve (2 GB). The backup never deletes anything from Drive: delete old archives from the backup folder by hand and empty the trash, and the backup continues on the following nights."
+      "backupDriveFull": "Google Drive is nearly full: tonight's backup could not upload everything, because the free space does not exceed the kept reserve (2 GB). Do not delete single archives: files held only in them drop out of the backup and are not sent again. The safe ways are to add Drive storage, or to move the whole backup folder to the trash (and empty it when the space is needed), so the next night starts a fresh complete copy."
     },
     "web": {
       "updated": "Updated {at}",

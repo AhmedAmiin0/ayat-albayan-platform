@@ -29,10 +29,12 @@ describe('the backup’s alerts (bell only, once a day per subject)', () => {
     expect(text).toContain('6');
   });
 
-  it('Drive nearly full: says to delete old archives by hand', async () => {
+  it('Drive nearly full: never single archives; more storage or the whole folder', async () => {
     const t = setup();
     await t.alerts.driveFull({ now });
     expect(t.said().subject).toBe('drive_backup:drive_full:2026-11-10');
     expect(t.said().vars.reason).toBe(ar.googleSync.alerts.backupDriveFull);
+    expect(t.said().vars.reason).toContain('كاملًا إلى سلة المهملات');
+    expect(t.said().vars.reason).not.toContain('احذف الأرشيفات القديمة');
   });
 });

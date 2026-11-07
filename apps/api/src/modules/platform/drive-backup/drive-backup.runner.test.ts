@@ -93,6 +93,15 @@ describe('DriveBackupRunner (docs/45 §5)', () => {
     expect(t.alerts.failed).not.toHaveBeenCalled();
   });
 
+  it('a failed night clears the waiting and skipped counts (never an older night’s)', async () => {
+    const t = setup();
+    t.minio.set({ bucket: 'reports', key: 'a.pdf', body: 'a' });
+    t.drive.failNext.set('putChunk', new GoogleApiError(400, 'badRequest'));
+    expect(await t.runner.runOnce()).toBe('failed');
+    const counts = { waiting: 0, skipped: [], skipped_count: 0, last_error: '400 badRequest' };
+    expect(t.state.save).toHaveBeenLastCalledWith(expect.objectContaining(counts));
+  });
+
   it('a refused token goes through the Google sync’s own handling (disconnect)', async () => {
     const t = setup();
     t.drive.failNext.set('quota', new GoogleApiError(400, 'invalid_grant'));

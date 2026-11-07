@@ -32,9 +32,9 @@ describe('one big object’s own part', () => {
     expect(t.store.rows[0]).toMatchObject({ status: 'failed', error: 'run_deadline' });
   });
 
-  it('any other failure: that object is skipped (null), the night goes on', async () => {
+  it('any other failure: that object is skipped as upload_failed, the night goes on', async () => {
     const { t, run } = await solo(() => new GoogleApiError(400, 'badRequest'));
-    await expect(run()).resolves.toBeNull();
+    await expect(run()).resolves.toEqual({ done: null, why: 'upload_failed' });
     expect(t.store.rows[0]?.status).toBe('failed');
   });
 });
