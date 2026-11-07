@@ -80,7 +80,7 @@ export async function putFor(
 }
 
 /** A live write: the chats it changed (null: not `owner`'s), and whether it held every row. */
-export interface LiveWrite {
+interface LiveWrite {
   change: StoreChange | null;
   complete: boolean;
 }
