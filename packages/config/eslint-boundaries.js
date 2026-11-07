@@ -37,7 +37,7 @@ export function isDeep(spec, { file, cwd, alias, module }) {
   return rest !== '' && !INDEX.test(rest);
 }
 
-const rule = {
+const moduleBoundariesRule = {
   meta: {
     type: 'problem',
     docs: { description: "Import another module only through its index.ts (docs/27 §1 rule 6)." },
@@ -77,7 +77,7 @@ const rule = {
 /** The local `ab` plugin: one object, so every block that registers it names the same plugin. */
 export const boundariesPlugin = {
   rules: {
-    'module-boundaries': rule,
+    'module-boundaries': moduleBoundariesRule,
     'max-params': maxParamsRule,
     'forbidden-imports': forbiddenImportsRule,
     'no-parent-imports': noParentImportsRule,

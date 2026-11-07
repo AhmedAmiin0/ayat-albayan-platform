@@ -1,12 +1,10 @@
-import { RuleTester } from 'eslint';
-import tseslint from 'typescript-eslint';
 import { maxParamsRule } from './eslint-params.js';
+import { testRule } from './rule-testers.js';
 
-// TypeScript syntax (signatures, overloads, `this` parameters) needs the typescript-eslint parser.
-const tester = new RuleTester({ languageOptions: { parser: tseslint.parser } });
+// TypeScript syntax (signatures, overloads, `this` parameters): the TS parser of each linter.
 const tooMany = (count, max) => ({ messageId: 'tooMany', data: { count, max } });
 
-tester.run('max-params', maxParamsRule, {
+testRule({ name: 'max-params', rule: maxParamsRule, lang: 'ts' }, {
   valid: [
     'function f(a, b, c) {}',
     'const f = (a, b, c) => a;',

@@ -1,0 +1,80 @@
+{
+  "src/async/errors.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    }
+  },
+  "src/async/result.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/async/result.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 2
+    }
+  },
+  "src/async/retry.ts": {
+    "max-depth": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/locale/locale.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/phone/phone.reject.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/phone/phone.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/schemas/common.ts": {
+    "no-restricted-properties": {
+      "count": 1
+    }
+  },
+  "src/schemas/list-sort.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "typescript/explicit-module-boundary-types": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/text/arabic.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/text/highlight-diff.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/no-misused-spread": {
+      "count": 3
+    }
+  },
+  "src/text/text-dir.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  }
+}

@@ -1,6 +1,5 @@
-import { config, TESTS } from '@ab/config/eslint';
-// One flat module (docs/32 §4 @ab/i18n): the UI-string helpers. The JSON bundles stay in shared.
-export default config(
-  import.meta.dirname,
-  { files: ['src/**/*.ts'], ignores: TESTS, rules: { '@typescript-eslint/explicit-module-boundary-types': 'error' } },
-);
+import { config } from '@ab/config/eslint';
+import lint from './lint.blocks.mjs';
+
+// The package's own blocks live in lint.blocks.mjs (shared with Oxlint, docs/31b).
+export default config(import.meta.dirname, ...lint.blocks);

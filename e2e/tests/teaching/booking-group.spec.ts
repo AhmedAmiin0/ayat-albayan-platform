@@ -1,9 +1,10 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { lessonsOf, resetAbrar, ruleOf, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
+import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
 // Two siblings in ONE group lesson on a two-day series (R-STU-04, R-SCH-02/06): the wizard ticks the
-// sibling, a second pick on the grid adds Wednesday at the same time, SeriesCheck is clean, and the booking writes one rule with both
+// sibling, a second lesson row adds Wednesday at the same time, SeriesCheck is clean, and the booking writes one rule with both
 // students, both on every lesson, and a single confirmation to the guardian naming both.
 
 const weekday = ar.enums.weekday;
@@ -26,12 +27,11 @@ test.describe('siblings group + multi-day series (R-STU-04)', () => {
     await next();
     await next(); // package 8, 45 min
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
-    await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-    await step.getByRole('region', { name: new RegExp(`^${weekday['0']} `) }).getByRole('button', { name: /16:00/ }).click();
-    await step.getByRole('region', { name: new RegExp(`^${weekday['3']} `) }).getByRole('button', { name: /16:00/ }).click();
+    await fillLessonRow(step, 1, { weekday: 0, time: '16:00' });
+    await fillLessonRow(step, 2, { weekday: 3, time: '16:00' });
     const days = step.getByRole('region', { name: new RegExp(ar.booking.pickDays) });
     for (const d of ['0', '3'] as const) {
-      await expect(days.getByRole('button', { name: ar.booking.removeDay.replace('{day}', weekday[d]) })).toBeVisible();
+      await expect(days.getByText(ar.booking.dayAt.replace('{day}', weekday[d]).replace('{time}', '16:00'))).toBeVisible();
     }
     await expect(step.getByText(ar.booking.seriesFree)).toBeVisible(); // 0 conflicts over the whole series
     await next();

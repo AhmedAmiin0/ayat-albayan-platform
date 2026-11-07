@@ -1,8 +1,5 @@
-import { config, syntaxExempt } from '@ab/config/eslint';
-// A CLI: console is its output.
-export default config(
-  import.meta.dirname,
-  { rules: { 'no-console': 'off' } },
-  // docs/36 H-1 (row ht): tools/scripts' one outbound HTTP client is the only fetch caller.
-  syntaxExempt({ files: ['http/**'], http: true }),
-);
+import { config } from '@ab/config/eslint';
+import lint from './lint.blocks.mjs';
+
+// The package's own blocks live in lint.blocks.mjs (shared with Oxlint, docs/31b).
+export default config(import.meta.dirname, ...lint.blocks);

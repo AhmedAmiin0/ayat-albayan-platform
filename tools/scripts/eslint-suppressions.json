@@ -221,7 +221,7 @@
       "count": 2
     }
   },
-  "ci-checks/lint/lint-gate.mjs": {
+  "ci-checks/lint/json-file.mjs": {
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -244,7 +244,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "ci-checks/move-module/knip.ts": {

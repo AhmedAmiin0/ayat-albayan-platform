@@ -1,8 +1,7 @@
 import { changePicks, changePrefillFrom, type BookedCourse, type SalesCourseView } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { bookFailure, dayStartUtc } from '@/booking';
-import { SlotStep } from '@/booking/trial/components/SlotStep';
+import { bookFailure, dayStartUtc, LessonTimesStep } from '@/booking';
 import { t } from '@/core/lib/i18n/i18n';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { AppText } from '@/core/ui/primitives/AppText';
@@ -30,10 +29,9 @@ interface CourseChangeFlowProps {
 
 /**
  * «تغيير أيام الحلقات» (owner 2026-10-18): exactly the plan's days a week, prefilled with the course's
- * own from changePrefillFrom (the later of changeOpensOn and startsOn), its 7-day slot window opening
- * on that same day (SlotStep multi, the course's lessons not busy against themselves) so the
- * prefilled picks show checked (a pick rolled a week on while today's lesson is still on ends past
- * the window and shows only in the picked list) → the review with the remaining lessons and the clashes (unchanged
+ * own from changePrefillFrom (the later of changeOpensOn and startsOn), each day a date and a time
+ * from that same day on (LessonTimesStep, its slot data with the course's lessons not busy against
+ * themselves; a pick rolled a week on past that week is left to the review's check) → the review with the remaining lessons and the clashes (unchanged
  * days: the check's own no_change) → «احفظ الأيام الجديدة». Trade-off: the window has no paging, so a
  * pending change's old days before its startsOn cannot be picked here (web pages back to them). The
  * teacher, the length and the zone stay the course's. One clientRequestId per flow (rule 8).
@@ -46,7 +44,8 @@ export function CourseChangeFlow({ student, course, onLeave, onDone, target }: C
   const [step, setStep] = useState<'slot' | 'review'>(target?.review ? 'review' : 'slot');
   const [now] = useState(() => new Date());
   const [first] = useState(() => changePicks(course, now));
-  const [from] = useState(() => dayStartUtc(changePrefillFrom(course, now), course.tz).toISOString());
+  const [opens] = useState(() => changePrefillFrom(course, now));
+  const from = dayStartUtc(opens, course.tz).toISOString();
   const [picks, setPicks] = useState(() => first.map((p) => p.at));
   const [requestId] = useState(newRequestId);
   const change = useChangeCourse(target?.path);
@@ -70,8 +69,9 @@ export function CourseChangeFlow({ student, course, onLeave, onDone, target }: C
             {t.booking.courseChange.currentDays.replace('{days}', daysText(course.days, course.tz, viewer))}
           </AppText>
           <AppText style={note}>{t.booking.courseChange.changeHint}</AppText>
-          <SlotStep
+          <LessonTimesStep
             teacherId={target?.teacherId ?? course.teacherId}
+            opens={opens}
             tz={course.tz}
             durationMin={course.durationMin}
             from={from}

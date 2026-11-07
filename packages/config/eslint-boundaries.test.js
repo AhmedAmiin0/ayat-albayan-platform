@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-import { describe, it, test } from 'node:test';
-import { RuleTester } from 'eslint';
+import { test } from 'node:test';
 import { boundariesPlugin, isDeep, moduleOf } from './eslint-boundaries.js';
+import { testRule } from './rule-testers.js';
 
 const cwd = '/repo/apps/api';
 const api = { cwd, module: 'src/modules/[^/]+/[^/]+' };
@@ -44,13 +44,10 @@ test('isDeep resolves an alias against the package root', () => {
   assert.equal(isDeep('@/features/a/b/other', web), false);
 });
 
-RuleTester.describe = describe;
-RuleTester.it = it;
-const tester = new RuleTester({ languageOptions: { ecmaVersion: 2024, sourceType: 'module' } });
 // RuleTester lints from process.cwd(), so the file sits under it.
 const filename = `${process.cwd()}/src/modules/sales/leads/a.ts`;
 const options = [{ root: process.cwd(), module: api.module }];
-tester.run('module-boundaries', boundariesPlugin.rules['module-boundaries'], {
+testRule({ name: 'module-boundaries', rule: boundariesPlugin.rules['module-boundaries'] }, {
   valid: [
     { code: "import { x } from '../sales/index.js';", filename, options },
     { code: "export { y } from './y.js';", filename, options },

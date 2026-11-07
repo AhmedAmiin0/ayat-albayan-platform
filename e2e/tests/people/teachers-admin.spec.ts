@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { dropTeacher, insertTeacher } from '../../support/people/admin-extra';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { addDays, nextWeekSaturday, seedFamily, withSql } from '../../support/core/schedule';
+import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
 // R-TCH-01/02: create a teacher, rates, the admin availability grid, time off, and time off
 // blocking the booking wizard's slots. Not asserted: a students count (TeacherFacts has none).
@@ -96,14 +97,12 @@ test.describe('teachers admin (R-TCH-01/02)', () => {
 
       await pickTeacherInWizard(page, family.studentIds[0] ?? '');
       const step = page.getByRole('region', { name: ar.booking.steps.slot });
-      await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-      const day = () => step.getByRole('region', { name: new RegExp(`^${SUNDAY} `) });
-      await expect(day().getByRole('button')).toHaveCount(2);
-      await expect(day().getByRole('button').filter({ hasNotText: ar.booking.slotBusy })).toHaveCount(0);
-      await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-      const free = day().getByRole('button').filter({ hasNotText: ar.booking.slotBusy });
-      await expect(free.first()).toContainText('16:00');
-      await expect(free).toHaveCount(2);
+      // Next Sunday is all time off: 16:00 shows the clash; the Sunday after is free.
+      await fillLessonRow(step, 1, { weekday: 0, time: '16:00' });
+      await expect(step.getByText(ar.booking.conflictTitle)).toBeVisible();
+      await expect(step.getByText(ar.lessonTimes.free)).toHaveCount(0);
+      await fillLessonRow(step, 1, { weekday: 0, time: '16:00', weeksLater: 1 });
+      await expect(step.getByText(ar.lessonTimes.free)).toBeVisible();
     } finally {
       await dropTeacher(teacherId);
     }

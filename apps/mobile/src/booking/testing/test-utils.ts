@@ -4,7 +4,8 @@ import { cachedList, huda, unnamed } from '@/inbox/shared/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient } from '@/test/query';
-import { maryam, MON_19, noAvailability, slot, SUN_17 } from './fixtures';
+import { maryam, MON_19, noAvailability, slot, slotsAnswer, SUN_17 } from './fixtures';
+import { pickLesson } from './lesson-times';
 
 // Test-only helpers for the quick-book screen tests (the jest.mock calls stay in each test file).
 
@@ -29,20 +30,22 @@ export function fakeBookingApi() {
   const fetch = (path: string): Promise<unknown> => {
     if (path.startsWith('/booking/teachers')) return Promise.resolve(api.teachers);
     if (path.startsWith('/booking/slots')) {
-      return Promise.resolve({ teacher_tz: 'Africa/Cairo', step_min: 45, slots: api.slots });
+      return Promise.resolve(slotsAnswer(api.slots));
     }
     return Promise.reject(new Error(`unexpected GET ${path}`));
   };
   return { api, fetch };
 }
 
-/** The chat's «اشترك» wizard: name, teacher, the package step as it is, the slot, «التالي» → «الفاتورة». */
+/** The chat's «اشترك» wizard: name, teacher, the package step as it is, one day (Sunday 4 Oct at
+ * `time`, the other row dropped), «التالي» → «الفاتورة». */
 export async function walkPackageToInvoice(time = '17:00') {
   await fireEvent.changeText(await screen.findByLabelText(t.leads.studentName), 'يوسف');
   await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
   await fireEvent.press(await screen.findByRole('button', { name: t.booking.next }));
-  await fireEvent.press(await screen.findByRole('checkbox', { name: new RegExp(`^${time}`) }));
+  await pickLesson(0, { date: '2026-10-04', time });
+  await fireEvent.press(screen.getByRole('button', { name: t.lessonTimes.removeRow.replace('{n}', '2') }));
   await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));
   await screen.findByText(t.booking.invoice.hint);
 }

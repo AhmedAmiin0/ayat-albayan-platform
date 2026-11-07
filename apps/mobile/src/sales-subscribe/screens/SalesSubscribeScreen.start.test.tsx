@@ -1,6 +1,7 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { dayLabel } from '@/booking/shared/slots';
 import { t } from '@/core/lib/i18n/i18n';
+import { dayOf, dialogProps, pickDay } from '@/test/pickers/native-picker';
 import { localDay, money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
@@ -47,7 +48,7 @@ test('without subscriptions.set_start_date: no day picker, «تبدأ الباق
   await open();
   const today = dayLabel(new Date('2026-10-12T12:00:00Z'), 'UTC');
   expect(screen.getByText(m.startsOnDefault.replace('{date}', today))).toBeTruthy();
-  expect(screen.queryByRole('radio', { name: t.mobile.today })).toBeNull();
+  expect(screen.queryByTestId('start-day-open')).toBeNull();
   expect(screen.queryByRole('switch', { name: m.alreadyStarted })).toBeNull();
   await save();
   await waitFor(() => expect(lastBody()).toBeDefined());
@@ -55,10 +56,13 @@ test('without subscriptions.set_start_date: no day picker, «تبدأ الباق
   expect(lastBody()).not.toHaveProperty('alreadyStarted');
 });
 
-test('with it: the day chips (today on, no past day), sent as startsOn without alreadyStarted', async () => {
+test('with it: the date dialog (today on, no past day), sent as startsOn without alreadyStarted', async () => {
   asSales('subscriptions.set_start_date');
   await open();
-  expect(await screen.findByRole('radio', { name: t.mobile.today, checked: true })).toBeTruthy();
+  await fireEvent.press(await screen.findByTestId('start-day-open'));
+  const bounds = await dialogProps();
+  expect([dayOf(bounds.minimumDate), dayOf(bounds.maximumDate)]).toEqual(['2026-10-12', '2026-10-18']);
+  await act(() => bounds.onValueChange({}, new Date(2026, 9, 12, 12)));
   expect(screen.queryByText(m.startsOnDefault.split('(')[0] ?? '')).toBeNull();
   await save();
   await waitFor(() => expect(lastBody()).toMatchObject({ startsOn: '2026-10-12' }));
@@ -69,30 +73,24 @@ test('a past day only with «بدأ الاشتراك سابقًا»: picked on t
   asSales('subscriptions.set_start_date');
   await open();
   await fireEvent(await screen.findByRole('switch', { name: m.alreadyStarted }), 'valueChange', true);
-  expect(screen.queryByRole('radio', { name: t.mobile.today })).toBeNull();
+  expect(screen.queryByTestId('start-day-open')).toBeNull();
   expect(screen.getByText(m.startedOn)).toBeTruthy();
   expect(screen.queryByDisplayValue('2026-10-12')).toBeNull();
   expect(screen.getByText(t.datePicker.earliest.replace('{date}', localDay('2025-10-12')))).toBeTruthy();
 
-  await fireEvent.press(screen.getByTestId('date-picker-open'));
-  expect(screen.getByRole('button', { name: t.mobileFinance.month.next, disabled: true })).toBeTruthy();
-  expect(screen.getByTestId('calendar-day-2026-10-13').props.accessibilityState).toMatchObject({ disabled: true });
-  for (let i = 0; i < 11; i += 1) await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.prev }));
-  await fireEvent.press(screen.getByTestId('calendar-day-2025-11-13'));
-  expect(screen.queryByTestId('date-picker-sheet')).toBeNull();
+  await pickDay('date-picker-open', '2025-11-13');
+  expect(screen.queryByTestId('native-date-time-picker')).toBeNull();
   expect(screen.getByText(localDay('2025-11-13'))).toBeTruthy();
   await save();
   await waitFor(() => expect(lastBody()).toMatchObject({ startsOn: '2025-11-13', alreadyStarted: true }));
   expect(screen.queryByText(m.error.start_date_too_old)).toBeNull();
 });
 
-test('the calendar stops a year back: the month before is off and its earlier days cannot be picked', async () => {
+test('the past-day dialog stops a year back and at today (the API’s bounds)', async () => {
   asSales('subscriptions.set_start_date');
   await open();
   await fireEvent(await screen.findByRole('switch', { name: m.alreadyStarted }), 'valueChange', true);
   await fireEvent.press(screen.getByTestId('date-picker-open'));
-  for (let i = 0; i < 12; i += 1) await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.prev }));
-  expect(screen.getByRole('button', { name: t.mobileFinance.month.prev, disabled: true })).toBeTruthy();
-  expect(screen.getByTestId('calendar-day-2025-10-11').props.accessibilityState).toMatchObject({ disabled: true });
-  expect(screen.getByTestId('calendar-day-2025-10-12').props.accessibilityState).toMatchObject({ disabled: false });
+  const bounds = await dialogProps();
+  expect([dayOf(bounds.minimumDate), dayOf(bounds.maximumDate)]).toEqual(['2025-10-12', '2026-10-12']);
 });

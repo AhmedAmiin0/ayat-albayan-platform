@@ -1,0 +1,6 @@
+// docs/27 §1 rule 6: each src/ folder (enums, google, integrations, permissions, theme) is a
+// module; others reach it only through its index.ts.
+import { libraryBlocks } from '@ab/config/lint';
+
+const blocks = libraryBlocks({ root: import.meta.dirname, module: 'src/[^/.]+' });
+export default { react: false, blocks };

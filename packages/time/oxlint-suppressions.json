@@ -1,0 +1,27 @@
+{
+  "src/clock/clock-pref.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/clock/clock-range.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/zone/wall.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/zone/week.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/zone/zoned.ts": {
+    "complexity": {
+      "count": 1
+    }
+  }
+}

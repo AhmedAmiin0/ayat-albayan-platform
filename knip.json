@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "workspaces": {
     ".": {
-      "entry": ["tools/livekit/token-server.mjs"],
+      "entry": ["tools/livekit/token-server.mjs", "oxlint.full.config.ts"],
       "ignoreBinaries": ["supabase"]
     },
     "docs/design/brand/tools": {
@@ -21,7 +21,7 @@
       "ignoreDependencies": ["babel-plugin-react-compiler", "zod"]
     },
     "apps/mobile": {
-      "entry": ["app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
+      "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
       "project": ["{app,src}/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         "react-test-renderer",

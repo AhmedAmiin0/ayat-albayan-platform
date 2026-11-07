@@ -1,5 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { pickLesson } from '@/booking/testing/lesson-times';
 import { pickReceipt } from '@/core/lib/receipts/receipt';
 import { renderWithQuery } from '@/test/query';
 import { BookTrialScreen } from './BookTrialScreen';
@@ -8,6 +9,7 @@ import { packageDaysNote } from '@/booking/trial/lib/package-choice';
 import { dayLine } from '@/booking/shared/picks';
 import { uploadInvoice } from '@/booking/invoice/invoice-upload';
 import { fakeBookingApi, PHOTO, PREVIEW } from '@/booking/testing/test-utils';
+import { fakeNow } from '@/test/fake-now';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
@@ -23,12 +25,8 @@ jest.mock('@/booking/invoice/invoice-upload', () => ({ uploadInvoice: jest.fn() 
 const mockReplace = jest.fn();
 // The chat's «اشترك»: the lead's id, number and WhatsApp name, and the package mode.
 jest.mock('expo-router', () => ({
-  router: {
-    back: jest.fn(),
-    canGoBack: () => true,
-    replace: (h: unknown) => mockReplace(h),
-    push: jest.fn(),
-  },
+  router: { back: jest.fn(), canGoBack: () => true, push: jest.fn(),
+    replace: (h: unknown) => mockReplace(h) },
   useLocalSearchParams: () => ({
     leadId: 'a1',
     phone: '+966552147730',
@@ -37,10 +35,13 @@ jest.mock('expo-router', () => ({
   }),
 }));
 
+const isOff = (name: string) => screen.getByRole('button', { name }).props.accessibilityState?.disabled;
 const press = async (role: 'button' | 'radio' | 'checkbox', name: string) =>
   fireEvent.press(await screen.findByRole(role, { name }));
 
+// The picked lessons (from Sunday 4 Oct 2026) lie ahead: «now» is Friday 2 Oct.
 beforeEach(() => {
+  fakeNow(new Date('2026-10-02T06:00:00Z'));
   jest.clearAllMocks();
   const booking = fakeBookingApi();
   booking.api.slots = [slot(SUN_17), slot(THU_18)];
@@ -48,6 +49,7 @@ beforeEach(() => {
   jest.mocked(pickReceipt).mockResolvedValue(PHOTO);
   jest.mocked(uploadInvoice).mockResolvedValue('req/0b1c.jpg');
 });
+afterEach(() => jest.useRealTimers());
 
 test('a lead from the chat books a package: size, a time per day, the required invoice, then its subscription', async () => {
   await renderWithQuery(<BookTrialScreen />);
@@ -64,12 +66,11 @@ test('a lead from the chat books a package: size, a time per day, the required i
   await press('radio', t.enums.packageSize['12']);
   await press('radio', t.enums.duration['60']);
   await press('button', t.booking.next);
-  // A package picks one time per weekday, then «التالي» (disabled until a day is picked).
-  expect(await screen.findByText(t.booking.noDayPicked)).toBeTruthy();
-  expect(screen.getByRole('button', { name: t.booking.next }).props.accessibilityState).toMatchObject({ disabled: true });
-  await press('checkbox', '17:00');
-  await press('checkbox', '18:00');
-  expect(screen.getByRole('checkbox', { name: '17:00', checked: true })).toBeTruthy();
+  expect(await screen.findByTestId('lesson-date-2')).toBeTruthy(); // 12 a month = 3 rows; one dropped
+  expect(isOff(t.booking.next)).toBe(true);
+  await pickLesson(0, { date: '2026-10-04', time: '17:00' });
+  await pickLesson(1, { date: '2026-10-08', time: '18:00' });
+  await press('button', t.lessonTimes.removeRow.replace('{n}', '3'));
   expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh', R24))).toBeTruthy();
   await press('button', t.booking.next);
   const slotsPath = mockApiFetch.mock.calls

@@ -10,7 +10,7 @@ import { renderWithQuery } from '@/test/query';
 import { isDisabled, press } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen';
 import { courseView } from '@/sales-course/testing/fixtures';
-import { changeApi, changeSundayToMonday, NOW, runningCourse, TZ, windowed } from './change-test-setup';
+import { changeApi, changeSundayToMonday, NOW, rowTime, runningCourse, timeLabel, TZ, windowed } from './change-test-setup';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
@@ -76,12 +76,11 @@ test('a course booked ahead (a renewal) is changed from its own first week: the 
   expect(await screen.findByText(t.booking.courseChange.upcoming)).toBeTruthy();
   await press('button', t.booking.courseChange.changeDays);
   expect(await screen.findByText(dayLine('2026-10-11T14:00:00.000Z', TZ, R24))).toBeTruthy(); // Sunday 11 Oct 17:00
-  // The picks are seeded once the slots answer, a render after the day lines: wait for the check itself.
-  expect(await screen.findByRole('checkbox', { name: '17:00', checked: true })).toBeTruthy();
+  expect(await rowTime(0)).toBe(timeLabel('17:00')); // the rows start prefilled
   expect(screen.getByText(dayLine('2026-10-15T15:00:00.000Z', TZ, R24))).toBeTruthy(); // Thursday 15 Oct 18:00
   const [read] = mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith('/sales/booking/slots'));
   expect(new URLSearchParams(read?.split('?')[1]).get('from')).toBe('2026-10-10T21:00:00.000Z'); // 11 Oct 00:00 Riyadh
-  await changeSundayToMonday(); // on the grid: Sunday 17:00 off, Monday 12 Oct 19:00 on
+  await changeSundayToMonday({ row: 0, monday: '2026-10-12' }); // Sunday 11 Oct → Monday 12 Oct 19:00
   const [check] = mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === `${CHANGE}/check`);
   expect((check?.[2] as { startsOn: string }).startsOn >= ahead.startsOn).toBe(true);
 });
@@ -101,9 +100,9 @@ test('booked ahead with a pending change: slots and picks from the new set\'s st
   mockApiSend.mockRejectedValue(new ApiError(400, { code: 'no_change', message: 'x' }));
   await renderWithQuery(<CourseScreen />);
   await press('button', t.booking.courseChange.changeDays);
-  expect(await screen.findByRole('checkbox', { name: '19:00', checked: true })).toBeTruthy(); // Monday 12 Oct
-  expect(screen.getByRole('checkbox', { name: '18:00', checked: true })).toBeTruthy(); // Thursday 15 Oct
-  expect(screen.queryByRole('checkbox', { name: '17:00' })).toBeNull(); // the old Sunday 11 Oct: web only
+  expect(await rowTime(0)).toBe(timeLabel('19:00')); // Monday 12 Oct
+  expect(await rowTime(1)).toBe(timeLabel('18:00')); // Thursday 15 Oct; the old Sunday 11 Oct: web only
+  expect(screen.queryByTestId('lesson-time-2')).toBeNull();
   expect(slotsFrom()).toBe(dayStartUtc(ahead.startsOn, TZ).toISOString());
   await press('button', t.booking.next);
   expect(await screen.findByText(t.booking.error.no_change)).toBeTruthy();
@@ -120,8 +119,8 @@ test('a pending change (its new days start later, the old ones still run): runni
   await renderWithQuery(<CourseScreen />);
   expect(await screen.findByText(t.booking.courseChange.running)).toBeTruthy();
   await press('button', t.booking.courseChange.changeDays);
-  expect(await screen.findByRole('checkbox', { name: '17:00', checked: true })).toBeTruthy(); // Sunday 11 Oct
-  expect(screen.getByRole('checkbox', { name: '18:00', checked: true })).toBeTruthy(); // Thursday 15 Oct
+  expect(await rowTime(0)).toBe(timeLabel('17:00')); // Sunday 11 Oct
+  expect(await rowTime(1)).toBe(timeLabel('18:00')); // Thursday 15 Oct
   expect(slotsFrom()).toBe(dayStartUtc(pending.startsOn, TZ).toISOString()); // not today
   await press('button', t.booking.next);
   expect(await screen.findByText(t.booking.error.no_change)).toBeTruthy();

@@ -1,9 +1,4 @@
 {
-  "eslint.config.js": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "public/sw.js": {
     "ab/no-shape-checks": {
       "count": 1
@@ -9284,18 +9279,15 @@
   },
   "src/features/teaching/booking/steps/slots/SlotDays.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/teaching/booking/steps/slots/SlotStep.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/teaching/booking/steps/slots/TeacherStep.tsx": {

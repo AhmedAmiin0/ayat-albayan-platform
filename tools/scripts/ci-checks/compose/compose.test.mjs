@@ -18,10 +18,13 @@ test('the project and its services', () => {
   ]);
 });
 
-test('only the load balancer is published, on localhost:3110 (the host Caddy target, unchanged)', () => {
-  const unpublished = Object.keys(services).filter((n) => n !== 'ayat-lb');
+test('only the load balancer and the MinIO console are published, both on localhost only', () => {
+  const published = ['ayat-lb', 'ayat-minio'];
+  const unpublished = Object.keys(services).filter((n) => !published.includes(n));
   for (const name of unpublished) assert.equal(services[name].ports, undefined, name);
   assert.deepEqual(services['ayat-lb'].ports, ['127.0.0.1:3110:8080']);
+  // The console (docs/45 §7): an SSH tunnel only, never the host Caddy.
+  assert.deepEqual(services['ayat-minio'].ports, ['127.0.0.1:9001:9001']);
 });
 
 test('one image built once, reused by the three app services, never pulled', () => {

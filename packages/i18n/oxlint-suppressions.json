@@ -1,0 +1,23 @@
+{
+  "src/arabic-literals.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/schemas.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/strings.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 4
+    }
+  }
+}

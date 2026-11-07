@@ -1,6 +1,6 @@
 import { screen, waitFor, fireEvent } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/core/lib/money/format';
+import { localDay, money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
@@ -41,7 +41,7 @@ afterEach(() => jest.useRealTimers());
 test('a London family at 21:30 UTC: «اليوم» is Riyadh 2026-10-13 and is accepted', async () => {
   await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(money(180, 'SAR'))).toBeTruthy();
-  expect(await screen.findByRole('radio', { name: t.mobile.today, checked: true })).toBeTruthy();
+  expect(await screen.findByText(localDay('2026-10-13'))).toBeTruthy();
   fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
   await waitFor(() => expect(lastBody()).toMatchObject({ startsOn: '2026-10-13' }));
   expect(screen.queryByText(m.error.start_date_past)).toBeNull();

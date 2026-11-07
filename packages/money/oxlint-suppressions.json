@@ -1,0 +1,317 @@
+{
+  "src/assistant/commission.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "stylistic/max-len": {
+      "count": 8
+    }
+  },
+  "src/assistant/first-paid.sales.test.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/assistant/first-paid.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/assistant/first-paid.ts": {
+    "complexity": {
+      "count": 3
+    },
+    "stylistic/max-len": {
+      "count": 13
+    }
+  },
+  "src/assistant/kind.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "src/assistant/renewal.test.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/assistant/renewal.ts": {
+    "stylistic/max-len": {
+      "count": 8
+    }
+  },
+  "src/assistant/schemas.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/assistant/schemas.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/assistant/started.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/assistant/started.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/assistant/statement.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/assistant/statement.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 8
+    }
+  },
+  "src/assistant/terms-dates.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "src/assistant/views.ts": {
+    "stylistic/max-len": {
+      "count": 9
+    }
+  },
+  "src/assistant/wallet.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/dot-notation": {
+      "count": 6
+    }
+  },
+  "src/assistant/wallet.ts": {
+    "stylistic/max-len": {
+      "count": 18
+    }
+  },
+  "src/ledger/alerts.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/alerts.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/earning-sync.test.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/earnings/earning-sync.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "src/ledger/earnings/earnings-pay.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/earnings-pay.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "src/ledger/earnings/earnings-schemas.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/earnings-schemas.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/earnings-views.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/earnings.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/earnings/earnings.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/earnings/pay-rule.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/ledger/earnings/payout.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/schemas.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/schemas.ts": {
+    "stylistic/max-len": {
+      "count": 8
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/package-cancel.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 13
+    }
+  },
+  "src/ledger/usage/package-progress.ts": {
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/payment-state.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/payment-state.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    },
+    "typescript/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/tiers.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/usage.before.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/usage/usage.instant.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/usage/usage.makeup.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/usage.test.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/ledger/usage/usage.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/ledger/views.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/pricing/currency.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/pricing/price.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/pricing/quote.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/pricing/renewal.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/pricing/renewal.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "ab/no-shape-checks": {
+      "count": 2
+    }
+  },
+  "src/status-style/commission-status-style.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/status-style/commission-status-style.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/status-style/status-style.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  }
+}

@@ -8,6 +8,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { fakeCourseApi, isDisabled, press, walkToReview } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from './CourseScreen';
 import { courseView, STUDENT_ID, SUB_ID } from '@/sales-course/testing/fixtures';
+import { fakeNow } from '@/test/fake-now';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -24,10 +25,13 @@ jest.mock('expo-router', () => ({
 
 const reads = (prefix: string) => mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith(prefix));
 
+// The picked lessons (from Sunday 4 Oct 2026) lie ahead: «now» is Friday 2 Oct.
 beforeEach(() => {
+  fakeNow(new Date('2026-10-02T06:00:00Z'));
   jest.clearAllMocks();
   mockParams.current = { studentId: STUDENT_ID };
 });
+afterEach(() => jest.useRealTimers());
 
 test('after «احجز» the refetched course (now hers: course_exists) keeps the booked panel', async () => {
   const api = fakeCourseApi();
@@ -53,7 +57,7 @@ test('a subscription that starts ahead: its first day in the header and the slot
   await renderWithQuery(<CourseScreen />);
   expect(await screen.findByText(t.booking.subscriptionStarts.replace('{date}', localDay('2099-01-04')))).toBeTruthy();
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
-  await screen.findAllByRole('checkbox', { name: '17:00' });
+  await screen.findByTestId('lesson-date-0');
   // Midnight of 4 Jan 2099 in Riyadh (+03).
   expect(reads('/sales/booking/slots')[0]).toContain(`from=${encodeURIComponent('2099-01-03T21:00:00.000Z')}`);
 });

@@ -1,9 +1,4 @@
 {
-  "eslint.config.js": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "playwright.config.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 9
@@ -988,7 +983,7 @@
   },
   "tests/platform/forms-parity.spec.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "tests/platform/google-calendar-handover.sql.spec.ts": {
@@ -1356,11 +1351,6 @@
   },
   "tests/teaching/edit-session-time.spec.ts": {
     "max-len": {
-      "count": 1
-    }
-  },
-  "tests/teaching/journey-5-availability-wizard.spec.ts": {
-    "@typescript-eslint/no-unnecessary-template-expression": {
       "count": 1
     }
   },

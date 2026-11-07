@@ -1,0 +1,14 @@
+{
+  "typescript/no-meaningless-void-operator": {
+    "missed": 12,
+    "why": "tsgolint (oxlint-tsgolint 7.0.2005) does not report `void` on a call or an `await` in an async arrow body (`async () => void (await x())`), which typescript-eslint 8.71 does; type-aware, so no JS-plugin fallback (docs/31b §3)."
+  },
+  "typescript/no-unnecessary-type-assertion": {
+    "missed": 45,
+    "why": "tsgolint does not report an assertion to the contextual or a widened type (`{} as Record<string, number>` in a typed slot, `tz as string` on a string-literal union, `jest.requireMock(...) as {…}`), which typescript-eslint 8.71 does; type-aware, no JS-plugin fallback (docs/31b §3)."
+  },
+  "typescript/prefer-optional-chain": {
+    "missed": 22,
+    "why": "tsgolint does not report `!a || a.b !== c` (→ `a?.b !== c`), which typescript-eslint 8.71 does; type-aware, no JS-plugin fallback (docs/31b §3)."
+  }
+}

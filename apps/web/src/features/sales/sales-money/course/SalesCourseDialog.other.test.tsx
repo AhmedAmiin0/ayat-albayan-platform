@@ -1,7 +1,6 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ABRAR, next } from '@/features/teaching/booking/wizard-fixture';
-import { dayMonthLabel } from '@/features/teaching/schedule';
+import { ABRAR, next, rowInputs } from '@/features/teaching/booking/wizard-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { COURSE_STUDENT_ID, COURSE_VIEW, RENEWAL_VIEW, routeCourseSend, routeRenewal } from './course-fixture';
@@ -33,11 +32,14 @@ describe('«اختر أيامًا أخرى» and the first course (owner 2026-10
     const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });
     await waitFor(() => expect(abrar).toHaveProperty('checked', true));
     next();
-    expect(await screen.findByText(t.schedule.weekOf.replace('{date}', dayMonthLabel('2026-10-10')))).toBeTruthy();
-    const grid = await screen.findByRole('group', { name: t.booking.freeSlots });
-    await within(grid).findAllByRole('button');
-    expect(within(grid).queryAllByRole('button', { pressed: true })).toHaveLength(0);
-    expect(screen.getByText(t.booking.pickSlotFirst)).toBeTruthy();
+    // Empty rows, each date from the day the new course opens (after the previous one's last day).
+    for (const n of [1, 2]) {
+      const row = await rowInputs(n);
+      expect(row.date).toHaveProperty('value', '');
+      expect(row.time).toHaveProperty('value', '');
+      expect(row.date.getAttribute('min')).toBe('2026-10-11');
+    }
+    expect(screen.queryByText(t.booking.seriesFree)).toBeNull();
   });
 
   it('no previous course: no choice, straight to the wizard', async () => {

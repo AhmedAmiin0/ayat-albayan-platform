@@ -1,0 +1,270 @@
+{
+  "src/boundaries.test.ts": {
+    "typescript/no-unnecessary-template-expression": {
+      "count": 1
+    }
+  },
+  "src/custom-config/index.ts": {
+    "typescript/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/custom-config/public-config.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/custom-config/public.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/custom-config/schema.ts": {
+    "no-nested-ternary": {
+      "count": 2
+    }
+  },
+  "src/defs.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "src/domains/activity.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/feedback.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/finance/finance.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/finance/payouts.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/messaging.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "src/domains/notifications.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/notifications.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/domains/sales.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/domains/teaching/classroom.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/domains/teaching/recordings.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/teaching/reports.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/teaching/scheduling.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/domains/uploads.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/gate.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/google-defs.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/groups.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/index.ts": {
+    "typescript/consistent-type-exports": {
+      "count": 1
+    }
+  },
+  "src/layout.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/ownership.ts": {
+    "stylistic/max-len": {
+      "count": 9
+    }
+  },
+  "src/public.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/read-settings.messaging.test.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/read-settings.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/registry.nullable.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/registry.ts": {
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    },
+    "typescript/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "src/seed/config-describe.migration.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/seed/entries.test.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/seed/entries.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "src/seed/google-settings-keys.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/seed/seed-entries.metadata.test.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
+  "src/seed/seed-entries.sql-keys.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/seed/seed-entries.test.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "typescript/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/seed/seed-entries.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "src/seed/seed-payload.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    },
+    "ab/no-shape-checks": {
+      "count": 1
+    }
+  },
+  "src/seed/sql-defaults.migration.test.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/seed/sql-readers.ts": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "src/validation/patch.test.ts": {
+    "stylistic/max-len": {
+      "count": 5
+    }
+  },
+  "src/validation/patch.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/validation/schema.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/validation/schema.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    },
+    "typescript/no-unnecessary-condition": {
+      "count": 1
+    },
+    "typescript/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/validation/validate.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/value-groups.registry.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  }
+}

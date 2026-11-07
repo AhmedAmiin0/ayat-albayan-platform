@@ -9,12 +9,16 @@
 // (the first lint pass, no bulk suppressions) runs a rule that has suppressed violations.
 // Usage: [GUARD_BASE=<base checkout>] node tools/scripts/ci-checks/lint/lint-gate.mjs
 //   [--configs <base ESLint config sources> <head ones>] (a rule the PR turns on: newRule)
+//   or: --oxlint <report.json> [--prune | --suppress-all] (oxlint-gate.mjs)
 import { existsSync, globSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { readJson } from './json-file.mjs';
+import { BASELINE, oxlintCli } from './oxlint/gate.mjs';
+import { baselineFile, oxlintrcFile } from './oxlint/schemas.mjs';
 
 const DIRS = ['apps/*', 'packages/*', 'tools/*', 'e2e', 'docs/design/brand/tools'];
-const FILES = DIRS.map((dir) => `${dir}/eslint-suppressions.json`);
+const FILES = (name) => DIRS.map((dir) => `${dir}/${name}`);
 
 /** Per-rule totals (sorted by rule) of suppressions files `{ file: { rule: { count } } }`. */
 export function totals(files) {
@@ -104,16 +108,27 @@ function configTexts(args) {
 const never = () => false;
 const baselines = (configs) => ({ isNew: newRule(configs), isTightened: tightenedRule(configs) });
 const sum = (byRule) => Object.values(byRule).reduce((a, b) => a + b, 0);
-const read = (path) => JSON.parse(readFileSync(path, 'utf8'));
 
-/** The suppressions files of the tree at `dir`: their paths and contents. */
-function suppressions(dir) {
-  const paths = globSync(FILES, { cwd: dir }).sort();
-  return { paths, files: paths.map((p) => read(join(dir, p))) };
+/** The `name` suppressions files of the tree at `dir`: their paths and contents. */
+function suppressions(dir, name = 'eslint-suppressions.json') {
+  const paths = globSync(FILES(name), { cwd: dir }).sort();
+  return { paths, files: paths.map((p) => readJson(join(dir, p), baselineFile)) };
+}
+
+/**
+ * The Oxlint baselines' per-rule totals against the base branch's (oxlint-gate.mjs holds each
+ * file to its count; this refuses a count raised by hand). None on the base: their first PR.
+ */
+function oxlintAboveBase(root, dir, configs) {
+  const base = dir ? suppressions(dir, BASELINE).files : [];
+  if (base.length === 0) return [];
+  const now = totals(suppressions(root, BASELINE).files);
+  return aboveBase(now, totals(base), baselines(configs)).map((line) => `oxlint ${line}`);
 }
 
 function main(args) {
   const root = fileURLToPath(new URL('../../../..', import.meta.url));
+  if (args.includes('--oxlint')) return oxlintCli(root, args);
   const { paths, files } = suppressions(root);
   const now = totals(files);
   const dir = process.env.GUARD_BASE;
@@ -121,8 +136,9 @@ function main(args) {
   const exists = (path) => existsSync(join(root, path));
   const diff = [
     ...(base ? aboveBase(now, base, baselines(configTexts(args))) : []),
+    ...oxlintAboveBase(root, dir, configTexts(args)),
     ...paths.flatMap((p, i) => gone(dirname(p), files[i], exists)),
-    ...oxlintSuppressed(read(join(root, '.oxlintrc.json')), now),
+    ...oxlintSuppressed(readJson(join(root, '.oxlintrc.json'), oxlintrcFile), now),
   ];
   const against = base ? `the base branch ${sum(base)}` : 'no base branch given (GUARD_BASE)';
   console.log(`lint: ${sum(now)} suppressed in ${paths.length} packages, ${against}`);

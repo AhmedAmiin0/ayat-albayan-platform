@@ -1,7 +1,7 @@
 {
   "name": "mobile",
   "private": true,
-  "main": "expo-router/entry",
+  "main": "index.ts",
   "scripts": {
     "start": "expo start",
     "dev": "expo start",
@@ -27,6 +27,7 @@
     "@ab/shared": "workspace:*",
     "@config-plugins/react-native-webrtc": "15.0.2",
     "@expo-google-fonts/noto-sans-arabic": "^0.4.3",
+    "@expo/ui": "~57.0.26",
     "@livekit/react-native": "3.0.0",
     "@livekit/react-native-expo-plugin": "1.0.3",
     "@livekit/react-native-webrtc": "144.2.0",
@@ -53,6 +54,7 @@
     "expo-sharing": "~57.0.24",
     "expo-sqlite": "~57.0.4",
     "expo-status-bar": "~57.0.1",
+    "expo-task-manager": "~57.0.22",
     "expo-updates": "~57.0.24",
     "expo-video": "~57.0.5",
     "livekit-client": "2.22.3",

@@ -1,17 +1,16 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { Linter, RuleTester } from 'eslint';
-import tseslint from 'typescript-eslint';
+import { Linter } from 'eslint';
 import { noParentImports } from './eslint-boundaries.js';
 import { aliasable, isParent, noParentImportsRule } from './eslint-parent-imports.js';
+import { testRule } from './rule-testers.js';
 
-const tester = new RuleTester({ languageOptions: { parser: tseslint.parser, sourceType: 'module' } });
 const parent = (spec) => ({ messageId: 'parent', data: { spec } });
 const at = { filename: '/pkg/src/x/y/file.ts', options: [{ root: '/pkg', dir: 'src' }] };
 const ok = (code) => ({ ...at, code });
 const bad = (code, ...specs) => ({ ...at, code, errors: specs.map(parent) });
 
-tester.run('no-parent-imports', noParentImportsRule, {
+testRule({ name: 'no-parent-imports', rule: noParentImportsRule, lang: 'ts' }, {
   valid: [
     ok("import { a } from './a';"),
     ok("import { a } from '@/common/a';"),

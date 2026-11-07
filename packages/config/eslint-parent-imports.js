@@ -65,7 +65,8 @@ const rule = {
       ExportAllDeclaration: source,
       ImportExpression: source,
       TSExternalModuleReference: (node) => check(pathLiteral(node.expression)),
-      TSImportType: (node) => check(pathLiteral(node.argument?.literal ?? node.argument)),
+      // `source`: typescript-eslint 8 and Oxlint (`argument` is deprecated, Oxlint has none).
+      TSImportType: (node) => check(pathLiteral(node.source)),
       CallExpression: (node) => {
         if (PATH_CALLS.test(calleeName(node.callee))) check(pathLiteral(node.arguments[0]));
       },

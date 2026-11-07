@@ -5,3 +5,4 @@ export { rescheduleFailure } from './reschedule/reschedule-errors';
 export { RescheduleFrame, RescheduleSheet } from './reschedule/RescheduleSheet';
 export { SlotPicker } from './reschedule/SlotPicker';
 export { CorrectOutcome } from './correct/CorrectOutcome';
+export { SlotButton } from './reschedule/SlotButton';

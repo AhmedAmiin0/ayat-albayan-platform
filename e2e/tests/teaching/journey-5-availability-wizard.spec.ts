@@ -1,9 +1,10 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { lessonsOf, queuedFor, resetAbrar, ruleOf, seedFamily } from '../../support/core/schedule';
+import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
 // Journey 5 (docs/03 §5): the teacher sets availability → the booking wizard only offers those
-// slots. R-TCH-02, R-SCH-08 (teacher self-service), R-SCH-06 (slot grid from real availability).
+// times. R-TCH-02, R-SCH-08 (teacher self-service), R-SCH-06 (times read against availability).
 
 const WEDNESDAY = ar.enums.weekday['3'];
 
@@ -37,19 +38,17 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
     // Next week is whole (this week's Wednesday may be gone): 45-minute starts inside 16:00–18:00.
+    // 17:30 would end past 18:00 (outside her availability, with 16:00 and 16:45 offered instead);
+    // 16:00 is free and becomes the first lesson.
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
-    await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-    const slots = step.getByRole('group', { name: ar.booking.freeSlots }).getByRole('button');
-    await expect(slots).toHaveCount(2);
-    await expect(slots.nth(0)).toContainText('16:00');
-    await expect(slots.nth(1)).toContainText('16:45');
-    const wednesday = step.getByRole('region', { name: new RegExp(`^${WEDNESDAY} `) });
-    await expect(wednesday.getByRole('button')).toHaveCount(2);
-
-    // Picking one moves on: the first lesson is that Wednesday at 16:00 Riyadh.
-    await slots.nth(0).click();
-    await expect(step.getByRole('status')).toContainText(`${WEDNESDAY}`);
-    await expect(step.getByRole('status')).toContainText('16:00');
+    await fillLessonRow(step, 1, { weekday: 3, time: '17:30' });
+    await expect(step.getByText(/خارج المواعيد المتاحة للمعلم/)).toBeVisible();
+    const nearest = step.getByRole('group', { name: ar.lessonTimes.nearest }).getByRole('button');
+    await expect(nearest).toHaveCount(2);
+    await nearest.first().click();
+    await expect(step.getByText(ar.lessonTimes.free)).toBeVisible();
+    const dayAt = ar.booking.dayAt.replace('{day}', WEDNESDAY).replace('{time}', '16:00');
+    await expect(step.getByRole('region', { name: new RegExp(ar.booking.pickDays) }).getByText(dayAt)).toBeVisible();
     await expect(admin.getByRole('button', { name: ar.booking.next })).toBeEnabled();
 
     // Review → «احجز»: one transaction writes the rule (idempotency key, no frozen link), the

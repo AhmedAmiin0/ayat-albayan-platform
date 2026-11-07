@@ -1,4 +1,5 @@
-// Path-keyed baselines in a move PR (docs/27 §4): ESLint bulk suppressions (`<pkg>/eslint-suppressions.json`,
+// Path-keyed baselines in a move PR (docs/27 §4): the lint suppressions (`<pkg>/eslint-suppressions.json`
+// and Oxlint's `<pkg>/oxlint-suppressions.json`, docs/31b §4,
 // keyed by PACKAGE-relative paths), the knip baseline, the queries list and the folder-cap allow-lists (repo
 // paths). A pure move may only carry an entry to its file's (or whole folder's) new path. Suppressions keep
 // every entry and count exactly; the other baselines may also shrink (their own gates check them against the
@@ -7,7 +8,7 @@ import { posix } from 'node:path';
 import { folderRenames } from '../pure-move-tokens.mjs';
 import { renameGuardLine } from './identifiers.mjs';
 
-const SUPPRESSIONS = /(^|\/)eslint-suppressions\.json$/;
+const SUPPRESSIONS = /(^|\/)(eslint|oxlint)-suppressions\.json$/;
 // The queries list (lint/queries-gate.mjs): knip-shaped lines that are bare paths.
 const KNIP = /^refactor\/guards\/(knip|queries)\.json$/;
 const FOLDER_CAP = /^refactor\/folder-cap\/[^/]+\.json$/;
