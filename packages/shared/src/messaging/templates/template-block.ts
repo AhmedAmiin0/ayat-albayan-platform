@@ -56,7 +56,7 @@ export interface TemplateBlockSource {
  * URL suffixes that are a guardian's own signed token (the feedback form, the classroom guest link):
  * a staff tap would act as the family, so the button shows its label only.
  */
-const TOKEN_URL_KEYS: ReadonlySet<string> = new Set(['lesson_feedback_request', 'lesson_join_link']);
+export const TOKEN_URL_KEYS: ReadonlySet<string> = new Set(['lesson_feedback_request', 'lesson_join_link']);
 
 /** Before the first sync with `display`: the registry's own buttons (the sender's view). */
 export function registryButtons(buttons: readonly TemplateButton[]): TemplateDisplayButton[] {

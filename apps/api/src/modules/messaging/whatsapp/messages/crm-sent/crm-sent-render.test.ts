@@ -28,7 +28,7 @@ describe('sentTemplate + renderSent', () => {
       { type: 'BUTTONS', buttons: [{ type: 'URL', text: 'افتح', url: 'https://x.example/{{1}}' }] },
     ];
     const sent = { name: 'report_session', language: 'ar', body: [], header: null, buttons: [] };
-    const out = renderSent({ copy, sent, documentUrl: 'https://s.example/r.pdf' });
+    const out = renderSent({ copy, sent, key: 'report_ready', documentUrl: 'https://s.example/r.pdf' });
     expect(out.block).toEqual({ header: { type: 'document' }, footer: null, buttons: [{ type: 'url', text: 'افتح' }] });
     expect(out.text).toBe('تقرير الحلقة\n\nhttps://s.example/r.pdf');
   });

@@ -45,6 +45,16 @@ describe('CrmCopiesRepo', () => {
     const db = { from: () => ({ select: async () => ({ data: null, error: { message: 'down' } }) }) } as unknown as Db;
     expect(await new CrmCopiesRepo(db).find('a', 'ar')).toBeNull();
   });
+
+  it('a failed read is not cached: the next call reads again and finds the copy', async () => {
+    const select = vi.fn()
+      .mockResolvedValueOnce({ data: null, error: { message: 'down' } })
+      .mockResolvedValueOnce({ data: [{ name: 'a', language: 'ar', components: [BODY] }], error: null });
+    const repo = new CrmCopiesRepo({ from: () => ({ select }) } as unknown as Db);
+    expect(await repo.find('a', 'ar', 0)).toBeNull();
+    expect(await repo.find('a', 'ar', 1)).toEqual([BODY]);
+    expect(select).toHaveBeenCalledTimes(2);
+  });
 });
 
 describe('saveCrmCopies', () => {

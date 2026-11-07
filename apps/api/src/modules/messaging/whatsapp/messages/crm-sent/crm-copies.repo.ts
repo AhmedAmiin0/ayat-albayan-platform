@@ -13,6 +13,10 @@ const rowSchema = z.object({
   components: z.array(z.unknown()).catch([]),
 });
 type Copies = Map<string, Component[]>;
+interface CopyEntry {
+  at: number;
+  rows: Promise<Copies>;
+}
 
 const keyOf = (name: string, language: string): string => `${name}:${language}`;
 const listed = (t: MetaTemplate): boolean => components(t.components).length > 0;
@@ -23,7 +27,7 @@ const listed = (t: MetaTemplate): boolean => components(t.components).length > 0
  */
 @Injectable()
 export class CrmCopiesRepo {
-  private copy: { at: number; rows: Promise<Copies> } | null = null;
+  private copy: CopyEntry | null = null;
 
   constructor(@Inject(DB) private readonly db: Db) {}
 
@@ -32,6 +36,8 @@ export class CrmCopiesRepo {
     const fresh = this.copy && now - this.copy.at < COPY_MS ? this.copy : null;
     const copy = fresh ?? { at: now, rows: this.all() };
     this.copy = copy;
+    // A failed read is not kept: the next call reads again (as TemplateNames.rows does).
+    copy.rows.catch(() => this.forget(copy));
     const rows = await copy.rows.catch(() => new Map<string, Component[]>());
     return rows.get(keyOf(name, language)) ?? null;
   }
@@ -49,6 +55,10 @@ export class CrmCopiesRepo {
     if (error) throw new Error(`crm template copies not saved: ${error.message}`);
     this.copy = null;
     return rows.length;
+  }
+
+  private forget(copy: CopyEntry): void {
+    if (this.copy === copy) this.copy = null;
   }
 
   private async all(): Promise<Copies> {
