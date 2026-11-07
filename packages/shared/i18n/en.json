@@ -6990,12 +6990,22 @@
       "button": "Sync templates with this number",
       "busy": "Syncing templates…",
       "done": "Sync complete. Templates on the number’s account: {{meta}}; updated for this number: {{synced}}.",
+      "doneLine": "{{line}} templates synced. Templates on the line’s account: {{meta}}; updated in the registry: {{synced}}.",
       "failed": "Template sync failed: {{error}}",
       "errors": {
         "not_configured": "This number’s credentials are incomplete, so its templates cannot be read.",
         "meta_error": "Meta returned an error ({{message}}).",
         "kapso_auth": "Kapso refused this number’s credentials.",
-        "crm_managed": "This number's templates are managed in the CRM, so they are not read from here."
+        "crm_managed": "This number’s templates are managed in the CRM, so this button does not read them. Check their status on the Templates page.",
+        "crm_auth": "The CRM refused its API key. Update the CRM API key in Communications → Security, then try again.",
+        "crm_scope_missing": "The CRM API key lacks the {{message}} scope. Create a key that has it, save it, then try again.",
+        "evolution_no_templates": "An Evolution number has no templates, so there is nothing to sync.",
+        "calls_no_templates": "This number is for calls only, so it has no templates.",
+        "module_mode_only": "This sync works when the setup source is Numbers. Sync templates from the Templates page.",
+        "template_sync_off": "Template sync with WhatsApp is off in this environment.",
+        "unknown_number": "This number no longer exists. Refresh the page and try again.",
+        "allow_list_only": "Template sync is available to the administrator only.",
+        "forbidden": "You do not have permission to manage templates."
       }
     },
     "fallbackRank": {

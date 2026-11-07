@@ -51,7 +51,8 @@ export class Outbox {
       const pass = this.sender.kick();
       if (wait) await pass;
     }
-    const now = wait && queued.status === 'queued' ? await this.settled(queued.id) : await this.queries.get(queued.id);
+    // The enqueue's own row (a replay's is read back there): only send() reads it again.
+    const now = wait && queued.status === 'queued' ? await this.settled(queued.id) : queued;
     const view = await this.views.view(now ?? queued);
     return { view, replayed: queued.replayed === true };
   }

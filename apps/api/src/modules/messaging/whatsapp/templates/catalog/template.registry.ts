@@ -47,6 +47,12 @@ export class TemplateRegistry {
     return row?.status === 'approved' ? toTemplateView(row) : null;
   }
 
+  /** approved() through the 60 s copy (docs/42 42-3): the composer's reopen note, never a send. */
+  async approvedCached(key: string): Promise<TemplateView | null> {
+    const row = await this.queries.cached(key);
+    return row?.status === 'approved' ? toTemplateView(row) : null;
+  }
+
   /**
    * GET /messaging/templates/lines: each line's facts (env only), its newest check, its last sync (stored,
    * so the copy that ran the sync and the one answering may differ; unreadable = none).

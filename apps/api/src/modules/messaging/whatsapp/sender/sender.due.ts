@@ -1,7 +1,8 @@
 import type { Json } from '@ab/db';
 import type { LessonStatus, WaLine } from '@ab/shared';
 import type { Db } from '@/common/db/db.module';
-import type { StaleLead } from './send-stale';
+import { SENDING } from './send-plan';
+import { AUTO_OFF, AUTOMATIC_KEYS, type StaleLead } from './send-stale';
 
 /** A queued outbound row with what expiry, staleness and the failure push need. */
 export interface DueMessage {
@@ -71,3 +72,25 @@ export async function anyDue(db: Db, input: { now: Date; allowed: readonly strin
  * may have sent from the app. The sender's read and claim and the held-text release carry it.
  */
 export const NOT_APP_SENT = 'app_send_until.is.null';
+
+/**
+ * Automatic messages OFF: every job-made reminder / follow-up / renewal still queued is held
+ * (failed «auto_off», no push), also under a template Meta has not approved yet, which due()
+ * never reads and which would otherwise go out on its own once approved and switched ON. Not a
+ * row already claimed (SENDING): Meta may have sent it; the worker asks the admin. The count.
+ */
+export async function holdAutomatic(db: Db, allowed: readonly string[] | null): Promise<number> {
+  const held = { status: 'failed' as const, error_code: AUTO_OFF.code, error_text: AUTO_OFF.text };
+  const query = db
+    .from('messages')
+    .update({ ...held, next_attempt_at: null })
+    .eq('direction', 'outbound')
+    .eq('status', 'queued')
+    .is('created_by', null)
+    .in('template_key', [...AUTOMATIC_KEYS])
+    .or(`error_code.is.null,error_code.neq.${SENDING}`);
+  const scoped = allowed ? query.in('phone_e164', [...allowed]) : query;
+  const { data, error } = await scoped.select('id');
+  if (error) throw new Error(`automatic hold failed: ${error.message}`);
+  return data.length;
+}

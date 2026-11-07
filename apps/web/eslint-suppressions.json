@@ -3855,11 +3855,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/numbers/form/fallback-rank.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/messaging/numbers/form/number-errors.ts": {
     "ab/no-shape-checks": {
       "count": 2

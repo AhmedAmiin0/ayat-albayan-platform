@@ -16,17 +16,19 @@ describe('ThreadMessagesRepo.enqueue', () => {
     expect(calls.some((c) => c.method === 'upsert')).toBe(false);
   });
 
-  it('a new dedup_key: the upsert writes, the read-back is not replayed', async () => {
+  it('a new dedup_key: the upsert returns the row, nothing is read back (docs/42 42-5)', async () => {
     const row = { ...ROW, dedup_key: 'k1' };
-    const { db, argsOf } = fakeDb({ messages: [{ data: [{ id: 'm1' }] }, { data: { ...STORED, dedup_key: 'k1' } }] });
-    await expect(repoOn(db).enqueue(row)).resolves.toMatchObject({ id: 'm1', replayed: false });
+    const { db, argsOf, trips } = fakeDb({ messages: [{ data: [{ ...STORED, dedup_key: 'k1' }] }] });
+    await expect(repoOn(db).enqueue(row)).resolves.toMatchObject({ id: 'm1', body: 'سلام', replayed: false });
     expect(argsOf('messages', 'upsert')).toEqual([row, { onConflict: 'dedup_key', ignoreDuplicates: true }]);
-    expect(argsOf('messages', 'eq')).toEqual(['dedup_key', 'k1']);
+    expect(trips).toEqual(['messages']);
   });
 
-  it('a replayed dedup_key: nothing written, the first row comes back replayed', async () => {
-    const { db } = fakeDb({ messages: [{ data: [] }, { data: { ...STORED, dedup_key: 'k1' } }] });
+  it('a replayed dedup_key: nothing written, the first row is read back and flagged', async () => {
+    const { db, argsOf, trips } = fakeDb({ messages: [{ data: [] }, { data: { ...STORED, dedup_key: 'k1' } }] });
     await expect(repoOn(db).enqueue({ ...ROW, dedup_key: 'k1' })).resolves.toMatchObject({ id: 'm1', replayed: true });
+    expect(argsOf('messages', 'eq')).toEqual(['dedup_key', 'k1']);
+    expect(trips).toEqual(['messages', 'messages']);
   });
 
   it('a failed write names the step', async () => {

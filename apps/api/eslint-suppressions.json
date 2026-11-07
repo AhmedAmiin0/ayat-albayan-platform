@@ -4383,11 +4383,8 @@
     }
   },
   "src/modules/messaging/numbers/lines/numbers.health.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/numbers/lines/numbers.lines.ts": {
@@ -6050,7 +6047,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/messaging/whatsapp/sender/staff-at-send.ts": {
@@ -6178,7 +6175,7 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.repo.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.restricted.http.test.ts": {
@@ -6254,7 +6251,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 13
+      "count": 9
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.controller.ts": {
@@ -6267,7 +6264,7 @@
   },
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.service.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-submit.ts": {
