@@ -1,9 +1,14 @@
-import { connectInboxLive, createLiveSession, INBOX_INACTIVE_LEAVE_MS, type LiveTargets } from '@ab/client-core';
+import {
+  connectInboxLive,
+  createLiveSession,
+  INBOX_INACTIVE_LEAVE_MS,
+  type LiveTargets,
+} from '@ab/client-core';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 import { supabase } from '@/core/lib/http/supabase';
 import { queryClient as client } from '@/core/lib/query/query-client';
-import { nudgeInboxStore } from '@/inbox/thread/local/store-session';
+import { nudgeInboxStore, patchInboxStore } from '@/inbox/thread/local/store-session';
 import { refreshOpenChat } from './live-refresh';
 import { inboxLive } from './inbox-live';
 import { changeLists } from './list-marks';
@@ -25,8 +30,15 @@ const targets: LiveTargets = {
   },
   badge: () => {
     nudgeInboxStore();
-    if (active()) void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false });
+    if (active())
+      void client.invalidateQueries(
+        { queryKey: ['threads', 'nav-count'] },
+        { cancelRefetch: false },
+      );
   },
+  // docs/44 K1: the event's ticks into the phone store at once (the screens read it); the re-reads
+  // above still run; the sync lands as the server sent it (no fold).
+  rows: patchInboxStore,
 };
 
 /**

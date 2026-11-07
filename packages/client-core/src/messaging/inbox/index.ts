@@ -16,8 +16,22 @@ export {
   THREAD_FULL_LIVE_MS,
 } from './inbox-live.js';
 export { connectInboxLive, type LiveChannel, type LiveClient } from './live-connect.js';
+export {
+  applyLiveRows,
+  LIVE_ROWS_MAX,
+  liveEvent,
+  type LiveEvent,
+  type LiveRow,
+  patchChat,
+  patchList,
+} from './live-rows.js';
 export { createLiveSession, type LiveSession } from './live-session.js';
-export { createInboxLive, type InboxLive, type InboxLiveOptions, type LiveTargets } from './live-store.js';
+export {
+  createInboxLive,
+  type InboxLive,
+  type InboxLiveOptions,
+  type LiveTargets,
+} from './live-store.js';
 export { createThrottle, type Throttle } from './throttle.js';
 export {
   patchMessage,
@@ -31,5 +45,14 @@ export {
   tappedReaction,
   withOurs,
 } from './reactions.js';
-export { type ReactInput, reactionMutation, type ReactionPorts, withReactions } from './reaction-mutation.js';
-export { templateButtonHint, templateButtonLabel, type TemplateButtonWords } from './template-button.js';
+export {
+  type ReactInput,
+  reactionMutation,
+  type ReactionPorts,
+  withReactions,
+} from './reaction-mutation.js';
+export {
+  templateButtonHint,
+  templateButtonLabel,
+  type TemplateButtonWords,
+} from './template-button.js';

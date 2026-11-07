@@ -1,7 +1,15 @@
-import { chatLiveKey, connectInboxLive, createInboxLive, createLiveSession, INBOX_HIDDEN_LEAVE_MS } from '@ab/client-core';
+import {
+  chatLiveKey,
+  connectInboxLive,
+  createInboxLive,
+  createLiveSession,
+  INBOX_HIDDEN_LEAVE_MS,
+} from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useSyncExternalStore } from 'react';
 import { supabase } from '@/lib/http/supabase';
+import { rereadChat } from './chat-reread';
+import { patchLiveCaches } from './live-patch';
 
 /**
  * The inbox's realtime nudge on the web (docs/12 §15), shared logic in @ab/client-core: the private
@@ -40,21 +48,32 @@ export function useInboxRealtime(enabled: boolean): void {
     const list = inboxLive.watch('list');
     const open = () =>
       connectInboxLive(supabase, inboxLive, {
+        // docs/44 K1: a read in flight started before this event: cancelled, never joined (a
+        // page load or a first load is waited for instead: chat-reread.ts).
         chat: (phone) => {
-          // cancelRefetch false: an older page being loaded is joined, not cancelled.
-          const filters = { queryKey: ['threads', 'detail', phone], type: 'active' } as const;
-          if (document.hasFocus()) void client.refetchQueries(filters, { cancelRefetch: false });
+          if (document.hasFocus()) rereadChat(client, phone);
         },
         // A hidden tab waits: TanStack re-reads the stale list when it is shown again. A read in
         // flight started before this change: cancelled, never joined (docs/43 AU1; throttled 3 s).
         list: () => {
           const filters = { queryKey: ['threads', 'list'], type: 'active' } as const;
-          if (document.visibilityState === 'visible') void client.refetchQueries(filters, { cancelRefetch: true });
+          if (document.visibilityState === 'visible')
+            void client.refetchQueries(filters, { cancelRefetch: true });
         },
-        badge: () => void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }, { cancelRefetch: false }),
+        badge: () =>
+          void client.invalidateQueries(
+            { queryKey: ['threads', 'nav-count'] },
+            { cancelRefetch: false },
+          ),
+        // docs/44 K1: the event's ticks into the caches at once (a visual patch); the re-reads
+        // above still run and land as the server sent them.
+        rows: (phone, rows) => patchLiveCaches(client, phone, rows),
       });
     const session = createLiveSession(open, inboxLive.resync);
-    const shown = () => (document.visibilityState === 'hidden' ? session.pause(INBOX_HIDDEN_LEAVE_MS) : session.resume());
+    const shown = () =>
+      document.visibilityState === 'hidden'
+        ? session.pause(INBOX_HIDDEN_LEAVE_MS)
+        : session.resume();
     if (document.visibilityState !== 'hidden') session.resume(); // a tab opened in the background joins when shown
     document.addEventListener('visibilitychange', shown);
     return () => {

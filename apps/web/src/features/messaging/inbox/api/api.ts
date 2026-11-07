@@ -60,14 +60,17 @@ export const threadFileQuery = (phone: string, messageId: string) =>
   queryOptions({
     // Not under ['threads']: a send or an opened chat invalidates those, and this would sign it again.
     queryKey: ['thread-file', phone, messageId],
-    queryFn: () => apiFetch<ThreadFile>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file`),
+    queryFn: () =>
+      apiFetch<ThreadFile>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file`),
     staleTime: 30 * 60_000,
     retry: false,
   });
 
 /** «تنزيل» (owner 2026-10-26): never cached, a fresh URL each click, signed to save under the file's name. */
 export const threadFileDownload = (phone: string, messageId: string) =>
-  apiFetch<ThreadFile>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file?download=1`);
+  apiFetch<ThreadFile>(
+    `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file?download=1`,
+  );
 
 /** H3; `replyToMessageId` (owner 2026-10-25): the message of this chat it answers (400 reply_not_in_thread otherwise). */
 /** The row, and whether its request id replayed the FIRST one (TextAnswer). */
@@ -85,10 +88,12 @@ export const sendRating = ({ phone, ...body }: ThreadRating & { phone: string })
 export const retryMessage = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/retry`);
 
 /** M3: the admin opened wa.me; the sender holds the row until they confirm (M2) or put it back (M1). */
-export const handOffMessage = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/hand-off`);
+export const handOffMessage = (id: string) =>
+  apiSend<MessageView>('POST', `/messages/${id}/hand-off`);
 
 /** M2: the admin sent it from WhatsApp by hand (R-MSG-03); the sender never resends it. */
-export const markSentManually = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/sent-manually`);
+export const markSentManually = (id: string) =>
+  apiSend<MessageView>('POST', `/messages/${id}/sent-manually`);
 
 /** GET /leads returns every column; the inbox panel needs these beyond the list row. */
 export type InboxLead = LeadRow & {

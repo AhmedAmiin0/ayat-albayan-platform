@@ -1,12 +1,6 @@
-import {
-  changedPhone,
-  chatLiveKey,
-  phoneOfKey,
-  refreshPlan,
-  throttleMsOf,
-  type LiveKey,
-} from './inbox-live.js';
+import { chatLiveKey, phoneOfKey, refreshPlan, throttleMsOf, type LiveKey } from './inbox-live.js';
 import { createLiveRegistry } from './live-registry.js';
+import { liveEvent, type LiveRow } from './live-rows.js';
 import { createThrottle, type Throttle } from './throttle.js';
 
 /** What a refresh does in an app: re-read through the API (the same queries its polls run). */
@@ -15,6 +9,16 @@ export interface LiveTargets {
   chat(phone: string): void;
   list(): void;
   badge(): void;
+  /**
+   * An event's rows (docs/44 K1): an instant visual patch of the held copies (ticks). The event
+   * re-reads all the same; a failed patch is ignored (the read brings the truth).
+   */
+  rows?(phone: string, rows: readonly LiveRow[]): unknown;
+}
+
+/** The app's patch, never in the way of the re-read (a throw or a rejection is dropped). */
+async function patch(targets: LiveTargets | null, phone: string, rows: readonly LiveRow[]) {
+  await targets?.rows?.(phone, rows);
 }
 
 /** One per app: whether realtime is up (intervals read it), what is on screen, and the throttled refreshes. */
@@ -55,7 +59,8 @@ export function createInboxLive({ chatOwnsBadge = false }: InboxLiveOptions = {}
   const fire = (key: LiveKey) => {
     if (!targets) return;
     let throttle = throttles.get(key);
-    if (!throttle) throttles.set(key, (throttle = createThrottle(() => run(key), throttleMsOf(key))));
+    if (!throttle)
+      throttles.set(key, (throttle = createThrottle(() => run(key), throttleMsOf(key))));
     throttle.call();
   };
   const store: InboxLive = {
@@ -79,8 +84,11 @@ export function createInboxLive({ chatOwnsBadge = false }: InboxLiveOptions = {}
       throttles.delete(key);
     },
     changed(payload) {
-      const phone = changedPhone(payload);
-      if (!phone) return;
+      const event = liveEvent(payload);
+      if (!event) return;
+      const { phone, rows } = event;
+      // The patch first (the tick moves at once), then the same throttled re-read as ever.
+      if (rows) void patch(targets, phone, rows).catch(() => undefined);
       const owned = chatOwnsBadge && registry.isWatched(chatLiveKey(phone));
       for (const key of refreshPlan(phone, owned)) if (registry.route(key)) fire(key);
     },

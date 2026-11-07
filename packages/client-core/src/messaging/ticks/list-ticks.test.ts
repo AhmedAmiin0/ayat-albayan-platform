@@ -13,7 +13,9 @@ const statusOf = (r: TickRow) => chats[r.last_message_id];
 
 describe('chatStatus: the status a chat cache holds for one message', () => {
   it('finds the id on any page, the newest page first', () => {
-    const cache = { pages: [{ messages: [msg('x', 'read')] }, { messages: [msg('y', 'sent'), msg('x', 'sent')] }] };
+    const cache = {
+      pages: [{ messages: [msg('x', 'read')] }, { messages: [msg('y', 'sent'), msg('x', 'sent')] }],
+    };
     expect(chatStatus(cache, 'x')).toBe('read');
     expect(chatStatus(cache, 'y')).toBe('sent');
   });
@@ -24,14 +26,19 @@ describe('chatStatus: the status a chat cache holds for one message', () => {
   });
 });
 
-describe('overlayTicks: the list row follows the chat (docs/43 §2, the owner\'s pending tick)', () => {
-  it('lifts a queued row to the chat\'s ✓ and a ✓ row to ✓✓', () => {
+describe("overlayTicks: the list row follows the chat (docs/43 §2, the owner's pending tick)", () => {
+  it("lifts a queued row to the chat's ✓ and a ✓ row to ✓✓", () => {
     const out = overlayTicks([row('+1', 'm1', 'queued'), row('+2', 'm2', 'delivered')], statusOf);
     expect(out.map((r) => r.last_status)).toEqual(['sent', 'read']);
   });
 
   it('never lowers a row, never takes failed over it, ignores chats not loaded', () => {
-    const items = [row('+1', 'm1', 'read'), row('+3', 'm3', 'sent'), row('+4', 'm4', 'queued'), row('+5', 'm9', 'queued')];
+    const items = [
+      row('+1', 'm1', 'read'),
+      row('+3', 'm3', 'sent'),
+      row('+4', 'm4', 'queued'),
+      row('+5', 'm9', 'queued'),
+    ];
     expect(overlayTicks(items, statusOf)).toBe(items);
   });
 

@@ -1,8 +1,8 @@
-import type { HeldStamp, SyncPlan, SyncState } from '@ab/client-core';
+import type { HeldStamp, LiveRow, SyncPlan, SyncState } from '@ab/client-core';
 import type { MessageView, SyncMessage, ThreadView } from '@ab/shared';
 import type { SqlPort } from './sql-port';
 import type { StoreChange } from './store-change';
-import { owns, type PlanBase, putFor, rememberGone, writeFor } from './store-guard';
+import { liveFor, owns, type PlanBase, putFor, rememberGone, writeFor } from './store-guard';
 import { createQueue } from './store-queue';
 import { readChat, readHeld, readState, readThreads } from './store-read';
 import { migrateStore } from './store-schema';
@@ -25,6 +25,11 @@ export interface MessageStore {
   apply(plan: SyncPlan, at: PlanBase): Promise<boolean>;
   /** Rows from a chat read or a send's answer, merged by id (mergeRead), for `owner`. */
   putReads(rows: readonly MessageView[], owner: string): Promise<boolean>;
+  /**
+   * A realtime event's ticks for `owner` (docs/44 K1, a visual patch): stored rows of `phone` and
+   * their chats-list rows move by laterStatus. The next sync lands over it as the server sent it.
+   */
+  live(rows: readonly LiveRow[], at: { owner: string; phone: string }): Promise<boolean>;
   /** One chat's newest rows, newest first; [] when the store is not `owner`'s. */
   chat(owner: string, phone: string, limit: number): Promise<SyncMessage[]>;
   /** The chats-list rows; [] when the store is not `owner`'s. */
@@ -72,6 +77,7 @@ export function createMessageStore(port: SqlPort): MessageStore {
       }),
     putReads: (rows, owner) =>
       serial(async () => commit(await putFor(port, rows, { owner, gone }))),
+    live: (rows, at) => serial(async () => commit(await liveFor(port, rows, at))),
     chat: (owner, phone, limit) => ownerRead(owner, () => readChat(port, phone, limit)),
     threads: (owner) => ownerRead(owner, () => readThreads(port)),
     wipe: () => serial(() => clear(null)),

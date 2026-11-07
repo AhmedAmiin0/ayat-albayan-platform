@@ -1,3 +1,4 @@
+import type { LiveRow } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
 import { deleteStoreFile, openExpoPort } from '@/inbox/thread/store/expo-port';
 import { createMessageStore, type MessageStore } from '@/inbox/thread/store/message-store';
@@ -87,7 +88,10 @@ export const stopInboxStore = (): Promise<void> =>
 async function storedOwner(): Promise<string | null> {
   const port = await openExpoPort();
   // No tables yet (a wiped or never-used file): nobody's.
-  const owner = await readState(port).then((s) => s.owner, () => null);
+  const owner = await readState(port).then(
+    (s) => s.owner,
+    () => null,
+  );
   await port.close();
   return owner;
 }
@@ -125,6 +129,11 @@ export const wakeInboxStore = (owner: string): Promise<StoreWake | null> =>
     const woken = running ?? (theirs ? await openSession(owner) : null);
     return woken?.owner === owner ? wakeOf(woken) : null;
   });
+
+/** A realtime event's ticks into the store (docs/44 K1, a visual patch; the sync still runs). */
+export const patchInboxStore = async (phone: string, rows: readonly LiveRow[]): Promise<void> => {
+  await session?.store.live(rows, { owner: session.owner, phone }).catch(() => false);
+};
 
 /** Something changed on the server (realtime, push, back in the foreground): sync soon. */
 export const nudgeInboxStore = (): void => session?.engine.nudge();

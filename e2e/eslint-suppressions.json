@@ -656,7 +656,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "tests/messaging/inbox-send-file.spec.ts": {

@@ -653,7 +653,7 @@
   },
   "tests/messaging/inbox-realtime.sql.spec.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     },
     "typescript/use-unknown-in-catch-callback-variable": {
       "count": 1

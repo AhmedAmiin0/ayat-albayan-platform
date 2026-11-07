@@ -250,7 +250,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/messaging/inbox/reaction-mutation.test.ts": {
