@@ -31,6 +31,12 @@ export class MemoryStore implements BackupStore {
     return Promise.resolve(out);
   }
 
+  lastPart(input: Pick<NewArchive, 'folderId' | 'kind' | 'label'>) {
+    const same = (r: Row) =>
+      r.folderId === input.folderId && r.kind === input.kind && r.label === input.label;
+    return Promise.resolve(Math.max(0, ...this.rows.filter(same).map((r) => r.part)));
+  }
+
   /** Like the table's unique (folder_id, kind, label, part), trashed rows included. */
   start(input: NewArchive) {
     const same = (r: Row) =>
@@ -45,18 +51,27 @@ export class MemoryStore implements BackupStore {
   }
 
   uploaded(input: { id: string; fileId: string }) {
-    this.row(input.id).drive_file_id = input.fileId;
-    return Promise.resolve();
+    return this.own(input.id, { drive_file_id: input.fileId });
   }
 
   finish(input: FinishedArchive) {
-    const r = this.row(input.id);
-    Object.assign(r, { status: 'done', drive_file_id: input.fileId, objects: input.entries });
-    return Promise.resolve();
+    return this.own(input.id, {
+      status: 'done',
+      drive_file_id: input.fileId,
+      objects: input.entries,
+    });
   }
 
-  fail(input: { id: string; error: string }) {
-    Object.assign(this.row(input.id), { status: 'failed', error: input.error });
+  fail(input: { id: string; error: string; fileId?: string }) {
+    const file = input.fileId === undefined ? {} : { drive_file_id: input.fileId };
+    return this.own(input.id, { status: 'failed', error: input.error, ...file });
+  }
+
+  /** Like the repo: only a row still `uploading`; otherwise an error. */
+  private own(id: string, patch: Partial<Row>): Promise<void> {
+    const r = this.row(id);
+    if (r.status !== 'uploading') return Promise.reject(new Error('not uploading'));
+    Object.assign(r, patch);
     return Promise.resolve();
   }
 

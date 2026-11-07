@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { GoogleApiError } from '@/modules/platform/google-sync';
-import { B, contents, fileNamed, names, setup } from './backup-run.fakes';
+import { B, contents, fileNamed, fit, names, setup } from './backup-run.fakes';
 
 // docs/45 §5: runs are resumable (per part) and one bad object never stops a run.
 
 describe('resume after a crash mid-upload', () => {
   it('a failed part is retried next night; parts already uploaded are kept, not redone', async () => {
-    const t = await setup({ part: 25, run: 1000 });
+    const t = await setup({ part: fit(2), run: 1024 ** 3 });
     for (const k of ['a', 'b', 'c'])
       t.minio.set({ bucket: B.reports, key: k, body: 'x'.repeat(10) });
     let puts = 0;
@@ -40,7 +40,8 @@ describe('resume after a crash mid-upload', () => {
       name: 'x',
     });
     const sum = await t.night('2026-11-08');
-    expect(t.store.rows[1]).toMatchObject({ status: 'failed', error: 'interrupted' });
+    // Abandoned, then removed with its file (none here) and trashed; its part number stays taken.
+    expect(t.store.rows[1]).toMatchObject({ status: 'trashed', error: 'interrupted' });
     expect(sum).toMatchObject({ kind: 'incr', objects: 1 });
     expect(names(t.drive, t.folderId)).toContain('incr-2026-11-08.p2.tar.zst');
   });

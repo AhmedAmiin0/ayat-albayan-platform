@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { ArchiveRow } from './archive.types';
 import { decide } from './decide';
-import { isPending, planParts } from './parts';
+import { partCost } from './cost';
+import { type Caps, DEFAULT_CAPS, isPending, planParts } from './parts';
 import { toTrash } from './retention';
 
 const row = (over: Partial<ArchiveRow>): ArchiveRow => ({
@@ -15,6 +16,8 @@ const row = (over: Partial<ArchiveRow>): ArchiveRow => ({
   drive_file_id: 'f',
   ...over,
 });
+const MB = 1024 ** 2;
+const GB = 1024 ** 3;
 const o = (key: string, size: number) => ({ bucket: 'reports' as const, key, etag: key, size });
 
 describe('decide', () => {
@@ -22,7 +25,6 @@ describe('decide', () => {
     expect(decide([], new Date('2026-11-10T01:00:00Z'))).toMatchObject({
       kind: 'full',
       label: '2026-W46',
-      firstPart: 1,
     });
   });
 
@@ -32,17 +34,6 @@ describe('decide', () => {
       new Date('2026-11-09T01:00:00Z'),
     );
     expect(plan).toMatchObject({ kind: 'full', label: '2026-W46' });
-  });
-
-  it('a failed part keeps its number: the next part goes after it', () => {
-    const rows = [
-      row({ sealed: false }),
-      row({ id: 'p2', part: 2, status: 'failed', sealed: false }),
-    ];
-    expect(decide(rows, new Date('2026-11-08T01:00:00Z'))).toMatchObject({
-      kind: 'full',
-      firstPart: 3,
-    });
   });
 
   it('an incremental builds on the sealed full and the incrementals after it only', () => {
@@ -70,16 +61,35 @@ describe('decide', () => {
 });
 
 describe('parts and pending', () => {
-  it('part and run caps, in order; one big object always fits', () => {
-    expect(
-      planParts([o('a', 6), o('b', 6), o('c', 6)], { part: 10, run: 100 }).parts.map(
-        (p) => p.length,
-      ),
-    ).toEqual([1, 1, 1]);
-    expect(planParts([o('a', 4), o('b', 4), o('c', 4)], { part: 10, run: 9 })).toMatchObject({
-      left: 1,
-    });
-    expect(planParts([o('huge', 500)], { part: 10, run: 10 }).parts).toEqual([[o('huge', 500)]]);
+  it('part and run caps (costs, overheads counted), in order; one big object always fits', () => {
+    const three = [o('a', MB), o('b', MB), o('c', MB)];
+    const lengths = (caps: Caps) => planParts(three, caps).parts.map((p) => p.length);
+    expect(lengths({ part: partCost([o('a', MB)]), run: GB })).toEqual([1, 1, 1]);
+    expect(lengths({ part: partCost(three.slice(0, 2)), run: GB })).toEqual([2, 1]);
+    const one = partCost([o('a', MB)]);
+    expect(planParts(three, { part: one, run: 2 * one })).toMatchObject({ left: 1 });
+    expect(planParts([o('huge', GB)], { part: MB, run: MB }).parts).toEqual([[o('huge', GB)]]);
+  });
+
+  it('an object larger than the room is skipped; the later ones still go (no freeze)', () => {
+    const todo = [o('big', 2 * GB), o('a', MB), o('b', MB)];
+    const plan = planParts(todo, DEFAULT_CAPS, GB);
+    expect(plan.tooLarge.map((x) => x.key)).toEqual(['big']);
+    expect(plan.parts).toEqual([[o('a', MB), o('b', MB)]]);
+    expect(plan.left).toBe(0);
+  });
+
+  it('every part planned fits the room it was planned for', () => {
+    const todo = Array.from({ length: 50 }, (_, i) => o(`k${i}`, 30 * MB));
+    const room = 400 * MB;
+    const plan = planParts(todo, DEFAULT_CAPS, room);
+    expect(plan.parts.every((p) => partCost(p) <= room)).toBe(true);
+    expect(plan.parts.reduce((n, p) => n + partCost(p), 0)).toBeLessThanOrEqual(room);
+    expect(plan.left).toBeGreaterThan(0);
+  });
+
+  it('the cost charges the tar and zstd overhead, never just the raw bytes', () => {
+    expect(partCost([o('a', GB)])).toBeGreaterThan(GB + 1024 * 1024);
   });
 
   it('pending = not covered with the same ETag', () => {

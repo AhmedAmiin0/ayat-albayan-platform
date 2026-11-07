@@ -18,6 +18,7 @@ export class DriveBackupHttp implements P.DriveBackupApi {
   constructor(
     private readonly auth: OAuth2Client,
     private readonly endpoints: GoogleEndpoints,
+    private readonly signal?: AbortSignal,
   ) {}
 
   private get files(): string {
@@ -26,7 +27,8 @@ export class DriveBackupHttp implements P.DriveBackupApi {
 
   private async call(options: Options): Promise<Answer> {
     try {
-      return await this.auth.request<unknown>({ timeout: 30_000, retry: false, ...options });
+      const base = { timeout: 30_000, retry: false, ...(this.signal && { signal: this.signal }) };
+      return await this.auth.request<unknown>({ ...base, ...options });
     } catch (e) {
       throw toGoogleError(e);
     }
@@ -84,6 +86,12 @@ export class DriveBackupHttp implements P.DriveBackupApi {
       pageToken = page.nextPageToken;
     } while (pageToken);
     return out;
+  }
+
+  async findMarked(input: { folderId: string; rowId: string }): Promise<string[]> {
+    const params = { q: S.markedQuery(input), fields: `files(${S.FILE_FIELDS})` };
+    const { files } = S.listSchema.parse((await this.call({ url: this.files, params })).data);
+    return files.flatMap((f) => (S.isBackupOwn(f) && S.isMarked(f, input) ? [f.id] : []));
   }
 
   async startUpload(target: P.UploadTarget): Promise<string> {

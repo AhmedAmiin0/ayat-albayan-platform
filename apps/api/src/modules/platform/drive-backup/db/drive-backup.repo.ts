@@ -2,23 +2,25 @@ import type { Database } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { ArchiveRow } from '@/modules/platform/drive-backup/plan/archive.types';
-import { objectId } from '@/modules/platform/drive-backup/plan/parts';
 import type {
   BackupStore,
   FinishedArchive,
   NewArchive,
 } from '@/modules/platform/drive-backup/run/backup-store.port';
 import { ARCHIVE_COLUMNS, archiveRowSchema, fail } from './archive-row.schema';
+import { ArchiveObjectsRepo } from './archive-objects.repo';
 
 const PAGE = 1000;
-const BATCH = 500;
 const now = () => new Date().toISOString();
 type Patch = Database['public']['Tables']['drive_backup_archives']['Update'];
 
 /** drive_backup_archives + drive_backup_objects with the service role (docs/45 §5). */
 @Injectable()
 export class DriveBackupRepo implements BackupStore {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    @Inject(ArchiveObjectsRepo) private readonly objects: ArchiveObjectsRepo,
+  ) {}
 
   async abandon(folderId: string): Promise<void> {
     const { error } = await this.db
@@ -49,29 +51,22 @@ export class DriveBackupRepo implements BackupStore {
   }
 
   /** Archive by archive, oldest first, page by page: a later ETag replaces an earlier one. */
-  async covered(archives: readonly ArchiveRow[]): Promise<Map<string, string>> {
-    const out = new Map<string, string>();
-    const ordered = [...archives].sort((a, b) => a.started_at.localeCompare(b.started_at));
-    for (const a of ordered) {
-      for (let from = 0, more = true; more; from += PAGE) {
-        const page = await this.objectsPage(a.id, from);
-        page.forEach((o) => out.set(objectId(o), o.etag));
-        more = page.length === PAGE;
-      }
-    }
-    return out;
+  covered(archives: readonly ArchiveRow[]): Promise<Map<string, string>> {
+    return this.objects.covered(archives);
   }
 
-  private async objectsPage(archiveId: string, from: number) {
+  async lastPart(input: Pick<NewArchive, 'folderId' | 'kind' | 'label'>): Promise<number> {
     const { data, error } = await this.db
-      .from('drive_backup_objects')
-      .select('bucket, key, etag')
-      .eq('archive_id', archiveId)
-      .order('bucket')
-      .order('key')
-      .range(from, from + PAGE - 1);
-    if (error) throw fail('objects read', error);
-    return data;
+      .from('drive_backup_archives')
+      .select('part')
+      .eq('folder_id', input.folderId)
+      .eq('kind', input.kind)
+      .eq('label', input.label)
+      .order('part', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error) throw fail('last part read', error);
+    return data?.part ?? 0;
   }
 
   async start(input: NewArchive): Promise<string> {
@@ -86,37 +81,31 @@ export class DriveBackupRepo implements BackupStore {
   }
 
   uploaded(input: { id: string; fileId: string }): Promise<void> {
-    return this.patch([input.id], { drive_file_id: input.fileId });
+    return this.own(input.id, { drive_file_id: input.fileId });
   }
 
   /** The objects first, then `done`: a crash between leaves it uploading (its file id is kept). */
   async finish(input: FinishedArchive): Promise<void> {
-    const rows = input.entries.map((e) => ({
-      archive_id: input.id,
-      bucket: e.bucket,
-      key: e.key,
-      etag: e.etag,
-      size: e.size,
-    }));
-    for (let i = 0; i < rows.length; i += BATCH) {
-      const { error } = await this.db
-        .from('drive_backup_objects')
-        .upsert(rows.slice(i, i + BATCH), { ignoreDuplicates: true });
-      if (error) throw fail('objects write', error);
-    }
+    await this.objects.write(input);
     const done = {
       status: 'done',
       drive_file_id: input.fileId,
-      objects: rows.length,
+      objects: input.entries.length,
       skipped: input.skipped,
       bytes_raw: input.rawBytes,
       bytes_compressed: input.compressedBytes,
     };
-    await this.patch([input.id], { ...done, finished_at: now() });
+    await this.own(input.id, { ...done, finished_at: now() });
   }
 
-  fail(input: { id: string; error: string }): Promise<void> {
-    return this.patch([input.id], { status: 'failed', error: input.error, finished_at: now() });
+  fail(input: { id: string; error: string; fileId?: string }): Promise<void> {
+    const file = input.fileId === undefined ? {} : { drive_file_id: input.fileId };
+    return this.own(input.id, {
+      status: 'failed',
+      error: input.error,
+      finished_at: now(),
+      ...file,
+    });
   }
 
   seal(id: string): Promise<void> {
@@ -131,6 +120,18 @@ export class DriveBackupRepo implements BackupStore {
       .delete()
       .in('archive_id', [...ids]);
     if (error) throw fail('objects delete', error);
+  }
+
+  /** This run's row only: still `uploading`; zero rows changed is an error (docs/45 §5.1). */
+  private async own(id: string, values: Patch): Promise<void> {
+    const { data, error } = await this.db
+      .from('drive_backup_archives')
+      .update(values)
+      .eq('id', id)
+      .eq('status', 'uploading')
+      .select('id');
+    if (error) throw fail('archive write', error);
+    if (data.length !== 1) throw new Error('drive backup archive write failed: not uploading');
   }
 
   private async patch(ids: readonly string[], values: Patch): Promise<void> {

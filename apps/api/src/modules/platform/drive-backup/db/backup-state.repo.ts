@@ -1,16 +1,23 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
+import { FROZEN_REASONS } from '@/modules/platform/drive-backup/plan/frozen';
 import { fail, RECENT_COLUMNS, recentRowSchema, type RecentRow } from './archive-row.schema';
 
-export interface BackupState {
-  folder_id: string | null;
-  account_email: string | null;
-  quota_limit: number | null;
-  quota_usage: number | null;
-  quota_at: string | null;
-  last_run_at: string | null;
-  last_error: string | null;
-}
+const stateSchema = z.object({
+  folder_id: z.string().nullable(),
+  account_email: z.string().nullable(),
+  quota_limit: z.number().nullable(),
+  quota_usage: z.number().nullable(),
+  quota_at: z.string().nullable(),
+  last_run_at: z.string().nullable(),
+  last_error: z.string().nullable(),
+  /** The open full's first part, when it has been open for more than 3 nights (plan/frozen.ts). */
+  frozen_since: z.string().nullable(),
+  frozen_reason: z.enum(FROZEN_REASONS).nullable(),
+});
+export type BackupState = z.infer<typeof stateSchema>;
+
 const EMPTY: BackupState = {
   folder_id: null,
   account_email: null,
@@ -19,9 +26,11 @@ const EMPTY: BackupState = {
   quota_at: null,
   last_run_at: null,
   last_error: null,
+  frozen_since: null,
+  frozen_reason: null,
 };
 const COLUMNS =
-  'folder_id, account_email, quota_limit, quota_usage, quota_at, last_run_at, last_error';
+  'folder_id, account_email, quota_limit, quota_usage, quota_at, last_run_at, last_error, frozen_since, frozen_reason';
 
 /** drive_backup_state (one row) and the status line's recent archives, with the service role. */
 @Injectable()
@@ -35,7 +44,7 @@ export class BackupStateRepo {
       .eq('id', true)
       .maybeSingle();
     if (error) throw fail('state read', error);
-    return { ...EMPTY, ...(data ?? {}) };
+    return data === null ? EMPTY : stateSchema.parse(data);
   }
 
   async save(patch: Partial<BackupState>): Promise<void> {

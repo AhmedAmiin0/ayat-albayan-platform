@@ -7,9 +7,6 @@ const GB = 1024 ** 3;
  * report PDFs and Sheets): under this a warning and no upload. A run's budget is what is above.
  */
 export const RESERVE_BYTES = 2 * GB;
-/** Tar headers per object and the archive's tail: a part may compress to a bit more than raw. */
-const PER_OBJECT_BYTES = 2048;
-const PER_PART_BYTES = 1024 * 1024;
 
 /** Bytes left; null: no limit. */
 export const freeOf = (q: Pick<DriveQuota, 'limit' | 'usage'>): number | null =>
@@ -20,10 +17,6 @@ export const budgetOf = (free: number | null): number =>
   free === null ? Number.POSITIVE_INFINITY : free - RESERVE_BYTES;
 
 export const isLow = (free: number | null): boolean => free !== null && free < RESERVE_BYTES;
-
-/** The most a part of these objects can take on Drive (raw bytes plus the tar's own). */
-export const partCost = (objects: readonly { size: number }[]): number =>
-  objects.reduce((n, o) => n + o.size + PER_OBJECT_BYTES, PER_PART_BYTES);
 
 /** «1.4 GB»: the alert's figure (one decimal). */
 export const gbText = (bytes: number): string => `${(bytes / GB).toFixed(1)} GB`;

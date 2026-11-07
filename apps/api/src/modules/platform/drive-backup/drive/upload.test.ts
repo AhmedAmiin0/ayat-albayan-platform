@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { GoogleApiError } from '@/modules/platform/google-sync';
 import { FakeDrive } from './drive-backup.fakes';
-import { rechunk, uploadStream } from './upload';
+import { rechunk } from './chunks';
+import { uploadStream } from './upload';
 
 async function* pieces(sizes: number[]) {
   for (const [i, n] of sizes.entries()) yield Buffer.alloc(n, i);

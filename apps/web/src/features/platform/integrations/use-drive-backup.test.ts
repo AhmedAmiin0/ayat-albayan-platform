@@ -1,7 +1,7 @@
 import { counted } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { backupLines, bytesText, type DriveBackupView } from './use-drive-backup';
+import { backupLines, bytesText, frozenLine, type DriveBackupView } from './use-drive-backup';
 
 const b = t.integrations.driveBackup;
 const GB = 1024 ** 3;
@@ -13,6 +13,7 @@ const view = (over: Partial<DriveBackupView> = {}): DriveBackupView => ({
   last_error: null,
   quota: { limit: 15 * GB, free: 9 * GB },
   low_quota: false,
+  frozen: null,
   ...over,
 });
 
@@ -40,8 +41,13 @@ describe('the Drive backup status line (docs/45 §5)', () => {
   });
 
   it('no archive yet, an error, an unlimited Drive', () => {
-    const lines = backupLines(view({ last: null, last_error: '403 storageQuotaExceeded',
-      quota: { limit: null, free: null } }));
+    const lines = backupLines(
+      view({
+        last: null,
+        last_error: '403 storageQuotaExceeded',
+        quota: { limit: null, free: null },
+      }),
+    );
     expect(lines).toContain(b.none);
     expect(lines).toContain(b.error.replace('{error}', '403 storageQuotaExceeded'));
     expect(lines).toContain(b.quotaUnlimited);
@@ -51,5 +57,14 @@ describe('the Drive backup status line (docs/45 §5)', () => {
     const sizes = { bytes_raw: GB, bytes_compressed: GB };
     const last = { kind: 'full' as const, label: '2026-W45', objects, ...sizes };
     expect(backupLines(view({ last }))[0]).toContain(`(${counted(b.files, objects)})`);
+  });
+
+  it('a frozen backup says so, since when and why; none while it moves', () => {
+    const frozen = { since: '2026-11-03T01:00:00Z', reason: 'too_large' as const };
+    const line = frozenLine(view({ frozen }));
+    expect(line).toBe(
+      b.frozen.replace('{since}', '2026-11-03').replace('{reason}', b.frozenReasons.too_large),
+    );
+    expect(frozenLine(view())).toBeNull();
   });
 });

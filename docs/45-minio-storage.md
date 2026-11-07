@@ -233,9 +233,13 @@ Google project, client or credential.
   objects with a multipart ETag rely on the zstd checksum alone. By hand: `zstd -dc full-2026-W45.tar.zst | tar -x`.
 - **Streamed:** MinIO → tar → zstd → a Drive resumable upload, 8 MiB chunks: nothing on disk, about
   one chunk plus one object (≤ 64 MiB, read into one buffer of its size; larger objects stream)
-  in memory. A part is cut at 1 GiB raw;
-  a night stops after 4 GiB raw (the rest continues the next night; a full stays open until done).
-  Concurrency 1. A failed chunk (429, 5xx, network) is resent from what Drive holds, 5 tries.
+  in memory. A part is cut at 1 GiB and a night stops after 4 GiB, both counted as the part's
+  **cost** on Drive (raw bytes plus the tar headers and padding, the manifest and zstd's own
+  overhead on bytes that do not shrink), never raw bytes alone (the rest continues the next night;
+  a full stays open until done). Concurrency 1. A failed chunk (429, 5xx, network) is resent from
+  what Drive last confirmed, 5 tries; after the last one Drive is asked once more (the final chunk
+  may have landed: its file is kept); a session whose answers stop moving forward (a 308 with no
+  progress) gives up after 5 answers.
 - **Crash and resume:** each part is a row in `drive_backup_archives` (`uploading` → `done` |
   `failed`) with its objects and ETags in `drive_backup_objects`. A part counts only once `done`: a
   run killed mid-upload leaves `uploading`, the next run marks it `failed` and archives those objects
@@ -243,34 +247,57 @@ Google project, client or credential.
   and reported (manifest, alert), never stops the run, and is tried again the next night. An object
   over 64 MiB streams in a part of its own: if that read fails, only that object is skipped. A
   network failure or 429 / 5xx on a chunk is resent from what Drive holds (5 tries); a run that
-  hangs is aborted after 8 hours (its MinIO requests and the part's pipeline get the abort, so its
-  memory and sockets are freed). The restore also uses the parts of a full not yet sealed.
+  hangs is aborted after 8 hours (its MinIO and Drive requests, the part's pipeline and the waits
+  between retries all get the abort, so its memory and sockets are freed). The job then waits for
+  that run to really end (up to 10 minutes) before another run may start, and a row is written as
+  `done` (or gets its file id) only while it is still `uploading`: a second run never takes over a
+  part that is still being uploaded. An object whose ETag or size at read time differs from the
+  listing (a report PDF re-rendered in place) is skipped as `changed` and taken the next night: it
+  is never streamed past the cost charged for it. The restore also uses the parts of a full not
+  yet sealed.
 - **Sealing:** a full is sealed only when it holds every object that still exists: nothing left by
-  the byte cap and no object skipped for a failed read (a vanished one is fine). Otherwise it stays
-  open and the next night continues the same full; until then the restore uses the previous sealed
-  full plus the parts and incrementals after it.
+  the byte cap, nothing too large for the night's room and no object skipped for a failed read or
+  a new version (a vanished one is fine). Otherwise it stays open and the next night continues the
+  same full; until then the restore uses the previous sealed full plus the parts and incrementals
+  after it. A full open for **more than 3 nights** is reported as frozen: «النسخ الاحتياطي متوقف»
+  on the status line and in an alert, with the reason (an object larger than Drive's free space,
+  Drive full, unreadable objects, failing nights, or simply not finished).
 - **Retention:** the last **4 fulls** and the incrementals after the oldest of them. Older archives are
   **deleted from Drive for good** (`DELETE drive/v3/files/{id}`, not Drive's trash, which keeps counting
-  against the shared quota for 30 days), only right after a newer full was sealed. The backup deletes
+  against the shared quota for 30 days), right after a newer full was sealed (and at the start of a
+  night, if a crash came between the two). Drive never has to hold a 5th full first: when the open
+  full needs more than the night's room, the oldest sealed full and the incrementals before the
+  next one are retired early, again while needed, as long as one sealed full and its chain stay. The backup deletes
   only file ids from its own `drive_backup_archives` rows of its own folder, and only after reading
   the file and finding it in that folder with the backup's marker (`ab_backup=minio`); a file that
-  is gone (404) or not the backup's own is left alone. It never lists Drive to delete anything.
-- **Orphans:** the Drive file id is stored on the row as soon as the upload returns, before the
-  objects are written. A part whose bookkeeping then fails (or a crash right after) is `failed`
-  with its file id: the next run deletes that file (same checks) before planning anything else.
+  is gone (404) or not the backup's own is left alone. It never lists Drive to delete anything,
+  but for one narrow case below.
+- **Orphans:** every archive file carries its row's id (`ab_row` in appProperties), set before the
+  upload starts. The Drive file id is kept on the row the moment Drive answers with it, even when
+  the run fails right after (the deadline, the bookkeeping). The next night first deletes the file
+  of every `failed` row (same checks) and marks the row `trashed`; a failed row whose file id never
+  came back is resolved by asking Drive for the files **in the backup's folder that carry
+  `ab_backup=minio` and that row's `ab_row`**: nothing else is ever looked up for deletion. A part
+  number is never reused: the next part follows every row of that archive, trashed ones included.
 - **Expected size:** PDFs, JPEG/PNG photos, voice notes and videos are already compressed: they barely
   shrink (a few %). The gain is on the rest (CSV, JSON, text, some old PDFs): often 3× to 10×. Plan
-  Drive space as about the raw size of 4 fulls plus a week of incrementals (nothing
-  waits in Drive's trash).
+  Drive space as **the fulls kept (up to 4) + the open full being written + the incrementals after
+  the oldest kept full + the 2 GB reserve** (nothing waits in Drive's trash). When that does not
+  fit, early retirement keeps fewer fulls (at least one sealed full and its chain) instead of
+  stopping: e.g. a 15 GB account with ~3 GB of other use and ~2.3 GB of MinIO keeps about 3 to 4.
 - **Quota (the top priority: the account is shared with Gmail, the old Apps Script and the Google
   sync's report PDFs and Sheets):** a free Gmail account has 15 GB. Each run reads
-  `about.storageQuota` and gets a **byte budget = free − 2 GB reserve**: under 2 GB free → a bell
-  alert to the admins and no upload at all; otherwise the night uploads at most that budget (and at
-  most 4 GiB raw). Before **each part** the quota is read again and a part that would eat into the
-  reserve stops the run (`drive_full`). Drive's `storageQuotaExceeded` always stops the run (it is
+  `about.storageQuota` and gets a **byte budget = free − 2 GB reserve**, read **after** the night's
+  clean-up (failed parts' files, due retention: they only free space). Under 2 GB free → a bell
+  alert to the admins; nothing is uploaded while no part fits above the reserve; otherwise the night
+  uploads at most that budget (and at most 4 GiB). An object whose own part is larger than the
+  budget is skipped for the night and named in an alert (the objects after it still go). Before
+  **each part** the quota is read again: a part that would eat into the reserve waits for the next
+  night while a later part still fits; when none does, the run stops (`drive_full`). Drive's `storageQuotaExceeded` always stops the run (it is
   never treated as «skip this object»).
 - **Alerts** (admins, bell only, the Google sync's `google_sync_alert`): a failed night, low quota,
-  skipped objects; once per day each.
+  skipped objects, objects too large for the night's room (by name), a frozen backup; once per day
+  each.
 
 **Turning it on** (owner): «التكاملات» › Google is connected (docs/24) and «التكاملات» › «التخزين»
 has a passing «اختبار الاتصال»; then set «نسخ احتياطي لملفات MinIO إلى Google Drive» to «مفعّلة» and

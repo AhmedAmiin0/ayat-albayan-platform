@@ -18,10 +18,9 @@ export interface ArchiveRow {
   drive_file_id: string | null;
 }
 
-/** One run: its kind and label, the archives already covering objects, the next part. */
+/** One run: its kind and label, the archives already covering objects. */
 export interface RunPlan {
   kind: ArchiveKind;
   label: string;
   base: readonly ArchiveRow[];
-  firstPart: number;
 }

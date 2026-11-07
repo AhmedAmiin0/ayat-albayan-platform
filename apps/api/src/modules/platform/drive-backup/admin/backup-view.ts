@@ -1,5 +1,6 @@
 import type { BackupState } from '@/modules/platform/drive-backup/db/backup-state.repo';
 import type { RecentRow } from '@/modules/platform/drive-backup/db/archive-row.schema';
+import type { FrozenReason } from '@/modules/platform/drive-backup/plan/frozen';
 import { freeOf, isLow } from '@/modules/platform/drive-backup/run/quota';
 
 /** GET /admin/storage-backup/status: the status line under «التخزين» (docs/45 §5). */
@@ -20,6 +21,8 @@ export interface BackupStatusView {
   last_error: string | null;
   quota: { limit: number | null; usage: number; free: number | null; at: string } | null;
   low_quota: boolean;
+  /** «النسخ الاحتياطي متوقف»: a full open for more than 3 nights, since when and why. */
+  frozen: { since: string; reason: FrozenReason } | null;
 }
 
 /** The newest done archive's label, its parts summed. */
@@ -48,3 +51,8 @@ export function quotaView(s: BackupState): BackupStatusView['quota'] {
 }
 
 export const lowQuota = (q: BackupStatusView['quota']): boolean => isLow(q?.free ?? null);
+
+export const frozenView = (s: BackupState): BackupStatusView['frozen'] =>
+  s.frozen_since === null || s.frozen_reason === null
+    ? null
+    : { since: s.frozen_since, reason: s.frozen_reason };

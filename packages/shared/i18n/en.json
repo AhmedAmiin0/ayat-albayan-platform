@@ -6134,7 +6134,15 @@
       "note": "PDFs and images are already compressed, so they barely shrink.",
       "loadError": "Could not load the backup status.",
       "sizeGb": "{n} GB",
-      "sizeMb": "{n} MB"
+      "sizeMb": "{n} MB",
+      "frozen": "The backup is frozen since {since}: {reason}",
+      "frozenReasons": {
+        "too_large": "One or more files are larger than the free space in Google Drive.",
+        "drive_full": "There is not enough free space in Google Drive.",
+        "unread": "Some files could not be read from MinIO.",
+        "incomplete": "Not every file has been uploaded yet.",
+        "failed": "The backup fails every night; check the last error."
+      }
     }
   },
   "account": {
@@ -6427,7 +6435,14 @@
         "two": "Tonight's backup skipped 2 files it could not read from MinIO; it will try them again next night.",
         "few": "Tonight's backup skipped {n} files it could not read from MinIO; it will try them again next night.",
         "other": "Tonight's backup skipped {n} files it could not read from MinIO; it will try them again next night."
-      }
+      },
+      "backupTooLarge": {
+        "one": "Tonight's backup did not copy 1 file because it is larger than the free space in Google Drive: {names}. Free up space in Drive so it is copied on a later night.",
+        "two": "Tonight's backup did not copy 2 files because they are larger than the free space in Google Drive: {names}. Free up space in Drive so they are copied on a later night.",
+        "few": "Tonight's backup did not copy {n} files because they are larger than the free space in Google Drive: {names}. Free up space in Drive so they are copied on a later night.",
+        "other": "Tonight's backup did not copy {n} files because they are larger than the free space in Google Drive: {names}. Free up space in Drive so they are copied on a later night."
+      },
+      "backupFrozen": "The backup is frozen: the full backup started on {since} has not finished for more than three nights. Reason: {reason}"
     },
     "web": {
       "updated": "Updated {at}",

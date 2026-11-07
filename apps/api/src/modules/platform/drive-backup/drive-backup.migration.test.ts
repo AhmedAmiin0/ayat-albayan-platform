@@ -23,4 +23,11 @@ describe('migration 20261107000200: the Drive backup tables', () => {
     expect(sql).toContain('references public.drive_backup_archives (id) on delete cascade');
     expect(sql).toContain('primary key (archive_id, bucket, key)');
   });
+
+  it('the frozen status (a full open for more than 3 nights) and its reasons', () => {
+    expect(sql).toContain('frozen_since timestamptz');
+    expect(sql).toContain(
+      "check (frozen_reason in ('too_large', 'drive_full', 'unread', 'incomplete', 'failed'))",
+    );
+  });
 });

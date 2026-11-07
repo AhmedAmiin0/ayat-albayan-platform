@@ -25,6 +25,13 @@ const viewSchema = z.object({
   last_error: z.string().nullable(),
   quota: z.object({ limit: z.number().nullable(), free: z.number().nullable() }).nullable(),
   low_quota: z.boolean(),
+  /** A full open for more than 3 nights (api plan/frozen.ts): since when and why. */
+  frozen: z
+    .object({
+      since: z.string(),
+      reason: z.enum(['too_large', 'drive_full', 'unread', 'incomplete', 'failed']),
+    })
+    .nullable(),
 });
 export type DriveBackupView = z.infer<typeof viewSchema>;
 
@@ -56,6 +63,15 @@ function quotaLine(q: DriveBackupView['quota']): string | null {
   const { free, limit } = q;
   if (free === null || limit === null) return b.quotaUnlimited;
   return b.quota.replace('{free}', bytesText(free)).replace('{limit}', bytesText(limit));
+}
+
+/** «النسخ الاحتياطي متوقف منذ …: السبب», or null while the backup moves. */
+export function frozenLine(v: DriveBackupView): string | null {
+  const f = v.frozen;
+  if (!f) return null;
+  return b.frozen
+    .replace('{since}', f.since.slice(0, 10))
+    .replace('{reason}', b.frozenReasons[f.reason]);
 }
 
 /** The status line's sentences, in order (empty ones dropped). */

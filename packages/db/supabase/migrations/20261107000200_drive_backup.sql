@@ -4,7 +4,8 @@
 --   * drive_backup_state: one row, the Drive folder (and the account it belongs to), the quota.
 --   * drive_backup_archives: one row per archive file on Drive (a part of a nightly incremental or
 --     a weekly full); status uploading → done | failed, then trashed by retention (the file is
---     deleted from Drive for good, not moved to its trash).
+--     deleted from Drive for good, not moved to its trash). The file carries the row's id
+--     (appProperties ab_row), so a failed row whose file id was lost still finds its file.
 --   * drive_backup_objects: the objects (with ETags) each archive holds: what later runs count as
 --     covered, so runs are idempotent and resume after a crash. Rows go with their archive.
 -- Expand-only and re-runnable; nothing runs until an admin switches MINIO_DRIVE_BACKUP on.
@@ -20,6 +21,10 @@ create table if not exists public.drive_backup_state (
   quota_at timestamptz,
   last_run_at timestamptz,
   last_error text check (char_length(last_error) <= 500),
+  -- A full open for more than 3 nights: when it started and why it does not seal (status line).
+  frozen_since timestamptz,
+  frozen_reason text
+    check (frozen_reason in ('too_large', 'drive_full', 'unread', 'incomplete', 'failed')),
   updated_at timestamptz not null default now()
 );
 

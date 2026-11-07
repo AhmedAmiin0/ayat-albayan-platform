@@ -57,6 +57,11 @@ export interface DriveBackupApi {
   createFolder(name: string): Promise<string>;
   /** The files in a folder (not trashed). */
   list(folderId: string): Promise<BackupFile[]>;
+  /**
+   * The ids of the files in `folderId` that carry the backup's marker AND `ab_row` = `rowId` (one
+   * archive row's upload): how a failed row whose file id was lost finds its file. Nothing else.
+   */
+  findMarked(input: { folderId: string; rowId: string }): Promise<string[]>;
   /** A resumable upload session (its URL stays in memory only). */
   startUpload(target: UploadTarget): Promise<string>;
   putChunk(input: ChunkInput): Promise<ChunkResult>;
@@ -73,7 +78,8 @@ export interface DriveBackupApi {
 
 /** The outside world: Drive for the connected token (null: no OAuth client), MinIO, config. */
 export interface DriveBackupFactory {
-  drive(refreshToken: string): DriveBackupApi | null;
+  /** `signal` aborts every Drive request of the run (the job's deadline). */
+  drive(refreshToken: string, signal?: AbortSignal): DriveBackupApi | null;
   /** `signal` aborts every MinIO read of the run (the job's deadline). */
   source(minio: MinioEnv, signal?: AbortSignal): BackupSource;
   /** The storage config now («التكاملات» overlay or env). */

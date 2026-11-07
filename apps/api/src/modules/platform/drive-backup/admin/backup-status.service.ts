@@ -1,16 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
 import { storageEnv } from '@/config/env/env.storage';
 import { GoogleConnection } from '@/modules/platform/google-sync';
 import { BackupStateRepo } from '@/modules/platform/drive-backup/db/backup-state.repo';
-import { type BackupStatusView, lastArchive, lowQuota, quotaView } from './backup-view';
+import { type BackupStatusView, frozenView, lastArchive, lowQuota, quotaView } from './backup-view';
 
 /** The status line: settings and readiness, the last archive, the last error, Drive's quota. */
 @Injectable()
 export class BackupStatusService {
+  // @Inject(Class): the classes are values here (DI), not only types (docs/31b §3.2).
   constructor(
-    private readonly state: BackupStateRepo,
-    private readonly connection: GoogleConnection,
+    @Inject(BackupStateRepo) private readonly state: BackupStateRepo,
+    @Inject(GoogleConnection) private readonly connection: GoogleConnection,
   ) {}
 
   async view(): Promise<BackupStatusView> {
@@ -26,6 +27,7 @@ export class BackupStatusService {
       last_error: s.last_error,
       quota,
       low_quota: lowQuota(quota),
+      frozen: frozenView(s),
     };
   }
 }

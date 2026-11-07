@@ -7,11 +7,6 @@ const WEEK_MS = 7 * 86_400_000;
 
 const done = (rows: readonly ArchiveRow[]) => rows.filter((r) => r.status === 'done');
 const byStart = (a: ArchiveRow, b: ArchiveRow) => a.started_at.localeCompare(b.started_at);
-const nextPart = (rows: readonly ArchiveRow[], plan: Pick<RunPlan, 'kind' | 'label'>): number =>
-  Math.max(
-    0,
-    ...rows.filter((r) => r.kind === plan.kind && r.label === plan.label).map((r) => r.part),
-  ) + 1;
 const fullParts = (rows: readonly ArchiveRow[], label: string) =>
   done(rows).filter((r) => r.kind === 'full' && r.label === label);
 
@@ -26,7 +21,8 @@ function lastSealed(rows: readonly ArchiveRow[]): ArchiveRow | null {
 }
 
 /** A full with parts uploaded but not sealed (a crash, the byte cap), newer than the base. */
-function openFull(rows: readonly ArchiveRow[], sealed: ArchiveRow | null): string | null {
+export function openFull(rows: readonly ArchiveRow[]): string | null {
+  const sealed = lastSealed(rows);
   const fulls = done(rows)
     .filter((r) => r.kind === 'full')
     .sort(byStart);
@@ -52,16 +48,13 @@ const chainStart = (rows: readonly ArchiveRow[], label: string): string =>
  */
 export function decide(rows: readonly ArchiveRow[], now: Date): RunPlan {
   const sealed = lastSealed(rows);
-  const open = openFull(rows, sealed);
+  const open = openFull(rows);
   const fullLabel = open ?? (fullDue(sealed, now) ? weekLabel(now) : null);
   if (fullLabel !== null || sealed === null) {
     const label = fullLabel ?? weekLabel(now);
-    const plan = { kind: 'full' as const, label };
-    return { ...plan, base: fullParts(rows, label), firstPart: nextPart(rows, plan) };
+    return { kind: 'full', label, base: fullParts(rows, label) };
   }
   const since = chainStart(rows, sealed.label);
   const incr = done(rows).filter((r) => r.kind === 'incr' && r.started_at > since);
-  const plan = { kind: 'incr' as const, label: dayLabel(now) };
-  const base = [...fullParts(rows, sealed.label), ...incr];
-  return { ...plan, base, firstPart: nextPart(rows, plan) };
+  return { kind: 'incr', label: dayLabel(now), base: [...fullParts(rows, sealed.label), ...incr] };
 }

@@ -1,31 +1,14 @@
 import type { ArchiveRow, RunPlan } from '@/modules/platform/drive-backup/plan/archive.types';
 import { archiveProps, dayLabel } from '@/modules/platform/drive-backup/plan/labels';
-import { orphans, toTrash } from '@/modules/platform/drive-backup/plan/retention';
-import type { RunDeps } from './backup-store.port';
+import { toTrash } from '@/modules/platform/drive-backup/plan/retention';
+import type { RunDeps } from '@/modules/platform/drive-backup/run/backup-store.port';
+import { retire } from '@/modules/platform/drive-backup/run/cleanup/retire';
 
 const lastPart = (rows: readonly ArchiveRow[], label: string): ArchiveRow | undefined =>
   rows
     .filter((r) => r.status === 'done' && r.kind === 'full' && r.label === label)
     .sort((a, b) => a.part - b.part)
     .at(-1);
-
-/**
- * Deletes these rows' Drive files for good (not to Drive's trash, which keeps counting against
- * the shared quota for 30 days), then marks the rows. Only ids from the backup's own rows of this
- * folder, and Drive deletes only a file that carries the backup's marker in that folder
- * (drive-remove.ts); one already gone (404) or not the backup's own is just dropped from the rows.
- */
-async function retire(deps: RunDeps, folderId: string, rows: readonly ArchiveRow[]) {
-  const fileIds = rows.flatMap((r) => (r.drive_file_id === null ? [] : [r.drive_file_id]));
-  for (const fileId of fileIds) await deps.api.remove({ fileId, folderId });
-  await deps.store.trashed(rows.map((r) => r.id));
-  return rows.length;
-}
-
-/** Files of parts that failed after their upload (bookkeeping, a crash): not counted, deleted. */
-export async function removeOrphans(deps: RunDeps, folderId: string): Promise<number> {
-  return retire(deps, folderId, orphans(await deps.store.archives(folderId)));
-}
 
 /**
  * A full whose every object is uploaded: its last part is marked sealed (on Drive, for the restore,

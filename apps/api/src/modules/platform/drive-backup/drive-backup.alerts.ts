@@ -1,8 +1,12 @@
 import { counted } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
+import type { FrozenReason } from '@/modules/platform/drive-backup/plan/frozen';
 import { dayLabel } from '@/modules/platform/drive-backup/plan/labels';
+
+/** At most this many names in the too-large alert (the rest only counted). */
+const NAMES_SHOWN = 5;
 
 /**
  * The backup's admin alerts: the Google sync's bell pattern (google_sync_alert, bell only, never
@@ -10,7 +14,8 @@ import { dayLabel } from '@/modules/platform/drive-backup/plan/labels';
  */
 @Injectable()
 export class DriveBackupAlerts {
-  constructor(private readonly push: PushService) {}
+  // @Inject(Class): the class is a value here (DI), not only a type (docs/31b §3.2).
+  constructor(@Inject(PushService) private readonly push: PushService) {}
 
   private tell(subject: string, reason: string): Promise<void> {
     const event = { subject: `drive_backup:${subject}`, vars: { reason }, bellOnly: true };
@@ -30,5 +35,21 @@ export class DriveBackupAlerts {
   skipped(input: { count: number; now: Date }): Promise<void> {
     const reason = counted(ar.googleSync.alerts.backupSkipped, input.count);
     return this.tell(`skipped:${dayLabel(input.now)}`, reason);
+  }
+
+  /** Objects larger than tonight's room, by name (the first few). */
+  tooLarge(input: { names: readonly string[]; now: Date }): Promise<void> {
+    const names = input.names.slice(0, NAMES_SHOWN).join('، ');
+    const text = counted(ar.googleSync.alerts.backupTooLarge, input.names.length);
+    return this.tell(`too_large:${dayLabel(input.now)}`, text.replace('{names}', names));
+  }
+
+  /** «النسخ الاحتياطي متوقف»: a full open for more than 3 nights, and why. */
+  frozen(input: { reason: FrozenReason; since: string; now: Date }): Promise<void> {
+    const why = ar.integrations.driveBackup.frozenReasons[input.reason];
+    const text = ar.googleSync.alerts.backupFrozen
+      .replace('{since}', input.since.slice(0, 10))
+      .replace('{reason}', why);
+    return this.tell(`frozen:${dayLabel(input.now)}`, text);
   }
 }

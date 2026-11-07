@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { RecentRow } from '@/modules/platform/drive-backup/db/archive-row.schema';
-import { lastArchive, lowQuota, quotaView } from './backup-view';
+import { frozenView, lastArchive, lowQuota, quotaView } from './backup-view';
 
 const GB = 1024 ** 3;
 const r = (over: Partial<RecentRow>): RecentRow => ({
@@ -26,6 +26,8 @@ const state = {
   quota_at: '2026-11-07T01:00:00Z',
   last_run_at: null,
   last_error: null,
+  frozen_since: null,
+  frozen_reason: null,
 };
 
 describe('the status view', () => {
@@ -53,5 +55,15 @@ describe('the status view', () => {
     expect(
       quotaView({ ...state, quota_at: null, quota_limit: null, quota_usage: null }),
     ).toBeNull();
+  });
+
+  it('frozen: since when and why, or null', () => {
+    const since = '2026-11-03T01:00:00Z';
+    const frozen = { ...state, quota_limit: null, quota_usage: null };
+    expect(frozenView({ ...frozen, frozen_since: since, frozen_reason: 'too_large' })).toEqual({
+      since,
+      reason: 'too_large',
+    });
+    expect(frozenView(frozen)).toBeNull();
   });
 });

@@ -19,7 +19,8 @@ export interface PartEntry {
   size: number;
   contentType: string;
 }
-export type SkipReason = 'missing' | 'read_failed';
+/** changed: a new version since the listing (retried next night, never streamed past its cost). */
+export type SkipReason = 'missing' | 'read_failed' | 'changed';
 export interface PartReport {
   entries: PartEntry[];
   skipped: { bucket: string; key: string; reason: SkipReason }[];
@@ -51,11 +52,16 @@ async function readWhole(opened: OpenedObject): Promise<Buffer> {
   return out;
 }
 
-/** Open (and read, when small) one object; a missing or unreadable one is skipped and reported. */
+/** The object read is not the one listed (and charged against the budget): a re-rendered PDF. */
+const changed = (o: ListedObject, opened: OpenedObject): boolean =>
+  opened.etag !== o.etag || opened.size > o.size;
+
+/** Open (and read, when small) one object; a missing, changed or unreadable one is skipped. */
 async function ready(source: BackupSource, o: ListedObject, report: PartReport) {
   try {
     const opened = await source.open(o);
     if (!opened) return skip(report, o, 'missing');
+    if (changed(o, opened)) return closed(opened, skip(report, o, 'changed'));
     if (opened.size > BUFFER_MAX) return { opened, bytes: null };
     return { opened, bytes: await readWhole(opened) };
   } catch {
@@ -72,6 +78,12 @@ async function* streamed(opened: OpenedObject): AsyncGenerator<Buffer> {
     yield Buffer.from(c);
   }
   if (n !== opened.size) throw new Error('object_cut_off');
+}
+
+/** Drops an opened body unread (a stream's iterator return() destroys it), then answers `out`. */
+function closed<T>(opened: OpenedObject, out: T): T {
+  void opened.body[Symbol.asyncIterator]().return?.();
+  return out;
 }
 
 const mtime = (now: Date): number => Math.floor(now.getTime() / 1000);

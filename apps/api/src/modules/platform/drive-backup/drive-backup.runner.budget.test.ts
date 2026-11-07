@@ -25,7 +25,13 @@ function setup(tokens: string[]) {
   const store = new MemoryStore();
   const read = vi.fn().mockResolvedValue({ folder_id: null, account_email: null });
   const state = { read, save: vi.fn() };
-  const alerts = { failed: vi.fn(), lowQuota: vi.fn(), skipped: vi.fn() };
+  const alerts = {
+    failed: vi.fn(),
+    lowQuota: vi.fn(),
+    skipped: vi.fn(),
+    tooLarge: vi.fn(),
+    frozen: vi.fn(),
+  };
   const data = { store, state, alerts } as unknown as DriveBackupData;
   const refreshToken = vi.fn();
   tokens.forEach((tk) => refreshToken.mockResolvedValueOnce(tk));

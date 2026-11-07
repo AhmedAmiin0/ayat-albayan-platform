@@ -1105,6 +1105,8 @@ export type Database = {
         Row: {
           account_email: string | null;
           folder_id: string | null;
+          frozen_reason: string | null;
+          frozen_since: string | null;
           id: boolean;
           last_error: string | null;
           last_run_at: string | null;
@@ -1116,6 +1118,8 @@ export type Database = {
         Insert: {
           account_email?: string | null;
           folder_id?: string | null;
+          frozen_reason?: string | null;
+          frozen_since?: string | null;
           id?: boolean;
           last_error?: string | null;
           last_run_at?: string | null;
@@ -1127,6 +1131,8 @@ export type Database = {
         Update: {
           account_email?: string | null;
           folder_id?: string | null;
+          frozen_reason?: string | null;
+          frozen_since?: string | null;
           id?: boolean;
           last_error?: string | null;
           last_run_at?: string | null;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { GoogleApiError } from '@/modules/platform/google-sync';
-import { B, setup } from './backup-run.fakes';
+import { B, fit, setup } from './backup-run.fakes';
 import { RESERVE_BYTES } from './quota';
 
 // docs/45 §5.1: the shared Google account never fills: Drive's room is read before every part, and
@@ -10,17 +10,18 @@ const GB = 1024 ** 3;
 
 describe('Drive’s room during a run', () => {
   it('re-reads the quota before each part; a part that would eat the reserve stops the run', async () => {
-    const t = await setup({ part: 25, run: 1000 });
-    for (const k of ['a', 'b', 'c']) t.minio.set({ bucket: B.reports, key: k, body: 'x'.repeat(10) });
+    const t = await setup({ part: fit(2), run: 1024 ** 3 });
+    for (const k of ['a', 'b', 'c'])
+      t.minio.set({ bucket: B.reports, key: k, body: 'x'.repeat(10) });
     const quota = t.drive.quota.bind(t.drive);
     let calls = 0;
     t.drive.quota = async () => {
       calls += 1;
       const q = await quota();
-      return calls === 1 ? q : { ...q, usage: (q.limit ?? 0) - RESERVE_BYTES + 1 };
+      return calls <= 2 ? q : { ...q, usage: (q.limit ?? 0) - RESERVE_BYTES + 1 };
     };
     await expect(t.night('2026-11-07')).rejects.toThrow('drive_full');
-    expect(calls).toBe(2);
+    expect(calls).toBe(3); // tonight's room, then once before each part
     expect(t.drive.log.filter((m) => m === 'startUpload')).toHaveLength(1);
     expect(t.store.rows.map((r) => r.status)).toEqual(['done']);
   });
@@ -35,9 +36,10 @@ describe('Drive’s room during a run', () => {
   });
 
   it('plenty of room: every part goes up', async () => {
-    const t = await setup({ part: 25, run: 1000 });
+    const t = await setup({ part: fit(2), run: 1024 ** 3 });
     t.drive.quotaAnswer = { limit: 15 * GB, usage: GB, email: 'academy@example.test' };
-    for (const k of ['a', 'b', 'c']) t.minio.set({ bucket: B.reports, key: k, body: 'x'.repeat(10) });
+    for (const k of ['a', 'b', 'c'])
+      t.minio.set({ bucket: B.reports, key: k, body: 'x'.repeat(10) });
     expect(await t.night('2026-11-07')).toMatchObject({ parts: 2, sealed: true });
   });
 });

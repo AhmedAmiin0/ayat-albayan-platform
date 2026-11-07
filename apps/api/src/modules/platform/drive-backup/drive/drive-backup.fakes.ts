@@ -1,24 +1,11 @@
 import { Readable } from 'node:stream';
 import { GoogleApiError } from '@/modules/platform/google-sync';
 import type * as P from './drive-backup.port';
-import { BACKUP_MARK, FOLDER_MIME } from './drive-files.schema';
+import { BACKUP_MARK, FOLDER_MIME, isMarked } from './drive-files.schema';
+import type { Session, Stored } from './drive-backup.fakes.types';
 
 // An in-memory Drive for the backup's tests: folders, resumable sessions, files, deletes. Never
 // Google. Obviously fake ids and an example.test account.
-
-interface Stored {
-  meta: P.BackupFile;
-  parentId: string;
-  mimeType: string;
-  bytes: Buffer;
-  trashed: boolean;
-}
-interface Session {
-  target: P.UploadTarget;
-  chunks: Buffer[];
-  committed: number;
-  fileId: string | null;
-}
 
 const GB = 1024 ** 3;
 const T0 = Date.UTC(2026, 10, 1);
@@ -89,6 +76,12 @@ export class FakeDrive implements P.DriveBackupApi {
     return Promise.resolve(this.live(folderId).map((f) => f.meta));
   }
 
+  findMarked(input: { folderId: string; rowId: string }) {
+    this.call('findMarked');
+    const own = this.live(input.folderId).filter((f) => isMarked(f.meta, input));
+    return Promise.resolve(own.map((f) => f.meta.id));
+  }
+
   startUpload(target: P.UploadTarget) {
     this.call('startUpload');
     const session = `https://upload.example.test/session/${this.sessions.size + 1}`;
@@ -104,9 +97,8 @@ export class FakeDrive implements P.DriveBackupApi {
     s.committed += input.bytes.length;
     if (input.total === null) return Promise.resolve({ committed: s.committed, fileId: null });
     const { name, parentId, appProperties } = s.target;
-    const bytes = Buffer.concat(s.chunks);
-    const mimeType = 'application/zstd';
-    s.fileId = this.add({ name, parentId, mimeType, bytes, props: appProperties });
+    const file = { name, parentId, mimeType: 'application/zstd', bytes: Buffer.concat(s.chunks) };
+    s.fileId = this.add({ ...file, props: appProperties });
     return Promise.resolve({ committed: 0, fileId: s.fileId });
   }
 

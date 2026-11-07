@@ -32,12 +32,16 @@ export interface BackupStore {
   archives(folderId: string): Promise<ArchiveRow[]>;
   /** `bucket/key` → ETag held by these archives (later archives win). */
   covered(archives: readonly ArchiveRow[]): Promise<Map<string, string>>;
+  /** The highest part number of that archive over EVERY row, trashed ones included; 0: none. */
+  lastPart(input: Pick<NewArchive, 'folderId' | 'kind' | 'label'>): Promise<number>;
   start(input: NewArchive): Promise<string>;
+  // uploaded / finish / fail change a row only while it is `uploading` (this run's): zero rows
+  // changed (another run abandoned it) is an error, never a silent success.
   /** The Drive file id, as soon as the upload returns (before the objects are written). */
   uploaded(input: { id: string; fileId: string }): Promise<void>;
   finish(input: FinishedArchive): Promise<void>;
-  /** `failed`, keeping a Drive file id already stored (retention deletes that file). */
-  fail(input: { id: string; error: string }): Promise<void>;
+  /** `failed`, with the Drive file id when the file exists (the next run deletes that file). */
+  fail(input: { id: string; error: string; fileId?: string }): Promise<void>;
   seal(id: string): Promise<void>;
   /** Status `trashed`: the file is deleted from Drive (or was gone); its objects are dropped. */
   trashed(ids: readonly string[]): Promise<void>;

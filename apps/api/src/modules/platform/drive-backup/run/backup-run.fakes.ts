@@ -3,14 +3,20 @@ import { zstdDecompressSync } from 'node:zlib';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { readTar } from '@/modules/platform/drive-backup/archive/tar-read';
 import { FakeDrive } from '@/modules/platform/drive-backup/drive/drive-backup.fakes';
+import { partCost } from '@/modules/platform/drive-backup/plan/cost';
 import { DEFAULT_CAPS, type Caps } from '@/modules/platform/drive-backup/plan/parts';
 import { FakeMinio } from '@/modules/platform/drive-backup/source/backup-source.fakes';
 import { runBackup } from './backup-run';
+import { RESERVE_BYTES } from './quota';
 import { MemoryStore } from './backup-store.fakes';
 
 // One MinIO, one Drive folder, one bookkeeping store, and a night runner, for the run tests.
 
 export const B = BUCKETS;
+
+/** A cap that holds exactly `n` objects of `size` bytes (cost.ts: the overheads counted). */
+export const fit = (n: number, size = 10): number =>
+  partCost(Array.from({ length: n }, () => ({ size })));
 
 export async function setup(caps: Caps = DEFAULT_CAPS) {
   const drive = new FakeDrive();
@@ -26,6 +32,16 @@ export async function setup(caps: Caps = DEFAULT_CAPS) {
     return runBackup(deps, { folderId, now });
   };
   return { drive, minio, store, folderId, deps, night };
+}
+
+/** Drive's quota from what it holds: `room()` above the 2 GB reserve while it holds nothing. */
+export function roomOf(drive: FakeDrive, room: () => number): void {
+  const limit = 15 * 1024 ** 3;
+  drive.quota = () => {
+    const held = [...drive.files.values()].reduce((n, f) => n + f.bytes.length, 0);
+    const usage = limit - RESERVE_BYTES - room() + held;
+    return Promise.resolve({ limit, usage, email: 'academy@example.test' });
+  };
 }
 
 interface Entry {

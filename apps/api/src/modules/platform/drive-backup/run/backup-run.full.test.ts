@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { B, names, setup } from './backup-run.fakes';
+import { B, fit, names, setup } from './backup-run.fakes';
 
 // docs/45 §5: a weekly full (Friday or later, UTC), parts under a size cap, a per-run byte cap,
 // and retention: the last 4 fulls and the incrementals after the oldest, deleted from Drive for
@@ -65,7 +65,7 @@ describe('weekly full archive', () => {
 
 describe('caps', () => {
   it('splits a large archive into parts under the part cap', async () => {
-    const t = await setup({ part: 25, run: 1000 });
+    const t = await setup({ part: fit(2), run: 1024 ** 3 });
     for (const k of ['a', 'b', 'c', 'd', 'e'])
       t.minio.set({ bucket: B.reports, key: k, body: 'x'.repeat(10) });
     const sum = await t.night('2026-11-07');
@@ -81,7 +81,7 @@ describe('caps', () => {
   });
 
   it('stops at the run’s byte cap; the next night continues the same full, then seals it', async () => {
-    const t = await setup({ part: 1000, run: 20 });
+    const t = await setup({ part: fit(2), run: 2 * fit(2) - 1 });
     for (const k of ['a', 'b', 'c', 'd'])
       t.minio.set({ bucket: B.reports, key: k, body: 'x'.repeat(10) });
     expect(await t.night('2026-11-07')).toMatchObject({
