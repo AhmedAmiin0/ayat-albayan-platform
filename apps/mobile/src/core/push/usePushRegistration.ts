@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useHolds } from '@/core/auth/use-permissions';
+import { useInboxStore } from '@/inbox';
 import type { PushTree } from './notification-route';
 import { registerPush } from './registerPush';
 import { useNotificationHandling } from './useNotificationHandling';
@@ -13,6 +14,8 @@ import { useNotificationHandling } from './useNotificationHandling';
  */
 export function usePushRegistration(tree: PushTree = 'admin'): void {
   useNotificationHandling(tree);
+  // The phone's message store (docs/43 43-7) for every tree that reads chats.
+  useInboxStore(useHolds('inbox.read'));
   const allowed = useHolds('notifications.push');
   useEffect(() => {
     if (allowed) void registerPush();

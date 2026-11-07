@@ -1,4 +1,11 @@
-import { changedPhone, phoneOfKey, refreshPlan, throttleMsOf, type LiveKey } from './inbox-live.js';
+import {
+  changedPhone,
+  chatLiveKey,
+  phoneOfKey,
+  refreshPlan,
+  throttleMsOf,
+  type LiveKey,
+} from './inbox-live.js';
 import { createLiveRegistry } from './live-registry.js';
 import { createThrottle, type Throttle } from './throttle.js';
 
@@ -28,7 +35,12 @@ export interface InboxLive {
   bind(targets: LiveTargets): () => void;
 }
 
-export function createInboxLive(): InboxLive {
+/** `chatOwnsBadge`: an event for the chat on screen leaves the badge to its re-read (AU6). */
+export interface InboxLiveOptions {
+  chatOwnsBadge?: boolean;
+}
+
+export function createInboxLive({ chatOwnsBadge = false }: InboxLiveOptions = {}): InboxLive {
   let live = false;
   let targets: LiveTargets | null = null;
   const listeners = new Set<() => void>();
@@ -69,7 +81,8 @@ export function createInboxLive(): InboxLive {
     changed(payload) {
       const phone = changedPhone(payload);
       if (!phone) return;
-      for (const key of refreshPlan(phone)) if (registry.route(key)) fire(key);
+      const owned = chatOwnsBadge && registry.isWatched(chatLiveKey(phone));
+      for (const key of refreshPlan(phone, owned)) if (registry.route(key)) fire(key);
     },
     resync() {
       fire('badge');

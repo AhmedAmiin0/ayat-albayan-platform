@@ -59,18 +59,18 @@ describe('TextComposer: a remounted box never replays a send (rule 8)', () => {
     fireEvent.click(button());
     first.unmount();
     show();
-    reject(new ApiError(500, null));
+    reject(new ApiError(422, null));
     await waitFor(() => expect(box().value).toBe('السلام عليكم'));
   });
 
   it('a failed send, then edited text → a new id; the same text again → the failed id', async () => {
-    apiSend.mockRejectedValueOnce(new ApiError(500, null));
+    apiSend.mockRejectedValueOnce(new ApiError(422, null));
     show();
     type('السلام عليكم');
     fireEvent.click(button());
     await screen.findByRole('alert');
     type('السلام عليكم ورحمة الله');
-    apiSend.mockRejectedValueOnce(new ApiError(500, null));
+    apiSend.mockRejectedValueOnce(new ApiError(422, null));
     fireEvent.click(button());
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(2));
     expect(sentBody(1).clientRequestId).not.toBe(sentBody(0).clientRequestId);

@@ -28,8 +28,8 @@ export function threadNextParam(
   return last.has_more && oldest ? { before: oldest.created_at, before_id: oldest.id } : undefined;
 }
 
-/** The app's typed GET of a chat page (its apiFetch<ThreadDetail>). */
-export type ThreadGet = (path: string) => Promise<ThreadDetail>;
+/** The app's typed GET of a chat page (its apiFetch<ThreadDetail>), with TanStack's signal. */
+export type ThreadGet = (path: string, init: { signal: AbortSignal }) => Promise<ThreadDetail>;
 
 /** Outside the live chat's keys on purpose: sends, polls and invalidations never write into it. */
 export const anchoredThreadKey = (phone: string, id: string) => ['thread-at', phone, id] as const;
@@ -40,7 +40,7 @@ export const anchoredThreadPrefix = (phone: string) => ['thread-at', phone] as c
 /** useInfiniteQuery's options of an anchored window (plain: client-core has no react-query). */
 export interface AnchoredPagesOptions {
   queryKey: ReturnType<typeof anchoredThreadKey>;
-  queryFn: (ctx: { pageParam: ThreadPageParam }) => Promise<ThreadDetail>;
+  queryFn: (ctx: { pageParam: ThreadPageParam; signal: AbortSignal }) => Promise<ThreadDetail>;
   initialPageParam: ThreadPageParam;
   getNextPageParam: (last: ThreadDetail) => ThreadPageParam | undefined;
   staleTime: number;
@@ -55,7 +55,8 @@ export function anchoredThreadPages(
   const path = `/threads/${encodeURIComponent(phone)}`;
   return {
     queryKey: anchoredThreadKey(phone, id),
-    queryFn: ({ pageParam }) => get(`${path}${threadPageQuery(pageParam)}`),
+    // TanStack's signal (docs/43 AU8): leaving the window cancels its read.
+    queryFn: ({ pageParam, signal }) => get(`${path}${threadPageQuery(pageParam)}`, { signal }),
     initialPageParam: { around: id },
     getNextPageParam: threadNextParam,
     staleTime: Number.POSITIVE_INFINITY,

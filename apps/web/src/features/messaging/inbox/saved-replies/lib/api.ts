@@ -11,7 +11,7 @@ import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { supabase } from '@/lib/http/supabase';
+import { uploadSigned } from '@/lib/storage/upload-slot';
 import { ChatUploadError } from '@/features/messaging/inbox/api/api.files';
 
 // «الردود السريعة» (owner 2026-10-25): the shared list and the caller's own, filled into the composer.
@@ -45,9 +45,7 @@ export const stageReply = (input: { id: string; clientRequestId: string }) =>
 /** Uploads a picked image or PDF under the uploader's folder; resolves to its storage path. */
 export async function uploadReplyFile(input: { file: File; mime: ChatSendMime }): Promise<string> {
   const signed = await apiSend<SignedUpload>('POST', '/saved-replies/attachment-upload-url', { mime: input.mime, size: input.file.size });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, input.file, { contentType: input.mime });
+  const { error } = await uploadSigned(signed, { body: input.file, contentType: input.mime });
   if (error) throw new ChatUploadError(error.message);
   return signed.path;
 }

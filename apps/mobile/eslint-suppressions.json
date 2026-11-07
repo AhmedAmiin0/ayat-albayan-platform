@@ -3478,7 +3478,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "src/inbox/composer/use-thread-reopen.ts": {
@@ -5566,11 +5566,6 @@
       "count": 2
     }
   },
-  "src/inbox/thread/hooks/inbox-sync.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/inbox/thread/hooks/send-paths.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
@@ -5682,11 +5677,8 @@
     }
   },
   "src/inbox/thread/live/use-inbox-realtime.ts": {
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/inbox/threads-list/ClosedRow.tsx": {
@@ -9619,9 +9611,6 @@
     },
     "max-len": {
       "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
     }
   },
   "src/teacher/report/components/ReportTextField.tsx": {
@@ -9652,7 +9641,7 @@
   },
   "src/teacher/report/hooks/use-report-entry.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teacher/report/hooks/use-scroll-to-invalid.test.tsx": {
@@ -9725,14 +9714,8 @@
     }
   },
   "src/teacher/report/v2/V2Footer.tsx": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
-    },
-    "no-nested-ternary": {
-      "count": 1
     }
   },
   "src/teacher/report/v2/V2Header.tsx": {

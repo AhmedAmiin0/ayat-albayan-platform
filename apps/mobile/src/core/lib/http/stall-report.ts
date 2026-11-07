@@ -1,7 +1,7 @@
 import { connectivity } from '@/core/lib/connectivity/connectivity';
 import { logWarning } from '@/core/lib/log';
 import { mobileClientTag } from './client-tag';
-import type { StallStage } from './read-deadline';
+import type { StallStage } from '@ab/client-core';
 
 const logged = new Set<StallStage>();
 

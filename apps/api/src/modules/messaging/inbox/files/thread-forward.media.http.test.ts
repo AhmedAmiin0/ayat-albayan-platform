@@ -30,7 +30,7 @@ describe('POST /threads/forward with a file: re-sent from our storage, never upl
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.resetAllMocks();
-    vi.spyOn(storage, 'copy').mockResolvedValue();
+    vi.spyOn(storage, 'copy').mockImplementation(async (input) => input.to.path);
     t.queries.thread.mockImplementation(async (phone: string) => threadRow({ phone_e164: phone, last_inbound_at: FRESH }));
     t.queries.get.mockImplementation(async (id: string) => (id === SRC ? src : null));
     t.queries.enqueue.mockImplementation(async (row: Partial<MessageRow>) =>

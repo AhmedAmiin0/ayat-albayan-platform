@@ -11,7 +11,7 @@ import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { MONEY_KEY, type Page } from '@/features/finance/subscriptions/api';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
-import { supabase } from '@/lib/http/supabase';
+import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // apps/api/src/modules/teacher-earnings (docs/11 §10). Teacher money is EGP.
 export type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView } from '@ab/shared';
@@ -84,9 +84,7 @@ export async function uploadTeacherReceipt(input: { teacherId: string; file: Fil
     mime: file.type,
     size: file.size,
   });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type });
+  const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return signed.path;
 }

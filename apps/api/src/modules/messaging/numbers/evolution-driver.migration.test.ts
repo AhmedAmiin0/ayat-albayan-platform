@@ -24,7 +24,7 @@ describe('migration: the Evolution driver', () => {
   it('lists every shared secret key, EVOLUTION_API_KEY included, service role only', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(code)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
-    expect(listed.sort()).toEqual([...INTEGRATION_SECRET_KEYS].sort());
+    expect(listed.sort()).toEqual(INTEGRATION_SECRET_KEYS.filter((k) => !k.startsWith('MINIO_')).sort());
     expect(code).toContain('grant execute on function public.integration_secret_key_ok(text) to service_role;');
   });
 

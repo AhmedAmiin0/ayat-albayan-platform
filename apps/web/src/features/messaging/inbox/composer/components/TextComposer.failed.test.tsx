@@ -36,7 +36,7 @@ afterEach(() => {
 
 describe('TextComposer: a failed id never outlives its text (round 2 C)', () => {
   it('failed → other text sent fine → the first text much later gets a new id, not a replay', async () => {
-    apiSend.mockRejectedValueOnce(new ApiError(500, null));
+    apiSend.mockRejectedValueOnce(new ApiError(422, null));
     show();
     type('السلام عليكم');
     await sendAndWait(1);
@@ -52,7 +52,7 @@ describe('TextComposer: a failed id never outlives its text (round 2 C)', () => 
   });
 
   it('the failed text again (spaces aside) still reuses its id', async () => {
-    apiSend.mockRejectedValueOnce(new ApiError(500, null));
+    apiSend.mockRejectedValueOnce(new ApiError(422, null));
     show();
     type('السلام عليكم');
     await sendAndWait(1);
@@ -73,7 +73,7 @@ describe('TextComposer: a failure after a remount says why (round 2 H)', () => {
     fireEvent.click(button());
     first.unmount();
     show();
-    reject(new ApiError(503, {}));
+    reject(new ApiError(422, {}));
     expect((await screen.findByRole('alert')).textContent).toBe(t.inbox.error.send_failed);
     expect(box().value).toBe('السلام عليكم');
     expect(box().getAttribute('aria-invalid')).toBe('true');
@@ -107,7 +107,7 @@ describe('TextComposer: a send settling after sign-out writes nothing back (roun
     clearAllDrafts();
     clearOwnSends();
     view.unmount();
-    reject(new ApiError(500, null));
+    reject(new ApiError(422, null));
     await waitFor(() => expect(client.isMutating()).toBe(0));
     expect(getDraft(PHONE)).toEqual({ text: '', failed: null });
   });

@@ -51,7 +51,9 @@ export class PdfPreviewService {
     const doc = known ?? (await this.guard(`${msg.id}:1`, () => this.probes.run(msg.id, () => this.probe(msg.id, file))));
     if (doc.pages === 0) throw waHttpError('pdf_no_preview', HttpStatus.UNPROCESSABLE_ENTITY);
     if (input.page > Math.min(doc.pages, PDF_PREVIEW_PAGES)) throw waHttpError('page_out_of_range', HttpStatus.BAD_REQUEST);
-    const ref = { bucket: BUCKETS.waMedia, path: pdfPagePath({ messageId: msg.id, page: input.page }) };
+    // A page cache: looked up where new files go now (docs/45); a miss renders it there.
+    const path = this.storage.storedPathFor(pdfPagePath({ messageId: msg.id, page: input.page }));
+    const ref = { bucket: BUCKETS.waMedia, path };
     if (!(await this.storage.exists(ref))) {
       const range = pageRange(input.page, doc.pages);
       const key = `${msg.id}:${range.first}`;

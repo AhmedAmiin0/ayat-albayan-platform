@@ -1,11 +1,11 @@
-import { createApiClient } from '@ab/client-core';
+import { createApiClient, markSending, readTimeoutFor } from '@ab/client-core';
 import { connectivity } from '@/core/lib/connectivity/connectivity';
 import { isNetworkError } from '@/core/lib/connectivity/network-error';
 import { mobileClientTag } from './client-tag';
 import { env } from './env';
 import { accessToken } from './access-token';
-import { markSending, readTimeoutFor } from './read-deadline';
 import { withReadDeadline } from './read-within';
+import { reportStall } from './stall-report';
 
 // The one client lives in @ab/client-core (docs/27 E1); this module injects mobile's env, session and tag.
 export { ApiError, toQueryString, type SendMethod } from '@ab/client-core';
@@ -28,6 +28,8 @@ const client = createApiClient({
   accessToken,
   clientTag: mobileClientTag,
   fetch: reach,
+  // A write with no answer in 30 s (client-core's send deadline) is a stall too.
+  onStall: reportStall,
 });
 
 /** fetch against the Nest API with the current Supabase access token and the client tag (`X-AB-Client`). */

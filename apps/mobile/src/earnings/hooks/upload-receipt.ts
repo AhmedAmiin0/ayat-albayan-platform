@@ -2,7 +2,7 @@ import type { SignedUpload } from '@ab/shared';
 import { apiSend } from '@/core/lib/http/api';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
-import { supabase } from '@/core/lib/http/supabase';
+import { uploadSigned } from '@/core/lib/http/upload-slot';
 
 /**
  * POST /teacher-earnings/:teacherId/receipt-upload-url, then the signed upload into the private
@@ -13,9 +13,7 @@ export async function uploadTeacherReceipt(teacherId: string, receipt: Receipt):
     mime: receipt.mime,
     size: receipt.size,
   });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, receipt.bytes, { contentType: receipt.mime });
+  const { error } = await uploadSigned(signed, { body: receipt.bytes, contentType: receipt.mime });
   if (error) throw new ReceiptUploadError(error.message);
   return signed.path;
 }

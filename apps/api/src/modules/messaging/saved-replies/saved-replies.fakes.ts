@@ -94,7 +94,7 @@ function storageMock() {
     signedUpload: vi.fn(async (ref: { bucket: string; path: string }) => ({ ...ref, token: 'tok', signed_url: 'https://storage.test/up' })),
     info: vi.fn(async () => ({ size: 2048, contentType: 'application/pdf' })),
     head: vi.fn(async () => PDF_HEAD),
-    copy: vi.fn(async () => undefined),
+    copy: vi.fn(async (c: { to: { path: string } }) => c.to.path),
     remove: vi.fn(async () => undefined),
   };
 }

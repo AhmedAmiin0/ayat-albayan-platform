@@ -57,9 +57,9 @@ export class GifService {
     const giphy = this.giphy();
     if (!giphy) throw waHttpError('giphy_not_configured', HttpStatus.SERVICE_UNAVAILABLE);
     const bytes = await giphy.mp4(s.input.gifId);
-    const path = gifPath({ actorId: s.actorId, requestId: s.input.clientRequestId });
-    const file = { bucket: BUCKETS.waMedia, path, body: bytes };
-    await this.storage.upload({ ...file, contentType: GIF_MIME });
+    const file = gifPath({ actorId: s.actorId, requestId: s.input.clientRequestId });
+    const gif = { bucket: BUCKETS.waMedia, path: file, body: bytes, contentType: GIF_MIME };
+    const path = await this.storage.upload(gif);
     return this.outbox.queue({
       ...outboundBase(s, thread),
       dedup_key: key,

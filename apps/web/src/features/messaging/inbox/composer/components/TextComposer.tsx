@@ -10,8 +10,8 @@ import { cn } from '@/lib/utils';
 import type { ComposerExtras } from '@/features/messaging/inbox/composer/lib/composer-extras';
 import { sendsOnKey } from '@/features/messaging/inbox/composer/lib/composer-keys';
 import { ComposerError } from './ComposerError';
-import { draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
-import { useTextSend } from '@/features/messaging/inbox/composer/lib/use-text-send';
+import { draftGeneration, getDraft, keepsFailed, keptFailed, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { textSentOf, useTextSend } from '@/features/messaging/inbox/composer/lib/use-text-send';
 import { ownSendGeneration } from '@/features/messaging/inbox/composer/lib/own-send';
 import { ReplyStrip } from './ReplyStrip';
 import { sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
@@ -48,7 +48,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const text = draft.text;
   const write = (next: string) => {
     const { failed } = getDraft(phone);
-    setDraft(phone, { text: next, failed: failed?.text === next.trim() ? failed : null });
+    setDraft(phone, { text: next, failed: keepsFailed(failed, next) ? failed : null });
   };
   const mutationKey = ['inbox-send', phone];
   const send = useTextSend(phone, { replyDone: reply.done, settled: () => area.current?.focus() });
@@ -65,7 +65,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   // Not a stored session_closed: this box mounts only where a text goes (ComposerPhone), and the
   // closed-window notice replaces it where none can (round 3).
   const stored = draft.failed?.code === 'session_closed' ? null : draft.failed;
-  const failedHere = !pending && stored?.text === text.trim() ? sendErrorCodeText(stored.code) : null;
+  const failedHere = !pending && keepsFailed(stored, text) ? sendErrorCodeText(stored.code) : null;
   const local = send.isError && !pending ? sendErrorText(send.error) : null;
   const error = tooLong ? t.inbox.composer.tooLong : (failedHere ?? local);
   const blocked = !text.trim() || tooLong || pending;
@@ -73,8 +73,8 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
     if (blocked) return;
     const gen = { draft: draftGeneration(), own: ownSendGeneration() };
     const body = text.trim();
-    const sent = { phone, text: body, clientRequestId: requestIdFor(draft, body), replyTo: reply.replyTo, gen, after: extras?.onSubmit?.() };
-    setDraft(phone, { text: '', failed: null });
+    const sent = { ...textSentOf(phone, draft, body), replyTo: reply.replyTo, gen, after: extras?.onSubmit?.() };
+    setDraft(phone, { text: '', failed: keptFailed(draft.failed) });
     send.mutate(sent);
   };
 

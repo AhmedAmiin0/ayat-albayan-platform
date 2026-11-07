@@ -82,6 +82,9 @@ test('a complete report is sent with its version; the sent state and edit window
     homework: 'الملك 6-10',
   });
   expect(await screen.findByText(t.reports.submitted)).toBeTruthy();
+  // Sent: read-only until «تعديل التقرير», which opens the same report for «حفظ التعديل».
+  expect(screen.queryByText(t.reports.resubmit)).toBeNull();
+  await fireEvent.press(screen.getByText(t.reports.edit));
   expect(screen.getByText(t.reports.resubmit)).toBeTruthy();
 });
 

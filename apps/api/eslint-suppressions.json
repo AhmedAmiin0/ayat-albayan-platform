@@ -984,17 +984,6 @@
       "count": 1
     }
   },
-  "src/common/storage/storage.service.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 10
-    }
-  },
   "src/common/student-ids.ts": {
     "ab/forbidden-imports": {
       "count": 1
@@ -3309,7 +3298,7 @@
   },
   "src/modules/messaging/inbox/files/pdf/pdf-preview.service.ts": {
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-render.spawn.test.ts": {
@@ -10052,7 +10041,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/teaching/booking/invoice/invoice-sniff.ts": {
@@ -11294,7 +11283,7 @@
   },
   "src/modules/teaching/classroom/recordings/recording.starter.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/recordings/recordings.controller.ts": {

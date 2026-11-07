@@ -7,6 +7,7 @@ import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { refreshInbox, refreshLists, touchInbox } from './inbox-sync';
 import { useForward } from './use-forward';
 import { useMessageAction, useSendMessage } from './use-thread';
+import { ApiError } from '@ab/client-core';
 
 // Every way a chat sends (text, template, quote, file, saved reply, forward, retry, reopen) goes
 // through the inbox refresh (owner 2026-10-27), and the ones that know their row touch the list. A
@@ -56,7 +57,7 @@ test('a text and a template (the quote sheet too) touch the list, then refresh t
 });
 
 test('a refused send still refreshes the inbox, so the list shows the truth again', async () => {
-  mockApiSend.mockRejectedValue(new Error('refused'));
+  mockApiSend.mockRejectedValue(new ApiError(409, null));
   const client = await run(() => useSendMessage(PHONE), { id: 'p1', out: { kind: 'text', text: 'وصلت' } });
   expect(sent).toHaveBeenCalledWith(client);
 });

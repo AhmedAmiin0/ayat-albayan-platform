@@ -79,7 +79,7 @@ describe('BookingInvoices.resolve — saved from the chat (R-MSG-06)', () => {
     const { invoices, storage } = setup();
     await invoices.resolve(req(), SCOPE);
     await invoices.resolve(req(), SCOPE);
-    const targets = storage.copy.mock.calls.map((c) => (c[0] as { to: { path: string } }).to.path);
+    const targets = storage.copy.mock.calls.map((c) => (c[0]).to.path);
     expect(new Set(targets).size).toBe(1);
   });
 });

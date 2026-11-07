@@ -1,7 +1,7 @@
 import type { SavedReply, SavedReplyCreate, SavedReplyUpdate, SignedUpload } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/core/lib/http/api';
-import { supabase } from '@/core/lib/http/supabase';
+import { uploadSigned } from '@/core/lib/http/upload-slot';
 import { ChatFileError, type ChatFilePick } from '@/inbox/composer/send-file';
 
 // «الردود السريعة» (owner 2026-10-25): GET /saved-replies answers the shared list then the caller's
@@ -39,9 +39,7 @@ export const useMoveReply = () =>
 /** The picked image / PDF into wa-media through a signed URL; resolves what POST / PATCH take. */
 export async function uploadReplyFile(file: ChatFilePick): Promise<{ path: string; name: string }> {
   const signed = await apiSend<SignedUpload>('POST', '/saved-replies/attachment-upload-url', { mime: file.mime, size: file.size });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, file.bytes, { contentType: file.mime });
+  const { error } = await uploadSigned(signed, { body: file.bytes, contentType: file.mime });
   if (error) throw new ChatFileError('file_upload');
   return { path: signed.path, name: file.filename };
 }

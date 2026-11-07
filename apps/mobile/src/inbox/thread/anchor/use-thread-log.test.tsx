@@ -66,7 +66,8 @@ test('a hit not loaded opens the window around it with one request', async () =>
   await waitFor(() => expect(result.current.target).toEqual({ id: OLD, ready: true }));
   expect(result.current.anchored).toBe(true);
   expect(aroundCalls()).toEqual([
-    [`/threads/${encodeURIComponent(PHONE)}?around=${OLD}`, undefined],
+    // TanStack's signal travels with it (docs/43 AU8).
+    [`/threads/${encodeURIComponent(PHONE)}?around=${OLD}`, { signal: expect.any(AbortSignal) }],
   ]);
   expect(result.current.query.data?.pages[0]?.messages.map((m) => m.id)).toEqual([OLD, 'c3']);
   expect(result.current.to).toBe(newer.created_at);

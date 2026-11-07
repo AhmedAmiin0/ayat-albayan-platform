@@ -48,7 +48,8 @@ describe('InboxPage thread list (R-LEAD-02)', () => {
     expect(guardian.getByText(`${t.inbox.you} أهلًا`)).toBeTruthy();
     expect(guardian.queryByText(t.inbox.kind.guardian)).toBeNull();
     expect(guardian.queryByText(t.inbox.subscription.badge.subscribed)).toBeNull();
-    expect(apiFetch).toHaveBeenCalledWith(expect.stringMatching(/^\/threads\?page=1&pageSize=30&search=/));
+    const list = expect.stringMatching(/^\/threads\?page=1&pageSize=30&search=/);
+    expect(apiFetch).toHaveBeenCalledWith(list, { signal: expect.any(AbortSignal) });
     expect(screen.getByText(t.leads.count.replace('{n}', '2'))).toBeTruthy();
   });
 

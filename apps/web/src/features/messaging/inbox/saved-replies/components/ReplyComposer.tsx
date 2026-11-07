@@ -1,6 +1,6 @@
 import { resolveSavedReply, type SavedReply, type ThreadView } from '@ab/shared';
 import { useId, useSyncExternalStore, type ReactNode } from 'react';
-import { getDraft, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { getDraft, keptFailed, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
 import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 import { TextComposer } from '@/features/messaging/inbox/composer/components/TextComposer';
 import { fillComposer, slashQuery } from '@/features/messaging/inbox/saved-replies/lib/filter';
@@ -51,7 +51,8 @@ export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) 
   const dialogs = useReplyDialogs('mine');
   const onPick = (reply: SavedReply) => {
     const before = getDraft(phone).text;
-    setDraft(phone, { text: fillComposer(before, resolveSavedReply(reply.body, values)), failed: null });
+    const failed = keptFailed(getDraft(phone).failed);
+    setDraft(phone, { text: fillComposer(before, resolveSavedReply(reply.body, values)), failed });
     const next = reply.attachment ? { replyId: reply.id, attachment: reply.attachment, requestId: crypto.randomUUID(), failed: null } : null;
     // A pick that replaces the box (a «/» token or an empty box) replaces its file too; one added after text keeps it.
     if (next || replacesBox(before)) setStaged(phone, next);

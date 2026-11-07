@@ -1,6 +1,6 @@
 import type { SignedUpload } from '@ab/shared';
 import { apiSend } from '@/core/lib/http/api';
-import { supabase } from '@/core/lib/http/supabase';
+import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 
@@ -16,9 +16,7 @@ export async function uploadSalesReceipt(subscriptionId: string, receipt: Receip
     size: receipt.size,
     ...bind,
   });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, receipt.bytes, { contentType: receipt.mime });
+  const { error } = await uploadSigned(signed, { body: receipt.bytes, contentType: receipt.mime });
   if (error) throw new ReceiptUploadError(error.message);
   return signed.path;
 }

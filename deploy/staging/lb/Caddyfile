@@ -33,3 +33,30 @@
 		health_passes 1
 	}
 }
+
+# Files (docs/45-minio-storage.md): the host Caddy proxies files.ayatalbayan.com here too; this host only goes
+# to MinIO, every other one stays on the :8080 site above. MinIO checks each signed URL against the Host header,
+# which Caddy passes on unchanged. Upstreams resolve per request: without the minio profile Caddy still starts
+# and this host answers 502.
+http://files.ayatalbayan.com:8080 {
+	# MinIO's own admin and metrics routes are for the project network only; the health probe stays public.
+	@minio_internal {
+		path /minio/*
+		not path /minio/health/*
+	}
+	respond @minio_internal 404
+
+	# The API caps each file (25 MiB at most) when it signs the upload; this is the outer wall. LiveKit's
+	# recordings go up in multipart parts well under it.
+	request_body {
+		max_size 64MB
+	}
+
+	reverse_proxy ayat-minio:9000 {
+		# Replace MinIO's own: a stored file is never sniffed into HTML, runs no script and sends no Referer.
+		# No CSP sandbox: Chrome refuses to show a PDF in a sandboxed page (the report links).
+		header_down X-Content-Type-Options nosniff
+		header_down Referrer-Policy no-referrer
+		header_down Content-Security-Policy "default-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; form-action 'none'; base-uri 'none'"
+	}
+}

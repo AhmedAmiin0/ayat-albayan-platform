@@ -1,5 +1,7 @@
 import { ApiError, readJson } from './api-error.js';
 import { CLIENT_HEADER } from './client-header.js';
+import { type StallStage, withDeadline } from './deadline.js';
+import { sendTimeoutFor } from './timeouts.js';
 
 export type SendMethod = 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -13,12 +15,16 @@ export interface ApiClientOptions {
   clientTag: () => string;
   /** The transport; mobile wraps fetch to report reachability (connectivity). Default: global fetch. */
   fetch?: (url: string, init: RequestInit) => Promise<Response>;
+  /** A write passed its deadline (mobile tells its connection state). Default: nothing. */
+  onStall?: (stage: StallStage) => void;
 }
 
 export interface ApiClient {
   apiFetch<T>(path: string, init?: RequestInit): Promise<T>;
   apiSend<T = void>(method: SendMethod, path: string, body?: unknown): Promise<T>;
 }
+
+const ignore = (): void => undefined;
 
 /** fetch against the Nest API with the access token and the client tag (`X-AB-Client`). */
 export function createApiClient(opts: ApiClientOptions): ApiClient {
@@ -34,14 +40,20 @@ export function createApiClient(opts: ApiClientOptions): ApiClient {
     return body as T;
   }
 
-  /** JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. */
+  /**
+   * JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. Bounded
+   * (docs/43 AU10): no answer within sendTimeoutFor(path), token included, rejects as no answer
+   * (`TypeError`) and aborts the fetch; isNoAnswer tells that from the API's refusal.
+   */
   function apiSend<T = void>(method: SendMethod, path: string, body?: unknown): Promise<T> {
     const init: RequestInit = { method };
     if (body !== undefined) {
       init.headers = { 'Content-Type': 'application/json' };
       init.body = JSON.stringify(body);
     }
-    return apiFetch<T>(path, init);
+    const send = (signal: AbortSignal) => apiFetch<T>(path, { ...init, signal });
+    const timeoutMs = sendTimeoutFor(path);
+    return withDeadline(send, { onTimeout: opts.onStall ?? ignore, timeoutMs });
   }
 
   return { apiFetch, apiSend };

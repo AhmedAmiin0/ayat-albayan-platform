@@ -41,6 +41,14 @@ describe('«رابط دفع»: the link made', () => {
     expect(apiSend.mock.calls.filter(([, path]) => String(path).startsWith('/threads'))).toHaveLength(0);
   });
 
+  it('filling the box keeps an unconfirmed send\'s pinned id (docs/44 BUG7 H2)', async () => {
+    const failed = { text: 'وصلت', id: 'req-1', code: 'send_unconfirmed' };
+    setDraft(PHONE, { text: '', failed });
+    await created();
+    fireEvent.click(await screen.findByRole('button', { name: P.sendInChat }));
+    expect(getDraft(PHONE).failed).toEqual(failed);
+  });
+
   it('only where no text can go (useMaySend false): the closed note, only «نسخ» works', async () => {
     await created({ canSend: false });
     expect(await screen.findByText(t.inbox.sessionClosed)).toBeTruthy();

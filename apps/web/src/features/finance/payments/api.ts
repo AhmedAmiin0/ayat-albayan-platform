@@ -12,7 +12,7 @@ import {
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { sortFilterParams, type SortSearch } from '@/lib/list/list-search';
-import { supabase } from '@/lib/http/supabase';
+import { uploadSigned } from '@/lib/storage/upload-slot';
 import { MONEY_KEY, PAGE_SIZE, type Page } from '@/features/finance/subscriptions/api';
 
 // apps/api/src/modules/payments (docs/11 §7, R-PAY-01).
@@ -87,9 +87,7 @@ export async function uploadReceipt(input: { subscriptionId: string; file: File 
     mime: file.type,
     size: file.size,
   });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type });
+  const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return signed.path;
 }

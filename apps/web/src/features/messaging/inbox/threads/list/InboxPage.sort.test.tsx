@@ -29,7 +29,8 @@ describe('InboxPage list order and status (R-NFR-08), in the shared «تصفية
   it('sends the order and status to the server: unread first is most-unread (desc)', async () => {
     renderInbox({ sort: 'unread', f_status: 'trial_booked', page: 2 });
     await screen.findAllByRole('link');
-    expect(apiFetch).toHaveBeenCalledWith('/threads?page=2&pageSize=30&sort=unread&dir=desc&status=trial_booked');
+    const path = '/threads?page=2&pageSize=30&sort=unread&dir=desc&status=trial_booked';
+    expect(apiFetch).toHaveBeenCalledWith(path, { signal: expect.any(AbortSignal) });
   });
 
   it('no select sits above the list any more: the order and the status wait in the panel', async () => {

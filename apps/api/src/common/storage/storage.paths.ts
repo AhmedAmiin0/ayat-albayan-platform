@@ -1,7 +1,9 @@
 import { randomUUID } from 'node:crypto';
+import { storageKeyOf } from '@ab/shared';
 
 // Private buckets and object paths (migration 122). The storage.objects policies parse these
-// paths, so build them only here.
+// paths, so build them only here. A stored path may carry the «minio:» marker (docs/45): every
+// check below reads the path without it.
 
 export const BUCKETS = {
   reports: 'reports',
@@ -78,12 +80,12 @@ export function teacherAvatarPath(input: { teacherId: string; mime: string; now?
 
 /** Was `path` signed for this user's photo? Exactly {user_id}/avatar-{file}. */
 export function isUserAvatarPathOf(path: string, userId: string): boolean {
-  return isPathOf(path, userId) && path.startsWith(`${userId}/avatar-`);
+  return isPathOf(path, userId) && storageKeyOf(path).startsWith(`${userId}/avatar-`);
 }
 
 /** Was `path` signed for this teacher record's photo? Exactly teachers/{teacher_id}/avatar-{file}. */
 export function isTeacherAvatarPathOf(path: string, teacherId: string): boolean {
-  const parts = path.split('/');
+  const parts = storageKeyOf(path).split('/');
   return parts.length === 3 && parts[0] === 'teachers' && isUserAvatarPathOf(parts.slice(1).join('/'), teacherId);
 }
 
@@ -124,7 +126,7 @@ export function forwardOutPath(input: { actorId: string; requestId: string; mess
 
 /** Was `path` signed for this actor and request? Exactly out/{actor}/{request}/{file}. */
 export function isChatOutPathOf(path: string, owner: { actorId: string; requestId: string }): boolean {
-  const parts = path.split('/');
+  const parts = storageKeyOf(path).split('/');
   const [out, actor, request, file] = parts;
   return parts.length === 4 && out === 'out' && actor === owner.actorId && request === owner.requestId
     && file !== undefined && file.length > 0 && file !== '..' && file !== '.';
@@ -132,6 +134,12 @@ export function isChatOutPathOf(path: string, owner: { actorId: string; requestI
 
 /** Does `path` belong to `owner` (a report id or a subscription id)? Guards a client-sent path. */
 export function isPathOf(path: string, owner: string): boolean {
-  const [head, file, ...rest] = path.split('/');
+  const [head, file, ...rest] = storageKeyOf(path).split('/');
   return head === owner && file !== undefined && file.length > 0 && rest.length === 0;
+}
+
+/** A file staff sent from the chat (wa-media out/…, any store), never an inbound cache. */
+export function isSentFilePath(path: string | null | undefined): boolean {
+  const key = storageKeyOf(path ?? '');
+  return key.startsWith('out/') && !key.split('/').includes('..');
 }

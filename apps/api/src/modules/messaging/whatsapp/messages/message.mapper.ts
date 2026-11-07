@@ -10,6 +10,7 @@ import {
   type MessageView,
   type RenderableTemplate,
 } from '@ab/shared';
+import { isSentFilePath } from '@/common/storage/storage.paths';
 import { isCrmHistoryRow } from './crm-history/crm-history-url';
 import { mediaExpired } from './inbound-media.service';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
@@ -57,7 +58,6 @@ export function needsManualSend(row: Pick<MessageRow, 'direction' | 'status' | '
 
 /** The teacher who sent the row from their inbox; null for the academy or a job. */
 const senderName = (row: ThreadMessageRow): string | null => row.sent_by_teacher?.display_name_ar ?? null;
-
 /** Staff behind an outbound row (D4): the teacher's name wins, else the profile's; null for inbound. */
 const staffName = (row: ThreadMessageRow): string | null =>
   row.direction === 'outbound' ? (senderName(row) ?? row.sender?.full_name ?? null) : null;
@@ -73,11 +73,10 @@ const fallbackLink = (row: ThreadMessageRow, text: string | undefined): string |
 /** A file we can still fetch from WhatsApp (theirs, or an echo of the WhatsApp Business app): a bubble type, not expired. */
 const fetchable = (row: ThreadMessageRow): boolean => isChatViewMime(row.media_mime) && !mediaExpired(row, new Date());
 
-/** A sent row's: our stored file (out/…), an echo still fetchable, or a plain text. */
-const outboundForwardable = (row: ThreadMessageRow): boolean => {
-  if (row.media_path?.startsWith('out/')) return true;
-  return row.media_id ? fetchable(row) : !row.media_mime && !!row.body?.trim();
-};
+/** A sent row's: our stored file (out/…, either store), an echo still fetchable, or a text. */
+const outboundForwardable = (row: ThreadMessageRow): boolean =>
+  isSentFilePath(row.media_path) || (row.media_id ? fetchable(row) : isText(row));
+const isText = (row: ThreadMessageRow): boolean => !row.media_mime && !!row.body?.trim();
 
 /** «إعادة توجيه»: a text, or a file we hold (ours) or can still fetch (theirs or an echo, not expired); never a template. */
 const isForwardable = (row: ThreadMessageRow): boolean => {

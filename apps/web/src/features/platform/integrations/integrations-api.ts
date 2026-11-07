@@ -23,3 +23,7 @@ export const clearIntegrationSecret = (key: IntegrationSecretKey) =>
 /** POST /settings/integrations/crm-webhook: the CRM's delivery-ticks webhook (never its secret). */
 export const registerCrmWebhook = (): Promise<unknown> =>
   apiSend('POST', '/settings/integrations/crm-webhook');
+
+/** POST /settings/integrations/storage-probe: put, read, delete a probe object (docs/45). */
+export const probeStorage = (): Promise<unknown> =>
+  apiSend('POST', '/settings/integrations/storage-probe');

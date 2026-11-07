@@ -26,6 +26,7 @@ test.describe('admin report edit and PDF (R-REP-02/03, R12)', () => {
     const admin = await asRole('admin');
     await admin.goto(`/admin/students/${seed.studentId}/reports/${seed.todayLessonId}`);
     await expect(admin.getByRole('textbox', { name: ar.reports.notes, exact: true })).toHaveValue(TEXTS.notes);
+    await admin.getByRole('button', { name: ar.reports.edit, exact: true }).click();
     await fillTexts(admin, { notes: EDITED });
     await admin.getByRole('button', { name: ar.reports.resubmit }).click();
     await expect(admin.getByText(ar.reports.version.replace('{n}', '2'))).toBeVisible();

@@ -47,7 +47,3 @@ test('BLOCKING (docs/38 correction 1): expo-sharing builds from source (its patc
   // Without it Gradle links the prebuilt AAR (local-maven-repo) and ignores the patched Kotlin.
   expect(pkg.expo.autolinking.android.buildFromSource).toContain('expo-sharing');
 });
-
-test('the version stays 0.4.0: the share JS reaches the OkHttp APK and the share APK by OTA', () => {
-  expect(app.expo.version).toBe('0.4.0');
-});

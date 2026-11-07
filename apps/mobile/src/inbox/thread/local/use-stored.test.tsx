@@ -1,0 +1,76 @@
+import { renderHook } from '@testing-library/react-native';
+import { act } from 'react';
+import { useInboxStore } from './use-stored';
+
+// The store session follows the signed-in tree (docs/43 43-7).
+
+const mockStart = jest.fn(async (_owner: string) => undefined);
+const mockStop = jest.fn(async () => undefined);
+jest.mock('./store-session', () => ({
+  ...jest.requireActual('./store-session'),
+  startInboxStore: (owner: string) => mockStart(owner),
+  stopInboxStore: () => mockStop(),
+}));
+let mockUser: string | null = 'user-a';
+let mockGate: Promise<void> = Promise.resolve();
+const mockAnswer = async () => {
+  await mockGate;
+  return { data: { session: mockUser ? { user: { id: mockUser } } : null } };
+};
+const mockAuth: { listener?: (event: string, s: { user: { id: string } } | null) => void } = {};
+const mockOff = jest.fn();
+jest.mock('@/core/lib/http/supabase', () => ({
+  supabase: {
+    auth: {
+      getSession: () => mockAnswer(),
+      onAuthStateChange: (cb: (event: string, s: { user: { id: string } } | null) => void) => {
+        mockAuth.listener = cb;
+        return { data: { subscription: { unsubscribe: mockOff } } };
+      },
+    },
+  },
+}));
+
+beforeEach(() => {
+  mockStart.mockClear();
+  mockStop.mockClear();
+  mockUser = 'user-a';
+  mockGate = Promise.resolve();
+});
+
+test('enabled: started for the session’s user; unmounted (sign-out): stopped and wiped', async () => {
+  const hook = await renderHook(() => useInboxStore(true));
+  await act(async () => undefined);
+  expect(mockStart).toHaveBeenCalledWith('user-a');
+  await hook.unmount();
+  expect(mockStop).toHaveBeenCalledTimes(1);
+});
+
+test('without inbox.read or a session: never started', async () => {
+  await renderHook(() => useInboxStore(false));
+  mockUser = null;
+  await renderHook(() => useInboxStore(true));
+  await act(async () => undefined);
+  expect(mockStart).not.toHaveBeenCalled();
+});
+
+test('unmounted before the session was read: never started after', async () => {
+  let open: () => void = () => undefined;
+  mockGate = new Promise((resolve) => (open = resolve));
+  const hook = await renderHook(() => useInboxStore(true));
+  await hook.unmount();
+  await act(async () => open());
+  expect(mockStart).not.toHaveBeenCalled();
+  expect(mockStop).toHaveBeenCalledTimes(1);
+});
+
+test('no session at first (offline cold start): a later auth event starts it; unmount unsubscribes', async () => {
+  mockUser = null;
+  const hook = await renderHook(() => useInboxStore(true));
+  await act(async () => undefined);
+  expect(mockStart).not.toHaveBeenCalled();
+  await act(async () => mockAuth.listener?.('TOKEN_REFRESHED', { user: { id: 'user-a' } }));
+  expect(mockStart).toHaveBeenCalledWith('user-a');
+  await hook.unmount();
+  expect(mockOff).toHaveBeenCalled();
+});

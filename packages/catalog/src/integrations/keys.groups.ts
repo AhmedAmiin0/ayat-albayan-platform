@@ -55,6 +55,14 @@ export const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   GOOGLE_CLIENT_SECRET: 'google',
   // The chat's GIF panel (owner 2026-11-01); unset = the panel asks an admin for the key.
   GIPHY_API_KEY: 'giphy',
+  // Object storage (docs/45): which one keeps new files, and the MinIO server.
+  STORAGE_DRIVER: 'storage',
+  MINIO_ENDPOINT: 'storage',
+  MINIO_PUBLIC_URL: 'storage',
+  MINIO_REGION: 'storage',
+  MINIO_BUCKET_PREFIX: 'storage',
+  MINIO_ACCESS_KEY: 'storage',
+  MINIO_SECRET_KEY: 'storage',
   // Stripe (docs/30): the API lists these only with FEATURE_STRIPE (test or live).
   STRIPE_ENABLED: 'stripe',
   STRIPE_API_KEY: 'stripe',

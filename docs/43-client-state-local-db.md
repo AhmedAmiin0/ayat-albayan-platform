@@ -86,6 +86,26 @@ Files near the cap: web `inbox/api/api.ts` **150**, `TextComposer.tsx` 149, mobi
 | 43-6 | feat(mobile): SQLite store + sync engine (pure merge/cursor/tombstone logic in client-core, ≥80 %) | **APK 0.5.0** | jest-expo + client-core unit | — |
 | 43-7 | feat(mobile): screens read SQLite; thread pages `noPersist` | OTA on 0.5.0 | screen tests | chat opens from disk (~0 ms); idle traffic ~120 tiny syncs/h instead of page reads; blob shrinks by MBs |
 
+### 43-6 as built (APK 0.5.0)
+
+- `expo.version` **0.4.0 → 0.5.0** (`expo-sqlite` ~57.0.4 via `expo install`). `runtimeVersion` follows the
+  app version, so an OTA built from this code never reaches a 0.4.x APK: install APK 0.5.0 first.
+- Pure logic in `packages/client-core/src/messaging/thread-sync/` (`planSync`, cursor, `mergeRead`, wire parse).
+- The store and engine: `apps/mobile/src/inbox/thread/store/` (tables as above; `sync_state.owner` = the
+  signed-in user id, wiped when another user opens it; writes for an old owner are dropped). Not started in
+  the app until 43-7.
+
+### 43-7 as built (OTA on 0.5.0)
+
+- `useInboxStore` (every tree with `inbox.read`, via usePushRegistration) starts the store for the session's
+  user id; the tree's unmount and the 'out' gate stop it and wipe the rows (no session: the file is deleted).
+- Nudges: every realtime event, `refreshLists` (push, send, opened chat) and `resumeInbox`; 30 s fallback.
+- Readers (`thread/local/`, useSyncExternalStore over one reader): the live chat = HTTP pages with the stored
+  ticks and the rows a sync brought first (`withStoredRows`), or the stored rows alone before its GET
+  (offline open); list row ticks = the further of the chat's and the stored chats-list row's (`furtherOf`);
+  an anchored window takes the stored ticks only. Thread pages are `noPersist`. The HTTP polls stay (they
+  stamp rows read); filtered lists stay on HTTP with the 43-1 overlay.
+
 ## 6. Rejected ideas and risks
 
 | Idea / risk | Decision |

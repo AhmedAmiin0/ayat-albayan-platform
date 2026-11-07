@@ -44,8 +44,10 @@ describe('anchoredThreadPages', () => {
     const get = vi.fn().mockResolvedValue(detail);
     const o = anchoredThreadPages('+966500000001', ID, get);
     expect(o.initialPageParam).toEqual({ around: ID });
-    await o.queryFn({ pageParam: o.initialPageParam });
-    expect(get).toHaveBeenCalledWith(`/threads/%2B966500000001?around=${ID}`);
+    const { signal } = new AbortController();
+    await o.queryFn({ pageParam: o.initialPageParam, signal });
+    // TanStack's signal reaches the GET (docs/43 AU8).
+    expect(get).toHaveBeenCalledWith(`/threads/%2B966500000001?around=${ID}`, { signal });
     expect(o.getNextPageParam(detail)).toEqual({ before: AT, before_id: 'a' });
     expect(o.staleTime).toBe(Number.POSITIVE_INFINITY);
   });
