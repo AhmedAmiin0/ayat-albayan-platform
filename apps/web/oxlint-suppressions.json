@@ -8727,13 +8727,7 @@
     }
   },
   "src/features/sales/sales/use-sales-unread.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

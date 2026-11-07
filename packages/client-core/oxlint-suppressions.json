@@ -211,7 +211,7 @@
   },
   "src/messaging/inbox/inbox-live.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -237,7 +237,7 @@
   },
   "src/messaging/inbox/live-session.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/messaging/inbox/live-store.test.ts": {

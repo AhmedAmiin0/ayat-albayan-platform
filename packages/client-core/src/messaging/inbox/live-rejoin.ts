@@ -3,9 +3,9 @@
  * green/red dot and a reconnect with backoff»): 1 s, 2 s, 5 s, 10 s, then every 30 s until it is
  * SUBSCRIBED again. A resume or the network coming back rejoins at once (now()).
  */
-export const REJOIN_STEPS_MS: readonly number[] = [1_000, 2_000, 5_000, 10_000];
+const REJOIN_STEPS_MS: readonly number[] = [1_000, 2_000, 5_000, 10_000];
 /** After the steps: one try every 30 s for as long as it stays down. */
-export const REJOIN_STEADY_MS = 30_000;
+const REJOIN_STEADY_MS = 30_000;
 
 /** The wait before the rejoin number `attempt` (0 = the first after a drop). */
 export const rejoinDelayMs = (attempt: number): number =>
@@ -22,7 +22,7 @@ export type LiveDotState = 'on' | 'off';
 
 export const liveDotState = (live: boolean): LiveDotState => (live ? 'on' : 'off');
 
-export interface Rejoin {
+interface Rejoin {
   /** The channel dropped: a rejoin after the next step of the backoff (one pending at most). */
   dropped(): void;
   /** Resume / online: a pending rejoin runs now (nothing pending: nothing to do). */
