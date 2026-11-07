@@ -5,6 +5,7 @@ import { PHONE } from '@/inbox/shared/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { armCamera } from '@/test/native-mocks';
 import { booked } from '@/booking/testing/fixtures';
+import { pickLesson } from '@/booking/testing/lesson-times';
 import { subscribeBackend } from './flow-backend';
 import { CHILD } from './fixtures';
 
@@ -65,7 +66,8 @@ test('a lead without a student: «اشترك» → camera invoice → POST /book
   await fireEvent.press(await screen.findByText('مريم المعلمة'));
   expect(screen.getByRole('radio', { name: t.enums.packageSize['8'], checked: true })).toBeTruthy();
   await press('button', t.booking.next);
-  await press('checkbox', '17:00'); // a package: a time per day, then «التالي»
+  await pickLesson(0, { date: '2026-10-04', time: '17:00' }); // a package: a date and a time per day
+  await press('button', t.lessonTimes.removeRow.replace('{n}', '2'));
   await press('button', t.booking.next);
   await press('button', t.booking.mobile.takePhoto);
   expect(await screen.findByLabelText(new RegExp(`^${t.booking.mobile.invoiceA11y.split('{source}')[0]}`))).toBeTruthy();

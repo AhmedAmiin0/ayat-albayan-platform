@@ -21,6 +21,8 @@ export interface PickCheckInput {
   /** The lesson length: the outside conflict's end. */
   durationMin: number;
   now: Date;
+  /** Where the fetched slots end (GET /booking/slots `to`): later picks are the series check's. */
+  until?: string | undefined;
 }
 
 const MINUTE = 60_000;
@@ -43,6 +45,7 @@ function offGrid(at: number, input: PickCheckInput): PickState {
 export function pickState(input: PickCheckInput): PickState {
   const at = Date.parse(input.at);
   if (at < input.now.getTime()) return { kind: 'past' };
+  if (input.until !== undefined && at >= Date.parse(input.until)) return { kind: 'unchecked' };
   const slot = input.slots.find((s) => startOf(s) === at);
   if (!slot) return offGrid(at, input);
   return slot.conflicts.length === 0 ? { kind: 'free' } : { kind: 'busy', conflicts: slot.conflicts };

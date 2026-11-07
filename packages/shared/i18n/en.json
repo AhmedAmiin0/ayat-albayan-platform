@@ -8256,6 +8256,8 @@
     "useTime": "Pick {time}",
     "ok": "OK",
     "dateRequired": "Pick the date",
-    "timeRequired": "Pick the time"
+    "timeRequired": "Pick the time",
+    "addDay": "Add a day",
+    "removeRow": "Remove day {n}"
   }
 }

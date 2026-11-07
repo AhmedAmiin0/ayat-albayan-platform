@@ -12,7 +12,6 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { isOffline } from '@/core/lib/money/payment-errors';
 import type { PlanChoice } from '@/finance/pricing/selection';
-import { dayLabel } from '@/booking/shared/slots';
 import { localDate } from '@/today/lib/timeline';
 
 // «اشتراك جديد» from a chat (R-SUB-01): the calculator inputs for ONE student and the package's
@@ -56,11 +55,6 @@ export function startDays(now: Date, tz: string, first?: string): string[] {
   const today = localDate(now, tz);
   const days = Array.from({ length: 7 }, (_, i) => addCalendarDays(today, i));
   return first && !days.includes(first) ? [first, ...days] : days;
-}
-
-/** «النهارده», else «الأحد 4 أكتوبر» (Western digits) for a local date (a day: read in UTC). */
-export function startDayLabel(date: string, today: string): string {
-  return date === today ? t.mobile.today : dayLabel(new Date(`${date}T12:00:00Z`), 'UTC');
 }
 
 function codeOf(error: unknown): string | undefined {

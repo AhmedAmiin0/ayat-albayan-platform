@@ -2,7 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { cachedThread, detail, PHONE } from '@/inbox/shared/thread-fixtures';
 import { t } from '@/core/lib/i18n/i18n';
-import { money } from '@/core/lib/money/format';
+import { pickDay } from '@/test/pickers/native-picker';
+import { localDay, money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/core/ui/primitives/Ltr';
 import { balance, CHILD, profile, quote, saved, SISTER } from './fixtures';
@@ -39,7 +40,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('pick the package → the API’s price → a day chip → «أنشئ الاشتراك»: POST /subscriptions, «تم تسجيل الاشتراك», back to the chat', async () => {
+test('pick the package → the API’s price → a day on the date dialog → «أنشئ الاشتراك»: POST /subscriptions, «تم تسجيل الاشتراك», back to the chat', async () => {
   const client = createTestQueryClient();
   client.setQueryData(threadKey(PHONE), cachedThread(detail([])));
   await renderWithQuery(<SubscribeScreen />, client);
@@ -62,8 +63,8 @@ test('pick the package → the API’s price → a day chip → «أنشئ ال�
   await waitFor(() =>
     expect(sent('/subscriptions/quote').at(-1)?.[2]).toEqual({ studentId: CHILD, pricing }),
   );
-  expect(screen.getByRole('radio', { name: t.mobile.today, checked: true })).toBeTruthy();
-  await radio('السبت 3 أكتوبر');
+  expect(screen.getByText(localDay('2026-10-02'))).toBeTruthy(); // today
+  await pickDay('start-day-open', '2026-10-03');
 
   await fireEvent.press(await saveButton());
   expect(await screen.findByText(t.subscriptions.saved)).toBeTruthy();
@@ -94,7 +95,7 @@ test('after booking a package: its size, length and first lesson day are already
     studentId: CHILD,
     pricing: { duration: 60, discount: 0, tier: 'starter' },
   });
-  expect(screen.getByRole('radio', { name: 'الأحد 4 أكتوبر', checked: true })).toBeTruthy();
+  expect(screen.getByText(localDay('2026-10-04'))).toBeTruthy();
 });
 
 test('no price yet (offline): «أنشئ الاشتراك» stays off and the quote offers a retry', async () => {

@@ -8256,6 +8256,8 @@
     "useTime": "اختر {time}",
     "ok": "تم",
     "dateRequired": "اختر التاريخ",
-    "timeRequired": "اختر الساعة"
+    "timeRequired": "اختر الساعة",
+    "addDay": "أضف يومًا",
+    "removeRow": "احذف اليوم {n}"
   }
 }

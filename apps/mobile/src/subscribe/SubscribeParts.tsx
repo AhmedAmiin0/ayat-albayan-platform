@@ -10,9 +10,10 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { FilterPills } from '@/core/ui/form/FilterPills';
+import { DatePickerField } from '@/core/ui/form/date-picker';
 import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { QuotePreview } from './QuotePreview';
-import { startDayLabel, subscribeErrorText } from './subscribe-form';
+import { subscribeErrorText } from './subscribe-form';
 
 /** «الطالب»: the child and the siblings to subscribe instead; nothing for an only child. */
 export function StudentPills(p: {
@@ -52,23 +53,24 @@ export function PriceSection({ quote }: { quote: UseQueryResult<QuoteResponse> }
   );
 }
 
-/** «بداية الباقة»: day chips, never a typed date (rule 6). */
-export function StartDayPills(p: {
+/** «بداية الباقة» on Expo's date dialog (rule 6, never typed), bounded by the days it offered. */
+interface StartDayFieldProps {
   days: readonly string[];
-  today: string;
   value: string;
   onChange: (day: string) => void;
-}) {
+}
+
+export function StartDayField(p: StartDayFieldProps) {
+  const sorted = [...p.days].sort();
+  const range = { min: sorted[0] ?? p.value, max: sorted.at(-1) ?? p.value };
   return (
-    <Section title={t.subscriptions.startsOn}>
-      <FilterPills
-        items={p.days.map((d) => ({ value: d, label: startDayLabel(d, p.today) }))}
-        value={p.value}
-        onChange={p.onChange}
-        accessibilityLabel={t.subscriptions.startsOn}
-        role="radiogroup"
-      />
-    </Section>
+    <DatePickerField
+      label={t.subscriptions.startsOn}
+      day={p.value}
+      range={range}
+      onChange={p.onChange}
+      testID="start-day-open"
+    />
   );
 }
 

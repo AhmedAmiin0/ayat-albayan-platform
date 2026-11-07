@@ -114,3 +114,12 @@ jest.mock('@shopify/flash-list/dist/recyclerview/utils/measureLayout', () => {
     measureItemLayout: jest.fn(() => ({ x: 0, y: 0, width: 100, height: 100 })),
   };
 });
+
+// @expo/ui's DateTimePicker is a native view (Jetpack Compose / SwiftUI) with no jest module: a
+// stand-in View that carries its props, so a test reads mode / bounds and confirms
+// (props.onValueChange) or cancels (props.onDismiss) the dialog itself.
+jest.mock('@expo/ui/community/datetime-picker', () => {
+  const { View } = require('react-native');
+  const DateTimePicker = (props) => require('react').createElement(View, { testID: 'native-date-time-picker', ...props });
+  return { __esModule: true, default: DateTimePicker, DateTimePicker };
+});

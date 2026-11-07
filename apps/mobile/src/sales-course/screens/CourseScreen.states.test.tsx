@@ -53,7 +53,7 @@ test('a subscription that starts ahead: its first day in the header and the slot
   await renderWithQuery(<CourseScreen />);
   expect(await screen.findByText(t.booking.subscriptionStarts.replace('{date}', localDay('2099-01-04')))).toBeTruthy();
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
-  await screen.findAllByRole('checkbox', { name: '17:00' });
+  await screen.findByTestId('lesson-date-0');
   // Midnight of 4 Jan 2099 in Riyadh (+03).
   expect(reads('/sales/booking/slots')[0]).toContain(`from=${encodeURIComponent('2099-01-03T21:00:00.000Z')}`);
 });

@@ -37,6 +37,12 @@ describe('pickState: what the grid says about a picked time', () => {
     expect(pickState({ ...base, slots: [], at: '2026-11-08T15:45:00.000Z' }).kind).toBe('outside');
   });
 
+  it('after the fetched window: the series check decides', () => {
+    const until = '2026-11-09T00:00:00.000Z';
+    expect(pickState({ ...base, until, at: '2026-11-10T20:00:00.000Z' })).toEqual({ kind: 'unchecked' });
+    expect(pickState({ ...base, until, at: '2026-11-08T14:00:00.000Z' })).toEqual({ kind: 'free' });
+  });
+
   it('a time already past', () => {
     expect(pickState({ ...base, at: '2026-11-07T09:00:00.000Z' })).toEqual({ kind: 'past' });
   });

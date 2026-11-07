@@ -1,4 +1,5 @@
-import { normalizePhone } from '@ab/shared';
+import { normalizePhone, packagePerWeek, wallParts } from '@ab/shared';
+import { useState } from 'react';
 import { View } from 'react-native';
 import type { BookFailure } from '@/booking/shared/booking-errors';
 import { useBookingMode } from '@/booking/shared/booking-mode';
@@ -11,6 +12,7 @@ import { kindPatch } from '@/booking/trial/lib/package-choice';
 import { PackageStep } from './PackageStep';
 import { fromPicks, NO_PICKS, picksOf } from '@/booking/shared/picks';
 import { SlotStep, type SlotStepProps } from './SlotStep';
+import { LessonTimesStep } from '@/booking/lesson-times';
 import type { Step } from '@/booking/trial/lib/steps';
 import { TeacherStep } from './TeacherStep';
 
@@ -76,14 +78,15 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
     );
   }
   if (step === 'slot' && draft.teacher) {
-    return (
-      <SlotStep
-        teacherId={draft.teacher.id}
-        tz={draft.tz}
-        durationMin={draft.durationMin}
-        {...slotChoice(draft, patch, () => go(next))}
-      />
-    );
+    const slot = { teacherId: draft.teacher.id, tz: draft.tz, durationMin: draft.durationMin };
+    const onNext = () => go(next);
+    const times = { slot, draft, patch, onNext };
+    if (draft.kind === 'package') return <PackageTimes {...times} />;
+    const onPick = (startsAt: string) => {
+      patch({ startsAt });
+      onNext();
+    };
+    return <SlotStep {...slot} onPick={onPick} />;
   }
   if (step === 'invoice') {
     const phone = normalizePhone(draft.phone);
@@ -112,19 +115,19 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
   );
 }
 
-/** A package toggles a time per weekday, then «التالي»; a trial's one slot moves on at once. */
-function slotChoice(
-  draft: TrialDraft,
-  patch: (p: Partial<TrialDraft>) => void,
-  onward: () => void,
-): Pick<SlotStepProps, 'onPick' | 'multi'> {
-  if (draft.kind === 'package') {
-    return { multi: { picks: picksOf(draft), onChange: (picks) => patch(fromPicks(picks)), onNext: onward } };
-  }
-  return {
-    onPick: (startsAt) => {
-      patch({ startsAt });
-      onward();
-    },
-  };
+interface PackageTimesProps {
+  slot: Pick<SlotStepProps, 'teacherId' | 'tz' | 'durationMin'>;
+  draft: TrialDraft;
+  patch: (p: Partial<TrialDraft>) => void;
+  onNext: () => void;
+}
+
+/** A package: a date and a time per day (owner 2026-11-07), from today in the family's zone. */
+function PackageTimes({ slot, draft, patch, onNext }: PackageTimesProps) {
+  const [now] = useState(() => new Date().toISOString());
+  const onChange = (picks: string[]) => patch(fromPicks(picks));
+  const multi = { picks: picksOf(draft), onChange, onNext };
+  const opens = wallParts(now, draft.tz).date;
+  const start = packagePerWeek(draft.pkg) ?? 1;
+  return <LessonTimesStep {...slot} opens={opens} startRows={start} multi={multi} />;
 }

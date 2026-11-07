@@ -5,7 +5,7 @@ import { dayLine } from '@/booking/shared/picks';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
-import { isDisabled, fakeCourseApi, press, walkToReview } from '@/sales-course/testing/course-test-utils';
+import { isDisabled, fakeCourseApi, pickLesson, press, walkToReview } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen';
 import { courseView, STUDENT_ID } from '@/sales-course/testing/fixtures';
 
@@ -49,9 +49,9 @@ test('teacher → exactly the plan’s days, each with its time → review → �
   expect(await screen.findByText(t.booking.pickNDays.two)).toBeTruthy();
   const slots = mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).find((p) => p.startsWith('/sales/booking/slots'));
   expect(slots).toContain('durationMin=45'); // the subscription's length
-  await press('checkbox', '17:00');
+  await pickLesson(0, { date: '2026-10-04', time: '17:00' }); // Sunday, Riyadh
   expect(isDisabled(t.booking.next)).toBe(true); // one day of two
-  await press('checkbox', '18:00');
+  await pickLesson(1, { date: '2026-10-08', time: '18:00' }); // Thursday
   await press('button', t.booking.next);
 
   expect(await screen.findByText(dayLine(SUN_17, 'Asia/Riyadh', R24))).toBeTruthy();
