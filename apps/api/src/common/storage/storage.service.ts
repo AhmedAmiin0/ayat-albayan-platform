@@ -1,12 +1,14 @@
 import { storageKeyOf, storageProviderOf, storedPath, type StorageProvider } from '@ab/shared';
 import type { SignedDownload, SignedUpload } from '@ab/shared';
-import { Global, Inject, Injectable, Module, Optional } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { canFillMinioSlot } from './slots/upload-client';
 import { SIGNED_URL_SECONDS, type Bucket } from './storage.paths';
 import { defaultSource } from './store/default-source.supabase';
 import type { ObjectKey, ObjectStore } from './store/object-store';
-import { byProvider, STORE_SOURCE, transfer, urlsByPath } from './store/routing';
-import type { Download, ManyPaths, ObjectRef, S3Target, Upload } from './store/routing';
+import { byProvider, dropCopies, missingWhenUnconfigured, STORE_SOURCE } from './store/routing';
+import { transfer, urlsByPath } from './store/routing';
+import type { Download, ManyPaths, ObjectRef, S3Target, Upload, UploadSlot } from './store/routing';
 import type { StoreSource } from './store/store-source';
 
 /**
@@ -28,15 +30,15 @@ export class StorageService {
     return { store: this.stores.store(provider), provider, key };
   }
 
-  /** Where a new object goes, and the path to keep for it. */
-  private target(ref: ObjectRef) {
-    const provider = this.stores.active();
+  /** Where a new object goes (the active store by default) and the path to keep for it. */
+  private target(ref: ObjectRef, provider = this.stores.active()) {
     const key: ObjectKey = { bucket: ref.bucket, key: storageKeyOf(ref.path) };
     const path = storedPath({ provider, key: key.key });
     return { store: this.stores.store(provider), provider, key, path };
   }
 
-  private on<T>(ref: ObjectRef, read: (s: ObjectStore, key: ObjectKey) => Promise<T>): Promise<T> {
+  /** Never throws: a «minio:» path without a MinIO config rejects (StorageNotConfigured). */
+  private async on<T>(ref: ObjectRef, read: (s: ObjectStore, key: ObjectKey) => Promise<T>) {
     const { store, key } = this.at(ref);
     return read(store, key);
   }
@@ -50,16 +52,24 @@ export class StorageService {
     return storedPath({ provider: this.stores.active(), key: path });
   }
 
-  /** An outside S3 writer's target (the LiveKit egress) while MinIO keeps new files; else null. */
-  egressTarget(bucket: Bucket): S3Target | null {
-    return this.stores.active() === 'minio' ? this.stores.minioTarget(bucket) : null;
+  /** Recordings go into MinIO: driver minio AND MINIO_RECORDINGS on (docs/45 §1). */
+  recordsToMinio(): boolean {
+    return this.stores.recordsToMinio();
   }
 
-  /** A one-off URL the client uploads to; `path` is the one to send back (marked in MinIO). */
-  async signedUpload(ref: ObjectRef): Promise<SignedUpload> {
-    const t = this.target(ref);
-    const slot = await t.store.signedPut(t.key);
-    return { bucket: ref.bucket, path: t.path, token: slot.token, signed_url: slot.signedUrl };
+  /** The LiveKit egress's S3 target while recordings go into MinIO; else null. */
+  egressTarget(bucket: Bucket): S3Target | null {
+    return this.recordsToMinio() ? this.stores.minioTarget(bucket) : null;
+  }
+
+  /**
+   * A one-off URL for exactly this file; `path` is the one to send back (marked in MinIO). MinIO
+   * only for a client that can fill its slot (X-AB-Upload); any other client gets Supabase's.
+   */
+  async signedUpload(slot: UploadSlot): Promise<SignedUpload> {
+    const t = this.target(slot, canFillMinioSlot() ? this.stores.active() : 'supabase');
+    const put = await t.store.signedPut({ ...t.key, file: slot.file });
+    return { bucket: slot.bucket, path: t.path, token: put.token, signed_url: put.signedUrl };
   }
 
   /** A time-limited GET URL (default 1 h); `download` saves it under that name. */
@@ -99,11 +109,11 @@ export class StorageService {
   }
 
   info(ref: ObjectRef): Promise<{ size: number; contentType: string } | null> {
-    return this.on(ref, (store, key) => store.info(key));
+    return this.on(ref, (store, key) => store.info(key)).catch(missingWhenUnconfigured);
   }
 
   head(ref: ObjectRef, bytes: number): Promise<Uint8Array | null> {
-    return this.on(ref, (store, key) => store.head(key, bytes));
+    return this.on(ref, (store, key) => store.head(key, bytes)).catch(missingWhenUnconfigured);
   }
 
   /**
@@ -125,19 +135,16 @@ export class StorageService {
   }
 
   async remove(ref: ObjectRef): Promise<void> {
-    await this.on(ref, (store, key) => store.remove({ bucket: key.bucket, keys: [key.key] }));
+    await this.removeMany({ bucket: ref.bucket, paths: [ref.path] });
   }
 
-  /** One call per store for many objects of a bucket; a path that does not exist is a no-op. */
+  /** One call per store (a missing path is a no-op), then the bulk copy's MinIO twin if any. */
   async removeMany(input: ManyPaths): Promise<void> {
     for (const [provider, paths] of byProvider(input.paths)) {
       const keys = paths.map((p) => storageKeyOf(p));
       await this.stores.store(provider).remove({ bucket: input.bucket, keys });
+      // Fire and forget: a slow MinIO never holds up a Supabase delete.
+      void dropCopies(this.stores.copyHolder(provider), { bucket: input.bucket, keys });
     }
   }
 }
-
-/** Global: reports, the PDF job and payments inject StorageService. */
-@Global()
-@Module({ providers: [StorageService], exports: [StorageService] })
-export class StorageModule {}

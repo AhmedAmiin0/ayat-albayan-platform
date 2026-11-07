@@ -53,7 +53,7 @@ describe('POST /payments: a booked payment never comes back as an error (rule 8)
   it('a replay: only the fresh paths, capped at 5 with the stored ones; a failing check is skipped, never a 400', async () => {
     m.payments.byRequest.mockResolvedValue(paymentRow({ client_request_id: REQ }));
     m.attachments.forPayment.mockResolvedValue(stored(1, 2, 3));
-    m.storage.info.mockImplementation(async (ref: { path: string }) => (ref.path === file(4) ? null : { size: 2048 }));
+    m.storage.info.mockImplementation(async (ref: { path: string }) => (ref.path === file(4) ? null : { size: 2048, contentType: 'image/jpeg' }));
     const res = await call(post({ attachments: [file(1), file(4), file(5), file(6)] }));
     expect([res.statusCode, res.json().id]).toEqual([201, PAYMENT_ID]);
     expect(savedPaths(m)).toEqual([file(5)]); // 4 failed its check, 6 is over the limit

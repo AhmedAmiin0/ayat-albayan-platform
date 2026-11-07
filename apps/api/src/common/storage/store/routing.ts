@@ -1,6 +1,7 @@
 import { storageKeyOf, storageProviderOf, type StorageProvider } from '@ab/shared';
 import type { Bucket } from '@/common/storage/storage.paths';
-import type { ObjectKey, ObjectStore } from './object-store';
+import type { ObjectKey, ObjectStore, SlotFile } from './object-store';
+import { StorageNotConfigured } from './store-source';
 
 // StorageService's helpers (docs/45), beside it for its 150-line cap.
 
@@ -30,6 +31,10 @@ export interface Download extends ObjectRef {
 export interface ManyPaths {
   bucket: Bucket;
   paths: readonly string[];
+}
+/** A client upload slot: where, and the file it admits (the route's zod schema checked both). */
+export interface UploadSlot extends ObjectRef {
+  file: SlotFile;
 }
 
 interface Located {
@@ -64,3 +69,17 @@ export const urlsByPath = (
     const url = urls.get(storageKeyOf(path));
     return url ? [[path, url] as [string, string]] : [];
   });
+
+/** The bulk copy's twin of a removed Supabase object (docs/45 §6): best effort, never fails it. */
+export async function dropCopies(
+  holder: ObjectStore | null,
+  o: { bucket: Bucket; keys: readonly string[] },
+): Promise<void> {
+  await holder?.remove(o).catch(() => undefined);
+}
+
+/** A «minio:» path while MinIO is not configured holds nothing: missing (null), never a 500. */
+export function missingWhenUnconfigured(e: unknown): null {
+  if (e instanceof StorageNotConfigured) return null;
+  throw e;
+}

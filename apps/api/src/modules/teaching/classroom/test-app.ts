@@ -60,7 +60,12 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     moderation: moderation(),
     recordings: recordingQueries(),
     http: http(),
-    storage: { signedDownload: vi.fn(), writesTo: () => 'supabase', egressTarget: () => null },
+    storage: {
+      signedDownload: vi.fn(),
+      writesTo: () => 'supabase',
+      recordsToMinio: () => false,
+      egressTarget: () => null,
+    },
     studentLinks: studentLinkQueries(),
     audit: { record: vi.fn() },
     meetings: meetingQueries(),

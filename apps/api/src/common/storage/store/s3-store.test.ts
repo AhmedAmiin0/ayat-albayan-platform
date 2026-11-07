@@ -56,7 +56,8 @@ describe('S3Store (MinIO adapter) against a fake S3', () => {
     const { store } = fakeS3();
     const url = await store.signedGet({ bucket: 'reports', key: 's/l.pdf', seconds: 300 });
     expect(url).toBe('https://files.example.com/ab-reports/s/l.pdf?X-Amz-Expires=300');
-    expect(await store.signedPut({ bucket: 'avatars', key: 'u/avatar-1.png' })).toEqual({
+    const file = { size: 900, mime: 'image/png' };
+    expect(await store.signedPut({ bucket: 'avatars', key: 'u/avatar-1.png', file })).toEqual({
       token: '',
       signedUrl: 'https://files.example.com/ab-avatars/u/avatar-1.png?X-Amz-Expires=900',
     });

@@ -1,5 +1,5 @@
 import type { Bucket } from '@/common/storage/storage.paths';
-import type { ObjectStore } from '@/common/storage/store/object-store';
+import { ObjectExists, type ObjectStore } from '@/common/storage/store/object-store';
 
 // The later bulk copy (docs/45 «Bulk copy»): every Supabase object into MinIO under the same key.
 // Dry-run unless `apply`; idempotent: an object MinIO already holds is never touched.
@@ -35,12 +35,17 @@ async function copyOne(plan: CopyPlan, o: { bucket: Bucket; key: string }): Prom
   if (!plan.apply) return 'pending';
   const body = await plan.from.get(o);
   if (!body) return 'failed';
-  await plan.to.put({ ...o, body, contentType: src.contentType });
+  // ifAbsent: the app may write the same key between the check above and this put; the newer
+  // object wins (If-None-Match: *, 412 → ObjectExists → present), never the stale copy.
+  await plan.to.put({ ...o, body, contentType: src.contentType, ifAbsent: true });
   return 'copied';
 }
 
+/** A key taken while copying is «present»; any other failure is «failed». */
+const outcomeOf = (e: unknown): Outcome => (e instanceof ObjectExists ? 'present' : 'failed');
+
 const safely = (plan: CopyPlan, o: { bucket: Bucket; key: string }): Promise<Outcome> =>
-  copyOne(plan, o).catch(() => 'failed' as const);
+  copyOne(plan, o).catch(outcomeOf);
 
 /** One bucket after the other, one object at a time (a small VPS; the copy may run for hours). */
 export async function copyToMinio(plan: CopyPlan): Promise<BucketTally[]> {

@@ -29,10 +29,14 @@ export class SignedUploadError extends Error {
   }
 }
 
+/**
+ * The slot is signed for exactly the file the app declared at …/upload-url (docs/45): its
+ * Content-Type (the same mime, sent here), its Content-Length (fetch sets it from these bytes, the
+ * size declared) and If-None-Match: * (one upload per key). MinIO refuses a PUT that differs.
+ */
 async function putToSignedUrl(signed: SignedUpload, file: UploadFile): Promise<void> {
   const res = await fetch(signed.signed_url, {
     method: 'PUT',
-    // Signed by the API (one upload per key): MinIO refuses the PUT without it.
     headers: { 'Content-Type': file.contentType, 'If-None-Match': '*' },
     body: file.body,
   });

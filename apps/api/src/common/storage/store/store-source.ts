@@ -4,7 +4,7 @@ import type { Bucket } from '@/common/storage/storage.paths';
 import type { ObjectStore } from './object-store';
 
 /** A MinIO read or write without a full MinIO config: an error, never a silent fallback. */
-class StorageNotConfigured extends Error {
+export class StorageNotConfigured extends Error {
   constructor() {
     super('storage_not_configured');
   }
@@ -36,6 +36,21 @@ export class StoreSource {
 
   store(provider: StorageProvider): ObjectStore {
     return this.pick[provider]();
+  }
+
+  /** LiveKit egress writes into MinIO: the driver is minio AND MINIO_RECORDINGS is on (docs/45). */
+  recordsToMinio(): boolean {
+    const c = this.sources.config();
+    return c.driver === 'minio' && c.recordings;
+  }
+
+  /**
+   * Where the bulk copy (docs/45 §6) may hold a second copy of this store's objects under the same
+   * key: MinIO for a Supabase path once MinIO is configured; else null.
+   */
+  copyHolder(provider: StorageProvider): ObjectStore | null {
+    const copied = provider === 'supabase' && this.sources.config().minio !== null;
+    return copied ? this.minio() : null;
   }
 
   /** MinIO's S3 target for an outside writer (public URL: it may run off this host). */

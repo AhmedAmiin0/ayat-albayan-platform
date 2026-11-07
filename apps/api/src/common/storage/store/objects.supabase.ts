@@ -9,6 +9,7 @@ import type {
   PutObject,
   SignedGet,
   SignedPut,
+  SlotKey,
 } from './object-store';
 
 const fail = (what: string, error: { message: string }): Error =>
@@ -42,7 +43,8 @@ export class SupabaseStore implements ObjectStore {
   }
 
   async put(o: PutObject): Promise<void> {
-    const options = { contentType: o.contentType, upsert: true };
+    // ifAbsent: Supabase refuses a duplicate (an error); the S3 adapter maps it to ObjectExists.
+    const options = { contentType: o.contentType, upsert: o.ifAbsent !== true };
     const { error } = await this.from(o.bucket).upload(o.key, o.body, options);
     if (error) throw fail('upload', error);
   }
@@ -105,7 +107,8 @@ export class SupabaseStore implements ObjectStore {
     return new Map(data.flatMap(signedRow));
   }
 
-  async signedPut(o: ObjectKey): Promise<SignedPut> {
+  /** The bucket's own file_size_limit and allowed_mime_types check the file (docs/45). */
+  async signedPut(o: SlotKey): Promise<SignedPut> {
     const { data, error } = await this.from(o.bucket).createSignedUploadUrl(o.key);
     if (error) throw fail('signed upload', error);
     return { token: data.token, signedUrl: data.signedUrl };

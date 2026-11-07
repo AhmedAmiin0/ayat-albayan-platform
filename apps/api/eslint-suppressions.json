@@ -1807,7 +1807,7 @@
   },
   "src/modules/finance/payments/payments.attachments.replay.http.test.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/finance/payments/payments.cancelled.http.test.ts": {

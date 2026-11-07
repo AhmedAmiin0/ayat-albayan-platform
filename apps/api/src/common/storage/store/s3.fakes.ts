@@ -17,6 +17,11 @@ interface Stored {
 
 const notFound = () =>
   Object.assign(new Error('NoSuchKey'), { name: 'NoSuchKey', $metadata: { httpStatusCode: 404 } });
+const taken = () =>
+  Object.assign(new Error('PreconditionFailed'), {
+    name: 'PreconditionFailed',
+    $metadata: { httpStatusCode: 412 },
+  });
 const asBytes = (body: unknown): Uint8Array =>
   body instanceof Uint8Array ? body : new Uint8Array();
 const answer = (s: Stored, range?: string) => {
@@ -37,6 +42,7 @@ export function fakeS3() {
       PutObjectCommand,
       (c) => {
         const i = (c as PutObjectCommand).input;
+        if (i.IfNoneMatch === '*' && objects.has(at(i.Bucket, i.Key))) throw taken();
         objects.set(at(i.Bucket, i.Key), { body: asBytes(i.Body), type: i.ContentType ?? '' });
         return {};
       },

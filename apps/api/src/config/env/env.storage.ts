@@ -24,6 +24,8 @@ export const STORAGE_SHAPE = {
   MINIO_BUCKET_PREFIX: opt(minioBucketPrefix),
   MINIO_ACCESS_KEY: opt(minioAccessKey),
   MINIO_SECRET_KEY: optionalSecret,
+  /** Lesson and meeting recordings into MinIO: its own switch, off by default (docs/45 §1). */
+  MINIO_RECORDINGS: z.preprocess(blankIsUnset, z.stringbool().default(false)),
 };
 
 const minioSchema = z.object({
@@ -49,6 +51,8 @@ export interface StorageEnv {
   driver: StorageDriver;
   /** null = not (fully) configured: a MinIO read or write fails loudly, never falls back. */
   minio: MinioEnv | null;
+  /** MINIO_RECORDINGS: LiveKit egress writes into MinIO (driver on minio) only when set. */
+  recordings: boolean;
 }
 
 type StorageSource = Partial<Record<keyof typeof STORAGE_SHAPE, unknown>>;
@@ -69,5 +73,6 @@ export function storageEnv(env: StorageSource): StorageEnv {
         secretKey: m.MINIO_SECRET_KEY,
       }
     : null;
-  return { driver, minio };
+  const recordings = z.boolean().catch(false).parse(env.MINIO_RECORDINGS);
+  return { driver, minio, recordings };
 }

@@ -63,7 +63,7 @@ describe('teacher earnings routes (admin)', () => {
     m.storage.signedUpload.mockResolvedValue({ bucket: 'receipts', path: 'p', token: 't', signed_url: 'u' });
     const up = await call({ method: 'POST', url: `/teacher-earnings/${TEACHER}/receipt-upload-url`, body: { mime: 'image/png', size: 10 } });
     expect(up.statusCode).toBe(200);
-    expect(m.storage.signedUpload).toHaveBeenCalledWith({ bucket: 'receipts', path: expect.stringMatching(new RegExp(`^${TEACHER}/.+\\.png$`)) });
+    expect(m.storage.signedUpload).toHaveBeenCalledWith({ bucket: 'receipts', path: expect.stringMatching(new RegExp(`^${TEACHER}/.+\\.png$`)), file: { mime: 'image/png', size: 10 } });
     expect((await call({ method: 'POST', url: `/teacher-earnings/${TEACHER}/receipt-upload-url`, body: { mime: 'text/html', size: 10 } })).statusCode).toBe(400);
     m.earnings.payment.mockResolvedValue(paymentRow({ receipt_path: `${TEACHER}/a.png` }));
     m.storage.signedDownload.mockResolvedValue({ url: 'u', expires_at: 'e' });

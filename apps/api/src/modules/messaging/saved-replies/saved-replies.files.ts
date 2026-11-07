@@ -40,7 +40,8 @@ export class SavedReplyFiles {
 
   async uploadUrl(actorId: string, input: SavedReplyUpload): Promise<SignedUpload> {
     assertSendable({ mime: input.mime, size: input.size, maxBytes: await this.maxBytes() });
-    return this.storage.signedUpload(ref(savedReplyPath({ actorId, mime: input.mime })));
+    const path = savedReplyPath({ actorId, mime: input.mime });
+    return this.storage.signedUpload({ ...ref(path), file: input });
   }
 
   /** The uploaded object, if it is this actor's and really a JPEG, PNG or PDF within the limits. */

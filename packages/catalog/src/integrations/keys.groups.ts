@@ -62,6 +62,7 @@ export const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   MINIO_REGION: 'storage',
   MINIO_BUCKET_PREFIX: 'storage',
   MINIO_ACCESS_KEY: 'storage',
+  MINIO_RECORDINGS: 'storage',
   MINIO_SECRET_KEY: 'storage',
   // Stripe (docs/30): the API lists these only with FEATURE_STRIPE (test or live).
   STRIPE_ENABLED: 'stripe',
