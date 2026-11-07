@@ -6,8 +6,9 @@ import { createMessageStore } from './message-store';
 import { A, answer, at, id, row, threadRow } from './store-fixtures';
 import { createSyncEngine } from './sync-engine';
 
-// docs/44 K1 on mobile: a live tick is a visual patch of the store; the sync stays the truth and
-// folds by the patch-time rule: only a sync read that started BEFORE a patch keeps its tick.
+// docs/44 K1 on mobile: a live tick is a visual patch of the store; no sync is folded. The
+// event's sync joins a run in flight and asks for exactly one more after it: that extra run
+// starts after the event, so the last write is always the server's newest.
 
 const ON = { owner: 'user-a', phone: A };
 const live = (s: MessageStatus): LiveRow => ({ id: id(1), s, d: 'outbound', at: '' });
@@ -31,24 +32,28 @@ async function setup(first: Partial<SyncMessage>) {
   return { store, engine, fetchPage, stored, listed, next };
 }
 
-test('a sync started before the patch lands after it: stays delivered; the next sync is truth', async () => {
+test('patch, an older sync in flight lands, the extra sync lands the newest: the server wins', async () => {
   const t = await setup({ status: 'sent' });
   let land = (_: ThreadSync): void => undefined;
   t.next(new Promise<ThreadSync>((resolve) => (land = resolve)));
   const run = t.engine.syncNow();
-  await waitFor(() => t.fetchPage.mock.calls.length === 2); // the request is out
+  await waitFor(() => t.fetchPage.mock.calls.length === 2); // the older request is out
   await t.store.live([live('delivered')], ON);
+  expect((await t.stored())?.status).toBe('delivered');
+  void t.engine.syncNow(); // the event's sync: joins the run, asks for one more after it
+  t.next(synced(3, { status: 'read', read_at: at(3) }));
   land(synced(2, { status: 'sent' }));
   await run;
-  expect([(await t.stored())?.status, await t.listed()]).toEqual(['delivered', 'delivered']);
-  t.next(synced(3, { status: 'delivered', delivered_at: at(3) }));
-  await t.engine.syncNow();
-  expect((await t.stored())?.delivered_at).toBe(at(3));
+  let newest: unknown[] = [];
+  await settle(async () => (newest = [(await t.stored())?.read_at, await t.listed()])[1] === 'read');
+  expect(newest).toEqual([at(3), 'read']);
+  expect(t.fetchPage).toHaveBeenCalledTimes(3); // exactly one extra run
 });
 
-test('a re-queue (failed → queued) from a sync started after the patch shows queued', async () => {
-  const t = await setup({ status: 'sent' });
-  await t.store.live([live('delivered')], ON);
+test('a re-queue (failed → queued): the patch and the next sync both show queued', async () => {
+  const t = await setup({ status: 'failed' });
+  await t.store.live([live('queued')], ON);
+  expect((await t.stored())?.status).toBe('queued');
   t.next(synced(2, { status: 'queued' }));
   await t.engine.syncNow();
   expect([(await t.stored())?.status, await t.listed()]).toEqual(['queued', 'queued']);
@@ -63,7 +68,14 @@ test('a sent event moves the tick; the next sync makes the row replyable', async
   expect((await t.stored())?.replyable).toBe(true);
 });
 
+const tick = () => new Promise((r) => setTimeout(r, 1));
+
 /** Lets the engine run until `done` (its store reads are real async SQLite calls). */
 async function waitFor(done: () => boolean): Promise<void> {
-  for (let i = 0; i < 100 && !done(); i += 1) await new Promise((r) => setTimeout(r, 1));
+  for (let i = 0; i < 100 && !done(); i += 1) await tick();
+}
+
+/** waitFor with an async check (a store read). */
+async function settle(done: () => Promise<boolean>): Promise<void> {
+  for (let i = 0; i < 100 && !(await done()); i += 1) await tick();
 }

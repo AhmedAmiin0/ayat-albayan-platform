@@ -5,7 +5,7 @@ import { createMessageStore } from './message-store';
 import { A, B, applyAs, id, plan, row, threadRow } from './store-fixtures';
 
 // docs/44 K1: a realtime event's ticks straight into the phone store (a visual patch); the same
-// owner guard as every write; the server's sync stamp untouched. The sync's patch-time rule:
+// owner guard as every write; the server's sync stamp untouched. Syncs around a patch:
 // sync-engine.live.test.ts.
 
 const live = (n: number, s: MessageStatus): LiveRow => ({ id: id(n), s, d: 'outbound', at: '' });

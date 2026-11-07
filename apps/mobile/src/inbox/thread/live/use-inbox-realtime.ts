@@ -37,7 +37,7 @@ const targets: LiveTargets = {
       );
   },
   // docs/44 K1: the event's ticks into the phone store at once (the screens read it); the re-reads
-  // above still run, and the sync folds by the patch-time rule (store-guard.ts).
+  // above still run; the sync lands as the server sent it (no fold).
   rows: patchInboxStore,
 };
 

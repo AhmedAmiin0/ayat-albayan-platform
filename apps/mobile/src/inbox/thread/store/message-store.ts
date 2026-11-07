@@ -1,10 +1,4 @@
-import {
-  createPatchTimes,
-  type HeldStamp,
-  type LiveRow,
-  type SyncPlan,
-  type SyncState,
-} from '@ab/client-core';
+import type { HeldStamp, LiveRow, SyncPlan, SyncState } from '@ab/client-core';
 import type { MessageView, SyncMessage, ThreadView } from '@ab/shared';
 import type { SqlPort } from './sql-port';
 import type { StoreChange } from './store-change';
@@ -31,11 +25,9 @@ export interface MessageStore {
   apply(plan: SyncPlan, at: PlanBase): Promise<boolean>;
   /** Rows from a chat read or a send's answer, merged by id (mergeRead), for `owner`. */
   putReads(rows: readonly MessageView[], owner: string): Promise<boolean>;
-  /** A sync read starts: its patch-time stamp, passed back in apply's `since` (docs/44 K1). */
-  stamp(): number;
   /**
-   * A realtime event's ticks for `owner` (docs/44 K1, a visual patch): its ids are marked as
-   * patched now, then stored rows of `phone` and their chats-list rows move by laterStatus.
+   * A realtime event's ticks for `owner` (docs/44 K1, a visual patch): stored rows of `phone` and
+   * their chats-list rows move by laterStatus. The next sync lands over it as the server sent it.
    */
   live(rows: readonly LiveRow[], at: { owner: string; phone: string }): Promise<boolean>;
   /** One chat's newest rows, newest first; [] when the store is not `owner`'s. */
@@ -51,7 +43,6 @@ export interface MessageStore {
 export function createMessageStore(port: SqlPort): MessageStore {
   const listeners = new Set<(change: StoreChange) => void>();
   const gone = new Set<string>();
-  const times = createPatchTimes();
   const tell = (change: StoreChange) => listeners.forEach((l) => l(change));
   const serial = createQueue();
   const commit = (change: StoreChange | null) => {
@@ -80,18 +71,13 @@ export function createMessageStore(port: SqlPort): MessageStore {
     },
     apply: (plan, at) =>
       serial(async () => {
-        const change = await writeFor(port, plan, { ...at, times });
+        const change = await writeFor(port, plan, at);
         if (change) rememberGone(gone, plan.remove);
         return commit(change);
       }),
     putReads: (rows, owner) =>
       serial(async () => commit(await putFor(port, rows, { owner, gone }))),
-    stamp: () => times.start(),
-    live: (rows, at) => {
-      // Marked on arrival: a sync read that starts from now on is newer than this patch.
-      times.mark(rows.map((r) => r.id));
-      return serial(async () => commit(await liveFor(port, rows, at)));
-    },
+    live: (rows, at) => serial(async () => commit(await liveFor(port, rows, at))),
     chat: (owner, phone, limit) => ownerRead(owner, () => readChat(port, phone, limit)),
     threads: (owner) => ownerRead(owner, () => readThreads(port)),
     wipe: () => serial(() => clear(null)),

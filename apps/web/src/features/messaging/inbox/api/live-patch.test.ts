@@ -3,10 +3,9 @@ import { QueryClient } from '@tanstack/react-query';
 import { describe, expect, it, vi } from 'vitest';
 import { patchLiveCaches } from './live-patch';
 import { live, msg, PHONE, thread } from './patch-fixtures';
-import { inboxPatches } from './patch-times';
 
 // docs/44 K1 on the web: the push's ticks go straight into the chat and list caches (a visual
-// patch; the live store's re-read still runs).
+// patch; the live store's re-read still runs). Reads around a patch: live-patch.reads.test.ts.
 
 const LIST_KEY = ['threads', 'list', ''];
 const CHAT_KEY = ['threads', 'detail', PHONE];
@@ -38,14 +37,6 @@ describe('patchLiveCaches', () => {
     expect(client.getQueryState(CHAT_KEY)?.dataUpdatedAt).toBe(100);
     expect(client.getQueryState(LIST_KEY)?.dataUpdatedAt).toBe(50);
     expect(fetch).not.toHaveBeenCalled();
-  });
-
-  it('marks the ids it patched (the patch-time rule of the reads)', () => {
-    const { client } = seed([msg('a', 'sent')], []);
-    const since = inboxPatches.start();
-    patchLiveCaches(client, PHONE, [live('a', 'read')]);
-    expect(inboxPatches.patchedAfter('a', since)).toBe(true);
-    expect(inboxPatches.patchedAfter('a', inboxPatches.start())).toBe(false);
   });
 
   it.each<[MessageStatus, MessageStatus, MessageStatus]>([

@@ -48,9 +48,9 @@ export function useInboxRealtime(enabled: boolean): void {
     const open = () =>
       connectInboxLive(supabase, inboxLive, {
         chat: (phone) => {
-          // cancelRefetch false: an older page being loaded is joined, not cancelled.
+          // docs/44 K1: a read in flight started before this event: cancelled, never joined.
           const filters = { queryKey: ['threads', 'detail', phone], type: 'active' } as const;
-          if (document.hasFocus()) void client.refetchQueries(filters, { cancelRefetch: false });
+          if (document.hasFocus()) void client.refetchQueries(filters, { cancelRefetch: true });
         },
         // A hidden tab waits: TanStack re-reads the stale list when it is shown again. A read in
         // flight started before this change: cancelled, never joined (docs/43 AU1; throttled 3 s).
@@ -64,7 +64,8 @@ export function useInboxRealtime(enabled: boolean): void {
             { queryKey: ['threads', 'nav-count'] },
             { cancelRefetch: false },
           ),
-        // docs/44 K1: the event's ticks into the caches at once; the re-reads above still run.
+        // docs/44 K1: the event's ticks into the caches at once (a visual patch); the re-reads
+        // above still run and land as the server sent them.
         rows: (phone, rows) => patchLiveCaches(client, phone, rows),
       });
     const session = createLiveSession(open, inboxLive.resync);

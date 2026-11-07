@@ -1,11 +1,8 @@
 import {
   applyLiveRows,
-  foldListRows,
-  foldMessages,
   laterStatus,
   type LiveRow,
   mergeRead,
-  type PatchTimes,
   type SyncPlan,
   type SyncState,
 } from '@ab/client-core';
@@ -22,8 +19,6 @@ import { writePlan, writeRows, writeThreads } from './store-write';
 export interface PlanBase {
   owner: string;
   base: SyncState;
-  /** The read's patch-time stamp (store.stamp() before the ask); absent: the read wins. */
-  since?: number;
 }
 
 /** The ids tombstoned in this session: a chat read in flight never brings one back. */
@@ -43,37 +38,18 @@ export function rememberGone(gone: Set<string>, ids: readonly string[]): void {
 }
 
 /**
- * The plan's rows by the patch-time rule (docs/44 K1): an id a live event patched AFTER the read
- * started gets the stored (patched) tick re-applied over the read's (laterStatus); every other
- * row lands as read, a real re-queue too. The store is read here, after the read's await.
- */
-async function foldPlan(port: SqlPort, plan: SyncPlan, at: PlanBase & { times: PatchTimes }) {
-  const { times, since = times.start() } = at;
-  const patched = (id: string) => times.patchedAfter(id, since);
-  const held = await readRows(port, plan.upsert.map((m) => m.id).filter(patched));
-  const ids = plan.threads.map((t) => t.last_message_id).filter(patched);
-  const listed = new Map(
-    (await readThreadsOf(port, ids)).map((t) => [t.last_message_id, t.last_status]),
-  );
-  const upsert = foldMessages({ times, since, held: (id) => held.get(id)?.status }, plan.upsert);
-  const threads = foldListRows({ times, since, held: (id) => listed.get(id) }, plan.threads);
-  return { ...plan, upsert, threads };
-}
-
-/**
  * A sync plan, written only when the store is still `owner`'s and still holds the mark it was
  * planned from (a wipe, a scope reset or another run moved it: the plan is stale, dropped).
  */
 export async function writeFor(
   port: SqlPort,
   plan: SyncPlan,
-  at: PlanBase & { times: PatchTimes },
+  { owner, base }: PlanBase,
 ): Promise<StoreChange | null> {
   const now = await readState(port);
-  if (now.owner !== at.owner || !sameMark(now.sync, at.base)) return null;
+  if (now.owner !== owner || !sameMark(now.sync, base)) return null;
   const removed = await readHeld(port, plan.remove);
-  const kept = await foldPlan(port, plan, at);
-  await port.transaction(() => writePlan(port, kept));
+  await port.transaction(() => writePlan(port, plan));
   return changedPhones(plan, removed);
 }
 
@@ -106,8 +82,8 @@ export async function putFor(
 /**
  * A realtime event's ticks (docs/44 K1, a visual patch) for `owner`: each stored row of chat
  * `phone` among `rows` takes the incoming status by laterStatus, and so does a chats-list row
- * whose last message it is. Only the tick moves (updated_at stays: the next sync lands the server's
- * row over it). The chats it changed; null when the store is not `owner`'s.
+ * whose last message it is. Only the tick moves (updated_at stays: the next sync lands the
+ * server's row over it as sent, no fold). The chats it changed; null when not `owner`'s.
  */
 export async function liveFor(
   port: SqlPort,

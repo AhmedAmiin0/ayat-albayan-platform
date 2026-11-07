@@ -45,11 +45,11 @@ reaction/marker rows (`message_is_reaction`), edits/deletes (need a body re-read
 queued < sent < delivered < read only; `failed`/`sent_manually` always replace) in the chat AND the list row,
 and ignores phones not in a loaded list. The patch is VISUAL ONLY (owner, 2026-11-07): every event, rows or
 `{phone}`, still runs the same throttled re-read (web chat + list, mobile sync nudge), which brings replyable,
-stamps, re-queues and bodies. Reads are never folded by rank; only the patch-time rule applies
-(`client-core/src/messaging/ticks/patch-times.ts`): a read that STARTED BEFORE a patch of an id keeps that
-patch's tick (re-applied by `laterStatus`, the cache read after the await); a read started after it wins. On the
-web an older page loading during a patch (TanStack commits the pages it copied at its start) gets the patch
-re-applied once it lands. Supabase's broadcast payload limit must be checked for our plan before merge.
+stamps, re-queues and bodies. No read is ever folded (owner, 2026-11-07, third round): a read or a sync
+result is written exactly as the server sent it. The re-read STARTS AFTER the event: on the web the patch
+cancels the chat's and lists' reads in flight (reverted to the patched data, never committed after it) and the
+re-reads run with `cancelRefetch: true`; on mobile the sync engine joins the run in flight and runs exactly one
+more after it, and a shown list's `rereadList` follows a joined read with a second one. Supabase's broadcast payload limit must be checked for our plan before merge.
 
 ## 3. «آخر نشاط» (last seen) — what is possible
 
