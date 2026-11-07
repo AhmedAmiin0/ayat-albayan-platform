@@ -2,7 +2,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
-import { refreshInbox, touchInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { touchInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { refreshSent } from '@/inbox/thread/hooks/use-thread';
 import { appendMessage, removeMessage, type ThreadCache, threadKey } from '@/inbox/thread/hooks/thread-cache';
 import type { SharedFile } from './read-share';
 import { type ShareResult, sendSharedFiles } from './send-shared';
@@ -45,7 +46,7 @@ export function useShareSend() {
       rows.reduce((cache, row) => appendMessage(removeMessage(cache, row.id), row), old),
     );
     await Promise.all(rows.map((row) => touchInbox(client, row)));
-    void refreshInbox(client, phone);
+    void refreshSent(client, phone);
     const failed = results.filter(isFailed);
     setStep(null);
     setOutcome({ phone, failed });

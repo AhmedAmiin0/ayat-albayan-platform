@@ -11,7 +11,9 @@ const SESSION = ['AuthController.me', 'AuthSessionController.login', 'AuthSessio
 const ACCOUNT = ['avatarUploadUrl', 'changeEmail', 'changePassword', 'profile', 'removeAvatar', 'setAvatar', 'updateProfile'].map((h) => `AccountController.${h}`);
 /** docs/33: may this login track its own online status (every login, whatever its role). */
 const PRESENCE = ['PresenceController.me'];
-const SIGNED_IN_ONLY = [...SESSION, ...ACCOUNT, ...PRESENCE];
+/** The report's live page: any role may ask; ReportReaders answers its readers only (404 else). */
+const REPORT_PAGE = ['ReportPageController.byPublicId', 'ReportPageController.byReportId'];
+const SIGNED_IN_ONLY = [...SESSION, ...ACCOUNT, ...PRESENCE, ...REPORT_PAGE];
 
 describe('permission coverage', () => {
   let routes: RouteAccess[];

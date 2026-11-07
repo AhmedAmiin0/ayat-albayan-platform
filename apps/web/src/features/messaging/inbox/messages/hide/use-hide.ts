@@ -1,7 +1,7 @@
 import { threadHidePath } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@/lib/http/api';
-import { threadQuery } from '@/features/messaging/inbox/api/api';
+import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 
 /**

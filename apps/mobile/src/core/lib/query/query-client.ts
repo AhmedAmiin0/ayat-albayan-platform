@@ -53,9 +53,26 @@ export const queryClient = new QueryClient({
   },
 });
 
+/**
+ * Back in the foreground the inbox re-reads through ONE path, resumeInbox (docs/43 AU3): it
+ * cancels a read stuck across the background and re-reads the chats, lists, badge and
+ * «القوائم». A focus refetch of the same queries would only start reads it cancels at once.
+ */
+export const RESUME_OWNED: readonly string[][] = [['threads'], ['chat-lists']];
+const NO_FOCUS_REFETCH = { refetchOnWindowFocus: false } as const;
+for (const queryKey of RESUME_OWNED) queryClient.setQueryDefaults(queryKey, NO_FOCUS_REFETCH);
+
+/**
+ * The whole cache is one AsyncStorage value, written at most every 5 s (docs/43 AU11;
+ * TanStack's default 1 s re-stringified it on nearly every poll). A kill within 5 s of a
+ * change loses only that change: the next start re-reads it.
+ */
+export const PERSIST_THROTTLE_MS = 5_000;
+
 export const persister = createAsyncStoragePersister({
   storage: AsyncStorage,
   key: 'ab-query-cache',
+  throttleTime: PERSIST_THROTTLE_MS,
 });
 
 export const persistOptions: Omit<PersistQueryClientOptions, 'queryClient'> = {

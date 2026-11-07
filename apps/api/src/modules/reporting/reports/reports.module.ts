@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
 import { RateLimitRepo } from '@/common/http/rate-limit.repo';
-import { ShortLinksModule } from '@/modules/platform/short-links';
+import { ReportPageModule } from '@/modules/reporting/report-page';
 import { ReportPdfModule } from '../report-pdf/report-pdf.module';
 import { TeachersModule } from '../../people/teachers/teachers.module';
 import { ReportAccess } from './report-access';
@@ -27,6 +27,8 @@ import { ReportV2Service } from './v2/report-v2.service';
 import { TEACHER_LINK_CONFIG, type TeacherLinkConfig } from './teacher-link/teacher-link.config';
 import { TeacherLinkAccess } from './teacher-link/teacher-link.access';
 import { TeacherLinkController } from './teacher-link/teacher-link.controller';
+import { TeacherLinkFiles } from './teacher-link/teacher-link.files';
+import { TeacherLinkFilesController } from './teacher-link/teacher-link-files.controller';
 import { TeacherReportLinks } from './teacher-link/teacher-link.issuer';
 import { TeacherLinkLimit } from './teacher-link/teacher-link.limit';
 import { TeacherLinkReports } from './teacher-link/teacher-link.reports';
@@ -41,16 +43,17 @@ const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_
  * ReportPdfQueue marks a report pending and kicks ReportPdfJob (R-REP-03). v2/: the new form
  * (report_form_v2).
  * teacher-link/: the teacher's no-login report link for one lesson (docs/19), and its issuer for
- * the reminders.
+ * the reminders. ReportPageModule: the report's live page (/report/<public_id>).
  */
 @Module({
-  imports: [TeachersModule, ReportPdfModule, ShortLinksModule],
+  imports: [TeachersModule, ReportPdfModule, ReportPageModule],
   controllers: [
     ReportsController,
     ReportAttachmentsController,
     ReportEntryController,
     ReportV2Controller,
     TeacherLinkController,
+    TeacherLinkFilesController,
   ],
   providers: [
     ReportAccess,
@@ -75,6 +78,7 @@ const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_
     TeacherLinkAccess,
     TeacherLinkLimit,
     TeacherLinkReports,
+    TeacherLinkFiles,
     TeacherReportLinks,
   ],
   exports: [
@@ -83,6 +87,7 @@ const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_
     ReportPdfQueue,
     ReportsQueries,
     TeacherReportLinks,
+    TEACHER_LINK_CONFIG,
   ],
 })
 export class ReportsModule {}

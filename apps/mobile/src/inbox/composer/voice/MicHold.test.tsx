@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { askMic, hold, lift, moveTo, openChat, perms, rec, replyToAsked, resetVoice, tick } from './voice-test-kit';
+import { askMic, hold, lift, moveTo, openChat, perms, rec, replyToAsked, resetVoice, tick, voiceRow } from './voice-test-kit';
 
 // Hold to record, lift to send (owner 2026-10-27) on an Arabic phone (jest.setup: RTL). No real
 // recorder, upload or WhatsApp: expo-audio, the API and Storage are fakes.
@@ -75,7 +75,7 @@ test('slide toward the start (right in Arabic, dx > 0) past the line cancels; no
 });
 
 test('lift after a hold: the m4a goes as audio/mp4 voice.m4a to this chat, answering the quoted message', async () => {
-  mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce({ id: 'v1' });
+  mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce(voiceRow);
   await openChat(mockApiFetch);
   await replyToAsked();
   await hold();
@@ -90,7 +90,7 @@ test('lift after a hold: the m4a goes as audio/mp4 voice.m4a to this chat, answe
 });
 
 test('slide up locks: the bar shows delete and «أرسل»; «أرسل» stops then sends once', async () => {
-  mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce({ id: 'v1' });
+  mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce(voiceRow);
   await openChat(mockApiFetch);
   await hold(300, 500);
   await moveTo(300, 380);
@@ -116,7 +116,7 @@ test('a failed send keeps the recording; the retry reuses the same request id', 
   expect(await screen.findByText(t.inbox.error.session_closed)).toBeTruthy();
   expect(screen.getByTestId('recording-bar')).toBeTruthy();
   const first = bodies()[0]?.clientRequestId;
-  mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce({ id: 'v1' });
+  mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce(voiceRow);
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(3));
   expect(bodies()[1]?.clientRequestId).toBe(first);

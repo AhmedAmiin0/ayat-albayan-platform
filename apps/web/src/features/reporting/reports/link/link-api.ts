@@ -12,6 +12,7 @@ import { ApiError, publicApiFetch, publicApiSend, type SendMethod } from '@/lib/
 import { t } from '@/lib/i18n/i18n';
 import { REPORTS_KEY, reportErrorText } from '@/features/reporting/reports/api';
 import type { ReportApi } from '@/features/reporting/reports/report-api';
+import { linkFileCalls } from './link-files';
 
 // The teacher's signed link to one lesson's report (no login): /public/teacher-report/:token/….
 
@@ -72,7 +73,7 @@ export const linkReportFormQuery = (token: string) =>
     refetchOnWindowFocus: false,
   });
 
-/** The form's calls bound to the link's token; no attachments (they need a session). */
+/** The form's calls bound to the link's token, the teacher's attachments included. */
 export function linkReportApi(token: string): ReportApi {
   const at = (id: string, step: string) => `${base(token)}/reports/${id}/${step}`;
   return {
@@ -82,6 +83,7 @@ export function linkReportApi(token: string): ReportApi {
     submitReportV2: ({ id, body }: Sent<ReportV2SubmitBody>) =>
       send('POST', at(id, 'v2/submit'), body),
     errorText: linkErrorText,
-    attachments: false,
+    attachments: true,
+    files: linkFileCalls(base(token)),
   };
 }

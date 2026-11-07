@@ -2,7 +2,9 @@ import { deltaSearch, mergeDelta, needsFullRead } from '@ab/client-core';
 import type { ThreadDelta } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/http/api';
-import { INBOX_REFRESH_MS, threadPath, threadQuery } from './api';
+import { INBOX_REFRESH_MS, threadPath } from './api';
+import { useTicksInLists } from './list-ticks';
+import { threadQuery } from './thread-query';
 import { inboxLive, useLiveChat } from './live';
 
 /**
@@ -18,15 +20,16 @@ export function useLiveThread(phone: string) {
   const detail = useInfiniteQuery(options);
   const client = useQueryClient();
   useLiveChat(phone);
+  useTicksInLists(phone, detail.data); // the list beside it shows the same tick (docs/43 43-1)
   const queryKey = options.queryKey;
   useQuery({
     // Outside ['threads']: a send's or an opened chat's invalidation never runs it.
     queryKey: ['thread-delta', phone],
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       const search = document.hasFocus() ? deltaSearch(client.getQueryData(queryKey), Date.now()) : null;
       if (!search) return Date.now();
       const asked = client.getQueryState(queryKey)?.dataUpdatedAt;
-      const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`);
+      const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`, { signal });
       const busy = client.isFetching({ queryKey }) + client.isMutating({ mutationKey: ['inbox-send', phone] }) > 0;
       // A full read that landed meanwhile is newer than this answer: keep it.
       if (busy || client.getQueryState(queryKey)?.dataUpdatedAt !== asked) return Date.now();

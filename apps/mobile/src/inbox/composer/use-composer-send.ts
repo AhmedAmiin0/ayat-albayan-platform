@@ -1,13 +1,16 @@
 import { useIsMutating } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
-import { sendError } from '@/inbox/messages/hooks/message-text';
+import { chatSendError } from '@/inbox/thread/send/send-error';
 import { quoteOf } from '@/inbox/messages/hooks/quote-text';
 import { useSendStagedFile } from '@/inbox/saved-replies/hooks/send-staged';
 import type { StagedFile } from '@/inbox/saved-replies/hooks/use-saved-reply';
 import { fileError } from './send-file';
 import { type Outgoing, sendKey, useSendMessage } from '@/inbox/thread/hooks/use-thread';
+import { useBoxId } from '@/inbox/thread/send/box-id';
+import { PINS, useReplayed } from '@/inbox/thread/send/pinned-send';
+import { t } from '@/core/lib/i18n/i18n';
 
 /** One template draft = one key + params: re-sending it after an error keeps its clientRequestId. */
 const draftOf = (out: Outgoing): string =>
@@ -41,8 +44,8 @@ interface ComposerSendInput {
 }
 
 /**
- * The box's «أرسل»: the text (its clientRequestId kept while the same text is retried, so a lost
- * answer never sends twice), then a staged file. A refused text comes back into the box; the file
+ * The box's «أرسل»: the text (its clientRequestId from useBoxId: a lost answer never sends twice),
+ * then a staged file. A refused text comes back into the box; the file
  * waits in its chip until it went. A template keeps its own id the same way. `errors` = what failed, in words.
  */
 export function useComposerSend({ phone, text, setText, staged, clearStaged }: ComposerSendInput) {
@@ -50,12 +53,10 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   // Any send of this chat in flight (this box's or «عرض سعر»'s): one at a time.
   const inFlight = useIsMutating({ mutationKey: sendKey(phone) }) > 0;
   const sendStaged = useSendStagedFile(phone);
-  const [draftId, setDraftId] = useState(requestId);
+  const boxId = useBoxId(phone);
+  const replayed = useReplayed('box', phone);
   // «رد» (owner 2026-10-25): the message the next text answers; another target is another send.
   const { reply, setReply } = useChatActions();
-  const draftReply = useRef<string | undefined>(undefined);
-  // The text that id was minted for: a box filled from outside since (a quote, a saved reply) is a new request.
-  const draftText = useRef<string | null>(null);
   const templateId = useTemplateId();
   const sendTemplate = (out: Outgoing) => {
     send.mutate({ out, id: templateId.of(out) }, { onSuccess: templateId.sent });
@@ -77,25 +78,26 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
     if (!body) return sendFile(staged);
     setText('');
     const replyTo = reply ? quoteOf(reply) : undefined;
-    const id = draftReply.current === replyTo?.id && draftText.current === body ? draftId : requestId();
-    draftReply.current = replyTo?.id;
-    draftText.current = body;
-    setDraftId(id);
+    const id = boxId.take(body, replyTo?.id);
+    // Hook-level (useSendMessage) puts the text back after no answer or a refusal, pins or
+    // releases the id, and on a replay of the first message brings the edit back (docs/44 M1).
     send.mutate(
-      { out: { kind: 'text', text: body, ...(replyTo ? { replyTo } : {}) }, id },
+      { out: { kind: 'text', text: body, ...(replyTo ? { replyTo } : {}) }, id, pin: 'box' },
       {
         onSuccess: () => {
-          setDraftId(requestId());
+          boxId.sent();
+          if (PINS.box.replayed(phone)) return;
           if (replyTo) setReply((now) => (now?.id === replyTo.id ? null : now));
           const now = stagedNow.current;
           if (now && now.requestId === tapped) sendFile(now);
         },
-        onError: () => setText((now) => now || body),
       },
     );
   };
-  const errors = [send.isError ? sendError(send.error) : null, sendStaged.isError ? fileError(sendStaged.error) : null];
-  return { sendTemplate, sendText, renew: () => setDraftId(requestId()), errors, pending: inFlight || send.isPending || sendStaged.isPending };
+  const sendLine = send.isError ? chatSendError(send.error) : null;
+  const textLine = replayed ? t.inbox.error.send_replayed : sendLine;
+  const errors = [textLine, sendStaged.isError ? fileError(sendStaged.error) : null];
+  return { sendTemplate, sendText, renew: boxId.renew, errors, pending: inFlight || send.isPending || sendStaged.isPending };
 }
 
 /** The failures under the box: the text's always; the file's only while the window is open. */

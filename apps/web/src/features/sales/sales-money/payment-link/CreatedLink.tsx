@@ -7,7 +7,7 @@ import { Amount } from '@/features/finance/subscriptions';
 import { formatDate } from '@/features/sales/leads';
 import { fillText, linkMessage } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
-import { getDraft, setDraft } from '@/features/messaging/inbox';
+import { getDraft, keptFailed, setDraft } from '@/features/messaging/inbox';
 import { fillComposer } from '@/features/messaging/inbox';
 
 const P = t.paymentLinks;
@@ -35,7 +35,9 @@ export function CreatedLink({ link, phone, canSend, onClose, onBookCourse }: Pro
   const [copied, setCopied] = useState<'ok' | 'failed' | null>(null);
   const text = linkMessage(link);
   const insert = () => {
-    setDraft(phone, { text: fillComposer(getDraft(phone).text, text), failed: null });
+    const now = getDraft(phone);
+    // An unconfirmed send keeps its id for the box's retry (docs/44 BUG7).
+    setDraft(phone, { text: fillComposer(now.text, text), failed: keptFailed(now.failed) });
     onClose();
   };
   const copy = async () => {

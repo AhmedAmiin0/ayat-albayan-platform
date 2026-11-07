@@ -1,4 +1,4 @@
-import { withDeadline } from './read-deadline';
+import { withDeadline } from '@ab/client-core';
 import { reportStall } from './stall-report';
 
 /**

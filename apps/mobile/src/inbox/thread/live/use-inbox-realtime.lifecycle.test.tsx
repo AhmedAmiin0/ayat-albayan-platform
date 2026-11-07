@@ -3,7 +3,10 @@ import { act, renderHook } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 import { queryClient as client } from '@/core/lib/query/query-client';
 import { inboxLive } from './inbox-live';
+import { changeLists } from './list-marks';
 import { useInboxRealtime } from './use-inbox-realtime';
+
+jest.mock('./list-marks', () => ({ changeLists: jest.fn() }));
 
 // Owner 2026-10-27: close the connection when it is not needed, no leaks. Mocked client, no socket.
 
@@ -86,12 +89,12 @@ test('background leaves at once (polls back to the offline rate); foreground: on
   await flip('background');
   await settle();
   expect([open(), liveInterval(inboxLive.isLive(), OFFLINE), await timers()]).toEqual([0, OFFLINE, 0]);
-  const lists = jest.mocked(client.refetchQueries).mock.calls.length;
+  const lists = jest.mocked(changeLists).mock.calls.length;
   await flip('active');
   await settle();
   expect([mockRt.joins.length, open()]).toEqual([2, 1]);
   mockRt.joins[1]?.status?.('SUBSCRIBED');
-  expect(jest.mocked(client.refetchQueries).mock.calls.length).toBe(lists + 1);
+  expect(jest.mocked(changeLists).mock.calls.length).toBe(lists + 1);
   release();
   await hook.unmount();
 });

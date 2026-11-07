@@ -55,7 +55,17 @@ describe('isAutomatic: job-made reminders, classroom links, follow-ups, renewals
     const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request', 'teacher_new_student'];
     // A schedule change a person made (owner 2026-10-30): never held by the automatic switch.
     onAction.push('lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed');
+    // The report's link to the family and the teacher, after a teacher submitted it (2026-11-06).
+    onAction.push('report_ready_family', 'report_ready_teacher');
+    // teacher_lesson_v3 also carries the new-student alert (a booking): never held.
+    onAction.push('teacher_lesson_v3');
     expect([...AUTOMATIC_KEYS, ...onAction].sort()).toEqual([...TEMPLATE_KEYS].sort());
+  });
+
+  it('teacher_lesson_v3: automatic as the same-day reminder, never as the new-student alert', () => {
+    const v3 = { template_key: 'teacher_lesson_v3', created_by: null };
+    expect(isAutomatic({ ...v3, dedup_key: 'teacher_lesson_reminder:l1:t1' })).toBe(true);
+    expect(isAutomatic({ ...v3, dedup_key: 'teacher_new_student:l1:t1' })).toBe(false);
   });
 
   it('the schedule-change notices are not automatic, even job-made (a resume by the daily job)', () => {

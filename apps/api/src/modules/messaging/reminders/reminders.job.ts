@@ -10,7 +10,7 @@ import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson
 import { RemindersRepo } from './reminders.repo';
 import { lookaheadHours, reminderRules, type ReminderRules } from './plan/reminders.rules';
 import { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
-import { ReminderTeacherLinks } from './reminders.teacher-links';
+import { ReminderTeacherLinks, v3Approved } from './reminders.teacher-links';
 import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
@@ -53,7 +53,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     private readonly policy: NotificationPolicy,
   ) {}
 
-  /** The teacher reminder's short links (property injection keeps the constructor at four). */
+  /** The teacher reminder's signed links (property injection keeps the constructor at four). */
   @Inject(ReminderTeacherLinks) private readonly teacherLinks!: ReminderTeacherLinks;
 
   onApplicationBootstrap(): void {
@@ -95,8 +95,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
 
   /**
    * This tick's reminders, with the link each lesson's teacher mode picks (ctx.auto = the academy default), and the families' own
-   * classroom links. LiveKit and the origin are read every tick (the integration config may change).
-   * A template is looked up only when it could be used.
+   * classroom links. LiveKit and the origin are read every tick. A template is looked up only when it could be used.
    */
   private async queue({ settings, rules, lessons, now }: QueueInput): Promise<number> {
     const env = loadEnv();
@@ -112,7 +111,8 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     const win = joinWindowConfig(settings);
     const at = { minutesBefore, teacherMinutesBefore, now, origin: ctx.origin, win };
     const teacherLinks = rules.teacher ? await this.teacherLinks.build(sent, at) : undefined;
-    const rows = planReminders({ ...plan, lessons: sent, teacherLinks, dayBefore: approved.has('lesson_reminder_24h'), now });
+    const teacherV3 = await v3Approved(this.queries, teacherLinks);
+    const rows = planReminders({ ...plan, lessons: sent, teacherLinks, teacherV3, dayBefore: approved.has('lesson_reminder_24h'), now });
     const candidates = joinCandidates(lessons, ctx, { now, minutesBefore, win });
     return this.queries.queue([...rows, ...(await this.roomLinks(candidates, now))]);
   }

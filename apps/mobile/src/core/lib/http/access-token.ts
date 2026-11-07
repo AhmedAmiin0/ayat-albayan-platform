@@ -1,4 +1,4 @@
-import { noAnswer } from './read-deadline';
+import { noAnswer } from '@ab/client-core';
 import { supabase } from './supabase';
 
 /**

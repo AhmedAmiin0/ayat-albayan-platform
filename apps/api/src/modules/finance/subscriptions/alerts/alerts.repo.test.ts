@@ -51,7 +51,7 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
   });
 
   it('the renewal message is a queued outbound renewal_due to the guardian, deduped', async () => {
-    const { db, argsOf } = fakeDb({ messages: [{}] });
+    const { db, argsOf } = fakeDb({ messages: [{ data: [] }] });
     const recipient = { studentName: 'سهيلة', guardianId: 'g1', phone: '+966500000001' };
     const now = new Date('2026-10-02T09:00:00Z');
     await new AlertsRepo(db, fakePolicy()).queueRenewal({ recipient, params: { '1': 'سهيلة' }, dedupKey: 'renewal_due:sub-1', now });

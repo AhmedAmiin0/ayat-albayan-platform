@@ -3,6 +3,7 @@ import { SalesModule } from '@/modules/sales/sales/sales.module';
 import { SchedulingModule } from '@/modules/teaching/scheduling/scheduling.module';
 import { SubscriptionsModule } from '@/modules/finance/subscriptions/subscriptions.module';
 import { TeachersModule } from '@/modules/people/teachers/teachers.module';
+import { LessonLinksModule } from '@/modules/teaching/lesson-links';
 import { BookingExtrasController } from './booking-extras.controller';
 import { BookingFollowUps } from './core/booking.follow-ups';
 import { BookingController } from './booking.controller';
@@ -63,6 +64,7 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     SalesModule,
     SubscriptionsModule,
     ScheduleNoticesModule,
+    LessonLinksModule,
   ],
   controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController, CourseTeacherController, CourseTimesController, TrialDateController, SalesTrialDateController],
   providers: [

@@ -50,11 +50,20 @@ export const WHATSAPP_ENTRIES = [
     ...ROW,
     key: 'teacher_new_student',
     audience: 'teacher',
-    templates: ['teacher_new_student'],
+    templates: ['teacher_new_student', 'teacher_lesson_v3'],
     automatic: false,
     rowSwitch: { key: 'teacher_whatsapp_new_student', isOn: (s) => s.teacher_whatsapp_new_student },
   },
-  { ...ROW, key: 'report_ready', audience: 'guardian', templates: ['report_ready'], automatic: false, essential: true },
+  {
+    // The family's PDF (report_ready) or, once approved, the live page's link to the family
+    // and the teacher (report_ready_family / _teacher, owner 2026-11-06): one rule for all.
+    ...ROW,
+    key: 'report_ready',
+    audience: 'guardian',
+    templates: ['report_ready', 'report_ready_family', 'report_ready_teacher'],
+    automatic: false,
+    essential: true,
+  },
   { ...AUTO, key: 'renewal_due', audience: 'guardian', templates: ['renewal_due'], timing: 'renewal_alert_remaining' },
   { ...AUTO, key: 'follow_up_slots', audience: 'lead', templates: ['follow_up_slots'], timing: 'follow_up_hours' },
   {

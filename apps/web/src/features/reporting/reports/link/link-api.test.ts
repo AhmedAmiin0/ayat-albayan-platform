@@ -45,7 +45,20 @@ describe('the teacher link calls (no session)', () => {
       [`${BASE}/reports/r-1/v2/draft`, 'PUT', false],
       [`${BASE}/reports/r-1/v2/submit`, 'POST', false],
     ]);
-    expect(api.attachments).toBe(false);
+    expect(api.attachments).toBe(true);
+  });
+
+  it('the attachments: remove and open through the token-bound routes, no session', async () => {
+    const api = linkReportApi(TOKEN);
+    fetchMock.mockImplementation(() => Promise.resolve(new Response(null, { status: 204 })));
+    await api.files.remove({ id: 'r-1', attachmentId: 'a-1' });
+    const signed = { url: 'https://files.example/a', expires_at: '2026-11-06T13:00:00Z' };
+    fetchMock.mockImplementation(() => Promise.resolve(new Response(JSON.stringify(signed))));
+    await expect(api.files.url({ id: 'r-1', attachmentId: 'a-1' })).resolves.toEqual(signed);
+    expect(calls()).toEqual([
+      [`${BASE}/reports/r-1/attachments/a-1`, 'DELETE', false],
+      [`${BASE}/reports/r-1/attachments/a-1/url`, 'GET', false],
+    ]);
   });
 });
 

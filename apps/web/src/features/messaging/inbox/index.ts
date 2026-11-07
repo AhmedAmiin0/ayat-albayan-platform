@@ -2,7 +2,6 @@ export {
   changeLeadStatus,
   handOffMessage,
   INBOX_REFRESH_MS,
-  inboxPollMs,
   type InboxLead,
   leadByPhoneQuery,
   markSentManually,
@@ -14,10 +13,10 @@ export {
   setFollowUpPaused,
   type ThreadFile,
   threadFileQuery,
-  threadQuery,
   THREADS_PAGE_SIZE,
   threadsQuery,
 } from './api/api';
+export { threadQuery } from './api/thread-query';
 export {
   clockText,
   errorText,
@@ -69,7 +68,7 @@ export {
 export { useReplyDialogs } from './saved-replies/hooks/use-reply-dialogs';
 export { clearTabMemories } from './shared/tab-memory';
 export { BUBBLE_ROW } from './messages/lib/bubble-side';
-export { getDraft, setDraft } from './composer/lib/draft-store';
+export { getDraft, keptFailed, setDraft } from './composer/lib/draft-store';
 export { fillComposer } from './saved-replies/lib/filter';
 export { useMaySend } from './shared/may-send';
 export { LinkFamilyDialog } from './lead/LinkFamilyDialog';

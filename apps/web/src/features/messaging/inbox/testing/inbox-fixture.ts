@@ -1,3 +1,4 @@
+import { provisionalMessage } from '@ab/client-core';
 import type {
   MessageView,
   TemplateView,
@@ -40,34 +41,14 @@ export function thread(patch: Partial<ThreadView> = {}): ThreadView {
   };
 }
 
+/** A received row (client-core's provisional row with an inbound row's fields). */
 export function message(patch: Partial<MessageView> = {}): MessageView {
+  const now = new Date('2026-10-01T10:00:00Z');
   return {
-    id: 'm-in',
+    ...provisionalMessage({ id: 'm-in', phone: PHONE, body: 'السلام عليكم', now }),
     direction: 'inbound',
     status: 'delivered',
-    phone_e164: PHONE,
     lead_id: 'lead-1',
-    guardian_id: null,
-    lesson_id: null,
-    template_key: null,
-    template_params: null,
-    body: 'السلام عليكم',
-    media_mime: null,
-    media_url: null,
-    reply_to_wa_id: null,
-    interactive_payload: null,
-    error_code: null,
-    error_text: null,
-    attempts: 0,
-    next_attempt_at: null,
-    scheduled_for: null,
-    sent_at: null,
-    delivered_at: null,
-    read_at: null,
-    sent_manually_at: null,
-    created_at: '2026-10-01T10:00:00Z',
-    click_to_chat: null,
-    lesson: null,
     ...patch,
   };
 }

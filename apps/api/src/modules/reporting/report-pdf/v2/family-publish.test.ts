@@ -19,7 +19,8 @@ function publisher(source: ReportSource) {
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
   const p = new ReportPdfPublisher({ load: async () => source } as unknown as ReportPdfSource, renderer as unknown as PdfRenderer, storage as unknown as StorageService);
   const feedback = { url: vi.fn(async () => 'https://api.example/r/Ab12Cd34Ef') };
-  Object.assign(p, { settings: new ReportPdfSettings(fakeSettings()), feedback });
+  const templates = { approved: vi.fn(async () => new Set<string>()) };
+  Object.assign(p, { settings: new ReportPdfSettings(fakeSettings()), feedback, templates });
   return { p, renderer, storage };
 }
 
@@ -42,7 +43,7 @@ describe('the family report keeps the same sending path; only the page changes f
     expect(v2.renderer.render.mock.calls[0]?.[0]).toContain('<h1>تقرير حلقة سلمى عبد الرحمن</h1>');
     expect(v2.renderer.render.mock.calls[0]?.[0]).not.toContain('cartouche');
     expect(b.path).toBe(a.path);
-    expect(b.message).toEqual(a.message);
+    expect(b.messages).toEqual(a.messages);
     expect(v2.storage.upload).toHaveBeenCalledWith(expect.objectContaining({ bucket: 'reports', path: a.path }));
   });
 

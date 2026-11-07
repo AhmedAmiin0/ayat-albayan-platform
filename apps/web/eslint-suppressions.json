@@ -1903,7 +1903,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 13
+      "count": 10
     }
   },
   "src/features/messaging/inbox/api/live.lifecycle.test.tsx": {
@@ -2090,14 +2090,11 @@
     }
   },
   "src/features/messaging/inbox/composer/components/TextComposer.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
     "max-len": {
-      "count": 12
+      "count": 7
     },
     "max-lines-per-function": {
       "count": 1
@@ -2121,17 +2118,12 @@
   },
   "src/features/messaging/inbox/composer/lib/draft-store.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/composer/lib/send-error.ts": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/features/messaging/inbox/composer/lib/send-start.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/composer/lib/template-params.ts": {
@@ -2180,7 +2172,7 @@
   },
   "src/features/messaging/inbox/composer/quote/use-quote-offer.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/format.test.ts": {
@@ -2879,7 +2871,7 @@
   },
   "src/features/messaging/inbox/saved-replies/components/ReplyComposer.tsx": {
     "max-len": {
-      "count": 11
+      "count": 10
     },
     "max-lines-per-function": {
       "count": 1
@@ -7401,11 +7393,6 @@
       "count": 1
     }
   },
-  "src/features/reporting/reports/ReportFormPage.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/reporting/reports/ReportFormPage.tsx": {
     "max-len": {
       "count": 1
@@ -7469,11 +7456,6 @@
     }
   },
   "src/features/reporting/reports/entry-v2/ToggleChips.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/reporting/reports/entry-v2/V2Footer.tsx": {
     "max-len": {
       "count": 2
     }
@@ -7617,11 +7599,6 @@
       "count": 1
     },
     "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/features/reporting/reports/entry/ReportEntryFooter.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -11287,10 +11264,10 @@
   },
   "src/lib/http/api.ts": {
     "@typescript-eslint/unbound-method": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/lib/http/client-tag.ts": {

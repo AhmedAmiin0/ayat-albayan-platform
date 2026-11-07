@@ -29,89 +29,13 @@ export function threadMessages(data: ThreadCache | undefined): MessageView[] {
   return out;
 }
 
-function mapMessages(
-  data: ThreadCache | undefined,
-  edit: (messages: MessageView[], index: number) => MessageView[],
-): ThreadCache | undefined {
-  if (!data) return data;
-  return { ...data, pages: data.pages.map((p, i) => ({ ...p, messages: edit(p.messages, i) })) };
-}
-
-/** Puts a just-sent row at the end of the newest page. */
-export function appendMessage(data: ThreadCache | undefined, row: MessageView) {
-  return mapMessages(data, (messages, i) => (i === 0 ? [...messages, row] : messages));
-}
-
-/** Swaps the row with this id (the provisional one, or a retried one) for the server's row. */
-export function replaceMessage(data: ThreadCache | undefined, id: string, row: MessageView) {
-  return mapMessages(data, (messages) => messages.map((m) => (m.id === id ? row : m)));
-}
-
-/** Rollback of a send the API refused. */
-export function removeMessage(data: ThreadCache | undefined, id: string) {
-  return mapMessages(data, (messages) => messages.filter((m) => m.id !== id));
-}
-
-/**
- * A poll's fresh newest page folded into pages[0] (older pages untouched, so nothing shifts): its rows
- * win; older rows it no longer covers stay before them, rows it does not know yet (a send still in
- * flight, an answer that came back first) stay after them, so a refetch never drops a provisional row.
- */
-export function mergeNewest(data: ThreadCache | undefined, fresh: ThreadDetail): ThreadCache | undefined {
-  const head = data?.pages[0];
-  if (!data || !head) return data;
-  const ids = new Set(fresh.messages.map((m) => m.id));
-  const from = Date.parse(fresh.messages[0]?.created_at ?? '') || -Infinity;
-  const rest = head.messages.filter((m) => !ids.has(m.id));
-  const before = rest.filter((m) => Date.parse(m.created_at) < from);
-  const after = rest.filter((m) => Date.parse(m.created_at) >= from);
-  const messages = [...before, ...fresh.messages, ...after];
-  const page = { ...fresh, messages, has_more: before.length > 0 ? head.has_more : fresh.has_more };
-  return { ...data, pages: [page, ...data.pages.slice(1)] };
-}
-
-/** More new rows than one page since the last read: merging would hide the ones in between. */
-export function leavesGap(data: ThreadCache | undefined, fresh: ThreadDetail): boolean {
-  const cached = new Set(data?.pages[0]?.messages.map((m) => m.id));
-  return fresh.has_more && cached.size > 0 && !fresh.messages.some((m) => cached.has(m.id));
-}
-
-interface Provisional {
-  id: string;
-  phone: string;
-  body: string;
-  templateKey?: string;
-  now?: Date;
-}
-
-/** The row an optimistic send shows until the API answers: queued, ours, no wa.me link yet. */
-export function provisionalMessage(p: Provisional): MessageView {
-  return {
-    id: p.id,
-    direction: 'outbound',
-    status: 'queued',
-    phone_e164: p.phone,
-    lead_id: null,
-    guardian_id: null,
-    lesson_id: null,
-    template_key: p.templateKey ?? null,
-    template_params: null,
-    body: p.body,
-    media_mime: null,
-    media_url: null,
-    reply_to_wa_id: null,
-    interactive_payload: null,
-    error_code: null,
-    error_text: null,
-    attempts: 0,
-    next_attempt_at: null,
-    scheduled_for: null,
-    sent_at: null,
-    delivered_at: null,
-    read_at: null,
-    sent_manually_at: null,
-    created_at: (p.now ?? new Date()).toISOString(),
-    click_to_chat: null,
-    lesson: null,
-  };
-}
+// The cache edits themselves are shared with web (client-core thread-pages): an optimistic send's
+// row, the API's row in its place, a rollback, a fresh newest page folded in (mergeNewest).
+export {
+  appendMessage,
+  leavesGap,
+  mergeNewest,
+  provisionalMessage,
+  removeMessage,
+  replaceMessage,
+} from '@ab/client-core';

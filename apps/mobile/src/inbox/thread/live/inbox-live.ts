@@ -1,8 +1,12 @@
 import { createInboxLive, type LiveKey } from '@ab/client-core';
 import { useEffect, useSyncExternalStore } from 'react';
 
-/** The app's one live state (docs/12 §15): realtime up or not, what is on screen. */
-export const inboxLive = createInboxLive();
+/**
+ * The app's one live state (docs/12 §15): realtime up or not, what is on screen. The open
+ * chat owns the badge (docs/43 AU6): its delta stamps a new message read and useInboxRead
+ * refreshes the badge.
+ */
+export const inboxLive = createInboxLive({ chatOwnsBadge: true });
 
 /** Whether the realtime channel is SUBSCRIBED: the polls slow to INBOX_FALLBACK_MS while it is. */
 export function useInboxLive(): boolean {

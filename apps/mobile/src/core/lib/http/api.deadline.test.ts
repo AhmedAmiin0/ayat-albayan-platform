@@ -1,6 +1,6 @@
 import { connectivity } from '@/core/lib/connectivity/connectivity';
 import { apiFetch, apiSend } from './api';
-import { READ_TIMEOUT_MS } from './read-deadline';
+import { READ_TIMEOUT_MS, SEND_TIMEOUT_MS } from '@ab/client-core';
 import { supabase } from './supabase';
 
 // The read deadline covers the whole apiFetch, token included (owner 2026-11-05: a chat read stuck
@@ -46,14 +46,20 @@ test('a sent GET with no answer rejects at the deadline and its fetch is aborted
   expect(init.signal?.aborted).toBe(true);
 });
 
-test('a write (POST) gets no read deadline: still waiting long after it', async () => {
+test('a write (POST) keeps waiting past the read deadline, then ends as no answer at 30 s', async () => {
+  // docs/43 AU10: a hung POST used to keep the chat's send in flight forever (BUG2).
   getSession.mockResolvedValue(session as never);
   mockFetch.mockImplementation(never);
   const onDone = jest.fn();
-  void apiSend('POST', '/threads/x/text', { text: 'hi' }).then(onDone, onDone);
-  await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS * 3);
+  const send = apiSend('POST', '/threads/x/text', { text: 'hi' });
+  void send.then(onDone, onDone);
+  await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS);
   expect(onDone).not.toHaveBeenCalled();
   expect(connectivity.reportFailure).not.toHaveBeenCalled();
+  await expectNoAnswerAtDeadline(send, 1);
+  expect(SEND_TIMEOUT_MS).toBeGreaterThan(READ_TIMEOUT_MS);
+  const [, init] = mockFetch.mock.calls[0] as [string, RequestInit];
+  expect(init.signal?.aborted).toBe(true);
 });
 
 test('a failed token refresh is no answer, not an unauthenticated request', async () => {

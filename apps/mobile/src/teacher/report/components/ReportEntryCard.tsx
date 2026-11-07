@@ -44,7 +44,7 @@ interface ReportEntryCardProps {
 export function ReportEntryCard({ form, entry, tz, scroll }: ReportEntryCardProps) {
   const s = useReportEntry(entry.report, entry.student.program);
   const { report, values } = s;
-  const locked = !report.can_edit;
+  const { locked } = s.mode;
   const needsText = (k: TextKey) => textRequired(k, values.attendance, report.version);
   const firstInvalid =
     s.problem === 'missing_attendance'
