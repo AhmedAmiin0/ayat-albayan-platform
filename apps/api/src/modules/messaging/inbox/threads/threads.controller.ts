@@ -102,8 +102,10 @@ export class ThreadsController {
       actorId: user.id,
       scope,
       sales,
+      role: user.role,
     });
-    return this.audited({ sent, action: 'thread_text', user, scope, sales });
+    const action = input.correctsId ? 'thread_correction' : 'thread_text';
+    return this.audited({ sent, action, user, scope, sales });
   }
 
   @Post(':phone/template')

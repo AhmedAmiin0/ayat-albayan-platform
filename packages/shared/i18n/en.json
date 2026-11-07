@@ -3241,14 +3241,14 @@
     "hide": {
       "action": "Remove from platform",
       "title": "Remove this message from the platform?",
-      "body": "The message will be hidden for all staff on the platform only. It is NOT deleted from the customer's phone: they still see it in WhatsApp.",
+      "body": "The message will be hidden for all staff on the platform only. It is NOT deleted for the family: they still have it in WhatsApp.",
       "confirm": "Remove from platform",
       "placeholder": "Hidden on the platform — still visible to the customer",
       "by": "Hidden by {name} · {time}",
       "byUnknown": "Hidden · {time}",
       "unhide": "Show",
       "failed": "Could not complete the action, please try again.",
-      "noEdit": "WhatsApp messages cannot be edited from the platform; edit them in the WhatsApp Business app."
+      "noEdit": "This message cannot be edited from the platform; only a text you sent can be corrected, with a new «تصحيح» (correction) message."
     },
     "sticker": {
       "favourite": "Add to favourites",
@@ -3274,6 +3274,20 @@
       "more": "Show more messages",
       "failed": "Could not search the messages. Please try again.",
       "hint": "Type at least three characters to search message text"
+    },
+    "correction": {
+      "action": "Edit",
+      "bar": "Edit message",
+      "cancel": "Cancel edit",
+      "prefix": "تصحيح: ",
+      "note": "A sent WhatsApp message cannot be edited; the family gets a new reply to it that starts with «تصحيح:» (correction).",
+      "mark": "Corrected",
+      "jump": "Go to the correction",
+      "errors": {
+        "correction_not_in_thread": "The message to correct is not in this chat",
+        "not_correctable": "This message cannot be corrected",
+        "not_your_message": "You can only correct your own messages"
+      }
     }
   },
   "mobileFinance": {

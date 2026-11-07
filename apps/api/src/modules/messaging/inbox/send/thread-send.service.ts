@@ -9,6 +9,7 @@ import { chatLine } from './text-line';
 import { ThreadQuotes, type ReplyFields, type SendFrom } from '@/modules/messaging/inbox/threads/thread-quotes';
 import { missingParams, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { CorrectionRepo, correctionOf } from './correction';
 
 export { chatLine, sendLine } from './text-line';
 
@@ -31,6 +32,8 @@ export interface ThreadSend<T> {
   dedup?: string;
   /** A server-made send that must not go out late (the reopen template: 24 h). */
   expiresAt?: string;
+  /** The sender's base role («تعديل»: an admin corrects anyone's text). */
+  role?: string | null;
 }
 
 /**
@@ -77,6 +80,7 @@ export async function replyOf(
 export class ThreadSendService {
   /** «رد» (property-injected: the constructor is at the 3-parameter limit). */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
+  @Inject(CorrectionRepo) private readonly corrections?: CorrectionRepo; // «تعديل» = a correction
 
   constructor(
     private readonly queries: ThreadsRepo,
@@ -94,10 +98,12 @@ export class ThreadSendService {
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
     const at = { now, windows: () => this.queries.numberWindows(s.phone) };
-    const teacher = !!s.scope;
-    const from = await chatLine(thread, { ...at, teacher });
-    const reply = await replyOf(this.quotes, s, from);
-    return this.outbox.queue({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...from, ...reply });
+    const fix = await correctionOf(this.corrections, s);
+    const from = await chatLine(thread, { ...at, teacher: !!s.scope });
+    const reply = await replyOf(this.quotes, fix.send, from);
+    const body = fix.send.input.text;
+    const row = { ...outboundBase(s, thread), dedup_key: key, body, ...from, ...reply };
+    return this.outbox.queue({ ...row, ...fix.row });
   }
 
   /**

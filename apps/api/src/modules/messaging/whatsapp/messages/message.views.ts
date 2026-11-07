@@ -8,6 +8,7 @@ import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/te
 import { templateButtons, templateDisplay, templateParams } from './wa-json';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { withHidden } from './hidden/hidden-view';
+import { withCorrection } from './correction/correction-view';
 import { TemplateNames } from '@/modules/messaging/whatsapp/templates/names/template-names';
 import { asRelayTemplateRow, relayTemplateName } from './relay-view/relay-template-row';
 
@@ -26,6 +27,10 @@ export class MessageViews {
   ) {}
 
   async view(stored: ThreadMessageRow, mediaUrl: string | null = null): Promise<MessageView> {
+    return withCorrection(await this.shown(stored, mediaUrl), stored);
+  }
+
+  private async shown(stored: ThreadMessageRow, mediaUrl: string | null): Promise<MessageView> {
     if (stored.hidden_at)
       return withHidden(withMarks(toMessageView({ row: stored, template: null }), stored), stored);
     const row = await this.relayed(stored);
