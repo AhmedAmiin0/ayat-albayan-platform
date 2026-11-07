@@ -7,6 +7,7 @@ import {
 } from './keys.js';
 import { evolutionBase, evolutionInternalHosts } from './evolution.js';
 import { parseAllowedRecipients } from './recipients.js';
+import { STORAGE_VALUE_CHECKS } from './storage.js';
 
 // The value checks of the plain keys, consistent with apps/api/src/config/env/env.ts (the API also re-checks
 // every DB value with its own env schema before using it).
@@ -80,6 +81,7 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   // The select's two values only (INTEGRATION_ENUMS): no «1» or «on» the screens would not show.
   STRIPE_ENABLED: z.enum(['false', 'true']),
   STRIPE_MAX_DISCOUNT_PCT: stripeMaxDiscountPct,
+  ...STORAGE_VALUE_CHECKS,
 };
 
 /**

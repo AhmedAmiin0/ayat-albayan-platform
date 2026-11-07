@@ -31,7 +31,7 @@ export async function voiceMedia(storage: StorageService, m4a: ObjectRef, transc
     log.warn(`voice note sent as plain audio (no ogg/opus copy): ${m4a.path}`);
     return plain;
   }
-  const path = voiceOggPath(m4a.path);
-  await storage.upload({ bucket: m4a.bucket, path, body: ogg, contentType: 'audio/ogg' });
+  const ref = { bucket: m4a.bucket, path: voiceOggPath(m4a.path) };
+  const path = await storage.upload({ ...ref, body: ogg, contentType: 'audio/ogg' });
   return { media_path: path, media_mime: 'audio/ogg', media_name: 'voice.ogg' };
 }

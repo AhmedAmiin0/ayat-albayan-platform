@@ -13,7 +13,7 @@ import {
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
-import { supabase } from '@/lib/http/supabase';
+import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // apps/api assistant-pay module (owner, 2026-10-06; the salesperson, «مسؤول/ة المبيعات», is the base role sales). Reads need
 // assistantpay.read, writes assistantpay.write, approve assistantpay.approve. Amounts are per currency.
@@ -87,7 +87,7 @@ export const statementReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/as
 /** Straight to the private bucket through a one-off signed URL; the path is then sent with the pay. */
 export async function uploadStatementReceipt(file: File, assistantId: string): Promise<string> {
   const signed = await apiSend<SignedUpload>('POST', '/assistant-pay/receipt-upload-url', { assistantId, mime: file.type, size: file.size });
-  const { error } = await supabase.storage.from(signed.bucket).uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type });
+  const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return signed.path;
 }

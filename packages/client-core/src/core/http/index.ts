@@ -19,3 +19,12 @@ export {
   SLOW_READ_TIMEOUT_MS,
   sendTimeoutFor,
 } from './timeouts.js';
+export {
+  SignedUploadError,
+  slotUploader,
+  uploadToSlot,
+  type SlotBucket,
+  type SlotUploadResult,
+  type SupabaseSlotUpload,
+  type UploadFile,
+} from './signed-upload.js';

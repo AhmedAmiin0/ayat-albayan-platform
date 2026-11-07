@@ -110,6 +110,6 @@ export class InboundMediaRepo {
   /** Inbound rows with Meta's media id (never an old-CRM copy), or echoes: outbound with a media id and a cached copy that is not a sent file. */
   private cached<Q extends Filterable<Q>>(q: Q, echoes = false): Q {
     if (!echoes) return q.eq('direction', 'inbound').not('media_id', 'is', null);
-    return q.eq('direction', 'outbound').not('media_id', 'is', null).not('media_path', 'like', 'out/%');
+    return q.eq('direction', 'outbound').not('media_id', 'is', null).not('media_path', 'like', 'out/%').not('media_path', 'like', 'minio:out/%');
   }
 }

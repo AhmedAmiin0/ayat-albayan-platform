@@ -726,7 +726,7 @@
       "count": 9
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/finance/expenses/expense-columns.tsx": {
@@ -4335,7 +4335,7 @@
       "count": 11
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/features/people/assistants/attribution.test.tsx": {
@@ -7403,7 +7403,7 @@
       "count": 12
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/reporting/reports/chart/ChartPoints.tsx": {

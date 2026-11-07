@@ -11,7 +11,7 @@ import {
 import { pdfPageRetryable } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
-import { supabase } from '@/lib/http/supabase';
+import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // D2 (owner 2026-10-19 #2): staff send an image or PDF inside the 24 h window. The file goes to
 // wa-media through a one-off signed URL, then POST /file sends that path (the API re-checks it).
@@ -36,9 +36,7 @@ export async function uploadChatFile(input: { phone: string; requestId: string; 
   const mime = chatSendMime(file);
   if (!mime) throw new ChatUploadError('file_type');
   const signed = await fileUploadUrl({ phone: input.phone, clientRequestId: input.requestId, mime, size: file.size });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, file, { contentType: mime });
+  const { error } = await uploadSigned(signed, { body: file, contentType: mime });
   if (error) throw new ChatUploadError(error.message);
   return signed.path;
 }

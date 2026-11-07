@@ -1,7 +1,7 @@
 import type { AccountProfile, EmailChange, PasswordChange, ProfileUpdate, SignedUpload } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
-import { supabase } from '@/lib/http/supabase';
+import { uploadSigned } from '@/lib/storage/upload-slot';
 
 /** «حسابي» (R-ACC-01..05): every /me call acts on the signed-in caller only. */
 export const PROFILE_KEY = ['me', 'profile'] as const;
@@ -31,9 +31,7 @@ export const changePassword = (body: PasswordChange) => apiSend('PUT', '/me/pass
  */
 export async function uploadPhoto<T>(base: string, file: File): Promise<T> {
   const signed = await apiSend<SignedUpload>('POST', `${base}/upload-url`, { mime: file.type, size: file.size });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type });
+  const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return apiSend<T>('PUT', base, { path: signed.path });
 }

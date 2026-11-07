@@ -67,8 +67,8 @@ export class SavedReplyFiles {
 
   /** Copied to out/{sender}/{request}/: POST /threads/:phone/file then sends it with every chat check. */
   async stage(input: { file: StoredFile; name: string; actorId: string; requestId: string }): Promise<SavedReplyStaged> {
-    const to = chatOutPath({ actorId: input.actorId, requestId: input.requestId, mime: input.file.mime });
-    await this.storage.copy({ from: ref(input.file.path), to: ref(to) });
+    const key = chatOutPath({ actorId: input.actorId, requestId: input.requestId, mime: input.file.mime });
+    const to = await this.storage.copy({ from: ref(input.file.path), to: ref(key) });
     return { path: to, filename: input.name };
   }
 

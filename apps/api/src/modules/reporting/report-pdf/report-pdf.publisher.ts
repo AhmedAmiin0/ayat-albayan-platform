@@ -54,8 +54,9 @@ export class ReportPdfPublisher {
     const html = source.report.form_version === 2 ? familyHtml({ ...toFamilyModel(source, now), contact }, pdfAssets()) : reportHtml(model, pdfAssets());
     const body = await this.renderer.render(html, footerLabel({ code: model.student.code, startsAt: model.startsAt, tz: model.tz }));
     const { student_id: studentId, lesson_id: lessonId } = source.report;
-    const path = reportPdfPath({ studentId, lessonId });
-    await this.storage.upload({ bucket: BUCKETS.reports, path, body, contentType: 'application/pdf' });
+    // The stored path («minio:…» once MinIO keeps new files, docs/45) is what the report row keeps.
+    const key = reportPdfPath({ studentId, lessonId });
+    const path = await this.storage.upload({ bucket: BUCKETS.reports, path: key, body, contentType: 'application/pdf' });
     const feedbackUrl = await this.feedback.url({ lessonId, studentId }, now);
     const approved = await this.templates.approved();
     const messages = readyMessages({ source, feedbackUrl, now, pdfPath: path, approved });

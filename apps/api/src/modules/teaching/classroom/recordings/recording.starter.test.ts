@@ -6,6 +6,7 @@ import { http, recordingQueries, S3 } from '@/modules/teaching/classroom/moderat
 import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import type { RecordingRepo } from './recording.repo';
 import { RecordingStarter } from './recording.starter';
+import { SUPABASE_STORAGE } from './recording.storage.fakes';
 import { lessonTarget, meetingTarget } from './recording-target';
 
 let q: ReturnType<typeof recordingQueries>;
@@ -15,6 +16,7 @@ const starter = (opts: { s3?: RecordingConfig; livekit?: typeof CONFIG | null } 
     q as unknown as RecordingRepo,
     new LivekitApi(opts.livekit === undefined ? CONFIG : opts.livekit, h),
     opts.s3 === undefined ? S3 : opts.s3,
+    SUPABASE_STORAGE,
   );
 const path = `lessons/${LESSON_ID}/2026-10-05T16-05-00-000Z.mp3`;
 

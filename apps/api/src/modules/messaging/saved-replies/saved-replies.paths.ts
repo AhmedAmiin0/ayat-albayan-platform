@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { storageKeyOf } from '@ab/shared';
 import { extFor } from '../../../common/storage/storage.paths';
 
 // A saved reply's attachment lives in the chat's own bucket (wa-media) under saved/{actor}/: the
@@ -12,7 +13,7 @@ export function savedReplyPath(input: { actorId: string; mime: string }): string
 
 /** Was `path` signed for this actor? Exactly saved/{actor}/{file}, no traversal. */
 export function isSavedReplyPathOf(path: string, actorId: string): boolean {
-  const parts = path.split('/');
+  const parts = storageKeyOf(path).split('/');
   const [saved, actor, file] = parts;
   return parts.length === 3 && saved === 'saved' && actor === actorId
     && file !== undefined && file.length > 0 && file !== '..' && file !== '.';

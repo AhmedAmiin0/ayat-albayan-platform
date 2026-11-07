@@ -48,8 +48,10 @@ export class SalesChatFiles {
     const picked = await this.thread.pick({ phone: input.phone, messageId: input.messageId });
     if (!picked) throw badRequest('receipt_type');
     const { msg, file } = picked;
-    const to = { bucket: BUCKETS.receipts, path: `${input.subscriptionId}/wa-${msg.id}-${randomUUID()}.${extFor(file.mime)}` };
-    await this.storage.copy({ from: { bucket: file.bucket, path: file.path }, to });
+    const key = `${input.subscriptionId}/wa-${msg.id}-${randomUUID()}.${extFor(file.mime)}`;
+    const from = { bucket: file.bucket, path: file.path };
+    const copied = await this.storage.copy({ from, to: { bucket: BUCKETS.receipts, path: key } });
+    const to = { bucket: BUCKETS.receipts, path: copied };
     const info = await this.storage.info(to);
     if (!info) throw new Error('receipt copy is missing after copy');
     if (info.size > input.maxBytes) {

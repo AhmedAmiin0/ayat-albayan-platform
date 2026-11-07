@@ -3,7 +3,7 @@ import { type QueryClient, useMutation, useQueryClient } from '@tanstack/react-q
 import * as DocumentPicker from 'expo-document-picker';
 import { apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
-import { supabase } from '@/core/lib/http/supabase';
+import { uploadSigned } from '@/core/lib/http/upload-slot';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { ensureCameraPermission, pickReceipt } from '@/payments';
 import { sendError } from '@/inbox/messages/hooks/message-text';
@@ -92,9 +92,7 @@ export async function sendChatFile({ phone, file, id, maxBytes, replyToMessageId
     mime: file.mime,
     size: file.size,
   });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, file.bytes, { contentType: file.mime });
+  const { error } = await uploadSigned(signed, { body: file.bytes, contentType: file.mime });
   if (error) throw new ChatFileError('file_upload');
   return apiSend<MessageView>('POST', `${threadPath(phone)}/file`, {
     clientRequestId: id,

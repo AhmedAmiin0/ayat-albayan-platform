@@ -5,3 +5,4 @@ export * from './views.js';
 export * from './driver-keys.js';
 export * from './wa-errors.js';
 export * from './evolution.js';
+export * from './storage.js';

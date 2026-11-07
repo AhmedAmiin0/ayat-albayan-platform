@@ -12,7 +12,7 @@ import type {
 } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
-import { supabase } from '@/lib/http/supabase';
+import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): /sales/money/*,
 // /sales/subscriptions and /sales/payments. Only her students; the price always from the API. `Bind`: the chat's
@@ -101,9 +101,7 @@ export async function uploadSalesReceipt(input: { subscriptionId: string; file: 
     size: file.size,
     ...input.bind,
   });
-  const { error } = await supabase.storage
-    .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type });
+  const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return signed.path;
 }

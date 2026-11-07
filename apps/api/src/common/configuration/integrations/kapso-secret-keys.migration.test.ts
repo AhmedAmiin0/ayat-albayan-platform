@@ -6,6 +6,8 @@ import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Migration 450 (docs/19): the Kapso secrets join the Vault allow-list. No database in unit tests.
 const dir = MIGRATIONS_DIR;
+const LATER = ['GOOGLE_', 'WACRM_', 'CALLS_', 'STRIPE_', 'GIPHY_', 'EVOLUTION_', 'MINIO_'];
+const ofItsDay = INTEGRATION_SECRET_KEYS.filter((k) => !LATER.some((p) => k.startsWith(p)));
 const FILE = '20261017000450_kapso_secret_keys.sql';
 const sql = readFileSync(join(dir, FILE), 'utf8');
 
@@ -14,7 +16,7 @@ describe('migration 450: Kapso secret keys', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(sql)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
     // The Google client secret (20261022000610) and the CRM keys (20261025000640) came later.
-    expect(listed.sort()).toEqual(INTEGRATION_SECRET_KEYS.filter((k) => !k.startsWith('GOOGLE_') && !k.startsWith('WACRM_') && !k.startsWith('CALLS_') && !k.startsWith('STRIPE_') && !k.startsWith('GIPHY_') && !k.startsWith('EVOLUTION_')).sort());
+    expect(listed.sort()).toEqual([...ofItsDay].sort());
     expect(listed).toEqual(expect.arrayContaining(['KAPSO_API_KEY', 'KAPSO_WEBHOOK_SECRET']));
   });
 

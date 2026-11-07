@@ -29,7 +29,8 @@ export function setup() {
   const storage = {
     exists: vi.fn(async (ref: { path: string }) => objects.has(ref.path)),
     download: vi.fn(async (ref: { path: string }) => objects.get(ref.path) ?? null),
-    upload: vi.fn(async (ref: { path: string; body: Uint8Array }) => void objects.set(ref.path, ref.body)),
+    upload: vi.fn(async (ref: { path: string; body: Uint8Array }) => (objects.set(ref.path, ref.body), ref.path)),
+    storedPathFor: (path: string) => path,
     signedDownload: vi.fn(async (ref: { path: string }) => ({ url: `https://signed/${ref.path}`, expires_at: '2026-10-29T13:00:00.000Z' })),
   };
   const queries = {

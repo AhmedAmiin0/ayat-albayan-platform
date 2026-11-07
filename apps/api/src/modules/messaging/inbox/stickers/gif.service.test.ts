@@ -15,7 +15,7 @@ const one = { data: { id: 'x9', title: 'شكرًا', images: { fixed_width: stil
 
 const threads = { thread: vi.fn(), numberWindows: vi.fn() };
 const outbox = { queue: vi.fn() };
-const storage = { upload: vi.fn() };
+const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
 const transport = vi.fn();
 const gifs = (key: string | null = 'k1') => {
   const repo = threads as unknown as ThreadsRepo;

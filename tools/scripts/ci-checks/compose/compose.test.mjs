@@ -10,6 +10,8 @@ test('the project and its services', () => {
     'ayat-api-a',
     'ayat-api-b',
     'ayat-lb',
+    'ayat-minio',
+    'ayat-minio-init',
     'ayat-pdf',
     'ayat-redis',
     'ayat-worker',
@@ -17,7 +19,8 @@ test('the project and its services', () => {
 });
 
 test('only the load balancer is published, on localhost:3110 (the host Caddy target, unchanged)', () => {
-  for (const name of APPS) assert.equal(services[name].ports, undefined, name);
+  const unpublished = Object.keys(services).filter((n) => n !== 'ayat-lb');
+  for (const name of unpublished) assert.equal(services[name].ports, undefined, name);
   assert.deepEqual(services['ayat-lb'].ports, ['127.0.0.1:3110:8080']);
 });
 
@@ -64,10 +67,13 @@ test('memory limits fit the 8 GB VPS beside the CRM', () => {
     'ayat-pdf': 128,
     'ayat-lb': 64,
     'ayat-redis': 96,
+    'ayat-minio': 512,
+    'ayat-minio-init': 64,
   });
   // ≈ 2.3 GB of the 8 GB beside the CRM (the worker's 1 GB: Node heap + Chromium; the PDF sandbox's own 128 MB on
   // top: the copies keep 512 MB, they hold each preview's PDF and JPEGs, docs/09).
-  assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 2336);
+  // + MinIO and its one-shot init (docs/45): ≈ 2.9 GB, inside the ~4.6 GB the VPS has free.
+  assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 2912);
 });
 
 test('every container log rotates (json-file, size-capped): never the disk the CRM shares', () => {

@@ -48,7 +48,7 @@ export function mocks() {
     access: { check: vi.fn() },
     audit: { record: vi.fn() },
     settings: { all: vi.fn() },
-    storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn(), info: vi.fn(), copy: vi.fn(), head: vi.fn() },
+    storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn(), info: vi.fn(), copy: vi.fn(async (c: { to: { path: string } }) => c.to.path), head: vi.fn() },
     pricing: { quote: vi.fn(), catalog: vi.fn() },
     attachments: { forPayment: vi.fn(), save: vi.fn(), owners: vi.fn() }, // payment_attachments
     // The salesperson's money routes (sales-money): her ownership, her families, the chat files.

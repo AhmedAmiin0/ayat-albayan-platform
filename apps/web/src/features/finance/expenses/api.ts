@@ -10,7 +10,7 @@ import {
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
-import { supabase } from '@/lib/http/supabase';
+import { uploadSigned } from '@/lib/storage/upload-slot';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
@@ -75,7 +75,7 @@ export const expenseReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/expe
 /** Straight to receipts/expenses/… through a one-off signed URL; the path is then saved with the expense. */
 export async function uploadExpenseReceipt(file: File): Promise<string> {
   const signed = await apiSend<SignedUpload>('POST', '/expenses/receipt-upload-url', { mime: file.type, size: file.size });
-  const { error } = await supabase.storage.from(signed.bucket).uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type });
+  const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return signed.path;
 }
