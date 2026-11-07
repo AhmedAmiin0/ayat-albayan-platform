@@ -10,6 +10,7 @@ interface NodeStatement {
 interface NodeDatabase {
   exec(sql: string): void;
   prepare(sql: string): NodeStatement;
+  close(): void;
 }
 interface NodeSqlite {
   DatabaseSync: new (path: string) => NodeDatabase;
@@ -24,6 +25,7 @@ export function memoryPort(): { port: SqlPort; db: NodeDatabase } {
     run: async (sql, params) => void db.prepare(sql).run(...params),
     // Plain objects (node:sqlite hands null-prototype rows).
     all: async (sql, params) => db.prepare(sql).all(...params).map((r) => ({ ...Object(r) })),
+    close: async () => db.close(),
     transaction: async (work) => {
       db.exec('begin');
       try {

@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { listsKey } from '@/inbox/lists/lib/use-chat-lists';
 import { changeLists } from '@/inbox/thread/live/list-marks';
+import { nudgeInboxStore } from '@/inbox/thread/local/store-session';
 import { type ThreadCache, threadKey } from './thread-cache';
 import { clearUnread, newestInbound, type ThreadListCache, touchList } from './thread-list-cache';
 
@@ -23,6 +24,7 @@ const navCountKey = ['threads', 'nav-count'];
  * it when it shows again; a list on screen re-reads now (changeLists).
  */
 export function refreshLists(client: QueryClient): void {
+  nudgeInboxStore(); // the phone store syncs too (docs/43 43-7)
   changeLists(client);
   for (const queryKey of [navCountKey, listsKey]) void client.invalidateQueries({ queryKey });
 }
@@ -57,6 +59,7 @@ export async function refreshChat(client: QueryClient, phone: string): Promise<v
  */
 export async function resumeInbox(client: QueryClient): Promise<void> {
   await client.cancelQueries({ queryKey: ['threads'] });
+  nudgeInboxStore();
   await refreshInbox(client);
 }
 
@@ -92,6 +95,8 @@ function markInboxRead(client: QueryClient, phone: string): void {
 /** The open chat's useThread: its pages, and whether the server answered since the chat opened. */
 interface ReadState {
   data: ThreadCache | undefined;
+  /** The server's pages alone (useStoredView): a row the phone store brought was never stamped. */
+  httpData?: ThreadCache | undefined;
   isFetchedAfterMount: boolean;
   isSuccess: boolean;
 }
@@ -100,12 +105,13 @@ interface ReadState {
  * markInboxRead once the open chat's GET answered, then again only when a newer received message
  * arrives in it: a refetch with nothing new (a poll) refetches no list.
  */
-export function useInboxRead(phone: string, { data, isFetchedAfterMount, isSuccess }: ReadState): void {
+export function useInboxRead(phone: string, state: ReadState): void {
+  const { data, httpData, isFetchedAfterMount, isSuccess } = state;
   const client = useQueryClient();
   // The saved copy on disk shows before the GET: it read nothing on the server yet.
   const answered = isFetchedAfterMount && isSuccess;
   const seen = useRef('');
-  const inbound = newestInbound(data);
+  const inbound = newestInbound(httpData ?? data);
   useEffect(() => {
     if (!answered || !inbound || seen.current === inbound) return;
     seen.current = inbound;

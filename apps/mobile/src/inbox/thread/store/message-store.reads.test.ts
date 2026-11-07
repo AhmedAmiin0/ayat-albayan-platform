@@ -43,3 +43,13 @@ test('failed comes through over a ranked tick held only from reads', async () =>
   await store.putReads([{ ...view, status: 'failed' }], 'user-a');
   expect((await store.chat('user-a', A, 1))[0]?.status).toBe('failed');
 });
+
+test('a read equal to the stored row writes nothing and tells no reader', async () => {
+  const store = await opened();
+  const { updated_at: _, ...view } = row({ n: 1 });
+  await store.putReads([view], 'user-a');
+  const heard = jest.fn();
+  store.subscribe(heard);
+  expect(await store.putReads([view], 'user-a')).toBe(true);
+  expect(heard).not.toHaveBeenCalled();
+});

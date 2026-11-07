@@ -14,6 +14,7 @@ export async function openExpoPort(): Promise<SqlPort> {
     },
     all: (sql, params) => db.getAllAsync<unknown>(sql, [...params]),
     transaction: (work) => db.withTransactionAsync(work),
+    close: () => db.closeAsync(),
   };
 }
 

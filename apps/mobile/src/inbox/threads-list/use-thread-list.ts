@@ -7,6 +7,7 @@ import { nextPageParam, type Page } from '@/core/lib/query/paging';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import { useInboxLive, useLiveWatch } from '@/inbox/thread/live';
+import { useStoredThreads } from '@/inbox/thread/local';
 import { waitingForReply } from './chat-filter';
 import { useListCatchUp, withChatTicks } from './list-catch-up';
 
@@ -38,6 +39,7 @@ export function useThreadList({ search, unread, list, status, live: liveTab = fa
   const client = useQueryClient();
   const queryKey = ['threads', 'list', { search, unread, list, status }];
   useListCatchUp(queryKey, focused);
+  const stored = useStoredThreads(); // the phone store's ticks (docs/43 43-7)
   const query = useInfiniteQuery({
     queryKey,
     // TanStack's signal: a list nobody shows drops its read, so a later mount starts a new one.
@@ -50,7 +52,7 @@ export function useThreadList({ search, unread, list, status, live: liveTab = fa
     getNextPageParam: nextPageParam,
     refetchInterval: liveTab && focused ? liveInterval(live, INBOX_LIST_REFRESH_MS) : false,
     // A list answer never shows a tick behind the one its chat already merged (docs/43 43-1).
-    select: withChatTicks(client, queryKey),
+    select: withChatTicks(client, queryKey, stored),
   });
   const pages = query.data?.pages;
   const items = useMemo(() => {

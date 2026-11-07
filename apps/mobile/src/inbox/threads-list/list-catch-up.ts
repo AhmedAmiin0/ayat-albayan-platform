@@ -1,4 +1,5 @@
-import { chatStatus, overlayPages, type StatusOf } from '@ab/client-core';
+import { chatStatus, furtherOf, overlayPages, type StatusOf, storedStatus } from '@ab/client-core';
+import type { ThreadView } from '@ab/shared';
 import { type QueryClient, type QueryKey, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { missedChange, rereadList, showList } from '@/inbox/thread/live';
@@ -26,9 +27,17 @@ const chatTicks =
     return chatStatus(chat, row.last_message_id);
   };
 
-/** The list query's select: a list answer never shows a tick behind a newer chat read's. */
-export const withChatTicks = (client: QueryClient, queryKey: QueryKey) => (data: ThreadListCache) =>
-  overlayPages(data, chatTicks(client, updatedAt(client, queryKey)));
+/** Stored chats-list rows by phone (the phone store, docs/43 43-7; empty without one). */
+type Stored = ReadonlyMap<string, ThreadView>;
+
+/** A list row's tick: the further along of the open chat's and the phone store's. */
+const listTicks = (client: QueryClient, since: number, stored: Stored): StatusOf =>
+  furtherOf(chatTicks(client, since), storedStatus(stored));
+
+/** The list query's select: never a tick behind a chat read's or the phone store's. */
+export const withChatTicks =
+  (client: QueryClient, queryKey: QueryKey, stored: Stored) => (data: ThreadListCache) =>
+    overlayPages(data, listTicks(client, updatedAt(client, queryKey), stored));
 
 /** The chats' ticks written into this list's cache, keeping its time (it was not read again). */
 function liftTicks(client: QueryClient, queryKey: QueryKey): void {
