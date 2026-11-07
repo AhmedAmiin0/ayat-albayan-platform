@@ -8,37 +8,35 @@ const ROWS: LiveRow[] = [{ id: 'a', s: 'delivered', d: 'outbound', at: '2026-11-
 
 function setup(rows?: LiveTargets['rows']) {
   const live = createInboxLive();
-  const targets = { chat: vi.fn(), list: vi.fn(), badge: vi.fn(), rows: rows && vi.fn(rows) };
+  const order: string[] = [];
+  const targets = {
+    chat: vi.fn(() => order.push('chat')),
+    list: vi.fn(),
+    badge: vi.fn(),
+    rows:
+      rows && vi.fn((phone: string, r: readonly LiveRow[]) => (order.push('rows'), rows(phone, r))),
+  };
   live.bind(targets);
   live.watch(chatLiveKey(OPEN));
   live.watch('list');
-  return { live, targets };
+  return { live, targets, order };
 }
-
-const reads = (t: ReturnType<typeof setup>['targets']) =>
-  t.chat.mock.calls.length + t.list.mock.calls.length + t.badge.mock.calls.length;
 
 beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
-describe('createInboxLive: an event with rows (docs/44 K1)', () => {
-  it('rows the app took whole: no re-read at all', async () => {
-    const { live, targets } = setup(() => true);
+describe('createInboxLive: an event with rows (docs/44 K1, a visual patch only)', () => {
+  it('patches first, then re-reads the chat, the list and the badge as before', async () => {
+    const { live, targets, order } = setup(() => undefined);
     live.changed({ phone: OPEN, rows: ROWS });
     await vi.runAllTimersAsync();
     expect(targets.rows).toHaveBeenCalledWith(OPEN, ROWS);
-    expect(reads(targets)).toBe(0);
-  });
-
-  it('an async patch that holds every row: no re-read either', async () => {
-    const { live, targets } = setup(() => Promise.resolve(true));
-    live.changed({ phone: OPEN, rows: ROWS });
-    await vi.runAllTimersAsync();
-    expect(reads(targets)).toBe(0);
+    expect(order).toEqual(['rows', 'chat']);
+    expect(targets.list).toHaveBeenCalledTimes(1);
+    expect(targets.badge).toHaveBeenCalledTimes(1);
   });
 
   it.each([
-    ['an unknown id (false)', () => false],
     ['a failed patch (rejects)', () => Promise.reject(new Error('disk'))],
     [
       'a throwing patch',
@@ -46,17 +44,16 @@ describe('createInboxLive: an event with rows (docs/44 K1)', () => {
         throw new Error('boom');
       },
     ],
-  ])('%s: the throttled read as before', async (_, rows: () => boolean | Promise<boolean>) => {
+  ])('%s: the read still runs', async (_, rows: () => void | Promise<unknown>) => {
     const { live, targets } = setup(rows);
     live.changed({ phone: OPEN, rows: ROWS });
     await vi.runAllTimersAsync();
     expect(targets.chat).toHaveBeenCalledWith(OPEN);
     expect(targets.list).toHaveBeenCalledTimes(1);
-    expect(targets.badge).toHaveBeenCalledTimes(1);
   });
 
-  it('a {phone}-only event never asks the patch and re-reads at once', () => {
-    const { live, targets } = setup(() => true);
+  it('a {phone}-only event never asks the patch', () => {
+    const { live, targets } = setup(() => undefined);
     live.changed({ phone: OPEN });
     expect(targets.rows).not.toHaveBeenCalled();
     expect(targets.chat).toHaveBeenCalledWith(OPEN);
@@ -67,13 +64,5 @@ describe('createInboxLive: an event with rows (docs/44 K1)', () => {
     live.changed({ phone: OPEN, rows: ROWS });
     await vi.runAllTimersAsync();
     expect(targets.chat).toHaveBeenCalledTimes(1);
-  });
-
-  it('isWatched follows watch / release (the apps settle rows only against the open chat)', () => {
-    const live = createInboxLive();
-    const release = live.watch(chatLiveKey(OPEN));
-    expect(live.isWatched(chatLiveKey(OPEN))).toBe(true);
-    release();
-    expect(live.isWatched(chatLiveKey(OPEN))).toBe(false);
   });
 });

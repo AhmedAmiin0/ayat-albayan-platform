@@ -10,7 +10,6 @@ const row = (id: string, s: MessageStatus): LiveRow => ({
   at: '2026-11-07T10:00:00Z',
 });
 const msg = (id: string, status: MessageStatus) => ({ id, status, body: id }) as MessageView;
-const held = (map: Record<string, MessageStatus>) => (id: string) => map[id];
 
 describe('liveEvent: the payload, parsed (zod)', () => {
   it('keeps the phone and the rows', () => {
@@ -33,40 +32,14 @@ describe('liveEvent: the payload, parsed (zod)', () => {
   });
 });
 
-describe('applyLiveRows: tick moves of the open chat settle, everything else re-reads', () => {
-  it('complete when every row is an outbound tick the open chat holds', () => {
-    const out = applyLiveRows(
-      [row('a', 'sent'), row('b', 'read')],
-      held({ a: 'queued', b: 'sent' }),
-    );
-    expect(out.complete).toBe(true);
-    expect([...out.incoming]).toEqual([
-      ['a', 'sent'],
-      ['b', 'read'],
-    ]);
-  });
-
-  it('a row the chat does not show (a new message) re-reads; every row still patches', () => {
-    const out = applyLiveRows([row('a', 'delivered'), row('new', 'sent')], held({ a: 'sent' }));
-    expect(out.complete).toBe(false);
-    expect([...out.incoming]).toEqual([
-      ['a', 'delivered'],
-      ['new', 'sent'],
-    ]);
-  });
-
-  it('an inbound row re-reads even when already held (a list/sync read landed it first)', () => {
+describe('applyLiveRows: the incoming status by id', () => {
+  it('every row, inbound and queued alike', () => {
     const inbound: LiveRow = { ...row('m', 'delivered'), d: 'inbound' };
-    expect(applyLiveRows([inbound], held({ m: 'delivered' })).complete).toBe(false);
-  });
-
-  it('a queued row (insert, or a retry of a failed one) re-reads even when held', () => {
-    expect(applyLiveRows([row('a', 'queued')], held({ a: 'failed' })).complete).toBe(false);
-  });
-
-  it('no rows: incomplete, nothing to move', () => {
-    expect(applyLiveRows(undefined, held({}))).toEqual({ incoming: new Map(), complete: false });
-    expect(applyLiveRows([], held({})).complete).toBe(false);
+    expect([...applyLiveRows([row('a', 'sent'), row('b', 'queued'), inbound])]).toEqual([
+      ['a', 'sent'],
+      ['b', 'queued'],
+      ['m', 'delivered'],
+    ]);
   });
 });
 

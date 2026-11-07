@@ -64,11 +64,8 @@ export function useInboxRealtime(enabled: boolean): void {
             { queryKey: ['threads', 'nav-count'] },
             { cancelRefetch: false },
           ),
-        // docs/44 K1: the event's ticks straight into the caches; a new row still re-reads.
-        rows: (phone, rows) => {
-          const watched = inboxLive.isWatched(chatLiveKey(phone));
-          return patchLiveCaches(client, { phone, watched }, rows);
-        },
+        // docs/44 K1: the event's ticks into the caches at once; the re-reads above still run.
+        rows: (phone, rows) => patchLiveCaches(client, phone, rows),
       });
     const session = createLiveSession(open, inboxLive.resync);
     const shown = () =>

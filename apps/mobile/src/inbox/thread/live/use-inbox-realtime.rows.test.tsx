@@ -2,7 +2,6 @@ import { chatLiveKey, type LiveRow } from '@ab/client-core';
 import { act, renderHook } from '@testing-library/react-native';
 import { AppState } from 'react-native';
 import { queryClient as client } from '@/core/lib/query/query-client';
-import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { nudgeInboxStore, patchInboxStore } from '@/inbox/thread/local/store-session';
 import { inboxLive } from './inbox-live';
 import { changeLists } from './list-marks';
@@ -14,7 +13,8 @@ jest.mock('@/inbox/thread/local/store-session', () => ({
   patchInboxStore: jest.fn(),
 }));
 
-// docs/44 K1 on mobile: an event's ticks go into the phone store; held rows mean zero HTTP.
+// docs/44 K1 on mobile: an event's ticks go into the phone store (a visual patch); it re-reads all
+// the same.
 
 const OPEN = '+966500000001';
 const ROW: LiveRow = { id: 'm1', s: 'delivered', d: 'outbound', at: '2026-11-07T10:00:00Z' };
@@ -44,71 +44,46 @@ jest.mock('@/core/lib/http/supabase', () => ({
 async function mount() {
   Object.defineProperty(AppState, 'currentState', { value: 'active', configurable: true });
   jest.spyOn(AppState, 'addEventListener').mockImplementation(() => ({ remove: jest.fn() }));
-  const refetch = jest.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);
-  const invalidate = jest.spyOn(client, 'invalidateQueries').mockResolvedValue(undefined);
+  jest.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);
+  jest.spyOn(client, 'invalidateQueries').mockResolvedValue(undefined);
   const hook = await renderHook(() => useInboxRealtime(true));
   await act(async () => undefined);
   await act(async () => mockHooks.status?.('SUBSCRIBED'));
   inboxLive.watch(chatLiveKey(OPEN));
   inboxLive.watch('list');
   jest.clearAllMocks();
-  const http = () => refetch.mock.calls.length + invalidate.mock.calls.length;
-  return { hook, http };
+  return { hook };
 }
-
-/** The open chat's read cache holds these ids (what is on screen). */
-const showing = (...ids: string[]) =>
-  client.setQueryData(threadKey(OPEN), {
-    pages: [{ messages: ids.map((id) => ({ id, status: 'sent' })), has_more: false }],
-    pageParams: [null],
-  });
 
 const push = (rows: LiveRow[]) =>
   act(async () => mockHooks.event?.({ payload: { phone: OPEN, rows } }));
 
 beforeEach(() => jest.useFakeTimers());
 afterEach(() => {
-  client.removeQueries({ queryKey: threadKey(OPEN) });
   inboxLive.forget(chatLiveKey(OPEN));
   inboxLive.forget('list');
   jest.useRealTimers();
   jest.restoreAllMocks();
 });
 
-test('an outbound tick the open chat shows: the tick moves with no request, no nudge', async () => {
-  jest.mocked(patchInboxStore).mockResolvedValue(true);
-  showing('m1');
-  const { hook, http } = await mount();
+test('rows patch the phone store first, then the sync and the screens re-read as before', async () => {
+  const { hook } = await mount();
+  const order: string[] = [];
+  jest.mocked(patchInboxStore).mockImplementation(async () => void order.push('patch'));
+  jest.mocked(nudgeInboxStore).mockImplementation(() => void order.push('nudge'));
   await push([ROW]);
   await act(async () => jest.runAllTimersAsync());
   expect(patchInboxStore).toHaveBeenCalledWith(OPEN, [ROW]);
-  expect([http(), jest.mocked(changeLists).mock.calls.length]).toEqual([0, 0]);
-  expect(nudgeInboxStore).not.toHaveBeenCalled();
-  await act(async () => hook.unmount());
-});
-
-test.each([
-  ['an unknown id', 'queued' as const, false],
-  ['failed (the overlay shows ranked ticks only)', 'failed' as const, true],
-])('%s: the store syncs and the screens re-read as before', async (_, s, held) => {
-  jest.mocked(patchInboxStore).mockResolvedValue(held);
-  const { hook } = await mount();
-  await push([{ ...ROW, s }]);
-  await act(async () => jest.runAllTimersAsync());
-  expect(nudgeInboxStore).toHaveBeenCalled();
+  expect(order[0]).toBe('patch');
+  expect(order).toContain('nudge');
   expect(changeLists).toHaveBeenCalled();
   await act(async () => hook.unmount());
 });
 
-test.each<[string, LiveRow, string[]]>([
-  ['a new message a sync stored first (the open chat lacks it)', ROW, []],
-  ['an inbound row the chat shows (the read stamps it)', { ...ROW, d: 'inbound' }, ['m1']],
-  ['a retry: failed → queued (the overlay ignores unranked)', { ...ROW, s: 'queued' }, ['m1']],
-])('%s: the store says held, the open chat still re-reads', async (_, row, shown) => {
-  jest.mocked(patchInboxStore).mockResolvedValue(true);
-  showing(...shown);
+test('a failed patch never stops the re-read', async () => {
+  jest.mocked(patchInboxStore).mockRejectedValue(new Error('disk'));
   const { hook } = await mount();
-  await push([row]);
+  await push([{ ...ROW, s: 'queued' }]);
   await act(async () => jest.runAllTimersAsync());
   expect(nudgeInboxStore).toHaveBeenCalled();
   expect(changeLists).toHaveBeenCalled();

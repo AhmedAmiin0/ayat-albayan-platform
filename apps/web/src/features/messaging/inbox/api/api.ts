@@ -10,13 +10,14 @@ import type {
   ThreadText,
   ThreadView,
 } from '@ab/shared';
-import { laterListTicks, liveInterval } from '@ab/client-core';
+import { liveInterval } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { LeadRow, Page } from '@/features/sales/leads/types';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { env } from '@/lib/http/env';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { inboxLive } from './live';
+import { foldListRead, inboxPatches } from './patch-times';
 
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
@@ -37,12 +38,12 @@ export const threadsQuery = (s: InboxSearch) => {
   if (s.list) params.set('list', s.list);
   return queryOptions({
     queryKey: ['threads', 'list', params.toString()],
-    // A read in flight never takes back a tick a live event moved meanwhile (docs/44 K1).
-    queryFn: async ({ signal, client, queryKey }) =>
-      laterListTicks(
-        client.getQueryData<Page<ThreadView>>(queryKey),
-        await apiFetch<Page<ThreadView>>(`/threads?${params}`, { signal }),
-      ),
+    // docs/44 K1: the patch-time rule (patch-times.ts); the cache is read after the await.
+    queryFn: async ({ signal, client, queryKey }) => {
+      const since = inboxPatches.start();
+      const page = await apiFetch<Page<ThreadView>>(`/threads?${params}`, { signal });
+      return foldListRead(client.getQueryData<Page<ThreadView>>(queryKey), since, page);
+    },
     placeholderData: keepPreviousData,
     refetchInterval: () => liveInterval(inboxLive.isLive(), env.inboxListRefreshMs),
   });

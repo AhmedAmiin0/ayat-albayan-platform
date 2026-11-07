@@ -1,6 +1,5 @@
 import {
   type ChatPages,
-  laterTicks,
   threadNextParam,
   threadPageQuery,
   type ThreadPageParam,
@@ -8,6 +7,7 @@ import {
 import { infiniteQueryOptions } from '@tanstack/react-query';
 import { env } from '@/lib/http/env';
 import { threadPage, threadPath } from './api';
+import { foldChatRead, inboxPatches } from './patch-times';
 
 /**
  * One page per `before` + `before_id` (the oldest loaded message), newest page first. Opening
@@ -18,17 +18,19 @@ import { threadPage, threadPath } from './api';
  * event (useWindowFocus), which re-arms the interval. This full read runs on open, on focus and
  * every threadFullRefreshMs; between them the chat's delta poll (thread-delta.ts, ~2 reads) brings
  * new rows and ticks. TanStack's signal (docs/43 AU8): a superseded read is freed. A page that
- * lands keeps any cached tick further along (laterTicks, docs/44 K1): a read in flight never takes
- * back a tick a live event moved meanwhile.
+ * lands is folded by the patch-time rule (patch-times.ts, docs/44 K1): a live tick stays only
+ * against a read that started before it; the cache is read after the await.
  */
 export const threadQuery = (phone: string) =>
   infiniteQueryOptions({
     queryKey: ['threads', 'detail', phone],
-    queryFn: async ({ pageParam, signal, client, queryKey }) =>
-      laterTicks(
-        client.getQueryData<ChatPages>(queryKey),
-        await threadPage(`${threadPath(phone)}${threadPageQuery(pageParam)}`, { signal }),
-      ),
+    queryFn: async ({ pageParam, signal, client, queryKey }) => {
+      const since = inboxPatches.start();
+      const page = await threadPage(`${threadPath(phone)}${threadPageQuery(pageParam)}`, {
+        signal,
+      });
+      return foldChatRead(client.getQueryData<ChatPages>(queryKey), since, page);
+    },
     initialPageParam: null as ThreadPageParam,
     // Time and id (docs/37 NEW 4): rows sharing the oldest row's time are never skipped.
     getNextPageParam: threadNextParam,

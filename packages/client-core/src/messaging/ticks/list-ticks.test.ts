@@ -1,13 +1,6 @@
 import type { MessageStatus, MessageView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import {
-  chatStatus,
-  laterListTicks,
-  overlayPage,
-  overlayPages,
-  overlayTicks,
-  type TickRow,
-} from './list-ticks.js';
+import { chatStatus, overlayPage, overlayPages, overlayTicks, type TickRow } from './list-ticks.js';
 
 const row = (phone: string, id: string, last_status: MessageStatus): TickRow => ({
   phone_e164: phone,
@@ -74,27 +67,5 @@ describe('overlayPage / overlayPages: whole list caches', () => {
     expect(out.pages[0]?.total).toBe(1);
     expect(out.pages[1]).toBe(still);
     expect(out.pageParams).toBe(data.pageParams);
-  });
-});
-
-describe('laterListTicks: a fresh list page never lowers a cached tick (docs/44 K1)', () => {
-  const page = (status: MessageStatus) => ({
-    items: [{ phone_e164: '+966500000001', last_message_id: 'a', last_status: status }],
-  });
-
-  it.each<[MessageStatus, MessageStatus, MessageStatus]>([
-    ['delivered', 'sent', 'delivered'],
-    ['sent', 'read', 'read'],
-    ['delivered', 'failed', 'failed'],
-    ['failed', 'queued', 'queued'],
-  ])('cached %s, fresh %s → %s', (cached, fresh, kept) => {
-    expect(laterListTicks(page(cached), page(fresh)).items[0]?.last_status).toBe(kept);
-  });
-
-  it('nothing cached, or another last message: the fresh page as is', () => {
-    const fresh = page('sent');
-    expect(laterListTicks(undefined, fresh)).toBe(fresh);
-    const other = { items: [row('+966500000001', 'b', 'read')] };
-    expect(laterListTicks(other, fresh)).toBe(fresh);
   });
 });

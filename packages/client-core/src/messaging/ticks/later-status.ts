@@ -13,9 +13,6 @@ const RANK: Record<MessageStatus, number | null> = {
   sent_manually: null,
 };
 
-/** On the ranked path (queued < sent < delivered < read): not failed, not sent by hand. */
-export const isRanked = (status: MessageStatus): boolean => RANK[status] !== null;
-
 /** Both statuses are on the ranked path and `status` is further along it than `than`. */
 export function ranksAbove(status: MessageStatus, than: MessageStatus): boolean {
   const a = RANK[status];
@@ -33,7 +30,7 @@ export function laterStatus(cached: MessageStatus, incoming: MessageStatus): Mes
 }
 
 /** `fresh` with the cached row's tick (and its stamps) when the cached one is further along. */
-export function laterTick<M extends MessageView>(cached: MessageView | undefined, fresh: M): M {
+export function laterTick(cached: MessageView | undefined, fresh: MessageView): MessageView {
   if (!cached || !ranksAbove(cached.status, fresh.status)) return fresh;
   const { status, sent_at, delivered_at, read_at } = cached;
   return { ...fresh, status, sent_at, delivered_at, read_at };

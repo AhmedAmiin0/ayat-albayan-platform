@@ -2,17 +2,13 @@ import type { LiveRow } from '@ab/client-core';
 import type { MessageStatus } from '@ab/shared';
 import { memoryPort } from '@/test/node-sql';
 import { createMessageStore } from './message-store';
-import { A, B, applyAs, at, id, plan, row, threadRow } from './store-fixtures';
+import { A, B, applyAs, id, plan, row, threadRow } from './store-fixtures';
 
-// docs/44 K1: a realtime event's ticks straight into the phone store (no HTTP); the same owner
-// guard as every write; the server's sync stamp untouched.
+// docs/44 K1: a realtime event's ticks straight into the phone store (a visual patch); the same
+// owner guard as every write; the server's sync stamp untouched. The sync's patch-time rule:
+// sync-engine.live.test.ts.
 
 const live = (n: number, s: MessageStatus): LiveRow => ({ id: id(n), s, d: 'outbound', at: '' });
-/** Row 1 as a later sync answers it: a newer updated_at, the same created_at. */
-const synced = (status: MessageStatus, s: number) => ({
-  ...row({ n: 1, status }),
-  updated_at: at(s),
-});
 
 async function filled() {
   const { port } = memoryPort();
@@ -49,12 +45,12 @@ test('the sync stamp stays: the next sync still lands the server row', async () 
   expect(held(id(1))).toBe(row({ n: 1 }).updated_at);
 });
 
-test('an unknown id, or a row of another chat, is not complete (the caller re-reads)', async () => {
+test('an unknown id, or a row of another chat, moves nothing', async () => {
   const { store, statuses } = await filled();
   const at = { owner: 'user-a', phone: A };
-  expect(await store.live([live(1, 'sent'), live(9, 'queued')], at)).toBe(false);
+  expect(await store.live([live(1, 'sent'), live(9, 'queued')], at)).toBe(true);
   expect(await statuses()).toEqual(['read', 'sent']);
-  expect(await store.live([live(3, 'read')], at)).toBe(false);
+  await store.live([live(3, 'read')], at);
   expect((await store.chat('user-a', B, 10))[0]?.status).toBe('sent');
 });
 
@@ -69,24 +65,4 @@ test('failed replaces any tick (laterStatus)', async () => {
   const { store, statuses } = await filled();
   expect(await store.live([live(2, 'failed')], { owner: 'user-a', phone: A })).toBe(true);
   expect(await statuses()).toEqual(['failed', 'queued']);
-});
-
-test('a sync read in flight lands after a live tick: the tick never goes back', async () => {
-  const { store, statuses } = await filled();
-  await applyAs(store, plan([], { threads: [threadRow(A, 1)] }));
-  await store.live([live(1, 'delivered')], { owner: 'user-a', phone: A });
-  const older = synced('sent', 30); // newer updated_at, older tick
-  await applyAs(store, plan([older], { threads: [{ ...threadRow(A, 1), last_status: 'sent' }] }));
-  expect(await statuses()).toEqual(['read', 'delivered']);
-  expect((await store.threads('user-a'))[0]?.last_status).toBe('delivered');
-  expect((await store.held([id(1)]))(id(1))).toBe(older.updated_at);
-});
-
-test('a sync bringing failed (or a retry back to queued) still lands over a live tick', async () => {
-  const { store, statuses } = await filled();
-  await store.live([live(1, 'delivered')], { owner: 'user-a', phone: A });
-  await applyAs(store, plan([synced('failed', 30)]));
-  expect(await statuses()).toEqual(['read', 'failed']);
-  await applyAs(store, plan([synced('queued', 40)]));
-  expect(await statuses()).toEqual(['read', 'queued']);
 });

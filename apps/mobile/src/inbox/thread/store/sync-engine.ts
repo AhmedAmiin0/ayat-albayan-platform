@@ -34,9 +34,10 @@ interface SyncEngine {
 async function syncPage(deps: SyncEngineDeps, signal: AbortSignal): Promise<boolean> {
   const { store, owner, fetchPage } = deps;
   const state = await store.state();
+  const since = store.stamp(); // docs/44 K1: a live tick after this stays over the read's
   const res = await fetchPage(nextSince(state), signal);
   const plan = planSync(state, res, await store.held(res.messages.map((m) => m.id)));
-  const kept = !signal.aborted && (await store.apply(plan, { owner, base: state }));
+  const kept = !signal.aborted && (await store.apply(plan, { owner, base: state, since }));
   return kept && plan.state.more;
 }
 
@@ -75,7 +76,9 @@ export function createSyncEngine(deps: SyncEngineDeps): SyncEngine {
     nudge: () => throttle.call(),
     syncNow() {
       again = running !== null;
-      running ??= drain().catch(() => undefined).finally(settle);
+      running ??= drain()
+        .catch(() => undefined)
+        .finally(settle);
       return running;
     },
     start() {

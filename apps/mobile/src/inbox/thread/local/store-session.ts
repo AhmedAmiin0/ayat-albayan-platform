@@ -130,9 +130,10 @@ export const wakeInboxStore = (owner: string): Promise<StoreWake | null> =>
     return woken?.owner === owner ? wakeOf(woken) : null;
   });
 
-/** A realtime event's ticks into the store (docs/44 K1); true when it held every row. */
-export const patchInboxStore = async (phone: string, rows: readonly LiveRow[]): Promise<boolean> =>
-  session ? session.store.live(rows, { owner: session.owner, phone }).catch(() => false) : false;
+/** A realtime event's ticks into the store (docs/44 K1, a visual patch; the sync still runs). */
+export const patchInboxStore = async (phone: string, rows: readonly LiveRow[]): Promise<void> => {
+  await session?.store.live(rows, { owner: session.owner, phone }).catch(() => false);
+};
 
 /** Something changed on the server (realtime, push, back in the foreground): sync soon. */
 export const nudgeInboxStore = (): void => session?.engine.nudge();

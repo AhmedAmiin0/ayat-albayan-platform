@@ -43,8 +43,13 @@ reaction/marker rows (`message_is_reaction`), edits/deletes (need a body re-read
 (`inbox_live_reader`, 860; `routing.teacher.test.tsx:125`). Client: pure `applyLiveRows` inside `thread-delta.ts`
 (`client-core/src/messaging/inbox` already has 12 code files) patches known ids by `laterStatus` (docs/43 43-1:
 queued < sent < delivered < read only; `failed`/`sent_manually` always replace) in the chat AND the list row,
-and ignores phones not in a loaded list; unknown ids still trigger the
-throttled HTTP read for the body. Supabase's broadcast payload limit must be checked for our plan before merge.
+and ignores phones not in a loaded list. The patch is VISUAL ONLY (owner, 2026-11-07): every event, rows or
+`{phone}`, still runs the same throttled re-read (web chat + list, mobile sync nudge), which brings replyable,
+stamps, re-queues and bodies. Reads are never folded by rank; only the patch-time rule applies
+(`client-core/src/messaging/ticks/patch-times.ts`): a read that STARTED BEFORE a patch of an id keeps that
+patch's tick (re-applied by `laterStatus`, the cache read after the await); a read started after it wins. On the
+web an older page loading during a patch (TanStack commits the pages it copied at its start) gets the patch
+re-applied once it lands. Supabase's broadcast payload limit must be checked for our plan before merge.
 
 ## 3. «آخر نشاط» (last seen) — what is possible
 

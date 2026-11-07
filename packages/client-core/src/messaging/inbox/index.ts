@@ -21,7 +21,6 @@ export {
   LIVE_ROWS_MAX,
   liveEvent,
   type LiveEvent,
-  type LivePatch,
   type LiveRow,
   patchChat,
   patchList,
