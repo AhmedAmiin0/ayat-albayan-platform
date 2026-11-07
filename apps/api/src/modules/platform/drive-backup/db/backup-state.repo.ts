@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
-import { FROZEN_REASONS } from '@/modules/platform/drive-backup/plan/frozen';
+import { SKIP_WHYS } from '@/modules/platform/drive-backup/run/summary';
 import { fail, RECENT_COLUMNS, recentRowSchema, type RecentRow } from './archive-row.schema';
+
+const skippedSchema = z.object({ id: z.string(), size: z.number(), reason: z.enum(SKIP_WHYS) });
 
 const stateSchema = z.object({
   folder_id: z.string().nullable(),
@@ -12,14 +14,16 @@ const stateSchema = z.object({
   quota_at: z.string().nullable(),
   last_run_at: z.string().nullable(),
   last_error: z.string().nullable(),
-  /** The open full's first part, when it has been open for more than 3 nights (plan/frozen.ts). */
-  frozen_since: z.string().nullable(),
-  frozen_reason: z.enum(FROZEN_REASONS).nullable(),
-  /** Objects the night's cap left for later, and the oldest with the night first left (left.ts). */
-  left_count: z.number().int(),
-  left_watch: z.record(z.string(), z.string()),
+  /** The last night's skipped objects, named (the first SKIPPED_KEPT), and how many in all. */
+  skipped: z.array(skippedSchema),
+  skipped_count: z.number().int(),
+  /** Objects the last night could not send for lack of room on Drive. */
+  waiting: z.number().int(),
 });
 export type BackupState = z.infer<typeof stateSchema>;
+
+/** At most this many skipped objects are named on the status line. */
+export const SKIPPED_KEPT = 50;
 
 const EMPTY: BackupState = {
   folder_id: null,
@@ -29,13 +33,13 @@ const EMPTY: BackupState = {
   quota_at: null,
   last_run_at: null,
   last_error: null,
-  frozen_since: null,
-  frozen_reason: null,
-  left_count: 0,
-  left_watch: {},
+  skipped: [],
+  skipped_count: 0,
+  waiting: 0,
 };
+
 const COLUMNS =
-  'folder_id, account_email, quota_limit, quota_usage, quota_at, last_run_at, last_error, frozen_since, frozen_reason, left_count, left_watch';
+  'folder_id, account_email, quota_limit, quota_usage, quota_at, last_run_at, last_error, skipped, skipped_count, waiting';
 
 /** drive_backup_state (one row) and the status line's recent archives, with the service role. */
 @Injectable()

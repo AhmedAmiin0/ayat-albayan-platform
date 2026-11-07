@@ -47,7 +47,9 @@ describe('restore of an archive damaged in the middle (incompressible data)', ()
     t.minio.set({ bucket: B.reports, key: 'a-noise.bin', body: randomBytes(256 * 1024) });
     t.minio.set({ bucket: B.reports, key: 'z-noise.bin', body: randomBytes(256 * 1024) });
     await t.night('2026-11-07');
-    const full = [...t.drive.files.values()].find((f) => f.meta.name === 'full-2026-W45.tar.zst');
+    const full = [...t.drive.files.values()].find(
+      (f) => f.meta.name === 'add-2026-11-07.p1.tar.zst',
+    );
     const at = Math.floor((full?.bytes.length ?? 0) / 4);
     full?.bytes.fill(0x55, at, at + 64);
     const target = new FakeMinio();

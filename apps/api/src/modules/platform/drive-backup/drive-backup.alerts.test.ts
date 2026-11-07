@@ -2,9 +2,10 @@ import { describe, expect, it, vi } from 'vitest';
 import type { PushService } from '@/common/push/push.service';
 import { ar } from '@/common/infra/i18n/server-text';
 import { DriveBackupAlerts } from './drive-backup.alerts';
-import type { TooLargeItem } from './run/summary';
+import type { SkippedItem } from './run/summary';
 
 const now = new Date('2026-11-10T01:00:00Z');
+const why = ar.integrations.driveBackup.skipReasons;
 
 function setup() {
   const notifyAdmins = vi.fn().mockResolvedValue(undefined);
@@ -14,38 +15,24 @@ function setup() {
 }
 
 describe('the backup’s alerts (bell only, once a day per subject)', () => {
-  it('too large: counted in Arabic forms, the first names given with size and why', async () => {
+  it('skipped: counted in Arabic forms, the first names given with size and why', async () => {
     const t = setup();
     const keys = ['reports/a', 'reports/b', 'reports/c', 'reports/d', 'reports/e', 'reports/f'];
-    const items: TooLargeItem[] = keys.map((id) => ({ id, size: 1024 ** 3, why: 'room' }));
-    items[0] = { id: 'recordings/r.mp4', size: 5 * 1024 ** 3, why: 'night' };
-    await t.alerts.tooLarge({ items, now });
-    expect(t.said().subject).toBe('drive_backup:too_large:2026-11-10');
+    const items: SkippedItem[] = keys.map((id) => ({ id, size: 3 * 1024 ** 2, reason: 'changed' }));
+    items[0] = { id: 'recordings/r.mp4', size: 5 * 1024 ** 3, reason: 'too_large' };
+    await t.alerts.skipped({ items, now });
+    expect(t.said().subject).toBe('drive_backup:skipped:2026-11-10');
     const text = t.said().vars.reason;
-    expect(text).toContain('recordings/r.mp4 (5.0 GB، أكبر من حدّ الليلة)');
-    expect(text).toContain(
-      `reports/e (1.0 GB، ${ar.integrations.driveBackup.tooLargeReasons.room})`,
-    );
+    expect(text).toContain(`recordings/r.mp4 (5.0 GB، ${why.too_large})`);
+    expect(text).toContain(`reports/e (3.0 MB، ${why.changed})`);
     expect(text).not.toContain('reports/f');
     expect(text).toContain('6');
   });
 
-  it('frozen: «النسخ الاحتياطي متوقف» with the day it started and the reason', async () => {
+  it('Drive nearly full: says to delete old archives by hand', async () => {
     const t = setup();
-    await t.alerts.frozen({ reason: 'drive_full', since: '2026-11-06T01:00:00Z', now });
-    const text = t.said().vars.reason;
-    expect(text).toContain('النسخ الاحتياطي متوقف');
-    expect(text).toContain('2026-11-06');
-    expect(text).toContain(ar.integrations.driveBackup.frozenReasons.drive_full);
-  });
-
-  it('left 3 nights: counted, the oldest named with its day', async () => {
-    const t = setup();
-    await t.alerts.left({ count: 7, key: 'recordings/r.mp4', since: '2026-11-08T01:00:00Z', now });
-    expect(t.said().subject).toBe('drive_backup:left:2026-11-10');
-    const text = t.said().vars.reason;
-    expect(text).toContain('recordings/r.mp4');
-    expect(text).toContain('2026-11-08');
-    expect(text).toContain('7');
+    await t.alerts.driveFull({ now });
+    expect(t.said().subject).toBe('drive_backup:drive_full:2026-11-10');
+    expect(t.said().vars.reason).toBe(ar.googleSync.alerts.backupDriveFull);
   });
 });

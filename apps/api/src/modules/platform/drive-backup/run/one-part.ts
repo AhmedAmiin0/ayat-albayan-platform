@@ -1,6 +1,6 @@
 import { classify, errorText } from '@/modules/platform/google-sync';
-import type { ArchiveStatus, RunPlan } from '@/modules/platform/drive-backup/plan/archive.types';
-import { archiveName, archiveProps, dayLabel } from '@/modules/platform/drive-backup/plan/labels';
+import type { PartPlan } from '@/modules/platform/drive-backup/plan/archive.types';
+import { archiveName, archiveProps } from '@/modules/platform/drive-backup/plan/labels';
 import { isSolo } from '@/modules/platform/drive-backup/plan/parts';
 import type { ListedObject } from '@/modules/platform/drive-backup/source/backup-source.port';
 import type { RunDeps } from './backup-store.port';
@@ -12,7 +12,6 @@ interface OnePart {
   folderId: string;
   now: Date;
 }
-type PartPlan = RunPlan & { part: number };
 /** How far a part got: its row, then its Drive file the moment Drive answers with it. */
 interface Reached {
   id: string | null;
@@ -20,8 +19,8 @@ interface Reached {
 }
 
 /**
- * The row first (uploading; its id goes on the file as `ab_row`, so a file whose id is lost is
- * still found: seal.ts), then the upload, the Drive file id at once, then done.
+ * The row first (uploading; its id goes on the file as `ab_row`), then the upload, the Drive
+ * file id at once, then the objects and `done`: only then do they count as backed up.
  */
 async function upload(
   ctx: OnePart,
@@ -31,15 +30,9 @@ async function upload(
   const { deps, folderId, now } = ctx;
   const { plan, objects } = part;
   const name = archiveName(plan);
-  const id = await deps.store.start({
-    folderId,
-    kind: plan.kind,
-    label: plan.label,
-    part: plan.part,
-    name,
-  });
+  const id = await deps.store.start({ folderId, ...plan, name });
   at.id = id;
-  const appProperties = { ...archiveProps(plan, dayLabel(now)), ab_row: id };
+  const appProperties = { ...archiveProps(plan), ab_row: id };
   const target = { name, parentId: folderId, appProperties };
   const extra = {
     ...(deps.wait && { wait: deps.wait }),
@@ -52,51 +45,28 @@ async function upload(
   const r = await uploadPart({ api: deps.api, target, part: input, onFile, ...extra });
   await deps.store.uploaded({ id, fileId: r.fileId });
   const { entries, rawBytes, skipped } = r.report;
-  const done = { id, fileId: r.fileId, rawBytes, compressedBytes: r.compressedBytes, entries };
-  await deps.store.finish({ ...done, skipped: skipped.length });
+  const done = { id, folderId, fileId: r.fileId, rawBytes, entries };
+  await deps.store.finish({ ...done, compressedBytes: r.compressedBytes, skipped: skipped.length });
   return { id, fileId: r.fileId, ...r.report, compressedBytes: r.compressedBytes };
 }
 export type PartDone = Awaited<ReturnType<typeof upload>>;
 
-/** Deletes a file this part made (own folder + marker, drive-remove.ts); a failure is left. */
-const dropFile = (ctx: OnePart, fileId: string): Promise<void> =>
-  ctx.deps.api.remove({ fileId, folderId: ctx.folderId }).then(
-    () => undefined,
-    () => undefined,
-  );
-
-/** Rows another run took over (abandon, then maybe its clean-up): the file is no row's now. */
-const ABANDONED: readonly (ArchiveStatus | null)[] = ['failed', 'trashed'];
-
 /**
- * fail() did not go through: the row is read again, and the file is deleted only when the row
- * was taken over. A `done` row (finish() committed, its answer lost) keeps its file; a re-read
- * that fails too leaves it as well (the next night's clean-up finds a real orphan: seal.ts).
- */
-async function dropIfAbandoned(ctx: OnePart, at: { id: string; fileId: string }) {
-  const status = await ctx.deps.store.status(at.id).catch(() => null);
-  if (ABANDONED.includes(status)) await dropFile(ctx, at.fileId);
-}
-
-/**
- * The row `failed`, with the Drive file id when the file exists (the next run deletes it). When
- * that write fails (the database, or the row is no longer `uploading`), see dropIfAbandoned; a
- * file whose id never came back is found later by its `ab_row` marker.
+ * The row `failed`, with the Drive file id when the file exists. Add-only: the file is never
+ * deleted (an orphan the restore tolerates); a failed write is left (the next night abandons it).
  */
 async function failed(ctx: OnePart, at: Reached, e: unknown): Promise<void> {
   const { id, fileId } = at;
   if (id === null) return;
   const fail = { id, error: errorText(e), ...(fileId !== null && { fileId }) };
-  await ctx.deps.store
-    .fail(fail)
-    .catch(() => (fileId === null ? undefined : dropIfAbandoned(ctx, { id, fileId })));
+  await ctx.deps.store.fail(fail).catch(() => undefined);
 }
 
 /** What a failure really was: the job's deadline (its reason) once the run is aborted. */
 const causeOf = (ctx: OnePart, e: unknown): unknown =>
   ctx.deps.signal?.aborted === true ? ctx.deps.signal.reason : e;
 
-/** One archive file; on any failure (its row start included) the row is failed and kept honest. */
+/** One archive file; on any failure (its row start included) the row is failed. */
 async function onePart(ctx: OnePart, plan: PartPlan, objects: ListedObject[]) {
   const at: Reached = { id: null, fileId: null };
   try {

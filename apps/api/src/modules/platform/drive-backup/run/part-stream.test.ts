@@ -40,7 +40,9 @@ describe('partBytes: a small object read whole', () => {
   ])('announced %i, read %i: skipped as read_failed', async (announced, real) => {
     const { report } = await run(announced, real);
     expect(report.entries).toEqual([]);
-    expect(report.skipped).toEqual([{ bucket: 'reports', key: 'k', reason: 'read_failed' }]);
+    expect(report.skipped).toEqual([
+      { bucket: 'reports', key: 'k', size: 10, reason: 'read_failed' },
+    ]);
   });
 });
 
@@ -51,7 +53,7 @@ describe('partBytes: the object read is the one listed (verification item 5)', (
   ])('%s: skipped as changed, never streamed past its cost', async (_, opened) => {
     const { report, total } = await run(10, opened.size, opened);
     expect(report.entries).toEqual([]);
-    expect(report.skipped).toEqual([{ bucket: 'reports', key: 'k', reason: 'changed' }]);
+    expect(report.skipped).toEqual([{ bucket: 'reports', key: 'k', size: 10, reason: 'changed' }]);
     expect(total).toBeLessThan(10 * 1024);
   });
 });

@@ -18,16 +18,14 @@ describe('migration 20261107000200: the Drive backup tables', () => {
     expect(sql).toContain('using ((select public.is_admin()))');
   });
 
-  it('one row per archive part per folder; objects go with their archive', () => {
-    expect(sql).toContain('unique (folder_id, kind, label, part)');
-    expect(sql).toContain('references public.drive_backup_archives (id) on delete cascade');
-    expect(sql).toContain('primary key (archive_id, bucket, key)');
+  it('one row per archive part per night; one recorded row per version (bucket, key, ETag)', () => {
+    expect(sql).toContain('unique (folder_id, label, part)');
+    expect(sql).toContain('primary key (folder_id, bucket, key, etag)');
+    expect(sql).toContain("check (status in ('uploading', 'done', 'failed'))");
   });
 
-  it('the frozen status (a full open for more than 3 nights) and its reasons', () => {
-    expect(sql).toContain('frozen_since timestamptz');
-    expect(sql).toContain(
-      "check (frozen_reason in ('too_large', 'drive_full', 'unread', 'incomplete', 'failed'))",
-    );
+  it('add-only: no weekly fulls, sealing, retention or trashed status remain', () => {
+    expect(sql).not.toMatch(/\bkind\b|sealed|frozen|left_watch|'trashed'|on delete cascade/);
+    expect(sql).toContain("check (jsonb_typeof(skipped) = 'array')");
   });
 });

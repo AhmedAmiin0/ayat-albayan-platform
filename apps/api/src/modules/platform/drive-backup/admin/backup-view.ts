@@ -1,16 +1,14 @@
 import type { BackupState } from '@/modules/platform/drive-backup/db/backup-state.repo';
 import type { RecentRow } from '@/modules/platform/drive-backup/db/archive-row.schema';
-import type { FrozenReason } from '@/modules/platform/drive-backup/plan/frozen';
-import { oldestLeft, type OldestLeft } from '@/modules/platform/drive-backup/plan/left';
 import { freeOf, isLow } from '@/modules/platform/drive-backup/run/quota';
+import type { SkippedItem } from '@/modules/platform/drive-backup/run/summary';
 
-/** GET /admin/storage-backup/status: the status line under «التخزين» (docs/45 §5). */
+/** GET /settings/integrations/storage-backup: the status line under «التخزين» (docs/45 §5). */
 export interface BackupStatusView {
   enabled: boolean;
   ready: { minio: boolean; google: boolean };
-  /** The latest archive (all its parts): kind, label, objects, bytes raw → compressed. */
+  /** The latest night that uploaded (all its parts): objects, bytes raw → compressed. */
   last: {
-    kind: string;
     label: string;
     finished_at: string | null;
     objects: number;
@@ -22,21 +20,20 @@ export interface BackupStatusView {
   last_error: string | null;
   quota: { limit: number | null; usage: number; free: number | null; at: string } | null;
   low_quota: boolean;
-  /** «النسخ الاحتياطي متوقف»: a full open for more than 3 nights, since when and why. */
-  frozen: { since: string; reason: FrozenReason } | null;
-  /** Objects left for later nights (the night's cap, Drive's room): how many, the oldest. */
-  left: OldestLeft | null;
+  /** The last night's skipped objects: how many, and the first ones named (retried nightly). */
+  skipped: { count: number; items: SkippedItem[] };
+  /** Objects the last night could not send: Drive's free space under the 2 GB reserve. */
+  waiting: number;
 }
 
-/** The newest done archive's label, its parts summed. */
+/** The newest night with a done part, its parts summed. */
 export function lastArchive(rows: readonly RecentRow[]): BackupStatusView['last'] {
   const done = rows.filter((r) => r.status === 'done');
   const head = done[0];
   if (!head) return null;
-  const parts = done.filter((r) => r.kind === head.kind && r.label === head.label);
+  const parts = done.filter((r) => r.label === head.label);
   const sum = (pick: (r: RecentRow) => number) => parts.reduce((n, r) => n + pick(r), 0);
   return {
-    kind: head.kind,
     label: head.label,
     finished_at: head.finished_at,
     objects: sum((r) => r.objects),
@@ -55,9 +52,7 @@ export function quotaView(s: BackupState): BackupStatusView['quota'] {
 
 export const lowQuota = (q: BackupStatusView['quota']): boolean => isLow(q?.free ?? null);
 
-export const frozenView = (s: BackupState): BackupStatusView['frozen'] =>
-  s.frozen_since === null || s.frozen_reason === null
-    ? null
-    : { since: s.frozen_since, reason: s.frozen_reason };
-
-export const leftView = (s: BackupState): BackupStatusView['left'] => oldestLeft(s);
+export const skippedView = (s: BackupState): BackupStatusView['skipped'] => ({
+  count: s.skipped_count,
+  items: s.skipped,
+});

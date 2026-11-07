@@ -16,14 +16,11 @@ import { DEFAULT_CAPS } from './plan/parts';
 import type { RunDeps } from './run/backup-store.port';
 import { runBackup, type RunSummary } from './run/backup-run';
 import { ensureFolder } from './run/folder';
-import { freeOf, gbText, isLow, isStorageFull } from './run/quota';
+import { isStorageFull } from './run/quota';
 import { DriveBackupData } from './drive-backup.data';
-import { reportFrozen, reportNight } from './drive-backup.report';
+import { reportNight } from './drive-backup.report';
 
 export type RunOutcome = 'off' | 'not_connected' | 'ran' | 'failed';
-
-/** A failed night, for the frozen reason: Drive full, or anything else. */
-const FAILED_AS = (e: unknown) => (isStorageFull(e) ? ('drive_full' as const) : ('other' as const));
 
 interface RunInput {
   api: DriveBackupApi;
@@ -84,21 +81,15 @@ export class DriveBackupRunner {
     return api && token ? { api, token } : null;
   }
 
-  /** Drive's quota on the status line (and the low-quota alert); the account's email. */
+  /** Drive's quota on the status line; the account's email. */
   private async quota(api: DriveBackupApi, now: Date): Promise<string> {
     const quota = await api.quota();
-    const free = freeOf(quota);
     const at = { quota_limit: quota.limit, quota_usage: quota.usage, quota_at: now.toISOString() };
     await this.data.state.save(at);
-    if (isLow(free)) await this.data.alerts.lowQuota({ free: gbText(free ?? 0), now });
     return quota.email;
   }
 
-  /**
-   * The night: the clean-up first (it only frees space), then the byte budget (free − the 2 GB
-   * reserve, read again before each part: run/room.ts), then the parts. A full open too long is
-   * reported as frozen, whether the night ran or failed.
-   */
+  /** The night (run/backup-run.ts): add-only, Drive's room read again before each part. */
   private async run(input: RunInput) {
     const { api, now } = input;
     const folderId = await ensureFolder(api, this.data.state, await this.quota(api, now));
@@ -111,12 +102,8 @@ export class DriveBackupRunner {
       caps: DEFAULT_CAPS,
       ...(input.signal && { signal: input.signal }),
     };
-    const sum = await runBackup(deps, { folderId, now }).catch(async (e: unknown) => {
-      const outcome = { tooLarge: 0, unread: 0, error: FAILED_AS(e) };
-      await reportFrozen(this.data, { folderId, now, outcome }).catch(() => undefined);
-      throw e;
-    });
-    await reportNight(this.data, { folderId, now, sum });
+    const sum = await runBackup(deps, { folderId, now });
+    await reportNight(this.data, { now, sum });
     this.log.log(summaryLine(sum));
   }
 
@@ -128,11 +115,13 @@ export class DriveBackupRunner {
     const current = held === input.token;
     await (current ? this.onError[classify(e)] : this.onError.fatal)();
     await this.data.state.save({ last_run_at: now.toISOString(), last_error: error });
-    await this.data.alerts.failed({ error, now });
+    await (isStorageFull(e)
+      ? this.data.alerts.driveFull({ now })
+      : this.data.alerts.failed({ error, now }));
   }
 }
 
 const summaryLine = (s: RunSummary): string =>
-  `drive backup ${s.kind} ${s.label}: ${s.parts} part(s), ${s.objects} object(s), ` +
-  `${s.rawBytes} → ${s.compressedBytes} bytes, ${s.skipped} skipped, ` +
-  `${s.tooLarge.length} too large, ${s.left.length} left`;
+  `drive backup add ${s.label}: ${s.parts} part(s), ${s.objects} object(s), ` +
+  `${s.rawBytes} → ${s.compressedBytes} bytes, ${s.skipped.length} skipped, ` +
+  `${s.waiting} waiting for room`;

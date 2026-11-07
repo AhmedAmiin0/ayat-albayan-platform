@@ -3,7 +3,8 @@ import type { BackupSource } from '@/modules/platform/drive-backup/source/backup
 
 // The Drive calls of the MinIO backup (docs/45 §5), on the academy's existing Google connection.
 // The real adapter is drive-backup.http.ts; every test uses drive-backup.fakes.ts. Failures throw
-// GoogleApiError (status + Google's reason, never a token or a URL).
+// GoogleApiError (status + Google's reason, never a token or a URL). ADD-ONLY: there is no
+// delete, trash or update of a file here at all (owner 2026-11-07): the backup only adds files.
 
 export interface DriveQuota {
   /** null: no limit (a Workspace pool). */
@@ -41,18 +42,6 @@ export interface ChunkInput {
   total: number | null;
 }
 
-export interface RemoveInput {
-  fileId: string;
-  folderId: string;
-  /** Retention only: a file a person moved to Drive's trash is deleted too (else it is kept). */
-  trashedToo?: boolean;
-}
-/**
- * gone: already not on Drive (404); foreign: not the backup's own archive, left alone; kept: in
- * Drive's trash (a person may restore it for 30 days), left alone outside retention.
- */
-export type Removed = 'deleted' | 'gone' | 'foreign' | 'kept';
-
 export interface DriveBackupApi {
   quota(): Promise<DriveQuota>;
   /** The folder if it exists, is not trashed and is the backup's own (appProperties). */
@@ -62,24 +51,11 @@ export interface DriveBackupApi {
   createFolder(name: string): Promise<string>;
   /** The files in a folder (not trashed). */
   list(folderId: string): Promise<BackupFile[]>;
-  /**
-   * The ids of the files in `folderId` that carry the backup's marker AND `ab_row` = `rowId` (one
-   * archive row's upload): how a failed row whose file id was lost finds its file. Nothing else.
-   */
-  findMarked(input: { folderId: string; rowId: string }): Promise<string[]>;
   /** A resumable upload session (its URL stays in memory only). */
   startUpload(target: UploadTarget): Promise<string>;
   putChunk(input: ChunkInput): Promise<ChunkResult>;
   /** What Drive holds of a session (after a failed chunk). */
   progress(session: string): Promise<ChunkResult>;
-  setProperties(input: { fileId: string; appProperties: Record<string, string> }): Promise<void>;
-  /**
-   * Deletes an archive for good (Drive's trash would keep counting against the shared quota for 30
-   * days), but only a file in `folderId` that carries the backup's marker: anything else is left.
-   */
-  remove(input: RemoveInput): Promise<Removed>;
-  /** The backup's own file in `folderId`, not trashed (one GET by id): a part to seal on. */
-  present(input: RemoveInput): Promise<boolean>;
   download(fileId: string): Promise<AsyncIterable<Uint8Array>>;
 }
 

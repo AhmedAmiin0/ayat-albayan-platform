@@ -206,137 +206,88 @@ docker run --rm -v ayat-albayan-staging_minio-data:/data:ro -v /var/backups:/bac
   tar czf /backup/minio-data-$(date +%F).tgz -C /data .
 ```
 
-### 5.1 Off-host: compressed archives on Google Drive (owner 2026-11-07)
+### 5.1 Off-host: compressed archives on Google Drive (owner 2026-11-07, add-only)
 
 «use google drive», «but compress it first». The worker uploads compressed archives of the MinIO
 buckets to the academy's Google Drive, on the Google connection «التكاملات» › Google already holds
 (docs/24: same OAuth client, same refresh token in Vault, same `invalid_grant` handling). No new
 Google project, client or credential.
 
-- **What:** the buckets `reports`, `report-attachments`, `receipts`, `invoices`, `wa-media`,
-  `avatars`; `recordings` only while `MINIO_RECORDINGS` is on.
+**Add-only (owner decision 2026-11-07, PR #690):** the backup **only adds files** to Drive. It
+never deletes, trashes or changes a file there, not even its own failed uploads. There are no
+weekly fulls, no sealing and no retention: freeing space on Drive is done by hand (below).
+
+- **What is uploaded:** every object of the buckets `reports`, `report-attachments`, `receipts`,
+  `invoices`, `wa-media`, `avatars` (`recordings` only while `MINIO_RECORDINGS` is on) whose
+  **(bucket, key, ETag)** is not yet recorded as backed up (`drive_backup_objects`). The first night
+  therefore sends everything; later nights send only new and changed objects. An object is recorded
+  only after its part's upload is confirmed by Drive **and** its row is written; until then it is
+  simply sent again the next night.
 - **Where:** the folder «نسخ احتياطي — ملفات المنصة» in My Drive of the connected account, created
   once (marked with the app property `ab_backup=minio`; its id and the account's address in
-  `drive_backup_state`). The account is Drive's own answer (`about.user`), not the database: after a
-  reconnect to another account, nothing goes to the old folder; a new folder and a new chain start.
+  `drive_backup_state`). The account is Drive's own answer (`about.user`): after a reconnect to
+  another account, nothing goes to the old folder; a new folder starts and everything is sent again.
 - **When:** every night at 01:00 UTC (04:00 Riyadh) in `ayat-worker` (`drive-backup` job, the Google
-  sync's single-flight pattern). A **full** archive starts on Friday (or the first night after it
-  without one, or at once when the last full is more than a week old); the other nights are
-  **incrementals**: every object whose ETag is not in the last full or the incrementals after it.
-- **Format:** `full-YYYY-Www.tar.zst`, `incr-YYYY-MM-DD.tar.zst` (`.p2`, `.p3`… for further parts):
-  a POSIX (pax) tar, entries `<bucket>/<key>` with the object's Content-Type and ETag in pax records
-  (`AB.*`; GNU tar warns «unknown extended header keyword» and extracts normally), and
-  `manifest.json` last (bucket, key, ETag, size, Content-Type of each object, and the skipped ones).
-  Compressed with **zstd level 3 from Node's own `node:zlib`** (Node ≥ 22.15; the image runs Node
-  24): no native module and no package; with zstd's checksum, so a damaged archive fails the
-  restore. The restore also checks each object against its recorded MD5 ETag before MinIO keeps
-  it (the last chunk is held back until the digest matches), so a damaged object is never restored;
-  objects with a multipart ETag rely on the zstd checksum alone. By hand: `zstd -dc full-2026-W45.tar.zst | tar -x`.
+  sync's single-flight pattern; a run is aborted after 8 hours and the next one waits for it to end).
+- **Format:** `add-YYYY-MM-DD.pN.tar.zst` (the night's UTC day, part N = 1, 2, …; a part number is
+  never reused, failed parts included): a POSIX (pax) tar, entries `<bucket>/<key>` with the
+  object's Content-Type and ETag in pax records (`AB.*`; GNU tar warns «unknown extended header
+  keyword» and extracts normally), and `manifest.json` last. Each file carries `ab_backup=minio`,
+  `label` (the day), `part` and `ab_row` in its appProperties. Compressed with **zstd level 3 from
+  Node's own `node:zlib`** with zstd's checksum, so a damaged archive fails the restore; the restore
+  also checks each object against its MD5 ETag before MinIO keeps it.
 - **Streamed:** MinIO → tar → zstd → a Drive resumable upload, 8 MiB chunks: nothing on disk, about
-  one chunk plus one object (≤ 64 MiB, read into one buffer of its size; larger objects stream)
-  in memory. A part is cut at 1 GiB and a night stops after 4 GiB, both counted as the part's
-  **cost** on Drive (raw bytes plus the tar headers and padding, the manifest and zstd's own
-  overhead on bytes that do not shrink), never raw bytes alone (the rest continues the next night;
-  a full stays open until done). Concurrency 1. A failed chunk (429, 5xx, network) is resent from
-  what Drive last confirmed, 5 tries; after the last one Drive is asked once more (the final chunk
-  may have landed: its file is kept); a session whose answers stop moving forward (a 308 with no
-  progress) gives up after 5 answers.
-- **Crash and resume:** each part is a row in `drive_backup_archives` (`uploading` → `done` |
-  `failed`) with its objects and ETags in `drive_backup_objects`. A part counts only once `done`: a
-  run killed mid-upload leaves `uploading`, the next run marks it `failed` and archives those objects
-  again; parts already uploaded are not redone. An object that vanished or cannot be read is skipped
-  and reported (manifest, alert), never stops the run, and is tried again the next night. An object
-  over 64 MiB streams in a part of its own: if that read fails, only that object is skipped. A
-  network failure or 429 / 5xx on a chunk is resent from what Drive holds (5 tries); a run that
-  hangs is aborted after 8 hours (its MinIO and Drive requests, the part's pipeline and the waits
-  between retries all get the abort, so its memory and sockets are freed). The job then waits for
-  that run to really end (up to 10 minutes) before another run may start, and a row is written as
-  `done` (or gets its file id) only while it is still `uploading`: a second run never takes over a
-  part that is still being uploaded. An object whose ETag or size at read time differs from the
-  listing (a report PDF re-rendered in place) is skipped as `changed` and taken the next night: it
-  is never streamed past the cost charged for it. The restore also uses the parts of a full not
-  yet sealed.
-- **Sealing:** a full is sealed when nothing is left by the byte cap and no object was skipped for
-  a failed read or a new version (a vanished one is fine). A **too-large** object (its own part
-  above Drive's room or the night's cap) does **not** keep a full open: it is named in the alert
-  every night instead, so the backup of everything else keeps moving (round 4). Before sealing,
-  **every done part** of the full is checked on Drive (one GET by id each, never a listing): a part
-  whose file is gone, or that a person moved to Drive's trash, has its row marked `trashed`
-  **without any delete** (a trashed file may still be restored from Drive's trash, which Drive
-  empties after 30 days), its objects go again the next night and the full stays open. Otherwise
-  the full stays open and the next night continues it; until then the restore uses the previous
-  sealed full plus the parts and incrementals after it. A full open for **more than 3 nights** is
-  reported as frozen: «النسخ الاحتياطي متوقف» on the status line and in an alert, with the reason
-  (Drive full, failing nights, a too-large object, unreadable objects, or simply not finished).
-- **Retention:** the last **4 fulls** and the incrementals after the oldest of them. Older archives are
-  **deleted from Drive for good** (`DELETE drive/v3/files/{id}`, not Drive's trash, which keeps counting
-  against the shared quota for 30 days), right after a newer full was sealed (and at the start of a
-  night, if a crash came between the two). Drive never has to hold a 5th full first: when the open
-  full needs more than the night's room, the oldest sealed full and the incrementals before the
-  next one are retired early, again while needed, as long as one sealed full and its chain stay. The backup deletes
-  only file ids from its own `drive_backup_archives` rows of its own folder, and only after reading
-  the file and finding it in that folder with the backup's marker (`ab_backup=minio`); a file that
-  is gone (404) or not the backup's own is left alone. A file in Drive's trash is deleted only by
-  retention and early retirement (it still counts against the quota); every other path leaves it
-  where a person may restore it. It never lists Drive to delete anything,
-  but for one narrow case below.
-- **Orphans:** every archive file carries its row's id (`ab_row` in appProperties), set before the
-  upload starts. The Drive file id is kept on the row the moment Drive answers with it, even when
-  the run fails right after (the deadline, the bookkeeping). The next night first deletes the file
-  of every `failed` row (same checks) and marks the row `trashed`; a failed row whose file id never
-  came back is resolved by asking Drive for the files **in the backup's folder that carry
-  `ab_backup=minio` and that row's `ab_row`**: nothing else is ever looked up for deletion. Such a
-  row (failed, no file id) whose search finds nothing yet is **kept `failed` for up to 7 days** and
-  searched again each night (Drive's search may lag, and an abort in the last chunk can lose the id
-  of a file Drive did make); after that it is marked `trashed`. A part
-  number is never reused: the next part follows every row of that archive, trashed ones included.
-- **Expected size:** PDFs, JPEG/PNG photos, voice notes and videos are already compressed: they barely
-  shrink (a few %). The gain is on the rest (CSV, JSON, text, some old PDFs): often 3× to 10×. Plan
-  Drive space as **the fulls kept (up to 4) + the open full being written + the incrementals after
-  the oldest kept full + the 2 GB reserve** (nothing waits in Drive's trash). When that does not
-  fit, early retirement keeps fewer fulls (at least one sealed full and its chain) instead of
-  stopping: e.g. a 15 GB account with ~3 GB of other use and ~2.3 GB of MinIO keeps about 3 to 4.
-- **Quota (the top priority: the account is shared with Gmail, the old Apps Script and the Google
-  sync's report PDFs and Sheets):** a free Gmail account has 15 GB. Each run reads
-  `about.storageQuota` and gets a **byte budget = free − 2 GB reserve**, read **after** the night's
-  clean-up (failed parts' files, due retention: they only free space). Under 2 GB free → a bell
-  alert to the admins; nothing is uploaded while no part fits above the reserve; otherwise the night
-  uploads at most that budget (and at most 4 GiB). **No part above the night's cap (the smaller of
-  the budget and 4 GiB) is ever sent:** an object whose own part is larger than either is **too
-  large**: skipped, never opened nor uploaded, named in an alert with its size and why («أكبر من
-  المساحة المتاحة في Google Drive» / «أكبر من حدّ الليلة»), and the objects after it still go the
-  same night (a part that only overflows what is left of the cap waits, the smaller ones after it
-  still go). Before
-  **each part** the quota is read again: a part that would eat into the reserve waits for the next
-  night while a later part still fits; when none does, the run stops (`drive_full`). Drive's `storageQuotaExceeded` always stops the run (it is
-  never treated as «skip this object»).
+  one chunk plus one object (≤ 64 MiB read into one buffer; larger ones stream in a part of their
+  own) in memory. A part is cut at **1 GiB** of cost (raw bytes plus the tar's and zstd's overhead).
+  A failed chunk is resent from what Drive last confirmed (5 tries).
+- **Failures:** a failed or interrupted part is marked `failed` in `drive_backup_archives` and its
+  objects are retried the next night under a new part name. If Drive did create the file (the
+  answer was lost, the deadline hit), that **orphan file stays on Drive**: it is never deleted
+  automatically, and the restore tolerates it (a duplicate copy of a key only counts as `older`).
+  Drive's `storageQuotaExceeded`, a refused Google token or the deadline stop the night.
+- **Skipped objects:** an object larger than the 1 GiB part cap, one that cannot be read from
+  MinIO, or one that changed while being read (a new ETag or size: a re-rendered PDF) is skipped
+  that night and **named** (`bucket/key`, size, reason) on the status line and in the alert. It is
+  tried again every night and never blocks the other objects. A vanished object is not named.
+- **Quota (the account is shared with Gmail and the Google sync):** the night's budget is **free
+  space − 2 GB reserve**, read at the start and **again before each part**; no part is uploaded
+  past it (nor past what the night has left of its starting budget). A part that does not fit
+  waits; a smaller later one may still go. When the room is too low the night uploads nothing.
+  The objects that waited are counted on the status line, and the admins get the alert «مساحة
+  Google Drive توشك على النفاد» asking them to delete old archives by hand.
 - **Alerts** (admins, bell only, the Google sync's `google_sync_alert`), once per day each: a failed
-  night; low quota; skipped objects; **too large** objects (the first 5 as `bucket/key (size، why)`,
-  the rest counted; named every night while they stay too large); objects **left** by the cap or
-  the room 3 nights running (`drive_backup_state.left_watch` keeps the night each `bucket/key` was
-  first left, `left_count` how many are left now; the alert gives the count and the oldest by name
-  and night); a **frozen** backup (a full open more than 3 nights, with its frozen reason:
-  `drive_full`, `failed`, `too_large`, `unread` or `incomplete`).
+  night; skipped objects (the first 5 named with size and reason, the rest counted); Drive nearly
+  full. Never WhatsApp, push or email.
+
+**Freeing space by hand** (the backup never does it): in Drive, open «نسخ احتياطي — ملفات المنصة»,
+delete the oldest `add-…` archives, then **empty Drive's trash** (a trashed file still counts
+against the quota for 30 days). Know what this costs: an object version that lived only in the
+deleted archives is no longer backed up, and the backup does **not** send it again (it is still
+recorded as backed up) unless it changes. To take a fresh complete copy instead, move the **whole
+folder** to the trash (and empty it when space is needed): the next night creates a new folder and
+uploads everything again (`drive_backup_objects` is per folder).
 
 **Turning it on** (owner): «التكاملات» › Google is connected (docs/24) and «التكاملات» › «التخزين»
 has a passing «اختبار الاتصال»; then set «نسخ احتياطي لملفات MinIO إلى Google Drive» to «مفعّلة» and
-save. The status line under «التخزين» shows the last archive (raw → compressed size), the last error and
-Drive's free space. Off again: set it to «متوقفة» (archives already on Drive stay).
+save. The status line under «التخزين» (admins only) shows the last night (raw → compressed size),
+the skipped objects by name, the objects waiting for room, the last error and Drive's free space.
+Off again: set it to «متوقفة» (archives already on Drive stay).
 
 **Restore** (owner, on the VPS, inside the worker container; reads Drive, writes MinIO with the app
-user's keys):
+user's keys). Every archive counts: they are applied in name order (night, then part) and for the
+same key **the newest copy wins** (the script reads them newest first and keeps the first copy of
+each key, so a key is written once and duplicates are harmless):
 
-1. **Dry run** (the default; writes nothing): lists the archives that rebuild the given day, newest
-   first. `--to D` restores what the archives uploaded up to the night of D (01:00 UTC) hold,
-   i.e. MinIO as it was at the end of D−1; for the end of D, use D+1: `docker compose -p ayat-albayan-staging exec -T ayat-worker node dist/scripts/minio-drive-restore.js --to 2026-11-07`
-2. **Apply:** add `--apply`. The newest copy of each key wins (the incrementals, then the full);
-   an object MinIO already holds is **kept** (`If-None-Match: *`) unless `--overwrite` is added.
-   The JSON summary gives `put`, `kept`, `older` (an older copy of a key already restored) and
-   `failed` (the keys that could not be written).
+1. **Dry run** (the default; writes nothing): lists the archives, newest first. `--to D` uses the
+   archives of the nights up to D (01:00 UTC), i.e. MinIO as it was at the end of D−1; for the end
+   of D, use D+1: `docker compose -p ayat-albayan-staging exec -T ayat-worker node dist/scripts/minio-drive-restore.js --to 2026-11-07`
+2. **Apply:** add `--apply`. An object MinIO already holds is **kept** (`If-None-Match: *`) unless
+   `--overwrite` is added. The JSON summary gives `put`, `kept`, `older` (an older or duplicate
+   copy of a key already restored) and `failed` (the keys that could not be written).
 3. Deleted objects come back too (archives never record deletes), as with `backup.sh`.
 4. Without the platform (a new server): download the folder's archives from Drive and
-   `zstd -dc <file> | tar -x` the full, then each incremental in date order, then `mc mirror` the
-   folders into the buckets.
+   `zstd -dc <file> | tar -x` each one **oldest first** (by night, then part number: `p10` after
+   `p9`), so later copies overwrite older ones; then `mc mirror` the folders into the buckets.
 
 ## 6. Moving the old files (served from MinIO)
 

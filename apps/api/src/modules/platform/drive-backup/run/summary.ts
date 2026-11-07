@@ -1,82 +1,80 @@
-import type { RunPlan } from '@/modules/platform/drive-backup/plan/archive.types';
-import {
-  objectId,
-  type TooLarge,
-  type TooLargeWhy,
-} from '@/modules/platform/drive-backup/plan/parts';
+import { objectId } from '@/modules/platform/drive-backup/plan/parts';
+import type { ListedObject } from '@/modules/platform/drive-backup/source/backup-source.port';
 import type { PartDone } from './one-part';
 import type { SkipReason } from './part-stream';
 
-/** An object never sent tonight (plan/parts.ts): named in the alert with its size and why. */
-export interface TooLargeItem {
+/** Why an object was not backed up tonight (it is tried again every night). */
+export const SKIP_WHYS = ['too_large', 'read_failed', 'changed'] as const;
+export type SkipWhy = (typeof SKIP_WHYS)[number];
+
+/** A skipped object, named in the admin status and the alert. */
+export interface SkippedItem {
   /** `bucket/key`. */
   id: string;
   size: number;
-  why: TooLargeWhy;
+  reason: SkipWhy;
 }
 
-export const tooLargeItems = (list: readonly TooLarge[]): TooLargeItem[] =>
-  list.map((t) => ({ id: objectId(t.object), size: t.object.size, why: t.why }));
-
 export interface RunSummary {
-  kind: RunPlan['kind'];
   label: string;
   parts: number;
   objects: number;
-  skipped: number;
-  /** Skipped objects that still exist (a failed read, a new version): their full stays open. */
-  unread: number;
-  /** Objects above tonight's room or the night's cap (skipped; named in the alert). */
-  tooLarge: TooLargeItem[];
   rawBytes: number;
   compressedBytes: number;
-  /** `bucket/key` of the objects left for the next night (the run's cap, or no room). */
-  left: string[];
-  sealed: boolean;
-  /** Archives deleted from Drive: failed parts, retention, early retirement. */
-  trashed: number;
+  skipped: SkippedItem[];
+  /** Objects not sent tonight: Drive's free space above the 2 GB reserve was too small. */
+  waiting: number;
 }
 
-export const emptySummary = (plan: Pick<RunPlan, 'kind' | 'label'>): RunSummary => ({
-  kind: plan.kind,
-  label: plan.label,
+export const emptySummary = (label: string): RunSummary => ({
+  label,
   parts: 0,
   objects: 0,
-  skipped: 0,
-  unread: 0,
-  tooLarge: [],
   rawBytes: 0,
   compressedBytes: 0,
-  left: [],
-  sealed: false,
-  trashed: 0,
+  skipped: [],
+  waiting: 0,
 });
 
-/** Reasons that leave an object that still exists out of the archive. */
-const STILL_THERE: readonly SkipReason[] = ['read_failed', 'changed'];
+const item = (o: { bucket: string; key: string; size: number }, reason: SkipWhy): SkippedItem => ({
+  id: objectId(o),
+  size: o.size,
+  reason,
+});
+
+export const tooLargeItems = (list: readonly ListedObject[]): SkippedItem[] =>
+  list.map((o) => item(o, 'too_large'));
+
+/** What a skip inside a part means for the admins: a vanished object is not named (it is gone). */
+const NAMED: Record<SkipReason, SkipWhy | null> = {
+  missing: null,
+  read_failed: 'read_failed',
+  changed: 'changed',
+};
 
 export const added = (sum: RunSummary, r: PartDone): RunSummary => ({
   ...sum,
   parts: sum.parts + 1,
   objects: sum.objects + r.entries.length,
-  skipped: sum.skipped + r.skipped.length,
-  unread: sum.unread + r.skipped.filter((s) => STILL_THERE.includes(s.reason)).length,
   rawBytes: sum.rawBytes + r.rawBytes,
   compressedBytes: sum.compressedBytes + r.compressedBytes,
+  skipped: [
+    ...sum.skipped,
+    ...r.skipped.flatMap((s) => {
+      const why = NAMED[s.reason];
+      return why === null ? [] : [item(s, why)];
+    }),
+  ],
 });
 
-/** One big object whose own part failed: skipped, and still to be read. */
-export const soloFailed = (sum: RunSummary): RunSummary => ({
+/** One big object whose own part failed: skipped tonight, named, retried next night. */
+export const soloFailed = (sum: RunSummary, objects: readonly ListedObject[]): RunSummary => ({
   ...sum,
-  skipped: sum.skipped + 1,
-  unread: sum.unread + 1,
+  skipped: [...sum.skipped, ...objects.map((o) => item(o, 'read_failed'))],
 });
 
-/**
- * A full is sealed when nothing is left for the next night and no object was skipped while it
- * still exists (a vanished one is fine). A too-large object does not keep it open: it is named in
- * the alert every night instead, so the backup of everything else keeps moving. Otherwise the
- * full stays open and the next night continues it (one open too long: plan/frozen.ts).
- */
-export const sealable = (plan: Pick<RunPlan, 'kind'>, sum: RunSummary): boolean =>
-  plan.kind === 'full' && sum.left.length === 0 && sum.unread === 0;
+/** A part that did not fit Drive's room: its objects wait for a later night. */
+export const waited = (sum: RunSummary, objects: readonly ListedObject[]): RunSummary => ({
+  ...sum,
+  waiting: sum.waiting + objects.length,
+});

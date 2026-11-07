@@ -29,7 +29,7 @@ describe('dropped MinIO bodies are destroyed', () => {
     const input = inputOf(sourceOf(body, { size: 9, etag: 'new' }), 9);
     for await (const c of partBytes(input)) expect(c).toBeDefined();
     expect(input.report.skipped).toEqual([
-      { bucket: 'recordings', key: 'r.mp4', reason: 'changed' },
+      { bucket: 'recordings', key: 'r.mp4', size: 9, reason: 'changed' },
     ]);
     expect(body.destroyed).toBe(true);
   });

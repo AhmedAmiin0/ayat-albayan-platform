@@ -6102,7 +6102,7 @@
       },
       "MINIO_DRIVE_BACKUP": {
         "label": "Back up MinIO files to Google Drive",
-        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO, and a full archive every week, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The last four full archives are kept. PDFs and images are already compressed, so most of the saving comes from other files."
+        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO that are not backed up yet, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The backup never deletes any file from Drive: when space runs low, delete old archives by hand. PDFs and images are already compressed, so most of the saving comes from other files."
       }
     },
     "developer": "For developers",
@@ -6116,37 +6116,38 @@
       "needsMinio": "Waiting for complete MinIO settings.",
       "needsGoogle": "Waiting for the Google account to be linked in the Google section.",
       "none": "No archive uploaded yet. The job runs every night at 4:00 Riyadh time.",
-      "last": "Last archive: {name} ({objects}), {raw} before compression → {compressed} after.",
+      "last": "Last archive: night of {day} ({objects}), {raw} before compression → {compressed} after.",
       "files": {
         "one": "1 file",
         "two": "2 files",
         "few": "{n} files",
         "other": "{n} files"
       },
-      "kinds": {
-        "full": "full",
-        "incr": "incremental"
-      },
       "error": "Last error: {error}",
       "quota": "Free space on Drive: {free} of {limit}.",
       "quotaUnlimited": "Drive space is unlimited.",
-      "lowQuota": "Less than 2 GB is free on Drive: empty the trash or add space.",
+      "lowQuota": "Less than 2 GB is free on Drive, so nothing is uploaded until there is room: delete old archives from the backup folder by hand and empty the trash, or add space.",
       "note": "PDFs and images are already compressed, so they barely shrink.",
       "loadError": "Could not load the backup status.",
       "sizeGb": "{n} GB",
       "sizeMb": "{n} MB",
-      "frozen": "The backup is frozen since {since}: {reason}",
-      "left": "Waiting for later nights: {count}, the oldest {name} since {since}.",
-      "tooLargeReasons": {
-        "room": "larger than the free space in Google Drive",
-        "night": "larger than the nightly cap"
+      "skipped": {
+        "one": "1 file was not backed up last night; it is tried again every night:",
+        "two": "2 files were not backed up last night; they are tried again every night:",
+        "few": "{n} files were not backed up last night; they are tried again every night:",
+        "other": "{n} files were not backed up last night; they are tried again every night:"
       },
-      "frozenReasons": {
-        "too_large": "One or more files are larger than the free space in Google Drive or the nightly cap.",
-        "drive_full": "There is not enough free space in Google Drive.",
-        "unread": "Some files could not be read from MinIO.",
-        "incomplete": "Not every file has been uploaded yet.",
-        "failed": "The backup fails every night; check the last error."
+      "skippedItem": "{name} ({size}, {why})",
+      "waiting": {
+        "one": "1 file is waiting for room in Google Drive.",
+        "two": "2 files are waiting for room in Google Drive.",
+        "few": "{n} files are waiting for room in Google Drive.",
+        "other": "{n} files are waiting for room in Google Drive."
+      },
+      "skipReasons": {
+        "too_large": "larger than the 1 GB archive cap",
+        "read_failed": "could not be read from MinIO",
+        "changed": "changed while being read"
       }
     }
   },
@@ -6434,27 +6435,14 @@
       "teacherUnmapped": "{name}'s lessons go to the main calendar only until their calendar is mapped.",
       "scriptEventPresent": "{name}'s calendar is still built from the sheet: stop the script for this teacher first",
       "backupFailed": "The platform files backup to Google Drive failed: {error}. It will run again next night.",
-      "backupLowQuota": "Less than 2 GB is free in Google Drive ({free} left). Empty the Drive trash or add space before the backup stops.",
       "backupSkipped": {
-        "one": "Tonight's backup skipped 1 file it could not read from MinIO; it will try it again next night.",
-        "two": "Tonight's backup skipped 2 files it could not read from MinIO; it will try them again next night.",
-        "few": "Tonight's backup skipped {n} files it could not read from MinIO; it will try them again next night.",
-        "other": "Tonight's backup skipped {n} files it could not read from MinIO; it will try them again next night."
+        "one": "Tonight's backup did not copy 1 file: {names}. The other files are still copied, and it is tried again every night.",
+        "two": "Tonight's backup did not copy 2 files: {names}. The other files are still copied, and they are tried again every night.",
+        "few": "Tonight's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every night.",
+        "other": "Tonight's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every night."
       },
-      "backupTooLarge": {
-        "one": "Tonight's backup did not copy 1 file, and it will not be uploaded while this lasts: {names}. The other files are still copied, and this file is named every night.",
-        "two": "Tonight's backup did not copy 2 files, and they will not be uploaded while this lasts: {names}. The other files are still copied, and these files are named every night.",
-        "few": "Tonight's backup did not copy {n} files, and they will not be uploaded while this lasts: {names}. The other files are still copied, and these files are named every night.",
-        "other": "Tonight's backup did not copy {n} files, and they will not be uploaded while this lasts: {names}. The other files are still copied, and these files are named every night."
-      },
-      "backupTooLargeItem": "{name} ({size}, {why})",
-      "backupLeft": {
-        "one": "1 file has been left out of the backup for three nights in a row by the nightly transfer cap or the free space in Google Drive: {name} (since {since}).",
-        "two": "2 files are left out of the backup; the oldest for three nights in a row by the nightly transfer cap or the free space in Google Drive: {name} (since {since}).",
-        "few": "{n} files are left out of the backup; the oldest for three nights in a row by the nightly transfer cap or the free space in Google Drive: {name} (since {since}).",
-        "other": "{n} files are left out of the backup; the oldest for three nights in a row by the nightly transfer cap or the free space in Google Drive: {name} (since {since})."
-      },
-      "backupFrozen": "The backup is frozen: the full backup started on {since} has not finished for more than three nights. Reason: {reason}"
+      "backupSkippedItem": "{name} ({size}, {why})",
+      "backupDriveFull": "Google Drive is nearly full: tonight's backup could not upload everything, because the free space does not exceed the kept reserve (2 GB). The backup never deletes anything from Drive: delete old archives from the backup folder by hand and empty the trash, and the backup continues on the following nights."
     },
     "web": {
       "updated": "Updated {at}",

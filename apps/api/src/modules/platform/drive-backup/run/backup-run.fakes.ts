@@ -28,7 +28,6 @@ export async function setup(caps: Caps = DEFAULT_CAPS) {
   /** Runs the backup of the night of `day` (01:00 UTC). */
   const night = (day: string) => {
     const now = new Date(`${day}T01:00:00Z`);
-    store.today = now;
     return runBackup(deps, { folderId, now });
   };
   return { drive, minio, store, folderId, deps, night };
@@ -38,6 +37,7 @@ export async function setup(caps: Caps = DEFAULT_CAPS) {
 export function roomOf(drive: FakeDrive, room: () => number): void {
   const limit = 15 * 1024 ** 3;
   drive.quota = () => {
+    drive.log.push('quota');
     const held = [...drive.files.values()].reduce((n, f) => n + f.bytes.length, 0);
     const usage = limit - RESERVE_BYTES - room() + held;
     return Promise.resolve({ limit, usage, email: 'academy@example.test' });
@@ -62,7 +62,7 @@ export async function contents(drive: FakeDrive, fileId: string): Promise<Entry[
   return out;
 }
 
-/** The archives in the folder by name (not trashed). */
+/** The archives in the folder by name. */
 export const names = (drive: FakeDrive, folderId: string): string[] =>
   drive.live(folderId).map((f) => f.meta.name);
 

@@ -3,7 +3,7 @@ import type { GoogleEndpoints } from '@/config/env/env';
 import { toGoogleError } from '@/modules/platform/google-sync';
 import type * as P from './drive-backup.port';
 import * as S from './drive-files.schema';
-import * as R from './drive-remove';
+import * as R from './drive-call';
 
 /** A chunk (8 MiB) on a slow uplink; one archive download, long but never forever. */
 const CHUNK_TIMEOUT_MS = 180_000;
@@ -13,6 +13,7 @@ const DONE_OR_MORE = (status: number): boolean => status < 300 || status === 308
 /**
  * Drive v3 for the backup, over the academy's OAuth2Client (google-auth-library adds the bearer and
  * refreshes it). No retries here (upload.ts retries a chunk); every failure is a GoogleApiError.
+ * Add-only: it never removes, trashes or changes a file (drive-backup.http.addonly.test.ts).
  */
 export class DriveBackupHttp implements P.DriveBackupApi {
   constructor(
@@ -88,12 +89,6 @@ export class DriveBackupHttp implements P.DriveBackupApi {
     return out;
   }
 
-  async findMarked(input: { folderId: string; rowId: string }): Promise<string[]> {
-    const params = { q: S.markedQuery(input), fields: `files(${S.FILE_FIELDS})` };
-    const { files } = S.listSchema.parse((await this.call({ url: this.files, params })).data);
-    return files.flatMap((f) => (S.isBackupOwn(f) && S.isMarked(f, input) ? [f.id] : []));
-  }
-
   async startUpload(target: P.UploadTarget): Promise<string> {
     const res = await this.call({
       method: 'POST',
@@ -121,20 +116,6 @@ export class DriveBackupHttp implements P.DriveBackupApi {
     if (res.status === 308)
       return { committed: S.committedOf(res.headers.get('range')), fileId: null };
     return { committed: 0, fileId: S.idSchema.parse(res.data).id };
-  }
-
-  async setProperties(input: { fileId: string; appProperties: Record<string, string> }) {
-    const url = `${this.files}/${encodeURIComponent(input.fileId)}`;
-    await this.call({ method: 'PATCH', url, data: { appProperties: input.appProperties } });
-  }
-
-  /** DELETE, not trash: a trashed file keeps using the shared quota for 30 days. */
-  remove(input: P.RemoveInput): Promise<P.Removed> {
-    return R.removeArchive((o) => this.call(o), { ...input, files: this.files });
-  }
-
-  present(input: P.RemoveInput): Promise<boolean> {
-    return R.archivePresent((o) => this.call(o), { ...input, files: this.files });
   }
 
   async download(fileId: string): Promise<AsyncIterable<Uint8Array>> {

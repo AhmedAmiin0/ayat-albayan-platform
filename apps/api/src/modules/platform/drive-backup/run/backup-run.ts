@@ -1,97 +1,88 @@
 import type { Bucket } from '@/common/storage/storage.paths';
-import type { RunPlan } from '@/modules/platform/drive-backup/plan/archive.types';
 import { partCost } from '@/modules/platform/drive-backup/plan/cost';
-import { decide } from '@/modules/platform/drive-backup/plan/decide';
-import {
-  isPending,
-  objectId,
-  planParts,
-  type Covered,
-} from '@/modules/platform/drive-backup/plan/parts';
+import { dayLabel } from '@/modules/platform/drive-backup/plan/labels';
+import { isPending, planParts } from '@/modules/platform/drive-backup/plan/parts';
 import type { ListedObject } from '@/modules/platform/drive-backup/source/backup-source.port';
 import type { RunDeps } from './backup-store.port';
-import { cleanUp } from '@/modules/platform/drive-backup/run/cleanup/clean-up';
 import { partOrSkip } from './one-part';
-import { DriveFull } from './quota';
-import { fitsNow, roomFor } from './room';
-import { finishFull } from '@/modules/platform/drive-backup/run/cleanup/seal';
-import { added, emptySummary, sealable, soloFailed, tooLargeItems } from './summary';
+import { budgetOf, freeOf } from './quota';
+import { added, emptySummary, soloFailed, tooLargeItems, waited } from './summary';
 import type { RunSummary } from './summary';
 
 export type { RunSummary } from './summary';
 
-async function pendingIn(deps: RunDeps, bucket: Bucket, covered: Covered) {
+async function pendingIn(deps: RunDeps, bucket: Bucket, covered: ReadonlySet<string>) {
   const out: ListedObject[] = [];
   for await (const o of deps.source.list(bucket)) if (isPending(covered, o)) out.push(o);
   return out;
 }
 
-async function pending(deps: RunDeps, covered: Covered): Promise<ListedObject[]> {
+async function pending(deps: RunDeps, covered: ReadonlySet<string>): Promise<ListedObject[]> {
   const todo: ListedObject[] = [];
   for (const bucket of deps.buckets) todo.push(...(await pendingIn(deps, bucket, covered)));
   return todo;
 }
 
-/** A first full of an empty MinIO still uploads one (manifest-only) part: the chain's base. */
-const workOf = (plan: RunPlan, parts: ListedObject[][]): ListedObject[][] =>
-  plan.kind === 'full' && plan.base.length === 0 && parts.length === 0 ? [[]] : parts;
+/** Drive's room now: free minus the 2 GB reserve (quota.ts); Infinity without a limit. */
+const roomNow = async (deps: RunDeps): Promise<number> => budgetOf(freeOf(await deps.api.quota()));
+
+/** The night's budget: what it started with, less what it already sent (Drive's figure may lag). */
+interface Budget {
+  start: number;
+  spent: number;
+}
+
+/** Read again right before a part: it goes only under both today's room and what is left. */
+const fitsNow = async (deps: RunDeps, input: { cost: number; budget: Budget }) =>
+  input.cost <= Math.min(await roomNow(deps), input.budget.start - input.budget.spent);
 
 interface Night {
   folderId: string;
   now: Date;
-  plan: RunPlan;
-  /** The first part number: after every row of that archive, trashed ones included (unique). */
+  label: string;
+  /** The first part number: after every row of that night, failed ones included (unique). */
   first: number;
+  room: number;
 }
 
-/** The parts in order, each checked against Drive's room right before it (room.ts fitsNow). */
+/** The parts in order; one that does not fit Drive's room waits (a smaller later one may go). */
 async function uploadAll(
   deps: RunDeps,
   night: Night,
-  input: { work: ListedObject[][]; sum: RunSummary },
+  input: { parts: ListedObject[][]; sum: RunSummary },
 ) {
-  const { folderId, now, plan } = night;
+  const { folderId, now, label } = night;
+  const budget: Budget = { start: night.room, spent: 0 };
   let sum = input.sum;
   let part = night.first;
-  for (const [i, objects] of input.work.entries()) {
-    const fits = await fitsNow(deps, { part: objects, later: input.work.slice(i + 1) });
-    if (!fits) {
-      sum = { ...sum, left: [...sum.left, ...objects.map(objectId)] };
+  for (const objects of input.parts) {
+    const cost = partCost(objects);
+    if (!(await fitsNow(deps, { cost, budget }))) {
+      sum = waited(sum, objects);
       continue;
     }
-    const r = await partOrSkip({ deps, folderId, now }, { ...plan, part }, objects);
+    const r = await partOrSkip({ deps, folderId, now }, { label, part }, objects);
+    budget.spent += cost;
     part += 1;
-    sum = r ? added(sum, r) : soloFailed(sum);
+    sum = r ? added(sum, r) : soloFailed(sum, objects);
   }
   return sum;
 }
 
 /**
- * The night after its clean-up: decide the archive, list what is new or changed against the base,
- * make room (an open full retires the oldest sealed full early), skip what is larger than the
- * room or the night's cap, upload the rest in parts, then seal a complete full and apply retention.
+ * One add-only night (docs/45 §5): every object whose (bucket, key, ETag) is not recorded yet goes
+ * into tonight's parts, within Drive's room above the 2 GB reserve (read again before each part);
+ * one larger than the part cap is skipped and named. Nothing on Drive is
+ * ever deleted: a failed part's objects simply go again next night under a new part number.
  */
-async function backUp(deps: RunDeps, input: { folderId: string; now: Date }) {
-  const { folderId } = input;
-  const plan = decide(await deps.store.archives(folderId), input.now);
-  const todo = await pending(deps, await deps.store.covered(plan.base));
-  const need = plan.kind === 'full' ? partCost(todo) : null;
-  const { room, trashed } = await roomFor(deps, { folderId, need });
-  if (room < partCost([])) throw new DriveFull();
-  const { parts, left, tooLarge } = planParts(todo, deps.caps, room);
-  const last = await deps.store.lastPart({ folderId, kind: plan.kind, label: plan.label });
-  const ids = { left: left.map(objectId), tooLarge: tooLargeItems(tooLarge) };
-  const start = { ...emptySummary(plan), ...ids, trashed };
-  const night = { ...input, plan, first: last + 1 };
-  const sum = await uploadAll(deps, night, { work: workOf(plan, parts), sum: start });
-  if (!sealable(plan, sum)) return sum;
-  const sealed = await finishFull(deps, { folderId, plan });
-  return { ...sum, sealed: sealed.sealed, trashed: sum.trashed + sealed.trashed };
-}
-
-/** One night (docs/45 §5): the clean-up (it only frees space), then the backup itself. */
 export async function runBackup(deps: RunDeps, input: { folderId: string; now: Date }) {
-  const removed = await cleanUp(deps, input);
-  const sum = await backUp(deps, input);
-  return { ...sum, trashed: sum.trashed + removed };
+  const { folderId } = input;
+  await deps.store.abandon(folderId);
+  const todo = await pending(deps, await deps.store.covered(folderId));
+  const room = await roomNow(deps);
+  const { parts, tooLarge } = planParts(todo, deps.caps, room);
+  const label = dayLabel(input.now);
+  const first = (await deps.store.lastPart({ folderId, label })) + 1;
+  const start = { ...emptySummary(label), skipped: tooLargeItems(tooLarge) };
+  return uploadAll(deps, { ...input, label, first, room }, { parts, sum: start });
 }

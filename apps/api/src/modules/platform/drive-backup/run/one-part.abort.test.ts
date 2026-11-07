@@ -15,9 +15,9 @@ async function solo(failWith: (stop: AbortController) => Error) {
   const ctx = {
     deps: { ...t.deps, signal: stop.signal },
     folderId: t.folderId,
-    now: t.store.today,
+    now: new Date('2026-11-07T01:00:00Z'),
   };
-  const plan = { kind: 'full' as const, label: '2026-W45', base: [], part: 1 };
+  const plan = { label: '2026-11-07', part: 1 };
   const big = [{ bucket: B.recordings, key: 'r.mp4', etag, size: STREAMED_MIN + 1 }];
   return { t, run: () => partOrSkip(ctx, plan, big) };
 }

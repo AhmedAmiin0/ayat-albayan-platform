@@ -5,11 +5,10 @@ import { GoogleConnection } from '@/modules/platform/google-sync';
 import { BackupStateRepo } from '@/modules/platform/drive-backup/db/backup-state.repo';
 import {
   type BackupStatusView,
-  frozenView,
   lastArchive,
-  leftView,
   lowQuota,
   quotaView,
+  skippedView,
 } from './backup-view';
 
 /** The status line: settings and readiness, the last archive, the last error, Drive's quota. */
@@ -34,8 +33,8 @@ export class BackupStatusService {
       last_error: s.last_error,
       quota,
       low_quota: lowQuota(quota),
-      frozen: frozenView(s),
-      left: leftView(s),
+      skipped: skippedView(s),
+      waiting: s.waiting,
     };
   }
 }

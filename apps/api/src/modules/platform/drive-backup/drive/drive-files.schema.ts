@@ -48,18 +48,6 @@ export const toFile = (f: RawFile): BackupFile => ({
 export const isBackupOwn = (f: RawFile): boolean =>
   f.trashed !== true && f.appProperties?.ab_backup === BACKUP_MARK.ab_backup;
 
-/** What the permanent delete checks first: the parents and the marker. */
-export const OWNER_FIELDS = 'id,parents,appProperties';
-export const ownerSchema = z.object({
-  parents: z.array(z.string()).default([]),
-  trashed: z.boolean().default(false),
-  appProperties: z.record(z.string(), z.string()).optional(),
-});
-
-/** An archive the backup itself made, in its own folder: the only files it ever deletes. */
-export const isOwnArchive = (f: z.infer<typeof ownerSchema>, folderId: string): boolean =>
-  f.appProperties?.ab_backup === BACKUP_MARK.ab_backup && f.parents.includes(folderId);
-
 /** A Drive query string literal: backslash and quote escaped. */
 export const lit = (s: string): string => `'${s.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 
@@ -68,19 +56,3 @@ export function committedOf(range: string | null): number {
   const m = /bytes=0-(\d+)/.exec(range ?? '');
   return m ? Number(m[1]) + 1 : 0;
 }
-
-/** The files of one archive row's upload: in the folder, the backup's marker and `ab_row`. */
-export const markedQuery = (input: { folderId: string; rowId: string }): string =>
-  [
-    `${lit(input.folderId)} in parents`,
-    'trashed = false',
-    "appProperties has { key='ab_backup' and value='minio' }",
-    `appProperties has { key='ab_row' and value=${lit(input.rowId)} }`,
-  ].join(' and ');
-
-/** A file of that row's upload: the backup's marker and its `ab_row`. */
-export const isMarked = (
-  f: { appProperties?: Readonly<Record<string, string>> | undefined },
-  input: { rowId: string },
-): boolean =>
-  f.appProperties?.ab_backup === BACKUP_MARK.ab_backup && f.appProperties.ab_row === input.rowId;

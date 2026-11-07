@@ -1,26 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { archiveName, dayLabel, isoWeekday, msUntilUtcHour, weekLabel } from './labels';
+import { archiveName, archiveProps, dayLabel, msUntilUtcHour } from './labels';
 
 describe('archive labels', () => {
-  it.each([
-    ['2026-11-07', '2026-W45'],
-    ['2026-01-01', '2026-W01'],
-    ['2027-01-01', '2026-W53'],
-    ['2024-12-30', '2025-W01'],
-  ])('%s is in ISO week %s', (day, week) => {
-    expect(weekLabel(new Date(`${day}T12:00:00Z`))).toBe(week);
+  it('the UTC day and the part names', () => {
+    expect(dayLabel(new Date('2026-11-07T23:59:00Z'))).toBe('2026-11-07');
+    expect(archiveName({ label: '2026-11-07', part: 1 })).toBe('add-2026-11-07.p1.tar.zst');
+    expect(archiveName({ label: '2026-11-07', part: 12 })).toBe('add-2026-11-07.p12.tar.zst');
   });
 
-  it('days, weekdays and names', () => {
-    expect(dayLabel(new Date('2026-11-07T23:59:00Z'))).toBe('2026-11-07');
-    expect(isoWeekday(new Date('2026-11-13T01:00:00Z'))).toBe(5);
-    expect(isoWeekday(new Date('2026-11-08T01:00:00Z'))).toBe(7);
-    expect(archiveName({ kind: 'incr', label: '2026-11-07', part: 1 })).toBe(
-      'incr-2026-11-07.tar.zst',
-    );
-    expect(archiveName({ kind: 'full', label: '2026-W45', part: 3 })).toBe(
-      'full-2026-W45.p3.tar.zst',
-    );
+  it('the marker on every archive', () => {
+    expect(archiveProps({ label: '2026-11-07', part: 2 })).toEqual({
+      ab_source: 'platform',
+      ab_backup: 'minio',
+      label: '2026-11-07',
+      part: '2',
+    });
   });
 
   it('the next 01:00 UTC', () => {

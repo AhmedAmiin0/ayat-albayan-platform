@@ -24,7 +24,7 @@ export interface PartEntry {
 export type SkipReason = 'missing' | 'read_failed' | 'changed';
 export interface PartReport {
   entries: PartEntry[];
-  skipped: { bucket: string; key: string; reason: SkipReason }[];
+  skipped: { bucket: string; key: string; size: number; reason: SkipReason }[];
   rawBytes: number;
 }
 export const emptyReport = (): PartReport => ({ entries: [], skipped: [], rawBytes: 0 });
@@ -36,7 +36,7 @@ interface Ready {
 }
 
 function skip(report: PartReport, o: ListedObject, reason: SkipReason): null {
-  report.skipped.push({ bucket: o.bucket, key: o.key, reason });
+  report.skipped.push({ bucket: o.bucket, key: o.key, size: o.size, reason });
   return null;
 }
 

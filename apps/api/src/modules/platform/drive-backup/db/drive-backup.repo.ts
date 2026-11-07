@@ -1,21 +1,19 @@
 import type { Database } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import type { ArchiveRow, ArchiveStatus } from '@/modules/platform/drive-backup/plan/archive.types';
 import type {
   BackupStore,
   FinishedArchive,
   NewArchive,
 } from '@/modules/platform/drive-backup/run/backup-store.port';
 import { ArchiveReadsRepo } from './archive-reads.repo';
-import { ARCHIVE_COLUMNS, archiveRowSchema, fail } from './archive-row.schema';
+import { fail } from './archive-row.schema';
 import { ArchiveObjectsRepo } from './archive-objects.repo';
 
-const PAGE = 1000;
 const now = () => new Date().toISOString();
 type Patch = Database['public']['Tables']['drive_backup_archives']['Update'];
 
-/** drive_backup_archives + drive_backup_objects with the service role (docs/45 §5). */
+/** drive_backup_archives + drive_backup_objects with the service role (docs/45 §5, add-only). */
 @Injectable()
 export class DriveBackupRepo implements BackupStore {
   constructor(
@@ -33,43 +31,19 @@ export class DriveBackupRepo implements BackupStore {
     if (error) throw fail('abandon', error);
   }
 
-  /** Every page (PostgREST caps one answer at 1000 rows). */
-  async archives(folderId: string): Promise<ArchiveRow[]> {
-    const out: ArchiveRow[] = [];
-    for (let from = 0, more = true; more; from += PAGE) {
-      const { data, error } = await this.db
-        .from('drive_backup_archives')
-        .select(ARCHIVE_COLUMNS)
-        .eq('folder_id', folderId)
-        .neq('status', 'trashed')
-        .order('started_at')
-        .order('id')
-        .range(from, from + PAGE - 1);
-      if (error) throw fail('archives read', error);
-      out.push(...archiveRowSchema.array().parse(data));
-      more = data.length === PAGE;
-    }
-    return out;
+  covered(folderId: string): Promise<Set<string>> {
+    return this.objects.covered(folderId);
   }
 
-  /** Archive by archive, oldest first, page by page: a later ETag replaces an earlier one. */
-  covered(archives: readonly ArchiveRow[]): Promise<Map<string, string>> {
-    return this.objects.covered(archives);
-  }
-
-  lastPart(input: Pick<NewArchive, 'folderId' | 'kind' | 'label'>): Promise<number> {
+  lastPart(input: Pick<NewArchive, 'folderId' | 'label'>): Promise<number> {
     return this.reads.lastPart(input);
   }
 
-  status(id: string): Promise<ArchiveStatus | null> {
-    return this.reads.status(id);
-  }
-
   async start(input: NewArchive): Promise<string> {
-    const { folderId: folder_id, kind, label, part, name } = input;
+    const { folderId: folder_id, label, part, name } = input;
     const { data, error } = await this.db
       .from('drive_backup_archives')
-      .insert({ folder_id, kind, label, part, name })
+      .insert({ folder_id, label, part, name })
       .select('id')
       .single();
     if (error) throw fail('archive start', error);
@@ -104,21 +78,7 @@ export class DriveBackupRepo implements BackupStore {
     });
   }
 
-  seal(id: string): Promise<void> {
-    return this.patch([id], { sealed: true });
-  }
-
-  async trashed(ids: readonly string[]): Promise<void> {
-    if (ids.length === 0) return;
-    await this.patch(ids, { status: 'trashed' });
-    const { error } = await this.db
-      .from('drive_backup_objects')
-      .delete()
-      .in('archive_id', [...ids]);
-    if (error) throw fail('objects delete', error);
-  }
-
-  /** This run's row only: still `uploading`; zero rows changed is an error (docs/45 §5.1). */
+  /** This run's row only: still `uploading`; zero rows changed is an error (docs/45 §5). */
   private async own(id: string, values: Patch): Promise<void> {
     const { data, error } = await this.db
       .from('drive_backup_archives')
@@ -128,13 +88,5 @@ export class DriveBackupRepo implements BackupStore {
       .select('id');
     if (error) throw fail('archive write', error);
     if (data.length !== 1) throw new Error('drive backup archive write failed: not uploading');
-  }
-
-  private async patch(ids: readonly string[], values: Patch): Promise<void> {
-    const { error } = await this.db
-      .from('drive_backup_archives')
-      .update(values)
-      .in('id', [...ids]);
-    if (error) throw fail('archive write', error);
   }
 }

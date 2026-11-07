@@ -16,12 +16,12 @@ const GB = 1024 ** 3;
 const answer = {
   enabled: true,
   ready: { minio: true, google: true },
-  last: { kind: 'full', label: '2026-W45', objects: 3, bytes_raw: 2 * GB, bytes_compressed: GB },
+  last: { label: '2026-11-07', objects: 3, bytes_raw: 2 * GB, bytes_compressed: GB },
   last_error: null,
   quota: { limit: 15 * GB, free: GB, usage: 14 * GB, at: '2026-11-07T01:00:00Z' },
   low_quota: true,
-  frozen: null,
-  left: null,
+  skipped: { count: 0, items: [] },
+  waiting: 0,
   last_run_at: '2026-11-07T01:00:00Z',
 };
 
@@ -40,13 +40,17 @@ describe('<DriveBackupStatus> under «التخزين»', () => {
     expect(apiFetch).toHaveBeenCalledWith('/settings/integrations/storage-backup');
   });
 
-  it('a frozen backup: «النسخ الاحتياطي متوقف» with its reason', async () => {
-    const frozen = { since: '2026-11-03T01:00:00Z', reason: 'drive_full' };
-    apiFetch.mockResolvedValue({ ...answer, low_quota: false, frozen });
+  it('objects waiting for room, and the skipped ones by name', async () => {
+    const items = [{ id: 'reports/bad.pdf', size: 1024, reason: 'read_failed' }];
+    apiFetch.mockResolvedValue({
+      ...answer,
+      low_quota: false,
+      waiting: 2,
+      skipped: { count: 1, items },
+    });
     renderWithClient(<DriveBackupStatus />);
-    const alert = await screen.findByRole('alert');
-    expect(alert.textContent).toContain(b.frozenReasons.drive_full);
-    expect(alert.textContent).toContain('2026-11-03');
+    expect((await screen.findByRole('alert')).textContent).toContain(b.waiting.two);
+    expect(screen.getByText(/reports\/bad\.pdf/).textContent).toContain(b.skipReasons.read_failed);
   });
 
   it('a failed read says so', async () => {

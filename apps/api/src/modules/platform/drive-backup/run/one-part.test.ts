@@ -2,11 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { B, setup } from './backup-run.fakes';
 import { runBackup } from './backup-run';
 
-// Verification items 4, 6 and 7: a created Drive file's id is never lost, a row taken over by
-// another run is never written as this run's, and a failed start() leaves nothing behind.
+// A created Drive file's id is never lost, a row taken over by another run is never written as
+// this run's, a failed start() leaves nothing behind, and no file is ever deleted (add-only).
+
+const NOW = new Date('2026-11-07T01:00:00Z');
 
 describe('a part that fails after its file exists', () => {
-  it('aborted during the last chunk: the file id is kept on the failed row, then deleted', async () => {
+  it('aborted during the last chunk: the file id is kept on the failed row, the file kept', async () => {
     const t = await setup();
     const stop = new AbortController();
     t.minio.set({ bucket: B.reports, key: 'a.pdf', body: 'a' });
@@ -17,17 +19,16 @@ describe('a part that fails after its file exists', () => {
       return r;
     };
     const deps = { ...t.deps, signal: stop.signal };
-    await expect(runBackup(deps, { folderId: t.folderId, now: t.store.today })).rejects.toThrow();
+    await expect(runBackup(deps, { folderId: t.folderId, now: NOW })).rejects.toThrow();
     const row = t.store.rows[0];
     expect(row?.status).toBe('failed');
-    const file = row?.drive_file_id ?? '';
-    expect(t.drive.files.has(file)).toBe(true);
+    expect(t.drive.files.has(row?.drive_file_id ?? '')).toBe(true);
     t.drive.putChunk = put;
-    await t.night('2026-11-08');
-    expect(t.drive.deleted).toContain(file);
+    expect(await t.night('2026-11-08')).toMatchObject({ objects: 1 });
+    expect(t.drive.files.has(row?.drive_file_id ?? '')).toBe(true);
   });
 
-  it('a row abandoned by another run: no write as this run’s; its file is deleted now', async () => {
+  it('a row abandoned by another run: no write as this run’s; its file is left alone', async () => {
     const t = await setup();
     t.minio.set({ bucket: B.reports, key: 'a.pdf', body: 'a' });
     const put = t.drive.putChunk.bind(t.drive);
@@ -37,8 +38,7 @@ describe('a part that fails after its file exists', () => {
     };
     await expect(t.night('2026-11-07')).rejects.toThrow('not uploading');
     expect(t.store.rows[0]).toMatchObject({ status: 'failed', error: 'interrupted' });
-    expect(t.drive.deleted).toHaveLength(1);
-    expect(t.drive.live(t.folderId)).toEqual([]);
+    expect(t.drive.live(t.folderId)).toHaveLength(1);
   });
 
   it('start() fails (a duplicate part): the error goes on, no row and no upload', async () => {
@@ -49,7 +49,7 @@ describe('a part that fails after its file exists', () => {
     expect(t.drive.log).not.toContain('startUpload');
   });
 
-  it('the file carries its row id (ab_row): a lost id can be found again', async () => {
+  it('the file carries its row id (ab_row)', async () => {
     const t = await setup();
     t.minio.set({ bucket: B.reports, key: 'a.pdf', body: 'a' });
     await t.night('2026-11-07');

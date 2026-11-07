@@ -25,13 +25,7 @@ function setup(input: { cfg?: StorageEnv; token?: string | null } = {}) {
     read: vi.fn().mockResolvedValue({ folder_id: null, account_email: null }),
     save: vi.fn(),
   };
-  const alerts = {
-    failed: vi.fn(),
-    lowQuota: vi.fn(),
-    skipped: vi.fn(),
-    tooLarge: vi.fn(),
-    frozen: vi.fn(),
-  };
+  const alerts = { failed: vi.fn(), skipped: vi.fn(), driveFull: vi.fn() };
   const data = { store: new MemoryStore(), state, alerts } as unknown as DriveBackupData;
   const connection = {
     refreshToken: vi.fn().mockResolvedValue(input.token === undefined ? 'rt' : input.token),
@@ -69,33 +63,34 @@ describe('DriveBackupRunner (docs/45 §5)', () => {
     expect(t.state.save).toHaveBeenCalledWith(
       expect.objectContaining({ account_email: 'academy@example.test' }),
     );
-    expect(t.state.save).toHaveBeenCalledWith({
+    expect(t.state.save).toHaveBeenLastCalledWith({
       last_run_at: '2026-11-07T01:00:00.000Z',
       last_error: null,
+      skipped: [],
+      skipped_count: 0,
+      waiting: 0,
     });
-    expect(t.state.save).toHaveBeenLastCalledWith({ frozen_since: null, frozen_reason: null });
     expect(t.drive.log).toContain('createFolder');
-    expect(t.alerts.lowQuota).not.toHaveBeenCalled();
+    expect(t.alerts.driveFull).not.toHaveBeenCalled();
   });
 
-  it('under the 2 GB reserve: warns the admins and uploads nothing', async () => {
+  it('under the 2 GB reserve: uploads nothing; «Drive nearly full» told', async () => {
     const t = setup();
     t.minio.set({ bucket: 'reports', key: 'a.pdf', body: 'a' });
     t.drive.quotaAnswer = { limit: 15 * GB, usage: 14 * GB, email: 'academy@example.test' };
-    expect(await t.runner.runOnce()).toBe('failed');
-    expect(t.alerts.lowQuota).toHaveBeenCalledWith(expect.objectContaining({ free: '1.0 GB' }));
+    expect(await t.runner.runOnce()).toBe('ran');
     expect(t.drive.log).not.toContain('startUpload');
+    expect(t.state.save).toHaveBeenLastCalledWith(expect.objectContaining({ waiting: 1 }));
+    expect(t.alerts.driveFull).toHaveBeenCalledOnce();
   });
 
-  it('Drive almost full: no upload, the error recorded and told', async () => {
+  it('Drive refuses for space (storageQuotaExceeded): recorded, «Drive nearly full»', async () => {
     const t = setup();
-    t.drive.quotaAnswer = { limit: 15 * GB, usage: 15 * GB - 1000, email: 'academy@example.test' };
+    t.minio.set({ bucket: 'reports', key: 'a.pdf', body: 'a' });
+    t.drive.failNext.set('putChunk', new GoogleApiError(403, 'storageQuotaExceeded'));
     expect(await t.runner.runOnce()).toBe('failed');
-    expect(t.drive.log).not.toContain('startUpload');
-    expect(t.state.save).toHaveBeenLastCalledWith(
-      expect.objectContaining({ last_error: 'drive_full' }),
-    );
-    expect(t.alerts.failed).toHaveBeenCalledWith(expect.objectContaining({ error: 'drive_full' }));
+    expect(t.alerts.driveFull).toHaveBeenCalledOnce();
+    expect(t.alerts.failed).not.toHaveBeenCalled();
   });
 
   it('a refused token goes through the Google sync’s own handling (disconnect)', async () => {

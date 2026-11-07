@@ -23,15 +23,9 @@ function setup(tokens: string[]) {
   const drive = new FakeDrive();
   const minio = new FakeMinio();
   const store = new MemoryStore();
-  const read = vi.fn().mockResolvedValue({ folder_id: null, account_email: null, left_watch: {} });
+  const read = vi.fn().mockResolvedValue({ folder_id: null, account_email: null });
   const state = { read, save: vi.fn() };
-  const alerts = {
-    failed: vi.fn(),
-    lowQuota: vi.fn(),
-    skipped: vi.fn(),
-    tooLarge: vi.fn(),
-    frozen: vi.fn(),
-  };
+  const alerts = { failed: vi.fn(), skipped: vi.fn(), driveFull: vi.fn() };
   const data = { store, state, alerts } as unknown as DriveBackupData;
   const refreshToken = vi.fn();
   tokens.forEach((tk) => refreshToken.mockResolvedValueOnce(tk));
@@ -52,7 +46,7 @@ describe('DriveBackupRunner: the night’s byte budget (docs/45 §5.1)', () => {
     t.drive.quotaAnswer = { limit, usage, email: 'a@example.test' };
     expect(await t.runner.runOnce()).toBe('ran');
     expect(t.store.rows.map((r) => r.objects.length)).toEqual([2]);
-    expect(t.store.rows[0]?.sealed).toBe(false);
+    expect(t.alerts.driveFull).toHaveBeenCalledOnce();
   });
 });
 

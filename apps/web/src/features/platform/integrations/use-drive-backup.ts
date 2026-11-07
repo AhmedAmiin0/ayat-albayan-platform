@@ -15,7 +15,6 @@ const viewSchema = z.object({
   ready: z.object({ minio: z.boolean(), google: z.boolean() }),
   last: z
     .object({
-      kind: z.enum(['full', 'incr']),
       label: z.string(),
       objects: z.number(),
       bytes_raw: z.number(),
@@ -25,15 +24,19 @@ const viewSchema = z.object({
   last_error: z.string().nullable(),
   quota: z.object({ limit: z.number().nullable(), free: z.number().nullable() }).nullable(),
   low_quota: z.boolean(),
-  /** A full open for more than 3 nights (api plan/frozen.ts): since when and why. */
-  frozen: z
-    .object({
-      since: z.string(),
-      reason: z.enum(['too_large', 'drive_full', 'unread', 'incomplete', 'failed']),
-    })
-    .nullable(),
-  /** Objects left for later nights (api plan/left.ts): how many, the oldest and since when. */
-  left: z.object({ count: z.number(), key: z.string(), since: z.string() }).nullable(),
+  /** The last night's skipped objects (api run/summary.ts): the count and the first ones named. */
+  skipped: z.object({
+    count: z.number(),
+    items: z.array(
+      z.object({
+        id: z.string(),
+        size: z.number(),
+        reason: z.enum(['too_large', 'read_failed', 'changed']),
+      }),
+    ),
+  }),
+  /** Objects the last night could not send: Drive's free space under the 2 GB reserve. */
+  waiting: z.number(),
 });
 export type DriveBackupView = z.infer<typeof viewSchema>;
 
@@ -54,7 +57,7 @@ function lastLine(v: DriveBackupView): string {
   const last = v.last;
   if (!last) return b.none;
   return b.last
-    .replace('{name}', `${b.kinds[last.kind]} ${last.label}`)
+    .replace('{day}', last.label)
     .replace('{objects}', counted(b.files, last.objects))
     .replace('{raw}', bytesText(last.bytes_raw))
     .replace('{compressed}', bytesText(last.bytes_compressed));
@@ -67,29 +70,28 @@ function quotaLine(q: DriveBackupView['quota']): string | null {
   return b.quota.replace('{free}', bytesText(free)).replace('{limit}', bytesText(limit));
 }
 
-/** «النسخ الاحتياطي متوقف منذ …: السبب», or null while the backup moves. */
-export function frozenLine(v: DriveBackupView): string | null {
-  const f = v.frozen;
-  if (!f) return null;
-  return b.frozen
-    .replace('{since}', f.since.slice(0, 10))
-    .replace('{reason}', b.frozenReasons[f.reason]);
+/** «لم يُنسخ … ملفًا …» and each named object (size, why); empty when nothing was skipped. */
+export function skippedLines(v: DriveBackupView): string[] {
+  const { count, items } = v.skipped;
+  if (count === 0) return [];
+  const named = items.map((i) =>
+    b.skippedItem
+      .replace('{name}', i.id)
+      .replace('{size}', bytesText(i.size))
+      .replace('{why}', b.skipReasons[i.reason]),
+  );
+  return [counted(b.skipped, count), ...named];
 }
 
-/** «تنتظر النسخ في الليالي التالية: …», or null when nothing is left. */
-function leftLine(l: DriveBackupView['left']): string | null {
-  if (!l) return null;
-  return b.left
-    .replace('{count}', counted(b.files, l.count))
-    .replace('{name}', l.key)
-    .replace('{since}', l.since.slice(0, 10));
-}
+/** «ينتظر … توفّر المساحة في Google Drive», or null when nothing waits. */
+export const waitingLine = (v: DriveBackupView): string | null =>
+  v.waiting > 0 ? counted(b.waiting, v.waiting) : null;
 
 /** The status line's sentences, in order (empty ones dropped). */
 export function backupLines(v: DriveBackupView): string[] {
   const blocked = STATE.find(([when]) => when(v))?.[1] ?? null;
   const error = v.last_error ? b.error.replace('{error}', v.last_error) : null;
-  const lines = [blocked, lastLine(v), leftLine(v.left), error, quotaLine(v.quota), b.note];
+  const lines = [blocked, lastLine(v), error, quotaLine(v.quota), b.note];
   return lines.filter((l): l is string => l !== null);
 }
 

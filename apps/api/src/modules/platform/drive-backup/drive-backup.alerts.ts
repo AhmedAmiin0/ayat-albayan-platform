@@ -2,21 +2,19 @@ import { counted } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
-import type { FrozenReason } from '@/modules/platform/drive-backup/plan/frozen';
 import { dayLabel } from '@/modules/platform/drive-backup/plan/labels';
-import type { OldestLeft } from '@/modules/platform/drive-backup/plan/left';
-import { gbText } from '@/modules/platform/drive-backup/run/quota';
-import type { TooLargeItem } from '@/modules/platform/drive-backup/run/summary';
+import { sizeText } from '@/modules/platform/drive-backup/run/quota';
+import type { SkippedItem } from '@/modules/platform/drive-backup/run/summary';
 
-/** At most this many names in the too-large alert (the rest only counted). */
+/** At most this many names in the skipped alert (the rest only counted). */
 const NAMES_SHOWN = 5;
 
-/** «bucket/key (size، why)»: why from the plan (larger than Drive's room or the night's cap). */
-const itemText = (t: TooLargeItem): string =>
-  ar.googleSync.alerts.backupTooLargeItem
+/** «bucket/key (size، why)». */
+const itemText = (t: SkippedItem): string =>
+  ar.googleSync.alerts.backupSkippedItem
     .replace('{name}', t.id)
-    .replace('{size}', gbText(t.size))
-    .replace('{why}', ar.integrations.driveBackup.tooLargeReasons[t.why]);
+    .replace('{size}', sizeText(t.size))
+    .replace('{why}', ar.integrations.driveBackup.skipReasons[t.reason]);
 
 /**
  * The backup's admin alerts: the Google sync's bell pattern (google_sync_alert, bell only, never
@@ -37,37 +35,15 @@ export class DriveBackupAlerts {
     return this.tell(`failed:${dayLabel(input.now)}`, reason);
   }
 
-  lowQuota(input: { free: string; now: Date }): Promise<void> {
-    const reason = ar.googleSync.alerts.backupLowQuota.replace('{free}', input.free);
-    return this.tell(`quota:${dayLabel(input.now)}`, reason);
-  }
-
-  skipped(input: { count: number; now: Date }): Promise<void> {
-    const reason = counted(ar.googleSync.alerts.backupSkipped, input.count);
-    return this.tell(`skipped:${dayLabel(input.now)}`, reason);
-  }
-
-  /** Objects never sent (above Drive's room or the night's cap): the first few, size and why. */
-  tooLarge(input: { items: readonly TooLargeItem[]; now: Date }): Promise<void> {
+  /** Objects not backed up tonight, named (the first few): size and why; retried every night. */
+  skipped(input: { items: readonly SkippedItem[]; now: Date }): Promise<void> {
     const names = input.items.slice(0, NAMES_SHOWN).map(itemText).join('، ');
-    const text = counted(ar.googleSync.alerts.backupTooLarge, input.items.length);
-    return this.tell(`too_large:${dayLabel(input.now)}`, text.replace('{names}', names));
+    const text = counted(ar.googleSync.alerts.backupSkipped, input.items.length);
+    return this.tell(`skipped:${dayLabel(input.now)}`, text.replace('{names}', names));
   }
 
-  /** Objects the night's cap left 3 nights running: how many, the oldest by name and night. */
-  left(input: OldestLeft & { now: Date }): Promise<void> {
-    const text = counted(ar.googleSync.alerts.backupLeft, input.count)
-      .replace('{name}', input.key)
-      .replace('{since}', input.since.slice(0, 10));
-    return this.tell(`left:${dayLabel(input.now)}`, text);
-  }
-
-  /** «النسخ الاحتياطي متوقف»: a full open for more than 3 nights, and why. */
-  frozen(input: { reason: FrozenReason; since: string; now: Date }): Promise<void> {
-    const why = ar.integrations.driveBackup.frozenReasons[input.reason];
-    const text = ar.googleSync.alerts.backupFrozen
-      .replace('{since}', input.since.slice(0, 10))
-      .replace('{reason}', why);
-    return this.tell(`frozen:${dayLabel(input.now)}`, text);
+  /** Drive's free space is under the 2 GB reserve: old archives must be deleted by hand. */
+  driveFull(input: { now: Date }): Promise<void> {
+    return this.tell(`drive_full:${dayLabel(input.now)}`, ar.googleSync.alerts.backupDriveFull);
   }
 }
