@@ -9,22 +9,39 @@ import { recordOwnSend } from './own-send';
 import { sendErrorCode } from './send-error';
 
 /**
- * A send, the message it answers («رد»), the tab-memory generations it started in and what
- * follows it (never sent).
+ * A send, the message it answers («رد») or corrects («تعديل»), the tab-memory generations it
+ * started in and what follows it (never sent).
  */
 export interface Sent {
   phone: string;
   text: string;
   clientRequestId: string;
   replyTo?: string | undefined;
+  correctsId?: string | undefined;
   gen: { draft: number; own: number };
   after?: (() => void) | undefined;
 }
 
-/** What the box does around a send: «رد» cleared after it, the focus back after either outcome. */
+/**
+ * What the box does around a send: «رد» / «تعديل» cleared after it, the focus back after either
+ * outcome.
+ */
 interface SendHooks {
   replyDone: (id: string) => void;
+  editDone?: ((id: string) => void) | undefined;
   settled: () => void;
+}
+
+/** The body's links: the message it answers, or the one it corrects (the API adds «تصحيح: »). */
+const linksOf = ({ replyTo, correctsId }: Sent) => ({
+  ...(replyTo ? { replyToMessageId: replyTo } : {}),
+  ...(correctsId ? { correctsId } : {}),
+});
+
+/** A sent answer or correction clears its strip (only while it is still the one picked). */
+function clearPicks(sent: Sent, hooks: SendHooks): void {
+  if (sent.replyTo) hooks.replyDone(sent.replyTo);
+  if (sent.correctsId) hooks.editDone?.(sent.correctsId);
 }
 
 /** The box's send of `text` with its id (requestIdFor: the pinned or kept one first). */
@@ -59,9 +76,9 @@ export function useTextSend(phone: string, hooks: SendHooks) {
   const client = useQueryClient();
   return useMutation({
     mutationKey: ['inbox-send', phone],
-    mutationFn: ({ phone: to, text, clientRequestId, replyTo }: Sent) => {
-      const reply = replyTo ? { replyToMessageId: replyTo } : {};
-      return sendText({ phone: to, text, clientRequestId, ...reply });
+    mutationFn: (sent: Sent) => {
+      const { phone: to, text, clientRequestId } = sent;
+      return sendText({ phone: to, text, clientRequestId, ...linksOf(sent) });
     },
     onMutate: async (sent) => {
       // Her own send snaps the log to the bottom (own-send), the provisional row first.
@@ -72,7 +89,7 @@ export function useTextSend(phone: string, hooks: SendHooks) {
     onSuccess: (view, sent) => {
       recordOwnSend(sent.phone, view.id, sent.gen.own);
       showSent(client, sent.clientRequestId, view);
-      if (sent.replyTo) hooks.replyDone(sent.replyTo);
+      clearPicks(sent, hooks);
       settleTextSend(view, sent);
       sent.after?.();
     },

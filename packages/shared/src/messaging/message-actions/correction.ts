@@ -31,7 +31,7 @@ export interface CorrectionActor {
   role?: string | null;
 }
 
-const kindOk: Array<(m: Correctable) => boolean> = [
+const kindOk: ((m: Correctable) => boolean)[] = [
   (m) => m.direction === 'outbound',
   (m) => m.status !== 'failed',
   (m) => !m.template_key && !m.media_mime,

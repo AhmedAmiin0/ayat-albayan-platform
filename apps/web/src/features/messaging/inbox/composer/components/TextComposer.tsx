@@ -14,8 +14,12 @@ import { draftGeneration, getDraft, keepsFailed, keptFailed, setDraft, subscribe
 import { textSentOf, useTextSend } from '@/features/messaging/inbox/composer/lib/use-text-send';
 import { ownSendGeneration } from '@/features/messaging/inbox/composer/lib/own-send';
 import { ReplyStrip } from './ReplyStrip';
+import { EditStrip } from './EditStrip';
 import { sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
-import { useReplyTarget } from '@/features/messaging/inbox/composer/lib/use-reply-target';
+import {
+  useEditTarget,
+  useReplyTarget,
+} from '@/features/messaging/inbox/composer/lib/use-reply-target';
 
 /** The box's tallest height (about five lines), then it scrolls. */
 const COMPACT_MAX_PX = 128;
@@ -37,6 +41,7 @@ export interface TextComposerProps {
  * meanwhile is never wiped. While this chat's send is in flight no box for it can send (mutationKey),
  * even one mounted since. A send settling after a sign-out writes nothing back (generations).
  * «رد» (owner 2026-10-25): the quoted strip above the box; a sent answer clears it, a failed one keeps it.
+ * «تعديل» (owner 2026-11-07) likewise: EditStrip, and the send carries `correctsId`.
  * The send itself (optimistic bubble, newest-page refresh) is useTextSend.
  */
 export function TextComposer({ phone, leading, extras }: TextComposerProps) {
@@ -45,13 +50,18 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const desktop = !usePhone();
   const draft = useSyncExternalStore(subscribeDrafts, () => getDraft(phone));
   const reply = useReplyTarget(area);
+  const fix = useEditTarget(area);
   const text = draft.text;
   const write = (next: string) => {
     const { failed } = getDraft(phone);
     setDraft(phone, { text: next, failed: keepsFailed(failed, next) ? failed : null });
   };
   const mutationKey = ['inbox-send', phone];
-  const send = useTextSend(phone, { replyDone: reply.done, settled: () => area.current?.focus() });
+  const send = useTextSend(phone, {
+    replyDone: reply.done,
+    editDone: fix.done,
+    settled: () => area.current?.focus(),
+  });
   const pending = useIsMutating({ mutationKey }) > 0;
   // The box grows with its text (1 line → about 5), also where `field-sizing` is missing.
   useLayoutEffect(() => {
@@ -73,7 +83,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
     if (blocked) return;
     const gen = { draft: draftGeneration(), own: ownSendGeneration() };
     const body = text.trim();
-    const sent = { ...textSentOf(phone, draft, body), replyTo: reply.replyTo, gen, after: extras?.onSubmit?.() };
+    const sent = { ...textSentOf(phone, draft, body), replyTo: reply.replyTo, correctsId: fix.correctsId, gen, after: extras?.onSubmit?.() };
     setDraft(phone, { text: '', failed: keptFailed(draft.failed) });
     send.mutate(sent);
   };
@@ -87,6 +97,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
       }}
     >
       <ReplyStrip returnFocus={area} />
+      <EditStrip phone={phone} returnFocus={area} />
       {extras?.above}
       <div className="flex items-end gap-1.5">
         {leading}

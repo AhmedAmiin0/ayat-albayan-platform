@@ -26,7 +26,7 @@ const fillBox = (phone: string, m: MessageView) =>
 const clearIf = <T extends { id: string }>(id: string | undefined) => (now: T | null) =>
   id === undefined || now?.id === id ? null : now;
 
-/** «رد» and «تعديل»: the message the next text answers or corrects; picking one clears the other. */
+/** «رد» and «تعديل»: what the next text answers or corrects; picking one clears the other. */
 function usePicks(phone: string) {
   const [target, setTarget] = useState<MessageQuote | null>(null);
   const [editing, setEditing] = useState<MessageView | null>(null);
@@ -49,7 +49,8 @@ function usePicks(phone: string) {
  * keyed by phone, so another chat starts with no target. «رد» follows the text rule (useMaySend: tried
  * after the window on a Kapso chat line); where a text cannot go it is off with the closed-window
  * notice as its hint, and a target set before is not offered to the composer. «بحث» lives here too.
- * «تعديل» (owner 2026-11-07) fills the box with the original's text; it and «رد» exclude each other.
+ * «تعديل» (owner 2026-11-07) fills the box with the original's text; it and «رد» exclude each
+ * other.
  */
 export function ChatActionsProvider({ thread, enabled, children }: ChatActionsProviderProps) {
   const [forwarding, setForwarding] = useState<MessageView | null>(null);

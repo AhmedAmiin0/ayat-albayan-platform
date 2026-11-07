@@ -10,7 +10,7 @@ import { waHttpError } from '@/modules/messaging/whatsapp';
 import type { CorrectionRepo, CorrectionTarget } from './correction.repo';
 
 /** The send as the service needs it: its phone, input, author and base role. */
-export interface CorrectionSend {
+interface CorrectionSend {
   phone: string;
   input: ThreadText;
   actorId: string;
@@ -19,7 +19,7 @@ export interface CorrectionSend {
 }
 
 /** The send after «تعديل»: the prefixed text replying to the original, and the row's link. */
-export interface Corrected<S extends CorrectionSend> {
+interface Corrected<S extends CorrectionSend> {
   send: S;
   row: { corrects_id?: string };
 }
