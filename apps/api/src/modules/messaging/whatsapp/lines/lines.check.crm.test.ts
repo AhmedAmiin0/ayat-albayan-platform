@@ -44,10 +44,22 @@ describe('LinesCheck on a crm line', () => {
     expect(view).toMatchObject({ crm_send_scope: false, crm_webhook_secret: false, errors: [] });
   });
 
+  it('the template scopes the key lacks, from the same GET /me (docs/39)', async () => {
+    crmLine();
+    const lacking = await check(me(['messages:send']));
+    expect(lacking.view?.crm_template_scopes_missing).toEqual(['templates:read', 'templates:write']);
+    expect(lacking.requests).toHaveLength(1);
+    const half = await check(me(['messages:send', 'templates:read']));
+    expect(half.view?.crm_template_scopes_missing).toEqual(['templates:write']);
+    const all = await check(me(['messages:send', 'templates:read', 'templates:write']));
+    expect(all.view?.crm_template_scopes_missing).toEqual([]);
+  });
+
   it('a refused key: one crm_me error tagged credential crm, scope unknown', async () => {
     crmLine();
     const { view } = await check(crmFailure(401, 'unauthorized'));
     expect(view?.crm_send_scope).toBeNull();
+    expect(view?.crm_template_scopes_missing).toBeNull();
     expect(view?.errors).toEqual([expect.objectContaining({ step: 'crm_me', credential: 'crm' })]);
   });
 

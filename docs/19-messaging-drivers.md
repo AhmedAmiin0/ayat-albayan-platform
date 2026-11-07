@@ -141,8 +141,9 @@ line stays off (`duplicate_chat_phone`, boot log `WA_CHAT_PROVIDER (crm, same as
 | Text / files | `type:"text"` (reply-to dropped: the CRM wants its own uuid) · `type:"document"\|"image"` with `media_url`, `filename`, caption as `text` |
 | wamid | `data.whatsapp_message_id` (a 2xx without it = `uncertain`) |
 | markRead | no-op (the CRM owns the conversation) |
-| Template list / submit / samples / inbound media | `WaError {unsupported:'crm'}`: the sync answers `crm_managed` (no call, **no row touched**: nothing is marked missing or not_submitted; the one exception is a send Meta refuses with #132001, «تحقق من القالب» below), submit is 409 `crm_managed`, a number's sync `crm_managed`, inbound media 409 `crm_no_media`; `canUploadSamples()` false |
-| 401 / 403, 400 `whatsapp_not_configured` | `credential: 'crm'` (the key, or the CRM's own WhatsApp connection, is down: the line, not the message): the queue is held 15 min, uncounted, line paused, one push a day; rows read `crm_auth` («رفض نظام CRM مفتاح الواجهة…») |
+| Template list / submit | through the CRM's `/templates` (docs/39, «Templates through the CRM» below): status only, nothing imported, never marked missing by the sync; a document header or a rejected row with a `meta_id` is 409 `crm_managed`; a CRM without `/templates` (404) answers `crm_managed` and touches no row; a number's sync (module mode) still `crm_managed` |
+| Samples / inbound media | `WaError {unsupported:'crm'}`: inbound media 409 `crm_no_media`; `canUploadSamples()` false |
+| 401 / 403, 400 `whatsapp_not_configured` | `credential: 'crm'` (the key, or the CRM's own WhatsApp connection, is down: the line, not the message): the queue is held 15 min, uncounted, line paused, one push a day; rows read `crm_auth` («رفض نظام CRM مفتاح الواجهة…»). A 403 naming a scope («missing the 'templates:read' scope») also keeps it as `missingScope`: «مزامنة» / «إرسال إلى ميتا» read `crm_scope_missing` with that scope (docs/39) |
 | 429 | queued until `Retry-After` (default 1 min, max 1 h), uncounted, `crm_rate_limited` (120 req/min per key); the line pauses for the rest of the pass, **no** «token refused» push |
 | 502 `meta_error`, 500 `template_malformed`, any other 4xx, a 3xx | failed at once with `crm_<code>` and the CRM's message (nothing was sent). Redirects are never followed (`redirect: 'manual'`); a body that is not the CRM's envelope is kept as `http_<status>` only |
 | 500 `internal`, other 5xx, a timeout, a connection lost after the request left | `uncertain` (the CRM may have reached Meta before failing its own insert). **No idempotency key: never resent automatically** |
@@ -156,12 +157,13 @@ number's template approval is `message_templates.status` (the hand-set one): rou
 number on the same `waba_id`.
 
 **Template status on a crm line.** The queue gate (teacher-alert.plan.ts, confirmations) and the send gate
-(sender.queries.ts) read `message_templates.status` from our db, and a crm line is never synced. So on
-«القوالب» a template whose line is on crm shows «يدويًا» beside its chip (missing reads «غير متاح في نظام CRM»)
-and two buttons: «علِّمه معتمدًا في نظام CRM» (`approved`, after a second «تأكيد الاعتماد»: messages go out with
+(sender.queries.ts) read `message_templates.status` from our db. Since docs/39 a crm line's «مزامنة» reads it
+from the CRM (below); the hand-set marks stay as the fallback for a CRM that cannot say (no `/templates`, a key
+without `templates:read`, a row the CRM lists under no name of ours). On «القوالب» a template whose line is on
+crm shows «عبر نظام CRM» beside its chip (missing reads «غير متاح في نظام CRM») and two buttons: «علِّمه معتمدًا في نظام CRM» (`approved`, after a second «تأكيد الاعتماد»: messages go out with
 it at once) / «علِّمه غير متاح» (`missing`) → `PUT /messaging/templates/:key/crm-status`
-(templates.manage, audited `template_crm_status_set`; 409 `not_crm_line` on any other line). No sync
-overwrites it while the line stays on crm. Moving a template to a crm line resets it to not_submitted as
+(templates.manage, audited `template_crm_status_set`; 409 `not_crm_line` on any other line). The next
+«مزامنة» overwrites a hand-set status only when the CRM lists that template. Moving a template to a crm line resets it to not_submitted as
 any move does; set it by hand afterwards. **Switching a line to crm keeps every status from the last Meta
 sync**: an `approved` row starts going to the CRM as soon as `WA_PROVIDER` is saved (the
 `WA_ALLOWED_RECIPIENTS` guard covers steps 4–6 below), so review every row of that line (step 5).
@@ -192,17 +194,33 @@ existing «إرسال إلى ميتا» confirm next: the same submit, then the 
 through the CRM (docs/39, below). Not built: editing or deleting a row, authentication
 templates, a variable in the header, a media header on a new row, admin template screens on mobile.
 
-**Templates through the CRM (docs/39, 2026-11-06).** The CRM overlay adds `GET /api/v1/templates` (scope
-`templates:read`; `?sync=1` pulls from Meta first) and `POST /api/v1/templates` (scope `templates:write`; the
-dashboard's TemplatePayload). `crm.client.ts` maps `getTemplates` / `submitTemplate` onto them
-(`drivers/crm/crm-templates.ts`); a CRM without them (404) still answers `crm_managed`, and a key without the
-scope is `crm_auth` on the line. A crm line's «مزامنة» is status only (`crmSyncPatch`): each row is found by
-`crmTemplateName` / `crmTemplateLanguage`, its body, footer and display stay ours, nothing is imported, and a row
-the CRM lacks is never marked missing (only `last_checked_at` moves; a real absence is caught on send by
-132001). Saving a line as crm syncs it once. «إرسال إلى ميتا» on a crm line submits through the CRM under the
-same name and language; a document header (no sample upload) and a rejected row (the CRM API has no edit) are
-still made in the CRM dashboard (409 `crm_managed`). The manual «علِّمه معتمدًا / مفقود» marks stay as a
-fallback; the next sync overwrites them whenever the CRM has the template.
+**Templates through the CRM (docs/39, built 2026-11-06 / 11-07).** The CRM overlay adds
+`GET /api/v1/templates` (scope `templates:read`; `?sync=1` pulls from Meta first) and `POST /api/v1/templates`
+(scope `templates:write`; the dashboard's TemplatePayload). `crm.client.ts` maps `getTemplates` /
+`submitTemplate` onto them (`drivers/crm/crm-templates.ts`); a CRM without them (404) still answers
+`crm_managed` and touches no row.
+
+- **«مزامنة» on the crm number** (`POST /messaging/templates/health {line}`, `syncLine` → `crmSyncPatch`): each
+  of that line's rows is found by `crmTemplateName` / `crmTemplateLanguage` (crm_name, else the old script's
+  default, else meta_name: a row such as renewal_due whose meta_name is the CRM name is found by it) and takes
+  the CRM's status (APPROVED → approved, PENDING → pending, REJECTED → rejected with Meta's reason, …),
+  quality and, for its OWN name only, Meta's template id (`meta_id`; another name's id is never the row's). Its
+  body, footer and display stay ours, nothing is imported, a DRAFT counts as absent, and a row the CRM lacks
+  is never marked missing (only `last_checked_at` moves; a real absence is caught on send by 132001).
+  Saving a line as crm syncs it once.
+- **«إرسال إلى ميتا» on a crm row** (`POST /messaging/templates/:key/submit`) goes through the CRM under the
+  same name and language and is saved pending with the returned `meta_id`. The web shows the button exactly
+  when the API accepts it (`crm/crm-submit.ts`): not_submitted, missing, or rejected **without** a `meta_id`,
+  never a document header. A document header (the CRM uploads no sample PDF) reads «تُنشأ في لوحة CRM» and a
+  rejected row Meta already holds (the CRM API has no edit) «تُعدَّل في لوحة CRM», each with its reason
+  (the API answers 409 `crm_managed` for both, before any call).
+- **A key without the template scopes:** the CRM answers 403 «missing the 'templates:read' scope»; the line's
+  sync reads `crm_scope_missing` (message = the scope) and a submit 502 `crm_scope_missing {scope}`, both in
+  words naming the scope and «التواصل» ← «الحماية» ← «مفتاح واجهة نظام CRM». No row is touched. A 403
+  naming no scope stays `crm_auth`. «افحص الخطوط» reports it before any sync: `crm_template_scopes_missing`
+  from the same `GET /me` (no other call).
+- The manual «علِّمه معتمدًا / علِّمه غير متاح» marks and «اسم القالب في CRM» stay as the fallback; the next
+  sync overwrites a mark whenever the CRM lists the template.
 
 **Webhook `POST /webhooks/wacrm`** (public, raw body, never in the activity log). `X-Wacrm-Signature:
 t=<unix>,v1=<hex>` with v1 = HMAC-SHA256(`WACRM_WEBHOOK_SECRET`, `${t}.${rawBody}`), constant-time; `t` more
@@ -248,8 +266,9 @@ Before pressing, and after:
 Code: `apps/api/src/modules/messaging/webhook/crm-register/`.
 
 **Lines check.** A crm line makes one call, `GET /me`: ok, key refused (`errors[0].credential = 'crm'`), or
-`crm_send_scope: false` (no `messages:send`); plus `crm_webhook_secret` (set or not, never the value). Never
-a test message.
+`crm_send_scope: false` (no `messages:send`); `crm_template_scopes_missing` (the `templates:read` /
+`templates:write` the key lacks, docs/39; null when `/me` failed), shown under the line as «ينقص مفتاح واجهة
+نظام CRM صلاحية …»; plus `crm_webhook_secret` (set or not, never the value). Never a test message.
 
 **Mapping to the old script** (owner 2026-10-25: «add a similar integration»). The CRM holds the templates
 of the academy's old Google Apps Script («نظام تسجيل الطلاب», CRM.gs), which sent through the same
@@ -378,8 +397,8 @@ report_ready) only after checking in the CRM that both templates have no variabl
 do, keep report_ready (the CRM must then hold an approved `report_ready` with a document header) and tell us
 their variables to map them.
 
-**Limits.** No template sync or submit from here (submit and approve in the CRM, which syncs from Meta);
-the CRM must hold **the same template names and languages** as our registry (`meta_name`, `language`, or the row's
+**Limits.** Template sync and submit go through the CRM (docs/39); a document header or a rejected row is
+made in the CRM dashboard; the CRM must hold **the same template names and languages** as our registry (`meta_name`, `language`, or the row's
 `crm_name` / `crm_language` / the old script's default), and
 **the same buttons in the same order** (`buttonParams` is keyed by the button's index); no
 inbound media; no idempotency (an uncertain send is the admin's call); a document header or the report PDF goes
@@ -388,11 +407,11 @@ as a link and the CRM shows its own file name, not ours (`AB-nnnn_<date>_تقر�
 
 ### Switching the notifications line to the CRM (owner steps)
 
-1. In the CRM: Settings → API keys → New key with scope **`messages:send`**; copy it (shown once).
+1. In the CRM: Settings → API keys → New key with scopes **`messages:send`**, **`templates:read`** and **`templates:write`** (docs/39); copy it (shown once).
 2. «التواصل» ← «الحماية» → «نظام CRM»: `WACRM_API_BASE` = `https://<crm-host>/api/v1`, save the key as `WACRM_API_KEY`.
 3. Give that key the scope **`webhooks:manage`** too, then press «ربط علامات التسليم من نظام CRM تلقائيًا» under «نظام CRM» (after step 4: it needs the notifications line on crm). It registers the delivery-ticks webhook and stores its secret as `WACRM_WEBHOOK_SECRET` («Delivery ticks: one click» above). Then remove `webhooks:manage` from the key again.
 4. Set `WA_PROVIDER` = «نظام CRM» (web «التكاملات», or on the phone «التواصل» → «نظرة عامة» → «مزوّد الإرسال لكل خط»: pick «نظام CRM», check the missing keys it names, confirm «سيُرسل هذا الخط عبر نظام CRM»; same audited save), save, press «افحص الخطوط»: the line must show «نظام CRM», nothing missing, «مفتاح واجهة نظام CRM صالح ويملك صلاحية الإرسال».
-5. On «القوالب», review **every** notifications template (statuses carry over from the last Meta sync): mark each one the CRM holds (same name, language and button order) approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد», and each one it lacks «علِّمه غير متاح».
+5. On «القوالب», press «مزامنة» on the notifications number: every row the CRM holds under its name reads the CRM's status. Review the rest (statuses carry over from the last Meta sync): mark each one the CRM holds under another spelling approved with «علِّمه معتمدًا في نظام CRM» → «تأكيد الاعتماد» (or fix its CRM name, step 6, and sync again), and each one it lacks «علِّمه غير متاح».
 6. On «القوالب», review the **CRM names** (the line under each crm row's buttons, «في نظام CRM: …»): teacher_new_student must read `teacher_lesson_v2` (its buttons: see «teacher_lesson_v2's real buttons»), teacher_lesson_reminder and teacher_lesson_reminder_meet `teacher_lesson_reminder`; correct any name or language the CRM spells differently with «عدّل اسمه في نظام CRM». For the old script's report flow set report_ready to `report_session` only after the check in «Not known» above.
 7. Send one test to a number in `WA_ALLOWED_RECIPIENTS` before removing the guard.
 8. **Rollback:** set `WA_PROVIDER` back to «Meta مباشرة» (or Kapso). Nothing else changes; the hand-set statuses are re-synced by the next Meta sync **that reads the list** (a failed read touches no row: with a dead Meta token, re-check «القوالب» by hand).

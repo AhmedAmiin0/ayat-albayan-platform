@@ -2,6 +2,27 @@
 
 The CRM (github.com/AhmedAmiin0/ayat-crm, private; hosted at crm.ayatalbayan.com) now exposes GET /api/v1/templates (scope templates:read; ?sync=1 pulls from Meta first; envelope {data:[{name,language,status,category,meta_template_id,quality_score,rejection_reason,...}], meta:{next_cursor,sync}}) and POST /api/v1/templates (scope templates:write; body = the CRM dashboard TemplatePayload; 201 {data:{meta_template_id,status,template,dry_run}}). Deployed 2026-11-06. Errors: 401 unauthorized, 403 missing scope, 400 whatsapp_not_configured/bad_request, 429 meta_rate_limited, 502 meta_error.
 
+## What is built (2026-11-07)
+
+- Server (commit 7957a51): `drivers/crm/crm-templates.ts` (list + submit body), `crm.client.ts` getTemplates /
+  submitTemplate (404 → `crm_managed`; a rejected row with a `meta_id` refused before any call),
+  `crmSyncPatch` (status only by `crmTemplateName` / `crmTemplateLanguage`), `template-submit.ts` (409
+  `crm_managed` only for a document header), the verifier syncing a line saved as crm, and «قالب جديد» →
+  «إرسال إلى ميتا» on a crm line.
+- «القوالب» rows (this PR): an existing crm row shows «إرسال إلى ميتا» exactly when the API accepts it
+  (`apps/web/.../templates/crm/crm-submit.ts`: not_submitted, missing, or rejected without a `meta_id`; never a
+  document header). Otherwise it says why: «تُنشأ في لوحة CRM» (document header: no sample PDF upload) or
+  «تُعدَّل في لوحة CRM» (rejected on Meta: the CRM API has no edit). The hand-set «علِّمه معتمدًا / غير متاح»
+  and the CRM name buttons stay as the fallback; the status note reads «عبر نظام CRM».
+- «مزامنة»: unchanged route (`POST /messaging/templates/health {line}`). A row found under its OWN name
+  (renewal_due, PENDING in the CRM → pending) also takes Meta's template id from the CRM, so a template the
+  CRM shows rejected is offered for editing in the CRM, never created twice. Another name's id is never kept.
+- Missing scopes: a CRM 403 naming a scope keeps it (`WaError.info.missingScope`). The sync reads
+  `crm_scope_missing` (message = the scope), a submit answers 502 `crm_scope_missing {scope}`; the web says
+  «ينقص مفتاح واجهة نظام CRM صلاحية templates:read: أنشئ في نظام CRM مفتاحًا يملكها، واحفظه في «التواصل» ←
+  «الحماية» ← «مفتاح واجهة نظام CRM»…». A 403 naming no scope stays `crm_auth`. «افحص الخطوط» shows the
+  template scopes the key lacks from the GET /me it already makes (`crm_template_scopes_missing`).
+
 ## Platform changes (design, verified against develop)
 
 - NEW apps/api/src/modules/messaging/whatsapp/drivers/crm/crm-templates.ts (about 60 lines). It lists the CRM's templates as a MetaTemplate[] and builds the CRM submit body. Its own imports only: zod, @ab/shared (crmTemplateName, crmTemplateLanguage), templateButtons/templateDisplay from messages/wa-json, bodyExamples from template-review, WaError/MetaTemplate/TemplateRow from whatsapp.types, crmJson/CrmConn from ./crm-http. Sketch:
@@ -94,10 +115,10 @@ The CRM (github.com/AhmedAmiin0/ayat-crm, private; hosted at crm.ayatalbayan.com
 
 - 1. Deploy the CRM overlay first; a key can't carry a scope that doesn't exist yet. Copy the three files to /opt/wacrm/patches/src/lib/api-keys/scopes.ts, /opt/wacrm/patches/src/lib/api/v1/templates.ts and /opt/wacrm/patches/src/app/api/v1/templates/route.ts, add the three COPY lines to /opt/wacrm/docker-compose.yml, and run deploy-vps.sh. Check: GET https://<crm-host>/api/v1/templates with the current key should answer 403 forbidden "missing the 'templates:read' scope", not 404.
 - 2. In the CRM dashboard, go to Settings → API keys and create a new key. Tick every scope the current platform key has (at least messages:send; GET /api/v1/me with the old key lists them) plus templates:read and templates:write. Scopes are fixed when a key is created, and the platform uses one WACRM_API_KEY for both sends and templates, so the new key replaces the old one.
-- 3. In the platform, open «التكاملات» → the CRM group, paste the new key into WACRM_API_KEY (stored in Vault) and save. Leave WACRM_API_BASE as it is (https://<crm-host>/api/v1). Run «فحص الخطوط»: it checks only messages:send. Revoke the old CRM key after the next step works.
-- 4. Merge and deploy the platform PR, then press «مزامنة» on the crm number in «القوالب». Expected result: ok with meta_count equal to the CRM's template count, and statuses updated for the keys whose CRM name matches. If it shows crm_auth, the key lacks templates:read. If it shows crm_managed, the CRM overlay isn't deployed.
+- 3. In the platform, open «التكاملات» → the CRM group, paste the new key into WACRM_API_KEY (stored in Vault) and save. Leave WACRM_API_BASE as it is (https://<crm-host>/api/v1). Run «افحص الخطوط»: under the notifications line it must say the key may send and must NOT say «ينقص مفتاح واجهة نظام CRM صلاحية templates:read / templates:write». Revoke the old CRM key after the next step works.
+- 4. Merge and deploy the platform PR, then press «مزامنة» on the crm number in «القوالب». Expected result: ok with meta_count equal to the CRM's template count, and statuses updated for the keys whose CRM name matches. If it says «ينقص مفتاح واجهة نظام CRM صلاحية templates:read» (crm_scope_missing), the saved key is still the old one or lacks the scope: redo steps 2-3. crm_auth means the key was refused. If it shows crm_managed, the CRM overlay isn't deployed.
 - 5. For any key that kept a stale status (the CRM has no template under its crmTemplateName), set its CRM name with «اسم القالب في CRM» (PUT :key/crm-name) and sync again. report_ready is the likely one: set it to report_session if you want its status tracked.
-- 6. To create a template on a crm number: «قالب جديد» → save → «إرسال إلى ميتا». It goes through the CRM to Meta and comes back as pending; press «مزامنة» later to see it approved. Templates with a PDF/document header, and edits to rejected templates, are still done in the CRM dashboard.
+- 6. To create a template on a crm number: «قالب جديد» → save → «إرسال إلى ميتا». An existing row that is not submitted, missing, or rejected without a Meta id also has «إرسال إلى ميتا» in the table. It goes through the CRM to Meta and comes back as pending; press «مزامنة» later to see it approved. Templates with a PDF/document header, and edits to rejected templates, are still done in the CRM dashboard (the row says so: «تُنشأ في لوحة CRM» / «تُعدَّل في لوحة CRM»).
 
 ## Risks
 
@@ -111,5 +132,5 @@ The CRM (github.com/AhmedAmiin0/ayat-crm, private; hosted at crm.ayatalbayan.com
 - A crm sync never marks a row missing, by design (crmSyncPatch). A key whose CRM template was deleted keeps its old status until a send fails with 132001 and TemplateMissing catches it. The CRM's own sync also never deletes local rows that are gone from Meta, so a deleted template can still read APPROVED in the CRM.
 - The API submit no longer overwrites an existing row with DRAFT on a Meta failure; it records only submission_error. This deviates on purpose from the dashboard submit, to avoid losing the meta_template_id. If Meta accepts the template but the local save fails, the response is still 201 with template null; the next ?sync=1 repairs the row.
 - Rows that are rejected (with a meta_id) or have a document header can't be resubmitted from the platform on a crm line. The CRM API has no edit endpoint and only image sample uploads. The platform returns 409 crm_managed and the admin finishes in the CRM dashboard.
-- Deploy order matters. If the platform is deployed before the CRM overlay, the 404 is mapped to crm_managed, so behaviour stays as it is today. If the key lacks templates:read, the line shows crm_auth on «مزامنة» only; sends are unaffected, but «فحص الخطوط» (lines.check.crm.ts:11 checks messages:send) won't flag it.
+- Deploy order matters. If the platform is deployed before the CRM overlay, the 404 is mapped to crm_managed, so behaviour stays as it is today. If the key lacks templates:read, «مزامنة» shows crm_scope_missing naming it and «افحص الخطوط» lists the missing template scopes; sends are unaffected.
 - Verification: the CRM overlay was typechecked (tsc) and linted (eslint) against wacrm 98b5bd2, and scopes.test.ts passed 9/9, all in a temporary worktree that has since been removed. The platform sketches were not compiled, because the local checkout is behind origin/develop and its dependencies have drifted. The endpoints were not called against a live CRM.

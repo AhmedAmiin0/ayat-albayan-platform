@@ -40,12 +40,14 @@ describe('templates on a crm line', () => {
     const health = await services(g).verifier.verifyAll({ line: 'notifications', now: NOW });
     expect(health.lines).toEqual([expect.objectContaining({ provider: 'crm', ok: true, meta_count: 2, imported: [], skipped: [] })]);
     expect(g.requests[0]?.url).toBe(`${CRM_ENV.base}/templates?sync=1&limit=100`);
-    expect(queries.update).toHaveBeenCalledWith('booking_confirmation', { last_checked_at: NOW.toISOString(), status: 'rejected', quality: 'RED', last_error: 'bad' });
+    expect(queries.update).toHaveBeenCalledWith('booking_confirmation', {
+      last_checked_at: NOW.toISOString(), status: 'rejected', quality: 'RED', last_error: 'bad', meta_id: 'mt-1',
+    });
     expect(queries.update).toHaveBeenCalledWith('gone', { last_checked_at: NOW.toISOString() });
     expect(queries.insert).not.toHaveBeenCalled();
   });
 
-  it('an older CRM (404) answers crm_managed and touches no row; a key without templates:read is crm_auth', async () => {
+  it('an older CRM (404) answers crm_managed and touches no row; a 403 naming no scope is crm_auth', async () => {
     const old = await services(scriptedFetch(crmFailure(404, 'not_found'))).verifier.verifyAll({ line: 'notifications', now: NOW });
     expect(old.lines).toEqual([expect.objectContaining({ provider: 'crm', ok: false, error: 'crm_managed', meta_count: 0 })]);
     const scope = await services(scriptedFetch(crmFailure(403, 'forbidden'))).verifier.verifyAll({ line: 'notifications', now: NOW });

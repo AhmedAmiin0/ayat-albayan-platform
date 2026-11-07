@@ -46,8 +46,15 @@ export async function fromMeta<T>(call: () => Promise<T>): Promise<T> {
   }
 }
 
-/** A failed list read as a line's error: the same code (and Meta's message) the 502 would carry. */
+interface ErrorBody { code: string; meta_message?: unknown; scope?: unknown }
+
+/**
+ * A failed list read as a line's error: the same code (and Meta's message, or the missing scope)
+ * the 502 would carry.
+ */
 export function readError(e: WaError): { error: string; message?: string } {
-  const body = graphHttpError(e).getResponse() as { code: string; meta_message?: unknown };
-  return typeof body.meta_message === 'string' ? { error: body.code, message: body.meta_message } : { error: body.code };
+  const body = graphHttpError(e).getResponse() as ErrorBody;
+  // crm_scope_missing carries the scope the key lacks as its message (the web names it).
+  const said = body.scope ?? body.meta_message;
+  return typeof said === 'string' ? { error: body.code, message: said } : { error: body.code };
 }

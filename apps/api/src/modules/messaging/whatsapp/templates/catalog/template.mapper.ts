@@ -72,14 +72,30 @@ const CREDENTIAL_CODE: Record<NonNullable<WaError['info']['credential']>, string
   evolution: EVOLUTION_AUTH,
 };
 
+/** The CRM's 403 naming a scope its key lacks (templates:read on «مزامنة», docs/39). */
+export const CRM_SCOPE_MISSING = 'crm_scope_missing';
+
+type ToHttp = (e: WaError) => HttpException | undefined;
+
+const unsupportedHttp: ToHttp = (e) => {
+  const code = e.info.unsupported ? UNSUPPORTED_CODE[e.info.unsupported] : undefined;
+  return code ? waHttpError(code, 409) : undefined;
+};
+
+const scopeHttp: ToHttp = (e) =>
+  (e.info.missingScope ? waHttpError(CRM_SCOPE_MISSING, 502, { scope: e.info.missingScope }) : undefined);
+
+const credentialHttp: ToHttp = (e) => {
+  const code = e.info.credential ? CREDENTIAL_CODE[e.info.credential] : undefined;
+  return code ? waHttpError(code, 502) : undefined;
+};
+
 /**
- * A driver failure → 502: kapso_auth / crm_auth when Kapso / the CRM refused its key (docs/19), else
- * meta_error with Meta's code and message; a call the crm driver does not support → 409 crm_managed.
+ * A driver failure → 502: crm_scope_missing (with `scope`) when the CRM key lacks a scope, kapso_auth
+ * / crm_auth when Kapso / the CRM refused its key (docs/19), else meta_error with Meta's code and
+ * message; a call the crm driver does not support → 409 crm_managed.
  */
 export function graphHttpError(e: WaError): HttpException {
-  const unsupported = e.info.unsupported ? UNSUPPORTED_CODE[e.info.unsupported] : undefined;
-  if (unsupported) return waHttpError(unsupported, 409);
-  const credential = e.info.credential ? CREDENTIAL_CODE[e.info.credential] : undefined;
-  if (credential) return waHttpError(credential, 502);
-  return waHttpError('meta_error', 502, { meta_code: e.info.code, meta_message: e.info.details ?? e.message });
+  return unsupportedHttp(e) ?? scopeHttp(e) ?? credentialHttp(e)
+    ?? waHttpError('meta_error', 502, { meta_code: e.info.code, meta_message: e.info.details ?? e.message });
 }

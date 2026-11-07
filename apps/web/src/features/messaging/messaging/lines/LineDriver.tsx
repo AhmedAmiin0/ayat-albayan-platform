@@ -19,12 +19,37 @@ function GapNames({ gaps }: { gaps: readonly string[] }) {
   );
 }
 
-type DriverView = Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone'> & Partial<Pick<LineCheckView, 'crm_send_scope'>>;
+type ScopeView = Partial<Pick<LineCheckView, 'crm_send_scope' | 'crm_template_scopes_missing'>>;
+type DriverView = Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone'> & ScopeView;
+
+/**
+ * A crm line's key (GET /me): messages:send or not, and the template scopes «مزامنة» and «إرسال إلى
+ * ميتا» need (docs/39) when it lacks them. Unknown (the call failed) shows nothing.
+ */
+function CrmScopes({ view }: { view: ScopeView }) {
+  const s = t.templates.settings.lines;
+  const lacking = view.crm_template_scopes_missing ?? [];
+  const [before, after = ''] = s.crmTemplateScopesMissing.split('{scopes}');
+  return (
+    <>
+      {view.crm_send_scope === false && <p className="text-act">{s.crmScopeMissing}</p>}
+      {view.crm_send_scope === true && <p className="text-ok">{s.crmScopeOk}</p>}
+      {lacking.length > 0 && (
+        <p className="text-act">
+          {before}
+          <Ltr className={WRAP}>{lacking.join(', ')}</Ltr>
+          {after}
+        </p>
+      )}
+    </>
+  );
+}
 
 /**
  * The line's sending provider (docs/19: Meta directly, Kapso or the academy CRM) and, when it cannot send
  * yet, what it still lacks by its «التكاملات» label (never a value), in words when the chat line's phone id
- * is the notifications one, and on a crm line whether its key may send (GET /me; unknown = not shown).
+ * is the notifications one, and on a crm line whether its key may send and lacks a templates scope
+ * (GET /me; unknown = not shown).
  */
 export function LineDriver({ view }: { view: DriverView | null }) {
   const s = t.templates.settings.lines;
@@ -44,8 +69,7 @@ export function LineDriver({ view }: { view: DriverView | null }) {
         </p>
       )}
       {view.duplicate_chat_phone && <p className="text-act">{s.duplicateChatPhone}</p>}
-      {view.provider === 'crm' && view.crm_send_scope === false && <p className="text-act">{s.crmScopeMissing}</p>}
-      {view.provider === 'crm' && view.crm_send_scope === true && <p className="text-ok">{s.crmScopeOk}</p>}
+      {view.provider === 'crm' && <CrmScopes view={view} />}
     </div>
   );
 }

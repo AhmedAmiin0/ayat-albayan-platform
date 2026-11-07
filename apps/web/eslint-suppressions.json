@@ -3298,11 +3298,8 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/messaging/messaging/lines/LineRow.crm.test.tsx": {
@@ -4002,17 +3999,14 @@
     }
   },
   "src/features/messaging/templates/api.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 3
-    },
     "ab/no-untyped-api-calls": {
       "count": 11
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/features/messaging/templates/crm/CrmNameButton.tsx": {
