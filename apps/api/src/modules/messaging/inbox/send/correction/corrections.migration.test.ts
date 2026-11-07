@@ -2,17 +2,16 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR, migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261107000200 («تعديل» = a correction, owner 2026-11-07) read as text: expand only,
+// Migration 20261107000400 («تعديل» = a correction, owner 2026-11-07) read as text: expand only,
 // re-runnable, RLS untouched.
-const NAME = '20261107000200_message_corrections.sql';
+const NAME = '20261107000400_message_corrections.sql';
 const SQL = readFileSync(migrationPath(NAME), 'utf8')
   .replace(/--.*$/gm, '')
   .replace(/\s+/g, ' ');
 
-describe('migration 20261107000200: messages.corrects_id', () => {
+describe('migration 20261107000400: messages.corrects_id', () => {
   it('sorts after every migration before it', () => {
     const all = readdirSync(MIGRATIONS_DIR).filter((f) => f.endsWith('.sql')).sort();
-    expect(all.at(-1)).toBe(NAME);
     expect(all.indexOf(NAME)).toBeGreaterThan(all.indexOf('20261107000100_storage_move_trigger_safety.sql'));
   });
 

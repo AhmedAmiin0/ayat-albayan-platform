@@ -1,0 +1,70 @@
+import { stripCorrectionPrefix, type MessageQuote, type MessageView } from '@ab/shared';
+import ar from '@ab/shared/i18n/ar.json';
+import { useEffect, useRef, useState, type RefObject } from 'react';
+import { getDraft, keptFailed, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { quoteOf } from '@/features/messaging/inbox/messages/lib/quote';
+
+/** The box's own draft from before «تعديل», and the message being corrected. */
+type Saved = { id: string; text: string } | null;
+
+/** The box gets `text` (an unconfirmed send keeps its pinned id). */
+const putBox = (phone: string, text: string) =>
+  setDraft(phone, { text, failed: keptFailed(getDraft(phone).failed) });
+
+/**
+ * «تعديل»: the box holds the text to correct. A correction's own body comes without its prefix
+ * (the API adds it once; the send targets the original).
+ */
+const editText = (m: MessageView): string =>
+  m.corrects_id ? stripCorrectionPrefix(ar.inbox.correction.prefix, m.body ?? '') : (m.body ?? '');
+
+/** An edit that ends without a send: the box's own draft comes back. */
+function restore(phone: string, saved: RefObject<Saved>): void {
+  const was = saved.current;
+  saved.current = null;
+  if (was) putBox(phone, was.text);
+}
+
+/** Leaving the chat (another chat, the pane closed) mid-edit ends it as ✕ does. */
+function useRestoreOnLeave(phone: string, saved: RefObject<Saved>): void {
+  useEffect(() => () => restore(phone, saved), [phone, saved]);
+}
+
+/** ✕ (no id), or the send that answered `id` while it is still the one picked. */
+const clearIf =
+  <T extends { id: string }>(id: string | undefined) =>
+  (now: T | null) =>
+    id === undefined || now?.id === id ? null : now;
+
+/**
+ * «رد» and «تعديل»: what the next text answers or corrects; picking one clears the other. An
+ * edit keeps the box's draft from before it: ✕, «رد» or leaving the chat brings it back (review
+ * of #694); only its sent correction drops it.
+ */
+export function usePicks(phone: string) {
+  const [target, setTarget] = useState<MessageQuote | null>(null);
+  const [editing, setEditing] = useState<MessageView | null>(null);
+  const saved = useRef<Saved>(null);
+  useRestoreOnLeave(phone, saved);
+  const endEdit = () => {
+    setEditing(null);
+    restore(phone, saved);
+  };
+  const reply = (m: MessageView) => {
+    endEdit();
+    setTarget(quoteOf(m));
+  };
+  const edit = (m: MessageView) => {
+    saved.current = { id: m.id, text: saved.current?.text ?? getDraft(phone).text };
+    setTarget(null);
+    setEditing(m);
+    putBox(phone, editText(m));
+  };
+  const editSent = (id: string) => {
+    saved.current = saved.current?.id === id ? null : saved.current;
+    setEditing(clearIf(id));
+  };
+  const cancelReply = (id?: string) => setTarget(clearIf(id));
+  const cancelEdit = (id?: string) => (id === undefined ? endEdit() : editSent(id));
+  return { target, editing, reply, edit, cancelReply, cancelEdit };
+}

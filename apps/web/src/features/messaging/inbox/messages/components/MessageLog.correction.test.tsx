@@ -49,7 +49,10 @@ describe('a corrected message (owner 2026-11-07)', () => {
 
   it('a click on the mark jumps to the correction', () => {
     showChat([OWN, FIX]);
-    fireEvent.click(screen.getByRole('button', { name: c.jump }));
+    // Named by its visible text (WCAG 2.5.3), where it goes as its description.
+    const mark = screen.getByRole('button', { name: c.mark });
+    expect(mark.getAttribute('title')).toBe(c.jump);
+    fireEvent.click(mark);
     expect(scrollIntoView).toHaveBeenCalledTimes(1);
     expect(scrollIntoView.mock.contexts[0]).toBe(bubble(FIX.id));
     expect(document.activeElement).toBe(bubble(FIX.id));

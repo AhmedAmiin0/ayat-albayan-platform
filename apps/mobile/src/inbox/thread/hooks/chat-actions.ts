@@ -21,7 +21,7 @@ export interface ChatActions {
   editing: MessageView | null;
   /** Starts the correction: the box holds its text, any reply is dropped. */
   startEdit: (m: MessageView) => void;
-  /** ✕ on the edit bar: the box empties. */
+  /** ✕ on the edit bar: the box gets back its draft from before the edit. */
   cancelEdit: () => void;
   /** The correction of `id` went: edit mode ends (unless another one started meanwhile). */
   editSent: (id: string) => void;

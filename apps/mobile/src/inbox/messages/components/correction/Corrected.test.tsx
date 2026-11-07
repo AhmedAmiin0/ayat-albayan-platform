@@ -48,7 +48,9 @@ test('the original is greyed and marked; its corrections and other bubbles are n
 test('a tap on «صُحِّحت» scrolls to the newest correction', async () => {
   const toIndex = jest.spyOn(FlatList.prototype, 'scrollToIndex').mockImplementation(() => undefined);
   await show([original, first, newest, other]);
-  const mark = screen.getByRole('button', { name: t.inbox.correction.jump });
+  // Named by its visible text (WCAG 2.5.3); where it goes is the hint.
+  const mark = screen.getByRole('button', { name: t.inbox.correction.mark });
+  expect(mark.props.accessibilityHint).toBe(t.inbox.correction.jump);
   await fireEvent.press(mark);
   // Newest first: x1, c2, c1, o1.
   expect(toIndex).toHaveBeenCalledWith({ index: 1, animated: true, viewPosition: 0.5 });

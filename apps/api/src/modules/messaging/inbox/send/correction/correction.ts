@@ -47,9 +47,27 @@ export function checkTarget(row: CorrectionTarget | null, s: CorrectionSend): Co
 }
 
 /**
+ * What a correction replies to and links: the original. Correcting a correction targets the
+ * message IT corrects, so the chain stays one level (one «صُحِّحت», one quote, one prefix).
+ */
+async function originalOf(
+  repo: CorrectionRepo,
+  picked: CorrectionTarget,
+): Promise<CorrectionTarget> {
+  if (!picked.corrects_id) return picked;
+  const original = await repo.target(picked.corrects_id);
+  if (original?.phone_e164 !== picked.phone_e164) {
+    throw waHttpError('correction_not_in_thread', HttpStatus.BAD_REQUEST);
+  }
+  return original;
+}
+
+/**
  * «تعديل» in a WhatsApp chat (owner 2026-11-07): a send with correctsId becomes a NEW text,
  * «تصحيح: » (ar.json, admins may reword it) + the new text, sent as a reply to the original (its
- * wamid, the «رد» path), linked by corrects_id. Every other send rule is the text's own.
+ * wamid, the «رد» path), linked by corrects_id. The rights are checked on the picked message;
+ * a picked correction links its original (originalOf), and a leading prefix in the text is dropped
+ * (correctionBody). Every other send rule is the text's own.
  */
 export async function correctionOf<S extends CorrectionSend>(
   repo: CorrectionRepo | undefined,
@@ -58,7 +76,7 @@ export async function correctionOf<S extends CorrectionSend>(
   const id = s.input.correctsId;
   if (!id) return { send: s, row: {} };
   if (!repo) throw new Error('CorrectionRepo is not provided');
-  const row = checkTarget(await repo.target(id), s);
+  const row = await originalOf(repo, checkTarget(await repo.target(id), s));
   const text = correctionBody(ar.inbox.correction.prefix, s.input.text);
   const input = { ...s.input, text, replyToMessageId: row.id };
   return { send: { ...s, input }, row: { corrects_id: row.id } };

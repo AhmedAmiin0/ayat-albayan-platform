@@ -1,4 +1,4 @@
-import type { MessageView } from '@ab/shared';
+import { correctionBody, stripCorrectionPrefix, type MessageView } from '@ab/shared';
 import type { ThreadPages } from '../inbox/index.js';
 
 // docs/44 BUG7, shared by web and mobile. The server dedups `who:phone:clientRequestId` with no
@@ -13,24 +13,45 @@ export const SEND_UNCONFIRMED = 'send_unconfirmed';
 /** A send with the pinned id was answered with the FIRST message: the edit was not sent. */
 export const SEND_REPLAYED = 'send_replayed';
 
+/** A text send's 2xx: its row, and from the API whether its request id replayed the FIRST row. */
+export type TextAnswer = MessageView & { replayed?: boolean | undefined };
+
+/** What a send carried: its text; a correction («تعديل») also its original and the app's prefix. */
+export interface SentText {
+  text: string;
+  correction?: { id: string; prefix: string } | undefined;
+}
+
+type Answer = Pick<TextAnswer, 'body' | 'corrects_id' | 'replayed'>;
+type Correction = NonNullable<SentText['correction']>;
+
+const bodyOf = (row: Answer): string => (row.body ?? '').trim();
+
+/**
+ * A correction (owner 2026-11-07) is this send only when it corrects the same original. A new row
+ * ends with the text (the prefix may be reworded by the admins); a replayed one is this send only
+ * when it IS this correction (the app's prefix + the same text: a retry after a lost answer), so a
+ * shortened resend or another text under the pinned id is never taken for it.
+ */
+function correctionEchoes(row: Answer, sent: SentText, c: Correction): boolean {
+  const own = stripCorrectionPrefix(c.prefix, sent.text);
+  const body = bodyOf(row);
+  const same = row.replayed ? body === correctionBody(c.prefix, own) : body.endsWith(own);
+  return row.corrects_id === c.id && same;
+}
+
 /**
  * A 2xx text answer carrying another message than the one sent: a replay of the first one under
  * this id (checked on EVERY 2xx: a 4xx such as 409 session_closed or 400 reply_not_in_thread is
  * decided before the dedup lookup, so an id it released may still replay). The server only trims,
- * so a real send always echoes the same body.
+ * so a plain text always echoes the same body.
  */
-export const replayedOther = (
-  row: Pick<MessageView, 'body'>,
-  sentBody: string,
-  correction = false,
-): boolean => !echoes({ body: (row.body ?? '').trim(), sent: sentBody.trim(), correction });
-
-/**
- * A correction (owner 2026-11-07) comes back after its prefix («تصحيح: », which admins may reword):
- * its row ends with the text sent; any other send echoes it exactly.
- */
-const echoes = (e: { body: string; sent: string; correction: boolean }): boolean =>
-  e.correction ? e.body.endsWith(e.sent) : e.body === e.sent;
+export function replayedOther(row: Answer, sent: SentText): boolean {
+  const echoes = sent.correction
+    ? correctionEchoes(row, sent, sent.correction)
+    : bodyOf(row) === sent.text.trim();
+  return !echoes;
+}
 
 /** The provisional row with this id marked «unconfirmed» (kept on screen, never rolled back). */
 export function markUnconfirmed<T extends ThreadPages>(

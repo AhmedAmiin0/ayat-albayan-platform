@@ -57,18 +57,37 @@ export const canCorrect = (
   who: CorrectionActor | null | undefined,
 ): boolean => !!who && isCorrectable(m) && mayCorrect(m.sent_by_id, who);
 
-/** The text the family gets: the prefix (ar.json inbox.correction.prefix) then the new text. */
-export const correctionBody = (prefix: string, text: string): string => `${prefix}${text.trim()}`;
+/**
+ * The text without its leading prefix(es) (trimmed): a correction's own body, or a prefix staff
+ * typed themselves, never reaches the family twice («تصحيح: تصحيح: …»).
+ */
+export function stripCorrectionPrefix(prefix: string, text: string): string {
+  const p = prefix.trim();
+  const t = text.trim();
+  const starts = p !== '' && t.startsWith(p);
+  return starts ? stripCorrectionPrefix(p, t.slice(p.length)) : t;
+}
+
+/** The text the family gets: the prefix (ar.json inbox.correction.prefix) once, then the text. */
+export const correctionBody = (prefix: string, text: string): string =>
+  `${prefix}${stripCorrectionPrefix(prefix, text)}`;
+
+/** A correction that counts: not failed, hidden or deleted (it never greys its original). */
+const counts = (m: CorrectionRow): boolean =>
+  Boolean(m.corrects_id) && m.status !== 'failed' && !m.hidden && !m.deleted;
+
+/** What correctionsOf reads of a loaded message. */
+type CorrectionRow = { id: string; created_at: string; status?: string } & CorrectionMark &
+  Pick<Correctable, 'hidden' | 'deleted'>;
 
 /**
  * Original id → its newest correction's id, from the loaded messages (a correction is always newer
- * than what it corrects, so any loaded run that holds the original holds it too).
+ * than what it corrects, so any loaded run that holds the original holds it too). A failed, hidden
+ * or deleted correction never reached the family: its original is not marked.
  */
 export function correctionsOf(
-  messages: readonly ({ id: string; created_at: string } & CorrectionMark)[],
+  messages: readonly CorrectionRow[],
 ): Map<string, string> {
-  const sorted = [...messages].sort((a, b) => a.created_at.localeCompare(b.created_at));
-  const map = new Map<string, string>();
-  for (const m of sorted) if (m.corrects_id) map.set(m.corrects_id, m.id);
-  return map;
+  const sorted = messages.filter(counts).sort((a, b) => a.created_at.localeCompare(b.created_at));
+  return new Map(sorted.map((m) => [m.corrects_id ?? '', m.id]));
 }

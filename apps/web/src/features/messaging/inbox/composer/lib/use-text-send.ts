@@ -1,5 +1,12 @@
-import { provisionalMessage, replayedOther, SEND_REPLAYED, SEND_UNCONFIRMED } from '@ab/client-core';
-import type { MessageView } from '@ab/shared';
+import {
+  provisionalMessage,
+  replayedOther,
+  SEND_REPLAYED,
+  SEND_UNCONFIRMED,
+  type SentText,
+  type TextAnswer,
+} from '@ab/client-core';
+import ar from '@ab/shared/i18n/ar.json';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
 import { sendText } from '@/features/messaging/inbox/api/api';
@@ -51,18 +58,29 @@ export const textSentOf = (phone: string, draft: Draft, text: string) => ({
   clientRequestId: requestIdFor(draft, text),
 });
 
+/** What settleTextSend reads of the answer. */
+type Answer = Pick<TextAnswer, 'body' | 'corrects_id' | 'replayed'>;
+
+/** What the answer is checked against: the text, and a correction's original and prefix. */
+const sentText = ({ text, correctsId }: Sent): SentText => ({
+  text,
+  correction: correctsId ? { id: correctsId, prefix: ar.inbox.correction.prefix } : undefined,
+});
+
 /**
  * A text got its 2xx (useMutation's own onSuccess: it runs after the box unmounted too): the
- * pinned id is released. An answer with another body is the FIRST message replayed under this id
+ * pinned id is released. An answer with another message is the FIRST one replayed under this id
  * (docs/44 M1): the edit comes back with the note and a fresh id. Checked on EVERY 2xx: a 409
  * session_closed is decided before the server's dedup lookup, so a released id may still replay.
+ * Returns whether it was such a replay (then «رد» / «تعديل» stay picked: nothing new went out).
  */
-export function settleTextSend(view: Pick<MessageView, 'body'>, sent: Sent): void {
+export function settleTextSend(view: Answer, sent: Sent): boolean {
   const now = getDraft(sent.phone);
-  const lost = replayedOther(view, sent.text, Boolean(sent.correctsId));
+  const lost = replayedOther(view, sentText(sent));
   const note = { text: sent.text, id: crypto.randomUUID(), code: SEND_REPLAYED };
   const next = lost ? { text: now.text || sent.text, failed: note } : { ...now, failed: null };
   setDraft(sent.phone, next, sent.gen.draft);
+  return lost;
 }
 
 /**
@@ -89,8 +107,9 @@ export function useTextSend(phone: string, hooks: SendHooks) {
     onSuccess: (view, sent) => {
       recordOwnSend(sent.phone, view.id, sent.gen.own);
       showSent(client, sent.clientRequestId, view);
-      clearPicks(sent, hooks);
-      settleTextSend(view, sent);
+      // A replay brings the text back and keeps «رد» / «تعديل» (review of #694, as mobile).
+      const replayed = settleTextSend(view, sent);
+      if (!replayed) clearPicks(sent, hooks);
       sent.after?.();
     },
     onError: async (e, sent) => {

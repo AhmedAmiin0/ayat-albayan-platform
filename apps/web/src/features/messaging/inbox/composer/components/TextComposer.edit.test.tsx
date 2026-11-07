@@ -52,7 +52,13 @@ describe('«تعديل» in the text box (owner 2026-11-07)', () => {
 
   it('the send carries correctsId (no replyToMessageId, no prefix); a sent one clears the bar', async () => {
     apiSend.mockResolvedValue(
-      message({ id: 'fix', direction: 'outbound', status: 'queued', body: 'تصحيح: السادسة' }),
+      message({
+        id: 'fix',
+        direction: 'outbound',
+        status: 'queued',
+        body: 'تصحيح: الحلقة الساعة السادسة',
+        corrects_id: OWN.id,
+      }),
     );
     showChat();
     pickEdit();
@@ -63,6 +69,17 @@ describe('«تعديل» in the text box (owner 2026-11-07)', () => {
       clientRequestId: expect.any(String),
       correctsId: OWN.id,
     });
+  });
+
+  it('a replayed earlier row keeps the bar and brings the text back (review of #694)', async () => {
+    const first = { body: 'تصحيح: الحلقة الساعة', corrects_id: OWN.id, replayed: true };
+    apiSend.mockResolvedValue({ ...message({ id: 'fix', direction: 'outbound' }), ...first });
+    showChat();
+    pickEdit();
+    sendText('الساعة');
+    expect((await screen.findByRole('alert')).textContent).toContain(t.inbox.error.send_replayed);
+    expect(editBar()).toBeTruthy();
+    expect(box().value).toBe('الساعة');
   });
 
   it('a refused correction keeps the bar and says why', async () => {

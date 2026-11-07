@@ -19,12 +19,20 @@ afterEach(clearAllDrafts);
 
 it('a correction answered with the prefixed body settles with no replay note', () => {
   setDraft(PHONE, { text: '', failed: null });
-  settleTextSend({ body: 'تصحيح: الساعة الخامسة' }, sent());
+  const row = { body: 'تصحيح: الساعة الخامسة', corrects_id: 'o1' };
+  expect(settleTextSend(row, sent())).toBe(false);
   expect(getDraft(PHONE).failed).toBeNull();
 });
 
 it('a correction answered with another message is still the replay', () => {
   setDraft(PHONE, { text: '', failed: null });
-  settleTextSend({ body: 'تصحيح: الساعة الرابعة' }, sent());
+  expect(settleTextSend({ body: 'تصحيح: الساعة الرابعة', corrects_id: 'o1' }, sent())).toBe(true);
   expect(getDraft(PHONE).failed?.code).toBe(SEND_REPLAYED);
+});
+
+it('a replayed row correcting another message is the replay too (review of #694)', () => {
+  setDraft(PHONE, { text: '', failed: null });
+  const row = { body: 'تصحيح: الساعة الخامسة', corrects_id: 'o2', replayed: true };
+  expect(settleTextSend(row, sent())).toBe(true);
+  expect(getDraft(PHONE).text).toBe('الساعة الخامسة');
 });

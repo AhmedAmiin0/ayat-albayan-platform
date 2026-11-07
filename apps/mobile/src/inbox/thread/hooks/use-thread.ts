@@ -1,5 +1,5 @@
 import type { MessageView, ThreadDetail } from '@ab/shared';
-import { refreshNewest, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
+import { refreshNewest, type TextAnswer, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import {
   infiniteQueryOptions,
   type QueryClient,
@@ -102,7 +102,7 @@ export function useSendMessage(phone: string) {
     // One key per chat: the composer and «عرض سعر» see each other's send in flight (useIsMutating).
     mutationKey: sendKey(phone),
     mutationFn: (input: SendInput) =>
-      apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, sendBody(input)),
+      apiSend<TextAnswer>('POST', `${threadPath(phone)}/${input.out.kind}`, sendBody(input)),
     onMutate: async ({ out, id, pin }) => {
       const generation = pinGeneration(pin);
       markOwnSend(phone);
