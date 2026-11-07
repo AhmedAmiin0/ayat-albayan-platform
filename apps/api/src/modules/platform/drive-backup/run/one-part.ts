@@ -6,6 +6,8 @@ import type { ListedObject } from '@/modules/platform/drive-backup/source/backup
 import type { RunDeps } from './backup-store.port';
 import { uploadPart } from './part-upload';
 import { isStorageFull } from './quota';
+import { soloWhy } from './read-error';
+import type { SkipWhy } from './summary';
 
 interface OnePart {
   deps: RunDeps;
@@ -88,12 +90,19 @@ const stopsRun = (ctx: OnePart, e: unknown, objects: readonly ListedObject[]): b
   isStorageFull(e) ||
   !isSolo(objects);
 
+/** A part on Drive, or one big object's own part that failed and why (it is skipped tonight). */
+type PartOutcome = { done: PartDone } | { done: null; why: SkipWhy };
+
 /** A failed part of one big streamed object skips that object (retried next night); else stop. */
-export async function partOrSkip(ctx: OnePart, plan: PartPlan, objects: ListedObject[]) {
+export async function partOrSkip(
+  ctx: OnePart,
+  plan: PartPlan,
+  objects: ListedObject[],
+): Promise<PartOutcome> {
   try {
-    return await onePart(ctx, plan, objects);
+    return { done: await onePart(ctx, plan, objects) };
   } catch (e) {
     if (stopsRun(ctx, e, objects)) throw e;
-    return null;
+    return { done: null, why: soloWhy(e) };
   }
 }

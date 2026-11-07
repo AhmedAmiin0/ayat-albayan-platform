@@ -12,6 +12,7 @@ import {
   type DriveBackupApi,
   type DriveBackupFactory,
 } from './drive/drive-backup.port';
+import type { BackupState } from './db/backup-state.repo';
 import { DEFAULT_CAPS } from './plan/parts';
 import type { RunDeps } from './run/backup-store.port';
 import { runBackup, type RunSummary } from './run/backup-run';
@@ -21,6 +22,13 @@ import { DriveBackupData } from './drive-backup.data';
 import { reportNight } from './drive-backup.report';
 
 export type RunOutcome = 'off' | 'not_connected' | 'ran' | 'failed';
+
+/** A failed night's counts: an older night's waiting or skipped are never shown as this one's. */
+const NO_COUNTS: Pick<BackupState, 'waiting' | 'skipped' | 'skipped_count'> = {
+  waiting: 0,
+  skipped: [],
+  skipped_count: 0,
+};
 
 interface RunInput {
   api: DriveBackupApi;
@@ -114,7 +122,7 @@ export class DriveBackupRunner {
     const held = await this.connection.refreshToken().catch(() => null);
     const current = held === input.token;
     await (current ? this.onError[classify(e)] : this.onError.fatal)();
-    await this.data.state.save({ last_run_at: now.toISOString(), last_error: error });
+    await this.data.state.save({ last_run_at: now.toISOString(), last_error: error, ...NO_COUNTS });
     await (isStorageFull(e)
       ? this.data.alerts.driveFull({ now })
       : this.data.alerts.failed({ error, now }));

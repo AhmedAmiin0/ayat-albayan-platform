@@ -32,9 +32,12 @@ interface Budget {
   spent: number;
 }
 
-/** Read again right before a part: it goes only under both today's room and what is left. */
+/**
+ * A part goes only under both what the night has left and Drive's room, read again right before
+ * it; the local budget first, so Drive is asked only for a part that could still go.
+ */
 const fitsNow = async (deps: RunDeps, input: { cost: number; budget: Budget }) =>
-  input.cost <= Math.min(await roomNow(deps), input.budget.start - input.budget.spent);
+  input.cost <= input.budget.start - input.budget.spent && input.cost <= (await roomNow(deps));
 
 interface Night {
   folderId: string;
@@ -64,7 +67,7 @@ async function uploadAll(
     const r = await partOrSkip({ deps, folderId, now }, { label, part }, objects);
     budget.spent += cost;
     part += 1;
-    sum = r ? added(sum, r) : soloFailed(sum, objects);
+    sum = r.done ? added(sum, r.done) : soloFailed(sum, { objects, why: r.why });
   }
   return sum;
 }
@@ -84,5 +87,7 @@ export async function runBackup(deps: RunDeps, input: { folderId: string; now: D
   const label = dayLabel(input.now);
   const first = (await deps.store.lastPart({ folderId, label })) + 1;
   const start = { ...emptySummary(label), skipped: tooLargeItems(tooLarge) };
+  // Not even an empty part fits: nothing goes, everything waits (one quota read, «Drive full»).
+  if (room < partCost([])) return waited(start, parts.flat());
   return uploadAll(deps, { ...input, label, first, room }, { parts, sum: start });
 }

@@ -6,6 +6,7 @@ import type {
 } from '@/modules/platform/drive-backup/source/backup-source.port';
 import { STREAMED_MIN } from '@/modules/platform/drive-backup/plan/parts';
 import { entryHead, padding, TAR_END } from '@/modules/platform/drive-backup/archive/tar';
+import { fromSource, SourceReadError } from './read-error';
 
 /**
  * Objects up to this size are read whole first (a failed read skips them cleanly), into one buffer
@@ -73,12 +74,12 @@ async function ready(source: BackupSource, o: ListedObject, report: PartReport) 
 /** A large object's bytes, exactly its size: a cut-off or grown read aborts the part (retried). */
 async function* streamed(opened: OpenedObject): AsyncGenerator<Buffer> {
   let n = 0;
-  for await (const c of opened.body) {
+  for await (const c of fromSource(opened.body)) {
     n += c.length;
-    if (n > opened.size) throw new Error('object_size_changed');
+    if (n > opened.size) throw new SourceReadError('object_size_changed');
     yield Buffer.from(c);
   }
-  if (n !== opened.size) throw new Error('object_cut_off');
+  if (n !== opened.size) throw new SourceReadError('object_cut_off');
 }
 
 /** A stream is destroyed (an unstarted iterator's return() does not); else its return(). */

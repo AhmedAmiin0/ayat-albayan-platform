@@ -73,4 +73,16 @@ describe('a bad object', () => {
     ]);
     expect(t.store.rows.map((r) => r.status)).toEqual(['done', 'failed', 'done']);
   });
+
+  it('a big object whose own upload Drive refuses is named upload_failed (not MinIO)', async () => {
+    const t = await setup();
+    t.minio.set({ bucket: B.reports, key: 'big.mp4', body: Buffer.alloc(65 * 1024 * 1024) });
+    t.minio.set({ bucket: B.reports, key: 'c.pdf', body: 'c' });
+    t.drive.failNext.set('putChunk', new GoogleApiError(400, 'badRequest'));
+    const sum = await t.night('2026-11-07');
+    expect(sum).toMatchObject({ parts: 1, objects: 1 });
+    expect(sum.skipped).toEqual([
+      { id: 'reports/big.mp4', size: 65 * 1024 * 1024, reason: 'upload_failed' },
+    ]);
+  });
 });

@@ -252,20 +252,23 @@ weekly fulls, no sealing and no retention: freeing space on Drive is done by han
 - **Quota (the account is shared with Gmail and the Google sync):** the night's budget is **free
   space − 2 GB reserve**, read at the start and **again before each part**; no part is uploaded
   past it (nor past what the night has left of its starting budget). A part that does not fit
-  waits; a smaller later one may still go. When the room is too low the night uploads nothing.
-  The objects that waited are counted on the status line, and the admins get the alert «مساحة
-  Google Drive توشك على النفاد» asking them to delete old archives by hand.
+  waits; a smaller later one may still go (Drive is asked again only for a part that still fits
+  the night's own budget). When the room is too low for even an empty part the night plans no
+  parts and uploads nothing. The objects that waited are counted on the status line, and the
+  admins get the alert «مساحة Google Drive توشك على النفاد»: add Drive storage, or move the whole
+  folder to the trash (below); never delete single archives. A failed night clears the waiting
+  and skipped counts (they are never an older night's numbers shown as the latest).
 - **Alerts** (admins, bell only, the Google sync's `google_sync_alert`), once per day each: a failed
   night; skipped objects (the first 5 named with size and reason, the rest counted); Drive nearly
   full. Never WhatsApp, push or email.
 
-**Freeing space by hand** (the backup never does it): in Drive, open «نسخ احتياطي — ملفات المنصة»,
-delete the oldest `add-…` archives, then **empty Drive's trash** (a trashed file still counts
-against the quota for 30 days). Know what this costs: an object version that lived only in the
-deleted archives is no longer backed up, and the backup does **not** send it again (it is still
-recorded as backed up) unless it changes. To take a fresh complete copy instead, move the **whole
-folder** to the trash (and empty it when space is needed): the next night creates a new folder and
-uploads everything again (`drive_backup_objects` is per folder).
+**Freeing space by hand** (the backup never does it): the safe ways are **adding Drive storage**, or
+moving the **whole folder** «نسخ احتياطي — ملفات المنصة» to the trash (and emptying it when space is
+needed: a trashed file still counts against the quota for 30 days): the next night finds no live
+folder (a trashed one is never reused), creates a new one and uploads everything again
+(`drive_backup_objects` is per folder). **Never delete single `add-…` archives:** an object version
+that lived only in them is no longer backed up, and the backup does **not** send it again (it is
+still recorded as backed up) unless it changes; the status still looks healthy.
 
 **Turning it on** (owner): «التكاملات» › Google is connected (docs/24) and «التكاملات» › «التخزين»
 has a passing «اختبار الاتصال»; then set «نسخ احتياطي لملفات MinIO إلى Google Drive» to «مفعّلة» and
