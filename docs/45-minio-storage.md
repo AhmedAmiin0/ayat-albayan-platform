@@ -88,7 +88,7 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
   (`compose-minio.test.mjs` guards it). It refuses
   to start (exit 1, the reason in its log) when the user is under 3 or the password under 16 characters, so it
   never runs on MinIO's default credentials.
-- **`ayat-minio-init`** (the same pinned image, profile `minio`, one shot, 64 MB): runs
+- **`ayat-minio-init`** (the same pinned image, profile `minio`, one shot, 192 MB: Chainguard's mc is killed at 64 MB on `mc admin user add`): runs
   `deploy/staging/minio/init.sh` from the shipped checkout (`src/`). It waits up to 2 minutes for MinIO, creates
   each bucket (`mc mb --ignore-existing`), makes it private (`mc anonymous set none`), writes the policy `ayat-app`
   (`s3:GetObject`, `PutObject`, `DeleteObject` on objects, `ListBucket`, `GetBucketLocation` on the buckets, nothing
@@ -277,8 +277,9 @@ Owner 2026-11-07: «move all the old files in minio to be served». `tools/scrip
 `docker compose -p ayat-albayan-staging exec -T ayat-worker node dist/scripts/storage-move.js` (code:
 `apps/api/src/scripts/storage-move/`). For every row whose path has no marker, one at a time, by id:
 
-1. the object is read from Supabase (a missing one is **reported**, never invented; one over `--max-mb`, default 64,
-   is left alone and reported as `too_large`);
+1. the object is read from Supabase (a missing one is **reported**, never invented; one over `--max-mb` (at most
+   64: each object is held in memory a few times, inside the live worker's 1 GB container) is left alone and
+   reported as `too_large`, still served from Supabase);
 2. it is put into MinIO under the **same key** with its Content-Type, `If-None-Match: *` (the storage-copy code: an
    object MinIO already holds is never overwritten);
 3. it is **verified**: size and Content-Type as both stores report them, and a SHA-256 of the bytes read back from
@@ -315,10 +316,40 @@ and the chat PDF page previews (no column; rendered again on demand).
    `payment_attachments`, `expenses`, `teacher_payments`, `teacher_payouts`, `assistant_statements`, `invoices`,
    `saved_replies`, `profiles`, `messages`. `--limit N` stops after N rows; `--table <t> --after <cursor>` resumes
    after a cursor (a plain re-run also works: moved rows drop out). Recordings last, if at all, after checking
-   the disk (§7), with `--max-mb` raised.
+   the disk (§7); recordings over 64 MB stay in Supabase.
+   Before every batch the run reads `STORAGE_DRIVER` again: switched back to `supabase`, it stops (a re-render
+   would write Supabase under a key it just copied). On any stop it still prints the summary with `error` and each
+   column's `cursor`, and exits 1.
 5. Re-run the dry run: `toMove` left over = the `missing` / `mismatch` / `failed` rows (still served from
-   Supabase). A `payments` row of a cancelled package is `failed`: the database freezes that row (its receipt
-   stays served from Supabase). Updating a `payments` row re-runs its assistant commission check, as any edit does.
+   Supabase).
+
+**What a path rewrite fires** (migration `20261107000100`, every trigger on the 14 tables audited): a path-only
+update moves **no money** and changes **no status**. It sets `updated_at` where the table has one, and nothing else:
+
+- `payments`: the assistant commission is re-evaluated on an update only when `subscription_id`, `amount`, `kind`,
+  `paid_at`, `created_at` or `id` changes (what the evaluation reads); insert and delete as before. A receipt
+  move, a note or a method edit re-applies none of today's commission rules. A cancelled package's payment
+  (frozen, migration 934) now moves too: the guard lets through exactly `receipt_path` → `minio:` + the same
+  path, or the rollback below (the exact inverse), with every other column equal; every money change, another
+  receipt and a delete are still refused.
+- `messages`: a row whose only change is `media_path` → `minio:` + the same path sends no inbox live update
+  (media arriving, null → a path, still does); its `updated_at` (the mobile sync cursor) moves, so phones pick
+  up the new path. `thread_summaries` ignore `media_path` as before. Running it outside working hours is no
+  longer needed for the inbox, only for the load.
+- `lesson_reports`: the Google sync outbox fires on `pdf_status` only, never on `pdf_path`.
+- `payment_attachments`: the folder check accepts the `minio:` marker (migration 1501).
+- `profiles`, `teachers`: their other triggers are `update of` other columns (role, push tokens, rates, meeting
+  link, calendar owner, phone, status); the move's `update … set <column>` fires none of them.
+- `expenses`, `teacher_payouts`, `assistant_statements`, `saved_replies`: `updated_at` only;
+  `teacher_payments`, `invoices`, `report_attachments`, `lesson_recordings`: no trigger.
+
+Nothing is excluded any more for a trigger reason.
+
+**Load.** One row and one `UPDATE` at a time, with a pause between batches; run `messages` in `--limit` slices.
+
+**Old paths still in clients.** A form opened before the move may send back the old unmarked path of a moved
+file: the API treats it as the same file (`sameStoredObject`: receipts, expenses, saved replies, payment
+attachments), keeps the row's `minio:` path and deletes nothing.
 
 **Rollback** of a moved row: set its column back to the unmarked path (`before.rows` of its `storage_move` audit
 row has it) while the Supabase object still exists; reads follow the path again. Never needed for the files:

@@ -1,4 +1,5 @@
 import type { Tables, TablesInsert } from '@ab/db';
+import { storageKeyOf, storedPath } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
@@ -27,9 +28,12 @@ export class PaymentAttachmentsRepo {
   /** Who already holds these paths (an attachment row or a payments.receipt_path): one file, one payment. */
   async owners(paths: readonly string[]): Promise<PathOwner[]> {
     if (paths.length === 0) return [];
+    // Either form of each path: a file the move marked «minio:» is the same file (docs/45 §6).
+    const both = (p: string) => [storageKeyOf(p), storedPath({ provider: 'minio', key: p })];
+    const forms = [...new Set(paths.flatMap(both))];
     const [files, receipts] = await Promise.all([
-      this.db.from('payment_attachments').select('path, payment_id').in('path', [...paths]),
-      this.db.from('payments').select('id, receipt_path').in('receipt_path', [...paths]),
+      this.db.from('payment_attachments').select('path, payment_id').in('path', forms),
+      this.db.from('payments').select('id, receipt_path').in('receipt_path', forms),
     ]);
     if (files.error) throw dbError(files.error);
     if (receipts.error) throw dbError(receipts.error);

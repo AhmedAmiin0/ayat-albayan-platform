@@ -5,7 +5,11 @@ import { MOVED_TABLES } from './columns';
 // accepted, so a typo never runs something the operator did not ask for.
 
 const flag = z.literal(true).optional();
-const count = (max: number) => z.coerce.number().int().min(1).max(max);
+// A number flag needs its value (`--limit` alone is refused, never read as 1).
+const digits = z.string().regex(/^\d+$/, 'a whole number');
+const number = (min: number, max: number) =>
+  digits.transform(Number).pipe(z.number().int().min(min).max(max));
+const count = (max: number) => number(1, max);
 
 const Args = z
   .object({
@@ -18,8 +22,9 @@ const Args = z
     limit: count(10_000_000).optional(),
     after: z.guid().optional(),
     batch: count(500).default(100),
-    'max-mb': count(256).default(64),
-    'pause-ms': z.coerce.number().int().min(0).max(60_000).default(500),
+    // Each object is held in memory a few times over, inside the live worker's 1 GB container.
+    'max-mb': count(64).default(64),
+    'pause-ms': number(0, 60_000).default(500),
     sample: count(50).default(5),
   })
   .strict()

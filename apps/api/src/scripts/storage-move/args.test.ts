@@ -28,6 +28,10 @@ describe('storage-move command line (docs/45 §6)', () => {
     [['--aply']],
     [['apply']],
     [['--apply', 'yes']],
+    [['--limit', '--apply']],
+    [['--max-mb']],
+    [['--max-mb', '128']],
+    [['--limit', '1.5']],
   ])('refuses %j', (argv) => {
     expect(() => parseMoveArgs(argv)).toThrow();
   });

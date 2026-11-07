@@ -245,7 +245,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 64M
+          memory: 192M
 
 volumes:
   # Every object MinIO holds (docs/45 «Backups»): on the host disk, no quota; the API caps each file.
