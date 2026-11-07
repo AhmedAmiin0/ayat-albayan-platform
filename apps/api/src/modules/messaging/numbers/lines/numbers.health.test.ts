@@ -14,7 +14,12 @@ describe('NumbersHealth (#134 item 9)', () => {
     const saveHealth = vi.fn(async () => undefined);
     await new NumbersHealth({ saveHealth } as unknown as NumbersRepo).save([view({}), view({ line: 'chat', configured: false, phone_number_id: null })]);
     expect(saveHealth).toHaveBeenCalledOnce();
-    expect(saveHealth).toHaveBeenCalledWith('1000000001', expect.objectContaining({ display_phone_e164: '+15550001111', checked_at: '2026-10-23T08:00:00Z' }));
+    expect(saveHealth).toHaveBeenCalledWith(
+      { phone_number_id: '1000000001' },
+      expect.objectContaining({
+        display_phone_e164: '+15550001111', checked_at: '2026-10-23T08:00:00Z',
+      }),
+    );
   });
 
   it('a failed write never fails the check', async () => {
