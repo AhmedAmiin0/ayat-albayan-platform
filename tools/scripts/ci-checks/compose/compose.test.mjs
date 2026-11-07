@@ -72,7 +72,8 @@ test('memory limits fit the 8 GB VPS beside the CRM', () => {
   });
   // ≈ 2.3 GB of the 8 GB beside the CRM (the worker's 1 GB: Node heap + Chromium; the PDF sandbox's own 128 MB on
   // top: the copies keep 512 MB, they hold each preview's PDF and JPEGs, docs/09).
-  // + MinIO and its one-shot init (docs/45; the init needs 192 MB: Chainguard's mc is OOM-killed at 64 MB):
+  // + MinIO and its one-shot init (docs/45; the init needs 192 MB:
+  // Chainguard's mc is OOM-killed at 64 MB):
   // ≈ 3.0 GB, inside the ~4.6 GB the VPS has free.
   assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 3040);
 });
