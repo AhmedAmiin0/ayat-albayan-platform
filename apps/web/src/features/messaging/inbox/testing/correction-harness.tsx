@@ -16,7 +16,7 @@ export const OWN = message({
   id: 'own',
   direction: 'outbound',
   status: 'sent',
-  body: 'الحلقة الساعة الخامسة\nإن شاء الله',
+  body: 'The lesson is at five\nSee you then',
   replyable: true,
   forwardable: true,
   sent_by_id: ME,

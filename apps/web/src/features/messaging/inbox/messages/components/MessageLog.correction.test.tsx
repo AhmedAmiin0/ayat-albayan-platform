@@ -41,7 +41,7 @@ describe('a corrected message (owner 2026-11-07)', () => {
     showChat([OWN, FIX]);
     const original = bubble(OWN.id);
     expect(within(original).getByText(c.mark)).toBeTruthy();
-    const text = within(original).getByText(/الحلقة الساعة الخامسة/);
+    const text = within(original).getByText(/The lesson is at five/);
     expect(text.closest('.opacity-60')).toBeTruthy();
     expect(within(bubble(FIX.id)).queryByText(c.mark)).toBeNull();
     expect(within(bubble(FIX.id)).getByText(/السادسة/).closest('.opacity-60')).toBeNull();

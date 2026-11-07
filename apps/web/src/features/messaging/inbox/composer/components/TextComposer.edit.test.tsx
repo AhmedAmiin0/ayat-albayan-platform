@@ -36,8 +36,8 @@ describe('«تعديل» in the text box (owner 2026-11-07)', () => {
   it('the bar shows the original’s first line and says the family gets a «تصحيح:» reply', () => {
     showChat();
     pickEdit();
-    expect(within(bar()).getByText('الحلقة الساعة الخامسة')).toBeTruthy();
-    expect(within(bar()).queryByText(/إن شاء الله/)).toBeNull();
+    expect(within(bar()).getByText('The lesson is at five')).toBeTruthy();
+    expect(within(bar()).queryByText(/See you then/)).toBeNull();
     expect(screen.getByText(c.note)).toBeTruthy();
   });
 
