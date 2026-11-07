@@ -84,3 +84,16 @@ test('an answer that lands after the account switched is dropped by the store', 
   await run;
   expect(await t.store.chat('user-a', A, 10)).toEqual([]);
 });
+
+test('idle(): resolved with no run; else the run in flight, without asking for another', async () => {
+  const t = setup();
+  await t.engine.idle();
+  const first = t.engine.syncNow();
+  await jest.advanceTimersByTimeAsync(0);
+  let joined = false;
+  void t.engine.idle().then(() => (joined = true));
+  await t.answerNow();
+  await first;
+  await jest.advanceTimersByTimeAsync(SYNC_THROTTLE_MS * 5);
+  expect([joined, t.fetchPage.mock.calls.length]).toEqual([true, 1]);
+});

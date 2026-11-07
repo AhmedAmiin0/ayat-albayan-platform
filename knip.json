@@ -21,7 +21,7 @@
       "ignoreDependencies": ["babel-plugin-react-compiler", "zod"]
     },
     "apps/mobile": {
-      "entry": ["app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
+      "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
       "project": ["{app,src}/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         "react-test-renderer",

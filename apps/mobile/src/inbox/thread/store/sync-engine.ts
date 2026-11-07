@@ -24,6 +24,8 @@ interface SyncEngine {
   nudge(): void;
   /** One run now (joins the run in flight and asks for one more after it). */
   syncNow(): Promise<void>;
+  /** The run in flight (resolved when none): a push wake waits on it, never asks again. */
+  idle(): Promise<void>;
   /** Syncs at once and every SYNC_FALLBACK_MS until stop(). */
   start(): void;
   /** For good: the request in flight is aborted, nothing more is written. */
@@ -78,6 +80,7 @@ export function createSyncEngine(deps: SyncEngineDeps): SyncEngine {
       running ??= drain().catch(() => undefined).finally(settle);
       return running;
     },
+    idle: () => running ?? Promise.resolve(),
     start() {
       engine.nudge();
       timer ??= setInterval(() => engine.nudge(), SYNC_FALLBACK_MS);

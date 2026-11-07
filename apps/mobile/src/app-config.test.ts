@@ -39,7 +39,7 @@ test('LiveKit (docs/35): its expo plugin with the communication audio type, no s
   ]);
 });
 
-test('version 0.5.0, the APK with expo-sqlite (docs/43 43-6; an OTA never reaches 0.4.x); no forcesRTL', () => {
-  expect(app.expo.version).toBe('0.5.0');
+test('version 0.6.0, the APK with the push sync task (docs/43 §5; an OTA never reaches 0.5.x); no forcesRTL', () => {
+  expect(app.expo.version).toBe('0.6.0');
   expect(JSON.stringify(app)).not.toContain('forcesRTL');
 });
