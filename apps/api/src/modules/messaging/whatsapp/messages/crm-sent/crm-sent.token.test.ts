@@ -18,7 +18,10 @@ describe('renderSent: token links', () => {
   it.each(['lesson_feedback_request', 'lesson_join_link'])('%s: the button has no url', (key) => {
     const out = render(key);
     expect(out.block.buttons).toEqual([{ type: 'url', text: 'افتح' }]);
-    expect(out.text).toBe('حلقة سارة');
+  });
+
+  it.each(['lesson_feedback_request', 'lesson_join_link'])('%s: the wa.me hand-off keeps the family link', (key) => {
+    expect(render(key).text).toBe('حلقة سارة\n\nhttps://x.example/tok-family');
   });
 
   it('lesson_reminder_meet keeps its filled meeting link', () => {

@@ -30,24 +30,19 @@ const textOf = (copy: readonly Component[], type: string): string | null =>
 const filledBody = (body: string, values: readonly string[]): string =>
   body.replace(/\{\{(\d+)\}\}/g, (whole, n: string) => values[Number(n) - 1] ?? whole);
 
-/** The value a URL button's {{1}} takes: none while unsent, or a family token (a staff tap). */
-const linkValue = (value: string | undefined, key: string): string | undefined =>
-  (TOKEN_URL_KEYS.has(key) ? undefined : value);
-
-/** A URL button's {{1}} from the value sent at its index; no link while none (linkValue). */
-function filledButton(b: TemplateDisplayButton, value: string | undefined, key: string) {
+/** A URL button's {{1}} from the value sent at its index; no link while none, or when hidden. */
+function filledButton(b: TemplateDisplayButton, value: string | undefined, hide: boolean) {
   if (b.type !== 'url' || !b.url?.includes('{{1}}')) return b;
   const { url = '', ...rest } = b;
-  const link = linkValue(value, key);
-  return link === undefined ? rest : { ...rest, url: url.replace('{{1}}', link) };
+  return value === undefined || hide ? rest : { ...rest, url: url.replace('{{1}}', value) };
 }
 
 /** The header, footer and buttons WhatsApp drew around the body. */
 type Block = MessageTemplateBlock;
-function blockOf(copy: readonly Component[], sent: WabaTemplate, key: string): Block {
+function blockOf(copy: readonly Component[], sent: WabaTemplate, hide: boolean): Block {
   const display = templateDisplay(metaDisplay(copy));
   const valueAt = (i: number) => sent.buttons.find((b) => b.index === i)?.value;
-  const buttons = (display?.buttons ?? []).map((b, i) => filledButton(b, valueAt(i), key));
+  const buttons = (display?.buttons ?? []).map((b, i) => filledButton(b, valueAt(i), hide));
   return { header: display?.header ?? null, footer: textOf(copy, 'FOOTER'), buttons };
 }
 
@@ -60,6 +55,10 @@ function handOff(body: string, block: MessageTemplateBlock, documentUrl: string)
 export function renderSent(input: RenderInput): SentRender {
   const { copy, sent, key } = input;
   const body = filledBody(textOf(copy, 'BODY') ?? '', sent.body);
-  const block = blockOf(copy, sent, key);
-  return { body, block, text: handOff(body, block, input.documentUrl ?? '') };
+  // A family token link (TOKEN_URL_KEYS) shows its label only: a staff tap would act as the family.
+  const hide = TOKEN_URL_KEYS.has(key);
+  const block = blockOf(copy, sent, hide);
+  // The wa.me hand-off goes to the family itself, so it keeps their link (fallbackText's rule).
+  const links = hide ? blockOf(copy, sent, false) : block;
+  return { body, block, text: handOff(body, links, input.documentUrl ?? '') };
 }
