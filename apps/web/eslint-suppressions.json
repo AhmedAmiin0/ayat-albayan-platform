@@ -1935,7 +1935,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/messaging/inbox/composer/components/AttachButton.test.tsx": {
