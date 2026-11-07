@@ -22,10 +22,7 @@ export interface ThreadSend<T> {
   scope?: TeacherScope | null;
   /** Sales mode: the sending salesperson (any chat, her own dedup space and audit). */
   sales?: SalesScope | null;
-  /**
-   * Neither templates.manage nor templates.send_all (owner 2026-10-12): only the restricted allow-list
-   * (restrictedMay, like GET /messaging/templates). Absent = every template (the admin).
-   */
+  /** No templates.send_all (owner 2026-10-12): the allow-list only (restrictedMay); absent: all. */
   restricted?: boolean;
   /** «إعادة توجيه»: the message this copy was forwarded from (messages.forwarded_from_id). */
   forwardedFrom?: string;
