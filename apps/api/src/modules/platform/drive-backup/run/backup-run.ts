@@ -1,5 +1,5 @@
 import { classify, errorText } from '@/modules/platform/google-sync';
-import type { ArchiveRow, RunPlan } from '@/modules/platform/drive-backup/plan/archive.types';
+import type { RunPlan } from '@/modules/platform/drive-backup/plan/archive.types';
 import { decide } from '@/modules/platform/drive-backup/plan/decide';
 import type { Bucket } from '@/common/storage/storage.paths';
 import { archiveName, archiveProps, dayLabel } from '@/modules/platform/drive-backup/plan/labels';
