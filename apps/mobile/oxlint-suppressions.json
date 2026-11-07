@@ -3441,9 +3441,6 @@
     }
   },
   "src/inbox/composer/use-composer-send.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 4
     },
@@ -4103,7 +4100,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/messages/hooks/bubble-side.ts": {

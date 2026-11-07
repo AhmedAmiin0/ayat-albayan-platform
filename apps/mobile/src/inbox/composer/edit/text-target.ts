@@ -4,7 +4,7 @@ import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import type { Outgoing } from '@/inbox/thread/send/outgoing';
 
 /** The box's text send. */
-export type TextOut = Extract<Outgoing, { kind: 'text' }>;
+type TextOut = Extract<Outgoing, { kind: 'text' }>;
 
 interface TextTargets {
   reply: MessageView | null;

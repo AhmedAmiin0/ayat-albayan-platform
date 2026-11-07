@@ -3,7 +3,7 @@ import { type Dispatch, type SetStateAction, useState } from 'react';
 import { setComposerText } from '@/inbox/composer/draft-store';
 
 /** What the box's next text answers («رد») or corrects («تعديل»): one of them at most. */
-export interface ComposeTarget {
+interface ComposeTarget {
   reply: MessageView | null;
   setReply: Dispatch<SetStateAction<MessageView | null>>;
   editing: MessageView | null;

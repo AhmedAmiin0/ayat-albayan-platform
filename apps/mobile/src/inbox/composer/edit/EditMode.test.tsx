@@ -58,7 +58,7 @@ test('the box takes the old text under the edit bar and its note', async () => {
   await editOwn();
   expect(box().props.value).toBe(own.body);
   const strip = within(screen.getByTestId('edit-strip'));
-  expect(strip.getByText(`${t.inbox.correction.bar} ·`)).toBeTruthy();
+  expect(strip.getByText(t.inbox.correction.bar)).toBeTruthy();
   expect(strip.getByText(t.inbox.correction.note)).toBeTruthy();
   expect(screen.queryByTestId('reply-strip')).toBeNull();
 });

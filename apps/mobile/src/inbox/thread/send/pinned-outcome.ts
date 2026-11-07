@@ -2,7 +2,7 @@ import { replayedOther } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { unanswered } from './after-send';
-import { carried, echoed, type SendInput } from './outgoing';
+import { carried, type SendInput } from './outgoing';
 import { PINS, type PinKind } from './pinned-send';
 
 /** A send of the chat with its pin kind (none: templates, resend, new chat) and generation. */
@@ -11,8 +11,8 @@ interface PinnedSend {
   id: string;
   /** What this send carried (the text, or a template's preview): the box gets it back. */
   body: string;
-  /** What its row should say (a correction's prefix too): another body is a replay. */
-  echo: string;
+  /** A correction: its row says the body after the API's prefix (replayedOther). */
+  correction: boolean;
   pin?: PinKind | undefined;
   /** The pin store's generation when the send started (a sign-out since: nothing is written). */
   generation: number;
@@ -36,7 +36,7 @@ function restoreBox(s: PinnedSend): void {
 export function settlePinned(s: PinnedSend, row: MessageView): void {
   const store = storeOf(s);
   if (!store) return;
-  const lost = replayedOther(row, s.echo);
+  const lost = replayedOther(row, s.body, s.correction);
   store.release(s.phone, s.id, s.generation);
   if (lost && store.generation() === s.generation) store.setReplayed(s.phone, true);
   if (lost) restoreBox(s);
@@ -59,7 +59,7 @@ export const pinnedOf = (phone: string, input: SendInput, generation: number): P
   phone,
   id: input.id,
   body: carried(input.out),
-  echo: echoed(input.out),
+  correction: input.out.kind === 'text' && Boolean(input.out.correctsId),
   pin: input.pin,
   generation,
 });

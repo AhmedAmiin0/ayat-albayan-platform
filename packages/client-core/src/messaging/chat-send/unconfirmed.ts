@@ -19,8 +19,18 @@ export const SEND_REPLAYED = 'send_replayed';
  * decided before the dedup lookup, so an id it released may still replay). The server only trims,
  * so a real send always echoes the same body.
  */
-export const replayedOther = (row: Pick<MessageView, 'body'>, sentBody: string): boolean =>
-  (row.body ?? '').trim() !== sentBody.trim();
+export const replayedOther = (
+  row: Pick<MessageView, 'body'>,
+  sentBody: string,
+  correction = false,
+): boolean => !echoes({ body: (row.body ?? '').trim(), sent: sentBody.trim(), correction });
+
+/**
+ * A correction (owner 2026-11-07) comes back after its prefix («تصحيح: », which admins may reword):
+ * its row ends with the text sent; any other send echoes it exactly.
+ */
+const echoes = (e: { body: string; sent: string; correction: boolean }): boolean =>
+  e.correction ? e.body.endsWith(e.sent) : e.body === e.sent;
 
 /** The provisional row with this id marked «unconfirmed» (kept on screen, never rolled back). */
 export function markUnconfirmed<T extends ThreadPages>(

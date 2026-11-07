@@ -59,7 +59,7 @@ export const textSentOf = (phone: string, draft: Draft, text: string) => ({
  */
 export function settleTextSend(view: Pick<MessageView, 'body'>, sent: Sent): void {
   const now = getDraft(sent.phone);
-  const lost = replayedOther(view, sent.text);
+  const lost = replayedOther(view, sent.text, Boolean(sent.correctsId));
   const note = { text: sent.text, id: crypto.randomUUID(), code: SEND_REPLAYED };
   const next = lost ? { text: now.text || sent.text, failed: note } : { ...now, failed: null };
   setDraft(sent.phone, next, sent.gen.draft);

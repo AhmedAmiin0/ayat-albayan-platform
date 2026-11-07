@@ -11,44 +11,33 @@ import { shape, type, useTheme } from '@/theme';
 
 /**
  * Over the composer while she corrects a message (owner 2026-11-07), as WhatsApp's edit bar:
- * «تعديل الرسالة» · the original's first line and ✕, then the one line that says the family gets
- * a new «تصحيح» reply (WhatsApp cannot edit a sent message). Shown only while free text can go out.
+ * «تعديل الرسالة» over the original's first line, ✕ beside them, then the one line that says
+ * the family gets a new «تصحيح» reply (WhatsApp cannot edit a sent message). Shown only while
+ * free text can go out.
  */
 export function EditStrip() {
   const { color } = useTheme();
   const { editing, cancelEdit } = useChatActions();
   if (!editing) return null;
   const text = quoteText(quoteOf(editing));
-  const line = { fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm) };
+  const line = { fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) };
+  const bar = { borderStartWidth: 3, borderStartColor: color.lapis, backgroundColor: color.sunk };
+  const title = { ...line, fontFamily: type.ui[600], color: color.lapis };
   return (
     <View testID="edit-strip" style={{ gap: 2 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          minHeight: shape.control.touch,
-          paddingStart: 10,
-          borderStartWidth: 3,
-          borderStartColor: color.lapis,
-          borderRadius: shape.radius.sm,
-          backgroundColor: color.sunk,
-        }}
-      >
+      <View style={{ ...bar, flexDirection: 'row', borderRadius: shape.radius.sm }}>
         <View
           accessible
           accessibilityLabel={`${t.inbox.correction.bar}: ${text}`}
-          style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4 }}
+          style={{ flex: 1, justifyContent: 'center', paddingVertical: 4, paddingStart: 8 }}
         >
-          <AppText
-            numberOfLines={1}
-            style={{ ...line, flexShrink: 0, fontFamily: type.ui[600], color: color.lapis }}
-          >
-            {`${t.inbox.correction.bar} ·`}
+          <AppText numberOfLines={1} style={title}>
+            {t.inbox.correction.bar}
           </AppText>
           <ContentText
             source={text}
             numberOfLines={1}
-            style={{ ...line, flex: 1, fontFamily: type.ui[400], color: color.ink2 }}
+            style={{ ...line, fontFamily: type.ui[400], color: color.ink2 }}
           >
             {text}
           </ContentText>
