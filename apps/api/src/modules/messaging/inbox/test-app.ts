@@ -24,8 +24,6 @@ import type { FamilyTag } from './people/thread-people.mapper';
 import { TeacherThreadsRepo } from './teacher-threads/teacher-threads.repo';
 import { ThreadsRepo } from './threads/threads.repo';
 import { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
-import { KapsoReopener } from './reopen/kapso-reopener';
-import { ReopenRepo } from './reopen/reopen.repo';
 import { DeltaRepo } from './delta/delta.repo';
 import { SyncRepo } from './delta/sync.repo';
 import { MessageHideRepo } from './hide/message-hide.repo';
@@ -86,11 +84,8 @@ function mocks() {
     gate: { open: vi.fn() },
     sender: { kick: vi.fn() },
     audit: { record: vi.fn() },
-    reopens: { nextKey: vi.fn(async (): Promise<string | null> => null), templateKey: vi.fn(async () => 'inquiry_followup_ar_v2') },
-    kapso: { reopen: vi.fn(async () => false) },
     reopenRequest: {
       usable: vi.fn(async (): Promise<string | null> => 'template'),
-      nextKey: vi.fn(),
     },
     hides: { target: vi.fn(), set: vi.fn(async () => true) },
     delta: { newer: vi.fn(), pending: vi.fn() },
@@ -123,8 +118,6 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(SendGate).useValue(m.gate)
     .overrideProvider(MessageSender).useValue(m.sender)
     .overrideProvider(AuditService).useValue(m.audit)
-    .overrideProvider(ReopenRepo).useValue(m.reopens)
-    .overrideProvider(KapsoReopener).useValue(m.kapso)
     .overrideProvider(ReopenRequest).useValue(m.reopenRequest)
     .overrideProvider(InboxSettings).useValue(inboxSettings())
     .overrideProvider(MessageHideRepo).useValue(m.hides)

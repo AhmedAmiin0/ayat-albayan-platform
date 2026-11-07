@@ -29,6 +29,7 @@ import { MessageWorker } from './sender/message.worker';
 import { EvolutionPaceRepo } from './sender/pace';
 import { KapsoHold } from './sender/window/kapso-hold';
 import { ReopenRequest } from './sender/window/reopen-request';
+import { ReopenAudit } from './sender/window/reopen-audit';
 import { WindowHold } from './sender/window/window-hold';
 import { WindowRelease } from './sender/window/window-release';
 import { WindowRepo } from './sender/window/window.repo';
@@ -110,7 +111,7 @@ function lines(): WhatsappLines {
     manualSend.AppSendAdoptRepo, manualSend.AppSendAdopt,
     manualSend.AppSendExpiryRepo, manualSend.AppSendExpiry,
     WindowSettings,
-    ReopenRequest,
+    ReopenRequest, ReopenAudit,
     WindowRelease,
     WindowHold,
     KapsoHold,

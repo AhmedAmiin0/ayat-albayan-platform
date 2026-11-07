@@ -1,8 +1,8 @@
 import { localDate } from '../lesson/timing.day-before.js';
 
-// «إعادة فتح المحادثة» (owner 2026-10-26): opening a thread whose 24 h window is closed asks the
-// server, once, to reopen it: Kapso's own conversation record (chat number on the kapso driver) and
-// one approved template, the only thing that reopens WhatsApp's window.
+// «إعادة فتح المحادثة»: the starter template that reopens WhatsApp's 24 h window. Owner 2026-11-07
+// (option 1): it goes only when a staff member presses send in a closed chat, never on open; the
+// message is held until the family replies (the sender's window hold).
 
 // The template is the `chat_reopen_template` setting (default welcome_greeting, owner 2026-11-03).
 
@@ -10,21 +10,20 @@ import { localDate } from '../lesson/timing.day-before.js';
 export const REOPEN_TZ = 'Asia/Riyadh';
 
 /**
- * What became of the template: queued now, queued earlier today, not this role's to send, window still
- * open, the configured template not approved yet (Kapso's reopen only, no fallback), or not sendable.
+ * POST /threads/:phone/reopen's answer, kept for app builds older than 2026-11-07 that call it on
+ * open: the window is still open, or the starter goes on the first send. It never queues anything.
  */
-export type ReopenTemplateOutcome =
-  | 'template_queued' | 'already_requested_today' | 'not_allowed' | 'window_open' | 'template_unavailable' | 'not_sent';
+export type ReopenTemplateOutcome = 'window_open' | 'on_send';
 
-/** POST /threads/:phone/reopen. */
+/** POST /threads/:phone/reopen (old clients only). */
 export interface ThreadReopenView {
-  /** Kapso's conversation record was switched back to active (false: not on kapso, none ended, or Kapso failed). */
+  /** Always false since 2026-11-07 (the hold reopens Kapso's record on send). */
   kapso_reopened: boolean;
   template: ReopenTemplateOutcome;
 }
 
 /**
- * `reopen:<E.164>:<Asia/Riyadh date>`: a second open the same day enqueues nothing. A later try the
+ * `reopen:<E.164>:<Asia/Riyadh date>`: a second send the same day queues no second template. A later try the
  * same day (the first failed or expired unsent) adds `:<try>` (2, 3…), so it is not deduped away.
  */
 export function reopenDedupKey(phone: string, now: Date, attempt = 1): string {

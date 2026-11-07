@@ -1,5 +1,6 @@
+import type { TablesInsert } from '@ab/db';
 import { reopenChoiceOf, type ReopenChoice, type TemplateView } from '@ab/shared';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { DAY_MS, nextReopenKey, reopenRequested, type ReopenRow } from './reopen-state';
@@ -15,6 +16,7 @@ import { reopenUsable } from './window-rules';
 import { WindowRepo } from './window.repo';
 import { WindowSettings } from './window.settings';
 import { ReopenCancel } from './manual-send';
+import { ReopenAudit } from './reopen-audit';
 
 const last4 = (phone: string): string => `…${phone.slice(-4)}`;
 const HELD: HoldPlan = { note: null };
@@ -31,6 +33,8 @@ const failNow = (why: FailWhy): HoldPlan => ({ fail: why, note: null });
 @Injectable()
 export class ReopenRequest {
   private readonly log = new Logger('ReopenRequest');
+  /** Property-injected (the constructor is at its limit); absent (a bare test): no audit line. */
+  @Optional() @Inject(ReopenAudit) audit?: ReopenAudit;
 
   constructor(
     private readonly repo: WindowRepo,
@@ -61,12 +65,6 @@ export class ReopenRequest {
     return (await usable[choice]()) ? choice : null;
   }
 
-  /** A new reopen's key now (the thread-open path); null = one is live, or no try left today. */
-  async nextKey(phone: string, now: Date): Promise<string | null> {
-    const rows = await this.lastDay(phone, now);
-    return reopenRequested(rows, now) ? null : nextReopenKey(phone, rows, now);
-  }
-
   /** How a closed chat's text is held: behind a template (queued if none is live), or waiting. */
   async ensure(row: DueMessage, now: Date): Promise<HoldPlan> {
     const plans: Record<ReopenChoice, () => Promise<HoldPlan>> = {
@@ -84,9 +82,15 @@ export class ReopenRequest {
     const template = await this.template();
     const dedup = nextReopenKey(phone, rows, now);
     if (!template || !dedup) return failNow(template ? TRIES_USED : UNAVAILABLE);
-    await this.repo.queueReopen(reopenRow(row, { key: template.key, dedup, now }));
-    this.log.log(`reopen template ${template.key} queued for ${last4(phone)}`);
+    await this.queue(reopenRow(row, { key: template.key, dedup, now }));
     return { ...HELD, queued: dedup };
+  }
+
+  /** Queued (deduped) and, when this pass inserted it, audited under the sender. */
+  private async queue(reopen: TablesInsert<'messages'>): Promise<void> {
+    const id = await this.repo.queueReopen(reopen);
+    if (id) await this.audit?.record(reopen, id);
+    this.log.log(`reopen template ${reopen.template_key ?? ''} queued for ${last4(reopen.phone_e164)}`);
   }
 
   /** The hold this plan was for missed: the reopen it queued goes unless a text still waits. */

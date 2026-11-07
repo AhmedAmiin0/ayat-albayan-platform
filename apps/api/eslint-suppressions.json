@@ -4213,7 +4213,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/inbox.settings.test.ts": {
@@ -4362,106 +4362,9 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/reopen/kapso-reopener.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/kapso-reopener.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/messaging/inbox/reopen/reopen-params.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/reopen-params.ts": {
-    "ab/no-parent-imports": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/reopen-template.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/modules/messaging/inbox/reopen/reopen.settings.ts": {
-    "ab/no-parent-imports": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/thread-reopen.calls.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    }
-  },
-  "src/modules/messaging/inbox/reopen/thread-reopen.controller.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/inbox/reopen/thread-reopen.http.test.ts": {
     "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/thread-reopen.kapso.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 5
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/reopen/thread-reopen.service.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/modules/messaging/inbox/reopen/thread-reopen.template.http.test.ts": {
-    "ab/no-parent-imports": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
+      "count": 2
     }
   },
   "src/modules/messaging/inbox/sales-threads/sales-threads.service.ts": {
