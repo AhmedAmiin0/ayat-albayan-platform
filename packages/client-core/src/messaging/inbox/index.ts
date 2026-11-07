@@ -20,7 +20,6 @@ export {
   unreadTotal,
 } from './inbox-live.js';
 export { connectInboxLive, type LiveChannel, type LiveClient, type LiveConnection } from './live-connect.js';
-export { liveDotState, type LiveDotState } from './live-rejoin.js';
 export {
   applyLiveRows,
   LIVE_ROWS_MAX,

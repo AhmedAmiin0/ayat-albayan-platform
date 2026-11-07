@@ -1,7 +1,7 @@
 import { liveInterval, UNREAD_COUNT_KEY, UNREAD_COUNT_PATH, unreadTotal } from '@ab/client-core';
 import { ApiError, apiFetch } from '@/lib/http/api';
 import { env } from '@/lib/http/env';
-import { inboxLive } from './live';
+import { inboxLive } from '@/features/messaging/inbox/api/live';
 
 /** A signed-out session (401) is not retried: the next poll, or the sign-in, asks again. */
 export const unreadRetry = (count: number, error: unknown): boolean =>

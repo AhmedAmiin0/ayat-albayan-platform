@@ -1,5 +1,5 @@
 import { INBOX_LIVE_EVENT, INBOX_LIVE_TOPIC } from './inbox-live.js';
-import { createRejoin, isDropped } from './live-rejoin.js';
+import { createRejoin, isDropped } from '../live-rejoin/index.js';
 import type { InboxLive, LiveTargets } from './live-store.js';
 
 /** The slice of a SupabaseClient this uses (no dependency on supabase-js here). */
@@ -46,9 +46,10 @@ export interface LiveConnection {
  * sign-out: stop). setAuth() before every join: the join carries the session's JWT (the policy reads
  * it), not the anon key a join could otherwise go out with before supabase-js has read the session.
  * supabase-js keeps it current itself afterwards (TOKEN_REFRESHED → realtime.setAuth).
- * A drop (CHANNEL_ERROR, TIMED_OUT, CLOSED) leaves that channel and joins a fresh one with backoff
- * (live-rejoin.ts); SUBSCRIBED again resyncs what is on screen. Statuses of a channel already left
- * are ignored. Never throws: without realtime the apps simply keep polling at their old rate.
+ * A drop (CHANNEL_ERROR, TIMED_OUT, CLOSED) leaves that channel and joins a fresh one with
+ * backoff (messaging/live-rejoin); SUBSCRIBED again resyncs what is on screen. Statuses of a
+ * channel already left are ignored. Never throws: without realtime the apps simply keep polling
+ * at their old rate.
  */
 export function connectInboxLive(client: LiveClient, live: InboxLive, targets: LiveTargets): LiveConnection {
   let stopped = false;
