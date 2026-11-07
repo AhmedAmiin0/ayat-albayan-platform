@@ -5,7 +5,7 @@ import { SLOT_SIGNED_HEADERS } from './s3-slot';
 import { S3Store, type S3Command } from './s3-store';
 
 /** One S3 client per host: path-style (MinIO), checksums only where S3 requires them. */
-function client(m: MinioEnv, endpoint: string): S3Client {
+export function s3Client(m: MinioEnv, endpoint: string): S3Client {
   return new S3Client({
     endpoint,
     region: m.region,
@@ -25,8 +25,8 @@ function client(m: MinioEnv, endpoint: string): S3Client {
  * kept, so the signature MinIO checks is the one the client was given (docs/45).
  */
 export function minioStore(m: MinioEnv): S3Store {
-  const internal = client(m, m.endpoint);
-  const publicHost = client(m, m.publicUrl);
+  const internal = s3Client(m, m.endpoint);
+  const publicHost = s3Client(m, m.publicUrl);
   return new S3Store({
     send: (command: S3Command) => internal.send(command as Parameters<S3Client['send']>[0]),
     // A slot's size and type stay request headers MinIO checks (absent on a GET: nothing to sign).

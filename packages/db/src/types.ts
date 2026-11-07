@@ -1012,6 +1012,131 @@ export type Database = {
         };
         Relationships: [];
       };
+      drive_backup_archives: {
+        Row: {
+          bytes_compressed: number;
+          bytes_raw: number;
+          drive_file_id: string | null;
+          error: string | null;
+          finished_at: string | null;
+          folder_id: string;
+          id: string;
+          kind: string;
+          label: string;
+          name: string;
+          objects: number;
+          part: number;
+          sealed: boolean;
+          skipped: number;
+          started_at: string;
+          status: string;
+        };
+        Insert: {
+          bytes_compressed?: number;
+          bytes_raw?: number;
+          drive_file_id?: string | null;
+          error?: string | null;
+          finished_at?: string | null;
+          folder_id: string;
+          id?: string;
+          kind: string;
+          label: string;
+          name: string;
+          objects?: number;
+          part: number;
+          sealed?: boolean;
+          skipped?: number;
+          started_at?: string;
+          status?: string;
+        };
+        Update: {
+          bytes_compressed?: number;
+          bytes_raw?: number;
+          drive_file_id?: string | null;
+          error?: string | null;
+          finished_at?: string | null;
+          folder_id?: string;
+          id?: string;
+          kind?: string;
+          label?: string;
+          name?: string;
+          objects?: number;
+          part?: number;
+          sealed?: boolean;
+          skipped?: number;
+          started_at?: string;
+          status?: string;
+        };
+        Relationships: [];
+      };
+      drive_backup_objects: {
+        Row: {
+          archive_id: string;
+          bucket: string;
+          etag: string;
+          key: string;
+          size: number;
+        };
+        Insert: {
+          archive_id: string;
+          bucket: string;
+          etag: string;
+          key: string;
+          size: number;
+        };
+        Update: {
+          archive_id?: string;
+          bucket?: string;
+          etag?: string;
+          key?: string;
+          size?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'drive_backup_objects_archive_id_fkey';
+            columns: ['archive_id'];
+            isOneToOne: false;
+            referencedRelation: 'drive_backup_archives';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      drive_backup_state: {
+        Row: {
+          account_email: string | null;
+          folder_id: string | null;
+          id: boolean;
+          last_error: string | null;
+          last_run_at: string | null;
+          quota_at: string | null;
+          quota_limit: number | null;
+          quota_usage: number | null;
+          updated_at: string;
+        };
+        Insert: {
+          account_email?: string | null;
+          folder_id?: string | null;
+          id?: boolean;
+          last_error?: string | null;
+          last_run_at?: string | null;
+          quota_at?: string | null;
+          quota_limit?: number | null;
+          quota_usage?: number | null;
+          updated_at?: string;
+        };
+        Update: {
+          account_email?: string | null;
+          folder_id?: string | null;
+          id?: boolean;
+          last_error?: string | null;
+          last_run_at?: string | null;
+          quota_at?: string | null;
+          quota_limit?: number | null;
+          quota_usage?: number | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       expense_categories: {
         Row: {
           active: boolean;

@@ -110,6 +110,7 @@ export const INTEGRATION_ENUMS: Partial<Record<IntegrationPlainKey, readonly str
   STRIPE_ENABLED: ['false', 'true'], // «الدفع الإلكتروني» (docs/30): off by default.
   STORAGE_DRIVER: STORAGE_DRIVERS, // docs/45: supabase until an admin switches (the cut-over).
   MINIO_RECORDINGS: ['false', 'true'], // docs/45 §1: recordings into MinIO, off by default.
+  MINIO_DRIVE_BACKUP: ['false', 'true'], // docs/45 §5: MinIO archives to Google Drive, off.
 };
 
 /** The allowed values of an enum key, or null for a free-text key. */

@@ -31,7 +31,7 @@ const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 // Item 5: after the bulk copy (docs/45 §6) a Supabase object has a MinIO twin under the same key.
 describe('deleting a Supabase path after the bulk copy', () => {
   it('removes the MinIO twin too (best effort)', async () => {
-    const t = setup({ driver: 'minio', minio: MINIO, recordings: false });
+    const t = setup({ driver: 'minio', minio: MINIO, recordings: false, driveBackup: false });
     t.supabase.objects.set('ab-receipts/s/a.jpg', BYTES);
     t.minio.objects.set('ab-receipts/s/a.jpg', BYTES);
     await t.storage.remove({ bucket: 'receipts', path: 's/a.jpg' });
@@ -40,7 +40,7 @@ describe('deleting a Supabase path after the bulk copy', () => {
   });
 
   it('a «minio:» path is removed in MinIO only; Supabase keeps its key', async () => {
-    const t = setup({ driver: 'minio', minio: MINIO, recordings: false });
+    const t = setup({ driver: 'minio', minio: MINIO, recordings: false, driveBackup: false });
     t.supabase.objects.set('ab-receipts/s/a.jpg', BYTES);
     t.minio.objects.set('ab-receipts/s/a.jpg', BYTES);
     await t.storage.removeMany({ bucket: 'receipts', paths: ['minio:s/a.jpg'] });
@@ -49,12 +49,12 @@ describe('deleting a Supabase path after the bulk copy', () => {
   });
 
   it('a MinIO that fails never fails the Supabase delete; none configured → Supabase only', async () => {
-    const t = setup({ driver: 'supabase', minio: MINIO, recordings: false });
+    const t = setup({ driver: 'supabase', minio: MINIO, recordings: false, driveBackup: false });
     t.minio.objects.delete = () => {
       throw new Error('down');
     };
     await expect(t.storage.remove({ bucket: 'receipts', path: 's/a.jpg' })).resolves.toBeUndefined();
-    const plain = setup({ driver: 'supabase', minio: null, recordings: false });
+    const plain = setup({ driver: 'supabase', minio: null, recordings: false, driveBackup: false });
     await plain.storage.remove({ bucket: 'receipts', path: 's/a.jpg' });
     expect(plain.minio.sent).toEqual([]);
   });
@@ -63,15 +63,15 @@ describe('deleting a Supabase path after the bulk copy', () => {
 // Item 3: recordings are their own switch, never implied by STORAGE_DRIVER=minio.
 describe('recordings into MinIO', () => {
   it('off with the driver on minio unless MINIO_RECORDINGS is on', () => {
-    expect(setup({ driver: 'minio', minio: MINIO, recordings: false }).storage.recordsToMinio()).toBe(false);
-    expect(setup({ driver: 'supabase', minio: MINIO, recordings: true }).storage.recordsToMinio()).toBe(false);
-    const on = setup({ driver: 'minio', minio: MINIO, recordings: true }).storage;
+    expect(setup({ driver: 'minio', minio: MINIO, recordings: false, driveBackup: false }).storage.recordsToMinio()).toBe(false);
+    expect(setup({ driver: 'supabase', minio: MINIO, recordings: true, driveBackup: false }).storage.recordsToMinio()).toBe(false);
+    const on = setup({ driver: 'minio', minio: MINIO, recordings: true, driveBackup: false }).storage;
     expect(on.recordsToMinio()).toBe(true);
     expect(on.egressTarget('recordings')).toMatchObject({ bucket: 'recordings' });
   });
 
   it('no egress target while the switch is off', () => {
-    const off = setup({ driver: 'minio', minio: MINIO, recordings: false }).storage;
+    const off = setup({ driver: 'minio', minio: MINIO, recordings: false, driveBackup: false }).storage;
     expect(off.egressTarget('recordings')).toBeNull();
   });
 });

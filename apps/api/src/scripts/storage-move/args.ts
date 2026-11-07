@@ -45,7 +45,7 @@ const isFlag = (s: string | undefined): boolean => s?.startsWith('--') === true;
 const keyOf = (word: string): string => (isFlag(word) ? word.slice(2) : `?${word}`);
 
 /** ['--table', 'payments', '--apply'] → { table: 'payments', apply: true }. */
-function pairs(argv: readonly string[]): Record<string, string | true> {
+export function pairs(argv: readonly string[]): Record<string, string | true> {
   const out: Record<string, string | true> = {};
   for (let i = 0; i < argv.length; i += 1) {
     const next = argv[i + 1];

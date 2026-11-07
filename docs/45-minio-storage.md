@@ -64,6 +64,7 @@ only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «ا�
 | `MINIO_ACCESS_KEY` | `minio.env` `MINIO_APP_ACCESS_KEY` | the app user, never the root user |
 | `MINIO_SECRET_KEY` | `minio.env` `MINIO_APP_SECRET_KEY` | Vault secret |
 | `MINIO_RECORDINGS` | `false` | recordings into MinIO (with the driver on `minio`); uncapped, §7 |
+| `MINIO_DRIVE_BACKUP` | `false` → `true` | nightly compressed archives to Google Drive (§5.1) |
 
 `MINIO_ENDPOINT` and `MINIO_PUBLIC_URL` refuse an IP literal (the Evolution base's SSRF rules): `http://` only
 to `localhost` or the listed docker service `ayat-minio`, `https://` only to a public host name.
@@ -164,7 +165,7 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
 9. **Cut over.** Preconditions, every one checked first:
    - **Backups:** the cron line of §5 is installed (`crontab -l`), one `backup.sh` run succeeded (run it by hand
      once; `/var/log/ayat-minio-backup.log` ends without an error and `/var/backups/ayat-minio` has the buckets),
-     and the off-host copy of that folder is scheduled.
+     and the off-host copy (§5.1, the Drive backup) is switched on.
    - **Phones:** every staff phone runs **APK 0.5.0** with the OTA of this change (the phones restarted onto it),
      and open web tabs are reloaded. An older client still gets Supabase slots (`X-AB-Upload`, §1) so it keeps
      working, but only the new ones write to MinIO.
@@ -194,8 +195,7 @@ and list is all it needs; never root). Host crontab (`crontab -e` as root):
 `mc mirror --overwrite` adds new and changed files and never deletes: a file removed in MinIO stays in the backup,
 so an accidental delete can be restored. Retention: nothing is pruned automatically; the reports and receipts are
 write-once and small. When the folder grows, delete old per-bucket files by hand or empty the folder and let the
-next run copy everything again. The backup sits on the same disk: copy it off the server too (e.g. `rsync` of the
-folder to another machine) for a disk failure. Restore: the same container with the root keys,
+next run copy everything again. The backup sits on the same disk; the off-host copy is the Google Drive backup below (§5.1). Restore: the same container with the root keys,
 `mc mirror /backup/<bucket> ayat/<bucket>`.
 
 Alternative, sparingly (a raw copy of MinIO's own format, only consistent with `ayat-minio` stopped):
@@ -204,6 +204,68 @@ Alternative, sparingly (a raw copy of MinIO's own format, only consistent with `
 docker run --rm -v ayat-albayan-staging_minio-data:/data:ro -v /var/backups:/backup busybox:1.37 \
   tar czf /backup/minio-data-$(date +%F).tgz -C /data .
 ```
+
+### 5.1 Off-host: compressed archives on Google Drive (owner 2026-11-07)
+
+«use google drive», «but compress it first». The worker uploads compressed archives of the MinIO
+buckets to the academy's Google Drive, on the Google connection «التكاملات» › Google already holds
+(docs/24: same OAuth client, same refresh token in Vault, same `invalid_grant` handling). No new
+Google project, client or credential.
+
+- **What:** the buckets `reports`, `report-attachments`, `receipts`, `invoices`, `wa-media`,
+  `avatars`; `recordings` only while `MINIO_RECORDINGS` is on.
+- **Where:** the folder «نسخ احتياطي — ملفات المنصة» in My Drive of the connected account, created
+  once (marked with the app property `ab_backup=minio`; its id and the account's address in
+  `drive_backup_state`). The account is Drive's own answer (`about.user`), not the database: after a
+  reconnect to another account, nothing goes to the old folder; a new folder and a new chain start.
+- **When:** every night at 01:00 UTC (04:00 Riyadh) in `ayat-worker` (`drive-backup` job, the Google
+  sync's single-flight pattern). A **full** archive starts on Friday (or the first night after it
+  without one, or at once when the last full is more than a week old); the other nights are
+  **incrementals**: every object whose ETag is not in the last full or the incrementals after it.
+- **Format:** `full-YYYY-Www.tar.zst`, `incr-YYYY-MM-DD.tar.zst` (`.p2`, `.p3`… for further parts):
+  a POSIX (pax) tar, entries `<bucket>/<key>` with the object's Content-Type and ETag in pax records
+  (`AB.*`; GNU tar warns «unknown extended header keyword» and extracts normally), and
+  `manifest.json` last (bucket, key, ETag, size, Content-Type of each object, and the skipped ones).
+  Compressed with **zstd level 3 from Node's own `node:zlib`** (Node ≥ 22.15; the image runs Node
+  24): no native module and no package; with zstd's checksum, so a damaged archive fails the
+  restore instead of restoring bad bytes. By hand: `zstd -dc full-2026-W45.tar.zst | tar -x`.
+- **Streamed:** MinIO → tar → zstd → a Drive resumable upload, 8 MiB chunks: nothing on disk, about
+  one chunk plus one object (≤ 64 MiB; larger objects stream) in memory. A part is cut at 1 GiB raw;
+  a night stops after 4 GiB raw (the rest continues the next night; a full stays open until done).
+  Concurrency 1. A failed chunk (429, 5xx, network) is resent from what Drive holds, 5 tries.
+- **Crash and resume:** each part is a row in `drive_backup_archives` (`uploading` → `done` |
+  `failed`) with its objects and ETags in `drive_backup_objects`. A part counts only once `done`: a
+  run killed mid-upload leaves `uploading`, the next run marks it `failed` and archives those objects
+  again; parts already uploaded are not redone. An object that vanished or cannot be read is skipped
+  and reported (manifest, alert), never stops the run, and is tried again the next night.
+- **Retention:** the last **4 fulls** and the incrementals after the oldest of them. Older archives go
+  to Drive's trash, only right after a newer full was sealed (all its parts uploaded).
+- **Expected size:** PDFs, JPEG/PNG photos, voice notes and videos are already compressed: they barely
+  shrink (a few %). The gain is on the rest (CSV, JSON, text, some old PDFs): often 3× to 10×. Plan
+  Drive space as about the raw size of 4 fulls plus a week of incrementals.
+- **Quota:** a free Gmail account has 15 GB shared with Gmail and Photos. Each run reads
+  `about.storageQuota`: under 2 GB free → a bell alert to the admins; under 512 MiB → no upload.
+- **Alerts** (admins, bell only, the Google sync's `google_sync_alert`): a failed night, low quota,
+  skipped objects; once per day each.
+
+**Turning it on** (owner): «التكاملات» › Google is connected (docs/24) and «التكاملات» › «التخزين»
+has a passing «اختبار الاتصال»; then set «نسخ احتياطي لملفات MinIO إلى Google Drive» to «مفعّلة» and
+save. The status line under «التخزين» shows the last archive (raw → compressed size), the last error and
+Drive's free space. Off again: set it to «متوقفة» (archives already on Drive stay).
+
+**Restore** (owner, on the VPS, inside the worker container; reads Drive, writes MinIO with the app
+user's keys):
+
+1. **Dry run** (the default; writes nothing): lists the archives that rebuild the given day, newest
+   first: `docker compose -p ayat-albayan-staging exec -T ayat-worker node dist/scripts/minio-drive-restore.js --to 2026-11-07`
+2. **Apply:** add `--apply`. The newest copy of each key wins (the incrementals, then the full);
+   an object MinIO already holds is **kept** (`If-None-Match: *`) unless `--overwrite` is added.
+   The JSON summary gives `put`, `kept`, `older` (an older copy of a key already restored) and
+   `failed` (the keys that could not be written).
+3. Deleted objects come back too (archives never record deletes), as with `backup.sh`.
+4. Without the platform (a new server): download the folder's archives from Drive and
+   `zstd -dc <file> | tar -x` the full, then each incremental in date order, then `mc mirror` the
+   folders into the buckets.
 
 ## 6. Moving the old files (served from MinIO)
 
