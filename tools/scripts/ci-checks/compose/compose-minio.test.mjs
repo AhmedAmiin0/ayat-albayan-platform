@@ -27,12 +27,13 @@ test('one image pinned by digest for the server, the init and the backup (it shi
   assert.equal(/^MC_IMAGE=(.+)$/m.exec(backupSh)?.[1], minio.image, 'the backup uses the same image');
 });
 
-test('internal only: no published port, no host network, no console', () => {
-  for (const s of [minio, init]) {
-    assert.equal(s.ports, undefined);
-    assert.equal(s.network_mode, undefined);
-  }
-  assert.equal(minio.environment.MINIO_BROWSER, 'off');
+test('internal only: no host network; the console only on the host loopback (SSH tunnel)', () => {
+  for (const s of [minio, init]) assert.equal(s.network_mode, undefined);
+  assert.equal(init.ports, undefined);
+  // Owner 2026-11-07: the web console, reachable only through `ssh -L 9001:127.0.0.1:9001`.
+  assert.equal(minio.environment.MINIO_BROWSER, 'on');
+  assert.deepEqual(minio.ports, ['127.0.0.1:9001:9001']);
+  assert.match(minio.command.join('\n'), /exec minio server \/data --console-address :9001/);
 });
 
 test("the keys in minio.env, read by the two MinIO services only, never through the app's .env", () => {
@@ -57,7 +58,7 @@ test('refuses to start without real root credentials (never the default)', () =>
   assert.match(script, /"\$\$\{#MINIO_ROOT_PASSWORD\}" -ge 16/);
   assert.match(script, /"\$\$\{#MINIO_ROOT_USER\}" -ge 3/);
   assert.match(script, /exit 1/);
-  assert.match(script, /exec minio server \/data\s*$/);
+  assert.match(script, /exec minio server \/data --console-address :9001\s*$/);
 });
 
 test('its data on a named volume, a health check, rotated logs, 512 MB', () => {
