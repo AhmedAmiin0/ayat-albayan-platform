@@ -1,4 +1,5 @@
 import { Pressable, View } from 'react-native';
+import { t } from '@/core/lib/i18n/i18n';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { Chevron } from '@/core/ui/primitives/Chevron';
@@ -28,7 +29,7 @@ export function PickerRow(props: PickerRowProps) {
       <Pressable
         testID={testID}
         accessibilityRole="button"
-        accessibilityLabel={error ? `${label}: ${text}، ${error}` : `${label}: ${text}`}
+        accessibilityLabel={error ? `${label}: ${text}${t.common.listSeparator}${error}` : `${label}: ${text}`}
         accessibilityHint={hint}
         onPress={onPress}
         style={{
