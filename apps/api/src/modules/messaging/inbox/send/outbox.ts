@@ -4,15 +4,25 @@ import { Injectable } from '@nestjs/common';
 import { sleep } from '@/common/infra/cache/sleep';
 import { appRole } from '@/config/role/app-role';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
-import { laneOfRow } from '@/modules/messaging/whatsapp';
+import { laneOfRow, type MessageRow } from '@/modules/messaging/whatsapp';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 
 /**
  * The row as the clients see it; `replayed` = a repeated request id, nothing new was queued;
- * `sameRequest` (a correction's replay only) = that first row IS this request (round 4 of #694).
+ * `sameRequest` (a correction's replay only) = that first row IS this request (round 4 of #694);
+ * `echo` = what the STORED row holds (a hidden row's view shows no body: #694 follow-up, item 1).
  */
-export type Sent = { view: MessageView; replayed: boolean; sameRequest?: boolean };
+export type Sent = { view: MessageView; replayed: boolean; sameRequest?: boolean; echo?: Echo };
+
+/** The stored row's fields a correction's retry is compared with (correction-checks.ts). */
+type Echo = Pick<MessageRow, 'body' | 'corrects_id' | 'correction_text'>;
+
+const echoOf = (row: Echo): Echo => ({
+  body: row.body,
+  corrects_id: row.corrects_id,
+  correction_text: row.correction_text,
+});
 
 type Outbound = Omit<TablesInsert<'messages'>, 'direction' | 'status'>;
 
@@ -51,7 +61,7 @@ export class Outbox {
   /** Rule 8 before a send's own checks: the row this key already queued (replayed), else null. */
   async replayOf(key: string): Promise<Sent | null> {
     const row = await this.queries.byDedupKey(key);
-    return row ? { view: await this.views.view(row), replayed: true } : null;
+    return row ? { view: await this.views.view(row), replayed: true, echo: echoOf(row) } : null;
   }
 
   private async write(row: Outbound, wait: boolean): Promise<Sent> {
@@ -66,7 +76,7 @@ export class Outbox {
     // The enqueue's own row (a replay's is read back there): only send() reads it again.
     const now = wait && queued.status === 'queued' ? await this.settled(queued.id) : queued;
     const view = await this.views.view(now ?? queued);
-    return { view, replayed: queued.replayed === true };
+    return { view, replayed: queued.replayed === true, echo: echoOf(queued) };
   }
 
   /** The row after the pass; on an API copy, read again (bounded) while the worker has not moved it yet. */

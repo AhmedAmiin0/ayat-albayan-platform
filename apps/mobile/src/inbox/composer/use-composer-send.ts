@@ -77,6 +77,7 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
     if (target.bare(body)) return sendFile(staged);
     setText('');
     const out = target.out(body);
+    const session = target.session;
     const id = boxId.take(body, targetKey(out));
     // Hook-level (useSendMessage) puts the text back after no answer or a refusal, pins or
     // releases the id, and on a replay of the first message brings the edit back (docs/44 M1).
@@ -86,7 +87,7 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
         onSuccess: () => {
           boxId.sent();
           if (PINS.box.replayed(phone)) return;
-          target.sent(out);
+          target.sent(out, session);
           const now = stagedNow.current;
           if (now && now.requestId === tapped) sendFile(now);
         },

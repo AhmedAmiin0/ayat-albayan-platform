@@ -86,7 +86,8 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
     if (blocked) return;
     const gen = { draft: draftGeneration(), own: ownSendGeneration() };
     const body = text.trim();
-    const sent = { ...textSentOf(phone, draft, body), replyTo: reply.replyTo, correctsId: fix.correctsId, gen, after: extras?.onSubmit?.() };
+    const links = { replyTo: reply.replyTo, correctsId: fix.correctsId, editSession: fix.session };
+    const sent = { ...textSentOf(phone, draft, body), ...links, gen, after: extras?.onSubmit?.() };
     setDraft(phone, { text: '', failed: keptFailed(draft.failed) });
     send.mutate(sent);
   };

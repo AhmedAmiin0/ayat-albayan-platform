@@ -1,7 +1,8 @@
-import { correctionBody, isCorrectable, mayCorrect, type ThreadText, WA_TEXT_MAX } from '@ab/shared';
+import { isCorrectable, mayCorrect, type ThreadText, WA_TEXT_MAX } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
-import { ar, BUNDLES } from '@/common/infra/i18n/server-text';
+import { ar } from '@/common/infra/i18n/server-text';
 import { waHttpError } from '@/modules/messaging/whatsapp';
+import { ownText } from './correction-checks';
 import type { CorrectionRepo, CorrectionTarget } from './correction.repo';
 
 /** The send as the service needs it: its phone, input, author and base role. */
@@ -16,7 +17,8 @@ interface CorrectionSend {
 /** The send after «تعديل»: the prefixed text replying to the original, and the row's link. */
 interface Corrected<S extends CorrectionSend> {
   send: S;
-  row: { corrects_id?: string };
+  /** corrects_id and the text without its prefix (an exact retry is recognised, #694 follow-up). */
+  row: { corrects_id?: string; correction_text?: string };
 }
 
 /** The rule reads the row as a view would: a wamid = WhatsApp knows it (a reply can name it). */
@@ -49,9 +51,9 @@ export function checkTarget(row: CorrectionTarget | null, s: CorrectionSend): Co
  * (theirs or the bundled default) dropped. 400 empty_correction when nothing is left, 400 too_long
  * when the prefixed text passes WhatsApp's limit (an admin's long wording, round 4).
  */
-function bodyOf(text: string): string {
+function bodyOf(own: string): string {
   const prefix = ar.inbox.correction.prefix;
-  const body = correctionBody(prefix, text, [BUNDLES.ar.inbox.correction.prefix]);
+  const body = `${prefix}${own}`;
   const refusal = refusalOf(body, prefix);
   if (refusal) throw waHttpError(refusal, HttpStatus.BAD_REQUEST);
   return body;
@@ -79,7 +81,7 @@ export async function correctionOf<S extends CorrectionSend>(
   if (!id) return { send: s, row: {} };
   if (!repo) throw new Error('CorrectionRepo is not provided');
   const row = checkTarget(await repo.target(id), s);
-  const text = bodyOf(s.input.text);
-  const input = { ...s.input, text, replyToMessageId: row.id };
-  return { send: { ...s, input }, row: { corrects_id: row.id } };
+  const own = ownText(s.input.text);
+  const input = { ...s.input, text: bodyOf(own), replyToMessageId: row.id };
+  return { send: { ...s, input }, row: { corrects_id: row.id, correction_text: own } };
 }

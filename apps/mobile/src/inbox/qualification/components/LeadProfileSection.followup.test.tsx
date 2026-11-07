@@ -68,7 +68,8 @@ test('the lead sent «وقف» themselves: resuming asks first; «إلغاء» s
   await fireEvent.press(screen.getByRole('button', { name: f.resumeLeadYes }));
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/leads/a1/follow-up', { paused: false });
   await waitFor(() => expect(screen.queryByText(f.resumeLeadConfirm)).toBeNull());
-  expect(screen.getByRole('button', { name: f.pause })).toBeTruthy();
+  // The «إيقاف» button comes with the refreshed profile, a render after the dialog closes.
+  expect(await screen.findByRole('button', { name: f.pause })).toBeTruthy();
 });
 
 test('a refused pause says so under the button and changes nothing', async () => {

@@ -7,13 +7,36 @@ interface ComposeTarget {
   reply: MessageView | null;
   setReply: Dispatch<SetStateAction<MessageView | null>>;
   editing: MessageView | null;
+  editSession: string | null;
   startEdit: (m: MessageView) => void;
   cancelEdit: () => void;
-  editSent: (id: string) => void;
+  editSent: (session: string) => void;
 }
 
-/** The box's own draft from before «تعديل», and the message being corrected. */
-type Saved = { id: string; text: string } | null;
+/**
+ * The box's own draft from before «تعديل», and the edit SESSION: one per tap on «تعديل», so a
+ * correction sent from an earlier tap never ends a newer one (#694 follow-up item 4).
+ */
+type Saved = { session: string; text: string } | null;
+
+let sessions = 0;
+const nextSession = (): string => {
+  sessions += 1;
+  return `edit-${sessions}`;
+};
+
+/**
+ * A sent correction ends its own session only: the box's draft from before the edit comes back
+ * when the box is still empty (#694 follow-up item 6). Whether it was that session.
+ */
+function sentEdit(phone: string, saved: RefObject<Saved>, session: string): boolean {
+  const was = saved.current;
+  if (was?.session !== session) return false;
+  saved.current = null;
+  const empty = getComposerText(phone) === '';
+  if (empty) setComposerText(phone, was.text);
+  return true;
+}
 
 /** An edit that ends without a send: the box's own draft comes back. */
 function restore(phone: string, saved: RefObject<Saved>): void {
@@ -27,18 +50,25 @@ function useRestoreOnLeave(phone: string, saved: RefObject<Saved>): void {
   useEffect(() => () => restore(phone, saved), [phone, saved]);
 }
 
+/** An edit in progress: its chat, the message and its session. */
+type Edit = { phone: string; m: MessageView; session: string } | null;
+
+/** The edit as this chat sees it: a screen kept mounted on another chat is never in edit mode. */
+const editOf = (edit: Edit, phone: string) =>
+  edit?.phone === phone
+    ? { editing: edit.m, editSession: edit.session }
+    : { editing: null, editSession: null };
+
 /**
  * One open chat's «رد» and «تعديل» (owner 2026-11-07), as WhatsApp: picking a reply ends an edit,
  * starting an edit drops the reply and puts the original's text in the box. An edit keeps the
- * box's draft from before it: ✕, a picked reply or leaving the chat brings it back (review of
- * #694); only its sent correction drops it. An updater (a send that settles its own reply) never
- * ends an edit.
+ * box's draft from before it: ✕, a picked reply, leaving the chat or its sent correction (into a
+ * still empty box) brings it back (review of #694). An updater (a send that settles its own
+ * reply) never ends an edit.
  */
 export function useComposeTarget(phone: string): ComposeTarget {
   const [reply, setReplyNow] = useState<MessageView | null>(null);
-  // Per chat: a screen that stays mounted on another chat is never in edit mode there.
-  const [edit, setEdit] = useState<{ phone: string; m: MessageView } | null>(null);
-  const editing = edit?.phone === phone ? edit.m : null;
+  const [edit, setEdit] = useState<Edit>(null);
   const saved = useRef<Saved>(null);
   useRestoreOnLeave(phone, saved);
   const cancelEdit = () => {
@@ -51,14 +81,14 @@ export function useComposeTarget(phone: string): ComposeTarget {
     setReplyNow(next);
   };
   const startEdit = (m: MessageView) => {
-    saved.current = { id: m.id, text: saved.current?.text ?? getComposerText(phone) };
+    const session = nextSession();
+    saved.current = { session, text: saved.current?.text ?? getComposerText(phone) };
     setReplyNow(null);
-    setEdit({ phone, m });
+    setEdit({ phone, m, session });
     setComposerText(phone, m.body ?? ''); // only ever an original (isCorrectable)
   };
-  const editSent = (id: string) => {
-    saved.current = saved.current?.id === id ? null : saved.current;
-    setEdit((now) => (now?.m.id === id ? null : now));
+  const editSent = (session: string) => {
+    if (sentEdit(phone, saved, session)) setEdit(null);
   };
-  return { reply, setReply, editing, startEdit, cancelEdit, editSent };
+  return { reply, setReply, ...editOf(edit, phone), startEdit, cancelEdit, editSent };
 }

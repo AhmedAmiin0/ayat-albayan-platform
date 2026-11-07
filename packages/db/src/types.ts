@@ -2881,6 +2881,7 @@ export type Database = {
           attempts: number;
           body: string | null;
           channel: string;
+          correction_text: string | null;
           corrects_id: string | null;
           created_at: string;
           created_by: string | null;
@@ -2936,6 +2937,7 @@ export type Database = {
           attempts?: number;
           body?: string | null;
           channel?: string;
+          correction_text?: string | null;
           corrects_id?: string | null;
           created_at?: string;
           created_by?: string | null;
@@ -2991,6 +2993,7 @@ export type Database = {
           attempts?: number;
           body?: string | null;
           channel?: string;
+          correction_text?: string | null;
           corrects_id?: string | null;
           created_at?: string;
           created_by?: string | null;

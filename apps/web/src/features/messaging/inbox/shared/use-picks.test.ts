@@ -4,7 +4,7 @@ import { clearAllDrafts, getDraft, setDraft } from '@/features/messaging/inbox/c
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { usePicks } from './use-picks';
 
-// Review of PR #694 (1, 4, 5): an edit that ends without a send gives the box its draft back.
+// Review of PR #694 (1, 4, 5) and its follow-up (4, 6): the box's draft around «تعديل».
 const OWN = message({ id: 'own', direction: 'outbound', status: 'sent', body: 'الساعة الخامسة' });
 const OTHER = message({ id: 'other', direction: 'outbound', body: 'الساعة السادسة' });
 const typed = () => getDraft(PHONE).text;
@@ -42,12 +42,33 @@ describe('usePicks: the box around «تعديل»', () => {
     expect(typed()).toBe('مسودتي');
   });
 
-  it('its sent correction ends it with no draft back (the box is the send’s)', () => {
+  it('its sent correction ends it and gives the empty box its draft back (follow-up item 6)', () => {
     const { result, unmount } = start();
+    const session = result.current.editSession ?? '';
     setDraft(PHONE, { text: '', failed: null });
-    act(() => result.current.cancelEdit(OWN.id));
+    act(() => result.current.cancelEdit(session));
     unmount();
-    expect([result.current.editing, typed()]).toEqual([null, '']);
+    expect([result.current.editing, typed()]).toEqual([null, 'مسودتي']);
+  });
+
+  it('a sent correction never overwrites text typed into the box since', () => {
+    const { result } = start();
+    const session = result.current.editSession ?? '';
+    setDraft(PHONE, { text: 'نص جديد', failed: null });
+    act(() => result.current.cancelEdit(session));
+    expect([result.current.editing, typed()]).toEqual([null, 'نص جديد']);
+  });
+
+  it('«تعديل» again while the first correction is in flight: its success ends neither (item 4)', () => {
+    const { result } = start();
+    const first = result.current.editSession ?? '';
+    setDraft(PHONE, { text: '', failed: null }); // the first correction left the box
+    act(() => result.current.edit(OWN));
+    expect(result.current.editSession).not.toBe(first);
+    act(() => result.current.cancelEdit(first));
+    expect([result.current.editing?.id, typed()]).toEqual([OWN.id, 'الساعة الخامسة']);
+    act(() => result.current.cancelEdit());
+    expect(typed()).toBe('مسودتي');
   });
 
   it('a second «تعديل» keeps the first draft and puts the other text in the box', () => {

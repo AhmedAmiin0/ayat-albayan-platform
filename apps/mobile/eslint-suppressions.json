@@ -3314,11 +3314,6 @@
       "count": 2
     }
   },
-  "src/inbox/composer/draft-store.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/inbox/composer/draft-store.ts": {
     "max-len": {
       "count": 4

@@ -26,6 +26,8 @@ export interface Sent {
   clientRequestId: string;
   replyTo?: string | undefined;
   correctsId?: string | undefined;
+  /** The «تعديل» tap it was sent from: its success ends that edit only (#694 follow-up). */
+  editSession?: string | undefined;
   gen: { draft: number; own: number };
   after?: (() => void) | undefined;
 }
@@ -36,7 +38,7 @@ export interface Sent {
  */
 interface SendHooks {
   replyDone: (id: string) => void;
-  editDone?: ((id: string) => void) | undefined;
+  editDone?: ((session: string) => void) | undefined;
   settled: () => void;
 }
 
@@ -49,7 +51,7 @@ const linksOf = ({ replyTo, correctsId }: Sent) => ({
 /** A sent answer or correction clears its strip (only while it is still the one picked). */
 function clearPicks(sent: Sent, hooks: SendHooks): void {
   if (sent.replyTo) hooks.replyDone(sent.replyTo);
-  if (sent.correctsId) hooks.editDone?.(sent.correctsId);
+  if (sent.editSession) hooks.editDone?.(sent.editSession);
 }
 
 /** The box's send of `text` with its id (requestIdFor: the pinned or kept one first). */

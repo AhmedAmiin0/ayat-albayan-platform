@@ -21,9 +21,11 @@ export interface ChatActions {
    * cannot edit); null when none (or while the window is closed). Picking it clears «رد», and back.
    */
   editing: MessageView | null;
+  /** This «تعديل» tap's session (its sends carry it); null when none. */
+  editSession: string | null;
   edit: (m: MessageView) => void;
-  /** ✕, or a send that corrected `id`: only clears while that one is still being corrected. */
-  cancelEdit: (id?: string) => void;
+  /** ✕, or a sent correction of `session`: only ends that very edit, never a newer one. */
+  cancelEdit: (session?: string) => void;
   forward: (m: MessageView) => void;
   /** The quoted original is older than the loaded pages: say so. */
   notLoaded: () => void;
@@ -43,6 +45,7 @@ export const ChatActionsContext = createContext<ChatActions>({
   reply: noop,
   cancelReply: noop,
   editing: null,
+  editSession: null,
   edit: noop,
   cancelEdit: noop,
   forward: noop,

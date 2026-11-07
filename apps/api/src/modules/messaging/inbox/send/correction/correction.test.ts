@@ -35,7 +35,7 @@ describe('correctionOf', () => {
     const repo = repoOf();
     const out = await correctionOf(repo, send());
     expect(out.send.input).toMatchObject({ text: 'تصحيح: نص جديد', replyToMessageId: ORIGINAL });
-    expect(out.row).toEqual({ corrects_id: ORIGINAL });
+    expect(out.row).toEqual({ corrects_id: ORIGINAL, correction_text: 'نص جديد' });
     expect(Object.keys(repo)).toEqual(['target']);
   });
 });

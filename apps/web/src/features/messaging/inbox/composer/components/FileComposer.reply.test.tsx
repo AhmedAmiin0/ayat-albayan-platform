@@ -26,6 +26,7 @@ function show(cancelReply = vi.fn()) {
     reply: vi.fn(),
     cancelReply,
     editing: null,
+    editSession: null,
     edit: vi.fn(),
     cancelEdit: vi.fn(),
     forward: vi.fn(),

@@ -12,6 +12,13 @@ import {
 const A = '+966501234567';
 const B = '+971501234567';
 
+/** The staged file's bound text (null: none staged). */
+interface Bound {
+  on: string | null;
+}
+const staging = (phone: string) =>
+  renderHook(({ on }: Bound) => useForgetDraftOnLeave(phone, on), { initialProps: { on: null } });
+
 describe('composer draft store («عرض سعر» fills the box; drafts kept until sign-out)', () => {
   afterEach(() => clearComposerDrafts());
 
@@ -60,7 +67,7 @@ describe('composer draft store («عرض سعر» fills the box; drafts kept unt
 
   it('leaving with a saved reply’s file staged forgets the text; without one it stays', async () => {
     setComposerText(A, 'with file');
-    const bound = await renderHook(({ on }: { on: string | null }) => useForgetDraftOnLeave(A, on), { initialProps: { on: null } });
+    const bound = await staging(A);
     await bound.rerender({ on: 'with file' });
     await bound.unmount();
     expect(getComposerText(A)).toBe('');
@@ -76,5 +83,24 @@ describe('composer draft store («عرض سعر» fills the box; drafts kept unt
     setComposerText(A, 'my draft'); // the edit's restore ran first
     await bound.unmount();
     expect(getComposerText(A)).toBe('my draft');
+  });
+
+  it('a staged reply’s text changed before «تعديل» goes too (#694 follow-up item 5)', async () => {
+    const bound = await staging(A);
+    await bound.rerender({ on: 'reply text' });
+    await bound.rerender({ on: 'reply text, changed' });
+    await bound.rerender({ on: 'the original' }); // «تعديل»: the box holds the original
+    setComposerText(A, 'reply text, changed'); // the edit's restore ran first
+    await bound.unmount();
+    expect(getComposerText(A)).toBe('');
+  });
+
+  it('once the file is sent or removed, the texts it held are free again', async () => {
+    const bound = await staging(A);
+    await bound.rerender({ on: 'reply text' });
+    await bound.rerender({ on: null });
+    setComposerText(A, 'reply text');
+    await bound.unmount();
+    expect(getComposerText(A)).toBe('reply text');
   });
 });

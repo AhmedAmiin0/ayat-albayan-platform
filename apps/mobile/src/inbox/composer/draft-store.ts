@@ -53,17 +53,21 @@ export function useComposerText(phone: string): [string, (next: Next) => void] {
   return [text, set];
 }
 
-/** The box's texts bound to a staged file: the one it was staged with and the latest. */
-type Bound = { first: string; last: string } | null;
+/**
+ * Every text the box held while a saved reply's file was staged (#694 follow-up item 5): the one
+ * it was staged with, each change to it and the edit's; null when no file is staged. A draft
+ * typed before the staging is never in it.
+ */
+type Bound = Set<string> | null;
 
 const boundNext = (was: Bound, text: string | null): Bound =>
-  text === null ? null : { first: was?.first ?? text, last: text };
+  text === null ? null : new Set(was).add(text);
 
 /**
  * Leaving the chat while a saved reply's file waits in its chip (`bound`: the box's text then,
- * else null): that text goes too, as before drafts were kept, so it never comes back to be sent
+ * else null): any text the box held with that file goes too, so it never comes back to be sent
  * without the file it was picked with. Any other text stays (round 4 of #694: the draft an edit
- * restores, whichever cleanup runs first).
+ * restores).
  */
 export function useForgetDraftOnLeave(phone: string, bound: string | null): void {
   const now = useRef<Bound>(null);
@@ -73,8 +77,7 @@ export function useForgetDraftOnLeave(phone: string, bound: string | null): void
   useEffect(
     () => () => {
       const held = now.current;
-      const text = getComposerText(phone);
-      if (held && (text === held.first || text === held.last)) setComposerText(phone, '');
+      if (held?.has(getComposerText(phone))) setComposerText(phone, '');
     },
     [phone],
   );

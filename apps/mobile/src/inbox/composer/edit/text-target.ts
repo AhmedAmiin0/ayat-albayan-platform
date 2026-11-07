@@ -35,17 +35,20 @@ export const bareText = (text: string, editing: MessageView | null): boolean =>
 export const textMax = (editing: MessageView | null): number =>
   WA_TEXT_MAX - (editing ? CORRECTION_PREFIX_ROOM : 0);
 
-/** The box's text target now, and its end once that text went (its reply or its edit mode). */
+/**
+ * The box's text target now, its «تعديل» session (taken at the tap) and its end once that text
+ * went: its reply, or the edit it was sent from (never a newer one, #694 follow-up item 4).
+ */
 export function useTextTarget() {
-  const { reply, setReply, editing, editSent } = useChatActions();
-  const sent = (out: TextOut) => {
+  const { reply, setReply, editing, editSession, editSent } = useChatActions();
+  const sent = (out: TextOut, session: string | null) => {
     const answered = out.replyTo?.id;
     setReply((now) => (now !== null && now.id === answered ? null : now));
-    if (out.correctsId) editSent(out.correctsId);
+    if (out.correctsId && session) editSent(session);
   };
   const out = (text: string) => textOut(text, { reply, editing });
   const bare = (text: string) => bareText(text, editing);
   // Nothing to send, or no room left for the API's prefix (round 4 of #694).
   const blocked = (text: string) => bare(text) || text.length > textMax(editing);
-  return { out, sent, bare, blocked };
+  return { out, session: editSession, sent, bare, blocked };
 }
