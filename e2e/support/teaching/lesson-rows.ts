@@ -6,13 +6,13 @@ import { addDays, nextWeekSaturday } from '../core/schedule';
 // a native time input, the family's wall clock. Replaces clicking «الأسبوع التالي» + a slot.
 
 /** Next week's (Riyadh, السبت → الجمعة) date of `weekday` (0 = الأحد): always in the future. */
-export function nextWeekDay(weekday: number): string {
+function nextWeekDay(weekday: number): string {
   return addDays(nextWeekSaturday(), (weekday + 1) % 7);
 }
 
 const rowName = (n: number): string => ar.lessonTimes.row.replace('{n}', String(n));
 
-export interface RowAt {
+interface RowAt {
   /** 0 = الأحد. */
   weekday: number;
   /** «HH:MM», the family's wall clock. */
