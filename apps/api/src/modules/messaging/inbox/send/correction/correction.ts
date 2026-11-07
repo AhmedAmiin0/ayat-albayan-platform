@@ -1,0 +1,85 @@
+import { correctionBody, isCorrectable, mayCorrect, type ThreadText, WA_TEXT_MAX } from '@ab/shared';
+import { HttpStatus } from '@nestjs/common';
+import { ar, BUNDLES } from '@/common/infra/i18n/server-text';
+import { waHttpError } from '@/modules/messaging/whatsapp';
+import type { CorrectionRepo, CorrectionTarget } from './correction.repo';
+
+/** The send as the service needs it: its phone, input, author and base role. */
+interface CorrectionSend {
+  phone: string;
+  input: ThreadText;
+  actorId: string;
+  /** The sender's base role: an admin corrects anyone's text. */
+  role?: string | null;
+}
+
+/** The send after «تعديل»: the prefixed text replying to the original, and the row's link. */
+interface Corrected<S extends CorrectionSend> {
+  send: S;
+  row: { corrects_id?: string };
+}
+
+/** The rule reads the row as a view would: a wamid = WhatsApp knows it (a reply can name it). */
+const asCorrectable = (row: CorrectionTarget) => ({
+  ...row,
+  replyable: row.wa_message_id !== null,
+  hidden: row.hidden_at,
+  deleted: Boolean(row.deleted_at),
+});
+
+/**
+ * 400 correction_not_in_thread / not_correctable (a correction too: staff correct the original
+ * again, review of #694), 403 not_your_message; else the row.
+ */
+export function checkTarget(row: CorrectionTarget | null, s: CorrectionSend): CorrectionTarget {
+  if (row?.phone_e164 !== s.phone) {
+    throw waHttpError('correction_not_in_thread', HttpStatus.BAD_REQUEST);
+  }
+  if (!isCorrectable(asCorrectable(row))) {
+    throw waHttpError('not_correctable', HttpStatus.BAD_REQUEST);
+  }
+  if (!mayCorrect(row.created_by, { id: s.actorId, role: s.role ?? null })) {
+    throw waHttpError('not_your_message', HttpStatus.FORBIDDEN);
+  }
+  return row;
+}
+
+/**
+ * The family's text: the admins' prefix (inbox.correction.prefix, «الترجمات») once, a typed one
+ * (theirs or the bundled default) dropped. 400 empty_correction when nothing is left, 400 too_long
+ * when the prefixed text passes WhatsApp's limit (an admin's long wording, round 4).
+ */
+function bodyOf(text: string): string {
+  const prefix = ar.inbox.correction.prefix;
+  const body = correctionBody(prefix, text, [BUNDLES.ar.inbox.correction.prefix]);
+  const refusal = refusalOf(body, prefix);
+  if (refusal) throw waHttpError(refusal, HttpStatus.BAD_REQUEST);
+  return body;
+}
+
+/** Why the family's body cannot go, by the first rule it breaks; none = undefined. */
+const refusalOf = (body: string, prefix: string): string | undefined =>
+  [
+    { code: 'empty_correction', breaks: body === prefix },
+    { code: 'too_long', breaks: body.length > WA_TEXT_MAX },
+  ].find((r) => r.breaks)?.code;
+
+/**
+ * «تعديل» in a WhatsApp chat (owner 2026-11-07): a send with correctsId becomes a NEW text,
+ * «تصحيح: » (ar.json, admins may reword it) + the new text, sent as a reply to the original (its
+ * wamid, the «رد» path), linked by corrects_id. The rights are checked on the picked message,
+ * which is never a correction itself (checkTarget), and a leading prefix is dropped (bodyOf).
+ * Every other send rule is the text's own.
+ */
+export async function correctionOf<S extends CorrectionSend>(
+  repo: CorrectionRepo | undefined,
+  s: S,
+): Promise<Corrected<S>> {
+  const id = s.input.correctsId;
+  if (!id) return { send: s, row: {} };
+  if (!repo) throw new Error('CorrectionRepo is not provided');
+  const row = checkTarget(await repo.target(id), s);
+  const text = bodyOf(s.input.text);
+  const input = { ...s.input, text, replyToMessageId: row.id };
+  return { send: { ...s, input }, row: { corrects_id: row.id } };
+}

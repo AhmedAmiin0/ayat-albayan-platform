@@ -8,8 +8,11 @@ import { laneOfRow } from '@/modules/messaging/whatsapp';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 
-/** The row as the clients see it; `replayed` = a repeated request id, nothing new was queued. */
-export type Sent = { view: MessageView; replayed: boolean };
+/**
+ * The row as the clients see it; `replayed` = a repeated request id, nothing new was queued;
+ * `sameRequest` (a correction's replay only) = that first row IS this request (round 4 of #694).
+ */
+export type Sent = { view: MessageView; replayed: boolean; sameRequest?: boolean };
 
 type Outbound = Omit<TablesInsert<'messages'>, 'direction' | 'status'>;
 
@@ -43,6 +46,12 @@ export class Outbox {
 
   queue(row: Outbound): Promise<Sent> {
     return this.write(row, false);
+  }
+
+  /** Rule 8 before a send's own checks: the row this key already queued (replayed), else null. */
+  async replayOf(key: string): Promise<Sent | null> {
+    const row = await this.queries.byDedupKey(key);
+    return row ? { view: await this.views.view(row), replayed: true } : null;
   }
 
   private async write(row: Outbound, wait: boolean): Promise<Sent> {

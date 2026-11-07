@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import type { TextInput } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { useTheme } from '@/theme';
 import { IconButton } from '@/core/ui/primitives/IconButton';
@@ -10,6 +9,7 @@ import { ComposerInput, type Selection } from '@/inbox/composer/ComposerInput';
 import { EmojiSheet } from '@/inbox/composer/emoji/EmojiSheet';
 import { insertAt } from '@/inbox/composer/emoji/emoji-list';
 import { QuoteButton } from '@/inbox/composer/quote/QuoteButton';
+import { useEditFocus } from '@/inbox/composer/edit/use-edit-focus';
 
 export interface PillProps {
   phone: string;
@@ -39,7 +39,7 @@ export function PillContents(p: PillProps) {
   const { color } = useTheme();
   const [emoji, setEmoji] = useState(false);
   const sel = useRef<Selection>({ start: p.text.length, end: p.text.length });
-  const input = useRef<TextInput | null>(null);
+  const input = useEditFocus();
   const pick = (e: string) => {
     const next = insertAt(p.text, sel.current, e);
     sel.current = { start: next.caret, end: next.caret };

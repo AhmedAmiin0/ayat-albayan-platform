@@ -31,6 +31,7 @@ export {
   useHideRights,
   useHolds,
   useIsAdmin,
+  useMeActor,
   useMeId,
   useMeReady,
   usePermissions,

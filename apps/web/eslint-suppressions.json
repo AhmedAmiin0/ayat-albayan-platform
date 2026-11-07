@@ -2580,9 +2580,6 @@
     }
   },
   "src/features/messaging/inbox/messages/lib/bubble-offers.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }

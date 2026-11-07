@@ -1,9 +1,8 @@
 import { useIsMutating } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
-import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { chatSendError } from '@/inbox/thread/send/send-error';
-import { quoteOf } from '@/inbox/messages/hooks/quote-text';
+import { targetKey, useTextTarget } from '@/inbox/composer/edit/text-target';
 import { useSendStagedFile } from '@/inbox/saved-replies/hooks/send-staged';
 import type { StagedFile } from '@/inbox/saved-replies/hooks/use-saved-reply';
 import { fileError } from './send-file';
@@ -55,8 +54,8 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   const sendStaged = useSendStagedFile(phone);
   const boxId = useBoxId(phone);
   const replayed = useReplayed('box', phone);
-  // «رد» (owner 2026-10-25): the message the next text answers; another target is another send.
-  const { reply, setReply } = useChatActions();
+  // «رد» (owner 2026-10-25) or «تعديل» (2026-11-07): what the next text answers or corrects.
+  const target = useTextTarget();
   const templateId = useTemplateId();
   const sendTemplate = (out: Outgoing) => {
     send.mutate({ out, id: templateId.of(out) }, { onSuccess: templateId.sent });
@@ -75,19 +74,19 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
     if (inFlight || send.isPending || sendStaged.isPending) return;
     const body = text.trim();
     const tapped = staged?.requestId;
-    if (!body) return sendFile(staged);
+    if (target.bare(body)) return sendFile(staged);
     setText('');
-    const replyTo = reply ? quoteOf(reply) : undefined;
-    const id = boxId.take(body, replyTo?.id);
+    const out = target.out(body);
+    const id = boxId.take(body, targetKey(out));
     // Hook-level (useSendMessage) puts the text back after no answer or a refusal, pins or
     // releases the id, and on a replay of the first message brings the edit back (docs/44 M1).
     send.mutate(
-      { out: { kind: 'text', text: body, ...(replyTo ? { replyTo } : {}) }, id, pin: 'box' },
+      { out, id, pin: 'box' },
       {
         onSuccess: () => {
           boxId.sent();
           if (PINS.box.replayed(phone)) return;
-          if (replyTo) setReply((now) => (now?.id === replyTo.id ? null : now));
+          target.sent(out);
           const now = stagedNow.current;
           if (now && now.requestId === tapped) sendFile(now);
         },
@@ -97,7 +96,10 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   const sendLine = send.isError ? chatSendError(send.error) : null;
   const textLine = replayed ? t.inbox.error.send_replayed : sendLine;
   const errors = [textLine, sendStaged.isError ? fileError(sendStaged.error) : null];
-  return { sendTemplate, sendText, renew: boxId.renew, errors, pending: inFlight || send.isPending || sendStaged.isPending };
+  const pending = inFlight || send.isPending || sendStaged.isPending;
+  // In edit mode a box holding only «تصحيح:» has nothing to send (round 3 of #694), nor one with no
+  // room left for the prefix (round 4).
+  return { sendTemplate, sendText, renew: boxId.renew, errors, pending, blocked: target.blocked(text) };
 }
 
 /** The failures under the box: the text's always; the file's only while the window is open. */

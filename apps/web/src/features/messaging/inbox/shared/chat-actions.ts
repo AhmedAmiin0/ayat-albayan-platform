@@ -16,6 +16,14 @@ export interface ChatActions {
   reply: (m: MessageView) => void;
   /** ✕, or a send that answered `id`: only clears while that one is still the target. */
   cancelReply: (id?: string) => void;
+  /**
+   * «تعديل» (owner 2026-11-07): the message the next text corrects (a new «تصحيح:» reply, WhatsApp
+   * cannot edit); null when none (or while the window is closed). Picking it clears «رد», and back.
+   */
+  editing: MessageView | null;
+  edit: (m: MessageView) => void;
+  /** ✕, or a send that corrected `id`: only clears while that one is still being corrected. */
+  cancelEdit: (id?: string) => void;
   forward: (m: MessageView) => void;
   /** The quoted original is older than the loaded pages: say so. */
   notLoaded: () => void;
@@ -34,6 +42,9 @@ export const ChatActionsContext = createContext<ChatActions>({
   target: null,
   reply: noop,
   cancelReply: noop,
+  editing: null,
+  edit: noop,
+  cancelEdit: noop,
   forward: noop,
   notLoaded: noop,
   reactable: () => false,

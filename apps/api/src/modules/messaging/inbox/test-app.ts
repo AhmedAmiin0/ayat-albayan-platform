@@ -62,6 +62,7 @@ function mocks() {
     queries: {
       ...{ list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
       lessonTeacher: vi.fn(),
+      byDedupKey: vi.fn(async (): Promise<object | null> => null),
       numberWindows: vi.fn(async (): Promise<ThreadWindow[]> => []),
       known: vi.fn(async (): Promise<KnownNumber | null> => null),
       lessons: vi.fn(async (): Promise<ThreadLesson[]> => []),

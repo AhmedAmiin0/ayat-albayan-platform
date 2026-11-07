@@ -10,7 +10,7 @@ import type {
   ThreadText,
   ThreadView,
 } from '@ab/shared';
-import { liveInterval } from '@ab/client-core';
+import { liveInterval, type TextAnswer } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { LeadRow, Page } from '@/features/sales/leads/types';
 import { apiFetch, apiSend } from '@/lib/http/api';
@@ -70,8 +70,9 @@ export const threadFileDownload = (phone: string, messageId: string) =>
   apiFetch<ThreadFile>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file?download=1`);
 
 /** H3; `replyToMessageId` (owner 2026-10-25): the message of this chat it answers (400 reply_not_in_thread otherwise). */
+/** The row, and whether its request id replayed the FIRST one (TextAnswer). */
 export const sendText = ({ phone, ...body }: ThreadText & { phone: string }) =>
-  apiSend<MessageView>('POST', `${threadPath(phone)}/text`, body);
+  apiSend<TextAnswer>('POST', `${threadPath(phone)}/text`, body);
 
 export const sendTemplate = ({ phone, ...body }: ThreadTemplate & { phone: string }) =>
   apiSend<MessageView>('POST', `${threadPath(phone)}/template`, body);

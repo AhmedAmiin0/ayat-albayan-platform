@@ -16,6 +16,7 @@ import { useClock } from '@/lib/clock';
 import { TemplateButtons } from '@/features/messaging/inbox/messages/template/TemplateButtons';
 import { stickerOrGif } from '@/features/messaging/inbox/messages/sticker/StickerMedia';
 import { hasWhatsAppLine, WhatsAppSendLine } from '@/features/messaging/inbox/messages/whatsapp-send';
+import { CorrectedMark } from '@/features/messaging/inbox/messages/hide/CorrectedMark';
 
 /** Some of the bubble's text is selected with the mouse. */
 function selectedIn(el: HTMLElement): boolean {
@@ -28,6 +29,8 @@ export interface MessageBubbleProps {
   /** Its template is not approved yet, so the sender leaves it queued. */
   waitingTemplate: boolean;
   now: Date;
+  /** Its newest «تصحيح:» reply (owner 2026-11-07): this one shows greyed, marked «صُحِّحت». */
+  correctedBy?: string | undefined;
 }
 
 /**
@@ -38,7 +41,8 @@ export interface MessageBubbleProps {
  * can write in, «رد» / «إعادة توجيه» beside it (BubbleActions; also a right-click), and an id a
  * quote's click scrolls to (jump-to-message), highlighted for a moment.
  */
-export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbleProps) {
+export function MessageBubble(props: MessageBubbleProps) {
+  const { message: m, waitingTemplate, now, correctedBy } = props;
   const outbound = m.direction === 'outbound';
   const clock = useClock();
   const notes = outboundNotes(m, { waitingTemplate, now, clock });
@@ -87,10 +91,13 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
           m.status === 'failed' && 'shadow-[inset_0_0_0_1px_var(--color-act)]',
         )}
       >
-        <Content message={m} />
-        <SenderLine message={m} />
+        <div className={cn(correctedBy && 'opacity-60')}>
+          <Content message={m} />
+          <SenderLine message={m} />
+        </div>
         <footer className="mt-1.5 flex flex-wrap items-center justify-end gap-2 text-2xs text-ink-3">
           <LineBadge line={m.line} />
+          {correctedBy && <CorrectedMark correction={correctedBy} />}
           <time dateTime={m.created_at} title={fullTime(m.created_at, clock)} className="tabular-nums">
             {/* The day separators are hidden from screen readers: they hear the full date here. */}
             <span aria-hidden="true">{clockText(m.created_at, clock)}</span>

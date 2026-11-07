@@ -1,4 +1,4 @@
-import type { CallView, MessageView, ThreadLesson } from '@ab/shared';
+import { correctionsOf, type CallView, type MessageView, type ThreadLesson } from '@ab/shared';
 import { windowEnd } from '@ab/client-core';
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -13,10 +13,8 @@ import { useLastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send
 import { isNearBottom } from '@/features/messaging/inbox/messages/lib/stick-to-bottom';
 import { logNow } from '@/features/messaging/inbox/messages/lib/log-now';
 import { ReplyActionsProvider } from '@/features/messaging/inbox/messages/reply-actions';
-import {
-  useAnchorScroll,
-  type LogAnchor,
-} from '@/features/messaging/inbox/messages/lib/use-anchor-scroll';
+import { useAnchorScroll, type LogAnchor }
+  from '@/features/messaging/inbox/messages/lib/use-anchor-scroll';
 
 export interface MessageLogProps {
   /** The chat's number: her own last send in it (own-send) snaps the log down. */
@@ -101,6 +99,7 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
   const items: LogItem[] = withDays(messages, now, calls && { list: calls, from, to });
   const seen = awayAt === null ? -1 : messages.findIndex((m) => m.id === awayAt);
   const unseen = seen < 0 ? 0 : messages.length - 1 - seen;
+  const corrected = correctionsOf(messages); // «صُحِّحت» on an original: its newest correction
 
   return (
     <div
@@ -135,6 +134,7 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
                 key={item.message.id}
                 message={item.message}
                 now={now}
+                correctedBy={corrected.get(item.message.id)}
                 waitingTemplate={item.message.status === 'queued' && !!item.message.template_key && waitingKeys.has(item.message.template_key)}
               />
             ),

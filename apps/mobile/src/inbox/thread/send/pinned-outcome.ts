@@ -1,5 +1,4 @@
-import { replayedOther } from '@ab/client-core';
-import type { MessageView } from '@ab/shared';
+import { replayedOther, type SentText, type TextAnswer } from '@ab/client-core';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { unanswered } from './after-send';
 import { carried, type SendInput } from './outgoing';
@@ -9,8 +8,10 @@ import { PINS, type PinKind } from './pinned-send';
 interface PinnedSend {
   phone: string;
   id: string;
-  /** What this send carried (the text, or a template's preview). */
+  /** What this send carried (the text, or a template's preview): the box gets it back. */
   body: string;
+  /** A correction: its original (the API says whether a replay is this request). */
+  correction: SentText['correction'];
   pin?: PinKind | undefined;
   /** The pin store's generation when the send started (a sign-out since: nothing is written). */
   generation: number;
@@ -31,10 +32,10 @@ function restoreBox(s: PinnedSend): void {
  * (session_closed, reply_not_in_thread) is decided before the dedup lookup, so an id it released
  * and a same-text resend reused may still replay the first message.
  */
-export function settlePinned(s: PinnedSend, row: MessageView): void {
+export function settlePinned(s: PinnedSend, row: TextAnswer): void {
   const store = storeOf(s);
   if (!store) return;
-  const lost = replayedOther(row, s.body);
+  const lost = replayedOther(row, { text: s.body, correction: s.correction });
   store.release(s.phone, s.id, s.generation);
   if (lost && store.generation() === s.generation) store.setReplayed(s.phone, true);
   if (lost) restoreBox(s);
@@ -52,11 +53,16 @@ export function failPinned(s: PinnedSend, error: unknown): void {
   restoreBox(s);
 }
 
+/** A correction's original (replayedOther trusts the API's `same_request` for a replay). */
+const correctionOf = (out: SendInput['out']): SentText['correction'] =>
+  out.kind === 'text' && out.correctsId ? { id: out.correctsId } : undefined;
+
 /** A send of useSendMessage as the pin rule sees it. */
 export const pinnedOf = (phone: string, input: SendInput, generation: number): PinnedSend => ({
   phone,
   id: input.id,
   body: carried(input.out),
+  correction: correctionOf(input.out),
   pin: input.pin,
   generation,
 });

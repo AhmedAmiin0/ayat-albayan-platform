@@ -11,6 +11,7 @@ import { messageGap } from '@/inbox/messages/hooks/list-gap';
 import { SeenRowsContext, useSeenRows } from '@/inbox/messages/hooks/seen-rows';
 import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 import { MessageRow } from '@/inbox/messages/list/MessageRow';
+import { rowCorrections } from '@/inbox/messages/components/correction/correction-context';
 import { dayLabel, hasDayChip } from '@/inbox/messages/days/day-label';
 import { CellFrames } from '@/inbox/messages/days/DayCell';
 import { FloatingDay } from '@/inbox/messages/days/FloatingDay';
@@ -64,6 +65,8 @@ export function MessageList({ phone, query: live }: { phone: string; query: Thre
   const callBack = useCallBack({ phone, thread: query.data?.pages[0]?.thread ?? null });
   const more = query.hasNextPage;
   const rows = useMemo(() => logRows(threadMessages(query.data), { calls, hasMore: more, to }), [query.data, calls, more, to]);
+  // «تعديل» (owner 2026-11-07): each corrected original's newest correction.
+  const corrections = rowCorrections(rows);
   const newest = rows[0]?.message;
   const ours = newest?.direction === 'outbound' && !senderLine(newest) ? newest.id : undefined;
   useEffect(() => {
@@ -90,9 +93,10 @@ export function MessageList({ phone, query: live }: { phone: string; query: Thre
         onJump={onJump}
         highlight={lit === item.id}
         onCallBack={onCallBack}
+        correctedBy={corrections.get(item.id)}
       />
     ),
-    [rows, more, phone, onJump, lit, onCallBack],
+    [rows, more, phone, onJump, lit, onCallBack, corrections],
   );
   const onEndReached = useOlder(query);
   // «اليوم» / «أمس» move at midnight with no new message: today's key redraws the rows' day chips.

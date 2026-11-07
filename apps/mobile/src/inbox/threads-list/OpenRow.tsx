@@ -17,6 +17,8 @@ interface OpenRowProps extends PillProps {
   onSend: () => void;
   /** The text or a staged file is on its way: one «أرسل» at a time. */
   sending: boolean;
+  /** Nothing to send yet (edit mode with only «تصحيح:» in the box). */
+  blocked?: boolean;
 }
 
 interface Voice {
@@ -31,7 +33,7 @@ function Row({ p, voice }: { p: OpenRowProps; voice: Voice }) {
   const state = ui?.state ?? IDLE;
   const mode = roundMode({ voice: ui !== null && !voice.inCall, text: p.text, staged: p.staged, state });
   const bar = ui !== null && state.kind !== 'idle' && state.kind !== 'arming';
-  const empty = p.text.trim() === '' && !p.staged;
+  const empty = (p.text.trim() === '' || p.blocked === true) && !p.staged;
   const round =
     mode === 'mic' && ui ? (
       <MicHold voice={ui}>
