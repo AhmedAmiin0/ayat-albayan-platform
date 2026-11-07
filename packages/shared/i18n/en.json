@@ -3287,7 +3287,9 @@
         "correction_not_in_thread": "The message to correct is not in this chat",
         "not_correctable": "This message cannot be corrected",
         "empty_correction": "Write the corrected text after «Correction:»",
-        "not_your_message": "You can only correct your own messages"
+        "not_your_message": "You can only correct your own messages",
+        "correction_other_number": "This correction would go from another academy number, so it cannot reply to the original; send it as a new message",
+        "too_long": "The correction with «Correction:» is longer than WhatsApp allows; shorten it"
       }
     }
   },

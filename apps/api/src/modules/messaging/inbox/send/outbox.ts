@@ -7,8 +7,11 @@ import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sende
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 
-/** The row as the clients see it; `replayed` = a repeated request id, nothing new was queued. */
-export type Sent = { view: MessageView; replayed: boolean };
+/**
+ * The row as the clients see it; `replayed` = a repeated request id, nothing new was queued;
+ * `sameRequest` (a correction's replay only) = that first row IS this request (round 4 of #694).
+ */
+export type Sent = { view: MessageView; replayed: boolean; sameRequest?: boolean };
 
 type Outbound = Omit<TablesInsert<'messages'>, 'direction' | 'status'>;
 

@@ -1,4 +1,4 @@
-import { correctionBody, stripCorrectionPrefix, type MessageView } from '@ab/shared';
+import type { MessageView } from '@ab/shared';
 import type { ThreadPages } from '../inbox/index.js';
 
 // docs/44 BUG7, shared by web and mobile. The server dedups `who:phone:clientRequestId` with no
@@ -13,34 +13,34 @@ export const SEND_UNCONFIRMED = 'send_unconfirmed';
 /** A send with the pinned id was answered with the FIRST message: the edit was not sent. */
 export const SEND_REPLAYED = 'send_replayed';
 
-/** A text send's 2xx: its row, and from the API whether its request id replayed the FIRST row. */
-export type TextAnswer = MessageView & { replayed?: boolean | undefined };
-
 /**
- * What a send carried: its text; a correction («تعديل») also its original and the Arabic prefixes
- * the API may have put in front: the admins' wording this app knows, then the bundled default.
+ * A text send's 2xx: its row, and from the API whether its request id replayed the FIRST row and,
+ * for a correction, whether that first row IS this very request (the server decides, round 4).
  */
+export type TextAnswer = MessageView & {
+  replayed?: boolean | undefined;
+  same_request?: boolean | undefined;
+};
+
+/** What a send carried: its text; a correction («تعديل») also the original it corrects. */
 export interface SentText {
   text: string;
-  correction?: { id: string; prefixes: readonly string[] } | undefined;
+  correction?: { id: string } | undefined;
 }
 
-type Answer = Pick<TextAnswer, 'body' | 'corrects_id' | 'replayed'>;
+type Answer = Pick<TextAnswer, 'body' | 'corrects_id' | 'replayed' | 'same_request'>;
 type Correction = NonNullable<SentText['correction']>;
 
 const bodyOf = (row: Answer): string => (row.body ?? '').trim();
 
 /**
- * A correction (owner 2026-11-07) is this send only when it corrects the same original (the picked
- * one: a correction is never corrected again). A new row ends with the text; a replayed one is
- * this send only when it IS this correction (one of the prefixes + the same text: a retry after a
- * lost answer), so a shortened resend or another text under the pinned id is never taken for it.
+ * A correction (owner 2026-11-07) is this send only when it corrects the same original. A new row
+ * was written by this request; a replayed one is this send only when the API says it is the same
+ * request (`same_request`: the same original and text, a retry after a lost answer). The prefix is
+ * never rebuilt here: admins may reword it, and a stale client would guess wrong (review of #694).
  */
-function correctionEchoes(row: Answer, sent: SentText, c: Correction): boolean {
-  const own = stripCorrectionPrefix(c.prefixes, sent.text);
-  const body = bodyOf(row);
-  const exact = c.prefixes.some((p) => body === correctionBody(p, own));
-  const same = row.replayed ? exact : body.endsWith(own);
+function correctionEchoes(row: Answer, c: Correction): boolean {
+  const same = row.replayed === true ? row.same_request === true : true;
   return row.corrects_id === c.id && same;
 }
 
@@ -52,7 +52,7 @@ function correctionEchoes(row: Answer, sent: SentText, c: Correction): boolean {
  */
 export function replayedOther(row: Answer, sent: SentText): boolean {
   const echoes = sent.correction
-    ? correctionEchoes(row, sent, sent.correction)
+    ? correctionEchoes(row, sent.correction)
     : bodyOf(row) === sent.text.trim();
   return !echoes;
 }

@@ -1,20 +1,28 @@
 import type { MessageQuote, MessageView } from '@ab/shared';
 import { useEffect, useRef, useState, type RefObject } from 'react';
-import { getDraft, keptFailed, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
+import {
+  draftGeneration,
+  getDraft,
+  keptFailed,
+  setDraft,
+} from '@/features/messaging/inbox/composer/lib/draft-store';
 import { quoteOf } from '@/features/messaging/inbox/messages/lib/quote';
 
-/** The box's own draft from before «تعديل», and the message being corrected. */
-type Saved = { id: string; text: string } | null;
+/**
+ * The box's own draft from before «تعديل», the message being corrected and the draft store's
+ * generation when the edit started (a sign-out since: nothing is written back, round 4).
+ */
+type Saved = { id: string; text: string; gen: number } | null;
 
-/** The box gets `text` (an unconfirmed send keeps its pinned id). */
-const putBox = (phone: string, text: string) =>
-  setDraft(phone, { text, failed: keptFailed(getDraft(phone).failed) });
+/** The box gets `text` (an unconfirmed send keeps its pinned id), unless `gen` has ended. */
+const putBox = (phone: string, text: string, gen = draftGeneration()) =>
+  setDraft(phone, { text, failed: keptFailed(getDraft(phone).failed) }, gen);
 
-/** An edit that ends without a send: the box's own draft comes back. */
+/** An edit that ends without a send: the box's own draft comes back (same session only). */
 function restore(phone: string, saved: RefObject<Saved>): void {
   const was = saved.current;
   saved.current = null;
-  if (was) putBox(phone, was.text);
+  if (was) putBox(phone, was.text, was.gen);
 }
 
 /** Leaving the chat (another chat, the pane closed) mid-edit ends it as ✕ does. */
@@ -47,7 +55,8 @@ export function usePicks(phone: string) {
     setTarget(quoteOf(m));
   };
   const edit = (m: MessageView) => {
-    saved.current = { id: m.id, text: saved.current?.text ?? getDraft(phone).text };
+    const gen = saved.current?.gen ?? draftGeneration();
+    saved.current = { id: m.id, text: saved.current?.text ?? getDraft(phone).text, gen };
     setTarget(null);
     setEditing(m);
     putBox(phone, m.body ?? ''); // «تعديل» is only ever on an original (isCorrectable)

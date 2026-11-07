@@ -1,3 +1,4 @@
+import { WA_TEXT_MAX } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ar } from '@/common/infra/i18n/server-text';
 import { correctionOf } from './correction';
@@ -68,4 +69,20 @@ describe('correctionOf: the prefix', () => {
       });
     },
   );
+});
+
+describe('correctionOf: the final body (round 4, item 4)', () => {
+  it('a long admin prefix pushing the body past WhatsApp\'s limit: 400 too_long', async () => {
+    ar.inbox.correction.prefix = `${'ت'.repeat(60)}: `;
+    await expect(correctionOf(repo, send('ن'.repeat(WA_TEXT_MAX - 50)))).rejects.toMatchObject({
+      response: { code: 'too_long' },
+      status: 400,
+    });
+  });
+
+  it('a body exactly at the limit still goes', async () => {
+    const text = 'ن'.repeat(WA_TEXT_MAX - DEFAULT_PREFIX.length);
+    const out = await correctionOf(repo, send(text));
+    expect(out.send.input.text).toHaveLength(WA_TEXT_MAX);
+  });
 });

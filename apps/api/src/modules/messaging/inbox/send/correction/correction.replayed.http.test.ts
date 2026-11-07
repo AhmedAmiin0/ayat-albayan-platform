@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { ar } from '@/common/infra/i18n/server-text';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { inboxApp } from '@/modules/messaging/inbox/test-app';
@@ -54,5 +55,25 @@ describe('POST /threads/:phone/text answers `replayed`', () => {
     expect(gone).not.toHaveBeenCalled();
     expect(t.queries.enqueue).not.toHaveBeenCalled();
     expect(t.queries.byDedupKey).toHaveBeenCalledWith(`admin:${PHONE}:${body.clientRequestId}`);
+  });
+
+  it.each([
+    ['the exact retry (any client wording): same_request true', 'الخامسة', true],
+    ['another text under the pinned id: same_request false', 'السادسة', false],
+  ])('an admin-reworded prefix, %s (round 4, item 1)', async (_, text, same) => {
+    const bundled = ar.inbox.correction.prefix;
+    ar.inbox.correction.prefix = 'تعديل: ';
+    const first = { id: 'm9', body: 'تعديل: الخامسة', corrects_id: ORIGINAL };
+    t.queries.byDedupKey.mockResolvedValue(
+      messageRow({ ...first, template_key: null, template_params: null }),
+    );
+    const res = await t.call({
+      method: 'POST',
+      url: URL,
+      token: 'admin',
+      body: { ...body, text, correctsId: ORIGINAL },
+    });
+    ar.inbox.correction.prefix = bundled;
+    expect([res.json().replayed, res.json().same_request]).toEqual([true, same]);
   });
 });

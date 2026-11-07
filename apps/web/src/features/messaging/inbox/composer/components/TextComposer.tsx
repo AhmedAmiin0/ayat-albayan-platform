@@ -1,4 +1,4 @@
-import { stripCorrectionPrefix, WA_TEXT_MAX } from '@ab/shared';
+import { CORRECTION_PREFIX_ROOM, stripCorrectionPrefix, WA_TEXT_MAX } from '@ab/shared';
 import { useIsMutating } from '@tanstack/react-query';
 import { useId, useLayoutEffect, useRef, useSyncExternalStore, type ReactNode } from 'react';
 import { Icon } from '@/components/ui/display/icon';
@@ -70,7 +70,8 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
     el.style.height = 'auto';
     el.style.height = `${Math.min(el.scrollHeight, COMPACT_MAX_PX)}px`;
   }, [text]);
-  const tooLong = text.length > WA_TEXT_MAX;
+  // A correction leaves room for the API's «تصحيح: » (round 4): the same limit as threadTextSchema.
+  const tooLong = text.length > WA_TEXT_MAX - (fix.correctsId ? CORRECTION_PREFIX_ROOM : 0);
   // The failure's line follows the draft (a box mounted since the send still says why), else this box's.
   // Not a stored session_closed: this box mounts only where a text goes (ComposerPhone), and the
   // closed-window notice replaces it where none can (round 3).
@@ -99,7 +100,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
       }}
     >
       <ReplyStrip returnFocus={area} />
-      <EditStrip phone={phone} returnFocus={area} />
+      <EditStrip returnFocus={area} />
       {extras?.above}
       <div className="flex items-end gap-1.5">
         {leading}

@@ -97,8 +97,9 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   const textLine = replayed ? t.inbox.error.send_replayed : sendLine;
   const errors = [textLine, sendStaged.isError ? fileError(sendStaged.error) : null];
   const pending = inFlight || send.isPending || sendStaged.isPending;
-  // In edit mode a box holding only «تصحيح:» has nothing to send (round 3 of #694).
-  return { sendTemplate, sendText, renew: boxId.renew, errors, pending, blocked: target.bare(text) };
+  // In edit mode a box holding only «تصحيح:» has nothing to send (round 3 of #694), nor one with no
+  // room left for the prefix (round 4).
+  return { sendTemplate, sendText, renew: boxId.renew, errors, pending, blocked: target.blocked(text) };
 }
 
 /** The failures under the box: the text's always; the file's only while the window is open. */

@@ -3332,7 +3332,7 @@
   },
   "src/inbox/composer/draft-store.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "no-restricted-syntax": {
       "count": 1

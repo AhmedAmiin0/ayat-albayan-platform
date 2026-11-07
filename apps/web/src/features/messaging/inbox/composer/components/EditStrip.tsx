@@ -3,28 +3,25 @@ import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
 import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
-import { getDraft, keptFailed, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { quoteOf, quoteText } from '@/features/messaging/inbox/messages/lib/quote';
 
 const c = t.inbox.correction;
 
 export interface EditStripProps {
-  phone: string;
   /** After ✕ the focus goes back to the box. */
   returnFocus: RefObject<HTMLElement | null>;
 }
 
 /**
- * «تعديل الرسالة» above the box (owner 2026-11-07), as WhatsApp: the original's first line and ✕
- * (which empties the box), then one line on what the family gets (a new «تصحيح:» reply). Nothing
- * while no message is being corrected.
+ * «تعديل الرسالة» above the box (owner 2026-11-07), as WhatsApp: the original's first line and
+ * ✕ (the box gets back its draft from before the edit: usePicks), then one line on what the
+ * family gets (a new «تصحيح:» reply). Nothing while no message is being corrected.
  */
-export function EditStrip({ phone, returnFocus }: EditStripProps) {
+export function EditStrip({ returnFocus }: EditStripProps) {
   const { editing, cancelEdit } = useChatActions();
   if (!editing) return null;
   const cancel = () => {
     cancelEdit();
-    setDraft(phone, { text: '', failed: keptFailed(getDraft(phone).failed) });
     returnFocus.current?.focus();
   };
   return (

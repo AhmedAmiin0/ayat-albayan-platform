@@ -1,9 +1,4 @@
-import {
-  correctionBody,
-  isCorrectable,
-  mayCorrect,
-  type ThreadText,
-} from '@ab/shared';
+import { correctionBody, isCorrectable, mayCorrect, type ThreadText, WA_TEXT_MAX } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
 import { ar, BUNDLES } from '@/common/infra/i18n/server-text';
 import { waHttpError } from '@/modules/messaging/whatsapp';
@@ -51,14 +46,23 @@ export function checkTarget(row: CorrectionTarget | null, s: CorrectionSend): Co
 
 /**
  * The family's text: the admins' prefix (inbox.correction.prefix, «الترجمات») once, a typed one
- * (theirs or the bundled default) dropped. 400 empty_correction when nothing is left.
+ * (theirs or the bundled default) dropped. 400 empty_correction when nothing is left, 400 too_long
+ * when the prefixed text passes WhatsApp's limit (an admin's long wording, round 4).
  */
 function bodyOf(text: string): string {
   const prefix = ar.inbox.correction.prefix;
   const body = correctionBody(prefix, text, [BUNDLES.ar.inbox.correction.prefix]);
-  if (body === prefix) throw waHttpError('empty_correction', HttpStatus.BAD_REQUEST);
+  const refusal = refusalOf(body, prefix);
+  if (refusal) throw waHttpError(refusal, HttpStatus.BAD_REQUEST);
   return body;
 }
+
+/** Why the family's body cannot go, by the first rule it breaks; none = undefined. */
+const refusalOf = (body: string, prefix: string): string | undefined =>
+  [
+    { code: 'empty_correction', breaks: body === prefix },
+    { code: 'too_long', breaks: body.length > WA_TEXT_MAX },
+  ].find((r) => r.breaks)?.code;
 
 /**
  * «تعديل» in a WhatsApp chat (owner 2026-11-07): a send with correctsId becomes a NEW text,

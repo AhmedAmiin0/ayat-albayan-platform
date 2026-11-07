@@ -7,6 +7,8 @@ test.each([
   ['correction_not_in_thread', t.inbox.correction.errors.correction_not_in_thread],
   ['not_correctable', t.inbox.correction.errors.not_correctable],
   ['not_your_message', t.inbox.correction.errors.not_your_message],
+  ['correction_other_number', t.inbox.correction.errors.correction_other_number],
+  ['too_long', t.inbox.correction.errors.too_long],
 ])('%s', (code, text) => {
   expect(sendError(new ApiError(code === 'not_your_message' ? 403 : 400, { code }))).toBe(text);
 });

@@ -2,7 +2,8 @@ import { message } from '@/inbox/shared/thread-fixtures';
 import { carried, echoed, sendBody } from '@/inbox/thread/send/outgoing';
 import ar from '@ab/shared/i18n/ar.json';
 import { t } from '@/core/lib/i18n/i18n';
-import { bareText, targetKey, textOut } from './text-target';
+import { CORRECTION_PREFIX_ROOM, WA_TEXT_MAX } from '@ab/shared';
+import { bareText, targetKey, textMax, textOut } from './text-target';
 
 // The box's text send (owner 2026-11-07): a correction carries correctsId, never a reply.
 const original = message({ id: 'o1', direction: 'outbound', body: 'الحلقة غدًا' });
@@ -64,4 +65,9 @@ describe('round 3 of #694: the admins\' prefix, a bare prefix', () => {
     expect(bareText('تصحيح:', null)).toBe(false);
     expect(bareText('  ', null)).toBe(true);
   });
+});
+
+test('round 4 of #694: edit mode leaves room for the API prefix', () => {
+  expect(textMax(original)).toBe(WA_TEXT_MAX - CORRECTION_PREFIX_ROOM);
+  expect(textMax(null)).toBe(WA_TEXT_MAX);
 });

@@ -61,7 +61,7 @@ export function Composer({
   const [quoting, setQuoting] = useState(false);
   const [text, setText] = useComposerText(phone);
   const replies = useSavedReplyDraft({ text, setText, enabled: staff });
-  useForgetDraftOnLeave(phone, replies.staged !== null);
+  useForgetDraftOnLeave(phone, replies.staged ? text : null);
   const send = useComposerSend({ phone, text, setText, ...replies });
   const { sendTemplate, sendText, renew, errors, pending } = send;
   const [picking, setPicking] = useState(false);

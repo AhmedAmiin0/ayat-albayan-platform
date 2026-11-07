@@ -9,8 +9,8 @@ import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { t } from '@/core/lib/i18n/i18n';
 import { PINS } from './pinned-send';
 
-// Review of PR #694 (2): the API says `replayed` when the pinned id gave back its FIRST row; a
-// correction is this send only when that row corrects the same original with the same text.
+// Review of PR #694 (2, round 4): the API says `replayed` when the pinned id gave back its FIRST
+// row and `same_request` when that row IS this correction; the app never rebuilds the prefix.
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
   ...jest.requireActual('@/core/lib/http/api'),
@@ -45,7 +45,8 @@ beforeEach(() => {
 });
 
 test.each([
-  ['a shortened resend', { body: 'تصحيح: الساعة الخامسة', corrects_id: 'o1' }],
+  ['a shortened resend', { body: 'تصحيح: الساعة الخامسة', corrects_id: 'o1', same_request: false }],
+  ['no word from the API', { body: 'تصحيح: الخامسة', corrects_id: 'o1' }],
   ['a plain text first, then «تعديل»', { body: 'الخامسة', corrects_id: null }],
   ['the same text on another message', { body: 'تصحيح: الخامسة', corrects_id: 'o2' }],
 ])('%s: the replayed row is not this correction (note, text back)', async (_, row) => {
@@ -57,7 +58,7 @@ test.each([
 
 test('a retry of this very correction after a lost answer is this send', async () => {
   mockApiSend.mockResolvedValue(
-    answer({ body: 'تصحيح: الخامسة', corrects_id: 'o1', replayed: true }),
+    answer({ body: 'تصحيح: الخامسة', corrects_id: 'o1', replayed: true, same_request: true }),
   );
   await sendFix('الخامسة');
   expect(PINS.box.replayed(PHONE)).toBe(false);
@@ -71,10 +72,11 @@ test('a second correction of the original goes once and is reported sent (round 
   expect(PINS.box.replayed(PHONE)).toBe(false);
 });
 
-test('an admin-reworded prefix: a retry after a lost answer is this send (round 3)', async () => {
+test('a reworded prefix this app never saw: the API says same_request (round 4)', async () => {
   const before = t.inbox.correction.prefix;
-  t.inbox.correction.prefix = 'تعديل: ';
-  mockApiSend.mockResolvedValue(answer({ body: 'تعديل: الخامسة', corrects_id: 'o1', replayed: true }));
+  t.inbox.correction.prefix = 'Correction: ';
+  const first = { body: 'تعديل: الخامسة', corrects_id: 'o1', replayed: true, same_request: true };
+  mockApiSend.mockResolvedValue(answer(first));
   await sendFix('الخامسة');
   t.inbox.correction.prefix = before;
   expect(PINS.box.replayed(PHONE)).toBe(false);

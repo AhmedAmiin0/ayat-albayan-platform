@@ -1,4 +1,4 @@
-import { stripCorrectionPrefix, type MessageView } from '@ab/shared';
+import { CORRECTION_PREFIX_ROOM, stripCorrectionPrefix, WA_TEXT_MAX, type MessageView } from '@ab/shared';
 import { quoteOf } from '@/inbox/messages/hooks/quote-text';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { correctionPrefixes, type Outgoing } from '@/inbox/thread/send/outgoing';
@@ -28,6 +28,13 @@ export const targetKey = (out: TextOut): string | undefined =>
 export const bareText = (text: string, editing: MessageView | null): boolean =>
   !stripCorrectionPrefix(editing ? correctionPrefixes() : [], text);
 
+/**
+ * The box's longest text: in edit mode it leaves room for the API's «تصحيح: » (round 4 of #694,
+ * the same limit as threadTextSchema), else WhatsApp's own.
+ */
+export const textMax = (editing: MessageView | null): number =>
+  WA_TEXT_MAX - (editing ? CORRECTION_PREFIX_ROOM : 0);
+
 /** The box's text target now, and its end once that text went (its reply or its edit mode). */
 export function useTextTarget() {
   const { reply, setReply, editing, editSent } = useChatActions();
@@ -37,5 +44,8 @@ export function useTextTarget() {
     if (out.correctsId) editSent(out.correctsId);
   };
   const out = (text: string) => textOut(text, { reply, editing });
-  return { out, sent, bare: (text: string) => bareText(text, editing) };
+  const bare = (text: string) => bareText(text, editing);
+  // Nothing to send, or no room left for the API's prefix (round 4 of #694).
+  const blocked = (text: string) => bare(text) || text.length > textMax(editing);
+  return { out, sent, bare, blocked };
 }

@@ -57,4 +57,11 @@ describe('usePicks: the box around «تعديل»', () => {
     act(() => result.current.cancelEdit());
     expect(typed()).toBe('مسودتي');
   });
+
+  it('leaving the chat after a sign-out writes nothing back (round 4, item 5)', () => {
+    const { unmount } = start();
+    clearAllDrafts();
+    unmount();
+    expect(typed()).toBe('');
+  });
 });

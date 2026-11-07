@@ -9,7 +9,7 @@ import { chatLine } from './text-line';
 import { ThreadQuotes, type ReplyFields, type SendFrom } from '@/modules/messaging/inbox/threads/thread-quotes';
 import { missingParams, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
-import { CorrectionRepo, correctionOf } from './correction';
+import { assertRepliesToOriginal, CorrectionRepo, correctionOf, withSameRequest } from './correction';
 
 export { chatLine, sendLine } from './text-line';
 
@@ -87,23 +87,23 @@ export class ThreadSendService {
   ) {}
 
   /**
-   * H3: free text from the chat line when its window is open, else from notifications; after
-   * every window, a staff member's text (a forward too) is held behind the reopen template
-   * (chatLine, owner 2026-11-03). Teacher mode (docs/19) keeps 409 session_closed (sendLine).
+   * H3: free text from the chat line (window open) or notifications; after every window it is held
+   * behind the reopen template (chatLine, 2026-11-03). Teacher mode keeps 409 (sendLine).
    */
   async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<Sent> {
     if (s.scope) assertCanSend(s.scope, s.phone);
     const key = dedupKey(s);
     const again = s.input.correctsId ? await this.outbox.replayOf(key) : null;
-    if (again) return again; // «تعديل»: a retry's first row, before its checks (#694)
+    if (again) return withSameRequest(again, s.input); // «تعديل»: a retry's first row (#694)
     const thread = await this.queries.thread(s.phone);
     const at = { now, windows: () => this.queries.numberWindows(s.phone) };
     const fix = await correctionOf(this.corrections, s);
     const from = await chatLine(thread, { ...at, teacher: !!s.scope });
     const reply = await replyOf(this.quotes, fix.send, from);
+    assertRepliesToOriginal(fix.row.corrects_id, reply);
     const body = fix.send.input.text;
     const row = { ...outboundBase(s, thread), dedup_key: key, body, ...from, ...reply };
-    return this.outbox.queue({ ...row, ...fix.row });
+    return withSameRequest(await this.outbox.queue({ ...row, ...fix.row }), s.input);
   }
 
   /**

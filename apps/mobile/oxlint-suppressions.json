@@ -3317,7 +3317,7 @@
   },
   "src/inbox/composer/draft-store.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/no-restricted-syntax": {
       "count": 1

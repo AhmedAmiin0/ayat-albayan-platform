@@ -14,6 +14,12 @@ describe('«تعديل»: the API’s refusals in words', () => {
     expect(sendErrorText(new ApiError(403, { code: 'not_your_message' }))).toBe(e.not_your_message);
   });
 
+  it('round 4: another number (409) and a prefixed text too long (400) say why', () => {
+    const other = new ApiError(409, { code: 'correction_other_number' });
+    expect(sendErrorText(other)).toBe(e.correction_other_number);
+    expect(sendErrorText(new ApiError(400, { code: 'too_long' }))).toBe(e.too_long);
+  });
+
   it('a stored code too (a remounted box), the send’s own codes unchanged', () => {
     expect(sendErrorCodeText('not_correctable')).toBe(e.not_correctable);
     expect(sendErrorCodeText('session_closed')).toBe(t.inbox.error.session_closed);

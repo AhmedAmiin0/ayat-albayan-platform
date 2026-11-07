@@ -29,9 +29,10 @@ it('a correction answered with the prefixed body settles with no replay note', (
   expect(getDraft(PHONE).failed).toBeNull();
 });
 
-it('a correction answered with another message is still the replay', () => {
+it('a replayed first row the API calls another request is still the replay', () => {
   setDraft(PHONE, { text: '', failed: null });
-  expect(settleTextSend({ body: 'تصحيح: الساعة الرابعة', corrects_id: 'o1' }, sent())).toBe(true);
+  const row = { body: 'تصحيح: الساعة الرابعة', corrects_id: 'o1', replayed: true };
+  expect(settleTextSend({ ...row, same_request: false }, sent())).toBe(true);
   expect(getDraft(PHONE).failed?.code).toBe(SEND_REPLAYED);
 });
 
@@ -42,10 +43,10 @@ it('a replayed row correcting another message is the replay too (review of #694)
   expect(getDraft(PHONE).text).toBe('الساعة الخامسة');
 });
 
-it('an admin-reworded prefix: a retry after a lost answer is this send (round 3, item 2)', () => {
-  t.inbox.correction.prefix = 'تعديل: ';
+it('a reworded prefix this English/stale client never saw: the API says same_request', () => {
+  t.inbox.correction.prefix = 'Correction: ';
   setDraft(PHONE, { text: '', failed: null });
   const row = { body: 'تعديل: الساعة الخامسة', corrects_id: 'o1', replayed: true };
-  expect(settleTextSend(row, sent())).toBe(false);
+  expect(settleTextSend({ ...row, same_request: true }, sent())).toBe(false);
   expect(getDraft(PHONE).failed).toBeNull();
 });

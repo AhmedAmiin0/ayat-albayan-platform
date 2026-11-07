@@ -1,7 +1,7 @@
 import { replayedOther, type SentText, type TextAnswer } from '@ab/client-core';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { unanswered } from './after-send';
-import { carried, correctionPrefixes, type SendInput } from './outgoing';
+import { carried, type SendInput } from './outgoing';
 import { PINS, type PinKind } from './pinned-send';
 
 /** A send of the chat with its pin kind (none: templates, resend, new chat) and generation. */
@@ -10,7 +10,7 @@ interface PinnedSend {
   id: string;
   /** What this send carried (the text, or a template's preview): the box gets it back. */
   body: string;
-  /** A correction: its original and the prefixes the API may have used (replayedOther). */
+  /** A correction: its original (the API says whether a replay is this request). */
   correction: SentText['correction'];
   pin?: PinKind | undefined;
   /** The pin store's generation when the send started (a sign-out since: nothing is written). */
@@ -53,11 +53,9 @@ export function failPinned(s: PinnedSend, error: unknown): void {
   restoreBox(s);
 }
 
-/** A correction's original and the prefixes its row may start with (the API's Arabic ones). */
+/** A correction's original (replayedOther trusts the API's `same_request` for a replay). */
 const correctionOf = (out: SendInput['out']): SentText['correction'] =>
-  out.kind === 'text' && out.correctsId
-    ? { id: out.correctsId, prefixes: correctionPrefixes() }
-    : undefined;
+  out.kind === 'text' && out.correctsId ? { id: out.correctsId } : undefined;
 
 /** A send of useSendMessage as the pin rule sees it. */
 export const pinnedOf = (phone: string, input: SendInput, generation: number): PinnedSend => ({

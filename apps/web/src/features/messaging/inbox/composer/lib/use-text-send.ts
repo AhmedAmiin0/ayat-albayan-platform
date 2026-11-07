@@ -60,21 +60,22 @@ export const textSentOf = (phone: string, draft: Draft, text: string) => ({
 });
 
 /** What settleTextSend reads of the answer. */
-type Answer = Pick<TextAnswer, 'body' | 'corrects_id' | 'replayed'>;
+type Answer = Pick<TextAnswer, 'body' | 'corrects_id' | 'replayed' | 'same_request'>;
 
 /**
- * The Arabic prefixes the API may put before a correction: the admins' wording (this run's `t`,
- * override-merged, when it is the Arabic one), then the bundled default the API also strips.
+ * The Arabic prefixes the API may put before a correction (the box's «nothing left» check only):
+ * the admins' wording (this run's `t`, when it is the Arabic one), then the bundled default.
  */
 export const correctionPrefixes = (): string[] => [
   ...(locale === 'ar' ? [t.inbox.correction.prefix] : []),
   BUNDLES.ar.inbox.correction.prefix,
 ];
 
-/** What the answer is checked against: the text, and a correction's original and prefixes. */
+/** What the answer is checked against: the text, and a correction's original (the API says
+ * whether a replayed first row is this very correction: `same_request`). */
 const sentText = ({ text, correctsId }: Sent): SentText => ({
   text,
-  correction: correctsId ? { id: correctsId, prefixes: correctionPrefixes() } : undefined,
+  correction: correctsId ? { id: correctsId } : undefined,
 });
 
 /**
