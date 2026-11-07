@@ -6883,7 +6883,7 @@
   },
   "src/modules/messaging/whatsapp/sender/sender.repo.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     },
     "ab/module-boundaries": {
       "count": 1
@@ -7086,7 +7086,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.restricted.http.test.ts": {

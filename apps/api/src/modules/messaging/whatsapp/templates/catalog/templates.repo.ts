@@ -6,6 +6,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import type { ImportRow } from '@/modules/messaging/whatsapp/templates/sync/template-import';
 import type { TemplatePatch } from '@/modules/messaging/whatsapp/templates/sync/template-sync';
 import { templateRow, templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { sendableCache } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
 
 /** One (template, number) approval (docs/23c decision 4). */
 export type ApprovalRow = Tables<'message_template_numbers'>;
@@ -23,18 +24,21 @@ type MaybeRow = TemplateRow | null;
 export class TemplatesRepo {
   /** cached(): one read per key a minute, shared by concurrent callers; cleared by every write here. */
   private readonly copies = new Map<string, { row: Promise<TemplateRow | null>; at: number }>();
+  /** sendable(): the sender pass's templates; same minute, same clears, crm gate live (42-3). */
+  private readonly sendables = sendableCache(() => this.db);
 
   constructor(
     @Inject(DB) private readonly db: Db,
     @Optional() private readonly shared?: SharedCache,
   ) {
-    shared?.on('templates', () => this.copies.clear());
+    shared?.on('templates', () => this.clear());
   }
 
   /**
    * A thread's bubbles render each templated row (≤ 50 a page, mostly the same few keys): an in-memory
    * copy instead of a read per row. Dropped on update / insert here (template sync, submit, edits);
-   * another API copy's write (Redis: `templates`) drops it at once, else within TEMPLATE_COPY_MS. Display only: sends read get().
+   * another API copy's write (Redis: `templates`) drops it at once, else within TEMPLATE_COPY_MS.
+   * Display and the composer's reopen note only: the reopen queue and other sends read get().
    */
   cached(key: string, now = Date.now()): Promise<TemplateRow | null> {
     const hit = this.copies.get(key);
@@ -45,9 +49,19 @@ export class TemplatesRepo {
     return row;
   }
 
+  /** sendableTemplates (template-gate.repo) through the minute's copy. */
+  sendable(now = Date.now()): Promise<TemplateRow[]> {
+    return this.sendables.get(now);
+  }
+
+  private clear(): void {
+    this.copies.clear();
+    this.sendables.clear();
+  }
+
   /** After a write here: every copy, in this process and (Redis) the others. */
   private forget(): void {
-    this.copies.clear();
+    this.clear();
     void this.shared?.invalidate({ topic: 'templates' });
   }
 

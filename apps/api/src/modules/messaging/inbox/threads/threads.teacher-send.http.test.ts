@@ -30,7 +30,10 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
     t.teacher.phones.mockResolvedValue([PHONE, OWN]);
     t.queries.lessonTeacher.mockResolvedValue('tch-1');
     t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, guardian_id: 'g1' }));
-    t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9', status: 'queued' }));
+    const named = { sent_by_teacher: { display_name_ar: 'أبرار' } };
+    t.queries.enqueue.mockImplementation(async (row: object) => ({
+      ...messageRow({ ...row, id: 'm9', status: 'queued' }), ...named,
+    }));
     t.queries.get.mockImplementation(async () => ({ ...messageRow({ id: 'm9', status: 'sent', body: 'أهلًا', template_key: null }), sent_by_teacher: { display_name_ar: 'أبرار' } }));
     t.templates.get.mockResolvedValue(INVITE);
   });
@@ -38,7 +41,8 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
   it('H3 in the window: 201, the row names the teacher, its own dedup key space, audited with the name', async () => {
     const res = await t.call(text());
     expect(res.statusCode).toBe(201);
-    expect(res.json()).toMatchObject({ id: 'm9', status: 'sent', sent_by_teacher_name: 'أبرار' });
+    // The enqueue's row (MESSAGE_SELECT, docs/42 42-5) already names the teacher: no read back.
+    expect(res.json()).toMatchObject({ id: 'm9', status: 'queued', sent_by_teacher_name: 'أبرار' });
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({
       phone_e164: PHONE, body: 'أهلًا', created_by: TEACHER.id, sent_by_teacher_id: 'tch-1', dedup_key: `teacher:tch-1:${PHONE}:${REQ}`,
     }));
