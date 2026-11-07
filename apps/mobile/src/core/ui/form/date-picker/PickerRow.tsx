@@ -28,7 +28,7 @@ export function PickerRow(props: PickerRowProps) {
       <Pressable
         testID={testID}
         accessibilityRole="button"
-        accessibilityLabel={`${label}: ${text}`}
+        accessibilityLabel={error ? `${label}: ${text}، ${error}` : `${label}: ${text}`}
         accessibilityHint={hint}
         onPress={onPress}
         style={{

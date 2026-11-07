@@ -71,3 +71,18 @@ export function patchRow(
 ): LessonRow[] {
   return rows.map((row, i) => (i === index ? { ...row, ...patch } : row));
 }
+
+/** Indexes of rows with only a date or only a time: not a pick yet, never silently dropped. */
+export function partialRows(rows: readonly LessonRow[]): number[] {
+  return rows.map((r, i) => ((r.date === '') !== (r.time === '') ? i : -1)).filter((i) => i >= 0);
+}
+
+/** Indexes of filled rows whose time has already passed (the API refuses or skips them). */
+export function pastRows(rows: readonly LessonRow[], at: { tz: string; now: Date }): number[] {
+  return rows
+    .map((row, i) => {
+      const when = lessonAt(row, at.tz);
+      return when !== null && Date.parse(when) < at.now.getTime() ? i : -1;
+    })
+    .filter((i) => i >= 0);
+}

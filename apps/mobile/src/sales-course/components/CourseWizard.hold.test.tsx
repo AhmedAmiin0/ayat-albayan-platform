@@ -5,6 +5,7 @@ import { renderWithQuery } from '@/test/query';
 import { fakeCourseApi, isDisabled, press, walkToReview } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen';
 import { courseView, STUDENT_ID } from '@/sales-course/testing/fixtures';
+import { fakeNow } from '@/test/fake-now';
 
 // Hold mode (owner 2026-11-06): unpaid with an open payment link, «احجز» keeps a draft.
 const mockApiFetch = jest.fn();
@@ -33,11 +34,14 @@ async function submit() {
 const reply = (draft: unknown) => async (_m: string, path: string) =>
   path === '/sales/booking/check' ? { conflicts: [] } : draft;
 
+// The picked lessons (from Sunday 4 Oct 2026) lie ahead: «now» is Friday 2 Oct.
 beforeEach(() => {
+  fakeNow(new Date('2026-10-02T06:00:00Z'));
   jest.clearAllMocks();
   mockParams.current = { studentId: STUDENT_ID };
   mockApiFetch.mockImplementation(fakeCourseApi(courseView({ hold: true })).fetch);
 });
+afterEach(() => jest.useRealTimers());
 
 test('the picks are saved as a draft (PUT), nothing booked; «تم» leaves', async () => {
   mockApiSend.mockImplementation(reply({ state: 'draft', saved_at: '2026-11-06T09:00:00.000Z' }));

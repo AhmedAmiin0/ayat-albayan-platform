@@ -4,7 +4,7 @@ import { cachedList, huda, unnamed } from '@/inbox/shared/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { listKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient } from '@/test/query';
-import { maryam, MON_19, noAvailability, slot, SUN_17 } from './fixtures';
+import { maryam, MON_19, noAvailability, slot, slotsAnswer, SUN_17 } from './fixtures';
 import { pickLesson } from './lesson-times';
 
 // Test-only helpers for the quick-book screen tests (the jest.mock calls stay in each test file).
@@ -30,7 +30,7 @@ export function fakeBookingApi() {
   const fetch = (path: string): Promise<unknown> => {
     if (path.startsWith('/booking/teachers')) return Promise.resolve(api.teachers);
     if (path.startsWith('/booking/slots')) {
-      return Promise.resolve({ teacher_tz: 'Africa/Cairo', step_min: 45, slots: api.slots });
+      return Promise.resolve(slotsAnswer(api.slots));
     }
     return Promise.reject(new Error(`unexpected GET ${path}`));
   };

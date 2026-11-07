@@ -82,13 +82,13 @@ describe('LessonRows: a date and a time per lesson day (owner 2026-11-07)', () =
     expect(await screen.findByText(t.lessonTimes.past)).toBeTruthy();
   });
 
-  it('the admin adds a day; the same weekday twice is an error and not picked', async () => {
+  it('the admin adds a day; the same weekday twice is an error and nothing is picked', async () => {
     const onChange = setup();
     fill(1, '2026-10-04', '17:00');
     fireEvent.click(screen.getByRole('button', { name: t.lessonTimes.addDay }));
     fill(2, '2026-10-04', '18:30');
     expect(await screen.findByText(t.lessonTimes.sameDay)).toBeTruthy();
-    expect(onChange).toHaveBeenLastCalledWith({ startsAt: '2026-10-04T14:00:00.000Z', extra: [] });
+    expect(onChange).toHaveBeenLastCalledWith({ startsAt: null, extra: [] });
     fill(2, '2026-10-07', '19:30');
     expect(onChange).toHaveBeenLastCalledWith({ startsAt: '2026-10-04T14:00:00.000Z', extra: ['2026-10-07T16:30:00.000Z'] });
   });

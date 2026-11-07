@@ -15,6 +15,7 @@ export interface RowsCtx {
   data: SlotsResponse | undefined;
   teacherTz: string | null;
   bounds: RowBounds;
+  until?: string | undefined;
 }
 
 export interface LessonRowProps {

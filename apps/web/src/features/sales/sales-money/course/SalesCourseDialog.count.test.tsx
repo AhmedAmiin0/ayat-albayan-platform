@@ -77,13 +77,13 @@ describe('the assistant’s course: exactly the plan’s days, each with its tim
     expect(screen.queryByRole('button', { name: t.inbox.subscription.make })).toBeNull();
   });
 
-  it('clearing a day’s time goes back below the count: «التالي» waits again; no row to remove', async () => {
+  it('clearing a day’s time: no day is kept half-picked, «التالي» waits again; no row to remove', async () => {
     routeCourseSend(apiSend);
     await toSlotStep();
     pickWednesday();
     fillRow(2, '2026-10-07', '');
     expect(nextButton().hasAttribute('disabled')).toBe(true);
-    expect(screen.getByText(pickProgress(t.booking, 1, 2) ?? '')).toBeTruthy();
+    expect(screen.queryByText(t.booking.seriesFree)).toBeNull(); // no picks, so no series check
     expect(screen.queryByRole('button', { name: new RegExp(t.booking.removeDay.replace('{day}', '')) })).toBeNull();
   });
 });

@@ -8,6 +8,7 @@ import { renderWithQuery } from '@/test/query';
 import { isDisabled, fakeCourseApi, pickLesson, press, walkToReview } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen';
 import { courseView, STUDENT_ID } from '@/sales-course/testing/fixtures';
+import { fakeNow } from '@/test/fake-now';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
@@ -26,7 +27,9 @@ jest.mock('expo-router', () => ({
 
 const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
 
+// The picked lessons (from Sunday 4 Oct 2026) lie ahead: «now» is Friday 2 Oct.
 beforeEach(() => {
+  fakeNow(new Date('2026-10-02T06:00:00Z'));
   jest.clearAllMocks();
   mockParams.current = { studentId: STUDENT_ID };
   mockApiFetch.mockImplementation(fakeCourseApi().fetch);
@@ -34,6 +37,7 @@ beforeEach(() => {
     path === '/sales/booking/check' ? { conflicts: [] } : booked(SUN_17),
   );
 });
+afterEach(() => jest.useRealTimers());
 
 test('a course she cannot book says why, and offers no wizard', async () => {
   mockApiFetch.mockImplementation(fakeCourseApi(courseView({ blocked: 'course_exists' })).fetch);

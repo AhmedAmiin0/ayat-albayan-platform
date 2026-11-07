@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { lessonAt, patchRow, picksFromRows, repeatedDays, rowsFromPicks, weekBounds } from './rows.js';
+import {
+  lessonAt,
+  partialRows,
+  pastRows,
+  patchRow,
+  picksFromRows,
+  repeatedDays,
+  rowsFromPicks,
+  weekBounds,
+} from './rows.js';
 
 const CAIRO = 'Africa/Cairo';
 
@@ -56,5 +65,16 @@ describe('lesson rows (a date + a time per lesson day)', () => {
   it('patchRow changes one row only', () => {
     const rows = [{ date: '2026-11-08', time: '' }, { date: '', time: '' }];
     expect(patchRow(rows, 0, { time: '09:15' })).toEqual([{ date: '2026-11-08', time: '09:15' }, { date: '', time: '' }]);
+  });
+
+  it('a row with only a date or only a time is partial; a blank one is not', () => {
+    const rows = [{ date: '2026-11-08', time: '' }, { date: '', time: '' }, { date: '', time: '10:00' }];
+    expect(partialRows(rows)).toEqual([0, 2]);
+  });
+
+  it('a filled row before now is past', () => {
+    const now = new Date('2026-11-08T15:30:00.000Z');
+    const rows = [{ date: '2026-11-08', time: '17:00' }, { date: '2026-11-08', time: '18:00' }, { date: '', time: '' }];
+    expect(pastRows(rows, { tz: CAIRO, now })).toEqual([0]);
   });
 });

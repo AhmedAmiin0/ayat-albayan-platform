@@ -2,6 +2,8 @@ export {
   type DayBounds,
   lessonAt,
   type LessonRow,
+  partialRows,
+  pastRows,
   patchRow,
   picksFromRows,
   repeatedDays,

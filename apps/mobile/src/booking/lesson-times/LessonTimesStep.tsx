@@ -46,7 +46,7 @@ export function LessonTimesStep(props: LessonTimesStepProps) {
   const days = useLessonRows(multi, tz, props.startRows ?? 1);
   const window = slotWindow(windowStart(now, from));
   const slots = useSlots({ teacherId, ...window, durationMin, ...excludeParams(exclude) });
-  const view = rowsView(days.rows, days.fixed, tz);
+  const view = rowsView(days.rows, { fixed: days.fixed, tz, now });
   const ctx = { tz, slots: slots.data, until: window.to, durationMin, now, viewer };
   return (
     <View style={{ gap: 12 }}>

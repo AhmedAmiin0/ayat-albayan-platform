@@ -9,6 +9,7 @@ import { packageDaysNote } from '@/booking/trial/lib/package-choice';
 import { dayLine } from '@/booking/shared/picks';
 import { uploadInvoice } from '@/booking/invoice/invoice-upload';
 import { fakeBookingApi, PHOTO, PREVIEW } from '@/booking/testing/test-utils';
+import { fakeNow } from '@/test/fake-now';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
@@ -24,12 +25,8 @@ jest.mock('@/booking/invoice/invoice-upload', () => ({ uploadInvoice: jest.fn() 
 const mockReplace = jest.fn();
 // The chat's «اشترك»: the lead's id, number and WhatsApp name, and the package mode.
 jest.mock('expo-router', () => ({
-  router: {
-    back: jest.fn(),
-    canGoBack: () => true,
-    replace: (h: unknown) => mockReplace(h),
-    push: jest.fn(),
-  },
+  router: { back: jest.fn(), canGoBack: () => true, push: jest.fn(),
+    replace: (h: unknown) => mockReplace(h) },
   useLocalSearchParams: () => ({
     leadId: 'a1',
     phone: '+966552147730',
@@ -42,7 +39,9 @@ const isOff = (name: string) => screen.getByRole('button', { name }).props.acces
 const press = async (role: 'button' | 'radio' | 'checkbox', name: string) =>
   fireEvent.press(await screen.findByRole(role, { name }));
 
+// The picked lessons (from Sunday 4 Oct 2026) lie ahead: «now» is Friday 2 Oct.
 beforeEach(() => {
+  fakeNow(new Date('2026-10-02T06:00:00Z'));
   jest.clearAllMocks();
   const booking = fakeBookingApi();
   booking.api.slots = [slot(SUN_17), slot(THU_18)];
@@ -50,6 +49,7 @@ beforeEach(() => {
   jest.mocked(pickReceipt).mockResolvedValue(PHOTO);
   jest.mocked(uploadInvoice).mockResolvedValue('req/0b1c.jpg');
 });
+afterEach(() => jest.useRealTimers());
 
 test('a lead from the chat books a package: size, a time per day, the required invoice, then its subscription', async () => {
   await renderWithQuery(<BookTrialScreen />);

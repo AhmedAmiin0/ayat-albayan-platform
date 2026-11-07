@@ -40,12 +40,13 @@ const teacherZone = (data: SlotsResponse | undefined, teacher: BookingDraft['tea
 function useRowsCtx(draft: BookingDraft, at: At) {
   const { rows, opens, now } = at;
   const { tz, teacher } = draft;
+  const window = slotsWindow(rows, { opens, tz, now });
   const slots = useRowSlots({
     teacherId: teacher?.id ?? '',
     durationMin: draft.durationMin,
     studentIds: draft.students.map((s) => s.id),
     excludeLessonId: draft.trialDate?.upcomingId ?? undefined,
-    window: slotsWindow(rows, { opens, tz, now }),
+    window,
   });
   const ctx: RowsCtx = {
     tz,
@@ -54,6 +55,7 @@ function useRowsCtx(draft: BookingDraft, at: At) {
     data: slots.data,
     teacherTz: teacherZone(slots.data, teacher),
     bounds: rowBounds(opens),
+    until: window.to.toISOString(),
   };
   return { ctx, failed: slots.isError };
 }
@@ -72,10 +74,10 @@ export function LessonRows({ draft, onChange }: LessonRowsProps) {
   const { ctx, failed } = useRowsCtx(draft, { rows, opens, now });
   const update = (next: LessonRow[]) => {
     setRows(next);
-    onChange(withPicks(rowPicks(next, tz)));
+    onChange(withPicks(rowPicks(next, { tz, now })));
   };
   const removable = course === null && rows.length > 1;
-  const errors = rowErrors(rows);
+  const errors = rowErrors(rows, { tz, now });
   return (
     <div className="grid gap-3">
       <p className="text-xs text-ink-2">{t.lessonTimes.intro.replace('{city}', tzCity(tz) ?? tz)}</p>

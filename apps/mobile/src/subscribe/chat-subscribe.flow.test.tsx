@@ -8,12 +8,18 @@ import { booked } from '@/booking/testing/fixtures';
 import { pickLesson } from '@/booking/testing/lesson-times';
 import { subscribeBackend } from './flow-backend';
 import { CHILD } from './fixtures';
+import { fakeNow } from '@/test/fake-now';
 
 const s = t.inbox.subscription;
 const press = async (role: 'button' | 'radio' | 'checkbox', name: string) =>
   fireEvent.press(await screen.findByRole(role, { name }));
 
-beforeEach(resetApp);
+// The picked lesson (Sunday 4 Oct 2026) lies ahead: «now» is Friday 2 Oct.
+beforeEach(() => {
+  fakeNow(new Date('2026-10-02T06:00:00Z'));
+  return resetApp();
+});
+afterEach(() => jest.useRealTimers());
 
 test('expired family: chip «انتهت الباقة» → «جدّد» → quote → save once → back: the chat chip and the list tag say «مشترك»', async () => {
   const { backend, state } = subscribeBackend({ hold: true });

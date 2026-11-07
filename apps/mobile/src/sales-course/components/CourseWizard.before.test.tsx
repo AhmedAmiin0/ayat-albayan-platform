@@ -7,6 +7,7 @@ import { renderWithQuery } from '@/test/query';
 import { isDisabled, fakeCourseApi, press, walkToReview } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen';
 import { courseView, SUB_ID } from '@/sales-course/testing/fixtures';
+import { fakeNow } from '@/test/fake-now';
 
 // Owner 2026-10-28: 1 of the 8 lessons was taken before the platform → the course books 7.
 const mockApiFetch = jest.fn();
@@ -23,13 +24,16 @@ jest.mock('expo-router', () => ({
 
 const subscription = { id: SUB_ID, package: '8' as const, duration: 45 as const, lessons_total: 8, lessons_used_before: 1, starts_on: '2026-10-04' };
 
+// The picked lessons (from Sunday 4 Oct 2026) lie ahead: «now» is Friday 2 Oct.
 beforeEach(() => {
+  fakeNow(new Date('2026-10-02T06:00:00Z'));
   jest.clearAllMocks();
   mockApiFetch.mockImplementation(fakeCourseApi(courseView({ subscription })).fetch);
   mockApiSend.mockImplementation(async (_m: string, path: string) =>
     path === '/sales/booking/check' ? { conflicts: [] } : booked(SUN_17),
   );
 });
+afterEach(() => jest.useRealTimers());
 
 test('the review and the done screen end the course on its 7th lesson (total − before)', async () => {
   await renderWithQuery(<CourseScreen />);

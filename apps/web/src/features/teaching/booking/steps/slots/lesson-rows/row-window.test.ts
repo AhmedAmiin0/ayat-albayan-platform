@@ -5,6 +5,7 @@ import { besideText, farRows, rowBounds, rowsOpen, slotsWindow } from './row-win
 
 const C24 = { cycle: '24', locale: 'ar' } as const;
 const NOW = new Date('2026-10-03T09:00:00.000Z'); // Saturday 12:00 Riyadh
+const AT = { tz: 'Asia/Riyadh', now: NOW };
 
 describe('lesson rows: bounds and window', () => {
   it('opens on the course day, never before today in the family zone', () => {
@@ -24,18 +25,26 @@ describe('lesson rows: bounds and window', () => {
       { date: '2026-10-12', time: '18:00' },
     ];
     expect(farRows(rows)).toEqual([1, 2]);
-    expect(rowErrors(rows).get(1)).toBe(t.lessonTimes.sameDay);
-    expect(rowErrors(rows).get(2)).toBe(t.lessonTimes.farDay);
+    expect(rowErrors(rows, AT).get(1)).toBe(t.lessonTimes.sameDay);
+    expect(rowErrors(rows, AT).get(2)).toBe(t.lessonTimes.farDay);
     expect(farRows([{ date: '', time: '' }])).toEqual([]);
   });
 
-  it('the picks leave out the rows with a date error', () => {
-    const rows = [
+  it('no picks while a row has an error or only half its date / time; else every row', () => {
+    const two = [
       { date: '2026-10-04', time: '17:00' },
       { date: '2026-10-07', time: '19:30' },
-      { date: '2026-10-11', time: '17:00' },
     ];
-    expect(rowPicks(rows, 'Asia/Riyadh')).toEqual(['2026-10-04T14:00:00.000Z', '2026-10-07T16:30:00.000Z']);
+    expect(rowPicks(two, AT)).toEqual(['2026-10-04T14:00:00.000Z', '2026-10-07T16:30:00.000Z']);
+    expect(rowPicks([...two, { date: '2026-10-11', time: '17:00' }], AT)).toEqual([]);
+    expect(rowPicks([...two, { date: '2026-10-08', time: '' }], AT)).toEqual([]);
+    expect(rowPicks([...two, { date: '', time: '' }], AT)).toHaveLength(2);
+  });
+
+  it('a time already past is an error (the API refuses or skips it)', () => {
+    const late = { tz: 'Asia/Riyadh', now: new Date('2026-10-04T15:00:00.000Z') };
+    expect(rowErrors([{ date: '2026-10-04', time: '17:00' }], late).get(0)).toBe(t.lessonTimes.past);
+    expect(rowPicks([{ date: '2026-10-04', time: '17:00' }], late)).toEqual([]);
   });
 
   it('the slot window is the rows’ week in the family zone, from now on', () => {
