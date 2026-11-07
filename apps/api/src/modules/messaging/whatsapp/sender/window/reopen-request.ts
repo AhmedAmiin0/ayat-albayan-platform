@@ -94,7 +94,7 @@ export class ReopenRequest {
     const template = await this.template();
     const dedup = nextReopenKey(phone, rows, now);
     if (!template || !dedup) return failNow(template ? TRIES_USED : UNAVAILABLE);
-    await this.queue(reopenRow(row, { key: template.key, dedup, now }));
+    await this.queue(reopenRow(row, { key: template.key, line: template.line, dedup, now }));
     return { ...HELD, queued: dedup };
   }
 

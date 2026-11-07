@@ -1,6 +1,7 @@
 import type { MessageDirection } from '@ab/catalog';
 import { adWelcomeOf } from './chat-markers.js';
 import type { HiddenMark } from '../message-actions/hidden.js';
+import type { CorrectionMark } from '../message-actions/correction.js';
 import { payloadTypeOf } from '../payload/index.js';
 
 // What a bubble (or the chats list's last line) shows instead of its own content (owner
@@ -54,7 +55,7 @@ export function previewNote(
  * MessageView's marks (owner 2026-10-30), set by the API from messages.edited_at / deleted_at, and
  * hidden_at («حذف من المنصة», HiddenMark).
  */
-export interface MessageMarks extends HiddenMark {
+export interface MessageMarks extends HiddenMark, CorrectionMark {
   /** Edited after it was sent («تم التعديل»): body is the new text. Absent = no. */
   edited?: boolean;
   /** Deleted for everyone («تم حذف هذه الرسالة»): body, file and payload withheld. Absent = no. */

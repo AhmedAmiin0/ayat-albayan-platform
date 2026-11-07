@@ -1,5 +1,5 @@
 import type { MessageView, ThreadDetail } from '@ab/shared';
-import { refreshNewest, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
+import { refreshNewest, type TextAnswer, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import {
   infiniteQueryOptions,
   type QueryClient,
@@ -12,7 +12,7 @@ import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { useStoredView } from '@/inbox/thread/local/stored-view';
 import { rollback, unanswered } from '@/inbox/thread/send/after-send';
 import { failPinned, pinGeneration, pinnedOf, settlePinned } from '@/inbox/thread/send/pinned-outcome';
-import { carried, type SendDone, sendBody, type SendInput } from '@/inbox/thread/send/outgoing';
+import { echoed, type SendDone, sendBody, type SendInput } from '@/inbox/thread/send/outgoing';
 import { refreshInbox, refreshLists, touchInbox } from './inbox-sync';
 import {
   appendMessage,
@@ -102,12 +102,12 @@ export function useSendMessage(phone: string) {
     // One key per chat: the composer and «عرض سعر» see each other's send in flight (useIsMutating).
     mutationKey: sendKey(phone),
     mutationFn: (input: SendInput) =>
-      apiSend<MessageView>('POST', `${threadPath(phone)}/${input.out.kind}`, sendBody(input)),
+      apiSend<TextAnswer>('POST', `${threadPath(phone)}/${input.out.kind}`, sendBody(input)),
     onMutate: async ({ out, id, pin }) => {
       const generation = pinGeneration(pin);
       markOwnSend(phone);
       await client.cancelQueries({ queryKey });
-      const text = carried(out);
+      const text = echoed(out);
       const key = out.kind === 'template' ? out.key : undefined;
       // An answer shows its quote at once (owner 2026-10-25 «رد»), as the API's row will.
       const quote = out.kind === 'text' && out.replyTo ? { reply_to_message_id: out.replyTo.id, reply_to: out.replyTo } : {};

@@ -42,7 +42,7 @@ export class DriveBackupAlerts {
     return this.tell(`skipped:${dayLabel(input.now)}`, text.replace('{names}', names));
   }
 
-  /** Drive's free space is under the 2 GB reserve: old archives must be deleted by hand. */
+  /** Room under the 2 GB reserve: add storage or trash the whole folder (never single archives). */
   driveFull(input: { now: Date }): Promise<void> {
     return this.tell(`drive_full:${dayLabel(input.now)}`, ar.googleSync.alerts.backupDriveFull);
   }

@@ -47,7 +47,7 @@ describe('TeacherAlert: the approval gate by the line\'s driver', () => {
     expect(rows[0]).toMatchObject({
       template_key: 'teacher_new_student',
       dedup_key: 'teacher_new_student:L1:T1',
-      template_params: { crm: { body: ['أ. خالد', 'سهيلة', 'AB-0101', expect.any(String), expect.any(String)] } },
+      template_params: { crm: { body: ['أ. خالد', 'سهيلة (AB-0101)', expect.any(String), '45 دقيقة'] } },
     });
   });
 

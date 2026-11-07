@@ -80,6 +80,14 @@ export class ThreadMessagesRepo {
     return { ...data, replayed: true };
   }
 
+  /** The row a dedup_key already queued (rule 8), or null. */
+  async byDedupKey(key: string): Promise<ThreadMessageRow | null> {
+    const { data, error } = await this.db
+      .from('messages').select(MESSAGE_SELECT).eq('dedup_key', key).maybeSingle();
+    check(error, 'message dedup read');
+    return data;
+  }
+
   private async insert(row: TablesInsert<'messages'>): Promise<ThreadMessageRow> {
     const { data, error } = await this.db.from('messages').insert(row).select(MESSAGE_SELECT).single();
     check(error, 'message enqueue');

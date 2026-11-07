@@ -1,0 +1,83 @@
+import type { ThreadDetail } from '@ab/shared';
+import { act, renderHook, waitFor } from '@testing-library/react-native';
+import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
+import { message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { clearChatMemory } from '@/inbox/thread/anchor';
+import { type ThreadCache, threadKey } from '@/inbox/thread/hooks/thread-cache';
+import { useSendMessage } from '@/inbox/thread/hooks/use-thread';
+import { createTestQueryClient, queryWrapper } from '@/test/query';
+import { t } from '@/core/lib/i18n/i18n';
+import { PINS } from './pinned-send';
+
+// Review of PR #694 (2, round 4): the API says `replayed` when the pinned id gave back its FIRST
+// row and `same_request` when that row IS this correction; the app never rebuilds the prefix.
+const mockApiSend = jest.fn();
+jest.mock('@/core/lib/http/api', () => ({
+  ...jest.requireActual('@/core/lib/http/api'),
+  apiSend: (...args: unknown[]) => mockApiSend(...args),
+}));
+jest.mock('@/inbox/thread/hooks/inbox-sync', () => ({
+  refreshInbox: jest.fn(async () => undefined),
+  refreshLists: jest.fn(),
+  touchInbox: jest.fn(async () => undefined),
+}));
+
+const page = { messages: [], has_more: false } as unknown as ThreadDetail;
+const fix = (text: string) => ({
+  id: 'req-1',
+  out: { kind: 'text' as const, text, correctsId: 'o1' },
+  pin: 'box' as const,
+});
+const answer = (over: object) => ({ ...message({ id: 'srv-1', status: 'sent' }), ...over });
+
+async function sendFix(text: string) {
+  const client = createTestQueryClient();
+  client.setQueryData<ThreadCache>(threadKey(PHONE), { pages: [page], pageParams: [null] });
+  const hook = await renderHook(() => useSendMessage(PHONE), { wrapper: queryWrapper(client) });
+  await act(async () => hook.result.current.mutate(fix(text)));
+  await waitFor(() => expect(hook.result.current.isPending).toBe(false));
+}
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  clearChatMemory();
+  setComposerText(PHONE, '');
+});
+
+test.each([
+  ['a shortened resend', { body: 'تصحيح: الساعة الخامسة', corrects_id: 'o1', same_request: false }],
+  ['no word from the API', { body: 'تصحيح: الخامسة', corrects_id: 'o1' }],
+  ['a plain text first, then «تعديل»', { body: 'الخامسة', corrects_id: null }],
+  ['the same text on another message', { body: 'تصحيح: الخامسة', corrects_id: 'o2' }],
+])('%s: the replayed row is not this correction (note, text back)', async (_, row) => {
+  mockApiSend.mockResolvedValue(answer({ ...row, replayed: true }));
+  await sendFix('الخامسة');
+  expect(PINS.box.replayed(PHONE)).toBe(true);
+  expect(getComposerText(PHONE)).toBe('الخامسة');
+});
+
+test('a retry of this very correction after a lost answer is this send', async () => {
+  mockApiSend.mockResolvedValue(
+    answer({ body: 'تصحيح: الخامسة', corrects_id: 'o1', replayed: true, same_request: true }),
+  );
+  await sendFix('الخامسة');
+  expect(PINS.box.replayed(PHONE)).toBe(false);
+  expect(getComposerText(PHONE)).toBe('');
+});
+
+test('a second correction of the original goes once and is reported sent (round 3)', async () => {
+  mockApiSend.mockResolvedValue(answer({ body: 'تصحيح: السادسة', corrects_id: 'o1', replayed: false }));
+  await sendFix('السادسة');
+  expect(mockApiSend).toHaveBeenCalledTimes(1);
+  expect(PINS.box.replayed(PHONE)).toBe(false);
+});
+
+test('a reworded prefix this app never saw: the API says same_request (round 4)', async () => {
+  const before = t.inbox.correction.prefix;
+  t.inbox.correction.prefix = 'Correction: ';
+  const first = { body: 'تعديل: الخامسة', corrects_id: 'o1', replayed: true, same_request: true };
+  mockApiSend.mockResolvedValue(answer(first));
+  await sendFix('الخامسة');
+  t.inbox.correction.prefix = before;
+  expect(PINS.box.replayed(PHONE)).toBe(false);
+});

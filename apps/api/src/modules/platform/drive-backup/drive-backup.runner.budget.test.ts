@@ -48,6 +48,18 @@ describe('DriveBackupRunner: the night’s byte budget (docs/45 §5.1)', () => {
     expect(t.store.rows.map((r) => r.objects.length)).toEqual([2]);
     expect(t.alerts.driveFull).toHaveBeenCalledOnce();
   });
+
+  it('no room for any part: Drive asked once by the run, every object waits', async () => {
+    const t = setup(['rt']);
+    for (let i = 0; i < 200; i += 1) t.minio.set({ bucket: 'reports', key: `k${i}`, body: 'x' });
+    const limit = 15 * 1024 * MB;
+    t.drive.quotaAnswer = { limit, usage: limit - RESERVE_BYTES - MB / 2, email: 'a@example.test' };
+    expect(await t.runner.runOnce()).toBe('ran');
+    expect(t.drive.log.filter((m) => m === 'quota')).toHaveLength(2); // status line, the night
+    expect(t.drive.log).not.toContain('startUpload');
+    expect(t.alerts.driveFull).toHaveBeenCalledOnce();
+    expect(t.alerts.failed).not.toHaveBeenCalled();
+  });
 });
 
 describe('DriveBackupRunner: a token replaced during the run', () => {

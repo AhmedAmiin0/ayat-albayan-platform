@@ -102,8 +102,14 @@ export class ThreadsController {
       actorId: user.id,
       scope,
       sales,
+      role: user.role,
     });
-    return this.audited({ sent, action: 'thread_text', user, scope, sales });
+    const action = input.correctsId ? 'thread_correction' : 'thread_text';
+    const view = await this.audited({ sent, action, user, scope, sales });
+    // `replayed`: this request id's FIRST row came back, nothing new was queued (the clients
+    // tell a replayed earlier row from the send they made: docs/44 M1, «تعديل»); `same_request`:
+    // for a correction, the server's word that this first row IS this request (#694 round 4).
+    return { ...view, replayed: sent.replayed, same_request: sent.sameRequest === true };
   }
 
   @Post(':phone/template')

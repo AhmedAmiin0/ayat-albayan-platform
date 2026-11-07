@@ -78,7 +78,7 @@ describe('ConfigReloadJob (the worker side of an admin save)', () => {
     const urls = stubFetch();
     const { fakes, job } = worker();
     await job.reload();
-    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick']);
+    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick?wait=0']);
     expect(fakes.get(NumbersConfig)?.reload).not.toHaveBeenCalled();
   });
 });
@@ -93,7 +93,7 @@ describe('an admin save on an API copy kicks the worker (kickConfigReload)', () 
     const q = fakeQueries();
     await new IntegrationConfigService(asQueries(q), 60_000).writeValues({}, 'admin-1');
     expect(q.rawValues).toHaveBeenCalledTimes(1);
-    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick']);
+    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick?wait=0']);
   });
 
   it('api with PEER_URLS: the worker and every other API copy reload', async () => {
@@ -103,7 +103,7 @@ describe('an admin save on an API copy kicks the worker (kickConfigReload)', () 
     const urls = stubFetch();
     await integration().clearSecret('WA_ACCESS_TOKEN');
     expect(urls).toEqual([
-      'http://ayat-worker:3000/internal/jobs/config-reload/kick',
+      'http://ayat-worker:3000/internal/jobs/config-reload/kick?wait=0',
       'http://ayat-api-b:3000/internal/jobs/config-reload/here',
     ]);
   });
@@ -123,7 +123,7 @@ describe('an admin save on an API copy kicks the worker (kickConfigReload)', () 
     const q = { all: vi.fn(async () => []), upsert: vi.fn(async () => undefined), remove: vi.fn(async () => undefined) };
     await new TranslationsService(q as never).restore('en', 'nav.leads');
     expect(q.all).toHaveBeenCalledTimes(1);
-    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick']);
+    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick?wait=0']);
   });
 
   it('a Google OFF drops the cache here and kicks the worker', async () => {
@@ -132,6 +132,6 @@ describe('an admin save on an API copy kicks the worker (kickConfigReload)', () 
     const urls = stubFetch();
     const db = { from: () => ({ upsert: async () => ({ error: null }) }) };
     await new GoogleSettings(db as never, 30_000).write({ values: { enabled: false }, actorId: 'admin-1' });
-    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick']);
+    expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick?wait=0']);
   });
 });

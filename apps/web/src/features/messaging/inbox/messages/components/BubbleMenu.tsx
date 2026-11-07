@@ -90,7 +90,12 @@ export function BubbleMenu(props: BubbleMenuProps) {
         </button>
       )}
       {offers.whatsapp && <WhatsAppSendItem message={m} pick={pick} className={item} />}
-      <HideItems offers={offers} onPick={pick(() => onHide?.())} />
+      <HideItems
+        offers={offers}
+        onPick={pick(() => onHide?.())}
+        onEdit={blocked ? undefined : pick(() => actions.edit(m))}
+        blocked={blocked}
+      />
     </div>
   );
 }

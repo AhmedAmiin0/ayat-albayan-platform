@@ -4,7 +4,7 @@ import type { PartDone } from './one-part';
 import type { SkipReason } from './part-stream';
 
 /** Why an object was not backed up tonight (it is tried again every night). */
-export const SKIP_WHYS = ['too_large', 'read_failed', 'changed'] as const;
+export const SKIP_WHYS = ['too_large', 'read_failed', 'changed', 'upload_failed'] as const;
 export type SkipWhy = (typeof SKIP_WHYS)[number];
 
 /** A skipped object, named in the admin status and the alert. */
@@ -67,10 +67,13 @@ export const added = (sum: RunSummary, r: PartDone): RunSummary => ({
   ],
 });
 
-/** One big object whose own part failed: skipped tonight, named, retried next night. */
-export const soloFailed = (sum: RunSummary, objects: readonly ListedObject[]): RunSummary => ({
+/** One big object whose own part failed: skipped tonight, named with why, retried next night. */
+export const soloFailed = (
+  sum: RunSummary,
+  failed: { objects: readonly ListedObject[]; why: SkipWhy },
+): RunSummary => ({
   ...sum,
-  skipped: [...sum.skipped, ...objects.map((o) => item(o, 'read_failed'))],
+  skipped: [...sum.skipped, ...failed.objects.map((o) => item(o, failed.why))],
 });
 
 /** A part that did not fit Drive's room: its objects wait for a later night. */

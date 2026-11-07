@@ -60,13 +60,21 @@ describe('composer draft store («عرض سعر» fills the box; drafts kept unt
 
   it('leaving with a saved reply’s file staged forgets the text; without one it stays', async () => {
     setComposerText(A, 'with file');
-    const bound = await renderHook(({ on }: { on: boolean }) => useForgetDraftOnLeave(A, on), { initialProps: { on: false } });
-    await bound.rerender({ on: true });
+    const bound = await renderHook(({ on }: { on: string | null }) => useForgetDraftOnLeave(A, on), { initialProps: { on: null } });
+    await bound.rerender({ on: 'with file' });
     await bound.unmount();
     expect(getComposerText(A)).toBe('');
     setComposerText(B, 'plain');
-    const free = await renderHook(() => useForgetDraftOnLeave(B, false));
+    const free = await renderHook(() => useForgetDraftOnLeave(B, null));
     await free.unmount();
     expect(getComposerText(B)).toBe('plain');
+  });
+
+  it('a draft an edit restored (not the staged reply’s text) survives leaving (#694 round 4)', async () => {
+    setComposerText(A, 'reply text');
+    const bound = await renderHook(() => useForgetDraftOnLeave(A, 'reply text'));
+    setComposerText(A, 'my draft'); // the edit's restore ran first
+    await bound.unmount();
+    expect(getComposerText(A)).toBe('my draft');
   });
 });

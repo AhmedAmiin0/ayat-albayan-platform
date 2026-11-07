@@ -2881,6 +2881,7 @@ export type Database = {
           attempts: number;
           body: string | null;
           channel: string;
+          corrects_id: string | null;
           created_at: string;
           created_by: string | null;
           dedup_key: string | null;
@@ -2935,6 +2936,7 @@ export type Database = {
           attempts?: number;
           body?: string | null;
           channel?: string;
+          corrects_id?: string | null;
           created_at?: string;
           created_by?: string | null;
           dedup_key?: string | null;
@@ -2989,6 +2991,7 @@ export type Database = {
           attempts?: number;
           body?: string | null;
           channel?: string;
+          corrects_id?: string | null;
           created_at?: string;
           created_by?: string | null;
           dedup_key?: string | null;
@@ -3051,6 +3054,13 @@ export type Database = {
             columns: ['our_reaction_by'];
             isOneToOne: false;
             referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_corrects_id_fkey';
+            columns: ['corrects_id'];
+            isOneToOne: false;
+            referencedRelation: 'messages';
             referencedColumns: ['id'];
           },
           {

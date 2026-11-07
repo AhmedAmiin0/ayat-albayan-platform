@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { templateServices } from './template-services.fakes';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { templateStamp } from '@/modules/messaging/whatsapp/sender/send-line';
 import type { MetaTemplate, TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // «نقل إلى الرقم الآخر» (owner 2026-10-18): the row moves, its old WABA's state is dropped, and the new
@@ -17,6 +18,7 @@ const queries = {
     return db.get(key) ?? null;
   }),
   insert: vi.fn(async () => null),
+  relaneQueued: vi.fn(async () => 0),
   saveLineSync: vi.fn(async (s: { line: string }) => void synced.set(s.line, s)),
   lineSyncs: vi.fn(async () => new Map(synced)),
 };
@@ -65,8 +67,17 @@ describe('PATCH /messaging/templates/:key/line', () => {
   it('the same line is a no-op (no write, no audit); an unknown key is 404', async () => {
     await expect(registry().admin.moveLine({ key: 'booking_confirmation', line: 'notifications' }, 'a')).resolves.toMatchObject({ sync: null });
     expect(queries.update).not.toHaveBeenCalled();
+    expect(queries.relaneQueued).not.toHaveBeenCalled();
     expect(audit.record).not.toHaveBeenCalled();
     await expect(registry().admin.moveLine({ key: 'nope', line: 'chat' }, 'a')).rejects.toMatchObject({ status: 404 });
+  });
+
+  it('its queued, unclaimed rows take the new lane stamp (#695 review item 2)', async () => {
+    await registry().admin.moveLine({ key: 'booking_confirmation', line: 'chat' }, 'a');
+    const toChat = templateStamp({ line: 'chat' }).line ?? null;
+    expect(queries.relaneQueued).toHaveBeenLastCalledWith({ key: 'booking_confirmation', line: toChat });
+    await registry().admin.moveLine({ key: 'booking_confirmation', line: 'notifications' }, 'a');
+    expect(queries.relaneQueued).toHaveBeenLastCalledWith({ key: 'booking_confirmation', line: null });
   });
 
   it('the move’s sync is remembered as the line’s last sync', async () => {

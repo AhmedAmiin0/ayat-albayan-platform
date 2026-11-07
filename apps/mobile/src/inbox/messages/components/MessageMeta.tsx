@@ -10,6 +10,7 @@ import { clock, deliveryTimes, errorLine, queuedLine } from '@/inbox/messages/ho
 import { senderText } from '@/inbox/thread/hooks/thread-mode';
 import { useClockCycle } from '@/core/lib/clock';
 import { WhatsAppStatusLine } from '@/inbox/messages/resend/WhatsAppSendLine';
+import { CorrectedMark } from '@/inbox/messages/components/correction/CorrectedMark';
 
 export function useSmall() {
   const { color } = useTheme();
@@ -51,6 +52,7 @@ export function MessageMeta({ message: m, onTicksPress }: { message: MessageView
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 8 }}>
         {m.line ? <AppText style={small}>{lineWord(m.line)}</AppText> : null}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <CorrectedMark />
           <AppText style={small}>{timeOf(m, cycle)}</AppText>
           {m.direction === 'outbound' ? (
             <DeliveryTicks

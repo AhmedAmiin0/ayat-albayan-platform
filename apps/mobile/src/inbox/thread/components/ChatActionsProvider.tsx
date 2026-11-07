@@ -20,6 +20,7 @@ import { EmojiSheet } from '@/inbox/composer/emoji/EmojiSheet';
 import { isOwnThread, useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { sendState } from '@/inbox/thread/hooks/chat-window';
 import { ChatSearchProvider } from '@/inbox/thread/search';
+import { useComposeTarget } from '@/inbox/composer/edit/use-compose-target';
 
 export interface ChatActionsProviderProps {
   phone: string;
@@ -34,7 +35,9 @@ export interface ChatActionsProviderProps {
  */
 export function ChatActionsProvider({ phone, thread, children }: ChatActionsProviderProps) {
   const mode = useThreadMode();
-  const [reply, setReply] = useState<MessageView | null>(null);
+  // «رد» and «تعديل» (owner 2026-11-07): one of them at most (useComposeTarget).
+  const target = useComposeTarget(phone);
+  const { setReply } = target;
   const [menu, setMenu] = useState<{ m: MessageView; at: number | null } | null>(null);
   const [forward, setForward] = useState<MessageView | null>(null);
   const [copy, setCopy] = useState<CopyRequest | null>(null);
@@ -68,9 +71,9 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
       openReactors: setReactors,
       openFailed: setFailed,
     }),
-    [enabled, canSend, windowOpen, threadName, reactableNow, reactNow],
+    [enabled, canSend, setReply, windowOpen, threadName, reactableNow, reactNow],
   );
-  const value = useMemo<ChatActions>(() => ({ ...bubble, reply, notice, say }), [bubble, reply, notice]);
+  const value = useMemo<ChatActions>(() => ({ ...bubble, ...target, notice, say }), [bubble, target, notice]);
   const removable = reactors !== null && value.reactable(reactors);
   return (
     <ChatActionsContext.Provider value={value}>

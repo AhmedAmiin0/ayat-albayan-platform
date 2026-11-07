@@ -3239,7 +3239,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 10
     }
   },
   "src/inbox/composer/ComposerInput.tsx": {
@@ -3317,7 +3317,7 @@
   },
   "src/inbox/composer/draft-store.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -3441,9 +3441,6 @@
     }
   },
   "src/inbox/composer/use-composer-send.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 4
     },
@@ -4103,7 +4100,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/messages/hooks/bubble-side.ts": {

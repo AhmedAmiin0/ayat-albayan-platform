@@ -8,6 +8,8 @@ import { BODY_SLOTS, type BodySlot } from './templates/templates.js';
 
 /** WhatsApp's text-message limit. */
 export const WA_TEXT_MAX = 4096;
+/** A correction's text leaves room for its prefix («تصحيح: », admins may reword it). */
+export const CORRECTION_PREFIX_ROOM = 40;
 
 /** POST /threads/:phone/text: a session message (24 h window only, else 409 session_closed). */
 export const threadTextSchema = z.object({
@@ -16,6 +18,11 @@ export const threadTextSchema = z.object({
   clientRequestId: z.uuid().optional(),
   /** «رد»: the quoted message, of this same chat (the API resolves its wamid; 400 reply_not_in_thread). */
   replyToMessageId: z.uuid().optional(),
+  /** «تعديل» (owner 2026-11-07): this text corrects that message (a reply prefixed «تصحيح: »). */
+  correctsId: z.uuid().optional(),
+}).refine((b) => !b.correctsId || b.text.length <= WA_TEXT_MAX - CORRECTION_PREFIX_ROOM, {
+  path: ['text'],
+  message: 'too_long',
 });
 
 /** POST /threads/:phone/file-upload-url: a signed upload for one image, PDF (owner 2026-10-19 #2) or voice note (2026-10-27). */

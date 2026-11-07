@@ -8,7 +8,11 @@ import { Outbox, SETTLE_POLL_MS, SETTLE_POLLS } from './outbox';
 const ROW = { phone_e164: '+966500000001', body: 'أهلًا', dedup_key: 'admin:+966500000001:req-1' };
 
 function setup(status: 'queued' | 'sent', replayed = false) {
-  const queries = { enqueue: vi.fn(async () => ({ ...messageRow({ id: 'm1', status }), replayed })), get: vi.fn(async () => null) };
+  const queries = {
+    enqueue: vi.fn(async () => ({ ...messageRow({ id: 'm1', status }), replayed })),
+    get: vi.fn(async () => null),
+    byDedupKey: vi.fn(async (key: string) => (key === ROW.dedup_key ? messageRow({ id: 'm1', status }) : null)),
+  };
   const sender = { kick: vi.fn(() => new Promise<void>(() => undefined)) }; // a pass that never ends (WhatsApp hangs)
   const views = { view: vi.fn(async (r: { id: string; status: string }) => ({ id: r.id, status: r.status })) };
   const outbox = new Outbox(queries as unknown as ThreadMessagesRepo, sender as unknown as MessageSender, views as unknown as MessageViews);
@@ -22,6 +26,7 @@ describe('Outbox (rule 8 dedup, «instant send»)', () => {
     expect(sent).toEqual({ view: { id: 'm1', status: 'queued' }, replayed: false });
     expect(t.queries.enqueue).toHaveBeenCalledWith({ ...ROW, direction: 'outbound', status: 'queued' });
     expect(t.sender.kick).toHaveBeenCalledTimes(1);
+    expect(t.sender.kick).toHaveBeenCalledWith({ lane: 'main', wait: false }); // docs/42 42-7
     expect(t.queries.get).not.toHaveBeenCalled(); // the enqueue's row: no read back (docs/42 42-5)
   });
 
@@ -36,6 +41,18 @@ describe('Outbox (rule 8 dedup, «instant send»)', () => {
     const t = setup('queued');
     const outcome = await Promise.race([t.outbox.send(ROW).then(() => 'answered'), new Promise((r) => setTimeout(() => r('waiting'), 20))]);
     expect(outcome).toBe('waiting');
+  });
+});
+
+describe('Outbox kick lanes (docs/42 42-7, 42-8)', () => {
+  it('a chat-line text kicks the chat lane; send() asks the worker to wait', async () => {
+    const t = setup('queued');
+    t.queries.enqueue.mockResolvedValue({ ...messageRow({ id: 'm1', line: 'chat' }), replayed: false });
+    await t.outbox.queue(ROW);
+    expect(t.sender.kick).toHaveBeenLastCalledWith({ lane: 'chat', wait: false });
+    t.sender.kick.mockResolvedValue(undefined);
+    await t.outbox.send(ROW);
+    expect(t.sender.kick).toHaveBeenLastCalledWith({ lane: 'chat', wait: true });
   });
 });
 
@@ -76,5 +93,12 @@ describe('Outbox.send on an API copy (docs/09: the pass runs on the worker)', ()
     t.sender.kick.mockResolvedValue(undefined);
     await t.outbox.send(ROW);
     expect(t.queries.get).toHaveBeenCalledTimes(1);
+  });
+
+  it('replayOf: the row a key already queued, as a replay; an unknown key is null', async () => {
+    const t = setup('sent');
+    expect(await t.outbox.replayOf(ROW.dedup_key)).toEqual({ view: { id: 'm1', status: 'sent' }, replayed: true });
+    expect(await t.outbox.replayOf('admin:+966500000001:other')).toBeNull();
+    expect(t.sender.kick).not.toHaveBeenCalled();
   });
 });

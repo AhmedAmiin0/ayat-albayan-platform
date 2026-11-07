@@ -3241,14 +3241,14 @@
     "hide": {
       "action": "Remove from platform",
       "title": "Remove this message from the platform?",
-      "body": "The message will be hidden for all staff on the platform only. It is NOT deleted from the customer's phone: they still see it in WhatsApp.",
+      "body": "The message will be hidden for all staff on the platform only. It is NOT deleted for the family: they still have it in WhatsApp.",
       "confirm": "Remove from platform",
       "placeholder": "Hidden on the platform — still visible to the customer",
       "by": "Hidden by {name} · {time}",
       "byUnknown": "Hidden · {time}",
       "unhide": "Show",
       "failed": "Could not complete the action, please try again.",
-      "noEdit": "WhatsApp messages cannot be edited from the platform; edit them in the WhatsApp Business app."
+      "noEdit": "This message cannot be edited from the platform; only a text you sent can be corrected, with a new correction message."
     },
     "sticker": {
       "favourite": "Add to favourites",
@@ -3274,6 +3274,23 @@
       "more": "Show more messages",
       "failed": "Could not search the messages. Please try again.",
       "hint": "Type at least three characters to search message text"
+    },
+    "correction": {
+      "action": "Edit",
+      "bar": "Edit message",
+      "cancel": "Cancel edit",
+      "prefix": "Correction: ",
+      "note": "A sent WhatsApp message cannot be edited; the family gets a new reply to it that starts with the Arabic word for «Correction:».",
+      "mark": "Corrected",
+      "jump": "Go to the correction",
+      "errors": {
+        "correction_not_in_thread": "The message to correct is not in this chat",
+        "not_correctable": "This message cannot be corrected",
+        "empty_correction": "Write the corrected text after «Correction:»",
+        "not_your_message": "You can only correct your own messages",
+        "correction_other_number": "This correction would go from another academy number, so it cannot reply to the original; send it as a new message",
+        "too_long": "The correction with «Correction:» is longer than WhatsApp allows; shorten it"
+      }
     }
   },
   "mobileFinance": {
@@ -6102,7 +6119,7 @@
       },
       "MINIO_DRIVE_BACKUP": {
         "label": "Back up MinIO files to Google Drive",
-        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO that are not backed up yet, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The backup never deletes any file from Drive: when space runs low, delete old archives by hand. PDFs and images are already compressed, so most of the saving comes from other files."
+        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO that are not backed up yet, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The backup never deletes any file from Drive: when space runs low, do not delete single archives (files held only in them drop out of the backup and are not sent again); add Drive storage, or move the whole folder to the trash and empty the trash (no space is freed before that); the next night starts a fresh complete copy, and there is no backup until it finishes. PDFs and images are already compressed, so most of the saving comes from other files."
       }
     },
     "developer": "For developers",
@@ -6126,7 +6143,7 @@
       "error": "Last error: {error}",
       "quota": "Free space on Drive: {free} of {limit}.",
       "quotaUnlimited": "Drive space is unlimited.",
-      "lowQuota": "Less than 2 GB is free on Drive, so nothing is uploaded until there is room: delete old archives from the backup folder by hand and empty the trash, or add space.",
+      "lowQuota": "Less than 2 GB is free on Drive, so nothing is uploaded until there is room. Do not delete single archives: files held only in them drop out of the backup and are not sent again. Add Drive storage, or move the whole backup folder to the trash and empty the trash (no space is freed before that); the next night starts a fresh complete copy, and there is no backup until it finishes.",
       "note": "PDFs and images are already compressed, so they barely shrink.",
       "loadError": "Could not load the backup status.",
       "sizeGb": "{n} GB",
@@ -6147,7 +6164,8 @@
       "skipReasons": {
         "too_large": "larger than the 1 GB archive cap",
         "read_failed": "could not be read from MinIO",
-        "changed": "changed while being read"
+        "changed": "changed while being read",
+        "upload_failed": "could not be uploaded to Google Drive or recorded"
       }
     }
   },
@@ -6442,7 +6460,7 @@
         "other": "Tonight's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every night."
       },
       "backupSkippedItem": "{name} ({size}, {why})",
-      "backupDriveFull": "Google Drive is nearly full: tonight's backup could not upload everything, because the free space does not exceed the kept reserve (2 GB). The backup never deletes anything from Drive: delete old archives from the backup folder by hand and empty the trash, and the backup continues on the following nights."
+      "backupDriveFull": "Google Drive is nearly full: tonight's backup could not upload everything, because the free space does not exceed the kept reserve (2 GB). Do not delete single archives: files held only in them drop out of the backup and are not sent again. Adding Drive storage is best. Otherwise move the whole backup folder to the trash and empty the trash (no space is freed before that); the next night starts a fresh complete copy, and there is no backup until it finishes."
     },
     "web": {
       "updated": "Updated {at}",

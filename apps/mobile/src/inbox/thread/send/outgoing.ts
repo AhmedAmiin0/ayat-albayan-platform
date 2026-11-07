@@ -1,4 +1,13 @@
-import type { MessageQuote, MessageView, TemplateParamsInput, ThreadTemplate } from '@ab/shared';
+import {
+  correctionBody,
+  type MessageQuote,
+  type MessageView,
+  type TemplateParamsInput,
+  type ThreadTemplate,
+} from '@ab/shared';
+import bundled from '@ab/shared/i18n/ar.json';
+import { t } from '@/core/lib/i18n/i18n';
+import { locale } from '@/core/lib/i18n/locale';
 import type { PinKind } from './pinned-send';
 
 /**
@@ -6,7 +15,7 @@ import type { PinKind } from './pinned-send';
  * registry key: a producer's, or a chat starter imported from Meta (owner 2026-10-12).
  */
 export type Outgoing =
-  | { kind: 'text'; text: string; replyTo?: MessageQuote }
+  | { kind: 'text'; text: string; replyTo?: MessageQuote; correctsId?: string }
   | {
       kind: 'template';
       key: ThreadTemplate['key'];
@@ -34,11 +43,30 @@ export interface SendDone {
 /** What the send carries: its text, or a template's preview. */
 export const carried = (out: Outgoing): string => (out.kind === 'text' ? out.text : out.preview);
 
+/**
+ * The Arabic prefixes the API may put before a correction (it adds Arabic whatever the app's
+ * language): the admins' wording (this run's override-merged `t`, when it is the Arabic one), then
+ * the bundled default, which the API strips too.
+ */
+export const correctionPrefixes = (): [string, string] => {
+  const fallback = bundled.inbox.correction.prefix;
+  return [locale === 'ar' ? t.inbox.correction.prefix : fallback, fallback];
+};
+
+/** What the API's row will say: a correction (owner 2026-11-07) after its prefix; else the text. */
+export function echoed(out: Outgoing): string {
+  const [prefix, fallback] = correctionPrefixes();
+  const fixes = out.kind === 'text' && out.correctsId;
+  return fixes ? correctionBody(prefix, out.text, [fallback]) : carried(out);
+}
+
 /** The POST body of a text or template send, with its clientRequestId. */
 export function sendBody({ out, id }: SendInput) {
   if (out.kind === 'text') {
     const reply = out.replyTo ? { replyToMessageId: out.replyTo.id } : {};
-    return { text: out.text, clientRequestId: id, ...reply };
+    // «تعديل» (owner 2026-11-07): the API adds the prefix and the reply to the original.
+    const corrects = out.correctsId ? { correctsId: out.correctsId } : {};
+    return { text: out.text, clientRequestId: id, ...reply, ...corrects };
   }
   const lesson = out.lessonId ? { lessonId: out.lessonId } : {};
   return { key: out.key, params: out.params, clientRequestId: id, ...lesson };

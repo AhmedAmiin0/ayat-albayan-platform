@@ -6,6 +6,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import type { BubbleOffers } from '@/inbox/messages/hooks/bubble-offers';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { Note } from '@/more';
+import { CorrectAction } from '@/inbox/messages/components/correction/CorrectAction';
 import { useHideMessage } from './use-hide-message';
 
 interface HideActionsProps {
@@ -17,8 +18,8 @@ interface HideActionsProps {
 
 /**
  * The long-press menu's «حذف من المنصة» (admin, sales) with a confirm that says plainly the message
- * stays on the customer's phone, «إظهار» on a hidden one (the admin), and why there is no «تعديل»
- * for a WhatsApp message (only the WhatsApp Business app can edit it).
+ * stays on the customer's phone, «إظهار» on a hidden one (the admin), «تعديل» (a correction) on
+ * a text this viewer may correct, and why there is none on our other messages.
  */
 export function HideActions({ message: m, offers, phone, onClose }: HideActionsProps) {
   const [asking, setAsking] = useState(false);
@@ -31,6 +32,7 @@ export function HideActions({ message: m, offers, phone, onClose }: HideActionsP
     );
   return (
     <>
+      {offers.correct ? <CorrectAction message={m} onClose={onClose} /> : null}
       {offers.noEdit ? <Note>{t.inbox.hide.noEdit}</Note> : null}
       {offers.hide && !asking ? (
         <Button variant="secondary" label={t.inbox.hide.action} onPress={() => setAsking(true)} />
