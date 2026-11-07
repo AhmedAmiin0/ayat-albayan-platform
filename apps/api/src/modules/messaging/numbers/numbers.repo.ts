@@ -3,9 +3,11 @@ import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import type { Database } from '@ab/db';
 import { DB, type Db } from '@/common/db/db.module';
 import type { NumberPatch } from './numbers.patch';
+import type { HealthTarget } from './lines/numbers.health-target';
 
 export type NumberRow = Database['public']['Tables']['wa_numbers']['Row'];
 type Health = Pick<NumberRow, 'health' | 'checked_at'> & { display_phone_e164?: string };
+
 
 const COLUMNS =
   'id, label, purpose, provider, phone_number_id, waba_id, app_id, display_phone_e164, enabled, is_default, fallback_rank, health, checked_at, created_at, updated_at, updated_by, evolution_mode, evolution_auto_sends, evolution_state, evolution_state_at, evolution_config, evolution_sync, evolution_enabled_at';
@@ -92,9 +94,12 @@ export class NumbersRepo {
     return data === true;
   }
 
-  /** The last line check of a phone id, on every row that has it (#134 item 9). */
-  async saveHealth(phoneNumberId: string, health: Health): Promise<void> {
-    const { error } = await this.db.from('wa_numbers').update(health).eq('phone_number_id', phoneNumberId);
+  /**
+   * The last line check (#134 item 9): on every row of the phone id checked, or a crm line's on its
+   * role's crm rows (just the routed number when one is named; numbers.health-target.ts).
+   */
+  async saveHealth(target: HealthTarget, health: Health): Promise<void> {
+    const { error } = await this.db.from('wa_numbers').update(health).match(target);
     if (error) throw new Error(`number health write failed: ${error.message}`);
   }
 

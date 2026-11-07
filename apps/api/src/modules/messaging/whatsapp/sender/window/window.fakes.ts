@@ -63,13 +63,15 @@ export function windowFakes() {
   const approved = vi.fn(async (key: string): Promise<TemplateView | null> =>
     key === WELCOME.key ? WELCOME : null,
   );
+  /** The composer note's 60 s copy (docs/42 42-3): same answers, its own spy. */
+  const approvedCached = vi.fn(async (key: string) => approved(key));
   const settings = { read: vi.fn(async () => ({ chat_reopen_template: 'welcome_greeting' })) };
   const dispatch = { ready: vi.fn(() => true) };
   const asRepo = repo as unknown as WindowRepo;
   const cancels = { dropLost: vi.fn(async () => ({ cancelled: 1 })) };
   const request = new ReopenRequest(
     asRepo,
-    { approved } as unknown as TemplateRegistry,
+    { approved, approvedCached } as unknown as TemplateRegistry,
     settings as unknown as WindowSettings,
     cancels as unknown as ReopenCancel,
   );
@@ -85,7 +87,7 @@ export function windowFakes() {
   );
   const kapso = { reopen: vi.fn(async (): Promise<string | null> => null) };
   hold.kapso = kapso as unknown as KapsoHold;
-  const parts = { repo, approved, settings, dispatch, cancels, expiry, audit };
+  const parts = { repo, approved, approvedCached, settings, dispatch, cancels, expiry, audit };
   return { ...parts, hold, request, release, kapso };
 }
 

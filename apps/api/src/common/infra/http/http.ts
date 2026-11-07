@@ -3,6 +3,7 @@ import { readCapped } from './bytes';
 import { withDeadline, type Phase } from './deadline';
 import { Failed, Passthrough, type HttpFailure } from './failure';
 import type { BytesCall, Http, HttpProfile, HttpRequest } from './http.types';
+import { timed } from './http-timing';
 import { initOf, urlOf, whereOf } from './request';
 
 // The one outbound client of the api (docs/36 H-1): a profile per integration, no retries (a send
@@ -57,15 +58,17 @@ async function call<E extends Error, T>(
   const where = whereOf(profile.name, req);
   const ms = req.timeoutMs ?? profile.timeoutMs;
   const run = { ms, caller: req.signal, errors: profile.errors, where };
-  return withDeadline(run, async (signal: AbortSignal, phase: Phase) => {
+  // docs/42 42-2: every call's time and status, logged (http-timing) whatever the outcome.
+  return timed(where, (seen) => withDeadline(run, async (signal: AbortSignal, phase: Phase) => {
     const headers = await profile.headers();
     const url = urlOf(profile.base(), req);
     const send = profile.fetch ?? fetch;
     phase.sent = true;
     const res = await send(url, initOf({ profile, req, headers }, signal));
     phase.headers = true;
+    seen(res.status);
     return read(res, where);
-  });
+  }));
 }
 
 /** A non-2xx goes to the table (through Failed); a 2xx is the reader's. */

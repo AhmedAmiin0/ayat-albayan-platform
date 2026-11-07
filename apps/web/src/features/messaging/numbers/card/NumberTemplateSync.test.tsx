@@ -42,9 +42,11 @@ describe('a number’s template sync', () => {
     await waitFor(() => expect(card.getByRole('status').textContent).toBe(s.failed.replace('{{error}}', s.errors.not_configured)));
   });
 
-  it('a refused call is announced too', async () => {
-    apiSend.mockRejectedValue(new ApiError(403, { message: 'forbidden' }));
+  it('a refused call is announced in words, never «حدث خطأ»', async () => {
+    const code = 'module_mode_only';
+    apiSend.mockRejectedValue(new ApiError(409, { code, message: code }));
     const card = await clickSync();
-    await waitFor(() => expect(card.getByRole('status').textContent).toBe(s.failed.replace('{{error}}', t.numbers.errors.generic)));
+    const text = s.failed.replace('{{error}}', s.errors.module_mode_only);
+    await waitFor(() => expect(card.getByRole('status').textContent).toBe(text));
   });
 });
