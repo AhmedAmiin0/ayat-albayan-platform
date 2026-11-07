@@ -46,12 +46,15 @@ queued < sent < delivered < read only; `failed`/`sent_manually` always replace) 
 and ignores phones not in a loaded list. The patch is VISUAL ONLY (owner, 2026-11-07): every event, rows or
 `{phone}`, still runs the same throttled re-read (web chat + list, mobile sync nudge), which brings replyable,
 stamps, re-queues and bodies. No read is ever folded (owner, 2026-11-07, third round): a read or a sync
-result is written exactly as the server sent it. The re-read STARTS AFTER the event: on the web the patch
-cancels the chat's read in flight only when it moved that chat (reverted to the patched data, never committed
-after it; a page load «تحميل الأقدم» and a first load are never cancelled) and the re-reads run with
-`cancelRefetch: true`. A LIST read is never cancelled by the patch (round 4: a burst of events would starve
-GET /threads); the throttled list re-read supersedes a stale one, so a stale tick shows for one throttle window
-at most. The chat re-read waits for a page load or a first load in flight and runs after it (`chat-reread.ts`).
+result is written exactly as the server sent it. The re-read STARTS AFTER the event: on the web the re-reads
+run with `cancelRefetch: true` (an older read in flight is cancelled, never joined). The patch itself cancels
+NO read (round 4 for the list, round 5 for the chat: a burst of events would starve GET /threads and
+GET /threads/:phone); the throttled re-read supersedes a stale read in flight, so a stale tick shows for one
+throttle window at most. Two loads are never cancelled nor joined; the re-read waits for them and runs once
+after them (`reread.ts`): a chat page load «تحميل الأقدم» in flight and a first load (chat or list). A page
+load that cancels a re-read (fetchNextPage's own `cancelRefetch`) is followed by one more re-read (one per
+click). A chat re-read starts only while the window has focus (a full read stamps `read_at` and sends Meta a
+read receipt), also when it was deferred; the chat's focus re-read (`useWindowFocus`) makes up a skipped one.
 Meta's delivered webhook (`wa_conversation_id`, `wa_pricing_category`) is tick-only too. On mobile a patch moves
 a stored tick forward only (`liveTick`): it lands failed / by hand only when newer than the row's sync stamp, so
 a late event never undoes a synced failure; on mobile the sync engine joins the run in flight and runs exactly one
