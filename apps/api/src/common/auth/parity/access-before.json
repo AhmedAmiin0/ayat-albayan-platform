@@ -464,6 +464,7 @@
   "MessageHideController.hide": ["admin","sales","teacher"],
   "MessageHideController.unhide": ["admin","sales","teacher"],
   "StorageProbeController.run": ["admin"],
+  "BackupStatusController.view": ["admin"],
   "StickersController.favourite": ["admin","sales","teacher"],
   "StickersController.gif": ["admin","sales","teacher"],
   "StickersController.gifList": ["admin","sales","teacher"],
