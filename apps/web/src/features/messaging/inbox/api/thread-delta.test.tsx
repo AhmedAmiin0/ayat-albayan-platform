@@ -3,12 +3,17 @@ import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { detail, message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { inboxLive } from './live';
 import { useLiveThread } from './thread-delta';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-// A fast delta tick for the test; the real one is 10 s (INBOX_REFRESH_MS).
-vi.mock('./api', async (orig) => ({ ...(await orig<object>()), INBOX_REFRESH_MS: 40 }));
+// A fast delta tick for the test; the real one is 10 s down / 20 s live (inboxPollMs).
+vi.mock('./api', async (orig) => ({
+  ...(await orig<object>()),
+  INBOX_REFRESH_MS: 40,
+  inboxPollMs: () => 40,
+}));
 
 const PATH = '/threads/%2B966501234567';
 const first = message({ id: 'm1', created_at: '2026-10-27T10:00:00Z' });
@@ -59,5 +64,12 @@ describe('useLiveThread: the open chat polls a delta between full reads', () => 
     await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
     await new Promise((r) => setTimeout(r, 150));
     expect(deltaCalls()).toEqual([]);
+  });
+
+  it('keeps polling the delta while realtime reads SUBSCRIBED (a quietly dead socket, docs/44 BUG5)', async () => {
+    vi.spyOn(document, 'hasFocus').mockReturnValue(true);
+    vi.spyOn(inboxLive, 'isLive').mockReturnValue(true);
+    setup({ messages: [], has_more: false, pending: [] });
+    await waitFor(() => expect(deltaCalls().length).toBeGreaterThan(1));
   });
 });

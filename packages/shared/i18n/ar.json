@@ -2755,6 +2755,8 @@
     "dayYesterday": "أمس",
     "noticeMore": "عرض التنبيه كاملًا",
     "title": "الرسائل",
+    "liveOn": "متصل",
+    "liveOff": "غير متصل",
     "searchPlaceholder": "ابحث بالاسم أو الرقم أو نص الرسالة",
     "filterAll": "الكل",
     "filterUnread": "غير مقروءة",

@@ -1,4 +1,11 @@
-import { chatLiveKey, phoneOfKey, refreshPlan, throttleMsOf, type LiveKey } from './inbox-live.js';
+import {
+  catchUpPlan,
+  chatLiveKey,
+  phoneOfKey,
+  refreshPlan,
+  throttleMsOf,
+  type LiveKey,
+} from './inbox-live.js';
 import { createLiveRegistry } from './live-registry.js';
 import { liveEvent, type LiveRow } from './live-rows.js';
 import { createThrottle, type Throttle } from './throttle.js';
@@ -75,7 +82,7 @@ export function createInboxLive({ chatOwnsBadge = false }: InboxLiveOptions = {}
       return () => void listeners.delete(listener);
     },
     watch(key) {
-      if (registry.watch(key)) fire(key);
+      if (registry.watch(key)) catchUpPlan(key).forEach(fire);
       return () => registry.unwatch(key);
     },
     forget(key) {

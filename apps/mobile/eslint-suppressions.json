@@ -1934,17 +1934,6 @@
       "count": 1
     }
   },
-  "src/core/nav/use-inbox-badge.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/core/push/device-key.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
@@ -5665,7 +5654,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/threads-list/LeadChips.tsx": {

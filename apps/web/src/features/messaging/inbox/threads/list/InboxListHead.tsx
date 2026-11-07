@@ -3,6 +3,7 @@ import { Cartouche } from '@/components/ui/display/cartouche';
 import { PageHead } from '@/components/ui/layout/page';
 import { t } from '@/lib/i18n/i18n';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { LiveDot } from './LiveDot';
 import { NewChatForm, NewChatToggle } from './NewChatForm';
 
 export interface InboxListHeadProps {
@@ -16,7 +17,8 @@ export interface InboxListHeadProps {
 
 /**
  * The list column's first row (docs/07 principle 4): the screen's ONE cartouche, the count, `head`
- * and the icon-only «محادثة جديدة» (admin and sales), whose form unfolds under the row.
+ * and the icon-only «محادثة جديدة» (admin and sales), whose form unfolds under the row. Admin and
+ * sales also see the realtime dot (a teacher never joins the channel: no dot).
  */
 export function InboxListHead({ total, head, onOpen }: InboxListHeadProps) {
   const mode = useInboxMode();
@@ -26,6 +28,7 @@ export function InboxListHead({ total, head, onOpen }: InboxListHeadProps) {
     <>
       <PageHead className="mb-3 gap-x-3 gap-y-2">
         <Cartouche>{mode !== 'admin' ? t.nav.conversations : t.inbox.title}</Cartouche>
+        {newChat && <LiveDot />}
         {total !== undefined && (
           <span className="text-sm text-ink-3 tabular-nums">{t.leads.count.replace('{n}', String(total))}</span>
         )}

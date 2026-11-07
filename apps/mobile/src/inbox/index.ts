@@ -9,7 +9,7 @@ export { shareRedirect } from './thread/share/share-redirect';
 export { threadHref } from './thread/hooks/thread-cache';
 export { clockAt } from './shared/format';
 export { StaffCalls } from './thread/calls/state/StaffCalls';
-export { useInboxRealtime } from './thread/live';
+export { useInboxLive, useInboxRealtime } from './thread/live';
 export { useInboxStore } from './thread/local';
 export { clearInboxOnSignOut } from './sign-out';
 // A screen over the chat (sales-subscribe «رابط دفع») fills its reply box wherever a text goes (chatMaySend).

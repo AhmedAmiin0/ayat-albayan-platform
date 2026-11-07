@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { THREAD_FULL_MS } from '../channels/channels.js';
 import {
+  catchUpPlan,
   changedPhone,
+  unreadTotal,
   chatLiveKey,
   fullReadInterval,
   INBOX_FALLBACK_MS,
@@ -44,5 +46,20 @@ describe('the thread_changed event → what refreshes', () => {
     expect(liveInterval(true, 10_000)).toBe(20_000);
     expect(liveInterval(false, 10_000)).toBe(10_000);
     expect(liveInterval(false, 30_000)).toBe(30_000);
+  });
+});
+
+describe('catchUpPlan (docs/44 BUG4)', () => {
+  it('the list catches up with the badge; a chat or the badge alone', () => {
+    expect(catchUpPlan('list')).toEqual(['list', 'badge']);
+    expect(catchUpPlan(chatLiveKey('+966500000001'))).toEqual(['chat:+966500000001']);
+    expect(catchUpPlan('badge')).toEqual(['badge']);
+  });
+});
+
+describe('unreadTotal', () => {
+  it('reads the page total; anything else throws', () => {
+    expect(unreadTotal({ items: [], total: 4, page: 1, pageSize: 1 })).toBe(4);
+    for (const bad of [null, {}, { total: -1 }, { total: '3' }]) expect(() => unreadTotal(bad)).toThrow();
   });
 });
