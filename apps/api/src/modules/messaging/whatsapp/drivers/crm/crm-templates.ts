@@ -5,6 +5,7 @@ import { bodyExamples } from '@/modules/messaging/whatsapp/template-review';
 import {
   WaError, type MetaTemplate, type TemplateRow,
 } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { crmComponents, crmTextSchema } from './crm-components';
 import { crmJson, type CrmConn } from './crm-http';
 
 // A crm line's templates through the academy CRM (docs/39): GET templates?sync=1 (the CRM re-syncs
@@ -24,7 +25,7 @@ const rowSchema = z.object({
   meta_template_id: z.string().nullable(),
   quality_score: z.string().nullable(),
   rejection_reason: z.string().nullable(),
-});
+}).extend(crmTextSchema.shape);
 type CrmRow = z.infer<typeof rowSchema>;
 
 const savedSchema = z.object({ meta_template_id: z.string(), status: z.string() });
@@ -37,7 +38,7 @@ const toMeta = (r: CrmRow): MetaTemplate => ({
   status: r.status,
   category: r.category ?? '',
   quality: r.quality_score,
-  components: [],
+  components: crmComponents(r),
   rejectedReason: r.rejection_reason,
 });
 

@@ -1,17 +1,19 @@
 import { WA_LINES, type TemplateHealthView, type TemplateLineSync, type WaLine } from '@ab/shared';
 import {
-  Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy, type OnModuleInit,
+  Inject, Injectable, Logger, Optional,
+  type OnApplicationBootstrap, type OnModuleDestroy, type OnModuleInit,
 } from '@nestjs/common';
 import { onLineSaved, type LineSaved } from '@/common/configuration/integrations/provider-saved';
 import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import {
-  requireLine, requireSync, syncOn,
+  onCrm, requireLine, requireSync, syncOn,
 } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { CRM_MANAGED } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
-import { rememberSync, syncLine } from './template-line-sync';
+import { refreshCrmCopies, rememberSync, syncLine } from './template-line-sync';
+import { CrmCopiesRepo } from '@/modules/messaging/whatsapp/messages/crm-sent/crm-copies.repo';
 import {
   WHATSAPP_LINES, type WhatsappLines,
 } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -44,6 +46,7 @@ export class TemplateVerifier implements OnModuleInit, OnApplicationBootstrap, O
     private readonly queries: TemplatesRepo,
     @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,
     private readonly catalog: TemplateRegistry,
+    @Optional() @Inject(CrmCopiesRepo) private readonly copies?: CrmCopiesRepo,
   ) {}
 
   /** Request-driven (not a job): the API process that saved the line runs the sync. */
@@ -96,7 +99,7 @@ export class TemplateVerifier implements OnModuleInit, OnApplicationBootstrap, O
     requireSync();
     const now = opts.now ?? new Date();
     const targets = this.targets(opts.line);
-    const deps = { queries: this.queries, lines: this.lines, log: this.log };
+    const deps = { queries: this.queries, lines: this.lines, log: this.log, copies: this.copies };
     const results: TemplateLineSync[] = [];
     for (const line of targets) {
       const result = await syncLine(deps, line, now);
@@ -104,6 +107,14 @@ export class TemplateVerifier implements OnModuleInit, OnApplicationBootstrap, O
       results.push(result);
     }
     return { lines: results, templates: await this.catalog.list() };
+  }
+
+  /** Each configured crm line's template text kept as our copy (CrmCopyRefresh); lines read. */
+  async refreshCrmCopies(now: Date = new Date()): Promise<WaLine[]> {
+    const deps = { queries: this.queries, lines: this.lines, log: this.log, copies: this.copies };
+    const crm = this.configuredLines().filter(onCrm);
+    for (const line of crm) await refreshCrmCopies(deps, line, now);
+    return crm;
   }
 
   /** The asked line (503 when it is not configured), else every configured line (503 when none). */

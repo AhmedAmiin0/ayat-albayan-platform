@@ -1,7 +1,8 @@
 import type {
   TemplateLineSync, TemplateNumberSetView, TemplateNumberSyncView, WaLine,
 } from '@ab/shared';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
+import { CrmCopiesRepo } from '@/modules/messaging/whatsapp/messages/crm-sent/crm-copies.repo';
 import { AuditService } from '@/common/audit/audit.service';
 import {
   activeNumberId, overlayNumbers,
@@ -28,6 +29,7 @@ export class TemplateNumbers {
     private readonly queries: TemplatesRepo,
     private readonly audit: AuditService,
     @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,
+    @Optional() @Inject(CrmCopiesRepo) private readonly copies?: CrmCopiesRepo,
   ) {}
 
   /** PUT /messaging/templates/:key/number (template-number-set.ts). */
@@ -45,7 +47,7 @@ export class TemplateNumbers {
 
   /** One line's sync, kept for «القوالب» (lineViews) as POST …/templates/health keeps it. */
   private async syncLine(line: WaLine, now: Date): Promise<TemplateLineSync> {
-    const deps = { queries: this.queries, lines: this.lines, log: this.log };
+    const deps = { queries: this.queries, lines: this.lines, log: this.log, copies: this.copies };
     const result = await syncLine(deps, line, now);
     await rememberSync(deps, result);
     return result;

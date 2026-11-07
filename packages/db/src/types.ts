@@ -985,6 +985,27 @@ export type Database = {
           },
         ];
       };
+      crm_template_copies: {
+        Row: {
+          components: Json;
+          language: string;
+          name: string;
+          synced_at: string;
+        };
+        Insert: {
+          components?: Json;
+          language: string;
+          name: string;
+          synced_at?: string;
+        };
+        Update: {
+          components?: Json;
+          language?: string;
+          name?: string;
+          synced_at?: string;
+        };
+        Relationships: [];
+      };
       custom_config: {
         Row: {
           description: string | null;
