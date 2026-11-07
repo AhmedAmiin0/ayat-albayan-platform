@@ -288,7 +288,7 @@ Meta values, never the producer's CRM values.
 | Ours (`key`) | The CRM's template | Values |
 |---|---|---|
 | `booking_confirmation` / `_meet` / `_plain`, `lesson_reminder` (`lesson_reminder_v2` on Meta) / `_meet` / `_plain` | same names (no change) | the meta driver's values |
-| `teacher_new_student` | `teacher_lesson_v2` (default, no crm_name needed) | body [teacher, students, their codes `AB-nnnn`, the first lesson's time in the teacher's tz, its duration «45 دقيقة»]; URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` (**wrong on the real template**, see below) |
+| `teacher_new_student` | `teacher_lesson_v2` (default, no crm_name needed) | body, its four slots [{{1}} teacher, {{2}} students with their codes «سهيلة (AB-0101) ومريم (AB-0102)», {{3}} the first lesson's time in the teacher's tz, {{4}} its duration «45 دقيقة»] (until 2026-11-07 five values went and the CRM shifted time and duration); URL buttons by index: 0 «ادخل الحلقة» = `classroom/<lesson id>`, 1 «تقرير الحلقة» = `teacher/report/<lesson id>` (**wrong on the real template**, see below) |
 | `teacher_lesson_reminder` / `_meet` (the same-day reminder, since 2026-10-31: the CRM's account has no `teacher_lesson_reminder_meet`, Meta #132001) | `teacher_lesson_reminder` (default, the old script's own teacher template, no buttons) | body [teacher, one line: «<the lesson's time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) · رابط الحلقة: <join> · تقرير الحلقة: <report>»]; no buttons; `<report>` is the teacher's short no-login report link («Teacher report link» below) |
 | `report_ready` | `session_report_pdf` (since 2026-11-05: `crm_name` set by migration `20261105000301`) | ONE template call: header DOCUMENT = the report PDF (7-day signed URL); body [student, the lesson date `dd/MM/yyyy` in the guardian's tz, the teacher's display name, the family's «رأيك يهمّنا» short link]; trial lessons too («Report flow» below). The old two-call flow (`report_session` / `report_trial_session`) is still in the code but those templates are PENDING_DELETION on Meta: never set them |
 
@@ -489,7 +489,7 @@ components from it (`waba-graph.ts`): the same template and values on either dri
 
 | Platform key | WABA template | Values sent |
 |---|---|---|
-| teacher_new_student | `teacher_lesson_v2` | body [teacher, students, codes, time, duration]; URL buttons 0 room, 1 report |
+| teacher_new_student | `teacher_lesson_v2` | body [teacher, «name (AB-nnnn)» students, time, duration] (4 slots); URL buttons 0 room, 1 report |
 | teacher_lesson_reminder, teacher_lesson_reminder_meet | `teacher_lesson_reminder` | body [teacher, one line]; no button |
 | report_ready (crm_name `report_session`) | the PDF as a document message, then `report_trial_session` / `report_session` | no variables |
 | every other key (booking_confirmation(_meet/_plain), lesson_reminder (`lesson_reminder_v2`), _meet, _plain, …) | its `crm_name`, else `meta_name` | its own values and buttons |
