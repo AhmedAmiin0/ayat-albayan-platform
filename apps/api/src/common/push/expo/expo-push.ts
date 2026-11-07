@@ -1,4 +1,4 @@
-import type { PushKind } from '@ab/shared';
+import { type PushKind, wakesInbox } from '@ab/shared';
 import { z } from 'zod';
 import { ar } from '@/common/infra/i18n/server-text';
 import { fill } from '@/modules/reporting/report-pdf/render/pdf-text';
@@ -28,10 +28,23 @@ export interface ExpoMessage {
   data: Record<string, string>;
   sound: 'default';
   channelId: string;
+  /** A message push (wakesInbox): FCM high priority, so Android delivers it now, even in Doze. */
+  priority?: 'high';
+  /** …and a background wake-up (iOS content-available; the app's task syncs its store). */
+  _contentAvailable?: true;
 }
 
+/** The background wake-up fields of a message push (docs/43 §5, APK 0.6.0); none otherwise. */
+const WAKE = { priority: 'high', _contentAvailable: true } as const;
+const wakeFields = (data: Record<string, string>) => (wakesInbox(data.kind) ? WAKE : {});
+
+/**
+ * One message per device on the default channel: the same visible banner for every kind; a
+ * message push also wakes the app's background task (data stays the kind and the phone).
+ */
 export function expoMessages(tokens: readonly string[], text: PushText, data: Record<string, string>): ExpoMessage[] {
-  return tokens.map((to) => ({ to, ...text, data, sound: 'default', channelId: ANDROID_CHANNEL }));
+  const wake = wakeFields(data);
+  return tokens.map((to) => ({ to, ...text, data, sound: 'default', channelId: ANDROID_CHANNEL, ...wake }));
 }
 
 /** One Expo push ticket (response `data[i]` for message i), discriminated on `status`. */

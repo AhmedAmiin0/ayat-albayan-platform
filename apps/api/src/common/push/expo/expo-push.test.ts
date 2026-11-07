@@ -20,7 +20,7 @@ describe('pushText (ar.json notifications)', () => {
 describe('expoMessages / readTickets (R-MOB-01)', () => {
   const tokens = ['ExponentPushToken[a]', 'ExponentPushToken[b]'];
 
-  it('one message per device on the admin channel', () => {
+  it('a message push: one per device, the same banner, plus the background wake-up (docs/43 §5)', () => {
     const msgs = expoMessages(tokens, { title: 't', body: 'b' }, { kind: 'new_lead', phone: '+966500000001' });
     expect(msgs).toEqual(
       tokens.map((to) => ({
@@ -30,8 +30,20 @@ describe('expoMessages / readTickets (R-MOB-01)', () => {
         data: { kind: 'new_lead', phone: '+966500000001' },
         sound: 'default',
         channelId: 'default',
+        priority: 'high',
+        _contentAvailable: true,
       })),
     );
+    const [message] = expoMessages(tokens, { title: 't', body: 'b' }, { kind: 'new_message', phone: '+1' });
+    expect([message?.priority, message?._contentAvailable]).toEqual(['high', true]);
+  });
+
+  it('any other kind (or none): the banner only, no wake-up fields, data untouched', () => {
+    const cases: Record<string, string>[] = [{ kind: 'payment_due', student: 's' }, {}];
+    for (const data of cases) {
+      const [message] = expoMessages(['ExponentPushToken[a]'], { title: 't', body: 'b' }, data);
+      expect(message).toEqual({ to: 'ExponentPushToken[a]', title: 't', body: 'b', data, sound: 'default', channelId: 'default' });
+    }
   });
 
   it('collects ticket ids and the tokens Expo says are gone', () => {

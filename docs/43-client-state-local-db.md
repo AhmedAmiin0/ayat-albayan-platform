@@ -106,6 +106,36 @@ Files near the cap: web `inbox/api/api.ts` **150**, `TextComposer.tsx` 149, mobi
   an anchored window takes the stored ticks only. Thread pages are `noPersist`. The HTTP polls stay (they
   stamp rows read); filtered lists stay on HTTP with the 43-1 overlay.
 
+### Background push sync (APK 0.6.0, owner 2026-11-07)
+
+Before 0.6.0 nothing ran while the app was in the background or killed, so the phone store synced only
+once the app was opened. Now a message push wakes it:
+
+- **Server** (`common/push/expo/expo-push.ts`): pushes of `PUSH_WAKE_KINDS` (`new_message`, `new_lead`;
+  `packages/shared/src/notifications/push-wake.ts`) go out with `priority: 'high'` (FCM high priority:
+  delivered at once, also in Doze) and `_contentAvailable: true` (iOS content-available), with the same
+  banner as before. `data` stays `{ kind, phone }`; nothing beyond today's preview.
+- **Phone**: `expo-task-manager` (~57.0.22). The entry is now `apps/mobile/index.ts`, which defines and
+  registers the background notification task (`thread/local/push-task.ts`, `registerTaskAsync`) before
+  `expo-router/entry`. Expo delivers Android pushes as FCM data messages, so the task runs in the
+  foreground, in the background and when the app was killed (a headless JS start, no screen).
+- **The task** (`thread/local/push-wake.ts`): only a message push (zod over `data.dataString`); the
+  persisted Supabase session's user id; `wakeInboxStore(owner)` gives the app's running session when it is
+  that owner's, else opens one only when the file's `sync_state.owner` is already that user (the app started
+  the store for them before; signed out = wiped/deleted = nothing; another account = nothing, never wiped).
+  It calls the engine's `syncNow()`: it joins the run in flight and asks for exactly one more after it (a
+  push's message may be newer than that run's ask), never two at a time. Wakes are counted on a session
+  they opened: the last one out closes it (engine stopped at once, request aborted, rows kept). 20 s
+  budget for the whole wake, the close included. A session the app started meanwhile stays.
+  The push payload is never written: the sync is the only writer.
+- **Limits**: the server sends one message push per phone per 10 minutes (`messageSubject`), so later
+  messages in that window still arrive with the next wake, the 30 s fallback or opening the app. Android
+  vendor battery savers (Xiaomi MIUI/HyperOS, Huawei EMUI, Oppo/Realme ColorOS, Vivo) may block a killed
+  app's wake-up until it is allowed to run in the background ("autostart" / "no restrictions"). iOS: no
+  `remote-notification` background mode is configured, so the task never runs there (a no-op).
+- **OTA**: `expo.version` 0.5.0 → **0.6.0** (a new native module). An OTA built from here never reaches
+  0.5.x: install APK 0.6.0 first.
+
 ## 6. Rejected ideas and risks
 
 | Idea / risk | Decision |

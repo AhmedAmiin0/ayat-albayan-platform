@@ -9,3 +9,4 @@ export * from './catalogue/catalogue-state.js';
 export * from './rules.types.js';
 export * from './rules.legacy.js';
 export * from './rules.effective.js';
+export * from './push-wake.js';
