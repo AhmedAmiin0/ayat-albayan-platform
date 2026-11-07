@@ -196,15 +196,18 @@ services:
           echo 'ayat-minio: set MINIO_ROOT_USER and MINIO_ROOT_PASSWORD (16+ characters) in minio.env' >&2
           exit 1
         }
-        exec minio server /data
+        exec minio server /data --console-address :9001
     env_file:
       - path: ./minio.env
         required: false
     environment:
-      # S3 API only: no web console to attack.
-      MINIO_BROWSER: "off"
+      # The web console (object browser) answers on the host's 127.0.0.1:9001 only: an SSH tunnel
+      # reaches it (docs/45 §7); never published, never through Caddy.
+      MINIO_BROWSER: "on"
       # The Go GC works to stay under the container limit instead of being OOM-killed at it.
       GOMEMLIMIT: 400MiB
+    ports:
+      - "127.0.0.1:9001:9001"
     volumes:
       - minio-data:/data
     restart: unless-stopped

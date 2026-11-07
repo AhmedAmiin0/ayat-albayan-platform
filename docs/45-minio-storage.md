@@ -268,6 +268,12 @@ of every bucket; the move above is what makes MinIO serve the old files.
 
 ## 7. Disk, memory, operations
 
+- **Web console (owner 2026-11-07):** the object browser answers on the host's `127.0.0.1:9001` only, never
+  published to the internet and never behind Caddy. From your PC: `ssh -N -L 9001:127.0.0.1:9001 hostinger`, then
+  open `http://localhost:9001` and sign in with `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` from
+  `/opt/ayat-albayan-staging/minio.env` (read on the server; never paste them anywhere). The community console is an
+  object browser only (users and policies are managed with `mc`, as `init.sh` does).
+
 - **Memory:** 512 MB for MinIO (`GOMEMLIMIT=400MiB` keeps Go's heap under it; idle use is far less) + 64 MB for
   the one-shot init: the compose sum goes from 2336 to 2912 MB, inside the ~4.6 GB the VPS has free.
 - **Disk:** the volume `ayat-albayan-staging_minio-data` (under `/var/lib/docker/volumes/`) has no quota; ~62 GB
