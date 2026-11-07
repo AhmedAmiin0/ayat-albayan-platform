@@ -40,12 +40,14 @@ describe('templates on a crm line', () => {
     const health = await services(g).verifier.verifyAll({ line: 'notifications', now: NOW });
     expect(health.lines).toEqual([expect.objectContaining({ provider: 'crm', ok: true, meta_count: 2, imported: [], skipped: [] })]);
     expect(g.requests[0]?.url).toBe(`${CRM_ENV.base}/templates?sync=1&limit=100`);
-    expect(queries.update).toHaveBeenCalledWith('booking_confirmation', { last_checked_at: NOW.toISOString(), status: 'rejected', quality: 'RED', last_error: 'bad' });
+    expect(queries.update).toHaveBeenCalledWith('booking_confirmation', {
+      last_checked_at: NOW.toISOString(), status: 'rejected', quality: 'RED', last_error: 'bad', meta_id: 'mt-1',
+    });
     expect(queries.update).toHaveBeenCalledWith('gone', { last_checked_at: NOW.toISOString() });
     expect(queries.insert).not.toHaveBeenCalled();
   });
 
-  it('an older CRM (404) answers crm_managed and touches no row; a key without templates:read is crm_auth', async () => {
+  it('an older CRM (404) answers crm_managed and touches no row; a 403 naming no scope is crm_auth', async () => {
     const old = await services(scriptedFetch(crmFailure(404, 'not_found'))).verifier.verifyAll({ line: 'notifications', now: NOW });
     expect(old.lines).toEqual([expect.objectContaining({ provider: 'crm', ok: false, error: 'crm_managed', meta_count: 0 })]);
     const scope = await services(scriptedFetch(crmFailure(403, 'forbidden'))).verifier.verifyAll({ line: 'notifications', now: NOW });
@@ -62,6 +64,16 @@ describe('templates on a crm line', () => {
       { code: 'crm_managed', message: 'crm_managed', line: 'notifications' },
     ]);
     expect(queries.update).not.toHaveBeenCalled();
+  });
+
+  it('a row the CRM knows by another name is 409 crm_managed before any call', async () => {
+    const g = scriptedFetch();
+    for (const row of [templateRow({ key: 'teacher_new_student', meta_name: 'teacher_new_student', status: 'rejected' }),
+      templateRow({ status: 'not_submitted', crm_name: 'booking_v2' })]) {
+      queries.get.mockResolvedValue(row);
+      expect((await rejected(services(g).admin.submit(row.key, 'admin-1')))?.[0]).toBe(409);
+    }
+    expect(g.requests).toHaveLength(0);
   });
 
   it('any other submit goes through the CRM and is saved pending', async () => {

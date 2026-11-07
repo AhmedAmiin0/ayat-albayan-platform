@@ -19,6 +19,8 @@ export interface LineCheckView {
   crm_webhook_secret?: boolean;
   /** crm lines only: does the CRM key carry messages:send (GET /me)? null = not known (the call failed). */
   crm_send_scope?: boolean | null;
+  /** crm lines only (docs/39): the templates:read / write scopes the key lacks; null = unknown. */
+  crm_template_scopes_missing?: string[] | null;
   /**
    * meta lines, and a crm line before its switch (docs/19 «CRM → Meta»): is the app secret
    * (WA_APP_SECRET / WA_CHAT_APP_SECRET) and WA_VERIFY_TOKEN set (never the values), and is the

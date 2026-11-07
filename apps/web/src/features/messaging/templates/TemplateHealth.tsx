@@ -26,7 +26,7 @@ import { useTemplateNumber } from './numbers/use-template-number';
  * only after its explicit confirm dialog. «متاح للمعلمين والمبيعات» (the restricted allow-list)
  * picks the only templates teachers, sales and other limited roles may send (owner 2026-10-12).
  * «يُرسل من» picks each template's own number (templates.manage, after its dialog; docs/23c decision 9).
- * A template on a crm line has its status and its CRM name set by hand (docs/19): the CRM holds it, nothing syncs it.
+ * A crm line (docs/39) syncs its statuses from the CRM and submits through it (hand-set marks: fallback).
  * «قالب جديد» (owner 2026-10-31) adds a row; once saved, its «إرسال إلى ميتا» dialog opens.
  */
 export function TemplateHealth({ headingId }: { headingId: string }) {

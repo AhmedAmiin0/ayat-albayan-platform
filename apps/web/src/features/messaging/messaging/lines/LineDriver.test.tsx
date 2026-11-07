@@ -47,5 +47,16 @@ describe('LineDriver (docs/19)', () => {
     expect(screen.queryByText(s.crmScopeMissing)).toBeNull();
     expect(document.body.textContent).toContain(t.integrations.keys.WACRM_API_KEY.label);
   });
-});
 
+  it('a crm key without the templates scopes names them (docs/39); with both, or unknown, nothing', () => {
+    const view = { provider: 'crm' as const, gaps: [], duplicate_chat_phone: false, crm_send_scope: true };
+    const [before] = s.crmTemplateScopesMissing.split('{scopes}');
+    const { rerender } = render(<LineDriver view={{ ...view, crm_template_scopes_missing: ['templates:read', 'templates:write'] }} />);
+    expect(document.body.textContent).toContain(`${before ?? ''}templates:read, templates:write`);
+    expect(document.body.textContent).toContain('مفتاح واجهة نظام CRM');
+    rerender(<LineDriver view={{ ...view, crm_template_scopes_missing: [] }} />);
+    expect(document.body.textContent).not.toContain('templates:');
+    rerender(<LineDriver view={{ ...view, crm_template_scopes_missing: null }} />);
+    expect(document.body.textContent).not.toContain('templates:');
+  });
+});

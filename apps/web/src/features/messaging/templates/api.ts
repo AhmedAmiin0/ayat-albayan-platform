@@ -1,5 +1,6 @@
 import type { CRM_TEMPLATE_STATUSES, TemplateCreateInput, TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateNumberSetView, TemplateView, WaLine } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
+import { z } from 'zod';
 import { errorCode } from '@/features/teaching/schedule';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
@@ -75,19 +76,36 @@ interface CodeInput {
   line: unknown;
 }
 
-/** templates.error.<code> in words: meta_error carries Meta's detail (or «—»), the rest name their line. */
+/** The detail fields of the API's error body (docs/12 §1); anything else is ignored. */
+const errorBodySchema = z.object({
+  meta_message: z.unknown(),
+  meta_code: z.unknown(),
+  scope: z.unknown(),
+  line: z.unknown(),
+}).partial();
+
+/** The API's detail as shown: Meta's message or code, or the CRM key's missing scope; else «—». */
+const detailText = (detail: unknown): string =>
+  (typeof detail === 'string' || typeof detail === 'number' ? String(detail) : '—');
+
+/**
+ * templates.error.<code> in words: meta_error carries Meta's detail (or «—»), crm_scope_missing the
+ * scope the CRM key lacks (docs/39), the rest name their line.
+ */
 function codeText({ code, detail, line }: CodeInput): string {
   const text = code ? ERRORS[code] : undefined;
   if (!text) return t.common.error;
-  if (code === 'meta_error') return text.replace('{message}', typeof detail === 'string' || typeof detail === 'number' ? String(detail) : '—');
   const named: WaLine = line === 'chat' ? 'chat' : 'notifications';
-  return text.replace('{line}', t.enums.waLine[named]).replace('{key}', APP_ID_KEY[named]);
+  const shown = detailText(detail);
+  return text.replace('{message}', shown).replace('{scope}', shown)
+    .replace('{line}', t.enums.waLine[named]).replace('{key}', APP_ID_KEY[named]);
 }
 
-/** templates.error.<code> in words; Meta's own message (502 meta_error) when it sent one. */
+/** templates.error.<code> in words; Meta's own message (502 meta_error) or the CRM's scope. */
 export function templateErrorText(error: unknown): string {
-  const body = error instanceof ApiError ? (error.body as Record<string, unknown> | null) : null;
-  return codeText({ code: errorCode(error) ?? undefined, detail: body?.['meta_message'] ?? body?.['meta_code'], line: body?.['line'] });
+  const body = error instanceof ApiError ? errorBodySchema.safeParse(error.body).data : undefined;
+  const detail = body?.meta_message ?? body?.meta_code ?? body?.scope;
+  return codeText({ code: errorCode(error) ?? undefined, detail, line: body?.line });
 }
 
 type FailedSync = Pick<TemplateLineSync, 'line' | 'error' | 'message'>;
