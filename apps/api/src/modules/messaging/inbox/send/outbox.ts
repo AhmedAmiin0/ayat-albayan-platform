@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { sleep } from '@/common/infra/cache/sleep';
 import { appRole } from '@/config/role/app-role';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
+import { laneOfRow } from '@/modules/messaging/whatsapp';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 
@@ -47,8 +48,10 @@ export class Outbox {
   private async write(row: Outbound, wait: boolean): Promise<Sent> {
     const queued = await this.queries.enqueue({ ...row, direction: 'outbound', status: 'queued' });
     if (queued.status === 'queued') {
-      // kick() never rejects (runOnce catches and logs); queue() never waits on WhatsApp.
-      const pass = this.sender.kick();
+      // kick() never rejects (runOnce catches and logs); queue() never waits on WhatsApp. It names
+      // the row's lane (a chat text never waits behind notifications) and, for send(), asks the
+      // worker to answer after the pass (docs/42 42-7, 42-8).
+      const pass = this.sender.kick({ lane: laneOfRow(queued), wait });
       if (wait) await pass;
     }
     // The enqueue's own row (a replay's is read back there): only send() reads it again.

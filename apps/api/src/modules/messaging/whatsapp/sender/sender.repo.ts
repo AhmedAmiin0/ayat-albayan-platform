@@ -7,11 +7,18 @@ import { stampDelivered } from '@/modules/messaging/whatsapp/messages/delivered'
 import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
 import { anyDue, DUE_COLUMNS, holdAutomatic, NOT_APP_SENT, type DueMessage } from './sender.due';
 import { staffAtSend } from './staff-at-send';
+import { LANE_ROWS, type Lane } from './drain';
 import { sendableTemplates } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
 import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { TemplateRow, WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 export type { DueMessage } from './sender.due';
+
+/** due(): the approved keys, now, the batch and (a lane's pass) its lane. */
+/** Without a chat client, chat-stamped texts are never read (they would fill the batch forever). */
+const NOT_CHAT_TEXT = 'template_key.not.is.null,line.is.null,line.neq.chat';
+
+interface DueInput { keys: readonly string[]; now: Date; limit: number; lane?: Lane }
 
 /** The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set. */
 @Injectable()
@@ -56,7 +63,7 @@ export class SenderRepo {
    * pile waiting for Meta's approval never starves the rest. Nor are chat-stamped texts while the
    * chat client is not configured (they would fill the batch forever).
    */
-  async due(input: { keys: readonly string[]; now: Date; limit: number }): Promise<DueMessage[]> {
+  async due(input: DueInput): Promise<DueMessage[]> {
     const now = input.now.toISOString();
     const approved = input.keys.length ? `,template_key.in.(${input.keys.join(',')})` : '';
     const query = this.db
@@ -70,7 +77,8 @@ export class SenderRepo {
       .or(NOT_APP_SENT)
       .or('line.is.null,line.neq.calls'); // never a row of the calls number (docs/28 §10)
     const allowed = this.allowed;
-    const sendable = this.chatConfigured ? query : query.or('template_key.not.is.null,line.is.null,line.neq.chat');
+    const laned = input.lane ? query.or(LANE_ROWS[input.lane]) : query; // docs/42 42-7
+    const sendable = this.chatConfigured ? laned : laned.or(NOT_CHAT_TEXT);
     const scoped = allowed ? sendable.in('phone_e164', [...allowed]) : sendable;
     const ordered = scoped.order('scheduled_for', { ascending: true, nullsFirst: true }).order('created_at');
     const { data, error } = await ordered.limit(input.limit);

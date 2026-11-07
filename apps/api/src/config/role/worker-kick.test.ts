@@ -43,3 +43,13 @@ describe('kickWorker', () => {
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('sender: worker kick: failed'));
   });
 });
+
+describe('kickWorker options (docs/42 42-7, 42-8)', () => {
+  it('names the lane and asks to wait in the query', async () => {
+    const fetch = vi.fn().mockResolvedValue(new Response(null, { status: 202 }));
+    vi.stubGlobal('fetch', fetch);
+    await kickWorker('sender', { lane: 'chat', wait: true });
+    const [url] = fetch.mock.calls[0] as [string];
+    expect(url).toBe('http://worker.invalid:3001/internal/jobs/sender/kick?lane=chat&wait=1');
+  });
+});

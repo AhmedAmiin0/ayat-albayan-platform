@@ -23,9 +23,9 @@ function route() {
 }
 
 describe('POST /internal/jobs/:name/kick (the worker)', () => {
-  it("runs the named job's kick and answers once its pass is done", async () => {
+  it("with ?wait=1 runs the named job's kick and answers once its pass is done", async () => {
     const { job, controller } = route();
-    await controller.kick('test-kick-route', internalToken());
+    await controller.kick('test-kick-route', internalToken(), { wait: '1' });
     expect(job.kicked).toBe(1);
   });
 

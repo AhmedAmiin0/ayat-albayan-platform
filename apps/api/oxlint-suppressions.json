@@ -1305,7 +1305,7 @@
   },
   "src/config/role/worker-kick.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/main.ts": {
@@ -6762,10 +6762,10 @@
       "count": 3
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/sender/message.worker.auto.test.ts": {
