@@ -123,9 +123,10 @@ once the app was opened. Now a message push wakes it:
   persisted Supabase session's user id; `wakeInboxStore(owner)` gives the app's running session when it is
   that owner's, else opens one only when the file's `sync_state.owner` is already that user (the app started
   the store for them before; signed out = wiped/deleted = nothing; another account = nothing, never wiped).
-  It nudges the engine (the same 1 s throttle as realtime and the foreground push listener) and waits for the
-  run in flight (`engine.idle()`): no second run of its own. 20 s budget for the whole wake; on time-out
-  its own session is closed (the request aborted, rows kept). A session the app started meanwhile stays.
+  It calls the engine's `syncNow()`: it joins the run in flight and asks for exactly one more after it (a
+  push's message may be newer than that run's ask), never two at a time. Wakes are counted on a session
+  they opened: the last one out closes it (engine stopped at once, request aborted, rows kept). 20 s
+  budget for the whole wake, the close included. A session the app started meanwhile stays.
   The push payload is never written: the sync is the only writer.
 - **Limits**: the server sends one message push per phone per 10 minutes (`messageSubject`), so later
   messages in that window still arrive with the next wake, the 30 s fallback or opening the app. Android

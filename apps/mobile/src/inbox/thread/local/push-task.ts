@@ -6,7 +6,7 @@ import { onPushWake } from './push-wake';
 export const PUSH_SYNC_TASK = 'ab-push-sync';
 
 /**
- * Defined and registered at module scope, from the app's entry (index.ts) before the router: a
+ * Defined and registered when the bundle loads, from the app's entry (index.ts): a
  * push that starts the app with no screen (killed, Android) loads the bundle and runs only this.
  * iOS without the remote-notification background mode never runs it (a no-op there).
  */

@@ -65,7 +65,8 @@ async function syncFor(deps: WakeDeps, signal: AbortSignal): Promise<Result> {
     await within(wake.sync(), signal);
     return Result.NewData;
   } finally {
-    await wake.release();
+    // Its engine stops at once; the close is waited on only within the budget.
+    await within(wake.release(), signal).catch(() => undefined);
   }
 }
 

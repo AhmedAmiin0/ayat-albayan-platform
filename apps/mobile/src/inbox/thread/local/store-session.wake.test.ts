@@ -55,20 +55,39 @@ test('the file holds another account, or nobody: nothing opened, synced or wiped
   expect(mockFetch).not.toHaveBeenCalled();
 });
 
-test('the app runs (foreground): the wake joins its run in flight, asks nothing more', async () => {
-  let answerNow: () => void = () => undefined;
-  mockFetch.mockReturnValue(new Promise((resolve) => (answerNow = () => resolve(answer()))));
+test('the app runs (foreground): the wake joins its run in flight and asks for one more', async () => {
+  const answers: (() => void)[] = [];
+  const asked = () => new Promise((resolve) => answers.push(() => resolve(answer())));
+  mockFetch.mockImplementation(asked);
   await startInboxStore('user-a');
   const wake = await wakeInboxStore('user-a');
   const synced = wake?.sync();
   await settle();
   expect(mockFetch).toHaveBeenCalledTimes(1);
-  answerNow();
+  answers[0]?.();
   await synced;
+  await settle();
+  answers[1]?.();
+  await settle();
+  expect(mockFetch).toHaveBeenCalledTimes(2); // the push's own run, never a third
   await wake?.release(); // the app's session stays
   mockClose.mockClear();
   await stopInboxStore();
   expect(mockClose).toHaveBeenCalledTimes(1);
+});
+
+test('two pushes on a killed app: the first out never stops the second one’s sync', async () => {
+  await fileOf('user-a');
+  const first = await wakeInboxStore('user-a');
+  const second = await wakeInboxStore('user-a');
+  await first?.sync();
+  await first?.release();
+  expect(mockClose).toHaveBeenCalledTimes(1); // only storedOwner's peek
+  await second?.sync();
+  expect(mockFetch).toHaveBeenCalledTimes(2);
+  await second?.release();
+  expect(mockClose).toHaveBeenCalledTimes(2);
+  expect(storeReader.threads().size).toBe(0);
 });
 
 test('another account signed in on the running app: null', async () => {

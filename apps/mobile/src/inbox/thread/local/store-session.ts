@@ -20,15 +20,17 @@ interface Session {
   port: SqlPort;
   store: MessageStore;
   engine: ReturnType<typeof createSyncEngine>;
-  /** Started by the app's trees (fallback timer on); false while only a push wake holds it. */
+  /** Started by the app's trees (fallback timer on); false while only push wakes hold it. */
   started: boolean;
+  /** Push wakes holding it now: the last one out closes a session the app never started. */
+  wakes: number;
 }
 
 /** What a push wake gets (push-wake.ts): one sync of the owner's store, then let go of it. */
 export interface StoreWake {
-  /** A nudge (the engine's throttle) and the run it joins; never a second run of its own. */
+  /** syncNow: joins the run in flight and asks for exactly one more after it (a new push). */
   sync(): Promise<void>;
-  /** A session the wake opened is closed (rows kept, request aborted); the app's stays. */
+  /** The last wake out closes a session the app never started (rows kept, request aborted). */
   release(): Promise<void>;
 }
 
@@ -50,7 +52,7 @@ async function openFor(owner: string): Promise<{ port: SqlPort; store: MessageSt
 async function openSession(owner: string): Promise<Session> {
   const { port, store } = await openFor(owner);
   const engine = createSyncEngine({ store, owner, fetchPage: fetchSyncPage });
-  session = { owner, port, store, engine, started: false };
+  session = { owner, port, store, engine, started: false, wakes: 0 };
   storeReader.attach(store, owner);
   return session;
 }
@@ -90,23 +92,25 @@ async function storedOwner(): Promise<string | null> {
   return owner;
 }
 
-/** The wake's own session, closed when the app never started it (rows kept: still theirs). */
-const releaseFor = (woken: Session) => (): Promise<void> =>
-  serial(async () => {
-    if (session !== woken || woken.started) return;
-    session = null;
-    storeReader.detach();
-    woken.engine.stop();
-    await woken.port.close();
-  });
+const idleWake = (s: Session): boolean => s.wakes === 0 && !s.started && session === s;
 
-const wakeOf = (s: Session, opened: boolean): StoreWake => ({
-  sync: () => {
-    s.engine.nudge();
-    return s.engine.idle();
-  },
-  release: opened ? releaseFor(s) : () => Promise.resolve(),
-});
+/**
+ * One wake out. The last one out of a session the app never started: the engine stops at once
+ * (its request aborted, even with the queue busy), the connection closes in turn; rows kept.
+ */
+const releaseFor = (woken: Session) => (): Promise<void> => {
+  woken.wakes -= 1;
+  if (!idleWake(woken)) return Promise.resolve();
+  session = null;
+  storeReader.detach();
+  woken.engine.stop();
+  return serial(() => woken.port.close());
+};
+
+function wakeOf(s: Session): StoreWake {
+  s.wakes += 1;
+  return { sync: () => s.engine.syncNow(), release: releaseFor(s) };
+}
 
 /**
  * A message push woke the app (push-wake.ts, docs/43 §5): the signed-in `owner`'s session, the
@@ -117,9 +121,9 @@ const wakeOf = (s: Session, opened: boolean): StoreWake => ({
 export const wakeInboxStore = (owner: string): Promise<StoreWake | null> =>
   serial(async () => {
     const running = session;
-    const opened = running ? null : (await storedOwner()) === owner;
-    const woken = running ?? (opened ? await openSession(owner) : null);
-    return woken?.owner === owner ? wakeOf(woken, opened === true) : null;
+    const theirs = running ? false : (await storedOwner()) === owner;
+    const woken = running ?? (theirs ? await openSession(owner) : null);
+    return woken?.owner === owner ? wakeOf(woken) : null;
   });
 
 /** Something changed on the server (realtime, push, back in the foreground): sync soon. */
