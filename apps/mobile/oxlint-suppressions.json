@@ -843,7 +843,7 @@
   },
   "src/booking/testing/test-utils.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/booking/trial/components/ConfirmNotices.tsx": {
@@ -912,7 +912,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/booking/trial/lib/booking-body.days.test.ts": {
@@ -7325,7 +7325,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/sales-course/change/CourseChangeDone.tsx": {
@@ -7338,10 +7338,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
-    },
-    "ab/module-boundaries": {
-      "count": 1
+      "count": 5
     },
     "typescript/no-confusing-void-expression": {
       "count": 3
@@ -7473,9 +7470,6 @@
     },
     "stylistic/max-len": {
       "count": 4
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "typescript/no-confusing-void-expression": {
       "count": 2
@@ -7773,10 +7767,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
-    },
-    "ab/module-boundaries": {
-      "count": 1
+      "count": 8
     }
   },
   "src/sales-subscribe/components/TransferDone.buttons.test.tsx": {
@@ -9489,7 +9480,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 2
