@@ -12,6 +12,7 @@ import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { GateNote } from '@/inbox/thread/components/GateNote';
 import { OpenRow } from '@/inbox/threads-list/OpenRow';
 import { QuoteStrip } from '@/inbox/messages/components/QuoteStrip';
+import { EditStrip } from './edit/EditStrip';
 import { SavedReplyChip } from '@/inbox/saved-replies/components/SavedReplyChip';
 import { SavedReplyPicker } from '@/inbox/saved-replies/components/SavedReplyPicker';
 import { SlashSuggestions } from '@/inbox/saved-replies/quick-list/SlashSuggestions';
@@ -33,6 +34,7 @@ import { errorLines, useComposerSend } from './use-composer-send';
  * the list over the row, its tile in the paperclip's sheet opens the sheet; a pick fills the box and stages its file (the
  * chip). «أرسل» sends the text, then the file.
  * «رد» (owner 2026-10-25): the quoted strip over the row; the text answers it (useComposerSend).
+ * «تعديل» (2026-11-07): the edit bar instead; the text goes as a correction of that message.
  * Opening a closed chat sends nothing (owner 2026-11-07): the starter template goes on the first
  * send, which is held until the family replies; the «try» note (ClosedNote) says so.
  * «عرض سعر» (owner 2026-10-26, staff with pricing.read): its sheet sends the offer or fills the box; the
@@ -92,6 +94,7 @@ export function Composer({
       <GateNote />
       {trying ? <ClosedNote known note={t.inbox[afterWindowNote(thread?.reopen_choice)]} /> : null}
       {may ? <QuoteStrip /> : null}
+      {may ? <EditStrip /> : null}
       {may && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
       {may && replies.search !== null ? (
         <SlashSuggestions search={replies.search} contact={{ thread, student }} onFill={replies.fill} />

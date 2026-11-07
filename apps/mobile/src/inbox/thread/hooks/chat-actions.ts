@@ -17,6 +17,14 @@ export interface ChatActions {
   /** The message the next text or file answers. */
   reply: MessageView | null;
   setReply: Dispatch<SetStateAction<MessageView | null>>;
+  /** «تعديل» (owner 2026-11-07): the message the next text corrects; never with a reply. */
+  editing: MessageView | null;
+  /** Starts the correction: the box holds its text, any reply is dropped. */
+  startEdit: (m: MessageView) => void;
+  /** ✕ on the edit bar: the box empties. */
+  cancelEdit: () => void;
+  /** The correction of `id` went: edit mode ends (unless another one started meanwhile). */
+  editSent: (id: string) => void;
   /** Free text can go out now (24 h window, not a read-only chat): «رد» is usable. */
   canSend: boolean;
   /** Who an inbound quote is from: the chat's name, else its number. */
@@ -43,6 +51,10 @@ export const ChatActionsContext = createContext<ChatActions>({
   enabled: false,
   reply: null,
   setReply: noop,
+  editing: null,
+  startEdit: noop,
+  cancelEdit: noop,
+  editSent: noop,
   canSend: false,
   threadName: null,
   openMenu: noop,

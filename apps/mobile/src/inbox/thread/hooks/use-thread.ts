@@ -12,7 +12,7 @@ import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { useStoredView } from '@/inbox/thread/local/stored-view';
 import { rollback, unanswered } from '@/inbox/thread/send/after-send';
 import { failPinned, pinGeneration, pinnedOf, settlePinned } from '@/inbox/thread/send/pinned-outcome';
-import { carried, type SendDone, sendBody, type SendInput } from '@/inbox/thread/send/outgoing';
+import { echoed, type SendDone, sendBody, type SendInput } from '@/inbox/thread/send/outgoing';
 import { refreshInbox, refreshLists, touchInbox } from './inbox-sync';
 import {
   appendMessage,
@@ -107,7 +107,7 @@ export function useSendMessage(phone: string) {
       const generation = pinGeneration(pin);
       markOwnSend(phone);
       await client.cancelQueries({ queryKey });
-      const text = carried(out);
+      const text = echoed(out);
       const key = out.kind === 'template' ? out.key : undefined;
       // An answer shows its quote at once (owner 2026-10-25 «رد»), as the API's row will.
       const quote = out.kind === 'text' && out.replyTo ? { reply_to_message_id: out.replyTo.id, reply_to: out.replyTo } : {};

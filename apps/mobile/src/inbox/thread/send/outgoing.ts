@@ -1,4 +1,11 @@
-import type { MessageQuote, MessageView, TemplateParamsInput, ThreadTemplate } from '@ab/shared';
+import {
+  correctionBody,
+  type MessageQuote,
+  type MessageView,
+  type TemplateParamsInput,
+  type ThreadTemplate,
+} from '@ab/shared';
+import ar from '@ab/shared/i18n/ar.json';
 import type { PinKind } from './pinned-send';
 
 /**
@@ -6,7 +13,7 @@ import type { PinKind } from './pinned-send';
  * registry key: a producer's, or a chat starter imported from Meta (owner 2026-10-12).
  */
 export type Outgoing =
-  | { kind: 'text'; text: string; replyTo?: MessageQuote }
+  | { kind: 'text'; text: string; replyTo?: MessageQuote; correctsId?: string }
   | {
       kind: 'template';
       key: ThreadTemplate['key'];
@@ -34,11 +41,22 @@ export interface SendDone {
 /** What the send carries: its text, or a template's preview. */
 export const carried = (out: Outgoing): string => (out.kind === 'text' ? out.text : out.preview);
 
+/**
+ * What the API's row will say: a correction (owner 2026-11-07) after «تصحيح: », which the API adds
+ * in Arabic whatever the app's language; else what it carries.
+ */
+export const echoed = (out: Outgoing): string =>
+  out.kind === 'text' && out.correctsId
+    ? correctionBody(ar.inbox.correction.prefix, out.text)
+    : carried(out);
+
 /** The POST body of a text or template send, with its clientRequestId. */
 export function sendBody({ out, id }: SendInput) {
   if (out.kind === 'text') {
     const reply = out.replyTo ? { replyToMessageId: out.replyTo.id } : {};
-    return { text: out.text, clientRequestId: id, ...reply };
+    // «تعديل» (owner 2026-11-07): the API adds the prefix and the reply to the original.
+    const corrects = out.correctsId ? { correctsId: out.correctsId } : {};
+    return { text: out.text, clientRequestId: id, ...reply, ...corrects };
   }
   const lesson = out.lessonId ? { lessonId: out.lessonId } : {};
   return { key: out.key, params: out.params, clientRequestId: id, ...lesson };

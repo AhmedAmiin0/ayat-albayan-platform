@@ -12,7 +12,7 @@ import { copyText, downloadFile, downloadProblem } from '@/inbox/messages/copy-d
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { ReactionBar } from '@/inbox/messages/reactions/ReactionBar';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
-import { useHideRights } from '@/core/auth';
+import { useHideRights, useMeActor } from '@/core/auth';
 import { HideActions } from '@/inbox/messages/components/hide/HideActions';
 import { StickerFavourite } from '@/inbox/messages/components/sticker/StickerFavourite';
 
@@ -41,8 +41,9 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
   const { enabled, canSend, setReply, openForward, showCopy, say, reactable, react } = useChatActions();
   const teacher = useThreadMode().kind === 'teacher';
   const rights = useHideRights();
+  const me = useMeActor();
   const offers = m
-    ? bubbleOffers(m, { enabled, teacher, react: reactable(m), ...rights })
+    ? bubbleOffers(m, { enabled, teacher, react: reactable(m), ...rights, me })
     : null;
   const reply = offers?.reply === true;
   const forward = offers?.forward === true;

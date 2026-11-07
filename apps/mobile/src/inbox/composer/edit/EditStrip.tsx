@@ -1,0 +1,63 @@
+import { View } from 'react-native';
+import { t } from '@/core/lib/i18n/i18n';
+import { Note } from '@/core/ui/feedback/Note';
+import { AppText } from '@/core/ui/primitives/AppText';
+import { ContentText } from '@/core/ui/primitives/ContentText';
+import { IconButton } from '@/core/ui/primitives/IconButton';
+import { CloseIcon } from '@/inbox/shared/chat-icons';
+import { quoteOf, quoteText } from '@/inbox/messages/hooks/quote-text';
+import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
+import { shape, type, useTheme } from '@/theme';
+
+/**
+ * Over the composer while she corrects a message (owner 2026-11-07), as WhatsApp's edit bar:
+ * «تعديل الرسالة» · the original's first line and ✕, then the one line that says the family gets
+ * a new «تصحيح» reply (WhatsApp cannot edit a sent message). Shown only while free text can go out.
+ */
+export function EditStrip() {
+  const { color } = useTheme();
+  const { editing, cancelEdit } = useChatActions();
+  if (!editing) return null;
+  const text = quoteText(quoteOf(editing));
+  const line = { fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm) };
+  return (
+    <View testID="edit-strip" style={{ gap: 2 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          minHeight: shape.control.touch,
+          paddingStart: 10,
+          borderStartWidth: 3,
+          borderStartColor: color.lapis,
+          borderRadius: shape.radius.sm,
+          backgroundColor: color.sunk,
+        }}
+      >
+        <View
+          accessible
+          accessibilityLabel={`${t.inbox.correction.bar}: ${text}`}
+          style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4 }}
+        >
+          <AppText
+            numberOfLines={1}
+            style={{ ...line, flexShrink: 0, fontFamily: type.ui[600], color: color.lapis }}
+          >
+            {`${t.inbox.correction.bar} ·`}
+          </AppText>
+          <ContentText
+            source={text}
+            numberOfLines={1}
+            style={{ ...line, flex: 1, fontFamily: type.ui[400], color: color.ink2 }}
+          >
+            {text}
+          </ContentText>
+        </View>
+        <IconButton label={t.inbox.correction.cancel} onPress={cancelEdit}>
+          <CloseIcon color={color.ink2} size={18} />
+        </IconButton>
+      </View>
+      <Note>{t.inbox.correction.note}</Note>
+    </View>
+  );
+}
