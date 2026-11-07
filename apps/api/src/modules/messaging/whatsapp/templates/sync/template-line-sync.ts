@@ -7,6 +7,7 @@ import {
 import { EVOLUTION_NO_TEMPLATES } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { TemplatePatch } from './template-sync';
+import { saveCrmCopies, type CopiesDeps } from '@/modules/messaging/whatsapp/messages/crm-sent/crm-copies.save';
 import {
   WaError, type MetaTemplate, type TemplateRow, type WhatsappLines,
 } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -17,7 +18,7 @@ import {
 
 interface Warn { warn: (message: string) => void }
 
-export interface LineSyncDeps {
+export interface LineSyncDeps extends CopiesDeps {
   queries: Pick<TemplatesRepo, 'all' | 'update' | 'insert'>;
   lines: WhatsappLines;
   log: Warn;
@@ -69,6 +70,15 @@ async function importNew(deps: LineSyncDeps, read: LineRead, known: TemplateRow[
 }
 
 /**
+ * A crm line imports nothing; its list is kept as our copy of each CRM template's own text, which
+ * the inbox shows a row sent through the CRM with (messages/crm-sent/).
+ */
+async function crmFound(deps: LineSyncDeps, read: LineRead) {
+  await saveCrmCopies(deps, read);
+  return { imported: [], skipped: [] };
+}
+
+/**
  * POST /messaging/templates/health for one line; an unconfigured line answers not_configured and
  * reads nothing. A crm line reads the CRM's list (docs/39): status only, by the name each row is
  * sent under, nothing imported and nothing marked missing because of the CRM. A CRM without
@@ -85,8 +95,17 @@ export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Pro
   const read = { line, list, now };
   const { rows, synced } = await updateRows(deps, read, crm ? crmSyncPatch : wabaSyncPatch);
   // A crm line imports nothing: the CRM account's other templates are not the platform's to send.
-  const found = crm ? { imported: [], skipped: [] } : await importNew(deps, read, rows);
+  const found = crm ? await crmFound(deps, read) : await importNew(deps, read, rows);
   return { ...facts, ok: true, checked_at: now.toISOString(), meta_count: list.length, synced, ...found };
+}
+
+/**
+ * The daily refresh of our copy of a crm line's template text (CrmCopyRefresh): one read, saved;
+ * statuses untouched. A failed read is logged (readList) and leaves the copy as it was.
+ */
+export async function refreshCrmCopies(deps: LineSyncDeps, line: WaLine, now: Date): Promise<void> {
+  const list = await readList(deps, line);
+  await (Array.isArray(list) ? saveCrmCopies(deps, { list, now }) : Promise.resolve());
 }
 
 /** A line's sync result for lineViews(); a failed write only logs (the sync itself is done). */

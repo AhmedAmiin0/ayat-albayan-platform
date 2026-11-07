@@ -135,3 +135,20 @@ The CRM (github.com/AhmedAmiin0/ayat-crm, private; hosted at crm.ayatalbayan.com
 - Rows that are rejected (with a meta_id) or have a document header can't be resubmitted from the platform on a crm line. The CRM API has no edit endpoint and only image sample uploads. The platform returns 409 crm_managed and the admin finishes in the CRM dashboard.
 - Deploy order matters. If the platform is deployed before the CRM overlay, the 404 is mapped to crm_managed, so behaviour stays as it is today. If the key lacks templates:read, «مزامنة» shows crm_scope_missing naming it and «افحص الخطوط» lists the missing template scopes; sends are unaffected.
 - Verification: the CRM overlay was typechecked (tsc) and linted (eslint) against wacrm 98b5bd2, and scopes.test.ts passed 9/9, all in a temporary worktree that has since been removed. The platform sketches were not compiled, because the local checkout is behind origin/develop and its dependencies have drifted. The endpoints were not called against a live CRM.
+
+## The CRM's own text in the inbox (owner 2026-11-07)
+
+«The reminder is not right»: the inbox drew a row sent through the CRM from the platform registry
+row of its key (teacher_lesson_reminder_meet: its own body and a «ادخل الحلقة» button), while the
+teacher got the CRM's teacher_lesson_reminder (its own body, the full line, no button).
+
+- GET templates also keeps each CRM row's `header_type` / `header_content`, `body_text`,
+  `footer_text` and `buttons` (all optional) as Meta components (drivers/crm/crm-components.ts).
+- `crm_template_copies` (migration 20261107001000, keyed by the CRM name + language) holds them,
+  written by the crm line's sync («مزامنة», the boot check) and by CrmCopyRefresh (worker, minutes
+  after start, then daily; one GET per crm line).
+- messages/crm-sent/: a template row on a crm line (its number's driver, else its line's) whose
+  body is the template's own renders the CRM copy of the template the driver sends
+  (wabaReport / wabaTemplate: the same name and values), its URL buttons filled from the sent
+  suffixes; the wa.me hand-off carries the same text. No copy yet, values that would not build a
+  send, or a meta / kapso line: the registry rendering as before.

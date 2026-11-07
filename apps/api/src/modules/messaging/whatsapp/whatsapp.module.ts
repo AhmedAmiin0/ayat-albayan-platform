@@ -24,6 +24,7 @@ import { MessageDispatch } from './sender/message.dispatch';
 import { MessageSender } from './sender/message.sender';
 import { SenderWake } from './sender/wake/sender-wake.registrar';
 import { MessageViews } from './messages/message.views';
+import { CRM_SENT_PROVIDERS } from './messages/crm-sent';
 import { TemplateNames } from './templates/names/template-names';
 import { MessageWorker } from './sender/message.worker';
 import { EvolutionPaceRepo } from './sender/pace';
@@ -117,8 +118,7 @@ function lines(): WhatsappLines {
     KapsoHold,
     MessageWorker, MessageSender, SenderWake,
     MessagesRepo,
-    MessageViews,
-    TemplateNames,
+    MessageViews, TemplateNames, ...CRM_SENT_PROVIDERS,
     MessagesService,
     AppSendRepo,
     AppSend,

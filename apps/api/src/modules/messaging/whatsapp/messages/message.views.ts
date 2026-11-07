@@ -1,5 +1,5 @@
 import { templateBlock, withMarks, type MessageTemplateBlock, type MessageView } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { StorageService } from '@/common/storage/storage.service';
 import { documentLink } from '@/modules/messaging/whatsapp/sender/message.dispatch';
 import { needsManualSend, toMessageView, type ThreadMessageRow } from './message.mapper';
@@ -10,6 +10,7 @@ import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { withHidden } from './hidden/hidden-view';
 import { TemplateNames } from '@/modules/messaging/whatsapp/templates/names/template-names';
 import { asRelayTemplateRow, relayTemplateName } from './relay-view/relay-template-row';
+import { CrmSentText } from './crm-sent/crm-sent';
 
 /**
  * MessageView for one row with its registry template and, while the admin may still send it by
@@ -23,6 +24,8 @@ export class MessageViews {
     private readonly templates: TemplatesRepo,
     private readonly storage: StorageService,
     private readonly names: TemplateNames,
+    /** A row sent through the CRM shows the CRM template's own text (owner 2026-11-07). */
+    @Optional() @Inject(CrmSentText) private readonly crmSent?: CrmSentText,
   ) {}
 
   async view(stored: ThreadMessageRow, mediaUrl: string | null = null): Promise<MessageView> {
@@ -35,7 +38,10 @@ export class MessageViews {
       template && needsManualSend(row) ? await documentLink(this.storage, params.document) : null;
     const block = template ? blockOf(row, template) : null;
     const shown = template ? renderable(template) : null;
-    return withMarks(toMessageView({ row, template: shown, documentUrl, mediaUrl, block }), row);
+    const view = toMessageView({ row, template: shown, documentUrl, mediaUrl, block });
+    const crm = template ? this.crmSent : undefined;
+    const sent = template && crm ? await crm.apply(view, { row, template, documentUrl }) : view;
+    return withMarks(sent, row);
   }
 
   /** A template the old script sent through the relay, as our own template row (display only). */
