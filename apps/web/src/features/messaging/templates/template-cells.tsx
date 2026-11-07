@@ -5,6 +5,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { canSubmit } from './api';
+import { crmCanSubmit, crmOnly } from './crm/crm-submit';
 
 // Cells of the template health table that carry more than one value (template-columns.tsx).
 
@@ -40,8 +41,9 @@ export function NumberCell({ line, phone }: { line: WaLine; phone: string | unde
 }
 
 /**
- * The status chip and Meta's reason. A crm line's row (docs/19) is set by hand: «يدويًا» beside the chip, and
- * missing reads «غير متاح في نظام CRM» (Meta is not the source there).
+ * The status chip and Meta's reason. A crm line's row (docs/39) reads its status from the CRM on
+ * «مزامنة», or by hand as the fallback: «يدويًا / من CRM» beside the chip, and missing reads «غير متاح
+ * في نظام CRM».
  */
 export function StatusCell({ tpl, crm }: { tpl: TemplateView; crm: boolean }) {
   const label = crm && tpl.status === 'missing' ? t.templates.crmStatus.missingChip : t.enums.templateStatus[tpl.status];
@@ -62,29 +64,51 @@ export interface RowActionsProps {
   onMove: (tpl: TemplateView) => void;
   /** The server's facts for the number the row would move to; undefined while loading. */
   target: TemplateLineView | undefined;
-  /** The row's line is on crm (docs/19): no submit; these hand-set status buttons instead. */
+  /**
+   * Set only on a crm line's row (docs/39): its hand-set status buttons and CRM name, the fallback
+   * when the CRM cannot say. Its submit goes through the CRM, where the CRM's API allows.
+   */
   crm?: ReactNode;
   /** A meta line's «اسم القالب في واتساب» button, beside its submit (docs/19 «CRM → Meta»). */
   name?: ReactNode;
 }
 
+type SubmitProps = Pick<RowActionsProps, 'tpl' | 'onSubmit'> & { onCrm: boolean };
+
 /**
- * Submit to Meta (a not-submitted / rejected / missing row, on either number; a PDF-header template too:
- * the API uploads a sample PDF first) and «نقل إلى الرقم الآخر», each behind its own dialog. Moving to
- * a number the server has no credentials for is disabled, with the reason beside it.
+ * «إرسال إلى ميتا» for a submittable row. On a crm line only when the API would submit it through
+ * the CRM (crm-submit.ts); a document header, or a rejected row Meta already holds, says instead
+ * that it is made in the CRM dashboard, and why.
  */
-export function RowActions({ tpl, onSubmit, onMove, target, crm, name }: RowActionsProps) {
-  const reason = useId();
-  const noTarget = target?.configured === false;
+function SubmitAction({ tpl, onSubmit, onCrm }: SubmitProps) {
+  const only = onCrm ? crmOnly(tpl) : null;
+  const shown = (onCrm ? crmCanSubmit : canSubmit)(tpl);
   return (
-    <span className="flex flex-wrap gap-2">
-      {crm}
-      {name}
-      {!crm && canSubmit(tpl) && (
+    <>
+      {shown && (
         <Button size="sm" variant="secondary" onClick={() => onSubmit(tpl)}>
           {t.templates.submit}
         </Button>
       )}
+      {only && <span className="self-center text-2xs text-ink-3">{t.templates.crmSubmit[only]}</span>}
+    </>
+  );
+}
+
+/**
+ * Submit to Meta (a not-submitted / rejected / missing row, on either number; a PDF-header template too
+ * on meta: the API uploads a sample PDF first) and «نقل إلى الرقم الآخر», each behind its own dialog.
+ * Moving to a number the server has no credentials for is disabled, with the reason beside it.
+ */
+export function RowActions({ tpl, onSubmit, onMove, target, crm, name }: RowActionsProps) {
+  const reason = useId();
+  const onCrm = crm !== undefined;
+  const noTarget = target?.configured === false;
+  return (
+    <span className="flex flex-wrap gap-2">
+      <SubmitAction tpl={tpl} onSubmit={onSubmit} onCrm={onCrm} />
+      {crm}
+      {name}
       <Button
         size="sm"
         variant="ghost"

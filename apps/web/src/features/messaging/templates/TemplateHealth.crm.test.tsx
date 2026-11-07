@@ -10,7 +10,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// docs/19 «crm driver»: a template whose line is on crm gets its status by hand, never «إرسال إلى ميتا».
+// docs/19 «crm driver», docs/39: a crm line's row submits through the CRM; its status by hand stays a fallback.
 
 const s = t.templates.crmStatus;
 const MISSING = template({ key: 'renewal_due', status: 'missing' });
@@ -29,11 +29,11 @@ afterEach(() => {
 });
 
 describe('template health: a crm line', () => {
-  it('no submit; missing reads «غير متاح في نظام CRM»; approving (after its confirm) PUTs the status', async () => {
+  it('submit beside the hand-set marks; missing reads «غير متاح في نظام CRM»; approving PUTs the status', async () => {
     renderHealth();
     const row = within((await screen.findByText(t.templates.names.renewal_due)).closest('tr') as HTMLElement);
     await row.findByText(s.note);
-    expect(row.queryByRole('button', { name: t.templates.submit })).toBeNull();
+    expect(row.getByRole('button', { name: t.templates.submit })).toBeTruthy();
     apiSend.mockResolvedValue({ ...MISSING, status: 'approved' });
     expect(row.getByText(s.missingChip)).toBeTruthy();
     fireEvent.click(row.getByRole('button', { name: s.approvedFor.replace('{name}', t.templates.names.renewal_due) }));

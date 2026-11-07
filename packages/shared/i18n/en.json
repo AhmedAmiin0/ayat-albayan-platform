@@ -3379,7 +3379,12 @@
       "confirmHint": "Messages will be sent with this template at once",
       "missingChip": "Not available in the CRM",
       "saved": "Status of «{name}» saved: {status}",
-      "note": "By hand"
+      "note": "Via the CRM"
+    },
+    "crmSubmit": {
+      "document": "Made in the CRM dashboard: the CRM uploads no sample PDF for Meta's review",
+      "named": "Managed in the CRM dashboard: the CRM knows this template by another name or language, so our text is never sent under it",
+      "rejected": "Edited in the CRM dashboard: the CRM API cannot edit a template Meta rejected"
     },
     "moveTitle": "Move the template to the other number",
     "moveConfirm": "«{name}» will be sent from {to} instead of {from}. After the move its status is checked on the {to} account in Meta: it stays approved if it is approved there, otherwise it becomes «Not sent to Meta yet» until you submit it to Meta from that number.",
@@ -3535,6 +3540,7 @@
         "webhookCrmNoSecret": "«CRM webhook signing secret» is not set in «Communications» → «Safety», so every CRM delivery is refused and no delivery ticks show",
         "crmScopeMissing": "The CRM API key is valid but lacks the messages:send scope, so this line will not send. Update it in «Communications» → «Safety».",
         "crmScopeOk": "The CRM API key is valid and has the send scope",
+        "crmTemplateScopesMissing": "The CRM API key lacks {scopes}, so this number's templates neither sync nor go for review from here. Update it in «Communications» → «Safety» → «CRM API key».",
         "metaReady": "Ready to send directly through Meta",
         "metaAppSecretSet": "The Meta app secret is set, so signed inbound messages are accepted",
         "metaAppSecretMissing": "The Meta app secret is not set, so inbound messages from Meta will be refused",
@@ -3567,7 +3573,8 @@
       "meta_error": "Meta rejected the request: {message}",
       "kapso_auth": "Kapso refused the project API key: update «Kapso project API key» in «Communications» → «Safety», then try again.",
       "crm_auth": "The CRM refused its API key: update «CRM API key» in «Communications» → «Safety», then try again.",
-      "crm_managed": "{line} templates are managed in the CRM: they are submitted to Meta and approved there, then their status is set here by hand.",
+      "crm_managed": "On {line} this is done in the CRM dashboard only: a template with a PDF, a rejected template (edited there), or a CRM whose API does not offer templates yet.",
+      "crm_scope_missing": "The CRM API key lacks the {scope} scope: create a key with it in the CRM, save it in «Communications» → «Safety» → «CRM API key», then try again.",
       "not_crm_line": "The status is set by hand only for templates of a line switched to «CRM».",
       "needs_app_id": "This template includes a PDF file. To send it to Meta from the {line}, the Meta app ID ({key}) has to be set on the server first.",
       "needs_meta_driver": "This template includes a PDF file, and Kapso cannot upload the sample file. To send it to Meta, switch the «Sending provider» of the {line} to «Meta direct» in «Communications» → «Numbers», then try again.",

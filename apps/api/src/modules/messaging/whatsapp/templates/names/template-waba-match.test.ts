@@ -82,7 +82,9 @@ describe('crmSyncPatch (docs/39)', () => {
   it('found by the name it is sent under: status, quality and reason; footer, display and body stay ours', () => {
     const row = templateRow({ status: 'pending', display: { header: null, buttons: [] } });
     const patch = crmSyncPatch(row, [meta('booking_confirmation', { status: 'REJECTED', quality: 'RED', rejectedReason: 'bad' })], NOW);
-    expect(patch).toEqual({ last_checked_at: NOW.toISOString(), status: 'rejected', quality: 'RED', last_error: 'bad' });
+    expect(patch).toEqual({
+      last_checked_at: NOW.toISOString(), status: 'rejected', quality: 'RED', last_error: 'bad', meta_id: 'id-booking_confirmation',
+    });
     expect(Object.keys(patch)).not.toEqual(expect.arrayContaining(['footer_ar']));
     expect(crmSyncPatch(ALERT, [meta('teacher_lesson_v2')], NOW)).toMatchObject({ status: 'approved', last_error: null });
   });

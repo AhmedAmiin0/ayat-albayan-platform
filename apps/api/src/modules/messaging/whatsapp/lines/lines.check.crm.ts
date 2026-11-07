@@ -9,6 +9,8 @@ import { WaError } from '../whatsapp.types';
 
 /** The scope POST /messages needs. */
 const CRM_SEND_SCOPE = 'messages:send';
+/** The scopes «مزامنة» and «إرسال إلى ميتا» need on a crm line (docs/39). */
+const CRM_TEMPLATE_SCOPES = ['templates:read', 'templates:write'] as const;
 
 const meSchema = z.object({ key: z.object({ scopes: z.array(z.string()) }) });
 
@@ -21,27 +23,40 @@ interface CrmCheckInput {
 }
 
 type CallError = LineCheckView['errors'][number];
+type ScopeFacts = Pick<LineCheckView, 'crm_send_scope' | 'crm_template_scopes_missing'>;
 
-/** Does the key carry messages:send? A refused key or a failed call is an errors[] entry (scope unknown). */
-async function scopeOf(conn: CrmConn): Promise<{ scope: boolean | null; error?: CallError }> {
+/** The key's scopes (GET /me); a refused key or a failed call is an errors[] entry (scopes unknown). */
+async function scopesOf(conn: CrmConn): Promise<{ scopes: string[] | null; error?: CallError }> {
   try {
     const me = meSchema.safeParse(await crmJson(conn, { path: 'me' }));
-    if (!me.success) return { scope: null, error: { step: 'crm_me', code: null, message: 'Unexpected CRM response to GET /me' } };
-    return { scope: me.data.key.scopes.includes(CRM_SEND_SCOPE) };
+    if (!me.success) return { scopes: null, error: { step: 'crm_me', code: null, message: 'Unexpected CRM response to GET /me' } };
+    return { scopes: me.data.key.scopes };
   } catch (e) {
     const tag = e instanceof WaError && e.info.credential ? { credential: e.info.credential } : {};
-    return { scope: null, error: { step: 'crm_me', code: null, message: e instanceof Error ? e.message : String(e), ...tag } };
+    return { scopes: null, error: { step: 'crm_me', code: null, message: e instanceof Error ? e.message : String(e), ...tag } };
   }
 }
 
-/** One configured crm line: ok, the key refused (credential 'crm'), or the key without messages:send. */
+const UNKNOWN: ScopeFacts = { crm_send_scope: null, crm_template_scopes_missing: null };
+
+/** messages:send, and the template scopes the key lacks; both unknown (null) when /me failed. */
+const scopeFacts = (scopes: readonly string[] | null): ScopeFacts =>
+  (scopes ? {
+    crm_send_scope: scopes.includes(CRM_SEND_SCOPE),
+    crm_template_scopes_missing: CRM_TEMPLATE_SCOPES.filter((s) => !scopes.includes(s)),
+  } : UNKNOWN);
+
+/**
+ * One configured crm line: ok, the key refused (credential 'crm'), or the key without messages:send;
+ * and which template scopes it lacks, from the same GET /me (no other call).
+ */
 export async function crmLineCheck(input: CrmCheckInput): Promise<LineCheckView> {
-  const { scope, error } = await scopeOf(input.conn);
+  const { scopes, error } = await scopesOf(input.conn);
   return {
     line: input.line,
     configured: true,
     ...input.driver,
-    crm_send_scope: scope,
+    ...scopeFacts(scopes),
     phone_number_id: null,
     waba_id: null,
     app_id: null,
