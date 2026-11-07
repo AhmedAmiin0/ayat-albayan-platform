@@ -44,7 +44,7 @@ describe('createInboxLive: an event with rows (docs/44 K1, a visual patch only)'
         throw new Error('boom');
       },
     ],
-  ])('%s: the read still runs', async (_, rows: () => void | Promise<unknown>) => {
+  ])('%s: the read still runs', async (_, rows: () => unknown) => {
     const { live, targets } = setup(rows);
     live.changed({ phone: OPEN, rows: ROWS });
     await vi.runAllTimersAsync();

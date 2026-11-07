@@ -13,7 +13,7 @@ export interface LiveTargets {
    * An event's rows (docs/44 K1): an instant visual patch of the held copies (ticks). The event
    * re-reads all the same; a failed patch is ignored (the read brings the truth).
    */
-  rows?(phone: string, rows: readonly LiveRow[]): void | Promise<unknown>;
+  rows?(phone: string, rows: readonly LiveRow[]): unknown;
 }
 
 /** The app's patch, never in the way of the re-read (a throw or a rejection is dropped). */
