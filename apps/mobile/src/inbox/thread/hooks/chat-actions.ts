@@ -19,12 +19,14 @@ export interface ChatActions {
   setReply: Dispatch<SetStateAction<MessageView | null>>;
   /** «تعديل» (owner 2026-11-07): the message the next text corrects; never with a reply. */
   editing: MessageView | null;
+  /** This «تعديل» tap's session (its send carries it); null when none. */
+  editSession: string | null;
   /** Starts the correction: the box holds its text, any reply is dropped. */
   startEdit: (m: MessageView) => void;
   /** ✕ on the edit bar: the box gets back its draft from before the edit. */
   cancelEdit: () => void;
-  /** The correction of `id` went: edit mode ends (unless another one started meanwhile). */
-  editSent: (id: string) => void;
+  /** The correction sent from `session` went: that edit ends (never a newer «تعديل»). */
+  editSent: (session: string) => void;
   /** Free text can go out now (24 h window, not a read-only chat): «رد» is usable. */
   canSend: boolean;
   /** Who an inbound quote is from: the chat's name, else its number. */
@@ -52,6 +54,7 @@ export const ChatActionsContext = createContext<ChatActions>({
   reply: null,
   setReply: noop,
   editing: null,
+  editSession: null,
   startEdit: noop,
   cancelEdit: noop,
   editSent: noop,

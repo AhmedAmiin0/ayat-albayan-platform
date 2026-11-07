@@ -16,11 +16,12 @@ export function useReplyTarget(box: RefObject<HTMLElement | null>) {
 }
 
 /**
- * The composer's side of «تعديل» (owner 2026-11-07): the id its next send corrects, and the focus
- * on its box (the caret after the original's text) whenever one is picked. `done(id)` as «رد».
+ * The composer's side of «تعديل» (owner 2026-11-07): the id its next send corrects, its edit
+ * session, and the focus on its box (the caret after the original's text) whenever one is picked.
+ * `done(session)` ends that very edit only (#694 follow-up item 4).
  */
 export function useEditTarget(box: RefObject<HTMLTextAreaElement | null>) {
-  const { editing, cancelEdit } = useChatActions();
+  const { editing, editSession, cancelEdit } = useChatActions();
   const id = editing?.id;
   useEffect(() => {
     const el = box.current;
@@ -28,7 +29,7 @@ export function useEditTarget(box: RefObject<HTMLTextAreaElement | null>) {
     el.focus();
     el.setSelectionRange(el.value.length, el.value.length);
   }, [id, box]);
-  return { correctsId: id, done: cancelEdit };
+  return { correctsId: id, session: editSession ?? undefined, done: cancelEdit };
 }
 
 /** Calls `toText` (render phase) when a new target is picked: the template toggle gives way to the box. */

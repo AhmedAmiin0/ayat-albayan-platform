@@ -23,7 +23,7 @@ describe('Outbox (rule 8 dedup, «instant send»)', () => {
   it('queue answers as soon as the row is queued: the sender is kicked, never awaited', async () => {
     const t = setup('queued');
     const sent = await t.outbox.queue(ROW);
-    expect(sent).toEqual({ view: { id: 'm1', status: 'queued' }, replayed: false });
+    expect(sent).toEqual({ view: { id: 'm1', status: 'queued' }, replayed: false, echo: expect.any(Object) });
     expect(t.queries.enqueue).toHaveBeenCalledWith({ ...ROW, direction: 'outbound', status: 'queued' });
     expect(t.sender.kick).toHaveBeenCalledTimes(1);
     expect(t.sender.kick).toHaveBeenCalledWith({ lane: 'main', wait: false }); // docs/42 42-7
@@ -32,7 +32,7 @@ describe('Outbox (rule 8 dedup, «instant send»)', () => {
 
   it('queue keeps the dedup: a replayed request id answers the first row and kicks nothing', async () => {
     const t = setup('sent', true);
-    expect(await t.outbox.queue(ROW)).toEqual({ view: { id: 'm1', status: 'sent' }, replayed: true });
+    expect(await t.outbox.queue(ROW)).toMatchObject({ view: { id: 'm1', status: 'sent' }, replayed: true });
     expect(t.sender.kick).not.toHaveBeenCalled();
     expect(t.queries.get).not.toHaveBeenCalled(); // the replay was read back by the enqueue
   });
@@ -97,7 +97,7 @@ describe('Outbox.send on an API copy (docs/09: the pass runs on the worker)', ()
 
   it('replayOf: the row a key already queued, as a replay; an unknown key is null', async () => {
     const t = setup('sent');
-    expect(await t.outbox.replayOf(ROW.dedup_key)).toEqual({ view: { id: 'm1', status: 'sent' }, replayed: true });
+    expect(await t.outbox.replayOf(ROW.dedup_key)).toMatchObject({ view: { id: 'm1', status: 'sent' }, replayed: true });
     expect(await t.outbox.replayOf('admin:+966500000001:other')).toBeNull();
     expect(t.sender.kick).not.toHaveBeenCalled();
   });

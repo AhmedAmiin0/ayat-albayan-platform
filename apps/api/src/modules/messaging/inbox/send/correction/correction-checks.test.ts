@@ -16,35 +16,36 @@ afterEach(() => {
   ar.inbox.correction.prefix = DEFAULT_PREFIX;
 });
 
-describe('sameRequest', () => {
+describe('sameRequest (a row sent before correction_text was kept)', () => {
   it('admin-reworded prefix + a retry from a stale client: recognised', () => {
     ar.inbox.correction.prefix = 'تعديل: ';
-    const first = { body: 'تعديل: الساعة الخامسة', corrects_id: O1 };
+    const first = { body: 'تعديل: الساعة الخامسة', corrects_id: O1, correction_text: null };
     expect(sameRequest(first, input('الساعة الخامسة'))).toBe(true);
     expect(sameRequest(first, input(`${DEFAULT_PREFIX}الساعة الخامسة`))).toBe(true);
   });
 
   it('a first row under the bundled prefix (written before the rewording) is recognised', () => {
     ar.inbox.correction.prefix = 'تعديل: ';
-    const first = { body: `${DEFAULT_PREFIX}الساعة الخامسة`, corrects_id: O1 };
+    const first = { body: `${DEFAULT_PREFIX}الساعة الخامسة`, corrects_id: O1, correction_text: null };
     expect(sameRequest(first, input(' الساعة الخامسة '))).toBe(true);
   });
 
   it('another text, another original or a plain send: not the same request', () => {
-    const first = { body: `${DEFAULT_PREFIX}الساعة الخامسة`, corrects_id: O1 };
+    const first = { body: `${DEFAULT_PREFIX}الساعة الخامسة`, corrects_id: O1, correction_text: null };
     expect(sameRequest(first, input('الخامسة'))).toBe(false);
     expect(sameRequest(first, input('الساعة الخامسة', 'o2'))).toBe(false);
     expect(sameRequest(first, { text: 'الساعة الخامسة', clientRequestId: 'r1' })).toBe(false);
-    expect(sameRequest({ body: 'الساعة الخامسة', corrects_id: null }, input('الساعة الخامسة')))
+    expect(sameRequest({ body: 'الساعة الخامسة', corrects_id: null, correction_text: null }, input('الساعة الخامسة')))
       .toBe(false);
   });
 });
 
 describe('withSameRequest', () => {
-  const view = { body: `${DEFAULT_PREFIX}الخامسة`, corrects_id: O1 };
-  it('only a replay carries the flag', () => {
-    expect(withSameRequest({ view, replayed: true }, input('الخامسة')).sameRequest).toBe(true);
-    expect(withSameRequest({ view, replayed: false }, input('الخامسة'))).not.toHaveProperty(
+  const echo = { body: `${DEFAULT_PREFIX}الخامسة`, corrects_id: O1, correction_text: 'الخامسة' };
+  it('only a replay carries the flag; a send without the stored row is never the same', () => {
+    expect(withSameRequest({ echo, replayed: true }, input('الخامسة')).sameRequest).toBe(true);
+    expect(withSameRequest({ replayed: true }, input('الخامسة')).sameRequest).toBe(false);
+    expect(withSameRequest({ echo, replayed: false }, input('الخامسة'))).not.toHaveProperty(
       'sameRequest',
     );
   });

@@ -3310,11 +3310,6 @@
       "count": 2
     }
   },
-  "src/inbox/composer/draft-store.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/inbox/composer/draft-store.ts": {
     "stylistic/max-len": {
       "count": 4

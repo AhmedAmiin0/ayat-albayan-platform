@@ -45,7 +45,7 @@ describe('correctionOf: one level only', () => {
       text: 'تصحيح: الحلقة الساعة السادسة',
       replyToMessageId: ORIGINAL,
     });
-    expect(out.row).toEqual({ corrects_id: ORIGINAL });
+    expect(out.row).toEqual({ corrects_id: ORIGINAL, correction_text: 'الحلقة الساعة السادسة' });
   });
 });
 

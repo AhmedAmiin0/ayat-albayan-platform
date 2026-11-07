@@ -52,6 +52,7 @@ describe('«تعديل» = a correction: POST /threads/:phone/text with corrects
       expect.objectContaining({
         body: 'تصحيح: الحلقة الساعة الخامسة',
         corrects_id: ORIGINAL,
+        correction_text: 'الحلقة الساعة الخامسة',
         reply_to_message_id: ORIGINAL,
         reply_to_wa_id: 'wamid.O',
         created_by: ADMIN.id,
