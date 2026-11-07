@@ -35,6 +35,8 @@ describe('the backup’s alerts (bell only, once a day per subject)', () => {
     expect(t.said().subject).toBe('drive_backup:drive_full:2026-11-10');
     expect(t.said().vars.reason).toBe(ar.googleSync.alerts.backupDriveFull);
     expect(t.said().vars.reason).toContain('كاملًا إلى سلة المهملات');
+    expect(t.said().vars.reason).toContain('ثم أفرغها');
+    expect(ar.integrations.driveBackup.lowQuota).toContain('ثم أفرغها');
     expect(t.said().vars.reason).not.toContain('احذف الأرشيفات القديمة');
   });
 });
