@@ -1,8 +1,8 @@
 import { QUOTE_BODY_MAX, UNAVAILABLE_QUOTE, type MessageQuote, type MessageView } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { looksCrmHistory } from '../../whatsapp';
-import { waHttpError } from '../../whatsapp/templates/catalog/template.mapper';
+import { DB, type Db } from '@/common/db/db.module';
+import { looksCrmHistory } from '@/modules/messaging/whatsapp';
+import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 
 /** A quoted row as read here: what the bubble shows, and who of staff sent it. */
 export interface QuotedRow {

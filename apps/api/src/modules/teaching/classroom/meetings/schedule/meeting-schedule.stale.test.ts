@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { TEACHER } from '../../classroom.fakes';
-import { MEETING_ID, NOW, scheduledRow } from '../../internal-meetings/internal-meetings.fakes';
-import { CLOSED_PHONE, OPEN_PHONE, STAFF_ID, stored } from '../invites/meeting-invites.fakes';
+import { TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import { MEETING_ID, NOW, scheduledRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import { CLOSED_PHONE, OPEN_PHONE, STAFF_ID, stored } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
 import { meetingServices, type MeetingServices } from './meeting-services.fakes';
 
 // A reschedule drops the queued invitation texts: a family whose text never went out must not read «sent».

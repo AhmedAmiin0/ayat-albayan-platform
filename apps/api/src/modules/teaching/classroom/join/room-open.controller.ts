@@ -1,8 +1,8 @@
 import type { RoomOpenResult } from '@ab/shared';
 import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { RoomOpenService } from './room-open.service';
 
 /** «افتح الحلقة الآن»: the admin or the lesson's teacher opens the room before the usual 15 minutes. */

@@ -1,9 +1,9 @@
 import type { StudentAttendanceTable } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { SalesStudentScope } from '../sales-student-scope';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 import { monthOf, StudentAttendanceService } from './student-attendance.service';
 
 /**

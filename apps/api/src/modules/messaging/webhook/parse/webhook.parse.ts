@@ -6,9 +6,9 @@ import {
   type InboundEvent,
   type StatusEvent,
   type WebhookBatch,
-} from '../webhook.events';
+} from '@/modules/messaging/webhook/webhook.events';
 import { readCalls, readPermissionReplies } from './webhook.calls';
-import { receiving, where, type ReceiveOptions, type Receiving } from '../lines/webhook.lines';
+import { receiving, where, type ReceiveOptions, type Receiving } from '@/modules/messaging/webhook/lines/webhook.lines';
 import { ECHO_FIELD, readEchoes } from './webhook.echoes';
 import { mediaFileName } from './file-name';
 

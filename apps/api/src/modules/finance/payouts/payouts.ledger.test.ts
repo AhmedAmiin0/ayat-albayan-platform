@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYOUT_ID, payoutRow, TEACHER_ID } from '../subscriptions/money/money.fakes';
-import { ADMIN, moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
+import { PAYOUT_ID, payoutRow, TEACHER_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { ADMIN, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
 // The rule against double counting (docs/11 §12): the ledger is the record of what was paid, and
 // marking a payout paid settles it in the SAME transaction (pay_payout, migration 20261005000201).

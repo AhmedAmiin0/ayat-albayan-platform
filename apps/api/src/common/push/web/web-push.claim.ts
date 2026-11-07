@@ -1,8 +1,8 @@
 import { ConflictException } from '@nestjs/common';
-import { dbError } from '../../http/http';
-import type { Db } from '../../db/db.module';
-import { DEVICE_IN_USE, mayClaimDevice } from '../expo/push-claim';
-import { liveSessions } from '../dispatch/push.sessions';
+import { dbError } from '@/common/http/http';
+import type { Db } from '@/common/db/db.module';
+import { DEVICE_IN_USE, mayClaimDevice } from '@/common/push/expo/push-claim';
+import { liveSessions } from '@/common/push/dispatch/push.sessions';
 import type { WebPushSubscriptionInput } from './web-push.endpoint';
 
 /**

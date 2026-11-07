@@ -2,6 +2,7 @@ import type { Locator, Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { seedPackageStudent } from '../../support/finance/money';
 import { resetAbrar, seedFamily, setAvailability } from '../../support/core/schedule';
+import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
 // Forms parity (owner 2026-10-03, "THESE ARE ALL OUR FORMS"): each form in the app shows the Google
 // Form's titles, options, order and stars. The expected text is typed here from the owner's paste on
@@ -9,7 +10,6 @@ import { resetAbrar, seedFamily, setAvailability } from '../../support/core/sche
 // differences are marked «DEVIATION».
 
 const GRADES = ['ممتاز', 'جيد جدًا', 'جيد', 'مقبول', 'يحتاج إلى مراجعة'];
-const DAYS = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
 
 /** The titles appear in this order on the page. */
 async function expectOrder(scope: Locator, titles: string[]): Promise<void> {
@@ -80,20 +80,19 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     ]);
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
-    // الساعة * / تاريخ أول حلقة / الأيام المتاحة * (السبت → الجمعة). DEVIATION: the hour and the date
-    // are picked from the teacher's free slots (never typed), as one control.
+    // الساعة * / تاريخ أول حلقة / الأيام المتاحة *. DEVIATION (owner 2026-11-07): per lesson day a
+    // date input and a time input (native pickers, never free text), read against her free slots.
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
-    await expect(step.getByRole('heading', { name: 'الساعة' })).toBeVisible();
-    await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-    await step.getByRole('group', { name: ar.booking.freeSlots }).getByRole('button').first().click();
-    await expect(step.getByRole('heading', { name: 'تاريخ أول حلقة' })).toBeVisible();
-    // DEVIATION (owner 2026-10-18): each day is picked on the slot grid with its own time (السبت →
-    // الجمعة columns); the picked days are listed under «الأيام المتاحة» *, each removable.
-    const columns = step.getByRole('group', { name: ar.booking.freeSlots }).getByRole('region');
-    expect((await columns.evaluateAll((els) => els.map((e) => e.getAttribute('aria-label') ?? ''))).map((l) => l.split(' ')[0])).toEqual(DAYS);
+    await expect(step.getByRole('heading', { name: ar.lessonTimes.title })).toBeVisible();
+    const first = step.getByRole('group', { name: ar.lessonTimes.row.replace('{n}', '1') });
+    await expect(first.getByLabel(ar.lessonTimes.date, { exact: true })).toHaveAttribute('type', 'date');
+    await expect(first.getByLabel(ar.lessonTimes.time, { exact: true })).toHaveAttribute('type', 'time');
+    await fillLessonRow(step, 1, { weekday: 3, time: '16:00' });
+    // DEVIATION (owner 2026-10-18): each day has its own time; the days set are listed under
+    // «الأيام المتاحة» *.
     const days = step.getByRole('region', { name: /الأيام المتاحة/ });
     await expect(days.getByRole('heading')).toContainText('*');
-    await expect(days.getByRole('button', { name: new RegExp(ar.booking.removeDay.replace('{day}', '')) })).toHaveCount(1);
+    await expect(days.getByRole('listitem')).toHaveCount(1);
   });
 
   test('2 · «تقرير الحلقة»: sections, titles, options and order', async ({ asRole }) => {

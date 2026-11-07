@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
-import type { Bucket } from '../../../../common/storage/storage.paths';
-import type { StorageService } from '../../../../common/storage/storage.service';
+import type { Bucket } from '@/common/storage/storage.paths';
+import type { StorageService } from '@/common/storage/storage.service';
 import { toVoiceOgg } from './voice-ogg';
 
 /** What the outbox row carries for a file. */

@@ -1,7 +1,6 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ABRAR, next } from '@/features/teaching/booking/wizard-fixture';
-import { dayMonthLabel } from '@/features/teaching/schedule';
+import { ABRAR, fillRow, next, rowInputs } from '@/features/teaching/booking/wizard-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { continueText } from './course-continue';
@@ -17,8 +16,12 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-const day = (n: 0 | 3) => screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[n]} `) });
-const pressed = async (n: 0 | 3, time: RegExp) => within(await day(n)).getByRole('button', { name: time }).getAttribute('aria-pressed');
+/** Lesson row `n` holds this date and time (the family's wall clock). */
+async function rowHolds(n: number, date: string, time: string): Promise<void> {
+  const row = await rowInputs(n);
+  expect(row.date).toHaveProperty('value', date);
+  expect(row.time).toHaveProperty('value', time);
+}
 const taken = (n: 0 | 3) => t.booking.courseChange.continueTaken.replace('{day}', t.enums.weekday[n]);
 
 /** Open the dialog, «تابِع بنفس الأيام», wait for the previous teacher, then on to the slot step. */
@@ -49,9 +52,8 @@ describe('«تابِع بنفس الأيام» in «أيام الحلقات» (o
   it('prefills the previous teacher and days, on the week the new course opens, and checks them', async () => {
     routeCourseSend(apiSend);
     await continueToSlots();
-    expect(await screen.findByText(t.schedule.weekOf.replace('{date}', dayMonthLabel('2026-10-10')))).toBeTruthy();
-    expect(await pressed(0, /17:00/)).toBe('true');
-    expect(await pressed(3, /19:30/)).toBe('true');
+    await rowHolds(1, '2026-10-11', '17:00');
+    await rowHolds(2, '2026-10-14', '19:30');
     expect(await screen.findByText(t.booking.seriesFree)).toBeTruthy();
     const check = apiSend.mock.calls.find(([, path]) => path === '/sales/booking/check');
     expect(check?.[2]).toMatchObject({ teacherId: ABRAR.id, byday: [0, 3], startsOn: '2026-10-11', startsAt: NEXT_SUN });
@@ -63,9 +65,9 @@ describe('«تابِع بنفس الأيام» in «أيام الحلقات» (o
     await continueToSlots();
     expect(await screen.findByText(taken(0))).toBeTruthy();
     expect(screen.queryByText(taken(3))).toBeNull();
-    fireEvent.click(within(await day(0)).getByRole('button', { name: /18:00/ }));
-    expect(await pressed(0, /18:00/)).toBe('true');
-    expect(await pressed(0, /17:00/)).toBe('false');
+    await rowInputs(1);
+    fillRow(1, '2026-10-11', '18:00');
+    await rowHolds(1, '2026-10-11', '18:00');
     await waitFor(() => expect(screen.queryByText(taken(0))).toBeNull());
     const bodies = apiSend.mock.calls.filter(([, path]) => path === '/sales/booking/check').map(([, , b]) => b as { startsAt: string });
     expect(bodies.at(-1)?.startsAt).toBe('2026-10-11T15:00:00.000Z');

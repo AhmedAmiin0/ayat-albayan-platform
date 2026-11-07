@@ -1,9 +1,9 @@
 import type { GoogleDiscoveryView, GoogleFound } from '@ab/shared';
 import { z } from 'zod';
-import type { GoogleClient } from '../google-client.port';
-import { DRIVE, MIME } from '../google-format';
+import type { GoogleClient } from '@/modules/platform/google-sync/google-client.port';
+import { DRIVE, MIME } from '@/modules/platform/google-sync/google-format';
 import type { SummaryLink } from './suggest';
-import { summaryLinks } from '../writers/sheets/summary-row';
+import { summaryLinks } from '@/modules/platform/google-sync/writers/sheets/summary-row';
 
 /** google_account.discovery: the view plus the summary sheet's student links (for suggestions). */
 type StoredDiscovery = GoogleDiscoveryView & { students: SummaryLink[] };

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { NotificationPolicy } from '../../messaging/notification-rules/policy/policy';
-import { fakeRulesReader, type FakePolicyInput } from '../../messaging/notification-rules/policy/policy.fakes';
+import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { fakeRulesReader, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { ReportPdfJob } from './report-pdf.job';
 import type { ReportPdfPublisher } from './report-pdf.publisher';
 import type { Finish, ReportPdfQueries } from './report-pdf.queries';

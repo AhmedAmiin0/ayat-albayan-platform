@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { absentModel, sampleModel, STUB_ASSETS } from '../report-pdf.fakes';
+import { absentModel, sampleModel, STUB_ASSETS } from '@/modules/reporting/report-pdf/report-pdf.fakes';
 import { reportHtml } from './template';
 import { REPORT_CSS } from './template.css';
 

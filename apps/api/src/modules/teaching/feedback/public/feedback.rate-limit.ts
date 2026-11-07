@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import type { FeedbackSettings } from '../feedback.settings';
+import type { FeedbackSettings } from '@/modules/teaching/feedback/feedback.settings';
 
 const MIN_MS = 60_000;
 /** The registry default (10 min): join and activity limits keep it; the feedback form reads the setting. */

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { conflict } from '../../../common/http/errors';
-import { dbError } from '../../../common/http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { conflict } from '@/common/http/errors';
+import { dbError } from '@/common/http/http';
 
 /**
  * A teacher's sign-in username (docs/30 §1): it lives on the teacher's login profile (profiles.username,

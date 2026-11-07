@@ -1,7 +1,7 @@
 import { AVATAR_MAX_BYTES, AVATAR_MIMES, baseMime } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { SNIFF_BYTES, sniffMime } from '../file-sniff';
-import { badRequest } from '../../http/errors';
+import { SNIFF_BYTES, sniffMime } from '@/common/storage/file-sniff';
+import { badRequest } from '@/common/http/errors';
 import { AVATAR_FILES, type AvatarFiles } from './avatar-files';
 
 /** Where one person's photo path is stored (profiles.avatar_path or teachers.avatar_path). */

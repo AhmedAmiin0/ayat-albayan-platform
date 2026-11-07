@@ -6,6 +6,7 @@ import { t } from '@/lib/i18n/i18n';
 import { pickPatch, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { SeriesCheck } from '@/features/teaching/booking/steps/review/SeriesCheck';
 import { pickHint, SlotDays } from './SlotDays';
+import { LessonRows } from './lesson-rows';
 import { type Clock, useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 
@@ -34,16 +35,42 @@ export function courseNear(startsOn: string, now: Date = new Date()): string {
 }
 
 /**
- * Step 4 (R-SCH-06): the lessons from the teacher's real free slots (length picked with the package).
- * A package picks one slot per weekday, each at its own time (owner 2026-10-18); the earliest is the
- * first lesson. A trial or a makeup is one lesson: one slot, no repeat.
+ * Step 4 (R-SCH-06): a package picks a date and a time per lesson day (owner 2026-11-07), each read
+ * against the teacher's free slots; the earliest is the first lesson. A trial or a makeup is one
+ * lesson: one slot on the grid, no repeat.
  */
 export function SlotStep({ draft, onChange }: SlotStepProps) {
-  const clock = { ...useClock(), tz: useViewerTz() };
-  const teacher = draft.teacher;
-  if (!teacher) return null;
-  const pkg = draft.kind === 'package';
+  if (!draft.teacher) return null;
+  const Step = draft.kind === 'package' ? PackageTimes : OneSlot;
+  return <Step draft={draft} onChange={onChange} />;
+}
 
+/** A package: a date and a time per lesson day (LessonRows), the days they make, the series check. */
+function PackageTimes({ draft, onChange }: SlotStepProps) {
+  return (
+    <div className="grid gap-5">
+      <section className="grid gap-2">
+        <h3 className="text-sm font-semibold">
+          {t.lessonTimes.title}
+          <RequiredMark />
+        </h3>
+        <p className="text-xs text-ink-2">{pickHint(draft)}</p>
+        <LessonRows key={draft.teacher?.id} draft={draft} onChange={onChange} />
+      </section>
+      {draft.startsAt ? (
+        <>
+          <SlotDays draft={draft} />
+          <SeriesCheck draft={draft} />
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+/** A trial or a makeup: one lesson, picked on the teacher's free slots. */
+function OneSlot({ draft, onChange }: SlotStepProps) {
+  const clock = { ...useClock(), tz: useViewerTz() };
+  const teacherId = draft.teacher?.id ?? '';
   return (
     <div className="grid gap-5">
       <section className="grid gap-2">
@@ -51,17 +78,14 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
           {t.booking.pickTime}
           <RequiredMark />
         </h3>
-        {pkg && <p className="text-xs text-ink-2">{pickHint(draft)}</p>}
         <SlotPicker
-          teacherId={teacher.id}
+          teacherId={teacherId}
           durationMin={draft.durationMin}
           studentIds={draft.students.map((s) => s.id)}
           studentTz={draft.tz}
           value={draft.startsAt}
-          also={pkg ? draft.extra : undefined}
           onPick={(slot) => onChange(pickPatch(draft, slot.starts_at))}
           excludeLessonId={draft.trialDate?.upcomingId ?? undefined}
-          {...(draft.course ? { near: courseNear(draft.course.startsOn) } : {})}
         />
       </section>
       {draft.startsAt ? (
@@ -72,7 +96,6 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
               {t.booking.picked.replace('{when}', pickedText(draft.startsAt, draft.tz, clock))}
             </p>
           </section>
-          {pkg && <SlotDays draft={draft} onChange={onChange} />}
           <SeriesCheck draft={draft} />
         </>
       ) : (

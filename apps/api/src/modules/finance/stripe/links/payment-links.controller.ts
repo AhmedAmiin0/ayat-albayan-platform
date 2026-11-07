@@ -1,10 +1,10 @@
 import { paymentLinkCreateSchema, paymentLinkListSchema, paymentLinkQuoteSchema, type PaymentLinkQuoteView, type PaymentLinkView } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { parseOrThrow } from '../../../../common/http/http';
-import { StripeEnabledGuard } from '../gate/stripe-gate';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { parseOrThrow } from '@/common/http/http';
+import { StripeEnabledGuard } from '@/modules/finance/stripe/gate/stripe-gate';
 import { LinkCancel } from './link-cancel';
 import { LinkCreate } from './link-create';
 import { LinkDeps } from './link-deps';

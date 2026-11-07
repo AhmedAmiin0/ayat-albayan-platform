@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
-import { ADMIN_PAY, attachment as file, JPEG, PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '../../sales/sales-money/sales-money.pay.fakes';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { ADMIN_PAY, attachment as file, JPEG, PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/sales/sales-money/sales-money.pay.fakes';
 
 const REQ = '7d1c6a52-3b7e-4f0e-9a51-2f7c3e9b8a20';
 const post = (body: object) => ({ method: 'POST' as const, url: '/payments', body: { ...ADMIN_PAY, clientRequestId: REQ, ...body } });
@@ -53,7 +53,7 @@ describe('POST /payments: a booked payment never comes back as an error (rule 8)
   it('a replay: only the fresh paths, capped at 5 with the stored ones; a failing check is skipped, never a 400', async () => {
     m.payments.byRequest.mockResolvedValue(paymentRow({ client_request_id: REQ }));
     m.attachments.forPayment.mockResolvedValue(stored(1, 2, 3));
-    m.storage.info.mockImplementation(async (ref: { path: string }) => (ref.path === file(4) ? null : { size: 2048 }));
+    m.storage.info.mockImplementation(async (ref: { path: string }) => (ref.path === file(4) ? null : { size: 2048, contentType: 'image/jpeg' }));
     const res = await call(post({ attachments: [file(1), file(4), file(5), file(6)] }));
     expect([res.statusCode, res.json().id]).toEqual([201, PAYMENT_ID]);
     expect(savedPaths(m)).toEqual([file(5)]); // 4 failed its check, 6 is over the limit

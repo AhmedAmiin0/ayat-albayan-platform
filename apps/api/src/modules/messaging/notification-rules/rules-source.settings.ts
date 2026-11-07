@@ -1,7 +1,7 @@
 import { RULE_SETTING_KEYS, type RuleSettings, type SettingKey } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
-import { SETTINGS_CACHE_MS, SettingsService } from '../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SETTINGS_CACHE_MS, SettingsService } from '@/common/settings/settings.service';
 
 /** What the rules read from settings: where producers read (comms_source) and the 8 legacy keys. */
 const KEYS = ['comms_source', ...RULE_SETTING_KEYS] as const satisfies readonly SettingKey[];

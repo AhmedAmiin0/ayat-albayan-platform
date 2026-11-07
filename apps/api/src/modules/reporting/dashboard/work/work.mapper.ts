@@ -1,6 +1,6 @@
 import type { AdminTaskKind, LessonStatus, PackageSize } from '@ab/shared';
 import { round2 } from './conversion';
-import { WORK_ITEMS, type PendingReportRow, type TaskRow, type UnpaidRow, type WorkList } from '../dashboard.types';
+import { WORK_ITEMS, type PendingReportRow, type TaskRow, type UnpaidRow, type WorkList } from '@/modules/reporting/dashboard/dashboard.types';
 
 // GET /dashboard/work rows (pure). Each list: the total, and the oldest WORK_ITEMS first.
 

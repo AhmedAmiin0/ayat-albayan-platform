@@ -30,11 +30,12 @@ export interface TemplateSkip {
 export interface TemplateLineSync extends TemplateLineFacts {
   ok: boolean;
   /**
-   * The line's failure code when ok is false: not_configured, meta_error, kapso_auth; crm_managed = the line
-   * is on the crm driver, whose templates live in the CRM (no call made, no row touched, docs/19).
+   * The line's failure code when ok is false: not_configured, meta_error, kapso_auth, crm_auth;
+   * crm_scope_missing = the CRM key lacks templates:read (docs/39); crm_managed = a CRM without
+   * /templates (no row touched).
    */
   error?: string;
-  /** Meta's own message for meta_error. */
+  /** Meta's own message for meta_error; the missing scope for crm_scope_missing. */
   message?: string;
   checked_at: string;
   /** Templates on this WABA (as listed); 0 when the read failed. */

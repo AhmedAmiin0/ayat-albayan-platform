@@ -61,7 +61,7 @@ test('a plan of other days a week: said so, no «تابِع»; «عدّل الأ
   expect(await screen.findByText(adjust)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.booking.courseChange.continueSameDays })).toBeNull();
   await pressEnabled(t.booking.courseChange.adjustDays);
-  await screen.findAllByRole('checkbox', { name: '17:00' });
+  await screen.findByTestId('lesson-date-0');
   expect(screen.getByText(dayLine('2026-10-11T14:00:00.000Z', TZ, R24))).toBeTruthy();
   expect(screen.getByText(dayLine('2026-10-15T15:00:00.000Z', TZ, R24))).toBeTruthy();
   expect(screen.getByText(pickProgress(t.booking, 2, 3) ?? '')).toBeTruthy();

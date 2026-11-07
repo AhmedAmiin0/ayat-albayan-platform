@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { threadRow } from '../inbox.fakes';
+import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { messagingWindowOpen } from './threads.mapper';
 
 // docs/28 §10: a message to the calls number opens no messaging window (the composer and reopen

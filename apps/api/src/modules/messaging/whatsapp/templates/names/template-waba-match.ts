@@ -54,16 +54,26 @@ export function wabaSyncPatch(row: TemplateRow, list: List, now: Date): Template
 }
 
 /**
- * A crm line's row (docs/39): status, quality and reason only, found by the name it is sent
- * under. The CRM lists no components, so body, footer and display stay ours (syncPatch would
- * blank footer_ar and display). If the CRM has no such template, only last_checked_at changes:
+ * A crm line's row (docs/39): status, quality and reason (and its own template's id), found by
+ * the name it is sent under. The CRM lists no components, so body, footer and display stay ours
+ * (syncPatch would blank footer_ar and display). If the CRM has no such template, only
+ * last_checked_at changes:
  * nothing is marked missing because of the CRM (report_ready, or a key without crm_name, would
  * otherwise stop sending). A real absence is still caught on send by TemplateMissing (132001).
  */
 export function crmSyncPatch(row: TemplateRow, list: List, now: Date): TemplatePatch {
-  const { meta } = wabaMatch(row, list);
-  return meta ? mappedPatch(meta, now) : { last_checked_at: now.toISOString() };
+  const { meta, mapped } = wabaMatch(row, list);
+  const checked = { last_checked_at: now.toISOString() };
+  return meta ? { ...mappedPatch(meta, now), ...ownId(meta, mapped) } : checked;
 }
+
+/**
+ * Meta's id of the row's OWN template (its meta_name + language, renewal_due) as the CRM lists it:
+ * a rejected one then reads «edit it in the CRM», never a second create. Another name's id is not
+ * the row's (mappedPatch), and a row the CRM lists without an id keeps its own.
+ */
+const ownId = (meta: MetaTemplate, mapped: boolean): TemplatePatch =>
+  (meta.id && !mapped ? { meta_id: meta.id } : {});
 
 /**
  * Every WABA name + language («name:language») a row stands for: its own, its WABA name and, for

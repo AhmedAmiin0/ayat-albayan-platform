@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
-import { TEACHER } from '../earnings.fakes';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { TEACHER } from '@/modules/finance/teacher-earnings/earnings.fakes';
 import { paymentsPage, sessionsPage } from './earnings.lists';
 
 const V = 'v_teacher_countable_earnings';

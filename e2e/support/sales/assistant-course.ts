@@ -1,10 +1,11 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
 import { withSql } from '../core/schedule';
+import { fillLessonRow } from '../teaching/lesson-rows';
 
 // «أيام الحلقات» in journey 7 (owner 2026-10-18): right after «اشتراك جديد» the assistant books the weekly
 // course of the subscription she sold: the plan's days a week (the weekly plan = 1), each with its time from
-// the teacher's free slots; the course stops after the plan's lessons (ends_on on every rule).
+// a date and a time input; the course stops after the plan's lessons (ends_on on every rule).
 
 const B = ar.booking;
 
@@ -21,8 +22,7 @@ export async function bookCourseDays(page: Page, transfer: Locator): Promise<voi
   const step = dialog.getByRole('region', { name: B.steps.slot });
   await expect(step.getByText(B.pickNDays.one)).toBeVisible();
   await expect(dialog.getByRole('button', { name: B.next })).toBeDisabled();
-  await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-  await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: /16:00/ }).click();
+  await fillLessonRow(step, 1, { weekday: 0, time: '16:00' });
   await expect(step.getByText(B.seriesFree)).toBeVisible(); // a clash would block her (no override)
   await next();
   const review = dialog.getByRole('region', { name: B.steps.review });

@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
-import { fakePolicy } from '../../modules/messaging/notification-rules/policy/policy.fakes';
-import type { NotificationPolicy } from '../../modules/messaging/notification-rules/policy/policy';
-import { systemResolver, type PermissionResolver } from '../auth/permissions';
-import type { Db } from '../db/db.module';
+import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import type { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
+import { systemResolver, type PermissionResolver } from '@/common/auth/permissions';
+import type { Db } from '@/common/db/db.module';
 import type { ExpoTicket } from './expo/expo-push';
 import { PushAudience } from './dispatch/push.audience';
 import { PushChannels } from './dispatch/push.channels';

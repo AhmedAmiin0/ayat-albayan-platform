@@ -1,11 +1,11 @@
 import { Injectable, Logger, Optional, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import type { CallEndReason } from '@ab/shared';
-import { CallsGate } from '../access/calls-gate';
-import { callingLine } from '../kapso/calling-line';
-import type { CallRow } from '../store/call-row';
+import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
+import { callingLine } from '@/modules/messaging/calls/kapso/calling-line';
+import type { CallRow } from '@/modules/messaging/calls/store/call-row';
 import { logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
-import { BackgroundJob } from '../../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 /** An outbound call nobody answered within this is ended (and terminated on WhatsApp). */
 export const UNANSWERED_MS = 45_000;

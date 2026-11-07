@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS, type AcademySettings } from '@ab/shared';
-import type { AuditEntry, AuditService } from '../../../common/audit/audit.service';
-import type { SettingsService } from '../../../common/settings/settings.service';
-import type { CodeSend } from '../../messaging/whatsapp';
+import type { AuditEntry, AuditService } from '@/common/audit/audit.service';
+import type { SettingsService } from '@/common/settings/settings.service';
+import type { CodeSend } from '@/modules/messaging/whatsapp';
 import type { CodePurpose, CodeStore, LiveCode, NewCode, PhoneStats, Subject } from './sign-in.ports';
 import { SignInSettings } from './sign-in.settings';
 

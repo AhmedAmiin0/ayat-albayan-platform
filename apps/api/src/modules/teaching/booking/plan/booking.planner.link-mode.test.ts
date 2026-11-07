@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fakePlanner, leadRequest, NOW, TEACHER } from '../booking.fakes';
+import { fakePlanner, leadRequest, NOW, TEACHER } from '@/modules/teaching/booking/booking.fakes';
 
 // settings.meeting_link_auto (owner 2026-10-12): the booking confirmation follows the mode; the
 // lesson rows always keep the resolved fixed link (turning the switch off brings it straight back).

@@ -1,7 +1,7 @@
 import type { SettingKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /** RecordingRetention: how many days a recording file is kept (null = forever). */
 const KEYS = ['recording_retention_days'] as const satisfies readonly SettingKey[];

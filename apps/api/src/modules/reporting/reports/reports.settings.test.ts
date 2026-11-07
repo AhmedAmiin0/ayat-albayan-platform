@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { ReportsSettings } from './reports.settings';
 
 /** What ReportGate read before the reader existed, plus the v2 form flag: the reader lists exactly these. */

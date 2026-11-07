@@ -1,7 +1,7 @@
 import type { SettingKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../../common/settings/settings-slice';
-import { SettingsService } from '../../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /**
  * GoogleSyncSource: whether a lesson goes out with our classroom. The google_* rows are not

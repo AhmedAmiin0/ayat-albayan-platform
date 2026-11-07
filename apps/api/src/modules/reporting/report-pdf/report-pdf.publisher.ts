@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { StorageService } from '../../../common/storage/storage.service';
-import { BUCKETS, reportPdfPath } from '../../../common/storage/storage.paths';
+import { StorageService } from '@/common/storage/storage.service';
+import { BUCKETS, reportPdfPath } from '@/common/storage/storage.paths';
 import { pdfContact } from './render/pdf-contact';
 import type { PdfContact } from './render/pdf-model';
 import { pdfAssets } from './pdf-assets';

@@ -1,14 +1,14 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { StaffPhotoAdmin } from '../../../../common/storage/avatars/staff-photo-admin';
-import { FakeRoleStore } from '../../roles/roles.fakes';
-import { ROLE_STORE } from '../../roles/roles.store';
-import { FakeAuthAdmin, FakeUserStore, row } from '../users.fakes';
-import { AUTH_ADMIN, USER_STORE } from '../store/users.store';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { StaffPhotoAdmin } from '@/common/storage/avatars/staff-photo-admin';
+import { FakeRoleStore } from '@/modules/people/roles/roles.fakes';
+import { ROLE_STORE } from '@/modules/people/roles/roles.store';
+import { FakeAuthAdmin, FakeUserStore, row } from '@/modules/people/users/users.fakes';
+import { AUTH_ADMIN, USER_STORE } from '@/modules/people/users/store/users.store';
 
 // The admin's staff-photo routes through the real guards (owner 2026-10-28).
 

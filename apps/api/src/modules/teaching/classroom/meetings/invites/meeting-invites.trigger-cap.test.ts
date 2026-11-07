@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, TEACHER } from '../../classroom.fakes';
-import { MEETING_ID, NOW, scheduledRow } from '../../internal-meetings/internal-meetings.fakes';
+import { ADMIN, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import { MEETING_ID, NOW, scheduledRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
 import { CLOSED_PHONE, OPEN_PHONE, openThread, STUDENT_A, STUDENT_B, stored } from './meeting-invites.fakes';
-import { meetingServices, type MeetingServices } from '../schedule/meeting-services.fakes';
+import { meetingServices, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
 // Migration 414's race-safe daily cap fails only the recipient it hits (the 'never throws' contract).
 let s: MeetingServices;

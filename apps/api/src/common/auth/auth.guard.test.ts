@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { AppModule } from '../../app.module';
+import { AppModule } from '@/app.module';
 import { PERMISSION_RESOLVER, TOKEN_VERIFIER, type TokenVerifier } from './auth.guard';
 import { Permissions } from './decorators';
 import { MeZoneRepo } from './me-zone.repo';

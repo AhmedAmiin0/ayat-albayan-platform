@@ -1,7 +1,7 @@
 import type { FxRate } from '@ab/shared';
 import { ServiceUnavailableException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import type { FxService } from '../../../finance/fx/fx.service';
+import type { FxService } from '@/modules/finance/fx/fx.service';
 import { FxConverter } from './fx-converter';
 
 const rate = (quote: string, r: number): FxRate => ({

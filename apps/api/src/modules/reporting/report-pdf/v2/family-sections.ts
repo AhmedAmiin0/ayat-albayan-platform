@@ -1,5 +1,5 @@
 import { ARABIC_SKILLS, ISLAMIC_RATES, JUZ_NAMES, surahName, type Grade, type Program } from '@ab/shared';
-import { AR, EMPTY, esc, fill, para } from '../render/pdf-text';
+import { AR, EMPTY, esc, fill, para } from '@/modules/reporting/report-pdf/render/pdf-text';
 import type { FamilyModel } from './family-model';
 
 const v = AR.reports.v2;

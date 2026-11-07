@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS, uploadMaxBytes } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { PaymentsSettings } from './payments.settings';
 
 /** What PaymentsController read before the reader existed: the reader lists exactly these. */

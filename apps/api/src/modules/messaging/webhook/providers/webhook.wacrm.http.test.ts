@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { outbound } from '../webhook.fakes';
-import { wacrmSign, webhookApp } from '../test-app';
+import { outbound } from '@/modules/messaging/webhook/webhook.fakes';
+import { wacrmSign, webhookApp } from '@/modules/messaging/webhook/test-app';
 
 // POST /webhooks/wacrm (docs/19 «crm driver»): signed + fresh, deduped on the delivery id; ticks only.
 

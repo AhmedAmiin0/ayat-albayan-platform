@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { LINE } from '../calls.fakes';
+import { LINE } from '@/modules/messaging/calls/calls.fakes';
 import { KapsoCallsApi } from './kapso-calls';
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });

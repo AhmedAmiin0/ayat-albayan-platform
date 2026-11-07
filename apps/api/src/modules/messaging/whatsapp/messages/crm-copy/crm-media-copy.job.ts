@@ -1,9 +1,9 @@
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { CRM_MEDIA_PREFIX, allowedCrmUrl } from '../crm-history/crm-history-url';
+import { CRM_MEDIA_PREFIX, allowedCrmUrl } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history-url';
 import { CrmMediaCopier, type CopyOutcome } from './crm-media-copier';
 import { CrmMediaCopyDone } from './crm-media-copy.done';
 import { CrmMediaCopySettings } from './crm-media-copy.settings';
-import { BackgroundJob } from '../../../../../config/role/background-job';
+import { BackgroundJob } from '@/config/role/background-job';
 
 /** Two files at a time: the batch of 20 takes ten rounds at most (10 s fetch timeout each). */
 const CONCURRENCY = 2;

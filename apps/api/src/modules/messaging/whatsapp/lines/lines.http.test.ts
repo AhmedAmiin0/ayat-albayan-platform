@@ -1,6 +1,6 @@
 import type { LineCheckView } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { whatsappApp } from '../test-app';
+import { whatsappApp } from '@/modules/messaging/whatsapp/test-app';
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 const URL = '/messaging/lines/check';

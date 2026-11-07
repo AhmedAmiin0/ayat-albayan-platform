@@ -1,4 +1,4 @@
-import { DRIVE } from '../../google-format';
+import { DRIVE } from '@/modules/platform/google-sync/google-format';
 
 /** A file name never carries a path separator or a control character. */
 // oxlint-disable-next-line no-control-regex -- control characters are exactly what is stripped

@@ -1,10 +1,10 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { StorageService } from '../../../../common/storage/storage.service';
-import { messageRow } from '../../whatsapp/sender/sender.fakes';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { InboxSettings } from '../inbox.settings';
-import { SALES, TEACHER, inboxApp } from '../test-app';
+import { StorageService } from '@/common/storage/storage.service';
+import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { InboxSettings } from '@/modules/messaging/inbox/inbox.settings';
+import { SALES, TEACHER, inboxApp } from '@/modules/messaging/inbox/test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}`;
@@ -66,7 +66,7 @@ describe('POST /threads/:phone/file-upload-url and /file (owner 2026-10-19 #2)',
   it('sales gets a signed upload URL for her own out/ path', async () => {
     const res = await t.call({ method: 'POST', url: `${URL}/file-upload-url`, token: 'sales', body: { clientRequestId: REQ, mime: 'image/png', size: 2048 } });
     expect([res.statusCode, res.json().signed_url]).toEqual([201, 'http://up']);
-    expect(storage.signedUpload).toHaveBeenCalledWith({ bucket: 'wa-media', path: expect.stringMatching(`^out/${SALES.id}/${REQ}/`) });
+    expect(storage.signedUpload).toHaveBeenCalledWith({ bucket: 'wa-media', path: expect.stringMatching(`^out/${SALES.id}/${REQ}/`), file: { size: 2048, mime: 'image/png' } });
   });
 
   it('a teacher: 403 files_forbidden on both routes, nothing signed or queued', async () => {

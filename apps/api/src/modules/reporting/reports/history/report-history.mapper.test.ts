@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { historyResponse, pendingViews } from './report-history.mapper';
 import type { HistoryRow, PendingRow } from './report-history.queries';
-import { TEACHER_ID } from '../reports.fakes';
+import { TEACHER_ID } from '@/modules/reporting/reports/reports.fakes';
 
 function row(id: string, over: Partial<HistoryRow> = {}): HistoryRow {
   return {

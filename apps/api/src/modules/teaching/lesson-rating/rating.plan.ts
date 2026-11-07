@@ -1,5 +1,5 @@
 import { feedbackEligible, lessonRatingMessage, RATING_TEMPLATE, type Attendance, type LessonStatus } from '@ab/shared';
-import { queuedRow, type QueuedMessage } from '../../messaging/reminders/queued-row';
+import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 
 // Which lesson_rating rows to queue after lessons took place (pure; migration 195, docs/12 §7).
 

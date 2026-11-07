@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 const WINDOW_MS = 60_000;
 const digest = (key: string): string => createHash('sha256').update(key).digest('base64url');

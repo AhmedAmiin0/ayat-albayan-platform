@@ -1,13 +1,13 @@
 import type { ActiveCallView, CallConfigView, CallView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { can } from '../../../../common/auth/permissions';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { iceServers, loadEnv } from '../../../../config/env/env';
-import { maySee, phonesOf, type CallActor } from '../access/call-access';
-import { CallsGate } from '../access/calls-gate';
-import { callingLine } from '../kapso/calling-line';
-import { toActiveView, toCallView } from '../store/calls.mapper';
-import type { CallRow } from '../store/call-row';
+import { can } from '@/common/auth/permissions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { iceServers, loadEnv } from '@/config/env/env';
+import { maySee, phonesOf, type CallActor } from '@/modules/messaging/calls/access/call-access';
+import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
+import { callingLine } from '@/modules/messaging/calls/kapso/calling-line';
+import { toActiveView, toCallView } from '@/modules/messaging/calls/store/calls.mapper';
+import type { CallRow } from '@/modules/messaging/calls/store/call-row';
 import { CallsKit } from './call-kit';
 
 /** A live row this user's device should show: their own call, or an inbound one ringing in a chat they may answer (inbox.send). */

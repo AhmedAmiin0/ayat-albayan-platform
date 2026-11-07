@@ -1,5 +1,5 @@
 import { canEditReport, editUntil, type TeacherReportView } from '@ab/shared';
-import { iso } from '../submit/report-form.mapper';
+import { iso } from '@/modules/reporting/reports/submit/report-form.mapper';
 import type { ReportStudent, TeacherReportRow } from './teacher-reports.queries';
 
 export type TeacherReportParts = {

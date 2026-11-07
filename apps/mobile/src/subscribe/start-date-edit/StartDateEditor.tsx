@@ -2,7 +2,7 @@ import { riyadhToday, startDateEditMax, startDateEditMin } from '@ab/shared';
 import type { QueryKey } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { StartDayPicker } from '@/assistants';
+import { DatePickerField } from '@/core/ui/form/date-picker';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button } from '@/core/ui/primitives/Button';
 import { Note } from '@/more';
@@ -19,7 +19,7 @@ interface EditorProps {
 const e = t.salesMoney.startDateEdit;
 
 /**
- * The open editor: StartDayPicker from the stored day, bounded as the server checks
+ * The open editor: Expo's date dialog from the stored day, bounded as the server checks
  * (startDateEditMin / startDateEditMax); «حفظ» only for another day.
  */
 export function StartDateEditor({ sub, stale, onDone }: EditorProps) {
@@ -29,11 +29,10 @@ export function StartDateEditor({ sub, stale, onDone }: EditorProps) {
   const max = startDateEditMax({ today, lessonsUsedBefore: sub.lessons_used_before ?? 0 });
   return (
     <View testID="start-date-editor" style={{ gap: 8 }}>
-      <StartDayPicker
+      <DatePickerField
         label={e.label}
         day={day}
-        min={startDateEditMin(today)}
-        max={max}
+        range={{ min: startDateEditMin(today), max }}
         onChange={setDay}
         error={save.isError ? startDateErrorText(save.error) : undefined}
       />

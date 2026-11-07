@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { knownNumber } from './known-number';
 
 const PHONE = '+966501234567';

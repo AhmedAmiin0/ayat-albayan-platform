@@ -1,5 +1,5 @@
-import { waTo, type GraphBody } from '../../messages/wa-components';
-import type { ReactionSend } from '../../whatsapp.types';
+import { waTo, type GraphBody } from '@/modules/messaging/whatsapp/messages/wa-components';
+import type { ReactionSend } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // A message reaction (owner 2026-10-27): Meta's session message {type:'reaction'}; the same body on Kapso's
 // Meta proxy. An empty emoji removes ours. Never a template: only inside the 24 h window.

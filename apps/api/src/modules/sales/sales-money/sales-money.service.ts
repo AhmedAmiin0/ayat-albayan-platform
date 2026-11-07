@@ -13,8 +13,8 @@ import {
   type SubscriptionView,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { badRequest, conflict } from '../../../common/http/errors';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { badRequest, conflict } from '@/common/http/errors';
 import { toSalesPayment, toSalesQuote, toSalesSubscription } from './sales-money.mapper';
 import {
   assertSalesDiscount,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { NumbersSecrets } from './numbers.secrets';
 
 const ID = '00000000-0000-4000-8000-0000000000a1';

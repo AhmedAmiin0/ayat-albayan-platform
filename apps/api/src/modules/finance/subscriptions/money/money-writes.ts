@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { PackageEvents } from '@/common/infra/events/lesson-events';
-import { AuditService, type AuditEntry } from '../../../../common/audit/audit.service';
-import { SubscriptionAlertsService } from '../alerts/alerts.service';
+import { AuditService, type AuditEntry } from '@/common/audit/audit.service';
+import { SubscriptionAlertsService } from '@/modules/finance/subscriptions/alerts/alerts.service';
 import { MoneyFollowUps } from './money-follow-ups';
-import { activatesStudent } from '../student-lifecycle/student-activation';
-import type { RenewalCause } from '../student-lifecycle/student-renewal';
+import { activatesStudent } from '@/modules/finance/subscriptions/student-lifecycle/student-activation';
+import type { RenewalCause } from '@/modules/finance/subscriptions/student-lifecycle/student-renewal';
 
 type Done = AuditEntry & { actorId: string };
 

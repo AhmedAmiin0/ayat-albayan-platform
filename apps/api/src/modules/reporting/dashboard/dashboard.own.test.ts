@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fakeOwnNumbers, OWN_NOT_IN } from '../../messaging/numbers/own/own-numbers.fakes';
-import { fakeDb } from '../../people/guardians/fake-db';
+import { fakeOwnNumbers, OWN_NOT_IN } from '@/modules/messaging/numbers/own/own-numbers.fakes';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { DashboardQueries } from './dashboard.queries';
 
 const W = { from: new Date('2026-10-20T21:00:00.000Z'), to: new Date('2026-10-27T21:00:00.000Z') };

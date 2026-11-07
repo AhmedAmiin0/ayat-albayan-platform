@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../../common/push/push.service';
+import type { PushService } from '@/common/push/push.service';
 import { GoogleAlerts } from './google-alerts';
 import { TEACHER_ID } from './google-sync.fakes';
 

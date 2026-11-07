@@ -131,6 +131,8 @@ export class WaError extends Error {
       uncertain?: boolean;
       /** Kapso refused the line's project key, or the CRM its API key (docs/19): held like Meta's 190, in its own words. */
       credential?: 'kapso' | 'crm' | 'evolution';
+      /** The CRM's 403 named the scope its key lacks («templates:read», docs/39). */
+      missingScope?: string;
       /** The crm driver's error code («meta_error», «template_malformed», «bad_request», …): fails at once, never retried. */
       crmCode?: string;
       /** The CRM's rate limit (429): try again after this long, the try not counted. */

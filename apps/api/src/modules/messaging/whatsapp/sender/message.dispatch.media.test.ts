@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
+import type { StorageService } from '@/common/storage/storage.service';
 import { MessageDispatch, mediaLink } from './message.dispatch';
 import { dueMessage } from './sender.fakes';
-import { WaError, type WhatsappLines } from '../whatsapp.types';
+import { WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // A file staff sent from the chat (owner 2026-10-19 #2): by link, before the text branch.
 

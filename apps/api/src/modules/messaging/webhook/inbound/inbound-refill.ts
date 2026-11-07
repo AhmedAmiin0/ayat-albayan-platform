@@ -1,6 +1,6 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
 import { isUnsupportedMessage } from '@ab/shared';
-import type { Db } from '../../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 
 // Meta's `unsupported` (131060 «This message is unavailable»: often a new number's first message
 // while the chat line runs in coexistence) stores a row with no content. If Meta later re-sends

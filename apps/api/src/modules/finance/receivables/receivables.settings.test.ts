@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { readerOf } from '../../../common/settings/settings.fakes';
+import { readerOf } from '@/common/settings/settings.fakes';
 import { ReceivablesSettings } from './receivables.settings';
 
 /** The reporting currency only: a stopped course never reads the live refund rate (2026-11-06). */

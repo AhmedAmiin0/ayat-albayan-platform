@@ -1,10 +1,10 @@
 import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow, PaymentAttachmentView } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '../../../../common/auth/decorators';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { pageQuerySchema, parseOrThrow, type Page } from '../../../../common/http/http';
-import { PaymentAttachments } from '../../payments/attachments/payment-attachments.service';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { pageQuerySchema, parseOrThrow, type Page } from '@/common/http/http';
+import { PaymentAttachments } from '@/modules/finance/payments/attachments/payment-attachments.service';
 import { MyService } from './my.service';
 
 /**

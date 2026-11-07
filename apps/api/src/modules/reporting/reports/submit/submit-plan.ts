@@ -9,9 +9,9 @@ import {
   type LessonStatus,
 } from '@ab/shared';
 import type { Json } from '@ab/db';
-import { outcomeChange } from '../../../teaching/lessons/status/outcomes';
-import type { ChangeSet } from '../../../teaching/scheduling/change-set';
-import type { FormColumns } from '../report.mapper';
+import { outcomeChange } from '@/modules/teaching/lessons/status/outcomes';
+import type { ChangeSet } from '@/modules/teaching/scheduling/change-set';
+import type { FormColumns } from '@/modules/reporting/reports/report.mapper';
 
 /** Payload of public.submit_report (migration 130). snake_case like the columns. */
 export type SubmitPayload = {

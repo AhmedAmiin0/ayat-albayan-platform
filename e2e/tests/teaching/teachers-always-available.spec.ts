@@ -2,6 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { setSetting } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
+import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
 // Owner 2026-10-12 «make all the teachers available 24/7» (settings.teachers_always_available,
 // migration 320): «أبرار» has no saved availability, yet she can be picked, 03:00 Riyadh books with
@@ -38,10 +39,10 @@ test.describe('teachers available 24/7 (owner 2026-10-12)', () => {
     await next();
     await next(); // package 8, 45 min
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
-    await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-    const day = step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) });
-    await expect(day.getByRole('button', { name: /16:00/ })).toContainText(ar.booking.slotBusy);
-    await day.getByRole('button', { name: /^03:00/ }).click();
+    await fillLessonRow(step, 1, { weekday: 0, time: '16:00' });
+    await expect(step.getByText(/المعلم\/ة مشغول\/ة بحلقة أخرى في هذا الموعد/)).toBeVisible();
+    await fillLessonRow(step, 1, { weekday: 0, time: '03:00' });
+    await expect(step.getByText(ar.lessonTimes.free)).toBeVisible();
     await next();
     await uploadInvoice(admin);
     await admin.getByRole('button', { name: ar.booking.submit }).click();

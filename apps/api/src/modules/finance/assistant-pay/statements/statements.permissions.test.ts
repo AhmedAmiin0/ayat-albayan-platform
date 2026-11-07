@@ -1,6 +1,6 @@
 import { Reflector } from '@nestjs/core';
 import { describe, expect, it } from 'vitest';
-import { PERMISSION } from '../../../../common/auth/decorators';
+import { PERMISSION } from '@/common/auth/decorators';
 import { AssistantStatementsController } from './assistant-statements.controller';
 
 // Who may move a statement along: approving, taking an approval back (reopen) and reversing a payout

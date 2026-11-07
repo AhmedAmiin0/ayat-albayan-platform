@@ -1,11 +1,11 @@
 import type { CodeSession, PasswordSession } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
-import { authEmailOf, createAuthUser } from '../../../../common/auth/auth-users';
-import { DB, type Db } from '../../../../common/db/db.module';
-import { badRequest } from '../../../../common/http/errors';
-import { dbError } from '../../../../common/http/http';
-import { SIGN_IN_CONFIG, type AuthGate, type SignInConfig } from '../sign-in.ports';
+import { authEmailOf, createAuthUser } from '@/common/auth/auth-users';
+import { DB, type Db } from '@/common/db/db.module';
+import { badRequest } from '@/common/http/errors';
+import { dbError } from '@/common/http/http';
+import { SIGN_IN_CONFIG, type AuthGate, type SignInConfig } from '@/modules/people/sign-in/sign-in.ports';
 
 /** GoTrue's admin failures as module codes (a weak password is the user's to fix); anything else is a 500. */
 function authError(error: { code?: string | undefined }): Error {

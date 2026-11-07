@@ -1,6 +1,6 @@
 import type { BookingRequest } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { bookingRequest, leadRequest } from '../booking.fakes';
+import { bookingRequest, leadRequest } from '@/modules/teaching/booking/booking.fakes';
 import { clientRequest } from './booking.payload';
 
 const statusOf = (req: BookingRequest) => ('newStudent' in req ? req.newStudent.status : undefined);

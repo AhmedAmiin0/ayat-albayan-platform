@@ -1,5 +1,5 @@
 import type { EvolutionMode, WaLine, WaProvider } from '@ab/shared';
-import type { Env } from '../env';
+import type { Env } from '@/config/env/env';
 import { crmLine } from './env.crm';
 import { evolutionLine } from './env.evolution';
 import { kapsoLine } from './env.kapso';

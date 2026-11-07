@@ -8,7 +8,7 @@ import type {
   StudentCreate, Occurrence, OccurrenceTiming } from '@ab/shared';
 import type { Json } from '@ab/db';
 import { z } from 'zod';
-import { canTransitionLead } from '../../../sales/leads/lead-state-machine';
+import { canTransitionLead } from '@/modules/sales/leads/lead-state-machine';
 import type { MessageDraft } from './booking.messages';
 
 export type LessonRow = {

@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '../../../../common/storage/storage.service';
+import type { StorageService } from '@/common/storage/storage.service';
 import { MessageDispatch } from './message.dispatch';
 import { dueMessage } from './sender.fakes';
-import { templateRow } from '../whatsapp.fakes';
-import type { WhatsappLines } from '../whatsapp.types';
+import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Two lines (docs/12 §13.3, §13.5b): every row leaves from the line it is given (lineOf decides).
 

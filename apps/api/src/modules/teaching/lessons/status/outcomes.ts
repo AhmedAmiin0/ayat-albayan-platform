@@ -5,7 +5,7 @@ import {
   type LessonStatus,
   type StatusRouteEvent,
 } from '@ab/shared';
-import type { LessonChange } from '../../scheduling/change-set';
+import type { LessonChange } from '@/modules/teaching/scheduling/change-set';
 
 /** Attendance recorded by each outcome event (docs/10 route 7). */
 export const ATTENDANCE: Record<StatusRouteEvent, Attendance> = {

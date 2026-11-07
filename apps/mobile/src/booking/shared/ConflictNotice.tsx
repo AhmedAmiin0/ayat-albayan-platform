@@ -7,8 +7,8 @@ import { shape, type, useTheme } from '@/theme';
 export interface ConflictNoticeProps {
   /** One Arabic line per clash (booking.conflict.<kind>). */
   lines: readonly string[];
-  /** «اختار ميعاد تاني»: back to the free slots, fetched afresh. */
-  onChangeSlot: () => void;
+  /** «اختر موعدًا آخر»: back to the free slots, fetched afresh; none = the times are on screen. */
+  onChangeSlot?: (() => void) | undefined;
 }
 
 /**
@@ -38,7 +38,7 @@ export function ConflictNotice({ lines, onChangeSlot }: ConflictNoticeProps) {
           {line}
         </AppText>
       ))}
-      <Button label={t.booking.changeSlot} onPress={onChangeSlot} />
+      {onChangeSlot ? <Button label={t.booking.changeSlot} onPress={onChangeSlot} /> : null}
     </View>
   );
 }

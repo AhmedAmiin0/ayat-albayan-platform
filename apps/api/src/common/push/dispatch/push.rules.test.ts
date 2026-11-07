@@ -1,9 +1,9 @@
 import { PUSH_KINDS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { fakePolicy, fakeRulesReader, type FakePolicyInput } from '../../../modules/messaging/notification-rules/policy/policy.fakes';
-import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '../push.fakes';
+import { fakePolicy, fakeRulesReader, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '@/common/push/push.fakes';
 import { pushRoute } from './push.rules';
-import type { PushTransport } from '../push.service';
+import type { PushTransport } from '@/common/push/push.service';
 
 // docs/23 §2c: every staff push kind asks its notification rule (on/off, channels) before the bell row.
 

@@ -1,6 +1,6 @@
 import type { TablesInsert } from '@ab/db';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { services } from '../webhook.fakes';
+import { services } from '@/modules/messaging/webhook/webhook.fakes';
 import { kapsoText, SENT_AT } from './external.fakes';
 
 // A reply sent from the WhatsApp Business app (echo) or the old CRM (Kapso history) answers the chat:

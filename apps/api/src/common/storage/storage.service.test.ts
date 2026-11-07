@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Db } from '../db/db.module';
+import type { Db } from '@/common/db/db.module';
 import { StorageService } from './storage.service';
 
 function fakeStorage(bucketApi: Record<string, ReturnType<typeof vi.fn>>) {
@@ -13,7 +13,8 @@ describe('StorageService (R-REP-02/03, R-PAY-01)', () => {
       .fn()
       .mockResolvedValue({ data: { path: 'sub/x.jpg', token: 't', signedUrl: 'http://u' }, error: null });
     const { svc, from } = fakeStorage({ createSignedUploadUrl });
-    expect(await svc.signedUpload({ bucket: 'receipts', path: 'sub/x.jpg' })).toEqual({
+    const file = { size: 900, mime: 'image/jpeg' };
+    expect(await svc.signedUpload({ bucket: 'receipts', path: 'sub/x.jpg', file })).toEqual({
       bucket: 'receipts',
       path: 'sub/x.jpg',
       token: 't',

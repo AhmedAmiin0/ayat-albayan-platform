@@ -1,5 +1,5 @@
-import type { LivekitEnv } from '../../../config/env/env';
-import type { RecordingEnv } from '../../../config/env/env.recording';
+import type { LivekitEnv } from '@/config/env/env';
+import type { RecordingEnv } from '@/config/env/env.recording';
 
 /** Injection token for the LiveKit settings (overridden in tests). */
 export const CLASSROOM_CONFIG = Symbol('CLASSROOM_CONFIG');

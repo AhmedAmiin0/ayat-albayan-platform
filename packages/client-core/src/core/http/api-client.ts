@@ -1,3 +1,4 @@
+import { UPLOAD_CAPABILITY_HEADER, UPLOAD_SLOT_V2 } from '@ab/shared';
 import { ApiError, readJson } from './api-error.js';
 import { CLIENT_HEADER } from './client-header.js';
 import { type StallStage, withDeadline } from './deadline.js';
@@ -32,6 +33,8 @@ export function createApiClient(opts: ApiClientOptions): ApiClient {
     const token = await opts.accessToken();
     const headers = new Headers(init.headers);
     headers.set(CLIENT_HEADER, opts.clientTag());
+    // This build fills a MinIO slot (signed-upload.ts): the API may sign one (docs/45 §4 step 9).
+    headers.set(UPLOAD_CAPABILITY_HEADER, UPLOAD_SLOT_V2);
     if (token) headers.set('Authorization', `Bearer ${token}`);
     const send = opts.fetch ?? fetch;
     const res = await send(`${opts.baseUrl()}${path}`, { ...init, headers });

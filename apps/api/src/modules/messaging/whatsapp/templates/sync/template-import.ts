@@ -12,7 +12,7 @@ import {
 import { components, metaButtons, ourStatus, type Component } from './template-sync';
 import { metaDisplay } from './template-display';
 import { wabaNames } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
-import type { MetaTemplate, TemplateRow } from '../../whatsapp.types';
+import type { MetaTemplate, TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // One line's sync, pure part (owner 2026-10-12, 2026-10-18, docs/12 §3.4): an approved template on a
 // line's WABA the registry does not know becomes a row on THAT line; on the restricted allow-list only

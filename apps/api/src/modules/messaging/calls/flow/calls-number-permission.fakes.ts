@@ -1,10 +1,10 @@
 import { vi } from 'vitest';
-import { CALLS_LINE_ENV, fakeNumberStore } from '../calls-number.fakes';
-import { ADMIN_ACTOR, FAMILY, fakeApi, fakeGate, fakeKit } from '../calls.fakes';
-import type { CallingLine } from '../kapso/calling-line';
+import { CALLS_LINE_ENV, fakeNumberStore } from '@/modules/messaging/calls/calls-number.fakes';
+import { ADMIN_ACTOR, FAMILY, fakeApi, fakeGate, fakeKit } from '@/modules/messaging/calls/calls.fakes';
+import type { CallingLine } from '@/modules/messaging/calls/kapso/calling-line';
 import { CallPermissions } from './call-permission.service';
 import { CallsNumberPermission } from './calls-number-permission';
-import type { Outbox } from '../../inbox/send/outbox';
+import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 
 export const CALLS: CallingLine = { env: CALLS_LINE_ENV, numberId: 'n-calls', calls: true };
 export const REQ = '55555555-5555-4555-8555-555555555555';

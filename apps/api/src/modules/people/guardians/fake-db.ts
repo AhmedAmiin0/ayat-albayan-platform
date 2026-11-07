@@ -1,4 +1,4 @@
-import type { Db } from '../../../common/db/db.module';
+import type { Db } from '@/common/db/db.module';
 
 // Test helper (not a test): a chainable stand-in for the supabase-js query builder.
 

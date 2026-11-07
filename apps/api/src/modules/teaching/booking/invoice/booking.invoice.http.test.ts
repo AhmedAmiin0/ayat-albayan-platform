@@ -1,15 +1,15 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '../../../../app.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../../../common/auth/auth.guard';
-import type { AuthUser } from '../../../../common/auth/verify-token';
-import { IDS } from '../booking.fakes';
+import { AppModule } from '@/app.module';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { IDS } from '@/modules/teaching/booking/booking.fakes';
 import { BookingInvoices } from './booking.invoice';
-import { BookingService } from '../core/booking.service';
-import { MakeupCandidates } from '../makeup/makeup-candidates.service';
-import { fakeSettings } from '../../../../common/settings/settings.fakes';
-import { SettingsService } from '../../../../common/settings/settings.service';
+import { BookingService } from '@/modules/teaching/booking/core/booking.service';
+import { MakeupCandidates } from '@/modules/teaching/booking/makeup/makeup-candidates.service';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import { SettingsService } from '@/common/settings/settings.service';
 
 const REQ = 'c1111111-1111-4111-8111-111111111111';
 const USERS: Record<string, AuthUser> = {

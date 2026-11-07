@@ -1,7 +1,7 @@
 import type { Database, Json } from '@ab/db';
 import { GOOGLE_SYNC_KINDS, GOOGLE_SYNC_STATES, type GooglePlannedRequest, type GoogleSkipReason, type GoogleSyncKind, type GoogleSyncState } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../../common/db/db.module';
+import { DB, type Db } from '@/common/db/db.module';
 
 type ItemUpdate = Database['public']['Tables']['google_sync_items']['Update'];
 

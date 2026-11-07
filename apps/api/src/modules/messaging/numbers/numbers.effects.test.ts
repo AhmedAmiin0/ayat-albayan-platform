@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../../common/audit/audit.service';
+import type { AuditService } from '@/common/audit/audit.service';
 import type { NumbersConfig } from './config/numbers.config';
 import { NumbersEffects } from './numbers.effects';
 import type { OwnNumbers } from './own/own-numbers';

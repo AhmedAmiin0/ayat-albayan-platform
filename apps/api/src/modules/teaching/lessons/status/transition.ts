@@ -5,8 +5,8 @@ import {
   type LessonEvent,
   type LessonStatus,
 } from '@ab/shared';
-import type { LessonChange } from '../../scheduling/change-set';
-import { conflict } from '../../../../common/http/errors';
+import type { LessonChange } from '@/modules/teaching/scheduling/change-set';
+import { conflict } from '@/common/http/errors';
 
 /** 409 `{ code: 'invalid_transition', from, event }` (docs/10 §3). */
 export const invalidTransition = (from: LessonStatus, event: LessonEvent) =>

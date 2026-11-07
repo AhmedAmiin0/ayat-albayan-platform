@@ -1,7 +1,7 @@
 import type { SettingKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /** How far back a typed «نعم» looks for our lesson message. */
 const KEYS = ['quick_reply_window_hours'] as const satisfies readonly SettingKey[];

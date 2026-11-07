@@ -1,5 +1,5 @@
 import { isOpenLesson, type LessonView } from '@ab/shared';
-import type { LessonRow } from '../store/lesson-row';
+import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 
 /** A lesson that has not started yet and can still happen: the only ones R-SUB-02 flags. */
 function upcoming(lesson: { status: LessonRow['status']; starts_at: string }, now: number): boolean {

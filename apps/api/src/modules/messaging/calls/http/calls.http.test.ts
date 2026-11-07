@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { FAMILY, LINE } from '../calls.fakes';
-import { callsApp } from '../test-app';
+import { FAMILY, LINE } from '@/modules/messaging/calls/calls.fakes';
+import { callsApp } from '@/modules/messaging/calls/test-app';
 
-vi.mock('../kapso/calling-line', () => ({ callingLine: vi.fn(() => LINE) }));
+vi.mock('@/modules/messaging/calls/kapso/calling-line', () => ({ callingLine: vi.fn(() => LINE) }));
 
 let app: Awaited<ReturnType<typeof callsApp>> | null = null;
 afterEach(async () => {

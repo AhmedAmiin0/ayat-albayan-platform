@@ -1,7 +1,7 @@
 import { INVOICE_SORT_KEYS, listSortShape, localDate, SETTING_DEFAULTS, type ListSort } from '@ab/shared';
 import { z } from 'zod';
-import { utcWindow } from '../payments/payments.dto';
-import { pageQuerySchema, type PageQuery } from '../../../common/http/http';
+import { utcWindow } from '@/modules/finance/payments/payments.dto';
+import { pageQuerySchema, type PageQuery } from '@/common/http/http';
 
 export type InvoiceSortKey = (typeof INVOICE_SORT_KEYS)[number];
 

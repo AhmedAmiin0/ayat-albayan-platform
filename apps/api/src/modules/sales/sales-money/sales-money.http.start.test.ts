@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { moneyApp, resetMocks, type Mocks } from '../../finance/subscriptions/test-app';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 
 // 2026-10-12 13:00 in Riyadh: today = 2026-10-12.

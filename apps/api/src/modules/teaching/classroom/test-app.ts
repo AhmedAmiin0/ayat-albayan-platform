@@ -1,11 +1,11 @@
 // HTTP test harness for the classroom routes (test-only, excluded from the build). Real controllers,
 // guards, services and token minting; the DB-facing queries, the registry and the Outbox are mocks.
+import type { AuthUser } from '@/common/auth/verify-token';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '@/app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
-import type { AuthUser } from '@/common/auth/verify-token';
 import { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
@@ -60,7 +60,12 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     moderation: moderation(),
     recordings: recordingQueries(),
     http: http(),
-    storage: { signedDownload: vi.fn(), writesTo: () => 'supabase', egressTarget: () => null },
+    storage: {
+      signedDownload: vi.fn(),
+      writesTo: () => 'supabase',
+      recordsToMinio: () => false,
+      egressTarget: () => null,
+    },
     studentLinks: studentLinkQueries(),
     audit: { record: vi.fn() },
     meetings: meetingQueries(),

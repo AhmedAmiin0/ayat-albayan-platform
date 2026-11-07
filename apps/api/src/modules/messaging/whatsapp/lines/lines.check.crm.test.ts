@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { crmFailure } from '../drivers/crm/crm.fakes';
+import { crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { LinesCheck } from './lines.check';
-import { scriptedFetch } from '../whatsapp.fakes';
+import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver»: «افحص الخطوط» on a crm line = GET /me only, never a test message, never a Graph call.
 
@@ -44,10 +44,22 @@ describe('LinesCheck on a crm line', () => {
     expect(view).toMatchObject({ crm_send_scope: false, crm_webhook_secret: false, errors: [] });
   });
 
+  it('the template scopes the key lacks, from the same GET /me (docs/39)', async () => {
+    crmLine();
+    const lacking = await check(me(['messages:send']));
+    expect(lacking.view?.crm_template_scopes_missing).toEqual(['templates:read', 'templates:write']);
+    expect(lacking.requests).toHaveLength(1);
+    const half = await check(me(['messages:send', 'templates:read']));
+    expect(half.view?.crm_template_scopes_missing).toEqual(['templates:write']);
+    const all = await check(me(['messages:send', 'templates:read', 'templates:write']));
+    expect(all.view?.crm_template_scopes_missing).toEqual([]);
+  });
+
   it('a refused key: one crm_me error tagged credential crm, scope unknown', async () => {
     crmLine();
     const { view } = await check(crmFailure(401, 'unauthorized'));
     expect(view?.crm_send_scope).toBeNull();
+    expect(view?.crm_template_scopes_missing).toBeNull();
     expect(view?.errors).toEqual([expect.objectContaining({ step: 'crm_me', credential: 'crm' })]);
   });
 

@@ -1,6 +1,6 @@
 import { INVOICE_MAX_BYTES } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { IDS } from '../booking.fakes';
+import { IDS } from '@/modules/teaching/booking/booking.fakes';
 import { code, paid, PATH, SCOPE, setup } from './booking.invoice.fakes';
 
 describe('BookingInvoices.resolve — an uploaded file', () => {

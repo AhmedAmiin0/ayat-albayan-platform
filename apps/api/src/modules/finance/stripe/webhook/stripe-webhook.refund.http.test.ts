@@ -1,11 +1,11 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '../../subscriptions/money/money.fakes';
-import { resetMocks, SALES_A, type Mocks } from '../../subscriptions/test-app';
-import { uuidFor } from '../links/link-ids';
-import { stripeApp } from '../testing/stripe-app.fakes';
-import { chargeEvent } from '../testing/stripe-events.fakes';
-import { LINK_ID, linkRow, signed, stripeDefaults, type StripeMocks } from '../testing/stripe-mocks.fakes';
+import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { uuidFor } from '@/modules/finance/stripe/links/link-ids';
+import { stripeApp } from '@/modules/finance/stripe/testing/stripe-app.fakes';
+import { chargeEvent } from '@/modules/finance/stripe/testing/stripe-events.fakes';
+import { LINK_ID, linkRow, signed, stripeDefaults, type StripeMocks } from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
 
 vi.hoisted(() => {
   process.env.FEATURE_STRIPE = 'test';

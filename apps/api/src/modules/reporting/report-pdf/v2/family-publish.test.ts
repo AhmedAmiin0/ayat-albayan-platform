@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakeDb, type FakeResult } from '../../../people/guardians/fake-db';
-import { fakeSettings } from '../../../../common/settings/settings.fakes';
-import type { StorageService } from '../../../../common/storage/storage.service';
-import type { PdfRenderer } from '../render/pdf-renderer';
-import { sampleSource } from '../report-pdf.fakes';
-import { ReportPdfPublisher } from '../report-pdf.publisher';
-import { ReportPdfSettings } from '../report-pdf.settings';
-import { ReportPdfSource, type ReportSource } from '../report-pdf.source';
+import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeSettings } from '@/common/settings/settings.fakes';
+import type { StorageService } from '@/common/storage/storage.service';
+import type { PdfRenderer } from '@/modules/reporting/report-pdf/render/pdf-renderer';
+import { sampleSource } from '@/modules/reporting/report-pdf/report-pdf.fakes';
+import { ReportPdfPublisher } from '@/modules/reporting/report-pdf/report-pdf.publisher';
+import { ReportPdfSettings } from '@/modules/reporting/report-pdf/report-pdf.settings';
+import { ReportPdfSource, type ReportSource } from '@/modules/reporting/report-pdf/report-pdf.source';
 import { familySource } from './family.fakes';
 
 /** A clock before every fixture lesson: «الحلقة القادمة» is read after the lesson itself. */

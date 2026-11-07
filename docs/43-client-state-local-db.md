@@ -27,7 +27,7 @@ claim refuted and dropped). Ordered plan: docs/44.
    (`apps/mobile/src/inbox/thread/live/use-inbox-realtime.ts:18`; web `inbox/api/live.ts:51`): it **joins** a
    read still in flight that started before the status change, and that stale `queued` answer wins.
 5. Nothing copies the statuses the chat already merged into the list cache. With realtime quietly dead (still
-   SUBSCRIBED) nothing marks it dirty and returning to the list re-reads nothing: the 20 s poll is the only cure.
+   SUBSCRIBED) nothing marks it dirty and returning to the list re-reads nothing: the 20 s poll was the only cure. **Fixed 2026-11-07** (owner «i go back but the chat list is not updated»): `useListCatchUp` (apps/mobile/src/inbox/threads-list/list-catch-up.ts) reads once whenever the list comes back from hidden, unless it was read in the last `LIVE_LIST_THROTTLE_MS`; one GET /threads per return.
 
 ## 3. Audit (confirmed findings)
 

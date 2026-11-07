@@ -1,6 +1,6 @@
 import { monthStart, type DateRangeQuery } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { rangeWindow, riyadhDate } from '../dashboard/range';
+import { rangeWindow, riyadhDate } from '@/modules/reporting/dashboard/range';
 import { toCsv } from './csv';
 import { lessonRows, studentRows } from './exports.rows';
 import { ExportsQueries, type PaymentCsvFilter } from './exports.queries';

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { FakeResult } from '../../../people/guardians/fake-db';
+import type { FakeResult } from '@/modules/people/guardians/fake-db';
 import { STUB_WA_ENV, fakeGate, rows } from './send-gate.fakes';
 
 // docs/26 §5 «26-P4»: off for a missing row, JSON null, a string, a number, malformed, a failed read; on only for true.

@@ -1,7 +1,7 @@
 import type { SalesMoneySubscriptionView, SubscriptionCancel as CancelBody } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { AuthUser } from '../../../common/auth/verify-token';
-import { SubscriptionCancel } from '../../finance/subscriptions';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { SubscriptionCancel } from '@/modules/finance/subscriptions';
 import { toSalesSubscription } from './sales-money.mapper';
 import { SalesMoneyScope } from './sales-money.scope';
 

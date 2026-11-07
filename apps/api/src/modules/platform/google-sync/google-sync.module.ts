@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { googleEnv, loadEnv } from '../../../config/env/env';
+import { googleEnv, loadEnv } from '@/config/env/env';
 import { CalendarWriter } from './writers/calendar/calendar.writer';
 import { DriveFiles } from './writers/drive/drive-files';
 import { GoogleAccountQueries } from './oauth/google-account.queries';

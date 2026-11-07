@@ -1,6 +1,6 @@
 import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { at, sampleLesson } from '../reminders.fakes';
+import { at, sampleLesson } from '@/modules/messaging/reminders/reminders.fakes';
 import { joinCandidates, platformLesson, roomFor, sentLinks, type RoomContext } from './reminders.links';
 
 // teachers.meeting_mode (migration 490, owner 2026-10-19): the lesson's teacher decides, the academy

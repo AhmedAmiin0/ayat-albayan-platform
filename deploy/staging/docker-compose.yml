@@ -186,7 +186,7 @@ services:
   # Its keys live in minio.env (root only), never in .env: that is the app's env_file, so the API copies would
   # see MinIO's root password. Optional, so the file parses on a server without it (the guard below refuses).
   ayat-minio:
-    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    image: cgr.dev/chainguard/minio@sha256:aea6c163749e1caca37f907976dcf337177ddf5f558808f2aa591618fd3a6eef
     profiles: ["minio"]
     # Refuses to start without real root credentials: never MinIO's default minioadmin.
     entrypoint: ["/bin/sh", "-c"]
@@ -225,7 +225,7 @@ services:
   # `up -d` starts it again on every deploy. It waits for ayat-minio itself (init.sh), not through
   # service_healthy, so a MinIO that will not start never fails the API's deploy.
   ayat-minio-init:
-    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+    image: cgr.dev/chainguard/minio@sha256:aea6c163749e1caca37f907976dcf337177ddf5f558808f2aa591618fd3a6eef
     profiles: ["minio"]
     depends_on:
       ayat-minio:
@@ -245,7 +245,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 64M
+          memory: 192M
 
 volumes:
   # Every object MinIO holds (docs/45 «Backups»): on the host disk, no quota; the API caps each file.

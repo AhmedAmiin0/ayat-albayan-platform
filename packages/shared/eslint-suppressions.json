@@ -336,7 +336,7 @@
   },
   "src/messaging/templates/template-sync-views.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/messaging/templates/template-views.ts": {

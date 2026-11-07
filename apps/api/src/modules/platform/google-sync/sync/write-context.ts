@@ -1,5 +1,5 @@
 import type { GooglePlannedRequest } from '@ab/shared';
-import type { GoogleClient } from '../google-client.port';
+import type { GoogleClient } from '@/modules/platform/google-sync/google-client.port';
 import type { ItemResult, SyncItem } from './google-items.queries';
 
 /** One pass's mode: dry_run plans with NO Google call at all; live has a client. */

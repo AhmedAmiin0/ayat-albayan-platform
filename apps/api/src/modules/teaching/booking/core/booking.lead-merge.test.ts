@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { IDS, leadRequest } from '../booking.fakes';
+import { IDS, leadRequest } from '@/modules/teaching/booking/booking.fakes';
 import { withLeadFacts, type LeadFacts } from './booking.lead-merge';
 
 const lead = (over: Partial<LeadFacts> = {}): LeadFacts => ({

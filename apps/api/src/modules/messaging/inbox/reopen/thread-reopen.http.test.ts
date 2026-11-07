@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PHONE, threadRow } from '../inbox.fakes';
-import { inboxApp } from '../test-app';
+import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
+import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
 // POST /threads/:phone/reopen (owner 2026-11-07): kept for old app builds that call it on open,
 // it answers the window state and sends NOTHING (the starter template goes on send only).

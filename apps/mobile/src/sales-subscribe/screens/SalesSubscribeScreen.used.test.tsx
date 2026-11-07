@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
+import { pickDay } from '@/test/pickers/native-picker';
 import { money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
@@ -66,8 +67,7 @@ test('only with the switch on, from 0 with its note; off again resets it to 0', 
 const saveWith = async (used: number) => {
   await open();
   await switchTo(true);
-  await fireEvent.press(screen.getByTestId('date-picker-open'));
-  await fireEvent.press(screen.getByTestId('calendar-day-2026-10-11'));
+  await pickDay('date-picker-open', '2026-10-11');
   await press(m.usedBeforeMore, used);
   await fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
   await waitFor(() => expect(lastBody()).toMatchObject({ startsOn: '2026-10-11', alreadyStarted: true }));

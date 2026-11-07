@@ -1,6 +1,6 @@
 import { addCalendarMonths, dateRangeQuery, type DateRangeQuery, dayRangeIn, localDateIn, RIYADH_TZ } from '@ab/shared';
-import { badRequest } from '../../../common/http/errors';
-import { parseOrThrow } from '../../../common/http/http';
+import { badRequest } from '@/common/http/errors';
+import { parseOrThrow } from '@/common/http/http';
 
 // `?from&to` (docs/11 §3): local days in Asia/Riyadh, inclusive, at most a year.
 

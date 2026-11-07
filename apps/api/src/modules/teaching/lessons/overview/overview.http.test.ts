@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { LESSON_ID, lessonRow, TEACHER_ID } from '../lessons.fakes';
-import { lessonsApp } from '../test-app';
+import { LESSON_ID, lessonRow, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import { lessonsApp } from '@/modules/teaching/lessons/test-app';
 
 type Harness = Awaited<ReturnType<typeof lessonsApp>>;
 const DAY = 'from=2026-10-04T00:00:00%2B03:00&to=2026-10-05T00:00:00%2B03:00';

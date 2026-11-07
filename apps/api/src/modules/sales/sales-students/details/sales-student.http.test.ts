@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { MINE, OTHER, REPORT, studentsApp } from '../sales-students.fakes';
+import { MINE, OTHER, REPORT, studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
 const SECRET = /price|currency|fx_|amount|method|note|rate|phone|meeting|link|receipt|payment|secret|سر/i;

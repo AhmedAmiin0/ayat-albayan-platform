@@ -1,8 +1,8 @@
 // Fixtures of the sales money HTTP tests (test-only, excluded from the build).
 import { SETTING_DEFAULTS } from '@ab/shared';
-import { paymentRow, STUDENT_ID, SUB_ID, subRow, WEEKLY_SA } from '../../finance/subscriptions/money/money.fakes';
-import type { Mocks } from '../../finance/subscriptions/test-app';
-import { SALES_A } from '../../finance/subscriptions/test-app';
+import { paymentRow, STUDENT_ID, SUB_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/money.fakes';
+import type { Mocks } from '@/modules/finance/subscriptions/test-app';
+import { SALES_A } from '@/modules/finance/subscriptions/test-app';
 
 export const REQ = '9a000000-0000-4000-8000-000000000001';
 export const MSG = '9b000000-0000-4000-8000-000000000001';

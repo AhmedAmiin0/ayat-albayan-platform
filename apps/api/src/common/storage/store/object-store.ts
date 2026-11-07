@@ -12,6 +12,26 @@ export interface ObjectKey {
 export interface PutObject extends ObjectKey {
   body: Uint8Array;
   contentType: string;
+  /** Only when no object holds the key (If-None-Match: *); a present one throws ObjectExists. */
+  ifAbsent?: boolean;
+}
+
+/** A put with ifAbsent found the key already taken (S3 412): the object there was kept. */
+export class ObjectExists extends Error {
+  constructor() {
+    super('storage object exists');
+  }
+}
+
+/** What the client declared for an upload slot (the route's zod schema checked it). */
+export interface SlotFile {
+  size: number;
+  mime: string;
+}
+
+/** A slot's key and the exact file it admits (MinIO signs both; Supabase's bucket checks them). */
+export interface SlotKey extends ObjectKey {
+  file: SlotFile;
 }
 
 export interface ObjectInfo {
@@ -54,5 +74,5 @@ export interface ObjectStore {
     keys: readonly string[];
     seconds: number;
   }): Promise<Map<string, string>>;
-  signedPut(o: ObjectKey): Promise<SignedPut>;
+  signedPut(o: SlotKey): Promise<SignedPut>;
 }

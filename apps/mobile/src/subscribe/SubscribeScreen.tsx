@@ -23,7 +23,7 @@ import { NoCommissionNote } from './NoCommissionNote';
 import { PricingInputs } from './PricingInputs';
 import { formFrom, type FormPrefill } from './form-prefill';
 import { pricingOf, startDays, subscribeErrorText } from './subscribe-form';
-import { PriceSection, SavedPanel, StartDayPills, StudentPills } from './SubscribeParts';
+import { PriceSection, SavedPanel, StartDayField, StudentPills } from './SubscribeParts';
 import { useCreateSubscription, useSubscriptionQuote } from './use-subscribe';
 import { usePastUsedBefore } from './UsedBeforeField';
 
@@ -98,9 +98,8 @@ export function SubscribeScreen() {
         />
         <PriceSection quote={quote} />
         <CustomPriceField price={custom} />
-        <StartDayPills
+        <StartDayField
           days={startDays(now, tz, params.startsOn)}
-          today={today}
           value={startsOn}
           onChange={setPicked}
         />

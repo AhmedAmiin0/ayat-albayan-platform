@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '../../../common/db/db.module';
-import { notFound } from '../../../common/http/errors';
+import { DB, type Db } from '@/common/db/db.module';
+import { notFound } from '@/common/http/errors';
 import { dbError } from './http';
 
 type SecondNumber = { guardianId: string; phone: string; actorId: string };

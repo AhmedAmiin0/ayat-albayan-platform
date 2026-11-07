@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DB, type Db } from '../../db/db.module';
-import { dbError } from '../../http/http';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 import { AVATAR_FILES, type AvatarFiles } from './avatar-files';
 
 /** Roles whose photo is never shown (owner 2026-10-28: students and families are initials only). */

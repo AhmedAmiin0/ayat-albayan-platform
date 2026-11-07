@@ -95,6 +95,9 @@ app user, policy) start only with `COMPOSE_PROFILES=minio` in `.env` and their k
 `env_file`); `ayat-lb` serves
 `files.ayatalbayan.com` from it (signed URLs). Design, config keys, the owner's VPS steps, cut-over, rollback and
 backups: **[docs/45-minio-storage.md](45-minio-storage.md)**; guards in `tools/scripts/ci-checks/compose/compose-minio.test.mjs`.
+**Once any `minio:` row exists, the storage cut-over is rolled back only through `STORAGE_DRIVER`** (docs/45 §4
+step 10): never revert PR #666 or its follow-ups, its compose services or its Caddy sites, and never drop
+`COMPOSE_PROFILES=minio`; each makes every file stored in MinIO unreadable.
 
 ## Redeploy
 
@@ -429,7 +432,9 @@ Notes on `claude-tasks`: PRs it opens with the built-in token do not start `ci` 
 ### Roll back
 
 - **Staging deploy:** automatic. If a container never gets healthy or `/health` fails after the swap, the workflow restores `src.old`, the previous compose files and (when it was swapped) `web.old` (kept as `src.bad` / `web.bad`) and rolls again. By hand see «Roll back» above.
-- **A good deploy you do not want:** revert the commit on `develop`; the next deploy replaces it.
+- **A good deploy you do not want:** revert the commit on `develop`; the next deploy replaces it. Never the MinIO
+  storage layer (PR #666, its compose services, Caddy sites) once any `minio:` row exists: switch `STORAGE_DRIVER`
+  back instead (docs/45 §4 step 10).
 - **Migrations:** forward-only, no automatic undo. Write a new migration that reverses the change, or restore the Supabase backup (dashboard → Database → Backups).
 - **OTA:** run `mobile` with `ota-update` on a `develop` that is reverted, or on expo.dev → Updates → republish an older update to the branch.
 - **Server `.env`:** `deploy-staging` leaves `.env.bak-*` next to it.

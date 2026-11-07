@@ -2,11 +2,11 @@ import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium } from 'playwright-core';
 import { afterAll, describe, expect, it } from 'vitest';
-import { pdfAssets } from '../pdf-assets';
+import { pdfAssets } from '@/modules/reporting/report-pdf/pdf-assets';
 import { pageCount } from './pdf-pages';
 import { PdfRenderer } from './pdf-renderer';
-import { absentModel, sampleModel } from '../report-pdf.fakes';
-import { reportHtml } from '../template/template';
+import { absentModel, sampleModel } from '@/modules/reporting/report-pdf/report-pdf.fakes';
+import { reportHtml } from '@/modules/reporting/report-pdf/template/template';
 
 // Real Chromium, so it runs only where the Playwright browser is installed (dev machines with the
 // e2e browsers, the API image). PDF_SAMPLE_OUT=<dir> also writes sample.pdf and a PNG to look at.

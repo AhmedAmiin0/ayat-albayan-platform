@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { lead } from '../../../sales/leads/leads.fakes';
-import { event, GUARDIAN_ID, NEW_LEAD_ID, nobody, services } from '../webhook.fakes';
+import { lead } from '@/modules/sales/leads/leads.fakes';
+import { event, GUARDIAN_ID, NEW_LEAD_ID, nobody, services } from '@/modules/messaging/webhook/webhook.fakes';
 
 const LEAD_ID = '00000000-0000-4000-8000-0000000000c2';
 const knownLead = { ...nobody(), lead: { id: LEAD_ID, name: 'سارة', follow_up_stage: 0 } };

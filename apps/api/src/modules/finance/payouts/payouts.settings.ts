@@ -1,7 +1,7 @@
 import type { SettingKey } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { readSlice, type SettingsSlice } from '../../../common/settings/settings-slice';
-import { SettingsService } from '../../../common/settings/settings.service';
+import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
+import { SettingsService } from '@/common/settings/settings.service';
 
 /** Which lesson statuses a payout counts (payoutStatuses). The SQL earnings readers coalesce the same defaults. */
 const KEYS = ['payout_count_late', 'payout_count_no_show'] as const satisfies readonly SettingKey[];

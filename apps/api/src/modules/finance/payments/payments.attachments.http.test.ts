@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
-import { ADMIN_PAY, attachment as file, JPEG, PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '../../sales/sales-money/sales-money.pay.fakes';
+import { ADMIN, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { ADMIN_PAY, attachment as file, JPEG, PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/sales/sales-money/sales-money.pay.fakes';
 
 const post = (body: object) => ({ method: 'POST' as const, url: '/payments', body: { ...ADMIN_PAY, ...body } });
 
@@ -52,6 +52,15 @@ describe('POST /payments «المرفقات» (bank transfers only, docs/11 §7)
     expect([missing.statusCode, missing.json().code]).toEqual([400, 'attachment_path']);
     expect(m.payments.insert).not.toHaveBeenCalled();
     expect(m.attachments.save).not.toHaveBeenCalled();
+  });
+
+  it('stored as a non-receipt type (a JPEG served as text/html) → 400 attachment_type', async () => {
+    m.storage.info.mockResolvedValue({ size: 2048, contentType: 'text/html' });
+    const res = await call(post({ attachments: [file(1)] }));
+    expect([res.statusCode, res.json().code]).toEqual([400, 'attachment_type']);
+    expect(m.attachments.save).not.toHaveBeenCalled();
+    m.storage.info.mockResolvedValue({ size: 2048, contentType: 'image/png; charset=binary' });
+    expect((await call(post({ attachments: [file(1)] }))).statusCode).toBe(201);
   });
 
   it('first bytes not an image / PDF → 400 attachment_type', async () => {

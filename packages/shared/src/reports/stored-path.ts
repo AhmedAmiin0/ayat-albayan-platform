@@ -21,7 +21,23 @@ export function storageKeyOf(path: string): string {
   return path.slice(MARKS[storageProviderOf(path)].length);
 }
 
+/**
+ * Two paths of one object key: a row the move (docs/45 §6) marked «minio:» while a client still
+ * holds its old unmarked path. Sent back unchanged, it is the same file, never a replacement.
+ */
+export function sameStoredObject(a?: string | null, b?: string | null): boolean {
+  return Boolean(a) && Boolean(b) && storageKeyOf(a ?? '') === storageKeyOf(b ?? '');
+}
+
 /** The path to store for this key in this provider (the key itself for Supabase). */
 export function storedPath(input: { provider: StorageProvider; key: string }): string {
   return `${MARKS[input.provider]}${storageKeyOf(input.key)}`;
 }
+
+/**
+ * The header a client sends when it can upload to a MinIO slot (client-core slotUploader, docs/45
+ * §4 step 9): the API signs a MinIO slot only for it; a client without it (an older OTA bundle, a
+ * stale web tab) still gets a Supabase slot, which it knows how to fill.
+ */
+export const UPLOAD_CAPABILITY_HEADER = 'X-AB-Upload';
+export const UPLOAD_SLOT_V2 = 'slot-v2';

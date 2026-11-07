@@ -7,8 +7,8 @@ import {
   textMessage,
 } from './wa-components';
 import { templateMessage } from '@/modules/messaging/whatsapp/drivers/waba/waba-graph';
-import { REMINDER_24H, REPORT_READY, templateRow } from '../whatsapp.fakes';
-import { WaError } from '../whatsapp.types';
+import { REMINDER_24H, REPORT_READY, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const TO = '+966551234567';
 const params = { '1': 'سلمى ومريم', '2': 'الأحد 4 أكتوبر 17:00', button: 'ab-sara-x1' };

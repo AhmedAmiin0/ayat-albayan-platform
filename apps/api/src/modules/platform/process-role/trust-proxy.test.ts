@@ -1,6 +1,6 @@
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { describe, expect, it } from 'vitest';
-import { trustProxyHops } from '../../../config/role/app-role';
+import { trustProxyHops } from '@/config/role/app-role';
 
 /** req.ip as the API sees it, behind `hops` trusted proxies (main.ts passes trustProxyHops() to Fastify). */
 async function ipSeen(hops: number, request: { remote: string; xff?: string }): Promise<string> {

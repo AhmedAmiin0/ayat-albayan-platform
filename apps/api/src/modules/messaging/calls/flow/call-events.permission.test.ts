@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakeNumberStore } from '../calls-number.fakes';
-import { fakeGate, fakeKit } from '../calls.fakes';
+import { fakeNumberStore } from '@/modules/messaging/calls/calls-number.fakes';
+import { fakeGate, fakeKit } from '@/modules/messaging/calls/calls.fakes';
 import { CallEvents } from './call-events.service';
 import { CallsSweeper } from './calls.sweeper';
 
-vi.mock('../kapso/calling-line', () => ({ callingLine: vi.fn(() => null) }));
+vi.mock('@/modules/messaging/calls/kapso/calling-line', () => ({ callingLine: vi.fn(() => null) }));
 
 const AT = new Date('2026-10-27T09:00:00Z');
 

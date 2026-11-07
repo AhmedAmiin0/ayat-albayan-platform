@@ -1,5 +1,5 @@
-import type { EchoEvent } from '../webhook.events';
-import { where, type Receiving } from '../lines/webhook.lines';
+import type { EchoEvent } from '@/modules/messaging/webhook/webhook.events';
+import { where, type Receiving } from '@/modules/messaging/webhook/lines/webhook.lines';
 
 // Meta's `smb_message_echoes` webhook field (WhatsApp Business app coexistence): every message the
 // business sent from the WhatsApp Business app, with its content. Stored like a message sent from

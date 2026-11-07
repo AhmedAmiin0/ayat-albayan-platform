@@ -1,8 +1,8 @@
 import { Controller, Get, Query, Redirect } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
-import { Public } from '../../../../common/auth/decorators';
-import { loadEnv } from '../../../../config/env/env';
-import { firstWebOrigin } from '../../../teaching/classroom/classroom.config';
+import { Public } from '@/common/auth/decorators';
+import { loadEnv } from '@/config/env/env';
+import { firstWebOrigin } from '@/modules/teaching/classroom/classroom.config';
 import { GoogleOAuthService } from './google-oauth.service';
 
 /**

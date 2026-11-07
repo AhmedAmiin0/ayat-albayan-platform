@@ -1,8 +1,8 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { joinWindowConfig } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { ClassroomSettings } from '../classroom.settings';
-import type { AuthUser } from '../../../../common/auth/verify-token';
+import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { assertWindowOpen } from './join-gate';
 import { LessonRoleService } from './lesson-role.service';
 import { RoomAdmission } from './room-admission';

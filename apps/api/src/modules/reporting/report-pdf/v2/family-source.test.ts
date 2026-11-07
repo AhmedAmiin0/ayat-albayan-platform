@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../../people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { loadFamilyExtras } from './family-source';
 
 const REPORT = { id: 'r1', student_id: 's1', content: { segments: [{ kind: 'new', surah: 67, from: 16, to: 22, grade: 'good' }] }, submitted_at: '2026-10-27T14:00:00Z' };

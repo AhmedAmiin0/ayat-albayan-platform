@@ -1,6 +1,6 @@
 import { attendanceStyle, packageProgress } from '@ab/shared';
-import type { PdfAssets } from '../pdf-assets';
-import { AR, esc, fill, localDate, ltr, stamp, timeWithZone, weekdayName } from '../render/pdf-text';
+import type { PdfAssets } from '@/modules/reporting/report-pdf/pdf-assets';
+import { AR, esc, fill, localDate, ltr, stamp, timeWithZone, weekdayName } from '@/modules/reporting/report-pdf/render/pdf-text';
 import { FAMILY_CSS } from './family-css';
 import type { FamilyModel } from './family-model';
 import { doneHtml, homeworkHtml, noteHtml, progressHtml } from './family-sections';

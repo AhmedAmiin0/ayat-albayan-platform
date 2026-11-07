@@ -1,5 +1,5 @@
-import type { Db } from '../../../../common/db/db.module';
-import { familyOfPhone } from '../../../../common/db/family-of-phone';
+import type { Db } from '@/common/db/db.module';
+import { familyOfPhone } from '@/common/db/family-of-phone';
 import type { ThreadRow } from './threads.mapper';
 
 /** Who a number is when it has no message yet: enough for its people panel and its next lessons. */

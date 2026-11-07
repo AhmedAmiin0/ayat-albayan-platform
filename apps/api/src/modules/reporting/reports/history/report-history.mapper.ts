@@ -8,9 +8,9 @@ import {
   type Rubric,
   type StudentReportsResponse,
 } from '@ab/shared';
-import type { PageQuery } from '../../../../common/http/http';
+import type { PageQuery } from '@/common/http/http';
 import type { HistoryLesson, HistoryRow, PendingRow } from './report-history.queries';
-import { iso } from '../submit/report-form.mapper';
+import { iso } from '@/modules/reporting/reports/submit/report-form.mapper';
 
 type HistoryParts = {
   rows: readonly HistoryRow[];

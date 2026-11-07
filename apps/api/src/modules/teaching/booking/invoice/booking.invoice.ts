@@ -50,7 +50,8 @@ export class BookingInvoices {
   uploadUrl(input: InvoiceUpload, maxBytes = INVOICE_MAX_BYTES): Promise<SignedUpload> {
     if (input.size > maxBytes) return Promise.reject(bad('invoice_too_large'));
     const path = invoicePath({ requestId: input.clientRequestId, name: uploadName(input.mime) });
-    return this.storage.signedUpload({ bucket: BUCKETS.invoices, path });
+    const file = { size: input.size, mime: input.mime };
+    return this.storage.signedUpload({ bucket: BUCKETS.invoices, path, file });
   }
 
   /**

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '../../modules/people/guardians/fake-db';
+import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { familyOfPhone } from './family-of-phone';
 
 const FAMILY = { id: 'g1', name: 'أم سهيلة', tz: 'Asia/Riyadh', phone_e164: '+966551110000' };
