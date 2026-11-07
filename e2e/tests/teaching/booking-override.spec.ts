@@ -1,8 +1,9 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, ruleOf, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
+import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
-// Booking over a clash (R-SCH-04): the slot stays pickable, «احجز» → 409 → ConflictNotice, and
+// Booking over a clash (R-SCH-04): a busy time stays pickable, «احجز» → 409 → ConflictNotice, and
 // «احجز رغم التعارض» needs a reason that lands on the clashing lessons only (+ the book audit).
 
 const REASON = 'ولي الأمر طلب الميعاد ده';
@@ -27,8 +28,8 @@ test.describe('booking override with a reason (R-SCH-04)', () => {
     await next();
     await next(); // package 8, 45 min
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
-    await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-    await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: /16:00/ }).click();
+    await fillLessonRow(step, 1, { weekday: 0, time: '16:00' });
+    await expect(step.getByText(ar.booking.conflictTitle)).toBeVisible(); // busy at once
     await expect(step.getByText(ar.booking.seriesCheck.replace('{n}', '1'))).toBeVisible(); // the check sees the clash early
     await next();
     await uploadInvoice(admin);

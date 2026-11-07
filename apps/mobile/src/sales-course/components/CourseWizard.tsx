@@ -1,8 +1,15 @@
-import { continueFits, courseOpensOn, prefillDays, type BookedCourse, type PrefilledPick, type SalesCourseView } from '@ab/shared';
+import {
+  continueFits,
+  courseOpensOn,
+  prefillDays,
+  wallParts,
+  type BookedCourse,
+  type PrefilledPick,
+  type SalesCourseView,
+} from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { bookFailure, dayStartUtc } from '@/booking';
-import { SlotStep } from '@/booking/trial/components/SlotStep';
+import { bookFailure, dayStartUtc, LessonTimesStep } from '@/booking';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
@@ -33,7 +40,7 @@ interface CourseWizardProps {
 
 /**
  * The assistant's course (R-ASST-01, R-SCH-06): المعلم/ة (filtered by the student's program and
- * preference) → one time per weekday, exactly the plan's days a week (SlotStep multi) → المراجعة
+ * preference) → a date and a time per day, the plan's days a week (LessonTimesStep) → المراجعة
  * with the series check. The package, the length and the zone come from the subscription and the
  * student, never asked; the days are offered from its first day on (starts_on in the student's
  * zone, or the day after a previous course, never before today: courseOpensOn), or from now. A renewal
@@ -99,10 +106,11 @@ export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardPr
     }
     if (step === 'slot') {
       return (
-        <SlotStep
+        <LessonTimesStep
           teacherId={teacher.id}
           tz={view.student.tz}
           durationMin={sub?.duration ?? 45}
+          opens={opensOn ?? wallParts(now, view.student.tz).date}
           {...from}
           multi={{ picks, onChange: setPicks, onNext: () => go('confirm'), need: view.perWeek ?? 0 }}
         />

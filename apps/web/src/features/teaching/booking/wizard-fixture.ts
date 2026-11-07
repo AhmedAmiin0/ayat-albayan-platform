@@ -1,6 +1,6 @@
 import type { BookingTeacherOption } from '@ab/shared';
-import { fireEvent, screen, within } from '@testing-library/react';
-import { vi, type Mock } from 'vitest';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { expect, vi, type Mock } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 
 // Test data only (imported by the wizard *.test.tsx): API responses keyed by path prefix.
@@ -59,17 +59,47 @@ export async function pickTeacher(): Promise<void> {
   next();
 }
 
-/** From the package step on to the slot grid, and pick Sunday 17:00. */
-export async function pickSlot(): Promise<void> {
-  next();
-  const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
+const rowName = (n: number): string => t.lessonTimes.row.replace('{n}', String(n));
+
+/** Fills lesson row `n` (1-based) of a package: its date and its time, the family's wall clock. */
+export function fillRow(n: number, date: string, time: string): void {
+  const row = screen.getByRole('group', { name: rowName(n) });
+  fireEvent.change(within(row).getByLabelText(t.lessonTimes.date), { target: { value: date } });
+  fireEvent.change(within(row).getByLabelText(t.lessonTimes.time), { target: { value: time } });
+}
+
+/** Lesson row `n`'s date and time inputs, once it shows. */
+export async function rowInputs(n: number): Promise<{ date: HTMLElement; time: HTMLElement }> {
+  const row = await screen.findByRole('group', { name: rowName(n) });
+  const input = (label: string) => within(row).getByLabelText(label);
+  return { date: input(t.lessonTimes.date), time: input(t.lessonTimes.time) };
+}
+
+const SUNDAY = new RegExp(`^${t.enums.weekday[0]} `);
+const firstRow = () => screen.queryByRole('group', { name: rowName(1) });
+
+/** Sunday 17:00 on the grid of a single lesson (a trial, a makeup). */
+function pickGridSunday(): void {
+  const sunday = screen.getByRole('region', { name: SUNDAY });
   fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
 }
 
-/** A package's second day at its own time: Wednesday 19:30 (multi-pick, owner 2026-10-18). */
+/**
+ * From the package step on to the slot step, and Sunday 4 October 17:00: a package's first lesson
+ * row (date + time), else the one lesson's slot on the grid.
+ */
+export async function pickSlot(): Promise<void> {
+  next();
+  await waitFor(() => expect(firstRow() ?? screen.queryByRole('region', { name: SUNDAY })).toBeTruthy());
+  const pick = firstRow() ? () => fillRow(1, '2026-10-04', '17:00') : pickGridSunday;
+  pick();
+}
+
+/** A package's second day at its own time: Wednesday 19:30 (a second row, owner 2026-10-18). */
 export function pickWednesday(): void {
-  const wednesday = screen.getByRole('region', { name: new RegExp(`^${t.enums.weekday[3]} `) });
-  fireEvent.click(within(wednesday).getByRole('button', { name: /19:30/ }));
+  const second = screen.queryByRole('group', { name: rowName(2) });
+  if (!second) fireEvent.click(screen.getByRole('button', { name: t.lessonTimes.addDay }));
+  fillRow(2, '2026-10-07', '19:30');
 }
 
 /** Teacher → package (as preset) → slot (Sunday 17:00): the steps every path shares. */

@@ -1,67 +1,60 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/core/lib/money/format';
 import { DatePickerField } from './DatePickerField';
 
-const range = { min: '2026-09-15', max: '2026-11-02', today: '2026-11-02' };
-const d = t.datePicker;
-const stateOf = (day: string) =>
-  screen.getByTestId(`calendar-day-${day}`).props.accessibilityState as Record<string, unknown>;
+const range = { min: '2026-09-15', max: '2026-11-02' };
+const picker = () => screen.queryByTestId('native-date-time-picker');
+interface PickerProps {
+  mode: string;
+  value: Date;
+  minimumDate: Date;
+  maximumDate: Date;
+  presentation: string;
+  onValueChange: (e: unknown, at: Date) => void;
+  onDismiss: () => void;
+}
+const props = () => screen.getByTestId('native-date-time-picker').props as PickerProps;
 
-async function openOn(day: string, onChange = jest.fn()) {
+async function open(day: string, onChange = jest.fn()) {
   await render(<DatePickerField label="تاريخ البدء" day={day} range={range} onChange={onChange} />);
   await fireEvent.press(screen.getByTestId('date-picker-open'));
   return onChange;
 }
 
-test('shows the day and the earliest allowed date; the sheet is closed until tapped', async () => {
-  await render(
-    <DatePickerField label="تاريخ البدء" day="2026-10-20" range={range} onChange={jest.fn()} />,
-  );
+test('shows the day and the earliest allowed date; no dialog until tapped', async () => {
+  await render(<DatePickerField label="تاريخ البدء" day="2026-10-20" range={range} onChange={jest.fn()} />);
   expect(screen.getByText(localDay('2026-10-20'))).toBeTruthy();
-  expect(screen.getByText(d.earliest.replace('{date}', localDay('2026-09-15')))).toBeTruthy();
-  expect(screen.queryByTestId('date-picker-sheet')).toBeNull();
+  expect(screen.getByText(t.datePicker.earliest.replace('{date}', localDay('2026-09-15')))).toBeTruthy();
+  expect(picker()).toBeNull();
 });
 
-test('opens on the picked day’s month with it selected; picking a day sends YYYY-MM-DD and closes', async () => {
-  const onChange = await openOn('2026-10-20');
-  expect(screen.getByTestId('date-picker-sheet')).toBeTruthy();
-  expect(stateOf('2026-10-20')).toMatchObject({ selected: true });
-  await fireEvent.press(screen.getByTestId('calendar-day-2026-10-05'));
+test('a tap opens Expo’s date dialog on the day, bounded by the range', async () => {
+  await open('2026-10-20');
+  const p = props();
+  expect(p.mode).toBe('date');
+  expect(p.presentation).toBe('dialog');
+  expect([p.value.getFullYear(), p.value.getMonth(), p.value.getDate()]).toEqual([2026, 9, 20]);
+  expect(p.minimumDate.getDate()).toBe(15);
+  expect(p.maximumDate.getMonth()).toBe(10);
+});
+
+test('confirming sends YYYY-MM-DD and unmounts the dialog', async () => {
+  const onChange = await open('2026-10-20');
+  await act(() => props().onValueChange({}, new Date(2026, 9, 5, 0, 0)));
   expect(onChange).toHaveBeenCalledWith('2026-10-05');
-  expect(screen.queryByTestId('date-picker-sheet')).toBeNull();
+  expect(picker()).toBeNull();
 });
 
-test('days outside min/max are disabled and cannot be picked', async () => {
-  const onChange = await openOn('2026-11-01');
-  expect(stateOf('2026-11-03')).toMatchObject({ disabled: true });
-  expect(stateOf('2026-11-02')).toMatchObject({ disabled: false });
-  await fireEvent.press(screen.getByTestId('calendar-day-2026-11-03'));
+test('dismissing unmounts it without a change', async () => {
+  const onChange = await open('2026-10-20');
+  await act(() => props().onDismiss());
   expect(onChange).not.toHaveBeenCalled();
+  expect(picker()).toBeNull();
 });
 
-test('month arrows walk the months and stop at the range’s first and last month', async () => {
-  await openOn('2026-11-01');
-  expect(screen.getByRole('button', { name: t.mobileFinance.month.next, disabled: true })).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.prev }));
-  expect(screen.getByTestId('calendar-day-2026-10-31')).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.prev }));
-  expect(stateOf('2026-09-14')).toMatchObject({ disabled: true });
-  expect(stateOf('2026-09-15')).toMatchObject({ disabled: false });
-  expect(screen.getByRole('button', { name: t.mobileFinance.month.prev, disabled: true })).toBeTruthy();
-});
-
-test('a tap on the scrim closes without a change', async () => {
-  const onChange = await openOn('2026-10-20');
-  await fireEvent.press(screen.getByLabelText(t.common.cancel, { includeHiddenElements: true }));
-  expect(screen.queryByTestId('date-picker-sheet')).toBeNull();
-  expect(onChange).not.toHaveBeenCalled();
-});
-
-test('each day says its weekday; the academy today also says «اليوم»', async () => {
-  await openOn('2026-10-20');
-  const label = (day: string) => screen.getByTestId(`calendar-day-${day}`).props.accessibilityLabel as string;
-  expect(label('2026-10-20')).toBe(`${t.enums.weekday['2']}، ${localDay('2026-10-20')}`);
-  await fireEvent.press(screen.getByRole('button', { name: t.mobileFinance.month.next }));
-  expect(label('2026-11-02')).toBe(`${t.enums.weekday['1']}، ${localDay('2026-11-02')}، ${t.mobile.today}`);
+test('empty: the placeholder, and the dialog opens on the first allowed day', async () => {
+  await open('');
+  expect(screen.getByText(t.lessonTimes.pickDate)).toBeTruthy();
+  expect(props().value.getDate()).toBe(15);
 });

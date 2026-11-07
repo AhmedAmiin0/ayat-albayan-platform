@@ -8241,5 +8241,29 @@
       "failed": "We could not complete the request; please try again.",
       "noPhone": "There is no number on file to send the code to."
     }
+  },
+  "lessonTimes": {
+    "title": "Time of each day",
+    "intro": "For each day pick the date of its first lesson and its time, in the student's time ({city})",
+    "row": "Day {n}",
+    "date": "Date",
+    "time": "Time",
+    "pickDate": "Pick the date",
+    "pickTime": "Pick the time",
+    "range": "From {from} to {to}",
+    "teacherTime": "Teacher: {time}",
+    "viewerTime": "Your time: {time}",
+    "sameDay": "This day is already picked for another lesson, pick another day",
+    "past": "This time has passed, pick an upcoming one",
+    "free": "This time is free",
+    "unchecked": "This time is checked in the review",
+    "nearest": "Nearest free times on this day",
+    "useTime": "Pick {time}",
+    "ok": "OK",
+    "dateRequired": "Pick the date",
+    "timeRequired": "Pick the time",
+    "addDay": "Add a day",
+    "farDay": "Pick the days within one week of the first lesson",
+    "removeRow": "Remove day {n}"
   }
 }

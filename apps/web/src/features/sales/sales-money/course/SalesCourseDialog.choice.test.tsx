@@ -1,6 +1,6 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ABRAR, next } from '@/features/teaching/booking/wizard-fixture';
+import { ABRAR, next, rowInputs } from '@/features/teaching/booking/wizard-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { adjustText, continueText } from './course-continue';
@@ -18,10 +18,12 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 
 const openDialog = () => renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
 const sameButton = () => screen.findByRole('button', { name: t.booking.courseChange.continueSameDays });
-const pressed = async (n: 0 | 3, time: RegExp) => {
-  const day = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[n]} `) });
-  return within(day).getByRole('button', { name: time }).getAttribute('aria-pressed');
-};
+/** Lesson row `n` holds this date and time (empty strings: not set). */
+async function rowHolds(n: number, date: string, time: string): Promise<void> {
+  const row = await rowInputs(n);
+  expect(row.date).toHaveProperty('value', date);
+  expect(row.time).toHaveProperty('value', time);
+}
 
 describe('the renewal’s choice in «أيام الحلقات» (owner 2026-10-18)', () => {
   beforeEach(() => {
@@ -47,8 +49,9 @@ describe('the renewal’s choice in «أيام الحلقات» (owner 2026-10-1
     const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });
     await waitFor(() => expect(abrar).toHaveProperty('checked', true));
     next();
-    expect(await pressed(0, /17:00/)).toBe('true');
-    expect(await pressed(3, /19:30/)).toBe('true');
+    await rowHolds(1, '2026-10-11', '17:00');
+    await rowHolds(2, '2026-10-14', '19:30');
+    await rowHolds(3, '', '');
     expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(true);
   });
 
@@ -58,8 +61,7 @@ describe('the renewal’s choice in «أيام الحلقات» (owner 2026-10-1
     fireEvent.click(await screen.findByRole('button', { name: t.booking.courseChange.pickOtherDays }));
     fireEvent.click(await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) }));
     next();
-    expect(await pressed(0, /17:00/)).toBe('false');
-    expect(await pressed(3, /19:30/)).toBe('false');
+    for (const n of [1, 2, 3]) await rowHolds(n, '', '');
   });
 
   it('the previous teacher no longer bookable: said on the choice, «تابِع» disabled, no empty teacher', async () => {

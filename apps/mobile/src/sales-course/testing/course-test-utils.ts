@@ -1,6 +1,7 @@
 import type { SalesCourseView, SlotView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { maryam, noAvailability, slot, SUN_17, THU_18 } from '@/booking/testing/fixtures';
+import { pickLesson } from '@/booking/testing/lesson-times';
+import { maryam, noAvailability, slot, slotsAnswer, SUN_17, THU_18 } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
 import { courseView } from './fixtures';
 
@@ -16,7 +17,7 @@ export function fakeCourseApi(view: SalesCourseView = courseView()) {
     if (path.startsWith('/sales/booking/course')) return Promise.resolve(api.view);
     if (path.startsWith('/sales/booking/teachers')) return Promise.resolve([maryam, noAvailability]);
     if (path.startsWith('/sales/booking/slots')) {
-      return Promise.resolve({ teacher_tz: 'Africa/Cairo', step_min: 45, slots: api.slots });
+      return Promise.resolve(slotsAnswer(api.slots));
     }
     return Promise.reject(new Error(`unexpected GET ${path}`));
   };
@@ -36,11 +37,13 @@ export async function pressEnabled(name: string) {
   await press('button', name);
 }
 
+export { pickLesson };
+
 /** The teacher, then the Sunday 17:00 and Thursday 18:00 picks, then «التالي» → the review. */
 export async function walkToReview() {
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
-  await press('checkbox', '17:00');
-  await press('checkbox', '18:00');
+  await pickLesson(0, { date: '2026-10-04', time: '17:00' }); // SUN_17, Riyadh
+  await pickLesson(1, { date: '2026-10-08', time: '18:00' }); // THU_18
   await press('button', t.booking.next);
   await screen.findByRole('button', { name: t.booking.submit });
 }

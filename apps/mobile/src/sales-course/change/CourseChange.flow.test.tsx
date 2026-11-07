@@ -1,13 +1,13 @@
 import { counted } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react-native';
-import { maryam } from '@/booking/testing/fixtures';
+import { maryam, MON_19 } from '@/booking/testing/fixtures';
 import { dayLine } from '@/booking/shared/picks';
 import { t } from '@/core/lib/i18n/i18n';
 import { localDay } from '@/core/lib/money/format';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { daysText } from '@/sales-course/lib/course-days';
-import { isDisabled, press } from '@/sales-course/testing/course-test-utils';
+import { isDisabled, pickLesson, press } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen';
 import { STUDENT_ID, SUB_ID } from '@/sales-course/testing/fixtures';
 import { changeApi, changeBody, changeSundayToMonday, NOW, runningCourse, SUN_4, THU_1, TZ } from './change-test-setup';
@@ -52,15 +52,17 @@ test('a running course shows its days and «تغيير أيام الحلقات»
 test('the days come prefilled from today, the course’s own lessons not busy; «التالي» is not held on the client', async () => {
   await renderWithQuery(<CourseScreen />);
   await press('button', t.booking.courseChange.changeDays);
-  await screen.findAllByRole('checkbox', { name: '17:00' });
+  await screen.findByTestId('lesson-date-0');
   expect(screen.getByText(dayLine(THU_1, TZ, R24))).toBeTruthy();
   expect(screen.getByText(dayLine(SUN_4, TZ, R24))).toBeTruthy();
   // Nothing changed yet: only the series check knows (its 400 no_change), so «التالي» is open.
   expect(isDisabled(t.booking.next)).toBe(false);
-  await press('checkbox', '17:00'); // Sunday off: one day short
-  expect(isDisabled(t.booking.next)).toBe(true);
-  await press('checkbox', '19:00'); // Monday 19:00 instead
+  await pickLesson(1, { date: '2026-10-05', time: '19:00' }); // Sunday → Monday 19:00
+  expect(screen.getByText(dayLine(MON_19, TZ, R24))).toBeTruthy();
   expect(isDisabled(t.booking.next)).toBe(false);
+  await pickLesson(1, { date: '2026-10-01', time: '20:00' }); // Thursday twice: once a week
+  expect(screen.getByText(t.lessonTimes.sameDay)).toBeTruthy();
+  expect(isDisabled(t.booking.next)).toBe(true);
   const [slots] = reads('/sales/booking/slots');
   expect(slots).toContain(`teacherId=${maryam.id}`);
   expect(slots).toContain('durationMin=45');
@@ -98,7 +100,7 @@ test('the review: the current and new days, what is left and the new last day; �
 test('«رجوع» from the days goes back to the course screen', async () => {
   await renderWithQuery(<CourseScreen />);
   await press('button', t.booking.courseChange.changeDays);
-  await screen.findAllByRole('checkbox', { name: '17:00' });
+  await screen.findByTestId('lesson-date-0');
   await press('button', t.common.back);
   expect(await screen.findByRole('button', { name: t.booking.courseChange.changeDays })).toBeTruthy();
   expect(sent(`${CHANGE}/check`)).toHaveLength(0);

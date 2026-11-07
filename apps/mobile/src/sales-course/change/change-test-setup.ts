@@ -1,7 +1,8 @@
 import type { SlotView } from '@ab/shared';
+import { screen } from '@testing-library/react-native';
 import { MON_19, slot } from '@/booking/testing/fixtures';
 import { t } from '@/core/lib/i18n/i18n';
-import { fakeCourseApi, press } from '@/sales-course/testing/course-test-utils';
+import { fakeCourseApi, pickLesson, press } from '@/sales-course/testing/course-test-utils';
 import { bookedCourse, courseView, SUB_ID } from '@/sales-course/testing/fixtures';
 
 // Test-only: the student of the «تغيير أيام الحلقات» tests, whose course still runs (the jest.mock
@@ -35,14 +36,18 @@ export function windowed(fetch: (path: string) => Promise<unknown>) {
   };
 }
 
-/** On the days: Sunday 17:00 off, Monday 19:00 on (the course's days changed), then «التالي». */
-export async function changeSundayToMonday() {
-  await press('checkbox', '17:00');
-  await press('checkbox', '19:00');
+/** On the days: the Sunday row (the second from NOW) becomes Monday 19:00, then «التالي». */
+export async function changeSundayToMonday(sunday = { row: 1, monday: '2026-10-05' }) {
+  await pickLesson(sunday.row, { date: sunday.monday, time: '19:00' });
   await press('button', t.booking.next);
 }
 
 /** The change point is the earliest pick (today 18:00); Monday keeps its own 19:00. */
+/** A prefilled lesson row's time as the field reads it («الساعة: 17:00»). */
+export const rowTime = async (row: number): Promise<unknown> =>
+  (await screen.findByTestId(`lesson-time-${row}`)).props.accessibilityLabel;
+export const timeLabel = (time: string): string => `${t.lessonTimes.time}: ${time}`;
+
 export const changeBody = {
   subscriptionId: SUB_ID,
   byday: [1, 4],

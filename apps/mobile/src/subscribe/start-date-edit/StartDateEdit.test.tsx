@@ -1,9 +1,10 @@
-import { daysBefore, riyadhToday } from '@ab/shared';
+import { addCalendarDays, daysBefore, riyadhToday } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { pickDay } from '@/test/pickers/native-picker';
 import { StartDateEdit } from './StartDateEdit';
 import type { StartDatePackage } from './use-start-date-edit';
 
@@ -50,7 +51,7 @@ test('a day back, PATCH { startsOn }, then «عُدِّل»', async () => {
   await press(e.action);
   const save = screen.getByRole('button', { name: e.save });
   expect(save.props.accessibilityState.disabled).toBe(true);
-  await press(t.payments.mobile.dayBefore);
+  await pickDay('date-picker-open', daysBefore(FROM, 1));
   await press(e.save);
   await waitFor(() =>
     expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/subscriptions/sub1/start-date', {
@@ -64,7 +65,7 @@ test('a refusal reads in the user words and the editor stays', async () => {
   mockApiSend.mockRejectedValue(new ApiError(400, { code: 'used_before_needs_past_start' }));
   await show({ ...SUB, lessons_used_before: 2 });
   await press(e.action);
-  await press(t.payments.mobile.dayAfter);
+  await pickDay('date-picker-open', addCalendarDays(FROM, 1));
   await press(e.save);
   expect(await screen.findByText(e.errors.used_before_needs_past_start)).toBeTruthy();
   expect(screen.getByTestId('start-date-editor')).toBeTruthy();

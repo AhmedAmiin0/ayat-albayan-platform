@@ -91,7 +91,7 @@ test('a prefilled day taken since: its day is named, «اختر موعدًا آ�
   expect(await screen.findByText(taken)).toBeTruthy();
   expect(isDisabled(t.booking.submit)).toBe(true);
   await press('button', t.booking.changeSlot);
-  await screen.findAllByRole('checkbox', { name: '17:00' });
+  await screen.findByTestId('lesson-date-0');
   expect(screen.getByText(dayLine(SUN_11, TZ, R24))).toBeTruthy(); // the picks stay
   expect(screen.getByText(dayLine(THU_15, TZ, R24))).toBeTruthy();
   const [slots] = reads('/sales/booking/slots');
@@ -104,7 +104,7 @@ test('«اختر أيامًا أخرى»: the teacher step, then the days from t
   await renderWithQuery(<CourseScreen />);
   await press('button', t.booking.courseChange.pickOtherDays);
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
-  await screen.findAllByRole('checkbox', { name: '17:00' });
+  await screen.findByTestId('lesson-date-0');
   expect(reads('/sales/booking/slots')[0]).toContain(`from=${encodeURIComponent('2026-10-10T21:00:00.000Z')}`);
   await press('button', t.common.back);
   await press('button', t.common.back);

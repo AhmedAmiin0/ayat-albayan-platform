@@ -43,7 +43,7 @@ test('a clash: only «اختر موعدًا آخر», no override, nothing saved
   expect(screen.queryByRole('button', { name: t.booking.override })).toBeNull();
   expect(isDisabled(t.booking.courseChange.submit)).toBe(true);
   await press('button', t.booking.changeSlot);
-  expect(await screen.findAllByRole('checkbox', { name: '17:00' })).toBeTruthy();
+  expect(await screen.findByTestId('lesson-date-0')).toBeTruthy();
   expect(sent(CHANGE)).toHaveLength(0);
 });
 

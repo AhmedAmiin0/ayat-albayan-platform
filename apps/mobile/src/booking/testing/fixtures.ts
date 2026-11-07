@@ -94,3 +94,6 @@ export const UPLOADED: InvoiceDraft = {
   mime: 'image/jpeg',
   uri: 'file:///cache/invoice.jpg',
 };
+
+/** GET /booking/slots as the tests' fakes answer it: a Cairo teacher, 45-minute steps. */
+export const slotsAnswer = (slots: SlotView[]) => ({ teacher_tz: 'Africa/Cairo', step_min: 45, slots });

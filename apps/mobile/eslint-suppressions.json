@@ -850,7 +850,7 @@
   },
   "src/booking/testing/test-utils.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/booking/trial/components/ConfirmNotices.tsx": {
@@ -916,7 +916,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1
@@ -7306,7 +7306,7 @@
   },
   "src/sales-course/change/CourseChange.refusals.test.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/sales-course/change/CourseChangeDone.tsx": {
@@ -7318,11 +7318,8 @@
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 3
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
-      "count": 7
+      "count": 5
     },
     "max-lines-per-function": {
       "count": 1
@@ -7448,9 +7445,6 @@
     },
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "complexity": {
       "count": 1
@@ -7750,11 +7744,8 @@
     }
   },
   "src/sales-subscribe/components/StartDateField.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/sales-subscribe/components/TransferDone.buttons.test.tsx": {
@@ -9452,7 +9443,7 @@
   },
   "src/subscribe/subscribe-form.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 2

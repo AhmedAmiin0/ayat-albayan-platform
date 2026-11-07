@@ -38,7 +38,7 @@ const openTimes = async (role: 'admin' | 'sales' = 'admin') => {
   seedFullAccess(client, role);
   await renderWithQuery(<CourseActionsSection studentId="s1" subscriptionId={SUB} />, client);
   await fireEvent.press(await screen.findByRole('button', { name: c.times.action }));
-  await screen.findAllByRole('checkbox', { name: '17:00' });
+  await screen.findByTestId('lesson-date-0');
 };
 
 test('new days: the check and the save go to the profile route, the course count kept', async () => {

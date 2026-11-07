@@ -7,6 +7,7 @@ import { BookTrialScreen } from './BookTrialScreen';
 import { booked, SUN_17 } from '@/booking/testing/fixtures';
 import { uploadInvoice } from '@/booking/invoice/invoice-upload';
 import { fakeBookingApi, LEADS_KEY, walkPackageToInvoice } from '@/booking/testing/test-utils';
+import { fakeNow } from '@/test/fake-now';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -26,7 +27,9 @@ const MEDIA = '/threads/%2B966552147730/media';
 const MESSAGE = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const press = async (name: string) => fireEvent.press(await screen.findByRole('button', { name }));
 
+// The picked lessons (from Sunday 4 Oct 2026) lie ahead: «now» is Friday 2 Oct.
 beforeEach(() => {
+  fakeNow(new Date('2026-10-02T06:00:00Z'));
   jest.clearAllMocks();
   const api = fakeBookingApi();
   mockApiFetch.mockImplementation((path: string) =>
@@ -35,6 +38,7 @@ beforeEach(() => {
       : api.fetch(path),
   );
 });
+afterEach(() => jest.useRealTimers());
 
 test('the invoice saved from the guardian’s chat books by message id: nothing is uploaded from the phone', async () => {
   const client = createTestClientWithLead();
