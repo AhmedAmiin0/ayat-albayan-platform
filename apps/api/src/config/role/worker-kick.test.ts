@@ -25,7 +25,7 @@ describe('kickWorker', () => {
     vi.stubGlobal('fetch', fetch);
     await kickWorker('sender');
     const [url, init] = fetch.mock.calls[0] as [string, RequestInit];
-    expect(url).toBe('http://worker.invalid:3001/internal/jobs/sender/kick');
+    expect(url).toBe('http://worker.invalid:3001/internal/jobs/sender/kick?wait=0');
     expect(init.method).toBe('POST');
     expect(Object.keys(init.headers ?? {})).toEqual(['x-ab-internal']);
     expect(warn).not.toHaveBeenCalled();
@@ -41,5 +41,15 @@ describe('kickWorker', () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('fetch failed')));
     await expect(kickWorker('sender')).resolves.toBeUndefined();
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('sender: worker kick: failed'));
+  });
+});
+
+describe('kickWorker options (docs/42 42-7, 42-8)', () => {
+  it('names the lane and asks to wait in the query', async () => {
+    const fetch = vi.fn().mockResolvedValue(new Response(null, { status: 202 }));
+    vi.stubGlobal('fetch', fetch);
+    await kickWorker('sender', { lane: 'chat', wait: true });
+    const [url] = fetch.mock.calls[0] as [string];
+    expect(url).toBe('http://worker.invalid:3001/internal/jobs/sender/kick?lane=chat&wait=1');
   });
 });

@@ -128,6 +128,8 @@ describe('MessageWorker — automatic messages OFF', () => {
     const row = reminder({ error_code: SENDING, attempts: 1 });
     await expect(worker().process({ row, template, now: NOW, autoOn: false })).resolves.toBe('failed');
     expect(queries.expire).not.toHaveBeenCalled();
-    expect(queries.failure).toHaveBeenCalledWith(row.id, expect.objectContaining({ error_code: 'uncertain' }));
+    const uncertain = expect.objectContaining({ error_code: 'uncertain' });
+    // #695 item 1: only while still SENDING at attempt 1 (sender.repo failure CAS).
+    expect(queries.failure).toHaveBeenCalledWith(row.id, uncertain, { attempts: 1 });
   });
 });

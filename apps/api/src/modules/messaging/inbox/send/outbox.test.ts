@@ -22,6 +22,7 @@ describe('Outbox (rule 8 dedup, «instant send»)', () => {
     expect(sent).toEqual({ view: { id: 'm1', status: 'queued' }, replayed: false });
     expect(t.queries.enqueue).toHaveBeenCalledWith({ ...ROW, direction: 'outbound', status: 'queued' });
     expect(t.sender.kick).toHaveBeenCalledTimes(1);
+    expect(t.sender.kick).toHaveBeenCalledWith({ lane: 'main', wait: false }); // docs/42 42-7
     expect(t.queries.get).not.toHaveBeenCalled(); // the enqueue's row: no read back (docs/42 42-5)
   });
 
@@ -36,6 +37,18 @@ describe('Outbox (rule 8 dedup, «instant send»)', () => {
     const t = setup('queued');
     const outcome = await Promise.race([t.outbox.send(ROW).then(() => 'answered'), new Promise((r) => setTimeout(() => r('waiting'), 20))]);
     expect(outcome).toBe('waiting');
+  });
+});
+
+describe('Outbox kick lanes (docs/42 42-7, 42-8)', () => {
+  it('a chat-line text kicks the chat lane; send() asks the worker to wait', async () => {
+    const t = setup('queued');
+    t.queries.enqueue.mockResolvedValue({ ...messageRow({ id: 'm1', line: 'chat' }), replayed: false });
+    await t.outbox.queue(ROW);
+    expect(t.sender.kick).toHaveBeenLastCalledWith({ lane: 'chat', wait: false });
+    t.sender.kick.mockResolvedValue(undefined);
+    await t.outbox.send(ROW);
+    expect(t.sender.kick).toHaveBeenLastCalledWith({ lane: 'chat', wait: true });
   });
 });
 
