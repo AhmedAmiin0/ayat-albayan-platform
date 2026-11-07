@@ -65,7 +65,7 @@ export const correctionBody = (prefix: string, text: string): string => `${prefi
  * than what it corrects, so any loaded run that holds the original holds it too).
  */
 export function correctionsOf(
-  messages: ReadonlyArray<{ id: string; created_at: string } & CorrectionMark>,
+  messages: readonly ({ id: string; created_at: string } & CorrectionMark)[],
 ): Map<string, string> {
   const sorted = [...messages].sort((a, b) => a.created_at.localeCompare(b.created_at));
   const map = new Map<string, string>();
