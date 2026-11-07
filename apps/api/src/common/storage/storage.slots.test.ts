@@ -19,7 +19,11 @@ const SLOT = { bucket: 'receipts', path: 'sub/a.jpg', file: { size: 900, mime: '
 function setup(config: StorageEnv) {
   const supabase = fakeS3();
   const minio = fakeS3();
-  const source = new StoreSource({ supabase: supabase.store, config: () => config, minio: () => minio.store });
+  const source = new StoreSource({
+    supabase: supabase.store,
+    config: () => config,
+    minio: () => minio.store,
+  });
   return { supabase, minio, storage: new StorageService({} as Db, source) };
 }
 

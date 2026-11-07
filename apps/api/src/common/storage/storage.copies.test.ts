@@ -18,7 +18,11 @@ const BYTES = { body: new Uint8Array([1, 2, 3]), type: 'image/jpeg' };
 function setup(config: StorageEnv) {
   const supabase = fakeS3();
   const minio = fakeS3();
-  const source = new StoreSource({ supabase: supabase.store, config: () => config, minio: () => minio.store });
+  const source = new StoreSource({
+    supabase: supabase.store,
+    config: () => config,
+    minio: () => minio.store,
+  });
   return { supabase, minio, storage: new StorageService({} as Db, source) };
 }
 

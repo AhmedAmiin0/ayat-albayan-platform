@@ -28,9 +28,12 @@ const MIMES: ReadonlySet<string> = new Set(RECEIPT_MIMES);
 const fits = (info: ObjectInfo | null): info is ObjectInfo =>
   info !== null && info.size <= RECEIPT_MAX_BYTES;
 
-/** A receipt type, and the type the store serves it with (never a JPEG served as text/html). */
+/**
+ * Sniffed as a receipt type AND served by the store as one (never a JPEG served as text/html).
+ * Not equality: Android's picker re-encodes a PNG as JPEG yet labels it image/png (both safe).
+ */
 const servedAsSniffed = (mime: string | null, info: ObjectInfo): mime is string =>
-  mime !== null && MIMES.has(mime) && baseMime(info.contentType) === mime;
+  mime !== null && MIMES.has(mime) && MIMES.has(baseMime(info.contentType));
 
 @Injectable()
 export class PaymentAttachments {

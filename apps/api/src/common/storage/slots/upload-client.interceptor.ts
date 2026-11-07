@@ -10,7 +10,9 @@ import { withUploadClient } from './upload-client';
 
 const HEADER = UPLOAD_CAPABILITY_HEADER.toLowerCase();
 
-type WithHeaders = { headers?: Record<string, unknown> };
+interface WithHeaders {
+  headers?: Record<string, unknown>;
+}
 
 /**
  * Global: the handler (pipes included) runs inside the request's upload capability, so every
