@@ -1,3 +1,4 @@
+import type { WaLine } from '@ab/catalog';
 import { z } from 'zod';
 import type { TemplateView } from './template-views.js';
 
@@ -19,7 +20,10 @@ export interface TemplateNumberSetView {
 export interface TemplateNumberSyncView {
   number_id: string;
   ok: boolean;
-  /** not_configured, meta_error, kapso_auth. */
+  /**
+   * not_configured, meta_error, kapso_auth, crm_auth, crm_scope_missing, crm_managed,
+   * evolution_no_templates; calls_no_templates = a calls-only number has no templates.
+   */
   error?: string;
   /** Meta's own message for meta_error. */
   message?: string;
@@ -30,4 +34,10 @@ export interface TemplateNumberSyncView {
   synced: number;
   /** Every number written: this one and each other number on the same WABA. */
   number_ids: string[];
+  /**
+   * Set when the number ran its line's sync (the one «القوالب» runs): every number under
+   * legacy, and a crm number that is its role's number in module mode. Absent on the
+   * per-number WABA sync.
+   */
+  line?: WaLine;
 }

@@ -22,12 +22,14 @@ describe('Outbox (rule 8 dedup, «instant send»)', () => {
     expect(sent).toEqual({ view: { id: 'm1', status: 'queued' }, replayed: false });
     expect(t.queries.enqueue).toHaveBeenCalledWith({ ...ROW, direction: 'outbound', status: 'queued' });
     expect(t.sender.kick).toHaveBeenCalledTimes(1);
+    expect(t.queries.get).not.toHaveBeenCalled(); // the enqueue's row: no read back (docs/42 42-5)
   });
 
   it('queue keeps the dedup: a replayed request id answers the first row and kicks nothing', async () => {
     const t = setup('sent', true);
     expect(await t.outbox.queue(ROW)).toEqual({ view: { id: 'm1', status: 'sent' }, replayed: true });
     expect(t.sender.kick).not.toHaveBeenCalled();
+    expect(t.queries.get).not.toHaveBeenCalled(); // the replay was read back by the enqueue
   });
 
   it('send still waits for the pass (callers that report the outcome)', async () => {

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
-import type { MetaLineEnv } from '@/config/env/env';
+import type { EvolutionLineEnv, MetaLineEnv } from '@/config/env/env';
 import { syncNumber, type NumberSyncDeps } from './template-number-sync';
 import type { ApprovalRow, ApprovalWrite } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { REMINDER_24H, REPORT_READY, STUB_ENV, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
@@ -14,6 +14,10 @@ const number = (id: string, over: Partial<OverlayNumber> = {}): OverlayNumber =>
   id, label: id, purpose: 'notifications', phone_number_id: `p-${id}`, waba_id: 'waba-1', enabled: true, is_default: false,
   fallback_rank: 100, created_at: '2026-10-01T00:00:00Z', env, appSecret: null, ...over,
 });
+const EVO: EvolutionLineEnv = {
+  provider: 'evolution', base: 'http://evo', instance: 'i', token: 't', mode: 'baileys',
+  autoSends: false, gapMs: 0, dailyCap: 1, linkPreview: false,
+};
 const A = number('a'), B = number('b', { env: null, enabled: false }), C = number('c', { waba_id: 'waba-2' });
 const META: MetaTemplate = { id: 'm1', name: 'booking_confirmation', language: 'ar', status: 'APPROVED', category: 'UTILITY', quality: 'GREEN', components: [], rejectedReason: null };
 
@@ -22,10 +26,15 @@ const queries = {
   all: vi.fn(async () => [templateRow(), REPORT_READY, REMINDER_24H]),
   approvals: vi.fn(async (): Promise<ApprovalRow[]> => []),
   upsertApprovals: vi.fn(async (rows: readonly ApprovalWrite[]) => rows.length),
+  numberRef: vi.fn(async () => null),
 };
+const syncLine = vi.fn();
 let numbers: readonly OverlayNumber[] | null;
 const clientOf = vi.fn(() => ({ getTemplates }));
-const deps: NumberSyncDeps = { queries, numbers: () => numbers, clientOf, log: { warn: vi.fn() } };
+const deps: NumberSyncDeps = {
+  queries, numbers: () => numbers, clientOf, log: { warn: vi.fn() }, syncLine,
+  activeNumberId: () => undefined,
+};
 const written = (): ApprovalWrite[] => queries.upsertApprovals.mock.calls[0]?.[0] as ApprovalWrite[];
 
 describe('syncNumber', () => {
@@ -64,9 +73,22 @@ describe('syncNumber', () => {
     expect(queries.upsertApprovals).not.toHaveBeenCalled();
   });
 
-  it('legacy (no overlay) 409 module_mode_only; unknown 404; WA_TEMPLATE_SYNC=false 409', async () => {
+  it('an Evolution number answers evolution_no_templates without a call', async () => {
+    numbers = [number('e', { env: EVO })];
+    const out = await syncNumber(deps, 'e', NOW);
+    expect(out).toMatchObject({ ok: false, error: 'evolution_no_templates' });
+    expect(clientOf).not.toHaveBeenCalled();
+  });
+
+  it('legacy (no overlay) runs the line sync, never 409 module_mode_only', async () => {
     numbers = null;
-    await expect(syncNumber(deps, 'a', NOW)).rejects.toMatchObject({ status: 409, response: { code: 'module_mode_only' } });
+    const unknown = { status: 404, response: { code: 'unknown_number' } };
+    await expect(syncNumber(deps, 'a', NOW)).rejects.toMatchObject(unknown);
+    expect(queries.numberRef).toHaveBeenCalledWith('a');
+    expect(clientOf).not.toHaveBeenCalled();
+  });
+
+  it('unknown 404; WA_TEMPLATE_SYNC=false 409', async () => {
     numbers = [A];
     await expect(syncNumber(deps, 'zz', NOW)).rejects.toMatchObject({ status: 404, response: { code: 'unknown_number' } });
     vi.stubEnv('WA_TEMPLATE_SYNC', 'false');
