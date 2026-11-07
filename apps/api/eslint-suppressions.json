@@ -2052,7 +2052,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 12
+      "count": 10
     }
   },
   "src/modules/finance/payments/attachments/receipts.service.limit.test.ts": {

@@ -1,4 +1,4 @@
-import { PAYMENT_ATTACHMENTS_MAX, type PaymentMethod } from '@ab/shared';
+import { PAYMENT_ATTACHMENTS_MAX, sameStoredObject, storageKeyOf, type PaymentMethod } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { badRequest } from '../../../../common/http/errors';
 import { PaymentAttachments, type CheckedAttachment } from './payment-attachments.service';
@@ -7,6 +7,15 @@ import { ReceiptsService } from './receipts.service';
 type FilesInput = { method: PaymentMethod; receiptPath?: string | null | undefined; attachments?: readonly string[] | undefined };
 /** The booked row a late save lands on: its method and count rule, never the form's. */
 type BookedRow = { id: string; subscription_id: string; method: PaymentMethod };
+interface ReceiptPatch {
+  receiptPath?: string | null | undefined;
+  method?: PaymentMethod | undefined;
+}
+interface PatchedRow {
+  id: string;
+  subscription_id: string;
+  receipt_path: string | null;
+}
 type LateInput = { subscriptionId: string; attachments?: readonly string[] | undefined };
 
 const reason = (e: unknown): string => (e instanceof Error ? e.message : String(e));
@@ -29,11 +38,18 @@ export class PaymentFiles {
     return this.attachments.check({ subscriptionId, paths });
   }
 
-  /** PATCH: a new receipt (the payment's own path is fine); a payment with «المرفقات» stays a bank transfer (400). */
-  async checkPatch(row: { id: string; subscription_id: string }, patch: { receiptPath?: string | null | undefined; method?: PaymentMethod | undefined }): Promise<void> {
+  /**
+   * PATCH: a new receipt (the payment's own path is fine); a payment with «المرفقات» stays a
+   * bank transfer (400). Returns the patch to write: a path sent back for the row's own moved
+   * file keeps the row's path (docs/45 §6).
+   */
+  async checkPatch<P extends ReceiptPatch>(row: PatchedRow, sent: P): Promise<P> {
+    const own = sameStoredObject(row.receipt_path, sent.receiptPath);
+    const patch = own ? { ...sent, receiptPath: row.receipt_path } : sent;
     if (patch.receiptPath) await this.receipts.check({ subscriptionId: row.subscription_id, path: patch.receiptPath, paymentId: row.id });
-    if (patch.method === undefined || patch.method === 'bank') return;
+    if (patch.method === undefined || patch.method === 'bank') return patch;
     if ((await this.attachments.paths(row.id)).length > 0) throw badRequest('attachments_not_allowed');
+    return patch;
   }
 
   /** After the payment is booked (rule 8): a booked payment must never come back as an error, so a failure is logged. */
@@ -56,8 +72,9 @@ export class PaymentFiles {
     if (sent.length === 0 || row.subscription_id !== input.subscriptionId) return;
     try {
       if (row.method !== 'bank') return this.log.warn(`payment ${row.id}: ${row.method} payment, replayed files dropped`);
-      const stored = new Set(await this.attachments.paths(row.id));
-      const fresh = sent.filter((p) => !stored.has(p));
+      // By key: a file the move marked «minio:» is the same file (docs/45 §6).
+      const stored = new Set((await this.attachments.paths(row.id)).map(storageKeyOf));
+      const fresh = sent.filter((p) => !stored.has(storageKeyOf(p)));
       if (fresh.length === 0) return;
       const kept = fresh.slice(0, Math.max(0, PAYMENT_ATTACHMENTS_MAX - stored.size));
       if (kept.length < fresh.length) this.log.warn(`payment ${row.id}: ${fresh.length - kept.length} file(s) over the limit dropped`);
