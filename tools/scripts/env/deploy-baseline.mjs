@@ -5,8 +5,10 @@
 //   ota_base      the commit of the newest green mobile run that shipped an OTA to preview
 //                 (run-name «mobile ota-update preview» / «mobile both preview»); empty if none is known
 // An empty value means «unknown»: the workflow then fails safe (the gated migrate job runs; no OTA).
-// Usage: GITHUB_TOKEN=… GITHUB_REPOSITORY=o/r node tools/scripts/deploy-baseline.mjs   → key=value lines
+// Usage: GITHUB_TOKEN=… GITHUB_REPOSITORY=o/r node tools/scripts/env/deploy-baseline.mjs   → key=value lines
 import { fileURLToPath } from 'node:url';
+import { z } from 'zod';
+import { httpJson } from '../http/http-json.mjs';
 
 const SHA = /^[0-9a-f]{40}$/;
 
@@ -43,32 +45,57 @@ export function pickOtaBase(runs) {
   return run && SHA.test(run.head_sha) ? run.head_sha : '';
 }
 
-async function api(path) {
-  const base = process.env['GITHUB_API_URL'] || 'https://api.github.com';
-  const res = await fetch(`${base}/repos/${process.env['GITHUB_REPOSITORY']}${path}`, {
-    headers: {
-      authorization: `Bearer ${process.env['GITHUB_TOKEN']}`,
-      accept: 'application/vnd.github+json',
-    },
-  });
-  if (!res.ok) throw new Error(`GitHub API ${path}: ${res.status}`);
-  return res.json();
+const runsSchema = z
+  .looseObject({
+    workflow_runs: z
+      .array(
+        z.looseObject({
+          id: z.number(),
+          run_attempt: z.number(),
+          display_title: z.string().nullish(),
+          head_branch: z.string().nullish(),
+          head_sha: z.string().nullish(),
+          conclusion: z.string().nullish(),
+        }),
+      )
+      .optional(),
+  })
+  .transform((b) => b.workflow_runs ?? []);
+
+const jobsSchema = z
+  .looseObject({
+    jobs: z.array(z.looseObject({ name: z.string(), conclusion: z.string().nullish() })).optional(),
+  })
+  .transform((b) => b.jobs ?? []);
+
+/** `(path, schema) => body` on this repo's GitHub REST API; `send` is the test seam. */
+export function githubApi(env, send) {
+  const base = env['GITHUB_API_URL'] || 'https://api.github.com';
+  const headers = {
+    authorization: `Bearer ${env['GITHUB_TOKEN']}`,
+    accept: 'application/vnd.github+json',
+  };
+  const profile = { name: 'GitHub API', headers, fetch: send };
+  return (path, schema) =>
+    httpJson(profile, { url: `${base}/repos/${env['GITHUB_REPOSITORY']}${path}`, schema });
 }
 
-const greenRuns = async (file) =>
-  (await api(`/actions/workflows/${file}/runs?branch=develop&status=success&per_page=100`))
-    .workflow_runs ?? [];
+/** The green develop runs of one workflow, newest first. */
+export const greenRuns = (api, file) =>
+  api(`/actions/workflows/${file}/runs?branch=develop&status=success&per_page=100`, runsSchema);
 
-async function deployJobPassed(run) {
-  const { jobs = [] } = await api(
-    `/actions/runs/${run.id}/attempts/${run.run_attempt}/jobs?per_page=100`,
-  );
+/** Whether the run's «deploy» job passed in its latest attempt. */
+export async function deployJobPassed(api, run) {
+  const path = `/actions/runs/${run.id}/attempts/${run.run_attempt}/jobs?per_page=100`;
+  const jobs = await api(path, jobsSchema);
   return jobs.some((j) => j.name === 'deploy' && j.conclusion === 'success');
 }
 
 async function main() {
-  const out = await pickDeployBases(await greenRuns('deploy-staging.yml'), deployJobPassed);
-  out.ota_base = pickOtaBase(await greenRuns('mobile.yml'));
+  const api = githubApi(process.env, fetch);
+  const runs = await greenRuns(api, 'deploy-staging.yml');
+  const out = await pickDeployBases(runs, (run) => deployJobPassed(api, run));
+  out.ota_base = pickOtaBase(await greenRuns(api, 'mobile.yml'));
   for (const [k, v] of Object.entries(out)) console.log(`${k}=${v}`);
 }
 
