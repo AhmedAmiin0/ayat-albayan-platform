@@ -27,6 +27,8 @@ export class ReportPdfQueries {
   /**
    * The idle tick's one read: is any report pending or rendering? (partial index
    * lesson_reports_pdf_queue_idx, migration 20261028000861). false = nothing to recover or render.
+   * A report still inside its teacher's edit window counts too (docs/46): for up to that window the
+   * tick also runs recoverStale + pendingIds, two cheap reads at a few dozen reports a day.
    */
   async hasWork(): Promise<boolean> {
     const { data, error } = await this.db.from('lesson_reports').select('id').in('pdf_status', ['pending', 'rendering']).limit(1);

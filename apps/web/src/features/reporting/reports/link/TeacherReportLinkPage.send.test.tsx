@@ -22,7 +22,7 @@ afterEach(() => {
 });
 
 describe('TeacherReportLinkPage: sending', () => {
-  it('a double tap sends once; then «تم إرسال التقرير بنجاح», read-only, «تعديل التقرير»', async () => {
+  it('a double tap sends once; then «تم استلام التقرير», read-only, «تعديل التقرير»', async () => {
     let answer: (value: Response) => void = () => undefined;
     fetchMock.mockImplementation((_url, init) =>
       init?.method === 'POST'
@@ -44,7 +44,7 @@ describe('TeacherReportLinkPage: sending', () => {
     await waitFor(() => expect(posts()).toHaveLength(1));
     expect(posts()[0]?.[0]).toBe('http://api.test/public/teacher-report/tok/reports/r-1/submit');
     answer(new Response(JSON.stringify(SENT), { status: 200 }));
-    expect(await screen.findByText(/تم إرسال التقرير بنجاح/)).toBeTruthy();
+    expect(await screen.findByText(/تم استلام التقرير/)).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.reports.submit })).toBeNull();
     expect(screen.getByRole('button', { name: t.reports.edit })).toBeTruthy();
     expect(posts()).toHaveLength(1);

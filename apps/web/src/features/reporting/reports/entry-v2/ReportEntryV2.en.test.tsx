@@ -18,7 +18,7 @@ describe('the new report form, English', () => {
     expect(screen.getByRole('group', { name: /Attendance/ })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Surah Al-Qalam · ayahs 1–20' })).toBeTruthy();
     expect(screen.getByText('20 ayahs · pp. 564–565')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Send the report to the family' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Send the report' })).toBeTruthy();
     fireEvent.click(screen.getAllByRole('button', { name: 'Pick the surah and ayahs' })[0] as HTMLElement);
     expect(screen.getByRole('searchbox', { name: 'Search for a surah' })).toBeTruthy();
     expect(screen.getByRole('button', { name: /Surah Al-Faatiha/ })).toBeTruthy();

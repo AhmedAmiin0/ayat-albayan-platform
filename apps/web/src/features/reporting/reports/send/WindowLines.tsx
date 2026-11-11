@@ -31,7 +31,7 @@ export function WindowLines({ report, tz }: { report: WindowReport; tz: string }
   return (
     <>
       {[lines.edit, lines.family].filter((l) => l !== null).map((line) => (
-        <p key={line} role="status" className="flex items-center gap-1.5 text-xs text-ink-2">
+        <p key={line} className="flex items-center gap-1.5 text-xs text-ink-2">
           <NuqtaGlyph shape="hollow" className="text-ink-3" />
           {line}
         </p>

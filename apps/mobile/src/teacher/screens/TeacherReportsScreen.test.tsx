@@ -25,7 +25,8 @@ const sent = (over: Partial<TeacherReportView>): TeacherReportView => ({
   status: 'submitted',
   submitted_at: '2026-09-29T14:00:00Z',
   can_edit: true,
-  edit_until: '2026-09-30T14:00:00Z',
+  // Still open on the real clock: the chip derives from edit_until + now (docs/46 B5).
+  edit_until: new Date(Date.now() + 20 * 60_000).toISOString(),
   pdf_status: 'ready',
   sent_at: null,
   ...over,

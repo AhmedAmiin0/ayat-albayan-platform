@@ -1811,8 +1811,8 @@
     "draftSaved": "Draft saved {time}",
     "submit": "Send report",
     "resubmit": "Save changes",
-    "submitted": "Report sent",
-    "editUntil": "You can edit the report until {when}; then it goes to the family",
+    "submitted": "Report submitted",
+    "editUntil": "You can edit the report until {when}",
     "editClosed": "The editing window has closed. Contact the admin team if you need a change",
     "sentOk": "The report was received ({time})",
     "editSavedOk": "Your edit was saved successfully ({time})",
@@ -1995,7 +1995,7 @@
       "send": "Send the report",
       "saveEdit": "Save the edit",
       "saveDraft": "Save draft",
-      "sendHint": "You can still edit the report for a short while after sending it; then the family receives it once on WhatsApp.",
+      "sendHint": "The family receives the report once on WhatsApp, after the edit window ends.",
       "picker": {
         "cancel": "Cancel",
         "search": "Search for a surah",
@@ -2042,7 +2042,7 @@
     },
     "familySend": {
       "sendsIn": "Goes to the family in {when}",
-      "sending": "The edit window has closed; the report is going to the family now",
+      "sending": "The report is going to the family now",
       "sent": "Sent to the family"
     }
   },

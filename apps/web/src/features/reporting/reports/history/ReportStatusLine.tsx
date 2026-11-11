@@ -26,7 +26,7 @@ export function SaveStatus({ state, tz }: { state: SaveState; tz: string }) {
 const PDF_SHOWN: ReadonlySet<string> = new Set(['ready', 'failed']);
 
 /**
- * After a submit: «أُرسل التقرير», the version, the PDF once ready, and the window lines
+ * After a submit: «سُلِّم التقرير», the version, the PDF once ready, and the window lines
  * (WindowLines: how long the teacher may still edit, and when it goes to the family).
  */
 export function SubmittedNote({ report, tz }: { report: ReportView; tz: string }) {

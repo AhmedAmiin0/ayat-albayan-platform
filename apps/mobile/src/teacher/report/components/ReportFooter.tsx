@@ -33,7 +33,7 @@ const WORDS: SendWords = {
 const PDF_SHOWN: ReadonlySet<string> = new Set(['ready', 'failed']);
 
 /**
- * «أُرسل التقرير», its version, the PDF once ready, then the window lines (docs/46 B5): until when
+ * «سُلِّم التقرير», its version, the PDF once ready, then the window lines (docs/46 B5): until when
  * it may still be edited, and «سيُرسل إلى الأسرة بعد 12 دقيقة» / «… الآن» / «أُرسل إلى الأسرة»,
  * live (useNow); at the close the form and the lists are fetched again (useWindowClose).
  */

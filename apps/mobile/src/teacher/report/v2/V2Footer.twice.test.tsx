@@ -6,7 +6,7 @@ import { renderWithQuery } from '@/test/query';
 import { formResponseV2, reportView } from '@/teacher/report/testing/fixtures';
 import { ReportEntryCardV2 } from './ReportEntryCardV2';
 
-// Owner 2026-11-06: one send per tap, «تم إرسال التقرير بنجاح» and a read-only report, an edit
+// Owner 2026-11-06: one send per tap, «تم استلام التقرير» and a read-only report, an edit
 // only through «تعديل التقرير» (the same report and its version).
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -47,7 +47,7 @@ test('a double tap while pending sends once, with a spinner; then the confirmati
   expect(screen.getByTestId('send-spinner')).toBeTruthy();
   expect(posts()).toHaveLength(1);
   answer(reportView(SENT));
-  expect(await screen.findByText(/تم إرسال التقرير بنجاح/)).toBeTruthy();
+  expect(await screen.findByText(/تم استلام التقرير/)).toBeTruthy();
   expect(posts()).toHaveLength(1);
   expect(screen.queryByText(v2.send)).toBeNull();
   expect(screen.getByRole('radio', { name: v2.attendance.on_time })).toBeDisabled();
