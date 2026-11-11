@@ -7,7 +7,7 @@ import { TeacherCancelPush, teacherCancelEvent } from './teacher-cancel.push';
 const lesson = lessonRow();
 
 function setup(owners: () => Promise<string[]>) {
-  const push = { notifyAdmins: vi.fn(), notifySales: vi.fn() };
+  const push = { notifyAdmins: vi.fn(), notifyProfiles: vi.fn() };
   const repo = { ownerIds: vi.fn(owners) };
   const notifier = new TeacherCancelPush(
     push as unknown as PushService,
@@ -33,13 +33,14 @@ describe('TeacherCancelPush', () => {
     await notifier.notify(lesson, 'سفر');
     expect(push.notifyAdmins).toHaveBeenCalledWith('lesson_cancelled', expect.any(Object));
     expect(repo.ownerIds).toHaveBeenCalledWith(lesson.lesson_students.map((s) => s.student_id));
-    expect(push.notifySales).toHaveBeenCalledWith('lesson_cancelled', expect.any(Object), ['s-1']);
+    const owned = { kind: 'lesson_cancelled', profileIds: ['s-1'] };
+    expect(push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining(owned));
   });
 
   it('no owner: never every assistant', async () => {
     const { push, notifier } = setup(async () => []);
     await notifier.notify(lesson, 'سفر');
-    expect(push.notifySales).not.toHaveBeenCalled();
+    expect(push.notifyProfiles).not.toHaveBeenCalled();
   });
 
   it('an owners lookup failure is logged, never thrown (the cancel is saved)', async () => {
@@ -48,6 +49,6 @@ describe('TeacherCancelPush', () => {
     });
     await expect(notifier.notify(lesson, 'سفر')).resolves.toBeUndefined();
     expect(push.notifyAdmins).toHaveBeenCalled();
-    expect(push.notifySales).not.toHaveBeenCalled();
+    expect(push.notifyProfiles).not.toHaveBeenCalled();
   });
 });

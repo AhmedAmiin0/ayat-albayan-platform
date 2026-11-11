@@ -15,6 +15,6 @@ export function useTeacherCancel(lessonId: string) {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (body: TeacherCancelRequest) => cancelOne(lessonId, body),
-    onSuccess: () => client.invalidateQueries({ queryKey: LESSONS_KEY }),
+    onSettled: () => client.invalidateQueries({ queryKey: LESSONS_KEY }),
   });
 }

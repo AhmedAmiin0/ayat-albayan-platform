@@ -20,6 +20,8 @@ export interface SalesScheduleLesson {
   status: LessonStatus;
   trial: boolean;
   makeup: boolean;
+  /** docs/46 D1: the teacher said «سأحضر» (never the status). Absent in an old cache. */
+  teacher_confirmed_at?: string | null;
   /** The lesson's copied meeting link (trimmed, empty → null). Optional: an old persisted cache lacks it. */
   meeting_link?: string | null;
   /** The teacher holds it in our classroom (meeting_mode, else the academy default): «عبر الفصل», no URL. */

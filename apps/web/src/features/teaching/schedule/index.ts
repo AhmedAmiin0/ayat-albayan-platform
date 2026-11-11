@@ -46,3 +46,4 @@ export { SlotPicker, type SlotPickerProps } from './reschedule/SlotPicker';
 export { bookableWindow, byLocalDay, currentWeekStart, zoneLabel } from './reschedule/slots';
 export { dateLabel, dayMonthLabel } from './tz';
 export { RescheduleForm, type RescheduleFormProps } from './reschedule/RescheduleForm';
+export { TeacherConfirmedTag } from './lesson/TeacherConfirmedTag';

@@ -17,7 +17,7 @@ describe('sales schedule mappers', () => {
 
   it('toScheduleLesson whitelists: secret columns of the row never come out', () => {
     const out = toScheduleLesson(scheduleRow(), false);
-    expect(Object.keys(out).sort()).toEqual(['ends_at', 'id', 'makeup', 'meeting_link', 'platform_classroom', 'starts_at', 'status', 'students', 'teacher', 'trial']);
+    expect(Object.keys(out).sort()).toEqual(['ends_at', 'id', 'makeup', 'meeting_link', 'platform_classroom', 'starts_at', 'status', 'students', 'teacher', 'teacher_confirmed_at', 'trial']);
     expect(out.teacher).toEqual({ id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar' });
     expect(out.students).toEqual([{ id: 's1', code: 'AB-0101', name: 'ياسمين' }]);
     const bare = toScheduleLesson(scheduleRow({ teacher: null, rule: null, makeup_of_id: 'x', lesson_students: [{ student: { id: 's9', code: null, name: 'ن' } }] }), false);

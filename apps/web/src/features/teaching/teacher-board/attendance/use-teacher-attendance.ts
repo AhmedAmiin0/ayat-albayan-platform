@@ -1,10 +1,11 @@
-import { teacherLessonPaths } from '@ab/client-core';
+import { attendanceTableSchema, teacherLessonPaths } from '@ab/client-core';
 import type { StudentAttendanceTable } from '@ab/shared';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { apiFetch } from '@/lib/http/api';
 
-const readLog = (url: string): Promise<StudentAttendanceTable> => apiFetch(url);
+const readLog = async (url: string): Promise<StudentAttendanceTable> =>
+  attendanceTableSchema.parse(await apiFetch(url));
 
 /**
  * «سجل الحضور» of one of her students (docs/46 C5): GET /teachers/me/students/:id/attendance,

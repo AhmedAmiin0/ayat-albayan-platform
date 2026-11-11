@@ -141,7 +141,7 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
       <TrialChatNote status={teacherStudent(me.data, id)?.status} />
       {admin ? null : switcher}
       {pane === 'lessons' ? (
-        <StudentLessonsPanel studentId={id} />
+        <StudentLessonsPanel studentId={id} tz={me.data?.tz} />
       ) : (
         <ReportsPane id={id} who={who} />
       )}

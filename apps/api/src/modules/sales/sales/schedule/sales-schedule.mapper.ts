@@ -53,6 +53,7 @@ export function toScheduleLesson(row: SalesScheduleRow, academyAuto: boolean): S
     status: row.status,
     trial: row.rule?.package === 'trial',
     makeup: row.makeup_of_id !== null,
+    teacher_confirmed_at: row.teacher_confirmed_at ?? null,
     ...wayIn(row, academyAuto),
     teacher: {
       id: teacher?.id ?? '',

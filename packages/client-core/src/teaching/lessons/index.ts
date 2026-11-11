@@ -10,3 +10,4 @@ export {
   teacherConfirmed,
   teacherLessonPaths,
 } from './teacher-actions.js';
+export { attendanceTableSchema } from './attendance-table-schema.js';

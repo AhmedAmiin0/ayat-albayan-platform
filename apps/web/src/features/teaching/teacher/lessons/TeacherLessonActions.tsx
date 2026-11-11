@@ -14,7 +14,7 @@ export interface TeacherLessonActionsProps {
 
 /**
  * The teacher's own steps on an open lesson before its start (docs/46 C6): «سأحضر» (then
- * «أكّدتَ حضورك») and «إلغاء الحلقة» (danger, a reason in a dialog). Each has its own mutation.
+ * «حضورك مؤكَّد») and «إلغاء الحلقة» (danger, a reason in a dialog). Each has its own mutation.
  * Fragments: they sit in the card's own one-column grid.
  */
 export function TeacherLessonActions({ lesson, onDone }: TeacherLessonActionsProps) {

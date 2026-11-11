@@ -17,7 +17,7 @@ export function useTeacherActs(lesson: LessonView, onNotice: (text: string) => v
   return {
     canConfirm: teacherCanConfirm(lesson, now) && !confirm.isSuccess,
     canCancel: teacherCanAct(lesson, now),
-    /** «أكّدتَ حضورك» while the lesson is still ahead. */
+    /** «حضورك مؤكَّد» while the lesson is still ahead. */
     confirmed: confirmed && teacherCanAct(lesson, now),
     busy: confirm.isPending,
     error: confirm.isError ? teacherActionError(confirm.error) : undefined,

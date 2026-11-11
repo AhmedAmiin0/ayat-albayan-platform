@@ -2,7 +2,7 @@ import { ATTENDANCES, LESSON_STATUSES, type StudentAttendanceTable } from '@ab/s
 import { z } from 'zod';
 
 // GET /teachers/me/students/:id/attendance (docs/46 C5): the sales «سجل الحضور» table, parsed at
-// the boundary (rule 12) before AttendanceLogHead / AttendanceLogRow read it.
+// the boundary (rule 12) on web and mobile before their tables read it.
 
 const KINDS = ['present', 'absent', 'excused', 'cancelled', 'unmarked'] as const;
 const count = z.number().int().nonnegative();

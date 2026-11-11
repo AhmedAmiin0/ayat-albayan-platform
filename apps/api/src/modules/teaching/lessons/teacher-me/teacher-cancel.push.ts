@@ -21,8 +21,9 @@ export function teacherCancelEvent(lesson: LessonRow, reason: string): PushEvent
 
 /**
  * docs/46 D3: after a teacher cancels, the admins and the students' own assistant(s) get a push
- * with the reason (kind lesson_cancelled, its notification rule applies). No owner → no sales push
- * (never every assistant). Never throws: the cancel is already saved.
+ * with the reason (kind lesson_cancelled, its notification rule applies). The owners only, never
+ * notifySales: its fallback would reach every assistant when no owner can receive it (review #1).
+ * Never throws: the cancel is already saved.
  */
 @Injectable()
 export class TeacherCancelPush {
@@ -39,7 +40,7 @@ export class TeacherCancelPush {
     try {
       const owners = await this.repo.ownerIds(studentIdsOf(lesson));
       if (owners.length === 0) return;
-      await this.push.notifySales('lesson_cancelled', event, owners);
+      await this.push.notifyProfiles({ ...event, kind: 'lesson_cancelled', profileIds: owners });
     } catch (e) {
       this.log.warn(`teacher cancel ${lesson.id}: ${e instanceof Error ? e.message : String(e)}`);
     }

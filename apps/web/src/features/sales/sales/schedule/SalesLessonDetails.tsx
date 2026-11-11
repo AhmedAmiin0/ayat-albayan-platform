@@ -4,6 +4,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { DetailRow } from '@/features/teaching/schedule/lesson/DetailRow';
 import { durationMin, timeInCity } from '@/features/teaching/schedule/lesson/lessons';
 import { LessonTags } from '@/features/teaching/schedule/lesson/LessonTags';
+import { TeacherConfirmedTag } from '@/features/teaching/schedule';
 import { lengthText } from '@/features/teaching/schedule/edit-time/edit-time-text';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
@@ -46,6 +47,7 @@ export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) 
       <div className="flex flex-wrap items-center gap-2">
         <StatusChip {...words.chip(lesson.status)} className="justify-self-start" />
         <LessonTags lesson={lesson} />
+        <TeacherConfirmedTag lesson={lesson} />
       </div>
       <dl className="grid gap-3">
         <DetailRow label={t.schedule.time}>

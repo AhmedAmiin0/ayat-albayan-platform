@@ -15,7 +15,7 @@ export interface TeacherConfirmProps {
 
 /**
  * «سأحضر» (docs/46 C4, D1) while the lesson is open and ahead; once she said so (or the lesson
- * says teacher_confirmed_at), «أكّدتَ حضورك» instead. Never the family-style «تأكيد».
+ * says teacher_confirmed_at), «حضورك مؤكَّد» instead. Never the family-style «تأكيد».
  */
 export function TeacherConfirm({ lesson, now, onDone }: TeacherConfirmProps) {
   const w = t.teacherBoard;

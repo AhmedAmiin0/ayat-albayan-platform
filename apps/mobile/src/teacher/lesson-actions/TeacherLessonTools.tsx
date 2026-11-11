@@ -12,7 +12,7 @@ import type { TimedNotice } from './use-timed-notice';
 
 const w = t.teacherBoard;
 
-/** «أكّدتَ حضورك» once she said she will attend (the lesson still ahead). */
+/** «حضورك مؤكَّد» once she said she will attend (the lesson still ahead). */
 export function ConfirmedChip({ on }: { on: boolean }) {
   if (!on) return null;
   return (

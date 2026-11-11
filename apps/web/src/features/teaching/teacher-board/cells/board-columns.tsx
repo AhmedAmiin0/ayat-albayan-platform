@@ -35,7 +35,7 @@ const reportColumn = col.accessor((r) => r.summary.report?.status ?? '', {
 const attendanceColumn = col.accessor((r) => r.rate ?? -1, {
   id: 'attendance',
   header: () => w.attendance,
-  cell: (c) => <CountsCell row={c.row.original} />,
+  cell: (c) => labelled(w.attendance, <CountsCell row={c.row.original} />),
 });
 
 /**

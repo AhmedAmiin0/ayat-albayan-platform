@@ -39,10 +39,17 @@ function Waiting({ failed, retry }: { failed: boolean; retry: () => void }) {
  * window (14 days back, 14 ahead, her zone), the window's counts and attendance rate
  * (studentLessons, attendanceRate, the same as the web board), then «سجل الحضور» for every month.
  */
-export function StudentLessonsPanel({ studentId }: { studentId: string }) {
+interface PanelProps {
+  studentId: string;
+  /** Her teachers row's zone (the API's «سجل الحضور» months); the device zone until it loads. */
+  tz?: string | undefined;
+}
+
+export function StudentLessonsPanel({ studentId, tz: zone }: PanelProps) {
   const { color } = useTheme();
   const now = useNow();
-  const tz = useViewerTz();
+  const viewer = useViewerTz();
+  const tz = zone ?? viewer;
   const cycle = useClockCycle();
   const lessons = useMyLessons(boardWindow(now, tz));
   const board = studentLessons(lessons.data ?? [], { studentId, now });
