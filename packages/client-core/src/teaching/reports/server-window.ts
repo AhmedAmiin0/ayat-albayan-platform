@@ -6,17 +6,18 @@ type WindowFields = Pick<ReportView, 'can_edit' | 'edit_until' | 'sent_at' | 'pd
 /**
  * A report card keeps its own copy of the report (seeded once per id:version). The window fields
  * are the server's: a refetch at the close (can_edit false), the family send (sent_at) and the
- * render (pdf_status) reach the open form, while the same version is shown (review 11-11).
+ * render (pdf_status) reach the open form when the server's copy is the same version or newer (a
+ * card left behind by an edit elsewhere closes too); a newer local copy waits for its refetch.
  */
 export function withServerWindow(local: ReportView, server: ReportView): ReportView {
-  const same = local.id === server.id && local.version === server.version;
+  const current = local.id === server.id && server.version >= local.version;
   const fields: WindowFields = {
     can_edit: server.can_edit,
     edit_until: server.edit_until,
     sent_at: server.sent_at,
     pdf_status: server.pdf_status,
   };
-  return same ? { ...local, ...fields } : local;
+  return current ? { ...local, ...fields } : local;
 }
 
 /** A second after the close, so the server already answers can_edit = false. */

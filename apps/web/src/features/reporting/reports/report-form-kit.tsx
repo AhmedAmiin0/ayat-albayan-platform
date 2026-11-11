@@ -17,6 +17,7 @@ export function renderReportForm(apiFetch: Mock, form: ReportFormResponse) {
       <ReportFormPage lessonId="l-1" role="teacher" />
     </QueryClientProvider>,
   );
+  return client;
 }
 
 export const pick = (group: string, option: string) =>
