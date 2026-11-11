@@ -1,30 +1,35 @@
-import { closeRefetchIn } from '@ab/client-core';
+import { scheduleCloseRefetch } from '@ab/client-core';
 import type { ReportView } from '@ab/shared';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { REPORTS_KEY } from '@/features/reporting/reports/api';
 
+/** The form (under REPORTS_KEY) and the lesson lists, as a submit refreshes them. */
+const refreshForm = (client: QueryClient) =>
+  Promise.all([LESSONS_KEY, REPORTS_KEY].map((queryKey) => client.invalidateQueries({ queryKey })));
+
 /**
- * docs/46 B5 (as the phone's useWindowClose): when a report's edit window closes while it is on
- * screen, refetch the form and the lists, so the open card (withServerWindow) shows it closed
- * instead of offering an edit the API refuses; one more refetch while the server still says
- * can_edit after the close. Nothing for a draft or a window already closed.
+ * docs/46 B5 (as the phone's useWindowClose): when the edit window closes while the report is on
+ * screen, refetch, so the open card (withServerWindow) shows it closed instead of offering an
+ * edit the API refuses; one more refetch while the server still says can_edit after the close.
  */
-export function useWindowClose(report: Pick<ReportView, 'edit_until' | 'can_edit'>): void {
+export function useWindowClose({
+  edit_until: until,
+  can_edit: open,
+}: Pick<ReportView, 'edit_until' | 'can_edit'>): void {
   const client = useQueryClient();
   const [round, setRound] = useState(0);
-  const { edit_until: editUntil, can_edit: canEdit } = report;
-  useEffect(() => {
-    const window = { edit_until: editUntil, can_edit: canEdit };
-    const wait = closeRefetchIn(window, { now: new Date(), round });
-    if (wait === null) return undefined;
-    const refetch = () =>
-      Promise.all([
-        client.invalidateQueries({ queryKey: LESSONS_KEY }),
-        client.invalidateQueries({ queryKey: REPORTS_KEY }),
-      ]).then(() => setRound((r) => r + 1));
-    const id = setTimeout(() => void refetch(), wait);
-    return () => clearTimeout(id);
-  }, [client, editUntil, canEdit, round]);
+  useEffect(
+    () =>
+      scheduleCloseRefetch(
+        { edit_until: until, can_edit: open },
+        {
+          round,
+          refetch: () => refreshForm(client),
+          next: () => setRound((done) => done + 1),
+        },
+      ),
+    [client, until, open, round],
+  );
 }

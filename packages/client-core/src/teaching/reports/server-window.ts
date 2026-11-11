@@ -42,3 +42,23 @@ const PLAN: readonly ((r: CloseReport, now: Date) => number | null)[] = [
 export function closeRefetchIn(r: CloseReport, at: { now: Date; round: number }): number | null {
   return PLAN[at.round]?.(r, at.now) ?? null;
 }
+
+interface CloseRefetchPlan {
+  /** Refetches done in this open. */
+  round: number;
+  /** Fetch the form and the lists again (each app's query keys). */
+  refetch: () => Promise<unknown>;
+  /** After the refetch: count the round (the effect then plans the next one). */
+  next: () => void;
+}
+
+/**
+ * Starts the timer of the next close-time refetch (closeRefetchIn); returns its cleanup, for the
+ * app's useWindowClose effect (web and mobile share this, only the refetch differs).
+ */
+export function scheduleCloseRefetch(r: CloseReport, plan: CloseRefetchPlan): () => void {
+  const wait = closeRefetchIn(r, { now: new Date(), round: plan.round });
+  if (wait === null) return () => undefined;
+  const id = setTimeout(() => void plan.refetch().then(plan.next), wait);
+  return () => clearTimeout(id);
+}
