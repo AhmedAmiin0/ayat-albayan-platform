@@ -4645,21 +4645,11 @@
       "count": 1
     }
   },
-  "src/features/people/auth/family/PhoneSignIn.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/features/people/auth/login/PasswordForm.tsx": {
     "max-len": {
       "count": 2
     },
     "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/features/people/auth/login/StaffPanel.test.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -4723,9 +4713,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 10
     }
   },
   "src/features/people/auth/sign-out.timeout.test.ts": {
@@ -11828,11 +11815,6 @@
       "count": 1
     },
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/routes/teacher.tsx": {
-    "ab/module-boundaries": {
       "count": 1
     }
   },

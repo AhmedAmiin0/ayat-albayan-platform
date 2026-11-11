@@ -23,6 +23,13 @@ const profileDefaults = (input: UserCreate) => ({
   tz: input.tz ?? 'Asia/Riyadh',
 });
 
+/** A teacher link with no phone typed: the linked record whose number may follow (docs/46 A7). */
+const teacherPhoneSource = (ctx: {
+  kind: LinkKind | undefined;
+  input: UserCreate;
+}): string | null =>
+  ctx.kind === 'teacher' && !ctx.input.phone_e164 ? (ctx.input.linked_id ?? null) : null;
+
 /** POST /users: the login through the Auth Admin API, its profile, and the linked record. */
 @Injectable()
 export class UsersCreateService {
@@ -123,5 +130,19 @@ export class UsersCreateService {
     }
     if (input.linked_id && !(await this.store.link(kind, input.linked_id, profileId)))
       throw conflict('link_taken');
+    await this.copyTeacherPhone({ kind, input, profileId });
+  }
+
+  /**
+   * docs/46 A7: a teacher login left without a phone takes the record's (when nobody else holds
+   * it).
+   */
+  private async copyTeacherPhone(ctx: {
+    kind: LinkKind | undefined;
+    input: UserCreate;
+    profileId: string;
+  }) {
+    const teacherId = teacherPhoneSource(ctx);
+    if (teacherId) await this.store.adoptTeacherPhone(teacherId, ctx.profileId);
   }
 }

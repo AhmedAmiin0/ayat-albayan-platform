@@ -4613,22 +4613,12 @@
       "count": 1
     }
   },
-  "src/features/people/auth/family/PhoneSignIn.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/features/people/auth/login/PasswordForm.tsx": {
     "max-lines-per-function": {
       "count": 1
     },
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/features/people/auth/login/StaffPanel.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/people/auth/login/auth-api.ts": {
@@ -4686,9 +4676,6 @@
     }
   },
   "src/features/people/auth/sign-in.ts": {
-    "stylistic/max-len": {
-      "count": 10
-    },
     "ab/module-boundaries": {
       "count": 2
     },
@@ -11797,11 +11784,6 @@
     "stylistic/max-len": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/routes/teacher.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }

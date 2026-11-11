@@ -26,7 +26,8 @@ export function useForgot() {
   useEffect(() => {
     let live = true;
     authApi.codeStatus().then(
-      (s) => live && setStep(s.available ? 'identifier' : 'unavailable'),
+      // Staff codes (docs/46 A1): whatever the family flag says.
+      (s) => live && setStep(s.staff ? 'identifier' : 'unavailable'),
       () => live && setStep('unavailable'),
     );
     return () => void (live = false);

@@ -15,7 +15,7 @@ describe('public sign-in routes (docs/30 §6)', () => {
 
   it('GET /auth/code/status needs no login', async () => {
     const res = await h.get('/auth/code/status');
-    expect([res.statusCode, res.json()]).toEqual([200, { available: true }]);
+    expect([res.statusCode, res.json()]).toEqual([200, { available: true, staff: true }]);
   });
 
   it('POST /auth/code/request: the same empty 202 for a family, a missing, a staff and a malformed number', async () => {
@@ -32,36 +32,65 @@ describe('public sign-in routes (docs/30 §6)', () => {
   it('POST /auth/password/forgot: the same empty 202 whatever the identifier names', async () => {
     const before = h.send.sent.length;
     const answers = [];
-    for (const identifier of ['omar', 'ghost', 'AB-1234', 'AB-9999', PHONES.guardian, 'nobody@example.com']) {
+    for (const identifier of [
+      'omar',
+      'ghost',
+      'AB-1234',
+      'AB-9999',
+      PHONES.guardian,
+      'nobody@example.com',
+    ]) {
       const res = await h.post('/auth/password/forgot', { identifier }, nextIp());
       answers.push([res.statusCode, res.body]);
     }
     expect(answers).toEqual(Array(6).fill([202, '']));
     await settle();
-    expect(h.send.sent.slice(before).map((s) => s.phone)).toEqual([PHONES.teacher, PHONES.guardian]);
+    expect(h.send.sent.slice(before).map((s) => s.phone)).toEqual([
+      PHONES.teacher,
+      PHONES.guardian,
+    ]);
   });
 
   it('POST /auth/code/verify returns only the token hash and its type', async () => {
     await h.post('/auth/code/request', { phone: PHONES.guardian }, nextIp());
     await settle();
-    const res = await h.post('/auth/code/verify', { phone: PHONES.guardian, code: h.send.lastTo(PHONES.guardian) }, nextIp());
+    const res = await h.post(
+      '/auth/code/verify',
+      { phone: PHONES.guardian, code: h.send.lastTo(PHONES.guardian) },
+      nextIp(),
+    );
     expect(res.statusCode).toBe(200);
     expect(Object.keys(res.json()).sort()).toEqual(['token_hash', 'type']);
   });
 
   it('POST /auth/login: a session, or 401 invalid_credentials', async () => {
-    const ok = await h.post('/auth/login', { username: 'omar', password: 'Teacher-pass-1' }, nextIp());
+    const ok = await h.post(
+      '/auth/login',
+      { username: 'omar', password: 'Teacher-pass-1' },
+      nextIp(),
+    );
     expect([ok.statusCode, ok.json().access_token]).toEqual([200, 'at-p-teacher']);
     const bad = await h.post('/auth/login', { username: 'omar', password: 'nope' }, nextIp());
     expect([bad.statusCode, bad.json().code]).toEqual([401, 'invalid_credentials']);
   });
 
   it('validates every body (400) and answers 204 on a reset', async () => {
-    expect((await h.post('/auth/code/verify', { phone: PHONES.guardian, code: '12' }, nextIp())).statusCode).toBe(400);
+    expect(
+      (await h.post('/auth/code/verify', { phone: PHONES.guardian, code: '12' }, nextIp()))
+        .statusCode,
+    ).toBe(400);
     expect((await h.post('/auth/login', { username: '' }, nextIp())).statusCode).toBe(400);
     await h.post('/auth/password/forgot', { identifier: 'admin@example.com' }, nextIp());
     await settle();
-    const res = await h.post('/auth/password/reset', { identifier: 'admin@example.com', code: h.send.lastTo(PHONES.admin), password: 'Admin-new-123' }, nextIp());
+    const res = await h.post(
+      '/auth/password/reset',
+      {
+        identifier: 'admin@example.com',
+        code: h.send.lastTo(PHONES.admin),
+        password: 'Admin-new-123',
+      },
+      nextIp(),
+    );
     expect(res.statusCode).toBe(204);
   });
 });

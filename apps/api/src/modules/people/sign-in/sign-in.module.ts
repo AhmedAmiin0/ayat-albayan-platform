@@ -15,20 +15,28 @@ import { PasswordService } from './flows/password.service';
 import { SignInAccounts } from './flows/sign-in.accounts';
 import { SignInKit } from './flows/sign-in.kit';
 import { PasswordTargets } from './flows/targets';
+import { TeacherCodeService } from './flows/teacher-code.service';
 import { SignInController } from './sign-in.controller';
-import { AUTH_GATE, CODE_STORE, SIGN_IN_CONFIG, SUBJECT_STORE, type SignInConfig } from './sign-in.ports';
+import {
+  AUTH_GATE,
+  CODE_STORE,
+  SIGN_IN_CONFIG,
+  SUBJECT_STORE,
+  type SignInConfig,
+} from './sign-in.ports';
 import { SignInSettings } from './sign-in.settings';
 
 /**
- * Family accounts (owner 2026-10-27, docs/30): WhatsApp-code sign-in for families, username sign-in,
- * forgot password for everyone. CodeSend comes from the global WhatsappModule, AuditService and
- * SettingsService from their global modules.
+ * Family accounts (owner 2026-10-27, docs/30): WhatsApp-code sign-in for families, username
+ * sign-in, forgot password for everyone. CodeSend comes from the global WhatsappModule,
+ * AuditService and SettingsService from their global modules.
  */
 @Global()
 @Module({
   controllers: [SignInController],
   providers: [
     FamilyCodeService,
+    TeacherCodeService,
     PasswordService,
     PasswordTargets,
     SignInKit,

@@ -6,9 +6,22 @@ import { walkRoutes, type RouteAccess } from './route-walk.test-util';
 // A new controller handler without @Permissions (or a typo'd key) fails here, before review.
 
 /** Signed-in only, on purpose: the client reads its permissions from /auth/me. */
-const SESSION = ['AuthController.me', 'AuthSessionController.login', 'AuthSessionController.logout'];
+const SESSION = [
+  'AuthController.me',
+  'AuthSessionController.login',
+  'AuthSessionController.logout',
+];
 /** «حسابي» (R-ACC-01..05): every login edits its own account, whatever its role. */
-const ACCOUNT = ['avatarUploadUrl', 'changeEmail', 'changePassword', 'profile', 'removeAvatar', 'setAvatar', 'updateProfile'].map((h) => `AccountController.${h}`);
+const ACCOUNT = [
+  'avatarUploadUrl',
+  'changeEmail',
+  'changePassword',
+  'profile',
+  'removeAvatar',
+  'setAvatar',
+  'setup',
+  'updateProfile',
+].map((h) => `AccountController.${h}`);
 /** docs/33: may this login track its own online status (every login, whatever its role). */
 const PRESENCE = ['PresenceController.me'];
 /** The report's live page: any role may ask; ReportReaders answers its readers only (404 else). */

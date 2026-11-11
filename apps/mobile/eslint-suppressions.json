@@ -86,9 +86,6 @@
     }
   },
   "app/login.tsx": {
-    "max-len": {
-      "count": 2
-    },
     "max-lines-per-function": {
       "count": 1
     }

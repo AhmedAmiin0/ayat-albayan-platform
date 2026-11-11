@@ -2,9 +2,26 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import { conflict } from '@/common/http/errors';
-import { isStaff, type GuardianRec, type NewProfile, type ProfileRec, type StudentRec, type SubjectStore } from '@/modules/people/sign-in/sign-in.ports';
+import {
+  isStaff,
+  type GuardianRec,
+  type LinkKind,
+  type NewProfile,
+  type ProfileRec,
+  type StudentRec,
+  type SubjectStore,
+  type TeacherRec,
+} from '@/modules/people/sign-in/sign-in.ports';
+import { teacherByPhone } from './teacher-subjects.repo';
 
 const PROFILE = 'id, role, disabled_at, phone_e164';
+
+/** The table a lazy login's profile_id goes on (a ternary sent a teacher's link to students). */
+const LINK_TABLE = {
+  guardian: 'guardians',
+  student: 'students',
+  teacher: 'teachers',
+} as const satisfies Record<LinkKind, string>;
 
 interface ProfileRow {
   id: string;
@@ -17,6 +34,7 @@ interface ProfileRow {
  * The phone a staff reset code may go to is the profile's own (admins and the user edit it), never the
  * teacher row's: anyone with teachers.write could point that one at their own WhatsApp (review, docs/30 §3).
  */
+
 const toProfile = (r: ProfileRow): ProfileRec => ({ id: r.id, role: r.role, disabled: r.disabled_at !== null, phone: r.phone_e164 });
 
 /** SubjectStore on the service-role client: who a phone, a student code or a username names. */
@@ -61,6 +79,10 @@ export class SubjectsRepo implements SubjectStore {
     return data?.profile_id ? this.profileById(data.profile_id) : null;
   }
 
+  teacherByPhone(phone: string): Promise<TeacherRec | null> {
+    return teacherByPhone(this.db, phone);
+  }
+
   async insertProfile(row: NewProfile): Promise<void> {
     const { data: role } = await this.db.from('roles').select('id').eq('is_system', true).eq('key', row.role).maybeSingle();
     const { error } = await this.db.from('profiles').insert({
@@ -75,10 +97,9 @@ export class SubjectsRepo implements SubjectStore {
     if (error) throw dbError(error);
   }
 
-  async link(input: { kind: 'guardian' | 'student'; recordId: string; profileId: string }): Promise<boolean> {
-    const table = input.kind === 'guardian' ? 'guardians' : 'students';
+  async link(input: { kind: LinkKind; recordId: string; profileId: string }): Promise<boolean> {
     const { data, error } = await this.db
-      .from(table)
+      .from(LINK_TABLE[input.kind])
       .update({ profile_id: input.profileId })
       .eq('id', input.recordId)
       .is('profile_id', null)

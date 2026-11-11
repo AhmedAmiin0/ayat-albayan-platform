@@ -28,14 +28,18 @@ describe('SignInAccounts', () => {
     expect(again.userId).toBe(first.userId);
   });
 
-  it('passwordSession signs in by username, never by email or phone', async () => {
+  it("passwordSession signs in by username or a teacher's phone (docs/46 A5), never by email", async () => {
     const { accounts } = setup();
     expect(await accounts.passwordSession('omar', 'Teacher-pass-1')).toMatchObject({
       access_token: 'at-p-teacher',
     });
     expect(await accounts.passwordSession('omar', 'wrong')).toBeNull();
     expect(await accounts.passwordSession('teacher@example.com', 'Teacher-pass-1')).toBeNull();
-    expect(await accounts.passwordSession(PHONES.teacher, 'Teacher-pass-1')).toBeNull();
+    expect(await accounts.passwordSession(PHONES.teacher, 'Teacher-pass-1')).toMatchObject({
+      access_token: 'at-p-teacher',
+    });
+    expect(await accounts.passwordSession(PHONES.admin, 'Admin-pass-1')).toBeNull();
+    expect(await accounts.passwordSession(PHONES.newTeacher, 'Teacher-pass-1')).toBeNull();
   });
 
   it('setPassword on an existing login sets it, signs out everywhere, returns the reset event', async () => {
