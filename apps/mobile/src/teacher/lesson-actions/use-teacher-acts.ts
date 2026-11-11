@@ -26,6 +26,11 @@ export function useTeacherActs(lesson: LessonView, onNotice: (text: string) => v
     cancelling,
     openCancel: () => setCancelling(true),
     closeCancel: () => setCancelling(false),
+    /** A landed cancel: the form closes (review 11-11), then the notice. */
+    cancelDone: (text: string) => {
+      setCancelling(false);
+      onNotice(text);
+    },
   };
 }
 

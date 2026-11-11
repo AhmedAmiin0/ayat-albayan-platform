@@ -49,6 +49,13 @@ describe('studentLessons', () => {
     expect(out.counts).toEqual({ present: 1, absent: 1, excused: 0, cancelled: 0, unmarked: 1 });
   });
 
+  it('a lesson moved away (rescheduled) is never «آخر حلقة», but stays in the drawer', () => {
+    const moved = lesson({ id: 'm', at: '2026-11-11T09:00:00Z', status: 'rescheduled' });
+    const out = studentLessons([...lessons, moved], { studentId: 's1', now });
+    expect(out.last?.id).toBe('c');
+    expect(out.lessons.map((l) => l.id)).toContain('m');
+  });
+
   it('nothing for a student without lessons', () => {
     const out = studentLessons(lessons, { studentId: 'none', now });
     expect(out).toMatchObject({ lessons: [], last: null, next: null, report: null });

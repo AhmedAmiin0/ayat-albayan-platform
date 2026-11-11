@@ -9,7 +9,7 @@ export const BOARD_DAYS = 14;
 export interface StudentLessons {
   /** Hers with this student, oldest first. */
   lessons: LessonView[];
-  /** The newest lesson that already started. */
+  /** The newest lesson that already started and was not moved away (status rescheduled). */
   last: LessonView | null;
   /** The first open lesson still ahead. */
   next: LessonView | null;
@@ -20,6 +20,8 @@ export interface StudentLessons {
 }
 
 const startsAt = (l: LessonView): number => Date.parse(l.starts_at);
+/** A lesson moved to another time keeps its old row (status rescheduled): never «آخر حلقة». */
+const notMoved = (l: LessonView): boolean => l.status !== 'rescheduled';
 const ownOf = (l: LessonView, studentId: string) => l.students.find((s) => s.id === studentId);
 
 /** Lessons of one student (lesson.students[].id), oldest first. */
@@ -49,7 +51,7 @@ export function studentLessons(
   );
   return {
     lessons: mine,
-    last: started.at(-1) ?? null,
+    last: started.filter(notMoved).at(-1) ?? null,
     next,
     report: lastReport(started, o.studentId),
     counts: countKinds(kinds),

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { PushService } from '@/common/push/push.service';
 import { lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
 import type { TeacherCancelRepo } from './teacher-cancel.repo';
+import { lockScreenText } from '@/common/push/dispatch/push.lock-screen';
 import { TeacherCancelPush, teacherCancelEvent } from './teacher-cancel.push';
 
 const lesson = lessonRow();
@@ -21,9 +22,27 @@ describe('teacherCancelEvent (docs/46 D3)', () => {
     const event = teacherCancelEvent(lesson, 'سفر');
     expect(event.subject).toBe(`teacher_cancel:${lesson.id}`);
     expect(event.title).toContain(lesson.teacher?.display_name_ar ?? '');
-    expect(String(event.vars.when)).toContain('سفر');
+    expect(String(event.vars.reason)).toContain('سفر');
+    expect(String(event.vars.when)).not.toContain('سفر');
     expect(event.vars.student).toBe(lesson.lesson_students[0]?.student?.name);
     expect(event.data).toEqual({ lessonId: lesson.id });
+  });
+});
+
+describe('the lock screen (review 11-11)', () => {
+  it('redacts and clips the typed reason; the time stays', () => {
+    const event = teacherCancelEvent(lesson, 'رقم 0501234567');
+    const text = lockScreenText({ kind: 'lesson_cancelled', vars: event.vars, title: event.title });
+    expect(text.body).toContain('رقم');
+    expect(text.body).not.toMatch(/0501234567|050123/);
+    const long = teacherCancelEvent(lesson, 'س'.repeat(200));
+    const clipped = lockScreenText({ kind: 'lesson_cancelled', vars: long.vars });
+    expect(clipped.body).toContain('…');
+  });
+
+  it('any other cancel push has no reason and no literal slot', () => {
+    const text = lockScreenText({ kind: 'lesson_cancelled', vars: { student: 'سهيلة', when: 'الاثنين' } });
+    expect(text.body).not.toContain('{reason}');
   });
 });
 

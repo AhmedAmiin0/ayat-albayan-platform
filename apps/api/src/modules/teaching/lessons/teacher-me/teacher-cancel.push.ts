@@ -14,7 +14,8 @@ export function teacherCancelEvent(lesson: LessonRow, reason: string): PushEvent
   return {
     subject: `teacher_cancel:${lesson.id}`,
     title: fill(text.title, { teacher: lesson.teacher?.display_name_ar ?? '' }),
-    vars: { student: names.join('، '), when: `${when}. ${fill(text.reason, { reason })}` },
+    // `when` is the time only (never redacted); the typed reason has its own slot (lockVar).
+    vars: { student: names.join('، '), when, reason: `. ${fill(text.reason, { reason })}` },
     data: { lessonId: lesson.id },
   };
 }

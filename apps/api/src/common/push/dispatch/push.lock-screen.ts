@@ -14,6 +14,8 @@ const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
 const NAME_SLOTS: ReadonlySet<string> = new Set(['name', 'student', 'teacher']);
 /** A sum slot is masked whole, whatever its currency (AMOUNT knows a few codes only). */
 const MONEY_SLOTS: ReadonlySet<string> = new Set(['amount']);
+/** Free text a person typed (an inbox message, a cancel reason): redacted, then clipped. */
+const CLIPPED_SLOTS: ReadonlySet<string> = new Set(['text', 'reason']);
 /** The quoted message in an inbox alert. */
 export const PREVIEW_MAX = 60;
 
@@ -47,7 +49,7 @@ function lockVar(key: string, value: string | number): string | number {
   if (typeof value === 'number' || key === 'when') return value;
   const shown = redact(value);
   if (NAME_SLOTS.has(key)) return firstNames(shown);
-  return key === 'text' ? clip(shown) : shown;
+  return CLIPPED_SLOTS.has(key) ? clip(shown) : shown;
 }
 
 /** The device text of a notification: names cut to a first name, phones/sums/emails masked. */
