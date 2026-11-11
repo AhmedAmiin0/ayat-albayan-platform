@@ -6,7 +6,7 @@
   },
   "auth": {
     "loginTitle": "Sign in",
-    "email": "Email or username",
+    "email": "Email, username or mobile number",
     "password": "Password",
     "submit": "Sign in",
     "submitting": "Signing in…",
@@ -7916,6 +7916,27 @@
       "hint": "«The student» for an adult student who follows their own account."
     },
     "usersColumn": "Username"
+  },
+  "teacherAuth": {
+    "withCode": "Sign in with a WhatsApp code",
+    "codeIntro": "For teachers: enter the WhatsApp number the academy has on file and we will send you a code on WhatsApp.",
+    "withPassword": "Sign in with a password",
+    "codesUnavailable": "WhatsApp code sign-in is not available right now. Sign in with your password.",
+    "setup": {
+      "title": "Complete your account",
+      "intro": "Choose an email and a password before you continue. Afterwards you sign in with your email, username or mobile number and the password, or with a WhatsApp code.",
+      "email": "Email",
+      "password": "Password",
+      "confirm": "Type the password again",
+      "submit": "Save and continue",
+      "submitting": "Saving…",
+      "signOut": "Sign out",
+      "errors": {
+        "setup_done": "Your account is already set up. Please sign in again.",
+        "email_taken": "This email is used by another account.",
+        "invalid_email": "Enter a valid email address."
+      }
+    }
   },
   "studentChannel": {
     "title": "Student messages",

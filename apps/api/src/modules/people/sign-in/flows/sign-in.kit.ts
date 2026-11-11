@@ -55,6 +55,14 @@ export class SignInKit {
     return this.codes.available();
   }
 
+  /**
+   * Staff codes (teacher sign-in, staff reset) can go out now: pepper + send, no family flag
+   * (docs/46 A1).
+   */
+  staffAvailable(): Promise<boolean> {
+    return this.codes.sendable();
+  }
+
   check(input: CodeCheck): Promise<boolean> {
     return this.codes.check(input);
   }

@@ -62,10 +62,12 @@ mail can ever be delivered there. They are never displayed (the users list shows
 never typed and never sent anywhere. If a GoTrue version ever rejects `.invalid`, the fallback is a
 no-MX subdomain of the academy's own domain (open item 3).
 
-**Phone conflicts.** `profiles.phone_e164` is UNIQUE. A phone already on a staff profile (a teacher who is
-also a parent) cannot get a guardian profile: the verify answers `409 phone_belongs_to_staff` with a clear
+**Phone conflicts.** `profiles.phone_e164` is UNIQUE. A phone already on a non-teacher staff profile (an admin
+or a salesperson who is also a parent) cannot get a guardian profile: the verify answers `409 phone_belongs_to_staff` with a clear
 message («هذا الرقم مسجَّل لأحد أعضاء فريق الأكاديمية؛ سجّل الدخول من تبويب فريق الأكاديمية»), never a crash. It
-is only said after a correct code, so it reveals nothing to someone who does not hold the phone.
+is only said after a correct code, so it reveals nothing to someone who does not hold the phone. A teacher
+who is also a parent keeps both sign-ins (docs/46 «Shared numbers», 2026-11-11): a teacher's number never
+blocks the family, and the guardian login is made without the phone when a teacher login already holds it.
 
 ## 3. Codes
 
@@ -90,7 +92,8 @@ is only said after a correct code, so it reveals nothing to someone who does not
     day, and the site-wide breaker caps the sum.
 - Codes go **only to phones on file**: the guardian's phone (for the guardian and each of their child
   students) and a staff profile's own `phone_e164` (admins and the user edit it). Never a teacher row's
-  phone (anyone with `teachers.write` could point it at their own WhatsApp) and never a number the caller
+  phone (anyone with `teachers.write` could point it at their own WhatsApp), except a not-yet-signed-in
+  teacher's first sign-in code (§9a, docs/46 D2), and never a number the caller
   typed: a typed phone is only a lookup key. A staff member with no phone on their profile resets through
   the admin, as before.
 - Every request / forgot response is the same `202` «إن كان الحساب موجودًا فقد أرسلنا رمزًا إلى رقم الواتساب
@@ -184,6 +187,39 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
 - The portal pages (`/portal*`, another routine): they read `guardians.profile_id`,
   `students.profile_id` and `students.contact_is_self`.
 - The teacher–student channel (another routine).
+
+## 9a. Teachers: WhatsApp code + first-time setup (docs/46 PR A, owner 2026-11-11)
+
+- **Routes** (public, the same zod bodies, limits and answers as the family's): `POST /auth/staff-code/request
+  { phone }` → `202` always (lookup and send after the answer); `POST /auth/staff-code/verify { phone, code }` →
+  `{ token_hash, type }`, `401 invalid_code` for every failure, `403 account_disabled`, `503 codes_unavailable`.
+  `GET /auth/code/status` → `{ available, staff }`: `staff` = codes can be sent (pepper, approved
+  `account_code`, open send gate), **without** `family_login_enabled`; the staff reset uses it too, the family
+  side and a student's first password keep `available`.
+- **Who.** Active teachers only (`teachers.status = 'active'`), found by her login's own phone (role `teacher`)
+  or, else, the record's `teachers.phone_e164`. A teacher row linked to a login of another role, or a disabled
+  login, gets no code, and a code can never open such a login (`Provisioner.teacher` requires an enabled
+  `teacher` profile: `403 account_disabled`, only after a right code). Code subject `{ kind: 'teacher', id:
+  teachers.id }`, purpose `sign_in` (migration `20261111000100`); single use like every code.
+- **Destination (D2).** While she has **no login**: `teachers.phone_e164`. Once she has one: **her login's own
+  phone** (`profiles.phone_e164`), as staff reset codes; none → nothing is sent (still `202`). Editing a
+  teacher record can therefore never redirect the codes of an existing login.
+- **First sign-in.** The first right code makes her `teacher` login (`t-<teachers.id>@family.invalid`, the
+  record's name and zone) and links `teachers.profile_id`. The new profile takes the record's phone only while
+  no profile and no guardian row holds it. Then `/account-setup` («أكمل حسابك»; mobile shows the same screen
+  in the teacher tree): `PUT /me/setup { email, password }` (signed in; only while the profile is `teacher`
+  and the auth email is still synthetic, else `409 setup_done`; `409 email_taken`; password rules as
+  everywhere) sets both through the Admin API (`email_confirm`, no SMTP) and ends her other sessions; the
+  client calls `refreshSession()` (the JWT carries the email). The portal stays closed until then.
+- **After setup** she signs in with email, username **or her phone** + password (`POST /auth/login` resolves a
+  phone through the teacher record to her `teacher` login only), or with a code again.
+- **«المستخدمون».** A teacher login created there without a phone takes the record's (same «nobody else holds
+  it» rule); `tools/scripts/teacher-phones/teacher-phones-backfill.mjs` does the same for existing logins
+  (prints SQL, dry run by default; production only on the owner's go).
+- **Residual risk (accepted, D2).** Whoever holds `teachers.write` (admin by default) can change a not-yet-
+  signed-in teacher's `phone_e164` and so receive her **first** code, i.e. sign in as that teacher once and set
+  the email. It cannot reach a teacher who already has a login (her codes go to her login's phone), nor any
+  admin, sales or family login.
 
 ## 10. Open items
 

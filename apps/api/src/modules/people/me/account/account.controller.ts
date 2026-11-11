@@ -1,4 +1,5 @@
 import {
+  accountSetupSchema,
   avatarSetSchema,
   avatarUploadSchema,
   emailChangeSchema,
@@ -15,6 +16,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { AccountAvatarService } from './account.avatar.service';
 import { AccountService } from './account.service';
+import { AccountSetupService } from './account.setup.service';
 
 /**
  * «حسابي» (R-ACC-01..05): every signed-in user (any role, custom roles, students, guardians) on
@@ -29,7 +31,18 @@ export class AccountController {
   constructor(
     private readonly account: AccountService,
     private readonly avatar: AccountAvatarService,
+    private readonly firstSetup: AccountSetupService,
   ) {}
+
+  /** A code-made teacher login's email + password, once (docs/46 A4); 409 setup_done after. */
+  @Put('setup')
+  @HttpCode(204)
+  setup(
+    @ZodBody(accountSetupSchema) body: z.output<typeof accountSetupSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    return this.firstSetup.setup(user, body);
+  }
 
   @Get('profile')
   profile(@CurrentUser() user: AuthUser): Promise<AccountProfile> {

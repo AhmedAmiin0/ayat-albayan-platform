@@ -2,7 +2,7 @@ import { isEmailIdentifier } from '@ab/client-core';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { supabase } from '@/core/lib/http/supabase';
-import { authApi, loginErrorText } from './forgot';
+import { authApi, authErrorText, loginErrorText } from './forgot';
 import { isAccountDisabled, isOtherAppRole, noticeText } from './login-notice';
 import { appRole } from './role-claim';
 import type { Me } from './verify-role';
@@ -42,7 +42,10 @@ async function checkRole(): Promise<SignInResult> {
   } catch (error) {
     // Signed in but the role is unknown: don't leave a half-checked session behind.
     await supabase.auth.signOut();
-    return { ok: false, error: isAccountDisabled(error) ? noticeText('accountDisabled') : t.common.error };
+    return {
+      ok: false,
+      error: isAccountDisabled(error) ? noticeText('accountDisabled') : t.common.error,
+    };
   }
   if (!appRole(me.role)) {
     await supabase.auth.signOut();
@@ -60,3 +63,24 @@ export async function signIn(creds: Credentials): Promise<SignInResult> {
   const refused = await openSession(creds);
   return refused === null ? checkRole() : { ok: false, error: refused };
 }
+
+/**
+ * A teacher's WhatsApp code (docs/46 A8): the API answers a magic-link token hash that supabase-js
+ * turns into a session, then the same role check. A first sign-in lands on «أكمل حسابك».
+ */
+export async function signInWithCode(body: { phone: string; code: string }): Promise<SignInResult> {
+  try {
+    const session = await authApi.staffCodes.verify(body);
+    const { error } = await supabase.auth.verifyOtp({
+      type: session.type,
+      token_hash: session.token_hash,
+    });
+    return error ? { ok: false, error: t.familyAuth.errors.invalid_code } : await checkRole();
+  } catch (error) {
+    return { ok: false, error: codeRefusal(error) };
+  }
+}
+
+/** A disabled login says so (403 after a right code); anything else in the sign-in words. */
+const codeRefusal = (error: unknown): string =>
+  isAccountDisabled(error) ? noticeText('accountDisabled') : authErrorText(error, t.common.error);

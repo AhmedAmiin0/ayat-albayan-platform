@@ -1,16 +1,33 @@
 import type { CodeSession, PasswordSession } from '@ab/shared';
 import { ConflictException } from '@nestjs/common';
-import type { AuthGate, GuardianRec, NewProfile, ProfileRec, StudentRec, SubjectStore } from './sign-in.ports';
+import type { AuthGate, GuardianRec, LinkKind, NewProfile, ProfileRec } from './sign-in.ports';
+import type { StudentRec, SubjectStore, TeacherRec } from './sign-in.ports';
 
 // Example people only (no real data): one family with an adult contact and a child, staff with phones.
 
-export const PHONES = { guardian: '+966500000001', teacher: '+966500000002', admin: '+966500000003', other: '+966500000009' };
+export const PHONES = {
+  guardian: '+966500000001',
+  teacher: '+966500000002',
+  admin: '+966500000003',
+  newTeacher: '+966500000005',
+  other: '+966500000009',
+};
+
+/** A teacher record as the fake keeps it (its login is read from `profiles`). */
+export type FakeTeacher = Omit<TeacherRec, 'login'> & { active: boolean };
+
+const RIYADH = 'Asia/Riyadh';
 
 export class FakeSubjects implements SubjectStore {
   guardians: GuardianRec[] = [{ id: 'g1', name: 'ولي الأمر', phone: PHONES.guardian, tz: 'Asia/Riyadh', profileId: null }];
   students: (StudentRec & { code: string })[] = [
     { id: 's1', code: 'AB-1234', name: 'الطالب', tz: 'Asia/Riyadh', profileId: null, guardianPhone: PHONES.guardian },
   ];
+  /** «omar» has a login (p-teacher); t-new has none yet (docs/46 A2). */
+  teachers: FakeTeacher[] = [
+    { id: 't-omar', name: 'عمر', tz: RIYADH, recordPhone: PHONES.teacher, profileId: 'p-teacher' },
+    { id: 't-new', name: 'المعلمة', tz: RIYADH, recordPhone: PHONES.newTeacher, profileId: null },
+  ].map((t) => ({ ...t, active: true }));
   profiles: (ProfileRec & { username?: string | null; fullName?: string })[] = [
     { id: 'p-teacher', role: 'teacher', disabled: false, phone: PHONES.teacher, username: 'omar' },
     { id: 'p-admin', role: 'admin', disabled: false, phone: PHONES.admin },
@@ -31,6 +48,20 @@ export class FakeSubjects implements SubjectStore {
   async staffByPhone(phone: string) {
     return this.profiles.find((p) => p.phone === phone && p.role !== 'guardian' && p.role !== 'student') ?? null;
   }
+  teacherByPhone(phone: string): Promise<TeacherRec | null> {
+    return Promise.resolve(this.teacherNow(phone));
+  }
+  private teacherNow(phone: string): TeacherRec | null {
+    const own = this.profiles.find((p) => p.phone === phone && p.role === 'teacher');
+    const active = this.teachers.filter((t) => t.active);
+    const byLogin = own ? active.find((t) => t.profileId === own.id) : undefined;
+    const hit = byLogin ?? active.find((t) => t.recordPhone === phone);
+    if (!hit) return null;
+    const { active: _active, ...rec } = hit;
+    const p = this.profiles.find((x) => x.id === hit.profileId);
+    const login = p ? { id: p.id, role: p.role, disabled: p.disabled, phone: p.phone } : null;
+    return { ...rec, login };
+  }
   async profileByPhone(phone: string) {
     return this.profiles.find((p) => p.phone === phone) ?? null;
   }
@@ -38,8 +69,13 @@ export class FakeSubjects implements SubjectStore {
     if (row.phone && this.profiles.some((p) => p.phone === row.phone)) throw new ConflictException({ code: 'phone_belongs_to_staff' });
     this.profiles.push({ id: row.id, role: row.role, disabled: false, phone: row.phone, fullName: row.fullName });
   }
-  async link(input: { kind: 'guardian' | 'student'; recordId: string; profileId: string }): Promise<boolean> {
-    const list: { id: string; profileId: string | null }[] = input.kind === 'guardian' ? this.guardians : this.students;
+  async link(input: { kind: LinkKind; recordId: string; profileId: string }): Promise<boolean> {
+    const lists: Record<LinkKind, { id: string; profileId: string | null }[]> = {
+      guardian: this.guardians,
+      student: this.students,
+      teacher: this.teachers,
+    };
+    const list = lists[input.kind];
     const rec = list.find((r) => r.id === input.recordId);
     if (!rec || rec.profileId) return false;
     rec.profileId = input.profileId;

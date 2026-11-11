@@ -1,4 +1,6 @@
+export { TeacherCodeSignIn, useStaffCodes } from './code';
 export { AuthAlert, ForgotPassword } from './forgot';
+export { AccountSetupScreen, useNeedsSetup } from './setup';
 export {
   isAccountDisabled,
   isOtherAppRole,
@@ -17,7 +19,7 @@ export {
 } from './route-permissions';
 export { retryGate } from './gate-retry';
 export { RootGateProvider, useRootGate } from './root-gate';
-export { type Credentials, signIn, type SignInResult } from './sign-in';
+export { type Credentials, signIn, signInWithCode, type SignInResult } from './sign-in';
 export {
   type GateStatus,
   movesGate,
