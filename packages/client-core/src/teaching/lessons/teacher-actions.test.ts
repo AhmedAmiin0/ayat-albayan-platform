@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus } from '@ab/shared';
 import {
+  confirmedChipShown,
+  confirmedNow,
   teacherCanAct,
   teacherCanConfirm,
   teacherConfirmed,
@@ -32,6 +34,18 @@ describe('teacher lesson actions (docs/46 C3/C4)', () => {
     expect(teacherCanConfirm(done, now)).toBe(false);
     expect(teacherCanConfirm(lesson('scheduled', '2026-11-12T13:00:00Z'), now)).toBe(true);
     expect(teacherConfirmed({ ...done, teacher_confirmed_at: undefined })).toBe(false);
+  });
+
+  it('the chip: the answer bridges until the re-read, never for a moved or closed lesson', () => {
+    const open = lesson('scheduled', '2026-11-12T13:00:00Z');
+    const answer = lesson('scheduled', '2026-11-12T13:00:00Z', '2026-11-11T11:00:00Z');
+    expect(confirmedChipShown(open, { answer, now })).toBe(true);
+    const moved = lesson('scheduled', '2026-11-13T13:00:00Z');
+    expect(confirmedNow(moved, answer)).toBe(false);
+    const held = { ...answer, status: 'completed' as const };
+    expect(confirmedChipShown(held, { answer, now })).toBe(false);
+    const started = lesson('scheduled', '2026-11-11T12:00:00Z', '2026-11-11T11:00:00Z');
+    expect(confirmedChipShown(started, { answer: undefined, now })).toBe(false);
   });
 
   it('paths', () => {

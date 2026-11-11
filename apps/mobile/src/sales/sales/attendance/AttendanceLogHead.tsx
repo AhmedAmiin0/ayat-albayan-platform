@@ -14,14 +14,17 @@ interface AttendanceLogHeadProps {
   /** The chosen month (highlighted at once, while its rows still load). */
   month: string;
   onMonth: (month: string) => void;
+  /** The zone the months are bucketed in; the viewer's by default (the teacher log: hers). */
+  tz?: string | undefined;
 }
 
 /**
  * Above the rows, fixed while they scroll: the month pills (newest first), the month's totals
  * «حضر · غاب · بعذر · متأخر · ألغيت · أُجّلت», then the table's column header.
  */
-export function AttendanceLogHead({ data, month, onMonth }: AttendanceLogHeadProps) {
-  const tz = useViewerTz();
+export function AttendanceLogHead({ data, month, onMonth, tz: zone }: AttendanceLogHeadProps) {
+  const viewer = useViewerTz();
+  const tz = zone ?? viewer;
   const { color } = useTheme();
   const w = t.sales.student.log;
   const head = { fontFamily: type.ui[600], fontSize: type.size['2xs'], lineHeight: type.lineHeight(type.size['2xs']), color: color.ink2 };

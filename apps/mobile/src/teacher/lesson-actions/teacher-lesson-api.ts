@@ -1,4 +1,4 @@
-import type { TeacherCancelRequest } from '@ab/shared';
+import type { LessonView, TeacherCancelRequest } from '@ab/shared';
 import { teacherLessonPaths } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
@@ -34,8 +34,8 @@ function useRefreshLessons() {
 export function useTeacherConfirm(lessonId: string) {
   const refresh = useRefreshLessons();
   return useMutation({
-    // The answer (a LessonView) is not read: the refetch brings the lesson.
-    mutationFn: () => apiSend('POST', teacherLessonPaths.confirm(lessonId)),
+    // The answer bridges the chip until the refetch brings the lesson (confirmedNow).
+    mutationFn: () => apiSend<LessonView>('POST', teacherLessonPaths.confirm(lessonId)),
     // A 409 refetches too, so a stale button goes.
     onSettled: refresh,
   });

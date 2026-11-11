@@ -49,6 +49,17 @@ describe('TeacherLessonActions — «سأحضر» (docs/46 C4)', () => {
     expect(screen.getByRole('button', { name: w.cancel })).toBeTruthy();
   });
 
+  it('a confirmed lesson that started, was held or was cancelled: no chip (review 11-11)', () => {
+    const at = '2026-10-02T09:00:00.000Z';
+    renderActions(lesson({ id: 'c', starts_at: '2026-10-03T08:00:00.000Z', teacher_confirmed_at: at }));
+    expect(screen.queryByText(w.confirmedChip)).toBeNull();
+  });
+
+  it('a cancelled confirmed lesson: no chip', () => {
+    renderActions({ ...AHEAD, status: 'cancelled_by_teacher', teacher_confirmed_at: '2026-10-02T09:00:00.000Z' });
+    expect(screen.queryByText(w.confirmedChip)).toBeNull();
+  });
+
   it('409 lesson_started says the lesson began', async () => {
     apiSend.mockRejectedValue(new ApiError(409, { code: 'lesson_started', message: 'lesson_started' }));
     renderActions();

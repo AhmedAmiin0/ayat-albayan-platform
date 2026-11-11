@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
+import { zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { logTable } from '@/sales/sales/attendance/fixtures';
 import { renderWithQuery } from '@/test/query';
@@ -52,4 +53,14 @@ test('a failed read offers a retry', async () => {
   mockApiFetch.mockRejectedValue(new Error('offline'));
   await renderWithQuery(<TeacherAttendanceScreen />);
   expect(await screen.findByRole('button', { name: t.mobile.retry })).toBeTruthy();
+});
+
+test("months and dates in one zone: hers (teachers.tz), not the viewer's (review 11-11)", async () => {
+  mockApiFetch.mockImplementation(async (p: string) =>
+    p === '/teachers/me' ? { id: 't1', tz: 'Asia/Tokyo', students: [] } : logTable(),
+  );
+  await renderWithQuery(<TeacherAttendanceScreen />);
+  expect(await screen.findByText(zoneNote('Asia/Tokyo'))).toBeTruthy();
+  // 15:00Z is 00:00 the next day in Tokyo.
+  expect(screen.getAllByText('00:00').length).toBeGreaterThan(0);
 });

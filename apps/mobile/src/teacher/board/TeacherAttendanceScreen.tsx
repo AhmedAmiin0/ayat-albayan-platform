@@ -14,6 +14,7 @@ import { LazyList } from '@/core/ui/lists/LazyList';
 import { BackButton } from '@/core/ui/navigation';
 import { AttendanceLogHead, AttendanceLogRow, monthOf } from '@/sales/sales';
 import { reportFormHref } from '@/core/ui/lists/ReportRows';
+import { useTeacherMe } from '@/teacher/lib/queries';
 import { useTeacherAttendance } from './teacher-board-api';
 
 const keyOf = (row: AttendanceTableRow) => row.lesson_id;
@@ -23,7 +24,7 @@ const title = t.teacherBoard.attendanceLog;
 const openRow = (row: AttendanceTableRow) => router.push(reportFormHref(row.lesson_id));
 
 /** The month's rows: striped, a row with a report opens it. */
-function Rows({ data }: { data: StudentAttendanceTable }) {
+function Rows({ data, tz }: { data: StudentAttendanceTable; tz: string | undefined }) {
   const cycle = useClockCycle();
   return (
     <LazyList
@@ -31,12 +32,13 @@ function Rows({ data }: { data: StudentAttendanceTable }) {
       data={data.items}
       keyExtractor={keyOf}
       tabBar={false}
-      extraData={cycle}
+      extraData={`${cycle}:${tz ?? ''}`}
       renderItem={({ item, index }) => (
         <AttendanceLogRow
           row={item}
           striped={index % 2 === 1}
           cycle={cycle}
+          tz={tz}
           onOpen={item.report_id ? openRow : undefined}
         />
       )}
@@ -56,13 +58,15 @@ function Waiting({ failed, retry }: { failed: boolean; retry: () => void }) {
 
 /**
  * «سجل الحضور» of one of my students (docs/46 C5, C7): only my own lessons with them, all time, a
- * month at a time (her zone): the month pills, the month's totals and the striped table of the
+ * month at a time (her zone, months and dates alike): the month pills, the month's totals and the striped table of the
  * sales log (AttendanceLogHead, AttendanceLogRow) from GET /teachers/me/students/:id/attendance.
  */
 export function TeacherAttendanceScreen() {
   const id = useLocalSearchParams<{ id?: string }>().id ?? '';
   const [month, setMonth] = useState<string | null>(null);
   const log = useTeacherAttendance(id, month);
+  // The API buckets the months in her zone (teachers.tz): the dates show in the same one.
+  const tz = useTeacherMe().data?.tz;
   const data = log.data;
   const back = () => backWithin(`/teacher/reports/student/${id}`);
   const header = (subtitle?: string) => (
@@ -84,8 +88,8 @@ export function TeacherAttendanceScreen() {
   return (
     <Screen>
       {header(monthOf(data.month))}
-      <AttendanceLogHead data={data} month={month ?? data.month} onMonth={setMonth} />
-      <Rows data={data} />
+      <AttendanceLogHead data={data} month={month ?? data.month} onMonth={setMonth} tz={tz} />
+      <Rows data={data} tz={tz} />
     </Screen>
   );
 }
