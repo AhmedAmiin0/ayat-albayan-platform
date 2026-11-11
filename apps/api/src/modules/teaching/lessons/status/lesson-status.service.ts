@@ -20,6 +20,9 @@ const AFTER_START: ReadonlySet<StatusRouteEvent> = new Set(['complete', 'mark_la
 export type ConfirmInput = { lessonId: string; actor: AuthUser | null; anyLesson?: true };
 export type StatusInput = LessonStatusRequest & { lessonId: string; actor: AuthUser };
 
+const teacherAfterEnd = (actor: AuthUser, lesson: LessonRow): boolean =>
+  actor.role === 'teacher' && Date.parse(lesson.ends_at) <= Date.now();
+
 const audit = (lesson: LessonRow, opts: { action: string; after: object }) => ({
   entity: 'lessons',
   entityId: lesson.id,
@@ -43,7 +46,7 @@ export class LessonStatusService {
   /** scheduled → confirmed. Already confirmed → unchanged (a guardian may answer «نعم» twice). */
   async confirm({ lessonId, actor, anyLesson }: ConfirmInput): Promise<string> {
     const lesson = await this.store.get(lessonId);
-    if (actor && !anyLesson) await this.access.assertCanTouch(actor, lesson);
+    await this.assertMayConfirm(lesson, { actor, anyLesson });
     if (lesson.status === 'confirmed') return lesson.id;
     if (!applyLessonEvent(lesson.status, 'confirm')) throw invalidTransition(lesson.status, 'confirm');
     const actorId = actor?.id ?? null;
@@ -66,6 +69,21 @@ export class LessonStatusService {
       if ((await this.store.get(lessonId)).status !== 'confirmed') throw e;
     }
     return lesson.id;
+  }
+
+  /**
+   * Admin or the lesson's own teacher (LessonAccess, 403); a teacher no longer once the lesson
+   * ended (409 lesson_ended, docs/46 C4, as SalesLessonActions.confirm). The webhook (no actor)
+   * and a route that already decided (`anyLesson`) skip it.
+   */
+  private async assertMayConfirm(
+    lesson: LessonRow,
+    o: Omit<ConfirmInput, 'lessonId'>,
+  ): Promise<void> {
+    const actor = o.actor;
+    if (!actor || o.anyLesson) return;
+    await this.access.assertCanTouch(actor, lesson);
+    if (teacherAfterEnd(actor, lesson)) throw conflict('lesson_ended');
   }
 
   /**

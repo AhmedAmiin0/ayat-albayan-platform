@@ -2486,6 +2486,8 @@ export type Database = {
           starts_at: string;
           status: Database['public']['Enums']['lesson_status'];
           teacher_id: string;
+          teacher_confirmed_at: string | null;
+          teacher_confirmed_by: string | null;
           time_edit_reason: string | null;
           time_edit_was: Json | null;
           time_edited_at: string | null;
@@ -2513,6 +2515,8 @@ export type Database = {
           starts_at: string;
           status?: Database['public']['Enums']['lesson_status'];
           teacher_id: string;
+          teacher_confirmed_at?: string | null;
+          teacher_confirmed_by?: string | null;
           time_edit_reason?: string | null;
           time_edit_was?: Json | null;
           time_edited_at?: string | null;
@@ -2540,6 +2544,8 @@ export type Database = {
           starts_at?: string;
           status?: Database['public']['Enums']['lesson_status'];
           teacher_id?: string;
+          teacher_confirmed_at?: string | null;
+          teacher_confirmed_by?: string | null;
           time_edit_reason?: string | null;
           time_edit_was?: Json | null;
           time_edited_at?: string | null;
@@ -5787,6 +5793,8 @@ export type Database = {
           starts_at: string;
           status: Database['public']['Enums']['lesson_status'];
           teacher_id: string;
+          teacher_confirmed_at: string | null;
+          teacher_confirmed_by: string | null;
           time_edit_reason: string | null;
           time_edit_was: Json | null;
           time_edited_at: string | null;
@@ -5811,6 +5819,10 @@ export type Database = {
           name: string;
           updated_at: string;
         }[];
+      };
+      teacher_confirm_lesson: {
+        Args: { p_actor: string; p_lesson: string; p_teacher: string };
+        Returns: string;
       };
       trial_ahead: { Args: { p_students: string[] }; Returns: boolean };
       trial_date_replay: { Args: { p_request: string; p_student: string }; Returns: Json };

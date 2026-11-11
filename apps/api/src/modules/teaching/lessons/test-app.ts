@@ -27,6 +27,8 @@ import { LessonsRepo } from './lessons.repo';
 import { OverviewRepo } from './overview/overview.repo';
 import { ADMIN, CONTACT, lessonRow, TEACHER, TEACHER_ID } from './lessons.fakes';
 import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
+import { TeacherCancelPush } from './teacher-me/teacher-cancel.push';
+import { TeacherConfirmRepo } from './teacher-me/teacher-confirm.repo';
 import { TimeEditRepo } from './time-edit/time-edit.repo';
 import { ScheduleNoticesRepo } from '@/modules/teaching/schedule-notices';
 
@@ -60,6 +62,9 @@ function mocks() {
     rules: { rule: vi.fn(), activeRuleIds: vi.fn() },
     checker: { check: vi.fn() },
     me: { me: vi.fn() },
+    // docs/46 C3/C4: «سأحضر»'s atomic write and the admins' cancel push.
+    confirms: { confirm: vi.fn() },
+    cancelPush: { notify: vi.fn() },
     unpaid: { studentIds: vi.fn() },
     photos: fakePhotos().photos,
     proposals: { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() },
@@ -85,6 +90,8 @@ export async function lessonsApp() {
     .overrideProvider(ScheduleRepo).useValue(m.rules)
     .overrideProvider(ConflictChecker).useValue(m.checker)
     .overrideProvider(TeacherMeRepo).useValue(m.me)
+    .overrideProvider(TeacherConfirmRepo).useValue(m.confirms)
+    .overrideProvider(TeacherCancelPush).useValue(m.cancelPush)
     .overrideProvider(OverviewRepo).useValue(m.overview)
     .overrideProvider(TimeEditRepo).useValue(m.time)
     .overrideProvider(LessonProposalRepo).useValue(m.proposals)
@@ -126,6 +133,7 @@ export async function lessonsApp() {
     m.teachers.loads.mockResolvedValue(new Map());
     for (const read of Object.values(m.overview)) read.mockResolvedValue([]);
     m.notices.lesson.mockResolvedValue(null);
+    m.confirms.confirm.mockResolvedValue('ok');
     m.notices.approved.mockResolvedValue(true);
     m.notices.queue.mockImplementation(async (rows: readonly unknown[]) => rows.length);
   };

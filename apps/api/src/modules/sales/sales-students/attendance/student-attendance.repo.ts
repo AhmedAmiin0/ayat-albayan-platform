@@ -25,6 +25,13 @@ export interface AttendanceReportRow {
   lesson_id: string;
 }
 
+/** [from, to); `teacherId` keeps one teacher's lessons only (her own «سجل الحضور», docs/46 C5). */
+export interface AttendanceWindow {
+  from: Date;
+  to: Date;
+  teacherId?: string;
+}
+
 const LESSON_SELECT =
   'id, starts_at, ends_at, status, cancel_reason, rule_id, instant, makeup_of_id, rescheduled_from_id, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(display_name_ar), own:lesson_students!inner(student_id, attendance, chargeable)' as const;
 
@@ -43,12 +50,10 @@ export class StudentAttendanceRepo {
     return data !== null;
   }
 
-  /** The student's lessons that started inside [from, to), newest first. */
-  async lessons(studentId: string, w: { from: Date; to: Date }): Promise<AttendanceLessonRow[]> {
-    const { data, error } = await this.db
-      .from('lessons')
-      .select(LESSON_SELECT)
-      .eq('own.student_id', studentId)
+  /** The student's lessons that started inside [from, to), newest first; `teacherId`: hers only. */
+  async lessons(studentId: string, w: AttendanceWindow): Promise<AttendanceLessonRow[]> {
+    const base = this.db.from('lessons').select(LESSON_SELECT).eq('own.student_id', studentId);
+    const { data, error } = await (w.teacherId ? base.eq('teacher_id', w.teacherId) : base)
       .gte('starts_at', w.from.toISOString())
       .lt('starts_at', w.to.toISOString())
       .order('starts_at', { ascending: false })
@@ -58,12 +63,13 @@ export class StudentAttendanceRepo {
     return data;
   }
 
-  /** When each of the student's lessons before `now` started (for the month switcher), newest first. */
-  async starts(studentId: string, now: Date): Promise<string[]> {
-    const { data, error } = await this.db
+  /** When each of the student's lessons before `now` started (the month switcher), newest first. */
+  async starts(studentId: string, now: Date, teacherId?: string): Promise<string[]> {
+    const base = this.db
       .from('lessons')
       .select('starts_at, own:lesson_students!inner(student_id)')
-      .eq('own.student_id', studentId)
+      .eq('own.student_id', studentId);
+    const { data, error } = await (teacherId ? base.eq('teacher_id', teacherId) : base)
       .lt('starts_at', now.toISOString())
       .order('starts_at', { ascending: false })
       .limit(HISTORY_LIMIT);

@@ -69,6 +69,7 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     cancel_reason: row.cancel_reason,
     override_reason: row.override_reason,
     confirmed_at: row.confirmed_at === null ? null : iso(row.confirmed_at),
+    teacher_confirmed_at: row.teacher_confirmed_at ? iso(row.teacher_confirmed_at) : null,
     rescheduled_from_id: row.rescheduled_from_id,
     ...roomFields(row),
     students,
