@@ -8470,9 +8470,6 @@
     }
   },
   "src/modules/reporting/reports/history/report-history.mapper.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     },
@@ -8567,7 +8564,7 @@
   },
   "src/modules/reporting/reports/reports.settings.test.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/reporting/reports/reports.settings.ts": {
@@ -11663,14 +11660,11 @@
     }
   },
   "src/modules/teaching/lessons/lessons.mapper.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/teaching/lessons/lessons.module.ts": {
@@ -12005,7 +11999,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/lessons/student-lessons.controller.ts": {

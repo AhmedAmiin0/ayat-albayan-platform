@@ -15,7 +15,7 @@ import type { PageQuery } from '@/common/http/http';
 import type { HistoryLesson, HistoryRow, PendingRow } from './report-history.queries';
 import { iso } from '@/modules/reporting/reports/submit/report-form.mapper';
 
-type HistoryParts = {
+interface HistoryParts {
   rows: readonly HistoryRow[];
   lessons: readonly HistoryLesson[];
   /** lesson_id → «رقم الحلقة» (v_lesson_sequence). */
@@ -23,11 +23,19 @@ type HistoryParts = {
   page: PageQuery;
   /** The reader, now and settings.report_teacher_edit_minutes (docs/46 B7); none for sales. */
   window?: SummaryWindow;
-};
+}
 
-export type SummaryWindow = { role: UserRole | null; now: Date; minutes: number };
+interface SummaryWindow {
+  role: UserRole | null;
+  now: Date;
+  minutes: number;
+}
 
-type Joined = { row: HistoryRow; lesson: HistoryLesson; at: number };
+interface Joined {
+  row: HistoryRow;
+  lesson: HistoryLesson;
+  at: number;
+}
 
 /**
  * R5 (R-REP-05, issue D2): submitted reports newest lesson first, one page of them, and the grade
@@ -65,15 +73,19 @@ function summary({ row, lesson }: Joined, seq: ReadonlyMap<string, number>): Rep
   };
 }
 
+// A fake row may leave the column out: read it as never submitted, not an invalid date.
+const instantOf = (at: string | null | undefined): Date | null => (at ? new Date(at) : null);
+const isoOf = (at: Date | null): string | null => (at === null ? null : at.toISOString());
+const mayEdit = (w: SummaryWindow, submittedAt: Date | null): boolean =>
+  w.role !== null && canEditReport({ role: w.role, submittedAt, now: w.now, minutes: w.minutes });
+
 /** can_edit / edit_until for the reader (R-REP-02, docs/46 B7); nothing without a window. */
 function editWindow(row: HistoryRow, w: SummaryWindow | undefined): Partial<ReportSummaryView> {
-  // A fake row may leave the column out: read it as never submitted, not an invalid date.
-  const submittedAt = row.submitted_at ? new Date(row.submitted_at) : null;
-  const base = { submitted_at: submittedAt?.toISOString() ?? null };
+  const submittedAt = instantOf(row.submitted_at);
+  const base = { submitted_at: isoOf(submittedAt) };
   if (!w) return base;
   const until = editUntil({ submittedAt, minutes: w.minutes });
-  const canEdit = w.role !== null && canEditReport({ role: w.role, submittedAt, now: w.now, minutes: w.minutes });
-  return { ...base, can_edit: canEdit, edit_until: until?.toISOString() ?? null };
+  return { ...base, can_edit: mayEdit(w, submittedAt), edit_until: isoOf(until) };
 }
 
 function point({ row, lesson }: Joined): GradePoint {

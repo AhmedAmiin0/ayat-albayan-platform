@@ -1,5 +1,5 @@
 import type { PendingReportView, StudentReportsResponse } from '@ab/shared';
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { PageQuery } from '@/common/http/http';
 import { ReportAccess } from '@/modules/reporting/reports/report-access';
@@ -15,7 +15,7 @@ export class ReportHistoryService {
   constructor(
     private readonly queries: ReportHistoryQueries,
     private readonly access: ReportAccess,
-    private readonly settings: ReportsSettings,
+    @Inject(ReportsSettings) private readonly settings: ReportsSettings,
   ) {}
 
   /** R5 (R-REP-05, issue D2): admin; a teacher for their own student (assigned or taught). */
@@ -33,7 +33,8 @@ export class ReportHistoryService {
       this.queries.sequence(studentId),
       this.settings.read(),
     ]);
-    const reader = { role: user.role, now: new Date(), minutes: settings.report_teacher_edit_minutes };
+    const minutes = settings.report_teacher_edit_minutes;
+    const reader = { role: user.role, now: new Date(), minutes };
     return historyResponse({ rows, lessons, seq, page, window: reader });
   }
 

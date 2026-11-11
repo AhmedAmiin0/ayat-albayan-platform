@@ -7626,7 +7626,7 @@
   },
   "src/features/reporting/reports/history/ReportStatusLine.tsx": {
     "no-nested-ternary": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/reporting/reports/history/StudentReportsPage.notice.test.tsx": {
@@ -11187,7 +11187,7 @@
   },
   "src/features/teaching/teacher/reports/submitted-report-columns.tsx": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 2

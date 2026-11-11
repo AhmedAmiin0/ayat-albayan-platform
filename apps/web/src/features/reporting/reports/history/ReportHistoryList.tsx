@@ -52,7 +52,9 @@ export function ReportHistoryList({ items, role, tz, studentId, recorded }: Repo
               <RecordingLink studentId={studentId} lessonId={r.lesson_id} role={role} when={lessonWhenAt(new Date(r.starts_at), { tz, ...clock })} />
             )}
             {editableNow(r, now) && (
-              <ReportLink href={reportFormHref({ role, lessonId: r.lesson_id, studentId })}>{t.reports.edit}</ReportLink>
+              <ReportLink href={reportFormHref({ role, lessonId: r.lesson_id, studentId })}>
+                {t.reports.edit}
+              </ReportLink>
             )}
             <PdfAction report={r} role={role} />
           </div>

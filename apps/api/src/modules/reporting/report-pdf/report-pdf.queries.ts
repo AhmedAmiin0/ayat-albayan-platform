@@ -21,7 +21,7 @@ export type Finish =
 export class ReportPdfQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: ReportPdfSettings,
+    @Inject(ReportPdfSettings) private readonly settings: ReportPdfSettings,
   ) {}
 
   /**

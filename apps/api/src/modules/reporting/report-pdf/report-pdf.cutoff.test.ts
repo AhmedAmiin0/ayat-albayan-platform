@@ -12,7 +12,8 @@ describe('renderCutoff (docs/46 D5, B3)', () => {
   it('the window boundary is not yet due: the grace keeps an in-flight edit out of the render', () => {
     const closedAt = at('2026-11-11T09:30:00Z');
     expect(closedAt).toBeGreaterThan(renderCutoff(NOW, 30).getTime());
-    expect(closedAt).toBeLessThanOrEqual(renderCutoff(new Date(NOW.getTime() + SEND_GRACE_MS), 30).getTime());
+    const later = new Date(NOW.getTime() + SEND_GRACE_MS);
+    expect(closedAt).toBeLessThanOrEqual(renderCutoff(later, 30).getTime());
   });
 
   it('0 minutes: everything submitted so far is due at once (clock slack, no grace)', () => {

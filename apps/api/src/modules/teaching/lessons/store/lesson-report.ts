@@ -1,4 +1,4 @@
-import { canEditReport, editUntil, type LessonStudentView } from '@ab/shared';
+import { canEditReport, editUntil, SETTING_DEFAULTS, type LessonStudentView } from '@ab/shared';
 import type { Role } from '@/common/auth/verify-token';
 import type { LessonRow } from './lesson-row';
 
@@ -6,25 +6,45 @@ type Embedded = LessonRow['lesson_students'][number]['report'];
 type ReportState = NonNullable<LessonStudentView['report']>;
 
 /** Who reads the lesson, when, and settings.report_teacher_edit_minutes (docs/46 B7). */
-export type ReportWindow = { role: Role | null; now: Date; minutes: number };
+interface ReportWindow {
+  role: Role | null;
+  now: Date;
+  minutes: number;
+}
 
 const instant = (iso: string | null | undefined): Date | null => (iso ? new Date(iso) : null);
+const SETTING_DEFAULT_MINUTES = SETTING_DEFAULTS.report_teacher_edit_minutes;
+const isoOf = (at: Date | null): string | null => (at === null ? null : at.toISOString());
+
+/** canEditReport for the reader: the teacher until first submit + minutes, the admin always. */
+const mayEdit = (w: ReportWindow, submittedAt: Date | null): boolean =>
+  w.role !== null && canEditReport({ role: w.role, submittedAt, now: w.now, minutes: w.minutes });
 
 /**
  * A lesson student's report with its edit window (R-REP-02, docs/46 B7): first submit, family
- * send, can_edit (canEditReport for the caller: the teacher until first submit + minutes, the admin
- * always, nobody else) and edit_until; null before a report is opened.
+ * send, can_edit and edit_until; null before a report is opened.
  */
 export function lessonReport(report: Embedded, w: ReportWindow): ReportState | null {
   if (!report) return null;
   const submittedAt = instant(report.submitted_at);
-  const until = editUntil({ submittedAt, minutes: w.minutes });
   return {
     id: report.id,
     status: report.status,
-    submitted_at: submittedAt?.toISOString() ?? null,
-    sent_at: instant(report.sent_at)?.toISOString() ?? null,
-    can_edit: w.role !== null && canEditReport({ role: w.role, submittedAt, now: w.now, minutes: w.minutes }),
-    edit_until: until?.toISOString() ?? null,
+    submitted_at: isoOf(submittedAt),
+    sent_at: isoOf(instant(report.sent_at)),
+    can_edit: mayEdit(w, submittedAt),
+    edit_until: isoOf(editUntil({ submittedAt, minutes: w.minutes })),
   };
+}
+
+interface WindowContext {
+  role: Role | null;
+  reportMinutes?: number;
+  now?: Date;
+}
+
+/** The reader's window from the lesson view context: the registry default and now when absent. */
+export function readerWindow(ctx: WindowContext): ReportWindow {
+  const minutes = ctx.reportMinutes ?? SETTING_DEFAULT_MINUTES;
+  return { role: ctx.role, now: ctx.now ?? new Date(), minutes };
 }

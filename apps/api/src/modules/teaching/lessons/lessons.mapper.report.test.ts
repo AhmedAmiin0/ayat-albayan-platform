@@ -6,7 +6,7 @@ import { lessonRow } from './lessons.fakes';
 const NOW = new Date('2026-11-11T10:10:00Z');
 const ctx = { role: 'teacher' as const, seq: new Map<string, number>(), reportMinutes: 30, now: NOW };
 const student = { student_id: 's1', attendance: null, chargeable: true, student: { id: 's1', code: 'AB-0001', name: 'سهيلة', tz: 'Asia/Riyadh' } };
-type Embed = { id: string; status: 'draft' | 'submitted'; submitted_at?: string | null; sent_at?: string | null };
+interface Embed { id: string; status: 'draft' | 'submitted'; submitted_at?: string | null; sent_at?: string | null }
 
 const report = (r: Embed | null | undefined, over: Partial<typeof ctx> = {}) =>
   toLessonView(lessonRow({ lesson_students: [{ ...student, ...(r === undefined ? {} : { report: r }) }] }), { ...ctx, ...over })

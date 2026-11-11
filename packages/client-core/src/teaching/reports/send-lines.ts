@@ -1,7 +1,7 @@
 import { counted, type PluralForm } from '@ab/shared';
 import { minutesLeft, reportSendState, type SendReport, type SendState } from './send-state.js';
 
-/** The texts the two lines are made of (reports.editUntil, reports.familySend.*, the minute forms). */
+/** The texts the lines are made of (reports.editUntil, reports.familySend.*, the minute forms). */
 export interface SendWords {
   editUntil: string;
   editClosed: string;
@@ -19,7 +19,11 @@ export interface SendLines {
 }
 
 type LineReport = SendReport & { can_edit?: boolean };
-type LineContext = { now: Date; when: (d: Date) => string; words: SendWords };
+interface LineContext {
+  now: Date;
+  when: (d: Date) => string;
+  words: SendWords;
+}
 
 const FAMILY: Record<SendState, (r: LineReport, c: LineContext) => string | null> = {
   window: (r, c) => c.words.sendsIn.replace('{when}', counted(c.words.minutes, minutesLeft(r.edit_until, c.now))),

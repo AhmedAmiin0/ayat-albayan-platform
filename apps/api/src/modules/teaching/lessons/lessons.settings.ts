@@ -6,8 +6,8 @@ import { SettingsService } from '@/common/settings/settings.service';
 /**
  * RulePlanner (horizon), LessonCancelService and LessonStatusService (late cancel, R-SCH-07),
  * OverviewQueries (24/7 grid), TeacherMeQueries and LessonsQueries (meeting mode), LessonsController
- * (day view zone), TimeEditPayout (which statuses are paid, R-PAY-02) and AutoHeldService (whether
- * a lesson needs a confirmation, owner 2026-11-02), LessonViews (the report edit window, docs/46 B7).
+ * (day view zone), TimeEditPayout (which statuses are paid, R-PAY-02), AutoHeldService (whether
+ * a lesson needs a confirmation, owner 2026-11-02) and LessonViews (report edit window, docs/46).
  */
 const KEYS = [
   'booking_horizon_weeks',

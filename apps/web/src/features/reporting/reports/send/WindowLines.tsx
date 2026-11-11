@@ -26,7 +26,8 @@ type WindowReport = Pick<ReportView, 'status' | 'can_edit' | 'edit_until' | 'sen
 export function WindowLines({ report, tz }: { report: WindowReport; tz: string }) {
   const clock = useClock();
   const now = useNow(TICK_MS);
-  const lines = sendLines(report, { now, when: (d) => lessonWhenAt(d, { tz, ...clock }), words: WORDS });
+  const when = (d: Date) => lessonWhenAt(d, { tz, ...clock });
+  const lines = sendLines(report, { now, when, words: WORDS });
   return (
     <>
       {[lines.edit, lines.family].filter((l) => l !== null).map((line) => (
@@ -50,10 +51,13 @@ export function RowWindow({ report, href }: { report: WindowReport; href: string
   const now = useNow(TICK_MS);
   const lines = sendLines(report, { now, when: () => '', words: WORDS });
   const pending = PENDING.has(reportSendState(report, now));
+  const label = editableNow(report, now) ? t.reports.edit : t.reports.view;
   return (
     <span className="grid justify-items-start gap-1">
-      <ReportLink href={href}>{editableNow(report, now) ? t.reports.edit : t.reports.view}</ReportLink>
-      {pending && lines.family && <span className="text-xs whitespace-normal text-ink-3">{lines.family}</span>}
+      <ReportLink href={href}>{label}</ReportLink>
+      {pending && lines.family && (
+        <span className="text-xs whitespace-normal text-ink-3">{lines.family}</span>
+      )}
     </span>
   );
 }

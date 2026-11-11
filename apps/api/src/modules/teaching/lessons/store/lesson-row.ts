@@ -53,7 +53,9 @@ export type LessonRow = {
      * The student's lesson report (one per lesson and student); optional in test fakes, and so are
      * its first submit and family send (docs/46 B7).
      */
-    report?: { id: string; status: ReportStatus; submitted_at?: string | null; sent_at?: string | null } | null;
+    report?: {
+      id: string; status: ReportStatus; submitted_at?: string | null; sent_at?: string | null;
+    } | null;
   }[];
   /** The teacher's reschedule proposals (R-SCH-08); at most one is pending. */
   proposals: {

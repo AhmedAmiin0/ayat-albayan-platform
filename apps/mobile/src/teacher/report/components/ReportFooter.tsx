@@ -29,7 +29,7 @@ const WORDS: SendWords = {
   ...t.reports.familySend,
   minutes: t.settingsValues.units.minutes,
 };
-/** The PDF chip once there is something to say (ready, or failed): not while it waits for the close. */
+/** The PDF chip once it says something (ready, or failed): not while it waits for the close. */
 const PDF_SHOWN: ReadonlySet<string> = new Set(['ready', 'failed']);
 
 /**

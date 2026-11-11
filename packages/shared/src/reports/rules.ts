@@ -73,7 +73,8 @@ export interface EditWindowInput {
 
 /**
  * R-REP-02: admins edit always; the report's teacher edits a draft any time and a submitted report
- * until `minutes` after its first submit (edits never extend it) (the boundary instant is already closed); guardians never.
+ * until `minutes` after its first submit (edits never extend it; the boundary instant is already
+ * closed); guardians never.
  */
 export function canEditReport(input: EditWindowInput): boolean {
   if (input.role === 'admin') return true;
@@ -84,7 +85,8 @@ export function canEditReport(input: EditWindowInput): boolean {
 
 /** End of the teacher's edit window; null while the report is a draft. */
 export function editUntil(input: Pick<EditWindowInput, 'submittedAt' | 'minutes'>): Date | null {
-  return input.submittedAt === null ? null : new Date(input.submittedAt.getTime() + input.minutes * MINUTE);
+  const at = input.submittedAt;
+  return at === null ? null : new Date(at.getTime() + input.minutes * MINUTE);
 }
 
 export interface VersionState {

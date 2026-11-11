@@ -18,7 +18,7 @@ const PDF_WAIT = { timeout: 150_000, intervals: [1_000] };
 const WINDOW_MIN = 30;
 const when = (text: string) => text.split('{when}')[0]?.trim() ?? '';
 
-/** The first submit moved back by `minutes`, as if the window had run (submitted_at is the anchor). */
+/** The first submit (the window's anchor) moved back by `minutes`, as if the window had run. */
 const backdateMinutes = (reportId: string, minutes: number) =>
   withSql((sql) => sql`
     update public.lesson_reports set submitted_at = submitted_at - make_interval(mins => ${minutes})
@@ -69,11 +69,11 @@ test.describe('teacher report edit window (R-REP-02/03/04)', () => {
       select action from public.audit_log where entity = 'lesson_reports' and entity_id = ${first.id} order by at`);
     expect(audit.map((a) => a.action)).toEqual(['submit', 'edit']);
 
-    // Inside the window: no PDF, nothing queued for the family (the submit's kick finds nothing due).
+    // Inside the window: no PDF, nothing queued for the family (the kick finds nothing due).
     expect((await reportRow(s.todayLessonId)).pdf_status).toBe('pending');
     expect(await readyQueued(s.guardianId)).toHaveLength(0);
 
-    // The window closes (first submit + 30 min; the edit did not extend it): the sweep renders v2 once.
+    // The window closes (first submit + 30 min, not extended by the edit): v2 renders once.
     await backdateMinutes(first.id, WINDOW_MIN + 1);
     await expect.poll(async () => (await reportRow(s.todayLessonId)).pdf_status, PDF_WAIT).toBe('ready');
     expect(await readyQueued(s.guardianId)).toHaveLength(1);
