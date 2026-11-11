@@ -57,16 +57,18 @@ function Waiting({ failed, retry }: { failed: boolean; retry: () => void }) {
 }
 
 /**
- * «سجل الحضور» of one of my students (docs/46 C5, C7): only my own lessons with them, all time, a
- * month at a time (her zone, months and dates alike): the month pills, the month's totals and
- * the striped table of the sales log (AttendanceLogHead, AttendanceLogRow) from GET /teachers/me/students/:id/attendance.
+ * «سجل الحضور» of one of my students (docs/46 C5, C7): only my own lessons with them, all
+ * time, a month at a time (her zone, months and dates alike): the month pills, the month's
+ * totals and the striped table of the sales log (AttendanceLogHead, AttendanceLogRow) from
+ * GET /teachers/me/students/:id/attendance.
  */
 export function TeacherAttendanceScreen() {
   const id = useLocalSearchParams<{ id?: string }>().id ?? '';
   const [month, setMonth] = useState<string | null>(null);
   const log = useTeacherAttendance(id, month);
   // The API buckets the months in her zone (teachers.tz): the dates show in the same one.
-  const tz = useTeacherMe().data?.tz;
+  const me = useTeacherMe();
+  const tz = me.data?.tz;
   const data = log.data;
   const back = () => backWithin(`/teacher/reports/student/${id}`);
   const header = (subtitle?: string) => (
@@ -77,7 +79,8 @@ export function TeacherAttendanceScreen() {
       leading={<BackButton onPress={back} />}
     />
   );
-  if (!data) {
+  // Her zone first (review 11-11): no flash of the viewer's times; a failed read falls back.
+  if (!data || me.isPending) {
     return (
       <Screen>
         {header()}

@@ -6,11 +6,16 @@
 //   node tools/scripts/teacher-phones/teacher-phones-backfill.mjs          → dry run (the default):
 //      a read-only SELECT listing every row it would write (teacher id + name, login id, masked
 //      phone) and the checksum of the login ids; psql "$DB" -f dry-run.sql writes nothing.
-//   node tools/scripts/teacher-phones/teacher-phones-backfill.mjs --apply --ids=<id,id,…>
-//      → one transaction writing EXACTLY the reviewed login ids (from the dry run); it rolls back
-//      when the rows it would write differ from that list. Re-runnable (a set phone no longer
-//      matches; a lost race hits the unique index).
+//   node tools/scripts/teacher-phones/teacher-phones-backfill.mjs --apply \
+//      --ids=<id,…> --checksum=<md5>
+//      → one transaction writing EXACTLY the reviewed rows (login ids AND phones, from the dry
+//      run's ids + checksum); it rolls back when anything differs. Re-runnable (a set phone no
+//      longer matches; a lost race hits the unique index).
 
+const MD5 = /^[0-9a-f]{32}$/;
+/** The reviewed rows' fingerprint: login ids AND the phones they would get, in id order. */
+const PAIRS = `string_agg(profile_id::text || ':' || phone, ',' order by profile_id)`;
+const CHECKSUM = `md5(coalesce(${PAIRS}, ''))`;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 /** Teacher logins (role teacher) with no phone whose record has one nobody else holds. */
@@ -26,9 +31,10 @@ export const CANDIDATES = `with candidates as (
 )`;
 
 /** +9665•••••123: enough to recognise the number, never the whole of it in a terminal or log. */
-const MASKED = `left(f.phone, 5) || repeat('•', greatest(length(f.phone) - 8, 0)) || right(f.phone, 3)`;
+const MASKED =
+  `left(f.phone, 5) || repeat('•', greatest(length(f.phone) - 8, 0)) || right(f.phone, 3)`;
 
-export const DRY_RUN_SQL = `-- teacher-phones backfill: DRY RUN (read only). Review every row, then pass the login ids.
+export const DRY_RUN_SQL = `-- teacher-phones backfill: DRY RUN (read only): review every row.
 ${CANDIDATES}
 select f.teacher_id, f.name, f.profile_id as login_id, ${MASKED} as phone
 from free f order by f.profile_id;
@@ -36,7 +42,8 @@ ${CANDIDATES}
 select (select count(*) from candidates) as phoneless_teacher_logins,
        (select count(*) from free) as to_copy,
        (select count(*) from candidates) - (select count(*) from free) as kept_null_shared,
-       (select string_agg(profile_id::text, ',' order by profile_id) from free) as ids;
+       (select string_agg(profile_id::text, ',' order by profile_id) from free) as ids,
+       (select ${CHECKSUM} from free) as checksum;
 `;
 
 /** The reviewed login ids: lower-case UUIDs, sorted, no duplicates; throws on anything else. */
@@ -47,17 +54,26 @@ export function reviewedIds(raw) {
   return ids.sort();
 }
 
-export const applySql = (ids) => `-- teacher-phones backfill: APPLY ${ids.length} reviewed row(s).
+/** The dry run's checksum: 32 lower-case hex digits; throws on anything else. */
+export function reviewedChecksum(raw) {
+  const sum = String(raw ?? '').trim().toLowerCase();
+  if (!MD5.test(sum)) throw new Error('--checksum needs the dry run\'s checksum');
+  return sum;
+}
+
+export const applySql = ({ ids, checksum }) => `-- teacher-phones backfill: APPLY ${ids.length} row(s).
 begin;
 do $$
 declare
   wanted uuid[] := array[${ids.map((id) => `'${id}'`).join(', ')}]::uuid[];
   written int;
   free_ids uuid[];
+  free_sum text;
 begin
   ${CANDIDATES.replace(/\n/g, '\n  ')}
-  select coalesce(array_agg(profile_id order by profile_id), '{}') into free_ids from free;
-  if free_ids <> wanted then
+  select coalesce(array_agg(profile_id order by profile_id), '{}'), ${CHECKSUM}
+    into free_ids, free_sum from free;
+  if free_ids <> wanted or free_sum <> '${checksum}' then
     raise exception 'backfill: the rows to write differ from the reviewed list; nothing written';
   end if;
   update public.profiles p set phone_e164 = t.phone_e164
@@ -72,12 +88,15 @@ commit;
 `;
 
 export function parseArgs(argv) {
-  const ids = argv.find((a) => a.startsWith('--ids='));
-  return { apply: argv.includes('--apply'), ids: ids ? ids.slice('--ids='.length) : null };
+  const value = (name) =>
+    argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3) ?? null;
+  return { apply: argv.includes('--apply'), ids: value('ids'), checksum: value('checksum') };
 }
 
-/** The SQL for the arguments: the dry run unless --apply (which requires --ids) is given. */
-export const run = (args) => (args.apply ? applySql(reviewedIds(args.ids)) : DRY_RUN_SQL);
+/** The SQL for the arguments: the dry run unless --apply (with --ids and --checksum) is given. */
+const applyOf = (args) =>
+  applySql({ ids: reviewedIds(args.ids), checksum: reviewedChecksum(args.checksum) });
+export const run = (args) => (args.apply ? applyOf(args) : DRY_RUN_SQL);
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   process.stdout.write(run(parseArgs(process.argv.slice(2))));

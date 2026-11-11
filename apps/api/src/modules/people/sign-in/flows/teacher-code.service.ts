@@ -8,7 +8,8 @@ import { teacherCodePhone } from './teacher-destination';
 /**
  * A teacher's WhatsApp-code sign-in (docs/46 A2, D2), mirroring FamilyCodeService: the typed phone
  * is only a lookup key, the code goes to the record's phone while she has no login or her login's
- * setup is unfinished, else to her login's own phone. The first verified code makes her `teacher` login (A3); setup follows (A4).
+ * setup is unfinished, else to her login's own phone. The first verified code makes her `teacher`
+ * login (A3); setup follows (A4).
  */
 @Injectable()
 export class TeacherCodeService {

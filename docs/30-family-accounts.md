@@ -217,7 +217,7 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
 - **«المستخدمون».** A teacher login created there without a phone takes the record's (same «nobody else holds
   it» rule); `tools/scripts/teacher-phones/teacher-phones-backfill.mjs` does the same for existing logins
   (prints SQL; the dry run lists every row it would write with a masked phone, and `--apply` needs the
-  reviewed `--ids=` and rolls back on any difference; production only on the owner's go).
+  reviewed `--ids=` and `--checksum=` (ids + phones) and rolls back on any difference; production only on the owner's go).
 - **Shared number, after the first sign-in.** A teacher whose number is also a guardian's gets a login
   without a phone (a guardians row keeps the number, so the family's code sign-in is never blocked). Until
   she finishes setup her codes still go to the record phone (above), so signing out before setup never

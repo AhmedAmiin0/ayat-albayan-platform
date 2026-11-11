@@ -16,7 +16,10 @@ const instant = (iso: string | null | undefined): Date | null => (iso ? new Date
 const SETTING_DEFAULT_MINUTES = SETTING_DEFAULTS.report_teacher_edit_minutes;
 const isoOf = (at: Date | null): string | null => (at === null ? null : at.toISOString());
 
-type Instants = { submittedAt: Date | null; sentAt: Date | null };
+interface Instants {
+  submittedAt: Date | null;
+  sentAt: Date | null;
+}
 
 /**
  * canEditReport for the reader: the teacher until first submit + minutes and never once sent, the

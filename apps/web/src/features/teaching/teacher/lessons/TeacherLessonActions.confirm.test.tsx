@@ -51,7 +51,8 @@ describe('TeacherLessonActions — «سأحضر» (docs/46 C4)', () => {
 
   it('a confirmed lesson that started, was held or was cancelled: no chip (review 11-11)', () => {
     const at = '2026-10-02T09:00:00.000Z';
-    renderActions(lesson({ id: 'c', starts_at: '2026-10-03T08:00:00.000Z', teacher_confirmed_at: at }));
+    const started = lesson({ id: 'c', starts_at: '2026-10-03T08:00:00.000Z' });
+    renderActions({ ...started, teacher_confirmed_at: at });
     expect(screen.queryByText(w.confirmedChip)).toBeNull();
   });
 

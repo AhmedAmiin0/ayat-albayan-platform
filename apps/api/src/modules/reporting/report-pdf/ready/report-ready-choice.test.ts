@@ -94,8 +94,8 @@ describe('readyMessages — which templates go after the PDF', () => {
     expect(out.map((m) => m.template_key)).toEqual(['report_ready']);
   });
 
-  it('the teacher is still told when the close render runs within the slack (a slow poll)', () => {
-    const late = new Date(Date.parse('2026-09-29T14:41:00Z') + (30 + 1 + 60) * 60_000);
+  it('the teacher is still told when the close render runs within the slack (a failed render retried the next day)', () => {
+    const late = new Date(Date.parse('2026-09-29T14:41:00Z') + (30 + 1 + 24 * 60) * 60_000);
     const approved = new Set(['report_ready_teacher']);
     expect(readyMessages({ ...base, approved, now: late })).toHaveLength(2);
     const past = new Date(late.getTime() + 1000);

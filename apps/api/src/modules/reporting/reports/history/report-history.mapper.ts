@@ -27,7 +27,7 @@ interface HistoryParts {
 
 interface SummaryWindow {
   role: UserRole | null;
-  /** The reading teacher's own teachers.id (null for admins): another teacher's report is closed. */
+  /** The reading teacher's teachers.id (null for admins): another teacher's report is closed. */
   teacherId: string | null;
   now: Date;
   minutes: number;
@@ -83,7 +83,8 @@ const ownsOrAdmin = (w: SummaryWindow, row: HistoryRow): boolean =>
   w.role === 'admin' || row.teacher_id === w.teacherId;
 const mayEdit = (w: SummaryWindow, row: HistoryRow): boolean => {
   const at = { submittedAt: instantOf(row.submitted_at), sentAt: instantOf(row.sent_at) };
-  return w.role !== null && ownsOrAdmin(w, row) && canEditReport({ role: w.role, ...at, now: w.now, minutes: w.minutes });
+  const window = { ...at, now: w.now, minutes: w.minutes };
+  return w.role !== null && ownsOrAdmin(w, row) && canEditReport({ role: w.role, ...window });
 };
 
 /** can_edit / edit_until for the reader (R-REP-02, docs/46 B7); nothing without a window. */

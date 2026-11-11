@@ -24,9 +24,10 @@ type FamilyWay = 'link' | 'document';
 const MINUTE = 60_000;
 /**
  * How late after the window's close (+ grace) the first render may still come and tell the
- * teacher: job polls, a retry or a busy queue. Later, it is an admin's re-render of an old report.
+ * teacher: job polls, a failed render an admin retries the next day, a held queue (review 11-11).
+ * Later, it is an admin's re-render of an old never-sent report.
  */
-export const TEACHER_DUE_SLACK_MS = 60 * MINUTE;
+const TEACHER_DUE_SLACK_MS = 24 * 60 * MINUTE;
 
 /** This render is the first one after the window closed (not an old report re-rendered). */
 const closeRender = (i: ChoiceInput): boolean => {
