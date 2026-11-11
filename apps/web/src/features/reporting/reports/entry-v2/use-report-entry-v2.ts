@@ -1,4 +1,4 @@
-import { sendChecked } from '@ab/client-core';
+import { sendChecked, withServerWindow } from '@ab/client-core';
 import {
   effective,
   v2DraftBody,
@@ -32,7 +32,9 @@ const storedWords = () => [BUNDLES.ar.reports.v2.suggest, t.reports.v2.suggest];
 export function useReportEntryV2(initial: ReportView, studentProgram: Program, opened = false) {
   const queryClient = useQueryClient();
   const api = useReportApi();
-  const [report, setReport] = useState(initial);
+  const [own, setReport] = useState(initial);
+  // The refetched window (can_edit, sent_at, pdf_status) reaches this open card (review 11-11).
+  const report = withServerWindow(own, initial);
   const [values, setValues] = useState<V2Values>(() => v2ValuesOf(initial, studentProgram, storedWords()));
   const [problem, setProblem] = useState<string | null>(null);
   const mode = useReportMode(report, opened);

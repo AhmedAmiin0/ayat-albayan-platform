@@ -40,7 +40,7 @@ const PDF_SHOWN: ReadonlySet<string> = new Set(['ready', 'failed']);
 export function SentNote({ report, tz }: { report: ReportView; tz: string }) {
   const cycle = useClockCycle();
   const now = useNow();
-  useWindowClose(report.edit_until);
+  useWindowClose(report);
   const lines = sendLines(report, { now, when: (d) => whenIn(d, tz, cycle), words: WORDS });
   const pdf = report.pdf_status && PDF_SHOWN.has(report.pdf_status) ? report.pdf_status : null;
   return (
