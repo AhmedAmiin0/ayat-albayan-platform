@@ -20,19 +20,31 @@ const login = (over: Partial<NonNullable<TeacherRec['login']>>): TeacherRec => (
 
 describe('teacherCodePhone (docs/46 D2)', () => {
   it('no login: the record phone (or nowhere without one)', () => {
-    expect(teacherCodePhone(base)).toBe(RECORD);
-    expect(teacherCodePhone({ ...base, recordPhone: null })).toBeNull();
+    expect(teacherCodePhone(base, false)).toBe(RECORD);
+    expect(teacherCodePhone({ ...base, recordPhone: null }, false)).toBeNull();
   });
 
   it("a teacher login: only its own phone, never the record's", () => {
-    expect(teacherCodePhone(login({}))).toBe(LOGIN);
-    expect(teacherCodePhone(login({ phone: null }))).toBeNull();
+    expect(teacherCodePhone(login({}), false)).toBe(LOGIN);
+    expect(teacherCodePhone(login({ phone: null }), false)).toBeNull();
   });
 
   it('a disabled login or another role gets nothing', () => {
-    expect(teacherCodePhone(login({ disabled: true }))).toBeNull();
-    expect(teacherCodePhone(login({ role: 'admin' }))).toBeNull();
-    expect(teacherCodePhone(login({ role: 'guardian' }))).toBeNull();
+    expect(teacherCodePhone(login({ disabled: true }), false)).toBeNull();
+    expect(teacherCodePhone(login({ role: 'admin' }), false)).toBeNull();
+    expect(teacherCodePhone(login({ role: 'guardian' }), false)).toBeNull();
+  });
+});
+
+describe('teacherCodePhone while setup is pending (owner 2026-11-11)', () => {
+  it('a set-up-pending teacher login: the record phone, even when the login has none', () => {
+    expect(teacherCodePhone(login({ phone: null }), true)).toBe(RECORD);
+    expect(teacherCodePhone(login({}), true)).toBe(RECORD);
+  });
+
+  it('pending never opens a disabled login or another role', () => {
+    expect(teacherCodePhone(login({ disabled: true }), true)).toBeNull();
+    expect(teacherCodePhone(login({ role: 'admin' }), true)).toBeNull();
   });
 });
 

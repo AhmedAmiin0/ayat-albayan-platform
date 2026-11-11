@@ -1,4 +1,4 @@
-import { teacherCanAct, teacherCanConfirm, teacherConfirmed } from '@ab/client-core';
+import { confirmedChipShown, confirmedNow, teacherCanAct } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
@@ -13,12 +13,12 @@ export function useTeacherActs(lesson: LessonView, onNotice: (text: string) => v
   const now = useNow();
   const confirm = useTeacherConfirm(lesson.id);
   const [cancelling, setCancelling] = useState(false);
-  const confirmed = teacherConfirmed(lesson) || confirm.isSuccess;
+  const answer = confirm.data;
   return {
-    canConfirm: teacherCanConfirm(lesson, now) && !confirm.isSuccess,
+    canConfirm: teacherCanAct(lesson, now) && !confirmedNow(lesson, answer),
     canCancel: teacherCanAct(lesson, now),
     /** «حضورك مؤكَّد» while the lesson is still ahead. */
-    confirmed: confirmed && teacherCanAct(lesson, now),
+    confirmed: confirmedChipShown(lesson, { answer, now }),
     busy: confirm.isPending,
     error: confirm.isError ? teacherActionError(confirm.error) : undefined,
     confirm: () =>
@@ -26,6 +26,11 @@ export function useTeacherActs(lesson: LessonView, onNotice: (text: string) => v
     cancelling,
     openCancel: () => setCancelling(true),
     closeCancel: () => setCancelling(false),
+    /** A landed cancel: the form closes (review 11-11), then the notice. */
+    cancelDone: (text: string) => {
+      setCancelling(false);
+      onNotice(text);
+    },
   };
 }
 

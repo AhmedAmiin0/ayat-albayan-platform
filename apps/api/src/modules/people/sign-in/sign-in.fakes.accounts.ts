@@ -69,6 +69,10 @@ export class FakeSubjects implements SubjectStore {
     if (row.phone && this.profiles.some((p) => p.phone === row.phone)) throw new ConflictException({ code: 'phone_belongs_to_staff' });
     this.profiles.push({ id: row.id, role: row.role, disabled: false, phone: row.phone, fullName: row.fullName });
   }
+  isLinked(profileId: string): Promise<boolean> {
+    const lists = [this.guardians, this.students, this.teachers];
+    return Promise.resolve(lists.some((list) => list.some((r) => r.profileId === profileId)));
+  }
   async link(input: { kind: LinkKind; recordId: string; profileId: string }): Promise<boolean> {
     const lists: Record<LinkKind, { id: string; profileId: string | null }[]> = {
       guardian: this.guardians,

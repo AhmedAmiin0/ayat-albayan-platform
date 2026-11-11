@@ -54,7 +54,11 @@ export function TeacherLessonTools({ lesson, notice }: TeacherLessonToolsProps) 
       <ConfirmedChip on={acts.confirmed} />
       {acts.error ? <ErrorLine message={acts.error} /> : null}
       {acts.cancelling ? (
-        <TeacherCancelForm lessonId={lesson.id} onClose={acts.closeCancel} onDone={notice.show} />
+        <TeacherCancelForm
+          lessonId={lesson.id}
+          onClose={acts.closeCancel}
+          onDone={acts.cancelDone}
+        />
       ) : (
         <ToolButtons acts={acts} />
       )}

@@ -1,5 +1,5 @@
 import type { TeacherCancelRequest } from '@ab/shared';
-import { teacherLessonPaths } from '@ab/client-core';
+import { confirmAnswerSchema, teacherLessonPaths } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { ApiError, apiSend } from '@/core/lib/http/api';
@@ -24,6 +24,9 @@ export function teacherActionError(error: unknown): string {
   return ERROR_TEXT[codeOf(error) ?? ''] ?? t.teacherBoard.actionFailed;
 }
 
+/** apiSend with its reply left unknown, for the schema to parse. */
+const post: (method: 'POST', path: string) => Promise<unknown> = apiSend;
+
 /** «اليوم», «جدولي» and the board read GET /teachers/me/lessons under ['lessons']: refetch them. */
 function useRefreshLessons() {
   const client = useQueryClient();
@@ -34,8 +37,9 @@ function useRefreshLessons() {
 export function useTeacherConfirm(lessonId: string) {
   const refresh = useRefreshLessons();
   return useMutation({
-    // The answer (a LessonView) is not read: the refetch brings the lesson.
-    mutationFn: () => apiSend('POST', teacherLessonPaths.confirm(lessonId)),
+    // The answer bridges the chip until the refetch brings the lesson (confirmedNow).
+    mutationFn: async () =>
+      confirmAnswerSchema.safeParse(await post('POST', teacherLessonPaths.confirm(lessonId))).data,
     // A 409 refetches too, so a stale button goes.
     onSettled: refresh,
   });

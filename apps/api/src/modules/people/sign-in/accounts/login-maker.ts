@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto';
 import type { AuditService } from '@/common/audit/audit.service';
 import type {
   AuthGate,
@@ -31,7 +32,7 @@ export class LoginMaker {
   async make(input: MakeInput): Promise<string | null> {
     const left = await this.ports.auth.idByEmail(input.email);
     const id = left ?? (await this.create(input));
-    if (left) await this.adopt(left, input.password);
+    if (left) await this.adopt(left, input);
     const drop = () => (left ? Promise.resolve() : this.ports.auth.removeUser(id));
     const linked = await this.attach(id, input).catch(async (e: unknown) => {
       await drop().catch(() => undefined);
@@ -63,12 +64,25 @@ export class LoginMaker {
   }
 
   /**
-   * A login left by a failed attempt: whatever it held no longer opens it (as POST /users adopts
-   * one).
+   * A login left by a failed attempt: whatever it held no longer opens it (a fresh random password
+   * unless the caller chose one, sessions revoked, as POST /users adopts one). Anyone else's login
+   * that holds the address (another role, or already linked to a record) is refused before
+   * anything is touched.
    */
-  private async adopt(id: string, password: string | undefined): Promise<void> {
-    if (password) await this.ports.auth.setPassword(id, password);
+  private async adopt(id: string, input: MakeInput): Promise<void> {
+    if (!(await this.adoptable(id, input.profile.role))) {
+      throw new Error('code login has another role or a record');
+    }
+    await this.ports.auth.setPassword(id, input.password ?? freshPassword());
     await this.ports.auth.revokeSessions(id);
+  }
+
+  /** No profile yet, or a profile of the same role that no record links to. */
+  private async adoptable(id: string, role: LinkKind): Promise<boolean> {
+    const { subjects } = this.ports;
+    const profile = await subjects.profileById(id);
+    if (!profile) return true;
+    return profile.role === role && !(await subjects.isLinked(id));
   }
 
   private provisioned(id: string, input: MakeInput): Promise<void> {
@@ -82,3 +96,6 @@ export class LoginMaker {
     });
   }
 }
+
+/** Nobody knows it: an adopted login opens only through the code session that follows. */
+const freshPassword = (): string => randomBytes(24).toString('base64url');

@@ -1,9 +1,15 @@
-import { render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render as renderUi, screen } from '@testing-library/react';
+import type { ReactElement } from 'react';
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { reportView } from '@/features/reporting/reports/report-fixture';
 import { FooterAlerts } from './FooterAlerts';
+
+// SubmittedNote refetches at the window's close (useWindowClose): it needs a query client.
+const render = (ui: ReactElement) =>
+  renderUi(<QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>);
 
 describe('FooterAlerts', () => {
   it('the check, the API refusal and the block each read in their words', () => {

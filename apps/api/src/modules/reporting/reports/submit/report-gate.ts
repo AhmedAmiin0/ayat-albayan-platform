@@ -7,6 +7,8 @@ import type { ReportRow } from '@/modules/reporting/reports/report-row';
 import { ReportsQueries } from '@/modules/reporting/reports/reports.queries';
 import { ReportsSettings } from '@/modules/reporting/reports/reports.settings';
 
+const instantOf = (at: string | null): Date | null => (at === null ? null : new Date(at));
+
 /** The caller, now, the teacher's edit window, the late-cancel policy and report_form_v2. */
 type ReportContext = ViewContext & { lateCancelHours: number | null; formV2: boolean };
 
@@ -48,12 +50,15 @@ export class ReportGate {
     };
   }
 
-  /** The report while the caller may still change it (canEditReport → 409 edit_window_closed). */
+  /**
+   * The report while the caller may still change it (canEditReport → 409 edit_window_closed): a
+   * teacher never once it was sent to the family (sent_at), admins always.
+   */
   async editable(id: string, user: ReportCaller): Promise<{ row: ReportRow; ctx: ReportContext }> {
     const row = await this.load(id, user);
     const ctx = await this.context(user);
-    const submittedAt = row.submitted_at === null ? null : new Date(row.submitted_at);
-    if (ctx.role === null || !canEditReport({ role: ctx.role, submittedAt, now: ctx.now, minutes: ctx.minutes })) {
+    const window = { submittedAt: instantOf(row.submitted_at), sentAt: instantOf(row.sent_at) };
+    if (ctx.role === null || !canEditReport({ role: ctx.role, ...window, now: ctx.now, minutes: ctx.minutes })) {
       throw conflict('edit_window_closed');
     }
     return { row, ctx };

@@ -5,6 +5,9 @@ export {
   UPCOMING_LESSON_STYLE,
 } from './lesson-status.js';
 export {
+  confirmAnswerSchema,
+  confirmedChipShown,
+  confirmedNow,
   teacherCanAct,
   teacherCanConfirm,
   teacherConfirmed,

@@ -16,9 +16,14 @@ export interface PushText {
 }
 
 /** ar.json notifications.<kind> with its {slots} filled; a missing slot stays visible. */
+/** Slots a push may leave out. */
+const OPTIONAL: Record<string, string> = { reason: '' };
+
 export function pushText(kind: PushKind, vars: Record<string, string | number>): PushText {
   const t = ar.notifications[kind];
-  return { title: fill(t.title, vars), body: fill(t.body, vars) };
+  // An optional slot (a teacher's cancel reason): absent → nothing, never a literal «{reason}».
+  const all = { ...OPTIONAL, ...vars };
+  return { title: fill(t.title, all), body: fill(t.body, all) };
 }
 
 export interface ExpoMessage {

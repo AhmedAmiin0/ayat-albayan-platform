@@ -1,4 +1,4 @@
-import { teacherCanConfirm, teacherConfirmed } from '@ab/client-core';
+import { confirmedChipShown, confirmedNow, teacherCanAct } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { Button } from '@/components/ui/form/button';
@@ -14,18 +14,20 @@ export interface TeacherConfirmProps {
 }
 
 /**
- * «سأحضر» (docs/46 C4, D1) while the lesson is open and ahead; once she said so (or the lesson
- * says teacher_confirmed_at), «حضورك مؤكَّد» instead. Never the family-style «تأكيد».
+ * «سأحضر» (docs/46 C4, D1) while the lesson is open and ahead; once she said so (the re-read
+ * lesson's teacher_confirmed_at, or the confirm's answer until it arrives), «حضورك مؤكَّد»
+ * instead, only while the lesson is still ahead (as on the phone). Never the family «تأكيد».
  */
 export function TeacherConfirm({ lesson, now, onDone }: TeacherConfirmProps) {
   const w = t.teacherBoard;
   const confirm = useTeacherConfirm(lesson.id);
-  const confirmed = teacherConfirmed(lesson) || confirm.isSuccess;
-  const offered = teacherCanConfirm(lesson, now) && !confirm.isSuccess;
+  const answer = confirm.data;
+  const chip = confirmedChipShown(lesson, { answer, now });
+  const offered = teacherCanAct(lesson, now) && !confirmedNow(lesson, answer);
   return (
     <>
       {confirm.isError && <FormAlert>{teacherActionError(confirm.error)}</FormAlert>}
-      {confirmed && (
+      {chip && (
         <StatusChip tone="ok" glyph="fill" label={w.confirmedChip} className="justify-self-start" />
       )}
       {offered && (

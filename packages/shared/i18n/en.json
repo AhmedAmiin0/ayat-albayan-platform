@@ -3964,7 +3964,7 @@
     },
     "lesson_cancelled": {
       "title": "Lesson cancelled",
-      "body": "{student}’s lesson on {when} was cancelled"
+      "body": "{student}’s lesson on {when} was cancelled{reason}"
     },
     "course_paused": {
       "title": "Lessons paused",

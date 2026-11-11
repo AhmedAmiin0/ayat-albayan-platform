@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n/i18n';
 import type { SaveState } from '@/features/reporting/reports/entry/use-autosave';
 import { useClock } from '@/lib/clock';
 import { WindowLines } from '@/features/reporting/reports/send/WindowLines';
+import { useWindowClose } from '@/features/reporting/reports/send/use-window-close';
 
 /** «بيتحفظ…» / «المسودة اتحفظت 17:42» / a failed save, while the report is a draft (R-REP-02). */
 export function SaveStatus({ state, tz }: { state: SaveState; tz: string }) {
@@ -27,9 +28,11 @@ const PDF_SHOWN: ReadonlySet<string> = new Set(['ready', 'failed']);
 
 /**
  * After a submit: «سُلِّم التقرير», the version, the PDF once ready, and the window lines
- * (WindowLines: how long the teacher may still edit, and when it goes to the family).
+ * (WindowLines: how long the teacher may still edit, and when it goes to the family); at the
+ * close the form and the lists are fetched again (useWindowClose).
  */
 export function SubmittedNote({ report, tz }: { report: ReportView; tz: string }) {
+  useWindowClose(report);
   if (report.status !== 'submitted') return null;
   const pdf = report.pdf_status && PDF_SHOWN.has(report.pdf_status) ? report.pdf_status : null;
   return (

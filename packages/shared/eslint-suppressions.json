@@ -476,9 +476,6 @@
     }
   },
   "src/people/account/account.schemas.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }

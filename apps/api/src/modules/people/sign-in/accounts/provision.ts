@@ -120,7 +120,10 @@ export class Provisioner {
     return usableAs(login, 'teacher') ? login.id : refused();
   }
 
-  /** The number when nobody else holds it (a profile or a guardian row), else null. */
+  /**
+   * The number when nobody else holds it (a profile or a guardian row), else null: a guardian's
+   * number stays the family's; until setup her codes go to the record phone (teacher-destination).
+   */
   private async freePhone(phone: string | null): Promise<string | null> {
     if (!phone) return null;
     const [profile, guardian] = await Promise.all([

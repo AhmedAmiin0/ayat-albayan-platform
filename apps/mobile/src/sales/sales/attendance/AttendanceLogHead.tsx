@@ -1,12 +1,12 @@
 import type { StudentAttendanceTable } from '@ab/shared';
 import { View } from 'react-native';
-import { useViewerTz, zoneNote } from '@/core/lib/clock';
+import { zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { COLUMNS, ROW_LINE } from './AttendanceLogRow';
+import { COLUMNS, ROW_LINE, useLogTz } from './AttendanceLogRow';
 import { monthOf, totalsItems } from './attendance-log-text';
 
 interface AttendanceLogHeadProps {
@@ -14,14 +14,16 @@ interface AttendanceLogHeadProps {
   /** The chosen month (highlighted at once, while its rows still load). */
   month: string;
   onMonth: (month: string) => void;
+  /** The zone the months are bucketed in; the viewer's by default (the teacher log: hers). */
+  tz?: string | undefined;
 }
 
 /**
  * Above the rows, fixed while they scroll: the month pills (newest first), the month's totals
  * «حضر · غاب · بعذر · متأخر · ألغيت · أُجّلت», then the table's column header.
  */
-export function AttendanceLogHead({ data, month, onMonth }: AttendanceLogHeadProps) {
-  const tz = useViewerTz();
+export function AttendanceLogHead({ data, month, onMonth, tz: zone }: AttendanceLogHeadProps) {
+  const tz = useLogTz(zone);
   const { color } = useTheme();
   const w = t.sales.student.log;
   const head = { fontFamily: type.ui[600], fontSize: type.size['2xs'], lineHeight: type.lineHeight(type.size['2xs']), color: color.ink2 };

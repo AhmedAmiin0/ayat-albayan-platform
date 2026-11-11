@@ -3964,7 +3964,7 @@
     },
     "lesson_cancelled": {
       "title": "إلغاء حلقة",
-      "body": "أُلغيت حلقة {student} المحددة في {when}"
+      "body": "أُلغيت حلقة {student} المحددة في {when}{reason}"
     },
     "course_paused": {
       "title": "إيقاف الحلقات مؤقتًا",

@@ -16,9 +16,17 @@ const instant = (iso: string | null | undefined): Date | null => (iso ? new Date
 const SETTING_DEFAULT_MINUTES = SETTING_DEFAULTS.report_teacher_edit_minutes;
 const isoOf = (at: Date | null): string | null => (at === null ? null : at.toISOString());
 
-/** canEditReport for the reader: the teacher until first submit + minutes, the admin always. */
-const mayEdit = (w: ReportWindow, submittedAt: Date | null): boolean =>
-  w.role !== null && canEditReport({ role: w.role, submittedAt, now: w.now, minutes: w.minutes });
+interface Instants {
+  submittedAt: Date | null;
+  sentAt: Date | null;
+}
+
+/**
+ * canEditReport for the reader: the teacher until first submit + minutes and never once sent, the
+ * admin always.
+ */
+const mayEdit = (w: ReportWindow, at: Instants): boolean =>
+  w.role !== null && canEditReport({ role: w.role, ...at, now: w.now, minutes: w.minutes });
 
 /**
  * A lesson student's report with its edit window (R-REP-02, docs/46 B7): first submit, family
@@ -27,12 +35,13 @@ const mayEdit = (w: ReportWindow, submittedAt: Date | null): boolean =>
 export function lessonReport(report: Embedded, w: ReportWindow): ReportState | null {
   if (!report) return null;
   const submittedAt = instant(report.submitted_at);
+  const sentAt = instant(report.sent_at);
   return {
     id: report.id,
     status: report.status,
     submitted_at: isoOf(submittedAt),
-    sent_at: isoOf(instant(report.sent_at)),
-    can_edit: mayEdit(w, submittedAt),
+    sent_at: isoOf(sentAt),
+    can_edit: mayEdit(w, { submittedAt, sentAt }),
     edit_until: isoOf(editUntil({ submittedAt, minutes: w.minutes })),
   };
 }

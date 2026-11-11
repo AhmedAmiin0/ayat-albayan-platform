@@ -23,7 +23,7 @@ Teachers stop needing the admin to give them a login, and they run their day fro
 | # | Decision |
 |---|----------|
 | D1 | Teacher «تأكيد» means **«I will attend»**: stored apart (`lessons.teacher_confirmed_at/by`), never changes `lessons.status`, works whether `lesson_confirmation_required` is on or off. The teacher's current family-style confirm button is replaced. Whether the lesson took place stays with the report / outcome. |
-| D2 | A teacher's WhatsApp sign-in code goes to **`teachers.phone_e164`** while she has **no login** (her first sign-in); once she has a login it goes to **her login's own phone** (`profiles.phone_e164`, as reset codes do today), so editing a teacher record can never redirect codes of an existing login. Active teachers only, login role `teacher` only. No new switch: teacher codes work whenever codes can be sent (`LOGIN_CODE_PEPPER` set, `account_code` approved, sending on), independent of `family_login_enabled`. Residual risk (whoever holds `teachers.write`, admin by default, could redirect a not-yet-signed-in teacher's first code) is recorded in docs/30. *(Two-step destination = builder-check call, 11-11.)* |
+| D2 | A teacher's WhatsApp sign-in code goes to **`teachers.phone_e164`** while she has **no login** (her first sign-in) or her login's setup is unfinished (owner, 11-11); once setup is done it goes to **her login's own phone** (`profiles.phone_e164`, as reset codes do today), so editing a teacher record can never redirect codes of an existing login. Active teachers only, login role `teacher` only. No new switch: teacher codes work whenever codes can be sent (`LOGIN_CODE_PEPPER` set, `account_code` approved, sending on), independent of `family_login_enabled`. Residual risk (whoever holds `teachers.write`, admin by default, could redirect a not-yet-signed-in teacher's first code) is recorded in docs/30. *(Two-step destination = builder-check call, 11-11.)* |
 | D3 | Teacher cancel: **one lesson**, **reason required**, only **before the lesson starts**. Status `cancelled_by_teacher` (not charged, not paid — existing rule). Family gets the existing `lesson_cancelled` notice; admins + the student's owning assistant get a push with the reason. No automatic replacement; the screen suggests «اقترح موعدًا آخر». |
 | D4 | **Current student** = assigned to the teacher (her weekly rules / active course) and not paused or churned; trial and subscribed in one list with a status chip + filter. Board window: lessons **14 days back, 14 days ahead**. The attendance log covers **only her own lessons** with that student, all time. |
 | D5 | The edit window is **30 minutes from the first submit**; edits do not extend it. The family (and the teacher's own link message) gets **one** message 1–2 min after it closes. Admin edits after that re-render the PDF and page but do not re-send. The no-login teacher report link keeps its 24 h on its own setting. |
@@ -89,7 +89,10 @@ Each PR carries its web **and** mobile part. All three touch `packages/shared/i1
   `guardians` row or another profile holds: A3 provisioning, the A7 copy and the backfill all leave the
   teacher's profile phone null then, so the family keeps its code sign-in (`phone_belongs_to_staff` never
   fires because of a teacher) and the teacher still signs in through her record (A2/A5 look up `teachers`).
-  Unit-test both orders (parent first, teacher first). *(Builder-check call, 11-11.)*
+  While that login is setup-pending (role `teacher`, auth email still `isFamilyEmail`) her codes go to the
+  record phone, as with no login (owner, 11-11), so a sign-out before setup never locks her out; after setup
+  they go to the login's phone only. Unit-test both orders (parent first, teacher first) and parent first →
+  teacher code → setup unfinished → a second code reaches the record phone. *(Builder-check call, 11-11.)*
 - **A8 mobile (OTA).** `login.tsx` «الدخول برمز واتساب» mode: phone → 6-digit code → staff-code verify →
   `supabase.auth.verifyOtp`. Reuse `ForgotCodeStep`, `use-countdown`, `RESEND_SECONDS`. «أكمل حسابك»
   screen when `needs_setup`.

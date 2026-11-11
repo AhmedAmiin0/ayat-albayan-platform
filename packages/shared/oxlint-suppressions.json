@@ -483,9 +483,6 @@
   "src/people/account/account.schemas.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/people/account/account.views.ts": {

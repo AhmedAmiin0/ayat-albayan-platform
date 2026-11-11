@@ -21,19 +21,27 @@ export const COLUMNS: Record<'date' | 'time' | 'teacher' | 'status' | 'report', 
 
 export const ROW_LINE: ViewStyle = { flexDirection: 'row', alignItems: 'center', gap: 6 };
 
+/** The zone a log shows in: the one given (the teacher log: hers), else the viewer's. */
+export function useLogTz(zone: string | undefined): string {
+  const viewer = useViewerTz();
+  return zone ?? viewer;
+}
+
 interface AttendanceLogRowProps {
   row: AttendanceTableRow;
   /** Odd rows are striped. */
   striped: boolean;
   cycle: ClockCycle;
+  /** The zone of the dates and times; the viewer's by default (the teacher log passes hers). */
+  tz?: string | undefined;
   /** Given only when the row has a sent report (any student, owner 2026-10-30). */
   onOpen?: (row: AttendanceTableRow) => void;
 }
 
 /** One past lesson of «سجل الحضور»: the five cells, then the trial / makeup tags and the cancel reason. */
-export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, cycle, onOpen }: AttendanceLogRowProps) {
+export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, cycle, onOpen, tz: zone }: AttendanceLogRowProps) {
   const { color } = useTheme();
-  const tz = useViewerTz();
+  const tz = useLogTz(zone);
   const status = useLessonStatusText();
   const w = t.sales.student.log;
   const cell = { fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink };

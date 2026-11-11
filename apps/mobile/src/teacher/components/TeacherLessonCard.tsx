@@ -94,7 +94,11 @@ export function TeacherLessonCard(p: TeacherLessonCardProps) {
       <ConfirmedChip on={acts.confirmed} />
       {acts.error ? <ErrorLine message={acts.error} /> : null}
       {acts.cancelling ? (
-        <TeacherCancelForm lessonId={lesson.id} onClose={acts.closeCancel} onDone={p.onNotice} />
+        <TeacherCancelForm
+          lessonId={lesson.id}
+          onClose={acts.closeCancel}
+          onDone={acts.cancelDone}
+        />
       ) : (
         <TeacherLessonActions
           lesson={lesson}

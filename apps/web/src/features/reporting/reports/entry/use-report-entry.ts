@@ -1,4 +1,4 @@
-import { reportEntryValues, sendChecked } from '@ab/client-core';
+import { reportEntryValues, sendChecked, withServerWindow } from '@ab/client-core';
 import {
   submitBody,
   submitProblem,
@@ -28,7 +28,9 @@ const entryValuesOf = reportEntryValues;
 export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const queryClient = useQueryClient();
   const api = useReportApi();
-  const [report, setReport] = useState(initial);
+  const [own, setReport] = useState(initial);
+  // The refetched window (can_edit, sent_at, pdf_status) reaches this open card (review 11-11).
+  const report = withServerWindow(own, initial);
   const [values, setValues] = useState<FormValues>(() => entryValuesOf(initial, studentProgram));
   const [problem, setProblem] = useState<string | null>(null);
   const mode = useReportMode(report);

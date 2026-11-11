@@ -53,6 +53,7 @@ test('«إلغاء الحلقة» opens the reason form in place; a landed cance
   await fireEvent.changeText(screen.getByLabelText(new RegExp(w.reason)), 'سفر');
   await fireEvent.press(screen.getByRole('button', { name: w.cancelSubmit }));
   await waitFor(() => expect(screen.getByText(w.cancelledOk)).toBeTruthy());
+  expect(screen.queryByTestId('teacher-cancel-form')).toBeNull();
 });
 
 test('nothing to do on a started, closed or other lesson', async () => {

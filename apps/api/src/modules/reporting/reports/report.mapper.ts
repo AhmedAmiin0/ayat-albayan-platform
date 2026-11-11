@@ -50,7 +50,7 @@ export function reportView(row: ReportRow, ctx: ViewContext): ReportView {
     pdf_error: row.pdf_error,
     sent_at: row.sent_at,
     attachments: [...row.attachments].sort((a, b) => a.created_at.localeCompare(b.created_at)),
-    can_edit: ctx.role !== null && canEditReport({ role: ctx.role, submittedAt, now: ctx.now, minutes: ctx.minutes }),
+    can_edit: ctx.role !== null && canEditReport({ role: ctx.role, submittedAt, sentAt: instant(row.sent_at), now: ctx.now, minutes: ctx.minutes }),
     edit_until: until?.toISOString() ?? null,
     ...v2Fields(row),
   };
