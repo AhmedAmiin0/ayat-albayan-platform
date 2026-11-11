@@ -1,12 +1,12 @@
 import type { StudentAttendanceTable } from '@ab/shared';
 import { View } from 'react-native';
-import { useViewerTz, zoneNote } from '@/core/lib/clock';
+import { zoneNote } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { FilterPills } from '@/core/ui/form/FilterPills';
-import { COLUMNS, ROW_LINE } from './AttendanceLogRow';
+import { COLUMNS, ROW_LINE, useLogTz } from './AttendanceLogRow';
 import { monthOf, totalsItems } from './attendance-log-text';
 
 interface AttendanceLogHeadProps {
@@ -23,8 +23,7 @@ interface AttendanceLogHeadProps {
  * «حضر · غاب · بعذر · متأخر · ألغيت · أُجّلت», then the table's column header.
  */
 export function AttendanceLogHead({ data, month, onMonth, tz: zone }: AttendanceLogHeadProps) {
-  const viewer = useViewerTz();
-  const tz = zone ?? viewer;
+  const tz = useLogTz(zone);
   const { color } = useTheme();
   const w = t.sales.student.log;
   const head = { fontFamily: type.ui[600], fontSize: type.size['2xs'], lineHeight: type.lineHeight(type.size['2xs']), color: color.ink2 };

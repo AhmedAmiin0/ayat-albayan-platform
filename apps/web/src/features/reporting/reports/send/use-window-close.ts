@@ -16,7 +16,8 @@ export function useWindowClose(report: Pick<ReportView, 'edit_until' | 'can_edit
   const [round, setRound] = useState(0);
   const { edit_until: editUntil, can_edit: canEdit } = report;
   useEffect(() => {
-    const wait = closeRefetchIn({ edit_until: editUntil, can_edit: canEdit }, { now: new Date(), round });
+    const window = { edit_until: editUntil, can_edit: canEdit };
+    const wait = closeRefetchIn(window, { now: new Date(), round });
     if (wait === null) return undefined;
     const refetch = () =>
       Promise.all([

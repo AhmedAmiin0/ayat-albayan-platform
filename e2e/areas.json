@@ -195,6 +195,7 @@
         "teaching/schedule-all-teachers.spec.ts",
         "teaching/schedule-cancel.spec.ts",
         "teaching/lessons-auto-held.sql.spec.ts",
+        "teaching/teacher-confirm.sql.spec.ts",
         "teaching/schedule-overview.spec.ts",
         "teaching/schedule-series.spec.ts",
         "teaching/schedule-stale.spec.ts",

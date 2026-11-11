@@ -1,4 +1,5 @@
-import { isOpenLesson, type LessonView } from '@ab/shared';
+import { isOpenLesson, LESSON_STATUSES, type LessonView } from '@ab/shared';
+import { z } from 'zod';
 
 // docs/46 C3/C4/C5: the teacher's own routes (self.teacher), never the admin's /lessons/:id/cancel.
 
@@ -37,3 +38,10 @@ export const confirmedChipShown = (
   lesson: ActionLesson,
   o: { answer: ActionLesson | undefined; now: Date },
 ): boolean => confirmedNow(lesson, o.answer) && teacherCanAct(lesson, o.now);
+
+/** The fields of the confirm's answer (a LessonView) the chip reads, parsed at the boundary. */
+export const confirmAnswerSchema = z.object({
+  status: z.enum(LESSON_STATUSES),
+  starts_at: z.string(),
+  teacher_confirmed_at: z.string().nullable().optional(),
+});

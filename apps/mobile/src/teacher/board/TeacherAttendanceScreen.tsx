@@ -58,8 +58,8 @@ function Waiting({ failed, retry }: { failed: boolean; retry: () => void }) {
 
 /**
  * «سجل الحضور» of one of my students (docs/46 C5, C7): only my own lessons with them, all time, a
- * month at a time (her zone, months and dates alike): the month pills, the month's totals and the striped table of the
- * sales log (AttendanceLogHead, AttendanceLogRow) from GET /teachers/me/students/:id/attendance.
+ * month at a time (her zone, months and dates alike): the month pills, the month's totals and
+ * the striped table of the sales log (AttendanceLogHead, AttendanceLogRow) from GET /teachers/me/students/:id/attendance.
  */
 export function TeacherAttendanceScreen() {
   const id = useLocalSearchParams<{ id?: string }>().id ?? '';
@@ -88,7 +88,12 @@ export function TeacherAttendanceScreen() {
   return (
     <Screen>
       {header(monthOf(data.month))}
-      <AttendanceLogHead data={data} month={month ?? data.month} onMonth={setMonth} tz={tz} />
+      <AttendanceLogHead
+        data={data}
+        month={month ?? data.month}
+        onMonth={setMonth}
+        tz={tz}
+      />
       <Rows data={data} tz={tz} />
     </Screen>
   );

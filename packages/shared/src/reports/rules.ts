@@ -73,7 +73,7 @@ export interface EditWindowInput {
   minutes: number;
 }
 
-/** The teacher's own rule: never once sent, else a draft any time or until first submit + minutes. */
+/** The teacher's rule: never once sent, else a draft any time or until submit + minutes. */
 const teacherMayEdit = (input: EditWindowInput): boolean => {
   if (input.sentAt !== null) return false;
   const until = editUntil(input);
