@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CLOCK_SLACK_MS, renderCutoff, SEND_GRACE_MS } from './report-pdf.cutoff';
+import { CLOCK_SLACK_MS, renderCutoff, SEND_GRACE_MS } from './render-cutoff';
 
 const NOW = new Date('2026-11-11T10:00:00Z');
 const at = (iso: string) => new Date(iso).getTime();

@@ -3,7 +3,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import type { TablesInsert } from '@ab/db';
 import { wakeOn } from '@/common/jobs';
 import type { ReadyMessage } from './ready/report-ready-choice';
-import { renderCutoff } from './report-pdf.cutoff';
+import { renderCutoff } from './ready/render-cutoff';
 import { ReportPdfSettings } from './report-pdf.settings';
 
 export type Finish =
