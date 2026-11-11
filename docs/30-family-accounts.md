@@ -201,9 +201,10 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
   login, gets no code, and a code can never open such a login (`Provisioner.teacher` requires an enabled
   `teacher` profile: `403 account_disabled`, only after a right code). Code subject `{ kind: 'teacher', id:
   teachers.id }`, purpose `sign_in` (migration `20261111000100`); single use like every code.
-- **Destination (D2).** While she has **no login**: `teachers.phone_e164`. Once she has one: **her login's own
-  phone** (`profiles.phone_e164`), as staff reset codes; none → nothing is sent (still `202`). Editing a
-  teacher record can therefore never redirect the codes of an existing login.
+- **Destination (D2).** While she has **no login**, and while her login is still **setup-pending** (role
+  `teacher` and its auth email still `isFamilyEmail`, owner 2026-11-11): `teachers.phone_e164`. After setup:
+  **her login's own phone** (`profiles.phone_e164`), as staff reset codes; none → nothing is sent (still
+  `202`). Editing a teacher record can therefore never redirect the codes of a set-up login.
 - **First sign-in.** The first right code makes her `teacher` login (`t-<teachers.id>@family.invalid`, the
   record's name and zone) and links `teachers.profile_id`. The new profile takes the record's phone only while
   no profile and no guardian row holds it. Then `/account-setup` («أكمل حسابك»; mobile shows the same screen
@@ -215,15 +216,22 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
   phone through the teacher record to her `teacher` login only), or with a code again.
 - **«المستخدمون».** A teacher login created there without a phone takes the record's (same «nobody else holds
   it» rule); `tools/scripts/teacher-phones/teacher-phones-backfill.mjs` does the same for existing logins
-  (prints SQL, dry run by default; production only on the owner's go).
+  (prints SQL; the dry run lists every row it would write with a masked phone, and `--apply` needs the
+  reviewed `--ids=` and rolls back on any difference; production only on the owner's go).
 - **Shared number, after the first sign-in.** A teacher whose number is also a guardian's gets a login
-  without a phone, so later codes and staff resets have nowhere to go (D2: never the record's phone once
-  she has a login); she signs in with email / username / phone + password, and an admin resets a forgotten
-  password («إعادة تعيين كلمة السر» on «المستخدمون»). The request still answers `202`.
-- **Residual risk (accepted, D2).** Whoever holds `teachers.write` (admin by default) can change a not-yet-
-  signed-in teacher's `phone_e164` and so receive her **first** code, i.e. sign in as that teacher once and set
-  the email. It cannot reach a teacher who already has a login (her codes go to her login's phone), nor any
-  admin, sales or family login.
+  without a phone (a guardians row keeps the number, so the family's code sign-in is never blocked). Until
+  she finishes setup her codes still go to the record phone (above), so signing out before setup never
+  locks her out. After setup codes and staff resets have nowhere to go; she signs in with email / username /
+  phone + password, and an admin resets a forgotten password («إعادة تعيين كلمة السر» on «المستخدمون»).
+  The request still answers `202`.
+- **Adopting a left auth user.** `t-<id>@family.invalid` may already exist (a failed attempt). It is adopted
+  only when it has no profile, or a profile of the same role that no record links to; else the sign-in fails
+  before anything is touched. An adopted login gets a fresh random password and loses its sessions. `PUT
+  /me/email` refuses `@family.invalid` addresses, as `PUT /me/setup` and «المستخدمون» do.
+- **Residual risk (accepted, D2).** Whoever holds `teachers.write` (admin by default) can change the
+  `phone_e164` of a teacher who has no login or has not finished setup, and so receive her code, i.e. sign
+  in as that teacher and set the email. It cannot reach a teacher who finished setup (her codes go to her
+  login's phone), nor any admin, sales or family login.
 
 ## 10. Open items
 

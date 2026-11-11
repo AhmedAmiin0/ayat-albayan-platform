@@ -1,4 +1,4 @@
-import { parseIdentifier, type CodeSession, type PasswordSession } from '@ab/shared';
+import { isFamilyEmail, parseIdentifier, type CodeSession, type PasswordSession } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { Provisioner } from '@/modules/people/sign-in/accounts/provision';
 import {
@@ -30,6 +30,11 @@ export class SignInAccounts {
 
   teacherByPhone(phone: string): Promise<TeacherRec | null> {
     return this.subjects.teacherByPhone(phone);
+  }
+
+  /** Her login exists but its first-time setup is not done (auth email still synthetic, A4). */
+  async setupPending(teacher: TeacherRec): Promise<boolean> {
+    return teacher.login ? isFamilyEmail(await this.auth.emailOf(teacher.login.id)) : false;
   }
 
   /** The guardian's login (made at the first verified code) and its session. 401 invalid_code. */

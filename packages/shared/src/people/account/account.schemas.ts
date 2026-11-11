@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { phoneE164 } from '@ab/core';
+import { isFamilyEmail } from '../users/sign-in.js';
 import { PASSWORD_MAX } from '../users/validation.js';
 
 // «حسابي» (R-ACC-01..05, owner 2026-10-06): what a signed-in user may change on their OWN login.
@@ -34,9 +35,14 @@ export const profileUpdateSchema = z
   });
 export type ProfileUpdate = z.output<typeof profileUpdateSchema>;
 
-/** PUT /me/email (R-ACC-03). */
+/** PUT /me/email (R-ACC-03). Never a synthetic @family.invalid address (a code login's own). */
 export const emailChangeSchema = z.object({
-  email: z.string().trim().toLowerCase().pipe(z.email('invalid_email').max(254)),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .pipe(z.email('invalid_email').max(254))
+    .refine((v) => !isFamilyEmail(v), 'invalid_email'),
   current_password: password,
 });
 export type EmailChange = z.output<typeof emailChangeSchema>;

@@ -7,8 +7,8 @@ import { teacherCodePhone } from './teacher-destination';
 
 /**
  * A teacher's WhatsApp-code sign-in (docs/46 A2, D2), mirroring FamilyCodeService: the typed phone
- * is only a lookup key, the code goes to the record's phone while she has no login, else to her
- * login's own phone. The first verified code makes her `teacher` login (A3); setup follows (A4).
+ * is only a lookup key, the code goes to the record's phone while she has no login or her login's
+ * setup is unfinished, else to her login's own phone. The first verified code makes her `teacher` login (A3); setup follows (A4).
  */
 @Injectable()
 export class TeacherCodeService {
@@ -49,9 +49,14 @@ export class TeacherCodeService {
 
   private async send(raw: string): Promise<void> {
     const teacher = (await this.kit.staffAvailable()) ? await this.lookup(raw) : null;
-    const phone = teacher ? teacherCodePhone(teacher) : null;
+    const phone = teacher ? await this.destination(teacher) : null;
     if (!teacher || !phone) return;
     await this.kit.issue({ purpose: 'sign_in', subject: subjectOf(teacher), phone });
+  }
+
+  /** D2 + the owner call of 11-11: a setup-pending login still gets codes on the record phone. */
+  private async destination(teacher: TeacherRec): Promise<string | null> {
+    return teacherCodePhone(teacher, await this.accounts.setupPending(teacher));
   }
 }
 

@@ -108,6 +108,20 @@ export class SubjectsRepo implements SubjectStore {
     return data.length === 1;
   }
 
+  async isLinked(profileId: string): Promise<boolean> {
+    const counts = await Promise.all(
+      Object.values(LINK_TABLE).map(async (table) => {
+        const { count, error } = await this.db
+          .from(table)
+          .select('id', { count: 'exact', head: true })
+          .eq('profile_id', profileId);
+        if (error) throw dbError(error);
+        return count ?? 0;
+      }),
+    );
+    return counts.some((n) => n > 0);
+  }
+
   private async oneProfile(column: 'id' | 'username' | 'phone_e164', value: string): Promise<ProfileRec | null> {
     const { data, error } = await this.db.from('profiles').select(PROFILE).eq(column, value).maybeSingle();
     if (error) throw dbError(error);

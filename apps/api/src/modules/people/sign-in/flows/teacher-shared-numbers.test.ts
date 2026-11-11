@@ -62,6 +62,30 @@ describe('a teacher who is also a parent (docs/46 «Shared numbers»)', () => {
     expect(roleOf(w, 'guardian')).toEqual([expect.objectContaining({ phone: null })]);
   });
 
+  it('parent first, setup unfinished: a second teacher code still reaches the record phone', async () => {
+    const w = sharedWorld();
+    await familySignIn(w);
+    await teacherSignIn(w);
+    const before = w.send.sent.length;
+    await w.teachers.request({ phone: SHARED }, IP);
+    await w.kit.idle();
+    expect(w.send.sent.slice(before).map((s) => s.phone)).toEqual([SHARED]);
+    await expect(teacherSignIn(w)).resolves.toBeUndefined();
+  });
+
+  it('after setup the code goes only to the login phone (none here: nothing sent)', async () => {
+    const w = sharedWorld();
+    await familySignIn(w);
+    await teacherSignIn(w);
+    const login = roleOf(w, 'teacher')[0];
+    const user = w.auth.users.find((u) => u.id === login?.id);
+    if (user) user.email = 'teacher-real@example.com';
+    const before = w.send.sent.length;
+    await w.teachers.request({ phone: SHARED }, IP);
+    await w.kit.idle();
+    expect(w.send.sent.length).toBe(before);
+  });
+
   it("phone + password finds the teacher through her record, not the parent's login (A5)", async () => {
     const w = sharedWorld();
     await familySignIn(w);

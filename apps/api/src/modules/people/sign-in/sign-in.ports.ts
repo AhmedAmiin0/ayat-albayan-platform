@@ -108,6 +108,8 @@ export interface SubjectStore {
   /** Any profile holding this phone (profiles.phone_e164 is unique). */
   profileByPhone(phone: string): Promise<ProfileRec | null>;
   insertProfile(row: NewProfile): Promise<void>;
+  /** True when any guardians / students / teachers row links to this profile. */
+  isLinked(profileId: string): Promise<boolean>;
   /** Writes the link only while the record has none: false = someone linked it first. */
   link(input: { kind: LinkKind; recordId: string; profileId: string }): Promise<boolean>;
 }

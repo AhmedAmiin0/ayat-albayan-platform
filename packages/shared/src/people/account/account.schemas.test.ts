@@ -25,6 +25,7 @@ describe('email, password and avatar bodies (R-ACC-03..05)', () => {
     expect(emailChangeSchema.parse({ email: ' A@B.Test ', current_password: 'p' }).email).toBe('a@b.test');
     expect(emailChangeSchema.safeParse({ email: 'a@b.test', current_password: '' }).success).toBe(false);
     expect(emailChangeSchema.safeParse({ email: 'nope', current_password: 'p' }).success).toBe(false);
+    expect(emailChangeSchema.safeParse({ email: 't-1@family.invalid', current_password: 'p' }).success).toBe(false);
   });
   it('caps the new password at 72 and needs the current one', () => {
     expect(passwordChangeSchema.safeParse({ current_password: 'p', new_password: 'x'.repeat(73) }).success).toBe(false);
