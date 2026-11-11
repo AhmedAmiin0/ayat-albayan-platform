@@ -6121,7 +6121,7 @@
       },
       "MINIO_DRIVE_BACKUP": {
         "label": "Back up MinIO files to Google Drive",
-        "hint": "Off by default. When on, the server uploads every night a compressed archive of the files new or changed in MinIO that are not backed up yet, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The backup never deletes any file from Drive: when space runs low, do not delete single archives (files held only in them drop out of the backup and are not sent again); add Drive storage, or move the whole folder to the trash and empty the trash (no space is freed before that); the next night starts a fresh complete copy, and there is no backup until it finishes. PDFs and images are already compressed, so most of the saving comes from other files."
+        "hint": "Off by default. When on, the server uploads once a week (Friday before dawn) a compressed archive of the files new or changed in MinIO that are not backed up yet, to a backup folder (named \"platform files backup\" in Arabic) in the Google account linked in the Google section. It runs only while that account is linked and the MinIO settings are complete. The backup never deletes any file from Drive: when space runs low, do not delete single archives (files held only in them drop out of the backup and are not sent again); add Drive storage, or move the whole folder to the trash and empty the trash (no space is freed before that); the next weekly run starts a fresh complete copy, and there is no backup until it finishes. PDFs and images are already compressed, so most of the saving comes from other files."
       }
     },
     "developer": "For developers",
@@ -6134,8 +6134,8 @@
       "off": "Off. Turn it on above, then save.",
       "needsMinio": "Waiting for complete MinIO settings.",
       "needsGoogle": "Waiting for the Google account to be linked in the Google section.",
-      "none": "No archive uploaded yet. The job runs every night at 4:00 Riyadh time.",
-      "last": "Last archive: night of {day} ({objects}), {raw} before compression → {compressed} after.",
+      "none": "No archive uploaded yet. The job runs once a week, on Friday at 4:00 Riyadh time.",
+      "last": "Last archive: {day} ({objects}), {raw} before compression → {compressed} after.",
       "files": {
         "one": "1 file",
         "two": "2 files",
@@ -6145,16 +6145,16 @@
       "error": "Last error: {error}",
       "quota": "Free space on Drive: {free} of {limit}.",
       "quotaUnlimited": "Drive space is unlimited.",
-      "lowQuota": "Less than 2 GB is free on Drive, so nothing is uploaded until there is room. Do not delete single archives: files held only in them drop out of the backup and are not sent again. Add Drive storage, or move the whole backup folder to the trash and empty the trash (no space is freed before that); the next night starts a fresh complete copy, and there is no backup until it finishes.",
+      "lowQuota": "Less than 2 GB is free on Drive, so nothing is uploaded until there is room. Do not delete single archives: files held only in them drop out of the backup and are not sent again. Add Drive storage, or move the whole backup folder to the trash and empty the trash (no space is freed before that); the next weekly run starts a fresh complete copy, and there is no backup until it finishes.",
       "note": "PDFs and images are already compressed, so they barely shrink.",
       "loadError": "Could not load the backup status.",
       "sizeGb": "{n} GB",
       "sizeMb": "{n} MB",
       "skipped": {
-        "one": "1 file was not backed up last night; it is tried again every night:",
-        "two": "2 files were not backed up last night; they are tried again every night:",
-        "few": "{n} files were not backed up last night; they are tried again every night:",
-        "other": "{n} files were not backed up last night; they are tried again every night:"
+        "one": "1 file was not backed up in the last run; it is tried again every week:",
+        "two": "2 files were not backed up in the last run; they are tried again every week:",
+        "few": "{n} files were not backed up in the last run; they are tried again every week:",
+        "other": "{n} files were not backed up in the last run; they are tried again every week:"
       },
       "skippedItem": "{name} ({size}, {why})",
       "waiting": {
@@ -6454,15 +6454,15 @@
       "disconnected": "The Google account link expired, so sync stopped. Reconnect it from the settings.",
       "teacherUnmapped": "{name}'s lessons go to the main calendar only until their calendar is mapped.",
       "scriptEventPresent": "{name}'s calendar is still built from the sheet: stop the script for this teacher first",
-      "backupFailed": "The platform files backup to Google Drive failed: {error}. It will run again next night.",
+      "backupFailed": "The platform files backup to Google Drive failed: {error}. It will run again next week.",
       "backupSkipped": {
-        "one": "Tonight's backup did not copy 1 file: {names}. The other files are still copied, and it is tried again every night.",
-        "two": "Tonight's backup did not copy 2 files: {names}. The other files are still copied, and they are tried again every night.",
-        "few": "Tonight's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every night.",
-        "other": "Tonight's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every night."
+        "one": "This week's backup did not copy 1 file: {names}. The other files are still copied, and it is tried again every week.",
+        "two": "This week's backup did not copy 2 files: {names}. The other files are still copied, and they are tried again every week.",
+        "few": "This week's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every week.",
+        "other": "This week's backup did not copy {n} files, among them: {names}. The other files are still copied, and they are tried again every week."
       },
       "backupSkippedItem": "{name} ({size}, {why})",
-      "backupDriveFull": "Google Drive is nearly full: tonight's backup could not upload everything, because the free space does not exceed the kept reserve (2 GB). Do not delete single archives: files held only in them drop out of the backup and are not sent again. Adding Drive storage is best. Otherwise move the whole backup folder to the trash and empty the trash (no space is freed before that); the next night starts a fresh complete copy, and there is no backup until it finishes."
+      "backupDriveFull": "Google Drive is nearly full: this week's backup could not upload everything, because the free space does not exceed the kept reserve (2 GB). Do not delete single archives: files held only in them drop out of the backup and are not sent again. Adding Drive storage is best. Otherwise move the whole backup folder to the trash and empty the trash (no space is freed before that); the next weekly run starts a fresh complete copy, and there is no backup until it finishes."
     },
     "web": {
       "updated": "Updated {at}",

@@ -7,11 +7,14 @@ import {
   type OnModuleDestroy,
 } from '@nestjs/common';
 import { BackgroundJob } from '@/config/role/background-job';
-import { msUntilUtcHour } from './plan/labels';
+import { msUntilUtcWeekly } from './plan/labels';
 import { DriveBackupRunner, type RunOutcome } from './drive-backup.runner';
 
-/** 01:00 UTC = 04:00 Riyadh: the quiet hour, before the Google sync's 02:00 UTC reconcile. */
-const RUN_UTC_HOUR = 1;
+/**
+ * Once a week (owner 2026-11-11): Friday 01:00 UTC = Friday 04:00 Riyadh, the quiet hour of the
+ * weekend, before the Google sync's 02:00 UTC reconcile.
+ */
+const RUN_AT = { weekday: 5, hour: 1 };
 /**
  * A run that hangs (a stalled stream) is aborted after this: its MinIO and Drive requests, the
  * part's pipeline and the upload's waits get the abort (memory and sockets freed).
@@ -35,7 +38,7 @@ const aborted = (signal: AbortSignal): Promise<'failed'> =>
   });
 
 /**
- * The MinIO → Drive backup worker (docs/45 §5): once a night in the worker process (the Google
+ * The MinIO → Drive backup worker (docs/45 §5): once a week in the worker process (the Google
  * sync's pattern: in-process, single-flight, timers unref'd); `kick` runs it now (tests, a retry).
  */
 @BackgroundJob({ name: 'drive-backup', kick: 'kick' })
@@ -49,11 +52,11 @@ export class DriveBackupJob implements OnApplicationBootstrap, OnModuleDestroy {
   constructor(@Inject(DriveBackupRunner) private readonly runner: DriveBackupRunner) {}
 
   onApplicationBootstrap(): void {
-    const nightly = () => {
+    const weekly = () => {
       void this.kick();
-      this.timer = setTimeout(nightly, msUntilUtcHour(new Date(), RUN_UTC_HOUR)).unref();
+      this.timer = setTimeout(weekly, msUntilUtcWeekly(new Date(), RUN_AT)).unref();
     };
-    this.timer = setTimeout(nightly, msUntilUtcHour(new Date(), RUN_UTC_HOUR)).unref();
+    this.timer = setTimeout(weekly, msUntilUtcWeekly(new Date(), RUN_AT)).unref();
   }
 
   onModuleDestroy(): void {

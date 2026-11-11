@@ -64,7 +64,7 @@ only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «ا�
 | `MINIO_ACCESS_KEY`    | `minio.env` `MINIO_APP_ACCESS_KEY` | the app user, never the root user                                            |
 | `MINIO_SECRET_KEY`    | `minio.env` `MINIO_APP_SECRET_KEY` | Vault secret                                                                 |
 | `MINIO_RECORDINGS`    | `false`                            | recordings into MinIO (with the driver on `minio`); uncapped, §7             |
-| `MINIO_DRIVE_BACKUP`  | `false` → `true`                   | nightly compressed archives to Google Drive (§5.1)                           |
+| `MINIO_DRIVE_BACKUP`  | `false` → `true`                   | weekly compressed archives to Google Drive (§5.1)                            |
 
 `MINIO_ENDPOINT` and `MINIO_PUBLIC_URL` refuse an IP literal (the Evolution base's SSRF rules): `http://` only
 to `localhost` or the listed docker service `ayat-minio`, `https://` only to a public host name.
@@ -227,7 +227,7 @@ weekly fulls, no sealing and no retention: freeing space on Drive is done by han
   once (marked with the app property `ab_backup=minio`; its id and the account's address in
   `drive_backup_state`). The account is Drive's own answer (`about.user`): after a reconnect to
   another account, nothing goes to the old folder; a new folder starts and everything is sent again.
-- **When:** every night at 01:00 UTC (04:00 Riyadh) in `ayat-worker` (`drive-backup` job, the Google
+- **When:** once a week, Friday 01:00 UTC (04:00 Riyadh; owner 2026-11-11, was nightly) in `ayat-worker` (`drive-backup` job, the Google
   sync's single-flight pattern; a run is aborted after 8 hours and the next one waits for it to end).
 - **Format:** `add-YYYY-MM-DD.pN.tar.zst` (the night's UTC day, part N = 1, 2, …; a part number is
   never reused, failed parts included): a POSIX (pax) tar, entries `<bucket>/<key>` with the
