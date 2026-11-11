@@ -7924,7 +7924,7 @@
     "codesUnavailable": "WhatsApp code sign-in is not available right now. Sign in with your password.",
     "setup": {
       "title": "Complete your account",
-      "intro": "Choose an email and a password before you continue. Afterwards you sign in with your email, username or mobile number and the password, or with a WhatsApp code.",
+      "intro": "Choose an email and a password before you continue. Afterwards you sign in with your email, username or mobile number and the password.",
       "email": "Email",
       "password": "Password",
       "confirm": "Type the password again",

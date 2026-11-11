@@ -29,6 +29,15 @@ function PhoneStep({ flow }: { flow: CodeSignIn }) {
         value={flow.phone}
         onChangeText={flow.setPhone}
       />
+      <AppText
+        style={{
+          fontSize: type.size.xs,
+          lineHeight: type.lineHeight(type.size.xs),
+          color: color.ink2,
+        }}
+      >
+        {t.familyAuth.phoneHint}
+      </AppText>
       {flow.error ? <AuthAlert text={flow.error} /> : null}
       <Button
         label={flow.busy ? t.familyAuth.sending : t.familyAuth.sendCode}

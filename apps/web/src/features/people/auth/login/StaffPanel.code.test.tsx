@@ -54,3 +54,25 @@ describe('StaffPanel «الدخول برمز واتساب» (docs/46 A6)', () =>
     expect(screen.queryByRole('button', { name: T.withCode })).toBeNull();
   });
 });
+
+describe('the teacher code tab speaks for teachers (review)', () => {
+  it('a 503 at verify says the teacher text, not the family one', async () => {
+    const { signInWithCode } = await import('@/features/people/auth/sign-in');
+    vi.mocked(signInWithCode).mockResolvedValue({
+      ok: false,
+      error: t.familyAuth.errors.codes_unavailable,
+    });
+    apiFetch.mockResolvedValue({ available: false, staff: true });
+    apiSend.mockResolvedValue(undefined);
+    renderPanel();
+    fireEvent.click(await screen.findByRole('button', { name: T.withCode }));
+    fireEvent.change(screen.getByLabelText(t.familyAuth.phone), {
+      target: { value: '+966500000005' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: t.familyAuth.sendCode }));
+    const first = await screen.findByLabelText(t.familyAuth.codeDigit.replace('{n}', '1'));
+    fireEvent.paste(first, { clipboardData: { getData: () => '123456' } });
+    fireEvent.click(screen.getByRole('button', { name: t.familyAuth.verify }));
+    expect(await screen.findByText(T.codesUnavailable)).toBeTruthy();
+  });
+});

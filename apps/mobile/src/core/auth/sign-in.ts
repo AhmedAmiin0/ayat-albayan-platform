@@ -1,4 +1,4 @@
-import { isEmailIdentifier } from '@ab/client-core';
+import { isEmailIdentifier, signInError } from '@ab/client-core';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { supabase } from '@/core/lib/http/supabase';
@@ -82,5 +82,9 @@ export async function signInWithCode(body: { phone: string; code: string }): Pro
 }
 
 /** A disabled login says so (403 after a right code); anything else in the sign-in words. */
-const codeRefusal = (error: unknown): string =>
-  isAccountDisabled(error) ? noticeText('accountDisabled') : authErrorText(error, t.common.error);
+const codeRefusal = (error: unknown): string => {
+  if (isAccountDisabled(error)) return noticeText('accountDisabled');
+  return signInError(error) === 'codes_unavailable'
+    ? t.teacherAuth.codesUnavailable
+    : authErrorText(error, t.common.error);
+};

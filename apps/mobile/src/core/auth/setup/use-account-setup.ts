@@ -35,7 +35,8 @@ export function useAccountSetup() {
     setBusy(true);
     try {
       await authApi.setupAccount({ email: input.email.trim(), password: input.password });
-      await supabase.auth.refreshSession();
+      const { error: refresh } = await supabase.auth.refreshSession();
+      if (refresh) throw refresh;
       await queryClient.refetchQueries({ queryKey: pathKey('/auth/me') });
     } catch (e) {
       setError(setupRefusal(e) ?? authErrorText(e, t.common.error));

@@ -45,7 +45,7 @@ export function StaffPanel() {
     return (
       <>
         <p className="text-body text-pretty text-ink-2">{t.teacherAuth.codeIntro}</p>
-        <PhoneSignIn codes={authApi.staffCodes}>
+        <PhoneSignIn codes={authApi.staffCodes} unavailable={t.teacherAuth.codesUnavailable}>
           <LinkRow links={[toPassword]} />
         </PhoneSignIn>
       </>

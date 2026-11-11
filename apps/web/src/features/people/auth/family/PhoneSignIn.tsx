@@ -15,12 +15,14 @@ const F = t.familyAuth;
 interface Props {
   /** The family's routes or the teacher's (docs/46 A6): the same steps and answers. */
   codes: CodeRoutes;
+  /** The words for «codes cannot be sent now» on this tab (the teacher's are not the family's). */
+  unavailable?: string;
   /** Links under the phone. */
   children?: ReactNode;
 }
 
 /** A WhatsApp number → a 6-digit code → the role's home (docs/30 §1, §5; teachers: docs/46 A2). */
-export function PhoneSignIn({ codes, children }: Props) {
+export function PhoneSignIn({ codes, unavailable, children }: Props) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [phone, setPhone] = useState('');
@@ -36,7 +38,7 @@ export function PhoneSignIn({ codes, children }: Props) {
       const code = codeOf(flow.digits);
       if (code === null || flow.target === null) return F.errors.code_incomplete;
       const result = await signInWithCode({ phone: flow.target, code }, queryClient, codes.verify);
-      if (!result.ok) return result.error;
+      if (!result.ok) return swapUnavailable(result.error, unavailable);
       await navigate({ to: result.home });
       return undefined;
     });
@@ -67,3 +69,7 @@ export function PhoneSignIn({ codes, children }: Props) {
     />
   );
 }
+
+/** The tab's own «not available» words in place of the family's, when it has some. */
+const swapUnavailable = (error: string, unavailable: string | undefined): string =>
+  error === F.errors.codes_unavailable ? (unavailable ?? error) : error;

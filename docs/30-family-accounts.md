@@ -216,6 +216,10 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
 - **«المستخدمون».** A teacher login created there without a phone takes the record's (same «nobody else holds
   it» rule); `tools/scripts/teacher-phones/teacher-phones-backfill.mjs` does the same for existing logins
   (prints SQL, dry run by default; production only on the owner's go).
+- **Shared number, after the first sign-in.** A teacher whose number is also a guardian's gets a login
+  without a phone, so later codes and staff resets have nowhere to go (D2: never the record's phone once
+  she has a login); she signs in with email / username / phone + password, and an admin resets a forgotten
+  password («إعادة تعيين كلمة السر» on «المستخدمون»). The request still answers `202`.
 - **Residual risk (accepted, D2).** Whoever holds `teachers.write` (admin by default) can change a not-yet-
   signed-in teacher's `phone_e164` and so receive her **first** code, i.e. sign in as that teacher once and set
   the email. It cannot reach a teacher who already has a login (her codes go to her login's phone), nor any
