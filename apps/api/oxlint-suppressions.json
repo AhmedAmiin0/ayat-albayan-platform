@@ -7801,10 +7801,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 2
-    },
-    "stylistic/max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "src/modules/people/sign-in/accounts/subjects.repo.ts": {
@@ -7876,11 +7873,6 @@
       "count": 2
     }
   },
-  "src/modules/people/sign-in/flows/family-code.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/people/sign-in/flows/password.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 3
@@ -7888,9 +7880,6 @@
   },
   "src/modules/people/sign-in/flows/sign-in.accounts.ts": {
     "typescript/consistent-type-imports": {
-      "count": 1
-    },
-    "complexity": {
       "count": 1
     }
   },
@@ -7910,9 +7899,6 @@
   "src/modules/people/sign-in/sign-in.controller.ts": {
     "typescript/consistent-type-imports": {
       "count": 4
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/modules/people/sign-in/sign-in.fakes.accounts.ts": {
@@ -7926,16 +7912,6 @@
   "src/modules/people/sign-in/sign-in.fakes.ts": {
     "stylistic/max-len": {
       "count": 6
-    }
-  },
-  "src/modules/people/sign-in/sign-in.http.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/people/sign-in/sign-in.module.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/modules/people/sign-in/sign-in.ports.ts": {
@@ -8403,9 +8379,6 @@
     }
   },
   "src/modules/people/users/store/users.store.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    },
     "ab/module-boundaries": {
       "count": 1
     }

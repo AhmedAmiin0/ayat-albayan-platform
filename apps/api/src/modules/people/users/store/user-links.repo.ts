@@ -2,6 +2,7 @@ import type { LinkKind } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { phoneAware } from '@/modules/people/users/users.errors';
+import { adoptTeacherPhone } from './teacher-phone.repo';
 import * as links from './users.links.repo';
 import type { NewTeacher } from './users.store';
 
@@ -36,6 +37,10 @@ export class UserLinksRepo {
 
   syncTeacher(profileId: string, patch: TeacherPatch) {
     return links.syncTeacher(this.db, { profileId, patch });
+  }
+
+  adoptTeacherPhone(teacherId: string, profileId: string) {
+    return adoptTeacherPhone(this.db, { teacherId, profileId });
   }
 
   async createTeacher(row: NewTeacher): Promise<string> {

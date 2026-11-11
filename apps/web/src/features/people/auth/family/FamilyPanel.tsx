@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
+import { authApi } from '@/features/people/auth/login/auth-api';
 import { CodesGate } from '@/features/people/auth/login/CodesGate';
 import { LinkRow } from '@/features/people/auth/login/LinkRow';
 import { PasswordForm } from '@/features/people/auth/login/PasswordForm';
@@ -41,13 +42,17 @@ function FamilyViews() {
       {view === 'phone' && <p className="text-body text-pretty text-ink-2">{F.familyIntro}</p>}
       {saved && <StatusNote>{F.passwordSaved}</StatusNote>}
       {view === 'phone' ? (
-        <PhoneSignIn>
+        <PhoneSignIn codes={authApi.familyCodes}>
           <LinkRow links={[{ label: F.withUsername, onClick: go('username') }, firstTime]} />
         </PhoneSignIn>
       ) : (
         <PasswordForm id="username" label={F.username} hint={F.studentUsernameHint}>
           <LinkRow
-            links={[{ label: F.withPhone, onClick: go('phone') }, { label: F.forgot, onClick: go('forgot') }, firstTime]}
+            links={[
+              { label: F.withPhone, onClick: go('phone') },
+              { label: F.forgot, onClick: go('forgot') },
+              firstTime,
+            ]}
           />
         </PasswordForm>
       )}

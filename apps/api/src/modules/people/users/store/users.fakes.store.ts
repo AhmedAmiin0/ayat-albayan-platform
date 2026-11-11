@@ -108,6 +108,13 @@ export class FakeUserStore implements UserStore {
     return `t-${this.teachers.length}`;
   }
 
+  /** docs/46 A7: the teacher phones a link copied onto a phoneless profile. */
+  adopted: { teacherId: string; profileId: string }[] = [];
+  adoptTeacherPhone(teacherId: string, profileId: string): Promise<void> {
+    this.adopted.push({ teacherId, profileId });
+    return Promise.resolve();
+  }
+
   async syncTeacher(profileId: string, patch: object) {
     this.synced.push({ profileId, patch });
   }

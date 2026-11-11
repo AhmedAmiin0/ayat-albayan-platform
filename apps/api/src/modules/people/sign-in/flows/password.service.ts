@@ -9,7 +9,16 @@ import { Injectable } from '@nestjs/common';
 import { badRequest } from '@/common/http/errors';
 import { SignInAccounts } from './sign-in.accounts';
 import { codesUnavailable, invalidCode, invalidCredentials, SignInKit } from './sign-in.kit';
-import { PasswordTargets } from './targets';
+import { PasswordTargets, type PasswordTarget } from './targets';
+
+/**
+ * Which send check a target's code needs (docs/46 A1): staff codes go out whenever codes can be
+ * sent; a student's (the family side) also needs family_login_enabled.
+ */
+const CODES_OPEN: Record<PasswordTarget['kind'], (kit: SignInKit) => Promise<boolean>> = {
+  staff: (kit) => kit.staffAvailable(),
+  student: (kit) => kit.available(),
+};
 
 /**
  * Passwords (docs/30 §1, §6): username sign-in (a student's code or a teacher's username; an email
@@ -36,8 +45,7 @@ export class PasswordService {
   async forgot(body: ForgotBody, ip: string): Promise<void> {
     await this.kit.guard('request', { ip, identifier: body.identifier });
     this.kit.later(async () => {
-      if (!(await this.kit.available())) return;
-      const target = await this.targets.resolve(body.identifier);
+      const target = await this.openTarget(body.identifier);
       if (target) await this.kit.issue(target.code);
     });
   }
@@ -50,8 +58,8 @@ export class PasswordService {
     await this.kit.guard('check', { ip, identifier: body.identifier });
     const problem = passwordProblem(body.password, min);
     if (problem) throw badRequest(`password_${problem}`, { min });
-    if (!(await this.kit.available())) throw codesUnavailable();
-    const target = await this.targets.resolve(body.identifier);
+    if (!(await this.kit.staffAvailable())) throw codesUnavailable();
+    const target = await this.openTarget(body.identifier);
     if (!target) throw invalidCode();
     const ok = await this.kit.check({
       subject: target.code.subject,
@@ -60,5 +68,13 @@ export class PasswordService {
     });
     if (!ok) throw invalidCode();
     await this.kit.record(await this.accounts.setPassword(target, body.password));
+  }
+
+  /** The identifier's target while its codes can go out, else null (one answer for both). */
+  private async openTarget(identifier: string): Promise<PasswordTarget | null> {
+    const target = (await this.kit.staffAvailable())
+      ? await this.targets.resolve(identifier)
+      : null;
+    return target && (await CODES_OPEN[target.kind](this.kit)) ? target : null;
   }
 }

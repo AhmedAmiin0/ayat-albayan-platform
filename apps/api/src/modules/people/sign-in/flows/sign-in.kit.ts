@@ -55,6 +55,14 @@ export class SignInKit {
     return this.codes.available();
   }
 
+  /**
+   * Staff codes (teacher sign-in, staff reset) can go out now: pepper + send, no family flag
+   * (docs/46 A1).
+   */
+  staffAvailable(): Promise<boolean> {
+    return this.codes.sendable();
+  }
+
   check(input: CodeCheck): Promise<boolean> {
     return this.codes.check(input);
   }
@@ -62,6 +70,12 @@ export class SignInKit {
   /** Issue a code (CodeIssuer takes the phone's shared send buckets once it would send). */
   issue(target: CodeTarget): Promise<boolean> {
     return this.codes.issue(target);
+  }
+
+  /** A 202 code request: the limits now, `send` after the answer (so timing tells nothing). */
+  async answerFirst(at: { ip: string; phone: string }, send: (phone: string) => Promise<void>) {
+    await this.guard('request', { ip: at.ip, identifier: at.phone });
+    this.later(() => send(at.phone));
   }
 
   later(task: () => Promise<unknown>): void {

@@ -26,6 +26,7 @@ export function userStoreOf({ directory, profiles, links }: StoreParts): UserSto
     linkTarget: (kind, id) => links.linkTarget(kind, id),
     link: (kind, id, profileId) => links.link(kind, id, profileId),
     createTeacher: (row) => links.createTeacher(row),
+    adoptTeacherPhone: (teacherId, profileId) => links.adoptTeacherPhone(teacherId, profileId),
     syncTeacher: (profileId, patch) => links.syncTeacher(profileId, patch),
     candidates: (kind, q) => links.candidates(kind, q),
   };

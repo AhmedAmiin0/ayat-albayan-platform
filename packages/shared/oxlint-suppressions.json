@@ -580,7 +580,7 @@
   },
   "src/people/users/sign-in.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 2
     }
   },
   "src/people/users/users.schemas.ts": {

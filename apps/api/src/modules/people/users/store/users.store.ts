@@ -51,7 +51,9 @@ export interface NewTeacher {
   tz: string;
 }
 
-/** A table that references the user; `link` rows are cleared by the delete, `history` rows block it. */
+/**
+ * A table that references the user; `link` rows are cleared by the delete, `history` rows block it.
+ */
 export interface RefRow {
   ref_table: string;
   ref_column: string;
@@ -72,10 +74,15 @@ export interface UserStore {
   staff(): Promise<StaffProfile[]>;
   profile(id: string): Promise<StaffProfile | null>;
   upsertProfile(row: NewProfile): Promise<void>;
-  /** Role / role_id changes and disabling are guarded in the DB too (migration 287): 409 last_admin. */
+  /**
+   * Role / role_id changes and disabling are guarded in the DB too (migration 287): 409 last_admin.
+   */
   updateProfile(id: string, patch: ProfilePatch): Promise<void>;
   setDisabled(id: string, value: { by: string; reason: string | null } | null): Promise<void>;
-  /** Deletes the profile's browser push subscriptions (a disabled account gets nothing; app tokens stay). */
+  /**
+   * Deletes the profile's browser push subscriptions (a disabled account gets nothing; app tokens
+   * stay).
+   */
   forgetBrowsers(id: string): Promise<void>;
   /** Is the phone on another profile or on a teacher record that is not this profile's? */
   phoneTaken(phone: string, exceptProfile: string): Promise<boolean>;
@@ -83,8 +90,16 @@ export interface UserStore {
   /** Sets profile_id only while it is still null; false = somebody linked it first. */
   link(kind: LinkKind, id: string, profileId: string): Promise<boolean>;
   createTeacher(row: NewTeacher): Promise<string>;
+  /**
+   * docs/46 A7: the linked teacher's phone onto a phoneless profile, unless a profile or guardian
+   * holds it.
+   */
+  adoptTeacherPhone(teacherId: string, profileId: string): Promise<void>;
   /** The linked teacher's display name / phone follow the profile. */
-  syncTeacher(profileId: string, patch: { display_name_ar?: string; phone_e164?: string | null }): Promise<void>;
+  syncTeacher(
+    profileId: string,
+    patch: { display_name_ar?: string; phone_e164?: string | null },
+  ): Promise<void>;
   candidates(kind: LinkKind, q: string | undefined): Promise<LinkCandidate[]>;
   references(id: string): Promise<RefRow[]>;
 }
@@ -104,7 +119,10 @@ export interface AuthAdmin {
   /** Without a password the login is passwordless until a recovery link is used. */
   create(input: { email: string; password?: string; fullName: string }): Promise<string>;
   update(id: string, patch: AuthPatch): Promise<void>;
-  /** Deletes the login; its profile goes with it and the linked records' profile_id are set null by their FKs. */
+  /**
+   * Deletes the login; its profile goes with it and the linked records' profile_id are set null by
+   * their FKs.
+   */
   remove(id: string): Promise<void>;
   recoveryLink(email: string): Promise<string>;
   revokeSessions(id: string): Promise<void>;

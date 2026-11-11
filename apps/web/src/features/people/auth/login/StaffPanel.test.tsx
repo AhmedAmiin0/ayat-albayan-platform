@@ -12,7 +12,8 @@ vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
 
 const F = t.familyAuth;
 const click = (name: string) => fireEvent.click(screen.getByRole('button', { name }));
-const type = (label: string, value: string) => fireEvent.change(screen.getByLabelText(label), { target: { value } });
+const type = (label: string, value: string) =>
+  fireEvent.change(screen.getByLabelText(label), { target: { value } });
 
 function renderPanel() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -30,7 +31,7 @@ describe('StaffPanel «نسيت كلمة المرور؟» (docs/30 §4)', () => 
   });
 
   it('codes off: the admin resets it; back returns to the sign-in form', async () => {
-    apiFetch.mockResolvedValue({ available: false });
+    apiFetch.mockResolvedValue({ available: false, staff: false });
     renderPanel();
     click(F.forgot);
     expect(await screen.findByText(F.staffResetByAdmin)).toBeTruthy();
@@ -40,14 +41,16 @@ describe('StaffPanel «نسيت كلمة المرور؟» (docs/30 §4)', () => 
   });
 
   it('codes on: the reset flow, then «حُفظت كلمة المرور» above the sign-in form', async () => {
-    apiFetch.mockResolvedValue({ available: true });
+    apiFetch.mockResolvedValue({ available: false, staff: true });
     renderPanel();
     click(F.forgot);
     await screen.findByLabelText(F.identifier);
     type(F.identifier, 'admin@ab.local');
     click(F.sendCode);
     await screen.findByRole('status');
-    fireEvent.paste(screen.getByLabelText(F.codeDigit.replace('{n}', '1')), { clipboardData: { getData: () => '123456' } });
+    fireEvent.paste(screen.getByLabelText(F.codeDigit.replace('{n}', '1')), {
+      clipboardData: { getData: () => '123456' },
+    });
     type(F.newPassword, 'new-secret-1');
     type(F.confirmPassword, 'new-secret-1');
     click(F.savePassword);

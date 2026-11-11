@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { AuthAlert, ForgotPassword, setLoginNotice, signIn, useLoginNotice } from '@/core/auth';
+import {
+  AuthAlert,
+  ForgotPassword,
+  setLoginNotice,
+  signIn,
+  TeacherCodeSignIn,
+  useLoginNotice,
+  useStaffCodes,
+} from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
 import { type, useTheme } from '@/theme';
 import { Button } from '@/core/ui/primitives/Button';
@@ -9,15 +17,23 @@ import { KeyboardFrame } from '@/core/ui/layout/KeyboardFrame';
 import { Mark } from '@/core/ui/primitives/Mark';
 import { AppText } from '@/core/ui/primitives/AppText';
 
+/**
+ * password: identifier + password; code: a teacher's WhatsApp code (docs/46 A8); forgot: the reset.
+ */
+type Mode = 'password' | 'code' | 'forgot';
+
 // docs/07 §12: mobile drops the binding cover, frame and cartouche; it keeps the mark, Amiri title,
-// 16pt inputs and one lapis button. The error is the §10 inline alert: danger-soft, struck glyph, word.
+// 16pt inputs and one lapis button. The error is the §10 inline alert: danger-soft, struck glyph,
+// word.
 export default function Login() {
   const { color } = useTheme();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [forgot, setForgot] = useState(false);
+  const [mode, setMode] = useState<Mode>('password');
+  const codes = useStaffCodes();
+  const toPassword = () => setMode('password');
   // Why the last session ended (account disabled, wrong app), until the next attempt.
   const notice = useLoginNotice();
   const alert = error ?? notice;
@@ -27,7 +43,8 @@ export default function Login() {
     setError(null);
     setLoginNotice(null);
     const res = await signIn({ identifier: identifier.trim(), password });
-    // On success the auth gate swaps this screen for the tabs (Stack.Protected); stay busy till then.
+    // On success the auth gate swaps this screen for the tabs (Stack.Protected); stay busy till
+    // then.
     if (res.ok) return;
     setBusy(false);
     setError(res.error);
@@ -55,9 +72,9 @@ export default function Login() {
             {t.auth.loginTitle}
           </AppText>
         </View>
-        {forgot ? (
-          <ForgotPassword onBack={() => setForgot(false)} />
-        ) : (
+        {mode === 'forgot' ? <ForgotPassword onBack={toPassword} /> : null}
+        {mode === 'code' ? <TeacherCodeSignIn onBack={toPassword} /> : null}
+        {mode === 'password' ? (
           <>
             <Field
               label={t.auth.email}
@@ -78,9 +95,16 @@ export default function Login() {
             />
             {alert ? <AuthAlert text={alert} /> : null}
             <Button label={busy ? t.auth.submitting : t.auth.submit} onPress={submit} busy={busy} />
-            <Button variant="ghost" label={t.familyAuth.forgot} onPress={() => setForgot(true)} />
+            {codes ? (
+              <Button
+                variant="ghost"
+                label={t.teacherAuth.withCode}
+                onPress={() => setMode('code')}
+              />
+            ) : null}
+            <Button variant="ghost" label={t.familyAuth.forgot} onPress={() => setMode('forgot')} />
           </>
-        )}
+        ) : null}
       </ScrollView>
     </KeyboardFrame>
   );

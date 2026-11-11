@@ -8,6 +8,7 @@ import { PasswordService } from './flows/password.service';
 import { SignInAccounts } from './flows/sign-in.accounts';
 import { SignInKit } from './flows/sign-in.kit';
 import { PasswordTargets } from './flows/targets';
+import { TeacherCodeService } from './flows/teacher-code.service';
 import { FakeAudit, FakeCodes, FakeCodeSend, fakeSettings } from './sign-in.fakes';
 import { FakeAuth, FakeSubjects } from './sign-in.fakes.accounts';
 
@@ -32,5 +33,6 @@ export function signInWorld(opts: WorldOptions = {}) {
   const accounts = new SignInAccounts(subjects, auth, provision);
   const family = new FamilyCodeService(kit, accounts);
   const passwords = new PasswordService(kit, accounts, new PasswordTargets(subjects, auth));
-  return { codes, send, audit, subjects, auth, kit, family, passwords, limitStore };
+  const teachers = new TeacherCodeService(kit, accounts);
+  return { codes, send, audit, subjects, auth, kit, family, teachers, passwords, limitStore };
 }
