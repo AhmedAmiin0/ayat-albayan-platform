@@ -5,10 +5,14 @@ import { readyMessages } from './report-ready-choice';
 // Invented data (report-pdf.fakes): no real student, teacher or phone.
 const NOW = new Date('2026-09-29T15:12:00Z');
 const base = {
-  source: sampleSource({ report: { ...sampleSource().report, version: 1 } }),
+  // First submit 31 min ago, window 30: this is the render at the close (+ the 60 s grace).
+  source: sampleSource({
+    report: { ...sampleSource().report, version: 1, submitted_at: '2026-09-29T14:41:00Z' },
+  }),
   feedbackUrl: 'https://api.example/r/Ab12Cd34Ef',
   now: NOW,
   pdfPath: 's1/l1.pdf',
+  minutes: 30,
 };
 const PUBLIC_ID = '0123456789abcdef0123456789abcdef';
 
@@ -84,12 +88,25 @@ describe('readyMessages — which templates go after the PDF', () => {
     expect(out.map((m) => m.template_key)).toEqual(['report_ready']);
   });
 
+  it("an admin's re-render of an old never-sent report (version 3) never tells the teacher", () => {
+    const old = { ...base.source.report, version: 3, sent_at: null, submitted_at: '2026-08-01T10:00:00Z' };
+    const out = readyMessages({ ...base, source: { ...base.source, report: old }, approved: new Set(['report_ready_teacher']) });
+    expect(out.map((m) => m.template_key)).toEqual(['report_ready']);
+  });
+
+  it('the teacher is still told when the close render runs within the slack (a slow poll)', () => {
+    const late = new Date(Date.parse('2026-09-29T14:41:00Z') + (30 + 1 + 60) * 60_000);
+    const approved = new Set(['report_ready_teacher']);
+    expect(readyMessages({ ...base, approved, now: late })).toHaveLength(2);
+    const past = new Date(late.getTime() + 1000);
+    expect(readyMessages({ ...base, approved, now: past })).toHaveLength(1);
+  });
+
   it('the same report renders twice (an edit): the same dedup keys, so nothing is sent twice', () => {
     const approved = new Set(['report_ready_family', 'report_ready_teacher']);
     const first = readyMessages({ ...base, approved }).map((m) => m.dedup_key);
-    const again = readyMessages({ ...base, approved, now: new Date('2026-09-30T08:00:00Z') }).map(
-      (m) => m.dedup_key,
-    );
+    const now = new Date(NOW.getTime() + 30_000);
+    const again = readyMessages({ ...base, approved, now }).map((m) => m.dedup_key);
     expect(again).toEqual(first);
   });
 });

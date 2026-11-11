@@ -66,21 +66,33 @@ export interface EditWindowInput {
   role: UserRole;
   /** First submit; null for a draft that was never submitted. */
   submittedAt: Date | null;
+  /** lesson_reports.sent_at: once the family got it, the teacher's window is closed for good. */
+  sentAt: Date | null;
   now: Date;
   /** settings.report_teacher_edit_minutes (30; 0 closes at once). Not the no-login link's hours. */
   minutes: number;
 }
 
+/** The teacher's own rule: never once sent, else a draft any time or until first submit + minutes. */
+const teacherMayEdit = (input: EditWindowInput): boolean => {
+  if (input.sentAt !== null) return false;
+  const until = editUntil(input);
+  return until === null || input.now.getTime() < until.getTime();
+};
+
+const EDIT_RULE: Partial<Record<UserRole, (input: EditWindowInput) => boolean>> = {
+  admin: () => true,
+  teacher: teacherMayEdit,
+};
+
 /**
  * R-REP-02: admins edit always; the report's teacher edits a draft any time and a submitted report
  * until `minutes` after its first submit (edits never extend it; the boundary instant is already
- * closed); guardians never.
+ * closed) and never once it was sent (owner 2026-11-11: raising the setting does not re-open a
+ * sent report); guardians never.
  */
 export function canEditReport(input: EditWindowInput): boolean {
-  if (input.role === 'admin') return true;
-  if (input.role !== 'teacher') return false;
-  const until = editUntil(input);
-  return until === null || input.now.getTime() < until.getTime();
+  return EDIT_RULE[input.role]?.(input) ?? false;
 }
 
 /** End of the teacher's edit window; null while the report is a draft. */

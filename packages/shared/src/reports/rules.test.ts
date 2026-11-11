@@ -85,11 +85,17 @@ describe('canEditReport (R-REP-02: teacher 30 min from the first submit, admin a
   ] as const;
   const cases = rows.map(([name, role, submittedAt, now, expected]) => ({ name, role, submittedAt, now, expected }));
   it.each(cases)('$name → $expected', (c) => {
-    expect(canEditReport({ role: c.role, submittedAt: c.submittedAt, now: at(c.now), minutes: 30 })).toBe(c.expected);
+    expect(canEditReport({ role: c.role, submittedAt: c.submittedAt, sentAt: null, now: at(c.now), minutes: 30 })).toBe(c.expected);
   });
 
   it('minutes = 0 closes a submitted report at once for the teacher', () => {
-    expect(canEditReport({ role: 'teacher', submittedAt: SUBMITTED, now: SUBMITTED, minutes: 0 })).toBe(false);
+    expect(canEditReport({ role: 'teacher', submittedAt: SUBMITTED, sentAt: null, now: SUBMITTED, minutes: 0 })).toBe(false);
+  });
+
+  it('a sent report is closed for the teacher even inside the window; admins unchanged', () => {
+    const sent = { submittedAt: SUBMITTED, sentAt: SUBMITTED, now: SUBMITTED, minutes: 1440 };
+    expect(canEditReport({ role: 'teacher', ...sent })).toBe(false);
+    expect(canEditReport({ role: 'admin', ...sent })).toBe(true);
   });
 
   it('editUntil is submit + minutes, null for a draft', () => {

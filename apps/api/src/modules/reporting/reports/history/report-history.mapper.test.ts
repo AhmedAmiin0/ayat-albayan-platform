@@ -36,11 +36,11 @@ describe('historyResponse — the edit window per reader (docs/46 B7)', () => {
   const now = new Date('2026-11-11T10:20:00Z');
 
   it('the teacher: can_edit until first submit + minutes, with edit_until and submitted_at', () => {
-    const [item] = historyResponse({ ...base, window: { role: 'teacher', now, minutes: 30 } }).items;
+    const [item] = historyResponse({ ...base, window: { role: 'teacher', teacherId: TEACHER_ID, now, minutes: 30 } }).items;
     expect(item).toMatchObject({
       submitted_at: '2026-11-11T10:00:00.000Z', can_edit: true, edit_until: '2026-11-11T10:30:00.000Z',
     });
-    const [late] = historyResponse({ ...base, window: { role: 'teacher', now, minutes: 15 } }).items;
+    const [late] = historyResponse({ ...base, window: { role: 'teacher', teacherId: TEACHER_ID, now, minutes: 15 } }).items;
     expect(late?.can_edit).toBe(false);
   });
 
@@ -48,8 +48,22 @@ describe('historyResponse — the edit window per reader (docs/46 B7)', () => {
     const [item] = historyResponse(base).items;
     expect(item).toMatchObject({ submitted_at: '2026-11-11T10:00:00.000Z' });
     expect(item).not.toHaveProperty('can_edit');
-    const [anon] = historyResponse({ ...base, window: { role: null, now, minutes: 30 } }).items;
+    const [anon] = historyResponse({ ...base, window: { role: null, teacherId: null, now, minutes: 30 } }).items;
     expect(anon?.can_edit).toBe(false);
+  });
+
+  it("another teacher's report: closed for a teacher, still open for an admin (owner 11-11)", () => {
+    const w = { now, minutes: 30 };
+    const other = historyResponse({ ...base, window: { role: 'teacher', teacherId: 't-x', ...w } });
+    expect(other.items[0]?.can_edit).toBe(false);
+    const admin = historyResponse({ ...base, window: { role: 'admin', teacherId: null, ...w } });
+    expect(admin.items[0]?.can_edit).toBe(true);
+  });
+
+  it('a sent report is closed for its teacher inside the window (owner 11-11)', () => {
+    const sent = [row('a', { submitted_at: '2026-11-11 10:00:00+00', sent_at: '2026-11-11 10:05:00+00' })];
+    const window = { role: 'teacher' as const, teacherId: TEACHER_ID, now, minutes: 30 };
+    expect(historyResponse({ ...base, rows: sent, window }).items[0]?.can_edit).toBe(false);
   });
 });
 

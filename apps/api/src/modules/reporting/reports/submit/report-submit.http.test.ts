@@ -124,6 +124,14 @@ describe('POST /reports/:id/submit (R3; R-REP-02/03/04)', () => {
     expect((await h.call({ method: 'POST', url: URL, body: edit, token: 'admin' })).statusCode).toBe(200);
   });
 
+  it('a sent report: the teacher gets 409 edit_window_closed inside the window; the admin edits', async () => {
+    h.reports.get.mockResolvedValue({ ...submittedRow(), sent_at: AFTER.toISOString() });
+    h.reports.lesson.mockResolvedValue(lessonRow({ status: 'completed' }));
+    const edit = { ...FORM, expectedVersion: 1 };
+    expect((await h.call({ method: 'POST', url: URL, body: edit })).json().code).toBe('edit_window_closed');
+    expect((await h.call({ method: 'POST', url: URL, body: edit, token: 'admin' })).statusCode).toBe(200);
+  });
+
   it("another teacher's report → 403; unknown → 404", async () => {
     expect((await h.call({ method: 'POST', url: URL, body: FORM, token: 'other' })).statusCode).toBe(403);
     h.reports.get.mockResolvedValue(null);

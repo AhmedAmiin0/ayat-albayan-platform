@@ -22,8 +22,8 @@ export class ReportHistoryService {
   async student({ studentId, page, user }: HistoryInput): Promise<StudentReportsResponse> {
     const student = await this.queries.student(studentId);
     if (!student) throw new NotFoundException();
-    if (user.role !== 'admin') {
-      const teacherId = await this.access.teacherId(user);
+    const teacherId = user.role === 'admin' ? null : await this.access.teacherId(user);
+    if (teacherId !== null) {
       const own = student.teacher_id === teacherId || (await this.queries.taught({ teacherId, studentId }));
       if (!own) throw new ForbiddenException();
     }
@@ -34,7 +34,7 @@ export class ReportHistoryService {
       this.settings.read(),
     ]);
     const minutes = settings.report_teacher_edit_minutes;
-    const reader = { role: user.role, now: new Date(), minutes };
+    const reader = { role: user.role, teacherId, now: new Date(), minutes };
     return historyResponse({ rows, lessons, seq, page, window: reader });
   }
 

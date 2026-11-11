@@ -27,6 +27,8 @@ interface HistoryParts {
 
 interface SummaryWindow {
   role: UserRole | null;
+  /** The reading teacher's own teachers.id (null for admins): another teacher's report is closed. */
+  teacherId: string | null;
   now: Date;
   minutes: number;
 }
@@ -76,8 +78,13 @@ function summary({ row, lesson }: Joined, seq: ReadonlyMap<string, number>): Rep
 // A fake row may leave the column out: read it as never submitted, not an invalid date.
 const instantOf = (at: string | null | undefined): Date | null => (at ? new Date(at) : null);
 const isoOf = (at: Date | null): string | null => (at === null ? null : at.toISOString());
-const mayEdit = (w: SummaryWindow, submittedAt: Date | null): boolean =>
-  w.role !== null && canEditReport({ role: w.role, submittedAt, now: w.now, minutes: w.minutes });
+/** A teacher edits only her own report (owner 2026-11-11); admins keep the link to any. */
+const ownsOrAdmin = (w: SummaryWindow, row: HistoryRow): boolean =>
+  w.role === 'admin' || row.teacher_id === w.teacherId;
+const mayEdit = (w: SummaryWindow, row: HistoryRow): boolean => {
+  const at = { submittedAt: instantOf(row.submitted_at), sentAt: instantOf(row.sent_at) };
+  return w.role !== null && ownsOrAdmin(w, row) && canEditReport({ role: w.role, ...at, now: w.now, minutes: w.minutes });
+};
 
 /** can_edit / edit_until for the reader (R-REP-02, docs/46 B7); nothing without a window. */
 function editWindow(row: HistoryRow, w: SummaryWindow | undefined): Partial<ReportSummaryView> {
@@ -85,7 +92,7 @@ function editWindow(row: HistoryRow, w: SummaryWindow | undefined): Partial<Repo
   const base = { submitted_at: isoOf(submittedAt) };
   if (!w) return base;
   const until = editUntil({ submittedAt, minutes: w.minutes });
-  return { ...base, can_edit: mayEdit(w, submittedAt), edit_until: isoOf(until) };
+  return { ...base, can_edit: mayEdit(w, row), edit_until: isoOf(until) };
 }
 
 function point({ row, lesson }: Joined): GradePoint {
