@@ -336,7 +336,8 @@ by that teacher (404 `link_not_found`), from the lesson's start (409 `link_not_o
 `report_teacher_edit_hours` (410 `link_expired`), the report one of that lesson (404). The writes run the SAME
 services as the signed-in routes (`ReportsService`, `ReportSubmitService`, `ReportV2Service` with a `LinkCaller`),
 so drafts, versions, the lesson outcome, the PDF and report_ready behave exactly the same; the edit window after a
-submit is the teacher's (`canEditReport`). Actor = the teacher's auth user when they have one, else none; a
+submit is the teacher's (`canEditReport` with `report_teacher_edit_minutes`, docs/46: the link's own lifetime above
+stays on `report_teacher_edit_hours`). Actor = the teacher's auth user when they have one, else none; a
 submit also writes an audit row `teacher_link_submit` naming the teacher and the lesson. Rate-limited (120 a
 minute per IP, 60 per IP and link). No attachments on the link (they need a session). Web page: `/teacher-report/<token>`
 (no sign-in); signed-in teachers keep `/teacher/report/<id>`. Since 2026-11-06 the reminder carries the page
@@ -371,6 +372,8 @@ guardian's tz, {{3}} the teacher's display name, {{4}} the family's «رأيك �
 (`FeedbackLinks`: the live link the admin's request would send, else a new 14-day one; answered = the page says
 so), shortened (kind `feedback`); without a feedback link the academy's web address goes (logged). Trial lessons
 use the same template. ONE template call, so the PDF can never go twice; dedup stays `report_ready:{report id}`.
+Since docs/46 (PR B) it is queued when the teacher's edit window closes (first submit + `report_teacher_edit_minutes`
++ 60 s), with the final version; `report_ready_teacher` goes with it while `sent_at` is null (not only version 1).
 A row queued before this change carries two values and is refused before any call (Meta's 132000), never sent
 with the wrong ones. The CRM's `report_session` / `report_trial_session` are PENDING_DELETION on Meta: never use
 them. Fallback, not needed today (the crm driver sends a document header as `headerMediaUrl`):
