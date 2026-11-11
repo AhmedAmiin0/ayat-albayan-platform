@@ -3,9 +3,15 @@ import { loadEnv } from '@/config/env/env';
 import { SupabaseAccountAuth } from './account/account.auth';
 import { AccountAvatarService } from './account/account.avatar.service';
 import { AccountController } from './account/account.controller';
-import { ACCOUNT_AUTH, ACCOUNT_CONFIG, ACCOUNT_STORE, type AccountConfig } from './account/account.ports';
+import {
+  ACCOUNT_AUTH,
+  ACCOUNT_CONFIG,
+  ACCOUNT_STORE,
+  type AccountConfig,
+} from './account/account.ports';
 import { AccountRepo } from './account/account.repo';
 import { AccountService } from './account/account.service';
+import { AccountSetupService } from './account/account.setup.service';
 import { MeController } from './me.controller';
 import { MeService } from './me.service';
 
@@ -15,6 +21,7 @@ import { MeService } from './me.service';
   providers: [
     MeService,
     AccountService,
+    AccountSetupService,
     AccountAvatarService,
     { provide: ACCOUNT_STORE, useClass: AccountRepo },
     { provide: ACCOUNT_AUTH, useClass: SupabaseAccountAuth },

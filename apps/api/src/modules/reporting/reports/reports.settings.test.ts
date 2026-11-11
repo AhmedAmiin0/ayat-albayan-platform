@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { ReportsSettings } from './reports.settings';
 
-/** What ReportGate read before the reader existed, plus the v2 form flag: the reader lists exactly these. */
-const BEFORE = ['report_teacher_edit_hours', 'late_cancel_hours', 'report_form_v2'] as const;
+/** ReportGate's keys: the edit window (docs/46 B1), the link lifetime, the late-cancel policy, the v2 flag. */
+const BEFORE = ['report_teacher_edit_minutes', 'report_teacher_edit_hours', 'late_cancel_hours', 'report_form_v2'] as const;
 
 describe('ReportsSettings', () => {
   it('reads exactly its keys, in order, with the registry defaults', async () => {
@@ -14,7 +14,9 @@ describe('ReportsSettings', () => {
   });
 
   it('answers the stored edit window, late-cancel policy and v2 flag', async () => {
-    const values = await readerOf(ReportsSettings, { report_teacher_edit_hours: 6, late_cancel_hours: 12, report_form_v2: true }).read();
-    expect(values).toEqual({ report_teacher_edit_hours: 6, late_cancel_hours: 12, report_form_v2: true });
+    const stored = {
+      report_teacher_edit_minutes: 45, report_teacher_edit_hours: 6, late_cancel_hours: 12, report_form_v2: true,
+    };
+    expect(await readerOf(ReportsSettings, stored).read()).toEqual(stored);
   });
 });

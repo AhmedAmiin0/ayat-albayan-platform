@@ -18,7 +18,7 @@ const URL = `/reports/${REPORT_ID}/submit`;
 /** The five texts the Google Form required when the student attended (research-forms 12). */
 const TEXT = { recited: 'الفاتحة', newMemorization: 'الملك 1-5', revision: 'جزء عم', notes: 'ممتازة', homework: 'سورة الملك' };
 const FORM = { attendance: 'on_time', grades: FULL_GRADES, overall: 'excellent', ...TEXT, expectedVersion: 0 };
-const DAY = 24 * 3_600_000;
+const WINDOW = 30 * 60_000;
 
 describe('POST /reports/:id/submit (R3; R-REP-02/03/04)', () => {
   let h: Awaited<ReturnType<typeof reportsApp>>;
@@ -112,14 +112,14 @@ describe('POST /reports/:id/submit (R3; R-REP-02/03/04)', () => {
     expect(h.reports.submit).not.toHaveBeenCalled();
   });
 
-  it('an edit: the teacher within 24 h → version 2; after → 409 edit_window_closed; the admin always', async () => {
+  it('an edit: the teacher within 30 min of the first submit → version 2; after → 409 edit_window_closed; the admin always', async () => {
     h.reports.get.mockResolvedValue(submittedRow());
     h.reports.lesson.mockResolvedValue(lessonRow({ status: 'completed' }));
     const edit = { ...FORM, expectedVersion: 1 };
-    vi.setSystemTime(new Date(AFTER.getTime() + DAY - 1000));
+    vi.setSystemTime(new Date(AFTER.getTime() + WINDOW - 1000));
     expect((await h.call({ method: 'POST', url: URL, body: edit })).statusCode).toBe(200);
     expect(h.reports.submit.mock.calls[0]?.[0].report).toMatchObject({ version: 2, submitted_at: AFTER.toISOString() });
-    vi.setSystemTime(new Date(AFTER.getTime() + DAY));
+    vi.setSystemTime(new Date(AFTER.getTime() + WINDOW));
     expect((await h.call({ method: 'POST', url: URL, body: edit })).json().code).toBe('edit_window_closed');
     expect((await h.call({ method: 'POST', url: URL, body: edit, token: 'admin' })).statusCode).toBe(200);
   });

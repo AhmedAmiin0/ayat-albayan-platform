@@ -1,4 +1,4 @@
-import type { TeacherStudentKind, TeacherStudentView } from '@ab/shared';
+import { boardStudents, type TeacherStudentKind, type TeacherStudentView } from '@ab/shared';
 import { useViewerTz } from '@/core/lib/clock';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
@@ -21,6 +21,20 @@ const kinds = (): FilterPill<TeacherStudentKind>[] => [
 
 const keyOf = (s: TeacherStudentView) => s.id;
 
+interface StudentsEmptyProps {
+  kind: TeacherStudentKind;
+  loaded: boolean;
+  failed: boolean;
+  retry: () => void;
+}
+
+/** The empty list of this kind, the failed read with a retry, or «جاري التحميل». */
+function StudentsEmpty({ kind, loaded, failed, retry }: StudentsEmptyProps) {
+  const s = t.teacherStudents;
+  if (loaded) return <EmptyState title={kind === 'trial' ? s.emptyTrial : s.emptySubscribed} />;
+  return failed ? <ErrorState message={s.loadFailed} onRetry={retry} /> : <Note>{t.common.loading}</Note>;
+}
+
 /**
  * «الطلاب» (R-TCH-03): my students in two separate lists, «مشتركين» and «تجريبي», one at a time —
  * never mixed. No phone, guardian or money. Pull to refresh; offline the saved list stays. The list
@@ -30,29 +44,26 @@ const keyOf = (s: TeacherStudentView) => s.id;
 export function TeacherStudentsScreen() {
   const [kind, setKind] = useState<TeacherStudentKind>('subscribed');
   const list = useMyStudents(kind);
+  // The API splits by kind; only current students show (docs/46 D4: never paused or churned).
+  const shown = list.data ? boardStudents(list.data, 'all') : undefined;
+  const retry = () => void list.refetch();
   const tz = useViewerTz();
   const inset = useTabBarInset();
   const renderRow = useCallback(({ item }: ListRenderItemInfo<TeacherStudentView>) => <StudentRow student={item} tz={tz} />, [tz]);
-  const rows = useInsetRows(renderRow, list.data?.length ?? 0);
+  const rows = useInsetRows(renderRow, shown?.length ?? 0);
   return (
     <Screen list>
-      <ScreenHeader title={t.teacherStudents.title} size="h2" connecting count={list.data?.length} />
+      <ScreenHeader title={t.teacherStudents.title} size="h2" connecting count={shown?.length} />
       <FilterPills items={kinds()} value={kind} onChange={setKind} accessibilityLabel={t.teacherStudents.kinds} />
       <FlatList
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 24 + inset }}
-        data={list.data ?? []}
+        data={shown ?? []}
         keyExtractor={keyOf}
         refreshing={list.isRefetching}
-        onRefresh={() => void list.refetch()}
+        onRefresh={retry}
         ListEmptyComponent={
-          list.data ? (
-            <EmptyState title={kind === 'trial' ? t.teacherStudents.emptyTrial : t.teacherStudents.emptySubscribed} />
-          ) : list.isError ? (
-            <ErrorState message={t.teacherStudents.loadFailed} onRetry={() => void list.refetch()} />
-          ) : (
-            <Note>{t.common.loading}</Note>
-          )
+          <StudentsEmpty kind={kind} loaded={!!list.data} failed={list.isError} retry={retry} />
         }
         {...rows}
       />

@@ -12,6 +12,7 @@ import { SalesHistoryRepo, SalesRepo, SalesRosterRepo } from '@/modules/sales/sa
 import { A, NONE, OWN_A } from '@/modules/sales/sales/sales.fakes';
 import { bundle, verify } from '@/modules/sales/sales/academy/sales-academy.fakes';
 import type { TrialLessonRead } from '@/modules/teaching/booking';
+import { TeacherMeRepo } from '@/modules/teaching/lessons';
 import { type AttendanceRow, type LessonFacts, SalesStudentRepo } from './details/sales-student.repo';
 import { ruleRow, upcomingRow } from './sales-students.schedule.fakes';
 import { resetAttendance } from './attendance/student-attendance.fakes';
@@ -77,6 +78,7 @@ export async function studentsApp(settings: Partial<AcademySettings> = {}) {
   const files = { studentPdfUrl: vi.fn() };
   const overview = { exists: vi.fn(), rules: vi.fn(), lessons: vi.fn() };
   const attendance = { exists: vi.fn(), lessons: vi.fn(), starts: vi.fn(), reports: vi.fn() };
+  const me = { me: vi.fn(), students: vi.fn() };
   const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() }, status: { confirm: vi.fn() }, corrections: { correct: vi.fn() } };
   const roster = { rules: vi.fn(), packages: vi.fn(), lessons: vi.fn(), balances: vi.fn() };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
@@ -89,6 +91,7 @@ export async function studentsApp(settings: Partial<AcademySettings> = {}) {
     .overrideProvider(LessonServices).useValue(lessons)
     .overrideProvider(SalesTeacherOverviewRepo).useValue(overview)
     .overrideProvider(StudentAttendanceRepo).useValue(attendance)
+    .overrideProvider(TeacherMeRepo).useValue(me)
     .overrideProvider(SalesRosterRepo).useValue(roster)
     .overrideProvider(SettingsService)
     .useValue(fakeSettings({ sales_require_assignee: true, ...settings }))
@@ -120,5 +123,5 @@ export async function studentsApp(settings: Partial<AcademySettings> = {}) {
     roster.packages.mockResolvedValue([]);
     roster.balances.mockResolvedValue([]);
   };
-  return { app, call, reset, sales, queries, history, reports, files, lessons, schedule, overview, attendance, roster };
+  return { app, call, reset, sales, queries, history, reports, files, lessons, schedule, overview, attendance, roster, me };
 }

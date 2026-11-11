@@ -1,20 +1,9 @@
 import type { UserRole } from '@ab/shared';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { type ReactNode, useState } from 'react';
+import type { ReactNode } from 'react';
 import { Cartouche } from '@/components/ui/display/cartouche';
-import { EmptyState } from '@/components/ui/display/empty-state';
-import { FormAlert } from '@/components/ui/form/form-alert';
 import { PageHead } from '@/components/ui/layout/page';
-import { Pager } from '@/components/ui/layout/pager';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { studentReportsQuery } from '@/features/reporting/reports/api';
-import { useRecordedLessons } from './use-recorded-lessons';
-import { GradeChart } from '@/features/reporting/reports/chart/GradeChart';
-import { ReportHistoryList } from './ReportHistoryList';
-import { TableBox } from '@/components/data-table/TableBox';
-import { cn } from '@/lib/utils';
+import { StudentReportsBody } from './StudentReportsBody';
 
 export interface StudentReportsPageProps {
   studentId: string;
@@ -29,40 +18,14 @@ export interface StudentReportsPageProps {
 
 /** «سجل التقارير» of one student (R-REP-05, issue D2): the grade chart, then every report. */
 export function StudentReportsPage({ studentId, name, role, tz, notice }: StudentReportsPageProps) {
-  const [page, setPage] = useState(1);
-  const reports = useQuery({ ...studentReportsQuery(studentId, page), placeholderData: keepPreviousData });
-  const recorded = useRecordedLessons(studentId);
-  const head = (
+  return (
     <>
       <PageHead>
         <Cartouche>{t.reports.history}</Cartouche>
         {name && <span className="font-display text-h3 font-bold">{name}</span>}
       </PageHead>
       {notice}
-    </>
-  );
-  if (reports.isError) {
-    const forbidden = reports.error instanceof ApiError && reports.error.status === 403;
-    return <>{head}<FormAlert>{forbidden ? t.common.forbidden : t.common.error}</FormAlert></>;
-  }
-  if (!reports.data) return <>{head}<ListSkeleton /></>;
-  const data = reports.data;
-  if (data.total === 0) return <>{head}<EmptyState title={t.reports.noReports} /></>;
-
-  return (
-    <>
-      {head}
-      <section aria-label={t.reports.progress} className="mb-8 grid gap-3">
-        <h2 className="font-display text-h3 font-bold">{t.reports.progress}</h2>
-        <GradeChart series={data.series} tz={tz} />
-      </section>
-      <section aria-label={t.reports.title} className={cn('flex flex-auto flex-col gap-2', reports.isPlaceholderData && 'opacity-60')}>
-        <h2 className="font-display text-h3 font-bold">{t.reports.title}</h2>
-        <TableBox className="px-3">
-          <ReportHistoryList items={data.items} role={role} tz={tz} studentId={studentId} recorded={recorded} />
-        </TableBox>
-        <Pager page={data.page} total={data.total} pageSize={data.pageSize} onPage={setPage} />
-      </section>
+      <StudentReportsBody studentId={studentId} role={role} tz={tz} />
     </>
   );
 }

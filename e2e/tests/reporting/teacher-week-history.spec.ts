@@ -4,9 +4,10 @@ import { startedToday } from '../../support/finance/money';
 import { addDays, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { apiSubmit } from '../../support/reporting/teacher-extra';
 
-// Teacher dashboard beyond journey 2 (R-TCH-03, R-REP-05, R-SCH-03): the teacher's join link, «تأكيد
-// الحلقة» from the card, the week tab across days on the teacher's (Cairo) clock, «تقارير لسه ما
-// اتكتبتش» → the report, and «طلابي» → the report history with its grade chart.
+// Teacher dashboard beyond journey 2 (R-TCH-03, R-REP-05, R-SCH-03, docs/46 C1/C4): the
+// teacher's join link, the week tab across days on the teacher's (Cairo) clock, «سأحضر» on a
+// coming lesson, «تقارير لسه ما اتكتبتش» → the report, and the board «طلابي» → the drawer's
+// report history with its grade chart.
 
 const DAY = 86_400_000;
 const LINK = 'https://meet.jit.si/ayat-e2e-teacher-link';
@@ -41,7 +42,7 @@ async function seedAll(teacherId: string, tag: string) {
 const tab = (page: Page, name: string) => page.getByRole('tab', { name }).click();
 
 test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R-REP-05)', () => {
-  test('join link, confirm, the week by day, a missing report, and the student history chart', async ({ asRole }) => {
+  test('join link, the week by day, «سأحضر», a missing report, and the student history chart', async ({ asRole }) => {
     test.setTimeout(150_000);
     const teacherId = await resetAbrar();
     const [prev] = await withSql((sql) => sql<{ link: string | null }[]>`select meeting_link as link from public.teachers where id = ${teacherId}`);
@@ -54,14 +55,14 @@ test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R
       await teacher.goto('/teacher');
       for (const lessonId of s.past) await apiSubmit(teacher, { lessonId });
 
-      // The teacher's own link, and «تأكيد الحلقة» from today's card.
+      // The teacher's own link; today's card (already started) has no family-style «تأكيد
+      // الحلقة» (docs/46 D1).
       await teacher.reload();
       await expect(teacher.getByRole('region', { name: ar.teacherDash.joinLink }).getByRole('link', { name: ar.teacherDash.join })).toHaveAttribute('href', LINK);
+      await tab(teacher, ar.teacherDash.today);
       const card = teacher.getByRole('article', { name: new RegExp(s.week.name) });
-      await card.getByRole('button', { name: ar.lessons.event.confirm }).click();
-      await expect(card.getByText(ar.enums.lessonStatus.confirmed, { exact: true })).toBeVisible();
-      const confirmed = await withSql((sql) => sql<{ status: string }[]>`select status from public.lessons where id = ${s.weekLessons[0] ?? ''}`);
-      expect(confirmed).toEqual([{ status: 'confirmed' }]);
+      await expect(card.getByRole('button', { name: ar.lessons.event.complete })).toBeVisible();
+      await expect(card.getByRole('button', { name: ar.lessons.event.confirm })).toHaveCount(0);
 
       // The week tab: one card on each of the three days, at the Cairo clock.
       await tab(teacher, ar.teacherDash.week);
@@ -72,6 +73,15 @@ test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R
         await expect(section.getByRole('article', { name: new RegExp(`^${clock} .*${s.week.name}`) })).toHaveCount(1);
       }
 
+      // «سأحضر» on a coming lesson (docs/46 C4): the chip, teacher_confirmed_at set, the
+      // status kept.
+      const ahead = cairo(s.days[1] ?? new Date());
+      const coming = teacher.getByRole('article', { name: new RegExp(`^${ahead.clock} .*${s.week.name}`) }).first();
+      await coming.getByRole('button', { name: ar.teacherBoard.confirm }).click();
+      await expect(coming.getByText(ar.teacherBoard.confirmedChip)).toBeVisible();
+      const said = await withSql((sql) => sql<{ status: string; yes: boolean }[]>`select status, teacher_confirmed_at is not null as yes from public.lessons where id = ${s.weekLessons[1] ?? ''}`);
+      expect(said).toEqual([{ status: 'scheduled', yes: true }]);
+
       // «تقارير لم تُكتب بعد»: the past lesson without a report opens its form.
       await tab(teacher, ar.teacherDash.today);
       const pending = teacher.getByRole('region', { name: ar.reports.pending });
@@ -79,13 +89,14 @@ test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R
       await expect(teacher).toHaveURL(new RegExp(`/teacher/report/${s.missing}$`));
       await expect(teacher.getByRole('region', { name: ar.reports.identity })).toContainText(s.waiting.name);
 
-      // «طلابي» → the student → two reports and two points on the grade chart.
+      // «طلابي» (the board, the home's first tab) → the student → «التقارير»: two reports and
+      // two points on the grade chart.
       await teacher.goto('/teacher');
-      await tab(teacher, ar.teacherDash.myStudents);
-      await teacher.getByRole('table', { name: ar.teacherDash.myStudents }).getByRole('link', { name: s.history.name }).click();
-      await expect(teacher).toHaveURL(new RegExp(`/teacher/reports/${s.history.id}$`));
-      await expect(teacher.getByRole('region', { name: ar.reports.title }).locator('ol > li')).toHaveCount(2);
-      await expect(teacher.getByRole('region', { name: ar.reports.progress }).getByRole('figure').getByRole('img')).toHaveCount(2);
+      await teacher.getByRole('table', { name: ar.teacherBoard.tab }).getByRole('button', { name: s.history.name }).click();
+      const drawer = teacher.getByRole('dialog', { name: s.history.name });
+      await drawer.getByRole('tab', { name: ar.teacherBoard.reportsTab }).click();
+      await expect(drawer.getByRole('region', { name: ar.reports.title }).locator('ol > li')).toHaveCount(2);
+      await expect(drawer.getByRole('region', { name: ar.reports.progress }).getByRole('figure').getByRole('img')).toHaveCount(2);
     } finally {
       await withSql((sql) => sql`update public.teachers set meeting_link = ${link} where id = ${teacherId}`);
     }

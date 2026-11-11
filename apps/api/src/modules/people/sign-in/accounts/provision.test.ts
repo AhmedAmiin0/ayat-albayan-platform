@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FakeAudit } from '@/modules/people/sign-in/sign-in.fakes';
 import { FakeAuth, FakeSubjects, PHONES } from '@/modules/people/sign-in/sign-in.fakes.accounts';
-import { familyEmail, Provisioner } from './provision';
+import { blocksFamily, familyEmail, Provisioner } from './provision';
 
 const setup = () => {
   const subjects = new FakeSubjects();
@@ -50,10 +50,57 @@ describe('lazy provisioning (docs/30 §2)', () => {
 
   it('a guardian phone held by a non-staff profile gets a login without the phone', async () => {
     const { subjects, provision } = setup();
-    subjects.profiles.push({ id: 'p-other', role: 'student', disabled: false, phone: PHONES.guardian });
+    subjects.profiles.push({
+      id: 'p-other',
+      role: 'student',
+      disabled: false,
+      phone: PHONES.guardian,
+    });
     const guardian = subjects.guardians[0];
     if (!guardian) throw new Error('fixture');
     const id = await provision.guardian(guardian);
-    expect(subjects.profiles.find((p) => p.id === id)).toMatchObject({ role: 'guardian', phone: null });
+    expect(subjects.profiles.find((p) => p.id === id)).toMatchObject({
+      role: 'guardian',
+      phone: null,
+    });
+  });
+
+  it('a teacher login never adopts a found login of another role, and never deletes it', async () => {
+    const { subjects, auth, provision } = setup();
+    auth.users.push({ id: 'u-real', email: familyEmail('t', 't-new'), password: 'x' });
+    subjects.profiles.push({ id: 'u-real', role: 'admin', disabled: false, phone: null });
+    const t = {
+      id: 't-new',
+      name: 'المعلمة',
+      tz: 'Africa/Cairo',
+      recordPhone: null,
+      profileId: null,
+      login: null,
+    };
+    await expect(provision.teacher(t)).rejects.toThrow('another role');
+    expect(auth.users.map((u) => u.id)).toContain('u-real');
+  });
+
+  it('a lost teacher link keeps a found login and refuses (403)', async () => {
+    const { subjects, auth, provision } = setup();
+    auth.users.push({ id: 'u-left', email: familyEmail('t', 't-new'), password: null });
+    subjects.link = async () => false;
+    const t = {
+      id: 't-new',
+      name: 'المعلمة',
+      tz: 'Africa/Cairo',
+      recordPhone: null,
+      profileId: null,
+      login: null,
+    };
+    await expect(provision.teacher(t)).rejects.toThrow('account_disabled');
+    expect(auth.users.map((u) => u.id)).toContain('u-left');
+  });
+
+  it('blocksFamily: any staff holder but a teacher', () => {
+    const p = { id: 'p', disabled: false, phone: PHONES.teacher };
+    expect(blocksFamily({ ...p, role: 'teacher' })).toBe(false);
+    expect(blocksFamily({ ...p, role: 'admin' })).toBe(true);
+    expect(blocksFamily(null)).toBe(false);
   });
 });

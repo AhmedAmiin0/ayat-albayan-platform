@@ -18,9 +18,12 @@ interface ChoiceInput extends LinkInput {
 
 type FamilyWay = 'link' | 'document';
 
-/** The teacher hears of the first version only: an edit's re-render days later says nothing new. */
+/**
+ * The teacher hears once, with the family's send (docs/46 B4): the render at the window's close,
+ * whatever version the in-window edits reached; an admin's re-render after the send says nothing.
+ */
 const teacherDue = (i: ChoiceInput): boolean =>
-  i.approved.has('report_ready_teacher') && i.source.report.version === 1;
+  i.approved.has('report_ready_teacher') && i.source.report.sent_at === null;
 
 /** The family's one message: the live page's link once approved, today's PDF document before. */
 const FAMILY: Record<FamilyWay, (input: ChoiceInput) => ReadyMessage> = {

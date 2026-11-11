@@ -14,7 +14,7 @@ export interface TeacherReportView {
   grade_overall: Grade | null;
   status: ReportStatus;
   submitted_at: string | null;
-  /** canEditReport for the teacher, now (settings.report_teacher_edit_hours after submit). */
+  /** canEditReport for the teacher, now (report_teacher_edit_minutes after the first submit). */
   can_edit: boolean;
   /** End of the teacher's edit window (editUntil). */
   edit_until: string | null;

@@ -14,6 +14,7 @@ import { TeacherProposal } from '@/features/teaching/teacher/proposals/TeacherPr
 import { useClock } from '@/lib/clock';
 import { clockDir } from '@/lib/clock-text';
 import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
+import { TeacherLessonActions } from './TeacherLessonActions';
 
 export interface TeacherLessonCardProps {
   lesson: LessonView;
@@ -26,11 +27,12 @@ export interface TeacherLessonCardProps {
 
 /**
  * One lesson on the teacher dashboard (R-TCH-03, R-SCH-08): own time + each student's clock, the
- * status, «الباقة مش مدفوعة» for a flagged student (R-SUB-02), «ادخل الحلقة» (open lessons only:
- * never on a moved / cancelled one), confirm / attendance
- * for open lessons, and «اقترح ميعاد تاني» (or the proposal waiting for the admin). 48px controls.
- * A lesson held in the platform classroom (its own teacher's mode, so a substitute's applies) offers
- * no fixed link: the classroom is the way in.
+ * status, «الباقة مش مدفوعة» for a flagged student (R-SUB-02), «ادخل الحلقة» (open lessons
+ * only: never on a moved / cancelled one), her own «سأحضر» / «إلغاء الحلقة» before the start
+ * (docs/46 C6; the family-style confirm is hidden), attendance for open lessons, and «اقترح
+ * ميعاد تاني» (or the proposal waiting for the admin). 48px controls. A lesson held in the
+ * platform classroom (its own teacher's mode, so a substitute's applies) offers no fixed link:
+ * the classroom is the way in.
  */
 export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherLessonCardProps) {
   const clock = useClock();
@@ -81,7 +83,8 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
         <StaffJoinButton lesson={lesson} size="lg" />
         <CopyLinkButton lesson={lesson} />
         <LessonReportLinks lesson={lesson} role="teacher" size="lg" />
-        <LessonActions lesson={lesson} onDone={onDone} size="lg" />
+        <TeacherLessonActions lesson={lesson} onDone={onDone} />
+        <LessonActions lesson={lesson} onDone={onDone} size="lg" hideConfirm />
       </div>
       <TeacherProposal lesson={lesson} tz={tz} onDone={onDone} />
     </article>

@@ -6750,10 +6750,7 @@
   },
   "src/modules/people/sign-in/accounts/provision.ts": {
     "complexity": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "src/modules/people/sign-in/accounts/subjects.repo.ts": {
@@ -6812,27 +6809,12 @@
       "count": 1
     }
   },
-  "src/modules/people/sign-in/flows/family-code.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/people/sign-in/flows/sign-in.accounts.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/people/sign-in/flows/targets.ts": {
     "complexity": {
       "count": 1
     },
     "max-len": {
       "count": 3
-    }
-  },
-  "src/modules/people/sign-in/sign-in.controller.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/people/sign-in/sign-in.fakes.accounts.ts": {
@@ -6846,16 +6828,6 @@
   "src/modules/people/sign-in/sign-in.fakes.ts": {
     "max-len": {
       "count": 6
-    }
-  },
-  "src/modules/people/sign-in/sign-in.http.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/people/sign-in/sign-in.module.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/people/sign-in/sign-in.ports.ts": {
@@ -7271,9 +7243,6 @@
   "src/modules/people/users/store/users.store.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 5
     }
   },
   "src/modules/people/users/update/users.update.service.ts": {
@@ -8470,9 +8439,6 @@
     }
   },
   "src/modules/reporting/reports/history/report-history.mapper.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     },
@@ -8567,7 +8533,7 @@
   },
   "src/modules/reporting/reports/reports.settings.test.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/reporting/reports/reports.settings.ts": {
@@ -9127,12 +9093,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/sales/sales-students/attendance/student-attendance.repo.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/attendance/student-attendance.service.ts": {
@@ -11663,14 +11629,11 @@
     }
   },
   "src/modules/teaching/lessons/lessons.mapper.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/teaching/lessons/lessons.module.ts": {
@@ -12005,7 +11968,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/lessons/student-lessons.controller.ts": {

@@ -4645,21 +4645,11 @@
       "count": 1
     }
   },
-  "src/features/people/auth/family/PhoneSignIn.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/features/people/auth/login/PasswordForm.tsx": {
     "max-len": {
       "count": 2
     },
     "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/features/people/auth/login/StaffPanel.test.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -4723,9 +4713,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 10
     }
   },
   "src/features/people/auth/sign-out.timeout.test.ts": {
@@ -7626,7 +7613,7 @@
   },
   "src/features/reporting/reports/history/ReportStatusLine.tsx": {
     "no-nested-ternary": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/reporting/reports/history/StudentReportsPage.notice.test.tsx": {
@@ -7640,11 +7627,6 @@
     }
   },
   "src/features/reporting/reports/history/StudentReportsPage.test.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/reporting/reports/history/StudentReportsPage.tsx": {
     "max-len": {
       "count": 2
     }
@@ -11080,7 +11062,7 @@
   },
   "src/features/teaching/teacher/TeacherDashboard.tsx": {
     "ab/module-boundaries": {
-      "count": 4
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -11126,7 +11108,7 @@
       "count": 5
     },
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1
@@ -11187,7 +11169,7 @@
   },
   "src/features/teaching/teacher/reports/submitted-report-columns.tsx": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -11828,11 +11810,6 @@
       "count": 1
     },
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/routes/teacher.tsx": {
-    "ab/module-boundaries": {
       "count": 1
     }
   },

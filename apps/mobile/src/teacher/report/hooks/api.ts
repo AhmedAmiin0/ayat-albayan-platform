@@ -3,13 +3,11 @@ import type {
   ReportAttachmentView,
   ReportFormResponse,
   ReportView,
-  SignedDownload,
   SignedUpload,
   SubmitBody,
 } from '@ab/shared';
 import { reportErrorWords } from '@ab/client-core';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
-import { Linking } from 'react-native';
 import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
@@ -60,12 +58,6 @@ export async function uploadAttachment(id: string, file: Receipt): Promise<Repor
   const { error } = await uploadSigned(slot, { body: file.bytes, contentType: file.mime });
   if (error) throw new ApiError(400, { code: 'attachment_path' });
   return apiSend<ReportAttachmentView>('POST', `/reports/${id}/attachments`, { ...meta, path: slot.path });
-}
-
-/** Opens a private file (an attachment, the report PDF) through its short-lived signed URL. */
-export async function openSigned(path: string): Promise<void> {
-  const { url } = await apiFetch<SignedDownload>(path);
-  await Linking.openURL(url);
 }
 
 const errorWords = reportErrorWords(() => ({

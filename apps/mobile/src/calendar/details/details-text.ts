@@ -47,6 +47,7 @@ export type DetailsLesson = Pick<LessonView, 'id' | 'starts_at' | 'ends_at' | 's
       | 'override_reason'
       | 'conflicts'
       | 'time_edit'
+      | 'teacher_confirmed_at'
     >
   > & {
     teacher: { id?: string; display_name_ar: string; display_name_en?: string | null; tz?: string; avatar_url?: string | null };

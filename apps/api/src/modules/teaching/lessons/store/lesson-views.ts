@@ -42,14 +42,15 @@ export class LessonViews {
   async map(rows: readonly LessonRow[], role: Role | null): Promise<LessonView[]> {
     const now = Date.now();
     const completed = rows.filter((r) => r.status === 'completed').map((r) => r.id);
-    const [seq, flagged, academyAuto, photos, held] = await Promise.all([
+    const [seq, flagged, [academyAuto, reportMinutes], photos, held] = await Promise.all([
       this.lessons.seq(completed),
       this.flagged(upcomingStudentIds(rows, now)),
-      this.lessons.academyAuto(),
+      Promise.all([this.lessons.academyAuto(), this.lessons.reportMinutes()]),
       role === 'teacher' ? new Map<string, string>() : this.photos.ofTeachers(rows.map((r) => r.teacher_id)),
       role === 'teacher' ? new Set<string>() : this.correctable(settledIds(rows)),
     ]);
-    const view = (row: LessonRow) => markUnpaid(toLessonView(row, { role, seq, academyAuto }), flagged, now);
+    const ctx = { role, seq, academyAuto, reportMinutes, now: new Date(now) };
+    const view = (row: LessonRow) => markUnpaid(toLessonView(row, ctx), flagged, now);
     return rows.map((row) => withPhoto(withAutoHeld(view(row), held), photos));
   }
 

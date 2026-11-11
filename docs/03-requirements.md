@@ -94,8 +94,8 @@ Key enums (store in `packages/catalog/src/enums`):
 
 ### 3.6 Lesson reports
 - **R-REP-01** Teacher opens the report from the lesson itself; student id, teacher, student, date, lesson no., link are pre-filled and read-only; the program is pre-filled from the student and the teacher can change it (issues A2, A3, D1; R-FRM-02).
-- **R-REP-02** Form fields: attendance, recited, new memorization, revision, theory/tajweed, 6 rubric grades, overall grade, notes, homework, next plan, attachments (Supabase Storage). Validation: date not in future, not before lesson date; drafts auto-saved; editable by teacher for 24h, by admin always; versioned.
-- **R-REP-03** On submit: generate branded PDF (HTML template → PDF, Arabic fonts, RTL), store in Storage under `reports/{student_id}/{lesson_id}.pdf`, send to guardian via WhatsApp template with document, mark lesson `completed`, decrement package balance.
+- **R-REP-02** Form fields: attendance, recited, new memorization, revision, theory/tajweed, 6 rubric grades, overall grade, notes, homework, next plan, attachments (Supabase Storage). Validation: date not in future, not before lesson date; drafts auto-saved; editable by the teacher for `report_teacher_edit_minutes` (default 30) from the FIRST submit (edits never extend it; 0 = closed at once), by admin always; versioned (docs/46 D5).
+- **R-REP-03** When the teacher's edit window closes (first submit + `report_teacher_edit_minutes` + 60 s grace; at once when it is 0): generate branded PDF (HTML template → PDF, Arabic fonts, RTL), store in Storage under `reports/{student_id}/{lesson_id}.pdf`, send to guardian via WhatsApp template with document exactly ONCE per report (dedup `report_ready:{id}`; admin edits after the send re-render the PDF and page but never re-send; docs/46 D5), mark lesson `completed`, decrement package balance.
 - **R-REP-04** One report per lesson (unique constraint `lesson_id, student_id`); resubmission updates (issue A7).
 - **R-REP-05** Student report history and progress view (grades over time) replaces per-student sheets (issue D2).
 

@@ -1,4 +1,4 @@
-import type { TeacherReportView } from '@ab/shared';
+import { boardStudents, type TeacherReportView } from '@ab/shared';
 import { useViewerTz } from '@/core/lib/clock';
 import { useState, type ReactElement } from 'react';
 
@@ -12,7 +12,7 @@ import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { usePendingReports, useTeacherMe } from '@/teacher/lib/queries';
-import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from '@/teacher/components/ReportRows';
+import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from '@/core/ui/lists/ReportRows';
 
 type View = 'pending' | 'submitted' | 'students';
 
@@ -43,7 +43,7 @@ interface Rows {
 
 /**
  * «التقارير» (R-TCH-03, R-REP-05): the reports still to write, the ones I sent (edit while the
- * window is open, else read), and each of my students' history. Pull to refresh; offline the saved
+ * window is open, else read), and each of my current students' history (boardStudents). Pull to refresh; offline the saved
  * lists stay. The list screens' compact top (owner 2026-10-28): h2 title, the pills 8pt under it, the rows
  * in one inset card.
  */
@@ -72,7 +72,8 @@ export function TeacherReportsScreen() {
       more: sent.loadMore,
     },
     students: {
-      data: (me.data?.students ?? []).map((s) => ({ key: s.id, row: <StudentHistoryRow student={s} /> })),
+      // Only her current students (docs/46 D4): never paused or churned.
+      data: boardStudents(me.data?.students ?? [], 'all').map((s) => ({ key: s.id, row: <StudentHistoryRow student={s} /> })),
       loaded: me.data !== undefined,
       failed: me.isError,
       empty: t.teacherDash.noStudents,

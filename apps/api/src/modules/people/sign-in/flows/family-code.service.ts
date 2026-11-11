@@ -19,6 +19,11 @@ export class FamilyCodeService {
     return this.kit.available();
   }
 
+  /** Staff codes can go out (no family flag, docs/46 A1). */
+  staff(): Promise<boolean> {
+    return this.kit.staffAvailable();
+  }
+
   /**
    * Always 202, whatever exists: the lookup and the send run after the answer. 429 past a limit.
    */

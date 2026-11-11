@@ -42,7 +42,7 @@ describe('GET /sales/schedule over HTTP', () => {
     const res = await t.get('/sales/schedule?date=2026-10-11', 'salesA');
     expect(res.json().lessons).toEqual([
       {
-        id: 'les-2', starts_at: '2026-10-11T16:00:00.000Z', ends_at: '2026-10-11T16:30:00.000Z', status: 'confirmed', trial: true, makeup: false,
+        id: 'les-2', starts_at: '2026-10-11T16:00:00.000Z', ends_at: '2026-10-11T16:30:00.000Z', status: 'confirmed', trial: true, makeup: false, teacher_confirmed_at: null,
         meeting_link: 'https://meet.example.org/les-2', platform_classroom: false,
         teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar' }, students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', mine: true }],
       },

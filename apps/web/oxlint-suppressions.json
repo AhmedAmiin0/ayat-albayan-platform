@@ -4613,22 +4613,12 @@
       "count": 1
     }
   },
-  "src/features/people/auth/family/PhoneSignIn.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/features/people/auth/login/PasswordForm.tsx": {
     "max-lines-per-function": {
       "count": 1
     },
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/features/people/auth/login/StaffPanel.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/people/auth/login/auth-api.ts": {
@@ -4686,9 +4676,6 @@
     }
   },
   "src/features/people/auth/sign-in.ts": {
-    "stylistic/max-len": {
-      "count": 10
-    },
     "ab/module-boundaries": {
       "count": 2
     },
@@ -7575,7 +7562,7 @@
   },
   "src/features/reporting/reports/history/ReportStatusLine.tsx": {
     "no-nested-ternary": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/reporting/reports/history/StudentReportsPage.notice.test.tsx": {
@@ -7589,11 +7576,6 @@
     }
   },
   "src/features/reporting/reports/history/StudentReportsPage.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/features/reporting/reports/history/StudentReportsPage.tsx": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -11050,7 +11032,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/teaching/teacher/api.ts": {
@@ -11096,7 +11078,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 5
@@ -11163,7 +11145,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/lib/clock-options.tsx": {
@@ -11797,11 +11779,6 @@
     "stylistic/max-len": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/routes/teacher.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }

@@ -1,19 +1,28 @@
 import { REPORT_RUBRICS } from '@ab/shared';
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
-import { API, bearer } from '../../support/core/messages';
+import { API, bearer, setSetting } from '../../support/core/messages';
 import { seedPackageStudent } from '../../support/finance/money';
 import { queuedFor, resetAbrar, withSql } from '../../support/core/schedule';
-import { backdateSubmit, fillAttended, fillTexts, reportRow, storedObject, TEXTS } from '../../support/reporting/teacher-extra';
+import { fillAttended, fillTexts, reportRow, TEXTS } from '../../support/reporting/teacher-extra';
 
-// Edit window and versions (R-REP-02/04, R-NFR-03): inside report_teacher_edit_hours (24) the
-// teacher corrects the sent report → version 2, the PDF is rendered again, the guardian's
-// report_ready is not queued twice; after it the form is read-only and the API says
-// edit_window_closed; two tabs on one report → the second submit gets version_conflict.
+// Edit window and versions (R-REP-02/03/04, docs/46 D5, R-NFR-03): report_teacher_edit_minutes = 30
+// here (the shared seed is 0, sent at once). Inside the window the teacher corrects the sent report
+// → version 2, and nothing goes to the family; once the window (first submit + 30 min, never
+// extended by the edit) has closed, the PDF job renders the final version once and queues ONE
+// report_ready. After it the form is read-only and the API says edit_window_closed; two tabs on one
+// report → the second submit gets version_conflict.
 
-// Polled every second: the submit kicks the PDF job (ready in a few seconds), a 5 s step overshot it.
+// The job sweeps every 60 s; the render itself takes a few seconds.
 const PDF_WAIT = { timeout: 150_000, intervals: [1_000] };
+const WINDOW_MIN = 30;
 const when = (text: string) => text.split('{when}')[0]?.trim() ?? '';
+
+/** The first submit (the window's anchor) moved back by `minutes`, as if the window had run. */
+const backdateMinutes = (reportId: string, minutes: number) =>
+  withSql((sql) => sql`
+    update public.lesson_reports set submitted_at = submitted_at - make_interval(mins => ${minutes})
+    where id = ${reportId}`);
 
 async function open(page: Page, lessonId: string): Promise<void> {
   await page.goto(`/teacher/report/${lessonId}`);
@@ -32,18 +41,21 @@ const seed = async () => {
   return seedPackageStudent({ teacherId, paid: true, guardian: 'أم سلمى', student: 'سلمى' });
 };
 
-test.describe('teacher report edit window (R-REP-02/04)', () => {
-  test('inside 24 h: edit → version 2, PDF re-rendered, report_ready not re-queued, audit edit', async ({ asRole }) => {
+const readyQueued = async (guardianId: string) =>
+  (await queuedFor(guardianId)).filter((m) => m.template_key === 'report_ready');
+
+test.describe('teacher report edit window (R-REP-02/03/04)', () => {
+  test.beforeEach(() => setSetting('report_teacher_edit_minutes', WINDOW_MIN));
+  test.afterEach(() => setSetting('report_teacher_edit_minutes', 0));
+
+  test('inside 30 min: edit → version 2, nothing sent; at the close ONE render and ONE report_ready', async ({ asRole }) => {
     test.setTimeout(420_000);
     const s = await seed();
     const teacher = await asRole('teacher');
     await sendFirst(teacher, s.todayLessonId);
     await expect(teacher.getByText(when(ar.reports.editUntil))).toBeVisible();
-    await expect.poll(async () => (await reportRow(s.todayLessonId)).pdf_status, PDF_WAIT).toBe('ready');
+    await expect(teacher.getByText(when(ar.reports.familySend.sendsIn))).toBeVisible();
     const first = await reportRow(s.todayLessonId);
-    const pdf = { bucket: 'reports', path: first.pdf_path ?? '' };
-    const before = await storedObject(pdf);
-    expect(before).toBeDefined();
 
     // Sent: read-only until «تعديل التقرير», which re-opens the same report (owner 2026-11-06).
     const homework = teacher.getByRole('textbox', { name: ar.reports.homework, exact: true });
@@ -57,25 +69,25 @@ test.describe('teacher report edit window (R-REP-02/04)', () => {
       select action from public.audit_log where entity = 'lesson_reports' and entity_id = ${first.id} order by at`);
     expect(audit.map((a) => a.action)).toEqual(['submit', 'edit']);
 
-    // The job renders version 2 over the same object; the guardian's message was queued once.
-    await expect
-      .poll(async () => {
-        const row = await reportRow(s.todayLessonId);
-        const now = await storedObject(pdf);
-        const changed = now?.etag !== before?.etag || now?.updated_at.getTime() !== before?.updated_at.getTime();
-        return row.pdf_status === 'ready' && changed;
-      }, PDF_WAIT)
-      .toBe(true);
-    expect((await queuedFor(s.guardianId)).filter((m) => m.template_key === 'report_ready')).toHaveLength(1);
+    // Inside the window: no PDF, nothing queued for the family (the kick finds nothing due).
+    expect((await reportRow(s.todayLessonId)).pdf_status).toBe('pending');
+    expect(await readyQueued(s.guardianId)).toHaveLength(0);
+
+    // The window closes (first submit + 30 min, not extended by the edit): v2 renders once.
+    await backdateMinutes(first.id, WINDOW_MIN + 1);
+    await expect.poll(async () => (await reportRow(s.todayLessonId)).pdf_status, PDF_WAIT).toBe('ready');
+    expect(await readyQueued(s.guardianId)).toHaveLength(1);
+    await teacher.reload();
+    await expect(teacher.getByText(ar.reports.editClosed)).toBeVisible();
   });
 
-  test('after 24 h: read-only with the closed note, and the API answers edit_window_closed', async ({ asRole }) => {
+  test('after 30 min: read-only with the closed note, and the API answers edit_window_closed', async ({ asRole }) => {
     test.setTimeout(120_000);
     const s = await seed();
     const teacher = await asRole('teacher');
     await sendFirst(teacher, s.todayLessonId);
     const row = await reportRow(s.todayLessonId);
-    await backdateSubmit(row.id, 25);
+    await backdateMinutes(row.id, WINDOW_MIN + 1);
 
     await teacher.reload();
     await expect(teacher.getByText(ar.reports.editClosed)).toBeVisible();

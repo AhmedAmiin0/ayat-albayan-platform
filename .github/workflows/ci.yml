@@ -471,13 +471,17 @@ jobs:
       # and Playwright version and installed with dpkg, offline; apt only runs when they do not cover it.
       - name: Runner image
         id: img
-        run: echo "id=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "os=${ImageOS:-unknown}" >> "$GITHUB_OUTPUT"
+          echo "id=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
       - name: Restore the browser's system packages
         id: deb-cache
         uses: actions/cache/restore@v4
         with:
           path: ${{ runner.temp }}/pw-debs
           key: pw-debs-${{ steps.img.outputs.id }}-${{ steps.pw.outputs.version }}
+          # A new image version of the same Ubuntu release reuses the last packages (dpkg checks them).
+          restore-keys: pw-debs-${{ steps.img.outputs.os }}-
       - name: Install the browser's system libraries (only if missing)
         id: deps
         run: |
@@ -488,7 +492,24 @@ jobs:
             if sudo dpkg -i "$debs"/*.deb >/dev/null && pw install-deps --dry-run chromium; then exit 0; fi
             echo "::warning::the cached packages did not cover everything: installing from apt"
           fi
-          pw install-deps chromium
+          # apt over the network. 11-11: the runners could not resolve any *.ubuntu.com host for hours
+          # («Temporary failure resolving archive.ubuntu.com») and every e2e shard failed. After a failed
+          # try, apt also uses a mirror outside ubuntu.com (packages are still checked against Ubuntu's
+          # signing keys, whatever the mirror), then retries.
+          other_mirror() {
+            m=https://mirrors.edge.kernel.org/ubuntu/
+            list=/etc/apt/apt-mirrors.txt
+            [ -f "$list" ] && echo "$m" | sudo tee "$list" >/dev/null # the image's mirror list (26.04)
+            sudo sed -i -E "s#https?://(azure\.)?(archive|security)\.ubuntu\.com/ubuntu/?#$m#g" \
+              /etc/apt/sources.list.d/*.sources /etc/apt/sources.list 2>/dev/null || true
+          }
+          for wait in 0 20 60; do
+            sleep "$wait"
+            if pw install-deps chromium; then ok=1; break; fi
+            echo "::warning::installing the browser's system libraries failed: other mirror, retrying"
+            other_mirror
+          done
+          [ "${ok:-}" = 1 ] || { echo "::error::apt failed 3 times"; exit 1; }
           mkdir -p "$debs" && cp /var/cache/apt/archives/*.deb "$debs"/ 2>/dev/null \
             && echo "save=true" >> "$GITHUB_OUTPUT" || true
       - if: steps.deps.outputs.save == 'true' && steps.deb-cache.outputs.cache-hit != 'true'

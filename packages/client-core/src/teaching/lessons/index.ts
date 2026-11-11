@@ -4,3 +4,10 @@ export {
   type LessonStatusWords,
   UPCOMING_LESSON_STYLE,
 } from './lesson-status.js';
+export {
+  teacherCanAct,
+  teacherCanConfirm,
+  teacherConfirmed,
+  teacherLessonPaths,
+} from './teacher-actions.js';
+export { attendanceTableSchema } from './attendance-table-schema.js';

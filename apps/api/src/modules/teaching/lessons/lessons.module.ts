@@ -35,10 +35,16 @@ import { TimeEditPayout } from './time-edit/time-edit.payout';
 import { TimeEditRepo } from './time-edit/time-edit.repo';
 import { TeacherMeController } from './teacher-me/teacher-me.controller';
 import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
+import { TeacherCancelPush } from './teacher-me/teacher-cancel.push';
+import { TeacherCancelRepo } from './teacher-me/teacher-cancel.repo';
+import { TeacherConfirmRepo } from './teacher-me/teacher-confirm.repo';
+import { TeacherLessonController } from './teacher-me/teacher-lesson.controller';
+import { TeacherLessonDeps, TeacherLessonService } from './teacher-me/teacher-lesson.service';
 
 /**
  * Lesson lists (week / day / student), confirm, status, reschedule, cancel, and the teacher's own
- * routes (/teachers/me, /teachers/me/lessons, «اقترح ميعاد تاني» proposals). R-SCH-03, R-SCH-07,
+ * routes (/teachers/me, /teachers/me/lessons, its cancel / «سأحضر» (docs/46), proposals).
+ * R-SCH-03, R-SCH-07,
  * R-SCH-08, R-TCH-03, R-LES-01..03.
  * LessonStatusService.confirm is exported for the Phase 4 WhatsApp webhook («نعم» → confirm);
  * TeacherMeQueries for the teacher-mode inbox (which children of a guardian the teacher sees);
@@ -61,6 +67,7 @@ import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
     RuleCancelController,
     StudentLessonsController,
     TeacherMeController,
+    TeacherLessonController,
   ],
   providers: [
     AutoHeldCorrection,
@@ -85,6 +92,11 @@ import { TeacherMeRepo } from './teacher-me/teacher-me.repo';
     RescheduleOneService,
     RescheduleRuleService,
     RulePlanner,
+    TeacherCancelPush,
+    TeacherCancelRepo,
+    TeacherConfirmRepo,
+    TeacherLessonDeps,
+    TeacherLessonService,
     TeacherMeRepo,
     TimeEditPayout,
     TimeEditRepo,

@@ -107,6 +107,7 @@ test.describe('teacher isolation (R-NFR-02, rule 9)', () => {
       await seedAbrarPayout({ teacherId: abrar, amount: OWN_AMOUNT });
       const teacher = await asRole('teacher');
       await teacher.goto('/teacher');
+      await teacher.getByRole('tab', { name: ar.teacherDash.today }).click();
       await expect(teacher.getByRole('article', { name: new RegExp(`سدرة ${tag}`) })).toHaveCount(1);
       await expect(teacher.getByText(hiba.studentName)).toHaveCount(0);
 

@@ -1,3 +1,4 @@
+import { teacherConfirmed } from '@ab/client-core';
 import { isRunningLesson } from '@ab/shared';
 import { View } from 'react-native';
 import { useNow } from '@/core/lib/time/use-now';
@@ -9,7 +10,8 @@ import type { DetailsLesson } from './details-text';
 
 /**
  * The sheet's first line: the status chip (nuqta + word), «جارية الآن» while it runs, then the
- * kind tags «تجريبية» / «تعويضية» and «عُدّل الوقت» after an in-place edit (R-SCH-09/10/11).
+ * kind tags «تجريبية» / «تعويضية» and «عُدّل الوقت» after an in-place edit (R-SCH-09/10/11);
+ * «أكّد المعلم الحضور» once the teacher said «سأحضر» (docs/46 C4, never the status).
  */
 export function DetailsHead({ lesson }: { lesson: DetailsLesson }) {
   const now = useNow();
@@ -22,6 +24,9 @@ export function DetailsHead({ lesson }: { lesson: DetailsLesson }) {
       {lesson.trial ? <Tag>{t.schedule.trialTag}</Tag> : null}
       {lesson.makeup ? <Tag>{t.booking.makeup.tag}</Tag> : null}
       {lesson.time_edit ? <Tag>{t.lessons.timeEdit.tag}</Tag> : null}
+      {teacherConfirmed(lesson) ? (
+        <StatusChip tone="ok" glyph="fill" size="sm" label={t.teacherBoard.teacherConfirmed} />
+      ) : null}
     </View>
   );
 }
