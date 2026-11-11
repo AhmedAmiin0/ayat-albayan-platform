@@ -31,7 +31,7 @@ export class TeacherReportsService {
       lessons: new Map(lessons.map((l) => [l.id, l.starts_at])),
       students: new Map(students.map((s) => [s.id, s])),
       now: ctx.now,
-      hours: ctx.hours,
+      minutes: ctx.minutes,
     };
     return { items: rows.map((r) => toTeacherReportView(r, parts)), total, page: page.page, pageSize: page.pageSize };
   }

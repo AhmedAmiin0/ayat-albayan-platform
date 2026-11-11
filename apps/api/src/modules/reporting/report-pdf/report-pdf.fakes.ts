@@ -1,5 +1,10 @@
+import type { AcademySettings } from '@ab/shared';
+import type { Db } from '@/common/db/db.module';
+import { readerOf } from '@/common/settings/settings.fakes';
 import type { PdfAssets } from './pdf-assets';
 import type { ReportPdfModel } from './render/pdf-model';
+import { ReportPdfQueries } from './report-pdf.queries';
+import { ReportPdfSettings } from './report-pdf.settings';
 import type { ReportSource } from './report-pdf.source';
 
 // Invented sample data for the template, smoke and job tests: no real student, teacher or
@@ -91,6 +96,7 @@ export function sampleSource(over: Partial<ReportSource> = {}): ReportSource {
       form_version: 1,
       content: null,
       submitted_at: null,
+      sent_at: null,
       version: 2,
       public_id: '0123456789abcdef0123456789abcdef',
     },
@@ -105,3 +111,7 @@ export function sampleSource(over: Partial<ReportSource> = {}): ReportSource {
     ...over,
   };
 }
+
+/** The real queries on a fake db, the settings at their defaults unless overridden. */
+export const pdfQueries = (db: Db, over: Partial<AcademySettings> = {}): ReportPdfQueries =>
+  new ReportPdfQueries(db, readerOf(ReportPdfSettings, over));

@@ -65,7 +65,7 @@ describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
     expect((await screen.findByText(/حُفظت المسودة/)).textContent).toMatch(/\d\d:\d\d/);
   });
 
-  it('a full form is sent with the version; the page then reads «أُرسل التقرير»', async () => {
+  it('a full form is sent with the version; the page then reads «سُلِّم التقرير»', async () => {
     apiSend.mockImplementation((method: string) =>
       Promise.resolve(method === 'POST' ? reportView({ status: 'submitted', version: 1, attendance: 'on_time', pdf_status: 'pending', edit_until: '2026-10-04T14:00:00.000Z' }) : reportView()),
     );

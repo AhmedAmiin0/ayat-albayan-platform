@@ -38,7 +38,7 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
   it('claims each pending report, stores the PDF, queues the message, then marks that version ready', async () => {
     const summary = await job().runOnce(NOW);
     expect(summary).toEqual({ recovered: 0, rendered: 2, failed: 0, skipped: 0, held: 0 });
-    expect(queries.pendingIds).toHaveBeenCalledWith(20);
+    expect(queries.pendingIds).toHaveBeenCalledWith(20, expect.any(Date));
     expect(queries.claim.mock.calls).toEqual([['r1'], ['r2']]);
     expect(queries.queueMessages).toHaveBeenCalledWith([message]);
     expect(queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 3, status: 'ready', path: 's/r1.pdf' });

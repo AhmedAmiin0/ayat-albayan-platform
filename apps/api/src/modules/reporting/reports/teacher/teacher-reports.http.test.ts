@@ -4,9 +4,10 @@ import { reportsApp } from '@/modules/reporting/reports/test-app';
 import type { TeacherReportRow } from './teacher-reports.queries';
 
 const HOUR = 3_600_000;
+const MINUTE = 60_000;
 const row = (over: Partial<TeacherReportRow>): TeacherReportRow => ({
   ...{ id: REPORT_ID, lesson_id: LESSON_ID, student_id: STUDENT_ID, attendance: 'on_time', grade_overall: 'excellent' },
-  ...{ status: 'submitted', submitted_at: new Date(Date.now() - HOUR).toISOString(), pdf_status: 'ready', sent_at: null },
+  ...{ status: 'submitted', submitted_at: new Date(Date.now() - 10 * MINUTE).toISOString(), pdf_status: 'ready', sent_at: null },
   ...over,
 });
 
@@ -40,10 +41,10 @@ describe('GET /teachers/me/reports (teacher mode «التقارير», R-REP-02,
     expect(h.history.lessons).toHaveBeenCalledWith([LESSON_ID, LESSON_ID]);
   });
 
-  it('can_edit inside the 24 h window (with edit_until), not after it', async () => {
+  it('can_edit inside the 30-minute window (with edit_until), not after it', async () => {
     const [fresh, old] = (await h.call({ method: 'GET', url: '/teachers/me/reports' })).json().items;
     expect(fresh.can_edit).toBe(true);
-    expect(Date.parse(fresh.edit_until) - Date.parse(fresh.submitted_at)).toBe(24 * HOUR);
+    expect(Date.parse(fresh.edit_until) - Date.parse(fresh.submitted_at)).toBe(30 * MINUTE);
     expect(old.can_edit).toBe(false);
   });
 

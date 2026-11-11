@@ -65,7 +65,7 @@ const DEFAULTS_LITERAL = Object.freeze({
   lesson_confirmation_required: true, lesson_outcome_grace_minutes: 30,
   join_opens_before_min: 15, join_closes_after_min: 120, default_meeting_title: 'اجتماع', meeting_link_auto: false,
   meetings_in_app: true, meeting_max_minutes: 120,
-  report_teacher_edit_hours: 24, report_form_v2: false, reporting_currency: 'SAR', renewal_alert_remaining: 2, subscription_expiry_days: 7,
+  report_teacher_edit_minutes: 30, report_teacher_edit_hours: 24, report_form_v2: false, reporting_currency: 'SAR', renewal_alert_remaining: 2, subscription_expiry_days: 7,
   flag_future_lessons_when_unpaid: true, refund_attended_rate_percent: 100,
   payout_count_late: false, payout_count_no_show: false,
   payout_count_trials: false, fx_fresh_hours: 24, upload_max_mb: 10, academy_whatsapp_e164: '+966566101447',
@@ -83,9 +83,9 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expect(surface[name]).toBeDefined();
   });
 
-  it('SETTING_DEFAULTS holds the 59 keys with today\'s values', () => {
-    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(59);
-    expect(root.SETTING_KEYS).toHaveLength(59);
+  it('SETTING_DEFAULTS holds the 60 keys with today\'s values', () => {
+    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(60);
+    expect(root.SETTING_KEYS).toHaveLength(60);
     expect(root.SETTING_DEFAULTS).toEqual(DEFAULTS_LITERAL);
   });
 

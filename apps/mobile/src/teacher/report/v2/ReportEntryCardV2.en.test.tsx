@@ -25,7 +25,7 @@ test('English: the form, its surah names and the picker speak English', async ()
   const [entry] = form.entries;
   if (!entry) throw new Error('no entry');
   await renderWithQuery(<ReportEntryCardV2 form={form} entry={entry} tz="Africa/Cairo" />);
-  expect(t.reports.v2.send).toBe('Send the report to the family');
+  expect(t.reports.v2.send).toBe('Send the report');
   expect(screen.getByText('Lesson 9 of 12')).toBeTruthy();
   expect(screen.getByRole('radio', { name: 'Attended on time' })).toBeTruthy();
   expect(screen.getByText('Surah Al-Mulk · ayahs 1–15')).toBeTruthy();

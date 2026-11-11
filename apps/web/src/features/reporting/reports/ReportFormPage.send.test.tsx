@@ -46,18 +46,18 @@ describe('the report form: one send, then read-only, edit on demand', () => {
     expect(screen.getByTestId('send-spinner')).toBeTruthy();
     expect(posts()).toHaveLength(1);
     answer(reportView(sent));
-    expect(await screen.findByText(/تم إرسال التقرير بنجاح/)).toBeTruthy();
+    expect(await screen.findByText(/تم استلام التقرير/)).toBeTruthy();
     expect(posts()).toHaveLength(1);
   });
 
-  it('after the send: «تم إرسال التقرير بنجاح», the fields read-only, no send button', async () => {
+  it('after the send: «تم استلام التقرير», the fields read-only, no send button', async () => {
     apiSend.mockImplementation((method: string) =>
       Promise.resolve(method === 'POST' ? reportView(sent) : reportView()));
     renderReportForm(apiFetch, formResponse());
     await screen.findByRole('region', { name: t.reports.identity });
     gradeEverything();
     fireEvent.click(screen.getByRole('button', { name: t.reports.submit }));
-    expect(await screen.findByText(/تم إرسال التقرير بنجاح/)).toBeTruthy();
+    expect(await screen.findByText(/تم استلام التقرير/)).toBeTruthy();
     expect(screen.getByLabelText(t.reports.homework).matches(':disabled')).toBe(true);
     expect(screen.queryByRole('button', { name: t.reports.submit })).toBeNull();
     expect(screen.queryByRole('button', { name: t.reports.resubmit })).toBeNull();

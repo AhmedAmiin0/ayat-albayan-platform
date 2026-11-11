@@ -72,9 +72,15 @@ describe('readyMessages — which templates go after the PDF', () => {
     ]);
   });
 
-  it("an edit (version 2) never queues the teacher's message (a late one says nothing new)", () => {
-    const source = { ...base.source, report: { ...base.source.report, version: 2 } };
+  it("in-window edits (version 3) rendered at the close still queue the teacher's message (docs/46 B4)", () => {
+    const source = { ...base.source, report: { ...base.source.report, version: 3, sent_at: null } };
     const out = readyMessages({ ...base, source, approved: new Set(['report_ready_teacher']) });
+    expect(out.map((m) => m.template_key)).toEqual(['report_ready', 'report_ready_teacher']);
+  });
+
+  it("an admin's re-render after the send never queues the teacher's message (it says nothing new)", () => {
+    const sent = { ...base.source.report, version: 2, sent_at: '2026-09-29T15:13:00Z' };
+    const out = readyMessages({ ...base, source: { ...base.source, report: sent }, approved: new Set(['report_ready_teacher']) });
     expect(out.map((m) => m.template_key)).toEqual(['report_ready']);
   });
 

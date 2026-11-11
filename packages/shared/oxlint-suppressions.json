@@ -642,11 +642,6 @@
       "count": 4
     }
   },
-  "src/reports/rules.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/reports/schema.test.ts": {
     "stylistic/max-len": {
       "count": 1

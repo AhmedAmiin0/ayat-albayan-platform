@@ -1811,10 +1811,10 @@
     "draftSaved": "Draft saved {time}",
     "submit": "Send report",
     "resubmit": "Save changes",
-    "submitted": "Report sent",
+    "submitted": "Report submitted",
     "editUntil": "You can edit the report until {when}",
     "editClosed": "The editing window has closed. Contact the admin team if you need a change",
-    "sentOk": "The report was sent successfully ({time})",
+    "sentOk": "The report was received ({time})",
     "editSavedOk": "Your edit was saved successfully ({time})",
     "editHint": "To change the report, press “Edit report”. An edit updates the same report and never counts an extra lesson.",
     "version": "Version {n}",
@@ -1992,10 +1992,10 @@
         "tajweed_focus": "Needs to focus on tajweed"
       },
       "attach": "+ Attach a file",
-      "send": "Send the report to the family",
+      "send": "Send the report",
       "saveEdit": "Save the edit",
       "saveDraft": "Save draft",
-      "sendHint": "The guardian receives the report as a PDF on WhatsApp.",
+      "sendHint": "The family receives the report once on WhatsApp, after the edit window ends.",
       "picker": {
         "cancel": "Cancel",
         "search": "Search for a surah",
@@ -2039,6 +2039,11 @@
         "v2Badge": "New form",
         "noContent": "No content for this lesson"
       }
+    },
+    "familySend": {
+      "sendsIn": "Goes to the family in {when}",
+      "sending": "The report is going to the family now",
+      "sent": "Sent to the family"
     }
   },
   "subscriptions": {
@@ -4231,7 +4236,8 @@
     "subscriptionExpiryDays": "Mark the subscription expired after this many days pending renewal",
     "flagFutureLessonsWhenUnpaid": "Flag upcoming lessons when the package has ended and isn't paid",
     "refundAttendedRate": "Attended-lesson rate for refunds",
-    "reportTeacherEditHours": "Hours after sending that a teacher can still edit the report",
+    "reportTeacherEditMinutes": "Teacher's report edit window after the first submit (minutes)",
+    "reportTeacherEditHours": "Report link lifetime after the lesson ends",
     "reportingCurrency": "Dashboard currency",
     "payoutCountLate": "Count lessons where the student was late toward teacher payouts",
     "payoutCountNoShow": "Count lessons where the student was absent without notice toward teacher payouts",
@@ -4252,7 +4258,8 @@
     "hints": {
       "reminderMinutesBefore": "The guardian gets the reminder this many minutes before the lesson starts.",
       "bookingHorizonWeeks": "How many weeks of recurring lessons are created ahead.",
-      "reportTeacherEditHours": "After this the report is locked and only an admin can edit it.",
+      "reportTeacherEditMinutes": "The report goes to the family once, when this window closes; edits do not extend it. 0 sends it at once.",
+      "reportTeacherEditHours": "How long the teacher's no-login report link keeps working, counted from the lesson's end.",
       "renewalAlertRemaining": "A renewal task appears when the package balance reaches this number.",
       "subscriptionExpiryDays": "A student still pending renewal this long with no new payment becomes «Subscription expired».",
       "reportingCurrency": "Revenue and expense figures on the dashboard are converted to it.",

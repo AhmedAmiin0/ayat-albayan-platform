@@ -48,7 +48,7 @@ describe('the new report form: send and autosave', () => {
     expect(within(dialog).getByRole('status').textContent).toContain('يبدأ تلقائيًا بعد آخر حفظ (الآية 15).');
   });
 
-  it('sends the v2 body (parts, suggested overall, version; untouched homework left to the API) and reads «أُرسل التقرير»', async () => {
+  it('sends the v2 body (parts, suggested overall, version; untouched homework left to the API) and reads «سُلِّم التقرير»', async () => {
     apiSend.mockImplementation((method: string) =>
       Promise.resolve(method === 'POST' ? v2Report({ status: 'submitted', version: 1, attendance: 'on_time', pdf_status: 'pending' }) : v2Report()),
     );

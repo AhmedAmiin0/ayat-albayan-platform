@@ -12,6 +12,7 @@ export const VALUE_UNITS: Partial<Record<SettingKey, ValueUnit>> = {
   makeup_window_days: 'days',
   join_opens_before_min: 'minutes',
   join_closes_after_min: 'minutes',
+  report_teacher_edit_minutes: 'minutes',
   report_teacher_edit_hours: 'hours',
   renewal_alert_remaining: 'lessons',
   subscription_expiry_days: 'days',

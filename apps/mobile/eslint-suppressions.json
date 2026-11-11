@@ -9442,7 +9442,7 @@
   },
   "src/teacher/components/ReportRows.tsx": {
     "max-len": {
-      "count": 11
+      "count": 10
     },
     "no-nested-ternary": {
       "count": 2

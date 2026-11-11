@@ -5,7 +5,7 @@ import { readAll } from '@/common/db/read-all';
 import { dbError } from '@/common/http/http';
 
 const HISTORY_COLUMNS =
-  'id, lesson_id, teacher_id, attendance, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, status, version, pdf_status, sent_at' as const;
+  'id, lesson_id, teacher_id, attendance, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, status, version, pdf_status, sent_at, submitted_at' as const;
 
 export type HistoryRow = {
   id: string;
@@ -23,6 +23,7 @@ export type HistoryRow = {
   version: number;
   pdf_status: PdfStatus | null;
   sent_at: string | null;
+  submitted_at: string | null;
 };
 
 export type HistoryLesson = { id: string; starts_at: string; teacher: { id: string; display_name_ar: string } | null };

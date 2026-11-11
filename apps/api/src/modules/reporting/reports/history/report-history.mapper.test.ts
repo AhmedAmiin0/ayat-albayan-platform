@@ -20,6 +20,7 @@ function row(id: string, over: Partial<HistoryRow> = {}): HistoryRow {
     version: 1,
     pdf_status: 'ready',
     sent_at: null,
+    submitted_at: '2026-10-05T15:00:00+00:00',
     ...over,
   };
 }
@@ -27,6 +28,29 @@ const lesson = (id: string, day: number) => ({
   id: `l-${id}`,
   starts_at: `2026-10-0${day}T14:00:00+00:00`,
   teacher: { id: TEACHER_ID, display_name_ar: 'أبرار' },
+});
+
+describe('historyResponse — the edit window per reader (docs/46 B7)', () => {
+  const one = [row('a', { submitted_at: '2026-11-11 10:00:00+00' })];
+  const base = { rows: one, lessons: [lesson('a', 1)], seq: new Map<string, number>(), page: { page: 1, pageSize: 5 } };
+  const now = new Date('2026-11-11T10:20:00Z');
+
+  it('the teacher: can_edit until first submit + minutes, with edit_until and submitted_at', () => {
+    const [item] = historyResponse({ ...base, window: { role: 'teacher', now, minutes: 30 } }).items;
+    expect(item).toMatchObject({
+      submitted_at: '2026-11-11T10:00:00.000Z', can_edit: true, edit_until: '2026-11-11T10:30:00.000Z',
+    });
+    const [late] = historyResponse({ ...base, window: { role: 'teacher', now, minutes: 15 } }).items;
+    expect(late?.can_edit).toBe(false);
+  });
+
+  it('no window (sales): submitted_at only, no can_edit / edit_until; no role → never editable', () => {
+    const [item] = historyResponse(base).items;
+    expect(item).toMatchObject({ submitted_at: '2026-11-11T10:00:00.000Z' });
+    expect(item).not.toHaveProperty('can_edit');
+    const [anon] = historyResponse({ ...base, window: { role: null, now, minutes: 30 } }).items;
+    expect(anon?.can_edit).toBe(false);
+  });
 });
 
 describe('historyResponse (R-REP-05, issue D2)', () => {
