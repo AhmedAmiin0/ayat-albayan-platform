@@ -6,9 +6,11 @@ describe('signInApi (docs/30 §6)', () => {
   it('calls the public routes with their bodies', async () => {
     const apiFetch = vi.fn().mockResolvedValue({ available: true });
     const session = { token_hash: 'h', type: 'magiclink' };
-    const apiSend = vi.fn(async (_m: string, path: string) =>
-      path.endsWith('/verify') ? session : undefined,
-    );
+    const apiSend = vi
+      .fn()
+      .mockImplementation(async (_m: string, path: string) =>
+        path.endsWith('/verify') ? session : undefined,
+      );
     const api = signInApi({ apiFetch, apiSend });
     // An API without `staff` yet reads as «no staff codes».
     await expect(api.codeStatus()).resolves.toEqual({ available: true, staff: false });

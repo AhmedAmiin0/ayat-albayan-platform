@@ -8,7 +8,7 @@ import {
   type AccountProfile,
   type SignedUpload,
 } from '@ab/shared';
-import { Controller, Delete, Get, HttpCode, Patch, Post, Put } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Inject, Patch, Post, Put } from '@nestjs/common';
 import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, SignedIn } from '@/common/auth/decorators';
@@ -31,7 +31,7 @@ export class AccountController {
   constructor(
     private readonly account: AccountService,
     private readonly avatar: AccountAvatarService,
-    private readonly firstSetup: AccountSetupService,
+    @Inject(AccountSetupService) private readonly firstSetup: AccountSetupService,
   ) {}
 
   /** A code-made teacher login's email + password, once (docs/46 A4); 409 setup_done after. */

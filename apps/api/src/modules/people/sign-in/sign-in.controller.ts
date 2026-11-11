@@ -8,7 +8,7 @@ import {
   type CodeStatus,
   type PasswordSession,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Ip, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Inject, Ip, Post } from '@nestjs/common';
 import { z } from 'zod';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
@@ -30,7 +30,7 @@ export class SignInController {
   constructor(
     private readonly family: FamilyCodeService,
     private readonly passwords: PasswordService,
-    private readonly teachers: TeacherCodeService,
+    @Inject(TeacherCodeService) private readonly teachers: TeacherCodeService,
     private readonly settings: SignInSettings,
   ) {}
 

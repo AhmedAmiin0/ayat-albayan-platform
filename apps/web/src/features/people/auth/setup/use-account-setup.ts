@@ -10,7 +10,7 @@ import { setupErrorText, setupFormProblem, type SetupForm } from './setup-errors
 /**
  * PUT /me/setup, then a fresh session: /auth/me reads the email from the JWT, so without
  * refreshSession() the portal guard would still see the synthetic email and loop (docs/46 §5).
- * /auth/me is dropped, so /teacher's guard reads it again.
+ * The cached /auth/me takes the new email, so /teacher's guard lets her in.
  */
 function useSaveSetup() {
   const queryClient = useQueryClient();
@@ -20,7 +20,8 @@ function useSaveSetup() {
       await authApi.setupAccount(body);
       const { error } = await supabase.auth.refreshSession();
       if (error) throw error;
-      queryClient.removeQueries({ queryKey: meQuery.queryKey });
+      // The new email at once: /teacher's guard must not wait for the refreshed JWT on /auth/me.
+      queryClient.setQueryData(meQuery.queryKey, (me) => (me ? { ...me, email: body.email } : me));
     },
     onSuccess: () => navigate({ to: '/teacher' }),
   });

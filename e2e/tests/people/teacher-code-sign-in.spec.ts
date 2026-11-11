@@ -38,7 +38,11 @@ test.describe('teacher WhatsApp-code sign-in on /login', () => {
     await page.getByLabel(S.password, { exact: true }).fill(PASSWORD);
     await page.getByLabel(S.confirm).fill(PASSWORD);
     await page.getByRole('button', { name: S.submit }).click();
-    await expect(page).toHaveURL(/\/teacher/);
+    // A refusal on the form says why (its text is in the failure), instead of a bare URL timeout.
+    await page.waitForURL(/\/teacher/, { timeout: 15_000 }).catch(async () => {
+      const said = await page.getByRole('alert').allInnerTexts();
+      throw new Error(`still on ${page.url()}: ${said.join(' | ') || 'no alert'}`);
+    });
     await page.goto('/account-setup');
     await expect(page).toHaveURL(/\/teacher/);
     await page.context().close();

@@ -1,5 +1,5 @@
 import { normalizePhone, type CodeRequest, type CodeSession, type CodeVerify } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { TeacherRec } from '@/modules/people/sign-in/sign-in.ports';
 import { SignInAccounts } from './sign-in.accounts';
 import { codesUnavailable, invalidCode, SignInKit } from './sign-in.kit';
@@ -13,8 +13,9 @@ import { teacherCodePhone } from './teacher-destination';
 @Injectable()
 export class TeacherCodeService {
   constructor(
-    private readonly kit: SignInKit,
-    private readonly accounts: SignInAccounts,
+    // Explicit tokens: the classes stay value imports (Nest DI) for the type-import rule.
+    @Inject(SignInKit) private readonly kit: SignInKit,
+    @Inject(SignInAccounts) private readonly accounts: SignInAccounts,
   ) {}
 
   /**
