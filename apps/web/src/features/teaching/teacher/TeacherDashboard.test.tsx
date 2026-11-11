@@ -30,6 +30,14 @@ const ME: TeacherMe = {
 const TODAY = lesson({ id: 'a', starts_at: '2026-10-03T13:00:00.000Z', students: [{ ...SUHAILA, tz: 'Asia/Riyadh' }], meeting_link: null });
 const MONDAY = lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z', status: 'confirmed' });
 
+const BOARD_CALL = '/teachers/me/lessons?from=2026-09-18T21%3A00%3A00.000Z&to=2026-10-16T21%3A00%3A00.000Z';
+
+/** «اليوم» is the second tab now (the board leads): open it, then its 16:00 card. */
+async function openToday() {
+  fireEvent.click(await screen.findByRole('tab', { name: t.teacherDash.today }));
+  return screen.findByRole('article', { name: /16:00 سهيلة/ });
+}
+
 /** `auto`: settings.meeting_link_auto in GET /settings/public (the per-teacher flag wins, so it is ignored). */
 function renderDash(me: TeacherMe | Error = ME, auto = false, lessons: LessonView[] = [TODAY, MONDAY]) {
   apiFetch.mockImplementation((path: string) => {
@@ -61,43 +69,45 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     apiSend.mockReset();
   });
 
-  it('today: own time, the student clock, the fixed join link and a confirm', async () => {
+  it('today: own time, the student clock, the fixed join link and «سأحضر»', async () => {
     renderDash();
-    const card = await screen.findByRole('article', { name: /16:00 سهيلة/ });
+    const card = await openToday();
     // Cairo = Riyadh on 3 October (summer time): the student's clock reads the same, no extra line.
     expect(within(card).queryByText(/عند الطالب/)).toBeNull();
     expect(within(card).getByRole('link', { name: t.classroom.joinMeeting }).getAttribute('href')).toBe(ME.meeting_link);
-    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/lessons?from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z');
-    expect(within(card).queryByRole('button', { name: t.lessons.cancelSubmit })).toBeNull();
+    // One query: the board window, 14 days back and ahead of today in her zone (docs/46 D4).
+    expect(apiFetch).toHaveBeenCalledWith(BOARD_CALL);
+    // Her own «إلغاء الحلقة» only (docs/46 C6), never the admin's.
+    expect(within(card).getAllByRole('button', { name: t.teacherBoard.cancel })).toHaveLength(1);
+    expect(within(card).getByRole('button', { name: t.teacherBoard.confirm })).toBeTruthy();
   });
 
-  it('confirming a lesson posts it and says so', async () => {
+  it('«سأحضر» posts her own confirm (never the family-style one) and says so', async () => {
     apiSend.mockResolvedValue(TODAY);
     renderDash();
-    const card = await screen.findByRole('article', { name: /16:00 سهيلة/ });
-    fireEvent.click(within(card).getByRole('button', { name: t.lessons.event.confirm }));
-    await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.lessons.confirmed));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/a/confirm');
+    const card = await openToday();
+    expect(within(card).queryByRole('button', { name: t.lessons.event.confirm })).toBeNull();
+    fireEvent.click(within(card).getByRole('button', { name: t.teacherBoard.confirm }));
+    await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.teacherBoard.confirmedOk));
+    expect(apiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/a/confirm-attendance');
   });
 
-  it('the week tab lists every day; the students tab lists my students', async () => {
+  it('«طلابي» (the board) is the first tab; the week tab lists every day', async () => {
     renderDash();
-    await screen.findByRole('article', { name: /16:00/ });
+    const table = await screen.findByRole('table', { name: t.teacherBoard.tab });
+    expect(screen.getAllByRole('tab')[0]?.getAttribute('aria-selected')).toBe('true');
+    expect(within(table).getByRole('button', { name: 'سهيلة' })).toBeTruthy();
+    expect(within(table).getByText(t.enums.studentStatus.active)).toBeTruthy();
     fireEvent.click(screen.getByRole('tab', { name: t.teacherDash.week }));
     expect(screen.getAllByRole('article')).toHaveLength(2);
-    fireEvent.click(screen.getByRole('tab', { name: t.teacherDash.myStudents }));
-    const table = screen.getByRole('table', { name: t.teacherDash.myStudents });
-    expect(within(table).getByRole('cell', { name: 'سهيلة' })).toBeTruthy();
-    // Each name opens the student's «سجل التقارير» (R-REP-05).
-    expect(within(table).getByRole('link', { name: 'سهيلة' }).getAttribute('href')).toBe('/teacher/reports/s-1');
-    expect(within(table).getByText(t.enums.studentStatus.active)).toBeTruthy();
   });
 
   it('the week is the next 7 days from today (on a Friday too), with its dates as a heading', async () => {
     vi.setSystemTime(new Date('2026-10-09T09:00:00.000Z')); // Friday 9 Oct, 12:00 Cairo
     renderDash();
     fireEvent.click(await screen.findByRole('tab', { name: t.teacherDash.week }));
-    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/lessons?from=2026-10-08T21%3A00%3A00.000Z&to=2026-10-15T21%3A00%3A00.000Z');
+    const from = '2026-09-24T21%3A00%3A00.000Z';
+    expect(apiFetch).toHaveBeenCalledWith(`/teachers/me/lessons?from=${from}&to=2026-10-22T21%3A00%3A00.000Z`);
     expect(screen.getByRole('heading', { name: 'من 9 أكتوبر إلى 15 أكتوبر' })).toBeTruthy();
   });
 
@@ -114,7 +124,7 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
   it('me.platform_classroom: no fixed link at the top; classroom lessons hide it on the cards', async () => {
     const inClassroom = [TODAY, MONDAY].map((l) => ({ ...l, platform_classroom: true }));
     renderDash({ ...ME, platform_classroom: true }, false, inClassroom);
-    const card = await screen.findByRole('article', { name: /16:00 سهيلة/ });
+    const card = await openToday();
     await waitFor(() => expect(screen.queryByRole('region', { name: t.teacherDash.joinLink })).toBeNull());
     expect(within(card).queryByRole('link', { name: t.classroom.joinMeeting })).toBeNull();
     expect(within(card).queryByText(t.lessons.noLink)).toBeNull();
@@ -123,7 +133,7 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
   it('academy switch ON but the teacher is on the fixed link: the top link and card links stay', async () => {
     const fixed = [TODAY, MONDAY].map((l) => ({ ...l, platform_classroom: false }));
     renderDash(ME, true, fixed);
-    const card = await screen.findByRole('article', { name: /16:00 سهيلة/ });
+    const card = await openToday();
     await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/settings/public'));
     expect(screen.getByRole('region', { name: t.teacherDash.joinLink })).toBeTruthy();
     expect(within(card).getByRole('link', { name: t.classroom.joinMeeting })).toBeTruthy();

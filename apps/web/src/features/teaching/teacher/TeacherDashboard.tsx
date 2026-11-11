@@ -1,4 +1,4 @@
-import { addDays, weekWindowIn, zonedPartsIn } from '@ab/shared';
+import { zonedPartsIn } from '@ab/shared';
 import type { TeacherMe } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -11,23 +11,19 @@ import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { errorCode } from '@/features/teaching/schedule';
 import { InternalMeetingButton } from '@/features/teaching/meetings/internal/InternalMeetingButton';
 import { InternalMeetingsList } from '@/features/teaching/meetings/internal/InternalMeetingsList';
-import { PendingReports } from '@/features/reporting/reports/history/PendingReports';
-import { lessonsOnDay } from '@/features/teaching/schedule/lesson/lessons';
-import { dayMonthLabel } from '@/features/teaching/schedule';
+import { PendingReports } from '@/features/reporting/reports';
 import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
 import { usePlatformClassroom } from '@/lib/settings/public-config';
 import { myLessonsQuery, teacherMeQuery } from './api';
 import { JoinLink } from './lessons/JoinLink';
-import { LessonDayList } from './lessons/LessonDayList';
-import { MyStudents } from './MyStudents';
-import { TeacherAvailability } from './proposals/TeacherAvailability';
+import { DashboardPanel, type DashboardTab } from './DashboardPanel';
+import { boardWindow } from '@/features/teaching/teacher-board';
 
-type Tab = 'today' | 'week' | 'students' | 'availability';
-const TABS: { value: Tab; label: string }[] = [
+const TABS: { value: DashboardTab; label: string }[] = [
+  { value: 'students', label: t.teacherBoard.tab },
   { value: 'today', label: t.teacherDash.today },
   { value: 'week', label: t.teacherDash.week },
-  { value: 'students', label: t.teacherDash.myStudents },
   { value: 'availability', label: t.availability.title },
 ];
 
@@ -51,30 +47,16 @@ export function TeacherDashboard() {
 }
 
 /**
- * Today / the next 7 days in the teacher's own zone (a rolling week, so on a Friday it still shows
- * the coming days), their students, their availability.
+ * Her home (docs/46 C1): «طلابي» (the board) first, then «اليوم», «الأسبوع» and her availability.
+ * One query of the board window (14 days back and ahead) feeds every tab, all in her zone.
  */
 function Dashboard({ me }: { me: TeacherMe }) {
   const now = useNow();
   const platform = usePlatformClassroom(me.platform_classroom);
   const today = zonedPartsIn(now, me.tz).date;
-  const lessons = useQuery(myLessonsQuery(weekWindowIn(today, me.tz)));
-  const range = t.teacherDash.weekRange.replace('{from}', dayMonthLabel(today)).replace('{to}', dayMonthLabel(addDays(today, 6)));
-  const [tab, setTab] = useState<Tab>('today');
+  const lessons = useQuery(myLessonsQuery(boardWindow(today, me.tz)));
+  const [tab, setTab] = useState<DashboardTab>('students');
   const [notice, setNotice] = useState<string | null>(null);
-  const list = (which: 'today' | 'week') => {
-    if (lessons.isError) return <FormAlert>{t.teacherDash.loadError}</FormAlert>;
-    if (!lessons.data) return <ListSkeleton />;
-    const shown = which === 'today' ? lessonsOnDay(lessons.data, { date: today, tz: me.tz }) : lessons.data;
-    const empty = which === 'today' ? t.teacherDash.noLessonsToday : t.teacherDash.noLessonsWeek;
-    return (
-      <>
-        {which === 'week' && <h2 className="mb-3 text-sm font-semibold text-ink-2">{range}</h2>}
-        <LessonDayList lessons={shown} tz={me.tz} fallbackLink={me.meeting_link} empty={empty} onDone={setNotice} />
-      </>
-    );
-  };
-
   return (
     <>
       {/* Platform classroom (the teacher's mode, else the academy default): no fixed link at the top. */}
@@ -82,10 +64,7 @@ function Dashboard({ me }: { me: TeacherMe }) {
       <PendingReports tz={me.tz} />
       <Tabs label={t.teacherDash.tabs} tabs={TABS} value={tab} onChange={setTab} />
       <div role="tabpanel" aria-label={TABS.find((x) => x.value === tab)?.label}>
-        {tab === 'today' && list('today')}
-        {tab === 'week' && list('week')}
-        {tab === 'students' && <MyStudents students={me.students} />}
-        {tab === 'availability' && <TeacherAvailability me={me} />}
+        <DashboardPanel tab={tab} me={me} lessons={lessons} at={{ now, today }} onDone={setNotice} />
       </div>
       {notice && <Toast message={notice} onDismiss={() => setNotice(null)} />}
     </>

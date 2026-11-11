@@ -12,6 +12,7 @@ import { EditTimeLink } from '@/features/teaching/schedule/edit-time/EditTimeLin
 import { durationMin, studentTimes, timeInCity } from './lessons';
 import { DetailRow } from './DetailRow';
 import { LessonTags } from './LessonTags';
+import { TeacherConfirmedTag } from './TeacherConfirmedTag';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
@@ -36,6 +37,7 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
       <div className="flex flex-wrap items-center gap-2">
         <StatusChip {...status.chip(lesson.status)} className="justify-self-start" />
         <LessonTags lesson={lesson} />
+        <TeacherConfirmedTag lesson={lesson} />
       </div>
       <dl className="grid gap-3">
         <DetailRow label={t.schedule.time}>

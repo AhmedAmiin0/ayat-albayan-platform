@@ -19,6 +19,7 @@ test.describe('journey 2 — lesson report (R-REP-01..04)', () => {
     // Teacher: today's lesson (already started) → «الحلقة تمت» → «تقرير الحلقة».
     const page = await asRole('teacher');
     await page.goto('/teacher');
+    await page.getByRole('tab', { name: ar.teacherDash.today }).click();
     const card = page.getByRole('article', { name: /سهيلة/ });
     await card.getByRole('button', { name: ar.lessons.event.complete }).click();
     await expect(page.getByRole('status').filter({ hasText: ar.lessons.statusSaved })).toBeVisible();

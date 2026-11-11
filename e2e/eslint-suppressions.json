@@ -1133,7 +1133,7 @@
   },
   "tests/reporting/teacher-week-history.spec.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "tests/sales/assistant-auto-assign-off.api.spec.ts": {

@@ -20,6 +20,8 @@ export interface LessonActionsProps {
   onChangeCourse?: () => void;
   /** The drawer's pending proposal «موافقة» is the primary above: the confirm is outlined. */
   proposalLeads?: boolean;
+  /** The teacher's card: her own «سأحضر» replaces the family-style confirm (docs/46 D1). */
+  hideConfirm?: boolean;
   /** 48px on phones either way (docs/07 «الأزرار»); teacher surfaces keep 48px on desktop too. */
   size?: 'md' | 'lg';
 }
@@ -51,7 +53,8 @@ export function LessonActions(props: LessonActionsProps) {
   const win = useJoinWindow();
   // No «تأكيد» while the academy requires none (owner 2026-11-02); a family's «نعم» still confirms.
   const required = usePublicConfig().lesson_confirmation_required;
-  const confirmable = required && lesson.allowed_events.includes('confirm');
+  const confirmable =
+    required && props.hideConfirm !== true && lesson.allowed_events.includes('confirm');
   const live = useNow();
   // One filled button: «ادخل الحلقة» (live clock, as EnterButton) or a pending proposal's «موافقة» leads.
   const stepDown = (isOpenLesson(lesson.status) && canJoinNow(lesson, live, win)) || props.proposalLeads === true;
