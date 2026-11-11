@@ -3,6 +3,7 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { PageQuery } from '@/common/http/http';
 import { ReportAccess } from '@/modules/reporting/reports/report-access';
+import { ReportsSettings } from '@/modules/reporting/reports/reports.settings';
 import { historyResponse, pendingViews } from './report-history.mapper';
 import { ReportHistoryQueries } from './report-history.queries';
 
@@ -14,6 +15,7 @@ export class ReportHistoryService {
   constructor(
     private readonly queries: ReportHistoryQueries,
     private readonly access: ReportAccess,
+    private readonly settings: ReportsSettings,
   ) {}
 
   /** R5 (R-REP-05, issue D2): admin; a teacher for their own student (assigned or taught). */
@@ -26,11 +28,13 @@ export class ReportHistoryService {
       if (!own) throw new ForbiddenException();
     }
     const rows = await this.queries.submitted(studentId);
-    const [lessons, seq] = await Promise.all([
+    const [lessons, seq, settings] = await Promise.all([
       this.queries.lessons(rows.map((r) => r.lesson_id)),
       this.queries.sequence(studentId),
+      this.settings.read(),
     ]);
-    return historyResponse({ rows, lessons, seq, page });
+    const reader = { role: user.role, now: new Date(), minutes: settings.report_teacher_edit_minutes };
+    return historyResponse({ rows, lessons, seq, page, window: reader });
   }
 
   /** R11 (R-TCH-03): «تقارير لسه ما اتكتبتش», oldest first. */

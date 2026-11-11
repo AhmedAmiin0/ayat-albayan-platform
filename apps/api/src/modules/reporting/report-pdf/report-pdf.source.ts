@@ -7,7 +7,7 @@ import { loadFamilyExtras, type FamilyExtras } from './v2/family-source';
 const REPORT_COLUMNS =
   'id, lesson_id, student_id, teacher_id, attendance, program, recited, new_memorization, revision, theory, ' +
   'grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, ' +
-  'grade_commitment, grade_overall, notes, homework, next_plan, version, form_version, content, submitted_at, public_id';
+  'grade_commitment, grade_overall, notes, homework, next_plan, version, form_version, content, submitted_at, sent_at, public_id';
 
 export interface ReportRow {
   id: string;
@@ -35,6 +35,8 @@ export interface ReportRow {
   form_version: number;
   content: unknown;
   submitted_at: string | null;
+  /** The family's report_ready went out (the sender stamps it); null before. */
+  sent_at: string | null;
   /** The live page's opaque id (/report/<public_id>), the link templates' button. */
   public_id: string;
 }

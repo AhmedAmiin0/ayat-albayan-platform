@@ -26,7 +26,7 @@ const AFTER_COPY: readonly string[] = [
   'meeting_max_minutes', 'meetings_in_app', 'renewal_commission_enabled', 'sales_require_assignee',
   'lesson_confirmation_required',
   'refund_attended_rate_percent', 'lesson_outcome_grace_minutes',
-  'short_link_base',
+  'short_link_base', 'report_teacher_edit_minutes',
 ];
 
 describe('migration config_describe', () => {

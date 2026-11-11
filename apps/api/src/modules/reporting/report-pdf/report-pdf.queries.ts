@@ -3,6 +3,8 @@ import { DB, type Db } from '@/common/db/db.module';
 import type { TablesInsert } from '@ab/db';
 import { wakeOn } from '@/common/jobs';
 import type { ReadyMessage } from './ready/report-ready-choice';
+import { renderCutoff } from './report-pdf.cutoff';
+import { ReportPdfSettings } from './report-pdf.settings';
 
 export type Finish =
   | { id: string; version: number; status: 'ready'; path: string }
@@ -17,7 +19,10 @@ export type Finish =
  */
 @Injectable()
 export class ReportPdfQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly settings: ReportPdfSettings,
+  ) {}
 
   /**
    * The idle tick's one read: is any report pending or rendering? (partial index
@@ -41,13 +46,19 @@ export class ReportPdfQueries {
     return data.length;
   }
 
-  /** Oldest first. */
-  async pendingIds(limit: number): Promise<string[]> {
+  /**
+   * Oldest first, only reports whose teacher edit window has closed (docs/46 D5): first submit at
+   * or before renderCutoff. A report still in its window waits for a later poll, so the family
+   * gets the final version once; an admin edit of an older report renders at once.
+   */
+  async pendingIds(limit: number, now: Date): Promise<string[]> {
+    const { report_teacher_edit_minutes: minutes } = await this.settings.read();
     const { data, error } = await this.db
       .from('lesson_reports')
       .select('id')
       .eq('status', 'submitted')
       .eq('pdf_status', 'pending')
+      .lte('submitted_at', renderCutoff(now, minutes).toISOString())
       .order('updated_at', { ascending: true })
       .limit(limit);
     if (error) throw new Error(`pending PDFs read failed: ${error.message}`);

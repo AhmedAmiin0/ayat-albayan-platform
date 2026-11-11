@@ -14,14 +14,14 @@ import type { ReportRow } from './report-row';
 import { v2Fields } from './v2/report-v2.mapper';
 
 /** Who reads the report and when: drives can_edit / edit_until (R-REP-02). */
-export type ViewContext = { role: UserRole | null; now: Date; hours: number };
+export type ViewContext = { role: UserRole | null; now: Date; minutes: number };
 
 const instant = (iso: string | null) => (iso === null ? null : new Date(iso));
 
 /** lesson_reports row → ReportView (docs/11 §4); attachments oldest first. */
 export function reportView(row: ReportRow, ctx: ViewContext): ReportView {
   const submittedAt = instant(row.submitted_at);
-  const until = editUntil({ submittedAt, hours: ctx.hours });
+  const until = editUntil({ submittedAt, minutes: ctx.minutes });
   const grades = Object.fromEntries(REPORT_RUBRICS.map((r) => [r, row[RUBRIC_COLUMN[r]]])) as Record<
     Rubric,
     Grade | null
@@ -50,7 +50,7 @@ export function reportView(row: ReportRow, ctx: ViewContext): ReportView {
     pdf_error: row.pdf_error,
     sent_at: row.sent_at,
     attachments: [...row.attachments].sort((a, b) => a.created_at.localeCompare(b.created_at)),
-    can_edit: ctx.role !== null && canEditReport({ role: ctx.role, submittedAt, now: ctx.now, hours: ctx.hours }),
+    can_edit: ctx.role !== null && canEditReport({ role: ctx.role, submittedAt, now: ctx.now, minutes: ctx.minutes }),
     edit_until: until?.toISOString() ?? null,
     ...v2Fields(row),
   };

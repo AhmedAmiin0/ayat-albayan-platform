@@ -2,7 +2,7 @@ import type { Attendance, Grade, LessonStatus, UserRole } from '@ab/catalog';
 import { isClosedLesson, type StatusRouteEvent } from '@ab/schedule';
 import { gradeStyle } from '@ab/money';
 
-const HOUR = 3_600_000;
+const MINUTE = 60_000;
 
 /**
  * The six «تقييم البنود» rows of the «تقرير الحلقة» Google Form, in form order (R-REP-02).
@@ -67,13 +67,13 @@ export interface EditWindowInput {
   /** First submit; null for a draft that was never submitted. */
   submittedAt: Date | null;
   now: Date;
-  /** settings.report_teacher_edit_hours (24). */
-  hours: number;
+  /** settings.report_teacher_edit_minutes (30; 0 closes at once). Not the no-login link's hours. */
+  minutes: number;
 }
 
 /**
  * R-REP-02: admins edit always; the report's teacher edits a draft any time and a submitted report
- * until `hours` after its first submit (the boundary instant is already closed); guardians never.
+ * until `minutes` after its first submit (edits never extend it) (the boundary instant is already closed); guardians never.
  */
 export function canEditReport(input: EditWindowInput): boolean {
   if (input.role === 'admin') return true;
@@ -83,8 +83,8 @@ export function canEditReport(input: EditWindowInput): boolean {
 }
 
 /** End of the teacher's edit window; null while the report is a draft. */
-export function editUntil(input: Pick<EditWindowInput, 'submittedAt' | 'hours'>): Date | null {
-  return input.submittedAt === null ? null : new Date(input.submittedAt.getTime() + input.hours * HOUR);
+export function editUntil(input: Pick<EditWindowInput, 'submittedAt' | 'minutes'>): Date | null {
+  return input.submittedAt === null ? null : new Date(input.submittedAt.getTime() + input.minutes * MINUTE);
 }
 
 export interface VersionState {

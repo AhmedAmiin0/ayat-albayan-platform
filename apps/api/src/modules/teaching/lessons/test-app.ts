@@ -50,6 +50,7 @@ function mocks() {
     lessons: {
       get: vi.fn(), byIds: vi.fn(), window: vi.fn(), studentPage: vi.fn(), studentExists: vi.fn(),
       openOfRule: vi.fn(), contacts: vi.fn(), seq: vi.fn(), meetingLinkAuto: vi.fn(), academyAuto: vi.fn(),
+      reportMinutes: vi.fn(),
     },
     writer: { apply: vi.fn(), generate: vi.fn(), retime: vi.fn() },
     teachers: { idByProfile: vi.fn(), get: vi.fn(), loads: vi.fn() },
@@ -113,6 +114,7 @@ export async function lessonsApp() {
     m.lessons.contacts.mockResolvedValue([CONTACT]);
     m.lessons.meetingLinkAuto.mockResolvedValue(false);
     m.lessons.academyAuto.mockResolvedValue(false);
+    m.lessons.reportMinutes.mockResolvedValue(30);
     m.lessons.seq.mockResolvedValue(new Map());
     m.teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : null));
     m.settings.all.mockResolvedValue({ ...SETTING_DEFAULTS });

@@ -7,8 +7,8 @@ export type TeacherReportParts = {
   lessons: ReadonlyMap<string, string>;
   students: ReadonlyMap<string, ReportStudent>;
   now: Date;
-  /** settings.report_teacher_edit_hours. */
-  hours: number;
+  /** settings.report_teacher_edit_minutes. */
+  minutes: number;
 };
 
 /** Read-only identity from the lesson and the student; a missing embed degrades to ''. */
@@ -23,11 +23,11 @@ function identity(row: TeacherReportRow, p: TeacherReportParts): Pick<TeacherRep
 
 /**
  * One of my submitted reports (R-REP-02): «تعديل التقرير» while canEditReport for the teacher
- * (edit_until = first submit + report_teacher_edit_hours), else «عرض التقرير».
+ * (edit_until = first submit + report_teacher_edit_minutes), else «عرض التقرير».
  */
 export function toTeacherReportView(row: TeacherReportRow, p: TeacherReportParts): TeacherReportView {
   const submittedAt = row.submitted_at === null ? null : new Date(row.submitted_at);
-  const until = editUntil({ submittedAt, hours: p.hours });
+  const until = editUntil({ submittedAt, minutes: p.minutes });
   return {
     id: row.id,
     lesson_id: row.lesson_id,
@@ -36,7 +36,7 @@ export function toTeacherReportView(row: TeacherReportRow, p: TeacherReportParts
     grade_overall: row.grade_overall,
     status: row.status,
     submitted_at: submittedAt?.toISOString() ?? null,
-    can_edit: canEditReport({ role: 'teacher', submittedAt, now: p.now, hours: p.hours }),
+    can_edit: canEditReport({ role: 'teacher', submittedAt, now: p.now, minutes: p.minutes }),
     edit_until: until?.toISOString() ?? null,
     pdf_status: row.pdf_status,
     sent_at: row.sent_at,

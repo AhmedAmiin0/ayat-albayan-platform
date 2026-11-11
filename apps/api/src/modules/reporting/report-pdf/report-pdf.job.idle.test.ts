@@ -3,7 +3,7 @@ import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { ReportPdfJob } from './report-pdf.job';
 import type { ReportPdfPublisher } from './report-pdf.publisher';
-import { ReportPdfQueries } from './report-pdf.queries';
+import { pdfQueries } from './report-pdf.fakes';
 
 const T = 'lesson_reports';
 const publisher = { publish: vi.fn(), close: vi.fn(async () => undefined) } as unknown as ReportPdfPublisher;
@@ -11,7 +11,7 @@ const publisher = { publish: vi.fn(), close: vi.fn(async () => undefined) } as u
 /** The real queries on a counting fake db: every awaited query is one PostgREST round trip. */
 function setup(results: Parameters<typeof fakeDb>[0]) {
   const fake = fakeDb(results);
-  return { ...fake, job: new ReportPdfJob(new ReportPdfQueries(fake.db), publisher, fakePolicy()) };
+  return { ...fake, job: new ReportPdfJob(pdfQueries(fake.db), publisher, fakePolicy()) };
 }
 
 describe('ReportPdfJob — an idle tick (owner 2026-10-27: lesson_reports read twice a minute)', () => {

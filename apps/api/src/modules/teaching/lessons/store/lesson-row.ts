@@ -4,7 +4,7 @@ import type { Attendance, LessonStatus, PackageSize, ReportStatus } from '@ab/sh
 const LESSON_COLUMNS =
   'id, rule_id, teacher_id, starts_at, ends_at, status, meeting_link, cancel_reason, override_reason, confirmed_at, rescheduled_from_id, makeup_of_id, conflicts, time_edited_at, time_edit_reason, time_edit_was, room_opened_at, instant' as const;
 const LESSON_EMBEDS =
-  'teacher:teachers(id, display_name_ar, display_name_en, tz, meeting_mode), rule:schedule_rules!lessons_rule_id_fkey(byday, package, subscription_id), lesson_students(student_id, attendance, chargeable, student:students(id, code, name, tz), report:lesson_reports(id, status)), proposals:lesson_proposals!lesson_proposals_lesson_id_fkey(id, proposed_starts_at, note, status, created_at), original:makeup_of_id(id, starts_at), makeups:lessons!makeup_of_id(id, starts_at, status, makeup_student_id)' as const;
+  'teacher:teachers(id, display_name_ar, display_name_en, tz, meeting_mode), rule:schedule_rules!lessons_rule_id_fkey(byday, package, subscription_id), lesson_students(student_id, attendance, chargeable, student:students(id, code, name, tz), report:lesson_reports(id, status, submitted_at, sent_at)), proposals:lesson_proposals!lesson_proposals_lesson_id_fkey(id, proposed_starts_at, note, status, created_at), original:makeup_of_id(id, starts_at), makeups:lessons!makeup_of_id(id, starts_at, status, makeup_student_id)' as const;
 
 /** One select for every lesson view: the row, its teacher and its students. */
 export const LESSON_SELECT = `${LESSON_COLUMNS}, ${LESSON_EMBEDS}` as const;
@@ -49,8 +49,11 @@ export type LessonRow = {
     chargeable: boolean;
     /** code is a generated column, typed nullable by the generator; never null in practice. */
     student: { id: string; code: string | null; name: string; tz: string } | null;
-    /** The student's lesson report (one per lesson and student); optional in test fakes. */
-    report?: { id: string; status: ReportStatus } | null;
+    /**
+     * The student's lesson report (one per lesson and student); optional in test fakes, and so are
+     * its first submit and family send (docs/46 B7).
+     */
+    report?: { id: string; status: ReportStatus; submitted_at?: string | null; sent_at?: string | null } | null;
   }[];
   /** The teacher's reschedule proposals (R-SCH-08); at most one is pending. */
   proposals: {

@@ -42,7 +42,7 @@ export class ReportGate {
     return {
       role: callerRole(user),
       now: new Date(),
-      hours: s.report_teacher_edit_hours,
+      minutes: s.report_teacher_edit_minutes,
       lateCancelHours: s.late_cancel_hours,
       formV2: s.report_form_v2,
     };
@@ -53,7 +53,7 @@ export class ReportGate {
     const row = await this.load(id, user);
     const ctx = await this.context(user);
     const submittedAt = row.submitted_at === null ? null : new Date(row.submitted_at);
-    if (ctx.role === null || !canEditReport({ role: ctx.role, submittedAt, now: ctx.now, hours: ctx.hours })) {
+    if (ctx.role === null || !canEditReport({ role: ctx.role, submittedAt, now: ctx.now, minutes: ctx.minutes })) {
       throw conflict('edit_window_closed');
     }
     return { row, ctx };

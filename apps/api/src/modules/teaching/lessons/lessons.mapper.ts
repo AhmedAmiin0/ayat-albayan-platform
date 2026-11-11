@@ -4,6 +4,7 @@ import {
   isClosedLesson,
   isOpenLesson,
   meetingModeOf,
+  SETTING_DEFAULTS,
   usesPlatform,
   type Conflict,
   type LessonEvent,
@@ -16,6 +17,7 @@ import {
 import { z } from 'zod';
 import type { Role } from '@/common/auth/verify-token';
 import type { LessonRow } from './store/lesson-row';
+import { lessonReport } from './store/lesson-report';
 import type { SeqMap } from './lessons.repo';
 
 /** What a teacher may do to their own lesson (docs/10 §3 Guards); the rest is admin-only. */
@@ -27,8 +29,11 @@ const TEACHER_EVENTS: ReadonlySet<LessonEvent> = new Set([
   'excuse',
 ]);
 
-/** academyAuto: settings.meeting_link_auto, the default of a teacher whose meeting_mode is null (false when absent). */
-type ViewContext = { role: Role | null; seq: SeqMap; academyAuto?: boolean };
+/**
+ * academyAuto: settings.meeting_link_auto, the default of a teacher whose meeting_mode is null (false
+ * when absent); reportMinutes: settings.report_teacher_edit_minutes and now (the registry default and the current time when absent).
+ */
+type ViewContext = { role: Role | null; seq: SeqMap; academyAuto?: boolean; reportMinutes?: number; now?: Date };
 
 /** Event list for the caller's role (LessonView.allowed_events). */
 function eventsFor(row: Pick<LessonRow, 'status'>, role: Role | null): LessonEvent[] {
@@ -38,6 +43,9 @@ function eventsFor(row: Pick<LessonRow, 'status'>, role: Role | null): LessonEve
 
 /** DB row → API view (snake_case, instants ISO UTC). R-LES-01, R-LES-03, R-SCH-03. */
 export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
+  const reports = {
+    role: ctx.role, now: ctx.now ?? new Date(), minutes: ctx.reportMinutes ?? SETTING_DEFAULTS.report_teacher_edit_minutes,
+  };
   const students: LessonStudentView[] = row.lesson_students
     .map((s) => ({
       id: s.student_id,
@@ -48,7 +56,7 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
       chargeable: s.chargeable,
       seq: ctx.seq.get(`${row.id}:${s.student_id}`) ?? null,
       makeup: activeMakeup(row, s.student_id),
-      report: s.report ? { id: s.report.id, status: s.report.status } : null,
+      report: lessonReport(s.report, reports),
     }))
     .sort((a, b) => a.name.localeCompare(b.name, 'ar'));
   return {

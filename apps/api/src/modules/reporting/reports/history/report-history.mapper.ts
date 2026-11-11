@@ -1,4 +1,6 @@
 import {
+  canEditReport,
+  editUntil,
   gradeScore,
   REPORT_RUBRICS,
   RUBRIC_COLUMN,
@@ -6,6 +8,7 @@ import {
   type PendingReportView,
   type ReportSummaryView,
   type Rubric,
+  type UserRole,
   type StudentReportsResponse,
 } from '@ab/shared';
 import type { PageQuery } from '@/common/http/http';
@@ -18,7 +21,11 @@ type HistoryParts = {
   /** lesson_id → «رقم الحلقة» (v_lesson_sequence). */
   seq: ReadonlyMap<string, number>;
   page: PageQuery;
+  /** The reader, now and settings.report_teacher_edit_minutes (docs/46 B7); none for sales. */
+  window?: SummaryWindow;
 };
+
+export type SummaryWindow = { role: UserRole | null; now: Date; minutes: number };
 
 type Joined = { row: HistoryRow; lesson: HistoryLesson; at: number };
 
@@ -38,7 +45,7 @@ export function historyResponse(p: HistoryParts): StudentReportsResponse {
   const items = [...joined]
     .reverse()
     .slice(start, start + p.page.pageSize)
-    .map((j) => summary(j, p.seq));
+    .map((j) => ({ ...summary(j, p.seq), ...editWindow(j.row, p.window) }));
   return { items, total: joined.length, page: p.page.page, pageSize: p.page.pageSize, series: joined.map(point) };
 }
 
@@ -56,6 +63,17 @@ function summary({ row, lesson }: Joined, seq: ReadonlyMap<string, number>): Rep
     pdf_status: row.pdf_status,
     sent_at: row.sent_at,
   };
+}
+
+/** can_edit / edit_until for the reader (R-REP-02, docs/46 B7); nothing without a window. */
+function editWindow(row: HistoryRow, w: SummaryWindow | undefined): Partial<ReportSummaryView> {
+  // A fake row may leave the column out: read it as never submitted, not an invalid date.
+  const submittedAt = row.submitted_at ? new Date(row.submitted_at) : null;
+  const base = { submitted_at: submittedAt?.toISOString() ?? null };
+  if (!w) return base;
+  const until = editUntil({ submittedAt, minutes: w.minutes });
+  const canEdit = w.role !== null && canEditReport({ role: w.role, submittedAt, now: w.now, minutes: w.minutes });
+  return { ...base, can_edit: canEdit, edit_until: until?.toISOString() ?? null };
 }
 
 function point({ row, lesson }: Joined): GradePoint {

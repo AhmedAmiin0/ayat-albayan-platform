@@ -1,13 +1,16 @@
+import { sendLines, type SendWords } from '@ab/client-core';
 import { pdfStatusStyle, reportStatusStyle, type ClockCycle, type ReportFormResponse, type ReportView } from '@ab/shared';
 import { clockIn, useClockCycle, whenIn } from '@/core/lib/clock';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { t } from '@/core/lib/i18n/i18n';
+import { useNow } from '@/core/lib/time/use-now';
 import { Note } from '@/core/ui/feedback/Note';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { reportErrorText } from '@/teacher/report/hooks/api';
 import type { SaveState } from '@/teacher/report/hooks/use-autosave';
 import type { ReportEntryState } from '@/teacher/report/hooks/use-report-entry';
+import { useWindowClose } from '@/teacher/report/hooks/use-window-close';
 import { SendButton } from './SendButton';
 import { SentPanel } from './SentPanel';
 
@@ -20,29 +23,37 @@ export function saveLine(state: SaveState, tz: string, cycle: ClockCycle): strin
   return state.kind === 'failed' ? t.reports.saveFailed : null;
 }
 
-/** After a submit: how long the teacher may still edit, or that the window closed. */
-function windowLine(report: ReportView, tz: string, cycle: ClockCycle): string | null {
-  if (!report.can_edit) return t.reports.editClosed;
-  return report.edit_until ? t.reports.editUntil.replace('{when}', whenIn(new Date(report.edit_until), tz, cycle)) : null;
-}
+const WORDS: SendWords = {
+  editUntil: t.reports.editUntil,
+  editClosed: t.reports.editClosed,
+  ...t.reports.familySend,
+  minutes: t.settingsValues.units.minutes,
+};
+/** The PDF chip once there is something to say (ready, or failed): not while it waits for the close. */
+const PDF_SHOWN: ReadonlySet<string> = new Set(['ready', 'failed']);
 
-/** «التقرير اتبعت», its version, the PDF state, and the edit window. */
+/**
+ * «أُرسل التقرير», its version, the PDF once ready, then the window lines (docs/46 B5): until when
+ * it may still be edited, and «سيُرسل إلى الأسرة بعد 12 دقيقة» / «… الآن» / «أُرسل إلى الأسرة»,
+ * live (useNow); at the close the form and the lists are fetched again (useWindowClose).
+ */
 export function SentNote({ report, tz }: { report: ReportView; tz: string }) {
-  const editWindow = windowLine(report, tz, useClockCycle());
+  const cycle = useClockCycle();
+  const now = useNow();
+  useWindowClose(report.edit_until);
+  const lines = sendLines(report, { now, when: (d) => whenIn(d, tz, cycle), words: WORDS });
+  const pdf = report.pdf_status && PDF_SHOWN.has(report.pdf_status) ? report.pdf_status : null;
   return (
     <>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
         <StatusChip {...reportStatusStyle.submitted} label={t.reports.submitted} size="sm" />
         <Note>{t.reports.version.replace('{n}', String(report.version))}</Note>
-        {report.pdf_status ? (
-          <StatusChip
-            {...pdfStatusStyle[report.pdf_status]}
-            size="sm"
-            label={`${t.reports.pdfLabel}: ${t.enums.pdfStatus[report.pdf_status]}`}
-          />
+        {pdf ? (
+          <StatusChip {...pdfStatusStyle[pdf]} size="sm" label={`${t.reports.pdfLabel}: ${t.enums.pdfStatus[pdf]}`} />
         ) : null}
       </View>
-      {editWindow ? <Note>{editWindow}</Note> : null}
+      {lines.edit ? <Note>{lines.edit}</Note> : null}
+      {lines.family ? <Note>{lines.family}</Note> : null}
     </>
   );
 }

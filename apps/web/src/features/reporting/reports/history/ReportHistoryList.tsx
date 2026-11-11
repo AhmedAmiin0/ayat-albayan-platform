@@ -1,10 +1,14 @@
 import { gradeStyle, lessonWhenAt, type ReportSummaryView, type UserRole } from '@ab/shared';
+import { editableNow } from '@ab/client-core';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { PdfAction } from './PdfAction';
 import { RecordingLink } from './RecordingLink';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { useClock } from '@/lib/clock';
+import { useNow } from '@/lib/time/use-now';
+import { reportFormHref } from '@/features/reporting/reports/paths';
+import { ReportLink } from './ReportLink';
 
 export interface ReportHistoryListProps {
   items: ReportSummaryView[];
@@ -17,10 +21,12 @@ export interface ReportHistoryListProps {
 
 /**
  * The student's submitted reports, newest lesson first (R-REP-05, issue D2: replaces the
- * per-student sheets): when, which lesson, who taught, attendance, overall grade, the PDF.
+ * per-student sheets): when, which lesson, who taught, attendance, overall grade, the PDF, and
+ * «تعديل التقرير» while its edit window is still open on this clock (docs/46 B7).
  */
 export function ReportHistoryList({ items, role, tz, studentId, recorded }: ReportHistoryListProps) {
   const clock = useClock();
+  const now = useNow();
   return (
     <ol className="grid">
       {items.map((r) => (
@@ -44,6 +50,9 @@ export function ReportHistoryList({ items, role, tz, studentId, recorded }: Repo
           <div className="flex flex-wrap items-center gap-2">
             {recorded.has(r.lesson_id) && (
               <RecordingLink studentId={studentId} lessonId={r.lesson_id} role={role} when={lessonWhenAt(new Date(r.starts_at), { tz, ...clock })} />
+            )}
+            {editableNow(r, now) && (
+              <ReportLink href={reportFormHref({ role, lessonId: r.lesson_id, studentId })}>{t.reports.edit}</ReportLink>
             )}
             <PdfAction report={r} role={role} />
           </div>

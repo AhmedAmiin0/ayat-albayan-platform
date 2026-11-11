@@ -5,7 +5,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { reportFormHref } from '@/features/reporting/reports/paths';
 import { PdfAction } from '@/features/reporting/reports/history/PdfAction';
-import { ReportLink } from '@/features/reporting/reports/history/ReportLink';
+import { RowWindow } from '@/features/reporting/reports';
 import { t } from '@/lib/i18n/i18n';
 import type { Clock } from '@/lib/clock';
 
@@ -67,16 +67,11 @@ export function submittedReportColumns(tz: string, clock: Clock) {
       header: () => t.reports.actionsCol,
       cell: (c) => {
         const r = c.row.original;
-        const until = r.can_edit && r.edit_until ? t.reports.editUntil.replace('{when}', when(r.edit_until, tz, clock)) : null;
+        const href = reportFormHref({ role: 'teacher', lessonId: r.lesson_id, studentId: r.student.id });
         return (
-          <span className="grid justify-items-start gap-1">
-            <span className="flex flex-wrap items-center gap-2">
-              <ReportLink href={reportFormHref({ role: 'teacher', lessonId: r.lesson_id, studentId: r.student.id })}>
-                {r.can_edit ? t.reports.edit : t.reports.view}
-              </ReportLink>
-              <PdfAction report={r} role="teacher" />
-            </span>
-            {until && <span className="text-xs whitespace-normal text-ink-3">{until}</span>}
+          <span className="flex flex-wrap items-start gap-2">
+            <RowWindow report={r} href={href} />
+            <PdfAction report={r} role="teacher" />
           </span>
         );
       },
