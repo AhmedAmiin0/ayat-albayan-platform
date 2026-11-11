@@ -9499,31 +9499,12 @@
       "count": 1
     }
   },
-  "src/teacher/components/TeacherLessonActions.tsx": {
-    "no-nested-ternary": {
-      "count": 2
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 6
-    }
-  },
-  "src/teacher/components/TeacherLessonCard.buttons.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/teacher/components/TeacherLessonCard.test.tsx": {
     "stylistic/max-len": {
       "count": 3
     }
   },
   "src/teacher/components/TeacherLessonCard.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -9817,23 +9798,8 @@
     }
   },
   "src/teacher/screens/StudentReportsScreen.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 7
-    },
-    "ab/no-restricted-syntax": {
-      "count": 3
-    },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "typescript/no-redundant-type-constituents": {
-      "count": 2
-    },
-    "typescript/no-useless-default-assignment": {
-      "count": 1
     }
   },
   "src/teacher/screens/TeacherChatsScreen.tsx": {
@@ -9882,9 +9848,6 @@
     }
   },
   "src/teacher/screens/TeacherStudentsScreen.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 4
     },
@@ -9911,7 +9874,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 5
+      "count": 3
     }
   },
   "src/teaching/reschedule/MoveFields.tsx": {

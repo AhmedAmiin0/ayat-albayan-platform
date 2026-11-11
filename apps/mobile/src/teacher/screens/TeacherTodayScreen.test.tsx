@@ -20,9 +20,8 @@ jest.mock('expo-router', () => ({ router: { push: (h: string) => mockPush(h) } }
 jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
 
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
-const teacherEvents = { allowed_events: ['confirm' as const] };
 /** 16:00 Cairo, started, its report still to write. */
-const held = lesson({ id: 'held', starts_at: '2026-10-01T13:00:00.000Z', ...teacherEvents });
+const held = lesson({ id: 'held', starts_at: '2026-10-01T13:00:00.000Z' });
 /** 20:00 Cairo, ahead, waiting for confirmation, with a link; the student is in Muscat (21:00). */
 const later = lesson({
   id: 'later',
@@ -30,7 +29,6 @@ const later = lesson({
   ends_at: '2026-10-01T17:45:00.000Z',
   meeting_link: 'https://meet.google.com/abc',
   students: [jana],
-  ...teacherEvents,
 });
 /** Tomorrow in Cairo: not today. */
 const tomorrow = lesson({ id: 'tmr', starts_at: '2026-10-02T09:00:00.000Z', students: [{ ...yusuf, name: 'سلمى' }] });
@@ -47,7 +45,7 @@ beforeEach(() => {
   });
 });
 
-test('my lessons today on my clock: the report for the started one, join + confirm for the next', async () => {
+test('my lessons today on my clock: the report for the started one, join + «سأحضر» for the next', async () => {
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   expect(await screen.findByText(counted(t.reports.pendingCount, 1))).toBeTruthy();
   expect(screen.getByText('يوسف أحمد')).toBeTruthy();
@@ -55,8 +53,9 @@ test('my lessons today on my clock: the report for the started one, join + confi
   expect(screen.queryByText('سلمى')).toBeNull();
   expect(screen.getAllByRole('button', { name: t.reports.open })).toHaveLength(1);
   expect(screen.getByRole('button', { name: t.teacherDash.join })).toBeTruthy();
-  // No cancel or move for a teacher.
+  // No admin cancel or move for a teacher (hers is «إلغاء الحلقة», on the lesson ahead only).
   expect(screen.queryByText(t.today.cancel)).toBeNull();
+  expect(screen.getAllByRole('button', { name: t.teacherBoard.cancel })).toHaveLength(1);
   expect(screen.queryByText(t.lessons.rescheduleSubmit)).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: t.reports.open }));
   expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
@@ -71,17 +70,34 @@ test('docs/07 §6: the pending reports way is an outlined full-width button unde
   expect(StyleSheet.flatten(button.props.style)).toMatchObject({ borderWidth: 1, minHeight: 48 });
 });
 
-test('«تأكيد» shows confirmed at once and sends POST /lessons/:id/confirm', async () => {
-  mockApiSend.mockResolvedValue({});
+test('«سأحضر» only on the lesson still ahead: POST confirm-attendance, then the notice', async () => {
+  mockApiSend.mockResolvedValue({ ...later, teacher_confirmed_at: '2026-10-01T14:00:00Z' });
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
-  // Both lessons wait for confirmation; the second card is the 20:00 one.
-  const [, laterConfirm] = await screen.findAllByRole('button', { name: t.today.confirm });
-  if (!laterConfirm) throw new Error('no «تأكيد» on the 20:00 lesson');
-  await fireEvent.press(laterConfirm);
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/later/confirm', undefined));
+  // The family-style «تأكيد» is gone (docs/46 D1); the started lesson offers neither.
+  const [attend, ...more] = await screen.findAllByRole('button', { name: t.teacherBoard.confirm });
+  expect(more).toHaveLength(0);
+  expect(screen.queryByRole('button', { name: t.today.confirm })).toBeNull();
+  if (!attend) throw new Error('no «سأحضر» on the 20:00 lesson');
+  await fireEvent.press(attend);
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/later/confirm-attendance', undefined),
+  );
+  expect(await screen.findByText(t.teacherBoard.confirmedOk)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith(
     '/teachers/me/lessons?from=2026-09-30T10%3A00%3A00.000Z&to=2026-10-02T12%3A00%3A00.000Z',
   );
+});
+
+test('«إلغاء الحلقة» on the lesson ahead: the reason, then the screen says it was cancelled', async () => {
+  mockApiSend.mockResolvedValue({ ...later, status: 'cancelled_by_teacher' });
+  await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
+  await fireEvent.press(await screen.findByRole('button', { name: t.teacherBoard.cancel }));
+  await fireEvent.changeText(screen.getByLabelText(new RegExp(t.teacherBoard.reason)), 'مرض');
+  await fireEvent.press(screen.getByRole('button', { name: t.teacherBoard.cancelSubmit }));
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/later/cancel', { reason: 'مرض' }),
+  );
+  expect(await screen.findByText(t.teacherBoard.cancelledOk)).toBeTruthy();
 });
 
 test('a day without lessons says so', async () => {

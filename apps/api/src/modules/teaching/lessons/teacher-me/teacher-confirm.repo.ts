@@ -7,7 +7,7 @@ import { dbError } from '@/common/http/http';
 export const confirmOutcome = z.enum(['ok', 'not_found', 'not_owner', 'closed', 'started']);
 export type ConfirmOutcome = z.infer<typeof confirmOutcome>;
 
-export interface TeacherConfirm {
+interface TeacherConfirm {
   lessonId: string;
   teacherId: string;
   actorId: string;

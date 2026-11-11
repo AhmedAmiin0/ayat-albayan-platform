@@ -7,7 +7,7 @@ import { TeacherCancelPush } from './teacher-cancel.push';
 import { TeacherConfirmRepo } from './teacher-confirm.repo';
 import { assertConfirmed, assertTeacherMayCancel } from './teacher-lesson.rules';
 
-export interface TeacherCancel {
+interface TeacherCancel {
   lessonId: string;
   reason: string;
   actor: AuthUser;

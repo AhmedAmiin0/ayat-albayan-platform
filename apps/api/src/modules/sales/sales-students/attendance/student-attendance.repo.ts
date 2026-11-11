@@ -26,7 +26,7 @@ export interface AttendanceReportRow {
 }
 
 /** [from, to); `teacherId` keeps one teacher's lessons only (her own «سجل الحضور», docs/46 C5). */
-export interface AttendanceWindow {
+interface AttendanceWindow {
   from: Date;
   to: Date;
   teacherId?: string;

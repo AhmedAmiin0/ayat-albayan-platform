@@ -5,7 +5,7 @@ import { TeacherMeRepo } from '@/modules/teaching/lessons';
 import { attendanceWindow, monthIn, toAttendanceTable } from './student-attendance.mapper';
 import { StudentAttendanceRepo } from './student-attendance.repo';
 
-export interface TeacherAttendanceInput {
+interface TeacherAttendanceInput {
   /** The signed-in teacher's profile id. */
   profileId: string;
   studentId: string;

@@ -13,7 +13,7 @@ import type { AttendanceLessonRow, AttendanceReportRow } from './student-attenda
 
 
 /** Whose reading of a row: staff (attendanceKind) or the teacher (auto-held = unmarked). */
-export type AttendanceReader = 'staff' | 'teacher';
+type AttendanceReader = 'staff' | 'teacher';
 const KIND_OF = { staff: attendanceKind, teacher: teacherAttendanceKind } as const;
 /** Whose cancel reasons a reader sees: the teacher never the admin's (docs/46 C5). */
 const REASON_OF: Record<AttendanceReader, ReadonlySet<string>> = {

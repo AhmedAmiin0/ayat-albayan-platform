@@ -13,3 +13,4 @@ export { TeacherReportsScreen } from './screens/TeacherReportsScreen';
 export { TeacherScheduleScreen } from './screens/TeacherScheduleScreen';
 export { TeacherStudentsScreen } from './screens/TeacherStudentsScreen';
 export { TeacherTodayScreen } from './screens/TeacherTodayScreen';
+export { TeacherAttendanceScreen } from './board';

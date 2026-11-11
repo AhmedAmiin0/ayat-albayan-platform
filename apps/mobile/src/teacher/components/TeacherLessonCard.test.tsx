@@ -37,7 +37,7 @@ async function renderCard(platform: boolean | undefined, academyAuto: boolean) {
   client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: academyAuto });
   const l = lesson({ id: 'l1', meeting_link: LINK, ...(platform === undefined ? {} : { platform_classroom: platform }) });
   await renderWithQuery(
-    <TeacherLessonCard lesson={l} tz="Africa/Cairo" report={null} busy={false} onConfirm={noop} onReport={noop} />,
+    <TeacherLessonCard lesson={l} tz="Africa/Cairo" report={null} onNotice={noop} onReport={noop} />,
     client,
   );
 }

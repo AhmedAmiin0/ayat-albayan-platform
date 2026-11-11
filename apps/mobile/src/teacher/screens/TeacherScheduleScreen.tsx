@@ -16,6 +16,7 @@ import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useMyAvailability, useMyLessons, useTeacherMe } from '@/teacher/lib/queries';
+import { TeacherLessonTools, useTimedNotice } from '@/teacher/lesson-actions';
 import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 /** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so the row's action is idle. */
@@ -24,7 +25,8 @@ const noMove = () => undefined;
 /**
  * «جدولي» (R-TCH-03, R-SCH-08): my week السبت → الجمعة from GET /teachers/me/lessons, the same
  * day-by-day agenda as the admin's teacher calendar (my own days and clock, docs/34) with my availability as a faint line. ‹ › moves a week; offline the saved week stays. A tap
- * on a lesson opens «تفاصيل الحلقة» (its students, report state and «ادخل الحلقة»).
+ * on a lesson opens «تفاصيل الحلقة» (its students, report state, «ادخل الحلقة», and before it
+ * starts «سأحضر» / «إلغاء الحلقة»: docs/46 C7).
  */
 export function TeacherScheduleScreen() {
   const cycle = useClockCycle();
@@ -37,6 +39,7 @@ export function TeacherScheduleScreen() {
   const grid = useMyAvailability(me.data?.id);
   const inset = useTabBarInset();
   const details = useLessonDetails(lessons.data);
+  const notice = useTimedNotice();
   const loaded = lessons.data !== undefined;
   const days = agendaDays(lessons.data ?? [], start, tz);
   const empty = days.every((d) => d.lessons.length === 0);
@@ -82,7 +85,12 @@ export function TeacherScheduleScreen() {
         lesson={details.lesson}
         role="teacher"
         onClose={details.close}
-        actions={(l) => <JoinClassroomButton lesson={l} />}
+        actions={(l) => (
+          <>
+            <JoinClassroomButton lesson={l} />
+            <TeacherLessonTools lesson={l} notice={notice} />
+          </>
+        )}
       />
     </Screen>
   );
