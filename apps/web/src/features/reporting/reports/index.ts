@@ -16,6 +16,7 @@ export { LessonReportLinks, type LessonReportLinksProps } from './history/Lesson
 export { PdfAction } from './history/PdfAction';
 export { PendingReports } from './history/PendingReports';
 export { isPlainClick, ReportLink, type ReportLinkProps } from './history/ReportLink';
+export { StudentReportsBody, type StudentReportsBodyProps } from './history/StudentReportsBody';
 export { TeacherReportLinkPage } from './link/TeacherReportLinkPage';
 export { reportFormHref, reportHistoryHref, reportOpen } from './paths';
 export { RowWindow } from './send/WindowLines';

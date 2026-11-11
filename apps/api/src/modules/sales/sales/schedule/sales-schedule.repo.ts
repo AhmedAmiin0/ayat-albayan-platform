@@ -9,7 +9,7 @@ import { dbError } from '@/common/http/http';
  * meeting_link and the teacher's meeting_mode (for «عبر الفصل») are in since owner 2026-10-26.
  */
 const SALES_SCHEDULE_SELECT =
-  'id, starts_at, ends_at, status, makeup_of_id, meeting_link, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en, tz, meeting_mode), lesson_students(student:students(id, code, name, tz))' as const;
+  'id, starts_at, ends_at, status, makeup_of_id, meeting_link, teacher_confirmed_at, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en, tz, meeting_mode), lesson_students(student:students(id, code, name, tz))' as const;
 
 export interface SalesScheduleRow {
   id: string;
@@ -19,6 +19,8 @@ export interface SalesScheduleRow {
   makeup_of_id: string | null;
   /** Optional in test fakes. */
   meeting_link?: string | null;
+  /** docs/46 D1; optional in test fakes. */
+  teacher_confirmed_at?: string | null;
   rule: { package: string | null } | null;
   /** tz and meeting_mode optional in test fakes. */
   teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz?: string; meeting_mode?: string | null } | null;

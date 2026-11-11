@@ -68,3 +68,12 @@ test('empty and failed states', async () => {
   await fireEvent.press(screen.getByText(t.teacherStudents.trial));
   expect(await screen.findByText(t.teacherStudents.loadFailed)).toBeTruthy();
 });
+
+test('a paused or churned row the API still sends never shows (docs/46 D4: current students only)', async () => {
+  mockApiFetch.mockImplementation(async (p: string) =>
+    p === '/teachers/me' ? { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } : [row({}), row({ id: 's6', name: 'هند', status: 'paused' })],
+  );
+  await renderWithQuery(<TeacherStudentsScreen />);
+  expect(await screen.findByText('سهيلة')).toBeTruthy();
+  expect(screen.queryByText('هند')).toBeNull();
+});

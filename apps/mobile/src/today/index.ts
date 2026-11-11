@@ -4,6 +4,7 @@ export { TodayLayout } from './screens/TodayLayout';
 export { TodayScreen } from './screens/TodayScreen';
 export { useGreeting } from './lib/use-greeting';
 export { localDate } from './lib/timeline';
+export { Notice } from './components/Notice';
 export {
   durationLabel,
   lessonClock,

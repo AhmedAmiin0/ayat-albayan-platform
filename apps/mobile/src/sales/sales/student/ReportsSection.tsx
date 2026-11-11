@@ -8,7 +8,7 @@ import { ErrorLine } from '@/inbox';
 import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { SmallHeading as SectionLabel } from '@/sales/sales/components/SmallHeading';
-import { ReportHistoryRow } from '@/teacher';
+import { ReportHistoryRow } from '@/core/ui/lists/ReportRows';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { openStudentReportPdf } from './student-api';
 import { InsetGroup } from '@/core/ui/surface/inset';

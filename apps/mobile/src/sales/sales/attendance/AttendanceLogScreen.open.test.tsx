@@ -5,14 +5,14 @@ import { ApiError } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
-import { openSigned } from '@/teacher';
+import { openSigned } from '@/core/lib/http/open-signed';
 import { AttendanceLogScreen } from './AttendanceLogScreen';
 import { dayDateOf } from './attendance-log-text';
 import { logTable } from './fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
-jest.mock('@/teacher', () => ({ openSigned: jest.fn(async () => undefined) }));
+jest.mock('@/core/lib/http/open-signed', () => ({ openSigned: jest.fn(async () => undefined) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
 
 const w = t.sales.student.log;

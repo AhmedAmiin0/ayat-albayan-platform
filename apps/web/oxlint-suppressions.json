@@ -7580,11 +7580,6 @@
       "count": 2
     }
   },
-  "src/features/reporting/reports/history/StudentReportsPage.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/features/reporting/reports/history/use-recorded-lessons.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -11037,7 +11032,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/teaching/teacher/api.ts": {
@@ -11083,7 +11078,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 5

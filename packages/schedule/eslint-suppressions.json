@@ -207,7 +207,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 13
+      "count": 12
     }
   },
   "src/schemas/booking-extras.ts": {

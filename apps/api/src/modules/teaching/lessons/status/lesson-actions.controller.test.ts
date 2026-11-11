@@ -18,11 +18,19 @@ describe('POST /lessons/:id/confirm|status|cancel — roles and ownership (R-SCH
   afterEach(() => vi.useRealTimers());
 
   it('a teacher confirms their own lesson → 200 view with teacher-only actions', async () => {
+    h.lessons.get.mockResolvedValue(lessonRow({ ends_at: '2026-10-04T15:30:00+00:00' }));
     const res = await h.call({ method: 'POST', url: url('confirm'), token: 'teacher' });
     expect(res.statusCode).toBe(200);
     expect(h.writer.apply).toHaveBeenCalledTimes(1);
     expect(res.json()).toMatchObject({ id: LESSON_ID, starts_at: '2026-10-04T14:00:00.000Z' });
     expect(res.json().allowed_events).not.toContain('cancel_by_admin');
+  });
+
+  it('a teacher no longer confirms once the lesson ended → 409 lesson_ended (docs/46 C4); an admin still may', async () => {
+    const res = await h.call({ method: 'POST', url: url('confirm'), token: 'teacher' });
+    expect([res.statusCode, res.json().code]).toEqual([409, 'lesson_ended']);
+    expect(h.writer.apply).not.toHaveBeenCalled();
+    expect((await h.call({ method: 'POST', url: url('confirm'), token: 'admin' })).statusCode).toBe(200);
   });
 
   it("a teacher touching another teacher's lesson → 403, nothing written", async () => {

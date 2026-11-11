@@ -9,7 +9,8 @@ import { FormLabel } from '@/core/ui/form/FormLabel';
 import { pickReceipt, type Receipt } from '@/core/lib/receipts/receipt';
 import { openIcon } from '@/core/ui/actions';
 import { Button } from '@/core/ui/primitives/Button';
-import { openSigned, reportErrorText, uploadAttachment } from '@/teacher/report/hooks/api';
+import { openSigned } from '@/core/lib/http/open-signed';
+import { reportErrorText, uploadAttachment } from '@/teacher/report/hooks/api';
 
 export interface AttachmentsFieldProps {
   reportId: string;
