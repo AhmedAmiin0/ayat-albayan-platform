@@ -1,5 +1,5 @@
 import { attendanceMonthQuery, type StudentAttendanceTable } from '@ab/shared';
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -17,7 +17,9 @@ import { TeacherAttendanceService } from './teacher-attendance.service';
 @Permissions('self.teacher')
 @Controller('teachers/me/students')
 export class TeacherAttendanceController {
-  constructor(private readonly attendance: TeacherAttendanceService) {}
+  constructor(
+    @Inject(TeacherAttendanceService) private readonly attendance: TeacherAttendanceService,
+  ) {}
 
   @Get(':id/attendance')
   table(

@@ -1,5 +1,5 @@
 import { lessonWhenText, RIYADH_TZ } from '@ab/shared';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { PushService, type PushEvent } from '@/common/push/push.service';
 import { fill } from '@/modules/reporting/report-pdf';
@@ -29,8 +29,8 @@ export class TeacherCancelPush {
   private readonly log = new Logger(TeacherCancelPush.name);
 
   constructor(
-    private readonly push: PushService,
-    private readonly repo: TeacherCancelRepo,
+    @Inject(PushService) private readonly push: PushService,
+    @Inject(TeacherCancelRepo) private readonly repo: TeacherCancelRepo,
   ) {}
 
   async notify(lesson: LessonRow, reason: string): Promise<void> {

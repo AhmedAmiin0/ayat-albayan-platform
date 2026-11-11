@@ -1,5 +1,5 @@
 import { teacherCancelSchema, type LessonView } from '@ab/shared';
-import { Controller, HttpCode, Post } from '@nestjs/common';
+import { Controller, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -18,8 +18,8 @@ import { TeacherLessonService } from './teacher-lesson.service';
 @Controller('teachers/me/lessons')
 export class TeacherLessonController {
   constructor(
-    private readonly lessons: TeacherLessonService,
-    private readonly views: LessonViews,
+    @Inject(TeacherLessonService) private readonly lessons: TeacherLessonService,
+    @Inject(LessonViews) private readonly views: LessonViews,
   ) {}
 
   /** 409 lesson_started / invalid_transition; the reason is required. */

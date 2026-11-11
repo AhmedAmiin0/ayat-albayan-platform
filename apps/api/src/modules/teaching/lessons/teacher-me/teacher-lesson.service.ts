@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
@@ -17,10 +17,10 @@ interface TeacherCancel {
 @Injectable()
 export class TeacherLessonDeps {
   constructor(
-    readonly access: LessonAccess,
-    readonly cancels: LessonCancelService,
-    readonly confirms: TeacherConfirmRepo,
-    readonly push: TeacherCancelPush,
+    @Inject(LessonAccess) readonly access: LessonAccess,
+    @Inject(LessonCancelService) readonly cancels: LessonCancelService,
+    @Inject(TeacherConfirmRepo) readonly confirms: TeacherConfirmRepo,
+    @Inject(TeacherCancelPush) readonly push: TeacherCancelPush,
   ) {}
 }
 
@@ -32,8 +32,8 @@ export class TeacherLessonDeps {
 @Injectable()
 export class TeacherLessonService {
   constructor(
-    private readonly store: LessonStore,
-    private readonly deps: TeacherLessonDeps,
+    @Inject(LessonStore) private readonly store: LessonStore,
+    @Inject(TeacherLessonDeps) private readonly deps: TeacherLessonDeps,
   ) {}
 
   async cancel({ lessonId, reason, actor }: TeacherCancel, now = new Date()): Promise<string> {

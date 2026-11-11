@@ -1,5 +1,5 @@
 import type { StudentAttendanceTable } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { TeacherMeRepo } from '@/modules/teaching/lessons';
 import { attendanceWindow, monthIn, toAttendanceTable } from './student-attendance.mapper';
@@ -25,8 +25,8 @@ const isHers = (me: { students: readonly { id: string }[] }, studentId: string):
 @Injectable()
 export class TeacherAttendanceService {
   constructor(
-    private readonly me: TeacherMeRepo,
-    private readonly queries: StudentAttendanceRepo,
+    @Inject(TeacherMeRepo) private readonly me: TeacherMeRepo,
+    @Inject(StudentAttendanceRepo) private readonly queries: StudentAttendanceRepo,
   ) {}
 
   async table(input: TeacherAttendanceInput, now = new Date()): Promise<StudentAttendanceTable> {
