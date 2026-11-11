@@ -1,4 +1,3 @@
-export { openSigned } from '@/core/lib/http/open-signed';
 export { TeacherScope } from './components/TeacherScope';
 export { TeacherTabs } from './components/TeacherTabs';
 export { ReportFormScreen } from './report/screens/ReportFormScreen';
