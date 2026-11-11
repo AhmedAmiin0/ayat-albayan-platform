@@ -15,7 +15,7 @@ const sent = {
   status: 'submitted' as const, version: 1, attendance: 'on_time' as const,
   submitted_at: AT, edit_until: '2026-10-03T14:35:00.000Z', homework: 'الواجب المحفوظ',
 };
-const homework = () => screen.getByLabelText(t.reports.homework) as HTMLTextAreaElement;
+const homework = () => screen.getByLabelText<HTMLTextAreaElement>(t.reports.homework);
 
 describe('the report form at the edit window close', () => {
   beforeEach(() => {
