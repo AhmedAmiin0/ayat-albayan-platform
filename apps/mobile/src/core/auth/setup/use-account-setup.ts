@@ -21,8 +21,8 @@ function formProblem(input: SetupInput): string | null {
 }
 
 /**
- * PUT /me/setup, then refreshSession() (/auth/me reads the email from the JWT: without it the
- * screen would loop, docs/46 §5) and /auth/me again: the tree then opens the teacher's tabs.
+ * PUT /me/setup, then a sign-in on the new credentials (/auth/me reads the email from the JWT: else
+ * the screen would loop, docs/46 §5) and /auth/me again: the tree then opens the teacher's tabs.
  */
 export function useAccountSetup() {
   const [error, setError] = useState<string | null>(null);
@@ -34,9 +34,11 @@ export function useAccountSetup() {
     if (problem) return;
     setBusy(true);
     try {
-      await authApi.setupAccount({ email: input.email.trim(), password: input.password });
-      const { error: refresh } = await supabase.auth.refreshSession();
-      if (refresh) throw refresh;
+      const body = { email: input.email.trim(), password: input.password };
+      await authApi.setupAccount(body);
+      // A fresh session on the new credentials: the JWT then carries the real email (docs/46 §5).
+      const { error: fresh } = await supabase.auth.signInWithPassword(body);
+      if (fresh) throw fresh;
       await queryClient.refetchQueries({ queryKey: pathKey('/auth/me') });
     } catch (e) {
       setError(setupRefusal(e) ?? authErrorText(e, t.common.error));

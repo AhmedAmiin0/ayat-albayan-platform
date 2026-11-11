@@ -210,7 +210,7 @@ still answer `202`) while §4's gates are closed. Password rules are the existin
   in the teacher tree): `PUT /me/setup { email, password }` (signed in; only while the profile is `teacher`
   and the auth email is still synthetic, else `409 setup_done`; `409 email_taken`; password rules as
   everywhere) sets both through the Admin API (`email_confirm`, no SMTP) and ends her other sessions; the
-  client calls `refreshSession()` (the JWT carries the email). The portal stays closed until then.
+  client then signs in again with the new email + password (the JWT carries the email). The portal stays closed until then.
 - **After setup** she signs in with email, username **or her phone** + password (`POST /auth/login` resolves a
   phone through the teacher record to her `teacher` login only), or with a code again.
 - **«المستخدمون».** A teacher login created there without a phone takes the record's (same «nobody else holds

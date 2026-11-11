@@ -8,8 +8,8 @@ import { meQuery } from '@/features/people/auth/me';
 import { setupErrorText, setupFormProblem, type SetupForm } from './setup-errors';
 
 /**
- * PUT /me/setup, then a fresh session: /auth/me reads the email from the JWT, so without
- * refreshSession() the portal guard would still see the synthetic email and loop (docs/46 §5).
+ * PUT /me/setup, then a fresh session: /auth/me reads the email from the JWT, so the old token
+ * would still say the synthetic email and the portal guard would loop (docs/46 §5).
  * The cached /auth/me takes the new email, so /teacher's guard lets her in.
  */
 function useSaveSetup() {
@@ -18,7 +18,8 @@ function useSaveSetup() {
   return useMutation({
     mutationFn: async (body: { email: string; password: string }) => {
       await authApi.setupAccount(body);
-      const { error } = await supabase.auth.refreshSession();
+      // A fresh session on the new credentials (the old refresh token may not outlive the change).
+      const { error } = await supabase.auth.signInWithPassword(body);
       if (error) throw error;
       // The new email at once: /teacher's guard must not wait for the refreshed JWT on /auth/me.
       queryClient.setQueryData(meQuery.queryKey, (me) => (me ? { ...me, email: body.email } : me));

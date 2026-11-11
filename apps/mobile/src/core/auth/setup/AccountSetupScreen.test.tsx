@@ -12,7 +12,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
 }));
 jest.mock('@/core/lib/http/supabase', () => ({
-  supabase: { auth: { refreshSession: () => mockRefresh() } },
+  supabase: { auth: { signInWithPassword: (c: unknown) => mockRefresh(c) } },
 }));
 jest.mock('@/core/lib/query/query-client', () => ({
   queryClient: { refetchQueries: (q: unknown) => mockRefetch(q) },
@@ -42,7 +42,10 @@ test('saves email + password, refreshes the session, then reloads /auth/me (the 
     email: 'teacher@example.com',
     password: 'Long-enough-1',
   });
-  expect(mockRefresh).toHaveBeenCalled();
+  expect(mockRefresh).toHaveBeenCalledWith({
+    email: 'teacher@example.com',
+    password: 'Long-enough-1',
+  });
 });
 
 test('a bad email or two different passwords send nothing', async () => {

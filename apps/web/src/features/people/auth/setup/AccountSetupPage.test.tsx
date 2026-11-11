@@ -7,7 +7,11 @@ import { AccountSetupPage } from './AccountSetupPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 const navigate = vi.hoisted(() => vi.fn());
-const auth = vi.hoisted(() => ({ refreshSession: vi.fn(), getSession: vi.fn(), signOut: vi.fn() }));
+const auth = vi.hoisted(() => ({
+  signInWithPassword: vi.fn(),
+  getSession: vi.fn(),
+  signOut: vi.fn(),
+}));
 vi.mock('@/lib/http/api', () => ({ apiFetch, apiSend }));
 vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate }));
@@ -29,7 +33,7 @@ function renderPage() {
 describe('/account-setup «أكمل حسابك» (docs/46 A4, A6)', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    auth.refreshSession.mockResolvedValue({ error: null });
+    auth.signInWithPassword.mockResolvedValue({ error: null });
     auth.getSession.mockResolvedValue({ data: { session: { access_token: 'tok' } } });
     apiFetch.mockResolvedValue({
       id: 'u1',
@@ -51,7 +55,10 @@ describe('/account-setup «أكمل حسابك» (docs/46 A4, A6)', () => {
       email: 'teacher@example.com',
       password: 'Long-enough-1',
     });
-    expect(auth.refreshSession).toHaveBeenCalled();
+    expect(auth.signInWithPassword).toHaveBeenCalledWith({
+      email: 'teacher@example.com',
+      password: 'Long-enough-1',
+    });
   });
 
   it('a bad form sends nothing; an API refusal is shown in words', async () => {
