@@ -492,12 +492,22 @@ jobs:
             if sudo dpkg -i "$debs"/*.deb >/dev/null && pw install-deps --dry-run chromium; then exit 0; fi
             echo "::warning::the cached packages did not cover everything: installing from apt"
           fi
-          # apt over the network: retried, since one DNS blip on the runner (11-11, «Temporary failure
-          # resolving archive.ubuntu.com») failed every e2e shard at once.
-          for wait in 0 30 90; do
+          # apt over the network. 11-11: the runners could not resolve any *.ubuntu.com host for hours
+          # («Temporary failure resolving archive.ubuntu.com») and every e2e shard failed. After a failed
+          # try, apt also uses a mirror outside ubuntu.com (packages are still checked against Ubuntu's
+          # signing keys, whatever the mirror), then retries.
+          other_mirror() {
+            m=https://mirrors.edge.kernel.org/ubuntu/
+            list=/etc/apt/apt-mirrors.txt
+            [ -f "$list" ] && echo "$m" | sudo tee "$list" >/dev/null # the image's mirror list (26.04)
+            sudo sed -i -E "s#https?://(azure\.)?(archive|security)\.ubuntu\.com/ubuntu/?#$m#g" \
+              /etc/apt/sources.list.d/*.sources /etc/apt/sources.list 2>/dev/null || true
+          }
+          for wait in 0 20 60; do
             sleep "$wait"
             if pw install-deps chromium; then ok=1; break; fi
-            echo "::warning::installing the browser's system libraries failed: retrying"
+            echo "::warning::installing the browser's system libraries failed: other mirror, retrying"
+            other_mirror
           done
           [ "${ok:-}" = 1 ] || { echo "::error::apt failed 3 times"; exit 1; }
           mkdir -p "$debs" && cp /var/cache/apt/archives/*.deb "$debs"/ 2>/dev/null \
