@@ -10615,12 +10615,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/sales/sales-students/attendance/student-attendance.repo.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/attendance/student-attendance.service.ts": {
@@ -10629,6 +10629,16 @@
     },
     "stylistic/max-len": {
       "count": 1
+    }
+  },
+  "src/modules/sales/sales-students/attendance/teacher-attendance.controller.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-students/attendance/teacher-attendance.service.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 2
     }
   },
   "src/modules/sales/sales-students/details/sales-student-schedule.mapper.ts": {
@@ -14064,6 +14074,21 @@
     },
     "ab/zod-inputs": {
       "count": 1
+    }
+  },
+  "src/modules/teaching/lessons/teacher-me/teacher-cancel.push.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/lessons/teacher-me/teacher-lesson.controller.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "src/modules/teaching/lessons/teacher-me/teacher-lesson.service.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 5
     }
   },
   "src/modules/teaching/lessons/teacher-me/teacher-me.controller.ts": {
