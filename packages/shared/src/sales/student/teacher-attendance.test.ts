@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { attendanceRate, countKinds, teacherAttendanceKind, zeroCounts } from './attendance-rate.js';
+import { attendanceRate, countKinds, teacherAttendanceKind, zeroCounts } from './teacher-attendance.js';
 
 describe('teacherAttendanceKind', () => {
   it('auto-held (completed, no attendance) is unmarked, not present', () => {
@@ -42,6 +42,7 @@ describe('attendanceRate', () => {
   });
 
   it('cancelled and unmarked are not in the base', () => {
-    expect(attendanceRate({ ...zeroCounts(), present: 1, cancelled: 5, unmarked: 3 })).toBe(100);
+    const counts = { ...zeroCounts(), present: 1, cancelled: 5, unmarked: 3 };
+    expect(attendanceRate(counts)).toBe(100);
   });
 });

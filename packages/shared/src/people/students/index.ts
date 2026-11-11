@@ -5,3 +5,4 @@ export * from './course-pause.js';
 export * from './course-stop.js';
 export * from './stop-refund.js';
 export * from './stop-choices.js';
+export * from './board-students.js';

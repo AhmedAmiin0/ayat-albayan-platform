@@ -70,7 +70,7 @@ export const cancelRequestSchema = z.object({
   reason: requiredText,
 });
 
-/** POST /teachers/me/lessons/:id/cancel (docs/46 D3): one lesson, the reason required; by / scope are forced. */
+/** POST /teachers/me/lessons/:id/cancel (docs/46 D3): one lesson, a reason; by / scope forced. */
 export const teacherCancelSchema = z.object({ reason: requiredText.max(500) });
 export type TeacherCancelRequest = z.infer<typeof teacherCancelSchema>;
 

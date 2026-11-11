@@ -1,5 +1,5 @@
 import type { StudentStatus } from '@ab/catalog';
-import { isCurrentStudent, splitByStatus, type StudentListKind } from '../students/student-lists.js';
+import { isCurrentStudent, splitByStatus, type StudentListKind } from './student-lists.js';
 
 // docs/46 D4: the teacher board lists only her CURRENT students (isCurrentStudent: not paused, not
 // churned). TeacherMeRepo.students holds the ones assigned to her or on her active rules; the inbox

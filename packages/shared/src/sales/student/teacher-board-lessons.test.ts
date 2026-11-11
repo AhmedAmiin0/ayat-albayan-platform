@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus, Attendance } from '@ab/catalog';
 import type { LessonView } from '@ab/schedule';
-import { lessonsOfStudent, studentLessons } from './student-lessons.js';
+import { lessonsOfStudent, studentLessons } from './teacher-board-lessons.js';
 
 interface Spec {
   id: string;

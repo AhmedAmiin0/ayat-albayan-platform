@@ -1,6 +1,6 @@
 import { isOpenLesson, type LessonView } from '@ab/schedule';
 import type { ReportStatus } from '@ab/catalog';
-import { countKinds, teacherAttendanceKind, type AttendanceCounts } from './attendance-rate.js';
+import { countKinds, teacherAttendanceKind, type AttendanceCounts } from './teacher-attendance.js';
 
 /** The board window (docs/46 D4): 14 days back, 14 days ahead. */
 export const BOARD_DAYS = 14;
