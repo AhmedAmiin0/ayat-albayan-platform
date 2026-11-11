@@ -91,10 +91,14 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 0
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
-          package-manager-cache: false
+          cache: pnpm
+      # deploy-baseline.mjs reads the GitHub API through tools/scripts' HTTP client (zod): install
+      # only the @ab/scripts workspace, no build. A failed install fails plan, and migrate then runs.
+      - run: pnpm --filter @ab/scripts install --frozen-lockfile
       - id: base
         env:
           GITHUB_TOKEN: ${{ github.token }}
