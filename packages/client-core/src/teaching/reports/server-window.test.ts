@@ -14,6 +14,12 @@ describe('withServerWindow (review 11-11: the refetch reaches the open form)', (
     });
   });
 
+  it('an older local version (edited in another tab): the server window fields still win', () => {
+    const local = reportView({ version: 1, can_edit: true, notes: 'قديم' });
+    const server = reportView({ version: 2, can_edit: false, sent_at: UNTIL });
+    expect(withServerWindow(local, server)).toMatchObject({ can_edit: false, sent_at: UNTIL, notes: 'قديم' });
+  });
+
   it('a newer local version (the refetch not back yet): the local copy as is', () => {
     const local = reportView({ version: 3, can_edit: true });
     expect(withServerWindow(local, reportView({ version: 2, can_edit: false }))).toBe(local);

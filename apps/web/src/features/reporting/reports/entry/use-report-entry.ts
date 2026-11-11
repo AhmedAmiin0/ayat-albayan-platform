@@ -33,6 +33,9 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const report = withServerWindow(own, initial);
   const [values, setValues] = useState<FormValues>(() => entryValuesOf(initial, studentProgram));
   const [problem, setProblem] = useState<string | null>(null);
+  // A closed card shows what was saved (the newest copy), never unsaved edits (review 11-11).
+  const saved = initial.version >= own.version ? initial : own;
+  const shown = report.can_edit ? values : entryValuesOf(saved, studentProgram);
   const mode = useReportMode(report);
   const submit = useMutation({
     mutationFn: api.submitReport,
@@ -68,7 +71,9 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const setAttachments = (next: (files: ReportAttachmentView[]) => ReportAttachmentView[]) =>
     setReport((r) => ({ ...r, attachments: next(r.attachments) }));
 
-  return { report, values, set, setGrade, send, problem, submit, saveState, setAttachments, mode };
+  return {
+    report, values: shown, set, setGrade, send, problem, submit, saveState, setAttachments, mode,
+  };
 }
 
 export type ReportEntryState = ReturnType<typeof useReportEntry>;

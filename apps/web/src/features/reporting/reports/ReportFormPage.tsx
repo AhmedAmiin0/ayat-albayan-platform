@@ -37,7 +37,8 @@ export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProp
       <Cartouche>{t.reports.formTitle}</Cartouche>
     </PageHead>
   );
-  if (form.isError) return <>{head}<FormAlert>{loadError(form.error)}</FormAlert></>;
+  // A failed background refetch (the close-time one) keeps the loaded form (review 11-11).
+  if (form.isError && !form.data) return <>{head}<FormAlert>{loadError(form.error)}</FormAlert></>;
   if (!form.data) return <>{head}<ListSkeleton /></>;
 
   const data = form.data;
