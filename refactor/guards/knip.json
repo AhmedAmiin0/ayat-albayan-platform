@@ -73,7 +73,6 @@
   "apps/api/src/modules/reporting/report-pdf/report-pdf.job.ts exports RulesUnreadError",
   "apps/api/src/modules/reporting/report-pdf/report-pdf.job.ts types RunSummary",
   "apps/api/src/modules/reporting/report-pdf/report-pdf.publisher.ts types Published",
-  "apps/api/src/modules/reporting/report-pdf/report-pdf.settings.ts types ReportPdfSettingsValues",
   "apps/api/src/modules/reporting/reports/reports.settings.ts types ReportsSettingsValues",
   "apps/api/src/modules/reporting/reports/test-app.ts types InjectArgs",
   "apps/api/src/modules/sales/job-applicants/job-applicants.repo.ts types ApplicantMove",
