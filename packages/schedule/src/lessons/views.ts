@@ -24,8 +24,12 @@ export interface LessonStudentView {
   unpaid?: boolean;
   /** The active حجز تعويضي booked for this student's miss of the lesson (a group's others may have none). */
   makeup?: { lesson_id: string; starts_at: string } | null;
-  /** This student's تقرير الحلقة (draft or submitted), null before one is opened. Absent in an old cache. */
-  report?: { id: string; status: ReportStatus } | null;
+  /**
+   * This student's تقرير الحلقة (draft or submitted), null before one is opened. The window
+   * (docs/46 B7): first submit, family send, can_edit / edit_until for the caller. Old cache: absent.
+   */
+  report?: { id: string; status: ReportStatus; submitted_at?: string | null;
+    sent_at?: string | null; can_edit?: boolean; edit_until?: string | null } | null;
 }
 
 /** GET /lessons, /lessons/day, /teachers/me/lessons, /students/:id/lessons items. */
@@ -47,7 +51,8 @@ export interface LessonView {
   starts_at: string;
   ends_at: string;
   status: LessonStatus;
-  /** Settled by the job (or corrected since), no report since: staff may still correct it. */
+  /** Settled by the job (held 11-02 / absent 11-03) or corrected by staff, no submitted report
+   * since: staff may still correct it (POST …/correct; a completed one: cancel by teacher/student). */
   auto_held?: boolean;
   /** Copied onto the lesson at creation (R-LES-01), sent to the guardian (R-LES-02). */
   meeting_link: string | null;
@@ -99,10 +104,8 @@ export interface TeacherMe {
   meeting_link: string | null;
   /** teachers.meeting_mode as stored: null = the academy default (migration 490). */
   meeting_mode: TeacherMeetingMode | null;
-  /**
-   * usesPlatform(meeting_mode, settings.meeting_link_auto): the fixed link is not shown then. Absent in
-   * a payload cached before migration 490: clients use the academy default.
-   */
+  /** usesPlatform(meeting_mode, settings.meeting_link_auto): the fixed link is hidden then. Absent
+   * in a payload cached before migration 490: clients use the academy default. */
   platform_classroom?: boolean;
   students: { id: string; code: string; name: string; tz: string; status: StudentStatus }[];
 }

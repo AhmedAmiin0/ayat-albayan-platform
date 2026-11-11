@@ -5,9 +5,9 @@ import type { PasswordSession, CodeSession, UserRole } from '@ab/shared';
 
 /** report_view: a report page's code (owner 2026-11-06), subject = the report. */
 export type CodePurpose = 'sign_in' | 'reset_password' | 'set_password' | 'report_view';
-export type SubjectKind = 'guardian' | 'student' | 'profile' | 'report';
+export type SubjectKind = 'guardian' | 'student' | 'profile' | 'report' | 'teacher';
 
-/** Who a code is for: guardians.id, students.id, profiles.id (staff) or lesson_reports.id. */
+/** Who a code is for: guardians / students / profiles (staff) / lesson_reports / teachers .id. */
 export interface Subject {
   kind: SubjectKind;
   id: string;
@@ -74,9 +74,23 @@ export interface ProfileRec {
   phone: string | null;
 }
 
+/** An active teacher record and its login, if any (docs/46 A2): `login` null = no profile_id. */
+export interface TeacherRec {
+  id: string;
+  name: string;
+  tz: string;
+  /** teachers.phone_e164: the first code's destination only (D2). */
+  recordPhone: string | null;
+  profileId: string | null;
+  login: ProfileRec | null;
+}
+
+/** The records a lazy login links to (one table each). */
+export type LinkKind = 'guardian' | 'student' | 'teacher';
+
 export interface NewProfile {
   id: string;
-  role: 'guardian' | 'student';
+  role: LinkKind;
   fullName: string;
   phone: string | null;
   tz: string;
@@ -89,11 +103,13 @@ export interface SubjectStore {
   profileByUsername(username: string): Promise<ProfileRec | null>;
   /** A staff profile whose own phone, or whose teacher row's phone, is this one (a conflict / lookup key only). */
   staffByPhone(phone: string): Promise<ProfileRec | null>;
+  /** An active teacher whose login's phone (role teacher) or record phone is this one. */
+  teacherByPhone(phone: string): Promise<TeacherRec | null>;
   /** Any profile holding this phone (profiles.phone_e164 is unique). */
   profileByPhone(phone: string): Promise<ProfileRec | null>;
   insertProfile(row: NewProfile): Promise<void>;
   /** Writes the link only while the record has none: false = someone linked it first. */
-  link(input: { kind: 'guardian' | 'student'; recordId: string; profileId: string }): Promise<boolean>;
+  link(input: { kind: LinkKind; recordId: string; profileId: string }): Promise<boolean>;
 }
 
 /** GoTrue through the Admin API; signIn runs on an isolated client (no stored session). */

@@ -74,27 +74,27 @@ describe('reportBlock: submit only once the lesson started (R-REP-02 date rule)'
   });
 });
 
-describe('canEditReport (R-REP-02: teacher 24 h, admin always)', () => {
+describe('canEditReport (R-REP-02: teacher 30 min from the first submit, admin always)', () => {
   const rows = [
     ['admin, long after', 'admin', SUBMITTED, '2026-12-01T00:00:00Z', true],
     ['teacher, draft (never submitted)', 'teacher', null, '2027-01-01T00:00:00Z', true],
-    ['teacher, 23h59 after submit', 'teacher', SUBMITTED, '2026-10-02T09:59:59Z', true],
-    ['teacher, exactly 24 h after (closed)', 'teacher', SUBMITTED, '2026-10-02T10:00:00Z', false],
+    ['teacher, 29 min 59 s after submit', 'teacher', SUBMITTED, '2026-10-01T10:29:59Z', true],
+    ['teacher, exactly 30 min after (closed)', 'teacher', SUBMITTED, '2026-10-01T10:30:00Z', false],
     ['teacher, days after', 'teacher', SUBMITTED, '2026-10-05T10:00:00Z', false],
     ['guardian, never', 'guardian', null, '2026-10-01T10:00:00Z', false],
   ] as const;
   const cases = rows.map(([name, role, submittedAt, now, expected]) => ({ name, role, submittedAt, now, expected }));
   it.each(cases)('$name → $expected', (c) => {
-    expect(canEditReport({ role: c.role, submittedAt: c.submittedAt, now: at(c.now), hours: 24 })).toBe(c.expected);
+    expect(canEditReport({ role: c.role, submittedAt: c.submittedAt, now: at(c.now), minutes: 30 })).toBe(c.expected);
   });
 
-  it('hours = 0 closes a submitted report at once for the teacher', () => {
-    expect(canEditReport({ role: 'teacher', submittedAt: SUBMITTED, now: SUBMITTED, hours: 0 })).toBe(false);
+  it('minutes = 0 closes a submitted report at once for the teacher', () => {
+    expect(canEditReport({ role: 'teacher', submittedAt: SUBMITTED, now: SUBMITTED, minutes: 0 })).toBe(false);
   });
 
-  it('editUntil is submit + hours, null for a draft', () => {
-    expect(editUntil({ submittedAt: SUBMITTED, hours: 24 })?.toISOString()).toBe('2026-10-02T10:00:00.000Z');
-    expect(editUntil({ submittedAt: null, hours: 24 })).toBeNull();
+  it('editUntil is submit + minutes, null for a draft', () => {
+    expect(editUntil({ submittedAt: SUBMITTED, minutes: 30 })?.toISOString()).toBe('2026-10-01T10:30:00.000Z');
+    expect(editUntil({ submittedAt: null, minutes: 30 })).toBeNull();
   });
 });
 

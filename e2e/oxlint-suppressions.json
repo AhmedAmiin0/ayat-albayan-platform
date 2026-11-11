@@ -1121,12 +1121,6 @@
     }
   },
   "tests/reporting/teacher-report-edit-window.spec.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    },
     "typescript/dot-notation": {
       "count": 1
     }

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { formResponse } from './report-form.mapper';
 import { AFTER, lessonRow, reportRow, STUDENT_ID } from '@/modules/reporting/reports/reports.fakes';
 
-const ctx = { role: 'teacher' as const, now: AFTER, hours: 24 };
+const ctx = { role: 'teacher' as const, now: AFTER, minutes: 30 };
 
 describe('formResponse (R-REP-01)', () => {
   it('a student without a report row yet is left out; missing number reads 1, no package → null', () => {

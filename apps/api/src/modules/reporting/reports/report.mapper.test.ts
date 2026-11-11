@@ -3,13 +3,14 @@ import { formColumns, reportView, submitColumns } from './report.mapper';
 import { AFTER, FULL_GRADES, reportRow, submittedRow } from './reports.fakes';
 
 const DAY_LATER = new Date(AFTER.getTime() + 24 * 3_600_000);
+const WINDOW_END = new Date(AFTER.getTime() + 30 * 60_000);
 
 describe('reportView (docs/11 §4 ReportView)', () => {
   it('maps the grade columns to grades by rubric and hides pdf_path', () => {
     const view = reportView(submittedRow({ grade_tajweed: 'good', grade_overall: 'excellent', pdf_path: 's/l.pdf' }), {
       role: 'teacher',
       now: AFTER,
-      hours: 24,
+      minutes: 30,
     });
     expect(view.grades).toEqual({
       recitation: null,
@@ -24,19 +25,20 @@ describe('reportView (docs/11 §4 ReportView)', () => {
   });
 
   it('a draft: editable, no window yet', () => {
-    const view = reportView(reportRow(), { role: 'teacher', now: AFTER, hours: 24 });
+    const view = reportView(reportRow(), { role: 'teacher', now: AFTER, minutes: 30 });
     expect(view).toMatchObject({ can_edit: true, edit_until: null, status: 'draft', version: 0 });
   });
 
-  it('submitted: the teacher edits until submit + hours; the admin always (R-REP-02)', () => {
+  it('submitted: the teacher edits until first submit + minutes; the admin always (R-REP-02)', () => {
     const row = submittedRow();
-    expect(reportView(row, { role: 'teacher', now: AFTER, hours: 24 })).toMatchObject({
+    expect(reportView(row, { role: 'teacher', now: AFTER, minutes: 30 })).toMatchObject({
       can_edit: true,
-      edit_until: DAY_LATER.toISOString(),
+      edit_until: WINDOW_END.toISOString(),
     });
-    expect(reportView(row, { role: 'teacher', now: DAY_LATER, hours: 24 }).can_edit).toBe(false);
-    expect(reportView(row, { role: 'admin', now: DAY_LATER, hours: 24 }).can_edit).toBe(true);
-    expect(reportView(row, { role: null, now: AFTER, hours: 24 }).can_edit).toBe(false);
+    expect(reportView(row, { role: 'teacher', now: WINDOW_END, minutes: 30 }).can_edit).toBe(false);
+    expect(reportView(row, { role: 'teacher', now: DAY_LATER, minutes: 30 }).can_edit).toBe(false);
+    expect(reportView(row, { role: 'admin', now: DAY_LATER, minutes: 30 }).can_edit).toBe(true);
+    expect(reportView(row, { role: null, now: AFTER, minutes: 30 }).can_edit).toBe(false);
   });
 
   it('attachments oldest first', () => {
@@ -44,7 +46,7 @@ describe('reportView (docs/11 §4 ReportView)', () => {
     const view = reportView(reportRow({ attachments: [file('b', '2026-10-04T15:02:00Z'), file('a', '2026-10-04T15:01:00Z')] }), {
       role: 'admin',
       now: AFTER,
-      hours: 24,
+      minutes: 30,
     });
     expect(view.attachments.map((a) => a.id)).toEqual(['a', 'b']);
   });

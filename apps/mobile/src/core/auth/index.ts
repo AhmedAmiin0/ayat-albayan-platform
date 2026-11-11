@@ -1,4 +1,6 @@
+export { TeacherCodeSignIn, useStaffCodes } from './code';
 export { AuthAlert, ForgotPassword } from './forgot';
+export { AccountSetupScreen, useNeedsSetup } from './setup';
 export {
   isAccountDisabled,
   isOtherAppRole,

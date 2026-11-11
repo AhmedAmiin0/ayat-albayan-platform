@@ -1,11 +1,4 @@
-import type {
-  Attendance,
-  Grade,
-  LessonStatus,
-  PdfStatus,
-  Program,
-  ReportStatus,
-} from '@ab/catalog';
+import type { Attendance, Grade, LessonStatus, PdfStatus, Program, ReportStatus } from '@ab/catalog';
 import type { BalanceView } from '@ab/money';
 import type { Rubric } from './rules.js';
 import type { ReportContent } from './v2/content.js';
@@ -112,6 +105,13 @@ export interface ReportSummaryView {
   version: number;
   pdf_status: PdfStatus | null;
   sent_at: string | null;
+  /**
+   * docs/46 B7, absent in an old cache: the first submit, and for the reader now can_edit
+   * (canEditReport) and edit_until (first submit + report_teacher_edit_minutes). Sales get none.
+   */
+  submitted_at?: string | null;
+  can_edit?: boolean;
+  edit_until?: string | null;
 }
 
 /** GET /students/:id/reports (R-REP-05, issue D2): submitted reports, newest first + the series. */

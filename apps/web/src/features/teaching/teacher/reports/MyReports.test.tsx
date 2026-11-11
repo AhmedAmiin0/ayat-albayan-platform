@@ -30,7 +30,8 @@ const sent = (over: Partial<TeacherReportView>): TeacherReportView => ({
   status: 'submitted',
   submitted_at: '2026-10-01T15:00:00.000Z',
   can_edit: true,
-  edit_until: '2026-10-02T15:00:00.000Z',
+  // Still open on the real clock: the row derives the chip from edit_until + now (docs/46 B5).
+  edit_until: new Date(Date.now() + 20 * 60_000).toISOString(),
   pdf_status: 'ready',
   sent_at: null,
   ...over,
@@ -53,7 +54,7 @@ describe('/teacher/reports (R-REP-01/02/05)', () => {
     const sentList = await screen.findByRole('region', { name: t.reports.submittedTitle });
     const [open, closed] = within(sentList).getAllByRole('row').slice(1);
     expect(within(open as HTMLElement).getByRole('link', { name: t.reports.edit }).getAttribute('href')).toBe('/teacher/report/l-1');
-    expect(within(open as HTMLElement).getByText(/يمكنك تعديل التقرير حتى/)).toBeTruthy();
+    expect(within(open as HTMLElement).getByText(/سيُرسل إلى الأسرة بعد/)).toBeTruthy();
     expect(within(open as HTMLElement).getByRole('button', { name: t.reports.downloadPdf })).toBeTruthy();
     expect(within(closed as HTMLElement).getByRole('link', { name: t.reports.view })).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/reports?page=1&pageSize=20');

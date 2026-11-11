@@ -15,7 +15,7 @@ const onBack = jest.fn();
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockResolvedValue({ available: true });
+  mockApiFetch.mockResolvedValue({ available: false, staff: true });
   mockApiSend.mockResolvedValue(undefined);
 });
 
@@ -34,8 +34,11 @@ async function typeNewPassword(code: string, confirm: string) {
 }
 
 test.each([
-  ['codes are off', () => mockApiFetch.mockResolvedValue({ available: false })],
-  ['the status check fails', () => mockApiFetch.mockRejectedValue(new TypeError('Network request failed'))],
+  ['codes are off', () => mockApiFetch.mockResolvedValue({ available: true, staff: false })],
+  [
+    'the status check fails',
+    () => mockApiFetch.mockRejectedValue(new TypeError('Network request failed')),
+  ],
 ])('when %s the staff are told to ask the admins', async (_name, arrange) => {
   arrange();
   await render(<ForgotPassword onBack={onBack} />);
@@ -48,9 +51,13 @@ test.each([
 
 test('identifier → code → new password → saved, then back to login', async () => {
   await toCodeStep();
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/password/forgot', { identifier: 'sara.t' });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/password/forgot', {
+    identifier: 'sara.t',
+  });
   // Resend waits RESEND_SECONDS.
-  expect(screen.getByRole('button', { name: t.familyAuth.resendIn.replace('{seconds}', '60') })).toBeDisabled();
+  expect(
+    screen.getByRole('button', { name: t.familyAuth.resendIn.replace('{seconds}', '60') }),
+  ).toBeDisabled();
   await typeNewPassword('١٢٣ ٤٥٦', 'new-secret');
   expect(await screen.findByText(t.familyAuth.passwordSaved)).toBeTruthy();
   expect(mockApiSend).toHaveBeenLastCalledWith('POST', '/auth/password/reset', {

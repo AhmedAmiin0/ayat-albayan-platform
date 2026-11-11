@@ -15,6 +15,7 @@ const HANDLERS = [
   'avatarUploadUrl',
   'setAvatar',
   'removeAvatar',
+  'setup',
 ] as const;
 
 describe('AccountController', () => {
@@ -33,7 +34,7 @@ describe('AccountController', () => {
 
   it('acts on the token’s user and ignores ids in the body', async () => {
     const kit = accountKit();
-    const controller = new AccountController(kit.account, kit.avatar);
+    const controller = new AccountController(kit.account, kit.avatar, kit.setup);
     const body = await bodyPipeOf(
       AccountController,
       'updateProfile',
@@ -46,7 +47,7 @@ describe('AccountController', () => {
 
   it('validates bodies before the services run (400 validation_failed)', async () => {
     const kit = accountKit();
-    const controller = new AccountController(kit.account, kit.avatar);
+    const controller = new AccountController(kit.account, kit.avatar, kit.setup);
     // @ZodBody's pipe runs before the handler, so no service call happens.
     const updateProfile = bodyPipeOf(AccountController, 'updateProfile');
     const changePassword = bodyPipeOf(AccountController, 'changePassword');

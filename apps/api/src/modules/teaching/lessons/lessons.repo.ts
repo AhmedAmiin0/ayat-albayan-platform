@@ -87,6 +87,11 @@ export class LessonsRepo {
     return (await this.settings.read()).meeting_link_auto;
   }
 
+  /** settings.report_teacher_edit_minutes: the lesson's report state (docs/46 B7). */
+  async reportMinutes(): Promise<number> {
+    return (await this.settings.read()).report_teacher_edit_minutes;
+  }
+
   /** Each student's name + guardian, for the queued confirmation (docs/10 §5.11). */
   async contacts(studentIds: readonly string[]): Promise<Contact[]> {
     if (studentIds.length === 0) return [];

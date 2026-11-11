@@ -88,9 +88,6 @@
   "app/login.tsx": {
     "max-lines-per-function": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "app/sales/schedule.tsx": {
@@ -2392,7 +2389,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 10
     },
     "ab/no-restricted-syntax": {
       "count": 1

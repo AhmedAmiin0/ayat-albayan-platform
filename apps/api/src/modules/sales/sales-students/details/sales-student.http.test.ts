@@ -54,7 +54,7 @@ describe('GET /sales/students/:id «تفاصيل الطالب» (docs/16 row 36)
       total: 1,
       items: [{
         id: REPORT, lesson_id: 'l1', starts_at: '2026-10-11T15:00:00.000Z', lesson_no: 12, teacher: { id: 'tc1', display_name_ar: 'أبرار' },
-        attendance: 'on_time', grade_overall: 'excellent', status: 'submitted', version: 1, pdf_status: 'ready', sent_at: '2026-10-11T16:00:00Z',
+        attendance: 'on_time', grade_overall: 'excellent', status: 'submitted', version: 1, pdf_status: 'ready', sent_at: '2026-10-11T16:00:00Z', submitted_at: null,
       }],
     });
   });

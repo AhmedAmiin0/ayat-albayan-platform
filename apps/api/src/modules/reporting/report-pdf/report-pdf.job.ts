@@ -92,7 +92,7 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
       // Idle (the usual tick): one cheap read, no stale-recovery update and no pending read.
       if (!(await this.queries.hasWork())) return summary;
       summary.recovered = await this.queries.recoverStale(new Date(now.getTime() - STALE_MS));
-      for (const id of await this.queries.pendingIds(BATCH)) {
+      for (const id of await this.queries.pendingIds(BATCH, now)) {
         summary[await this.process(id)] += 1;
       }
     } catch (e) {

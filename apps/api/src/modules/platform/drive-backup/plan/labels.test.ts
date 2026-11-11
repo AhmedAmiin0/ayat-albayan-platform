@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { archiveName, archiveProps, dayLabel, msUntilUtcHour } from './labels';
+import { archiveName, archiveProps, dayLabel, msUntilUtcWeekly } from './labels';
 
 describe('archive labels', () => {
   it('the UTC day and the part names', () => {
@@ -17,8 +17,14 @@ describe('archive labels', () => {
     });
   });
 
-  it('the next 01:00 UTC', () => {
-    expect(msUntilUtcHour(new Date('2026-11-07T00:30:00Z'), 1)).toBe(30 * 60_000);
-    expect(msUntilUtcHour(new Date('2026-11-07T01:00:00Z'), 1)).toBe(86_400_000);
+  it('the next Friday 01:00 UTC', () => {
+    const at = { weekday: 5, hour: 1 };
+    const day = 86_400_000;
+    const from = (iso: string) => msUntilUtcWeekly(new Date(iso), at);
+    expect(from('2026-11-13T00:30:00Z')).toBe(30 * 60_000); // Friday, before
+    expect(from('2026-11-13T01:00:00Z')).toBe(7 * day); // exactly on it
+    expect(from('2026-11-13T02:00:00Z')).toBe(7 * day - 3_600_000); // Friday, after
+    expect(from('2026-11-12T23:00:00Z')).toBe(2 * 3_600_000); // Thursday night
+    expect(from('2026-11-07T00:30:00Z')).toBe(6 * day + 30 * 60_000); // Saturday
   });
 });

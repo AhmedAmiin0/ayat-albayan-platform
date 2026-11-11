@@ -45,7 +45,7 @@ export const SETTINGS_LAYOUT = {
   schedule: SCHEDULE_KEYS,
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
     'meeting_link_auto', 'meetings_in_app'],
-  reports: ['report_teacher_edit_hours', 'report_form_v2'],
+  reports: ['report_teacher_edit_minutes', 'report_teacher_edit_hours', 'report_form_v2'],
   accounts: [
     'reporting_currency',
     'renewal_alert_remaining',

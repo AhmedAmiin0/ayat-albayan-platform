@@ -575,7 +575,7 @@
   },
   "src/people/users/sign-in.ts": {
     "max-len": {
-      "count": 7
+      "count": 2
     }
   },
   "src/people/users/users.schemas.ts": {
@@ -635,11 +635,6 @@
   "src/reports/rules.test.ts": {
     "max-len": {
       "count": 4
-    }
-  },
-  "src/reports/rules.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/reports/schema.test.ts": {

@@ -86,9 +86,6 @@
     }
   },
   "app/login.tsx": {
-    "max-len": {
-      "count": 2
-    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -2404,7 +2401,7 @@
   },
   "src/core/ui/lists/ReportRows.tsx": {
     "max-len": {
-      "count": 11
+      "count": 10
     },
     "no-nested-ternary": {
       "count": 2

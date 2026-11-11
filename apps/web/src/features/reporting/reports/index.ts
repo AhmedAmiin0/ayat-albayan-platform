@@ -19,3 +19,4 @@ export { isPlainClick, ReportLink, type ReportLinkProps } from './history/Report
 export { StudentReportsBody, type StudentReportsBodyProps } from './history/StudentReportsBody';
 export { TeacherReportLinkPage } from './link/TeacherReportLinkPage';
 export { reportFormHref, reportHistoryHref, reportOpen } from './paths';
+export { RowWindow } from './send/WindowLines';

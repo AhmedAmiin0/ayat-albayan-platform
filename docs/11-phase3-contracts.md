@@ -84,7 +84,8 @@ Phase 2's conventions (docs/10 §3) still apply unless this file says otherwise.
   |---|---|---|
   | `renewal_alert_remaining` | 2 | R-SUB-02 |
   | `flag_future_lessons_when_unpaid` | true | R-SUB-02 |
-  | `report_teacher_edit_hours` | 24 | R-REP-02 |
+  | `report_teacher_edit_minutes` | 30 | R-REP-02/03 (docs/46 D5): the teacher's edit window from the first submit; the PDF and report_ready go when it closes; 0 = at once. No seeded row: the registry default applies |
+  | `report_teacher_edit_hours` | 24 | The no-login teacher report link's lifetime after the lesson's end (signed into its token); not the edit window since docs/46 |
   | `reporting_currency` | `'SAR'` | R-RPT-02 |
   | `payout_count_late` | false | R-PAY-02, owner question |
   | `payout_count_no_show` | false | R-PAY-02, owner question |
@@ -146,7 +147,7 @@ Phase 2's conventions (docs/10 §3) still apply unless this file says otherwise.
   - `submit_block` = `reportBlock(...)`. The identity fields come only from the lesson (R-REP-01, D1).
 - **R2:** writes only the sent fields (`sentOnly`), with last-write-wins autosave. A submitted report is edited through R3 only: the form drops autosave and shows «حفظ التعديل».
 - **R3** runs in **one transaction**: B1's RPC `submit_report` calls `apply_lesson_changes` inside it, or does the same writes.
-  1. Lock the report. `expectedVersion ≠ version` → 409 `version_conflict`. If the report is submitted and `!canEditReport({ role, submittedAt, now, hours: settings.report_teacher_edit_hours })` → 409 `edit_window_closed`.
+  1. Lock the report. `expectedVersion ≠ version` → 409 `version_conflict`. If the report is submitted and `!canEditReport({ role, submittedAt, now, minutes: settings.report_teacher_edit_minutes })` → 409 `edit_window_closed`.
   2. `reportBlock({ lessonStatus, lessonStartsAt, now })` → 409 `lesson_cancelled` / `not_started`.
   3. Write the fields, `status = 'submitted'`, and `nextVersion(...)` → `version`, `submitted_at`, `edited_at`. Set `pdf_status = 'pending'` and `pdf_error = null`.
   4. Insert `lesson_report_versions(version, snapshot = the row after the update)`, plus the audit row.
@@ -162,6 +163,7 @@ Phase 2's conventions (docs/10 §3) still apply unless this file says otherwise.
 ## 5. Report PDF + delivery (B2; R-REP-03, docs/07 §13)
 
 - **The job** polls every minute, plus once at boot.
+  - Due only after the teacher's window (docs/46 B3): `pendingIds` reads `submitted_at <= renderCutoff(now, report_teacher_edit_minutes)` = now − minutes − 60 s grace (0 minutes: everything submitted, with a few minutes of clock slack). A report still in its window stays `pending`; the poll is the sweeper. An admin edit of an older report is due at once (re-render, no re-send).
   - Claim: `update lesson_reports set pdf_status = 'rendering' where id = $1 and pdf_status = 'pending'`, compare-and-set, one instance at a time.
   - Render the HTML template (docs/07 §13: one A4 page, light tokens, self-hosted Amiri and Plex, `document.fonts.ready`) with headless Chromium. Use `playwright-core`; Chromium comes from the Playwright install.
   - Upload to `reports/{student_id}/{lesson_id}.pdf` (`StorageService.upload`, upsert), then set `pdf_path` and `pdf_status = 'ready'`.
