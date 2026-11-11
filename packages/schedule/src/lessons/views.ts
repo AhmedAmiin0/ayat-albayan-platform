@@ -51,8 +51,7 @@ export interface LessonView {
   starts_at: string;
   ends_at: string;
   status: LessonStatus;
-  /** Settled by the job (held 11-02 / absent 11-03) or corrected by staff, no submitted report
-   * since: staff may still correct it (POST …/correct; a completed one: cancel by teacher/student). */
+  /** Settled by the job (or corrected since), no report since: staff may still correct it. */
   auto_held?: boolean;
   /** Copied onto the lesson at creation (R-LES-01), sent to the guardian (R-LES-02). */
   meeting_link: string | null;
