@@ -12,13 +12,10 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     },
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/core/errors/chat-list-errors.ts": {

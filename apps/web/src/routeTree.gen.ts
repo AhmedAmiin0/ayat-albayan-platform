@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
-import { Route as AccountSetupRouteImport } from './routes/account-setup'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as LoginRouteImport } from './routes/login'
@@ -19,6 +18,7 @@ import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SalesRouteImport } from './routes/sales'
 import { Route as SetPasswordRouteImport } from './routes/set-password'
 import { Route as TeacherRouteImport } from './routes/teacher'
+import { Route as AccountSetupIndexRouteImport } from './routes/account-setup/index'
 import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminAssistantsRouteRouteImport } from './routes/admin/assistants/route'
@@ -100,11 +100,6 @@ const AccountRoute = AccountRouteImport.update({
   path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AccountSetupRoute = AccountSetupRouteImport.update({
-  id: '/account-setup',
-  path: '/account-setup',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -138,6 +133,11 @@ const SetPasswordRoute = SetPasswordRouteImport.update({
 const TeacherRoute = TeacherRouteImport.update({
   id: '/teacher',
   path: '/teacher',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountSetupIndexRoute = AccountSetupIndexRouteImport.update({
+  id: '/account-setup/',
+  path: '/account-setup/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountIndexRoute = AccountIndexRouteImport.update({
@@ -503,7 +503,6 @@ const AdminStudentsStudentIdReportsLessonIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRouteWithChildren
-  '/account-setup': typeof AccountSetupRoute
   '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRouteWithChildren
   '/login': typeof LoginRoute
@@ -536,6 +535,7 @@ export interface FileRoutesByFullPath {
   '/teacher/messages': typeof TeacherMessagesRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/teacher/students': typeof TeacherStudentsRoute
+  '/account-setup/': typeof AccountSetupIndexRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/assistant/': typeof AssistantIndexRoute
@@ -584,7 +584,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/account-setup': typeof AccountSetupRoute
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
   '/set-password': typeof SetPasswordRoute
@@ -613,6 +612,7 @@ export interface FileRoutesByTo {
   '/teacher/messages': typeof TeacherMessagesRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/teacher/students': typeof TeacherStudentsRoute
+  '/account-setup': typeof AccountSetupIndexRoute
   '/account': typeof AccountIndexRoute
   '/admin': typeof AdminIndexRoute
   '/assistant': typeof AssistantIndexRoute
@@ -663,7 +663,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRouteWithChildren
-  '/account-setup': typeof AccountSetupRoute
   '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRouteWithChildren
   '/login': typeof LoginRoute
@@ -696,6 +695,7 @@ export interface FileRoutesById {
   '/teacher/messages': typeof TeacherMessagesRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/teacher/students': typeof TeacherStudentsRoute
+  '/account-setup/': typeof AccountSetupIndexRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/assistant/': typeof AssistantIndexRoute
@@ -747,7 +747,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
-    | '/account-setup'
     | '/admin'
     | '/assistant'
     | '/login'
@@ -780,6 +779,7 @@ export interface FileRouteTypes {
     | '/teacher/messages'
     | '/teacher/payouts'
     | '/teacher/students'
+    | '/account-setup/'
     | '/account/'
     | '/admin/'
     | '/assistant/'
@@ -828,7 +828,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/account-setup'
     | '/login'
     | '/portal'
     | '/set-password'
@@ -857,6 +856,7 @@ export interface FileRouteTypes {
     | '/teacher/messages'
     | '/teacher/payouts'
     | '/teacher/students'
+    | '/account-setup'
     | '/account'
     | '/admin'
     | '/assistant'
@@ -906,7 +906,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/account'
-    | '/account-setup'
     | '/admin'
     | '/assistant'
     | '/login'
@@ -939,6 +938,7 @@ export interface FileRouteTypes {
     | '/teacher/messages'
     | '/teacher/payouts'
     | '/teacher/students'
+    | '/account-setup/'
     | '/account/'
     | '/admin/'
     | '/assistant/'
@@ -989,7 +989,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRouteWithChildren
-  AccountSetupRoute: typeof AccountSetupRoute
   AdminRoute: typeof AdminRouteWithChildren
   AssistantRoute: typeof AssistantRouteWithChildren
   LoginRoute: typeof LoginRoute
@@ -999,6 +998,7 @@ export interface RootRouteChildren {
   TeacherRoute: typeof TeacherRouteWithChildren
   ClassroomLessonIdRoute: typeof ClassroomLessonIdRoute
   MeetingIdRoute: typeof MeetingIdRoute
+  AccountSetupIndexRoute: typeof AccountSetupIndexRoute
   publicFeedbackTokenRoute: typeof publicFeedbackTokenRoute
   publicJoinLinkTokenRoute: typeof publicJoinLinkTokenRoute
   publicMTokenRoute: typeof publicMTokenRoute
@@ -1022,13 +1022,6 @@ declare module '@tanstack/react-router' {
       path: '/account'
       fullPath: '/account'
       preLoaderRoute: typeof AccountRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/account-setup': {
-      id: '/account-setup'
-      path: '/account-setup'
-      fullPath: '/account-setup'
-      preLoaderRoute: typeof AccountSetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -1078,6 +1071,13 @@ declare module '@tanstack/react-router' {
       path: '/teacher'
       fullPath: '/teacher'
       preLoaderRoute: typeof TeacherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account-setup/': {
+      id: '/account-setup/'
+      path: '/account-setup'
+      fullPath: '/account-setup/'
+      preLoaderRoute: typeof AccountSetupIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/': {
@@ -1793,7 +1793,6 @@ const TeacherRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRouteWithChildren,
-  AccountSetupRoute: AccountSetupRoute,
   AdminRoute: AdminRouteWithChildren,
   AssistantRoute: AssistantRouteWithChildren,
   LoginRoute: LoginRoute,
@@ -1803,6 +1802,7 @@ const rootRouteChildren: RootRouteChildren = {
   TeacherRoute: TeacherRouteWithChildren,
   ClassroomLessonIdRoute: ClassroomLessonIdRoute,
   MeetingIdRoute: MeetingIdRoute,
+  AccountSetupIndexRoute: AccountSetupIndexRoute,
   publicFeedbackTokenRoute: publicFeedbackTokenRoute,
   publicJoinLinkTokenRoute: publicJoinLinkTokenRoute,
   publicMTokenRoute: publicMTokenRoute,

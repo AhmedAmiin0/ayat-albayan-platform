@@ -19,7 +19,7 @@ export {
 } from './route-permissions';
 export { retryGate } from './gate-retry';
 export { RootGateProvider, useRootGate } from './root-gate';
-export { type Credentials, signIn, signInWithCode, type SignInResult } from './sign-in';
+export { type Credentials, signIn, type SignInResult } from './sign-in';
 export {
   type GateStatus,
   movesGate,

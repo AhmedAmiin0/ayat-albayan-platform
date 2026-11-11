@@ -7,7 +7,7 @@ import { pathKey } from '@/core/lib/query/query-keys';
 import { queryClient } from '@/core/lib/query/query-client';
 import { setupRefusal } from './setup-words';
 
-export interface SetupInput {
+interface SetupInput {
   email: string;
   password: string;
   confirm: string;

@@ -72,6 +72,12 @@ export class SignInKit {
     return this.codes.issue(target);
   }
 
+  /** A 202 code request: the limits now, `send` after the answer (so timing tells nothing). */
+  async answerFirst(at: { ip: string; phone: string }, send: (phone: string) => Promise<void>) {
+    await this.guard('request', { ip: at.ip, identifier: at.phone });
+    this.later(() => send(at.phone));
+  }
+
   later(task: () => Promise<unknown>): void {
     const run: Promise<void> = task()
       .then(() => undefined)

@@ -18,11 +18,11 @@ export class TeacherCodeService {
   ) {}
 
   /**
-   * Always 202, whatever exists: the lookup and the send run after the answer. 429 past a limit.
+   * 202 whatever exists (lookup + send run after the answer, SignInKit.answerFirst); 429 past a
+   * limit.
    */
-  async request(body: CodeRequest, ip: string): Promise<void> {
-    await this.kit.guard('request', { ip, identifier: body.phone });
-    this.kit.later(() => this.send(body.phone));
+  request(body: CodeRequest, ip: string): Promise<void> {
+    return this.kit.answerFirst({ ip, phone: body.phone }, (phone) => this.send(phone));
   }
 
   /**

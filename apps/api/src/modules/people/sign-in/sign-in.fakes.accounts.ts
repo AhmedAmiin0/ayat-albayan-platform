@@ -14,7 +14,7 @@ export const PHONES = {
 };
 
 /** A teacher record as the fake keeps it (its login is read from `profiles`). */
-export type FakeTeacher = Omit<TeacherRec, 'login'> & { active: boolean };
+type FakeTeacher = Omit<TeacherRec, 'login'> & { active: boolean };
 
 const RIYADH = 'Asia/Riyadh';
 
