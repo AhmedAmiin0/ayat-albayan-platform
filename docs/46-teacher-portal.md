@@ -123,18 +123,19 @@ Each PR carries its web **and** mobile part. All three touch `packages/shared/i1
   and backdates `submitted_at` by 31 min. docs/03 R-REP-02 (30 min, new key) and R-REP-03 (sent when the
   window closes); docs/11 settings table; docs/19.
 
+- **B7 report state on lessons (moved from C2).** Add `submitted_at`, `sent_at` to the `lesson_reports` embed in
+  `LESSON_SELECT`; compute `can_edit`/`edit_until` in the mapper from ReportsSettings (B2's minutes);
+  same fields on `ReportSummaryView`; ReportHistoryList links to the form while `can_edit`.
+
 ### PR C — `feat/teacher-board` (migration `20261111000200_lesson_teacher_confirm.sql`)
 
 - **C1 board (web).** `/teacher` home becomes the board, no new nav item. First tab «طلابي»: `me.students`
   filtered on the client by a pure, tested `isCurrentStudent()` (D4) + ONE `myLessonsQuery` over
   `[today−14d, today+14d)` (two calls if the API's 31-day cap needs it) grouped by `lesson.students[].id`.
-  Compact table: name/code/status chip | last lesson (date + attendance) | next lesson | last report state
+  Compact table: name/code/status chip | last lesson (date + attendance) | next lesson | last report state (status from the existing embed; `can_edit`/`edit_until` from B7 once PR B is in develop)
   | present / absent in the window. Row → existing Drawer with tabs «الحلقات» (TeacherLessonCard with the
   actions + report link to `/teacher/report/$lessonId`), «التقارير» (GradeChart + ReportHistoryList),
   «الحضور» (C5). Keep «اليوم». One tz for the board (the viewer's), not MyWeek's mix.
-- **C2 report state on lessons.** Add `submitted_at`, `sent_at` to the `lesson_reports` embed in
-  `LESSON_SELECT`; compute `can_edit`/`edit_until` in the mapper from ReportsSettings (B2's minutes);
-  same fields on `ReportSummaryView`; ReportHistoryList links to the form while `can_edit`.
 - **C3 teacher cancel (API).** `POST /teachers/me/lessons/:id/cancel {reason}` (required) under
   `self.teacher`: `LessonAccess.assertCanTouch`, then refuse unless the lesson is open and
   `starts_at > now` (409 `lesson_started`; also blocks the auto-held correction branch), then
