@@ -70,6 +70,10 @@ export const cancelRequestSchema = z.object({
   reason: requiredText,
 });
 
+/** POST /teachers/me/lessons/:id/cancel (docs/46 D3): one lesson, the reason required; by / scope are forced. */
+export const teacherCancelSchema = z.object({ reason: requiredText.max(500) });
+export type TeacherCancelRequest = z.infer<typeof teacherCancelSchema>;
+
 /** POST /schedule-rules/:id/cancel — ends the rule from `from` (default: today in rule.tz). */
 export const ruleCancelRequestSchema = z.object({
   by: z.enum(CANCEL_BY),

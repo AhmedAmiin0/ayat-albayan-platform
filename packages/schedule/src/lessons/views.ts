@@ -47,11 +47,7 @@ export interface LessonView {
   starts_at: string;
   ends_at: string;
   status: LessonStatus;
-  /**
-   * Settled by the job (held 11-02 / absent 11-03) or corrected by staff since, no submitted report
-   * since: staff may still correct it (POST …/correct; a completed one also POST cancel by
-   * teacher / student).
-   */
+  /** Settled by the job (or corrected since), no report since: staff may still correct it (POST …/correct). */
   auto_held?: boolean;
   /** Copied onto the lesson at creation (R-LES-01), sent to the guardian (R-LES-02). */
   meeting_link: string | null;
@@ -63,6 +59,8 @@ export interface LessonView {
   cancel_reason: string | null;
   override_reason: string | null;
   confirmed_at: string | null;
+  /** docs/46 D1 «سأحضر»: the teacher will attend; never changes status. Absent in an old cache. */
+  teacher_confirmed_at?: string | null;
   rescheduled_from_id: string | null;
   /** «افتح الحلقة الآن»: the room opened early (joinWindow); «حلقة فورية»: never consumes a package. */
   room_opened_at?: string | null;

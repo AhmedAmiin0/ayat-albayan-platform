@@ -12,6 +12,7 @@ export * from './reports/index.js';
 export * from './schemas/index.js';
 export * from './people/students/student-lists.js';
 export * from './people/students/index.js';
+export * from './people/teacher-board/index.js';
 export * from './sales/pick-sales.js';
 export * from './sales/views.js';
 export * from './sales/academy.js';
