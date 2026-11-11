@@ -14,7 +14,7 @@ import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { openSigned } from '@/teacher/report/hooks/api';
+import { openSigned } from '@/core/lib/http/open-signed';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { ReportFieldRow } from './ReportFieldRow';
 import { adminReportFields } from './report-v2-fields';

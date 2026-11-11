@@ -17,8 +17,8 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useStudentName } from '@/ops/reports/use-student-name';
 import { RecordingsButton } from '@/student-file/recordings/RecordingsButton';
 import { useTeacherMe } from '@/teacher/lib/queries';
-import { openSigned } from '@/teacher/report/hooks/api';
-import { ReportHistoryRow, reportFormHref } from '@/teacher/components/ReportRows';
+import { openSigned } from '@/core/lib/http/open-signed';
+import { ReportHistoryRow, reportFormHref } from '@/core/ui/lists/ReportRows';
 import { TrialChatNote } from '@/teacher/components/TrialChatNote';
 import { StudentLessonsPanel } from '@/teacher/board';
 

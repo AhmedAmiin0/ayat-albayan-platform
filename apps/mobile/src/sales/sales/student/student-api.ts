@@ -10,7 +10,7 @@ import { useQuery, type QueryKey } from '@tanstack/react-query';
 import { apiFetch } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { useSalesCourse } from '@/sales-course';
-import { openSigned } from '@/teacher';
+import { openSigned } from '@/core/lib/http/open-signed';
 
 /** GET /sales/students/:id — one of my students: subscriptions, attendance and sent reports (404 otherwise). */
 export const useSalesStudent = (id: string) =>

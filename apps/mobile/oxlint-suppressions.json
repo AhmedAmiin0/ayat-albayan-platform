@@ -2387,6 +2387,17 @@
       "count": 1
     }
   },
+  "src/core/ui/lists/ReportRows.tsx": {
+    "no-nested-ternary": {
+      "count": 2
+    },
+    "stylistic/max-len": {
+      "count": 11
+    },
+    "ab/no-restricted-syntax": {
+      "count": 1
+    }
+  },
   "src/core/ui/motion/use-cycle.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -6785,9 +6796,6 @@
     "ab/forbidden-imports": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 1
     },
@@ -9488,17 +9496,6 @@
       "count": 1
     }
   },
-  "src/teacher/components/ReportRows.tsx": {
-    "no-nested-ternary": {
-      "count": 2
-    },
-    "stylistic/max-len": {
-      "count": 11
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/teacher/components/TeacherLessonCard.test.tsx": {
     "stylistic/max-len": {
       "count": 3
@@ -9603,7 +9600,7 @@
       "count": 3
     },
     "ab/no-untyped-api-calls": {
-      "count": 6
+      "count": 5
     }
   },
   "src/teacher/report/hooks/use-autosave.ts": {

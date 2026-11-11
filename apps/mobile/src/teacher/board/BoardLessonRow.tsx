@@ -12,7 +12,7 @@ import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { ListRow } from '@/core/ui/layout/ListRow';
 import { ATTENDANCE_STYLE } from '@/sales/sales';
-import { reportFormHref } from '@/teacher/components/ReportRows';
+import { reportFormHref } from '@/core/ui/lists/ReportRows';
 
 const w = t.teacherBoard;
 

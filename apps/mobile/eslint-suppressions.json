@@ -2402,6 +2402,17 @@
       "count": 1
     }
   },
+  "src/core/ui/lists/ReportRows.tsx": {
+    "max-len": {
+      "count": 11
+    },
+    "no-nested-ternary": {
+      "count": 2
+    },
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
   "src/core/ui/motion/use-cycle.test.ts": {
     "max-len": {
       "count": 1
@@ -6758,9 +6769,6 @@
     "ab/forbidden-imports": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 1
     },
@@ -9443,17 +9451,6 @@
       "count": 1
     }
   },
-  "src/teacher/components/ReportRows.tsx": {
-    "max-len": {
-      "count": 11
-    },
-    "no-nested-ternary": {
-      "count": 2
-    },
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/teacher/components/TeacherLessonCard.test.tsx": {
     "max-len": {
       "count": 3
@@ -9555,7 +9552,7 @@
   },
   "src/teacher/report/hooks/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 6
+      "count": 5
     },
     "max-len": {
       "count": 3

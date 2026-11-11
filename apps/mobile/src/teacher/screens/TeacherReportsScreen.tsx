@@ -12,7 +12,7 @@ import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { usePendingReports, useTeacherMe } from '@/teacher/lib/queries';
-import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from '@/teacher/components/ReportRows';
+import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from '@/core/ui/lists/ReportRows';
 
 type View = 'pending' | 'submitted' | 'students';
 

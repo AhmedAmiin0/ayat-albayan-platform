@@ -13,7 +13,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { BackButton } from '@/core/ui/navigation';
 import { AttendanceLogHead, AttendanceLogRow, monthOf } from '@/sales/sales';
-import { reportFormHref } from '@/teacher/components/ReportRows';
+import { reportFormHref } from '@/core/ui/lists/ReportRows';
 import { useTeacherAttendance } from './teacher-board-api';
 
 const keyOf = (row: AttendanceTableRow) => row.lesson_id;
