@@ -1,5 +1,6 @@
 import { act, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { Text } from 'react-native';
+import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { pathKey } from '@/core/lib/query/query-keys';
 import { queryClient } from '@/core/lib/query/query-client';
@@ -20,10 +21,15 @@ const mockApiFetch = jest.fn(async (path: string) => {
     return mockMe.answer;
   }
   if (path.startsWith('/teachers/me')) return { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
+  if (path === '/settings/public') return publicConfig;
   return { total: 0 };
 });
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'admin' }));
+
+// The teacher page switches on, so these routing tests still gate «المحادثات» by the permission alone.
+const teacherPagesOn = Object.fromEntries(Object.values(TEACHER_PAGE_SWITCH).map((k) => [k, true]));
+const publicConfig = { ...PUBLIC_SETTING_DEFAULTS, ...teacherPagesOn, custom: {} };
 
 const stub = (label: string) => () => <Text>{label}</Text>;
 const app = {
