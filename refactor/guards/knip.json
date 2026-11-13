@@ -203,7 +203,6 @@
   "apps/mobile/src/sales/sales/index.ts types StudentsView",
   "apps/mobile/src/sales/sales/screens/AllStudentsScreen.tsx types StudentsView",
   "apps/mobile/src/student-file/recordings/RecordingFiltersBar.tsx types RecordingFiltersBarProps",
-  "apps/mobile/src/teacher/components/TeacherLessonCard.tsx types TeacherLessonCardProps",
   "apps/mobile/src/teacher/report/components/AttachmentsField.tsx exports fileLabel",
   "apps/mobile/src/teacher/report/components/AttachmentsField.tsx types AttachmentsFieldProps",
   "apps/mobile/src/teacher/report/components/ReportTextField.tsx types ReportTextFieldProps",
