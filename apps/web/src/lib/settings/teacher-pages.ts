@@ -11,11 +11,16 @@ export function useTeacherPageOn(): (page: TeacherPage) => boolean {
   return (page) => teacherPageOn(config, page);
 }
 
-export type TeacherPageState = 'loading' | 'on' | 'off';
+export type TeacherPageState = 'loading' | 'error' | 'on' | 'off';
 
-/** For a route guard: 'loading' until the settings answer, so a refresh on an open page never bounces. */
+const UNANSWERED = { pending: 'loading', error: 'error' } as const;
+
+/**
+ * For a route guard: 'loading' until the settings answer, so a refresh on an open page never
+ * bounces; 'error' when they cannot be read (an outage never sends the teacher away silently).
+ */
 export function useTeacherPageState(page: TeacherPage): TeacherPageState {
   const config = useQuery(publicConfigQuery);
-  if (config.isPending) return 'loading';
+  if (config.status !== 'success') return UNANSWERED[config.status];
   return teacherPageOn(withPublicDefaults(config.data), page) ? 'on' : 'off';
 }

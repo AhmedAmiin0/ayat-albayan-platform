@@ -15,7 +15,8 @@ const SCHEDULED = t.meetingInvites.scheduledItem;
 const button = (name: string) => screen.queryByRole('button', { name });
 
 test('the teacher sees only the start button her switch allows', async () => {
-  await renderWithQuery(<TeacherMeetingsScreen />, teacherPagesClient(false, { teacher_scheduled_meetings_enabled: true }));
+  const client = teacherPagesClient(false, { teacher_scheduled_meetings_enabled: true });
+  await renderWithQuery(<TeacherMeetingsScreen />, client);
   expect(await screen.findByRole('button', { name: SCHEDULED })).toBeTruthy();
   expect(button(INSTANT)).toBeNull();
 });

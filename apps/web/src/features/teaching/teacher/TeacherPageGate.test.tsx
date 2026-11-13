@@ -2,6 +2,7 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { t } from '@/lib/i18n/i18n';
 import { setTeacherPages } from '@/lib/settings/teacher-pages-testing';
 import { TeacherPageGate } from './TeacherPageGate';
 
@@ -52,6 +53,13 @@ describe('TeacherPageGate (settings «صفحات المعلم»)', () => {
     apiFetch.mockResolvedValue({ ...PUBLIC_SETTING_DEFAULTS, custom: {}, teacher_earnings_enabled: true });
     renderGate(freshClient());
     expect(await screen.findByText('the page')).toBeTruthy();
+    expect(navigateTo).not.toHaveBeenCalled();
+  });
+
+  it('settings that cannot be read: an error, never a silent redirect', async () => {
+    apiFetch.mockRejectedValue(new Error('offline'));
+    renderGate(freshClient());
+    expect(await screen.findByText(t.common.error)).toBeTruthy();
     expect(navigateTo).not.toHaveBeenCalled();
   });
 

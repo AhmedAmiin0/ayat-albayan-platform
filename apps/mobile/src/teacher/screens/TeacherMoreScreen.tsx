@@ -16,7 +16,7 @@ import { SignOutButton } from '@/teacher/components/SignOutButton';
 import { locale } from '@/core/lib/i18n/locale';
 
 type GateOpen = (gate: TeacherGate) => boolean;
-type MoreRow = { title: string; href: Href; visible: (open: GateOpen) => boolean };
+interface MoreRow { title: string; href: Href; visible: (open: GateOpen) => boolean }
 
 const always = (): boolean => true;
 const gated = (gate: TeacherGate) => (open: GateOpen): boolean => open(gate);

@@ -38,9 +38,11 @@ export function TeacherDashboard() {
   const head = (
     <PageHead>
       <Cartouche>{t.teacher.dashboardTitle}</Cartouche>
-      <div className="ms-auto">
-        <InternalMeetingButton instant={instant} scheduled={scheduled} />
-      </div>
+      {meetingsShown && (
+        <div className="ms-auto">
+          <InternalMeetingButton instant={instant} scheduled={scheduled} />
+        </div>
+      )}
     </PageHead>
   );
   if (me.isError) {

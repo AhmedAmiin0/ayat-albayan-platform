@@ -28,13 +28,15 @@ test('every switch off (the default): only students and availability stay', asyn
 });
 
 test('«أرباحي» off, «كشوف الشهر» on: a direct row to the statements', async () => {
-  await renderWithQuery(<TeacherMoreScreen />, teacherPagesClient(false, { teacher_statements_enabled: true }));
+  const client = teacherPagesClient(false, { teacher_statements_enabled: true });
+  await renderWithQuery(<TeacherMoreScreen />, client);
   await fireEvent.press(await screen.findByText(t.teacherNav.statements));
   expect(router.push).toHaveBeenCalledWith('/teacher/more/payouts');
   expect(screen.queryByText(t.teacherNav.payouts)).toBeNull();
 });
 
 test('one meetings switch is enough for the meetings row', async () => {
-  await renderWithQuery(<TeacherMoreScreen />, teacherPagesClient(false, { teacher_scheduled_meetings_enabled: true }));
+  const client = teacherPagesClient(false, { teacher_scheduled_meetings_enabled: true });
+  await renderWithQuery(<TeacherMoreScreen />, client);
   expect(await screen.findByText(t.mobileClassroom.meetingsRow)).toBeTruthy();
 });

@@ -12,11 +12,11 @@ import { useViewerTz } from '@/core/lib/clock';
 
 type Mode = 'instant' | 'scheduled' | null;
 
-/** Which start buttons show (default both; only the teacher's screen passes its academy switches). */
-export type MeetingAllow = { instant: boolean; scheduled: boolean };
+/** Which start buttons show (default both; only the teacher's screen passes its switches). */
+export interface MeetingAllow { instant: boolean; scheduled: boolean }
 const ALL: MeetingAllow = { instant: true, scheduled: true };
 
-type StartProps = { allow: MeetingAllow; onPick: (mode: 'instant' | 'scheduled') => void };
+interface StartProps { allow: MeetingAllow; onPick: (mode: 'instant' | 'scheduled') => void }
 
 function StartButtons({ allow, onPick }: StartProps) {
   return (

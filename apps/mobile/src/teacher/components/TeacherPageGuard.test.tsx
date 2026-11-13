@@ -42,9 +42,17 @@ test('a fetched answer with the switch off goes to «اليوم»', async () => 
 });
 
 test('a fetched answer with the switch on shows the screen', async () => {
-  mockApiFetch.mockResolvedValue({ ...PUBLIC_SETTING_DEFAULTS, custom: {}, teacher_earnings_enabled: true });
+  const config = { ...PUBLIC_SETTING_DEFAULTS, custom: {}, teacher_earnings_enabled: true };
+  mockApiFetch.mockResolvedValue(config);
   await renderWithQuery(<Earnings />);
   expect(await screen.findByText('the page')).toBeTruthy();
+  expect(mockRedirect).not.toHaveBeenCalled();
+});
+
+test('settings that cannot be read: an error with retry, never a silent redirect', async () => {
+  mockApiFetch.mockRejectedValue(new TypeError('Network request failed'));
+  await renderWithQuery(<Earnings />);
+  expect(await screen.findByText(t.common.error)).toBeTruthy();
   expect(mockRedirect).not.toHaveBeenCalled();
 });
 
