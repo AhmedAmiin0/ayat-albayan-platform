@@ -60,6 +60,8 @@ export async function seedFxRate(): Promise<void> {
  * (the OFF path: unit tests + lessons-auto-held.sql.spec).
  * report_teacher_edit_minutes (docs/46, code default 30) is 0 here: a submitted report goes to the
  * family at once, as the journeys expect; teacher-report-edit-window.spec sets 30 and back.
+ * The seven teacher page switches (owner 2026-11-13, code default false) are ON here: the journeys
+ * open the teacher's chats, earnings, statements, feedback and meetings (off: unit tests).
  */
 export async function seedSettings(): Promise<void> {
   const sql = postgres(env('DATABASE_URL'), { max: 1, onnotice: () => undefined });
@@ -73,7 +75,12 @@ export async function seedSettings(): Promise<void> {
         ('payout_count_late', 'false'::jsonb), ('payout_count_no_show', 'false'::jsonb),
         ('payout_count_trials', 'false'::jsonb),
         ('auto_messages_enabled', 'true'::jsonb), ('teachers_always_available', 'false'::jsonb),
-        ('lesson_confirmation_required', 'true'::jsonb)
+        ('lesson_confirmation_required', 'true'::jsonb),
+        ('teacher_chats_enabled', 'true'::jsonb), ('teacher_student_messages_enabled', 'true'::jsonb),
+        ('teacher_earnings_enabled', 'true'::jsonb), ('teacher_statements_enabled', 'true'::jsonb),
+        ('teacher_feedback_enabled', 'true'::jsonb),
+        ('teacher_internal_meetings_enabled', 'true'::jsonb),
+        ('teacher_scheduled_meetings_enabled', 'true'::jsonb)
       on conflict (key) do update set value = excluded.value`;
   } finally {
     await sql.end();

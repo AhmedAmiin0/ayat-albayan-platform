@@ -57,7 +57,7 @@ const TEACHER_GATE_PAGES = {
 } as const satisfies Record<string, readonly TeacherPage[]>;
 export type TeacherGate = keyof typeof TEACHER_GATE_PAGES;
 
-type TeacherSwitches = { readonly [K in (typeof TEACHER_PAGE_KEYS)[number]]: boolean };
+type TeacherSwitches = Readonly<Record<(typeof TEACHER_PAGE_KEYS)[number], boolean>>;
 
 /** Is this teacher page (or meetings button) on in these settings? */
 export const teacherPageOn = (config: TeacherSwitches, page: TeacherPage): boolean =>
