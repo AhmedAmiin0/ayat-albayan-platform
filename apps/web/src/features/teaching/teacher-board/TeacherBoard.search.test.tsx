@@ -38,12 +38,13 @@ describe('TeacherBoard search (docs/48)', () => {
     expect(names()).toEqual(['سهيلة']);
   });
 
-  it('a miss says so; clearing brings every row back', async () => {
+  it('a miss says so; «امسح البحث» empties the box and brings every row back', async () => {
     renderBoard();
     await search('زينب');
     expect(screen.getByText(t.teacherBoard.noMatch)).toBeTruthy();
     expect(screen.queryByRole('table')).toBeNull();
-    await search('');
+    fireEvent.click(screen.getByRole('button', { name: t.teacherBoard.clearSearch }));
     expect(names()).toHaveLength(4);
+    expect(screen.getByRole<HTMLInputElement>('searchbox').value).toBe('');
   });
 });

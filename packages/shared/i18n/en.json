@@ -4513,7 +4513,8 @@
     "search": "Search by name or code",
     "searchLabel": "Search students",
     "noMatch": "No student matches this name or code",
-    "emptyHint": "Every student the academy assigns to you shows here, with their lessons in the last 14 days and the next 14 days."
+    "emptyHint": "Every student the academy assigns to you shows here, with their lessons in the last 14 days and the next 14 days.",
+    "clearSearch": "Clear the search"
   },
   "teacherStudents": {
     "title": "Students",

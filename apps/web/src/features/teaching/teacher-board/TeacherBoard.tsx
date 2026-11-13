@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
 import { EmptyState } from '@/components/ui/display/empty-state';
+import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import { BoardHead } from './BoardHead';
 import { DEFAULT_SEGMENT, EMPTY_TITLE, type BoardSegment } from './board-segments';
@@ -45,7 +46,16 @@ export function TeacherBoard({ me, lessons, now }: TeacherBoardProps) {
     void navigate({ to: '/teacher/students/$studentId', params: { studentId: r.student.id } });
   const views: Record<View, () => ReactNode> = {
     empty: () => <EmptyState title={EMPTY_TITLE[segment]}>{t.teacherBoard.emptyHint}</EmptyState>,
-    noMatch: () => <EmptyState title={t.teacherBoard.noMatch} />,
+    noMatch: () => (
+      <EmptyState
+        title={t.teacherBoard.noMatch}
+        action={
+          <Button type="button" variant="secondary" onClick={() => setQ('')}>
+            {t.teacherBoard.clearSearch}
+          </Button>
+        }
+      />
+    ),
     table: () => (
       <DataTable
         stacked

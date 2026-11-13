@@ -4,30 +4,13 @@ import type { ReactNode } from 'react';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { PageHead } from '@/components/ui/layout/page';
-import { errorCode } from '@/features/teaching/schedule';
 import { teacherMeQuery } from '@/features/teaching/teacher';
 import { t } from '@/lib/i18n/i18n';
-import { LoadError } from './LoadError';
 import { loadState, type LoadState } from './load-state';
+import { MeError } from './MeError';
 import { StudentsBoard } from './StudentsBoard';
 
-interface ErrorText {
-  text: string;
-  retry: boolean;
-}
-
-/** A login with no teachers row cannot fix it by retrying; any other error can. */
-const ERRORS: Partial<Record<string, ErrorText>> = {
-  teacher_not_linked: { text: t.teacherDash.notLinked, retry: false },
-};
-const FALLBACK: ErrorText = { text: t.teacherDash.loadError, retry: true };
-
 type MeQuery = UseQueryResult<TeacherMe>;
-
-function MeError({ me }: { me: MeQuery }) {
-  const e = ERRORS[errorCode(me.error) ?? ''] ?? FALLBACK;
-  return <LoadError text={e.text} onRetry={e.retry ? me.refetch : undefined} />;
-}
 
 const BODY: Record<LoadState, (me: MeQuery) => ReactNode> = {
   ready: (me) => me.data && <StudentsBoard me={me.data} />,
