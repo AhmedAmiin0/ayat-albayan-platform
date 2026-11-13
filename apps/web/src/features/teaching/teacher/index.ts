@@ -6,4 +6,5 @@ export {
   proposeLesson,
   teacherMeQuery,
 } from './api';
+export { TrialChatNote } from './lessons/TrialChatNote';
 export { TeacherLessonCard, type TeacherLessonCardProps } from './lessons/TeacherLessonCard';

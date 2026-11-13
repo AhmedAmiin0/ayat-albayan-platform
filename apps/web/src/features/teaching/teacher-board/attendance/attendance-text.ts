@@ -1,4 +1,5 @@
-import { dateText, type AttendanceTableRow, type AttendanceTotalKind } from '@ab/shared';
+import { dateText, lessonWhenAt, type AttendanceTableRow, type AttendanceTotalKind } from '@ab/shared';
+import type { Clock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
 
@@ -29,11 +30,27 @@ const TAGS: [(r: AttendanceTableRow) => boolean, () => string][] = [
   [(r) => r.kind === 'present' && r.attendance === 'late', () => t.sales.student.log.late],
 ];
 
-/** «تجريبية · تعويضية · موعد بديل · متأخر», only those that apply, then the cancel reason. */
-export function rowNote(row: AttendanceTableRow): string {
+/** The viewer's clock: her zone and 12 / 24 h. */
+export type NoteClock = Clock & { tz: string };
+
+type Line = (r: AttendanceTableRow, clock: NoteClock) => string | null;
+const w = () => t.sales.student.log;
+const at = (iso: string, clock: NoteClock) => lessonWhenAt(new Date(iso), clock);
+
+/** After the tags: why it was cancelled, where it moved, what it replaced and why (docs/47). */
+const LINES: Line[] = [
+  (r) => (r.cancel_reason ? w().cancelReason.replace('{reason}', r.cancel_reason) : null),
+  (r, c) => (r.moved_to ? w().movedTo.replace('{when}', at(r.moved_to, c)) : null),
+  (r, c) => (r.moved_from ? w().movedFrom.replace('{when}', at(r.moved_from, c)) : null),
+  (r) => (r.move_reason ? w().moveReason.replace('{reason}', r.move_reason) : null),
+];
+
+/**
+ * «تجريبية · تعويضية · موعد بديل · متأخر», only those that apply, then the cancel reason and the
+ * move lines («نُقلت إلى …», «بدلًا من موعد …», «سبب تغيير الموعد: …») in the viewer's clock.
+ */
+export function rowNote(row: AttendanceTableRow, clock: NoteClock): string {
   const tags = TAGS.filter(([applies]) => applies(row)).map(([, word]) => word());
-  const reason = row.cancel_reason
-    ? [t.sales.student.log.cancelReason.replace('{reason}', row.cancel_reason)]
-    : [];
-  return [...tags, ...reason].join(' · ');
+  const lines = LINES.map((line) => line(row, clock)).filter((l) => l !== null);
+  return [...tags, ...lines].join(' · ');
 }

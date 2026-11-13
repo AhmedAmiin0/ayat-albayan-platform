@@ -1,13 +1,15 @@
 import type { MouseEventHandler, ReactNode } from 'react';
 
 // Test helper (not a test): a plain <a> standing in for TanStack Router's <Link>, with the path
-// params filled in and the search (object or updater) as the query string, so tests can read href.
+// params filled in, the search (object or updater) as the query string and the hash, so tests can
+// read href.
 
 type Search = Record<string, unknown>;
 interface LinkProps {
   to: string;
   params?: Record<string, string>;
   search?: Search | ((prev: Search) => Search);
+  hash?: string;
   activeOptions?: object;
   children?: ReactNode;
   className?: string;
@@ -16,7 +18,8 @@ interface LinkProps {
   onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
 
-export function Link({ to, params = {}, search, children, className, onClick, ...aria }: LinkProps) {
+export function Link(props: LinkProps) {
+  const { to, params = {}, search, hash, children, className, onClick, ...aria } = props;
   const s = typeof search === 'function' ? search({}) : (search ?? {});
   const path = Object.entries(params).reduce((p, [k, v]) => p.replace(`$${k}`, v), to);
   const query = new URLSearchParams(
@@ -24,8 +27,9 @@ export function Link({ to, params = {}, search, children, className, onClick, ..
       .filter(([, v]) => v !== undefined)
       .map(([k, v]) => [k, String(v)]),
   ).toString();
+  const href = `${path}${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`;
   return (
-    <a href={query ? `${path}?${query}` : path} className={className} aria-current={aria['aria-current']} aria-label={aria['aria-label']} onClick={onClick}>
+    <a href={href} className={className} aria-current={aria['aria-current']} aria-label={aria['aria-label']} onClick={onClick}>
       {children}
     </a>
   );

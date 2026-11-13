@@ -258,6 +258,7 @@
         "apps/web/src/routes/teacher/report.$lessonId.tsx",
         "apps/web/src/routes/teacher/reports.index.tsx",
         "apps/web/src/routes/teacher/reports.$studentId.tsx",
+        "apps/web/src/routes/teacher/students.$studentId.tsx",
         "apps/web/src/routes/admin/students/$studentId_.reports.tsx",
         "apps/web/src/routes/admin/students/$studentId_.reports.$lessonId.tsx",
         "apps/api/src/modules/reporting/reports/",
@@ -277,6 +278,7 @@
         "reporting/teacher-report-edit-window.spec.ts",
         "reporting/teacher-report-form-fields.spec.ts",
         "reporting/teacher-week-history.spec.ts",
+        "reporting/teacher-student-file.spec.ts",
         "messaging/trial-no-teacher-chat.spec.ts"
       ]
     },
@@ -300,7 +302,7 @@
         "apps/web/src/routes/admin/assistants/",
         "apps/web/src/routes/admin/(people)/users.tsx",
         "apps/web/src/routes/admin/(people)/roles.tsx",
-        "apps/web/src/routes/teacher/students.tsx",
+        "apps/web/src/routes/teacher/students.index.tsx",
         "apps/web/src/routes/account/index.tsx",
         "apps/api/src/modules/people/students/",
         "apps/api/src/modules/people/guardians/",

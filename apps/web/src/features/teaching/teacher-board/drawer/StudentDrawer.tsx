@@ -1,4 +1,6 @@
+import { Link } from '@tanstack/react-router';
 import { type ReactNode, useId, useState } from 'react';
+import { buttonVariants } from '@/components/ui/form/button';
 import { Tabs, tabIds } from '@/components/ui/layout/tabs';
 import { StudentReportsBody } from '@/features/reporting/reports';
 import { Drawer } from '@/features/teaching/schedule';
@@ -24,7 +26,10 @@ export interface StudentDrawerProps {
   onDone: (message: string) => void;
 }
 
-/** One student from the board (docs/46 C1): «الحلقات» | «التقارير» | «الحضور», one at a time. */
+/**
+ * One student from the board (docs/46 C1): «ملف الطالب» (docs/47), then «الحلقات» | «التقارير» |
+ * «الحضور», one at a time.
+ */
 export function StudentDrawer({ row, tz, fallbackLink, onClose, onDone }: StudentDrawerProps) {
   const prefix = useId();
   const [tab, setTab] = useState<Tab>('lessons');
@@ -44,6 +49,13 @@ export function StudentDrawer({ row, tz, fallbackLink, onClose, onDone }: Studen
   const ids = tabIds(prefix, tab);
   return (
     <Drawer title={row.student.name} onClose={onClose}>
+      <Link
+        to="/teacher/students/$studentId"
+        params={{ studentId }}
+        className={buttonVariants({ variant: 'secondary', size: 'sm', className: 'mb-3' })}
+      >
+        {w.openFile}
+      </Link>
       <Tabs label={w.drawerTabs} tabs={TABS} value={tab} onChange={setTab} idPrefix={prefix} />
       <div role="tabpanel" id={ids.panel} aria-labelledby={ids.tab}>
         {panels[tab]()}

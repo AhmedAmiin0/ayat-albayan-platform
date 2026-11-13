@@ -74,4 +74,17 @@ describe('the assistant\'s «تغيير الموعد» in the /sales drawer (own
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-7/reschedule', body));
     expect(await within(drawer).findByText(t.lessons.rescheduled)).toBeTruthy();
   });
+
+  it('the optional move reason goes in the body (docs/47)', async () => {
+    apiSend.mockResolvedValue({ id: 'new', starts_at: FREE.starts_at, status: 'scheduled' });
+    const drawer = open();
+    fireEvent.click(within(drawer).getByRole('button', { name: a.reschedule }));
+    fireEvent.click(await within(drawer).findByRole('button', { name: /17:00/ }));
+    const field = within(drawer).getByLabelText(t.reschedule.reason);
+    expect(within(drawer).getByText(t.reschedule.reasonHint)).toBeTruthy();
+    fireEvent.change(field, { target: { value: ' سفر الأسرة ' } });
+    fireEvent.click(within(drawer).getByRole('button', { name: t.lessons.rescheduleSubmit }));
+    const body = { startsAt: FREE.starts_at, reason: 'سفر الأسرة' };
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-7/reschedule', body));
+  });
 });

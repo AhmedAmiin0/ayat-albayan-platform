@@ -7167,11 +7167,6 @@
       "count": 1
     }
   },
-  "src/features/reporting/dashboard/link-mock.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/reporting/dashboard/search.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -11832,22 +11827,12 @@
       "count": 1
     }
   },
-  "src/routes/teacher/reports.$studentId.tsx": {
-    "ab/module-boundaries": {
-      "count": 4
-    }
-  },
   "src/routes/teacher/reports.index.tsx": {
     "stylistic/max-len": {
       "count": 2
     },
     "ab/module-boundaries": {
       "count": 2
-    }
-  },
-  "src/routes/teacher/students.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/styles/tokens.test.ts": {

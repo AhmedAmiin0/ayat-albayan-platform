@@ -29,12 +29,12 @@ function open() {
 describe('TeacherStudents «الطلاب» (teacher)', () => {
   afterEach(() => apiFetch.mockReset());
 
-  it('opens on «مشتركون» with only subscribed students, each name linking to the report history', async () => {
+  it('opens on «مشتركون» with only subscribed students, each name opening the student file', async () => {
     open();
     expect(await screen.findByText('سهيلة')).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/students?kind=subscribed');
     expect(screen.queryByText('بلال')).toBeNull();
-    expect(screen.getByRole('link', { name: 'سهيلة' }).getAttribute('href')).toBe('/teacher/reports/s1');
+    expect(screen.getByRole('link', { name: 'سهيلة' }).getAttribute('href')).toBe('/teacher/students/s1');
     expect(screen.getByText(/AB-0183/)).toBeTruthy();
     expect(screen.getByText(/جزء عمّ/)).toBeTruthy();
     expect(screen.getByText(t.teacherStudents.noNextLesson)).toBeTruthy();
