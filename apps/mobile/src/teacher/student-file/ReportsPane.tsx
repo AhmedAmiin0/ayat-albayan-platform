@@ -14,7 +14,7 @@ import { ReportHistoryRow, reportFormHref } from '@/core/ui/lists/ReportRows';
 import { RecordingsButton } from '@/student-file';
 
 /** Who reads: the admin (any report, read-only) or the teacher (her own lessons' forms). */
-export type Who = { admin: true } | { admin: false; teacherId: string | undefined };
+type Who = { admin: true } | { admin: false; teacherId: string | undefined };
 
 /**
  * A row's tap: the admin reads any report (`to`: in a chat group, its copy of the route); a

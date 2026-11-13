@@ -2,9 +2,7 @@ import type { AttendanceRowReport, StudentAttendanceTable, TeacherStudentHead } 
 import { logRow, logTable } from '@/sales/sales/attendance/fixtures';
 
 // The teacher's student file as the API answers it (tests only; sample names). The clock is
-// 2026-11-11 12:00Z (NOW): the head's next 14 days, then November's log.
-
-export const NOW = new Date('2026-11-11T12:00:00Z');
+// 2026-11-11 12:00Z: the head's next 14 days, then November's log.
 
 const sent = (over: Partial<AttendanceRowReport>): AttendanceRowReport => ({
   status: 'submitted',
