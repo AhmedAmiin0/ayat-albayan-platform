@@ -1,4 +1,4 @@
-// Guard for the automatic Claude review (owner 2026-11-13): the repo is PUBLIC (docs/09 «GitHub Actions»).
+// Guard for the automatic Claude review (owner 2026-11-13). The repo is PUBLIC (docs/09).
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
