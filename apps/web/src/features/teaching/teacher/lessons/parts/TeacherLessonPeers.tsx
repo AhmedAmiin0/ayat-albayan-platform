@@ -21,9 +21,17 @@ export interface TeacherLessonPeersProps {
 
 type Form = 'cancel' | 'propose' | null;
 
-/** In room mode the card draws the classroom itself (StaffJoinButton), never as a peer. */
-const drawnHere = (plan: TeacherPlan) => (a: PlanAction) =>
-  a !== 'cancel' && !(a === 'join' && plan.way === 'room');
+/**
+ * In room mode the card draws the classroom itself (StaffJoinButton), never as a peer; it also
+ * draws the reports itself, one per student (docs/49 «Drawer rule»).
+ */
+const drawnElsewhere = (plan: TeacherPlan): Record<PlanAction, boolean> => ({
+  join: plan.way === 'room',
+  confirm: false,
+  report: true,
+  cancel: true,
+});
+const drawnHere = (plan: TeacherPlan) => (a: PlanAction) => !drawnElsewhere(plan)[a];
 
 /** Her profile link beside the classroom: a static lesson without a link of its own. */
 const fallbackOf = (p: TeacherLessonPeersProps): string | null =>

@@ -1,9 +1,9 @@
-import type { PlanAction, ReportStage, WayIn } from '@ab/client-core';
+import type { PlanAction, WayIn } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { buttonVariants } from '@/components/ui/form/button';
 import { StaffJoinButton } from '@/features/teaching/classroom';
-import { ReportLink, reportFormHref } from '@/features/reporting/reports';
+import { REPORT_STAGE_LABEL, ReportLink, reportFormHref } from '@/features/reporting/reports';
 import { t } from '@/lib/i18n/i18n';
 import { TeacherConfirm } from '@/features/teaching/teacher/lessons/TeacherConfirm';
 import type { TeacherPlan } from './use-teacher-plan';
@@ -20,13 +20,6 @@ export interface TeacherLessonLeadProps {
 type View = (p: TeacherLessonLeadProps) => ReactNode;
 
 const variantOf = (p: TeacherLessonLeadProps) => (p.look.filled ? 'primary' : 'secondary');
-
-const REPORT_LABEL: Record<ReportStage, string> = {
-  write: t.reports.open,
-  resume: t.reports.resume,
-  window: t.reports.view,
-  done: t.reports.view,
-};
 
 /** «ادخل الحلقة» by the way in (owner Q3): our classroom, or her own link of the lesson. */
 const JOIN: Record<WayIn, View> = {
@@ -54,7 +47,7 @@ const LEAD: Record<PlanAction, View> = {
       size={p.look.size}
       variant={variantOf(p)}
     >
-      {REPORT_LABEL[p.plan.stage ?? 'write']}
+      {REPORT_STAGE_LABEL[p.plan.stage ?? 'write']}
     </ReportLink>
   ),
   // «إلغاء الحلقة» is never a lead: the card draws it last, danger-quiet (TeacherLessonPeers).

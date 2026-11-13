@@ -7535,11 +7535,6 @@
       "count": 1
     }
   },
-  "src/features/reporting/reports/history/LessonReportLinks.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/reporting/reports/history/RecordingLink.tsx": {
     "stylistic/max-len": {
       "count": 1

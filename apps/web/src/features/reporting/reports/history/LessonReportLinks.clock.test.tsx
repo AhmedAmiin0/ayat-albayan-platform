@@ -19,6 +19,6 @@ describe('LessonReportLinks clock', async () => {
     await act(async () => {
       vi.advanceTimersByTime(60_000);
     });
-    expect(screen.getByRole('link', { name: t.reports.formTitle })).toBeTruthy();
+    expect(screen.getByRole('link', { name: t.reports.open })).toBeTruthy();
   });
 });
