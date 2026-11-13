@@ -146,11 +146,13 @@ Five owner questions remain, each with a default.
   - the design-review stage
   - `pnpm turbo lint typecheck test` + e2e in GitHub Actions only, never locally (owner rule)
 
+File:line pointers in this doc are against 8537d7286. #711 merged on 2026-11-13 as f9e7f7524, so locate code by symbol.
+
 ## Delivery waves (cloud routines; the owner session merges)
 
 1. Now: PR1 «teacher live core» (base develop, which already has #711). #712 (docs/47 PR 1) is still open, so on a GitHub conflict, merge origin/develop.
 2. After PR1 and #712 merge, in parallel: PR2 web today, PR4 web students and PR5 mobile today. They only clash in ar/en.json.
-3. Then PR3 web schedule (after PR2), PR6 mobile schedule (after PR5) and docs/47 PR 2 (after PR4 + PR5; it sets PENDING_REPORTS_HREF and adds the paused list as a board segment).
+3. Then PR3 web schedule (after PR2 and PR4: it shares DashboardPanel.tsx with PR2 and TeacherDashboard.tsx with PR4), PR6 mobile schedule (after PR5) and docs/47 PR 2 (after PR4 + PR5; it sets PENDING_REPORTS_HREF and adds the paused list as a board segment).
 4. Last: PR7 mobile students (after docs/47 PR 2) and the optional PR8 mobile propose.
 
 ## Cross-screen model
