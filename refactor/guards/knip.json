@@ -145,7 +145,6 @@
   "apps/mobile/src/core/lib/i18n/i18n-overrides.ts exports cacheKey",
   "apps/mobile/src/core/lib/i18n/i18n-overrides.ts exports fetchOverrides",
   "apps/mobile/src/core/lib/i18n/i18n-overrides.ts exports restoreCachedOverrides",
-  "apps/mobile/src/core/lib/query/paging.ts types Patch",
   "apps/mobile/src/core/ui/primitives/Button.tsx types ButtonProps",
   "apps/mobile/src/core/ui/primitives/IconButton.tsx types IconButtonProps",
   "apps/mobile/src/core/ui/primitives/Mark.tsx types MarkProps",
