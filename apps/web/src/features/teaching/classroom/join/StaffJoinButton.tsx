@@ -14,6 +14,8 @@ import { useNow } from '@/lib/time/use-now';
 interface Props {
   lesson: JoinableLesson & { status: LessonStatus };
   size?: 'md' | 'lg';
+  /** The open join's fill (docs/48: secondary when the teacher's report leads). */
+  variant?: 'primary' | 'secondary';
 }
 
 /**
@@ -22,7 +24,7 @@ interface Props {
  * (POST /lessons/:id/room/open); the join button turns on without waiting for a refetch. Both fill the
  * width they are given (docs/07 «الأزرار»: never shrink-wrapped).
  */
-export function StaffJoinButton({ lesson, size = 'md' }: Props) {
+export function StaffJoinButton({ lesson, size = 'md', variant }: Props) {
   const now = useNow();
   const win = useJoinWindow();
   const client = useQueryClient();
@@ -40,7 +42,7 @@ export function StaffJoinButton({ lesson, size = 'md' }: Props) {
   const early = joinWindow(shown, now, win).state === 'early';
   return (
     <div className="grid gap-1.5">
-      <EnterButton lesson={shown} size={size} now={now} className="justify-items-stretch" />
+      <EnterButton lesson={shown} size={size} now={now} variant={variant} className="justify-items-stretch" />
       {early && (
         <Button type="button" variant="secondary" size={size} disabled={open.isPending} onClick={() => open.mutate(lesson.id)}>
           {open.isPending ? t.classroom.opening : t.classroom.openNow}

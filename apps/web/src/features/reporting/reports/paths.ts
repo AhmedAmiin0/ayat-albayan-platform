@@ -1,4 +1,6 @@
+import type { ReportStage } from '@ab/client-core';
 import { reportBlock, type LessonStatus, type UserRole } from '@ab/shared';
+import { t } from '@/lib/i18n/i18n';
 
 // Where a report is opened from (R-REP-01: always from the lesson itself).
 
@@ -20,3 +22,11 @@ export function reportHistoryHref(role: UserRole, studentId: string): string {
 export function reportOpen(lesson: { status: LessonStatus; starts_at: string }, now: Date): boolean {
   return reportBlock({ lessonStatus: lesson.status, lessonStartsAt: new Date(lesson.starts_at), now }) === null;
 }
+
+/** The teacher's report control, by her report stage (docs/49 R2). */
+export const REPORT_STAGE_LABEL: Record<ReportStage, string> = {
+  write: t.reports.open,
+  resume: t.reports.resume,
+  window: t.reports.edit,
+  done: t.reports.view,
+};

@@ -9,6 +9,8 @@ export interface SectionLink {
   icon: IconName;
   /** Active only on this exact path (a section home such as /teacher). */
   exact?: boolean;
+  /** Overrides `exact`: e.g. a home whose tabs write ?tab= stays active (TanStack options). */
+  activeOptions?: { exact?: boolean; includeSearch?: boolean };
   /** Dynamic roles: the permission that opens the page. */
   permission: Permission;
   /** A count after the label, part of the link's name (like AdminNav's): «3 غير مقروءة». */
@@ -34,7 +36,7 @@ export function SectionLinks({ label, items, can = () => true }: SectionLinksPro
           <li key={item.to} className="min-w-0">
             <Link
               to={item.to}
-              activeOptions={{ exact: item.exact ?? false }}
+              activeOptions={item.activeOptions ?? { exact: item.exact ?? false }}
               className={cn(
                 'group flex min-h-11 items-center gap-2.5 rounded-md border-s-[3px] border-transparent px-2.5 font-medium whitespace-nowrap text-ink-2 hover:bg-sunk hover:text-ink',
                 'aria-[current=page]:border-lapis aria-[current=page]:bg-sunk aria-[current=page]:font-semibold aria-[current=page]:text-ink',

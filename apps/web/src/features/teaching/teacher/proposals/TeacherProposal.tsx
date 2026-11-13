@@ -1,55 +1,43 @@
-import { isOpenLesson, type LessonView, lessonWhenAt } from '@ab/shared';
-import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
+import { type LessonView, lessonWhenAt } from '@ab/shared';
 import { Dialog } from '@/components/ui/overlay/dialog';
-import { usePhone } from '@/components/ui/layout/use-narrow';
 import { t } from '@/lib/i18n/i18n';
-import { ProposeForm } from './ProposeForm';
 import { useClock } from '@/lib/clock';
+import { ProposeForm } from './ProposeForm';
 
 export interface TeacherProposalProps {
   lesson: LessonView;
   /** The teacher's zone. */
   tz: string;
+  /** Driven by the card: its «اقترح موعدًا آخر», or the cancel dialog's (owner Q5). */
+  open: boolean;
+  onClose: () => void;
   onDone: (message: string) => void;
 }
 
 /**
- * The card's «اقترح ميعاد تاني» (R-SCH-08): the proposal waiting for the admin, else the button
- * that opens the form (open lessons only): inline in the card from 640px, a full-screen Dialog on
- * phones (owner, 2026-10-05: no inline form bars on the phone).
+ * «اقترح موعدًا آخر» (R-SCH-08): the proposal waiting for the admin as one line, and the form in a
+ * Dialog on every width (docs/48: no inline form in the card). The card offers it only while
+ * teacherCanPropose holds (open, no pending proposal: the API's 409 rule).
  */
-export function TeacherProposal({ lesson, tz, onDone }: TeacherProposalProps) {
+export function TeacherProposal({ lesson, tz, open, onClose, onDone }: TeacherProposalProps) {
   const clock = useClock();
-  const [proposing, setProposing] = useState(false);
-  const phone = usePhone();
   const proposal = lesson.pending_proposal;
-  if (proposal) {
-    const when = lessonWhenAt(new Date(proposal.proposed_starts_at), { tz, ...clock });
-    return <p className="text-sm text-act">{t.teacherDash.propose.pending.replace('{when}', when)}</p>;
-  }
-  if (!isOpenLesson(lesson.status)) return null;
-  const form = (
-    <ProposeForm
-      lesson={lesson}
-      tz={tz}
-      bare={phone}
-      onBack={() => setProposing(false)}
-      onDone={(message) => {
-        setProposing(false);
-        onDone(message);
-      }}
-    />
-  );
-  if (proposing && !phone) return form;
+  const when = proposal && lessonWhenAt(new Date(proposal.proposed_starts_at), { tz, ...clock });
   return (
     <>
-      <Button type="button" variant="ghost" size="lg" className="justify-self-start" aria-haspopup={phone ? 'dialog' : undefined} onClick={() => setProposing(true)}>
-        {t.teacherDash.proposeReschedule}
-      </Button>
-      {proposing && (
-        <Dialog title={t.teacherDash.propose.title} onClose={() => setProposing(false)}>
-          {form}
+      {when && <p className="text-sm text-act">{t.teacherDash.propose.pending.replace('{when}', when)}</p>}
+      {open && (
+        <Dialog title={t.teacherDash.propose.title} onClose={onClose}>
+          <ProposeForm
+            lesson={lesson}
+            tz={tz}
+            bare
+            onBack={onClose}
+            onDone={(message) => {
+              onClose();
+              onDone(message);
+            }}
+          />
         </Dialog>
       )}
     </>

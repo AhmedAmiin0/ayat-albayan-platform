@@ -11,6 +11,10 @@ import { useTeacherCancel } from './use-teacher-cancel';
 
 export interface TeacherCancelDialogProps {
   lessonId: string;
+  /** teacherCanPropose: open with no pending proposal (else the API answers 409). */
+  canPropose: boolean;
+  /** «اقترح موعدًا آخر» instead (owner Q5): closes this dialog and opens the proposal. */
+  onPropose: () => void;
   onClose: () => void;
   /** Toast text after the cancel. */
   onDone: (message: string) => void;
@@ -18,9 +22,12 @@ export interface TeacherCancelDialogProps {
 
 /**
  * «إلغاء هذه الحلقة» (docs/46 C3, D3): this lesson only, a required reason checked with
- * teacherCancelSchema before the request; the family and the admins hear the reason.
+ * teacherCancelSchema before the request; the family and the admins hear the reason. While no
+ * proposal is pending, «اقترح موعدًا آخر» is offered before she confirms (owner Q5): the API
+ * refuses a proposal on a cancelled lesson, so it is never suggested after.
  */
-export function TeacherCancelDialog({ lessonId, onClose, onDone }: TeacherCancelDialogProps) {
+export function TeacherCancelDialog(props: TeacherCancelDialogProps) {
+  const { lessonId, canPropose, onPropose, onClose, onDone } = props;
   const w = t.teacherBoard;
   const formId = useId();
   const [reason, setReason] = useState('');
@@ -44,14 +51,7 @@ export function TeacherCancelDialog({ lessonId, onClose, onDone }: TeacherCancel
       description={w.cancelHint}
       onClose={onClose}
       actions={
-        <>
-          <Button type="button" variant="ghost" onClick={onClose}>
-            {w.keep}
-          </Button>
-          <Button type="submit" variant="danger" form={formId} disabled={cancel.isPending}>
-            {w.cancelSubmit}
-          </Button>
-        </>
+        <CancelActions {...{ canPropose, onPropose, onClose, formId }} busy={cancel.isPending} />
       }
     >
       <form id={formId} className="grid gap-3" onSubmit={submit} noValidate>
@@ -68,5 +68,33 @@ export function TeacherCancelDialog({ lessonId, onClose, onDone }: TeacherCancel
         {cancel.isError && <FormAlert>{teacherActionError(cancel.error)}</FormAlert>}
       </form>
     </Dialog>
+  );
+}
+
+interface CancelActionsProps {
+  canPropose: boolean;
+  onPropose: () => void;
+  onClose: () => void;
+  formId: string;
+  busy: boolean;
+}
+
+/** «تراجع» · «اقترح موعدًا آخر» (while none is pending) · «تأكيد الإلغاء» (danger). */
+function CancelActions({ canPropose, onPropose, onClose, formId, busy }: CancelActionsProps) {
+  const w = t.teacherBoard;
+  return (
+    <>
+      <Button type="button" variant="ghost" onClick={onClose}>
+        {w.keep}
+      </Button>
+      {canPropose && (
+        <Button type="button" variant="secondary" onClick={onPropose}>
+          {w.suggestOther}
+        </Button>
+      )}
+      <Button type="submit" variant="danger" form={formId} disabled={busy}>
+        {w.cancelSubmit}
+      </Button>
+    </>
   );
 }

@@ -9,6 +9,10 @@ vi.mock('@/lib/http/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: vi.fn(() => Promise.resolve([])),
 }));
+vi.mock('@tanstack/react-router', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
+}));
 
 const ME: TeacherMe = {
   id: 't-abrar',
@@ -26,7 +30,7 @@ const at = { now: new Date('2026-10-03T09:00:00.000Z'), today: '2026-10-03' };
 function renderPanel(lessons: DashboardPanelProps['lessons']) {
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <DashboardPanel tab="today" me={ME} lessons={lessons} at={at} onDone={vi.fn()} />
+      <DashboardPanel tab="today" me={ME} lessons={lessons} at={at} onDone={vi.fn()} onOpen={vi.fn()} />
     </QueryClientProvider>,
   );
 }
