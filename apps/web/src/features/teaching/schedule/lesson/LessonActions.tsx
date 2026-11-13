@@ -1,6 +1,5 @@
 import { canJoinNow, isOpenLesson, STATUS_ROUTE_EVENTS, type LessonEvent, type LessonView, type StatusRouteEvent } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ButtonRow } from '@/components/ui/layout/button-row';
@@ -40,7 +39,6 @@ function eventsNow(lesson: LessonView, now: number): StatusRouteEvent[] {
 export function LessonActions(props: LessonActionsProps) {
   const { lesson, onDone, onCancel, onReschedule, onChangeCourse, size = 'md' } = props;
   const queryClient = useQueryClient();
-  const [now] = useState(() => Date.now());
   const done = async (message: string) => {
     await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
     onDone(message);
@@ -49,13 +47,14 @@ export function LessonActions(props: LessonActionsProps) {
   const status = useMutation({ mutationFn: setLessonStatus, onSuccess: () => done(t.lessons.statusSaved) });
   const busy = confirm.isPending || status.isPending;
   const error = confirm.error ?? status.error;
-  const outcomes = eventsNow(lesson, now);
+  // The live clock (docs/48): the outcomes appear by themselves at the start minute.
+  const live = useNow();
+  const outcomes = eventsNow(lesson, live.getTime());
   const win = useJoinWindow();
   // No «تأكيد» while the academy requires none (owner 2026-11-02); a family's «نعم» still confirms.
   const required = usePublicConfig().lesson_confirmation_required;
   const confirmable =
     required && props.hideConfirm !== true && lesson.allowed_events.includes('confirm');
-  const live = useNow();
   // One filled button: «ادخل الحلقة» (live clock, as EnterButton) or a pending proposal's «موافقة» leads.
   const stepDown = (isOpenLesson(lesson.status) && canJoinNow(lesson, live, win)) || props.proposalLeads === true;
 

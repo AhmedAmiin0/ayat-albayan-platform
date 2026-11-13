@@ -11,7 +11,7 @@ import type {
   ReportV2SubmitBody,
   SubmitBody,
 } from '@ab/shared';
-import { reportErrorWords } from '@ab/client-core';
+import { reportErrorWords, TEACHER_REFRESH_MS } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
@@ -38,10 +38,11 @@ export const studentReportsQuery = (studentId: string, page: number) =>
     queryFn: () => apiFetch<StudentReportsResponse>(`/students/${studentId}/reports?page=${page}&pageSize=10`),
   });
 
-/** R11: «تقارير لسه ما اتكتبتش». */
+/** R11: «تقارير لسه ما اتكتبتش». Polled every 30 s with her lessons (docs/48). */
 export const pendingReportsQuery = queryOptions({
   queryKey: [...REPORTS_KEY, 'pending'],
   queryFn: () => apiFetch<PendingReportView[]>('/teachers/me/pending-reports'),
+  refetchInterval: TEACHER_REFRESH_MS,
 });
 
 

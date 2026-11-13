@@ -1,5 +1,6 @@
 import { boardStudents, type TeacherStudentKind, type TeacherStudentView } from '@ab/shared';
 import { useViewerTz } from '@/core/lib/clock';
+import { usePullRefresh } from '@/core/lib/query/pull-refresh';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
@@ -47,6 +48,8 @@ export function TeacherStudentsScreen() {
   // The API splits by kind; only current students show (docs/46 D4: never paused or churned).
   const shown = list.data ? boardStudents(list.data, 'all') : undefined;
   const retry = () => void list.refetch();
+  // docs/48: the spinner only for her own pull, never a push refetch (no students poll).
+  const pull = usePullRefresh(list.refetch);
   const tz = useViewerTz();
   const inset = useTabBarInset();
   const renderRow = useCallback(({ item }: ListRenderItemInfo<TeacherStudentView>) => <StudentRow student={item} tz={tz} />, [tz]);
@@ -60,8 +63,8 @@ export function TeacherStudentsScreen() {
         contentContainerStyle={{ paddingBottom: 24 + inset }}
         data={shown ?? []}
         keyExtractor={keyOf}
-        refreshing={list.isRefetching}
-        onRefresh={retry}
+        refreshing={pull.refreshing}
+        onRefresh={pull.onRefresh}
         ListEmptyComponent={
           <StudentsEmpty kind={kind} loaded={!!list.data} failed={list.isError} retry={retry} />
         }

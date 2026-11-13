@@ -1,11 +1,10 @@
-import { isOpenLesson, zonedFieldsIn } from '@ab/shared';
+import { pickHero, type Hero as CoreHero } from '@ab/client-core';
+import { zonedFieldsIn } from '@ab/shared';
 import { applyFilter, type TodayFilter } from './timeline';
 import type { TodayLesson } from './today-lesson';
 
 // The calm «اليوم» (docs/29): which lesson is the hero, what stays in «بقية اليوم», what folds under
 // «انتهت». Pure, so the screen only lays it out.
-
-const MINUTE = 60_000;
 
 type GreetingPart = 'morning' | 'afternoon' | 'evening' | 'night';
 
@@ -25,26 +24,11 @@ export function firstName(fullName: unknown): string | null {
   return typeof fullName === 'string' ? (fullName.trim().split(/\s+/)[0] || null) : null;
 }
 
-export type Hero<L extends TodayLesson = TodayLesson> =
-  | { kind: 'running'; lesson: L }
-  /** `minutes`: whole minutes to the start, rounded up (a start 30 s away is «بعد دقيقة»). */
-  | { kind: 'next'; lesson: L; minutes: number };
+// pickHero lives in client-core (docs/48 PR1): web and mobile pick the same hero.
+export { pickHero };
+export type Hero<L extends TodayLesson = TodayLesson> = CoreHero<L>;
 
 const ended = (l: TodayLesson, at: number) => Date.parse(l.ends_at) <= at;
-
-/**
- * The hero card's lesson: one under way wins (the earliest started), else the next open one still
- * ahead, else none (the quiet day). Only open lessons: a held or no-show lesson is not «التالية».
- */
-export function pickHero<L extends TodayLesson>(lessons: readonly L[], now: Date): Hero<L> | null {
-  const at = now.getTime();
-  const open = lessons.filter((l) => isOpenLesson(l.status) && !ended(l, at));
-  const running = open.find((l) => Date.parse(l.starts_at) <= at);
-  if (running) return { kind: 'running', lesson: running };
-  const next = open.find((l) => Date.parse(l.starts_at) > at);
-  if (!next) return null;
-  return { kind: 'next', lesson: next, minutes: Math.ceil((Date.parse(next.starts_at) - at) / MINUTE) };
-}
 
 interface TodayPlan<L extends TodayLesson> {
   /** Only under «الكل»: a column filter shows that status's lessons as rows, the hero among them. */

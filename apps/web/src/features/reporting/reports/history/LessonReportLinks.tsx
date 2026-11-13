@@ -1,6 +1,6 @@
 import type { LessonView } from '@ab/shared';
-import { useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
+import { useNow } from '@/lib/time/use-now';
 import { reportFormHref, reportOpen } from '@/features/reporting/reports/paths';
 import { ReportLink } from './ReportLink';
 
@@ -16,7 +16,8 @@ export interface LessonReportLinksProps {
  * lesson; the admin opens it per student (one link each in a group lesson).
  */
 export function LessonReportLinks({ lesson, role, size = 'sm' }: LessonReportLinksProps) {
-  const [now] = useState(() => new Date());
+  // The live clock (docs/48): the link appears by itself at the start minute.
+  const now = useNow();
   if (!reportOpen(lesson, now) || lesson.students.length === 0) return null;
   const students = role === 'teacher' ? lesson.students.slice(0, 1) : lesson.students;
   const many = students.length > 1;

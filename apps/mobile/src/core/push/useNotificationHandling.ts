@@ -8,6 +8,7 @@ import { usePermissions } from '@/core/auth/use-permissions';
 import { refreshInbox, refreshLists, resumeInbox } from '@/inbox/thread/hooks/inbox-sync';
 import { isThreadHref, overChat } from '@/core/nav/chat-groups';
 import { pushKind, pushPhone, routeIn, type PushTree } from './notification-route';
+import { refreshForPush } from './push-refresh';
 
 /** An admin push in the foreground still shows: banner, notification list and sound. */
 export const FOREGROUND: Notifications.NotificationBehavior = {
@@ -54,6 +55,7 @@ export function useNotificationHandling(tree: PushTree = 'admin'): void {
       const kind = pushKind(data);
       const message = kind === 'new_lead' || kind === 'new_message';
       if (message) void client.invalidateQueries({ queryKey: ['leads'] });
+      refreshForPush(client, tree, kind); // docs/48: the teacher's screens; other trees: nothing
       // The thread, the chats list, the tab badge and «القوائم» (owner 2026-10-27: the list followed no push).
       if (phone) void refreshInbox(client, phone);
       else if (message) refreshLists(client);
@@ -68,7 +70,7 @@ export function useNotificationHandling(tree: PushTree = 'admin'): void {
       resume.remove();
       Notifications.setNotificationHandler(null);
     };
-  }, [client]);
+  }, [client, tree]);
 
   // The root navigator, read at tap time: the tabs that mount this hook sit under an open chat.
   const nav = useNavigationContainerRef();

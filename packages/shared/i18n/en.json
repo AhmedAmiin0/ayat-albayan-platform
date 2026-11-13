@@ -4505,10 +4505,11 @@
     "reasonRequired": "Write the reason for cancelling",
     "cancelSubmit": "Confirm cancellation",
     "keep": "Go back",
-    "cancelledOk": "The lesson is cancelled. Suggest another time if you can.",
+    "cancelledOk": "Lesson cancelled.",
     "suggestOther": "Suggest another time",
     "lessonStarted": "The lesson has started, so it can no longer be confirmed or cancelled.",
     "actionFailed": "That did not work. Try again.",
+    "offline": "The connection dropped before the reply came. Try again when you are back online.",
     "push": {
       "title": "Teacher {teacher} cancelled a lesson",
       "reason": "Reason: {reason}"
