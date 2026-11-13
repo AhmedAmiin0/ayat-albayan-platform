@@ -1,92 +1,56 @@
-import { clockOf, isOpenLesson, type LessonView, subscriptionStatusStyle } from '@ab/shared';
-import { buttonVariants } from '@/components/ui/form/button';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { tzCity } from '@/components/ui/form/time-zone-select';
-import { CopyLinkButton } from '@/features/teaching/classroom/join/CopyLinkButton';
-import { StaffJoinButton } from '@/features/teaching/classroom/join/StaffJoinButton';
-import { LessonReportLinks } from '@/features/reporting/reports/history/LessonReportLinks';
-import { LessonActions } from '@/features/teaching/schedule/lesson/LessonActions';
-import { studentNames, studentTimes } from '@/features/teaching/schedule/lesson/lessons';
-import { t } from '@/lib/i18n/i18n';
-import { usePlatformClassroom } from '@/lib/settings/public-config';
-import { cn } from '@/lib/utils';
-import { TeacherProposal } from '@/features/teaching/teacher/proposals/TeacherProposal';
+import { clockOf, type LessonView } from '@ab/shared';
+import { StaffJoinButton } from '@/features/teaching/classroom';
+import { LessonActions, studentNames } from '@/features/teaching/schedule';
 import { useClock } from '@/lib/clock';
-import { clockDir } from '@/lib/clock-text';
 import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
-import { TeacherLessonActions } from './TeacherLessonActions';
+import { cn } from '@/lib/utils';
+import { TeacherCardHead } from './parts/TeacherCardHead';
+import { TeacherLessonLead } from './parts/TeacherLessonLead';
+import { TeacherLessonPeers } from './parts/TeacherLessonPeers';
+import { teacherWord } from './parts/teacher-word';
+import { useTeacherPlan } from './parts/use-teacher-plan';
 
 export interface TeacherLessonCardProps {
   lesson: LessonView;
-  /** The teacher's zone: times read «بتوقيتك». */
+  /** The teacher's zone: every time on the card is hers. */
   tz: string;
-  /** The teacher's fixed link, when the lesson has none of its own (R-LES-01). */
+  /** Her profile link: a peer on a static lesson with no link of its own (R-LES-01, owner Q3). */
   fallbackLink: string | null;
   onDone: (message: string) => void;
 }
 
 /**
- * One lesson on the teacher dashboard (R-TCH-03, R-SCH-08): own time + each student's clock, the
- * status, «الباقة مش مدفوعة» for a flagged student (R-SUB-02), «ادخل الحلقة» (open lessons
- * only: never on a moved / cancelled one), her own «سأحضر» / «إلغاء الحلقة» before the start
- * (docs/46 C6; the family-style confirm is hidden), attendance for open lessons, and «اقترح
- * ميعاد تاني» (or the proposal waiting for the admin). 48px controls. A lesson held in the
- * platform classroom (its own teacher's mode, so a substitute's applies) offers no fixed link:
- * the classroom is the way in.
+ * One lesson for the teacher (R-TCH-03, R-SCH-08; docs/48): the head, ONE filled lead from
+ * lessonPlan (join while live, «سأحضر», the report), the peers, and the outcomes only after the
+ * start. The way in follows wayIn (owner Q3): our classroom (with «افتح الحلقة الآن» while early)
+ * on a platform lesson or one with no link of its own; her own link otherwise, and then no
+ * classroom and no «انسخ رابط الطالب». No family «تأكيد», no «اعتذر مسبقًا» (owner Q4).
  */
 export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherLessonCardProps) {
   const clock = useClock();
-  const style = useLessonStatusText().chip(lesson.status);
-  const platform = usePlatformClassroom(lesson.platform_classroom);
-  const link = lesson.meeting_link ?? fallbackLink;
+  const plan = useTeacherPlan(lesson);
+  const status = useLessonStatusText().chip(lesson.status);
+  const word = teacherWord(lesson, { now: plan.now, status });
+  const room = plan.way === 'room';
+  const lead = plan.lead;
   return (
     <article
       aria-label={`${clockOf(new Date(lesson.starts_at), { tz, ...clock })} ${studentNames(lesson)}`}
       className={cn(
         'grid gap-3 border-b border-rule py-4',
-        style.tone === 'act' && 'border-s-4 border-s-act ps-3',
+        word.tone === 'act' && 'border-s-4 border-s-act ps-3',
       )}
     >
-      <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
-        <div className="grid gap-0.5">
-          <p className="flex items-baseline gap-2">
-            <span dir={clockDir(clock)} className="text-lg font-semibold tabular-nums">
-              {clockOf(new Date(lesson.starts_at), { tz, ...clock })}
-            </span>
-            <span className="text-xs text-ink-3">{`${t.teacherDash.yourTime} (${tzCity(tz) ?? tz})`}</span>
-          </p>
-          <p className="text-body font-semibold">{studentNames(lesson)}</p>
-          {studentTimes(lesson, tz, clock).map((line) => (
-            <p key={line} className="text-xs text-ink-2">{line}</p>
-          ))}
-          {lesson.students.filter((s) => s.unpaid).map((s) => (
-            <StatusChip
-              key={s.id}
-              {...subscriptionStatusStyle.unpaid}
-              size="sm"
-              label={lesson.students.length > 1 ? `${s.name}: ${t.subscriptions.unpaidFlag}` : t.subscriptions.unpaidFlag}
-              className="justify-self-start"
-            />
-          ))}
-        </div>
-        <StatusChip {...style} className="ms-auto" />
-      </div>
-      {/* docs/07 «الأزرار»: one column, each action fills its width (no wrapped row of mixed buttons). */}
-      <div className="grid gap-3">
-        {platform || !isOpenLesson(lesson.status) ? null : link ? (
-          <a href={link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary', size: 'lg' })}>
-            {t.classroom.joinMeeting}
-          </a>
-        ) : (
-          <span className="text-sm text-ink-3">{t.lessons.noLink}</span>
-        )}
-        <StaffJoinButton lesson={lesson} size="lg" />
-        <CopyLinkButton lesson={lesson} />
-        <LessonReportLinks lesson={lesson} role="teacher" size="lg" />
-        <TeacherLessonActions lesson={lesson} onDone={onDone} />
-        <LessonActions lesson={lesson} onDone={onDone} size="lg" hideConfirm />
-      </div>
-      <TeacherProposal lesson={lesson} tz={tz} onDone={onDone} />
+      <TeacherCardHead lesson={lesson} tz={tz} word={word} room={room} />
+      {lead && (
+        <TeacherLessonLead
+          {...{ action: lead, lesson, plan, onDone }}
+          look={{ filled: true, size: 'lg' }}
+        />
+      )}
+      {room && lead !== 'join' && <StaffJoinButton lesson={lesson} size="lg" variant="secondary" />}
+      <TeacherLessonPeers {...{ lesson, plan, tz, fallbackLink, onDone }} />
+      <LessonActions lesson={lesson} onDone={onDone} size="lg" teacher />
     </article>
   );
 }

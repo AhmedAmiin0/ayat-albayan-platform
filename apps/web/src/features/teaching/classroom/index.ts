@@ -50,3 +50,4 @@ export { AssistantLessonRow } from './sessions/AssistantLessonRow';
 export { AssistantsManager } from './sessions/AssistantsManager';
 export { StudentJoinLink } from './student-link/StudentJoinLink';
 export { isLessonNow, windowStateAt } from './student-link/student-link';
+export { joinHint } from './room/livekit/window-hint';

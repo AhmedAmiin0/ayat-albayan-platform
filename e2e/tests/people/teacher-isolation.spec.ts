@@ -107,8 +107,8 @@ test.describe('teacher isolation (R-NFR-02, rule 9)', () => {
       await seedAbrarPayout({ teacherId: abrar, amount: OWN_AMOUNT });
       const teacher = await asRole('teacher');
       await teacher.goto('/teacher');
-      await teacher.getByRole('tab', { name: ar.teacherDash.today }).click();
-      await expect(teacher.getByRole('article', { name: new RegExp(`سدرة ${tag}`) })).toHaveCount(1);
+      // Her running lesson is the hero of «اليوم» (docs/48), above the tabs.
+      await expect(teacher.getByRole('region', { name: ar.today.running })).toContainText(`سدرة ${tag}`);
       await expect(teacher.getByText(hiba.studentName)).toHaveCount(0);
 
       await teacher.goto(`/teacher/report/${hiba.lessonId}`);

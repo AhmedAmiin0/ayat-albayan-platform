@@ -1,4 +1,10 @@
-import { canJoinNow, isOpenLesson, STATUS_ROUTE_EVENTS, type LessonEvent, type LessonView, type StatusRouteEvent } from '@ab/shared';
+import {
+  canJoinNow,
+  isOpenLesson,
+  STATUS_ROUTE_EVENTS,
+  type LessonView,
+  type StatusRouteEvent,
+} from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -7,6 +13,7 @@ import { useJoinWindow, usePublicConfig } from '@/lib/settings/public-config';
 import { useNow } from '@/lib/time/use-now';
 import { t } from '@/lib/i18n/i18n';
 import { confirmLesson, lessonErrorText, LESSONS_KEY, setLessonStatus } from '@/features/teaching/schedule/api';
+import { AdminButtons } from './AdminButtons';
 
 export interface LessonActionsProps {
   lesson: LessonView;
@@ -19,16 +26,23 @@ export interface LessonActionsProps {
   onChangeCourse?: () => void;
   /** The drawer's pending proposal «موافقة» is the primary above: the confirm is outlined. */
   proposalLeads?: boolean;
-  /** The teacher's card: her own «سأحضر» replaces the family-style confirm (docs/46 D1). */
-  hideConfirm?: boolean;
+  /**
+   * The teacher's card: her own «سأحضر» replaces the family-style confirm (docs/46 D1), and the
+   * pre-start «اعتذر مسبقًا» (a charged student cancel) is the admin's alone (docs/48 Q4).
+   */
+  teacher?: boolean;
   /** 48px on phones either way (docs/07 «الأزرار»); teacher surfaces keep 48px on desktop too. */
   size?: 'md' | 'lg';
 }
 
-/** Outcomes before the start are refused by the API (409 not_started); only «اعتذر» is early. */
-function eventsNow(lesson: LessonView, now: number): StatusRouteEvent[] {
-  const started = Date.parse(lesson.starts_at) <= now;
-  return STATUS_ROUTE_EVENTS.filter((e) => lesson.allowed_events.includes(e) && (started || e === 'excuse'));
+/**
+ * Outcomes before the start are refused by the API (409 not_started); only «اعتذر» is early, and
+ * never on the teacher's card (docs/48 Q4).
+ */
+function eventsNow(lesson: LessonView, at: { now: number; teacher: boolean }): StatusRouteEvent[] {
+  const started = Date.parse(lesson.starts_at) <= at.now;
+  const early = (e: StatusRouteEvent) => e === 'excuse' && !at.teacher;
+  return STATUS_ROUTE_EVENTS.filter((e) => lesson.allowed_events.includes(e) && (started || early(e)));
 }
 
 /**
@@ -49,12 +63,12 @@ export function LessonActions(props: LessonActionsProps) {
   const error = confirm.error ?? status.error;
   // The live clock (docs/48): the outcomes appear by themselves at the start minute.
   const live = useNow();
-  const outcomes = eventsNow(lesson, live.getTime());
+  const outcomes = eventsNow(lesson, { now: live.getTime(), teacher: props.teacher === true });
   const win = useJoinWindow();
   // No «تأكيد» while the academy requires none (owner 2026-11-02); a family's «نعم» still confirms.
   const required = usePublicConfig().lesson_confirmation_required;
   const confirmable =
-    required && props.hideConfirm !== true && lesson.allowed_events.includes('confirm');
+    required && props.teacher !== true && lesson.allowed_events.includes('confirm');
   // One filled button: «ادخل الحلقة» (live clock, as EnterButton) or a pending proposal's «موافقة» leads.
   const stepDown = (isOpenLesson(lesson.status) && canJoinNow(lesson, live, win)) || props.proposalLeads === true;
 
@@ -103,41 +117,3 @@ export function LessonActions(props: LessonActionsProps) {
   );
 }
 
-interface AdminButtonsProps {
-  events: readonly LessonEvent[];
-  size: 'md' | 'lg';
-  onCancel?: (() => void) | undefined;
-  onReschedule?: (() => void) | undefined;
-  /** Only for a lesson of an assistant course. */
-  onChangeCourse?: (() => void) | undefined;
-}
-
-/** One ButtonRow: «غيّر الميعاد» (its caption under the row says what it does: closes this lesson, opens a new one, can cover the series), «تغيير أيام الحلقات» of a course and «إلغاء الحلقة» (danger), only where the caller opens their forms and the status allows. */
-function AdminButtons({ events, size, onCancel, onReschedule, onChangeCourse }: AdminButtonsProps) {
-  const reschedule = onReschedule && events.includes('reschedule');
-  const course = onChangeCourse && events.includes('reschedule');
-  const cancel = onCancel && (events.includes('cancel_by_admin') || events.includes('cancel_by_teacher'));
-  if (![reschedule, course, cancel].some(Boolean)) return null;
-  return (
-    <div className="grid gap-1.5 border-t border-rule pt-3">
-      <ButtonRow>
-        {reschedule && (
-          <Button type="button" variant="secondary" size={size} onClick={onReschedule}>
-            {t.lessons.event.reschedule}
-          </Button>
-        )}
-        {course && (
-          <Button type="button" variant="secondary" size={size} onClick={onChangeCourse}>
-            {t.booking.courseChange.changeDays}
-          </Button>
-        )}
-        {cancel && (
-          <Button type="button" variant="danger-quiet" size={size} onClick={onCancel}>
-            {t.lessons.cancelSubmit}
-          </Button>
-        )}
-      </ButtonRow>
-      {reschedule && <span className="text-xs text-ink-3">{t.lessons.timeEdit.captionReschedule}</span>}
-    </div>
-  );
-}

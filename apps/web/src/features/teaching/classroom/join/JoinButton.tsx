@@ -21,19 +21,22 @@ interface Props {
   className?: string;
   /** The caller's clock, when it has one (StaffJoinButton): both read the same minute. */
   now?: Date;
+  /** An open join is filled unless another action leads (docs/48: one filled control). */
+  variant?: 'primary' | 'secondary';
 }
 
 /** «ادخل الحلقة» into the online classroom: enabled inside the settings' window (GET /settings/public) (re-checked every minute), otherwise disabled with «بتفتح الساعة …».
  * A plain link: it works without the router and opens /classroom/:id.
  */
-export function EnterButton({ lesson, size = 'md', className, now: given }: Props) {
+export function EnterButton(props: Props) {
+  const { lesson, size = 'md', className, now: given, variant = 'primary' } = props;
   const tick = useNow();
   const now = given ?? tick;
   const { canJoin, hint } = joinHint(lesson, now, { win: useJoinWindow(), cycle: useClock().cycle });
   return (
     <div className={cn('grid justify-items-start gap-1', className)}>
       {canJoin ? (
-        <a href={`/classroom/${lesson.id}`} className={buttonVariants({ variant: 'primary', size })}>
+        <a href={`/classroom/${lesson.id}`} className={buttonVariants({ variant, size })}>
           {t.classroom.enter}
         </a>
       ) : (
