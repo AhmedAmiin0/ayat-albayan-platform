@@ -4,15 +4,13 @@ import { Pressable, View } from 'react-native';
 import { JoinAround } from '@/classroom';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
-import { LiveBadge } from '@/live/LiveBadge';
 import { type, useTheme } from '@/theme';
 import { durationLabel, lessonClock, studentNames } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
-import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import { useInset } from '@/core/ui/surface/inset';
 import { teacherClock } from './agenda';
 import { RowDefaultActions } from './RowDefaultActions';
-import { Tag } from './Tag';
+import { RowSide } from './RowSide';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 
 /** «45 دقيقة · عند المعلم/ة 15:00 بتوقيت القاهرة»: the row's second line for the viewer `tz`. */
@@ -31,6 +29,26 @@ interface AgendaLessonRowProps {
   onEditTime?: (lesson: LessonView) => void;
   /** A tap on the row's line (not its buttons) opens «تفاصيل الحلقة». */
   onOpen?: (lesson: LessonView) => void;
+  /** The second line in place of «45 دقيقة · عند المعلم/ة …» (the teacher's: students' clocks). */
+  meta?: string;
+  /** The chip in place of the lesson-status chip (the teacher's own word, docs/48). */
+  chip?: ReactNode;
+  /**
+   * false: no JoinAround and no default actions; the row shows `actions` alone (the teacher draws
+   * her own lead, docs/48). Default true, as before.
+   */
+  join?: boolean;
+  /** The word a screen reader hears after the time, in place of the status (her word, docs/48). */
+  word?: string;
+}
+
+/** JoinAround the actions or the defaults (as before), or the actions alone (`join` false). */
+function RowFoot({ lesson, actions, onReschedule, onEditTime, join = true }: AgendaLessonRowProps) {
+  if (!join) return actions ?? null;
+  const own = actions ?? (
+    <RowDefaultActions lesson={lesson} onReschedule={onReschedule} onEditTime={onEditTime} />
+  );
+  return <JoinAround lesson={lesson}>{own}</JoinAround>;
 }
 
 /**
@@ -41,16 +59,18 @@ interface AgendaLessonRowProps {
  * it, so each press stays its own and a screen reader still reaches every button. Inside a day's inset
  * card (owner 2026-10-28: one container rule) it takes the card's 16pt padding and the card draws the rules.
  */
-export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onOpen }: AgendaLessonRowProps) {
+export function AgendaLessonRow(props: AgendaLessonRowProps) {
+  const { lesson, onOpen, meta, chip, word } = props;
   const { color } = useTheme();
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const frame = useInset() ? { paddingHorizontal: 16 } : { borderBottomWidth: 1, borderBottomColor: color.rule };
-  const subtitle = lessonMeta(lesson, cycle, tz);
+  const subtitle = meta ?? lessonMeta(lesson, cycle, tz);
   const body = { fontFamily: type.ui[600], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) };
   const who = studentNames(lesson);
   const status = useLessonStatusText();
+  const hint = `${lessonClock(lesson.starts_at, tz, cycle)} · ${word ?? status.label(lesson.status)}`;
   const line = (
     <>
       <AppText style={{ ...body, width: cycle === '12' ? 72 : 48, fontVariant: ['tabular-nums'] }}>{lessonClock(lesson.starts_at, tz, cycle)}</AppText>
@@ -60,12 +80,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onO
         </AppText>
         {subtitle ? <AppText style={{ ...small, color: color.ink2, fontVariant: ['tabular-nums'] }}>{subtitle}</AppText> : null}
       </View>
-      <View style={{ alignItems: 'flex-end', gap: 4 }}>
-        <LiveBadge lesson={lesson} />
-        <LessonStatusChip status={lesson.status} size="sm" />
-        {lesson.trial ? <Tag>{t.schedule.trialTag}</Tag> : null}
-        {lesson.makeup ? <Tag>{t.booking.makeup.tag}</Tag> : null}
-      </View>
+      <RowSide lesson={lesson} chip={chip} />
     </>
   );
   return (
@@ -74,7 +89,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onO
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t.lessons.sheet.openRow.replace('{names}', who)}
-          accessibilityHint={`${lessonClock(lesson.starts_at, tz, cycle)} · ${status.label(lesson.status)}`}
+          accessibilityHint={hint}
           onPress={() => onOpen(lesson)}
           style={({ pressed }) => [lineStyle, pressed ? { backgroundColor: color.sunk } : null]}
         >
@@ -84,9 +99,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime, onO
         <View style={lineStyle}>{line}</View>
       )}
       <View style={{ gap: 8 }}>
-        <JoinAround lesson={lesson}>
-          {actions ?? <RowDefaultActions lesson={lesson} onReschedule={onReschedule} onEditTime={onEditTime} />}
-        </JoinAround>
+        <RowFoot {...props} />
       </View>
     </View>
   );

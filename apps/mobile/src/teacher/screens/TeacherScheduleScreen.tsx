@@ -20,6 +20,7 @@ import { TeacherLessonTools, useTimedNotice } from '@/teacher/lesson-actions';
 import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 import { usePullRefresh } from '@/core/lib/query/pull-refresh';
 import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
+import { Notice } from '@/today';
 
 /** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so the row's action is idle. */
 const noMove = () => undefined;
@@ -88,8 +89,9 @@ export function TeacherScheduleScreen() {
         onClose={details.close}
         actions={(l) => (
           <>
+            {notice.text ? <Notice message={notice.text} /> : null}
             <JoinClassroomButton lesson={l} />
-            <TeacherLessonTools lesson={l} notice={notice} />
+            <TeacherLessonTools lesson={l} onDone={notice.show} />
           </>
         )}
       />

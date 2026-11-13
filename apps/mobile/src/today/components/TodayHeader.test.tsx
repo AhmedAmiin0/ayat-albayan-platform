@@ -7,7 +7,10 @@ import { TodayHeader } from './TodayHeader';
 
 // The header's bell: the admin's always; the salesperson's only with notifications.push (as «المحادثات»).
 let mockHeld: Permission[] = [];
-jest.mock('@/core/auth', () => ({ ...jest.requireActual('@/core/auth'), useHolds: (p: Permission) => mockHeld.includes(p) }));
+jest.mock('@/core/auth', () => ({
+  ...jest.requireActual('@/core/auth'),
+  useHolds: (p: Permission) => mockHeld.includes(p),
+}));
 jest.mock('@/notifications/BellButton', () => {
   const { Text: MockText } = jest.requireActual<typeof import('react-native')>('react-native');
   return { BellButton: ({ tree }: { tree: string }) => <MockText>{`bell:${tree}`}</MockText> };
@@ -36,9 +39,19 @@ test('the greeting carries the first name from the profile', async () => {
   const client = createTestQueryClient();
   client.setQueryData(PROFILE_KEY, { full_name: 'أحمد أمين' });
   await renderWithQuery(<TodayHeader now={now} tree="sales" />, client);
-  const named = t.today.greetingNamed.replace('{greeting}', t.today.greeting.evening).replace('{name}', 'أحمد');
+  const named = t.today.greetingNamed
+    .replace('{greeting}', t.today.greeting.evening)
+    .replace('{name}', 'أحمد');
   expect(screen.getByRole('header', { name: named })).toBeTruthy();
   // Owner 2026-10-28: the tab is already «اليوم», so the screen has no «اليوم» title of its own.
   expect(screen.queryByText(t.today.title)).toBeNull();
   expect(screen.getAllByRole('header')).toHaveLength(1);
+});
+
+test('the teacher (docs/48): her bell always, and her own date line in place of Riyadh’s', async () => {
+  mockHeld = [];
+  await renderWithQuery(<TodayHeader now={now} tree="teacher" dateLine="الإثنين 12 أكتوبر" />);
+  expect(screen.getByText('bell:teacher')).toBeTruthy();
+  expect(screen.getByText('الإثنين 12 أكتوبر')).toBeTruthy();
+  expect(screen.queryByText(/بتوقيت الرياض/)).toBeNull();
 });

@@ -15,5 +15,3 @@ export function useTimedNotice() {
   }, [text]);
   return { text, show: setText };
 }
-
-export type TimedNotice = ReturnType<typeof useTimedNotice>;

@@ -1,10 +1,8 @@
-import { counted, PUBLIC_SETTING_DEFAULTS, type PendingReportView } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
-import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
-import { jana, lesson, yusuf } from '@/today/testing/fixtures';
+import { answer, evening, held, later, NOW, saturday } from '@/teacher/today/testing/day-fixtures';
+import { shortDate } from '@/today';
 import { TeacherTodayScreen } from './TeacherTodayScreen';
 
 const mockApiFetch = jest.fn();
@@ -15,120 +13,103 @@ jest.mock('@/core/lib/http/api', () => ({
   apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
 }));
 const mockPush = jest.fn();
-jest.mock('expo-router', () => ({ router: { push: (h: string) => mockPush(h) } }));
-// 1 Oct 2026, 17:00 in Cairo (UTC+3 summer time).
+const mockNavigate = jest.fn();
+jest.mock('expo-router', () => ({
+  router: { push: (h: string) => mockPush(h), navigate: (h: string) => mockNavigate(h) },
+}));
 jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
 
-const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
-/** 16:00 Cairo, started, its report still to write. */
-const held = lesson({ id: 'held', starts_at: '2026-10-01T13:00:00.000Z' });
-/** 20:00 Cairo, ahead, waiting for confirmation, with a link; the student is in Muscat (21:00). */
-const later = lesson({
-  id: 'later',
-  starts_at: '2026-10-01T17:00:00.000Z',
-  ends_at: '2026-10-01T17:45:00.000Z',
-  meeting_link: 'https://meet.google.com/abc',
-  students: [jana],
-});
-/** Tomorrow in Cairo: not today. */
-const tomorrow = lesson({ id: 'tmr', starts_at: '2026-10-02T09:00:00.000Z', students: [{ ...yusuf, name: 'سلمى' }] });
-const pending: PendingReportView[] = [
-  { lesson_id: 'held', starts_at: held.starts_at, status: 'scheduled', student: { id: 's1', code: 'AB-0182', name: 'يوسف أحمد' }, report_id: null },
-];
+const DAY = 86_400_000;
+const lessonGets = () =>
+  mockApiFetch.mock.calls
+    .map(([p]) => String(p))
+    .filter((p) => p.startsWith('/teachers/me/lessons'));
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockImplementation(async (p: string) => {
-    if (p === '/teachers/me') return me;
-    if (p === '/teachers/me/pending-reports') return pending;
-    return [later, held, tomorrow];
-  });
+  mockApiFetch.mockImplementation(answer([later, held, evening, saturday]));
 });
 
-test('my lessons today on my clock: the report for the started one, join + «سأحضر» for the next', async () => {
+test('the short date, no zone line, the hero, the due block and one row; nothing else', async () => {
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
-  expect(await screen.findByText(counted(t.reports.pendingCount, 1))).toBeTruthy();
-  expect(screen.getByText('يوسف أحمد')).toBeTruthy();
-  expect(screen.getByText(new RegExp(`^20:00 · ${t.enums.duration['45']} · ${t.teacherDash.studentTime.replace('{time}', '21:00')}`))).toBeTruthy();
-  expect(screen.queryByText('سلمى')).toBeNull();
-  expect(screen.getAllByRole('button', { name: t.reports.open })).toHaveLength(1);
-  expect(screen.getByRole('button', { name: t.teacherDash.join })).toBeTruthy();
-  // No admin cancel or move for a teacher (hers is «إلغاء الحلقة», on the lesson ahead only).
-  expect(screen.queryByText(t.today.cancel)).toBeNull();
-  expect(screen.getAllByRole('button', { name: t.teacherBoard.cancel })).toHaveLength(1);
-  expect(screen.queryByText(t.lessons.rescheduleSubmit)).toBeNull();
-  await fireEvent.press(screen.getByRole('button', { name: t.reports.open }));
-  expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
-  await fireEvent.press(screen.getByRole('button', { name: t.reports.pending }));
-  expect(mockPush).toHaveBeenCalledWith('/teacher/reports');
+  const hero = within(await screen.findByTestId('teacher-hero-actions'));
+  expect(screen.getByText(shortDate(NOW))).toBeTruthy();
+  expect(screen.queryByText(/الأوقات بتوقيتك/)).toBeNull();
+  // The hero: «سأحضر» filled, her own link as the one peer, «التفاصيل».
+  expect(hero.getByRole('button', { name: t.teacherBoard.confirm })).toBeTruthy();
+  expect(hero.getByRole('button', { name: t.teacherDash.join })).toBeTruthy();
+  const due = within(screen.getByTestId('due-reports'));
+  expect(
+    due.getByRole('button', { name: new RegExp(`^${t.reports.open} — يوسف أحمد · `) }),
+  ).toBeTruthy();
+  expect(within(screen.getByTestId('today-rest')).getByText('سلمى علي')).toBeTruthy();
+  // No «جلسات مباشرة», no per-row «إلغاء الحلقة» (it lives in the sheet), not tomorrow's lesson.
+  expect(screen.queryByText('جلسات مباشرة')).toBeNull();
+  expect(screen.queryByRole('button', { name: t.teacherBoard.cancel })).toBeNull();
+  expect(screen.queryByText('ريم سالم')).toBeNull();
 });
 
-test('docs/07 §6: the pending reports way is an outlined full-width button under the chip, not a ghost', async () => {
+test('ONE lessons GET, on the 15-day aheadWindow from the padded day start', async () => {
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
-  const banner = await screen.findByTestId('pending-banner');
-  const button = within(banner).getByRole('button', { name: t.reports.pending });
-  expect(StyleSheet.flatten(button.props.style)).toMatchObject({ borderWidth: 1, minHeight: 48 });
-});
-
-test('«سأحضر» only on the lesson still ahead: POST confirm-attendance, then the notice', async () => {
-  mockApiSend.mockResolvedValue({ ...later, teacher_confirmed_at: '2026-10-01T14:00:00Z' });
-  await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
-  // The family-style «تأكيد» is gone (docs/46 D1); the started lesson offers neither.
-  const [attend, ...more] = await screen.findAllByRole('button', { name: t.teacherBoard.confirm });
+  await screen.findByTestId('teacher-hero-actions');
+  const [url, ...more] = lessonGets();
   expect(more).toHaveLength(0);
-  expect(screen.queryByRole('button', { name: t.today.confirm })).toBeNull();
-  if (!attend) throw new Error('no «سأحضر» on the 20:00 lesson');
-  await fireEvent.press(attend);
-  await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/later/confirm-attendance', undefined),
-  );
-  expect(await screen.findByText(t.teacherBoard.confirmedOk)).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith(
-    '/teachers/me/lessons?from=2026-09-30T10%3A00%3A00.000Z&to=2026-10-02T12%3A00%3A00.000Z',
-  );
+  const query = new URLSearchParams((url ?? '').split('?')[1]);
+  const from = Date.parse(query.get('from') ?? '');
+  expect(Date.parse(query.get('to') ?? '') - from).toBe(15 * DAY);
+  expect(new Date(from).toISOString()).toMatch(/T10:00:00\.000Z$/);
 });
 
-test('«إلغاء الحلقة» on the lesson ahead: the reason, then the screen says it was cancelled', async () => {
-  mockApiSend.mockResolvedValue({ ...later, status: 'cancelled_by_teacher' });
+test('a due row opens its report form in «اليوم»’s own stack', async () => {
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
-  await fireEvent.press(await screen.findByRole('button', { name: t.teacherBoard.cancel }));
-  await fireEvent.changeText(screen.getByLabelText(new RegExp(t.teacherBoard.reason)), 'مرض');
-  await fireEvent.press(screen.getByRole('button', { name: t.teacherBoard.cancelSubmit }));
-  await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/later/cancel', { reason: 'مرض' }),
+  const due = within(await screen.findByTestId('due-reports'));
+  await fireEvent.press(
+    due.getByRole('button', { name: new RegExp(`^${t.reports.open} — يوسف أحمد · `) }),
   );
-  expect(await screen.findByText(t.teacherBoard.cancelledOk)).toBeTruthy();
+  expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
 });
 
-test('a day without lessons says so', async () => {
-  mockApiFetch.mockImplementation(async (p: string) => (p === '/teachers/me' ? me : []));
+test('«سأحضر» on the hero is optimistic: «حضورك مؤكَّد» before the answer', async () => {
+  mockApiSend.mockReturnValue(new Promise(() => undefined));
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
-  expect(await screen.findByText(t.teacherDash.noLessonsToday)).toBeTruthy();
-  expect(screen.queryByText(t.reports.pending)).toBeNull();
+  const hero = within(await screen.findByTestId('teacher-hero-actions'));
+  await fireEvent.press(hero.getByRole('button', { name: t.teacherBoard.confirm }));
+  expect(await screen.findByText(t.teacherBoard.confirmedChip)).toBeTruthy();
+  expect(mockApiSend).toHaveBeenCalledWith(
+    'POST',
+    '/teachers/me/lessons/later/confirm-attendance',
+    undefined,
+  );
 });
 
-/** Today's lessons with the API's per-lesson flag, under the opposite academy setting. */
-async function renderDay(platform: boolean, academyAuto: boolean) {
-  const flagged = [later, held, tomorrow].map((l) => ({ ...l, platform_classroom: platform }));
+test('no lessons today: «لا توجد حلقات اليوم», the next one, and «افتح جدولي»', async () => {
+  mockApiFetch.mockImplementation(answer([saturday], []));
+  await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
+  const end = within(await screen.findByTestId('teacher-day-end'));
+  expect(end.getByText(t.teacherDash.noLessonsToday)).toBeTruthy();
+  expect(end.getByText(/ريم سالم/)).toBeTruthy();
+  await fireEvent.press(end.getByRole('button', { name: t.teacherToday.openSchedule }));
+  expect(mockNavigate).toHaveBeenCalledWith('/teacher/schedule');
+  expect(screen.queryByTestId('due-reports')).toBeNull();
+});
+
+test('every lesson ended and nothing ahead: «انتهت حلقات اليوم» and «لا توجد حلقات…»', async () => {
+  mockApiFetch.mockImplementation(answer([held]));
+  await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
+  const end = within(await screen.findByTestId('teacher-day-end'));
+  expect(end.getByText(t.today.quietTitle)).toBeTruthy();
+  expect(end.getByText(t.teacherToday.noneSoon)).toBeTruthy();
+});
+
+test('the lessons read failed with nothing saved: the error with a retry', async () => {
   mockApiFetch.mockImplementation(async (p: string) => {
-    if (p === '/teachers/me') return { ...me, meeting_mode: platform ? 'platform' : 'static', platform_classroom: platform };
-    if (p === '/teachers/me/pending-reports') return pending;
-    return flagged;
+    if (p.startsWith('/teachers/me/lessons')) throw new Error('down');
+    return [];
   });
-  const client = confirmingQueryClient();
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: academyAuto });
-  await renderWithQuery(<TeacherTodayScreen />, client);
-  await screen.findByText(counted(t.reports.pendingCount, 1));
-}
-
-test('lesson.platform_classroom: every open lesson gets the platform classroom even with the setting off', async () => {
-  await renderDay(true, false);
-  // JoinClassroomButton on both of today's open lessons (the fixed link would give only the 20:00 one).
-  expect(await screen.findAllByRole('button', { name: t.classroom.enter })).toHaveLength(2);
-});
-
-test('platform_classroom false: the fixed link even with the academy setting meeting_link_auto on', async () => {
-  await renderDay(false, true);
-  // Only the 20:00 lesson has a link; the classroom would give both open lessons a way in.
-  expect(screen.getAllByRole('button', { name: t.teacherDash.join })).toHaveLength(1);
+  await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
+  expect(await screen.findByText(t.teacherDash.loadError)).toBeTruthy();
+  expect(screen.queryByTestId('teacher-day-end')).toBeNull();
+  const before = lessonGets().length;
+  await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
+  await waitFor(() => expect(lessonGets().length).toBeGreaterThan(before));
 });

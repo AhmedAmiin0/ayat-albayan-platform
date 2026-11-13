@@ -5,7 +5,6 @@ import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { TeacherLessonTools } from './TeacherLessonTools';
-import { useTimedNotice } from './use-timed-notice';
 
 const mockApiSend = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
@@ -18,17 +17,19 @@ jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01
 
 const w = t.teacherBoard;
 
+const onDone = jest.fn();
+
 function Tools({ l }: { l: LessonView }) {
-  return <TeacherLessonTools lesson={l} notice={useTimedNotice()} />;
+  return <TeacherLessonTools lesson={l} onDone={onDone} />;
 }
 
 beforeEach(() => jest.clearAllMocks());
 
-test('before the start: «سأحضر» posts confirm-attendance, then the notice and the chip', async () => {
+test('before the start: «سأحضر» posts confirm-attendance, then onDone and the chip', async () => {
   mockApiSend.mockResolvedValue(lesson({ id: 'l1', teacher_confirmed_at: '2026-10-01T12:00:00Z' }));
   await renderWithQuery(<Tools l={lesson({ id: 'l1' })} />);
   await fireEvent.press(screen.getByRole('button', { name: w.confirm }));
-  expect(await screen.findByText(w.confirmedOk)).toBeTruthy();
+  await waitFor(() => expect(onDone).toHaveBeenCalledWith(w.confirmedOk));
   expect(mockApiSend).toHaveBeenCalledWith(
     'POST',
     '/teachers/me/lessons/l1/confirm-attendance',
@@ -45,14 +46,15 @@ test('a refused «سأحضر» (409 lesson_started) says so', async () => {
   expect(await screen.findByText(w.lessonStarted)).toBeTruthy();
 });
 
-test('«إلغاء الحلقة» opens the reason form in place; a landed cancel shows its notice', async () => {
+test('«إلغاء الحلقة» opens the reason form in place; a landed cancel calls onDone', async () => {
   mockApiSend.mockResolvedValue(lesson({ id: 'l1', status: 'cancelled_by_teacher' }));
   await renderWithQuery(<Tools l={lesson({ id: 'l1' })} />);
   await fireEvent.press(screen.getByRole('button', { name: w.cancel }));
   expect(screen.getByTestId('teacher-cancel-form')).toBeTruthy();
   await fireEvent.changeText(screen.getByLabelText(new RegExp(w.reason)), 'سفر');
   await fireEvent.press(screen.getByRole('button', { name: w.cancelSubmit }));
-  await waitFor(() => expect(screen.getByText(w.cancelledOk)).toBeTruthy());
+  await waitFor(() => expect(onDone).toHaveBeenCalledWith(w.cancelledOk));
+  expect(onDone).toHaveBeenCalledTimes(1);
   expect(screen.queryByTestId('teacher-cancel-form')).toBeNull();
 });
 
