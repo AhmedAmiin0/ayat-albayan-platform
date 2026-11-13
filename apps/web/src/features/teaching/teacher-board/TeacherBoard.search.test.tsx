@@ -1,4 +1,4 @@
-import { act, fireEvent, screen } from '@testing-library/react';
+import { act, fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FILTER_DEBOUNCE_MS } from '@/components/data-table/ColumnFilterText';
 import { t } from '@/lib/i18n/i18n';
@@ -46,5 +46,17 @@ describe('TeacherBoard search (docs/48)', () => {
     fireEvent.click(screen.getByRole('button', { name: t.teacherBoard.clearSearch }));
     expect(names()).toHaveLength(4);
     expect(screen.getByRole<HTMLInputElement>('searchbox').value).toBe('');
+  });
+
+  it('a search runs over all her students whatever the segment; empty, the segment is back', async () => {
+    renderBoard();
+    const kinds = screen.getByRole('group', { name: t.teacherBoard.kinds });
+    fireEvent.click(within(kinds).getByRole('button', { name: new RegExp(t.studentLists.trial) }));
+    expect(names()).toEqual(['جود']);
+    await search('هند');
+    expect(names()).toEqual(['هند']);
+    expect(screen.queryByText(t.teacherBoard.noMatch)).toBeNull();
+    await search('');
+    expect(names()).toEqual(['جود']);
   });
 });

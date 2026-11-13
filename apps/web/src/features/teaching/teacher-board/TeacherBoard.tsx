@@ -22,6 +22,10 @@ export interface TeacherBoardProps {
 
 type View = 'empty' | 'noMatch' | 'table';
 
+/** While the box holds a search, it runs over all her students whatever the segment. */
+const searchedKind = (segment: BoardSegment, q: string): BoardSegment =>
+  q.trim() === '' ? segment : 'all';
+
 /** An empty segment, else a search that matched nothing, else the table. */
 const viewOf = (segmentRows: number, shown: number): View =>
   ([
@@ -40,7 +44,8 @@ export function TeacherBoard({ me, lessons, now }: TeacherBoardProps) {
   const facts = useStudentFacts();
   const navigate = useNavigate();
   const counts = countByKind(boardStudents(me.students, 'all'));
-  const rows = boardRows(me.students, { lessons, kind: segment, now });
+  const kind = searchedKind(segment, q);
+  const rows = boardRows(me.students, { lessons, kind, now });
   const shown = searchRows(rows, { q, facts });
   const open = (r: BoardRow) =>
     void navigate({ to: '/teacher/students/$studentId', params: { studentId: r.student.id } });
