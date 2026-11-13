@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { LoadRetry, myLessonsQuery } from '@/features/teaching/teacher';
 import { boardWindow, TeacherBoard } from '@/features/teaching/teacher-board';
-import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
 import { cn } from '@/lib/utils';
 import { loadState, type LoadState } from './load-state';
