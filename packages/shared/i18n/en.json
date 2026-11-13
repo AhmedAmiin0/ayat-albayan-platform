@@ -4664,11 +4664,18 @@
     },
     "quickRatingCol": "WhatsApp rating"
   },
+  "teacherToday": {
+    "awaiting": "Awaiting your confirmation",
+    "nextLesson": "Your next lesson: {when} · {names}",
+    "noneSoon": "No lessons in the next two weeks",
+    "openSchedule": "Open my schedule",
+    "noOther": "No other lessons today",
+    "pendingTitle": "Reports not written yet · {n}",
+    "pendingMore": "Show the rest ({n})",
+    "pendingError": "Could not load the pending reports"
+  },
   "live": {
-    "title": "Live sessions",
-    "now": "Live now",
-    "startsAt": "Starts at {time}",
-    "teacher": "Teacher: {name}"
+    "now": "Live now"
   },
   "classroom": {
     "title": "Online classroom",

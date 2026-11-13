@@ -4664,11 +4664,18 @@
     },
     "quickRatingCol": "تقييم واتساب"
   },
+  "teacherToday": {
+    "awaiting": "بانتظار تأكيدك",
+    "nextLesson": "حلقتك القادمة: {when} · {names}",
+    "noneSoon": "لا توجد حلقات في الأسبوعين القادمين",
+    "openSchedule": "افتح جدولي",
+    "noOther": "لا توجد حلقات أخرى اليوم",
+    "pendingTitle": "تقارير لم تُكتب بعد · {n}",
+    "pendingMore": "عرض الباقي ({n})",
+    "pendingError": "تعذّر تحميل التقارير المعلّقة"
+  },
   "live": {
-    "title": "جلسات مباشرة",
-    "now": "مباشر الآن",
-    "startsAt": "تبدأ الساعة {time}",
-    "teacher": "المعلم/ة: {name}"
+    "now": "مباشر الآن"
   },
   "classroom": {
     "title": "الحلقة عبر الإنترنت",

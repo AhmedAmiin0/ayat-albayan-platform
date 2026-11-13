@@ -163,8 +163,9 @@ Each PR carries its web **and** mobile part. All three touch `packages/shared/i1
   open and before the start, each with its own mutation.
 - **C7 mobile (OTA).** «طلابي» pill filtered by `isCurrentStudent()`; StudentReportsScreen adds the
   student's lessons over the same window with the same counts; a cancel sheet (reason, one lesson) with
-  its OWN mutation to C3 — not `useLessonAction().cancel` (admin route) nor the admin CancelLesson; the
-  confirm + cancel actions in the «اليوم» card and the «جدولي» details sheet; a teacher «سجل الحضور»
+  its OWN mutation to C3 — not `useLessonAction().cancel` (admin route) nor the admin CancelLesson;
+  confirm + cancel in the sheet opened from the «اليوم» row and the hero's lead, and in the «جدولي»
+  sheet (docs/48: no per-lesson card on «اليوم» any more); a teacher «سجل الحضور»
   route reusing AttendanceLogHead/AttendanceLogRow with the C5 path.
 
 ## 5. Traps (must not break)
