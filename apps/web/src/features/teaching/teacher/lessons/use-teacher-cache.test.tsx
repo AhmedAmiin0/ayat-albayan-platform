@@ -17,12 +17,14 @@ vi.mock('@/lib/http/api', async (importOriginal) => ({
 // docs/48 web mutations: «سأحضر» is optimistic, cancel is write-through, only her lists change.
 const HOME = ['lessons', 'mine', 'home'];
 const WEEK = ['lessons', 'mine', 'week'];
+const OTHER = ['lessons', 'day', 'admin'];
 const AHEAD = lesson({ id: 'b', starts_at: '2099-10-05T13:00:00.000Z' });
 
 function setup() {
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
   client.setQueryData(HOME, [AHEAD]);
   client.setQueryData(WEEK, [AHEAD]);
+  client.setQueryData(OTHER, [AHEAD]);
   client.setQueryData(['teachers', 'me'], { id: 't' });
   const invalidate = vi.spyOn(client, 'invalidateQueries');
   const wrapper = ({ children }: { children: ReactNode }) => (
@@ -45,6 +47,7 @@ describe('useTeacherConfirm (optimistic)', () => {
     act(() => result.current.mutate());
     await waitFor(() => expect(rowOf(client, HOME)?.teacher_confirmed_at).toBeTruthy());
     expect(rowOf(client, WEEK)?.teacher_confirmed_at).toBeTruthy();
+    expect(rowOf(client, OTHER)?.teacher_confirmed_at ?? null).toBeNull();
     act(() => answer({ ...AHEAD, teacher_confirmed_at: '2099-10-01T00:00:00.000Z' }));
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(invalidate).toHaveBeenCalledWith({ queryKey: ['lessons'] });

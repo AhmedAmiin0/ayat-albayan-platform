@@ -14,12 +14,14 @@ jest.mock('@/core/lib/http/api', () => ({
 // docs/48 MOBILE MUTATIONS: «سأحضر» optimistic with rollback; cancel write-through.
 const TODAY = ['lessons', 'mine', { from: 'a', to: 'b' }];
 const WEEK = ['lessons', 'mine', { from: 'c', to: 'd' }];
+const OTHER = ['lessons', 'day', { date: 'x' }];
 const ahead = lesson({ id: 'l1', status: 'confirmed' });
 
 function setup() {
   const client = createTestQueryClient();
   client.setQueryData(TODAY, [ahead]);
   client.setQueryData(WEEK, [ahead]);
+  client.setQueryData(OTHER, [ahead]);
   const invalidate = jest.spyOn(client, 'invalidateQueries');
   return { client, invalidate, wrapper: queryWrapper(client) };
 }
@@ -60,6 +62,7 @@ test('a landed cancel closes the row and re-reads lessons and /teachers/me', asy
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   expect(rowOf(client, TODAY)?.status).toBe('cancelled_by_teacher');
   expect(rowOf(client, WEEK)?.status).toBe('cancelled_by_teacher');
+  expect(rowOf(client, OTHER)?.status).toBe('confirmed');
   expect(keysOf(invalidate)).toEqual(expect.arrayContaining([['lessons'], ['teachers', 'me']]));
 });
 
