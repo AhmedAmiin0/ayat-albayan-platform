@@ -25,8 +25,11 @@ describe('attendanceTableSchema (docs/46 C5)', () => {
   });
 
   it('reads the docs/47 move lines and report, with or without them', () => {
-    const report = { status: 'submitted', submitted_at: null, sent_at: null, can_edit: true, edit_until: null };
-    const moved = { ...row, moved_from: null, moved_to: '2026-11-02T10:00:00.000Z', move_reason: 'سفر', report };
+    const report = {
+      status: 'submitted', submitted_at: null, sent_at: null, can_edit: true, edit_until: null,
+    };
+    const movedTo = '2026-11-02T10:00:00.000Z';
+    const moved = { ...row, moved_from: null, moved_to: movedTo, move_reason: 'سفر', report };
     const table = { month: '2026-11', months: [], items: [moved, row], totals, mine: true };
     const [first, second] = attendanceTableSchema.parse(table).items;
     expect(first).toMatchObject({ move_reason: 'سفر', report: { can_edit: true } });

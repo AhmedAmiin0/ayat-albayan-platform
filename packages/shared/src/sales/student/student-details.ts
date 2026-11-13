@@ -72,7 +72,10 @@ export interface SalesStudentDetails {
 }
 
 /** POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override. */
-export const salesRescheduleSchema = z.strictObject({ startsAt: instant, reason: moveReasonSchema });
+export const salesRescheduleSchema = z.strictObject({
+  startsAt: instant,
+  reason: moveReasonSchema,
+});
 /**
  * POST /sales/lessons/:id/cancel: one lesson only; the reason is optional (null when absent).
  * `by` (owner 2026-11-02, default admin «ألغتها الإدارة»): teacher «ألغاها المعلم/ة» or

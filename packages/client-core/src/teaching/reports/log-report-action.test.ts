@@ -11,7 +11,8 @@ const report = {
 
 describe('logReportAction (docs/47)', () => {
   it('offers nothing before the start, on a cancelled or a moved lesson', () => {
-    expect(logReportAction({ ...row, status: 'scheduled', starts_at: '2026-11-14T10:00:00Z' }, now)).toBeNull();
+    const future = { ...row, status: 'scheduled', starts_at: '2026-11-14T10:00:00Z' } as const;
+    expect(logReportAction(future, now)).toBeNull();
     expect(logReportAction({ ...row, status: 'cancelled_by_admin' }, now)).toBeNull();
     expect(logReportAction({ ...row, status: 'rescheduled' }, now)).toBeNull();
   });

@@ -46,7 +46,8 @@ describe('sales lesson bodies', () => {
 
   it('move takes an optional trimmed reason (docs/47)', () => {
     const at = '2026-11-01T15:00:00Z';
-    expect(salesRescheduleSchema.parse({ startsAt: at, reason: ' سفر ' })).toEqual({ startsAt: at, reason: 'سفر' });
+    const parsed = salesRescheduleSchema.parse({ startsAt: at, reason: ' سفر ' });
+    expect(parsed).toEqual({ startsAt: at, reason: 'سفر' });
     expect(salesRescheduleSchema.safeParse({ startsAt: at, reason: '' }).success).toBe(false);
   });
 

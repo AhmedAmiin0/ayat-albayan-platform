@@ -32,7 +32,7 @@ export interface AttendanceTableRow {
   is_makeup: boolean;
   /** This lesson replaced a moved one. */
   is_rescheduled: boolean;
-  /** docs/47: the start of the lesson it replaced, else its time before an edit. Absent: old API. */
+  /** docs/47: the start of the lesson it replaced, else its time before an edit. */
   moved_from?: string | null;
   /** The start of the lesson this one moved to (a 'rescheduled' row). */
   moved_to?: string | null;

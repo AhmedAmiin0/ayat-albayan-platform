@@ -20,7 +20,8 @@ describe('courseEndOf', () => {
     expect(courseEndOf(c)).toEqual({ key: 'stopped', at: STOP });
   });
   it('an end wins over a booked last lesson', () => {
-    expect(courseEndOf({ ...base, ended_at: END, projected_end_at: PROJ })).toEqual({ key: 'ended', at: END });
+    const c = { ...base, ended_at: END, projected_end_at: PROJ };
+    expect(courseEndOf(c)).toEqual({ key: 'ended', at: END });
   });
   it('a booked last lesson wins over the count', () => {
     expect(courseEndOf({ ...base, projected_end_at: PROJ })).toEqual({ key: 'expected', at: PROJ });

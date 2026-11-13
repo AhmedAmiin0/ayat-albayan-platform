@@ -8,10 +8,12 @@ describe('rescheduleRequestSchema one-lesson reason (docs/47)', () => {
     expect(rescheduleRequestSchema.parse(one)).not.toHaveProperty('reason');
   });
   it('is trimmed', () => {
-    expect(rescheduleRequestSchema.parse({ ...one, reason: '  سفر  ' })).toMatchObject({ reason: 'سفر' });
+    const parsed = rescheduleRequestSchema.parse({ ...one, reason: '  سفر  ' });
+    expect(parsed).toMatchObject({ reason: 'سفر' });
   });
   it('refuses blank and over 500 characters', () => {
     expect(rescheduleRequestSchema.safeParse({ ...one, reason: '   ' }).success).toBe(false);
-    expect(rescheduleRequestSchema.safeParse({ ...one, reason: 'x'.repeat(501) }).success).toBe(false);
+    const long = { ...one, reason: 'x'.repeat(501) };
+    expect(rescheduleRequestSchema.safeParse(long).success).toBe(false);
   });
 });
