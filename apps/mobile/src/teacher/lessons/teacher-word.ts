@@ -15,10 +15,14 @@ type WordLesson = Parameters<typeof teacherLessonState>[0] & Pick<LessonView, 's
 /** `status` and `done` leave the word to the lesson-status chip. */
 type Worded = Exclude<TeacherLessonState, 'status' | 'done'>;
 
+/** A window not yet closed: a group's closed ones must not count down to the past. */
+const stillOpen = (now: Date) => (iso: string) => Date.parse(iso) > now.getTime();
+
 /** The soonest family send among the lesson's submitted reports still in their edit window. */
-const soonestClose = (lesson: WordLesson): string | undefined =>
+const soonestClose = (lesson: WordLesson, now: Date): string | undefined =>
   lesson.students
     .flatMap((s) => (s.report?.edit_until ? [s.report.edit_until] : []))
+    .filter(stillOpen(now))
     .sort()
     .at(0);
 
@@ -26,7 +30,7 @@ const soonestClose = (lesson: WordLesson): string | undefined =>
 const sendsIn = (lesson: WordLesson, now: Date): string =>
   t.reports.familySend.sendsIn.replace(
     '{when}',
-    counted(t.settingsValues.units.minutes, minutesLeft(soonestClose(lesson), now)),
+    counted(t.settingsValues.units.minutes, minutesLeft(soonestClose(lesson, now), now)),
   );
 
 const WORDS: Record<Worded, (lesson: WordLesson, now: Date) => TeacherWord> = {

@@ -49,3 +49,13 @@ test('held, sent, or past its window: null (the lesson-status chip speaks)', () 
   expect(teacherWord({ ...base, students: [{ ...yusuf, report: sent }] }, now)).toBeNull();
   expect(teacherWord({ ...base, status: 'cancelled_by_admin' }, now)).toBeNull();
 });
+
+test('a group: a closed window does not count down to the past; the open one does', () => {
+  const now = at('2026-10-01T14:00:00Z');
+  const sub = (edit_until: string) => ({ id: edit_until, status: 'submitted' as const, edit_until });
+  const closed = { ...yusuf, id: 's-a', report: { ...sub('2026-10-01T13:50:00Z'), sent_at: null } };
+  const open = { ...yusuf, id: 's-b', report: { ...sub('2026-10-01T14:07:00Z'), sent_at: null } };
+  const word = teacherWord({ ...base, students: [closed, open] }, now);
+  const when = counted(t.settingsValues.units.minutes, 7);
+  expect(word?.label).toBe(t.reports.familySend.sendsIn.replace('{when}', when));
+});
