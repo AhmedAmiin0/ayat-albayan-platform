@@ -19,7 +19,7 @@ import { useNow } from '@/lib/time/use-now';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { cn } from '@/lib/utils';
 import { myLessonsQuery, teacherMeQuery } from '@/features/teaching/teacher/api';
-import { LoadRetry } from './LoadRetry';
+import { LoadRetry } from '@/features/teaching/teacher/LoadRetry';
 import { TeacherLessonCard } from './TeacherLessonCard';
 
 /**

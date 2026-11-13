@@ -2,7 +2,11 @@ import { confirmAnswerSchema, teacherLessonPaths } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { apiSend } from '@/lib/http/api';
-import { holdMyLessons, patchMyLesson, restoreMyLessons } from './patch-my-lesson';
+import {
+  holdMyLessons,
+  patchMyLesson,
+  restoreMyLessons,
+} from '@/features/teaching/teacher/patch-my-lesson';
 
 /** apiSend with its reply left unknown, for the schema to parse. */
 const post: (method: 'POST', path: string) => Promise<unknown> = apiSend;

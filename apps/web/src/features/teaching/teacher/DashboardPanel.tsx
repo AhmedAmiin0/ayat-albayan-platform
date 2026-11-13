@@ -5,7 +5,7 @@ import { dayMonthLabel, lessonsOnDay } from '@/features/teaching/schedule';
 import { TeacherBoard, weekLessons } from '@/features/teaching/teacher-board';
 import { t } from '@/lib/i18n/i18n';
 import { LessonDayList } from './lessons/LessonDayList';
-import { LoadRetry } from './lessons/LoadRetry';
+import { LoadRetry } from './LoadRetry';
 import { TeacherAvailability } from './proposals/TeacherAvailability';
 
 export type DashboardTab = 'students' | 'today' | 'week' | 'availability';

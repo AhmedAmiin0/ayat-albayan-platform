@@ -3,7 +3,7 @@ import type { TeacherCancelRequest } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { apiSend } from '@/lib/http/api';
-import { patchMyLesson } from './patch-my-lesson';
+import { patchMyLesson } from '@/features/teaching/teacher/patch-my-lesson';
 
 /** apiSend with its reply left unknown, for the schema to parse. */
 type Post = (method: 'POST', path: string, body: TeacherCancelRequest) => Promise<unknown>;
