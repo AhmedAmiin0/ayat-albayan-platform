@@ -36,6 +36,9 @@ test('opens on «الحلقات»: the next 14 days, a moved one with its new ti
   expect(await screen.findByText(t.teacherFile.upcoming)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/students/s1');
   expect(screen.getByText(before(log.movedTo))).toBeTruthy();
+  // The column header over the upcoming rows, and again over the month's.
+  await screen.findByText(log.cancelReason.replace('{reason}', 'اعتذار الأسرة'));
+  expect(screen.getAllByText(log.columns.report)).toHaveLength(2);
   await fireEvent.press(screen.getByText(log.moveReason.replace('{reason}', 'سفر الأسرة')));
   expect(mockPush).not.toHaveBeenCalled();
 });

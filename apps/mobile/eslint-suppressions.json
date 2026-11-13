@@ -8154,7 +8154,7 @@
   },
   "src/sales/sales/attendance/AttendanceLogHead.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/sales/sales/attendance/AttendanceLogRow.tsx": {

@@ -54,14 +54,22 @@ function ReportsEmpty({ loaded, failed, retry }: EmptyProps) {
   return failed ? <ErrorState onRetry={retry} /> : null;
 }
 
+interface ReportsPaneProps {
+  id: string;
+  who: Who;
+  /** The teacher's zone (teachers.tz); the viewer's when absent (the admin). */
+  tz?: string | undefined;
+}
+
 /**
  * «التقارير» of one student (R-REP-05, R-TCH-03): the recordings way (a teacher's), then every
  * sent report, newest first, with its PDF once it is ready. Only the teacher's own lessons'
  * reports open as a form; another teacher's stays a history line. The admin reads any report
  * (read-only, ops/AdminReportScreen).
  */
-export function ReportsPane({ id, who }: { id: string; who: Who }) {
-  const tz = useViewerTz();
+export function ReportsPane({ id, who, tz: zone }: ReportsPaneProps) {
+  const viewer = useViewerTz();
+  const tz = zone ?? viewer;
   const list = usePagedList<ReportSummaryView>({ path: `/students/${id}/reports`, pageSize: 10 });
   const [error, setError] = useState(false);
   const pdfFailed = () => setError(true);

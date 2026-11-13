@@ -26,6 +26,10 @@ export const COLUMNS: Record<'date' | 'time' | 'teacher' | 'status' | 'report', 
   report: { flex: 0.8 },
 };
 
+/** The report column; wider in the teacher's file, whose cell holds «تعديل التقرير» (docs/47). */
+export const reportColumn = (wide: boolean): ViewStyle =>
+  wide ? { flex: 1.5 } : COLUMNS.report;
+
 export const ROW_LINE: ViewStyle = { flexDirection: 'row', alignItems: 'center', gap: 6 };
 
 /** The zone a log shows in: the one given (the teacher log: hers), else the viewer's. */
@@ -69,7 +73,7 @@ export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, c
         <View style={COLUMNS.status}>
           <StatusChip {...rowChip(row, status)} size="sm" />
         </View>
-        <AppText style={[cell, COLUMNS.report, { color: report.active ? color.lapis : color.ink3 }]}>{report.text}</AppText>
+        <AppText style={[cell, reportColumn(reportLabel !== undefined), { color: report.active ? color.lapis : color.ink3 }]}>{report.text}</AppText>
       </View>
       {tags.length > 0 ? <AppText style={note}>{tags.join(' · ')}</AppText> : null}
       {reason ? <AppText style={note}>{reason}</AppText> : null}

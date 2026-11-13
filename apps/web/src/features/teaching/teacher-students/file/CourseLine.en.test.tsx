@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { CourseLine } from './CourseLine';
-import { COURSE } from './file-fixture';
+import { COURSE } from './file-data';
 
 vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));

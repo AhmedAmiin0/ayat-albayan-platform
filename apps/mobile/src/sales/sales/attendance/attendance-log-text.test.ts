@@ -3,6 +3,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { ATTENDANCE_STYLE } from '@/sales/sales/student/attendance-text';
 import { lessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { attendancePath } from './attendance-log-api';
+import { COLUMNS, reportColumn } from './AttendanceLogRow';
 import {
   cancelLine,
   dayDateOf,
@@ -78,4 +79,9 @@ test('the report cell: sent / not sent for staff; her action word, or «—» fo
   expect(reportCell(logRow({ report_sent: false }))).toEqual({ text: w.notSent, active: false });
   expect(reportCell(logRow(), t.reports.edit)).toEqual({ text: t.reports.edit, active: true });
   expect(reportCell(logRow(), null)).toEqual({ text: '—', active: false });
+});
+
+test('the report column: the sales log keeps its width; the teacher\'s file widens it', () => {
+  expect(reportColumn(false)).toBe(COLUMNS.report);
+  expect(reportColumn(true).flex).toBeGreaterThan(COLUMNS.report.flex ?? 0);
 });

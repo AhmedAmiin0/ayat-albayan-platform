@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { courseLines } from './course-text';
-import { COURSE } from './file-fixture';
+import { COURSE } from './file-data';
 
 const TZ = 'Africa/Cairo';
 const f = t.teacherFile;

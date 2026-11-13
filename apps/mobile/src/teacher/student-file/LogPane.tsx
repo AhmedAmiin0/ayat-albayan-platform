@@ -58,7 +58,8 @@ interface MonthHeadProps {
 /** The month pills and totals once the month arrives; loading, or a retry when it failed. */
 function MonthHead({ data, month, onMonth, tz, failed, retry }: MonthHeadProps) {
   if (data) {
-    return <AttendanceLogHead data={data} month={month ?? data.month} onMonth={onMonth} tz={tz} />;
+    const chosen = month ?? data.month;
+    return <AttendanceLogHead data={data} month={chosen} onMonth={onMonth} tz={tz} wideReport />;
   }
   return failed ? <ErrorState onRetry={retry} /> : <Note>{t.common.loading}</Note>;
 }

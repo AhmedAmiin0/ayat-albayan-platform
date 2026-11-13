@@ -1,4 +1,4 @@
-import type { PendingReportView } from '@ab/shared';
+import { counted, type PendingReportView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { refreshAfterSubmit } from '@/teacher/report/hooks/api';
@@ -38,13 +38,22 @@ test('this student’s pending reports only, each opening its form', async () =>
   const rows = [pending('l-write', 's1'), pending('l-other', 's9')];
   mockApiFetch.mockImplementation(fileAnswers({ pending: rows }));
   await renderWithQuery(<TeacherStudentFileScreen />);
-  expect(await screen.findByText(t.reports.pending)).toBeTruthy();
+  expect(await screen.findByText(counted(t.reports.pendingCount, 1))).toBeTruthy();
   expect(screen.queryByText('سلمى')).toBeNull();
   // The pending row comes first; the log's own row offers the same «اكتب التقرير».
   const [first] = screen.getAllByText(t.reports.open);
   if (!first) throw new Error('no pending row');
   await fireEvent.press(first);
   expect(mockPush).toHaveBeenCalledWith('/teacher/reports/l-write');
+});
+
+test('many pending: the oldest two rows under the full count, so the lessons keep the screen', async () => {
+  const rows = ['p1', 'p2', 'p3', 'p4'].map((id) => pending(id, 's1'));
+  mockApiFetch.mockImplementation(fileAnswers({ pending: rows }));
+  await renderWithQuery(<TeacherStudentFileScreen />);
+  expect(await screen.findByText(counted(t.reports.pendingCount, 4))).toBeTruthy();
+  // Two pending rows, plus the log's one unwritten row.
+  expect(screen.getAllByText(t.reports.open)).toHaveLength(3);
 });
 
 test('after a submit and back, the row reads «تعديل التقرير» (refreshAfterSubmit)', async () => {

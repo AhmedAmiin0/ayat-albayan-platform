@@ -11,6 +11,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiFetch: (p: string) => mockApiFetch(p),
 }));
 const mockPush = jest.fn();
+jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 jest.mock('expo-router', () => ({
   router: { push: (h: string) => mockPush(h), back: jest.fn(), replace: jest.fn() },
 }));
@@ -82,4 +83,9 @@ test('no report yet: the empty line', async () => {
   mockApiFetch.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 10, series: [] });
   await renderWithQuery(<ReportsPane id="s1" who={mine} />);
   expect(await screen.findByText(t.reports.noReports)).toBeTruthy();
+});
+
+test('the teacher’s zone when given: 13:00Z reads 22:00 in Tokyo', async () => {
+  await renderWithQuery(<ReportsPane id="s1" who={mine} tz="Asia/Tokyo" />);
+  expect((await screen.findAllByText(/22:00/)).length).toBeGreaterThan(0);
 });

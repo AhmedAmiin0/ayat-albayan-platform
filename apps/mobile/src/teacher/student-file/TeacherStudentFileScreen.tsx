@@ -68,7 +68,7 @@ interface FileBodyProps {
 /** The trial note, the course, the pending reports, then the two panes. */
 function FileBody({ head, tz, teacherId }: FileBodyProps) {
   const [pane, setPane] = useState<Pane>('lessons');
-  const reports = <ReportsPane id={head.id} who={{ admin: false, teacherId }} />;
+  const reports = <ReportsPane id={head.id} who={{ admin: false, teacherId }} tz={tz} />;
   return (
     <>
       <TrialChatNote status={head.status} />
