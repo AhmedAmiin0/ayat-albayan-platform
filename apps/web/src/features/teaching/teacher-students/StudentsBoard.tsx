@@ -2,12 +2,11 @@ import { zonedPartsIn, type TeacherMe } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { myLessonsQuery } from '@/features/teaching/teacher';
+import { LoadRetry, myLessonsQuery } from '@/features/teaching/teacher';
 import { boardWindow, TeacherBoard } from '@/features/teaching/teacher-board';
 import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
 import { cn } from '@/lib/utils';
-import { LoadError } from './LoadError';
 import { loadState, type LoadState } from './load-state';
 
 /**
@@ -25,7 +24,7 @@ export function StudentsBoard({ me }: { me: TeacherMe }) {
         <TeacherBoard me={me} lessons={lessons.data} now={now} />
       </div>
     ),
-    error: () => <LoadError text={t.teacherDash.loadError} onRetry={lessons.refetch} />,
+    error: () => <LoadRetry onRetry={lessons.refetch} />,
     loading: () => <ListSkeleton />,
   };
   return views[loadState(lessons)]();
