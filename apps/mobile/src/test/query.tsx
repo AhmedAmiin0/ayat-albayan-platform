@@ -1,4 +1,4 @@
-import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH, type PublicSettings } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react-native';
 import type { ReactElement, ReactNode } from 'react';
@@ -54,5 +54,16 @@ export function confirmingQueryClient(options: TestClientOptions = {}): QueryCli
 export function noConfirmQueryClient(options: TestClientOptions = {}): QueryClient {
   const client = createTestQueryClient(options);
   seedPublicConfig(client, { lesson_confirmation_required: false });
+  return client;
+}
+
+/** Every teacher page switch set to `on` (they default OFF since 2026-11-13). */
+const teacherPagesAll = (on: boolean): Partial<PublicSettings> =>
+  Object.fromEntries(Object.values(TEACHER_PAGE_SWITCH).map((key) => [key, on]));
+
+/** A test client whose GET /settings/public has the teacher switches `on`, `patch` over them. */
+export function teacherPagesClient(on = true, patch: Partial<PublicSettings> = {}): QueryClient {
+  const client = createTestQueryClient();
+  seedPublicConfig(client, { ...teacherPagesAll(on), ...patch });
   return client;
 }

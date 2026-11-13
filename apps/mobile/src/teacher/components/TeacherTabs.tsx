@@ -2,15 +2,17 @@ import { canOpen } from '@/core/auth/route-permissions';
 import { type Can, usePermissions } from '@/core/auth/use-permissions';
 import { t } from '@/core/lib/i18n/i18n';
 import { AppNativeTabs, type TabItem } from '@/core/ui/layout/AppNativeTabs';
+import { useTeacherPageOn } from '@/teacher/lib/teacher-pages';
 import { TeacherScope } from './TeacherScope';
 
 // The teacher app, native tabs (R-AUTH-01, R-TCH-03, R-MOB-02): only her lessons, schedule, chats, students,
 // reports and payouts. Five tabs, the native bar's limit on Android; «الطلاب» lives in «المزيد».
-// The first tab sits at the inline-start (right in Arabic), as in the admin tabs. «المحادثات» hides without inbox.read.
-const tabItems = (can: Can): TabItem[] => [
+// The first tab sits at the inline-start (right in Arabic), as in the admin tabs. «المحادثات» hides
+// without inbox.read or while its academy switch is off (settings «صفحات المعلم»).
+const tabItems = (can: Can, chatsOn: boolean): TabItem[] => [
   { name: 'today', title: t.teacherNav.today, icon: 'today' },
   { name: 'schedule', title: t.teacherNav.calendar, icon: 'teacherSchedule' },
-  { name: 'chats', title: t.nav.conversations, icon: 'inbox', hidden: !canOpen(can, 'chats') },
+  { name: 'chats', title: t.nav.conversations, icon: 'inbox', hidden: !(canOpen(can, 'chats') && chatsOn) },
   { name: 'reports', title: t.teacherNav.reports, icon: 'reports' },
   { name: 'more', title: t.mobile.more, icon: 'more' },
 ];
@@ -22,9 +24,10 @@ const tabItems = (can: Can): TabItem[] => [
  */
 export function TeacherTabs() {
   const can = usePermissions();
+  const pageOn = useTeacherPageOn();
   return (
     <TeacherScope>
-      <AppNativeTabs tabs={tabItems(can)} />
+      <AppNativeTabs tabs={tabItems(can, pageOn('chats'))} />
     </TeacherScope>
   );
 }

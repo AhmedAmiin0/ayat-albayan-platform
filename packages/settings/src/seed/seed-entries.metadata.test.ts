@@ -7,7 +7,7 @@ const byKey = new Map(SEED_ENTRIES.map((e) => [e.key, e]));
 const keysWhere = (pick: (e: (typeof SEED_ENTRIES)[number]) => boolean): string[] =>
   SEED_ENTRIES.filter(pick).map((e) => e.key).sort();
 
-/** docs/26b §2: the «القيم» groups of the 33 CONFIG keys of docs/26 §1 + docs/30 (counts 4·4·1·5·3·1·8·4·1·2). */
+/** docs/26b §2: the «القيم» groups of the CONFIG keys of docs/26 §1 + docs/30 (counts 4·4·1·5·3·1·8·4·1·2). */
 const CONFIG_GROUPS: Record<string, string[]> = {
   schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available',
     'lesson_confirmation_required', 'lesson_outcome_grace_minutes'],
@@ -22,6 +22,9 @@ const CONFIG_GROUPS: Record<string, string[]> = {
   messaging: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'chat_reopen_template', 'whatsapp_calls_enabled', 'calls_permission_template', 'crm_media_host', 'crm_media_copy_all', 'presence_enabled'],
   sales: ['sales_auto_assign', 'sales_require_assignee', 'renewal_commission_enabled', 'renewal_commission_percent'],
   retention: ['recording_retention_days', 'activity_retention_days'],
+  teachers: ['teacher_chats_enabled', 'teacher_student_messages_enabled', 'teacher_earnings_enabled',
+    'teacher_statements_enabled', 'teacher_feedback_enabled', 'teacher_internal_meetings_enabled',
+    'teacher_scheduled_meetings_enabled'],
 };
 /** docs/26 §1: the 8 notification keys (owned by «الإشعارات» from 23-P4) and the send-gate keys. */
 const NOTIFICATION_KEYS = [
@@ -39,9 +42,9 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
     expect(missing).toEqual([]);
   });
 
-  it('the 48 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + renewal_commission_enabled, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33, + sales_require_assignee, docs/16 row 39, + lesson_confirmation_required, lesson_outcome_grace_minutes, + short_link_base, + refund_attended_rate_percent, + report_teacher_edit_minutes, docs/46) sit in their «القيم» group, scope config', () => {
+  it('the 48 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + renewal_commission_enabled, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33, + sales_require_assignee, docs/16 row 39, + lesson_confirmation_required, lesson_outcome_grace_minutes, + short_link_base, + refund_attended_rate_percent, + report_teacher_edit_minutes, docs/46, + the 7 teacher page switches) sit in their «القيم» group, scope config', () => {
     const config = Object.values(CONFIG_GROUPS).flat();
-    expect(config).toHaveLength(48);
+    expect(config).toHaveLength(55);
     for (const [group, keys] of Object.entries(CONFIG_GROUPS)) expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });

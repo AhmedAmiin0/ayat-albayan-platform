@@ -4292,7 +4292,14 @@
       "presenceEnabled": "When on, «Online now» or «Last seen» shows in the platform chats between teachers and families, and the admin sees the team's online status. Each user sees only the people they can already message. When off, no online status or last seen is recorded or shown.",
       "lessonConfirmationRequired": "When on (the default) a lesson shows \"Needs confirmation\" until the family replies \"Yes\" or the admin team confirms it. Every lesson that has ended is deducted from the package, confirmed or not. After the grace period a confirmed lesson is recorded as held; an unconfirmed one is recorded as absent when the platform sent the family's reminder and no reply came, and otherwise stays \"Needs confirmation\" for an assistant to resolve. When off, no lesson shows \"Needs confirmation\" and a lesson counts as held after the grace period unless another status was recorded.",
       "lessonOutcomeGraceMinutes": "Minutes after a lesson's end before its status is recorded automatically (held or absent). Default: 30 minutes.",
-      "shortLinkBase": "The address the platform's short links start with, e.g. https://example.com/r/ (must start with https:// and end with /). Empty = the platform API's address followed by /r/."
+      "shortLinkBase": "The address the platform's short links start with, e.g. https://example.com/r/ (must start with https:// and end with /). Empty = the platform API's address followed by /r/.",
+      "teacherChatsEnabled": "When on, teachers who hold the chats permission see the «Chats» page on the website and its tab in the mobile app. When off, the page is hidden and teachers cannot open it; the chats and their data do not change. Admins, sales and assistants are not affected.",
+      "teacherStudentMessagesEnabled": "When on, teachers see the «Student messages» page. When off, it is hidden on the website and under «More» in the mobile app and teachers cannot open it; the messages stay saved.",
+      "teacherEarningsEnabled": "When on, teachers see the «My earnings» page. When off, it is hidden on the website and in the mobile app and teachers cannot open it; earnings and their calculation do not change.",
+      "teacherStatementsEnabled": "When on, teachers see «Monthly statements» and its link in «My earnings». When off, the page and the link are hidden and teachers cannot open them; the statements stay as they are.",
+      "teacherFeedbackEnabled": "When on, teachers see the ratings and feedback of their students. When off, the page is hidden on the website and in the mobile app and teachers cannot open it; the feedback stays saved.",
+      "teacherInternalMeetingsEnabled": "When on, teachers can start an instant internal meeting from their page. When off, the button is hidden on the website and in the mobile app; admins, sales and assistants keep it.",
+      "teacherScheduledMeetingsEnabled": "When on, teachers can schedule an internal meeting from their page. When off, the button is hidden on the website and in the mobile app. With both meeting buttons off, the teacher's meetings list is hidden too."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -4324,7 +4331,14 @@
     "presenceEnabled": "Show online status and last seen",
     "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson",
     "lessonOutcomeGraceMinutes": "Grace after a lesson ends before its status is recorded (minutes)",
-    "shortLinkBase": "Short links base"
+    "shortLinkBase": "Short links base",
+    "teacherChatsEnabled": "Teacher «Chats» page",
+    "teacherStudentMessagesEnabled": "Teacher «Student messages» page",
+    "teacherEarningsEnabled": "Teacher «My earnings» page",
+    "teacherStatementsEnabled": "Teacher «Monthly statements» page",
+    "teacherFeedbackEnabled": "Teacher «Student feedback» page",
+    "teacherInternalMeetingsEnabled": "Teacher «Internal meeting» button",
+    "teacherScheduledMeetingsEnabled": "Teacher «Scheduled meeting» button"
   },
   "language": {
     "label": "Language",
@@ -7285,7 +7299,8 @@
       "sales": "Sales",
       "retention": "Logs and retention",
       "notifications": "Notifications",
-      "sending": "Sending and safety"
+      "sending": "Sending and safety",
+      "teachers": "Teacher pages"
     }
   },
   "settingsValues": {
@@ -7320,7 +7335,8 @@
       "retention": "Logs and retention",
       "notifications": "Notifications",
       "sending": "Sending and safety",
-      "google": "Google sync"
+      "google": "Google sync",
+      "teachers": "Teacher pages"
     },
     "all": "All",
     "clearSearch": "Clear search",
@@ -7538,7 +7554,8 @@
       "retention": "Logs and retention",
       "notifications": "Notifications (view only)",
       "sending": "Sending and safety (view only)",
-      "google": "Google sync (view only)"
+      "google": "Google sync (view only)",
+      "teachers": "Teacher pages"
     },
     "name": "Name",
     "value": "Value",

@@ -11795,7 +11795,7 @@
   },
   "src/routes/teacher/feedback.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 2
@@ -11816,7 +11816,7 @@
   },
   "src/routes/teacher/messages.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/dot-notation": {
       "count": 3

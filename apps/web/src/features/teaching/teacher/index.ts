@@ -7,3 +7,4 @@ export {
   teacherMeQuery,
 } from './api';
 export { TeacherLessonCard, type TeacherLessonCardProps } from './lessons/TeacherLessonCard';
+export { TeacherPageGate } from './TeacherPageGate';

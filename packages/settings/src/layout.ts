@@ -1,5 +1,6 @@
 import type { SettingKey } from './registry.js';
 import { SCHEDULE_KEYS } from './domains/teaching/schedule-keys.js';
+import { TEACHER_PAGE_KEYS } from './domains/teaching/teacher-pages.js';
 
 // Where each setting shows on /admin/settings, kept apart from who owns it (domains/*.ts). The
 // page renders a section's registry fields in this order; the sections come in SETTINGS_SECTIONS order.
@@ -70,6 +71,7 @@ export const SETTINGS_LAYOUT = {
     'presence_enabled',
     'recording_retention_days',
     'activity_retention_days',
+    ...TEACHER_PAGE_KEYS,
   ],
   sales: ['sales_auto_assign', 'sales_require_assignee', 'renewal_commission_enabled', 'renewal_commission_percent'],
   appearance: [],

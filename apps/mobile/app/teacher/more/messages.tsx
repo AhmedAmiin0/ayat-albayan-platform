@@ -1,1 +1,4 @@
-export { TeacherChannelsScreen as default } from '@/student-file';
+import { TeacherChannelsScreen } from '@/student-file';
+import { guardedTeacherRoute } from '@/teacher';
+
+export default guardedTeacherRoute('messages', TeacherChannelsScreen);
