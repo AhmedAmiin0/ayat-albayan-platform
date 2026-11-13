@@ -64,7 +64,9 @@ export class SalesLessonActions {
     await this.scope.assertLesson({ lessonId, now, user: actor });
     // Her own booking refuses a past time too (SalesBookingService): never a lesson that is already over.
     if (Date.parse(body.startsAt) <= now.getTime()) throw badRequest('date_in_past');
-    const id = await this.lessons.one.reschedule({ lessonId, body: { scope: 'one', startsAt: body.startsAt }, actor });
+    const reason = body.reason ? { reason: body.reason } : {};
+    const one = { scope: 'one' as const, startsAt: body.startsAt, ...reason };
+    const id = await this.lessons.one.reschedule({ lessonId, body: one, actor });
     const moved = await this.queries.lesson(id);
     if (!moved) throw notFound('lesson_not_found');
     return { id: moved.id, starts_at: new Date(moved.starts_at).toISOString(), status: moved.status };

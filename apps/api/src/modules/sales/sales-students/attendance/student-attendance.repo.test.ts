@@ -19,6 +19,21 @@ describe('StudentAttendanceQueries (whitelisted selects)', () => {
     expect(select).not.toMatch(SECRET);
   });
 
+  it('lessons: her teacher_id, the move embeds and the rule\'s last day and zone (docs/47)', async () => {
+    const f = fakeDb({ lessons: [{ data: [] }] });
+    const w = { from: new Date(0), to: new Date(1), teacherId: 't1' };
+    await new StudentAttendanceRepo(f.db).lessons('s1', w);
+    const select = String(f.argsOf('lessons', 'select')?.[0]);
+    expect(select).toContain('teacher_id, starts_at');
+    expect(select).toContain('time_edit_was');
+    expect(select).toContain('moved_from:rescheduled_from_id(starts_at, cancel_reason, teacher_id)');
+    expect(select).toContain('moved_to:lessons!rescheduled_from_id(starts_at)');
+    expect(select).toContain('rule:schedule_rules!lessons_rule_id_fkey(package, ends_on, tz)');
+    expect(select).not.toContain('time_edit_reason');
+    const eqs = f.calls.filter((c) => c.method === 'eq').map((c) => c.args);
+    expect(eqs).toContainEqual(['teacher_id', 't1']);
+  });
+
   it('starts: when each lesson before now started', async () => {
     const f = fakeDb({ lessons: [{ data: [{ starts_at: '2026-10-01T10:00:00Z' }] }] });
     expect(await new StudentAttendanceRepo(f.db).starts('s1', new Date('2026-10-28T10:00:00Z'))).toEqual(['2026-10-01T10:00:00Z']);
@@ -26,9 +41,11 @@ describe('StudentAttendanceQueries (whitelisted selects)', () => {
   });
 
   it('reports: submitted reports of these lessons only (ids, nothing of the content); none asked, none read', async () => {
-    const f = fakeDb({ lesson_reports: [{ data: [{ id: 'r1', lesson_id: 'l1' }] }] });
-    expect(await new StudentAttendanceRepo(f.db).reports('s1', ['l1'])).toEqual([{ id: 'r1', lesson_id: 'l1' }]);
-    expect(f.argsOf('lesson_reports', 'select')).toEqual(['id, lesson_id']);
+    const row = { id: 'r1', lesson_id: 'l1', submitted_at: null, sent_at: null };
+    const f = fakeDb({ lesson_reports: [{ data: [row] }] });
+    expect(await new StudentAttendanceRepo(f.db).reports('s1', ['l1'])).toEqual([row]);
+    expect(f.argsOf('lesson_reports', 'select')).toEqual(['id, lesson_id, submitted_at, sent_at']);
+    expect(f.argsOf('lesson_reports', 'eq')).toEqual(['student_id', 's1']);
     expect(f.argsOf('lesson_reports', 'in')).toEqual(['lesson_id', ['l1']]);
     const none = fakeDb({});
     expect(await new StudentAttendanceRepo(none.db).reports('s1', [])).toEqual([]);

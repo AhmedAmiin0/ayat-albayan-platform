@@ -77,7 +77,10 @@ export async function studentsApp(settings: Partial<AcademySettings> = {}) {
   const reports = { submitted: vi.fn(), lessons: vi.fn(), sequence: vi.fn() };
   const files = { studentPdfUrl: vi.fn() };
   const overview = { exists: vi.fn(), rules: vi.fn(), lessons: vi.fn() };
-  const attendance = { exists: vi.fn(), lessons: vi.fn(), starts: vi.fn(), reports: vi.fn() };
+  const attendance = {
+    exists: vi.fn(), lessons: vi.fn(), starts: vi.fn(), reports: vi.fn(),
+    student: vi.fn(), taughtBy: vi.fn(), packages: vi.fn(),
+  };
   const me = { me: vi.fn(), students: vi.fn() };
   const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() }, status: { confirm: vi.fn() }, corrections: { correct: vi.fn() } };
   const roster = { rules: vi.fn(), packages: vi.fn(), lessons: vi.fn(), balances: vi.fn() };

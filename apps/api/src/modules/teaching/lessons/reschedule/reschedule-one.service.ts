@@ -16,7 +16,34 @@ function movedNotice(old: LessonRow, lessonId: string, actor: AuthUser): Schedul
   return { kind: 'lesson_rescheduled', lessonId, fromStartsAt: old.starts_at, actorId: actor.id };
 }
 
+/** The audit's `after`: where it went, the clash override and the move reason (docs/47). */
+interface MovedTo {
+  id: string;
+  starts_at: string;
+  teacher_id: string;
+  override_reason: string | null;
+}
+const auditAfter = (next: MovedTo, reason: string | undefined) => ({
+  lesson_id: next.id,
+  starts_at: next.starts_at,
+  teacher_id: next.teacher_id,
+  override_reason: next.override_reason,
+  reason: reason ?? null,
+});
+
 type One = Extract<RescheduleRequest, { scope: 'one' }>;
+
+/**
+ * The old row becomes 'rescheduled'; docs/47 «سبب تغيير الموعد» (optional) is kept as its
+ * cancel_reason (apply_lesson_changes writes it on any change), absent when none was given.
+ */
+const movedAway = (old: LessonRow, reason: string | undefined) => ({
+  id: old.id,
+  from_status: old.status,
+  to_status: 'rescheduled' as const,
+  chargeable: false,
+  ...(reason ? { cancel_reason: reason } : {}),
+});
 type RescheduleOneInput = { lessonId: string; body: One; actor: AuthUser };
 
 /**
@@ -66,7 +93,7 @@ export class RescheduleOneService {
     await this.store.commit({
       change: {
         actor: actor.id,
-        changes: [{ id: old.id, from_status: old.status, to_status: 'rescheduled', chargeable: false }],
+        changes: [movedAway(old, body.reason)],
         lessons: [next],
         messages: confirmationMessages(forMessages(next, auto), contacts),
       },
@@ -75,7 +102,7 @@ export class RescheduleOneService {
         entityId: old.id,
         action: 'reschedule',
         before: { status: old.status, starts_at: old.starts_at, teacher_id: old.teacher_id },
-        after: { lesson_id: next.id, starts_at: next.starts_at, teacher_id: teacherId, override_reason: next.override_reason },
+        after: auditAfter(next, body.reason),
       },
       transition: { from: old.status, event: 'reschedule' },
       notice: movedNotice(old, next.id, actor),

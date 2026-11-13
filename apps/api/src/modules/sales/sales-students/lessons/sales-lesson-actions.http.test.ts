@@ -29,6 +29,16 @@ describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37), rule 
     });
   });
 
+  it('reschedule with a move reason (docs/47): trimmed and forwarded; unknown keys 400', async () => {
+    const body = { startsAt: AT, reason: ' سفر الأسرة ' };
+    const res = await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, { token: 'salesA', body });
+    expect(res.statusCode).toBe(200);
+    const one = { scope: 'one', startsAt: AT, reason: 'سفر الأسرة' };
+    expect(t.lessons.one.reschedule).toHaveBeenCalledWith(expect.objectContaining({ body: one }));
+    const extra = { body: { startsAt: AT, teacherId: MINE }, token: 'salesA' as const };
+    expect((await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, extra)).statusCode).toBe(400);
+  });
+
   it('cancel without a reason: one lesson, by the academy, reason null; a given reason is kept', async () => {
     t.queries.lesson.mockResolvedValueOnce(lessonFacts()).mockResolvedValueOnce(lessonFacts({ status: 'cancelled_by_admin' }));
     const res = await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesA', body: {} });

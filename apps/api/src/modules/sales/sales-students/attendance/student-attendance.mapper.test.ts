@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { attendanceWindow, monthsOf, toAttendanceTable } from './student-attendance.mapper';
-import { lessonRow, NOW, octoberLessons } from './student-attendance.fakes';
+import { attendanceWindow, monthsOf, toAttendanceTable, upcomingRows } from './student-attendance.mapper';
+import { HELD_REPORT, lessonRow, MOVED_TO, NOW, octoberLessons } from './student-attendance.fakes';
 
-const table = () =>
-  toAttendanceTable({ month: '2026-10', lessons: octoberLessons(), reports: [{ id: 'rep-held', lesson_id: 'held' }], starts: [], mine: true }, NOW);
+const input = { month: '2026-10', reports: [HELD_REPORT], starts: [], mine: true };
+const table = () => toAttendanceTable({ ...input, lessons: octoberLessons() }, NOW);
 
 describe('attendanceWindow', () => {
   it('a past month: its whole Riyadh bounds', () => {
@@ -29,7 +29,9 @@ describe('toAttendanceTable', () => {
     expect(t.items[0]).toEqual({
       lesson_id: 'held', starts_at: '2026-10-27T15:00:00.000Z', duration_min: 30, teacher_name: 'أبرار', status: 'completed', attendance: 'on_time',
       kind: 'present', report_sent: true, report_id: 'rep-held', cancel_reason: null, is_trial: false, is_makeup: false, is_rescheduled: false,
+      moved_from: null, moved_to: null, move_reason: null,
     });
+    expect(t.items.every((r) => !('report' in r))).toBe(true);
   });
 
   it('the totals of every kind, late on top of held', () => {
@@ -45,6 +47,12 @@ describe('toAttendanceTable', () => {
     expect(byId.get('moved')?.kind).toBeNull();
   });
 
+  it('a moved lesson: where it went and why (the reason is never its cancel reason)', () => {
+    const moved = table().items.find((r) => r.lesson_id === 'moved');
+    const to = new Date(MOVED_TO).toISOString();
+    expect(moved).toMatchObject({ moved_to: to, move_reason: 'طلب الأسرة', cancel_reason: null });
+  });
+
   it('the cancel reason only on a cancelled lesson', () => {
     const reasons = table().items.filter((r) => r.cancel_reason).map((r) => [r.lesson_id, r.cancel_reason]);
     expect(reasons).toEqual([['byTeacher', 'سفر المعلمة'], ['byAdmin', 'عطلة']]);
@@ -57,11 +65,25 @@ describe('toAttendanceTable', () => {
   });
 
   it('not hers: the report reads as sent and opens too (owner 2026-10-30)', () => {
-    const t = toAttendanceTable({ month: '2026-10', lessons: octoberLessons(), reports: [{ id: 'rep-held', lesson_id: 'held' }], starts: [], mine: false }, NOW);
+    const t = toAttendanceTable({ ...input, lessons: octoberLessons(), mine: false }, NOW);
     expect([t.items[0]?.report_sent, t.items[0]?.report_id, t.mine]).toEqual([true, 'rep-held', false]);
   });
 
   it('never a price, a link or notes', () => {
     expect(JSON.stringify(table())).not.toMatch(/meet|secret|notes|price|290|سر"/);
+  });
+});
+
+describe('upcomingRows (the file head, docs/47)', () => {
+  it('oldest first, no kind and no report; a cancel reason as the teacher reads it', () => {
+    const rows = upcomingRows([
+      lessonRow('b', '2026-11-03T15:00:00Z', { status: 'scheduled' }),
+      lessonRow('a', '2026-11-01T15:00:00Z', { status: 'cancelled_by_admin', cancel_reason: 'عطلة' }),
+    ]);
+    expect(rows.map((r) => [r.lesson_id, r.kind, r.cancel_reason])).toEqual([
+      ['a', null, 'عطلة'],
+      ['b', null, null],
+    ]);
+    expect(rows.every((r) => !('report' in r))).toBe(true);
   });
 });
