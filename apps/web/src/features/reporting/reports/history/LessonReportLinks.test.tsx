@@ -20,10 +20,10 @@ describe('LessonReportLinks (R-REP-01: «تقرير الحلقة» from the less
   });
   afterEach(() => vi.useRealTimers());
 
-  it('teacher: one link to the lesson form once it started', () => {
-    render(<LessonReportLinks lesson={lesson({ id: 'l-1', starts_at: STARTED, students: [SUHAILA, AYA] })} role="teacher" />);
+  it('teacher, one student: one control labelled by the stage', () => {
+    render(<LessonReportLinks lesson={lesson({ id: 'l-1', starts_at: STARTED })} role="teacher" />);
     const links = screen.getAllByRole('link');
-    expect(links.map((a) => [a.textContent, a.getAttribute('href')])).toEqual([[t.reports.formTitle, '/teacher/report/l-1']]);
+    expect(links.map((a) => [a.textContent, a.getAttribute('href')])).toEqual([[t.reports.open, '/teacher/report/l-1']]);
   });
 
   it('admin: one per student of a group lesson', () => {
@@ -36,6 +36,8 @@ describe('LessonReportLinks (R-REP-01: «تقرير الحلقة» from the less
   });
 
   it('nothing before the start or for a cancelled lesson', () => {
+    render(<LessonReportLinks lesson={lesson({ starts_at: STARTED, status: 'cancelled_by_admin' })} role="teacher" />);
+    expect(screen.queryByRole('link')).toBeNull();
     const { container } = render(<LessonReportLinks lesson={lesson({ starts_at: '2026-10-03T15:00:00.000Z' })} role="teacher" />);
     expect(container.textContent).toBe('');
     render(<LessonReportLinks lesson={lesson({ starts_at: STARTED, status: 'cancelled_by_admin' })} role="admin" />);

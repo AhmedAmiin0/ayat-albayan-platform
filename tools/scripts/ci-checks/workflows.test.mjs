@@ -102,7 +102,10 @@ test('deploying, migrating and mobile workflows never run on pull_request from s
 });
 
 test('secrets are only used in jobs that bind an environment (or call a workflow that does)', () => {
-  const allowed = { 'claude-tasks.yml': ['ANTHROPIC_API_KEY', 'CLAUDE_CODE_OAUTH_TOKEN'] };
+  const allowed = {
+    'claude-tasks.yml': ['ANTHROPIC_API_KEY', 'CLAUDE_CODE_OAUTH_TOKEN'],
+    'claude-code-review.yml': ['CLAUDE_CODE_OAUTH_TOKEN'],
+  };
   for (const w of workflows) {
     const top = secretsIn({ env: w.doc.env });
     // No exception left: the Turborepo cache is the GitHub Actions cache, no TURBO_TOKEN (2026-10-30).

@@ -1,5 +1,5 @@
 import { lesson } from '@/today/testing/fixtures';
-import { liveLessons, livePhase } from './live-filter';
+import { livePhase } from './live-filter';
 
 // 16:00-16:45 Riyadh = 13:00Z-13:45Z; the window opens 12:45Z.
 const row = lesson({ id: 'a', status: 'confirmed' });
@@ -22,16 +22,4 @@ test('only scheduled / confirmed lessons count', () => {
   for (const status of ['completed', 'cancelled_by_admin', 'no_show'] as const) {
     expect(livePhase(lesson({ id: 'c', status }), now)).toBeNull();
   }
-});
-
-test('liveLessons keeps live and soon rows, drops the rest, earliest start first', () => {
-  const soon = lesson({ id: 'soon', status: 'confirmed', starts_at: '2026-10-01T13:20:00Z', ends_at: '2026-10-01T14:00:00Z' });
-  const gone = lesson({ id: 'gone', status: 'cancelled_by_admin' });
-  const far = lesson({ id: 'far', status: 'confirmed', starts_at: '2026-10-01T16:00:00Z', ends_at: '2026-10-01T16:45:00Z' });
-  const out = liveLessons([soon, gone, far, row], at('2026-10-01T13:10:00Z'));
-  expect(out.map((i) => [i.lesson.id, i.phase])).toEqual([['a', 'live'], ['soon', 'soon']]);
-});
-
-test('nothing in, nothing out', () => {
-  expect(liveLessons([], new Date())).toEqual([]);
 });

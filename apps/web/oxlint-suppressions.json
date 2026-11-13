@@ -7535,11 +7535,6 @@
       "count": 1
     }
   },
-  "src/features/reporting/reports/history/LessonReportLinks.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/reporting/reports/history/RecordingLink.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -10687,7 +10682,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 8
@@ -10971,31 +10966,6 @@
       "count": 2
     }
   },
-  "src/features/teaching/teacher-students/TeacherStudents.sort.test.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/teacher-students/TeacherStudents.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/features/teaching/teacher-students/TeacherStudents.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/teacher-students/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/teacher-students/columns.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/teaching/teacher/MyPayouts.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -11052,20 +11022,6 @@
   "src/features/teaching/teacher/lessons/TeacherLessonCard.join.test.tsx": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/features/teaching/teacher/lessons/TeacherLessonCard.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 5
     }
   },
   "src/features/teaching/teacher/proposals/ProposeForm.tsx": {
@@ -11762,11 +11718,6 @@
     },
     "ab/module-boundaries": {
       "count": 3
-    }
-  },
-  "src/routes/teacher/index.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/routes/teacher/messages.tsx": {

@@ -1124,7 +1124,6 @@
     "noLessonsWeek": "No lessons this week",
     "noStudents": "No students with you yet",
     "noLink": "No fixed link yet. Contact the admin team.",
-    "yourTime": "Your time",
     "studentTime": "Student: {time}",
     "markAttendance": "Record attendance",
     "proposeReschedule": "Propose another time",
@@ -1135,7 +1134,7 @@
     "emptyHint": "Lessons show up here as soon as the admin team books them",
     "propose": {
       "title": "Propose another time",
-      "date": "Day",
+      "date": "Date",
       "time": "Time (your time zone)",
       "note": "Note for the admin team (optional)",
       "submit": "Send proposal",
@@ -1143,7 +1142,12 @@
       "pending": "You proposed {when}; waiting for the admin team's reply",
       "back": "Back"
     },
-    "trialChatViaSales": "Contact with a trial student’s family goes through sales."
+    "trialChatViaSales": "Contact with a trial student’s family goes through sales.",
+    "nextOn": "Your next lesson: {when} · {names}",
+    "noneSoon": "No lessons in the next two weeks",
+    "noMoreToday": "No other lessons today",
+    "openSchedule": "Open my schedule",
+    "awaiting": "Awaiting your confirmation"
   },
   "today": {
     "title": "Today",
@@ -1831,6 +1835,8 @@
       "few": "{n} reports waiting",
       "other": "{n} reports waiting"
     },
+    "pendingMore": "Show the rest ({n})",
+    "pendingError": "Could not load pending reports",
     "noPending": "All reports are written",
     "notSent": "Report not sent",
     "sentAt": "Sent on WhatsApp {when}",
@@ -4474,7 +4480,6 @@
   "teacherBoard": {
     "tab": "My students",
     "kinds": "Student status",
-    "window": "The last 14 days and the next 14 days",
     "student": "Student",
     "lastLesson": "Last lesson",
     "nextLesson": "Next lesson",
@@ -4485,11 +4490,8 @@
     "counts": "Present {present} · Absent {absent}",
     "rate": "Attendance {rate}%",
     "noStudents": "No current students",
-    "noLessons": "No lessons with this student in this period",
     "lessonsTab": "Lessons",
     "reportsTab": "Reports",
-    "attendanceTab": "Attendance",
-    "drawerTabs": "Student details",
     "writeReport": "Write the report",
     "openReport": "Open the report",
     "attendanceLog": "Attendance log",
@@ -4514,17 +4516,17 @@
       "title": "Teacher {teacher} cancelled a lesson",
       "reason": "Reason: {reason}"
     },
-    "openFile": "Student file"
+    "search": "Search by name or code",
+    "searchLabel": "Search students",
+    "noMatch": "No student matches this name or code",
+    "emptyHint": "Every student the academy assigns to you shows here, with their lessons in the last 14 days and the next 14 days.",
+    "clearSearch": "Clear the search"
   },
   "teacherStudents": {
-    "levelCol": "Level",
-    "ageCol": "Age",
-    "nextLessonCol": "Next lesson",
     "title": "Students",
     "kinds": "Student type",
     "subscribed": "Subscribed",
     "trial": "Trial",
-    "list": "Students list",
     "age": "{n} years",
     "nextLesson": "Next lesson: {when}",
     "noNextLesson": "No upcoming lesson",
@@ -4532,7 +4534,12 @@
     "emptyTrial": "You have no trial students right now",
     "loadFailed": "Could not load the students, try again",
     "retry": "Try again",
-    "openReports": "Open {name}'s file"
+    "ageYears": {
+      "one": "1 year",
+      "two": "2 years",
+      "few": "{n} years",
+      "other": "{n} years"
+    }
   },
   "teacherFile": {
     "title": "Student file",
@@ -4664,11 +4671,18 @@
     },
     "quickRatingCol": "WhatsApp rating"
   },
+  "teacherToday": {
+    "awaiting": "Awaiting your confirmation",
+    "nextLesson": "Your next lesson: {when} · {names}",
+    "noneSoon": "No lessons in the next two weeks",
+    "openSchedule": "Open my schedule",
+    "noOther": "No other lessons today",
+    "pendingTitle": "Reports not written yet · {n}",
+    "pendingMore": "Show the rest ({n})",
+    "pendingError": "Could not load the pending reports"
+  },
   "live": {
-    "title": "Live sessions",
-    "now": "Live now",
-    "startsAt": "Starts at {time}",
-    "teacher": "Teacher: {name}"
+    "now": "Live now"
   },
   "classroom": {
     "title": "Online classroom",
@@ -4785,7 +4799,6 @@
     "copyFailed": "Could not copy the link",
     "linkShown": "Student link",
     "linkWindow": "The link opens 15 minutes before the lesson",
-    "joinMeeting": "Meeting link (Meet/Jitsi)",
     "boardOf": "{name}'s board",
     "recordingNow": "Recording",
     "controls": "Classroom controls",

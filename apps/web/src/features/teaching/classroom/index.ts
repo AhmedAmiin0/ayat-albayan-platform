@@ -22,7 +22,7 @@ export {
 } from './api/meetings-api';
 export { ClassroomActions } from './join/ClassroomActions';
 export { ClassroomRoom } from './room/components/ClassroomRoom';
-export { CopyLinkButton } from './join/CopyLinkButton';
+export { CopyLinkButton, copyStudentLink } from './join/CopyLinkButton';
 export { GuestJoinPage } from './join/GuestJoinPage';
 export { EnterButton, type JoinableLesson, JoinButton } from './join/JoinButton';
 export { StaffJoinButton } from './join/StaffJoinButton';
@@ -50,3 +50,4 @@ export { AssistantLessonRow } from './sessions/AssistantLessonRow';
 export { AssistantsManager } from './sessions/AssistantsManager';
 export { StudentJoinLink } from './student-link/StudentJoinLink';
 export { isLessonNow, windowStateAt } from './student-link/student-link';
+export { joinHint } from './room/livekit/window-hint';

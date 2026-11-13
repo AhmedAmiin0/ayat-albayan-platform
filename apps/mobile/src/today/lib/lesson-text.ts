@@ -1,4 +1,11 @@
-import { ACADEMY_TZ, otherZoneClock, teacherName, weekdayOf, type ClockCycle } from '@ab/shared';
+import {
+  ACADEMY_TZ,
+  formatRunningHead,
+  otherZoneClock,
+  teacherName,
+  weekdayOf,
+  type ClockCycle,
+} from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { ltr } from '@/core/ui/primitives/Ltr';
@@ -30,6 +37,11 @@ export function viewerDayHint(iso: string, tz: string): string | null {
   const date = localDate(at, tz);
   if (date === localDate(at, ACADEMY_TZ)) return null;
   return weekdays[String(weekdayOf(date))] ?? null;
+}
+
+/** «الخميس 1 أكتوبر»: the running head's date without the year (the «اليوم» header line). */
+export function shortDate(now: Date): string {
+  return formatRunningHead(now, locale).gregorian.split(' ').slice(0, -1).join(' ');
 }
 
 /** «45 دقيقة» from the lesson's own span; nothing for a length outside the duration enum. */
@@ -71,6 +83,12 @@ export function studentNames(lesson: TodayLesson): string {
  */
 export function rowSubtitle(lesson: TodayLesson): string {
   const teacher = t.today.teacherTitled.replace('{teacher}', teacherName(lesson.teacher, locale));
-  const kind = lesson.makeup ? t.booking.makeup.tag : lesson.trial ? t.schedule.trialTag : undefined;
-  return [kind, teacher, durationLabel(lesson)].filter((part): part is string => part !== undefined).join(' · ');
+  const kind = lesson.makeup
+    ? t.booking.makeup.tag
+    : lesson.trial
+      ? t.schedule.trialTag
+      : undefined;
+  return [kind, teacher, durationLabel(lesson)]
+    .filter((part): part is string => part !== undefined)
+    .join(' · ');
 }

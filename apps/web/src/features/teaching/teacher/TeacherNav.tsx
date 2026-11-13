@@ -5,7 +5,15 @@ import { useTeacherPageOn } from '@/lib/settings/teacher-pages';
 
 // The teacher's own pages (R-TCH-03), the same order as the mobile tabs.
 export const TEACHER_NAV_ITEMS = [
-  { to: '/teacher', label: t.teacherNav.today, icon: 'clock', exact: true, permission: 'self.teacher' },
+  {
+    to: '/teacher',
+    label: t.teacherNav.today,
+    icon: 'clock',
+    exact: true,
+    // The home tabs write ?tab=: «اليوم» stays current on any search (docs/48).
+    activeOptions: { exact: true, includeSearch: false },
+    permission: 'self.teacher',
+  },
   { to: '/teacher/calendar', label: t.teacherNav.calendar, icon: 'calendar', permission: 'self.teacher' },
   { to: '/teacher/inbox', label: t.teacherNav.chats, icon: 'chat', permission: 'inbox.read' },
   { to: '/teacher/students', label: t.teacherNav.students, icon: 'users', permission: 'self.teacher' },
