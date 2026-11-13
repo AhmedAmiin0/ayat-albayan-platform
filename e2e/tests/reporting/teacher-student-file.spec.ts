@@ -85,7 +85,7 @@ test.describe('teacher student file (docs/47 PR 1)', () => {
     await expect(teacher.getByText(name).first()).toBeVisible({ timeout: 30_000 });
 
     // The course: its start (a calendar date) and how it ends; never a price.
-    const course = teacher.getByRole('region', { name: ar.teacherFile.title });
+    const course = teacher.getByRole('region', { name: ar.teacherFile.course });
     const start = dayLabel(await startsOn(s.subscriptionId));
     await expect(course).toContainText(ar.teacherFile.courseStart.replace('{date}', start));
     await expect(course).toContainText(/تنتهي الدورة بعد|النهاية المتوقعة للدورة|انتهت الدورة/);
