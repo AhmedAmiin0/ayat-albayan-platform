@@ -11,6 +11,8 @@ import { dayTimesSchema } from './day-times.js';
 
 export const localDate = z.iso.date();
 export const instant = z.iso.datetime({ offset: true });
+/** A one-lesson move's optional reason (docs/47 owner call 4), written on the moved-away row. */
+export const moveReasonSchema = z.string().trim().min(1).max(500).optional();
 export const lessonDuration = z.literal(DURATIONS);
 
 /** 0 = الأحد … 6 = السبت, at least one, no repeats. */
@@ -52,6 +54,8 @@ export const rescheduleRequestSchema = z.discriminatedUnion('scope', [
   z.object({
     scope: z.literal('one'),
     startsAt: instant,
+    /** docs/47 «سبب تغيير الموعد» (optional): the teacher sees it in the student file. */
+    reason: moveReasonSchema,
     /** Substitute teacher for this occurrence; defaults to the lesson's teacher. */
     teacherId: z.uuid().optional(),
     override: overrideSchema.optional(),

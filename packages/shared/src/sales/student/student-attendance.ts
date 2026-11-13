@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Attendance, LessonStatus } from '@ab/catalog';
+import type { Attendance, LessonStatus, ReportStatus } from '@ab/catalog';
 import { addCalendarMonths, monthRangeIn, RIYADH_TZ, riyadhToday } from '@ab/time';
 import { monthParam } from '@ab/money';
 import { attendanceKind, type AttendanceKind } from './student-details.js';
@@ -32,6 +32,23 @@ export interface AttendanceTableRow {
   is_makeup: boolean;
   /** This lesson replaced a moved one. */
   is_rescheduled: boolean;
+  /** docs/47: the start of the lesson it replaced, else its time before an edit. Absent: old API. */
+  moved_from?: string | null;
+  /** The start of the lesson this one moved to (a 'rescheduled' row). */
+  moved_to?: string | null;
+  /** «سبب تغيير الموعد»: a one-lesson move's reason (same teacher only). */
+  move_reason?: string | null;
+  /** The teacher reader's report of this lesson (docs/47); staff rows never carry it. */
+  report?: AttendanceRowReport | null;
+}
+
+/** The row's report state for the teacher: write / edit (inside the window) / view. */
+export interface AttendanceRowReport {
+  status: ReportStatus;
+  submitted_at: string | null;
+  sent_at: string | null;
+  can_edit: boolean;
+  edit_until: string | null;
 }
 
 /**
