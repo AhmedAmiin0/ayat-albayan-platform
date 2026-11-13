@@ -4474,7 +4474,6 @@
   "teacherBoard": {
     "tab": "My students",
     "kinds": "Student status",
-    "window": "The last 14 days and the next 14 days",
     "student": "Student",
     "lastLesson": "Last lesson",
     "nextLesson": "Next lesson",
@@ -4485,11 +4484,8 @@
     "counts": "Present {present} · Absent {absent}",
     "rate": "Attendance {rate}%",
     "noStudents": "No current students",
-    "noLessons": "No lessons with this student in this period",
     "lessonsTab": "Lessons",
     "reportsTab": "Reports",
-    "attendanceTab": "Attendance",
-    "drawerTabs": "Student details",
     "writeReport": "Write the report",
     "openReport": "Open the report",
     "attendanceLog": "Attendance log",
@@ -4514,17 +4510,16 @@
       "title": "Teacher {teacher} cancelled a lesson",
       "reason": "Reason: {reason}"
     },
-    "openFile": "Student file"
+    "search": "Search by name or code",
+    "searchLabel": "Search students",
+    "noMatch": "No student matches this name or code",
+    "emptyHint": "Every student the academy assigns to you shows here, with their lessons in the last 14 days and the next 14 days."
   },
   "teacherStudents": {
-    "levelCol": "Level",
-    "ageCol": "Age",
-    "nextLessonCol": "Next lesson",
     "title": "Students",
     "kinds": "Student type",
     "subscribed": "Subscribed",
     "trial": "Trial",
-    "list": "Students list",
     "age": "{n} years",
     "nextLesson": "Next lesson: {when}",
     "noNextLesson": "No upcoming lesson",
@@ -4532,7 +4527,12 @@
     "emptyTrial": "You have no trial students right now",
     "loadFailed": "Could not load the students, try again",
     "retry": "Try again",
-    "openReports": "Open {name}'s file"
+    "ageYears": {
+      "one": "1 year",
+      "two": "2 years",
+      "few": "{n} years",
+      "other": "{n} years"
+    }
   },
   "teacherFile": {
     "title": "Student file",
