@@ -5,10 +5,11 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
 
-const file = fileURLToPath(new URL('../../../.github/workflows/claude-code-review.yml', import.meta.url));
+const path = '../../../.github/workflows/claude-code-review.yml';
+const file = fileURLToPath(new URL(path, import.meta.url));
 const w = parse(readFileSync(file, 'utf8'));
 
-test('claude-code-review: pull_request only, skips forks and drafts, writes only PR comments', () => {
+test('claude-code-review: PRs only, skips forks and drafts, writes only comments', () => {
   assert.deepEqual(Object.keys(w.on), ['pull_request']);
   const job = w.jobs['claude-review'];
   assert.match(job.if, /head\.repo\.full_name == github\.repository/);
