@@ -82,15 +82,24 @@ function Dashboard({ me, ...props }: { me: TeacherMe } & Partial<HomeTabProps>) 
   const { hero, count } = homeToday(lessons.data, { now, today, tz: me.tz });
   const ids = tabIds('teacher-home', tab);
   const drawn = { openId, notice, tz: me.tz, fallbackLink: me.meeting_link };
+  // The hero and the block wait for the lessons (no flash of the hero's own report); a failed
+  // load still shows her fixed link as on a day with no hero.
+  const settled = lessons.data !== undefined || lessons.isError;
+  const onOpen = (id: string) => {
+    setNotice(null);
+    setOpenId(id);
+  };
   return (
     <>
-      {lessons.data && (
-        <TodayHero hero={hero} me={me} platform={platform} onOpen={setOpenId} onDone={setNotice} />
+      {settled && (
+        <>
+          <TodayHero hero={hero} me={me} platform={platform} onOpen={onOpen} onDone={setNotice} />
+          <PendingReports tz={me.tz} except={hero?.lesson.id} />
+        </>
       )}
-      <PendingReports tz={me.tz} except={hero?.lesson.id} />
       <Tabs label={t.teacherDash.tabs} tabs={homeTabs(count)} value={tab} onChange={onTab} idPrefix="teacher-home" />
       <div role="tabpanel" id={ids.panel} aria-labelledby={ids.tab}>
-        <DashboardPanel {...{ tab, me, lessons }} at={{ now, today }} onDone={setNotice} onOpen={setOpenId} />
+        <DashboardPanel {...{ tab, me, lessons }} at={{ now, today }} onDone={setNotice} onOpen={onOpen} />
       </div>
       <TeacherLessonDrawer
         lessons={lessons.data ?? []}

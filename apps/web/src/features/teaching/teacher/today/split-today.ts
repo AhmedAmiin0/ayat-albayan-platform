@@ -1,4 +1,4 @@
-import { isClosedLesson, type LessonView } from '@ab/shared';
+import { isClosedLesson, isOpenLesson, type LessonView } from '@ab/shared';
 
 // docs/48 «Day rows rule»: «بقية اليوم» = today's lessons not closed and not ended, the hero out;
 // ended ones fold under «انتهت n حلقات اليوم». Web lessonsOnDay keeps closed lessons (unlike mobile
@@ -17,9 +17,15 @@ export interface TodaySplit<L> {
   kind: DayKind;
 }
 
-type DayLesson = Pick<LessonView, 'id' | 'status' | 'ends_at'>;
+type DayLesson = Pick<LessonView, 'id' | 'status' | 'starts_at' | 'ends_at'>;
 
-const endedAt = (l: DayLesson, now: Date) => Date.parse(l.ends_at) <= now.getTime();
+const past = (iso: string, now: Date) => Date.parse(iso) <= now.getTime();
+/**
+ * Over for her day: ended, or started and already held (marked «تمت» early, excused, no-show):
+ * its report then waits in the pending block only, never on a row too (docs/48).
+ */
+const endedAt = (l: DayLesson, now: Date) =>
+  past(l.ends_at, now) || (past(l.starts_at, now) && !isOpenLesson(l.status));
 
 const KIND_RULES: readonly (readonly [DayKind, (s: KindInput) => boolean])[] = [
   ['empty', (s) => s.total === 0],

@@ -23,7 +23,7 @@ export function TeacherConfirm({ lesson, variant, size = 'lg', onDone }: Teacher
   const confirm = useTeacherConfirm(lesson.id, () => onDone(w.confirmedOk));
   const error = useConfirmError(lesson.id);
   return (
-    <>
+    <div className="grid gap-2">
       {error !== null && <FormAlert>{teacherActionError(error)}</FormAlert>}
       <Button
         type="button"
@@ -35,6 +35,6 @@ export function TeacherConfirm({ lesson, variant, size = 'lg', onDone }: Teacher
       >
         {w.confirm}
       </Button>
-    </>
+    </div>
   );
 }

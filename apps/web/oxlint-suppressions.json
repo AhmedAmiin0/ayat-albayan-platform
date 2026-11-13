@@ -10687,7 +10687,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 8
@@ -11063,20 +11063,6 @@
   "src/features/teaching/teacher/lessons/TeacherLessonCard.join.test.tsx": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/features/teaching/teacher/lessons/TeacherLessonCard.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 5
     }
   },
   "src/features/teaching/teacher/myStudentColumns.tsx": {
@@ -11802,11 +11788,6 @@
     },
     "ab/module-boundaries": {
       "count": 3
-    }
-  },
-  "src/routes/teacher/index.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/routes/teacher/messages.tsx": {

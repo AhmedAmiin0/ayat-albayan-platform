@@ -17,6 +17,8 @@ export interface TeacherLessonCardProps {
   /** Her profile link: a peer on a static lesson with no link of its own (R-LES-01, owner Q3). */
   fallbackLink: string | null;
   onDone: (message: string) => void;
+  /** false in a list of cards (the week tab): the lead is drawn secondary (docs/07 §6). */
+  leadFilled?: boolean;
 }
 
 /**
@@ -26,7 +28,8 @@ export interface TeacherLessonCardProps {
  * on a platform lesson or one with no link of its own; her own link otherwise, and then no
  * classroom and no «انسخ رابط الطالب». No family «تأكيد», no «اعتذر مسبقًا» (owner Q4).
  */
-export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherLessonCardProps) {
+export function TeacherLessonCard(props: TeacherLessonCardProps) {
+  const { lesson, tz, fallbackLink, onDone, leadFilled = true } = props;
   const clock = useClock();
   const plan = useTeacherPlan(lesson);
   const status = useLessonStatusText().chip(lesson.status);
@@ -45,7 +48,7 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
       {lead && (
         <TeacherLessonLead
           {...{ action: lead, lesson, plan, onDone }}
-          look={{ filled: true, size: 'lg' }}
+          look={{ filled: leadFilled, size: 'lg' }}
         />
       )}
       {room && lead !== 'join' && <StaffJoinButton lesson={lesson} size="lg" variant="secondary" />}

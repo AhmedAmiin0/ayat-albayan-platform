@@ -57,16 +57,16 @@ test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R
       await teacher.goto('/teacher');
       for (const lessonId of s.past) await apiSubmit(teacher, { lessonId });
 
-      // Today's started lesson is the running hero (docs/48): its own link leads (the fixed-link
-      // banner hides while a hero exists); its drawer has no family-style «تأكيد الحلقة» (docs/46 D1).
+      // Today's started lesson is the running hero (docs/48): its own link leads (the banner
+      // hides while a hero exists); its drawer has no family-style «تأكيد الحلقة» (docs/46 D1).
       await teacher.reload();
       const hero = teacher.getByRole('region', { name: ar.today.running });
       await expect(hero.getByRole('link', { name: ar.teacherDash.join })).toHaveAttribute('href', OWN_LINK);
       await hero.getByRole('button', { name: ar.today.details }).click();
-      const drawer = teacher.getByRole('dialog', { name: new RegExp(s.week.name) });
-      await expect(drawer.getByRole('button', { name: ar.lessons.event.complete })).toBeVisible();
-      await expect(drawer.getByRole('button', { name: ar.lessons.event.confirm })).toHaveCount(0);
-      await drawer.getByRole('button', { name: ar.common.close }).click();
+      const today = teacher.getByRole('dialog', { name: new RegExp(s.week.name) });
+      await expect(today.getByRole('button', { name: ar.lessons.event.complete })).toBeVisible();
+      await expect(today.getByRole('button', { name: ar.lessons.event.confirm })).toHaveCount(0);
+      await today.getByRole('button', { name: ar.common.close }).click();
 
       // The week tab: one card on each of the three days, at the Cairo clock.
       await tab(teacher, ar.teacherDash.week);

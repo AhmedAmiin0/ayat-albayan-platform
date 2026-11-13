@@ -1,11 +1,17 @@
 import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@/lib/i18n/i18n';
 import { publicConfigQuery } from '@/lib/settings/public-config';
 import { TeacherLessonCard } from './TeacherLessonCard';
+
+const copyJoinLinkUrl = vi.hoisted(() => vi.fn());
+vi.mock('@/features/teaching/classroom/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  copyJoinLinkUrl,
+}));
 
 const LINK = 'https://meet.jit.si/ayat-abrar'; // the fixture lesson's own link
 const MINE = 'https://meet.jit.si/ayat-mine'; // her profile link
@@ -44,6 +50,16 @@ it('no link of its own: the classroom, her profile link as a peer, «انسخ ر
   expect(classroom()).toBeTruthy();
   expect(screen.getByRole('link', { name: t.teacherDash.joinLink }).getAttribute('href')).toBe(MINE);
   expect(more()).toBeTruthy();
+});
+
+it('«انسخ رابط الطالب» from «المزيد»: the link shows outside the closed menu', async () => {
+  copyJoinLinkUrl.mockResolvedValue({ url: 'https://example.test/j/abc' });
+  card({ status: 'confirmed', platform_classroom: true });
+  fireEvent.click(screen.getByRole('button', { name: t.common.more }));
+  fireEvent.click(screen.getByRole('button', { name: t.classroom.copyLink }));
+  const shown = await screen.findByRole('textbox', { name: t.classroom.linkShown });
+  expect((shown as HTMLInputElement).value).toBe('https://example.test/j/abc');
+  expect(shown.closest('[hidden]')).toBeNull();
 });
 
 it('a platform lesson: the classroom only', () => {

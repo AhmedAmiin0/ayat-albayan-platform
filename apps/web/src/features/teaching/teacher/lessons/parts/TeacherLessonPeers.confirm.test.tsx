@@ -27,7 +27,8 @@ function Cached({ onDone }: { onDone: (m: string) => void }) {
 
 async function renderCard(l = AHEAD, onDone = vi.fn()) {
   server = l;
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+  const once = { retry: false };
+  const client = new QueryClient({ defaultOptions: { queries: once, mutations: once } });
   render(
     <QueryClientProvider client={client}>
       <Cached onDone={onDone} />

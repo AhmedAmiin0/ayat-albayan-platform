@@ -28,7 +28,7 @@ export function LessonDayList({ lessons, tz, fallbackLink, empty, onDone }: Less
             {`${weekday[String(weekdayOf(day))] ?? ''} ${dayMonthLabel(day)}`}
           </h3>
           {list.map((lesson) => (
-            <TeacherLessonCard key={lesson.id} lesson={lesson} tz={tz} fallbackLink={fallbackLink} onDone={onDone} />
+            <TeacherLessonCard key={lesson.id} lesson={lesson} tz={tz} fallbackLink={fallbackLink} onDone={onDone} leadFilled={false} />
           ))}
         </section>
       ))}

@@ -87,6 +87,18 @@ describe('TeacherDashboard — hero and tabs (docs/48)', () => {
     expect(screen.getByRole('dialog', { name: 'جود' })).toBeTruthy();
   });
 
+  it('opening a drawer clears the last notice (review: no stale message in the next lesson)', async () => {
+    apiSend.mockResolvedValue(HERO);
+    renderDash(undefined, 'today');
+    const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
+    fireEvent.click(within(hero).getByRole('button', { name: t.teacherBoard.confirm }));
+    await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.teacherBoard.confirmedOk));
+    const panel = screen.getByRole('tabpanel');
+    fireEvent.click(within(panel).getByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'جود') }));
+    const drawer = screen.getByRole('dialog', { name: 'جود' });
+    expect(within(drawer).getByRole('status').textContent).toBe('');
+  });
+
   it('a lessons error with nothing cached offers a retry', async () => {
     renderDash(new Error('down'), 'today');
     const alert = await screen.findByRole('alert');

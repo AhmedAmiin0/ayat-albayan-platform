@@ -16,7 +16,7 @@ export interface TeacherLessonRowProps {
   tz: string;
   onOpen: (lessonId: string) => void;
   onDone: (message: string) => void;
-  /** An ended row in «انتهت n حلقات اليوم»: muted, no lead (its report waits in the block). */
+  /** An ended row in «انتهت n حلقات اليوم»: muted, no lead. */
   ended?: boolean;
 }
 

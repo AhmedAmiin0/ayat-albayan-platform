@@ -29,6 +29,13 @@ describe('splitToday (docs/48 day rows rule)', () => {
     expect(s.kind).toBe('rows');
   });
 
+  it('a lesson held early (started, no longer open) folds into done, not a row', () => {
+    const s = splitToday([at('held', '11:30', 'completed'), LATER], { now: NOW, heroId: 'later' });
+    expect(ids(s.done)).toEqual(['held']);
+    expect(ids(s.rest)).toEqual([]);
+    expect(s.open).toBe(1);
+  });
+
   it('kinds: empty, only the hero, all ended', () => {
     expect(splitToday([], { now: NOW, heroId: null }).kind).toBe('empty');
     expect(splitToday([at('c', '14:00', 'cancelled_by_admin')], { now: NOW, heroId: null }).kind).toBe('empty');

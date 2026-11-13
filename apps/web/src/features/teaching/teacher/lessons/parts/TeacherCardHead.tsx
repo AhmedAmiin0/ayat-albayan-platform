@@ -1,11 +1,10 @@
 import { isOpenLesson, lessonWhenAt, type LessonView, subscriptionStatusStyle } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
-import { MoreMenu } from '@/components/ui/overlay/more-menu';
-import { CopyLinkButton } from '@/features/teaching/classroom';
 import { LessonTags, studentNames, studentTimes } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import type { LessonStatusChip } from '@/lib/settings/lesson-status-text';
 import { useClock } from '@/lib/clock';
+import { CopyStudentLink } from './CopyStudentLink';
 
 export interface TeacherCardHeadProps {
   lesson: LessonView;
@@ -47,11 +46,7 @@ export function TeacherCardHead({ lesson, tz, word, room }: TeacherCardHeadProps
           ))}
         </div>
       </div>
-      {room && isOpenLesson(lesson.status) && (
-        <MoreMenu>
-          <CopyLinkButton lesson={lesson} />
-        </MoreMenu>
-      )}
+      {room && isOpenLesson(lesson.status) && <CopyStudentLink lessonId={lesson.id} />}
     </div>
   );
 }
