@@ -1124,7 +1124,6 @@
     "noLessonsWeek": "No lessons this week",
     "noStudents": "No students with you yet",
     "noLink": "No fixed link yet. Contact the admin team.",
-    "yourTime": "Your time",
     "studentTime": "Student: {time}",
     "markAttendance": "Record attendance",
     "proposeReschedule": "Propose another time",
@@ -1135,7 +1134,7 @@
     "emptyHint": "Lessons show up here as soon as the admin team books them",
     "propose": {
       "title": "Propose another time",
-      "date": "Day",
+      "date": "Date",
       "time": "Time (your time zone)",
       "note": "Note for the admin team (optional)",
       "submit": "Send proposal",
@@ -1143,7 +1142,12 @@
       "pending": "You proposed {when}; waiting for the admin team's reply",
       "back": "Back"
     },
-    "trialChatViaSales": "Contact with a trial student’s family goes through sales."
+    "trialChatViaSales": "Contact with a trial student’s family goes through sales.",
+    "nextOn": "Your next lesson: {when} · {names}",
+    "noneSoon": "No lessons in the next two weeks",
+    "noMoreToday": "No other lessons today",
+    "openSchedule": "Open my schedule",
+    "awaiting": "Awaiting your confirmation"
   },
   "today": {
     "title": "Today",
@@ -1831,6 +1835,8 @@
       "few": "{n} reports waiting",
       "other": "{n} reports waiting"
     },
+    "pendingMore": "Show the rest ({n})",
+    "pendingError": "Could not load pending reports",
     "noPending": "All reports are written",
     "notSent": "Report not sent",
     "sentAt": "Sent on WhatsApp {when}",
@@ -4786,7 +4792,6 @@
     "copyFailed": "Could not copy the link",
     "linkShown": "Student link",
     "linkWindow": "The link opens 15 minutes before the lesson",
-    "joinMeeting": "Meeting link (Meet/Jitsi)",
     "boardOf": "{name}'s board",
     "recordingNow": "Recording",
     "controls": "Classroom controls",

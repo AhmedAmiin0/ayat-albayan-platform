@@ -11,6 +11,8 @@ import { apiSubmit } from '../../support/reporting/teacher-extra';
 
 const DAY = 86_400_000;
 const LINK = 'https://meet.jit.si/ayat-e2e-teacher-link';
+/** seedLesson's own link on every lesson (support/core/schedule.ts): the hero leads to it. */
+const OWN_LINK = 'https://meet.jit.si/ayat-e2e-abrar';
 
 /** A lesson's local date and clock on the teacher's Cairo clock. */
 function cairo(at: Date): { day: string; clock: string } {
@@ -55,14 +57,16 @@ test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R
       await teacher.goto('/teacher');
       for (const lessonId of s.past) await apiSubmit(teacher, { lessonId });
 
-      // The teacher's own link; today's card (already started) has no family-style «تأكيد
-      // الحلقة» (docs/46 D1).
+      // Today's started lesson is the running hero (docs/48): its own link leads (the banner
+      // hides while a hero exists); its drawer has no family-style «تأكيد الحلقة» (docs/46 D1).
       await teacher.reload();
-      await expect(teacher.getByRole('region', { name: ar.teacherDash.joinLink }).getByRole('link', { name: ar.teacherDash.join })).toHaveAttribute('href', LINK);
-      await tab(teacher, ar.teacherDash.today);
-      const card = teacher.getByRole('article', { name: new RegExp(s.week.name) });
-      await expect(card.getByRole('button', { name: ar.lessons.event.complete })).toBeVisible();
-      await expect(card.getByRole('button', { name: ar.lessons.event.confirm })).toHaveCount(0);
+      const hero = teacher.getByRole('region', { name: ar.today.running });
+      await expect(hero.getByRole('link', { name: ar.teacherDash.join })).toHaveAttribute('href', OWN_LINK);
+      await hero.getByRole('button', { name: ar.today.details }).click();
+      const today = teacher.getByRole('dialog', { name: new RegExp(s.week.name) });
+      await expect(today.getByRole('button', { name: ar.lessons.event.complete })).toBeVisible();
+      await expect(today.getByRole('button', { name: ar.lessons.event.confirm })).toHaveCount(0);
+      await today.getByRole('button', { name: ar.common.close }).click();
 
       // The week tab: one card on each of the three days, at the Cairo clock.
       await tab(teacher, ar.teacherDash.week);

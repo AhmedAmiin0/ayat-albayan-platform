@@ -6,7 +6,8 @@ import { t } from '@/lib/i18n/i18n';
 import { copyJoinLinkUrl } from '@/features/teaching/classroom/api/api';
 import { classroomErrorText } from '@/features/teaching/classroom/room/livekit/errors';
 
-async function copy(lessonId: string): Promise<string> {
+/** A fresh guest link, copied to the clipboard when allowed; the URL either way. */
+export async function copyStudentLink(lessonId: string): Promise<string> {
   const { url } = await copyJoinLinkUrl(lessonId);
   try {
     await navigator.clipboard.writeText(url);
@@ -18,7 +19,7 @@ async function copy(lessonId: string): Promise<string> {
 
 /** «انسخ لينك الطالب»: a fresh guest link, copied to the clipboard and shown, no WhatsApp needed. Full width (docs/07 «الأزرار»). */
 export function CopyLinkButton({ lesson }: { lesson: Pick<LessonView, 'id' | 'status'> }) {
-  const make = useMutation({ mutationFn: copy });
+  const make = useMutation({ mutationFn: copyStudentLink });
   if (!isOpenLesson(lesson.status)) return null;
   return (
     <div className="grid gap-1.5">

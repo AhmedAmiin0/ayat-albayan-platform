@@ -16,14 +16,16 @@ test.describe('journey 2 — lesson report (R-REP-01..04)', () => {
     const seed = await seedPackageStudent({ teacherId, paid: true, guardian: 'أم سهيلة', student: 'سهيلة' });
     expect(await balanceOf(seed.subscriptionId)).toMatchObject({ remaining: 3 });
 
-    // Teacher: today's lesson (already started) → «الحلقة تمت» → «تقرير الحلقة».
+    // Teacher: today's lesson (already started) is the running hero (docs/48) → «التفاصيل» →
+    // the drawer's «الحلقة تمت» → its «اكتب التقرير».
     const page = await asRole('teacher');
     await page.goto('/teacher');
-    await page.getByRole('tab', { name: ar.teacherDash.today }).click();
-    const card = page.getByRole('article', { name: /سهيلة/ });
-    await card.getByRole('button', { name: ar.lessons.event.complete }).click();
-    await expect(page.getByRole('status').filter({ hasText: ar.lessons.statusSaved })).toBeVisible();
-    await card.getByRole('link', { name: ar.reports.formTitle }).click();
+    const hero = page.getByRole('region', { name: ar.today.running });
+    await hero.getByRole('button', { name: ar.today.details }).click();
+    const drawer = page.getByRole('dialog', { name: /سهيلة/ });
+    await drawer.getByRole('button', { name: ar.lessons.event.complete }).click();
+    await expect(drawer.getByRole('status').filter({ hasText: ar.lessons.statusSaved })).toBeVisible();
+    await drawer.getByRole('link', { name: ar.reports.open }).click();
 
     // The identity is prefilled and read-only (R-REP-01); attendance comes from the card.
     const identity = page.getByRole('region', { name: ar.reports.identity });

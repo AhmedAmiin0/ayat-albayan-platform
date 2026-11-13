@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { TeacherLessonActions } from './TeacherLessonActions';
+import { TeacherLessonCard } from '@/features/teaching/teacher/lessons/TeacherLessonCard';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
@@ -15,14 +15,14 @@ const w = t.teacherBoard;
 function openCancel(onDone = vi.fn()) {
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <TeacherLessonActions lesson={AHEAD} onDone={onDone} />
+      <TeacherLessonCard lesson={AHEAD} tz="Africa/Cairo" fallbackLink={null} onDone={onDone} />
     </QueryClientProvider>,
   );
   fireEvent.click(screen.getByRole('button', { name: w.cancel }));
   return { onDone, dialog: screen.getByRole('dialog', { name: w.cancelTitle }) };
 }
 
-describe('TeacherLessonActions — «إلغاء الحلقة» (docs/46 C3, D3)', () => {
+describe('TeacherLessonPeers — «إلغاء الحلقة» (docs/46 C3, D3)', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-10-03T09:00:00.000Z'));

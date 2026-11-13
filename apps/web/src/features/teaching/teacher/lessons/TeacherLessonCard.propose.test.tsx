@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError } from '@/lib/http/api';
@@ -36,7 +36,8 @@ describe('TeacherLessonCard — «اقترح موعدًا آخر» (R-SCH-08)', 
     apiSend.mockResolvedValue(MONDAY);
     const onDone = renderCard();
     fireEvent.click(screen.getByRole('button', { name: t.teacherDash.proposeReschedule }));
-    expect(document.activeElement?.textContent).toBe(t.teacherDash.propose.title);
+    // A Dialog on every width (docs/48: no inline form in the card).
+    expect(screen.getByRole('dialog', { name: t.teacherDash.propose.title })).toBeTruthy();
     fireEvent.change(screen.getByLabelText(t.teacherDash.propose.date), { target: { value: '2026-10-06' } });
     fireEvent.change(screen.getByLabelText(t.teacherDash.propose.time), { target: { value: '18:30' } });
     fireEvent.change(screen.getByLabelText(t.teacherDash.propose.note), { target: { value: ' عندي ظرف ' } });
@@ -56,11 +57,23 @@ describe('TeacherLessonCard — «اقترح موعدًا آخر» (R-SCH-08)', 
     expect(await screen.findByText(t.lessons.error.proposal_pending)).toBeTruthy();
   });
 
-  it('a pending proposal shows instead of the button; closed lessons offer none', () => {
+  it('the cancel dialog offers «اقترح موعدًا آخر»: it closes and opens the proposal (owner Q5)', () => {
+    renderCard();
+    fireEvent.click(screen.getByRole('button', { name: t.teacherBoard.cancel }));
+    const cancel = screen.getByRole('dialog', { name: t.teacherBoard.cancelTitle });
+    fireEvent.click(within(cancel).getByRole('button', { name: t.teacherBoard.suggestOther }));
+    expect(screen.queryByRole('dialog', { name: t.teacherBoard.cancelTitle })).toBeNull();
+    expect(screen.getByRole('dialog', { name: t.teacherDash.propose.title })).toBeTruthy();
+  });
+
+  it('a pending proposal shows instead of the button, and the cancel dialog offers none', () => {
     const pending = { id: 'p1', proposed_starts_at: '2026-10-06T15:30:00.000Z', note: null, created_at: '2026-10-03T08:00:00.000Z' };
     renderCard(lesson({ ...MONDAY, pending_proposal: pending }));
     expect(screen.getByText(/اقترحت .*18:30، بانتظار رد الإدارة/)).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.teacherDash.proposeReschedule })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t.teacherBoard.cancel }));
+    const cancel = screen.getByRole('dialog', { name: t.teacherBoard.cancelTitle });
+    expect(within(cancel).queryByRole('button', { name: t.teacherBoard.suggestOther })).toBeNull();
   });
 
   it('a completed lesson cannot be moved', () => {

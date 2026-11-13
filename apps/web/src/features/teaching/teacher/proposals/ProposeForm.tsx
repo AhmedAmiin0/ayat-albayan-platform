@@ -47,6 +47,8 @@ export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormPro
       await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
       onDone(t.teacherDash.propose.sent);
     },
+    // A 409 proposal_pending: re-read, so the card stops offering it before the 30 s poll.
+    onError: () => queryClient.invalidateQueries({ queryKey: LESSONS_KEY }),
   });
   const today = zonedPartsIn(new Date(), tz).date;
 
