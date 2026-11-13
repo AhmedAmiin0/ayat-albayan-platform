@@ -45,7 +45,7 @@ export function TeacherStudentFile({ studentId, tab, onTab }: TeacherStudentFile
   if (head.isError) {
     return <FormAlert>{notHers(head.error) ? t.common.forbidden : t.common.error}</FormAlert>;
   }
-  if (!head.data) return <ListSkeleton />;
+  if (!head.data || me.isPending) return <ListSkeleton />;
   const data = head.data;
   const panels: Record<FileTab, () => ReactNode> = {
     lessons: () => (

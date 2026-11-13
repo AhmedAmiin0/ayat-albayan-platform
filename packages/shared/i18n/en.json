@@ -4522,6 +4522,7 @@
   "teacherFile": {
     "title": "Student file",
     "tabs": "Student file sections",
+    "course": "Course",
     "upcoming": "Lessons in the next 14 days",
     "noUpcoming": "No lessons in the next 14 days",
     "courseStart": "Course start: {date}",

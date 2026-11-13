@@ -425,6 +425,7 @@
   "TeacherEarningsController.void": ["admin"],
   "TeacherMeController.lessons": ["teacher"],
   "TeacherMeController.me": ["teacher"],
+  "TeacherAttendanceController.head": ["teacher"],
   "TeacherAttendanceController.table": ["teacher"],
   "TeacherLessonController.cancel": ["teacher"],
   "TeacherLessonController.confirm": ["teacher"],

@@ -58,9 +58,9 @@ describe('toTeacherCourse (the whitelist)', () => {
     });
   });
 
-  it('remaining is clamped at 0; no balance row: nothing used yet', () => {
-    expect(toTeacherCourse(pkg('p', '2026-10-01'), bal('p', 9, { remaining: -1 }))?.lessons_remaining)
-      .toBe(0);
+  it('remaining is clamped at 0, used at the total; no balance row: nothing used yet', () => {
+    const over = toTeacherCourse(pkg('p', '2026-10-01'), bal('p', 10, { remaining: -2 }));
+    expect(over).toMatchObject({ lessons_used: 8, lessons_remaining: 0 });
     expect(toTeacherCourse(pkg('p', '2026-10-01'), undefined)).toMatchObject({
       lessons_used: 0, lessons_remaining: 8,
     });

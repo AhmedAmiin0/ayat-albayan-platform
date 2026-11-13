@@ -34,11 +34,17 @@ const isoOrNull = (at: string | null | undefined): string | null =>
 const stoppedAt = (p: CoursePackageRow): string | null =>
   p.cancel_kind === 'stopped' ? isoOrNull(p.cancelled_at) : null;
 
-/** Used and left; without a balance row nothing is used yet. Left never reads below 0. */
+/**
+ * Used and left; without a balance row nothing is used yet. Neither reads past the package
+ * («10 من 8» would hint at unpaid lessons), and left never reads below 0.
+ */
 function counts(p: CoursePackageRow, b: CourseBalance | undefined) {
   const used = b?.lessons_used ?? 0;
   const remaining = b?.remaining ?? p.lessons_total - used;
-  return { lessons_used: used, lessons_remaining: Math.max(0, remaining) };
+  return {
+    lessons_used: Math.min(used, p.lessons_total),
+    lessons_remaining: Math.max(0, remaining),
+  };
 }
 
 /**

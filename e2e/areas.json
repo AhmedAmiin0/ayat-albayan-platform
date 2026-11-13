@@ -263,7 +263,8 @@
         "apps/web/src/routes/admin/students/$studentId_.reports.$lessonId.tsx",
         "apps/api/src/modules/reporting/reports/",
         "apps/api/src/modules/reporting/report-pdf/",
-        "apps/api/src/modules/teaching/lesson-rating/"
+        "apps/api/src/modules/teaching/lesson-rating/",
+        "apps/api/src/modules/sales/sales-students/attendance/"
       ],
       "specs": [
         "platform/forms-parity.spec.ts",

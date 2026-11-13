@@ -16,7 +16,7 @@ export function CourseLine({ course, tz }: CourseLineProps) {
   if (!course) return <p className="mb-4 text-sm text-ink-3">{t.teacherFile.noCourse}</p>;
   const lines = courseLines(course, tz);
   return (
-    <section aria-label={t.teacherFile.title} className="mb-4 grid gap-1">
+    <section aria-label={t.teacherFile.course} className="mb-4 grid gap-1">
       <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-ink-2">
         <li>{lines.start}</li>
         <li className="font-semibold text-ink">{lines.end}</li>
