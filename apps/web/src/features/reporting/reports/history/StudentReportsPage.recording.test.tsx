@@ -50,10 +50,10 @@ describe('report history → the lesson’s recording', () => {
     expect(screen.getAllByRole('link', { name: LINK })).toHaveLength(1);
   });
 
-  it('a teacher’s link opens her student file on «التقارير» at the recording (docs/47)', async () => {
+  it('a teacher’s link opens the student file at that lesson’s row (docs/49)', async () => {
     renderPage('teacher', ['l-b']);
     const link = await screen.findByRole('link', { name: LINK });
-    expect(link.getAttribute('href')).toBe('/teacher/students/s-1?tab=reports#recording-l-b');
+    expect(link.getAttribute('href')).toBe('/teacher/students/s-1#recording-l-b');
   });
 
   it('asks only for the ids: no signed recording list is requested', async () => {

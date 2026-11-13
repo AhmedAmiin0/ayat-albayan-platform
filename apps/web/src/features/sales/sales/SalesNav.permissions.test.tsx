@@ -43,6 +43,6 @@ describe('SalesNav / TeacherNav — dynamic roles', () => {
   it('keeps the teacher’s own pages and drops only what is not granted', () => {
     render(<TeacherNav can={without('inbox.read')} />, { wrapper: teacherPagesWrapper(true) });
     expect(screen.queryByRole('link', { name: t.teacherNav.chats })).toBeNull();
-    expect(screen.getByRole('link', { name: t.teacherNav.reports })).toBeTruthy();
+    expect(screen.getByRole('link', { name: t.teacherNav.students })).toBeTruthy();
   });
 });

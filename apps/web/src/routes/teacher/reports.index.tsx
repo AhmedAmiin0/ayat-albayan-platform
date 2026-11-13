@@ -1,16 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { MyReports } from '@/features/teaching/teacher/reports/MyReports';
-import { MY_REPORTS_LIST_KEYS } from '@/features/teaching/teacher/reports/SubmittedReports';
-import { parseServerListSearch } from '@/lib/list/server-list-search';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/** /teacher/reports?page&sort&dir&f_<key> — pending, sent (edit window) and my students' history (R-REP-01/02/05). */
+/**
+ * /teacher/reports — the old «التقارير» page (docs/49): each report now opens inside its lesson
+ * in the student file, so the address sends the teacher to «الطلاب» and drops any old list search.
+ */
 export const Route = createFileRoute('/teacher/reports/')({
-  validateSearch: (s: Record<string, unknown>) => parseServerListSearch(s, MY_REPORTS_LIST_KEYS),
-  component: MyReportsRoute,
+  beforeLoad: () => {
+    redirect({ to: '/teacher/students', throw: true });
+  },
 });
-
-function MyReportsRoute() {
-  const search = Route.useSearch();
-  const navigate = Route.useNavigate();
-  return <MyReports search={search} onSearch={(patch) => void navigate({ search: (prev) => ({ ...prev, ...patch }) })} />;
-}

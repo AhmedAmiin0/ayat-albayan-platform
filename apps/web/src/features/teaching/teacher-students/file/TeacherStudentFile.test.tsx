@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
@@ -62,16 +62,13 @@ describe('TeacherStudentFile «ملف الطالب» (docs/47)', () => {
     expect(within(pending).queryByText('آية')).toBeNull();
   });
 
-  it('«الحلقات» (default): the next 14 days with a cancel reason, then the month log', async () => {
-    const onTab = vi.fn();
-    renderFile({ apiFetch, onTab });
+  it('no tabs (docs/49): the next 14 days with a cancel reason, then the month log', async () => {
+    renderFile({ apiFetch });
     const upcoming = await screen.findByRole('table', { name: t.teacherFile.upcoming });
     const [, cancelled] = within(upcoming).getAllByRole('row').slice(1);
     expect(within(cancelled as HTMLElement).getByText(/سفر الأسرة/)).toBeTruthy();
     expect(await screen.findByRole('region', { name: t.teacherBoard.attendanceLog })).toBeTruthy();
-    const tabs = screen.getByRole('tablist', { name: t.teacherFile.tabs });
-    expect(within(tabs).getAllByRole('tab').map((x) => x.getAttribute('aria-selected'))).toEqual(['true', 'false']);
-    fireEvent.click(within(tabs).getByRole('tab', { name: t.teacherBoard.reportsTab }));
-    expect(onTab).toHaveBeenCalledWith('reports');
+    expect(screen.queryByRole('tablist')).toBeNull();
+    expect(screen.queryByRole('tab')).toBeNull();
   });
 });

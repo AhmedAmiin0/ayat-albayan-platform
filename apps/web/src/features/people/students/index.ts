@@ -38,7 +38,7 @@ export {
 } from './list/search';
 export { AgeField, type AgeFieldProps, ContactIsSelfField, GenderField } from './profile/FactFields';
 export { durationText, sizeText } from './recordings/recording-format';
-export { StudentRecordings } from './recordings/StudentRecordings';
+export { LessonRecording } from './recordings/LessonRecording';
 export {
   deleteRecording,
   recordedLessonIdsQuery,

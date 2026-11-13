@@ -276,6 +276,7 @@ Tests run in CI only.
   - Prune the 4 now-unused module-boundaries entries of reports.$studentId.tsx (eslint :11865, oxlint :11835) with the repo's prune script, run in the cloud routine.
   - Regenerate apps/web/src/routeTree.gen.ts.
   - e2e/areas.json:303: replace routes/teacher/students.tsx with students.index.tsx (people area). Add students.$studentId.tsx to the «reports» area paths.
+- **Done (web half of PR2, docs/49, branch feat/teacher-web-reports-in-lessons):** the nav item, the /teacher/reports redirect and the deletions below; the file also lost its «التقارير» tab (each report opens inside its lesson). The paused list is not part of it.
 - PR2 apps/web/src/features/teaching/teacher/TeacherNav.tsx L12: remove the /teacher/reports item. Rebased on #711, whose NAV_PAGE never names reports.
   PR2 apps/web/src/routes/teacher/reports.index.tsx: `beforeLoad: () => { throw redirect({ to: '/teacher/students' }) }`.
 - PR2, if owner question 5 says yes:
@@ -363,7 +364,7 @@ Tests run in CI only.
 
 ## Redirects
 
-- web /teacher/reports/$studentId → /teacher/students/$studentId?tab=reports, keeping any #recording-<id> hash (PR1)
+- web /teacher/reports/$studentId → /teacher/students/$studentId (no tab since docs/49), keeping any #recording-<id> hash, which opens that lesson's row (PR1)
 - web /teacher/reports (with any query) → /teacher/students (PR2)
 - web /teacher/students → same URL, served by students.index.tsx
 - web /teacher/report/$lessonId → unchanged

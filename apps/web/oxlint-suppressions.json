@@ -11009,14 +11009,6 @@
       "count": 4
     }
   },
-  "src/features/teaching/teacher/MyStudents.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/features/teaching/teacher/TeacherDashboard.test.tsx": {
     "stylistic/max-len": {
       "count": 3
@@ -11031,14 +11023,11 @@
     }
   },
   "src/features/teaching/teacher/api.ts": {
-    "stylistic/max-len": {
+    "ab/module-boundaries": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 3
-    },
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/teaching/teacher/lessons/LessonDayList.tsx": {
@@ -11079,11 +11068,6 @@
       "count": 5
     }
   },
-  "src/features/teaching/teacher/myStudentColumns.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/teaching/teacher/proposals/ProposeForm.tsx": {
     "react/purity": {
       "count": 1
@@ -11117,30 +11101,6 @@
     },
     "ab/module-boundaries": {
       "count": 4
-    }
-  },
-  "src/features/teaching/teacher/reports/MyReports.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/teacher/reports/SubmittedReports.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/teacher/reports/submitted-report-columns.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 2
     }
   },
   "src/lib/clock-options.tsx": {
@@ -11825,14 +11785,6 @@
   "src/routes/teacher/report.$lessonId.tsx": {
     "ab/module-boundaries": {
       "count": 1
-    }
-  },
-  "src/routes/teacher/reports.index.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 2
     }
   },
   "src/styles/tokens.test.ts": {

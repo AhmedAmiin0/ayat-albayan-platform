@@ -5,7 +5,7 @@ import { t } from '@/lib/i18n/i18n';
 
 /**
  * «تسجيل الحلقة»: from a report row to the lesson's recording in the student's file (the teacher's
- * opens on «التقارير», where the recordings sit under the history, docs/47).
+ * file opens that lesson's row at #recording-<id>, docs/49).
  */
 export function RecordingLink({ studentId, lessonId, role, when }: { studentId: string; lessonId: string; role: UserRole; when: string }) {
   const props = { hash: `recording-${lessonId}`, params: { studentId }, className: buttonVariants({ variant: 'secondary', size: 'sm' }) };
@@ -20,12 +20,7 @@ export function RecordingLink({ studentId, lessonId, role, when }: { studentId: 
       {body}
     </Link>
   ) : (
-    <Link
-      to="/teacher/students/$studentId"
-      search={{ tab: 'reports' }}
-      aria-label={label}
-      {...props}
-    >
+    <Link to="/teacher/students/$studentId" aria-label={label} {...props}>
       {body}
     </Link>
   );
