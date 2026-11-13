@@ -65,4 +65,19 @@ describe('PendingReports (R11, R-TCH-03)', () => {
     expect(screen.getByRole('link', { name: t.reports.resume }).getAttribute('href')).toBe('/teacher/report/l-2');
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/pending-reports');
   });
+
+  it('in a student file: only that student’s (docs/47)', async () => {
+    const aya = { id: 's-2', code: 'AB-0184', name: 'آية' };
+    apiFetch.mockResolvedValue([row({}), row({ lesson_id: 'l-2', student: aya })]);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(
+      <QueryClientProvider client={client}>
+        <PendingReports tz="Africa/Cairo" studentId="s-2" />
+      </QueryClientProvider>,
+    );
+    expect(await screen.findByText('آية')).toBeTruthy();
+    expect(screen.queryByText('سهيلة')).toBeNull();
+    const link = screen.getByRole('link', { name: t.reports.open });
+    expect(link.getAttribute('href')).toBe('/teacher/report/l-2');
+  });
 });

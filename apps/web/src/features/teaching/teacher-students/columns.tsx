@@ -23,7 +23,7 @@ function NextLesson({ iso }: { iso: string | null }) {
 }
 
 /**
- * My students (R-TCH-03): name (opens the report history; a «بانتظار التجديد» / «انتهى الاشتراك»
+ * My students (R-TCH-03): name (opens «ملف الطالب», docs/47; a «بانتظار التجديد» / «انتهى الاشتراك»
  * chip when the package ended, owner 2026-10-12, 2026-10-15), code, program, level, age, next lesson.
  * Sorted and filtered locally (the whole list is loaded). Under 640px the row stacks like the old
  * card: name + code, then program · level · age, then the next lesson.
@@ -34,7 +34,7 @@ export const teacherStudentColumns = col.columns([
     cell: (c) => (
       <span className="inline-flex flex-wrap items-center gap-x-2">
         <Link
-          to="/teacher/reports/$studentId"
+          to="/teacher/students/$studentId"
           params={{ studentId: c.row.original.id }}
           title={ts.openReports.replace('{name}', c.getValue())}
           className="inline-flex min-h-11 items-center font-semibold text-lapis underline underline-offset-4"

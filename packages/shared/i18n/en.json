@@ -1226,7 +1226,9 @@
     "offline": "The connection dropped before we got an answer, so we are not sure the time changed. Open the schedule again once you are back online",
     "badDuration": "This lesson length is not a standard one, so change its time from the web",
     "noSlots": "No free times for this teacher this week. Try the next week.",
-    "done": "Done"
+    "done": "Done",
+    "reason": "Reason for the new time (optional)",
+    "reasonHint": "The teacher sees this reason in the student file"
   },
   "editTime": {
     "action": "Edit time",
@@ -4510,7 +4512,8 @@
     "push": {
       "title": "Teacher {teacher} cancelled a lesson",
       "reason": "Reason: {reason}"
-    }
+    },
+    "openFile": "Student file"
   },
   "teacherStudents": {
     "levelCol": "Level",
@@ -4528,7 +4531,28 @@
     "emptyTrial": "You have no trial students right now",
     "loadFailed": "Could not load the students, try again",
     "retry": "Try again",
-    "openReports": "Report history of {name}"
+    "openReports": "Open {name}'s file"
+  },
+  "teacherFile": {
+    "title": "Student file",
+    "tabs": "Student file sections",
+    "course": "Course",
+    "upcoming": "Lessons in the next 14 days",
+    "noUpcoming": "No lessons in the next 14 days",
+    "courseStart": "Course start: {date}",
+    "courseStopped": "Course stopped on {date}",
+    "courseEnded": "Course ended on {date}",
+    "courseExpected": "Expected end: {date}",
+    "courseEndsAfter": {
+      "one": "Ends after 1 lesson",
+      "two": "Ends after 2 lessons",
+      "few": "Ends after {n} lessons",
+      "other": "Ends after {n} lessons"
+    },
+    "courseEndUnknown": "Course end not known yet",
+    "courseLessons": "Lessons: {used} of {total}",
+    "courseHint": "The count includes lessons with every teacher",
+    "noCourse": "No current course for this student"
   },
   "studentLists": {
     "kinds": "Student type",
@@ -5072,7 +5096,10 @@
         "moved": "Rescheduled",
         "late": "Late",
         "cancelReason": "Cancel reason: {reason}",
-        "openReport": "Open the report of the {date} lesson"
+        "openReport": "Open the report of the {date} lesson",
+        "movedTo": "Moved to {when}",
+        "movedFrom": "Instead of {when}",
+        "moveReason": "Reason for the new time: {reason}"
       }
     },
     "lessonActions": {

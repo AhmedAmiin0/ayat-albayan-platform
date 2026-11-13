@@ -75,3 +75,16 @@ describe('seriesDays: the moved series keeps how often it repeats', () => {
     expect(seriesDays({ ...thu, rule_byday: undefined }, '2026-10-03T14:00:00.000Z', 'Asia/Riyadh')).toEqual([6]);
   });
 });
+
+test('docs/47: a one-lesson move carries its trimmed reason; a blank one or a series none', () => {
+  const one = { lesson: pending, scope: 'one', startsAt: SAT_17, byday: [] } as const;
+  expect(rescheduleBody({ ...one, reason: '  سفر الأسرة ' })).toEqual({
+    scope: 'one',
+    startsAt: SAT_17,
+    reason: 'سفر الأسرة',
+  });
+  expect(rescheduleBody({ ...one, reason: '   ' })).toEqual({ scope: 'one', startsAt: SAT_17 });
+  const series = rescheduleBody({ ...one, scope: 'rule', reason: 'x' });
+  expect(series && 'reason' in series).toBe(false);
+  expect(rescheduleRequestSchema.safeParse(rescheduleBody({ ...one, reason: 'x' })).success).toBe(true);
+});

@@ -4,7 +4,14 @@ import { conflict } from '@/common/http/errors';
 import { readAll } from '@/common/db/read-all';
 import { dbError } from '@/common/http/http';
 
-type ProposalRow = { id: string; lesson_id: string; proposed_starts_at: string; status: string };
+/** `note`: her reason, the move reason on approval (docs/47). */
+interface ProposalRow {
+  id: string;
+  lesson_id: string;
+  proposed_starts_at: string;
+  status: string;
+  note: string | null;
+}
 type NewProposal = {
   lesson_id: string;
   teacher_id: string;
@@ -29,7 +36,7 @@ export class LessonProposalRepo {
   async get(id: string): Promise<ProposalRow | null> {
     const { data, error } = await this.db
       .from('lesson_proposals')
-      .select('id, lesson_id, proposed_starts_at, status')
+      .select('id, lesson_id, proposed_starts_at, status, note')
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);

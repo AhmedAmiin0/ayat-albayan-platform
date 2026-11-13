@@ -46,9 +46,11 @@ test.describe('trial students: no direct chat between the teacher and the family
     await expect(teacher.getByText(ar.inbox.error.not_your_thread)).toBeVisible({ timeout: 20_000 });
 
     // Her trial student's file: still hers, with the «through sales» note; the active one has none.
-    await teacher.goto(`/teacher/reports/${salma}`);
-    await expect(teacher.getByRole('note')).toHaveText(ar.teacherDash.trialChatViaSales);
-    await teacher.goto(`/teacher/reports/${jana}`);
+    // (the file's month log has its own role=note, the totals line: scope to the trial note)
+    await teacher.goto(`/teacher/students/${salma}`);
+    const note = teacher.getByRole('note').filter({ hasText: ar.teacherDash.trialChatViaSales });
+    await expect(note).toHaveText(ar.teacherDash.trialChatViaSales, { timeout: 20_000 });
+    await teacher.goto(`/teacher/students/${jana}`);
     await expect(teacher.getByText(`جنى ${tag}`).first()).toBeVisible();
     await expect(teacher.getByText(ar.teacherDash.trialChatViaSales)).toHaveCount(0);
   });

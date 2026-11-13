@@ -14,4 +14,4 @@ export { confirmFailureText } from './lesson-actions/confirm-lesson';
 export { AttendanceLogHead } from './attendance/AttendanceLogHead';
 export { AttendanceLogRow } from './attendance/AttendanceLogRow';
 export { monthOf } from './attendance/attendance-log-text';
-export { ATTENDANCE_STYLE } from './student/attendance-text';
+export { LogColumns } from './attendance/LogColumns';

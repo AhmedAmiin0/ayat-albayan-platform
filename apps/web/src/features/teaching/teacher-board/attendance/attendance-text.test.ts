@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
 import { monthLabel, rowNote, totalsLine } from './attendance-text';
 
+const CLOCK = { cycle: '24', locale: 'ar', tz: 'Africa/Cairo' } as const;
 const row = (over: Partial<AttendanceTableRow> = {}): AttendanceTableRow => ({
   lesson_id: 'l-1',
   starts_at: '2026-10-03T13:00:00.000Z',
@@ -35,12 +36,27 @@ describe('attendance-text (docs/46 C5)', () => {
   });
 
   it('a row note: only the tags that apply, then the reason', () => {
-    expect(rowNote(row())).toBe('');
-    expect(rowNote(row({ is_trial: true, attendance: 'late' }))).toBe(
+    expect(rowNote(row(), CLOCK)).toBe('');
+    expect(rowNote(row({ is_trial: true, attendance: 'late' }), CLOCK)).toBe(
       `${t.sales.student.log.trial} · ${t.sales.student.log.late}`,
     );
-    expect(rowNote(row({ kind: 'cancelled', status: 'cancelled_by_teacher', cancel_reason: 'سفر', is_makeup: true }))).toBe(
+    expect(rowNote(row({ kind: 'cancelled', status: 'cancelled_by_teacher', cancel_reason: 'سفر', is_makeup: true }), CLOCK)).toBe(
       `${t.sales.student.log.makeup} · ${t.sales.student.log.cancelReason.replace('{reason}', 'سفر')}`,
     );
   });
+
+  it('move lines (docs/47): the new time, the old one and the reason, in the viewer clock', () => {
+    const log = t.sales.student.log;
+    const moved = row({ status: 'rescheduled', kind: null, moved_to: '2026-10-05T13:00:00.000Z' });
+    expect(rowNote({ ...moved, move_reason: 'سفر' }, CLOCK)).toBe(
+      `${log.movedTo.replace('{when}', 'الاثنين 5 أكتوبر 16:00')} · ${log.moveReason.replace('{reason}', 'سفر')}`,
+    );
+    const riyadh = { ...CLOCK, tz: 'Asia/Riyadh' };
+    const replacement = row({ is_rescheduled: true, moved_from: '2026-10-01T13:00:00.000Z' });
+    expect(rowNote(replacement, riyadh)).toBe(
+      `${log.moved} · ${log.movedFrom.replace('{when}', 'الخميس 1 أكتوبر 16:00')}`,
+    );
+    expect(rowNote(row({ moved_from: null, moved_to: null, move_reason: null }), CLOCK)).toBe('');
+  });
 });
+

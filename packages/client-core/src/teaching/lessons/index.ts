@@ -14,3 +14,4 @@ export {
   teacherLessonPaths,
 } from './teacher-actions.js';
 export { attendanceTableSchema } from './attendance-table-schema.js';
+export { teacherStudentHeadSchema } from './teacher-student-head-schema.js';

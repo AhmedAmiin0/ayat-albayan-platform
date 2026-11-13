@@ -1,29 +1,14 @@
-import type { Attendance, LessonStatus, PackageSize } from '@ab/shared';
+import { COUNTS_FOR_MONEY, type LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
-
-/** A lesson of the student in the month: never its meeting_link, notes or a price. `own` is the student's row only. */
-export interface AttendanceLessonRow {
-  id: string;
-  starts_at: string;
-  ends_at: string;
-  status: LessonStatus;
-  cancel_reason: string | null;
-  rule_id: string | null;
-  instant: boolean;
-  makeup_of_id: string | null;
-  rescheduled_from_id: string | null;
-  rule: { package: PackageSize | null } | null;
-  teacher: { display_name_ar: string } | null;
-  own: { student_id: string; attendance: Attendance | null; chargeable: boolean }[];
-}
-
-/** A submitted report of the student: which lesson, nothing of its content. */
-export interface AttendanceReportRow {
-  id: string;
-  lesson_id: string;
-}
+import type {
+  AttendanceLessonRow,
+  AttendanceReportRow,
+  AttendanceStudent,
+  CoursePackageRow,
+  TaughtQuery,
+} from './student-attendance.rows';
 
 /** [from, to); `teacherId` keeps one teacher's lessons only (her own «سجل الحضور», docs/46 C5). */
 interface AttendanceWindow {
@@ -32,8 +17,22 @@ interface AttendanceWindow {
   teacherId?: string;
 }
 
-const LESSON_SELECT =
-  'id, starts_at, ends_at, status, cancel_reason, rule_id, instant, makeup_of_id, rescheduled_from_id, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(display_name_ar), own:lesson_students!inner(student_id, attendance, chargeable)' as const;
+const LESSON_COLUMNS =
+  'id, teacher_id, starts_at, ends_at, status, cancel_reason, rule_id, instant, makeup_of_id, ' +
+  'rescheduled_from_id, time_edit_was';
+/** Self-FK embeds as in lesson-row.ts: the replaced lesson and the lesson it moved to. */
+const LESSON_EMBEDS =
+  'moved_from:rescheduled_from_id(starts_at, cancel_reason, teacher_id), ' +
+  'moved_to:lessons!rescheduled_from_id(starts_at), ' +
+  'rule:schedule_rules!lessons_rule_id_fkey(package, ends_on, tz), ' +
+  'teacher:teachers(display_name_ar), own:lesson_students!inner(student_id, attendance, chargeable)';
+const LESSON_SELECT = `${LESSON_COLUMNS}, ${LESSON_EMBEDS}`;
+/** Lessons she gave or will give: never moved away or cancelled (docs/47 gap 15). */
+const TAUGHT = [
+  'scheduled', 'confirmed', 'completed', 'late', 'no_show',
+] as const satisfies readonly LessonStatus[];
+const PACKAGE_SELECT =
+  'id, starts_on, created_at, status, cancel_kind, cancelled_at, lessons_total' as const;
 
 /** A month of one student's lessons is a few dozen; the months list reads starts only. */
 const MONTH_LIMIT = 500;
@@ -82,10 +81,49 @@ export class StudentAttendanceRepo {
     if (lessonIds.length === 0) return [];
     const { data, error } = await this.db
       .from('lesson_reports')
-      .select('id, lesson_id')
+      .select('id, lesson_id, submitted_at, sent_at')
       .eq('student_id', studentId)
       .eq('status', 'submitted')
       .in('lesson_id', [...lessonIds]);
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The file head (docs/47); null for an unknown id. */
+  async student(id: string): Promise<AttendanceStudent | null> {
+    const { data, error } = await this.db
+      .from('students')
+      .select('id, code, name, status')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** Whether she has a lesson with the student (TAUGHT) that starts at `since` or later. */
+  async taughtBy(q: TaughtQuery): Promise<boolean> {
+    const { data, error } = await this.db
+      .from('lessons')
+      .select('id, own:lesson_students!inner(student_id)')
+      .eq('own.student_id', q.studentId)
+      .eq('teacher_id', q.teacherId)
+      .in('status', [...TAUGHT])
+      .gte('starts_at', q.since.toISOString())
+      .limit(1);
+    if (error) throw dbError(error);
+    return data.length > 0;
+  }
+
+  /** The student's packages that count (an unused cancel is out), newest first. */
+  async packages(studentId: string): Promise<CoursePackageRow[]> {
+    const { data, error } = await this.db
+      .from('subscriptions')
+      .select(PACKAGE_SELECT)
+      .eq('student_id', studentId)
+      .or(COUNTS_FOR_MONEY)
+      .order('starts_on', { ascending: false })
+      .order('created_at', { ascending: false })
+      .order('id', { ascending: false });
     if (error) throw dbError(error);
     return data;
   }

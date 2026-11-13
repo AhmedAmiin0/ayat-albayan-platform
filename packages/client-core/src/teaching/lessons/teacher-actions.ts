@@ -10,6 +10,8 @@ export const teacherLessonPaths = {
   confirm: (lessonId: string) => `/teachers/me/lessons/${lessonId}/confirm-attendance`,
   /** GET ?month=YYYY-MM: her own lessons with one of her students (StudentAttendanceTable). */
   attendance: (studentId: string) => `/teachers/me/students/${studentId}/attendance`,
+  /** GET: the student file's head (docs/47): name, status, course, the next 14 days. */
+  student: (studentId: string) => `/teachers/me/students/${studentId}`,
 } as const;
 
 type ActionLesson = Pick<LessonView, 'status' | 'starts_at' | 'teacher_confirmed_at'>;

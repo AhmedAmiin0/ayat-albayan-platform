@@ -3,7 +3,17 @@ import { t } from '@/core/lib/i18n/i18n';
 import { ATTENDANCE_STYLE } from '@/sales/sales/student/attendance-text';
 import { lessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { attendancePath } from './attendance-log-api';
-import { cancelLine, dayDateOf, monthOf, rowChip, rowTags, totalsItems } from './attendance-log-text';
+import { COLUMNS, reportColumn } from './AttendanceLogRow';
+import {
+  cancelLine,
+  dayDateOf,
+  monthOf,
+  moveLines,
+  reportCell,
+  rowChip,
+  rowTags,
+  totalsItems,
+} from './attendance-log-text';
 import { logRow, logTable } from './fixtures';
 
 const w = t.sales.student.log;
@@ -50,4 +60,28 @@ test('a scheduled lesson with no confirmation required reads «مجدولة», n
   const row = logRow({ kind: null, status: 'scheduled' });
   expect(rowChip(row, lessonStatusText(false)).label).toBe(t.lessons.noConfirm.scheduled);
   expect(rowChip(row, on).label).toBe(t.enums.lessonStatus.scheduled);
+});
+
+test('docs/47 move lines: new time, old time, reason; none from an old API', () => {
+  const row = logRow({ moved_to: '2026-10-28T15:00:00Z', move_reason: 'سفر' });
+  const lines = moveLines(row, 'Asia/Riyadh', '24');
+  expect(lines).toHaveLength(2);
+  expect(lines[0]).toContain(w.movedTo.split('{')[0]);
+  expect(lines[1]).toBe(w.moveReason.replace('{reason}', 'سفر'));
+  expect(moveLines(logRow({ moved_from: '2026-10-26T15:00:00Z' }), 'UTC', '24')[0]).toContain(
+    w.movedFrom.split('{')[0],
+  );
+  expect(moveLines(logRow(), 'UTC', '24')).toEqual([]);
+});
+
+test('the report cell: sent / not sent for staff; her action word, or «—» for none', () => {
+  expect(reportCell(logRow())).toEqual({ text: w.sent, active: true });
+  expect(reportCell(logRow({ report_sent: false }))).toEqual({ text: w.notSent, active: false });
+  expect(reportCell(logRow(), t.reports.edit)).toEqual({ text: t.reports.edit, active: true });
+  expect(reportCell(logRow(), null)).toEqual({ text: '—', active: false });
+});
+
+test('the report column: the sales log keeps its width; the teacher\'s file widens it', () => {
+  expect(reportColumn(false)).toBe(COLUMNS.report);
+  expect(reportColumn(true).flex).toBeGreaterThan(COLUMNS.report.flex ?? 0);
 });

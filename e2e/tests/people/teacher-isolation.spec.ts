@@ -114,8 +114,8 @@ test.describe('teacher isolation (R-NFR-02, rule 9)', () => {
       await teacher.goto(`/teacher/report/${hiba.lessonId}`);
       await expect(teacher.getByRole('alert').filter({ hasText: ar.common.forbidden })).toBeVisible();
       await expect(teacher.getByText('سر هبة')).toHaveCount(0);
-      // (react-query retries a failed history read before it shows the error)
-      await teacher.goto(`/teacher/reports/${hiba.studentId}`);
+      // Her student file (docs/47): not hers → forbidden (react-query retries before the error)
+      await teacher.goto(`/teacher/students/${hiba.studentId}`);
       await expect(teacher.getByRole('alert').filter({ hasText: ar.common.forbidden })).toBeVisible({ timeout: 30_000 });
 
       await teacher.goto('/teacher/payouts');

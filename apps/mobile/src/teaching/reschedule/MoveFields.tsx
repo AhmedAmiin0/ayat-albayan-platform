@@ -1,5 +1,5 @@
 import type { LessonView } from '@ab/shared';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice, ruleFromSlot } from '@/booking';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
@@ -16,7 +16,7 @@ import { SlotPicker } from './SlotPicker';
 const scopePills = () =>
   (['one', 'rule'] as const).map((s) => ({ value: s, label: t.lessons.scope[s] }));
 
-interface MoveFieldsProps {
+interface Props {
   lesson: LessonView;
   /** A bookable length (lessonDuration). */
   durationMin: number;
@@ -25,6 +25,8 @@ interface MoveFieldsProps {
   move: ReturnType<typeof useReschedule>;
   scope: Scope;
   onScope: (scope: Scope) => void;
+  /** «سبب تغيير الموعد» (docs/47): its text, and its field shown above the button. */
+  reason: { text: string; field: ReactNode };
 }
 
 /**
@@ -33,7 +35,7 @@ interface MoveFieldsProps {
  * clash that appeared since the slots loaded comes back as a 409 with «اختار ميعاد تاني»; booking
  * over it with a reason stays on the web.
  */
-export function MoveFields({ lesson, durationMin, tz, move, scope, onScope }: MoveFieldsProps) {
+export function MoveFields({ lesson, durationMin, tz, move, scope, onScope, reason }: Props) {
   const [startsAt, setStartsAt] = useState<string | null>(null);
   // null = untouched: the old rule's days shifted to the new slot (seriesDays).
   const [picked, setByday] = useState<number[] | null>(null);
@@ -45,21 +47,18 @@ export function MoveFields({ lesson, durationMin, tz, move, scope, onScope }: Mo
     setByday(null);
   };
   const submit = () => {
-    const body = startsAt ? rescheduleBody({ lesson, scope, startsAt, byday }) : null;
+    const input = { lesson, scope, byday, reason: reason.text };
+    const body = startsAt ? rescheduleBody({ ...input, startsAt }) : null;
     if (body) move.mutate(body);
+  };
+  const rescope = (s: Scope) => {
+    pick(null); // a slot fine for this lesson alone may be before it, which a series refuses
+    onScope(s);
   };
   return (
     <View style={{ gap: 16 }}>
       {/* A lesson outside a series has no «كل اللي بعدها» (the API answers 400 no_rule). */}
-      {lesson.rule_id ? (
-        <ScopeChoice
-          value={scope}
-          onChange={(s) => {
-            pick(null); // a slot fine for this lesson alone may be before it, which a series refuses
-            onScope(s);
-          }}
-        />
-      ) : null}
+      {lesson.rule_id ? <ScopeChoice value={scope} onChange={rescope} /> : null}
       {failure?.kind === 'conflict' ? (
         <ConflictNotice lines={failure.lines} onChangeSlot={() => pick(null)} />
       ) : (
@@ -75,6 +74,7 @@ export function MoveFields({ lesson, durationMin, tz, move, scope, onScope }: Mo
       {scope === 'rule' && startsAt ? (
         <SeriesDays startsAt={startsAt} tz={tz} value={byday} onChange={setByday} />
       ) : null}
+      {reason.field}
       <Submit
         failure={failure}
         pending={move.isPending}

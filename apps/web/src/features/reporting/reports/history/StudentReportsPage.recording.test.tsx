@@ -46,14 +46,14 @@ describe('report history → the lesson’s recording', () => {
   it('only the report whose lesson has a finished recording links to it (admin: the student profile)', async () => {
     renderPage('admin', ['l-a']);
     const link = await screen.findByRole('link', { name: LINK });
-    expect(link.getAttribute('href')).toBe('/admin/students/s-1');
+    expect(link.getAttribute('href')).toBe('/admin/students/s-1#recording-l-a');
     expect(screen.getAllByRole('link', { name: LINK })).toHaveLength(1);
   });
 
-  it('a teacher’s link stays on their own student page', async () => {
+  it('a teacher’s link opens her student file on «التقارير» at the recording (docs/47)', async () => {
     renderPage('teacher', ['l-b']);
     const link = await screen.findByRole('link', { name: LINK });
-    expect(link.getAttribute('href')).toBe('/teacher/reports/s-1');
+    expect(link.getAttribute('href')).toBe('/teacher/students/s-1?tab=reports#recording-l-b');
   });
 
   it('asks only for the ids: no signed recording list is requested', async () => {

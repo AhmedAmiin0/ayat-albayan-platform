@@ -8,7 +8,14 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
-import { cancelLine, dayDateOf, rowChip, rowTags } from './attendance-log-text';
+import {
+  cancelLine,
+  dayDateOf,
+  moveLines,
+  reportCell,
+  rowChip,
+  rowTags,
+} from './attendance-log-text';
 
 /** The table's columns (the header uses the same): date · time · teacher · status · report. */
 export const COLUMNS: Record<'date' | 'time' | 'teacher' | 'status' | 'report', ViewStyle> = {
@@ -18,6 +25,10 @@ export const COLUMNS: Record<'date' | 'time' | 'teacher' | 'status' | 'report', 
   status: { flex: 1.3, alignItems: 'flex-start' },
   report: { flex: 0.8 },
 };
+
+/** The report column; wider in the teacher's file, whose cell holds «تعديل التقرير» (docs/47). */
+export const reportColumn = (wide: boolean): ViewStyle =>
+  wide ? { flex: 1.5 } : COLUMNS.report;
 
 export const ROW_LINE: ViewStyle = { flexDirection: 'row', alignItems: 'center', gap: 6 };
 
@@ -36,10 +47,12 @@ interface AttendanceLogRowProps {
   tz?: string | undefined;
   /** Given only when the row has a sent report (any student, owner 2026-10-30). */
   onOpen?: (row: AttendanceTableRow) => void;
+  /** The teacher's file (docs/47): her action's word in the report cell; null: «—». */
+  reportLabel?: string | null;
 }
 
 /** One past lesson of «سجل الحضور»: the five cells, then the trial / makeup tags and the cancel reason. */
-export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, cycle, onOpen, tz: zone }: AttendanceLogRowProps) {
+export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, cycle, onOpen, tz: zone, reportLabel }: AttendanceLogRowProps) {
   const { color } = useTheme();
   const tz = useLogTz(zone);
   const status = useLessonStatusText();
@@ -50,7 +63,7 @@ export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, c
   const reason = cancelLine(row);
   const date = dayDateOf(row.starts_at, tz);
   const time = clockIn(new Date(row.starts_at), tz, cycle);
-  const sent = row.report_sent;
+  const report = reportCell(row, reportLabel);
   const body = (
     <>
       <View style={ROW_LINE}>
@@ -60,10 +73,13 @@ export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, c
         <View style={COLUMNS.status}>
           <StatusChip {...rowChip(row, status)} size="sm" />
         </View>
-        <AppText style={[cell, COLUMNS.report, { color: sent ? color.lapis : color.ink3 }]}>{sent ? w.sent : w.notSent}</AppText>
+        <AppText style={[cell, reportColumn(reportLabel !== undefined), { color: report.active ? color.lapis : color.ink3 }]}>{report.text}</AppText>
       </View>
       {tags.length > 0 ? <AppText style={note}>{tags.join(' · ')}</AppText> : null}
       {reason ? <AppText style={note}>{reason}</AppText> : null}
+      {moveLines(row, tz, cycle).map((line) => (
+        <AppText key={line} style={note}>{line}</AppText>
+      ))}
     </>
   );
   const style = { paddingHorizontal: 16, paddingVertical: 8, gap: 2, minHeight: 44, backgroundColor: striped ? color.sunk : color.page };
