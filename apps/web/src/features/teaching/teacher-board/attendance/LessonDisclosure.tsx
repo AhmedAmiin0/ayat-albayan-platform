@@ -1,6 +1,7 @@
 import type { AttendanceTableRow } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { Icon } from '@/components/ui/display/icon';
 import { buttonVariants } from '@/components/ui/form/button';
 import { LessonRecording, recordedLessonIdsQuery } from '@/features/people/students';
 import { LessonReportView } from '@/features/reporting/report-page';
@@ -12,6 +13,9 @@ const SUMMARY = [
   buttonVariants({ variant: 'secondary', size: 'sm' }),
   '[&::-webkit-details-marker]:hidden',
 ].join(' ');
+
+// Sized from the page (@container), so an open row never pushes the table sideways.
+const BODY = 'grid w-[85cqw] gap-4 whitespace-normal pt-2 sm:w-[min(36rem,55cqw)]';
 
 type Row = Pick<AttendanceTableRow, 'lesson_id' | 'starts_at' | 'report_id'>;
 
@@ -35,12 +39,13 @@ export function LessonDisclosure({ row, studentId }: LessonDisclosureProps) {
   const [open, setOpen] = useState(() => linkedHere(row.lesson_id));
   if (!row.report_id && !hasRec) return null;
   return (
-    <details open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
+    <details className="group" open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
       <summary className={SUMMARY}>
         {row.report_id ? t.reports.view : t.studentRecordings.reportLink}
+        <Icon name="chevron-down" className="transition-transform group-open:rotate-180" />
       </summary>
       {open && (
-        <div ref={revealOnMount} className="grid w-[min(36rem,85vw)] gap-4 whitespace-normal pt-2">
+        <div ref={revealOnMount} className={BODY}>
           {row.report_id && <LessonReportView reportId={row.report_id} />}
           {hasRec && (
             <LessonRecording

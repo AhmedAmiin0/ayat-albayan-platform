@@ -19,11 +19,14 @@ const NO_RETRY = { defaultOptions: { queries: { retry: false } } };
 const ROW = { lesson_id: 'l-9', starts_at: '2026-10-03T13:00:00.000Z', report_id: 'r-9' };
 
 function show(row: typeof ROW | { lesson_id: string; starts_at: string; report_id: null }) {
-  return render(
-    <QueryClientProvider client={new QueryClient(NO_RETRY)}>
+  const client = new QueryClient(NO_RETRY);
+  const view = render(
+    <QueryClientProvider client={client}>
       <LessonDisclosure row={row} studentId="s-1" />
     </QueryClientProvider>,
   );
+  const settled = () => client.isFetching() === 0 && apiFetch.mock.calls.length > 0;
+  return { ...view, settled };
 }
 
 const byReportCalls = () =>
@@ -65,8 +68,8 @@ describe('LessonDisclosure: the report and recording inside the lesson row (docs
 
   it('no report and no recording: nothing at all', async () => {
     apiFetch.mockResolvedValue([]);
-    const { container } = show({ ...ROW, report_id: null });
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalled());
+    const { container, settled } = show({ ...ROW, report_id: null });
+    await vi.waitFor(() => expect(settled()).toBe(true));
     expect(container.textContent).toBe('');
   });
 });

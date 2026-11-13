@@ -34,9 +34,9 @@ export function LogReportCell({ row, studentId }: LogReportCellProps) {
   const action = logReportAction(row, now);
   const href = reportFormHref({ role: 'teacher', lessonId: row.lesson_id, studentId });
   return (
-    <span className="grid justify-items-start gap-1">
+    <div className="grid justify-items-start gap-1">
       {action ? CELLS[action](row, href) : <span className="text-ink-3">—</span>}
       <LessonDisclosure row={row} studentId={studentId} />
-    </span>
+    </div>
   );
 }
