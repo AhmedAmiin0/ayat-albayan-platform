@@ -2,8 +2,10 @@ import {
   dateText,
   type AttendanceTableRow,
   type AttendanceTotalKind,
+  type ClockCycle,
   type StatusStyle,
 } from '@ab/shared';
+import { whenIn } from '@/core/lib/clock';
 import { t } from '@/core/lib/i18n/i18n';
 import { locale } from '@/core/lib/i18n/locale';
 import type { LessonStatusText } from '@/core/ui/feedback/lesson-status';
@@ -65,3 +67,34 @@ export function rowTags(row: AttendanceTableRow): string[] {
 /** «سبب الإلغاء: …» under a cancelled lesson, else null. */
 export const cancelLine = (row: Pick<AttendanceTableRow, 'cancel_reason'>): string | null =>
   row.cancel_reason ? fill(t.sales.student.log.cancelReason, { reason: row.cancel_reason }) : null;
+
+type MoveRow = Pick<AttendanceTableRow, 'moved_to' | 'moved_from' | 'move_reason'>;
+
+/**
+ * Under a moved lesson (docs/47): «نُقلت إلى …», «بدلًا من موعد …» and «سبب تغيير الموعد: …»,
+ * only those the row carries (an old API sends none), the times in `tz` on the viewer's clock.
+ */
+export function moveLines(row: MoveRow, tz: string, cycle: ClockCycle): string[] {
+  const w = t.sales.student.log;
+  const when = (iso: string) => whenIn(new Date(iso), tz, cycle);
+  const lines: [string | null | undefined, (value: string) => string][] = [
+    [row.moved_to, (v) => fill(w.movedTo, { when: when(v) })],
+    [row.moved_from, (v) => fill(w.movedFrom, { when: when(v) })],
+    [row.move_reason, (v) => fill(w.moveReason, { reason: v })],
+  ];
+  return lines.flatMap(([value, text]) => (value ? [text(value)] : []));
+}
+
+/**
+ * The report cell: the staff logs say sent / not sent; the teacher's file passes her action's word
+ * (docs/47 «تعديل التقرير» …), or null for a row that offers none («—»).
+ */
+export function reportCell(
+  row: Pick<AttendanceTableRow, 'report_sent'>,
+  label?: string | null,
+): { text: string; active: boolean } {
+  const w = t.sales.student.log;
+  const sent = row.report_sent;
+  if (label === undefined) return { text: sent ? w.sent : w.notSent, active: sent };
+  return label ? { text: label, active: true } : { text: '—', active: false };
+}

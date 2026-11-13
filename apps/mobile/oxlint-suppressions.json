@@ -8381,7 +8381,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/sales/sales/lesson-actions/SalesRescheduleSheet.tsx": {
@@ -9786,14 +9786,9 @@
       "count": 1
     }
   },
-  "src/teacher/screens/StudentReportsScreen.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/teacher/screens/StudentReportsScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teacher/screens/TeacherChatsScreen.tsx": {
@@ -9872,9 +9867,6 @@
     }
   },
   "src/teaching/reschedule/MoveFields.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     }

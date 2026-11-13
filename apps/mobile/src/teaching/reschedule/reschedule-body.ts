@@ -54,15 +54,23 @@ interface RescheduleInput {
   startsAt: string;
   /** Extra weekdays for scope `rule`. */
   byday: readonly number[];
+  /** «سبب تغيير الموعد» (docs/47, optional, scope `one` only): the teacher sees it in her file. */
+  reason?: string;
 }
 
+/** The trimmed reason as a body field; nothing when it is blank. */
+export const reasonField = (text = ''): { reason?: string } =>
+  text.trim() ? { reason: text.trim() } : {};
+
 /**
- * `one` moves this lesson to the slot. `rule` ends the series the day before and starts a weekly
- * one at the slot's local day and time in the family zone, same teacher and length. Null when the
- * length is not a bookable duration.
+ * `one` moves this lesson to the slot (with its reason, when one was typed). `rule` ends the
+ * series the day before and starts a weekly one at the slot's local day and time in the family
+ * zone, same teacher and length. Null when the length is not a bookable duration.
  */
 export function rescheduleBody(input: RescheduleInput): RescheduleRequest | null {
-  if (input.scope === 'one') return { scope: 'one', startsAt: input.startsAt };
+  if (input.scope === 'one') {
+    return { scope: 'one', startsAt: input.startsAt, ...reasonField(input.reason) };
+  }
   const durationMin = lessonDuration(input.lesson);
   if (durationMin === null) return null;
   const tz = familyTz(input.lesson);

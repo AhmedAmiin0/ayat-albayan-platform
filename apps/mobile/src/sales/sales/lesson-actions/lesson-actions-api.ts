@@ -4,6 +4,7 @@ import {
   type LessonStatus,
   type SalesCancel,
   type SalesLessonMoved,
+  type SalesReschedule,
   type SalesScheduleLesson,
 } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -31,11 +32,11 @@ const useRefreshSchedule = () => {
     ]);
 };
 
-/** POST /sales/lessons/:id/reschedule { startsAt }: the admin's one-lesson move (confirmation to the family queued). */
+/** POST /sales/lessons/:id/reschedule { startsAt, reason? }: the admin's one-lesson move (confirmation to the family queued). */
 export function useSalesReschedule(lessonId: string) {
   const refresh = useRefreshSchedule();
   return useMutation({
-    mutationFn: (startsAt: string) => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/reschedule`, { startsAt }),
+    mutationFn: (body: SalesReschedule) => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/reschedule`, body),
     onSuccess: refresh,
   });
 }

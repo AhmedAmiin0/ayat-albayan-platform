@@ -8342,7 +8342,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "no-nested-ternary": {
       "count": 1
@@ -9741,14 +9741,9 @@
       "count": 1
     }
   },
-  "src/teacher/screens/StudentReportsScreen.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/teacher/screens/StudentReportsScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teacher/screens/TeacherChatsScreen.tsx": {
@@ -9828,9 +9823,6 @@
   },
   "src/teaching/reschedule/MoveFields.tsx": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
