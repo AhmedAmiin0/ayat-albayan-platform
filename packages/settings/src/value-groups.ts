@@ -1,11 +1,12 @@
 import type { SettingKey } from './registry.js';
 import { SCHEDULE_KEYS } from './domains/teaching/schedule-keys.js';
+import { TEACHER_PAGE_KEYS } from './domains/teaching/teacher-pages.js';
 
 // «القيم» (docs/26b §2): the store's rows in small groups, one group per view (owner, 2026-10-23
 // «i dont like long pages», «stick with table»). Kept apart from layout.ts, which still orders the
 // old single page; docs/26 26-P1 later moves `group`/`confirm`/`ownedBy` into the registry itself.
 
-/** The editable groups of «القيم», in list order (48 keys). */
+/** The editable groups of «القيم», in list order (55 keys). */
 export const VALUE_GROUPS = {
   schedule: SCHEDULE_KEYS,
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
@@ -34,6 +35,7 @@ export const VALUE_GROUPS = {
   messages: ['quick_reply_window_hours', 'reminder_lookahead_hours', 'chat_reopen_template', 'whatsapp_calls_enabled', 'calls_permission_template', 'crm_media_host', 'crm_media_copy_all', 'presence_enabled'],
   sales: ['sales_auto_assign', 'sales_require_assignee', 'renewal_commission_enabled', 'renewal_commission_percent'],
   retention: ['recording_retention_days', 'activity_retention_days'],
+  teachers: TEACHER_PAGE_KEYS,
 } as const satisfies Record<string, readonly SettingKey[]>;
 export type ValueGroupId = keyof typeof VALUE_GROUPS;
 export const VALUE_GROUP_IDS = Object.keys(VALUE_GROUPS) as ValueGroupId[];

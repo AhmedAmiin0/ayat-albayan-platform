@@ -8,7 +8,7 @@ import { OWNED_VALUE_GROUPS, VALUE_CONFIRM, VALUE_GROUPS, type ValueGroupId } fr
 // Until the screens read the registry directly, the two must say the same thing.
 const REGISTRY_GROUP: Record<ValueGroupId | keyof typeof OWNED_VALUE_GROUPS, SettingGroup> = {
   schedule: 'schedule', classroom: 'classroom', reports: 'reports', accounts: 'accounts', payouts: 'payouts',
-  uploads: 'uploads', academy: 'academy', messages: 'messaging', sales: 'sales', retention: 'retention',
+  uploads: 'uploads', academy: 'academy', messages: 'messaging', sales: 'sales', retention: 'retention', teachers: 'teachers',
   notifications: 'notifications', sending: 'safety',
 };
 

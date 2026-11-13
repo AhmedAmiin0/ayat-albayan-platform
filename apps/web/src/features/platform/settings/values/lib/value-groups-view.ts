@@ -44,6 +44,7 @@ const NEW_LABEL: Partial<Record<ValuesGroupId, string>> = {
   payouts: g.payouts,
   messages: g.messages,
   retention: g.retention,
+  teachers: g.teachers,
   notifications: g.notifications,
   sending: g.sending,
   google: g.google,

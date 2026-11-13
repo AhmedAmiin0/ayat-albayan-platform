@@ -1,6 +1,8 @@
+import { teacherPageOn } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { t } from '@/core/lib/i18n/i18n';
+import { usePublicConfig } from '@/core/lib/query/public-config';
 import { Button } from '@/core/ui/primitives/Button';
 import { BackButton } from '@/core/ui/navigation';
 import { ErrorState } from '@/core/ui/feedback/ErrorState';
@@ -20,6 +22,7 @@ export function MyEarningsScreen() {
   const balance = useEarningsBalance(MINE);
   const [tab, setTab] = useState<Tab>('sessions');
   const [filter, setFilter] = useState<SessionFilter>('all');
+  const statements = teacherPageOn(usePublicConfig(), 'statements');
   const header = <EarningsHeader balance={balance.data} tab={tab} onTab={setTab} filter={filter} onFilter={setFilter} />;
   return (
     <Screen>
@@ -34,7 +37,9 @@ export function MyEarningsScreen() {
       ) : (
         <PaymentsList scope={MINE} header={header} />
       )}
-      <Button variant="secondary" label={t.earnings.monthly} onPress={() => router.push('/teacher/more/payouts')} />
+      {statements && (
+        <Button variant="secondary" label={t.earnings.monthly} onPress={() => router.push('/teacher/more/payouts')} />
+      )}
     </Screen>
   );
 }

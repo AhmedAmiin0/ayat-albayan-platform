@@ -1,1 +1,3 @@
-export { MyFeedbackScreen as default } from '@/teacher';
+import { guardedTeacherRoute, MyFeedbackScreen } from '@/teacher';
+
+export default guardedTeacherRoute('feedback', MyFeedbackScreen);

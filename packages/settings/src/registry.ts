@@ -16,6 +16,7 @@ import { REPORT_SETTINGS } from './domains/teaching/reports.js';
 import { SALES_SETTINGS } from './domains/sales.js';
 import { SCHEDULING_SETTINGS } from './domains/teaching/scheduling.js';
 import { SUBSCRIPTION_SETTINGS } from './domains/finance/subscriptions.js';
+import { TEACHER_PAGE_SETTINGS } from './domains/teaching/teacher-pages.js';
 import { UPLOAD_SETTINGS } from './domains/uploads.js';
 
 /**
@@ -42,6 +43,7 @@ export const SETTINGS_REGISTRY = {
   ...ACTIVITY_SETTINGS,
   ...FAMILY_LOGIN_SETTINGS,
   ...PRESENCE_SETTINGS,
+  ...TEACHER_PAGE_SETTINGS,
 } as const satisfies Record<string, SettingDef>;
 
 type Registry = typeof SETTINGS_REGISTRY;

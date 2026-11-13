@@ -15,6 +15,7 @@ import { PendingReports } from '@/features/reporting/reports';
 import { t } from '@/lib/i18n/i18n';
 import { useNow } from '@/lib/time/use-now';
 import { usePlatformClassroom } from '@/lib/settings/public-config';
+import { useTeacherPageOn } from '@/lib/settings/teacher-pages';
 import { myLessonsQuery, teacherMeQuery } from './api';
 import { JoinLink } from './lessons/JoinLink';
 import { DashboardPanel, type DashboardTab } from './DashboardPanel';
@@ -30,11 +31,15 @@ const TABS: { value: DashboardTab; label: string }[] = [
 /** /teacher home (R-TCH-03, R-SCH-08). The teachers row comes from GET /teachers/me. */
 export function TeacherDashboard() {
   const me = useQuery(teacherMeQuery);
+  const pageOn = useTeacherPageOn();
+  const instant = pageOn('internalMeetings');
+  const scheduled = pageOn('scheduledMeetings');
+  const meetingsShown = instant || scheduled;
   const head = (
     <PageHead>
       <Cartouche>{t.teacher.dashboardTitle}</Cartouche>
       <div className="ms-auto">
-        <InternalMeetingButton />
+        <InternalMeetingButton instant={instant} scheduled={scheduled} />
       </div>
     </PageHead>
   );
@@ -43,7 +48,7 @@ export function TeacherDashboard() {
     return <>{head}<FormAlert>{text}</FormAlert></>;
   }
   if (!me.data) return <>{head}<ListSkeleton /></>;
-  return <>{head}<Dashboard me={me.data} /><InternalMeetingsList /></>;
+  return <>{head}<Dashboard me={me.data} />{meetingsShown && <InternalMeetingsList />}</>;
 }
 
 /**

@@ -8,7 +8,7 @@ import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useMeetings } from '@/meetings/manage/api';
-import { CreateMeeting } from '@/meetings/create/CreateMeeting';
+import { CreateMeeting, type MeetingAllow } from '@/meetings/create/CreateMeeting';
 import { MeetingRow } from '@/meetings/manage/MeetingRow';
 import { useViewerTz } from '@/core/lib/clock';
 
@@ -16,8 +16,9 @@ import { useViewerTz } from '@/core/lib/clock';
  * «الاجتماعات الداخلية» (admin, teacher, assistant, sales): create now or scheduled with invitees,
  * then the newest (all for an admin, else mine and the ones I am invited to) with enter, share link,
  * reschedule, cancel, end and recordings. Times read in the viewer's zone; the room opens in the browser.
+ * `allow` (default both): which start buttons show; only the teacher's route passes its switches.
  */
-export function MeetingsScreen() {
+export function MeetingsScreen({ allow }: { allow?: MeetingAllow }) {
   const meetings = useMeetings();
   const tz = useViewerTz();
   const back = <BackButton onPress={() => router.back()} />;
@@ -30,7 +31,7 @@ export function MeetingsScreen() {
       <ScreenHeader title={t.mobileClassroom.meetingsRow} leading={back} />
       <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 32 }}>
         <View style={{ gap: 16 }}>
-          <CreateMeeting />
+          <CreateMeeting allow={allow} />
           {body}
         </View>
       </ScrollView>

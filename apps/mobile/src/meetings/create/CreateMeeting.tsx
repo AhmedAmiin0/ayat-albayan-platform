@@ -12,11 +12,28 @@ import { useViewerTz } from '@/core/lib/clock';
 
 type Mode = 'instant' | 'scheduled' | null;
 
+/** Which start buttons show (default both; only the teacher's screen passes its academy switches). */
+export type MeetingAllow = { instant: boolean; scheduled: boolean };
+const ALL: MeetingAllow = { instant: true, scheduled: true };
+
+type StartProps = { allow: MeetingAllow; onPick: (mode: 'instant' | 'scheduled') => void };
+
+function StartButtons({ allow, onPick }: StartProps) {
+  return (
+    <View style={{ gap: 8 }}>
+      {allow.instant && <Button label={t.meetings.new} onPress={() => onPick('instant')} />}
+      {allow.scheduled && (
+        <Button variant="secondary" label={t.meetingInvites.scheduledItem} onPress={() => onPick('scheduled')} />
+      )}
+    </View>
+  );
+}
+
 /**
  * «اجتماع جديد» (now) and «اجتماع مجدول» (a time and invitees), for every staff login holding
  * meetings.write. Then the link to share and each invitee's outcome with its own share button.
  */
-export function CreateMeeting() {
+export function CreateMeeting({ allow = ALL }: { allow?: MeetingAllow }) {
   const [mode, setMode] = useState<Mode>(null);
   const client = useQueryClient();
   const create = useMutation({
@@ -30,14 +47,7 @@ export function CreateMeeting() {
     setMode(null);
     create.reset();
   };
-  if (!mode) {
-    return (
-      <View style={{ gap: 8 }}>
-        <Button label={t.meetings.new} onPress={() => setMode('instant')} />
-        <Button variant="secondary" label={t.meetingInvites.scheduledItem} onPress={() => setMode('scheduled')} />
-      </View>
-    );
-  }
+  if (!mode) return <StartButtons allow={allow} onPick={setMode} />;
   if (create.data) return <CreateMeetingDone made={create.data} instant={mode === 'instant'} onClose={close} />;
   return (
     <CreateMeetingForm
