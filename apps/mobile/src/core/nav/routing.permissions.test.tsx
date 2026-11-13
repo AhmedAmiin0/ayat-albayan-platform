@@ -27,8 +27,9 @@ const mockApiFetch = jest.fn(async (path: string) => {
 jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'admin' }));
 
-// The teacher page switches on, so these routing tests still gate «المحادثات» by the permission alone.
-const teacherPagesOn = Object.fromEntries(Object.values(TEACHER_PAGE_SWITCH).map((k) => [k, true]));
+// The teacher page switches on, so these routing tests gate «المحادثات» by the permission.
+const switchKeys = Object.values(TEACHER_PAGE_SWITCH);
+const teacherPagesOn = Object.fromEntries(switchKeys.map((k) => [k, true]));
 const publicConfig = { ...PUBLIC_SETTING_DEFAULTS, ...teacherPagesOn, custom: {} };
 
 const stub = (label: string) => () => <Text>{label}</Text>;

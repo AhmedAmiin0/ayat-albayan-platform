@@ -78,7 +78,7 @@ beforeEach(() => {
   });
   // As verifyRole: /auth/me is in the cache when the gate opens a tree (docs/27 E2).
   queryClient.setQueryData(pathKey('/auth/me'), fullAccessMe('teacher'));
-  // The teacher page switches on from the first paint, so «المحادثات» is gated by the permission.
+  // The switches on from the first paint, so «المحادثات» is gated by the permission.
   queryClient.setQueryData(publicConfigQuery.queryKey, publicConfig);
 });
 
