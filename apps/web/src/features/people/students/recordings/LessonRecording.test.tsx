@@ -29,6 +29,24 @@ describe('LessonRecording: one lesson’s recording inside its row (docs/49)', (
     expect(String(apiFetch.mock.calls[0]?.[0])).toContain('from=2026-10-05&to=2026-10-05');
   });
 
+  it('a lesson recorded in parts shows every done segment', async () => {
+    const early = recordingView({ id: 'a', started_at: '2026-10-05T15:00:00.000Z' });
+    const parts = [recordingView({ id: 'b' }), early];
+    apiFetch.mockResolvedValue(pageOf(parts));
+    show();
+    expect(await screen.findAllByRole('listitem')).toHaveLength(2);
+  });
+
+  it('a newer failed row does not hide an older done one, which comes first', async () => {
+    const failed = recordingView({ id: 'f', status: 'failed', url: null });
+    apiFetch.mockResolvedValue(pageOf([failed, recordingView({ id: 'ok' })]));
+    show();
+    const rows = await screen.findAllByRole('listitem');
+    expect(rows).toHaveLength(2);
+    expect(rows[0]?.querySelector('video, audio')).toBeTruthy();
+    expect(rows[1]?.querySelector('video, audio')).toBeNull();
+  });
+
   it('a skeleton while it loads', async () => {
     apiFetch.mockReturnValueOnce(new Promise(() => undefined));
     show();
