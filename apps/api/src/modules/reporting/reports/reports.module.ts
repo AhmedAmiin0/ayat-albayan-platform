@@ -86,6 +86,7 @@ const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_
     ReportHistoryQueries,
     ReportPdfQueue,
     ReportsQueries,
+    ReportsSettings,
     TeacherReportLinks,
     TEACHER_LINK_CONFIG,
   ],

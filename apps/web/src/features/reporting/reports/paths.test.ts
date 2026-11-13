@@ -10,7 +10,7 @@ describe('report links (R-REP-01: opened from the lesson)', () => {
     expect(reportFormHref({ role: 'teacher', lessonId: 'l', studentId: 's' })).toBe('/teacher/report/l');
     expect(reportFormHref({ role: 'admin', lessonId: 'l', studentId: 's' })).toBe('/admin/students/s/reports/l');
     expect(reportHistoryHref('admin', 's')).toBe('/admin/students/s/reports');
-    expect(reportHistoryHref('teacher', 's')).toBe('/teacher/reports/s');
+    expect(reportHistoryHref('teacher', 's')).toBe('/teacher/students/s?tab=reports');
   });
 
   it('open once started, never for a cancelled / moved lesson', () => {

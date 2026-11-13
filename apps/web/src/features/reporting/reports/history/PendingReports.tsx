@@ -7,14 +7,21 @@ import { reportFormHref } from '@/features/reporting/reports/paths';
 import { ReportLink } from './ReportLink';
 import { useClock } from '@/lib/clock';
 
+export interface PendingReportsProps {
+  tz: string;
+  /** Only this student's (the top of her student file, docs/47); every student when absent. */
+  studentId?: string;
+}
+
 /**
  * «تقارير لسه ما اتكتبتش» on /teacher (R11, R-TCH-03): started lessons still missing a sent
  * report, oldest first, each opening the report. Nothing when every report is written.
  */
-export function PendingReports({ tz }: { tz: string }) {
+export function PendingReports({ tz, studentId }: PendingReportsProps) {
   const clock = useClock();
   const pending = useQuery(pendingReportsQuery);
-  const rows = pending.data ?? [];
+  const ofStudent = (id: string) => studentId === undefined || id === studentId;
+  const rows = (pending.data ?? []).filter((r) => ofStudent(r.student.id));
   if (rows.length === 0) return null;
   return (
     <section aria-label={t.reports.pending} className="mb-5 grid gap-2 border-b border-rule pb-4">

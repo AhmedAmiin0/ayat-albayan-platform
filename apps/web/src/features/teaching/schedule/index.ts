@@ -42,6 +42,8 @@ export {
   type ConflictNoticeProps,
   conflictText,
 } from './reschedule/ConflictNotice';
+export { MoveReason } from './reschedule/MoveReason';
+export { reasonPart } from './reschedule/reschedule';
 export { SlotPicker, type SlotPickerProps } from './reschedule/SlotPicker';
 export { bookableWindow, byLocalDay, currentWeekStart, zoneLabel } from './reschedule/slots';
 export { dateLabel, dayMonthLabel } from './tz';

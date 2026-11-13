@@ -8,6 +8,8 @@ import { StudentAttendanceRepo } from './attendance/student-attendance.repo';
 import { StudentAttendanceService } from './attendance/student-attendance.service';
 import { TeacherAttendanceController } from './attendance/teacher-attendance.controller';
 import { TeacherAttendanceService } from './attendance/teacher-attendance.service';
+import { TeacherStudentAccess } from './attendance/teacher-file/teacher-student-access';
+import { TeacherStudentHeadService } from './attendance/teacher-file/teacher-student-head.service';
 import { SalesStudentController } from './details/sales-student.controller';
 import { SalesStudentRepo } from './details/sales-student.repo';
 import { SalesStudentReads } from './details/sales-student.reads';
@@ -31,6 +33,6 @@ import { SalesTeacherOverviewRepo } from './teachers/sales-teacher-overview.repo
     StudentAttendanceController, TeacherAttendanceController],
   providers: [SalesStudentScope, SalesStudentRepo, TrialDateRepo, SalesStudentReads, SalesStudentService, LessonServices, SalesLessonActions,
     SalesTeacherOverviewRepo, SalesTeacherOverviewService, StudentAttendanceRepo, StudentAttendanceService,
-    TeacherAttendanceService],
+    TeacherAttendanceService, TeacherStudentAccess, TeacherStudentHeadService],
 })
 export class SalesStudentsModule {}

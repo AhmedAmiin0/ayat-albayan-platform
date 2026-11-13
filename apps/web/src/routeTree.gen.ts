@@ -48,7 +48,6 @@ import { Route as TeacherFeedbackRouteImport } from './routes/teacher/feedback'
 import { Route as TeacherInboxRouteImport } from './routes/teacher/inbox'
 import { Route as TeacherMessagesRouteImport } from './routes/teacher/messages'
 import { Route as TeacherPayoutsRouteImport } from './routes/teacher/payouts'
-import { Route as TeacherStudentsRouteImport } from './routes/teacher/students'
 import { Route as publicFeedbackTokenRouteImport } from './routes/(public)/feedback.$token'
 import { Route as publicJoinLinkTokenRouteImport } from './routes/(public)/join.$linkToken'
 import { Route as publicMTokenRouteImport } from './routes/(public)/m.$token'
@@ -86,6 +85,8 @@ import { Route as AdminTeachersTeacherIdRouteImport } from './routes/admin/teach
 import { Route as TeacherReportLessonIdRouteImport } from './routes/teacher/report.$lessonId'
 import { Route as TeacherReportsIndexRouteImport } from './routes/teacher/reports.index'
 import { Route as TeacherReportsStudentIdRouteImport } from './routes/teacher/reports.$studentId'
+import { Route as TeacherStudentsIndexRouteImport } from './routes/teacher/students.index'
+import { Route as TeacherStudentsStudentIdRouteImport } from './routes/teacher/students.$studentId'
 import { Route as AdminStudentsStudentIdReportsRouteImport } from './routes/admin/students/$studentId_.reports'
 import { Route as AdminTeachersTeacherIdEarningsRouteImport } from './routes/admin/teachers/$teacherId_.earnings'
 import { Route as AdminStudentsStudentIdReportsLessonIdRouteImport } from './routes/admin/students/$studentId_.reports.$lessonId'
@@ -285,11 +286,6 @@ const TeacherPayoutsRoute = TeacherPayoutsRouteImport.update({
   path: '/payouts',
   getParentRoute: () => TeacherRoute,
 } as any)
-const TeacherStudentsRoute = TeacherStudentsRouteImport.update({
-  id: '/students',
-  path: '/students',
-  getParentRoute: () => TeacherRoute,
-} as any)
 const publicFeedbackTokenRoute = publicFeedbackTokenRouteImport.update({
   id: '/(public)/feedback/$token',
   path: '/feedback/$token',
@@ -481,6 +477,17 @@ const TeacherReportsStudentIdRoute = TeacherReportsStudentIdRouteImport.update({
   path: '/reports/$studentId',
   getParentRoute: () => TeacherRoute,
 } as any)
+const TeacherStudentsIndexRoute = TeacherStudentsIndexRouteImport.update({
+  id: '/students/',
+  path: '/students/',
+  getParentRoute: () => TeacherRoute,
+} as any)
+const TeacherStudentsStudentIdRoute =
+  TeacherStudentsStudentIdRouteImport.update({
+    id: '/students/$studentId',
+    path: '/students/$studentId',
+    getParentRoute: () => TeacherRoute,
+  } as any)
 const AdminStudentsStudentIdReportsRoute =
   AdminStudentsStudentIdReportsRouteImport.update({
     id: '/$studentId_/reports',
@@ -534,7 +541,6 @@ export interface FileRoutesByFullPath {
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/messages': typeof TeacherMessagesRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
-  '/teacher/students': typeof TeacherStudentsRoute
   '/account-setup/': typeof AccountSetupIndexRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
@@ -577,7 +583,9 @@ export interface FileRoutesByFullPath {
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
+  '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/teacher/reports/': typeof TeacherReportsIndexRoute
+  '/teacher/students/': typeof TeacherStudentsIndexRoute
   '/admin/students/$studentId/reports': typeof AdminStudentsStudentIdReportsRouteWithChildren
   '/admin/teachers/$teacherId/earnings': typeof AdminTeachersTeacherIdEarningsRoute
   '/admin/students/$studentId/reports/$lessonId': typeof AdminStudentsStudentIdReportsLessonIdRoute
@@ -611,7 +619,6 @@ export interface FileRoutesByTo {
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/messages': typeof TeacherMessagesRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
-  '/teacher/students': typeof TeacherStudentsRoute
   '/account-setup': typeof AccountSetupIndexRoute
   '/account': typeof AccountIndexRoute
   '/admin': typeof AdminIndexRoute
@@ -654,7 +661,9 @@ export interface FileRoutesByTo {
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
+  '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/teacher/reports': typeof TeacherReportsIndexRoute
+  '/teacher/students': typeof TeacherStudentsIndexRoute
   '/admin/students/$studentId/reports': typeof AdminStudentsStudentIdReportsRouteWithChildren
   '/admin/teachers/$teacherId/earnings': typeof AdminTeachersTeacherIdEarningsRoute
   '/admin/students/$studentId/reports/$lessonId': typeof AdminStudentsStudentIdReportsLessonIdRoute
@@ -694,7 +703,6 @@ export interface FileRoutesById {
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/messages': typeof TeacherMessagesRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
-  '/teacher/students': typeof TeacherStudentsRoute
   '/account-setup/': typeof AccountSetupIndexRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
@@ -737,7 +745,9 @@ export interface FileRoutesById {
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
+  '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/teacher/reports/': typeof TeacherReportsIndexRoute
+  '/teacher/students/': typeof TeacherStudentsIndexRoute
   '/admin/students/$studentId_/reports': typeof AdminStudentsStudentIdReportsRouteWithChildren
   '/admin/teachers/$teacherId_/earnings': typeof AdminTeachersTeacherIdEarningsRoute
   '/admin/students/$studentId_/reports/$lessonId': typeof AdminStudentsStudentIdReportsLessonIdRoute
@@ -778,7 +788,6 @@ export interface FileRouteTypes {
     | '/teacher/inbox'
     | '/teacher/messages'
     | '/teacher/payouts'
-    | '/teacher/students'
     | '/account-setup/'
     | '/account/'
     | '/admin/'
@@ -821,7 +830,9 @@ export interface FileRouteTypes {
     | '/admin/teachers/$teacherId'
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
+    | '/teacher/students/$studentId'
     | '/teacher/reports/'
+    | '/teacher/students/'
     | '/admin/students/$studentId/reports'
     | '/admin/teachers/$teacherId/earnings'
     | '/admin/students/$studentId/reports/$lessonId'
@@ -855,7 +866,6 @@ export interface FileRouteTypes {
     | '/teacher/inbox'
     | '/teacher/messages'
     | '/teacher/payouts'
-    | '/teacher/students'
     | '/account-setup'
     | '/account'
     | '/admin'
@@ -898,7 +908,9 @@ export interface FileRouteTypes {
     | '/admin/teachers/$teacherId'
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
+    | '/teacher/students/$studentId'
     | '/teacher/reports'
+    | '/teacher/students'
     | '/admin/students/$studentId/reports'
     | '/admin/teachers/$teacherId/earnings'
     | '/admin/students/$studentId/reports/$lessonId'
@@ -937,7 +949,6 @@ export interface FileRouteTypes {
     | '/teacher/inbox'
     | '/teacher/messages'
     | '/teacher/payouts'
-    | '/teacher/students'
     | '/account-setup/'
     | '/account/'
     | '/admin/'
@@ -980,7 +991,9 @@ export interface FileRouteTypes {
     | '/admin/teachers/$teacherId'
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
+    | '/teacher/students/$studentId'
     | '/teacher/reports/'
+    | '/teacher/students/'
     | '/admin/students/$studentId_/reports'
     | '/admin/teachers/$teacherId_/earnings'
     | '/admin/students/$studentId_/reports/$lessonId'
@@ -1283,13 +1296,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherPayoutsRouteImport
       parentRoute: typeof TeacherRoute
     }
-    '/teacher/students': {
-      id: '/teacher/students'
-      path: '/students'
-      fullPath: '/teacher/students'
-      preLoaderRoute: typeof TeacherStudentsRouteImport
-      parentRoute: typeof TeacherRoute
-    }
     '/(public)/feedback/$token': {
       id: '/(public)/feedback/$token'
       path: '/feedback/$token'
@@ -1549,6 +1555,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherReportsStudentIdRouteImport
       parentRoute: typeof TeacherRoute
     }
+    '/teacher/students/': {
+      id: '/teacher/students/'
+      path: '/students'
+      fullPath: '/teacher/students/'
+      preLoaderRoute: typeof TeacherStudentsIndexRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/students/$studentId': {
+      id: '/teacher/students/$studentId'
+      path: '/students/$studentId'
+      fullPath: '/teacher/students/$studentId'
+      preLoaderRoute: typeof TeacherStudentsStudentIdRouteImport
+      parentRoute: typeof TeacherRoute
+    }
     '/admin/students/$studentId_/reports': {
       id: '/admin/students/$studentId_/reports'
       path: '/$studentId/reports'
@@ -1766,11 +1786,12 @@ interface TeacherRouteChildren {
   TeacherInboxRoute: typeof TeacherInboxRoute
   TeacherMessagesRoute: typeof TeacherMessagesRoute
   TeacherPayoutsRoute: typeof TeacherPayoutsRoute
-  TeacherStudentsRoute: typeof TeacherStudentsRoute
   TeacherIndexRoute: typeof TeacherIndexRoute
   TeacherReportLessonIdRoute: typeof TeacherReportLessonIdRoute
   TeacherReportsStudentIdRoute: typeof TeacherReportsStudentIdRoute
+  TeacherStudentsStudentIdRoute: typeof TeacherStudentsStudentIdRoute
   TeacherReportsIndexRoute: typeof TeacherReportsIndexRoute
+  TeacherStudentsIndexRoute: typeof TeacherStudentsIndexRoute
 }
 
 const TeacherRouteChildren: TeacherRouteChildren = {
@@ -1780,11 +1801,12 @@ const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherInboxRoute: TeacherInboxRoute,
   TeacherMessagesRoute: TeacherMessagesRoute,
   TeacherPayoutsRoute: TeacherPayoutsRoute,
-  TeacherStudentsRoute: TeacherStudentsRoute,
   TeacherIndexRoute: TeacherIndexRoute,
   TeacherReportLessonIdRoute: TeacherReportLessonIdRoute,
   TeacherReportsStudentIdRoute: TeacherReportsStudentIdRoute,
+  TeacherStudentsStudentIdRoute: TeacherStudentsStudentIdRoute,
   TeacherReportsIndexRoute: TeacherReportsIndexRoute,
+  TeacherStudentsIndexRoute: TeacherStudentsIndexRoute,
 }
 
 const TeacherRouteWithChildren =

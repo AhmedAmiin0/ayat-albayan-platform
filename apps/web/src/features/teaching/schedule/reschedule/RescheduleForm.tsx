@@ -12,6 +12,7 @@ import { t } from '@/lib/i18n/i18n';
 import { conflictsOf, lessonErrorText, LESSONS_KEY, rescheduleLesson } from '@/features/teaching/schedule/api';
 import { ConflictNotice } from './ConflictNotice';
 import { durationMin } from '@/features/teaching/schedule/lesson/lessons';
+import { MoveReason } from './MoveReason';
 import { familyTz, rescheduleBody, seriesDays } from './reschedule';
 import { ScopeRadios, type Scope } from './ScopeRadios';
 import { SlotPicker } from './SlotPicker';
@@ -35,11 +36,13 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
   const [startsAt, setStartsAt] = useState<string | null>(null);
   // null = untouched: the old rule's days, shifted to the new slot (seriesDays).
   const [picked, setByday] = useState<number[] | null>(null);
+  const [reason, setReason] = useState('');
   const tz = familyTz(lesson);
   const byday = picked ?? (startsAt ? seriesDays(lesson, startsAt) : []);
   const move = useMutation({
     mutationFn: (override?: string) => {
-      const body = startsAt ? rescheduleBody({ lesson, scope, startsAt, byday, override }) : null;
+      const input = { lesson, scope, byday, override, reason };
+      const body = startsAt ? rescheduleBody({ ...input, startsAt }) : null;
       if (!body) throw new Error('nothing picked');
       return rescheduleLesson({ id: lesson.id, body });
     },
@@ -80,6 +83,7 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
       {scope === 'rule' && startsAt && (
         <ByDayPicker fixed={ruleFromSlot(startsAt, tz).weekday} value={[...new Set([ruleFromSlot(startsAt, tz).weekday, ...byday])]} onChange={setByday} />
       )}
+      {scope === 'one' && <MoveReason value={reason} onChange={setReason} />}
       {conflicts ? (
         <ConflictNotice
           conflicts={conflicts}
@@ -89,7 +93,7 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
             move.reset();
             setStartsAt(null);
           }}
-          onOverride={(reason) => move.mutate(reason)}
+          onOverride={(why) => move.mutate(why)}
         />
       ) : (
         move.isError && <FormAlert>{lessonErrorText(move.error)}</FormAlert>

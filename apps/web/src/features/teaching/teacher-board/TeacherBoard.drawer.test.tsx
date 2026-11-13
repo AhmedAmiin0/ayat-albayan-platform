@@ -70,6 +70,12 @@ describe('TeacherBoard drawer «الحلقات | التقارير | الحضور
     expect(within(drawer).getAllByRole('button', { name: t.teacherBoard.confirm })).toHaveLength(1);
   });
 
+  it('«ملف الطالب» opens the student file (docs/47)', () => {
+    const drawer = openDrawer();
+    const link = within(drawer).getByRole('link', { name: t.teacherBoard.openFile });
+    expect(link.getAttribute('href')).toBe('/teacher/students/s-1');
+  });
+
   it('a row click opens the same drawer', () => {
     openDrawer();
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: t.common.close }));

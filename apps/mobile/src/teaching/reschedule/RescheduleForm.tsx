@@ -9,6 +9,7 @@ import { type, useTheme } from '@/theme';
 import { studentNames } from '@/today';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { MoveFields } from './MoveFields';
+import { MoveReason } from './MoveReason';
 import { useReschedule } from './queries';
 import { familyTz, lessonDuration, type Scope } from './reschedule-body';
 import { RescheduleDone } from './RescheduleDone';
@@ -29,6 +30,9 @@ export function RescheduleForm({ lesson, onClose, onDone }: RescheduleFormProps)
   const durationMin = lessonDuration(lesson);
   const move = useReschedule(lesson.id);
   const [scope, setScope] = useState<Scope>('one');
+  const [reason, setReason] = useState('');
+  // docs/47: only a one-lesson move carries a reason.
+  const field = scope === 'one' ? <MoveReason value={reason} onChange={setReason} /> : null;
 
   if (move.data) return <RescheduleDone moved={move.data} scope={scope} tz={tz} onClose={onDone ?? onClose} />;
   return (
@@ -44,6 +48,7 @@ export function RescheduleForm({ lesson, onClose, onDone }: RescheduleFormProps)
           move={move}
           scope={scope}
           onScope={setScope}
+          reason={{ text: reason, field }}
         />
       )}
     </View>

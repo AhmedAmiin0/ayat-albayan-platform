@@ -9,17 +9,11 @@ import {
   type StudentAttendanceTable,
 } from '@ab/shared';
 import { isTrialLesson } from '@/modules/finance/subscriptions';
-import type { AttendanceLessonRow, AttendanceReportRow } from './student-attendance.repo';
+import { moveOf, reasonShown, type AttendanceReader } from './lesson-row-notes';
+import type { AttendanceLessonRow, AttendanceReportRow } from './student-attendance.rows';
+import { rowReport, type ReportWindow } from './teacher-row-report';
 
-
-/** Whose reading of a row: staff (attendanceKind) or the teacher (auto-held = unmarked). */
-type AttendanceReader = 'staff' | 'teacher';
 const KIND_OF = { staff: attendanceKind, teacher: teacherAttendanceKind } as const;
-/** Whose cancel reasons a reader sees: the teacher never the admin's (docs/46 C5). */
-const REASON_OF: Record<AttendanceReader, ReadonlySet<string>> = {
-  staff: new Set(['cancelled_by_teacher', 'cancelled_by_admin']),
-  teacher: new Set(['cancelled_by_teacher']),
-};
 
 /** "YYYY-MM" of an instant in a zone (Riyadh for staff, the teacher's own zone for her). */
 export const monthIn = (at: Date, tz: string): string => zonedPartsIn(at, tz).date.slice(0, 7);
@@ -40,6 +34,7 @@ interface RowOptions {
   reader: AttendanceReader;
 }
 
+/** One lesson as a log row (no `report` key: the teacher's table adds it). */
 function rowOf(l: AttendanceLessonRow, o: RowOptions): AttendanceTableRow {
   const own = l.own[0];
   const attendance = own?.attendance ?? null;
@@ -53,11 +48,30 @@ function rowOf(l: AttendanceLessonRow, o: RowOptions): AttendanceTableRow {
     kind: KIND_OF[o.reader](l.status, attendance),
     report_sent: o.reportId !== null,
     report_id: o.reportId,
-    cancel_reason: REASON_OF[o.reader].has(l.status) ? l.cancel_reason : null,
+    cancel_reason: reasonShown[o.reader](l) ? l.cancel_reason : null,
     is_trial: isTrialLesson(l, own?.chargeable ?? true),
     is_makeup: l.makeup_of_id !== null,
     is_rescheduled: l.rescheduled_from_id !== null,
+    ...moveOf(l),
   };
+}
+
+/** Only the teacher's rows carry `report` (write / edit / view); staff rows never do. */
+const REPORT_OF: Record<
+  AttendanceReader,
+  (r: AttendanceReportRow | undefined, w: ReportWindow) => Pick<AttendanceTableRow, 'report'>
+> = {
+  staff: () => ({}),
+  teacher: (r, w) => ({ report: r === undefined ? null : rowReport(r, w) }),
+};
+
+/** Her next lessons with the student (the file head, docs/47): oldest first, no kind, no report. */
+export function upcomingRows(lessons: readonly AttendanceLessonRow[]): AttendanceTableRow[] {
+  const rows = lessons.map((l) => {
+    const row = rowOf(l, { reportId: null, reader: 'teacher' });
+    return { ...row, kind: null };
+  });
+  return rows.sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at));
 }
 
 /** Every month (in `tz`) with a lesson that started, and the current one, newest first. */
@@ -75,6 +89,8 @@ interface TableInput {
   /** Default: Riyadh, staff (the admin's and sales' table). */
   tz?: string;
   reader?: AttendanceReader;
+  /** The teacher's report edit window (settings.report_teacher_edit_minutes); default 0. */
+  minutes?: number;
 }
 
 /** The teacher's totals count an auto-held lesson (unmarked) as unmarked, never held. */
@@ -83,10 +99,14 @@ const forTotals = (row: AttendanceTableRow): Pick<AttendanceTableRow, 'status' |
 
 /** Whitelist of «سجل الحضور»: times, teacher, statuses, the cancel reason; never money or a link. */
 export function toAttendanceTable(input: TableInput, now: Date): StudentAttendanceTable {
-  const { tz = RIYADH_TZ, reader = 'staff' } = input;
-  const reportOf = new Map(input.reports.map((r) => [r.lesson_id, r.id]));
+  const { tz = RIYADH_TZ, reader = 'staff', minutes = 0 } = input;
+  const reportOf = new Map(input.reports.map((r) => [r.lesson_id, r]));
   const past = input.lessons.filter((l) => Date.parse(l.starts_at) < now.getTime());
-  const items = past.map((l) => rowOf(l, { reportId: reportOf.get(l.id) ?? null, reader }));
+  const items = past.map((l) => {
+    const report = reportOf.get(l.id);
+    const row = rowOf(l, { reportId: report?.id ?? null, reader });
+    return { ...row, ...REPORT_OF[reader](report, { now, minutes }) };
+  });
   items.sort((a, b) => Date.parse(b.starts_at) - Date.parse(a.starts_at));
   const totals = attendanceTableTotals(items.map(forTotals));
   const months = monthsOf(input.starts, now, tz);

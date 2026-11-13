@@ -6,13 +6,22 @@ import { ErrorLine } from '@/inbox';
 import { t } from '@/core/lib/i18n/i18n';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { Button } from '@/core/ui/primitives/Button';
-import { lessonDuration, RescheduleDone, rescheduleFailure, RescheduleHeading, SlotPicker } from '@/teaching';
+import {
+  lessonDuration,
+  MoveReason,
+  reasonField,
+  RescheduleDone,
+  rescheduleFailure,
+  RescheduleHeading,
+  SlotPicker,
+} from '@/teaching';
 import { useSalesReschedule } from './lesson-actions-api';
 
 /**
  * Sales' «تغيير الموعد» of ONE lesson (docs/16 row 37): who and when now, a free slot of the same
  * teacher (her scoped GET /sales/booking/slots), then the move. This lesson only (no series, no
- * substitute, no booking over a clash: a 409 asks for another slot). The admin's success panel follows;
+ * substitute, no booking over a clash: a 409 asks for another slot), with an optional «سبب تغيير
+ * الموعد» the teacher sees in her file (docs/47). The admin's success panel follows;
  * its «تم» closes the lesson's details too (they would show the old time with its actions still live).
  */
 interface SalesRescheduleFormProps {
@@ -29,6 +38,7 @@ export function SalesRescheduleForm({ lesson, onDone }: SalesRescheduleFormProps
   const durationMin = lessonDuration(lesson);
   const move = useSalesReschedule(lesson.id);
   const [startsAt, setStartsAt] = useState<string | null>(null);
+  const [reason, setReason] = useState('');
   const failure = move.isError ? rescheduleFailure(move.error, cycle, viewerZone) : null;
   const pick = (slot: string | null) => {
     move.reset();
@@ -45,10 +55,11 @@ export function SalesRescheduleForm({ lesson, onDone }: SalesRescheduleFormProps
       ) : (
         <SlotPicker lesson={lesson} durationMin={durationMin} tz={tz} value={startsAt} onPick={pick} slotsPath="/sales/booking/slots" />
       )}
+      <MoveReason value={reason} onChange={setReason} />
       {failure?.kind === 'error' ? <ErrorLine message={failure.text} /> : null}
       <Button
         label={move.isPending ? t.common.saving : t.lessons.rescheduleSubmit}
-        onPress={() => (startsAt ? move.mutate(startsAt) : undefined)}
+        onPress={() => (startsAt ? move.mutate({ startsAt, ...reasonField(reason) }) : undefined)}
         busy={move.isPending}
         disabled={startsAt === null || durationMin === null}
       />

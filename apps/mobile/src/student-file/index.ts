@@ -4,3 +4,4 @@ export { StudentRecordingsScreen } from './screens/StudentRecordingsScreen';
 export { TeacherStudentRecordingsScreen } from './screens/TeacherStudentRecordingsScreen';
 export { AdminChannelScreen, SalesChannelScreen, TeacherChannelScreen } from './channel/ChannelScreen';
 export { TeacherChannelsScreen } from './channel/TeacherChannelsScreen';
+export { RecordingsButton } from './recordings/RecordingsButton';

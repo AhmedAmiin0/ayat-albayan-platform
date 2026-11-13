@@ -12,7 +12,7 @@ const access = { assertCanTouch: vi.fn() };
 const rescheduler = { reschedule: vi.fn() };
 const NOW = new Date('2026-10-02T10:00:00Z');
 const LATER = '2026-10-05T15:00:00.000Z';
-const PROPOSAL = { id: 'p1', lesson_id: LESSON_ID, proposed_starts_at: '2026-10-05 15:00:00+00', status: 'pending' };
+const PROPOSAL = { id: 'p1', lesson_id: LESSON_ID, proposed_starts_at: '2026-10-05 15:00:00+00', status: 'pending', note: null };
 
 const proposer = (row = lessonRow()) =>
   new LessonProposeService(
@@ -74,6 +74,15 @@ describe('ProposalDecisionService — the admin approves or rejects (R-SCH-08)',
       actor: ADMIN,
     });
     expect(proposals.decide).toHaveBeenCalledWith('p1', { status: 'approved', decided_by: ADMIN.id, new_lesson_id: 'new-lesson' });
+  });
+
+  it('approve forwards her note as the move reason (docs/47)', async () => {
+    proposals.get.mockResolvedValue({ ...PROPOSAL, note: 'سفر' });
+    await decider.approve({ proposalId: 'p1', body: {}, actor: ADMIN });
+    const startsAt = PROPOSAL.proposed_starts_at;
+    const body = { scope: 'one', startsAt, override: undefined, reason: 'سفر' };
+    const call = { lessonId: LESSON_ID, body, actor: ADMIN };
+    expect(rescheduler.reschedule).toHaveBeenCalledWith(call);
   });
 
   it('a clash surfaces as 409 conflict and the proposal stays pending', async () => {

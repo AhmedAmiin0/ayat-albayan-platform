@@ -60,7 +60,13 @@ export class ProposalDecisionService {
     const proposal = await this.pending(proposalId);
     const newId = await this.reschedule.reschedule({
       lessonId: proposal.lesson_id,
-      body: { scope: 'one', startsAt: proposal.proposed_starts_at, override: body.override },
+      body: {
+        scope: 'one',
+        startsAt: proposal.proposed_starts_at,
+        override: body.override,
+        // docs/47: her proposal's note is the move reason the student file shows.
+        ...(proposal.note ? { reason: proposal.note } : {}),
+      },
       actor,
     });
     // The lesson is moved either way; a lost race here only leaves the proposal unmarked.

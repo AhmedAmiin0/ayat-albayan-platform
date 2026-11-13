@@ -32,3 +32,4 @@ export {
   type WayIn,
 } from './teacher-lesson-plan.js';
 export { nextOpenLesson, pickHero, type Hero, type HeroLesson } from './pick-hero.js';
+export { teacherStudentHeadSchema } from './teacher-student-head-schema.js';

@@ -45,7 +45,7 @@ export function AttendanceLog({ studentId, tz }: AttendanceLogProps) {
       <DataTable
         stacked
         label={t.teacherBoard.attendanceLog}
-        columns={attendanceColumns({ ...clock, tz })}
+        columns={attendanceColumns({ clock: { ...clock, tz }, studentId })}
         data={data.items}
         getRowId={(r) => r.lesson_id}
         emptyText={w.empty}

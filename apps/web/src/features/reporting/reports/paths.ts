@@ -9,8 +9,11 @@ export function reportFormHref(input: { role: UserRole; lessonId: string; studen
     : `/teacher/report/${input.lessonId}`;
 }
 
+/** «سجل التقارير»: the admin's page, or the teacher's student file on «التقارير» (docs/47). */
 export function reportHistoryHref(role: UserRole, studentId: string): string {
-  return role === 'admin' ? `/admin/students/${studentId}/reports` : `/teacher/reports/${studentId}`;
+  return role === 'admin'
+    ? `/admin/students/${studentId}/reports`
+    : `/teacher/students/${studentId}?tab=reports`;
 }
 
 /** The link shows once a report can be sent: the lesson started and was not cancelled or moved. */

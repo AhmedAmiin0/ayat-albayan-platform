@@ -12,6 +12,14 @@ export interface RescheduleInput {
   byday: readonly number[];
   /** Reason to move over conflicts (R-SCH-04). */
   override?: string | undefined;
+  /** «سبب تغيير الموعد» for scope `one` (docs/47); the teacher reads it in the student file. */
+  reason?: string | undefined;
+}
+
+/** A move's optional `reason` (docs/47): trimmed, and absent when empty. */
+export function reasonPart(reason: string | undefined): { reason?: string } {
+  const text = reason?.trim() ?? '';
+  return text ? { reason: text } : {};
 }
 
 /** The family's zone: the (first) student's, so their wall clock stays fixed. */
@@ -39,7 +47,9 @@ export function seriesDays(lesson: Pick<LessonView, 'starts_at' | 'rule_byday' |
  */
 export function rescheduleBody(i: RescheduleInput): RescheduleRequest | null {
   const override = i.override ? { override: { reason: i.override } } : {};
-  if (i.scope === 'one') return { scope: 'one', startsAt: i.startsAt, ...override };
+  if (i.scope === 'one') {
+    return { scope: 'one', startsAt: i.startsAt, ...override, ...reasonPart(i.reason) };
+  }
   const length = DURATIONS.find((d) => d === durationMin(i.lesson));
   if (!length) return null;
   const tz = familyTz(i.lesson);

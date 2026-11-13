@@ -22,6 +22,7 @@ export {
   type SendState,
 } from './send-state.js';
 export { editableNow, sendLines, type SendLines, type SendWords } from './send-lines.js';
+export { logReportAction, type LogReportAction } from './log-report-action.js';
 export {
   AFTER_CLOSE_MS,
   CLOSE_RETRY_MS,

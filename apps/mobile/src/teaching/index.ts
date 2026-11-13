@@ -6,3 +6,5 @@ export { RescheduleFrame, RescheduleSheet } from './reschedule/RescheduleSheet';
 export { SlotPicker } from './reschedule/SlotPicker';
 export { CorrectOutcome } from './correct/CorrectOutcome';
 export { SlotButton } from './reschedule/SlotButton';
+export { MoveReason } from './reschedule/MoveReason';
+export { reasonField } from './reschedule/reschedule-body';
