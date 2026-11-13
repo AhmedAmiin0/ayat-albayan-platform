@@ -64,25 +64,28 @@ test.describe('phone search (searchDigits)', () => {
     }
   });
 
-  test('inbox, leads and students boxes: Arabic digits, 00 and + prefixes, partial and name', async ({ asRole }) => {
-    // 18 page loads: ~20 s on a fresh DB, near 30 s once a full two-project run has filled it.
-    test.setTimeout(90_000);
-    const page = await asRole('admin');
-    const boxes = [
-      { url: '/admin/inbox', role: 'searchbox', who: person('lead') },
-      { url: '/admin/leads', role: 'searchbox', who: person('lead') },
-      { url: '/admin/students', role: 'textbox', who: person('guardian') },
-    ] as const;
-    for (const box of boxes) {
-      const terms = { ...variants(box.who), name: box.who.name, 'two digits': '77' };
+  // One test per box (7 page loads each): the three in one test went past 90 s once a full
+  // two-project run had filled the DB (develop 2026-11-13).
+  const boxes = [
+    { url: '/admin/inbox', role: 'searchbox', kind: 'lead' },
+    { url: '/admin/leads', role: 'searchbox', kind: 'lead' },
+    { url: '/admin/students', role: 'textbox', kind: 'guardian' },
+  ] as const;
+  for (const box of boxes) {
+    const title = `${box.url} box: Arabic digits, 00 and + prefixes, partial and name`;
+    test(title, async ({ asRole }) => {
+      test.setTimeout(60_000);
+      const page = await asRole('admin');
+      const who = person(box.kind);
+      const terms = { ...variants(who), name: who.name, 'two digits': '77' };
       for (const [label, term] of Object.entries(terms)) {
         await page.goto(box.url);
         const input = page.getByRole(box.role, { name: ar.common.search, exact: true });
         await input.fill(term);
         await input.press('Enter');
-        const shown = box.url.endsWith('students') ? `طالب ${box.who.name}` : box.who.name;
+        const shown = box.kind === 'guardian' ? `طالب ${who.name}` : who.name;
         await expect(page.getByText(shown).first(), `${box.url} by ${label}`).toBeVisible();
       }
-    }
-  });
+    });
+  }
 });
