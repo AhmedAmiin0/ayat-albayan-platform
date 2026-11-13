@@ -1,6 +1,5 @@
 import type {
   AttendanceTableRow,
-  ReportSummaryView,
   StudentAttendanceTable,
   StudentRecordingView,
   TeacherCourseView,
@@ -59,20 +58,6 @@ export const LOG: StudentAttendanceTable = {
   },
 };
 
-const report: ReportSummaryView = {
-  id: 'r-1',
-  lesson_id: 'l-9',
-  starts_at: '2026-10-03T13:00:00.000Z',
-  lesson_no: 7,
-  teacher: { id: 't-1', display_name_ar: 'أبرار' },
-  attendance: 'on_time',
-  grade_overall: 'very_good',
-  status: 'submitted',
-  version: 1,
-  pdf_status: 'ready',
-  sent_at: null,
-};
-
 const pending = (lessonId: string, student: { id: string; code: string; name: string }) => ({
   lesson_id: lessonId,
   starts_at: '2026-10-08T13:00:00.000Z',
@@ -84,7 +69,6 @@ export const PENDING = [
   pending('l-1', { id: 's-1', code: 'AB-0183', name: 'سهيلة' }),
   pending('l-2', { id: 's-2', code: 'AB-0184', name: 'آية' }),
 ];
-export const REPORTS = { items: [report], total: 1, page: 1, pageSize: 10, series: [] };
 const recording: StudentRecordingView = {
   id: 'rec-9',
   lesson_id: 'l-9',

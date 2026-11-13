@@ -13,7 +13,7 @@ const links = () =>
     .map((a) => [a.textContent, a.getAttribute('href')]);
 
 describe('TeacherNav — the teacher top bar (R-TCH-03)', () => {
-  it('only my pages, in order: today, my schedule, chats, students, student messages, reports, «أرباحي», «كشوف الشهر», feedback', () => {
+  it('only my pages, in order: today, my schedule, chats, students, student messages, «أرباحي», «كشوف الشهر», feedback', () => {
     render(<TeacherNav />, { wrapper: teacherPagesWrapper(true) });
     expect(links()).toEqual([
       [t.teacherNav.today, '/teacher'],
@@ -21,7 +21,6 @@ describe('TeacherNav — the teacher top bar (R-TCH-03)', () => {
       [t.teacherNav.chats, '/teacher/inbox'],
       [t.teacherNav.students, '/teacher/students'],
       [t.teacherNav.messages, '/teacher/messages'],
-      [t.teacherNav.reports, '/teacher/reports'],
       [t.teacherNav.payouts, '/teacher/earnings'],
       [t.teacherNav.statements, '/teacher/payouts'],
       [t.teacherNav.feedback, '/teacher/feedback'],
@@ -34,7 +33,6 @@ describe('TeacherNav — the teacher top bar (R-TCH-03)', () => {
       [t.teacherNav.today, '/teacher'],
       [t.teacherNav.calendar, '/teacher/calendar'],
       [t.teacherNav.students, '/teacher/students'],
-      [t.teacherNav.reports, '/teacher/reports'],
     ]);
   });
 

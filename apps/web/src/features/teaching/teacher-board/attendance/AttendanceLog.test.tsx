@@ -39,17 +39,20 @@ const LOG_47: StudentAttendanceTable = {
   ...LOG,
   items: [
     { ...base, lesson_id: 'w', starts_at: '2026-10-08T13:00:00.000Z', status: 'completed', attendance: null, kind: 'unmarked', report_sent: false, report: null },
-    { ...base, lesson_id: 'e', starts_at: '2026-10-07T13:00:00.000Z', status: 'completed', attendance: 'on_time', kind: 'present', report_sent: true, report: sent('2026-10-08T15:00:00.000Z') },
-    { ...base, lesson_id: 'v', starts_at: '2026-10-05T13:00:00.000Z', status: 'completed', attendance: 'on_time', kind: 'present', report_sent: true, report: sent('2026-10-05T15:00:00.000Z') },
+    { ...base, lesson_id: 'e', report_id: 'r-e', starts_at: '2026-10-07T13:00:00.000Z', status: 'completed', attendance: 'on_time', kind: 'present', report_sent: true, report: sent('2026-10-08T15:00:00.000Z') },
+    { ...base, lesson_id: 'v', report_id: 'r-v', starts_at: '2026-10-05T13:00:00.000Z', status: 'completed', attendance: 'on_time', kind: 'present', report_sent: true, report: sent('2026-10-05T15:00:00.000Z') },
     { ...base, lesson_id: 'm', starts_at: '2026-10-04T13:00:00.000Z', status: 'rescheduled', attendance: null, kind: null, report_sent: false, report: null, moved_to: '2026-10-06T13:00:00.000Z', move_reason: 'سفر الأسرة' },
     { ...base, lesson_id: 'x', starts_at: '2026-10-03T13:00:00.000Z', status: 'cancelled_by_admin', attendance: null, kind: 'cancelled', report_sent: false, report: null, cancel_reason: 'مرض' },
   ],
 };
 
 function renderLog(answer: Promise<unknown>) {
-  apiFetch.mockImplementation((path: string) =>
-    path === '/settings/public' ? Promise.resolve({ ...PUBLIC_SETTING_DEFAULTS, custom: {} }) : answer,
-  );
+  const fixed: Record<string, unknown> = {
+    '/settings/public': { ...PUBLIC_SETTING_DEFAULTS, custom: {} },
+    '/students/s-1/recorded-lesson-ids': [],
+  };
+  const reply = (path: string) => (path in fixed ? Promise.resolve(fixed[path]) : answer);
+  apiFetch.mockImplementation(reply);
   render(
     <QueryClientProvider client={new QueryClient(NO_RETRY)}>
       <AttendanceLog studentId="s-1" tz="Africa/Cairo" />
@@ -82,13 +85,14 @@ describe('AttendanceLog (docs/46 C5)', () => {
     expect(screen.getByRole('option', { name: 'أكتوبر 2026' })).toBeTruthy();
   });
 
-  it('report cell (docs/47): write → the form, edit inside the window, view after, «—» when moved or cancelled', async () => {
+  it('report cell (docs/47, docs/49): write → the form, edit inside the window, then read in the row', async () => {
     const [write, edit, view, moved, cancelled] = await tableRows(LOG_47);
     const link = (row: HTMLElement | undefined, name: string) =>
       within(row as HTMLElement).getByRole('link', { name }).getAttribute('href');
     expect(link(write, t.teacherBoard.writeReport)).toBe('/teacher/report/w');
     expect(link(edit, t.reports.edit)).toBe('/teacher/report/e');
-    expect(link(view, t.reports.view)).toBe('/teacher/report/v');
+    expect(within(view as HTMLElement).queryByRole('link')).toBeNull();
+    expect(within(view as HTMLElement).getByText(t.reports.view).tagName).toBe('SUMMARY');
     expect(within(moved as HTMLElement).getByText('—')).toBeTruthy();
     expect(within(moved as HTMLElement).queryByRole('link')).toBeNull();
     expect(within(cancelled as HTMLElement).getByText('—')).toBeTruthy();

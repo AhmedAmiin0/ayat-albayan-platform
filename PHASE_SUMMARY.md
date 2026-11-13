@@ -1764,3 +1764,6 @@ A behaviour-preserving refactor; docs/25 holds the vocabulary. No HTTP route, pa
 - **Stop course:** silent on purpose. No template or push kind says «the course stopped»: `course_paused` says «مؤقتًا» and `lesson_cancelled` names one lesson. A `course_stopped` template needs the owner's approval.
 - **Notify flag:** none of these routes or their UIs carries one (only «عدّل الوقت» has `notify`). Each send follows its catalogue rule and template approval, as before; every queue write is deduped; a replay returns before the writer.
 - **Checks:** CI only (no local runs). Unit tests cover the move choice, the audience split, the writer's dropped or kept confirmation and the announced changes, and `TeacherAlert.toTeachers`. Every sink is a fake.
+
+## Teacher web: reports inside each lesson, docs/49 (branch `feat/teacher-web-reports-in-lessons`, 2026-11-13)
+- **Owner ask:** «remove the reports tab from the web and list all the reports inside each lesson» (web only). The «التقارير» nav item and page are gone (/teacher/reports → «الطلاب»), the student file has no tabs, and each lesson row of the file opens this student's report (lines, attachments, PDF) and the lesson's recording in a lazy `<details>`. Teachers lose the grade chart and the sortable sent-reports table; admins keep both. No API, migration or i18n change. Checks: CI.

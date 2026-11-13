@@ -114,6 +114,12 @@ test.describe('teacher student file (docs/47 PR 1)', () => {
     const after = teacher.getByRole('table', { name: ar.teacherBoard.attendanceLog });
     const edit = after.locator(`a[href="/teacher/report/${s.todayLessonId}"]`);
     await expect(edit).toHaveText(ar.reports.edit, { timeout: 30_000 });
+
+    // docs/49: the sent report reads inside its own row (no «التقارير» tab), still with no money.
+    const editHref = teacher.locator(`a[href="/teacher/report/${s.todayLessonId}"]`);
+    const today = after.getByRole('row').filter({ has: editHref });
+    await today.locator('summary', { hasText: ar.reports.view }).click();
+    await expect(teacher.getByRole('article', { name: ar.reportPage.title })).toBeVisible();
     await expect(teacher.locator('body')).not.toContainText(/ريال|SAR|EGP/);
   });
 });

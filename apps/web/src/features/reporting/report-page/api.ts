@@ -16,3 +16,15 @@ export const reportPageQuery = (publicId: string) =>
     queryFn: async () => reportPageViewSchema.parse(await apiFetch(`/report-pages/${publicId}`)),
     retry: false,
   });
+
+/**
+ * GET /report-pages/by-report/:reportId: the same page, opened from the lesson row of the
+ * teacher's student file (docs/49). A report filed under another teacher id answers 404.
+ */
+export const reportPageByIdQuery = (reportId: string) =>
+  queryOptions<ReportPageView>({
+    queryKey: ['report-page', 'by-report', reportId],
+    queryFn: async () =>
+      reportPageViewSchema.parse(await apiFetch(`/report-pages/by-report/${reportId}`)),
+    retry: false,
+  });

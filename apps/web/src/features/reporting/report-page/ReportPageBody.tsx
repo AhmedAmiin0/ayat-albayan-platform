@@ -5,8 +5,14 @@ import { locale } from '@/lib/i18n/locale';
 import { pageLines } from './page-lines';
 import { ReportPageFiles } from './ReportPageFiles';
 
+export interface ReportPageBodyProps {
+  view: ReportPageView;
+  /** false inside a lesson row (docs/49): the row already says who and when. */
+  head?: boolean;
+}
+
 /** The saved report, read-only: who and when, its lines, the teacher's files and the PDF. */
-export function ReportPageBody({ view }: { view: ReportPageView }) {
+export function ReportPageBody({ view, head = true }: ReportPageBodyProps) {
   const clock = useClock();
   const s = t.reportPage;
   const when = lessonWhenAt(new Date(view.lesson.starts_at), { tz: view.tz, ...clock });
@@ -14,12 +20,14 @@ export function ReportPageBody({ view }: { view: ReportPageView }) {
   const lines = pageLines(view.report, { text, v1: t.reports });
   return (
     <article className="grid gap-4" aria-label={s.title}>
-      <header className="grid gap-1 border-b border-rule pb-3">
-        <p className="text-body font-semibold text-ink">
-          {s.lesson.replace('{student}', view.student.name).replace('{date}', when)}
-        </p>
-        <p className="text-sm text-ink-2">{s.teacher.replace('{name}', view.teacher.name)}</p>
-      </header>
+      {head && (
+        <header className="grid gap-1 border-b border-rule pb-3">
+          <p className="text-body font-semibold text-ink">
+            {s.lesson.replace('{student}', view.student.name).replace('{date}', when)}
+          </p>
+          <p className="text-sm text-ink-2">{s.teacher.replace('{name}', view.teacher.name)}</p>
+        </header>
+      )}
       <dl className="grid gap-3">
         {lines.map((l) => (
           <div
