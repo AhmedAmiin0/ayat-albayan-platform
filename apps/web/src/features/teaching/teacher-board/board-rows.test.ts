@@ -1,7 +1,7 @@
 import type { TeacherMe } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { boardRows } from './board-rows';
+import { boardRows, searchRows } from './board-rows';
 
 const student = (id: string, status: TeacherMe['students'][number]['status']) => ({
   id,
@@ -45,5 +45,31 @@ describe('boardRows (docs/46 C1)', () => {
     const row = firstRow('trial');
     expect(row.summary.lessons).toEqual([]);
     expect(row.rate).toBeNull();
+  });
+});
+
+describe('boardRows order and searchRows (docs/48)', () => {
+  const kid = (id: string, name: string) => ({ ...student(id, 'active'), name });
+  const KIDS = [kid('k-1', 'يوسف'), kid('k-2', 'بلال'), kid('k-3', 'آمنة'), kid('k-4', 'تسنيم')];
+  const at = (id: string, studentId: string, starts_at: string) =>
+    lesson({ id, starts_at, students: [{ ...SUHAILA, id: studentId }] });
+  const AHEAD = [
+    at('x', 'k-1', '2026-10-09T13:00:00.000Z'),
+    at('y', 'k-4', '2026-10-06T13:00:00.000Z'),
+  ];
+  const rows = () => boardRows(KIDS, { lessons: AHEAD, kind: 'all', now });
+
+  it('soonest next lesson first, no next lesson last, ties by the Arabic name', () => {
+    expect(rows().map((r) => r.student.id)).toEqual(['k-4', 'k-1', 'k-3', 'k-2']);
+  });
+
+  it('matches the name, the code in any case, and the facts line', () => {
+    const facts = new Map([['k-2', 'التجويد · المستوى الأول']]);
+    const ids = (q: string) => searchRows(rows(), { q, facts }).map((r) => r.student.id);
+    expect(ids('')).toHaveLength(4);
+    expect(ids('امنة')).toEqual(['k-3']);
+    expect(ids('ab-k-1')).toEqual(['k-1']);
+    expect(ids('تجويد')).toEqual(['k-2']);
+    expect(ids('زينب')).toEqual([]);
   });
 });

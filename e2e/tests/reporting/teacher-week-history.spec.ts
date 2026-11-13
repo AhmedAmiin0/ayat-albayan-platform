@@ -89,14 +89,16 @@ test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R
       await expect(teacher).toHaveURL(new RegExp(`/teacher/report/${s.missing}$`));
       await expect(teacher.getByRole('region', { name: ar.reports.identity })).toContainText(s.waiting.name);
 
-      // «طلابي» (the board, the home's first tab) → the student → «التقارير»: two reports and
-      // two points on the grade chart.
+      // «طلابي» (the board, the home's first tab) → the student's row opens «ملف الطالب»
+      // (docs/48) → «التقارير»: two reports and two points on the grade chart.
       await teacher.goto('/teacher');
-      await teacher.getByRole('table', { name: ar.teacherBoard.tab }).getByRole('button', { name: s.history.name }).click();
-      const drawer = teacher.getByRole('dialog', { name: s.history.name });
-      await drawer.getByRole('tab', { name: ar.teacherBoard.reportsTab }).click();
-      await expect(drawer.getByRole('region', { name: ar.reports.title }).locator('ol > li')).toHaveCount(2);
-      await expect(drawer.getByRole('region', { name: ar.reports.progress }).getByRole('figure').getByRole('img')).toHaveCount(2);
+      const board = teacher.getByRole('table', { name: ar.teacherBoard.tab });
+      await board.getByRole('row').filter({ hasText: s.history.name }).click();
+      await expect(teacher).toHaveURL(new RegExp(`/teacher/students/${s.history.id}`));
+      await teacher.getByRole('tab', { name: ar.teacherBoard.reportsTab }).click();
+      const panel = teacher.getByRole('tabpanel');
+      await expect(panel.getByRole('region', { name: ar.reports.title }).locator('ol > li')).toHaveCount(2);
+      await expect(panel.getByRole('region', { name: ar.reports.progress }).getByRole('figure').getByRole('img')).toHaveCount(2);
     } finally {
       await withSql((sql) => sql`update public.teachers set meeting_link = ${link} where id = ${teacherId}`);
     }

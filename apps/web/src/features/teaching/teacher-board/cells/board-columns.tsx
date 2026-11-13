@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { t } from '@/lib/i18n/i18n';
 import type { BoardRow } from '@/features/teaching/teacher-board/board-rows';
+import type { FactsById } from '@/features/teaching/teacher-board/student-facts';
 import { CountsCell } from './CountsCell';
 import { LessonCell } from './LessonCell';
 import { PhoneLabel } from './PhoneLabel';
@@ -15,7 +16,8 @@ const w = t.teacherBoard;
 export interface BoardColumnsInput {
   /** Her zone: every date on the board. */
   tz: string;
-  onOpen: (row: BoardRow) => void;
+  /** Each student's facts line (program · level · age), joined by id. */
+  facts: FactsById;
 }
 
 /** A stacked cell on phones starts with its column's name. */
@@ -41,15 +43,17 @@ const attendanceColumn = col.accessor((r) => r.rate ?? -1, {
 /**
  * «طلابي» columns (docs/46 C1): student (name, code, status) | last lesson (date + attendance) |
  * next lesson | last report | present / absent in the window (+ rate). Each sorts on its value.
+ * The name links to the student file (docs/47), with the facts line under it (docs/48).
  */
-export function boardColumns({ tz, onOpen }: BoardColumnsInput) {
+export function boardColumns({ tz, facts }: BoardColumnsInput) {
   return col.columns([
     col.accessor((r) => r.student.name, {
       id: 'student',
       header: () => w.student,
-      cell: (c) => (
-        <StudentCell student={c.row.original.student} onOpen={() => onOpen(c.row.original)} />
-      ),
+      cell: (c) => {
+        const { student } = c.row.original;
+        return <StudentCell student={student} facts={facts.get(student.id)} />;
+      },
       meta: { className: 'max-sm:basis-full' },
     }),
     col.accessor((r) => r.summary.last?.starts_at ?? '', {

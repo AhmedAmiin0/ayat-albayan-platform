@@ -4474,7 +4474,6 @@
   "teacherBoard": {
     "tab": "طلابي",
     "kinds": "حالة الطلاب",
-    "window": "آخر 14 يومًا و14 يومًا قادمة",
     "student": "الطالب",
     "lastLesson": "آخر حلقة",
     "nextLesson": "الحلقة القادمة",
@@ -4485,11 +4484,8 @@
     "counts": "حضر {present} · غاب {absent}",
     "rate": "نسبة الحضور {rate}%",
     "noStudents": "لا يوجد طلاب حاليون",
-    "noLessons": "لا حلقات لهذا الطالب في هذه الفترة",
     "lessonsTab": "الحلقات",
     "reportsTab": "التقارير",
-    "attendanceTab": "الحضور",
-    "drawerTabs": "تفاصيل الطالب",
     "writeReport": "اكتب التقرير",
     "openReport": "افتح التقرير",
     "attendanceLog": "سجل الحضور",
@@ -4514,17 +4510,17 @@
       "title": "ألغى المعلم {teacher} حلقة",
       "reason": "السبب: {reason}"
     },
-    "openFile": "ملف الطالب"
+    "search": "ابحث بالاسم أو الكود",
+    "searchLabel": "البحث في الطلاب",
+    "noMatch": "لا يوجد طالب بهذا الاسم أو الكود",
+    "emptyHint": "يظهر هنا كل طالب تُسنده إليك الإدارة، مع حلقاته في آخر 14 يومًا و14 يومًا قادمة.",
+    "clearSearch": "امسح البحث"
   },
   "teacherStudents": {
-    "levelCol": "المستوى",
-    "ageCol": "العمر",
-    "nextLessonCol": "الحلقة القادمة",
     "title": "الطلاب",
     "kinds": "نوع الطلاب",
     "subscribed": "مشتركون",
     "trial": "تجريبي",
-    "list": "قائمة الطلاب",
     "age": "{n} سنة",
     "nextLesson": "الحلقة القادمة: {when}",
     "noNextLesson": "لا توجد حلقة قادمة",
@@ -4532,7 +4528,12 @@
     "emptyTrial": "لا يوجد طلاب تجريبيون معك الآن",
     "loadFailed": "تعذّر تحميل الطلاب، حاول مرة أخرى",
     "retry": "حاول مرة أخرى",
-    "openReports": "افتح ملف {name}"
+    "ageYears": {
+      "one": "سنة واحدة",
+      "two": "سنتان",
+      "few": "{n} سنوات",
+      "other": "{n} سنة"
+    }
   },
   "teacherFile": {
     "title": "ملف الطالب",
