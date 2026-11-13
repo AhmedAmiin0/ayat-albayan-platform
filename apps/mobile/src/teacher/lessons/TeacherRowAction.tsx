@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
 import type { LeadContext } from './use-teacher-plan';
-import { RoomJoinButton } from './RoomJoinButton';
+import { RoomJoinButton } from '@/teacher/lesson-actions';
 
 /** The lead and peer actions a button draws here; «إلغاء الحلقة» lives in the sheet only. */
 export type LeadAction = Exclude<PlanAction, 'cancel'>;

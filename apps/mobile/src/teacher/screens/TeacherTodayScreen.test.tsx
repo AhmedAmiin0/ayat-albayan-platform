@@ -39,7 +39,9 @@ test('the short date, no zone line, the hero, the due block and one row; nothing
   expect(hero.getByRole('button', { name: t.teacherBoard.confirm })).toBeTruthy();
   expect(hero.getByRole('button', { name: t.teacherDash.join })).toBeTruthy();
   const due = within(screen.getByTestId('due-reports'));
-  expect(due.getByRole('button', { name: `${t.reports.open} — يوسف أحمد` })).toBeTruthy();
+  expect(
+    due.getByRole('button', { name: new RegExp(`^${t.reports.open} — يوسف أحمد · `) }),
+  ).toBeTruthy();
   expect(within(screen.getByTestId('today-rest')).getByText('سلمى علي')).toBeTruthy();
   // No «جلسات مباشرة», no per-row «إلغاء الحلقة» (it lives in the sheet), not tomorrow's lesson.
   expect(screen.queryByText('جلسات مباشرة')).toBeNull();
@@ -61,7 +63,9 @@ test('ONE lessons GET, on the 15-day aheadWindow from the padded day start', asy
 test('a due row opens its report form in «اليوم»’s own stack', async () => {
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   const due = within(await screen.findByTestId('due-reports'));
-  await fireEvent.press(due.getByRole('button', { name: `${t.reports.open} — يوسف أحمد` }));
+  await fireEvent.press(
+    due.getByRole('button', { name: new RegExp(`^${t.reports.open} — يوسف أحمد · `) }),
+  );
   expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
 });
 
@@ -98,8 +102,14 @@ test('every lesson ended and nothing ahead: «انتهت حلقات اليوم»
 });
 
 test('the lessons read failed with nothing saved: the error with a retry', async () => {
-  mockApiFetch.mockRejectedValue(new Error('down'));
+  mockApiFetch.mockImplementation(async (p: string) => {
+    if (p.startsWith('/teachers/me/lessons')) throw new Error('down');
+    return [];
+  });
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   expect(await screen.findByText(t.teacherDash.loadError)).toBeTruthy();
-  await waitFor(() => expect(screen.queryByTestId('teacher-day-end')).toBeNull());
+  expect(screen.queryByTestId('teacher-day-end')).toBeNull();
+  const before = lessonGets().length;
+  await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
+  await waitFor(() => expect(lessonGets().length).toBeGreaterThan(before));
 });

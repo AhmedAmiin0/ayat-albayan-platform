@@ -38,6 +38,8 @@ interface AgendaLessonRowProps {
    * her own lead, docs/48). Default true, as before.
    */
   join?: boolean;
+  /** The word a screen reader hears after the time, in place of the status (her word, docs/48). */
+  word?: string;
 }
 
 /** JoinAround the actions or the defaults (as before), or the actions alone (`join` false). */
@@ -58,7 +60,7 @@ function RowFoot({ lesson, actions, onReschedule, onEditTime, join = true }: Age
  * card (owner 2026-10-28: one container rule) it takes the card's 16pt padding and the card draws the rules.
  */
 export function AgendaLessonRow(props: AgendaLessonRowProps) {
-  const { lesson, onOpen, meta, chip } = props;
+  const { lesson, onOpen, meta, chip, word } = props;
   const { color } = useTheme();
   const cycle = useClockCycle();
   const tz = useViewerTz();
@@ -68,6 +70,7 @@ export function AgendaLessonRow(props: AgendaLessonRowProps) {
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) };
   const who = studentNames(lesson);
   const status = useLessonStatusText();
+  const hint = `${lessonClock(lesson.starts_at, tz, cycle)} · ${word ?? status.label(lesson.status)}`;
   const line = (
     <>
       <AppText style={{ ...body, width: cycle === '12' ? 72 : 48, fontVariant: ['tabular-nums'] }}>{lessonClock(lesson.starts_at, tz, cycle)}</AppText>
@@ -86,7 +89,7 @@ export function AgendaLessonRow(props: AgendaLessonRowProps) {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t.lessons.sheet.openRow.replace('{names}', who)}
-          accessibilityHint={`${lessonClock(lesson.starts_at, tz, cycle)} · ${status.label(lesson.status)}`}
+          accessibilityHint={hint}
           onPress={() => onOpen(lesson)}
           style={({ pressed }) => [lineStyle, pressed ? { backgroundColor: color.sunk } : null]}
         >

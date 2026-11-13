@@ -23,6 +23,8 @@ interface TeacherLessonRowProps {
   quiet?: boolean;
 }
 
+const CHIP_MAX = 140;
+
 /** No move on a teacher's row (the API never offers her `reschedule`). */
 const noMove = () => undefined;
 
@@ -30,7 +32,9 @@ const noMove = () => undefined;
 const rowVariant = (lead: LeadAction, live: boolean): ButtonVariant =>
   lead === 'join' && live ? 'primary' : 'secondary';
 
-const isLead = (lead: string | null): lead is LeadAction => lead !== null && lead !== 'cancel';
+/** A row never leads with the report: a due report lives only in the due block (docs/48). */
+const isLead = (lead: string | null): lead is Exclude<LeadAction, 'report'> =>
+  lead === 'join' || lead === 'confirm';
 
 /**
  * One of her lessons as a compact row (docs/48): time · names · «عند الطالب 15:00» · her word
@@ -57,12 +61,16 @@ export function TeacherLessonRow(p: TeacherLessonRowProps) {
       onReschedule={noMove}
       onOpen={p.onOpen}
       meta={studentClocks(lesson, { tz, cycle })}
+      word={word?.label}
       chip={
-        word ? (
-          <StatusChip tone={word.tone} glyph={word.glyph} label={word.label} size="sm" />
-        ) : (
-          <LessonStatusChip status={lesson.status} size="sm" />
-        )
+        // Capped so a long word («سيُرسل إلى الأسرة بعد …») never squeezes the names at 390 pt.
+        <View style={{ maxWidth: CHIP_MAX }}>
+          {word ? (
+            <StatusChip tone={word.tone} glyph={word.glyph} label={word.label} size="sm" />
+          ) : (
+            <LessonStatusChip status={lesson.status} size="sm" />
+          )}
+        </View>
       }
       join={false}
       actions={actions}

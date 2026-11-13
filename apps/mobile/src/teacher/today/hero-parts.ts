@@ -13,9 +13,9 @@ interface HeroButtons {
   peer: LeadAction | null;
 }
 
-/** The filled lead, and ONE outlined peer: her fixed link or the report (cancel is the sheet's). */
+/** The filled lead, and ONE outlined peer: her link, «سأحضر» or the report (cancel: the sheet). */
 export function heroButtons(plan: LessonPlan): HeroButtons {
-  const peer = plan.peers.find((a) => a === 'join' || a === 'report');
+  const peer = plan.peers.find(isButton);
   return { lead: isButton(plan.lead) ? plan.lead : null, peer: isButton(peer) ? peer : null };
 }
 

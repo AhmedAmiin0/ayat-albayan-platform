@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
@@ -41,6 +42,15 @@ test('room mode: the classroom join; a non-platform lesson with its own link: no
   );
   expect(screen.queryByTestId('join-classroom')).toBeNull();
   expect(screen.getByRole('button', { name: w.confirm })).toBeTruthy();
+});
+
+test('after ends_at in our classroom: the join is an outlined peer, not the filled lead', async () => {
+  mockNow = new Date('2026-10-01T14:00:00Z');
+  await open(lesson({ id: 'p', platform_classroom: true }));
+  const join = screen.getByRole('button', { name: t.classroom.enter });
+  // Outlined (secondary), never the filled primary while the report leads.
+  expect(StyleSheet.flatten(join.props.style).backgroundColor).not.toBe('#047857');
+  expect(join.props.accessibilityState).toMatchObject({ disabled: false });
 });
 
 test('after the start: exactly ONE report button, and it goes through onReport', async () => {

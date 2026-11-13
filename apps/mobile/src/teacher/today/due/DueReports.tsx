@@ -28,13 +28,16 @@ export function DueReports({ rows, failed, onRetry }: DueReportsProps) {
   const { color } = useTheme();
   if (rows.length === 0 && !failed) return null;
   const rest = rows.length - SHOWN;
+  // No «· 0» over a failed read: the count is not known.
+  const counted = t.teacherToday.pendingTitle.replace('{n}', String(rows.length));
+  const title = failed ? t.reports.pending : counted;
   return (
     <View style={{ gap: 8 }} testID="due-reports">
       <AppText
         accessibilityRole="header"
         style={{ ...titleStyle, color: color.ink, fontVariant: ['tabular-nums'] }}
       >
-        {t.teacherToday.pendingTitle.replace('{n}', String(rows.length))}
+        {title}
       </AppText>
       {failed ? (
         <>

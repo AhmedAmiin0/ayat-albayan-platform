@@ -19,7 +19,9 @@ beforeEach(() => jest.clearAllMocks());
 test('5 due: the title counts 5, three rows, then «عرض الباقي (2)» to the list', async () => {
   await render(<DueReports rows={five} failed={false} onRetry={jest.fn()} />);
   expect(screen.getByText(t.teacherToday.pendingTitle.replace('{n}', '5'))).toBeTruthy();
-  expect(screen.getByRole('button', { name: `${t.reports.resume} — طالب 2` })).toBeTruthy();
+  expect(
+    screen.getByRole('button', { name: new RegExp(`^${t.reports.resume} — طالب 2 · `) }),
+  ).toBeTruthy();
   expect(screen.queryByText('طالب 4')).toBeNull();
   await fireEvent.press(screen.getByText(t.teacherToday.pendingMore.replace('{n}', '2')));
   expect(mockPush).toHaveBeenCalledWith(PENDING_REPORTS_HREF);
@@ -27,7 +29,9 @@ test('5 due: the title counts 5, three rows, then «عرض الباقي (2)» to
 
 test('a row opens that lesson’s report form in «اليوم»', async () => {
   await render(<DueReports rows={five} failed={false} onRetry={jest.fn()} />);
-  await fireEvent.press(screen.getByRole('button', { name: `${t.reports.open} — طالب 1` }));
+  await fireEvent.press(
+    screen.getByRole('button', { name: new RegExp(`^${t.reports.open} — طالب 1 · `) }),
+  );
   expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/l1');
 });
 
@@ -37,6 +41,7 @@ test('nothing due: nothing at all; the read failed with nothing saved: the retry
   const onRetry = jest.fn();
   await rerender(<DueReports rows={[]} failed onRetry={onRetry} />);
   expect(screen.getByText(t.teacherToday.pendingError)).toBeTruthy();
+  expect(screen.getByText(t.reports.pending)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.teacherStudents.retry }));
   expect(onRetry).toHaveBeenCalled();
 });

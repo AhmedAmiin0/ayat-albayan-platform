@@ -23,10 +23,11 @@ export function DueRow({ row }: { row: DueReport }) {
   const cycle = useClockCycle();
   const names = row.names.join(t.common.listSeparator);
   const label = LABEL[row.stage];
+  const when = whenIn(new Date(row.startsAt), tz, cycle);
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${label} — ${names}`}
+      accessibilityLabel={`${label} — ${names} · ${when}`}
       onPress={() => router.push(`/teacher/today/report/${row.lessonId}`)}
       style={({ pressed }) => ({
         minHeight: 48,
@@ -43,7 +44,7 @@ export function DueRow({ row }: { row: DueReport }) {
           {names}
         </AppText>
         <AppText style={{ ...whenStyle, color: color.ink2, fontVariant: ['tabular-nums'] }}>
-          {whenIn(new Date(row.startsAt), tz, cycle)}
+          {when}
         </AppText>
       </View>
       <StatusChip tone="act" glyph={GLYPH[row.stage]} label={label} size="sm" />

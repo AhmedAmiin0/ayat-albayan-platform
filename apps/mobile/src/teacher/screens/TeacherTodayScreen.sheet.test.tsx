@@ -63,3 +63,19 @@ test('the ended lesson’s sheet: ONE report button, to «اليوم»’s own r
   await fireEvent.press(report);
   expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
 });
+
+test('an excused lesson that started: a quiet row with no report lead; its report shows once', async () => {
+  const excused = {
+    ...evening,
+    status: 'excused' as const,
+    starts_at: '2026-10-01T13:30:00.000Z',
+    ends_at: '2026-10-01T14:30:00.000Z',
+  };
+  mockApiFetch.mockImplementation(answer([later, excused], []));
+  await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
+  await openRow('سلمى علي');
+  expect(screen.queryAllByRole('button', { name: t.reports.open })).toHaveLength(0);
+  expect(
+    screen.getAllByRole('button', { name: new RegExp(`^${t.reports.open} — سلمى علي`) }),
+  ).toHaveLength(1);
+});
