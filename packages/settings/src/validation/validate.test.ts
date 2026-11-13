@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PUBLIC_SETTING_DEFAULTS, PUBLIC_SETTING_KEYS, publicSettings } from '../public.js';
+import { TEACHER_PAGE_KEYS } from '../domains/teaching/teacher-pages.js';
 import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from '../registry.js';
 import { isValidSetting, readSettings } from './validate.js';
 
@@ -42,6 +43,7 @@ describe('public settings', () => {
       [
         'academy_contact', 'academy_whatsapp_e164', 'join_closes_after_min', 'join_opens_before_min', 'lesson_confirmation_required',
         'makeup_window_days', 'meeting_link_auto', 'meetings_in_app', 'recording_consent_notice', 'upload_max_mb',
+        ...TEACHER_PAGE_KEYS,
       ].sort(),
     );
     expect(publicSettings({ ...SETTING_DEFAULTS, messaging_enabled: true })).toEqual(PUBLIC_SETTING_DEFAULTS);

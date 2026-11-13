@@ -3,6 +3,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { TeacherNav } from '@/features/teaching/teacher/TeacherNav';
+import { teacherPagesWrapper } from '@/lib/settings/teacher-pages-testing';
 import { t } from '@/lib/i18n/i18n';
 import { SalesNav } from './SalesNav';
 
@@ -40,7 +41,7 @@ describe('SalesNav / TeacherNav — dynamic roles', () => {
   });
 
   it('keeps the teacher’s own pages and drops only what is not granted', () => {
-    render(<TeacherNav can={without('inbox.read')} />);
+    render(<TeacherNav can={without('inbox.read')} />, { wrapper: teacherPagesWrapper(true) });
     expect(screen.queryByRole('link', { name: t.teacherNav.chats })).toBeNull();
     expect(screen.getByRole('link', { name: t.teacherNav.reports })).toBeTruthy();
   });

@@ -27,6 +27,9 @@ const AFTER_COPY: readonly string[] = [
   'lesson_confirmation_required',
   'refund_attended_rate_percent', 'lesson_outcome_grace_minutes',
   'short_link_base', 'report_teacher_edit_minutes',
+  'teacher_chats_enabled', 'teacher_student_messages_enabled', 'teacher_earnings_enabled',
+  'teacher_statements_enabled', 'teacher_feedback_enabled', 'teacher_internal_meetings_enabled',
+  'teacher_scheduled_meetings_enabled',
 ];
 
 describe('migration config_describe', () => {

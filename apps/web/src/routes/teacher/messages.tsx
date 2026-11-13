@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { TeacherMessagesPage } from '@/features/teaching/student-channel';
+import { TeacherPageGate } from '@/features/teaching/teacher';
 
 const UUID = /^[0-9a-f-]{36}$/i;
 
@@ -13,5 +14,12 @@ export const Route = createFileRoute('/teacher/messages')({
 function TeacherMessagesRoute() {
   const { student } = Route.useSearch();
   const navigate = Route.useNavigate();
-  return <TeacherMessagesPage studentId={student ?? null} onPick={(id) => void navigate({ search: id ? { student: id } : {} })} />;
+  return (
+    <TeacherPageGate page="messages">
+      <TeacherMessagesPage
+        studentId={student ?? null}
+        onPick={(id) => void navigate({ search: id ? { student: id } : {} })}
+      />
+    </TeacherPageGate>
+  );
 }

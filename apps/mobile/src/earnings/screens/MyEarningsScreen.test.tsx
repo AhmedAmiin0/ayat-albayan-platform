@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { renderWithQuery } from '@/test/query';
+import { renderWithQuery, teacherPagesClient } from '@/test/query';
 import { BALANCE, page, PAYMENT, SESSIONS } from '@/earnings/testing/fixtures';
 import { MyEarningsScreen } from './MyEarningsScreen';
 
@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 test('«مستحقاتي»: the three cards and every lesson with its status, from the /teachers/me routes only', async () => {
-  await renderWithQuery(<MyEarningsScreen />);
+  await renderWithQuery(<MyEarningsScreen />, teacherPagesClient());
   expect(await screen.findByText(t.earnings.outstanding)).toBeTruthy();
   expect(await screen.findByText(t.earnings.statusName.partially_paid)).toBeTruthy();
   expect(screen.getByText(t.earnings.statusName.paid)).toBeTruthy();
@@ -25,7 +25,7 @@ test('«مستحقاتي»: the three cards and every lesson with its status, fr
 });
 
 test('read only: no ticks, no pay button; the monthly statements are one tap away', async () => {
-  await renderWithQuery(<MyEarningsScreen />);
+  await renderWithQuery(<MyEarningsScreen />, teacherPagesClient());
   await screen.findByText(t.earnings.statusName.partially_paid);
   expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
   expect(screen.queryByText(t.earnings.pay)).toBeNull();
@@ -34,10 +34,16 @@ test('read only: no ticks, no pay button; the monthly statements are one tap awa
 });
 
 test('«الدفعات» lists what was paid to me; the unpaid filter asks the API for it', async () => {
-  await renderWithQuery(<MyEarningsScreen />);
+  await renderWithQuery(<MyEarningsScreen />, teacherPagesClient());
   await fireEvent.press(await screen.findByText(t.earnings.filter.unpaid));
   await screen.findByText(t.earnings.outstanding);
   expect(mockApiFetch.mock.calls.some(([p]) => String(p).includes('status=unpaid'))).toBe(true);
   await fireEvent.press(screen.getByText(t.earnings.mobile.payments));
   expect(await screen.findByText(/دفعة أكتوبر/)).toBeTruthy();
+});
+
+test('«كشوف الشهر» switched off: no button to the statements', async () => {
+  await renderWithQuery(<MyEarningsScreen />, teacherPagesClient(false));
+  await screen.findByText(t.earnings.statusName.partially_paid);
+  expect(screen.queryByText(t.earnings.monthly)).toBeNull();
 });

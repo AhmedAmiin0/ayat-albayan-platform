@@ -1,9 +1,11 @@
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { supabase } from '@/core/lib/http/supabase';
+import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH } from '@ab/shared';
 import { t } from '@/core/lib/i18n/i18n';
 import { queryClient } from '@/core/lib/query/query-client';
 import { pathKey } from '@/core/lib/query/query-keys';
+import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { fullAccessMe } from '@/test/staff-me';
 import { TabStack } from '@/core/nav/TabStack';
 import { registerPush } from '@/core/push/registerPush';
@@ -68,9 +70,16 @@ async function open(initialUrl: string) {
 beforeEach(() => {
   jest.clearAllMocks();
   const teacher = { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? fullAccessMe('teacher') : teacher));
+  const switches = Object.fromEntries(Object.values(TEACHER_PAGE_SWITCH).map((k) => [k, true]));
+  const publicConfig = { ...PUBLIC_SETTING_DEFAULTS, ...switches, custom: {} };
+  mockApiFetch.mockImplementation(async (path: string) => {
+    if (path === '/auth/me') return fullAccessMe('teacher');
+    return path === '/settings/public' ? publicConfig : teacher;
+  });
   // As verifyRole: /auth/me is in the cache when the gate opens a tree (docs/27 E2).
   queryClient.setQueryData(pathKey('/auth/me'), fullAccessMe('teacher'));
+  // The switches on from the first paint, so «المحادثات» is gated by the permission.
+  queryClient.setQueryData(publicConfigQuery.queryKey, publicConfig);
 });
 
 test('teacher: her five native tabs in RTL order, «اليوم» first, and this device registered for her pushes', async () => {

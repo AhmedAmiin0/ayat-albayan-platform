@@ -11823,7 +11823,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/routes/teacher/inbox.tsx": {
@@ -11844,7 +11844,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/routes/teacher/payouts.tsx": {

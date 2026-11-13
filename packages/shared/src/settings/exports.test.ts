@@ -51,7 +51,7 @@ const GOOGLE_NAMES = [
 /** Added by the segregation (additions only). */
 const NEW_NAMES = [
   'SETTINGS_LAYOUT', 'settingSection', 'PUBLIC_CONFIG_PATH', 'PUBLIC_CONFIG_QUERY_KEY', 'PUBLIC_CONFIG_STALE_MS',
-  'withPublicDefaults', 'CATALOGUE_SETTING_KEYS', 'GOOGLE_SETTING_KEYS',
+  'withPublicDefaults', 'CATALOGUE_SETTING_KEYS', 'GOOGLE_SETTING_KEYS', 'TEACHER_PAGE_SWITCH',
 ];
 
 /** Every registry key with today's default (the migrations seed the same values). */
@@ -74,6 +74,10 @@ const DEFAULTS_LITERAL = Object.freeze({
   activity_retention_days: 180,
   family_login_enabled: false, login_code_ttl_minutes: 10, login_code_max_attempts: 5,
   presence_enabled: true,
+  teacher_chats_enabled: false, teacher_student_messages_enabled: false,
+  teacher_earnings_enabled: false,
+  teacher_statements_enabled: false, teacher_feedback_enabled: false,
+  teacher_internal_meetings_enabled: false, teacher_scheduled_meetings_enabled: false,
 });
 
 const surface: Record<string, unknown> = root;
@@ -83,9 +87,9 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expect(surface[name]).toBeDefined();
   });
 
-  it('SETTING_DEFAULTS holds the 60 keys with today\'s values', () => {
-    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(60);
-    expect(root.SETTING_KEYS).toHaveLength(60);
+  it('SETTING_DEFAULTS holds the 67 keys with today\'s values', () => {
+    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(67);
+    expect(root.SETTING_KEYS).toHaveLength(67);
     expect(root.SETTING_DEFAULTS).toEqual(DEFAULTS_LITERAL);
   });
 
@@ -109,7 +113,11 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expectTypeOf<PublicSettingKey>().toEqualTypeOf<
       | 'academy_contact' | 'academy_whatsapp_e164' | 'join_closes_after_min' | 'join_opens_before_min'
       | 'lesson_confirmation_required' | 'makeup_window_days' | 'meeting_link_auto' | 'meetings_in_app'
-      | 'recording_consent_notice' | 'upload_max_mb'
+      | 'recording_consent_notice' | 'upload_max_mb' | 'teacher_chats_enabled'
+      | 'teacher_student_messages_enabled' | 'teacher_earnings_enabled'
+      | 'teacher_statements_enabled'
+      | 'teacher_feedback_enabled' | 'teacher_internal_meetings_enabled'
+      | 'teacher_scheduled_meetings_enabled'
     >();
     expectTypeOf<PublicSettings>().toEqualTypeOf<Pick<AcademySettings, PublicSettingKey>>();
     expectTypeOf<keyof PublicConfig>().toEqualTypeOf<PublicSettingKey | 'custom'>();

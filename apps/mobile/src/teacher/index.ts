@@ -1,10 +1,12 @@
 export { TeacherScope } from './components/TeacherScope';
+export { guardedTeacherRoute, TeacherPageGuard } from './components/TeacherPageGuard';
 export { TeacherTabs } from './components/TeacherTabs';
 export { ReportFormScreen } from './report/screens/ReportFormScreen';
 export { MyAvailabilityScreen } from './screens/MyAvailabilityScreen';
 export { MyFeedbackScreen } from './screens/MyFeedbackScreen';
 export { MyPayoutsScreen } from './screens/MyPayoutsScreen';
 export { TeacherChatsScreen } from './screens/TeacherChatsScreen';
+export { TeacherMeetingsScreen } from './screens/TeacherMeetingsScreen';
 export { TeacherMoreScreen } from './screens/TeacherMoreScreen';
 export { TeacherReportsScreen } from './screens/TeacherReportsScreen';
 export { TeacherScheduleScreen } from './screens/TeacherScheduleScreen';

@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
+import { setTeacherPages } from '@/lib/settings/teacher-pages-testing';
 import { BALANCE, page, PAYMENT, SESSIONS } from './fixtures';
 import { MyEarnings } from './MyEarnings';
 
@@ -10,9 +11,10 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
-const renderPage = () =>
+/** The teacher page switches answered `on` (they default off, owner 2026-11-13). */
+const renderPage = (on = true) =>
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider client={setTeacherPages(new QueryClient({ defaultOptions: { queries: { retry: false } } }), on)}>
       <MyEarnings />
     </QueryClientProvider>,
   );
@@ -49,6 +51,13 @@ describe('MyEarnings «مستحقاتي» (teacher, read only)', () => {
     expect((await screen.findByRole('link', { name: t.earnings.monthly })).getAttribute('href')).toBe('/teacher/payouts');
     fireEvent.click(await screen.findByRole('button', { name: t.earnings.filter.unpaid }));
     await vi.waitFor(() => expect(apiFetch.mock.calls.some((c) => String(c[0]).includes('/sessions?') && String(c[0]).includes('status=unpaid'))).toBe(true));
+  });
+
+  it('«كشوف الشهر» switched off: no link to the statements', async () => {
+    apiFetch.mockImplementation((path: string) => Promise.resolve(path.includes('/sessions') || path.includes('/payments') ? page([]) : BALANCE));
+    renderPage(false);
+    await screen.findByText(t.earnings.empty);
+    expect(screen.queryByRole('link', { name: t.earnings.monthly })).toBeNull();
   });
 
   it('an account not linked to a teacher says so', async () => {

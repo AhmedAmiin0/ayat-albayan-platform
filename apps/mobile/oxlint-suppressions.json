@@ -9518,7 +9518,7 @@
   },
   "src/teacher/components/TeacherTabs.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teacher/lib/day.ts": {

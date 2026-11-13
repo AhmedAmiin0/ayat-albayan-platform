@@ -9473,7 +9473,7 @@
   },
   "src/teacher/components/TeacherTabs.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teacher/lib/day.ts": {

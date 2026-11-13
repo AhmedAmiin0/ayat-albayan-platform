@@ -1,1 +1,3 @@
-export { TeacherChatsScreen as default } from '@/teacher';
+import { guardedTeacherRoute, TeacherChatsScreen } from '@/teacher';
+
+export default guardedTeacherRoute('chats', TeacherChatsScreen);
