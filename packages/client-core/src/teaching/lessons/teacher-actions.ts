@@ -45,3 +45,14 @@ export const confirmAnswerSchema = z.object({
   starts_at: z.string(),
   teacher_confirmed_at: z.string().nullable().optional(),
 });
+
+/**
+ * The cancel's answer (a LessonView), parsed at the boundary: the fields a write-through cancel
+ * puts on the cached row so it closes before the refetch (docs/48). An unexpected shape patches
+ * nothing; the refetch still comes.
+ */
+export const cancelAnswerSchema = z.object({
+  id: z.string(),
+  status: z.enum(LESSON_STATUSES),
+  cancel_reason: z.string().nullable(),
+});

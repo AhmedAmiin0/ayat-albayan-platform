@@ -1,4 +1,5 @@
 import type { LessonView, PayoutView, PendingReportView, TeacherMe } from '@ab/shared';
+import { TEACHER_REFRESH_MS } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, toQueryString } from '@/core/lib/http/api';
 import { pathKey } from '@/core/lib/query/query-keys';
@@ -18,21 +19,29 @@ export function isNotLinked(error: unknown): boolean {
   return error instanceof ApiError && error.status === 404;
 }
 
+/** `live`: the screen is in front (useScreenFocused), so it re-reads every 30 s (docs/48). */
+const pollWhen = (live: boolean) => (live ? TEACHER_REFRESH_MS : false);
+
 /**
  * GET /teachers/me/lessons?from&to (≤ 31 days, every status). Keyed under ['lessons'] so «تأكيد»
  * (useLessonAction, path /lessons) patches it at once and every lesson change refetches it.
  */
-export function useMyLessons(window: { from: string; to: string }) {
+export function useMyLessons(window: { from: string; to: string }, live = false) {
   return useQuery({
     queryKey: [...pathKey('/lessons'), 'mine', window],
     queryFn: () => apiFetch<LessonView[]>(`${ME}/lessons${toQueryString(window)}`),
+    refetchInterval: pollWhen(live),
   });
 }
 
 /** GET /teachers/me/pending-reports: started lessons still missing a sent report, oldest first. */
-export function usePendingReports() {
+export function usePendingReports(live = false) {
   const path = `${ME}/pending-reports`;
-  return useQuery({ queryKey: [...pathKey('/reports'), 'pending'], queryFn: () => apiFetch<PendingReportView[]>(path) });
+  return useQuery({
+    queryKey: [...pathKey('/reports'), 'pending'],
+    queryFn: () => apiFetch<PendingReportView[]>(path),
+    refetchInterval: pollWhen(live),
+  });
 }
 
 /** GET /teachers/me/payouts: my months, newest first (R-TCH-04). */

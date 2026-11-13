@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { EmptyState } from '@/components/ui/display/empty-state';
-import { FormAlert } from '@/components/ui/form/form-alert';
 import { Icon } from '@/components/ui/display/icon';
 import { PageHead } from '@/components/ui/layout/page';
 import { Toast } from '@/components/ui/overlay/toast';
@@ -20,6 +19,7 @@ import { useNow } from '@/lib/time/use-now';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { cn } from '@/lib/utils';
 import { myLessonsQuery, teacherMeQuery } from '@/features/teaching/teacher/api';
+import { LoadRetry } from './LoadRetry';
 import { TeacherLessonCard } from './TeacherLessonCard';
 
 /**
@@ -78,15 +78,22 @@ export function MyWeek() {
 }
 
 interface BodyProps {
-  lessons: { data?: LessonView[] | undefined; isError: boolean; isPlaceholderData: boolean };
+  lessons: {
+    data?: LessonView[] | undefined;
+    isError: boolean;
+    isPlaceholderData: boolean;
+    refetch: () => unknown;
+  };
   week: string;
   today: string;
   onOpen: (lesson: LessonView) => void;
 }
 
+/** Data first (docs/48): a failed 30 s poll keeps the grid; the error shows only with no data. */
 function Body({ lessons, week, today, onOpen }: BodyProps) {
-  if (lessons.isError) return <FormAlert>{t.teacherDash.loadError}</FormAlert>;
-  if (!lessons.data) return <ListSkeleton />;
+  if (!lessons.data) {
+    return lessons.isError ? <LoadRetry onRetry={lessons.refetch} /> : <ListSkeleton />;
+  }
   if (lessons.data.length === 0) return <EmptyState title={t.teacherDash.noLessonsWeek}>{t.teacherDash.emptyHint}</EmptyState>;
   return (
     <div aria-busy={lessons.isPlaceholderData || undefined} className={cn(lessons.isPlaceholderData && 'opacity-60')}>

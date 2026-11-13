@@ -18,6 +18,8 @@ import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useMyAvailability, useMyLessons, useTeacherMe } from '@/teacher/lib/queries';
 import { TeacherLessonTools, useTimedNotice } from '@/teacher/lesson-actions';
 import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
+import { usePullRefresh } from '@/core/lib/query/pull-refresh';
+import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 
 /** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so the row's action is idle. */
 const noMove = () => undefined;
@@ -35,11 +37,13 @@ export function TeacherScheduleScreen() {
   const today = viewerToday(useNow(), tz);
   const [start, setStart] = useFollowingDay(weekStart(today));
   const me = useTeacherMe();
-  const lessons = useMyLessons(weekWindow(start, tz));
+  // docs/48: a 30 s poll while «جدولي» is in front; the spinner only for her own pull.
+  const lessons = useMyLessons(weekWindow(start, tz), useScreenFocused());
   const grid = useMyAvailability(me.data?.id);
   const inset = useTabBarInset();
   const details = useLessonDetails(lessons.data);
   const notice = useTimedNotice();
+  const pull = usePullRefresh(() => Promise.all([lessons.refetch(), grid.refetch()]));
   const loaded = lessons.data !== undefined;
   const days = agendaDays(lessons.data ?? [], start, tz);
   const empty = days.every((d) => d.lessons.length === 0);
@@ -72,11 +76,8 @@ export function TeacherScheduleScreen() {
             onOpen={details.open}
           />
         )}
-        refreshing={lessons.isRefetching}
-        onRefresh={() => {
-          void lessons.refetch();
-          void grid.refetch();
-        }}
+        refreshing={pull.refreshing}
+        onRefresh={pull.onRefresh}
         ListEmptyComponent={
           lessons.isPending ? <Note>{t.common.loading}</Note> : <ErrorState onRetry={() => void lessons.refetch()} />
         }

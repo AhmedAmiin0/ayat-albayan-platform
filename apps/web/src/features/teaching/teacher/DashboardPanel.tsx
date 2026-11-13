@@ -1,11 +1,11 @@
 import { addDays, type LessonView, type TeacherMe } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { FormAlert } from '@/components/ui/form/form-alert';
 import { dayMonthLabel, lessonsOnDay } from '@/features/teaching/schedule';
 import { TeacherBoard, weekLessons } from '@/features/teaching/teacher-board';
 import { t } from '@/lib/i18n/i18n';
 import { LessonDayList } from './lessons/LessonDayList';
+import { LoadRetry } from './lessons/LoadRetry';
 import { TeacherAvailability } from './proposals/TeacherAvailability';
 
 export type DashboardTab = 'students' | 'today' | 'week' | 'availability';
@@ -14,7 +14,7 @@ export interface DashboardPanelProps {
   tab: DashboardTab;
   me: TeacherMe;
   /** The board window's lessons (one query for every tab); undefined while loading. */
-  lessons: { data: LessonView[] | undefined; isError: boolean };
+  lessons: { data: LessonView[] | undefined; isError: boolean; refetch: () => unknown };
   /** Her «now» and today on her calendar (me.tz: the one zone of the home). */
   at: { now: Date; today: string };
   onDone: (message: string) => void;
@@ -55,7 +55,7 @@ const PANELS: Record<Exclude<DashboardTab, 'availability'>, (p: Ready) => ReactN
 /** The open tab of the teacher home: the board, today, the week, or her availability. */
 export function DashboardPanel({ tab, lessons, ...rest }: DashboardPanelProps) {
   if (tab === 'availability') return <TeacherAvailability me={rest.me} />;
-  if (lessons.isError) return <FormAlert>{t.teacherDash.loadError}</FormAlert>;
-  if (!lessons.data) return <ListSkeleton />;
-  return PANELS[tab]({ ...rest, lessons: lessons.data });
+  // Data first (docs/48): a failed 30 s poll keeps the cached lessons on screen.
+  if (lessons.data) return PANELS[tab]({ ...rest, lessons: lessons.data });
+  return lessons.isError ? <LoadRetry onRetry={lessons.refetch} /> : <ListSkeleton />;
 }

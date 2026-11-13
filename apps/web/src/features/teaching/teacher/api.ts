@@ -1,4 +1,5 @@
 import type { LessonProposalRequest, LessonView, PayoutView, TeacherMe, TeacherReportView } from '@ab/shared';
+import { TEACHER_REFRESH_MS } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { Page } from '@/features/sales/leads/types';
 import { REPORTS_KEY } from '@/features/reporting/reports/api';
@@ -17,13 +18,17 @@ export const teacherMeQuery = queryOptions({
   retry: false,
 });
 
-/** GET /teachers/me/lessons?from&to — own lessons only, every status. */
+/**
+ * GET /teachers/me/lessons?from&to — own lessons only, every status. Polled every 30 s (docs/48),
+ * paused by TanStack on a hidden tab (refetchIntervalInBackground is false).
+ */
 export const myLessonsQuery = (w: Window) => {
   const params = new URLSearchParams({ from: w.from.toISOString(), to: w.to.toISOString() });
   return queryOptions({
     queryKey: [...LESSONS_KEY, 'mine', params.toString()],
     queryFn: () => apiFetch<LessonView[]>(`/teachers/me/lessons?${params}`),
     placeholderData: keepPreviousData,
+    refetchInterval: TEACHER_REFRESH_MS,
   });
 };
 

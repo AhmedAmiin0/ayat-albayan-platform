@@ -21,6 +21,8 @@ import { useMyLessons, usePendingReports } from '@/teacher/lib/queries';
 import { TeacherLessonCard } from '@/teacher/components/TeacherLessonCard';
 import { useTimedNotice } from '@/teacher/lesson-actions';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
+import { usePullRefresh } from '@/core/lib/query/pull-refresh';
+import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 
 const cities: Record<string, string | undefined> = t.tz;
 
@@ -50,8 +52,11 @@ export function TeacherTodayScreen() {
   const now = useNow();
   const tz = useViewerTz();
   const today = localDate(now, tz);
-  const day = useMyLessons(dayWindow(today));
-  const pending = usePendingReports();
+  // docs/48: a 30 s poll while «اليوم» is in front; the spinner only for her own pull.
+  const focused = useScreenFocused();
+  const day = useMyLessons(dayWindow(today), focused);
+  const pending = usePendingReports(focused);
+  const pull = usePullRefresh(() => Promise.all([day.refetch(), pending.refetch()]));
   const notice = useTimedNotice();
   const inset = useTabBarInset();
   const greeting = useGreeting(now);
@@ -86,11 +91,8 @@ export function TeacherTodayScreen() {
             onReport={() => router.push(`/teacher/today/report/${item.id}`)}
           />
         )}
-        refreshing={day.isRefetching}
-        onRefresh={() => {
-          void day.refetch();
-          void pending.refetch();
-        }}
+        refreshing={pull.refreshing}
+        onRefresh={pull.onRefresh}
         ListEmptyComponent={
           day.isPending ? (
             <Note>{t.common.loading}</Note>
