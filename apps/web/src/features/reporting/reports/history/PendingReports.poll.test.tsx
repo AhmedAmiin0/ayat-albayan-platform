@@ -36,7 +36,9 @@ describe('PendingReports poll', () => {
     renderWithClient(<PendingReports tz="Africa/Cairo" />);
     expect(await screen.findByRole('region', { name: t.reports.pending })).toBeTruthy();
     apiFetch.mockRejectedValue(new Error('down'));
-    act(() => vi.advanceTimersByTime(30_000));
+    await act(async () => {
+      vi.advanceTimersByTime(30_000);
+    });
     await waitFor(() => expect(apiFetch).toHaveBeenCalledTimes(2));
     expect(screen.getByText('سهيلة')).toBeTruthy();
   });

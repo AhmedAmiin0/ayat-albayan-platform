@@ -1,4 +1,4 @@
-import { pickHero, type Hero } from '@ab/client-core';
+import { pickHero, type Hero as CoreHero } from '@ab/client-core';
 import { zonedFieldsIn } from '@ab/shared';
 import { applyFilter, type TodayFilter } from './timeline';
 import type { TodayLesson } from './today-lesson';
@@ -25,7 +25,8 @@ export function firstName(fullName: unknown): string | null {
 }
 
 // pickHero lives in client-core (docs/48 PR1): web and mobile pick the same hero.
-export { pickHero, type Hero };
+export { pickHero };
+export type Hero<L extends TodayLesson = TodayLesson> = CoreHero<L>;
 
 const ended = (l: TodayLesson, at: number) => Date.parse(l.ends_at) <= at;
 

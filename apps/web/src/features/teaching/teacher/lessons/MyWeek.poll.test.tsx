@@ -37,7 +37,9 @@ describe('«جدولي» poll', () => {
     await screen.findByRole('table', { name: t.schedule.grid });
     expect(lessonCalls()).toBe(1);
     apiFetch.mockImplementation(failLessons);
-    act(() => vi.advanceTimersByTime(30_000));
+    await act(async () => {
+      vi.advanceTimersByTime(30_000);
+    });
     await waitFor(() => expect(lessonCalls()).toBe(2));
     expect(screen.getByRole('table', { name: t.schedule.grid })).toBeTruthy();
     expect(screen.queryByRole('alert')).toBeNull();

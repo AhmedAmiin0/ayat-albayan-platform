@@ -1,5 +1,5 @@
 import type { PushKind } from '@ab/shared';
-import type { QueryKey } from '@tanstack/react-query';
+import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { pathKey } from '@/core/lib/query/query-keys';
 import type { PushTree } from './notification-route';
 
@@ -27,4 +27,9 @@ const NONE: readonly QueryKey[] = [];
 /** The query keys a received push of `kind` refreshes in `tree`; [] for any other tree or kind. */
 export function pushRefreshKeys(tree: PushTree, kind: PushKind | null): readonly QueryKey[] {
   return (kind && TREE_REFRESH[tree]?.[kind]) ?? NONE;
+}
+
+/** Invalidates what a received push refreshes in this tree (nothing outside the teacher tree). */
+export function refreshForPush(client: QueryClient, tree: PushTree, kind: PushKind | null): void {
+  for (const queryKey of pushRefreshKeys(tree, kind)) void client.invalidateQueries({ queryKey });
 }

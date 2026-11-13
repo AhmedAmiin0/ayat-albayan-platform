@@ -3,7 +3,11 @@ import type { LessonStatus } from '@ab/shared';
 import { joinPhase, reportStage, teacherLessonState } from './teacher-lesson-plan.js';
 
 // A lesson 13:00–14:00 UTC; the window opens 12:45 and closes 16:00 (15 / 120 min defaults).
-type Report = { id: string; status: 'draft' | 'submitted'; edit_until?: string | null };
+interface Report {
+  id: string;
+  status: 'draft' | 'submitted';
+  edit_until?: string | null;
+}
 const lesson = (o: {
   status?: LessonStatus;
   confirmed?: string | null;
@@ -58,7 +62,7 @@ describe('teacherLessonState', () => {
     ['window with 12 minutes left', lesson({ reports: [sent(until)] }), '14:30', 'window'],
     ['status at edit_until', lesson({ reports: [sent(until)] }), '14:42', 'status'],
     ['status on a cancelled lesson', lesson({ status: 'cancelled_by_teacher' }), '12:00', 'status'],
-  ] as const)('%s', (_name, l, hhmm, word) => {
+  ] as const)('%s', (...[, l, hhmm, word]) => {
     expect(teacherLessonState(l, at(hhmm))).toBe(word);
   });
 });
