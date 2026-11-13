@@ -983,10 +983,7 @@
   },
   "src/calendar/agenda/AgendaLessonRow.tsx": {
     "stylistic/max-len": {
-      "count": 9
-    },
-    "ab/module-boundaries": {
-      "count": 1
+      "count": 7
     }
   },
   "src/calendar/agenda/LessonRowActions.hierarchy.test.tsx": {
@@ -1055,7 +1052,7 @@
   },
   "src/calendar/details/DetailsStudents.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/calendar/details/DetailsTeacher.tsx": {
@@ -1076,7 +1073,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/calendar/details/StudentPackageLine.tsx": {
@@ -5801,19 +5798,6 @@
       "count": 1
     }
   },
-  "src/live/LiveSessions.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/live/live-filter.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/meetings/create/CreateMeetingDone.tsx": {
     "stylistic/max-len": {
       "count": 3
@@ -9493,16 +9477,6 @@
       "count": 1
     }
   },
-  "src/teacher/components/TeacherLessonCard.test.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/teacher/components/TeacherLessonCard.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/teacher/components/TeacherScope.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
@@ -9522,9 +9496,6 @@
     }
   },
   "src/teacher/lib/day.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -9844,28 +9815,6 @@
       "count": 1
     }
   },
-  "src/teacher/screens/TeacherTodayScreen.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/teacher/screens/TeacherTodayScreen.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 3
-    }
-  },
   "src/teaching/reschedule/MoveFields.tsx": {
     "ab/module-boundaries": {
       "count": 1
@@ -10038,7 +9987,7 @@
   },
   "src/today/components/EndedFold.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/today/components/LessonRow.tsx": {
@@ -10085,7 +10034,7 @@
   },
   "src/today/components/TodayHeader.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/module-boundaries": {
       "count": 1
@@ -10106,7 +10055,7 @@
   },
   "src/today/hero/HeroCard.tsx": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/today/hero/hero-text.ts": {
@@ -10119,7 +10068,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/today/lib/timeline.ts": {

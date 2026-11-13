@@ -5,15 +5,13 @@ import { ButtonRow } from '@/core/ui/actions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { Button } from '@/core/ui/primitives/Button';
-import { Notice } from '@/today';
 import { TeacherCancelForm } from './TeacherCancelForm';
 import { useTeacherActs, type TeacherActs } from './use-teacher-acts';
-import type { TimedNotice } from './use-timed-notice';
 
 const w = t.teacherBoard;
 
 /** «حضورك مؤكَّد» once she said she will attend (the lesson still ahead). */
-export function ConfirmedChip({ on }: { on: boolean }) {
+function ConfirmedChip({ on }: { on: boolean }) {
   if (!on) return null;
   return (
     <View style={{ alignItems: 'flex-start' }}>
@@ -38,19 +36,18 @@ function ToolButtons({ acts }: { acts: TeacherActs }) {
 
 interface TeacherLessonToolsProps {
   lesson: LessonView;
-  /** The screen's notice: it outlives a cancelled lesson's actions. */
-  notice: TimedNotice;
+  /** Says what landed («سأحضر», a cancel): the screen's notice outlives the sheet (docs/48). */
+  onDone: (text: string) => void;
 }
 
 /**
  * The teacher's own actions in «تفاصيل الحلقة» of «جدولي» (docs/46 C7): «سأحضر» (C4) or its chip,
- * «إلغاء الحلقة» (C3) with the required reason, each its own mutation; the notice once one lands.
+ * «إلغاء الحلقة» (C3) with the required reason, each its own mutation; onDone once one lands.
  */
-export function TeacherLessonTools({ lesson, notice }: TeacherLessonToolsProps) {
-  const acts = useTeacherActs(lesson, notice.show);
+export function TeacherLessonTools({ lesson, onDone }: TeacherLessonToolsProps) {
+  const acts = useTeacherActs(lesson, onDone);
   return (
     <View style={{ gap: 8 }}>
-      {notice.text ? <Notice message={notice.text} /> : null}
       <ConfirmedChip on={acts.confirmed} />
       {acts.error ? <ErrorLine message={acts.error} /> : null}
       {acts.cancelling ? (

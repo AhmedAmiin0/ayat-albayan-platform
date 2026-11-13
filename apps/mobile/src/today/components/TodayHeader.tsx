@@ -1,22 +1,30 @@
-import { formatRunningHead } from '@ab/shared';
 import { View } from 'react-native';
 import { useHolds } from '@/core/auth';
 import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
 import { BellButton } from '@/notifications/BellButton';
 import { HeaderConnectingBar } from '@/core/ui/connecting/HeaderConnectingBar';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 import { hairline } from '@/core/ui/surface/surface';
+import { shortDate } from '@/today/lib/lesson-text';
 import { useGreeting } from '@/today/lib/use-greeting';
 
 interface TodayHeaderProps {
   now: Date;
   /** Whose bell: the admin's always, the salesperson's only with notifications.push (as «المحادثات»). */
-  tree: 'admin' | 'sales';
+  tree: 'admin' | 'sales' | 'teacher';
   /** «آخر تحديث 16:20» while offline with the saved day on screen. */
-  stale?: string;
+  stale?: string | undefined;
+  /** The line under the greeting in place of «… · بتوقيت الرياض» (the teacher's own, docs/48). */
+  dateLine?: string;
 }
+
+/** The trees whose bell always shows; sales' only with notifications.push. */
+const BELL_ALWAYS: Record<TodayHeaderProps['tree'], boolean> = {
+  admin: true,
+  teacher: true,
+  sales: false,
+};
 
 /**
  * The calm header (docs/29 §1): the greeting by the Riyadh clock (morning / afternoon / evening / night)
@@ -25,13 +33,16 @@ interface TodayHeaderProps {
  * the date line without the year under it, and the bell as a 44pt raised circle at the end side when
  * the tree shows one.
  */
-export function TodayHeader({ now, tree, stale }: TodayHeaderProps) {
+export function TodayHeader({ now, tree, stale, dateLine: own }: TodayHeaderProps) {
   const { color } = useTheme();
-  const bell = useHolds('notifications.push') || tree === 'admin';
-  const date = formatRunningHead(now, locale).gregorian.split(' ').slice(0, -1).join(' ');
-  const dateLine = t.today.dateLine.replace('{date}', date);
+  const bell = useHolds('notifications.push') || BELL_ALWAYS[tree];
+  const dateLine = own ?? t.today.dateLine.replace('{date}', shortDate(now));
   const greeting = useGreeting(now);
-  const small = { fontFamily: type.ui[500], color: color.ink3, fontVariant: ['tabular-nums' as const] };
+  const small = {
+    fontFamily: type.ui[500],
+    color: color.ink3,
+    fontVariant: ['tabular-nums' as const],
+  };
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -55,7 +66,13 @@ export function TodayHeader({ now, tree, stale }: TodayHeaderProps) {
           </AppText>
         </View>
         {bell ? (
-          <View style={{ borderRadius: 22, backgroundColor: color.raised, boxShadow: hairline(color.rule) }}>
+          <View
+            style={{
+              borderRadius: 22,
+              backgroundColor: color.raised,
+              boxShadow: hairline(color.rule),
+            }}
+          >
             <BellButton tree={tree} round />
           </View>
         ) : null}

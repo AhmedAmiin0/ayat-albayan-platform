@@ -1,5 +1,5 @@
 import { counted } from '@ab/shared';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { t } from '@/core/lib/i18n/i18n';
@@ -13,13 +13,16 @@ interface EndedFoldProps<L extends TodayLesson> {
   onOpen: (lesson: L) => void;
   /** Open from the start under a column filter (the filtered ended lessons are in view). Read on mount. */
   open?: boolean;
+  /** The unfolded rows in place of the compact RowsCard (the teacher's own rows, docs/48). */
+  rows?: ReactNode;
 }
 
 /**
  * The day's ended lessons as one quiet row «انتهت 3 حلقات اليوم» (docs/29 §5); a tap unfolds them as
  * compact rows, each still opening the tree's sheet («عدّل الوقت» for the admin, R-SCH-11).
  */
-export function EndedFold<L extends TodayLesson>({ lessons, onOpen, open = false }: EndedFoldProps<L>) {
+export function EndedFold<L extends TodayLesson>(props: EndedFoldProps<L>) {
+  const { lessons, onOpen, open = false, rows } = props;
   const { color } = useTheme();
   const [expanded, setExpanded] = useState(open);
   if (lessons.length === 0) return null;
@@ -53,7 +56,7 @@ export function EndedFold<L extends TodayLesson>({ lessons, onOpen, open = false
           <Path d="M6 9l6 6 6-6" fill="none" stroke={color.ink3} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
         </Svg>
       </Pressable>
-      {shown ? <RowsCard lessons={lessons} onOpen={onOpen} compact /> : null}
+      {shown ? (rows ?? <RowsCard lessons={lessons} onOpen={onOpen} compact />) : null}
     </View>
   );
 }

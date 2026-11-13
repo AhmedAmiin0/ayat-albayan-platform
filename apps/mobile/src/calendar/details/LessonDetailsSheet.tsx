@@ -27,6 +27,8 @@ interface LessonDetailsSheetProps<L extends DetailsLesson> {
   readOnly?: boolean;
   /** Opened from this student's own file: their name stays plain (no second copy of that screen). */
   hereStudentId?: string | undefined;
+  /** The teacher's report button goes here, in the current tab (docs/48); else reportHref. */
+  onReport?: (lessonId: string) => void;
 }
 
 /**
@@ -37,7 +39,8 @@ interface LessonDetailsSheetProps<L extends DetailsLesson> {
  * فقط» and only «ادخل الحلقة». A tap that navigates closes the sheet first.
  */
 export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetailsSheetProps<L>) {
-  const { lesson, role, onClose, actions, sheets, readOnly = role === 'sales', hereStudentId } = props;
+  const { lesson, role, onClose, actions, sheets, readOnly = role === 'sales' } = props;
+  const { hereStudentId, onReport } = props;
   const title = lesson ? lesson.students.map((s) => s.name).join(t.common.listSeparator) : '';
   return (
     <>
@@ -63,7 +66,13 @@ export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetails
                 {actions ? <View style={{ gap: 8 }}>{actions(lesson)}</View> : null}
                 {readOnly ? <Note>{t.lessons.sheet.readOnly}</Note> : null}
                 <DetailsWhen lesson={lesson} />
-                <DetailsStudents lesson={lesson} role={role} onLeave={onClose} hereStudentId={hereStudentId} />
+                <DetailsStudents
+                  lesson={lesson}
+                  role={role}
+                  onLeave={onClose}
+                  hereStudentId={hereStudentId}
+                  onReport={onReport}
+                />
                 <DetailsAbout lesson={lesson} role={role} />
               </>
             ) : null}

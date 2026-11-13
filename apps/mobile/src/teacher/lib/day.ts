@@ -1,9 +1,10 @@
-import { isClosedLesson, reportBlock, type LessonView, type PendingReportView } from '@ab/shared';
+import { isClosedLesson, type LessonView } from '@ab/shared';
 import { localDate } from '@/today/lib/timeline';
 
 // «اليوم» for the teacher (R-TCH-03): her own lessons on her own calendar day, in her zone. Pure.
 
 const HOUR = 3_600_000;
+const DAY = 24 * HOUR;
 
 /**
  * GET /teachers/me/lessons `from`/`to` sure to hold every lesson that starts on `date` in any zone
@@ -12,7 +13,10 @@ const HOUR = 3_600_000;
  */
 export function dayWindow(date: string): { from: string; to: string } {
   const midnight = Date.parse(`${date}T00:00:00Z`);
-  return { from: new Date(midnight - 14 * HOUR).toISOString(), to: new Date(midnight + 36 * HOUR).toISOString() };
+  return {
+    from: new Date(midnight - 14 * HOUR).toISOString(),
+    to: new Date(midnight + 36 * HOUR).toISOString(),
+  };
 }
 
 /**
@@ -25,21 +29,12 @@ export function lessonsOn(lessons: readonly LessonView[], date: string, tz: stri
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 }
 
-export type ReportAction = 'open' | 'edit' | 'view';
-
 /**
- * What a lesson card offers for its report: nothing before the lesson starts (or for a cancelled
- * one), «اكتب التقرير» / «تعديل التقرير» while it is on the pending list (a draft exists or not),
- * else «عرض التقرير». The pending list not loaded yet: «اكتب التقرير».
+ * «اليوم»'s one lessons read (docs/48): dayWindow's padded start, then 15 days on, so lessonsOn
+ * still finds today's lessons and nextOpenLesson the next one within two weeks. Under the API's
+ * 31-day cap and stable for the whole day.
  */
-export function reportAction(
-  lesson: LessonView,
-  pending: readonly PendingReportView[] | undefined,
-  now: Date,
-): ReportAction | null {
-  if (reportBlock({ lessonStatus: lesson.status, lessonStartsAt: new Date(lesson.starts_at), now }) !== null) return null;
-  if (!pending) return 'open';
-  const mine = pending.filter((p) => p.lesson_id === lesson.id);
-  if (mine.length === 0) return 'view';
-  return mine.some((p) => p.report_id !== null) ? 'edit' : 'open';
+export function aheadWindow(date: string): { from: string; to: string } {
+  const { from } = dayWindow(date);
+  return { from, to: new Date(Date.parse(from) + 15 * DAY).toISOString() };
 }
