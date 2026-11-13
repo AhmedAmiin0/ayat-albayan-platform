@@ -39,7 +39,8 @@ describe('TeacherNav — the teacher top bar (R-TCH-03)', () => {
   });
 
   it('one switch on shows only that page', () => {
-    render(<TeacherNav />, { wrapper: teacherPagesWrapper(false, { teacher_feedback_enabled: true }) });
+    const wrapper = teacherPagesWrapper(false, { teacher_feedback_enabled: true });
+    render(<TeacherNav />, { wrapper });
     expect(links().map(([, href]) => href)).toContain('/teacher/feedback');
     expect(links().map(([, href]) => href)).not.toContain('/teacher/earnings');
   });

@@ -5,12 +5,12 @@ import { t } from '@/lib/i18n/i18n';
 import { InternalMeetingDialog } from './InternalMeetingDialog';
 import { ScheduledMeetingDialog } from '@/features/teaching/meetings/scheduled/ScheduledMeetingDialog';
 
-type Props = {
+interface Props {
   /** «اجتماع داخلي» shows (default true; only the teacher's page passes its switch). */
   instant?: boolean;
   /** «اجتماع مجدول» shows (default true). */
   scheduled?: boolean;
-};
+}
 
 /**
  * «اجتماع داخلي» (now) and «اجتماع مجدول» (a time and invitees) on their own (teacher, assistant and

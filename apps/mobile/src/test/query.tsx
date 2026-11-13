@@ -58,7 +58,7 @@ export function noConfirmQueryClient(options: TestClientOptions = {}): QueryClie
 }
 
 /** Every teacher page switch set to `on` (they default OFF since 2026-11-13). */
-export const teacherPagesAll = (on: boolean): Partial<PublicSettings> =>
+const teacherPagesAll = (on: boolean): Partial<PublicSettings> =>
   Object.fromEntries(Object.values(TEACHER_PAGE_SWITCH).map((key) => [key, on]));
 
 /** A test client whose GET /settings/public has the teacher switches `on`, `patch` over them. */

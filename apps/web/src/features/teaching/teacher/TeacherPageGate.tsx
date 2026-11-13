@@ -6,7 +6,10 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
 import { useTeacherPageState, type TeacherPageState } from '@/lib/settings/teacher-pages';
 
-type Props = { page: TeacherPage; children: ReactNode };
+interface Props {
+  page: TeacherPage;
+  children: ReactNode;
+}
 
 /**
  * A teacher page behind its academy switch (owner 2026-11-13): a skeleton until the settings

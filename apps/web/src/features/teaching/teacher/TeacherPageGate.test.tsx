@@ -50,7 +50,8 @@ describe('TeacherPageGate (settings «صفحات المعلم»)', () => {
   });
 
   it('a fetched answer with the switch on (a hard refresh) shows the page', async () => {
-    apiFetch.mockResolvedValue({ ...PUBLIC_SETTING_DEFAULTS, custom: {}, teacher_earnings_enabled: true });
+    const on = { ...PUBLIC_SETTING_DEFAULTS, custom: {}, teacher_earnings_enabled: true };
+    apiFetch.mockResolvedValue(on);
     renderGate(freshClient());
     expect(await screen.findByText('the page')).toBeTruthy();
     expect(navigateTo).not.toHaveBeenCalled();
