@@ -6,8 +6,7 @@ import { apiSubmit } from '../../support/reporting/teacher-extra';
 
 // Teacher dashboard beyond journey 2 (R-TCH-03, R-REP-05, R-SCH-03, docs/46 C1/C4): the
 // teacher's join link, the week tab across days on the teacher's (Cairo) clock, «سأحضر» on a
-// coming lesson, «تقارير لسه ما اتكتبتش» → the report, and the board «طلابي» → the drawer's
-// report history with its grade chart.
+// coming lesson, «تقارير لم تُكتب بعد» → the report, and the board «طلابي» → the student file.
 
 const DAY = 86_400_000;
 const LINK = 'https://meet.jit.si/ayat-e2e-teacher-link';
@@ -42,7 +41,7 @@ async function seedAll(teacherId: string, tag: string) {
 const tab = (page: Page, name: string) => page.getByRole('tab', { name }).click();
 
 test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R-REP-05)', () => {
-  test('join link, the week by day, «سأحضر», a missing report, and the student history chart', async ({ asRole }) => {
+  test('join link, the week by day, «سأحضر», a missing report, and the student file', async ({ asRole }) => {
     test.setTimeout(150_000);
     const teacherId = await resetAbrar();
     const [prev] = await withSql((sql) => sql<{ link: string | null }[]>`select meeting_link as link from public.teachers where id = ${teacherId}`);
@@ -89,14 +88,14 @@ test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R
       await expect(teacher).toHaveURL(new RegExp(`/teacher/report/${s.missing}$`));
       await expect(teacher.getByRole('region', { name: ar.reports.identity })).toContainText(s.waiting.name);
 
-      // «طلابي» (the board, the home's first tab) → the student → «التقارير»: two reports and
-      // two points on the grade chart.
+      // «طلابي» (the board, the home's first tab) → the student's row opens «ملف الطالب»
+      // (docs/48): her name and «سجل الحضور» (the reports live in the lessons, docs/49).
       await teacher.goto('/teacher');
-      await teacher.getByRole('table', { name: ar.teacherBoard.tab }).getByRole('button', { name: s.history.name }).click();
-      const drawer = teacher.getByRole('dialog', { name: s.history.name });
-      await drawer.getByRole('tab', { name: ar.teacherBoard.reportsTab }).click();
-      await expect(drawer.getByRole('region', { name: ar.reports.title }).locator('ol > li')).toHaveCount(2);
-      await expect(drawer.getByRole('region', { name: ar.reports.progress }).getByRole('figure').getByRole('img')).toHaveCount(2);
+      const board = teacher.getByRole('table', { name: ar.teacherBoard.tab });
+      await board.getByRole('row').filter({ hasText: s.history.name }).click();
+      await expect(teacher).toHaveURL(new RegExp(`/teacher/students/${s.history.id}`));
+      await expect(teacher.getByText(s.history.name).first()).toBeVisible();
+      await expect(teacher.getByRole('region', { name: ar.teacherBoard.attendanceLog })).toBeVisible();
     } finally {
       await withSql((sql) => sql`update public.teachers set meeting_link = ${link} where id = ${teacherId}`);
     }

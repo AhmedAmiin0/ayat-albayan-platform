@@ -96,8 +96,7 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     renderDash();
     const table = await screen.findByRole('table', { name: t.teacherBoard.tab });
     expect(screen.getAllByRole('tab')[0]?.getAttribute('aria-selected')).toBe('true');
-    expect(within(table).getByRole('button', { name: 'سهيلة' })).toBeTruthy();
-    expect(within(table).getByText(t.enums.studentStatus.active)).toBeTruthy();
+    expect(within(table).getByRole('link', { name: 'سهيلة' }).getAttribute('href')).toBe('/teacher/students/s-1');
     fireEvent.click(screen.getByRole('tab', { name: t.teacherDash.week }));
     expect(screen.getAllByRole('article')).toHaveLength(2);
   });
