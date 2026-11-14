@@ -1,90 +1,111 @@
-import type { JoinWindow } from '@ab/schedule';
-import type { LessonStatus, PackageSize, SubscriptionStatus } from '@ab/catalog';
+import { LESSON_STATUSES } from '@ab/catalog';
+import { z } from 'zod';
 
-// The family portal (/portal, docs/31): what a guardian or student login reads. Whitelists only: no
-// teacher phone or email, no note or internal reason, no price, payment or invoice, no other family.
+// The family portal (/portal, docs/31, docs/50): what a guardian or student login reads. Whitelists
+// only: no teacher phone or email, no note or internal reason, no other family. Money only on the
+// package of a guardian or an adult student (portal-package.ts). Parsed at the client boundary.
 
 /** How many days «الحلقات القادمة» looks ahead. */
 export const PORTAL_LESSON_DAYS = 14;
 
-export interface PortalStudent {
-  id: string;
-  code: string;
-  name: string;
+export const portalStudentSchema = z.object({
+  id: z.string(),
+  code: z.string(),
+  name: z.string(),
   /** The family's clock for this student (students.tz). */
-  tz: string;
-  /** An adult student who is their own contact (family sign-in, docs/30): «حسابي» instead of «أبنائي». */
-  contact_is_self: boolean;
-}
+  tz: z.string(),
+  /** An adult student who is their own contact (docs/30): «حسابي» instead of «أبنائي». */
+  contact_is_self: z.boolean(),
+});
+export type PortalStudent = z.infer<typeof portalStudentSchema>;
 
 /** GET /portal/me. */
-export interface PortalHome {
-  kind: 'guardian' | 'student';
-  students: PortalStudent[];
-  /** wa.me link to the academy's chat line for «تواصل معنا للتجديد»; null while no chat number is known. */
-  renew_url: string | null;
-}
+export const portalHomeSchema = z.object({
+  kind: z.enum(['guardian', 'student']),
+  students: z.array(portalStudentSchema),
+  /**
+   * Kept for old app builds only (docs/50 §2: no WhatsApp link in family pages); no page reads it.
+   */
+  renew_url: z.string().nullable(),
+});
+export type PortalHome = z.infer<typeof portalHomeSchema>;
+export type PortalKind = PortalHome['kind'];
 
-export interface PortalTeacher {
-  display_name_ar: string;
-  display_name_en: string | null;
-}
+export const portalTeacherSchema = z.object({
+  display_name_ar: z.string(),
+  display_name_en: z.string().nullable(),
+});
+export type PortalTeacher = z.infer<typeof portalTeacherSchema>;
 
 /**
- * How the family enters: `classroom` = our platform room (POST …/join admits the student as a guest inside
- * the window), `external` = the lesson's own meeting link, `none` = no way in is known (or not open).
+ * How the family enters: `classroom` = our platform room (POST …/join admits the student as a guest
+ * inside the window), `external` = the lesson's own meeting link, `none` = no way in known (or not open).
  */
-export type PortalWayIn = 'classroom' | 'external' | 'none';
+export const PORTAL_WAYS_IN = ['classroom', 'external', 'none'] as const;
+export type PortalWayIn = (typeof PORTAL_WAYS_IN)[number];
 
-export interface PortalLesson {
-  id: string;
-  starts_at: string;
-  ends_at: string;
-  status: LessonStatus;
-  teacher: PortalTeacher;
-  way_in: PortalWayIn;
+/** @ab/schedule's JoinWindow as it crosses the wire. */
+export const joinWindowSchema = z.object({
+  state: z.enum(['early', 'open', 'closed']),
+  opens_at: z.string(),
+  closes_at: z.string(),
+});
+
+export const portalLessonSchema = z.object({
+  id: z.string(),
+  starts_at: z.string(),
+  ends_at: z.string(),
+  status: z.enum(LESSON_STATUSES),
+  teacher: portalTeacherSchema,
+  way_in: z.enum(PORTAL_WAYS_IN),
   /** Only for `external`, and only while the window is open. */
-  meeting_url: string | null;
-  window: JoinWindow;
-}
+  meeting_url: z.string().nullable(),
+  window: joinWindowSchema,
+});
+export type PortalLesson = z.infer<typeof portalLessonSchema>;
 
-/** GET /portal/students/:id/lessons: the next PORTAL_LESSON_DAYS days, by start. */
-export interface PortalLessons {
-  lessons: PortalLesson[];
-}
+/**
+ * «ما المطلوب للحلقة القادمة» (docs/50 §2): the newest SENT report's homework and next plan; never a
+ * draft. null without a sent report.
+ */
+export const portalPrepareSchema = z.object({
+  homework: z.string().nullable(),
+  next_plan: z.string().nullable(),
+  report_id: z.string(),
+  lesson_starts_at: z.string().nullable(),
+});
+export type PortalPrepare = z.infer<typeof portalPrepareSchema>;
 
-export interface PortalReport {
-  id: string;
-  lesson_id: string;
-  lesson_starts_at: string | null;
-  sent_at: string;
-  teacher: PortalTeacher | null;
-  /** A recording the teacher or admin made visible to the student (visible_to_student), else null. */
-  recording_id: string | null;
-}
+/** This calendar month (the student's clock): lessons attended and missed. */
+export const portalMonthSchema = z.object({ attended: z.number(), absent: z.number() });
+export type PortalMonth = z.infer<typeof portalMonthSchema>;
+
+/**
+ * GET /portal/students/:id/lessons: the next PORTAL_LESSON_DAYS days by start, plus the «ما المطلوب»
+ * card and this month's counts (optional: an older API leaves them out).
+ */
+export const portalLessonsSchema = z.object({
+  lessons: z.array(portalLessonSchema),
+  prepare: portalPrepareSchema.nullable().optional(),
+  month: portalMonthSchema.optional(),
+});
+export type PortalLessons = z.infer<typeof portalLessonsSchema>;
+
+export const portalReportSchema = z.object({
+  id: z.string(),
+  lesson_id: z.string(),
+  lesson_starts_at: z.string().nullable(),
+  sent_at: z.string(),
+  teacher: portalTeacherSchema.nullable(),
+  /** A recording staff made visible to the student (visible_to_student), else null. */
+  recording_id: z.string().nullable(),
+});
+export type PortalReport = z.infer<typeof portalReportSchema>;
 
 /** GET /portal/students/:id/reports: reports already sent to the family, newest first. */
-export interface PortalReports {
-  reports: PortalReport[];
-}
+export const portalReportsSchema = z.object({ reports: z.array(portalReportSchema) });
+export type PortalReports = z.infer<typeof portalReportsSchema>;
 
-/** POST …/reports/:id/url (5 minutes) and …/recordings/:id/url (an hour, for playback): a signed link, opened at once. */
-export interface PortalFileUrl {
-  url: string;
-  expires_at: string;
-}
-
-/** GET /portal/students/:id/package: the current package, no money; null without one. */
-export interface PortalPackage {
-  package: PackageSize | null;
-  duration: number;
-  lessons_total: number;
-  remaining: number;
-  starts_on: string;
-  renews_on: string | null;
-  status: SubscriptionStatus;
-}
-
-export interface PortalPackageView {
-  package: PortalPackage | null;
-}
+/** POST …/reports/:id/url (5 minutes) and …/recordings/:id/url (an hour): a signed link. */
+export const portalFileUrlSchema = z.object({ url: z.string(), expires_at: z.string() });
+export type PortalFileUrl = z.infer<typeof portalFileUrlSchema>;
