@@ -33,9 +33,9 @@ afterEach(() => {
 });
 
 describe('opening a closed chat', () => {
-  it('sends no request at all; the note says the welcome goes first on send', async () => {
+  it('sends no request at all; the reopen bar waits for a pick', async () => {
     openThread({ session_open: false, try_after_window: true });
-    expect(await screen.findByText(t.inbox.tryAfterWindow)).toBeTruthy();
+    expect(await screen.findByText(t.inbox.reopenBar.closed)).toBeTruthy();
     const box = await screen.findByRole('textbox', { name: t.inbox.composer.messageLabel });
     expect(box).toBeTruthy();
     expect(apiSend).not.toHaveBeenCalled();
@@ -44,7 +44,7 @@ describe('opening a closed chat', () => {
 
   it('a closed chat with templates only (meta line): no request either', async () => {
     openThread({ session_open: false });
-    expect(await screen.findByText(t.inbox.sessionClosed)).toBeTruthy();
+    expect(await screen.findByRole('button', { name: t.inbox.reopenBar.action })).toBeTruthy();
     expect(apiSend).not.toHaveBeenCalled();
   });
 

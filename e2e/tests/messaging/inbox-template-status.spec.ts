@@ -43,7 +43,7 @@ test.describe('inbox — closed session template and delivery chips (R-MSG-01, R
     await admin.goto(`/admin/inbox?page=1&phone=${encodeURIComponent(phone)}`);
     const log = admin.getByRole('log', { name: ar.messages.log });
     await expect(log).toBeVisible();
-    await expect(admin.getByText(ar.inbox.sessionClosed)).toBeVisible();
+    await expect(admin.getByText(ar.inbox.reopenBar.closed)).toBeVisible();
     await expect(admin.getByRole('textbox', { name: ar.inbox.composer.messageLabel })).toHaveCount(0);
     await expect(admin.getByRole('button', { name: field.send, exact: true })).toHaveCount(0);
 
