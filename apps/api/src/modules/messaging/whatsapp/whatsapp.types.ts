@@ -5,11 +5,9 @@ import {
 
 // WhatsappClient contract (docs/12 §3): B1 implements it over WA_API_BASE (wa-stub locally, e2e);
 // B2/B3 inject it with `@Inject(WHATSAPP_CLIENT)`. Foundation-owned: change it via the contract.
-
 export const WHATSAPP_CLIENT = Symbol('WHATSAPP_CLIENT');
 /** One client per line (docs/12 §13.4); WHATSAPP_CLIENT = its notifications client. */
 export const WHATSAPP_LINES = Symbol('WHATSAPP_LINES');
-
 /** One message_templates row; never on the `calls` line (migration 984's check, docs/28 §10). */
 export type TemplateRow = Omit<Tables<'message_templates'>, 'line'> & { line: WaLine };
 
@@ -108,6 +106,8 @@ export interface WhatsappClient {
    * document header needs `headerHandle` from uploadSample (Meta's sample for the reviewer).
    */
   submitTemplate(template: TemplateRow, opts?: { headerHandle?: string }): Promise<{ metaId: string; status: string }>;
+  /** Edits a template Meta knows (back to PENDING); absent = crm / evolution cannot. */
+  editTemplate?(row: TemplateRow, opts?: { headerHandle?: string }): Promise<{ status: string }>;
   /** WA_APP_ID is set: the Resumable Upload API (sample files for template headers) is usable. */
   canUploadSamples(): boolean;
   /** Resumable Upload API (session on the app, then the bytes): the handle for header_handle. */

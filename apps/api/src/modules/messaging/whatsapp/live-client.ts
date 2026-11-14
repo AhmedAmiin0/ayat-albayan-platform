@@ -1,5 +1,5 @@
 import type { WaLine } from '@ab/shared';
-import { allowedRecipients, lineEnvs, loadEnv } from '@/config/env/env';
+import { allowedRecipients, lineEnvs, lineProvider, loadEnv } from '@/config/env/env';
 import { whatsappClient } from './client-factory';
 import { WaError, type ReactionSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
@@ -49,6 +49,12 @@ export class LiveWhatsappClient implements WhatsappClient {
   }
   submitTemplate(...a: Parameters<WhatsappClient['submitTemplate']>): ReturnType<WhatsappClient['submitTemplate']> {
     return this.current().submitTemplate(...a);
+  }
+  editTemplate(...a: Parameters<NonNullable<WhatsappClient['editTemplate']>>): Promise<{ status: string }> {
+    const client = this.current();
+    const unsupported = lineProvider(loadEnv(), this.line) === 'evolution' ? 'evolution' : 'crm';
+    if (!client.editTemplate) throw new WaError('cannot edit a template', { code: null, status: 0, unsupported });
+    return client.editTemplate(...a);
   }
   uploadSample(...a: Parameters<WhatsappClient['uploadSample']>): ReturnType<WhatsappClient['uploadSample']> {
     return this.current().uploadSample(...a);

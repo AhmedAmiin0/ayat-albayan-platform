@@ -16,6 +16,7 @@ import { reactionMessage } from './drivers/meta/meta-reaction';
 import { WaError, type MetaTemplate, type ReactionSend, type SampleFile, type TemplateRow, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
 export const DEFAULT_TIMEOUT_MS = 15_000;
+interface SubmitOpts { headerHandle?: string }
 
 export interface ClientOpts {
   fetch?: FetchLike;
@@ -103,6 +104,15 @@ export class HttpWhatsappClient implements WhatsappClient {
         : { path: `${env.wabaId}/message_templates`, json: payload };
     const res = await http.json({ ...req, method: 'POST', schema: submitSchema });
     return { metaId: res.id ?? template.meta_id ?? '', status: res.status ?? 'PENDING' };
+  }
+
+  /** Meta's edit of a template it knows (Kapso: ?hsm_id): new components, same name, category. */
+  async editTemplate(row: TemplateRow, opts: SubmitOpts = {}): Promise<{ status: string }> {
+    const { env, http } = this.connection();
+    const json = { components: submitPayload(row, opts.headerHandle).components };
+    const path = templateEditPath(env, row.meta_id ?? '');
+    const res = await http.json({ path, method: 'POST', json, schema: submitSchema });
+    return { status: res.status ?? 'PENDING' };
   }
 
   canUploadSamples(): boolean {

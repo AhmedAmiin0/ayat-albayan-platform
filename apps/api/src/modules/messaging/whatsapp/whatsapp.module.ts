@@ -47,6 +47,7 @@ import { NumberRoutes } from './numbers/number-routes';
 import { RouteRepo } from './numbers/route.repo';
 import { SenderRepo } from './sender/sender.repo';
 import { TemplateCreator } from './templates/create/template-create';
+import { TEMPLATE_AUTHOR_CONTROLLERS, TEMPLATE_AUTHOR_PROVIDERS } from './templates/author';
 import { TemplateMissing } from './templates/check/template-missing';
 import { TemplateNumbersController } from './templates/sync/template-numbers.controller';
 import { TemplateNumbers } from './templates/sync/template-numbers.service';
@@ -84,7 +85,7 @@ function lines(): WhatsappLines {
   imports: [IntegrationConfigModule, NumbersModule],
   controllers: [
     TemplatesController, TemplateEditsController, MessagesController, GateController,
-    LinesController, TemplateNumbersController,
+    LinesController, TemplateNumbersController, ...TEMPLATE_AUTHOR_CONTROLLERS,
     NumbersEvolutionController, EvolutionConfigController,
   ],
   providers: [
@@ -93,10 +94,8 @@ function lines(): WhatsappLines {
     LinesCheck, LineHealthStore,
     TemplatesRepo, TemplateRegistry,
     TemplateVerifier, TemplateAdmin,
-    TemplateStarters,
-    TemplateNumbers,
-    TemplateCreator,
-    TemplateMissing,
+    TemplateStarters, TemplateNumbers, TemplateCreator, TemplateMissing,
+    ...TEMPLATE_AUTHOR_PROVIDERS,
     EvolutionPaceRepo, WhatsappSettings,
     GateSettings,
     SendGate,

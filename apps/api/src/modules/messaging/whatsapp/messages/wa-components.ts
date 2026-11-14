@@ -1,4 +1,4 @@
-import { BODY_SLOTS, WA_ERROR, type TemplateParams } from '@ab/shared';
+import { BODY_SLOTS, WA_ERROR, type TemplateDisplayButton, type TemplateParams } from '@ab/shared';
 import { bodyExamples } from '@/modules/messaging/whatsapp/template-review';
 import { authSubmitComponents } from '@/modules/messaging/whatsapp/direct/auth-template';
 import { templateButtons, templateDisplay } from './wa-json';
@@ -111,6 +111,24 @@ const textHeader = (row: TemplateRow): GraphBody[] => {
   return head?.type === 'text' && head.text ? [{ type: 'HEADER', format: 'TEXT', text: head.text }] : [];
 };
 
+const urlButton = (b: { text?: string; url: string; example?: string }): GraphBody => {
+  const example = b.url.includes('{{1}}') ? { example: [b.url.replace('{{1}}', b.example ?? 'sample')] } : {};
+  return { type: 'URL', text: b.text ?? '', url: b.url, ...example };
+};
+
+const SHOWN: Partial<Record<string, (b: TemplateDisplayButton) => GraphBody[]>> = {
+  url: (b) => (b.url ? [urlButton({ ...b, url: b.url })] : []),
+  quick_reply: (b) => [{ type: 'QUICK_REPLY', text: b.text }],
+};
+
+/** The registry's buttons, else what WhatsApp shows (an imported or sales one's plain replies). */
+function submitButtons(row: TemplateRow): GraphBody[] {
+  const own = templateButtons(row.buttons);
+  const shown = templateDisplay(row.display)?.buttons ?? [];
+  if (!own.length) return shown.flatMap((b) => SHOWN[b.type]?.(b) ?? []);
+  return own.map((b) => (b.type === 'url' ? urlButton(b) : { type: 'QUICK_REPLY', text: b.text }));
+}
+
 /**
  * POST /{waba}/message_templates (docs/12 §3.4): a DOCUMENT HEADER with the uploaded sample's
  * handle or a TEXT one, BODY with a sample for every {{n}} (Meta requires them), FOOTER, BUTTONS.
@@ -126,11 +144,7 @@ export function submitPayload(row: TemplateRow, headerHandle?: string): GraphBod
   components.push(...textHeader(row));
   components.push({ type: 'BODY', text: row.body_ar, ...(examples.length ? { example: { body_text: [examples] } } : {}) });
   if (row.footer_ar) components.push({ type: 'FOOTER', text: row.footer_ar });
-  const buttons = templateButtons(row.buttons).map((b) =>
-    b.type === 'url'
-      ? { type: 'URL', text: b.text ?? '', url: b.url, ...(b.url.includes('{{1}}') ? { example: [b.url.replace('{{1}}', b.example ?? 'sample')] } : {}) }
-      : { type: 'QUICK_REPLY', text: b.text },
-  );
+  const buttons = submitButtons(row);
   if (buttons.length) components.push({ type: 'BUTTONS', buttons });
   return { name: row.meta_name, language: row.language, category: row.category.toUpperCase(), components };
 }

@@ -2,12 +2,14 @@ import {
   templateCrmNameSchema, templateCrmStatusSchema, templateLineSchema, templateNumberSchema,
   templateStarterSchema, type TemplateMoveView, type TemplateNumberSetView, type TemplateView,
 } from '@ab/shared';
+import { templateEditSchema, templateKeyParam } from '@ab/shared';
 import { Controller, HttpCode, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { TemplateEditor } from '@/modules/messaging/whatsapp/templates/edit/template-editor';
 import { TemplateNumbers } from '@/modules/messaging/whatsapp/templates/sync/template-numbers.service';
 import { TemplateAdmin } from './template-admin';
 import { TemplateManagerGuard } from './template-manager.guard';
@@ -27,7 +29,20 @@ export class TemplateEditsController {
     private readonly admin: TemplateAdmin,
     private readonly numbers: TemplateNumbers,
     private readonly starters: TemplateStarters,
+    private readonly editor: TemplateEditor,
   ) {}
+
+  /** «تعديل»: body, footer, buttons (Meta's edit rules; a code-bound one: words only); audited. */
+  @Patch(':key/content')
+  @HttpCode(200)
+  @UseGuards(TemplateManagerGuard)
+  edit(
+    @ZodParam('key', templateKeyParam) key: string,
+    @ZodBody(templateEditSchema) input: z.output<typeof templateEditSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TemplateView> {
+    return this.editor.edit(key, input, { id: user.id, author: false });
+  }
 
   /** The only way a template reaches Meta: the admin's explicit, audited act, to its own number. */
   @Post(':key/submit')

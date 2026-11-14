@@ -29,6 +29,7 @@ const LATER = [
   '20261029000975_leads_link_family_permission.sql',
   '20261030000990_course_stop_permissions.sql',
   '20261103000999_subscriptions_edit_terms_permission.sql',
+  '20261114000100_templates_author.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
