@@ -47,9 +47,10 @@ export async function seedPortalFamily(): Promise<PortalFamily> {
   const now = Date.now();
   const second = await withSql(async (sql) => {
     await sql`insert into public.lesson_reports
-      (lesson_id, student_id, teacher_id, attendance, recited, homework, status, version, submitted_at, sent_at)
+      (lesson_id, student_id, teacher_id, attendance, recited, homework, status, version,
+        submitted_at, pdf_status, pdf_path, sent_at)
       values (${seed.pastLessonId}, ${seed.studentId}, ${teacherId}, 'on_time', 'سورة الملك',
-        'مراجعة سورة الملك', 'submitted', 1, now(), now())`;
+        'مراجعة سورة الملك', 'submitted', 1, now(), 'ready', ${`e2e/${seed.studentId}.pdf`}, now())`;
     const [s] = await sql<{ id: string }[]>`
       insert into public.students (guardian_id, name, name_normalized, tz)
       values (${seed.guardianId}, ${names.second}, ${normalizeArabic(names.second)}, 'Asia/Riyadh') returning id`;
@@ -97,6 +98,6 @@ export async function studentSignIn(page: Page, family: PortalFamily): Promise<v
   await page.getByRole('button', { name: ar.familyAuth.withUsername }).click();
   await page.getByLabel(ar.familyAuth.username).fill(family.first.code);
   await page.getByLabel(ar.auth.password, { exact: true }).fill(password);
-  await page.getByRole('button', { name: ar.auth.submit }).click();
+  await page.getByRole('button', { name: ar.auth.submit, exact: true }).click();
   await expect(page).toHaveURL(/\/portal/);
 }
