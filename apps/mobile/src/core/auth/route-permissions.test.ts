@@ -31,6 +31,7 @@ test.each<[RouteKey, string]>([
   ['assistants', 'assistantpay.read'],
   ['assistantLessons', 'self.assistant'],
   ['meetings', 'meetings.read'],
+  ['templates', 'templates.author'],
 ])('%s needs %s', (route, permission) => {
   expect(ROUTE_PERMISSION[route]).toBe(permission);
   expect(canOpen((p) => p === permission, route)).toBe(true);

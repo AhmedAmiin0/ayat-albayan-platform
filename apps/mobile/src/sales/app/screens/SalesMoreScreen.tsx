@@ -21,6 +21,7 @@ const rows = () =>
     { route: 'salesSubscriptions', title: t.sales.nav.subscriptions, href: '/sales/more/subscriptions' },
     { route: 'salesEarnings', title: t.assistantPortal.nav.earnings, href: '/sales/more/earnings' },
     { route: 'salesMeetings', title: t.mobileClassroom.meetingsRow, href: '/sales/more/meetings' },
+    { route: 'templates', title: t.templates.author.nav, href: '/sales/more/templates' },
   ] as const;
 
 /**

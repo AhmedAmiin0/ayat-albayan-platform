@@ -29,3 +29,5 @@ export {
   SpeakerIcon,
   SwitchCameraIcon,
 } from './thread/calls/screen/call-icons';
+// «القوالب» (owner 2026-11-14): the template form's live preview is the composer's.
+export { TemplatePreview } from './composer/TemplatePreview';
