@@ -70,7 +70,10 @@ export function sendableFreeText(body: string, slot: BodySlot, text: string): st
 /** Why the API refuses these params for this body (400), or null when Meta takes them. */
 export type TemplateParamProblem = 'param_not_normalised' | 'body_too_long';
 
-export function templateParamProblem(body: string, params: TemplateParams): TemplateParamProblem | null {
+export function templateParamProblem(
+  body: string,
+  params: TemplateParams,
+): TemplateParamProblem | null {
   const values = BODY_SLOTS.map((s) => params[s]).filter((v): v is string => v !== undefined);
   if (!values.every(isMetaSafeParam)) return 'param_not_normalised';
   return filledBodyLength(body, params) > TEMPLATE_LIMITS.body ? 'body_too_long' : null;

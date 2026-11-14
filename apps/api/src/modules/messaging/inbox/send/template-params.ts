@@ -1,5 +1,5 @@
 import { templateParamProblem, type TemplateView, type ThreadTemplate } from '@ab/shared';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { waHttpError } from '@/modules/messaging/whatsapp';
 import { missingParams } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 /**
