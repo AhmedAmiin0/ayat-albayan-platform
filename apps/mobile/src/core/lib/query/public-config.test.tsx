@@ -1,6 +1,6 @@
 import { PUBLIC_SETTING_DEFAULTS, type LessonView } from '@ab/shared';
 import { renderHook, waitFor } from '@testing-library/react-native';
-import { livePhase } from '@/live/live-filter';
+import { livePhase } from '@/calendar/live/live-filter';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { publicConfigQuery, useJoinWindow, usePublicConfig, useUploadMaxBytes } from './public-config';
 

@@ -15,8 +15,9 @@ const root = import.meta.dirname;
 // c-row move adds its domain here in the same PR that moves ALL of src/<domain>/ into
 // src/<domain>/<module>/ (a listed domain makes each sub-folder its own module).
 const DOMAINS = ['sales'];
-const APP = ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'];
-const TSX = ['src/**/*.tsx', 'app/**/*.tsx'];
+// app-family/: the family app's own expo-router root (docs/50 §7), linted as app/ is.
+const APP = ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}', 'app-family/**/*.{ts,tsx}'];
+const TSX = ['src/**/*.tsx', 'app/**/*.tsx', 'app-family/**/*.tsx'];
 const TEXT = {
   name: 'react-native',
   importNames: ['Text'],
@@ -66,7 +67,7 @@ export default {
     // docs/27 §1 rules 5–6: a route file imports a feature only through its index (`@/inbox`);
     // `@/core/**` is shared.
     {
-      files: ['app/**/*.tsx'],
+      files: ['app/**/*.tsx', 'app-family/**/*.tsx'],
       ignores: ['**/*.test.tsx'],
       rules: { 'no-restricted-imports': ['error', { paths: [TEXT], patterns: [ROUTES] }] },
     },
