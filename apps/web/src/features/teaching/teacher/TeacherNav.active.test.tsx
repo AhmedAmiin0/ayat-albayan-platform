@@ -7,7 +7,7 @@ import { t } from '@/lib/i18n/i18n';
 import { teacherPagesWrapper } from '@/lib/settings/teacher-pages-testing';
 import { TeacherNav } from './TeacherNav';
 
-/** The nav under a real router at `url` (the home tabs write ?tab=, docs/48). */
+/** The nav under a real router at `url` (an old link may still carry ?tab=, docs/48). */
 function showAt(url: string) {
   const root = createRootRoute({ component: () => <><TeacherNav /><Outlet /></> });
   const pages = ['/teacher', '/teacher/students'].map((path) =>

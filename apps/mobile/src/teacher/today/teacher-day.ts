@@ -1,7 +1,6 @@
 import { nextOpenLesson, pickHero, type Hero } from '@ab/client-core';
-import type { LessonView, PendingReportView } from '@ab/shared';
+import type { LessonView } from '@ab/shared';
 import { lessonsOn } from '@/teacher/lib/day';
-import { dueReports, type DueReport } from './due/due-reports';
 
 // The teacher's «اليوم» from ONE padded aheadWindow read (docs/48 «Day rows rule»). Pure.
 
@@ -14,7 +13,6 @@ interface TeacherDay {
   rest: LessonView[];
   /** Ended today: folded into «انتهت n حلقات اليوم». */
   ended: LessonView[];
-  due: DueReport[];
   /** The day-end card, or null while something is still ahead (or nothing is loaded yet). */
   dayEnd: DayEndKind | null;
   /** Only the hero is left and nothing ended: «لا توجد حلقات أخرى اليوم». */
@@ -25,7 +23,6 @@ interface TeacherDay {
 
 export interface DayInput {
   lessons: readonly LessonView[] | undefined;
-  pending: readonly PendingReportView[] | undefined;
   /** Today on her calendar (localDate in her zone). */
   date: string;
   tz: string;
@@ -57,17 +54,15 @@ const onlyHeroLeft = (s: Split) => s.hero !== null && s.rest.length === 0 && s.e
 const byStart = (lessons: readonly LessonView[] | undefined) =>
   [...(lessons ?? [])].sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 
-/** Hero, rows, fold, due reports and the day end: each due report once (docs/48). */
+/** Hero, rows, fold and the day end (docs/48; today's lessons only, owner 2026-11-14). */
 export function teacherDay(input: DayInput): TeacherDay {
   const s = split(input);
   const { now } = input;
   const dayEnd = dayEndOf(s);
-  const heroId = s.hero?.lesson.id;
   return {
     hero: s.hero,
     rest: s.rest,
     ended: s.ended,
-    due: dueReports({ today: s.today, pending: input.pending, heroId, now }),
     dayEnd,
     noOther: onlyHeroLeft(s),
     next: dayEnd ? nextOpenLesson(byStart(input.lessons), now) : null,

@@ -4,7 +4,6 @@ import { useLessonDetails } from '@/calendar';
 import { Screen } from '@/core/ui/layout/Screen';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { TeacherLessonSheet, useTimedNotice } from '@/teacher/lesson-actions';
-import { DueReports } from '@/teacher/today/due/DueReports';
 import { TeacherDayEnd } from '@/teacher/today/TeacherDayEnd';
 import { TeacherHero } from '@/teacher/today/TeacherHero';
 import { TodayEnded } from '@/teacher/today/TodayEnded';
@@ -17,10 +16,10 @@ const toReport = (lessonId: string) => router.push(`/teacher/today/report/${less
 
 /**
  * «اليوم» (R-TCH-03, R-MOB-02, docs/48): one scroll, one pull. Her greeting and date, the notice
- * once an action lands, the hero (pickHero: her lesson under way or next) with ONE lead, the due
- * reports once each, «بقية اليوم» as compact rows (one lead each; a tap opens the sheet with every
- * action), the ended lessons folded, and the day end with her next lesson. Offline the saved day
- * stays with its «آخر تحديث» (R-MOB-03).
+ * once an action lands, the hero (pickHero: her lesson under way or next) with ONE lead, «بقية
+ * اليوم» as compact rows (one lead each; a tap opens the sheet with every action), the ended
+ * lessons folded (each with its report lead), and the day end with her next lesson. Today's
+ * lessons only (owner 2026-11-14). Offline the saved day stays with its «آخر تحديث» (R-MOB-03).
  */
 export function TeacherTodayScreen() {
   const v = useTeacherToday();
@@ -49,11 +48,6 @@ export function TeacherTodayScreen() {
             onReport={toReport}
           />
         ) : null}
-        <DueReports
-          rows={day.due}
-          failed={v.pendingFailed}
-          onRetry={() => void v.pending.refetch()}
-        />
         <TodayRest lessons={day.rest} noOther={day.noOther} rows={rows} />
         <TodayEnded lessons={day.ended} rows={rows} />
         <TeacherDayEnd kind={day.dayEnd} next={day.next} />

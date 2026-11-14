@@ -32,19 +32,19 @@ afterEach(() => jest.useRealTimers());
 async function mount(focused: boolean) {
   mockFocused = focused;
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
-  await waitFor(() => expect(calls('/teachers/me/pending-reports')).toBe(1));
+  await waitFor(() => expect(calls('/teachers/me/lessons')).toBe(1));
 }
 
 test.each([
   [true, 2],
   [false, 1],
-])('focused=%s: the lessons and pending reports read %s times after 30 s', async (focused, n) => {
+])('focused=%s: the lessons read %s times after 30 s; never the pending list', async (focused, n) => {
   await mount(focused);
   await act(async () => {
     jest.advanceTimersByTime(30_000);
   });
   expect(calls('/teachers/me/lessons')).toBe(n);
-  expect(calls('/teachers/me/pending-reports')).toBe(n);
+  expect(calls('/teachers/me/pending-reports')).toBe(0);
 });
 
 test('a background poll never spins the pull-to-refresh spinner', async () => {

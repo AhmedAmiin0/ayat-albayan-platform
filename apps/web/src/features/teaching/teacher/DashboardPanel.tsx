@@ -1,20 +1,12 @@
-import { addDays, type LessonView, type TeacherMe } from '@ab/shared';
-import type { ReactNode } from 'react';
+import type { LessonView, TeacherMe } from '@ab/shared';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { dayMonthLabel } from '@/features/teaching/schedule';
-import { TeacherBoard, weekLessons } from '@/features/teaching/teacher-board';
-import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import type { DashboardTab } from './home-search';
-import { LessonDayList } from './lessons/LessonDayList';
 import { LoadRetry } from './LoadRetry';
-import { TeacherAvailability } from './proposals/TeacherAvailability';
 import { TodayPanel } from './today/TodayPanel';
 
 export interface DashboardPanelProps {
-  tab: DashboardTab;
   me: TeacherMe;
-  /** The board window's lessons (one query for every tab); undefined while loading. */
+  /** The board window's lessons (one query for the home); undefined while loading. */
   lessons: {
     data: LessonView[] | undefined;
     isError: boolean;
@@ -28,33 +20,8 @@ export interface DashboardPanelProps {
   onOpen: (lessonId: string) => void;
 }
 
-type Ready = Omit<DashboardPanelProps, 'lessons' | 'tab'> & { lessons: LessonView[] };
-
-const weekRange = (today: string) =>
-  t.teacherDash.weekRange
-    .replace('{from}', dayMonthLabel(today))
-    .replace('{to}', dayMonthLabel(addDays(today, 6)));
-
-const PANELS: Record<Exclude<DashboardTab, 'availability'>, (p: Ready) => ReactNode> = {
-  students: (p) => <TeacherBoard me={p.me} lessons={p.lessons} now={p.at.now} onDone={p.onDone} />,
-  today: (p) => <TodayPanel {...p} />,
-  week: (p) => (
-    <>
-      <h2 className="mb-3 text-sm font-semibold text-ink-2">{weekRange(p.at.today)}</h2>
-      <LessonDayList
-        lessons={weekLessons(p.lessons, { today: p.at.today, tz: p.me.tz })}
-        tz={p.me.tz}
-        fallbackLink={p.me.meeting_link}
-        empty={t.teacherDash.noLessonsWeek}
-        onDone={p.onDone}
-      />
-    </>
-  ),
-};
-
-/** The open tab of the teacher home: the board, today, the week, or her availability. */
-export function DashboardPanel({ tab, lessons, ...rest }: DashboardPanelProps) {
-  if (tab === 'availability') return <TeacherAvailability me={rest.me} />;
+/** The teacher home's today list under the hero (owner 2026-11-14: today's lessons only). */
+export function DashboardPanel({ lessons, ...rest }: DashboardPanelProps) {
   // Data first (docs/48): a failed 30 s poll keeps the cached lessons on screen; the midnight
   // window change dims the old day with aria-busy until the new one lands.
   if (!lessons.data) {
@@ -63,7 +30,7 @@ export function DashboardPanel({ tab, lessons, ...rest }: DashboardPanelProps) {
   const busy = lessons.isPlaceholderData === true;
   return (
     <div aria-busy={busy || undefined} className={cn(busy && 'opacity-60')}>
-      {PANELS[tab]({ ...rest, lessons: lessons.data })}
+      <TodayPanel {...rest} lessons={lessons.data} />
     </div>
   );
 }

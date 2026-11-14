@@ -10,7 +10,7 @@ export const TEACHER_NAV_ITEMS = [
     label: t.teacherNav.today,
     icon: 'clock',
     exact: true,
-    // The home tabs write ?tab=: «اليوم» stays current on any search (docs/48).
+    // «اليوم» stays current on any search (an old ?tab= link; owner 2026-11-14).
     activeOptions: { exact: true, includeSearch: false },
     permission: 'self.teacher',
   },

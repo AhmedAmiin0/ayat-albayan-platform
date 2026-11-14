@@ -4,7 +4,6 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@/lib/i18n/i18n';
-import type { DashboardTab } from './home-search';
 import { TeacherDashboard } from './TeacherDashboard';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -27,7 +26,7 @@ const MONDAY = lesson({ id: 'm', starts_at: '2026-10-05T13:00:00.000Z' });
 
 type Lessons = LessonView[] | Error;
 
-function renderDash(lessons: Lessons = [HERO, LATER, ENDED, MONDAY], tab: DashboardTab = 'students', onTab = vi.fn()) {
+function renderDash(lessons: Lessons = [HERO, LATER, ENDED, MONDAY]) {
   apiFetch.mockImplementation((path: string) => {
     if (path === '/teachers/me') return Promise.resolve(ME);
     if (path === '/settings/public') return Promise.resolve({ ...PUBLIC_SETTING_DEFAULTS, custom: {} });
@@ -37,15 +36,14 @@ function renderDash(lessons: Lessons = [HERO, LATER, ENDED, MONDAY], tab: Dashbo
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
     <QueryClientProvider client={client}>
-      <TeacherDashboard tab={tab} onTab={onTab} />
+      <TeacherDashboard />
     </QueryClientProvider>,
   );
-  return onTab;
 }
 
-const tabCount = (name: string) => screen.getByRole('tab', { name: new RegExp(name) }).textContent;
+const openRow = (name: string) => ({ name: t.lessons.sheet.openRow.replace('{names}', name) });
 
-describe('TeacherDashboard — hero and tabs (docs/48)', () => {
+describe('TeacherDashboard — the hero and today\'s list (owner 2026-11-14)', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-10-03T09:00:00.000Z'));
@@ -56,13 +54,12 @@ describe('TeacherDashboard — hero and tabs (docs/48)', () => {
     apiSend.mockReset();
   });
 
-  it('the hero sits above the tabs, with no fixed-link banner; «اليوم» counts 2', async () => {
+  it('the hero sits above today\'s rows, with no fixed-link banner', async () => {
     renderDash();
     const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
-    const tabs = screen.getByRole('tablist');
-    expect(hero.compareDocumentPosition(tabs) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const row = await screen.findByRole('button', openRow('جود'));
+    expect(hero.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.queryByRole('region', { name: t.teacherDash.joinLink })).toBeNull();
-    expect(tabCount(t.teacherDash.today)).toBe(`${t.teacherDash.today}2`);
   });
 
   it('no hero today in Meet mode: the banner shows her link', async () => {
@@ -71,36 +68,32 @@ describe('TeacherDashboard — hero and tabs (docs/48)', () => {
     expect(within(banner).getByRole('link', { name: t.teacherDash.join }).getAttribute('href')).toBe(ME.meeting_link);
   });
 
-  it('tab=today: the rest of the day as rows, the ended fold; a tab click goes to onTab', async () => {
-    const onTab = renderDash(undefined, 'today');
-    const panel = await screen.findByRole('tabpanel');
-    expect(await within(panel).findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'جود') })).toBeTruthy();
-    expect(within(panel).getByText('انتهت حلقة واحدة اليوم')).toBeTruthy();
-    fireEvent.click(screen.getByRole('tab', { name: t.teacherDash.week }));
-    expect(onTab).toHaveBeenCalledWith('week');
+  it('the rest of the day as rows and the ended fold; no tabs', async () => {
+    renderDash();
+    expect(await screen.findByRole('button', openRow('جود'))).toBeTruthy();
+    expect(screen.getByText('انتهت حلقة واحدة اليوم')).toBeTruthy();
+    expect(screen.queryByRole('tablist')).toBeNull();
   });
 
   it('a row opens the drawer; the toast waits while it is open', async () => {
-    renderDash(undefined, 'today');
-    const panel = await screen.findByRole('tabpanel');
-    fireEvent.click(await within(panel).findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'جود') }));
+    renderDash();
+    fireEvent.click(await screen.findByRole('button', openRow('جود')));
     expect(screen.getByRole('dialog', { name: 'جود' })).toBeTruthy();
   });
 
   it('opening a drawer clears the last notice (review: no stale message in the next lesson)', async () => {
     apiSend.mockResolvedValue(HERO);
-    renderDash(undefined, 'today');
+    renderDash();
     const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
     fireEvent.click(within(hero).getByRole('button', { name: t.teacherBoard.confirm }));
     await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.teacherBoard.confirmedOk));
-    const panel = screen.getByRole('tabpanel');
-    fireEvent.click(within(panel).getByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'جود') }));
+    fireEvent.click(screen.getByRole('button', openRow('جود')));
     const drawer = screen.getByRole('dialog', { name: 'جود' });
     expect(within(drawer).getByRole('status').textContent).toBe('');
   });
 
   it('a lessons error with nothing cached offers a retry', async () => {
-    renderDash(new Error('down'), 'today');
+    renderDash(new Error('down'));
     const alert = await screen.findByRole('alert');
     expect(alert.textContent).toContain(t.teacherDash.loadError);
     expect(within(alert).getByRole('button', { name: t.teacherStudents.retry })).toBeTruthy();

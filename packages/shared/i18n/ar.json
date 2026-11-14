@@ -1114,8 +1114,6 @@
   },
   "teacherDash": {
     "title": "حلقاتي",
-    "today": "اليوم",
-    "week": "الأسبوع",
     "joinLink": "رابط الحلقة",
     "join": "ادخل الحلقة",
     "myStudents": "طلابي",
@@ -1128,9 +1126,7 @@
     "markAttendance": "تسجيل الحضور",
     "proposeReschedule": "اقترح موعدًا آخر",
     "notLinked": "حسابك غير مربوط بملف معلم/ة بعد، تواصل مع الإدارة",
-    "tabs": "أقسام لوحة المعلم/ة",
     "loadError": "تعذّر تحميل حلقاتك، حاول مرة أخرى",
-    "weekRange": "من {from} إلى {to}",
     "emptyHint": "تظهر الحلقات هنا فور حجزها من الإدارة",
     "propose": {
       "title": "اقترح موعدًا آخر",
@@ -4476,6 +4472,10 @@
     "students": "الطلاب",
     "statements": "كشوف الشهر",
     "messages": "رسائل الطلاب"
+  },
+  "teacherCalendar": {
+    "views": "عرض جدولي",
+    "lessons": "الحلقات"
   },
   "teacherBoard": {
     "tab": "طلابي",

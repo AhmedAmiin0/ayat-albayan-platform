@@ -10,6 +10,7 @@ import {
   setAvailability,
   withSql,
 } from '../../support/core/schedule';
+import { openMyLesson } from '../../support/teaching/my-calendar';
 
 // Teacher «اقترح موعدًا آخر» → admin «وافق على الموعد» (R-SCH-08, lesson-proposals.controller.ts):
 // «أبرار» moves her own lesson 90 minutes later on her own clock (Cairo), the admin approves it
@@ -56,11 +57,9 @@ test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)',
     const lessonId = await seedLesson({ teacherId, studentId, startsAt, minutes: 45 });
     const movedTo = new Date(startsAt.getTime() + 90 * MINUTE);
 
-    // Teacher: the week tab → the lesson card → the form, on her own clock (same day, +90 min).
+    // Teacher: «جدولي» → the lesson card → the form, on her own clock (same day, +90 min).
     const teacher = await asRole('teacher');
-    await teacher.goto('/teacher');
-    await teacher.getByRole('tab', { name: ar.teacherDash.week }).click();
-    const card = teacher.getByRole('article', { name: /ريم/ });
+    const card = (await openMyLesson(teacher, { name: /ريم/, at: startsAt })).getByRole('article');
     await card.getByRole('button', { name: ar.teacherDash.proposeReschedule }).click();
     // The form sits in the card from 640px and in a full-screen dialog on a phone: find it by name.
     const form = teacher.getByRole('form', { name: ar.teacherDash.propose.title });
@@ -97,10 +96,9 @@ test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)',
       .poll(() => queuedFor(family.guardianId))
       .toContainEqual(expect.objectContaining({ template_key: 'booking_confirmation', status: 'queued' }));
 
-    // The teacher's week shows the lesson at the new time, with nothing left waiting.
-    await teacher.reload();
-    await teacher.getByRole('tab', { name: ar.teacherDash.week }).click();
-    const moved = teacher.getByRole('article', { name: new RegExp(`^${cairoClock(movedTo)} ريم`) });
+    // «جدولي» shows the lesson at the new time, with nothing left waiting.
+    const mine = await openMyLesson(teacher, { name: /ريم/, at: movedTo });
+    const moved = mine.getByRole('article', { name: new RegExp(`^${cairoClock(movedTo)} ريم`) });
     await expect(moved).toBeVisible();
     await expect(teacher.getByText(waiting)).toHaveCount(0);
   });

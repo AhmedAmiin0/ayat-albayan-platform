@@ -19,7 +19,7 @@ interface TeacherLessonRowProps {
   onReport: (lessonId: string) => void;
   /** Says what landed («سأحضر»). */
   onNotice: (text: string) => void;
-  /** An ended row in the fold: the word only, no lead (docs/48). */
+  /** An ended row in the fold: the word and only its report lead (owner 2026-11-14). */
   quiet?: boolean;
 }
 
@@ -32,9 +32,11 @@ const noMove = () => undefined;
 const rowVariant = (lead: LeadAction, live: boolean): ButtonVariant =>
   lead === 'join' && live ? 'primary' : 'secondary';
 
-/** A row never leads with the report: a due report lives only in the due block (docs/48). */
-const isLead = (lead: string | null): lead is Exclude<LeadAction, 'report'> =>
-  lead === 'join' || lead === 'confirm';
+/** The leads a row may draw: an ended row keeps only its report (no due block, 2026-11-14). */
+const OPEN_LEADS: readonly LeadAction[] = ['join', 'confirm', 'report'];
+const QUIET_LEADS: readonly LeadAction[] = ['report'];
+const rowLead = (lead: string | null, quiet = false): LeadAction | undefined =>
+  (quiet ? QUIET_LEADS : OPEN_LEADS).find((a) => a === lead);
 
 /**
  * One of her lessons as a compact row (docs/48): time · names · «عند الطالب 15:00» · her word
@@ -48,8 +50,8 @@ export function TeacherLessonRow(p: TeacherLessonRowProps) {
   const cycle = useClockCycle();
   const { plan, join, ctx } = useTeacherPlan(lesson, p);
   const word = teacherWord(lesson, now);
-  const lead = p.quiet ? null : plan.lead;
-  const actions = isLead(lead) ? (
+  const lead = rowLead(plan.lead, p.quiet);
+  const actions = lead ? (
     <View style={{ gap: 4 }}>
       <TeacherRowAction action={lead} variant={rowVariant(lead, join === 'live')} ctx={ctx} />
       {ctx.acts.error ? <ErrorLine message={ctx.acts.error} /> : null}

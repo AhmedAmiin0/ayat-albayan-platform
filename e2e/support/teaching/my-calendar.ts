@@ -1,0 +1,35 @@
+import { zonedPartsIn } from '@ab/shared';
+import type { Locator, Page } from '@playwright/test';
+import { ar, expect } from '../core/fixtures';
+
+// «جدولي» (/teacher/calendar): the teacher's week grid. The home lists today only (owner
+// 2026-11-14), so a later lesson's card (propose, «سأحضر», join) opens from here.
+
+const DAY = 86_400_000;
+
+/** The Saturday that starts `at`'s week on her (Cairo) calendar, as epoch ms. */
+function saturdayOf(at: Date): number {
+  const day = new Date(`${zonedPartsIn(at, 'Africa/Cairo').date}T00:00:00Z`);
+  return day.getTime() - ((day.getUTCDay() + 1) % 7) * DAY;
+}
+
+/** Whole weeks from this week to `at`'s (0 = this week). */
+const weeksAhead = (at: Date) => Math.round((saturdayOf(at) - saturdayOf(new Date())) / (7 * DAY));
+
+/** Opens her lesson on `at` (its student's name in `name`) and returns its drawer. */
+export async function openMyLesson(page: Page, o: { name: RegExp; at: Date }): Promise<Locator> {
+  await page.goto('/teacher/calendar');
+  await expect(page.getByRole('group', { name: ar.booking.weekNav })).toBeVisible();
+  for (let i = 0; i < weeksAhead(o.at); i += 1) {
+    await page.getByRole('button', { name: ar.schedule.nextWeek }).click();
+  }
+  await page.getByRole('button', { name: o.name }).first().click();
+  return page.getByRole('dialog', { name: o.name });
+}
+
+/** «جدولي» › «المواعيد المتاحة»: her availability editor. */
+export async function openMyAvailability(page: Page): Promise<void> {
+  await page.goto('/teacher/calendar');
+  await page.getByRole('button', { name: ar.availability.title }).click();
+  await expect(page).toHaveURL(/view=availability/);
+}
