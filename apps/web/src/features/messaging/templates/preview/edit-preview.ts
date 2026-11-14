@@ -1,5 +1,5 @@
 import type { MessageTemplateBlock, TemplateHeader } from '@ab/shared';
-import type { EditButton } from './edit-draft';
+import type { EditButton } from '@/features/messaging/templates/edit/edit-draft';
 
 /** The bubble's frame while typing: the template's own header, the footer and buttons as typed. */
 export function previewBlock(
