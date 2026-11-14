@@ -14,6 +14,9 @@ import { guardianSignIn, seedPortalFamily, studentSignIn } from '../../support/p
 const P = ar.portal;
 const MONEY = new RegExp([P.amountDue, P.payments, P.paymentInstructions, P.usedOfHint].join('|'));
 
+const PACKAGE_READ = /\/portal\/students\/[^/]+\/package(\?|$)/;
+const CHANNEL_READ = /\/portal\/students\/[^/]+\/channel\//;
+
 test.describe('family portal /portal', () => {
   test.skip(SINGLE_LINE, 'E2E_LINES=single: no chat line, so no sign-in codes');
   test.beforeEach(async () => {
@@ -79,8 +82,9 @@ test.describe('family portal /portal', () => {
     await expect(page.getByRole('tabpanel').getByRole('listitem')).not.toHaveCount(0);
 
     await expect(page.locator('body')).not.toContainText(MONEY);
-    expect(asked.filter((url) => url.includes('/package'))).toEqual([]);
-    expect(asked.filter((url) => url.includes('/channel/'))).toEqual([]);
+    // API reads only: the dev server also serves modules from packages/….
+    expect(asked.filter((url) => PACKAGE_READ.test(url))).toEqual([]);
+    expect(asked.filter((url) => CHANNEL_READ.test(url))).toEqual([]);
     await page.context().close();
   });
 });
