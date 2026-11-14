@@ -44,7 +44,7 @@ describe('opening a closed chat', () => {
 
   it('a closed chat with templates only (meta line): no request either', async () => {
     openThread({ session_open: false });
-    expect(await screen.findByRole('button', { name: t.inbox.reopenBar.action })).toBeTruthy();
+    expect((await screen.findAllByText(t.inbox.reopenBar.closed)).length).toBeGreaterThan(0);
     expect(apiSend).not.toHaveBeenCalled();
   });
 

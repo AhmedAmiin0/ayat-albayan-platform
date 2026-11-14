@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ReopenBar } from './ReopenBar';
 
@@ -32,6 +32,14 @@ describe('ReopenBar', () => {
     expect(screen.getAllByText(t.inbox.reopenBar.closed)).toHaveLength(1);
     fireEvent.click(action() as HTMLElement);
     expect(await screen.findByRole('dialog', { name: t.inbox.reopenBar.action })).toBeTruthy();
+  });
+
+  it('templates allowed, none from the chat line: the line, no button (no empty picker)', async () => {
+    routeFetch(apiFetch, [['/messaging/templates', [template({ key: 'renewal_due' })]]]);
+    renderWithClient(<ReopenBar {...base} thread={thread({ session_open: false })} />);
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalled());
+    await vi.waitFor(() => expect(action()).toBeNull());
+    expect(screen.getByText(t.inbox.reopenBar.closed)).toBeTruthy();
   });
 
   it('a reopen template live: «sent», its tick, the held note; no button', () => {

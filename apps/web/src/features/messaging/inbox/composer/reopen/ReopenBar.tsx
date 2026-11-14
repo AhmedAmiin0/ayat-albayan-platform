@@ -9,6 +9,7 @@ import {
 } from '@/features/messaging/inbox/composer/lib/allowed-templates';
 import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 import { ReopenDialog } from './ReopenDialog';
+import { useCanReopen } from './use-can-reopen';
 import { useReopenTick } from './use-reopen-tick';
 
 export interface ReopenBarProps {
@@ -43,6 +44,7 @@ function SentBar({ phone, sent, trying }: { phone: string; sent: ReopenSent; try
 export function ReopenBar(props: ReopenBarProps) {
   const { thread, noneAllowed } = props;
   const [picking, setPicking] = useState(false);
+  const canReopen = useCanReopen(props.teacher);
   const sent = thread.reopen_sent ?? null;
   const open = thread.session_open;
   const state = windowBar({ open, sent: sent !== null, noneAllowed: !!noneAllowed });
@@ -54,9 +56,11 @@ export function ReopenBar(props: ReopenBarProps) {
     reopen: () => (
       <div className={bar}>
         <p>{t.inbox.reopenBar.closed}</p>
-        <Button className="w-full sm:min-h-11" onClick={() => setPicking(true)}>
-          {t.inbox.reopenBar.action}
-        </Button>
+        {canReopen && (
+          <Button className="w-full sm:min-h-11" onClick={() => setPicking(true)}>
+            {t.inbox.reopenBar.action}
+          </Button>
+        )}
       </div>
     ),
   };

@@ -1,5 +1,6 @@
 import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
+import { ReopenPick } from '@/modules/messaging/whatsapp';
 import type { Page } from '@/common/http/http';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { assertPhone, type TeacherScope } from './teacher-scope';
@@ -22,6 +23,9 @@ const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
  */
 @Injectable()
 export class TeacherThreadsService {
+  /** The closed window's reopen bar fields (owner 2026-11-14); absent (unit tests): none. */
+  @Optional() @Inject(ReopenPick) private readonly pick?: ReopenPick;
+
   constructor(
     private readonly queries: ThreadsRepo,
     private readonly teacher: TeacherThreadsRepo,
@@ -50,7 +54,8 @@ export class TeacherThreadsService {
     if (first) await this.teacher.stampRead({ teacherId: scope.teacherId, phone: q.phone, at: now });
     const page = Promise.all([this.queries.thread(q.phone), this.messages.messages(q)]);
     const [row, rows] = await page;
-    const thread = row ? forTeacher(toThreadView(row, now), NO_READS) : null;
+    const view = row ? forTeacher(toThreadView(row, now), NO_READS) : null;
+    const thread = view && this.pick ? await this.pick.thread(view, now) : view;
     const [people, messages, lessons] = await Promise.all([
       first ? this.people(row, scope) : NO_ONE,
       Promise.all(rows.slice(0, q.limit).reverse().map((m) => this.views.view(m))),

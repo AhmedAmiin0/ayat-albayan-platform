@@ -63,7 +63,19 @@ describe('ThreadSendService.template with reopen', () => {
     expect(queued()).not.toHaveProperty('expires_at');
   });
 
-  it('no reopen flag: today\'s send, unchanged', async () => {
+  it('no flag, a chat-line template into a closed window: it takes the reopen key too', async () => {
+    await service().template(ask({ input: { ...input, reopen: undefined } }), NOW);
+    expect(queued()).toMatchObject({ dedup_key: STAMP.dedup });
+  });
+
+  it('no flag and a reopen already live: a plain template send, never a 409', async () => {
+    stamp.mockRejectedValue(new Error('reopen_live'));
+    await service().template(ask({ input: { ...input, reopen: undefined } }), NOW);
+    expect(queued().dedup_key).toBe(`admin:${PHONE}:${REQ}`);
+  });
+
+  it('no flag, a notifications-line template: plain, no stamp', async () => {
+    templates.approved.mockResolvedValue(tpl({ line: 'notifications' }));
     await service().template(ask({ input: { ...input, reopen: undefined } }), NOW);
     expect(stamp).not.toHaveBeenCalled();
   });
