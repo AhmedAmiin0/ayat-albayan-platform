@@ -1,5 +1,5 @@
 import type { TemplateView } from '@ab/shared';
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/core/lib/i18n/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { plainReminder, thread } from '@/inbox/shared/thread-fixtures';
@@ -65,5 +65,8 @@ test('no template allowed: the help line and no button', async () => {
 test('templates, none on the chat line: why, and no button', async () => {
   await show([plainReminder]);
   expect(await screen.findByText(t.inbox.reopenBar.closed)).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.inbox.reopenBar.action })).toBeNull();
+  // The button waits for the list: gone once it loads with nothing on the chat line.
+  await waitFor(() =>
+    expect(screen.queryByRole('button', { name: t.inbox.reopenBar.action })).toBeNull(),
+  );
 });
