@@ -18,7 +18,7 @@ export type PaymentLinkStatus = (typeof PAYMENT_LINK_STATUSES)[number];
  * Migration 20261115000100 holds the same list in payment_links_currency_check.
  */
 export const PAYMENT_LINK_CURRENCIES = ['SAR', 'AED', 'QAR', 'USD'] as const;
-export type PaymentLinkCurrency = (typeof PAYMENT_LINK_CURRENCIES)[number];
+type PaymentLinkCurrency =(typeof PAYMENT_LINK_CURRENCIES)[number];
 const linkCurrencySchema = z.enum(PAYMENT_LINK_CURRENCIES);
 
 /** Whether a payment link can be made in this package currency. */
