@@ -1,8 +1,8 @@
 import { ACCOUNT_CODE_TEMPLATE, restrictedMay, type ThreadTemplate, type ThreadText } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
-import { templateStamp } from '@/modules/messaging/whatsapp';
+import { ReopenPick, templateStamp } from '@/modules/messaging/whatsapp';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
@@ -11,6 +11,7 @@ import { ThreadQuotes, type ReplyFields, type SendFrom } from '@/modules/messagi
 import { missingParams, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { assertRepliesToOriginal, CorrectionRepo, correctionOf, withSameRequest } from './correction';
+import { reopenStamp } from './reopen-send';
 
 export { chatLine, sendLine } from './text-line';
 
@@ -26,10 +27,6 @@ export interface ThreadSend<T> {
   restricted?: boolean;
   /** «إعادة توجيه»: the message this copy was forwarded from (messages.forwarded_from_id). */
   forwardedFrom?: string;
-  /** A server-made idempotency key (the reopen request's `reopen:<phone>:<day>`) instead of the client's request id. */
-  dedup?: string;
-  /** A server-made send that must not go out late (the reopen template: 24 h). */
-  expiresAt?: string;
   role?: string | null; // the sender's base role («تعديل»: an admin corrects anyone's text)
 }
 
@@ -40,7 +37,6 @@ export interface ThreadSend<T> {
  * phone, or by another teacher, is a new send, never the first family's row.
  */
 export function dedupKey<T>(s: ThreadSend<T>): string {
-  if (s.dedup) return s.dedup;
   if (!s.input.clientRequestId) throw waHttpError('missing_client_request_id', 400);
   const who = s.sales ? `sales:${s.sales.salesId}` : s.scope ? `teacher:${s.scope.teacherId}` : 'admin';
   return `${who}:${s.phone}:${s.input.clientRequestId}`;
@@ -77,6 +73,7 @@ export async function replyOf(
 export class ThreadSendService {
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes; // «رد» (the constructor is full)
   @Inject(CorrectionRepo) private readonly corrections?: CorrectionRepo; // «تعديل» = a correction
+  @Optional() @Inject(ReopenPick) private readonly reopens?: ReopenPick; // «إعادة فتح المحادثة»
 
   constructor(
     private readonly queries: ThreadsRepo,
@@ -109,9 +106,10 @@ export class ThreadSendService {
    * A restricted role (teacher, sales, any role without templates.send_all) sends only the allow-list
    * (owner 2026-10-12): 403 template_not_allowed for any other. The sender picks the template's own
    * line at claim (docs/12 §13.3); a chat-line starter is stamped chat now (templateStamp), so the
-   * chat lane sends it before the chat's next text (docs/42 42-7).
+   * chat lane sends it before the chat's next text (docs/42 42-7). `reopen` in a closed window: the
+   * staff-picked reopen template (ReopenPick: the window hold's `reopen:` key, so no second one).
    */
-  async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
+  async template(s: ThreadSend<ThreadTemplate>, now = new Date()): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
     const key = dedupKey(s);
     // Its link is signed per lesson and student by «ابعت طلب الرأي» (FeedbackModule); a hand-made button is a dead link.
@@ -129,14 +127,16 @@ export class ThreadSendService {
     const missing = missingParams(template, s.input.params);
     if (missing.length) throw waHttpError('missing_params', 400, { missing });
     const thread = await this.queries.thread(s.phone);
+    const ask = { phone: s.phone, input: s.input, template, thread, now };
+    const reopen = await reopenStamp(this.reopens, ask);
     return this.outbox.queue({
       ...outboundBase(s, thread),
-      dedup_key: key,
+      dedup_key: reopen?.dedup ?? key,
       template_key: s.input.key,
       template_params: s.input.params,
       lesson_id: s.input.lessonId ?? null,
       ...templateStamp(template),
-      ...(s.expiresAt ? { expires_at: s.expiresAt } : {}),
+      ...(reopen ? { expires_at: reopen.expiresAt } : {}),
     });
   }
 

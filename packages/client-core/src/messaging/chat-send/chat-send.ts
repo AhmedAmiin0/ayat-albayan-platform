@@ -20,12 +20,3 @@ export function staffMaySend(chat: ChatSendState, staff: boolean): boolean {
 export function triesAfterWindow(chat: ChatSendState, staff: boolean): boolean {
   return !chat.open && staffMaySend(chat, staff);
 }
-
-/** The composer's after-the-window note per the admin's choice (owner 2026-11-06). */
-const AFTER_WINDOW_NOTE = { template: 'tryAfterWindow', wait: 'tryAfterWindowWait' } as const;
-export type AfterWindowNote = (typeof AFTER_WINDOW_NOTE)[keyof typeof AFTER_WINDOW_NOTE];
-
-/** ThreadView.reopen_choice → its note's key; absent (an older API) reads as the template. */
-export function afterWindowNote(choice: 'template' | 'wait' | undefined): AfterWindowNote {
-  return AFTER_WINDOW_NOTE[choice ?? 'template'];
-}

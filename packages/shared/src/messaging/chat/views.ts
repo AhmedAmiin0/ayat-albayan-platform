@@ -4,12 +4,13 @@ import type { ReplyQuote } from '../replies/reply-forward.js';
 import type { MessageReactions } from '../reactions/reactions.js';
 import type { MessageMarks, ThreadNote } from '../markers/marker-notes.js';
 import type { TemplatedMessage } from '../templates/template-block.js';
+import type { ReopenFields } from './thread-reopen.js';
 import type { TemplateParams } from '../templates/templates.js';
 import type { FamilyRingField, SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
 // Phase 4 responses (docs/12 §4): snake_case rows like every API response; instants ISO-8601 UTC.
 /** GET /threads item: one v_threads row plus the 24 h window at response time. */
-export interface ThreadView extends ThreadNote, FamilyRingField {
+export interface ThreadView extends ThreadNote, FamilyRingField, ReopenFields {
   phone_e164: string;
   /** Guardian name ?? lead name ?? teacher name; null = an unknown number (show the phone). */
   display_name: string | null;
@@ -36,9 +37,6 @@ export interface ThreadView extends ThreadNote, FamilyRingField {
   teacher_name: string | null;
   /** sessionWindowOpen(last_inbound_at, now): free text allowed, else a template (or a try). */
   session_open: boolean;
-  /** Kapso chat line: after the window a staff text is held; reopen_choice: what asks a reply. */
-  try_after_window?: boolean;
-  reopen_choice?: 'template' | 'wait';
   /** subscriptionBadge(the guardian's students) === 'subscribed': the «مشترك» tag. */
   subscribed: boolean;
   /** Family subscriptionBadge, null without a guardian: «اشتراكه خلص» and «مشترك». Absent in an old cache. */

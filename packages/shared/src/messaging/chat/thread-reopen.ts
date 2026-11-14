@@ -1,3 +1,4 @@
+import type { MessageStatus } from '@ab/catalog';
 import { localDate } from '../lesson/timing.day-before.js';
 
 // «إعادة فتح المحادثة»: the starter template that reopens WhatsApp's 24 h window. Owner 2026-11-07
@@ -85,3 +86,23 @@ const HOLD_FAILURES: ReadonlySet<string> = new Set([
 
 export const isHoldFailure = (code: string | null | undefined): boolean =>
   HOLD_FAILURES.has(code ?? '');
+
+// Owner 2026-11-14 («reopen the conversation like Kapso»): staff pick the template themselves.
+
+/** The reopen template live for a phone (pending or sent, not yet answered): the bar's tick. */
+export interface ReopenSent {
+  id: string;
+  template_key: string;
+  status: MessageStatus;
+}
+
+/** ThreadView's reopen fields (a closed window on the chat line). */
+export interface ReopenFields {
+  /** Kapso chat line: after the window a staff text is held; reopen_choice: what asks a reply. */
+  try_after_window?: boolean;
+  reopen_choice?: 'template' | 'wait';
+  /** Thread page, window closed: the reopen template live for this phone; absent/null = none. */
+  reopen_sent?: ReopenSent | null;
+  /** The academy's `chat_reopen_template` (the picker's preselected key); absent = none set. */
+  reopen_template?: string;
+}
