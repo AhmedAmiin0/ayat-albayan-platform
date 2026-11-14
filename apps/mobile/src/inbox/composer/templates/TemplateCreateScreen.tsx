@@ -13,7 +13,7 @@ import { Button } from '@/core/ui/primitives/Button';
 import {
   authorPayload, BodyFields, ButtonsField, CategoryPicker, DraftPreview, EMPTY_DRAFT,
   useTemplateDraft,
-} from '@/more/templates/form';
+} from '@/inbox/composer/templates/form';
 import { templateApi, templateErrorText, useTemplateSave } from './templates-api';
 
 const dailyLimit = () => t.templates.author.dailyLimit.replace('{max}', String(AUTHOR_DAILY_LIMIT));

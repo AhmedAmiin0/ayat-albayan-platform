@@ -1,1 +1,1 @@
-export { TemplateCreateScreen as default } from '@/more';
+export { TemplateCreateScreen as default } from '@/inbox';

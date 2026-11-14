@@ -12,7 +12,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { Button } from '@/core/ui/primitives/Button';
 import {
   BodyFields, ButtonsField, DraftPreview, draftOf, editPayload, EditRules, useTemplateDraft,
-} from '@/more/templates/form';
+} from '@/inbox/composer/templates/form';
 import {
   templateApi, templateErrorText, useTemplateList, useTemplateMode, useTemplateSave,
 } from './templates-api';

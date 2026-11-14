@@ -1,6 +1,6 @@
 import type { AuthorTemplate } from '@ab/client-core';
 import { previewParams } from '@ab/client-core';
-import { TemplatePreview } from '@/inbox';
+import { TemplatePreview } from '@/inbox/composer/TemplatePreview';
 import { type Draft, previewView } from './draft-input';
 
 /** The live WhatsApp-like bubble under the form: the samples fill the variables. */

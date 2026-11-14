@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { TemplateEditScreen } from '@/more';
+import { TemplateEditScreen } from '@/inbox';
 
 export default function TemplateEditRoute() {
   const { key } = useLocalSearchParams<{ key: string }>();
