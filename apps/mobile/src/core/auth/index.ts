@@ -1,13 +1,14 @@
-export { TeacherCodeSignIn, useStaffCodes } from './code';
-export { AuthAlert, ForgotPassword } from './forgot';
+export { CodeSignIn, TeacherCodeSignIn, useStaffCodes } from './code';
+export { AuthAlert, authApi, ForgotPassword } from './forgot';
 export { AccountSetupScreen, useNeedsSetup } from './setup';
+export { PasswordSignIn } from './kit/PasswordSignIn';
+export { SignInFrame } from './kit/SignInFrame';
+export { SignOutButton } from './kit/SignOutButton';
 export {
   isAccountDisabled,
   isOtherAppRole,
   type LoginNotice,
   noticeText,
-  setLoginNotice,
-  useLoginNotice,
 } from './login-notice';
 export {
   allowedRows,
@@ -19,7 +20,7 @@ export {
 } from './route-permissions';
 export { retryGate } from './gate-retry';
 export { RootGateProvider, useRootGate } from './root-gate';
-export { type Credentials, signIn, type SignInResult } from './sign-in';
+export type { Credentials, SignInResult } from './sign-in';
 export {
   type GateStatus,
   movesGate,

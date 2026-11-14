@@ -1,3 +1,9 @@
+import {
+  CODE_STATUS_KEY,
+  CODE_STATUS_STALE_MS,
+  codesOpen,
+  type CodesSide,
+} from '@ab/client-core';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { t } from '@/lib/i18n/i18n';
@@ -5,28 +11,17 @@ import { authApi } from './auth-api';
 
 /** GET /auth/code/status (docs/30 §4); a failed call counts as «not available». */
 const codeStatusQuery = queryOptions({
-  queryKey: ['auth', 'code-status'],
+  queryKey: CODE_STATUS_KEY,
   queryFn: () => authApi.codeStatus(),
   retry: false,
-  staleTime: 60_000,
+  staleTime: CODE_STATUS_STALE_MS,
 });
-
-/**
- * family = `available` (the family flag too); staff = `staff` (teacher codes, staff reset: docs/46
- * A1).
- */
-export type CodesSide = 'family' | 'staff';
-
-const OPEN: Record<CodesSide, (s: { available: boolean; staff: boolean }) => boolean> = {
-  family: (s) => s.available,
-  staff: (s) => s.staff,
-};
 
 /** Can this side's codes be sent now? undefined while the status loads. */
 export function useCodesOpen(side: CodesSide): boolean | undefined {
   const status = useQuery(codeStatusQuery);
   if (status.isPending) return undefined;
-  return status.data ? OPEN[side](status.data) : false;
+  return codesOpen(status.data, side);
 }
 
 interface Props {

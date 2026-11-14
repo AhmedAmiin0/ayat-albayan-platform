@@ -1,14 +1,31 @@
+import { type AppKind, appKind } from '@/core/lib/app-kind';
+
 /**
- * Who may use the app, each with their own tree (R-AUTH-01): admins the admin tabs, teachers the
- * teacher tabs, the salesperson (base role sales, «المبيعات») the sales tabs and the classroom
+ * Who may use the staff app, each with their own tree (R-AUTH-01): admins the admin tabs, teachers
+ * the teacher tabs, the salesperson (base role sales, «المبيعات») the sales tabs and the classroom
  * assistant («مساعد حلقة») the assistant tabs (owner 2026-10-12, docs/16 «Mobile»).
  */
-export const APP_ROLES = ['admin', 'teacher', 'sales', 'assistant'] as const;
+const STAFF_ROLES = ['admin', 'teacher', 'sales', 'assistant'] as const;
 
-export type AppRole = (typeof APP_ROLES)[number];
+/** Who may use the family app (docs/50 §7): a guardian, or a student who signs in themselves. */
+const FAMILY_ROLES = ['guardian', 'student'] as const;
 
+export type StaffRole = (typeof STAFF_ROLES)[number];
+export type FamilyRole = (typeof FAMILY_ROLES)[number];
+export type AppRole = StaffRole | FamilyRole;
+
+const ROLES_OF: Record<AppKind, readonly AppRole[]> = { staff: STAFF_ROLES, family: FAMILY_ROLES };
+/** The roles that have an account but belong to the other app («wrongApp»). */
+const OTHERS_OF: Record<AppKind, readonly AppRole[]> = { staff: FAMILY_ROLES, family: STAFF_ROLES };
+
+/** The role when it has a tree in THIS app, else null. */
 export function appRole(role: unknown): AppRole | null {
-  return APP_ROLES.find((r) => r === role) ?? null;
+  return ROLES_OF[appKind()].find((r) => r === role) ?? null;
+}
+
+/** A real role of the other app: the sign-in says so instead of «لم يُفعَّل حسابك». */
+export function isOtherAppRole(role: unknown): boolean {
+  return OTHERS_OF[appKind()].some((r) => r === role);
 }
 
 /**

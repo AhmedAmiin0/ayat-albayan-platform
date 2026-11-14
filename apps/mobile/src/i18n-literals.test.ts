@@ -2,7 +2,8 @@ import { arabicLiterals } from '@ab/shared';
 import allow from './i18n-literals.allow.json';
 
 // «Nothing untranslated» (owner, 2026-10-05): no Arabic in string literals or JSX text of the
-// app's screens and components (src/ and the expo-router app/). Copy lives in ar.json / en.json.
+// app's screens and components (src/ and the expo-router roots app/ and app-family/). Copy lives
+// in ar.json / en.json.
 // A justified exception goes in i18n-literals.allow.json with its reason.
 
 interface Dirent {
@@ -26,7 +27,8 @@ function tsxFiles(dir: string): string[] {
 }
 
 const allowed = new Set(Object.keys(allow.files));
-const files = [...tsxFiles('src'), ...tsxFiles('app')].filter((f) => !allowed.has(f));
+const roots = ['src', 'app', 'app-family'];
+const files = roots.flatMap(tsxFiles).filter((f) => !allowed.has(f));
 
 describe('no hard-coded Arabic in apps/mobile', () => {
   it('scans the screens and components', () => {

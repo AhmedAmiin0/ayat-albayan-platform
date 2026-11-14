@@ -30,3 +30,23 @@ export async function putPushToken(token: string): Promise<void> {
   await AsyncStorage.setItem(TOKEN_KEY, token);
   if (res?.deviceKey) await AsyncStorage.setItem(DEVICE_KEY, res.deviceKey);
 }
+
+// «الإشعارات على هذا الجهاز» (docs/50 §6, the family app's settings): off keeps this device out of
+// pushes until it is switched on again, across restarts. The staff app never sets it.
+
+export const PUSH_OPT_OUT_KEY = 'push.optOut';
+
+/** Has the person switched pushes off on this device? Unreadable storage counts as «on». */
+export async function pushOptedOut(): Promise<boolean> {
+  return (await AsyncStorage.getItem(PUSH_OPT_OUT_KEY).catch(() => null)) === '1';
+}
+
+const WRITE: Record<'on' | 'off', () => Promise<void>> = {
+  on: () => AsyncStorage.removeItem(PUSH_OPT_OUT_KEY),
+  off: () => AsyncStorage.setItem(PUSH_OPT_OUT_KEY, '1'),
+};
+
+/** Remembers the switch (registerPush then skips this device while it is off). */
+export function setPushOptOut(off: boolean): Promise<void> {
+  return WRITE[off ? 'off' : 'on']();
+}

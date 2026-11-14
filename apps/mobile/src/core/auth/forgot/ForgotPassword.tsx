@@ -4,18 +4,26 @@ import { AppText } from '@/core/ui/primitives/AppText';
 import { Button } from '@/core/ui/primitives/Button';
 import { Field } from '@/core/ui/form/Field';
 import { AuthAlert } from './AuthAlert';
+import { AuthHint } from './AuthHint';
 import { ForgotCodeStep } from './ForgotCodeStep';
+import { type ForgotMode, forgotWords } from './forgot-words';
 import { type Forgot, useForgot } from './use-forgot';
 
-function IdentifierStep({ forgot }: { forgot: Forgot }) {
+interface StepProps {
+  forgot: Forgot;
+  mode: ForgotMode;
+}
+
+function IdentifierStep({ forgot, mode }: StepProps) {
   const { color } = useTheme();
+  const words = forgotWords(mode);
   return (
     <>
       <AppText style={{ fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 }}>
-        {t.familyAuth.forgotIntro}
+        {words.intro}
       </AppText>
       <Field
-        label={t.familyAuth.identifier}
+        label={words.label}
         ltr
         autoCapitalize="none"
         autoCorrect={false}
@@ -23,6 +31,7 @@ function IdentifierStep({ forgot }: { forgot: Forgot }) {
         value={forgot.identifier}
         onChangeText={forgot.setIdentifier}
       />
+      {words.hint ? <AuthHint text={words.hint} /> : null}
       {forgot.error ? <AuthAlert text={forgot.error} /> : null}
       <Button
         label={forgot.busy ? t.familyAuth.sending : t.familyAuth.sendCode}
@@ -34,27 +43,34 @@ function IdentifierStep({ forgot }: { forgot: Forgot }) {
   );
 }
 
-function Step({ forgot }: { forgot: Forgot }) {
-  if (forgot.step === 'unavailable') return <AuthAlert text={t.familyAuth.staffResetByAdmin} />;
-  if (forgot.step === 'identifier') return <IdentifierStep forgot={forgot} />;
+function Step({ forgot, mode }: StepProps) {
+  if (forgot.step === 'unavailable') return <AuthAlert text={forgotWords(mode).unavailable} />;
+  if (forgot.step === 'identifier') return <IdentifierStep forgot={forgot} mode={mode} />;
   if (forgot.step === 'code') return <ForgotCodeStep forgot={forgot} />;
   if (forgot.step === 'done') return <AuthAlert tone="ok" text={t.familyAuth.passwordSaved} />;
   return <AppText>{t.common.loading}</AppText>;
 }
 
-/** «نسيت كلمة المرور؟» inside the login screen (docs/30 §7); `onBack` returns to the sign-in form. */
-export function ForgotPassword({ onBack }: { onBack: () => void }) {
+interface ForgotPasswordProps {
+  /** Returns to the sign-in form. */
+  onBack: () => void;
+  /** The staff app's reset (default), the family's, or a student's «أول دخول؟» (docs/50 §6). */
+  mode?: ForgotMode;
+}
+
+/** «نسيت كلمة المرور؟» / «أول دخول؟» inside a login screen (docs/30 §7). */
+export function ForgotPassword({ onBack, mode = 'staff' }: ForgotPasswordProps) {
   const { color } = useTheme();
-  const forgot = useForgot();
+  const forgot = useForgot(forgotWords(mode).side);
   return (
     <>
       <AppText
         accessibilityRole="header"
         style={{ fontFamily: type.ui[600], fontSize: type.size.h3, lineHeight: type.lineHeight(type.size.h3, true), color: color.ink }}
       >
-        {t.familyAuth.forgotTitle}
+        {forgotWords(mode).title}
       </AppText>
-      <Step forgot={forgot} />
+      <Step forgot={forgot} mode={mode} />
       <Button
         variant={forgot.step === 'done' ? 'primary' : 'ghost'}
         label={t.familyAuth.backToLogin}
