@@ -1,10 +1,20 @@
-import { reopenTick, windowBar, type WindowBar } from '@ab/client-core';
+import {
+  carriesText,
+  messageTemplate,
+  reopenTick,
+  windowBar,
+  type WindowBar,
+} from '@ab/client-core';
 import type { MessageStatus, MessageView, ThreadView } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useApprovedTemplates } from '@/inbox/composer/TemplatePicker';
 import { threadKey, threadMessages, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
+import { useComposerDraft } from '@/inbox/composer/draft-store';
 import { audienceOf, reopenAllowed } from './reopen-choices';
+
+/** Which sheet is open: «إعادة فتح المحادثة», «أرسِل الآن داخل قالب», or none. */
+export type Picking = 'reopen' | 'carry' | null;
 
 interface ReopenBarState {
   /** null: no thread yet (a new chat keeps its first-template row). */
@@ -13,9 +23,13 @@ interface ReopenBarState {
   tick: MessageStatus | null;
   /** A chat-line template this user may send exists (the button shows). */
   canReopen: boolean;
-  /** The reopen sheet is open. */
-  picking: boolean;
-  setPicking: (next: boolean) => void;
+  /** «أرسِل الآن داخل قالب» (owner 2026-11-14): a draft, and academy_message usable here. */
+  carrying: boolean;
+  /** The chat's unsent draft (the box), carried into academy_message's {{1}}. */
+  draft: string;
+  /** The reopen sheet is open: the plain reopen, or carrying the draft. */
+  picking: Picking;
+  setPicking: (next: Picking) => void;
 }
 
 interface ReopenBarInput {
@@ -32,7 +46,8 @@ interface ReopenBarInput {
  */
 export function useReopenBar({ phone, thread, open, teacher }: ReopenBarInput): ReopenBarState {
   const client = useQueryClient();
-  const [picking, setPicking] = useState(false);
+  const [picking, setPicking] = useState<Picking>(null);
+  const draft = useComposerDraft(phone);
   const templates = useApprovedTemplates(thread !== null && !open);
   const choices = reopenAllowed(templates.data, teacher, thread?.reopen_template);
   // None at all for this audience: the help line. Some, none on the chat line: no button.
@@ -40,7 +55,9 @@ export function useReopenBar({ phone, thread, open, teacher }: ReopenBarInput): 
   const canReopen = !templates.isSuccess || choices.list.length > 0;
   const messages = threadMessages(client.getQueryData<ThreadCache>(threadKey(phone)));
   const bar = barOf({ thread, open, noneAllowed }, messages);
-  return { ...bar, canReopen, picking, setPicking };
+  const template = messageTemplate(audienceOf(templates.data, teacher));
+  const carrying = bar.bar !== null && carriesText({ bar: bar.bar, draft, template });
+  return { ...bar, canReopen, carrying, draft, picking, setPicking };
 }
 
 type BarFields = Pick<ReopenBarState, 'bar' | 'tick'>;

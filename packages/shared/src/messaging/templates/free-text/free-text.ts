@@ -67,6 +67,31 @@ export function sendableFreeText(body: string, slot: BodySlot, text: string): st
   return capText(normaliseTemplateParam(text), freeTextRoom(body, slot));
 }
 
+/** The template parts the clients' send needs: its key (free text?) and body (the room). */
+export interface SendableTemplate {
+  key: string;
+  body_ar: string;
+}
+
+/** One body value as the clients send it: normalised; a free-text slot also cut to fit. */
+export function sendableParam(tpl: SendableTemplate, slot: BodySlot, raw: string): string {
+  const free = freeTextSlot(tpl.key) === slot;
+  return free ? sendableFreeText(tpl.body_ar, slot, raw) : normaliseTemplateParam(raw);
+}
+
+/** Every body value of `params` as sent (sendableParam); the button and payloads untouched. */
+export function sendableTemplateParams<T extends TemplateParams>(
+  tpl: SendableTemplate,
+  params: T,
+): T {
+  const out: T = { ...params };
+  for (const slot of BODY_SLOTS) {
+    const value = params[slot];
+    if (value !== undefined) out[slot] = sendableParam(tpl, slot, value);
+  }
+  return out;
+}
+
 /** Why the API refuses these params for this body (400), or null when Meta takes them. */
 export type TemplateParamProblem = 'param_not_normalised' | 'body_too_long';
 

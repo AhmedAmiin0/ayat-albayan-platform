@@ -34,7 +34,8 @@ export interface ReopenPick {
   initial: TemplateView | null;
   /** «أرسِل الآن داخل قالب» (2026-11-14): the draft in the free-text slot, over the prefill. */
   values?: ParamValues;
-  onSent: () => void;
+  /** The sent template's key. */
+  onSent: (key: string) => void;
 }
 
 /**
@@ -77,7 +78,7 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
     onSuccess: async (view, sent, start) => {
       settleOwnSend(sent.phone, view.id, start);
       pick('');
-      reopen?.onSent();
+      reopen?.onSent(sent.key);
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
   });

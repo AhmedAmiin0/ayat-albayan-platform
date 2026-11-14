@@ -1,10 +1,12 @@
 import {
   BODY_SLOTS,
+  freeTextSlot,
   lessonParams,
   LESSON_TIME_PARAMS,
   needsLesson,
   prefillParams,
   renderTemplateBody,
+  sendableTemplateParams,
   type BodySlot,
   type TemplateParamsInput,
   type TemplateView,
@@ -20,6 +22,7 @@ import { Field } from '@/core/ui/form/Field';
 import { FilterPills } from '@/core/ui/form/FilterPills';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { TemplatePreview } from './TemplatePreview';
+import { FreeTextField } from '@/inbox/composer/free-text/FreeTextField';
 import type { Outgoing } from '@/inbox/thread/hooks/use-thread';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
 
@@ -34,6 +37,8 @@ interface TemplateFormProps {
   contactName?: string | null;
   onBack: () => void;
   onSend: (out: Outgoing) => void;
+  /** «أرسِل الآن داخل قالب» (owner 2026-11-14): the draft in the free-text slot, over the prefill. */
+  initial?: TemplateParamsInput | undefined;
 }
 
 /**
@@ -41,14 +46,21 @@ interface TemplateFormProps {
  * lesson picked (rule 6: never typed, and in the recipient's tz), which also fills the names and
  * the meeting code. The meeting code when it has a link button, and the live preview.
  */
-export function TemplateForm({ template, lessons, contactName, onBack, onSend }: TemplateFormProps) {
+export function TemplateForm(props: TemplateFormProps) {
+  const { template, lessons, contactName, onBack, onSend } = props;
   const cycle = useClockCycle();
-  const [params, setParams] = useState<TemplateParamsInput>(() => prefillParams(template, { contactName }));
+  const [params, setParams] = useState<TemplateParamsInput>(() => ({
+    ...prefillParams(template, { contactName }),
+    ...props.initial,
+  }));
   const [lessonId, setLessonId] = useState('');
   const [missing, setMissing] = useState(false);
   const positions = POSITIONS.slice(0, template.params.length);
   const withButton = template.buttons.some((b) => b.type === 'url');
   const withLesson = needsLesson(template.params);
+  // Meta 132018: normalised (one line, single spaces), a free text also cut to fit (free-text.ts).
+  const sendable = sendableTemplateParams(template, params);
+  const free = freeTextSlot(template.key);
   const set = (key: Position | 'button', value: string) => setParams((p) => ({ ...p, [key]: value }));
   const pick = (id: string) => {
     const lesson = lessons.find((l) => l.id === id);
@@ -58,7 +70,7 @@ export function TemplateForm({ template, lessons, contactName, onBack, onSend }:
 
   const send = () => {
     const filled = positions.every((n) => params[n]?.trim()) && (!withButton || params.button?.trim());
-    const parsed = threadTemplateSchema.safeParse({ key: template.key, params });
+    const parsed = threadTemplateSchema.safeParse({ key: template.key, params: sendable });
     if (!filled || !parsed.success || (withLesson && !lessonId)) return setMissing(true);
     const { key, params: clean } = parsed.data;
     // The thread row shows what the API stores for a template row: the rendered body, no footer.
@@ -80,6 +92,11 @@ export function TemplateForm({ template, lessons, contactName, onBack, onSend }:
       ) : null}
       {positions.map((n, i) => {
         const name = template.params[i] ?? '';
+        if (n === free) {
+          const value = params[n] ?? '';
+          const body = template.body_ar;
+          return <FreeTextField key={n} {...{ body, slot: n, value }} onChange={(v) => set(n, v)} />;
+        }
         return (
           <Field
             key={n}
@@ -99,7 +116,7 @@ export function TemplateForm({ template, lessons, contactName, onBack, onSend }:
           onChangeText={(v) => set('button', v)}
         />
       ) : null}
-      <TemplatePreview template={template} params={params} />
+      <TemplatePreview template={template} params={sendable} />
       {missing ? <ErrorLine message={withLesson && !lessonId ? t.inbox.composer.pickLesson : t.common.required} /> : null}
       <ButtonRow>
         <Button label={t.inbox.composer.send} onPress={send} />

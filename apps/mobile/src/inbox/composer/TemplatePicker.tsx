@@ -1,4 +1,9 @@
-import { RATING_TEMPLATE, type TemplateView, type ThreadLesson } from '@ab/shared';
+import {
+  RATING_TEMPLATE,
+  type TemplateParamsInput,
+  type TemplateView,
+  type ThreadLesson,
+} from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Modal } from 'react-native';
@@ -39,7 +44,7 @@ interface TemplatePickerProps {
   onClose: () => void;
   onSend: (out: Outgoing) => void;
   /** «إعادة فتح المحادثة»: chat-line templates only, opened on the academy's (owner 2026-11-14). */
-  reopen?: { preferred: string | undefined };
+  reopen?: { preferred: string | undefined; values?: TemplateParamsInput | undefined };
 }
 
 /**
@@ -74,6 +79,7 @@ export function TemplatePicker(props: TemplatePickerProps) {
             template={chosen}
             lessons={props.lessons}
             contactName={props.contactName}
+            initial={chosen.key === reopen?.preferred ? reopen.values : undefined}
             onBack={() => setChosen(null)}
             onSend={(out) => {
               setChosen(null);

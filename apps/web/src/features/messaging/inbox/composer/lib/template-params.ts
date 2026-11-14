@@ -2,8 +2,7 @@ import {
   BODY_SLOTS,
   forAudience as audienceOf,
   freeTextSlot,
-  normaliseTemplateParam,
-  sendableFreeText,
+  sendableParam,
   lessonParams,
   LESSON_TIME_PARAMS,
   prefillParams as prefillTemplateParams,
@@ -69,20 +68,11 @@ export function missingParams(tpl: Pick<TemplateView, 'params' | 'buttons'>, val
 
 type SendShape = Pick<TemplateView, 'key' | 'body_ar' | 'params' | 'buttons'>;
 
-/**
- * A slot's value as it is sent (Meta 132018, owner 2026-11-14): normalised (no newline, tab or run
- * of spaces); a free-text slot («نص الرسالة») is also cut so the whole body stays within the limit.
- */
-function sendValue(tpl: SendShape, slot: ParamSlot, raw: string): string {
-  const free = freeTextSlot(tpl.key) === slot;
-  return free ? sendableFreeText(tpl.body_ar, slot, raw) : normaliseTemplateParam(raw);
-}
-
 /** The request's `params` (and the preview's): sendable values of the template's own slots. */
 export function toParamsInput(tpl: SendShape, values: ParamValues): TemplateParamsInput {
   const out: TemplateParamsInput = {};
   for (const { slot } of paramFields(tpl)) {
-    const value = sendValue(tpl, slot, values[slot] ?? '');
+    const value = sendableParam(tpl, slot, values[slot] ?? '');
     if (value) out[slot] = value;
   }
   const button = values.button?.trim();

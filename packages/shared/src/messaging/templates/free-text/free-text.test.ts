@@ -8,6 +8,7 @@ import {
   normaliseTemplateParam,
   normaliseTemplateParams,
   sendableFreeText,
+  sendableTemplateParams,
   templateParamProblem,
 } from './free-text.js';
 
@@ -88,5 +89,20 @@ describe('freeTextSlot', () => {
   it('knows academy_message carries the text in {{1}}', () => {
     expect(freeTextSlot('academy_message')).toBe('1');
     expect(freeTextSlot('welcome_greeting')).toBeNull();
+  });
+});
+
+describe('sendableTemplateParams (web and mobile send)', () => {
+  it('cuts the free-text slot to fit and normalises every other value', () => {
+    const tpl = { key: 'academy_message', body_ar: BODY };
+    const out = sendableTemplateParams(tpl, { '1': `أ\n${'ب'.repeat(2000)}`, button: 'x  y' });
+    expect(out['1']).toHaveLength(freeTextRoom(BODY, '1'));
+    expect(out['1'].startsWith('أ · ب')).toBe(true);
+    expect(out.button).toBe('x  y');
+  });
+
+  it('another template: normalised, not cut', () => {
+    const out = sendableTemplateParams({ key: 'welcome_greeting', body_ar: '{{1}}' }, { '1': 'أ\tب' });
+    expect(out).toEqual({ '1': 'أ ب' });
   });
 });

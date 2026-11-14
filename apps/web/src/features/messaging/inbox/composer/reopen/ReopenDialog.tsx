@@ -36,8 +36,9 @@ export function ReopenDialog({ thread, context, teacher, onClose, carry }: Reope
   const choices = reopenChoices(allowed, preferred);
   const slot = freeTextSlot(MESSAGE_TEMPLATE);
   const values = carry && slot && messageTemplate(allowed) ? { [slot]: carry.text } : {};
-  const onSent = () => {
-    carry?.onSent();
+  const onSent = (key: string) => {
+    // The draft went inside academy_message: cleared, never also held (another pick keeps it).
+    if (key === MESSAGE_TEMPLATE) carry?.onSent();
     onClose();
   };
   const reopen = { ...choices, values, onSent };
