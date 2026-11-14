@@ -97,7 +97,7 @@ test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)',
       .toContainEqual(expect.objectContaining({ template_key: 'booking_confirmation', status: 'queued' }));
 
     // «جدولي» shows the lesson at the new time, with nothing left waiting.
-    const mine = await openMyLesson(teacher, { name: /ريم/, at: movedTo });
+    const mine = await openMyLesson(teacher, { name: /ريم/, at: movedTo, last: true });
     const moved = mine.getByRole('article', { name: new RegExp(`^${cairoClock(movedTo)} ريم`) });
     await expect(moved).toBeVisible();
     await expect(teacher.getByText(waiting)).toHaveCount(0);

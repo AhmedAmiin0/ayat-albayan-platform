@@ -16,14 +16,22 @@ function saturdayOf(at: Date): number {
 /** Whole weeks from this week to `at`'s (0 = this week). */
 const weeksAhead = (at: Date) => Math.round((saturdayOf(at) - saturdayOf(new Date())) / (7 * DAY));
 
+interface MyLesson {
+  /** Her student's name on the chip. */
+  name: RegExp;
+  at: Date;
+  /** The week's last chip of that name (e.g. the moved lesson after its old, rescheduled one). */
+  last?: boolean;
+}
+
 /** Opens her lesson on `at` (its student's name in `name`) and returns its drawer. */
-export async function openMyLesson(page: Page, o: { name: RegExp; at: Date }): Promise<Locator> {
+export async function openMyLesson(page: Page, o: MyLesson): Promise<Locator> {
   await page.goto('/teacher/calendar');
   await expect(page.getByRole('group', { name: ar.booking.weekNav })).toBeVisible();
   for (let i = 0; i < weeksAhead(o.at); i += 1) {
     await page.getByRole('button', { name: ar.schedule.nextWeek }).click();
   }
-  await page.getByRole('button', { name: o.name }).first().click();
+  await page.getByRole('button', { name: o.name }).nth(o.last ? -1 : 0).click();
   return page.getByRole('dialog', { name: o.name });
 }
 

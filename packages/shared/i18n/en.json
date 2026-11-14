@@ -4672,10 +4672,7 @@
     "nextLesson": "Your next lesson: {when} · {names}",
     "noneSoon": "No lessons in the next two weeks",
     "openSchedule": "Open my schedule",
-    "noOther": "No other lessons today",
-    "pendingTitle": "Reports not written yet · {n}",
-    "pendingMore": "Show the rest ({n})",
-    "pendingError": "Could not load the pending reports"
+    "noOther": "No other lessons today"
   },
   "live": {
     "now": "Live now"
