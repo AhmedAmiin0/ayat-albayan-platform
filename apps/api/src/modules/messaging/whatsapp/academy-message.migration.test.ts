@@ -6,10 +6,10 @@ import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // Owner 2026-11-14 («a template that carries your text»). No database runs in unit tests: this
 // pins the migration's shape.
-const sql = readFileSync(join(MIGRATIONS_DIR, '20261114000100_academy_message_allowed.sql'), 'utf8');
+const sql = readFileSync(join(MIGRATIONS_DIR, '20261114000200_academy_message_allowed.sql'), 'utf8');
 const code = sql.replace(/--[^\n]*/g, '');
 
-describe('migration 20261114000100: academy_message on the allow-list', () => {
+describe('migration 20261114000200: academy_message on the allow-list', () => {
   it('is one of the restricted defaults the chat import flags', () => {
     expect(RESTRICTED_TEMPLATE_DEFAULTS).toContain('academy_message');
   });
