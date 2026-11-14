@@ -19,7 +19,7 @@ import { clearInboxOnSignOut, StaffCalls } from '@/inbox';
  * (tabs), teachers /teacher (a real segment: no URL shared with the admin's), sales /sales, the
  * classroom assistant /assistant, everyone else /login. Each tree's chat group
  * (react-native-screens#4132, no URL segment) sits in its guard, after it. Stack.Protected moves it
- * on a gate flip; screens read useRootGate. The family app has its own root (app-family/, docs/50).
+ * on a gate flip; screens read useRootGate. The family app is apps/family (docs/50).
  */
 export default function RootLayout() {
   const gate = useAuthGate();

@@ -727,7 +727,7 @@ Derived by `node docs/design/brand/tools/build.mjs` (no dependencies: a node:zli
 | `apps/mobile/assets/icon.png` | 1024² app icon: emblem on brand paper, opaque (iOS refuses alpha) |
 | `apps/mobile/assets/android-icon-foreground.png` / `-background.png` / `-monochrome.png` | Adaptive icon: the emblem at 50% (inside the 66dp safe circle) over solid paper; the monochrome is its line art for Android 13 themed icons |
 | `apps/mobile/assets/splash-icon.png` | The emblem on transparency, 1024², for the splash on `#FDF8F0` |
-| `apps/mobile/assets/brand/mark.png`, `mark-small.png` | What the RN `<Mark>` shows |
+| `packages/mobile-kit/assets/brand/mark.png`, `mark-small.png` | What the RN `<Mark>` shows (both apps, @ab/mobile-kit) |
 
 Use:
 

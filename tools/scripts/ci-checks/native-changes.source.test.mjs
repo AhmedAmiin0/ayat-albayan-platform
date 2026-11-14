@@ -25,7 +25,7 @@ test('package.json "expo" (autolinking buildFromSource) is native', () => {
   assert.deepEqual(nativeChanges(after, after), []);
 });
 
-test('APP_DIR picks the Expo app compared: the family app (docs/50 §7) has its own assets and plugins', async () => {
+test('APP_DIR picks the Expo app compared: the family app has its plugins, and its icons are mobile\'s', async () => {
   const prior = process.env.APP_DIR;
   process.env.APP_DIR = 'apps/family';
   try {
@@ -34,6 +34,8 @@ test('APP_DIR picks the Expo app compared: the family app (docs/50 §7) has its 
     assert.deepEqual(family.nativeChanges(snap(), snap(), { files }), [
       'apps/family/assets/icon.png changed',
       'apps/family/plugins/x.ts changed',
+      // apps/family/app.json's icon, adaptive icon and splash are apps/mobile/assets files.
+      'apps/mobile/assets/icon.png changed',
     ]);
   } finally {
     if (prior === undefined) delete process.env.APP_DIR;

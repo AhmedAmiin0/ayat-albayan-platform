@@ -8,6 +8,7 @@ import { parse } from 'yaml';
 
 const load = (f) =>
   parse(readFileSync(fileURLToPath(new URL(`../../../.github/workflows/${f}`, import.meta.url)), 'utf8'));
+const read = (f) => readFileSync(fileURLToPath(new URL(`../../../${f}`, import.meta.url)), 'utf8');
 const mobile = load('mobile.yml');
 const ci = load('ci.yml');
 const deploy = load('deploy-staging.yml');
@@ -36,12 +37,14 @@ test('eas init links or creates the family EAS project before every EAS call, an
     assert.ok(link > 0 && link < eas, job);
     const s = mobile.jobs[job].steps[link];
     assert.deepEqual([s.if, s['working-directory']], ["${{ inputs.app == 'family' }}", 'apps/family']);
-    assert.match(s.run, /npx --yes "\$EAS_CLI" init --non-interactive --force/);
-    assert.match(s.run, /grep -oE "\$uuid"/);
-    assert.match(s.run, /exit 1\n/);
-    assert.match(s.run, /FAMILY_EAS_PROJECT_ID=\$ids" >> "\$GITHUB_ENV"/);
-    assert.match(s.run, />> "\$GITHUB_STEP_SUMMARY"/);
+    assert.equal(s.run, 'bash ../../tools/scripts/ci-checks/eas-init-family.sh');
   }
+  const sh = read('tools/scripts/ci-checks/eas-init-family.sh');
+  assert.match(sh, /npx --yes "\$EAS_CLI" init --non-interactive --force/);
+  assert.match(sh, /grep -oE "\$uuid"/);
+  assert.match(sh, /exit 1\n/);
+  assert.match(sh, /FAMILY_EAS_PROJECT_ID=\$ids" >> "\$GITHUB_ENV"/);
+  assert.match(sh, />> "\$GITHUB_STEP_SUMMARY"/);
 });
 
 test('the family OTA goes to its own channel preview, without the staff app Stripe flag or Firebase secret', () => {

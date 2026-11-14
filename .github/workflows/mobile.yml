@@ -86,31 +86,13 @@ jobs:
       # `eas build` loads the app config, which resolves the config plugins (expo-router ...) from
       # node_modules: without the install it fails «Failed to resolve plugin for module "expo-router"» (run 39154529791).
       - run: pnpm i --frozen-lockfile
-      # The family app's EAS project (owner `holdmycup`, slug ayat-albayan-family): `eas init --force` links it, or
-      # creates it on the first run. Its app.config.ts is dynamic, so eas init cannot write the id there: it prints
-      # it (and may exit non-zero). The id goes to FAMILY_EAS_PROJECT_ID for the next steps (app.config.ts reads it)
-      # and to the run summary (not a secret) for the owner to keep (docs/50 §8).
+      # The family app's EAS project: linked or created, its id exported (eas-init-family.sh).
       - name: Link the family EAS project (eas init)
         if: ${{ inputs.app == 'family' }}
         working-directory: apps/family
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: |
-          test -n "$EXPO_TOKEN" || { echo "::error::add the secret EXPO_TOKEN to the environment mobile"; exit 1; }
-          rc=0
-          npx --yes "$EAS_CLI" init --non-interactive --force > "$RUNNER_TEMP/eas-init.log" 2>&1 || rc=$?
-          cat "$RUNNER_TEMP/eas-init.log"
-          uuid='[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'
-          ids=$(grep -oE "$uuid" "$RUNNER_TEMP/eas-init.log" | tr 'A-F' 'a-f' | sort -u || true)
-          if [ -z "$ids" ] || [ "$(wc -l <<< "$ids")" != 1 ]; then
-            echo "::error::eas init (exit $rc) printed no single project id (${ids:-none}): see above"
-            exit 1
-          fi
-          echo "FAMILY_EAS_PROJECT_ID=$ids" >> "$GITHUB_ENV"
-          {
-            echo "### Family EAS project @holdmycup/ayat-albayan-family"
-            echo "FAMILY_EAS_PROJECT_ID=\`$ids\` (eas init exit $rc). Keep it as docs/50 §8 says."
-          } >> "$GITHUB_STEP_SUMMARY"
+        run: bash ../../tools/scripts/ci-checks/eas-init-family.sh
       - name: EAS build (Android APK of the chosen profile, built on Expo's servers)
         id: eas
         working-directory: ${{ env.APP_DIR }}
@@ -162,31 +144,13 @@ jobs:
         if: ${{ inputs.app != 'family' }}
       - run: pnpm --filter "family^..." build
         if: ${{ inputs.app == 'family' }}
-      # The family app's EAS project (owner `holdmycup`, slug ayat-albayan-family): `eas init --force` links it, or
-      # creates it on the first run. Its app.config.ts is dynamic, so eas init cannot write the id there: it prints
-      # it (and may exit non-zero). The id goes to FAMILY_EAS_PROJECT_ID for the next steps (app.config.ts reads it)
-      # and to the run summary (not a secret) for the owner to keep (docs/50 §8).
+      # The family app's EAS project: linked or created, its id exported (eas-init-family.sh).
       - name: Link the family EAS project (eas init)
         if: ${{ inputs.app == 'family' }}
         working-directory: apps/family
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: |
-          test -n "$EXPO_TOKEN" || { echo "::error::add the secret EXPO_TOKEN to the environment mobile"; exit 1; }
-          rc=0
-          npx --yes "$EAS_CLI" init --non-interactive --force > "$RUNNER_TEMP/eas-init.log" 2>&1 || rc=$?
-          cat "$RUNNER_TEMP/eas-init.log"
-          uuid='[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'
-          ids=$(grep -oE "$uuid" "$RUNNER_TEMP/eas-init.log" | tr 'A-F' 'a-f' | sort -u || true)
-          if [ -z "$ids" ] || [ "$(wc -l <<< "$ids")" != 1 ]; then
-            echo "::error::eas init (exit $rc) printed no single project id (${ids:-none}): see above"
-            exit 1
-          fi
-          echo "FAMILY_EAS_PROJECT_ID=$ids" >> "$GITHUB_ENV"
-          {
-            echo "### Family EAS project @holdmycup/ayat-albayan-family"
-            echo "FAMILY_EAS_PROJECT_ID=\`$ids\` (eas init exit $rc). Keep it as docs/50 §8 says."
-          } >> "$GITHUB_STEP_SUMMARY"
+        run: bash ../../tools/scripts/ci-checks/eas-init-family.sh
       # APP_DIR (workflow env) tells native-changes.mjs which app to compare; the last build is that app's own.
       - name: Native-change guard (OTA = JavaScript only)
         working-directory: ${{ env.APP_DIR }}
