@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import {
   AUTHOR_DAILY_LIMIT, type TemplateAuthorInput, type TemplateEditInput, type TemplateView,
 } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { templateProblem } from '@/modules/messaging/whatsapp/template-review';
 import { requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
@@ -31,10 +31,10 @@ const listed = (userId: string) => (t: TemplateView): boolean =>
 @Injectable()
 export class TemplateAuthor {
   constructor(
-    private readonly queries: TemplatesRepo,
-    private readonly own: TemplateAuthorRepo,
-    private readonly audit: AuditService,
-    private readonly editor: TemplateEditor,
+    @Inject(TemplatesRepo) private readonly queries: TemplatesRepo,
+    @Inject(TemplateAuthorRepo) private readonly own: TemplateAuthorRepo,
+    @Inject(AuditService) private readonly audit: AuditService,
+    @Inject(TemplateEditor) private readonly editor: TemplateEditor,
   ) {}
 
   async list(userId: string): Promise<TemplateView[]> {

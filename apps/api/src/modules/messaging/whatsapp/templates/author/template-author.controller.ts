@@ -1,9 +1,9 @@
 import {
   templateAuthorSchema, templateEditSchema, templateKeyParam, type TemplateView,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Patch, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Inject, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
@@ -20,7 +20,7 @@ import { TemplateAuthor } from './template-author';
 @Permissions('templates.author')
 @Controller('messaging/templates/authored')
 export class TemplateAuthorController {
-  constructor(private readonly author: TemplateAuthor) {}
+  constructor(@Inject(TemplateAuthor) private readonly author: TemplateAuthor) {}
 
   /** Every status: «قيد المراجعة / معتمد / مرفوض» with Meta's reason (last_error). */
   @Get()

@@ -3,7 +3,7 @@ import {
   templateStarterSchema, type TemplateMoveView, type TemplateNumberSetView, type TemplateView,
 } from '@ab/shared';
 import { templateEditSchema, templateKeyParam } from '@ab/shared';
-import { Controller, HttpCode, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
+import { Controller, HttpCode, Inject, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -29,7 +29,7 @@ export class TemplateEditsController {
     private readonly admin: TemplateAdmin,
     private readonly numbers: TemplateNumbers,
     private readonly starters: TemplateStarters,
-    private readonly editor: TemplateEditor,
+    @Inject(TemplateEditor) private readonly editor: TemplateEditor,
   ) {}
 
   /** «تعديل»: body, footer, buttons (Meta's edit rules; a code-bound one: words only); audited. */

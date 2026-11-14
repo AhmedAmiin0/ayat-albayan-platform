@@ -33,10 +33,10 @@ export class TemplateEditor {
   private readonly log = new Logger(TemplateEditor.name);
 
   constructor(
-    private readonly queries: TemplatesRepo,
+    @Inject(TemplatesRepo) private readonly queries: TemplatesRepo,
     @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,
-    private readonly audit: AuditService,
-    private readonly verifier: TemplateVerifier,
+    @Inject(AuditService) private readonly audit: AuditService,
+    @Inject(TemplateVerifier) private readonly verifier: TemplateVerifier,
   ) {}
 
   async edit(key: string, input: TemplateEditInput, actor: EditActor): Promise<TemplateView> {
