@@ -1,4 +1,4 @@
-import type { Permission, PushKind } from '@ab/catalog';
+import type { AnyPushKind, Permission } from '@ab/catalog';
 
 /** What every bell row needs: the staff member reads their own notifications (R-NOT-01). */
 const BELL: readonly Permission[] = ['notifications.push'];
@@ -8,12 +8,14 @@ const INBOX: readonly Permission[] = ['notifications.push', 'inbox.read'];
 const SETTINGS: readonly Permission[] = ['notifications.push', 'settings.read'];
 /** «محفظتي»'s own news: for who may read their own earnings (the salesperson). */
 const EARNINGS: readonly Permission[] = ['notifications.push', 'self.sales_earnings'];
+/** The family app's own kinds (docs/50 §5.6): a guardian or student login, never staff. */
+const FAMILY: readonly Permission[] = ['notifications.push', 'self.portal'];
 
 /**
  * The permissions a profile must hold, at send time, to get a notification of each kind (bell row,
  * browser and app alike). PushService checks them against the profile's effective permissions.
  */
-export const PUSH_KIND_PERMISSIONS: Readonly<Record<PushKind, readonly Permission[]>> = {
+export const PUSH_KIND_PERMISSIONS: Readonly<Record<AnyPushKind, readonly Permission[]>> = {
   new_lead: INBOX,
   new_message: INBOX,
   reminder_failed: INBOX,
@@ -32,9 +34,12 @@ export const PUSH_KIND_PERMISSIONS: Readonly<Record<PushKind, readonly Permissio
   course_resumed: BELL,
   // Owner 2026-11-05: a payment came in (the admins and the student's assistant).
   payment_received: BELL,
+  // docs/50 §5.6: a lesson's join window opened; its report was sent to the family.
+  lesson_starting: FAMILY,
+  report_sent: FAMILY,
 };
 
 /** May a profile holding `held` be told about `kind`? */
-export function mayReceivePush(kind: PushKind, held: readonly string[]): boolean {
+export function mayReceivePush(kind: AnyPushKind, held: readonly string[]): boolean {
   return PUSH_KIND_PERMISSIONS[kind].every((p) => held.includes(p));
 }

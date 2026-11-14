@@ -1,4 +1,4 @@
-import type { PushKind } from '@ab/catalog';
+import type { AnyPushKind } from '@ab/catalog';
 import type { TemplateKey } from '../../messaging/templates/templates.js';
 import type { SettingKey } from '@ab/settings';
 import type { CatalogueSettings } from './catalogue-settings.js';
@@ -30,7 +30,7 @@ export interface NotificationEntry<K extends string = string> {
   /** The message_templates keys it may send (a variant is picked in code, e.g. by link host). */
   templates: readonly TemplateKey[];
   /** The bell / push kind it writes (push_notifications.kind). */
-  pushKind?: PushKind;
+  pushKind?: AnyPushKind;
   /** Governed by «الرسائل التلقائية» (settings.auto_messages_enabled). */
   automatic: boolean;
   /** Sent only when a person presses a button: listed, never switched. */

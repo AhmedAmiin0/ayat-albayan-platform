@@ -1,4 +1,4 @@
-import { HOME_BY_ROLE, PUSH_KINDS, type PushKind, type UserRole } from '@ab/catalog';
+import { ALL_PUSH_KINDS, HOME_BY_ROLE, type AnyPushKind, type UserRole } from '@ab/catalog';
 import { E164_RE } from '@ab/core';
 import { OPEN_COURSE } from './course-notice.js';
 
@@ -48,7 +48,7 @@ const MEETINGS: Record<Area, string> = {
 const lessonPath = (area: Area, data: Data): string =>
   area === 'teacher' ? '/teacher/calendar' : student(area, data);
 
-const ROUTES: Record<PushKind, (area: Area, data: Data) => string> = {
+const ROUTES: Record<AnyPushKind, (area: Area, data: Data) => string> = {
   new_lead: inbox,
   new_message: inbox,
   reminder_failed: inbox,
@@ -77,6 +77,10 @@ const ROUTES: Record<PushKind, (area: Area, data: Data) => string> = {
   course_resumed: lessonPath,
   // A payment came in (owner 2026-11-05): the student (their balance).
   payment_received: student,
+  // The family app's kinds (docs/50 §5.6) reach only portal logins (their home, '/portal'); a
+  // staff area never gets them, so it opens its home.
+  lesson_starting: (area) => HOME_BY_ROLE[area],
+  report_sent: (area) => HOME_BY_ROLE[area],
 };
 
 /** «احجز أيام الحلقات» (owner 2026-11-06): the family chat, wizard open; else the student. */
@@ -93,16 +97,17 @@ const isArea = (role: UserRole | null): role is Area =>
   role === 'admin' || role === 'teacher' || role === 'sales' || role === 'assistant';
 
 /** The kind a row's data names, or null. */
-export function notificationKind(data: Data): PushKind | null {
+export function notificationKind(data: Data): AnyPushKind | null {
   const kind = field(data, 'kind');
-  return PUSH_KINDS.find((k) => k === kind) ?? null;
+  return ALL_PUSH_KINDS.find((k) => k === kind) ?? null;
 }
 
 /**
  * The web path a bell row opens for the signed-in base role: admin kinds as the app's push map
  * (inbox ?phone=, /admin, the student), new_student → the teacher's calendar (the student for
  * admins), meeting_invite → /meeting/$id (the meetings list without a valid id). A non-staff role
- * or an unknown kind → the role's home ('/' when signed out).
+ * (a family login: '/portal', where lesson_starting and report_sent land) or an unknown kind → the
+ * role's home ('/' when signed out).
  */
 export function webNotificationPath(data: Data, role: UserRole | null): string {
   if (!isArea(role)) return role ? HOME_BY_ROLE[role] : '/';

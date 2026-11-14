@@ -4,13 +4,18 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { AppModule } from '@/app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
+import type { PermissionResolver } from '@/common/auth/permissions';
 import { NotificationsRepo } from '@/common/push/notifications.repo';
 
 const USERS: Record<string, AuthUser> = {
   assistant: { id: '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'assistant', sessionId: 'sess-1' },
   noSession: { id: '2b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'assistant' },
   student: { id: '3b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'student' },
+  // A custom role whose grants leave out notifications.push.
+  noBell: { id: '4b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'assistant' },
 };
+const resolver: PermissionResolver = async (u) =>
+  u.id === USERS.noBell?.id ? ['self.assistant'] : systemResolver(u);
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
@@ -26,7 +31,7 @@ describe('/me/web-push (R-NOT-02)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(NotificationsRepo).useValue(q)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -70,8 +75,12 @@ describe('/me/web-push (R-NOT-02)', () => {
     expect((await call({ method: 'DELETE', url: '/me/web-push' })).statusCode).toBe(400);
   });
 
-  it('403 without notifications.push', async () => {
-    expect((await call({ method: 'GET', url: '/me/web-push/key', token: 'student' })).statusCode).toBe(403);
-    expect((await call({ method: 'PUT', url: '/me/web-push', token: 'student', payload: SUB })).statusCode).toBe(403);
+  it('403 without notifications.push (a custom role)', async () => {
+    expect((await call({ method: 'GET', url: '/me/web-push/key', token: 'noBell' })).statusCode).toBe(403);
+    expect((await call({ method: 'PUT', url: '/me/web-push', token: 'noBell', payload: SUB })).statusCode).toBe(403);
+  });
+
+  it('a student login registers its browser (the portal roles’ fixed grant, docs/50 §5.6)', async () => {
+    expect((await call({ method: 'GET', url: '/me/web-push/key', token: 'student' })).statusCode).toBe(200);
   });
 });

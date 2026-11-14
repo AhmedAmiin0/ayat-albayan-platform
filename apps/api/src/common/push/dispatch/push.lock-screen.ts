@@ -1,4 +1,4 @@
-import type { PushKind } from '@ab/shared';
+import type { AnyPushKind } from '@ab/shared';
 import { pushText, type PushText } from '@/common/push/expo/expo-push';
 
 // What a device shows on its lock screen (owner 2026-10-25): no more personal data than the alert
@@ -53,7 +53,7 @@ function lockVar(key: string, value: string | number): string | number {
 }
 
 /** The device text of a notification: names cut to a first name, phones/sums/emails masked. */
-export function lockScreenText(input: { kind: PushKind; vars: Record<string, string | number>; title?: string | undefined }): PushText {
+export function lockScreenText(input: { kind: AnyPushKind; vars: Record<string, string | number>; title?: string | undefined }): PushText {
   const vars = Object.fromEntries(Object.entries(input.vars).map(([k, v]) => [k, lockVar(k, v)]));
   const text = pushText(input.kind, vars);
   return { title: input.title ? redact(input.title) : text.title, body: text.body };

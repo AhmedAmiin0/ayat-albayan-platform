@@ -25,7 +25,12 @@ const enabled = (profiles: FakeProfile[]) => ({
 });
 
 /** A push_device_sessions row (migration 700). */
-type FakeBinding = { token: string; profile_id: string; session_id: string; contested_at?: string | null };
+type FakeBinding = {
+  token: string;
+  profile_id: string;
+  session_id: string;
+  contested_at?: string | null;
+};
 
 interface FakePushOptions {
   /** Every upsert hits an existing dedup key. */
@@ -36,7 +41,22 @@ interface FakePushOptions {
   bindings?: FakeBinding[];
   /** Sessions push_live_sessions answers as live; default ['live']. */
   live?: string[];
+  /** students rows by login (contact_is_self: an adult student reads as a family). */
+  students?: FakeStudent[];
 }
+
+interface FakeStudent {
+  profile_id: string;
+  contact_is_self: boolean;
+}
+
+/** students .in('profile_id', ids).eq('contact_is_self', v). */
+const studentsIn = (rows: FakeStudent[], ids: string[]) => ({
+  eq: async (_c: string, v: boolean) => ({
+    data: rows.filter((s) => ids.includes(s.profile_id) && s.contact_is_self === v),
+    error: null,
+  }),
+});
 
 /**
  * A minimal supabase-js double: profiles select (eq role / in ids, then .is('disabled_at', null)),
@@ -44,17 +64,29 @@ interface FakePushOptions {
  */
 export function fakePushDb(profiles: FakeProfile[], opts: FakePushOptions = {}) {
   const writes: { table: string; op: string; value: unknown }[] = [];
-  const bindings = opts.bindings ?? profiles.flatMap((p) => p.push_tokens.map((token) => ({ token, profile_id: p.id, session_id: 'live' })));
+  const bindings =
+    opts.bindings ??
+    profiles.flatMap((p) =>
+      p.push_tokens.map((token) => ({ token, profile_id: p.id, session_id: 'live' })),
+    );
   const live = opts.live ?? ['live'];
   const keys = new Set<string | undefined>();
-  const rpc = vi.fn(async (_fn: string, args: { p_ids: string[] }) => ({ data: args.p_ids.filter((id) => live.includes(id)), error: null }));
+  const rpc = vi.fn(async (_fn: string, args: { p_ids: string[] }) => ({
+    data: args.p_ids.filter((id) => live.includes(id)),
+    error: null,
+  }));
+  const profilesIn = (ids: string[]) => enabled(profiles.filter((p) => ids.includes(p.id)));
+  const inBy: Record<string, (ids: string[]) => unknown> = {
+    students: (ids) => studentsIn(opts.students ?? [], ids),
+    push_device_sessions: async (ids) => ({
+      data: bindings.filter((b) => ids.includes(b.token)),
+      error: null,
+    }),
+  };
   const from = vi.fn((table: string) => ({
     select: () => ({
       eq: (_c: string, role: string) => enabled(profiles.filter((p) => p.role === role)),
-      in: (_c: string, ids: string[]) =>
-        table === 'push_device_sessions'
-          ? Promise.resolve({ data: bindings.filter((b) => ids.includes(b.token)), error: null })
-          : enabled(profiles.filter((p) => ids.includes(p.id))),
+      in: (_c: string, ids: string[]) => (inBy[table] ?? profilesIn)(ids),
     }),
     upsert: (value: { dedup_key?: string }) => {
       const repeat = opts.duplicate === true || (opts.dedup === true && keys.has(value.dedup_key));
@@ -64,7 +96,10 @@ export function fakePushDb(profiles: FakeProfile[], opts: FakePushOptions = {}) 
       return { select: async () => ({ data, error: null }) };
     },
     delete: () => ({
-      in: async (_c: string, value: unknown) => (writes.push({ table, op: 'delete', value }), { error: null }),
+      in: async (_c: string, value: unknown) => (
+        writes.push({ table, op: 'delete', value }),
+        { error: null }
+      ),
     }),
     update: (value: unknown) => {
       writes.push({ table, op: 'update', value });
@@ -74,7 +109,15 @@ export function fakePushDb(profiles: FakeProfile[], opts: FakePushOptions = {}) 
   return { db: { from, rpc } as unknown as Db, writes, rpc };
 }
 
-export const okTickets = (n: number): ExpoTicket[] => Array.from({ length: n }, (_, i) => ({ status: 'ok', id: `t${i}` }));
+export const okTickets = (n: number): ExpoTicket[] =>
+  Array.from({ length: n }, (_, i) => ({ status: 'ok', id: `t${i}` }));
+
+/** An Expo transport answering ok; `devices()`: every token it was asked to push to, in order. */
+export function fakeExpo() {
+  const transport = vi.fn<PushTransport>(async (m) => okTickets(m.length));
+  const devices = () => transport.mock.calls.flatMap(([m]) => m.map((x) => x.to));
+  return { transport, devices };
+}
 
 export function fakeWeb() {
   const send = vi.fn(async () => 0);
@@ -84,14 +127,23 @@ export function fakeWeb() {
 /** A PushService over the fakes; the system roles' permissions unless `resolve` says otherwise. */
 export function pushService(
   db: Db,
-  opts: { transport?: PushTransport; web?: WebPushSender; resolve?: PermissionResolver; policy?: NotificationPolicy } = {},
+  opts: {
+    transport?: PushTransport;
+    web?: WebPushSender;
+    resolve?: PermissionResolver;
+    policy?: NotificationPolicy;
+  } = {},
 ): PushService {
   const channels = new PushChannels(
     db,
     opts.transport ?? vi.fn<PushTransport>(),
     opts.web ?? fakeWeb().web,
   );
-  return new PushService(db, new PushAudience(db, opts.resolve ?? systemResolver, opts.policy ?? fakePolicy()), channels);
+  return new PushService(
+    db,
+    new PushAudience(db, opts.resolve ?? systemResolver, opts.policy ?? fakePolicy()),
+    channels,
+  );
 }
 
 /** The browser and app pushes run after notify*() returns (off the request path): let them finish. */

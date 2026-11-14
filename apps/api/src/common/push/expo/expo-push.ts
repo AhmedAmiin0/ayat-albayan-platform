@@ -1,4 +1,4 @@
-import { type PushKind, wakesInbox } from '@ab/shared';
+import { type AnyPushKind, wakesInbox } from '@ab/shared';
 import { z } from 'zod';
 import { ar } from '@/common/infra/i18n/server-text';
 import { fill } from '@/modules/reporting/report-pdf/render/pdf-text';
@@ -19,7 +19,7 @@ export interface PushText {
 /** Slots a push may leave out. */
 const OPTIONAL: Record<string, string> = { reason: '' };
 
-export function pushText(kind: PushKind, vars: Record<string, string | number>): PushText {
+export function pushText(kind: AnyPushKind, vars: Record<string, string | number>): PushText {
   const t = ar.notifications[kind];
   // An optional slot (a teacher's cancel reason): absent → nothing, never a literal «{reason}».
   const all = { ...OPTIONAL, ...vars };
