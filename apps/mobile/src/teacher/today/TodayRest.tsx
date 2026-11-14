@@ -11,6 +11,8 @@ export interface RowHandlers {
   onOpen: (lesson: LessonView) => void;
   onReport: (lessonId: string) => void;
   onNotice: (text: string) => void;
+  /** «صفوف مضغوطة» (owner 2026-11-14). */
+  compact?: boolean;
 }
 
 interface TodayRestProps {

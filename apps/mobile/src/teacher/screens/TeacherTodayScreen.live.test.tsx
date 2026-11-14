@@ -13,6 +13,12 @@ jest.mock('@/core/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), navigate: jest.fn() } }));
 jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
+// «تنبيهات اليوم» adds a second observer of the bell's polled query, which trips @sinonjs fake
+// timers' interval bookkeeping here; its own tests cover it (teacher/alerts).
+jest.mock('@/teacher/alerts', () => ({
+  ...jest.requireActual('@/teacher/alerts'),
+  TodayAlerts: () => null,
+}));
 let mockFocused = true;
 jest.mock('@/core/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
 

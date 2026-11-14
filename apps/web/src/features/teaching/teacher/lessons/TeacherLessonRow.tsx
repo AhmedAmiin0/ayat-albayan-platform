@@ -1,3 +1,4 @@
+import type { Density } from '@ab/client-core';
 import { clockOf, type LessonView, subscriptionStatusStyle } from '@ab/shared';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { LessonTags, studentNames, studentTimes } from '@/features/teaching/schedule';
@@ -18,14 +19,22 @@ export interface TeacherLessonRowProps {
   onDone: (message: string) => void;
   /** An ended row in «انتهت n حلقات اليوم»: muted, its report lead only (owner 2026-11-14). */
   ended?: boolean;
+  /** «صفوف مضغوطة» (owner 2026-11-14): tighter, without the students' own clocks. */
+  density?: Density;
 }
+
+/** The row and its open button, and whether the students' clocks show (still a 44px target). */
+const DENSITY: Record<Density, { row: string; open: string; times: boolean }> = {
+  comfortable: { row: 'py-1.5', open: 'min-h-12', times: true },
+  compact: { row: 'py-0.5', open: 'min-h-11', times: false },
+};
 
 /** An ended row never offers the join; its report stays (no pending block on the home). */
 const endedLead = (lead: string | null) => (lead === 'report' ? lead : null);
 
-const ROW = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-1.5';
+const ROW = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule';
 const OPEN =
-  'flex min-h-12 min-w-0 flex-[1_1_16rem] items-center gap-3 rounded-md px-1 text-start ' +
+  'flex min-w-0 flex-[1_1_16rem] items-center gap-3 rounded-md px-1 text-start ' +
   'transition-colors hover:bg-sunk';
 
 /**
@@ -34,6 +43,7 @@ const OPEN =
  */
 export function TeacherLessonRow(props: TeacherLessonRowProps) {
   const { lesson, tz, onOpen, onDone, ended = false } = props;
+  const d = DENSITY[props.density ?? 'comfortable'];
   const clock = useClock();
   const plan = useTeacherPlan(lesson);
   const status = useLessonStatusText().chip(lesson.status);
@@ -42,19 +52,19 @@ export function TeacherLessonRow(props: TeacherLessonRowProps) {
   const lead = ended ? endedLead(plan.lead) : plan.lead;
   const look = { filled: lead === 'join', size: 'md' } as const;
   return (
-    <li className={cn(ROW, ended && 'text-ink-2')}>
+    <li className={cn(ROW, d.row, ended && 'text-ink-2')}>
       <button
         type="button"
         aria-label={t.lessons.sheet.openRow.replace('{names}', names)}
         onClick={() => onOpen(lesson.id)}
-        className={OPEN}
+        className={cn(OPEN, d.open)}
       >
         <span dir={clockDir(clock)} className="shrink-0 font-semibold tabular-nums">
           {clockOf(new Date(lesson.starts_at), { tz, ...clock })}
         </span>
         <span className="grid min-w-0 flex-1 gap-0.5">
           <span className="truncate font-semibold">{names}</span>
-          {studentTimes(lesson, tz, clock).map((line) => (
+          {d.times && studentTimes(lesson, tz, clock).map((line) => (
             <span key={line} className="text-xs text-ink-2">{line}</span>
           ))}
           <span className="flex flex-wrap items-center gap-1.5">

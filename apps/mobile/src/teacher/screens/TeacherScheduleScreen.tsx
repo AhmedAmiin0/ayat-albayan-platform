@@ -1,100 +1,57 @@
-import { RIYADH_TZ } from '@ab/shared';
-import { FlatList } from 'react-native';
-import { agendaDays, availabilityLine, headerLine } from '@/calendar/agenda/agenda';
-import { AgendaDayView } from '@/calendar/agenda/AgendaDayView';
-import { LessonDetailsSheet } from '@/calendar/details/LessonDetailsSheet';
-import { useLessonDetails } from '@/calendar/details/use-lesson-details';
-import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
-import { PeriodSwitcher } from '@/calendar/overview/PeriodSwitcher';
-import { addDays, viewerToday, weekLabel, weekStart, weekWindow } from '@/calendar';
+import { router } from 'expo-router';
+import { type ReactNode, useState } from 'react';
+import { View } from 'react-native';
 import { t } from '@/core/lib/i18n/i18n';
-import { useFollowingDay } from '@/core/lib/time/use-following-day';
-import { Note } from '@/core/ui/feedback/Note';
-import { useNow } from '@/core/lib/time/use-now';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Screen } from '@/core/ui/layout/Screen';
 import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { useMyAvailability, useMyLessons, useTeacherMe } from '@/teacher/lib/queries';
-import { TeacherLessonTools, useTimedNotice } from '@/teacher/lesson-actions';
-import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
-import { usePullRefresh } from '@/core/lib/query/pull-refresh';
-import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
-import { Notice } from '@/today';
+import { PillButton } from '@/core/ui/primitives/PillButton';
+import { ScheduleMonth } from '@/teacher/schedule/ScheduleMonth';
+import { ScheduleWeek } from '@/teacher/schedule/ScheduleWeek';
 
-/** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so the row's action is idle. */
-const noMove = () => undefined;
+type Period = 'week' | 'month';
+
+const PERIODS = [
+  { value: 'week' as const, label: t.teacherSchedule.week },
+  { value: 'month' as const, label: t.teacherSchedule.month },
+];
+
+/** «المواعيد المتاحة» lives in «المزيد» (the native tab bar holds five); this is its shortcut. */
+const AVAILABILITY_HREF = '/teacher/more/availability';
+
+const toAvailability = () => router.push(AVAILABILITY_HREF);
+
+type Head = (subtitle: string) => ReactNode;
+const PANES: Record<Period, (head: Head) => ReactNode> = {
+  week: (head) => <ScheduleWeek head={head} />,
+  month: (head) => <ScheduleMonth head={head} />,
+};
 
 /**
- * «جدولي» (R-TCH-03, R-SCH-08): my week السبت → الجمعة from GET /teachers/me/lessons, the same
- * day-by-day agenda as the admin's teacher calendar (my own days and clock, docs/34) with my availability as a faint line. ‹ › moves a week; offline the saved week stays. A tap
- * on a lesson opens «تفاصيل الحلقة» (its students, report state, «ادخل الحلقة», and before it
- * starts «سأحضر» / «إلغاء الحلقة»: docs/46 C7).
+ * «جدولي» (R-TCH-03, R-SCH-08; owner 2026-11-14): «الأسبوع | الشهر». The week is the day-by-day
+ * agenda السبت → الجمعة; the month a Saturday-first grid whose day lists its lessons. Both read
+ * GET /teachers/me/lessons once per shown period, in her own days and clock (docs/34); a lesson
+ * opens «تفاصيل الحلقة» (teacher variant). «المواعيد المتاحة» is one tap away in the header.
  */
 export function TeacherScheduleScreen() {
-  const cycle = useClockCycle();
-  const tz = useViewerTz();
-  // The viewer's days (docs/34): week window, day buckets and clock are one zone.
-  const today = viewerToday(useNow(), tz);
-  const [start, setStart] = useFollowingDay(weekStart(today));
-  const me = useTeacherMe();
-  // docs/48: a 30 s poll while «جدولي» is in front; the spinner only for her own pull.
-  const lessons = useMyLessons(weekWindow(start, tz), useScreenFocused());
-  const grid = useMyAvailability(me.data?.id);
-  const inset = useTabBarInset();
-  const details = useLessonDetails(lessons.data);
-  const notice = useTimedNotice();
-  const pull = usePullRefresh(() => Promise.all([lessons.refetch(), grid.refetch()]));
-  const loaded = lessons.data !== undefined;
-  const days = agendaDays(lessons.data ?? [], start, tz);
-  const empty = days.every((d) => d.lessons.length === 0);
-  const subtitle = headerLine([zoneNote(tz)], lessons, { cycle, tz });
-  return (
-    <Screen list>
-      <ScreenHeader title={t.teacherNav.calendar} subtitle={subtitle} />
-      <PeriodSwitcher
-        label={weekLabel(start)}
-        current={start === weekStart(today)}
-        prevLabel={t.schedule.prevWeek}
-        nextLabel={t.schedule.nextWeek}
-        onPrev={() => setStart(addDays(start, -7))}
-        onNext={() => setStart(addDays(start, 7))}
-        onToday={() => setStart(weekStart(today))}
+  const [period, setPeriod] = useState<Period>('week');
+  const head: Head = (subtitle) => (
+    <>
+      <ScreenHeader
+        title={t.teacherNav.calendar}
+        subtitle={subtitle}
+        trailing={<PillButton label={t.availability.title} onPress={toAvailability} />}
       />
-      <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 + inset }}
-        data={loaded ? days : []}
-        keyExtractor={(day) => day.date}
-        extraData={cycle}
-        ListHeaderComponent={loaded && empty ? <Note>{t.teacherDash.noLessonsWeek}</Note> : null}
-        renderItem={({ item }) => (
-          <AgendaDayView
-            day={item}
-            today={item.date === today}
-            available={availabilityLine(grid.data ?? [], { date: item.date, teacherTz: me.data?.tz ?? RIYADH_TZ, cycle })}
-            onReschedule={noMove}
-            onOpen={details.open}
-          />
-        )}
-        refreshing={pull.refreshing}
-        onRefresh={pull.onRefresh}
-        ListEmptyComponent={
-          lessons.isPending ? <Note>{t.common.loading}</Note> : <ErrorState onRetry={() => void lessons.refetch()} />
-        }
-      />
-      <LessonDetailsSheet
-        lesson={details.lesson}
-        role="teacher"
-        onClose={details.close}
-        actions={(l) => (
-          <>
-            {notice.text ? <Notice message={notice.text} /> : null}
-            <JoinClassroomButton lesson={l} />
-            <TeacherLessonTools lesson={l} onDone={notice.show} />
-          </>
-        )}
-      />
-    </Screen>
+      <View style={{ marginBottom: 8 }}>
+        <FilterPills
+          items={PERIODS}
+          value={period}
+          onChange={setPeriod}
+          accessibilityLabel={t.teacherSchedule.period}
+          role="radiogroup"
+        />
+      </View>
+    </>
   );
+  return <Screen list>{PANES[period](head)}</Screen>;
 }

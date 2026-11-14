@@ -26,7 +26,7 @@ import { TeacherLessonCard } from './TeacherLessonCard';
  * /teacher/calendar «جدولي» (R-TCH-03, R-SCH-08): my lessons on my own week (docs/34), one
  * row, the same grid as the admin's (GET /teachers/me/lessons, own lessons only). A lesson opens
  * my lesson card: join, confirm / attendance, «اقترح ميعاد تاني», the report. `toggle`: the
- * «الحلقات | المواعيد المتاحة» switch in the head (TeacherCalendar).
+ * «الأسبوع | الشهر» switch in the head (TeacherCalendar).
  */
 export function MyWeek({ toggle }: { toggle?: ReactNode }) {
   const now = useNow();

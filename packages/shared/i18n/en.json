@@ -4473,10 +4473,6 @@
     "statements": "Monthly statements",
     "messages": "Student messages"
   },
-  "teacherCalendar": {
-    "views": "My schedule view",
-    "lessons": "Lessons"
-  },
   "teacherBoard": {
     "tab": "My students",
     "kinds": "Student status",
@@ -8474,5 +8470,53 @@
     "addDay": "Add a day",
     "farDay": "Pick the days within one week of the first lesson",
     "removeRow": "Remove day {n}"
+  },
+  "teacherAlerts": {
+    "title": "Today's alerts",
+    "empty": "No alerts today",
+    "soon": "{names}'s lesson {when}",
+    "confirm": "{names} at {time} awaits your confirmation",
+    "cancelledTeacher": "You cancelled {names}'s lesson ({time})",
+    "cancelledAdmin": "The office cancelled {names}'s lesson ({time})",
+    "movedTo": "{names}'s lesson moved from {time} to {to}",
+    "movedAway": "{names}'s lesson ({time}) moved to another time",
+    "movedFrom": "{names} at {time}, moved from {from}",
+    "reason": "Reason: {reason}",
+    "report": {
+      "write": "Write the report for {names}",
+      "resume": "Finish the report for {names}",
+      "window": "{names}'s report can still be edited"
+    },
+    "open": "Open lesson",
+    "markRead": "Mark as read",
+    "customize": "Customize",
+    "customizeTitle": "Customize today",
+    "savedHere": "These choices are saved on this device only.",
+    "alertsGroup": "Alerts",
+    "displayGroup": "Display",
+    "kind": {
+      "soon": "A lesson starting within 15 minutes",
+      "confirm": "Lessons awaiting your confirmation",
+      "changed": "Cancelled or moved lessons",
+      "report": "Reports to write or edit",
+      "bell": "Today's unread notifications"
+    },
+    "ended": "Show ended lessons",
+    "hero": "Show the current lesson card",
+    "compact": "Compact rows",
+    "done": "Done"
+  },
+  "teacherSchedule": {
+    "period": "Period",
+    "week": "Week",
+    "month": "Month",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "thisMonth": "This month",
+    "noLessonsMonth": "No lessons this month",
+    "noLessonsDay": "No lessons on this day",
+    "monthGrid": "Month calendar",
+    "dayCell": "{date}, {count}",
+    "noLessons": "No lessons"
   }
 }

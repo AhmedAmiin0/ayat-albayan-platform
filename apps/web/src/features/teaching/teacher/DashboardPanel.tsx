@@ -1,3 +1,4 @@
+import type { HomePrefs } from '@ab/client-core';
 import type { LessonView, TeacherMe } from '@ab/shared';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
 import { cn } from '@/lib/utils';
@@ -18,6 +19,8 @@ export interface DashboardPanelProps {
   onDone: (message: string) => void;
   /** Opens a lesson in the home's drawer (the «اليوم» rows). */
   onOpen: (lessonId: string) => void;
+  /** «تخصيص»: the hero, the ended fold and the row density. */
+  prefs: Pick<HomePrefs, 'hero' | 'ended' | 'density'>;
 }
 
 /** The teacher home's today list under the hero (owner 2026-11-14: today's lessons only). */

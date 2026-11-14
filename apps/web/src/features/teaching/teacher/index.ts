@@ -10,3 +10,4 @@ export { TeacherPageGate } from './TeacherPageGate';
 export { TeacherDashboard } from './TeacherDashboard';
 export { parseTeacherCalendarSearch } from './calendar-search';
 export { TeacherCalendar } from './TeacherCalendar';
+export { TeacherAvailabilityPage } from './proposals/TeacherAvailabilityPage';

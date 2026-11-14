@@ -20,6 +20,7 @@ import { TeacherLessonDrawer } from './lessons/TeacherLessonDrawer';
 import { homeToday } from './today/home-today';
 import { TodayHero } from './today/TodayHero';
 import { boardWindow } from '@/features/teaching/teacher-board';
+import { TodayAlerts, useHomePrefs } from './alerts';
 
 /** GET /teachers/me refused: teacher_not_linked offers no retry, anything else does. */
 const ME_ERRORS: Partial<Record<string, { text: string; retry: boolean }>> = {
@@ -57,10 +58,11 @@ function MeFallback({ me }: { me: UseQueryResult<TeacherMe> }) {
 }
 
 /**
- * Her home (docs/46 C1, docs/48; owner 2026-11-14: today's lessons only): the hero (the lesson
- * under way or next today), then the rest of today. Her students live on /teacher/students, her
- * availability on «جدولي». One query of the board window (14 days back and ahead, in her zone)
- * feeds both; a lesson opens in one drawer.
+ * Her home (docs/46 C1, docs/48; owner 2026-11-14: today's lessons only, alerts first):
+ * «تنبيهات اليوم», the hero (the lesson under way or next today), then the rest of today.
+ * «تخصيص» hides alert kinds, the hero or the ended lessons and makes the rows compact. Her
+ * students live on /teacher/students, her availability on /teacher/availability. One query of
+ * the board window (14 days back and ahead, in her zone) feeds all; one drawer opens a lesson.
  */
 function Dashboard({ me }: { me: TeacherMe }) {
   const now = useNow();
@@ -69,6 +71,7 @@ function Dashboard({ me }: { me: TeacherMe }) {
   const lessons = useQuery(myLessonsQuery(boardWindow(today, me.tz)));
   const [openId, setOpenId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const prefs = useHomePrefs();
   const { hero } = homeToday(lessons.data, { now, today, tz: me.tz });
   const drawn = { openId, notice, tz: me.tz, fallbackLink: me.meeting_link };
   // The hero waits for the lessons; a failed load still shows her fixed link as on a day with
@@ -80,10 +83,15 @@ function Dashboard({ me }: { me: TeacherMe }) {
   };
   return (
     <>
-      {settled && (
+      {lessons.data && <TodayAlerts lessons={lessons.data} now={now} tz={me.tz} onOpen={onOpen} />}
+      {settled && prefs.hero && (
         <TodayHero hero={hero} me={me} platform={platform} onOpen={onOpen} onDone={setNotice} />
       )}
-      <DashboardPanel {...{ me, lessons }} at={{ now, today }} onDone={setNotice} onOpen={onOpen} />
+      <DashboardPanel
+        {...{ me, lessons, prefs, onOpen }}
+        at={{ now, today }}
+        onDone={setNotice}
+      />
       <TeacherLessonDrawer
         lessons={lessons.data ?? []}
         {...drawn}

@@ -1,3 +1,4 @@
+import { DEFAULT_HOME_PREFS } from '@ab/client-core';
 import type { TeacherMe } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
@@ -30,7 +31,13 @@ const at = { now: new Date('2026-10-03T09:00:00.000Z'), today: '2026-10-03' };
 function renderPanel(lessons: DashboardPanelProps['lessons']) {
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <DashboardPanel me={ME} lessons={lessons} at={at} onDone={vi.fn()} onOpen={vi.fn()} />
+      <DashboardPanel
+        {...{ lessons, at }}
+        me={ME}
+        prefs={DEFAULT_HOME_PREFS}
+        onDone={vi.fn()}
+        onOpen={vi.fn()}
+      />
     </QueryClientProvider>,
   );
 }

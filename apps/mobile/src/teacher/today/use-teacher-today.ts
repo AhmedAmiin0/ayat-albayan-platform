@@ -28,6 +28,7 @@ export function useTeacherToday() {
   const updated = clockAt(ahead.dataUpdatedAt, cycle, tz);
   return {
     now,
+    tz,
     ahead,
     pull,
     day: teacherDay({ lessons: ahead.data, date, tz, now }),

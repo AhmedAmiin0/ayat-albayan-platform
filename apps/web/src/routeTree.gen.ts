@@ -82,6 +82,7 @@ import { Route as AdminSettingsIntegrationsRouteImport } from './routes/admin/se
 import { Route as AdminSettingsValuesRouteImport } from './routes/admin/settings.values'
 import { Route as AdminStudentsStudentIdRouteImport } from './routes/admin/students/$studentId'
 import { Route as AdminTeachersTeacherIdRouteImport } from './routes/admin/teachers/$teacherId'
+import { Route as TeacherAvailabilityIndexRouteImport } from './routes/teacher/availability/index'
 import { Route as TeacherReportLessonIdRouteImport } from './routes/teacher/report.$lessonId'
 import { Route as TeacherReportsIndexRouteImport } from './routes/teacher/reports.index'
 import { Route as TeacherReportsStudentIdRouteImport } from './routes/teacher/reports.$studentId'
@@ -462,6 +463,12 @@ const AdminTeachersTeacherIdRoute = AdminTeachersTeacherIdRouteImport.update({
   path: '/$teacherId',
   getParentRoute: () => AdminTeachersRouteRoute,
 } as any)
+const TeacherAvailabilityIndexRoute =
+  TeacherAvailabilityIndexRouteImport.update({
+    id: '/availability/',
+    path: '/availability/',
+    getParentRoute: () => TeacherRoute,
+  } as any)
 const TeacherReportLessonIdRoute = TeacherReportLessonIdRouteImport.update({
   id: '/report/$lessonId',
   path: '/report/$lessonId',
@@ -584,6 +591,7 @@ export interface FileRoutesByFullPath {
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
+  '/teacher/availability/': typeof TeacherAvailabilityIndexRoute
   '/teacher/reports/': typeof TeacherReportsIndexRoute
   '/teacher/students/': typeof TeacherStudentsIndexRoute
   '/admin/students/$studentId/reports': typeof AdminStudentsStudentIdReportsRouteWithChildren
@@ -662,6 +670,7 @@ export interface FileRoutesByTo {
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
+  '/teacher/availability': typeof TeacherAvailabilityIndexRoute
   '/teacher/reports': typeof TeacherReportsIndexRoute
   '/teacher/students': typeof TeacherStudentsIndexRoute
   '/admin/students/$studentId/reports': typeof AdminStudentsStudentIdReportsRouteWithChildren
@@ -746,6 +755,7 @@ export interface FileRoutesById {
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
+  '/teacher/availability/': typeof TeacherAvailabilityIndexRoute
   '/teacher/reports/': typeof TeacherReportsIndexRoute
   '/teacher/students/': typeof TeacherStudentsIndexRoute
   '/admin/students/$studentId_/reports': typeof AdminStudentsStudentIdReportsRouteWithChildren
@@ -831,6 +841,7 @@ export interface FileRouteTypes {
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
     | '/teacher/students/$studentId'
+    | '/teacher/availability/'
     | '/teacher/reports/'
     | '/teacher/students/'
     | '/admin/students/$studentId/reports'
@@ -909,6 +920,7 @@ export interface FileRouteTypes {
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
     | '/teacher/students/$studentId'
+    | '/teacher/availability'
     | '/teacher/reports'
     | '/teacher/students'
     | '/admin/students/$studentId/reports'
@@ -992,6 +1004,7 @@ export interface FileRouteTypes {
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
     | '/teacher/students/$studentId'
+    | '/teacher/availability/'
     | '/teacher/reports/'
     | '/teacher/students/'
     | '/admin/students/$studentId_/reports'
@@ -1534,6 +1547,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTeachersTeacherIdRouteImport
       parentRoute: typeof AdminTeachersRouteRoute
     }
+    '/teacher/availability/': {
+      id: '/teacher/availability/'
+      path: '/availability'
+      fullPath: '/teacher/availability/'
+      preLoaderRoute: typeof TeacherAvailabilityIndexRouteImport
+      parentRoute: typeof TeacherRoute
+    }
     '/teacher/report/$lessonId': {
       id: '/teacher/report/$lessonId'
       path: '/report/$lessonId'
@@ -1790,6 +1810,7 @@ interface TeacherRouteChildren {
   TeacherReportLessonIdRoute: typeof TeacherReportLessonIdRoute
   TeacherReportsStudentIdRoute: typeof TeacherReportsStudentIdRoute
   TeacherStudentsStudentIdRoute: typeof TeacherStudentsStudentIdRoute
+  TeacherAvailabilityIndexRoute: typeof TeacherAvailabilityIndexRoute
   TeacherReportsIndexRoute: typeof TeacherReportsIndexRoute
   TeacherStudentsIndexRoute: typeof TeacherStudentsIndexRoute
 }
@@ -1805,6 +1826,7 @@ const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherReportLessonIdRoute: TeacherReportLessonIdRoute,
   TeacherReportsStudentIdRoute: TeacherReportsStudentIdRoute,
   TeacherStudentsStudentIdRoute: TeacherStudentsStudentIdRoute,
+  TeacherAvailabilityIndexRoute: TeacherAvailabilityIndexRoute,
   TeacherReportsIndexRoute: TeacherReportsIndexRoute,
   TeacherStudentsIndexRoute: TeacherStudentsIndexRoute,
 }

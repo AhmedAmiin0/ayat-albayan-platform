@@ -20,6 +20,15 @@ test('«مستحقاتي» opens the per-lesson earnings (the monthly statements
   expect(screen.queryByText(t.teacherNav.statements)).toBeNull();
 });
 
+test('«المواعيد المتاحة» is the first row (owner 2026-11-14) and opens her availability', async () => {
+  await renderWithQuery(<TeacherMoreScreen />, teacherPagesClient());
+  const row = await screen.findByText(t.availability.title);
+  const tree = JSON.stringify(screen.toJSON());
+  expect(tree.indexOf(t.availability.title)).toBeLessThan(tree.indexOf(t.teacherNav.students));
+  await fireEvent.press(row);
+  expect(router.push).toHaveBeenCalledWith('/teacher/more/availability');
+});
+
 test('every switch off (the default): only students and availability stay', async () => {
   await renderWithQuery(<TeacherMoreScreen />, teacherPagesClient(false));
   expect(await screen.findByText(t.teacherNav.students)).toBeTruthy();

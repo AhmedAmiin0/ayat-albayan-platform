@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import type { CalendarView } from './calendar-search';
+import type { CalendarPeriod } from './calendar-search';
 import { TeacherCalendar } from './TeacherCalendar';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -14,33 +14,34 @@ const ME: TeacherMe = {
   meeting_link: null, meeting_mode: null, platform_classroom: false, students: [],
 };
 
-function renderCalendar(view: CalendarView) {
+function renderCalendar(period: CalendarPeriod) {
   apiFetch.mockImplementation((path: string) => Promise.resolve(path === '/teachers/me' ? ME : []));
-  const onView = vi.fn();
+  const onPeriod = vi.fn();
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
     <QueryClientProvider client={client}>
-      <TeacherCalendar view={view} onView={onView} />
+      <TeacherCalendar period={period} onPeriod={onPeriod} />
     </QueryClientProvider>,
   );
-  return onView;
+  return onPeriod;
 }
 
 const seg = (name: string) => screen.getByRole('button', { name });
 
-describe('TeacherCalendar «الحلقات | المواعيد المتاحة» (owner 2026-11-14)', () => {
-  it('lessons: the week grid; the toggle asks for the availability view', async () => {
-    const onView = renderCalendar('lessons');
+describe('TeacherCalendar «الأسبوع | الشهر» (owner 2026-11-14)', () => {
+  it('week: the week grid; the toggle asks for the month', async () => {
+    const onPeriod = renderCalendar('week');
     expect(await screen.findByText(t.teacherDash.noLessonsWeek)).toBeTruthy();
-    expect(seg(t.teacherCalendar.lessons).getAttribute('aria-pressed')).toBe('true');
-    fireEvent.click(seg(t.availability.title));
-    expect(onView).toHaveBeenCalledWith('availability');
+    expect(seg(t.teacherSchedule.week).getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(seg(t.teacherSchedule.month));
+    expect(onPeriod).toHaveBeenCalledWith('month');
   });
 
-  it('availability: her own availability, read for her id', async () => {
-    renderCalendar('availability');
-    expect(seg(t.availability.title).getAttribute('aria-pressed')).toBe('true');
-    await vi.waitFor(() => expect(apiFetch.mock.calls.some(([p]) => String(p).includes('t-1'))).toBe(true));
-    expect(screen.queryByText(t.teacherDash.noLessonsWeek)).toBeNull();
+  it('month: the month grid with its own arrows, and no availability toggle', async () => {
+    renderCalendar('month');
+    expect(await screen.findByRole('table', { name: t.teacherSchedule.monthGrid })).toBeTruthy();
+    expect(seg(t.teacherSchedule.month).getAttribute('aria-pressed')).toBe('true');
+    expect(seg(t.teacherSchedule.nextMonth)).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t.availability.title })).toBeNull();
   });
 });

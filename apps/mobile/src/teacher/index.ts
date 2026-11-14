@@ -13,3 +13,4 @@ export { TeacherScheduleScreen } from './screens/TeacherScheduleScreen';
 export { TeacherStudentFileScreen } from './student-file';
 export { TeacherStudentsScreen } from './screens/TeacherStudentsScreen';
 export { TeacherTodayScreen } from './screens/TeacherTodayScreen';
+export { HomeCustomizeScreen } from './alerts';

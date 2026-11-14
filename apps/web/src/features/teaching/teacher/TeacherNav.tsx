@@ -15,6 +15,7 @@ export const TEACHER_NAV_ITEMS = [
     permission: 'self.teacher',
   },
   { to: '/teacher/calendar', label: t.teacherNav.calendar, icon: 'calendar', permission: 'self.teacher' },
+  { to: '/teacher/availability', label: t.availability.title, icon: 'grid', permission: 'self.teacher' },
   { to: '/teacher/inbox', label: t.teacherNav.chats, icon: 'chat', permission: 'inbox.read' },
   { to: '/teacher/students', label: t.teacherNav.students, icon: 'users', permission: 'self.teacher' },
   { to: '/teacher/messages', label: t.teacherNav.messages, icon: 'chat', permission: 'self.teacher' },
