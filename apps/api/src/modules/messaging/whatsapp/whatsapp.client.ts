@@ -6,17 +6,18 @@ import { graphHttp, graphSend, type FetchLike, type GraphConn } from './drivers/
 import { fetchMedia, templateEditPath } from './drivers/kapso/kapso';
 import type { CrmBody } from './drivers/crm/crm-body';
 import { sentSchema, submitSchema } from './drivers/meta/meta-shapes';
-import { listTemplates } from './drivers/meta/meta-templates';
+import { editMetaTemplate, listTemplates } from './drivers/meta/meta-templates';
 import { resumableUpload } from './drivers/meta/meta-upload';
 import { relayGraphBody } from './drivers/waba/waba-graph';
 import { sendGraphTemplate } from './drivers/waba/waba-send';
 import { callPermissionMessage } from './messages/wa-call-permission';
 import { mediaMessage, readReceipt, submitPayload, textMessage, type GraphBody } from './messages/wa-components';
 import { reactionMessage } from './drivers/meta/meta-reaction';
-import { WaError, type MetaTemplate, type ReactionSend, type SampleFile, type TemplateRow, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
+import { capsOf } from './drivers/driver-caps';
+import { graphVoice } from './drivers/meta/meta-voice';
+import { WaError, type VoiceUpload, type MetaTemplate, type ReactionSend, type SampleFile, type TemplateRow, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
 export const DEFAULT_TIMEOUT_MS = 15_000;
-interface SubmitOpts { headerHandle?: string }
 
 export interface ClientOpts {
   fetch?: FetchLike;
@@ -24,8 +25,7 @@ export interface ClientOpts {
   allowed?: readonly string[] | null;
 }
 
-/** A read receipt's 2xx body is not checked (any answer, as before). */
-const ANY = z.unknown();
+const ANY = z.unknown(); // A read receipt's 2xx body is not checked (any answer, as before).
 
 interface Connected {
   conn: GraphConn;
@@ -106,13 +106,8 @@ export class HttpWhatsappClient implements WhatsappClient {
     return { metaId: res.id ?? template.meta_id ?? '', status: res.status ?? 'PENDING' };
   }
 
-  /** Meta's edit of a template it knows (Kapso: ?hsm_id): new components, same name, category. */
-  async editTemplate(row: TemplateRow, opts: SubmitOpts = {}): Promise<{ status: string }> {
-    const { env, http } = this.connection();
-    const json = { components: submitPayload(row, opts.headerHandle).components };
-    const path = templateEditPath(env, row.meta_id ?? '');
-    const res = await http.json({ path, method: 'POST', json, schema: submitSchema });
-    return { status: res.status ?? 'PENDING' };
+  editTemplate(row: TemplateRow, o: { headerHandle?: string } = {}): Promise<{ status: string }> {
+    return editMetaTemplate(this.connection(), row, o.headerHandle); // POST /{id} (meta-templates)
   }
 
   canUploadSamples(): boolean {
@@ -123,6 +118,12 @@ export class HttpWhatsappClient implements WhatsappClient {
   /** Meta's Resumable Upload API (meta-upload.ts): the template sample's header handle. */
   uploadSample(file: SampleFile): Promise<string> {
     return resumableUpload(this.connection().conn, file);
+  }
+
+  /** A voice note by uploaded media id where the driver uploads (capsOf: meta, kapso). */
+  voice(): VoiceUpload | null {
+    const post = (to: string, build: () => GraphBody) => this.send(to, build);
+    return this.conn && capsOf(this.conn.env).mediaUpload ? graphVoice(this.conn, post) : null;
   }
 
   /** Metadata, then the bytes, as the line's driver serves them (kapso.ts fetchMedia). */

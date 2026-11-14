@@ -6,7 +6,7 @@ import { ReminderTeacherLinks } from './reminders.teacher-links';
 const at = (now: Date) => ({ minutesBefore: 60, now });
 const LINKS = {
   join: 'join-tok',
-  report: { token: 'rep-tok', url: 'https://app.example/teacher-report/rep-tok', exp: 0 },
+  report: { suffix: 'L1', url: 'https://app.example/teacher/report/L1' },
 };
 
 function setup() {

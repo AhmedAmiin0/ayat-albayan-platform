@@ -1,7 +1,6 @@
 import type { CodeRoutes } from '@ab/client-core';
 import { normalizePhone } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
 import { t } from '@/lib/i18n/i18n';
 import { codeOf } from '@/features/people/auth/code/code-boxes';
@@ -9,6 +8,7 @@ import { CodeStep } from '@/features/people/auth/code/CodeStep';
 import { RequestStep } from '@/features/people/auth/code/RequestStep';
 import { useCodeFlow } from '@/features/people/auth/code/use-code-flow';
 import { signInWithCode } from '@/features/people/auth/sign-in';
+import { useLandAfterSignIn } from '@/features/people/auth/use-return-to';
 
 const F = t.familyAuth;
 
@@ -21,10 +21,13 @@ interface Props {
   children?: ReactNode;
 }
 
-/** A WhatsApp number → a 6-digit code → the role's home (docs/30 §1, §5; teachers: docs/46 A2). */
+/**
+ * A WhatsApp number → a 6-digit code → the role's home, or the page the guard carried in
+ * `?redirect=` (docs/30 §1, §5; teachers: docs/46 A2).
+ */
 export function PhoneSignIn({ codes, unavailable, children }: Props) {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const land = useLandAfterSignIn();
   const [phone, setPhone] = useState('');
   const flow = useCodeFlow((e164) => codes.request(e164));
 
@@ -39,7 +42,7 @@ export function PhoneSignIn({ codes, unavailable, children }: Props) {
       if (code === null || flow.target === null) return F.errors.code_incomplete;
       const result = await signInWithCode({ phone: flow.target, code }, queryClient, codes.verify);
       if (!result.ok) return swapUnavailable(result.error, unavailable);
-      await navigate({ to: result.home });
+      await land(result.home);
       return undefined;
     });
 

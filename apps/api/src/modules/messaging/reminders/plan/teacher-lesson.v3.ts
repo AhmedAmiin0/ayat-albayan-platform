@@ -9,14 +9,15 @@ import { lessonValues, oneLine, type TeacherLessonInput } from './teacher-lesson
 interface TeacherLessonV3Input extends TeacherLessonInput {
   /** {{6}}: the lesson's own meeting link, written in the text as well (Meet, fixed, classroom). */
   room: string;
-  /** The two button suffixes: the /join token and the no-login report token. */
+  /** The two button suffixes: the /join token and the lesson id (its report page). */
   links: TeacherLessonTokens;
 }
 
 /**
  * {{1}} the teacher, {{2}} the students, {{3}} their codes, {{4}} the time in the teacher's tz,
- * {{5}} the duration, {{6}} the meeting link; buttons [join token, report token]. The report link
- * is a button only. null when a value is missing: the caller keeps the older template.
+ * {{5}} the duration, {{6}} the meeting link; buttons [join token, lesson id]. The report button
+ * opens /teacher-report/<lesson id>, which redirects to the signed-in portal page. null when a
+ * value is missing: the caller keeps the older template.
  */
 export function teacherLessonV3(input: TeacherLessonV3Input): OutboundTemplate | null {
   const v = lessonValues(input);
@@ -31,7 +32,7 @@ export function teacherLessonV3(input: TeacherLessonV3Input): OutboundTemplate |
       '4': v.when,
       '5': v.duration,
       '6': room,
-      buttons: [input.links.join, input.links.report.token],
+      buttons: [input.links.join, input.links.report.suffix],
     },
   };
 }

@@ -26,6 +26,17 @@ export const templateRow = <T extends { line: NumberPurpose }>(
 export interface WaSent {
   waMessageId: string; // Meta's wamid (messages.wa_message_id)
   asText?: true; // the Evolution driver sent a template as plain text (Baileys has no templates)
+  media?: SentFile; // the file that went instead of the row's (a refused voice note's m4a)
+}
+
+/** The outbox row's file columns. */
+export type SentFile = Record<'media_path' | 'media_mime' | 'media_name', string>;
+
+/** A voice note by uploaded media id (Graph lines: capsOf().mediaUpload). */
+export interface VoiceUpload {
+  /** POST /{phone}/media, type audio/ogg (bare): the media id. Nobody is messaged yet. */
+  upload(ogg: Uint8Array): Promise<string>;
+  send(input: { to: string; id: string; replyTo?: string | null }): Promise<WaSent>;
 }
 
 /** A template as Meta lists it (GET /{waba}/message_templates). Statuses are Meta's spelling. */
@@ -33,24 +44,19 @@ export interface MetaTemplate {
   id: string;
   name: string;
   language: string;
-  /** APPROVED | PENDING | REJECTED | PAUSED | DISABLED | IN_APPEAL | … */
-  status: string;
+  status: string; // APPROVED | PENDING | REJECTED | PAUSED | DISABLED | IN_APPEAL | …
   category: string;
-  /** GREEN | YELLOW | RED | UNKNOWN; null when Meta sends none. */
-  quality: string | null;
+  quality: string | null; // GREEN | YELLOW | RED | UNKNOWN; null when Meta sends none
   components: unknown[];
   rejectedReason: string | null;
 }
 
 export interface TemplateSend {
-  /** E.164; the client sends the digits Meta wants. */
-  to: string;
+  to: string; // E.164; the client sends the digits Meta wants
   template: TemplateRow;
   params: TemplateParams;
-  /** Signed URL of params.document for a document-header template (7 days). */
-  documentUrl?: string | null;
-  /** Quick-reply payloads by button index (params.payloads, else derived by the sender). */
-  payloads?: readonly string[];
+  documentUrl?: string | null; // signed URL of params.document (a document header, 7 days)
+  payloads?: readonly string[]; // quick-reply payloads by button index (else the sender's)
 }
 
 /** A sample file Meta shows the template reviewer (report_ready's PDF header). */
@@ -97,10 +103,8 @@ export interface WhatsappClient {
   automaticOff?(): boolean;
   /** Evolution Baileys: ms before `to` may go (pacing) and the daily cap; absent = no pacing. */
   pace?(to: string): { waitMs: number; dailyCap: number; gapMs: number } | null;
-  /** Blue ticks for an inbound wamid (POST /messages {status:'read'}). */
-  markRead(waMessageId: string): Promise<void>;
-  /** All pages of the WABA's templates. Read-only: safe for the health check. */
-  getTemplates(): Promise<MetaTemplate[]>;
+  markRead(waMessageId: string): Promise<void>; // blue ticks (POST /messages {status:'read'})
+  getTemplates(): Promise<MetaTemplate[]>; // all pages; read-only (safe for the health check)
   /**
    * Creates the template on Meta (status PENDING). Only ever from the explicit admin route. A
    * document header needs `headerHandle` from uploadSample (Meta's sample for the reviewer).
@@ -108,8 +112,9 @@ export interface WhatsappClient {
   submitTemplate(template: TemplateRow, opts?: { headerHandle?: string }): Promise<{ metaId: string; status: string }>;
   /** Edits a template Meta knows (back to PENDING); absent = crm / evolution cannot. */
   editTemplate?(row: TemplateRow, opts?: { headerHandle?: string }): Promise<{ status: string }>;
-  /** WA_APP_ID is set: the Resumable Upload API (sample files for template headers) is usable. */
-  canUploadSamples(): boolean;
+  canUploadSamples(): boolean; // WA_APP_ID set: the Resumable Upload API is usable
+  /** Uploads a voice note and sends it by id; absent or null = this line sends by link only. */
+  voice?(): VoiceUpload | null;
   /** Resumable Upload API (session on the app, then the bytes): the handle for header_handle. */
   uploadSample(file: SampleFile): Promise<string>;
   /** Downloads inbound media: metadata GET /{media_id}, then the bytes with the bearer. */
@@ -124,24 +129,19 @@ export class WaError extends Error {
   constructor(
     message: string,
     readonly info: {
-      code: number | null;
-      status: number;
-      details?: string;
+      code: number | null; status: number; details?: string;
       /** The request may have reached Meta (timeout, connection lost mid-call): a resend could duplicate it. */
       uncertain?: boolean;
       /** Kapso refused the line's project key, or the CRM its API key (docs/19): held like Meta's 190, in its own words. */
       credential?: 'kapso' | 'crm' | 'evolution';
-      /** The CRM's 403 named the scope its key lacks («templates:read», docs/39). */
-      missingScope?: string;
+      missingScope?: string; // the scope the CRM's 403 named («templates:read», docs/39)
       /** The crm driver's error code («meta_error», «template_malformed», «bad_request», …): fails at once, never retried. */
       crmCode?: string;
-      /** The CRM's rate limit (429): try again after this long, the try not counted. */
-      retryAfterMs?: number;
+      retryAfterMs?: number; // the CRM's 429: try again after this long, the try not counted
       /** The call is not supported by this line's driver (the crm driver: template list / submit / samples / media). */
       unsupported?: 'crm' | 'evolution';
       blocked?: 'evolution_auto_off'; // the number's own safety rule, before any call (docs/19)
-      /** The crm driver: the template name sent (a 132001 marks only the key's own name). */
-      template?: string;
+      template?: string; // crm: the template name sent (a 132001 marks only the key's own name)
     },
   ) {
     super(message);

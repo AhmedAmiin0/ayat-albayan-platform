@@ -1,8 +1,9 @@
 import type { Http } from '@/common/infra/http/http.types';
 import type { GraphEnv } from '@/config/env/env';
-import { nextTemplateCursor } from '@/modules/messaging/whatsapp/drivers/kapso/kapso';
-import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
-import { templatesPageSchema, toMetaTemplate } from './meta-shapes';
+import { nextTemplateCursor, templateEditPath } from '@/modules/messaging/whatsapp/drivers/kapso/kapso';
+import { submitPayload } from '@/modules/messaging/whatsapp/messages/wa-components';
+import type { MetaTemplate, TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { submitSchema, templatesPageSchema, toMetaTemplate } from './meta-shapes';
 
 // GET /{waba}/message_templates, every page (out of whatsapp.client.ts, 150-line cap).
 
@@ -26,4 +27,19 @@ export async function listTemplates(env: GraphEnv, http: Http): Promise<MetaTemp
     if (!after) break;
   }
   return all;
+}
+
+/**
+ * Meta's edit of a template it knows (POST /{id}; Kapso: ?hsm_id=, kapso.ts): the components only,
+ * the name and the category never change. Back to PENDING.
+ */
+export async function editMetaTemplate(
+  c: { env: GraphEnv; http: Http },
+  row: TemplateRow,
+  headerHandle?: string,
+): Promise<{ status: string }> {
+  const json = { components: submitPayload(row, headerHandle).components };
+  const path = templateEditPath(c.env, row.meta_id ?? '');
+  const res = await c.http.json({ path, method: 'POST', json, schema: submitSchema });
+  return { status: res.status ?? 'PENDING' };
 }

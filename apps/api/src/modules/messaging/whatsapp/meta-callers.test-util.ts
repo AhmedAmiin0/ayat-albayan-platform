@@ -24,6 +24,9 @@ const WHITELIST = new Set([
   // The script relay (docs/19): the line's current client, its allow-list, the script's own sends.
   'modules/messaging/whatsapp/relay/relay.line.ts',
   'modules/messaging/whatsapp/sender/message.dispatch.ts',
+  // A voice note by uploaded media id (2026-11-14): the upload, and MessageDispatch's voice send.
+  'modules/messaging/whatsapp/drivers/meta/meta-voice.ts',
+  'modules/messaging/whatsapp/sender/voice/voice-dispatch.ts',
   'modules/messaging/whatsapp/templates/catalog/template.registry.ts',
   // The registry's own parts (150-line cap, s3): the admin's edits, the Meta sync, one line's sync
   // (read-only list), the explicit submit.

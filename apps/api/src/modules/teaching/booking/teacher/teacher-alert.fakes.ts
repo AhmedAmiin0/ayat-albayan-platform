@@ -45,11 +45,7 @@ export function fakeTeacherAlert(over: AlertOver = {}) {
   const links = {
     forLesson: vi.fn(async (l: { id: string }) => ({
       join: `join-${l.id}`,
-      report: {
-        token: `rep-${l.id}`,
-        url: `https://app.example/teacher-report/rep-${l.id}`,
-        exp: 0,
-      },
+      report: { suffix: l.id, url: `https://app.example/teacher/report/${l.id}` },
     })),
   };
   const deps = new TeacherAlertDeps(

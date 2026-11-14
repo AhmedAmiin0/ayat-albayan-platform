@@ -27,6 +27,8 @@ export interface HttpRequest {
   query?: Record<string, string | number | undefined>;
   json?: unknown;
   raw?: Uint8Array<ArrayBuffer>;
+  /** A multipart body (Graph's media upload); fetch writes its content type with the boundary. */
+  form?: FormData;
   /** Override or add headers (the upload's `authorization: OAuth …`, `file_offset`). */
   headers?: Record<string, string>;
   /** Overrides the profile's timeout for this call (the media bytes). */

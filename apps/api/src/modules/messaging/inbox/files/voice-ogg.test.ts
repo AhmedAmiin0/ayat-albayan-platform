@@ -16,6 +16,12 @@ describe('voiceArgs', () => {
     expect(args.join(' ')).toContain('-ac 1 -ar 48000 -c:a libopus -b:a 24k -application voip');
     expect(outputOf(args)).toBe('/t/out.ogg');
   });
+
+  it('strips all metadata and chapters and writes bitexact (2026-11-14: no MP4 tags in OpusTags)', () => {
+    const args = voiceArgs('/t/in.m4a', '/t/out.ogg').join(' ');
+    expect(args).toContain('-map_metadata -1 -map_chapters -1 -fflags +bitexact -flags:a +bitexact');
+    expect(args.indexOf('-map_metadata')).toBeGreaterThan(args.indexOf('-i /t/in.m4a'));
+  });
 });
 
 describe('toVoiceOgg (owner 2026-10-27: a real WhatsApp voice note)', () => {
