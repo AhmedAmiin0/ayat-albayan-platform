@@ -17,3 +17,4 @@ export {
   templatesQuery,
 } from './api';
 export { templatesMatch } from './templates-match';
+export { AuthorTemplatesPage } from './author/AuthorTemplatesPage';

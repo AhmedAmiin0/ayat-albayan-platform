@@ -120,6 +120,7 @@
         "sales/sales-meetings.spec.ts",
         "sales/sales-start-date-revoke.spec.ts",
         "sales/sales-starter.spec.ts",
+        "sales/sales-templates.spec.ts",
         "sales/sales-subscribe.api.spec.ts",
         "teaching/schedule-series.spec.ts",
         "teaching/schedule-stale.spec.ts",
@@ -390,6 +391,7 @@
         "sales/sales-meetings.spec.ts",
         "sales/sales-start-date-revoke.spec.ts",
         "sales/sales-starter.spec.ts",
+        "sales/sales-templates.spec.ts",
         "sales/sales-subscribe.api.spec.ts",
         "platform/shell-focus.spec.ts",
         "people/student-lists.spec.ts"

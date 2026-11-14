@@ -29,6 +29,7 @@ export interface TemplateColumnsInput {
   onSubmit: (tpl: TemplateView) => void;
   /** «نقل إلى الرقم الآخر» asked for one row (it confirms in its dialog). */
   onMove: (tpl: TemplateView) => void;
+  onEdit: (tpl: TemplateView) => void;
   /** Each number's formatted phone, when a lines check has run. */
   phones: PhoneMap;
   /** The server's facts for a number (a move to an unconfigured one is disabled). */
@@ -47,7 +48,7 @@ export interface TemplateColumnsInput {
  * R-MSG-01 health table: name + Meta name, number, «يُرسل من» + per-number approvals, category, status (+ Meta's reason), quality, checked,
  * the sales starter switch. The whole registry is loaded, so it sorts and filters locally.
  */
-export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, factsOf, sendFrom, crmStatus }: TemplateColumnsInput) {
+export function templateColumns({ onSubmit, onMove, onEdit, onStarter, saving, phones, factsOf, sendFrom, crmStatus }: TemplateColumnsInput) {
   const crmCell = (tpl: TemplateView) =>
     factsOf(tpl.line)?.provider === 'crm' ? (
       <>
@@ -140,7 +141,7 @@ export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, f
       id: 'actions',
       header: () => t.templates.actions,
       cell: (c) => (
-        <RowActions tpl={c.row.original} onSubmit={onSubmit} onMove={onMove} target={factsOf(otherLine(c.row.original.line))} crm={crmCell(c.row.original)} name={metaName(c.row.original)} />
+        <RowActions tpl={c.row.original} onSubmit={onSubmit} onMove={onMove} onEdit={onEdit} target={factsOf(otherLine(c.row.original.line))} crm={crmCell(c.row.original)} name={metaName(c.row.original)} />
       ),
       meta: { className: 'max-sm:order-7', headClassName: 'w-px' },
     }),

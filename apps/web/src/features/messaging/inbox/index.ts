@@ -83,3 +83,5 @@ export {
   showsPhone,
   useInboxMode,
 } from './shared/mode';
+export { TemplateButtons } from './messages/template/TemplateButtons';
+export { TemplateFrame } from './messages/template/TemplateFrame';
