@@ -1,5 +1,5 @@
 import {
-  templateAuthorSchema, templateEditSchema, templateKeyParam, type TemplateView,
+  templateAuthorEditSchema, templateAuthorSchema, templateKeyParam, type TemplateView,
 } from '@ab/shared';
 import { Controller, Get, HttpCode, Inject, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -42,7 +42,7 @@ export class TemplateAuthorController {
   @HttpCode(200)
   edit(
     @ZodParam('key', templateKeyParam) key: string,
-    @ZodBody(templateEditSchema) body: z.output<typeof templateEditSchema>,
+    @ZodBody(templateAuthorEditSchema) body: z.output<typeof templateAuthorEditSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateView> {
     return this.author.edit(key, body, user.id);

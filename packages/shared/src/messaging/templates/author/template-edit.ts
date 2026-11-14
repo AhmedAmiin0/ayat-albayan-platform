@@ -37,6 +37,14 @@ export const templateEditSchema = z.object({
 export type TemplateEditInput = z.output<typeof templateEditSchema>;
 export type TemplateEditButton = TemplateEditInput['buttons'][number];
 
+/** PATCH …/authored/:key: an author's edit; like a new one, plain quick replies only. */
+export const templateAuthorEditSchema = templateEditSchema.extend({
+  buttons: z
+    .array(z.object({ type: z.literal('quick_reply'), text: templateButtonText }))
+    .max(TEMPLATE_LIMITS.buttons)
+    .default([]),
+});
+
 /** The two categories a sales user picks from (an authentication template is the platform's). */
 export const AUTHOR_CATEGORIES = ['utility', 'marketing'] as const;
 export type AuthorCategory = (typeof AUTHOR_CATEGORIES)[number];

@@ -58,7 +58,8 @@ export function registryAfter(
   });
   const full = out.filter((b): b is TemplateButton => b !== null);
   if (full.length === after.length) return full;
-  return after.some(dynamicUrl) ? null : [];
+  const someIntent = full.some((b) => b.type === 'quick_reply');
+  return someIntent || after.some(dynamicUrl) ? null : [];
 }
 
 /** display after the edit: the header unchanged, the new buttons. */

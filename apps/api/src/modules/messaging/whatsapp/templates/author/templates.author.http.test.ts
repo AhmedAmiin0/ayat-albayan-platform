@@ -114,6 +114,17 @@ describe('templates.author routes', () => {
     }
   });
 
+  it('an author adds no link and no button action (400); an intent is dropped', async () => {
+    rows.set('offer', templateRow({ key: 'offer', meta_name: 'offer', line: 'chat', sales_starter: true, meta_id: '9', buttons: [] }));
+    const link = { type: 'url', text: 'افتح', url: 'https://example.org' };
+    const url = await t.call({ method: 'PATCH', url: `${URL}/offer`, token: 'sales', body: { ...edit, buttons: [link] } });
+    expect(url.statusCode).toBe(400);
+    t.chatClient.editTemplate.mockResolvedValue({ status: 'PENDING' });
+    const stop = { ...edit, buttons: [{ type: 'quick_reply', text: 'إيقاف', intent: 'stop' }] };
+    expect((await t.call({ method: 'PATCH', url: `${URL}/offer`, token: 'sales', body: stop })).statusCode).toBe(200);
+    expect(rows.get('offer')?.buttons).toEqual([]);
+  });
+
   it('never reaches a templates.manage route', async () => {
     rows.set('offer', templateRow({ key: 'offer', line: 'chat', sales_starter: true, meta_id: '9' }));
     const routes = [

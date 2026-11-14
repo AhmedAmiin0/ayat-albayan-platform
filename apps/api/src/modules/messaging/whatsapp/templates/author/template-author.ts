@@ -54,7 +54,10 @@ export class TemplateAuthor {
       entity: 'message_templates',
       entityId: REGISTRY_ENTITY_ID,
       action: 'template_authored',
-      after: { key, line: 'chat', category: input.category, params: row.params, sales_starter: true },
+      after: {
+        key, line: 'chat', category: input.category, sales_starter: true, body_ar: row.body_ar,
+        footer_ar: row.footer_ar, params: row.params, samples: row.samples, buttons: row.display,
+      },
     });
     const view = await this.editor.submit(key, userId);
     await this.editor.refresh(view);

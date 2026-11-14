@@ -72,6 +72,10 @@ describe('planEdit', () => {
     expect(refusal(free, words({ body: '{{1}} مرحبًا {{2}}' }))).toBe('invalid_template');
     const plainWithLink = words({ buttons: [jitsi, { type: 'quick_reply', text: 'نعم' }] });
     expect(refusal(free, plainWithLink)).toBe('reply_intent_required');
+    const mixed = words({ buttons: [
+      { type: 'quick_reply', text: 'تأكيد', intent: 'confirm' }, { type: 'quick_reply', text: 'نعم' },
+    ] });
+    expect(refusal(free, mixed)).toBe('reply_intent_required');
     const replies = plan(free, words({ buttons: [{ type: 'quick_reply', text: 'نعم' }] }));
     expect(replies.after.buttons).toEqual([]);
     expect(replies.after.display).toEqual({ header: null, buttons: [{ type: 'quick_reply', text: 'نعم' }] });

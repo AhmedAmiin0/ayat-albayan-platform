@@ -3618,8 +3618,9 @@
       "not_editable": "A template under Meta review or disabled cannot be edited. Wait for the review, then try again.",
       "not_author_editable": "You cannot edit this template: you can edit only the chat templates allowed to you that the platform does not send by itself.",
       "author_daily_limit": "You reached the daily limit for new templates ({max} a day). Try again tomorrow.",
-      "reply_intent_required": "This template has a link button the sender completes, so every quick reply needs an action.",
-      "buttons_unsupported": "This template has a call or copy-code button, which the platform cannot edit."
+      "reply_intent_required": "Either every quick reply has an action or none has one; a link button the sender completes needs an action on every quick reply.",
+      "buttons_unsupported": "This template has a call or copy-code button, which the platform cannot edit.",
+      "edit_conflict": "This template was edited or changed status while saving. Reload, check its text, then try again."
     },
     "checkedNow": "Template status checked",
     "buttons": "Buttons",

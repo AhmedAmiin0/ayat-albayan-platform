@@ -44,10 +44,20 @@ export class TemplateEditor {
     const plan = planEdit(row, input, new Date());
     if (isRefusal(plan)) throw refusalHttp(plan.refused, plan.details);
     if (plan.route === 'meta') await editOnMeta(this.lines, plan.after);
-    const saved = (await this.queries.update(key, plan.patch, row.status)) ?? row;
+    const saved = await this.queries.update(key, plan.patch, row.status);
+    if (!saved) return this.conflict(row);
     await this.record(row, plan, actor);
     await this.after(saved, plan, actor);
     return toTemplateView((await this.queries.get(key)) ?? saved);
+  }
+
+  /**
+   * Another edit or a sync moved the row while this one ran: Meta may hold this edit's words, so
+   * that line's sync reads them back; 409 edit_conflict (the client reloads and looks again).
+   */
+  private async conflict(row: TemplateRow): Promise<never> {
+    await this.refresh(row);
+    throw refusalHttp('edit_conflict');
   }
 
   /** 404, or 403 not_author_editable: an author edits only the allow-list's free templates. */
@@ -83,17 +93,17 @@ export class TemplateEditor {
   }
 
   private record(row: TemplateRow, plan: EditPlan, actor: EditActor): Promise<void> {
-    const { key, status, body_ar, footer_ar, params, buttons } = row;
+    const { key, status, body_ar, footer_ar, params, samples, display } = row;
     const next = plan.after;
     return this.audit.record({
       actorId: actor.id,
       entity: 'message_templates',
       entityId: REGISTRY_ENTITY_ID,
       action: 'template_edited',
-      before: { key, status, body_ar, footer_ar, params, buttons },
+      before: { key, status, body_ar, footer_ar, params, samples, buttons: display },
       after: {
         key, status: plan.patch.status ?? status, body_ar: next.body_ar, footer_ar: next.footer_ar,
-        params: next.params, buttons: next.display, route: plan.route,
+        params: next.params, samples: next.samples, buttons: next.display, route: plan.route,
         by: actor.author ? 'author' : 'admin',
       },
     });

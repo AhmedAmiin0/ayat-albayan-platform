@@ -67,6 +67,13 @@ describe('PATCH /messaging/templates/:key/content', () => {
     expect(res.json().next_at).toEqual(expect.any(String));
   });
 
+  it('409 edit_conflict when the row moved meanwhile; nothing audited', async () => {
+    t.templates.update.mockResolvedValueOnce(null);
+    const res = await t.call({ method: 'PATCH', url: url('booking_confirmation'), body: words });
+    expect([res.statusCode, res.json().code]).toEqual([409, 'edit_conflict']);
+    expect(t.audit.record).not.toHaveBeenCalled();
+  });
+
   it('a teacher or sales gets 403', async () => {
     for (const token of ['teacher', 'sales']) {
       expect((await t.call({ method: 'PATCH', url: url('booking_confirmation'), token, body: words })).statusCode).toBe(403);
