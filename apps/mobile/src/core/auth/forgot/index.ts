@@ -1,5 +1,6 @@
 export { authApi } from './auth-api';
 export { AuthAlert } from './AuthAlert';
+export { AuthHint } from './AuthHint';
 export { authErrorText, loginErrorText } from './auth-errors';
 export { CodeField } from './CodeField';
 export { ForgotPassword } from './ForgotPassword';

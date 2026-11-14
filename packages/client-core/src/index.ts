@@ -4,6 +4,7 @@ export * from './core/http/index.js';
 export * from './core/keys/index.js';
 export * from './core/auth/index.js';
 export * from './people/users/index.js';
+export * from './people/family-auth/index.js';
 export * from './finance/payments/index.js';
 export * from './people/assistants/index.js';
 export * from './teaching/reports/index.js';

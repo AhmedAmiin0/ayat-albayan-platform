@@ -21,8 +21,14 @@
       "ignoreDependencies": ["babel-plugin-react-compiler", "zod"]
     },
     "apps/mobile": {
-      "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
-      "project": ["{app,src}/**/*.{ts,tsx}"],
+      "entry": [
+        "index.ts",
+        "app/**/*.{ts,tsx}",
+        "app-family/**/*.{ts,tsx}",
+        "app.config.ts",
+        "jest.setup.cjs"
+      ],
+      "project": ["{app,app-family,src}/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         "react-test-renderer",
         "expo-system-ui",

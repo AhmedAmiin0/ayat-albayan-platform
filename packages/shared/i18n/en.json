@@ -4584,6 +4584,36 @@
     "dayEmpty": "No lessons for your students on this day",
     "joinNote": "The lesson opens in the browser when its time starts."
   },
+  "familyApp": {
+    "wrongApp": "This app is for families and students. Academy staff sign in to the staff app.",
+    "signIn": {
+      "title": "Ayat Al-Bayan",
+      "intro": "Follow your children's lessons and reports in one place.",
+      "tabsLabel": "Who is signing in?",
+      "guardian": "Guardian",
+      "student": "Student",
+      "guardianIntro": "Sign in with the WhatsApp number the academy has on file; a code will reach you on WhatsApp.",
+      "codesOff": "WhatsApp codes are not available right now. Students can sign in with their code and password.",
+      "studentCode": "Student code"
+    },
+    "home": {
+      "title": "My children",
+      "empty": "No students are linked to your account yet. Contact the academy.",
+      "open": "Open the student's page",
+      "loading": "Loading students…",
+      "settings": "Settings"
+    },
+    "child": {
+      "title": "Student page",
+      "soon": "Upcoming lessons, reports and the package will show here soon."
+    },
+    "settings": {
+      "title": "Settings",
+      "name": "Name",
+      "notifications": "Notifications on this device",
+      "notificationsHint": "Lesson and report alerts on this phone."
+    }
+  },
   "teacherNav": {
     "label": "Teacher sections",
     "today": "Today",

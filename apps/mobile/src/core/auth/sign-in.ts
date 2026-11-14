@@ -1,4 +1,4 @@
-import { isEmailIdentifier, signInError } from '@ab/client-core';
+import { type CodeRoutes, isEmailIdentifier, signInError } from '@ab/client-core';
 import { apiFetch } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { supabase } from '@/core/lib/http/supabase';
@@ -34,7 +34,7 @@ async function openSession({ identifier, password }: Credentials): Promise<strin
   }
 }
 
-/** Only admins, teachers, sales and classroom assistants stay signed in (R-AUTH-01). */
+/** Only this app's roles stay signed in (R-AUTH-01): staff here, families in the family app. */
 async function checkRole(): Promise<SignInResult> {
   let me: Me;
   try {
@@ -65,26 +65,34 @@ export async function signIn(creds: Credentials): Promise<SignInResult> {
 }
 
 /**
- * A teacher's WhatsApp code (docs/46 A8): the API answers a magic-link token hash that supabase-js
- * turns into a session, then the same role check. A first sign-in lands on «أكمل حسابك».
+ * A WhatsApp code, a teacher's (docs/46 A8) or a guardian's through `codes` (docs/50 §6): the API
+ * answers a magic-link token hash that supabase-js turns into a session, then the same role check.
+ * A teacher's first sign-in lands on «أكمل حسابك».
  */
-export async function signInWithCode(body: { phone: string; code: string }): Promise<SignInResult> {
+export async function signInWithCode(
+  body: { phone: string; code: string },
+  codes: CodeRoutes = authApi.staffCodes,
+): Promise<SignInResult> {
   try {
-    const session = await authApi.staffCodes.verify(body);
+    const session = await codes.verify(body);
     const { error } = await supabase.auth.verifyOtp({
       type: session.type,
       token_hash: session.token_hash,
     });
     return error ? { ok: false, error: t.familyAuth.errors.invalid_code } : await checkRole();
   } catch (error) {
-    return { ok: false, error: codeRefusal(error) };
+    return { ok: false, error: codeRefusal(error, codes) };
   }
 }
 
+/** Codes off on the teacher's routes say so in the teacher's words (the family's: familyAuth). */
+const teacherCodesOff = (error: unknown, codes: CodeRoutes): boolean =>
+  codes === authApi.staffCodes && signInError(error) === 'codes_unavailable';
+
 /** A disabled login says so (403 after a right code); anything else in the sign-in words. */
-const codeRefusal = (error: unknown): string => {
+const codeRefusal = (error: unknown, codes: CodeRoutes): string => {
   if (isAccountDisabled(error)) return noticeText('accountDisabled');
-  return signInError(error) === 'codes_unavailable'
+  return teacherCodesOff(error, codes)
     ? t.teacherAuth.codesUnavailable
     : authErrorText(error, t.common.error);
 };

@@ -41,6 +41,30 @@
       "node": "24.15.0",
       "pnpm": "11.25.0"
     },
+    "family-preview": {
+      "distribution": "internal",
+      "channel": "family-preview",
+      "android": {
+        "buildType": "apk"
+      },
+      "environment": "preview",
+      "env": {
+        "APP_VARIANT": "family",
+        "ORG_GRADLE_PROJECT_reactNativeArchitectures": "arm64-v8a"
+      },
+      "node": "24.15.0",
+      "pnpm": "11.25.0"
+    },
+    "family-production": {
+      "channel": "family-production",
+      "autoIncrement": true,
+      "environment": "production",
+      "env": {
+        "APP_VARIANT": "family"
+      },
+      "node": "24.15.0",
+      "pnpm": "11.25.0"
+    },
     "production": {
       "channel": "production",
       "autoIncrement": true,

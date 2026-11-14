@@ -12,6 +12,9 @@ const CHOOSER: Record<GateStatus, (can: Can) => Href | null> = {
   sales: (can) => (canOpen(can, 'inbox') ? '/sales/inbox/share' : null),
   teacher: (can) => (canOpen(can, 'chats') ? '/teacher/chats/share' : null),
   assistant: none,
+  // The family app (docs/50) is no share target.
+  guardian: none,
+  student: none,
   booting: none,
   out: none,
 };

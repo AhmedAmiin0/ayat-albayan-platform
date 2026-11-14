@@ -12,7 +12,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { InsetGroup } from '@/core/ui/surface/inset';
 import { useTeacherMe } from '@/teacher/lib/queries';
 import { useTeacherGateOpen } from '@/teacher/lib/teacher-pages';
-import { SignOutButton } from '@/teacher/components/SignOutButton';
+import { SignOutButton } from '@/core/auth';
 import { locale } from '@/core/lib/i18n/locale';
 
 type GateOpen = (gate: TeacherGate) => boolean;

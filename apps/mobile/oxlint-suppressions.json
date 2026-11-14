@@ -79,14 +79,9 @@
   },
   "app/_layout.tsx": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 2
     },
     "ab/no-restricted-syntax": {
-      "count": 2
-    }
-  },
-  "app/login.tsx": {
-    "max-lines-per-function": {
       "count": 1
     }
   },
@@ -322,7 +317,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 5
+      "count": 4
     }
   },
   "src/assistant-app/assistant-day.ts": {
@@ -1425,7 +1420,7 @@
   },
   "src/core/auth/forgot/ForgotPassword.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/core/auth/forgot/auth-errors.ts": {
@@ -1440,7 +1435,7 @@
   },
   "src/core/auth/login-notice.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -5793,7 +5788,7 @@
       "count": 1
     }
   },
-  "src/live/LiveBadge.tsx": {
+  "src/calendar/live/LiveBadge.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -8129,7 +8124,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 5
+      "count": 4
     }
   },
   "src/sales/app/screens/SalesTabs.tsx": {

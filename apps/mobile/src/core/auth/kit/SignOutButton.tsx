@@ -4,7 +4,7 @@ import { t } from '@/core/lib/i18n/i18n';
 import { signOutDevice } from '@/core/lib/session/sign-out';
 import { Button } from '@/core/ui/primitives/Button';
 
-/** «تسجيل الخروج»: on success the auth gate unmounts the teacher tabs and shows /login. */
+/** «تسجيل الخروج»: on success the auth gate unmounts the signed-in tree and shows /login. */
 export function SignOutButton() {
   const [leaving, setLeaving] = useState(false);
   const logout = () => {

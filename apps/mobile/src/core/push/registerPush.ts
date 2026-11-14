@@ -6,7 +6,7 @@ import { Platform } from 'react-native';
 import { ApiError, apiSend } from '@/core/lib/http/api';
 import { t } from '@/core/lib/i18n/i18n';
 import { logWarning } from '@/core/lib/log';
-import { putPushToken, TOKEN_KEY } from './device-key';
+import { pushOptedOut, putPushToken, TOKEN_KEY } from './device-key';
 import { hasLiveSession } from './live-session';
 import { ensurePushPermission } from './permission';
 import { silenceSettled } from './silence-push';
@@ -28,6 +28,10 @@ export function easProjectId(extra: unknown): string | null {
   return typeof id === 'string' && id ? id : null;
 }
 
+/** Signed in with a live token, and pushes not switched off on this device (device-key). */
+const mayRegister = async (): Promise<boolean> =>
+  (await hasLiveSession()) && !(await pushOptedOut());
+
 /**
  * On every admin start: real device + EAS project + permission (re-asked weekly) → Expo push token →
  * PUT /me/push-tokens (idempotent). Best effort: Expo Go, offline or a refused prompt skip silently
@@ -38,7 +42,8 @@ export async function registerPush(): Promise<void> {
   const projectId = easProjectId(Constants.expoConfig?.extra);
   if (!projectId) return;
   // Never before the user is authenticated (a cold start on an expired session): no prompt, no PUT.
-  if (!(await hasLiveSession())) return;
+  // Nor while «الإشعارات على هذا الجهاز» is off (the family app's settings, docs/50 §6).
+  if (!(await mayRegister())) return;
   try {
     if (Platform.OS === 'android') {
       // Android 13+ shows the permission prompt only once a channel exists.

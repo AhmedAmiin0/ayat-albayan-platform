@@ -4,7 +4,7 @@ import { TeacherTodayScreen } from '@/teacher/screens/TeacherTodayScreen';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
-import TodayRoute from '../../app/(tabs)/index';
+import TodayRoute from '../../../app/(tabs)/index';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/core/lib/http/api', () => ({
