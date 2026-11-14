@@ -15,9 +15,20 @@ describe('driver capabilities', () => {
   });
 
   it('reactions on Graph lines only; template lists on Graph lines only', () => {
-    expect(capsOf(META)).toEqual({ window24h: true, reactions: true, templateList: true });
+    expect(capsOf(META)).toEqual({
+      window24h: true, reactions: true, templateList: true, mediaUpload: true,
+    });
     expect(capsOf(CRM_ENV)).toMatchObject({ reactions: false, templateList: false });
     expect(capsOf(EVO_BAILEYS)).toMatchObject({ reactions: false, templateList: false });
-    expect(capsOf(EVO_CLOUD)).toEqual({ window24h: true, reactions: false, templateList: false });
+    expect(capsOf(EVO_CLOUD)).toEqual({
+      window24h: true, reactions: false, templateList: false, mediaUpload: false,
+    });
+  });
+
+  it('a voice note by media id on Meta and Kapso only; crm and evolution keep the link', () => {
+    const kapso = { ...META, provider: 'kapso' as const, apiKey: 'k' };
+    expect([META, kapso, null].map((e) => capsOf(e).mediaUpload)).toEqual([true, true, true]);
+    expect([CRM_ENV, EVO_BAILEYS, EVO_CLOUD].map((e) => capsOf(e).mediaUpload))
+      .toEqual([false, false, false]);
   });
 });

@@ -143,3 +143,7 @@ export function isSentFilePath(path: string | null | undefined): boolean {
   const key = storageKeyOf(path ?? '');
   return key.startsWith('out/') && !key.split('/').includes('..');
 }
+
+/** The recorded m4a kept beside a voice note's ogg: the fallback if the ogg is refused. */
+export const voiceM4aPath = (oggPath: string): string =>
+  `${oggPath.slice(0, oggPath.lastIndexOf('/'))}/voice.m4a`;

@@ -29,6 +29,9 @@ describe('voiceMedia (owner 2026-10-27)', () => {
     });
     expect(transcode).toHaveBeenCalledWith(BYTES);
     expect(storage.upload).toHaveBeenCalledWith({ bucket: 'wa-media', path: 'out/actor/req/voice.ogg', body: OGG, contentType: 'audio/ogg' });
+    expect(storage.upload).toHaveBeenCalledWith({
+      bucket: 'wa-media', path: 'out/actor/req/voice.m4a', body: BYTES, contentType: 'audio/mp4',
+    });
   });
 
   it('no ffmpeg (or it failed): the m4a itself, nothing uploaded', async () => {

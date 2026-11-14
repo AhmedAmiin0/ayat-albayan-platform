@@ -36,3 +36,33 @@ describe('MessageDispatch — a voice note', () => {
     for (const [input] of client.sendDocument.mock.calls as [{ voice: boolean }][]) expect(input.voice).toBe(false);
   });
 });
+
+describe('MessageDispatch — a voice note on a line that uploads media', () => {
+  const voice = { upload: vi.fn(), send: vi.fn() };
+  const uploading = { ...client, voice: () => voice };
+  const both = { notifications: uploading, chat: uploading } as unknown as WhatsappLines;
+  const store = { signedDownload: vi.fn(), download: vi.fn(), exists: vi.fn() };
+  const sut = () => new MessageDispatch(both, store as unknown as StorageService);
+
+  beforeEach(() => {
+    vi.resetAllMocks();
+    store.download.mockResolvedValue(new Uint8Array([1]));
+    voice.upload.mockResolvedValue('media-1');
+    voice.send.mockResolvedValue({ waMessageId: 'wamid.id' });
+    store.signedDownload.mockResolvedValue({ url: 'https://storage.local/x', expires_at: 'x' });
+  });
+
+  it('the ogg goes by media id, never by link', async () => {
+    const row = file({ media_path: 'out/u1/r1/voice.ogg', media_mime: 'audio/ogg', media_name: 'voice.ogg' });
+    await expect(sut().send(row, null, 'chat')).resolves.toEqual({ waMessageId: 'wamid.id' });
+    expect(voice.send).toHaveBeenCalledWith(expect.objectContaining({ id: 'media-1' }));
+    expect(client.sendDocument).not.toHaveBeenCalled();
+  });
+
+  it('images and PDFs keep their links on that line', async () => {
+    await sut().send(file({ media_path: 'out/u1/r1/a.jpg', media_mime: 'image/jpeg' }), null, 'chat');
+    await sut().send(file({ media_path: 'out/u1/r1/a.pdf', media_mime: 'application/pdf' }), null, 'chat');
+    expect(voice.upload).not.toHaveBeenCalled();
+    expect(client.sendDocument).toHaveBeenCalledTimes(2);
+  });
+});

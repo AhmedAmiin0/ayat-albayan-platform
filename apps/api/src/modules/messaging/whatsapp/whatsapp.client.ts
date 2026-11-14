@@ -13,6 +13,9 @@ import { sendGraphTemplate } from './drivers/waba/waba-send';
 import { callPermissionMessage } from './messages/wa-call-permission';
 import { mediaMessage, readReceipt, submitPayload, textMessage, type GraphBody } from './messages/wa-components';
 import { reactionMessage } from './drivers/meta/meta-reaction';
+import { capsOf } from './drivers/driver-caps';
+import { graphVoice } from './drivers/meta/meta-voice';
+import type { VoiceUpload } from './whatsapp.types';
 import { WaError, type MetaTemplate, type ReactionSend, type SampleFile, type TemplateRow, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
 export const DEFAULT_TIMEOUT_MS = 15_000;
@@ -113,6 +116,12 @@ export class HttpWhatsappClient implements WhatsappClient {
   /** Meta's Resumable Upload API (meta-upload.ts): the template sample's header handle. */
   uploadSample(file: SampleFile): Promise<string> {
     return resumableUpload(this.connection().conn, file);
+  }
+
+  /** A voice note by uploaded media id where the driver uploads (capsOf: meta, kapso). */
+  voice(): VoiceUpload | null {
+    const post = (to: string, build: () => GraphBody) => this.send(to, build);
+    return this.conn && capsOf(this.conn.env).mediaUpload ? graphVoice(this.conn, post) : null;
   }
 
   /** Metadata, then the bytes, as the line's driver serves them (kapso.ts fetchMedia). */
