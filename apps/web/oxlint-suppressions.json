@@ -4747,53 +4747,14 @@
       "count": 1
     }
   },
-  "src/features/people/portal/LoadState.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/people/portal/PackagePanel.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/people/portal/PortalHome.tsx": {
-    "complexity": {
+    "stylistic/max-len": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 7
-    }
-  },
-  "src/features/people/portal/ReportsPanel.tsx": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/features/people/portal/api.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 6
-    }
-  },
-  "src/features/people/portal/lessons/LessonAction.tsx": {
-    "stylistic/max-len": {
-      "count": 4
     }
   },
   "src/features/people/portal/lessons/LessonWhen.tsx": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/features/people/portal/lessons/LessonsPanel.tsx": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/features/people/portal/open-file.ts": {
@@ -9953,11 +9914,6 @@
     },
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/features/teaching/classroom/student-link/student-link.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/teaching/course-actions/ChangeTeacherDialog.tsx": {

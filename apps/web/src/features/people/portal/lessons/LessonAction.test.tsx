@@ -20,7 +20,7 @@ describe('LessonAction «ادخل الحلقة»', () => {
   });
 
   it('a classroom lesson inside the window asks the API to admit the student and hands the room on', async () => {
-    const room = { url: 'wss://lk.example.org', token: 'tok', role: 'guest' };
+    const room = { url: 'wss://lk.example.org', token: 'tok', room: 'lesson-l1', role: 'guest' };
     apiSend.mockResolvedValue(room);
     show({});
     fireEvent.click(screen.getByRole('button', { name: t.portal.join }));

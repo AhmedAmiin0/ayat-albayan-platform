@@ -4779,53 +4779,14 @@
       "count": 1
     }
   },
-  "src/features/people/portal/LoadState.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/people/portal/PackagePanel.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/people/portal/PortalHome.tsx": {
-    "complexity": {
+    "max-len": {
       "count": 1
-    },
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/features/people/portal/ReportsPanel.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/features/people/portal/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 6
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/people/portal/lessons/LessonAction.tsx": {
-    "max-len": {
-      "count": 4
     }
   },
   "src/features/people/portal/lessons/LessonWhen.tsx": {
     "max-len": {
       "count": 1
-    }
-  },
-  "src/features/people/portal/lessons/LessonsPanel.tsx": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/features/people/portal/open-file.ts": {
@@ -10013,11 +9974,6 @@
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/features/teaching/classroom/student-link/student-link.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/teaching/course-actions/StopCourseDialog.tsx": {

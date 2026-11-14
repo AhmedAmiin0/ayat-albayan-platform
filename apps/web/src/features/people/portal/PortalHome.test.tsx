@@ -1,77 +1,94 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { home, kid, lesson } from './portal.fixtures';
+import { home, soonLesson } from './portal.fixtures';
+import { portalApi, type Answers } from './portal.api-fixture';
 import { renderPortal } from './portal.render';
 import { PortalHome } from './PortalHome';
+import { reloadSeenReports } from './use-seen-reports';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
-function answer(me: unknown) {
-  apiFetch.mockImplementation(async (path: string) => {
-    if (path === '/portal/me') return me;
-    if (path.endsWith('/lessons')) return { lessons: path.includes('/s2/') ? [] : [lesson()] };
-    if (path.endsWith('/reports')) return { reports: [] };
-    if (path.endsWith('/channel/unread')) return { unread: 3 };
-    if (path.endsWith('/channel/messages')) return { student_name: 'سلمى', messages: [], has_more: false, read_only: false };
-    return { package: null };
+const prepare = { homework: 'سورة الملك', next_plan: null, report_id: 'r9', lesson_starts_at: null };
+const answers: Answers = {
+  lessons: (path: string) =>
+    path.includes('/s2/')
+      ? { lessons: [] }
+      : { lessons: [soonLesson()], prepare, month: { attended: 6, absent: 1 } },
+  reports: (path: string) => ({
+    reports: path.includes('/s1/')
+      ? [{ id: 'r1', lesson_id: 'l1', lesson_starts_at: null, sent_at: '2026-10-20T18:00:00Z', teacher: null, recording_id: null }]
+      : [],
+  }),
+};
+const show = (over: Answers = {}) => {
+  apiFetch.mockImplementation(portalApi({ ...answers, ...over }));
+  return renderPortal(<PortalHome />);
+};
+const card = (name: string) => screen.getByRole('article', { name });
+
+describe('PortalHome: the guardian sees every child at a glance', () => {
+  afterEach(() => {
+    apiFetch.mockReset();
+    localStorage.clear();
+    reloadSeenReports();
   });
-}
 
-describe('PortalHome /portal', () => {
-  afterEach(() => apiFetch.mockReset());
-
-  it('a guardian picks a child under «أبنائي»; each child reads its own lessons', async () => {
-    answer(home());
-    renderPortal(<PortalHome />);
-    expect(await screen.findByRole('group', { name: t.portal.myChildren })).toBeTruthy();
-    expect(await screen.findByText(t.portal.withTeacher.replace('{teacher}', 'أبرار'))).toBeTruthy();
+  it('one card per child: name, code, the next lesson with its countdown and join', async () => {
+    show();
+    expect(await screen.findByRole('article', { name: 'سلمى' })).toBeTruthy();
+    expect(card('يوسف')).toBeTruthy();
+    const salma = within(card('سلمى'));
+    expect(salma.getByText(t.portal.code.replace('{code}', 'AB-0201'))).toBeTruthy();
+    expect(await salma.findByRole('button', { name: t.portal.join })).toBeTruthy();
+    expect(salma.getByRole('timer').textContent).toMatch(/\d\d:\d\d:\d\d/);
+    expect(await within(card('يوسف')).findByText(t.portal.lessonsEmpty)).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/portal/students/s1/lessons');
-    fireEvent.click(screen.getByLabelText('يوسف'));
-    expect(await screen.findByText(t.portal.lessonsEmpty)).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/portal/students/s2/lessons');
   });
 
-  it('a student login or an adult who is their own contact reads «حسابي», with no chips', async () => {
-    answer(home({ kind: 'student', students: [kid()] }));
-    const view = renderPortal(<PortalHome />);
-    expect(await screen.findByText(t.portal.myAccount)).toBeTruthy();
-    expect(screen.queryByRole('radio')).toBeNull();
-    view.unmount();
-    answer(home({ students: [kid({ contact_is_self: true })] }));
-    renderPortal(<PortalHome />);
-    expect(await screen.findByText(t.portal.myAccount)).toBeTruthy();
+  it('«ما المطلوب», this month, the package with the amount due and the new reports', async () => {
+    show();
+    const salma = within(await screen.findByRole('article', { name: 'سلمى' }));
+    expect(await salma.findByText('سورة الملك')).toBeTruthy();
+    expect(salma.queryByText(t.portal.nextPlan)).toBeNull();
+    expect(salma.getByText(t.portal.monthAttended.replace('{n}', '6'))).toBeTruthy();
+    expect(await salma.findByText('8 من 12')).toBeTruthy();
+    expect(salma.getByText(new RegExp(t.portal.amountDue))).toBeTruthy();
+    expect(await salma.findByText(t.portal.newReports.one)).toBeTruthy();
   });
 
-  it('the tabs swap the sections: reports, package and the teacher chat (with its unread count)', async () => {
-    answer(home());
-    renderPortal(<PortalHome />);
-    const tabs = await screen.findAllByRole('tab');
-    const labels = [t.portal.lessonsTab, t.portal.reportsTab, t.portal.packageTab, `${t.studentChannel.portalTab} (3)`];
-    await waitFor(() => expect(screen.getAllByRole('tab').map((x) => x.textContent)).toEqual(labels));
-    fireEvent.click(tabs[1] as HTMLElement);
-    expect(await screen.findByText(t.portal.reportsEmpty)).toBeTruthy();
-    fireEvent.click(tabs[2] as HTMLElement);
-    expect(await screen.findByText(t.portal.packageEmpty)).toBeTruthy();
-    expect(screen.getByRole('link', { name: t.portal.renew }).getAttribute('href')).toBe('https://wa.me/966500000000');
-    fireEvent.click(tabs[3] as HTMLElement);
-    expect(await screen.findByLabelText(t.studentChannel.messageLabel)).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith('/portal/students/s1/channel/messages');
+  it('a card opens that child with its tabs; «كل الأبناء» goes back', async () => {
+    show();
+    const open = await screen.findAllByRole('button', { name: t.portal.openChild });
+    fireEvent.click(open[1] as HTMLElement);
+    expect(await screen.findByRole('heading', { name: 'يوسف' })).toBeTruthy();
+    const tabs = screen.getAllByRole('tab').map((x) => x.textContent);
+    const { upcomingTab, attendedTab, absentTab, packageTab } = t.portal;
+    expect(tabs).toEqual([upcomingTab, attendedTab, absentTab, packageTab]);
+    fireEvent.click(screen.getByRole('button', { name: t.portal.allChildren }));
+    expect(await screen.findByRole('article', { name: 'سلمى' })).toBeTruthy();
+  });
+
+  it('no WhatsApp link anywhere, even with renew_url from an old API', async () => {
+    show();
+    fireEvent.click((await screen.findAllByRole('button', { name: t.portal.openChild }))[0] as HTMLElement);
+    fireEvent.click(await screen.findByRole('tab', { name: t.portal.packageTab }));
+    expect(await screen.findByText(t.portal.payments)).toBeTruthy();
+    expect(document.querySelector('a[href*="wa.me"], a[href*="whatsapp"]')).toBeNull();
   });
 
   it('no linked student: its own empty state', async () => {
-    answer(home({ students: [] }));
-    renderPortal(<PortalHome />);
+    show({ me: home({ students: [] }) });
     expect(await screen.findByText(t.portal.noStudents)).toBeTruthy();
   });
 
   it('a failed load says so and retries', async () => {
-    answer(home());
+    apiFetch.mockImplementation(portalApi(answers));
     apiFetch.mockRejectedValueOnce(new Error('down'));
     renderPortal(<PortalHome />);
-    expect(await screen.findByText(t.portal.loadFailed)).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: t.portal.retry }));
-    await waitFor(() => expect(screen.getByRole('group', { name: t.portal.myChildren })).toBeTruthy());
+    fireEvent.click(await screen.findByRole('button', { name: t.portal.retry }));
+    await waitFor(() => expect(screen.getByRole('article', { name: 'سلمى' })).toBeTruthy());
   });
 });
