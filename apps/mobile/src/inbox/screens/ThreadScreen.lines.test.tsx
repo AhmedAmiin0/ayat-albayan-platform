@@ -75,7 +75,7 @@ test('no note when there is no reply line (a single line)', async () => {
 
 test('no note when the window is closed, even with a line', async () => {
   await render({ messages: [inbound], thread: { ...closedWindow, last_inbound_line: 'chat', reply_line: 'chat' } });
-  expect(screen.getByText(t.inbox.sessionClosed)).toBeTruthy();
+  expect(await screen.findByText(t.inbox.reopenBar.closed)).toBeTruthy();
   expect(anyReplyFrom()).toHaveLength(0);
 });
 

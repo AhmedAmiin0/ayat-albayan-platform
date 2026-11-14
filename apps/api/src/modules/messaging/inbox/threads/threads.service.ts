@@ -1,6 +1,6 @@
 import type { ReopenChoice, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { ReopenRequest } from '@/modules/messaging/whatsapp';
+import { ReopenPick, ReopenRequest } from '@/modules/messaging/whatsapp';
 import type { Page } from '@/common/http/http';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
@@ -18,6 +18,8 @@ export type { ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-pag
 export class ThreadsService {
   /** Property-injected (the constructor is at its limit); absent (unit tests): no reopen note. */
   @Optional() @Inject(ReopenRequest) private readonly reopen?: ReopenRequest;
+  /** The bar's live reopen and preselected template (closed window, owner 2026-11-14). */
+  @Optional() @Inject(ReopenPick) private readonly pick?: ReopenPick;
   /** The ring's renewal threshold (inbox.settings.ts); absent (unit tests): the default. */
   @Optional() @Inject(InboxSettings) private readonly settings?: InboxSettings;
 
@@ -64,7 +66,8 @@ export class ThreadsService {
       this.reopenUsable(),
     ]);
     const opts = { tag: first ? familyTag(people.students, threshold) : tag, reopenUsable };
-    const thread = at.found ? toThreadView(at.found, now, opts) : null;
+    const view = at.found ? toThreadView(at.found, now, opts) : null;
+    const thread = view && this.pick ? await this.pick.thread(view, now) : view;
     const detail: ThreadDetail = { thread, messages, has_more: at.rows.length > q.limit, lessons, people };
     return read ? asRead(detail, now) : detail;
   }

@@ -90,9 +90,9 @@ describe('the open thread on phones (< 640px): a full-screen chat', () => {
     expect(line.className).not.toMatch(/max-h-/);
   });
 
-  it('after the 24 h window: the closed notice first, templates only', async () => {
+  it('after the 24 h window: the reopen bar first, templates only', async () => {
     renderThread(false);
-    expect(await screen.findByText(t.inbox.sessionClosed)).toBeTruthy();
+    expect(await screen.findByText(t.inbox.reopenBar.closed)).toBeTruthy();
     expect(screen.queryByRole('textbox', { name: t.inbox.composer.messageLabel })).toBeNull();
     expect(screen.queryByRole('button', { name: t.inbox.composer.modeTemplate })).toBeNull();
     expect(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate })).toBeTruthy();

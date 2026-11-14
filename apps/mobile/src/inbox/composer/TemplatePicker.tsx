@@ -11,6 +11,7 @@ import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { TemplateForm } from './TemplateForm';
 import { TemplateList, templateName } from './TemplateList';
 import type { Outgoing } from '@/inbox/thread/hooks/use-thread';
+import { reopenAllowed } from '@/inbox/composer/reopen/reopen-choices';
 
 const PATH = '/messaging/templates';
 
@@ -37,6 +38,8 @@ interface TemplatePickerProps {
   teacher: boolean;
   onClose: () => void;
   onSend: (out: Outgoing) => void;
+  /** «إعادة فتح المحادثة»: chat-line templates only, opened on the academy's (owner 2026-11-14). */
+  reopen?: { preferred: string | undefined };
 }
 
 /**
@@ -45,7 +48,11 @@ interface TemplatePickerProps {
  */
 export function TemplatePicker(props: TemplatePickerProps) {
   const templates = useApprovedTemplates(props.visible);
-  const [chosen, setChosen] = useState<TemplateView | null>(null);
+  const reopen = props.reopen;
+  const choices = (rows: readonly TemplateView[] | undefined) =>
+    reopenAllowed(rows, props.teacher, reopen?.preferred);
+  // The reopen sheet opens on the preselected template's form (mounted when tapped).
+  const [chosen, setChosen] = useState(() => (reopen ? choices(templates.data).initial : null));
   const close = () => {
     setChosen(null);
     props.onClose();
@@ -74,7 +81,12 @@ export function TemplatePicker(props: TemplatePickerProps) {
             }}
           />
         ) : (
-          <TemplateList templates={templates} teacher={props.teacher} onPick={setChosen} />
+          <TemplateList
+            templates={templates}
+            teacher={props.teacher}
+            onPick={setChosen}
+            only={reopen ? (rows) => choices(rows).list : undefined}
+          />
         )}
       </Screen>
     </Modal>

@@ -1,11 +1,11 @@
-import { afterWindowNote } from '@ab/client-core';
 import type { ChatFileProblem, ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { Icon } from '@/components/ui/display/icon';
 import { IconButton } from '@/components/ui/form/icon-button';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { noneAllowedText, useNoneAllowed, type NoneReason } from '@/features/messaging/inbox/composer/lib/allowed-templates';
+import { useNoneAllowed } from '@/features/messaging/inbox/composer/lib/allowed-templates';
+import { ReopenBar } from '@/features/messaging/inbox/composer/reopen';
 import { AttachButton } from './AttachButton';
 import { FileComposer } from './FileComposer';
 import { sessionUntil } from '@/features/messaging/inbox/format';
@@ -57,27 +57,23 @@ function Notices({ notes }: { notes: string[] }) {
 }
 
 /**
- * The notices, the closed window's first. The reply line before the open window's note (collapsed,
- * only the first shows); a template leaves from its own registry line (docs/12 §13.18), not
- * reply_line: no reply line in template mode. With no template allowed the help line replaces
- * «فأرسل قالبًا».
+ * The notices: the gate, the reply line, then the open window's note (collapsed, only the first
+ * shows); a template leaves from its own registry line (docs/12 §13.18), not reply_line: no reply
+ * line in template mode. The closed window says its part in ReopenBar (owner 2026-11-14).
  */
-function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: NoneReason | null; clock: Clock; trying: boolean }): string[] {
-  const { thread, gateNote, mode, noneAllowed, clock } = input;
-  const open = thread.session_open;
-  const until = open && thread.last_inbound_at ? sessionUntil(thread.last_inbound_at, clock) : null;
-  const shut = open || noneAllowed ? null : t.inbox.sessionClosed;
-  // Owner 2026-11-06: the note says what happens (the welcome template, or reopen and wait).
-  const closedNote = input.trying ? t.inbox[afterWindowNote(thread.reopen_choice)] : shut;
+function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { clock: Clock }): string[] {
+  const { thread, gateNote, mode, clock } = input;
+  const inbound = thread.session_open ? thread.last_inbound_at : null;
+  const until = inbound ? sessionUntil(inbound, clock) : null;
   const replyFrom = mode === 'text' ? replyFromText(thread) : null;
-  return [closedNote, gateNote, replyFrom, until].filter((n): n is string => !!n);
+  return [gateNote, replyFrom, until].filter((n): n is string => !!n);
 }
 
 /**
  * The reply box at every width (phones since owner 2026-10-05, desktop since W2): pinned under the
  * log: the notices in one line, then a one-line growing message box with the template toggle
- * before it and a round «أرسل» after it. Outside the 24 h window: templates only. Teacher and sales
- * with no template allowed get no toggle, and after the window one line on what they can do.
+ * before it and a round «أرسل» after it. Outside the 24 h window ReopenBar on top (2026-11-14):
+ * the reopen picker, the live template's tick, or (none allowed) what they can do; then templates.
  * Staff (not teachers) also get a paperclip wherever a text goes (D2; after the window too on a
  * Kapso chat line, owner 2026-11-01): a picked file swaps the box for FileComposer. The File lives
  * here only (never in the draft store), for this chat only. Staff also get «الردود السريعة»
@@ -91,7 +87,7 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
   const trying = useTriesAfterWindow(thread);
   const typing = open || trying;
   const noneAllowed = useNoneAllowed(teacher);
-  const notes = noticeLines({ thread, gateNote, mode, noneAllowed, clock: useClock(), trying });
+  const notes = noticeLines({ thread, gateNote, mode, clock: useClock() });
   const access = useChatAccess(inbox);
   const { files, replies } = access;
   const [picked, setPicked] = useState<{ phone: string; file: File } | null>(null);
@@ -124,11 +120,10 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
   return (
     <div className="grid max-h-[70dvh] shrink-0 gap-1.5 overflow-y-auto border-t border-rule bg-page px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
       <Notices notes={notes} />
+      {!open && <ReopenBar {...{ thread, context, noneAllowed, trying, teacher }} />}
       {!open && <SendRatingButton thread={thread} />}
       {template && (toggle || locked || quote) && <div className="flex gap-1.5">{toggle}{locked}{quote}</div>}
-      {!typing && noneAllowed ? (
-        <p className="px-1 text-xs text-ink-2">{noneAllowedText(noneAllowed, t.inbox.composer.noAllowedHelp)}</p>
-      ) : template ? (
+      {!typing && noneAllowed ? null : template ? (
         <TemplateComposer phone={thread.phone_e164} context={context} teacher={teacher} />
       ) : file ? (
         <FileComposer phone={thread.phone_e164} file={file} onDone={() => setPicked(null)} />

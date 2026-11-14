@@ -37,9 +37,9 @@ beforeEach(() => {
   mockApiSend.mockReset();
 });
 
-test('a closed Kapso chat: no request on open; the note says the welcome goes first on send', async () => {
+test('a closed Kapso chat: no request on open; the bar offers the reopen', async () => {
   await open({ ...CLOSED, try_after_window: true });
-  expect(screen.getByText(t.inbox.tryAfterWindow)).toBeTruthy();
+  expect(await screen.findByText(t.inbox.reopenBar.closed)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
   expect(mockApiFetch.mock.calls.some((c) => String(c[0]).includes('/reopen'))).toBe(false);
 });

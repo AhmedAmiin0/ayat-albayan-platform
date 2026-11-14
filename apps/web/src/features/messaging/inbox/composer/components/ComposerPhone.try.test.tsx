@@ -13,7 +13,7 @@ vi.mock('@/lib/http/supabase', () => ({
 }));
 
 // Owner 2026-10-31: after the 24 h window, a Kapso chat line (try_after_window) still lets staff
-// type; the note says the chat is reopened on send («dont use templates»: no highlighted toggle).
+// type (no highlighted toggle). Owner 2026-11-14: the long note gave way to the reopen bar.
 
 const props = { context: {}, gateNote: null, mode: 'text' as const, onMode: vi.fn(), teacher: false };
 const box = () => screen.queryByRole('textbox', { name: t.inbox.composer.messageLabel });
@@ -37,10 +37,13 @@ function show(mode: InboxMode, tries: boolean, choice?: 'template' | 'wait') {
 
 afterEach(() => apiFetch.mockReset());
 
+const reopen = () => screen.queryByRole('button', { name: t.inbox.reopenBar.action });
+
 describe('ComposerPhone after the 24 h window', () => {
-  it.each(['admin', 'sales'] as const)('%s on a Kapso chat line: the reopen note, the box', async (mode) => {
+  it.each(['admin', 'sales'] as const)('%s on a Kapso chat line: the reopen bar, the box', async (mode) => {
     show(mode, true);
-    expect(screen.getByText(t.inbox.tryAfterWindow)).toBeTruthy();
+    expect(screen.getByText(t.inbox.reopenBar.closed)).toBeTruthy();
+    expect(reopen()).toBeTruthy();
     expect(screen.queryByText(t.inbox.sessionClosed)).toBeNull();
     expect(box()).toBeTruthy();
     await waitFor(() => expect(toggle()).toBeTruthy());
@@ -48,27 +51,21 @@ describe('ComposerPhone after the 24 h window', () => {
     expect(toggle()?.className).not.toContain('bg-lapis-wash');
   });
 
-  it('«بدون قالب» (owner 2026-11-06): the reopen-and-wait note, the box', () => {
+  it('«بدون قالب» (owner 2026-11-06): the same bar, the box', () => {
     show('admin', true, 'wait');
-    expect(screen.getByText(t.inbox.tryAfterWindowWait)).toBeTruthy();
-    expect(screen.queryByText(t.inbox.tryAfterWindow)).toBeNull();
+    expect(reopen()).toBeTruthy();
     expect(box()).toBeTruthy();
   });
 
-  it('a template chosen: the welcome template note', () => {
-    show('sales', true, 'template');
-    expect(screen.getByText(t.inbox.tryAfterWindow)).toBeTruthy();
-  });
-
-  it('a meta chat line (no flag): templates only, as before', () => {
+  it('a meta chat line (no flag): the bar only, no box', () => {
     show('admin', false);
-    expect(screen.getByText(t.inbox.sessionClosed)).toBeTruthy();
+    expect(reopen()).toBeTruthy();
     expect(box()).toBeNull();
   });
 
-  it('teacher mode keeps templates only, even on Kapso', () => {
+  it('teacher mode: the bar, never the box, even on Kapso', () => {
     show('teacher', true);
-    expect(screen.queryByText(t.inbox.tryAfterWindow)).toBeNull();
+    expect(reopen()).toBeTruthy();
     expect(box()).toBeNull();
   });
 });

@@ -3233,7 +3233,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 8
     }
   },
   "src/inbox/composer/ComposerInput.tsx": {

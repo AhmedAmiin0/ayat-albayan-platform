@@ -96,4 +96,4 @@ export { WhatsappModule } from './whatsapp.module';
 export { ReopenRequest } from './sender/window/reopen-request';
 export { capsOf, windowless } from './drivers/driver-caps';
 export { stampDelivered } from './messages/delivered';
-export { ReopenCancel } from './sender/window/manual-send';
+export { ReopenCancel, ReopenPick, type ReopenStamp } from './sender/window/manual-send';

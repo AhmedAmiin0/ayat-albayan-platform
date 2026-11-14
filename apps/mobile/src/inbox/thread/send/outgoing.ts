@@ -22,6 +22,8 @@ export type Outgoing =
       params: TemplateParamsInput;
       preview: string;
       lessonId?: string;
+      /** «إعادة فتح المحادثة» (owner 2026-11-14): this phone's reopen template. */
+      reopen?: true;
     };
 
 /** One send of useSendMessage. */
@@ -69,5 +71,6 @@ export function sendBody({ out, id }: SendInput) {
     return { text: out.text, clientRequestId: id, ...reply, ...corrects };
   }
   const lesson = out.lessonId ? { lessonId: out.lessonId } : {};
-  return { key: out.key, params: out.params, clientRequestId: id, ...lesson };
+  const reopen = out.reopen ? { reopen: true } : {};
+  return { key: out.key, params: out.params, clientRequestId: id, ...lesson, ...reopen };
 }
