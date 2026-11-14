@@ -17,7 +17,6 @@ const sunday = at('sun', ['2026-10-04T13:00', '2026-10-04T13:45']);
 
 const input = (lessons: DayInput['lessons']): DayInput => ({
   lessons,
-  pending: [],
   date: '2026-10-01',
   tz: 'Africa/Cairo',
   now,
@@ -30,11 +29,6 @@ test('the running lesson leads; the rest drops it and closed lessons; ended ones
   expect(day.ended.map((l) => l.id)).toEqual(['done']);
   expect(day.dayEnd).toBeNull();
   expect(day.next).toBeNull();
-});
-
-test('a due report shows once: the ended lesson in the block, the hero’s never', () => {
-  const day = teacherDay(input([running, done]));
-  expect(day.due.map((d) => d.lessonId)).toEqual(['done']);
 });
 
 test('no lessons today: «empty» and the next lesson ahead within the window', () => {

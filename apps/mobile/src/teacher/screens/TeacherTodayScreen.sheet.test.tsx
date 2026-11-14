@@ -52,19 +52,20 @@ test('the hero’s «التفاصيل» opens the sheet; its fixed link lesson h
   expect(screen.queryByTestId('join-classroom')).toBeNull();
 });
 
-test('the ended lesson’s sheet: ONE report button, to «اليوم»’s own report route', async () => {
+test('the ended lesson: its row lead and ONE sheet button, to «اليوم»’s own route', async () => {
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   const fold = await screen.findByRole('button', { name: counted(t.today.endedFold, 1) });
   await fireEvent.press(fold);
+  expect(screen.getAllByRole('button', { name: t.reports.open })).toHaveLength(1);
   await fireEvent.press(await openRow('يوسف أحمد'));
-  const [report, ...more] = screen.getAllByRole('button', { name: t.reports.open });
+  const [, sheet, ...more] = screen.getAllByRole('button', { name: t.reports.open });
   expect(more).toHaveLength(0);
-  if (!report) throw new Error('no report button in the sheet');
-  await fireEvent.press(report);
+  if (!sheet) throw new Error('no report button in the sheet');
+  await fireEvent.press(sheet);
   expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
 });
 
-test('an excused lesson that started: a quiet row with no report lead; its report shows once', async () => {
+test('an excused lesson that started: its row leads with the report, shown once', async () => {
   const excused = {
     ...evening,
     status: 'excused' as const,
@@ -74,8 +75,9 @@ test('an excused lesson that started: a quiet row with no report lead; its repor
   mockApiFetch.mockImplementation(answer([later, excused], []));
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   await openRow('سلمى علي');
-  expect(screen.queryAllByRole('button', { name: t.reports.open })).toHaveLength(0);
+  // No due block on «اليوم» any more (owner 2026-11-14): the row's lead is the one way in.
+  expect(screen.getAllByRole('button', { name: t.reports.open })).toHaveLength(1);
   expect(
-    screen.getAllByRole('button', { name: new RegExp(`^${t.reports.open} — سلمى علي`) }),
-  ).toHaveLength(1);
+    screen.queryAllByRole('button', { name: new RegExp(`^${t.reports.open} — سلمى علي`) }),
+  ).toHaveLength(0);
 });

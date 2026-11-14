@@ -107,7 +107,7 @@ test.describe('teacher isolation (R-NFR-02, rule 9)', () => {
       await seedAbrarPayout({ teacherId: abrar, amount: OWN_AMOUNT });
       const teacher = await asRole('teacher');
       await teacher.goto('/teacher');
-      // Her running lesson is the hero of «اليوم» (docs/48), above the tabs.
+      // Her running lesson is the hero of «اليوم» (docs/48).
       await expect(teacher.getByRole('region', { name: ar.today.running })).toContainText(`سدرة ${tag}`);
       await expect(teacher.getByText(hiba.studentName)).toHaveCount(0);
 

@@ -139,6 +139,10 @@ Each PR carries its web **and** mobile part. All three touch `packages/shared/i1
   | present / absent in the window. Row → existing Drawer with tabs «الحلقات» (TeacherLessonCard with the
   actions + report link to `/teacher/report/$lessonId`), «التقارير» (GradeChart + ReportHistoryList),
   «الحضور» (C5). Keep «اليوم». One tz for the board (the viewer's), not MyWeek's mix.
+  **Owner change 2026-11-14:** the `/teacher` home is today's lessons only (the hero, then «بقية
+  اليوم» and the ended fold): no tabs, no board, no pending-reports block, no week. The board lives
+  on `/teacher/students` only; «المواعيد المتاحة» moved to «جدولي» (`/teacher/calendar?view=`).
+  Mobile «اليوم» drops its due-reports block too; an ended row keeps its report lead.
 - **C3 teacher cancel (API).** `POST /teachers/me/lessons/:id/cancel {reason}` (required) under
   `self.teacher`: `LessonAccess.assertCanTouch`, then refuse unless the lesson is open and
   `starts_at > now` (409 `lesson_started`; also blocks the auto-held correction branch), then

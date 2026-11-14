@@ -2,6 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { lessonsOf, queuedFor, resetAbrar, ruleOf, seedFamily } from '../../support/core/schedule';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
+import { openMyAvailability } from '../../support/teaching/my-calendar';
 
 // Journey 5 (docs/03 §5): the teacher sets availability → the booking wizard only offers those
 // times. R-TCH-02, R-SCH-08 (teacher self-service), R-SCH-06 (times read against availability).
@@ -15,10 +16,9 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     await resetAbrar(); // no availability, no lessons
     const family = await seedFamily('أم سارة', ['سارة']);
 
-    // The teacher, on their own dashboard: one range, saved in Riyadh time.
+    // The teacher, on «جدولي» › «المواعيد المتاحة»: one range, saved in Riyadh time.
     const teacher = await asRole('teacher');
-    await teacher.goto('/teacher');
-    await teacher.getByRole('tab', { name: ar.availability.title }).click();
+    await openMyAvailability(teacher);
     await teacher.getByLabel(ar.availability.tz).selectOption('Asia/Riyadh');
     await teacher.getByRole('button', { name: `${ar.availability.addSlot} ${WEDNESDAY}`, exact: true }).click();
     await teacher.getByLabel(`${WEDNESDAY} ${ar.availability.from}`).selectOption('16:00');

@@ -40,7 +40,7 @@ describe('TeacherDashboard meetings follow «صفحات المعلم» (owner 20
 
   it('both switches off: no meeting button and no meetings list', async () => {
     renderDash({});
-    await screen.findByRole('tablist');
+    await screen.findByText(t.teacherDash.noLessonsToday);
     expect(button(INSTANT)).toBeNull();
     expect(button(SCHEDULED)).toBeNull();
     expect(screen.queryByRole('region', { name: t.meetings.internal.list })).toBeNull();
@@ -49,7 +49,7 @@ describe('TeacherDashboard meetings follow «صفحات المعلم» (owner 20
 
   it('only «اجتماع داخلي» on: the instant button and the list, no scheduled button', async () => {
     renderDash({ teacher_internal_meetings_enabled: true });
-    await screen.findByRole('tablist');
+    await screen.findByText(t.teacherDash.noLessonsToday);
     expect(button(INSTANT)).toBeTruthy();
     expect(button(SCHEDULED)).toBeNull();
     await waitFor(() => expect(apiFetch.mock.calls.some((c) => c[0] === '/meetings')).toBe(true));
@@ -57,7 +57,7 @@ describe('TeacherDashboard meetings follow «صفحات المعلم» (owner 20
 
   it('only «اجتماع مجدول» on: the scheduled button alone', async () => {
     renderDash({ teacher_scheduled_meetings_enabled: true });
-    await screen.findByRole('tablist');
+    await screen.findByText(t.teacherDash.noLessonsToday);
     expect(button(INSTANT)).toBeNull();
     expect(button(SCHEDULED)).toBeTruthy();
   });

@@ -30,7 +30,7 @@ const at = { now: new Date('2026-10-03T09:00:00.000Z'), today: '2026-10-03' };
 function renderPanel(lessons: DashboardPanelProps['lessons']) {
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <DashboardPanel tab="today" me={ME} lessons={lessons} at={at} onDone={vi.fn()} onOpen={vi.fn()} />
+      <DashboardPanel me={ME} lessons={lessons} at={at} onDone={vi.fn()} onOpen={vi.fn()} />
     </QueryClientProvider>,
   );
 }

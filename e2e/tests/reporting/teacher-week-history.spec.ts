@@ -1,12 +1,12 @@
-import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { startedToday } from '../../support/finance/money';
 import { addDays, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { apiSubmit } from '../../support/reporting/teacher-extra';
+import { openMyLesson } from '../../support/teaching/my-calendar';
 
-// Teacher dashboard beyond journey 2 (R-TCH-03, R-REP-05, R-SCH-03, docs/46 C1/C4): the
-// teacher's join link, the week tab across days on the teacher's (Cairo) clock, «سأحضر» on a
-// coming lesson, «تقارير لم تُكتب بعد» → the report, and the board «طلابي» → the student file.
+// Teacher pages beyond journey 2 (R-TCH-03, R-REP-05, R-SCH-03, docs/46 C1/C4): the hero's join
+// link on «اليوم» (today's lessons only, owner 2026-11-14), «سأحضر» on a coming lesson in
+// «جدولي», «تقارير لم تُكتب بعد» in the student file → the report, and «الطلاب» → the file.
 
 const DAY = 86_400_000;
 const LINK = 'https://meet.jit.si/ayat-e2e-teacher-link';
@@ -18,7 +18,6 @@ function cairo(at: Date): { day: string; clock: string } {
   const clock = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Africa/Cairo' });
   return { day: at.toLocaleDateString('en-CA', { timeZone: 'Africa/Cairo' }), clock: clock.format(at) };
 }
-const weekdayName = (day: string) => ar.enums.weekday[String(new Date(`${day}T00:00:00Z`).getUTCDay()) as keyof typeof ar.enums.weekday];
 
 async function student(tag: string, name: string): Promise<{ id: string; name: string }> {
   const family = await seedFamily(`أم ${name}`, [`${name} ${tag}`]);
@@ -30,20 +29,22 @@ async function seedAll(teacherId: string, tag: string) {
   const week = await student(tag, 'ريماس');
   const waiting = await student(tag, 'ضحى');
   const history = await student(tag, 'جنى');
+  const coming = await student(tag, 'لين');
   const slot = (days: number) => riyadh(addDays(riyadhToday, days), '12:00');
   const lesson = (studentId: string, startsAt: Date) => seedLesson({ teacherId, studentId, startsAt, minutes: 45 });
-  const days = [startedToday(), slot(2), slot(4)];
-  const weekLessons = await Promise.all(days.map((d) => lesson(week.id, d)));
+  const days = [startedToday(), slot(2)];
+  const weekLessons = [
+    await lesson(week.id, days[0] ?? new Date()),
+    await lesson(coming.id, slot(2)),
+  ];
   const missing = await lesson(waiting.id, new Date(Date.now() - 2 * DAY));
   const past = [await lesson(history.id, new Date(Date.now() - 3 * DAY)), await lesson(history.id, new Date(Date.now() - 5 * DAY))];
-  await withSql((sql) => sql`update public.students set teacher_id = ${teacherId} where id = ${history.id}`);
-  return { week, waiting, history, days, weekLessons, missing, past };
+  await withSql((sql) => sql`update public.students set teacher_id = ${teacherId} where id in ${sql([history.id, waiting.id])}`);
+  return { week, waiting, history, coming, days, weekLessons, missing, past };
 }
 
-const tab = (page: Page, name: string) => page.getByRole('tab', { name }).click();
-
-test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R-REP-05)', () => {
-  test('join link, the week by day, «سأحضر», a missing report, and the student file', async ({ asRole }) => {
+test.describe('teacher pages — today, «جدولي», pending reports, history (R-TCH-03, R-REP-05)', () => {
+  test('join link, «سأحضر» in «جدولي», a missing report, and the student file', async ({ asRole }) => {
     test.setTimeout(150_000);
     const teacherId = await resetAbrar();
     const [prev] = await withSql((sql) => sql<{ link: string | null }[]>`select meeting_link as link from public.teachers where id = ${teacherId}`);
@@ -67,34 +68,30 @@ test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R
       await expect(today.getByRole('button', { name: ar.lessons.event.confirm })).toHaveCount(0);
       await today.getByRole('button', { name: ar.common.close }).click();
 
-      // The week tab: one card on each of the three days, at the Cairo clock.
-      await tab(teacher, ar.teacherDash.week);
-      await expect(teacher.getByRole('article', { name: new RegExp(s.week.name) })).toHaveCount(3);
-      for (const at of s.days) {
-        const { day, clock } = cairo(at);
-        const section = teacher.getByRole('region', { name: new RegExp(`^${weekdayName(day)} `) });
-        await expect(section.getByRole('article', { name: new RegExp(`^${clock} .*${s.week.name}`) })).toHaveCount(1);
-      }
+      // The home is today only: the coming lessons are not on it.
+      await expect(teacher.getByRole('tablist')).toHaveCount(0);
+      await expect(teacher.getByRole('table', { name: ar.teacherBoard.tab })).toHaveCount(0);
 
-      // «سأحضر» on a coming lesson (docs/46 C4): the chip, teacher_confirmed_at set, the
-      // status kept.
-      const ahead = cairo(s.days[1] ?? new Date());
-      const coming = teacher.getByRole('article', { name: new RegExp(`^${ahead.clock} .*${s.week.name}`) }).first();
+      // «سأحضر» on a coming lesson in «جدولي» (docs/46 C4): the chip, teacher_confirmed_at set,
+      // the status kept.
+      const at = s.days[1] ?? new Date();
+      const drawer = await openMyLesson(teacher, { name: new RegExp(s.coming.name), at });
+      const coming = drawer.getByRole('article', { name: new RegExp(`^${cairo(at).clock} .*${s.coming.name}`) });
       await coming.getByRole('button', { name: ar.teacherBoard.confirm }).click();
       await expect(coming.getByText(ar.teacherBoard.confirmedChip)).toBeVisible();
       const said = await withSql((sql) => sql<{ status: string; yes: boolean }[]>`select status, teacher_confirmed_at is not null as yes from public.lessons where id = ${s.weekLessons[1] ?? ''}`);
       expect(said).toEqual([{ status: 'scheduled', yes: true }]);
 
-      // «تقارير لم تُكتب بعد»: the past lesson without a report opens its form.
-      await tab(teacher, ar.teacherDash.today);
+      // «تقارير لم تُكتب بعد» in her student file: the past lesson without a report opens its form.
+      await teacher.goto(`/teacher/students/${s.waiting.id}`);
       const pending = teacher.getByRole('region', { name: ar.reports.pending });
       await pending.getByRole('listitem').filter({ hasText: s.waiting.name }).getByRole('link', { name: ar.reports.open }).click();
       await expect(teacher).toHaveURL(new RegExp(`/teacher/report/${s.missing}$`));
       await expect(teacher.getByRole('region', { name: ar.reports.identity })).toContainText(s.waiting.name);
 
-      // «طلابي» (the board, the home's first tab) → the student's row opens «ملف الطالب»
+      // «الطلاب» (the board, /teacher/students) → the student's row opens «ملف الطالب»
       // (docs/48): her name and «سجل الحضور» (the reports live in the lessons, docs/49).
-      await teacher.goto('/teacher');
+      await teacher.goto('/teacher/students');
       const board = teacher.getByRole('table', { name: ar.teacherBoard.tab });
       await board.getByRole('row').filter({ hasText: s.history.name }).click();
       await expect(teacher).toHaveURL(new RegExp(`/teacher/students/${s.history.id}`));

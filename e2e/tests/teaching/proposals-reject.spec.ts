@@ -1,6 +1,7 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { addDays, lessonsOf, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 import { riyadhDay } from '../../support/teaching/schedule-extra';
+import { openMyLesson } from '../../support/teaching/my-calendar';
 
 // A teacher's «اقترح موعدًا آخر» the admin answers «ارفض الاقتراح» (R-SCH-08): the proposal is
 // `rejected` and decided, the lesson stays exactly where it was, the guardian hears nothing and the
@@ -33,9 +34,7 @@ test.describe('lesson proposal — admin rejects (R-SCH-08)', () => {
     const waiting = ar.teacherDash.propose.pending.split('{when}')[1] ?? '';
 
     const teacher = await asRole('teacher');
-    await teacher.goto('/teacher');
-    await teacher.getByRole('tab', { name: ar.teacherDash.week }).click();
-    const card = teacher.getByRole('article', { name: new RegExp(name) });
+    const card = (await openMyLesson(teacher, { name: new RegExp(name), at: startsAt })).getByRole('article');
     await expect(card.getByText(waiting)).toBeVisible();
     await expect(card.getByRole('button', { name: ar.teacherDash.proposeReschedule })).toHaveCount(0);
 
@@ -54,9 +53,8 @@ test.describe('lesson proposal — admin rejects (R-SCH-08)', () => {
     expect(rows.map((l) => [l.status, l.starts_at.toISOString()])).toEqual([['scheduled', startsAt.toISOString()]]);
     expect(await queuedFor(family.guardianId)).toEqual([]);
 
-    await teacher.reload();
-    await teacher.getByRole('tab', { name: ar.teacherDash.week }).click();
-    await expect(card.getByText(waiting)).toHaveCount(0);
-    await expect(card.getByRole('button', { name: ar.teacherDash.proposeReschedule })).toBeVisible();
+    const again = (await openMyLesson(teacher, { name: new RegExp(name), at: startsAt })).getByRole('article');
+    await expect(again.getByText(waiting)).toHaveCount(0);
+    await expect(again.getByRole('button', { name: ar.teacherDash.proposeReschedule })).toBeVisible();
   });
 });

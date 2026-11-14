@@ -1,6 +1,6 @@
 import { addDays, counted, type LessonView, weekWindowIn, zonedPartsIn } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
 import { EmptyState } from '@/components/ui/display/empty-state';
@@ -25,9 +25,10 @@ import { TeacherLessonCard } from './TeacherLessonCard';
 /**
  * /teacher/calendar «جدولي» (R-TCH-03, R-SCH-08): my lessons on my own week (docs/34), one
  * row, the same grid as the admin's (GET /teachers/me/lessons, own lessons only). A lesson opens
- * my lesson card: join, confirm / attendance, «اقترح ميعاد تاني», the report.
+ * my lesson card: join, confirm / attendance, «اقترح ميعاد تاني», the report. `toggle`: the
+ * «الحلقات | المواعيد المتاحة» switch in the head (TeacherCalendar).
  */
-export function MyWeek() {
+export function MyWeek({ toggle }: { toggle?: ReactNode }) {
   const now = useNow();
   const tz = useViewerTz();
   const thisWeek = currentWeekStart(now, tz);
@@ -45,6 +46,7 @@ export function MyWeek() {
         {lessons.data && lessons.data.length > 0 && (
           <span className="text-sm text-ink-3 tabular-nums">{counted(t.schedule.lessonCount, lessons.data.length)}</span>
         )}
+        {toggle}
       </PageHead>
       <div role="group" aria-label={t.booking.weekNav} className="mb-4 flex flex-wrap items-center gap-2">
         <Button type="button" variant="secondary" size="sm" onClick={() => setWeek(addDays(week, -7))}>

@@ -94,22 +94,15 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/a/confirm-attendance');
   });
 
-  it('«طلابي» (the board) is the first tab; the week tab lists every day', async () => {
+  it('today only (owner 2026-11-14): no tabs, no students board, no pending reports, no week', async () => {
     renderDash();
-    const table = await screen.findByRole('table', { name: t.teacherBoard.tab });
-    expect(screen.getAllByRole('tab')[0]?.getAttribute('aria-selected')).toBe('true');
-    expect(within(table).getByRole('link', { name: 'سهيلة' }).getAttribute('href')).toBe('/teacher/students/s-1');
-    fireEvent.click(screen.getByRole('tab', { name: t.teacherDash.week }));
-    expect(screen.getAllByRole('article')).toHaveLength(2);
-  });
-
-  it('the week is the next 7 days from today (on a Friday too), with its dates as a heading', async () => {
-    vi.setSystemTime(new Date('2026-10-09T09:00:00.000Z')); // Friday 9 Oct, 12:00 Cairo
-    renderDash();
-    fireEvent.click(await screen.findByRole('tab', { name: t.teacherDash.week }));
-    const from = '2026-09-24T21%3A00%3A00.000Z';
-    expect(apiFetch).toHaveBeenCalledWith(`/teachers/me/lessons?from=${from}&to=2026-10-22T21%3A00%3A00.000Z`);
-    expect(screen.getByRole('heading', { name: 'من 9 أكتوبر إلى 15 أكتوبر' })).toBeTruthy();
+    await screen.findByRole('region', { name: new RegExp(t.today.next) });
+    expect(screen.queryByRole('tablist')).toBeNull();
+    expect(screen.queryByRole('table', { name: t.teacherBoard.tab })).toBeNull();
+    expect(screen.queryByRole('region', { name: t.reports.pending })).toBeNull();
+    expect(apiFetch).not.toHaveBeenCalledWith('/teachers/me/pending-reports');
+    // Monday's lesson is not on the home.
+    expect(screen.queryAllByRole('article')).toHaveLength(0);
   });
 
   it('a login without a teachers row is told to call the admin', async () => {

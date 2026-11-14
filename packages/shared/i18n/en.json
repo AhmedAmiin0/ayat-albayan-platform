@@ -1114,8 +1114,6 @@
   },
   "teacherDash": {
     "title": "My lessons",
-    "today": "Today",
-    "week": "Week",
     "joinLink": "Lesson link",
     "join": "Join lesson",
     "myStudents": "My students",
@@ -1128,9 +1126,7 @@
     "markAttendance": "Record attendance",
     "proposeReschedule": "Propose another time",
     "notLinked": "Your account isn't linked to a teacher profile yet. Contact the admin team.",
-    "tabs": "Teacher dashboard sections",
     "loadError": "We couldn't load your lessons. Try again.",
-    "weekRange": "From {from} to {to}",
     "emptyHint": "Lessons show up here as soon as the admin team books them",
     "propose": {
       "title": "Propose another time",
@@ -4477,6 +4473,10 @@
     "statements": "Monthly statements",
     "messages": "Student messages"
   },
+  "teacherCalendar": {
+    "views": "My schedule view",
+    "lessons": "Lessons"
+  },
   "teacherBoard": {
     "tab": "My students",
     "kinds": "Student status",
@@ -4676,10 +4676,7 @@
     "nextLesson": "Your next lesson: {when} · {names}",
     "noneSoon": "No lessons in the next two weeks",
     "openSchedule": "Open my schedule",
-    "noOther": "No other lessons today",
-    "pendingTitle": "Reports not written yet · {n}",
-    "pendingMore": "Show the rest ({n})",
-    "pendingError": "Could not load the pending reports"
+    "noOther": "No other lessons today"
   },
   "live": {
     "now": "Live now"

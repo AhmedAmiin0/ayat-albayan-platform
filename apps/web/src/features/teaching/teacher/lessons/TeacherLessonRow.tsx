@@ -16,9 +16,12 @@ export interface TeacherLessonRowProps {
   tz: string;
   onOpen: (lessonId: string) => void;
   onDone: (message: string) => void;
-  /** An ended row in «انتهت n حلقات اليوم»: muted, no lead. */
+  /** An ended row in «انتهت n حلقات اليوم»: muted, its report lead only (owner 2026-11-14). */
   ended?: boolean;
 }
+
+/** An ended row never offers the join; its report stays (no pending block on the home). */
+const endedLead = (lead: string | null) => (lead === 'report' ? lead : null);
 
 const ROW = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-1.5';
 const OPEN =
@@ -36,7 +39,7 @@ export function TeacherLessonRow(props: TeacherLessonRowProps) {
   const status = useLessonStatusText().chip(lesson.status);
   const word = teacherWord(lesson, { now: plan.now, status });
   const names = studentNames(lesson);
-  const lead = ended ? null : plan.lead;
+  const lead = ended ? endedLead(plan.lead) : plan.lead;
   const look = { filled: lead === 'join', size: 'md' } as const;
   return (
     <li className={cn(ROW, ended && 'text-ink-2')}>

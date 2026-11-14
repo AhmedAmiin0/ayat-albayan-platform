@@ -84,7 +84,7 @@ Key enums (store in `packages/catalog/src/enums`):
 ### 3.4 Teachers
 - **R-TCH-01** `teachers` table: display name (ar/en), gender, programs, phone, email (auth), meeting link, per-lesson rate (EGP) by duration, status, max students.
 - **R-TCH-02** Weekly availability grid (`teacher_availability`: weekday, start, end, tz) + one-off unavailability (`teacher_time_off`).
-- **R-TCH-03** Teacher web dashboard: today / this week, join link, pending reports, students list. Teacher mode (owner request 2026-10-02, web + mobile): a teacher signs in and sees only their own chats, report forms, calendar, submitted reports and payouts (docs/10 §9); every scope is enforced server-side.
+- **R-TCH-03** Teacher web dashboard: today / this week, join link, pending reports, students list. Owner change 2026-11-14: the home («اليوم», web and mobile) lists today's lessons only (hero, the rest of today, the ended fold); the week and availability live in «جدولي», the students list on «الطلاب», pending reports in each student file and on each lesson's row and drawer. Teacher mode (owner request 2026-10-02, web + mobile): a teacher signs in and sees only their own chats, report forms, calendar, submitted reports and payouts (docs/10 §9); every scope is enforced server-side.
 - **R-TCH-04** Teacher payout report per month: completed lessons × rate; export CSV.
 
 ### 3.5 Lessons & meeting links

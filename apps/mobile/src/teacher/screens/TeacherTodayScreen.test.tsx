@@ -2,6 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { t } from '@/core/lib/i18n/i18n';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { answer, evening, held, later, NOW, saturday } from '@/teacher/today/testing/day-fixtures';
+import { counted } from '@ab/shared';
 import { shortDate } from '@/today';
 import { TeacherTodayScreen } from './TeacherTodayScreen';
 
@@ -30,7 +31,7 @@ beforeEach(() => {
   mockApiFetch.mockImplementation(answer([later, held, evening, saturday]));
 });
 
-test('the short date, no zone line, the hero, the due block and one row; nothing else', async () => {
+test('the short date, no zone line, the hero and one row; no due block (2026-11-14)', async () => {
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   const hero = within(await screen.findByTestId('teacher-hero-actions'));
   expect(screen.getByText(shortDate(NOW))).toBeTruthy();
@@ -38,10 +39,8 @@ test('the short date, no zone line, the hero, the due block and one row; nothing
   // The hero: «سأحضر» filled, her own link as the one peer, «التفاصيل».
   expect(hero.getByRole('button', { name: t.teacherBoard.confirm })).toBeTruthy();
   expect(hero.getByRole('button', { name: t.teacherDash.join })).toBeTruthy();
-  const due = within(screen.getByTestId('due-reports'));
-  expect(
-    due.getByRole('button', { name: new RegExp(`^${t.reports.open} — يوسف أحمد · `) }),
-  ).toBeTruthy();
+  expect(screen.queryByTestId('due-reports')).toBeNull();
+  expect(mockApiFetch).not.toHaveBeenCalledWith('/teachers/me/pending-reports');
   expect(within(screen.getByTestId('today-rest')).getByText('سلمى علي')).toBeTruthy();
   // No «جلسات مباشرة», no per-row «إلغاء الحلقة» (it lives in the sheet), not tomorrow's lesson.
   expect(screen.queryByText('جلسات مباشرة')).toBeNull();
@@ -60,12 +59,10 @@ test('ONE lessons GET, on the 15-day aheadWindow from the padded day start', asy
   expect(new Date(from).toISOString()).toMatch(/T10:00:00\.000Z$/);
 });
 
-test('a due row opens its report form in «اليوم»’s own stack', async () => {
+test('an ended row keeps its report lead; it opens the form in «اليوم»’s own stack', async () => {
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
-  const due = within(await screen.findByTestId('due-reports'));
-  await fireEvent.press(
-    due.getByRole('button', { name: new RegExp(`^${t.reports.open} — يوسف أحمد · `) }),
-  );
+  await fireEvent.press(await screen.findByRole('button', { name: counted(t.today.endedFold, 1) }));
+  await fireEvent.press(screen.getByRole('button', { name: t.reports.open }));
   expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
 });
 
@@ -90,7 +87,6 @@ test('no lessons today: «لا توجد حلقات اليوم», the next one, a
   expect(end.getByText(/ريم سالم/)).toBeTruthy();
   await fireEvent.press(end.getByRole('button', { name: t.teacherToday.openSchedule }));
   expect(mockNavigate).toHaveBeenCalledWith('/teacher/schedule');
-  expect(screen.queryByTestId('due-reports')).toBeNull();
 });
 
 test('every lesson ended and nothing ahead: «انتهت حلقات اليوم» and «لا توجد حلقات…»', async () => {
