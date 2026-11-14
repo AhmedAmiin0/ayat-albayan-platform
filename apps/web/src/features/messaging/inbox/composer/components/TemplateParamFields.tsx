@@ -4,9 +4,10 @@ import { Input } from '@/components/ui/form/input';
 import { Ltr } from '@/components/ui/display/ltr';
 import { cn } from '@/lib/utils';
 import { t } from '@/lib/i18n/i18n';
-import { paramFields, toParamsInput, urlButton, type ParamValues } from '@/features/messaging/inbox/composer/lib/template-params';
+import { freeTextField, paramFields, toParamsInput, urlButton, type ParamSlot, type ParamValues } from '@/features/messaging/inbox/composer/lib/template-params';
 import { TemplateButtons } from '@/features/messaging/inbox/messages/template/TemplateButtons';
 import { TemplateFrame } from '@/features/messaging/inbox/messages/template/TemplateFrame';
+import { FreeTextField } from '@/features/messaging/inbox/composer/free-text';
 
 export interface TemplateParamFieldsProps {
   template: TemplateView;
@@ -17,7 +18,22 @@ export interface TemplateParamFieldsProps {
 }
 
 const c = t.inbox.composer;
+interface FreeSlot { tpl: TemplateView; slot: ParamSlot }
 const required = (label: string) => c.required.replace('{field}', label);
+
+/** «نص الرسالة» across both columns (owner 2026-11-14). */
+function FreeText(props: Omit<TemplateParamFieldsProps, 'template'> & FreeSlot) {
+  const { tpl, slot, values, onChange } = props;
+  return (
+    <div className="sm:col-span-2">
+      <FreeTextField
+        {...{ body: tpl.body_ar, slot, value: values[slot] ?? '' }}
+        error={props.missing.includes(slot) ? required(c.freeText) : undefined}
+        onChange={(text) => onChange({ ...values, [slot]: text })}
+      />
+    </div>
+  );
+}
 
 /**
  * {{1}}…{{3}} by their names, the meeting-link suffix, then the message as the guardian reads it.
@@ -25,6 +41,8 @@ const required = (label: string) => c.required.replace('{field}', label);
  */
 export function TemplateParamFields({ template: tpl, values, missing, onChange }: TemplateParamFieldsProps) {
   const url = urlButton(tpl);
+  // «نص الرسالة» (owner 2026-11-14): a template whose variable is the staff's own text.
+  const free = freeTextField(tpl);
   const params = toParamsInput(tpl, values);
   const preview = renderTemplateBody(tpl.body_ar, params);
   // As the family will see it in WhatsApp: header, body, grey footer, the buttons under it.
@@ -33,7 +51,8 @@ export function TemplateParamFields({ template: tpl, values, missing, onChange }
   return (
     <>
       <div className="grid gap-x-4 gap-y-3 sm:grid-cols-2">
-        {paramFields(tpl).map(({ slot, label, fromLesson }) => (
+        {free && <FreeText {...{ tpl, values, missing, onChange }} slot={free} />}
+        {paramFields(tpl).filter(({ slot }) => slot !== free).map(({ slot, label, fromLesson }) => (
           <Field key={slot} label={label} error={missing.includes(slot) ? (fromLesson ? c.pickLesson : required(label)) : undefined}>
             {(p) => (
               <Input

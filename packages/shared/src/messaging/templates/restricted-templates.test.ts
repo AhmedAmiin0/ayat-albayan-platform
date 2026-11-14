@@ -18,8 +18,13 @@ const row = (over: Partial<RestrictedCheck> = {}): RestrictedCheck => ({
 });
 
 describe('the restricted allow-list (owner 2026-10-12)', () => {
-  it('defaults to exactly free_trial_invite, welcome_greeting and trial_reschedule (owner 2026-10-18)', () => {
-    expect(RESTRICTED_TEMPLATE_DEFAULTS).toEqual(['free_trial_invite', 'welcome_greeting', 'trial_reschedule']);
+  it('defaults to the three starters and academy_message (owner 2026-10-18, 2026-11-14)', () => {
+    expect(RESTRICTED_TEMPLATE_DEFAULTS).toEqual([
+      'free_trial_invite',
+      'welcome_greeting',
+      'trial_reschedule',
+      'academy_message',
+    ]);
   });
 
   it('an approved, flagged text template is allowed', () => {

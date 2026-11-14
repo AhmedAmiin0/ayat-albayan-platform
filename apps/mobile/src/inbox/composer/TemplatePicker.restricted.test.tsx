@@ -28,6 +28,8 @@ const STARTERS: TemplateView[] = [
   { ...INVITE, body_ar: 'ندعوكم إلى حلقة تجريبية مجانية', params: [] },
   { ...INVITE, key: 'welcome_greeting', meta_name: 'welcome_greeting', body_ar: 'أهلًا بكم في الأكاديمية', params: [] },
   { ...INVITE, key: 'trial_reschedule', meta_name: 'trial_reschedule', body_ar: 'أهلًا {{1}}', params: ['contact_name'] },
+  // Owner 2026-11-14: «a template that carries your text».
+  { ...INVITE, key: 'academy_message', meta_name: 'academy_message', body_ar: '{{1}}', params: ['var_1'] },
 ];
 const names: Record<string, string> = t.templates.names;
 const onSend = jest.fn();

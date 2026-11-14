@@ -1,4 +1,4 @@
-import { windowBar, type WindowBar } from '@ab/client-core';
+import { carriesText, windowBar, type WindowBar } from '@ab/client-core';
 import type { ReopenSent, ThreadView } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -8,6 +8,7 @@ import {
   type NoneReason,
 } from '@/features/messaging/inbox/composer/lib/allowed-templates';
 import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
+import { useCarryText } from '@/features/messaging/inbox/composer/free-text';
 import { ReopenDialog } from './ReopenDialog';
 import { useCanReopen } from './use-can-reopen';
 import { useReopenTick } from './use-reopen-tick';
@@ -43,11 +44,14 @@ function SentBar({ phone, sent, trying }: { phone: string; sent: ReopenSent; try
  */
 export function ReopenBar(props: ReopenBarProps) {
   const { thread, noneAllowed } = props;
-  const [picking, setPicking] = useState(false);
+  const [picking, setPicking] = useState<'reopen' | 'carry' | null>(null);
   const canReopen = useCanReopen(props.teacher);
+  const carry = useCarryText(thread.phone_e164, props.teacher);
   const sent = thread.reopen_sent ?? null;
   const open = thread.session_open;
   const state = windowBar({ open, sent: sent !== null, noneAllowed: !!noneAllowed });
+  // «أرسِل الآن داخل قالب» (owner 2026-11-14): the draft goes now inside academy_message.
+  const carrying = carriesText({ ...carry, bar: state });
   const views: Record<WindowBar, () => ReactNode> = {
     open: () => null,
     sent: () => sent && <SentBar phone={thread.phone_e164} sent={sent} trying={props.trying} />,
@@ -57,8 +61,13 @@ export function ReopenBar(props: ReopenBarProps) {
       <div className={bar}>
         <p>{t.inbox.reopenBar.closed}</p>
         {canReopen && (
-          <Button className="w-full sm:min-h-11" onClick={() => setPicking(true)}>
+          <Button className="w-full sm:min-h-11" onClick={() => setPicking('reopen')}>
             {t.inbox.reopenBar.action}
+          </Button>
+        )}
+        {carrying && (
+          <Button variant="secondary" className="w-full sm:min-h-11" onClick={() => setPicking('carry')}>
+            {t.inbox.reopenBar.carry}
           </Button>
         )}
       </div>
@@ -70,7 +79,8 @@ export function ReopenBar(props: ReopenBarProps) {
       {picking && (
         <ReopenDialog
           {...{ thread, context: props.context, teacher: props.teacher }}
-          onClose={() => setPicking(false)}
+          carry={picking === 'carry' ? { text: carry.draft, onSent: carry.clear } : undefined}
+          onClose={() => setPicking(null)}
         />
       )}
     </>

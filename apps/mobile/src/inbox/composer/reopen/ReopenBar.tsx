@@ -17,6 +17,8 @@ interface ReopenBarProps {
   /** A chat-line template may be picked: «إعادة فتح المحادثة» shows. */
   canReopen: boolean;
   onReopen: () => void;
+  /** «أرسِل الآن داخل قالب» (2026-11-14): shown when set (a draft, academy_message usable). */
+  onCarry?: (() => void) | null;
 }
 
 const TEXT: Record<ClosedBar, string> = {
@@ -34,7 +36,8 @@ const tickLine = (tick: MessageStatus | null): string | null =>
  * template went, the chat opens on the family's reply (its tick; typed texts are held);
  * «none_allowed»: what this user can do, no button.
  */
-export function ReopenBar({ bar, tick, held, canReopen, onReopen }: ReopenBarProps) {
+export function ReopenBar(props: ReopenBarProps) {
+  const { bar, tick, held, canReopen, onReopen, onCarry } = props;
   const { color } = useTheme();
   const small = { fontFamily: type.ui[500], fontSize: type.size['2xs'], color: color.ink };
   const lines = [TEXT[bar], bar === 'sent' ? tickLine(tick) : null];
@@ -53,6 +56,9 @@ export function ReopenBar({ bar, tick, held, canReopen, onReopen }: ReopenBarPro
       )}
       {bar === 'reopen' && canReopen ? (
         <Button label={t.inbox.reopenBar.action} onPress={onReopen} />
+      ) : null}
+      {onCarry ? (
+        <Button variant="secondary" label={t.inbox.reopenBar.carry} onPress={onCarry} />
       ) : null}
     </View>
   );

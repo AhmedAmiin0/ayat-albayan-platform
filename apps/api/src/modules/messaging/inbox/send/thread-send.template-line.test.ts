@@ -21,7 +21,7 @@ const queries = { thread: vi.fn(), numberWindows: vi.fn() };
 const templates = { approved: vi.fn() };
 const outbox = { queue: vi.fn() };
 const view = (line: 'chat' | 'notifications') =>
-  ({ key: 'academy_welcome', line, params: [], buttons: [], header_format: null }) as unknown as TemplateView;
+  ({ key: 'academy_welcome', line, params: [], buttons: [], header_format: null, body_ar: 'أهلًا' }) as unknown as TemplateView;
 const send = () =>
   new ThreadSendService(
     queries as unknown as ThreadsRepo,

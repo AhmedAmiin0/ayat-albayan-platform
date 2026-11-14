@@ -20,7 +20,7 @@ const stamp = vi.fn();
 const tpl = (over: Partial<TemplateView> = {}) =>
   ({
     key: 'free_trial_invite', line: 'chat', params: [], buttons: [], header_format: null,
-    status: 'approved', sales_starter: true, ...over,
+    status: 'approved', sales_starter: true, body_ar: 'أهلًا', ...over,
   }) as unknown as TemplateView;
 
 function service(): ThreadSendService {

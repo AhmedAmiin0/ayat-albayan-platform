@@ -1,5 +1,6 @@
 import {
   correctionBody,
+  normaliseTemplateParams,
   type MessageQuote,
   type MessageView,
   type TemplateParamsInput,
@@ -72,5 +73,7 @@ export function sendBody({ out, id }: SendInput) {
   }
   const lesson = out.lessonId ? { lessonId: out.lessonId } : {};
   const reopen = out.reopen ? { reopen: true } : {};
-  return { key: out.key, params: out.params, clientRequestId: id, ...lesson, ...reopen };
+  // Meta 132018 (owner 2026-11-14): no newline, tab or run of spaces in a body value.
+  const params = normaliseTemplateParams(out.params);
+  return { key: out.key, params, clientRequestId: id, ...lesson, ...reopen };
 }

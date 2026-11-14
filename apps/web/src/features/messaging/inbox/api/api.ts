@@ -1,14 +1,15 @@
-import type {
-  FollowUpNote,
-  SignedDownload,
-  LeadQualification,
-  LeadStatus,
-  MessageView,
-  ThreadDetail,
-  ThreadRating,
-  ThreadTemplate,
-  ThreadText,
-  ThreadView,
+import {
+  normaliseTemplateParams,
+  type FollowUpNote,
+  type SignedDownload,
+  type LeadQualification,
+  type LeadStatus,
+  type MessageView,
+  type ThreadDetail,
+  type ThreadRating,
+  type ThreadTemplate,
+  type ThreadText,
+  type ThreadView,
 } from '@ab/shared';
 import { liveInterval, type TextAnswer } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
@@ -77,8 +78,12 @@ export const threadFileDownload = (phone: string, messageId: string) =>
 export const sendText = ({ phone, ...body }: ThreadText & { phone: string }) =>
   apiSend<TextAnswer>('POST', `${threadPath(phone)}/text`, body);
 
-export const sendTemplate = ({ phone, ...body }: ThreadTemplate & { phone: string }) =>
-  apiSend<MessageView>('POST', `${threadPath(phone)}/template`, body);
+/** Meta 132018 (owner 2026-11-14): every body value normalised (free-text.ts) before it goes. */
+export const sendTemplate = ({ phone, params, ...body }: ThreadTemplate & { phone: string }) =>
+  apiSend<MessageView>('POST', `${threadPath(phone)}/template`, {
+    ...body,
+    params: normaliseTemplateParams(params),
+  });
 
 /** «إرسال تقييم الحلقة»: lesson_rating for the guardian's latest lesson that took place (migration 195). */
 export const sendRating = ({ phone, ...body }: ThreadRating & { phone: string }) =>

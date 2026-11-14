@@ -32,7 +32,10 @@ export interface TemplateComposerProps {
 export interface ReopenPick {
   list: TemplateView[];
   initial: TemplateView | null;
-  onSent: () => void;
+  /** «أرسِل الآن داخل قالب» (2026-11-14): the draft in the free-text slot, over the prefill. */
+  values?: ParamValues;
+  /** The sent template's key. */
+  onSent: (key: string) => void;
 }
 
 /**
@@ -55,7 +58,10 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
   const first = reopen?.initial ?? null;
   const [key, setKey] = useState(first?.key ?? '');
   const [lessonId, setLessonId] = useState('');
-  const prefill = () => (first ? prefillParams(first, context) : {});
+  // The carried draft (reopen.values) belongs to the first template, also when picked again.
+  const carried = (x: TemplateView) => (x === first ? reopen?.values : undefined);
+  const fill = (x: TemplateView) => ({ ...prefillParams(x, context), ...carried(x) });
+  const prefill = () => (first ? fill(first) : {});
   const [values, setValues] = useState<ParamValues>(prefill);
   const [tried, setTried] = useState(false);
   const requestId = useRef(crypto.randomUUID());
@@ -65,7 +71,7 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
     const chosen = approved.find((x) => x.key === next);
     setKey(next);
     setLessonId('');
-    setValues(chosen ? prefillParams(chosen, context) : {});
+    setValues(chosen ? fill(chosen) : {});
     setTried(false);
     requestId.current = crypto.randomUUID();
   }
@@ -75,7 +81,7 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
     onSuccess: async (view, sent, start) => {
       settleOwnSend(sent.phone, view.id, start);
       pick('');
-      reopen?.onSent();
+      reopen?.onSent(sent.key);
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
   });

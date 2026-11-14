@@ -44,6 +44,7 @@ test('the button opens the preselected template, its name prefilled and editable
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   expect(onSend).toHaveBeenCalledWith(
     expect.objectContaining({ kind: 'template', key: 'free_trial_invite', reopen: true }),
+    expect.any(Function),
   );
   expect(onSend.mock.calls[0]?.[0].params).toEqual({ 1: 'أم سارة' });
 });

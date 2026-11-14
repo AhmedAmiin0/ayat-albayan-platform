@@ -15,8 +15,8 @@ describe('migration 20261018000460: the reschedule starter and the line comment'
     );
   });
 
-  it('trial_reschedule is one of the three restricted defaults', () => {
-    expect(RESTRICTED_TEMPLATE_DEFAULTS).toEqual(['free_trial_invite', 'welcome_greeting', 'trial_reschedule']);
+  it('trial_reschedule is one of the restricted defaults', () => {
+    expect(RESTRICTED_TEMPLATE_DEFAULTS).toContain('trial_reschedule');
   });
 
   it('restates the line column comment (the admin sets it now), never editing migration 340', () => {
