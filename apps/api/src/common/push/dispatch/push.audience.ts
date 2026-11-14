@@ -1,4 +1,4 @@
-import { mayReceivePush, type PushKind, type UserRole } from '@ab/shared';
+import { mayReceivePush, type AnyPushKind, type UserRole } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   AccountDisabledError,
@@ -8,6 +8,7 @@ import {
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
 import { DB, type Db } from '@/common/db/db.module';
 import { pushRoute, type PushRoute } from './push.rules';
+import { readersOf, studentLogins } from './push.readers';
 import { liveTokens } from './push.sessions';
 
 /** A profile a notification may go to (enabled, permitted for its kind); push_tokens: live ones only. */
@@ -35,7 +36,7 @@ export class PushAudience {
   ) {}
 
   /** The kind's rule: off → no row; push not among its channels → the bell row only (pushRoute). */
-  async route(kind: PushKind): Promise<PushRoute> {
+  async route(kind: AnyPushKind): Promise<PushRoute> {
     const snap = await this.policy.snapshot();
     if (!snap) this.log.warn(`notification rules unread: ${kind} goes to the bell only`);
     return pushRoute(snap, kind);
@@ -51,7 +52,7 @@ export class PushAudience {
     return this.roleIds('sales');
   }
 
-  async recipients(kind: PushKind, ids: readonly string[]): Promise<Recipient[]> {
+  async recipients(kind: AnyPushKind, ids: readonly string[]): Promise<Recipient[]> {
     const { data, error } = await this.db
       .from('profiles')
       .select('id, role, push_tokens')
@@ -59,11 +60,25 @@ export class PushAudience {
       .is('disabled_at', null);
     if (error) throw new Error(error.message);
     const allowed = await Promise.all(data.map((p) => this.permitted(kind, p)));
+    const permitted = data.filter((_, i) => allowed[i]);
+    // A child student: lesson and report kinds only, never money (docs/50 §4).
+    const readers = readersOf(kind, permitted, await this.adults(studentLogins(permitted)));
     // Their devices: only tokens bound to a live session of theirs (signed out / revoked = none).
-    return liveTokens(
-      this.db,
-      data.filter((_, i) => allowed[i]),
-    );
+    return liveTokens(this.db, readers);
+  }
+
+  /**
+   * The student logins that are their own contact (students.contact_is_self): a family reader.
+   * A failed lookup answers none, so every student reads as a child (fail closed: no money news).
+   */
+  private async adults(ids: readonly string[]): Promise<ReadonlySet<string>> {
+    if (ids.length === 0) return new Set();
+    const { data, error } = await this.db
+      .from('students')
+      .select('profile_id')
+      .in('profile_id', [...ids])
+      .eq('contact_is_self', true);
+    return new Set(error ? [] : data.flatMap((s) => (s.profile_id ? [s.profile_id] : [])));
   }
 
   private async roleIds(role: 'admin' | 'sales'): Promise<string[]> {
@@ -76,7 +91,7 @@ export class PushAudience {
     return data.map((p) => p.id);
   }
 
-  private async permitted(kind: PushKind, profile: Recipient): Promise<boolean> {
+  private async permitted(kind: AnyPushKind, profile: Recipient): Promise<boolean> {
     try {
       return mayReceivePush(
         kind,

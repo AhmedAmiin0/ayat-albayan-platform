@@ -12,6 +12,7 @@ import {
   permissionGroups,
   selfPermissionsOf,
   systemPermissionsOf,
+  USER_ROLES,
 } from '@ab/catalog';
 
 describe('permission catalog', () => {
@@ -51,9 +52,9 @@ describe('system roles', () => {
     expect(t).not.toContain('payments.read');
   });
 
-  it('the portal roles hold only the portal scope key (docs/31), never a grant', () => {
-    expect(systemPermissionsOf('guardian')).toEqual(['self.portal']);
-    expect(systemPermissionsOf('student')).toEqual(['self.portal']);
+  it('the portal roles hold the portal scope key and their fixed bell (docs/50), no row grant', () => {
+    expect(systemPermissionsOf('guardian')).toEqual(['notifications.push', 'self.portal']);
+    expect(systemPermissionsOf('student')).toEqual(['notifications.push', 'self.portal']);
     expect(defaultGrantsOf('guardian')).toEqual([]);
     expect(defaultGrantsOf('student')).toEqual([]);
   });
@@ -78,9 +79,17 @@ describe('system roles', () => {
     for (const role of ['teacher', 'assistant', 'sales'] as const) expect(systemPermissionsOf(role)).not.toContain('templates.send_all');
   });
 
-  it('notifications.push (the bell in every staff portal, 2026-10-12) is held by every staff system role', () => {
-    for (const role of ['admin', 'teacher', 'assistant', 'sales'] as const) expect(systemPermissionsOf(role)).toContain('notifications.push');
-    for (const role of ['guardian', 'student'] as const) expect(systemPermissionsOf(role)).not.toContain('notifications.push');
+  it('notifications.push (the bell, 2026-10-12; families: docs/50 §5.6) is held by every system role', () => {
+    for (const role of USER_ROLES) expect(systemPermissionsOf(role)).toContain('notifications.push');
+  });
+
+  it('a portal role keeps notifications.push whatever its rows say (a fixed grant)', () => {
+    const held = (baseRole: 'guardian' | 'teacher', granted: string[]) =>
+      effectivePermissions({ baseRole, granted, allGrantable: false });
+    expect(held('guardian', ['students.read'])).toEqual(
+      expect.arrayContaining(['notifications.push', 'students.read']),
+    );
+    expect(held('teacher', [])).toEqual(['self.teacher']);
   });
 });
 

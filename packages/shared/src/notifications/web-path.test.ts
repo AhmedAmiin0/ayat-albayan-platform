@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PUSH_KINDS } from '@ab/catalog';
+import { ALL_PUSH_KINDS, FAMILY_PUSH_KINDS } from '@ab/catalog';
 import { notificationKind, webNotificationPath } from './web-path.js';
 
 const STUDENT = '3f1c2a5e-8b7d-4c1e-9a2b-1d2e3f4a5b6c';
@@ -83,8 +83,17 @@ describe('webNotificationPath (R-NOT-01)', () => {
     expect(webNotificationPath({ kind: 'new_lead' }, null)).toBe('/');
   });
 
+  it('the family kinds (docs/50 §5.6) open the family portal; a staff area its home', () => {
+    for (const kind of FAMILY_PUSH_KINDS) {
+      expect(webNotificationPath({ kind, studentId: STUDENT }, 'guardian')).toBe('/portal');
+      expect(webNotificationPath({ kind }, 'student')).toBe('/portal');
+      expect(webNotificationPath({ kind }, 'teacher')).toBe('/teacher');
+      expect(notificationKind({ kind })).toBe(kind);
+    }
+  });
+
   it('every kind maps to a same-origin path for every staff role', () => {
-    for (const kind of PUSH_KINDS) {
+    for (const kind of ALL_PUSH_KINDS) {
       for (const role of ['admin', 'teacher', 'sales', 'assistant'] as const) {
         expect(webNotificationPath({ kind }, role)).toMatch(/^\/[a-z]/);
       }

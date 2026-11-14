@@ -1,4 +1,4 @@
-import { isOpenLesson, localDateIn, type LessonView, type NotificationItem, type PushKind } from '@ab/shared';
+import { isOpenLesson, localDateIn, type LessonView, type NotificationItem, type AnyPushKind } from '@ab/shared';
 import { reportStage, teacherCanConfirm, type ReportStage } from '../lessons/index.js';
 import type { AlertKind } from './home-prefs.js';
 import { lessonChange, type LessonChange } from './lesson-changes.js';
@@ -30,7 +30,7 @@ export interface AlertInput {
  * Bell kinds about money or the inbox never reach this list (privacy; the bell still has them),
  * nor the lesson news the lesson alerts already say (a cancel, a move, a confirm request).
  */
-const BELL_SHOWN: Readonly<Record<PushKind, boolean>> = {
+const BELL_SHOWN: Readonly<Record<AnyPushKind, boolean>> = {
   new_lead: false,
   new_message: false,
   reminder_failed: false,
@@ -47,6 +47,9 @@ const BELL_SHOWN: Readonly<Record<PushKind, boolean>> = {
   course_paused: true,
   course_resumed: true,
   payment_received: false,
+  // The family app's kinds never reach a teacher (they need the portal scope).
+  lesson_starting: false,
+  report_sent: false,
 };
 
 const until = (l: LessonView, now: Date) => Date.parse(l.starts_at) - now.getTime();

@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '@/app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { NotificationsRepo } from './notifications.repo';
 
@@ -10,7 +11,11 @@ const USERS: Record<string, AuthUser> = {
   teacher: { id: '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'teacher' },
   sales: { id: '2b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'sales' },
   guardian: { id: '3b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'guardian' },
+  // A custom role whose grants leave out notifications.push.
+  noBell: { id: '4b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed', email: null, role: 'teacher' },
 };
+const resolver: PermissionResolver = async (u) =>
+  u.id === USERS.noBell?.id ? ['self.teacher'] : systemResolver(u);
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
@@ -26,7 +31,7 @@ describe('/me/notifications (R-NOT-01)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(NotificationsRepo).useValue(q)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -66,9 +71,15 @@ describe('/me/notifications (R-NOT-01)', () => {
     expect(q.readMine).not.toHaveBeenCalled();
   });
 
-  it('403 without notifications.push (a guardian)', async () => {
-    expect((await call({ method: 'GET', url: '/me/notifications', token: 'guardian' })).statusCode).toBe(403);
-    expect((await call({ method: 'POST', url: '/me/notifications/read', token: 'guardian' })).statusCode).toBe(403);
+  it('403 without notifications.push (a custom role)', async () => {
+    expect((await call({ method: 'GET', url: '/me/notifications', token: 'noBell' })).statusCode).toBe(403);
+    expect((await call({ method: 'POST', url: '/me/notifications/read', token: 'noBell' })).statusCode).toBe(403);
     expect(q.list).not.toHaveBeenCalled();
+  });
+
+  it('a guardian reads their own bell (the portal roles’ fixed grant, docs/50 §5.6)', async () => {
+    const res = await call({ method: 'GET', url: '/me/notifications', token: 'guardian' });
+    expect(res.statusCode).toBe(200);
+    expect(q.list).toHaveBeenCalledWith(USERS.guardian?.id, expect.anything());
   });
 });

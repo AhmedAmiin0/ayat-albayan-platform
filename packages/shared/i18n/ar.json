@@ -4094,6 +4094,14 @@
     "payment_received": {
       "title": "تم استلام دفعة",
       "body": "{student}: {amount}"
+    },
+    "lesson_starting": {
+      "title": "الحلقة على وشك البدء",
+      "body": "حلقة {student} في {when}: يمكنك الدخول الآن"
+    },
+    "report_sent": {
+      "title": "وصل تقرير الحلقة",
+      "body": "تقرير حلقة {student} في {when} متاح الآن"
     }
   },
   "bell": {
@@ -4323,7 +4331,9 @@
       "lesson_cancelled": "إلغاء حلقة",
       "course_paused": "إيقاف الحلقات مؤقتًا",
       "course_resumed": "استئناف الحلقات",
-      "payment_received": "تم استلام دفعة"
+      "payment_received": "تم استلام دفعة",
+      "lesson_starting": "الحلقة على وشك البدء",
+      "report_sent": "وصل تقرير الحلقة"
     },
     "paymentKind": {
       "payment": "دفعة",
@@ -6902,6 +6912,14 @@
       "payment_received": {
         "name": "تم استلام دفعة",
         "trigger": "عند تسجيل دفعة واردة لطالب، إلى الإدارة والمساعد المتابع للطالب"
+      },
+      "lesson_starting": {
+        "name": "الحلقة على وشك البدء",
+        "trigger": "عند فتح باب الدخول إلى الحلقة، إلى ولي الأمر والطالب في تطبيق الأسرة"
+      },
+      "report_sent": {
+        "name": "وصول تقرير الحلقة",
+        "trigger": "عند إرسال تقرير الحلقة إلى الأسرة، إلى ولي الأمر والطالب في تطبيق الأسرة"
       }
     }
   },

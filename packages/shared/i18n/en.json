@@ -4094,6 +4094,14 @@
     "payment_received": {
       "title": "Payment received",
       "body": "{student}: {amount}"
+    },
+    "lesson_starting": {
+      "title": "Lesson starting soon",
+      "body": "{student}'s lesson at {when}: you can join now"
+    },
+    "report_sent": {
+      "title": "Lesson report received",
+      "body": "{student}'s lesson report for {when} is ready"
     }
   },
   "bell": {
@@ -4323,7 +4331,9 @@
       "lesson_cancelled": "Lesson cancelled",
       "course_paused": "Lessons paused",
       "course_resumed": "Lessons resumed",
-      "payment_received": "Payment received"
+      "payment_received": "Payment received",
+      "lesson_starting": "Lesson starting soon",
+      "report_sent": "Lesson report received"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -6902,6 +6912,14 @@
       "payment_received": {
         "name": "Payment received",
         "trigger": "When an incoming payment is recorded for a student, to the administration and the student's assistant"
+      },
+      "lesson_starting": {
+        "name": "Lesson starting soon",
+        "trigger": "When the lesson's join window opens, to the guardian and the student in the family app"
+      },
+      "report_sent": {
+        "name": "Lesson report received",
+        "trigger": "When the lesson report is sent to the family, to the guardian and the student in the family app"
       }
     }
   },
