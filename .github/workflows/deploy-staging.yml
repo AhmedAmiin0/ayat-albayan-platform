@@ -377,7 +377,8 @@ jobs:
   # Automatic OTA (owner 2026-10-23): after a green deploy, when «plan» found mobile JS changes and no native
   # change, start mobile.yml (ota-update → preview) through the API, exactly like the manual button: it runs on
   # develop in the environment `mobile`, keeps its own native-change refusal, and never builds an APK, iOS or
-  # production. Only when develop still points at the deployed commit, so the OTA ships what passed ci.
+  # production. Only when develop still points at the deployed commit (or only ci's [skip ci] baseline
+  # commits followed it), so the OTA ships what passed ci.
   ota:
     needs: [plan, deploy]
     if: ${{ !cancelled() && needs.deploy.result == 'success' && needs.plan.outputs.ota == 'true' }}
@@ -394,6 +395,12 @@ jobs:
           api="$GITHUB_API_URL/repos/$GITHUB_REPOSITORY"
           auth=(-H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json")
           head=$(curl -fsS "${auth[@]}" "$api/branches/develop" | jq -r .commit.sha)
+          # ci's own baseline commits ([skip ci], github-actions[bot]) land right after a merge and change
+          # no app code: they must not cancel the OTA (11-13: #721's OTA was skipped this way).
+          only_bot='.status == "ahead" and all(.commits[];
+            .author.login == "github-actions[bot]" and (.commit.message | contains("[skip ci]")))'
+          if [ "$head" != "$SHA" ] && curl -fsS "${auth[@]}" "$api/compare/$SHA...$head" \
+              | jq -e "$only_bot" >/dev/null; then head="$SHA"; fi
           if [ "$head" != "$SHA" ]; then
             echo "::notice::develop moved on (${head:0:7}): no OTA now; the next deploy decides"; exit 0
           fi
