@@ -6,7 +6,7 @@ import { useApprovedTemplates } from '@/inbox/composer/TemplatePicker';
 import { threadKey, threadMessages, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 import { audienceOf, reopenAllowed } from './reopen-choices';
 
-export interface ReopenBarState {
+interface ReopenBarState {
   /** null: no thread yet (a new chat keeps its first-template row). */
   bar: WindowBar | null;
   /** The live reopen template's tick («sent»). */
