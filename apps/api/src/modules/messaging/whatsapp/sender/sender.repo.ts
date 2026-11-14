@@ -5,7 +5,7 @@ import type { StaffAtSend } from '@/modules/messaging/reminders/plan/staff-reach
 import { allowedRecipients, lineEnvs, loadEnv } from '@/config/env/env';
 import { stampDelivered } from '@/modules/messaging/whatsapp/messages/delivered';
 import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
-import { anyDue, DUE_COLUMNS, holdAutomatic, NOT_APP_SENT, type DueMessage } from './sender.due';
+import { anyDue, DUE_COLUMNS, holdAutomatic, NOT_APP_SENT, sentExtras, type DueMessage } from './sender.due';
 import { staffAtSend } from './staff-at-send';
 import { LANE_ROWS, type Lane } from './drain';
 import { sendableTemplates } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
@@ -116,7 +116,7 @@ export class SenderRepo {
     const at = input.at.toISOString();
     const { data, error } = await this.db
       .from('messages')
-      .update({ status: 'sent', sent_at: at, wa_message_id: input.sent.waMessageId, next_attempt_at: null, error_code: null, error_text: null, ...(input.sent.asText ? { sent_as_text: true } : {}) })
+      .update({ status: 'sent', sent_at: at, wa_message_id: input.sent.waMessageId, next_attempt_at: null, error_code: null, error_text: null, ...sentExtras(input.sent) })
       .eq('id', input.row.id)
       .eq('status', 'queued')
       .select('id');

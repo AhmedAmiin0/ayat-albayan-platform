@@ -6721,7 +6721,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 14
+      "count": 11
     }
   },
   "src/modules/messaging/whatsapp/sender/message.dispatch.voice.test.ts": {

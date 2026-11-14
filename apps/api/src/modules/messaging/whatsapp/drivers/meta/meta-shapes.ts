@@ -54,6 +54,8 @@ export const kapsoMediaSchema = z.object({ download_url: z.url(), mime_type: z.s
 /** Resumable Upload API: the session (`upload:…`, used verbatim as the next path), then the handle. */
 export const uploadSessionSchema = z.object({ id: z.string().regex(/^upload:[^/\s]+$/) });
 export const uploadHandleSchema = z.object({ h: z.string().min(1) });
+/** POST /{phone_number_id}/media (Meta, and Kapso's proxy of it): the media id to send by. */
+export const uploadedMediaSchema = z.object({ id: z.string().min(1) });
 
 // Line diagnostics (docs/12 §13.9): tolerant, every field optional, unknown fields ignored.
 

@@ -36,7 +36,7 @@ function bodyOf(req: HttpRequest): { body?: RequestInit['body']; type: Record<st
   const json = req.json === undefined ? undefined : JSON.stringify(req.json);
   const type: Record<string, string> =
     json === undefined ? {} : { 'content-type': 'application/json' };
-  return { body: req.raw ?? json, type };
+  return { body: req.form ?? req.raw ?? json, type };
 }
 
 interface InitInput<E extends Error> {

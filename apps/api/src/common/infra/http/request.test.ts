@@ -51,4 +51,14 @@ describe('the request', () => {
     expect(init?.body).toBe(raw);
     expect(init?.headers).toEqual({ 'x-api-key': 'profile-key' });
   });
+
+  it('a form is sent as is: no JSON content type (fetch writes the boundary)', async () => {
+    const fetch = answering(() => new Response(''));
+    const form = new FormData();
+    form.set('a', '1');
+    await createHttp(profileOf({ fetch })).status({ path: 'u', method: 'POST', form });
+    const init = fetch.calls[0]?.[1];
+    expect(init?.body).toBe(form);
+    expect(init?.headers).toEqual({ 'x-api-key': 'profile-key' });
+  });
 });
