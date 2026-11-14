@@ -1,6 +1,6 @@
 import type { ReopenFields, ThreadView, WaLine } from '@ab/shared';
 import { reopenChoiceOf } from '@ab/shared';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import {
   DAY_MS,
@@ -59,8 +59,8 @@ export class ReopenPick {
   private readonly log = new Logger('ReopenPick');
 
   constructor(
-    private readonly repo: ReopenPickRepo,
-    private readonly settings: WindowSettings,
+    @Inject(ReopenPickRepo) private readonly repo: ReopenPickRepo,
+    @Inject(WindowSettings) private readonly settings: WindowSettings,
   ) {}
 
   /** The picked template's stamp; throws the reason it cannot reopen this chat now. */
