@@ -1,7 +1,9 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
+import { meQuery, type Me } from '@/features/people/auth/me';
 import { t } from '@/lib/i18n/i18n';
 import { AuthorTemplatesPage } from './AuthorTemplatesPage';
 
@@ -23,6 +25,14 @@ const ROWS = [
 ];
 const editFor = (key: string) => screen.queryByRole('button', { name: t.templates.edit.openFor.replace('{name}', key) });
 
+/** Signed in as `me` (the author of the offer_* rows but offer_theirs). */
+function renderSignedIn() {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const me: Me = { id: 'me', email: null, role: 'sales', permissions: ['templates.author'] };
+  client.setQueryData(meQuery.queryKey, me);
+  render(<QueryClientProvider client={client}><AuthorTemplatesPage /></QueryClientProvider>);
+}
+
 afterEach(() => {
   apiFetch.mockReset();
   apiSend.mockReset();
@@ -30,8 +40,8 @@ afterEach(() => {
 
 describe('AuthorTemplatesPage', () => {
   it('shows each status, Meta\'s reason, and «تعديل» only on the author\'s own editable ones', async () => {
-    apiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { id: 'me' } : ROWS));
-    renderWithClient(<AuthorTemplatesPage />);
+    apiFetch.mockResolvedValue(ROWS);
+    renderSignedIn();
     expect(await screen.findByText('offer_a')).toBeTruthy();
     expect(screen.getByText(S.status.pending)).toBeTruthy();
     expect(screen.getByText(S.status.rejected)).toBeTruthy();
