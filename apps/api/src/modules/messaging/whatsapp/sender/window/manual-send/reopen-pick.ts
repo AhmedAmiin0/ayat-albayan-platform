@@ -17,7 +17,7 @@ export interface ReopenStamp {
 }
 
 /** The picked template's line, and when it is sent. */
-export interface PickAt {
+interface PickAt {
   phone: string;
   line: WaLine;
   now: Date;

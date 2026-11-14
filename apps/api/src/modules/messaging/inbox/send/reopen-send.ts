@@ -3,7 +3,7 @@ import type { ReopenPick, ReopenStamp } from '@/modules/messaging/whatsapp';
 import { messagingWindowOpen, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 /** A thread template send that may be «إعادة فتح المحادثة» (owner 2026-11-14). */
-export interface ReopenAsk {
+interface ReopenAsk {
   phone: string;
   input: Pick<ThreadTemplate, 'reopen'>;
   template: Pick<TemplateView, 'line'>;
