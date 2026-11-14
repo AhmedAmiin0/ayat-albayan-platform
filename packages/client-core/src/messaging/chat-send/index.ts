@@ -7,6 +7,7 @@ export {
   type WindowBar,
   type WindowBarInput,
 } from './window-bar.js';
+export { carriesText, messageTemplate, type CarryTextInput } from './carry-text.js';
 export { createPinStore, type PinStore } from './pin-store.js';
 export {
   markUnconfirmed,

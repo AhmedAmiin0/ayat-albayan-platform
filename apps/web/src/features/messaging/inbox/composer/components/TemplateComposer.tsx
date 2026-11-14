@@ -32,6 +32,8 @@ export interface TemplateComposerProps {
 export interface ReopenPick {
   list: TemplateView[];
   initial: TemplateView | null;
+  /** «أرسِل الآن داخل قالب» (2026-11-14): the draft in the free-text slot, over the prefill. */
+  values?: ParamValues;
   onSent: () => void;
 }
 
@@ -55,7 +57,7 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
   const first = reopen?.initial ?? null;
   const [key, setKey] = useState(first?.key ?? '');
   const [lessonId, setLessonId] = useState('');
-  const prefill = () => (first ? prefillParams(first, context) : {});
+  const prefill = () => (first ? { ...prefillParams(first, context), ...reopen?.values } : {});
   const [values, setValues] = useState<ParamValues>(prefill);
   const [tried, setTried] = useState(false);
   const requestId = useRef(crypto.randomUUID());

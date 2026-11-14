@@ -1,6 +1,9 @@
 import {
   BODY_SLOTS,
   forAudience as audienceOf,
+  freeTextSlot,
+  normaliseTemplateParam,
+  sendableFreeText,
   lessonParams,
   LESSON_TIME_PARAMS,
   prefillParams as prefillTemplateParams,
@@ -29,6 +32,10 @@ export function paramFields(tpl: Pick<TemplateView, 'params'>): { slot: ParamSlo
     return { slot, label: NAMES[name] ?? t.inbox.composer.param.replace('{n}', slot), fromLesson: LESSON_TIME_PARAMS.includes(name) };
   });
 }
+
+/** The template's free-text slot («نص الرسالة», owner 2026-11-14) among its variables, or null. */
+export const freeTextField = (tpl: Pick<TemplateView, 'key' | 'params'>): ParamSlot | null =>
+  paramFields(tpl).find((f) => f.slot === freeTextSlot(tpl.key))?.slot ?? null;
 
 /** The URL button's address with {{1}} in it, or null when the template has none. */
 export function urlButton(tpl: Pick<TemplateView, 'buttons'>): string | null {
@@ -60,11 +67,22 @@ export function missingParams(tpl: Pick<TemplateView, 'params' | 'buttons'>, val
   return needed.filter((k) => !values[k]?.trim());
 }
 
-/** The request's `params`: trimmed values for the template's own slots only. */
-export function toParamsInput(tpl: Pick<TemplateView, 'params' | 'buttons'>, values: ParamValues): TemplateParamsInput {
+type SendShape = Pick<TemplateView, 'key' | 'body_ar' | 'params' | 'buttons'>;
+
+/**
+ * A slot's value as it is sent (Meta 132018, owner 2026-11-14): normalised (no newline, tab or run
+ * of spaces); a free-text slot («نص الرسالة») is also cut so the whole body stays within the limit.
+ */
+function sendValue(tpl: SendShape, slot: ParamSlot, raw: string): string {
+  const free = freeTextSlot(tpl.key) === slot;
+  return free ? sendableFreeText(tpl.body_ar, slot, raw) : normaliseTemplateParam(raw);
+}
+
+/** The request's `params` (and the preview's): sendable values of the template's own slots. */
+export function toParamsInput(tpl: SendShape, values: ParamValues): TemplateParamsInput {
   const out: TemplateParamsInput = {};
   for (const { slot } of paramFields(tpl)) {
-    const value = values[slot]?.trim();
+    const value = sendValue(tpl, slot, values[slot] ?? '');
     if (value) out[slot] = value;
   }
   const button = values.button?.trim();

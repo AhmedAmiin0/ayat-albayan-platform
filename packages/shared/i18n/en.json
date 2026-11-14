@@ -2941,6 +2941,10 @@
       "notFound": "Could not open the lesson: it may have moved or been cancelled. Refresh the chat and try again."
     },
     "composer": {
+      "freeText": "Message text",
+      "freeTextCount": "{count} of {max} characters",
+      "freeTextOver": "The text is too long; only the first {max} characters will be sent.",
+      "freeTextHint": "WhatsApp needs the text on one line, so lines are joined with « · », as in the preview.",
       "placeholder": "Message",
       "placeholderDesktop": "Type a message — Enter to send, Shift+Enter for a new line",
       "send": "Send",
@@ -3022,6 +3026,7 @@
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
     "reopenBar": {
+      "carry": "Send now inside a template",
       "closed": "The 24-hour window has ended. Send a template to reopen the conversation.",
       "action": "Reopen conversation",
       "sent": "Template sent — the conversation reopens when the family replies",

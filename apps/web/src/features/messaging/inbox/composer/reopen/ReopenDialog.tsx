@@ -1,5 +1,5 @@
-import { reopenChoices } from '@ab/client-core';
-import type { ThreadView } from '@ab/shared';
+import { messageTemplate, reopenChoices } from '@ab/client-core';
+import { freeTextSlot, MESSAGE_TEMPLATE, type ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { FormAlert } from '@/components/ui/form/form-alert';
@@ -20,6 +20,8 @@ export interface ReopenDialogProps {
   /** A teacher's own chat number: the teacher's templates. */
   teacher: boolean;
   onClose: () => void;
+  /** «أرسِل الآن داخل قالب» (owner 2026-11-14): academy_message picked, {{1}} = this draft. */
+  carry?: { text: string; onSent: () => void } | undefined;
 }
 
 /**
@@ -27,10 +29,18 @@ export interface ReopenDialogProps {
  * chat line, the academy's `chat_reopen_template` picked and its variables filled from the chat
  * (still editable), the WhatsApp preview, then send. The API keeps it as this window's reopen.
  */
-export function ReopenDialog({ thread, context, teacher, onClose }: ReopenDialogProps) {
+export function ReopenDialog({ thread, context, teacher, onClose, carry }: ReopenDialogProps) {
   const templates = useQuery({ ...templatesQuery, enabled: useReadsMessaging() });
-  const choices = reopenChoices(allowedTemplates(templates.data, teacher), thread.reopen_template);
-  const reopen = { ...choices, onSent: onClose };
+  const allowed = allowedTemplates(templates.data, teacher);
+  const preferred = carry ? MESSAGE_TEMPLATE : thread.reopen_template;
+  const choices = reopenChoices(allowed, preferred);
+  const slot = freeTextSlot(MESSAGE_TEMPLATE);
+  const values = carry && slot && messageTemplate(allowed) ? { [slot]: carry.text } : {};
+  const onSent = () => {
+    carry?.onSent();
+    onClose();
+  };
+  const reopen = { ...choices, values, onSent };
   return (
     <Dialog title={t.inbox.reopenBar.action} description={bar.closed} onClose={onClose}>
       {templates.isError && <FormAlert>{t.common.error}</FormAlert>}
