@@ -7753,7 +7753,8 @@
       "notifications": "Notifications (view only)",
       "sending": "Sending and safety (view only)",
       "google": "Google sync (view only)",
-      "teachers": "Teacher pages"
+      "teachers": "Teacher pages",
+      "family": "Family app"
     },
     "name": "Name",
     "value": "Value",
