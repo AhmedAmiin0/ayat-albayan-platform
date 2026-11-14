@@ -27,8 +27,10 @@ export function useTemplateId() {
     last.current = { draft, id };
     return id;
   };
-  const sent = () => {
+  /** Once the API took it: forget the id, then `done` (the reopen's carried draft is cleared). */
+  const sent = (done?: () => void) => {
     last.current = null;
+    done?.();
   };
   return { of, sent };
 }
@@ -57,9 +59,8 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   // «رد» (owner 2026-10-25) or «تعديل» (2026-11-07): what the next text answers or corrects.
   const target = useTextTarget();
   const templateId = useTemplateId();
-  const sendTemplate = (out: Outgoing) => {
-    send.mutate({ out, id: templateId.of(out) }, { onSuccess: templateId.sent });
-  };
+  const sendTemplate = (out: Outgoing, done?: () => void) =>
+    send.mutate({ out, id: templateId.of(out) }, { onSuccess: () => templateId.sent(done) });
   // The chip as it is now, not as it was at the tap: removed or replaced meanwhile → not this file.
   const stagedNow = useRef(staged);
   useEffect(() => {

@@ -29,7 +29,8 @@ async function show(rows: TemplateView[], draft = 'سطر أول\n\nسطر   ث�
   setComposerText(PHONE, draft);
   mockApiFetch.mockResolvedValue(rows);
   const props = { phone: PHONE, lessons: [], teacher: false, open: false, held: true };
-  await renderWithQuery(<ReopenSlot {...props} thread={CLOSED} onSend={onSend} />, createTestQueryClient());
+  const slot = <ReopenSlot {...props} thread={CLOSED} onSend={onSend} />;
+  await renderWithQuery(slot, createTestQueryClient());
 }
 
 beforeEach(() => {
@@ -55,7 +56,7 @@ test('no draft: no second action', async () => {
   expect(carry()).toBeNull();
 });
 
-test('sends the draft normalised inside academy_message as the reopen, then clears it', async () => {
+test('sends the draft normalised in academy_message; cleared once the API took it', async () => {
   await show([WELCOME, ACADEMY]);
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.reopenBar.carry }));
   const box = await screen.findByLabelText(t.inbox.composer.freeText);
@@ -63,7 +64,12 @@ test('sends the draft normalised inside academy_message as the reopen, then clea
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   expect(onSend).toHaveBeenCalledWith(
     expect.objectContaining({ kind: 'template', key: 'academy_message', reopen: true }),
+    expect.any(Function),
   );
   expect(onSend.mock.calls[0]?.[0].params).toEqual({ 1: 'سطر أول · سطر ثانٍ' });
+  // A refused send (409 reopen_live…) never calls `done`: the draft stays in the box.
+  expect(getComposerText(PHONE)).toBe('سطر أول\n\nسطر   ثانٍ');
+  const done = onSend.mock.calls[0]?.[1] as () => void;
+  done();
   expect(getComposerText(PHONE)).toBe('');
 });

@@ -18,8 +18,13 @@ export interface CarryTextInput {
   draft: string;
   /** messageTemplate(): approved on the chat line and allowed for this user, or null. */
   template: TemplateView | null;
+  /** The draft's last send got no answer: the server may hold it, so it must not go again. */
+  unconfirmed: boolean;
 }
 
 /** The bar's second action: the reopen bar shows, a draft is typed, the template is usable. */
 export const carriesText = (c: CarryTextInput): boolean =>
-  c.bar === 'reopen' && c.draft.trim() !== '' && c.template?.status === 'approved';
+  c.bar === 'reopen' &&
+  c.draft.trim() !== '' &&
+  !c.unconfirmed &&
+  c.template?.status === 'approved';

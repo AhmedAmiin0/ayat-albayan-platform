@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { useApprovedTemplates } from '@/inbox/composer/TemplatePicker';
 import { threadKey, threadMessages, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 import { useComposerDraft } from '@/inbox/composer/draft-store';
+import { PINS } from '@/inbox/thread/send/pinned-send';
 import { audienceOf, reopenAllowed } from './reopen-choices';
 
 /** Which sheet is open: «إعادة فتح المحادثة», «أرسِل الآن داخل قالب», or none. */
@@ -56,7 +57,9 @@ export function useReopenBar({ phone, thread, open, teacher }: ReopenBarInput): 
   const messages = threadMessages(client.getQueryData<ThreadCache>(threadKey(phone)));
   const bar = barOf({ thread, open, noneAllowed }, messages);
   const template = messageTemplate(audienceOf(templates.data, teacher));
-  const carrying = bar.bar !== null && carriesText({ bar: bar.bar, draft, template });
+  // A box send with no answer pins its id: the server may hold that text, never carry it too.
+  const unconfirmed = PINS.box.pinned(phone) !== undefined;
+  const carrying = bar.bar !== null && carriesText({ bar: bar.bar, draft, template, unconfirmed });
   return { ...bar, canReopen, carrying, draft, picking, setPicking };
 }
 

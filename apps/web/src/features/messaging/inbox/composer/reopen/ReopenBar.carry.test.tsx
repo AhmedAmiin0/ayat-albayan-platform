@@ -5,6 +5,7 @@ import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { message, PHONE, template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
+import { SEND_UNCONFIRMED } from '@ab/client-core';
 import { ReopenBar } from './ReopenBar';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -52,6 +53,14 @@ describe('ReopenBar: «أرسِل الآن داخل قالب»', () => {
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalled());
     await screen.findByRole('button', { name: t.inbox.reopenBar.action });
     expect(carry()).toBeNull();
+  });
+
+  it('a draft whose send got no answer (the server may hold it): hidden', async () => {
+    show();
+    const failed = { text: 'نص', id: 'req-1', code: SEND_UNCONFIRMED };
+    setDraft(PHONE, { text: 'نص', failed });
+    await screen.findByRole('button', { name: t.inbox.reopenBar.action });
+    await vi.waitFor(() => expect(carry()).toBeNull());
   });
 
   it('no draft: hidden', async () => {

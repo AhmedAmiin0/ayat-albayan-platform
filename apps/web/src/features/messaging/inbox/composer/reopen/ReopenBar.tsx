@@ -51,7 +51,7 @@ export function ReopenBar(props: ReopenBarProps) {
   const open = thread.session_open;
   const state = windowBar({ open, sent: sent !== null, noneAllowed: !!noneAllowed });
   // «أرسِل الآن داخل قالب» (owner 2026-11-14): the draft goes now inside academy_message.
-  const carrying = carriesText({ bar: state, draft: carry.draft, template: carry.template });
+  const carrying = carriesText({ ...carry, bar: state });
   const views: Record<WindowBar, () => ReactNode> = {
     open: () => null,
     sent: () => sent && <SentBar phone={thread.phone_e164} sent={sent} trying={props.trying} />,

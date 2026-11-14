@@ -16,7 +16,8 @@ interface ReopenSlotProps {
   /** Staff may still type after the window (a Kapso chat line): texts are held. */
   held: boolean;
   /** The picked template, sent as this phone's reopen (reopen: true). */
-  onSend: (out: Outgoing) => void;
+  /** `done` runs once the API took it (the carried draft is cleared then). */
+  onSend: (out: Outgoing, done: () => void) => void;
 }
 
 /** The sheet's template, marked as the reopen. */
@@ -67,9 +68,9 @@ export function ReopenSlot(props: ReopenSlotProps) {
           onClose={close}
           onSend={(out) => {
             close();
-            // The draft went inside the template: cleared, never also held.
-            if (carry && carriesDraft(out)) setComposerText(phone, '');
-            props.onSend(asReopen(out));
+            // The draft went inside the template: cleared once the API took it, never also held.
+            const cleared = carry && carriesDraft(out);
+            props.onSend(asReopen(out), () => cleared && setComposerText(phone, ''));
           }}
         />
       ) : null}

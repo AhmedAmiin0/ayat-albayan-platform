@@ -18,7 +18,7 @@ describe('messageTemplate: academy_message on the chat line, when on this user�
 });
 
 describe('carriesText: «أرسِل الآن داخل قالب» (owner 2026-11-14)', () => {
-  const base = { bar: 'reopen' as const, draft: 'نص', template: ACADEMY };
+  const base = { bar: 'reopen' as const, draft: 'نص', template: ACADEMY, unconfirmed: false };
 
   it('closed window, a draft, the template approved and allowed: shown', () => {
     expect(carriesText(base)).toBe(true);
@@ -26,6 +26,7 @@ describe('carriesText: «أرسِل الآن داخل قالب» (owner 2026-11-
 
   it.each([
     ['no draft', { draft: '  \n' }],
+    ['its last send got no answer (may be held)', { unconfirmed: true }],
     ['not allowed or not imported', { template: null }],
     ['not approved', { template: tpl({ status: 'pending' }) }],
     ['window open', { bar: 'open' as const }],
