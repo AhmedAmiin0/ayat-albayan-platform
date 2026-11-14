@@ -11,7 +11,7 @@ const navigate = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('@/lib/http/api', () => ({ apiFetch, apiSend }));
 vi.mock('@/features/people/auth/session-activity', () => ({ reportSession: vi.fn() }));
-vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate }));
+vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate, useSearch: () => ({}) }));
 
 const F = t.familyAuth;
 const status = (available: boolean | Error) =>
@@ -51,7 +51,7 @@ describe('FamilyPanel (docs/30 §1, §7)', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/auth/code/request', { phone: '+201001234567' });
     fireEvent.paste(screen.getByLabelText(F.codeDigit.replace('{n}', '1')), { clipboardData: { getData: () => '123456' } });
     click(F.verify);
-    await waitFor(() => expect(navigate).toHaveBeenCalledWith({ to: '/portal' }));
+    await waitFor(() => expect(navigate).toHaveBeenCalledWith({ href: '/portal' }));
     expect(apiSend).toHaveBeenCalledWith('POST', '/auth/code/verify', { phone: '+201001234567', code: '123456' });
     expect(auth.verifyOtp).toHaveBeenCalledWith({ type: 'magiclink', token_hash: 'hash' });
   });

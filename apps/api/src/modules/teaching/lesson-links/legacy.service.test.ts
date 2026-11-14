@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { TeacherReportLink, TeacherReportLinks } from '@/modules/reporting/reports';
+import type { TeacherReportLink } from '@/modules/reporting/reports';
 import { LegacyReportLinks } from './legacy.service';
 import type { LessonLinksRepo, LinkLesson } from './lesson-links.repo';
 
@@ -31,7 +31,7 @@ function setup(rows: { lesson?: LinkLesson | null; teachers?: { id: string; tz: 
   };
   const service = new LegacyReportLinks(
     repo as unknown as LessonLinksRepo,
-    reports as unknown as TeacherReportLinks,
+    reports,
   );
   return { service, repo, reports };
 }

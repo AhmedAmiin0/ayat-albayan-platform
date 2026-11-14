@@ -8,7 +8,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', () => ({ apiFetch, apiSend }));
 vi.mock('@/features/people/auth/sign-in', () => ({ signIn: vi.fn() }));
-vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
+vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useSearch: () => ({}) }));
 
 const F = t.familyAuth;
 const click = (name: string) => fireEvent.click(screen.getByRole('button', { name }));

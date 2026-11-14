@@ -33,7 +33,12 @@ export class TeacherLessonLinks {
     @Inject(TEACHER_LINK_CONFIG) private readonly config: TeacherLinkConfig,
   ) {}
 
-  async forLesson(lesson: LinkLesson): Promise<TeacherLessonTokens | null> {
+  /** Signed in memory; still a promise, as the reminder and the alert await it. */
+  forLesson(lesson: LinkLesson): Promise<TeacherLessonTokens | null> {
+    return Promise.resolve(this.tokens(lesson));
+  }
+
+  private tokens(lesson: LinkLesson): TeacherLessonTokens | null {
     const report = this.reports.forLesson(lesson);
     const { secret } = this.config;
     if (!report || !secret) return null;

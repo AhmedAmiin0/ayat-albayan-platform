@@ -7,6 +7,7 @@ import { AccountSetupPage } from './AccountSetupPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 const navigate = vi.hoisted(() => vi.fn());
+const search = vi.hoisted((): { value: Record<string, unknown> } => ({ value: {} }));
 const auth = vi.hoisted(() => ({
   signInWithPassword: vi.fn(),
   getSession: vi.fn(),
@@ -14,7 +15,10 @@ const auth = vi.hoisted(() => ({
 }));
 vi.mock('@/lib/http/api', () => ({ apiFetch, apiSend }));
 vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate }));
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => navigate,
+  useSearch: () => search.value,
+}));
 vi.mock('@/features/people/auth/sign-in', () => ({ signOut: vi.fn() }));
 
 const S = t.teacherAuth.setup;
@@ -33,6 +37,7 @@ function renderPage() {
 describe('/account-setup «أكمل حسابك» (docs/46 A4, A6)', () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    search.value = {};
     auth.signInWithPassword.mockResolvedValue({ error: null });
     auth.getSession.mockResolvedValue({ data: { session: { access_token: 'tok' } } });
     apiFetch.mockResolvedValue({
@@ -50,7 +55,7 @@ describe('/account-setup «أكمل حسابك» (docs/46 A4, A6)', () => {
     type(S.password, 'Long-enough-1');
     type(S.confirm, 'Long-enough-1');
     fireEvent.click(screen.getByRole('button', { name: S.submit }));
-    await waitFor(() => expect(navigate).toHaveBeenCalledWith({ to: '/teacher' }));
+    await waitFor(() => expect(navigate).toHaveBeenCalledWith({ href: '/teacher' }));
     expect(apiSend).toHaveBeenCalledWith('PUT', '/me/setup', {
       email: 'teacher@example.com',
       password: 'Long-enough-1',
@@ -59,6 +64,17 @@ describe('/account-setup «أكمل حسابك» (docs/46 A4, A6)', () => {
       email: 'teacher@example.com',
       password: 'Long-enough-1',
     });
+  });
+
+  it('?redirect=<the report link>: lands on that page once set up (owner 2026-11-14)', async () => {
+    apiSend.mockResolvedValue(undefined);
+    search.value = { redirect: '/teacher/report/L1' };
+    renderPage();
+    type(S.email, 'teacher@example.com');
+    type(S.password, 'Long-enough-1');
+    type(S.confirm, 'Long-enough-1');
+    fireEvent.click(screen.getByRole('button', { name: S.submit }));
+    await waitFor(() => expect(navigate).toHaveBeenCalledWith({ href: '/teacher/report/L1' }));
   });
 
   it('a bad form sends nothing; an API refusal is shown in words', async () => {

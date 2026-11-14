@@ -16,7 +16,8 @@ interface TeacherLessonV3Input extends TeacherLessonInput {
 /**
  * {{1}} the teacher, {{2}} the students, {{3}} their codes, {{4}} the time in the teacher's tz,
  * {{5}} the duration, {{6}} the meeting link; buttons [join token, lesson id]. The report button
- * opens /teacher-report/<lesson id>, which redirects to the signed-in portal page. null when a value is missing: the caller keeps the older template.
+ * opens /teacher-report/<lesson id>, which redirects to the signed-in portal page. null when a
+ * value is missing: the caller keeps the older template.
  */
 export function teacherLessonV3(input: TeacherLessonV3Input): OutboundTemplate | null {
   const v = lessonValues(input);

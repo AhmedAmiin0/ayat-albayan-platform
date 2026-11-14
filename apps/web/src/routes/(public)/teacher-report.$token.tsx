@@ -9,9 +9,8 @@ import { linkLessonId, TeacherReportLinkPage } from '@/features/reporting/report
 export const Route = createFileRoute('/(public)/teacher-report/$token')({
   beforeLoad: ({ params }) => {
     const lessonId = linkLessonId(params.token);
-    if (lessonId) {
-      throw redirect({ to: '/teacher/report/$lessonId', params: { lessonId }, replace: true });
-    }
+    const to = '/teacher/report/$lessonId';
+    if (lessonId) redirect({ to, params: { lessonId }, replace: true, throw: true });
   },
   component: TeacherReportLinkRoute,
 });
