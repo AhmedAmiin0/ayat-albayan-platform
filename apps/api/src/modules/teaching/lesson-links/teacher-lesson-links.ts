@@ -9,7 +9,7 @@ import { joinExpiry, signTeacherJoin } from './join-token';
 
 /** One lesson's two teacher links (teacher_lesson_v3's button suffixes, owner 2026-11-06). */
 export interface TeacherLessonTokens {
-  /** The no-login report page and its token («تقرير الحلقة»). */
+  /** The signed-in report page and its button suffix, the lesson id («تقرير الحلقة»). */
   report: TeacherReportLink;
   /** The signed /join token («ادخل الحلقة»): GET /join/:token, until the end + 2 h. */
   join: string;
@@ -22,9 +22,9 @@ interface LinkLesson {
 }
 
 /**
- * The teacher's join and report tokens of one lesson, signed with FEEDBACK_TOKEN_SECRET (each under
- * its own context), stored nowhere (no short link any more). null when the secret or the web origin
- * is not configured: the producers then keep the signed-in pages.
+ * The teacher's two links of one lesson: the /join token, signed with FEEDBACK_TOKEN_SECRET and
+ * stored nowhere, and the signed-in report page (owner 2026-11-14, no report token any more). null
+ * when the secret or the web origin is not configured: the producers then keep their fallbacks.
  */
 @Injectable()
 export class TeacherLessonLinks {
@@ -34,7 +34,7 @@ export class TeacherLessonLinks {
   ) {}
 
   async forLesson(lesson: LinkLesson): Promise<TeacherLessonTokens | null> {
-    const report = await this.reports.forLesson(lesson);
+    const report = this.reports.forLesson(lesson);
     const { secret } = this.config;
     if (!report || !secret) return null;
     const exp = joinExpiry(lesson.ends_at);

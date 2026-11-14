@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { TeacherReportLinks } from '@/modules/reporting/reports';
+import type { TeacherReportLink, TeacherReportLinks } from '@/modules/reporting/reports';
 import { LegacyReportLinks } from './legacy.service';
 import type { LessonLinksRepo, LinkLesson } from './lesson-links.repo';
 
@@ -24,10 +24,9 @@ function setup(rows: { lesson?: LinkLesson | null; teachers?: { id: string; tz: 
     ]),
   };
   const reports = {
-    forLesson: vi.fn(async (l: { id: string; teacherId: string }) => ({
-      token: `tok-${l.id}-${l.teacherId}`,
-      url: `https://app.example/teacher-report/tok-${l.id}-${l.teacherId}`,
-      exp: 0,
+    forLesson: vi.fn((l: { id: string }): TeacherReportLink | null => ({
+      suffix: l.id,
+      url: `https://app.example/teacher/report/${l.id}`,
     })),
   };
   const service = new LegacyReportLinks(
@@ -38,22 +37,24 @@ function setup(rows: { lesson?: LinkLesson | null; teachers?: { id: string; tz: 
 }
 
 describe('LegacyReportLinks (GET /report-link/legacy/*)', () => {
-  it('(a) teacher/report/<lessonId>: that lesson’s page, issued for its CURRENT teacher', async () => {
+  it('(a) teacher/report/<lessonId>: that lesson’s signed-in portal page', async () => {
     const { service, reports } = setup();
     expect(await service.target(`teacher/report/${L1}`, NOW)).toBe(
-      `https://app.example/teacher-report/tok-${L1}-T-now`,
+      `https://app.example/teacher/report/${L1}`,
     );
-    expect(reports.forLesson).toHaveBeenCalledWith({
-      id: L1,
-      teacherId: 'T-now',
-      ends_at: '2026-11-06T14:30:00Z',
-    });
+    expect(reports.forLesson).toHaveBeenCalledWith(expect.objectContaining({ id: L1 }));
+  });
+
+  it('no web origin: invalid', async () => {
+    const { service, reports } = setup();
+    reports.forLesson.mockReturnValueOnce(null);
+    expect(await service.target(`teacher/report/${L1}`, NOW)).toBeNull();
   });
 
   it('(b) <code>/<teacher>/…: the pair’s most recent lesson of the last 24 h, in the teacher’s day', async () => {
     const { service, repo } = setup();
     const url = await service.target(`AB-0004/${encodeURIComponent('أبرار')}/tok`, NOW);
-    expect(url).toBe(`https://app.example/teacher-report/tok-${L1}-T-now`);
+    expect(url).toBe(`https://app.example/teacher/report/${L1}`);
     expect(repo.teachersNamed).toHaveBeenCalledWith('أبرار');
     expect(repo.pairLessons).toHaveBeenCalledWith({
       studentId: 'S1',
