@@ -35,6 +35,8 @@ export const ROUTE_PERMISSION = {
   // The classroom assistant's tree (web /assistant/): the lessons they assist and internal meetings.
   assistantLessons: 'self.assistant',
   meetings: 'meetings.read',
+  // «القوالب» (owner 2026-11-14): write and edit allow-list templates; sales by default, the admin.
+  templates: 'templates.author',
 } as const satisfies Record<string, Permission>;
 
 export type RouteKey = keyof typeof ROUTE_PERMISSION;

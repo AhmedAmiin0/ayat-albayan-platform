@@ -6,7 +6,7 @@ import { graphHttp, graphSend, type FetchLike, type GraphConn } from './drivers/
 import { fetchMedia, templateEditPath } from './drivers/kapso/kapso';
 import type { CrmBody } from './drivers/crm/crm-body';
 import { sentSchema, submitSchema } from './drivers/meta/meta-shapes';
-import { listTemplates } from './drivers/meta/meta-templates';
+import { editMetaTemplate, listTemplates } from './drivers/meta/meta-templates';
 import { resumableUpload } from './drivers/meta/meta-upload';
 import { relayGraphBody } from './drivers/waba/waba-graph';
 import { sendGraphTemplate } from './drivers/waba/waba-send';
@@ -15,8 +15,7 @@ import { mediaMessage, readReceipt, submitPayload, textMessage, type GraphBody }
 import { reactionMessage } from './drivers/meta/meta-reaction';
 import { capsOf } from './drivers/driver-caps';
 import { graphVoice } from './drivers/meta/meta-voice';
-import type { VoiceUpload } from './whatsapp.types';
-import { WaError, type MetaTemplate, type ReactionSend, type SampleFile, type TemplateRow, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
+import { WaError, type VoiceUpload, type MetaTemplate, type ReactionSend, type SampleFile, type TemplateRow, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
 export const DEFAULT_TIMEOUT_MS = 15_000;
 
@@ -26,8 +25,7 @@ export interface ClientOpts {
   allowed?: readonly string[] | null;
 }
 
-/** A read receipt's 2xx body is not checked (any answer, as before). */
-const ANY = z.unknown();
+const ANY = z.unknown(); // A read receipt's 2xx body is not checked (any answer, as before).
 
 interface Connected {
   conn: GraphConn;
@@ -106,6 +104,10 @@ export class HttpWhatsappClient implements WhatsappClient {
         : { path: `${env.wabaId}/message_templates`, json: payload };
     const res = await http.json({ ...req, method: 'POST', schema: submitSchema });
     return { metaId: res.id ?? template.meta_id ?? '', status: res.status ?? 'PENDING' };
+  }
+
+  editTemplate(row: TemplateRow, o: { headerHandle?: string } = {}): Promise<{ status: string }> {
+    return editMetaTemplate(this.connection(), row, o.headerHandle); // POST /{id} (meta-templates)
   }
 
   canUploadSamples(): boolean {

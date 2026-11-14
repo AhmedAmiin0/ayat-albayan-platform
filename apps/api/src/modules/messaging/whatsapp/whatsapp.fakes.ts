@@ -116,6 +116,7 @@ const BASE_ROW: TemplateRow = {
   number_id: null,
   crm_name: null,
   crm_language: null,
+  created_by: null, created_at: '2026-10-01T00:00:00Z', approved_edits: [],
 };
 
 export function templateRow(over: Partial<TemplateRow> = {}): TemplateRow {

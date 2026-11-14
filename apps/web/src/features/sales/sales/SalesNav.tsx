@@ -14,6 +14,7 @@ export const SALES_NAV_ITEMS = [
   { to: '/sales/live', label: t.sales.nav.live, icon: 'clock', permission: 'self.sales_academy' },
   { to: '/sales/schedule', label: t.sales.nav.academySchedule, icon: 'calendar', permission: 'self.sales_academy' },
   { to: '/sales/subscriptions', label: t.sales.nav.subscriptions, icon: 'receipt', permission: 'self.sales' },
+  { to: '/sales/templates', label: t.templates.author.nav, icon: 'template', permission: 'templates.author' },
   { to: '/sales/meetings', label: t.meetingInvites.list.title, icon: 'calendar', permission: 'meetings.read' },
   { to: '/sales/earnings', label: t.assistantPortal.nav.earnings, icon: 'wallet', permission: 'self.sales_earnings' },
 ] as const satisfies readonly SectionLink[];

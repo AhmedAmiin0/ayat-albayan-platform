@@ -34,6 +34,9 @@ const WHITELIST = new Set([
   'modules/messaging/whatsapp/templates/sync/template-verifier.ts',
   'modules/messaging/whatsapp/templates/sync/template-line-sync.ts',
   'modules/messaging/whatsapp/templates/sync/template-submit.ts',
+  // «تعديل» (owner 2026-11-14): Meta's edit and the PDF's sample, the admin's or author's act.
+  'modules/messaging/whatsapp/templates/edit/template-edit.meta.ts',
+  'modules/messaging/whatsapp/templates/edit/template-editor.ts',
   // One number's template sync (docs/23c decision 4): a read-only list from that number's own client.
   'modules/messaging/whatsapp/templates/sync/template-number-sync.ts',
   'modules/messaging/whatsapp/templates/sync/template-numbers.service.ts',
@@ -54,7 +57,7 @@ const WHITELIST = new Set([
   'modules/messaging/webhook/external/kapso-history.ts',
 ]);
 
-const METHODS = 'sendTemplate|sendText|sendDocument|markRead|getMedia|getTemplates|submitTemplate|uploadSample';
+const METHODS = 'sendTemplate|sendText|sendDocument|markRead|getMedia|getTemplates|submitTemplate|editTemplate|uploadSample';
 
 /** [label, pattern]: a call, a bracket call, a destructured method, a raw Graph base, a client. */
 const META_CALLS: readonly (readonly [string, RegExp])[] = [

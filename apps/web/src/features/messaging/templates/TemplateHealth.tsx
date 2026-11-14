@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import type { AuthorTemplate } from '@ab/client-core';
+import type { TemplateView } from '@ab/shared';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { numbersQuery } from '@/features/messaging/numbers/numbers-api';
 import { DataTable } from '@/components/data-table/DataTable';
@@ -7,6 +9,7 @@ import { Toast } from '@/components/ui/overlay/toast';
 import { t } from '@/lib/i18n/i18n';
 import { otherLine, templatesQuery } from './api';
 import { NewTemplate } from './create/NewTemplate';
+import { EditTemplateDialog } from './edit/EditTemplateDialog';
 import { CrmNameDialog } from './crm/CrmNameDialog';
 import { MoveLineDialog } from './lines/MoveLineDialog';
 import { SubmitTemplateDialog } from './numbers/SubmitTemplateDialog';
@@ -42,12 +45,14 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
   const { setPicking, busy: pickBusy } = pick;
   const { busyKey: crmBusy, onSet: onCrmSet } = useCrmStatus(a.setNotice);
   const crmName = useCrmName(a.setNotice);
+  const [editing, setEditing] = useState<TemplateView | null>(null);
   const { setEditing: onEditName } = crmName;
   const columns = useMemo(
     () =>
       templateColumns({
         onSubmit: setSubmitting,
         onMove: setMoving,
+        onEdit: setEditing,
         onStarter: (tpl, on) => toggleStarter({ key: tpl.key, on }),
         saving,
         phones,
@@ -55,9 +60,14 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
         sendFrom: { numbers, manage, busy: pickBusy, onPick: (template, numberId) => setPicking({ template, numberId }) },
         crmStatus: { busyKey: crmBusy, onSet: onCrmSet, onEditName },
       }),
-    [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking, pickBusy, crmBusy, onCrmSet, onEditName],
+    [setSubmitting, setMoving, setEditing, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking, pickBusy, crmBusy, onCrmSet, onEditName],
   );
   const rows = templates.data ?? [];
+  const onEdited = (saved: AuthorTemplate) => {
+    setEditing(null);
+    const text = saved.status === 'pending' ? t.templates.edit.saved : t.templates.edit.savedLocal;
+    a.setNotice({ message: text.replace('{name}', saved.key) });
+  };
 
   return (
     <>
@@ -116,6 +126,9 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
       )}
       {crmName.editing && (
         <CrmNameDialog template={crmName.editing} busy={crmName.save.isPending} onSave={(input) => crmName.save.mutate(input)} onClose={() => onEditName(null)} />
+      )}
+      {editing && (
+        <EditTemplateDialog tpl={editing} mode="admin" onSaved={onEdited} onClose={() => setEditing(null)} />
       )}
       {a.notice && <Toast {...a.notice} onDismiss={() => a.setNotice(null)} />}
     </>

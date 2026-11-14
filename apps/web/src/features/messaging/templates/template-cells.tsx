@@ -71,6 +71,8 @@ export interface RowActionsProps {
   crm?: ReactNode;
   /** A meta line's «اسم القالب في واتساب» button, beside its submit (docs/19 «CRM → Meta»). */
   name?: ReactNode;
+  /** «تعديل» (owner 2026-11-14): its words and buttons, behind its own dialog. */
+  onEdit: (tpl: TemplateView) => void;
 }
 
 type SubmitProps = Pick<RowActionsProps, 'tpl' | 'onSubmit'> & { onCrm: boolean };
@@ -100,7 +102,7 @@ function SubmitAction({ tpl, onSubmit, onCrm }: SubmitProps) {
  * on meta: the API uploads a sample PDF first) and «نقل إلى الرقم الآخر», each behind its own dialog.
  * Moving to a number the server has no credentials for is disabled, with the reason beside it.
  */
-export function RowActions({ tpl, onSubmit, onMove, target, crm, name }: RowActionsProps) {
+export function RowActions({ tpl, onSubmit, onMove, target, crm, name, onEdit }: RowActionsProps) {
   const reason = useId();
   const onCrm = crm !== undefined;
   const noTarget = target?.configured === false;
@@ -109,6 +111,14 @@ export function RowActions({ tpl, onSubmit, onMove, target, crm, name }: RowActi
       <SubmitAction tpl={tpl} onSubmit={onSubmit} onCrm={onCrm} />
       {crm}
       {name}
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label={t.templates.edit.openFor.replace('{name}', templateName(tpl.key))}
+        onClick={() => onEdit(tpl)}
+      >
+        {t.templates.edit.open}
+      </Button>
       <Button
         size="sm"
         variant="ghost"

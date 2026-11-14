@@ -1,9 +1,10 @@
 import { TEMPLATE_LIMITS, WA_LINES } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
-import { controlClass, Input } from '@/components/ui/form/input';
+import { Input } from '@/components/ui/form/input';
 import { Select } from '@/components/ui/form/select';
 import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { EditBodyFields } from '@/features/messaging/templates/edit/EditBodyFields';
+import { KeyField } from './KeyField';
 import type { TemplateDraft } from './template-draft';
 
 const S = t.templates.create;
@@ -26,11 +27,14 @@ export function IdentityFields({ draft, set, error }: DraftFieldsProps) {
   };
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <Field label={S.key} hint={S.keyHint} required error={error('key')}>
-        {(p) => (
-          <Input {...p} dir="ltr" autoComplete="off" spellCheck={false} value={draft.key} onChange={(e) => set({ key: e.target.value })} />
-        )}
-      </Field>
+      <KeyField
+        label={S.key}
+        hint={S.keyHint}
+        required
+        value={draft.key}
+        onChange={(key) => set({ key })}
+        error={error('key')}
+      />
       <Field label={S.line}>
         {(p) => (
           <Select {...p} value={draft.line} onChange={(e) => line(e.target.value)}>
@@ -67,22 +71,13 @@ export function ContentFields({ draft, set, error }: DraftFieldsProps) {
       <Field label={S.header} hint={max(S.headerHint, TEMPLATE_LIMITS.header)} error={error('header')}>
         {(p) => <Input {...p} dir="auto" maxLength={TEMPLATE_LIMITS.header} value={draft.header} onChange={(e) => set({ header: e.target.value })} />}
       </Field>
-      <Field label={S.body} hint={S.bodyHint} required error={error('body')}>
-        {(p) => (
-          <textarea
-            {...p}
-            rows={6}
-            dir="auto"
-            value={draft.body}
-            maxLength={TEMPLATE_LIMITS.body}
-            onChange={(e) => set({ body: e.target.value })}
-            className={cn(controlClass, 'min-h-32 resize-y py-2 leading-normal')}
-          />
-        )}
-      </Field>
-      <Field label={S.footer} hint={max(S.footerHint, TEMPLATE_LIMITS.footer)} error={error('footer')}>
-        {(p) => <Input {...p} dir="auto" maxLength={TEMPLATE_LIMITS.footer} value={draft.footer} onChange={(e) => set({ footer: e.target.value })} />}
-      </Field>
+      <EditBodyFields
+        body={draft.body}
+        footer={draft.footer}
+        onBody={(body) => set({ body })}
+        onFooter={(footer) => set({ footer })}
+        error={error}
+      />
     </div>
   );
 }
