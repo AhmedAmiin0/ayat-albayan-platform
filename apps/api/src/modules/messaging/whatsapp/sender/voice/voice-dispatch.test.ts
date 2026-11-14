@@ -79,6 +79,12 @@ describe('sendVoiceById', () => {
     await expect(sendVoiceById(at, voice)).resolves.toMatchObject({ waMessageId: 'wamid.m4a' });
     expect(voice.upload).not.toHaveBeenCalled();
   });
+  it('a path outside out/ is never read nor uploaded', async () => {
+    storage.exists.mockResolvedValue(false);
+    await expect(sendVoiceById({ ...at, path: 'in/x/voice.ogg' }, voice)).rejects.toThrow('missing');
+    expect(storage.download).not.toHaveBeenCalled();
+    expect(voice.upload).not.toHaveBeenCalled();
+  });
 });
 
 describe('refusedNow', () => {

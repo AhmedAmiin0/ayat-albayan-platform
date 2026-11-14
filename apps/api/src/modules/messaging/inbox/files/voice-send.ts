@@ -42,7 +42,9 @@ export async function voiceMedia(storage: StorageService, m4a: ObjectRef, transc
   const kept = { bucket: m4a.bucket, path: keptPath, body: pair.m4a, contentType: 'audio/mp4' };
   const [path] = await Promise.all([
     storage.upload({ bucket: m4a.bucket, path: oggPath, body: pair.ogg, contentType: 'audio/ogg' }),
-    storage.upload(kept),
+    storage.upload(kept).catch((e: unknown) => {
+      log.warn(`no m4a fallback kept: ${String(e)}`);
+    }),
   ]);
   return { media_path: path, media_mime: 'audio/ogg', media_name: 'voice.ogg' };
 }

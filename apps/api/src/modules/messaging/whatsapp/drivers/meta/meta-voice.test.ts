@@ -12,8 +12,11 @@ import { voiceForm, voiceIdMessage } from './meta-voice';
 
 const OGG = new TextEncoder().encode('OggS-opus');
 const UPLOADED = { status: 200, body: { id: 'media-1' } };
-const voiceOf = (env: typeof STUB_ENV | typeof KAPSO_ENV, f: ReturnType<typeof scriptedFetch>) =>
-  new HttpWhatsappClient(env, { fetch: f.fetch, timeoutMs: 1_000 }).voice();
+const voiceOf = (env: typeof STUB_ENV | typeof KAPSO_ENV, f: ReturnType<typeof scriptedFetch>) => {
+  const voice = new HttpWhatsappClient(env, { fetch: f.fetch, timeoutMs: 1_000 }).voice();
+  if (!voice) throw new Error('no uploader');
+  return voice;
+};
 
 describe('voiceForm', () => {
   it('messaging_product, the BARE audio/ogg type and voice.ogg as audio/ogg', () => {
@@ -39,30 +42,34 @@ describe('HttpWhatsappClient.voice()', () => {
   it('meta: uploads to /{phone}/media with the bearer, multipart, then sends by id', async () => {
     const f = scriptedFetch(UPLOADED, RECORDED.sendOk);
     const voice = voiceOf(STUB_ENV, f);
-    await expect(voice?.upload(OGG)).resolves.toBe('media-1');
-    await voice?.send({ to: '+966551234567', id: 'media-1' });
-    const [up, send] = f.requests;
-    expect(up?.url).toMatch(/\/stub-phone\/media$/);
-    expect(up?.init.method).toBe('POST');
-    expect(up?.init.body).toBeInstanceOf(FormData);
-    expect(up?.init.headers).toHaveProperty('authorization');
-    expect(up?.init.headers).not.toHaveProperty('content-type');
-    expect(send?.url).toMatch(/\/stub-phone\/messages$/);
-    expect(send?.body).toMatchObject({ type: 'audio', audio: { id: 'media-1', voice: true } });
+    await expect(voice.upload(OGG)).resolves.toBe('media-1');
+    await voice.send({ to: '+966551234567', id: 'media-1' });
+    expect(f.requests).toMatchObject([
+      {
+        url: expect.stringMatching(/\/stub-phone\/media$/),
+        init: { method: 'POST', body: expect.any(FormData), headers: { authorization: expect.any(String) } },
+      },
+      {
+        url: expect.stringMatching(/\/stub-phone\/messages$/),
+        body: { type: 'audio', audio: { id: 'media-1', voice: true } },
+      },
+    ]);
+    expect(f.requests[0]?.init.headers).not.toHaveProperty('content-type');
   });
 
   it('kapso: the same path on its Meta proxy with X-API-Key, never a bearer', async () => {
     const f = scriptedFetch(UPLOADED);
-    await voiceOf(KAPSO_ENV, f)?.upload(OGG);
-    const [up] = f.requests;
-    expect(up?.url).toBe('http://127.0.0.1:4010/kapso/v24.0/stub-phone/media');
-    expect(up?.init.headers).toMatchObject({ 'x-api-key': 'fake-kapso-key' });
-    expect(up?.init.headers).not.toHaveProperty('authorization');
+    await voiceOf(KAPSO_ENV, f).upload(OGG);
+    expect(f.requests).toMatchObject([{
+      url: 'http://127.0.0.1:4010/kapso/v24.0/stub-phone/media',
+      init: { headers: { 'x-api-key': 'fake-kapso-key' } },
+    }]);
+    expect(f.requests[0]?.init.headers).not.toHaveProperty('authorization');
   });
 
   it('a refused upload throws (the dispatch falls back); unconfigured, crm and evolution: none', async () => {
     const refused = { status: 400, body: { error: { code: 131053, message: 'Media upload error' } } };
-    await expect(voiceOf(STUB_ENV, scriptedFetch(refused))?.upload(OGG)).rejects.toThrow();
+    await expect(voiceOf(STUB_ENV, scriptedFetch(refused)).upload(OGG)).rejects.toThrow();
     expect(new HttpWhatsappClient(null).voice()).toBeNull();
     expect(whatsappClient(CRM_ENV).voice?.() ?? null).toBeNull();
     expect(whatsappClient(EVO_BAILEYS).voice?.() ?? null).toBeNull();

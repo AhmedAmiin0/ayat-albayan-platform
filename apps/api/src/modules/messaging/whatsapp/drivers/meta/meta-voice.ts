@@ -8,10 +8,10 @@ import { uploadedMediaSchema } from './meta-shapes';
 // Kapso re-uploaded the ogg as «audio/ogg; codecs=opus» and Meta refused it (131053).
 
 /** The upload's `type`: bare, never with «; codecs=opus». */
-export const VOICE_UPLOAD_TYPE = 'audio/ogg';
+const VOICE_UPLOAD_TYPE = 'audio/ogg';
 
 /** The client's own send (allow-list first, then POST /{phone}/messages). */
-export type GraphPost = (to: string, build: () => GraphBody) => Promise<WaSent>;
+type GraphPost = (to: string, build: () => GraphBody) => Promise<WaSent>;
 
 interface VoiceById {
   to: string;

@@ -1,6 +1,6 @@
 import { baseMime } from '@ab/shared';
 import { Logger } from '@nestjs/common';
-import { BUCKETS, voiceM4aPath } from '@/common/storage/storage.paths';
+import { BUCKETS, isSentFilePath, voiceM4aPath } from '@/common/storage/storage.paths';
 import type { StorageService } from '@/common/storage/storage.service';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 import {
@@ -9,7 +9,7 @@ import {
 
 // A voice note recorded in the app, on a line that uploads media (capsOf().mediaUpload: meta,
 // kapso; 2026-11-14): the ogg is uploaded and sent by its media id. A refused upload or send
-// sends the recorded m4a once instead, by link as plain audio, and the row records it (WaSent.media).
+// sends the recorded m4a once instead, by link as plain audio; the row records it (WaSent.media).
 
 const log = new Logger('VoiceDispatch');
 
@@ -46,7 +46,8 @@ async function m4aInstead(at: VoiceAt, cause: unknown): Promise<WaSent> {
 
 /** The ogg's bytes from Storage, uploaded: the media id. Nobody is messaged yet. */
 async function uploadOgg(at: VoiceAt, voice: VoiceUpload): Promise<string> {
-  const ogg = await at.storage.download({ bucket: BUCKETS.waMedia, path: at.path });
+  const sent = isSentFilePath(at.path);
+  const ogg = sent ? await at.storage.download({ bucket: BUCKETS.waMedia, path: at.path }) : null;
   if (!ogg) throw new WaError(`the voice note ${at.path} is missing`, { code: 100, status: 0 });
   return voice.upload(ogg);
 }
