@@ -3,7 +3,9 @@
 --
 -- 1. message_templates.created_by / created_at: who wrote a template on the platform (sales
 --    authoring) and when; the API counts a user's new templates of the last 24 h (5 a day).
---    Existing rows get created_by null (seeded or imported).
+--    Existing rows get created_by null (seeded or imported). No foreign key on purpose: the
+--    registry is reference data that no truncate of profiles may cascade into (e2e resetDb, and
+--    docs/12 «no foreign key points at message_templates» either way); a deleted login keeps its id.
 -- 2. message_templates.approved_edits: the times the template was edited on Meta while approved,
 --    kept for 30 days: Meta allows one such edit a day and 10 in 30 days.
 -- 3. templates.author: grantable; the system sales role (and the admin, for readers) by default.
@@ -15,7 +17,7 @@
 set local lock_timeout = '5s';
 
 alter table public.message_templates
-  add column if not exists created_by uuid references public.profiles (id) on delete set null,
+  add column if not exists created_by uuid,
   add column if not exists created_at timestamptz not null default now(),
   add column if not exists approved_edits timestamptz[] not null default '{}';
 
