@@ -1,13 +1,9 @@
 import { formatPhone, leadStatusStyle } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Ltr } from '@/core/ui/primitives/Ltr';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { shape, type, useTheme } from '@/theme';
+import { t, Ltr, StatusChip, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { leadAge } from '@/inbox/shared/format';
 import type { Lead } from '@/inbox/shared/types';
-import { AppText } from '@/core/ui/primitives/AppText';
 
 /** Label/value card of the lead row; its qualification and follow-up sit below (qualification/). */
 export function LeadFacts({ lead }: { lead: Lead }) {

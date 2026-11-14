@@ -1,10 +1,7 @@
 import { formatPhone, type FamilyOption } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, AppText, ltr, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/more';
-import { type, useTheme } from '@/theme';
 
 interface FamilyRowProps {
   family: FamilyOption;

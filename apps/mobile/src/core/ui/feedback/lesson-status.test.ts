@@ -1,8 +1,8 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { UPCOMING_LESSON_STYLE } from '@ab/client-core';
 import { renderHook } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { createTestQueryClient, queryWrapper, seedPublicConfig } from '@/test/query';
+import { t } from '@ab/mobile-kit';
+import { createTestQueryClient, seedPublicConfig, queryWrapper } from '@/test/query';
 import { lessonStatusText, useLessonStatusText } from './lesson-status';
 
 test('required: a row chip says the short «للتأكيد»; every other status keeps its word', () => {

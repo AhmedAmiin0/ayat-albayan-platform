@@ -2,16 +2,21 @@ import { type FamilyPhone, formatPhone, secondPhoneOf } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useHolds } from '@/core/auth';
-import { ApiError, apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import {
+  useHolds,
+  ApiError,
+  apiSend,
+  t,
+  pathKey,
+  Button,
+  Ltr,
+  ltr,
+  type,
+  useTheme,
+} from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { Button } from '@/core/ui/primitives/Button';
-import { Ltr, ltr } from '@/core/ui/primitives/Ltr';
 import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
-import { type, useTheme } from '@/theme';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 
 /** DELETE /guardians/:id/phones/:phone (204): only the second number; then the file, the families and the chats refetch. */

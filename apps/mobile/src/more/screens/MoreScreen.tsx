@@ -4,12 +4,16 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  Button,
+  ListRow,
+  Screen,
+  ScreenHeader,
+  signOutDevice,
+  InsetGroup,
+} from '@ab/mobile-kit';
 import { SalesSection } from '@/sales/sales/components/SalesSection';
-import { Button } from '@/core/ui/primitives/Button';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { AdminOpsSection } from '@/more/sections/AdminOpsSection';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more/appearance/ClockFormatPicker';
@@ -17,8 +21,6 @@ import { ClassroomSection } from '@/more/sections/ClassroomSection';
 import { FinanceSection } from '@/more/sections/FinanceSection';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { MoneySection } from '@/more/sections/MoneySection';
-import { signOutDevice } from '@/core/lib/session/sign-out';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**
  * «المزيد» (R-MOB-02): the read-only lists that don't earn a tab («الجدول» is its own tab now),

@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 import { DatePickerField } from './DatePickerField';
 

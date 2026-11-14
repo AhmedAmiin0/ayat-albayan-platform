@@ -1,5 +1,5 @@
 import type { AttendanceKind, SalesStudentDetails, StatusStyle } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales/lib/sales-text';
 
 /** The chip of each day: «حضر» full and green, «غاب» struck red, the rest neutral; «لم يُسجَّل» waits on someone. */

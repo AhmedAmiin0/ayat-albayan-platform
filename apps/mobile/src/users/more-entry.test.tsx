@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { MoreScreen } from '@/more/screens/MoreScreen';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 const only = (...keys: string[]) => (p: string) => keys.includes(p);
 

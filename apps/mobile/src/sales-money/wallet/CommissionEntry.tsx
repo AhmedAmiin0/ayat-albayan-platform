@@ -1,9 +1,7 @@
 import { walletStateStyle, type MyCommissionRow } from '@ab/shared';
 import { memo } from 'react';
 import { View } from 'react-native';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { StatusChip, AppText, type, useTheme } from '@ab/mobile-kit';
 import { commissionDay, commissionLine, walletMoney, walletStateText } from '@/sales-money/lib/money-text';
 import { useViewerTz } from '@/core/lib/clock';
 

@@ -1,8 +1,7 @@
 import type { PlanAction, ReportStage, WayIn } from '@ab/client-core';
 import type { ReactNode } from 'react';
 import { Linking } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
+import { t, Button, type ButtonVariant } from '@ab/mobile-kit';
 import type { LeadContext } from './use-teacher-plan';
 import { RoomJoinButton } from '@/teacher/lesson-actions';
 

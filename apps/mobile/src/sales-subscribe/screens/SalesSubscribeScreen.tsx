@@ -3,15 +3,17 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  Button,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
 import { useSalesCourse } from '@/sales-course';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useSalesFamily } from '@/sales-subscribe/lib/family';
 import { SalesSubscribeForm } from '@/sales-subscribe/components/SalesSubscribeForm';
 

@@ -3,9 +3,8 @@ import type { AssistantStatementView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
 import { openStatementReceipt } from '@/assistants/statements/hooks/receipt-link';
 import type { StatementCan } from '@/assistants/statements/hooks/statement-can';
 

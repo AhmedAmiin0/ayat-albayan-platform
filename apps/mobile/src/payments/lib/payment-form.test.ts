@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { balanceOf, OLD_SUB_ID, STUDENT, SUB_ID, subscription } from '@/payments/fixtures';
 import { checkDraft, chosenPackage, defaultPackage, emptyDraft, payablePackages, withMethod } from './payment-form';
 import type { Receipt } from '@/core/lib/receipts/receipt';

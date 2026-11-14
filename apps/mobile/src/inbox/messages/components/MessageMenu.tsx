@@ -1,10 +1,8 @@
 import type { MessageView } from '@ab/shared';
 import { Platform } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, Button, useHideRights, useMeActor } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { type, useTheme } from '@/theme';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import { Button } from '@/core/ui/primitives/Button';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { quoteOf, quoteText } from '@/inbox/messages/hooks/quote-text';
 import { bubbleOffers, downloadLabel } from '@/inbox/messages/hooks/bubble-offers';
@@ -12,7 +10,6 @@ import { copyText, downloadFile, downloadProblem } from '@/inbox/messages/copy-d
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { ReactionBar } from '@/inbox/messages/reactions/ReactionBar';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
-import { useHideRights, useMeActor } from '@/core/auth';
 import { HideActions } from '@/inbox/messages/components/hide/HideActions';
 import { StickerFavourite } from '@/inbox/messages/components/sticker/StickerFavourite';
 

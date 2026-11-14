@@ -9,7 +9,7 @@ import { fileError } from './send-file';
 import { type Outgoing, sendKey, useSendMessage } from '@/inbox/thread/hooks/use-thread';
 import { useBoxId } from '@/inbox/thread/send/box-id';
 import { PINS, useReplayed } from '@/inbox/thread/send/pinned-send';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 /** One template draft = one key + params: re-sending it after an error keeps its clientRequestId. */
 const draftOf = (out: Outgoing): string =>

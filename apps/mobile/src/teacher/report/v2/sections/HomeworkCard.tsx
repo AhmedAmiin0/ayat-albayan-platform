@@ -1,5 +1,5 @@
 import { effective } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { ReportTextField } from '@/teacher/report/components/ReportTextField';
 import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';

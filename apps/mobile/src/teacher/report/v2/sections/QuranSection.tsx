@@ -1,7 +1,7 @@
 import { SEGMENT_KINDS, TAJWEED_TOPICS, segmentsOf, type SegmentKind } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { placeRange, toggleTajweed } from '@/teacher/report/v2/hooks/content-edit';
 import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
 import { startDraft } from '@/teacher/report/v2/picker/picker-state';

@@ -1,9 +1,7 @@
 import { act, render, renderHook } from '@testing-library/react-native';
 import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
 import type { ComponentProps, ReactNode } from 'react';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { claimBarSlot, useBarSlotClaimed } from './bar-slot';
-import { useScreenFocused } from './use-screen-focus';
+import { ScreenHeader, claimBarSlot, useBarSlotClaimed, useScreenFocused } from '@ab/mobile-kit';
 
 // Where the bar goes: a focused screen's large title claims it; otherwise the root shows it under the safe area.
 type Navigation = NonNullable<ComponentProps<typeof NavigationContext.Provider>['value']>;

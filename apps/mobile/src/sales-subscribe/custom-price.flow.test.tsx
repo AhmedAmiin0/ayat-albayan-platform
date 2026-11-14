@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import type { SalesFamilyStudent } from '@ab/shared';
 import { z } from 'zod';
 import { GUARDIAN_PHONE, inboxBackend } from '@/inbox/shared/flow-backend';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { familyOf, kid, openSub } from './testing/fixtures';
 
 // «مبلغ مخصص» (owner 2026-11-02): the transfer that follows the save starts from the custom price.

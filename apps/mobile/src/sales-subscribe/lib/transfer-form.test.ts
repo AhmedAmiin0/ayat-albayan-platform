@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { openSub, SUB } from '@/sales-subscribe/testing/fixtures';
 import { checkTransfer, draftFor, type ReceiptChoice } from './transfer-form';
 

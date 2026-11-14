@@ -2,7 +2,7 @@ import { counted } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { booked, maryam, SUN_17, THU_18 } from '@/booking/testing/fixtures';
 import { dayLine } from '@/booking/shared/picks';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
 import { isDisabled, fakeCourseApi, pickLesson, press, walkToReview } from '@/sales-course/testing/course-test-utils';
@@ -14,8 +14,8 @@ const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

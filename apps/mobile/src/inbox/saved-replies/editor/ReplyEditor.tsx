@@ -1,10 +1,8 @@
 import { SAVED_REPLY_BODY_MAX, SAVED_REPLY_TITLE_MAX, type SavedReply, type SavedReplyScope } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button, Field } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { Field } from '@/core/ui/form/Field';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { type ReplySave, useSaveReply } from '@/inbox/saved-replies/hooks/api';
 import { insertToken, PlaceholderChips } from './PlaceholderChips';

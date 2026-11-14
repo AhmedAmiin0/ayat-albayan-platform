@@ -1,14 +1,14 @@
 import { screen } from '@testing-library/react-native';
 import { useVideoPlayer } from 'expo-video';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { MessageFile } from '@/inbox/messages/components/MessageFile';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 
 // A GIF bubble (owner 2026-11-01): it plays inline, muted and looping, as WhatsApp.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

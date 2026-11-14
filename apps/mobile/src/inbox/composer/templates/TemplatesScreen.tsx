@@ -1,14 +1,16 @@
 import type { AuthorTemplate } from '@ab/client-core';
 import { authorMayEdit, editRoute } from '@ab/shared';
 import { router } from 'expo-router';
-import { useMeId } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { Button } from '@/core/ui/primitives/Button';
-import { InsetGroup } from '@/core/ui/surface/inset';
+import {
+  useMeId,
+  t,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+  Button,
+  InsetGroup,
+} from '@ab/mobile-kit';
 import { TemplateItem } from './TemplateItem';
 import { useTemplateList, useTemplateMode } from './templates-api';
 

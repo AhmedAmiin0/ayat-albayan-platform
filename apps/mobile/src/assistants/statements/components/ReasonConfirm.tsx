@@ -1,12 +1,8 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, useTheme, AppText, Button, Field } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
-import { Field } from '@/core/ui/form/Field';
 
 interface ReasonConfirmProps {
   message: string;

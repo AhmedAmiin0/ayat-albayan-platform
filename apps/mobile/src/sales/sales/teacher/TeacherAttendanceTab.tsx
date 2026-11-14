@@ -1,12 +1,9 @@
 import type { SalesTeacherOverview } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, EmptyState, ListRow, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/more';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { InsetGroup } from '@/core/ui/surface/inset';
 import { SmallHeading } from '@/sales/sales/components/SmallHeading';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { studentsLine, totalsLine } from './overview-text';

@@ -1,6 +1,6 @@
 import { threadHidePath } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { refreshInbox } from '@/inbox/thread/hooks/inbox-sync';
 
 /**

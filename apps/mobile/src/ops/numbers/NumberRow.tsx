@@ -1,8 +1,7 @@
 import type { NumberView } from '@ab/shared';
 import { View } from 'react-native';
 import { Note } from '@/core/ui/feedback/Note';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { ListRow, StatusChip } from '@ab/mobile-kit';
 import { checkedLine, driverLine, healthChip, numberSubtitle, stateChips } from './numbers-words';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

@@ -1,6 +1,5 @@
 import { screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, ltr } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { SARA, usersGet } from '@/users/shared/fixtures';
 import { UsersScreen } from './UsersScreen';
@@ -8,8 +7,8 @@ import { UsersScreen } from './UsersScreen';
 // The users list shows a teacher's sign-in username (docs/30 §7).
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn(), replace: jest.fn(), canGoBack: () => true } }));

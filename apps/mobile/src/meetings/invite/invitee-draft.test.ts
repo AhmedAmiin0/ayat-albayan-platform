@@ -1,5 +1,5 @@
 import { formatPhone } from '@ab/shared';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { ltr } from '@ab/mobile-kit';
 import { addInvitee, fromOption, fromPhone, isFull, removeInvitee, type DraftInvitee } from './invitee-draft';
 
 const staff = fromOption({ kind: 'staff', id: '7b0c5f1e-1111-4a1a-8a1a-000000000001', name: 'أبرار', role: 'teacher' });

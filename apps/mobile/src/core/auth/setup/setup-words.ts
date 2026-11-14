@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 const refusal = z.object({
   body: z.object({ code: z.enum(['setup_done', 'email_taken', 'invalid_email']) }),

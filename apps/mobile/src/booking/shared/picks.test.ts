@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { SUN_17, THU_18 } from '@/booking/testing/fixtures';
 import { dayAtText, dayLine } from './picks';
 

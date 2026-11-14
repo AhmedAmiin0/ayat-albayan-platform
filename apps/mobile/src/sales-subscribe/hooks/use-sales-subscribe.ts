@@ -1,7 +1,7 @@
 import type { SalesMoneySubscriptionView, SalesQuoteView, SubscriptionPricing } from '@ab/shared';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { familyKey, refreshFamily, withOpenPackage } from '@/sales-subscribe/lib/family';
 

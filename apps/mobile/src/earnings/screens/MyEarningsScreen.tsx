@@ -1,13 +1,8 @@
 import { teacherPageOn } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button, BackButton, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { usePublicConfig } from '@/core/lib/query/public-config';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { EarningsHeader, type Tab } from '@/earnings/components/EarningsHeader';
 import { PaymentsList, SessionsList } from '@/earnings/components/EarningsList';
 import { useEarningsBalance, type SessionFilter } from '@/earnings/hooks/queries';

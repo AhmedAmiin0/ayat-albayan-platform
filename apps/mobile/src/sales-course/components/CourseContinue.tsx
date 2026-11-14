@@ -1,11 +1,7 @@
 import { counted, type BookedCourse } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, Button, ErrorState, type, useTheme } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { type, useTheme } from '@/theme';
 import { daysText } from '@/sales-course/lib/course-days';
 import type { KnownTeacher } from '@/sales-course/hooks/use-known-teacher';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

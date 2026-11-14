@@ -6,7 +6,7 @@ import { joinPath, roomRoute, roomWebUrl } from '@/classroom/room/model/join-tar
 import { roomMode } from '@/classroom/room/model/room-mode';
 import type { RoomTarget } from '@/classroom/room/model/room-types';
 import { nativeRoomAvailable } from '@/classroom/room/native/livekit-native';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { usePublicConfig } from '@/core/lib/query/public-config';
 
 /** settings.meetings_in_app (public, default on): rooms open inside the app (docs/35). */

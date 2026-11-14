@@ -131,13 +131,16 @@ Missing (build):
 
 ## 7. How it is built (DRY / SOLID)
 
-**The app:**
-- A separate app on the phone: its own name, icon, Android package `com.ayatalbayan.family`, own EAS Update channel.
-- It is built **from the same `apps/mobile` codebase**, as a new variant beside `stripetest`:
-  - its own expo-router root for the family routes (e.g. `EXPO_ROUTER_APP_ROOT` / the router `root` option);
-  - everything else (theme, UI kit, auth session, push registration, the LiveKit room, i18n) shared from `apps/mobile/src`.
-- The staff app keeps showing «wrongApp» to families; the family app shows it to staff.
-- Exact variant mechanics are the builder's call. The constraint: **no copied screen, hook or helper** between the two apps.
+**The app** (owner 2026-11-14: a separate app, not a variant of the staff app):
+- A separate app on the phone: its own name, icon, Android package / iOS bundle `com.ayatalbayan.family`, scheme `ayatalbayanfamily`, own EAS project and update channels.
+- **`apps/family`**: its own Expo project (package `family`, slug `ayat-albayan-family`, owner `holdmycup`), with the family routes only (expo-router `app/`) and the same scripts as apps/mobile: `lint`, `typecheck`, `test` (jest-expo), `bundle` (`expo export --platform android`), `eas-build-post-install` (`pnpm --filter "family^..." build`).
+  - `eas.json`: profiles `preview` (APK, channel and environment `preview`) and `production` (channel `production`).
+  - `app.config.ts` reads `FAMILY_EAS_PROJECT_ID` (→ `extra.eas.projectId` and `updates.url`; unset = no updates url) and `GOOGLE_SERVICES_JSON` (→ `android.googleServicesFile`).
+- **`packages/mobile-kit`** (`@ab/mobile-kit`): what both apps share (theme, UI kit, auth session, push registration, i18n). A **source** package: no build step; Metro, jest and tsc read its `.ts` sources.
+- **apps/mobile** is the staff app again: no family routes, no `family-*` EAS profiles. The staff app keeps showing «wrongApp» to families; the family app shows it to staff.
+- **No in-app room route for now:** the staff app's classroom (LiveKit) stays staff code in apps/mobile; it is not in the kit.
+- The constraint stays: **no copied screen, hook or helper** between the two apps: what both need moves into `@ab/mobile-kit` (or `@ab/client-core` when the web needs it too).
+- **CI** (`ci.yml` «verify»): lint and typecheck cover every workspace; `test family` runs the family app and `@ab/mobile-kit` (jest-expo, own machine); `bundle family` runs the Metro bundle. A change only under apps/mobile, apps/family or packages/mobile-kit skips the e2e machines.
 
 **Shared client logic:**
 - Portal queries (keys, fetchers, zod schemas) and view-model rules go in `@ab/client-core` (e.g. `messaging`-style folder `people/portal/`). Both web `PortalHome` and the app use them.
@@ -155,18 +158,25 @@ Missing (build):
 - **PRs, in order (each green on CI, merged by the owner's session):**
   1. API + shared: history, prepare, package money + child block, `family_chat_enabled`, push grant + kinds, `payment_instructions`.
   2. `@ab/client-core` portal + web pages.
-  3. The family app variant and its screens.
+  3. The family app (`apps/family` + `@ab/mobile-kit`) and its screens.
   4. e2e: guardian sees all children + attended/absent + package; a child student never sees money; chat hidden when off.
+- **Builds** (GitHub → Actions → mobile → Run workflow on develop, **app = family**; `profile` and `branch` are staff-only):
+  - every step runs in `apps/family` with its own `preview` profile: `build-android-apk` = its APK, `ota-update` = an OTA to its channel `preview`, compared with its own last build (native-change guard);
+  - first, `eas init --non-interactive --force` links the EAS project `@holdmycup/ayat-albayan-family`, or creates it on the first run. Its id goes to `FAMILY_EAS_PROJECT_ID` for the run's later steps and is printed in the run summary (it is not a secret);
+  - the owner keeps that id permanently: commit it into `apps/family/app.config.ts` as the `FAMILY_EAS_PROJECT_ID` fallback (ask a Claude session), so Expo's build servers and every later run have it without the env;
+  - run titles are `mobile <action> family-preview`; release tags `mobile-family-v<version>-b<run>` (APK) and `ota-family-preview-<day>-<n>` (OTA);
+  - deploy-staging's automatic OTA stays **staff only** (it dispatches mobile.yml without `app`, i.e. staff); a family OTA is always run by hand.
 - **Owner, before families can sign in:**
   - switch `family_login_enabled` on in «القيم» (the `account_code` template is approved on the chat line);
-  - add the Android app `com.ayatalbayan.family` in Firebase and give its `google-services.json` as an EAS secret (credentials: owner);
+  - Firebase: add the Android app `com.ayatalbayan.family`, download its `google-services.json` and upload it to the **family** EAS project as the **file** environment variable `GOOGLE_SERVICES_JSON`, environments `preview` and `production` (credentials: owner);
+  - in the family EAS project's `preview` and `production` environments, set the same `EXPO_PUBLIC_*` variables the staff project has (`EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_WEB_ORIGIN`);
   - choose the app's name and icon (default: «آيات البيان», the academy logo).
-- **Then:** an APK build of the family variant; Play Store later.
+- **Then:** a family APK (mobile → `build-android-apk`, app = family); Play Store later.
 
 ## 9. Left to the builder
 
 - Pagination sizes; skeleton and animation details within the theme.
 - Whether `prepare` rides on the lessons response or has its own route.
 - Where the report "seen" mark lives.
-- Exact variant/build wiring.
+- Exact build wiring inside apps/family and what moves into `@ab/mobile-kit`.
 - Naming of new files.

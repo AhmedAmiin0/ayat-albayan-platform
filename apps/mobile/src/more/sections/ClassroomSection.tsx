@@ -1,9 +1,7 @@
 import type { Permission } from '@ab/shared';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
-import { ListRow } from '@/core/ui/layout/ListRow';
+import { t, ListRow, InsetGroup } from '@ab/mobile-kit';
 import { Section } from '@/core/ui/surface/Section';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**
  * «الحلقات والاجتماعات»: the live lessons board and the meetings (web parity). Every staff login

@@ -1,16 +1,16 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { CreateAccountButton } from './CreateAccountButton';
 import { CANDIDATES, usersGet } from '@/users/shared/fixtures';
 
 const mockApiFetch = jest.fn();
 const mockHeld = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('@/core/auth/use-permissions', () => ({ usePermissions: () => (p: string) => mockHeld(p) }));
+jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({ usePermissions: () => (p: string) => mockHeld(p) }));
 
 const free = { id: CANDIDATES[0]?.id ?? '', name: 'يوسف علي', code: 'AB-0007' };
 

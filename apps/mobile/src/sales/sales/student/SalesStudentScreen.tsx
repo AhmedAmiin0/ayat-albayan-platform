@@ -1,17 +1,19 @@
 import { formatPhone, studentStatusStyle, type SalesStudentDetails } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
-import { useHolds } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  useHolds,
+  t,
+  StatusChip,
+  Button,
+  BackButton,
+  ltr,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { MessageSearchRow } from '@/inbox';
 import { Note } from '@/more';
 import { CoursePauseSection, PeopleEditSection } from '@/students';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SalesLoadScreen } from '@/sales/sales/components/SalesLoadScreen';
 import { familyChatHref } from '@/sales/sales/lib/sales-href';
 import { fill } from '@/sales/sales/lib/sales-text';

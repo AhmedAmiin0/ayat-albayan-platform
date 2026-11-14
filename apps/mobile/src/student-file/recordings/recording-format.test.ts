@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { durationText, sizeText, teacherLabel } from './recording-format';
 
 const R = t.mobileStudentFile.recordings;

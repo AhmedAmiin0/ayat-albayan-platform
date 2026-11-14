@@ -1,5 +1,5 @@
 import type { TextStyle } from 'react-native';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { AppText } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { highlightParts } from '@ab/shared';
 

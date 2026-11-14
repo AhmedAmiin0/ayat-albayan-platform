@@ -1,7 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 import { FinanceSection } from '@/more/sections/FinanceSection';
 import { renderWithQuery } from '@/test/query';
 import { monthLabel } from '@/teacher/lib/payout-text';
@@ -16,7 +15,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }));
 
 test('an English run reads en.json: the «Payouts and expenses» section on More', async () => {

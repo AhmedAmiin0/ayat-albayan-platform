@@ -1,14 +1,14 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { Composer } from '@/inbox/composer/Composer';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { cachedThread, detail, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
 // The paperclip's sheet (owner 2026-10-27): everything that left the bar, most used first.
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: jest.fn(async (mockPath: string) =>
     mockPath === '/messages/gate' ? { open: true, reason: null, queued: 0 } : [],
   ),

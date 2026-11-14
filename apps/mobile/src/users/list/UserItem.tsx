@@ -1,13 +1,7 @@
 import { memo, useCallback } from 'react';
 import { formatPhone, type UserView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { Ltr, ltr } from '@/core/ui/primitives/Ltr';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { Avatar } from '@/core/ui/primitives/Avatar';
+import { t, type, useTheme, AppText, ListRow, Ltr, ltr, StatusChip, Avatar } from '@ab/mobile-kit';
 import { lastSignIn, recordText, roleText, statusStyle } from '@/users/shared/format';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

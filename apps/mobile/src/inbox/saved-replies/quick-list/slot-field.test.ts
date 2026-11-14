@@ -1,5 +1,5 @@
 import { replySlots } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { slotKeyboard, slotLabel } from './slot-field';
 
 const slots = replySlots('{name} [المبلغ] [الرقم] [الرابط] [التاريخ] [الوقت] [اليوم والتاريخ] [IBAN] [ ] [ ]');

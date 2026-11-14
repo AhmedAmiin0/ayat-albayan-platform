@@ -4,12 +4,8 @@ import { Pressable, useWindowDimensions, View } from 'react-native';
 import { dayLabel } from '@/calendar';
 import { useNow } from '@/core/lib/time/use-now';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
+import { t, type, useTheme, AppText, toneColors, useInset } from '@ab/mobile-kit';
 import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '@/today';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { toneColors } from '@/core/ui/feedback/StatusChip';
-import { useInset } from '@/core/ui/surface/inset';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 
 interface SalesLessonRowProps {

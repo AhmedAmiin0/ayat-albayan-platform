@@ -1,5 +1,5 @@
 import { conflictLine } from '@/booking';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { usePlatformClassroom } from '@/core/lib/query/public-config';
 import { DetailsFact, DetailsGroup, DetailsLine } from './DetailsGroup';
 import { DetailsLink } from './DetailsLink';

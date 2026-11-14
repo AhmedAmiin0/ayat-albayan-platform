@@ -1,13 +1,10 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, IconButton, shape, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import { IconButton } from '@/core/ui/primitives/IconButton';
 import { CloseIcon } from '@/inbox/shared/chat-icons';
 import { quoteOf, quoteText } from '@/inbox/messages/hooks/quote-text';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
-import { shape, type, useTheme } from '@/theme';
 
 /**
  * Over the composer while she corrects a message (owner 2026-11-07), as WhatsApp's edit bar:

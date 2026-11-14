@@ -2,17 +2,20 @@ import type { TeacherStudentHead } from '@ab/shared';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useViewerTz } from '@/core/lib/clock';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  ApiError,
+  t,
+  EmptyState,
+  ErrorState,
+  FilterPills,
+  type FilterPill,
+  Screen,
+  ScreenHeader,
+  BackButton,
+  ltr,
+} from '@ab/mobile-kit';
 import { backWithin } from '@/core/nav/back-within';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Note } from '@/core/ui/feedback/Note';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { BackButton } from '@/core/ui/navigation';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { useTeacherStudentHead } from '@/teacher/board/teacher-board-api';
 import { TrialChatNote } from '@/teacher/components/TrialChatNote';
 import { useTeacherMe } from '@/teacher/lib/queries';

@@ -1,6 +1,6 @@
 import type { ThreadDetail } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { clearChatMemory } from '@/inbox/thread/anchor';
@@ -14,8 +14,8 @@ import { PINS } from './pinned-send';
 // the replay check runs on every 2xx text answer.
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 jest.mock('@/inbox/thread/hooks/inbox-sync', () => ({

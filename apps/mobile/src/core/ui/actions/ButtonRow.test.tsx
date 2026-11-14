@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { Button } from '@/core/ui/primitives/Button';
+import { Button } from '@ab/mobile-kit';
 import { ButtonRow } from './ButtonRow';
 
 const layout = (width: number) => ({ nativeEvent: { layout: { width, height: 48, x: 0, y: 0 } } });

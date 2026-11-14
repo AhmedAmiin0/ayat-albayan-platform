@@ -1,18 +1,13 @@
 import { router } from 'expo-router';
 import { allowedRows } from '@/core/auth/route-permissions';
-import type { Can } from '@/core/auth/use-permissions';
+import { t, SignOutButton, ListRow, Screen, ScreenHeader, InsetGroup } from '@ab/mobile-kit';
+import type { Can } from '@ab/mobile-kit';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
-import { t } from '@/core/lib/i18n/i18n';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { PaymentLinksRow } from '@/sales-subscribe';
-import { SignOutButton } from '@/core/auth';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 const rows = () =>
   [

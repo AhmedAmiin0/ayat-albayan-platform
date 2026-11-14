@@ -1,6 +1,6 @@
 import { act, fireEvent, renderRouter, screen } from 'expo-router/testing-library';
 import { AccessibilityInfo, Animated, Dimensions, Text } from 'react-native';
-import { glass, palette } from '@/theme';
+import { glass, palette } from '@ab/mobile-kit';
 import { AppNativeTabs, type TabItem } from './AppNativeTabs';
 
 // The pill's spring and the system's Reduce Motion / Reduce Transparency switches.

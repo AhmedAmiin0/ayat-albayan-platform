@@ -1,5 +1,5 @@
 import type { MyPaymentRow } from '@ab/shared';
-import { useHolds } from '@/core/auth/use-permissions';
+import { useHolds } from '@ab/mobile-kit';
 import { salesAmountEditable } from './amount-edit';
 import { EditAmountButton } from './EditAmountButton';
 import { useSalesAmountEdit } from './use-amount-edit';

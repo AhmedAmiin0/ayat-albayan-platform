@@ -2,7 +2,7 @@ import { pendingRequestId, uploadOnce } from '@ab/client-core';
 import type { TeacherPaymentResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import type { PayInput } from '@/earnings/lib/pay-draft';
 import { uploadTeacherReceipt } from './upload-receipt';

@@ -1,8 +1,7 @@
 import type { GifItem } from '@ab/shared';
 import { useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, useTheme } from '@/theme';
+import { t, shape, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { type PanelMedia, useGifs, usePanelSend } from './panel-api';

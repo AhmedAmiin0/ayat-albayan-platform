@@ -1,16 +1,15 @@
 import { screen } from '@testing-library/react-native';
 import { detail, failed, inbound } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, pathKey } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
 // retry / «ابعتها بنفسك» / hand-off need messages.manage (admin-only): a salesperson never sees them.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

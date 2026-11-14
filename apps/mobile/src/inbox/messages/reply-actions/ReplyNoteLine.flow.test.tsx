@@ -1,16 +1,15 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { selfPermissionsOf, type Permission, type ThreadLesson } from '@ab/shared';
 import { Pressable, Text } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery, seedPublicConfig } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));

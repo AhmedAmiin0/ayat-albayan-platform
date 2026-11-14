@@ -1,6 +1,5 @@
 import type { MessageView, TemplateView } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { meetReminder, message, notApproved } from '@/inbox/shared/thread-fixtures';
 import { ratingApproved, ratingDone, ratingError } from './rating-words';
 

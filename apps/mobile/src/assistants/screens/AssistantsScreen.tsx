@@ -1,11 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, BackButton, FilterPills, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { BackButton } from '@/core/ui/navigation';
-import { FilterPills } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useAssistants } from '@/assistants/api/api';
 import { AssistantsList } from '@/assistants/list/AssistantsList';
 import { CommissionLedger } from '@/assistants/commission/CommissionLedger';

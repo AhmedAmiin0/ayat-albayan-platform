@@ -1,7 +1,7 @@
 import { INBOX_INACTIVE_LEAVE_MS, liveInterval } from '@ab/client-core';
 import { act, renderHook } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
-import { queryClient as client } from '@/core/lib/query/query-client';
+import { queryClient as client } from '@ab/mobile-kit';
 import { inboxLive } from './inbox-live';
 import { changeLists } from './list-marks';
 import { useInboxRealtime } from './use-inbox-realtime';
@@ -25,7 +25,7 @@ const mockSupabase = {
   getChannels: jest.fn(() => mockRt.joins.filter((c) => !mockRt.removed.includes(c))),
   realtime: { setAuth: jest.fn(async () => undefined), disconnect: jest.fn(async () => 'ok') },
 };
-jest.mock('@/core/lib/http/supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   get supabase() {
     return mockSupabase;
   },

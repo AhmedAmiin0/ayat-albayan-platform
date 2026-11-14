@@ -1,6 +1,6 @@
 import type { CallPlatform, PeerMaker } from '@ab/client-core';
 import { requestId } from '@/core/lib/http/request-id';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { callApi } from '@/inbox/thread/calls/api/calls-api';
 import { restorePlayback, routeCallAudio } from '@/inbox/thread/calls/rtc/audio-route';
 import { createCallPeer } from '@/inbox/thread/calls/rtc/call-peer';

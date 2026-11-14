@@ -1,7 +1,7 @@
 import { message } from '@/inbox/shared/thread-fixtures';
 import { carried, echoed, sendBody } from '@/inbox/thread/send/outgoing';
 import ar from '@ab/shared/i18n/ar.json';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { CORRECTION_PREFIX_ROOM, WA_TEXT_MAX } from '@ab/shared';
 import { bareText, targetKey, textMax, textOut } from './text-target';
 

@@ -1,4 +1,4 @@
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 import { mediaProblem, photoBox } from './media-problem';
 
 test('410 expired, 403 forbidden, 409 crm_no_media the CRM, anything else failed', () => {

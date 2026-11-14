@@ -1,10 +1,8 @@
 import { memo } from 'react';
 import type { TeacherPaymentView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { instantDay } from '@/core/lib/money/format';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { egp } from '@/earnings/lib/format';
 import { useViewerTz } from '@/core/lib/clock';
 

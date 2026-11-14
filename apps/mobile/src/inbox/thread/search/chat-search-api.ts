@@ -1,7 +1,7 @@
 import { chatSearchPages, needsSearchPage, searchHits } from '@ab/client-core';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useEffectEvent } from 'react';
-import { apiFetch } from '@/core/lib/http/api';
+import { apiFetch } from '@ab/mobile-kit';
 
 interface Asked {
   phone: string;

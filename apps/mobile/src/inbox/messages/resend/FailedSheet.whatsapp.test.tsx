@@ -1,13 +1,12 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import { ApiError, apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, apiSend, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { failed, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { FailedSheet } from './FailedSheet';
 
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({}),
   apiSend: jest.fn(),
 }));

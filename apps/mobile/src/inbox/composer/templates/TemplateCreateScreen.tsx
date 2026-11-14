@@ -3,13 +3,9 @@ import {
 } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Field, Screen, ScreenHeader, Button } from '@ab/mobile-kit';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Note } from '@/core/ui/feedback/Note';
-import { Field } from '@/core/ui/form/Field';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { Button } from '@/core/ui/primitives/Button';
 import {
   authorPayload, BodyFields, ButtonsField, CategoryPicker, DraftPreview, EMPTY_DRAFT,
   useTemplateDraft,

@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
-import { useHolds } from '@/core/auth/use-permissions';
+import { useHolds, registerPush } from '@ab/mobile-kit';
 import { useInboxStore } from '@/inbox';
 import type { PushTree } from './notification-route';
-import { registerPush } from './registerPush';
 import { useNotificationHandling } from './useNotificationHandling';
 
 /**

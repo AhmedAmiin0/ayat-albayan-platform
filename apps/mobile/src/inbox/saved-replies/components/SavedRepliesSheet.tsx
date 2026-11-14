@@ -1,12 +1,8 @@
 import type { SavedReply, SavedReplyScope } from '@ab/shared';
 import { type ReactNode, useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, Button, ErrorState } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { useSavedReplies } from '@/inbox/saved-replies/hooks/api';
 import { ManageReplies } from '@/inbox/saved-replies/quick-list/ManageReplies';

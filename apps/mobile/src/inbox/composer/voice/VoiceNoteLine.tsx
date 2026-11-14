@@ -1,7 +1,5 @@
 import { Linking, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 
 /** The line under the bar: the tap hint, or the microphone blocked in Settings. */
 export type VoiceNote = 'hint' | 'blocked' | null;

@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
@@ -8,8 +8,8 @@ import { StickerFavourite } from './StickerFavourite';
 // «أضف إلى المفضلة» on a sticker bubble (owner 2026-11-01).
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

@@ -2,7 +2,7 @@ import { triesAfterWindow } from '@ab/client-core';
 import type { ThreadLesson, ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions } from '@/core/auth';
+import { usePermissions } from '@ab/mobile-kit';
 import { ClosedRow } from '@/inbox/threads-list/ClosedRow';
 import { useComposerText, useForgetDraftOnLeave } from './draft-store';
 import { QuoteSheet } from './quote/QuoteSheet';

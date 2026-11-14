@@ -7,8 +7,7 @@ import {
 } from '@ab/client-core';
 import type { CoursePausePreview, CoursePauseResult, CoursePauseStart, CoursePauseState } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 // «إيقاف مؤقت» (owner 2026-10-28, docs/11 §7b): the same routes in the admin and the sales trees
 // (courses.pause); the paths and the key are @ab/client-core's, shared with web.

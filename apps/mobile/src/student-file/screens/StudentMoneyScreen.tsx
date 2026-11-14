@@ -1,13 +1,8 @@
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
-import { usePermissions } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
+import { usePermissions, t, BackButton, FilterPills, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { useStudentName } from '@/ops/reports/use-student-name';
-import { BackButton } from '@/core/ui/navigation';
-import { FilterPills } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { StudentInvoicesList } from '@/student-file/money/StudentInvoicesList';
 import { StudentPaymentsList } from '@/student-file/money/StudentPaymentsList';
 

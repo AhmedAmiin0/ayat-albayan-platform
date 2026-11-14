@@ -1,12 +1,8 @@
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { setLocale } from '@/core/lib/i18n/locale-switch';
+import { t, locale, setLocale, ListRow, InsetGroup } from '@ab/mobile-kit';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ListRow } from '@/core/ui/layout/ListRow';
 import { Section } from '@/core/ui/surface/Section';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**
  * «اللغة»: offers the other language by its own name (العربية / English). Every screen reads its

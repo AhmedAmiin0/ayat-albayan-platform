@@ -2,11 +2,7 @@ import { teacherName, type BookingTeacherOption, type Gender, type Program } fro
 import { useState } from 'react';
 import { View } from 'react-native';
 import { TeacherStep } from '@/booking/trial/components/TeacherStep';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, locale, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 
 interface TrialTeacherPickProps {
   /** The last trial's teacher, kept with one tap; null when the student never had one. */

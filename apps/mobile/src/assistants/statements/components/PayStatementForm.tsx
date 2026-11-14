@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import type { PayDraft } from '@/finance/payouts/payout-actions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button, Field, FilterPills, type FilterPill } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { money } from '@/core/lib/money/format';
 import { FormLabel } from '@/core/ui/form/FormLabel';
@@ -12,9 +12,6 @@ import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
 import { statementMonth } from '@/sales-money/lib/money-text';
 import { useNow } from '@/core/lib/time/use-now';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
-import { Field } from '@/core/ui/form/Field';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import { assistantsErrorText } from '@/assistants/api/errors';
 import { usePayStatement } from '@/assistants/statements/hooks/use-pay-statement';
 

@@ -1,8 +1,7 @@
 import type { AttendanceTableRow, ClockCycle } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { InsetGroup } from '@/core/ui/surface/inset';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { AttendanceLogRow, LogColumns } from '@/sales/sales';
 

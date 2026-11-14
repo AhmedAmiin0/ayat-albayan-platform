@@ -1,5 +1,5 @@
 import { salesStartDate, usedBeforeProblem } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { usedBefore } from '@/subscribe';
 
 // The sales subscribe's first day (owner 2026-10-12, docs/16 row 24). Pure. Without

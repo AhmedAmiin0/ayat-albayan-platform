@@ -1,7 +1,6 @@
 import type { NumberView, ParityView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
 
 export const NUMBERS_PATH = '/admin/numbers';
 export const PARITY_PATH = '/admin/communications/parity';

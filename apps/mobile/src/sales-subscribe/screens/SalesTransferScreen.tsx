@@ -3,16 +3,18 @@ import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  apiSend,
+  t,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  ltr,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { CancelPackage } from '@/payments';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { chosenOpen, familyKey, openPackages, useSalesFamily } from '@/sales-subscribe/lib/family';
 import { OpenPackagePicker } from '@/sales-subscribe/components/OpenPackagePicker';
 import { TransferDone } from '@/sales-subscribe/components/TransferDone';

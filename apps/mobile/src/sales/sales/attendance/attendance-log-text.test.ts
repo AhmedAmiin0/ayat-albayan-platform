@@ -1,5 +1,5 @@
 import { lessonStatusStyle } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ATTENDANCE_STYLE } from '@/sales/sales/student/attendance-text';
 import { lessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { attendancePath } from './attendance-log-api';

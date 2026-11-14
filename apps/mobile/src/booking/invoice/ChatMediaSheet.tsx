@@ -1,9 +1,7 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button, ErrorState } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { FormLabel } from '@/core/ui/form/FormLabel';
-import { Button } from '@/core/ui/primitives/Button';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import type { ThreadMediaItem } from '@/booking/shared/contract';
 import { useThreadMedia } from './invoice-queries';
 import { MediaCard } from './MediaCard';

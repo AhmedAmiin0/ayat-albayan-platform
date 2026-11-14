@@ -1,9 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { InsetGroup } from '@/core/ui/surface/inset';
+import { apiFetch, t, pathKey, ErrorState, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { groupByWeekday, gridTz, tzLabel } from '@/more/schedule';
 import { Section } from '@/core/ui/surface/Section';

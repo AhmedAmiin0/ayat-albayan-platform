@@ -1,17 +1,15 @@
 import { pdfMetaLine } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking, StyleSheet } from 'react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t, shape } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { shape } from '@/theme';
 import { MessageFile } from '@/inbox/messages/components/MessageFile';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
 import { pageUrl, pdfDoc, pdfPage, pdfPath } from './photo-test-kit';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

@@ -1,12 +1,8 @@
 import { type MessageView, replyLesson, replyNote, type ReplyNote } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale, type, AppText, Button } from '@ab/mobile-kit';
 import { useNow } from '@/core/lib/time/use-now';
-import { type } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
 import { useSmall } from '@/inbox/messages/components/MessageMeta';
 import { useReplyActions } from './reply-actions-context';
 import { ReplyConfirmButton } from './ReplyConfirmButton';

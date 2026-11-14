@@ -1,10 +1,7 @@
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button, Field, FilterPills } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
-import { Field } from '@/core/ui/form/Field';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import type { CheckBy } from '@/registration-check/lib/registration-check';
 
 interface RegistrationFormProps {

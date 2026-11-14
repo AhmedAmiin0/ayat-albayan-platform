@@ -1,17 +1,15 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, apiFetch, apiSend, t, PROFILE_KEY } from '@ab/mobile-kit';
 import { profileFixture, savedProfile } from '@/test/account';
 import { renderWithQuery } from '@/test/query';
-import { PROFILE_KEY } from '@/account/hooks/queries';
 import { AccountScreen } from './AccountScreen';
 
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: jest.fn(), apiSend: jest.fn() }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: jest.fn(), apiSend: jest.fn() }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: jest.fn(() => true) } }));
 jest.mock('expo-image-picker', () => ({ launchCameraAsync: jest.fn(), launchImageLibraryAsync: jest.fn() }));
 const mockUpload = jest.fn(async (path: string) => ({ data: { path }, error: null }));
-jest.mock('@/core/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } } }));
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } } }));
 
 const send = jest.mocked(apiSend);
 const a = t.account.avatar;

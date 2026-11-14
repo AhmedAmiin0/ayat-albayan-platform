@@ -1,6 +1,6 @@
 import type { AssistantStatementView, AssistantTermsInput, AssistantTermsView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { ASSISTANTS_KEY } from './api';
 
 // The admin's writes (web api.ts + the dialogs): each re-reads everything under ['assistant-pay'] on success.

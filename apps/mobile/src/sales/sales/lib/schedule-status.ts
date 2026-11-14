@@ -1,5 +1,5 @@
 import { isCancelledLesson, type LessonStatus, type StatusStyle } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import type { LessonStatusText } from '@/core/ui/feedback/lesson-status';
 
 // «جدول الحلقات» status pills (UX review 2026-10-29 #6): the same shape as Today's summary filter

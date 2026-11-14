@@ -1,9 +1,6 @@
 import { Share, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, Button, AppText } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { type, useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
-import { AppText } from '@/core/ui/primitives/AppText';
 
 /** The meeting's link (shown once) with «شارك الرابط»: the share sheet has Copy, WhatsApp and the rest. */
 export function MeetingLinkShare({ url, note }: { url: string; note: string }) {

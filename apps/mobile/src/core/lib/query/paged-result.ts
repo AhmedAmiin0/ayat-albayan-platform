@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { usePullRefresh } from './pull-refresh';
+import { usePullRefresh } from '@ab/mobile-kit';
 
 /**
  * Adds fields to a TanStack result WITHOUT reading it. A spread (`{ ...query }`) reads every tracked

@@ -1,5 +1,5 @@
 import type { Glyph, LineHealthView, NotificationEntryView, Tone } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // «ماذا يُرسل ومتى» in words on the phone (the web's catalogue-text, same ar.json keys).
 

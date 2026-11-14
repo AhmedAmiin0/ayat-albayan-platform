@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { instantDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
 import { chatImage, expiredImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
@@ -7,8 +7,8 @@ import { SalesTransferScreen } from './SalesTransferScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
@@ -96,7 +96,7 @@ test('a file from the chat → receipt-from-chat → POST /sales/payments with i
 });
 
 test('an expired chat file (410): the reason, nothing chosen', async () => {
-  const { ApiError } = jest.requireActual<typeof import('@/core/lib/http/api')>('@/core/lib/http/api');
+  const { ApiError } = jest.requireActual<typeof import('@ab/mobile-kit/lib/http/api')>('@ab/mobile-kit/lib/http/api');
   mockApiSend.mockRejectedValue(new ApiError(410, { code: 'media_expired' }));
   await renderWithQuery(<SalesTransferScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: m.receiptFromChat }));

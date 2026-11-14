@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { rosterAttendanceLine, rosterScheduleLine } from './roster-text';
 
 const S = t.sales.allStudents;

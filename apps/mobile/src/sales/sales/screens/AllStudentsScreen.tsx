@@ -2,18 +2,20 @@ import type { SalesStudentView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  useTheme,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  FilterPills,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { CheckRegistrationButton } from '@/registration-check/components/CheckRegistrationButton';
 import { MyStudentsView } from '@/sales-money/screens/MyStudentsView';
-import { useTheme } from '@/theme';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
-import { FilterPills } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { AllStudentRow } from '@/sales/sales/components/AllStudentRow';
 

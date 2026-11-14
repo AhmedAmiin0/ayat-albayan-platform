@@ -1,13 +1,6 @@
 import { useState } from 'react';
-import {
-  ForgotPassword,
-  PasswordSignIn,
-  SignInFrame,
-  TeacherCodeSignIn,
-  useStaffCodes,
-} from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { ForgotPassword, PasswordSignIn, SignInFrame, t, Button } from '@ab/mobile-kit';
+import { TeacherCodeSignIn, useStaffCodes } from '@/core/auth';
 
 /**
  * password: identifier + password; code: a teacher's WhatsApp code (docs/46 A8); forgot: the reset.

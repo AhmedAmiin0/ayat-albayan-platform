@@ -1,7 +1,6 @@
 import type { AcademySettings } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
 
 const PATH = '/settings';
 

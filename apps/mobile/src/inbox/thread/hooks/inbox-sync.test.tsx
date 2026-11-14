@@ -1,5 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { delivered, detail, inbound, listCache, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { missedChange } from '@/inbox/thread/live';
@@ -9,8 +10,8 @@ import { useSendMessage, useThread } from './use-thread';
 
 const mockApiSend = jest.fn();
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
   apiFetch: (...mockArgs: unknown[]) => mockApiFetch(...mockArgs),
 }));

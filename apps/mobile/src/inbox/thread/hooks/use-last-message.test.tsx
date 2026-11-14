@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ChatHeader } from '@/inbox/thread/components/ChatHeader';
 import { useLastMessageLine } from './use-last-message';
 

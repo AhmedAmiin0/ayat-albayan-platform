@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 /**
  * One block of the lesson sheet (owner: «no long pages: compact, grouped»): a small ink-3 header

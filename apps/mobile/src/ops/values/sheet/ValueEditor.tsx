@@ -1,9 +1,7 @@
 import { settingDef, type SettingKey } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Field } from '@/core/ui/form/Field';
-import { FilterPills } from '@/core/ui/form/FilterPills';
+import { t, Field, FilterPills } from '@ab/mobile-kit';
 import { choicesOf, editorOf, type Draft, type EditorKind } from '@/ops/values/lib/value-draft';
 import { labelOf, optionLabel, textAt } from '@/ops/values/lib/value-text';
 

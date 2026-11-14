@@ -1,20 +1,24 @@
 import { cancelOffered, subscriptionStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { apiSend } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import {
+  apiSend,
+  pathKey,
+  t,
+  shape,
+  type,
+  useTheme,
+  AppText,
+  Button,
+  StatusChip,
+} from '@ab/mobile-kit';
 import { useStudentHref } from '@/core/nav/tree-base';
-import { t } from '@/core/lib/i18n/i18n';
 import { CancelPackage } from '@/payments';
 import { StartDateEdit, UsedBeforeEdit } from '@/subscribe';
 import { packageName, paidLine, usedOf } from '@/core/lib/money/format';
 import { packageLine } from '@/payments/lib/package-line';
 import { useRenewalThreshold, useStudentBalance } from '@/payments/hooks/queries';
 import { RecentPayments } from '@/payments/components/RecentPayments';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 
 /**

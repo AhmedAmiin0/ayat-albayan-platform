@@ -1,8 +1,5 @@
 import { Pressable, View, type ViewStyle } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Chevron } from '@/core/ui/primitives/Chevron';
+import { t, type, useTheme, AppText, Chevron } from '@ab/mobile-kit';
 
 interface ValueRowProps {
   label: string;

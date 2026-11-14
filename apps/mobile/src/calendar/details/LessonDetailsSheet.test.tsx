@@ -1,9 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { ApiError, t, AppText, ltr } from '@ab/mobile-kit';
 import { balanceOf, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { jana, lesson } from '@/today/testing/fixtures';
@@ -11,7 +8,7 @@ import { LessonDetailsSheet } from './LessonDetailsSheet';
 import type { DetailsRole } from './details-text';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
 // 17:00 Riyadh Thursday 1 Oct, a Muscat student; «now» is 17:20, so the report can be written.

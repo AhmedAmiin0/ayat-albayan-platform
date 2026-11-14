@@ -1,7 +1,6 @@
 import type { SalesPackageSummary } from '@ab/shared';
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, ltr } from '@ab/mobile-kit';
 import { student } from '@/sales/sales/testing/fixtures';
 import { AllStudentRow } from './AllStudentRow';
 

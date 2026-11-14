@@ -1,5 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { t, isolate } from '@ab/mobile-kit';
 import {
   actionLabel,
   actorLine,

@@ -1,14 +1,14 @@
 import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery, teacherPagesClient } from '@/test/query';
 import { guardedTeacherRoute, TeacherPageGuard } from './TeacherPageGuard';
 
 const mockApiFetch = jest.fn();
 const mockRedirect = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('expo-router', () => ({

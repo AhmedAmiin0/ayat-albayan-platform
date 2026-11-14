@@ -1,10 +1,7 @@
 import { memo, useCallback } from 'react';
 import type { StudentRecordingView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { t, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import { durationText, sizeText, teacherLabel } from './recording-format';
 import { RecordingDelete } from './RecordingDelete';
 import { RecordingPlay } from './RecordingPlay';

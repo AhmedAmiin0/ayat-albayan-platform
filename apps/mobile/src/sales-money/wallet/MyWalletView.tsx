@@ -1,5 +1,5 @@
 import type { MyCommissionRow } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { useBellSignal } from '@/notifications';

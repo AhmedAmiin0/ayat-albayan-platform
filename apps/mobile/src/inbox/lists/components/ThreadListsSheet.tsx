@@ -1,8 +1,7 @@
 import type { ChatListRef } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { listErrorText } from '@/inbox/lists/lib/list-errors';
 import { ListCheckRow } from './ListCheckRow';

@@ -1,6 +1,6 @@
 import { type RefObject, useEffect, useEffectEvent, useReducer, useRef, useState } from 'react';
 import type { FlatList } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { useChatActions } from './chat-actions';
 import { threadMessages } from './thread-cache';
 import type { useThread } from './use-thread';

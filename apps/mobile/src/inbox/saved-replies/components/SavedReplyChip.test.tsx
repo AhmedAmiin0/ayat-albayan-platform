@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape } from '@/theme';
+import { t, shape } from '@ab/mobile-kit';
 import { SavedReplyChip } from './SavedReplyChip';
 
 test('one dense line: the remove button is 32pt drawn, 44pt to touch, and removes', async () => {

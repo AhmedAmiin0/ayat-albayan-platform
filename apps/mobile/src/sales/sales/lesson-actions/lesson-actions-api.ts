@@ -8,8 +8,7 @@ import {
   type SalesScheduleLesson,
 } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiSend, pathKey } from '@ab/mobile-kit';
 
 /**
  * May she move or cancel this lesson (docs/16 row 37)? It must be open, not over and have a student,

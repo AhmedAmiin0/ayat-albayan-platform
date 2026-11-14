@@ -1,8 +1,7 @@
 import { channelEditError, channelKey, channelMessagePath } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ApiError, apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, apiSend, t } from '@ab/mobile-kit';
 import type { ChannelRef } from '@/student-file/channel/channel-queries';
 
 /** The API's refusal in words: a window passed, not yours, already deleted; else a failure. */

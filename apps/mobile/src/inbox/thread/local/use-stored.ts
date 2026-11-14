@@ -1,6 +1,6 @@
 import type { MessageView, SyncMessage, ThreadView } from '@ab/shared';
 import { useEffect, useSyncExternalStore } from 'react';
-import { supabase } from '@/core/lib/http/supabase';
+import { supabase } from '@ab/mobile-kit';
 import { putInboxReads, startInboxStore, stopInboxStore, storeReader } from './store-session';
 
 /** The newest stored rows of this chat, newest first ([] without a store); live while mounted. */

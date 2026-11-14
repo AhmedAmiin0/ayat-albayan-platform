@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { errorLine, queuedLine } from './message-text';
 
 // Owner 2026-11-03: a text held behind the reopen template, as the web says it.

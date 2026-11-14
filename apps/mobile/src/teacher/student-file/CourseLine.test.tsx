@@ -1,6 +1,6 @@
 import type { TeacherCourseView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { CourseLine } from './CourseLine';
 

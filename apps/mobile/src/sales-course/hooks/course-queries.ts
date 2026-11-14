@@ -1,8 +1,7 @@
 import { courseDraftSavedSchema } from '@ab/shared';
 import type { BookingRequest, BookingResult, Conflict, SalesCourseView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 
 const COURSE = '/sales/booking/course';
 

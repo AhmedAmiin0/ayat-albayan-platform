@@ -2,9 +2,7 @@ import type { MessageView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { palette, shape, type } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, palette, shape, type, AppText } from '@ab/mobile-kit';
 import { pdfPageQuery } from '@/inbox/messages/hooks/thread-file';
 
 /** An A4 page's height over its width: the page's box until its image says its own. */

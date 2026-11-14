@@ -1,5 +1,5 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { lessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
@@ -11,8 +11,8 @@ const statusWord = lessonStatusText(true).word;
 
 const mockApiFetch = jest.fn();
 let mockParams: Record<string, string> = {};
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => mockParams }));

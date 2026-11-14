@@ -1,7 +1,5 @@
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { useMyProfile } from '@/account/hooks/queries';
+import { t, ListRow, useMyProfile } from '@ab/mobile-kit';
 
 export type AccountHref = '/more/account' | '/teacher/more/account' | '/sales/more/account' | '/assistant/more/account';
 

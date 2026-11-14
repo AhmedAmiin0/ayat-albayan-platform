@@ -1,7 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import type { ReportField } from './report-fields';
 

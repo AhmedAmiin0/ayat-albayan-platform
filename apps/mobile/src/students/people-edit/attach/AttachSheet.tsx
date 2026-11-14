@@ -1,9 +1,8 @@
 import { roleActions } from '@ab/client-core';
 import { formatPhone } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ltr } from '@ab/mobile-kit';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { Note } from '@/more';
 import { SheetActions } from '@/students/course-pause/SheetActions';
 import type { PeopleSheetProps } from '@/students/people-edit/PeopleEditSection';

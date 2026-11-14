@@ -1,12 +1,9 @@
 import type { SalesTeacherView } from '@ab/shared';
 import { memo } from 'react';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ListRow, StatusChip, Avatar } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { countsLine } from '@/students/list/student-kinds';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { Avatar } from '@/core/ui/primitives/Avatar';
 import { useSalesHrefs } from '@/sales/sales/lib/sales-href';
 import { teacherCounts, teacherLabel, teacherSubtitle } from '@/sales/sales/lib/sales-text';
 

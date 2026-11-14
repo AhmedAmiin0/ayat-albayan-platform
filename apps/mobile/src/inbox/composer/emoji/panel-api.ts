@@ -1,6 +1,6 @@
 import { gifListSchema, type MessageView, stickerKey, stickerListSchema } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { apiFetch, apiSend, toQueryString } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { sendError } from '@/inbox/messages/hooks/message-text';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';

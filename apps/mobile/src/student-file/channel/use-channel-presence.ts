@@ -1,9 +1,8 @@
 import { channelPresenceKey, channelPresencePath } from '@ab/client-core';
 import { presenceLine, type ChannelPresence, type PresencePeer } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
+import { apiFetch, useScreenFocused } from '@ab/mobile-kit';
 import { chatStatus, usePresenceClock, usePresenceWatch } from '@/core/lib/presence';
-import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import type { ChannelRef } from './channel-queries';
 
 /** Last seen moves by the minute at most (the API's throttle): re-read it once a minute. */

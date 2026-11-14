@@ -1,9 +1,6 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { CameraIcon, MicIcon } from '@/inbox';
-import { type, useTheme } from '@/theme';
 
 const P = t.mobileRoom.permission;
 

@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
-import { IconButton } from '@/core/ui/primitives/IconButton';
+import { t, useTheme, IconButton } from '@ab/mobile-kit';
 import { AttachIcon } from '@/inbox/shared/chat-icons';
 import { AttachSheet } from './attach/AttachSheet';
 import { usePickSend } from './attach/use-pick-send';

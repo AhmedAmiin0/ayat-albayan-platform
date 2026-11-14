@@ -12,8 +12,7 @@ import {
   type ThreadView,
 } from '@ab/shared';
 import { clockIn, phoneTz } from '@/core/lib/clock';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { heldLine } from './held-line';
 
 // The words a thread shows (R-MOB-02): media labels, template names, times, send errors.

@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { currencyName } from '@/core/lib/money/format';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 

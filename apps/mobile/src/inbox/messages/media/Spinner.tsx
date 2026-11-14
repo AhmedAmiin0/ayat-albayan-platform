@@ -1,5 +1,5 @@
 import { ActivityIndicator, View } from 'react-native';
-import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
+import { useA11yPref } from '@ab/mobile-kit';
 
 /** A loading ring; with Reduce Motion a still one. Decorative: its button or screen says it is busy. */
 export function Spinner({ color, size = 22 }: { color: string; size?: number }) {

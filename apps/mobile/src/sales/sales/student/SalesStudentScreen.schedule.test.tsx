@@ -1,14 +1,14 @@
 import { act, fireEvent, screen, within } from '@testing-library/react-native';
 import { I18nManager } from 'react-native';
 import { setClockPref } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { details, upcoming, weeklySlot } from './fixtures';
 import { SalesStudentScreen } from './SalesStudentScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
 jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 

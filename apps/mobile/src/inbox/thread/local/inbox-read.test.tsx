@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { cachedThread, detail, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 import { useInboxRead } from '@/inbox/thread/hooks/inbox-sync';

@@ -1,13 +1,13 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Share } from 'react-native';
 import { renderWithQuery } from '@/test/query';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { JoinLinkCard } from './JoinLinkCard';
 
 const J = t.mobileStudentFile.joinLink;
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 

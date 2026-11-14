@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { shape, useTheme } from '@/theme';
+import { shape, useTheme } from '@ab/mobile-kit';
 
 /** The raised card the money screens use (finance PayoutFacts): one block of facts or one statement. */
 export function MoneyCard({ children }: { children: ReactNode }) {

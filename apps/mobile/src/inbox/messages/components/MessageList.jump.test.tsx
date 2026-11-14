@@ -1,7 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { FlatList } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { ChatNotice } from '@/inbox/thread/components/ChatNotice';
@@ -11,8 +11,8 @@ import { JUMP_PAGES } from '@/inbox/thread/hooks/use-jump';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
 // A tap on a quote whose original is on a page not loaded yet: older pages load until it is there.
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
 }));
 

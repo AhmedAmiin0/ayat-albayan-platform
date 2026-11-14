@@ -67,3 +67,13 @@ test('the newest green preview OTA is the OTA base; builds-only and development 
   assert.equal(pickOtaBase(runs), sha('a'));
   assert.equal(pickOtaBase([run('mobile')]), '');
 });
+
+test('a family app run (mobile.yml app=family) or a stripe-test run is never the staff OTA base', () => {
+  const runs = [
+    run('mobile ota-update family-preview', { head_sha: sha('c') }),
+    run('mobile both family-preview', { head_sha: sha('b') }),
+    run('mobile ota-update stripe-test', { head_sha: sha('d') }),
+    run('mobile ota-update preview', { head_sha: sha('a') }),
+  ];
+  assert.equal(pickOtaBase(runs), sha('a'));
+});

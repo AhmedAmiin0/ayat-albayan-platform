@@ -1,6 +1,5 @@
 import { isStickerMessage, type MessageView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { useStickerFavourite } from '@/inbox/composer/emoji/panel-api';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 

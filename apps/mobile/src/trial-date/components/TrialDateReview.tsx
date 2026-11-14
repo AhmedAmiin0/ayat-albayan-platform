@@ -1,10 +1,7 @@
 import type { TrialHistory } from '@ab/shared';
 import { View } from 'react-native';
 import { conflictLine, type BookFailure } from '@/booking';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { PickedLines } from './PickedLines';
 import { useTrialDateCheck } from '@/trial-date/lib/queries';
 import { ReviewNotices } from './ReviewNotices';

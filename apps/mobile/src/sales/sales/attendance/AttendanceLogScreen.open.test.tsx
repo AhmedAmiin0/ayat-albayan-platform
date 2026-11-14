@@ -1,8 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import type { ReactElement } from 'react';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { openSigned } from '@/core/lib/http/open-signed';
@@ -11,7 +10,7 @@ import { dayDateOf } from './attendance-log-text';
 import { logTable } from './fixtures';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
 jest.mock('@/core/lib/http/open-signed', () => ({ openSigned: jest.fn(async () => undefined) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
 

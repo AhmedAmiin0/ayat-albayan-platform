@@ -2,7 +2,7 @@ import { jsonText } from '@ab/client-core';
 import { PUSH_WAKE_KINDS } from '@ab/shared';
 import { BackgroundNotificationTaskResult as Result } from 'expo-notifications';
 import { z } from 'zod';
-import { supabase } from '@/core/lib/http/supabase';
+import { supabase } from '@ab/mobile-kit';
 import { type StoreWake, wakeInboxStore } from './store-session';
 
 // A message push while the app is in the background or killed (docs/43 §5, APK 0.6.0): the push

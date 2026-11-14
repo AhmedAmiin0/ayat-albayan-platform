@@ -1,6 +1,6 @@
 import type { StripeFeature } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { ApiError, apiFetch } from '@/core/lib/http/api';
+import { ApiError, apiFetch } from '@ab/mobile-kit';
 import { STRIPE_FEATURE_KEY } from '@/core/lib/stripe-flag';
 import { STRIPE_FEATURE } from './flag';
 

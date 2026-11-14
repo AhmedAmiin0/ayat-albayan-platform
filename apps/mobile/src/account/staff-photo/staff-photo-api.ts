@@ -1,6 +1,5 @@
 import { ACCOUNT_ERRORS, type StaffPhotoView } from '@ab/shared';
-import { ApiError, apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, apiSend, t } from '@ab/mobile-kit';
 import { uploadPhoto } from '@/account/hooks/account-api';
 import type { PickedAvatar } from '@/account/lib/avatar';
 

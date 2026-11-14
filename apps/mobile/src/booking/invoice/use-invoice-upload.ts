@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { isOffline } from '@/core/lib/money/payment-errors';
 import { pickReceipt, type Receipt, type ReceiptSource } from '@/core/lib/receipts/receipt';

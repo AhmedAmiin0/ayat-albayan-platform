@@ -1,14 +1,8 @@
 import { clickToChatLink, formatPhone } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Linking, ScrollView, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
+import { t, Button, BackButton, ErrorState, ltr, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { LeadFacts } from '@/inbox/leads/detail/LeadFacts';
 import { LeadReclassify } from '@/inbox/leads/detail/LeadReclassify';
 import { LeadAssign } from '@/inbox/leads/detail/LeadAssign';

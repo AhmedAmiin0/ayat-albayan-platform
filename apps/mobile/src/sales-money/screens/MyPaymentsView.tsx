@@ -1,6 +1,6 @@
 import type { MyPaymentRow } from '@ab/shared';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useMyPayments } from '@/sales-money/lib/my-api';

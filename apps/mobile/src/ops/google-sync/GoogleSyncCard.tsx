@@ -1,11 +1,7 @@
 import { ActivityIndicator, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, shape, type, useTheme, AppText, ErrorState, StatusChip } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { googleStatusText, useGoogleStatus, type GoogleStatusText } from './google-status';
 
 function Line({ children, tone }: { children: string; tone?: 'bad' }) {

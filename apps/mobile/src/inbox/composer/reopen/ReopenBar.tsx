@@ -1,10 +1,7 @@
 import type { WindowBar } from '@ab/client-core';
 import type { MessageStatus } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { shape, type, useTheme } from '@/theme';
+import { t, Button, AppText, shape, type, useTheme } from '@ab/mobile-kit';
 
 type ClosedBar = Exclude<WindowBar, 'open'>;
 

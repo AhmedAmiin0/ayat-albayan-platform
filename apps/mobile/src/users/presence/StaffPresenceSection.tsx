@@ -1,8 +1,5 @@
 import { ActivityIndicator, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { t, ErrorState, AppText, type, useTheme } from '@ab/mobile-kit';
 import { StaffPresenceRow } from './StaffPresenceRow';
 import { useStaffPresence } from './use-staff-presence';
 

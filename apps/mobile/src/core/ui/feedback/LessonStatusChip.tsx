@@ -1,6 +1,6 @@
 import type { LessonStatus } from '@ab/shared';
 import { useLessonStatusText } from './lesson-status';
-import { StatusChip, type StatusChipProps } from './StatusChip';
+import { StatusChip, type StatusChipProps } from '@ab/mobile-kit';
 
 interface LessonStatusChipProps {
   status: LessonStatus;

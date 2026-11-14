@@ -1,6 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, pathKey } from '@ab/mobile-kit';
 import { money } from '@/payments';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { CourseActionsSection } from './CourseActionsSection';
@@ -10,8 +9,8 @@ import { BASE, serve, stopPreview, SUB } from './fixtures';
 // owed or the refund amount; one summary line. 300 SAR paid, 3 of 8 attended (charge 112.5).
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));

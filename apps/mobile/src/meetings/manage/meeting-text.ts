@@ -1,8 +1,6 @@
 import { dateText, type ClockCycle, type MeetingView } from '@ab/shared';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { ApiError, t, locale } from '@ab/mobile-kit';
 
 const errors: Record<string, string | undefined> = t.classroom.error;
 

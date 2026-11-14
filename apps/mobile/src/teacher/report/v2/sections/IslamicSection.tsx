@@ -1,6 +1,6 @@
 import { ISLAMIC_DOMAINS, ISLAMIC_RATES } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ReportTextField } from '@/teacher/report/components/ReportTextField';
 import { gradeRate, withIslamic } from '@/teacher/report/v2/hooks/content-edit';
 import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';

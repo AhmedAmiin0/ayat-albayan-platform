@@ -1,10 +1,7 @@
 import { Pressable, View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, AppText, toneColors, type, useTheme } from '@ab/mobile-kit';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
-import { toneColors } from '@/core/ui/feedback/StatusChip';
-import { type, useTheme } from '@/theme';
 import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '@/today/lib/lesson-text';
 import type { TodayLesson } from '@/today/lib/today-lesson';
 

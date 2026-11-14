@@ -1,9 +1,6 @@
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { BackButton } from '@/core/ui/navigation';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { t, BackButton, Screen, ScreenHeader } from '@ab/mobile-kit';
 import type { RecordingSource } from './recording-format';
 import { RecordingsList } from './RecordingsList';
 

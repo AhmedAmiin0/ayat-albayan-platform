@@ -1,7 +1,6 @@
 import { normalizePhone, REGISTRATION_NAME_MIN, searchChars, type RegistrationCheckView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { ApiError, apiFetch, toQueryString } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, apiFetch, toQueryString, t } from '@ab/mobile-kit';
 
 // «التحقق من التسجيل» (owner 2026-10-12, docs/16 row 23): is this family / child already a student?
 // GET /sales/registration-check by the guardian's phone (E.164) or a name / code. The checks the API

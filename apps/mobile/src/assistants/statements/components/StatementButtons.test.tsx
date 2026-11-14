@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { palette } from '@/theme';
+import { t, palette } from '@ab/mobile-kit';
 import { statement } from '@/assistants/api/fixtures';
 import { StatementButtons } from './StatementButtons';
 

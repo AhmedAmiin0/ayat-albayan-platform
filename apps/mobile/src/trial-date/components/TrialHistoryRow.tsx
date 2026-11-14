@@ -1,9 +1,6 @@
 import type { TrialDateRow } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { t, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import { pickedLine, trialOutcomeStyle, whenLines } from '@/trial-date/lib/trial-date-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

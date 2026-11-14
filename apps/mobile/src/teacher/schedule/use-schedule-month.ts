@@ -4,7 +4,7 @@ import { viewerToday } from '@/calendar';
 import { useViewerTz } from '@/core/lib/clock';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { useNow } from '@/core/lib/time/use-now';
-import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
+import { useScreenFocused } from '@ab/mobile-kit';
 import { useMyLessons } from '@/teacher/lib/queries';
 import { visibleLessons } from '@/today';
 

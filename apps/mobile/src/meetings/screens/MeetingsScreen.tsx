@@ -1,12 +1,14 @@
 import { router } from 'expo-router';
 import { ScrollView, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import {
+  t,
+  AppText,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { useMeetings } from '@/meetings/manage/api';
 import { CreateMeeting, type MeetingAllow } from '@/meetings/create/CreateMeeting';
 import { MeetingRow } from '@/meetings/manage/MeetingRow';

@@ -1,13 +1,10 @@
 import type { PaymentView } from '@ab/shared';
 import { ActivityIndicator } from 'react-native';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';
 import { PaymentItem } from '@/money/payments/PaymentItem';
 import { PaymentTotals } from '@/money/payments/PaymentTotals';
 import { periodTotals } from '@/money/shared/queries';
-import { useTheme } from '@/theme';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (p: PaymentView) => p.id;

@@ -1,5 +1,5 @@
 import { act, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { palette } from '@ab/shared';
 import { inboxLive } from './inbox-live';
 import { LiveDot } from './LiveDot';

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, type LayoutChangeEvent, type ViewToken } from 'react-native';
-import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
+import { useA11yPref } from '@ab/mobile-kit';
 import { DayCell } from './DayCell';
 import { useDayBand } from './use-day-band';
 import type { DayRow } from './day-separators';

@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // A phone in Bogotá (UTC-5) or Cairo (UTC+3 until 29 Oct 2026) still reads the academy's Riyadh
 // calendar: today, the السبت week start and each label's weekday never follow the device's zone.

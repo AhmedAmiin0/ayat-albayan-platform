@@ -1,10 +1,6 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, EmptyState, ErrorState, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { InsetGroup } from '@/core/ui/surface/inset';
 import type { RecordingSource } from './recording-format';
 import { RecordingRow } from './RecordingRow';
 import { useRecordings, useRecordingStatus } from './recordings-api';

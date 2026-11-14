@@ -1,8 +1,6 @@
 import type { UserReference } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { tableLabel } from '@/users/shared/errors';
 
 /** The tables that keep a user from being deleted, with how many rows each holds. */

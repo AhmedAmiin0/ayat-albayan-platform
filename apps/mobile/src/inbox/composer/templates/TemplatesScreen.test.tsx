@@ -1,13 +1,13 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { clientAs, ME, tpl } from './fixtures';
 import { TemplatesScreen } from './TemplatesScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));

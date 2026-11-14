@@ -1,9 +1,8 @@
 import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, FilterPills } from '@ab/mobile-kit';
 import { PillButton } from '@/core/ui/primitives/PillButton';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { StudentFilterGroups } from './StudentFilterGroups';
 import { activeCount, countOf, NO_FILTERS, totalOf, type StudentFilters } from './student-filters';
 import { useStatusCounts, useTeacherOptions } from './use-student-list-data';

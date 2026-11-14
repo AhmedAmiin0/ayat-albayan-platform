@@ -1,9 +1,8 @@
 import type { ChatList, LeadStatus } from '@ab/shared';
 import { type ReactNode, useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
-import { useHolds } from '@/core/auth/use-permissions';
+import { useHolds, t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { t } from '@/core/lib/i18n/i18n';
 import { AutoListNote } from './AutoListNote';
 import { CreateListSheet } from './CreateListSheet';
 import { EditListSheet } from './EditListSheet';

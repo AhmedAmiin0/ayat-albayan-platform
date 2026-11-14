@@ -1,9 +1,7 @@
 import { View } from 'react-native';
 import { whenText } from '@/booking';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { studentNames } from '@/today';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { lengthOf } from '@/edit-time/lib/edit-time-body';
 import { lengthText } from '@/edit-time/lib/edit-time-text';
 import type { EditableLesson, TimeEditMode } from '@/edit-time/lib/types';

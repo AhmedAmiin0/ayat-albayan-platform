@@ -1,12 +1,8 @@
 import { DURATIONS, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, Field, FilterPills } from '@ab/mobile-kit';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 import { SlotPicker } from '@/teaching/reschedule/SlotPicker';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Field } from '@/core/ui/form/Field';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { CorrectTimes } from './CorrectTimes';
 import { isBookable, REASON_MAX, type EditState } from '@/edit-time/lib/edit-time-body';
 import { lengthText } from '@/edit-time/lib/edit-time-text';

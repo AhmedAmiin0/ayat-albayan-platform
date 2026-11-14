@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react-native';
 import { conflictLine } from '@/booking/shared/booking-errors';
 import { SUN_17 } from '@/booking/testing/fixtures';
 import { setClockPref } from '@/core/lib/clock';
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 import { CourseCheckNotice } from './CourseCheckNotice';
 
 const clash = { kind: 'teacher_busy', startsAt: SUN_17, endsAt: '2026-10-04T14:45:00.000Z' } as const;

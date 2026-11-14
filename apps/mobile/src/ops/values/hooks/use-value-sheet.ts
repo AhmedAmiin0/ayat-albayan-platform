@@ -1,7 +1,6 @@
 import { SETTING_DEFAULTS, type SettingKey } from '@ab/shared';
 import { useState } from 'react';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { ascii } from '@/ops/shared/ascii-digits';
 import { confirmOf, draftOf, parseDraft, sameValue, type Draft } from '@/ops/values/lib/value-draft';
 import { useSaveValue } from './use-save-value';

@@ -1,14 +1,10 @@
 import { leadStatusStyle, type LeadStatus } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t, StatusChip, type, useTheme, AppText } from '@ab/mobile-kit';
 import { useOptimisticStatus } from '@/core/lib/query/use-optimistic-status';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { type, useTheme } from '@/theme';
 import { allowedNextStatuses } from './allowed-next-statuses';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import type { Lead } from '@/inbox/shared/types';
-import { AppText } from '@/core/ui/primitives/AppText';
 
 /**
  * «تغيير الحالة»: one chip button per move the API allows from the current status (R-LEAD-01).

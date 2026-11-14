@@ -1,7 +1,7 @@
 import type { PaymentLinkView, UserRole } from '@ab/shared';
 import { focusManager } from '@tanstack/react-query';
 import { act, fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { seedFullAccess } from '@/test/staff-me';
 import { KID } from '@/sales-subscribe/testing/fixtures';
@@ -10,8 +10,8 @@ import { PaymentDoneScreen } from './PaymentDoneScreen';
 
 jest.mock('./flag', () => ({ STRIPE_FEATURE: true }));
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 const mockParams = { token: '', r: 'done' };

@@ -1,5 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, ltr } from '@ab/mobile-kit';
 import { jana, lesson, muscat, pending, yusuf } from '@/today/testing/fixtures';
 import {
   durationLabel,

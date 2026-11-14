@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { AppText, type, useTheme } from '@ab/mobile-kit';
 
 /** A sheet's plain lines, one under the other. */
 export function SheetLines({ lines }: { lines: readonly string[] }) {

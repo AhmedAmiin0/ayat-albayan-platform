@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Animated, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Chevron } from '@/core/ui/primitives/Chevron';
-import { IconButton } from '@/core/ui/primitives/IconButton';
-import { Ltr } from '@/core/ui/primitives/Ltr';
-import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
+import {
+  t,
+  shape,
+  type,
+  useTheme,
+  AppText,
+  Chevron,
+  IconButton,
+  Ltr,
+  useA11yPref,
+} from '@ab/mobile-kit';
 import { mediaTime } from '@/inbox/messages/hooks/media-time';
 import { TrashIcon } from '@/inbox/shared/chat-icons';
 import { keptTake, meterLevel } from './voice-machine';

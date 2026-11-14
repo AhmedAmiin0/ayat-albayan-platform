@@ -1,5 +1,5 @@
 import { counted } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { rowsView } from './lesson-rows-view';
 
 const TZ = 'Asia/Riyadh';

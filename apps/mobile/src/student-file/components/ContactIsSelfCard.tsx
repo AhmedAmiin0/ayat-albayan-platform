@@ -1,10 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { View } from 'react-native';
-import { apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { apiSend, t, pathKey, AppText, type, useTheme } from '@ab/mobile-kit';
 import { ContactIsSelfPills } from './ContactIsSelfPills';
 
 interface ContactIsSelfCardProps {

@@ -1,5 +1,5 @@
 import type { AccountProfile, SignedUpload } from '@ab/shared';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { PickedAvatar } from '@/account/lib/avatar';
 

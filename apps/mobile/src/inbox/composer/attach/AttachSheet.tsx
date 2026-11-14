@@ -1,6 +1,5 @@
 import { Animated, Modal, Pressable, StyleSheet, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, useTheme } from '@/theme';
+import { t, shape, useTheme } from '@ab/mobile-kit';
 import { SavedReplyIcon, TemplateIcon } from '@/inbox/shared/chat-icons';
 import { CameraIcon, DocumentIcon, EmojiIcon, GalleryIcon } from '@/inbox/shared/composer-icons';
 import type { ChatFileSource } from '@/inbox/composer/send-file';

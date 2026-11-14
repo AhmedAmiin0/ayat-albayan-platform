@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Modal, Pressable } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
-import { Screen } from '@/core/ui/layout/Screen';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
+import { t, useTheme, Screen, useTabBarInset } from '@ab/mobile-kit';
 import { ComposeIcon } from '@/inbox/shared/chat-icons';
 import { NewChatSteps } from './new-chat/NewChatSteps';
 

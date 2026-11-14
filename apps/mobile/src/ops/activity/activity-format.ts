@@ -1,9 +1,7 @@
 import { dateText } from '@ab/shared';
 import type { ActivityView, ClockCycle, StatusStyle } from '@ab/shared';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { t, locale, isolate } from '@ab/mobile-kit';
 
 // The log's times read in the viewer's zone (docs/34), 12 or 24 h as they chose, Western digits.
 

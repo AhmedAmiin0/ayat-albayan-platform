@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { hhmm, useClockCycle } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { NativePicker } from './NativePicker';
 import { PickerRow } from './PickerRow';
 import { dateToTime, timeToDate } from './picker-values';

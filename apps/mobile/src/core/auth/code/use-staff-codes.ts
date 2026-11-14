@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
-import { authApi } from '@/core/auth/forgot';
+import { authApi } from '@ab/mobile-kit';
 
 /** GET /auth/code/status as this screen reads it: anything else is «closed». */
 const statusSchema = z.object({ staff: z.boolean() });

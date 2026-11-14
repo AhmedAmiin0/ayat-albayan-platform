@@ -1,15 +1,15 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { pickProgress } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { maryam, slot, SUN_17, TUE_17 } from '@/booking/testing/fixtures';
 import { SlotStep } from './SlotStep';
 import { fakeBookingApi } from '@/booking/testing/test-utils';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

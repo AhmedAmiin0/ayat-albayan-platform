@@ -1,11 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { queryClient } from '@/core/lib/query/query-client';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, queryClient, pathKey, registerPush } from '@ab/mobile-kit';
 import { TabStack } from '@/core/nav/TabStack';
-import { registerPush } from '@/core/push/registerPush';
 import TabsLayout from '../../../app/(tabs)/_layout';
 import RootLayout from '../../../app/_layout';
 import AssistantLayout from '../../../app/assistant/_layout';
@@ -14,13 +11,13 @@ import TeacherLayout from '../../../app/teacher/_layout';
 
 // The real root and the four tree layouts with stub screens: the gate decides who reaches what.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 const mockMe = { answer: { role: 'sales', permissions: [] as string[] } };
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? mockMe.answer : { total: 0 }),
 }));
-jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out' }));
+jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out' }));
 
 const SALES = ['inbox.read', 'inbox.send', 'self.sales', 'self.sales_academy', 'self.sales_earnings', 'classroom.join'];
 const stub = (label: string) => () => <Text>{label}</Text>;

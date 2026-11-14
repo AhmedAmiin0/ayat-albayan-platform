@@ -1,6 +1,5 @@
 import type { NotificationEntryView } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { catalogue } from '@/ops/shared/fixtures';
 import { askOf, controlOf, heldLine, nameOf, needsTypedWord, partialLine, reachLine, ruleErrorText, ruleOf } from './rule-words';
 import { catalogueV2 } from '@/ops/notif-rules/testing/rules-fixtures';

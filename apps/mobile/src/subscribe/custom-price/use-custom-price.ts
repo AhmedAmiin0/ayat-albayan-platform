@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { checkCustomPrice, type QuotedPrice } from './custom-price';
 
 /**

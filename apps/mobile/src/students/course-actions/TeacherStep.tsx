@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { ErrorLine } from '@/inbox';
 import { useTeacherOptions } from './course-actions-api';
 import { SheetLines } from './SheetLines';

@@ -1,10 +1,11 @@
 import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { renderHook } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { publicConfigQuery, usePlatformClassroom } from './public-config';
 
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: () => new Promise(() => undefined),
 }));
 

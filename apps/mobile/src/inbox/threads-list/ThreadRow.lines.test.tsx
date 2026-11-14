@@ -1,7 +1,6 @@
 import { formatPhone, type ThreadView } from '@ab/shared';
 import { render, screen, within } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, ltr } from '@ab/mobile-kit';
 import { thread } from '@/inbox/shared/thread-fixtures';
 import type { ThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { useThreadRow } from './ThreadRow';

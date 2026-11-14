@@ -1,6 +1,6 @@
 import { Linking } from 'react-native';
 import { z } from 'zod';
-import { apiFetch } from './api';
+import { apiFetch } from '@ab/mobile-kit';
 
 /** The signed download answer: only its URL is read. */
 const signedUrl = z.object({ url: z.string() });

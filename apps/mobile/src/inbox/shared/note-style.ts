@@ -1,4 +1,4 @@
-import { type, useTheme } from '@/theme';
+import { type, useTheme } from '@ab/mobile-kit';
 
 /** One quiet line under or over the reply box (GateNote): 2xs ink-2. */
 export function useNoteStyle() {

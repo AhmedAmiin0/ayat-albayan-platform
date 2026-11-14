@@ -1,7 +1,6 @@
 import type { CallsUi } from '@ab/client-core';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { t } from '@/core/lib/i18n/i18n';
+import { pathKey, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { CallsContext } from '@/inbox/thread/calls/state/call-context';
 import { OFF, ON } from '@/inbox/thread/calls/state/call-test-kit';

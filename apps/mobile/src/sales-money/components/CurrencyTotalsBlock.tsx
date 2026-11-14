@@ -1,6 +1,6 @@
 import type { CurrencyTotals } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { AmountText } from './AmountText';
 import { byCurrency } from '@/sales-money/lib/money-text';

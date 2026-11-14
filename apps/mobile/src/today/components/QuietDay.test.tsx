@@ -1,6 +1,6 @@
 import { setViewerPersonTz } from '@ab/client-core';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import type { TodayLesson } from '@/today/lib/today-lesson';
 import type { TodaySource } from '@/today/lib/today-source';
 import { QuietDay } from './QuietDay';

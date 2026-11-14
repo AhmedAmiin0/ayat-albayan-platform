@@ -1,12 +1,12 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { AgendaLessonRow } from '@/calendar/agenda/AgendaLessonRow';
 import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { held, upcoming } from './testing/fixtures';
 
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: async () => [] }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: async () => [] }));
 
 // «عدّل الوقت» (R-SCH-11) shows only where the API offered it (time_edit_mode), beside «غيّر الموعد».
 

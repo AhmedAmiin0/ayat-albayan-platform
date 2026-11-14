@@ -1,7 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
 import { renderApp, resetApp } from '@/test/app-router';
+import { ApiError, t } from '@ab/mobile-kit';
 import { maryam, SUN_17 } from '@/booking/testing/fixtures';
 import { bookingBackend } from '@/booking/testing/flow-backend';
 import { slot } from '@/booking/testing/fixtures';

@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { maryam } from '@/booking/testing/fixtures';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { historyOf, OLD, STUDENT, trialResult, trialRow } from '@/trial-date/testing/fixtures';
@@ -10,8 +10,8 @@ import { fakeTrialApi, fakeTrialSend, walkToReview } from '@/trial-date/testing/
 // A salesperson, from her family chat (/sales/inbox/trial-date): everything under /sales/booking.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

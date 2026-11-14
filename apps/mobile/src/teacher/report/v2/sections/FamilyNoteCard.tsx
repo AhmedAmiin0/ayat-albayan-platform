@@ -1,5 +1,5 @@
 import { QUICK_NOTES } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { AttachmentsField } from '@/teacher/report/components/AttachmentsField';
 import { ReportTextField } from '@/teacher/report/components/ReportTextField';
 import { toggleQuick } from '@/teacher/report/v2/hooks/content-edit';

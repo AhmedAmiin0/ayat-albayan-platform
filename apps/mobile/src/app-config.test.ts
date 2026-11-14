@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import app from '../app.json';
 
 // Owner 2026-10-19 #1: expo-audio played voice notes only. Owner 2026-10-27 reversed it: the chat now

@@ -1,16 +1,14 @@
 import { chatBinding, RIYADH_TZ, type SalesFamilyStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { useHolds } from '@/core/auth/use-permissions';
+import { useHolds, t, Button } from '@ab/mobile-kit';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { CustomAmountPill } from '@/payments';
 import { CustomPriceField, quoteLessons, renewalForm, useCustomPrice } from '@/subscribe';
 import { PricingInputs } from '@/subscribe/PricingInputs';
 import { INITIAL_FORM, pricingOf, startDays } from '@/subscribe/subscribe-form';
 import { localDate } from '@/today';
-import { Button } from '@/core/ui/primitives/Button';
 import { ChildPills } from './ChildPills';
 import { PayMethodPills, type PayMethod } from './PayMethodPills';
 import { SalesPriceSection } from './SalesPriceSection';

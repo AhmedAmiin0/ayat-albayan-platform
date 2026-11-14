@@ -1,5 +1,5 @@
 import { type MessageQuote, type MessageView, QUOTE_BODY_MAX, quoteSnippet } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // The words of a quote (owner 2026-10-25 «رد»): over a bubble that answers one, and in the composer's strip.
 

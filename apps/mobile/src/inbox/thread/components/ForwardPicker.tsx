@@ -1,9 +1,8 @@
 import { FORWARD_MAX_TARGETS, type MessageView, type ThreadView } from '@ab/shared';
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { ForwardRow } from './ForwardRow';

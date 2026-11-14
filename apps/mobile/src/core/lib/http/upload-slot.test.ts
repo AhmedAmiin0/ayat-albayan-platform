@@ -3,7 +3,7 @@ import { uploadSigned } from './upload-slot';
 const mockUpload = jest.fn();
 const mockFrom = jest.fn((_bucket: string) => ({ uploadToSignedUrl: mockUpload }));
 // Lazy: the factory runs on the hoisted import, before the consts above exist.
-jest.mock('./supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   supabase: { storage: { from: (bucket: string) => mockFrom(bucket) } },
 }));
 

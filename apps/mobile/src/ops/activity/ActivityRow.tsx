@@ -1,7 +1,6 @@
 import { memo } from 'react';
 import type { ActivityView } from '@ab/shared';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { ListRow, StatusChip } from '@ab/mobile-kit';
 import { actionLabel, actorLine, metaLine, resultLabel, resultStyle } from './activity-format';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

@@ -1,8 +1,7 @@
 import type { BookingTeacherOption, SlotView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { cachedList, huda, unnamed } from '@/inbox/shared/fixtures';
-import { t } from '@/core/lib/i18n/i18n';
-import { listKey } from '@/core/lib/query/query-keys';
+import { t, listKey } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
 import { maryam, MON_19, noAvailability, slot, slotsAnswer, SUN_17 } from './fixtures';
 import { pickLesson } from './lesson-times';

@@ -7,8 +7,7 @@ import {
   type ThreadTemplate,
 } from '@ab/shared';
 import bundled from '@ab/shared/i18n/ar.json';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 import type { PinKind } from './pinned-send';
 
 /**

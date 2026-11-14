@@ -14,9 +14,7 @@ import {
   type PeopleStudentPatch,
 } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, type SendMethod } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, apiSend, type SendMethod, t, pathKey } from '@ab/mobile-kit';
 
 // /people/* (owner 2026-11-02), the web's api.ts: «تعديل البيانات», «ربط بولي أمر آخر» and «تحويل»
 // for the assistant and the admin. Paths, keys and error words are @ab/client-core's.

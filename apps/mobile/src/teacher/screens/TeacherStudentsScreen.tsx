@@ -1,16 +1,19 @@
 import { boardStudents, type TeacherStudentKind, type TeacherStudentView } from '@ab/shared';
 import { useViewerTz } from '@/core/lib/clock';
-import { usePullRefresh } from '@/core/lib/query/pull-refresh';
+import {
+  usePullRefresh,
+  t,
+  EmptyState,
+  ErrorState,
+  FilterPills,
+  type FilterPill,
+  Screen,
+  ScreenHeader,
+  useTabBarInset,
+} from '@ab/mobile-kit';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/core/ui/feedback/Note';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { StudentRow } from '@/teacher/components/StudentRow';
 import { useMyStudents } from '@/teacher/lib/students-queries';

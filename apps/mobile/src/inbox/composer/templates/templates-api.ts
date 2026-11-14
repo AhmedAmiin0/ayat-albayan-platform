@@ -3,9 +3,7 @@ import {
   type TemplateListMode,
 } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useHolds, useIsAdmin } from '@/core/auth/use-permissions';
-import { apiFetch, apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { useHolds, useIsAdmin, apiFetch, apiSend, t } from '@ab/mobile-kit';
 
 // «القوالب» (owner 2026-11-14): the routes live in @ab/client-core; this module binds them to
 // mobile's API client. Every write refreshes every template list (and the composers' pickers).

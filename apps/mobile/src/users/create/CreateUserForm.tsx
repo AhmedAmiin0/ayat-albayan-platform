@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createUser, roleOptionsQuery, USERS_KEY } from '@/users/shared/api';
 import { initialCreateForm, type CreateForm, type Prefill } from './create-form';
 import { CreateUserFields } from './CreateUserFields';

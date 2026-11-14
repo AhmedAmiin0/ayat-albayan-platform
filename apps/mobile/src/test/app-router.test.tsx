@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
 import { renderApp, resetApp } from './app-router';
+import { t } from '@ab/mobile-kit';
 import { FakeBackend } from './fake-backend';
 
 function emptyBackend() {

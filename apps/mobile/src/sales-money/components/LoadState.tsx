@@ -1,9 +1,6 @@
 import { ActivityIndicator, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { useTheme } from '@/theme';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 
 interface LoadStateProps {
   /** The query: no data yet, failed, or loaded (then `empty` decides). */

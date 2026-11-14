@@ -1,10 +1,7 @@
 import { router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { FilterPills } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { t, FilterPills, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { ScheduleMonth } from '@/teacher/schedule/ScheduleMonth';
 import { ScheduleWeek } from '@/teacher/schedule/ScheduleWeek';

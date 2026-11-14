@@ -6,7 +6,7 @@ import {
   type StudentBalanceView,
   type SubscriptionView,
 } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { type Attachment, withAttachment } from '@/payments/receipts/attachments';
 import type { PaymentInput } from './optimistic';
 import { paidAtFor } from '@/core/lib/money/paid-day';

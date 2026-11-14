@@ -1,9 +1,6 @@
 import type { ChannelAudience } from '@ab/client-core';
 import { router, useLocalSearchParams } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { BackButton } from '@/core/ui/navigation';
+import { t, Screen, ScreenHeader, BackButton } from '@ab/mobile-kit';
 import { ChannelPresenceLine } from './ChannelPresenceLine';
 import { ChannelThread } from './ChannelThread';
 import { useChannel } from './channel-queries';

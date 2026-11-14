@@ -1,6 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 
 interface CorrectActionProps {

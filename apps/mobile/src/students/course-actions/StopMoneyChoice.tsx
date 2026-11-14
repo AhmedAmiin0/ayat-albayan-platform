@@ -13,10 +13,7 @@ import {
 import type { CourseStopPreview, StopRefund } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useHolds } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
-import { Field } from '@/core/ui/form/Field';
-import { FilterPills } from '@/core/ui/form/FilterPills';
+import { useHolds, t, Field, FilterPills } from '@ab/mobile-kit';
 import { money } from '@/payments';
 import { SheetLines } from './SheetLines';
 

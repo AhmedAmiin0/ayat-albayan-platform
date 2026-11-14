@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ReasonConfirm } from './ReasonConfirm';
 
 test('docs/07 «الأزرار»: the verb first, «إلغاء» beside it; a short reason does not confirm', async () => {

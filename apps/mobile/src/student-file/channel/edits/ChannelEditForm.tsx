@@ -1,12 +1,9 @@
 import { CHANNEL_BODY_MAX } from '@ab/shared';
 import { useState } from 'react';
 import { TextInput, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions/ButtonRow';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
 import { channelInputStyle } from '@/student-file/channel/channel-input-style';
-import { type, useTheme } from '@/theme';
 
 interface ChannelEditFormProps {
   initial: string;

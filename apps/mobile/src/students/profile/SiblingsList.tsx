@@ -1,11 +1,8 @@
 import { studentStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ListRow, StatusChip, InsetGroup } from '@ab/mobile-kit';
 import { useStudentHref } from '@/core/nav/tree-base';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { InsetGroup } from '@/core/ui/surface/inset';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import type { StudentRef } from '@/students/shared/types';
 

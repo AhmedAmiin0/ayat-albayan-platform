@@ -1,10 +1,7 @@
 import type { PaymentView } from '@ab/shared';
 import { useState } from 'react';
 import { ActivityIndicator, Image, Linking, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, shape, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { useReceiptUrl } from '@/money/shared/queries';
 import { isPdfReceipt } from './receipt-file';
 

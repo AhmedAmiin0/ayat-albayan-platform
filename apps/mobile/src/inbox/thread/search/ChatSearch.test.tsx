@@ -1,13 +1,13 @@
 import { act, fireEvent, screen, within } from '@testing-library/react-native';
 import { BackHandler, FlatList } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { chat, found, stub } from './search.fixture';
 import { MID, NEW, OLD } from './search.data';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (path: string) => mockApiFetch(path),
 }));
 

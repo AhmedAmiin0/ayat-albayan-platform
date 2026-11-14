@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, useTheme } from '@/theme';
-import { IconButton } from '@/core/ui/primitives/IconButton';
-import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
+import { t, shape, useTheme, IconButton, useA11yPref } from '@ab/mobile-kit';
 import { SendIcon } from '@/inbox/shared/chat-icons';
 import { MicIcon } from '@/inbox/shared/composer-icons';
 

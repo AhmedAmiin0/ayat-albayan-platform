@@ -1,9 +1,7 @@
 import type { NotificationAudience } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { FilterPills } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
+import { t, FilterPills, Screen } from '@ab/mobile-kit';
 import { CommsOverview } from '@/ops/comms/CommsOverview';
 import { NotificationCatalogue } from './NotificationCatalogue';
 import { NumbersList } from '@/ops/numbers/NumbersList';

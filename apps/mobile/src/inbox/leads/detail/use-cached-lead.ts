@@ -5,7 +5,7 @@ import {
   type QueryClient,
 } from '@tanstack/react-query';
 import { flattenPages, type Page } from '@/core/lib/query/paging';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { pathKey } from '@ab/mobile-kit';
 import type { Lead } from '@/inbox/shared/types';
 
 /** The lead with this id in any cached inbox list, freshest list first; undefined if none has it. */

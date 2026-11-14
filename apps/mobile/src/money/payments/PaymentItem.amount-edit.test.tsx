@@ -1,17 +1,15 @@
 import type { PaymentView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t, pathKey } from '@ab/mobile-kit';
 import { money } from '@/core/lib/money/format';
-import { pathKey } from '@/core/lib/query/query-keys';
 import { payment } from '@/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { PaymentItem } from './PaymentItem';
 
 // «تعديل المبلغ» on «كل المدفوعات» (owner 2026-11-02): PATCH /payments/:id { amount } only.
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: jest.fn(async () => ({})),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

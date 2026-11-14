@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { threadKey, threadMessages, threadPath, type ThreadCache } from './thread-cache';
@@ -10,8 +11,8 @@ import { threadQuery, useSendMessage } from './use-thread';
 
 const mockApiSend = jest.fn();
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
   apiFetch: (...mockArgs: unknown[]) => mockApiFetch(...mockArgs),
 }));

@@ -1,8 +1,7 @@
 import type { NotificationEntryView, NotificationsOverview } from '@ab/shared';
 import { View } from 'react-native';
 import { Note } from '@/core/ui/feedback/Note';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { ListRow, StatusChip } from '@ab/mobile-kit';
 import { chipOf, factsOf, whenOf } from '@/ops/settings/catalogue-words';
 import { controlOf, heldLine, nameOf, partialLine, ruleOf } from '@/ops/notif-rules/lib/rule-words';
 import { RowAsk } from './RowAsk';

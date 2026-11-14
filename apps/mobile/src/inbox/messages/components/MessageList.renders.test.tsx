@@ -5,8 +5,8 @@ import { MessageList } from './MessageList';
 import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
 }));
 // Every bubble draw draws its meta line once: count them by message id.

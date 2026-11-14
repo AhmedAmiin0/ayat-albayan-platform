@@ -1,9 +1,8 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react-native';
-import { persistOptions } from '@/core/lib/query/query-client';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { queryWrapper } from '@/test/query';
+import { persistOptions, pathKey } from '@ab/mobile-kit';
 import { periodTotals, usePaymentAttachments, useReceiptUrl } from './queries';
+import { queryWrapper } from '@/test/query';
 
 test('totals come off the first page, ignoring anything malformed', () => {
   const sar = { currency: 'SAR', net: 100, payments: 120, refunds: 20 };

@@ -1,5 +1,4 @@
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { lengthLocked, lockedText, payoutLockOf } from './edit-time-lock';
 import { lengthText } from './edit-time-text';

@@ -1,7 +1,7 @@
 import { messageHits, messageSearchPages } from '@ab/client-core';
 import { searchesMessages, type MessageSearchHit } from '@ab/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
+import { apiFetch } from '@ab/mobile-kit';
 
 /** What the chats list knows of the global search. */
 export interface MessageHitsState {

@@ -1,12 +1,13 @@
 import type { CourseChangeRequest } from '@ab/shared';
 import { renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useCourseChangeCheck } from './change-queries';
 import { SUB_ID } from '@/sales-course/testing/fixtures';
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 

@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Animated, type GestureResponderEvent, I18nManager, useWindowDimensions } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { cancelDistance, dragVerdict, hintOpacity, micShift, towardStart } from './voice-drag';
 import type { VoiceUi } from './use-voice';
 

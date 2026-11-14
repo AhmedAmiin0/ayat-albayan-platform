@@ -1,12 +1,11 @@
 import { setViewerPersonTz } from '@ab/client-core';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { BookedPanel } from './BookedPanel';
 
 const mockReplace = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: async () => ({}) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: async () => ({}) }));
 jest.mock('expo-router', () => ({ router: { replace: (h: unknown) => mockReplace(h) } }));
 
 const result = {

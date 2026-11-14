@@ -1,11 +1,7 @@
 import { router } from 'expo-router';
 import { Pressable } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, useTheme } from '@/theme';
-import { Mark } from '@/core/ui/primitives/Mark';
+import { t, shape, useTheme, Mark, Avatar, useMyProfile } from '@ab/mobile-kit';
 import type { AccountHref } from './AccountRow';
-import { Avatar } from '@/core/ui/primitives/Avatar';
-import { useMyProfile } from '@/account/hooks/queries';
 
 /**
  * The More screens' header end (R-ACC-05): the user's photo or initials, a 44pt button to «حسابي».

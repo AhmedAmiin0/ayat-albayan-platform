@@ -1,11 +1,11 @@
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 import { InvoiceUploadError, uploadInvoice } from './invoice-upload';
 
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiSend: jest.fn() }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiSend: jest.fn() }));
 const mockUpload = jest.fn();
 const mockFrom = jest.fn((bucket: string) => ({ bucket, uploadToSignedUrl: mockUpload }));
-jest.mock('@/core/lib/http/supabase', () => ({ supabase: { storage: { from: (b: string) => mockFrom(b) } } }));
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({ supabase: { storage: { from: (b: string) => mockFrom(b) } } }));
 
 const send = jest.mocked(apiSend);
 const REQ = '99999999-9999-4999-8999-999999999999';

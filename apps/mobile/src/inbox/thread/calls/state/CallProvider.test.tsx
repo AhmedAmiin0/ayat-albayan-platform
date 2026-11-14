@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Vibration } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { CallButton } from '@/inbox/thread/calls/entries/CallButton';
 import { CallProvider } from './CallProvider';
@@ -9,8 +9,8 @@ import { fakeRtc, OFF, ON, ringing, routes } from './call-test-kit';
 
 const mockFetch = jest.fn();
 const mockSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (...a: unknown[]) => mockFetch(...a),
   apiSend: (...a: unknown[]) => mockSend(...a),
 }));

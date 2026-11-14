@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { HangUpIcon, PhoneIcon, RoundButton, SpeakerIcon, SwitchCameraIcon } from '@/inbox';
 import { CameraButton, MicButton } from '@/classroom/room/preview/MediaButtons';
 

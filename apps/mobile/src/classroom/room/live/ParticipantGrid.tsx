@@ -1,9 +1,7 @@
 import { View } from 'react-native';
 import { gridRows } from '@/classroom/room/model/room-grid';
 import type { RoomPlatform, RoomTile } from '@/classroom/room/model/room-types';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import { ParticipantTile } from './ParticipantTile';
 
 interface ParticipantGridProps {

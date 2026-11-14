@@ -1,6 +1,6 @@
 import { renderRouter } from 'expo-router/testing-library';
 import type { ComponentType } from 'react';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { AppText } from '@ab/mobile-kit';
 import { TabStack, tabStackSettings } from '@/core/nav/TabStack';
 import { AppNativeTabs } from '@/core/ui/layout/AppNativeTabs';
 

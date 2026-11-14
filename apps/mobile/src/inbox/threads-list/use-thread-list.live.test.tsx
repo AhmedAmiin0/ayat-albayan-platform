@@ -1,5 +1,6 @@
 import { INBOX_FALLBACK_MS, INBOX_LIST_REFRESH_MS } from '@ab/client-core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { inboxLive } from '@/inbox/thread/live';
 import { useThreadList } from './use-thread-list';
@@ -7,12 +8,12 @@ import { useThreadList } from './use-thread-list';
 // The chats tab re-reads its list while focused, so unread counts and order update (owner 2026-10-27).
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 let mockFocused = true;
-jest.mock('@/core/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
+jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
 
 const tick = () => act(() => jest.advanceTimersByTimeAsync(INBOX_LIST_REFRESH_MS));
 

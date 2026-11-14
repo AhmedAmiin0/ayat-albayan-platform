@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Linking } from 'react-native';
 import { parseTarget, roomWebUrl } from '@/classroom/room/model/join-target';
 import { nativeRoomPlatform } from '@/classroom/room/native/native-platform';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { RoomNotice } from './RoomNotice';
 import { RoomScreen } from './RoomScreen';
 

@@ -1,16 +1,10 @@
 import { formatPhone, sessionWindowOpen, type ThreadView } from '@ab/shared';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
-import { useHolds } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
+import { useHolds, t, ErrorState, KeyboardFrame, ltr, Screen, Avatar } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { KeyboardFrame } from '@/core/ui/layout/KeyboardFrame';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { Screen } from '@/core/ui/layout/Screen';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { ChatHeader } from '@/inbox/thread/components/ChatHeader';
-import { Avatar } from '@/core/ui/primitives/Avatar';
 import { ChatNotice } from '@/inbox/thread/components/ChatNotice';
 import { CallButton } from '@/inbox/thread/calls/entries/CallButton';
 import { Composer } from '@/inbox/composer/Composer';

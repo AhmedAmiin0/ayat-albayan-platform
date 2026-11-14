@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 import { balanceOf, page, subscription } from '@/payments/fixtures';
 import { partPaidLine } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
@@ -7,8 +7,8 @@ import { BalanceCard } from './BalanceCard';
 
 // Owner 2026-10-28: a package of 81 with 80 received is still «غير مدفوعة»; the card says what is left.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));

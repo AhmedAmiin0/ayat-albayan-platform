@@ -1,11 +1,12 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { PAYMENT } from '@/earnings/testing/fixtures';
 import type { PayInput } from '@/earnings/lib/pay-draft';
 import { usePayTeacher } from './use-pay-teacher';
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiSend: (...a: unknown[]) => mockApiSend(...a) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiSend: (...a: unknown[]) => mockApiSend(...a) }));
 const mockUpload = jest.fn();
 jest.mock('./upload-receipt', () => ({ uploadTeacherReceipt: (...a: unknown[]) => mockUpload(...a) }));
 

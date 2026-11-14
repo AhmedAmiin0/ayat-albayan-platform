@@ -1,6 +1,5 @@
 import { counted, teacherName, type ClockCycle } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 import { durationLabel, studentTimes } from '@/today/lib/lesson-text';
 import type { TodayLesson } from '@/today/lib/today-lesson';
 import type { Hero } from '@/today/lib/today-plan';

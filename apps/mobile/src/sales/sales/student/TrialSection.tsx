@@ -1,16 +1,11 @@
 import { canPickTrialDate, type SalesStudentDetails, type SalesTrialLesson, type TrialOutcome } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { useHolds } from '@/core/auth';
+import { useHolds, t, Button, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { Button } from '@/core/ui/primitives/Button';
 import { chatTrialHref, trialOutcomeStyle } from '@/trial-date';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { SmallHeading } from '@/sales/sales/components/SmallHeading';
 import { fill } from '@/sales/sales/lib/sales-text';
 

@@ -1,5 +1,5 @@
 import { lessonWhenText } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { whenLines } from './trial-date-text';
 
 // docs/34: a Riyadh family's 18:00 trial read by a Cairo salesperson.

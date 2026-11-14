@@ -1,7 +1,7 @@
 import { counted } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react-native';
 import { booked, SUN_17 } from '@/booking/testing/fixtures';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
 import { isDisabled, fakeCourseApi, press, walkToReview } from '@/sales-course/testing/course-test-utils';
@@ -12,8 +12,8 @@ import { fakeNow } from '@/test/fake-now';
 // Owner 2026-10-28: 1 of the 8 lessons was taken before the platform → the course books 7.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

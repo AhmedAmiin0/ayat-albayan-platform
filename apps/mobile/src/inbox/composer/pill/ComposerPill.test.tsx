@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { Composer } from '@/inbox/composer/Composer';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
@@ -10,12 +10,12 @@ import { clearComposerDrafts } from '@/inbox/composer/draft-store';
 
 // The pill: the emoji in the bar as WhatsApp (owner 2026-10-29; no camera since 2026-11-01), the paperclip's sheet's tiles, and the teacher's own pill.
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: jest.fn(async () => ({ open: true, reason: null, queued: 0 })),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
-jest.mock('@/core/lib/http/supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   supabase: { storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) } },
 }));
 jest.mock('expo-image-picker', () => ({

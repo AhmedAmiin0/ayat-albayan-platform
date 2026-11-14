@@ -1,9 +1,6 @@
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { type, useTheme } from '@/theme';
+import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import type { BookFailure } from '@/booking/shared/booking-errors';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
 import type { StudentChoice, TrialDraft } from '@/booking/trial/lib/draft';

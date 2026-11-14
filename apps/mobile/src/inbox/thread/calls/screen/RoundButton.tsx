@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { type, useTheme, AppText } from '@ab/mobile-kit';
 
 type RoundTone = 'plain' | 'accept' | 'end';
 

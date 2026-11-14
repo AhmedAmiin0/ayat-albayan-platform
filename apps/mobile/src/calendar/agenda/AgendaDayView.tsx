@@ -1,9 +1,6 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { InsetGroup } from '@/core/ui/surface/inset';
+import { t, type, useTheme, AppText, InsetGroup } from '@ab/mobile-kit';
 import type { AgendaDay } from './agenda';
 import { AgendaLessonRow } from './AgendaLessonRow';
 import { dayLabel } from '@/calendar/lib/week';

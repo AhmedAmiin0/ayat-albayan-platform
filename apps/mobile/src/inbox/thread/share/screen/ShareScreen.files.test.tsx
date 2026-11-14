@@ -1,6 +1,6 @@
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import * as Sharing from 'expo-sharing';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ChatFileError, sendChatFile } from '@/inbox/composer/send-file';
 import { renderShare, resolvedPdf, TEACHER } from './share-testing';
 import type * as ShareTestingModule from './share-testing';
@@ -12,8 +12,8 @@ jest.mock('expo-sharing', () => ({
   getResolvedSharedPayloadsAsync: jest.fn(),
   clearSharedPayloads: jest.fn(),
 }));
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async (path: string) => jest.requireActual<ShareTesting>('./share-testing').answerThreads(path),
 }));
 jest.mock('@/inbox/composer/send-file', () => ({

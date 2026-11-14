@@ -1,7 +1,5 @@
 import { Pressable } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Chevron } from '@/core/ui/primitives/Chevron';
+import { shape, type, useTheme, AppText, Chevron } from '@ab/mobile-kit';
 
 interface RangeButtonProps {
   /** «سورة الملك · الآيات 1–15», or «اختر السورة والآيات» on an empty part. */

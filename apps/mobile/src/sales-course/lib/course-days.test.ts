@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { daysText, requestDays, takenDays, takenTexts, weekdayName } from './course-days';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;

@@ -1,6 +1,6 @@
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import appJson from '../../app.json';
 import PaymentRoute from '../../app/(tabs)/students/payment/[id]';
 import { PaymentScreen } from './screens/PaymentScreen';

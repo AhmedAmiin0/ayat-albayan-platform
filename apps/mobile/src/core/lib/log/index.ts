@@ -1,1 +1,0 @@
-export { logWarning } from './log';

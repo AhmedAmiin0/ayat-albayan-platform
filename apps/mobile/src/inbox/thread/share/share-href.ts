@@ -1,5 +1,6 @@
 import type { Href } from 'expo-router';
-import { type Can, canOpen, type GateStatus } from '@/core/auth';
+import type { Can, GateStatus } from '@ab/mobile-kit';
+import { canOpen } from '@/core/auth';
 
 // docs/38 §mobile 2: the root /share screen hands the share to the signed-in tree's own chooser,
 // inside its chat group (its thread mode and link base). null: no chats to share into.

@@ -1,8 +1,6 @@
 import { googleErrorKey, type Glyph, type GoogleAccountStatus, type GoogleStatusView, type Tone } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, t, pathKey } from '@ab/mobile-kit';
 
 const GOOGLE_STATUS_PATH = '/admin/google/status';
 

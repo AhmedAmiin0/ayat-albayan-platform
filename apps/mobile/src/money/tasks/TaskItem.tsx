@@ -2,10 +2,8 @@ import { memo } from 'react';
 import type { AdminTaskView } from '@ab/shared';
 import { pushInTab } from '@/core/nav/back-within';
 import { useTabOpen } from '@/core/auth/use-tab-open';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ListRow, StatusChip } from '@ab/mobile-kit';
 import { instantDay } from '@/core/lib/money/format';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { taskText } from './tasks';
 import { useViewerTz } from '@/core/lib/clock';
 

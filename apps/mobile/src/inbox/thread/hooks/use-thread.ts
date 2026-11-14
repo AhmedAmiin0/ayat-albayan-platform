@@ -7,7 +7,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { useStoredView } from '@/inbox/thread/local/stored-view';
 import { rollback, unanswered } from '@/inbox/thread/send/after-send';

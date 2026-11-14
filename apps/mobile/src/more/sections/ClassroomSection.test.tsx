@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ClassroomSection } from './ClassroomSection';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));

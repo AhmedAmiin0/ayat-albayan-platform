@@ -1,6 +1,6 @@
 import { type RefObject, useEffect, useEffectEvent, useRef } from 'react';
 import type { FlatList } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import type { LogTarget } from './use-thread-log';
 
 interface AnchorJump {

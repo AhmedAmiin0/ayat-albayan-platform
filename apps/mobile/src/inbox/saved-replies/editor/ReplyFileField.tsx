@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { type ChatFileSource, pickChatFile } from '@/inbox/composer/send-file';

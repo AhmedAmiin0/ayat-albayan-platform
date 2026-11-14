@@ -1,7 +1,6 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 /** The catalogue's query key prefix (NotificationCatalogue adds the settings' fetch time). */
 export const CATALOGUE_KEY = ['admin', 'notifications'] as const;

@@ -1,12 +1,12 @@
 import { act, renderHook } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { setComposerText, useComposerText } from './draft-store';
 import { useComposerSend } from './use-composer-send';
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 

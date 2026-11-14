@@ -11,14 +11,12 @@ import { MakeupAction } from '@/booking/makeup/MakeupAction';
 import { useJoinOpen } from '@/classroom';
 import { CorrectOutcome } from '@/teaching';
 import { useNow } from '@/core/lib/time/use-now';
-import { usePermissions } from '@/core/auth';
+import { usePermissions, t, Button, type ButtonVariant } from '@ab/mobile-kit';
 import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
 import { CancelLesson } from '@/today/components/CancelLesson';
 import { studentNames } from '@/today';
 import type { useLessonAction } from '@/today/lib/use-lesson-action';
-import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 

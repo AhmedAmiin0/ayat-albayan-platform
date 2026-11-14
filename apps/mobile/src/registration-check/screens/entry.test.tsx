@@ -1,16 +1,15 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { detail, inbound } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, pathKey } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { AllStudentsScreen } from '@/sales/sales/screens/AllStudentsScreen';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
 // The two ways in: the sales chat header (the number filled in) and the «الطلاب» tab header.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: jest.fn(),
 }));

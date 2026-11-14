@@ -1,13 +1,16 @@
 import { JOB_APPLICANT_STATUSES, jobApplicantStatusStyle } from '@ab/shared';
 import { useState } from 'react';
 
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  EmptyState,
+  ErrorState,
+  FilterPills,
+  type FilterPill,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { ApplicantRow } from '@/more/applicants/ApplicantRow';
 import { applicantParams, applicantSortChoices, type ApplicantStatusFilter } from '@/more/applicants/applicant-params';
 import type { JobApplicant } from '@/core/lib/staff/types';

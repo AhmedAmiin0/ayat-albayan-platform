@@ -1,14 +1,14 @@
 import { RESTRICTED_TEMPLATE_DEFAULTS, type TemplateView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { plainReminder } from '@/inbox/shared/thread-fixtures';
 import { TemplatePicker } from './TemplatePicker';
 
 // Owner 2026-10-12: every role without templates.manage / templates.send_all gets only the allow-list.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

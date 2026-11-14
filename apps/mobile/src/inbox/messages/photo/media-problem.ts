@@ -1,5 +1,5 @@
 import { baseMime, isChatViewMime, STICKER_SIZE } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 
 /** Why a bubble's file cannot be shown (W6): what the bubble says instead of the file. */
 export type MediaProblem = 'expired' | 'forbidden' | 'crm' | 'failed';

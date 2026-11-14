@@ -1,9 +1,6 @@
 import { effective } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { ReportTextField } from '@/teacher/report/components/ReportTextField';
 import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
 import { Card } from '@/teacher/report/v2/ui/Card';

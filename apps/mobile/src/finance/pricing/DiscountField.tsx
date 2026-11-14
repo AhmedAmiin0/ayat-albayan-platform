@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { TextInput, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 interface DiscountFieldProps {
   /** The raw text; the selection parses it (parseDiscount) when it asks for a quote. */

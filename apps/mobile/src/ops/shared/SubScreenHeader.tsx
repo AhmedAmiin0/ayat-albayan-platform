@@ -1,6 +1,5 @@
 import { backWithin } from '@/core/nav/back-within';
-import { BackButton } from '@/core/ui/navigation';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { BackButton, ScreenHeader } from '@ab/mobile-kit';
 
 const back = () => backWithin('/more/ops/settings');
 

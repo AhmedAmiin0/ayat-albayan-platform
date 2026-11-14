@@ -1,10 +1,8 @@
 import { type CallView, chatDayKey, senderLine } from '@ab/shared';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, useTheme, EmptyState } from '@ab/mobile-kit';
 import { useStableHandler } from '@/core/lib/stable-handler';
-import { useTheme } from '@/theme';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
 import { logRows, type LogRow } from '@/inbox/thread/calls/entries/log-rows';
 import { useCallBack, useThreadCalls } from '@/inbox/thread/calls/entries/use-thread-calls';
 import { messageGap } from '@/inbox/messages/hooks/list-gap';

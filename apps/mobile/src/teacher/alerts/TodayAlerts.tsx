@@ -1,12 +1,9 @@
 import type { LessonView } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, InsetGroup, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { InsetGroup } from '@/core/ui/surface/inset';
 import { useMarkRead } from '@/notifications';
-import { type, useTheme } from '@/theme';
 import { AlertRow, type AlertHandlers } from './AlertRow';
 import { useHomePrefs } from './home-prefs';
 import { useTodayAlerts } from './use-today-alerts';

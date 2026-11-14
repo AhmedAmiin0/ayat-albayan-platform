@@ -1,6 +1,6 @@
 import type { MessageView, SavedReplyStaged } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { fileSendSteps } from '@/inbox/composer/send-file';
 import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 import type { StagedFile } from './use-saved-reply';

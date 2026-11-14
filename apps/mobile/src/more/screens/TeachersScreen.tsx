@@ -1,10 +1,6 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t, EmptyState, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { TeacherRow } from '@/more/teachers/TeacherRow';
 import type { TeacherListItem } from '@/core/lib/staff/types';
 

@@ -1,10 +1,7 @@
 import { replyConfirmPath, type ConfirmRoute } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { apiSend } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { apiSend, pathKey, t, Button } from '@ab/mobile-kit';
 import { confirmFailureText } from '@/sales/sales';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { refreshChat } from '@/inbox/thread/hooks/inbox-sync';

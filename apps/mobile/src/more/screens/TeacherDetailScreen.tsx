@@ -2,15 +2,21 @@ import { teacherName, teacherStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
-import { ApiError, apiFetch } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import {
+  ApiError,
+  apiFetch,
+  t,
+  pathKey,
+  Button,
+  BackButton,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+  StatusChip,
+  locale,
+  useIsAdmin,
+  Avatar,
+} from '@ab/mobile-kit';
 import { TeacherContact } from '@/more/teachers/TeacherContact';
 import { TeacherUsername } from '@/more/teachers/TeacherUsername';
 import { TeacherCalendarOwner } from '@/more/teachers/TeacherCalendarOwner';
@@ -18,10 +24,7 @@ import { TeacherStudentsSection } from '@/more/sections/TeacherStudentsSection';
 import type { Teacher } from '@/core/lib/staff/types';
 import { UpcomingTimeOff } from '@/more/availability/UpcomingTimeOff';
 import { WeeklyAvailability } from '@/more/availability/WeeklyAvailability';
-import { locale } from '@/core/lib/i18n/locale';
 import { StaffPhotoControl } from '@/account';
-import { useIsAdmin } from '@/core/auth';
-import { Avatar } from '@/core/ui/primitives/Avatar';
 
 /** The teacher's page and lists, and sales' «المعلمون»: where a new photo must show. */
 const TEACHER_KEYS = [pathKey('/teachers'), pathKey('/sales/teachers')];

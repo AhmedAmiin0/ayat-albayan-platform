@@ -1,10 +1,7 @@
 import { messageStatusStyle, type ThreadView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { useClockCycle } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { t, StatusChip, AppText, type, useTheme } from '@ab/mobile-kit';
 import { rowTime } from '@/inbox/messages/days/day-label';
 import { UnreadCount } from './UnreadCount';
 

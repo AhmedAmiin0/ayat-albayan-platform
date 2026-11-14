@@ -1,7 +1,6 @@
 import { packageCancelOffered } from '@ab/client-core';
 import { useState } from 'react';
-import { useHolds } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
+import { useHolds, t } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { CancelPackage } from '@/payments';
 import { cancelAnyPackage, packageCancelStale, usePackageCancelCheck } from './student-api';

@@ -4,8 +4,7 @@ import { roomWebUrl } from '@/classroom/room/model/join-target';
 import type { RoomCredentials, RoomPlatform, RoomTarget } from '@/classroom/room/model/room-types';
 import { fetchJoin as apiJoin } from '@/classroom/room/state/fetch-join';
 import { useRoomSession } from '@/classroom/room/state/use-room-session';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
+import { t, useTheme } from '@ab/mobile-kit';
 import { RoomBody } from './RoomBody';
 import { RoomTopBar } from './RoomTopBar';
 

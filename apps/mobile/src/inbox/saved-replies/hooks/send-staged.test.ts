@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import * as ownSend from '@/inbox/thread/anchor/own-send';
@@ -9,8 +10,8 @@ import type { StagedFile } from './use-saved-reply';
 // (docs/37).
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 

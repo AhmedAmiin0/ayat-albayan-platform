@@ -1,4 +1,4 @@
-import { shape, type } from '@/theme';
+import { shape, type } from '@ab/mobile-kit';
 import { inputLine } from './ComposerInput';
 
 // Owner 2026-11-01: on Android «Message» and the caret sat at the top of the typing bar.

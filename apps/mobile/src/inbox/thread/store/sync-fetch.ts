@@ -1,6 +1,6 @@
 import { parseThreadSync } from '@ab/client-core';
 import { SYNC_LIMIT_DEFAULT, type ThreadSync } from '@ab/shared';
-import { apiFetch, toQueryString } from '@/core/lib/http/api';
+import { apiFetch, toQueryString } from '@ab/mobile-kit';
 
 /**
  * GET /threads/sync?since=&limit= (apps/api …/delta/thread-sync.controller.ts): no `since` on a

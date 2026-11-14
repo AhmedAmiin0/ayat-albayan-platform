@@ -3,10 +3,7 @@ import { memo, useState } from 'react';
 import { Linking, View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { invoiceSubtitle } from '@/finance/invoices/invoice-text';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { invoiceDownloadUrl } from './money-queries';
 import { useViewerTz } from '@/core/lib/clock';
 

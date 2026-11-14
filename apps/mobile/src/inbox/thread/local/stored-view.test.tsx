@@ -1,4 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { memoryPort } from '@/test/node-sql';
 import { PHONE, thread } from '@/inbox/shared/thread-fixtures';
@@ -11,11 +12,11 @@ import { storedPage, viewOf } from './stored-view';
 // docs/43 43-7: the chat reads the phone store: on screen before its GET, its ticks, new rows.
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('@/core/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => false }));
+jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => false }));
 
 const mine = (n: number, status: 'sent' | 'read' = 'sent') => row({ n, phone: PHONE, status });
 const page = (...messages: ReturnType<typeof mine>[]) => ({

@@ -2,13 +2,10 @@ import { BottomTabBarHeightCallbackContext, type BottomTabBarProps } from 'expo-
 import { CommonActions } from 'expo-router/react-navigation';
 import { useContext, useEffect } from 'react';
 import { Animated, I18nManager, Platform, useWindowDimensions, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
+import { t, useTheme, BAR_HEIGHT, BAR_SIDE, barBottom, useA11yPref } from '@ab/mobile-kit';
 import type { TabItem } from './AppNativeTabs';
 import { GlassGradient } from '@/core/ui/primitives/GlassGradient';
 import { GlassTab } from './GlassTab';
-import { BAR_HEIGHT, BAR_SIDE, barBottom } from './tab-bar-inset';
-import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
 import { usePillOffset } from './use-pill-offset';
 
 const EDGE = [[0, 0], [1, 1]] as const;

@@ -1,5 +1,4 @@
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { dayChipLabel, inviteError, notSentHint, opensLine, resultLabel, scheduleLine, tzNote } from './invite-text';
 import { roleOf } from './use-may-invite-phones';
 

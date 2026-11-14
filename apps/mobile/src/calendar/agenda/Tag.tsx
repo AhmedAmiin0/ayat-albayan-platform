@@ -1,5 +1,4 @@
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 /** A small neutral pill under a lesson's status: «تجريبية». A kind, not a state: no tone, no glyph. */
 export function Tag({ children }: { children: string }) {

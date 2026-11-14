@@ -1,8 +1,7 @@
 import { offerText } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { Linking, Share, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import type { QuoteResponse } from './use-quote';
 
 export interface OfferActionsProps {

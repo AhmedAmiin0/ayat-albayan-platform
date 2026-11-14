@@ -1,9 +1,7 @@
 import type { TeacherCourseView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
 import { courseLines } from './course-text';
 
 interface CourseLineProps {

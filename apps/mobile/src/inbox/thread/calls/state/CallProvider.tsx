@@ -2,7 +2,7 @@ import { askOf, ringWhile, type CallTarget, type CallsUi, type PermissionAsk } f
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { callErrorText } from '@/inbox/thread/calls/api/call-error';
 import { callConfigQuery, callPermissionQuery } from '@/inbox/thread/calls/api/calls-api';
 import { useCallsRealtime } from '@/inbox/thread/calls/api/use-calls-realtime';

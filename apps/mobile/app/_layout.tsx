@@ -1,10 +1,18 @@
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { type GateStatus, useAuthGate, useMeId, useMeReady } from '@/core/auth';
+import {
+  type GateStatus,
+  useAuthGate,
+  useMeId,
+  useMeReady,
+  RootFrame,
+  RootProviders,
+  useRootBoot,
+  useTheme,
+} from '@ab/mobile-kit';
 import { usePresenceSelf } from '@/core/lib/presence';
-import { ROOM_SCREEN, RootFrame, RootProviders, useRootBoot } from '@/core/root';
+import { ROOM_SCREEN } from '@/core/root';
 import { clearInboxOnSignOut, StaffCalls } from '@/inbox';
-import { useTheme } from '@/theme';
 
 /**
  * Fonts + language + translation overrides + session gate (useRootBoot), then one stack: admins

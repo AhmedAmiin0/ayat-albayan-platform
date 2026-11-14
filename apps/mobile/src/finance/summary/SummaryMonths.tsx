@@ -1,10 +1,9 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
 import { MonthRow } from './MonthRow';
 import { activeMonths } from './summary-lines';
 import type { FinanceSummary } from './summary-types';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 /** «الإيرادات والتكلفة حسب الشهر»: months with money, newest first; «لا توجد بيانات» for a quiet year. */
 export function SummaryMonths({ finance }: { finance: FinanceSummary['finance'] }) {

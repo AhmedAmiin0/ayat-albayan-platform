@@ -1,15 +1,14 @@
 import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
-import { apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { apiSend, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { FailedSheet } from './FailedSheet';
 
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({}),
   apiSend: jest.fn(),
 }));

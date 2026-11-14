@@ -1,13 +1,9 @@
 import type { MessageSearchHit } from '@ab/shared';
 import { type Href, router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button, AppText, InsetGroup, type, useTheme } from '@ab/mobile-kit';
 import { inTree, type TreeBase } from '@/core/nav/tree-base';
-import { Button } from '@/core/ui/primitives/Button';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { InsetGroup } from '@/core/ui/surface/inset';
 import { threadLink, type ThreadMode } from '@/inbox/thread/hooks/thread-mode';
-import { type, useTheme } from '@/theme';
 import { MessageHitRow } from './MessageHitRow';
 import type { MessageHitsState } from './use-message-hits';
 

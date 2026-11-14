@@ -1,11 +1,8 @@
 import type { StudentAttendanceTable } from '@ab/shared';
 import { View } from 'react-native';
 import { zoneNote } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, FilterPills } from '@ab/mobile-kit';
 import { Note } from '@/more';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { useLogTz } from './AttendanceLogRow';
 import { LogColumns } from './LogColumns';
 import { monthOf, totalsItems } from './attendance-log-text';

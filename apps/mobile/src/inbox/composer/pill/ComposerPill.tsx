@@ -1,7 +1,5 @@
 import { useRef, useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
-import { IconButton } from '@/core/ui/primitives/IconButton';
+import { t, useTheme, IconButton } from '@ab/mobile-kit';
 import { TemplateIcon } from '@/inbox/shared/chat-icons';
 import { EmojiIcon } from '@/inbox/shared/composer-icons';
 import { AttachFile } from '@/inbox/composer/AttachFile';

@@ -1,10 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { canOpen } from '@/core/auth/route-permissions';
-import { usePermissions } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
+import { usePermissions, t, FilterPills, type FilterPill, Screen } from '@ab/mobile-kit';
 import { useTreeBase } from '@/core/nav/tree-base';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
 import { LeadsList } from '@/inbox/leads/list/LeadsList';
 import { ThreadsList } from '@/inbox/threads-list/ThreadsList';
 import { CallsLog } from '@/inbox/thread/calls/log/CallsLog';

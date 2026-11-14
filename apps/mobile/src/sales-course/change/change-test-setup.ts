@@ -1,7 +1,7 @@
 import type { SlotView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { MON_19, slot } from '@/booking/testing/fixtures';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { fakeCourseApi, pickLesson, press } from '@/sales-course/testing/course-test-utils';
 import { bookedCourse, courseView, SUB_ID } from '@/sales-course/testing/fixtures';
 

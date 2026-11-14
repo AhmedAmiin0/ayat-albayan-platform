@@ -1,6 +1,6 @@
 import type { Permission, PeopleEditView } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
 
 // Test data (not a test): one student with a family of two and a second number.

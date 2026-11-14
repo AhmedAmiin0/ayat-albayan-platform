@@ -10,8 +10,8 @@ import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
 const mockGet = jest.fn();
 const mockPost = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockGet(p),
   apiSend: (...a: unknown[]) => mockPost(...a),
 }));

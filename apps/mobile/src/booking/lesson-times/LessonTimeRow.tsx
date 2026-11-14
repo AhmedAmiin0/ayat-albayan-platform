@@ -1,11 +1,8 @@
 import type { DayBounds, LessonRow } from '@ab/client-core';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, Button, shape, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { DatePickerField, TimePickerField } from '@/core/ui/form/date-picker';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { shape, type, useTheme } from '@/theme';
 import { PickNotice } from './PickNotice';
 import type { RowCheck } from './row-check';
 

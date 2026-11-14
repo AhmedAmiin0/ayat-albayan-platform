@@ -1,6 +1,5 @@
 import { RATING_TEMPLATE, type MessageView, type TemplateView } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 
 const r = t.inbox.rating;
 const ERRORS: Record<string, string | undefined> = {

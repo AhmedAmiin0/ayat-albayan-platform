@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { FilterPills } from '@/core/ui/form/FilterPills';
+import { t, FilterPills } from '@ab/mobile-kit';
 import { EmojiGrid } from './EmojiGrid';
 import type { PanelMedia } from './panel-api';
 import { GifTab } from './GifTab';

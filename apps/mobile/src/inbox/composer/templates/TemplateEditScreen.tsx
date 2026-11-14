@@ -3,13 +3,9 @@ import { bodyVarCount } from '@ab/client-core';
 import { editRoute, isCodeBound } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ErrorState, Screen, ScreenHeader, Button } from '@ab/mobile-kit';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { Note } from '@/core/ui/feedback/Note';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { Button } from '@/core/ui/primitives/Button';
 import {
   BodyFields, ButtonsField, DraftPreview, draftOf, editPayload, EditRules, useTemplateDraft,
 } from '@/inbox/composer/templates/form';

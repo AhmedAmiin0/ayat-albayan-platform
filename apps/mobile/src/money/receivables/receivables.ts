@@ -1,5 +1,5 @@
 import { matchesQuery, type ReceivableRow } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 /** Past this many days the web shows the late count in saffron; so does the phone. */
 const SEVERE_DAYS = 60;

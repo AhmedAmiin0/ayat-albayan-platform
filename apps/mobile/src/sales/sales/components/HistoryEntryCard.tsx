@@ -1,11 +1,9 @@
 import type { SalesHistoryEntry, SalesStudentSubscription } from '@ab/shared';
 import { View } from 'react-native';
 import { useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { partPaidLine } from '@/payments';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { historyLines } from '@/sales/sales/lib/sales-text';
 import { SmallHeading } from './SmallHeading';
 

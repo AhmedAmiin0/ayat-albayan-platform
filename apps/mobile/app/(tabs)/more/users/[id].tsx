@@ -1,4 +1,4 @@
-import { usePermissions } from '@/core/auth';
+import { usePermissions } from '@ab/mobile-kit';
 import { UserDetailScreen } from '@/users';
 
 export default function UserRoute() {

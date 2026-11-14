@@ -1,7 +1,7 @@
 import type { MessageView, ThreadView } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
@@ -11,8 +11,8 @@ import { ApiError } from '@ab/client-core';
 
 // Meta's 131060 on a new number's first message (owner 2026-10-27): clearer words and «اطلب إعادة الإرسال».
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

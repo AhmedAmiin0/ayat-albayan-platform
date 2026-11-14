@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { currencyName } from '@/core/lib/money/format';
 import { FormLabel } from '@/core/ui/form/FormLabel';
-import { FilterPills } from '@/core/ui/form/FilterPills';
+import { FilterPills } from '@ab/mobile-kit';
 import { TERM_CURRENCIES } from '@/assistants/terms/terms-form';
 
 interface CurrencyPillsProps {

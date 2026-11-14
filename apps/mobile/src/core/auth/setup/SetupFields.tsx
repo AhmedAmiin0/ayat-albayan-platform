@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { AuthAlert } from '@/core/auth/forgot';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
-import { Field } from '@/core/ui/form/Field';
+import { AuthAlert, t, Button, Field } from '@ab/mobile-kit';
 import { useAccountSetup } from './use-account-setup';
 
 const S = t.teacherAuth.setup;

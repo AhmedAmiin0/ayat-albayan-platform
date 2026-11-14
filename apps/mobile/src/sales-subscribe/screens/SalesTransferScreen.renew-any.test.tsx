@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { instantDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
 import { chatImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
@@ -8,8 +8,8 @@ import { SalesTransferScreen } from './SalesTransferScreen';
 // sales.renew_any (owner 2026-10-29, docs/16 row 38): a child of the chat's family that is not hers (mine: false).
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

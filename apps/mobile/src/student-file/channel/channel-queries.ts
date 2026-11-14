@@ -12,8 +12,7 @@ import {
 import type { ChannelMessageView, ChannelPage, TeacherChannelRow } from '@ab/shared';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
-import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { useScreenFocused, apiFetch, apiSend } from '@ab/mobile-kit';
 
 // The student channel on the phone (docs/31 §2): the list polls while shown (CHANNEL_REFRESH_MS); the thread
 // has its socket (use-channel-live) and polls only as the fallback (channelPollMs).

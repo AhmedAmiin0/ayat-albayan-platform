@@ -1,11 +1,8 @@
 import { dateClockText, nextEditAt, type TemplateStatus } from '@ab/shared';
 import { useViewerClock } from '@/core/lib/clock';
-import { locale } from '@/core/lib/i18n/locale';
-import { t } from '@/core/lib/i18n/i18n';
+import { locale, t, AppText, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
 
 interface EditRulesProps {
   status: TemplateStatus;

@@ -7,12 +7,9 @@ import {
 } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, StatusChip, ListRow, InsetGroup } from '@ab/mobile-kit';
 import { studentDetailsHref, useStudentHref, useTreeBase } from '@/core/nav/tree-base';
 import { Note } from '@/more';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { InsetGroup } from '@/core/ui/surface/inset';
 import { SmallHeading as SectionLabel } from '@/sales/sales/components/SmallHeading';
 import { familyChatHref } from '@/sales/sales/lib/sales-href';
 import { fill } from '@/sales/sales/lib/sales-text';

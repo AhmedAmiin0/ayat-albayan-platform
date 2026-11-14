@@ -1,9 +1,7 @@
 import { formatPhone, WA_LINES, type NotificationsOverview } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ErrorState, ltr } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { numberLine } from './catalogue-words';
 import type { AudienceTab } from '@/ops/notif-rules/lib/audience-tabs';
 import { CatalogueAudience } from '@/ops/notif-rules/components/CatalogueAudience';

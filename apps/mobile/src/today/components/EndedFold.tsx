@@ -2,9 +2,7 @@ import { counted } from '@ab/shared';
 import { type ReactNode, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import type { TodayLesson } from '@/today/lib/today-lesson';
 import { RowsCard } from './RowsCard';
 

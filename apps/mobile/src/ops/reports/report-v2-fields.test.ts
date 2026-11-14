@@ -1,5 +1,5 @@
 import { emptyContent } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { report } from '@/ops/shared/fixtures';
 import { reportFields } from './report-fields';
 import { adminReportFields } from './report-v2-fields';

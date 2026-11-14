@@ -1,8 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { ChatNotice } from '@/inbox/thread/components/ChatNotice';
@@ -11,8 +10,8 @@ import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
 // «نسخ النص» and «تنزيل» in the long-press menu (owner 2026-10-26), JS only: no clipboard module.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

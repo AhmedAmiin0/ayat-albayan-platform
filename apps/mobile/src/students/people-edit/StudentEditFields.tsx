@@ -1,6 +1,6 @@
 import { notesFilter, type StudentForm } from '@ab/client-core';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { PeopleChoice } from './PeopleChoice';
 import { PeopleField } from './PeopleField';

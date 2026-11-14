@@ -1,10 +1,7 @@
 import { quoteIcon } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText, IconButton } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import { IconButton } from '@/core/ui/primitives/IconButton';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { CloseIcon } from '@/inbox/shared/chat-icons';
 import { quoteOf, quoteSender, quoteText } from '@/inbox/messages/hooks/quote-text';

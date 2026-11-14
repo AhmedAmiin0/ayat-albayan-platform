@@ -1,9 +1,7 @@
 import { ActivityIndicator, ScrollView } from 'react-native';
 import { useViewerTz, zoneNote } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, useTheme, ErrorState } from '@ab/mobile-kit';
 import { Note } from '@/more';
-import { useTheme } from '@/theme';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { TeacherAttendanceTab } from './TeacherAttendanceTab';
 import { TeacherScheduleTab } from './TeacherScheduleTab';
 import { useTeacherOverview } from './teacher-overview-api';

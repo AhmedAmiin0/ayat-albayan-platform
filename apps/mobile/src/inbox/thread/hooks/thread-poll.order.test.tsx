@@ -1,6 +1,7 @@
 import { THREAD_FULL_MS } from '@ab/client-core';
 import type { MessageStatus } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { cachedThread, delivered, detail, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 import { threadKey, threadMessages, threadPath } from './thread-cache';
@@ -11,11 +12,11 @@ import { useThread } from './use-thread';
 // newest truth and replaces it (43-1); failed / a retry back to queued always come through.
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('@/core/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => true }));
+jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => true }));
 
 const PATH = threadPath(PHONE);
 const EMPTY_DELTA = { messages: [], has_more: false, pending: [] };

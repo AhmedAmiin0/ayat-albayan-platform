@@ -1,5 +1,5 @@
 import type { TeacherCourseView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { instantDay, localDay } from '@/core/lib/money/format';
 import { courseLines } from './course-text';
 

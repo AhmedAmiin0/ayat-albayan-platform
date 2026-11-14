@@ -1,10 +1,7 @@
 import { memo, useCallback } from 'react';
 import { earningStatusStyle, type TeacherEarningView } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { t, shape, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import { egp, sessionDetail, sessionWhen } from '@/earnings/lib/format';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

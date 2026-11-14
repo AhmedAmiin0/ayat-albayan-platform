@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ATTENDANCE_STYLE, totalsLines } from './attendance-text';
 
 const zero = { present: 0, absent: 0, excused: 0, cancelled: 0, unmarked: 0 };

@@ -4,7 +4,7 @@ import { useIsMutating } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
 import { DEFAULT_PRICING, type PricingSelection, useQuote } from '@/finance';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { PINS, pinnedId, useReplayed } from '@/inbox/thread/send/pinned-send';
 import { chatSendError } from '@/inbox/thread/send/send-error';
 import { sendKey, useSendMessage } from '@/inbox/thread/hooks/use-thread';

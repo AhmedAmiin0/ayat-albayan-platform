@@ -1,11 +1,8 @@
 import type { LeadFollowUp } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';

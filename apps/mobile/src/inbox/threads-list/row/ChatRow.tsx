@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react';
 import { Pressable, View, type TextStyle, type ViewStyle } from 'react-native';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { useInset } from '@/core/ui/surface/inset';
-import { type, useTheme } from '@/theme';
+import { AppText, useInset, type, useTheme } from '@ab/mobile-kit';
 
 interface ChatRowProps {
   /** The avatar, centred on the row's height. */

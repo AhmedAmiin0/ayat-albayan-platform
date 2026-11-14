@@ -1,6 +1,5 @@
 import { teacherName } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 
 const R = t.mobileStudentFile.recordings;
 const MB = 1024 * 1024;

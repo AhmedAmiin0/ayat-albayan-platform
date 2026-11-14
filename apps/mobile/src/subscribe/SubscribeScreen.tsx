@@ -5,17 +5,19 @@ import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { apiFetch } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import {
+  apiFetch,
+  t,
+  pathKey,
+  Button,
+  BackButton,
+  ErrorState,
+  ltr,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import type { StudentProfile, StudentRef } from '@/students/shared/types';
 import { localDate } from '@/today';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { CustomAmountPill } from '@/payments';
 import { CustomPriceField } from './custom-price/CustomPriceField';
 import { useCustomPrice } from './custom-price/use-custom-price';

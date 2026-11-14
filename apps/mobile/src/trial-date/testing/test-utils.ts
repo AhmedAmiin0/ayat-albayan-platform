@@ -2,7 +2,7 @@ import type { TrialHistory } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { fakeBookingApi } from '@/booking/testing/test-utils';
 import { maryam } from '@/booking/testing/fixtures';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // Test-only helpers for the trial-date screen tests (the jest.mock calls stay in each test file).
 

@@ -1,11 +1,8 @@
 import type { SalesMoneySubscriptionView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, FilterPills } from '@ab/mobile-kit';
 import { partPaidLine } from '@/payments';
 import { FormLabel } from '@/core/ui/form/FormLabel';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { dueText, packageLabel } from '@/sales-subscribe/lib/package-text';
 
 interface OpenPackagePickerProps {

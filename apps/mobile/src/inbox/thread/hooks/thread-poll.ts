@@ -1,8 +1,7 @@
 import { chatLiveKey, deltaSearch, freshRow, fullReadInterval, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead } from '@ab/client-core';
 import type { ThreadDelta, ThreadDetail } from '@ab/shared';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
-import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
+import { apiFetch, useScreenFocused } from '@ab/mobile-kit';
 import { useInboxLive, useLiveWatch } from '@/inbox/thread/live/inbox-live';
 import { noteDelta } from '@/inbox/thread/live/delta-news';
 import { leavesGap, mergeNewest, sendKey, threadKey, threadPath, type ThreadCache } from './thread-cache';

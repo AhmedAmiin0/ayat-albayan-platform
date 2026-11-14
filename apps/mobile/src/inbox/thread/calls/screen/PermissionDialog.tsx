@@ -1,10 +1,7 @@
 import { permissionHint, permissionReplyText, type PermissionAsk } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Modal, Pressable } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, space, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, shape, space, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
 import { callErrorText } from '@/inbox/thread/calls/api/call-error';
 import { callApi } from '@/inbox/thread/calls/api/calls-api';

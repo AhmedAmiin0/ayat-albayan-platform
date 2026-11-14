@@ -1,7 +1,5 @@
 import { router } from 'expo-router';
-import { useHolds } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
-import { ListRow } from '@/core/ui/layout/ListRow';
+import { useHolds, t, ListRow } from '@ab/mobile-kit';
 import { STRIPE_FEATURE } from '@/sales-subscribe/payment-link/flag';
 import { useStripeOn } from '@/sales-subscribe/payment-link/use-stripe';
 

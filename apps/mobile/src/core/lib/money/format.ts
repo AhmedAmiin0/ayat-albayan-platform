@@ -8,9 +8,7 @@ import {
   type OwedPackage,
   type SubscriptionView,
 } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, locale, ltr } from '@ab/mobile-kit';
 
 // Money lines (docs/07 §2: Western digits, LTR values isolated). Strings come from ar.json only.
 

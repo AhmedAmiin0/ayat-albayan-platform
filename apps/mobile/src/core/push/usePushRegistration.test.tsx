@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react-native';
+import { registerPush } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { registerPush } from './registerPush';
 import { useNotificationHandling } from './useNotificationHandling';
 import { usePushRegistration } from './usePushRegistration';
 
-jest.mock('./registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 jest.mock('./useNotificationHandling', () => ({ useNotificationHandling: jest.fn() }));
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: jest.fn(() => new Promise(() => undefined)) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: jest.fn(() => new Promise(() => undefined)) }));
 
 async function mount(permissions?: string[], tree?: 'admin' | 'teacher') {
   const client = createTestQueryClient();

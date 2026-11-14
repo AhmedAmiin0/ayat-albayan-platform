@@ -1,5 +1,5 @@
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Section } from '@/core/ui/surface/Section';
 import { CardTitle } from '@/sales-money/components/CardTitle';
 import { CurrencyTotalsBlock } from '@/sales-money/components/CurrencyTotalsBlock';

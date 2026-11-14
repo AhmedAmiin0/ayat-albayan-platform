@@ -1,8 +1,7 @@
 import { CHAT_FILE_MIMES, chatFileProblem, type MessageView, type SignedUpload } from '@ab/shared';
 import { type QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as DocumentPicker from 'expo-document-picker';
-import { apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { apiSend, t } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { ensureCameraPermission, pickReceipt } from '@/payments';

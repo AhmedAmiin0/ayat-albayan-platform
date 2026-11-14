@@ -1,10 +1,9 @@
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, permissionsOf } from '@ab/mobile-kit';
 import { MoreScreen } from '@/more/screens/MoreScreen';
-import { permissionsOf } from './use-permissions';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 test('permissionsOf reads /auth/me and drops unknown keys', () => {
   expect(permissionsOf({ role: 'admin', permissions: ['payments.read', 'nope', 3] })).toEqual(['payments.read']);

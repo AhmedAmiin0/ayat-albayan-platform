@@ -4529,7 +4529,7 @@
     }
   },
   "mobileRoles": {
-    "wrongApp": "This app is for the academy team: admins, teachers, sales and classroom assistants. Guardians and students follow the link they receive on WhatsApp.",
+    "wrongApp": "This app is for the academy team: admins, teachers, sales and classroom assistants. Guardians and students sign in to the family app «Ayat Al-Bayan».",
     "salesRole": "Sales",
     "assistantRole": "Classroom assistant",
     "lessonsTab": "My lessons",

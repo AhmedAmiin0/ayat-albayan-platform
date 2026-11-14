@@ -106,10 +106,10 @@ test('mobile.yml profile: preview by default (every automatic run), stripe-test 
   assert.match(guard.run, /--build-profile "\$PROFILE" --status finished/);
   assert.match(guard.run, /native-changes\.mjs "\$last" "\$PROFILE"/);
   for (const s of [step('build', 'EAS build'), guard, step('ota', 'EAS update')]) {
-    assert.equal(s.env.PROFILE, "${{ inputs.profile || 'preview' }}");
+    assert.equal(s.env.PROFILE, "${{ inputs.app == 'family' && 'preview' || inputs.profile || 'preview' }}");
   }
   const update = step('ota', 'EAS update').run;
-  const [side, normal] = update.split('exit 0');
+  const [, side, normal] = update.split('exit 0'); // the family app's block first (mobile-family.test.mjs)
   assert.match(side, /if \[ "\$PROFILE" = stripe-test \]/);
   assert.match(side, /EXPO_PUBLIC_FEATURE_STRIPE=1 APP_VARIANT=stripetest/);
   assert.match(side, /--channel stripe-test --environment preview/);
@@ -132,7 +132,7 @@ test('release tags: only after a green release, no environment or secret, a fail
   assert.equal(step(app, 'app').env.SHA, '${{ github.event.workflow_run.head_sha || github.sha }}');
   assert.equal(step(phone, 'apk').if, "${{ needs.build.result == 'success' }}");
   assert.equal(step(phone, 'ota').if, "${{ needs.ota.result == 'success' }}");
-  assert.equal(step(phone, 'ota').env.CHANNEL, mobile['run-name'].match(/\$\{\{ inputs\.profile.*\}\}/)[0]);
+  assert.equal(step(phone, 'ota').env.CHANNEL, mobile['run-name'].match(/\$\{\{ inputs\.app.*\}\}/)[0]);
   for (const s of [step(app, 'app'), step(phone, 'apk'), step(phone, 'ota')]) {
     assert.match(s.run, /node tools\/scripts\/ci-checks\/release-tags\/release-tag\.mjs$/);
   }

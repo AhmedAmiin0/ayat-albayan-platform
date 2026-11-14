@@ -2,6 +2,7 @@ import { INBOX_REFRESH_MS, THREAD_FULL_MS } from '@ab/client-core';
 import type { ThreadDelta } from '@ab/shared';
 import { focusManager } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { cachedThread, delivered, detail, failed, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 import { provisionalMessage, sendKey, threadKey, threadMessages, threadPath } from './thread-cache';
@@ -11,12 +12,12 @@ import { useThread } from './use-thread';
 // INBOX_REFRESH_MS (~2 reads), the newest page every THREAD_FULL_MS.
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 let mockFocused = true;
-jest.mock('@/core/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
+jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
 
 const tick = (ms = INBOX_REFRESH_MS) => act(() => jest.advanceTimersByTimeAsync(ms));
 const appActive = (on: boolean) => act(async () => focusManager.setFocused(on));

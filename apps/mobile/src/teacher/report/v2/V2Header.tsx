@@ -2,12 +2,8 @@ import { teacherName, type ReportFormEntry, type ReportFormLesson } from '@ab/sh
 import { fillSlots } from '@ab/client-core';
 import { View } from 'react-native';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, locale, AppText, ltr, shape, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/more';
-import { shape, type, useTheme } from '@/theme';
 
 /** «الحلقة 9 من 12» with a package, else «الحلقة 9». */
 function lessonChip(entry: Pick<ReportFormEntry, 'lesson_no' | 'package'>): string {

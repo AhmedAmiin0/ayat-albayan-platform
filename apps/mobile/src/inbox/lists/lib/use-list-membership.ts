@@ -1,6 +1,6 @@
 import type { ChatListRef } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { threadKey, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 import { listPath, listsKey, threadsKey } from './use-chat-lists';
 

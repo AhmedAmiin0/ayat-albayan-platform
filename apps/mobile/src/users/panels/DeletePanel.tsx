@@ -1,10 +1,8 @@
 import type { UserDetail } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Section } from '@/core/ui/surface/Section';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { deleteUser, disableUser, USERS_KEY } from '@/users/shared/api';
 import { historyReferences, userErrorText } from '@/users/shared/errors';
 import { HistoryReferences } from './HistoryReferences';

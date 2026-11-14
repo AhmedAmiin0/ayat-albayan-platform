@@ -2,10 +2,7 @@ import { safeHttpUrl } from '@ab/shared';
 import { useState } from 'react';
 import { Linking, View } from 'react-native';
 import { copyOrShare } from '@/core/lib/clipboard';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { ButtonRow, copyIcon, openIcon } from '@/core/ui/actions';
 import { DetailsFact, DetailsLine } from './DetailsGroup';
 

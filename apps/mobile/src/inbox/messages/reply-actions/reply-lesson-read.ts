@@ -1,6 +1,6 @@
 import { chatDayKey, type LessonView, type ReplyLesson, RIYADH_TZ, type SalesScheduleLesson, type SalesScheduleDay } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString } from '@/core/lib/http/api';
+import { apiFetch, toQueryString } from '@ab/mobile-kit';
 
 const MINUTE_MS = 60_000;
 

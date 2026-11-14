@@ -1,20 +1,23 @@
 import { router } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import type { ReactNode } from 'react';
-import { useHolds, useIsAdmin } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  useHolds,
+  useIsAdmin,
+  t,
+  useTheme,
+  BackButton,
+  Chevron,
+  ListRow,
+  NuqtaGlyph,
+  Screen,
+  ScreenHeader,
+  toneColors,
+  InsetGroup,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { useTheme } from '@/theme';
-import { BackButton } from '@/core/ui/navigation';
-import { Chevron } from '@/core/ui/primitives/Chevron';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { toneColors } from '@/core/ui/feedback/StatusChip';
 import { StripeSwitchRow } from './stripe/StripeSwitchRow';
 import { useSettings } from './use-settings';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 const back = () => backWithin('/more');
 

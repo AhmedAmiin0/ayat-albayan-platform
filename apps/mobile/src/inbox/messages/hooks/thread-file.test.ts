@@ -1,11 +1,11 @@
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
 import { pdfPagePath, pdfPageQuery, signedStaleTime, threadFilePath, threadFileQuery } from './thread-file';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

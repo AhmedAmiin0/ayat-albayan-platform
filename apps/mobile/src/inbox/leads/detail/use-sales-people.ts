@@ -1,8 +1,7 @@
 import type { SalesPersonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
 import { withTracked } from '@/core/lib/query/paged-result';
-import { pathKey } from '@/core/lib/query/query-keys';
 
 const PATH = '/sales/people';
 

@@ -1,7 +1,6 @@
 import type { UserDetail } from '@ab/shared';
 import { StaffPhotoControl } from '@/account';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { Avatar } from '@/core/ui/primitives/Avatar';
+import { pathKey, Avatar } from '@ab/mobile-kit';
 import { USERS_KEY } from '@/users/shared/api';
 
 /** The users list and page, and a teacher's own pages (a teacher login's photo is the teacher's). */

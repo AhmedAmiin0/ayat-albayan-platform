@@ -2,7 +2,7 @@ import { CallStore, deriveCall, type CallDerived, type CallSession, type NoticeA
 import type { ActiveCallView, CallConfigView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { activeCallsQuery, CALLS_KEY } from '@/inbox/thread/calls/api/calls-api';
 import type { RtcDeps } from '@/inbox/thread/calls/rtc/media';
 import { mobileCalls, peerMaker } from './call-platform';

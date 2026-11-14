@@ -1,12 +1,9 @@
 import { counted, type QuoteResponse } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, shape, type, useTheme, AppText, ltr } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { money } from '@/core/lib/money/format';
 import { FxNote } from '@/finance/pricing/FxNote';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ltr } from '@/core/ui/primitives/Ltr';
 
 const p = t.pricing;
 const minutes: Readonly<Record<string, string | undefined>> = p.durations;

@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { countsLine, KIND_EMPTY, kindCounts, kindPills, presetKind } from './student-kinds';
 
 const L = t.studentLists;

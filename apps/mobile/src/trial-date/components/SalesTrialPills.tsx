@@ -2,11 +2,9 @@ import { canPickTrialDate, type SalesFamilyStudent, type ThreadView } from '@ab/
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Platform } from 'react-native';
-import { useHolds } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
+import { useHolds, t, Button } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
-import { Button } from '@/core/ui/primitives/Button';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { ownStudents, useSalesFamily } from '@/sales-subscribe/lib/family';
 import { chatTrialHref } from '@/trial-date/lib/trial-href';

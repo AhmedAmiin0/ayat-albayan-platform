@@ -1,18 +1,14 @@
 import { statusParamOfKind, type StudentListKind } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button, ErrorState, FilterPills, InsetGroup } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { NO_FILTERS } from '@/students/list/student-filters';
 import { KIND_EMPTY, kindCounts, kindPills, presetKind } from '@/students/list/student-kinds';
 import { StudentRow } from '@/students/list/StudentRow';
 import type { StudentListItem } from '@/students/shared/types';
 import { useStatusCounts } from '@/students/list/use-student-list-data';
-import { Button } from '@/core/ui/primitives/Button';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 const L = t.studentLists;
 

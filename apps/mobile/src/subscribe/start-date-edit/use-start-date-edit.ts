@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { z } from 'zod';
-import { ApiError, apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, apiSend, t } from '@ab/mobile-kit';
 
 /** The package as both cards hold it. */
 export interface StartDatePackage {

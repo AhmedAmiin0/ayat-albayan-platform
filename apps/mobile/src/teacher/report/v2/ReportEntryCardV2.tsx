@@ -1,6 +1,6 @@
 import { attended, type ReportFormEntry, type ReportFormResponse } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { useV2Entry } from './hooks/use-v2-entry';
 import { AbsentCard } from './sections/AbsentCard';
 import { ArabicSection } from './sections/ArabicSection';

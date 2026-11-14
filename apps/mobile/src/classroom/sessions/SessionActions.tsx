@@ -1,9 +1,7 @@
 import { isOpenLesson, type LessonView } from '@ab/shared';
-import { usePermissions } from '@/core/auth/use-permissions';
+import { usePermissions, t, Button } from '@ab/mobile-kit';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
 import { CopyLinkAction } from '@/classroom/links/CopyLinkAction';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { SendLinkAction } from '@/classroom/links/SendLinkAction';

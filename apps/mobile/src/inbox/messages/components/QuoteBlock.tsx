@@ -1,9 +1,7 @@
 import { isUnavailableQuote, type MessageQuote, quoteIcon, type ReplyQuote } from '@ab/shared';
 import { useState } from 'react';
 import { Image, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { useBubbleChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { useQuoteThumb } from '@/inbox/messages/hooks/quote-thumb';

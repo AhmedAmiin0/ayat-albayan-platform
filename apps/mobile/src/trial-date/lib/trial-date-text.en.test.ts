@@ -1,6 +1,5 @@
 import { lessonWhenText } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { t, isolate } from '@ab/mobile-kit';
 import { trialRow } from '@/trial-date/testing/fixtures';
 import { pickedLine } from './trial-date-text';
 

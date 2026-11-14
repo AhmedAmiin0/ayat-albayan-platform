@@ -1,10 +1,7 @@
 import { reactorLines } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
 import { Modal, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, shape, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 
 interface ReactorsSheetProps {
   /** The message whose pill was tapped; null hides the sheet. */

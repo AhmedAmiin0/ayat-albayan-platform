@@ -1,4 +1,4 @@
-import { toQueryString } from '@/core/lib/http/api';
+import { toQueryString } from '@ab/mobile-kit';
 import { DEFAULT_SELECTION, quoteParams } from './selection';
 
 test('default: SA, 45 min, the popular standard package, 1 student, no discount', () => {

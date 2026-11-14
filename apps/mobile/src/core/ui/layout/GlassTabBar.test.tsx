@@ -1,8 +1,7 @@
 import { fireEvent, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, useTabBarInset } from '@ab/mobile-kit';
 import { AppNativeTabs, type TabItem } from './AppNativeTabs';
-import { useTabBarInset } from './tab-bar-inset';
 
 // The real tabs + glass bar over stub screens; each screen prints the bar inset it is given.
 const TABS: TabItem[] = [

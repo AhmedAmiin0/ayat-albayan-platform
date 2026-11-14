@@ -1,10 +1,7 @@
 import { ayahCount, juzOf, searchSurahs, surahName } from '@ab/shared';
 import { fillSlots } from '@ab/client-core';
 import { FlatList, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, locale, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/more';
 
 const ROW = 52;

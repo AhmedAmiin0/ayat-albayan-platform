@@ -1,6 +1,6 @@
 import type { SalesTeacherOption } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
+import { apiFetch } from '@ab/mobile-kit';
 
 /** GET /sales/subscriptions/teachers: «المعلم/ة»'s choices (the active teachers, names only). */
 export function useSalesTeachers() {

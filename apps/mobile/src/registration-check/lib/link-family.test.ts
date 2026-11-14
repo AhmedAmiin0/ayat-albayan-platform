@@ -1,6 +1,5 @@
 import { LEAD_FAMILY_LINK_ERRORS } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { linkFamilyErrorText } from './link-family';
 
 // POST /leads/:id/link-family refusals in her words (owner 2026-10-29): every shared code has its line.

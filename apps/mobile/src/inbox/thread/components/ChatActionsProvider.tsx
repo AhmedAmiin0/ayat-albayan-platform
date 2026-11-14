@@ -1,7 +1,7 @@
 import { staffMaySend } from '@ab/client-core';
 import { canReact, formatPhone, type MessageView, type ThreadView } from '@ab/shared';
 import { type ReactNode, useMemo, useState } from 'react';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { ltr } from '@ab/mobile-kit';
 import {
   BubbleActionsContext,
   type BubbleChatActions,

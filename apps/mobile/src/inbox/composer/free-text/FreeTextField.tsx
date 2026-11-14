@@ -1,9 +1,6 @@
 import { freeTextRoom, normaliseTemplateParam, type BodySlot } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Field } from '@/core/ui/form/Field';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { t, Field, AppText, type, useTheme } from '@ab/mobile-kit';
 
 interface FreeTextFieldProps {
   /** The template's body: what is left of the 1024 characters for the text. */

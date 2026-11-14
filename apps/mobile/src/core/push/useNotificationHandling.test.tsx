@@ -1,12 +1,13 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import * as Notifications from 'expo-notifications';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { FOREGROUND, useNotificationHandling } from './useNotificationHandling';
 
 // GET /auth/me answers mockMe, so a mount refetch never swaps seeded permissions for «hide nothing».
 let mockMe: unknown = {};
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? mockMe : {}),
 }));
 const mockPush = jest.fn();

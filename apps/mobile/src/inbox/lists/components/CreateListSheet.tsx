@@ -1,5 +1,5 @@
 import type { ChatList } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { listErrorText } from '@/inbox/lists/lib/list-errors';
 import { ListNameForm } from './ListNameForm';
 import { ListSheet } from './ListSheet';

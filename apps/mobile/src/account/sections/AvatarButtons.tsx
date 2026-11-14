@@ -1,9 +1,6 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
 import type { AvatarSource } from '@/account/lib/avatar';
 
 interface AvatarButtonsProps {

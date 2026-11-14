@@ -2,9 +2,8 @@ import { teacherChoice, type TeacherPick } from '@ab/client-core';
 import type { SalesFamilyStudent } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, FilterPills } from '@ab/mobile-kit';
 import { Note, Section } from '@/more';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { useSalesTeachers } from '@/sales-subscribe/hooks/use-sales-teachers';
 

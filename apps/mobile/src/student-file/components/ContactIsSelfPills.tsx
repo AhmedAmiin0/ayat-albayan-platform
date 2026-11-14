@@ -1,5 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
+import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
 
 type ContactFor = 'guardian' | 'self';
 

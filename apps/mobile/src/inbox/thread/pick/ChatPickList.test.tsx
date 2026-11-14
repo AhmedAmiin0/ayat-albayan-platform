@@ -1,14 +1,13 @@
 import type { ThreadView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, AppText } from '@ab/mobile-kit';
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { renderWithQuery } from '@/test/query';
 import { ChatPickList } from './ChatPickList';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

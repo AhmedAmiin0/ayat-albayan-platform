@@ -5,16 +5,18 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { bookFailure, isCodedRefusal } from '@/booking';
 import { BookingModeProvider } from '@/booking/shared/booking-mode';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  AppText,
+  Button,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { CourseChangeFlow } from '@/sales-course/change/CourseChangeFlow';
 import { CurrentCourse } from '@/sales-course/change/CurrentCourse';
 import { CourseWizard } from '@/sales-course/components/CourseWizard';

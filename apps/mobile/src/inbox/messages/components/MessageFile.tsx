@@ -1,9 +1,7 @@
 import { baseMime, isGifMessage, isPdfMime, isPlayableMime, type MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
 import { mediaKind } from '@/inbox/messages/hooks/message-text';
 import { useSmall } from './MessageMeta';

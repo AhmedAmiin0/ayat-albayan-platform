@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { GATE_LINE_SEPARATOR, gateChip, gateLine } from './gate-words';
 
 const s = t.templates.settings;

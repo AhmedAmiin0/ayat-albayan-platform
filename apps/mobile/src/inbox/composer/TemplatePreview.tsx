@@ -1,8 +1,6 @@
 import { renderTemplateBody, templateBlock, type TemplateParamsInput, type TemplateView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { TemplateButtons } from '@/inbox/messages/template/TemplateButtons';
 import { TemplateFrame } from '@/inbox/messages/template/TemplateFrame';

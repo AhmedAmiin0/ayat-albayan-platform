@@ -1,5 +1,5 @@
 import type { IntegrationConfigItem } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { stripeSwitch, switchNote, switchValues } from './stripe-switch';
 
 const S = t.paymentLinks.settings;

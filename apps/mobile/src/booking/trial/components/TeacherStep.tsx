@@ -7,16 +7,19 @@ import {
   type Program,
 } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  AppText,
+  ErrorState,
+  FilterPills,
+  ListRow,
+  InsetGroup,
+  type,
+  useTheme,
+  locale,
+} from '@ab/mobile-kit';
 import { FormLabel } from '@/core/ui/form/FormLabel';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { FilterPills } from '@/core/ui/form/FilterPills';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { InsetGroup } from '@/core/ui/surface/inset';
-import { type, useTheme } from '@/theme';
 import { useBookingTeachers } from '@/booking/shared/queries';
-import { locale } from '@/core/lib/i18n/locale';
 
 export interface TeacherStepProps {
   program: Program;

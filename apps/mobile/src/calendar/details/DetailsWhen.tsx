@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { DetailsGroup, DetailsLine } from './DetailsGroup';
 import { clockLines, lengthLine, seriesLine, whenLine, type DetailsLesson } from './details-text';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';

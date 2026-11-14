@@ -1,5 +1,4 @@
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { type, useTheme, AppText } from '@ab/mobile-kit';
 
 /** The caller's name under the avatar, the screen's heading (one line, the display face). */
 export function CallerName({ name }: { name: string }) {

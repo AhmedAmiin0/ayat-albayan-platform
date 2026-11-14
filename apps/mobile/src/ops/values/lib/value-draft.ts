@@ -9,7 +9,7 @@ import {
   type SettingKey,
   type SettingTypeTable,
 } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ascii } from '@/ops/shared/ascii-digits';
 
 // The bottom sheet's editor model: which editor a key gets, the typed draft, and the draft parsed

@@ -1,8 +1,7 @@
 import { isUnavailableMessage, type MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { useBubbleChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { ResendSheet } from './ResendSheet';
 

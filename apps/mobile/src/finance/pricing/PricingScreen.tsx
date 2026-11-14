@@ -1,13 +1,8 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, useTheme, BackButton, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { Section } from '@/core/ui/surface/Section';
-import { useTheme } from '@/theme';
-import { BackButton } from '@/core/ui/navigation';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { OfferActions } from './OfferActions';
 import { PricingSteps } from './PricingSteps';
 import { QuoteCard } from './QuoteCard';

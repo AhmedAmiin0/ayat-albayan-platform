@@ -2,7 +2,7 @@ import type { ThreadPdfPage } from '@ab/shared';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { pdfPageRetryable } from '@ab/client-core';
-import { ApiError, apiFetch } from '@/core/lib/http/api';
+import { ApiError, apiFetch } from '@ab/mobile-kit';
 import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 
 /** W6's answer: a signed URL of our own copy of the file, and its type. */

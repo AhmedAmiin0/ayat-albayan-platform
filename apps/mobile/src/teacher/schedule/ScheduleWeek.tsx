@@ -9,10 +9,8 @@ import {
   weekStart,
 } from '@/calendar';
 import { useClockCycle, zoneNote } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { t, ErrorState, useTabBarInset } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { ScheduleSheet } from './ScheduleSheet';
 import { useScheduleWeek } from './use-schedule-week';
 

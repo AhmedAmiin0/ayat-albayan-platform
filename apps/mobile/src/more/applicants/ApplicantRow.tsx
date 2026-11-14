@@ -1,9 +1,6 @@
 import { formatPhone, jobApplicantStatusStyle } from '@ab/shared';
 import { memo } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { t, ListRow, ltr, StatusChip } from '@ab/mobile-kit';
 import type { JobApplicant } from '@/core/lib/staff/types';
 import { ApplicantLinks } from './ApplicantLinks';
 

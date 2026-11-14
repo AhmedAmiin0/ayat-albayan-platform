@@ -1,5 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { useState } from 'react';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { PRICES } from '@/inbox/saved-replies/testing/fixtures';
 import type { StagedFile } from '@/inbox/saved-replies/hooks/use-saved-reply';
@@ -7,8 +8,8 @@ import { message } from '@/inbox/shared/thread-fixtures';
 import { useComposerSend } from './use-composer-send';
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 

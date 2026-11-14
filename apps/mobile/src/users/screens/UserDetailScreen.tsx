@@ -1,14 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator } from 'react-native';
-import type { Can } from '@/core/auth/use-permissions';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
-import { BackButton } from '@/core/ui/navigation';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import {
+  ApiError,
+  t,
+  useTheme,
+  BackButton,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
+import type { Can } from '@ab/mobile-kit';
 import { roleOptionsQuery, userQuery } from '@/users/shared/api';
 import { backToUsers } from '@/users/shared/nav';
 import { UserEditor } from '@/users/edit/UserEditor';

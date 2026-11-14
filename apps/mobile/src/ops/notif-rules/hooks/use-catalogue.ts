@@ -1,6 +1,6 @@
 import type { NotificationsOverview } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
+import { apiFetch } from '@ab/mobile-kit';
 import { useSettings } from '@/ops/settings/use-settings';
 import { CATALOGUE_KEY } from './use-toggle-rule';
 

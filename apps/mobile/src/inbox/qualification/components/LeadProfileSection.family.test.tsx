@@ -1,5 +1,5 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { huda } from '@/inbox/shared/fixtures';
 import { answer, hudaProfile, QUALIFICATION } from '@/inbox/qualification/lib/fixtures';
@@ -7,8 +7,8 @@ import { LeadProfileSection } from './LeadProfileSection';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

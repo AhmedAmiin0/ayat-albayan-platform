@@ -3,14 +3,16 @@ import { backWithin } from '@/core/nav/back-within';
 import { useRef, type ComponentProps } from 'react';
 import { ScrollView, View } from 'react-native';
 import { clockAt } from '@/inbox/shared/format';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  ApiError,
+  t,
+  BackButton,
+  ErrorState,
+  KeyboardFrame,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { BackButton } from '@/core/ui/navigation';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { KeyboardFrame } from '@/core/ui/layout/KeyboardFrame';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { reportErrorText, useReportForm } from '@/teacher/report/hooks/api';
 import { ReportEntryCard } from '@/teacher/report/components/ReportEntryCard';
 import { ReportEntryCardV2 } from '@/teacher/report/v2';

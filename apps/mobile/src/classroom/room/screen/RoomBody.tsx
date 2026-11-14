@@ -1,6 +1,6 @@
 import type { RoomPlatform } from '@/classroom/room/model/room-types';
 import type { useRoomSession } from '@/classroom/room/state/use-room-session';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { RoomEnd } from './RoomEnd';
 import { RoomLive } from '@/classroom/room/live/RoomLive';
 import { RoomNotice } from './RoomNotice';

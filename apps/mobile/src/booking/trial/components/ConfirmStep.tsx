@@ -1,10 +1,7 @@
 import { counted } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { type, useTheme } from '@/theme';
 import type { BookFailure } from '@/booking/shared/booking-errors';
 import { summary, type SummaryRow } from '@/booking/trial/lib/confirm-summary';
 import { FailureNotice, PackageDaysNote } from './ConfirmNotices';

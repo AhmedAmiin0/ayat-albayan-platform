@@ -1,6 +1,6 @@
 import type { ReplySlot } from '@ab/shared';
 import type { KeyboardTypeOptions } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 /** Blanks typed as digits («[المبلغ]», «[الرقم]») or as a link («[الرابط]»); dates and times stay plain text. */
 const NUMERIC = new Set(['المبلغ', 'الرقم', 'amount', 'number']);

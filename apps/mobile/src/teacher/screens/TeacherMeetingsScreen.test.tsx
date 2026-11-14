@@ -1,12 +1,12 @@
 import { screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { MeetingsScreen } from '@/meetings';
 import { renderWithQuery, teacherPagesClient } from '@/test/query';
 import { TeacherMeetingsScreen } from './TeacherMeetingsScreen';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useSegments: () => ['teacher'] }));
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: jest.fn(async () => []),
 }));
 

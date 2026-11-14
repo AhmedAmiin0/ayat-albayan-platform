@@ -2,11 +2,8 @@ import { type MessageView, PDF_PREVIEW_PAGES, pdfMetaLine, type ThreadPdfPage } 
 import { useState } from 'react';
 import { FlatList, Modal, StatusBar, View, type ViewToken } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { t } from '@/core/lib/i18n/i18n';
-import { palette, shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, palette, shape, type, useTheme, AppText, useA11yPref } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
 import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
 import { PdfPage } from './PdfPage';
 import { PhotoViewer } from './PhotoViewer';

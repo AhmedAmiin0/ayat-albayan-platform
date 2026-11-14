@@ -1,6 +1,6 @@
 import type { CallView } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { CallsLogRow } from './CallsLogRow';
 
 const call = (over: Partial<CallView> = {}): CallView => ({

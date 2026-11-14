@@ -1,7 +1,7 @@
 import { isCallsData, subscribeCalls } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { supabase } from '@/core/lib/http/supabase';
+import { supabase } from '@ab/mobile-kit';
 import { CALLS_KEY } from './calls-api';
 
 /**

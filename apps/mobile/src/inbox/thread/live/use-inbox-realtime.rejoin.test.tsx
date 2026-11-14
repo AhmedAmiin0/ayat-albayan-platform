@@ -1,7 +1,7 @@
 import { onlineManager } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
-import { queryClient as client } from '@/core/lib/query/query-client';
+import { queryClient as client } from '@ab/mobile-kit';
 import { nudgeInboxStore } from '@/inbox/thread/local/store-session';
 import { inboxLive } from './inbox-live';
 import { useInboxRealtime } from './use-inbox-realtime';
@@ -27,7 +27,7 @@ const mockSupabase = {
   getChannels: jest.fn(() => []),
   realtime: { setAuth: jest.fn(async () => undefined), disconnect: jest.fn(async () => 'ok') },
 };
-jest.mock('@/core/lib/http/supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   get supabase() {
     return mockSupabase;
   },

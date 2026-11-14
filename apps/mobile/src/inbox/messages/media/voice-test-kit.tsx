@@ -2,7 +2,7 @@ import type { MessageView } from '@ab/shared';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { useSyncExternalStore } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { VoiceNote } from './VoiceNote';

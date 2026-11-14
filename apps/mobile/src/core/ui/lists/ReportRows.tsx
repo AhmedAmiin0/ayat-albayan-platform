@@ -2,10 +2,7 @@ import { memo } from 'react';
 import { gradeStyle, type PendingReportView, type ReportSummaryView, type TeacherReportView } from '@ab/shared';
 import { editableNow } from '@ab/client-core';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { t, Button, ListRow, StatusChip } from '@ab/mobile-kit';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
 import { useNow } from '@/core/lib/time/use-now';
 

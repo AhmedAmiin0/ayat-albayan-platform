@@ -1,8 +1,7 @@
 import { screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, palette } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import { palette } from '@/theme';
 import { PermissionDialog } from './PermissionDialog';
 
 const styleOf = (name: string) => StyleSheet.flatten(within(screen.getByTestId('call-permission')).getByRole('button', { name }).props.style);

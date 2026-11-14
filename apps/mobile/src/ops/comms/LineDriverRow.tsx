@@ -1,11 +1,9 @@
 import { driverMissing, type IntegrationConfigItem, type WaLine, type WaProvider } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, FilterPills, Ltr } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { Ltr } from '@/core/ui/primitives/Ltr';
 import { driverName, LINE_PROVIDERS, lineDriver, type LineProvider } from './line-driver';
 
 interface LineDriverRowProps {

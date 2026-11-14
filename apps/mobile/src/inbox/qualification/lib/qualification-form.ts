@@ -1,5 +1,5 @@
 import { leadQualPatch, type QualForm, type QualResult } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // R-LEAD-03: the lead's qualification form lives in @ab/shared (docs/27 E5), shared with the web; this module
 // keeps the phone's names, injects `t` and adds the phone's time choices.

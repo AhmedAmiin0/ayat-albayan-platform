@@ -1,7 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { FlatList, StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { MessageList } from '@/inbox/messages/components/MessageList';
@@ -10,8 +10,8 @@ import type { useThread } from '@/inbox/thread/hooks/use-thread';
 import { CORRECTED_OPACITY } from './Corrected';
 
 // «تعديل» (owner 2026-11-07): the original greys with «صُحِّحت»; a tap goes to the correction.
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
 }));
 

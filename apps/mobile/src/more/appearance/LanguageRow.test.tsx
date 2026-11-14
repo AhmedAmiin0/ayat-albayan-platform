@@ -1,9 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { setLocale } from '@/core/lib/i18n/locale-switch';
+import { t, setLocale } from '@ab/mobile-kit';
 import { LanguageRow } from './LanguageRow';
 
-jest.mock('@/core/lib/i18n/locale-switch', () => ({ setLocale: jest.fn(async () => 'reloading') }));
+jest.mock('@ab/mobile-kit/lib/i18n/locale-switch', () => ({ setLocale: jest.fn(async () => 'reloading') }));
 
 beforeEach(() => jest.clearAllMocks());
 

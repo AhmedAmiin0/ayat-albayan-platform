@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { dayLabel, opensDay, rowTime } from './day-label';
 import { clock, deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 

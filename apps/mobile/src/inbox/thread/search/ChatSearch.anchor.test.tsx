@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import type * as React from 'react';
 import { BackHandler, FlatList } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { detail } from '@/inbox/shared/thread-fixtures';
 import { renderWithQuery } from '@/test/query';
 import { chat, found, stub } from './search.fixture';
@@ -11,8 +11,8 @@ import { MID, NEW, OLD } from './search.data';
 // it), so the list's useThreadLog / useAnchorJump run as in the app.
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (path: string) => mockApiFetch(path),
 }));
 type ReactModule = typeof React;

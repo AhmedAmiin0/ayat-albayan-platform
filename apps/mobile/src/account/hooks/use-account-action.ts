@@ -2,7 +2,7 @@ import type { AccountProfile } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { type AccountField, type AccountFieldErrors, accountErrors } from '@/account/lib/account-errors';
-import { PROFILE_KEY } from './queries';
+import { PROFILE_KEY } from '@ab/mobile-kit';
 
 interface AccountActionOptions<V> {
   /** The /me call; a returned profile replaces ['me','profile'] (header, row and form update at once). */

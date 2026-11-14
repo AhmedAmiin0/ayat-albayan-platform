@@ -1,13 +1,13 @@
 import { emptyContent, type ReportFormResponse } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { formResponseV2 } from '@/teacher/report/testing/fixtures';
 import { ReportEntryCardV2 } from './ReportEntryCardV2';
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
 }));
 

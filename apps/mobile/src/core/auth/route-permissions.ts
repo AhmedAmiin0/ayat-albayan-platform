@@ -1,5 +1,5 @@
 import type { Permission } from '@ab/shared';
-import type { Can } from './use-permissions';
+import type { Can } from '@ab/mobile-kit';
 
 /**
  * The permission each mobile screen needs, mirroring ADMIN_PAGES / admin-nav-items on the web.

@@ -1,9 +1,7 @@
 import { View } from 'react-native';
 import { SummaryList } from '@/booking/trial/components/ConfirmStep';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import type { TrialDateDraft } from '@/trial-date/lib/trial-date-body';
 import { whenLines } from '@/trial-date/lib/trial-date-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

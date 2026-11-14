@@ -1,6 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { leftToRight } from '@/inbox/shared/physical-row.helpers';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
@@ -13,8 +13,8 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: jest.fn(),
 }));

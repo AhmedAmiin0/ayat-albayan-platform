@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { t, EmptyState, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { STRIPE_FEATURE } from '@/sales-subscribe/payment-link/flag';
 import { useLinks } from '@/sales-subscribe/payment-link/link-api';

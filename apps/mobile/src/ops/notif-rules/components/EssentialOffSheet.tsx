@@ -2,14 +2,10 @@ import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, shape, useTheme, Button, Field, ScreenHeader } from '@ab/mobile-kit';
+import type { AppTextNode } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { shape, useTheme } from '@/theme';
-import type { AppTextNode } from '@/core/ui/primitives/AppText';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
-import { Field } from '@/core/ui/form/Field';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useFocusOnOpen } from '@/ops/notif-rules/hooks/use-focus-on-open';
 
 interface EssentialOffSheetProps {

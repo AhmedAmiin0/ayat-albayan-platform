@@ -2,10 +2,7 @@ import type { AttendanceTableRow, ClockCycle } from '@ab/shared';
 import { memo } from 'react';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import { clockIn, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { t, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import {

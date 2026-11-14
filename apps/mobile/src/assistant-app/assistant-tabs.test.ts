@@ -1,5 +1,5 @@
 import type { Permission } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { assistantTabItems } from './assistant-tabs';
 
 test('the classroom assistant: «حلقاتي» then «المزيد»', () => {

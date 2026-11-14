@@ -1,5 +1,4 @@
-import { canOpen, type Can, tabOpen, usePermissions } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
+import { type Can, usePermissions, t } from '@ab/mobile-kit';import { canOpen, tabOpen } from '@/core/auth';
 import { useInboxBadge } from '@/core/nav/use-inbox-badge';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
 import { AppNativeTabs, type TabItem } from '@/core/ui/layout/AppNativeTabs';

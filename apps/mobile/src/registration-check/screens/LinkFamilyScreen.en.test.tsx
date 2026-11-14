@@ -1,6 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { LinkFamilyScreen } from './LinkFamilyScreen';
 
@@ -9,8 +9,8 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async (path: string) =>
     path === '/auth/me'
       ? { role: 'admin', permissions: ['students.check_registration', 'leads.link_family'] }

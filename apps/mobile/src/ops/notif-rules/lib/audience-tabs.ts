@@ -1,5 +1,5 @@
 import { NOTIFICATION_AUDIENCES, type NotificationAudience, type NotificationEntryView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // «الإشعارات» one audience at a time on the phone (docs/26b §6 1.10), in the web's order:
 // ولي الأمر · المعلم/ة · العميل · فريق الأكاديمية, then «يدوي» (the messages a person sends) when any.

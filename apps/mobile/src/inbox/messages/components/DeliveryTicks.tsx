@@ -8,9 +8,7 @@ import {
 } from '@ab/shared';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { t } from '@/core/lib/i18n/i18n';
-import { type Palette, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, type Palette, type, useTheme, AppText } from '@ab/mobile-kit';
 
 // Read is the WhatsApp-like blue (`read`), the rest the tick grey (`tick`); failed is saffron, the
 // «دورك» tone of its chip (status-style.ts).

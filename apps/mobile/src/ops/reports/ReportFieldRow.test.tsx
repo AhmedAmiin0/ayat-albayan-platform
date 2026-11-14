@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ReportFieldRow } from './ReportFieldRow';
 
 // Arabic (jest.setup: RTL): the teacher's words align by their own direction, not the UI's.

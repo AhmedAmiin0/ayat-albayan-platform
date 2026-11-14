@@ -1,8 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { Linking, StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { palette } from '@/theme';
+import { t, palette } from '@ab/mobile-kit';
 import { InChatProvider } from '@/core/nav/tree-base';
 import { GuardianCard } from './GuardianCard';
 

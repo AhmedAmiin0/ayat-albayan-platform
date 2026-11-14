@@ -1,6 +1,6 @@
 import type { CorrectTo } from '@ab/shared';
 import { Note } from '@/more';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { CorrectOutcome, rescheduleFailure } from '@/teaching';
 import { useSalesCorrect } from './lesson-actions-api';

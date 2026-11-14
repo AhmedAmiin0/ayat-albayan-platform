@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { QuoteButton } from '@/inbox/composer/quote/QuoteButton';
 import { SavedRepliesButton } from '@/inbox/saved-replies/components/SavedRepliesButton';

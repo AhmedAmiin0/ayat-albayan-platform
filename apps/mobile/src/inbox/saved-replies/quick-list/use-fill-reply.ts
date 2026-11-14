@@ -1,5 +1,5 @@
 import { replyNeedsInput, resolveSavedReply, type SavedReply, type SavedReplyValues, type ThreadView } from '@ab/shared';
-import { useMyProfile } from '@/account/hooks/queries';
+import { useMyProfile } from '@ab/mobile-kit';
 import type { ReplyFill } from '@/inbox/saved-replies/hooks/use-saved-reply';
 
 export interface ReplyContact {

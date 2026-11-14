@@ -1,8 +1,7 @@
 import type { FamilyRing } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme, type Palette } from '@/theme';
+import { t, useTheme, type Palette } from '@ab/mobile-kit';
 
 type RingKey = FamilyRing | 'none';
 

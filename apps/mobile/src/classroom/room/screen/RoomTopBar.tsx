@@ -1,9 +1,7 @@
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import { PillButton } from '@/core/ui/primitives/PillButton';
-import { type, useTheme } from '@/theme';
 
 interface RoomTopBarProps {
   title: string;

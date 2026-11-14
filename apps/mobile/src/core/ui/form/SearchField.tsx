@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
+import { t, shape, type, useTheme } from '@ab/mobile-kit';
 
 interface SearchFieldProps {
   /** Called with the trimmed text once typing pauses (and at once on the keyboard's search key). */

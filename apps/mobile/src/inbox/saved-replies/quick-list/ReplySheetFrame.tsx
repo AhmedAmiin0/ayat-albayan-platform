@@ -1,8 +1,6 @@
 import { type ReactNode, useMemo, useState } from 'react';
 import { Animated, KeyboardAvoidingView, Modal, PanResponder, Platform, Pressable, useWindowDimensions, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, useTheme } from '@/theme';
-import { useA11yPref } from '@/core/ui/primitives/use-a11y-pref';
+import { t, shape, useTheme, useA11yPref } from '@ab/mobile-kit';
 import { dragClaims, dragCloses, dragOffset } from './sheet-drag';
 
 /**

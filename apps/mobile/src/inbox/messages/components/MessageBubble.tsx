@@ -1,10 +1,7 @@
 import { memo } from 'react';
 import { isChatViewMime, type MessageView, pdfCaptionIsName } from '@ab/shared';
 import { type GestureResponderEvent, Linking, Pressable, View, type ViewStyle } from 'react-native';
-import { useHolds } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { useHolds, t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { holdTop, useBubbleActions } from '@/inbox/messages/hooks/bubble-actions';
 import { ReactionPill } from '@/inbox/messages/reactions/ReactionPill';
 import { useBubbleChatActions } from '@/inbox/thread/hooks/chat-actions';

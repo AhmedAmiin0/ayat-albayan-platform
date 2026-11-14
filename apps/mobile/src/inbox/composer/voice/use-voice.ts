@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Animated } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { fileError } from '@/inbox/composer/send-file';
 import { useSendVoice } from './send-voice';

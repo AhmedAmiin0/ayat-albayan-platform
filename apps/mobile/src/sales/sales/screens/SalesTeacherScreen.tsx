@@ -3,24 +3,26 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { pushInTab } from '@/core/nav/back-within';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  useTheme,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  ListRow,
+  Screen,
+  ScreenHeader,
+  StatusChip,
+  FilterPills,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { KIND_EMPTY } from '@/students/list/student-kinds';
-import { useTheme } from '@/theme';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { useSalesTeachers } from '@/sales/sales/lib/sales-api';
 import { SalesTeacherHeader } from '@/sales/sales/components/SalesTeacherHeader';
 import { nextLessonLine, teacherLabel, teacherSubtitle } from '@/sales/sales/lib/sales-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { TeacherOverviewTab } from '@/sales/sales/teacher/TeacherOverviewTab';
 
 type TeacherTab = 'students' | 'schedule' | 'attendance';

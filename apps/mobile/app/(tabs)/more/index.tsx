@@ -1,4 +1,4 @@
-import { usePermissions } from '@/core/auth';
+import { usePermissions } from '@ab/mobile-kit';
 import { MoreScreen } from '@/more';
 
 export default function MoreRoute() {

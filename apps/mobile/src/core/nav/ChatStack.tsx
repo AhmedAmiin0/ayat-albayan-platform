@@ -1,4 +1,4 @@
-import { FullScreenProvider } from '@/core/ui/layout/Screen';
+import { FullScreenProvider } from '@ab/mobile-kit';
 import { PlainStack } from './TabStack';
 import { InChatProvider } from './tree-base';
 

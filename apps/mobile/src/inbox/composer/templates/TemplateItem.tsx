@@ -1,11 +1,7 @@
 import type { AuthorTemplate } from '@ab/client-core';
 import { isCodeBound } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { t, StatusChip, ListRow, AppText, type, useTheme } from '@ab/mobile-kit';
 import { rejectionOf, statusWord } from './status-words';
 
 interface TemplateItemProps {

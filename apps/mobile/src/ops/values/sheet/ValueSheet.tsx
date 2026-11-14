@@ -1,10 +1,8 @@
 import type { SettingKey, SettingMeta } from '@ab/shared';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, useTheme } from '@/theme';
-import type { AppTextNode } from '@/core/ui/primitives/AppText';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { t, shape, useTheme, ScreenHeader } from '@ab/mobile-kit';
+import type { AppTextNode } from '@ab/mobile-kit';
 import { useValueSheet } from '@/ops/values/hooks/use-value-sheet';
 import { DescriptionEditor } from './DescriptionEditor';
 import { useSheetDescription, type SheetDescription } from '@/ops/values/hooks/use-description-editor';

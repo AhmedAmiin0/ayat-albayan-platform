@@ -1,8 +1,7 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { Button } from '@/core/ui/primitives/Button';
 import { fileError } from '@/inbox/composer/send-file';
 import type { SharedFile } from '@/inbox/thread/share/read-share';
 import { type FailedShare, sendingText, type ShareStep } from '@/inbox/thread/share/use-share-send';

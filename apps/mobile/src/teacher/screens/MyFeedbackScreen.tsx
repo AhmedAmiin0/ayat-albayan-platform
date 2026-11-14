@@ -1,15 +1,10 @@
 import { router } from 'expo-router';
 import { FlatList } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, BackButton, EmptyState, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { AverageCard } from '@/feedback/AverageCard';
 import { FeedbackRow } from '@/feedback/FeedbackRow';
 import { useMyFeedback } from '@/feedback/queries';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 
 /**
  * «رأيك يهمّنا» for a teacher: my own average and the answers about my lessons, newest first.

@@ -1,7 +1,5 @@
 import { ActivityIndicator, Image, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { shape, type, useTheme } from '@/theme';
+import { t, AppText, shape, type, useTheme } from '@ab/mobile-kit';
 import type { ThreadMediaItem } from '@/booking/shared/contract';
 import { useMediaUrl } from './invoice-queries';
 import { ReceiptIcon } from './ReceiptIcon';

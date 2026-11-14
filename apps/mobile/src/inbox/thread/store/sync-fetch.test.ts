@@ -3,8 +3,8 @@ import { fetchSyncPage } from './sync-fetch';
 import { answer, row } from './store-fixtures';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (path: string, init: RequestInit) => mockApiFetch(path, init),
 }));
 

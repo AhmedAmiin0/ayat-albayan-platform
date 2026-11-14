@@ -1,14 +1,10 @@
 import type { SalesStudentDetails } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, Button, StatusChip } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 import { useStudentHref } from '@/core/nav/tree-base';
 import { Note } from '@/more';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { SmallHeading as SectionLabel } from '@/sales/sales/components/SmallHeading';
 import { ATTENDANCE_STYLE, totalsLines } from './attendance-text';
 

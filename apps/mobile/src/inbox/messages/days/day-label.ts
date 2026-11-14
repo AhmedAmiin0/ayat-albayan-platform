@@ -1,6 +1,5 @@
 import { chatDay, chatDayKey, type ClockCycle, dateText, dayParts } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 import { clock, deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 
 // The day separators of a chat, as WhatsApp (owner 2026-10-27): «اليوم», «أمس», the weekday within

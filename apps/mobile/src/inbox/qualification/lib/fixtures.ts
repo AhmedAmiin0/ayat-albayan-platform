@@ -1,4 +1,4 @@
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 import { huda, page } from '@/inbox/shared/fixtures';
 import type { LeadProfile } from './queries';
 

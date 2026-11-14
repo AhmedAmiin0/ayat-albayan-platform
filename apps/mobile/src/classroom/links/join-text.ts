@@ -1,6 +1,5 @@
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError, t } from '@ab/mobile-kit';
 import type { ClockCycle } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
 import { lessonClock } from '@/today/lib/lesson-text';
 
 const errors: Record<string, string | undefined> = t.classroom.error;

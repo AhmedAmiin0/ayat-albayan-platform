@@ -1,17 +1,17 @@
 import { channelPresencePath } from '@ab/client-core';
 import type { ChannelPresence } from '@ab/shared';
 import { act, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { realtime } from '@/test/presence-realtime';
 import { ChannelPresenceLine } from './ChannelPresenceLine';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('@/core/lib/http/supabase', () =>
+jest.mock('@ab/mobile-kit/lib/http/supabase', () =>
   jest.requireActual('@/test/presence-realtime').realtime.module(),
 );
 

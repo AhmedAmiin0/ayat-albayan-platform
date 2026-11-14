@@ -1,11 +1,8 @@
 import { memo } from 'react';
 import type { PaymentView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, Ltr } from '@ab/mobile-kit';
 import { instantDay, money } from '@/core/lib/money/format';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Ltr } from '@/core/ui/primitives/Ltr';
 import { AttachmentsViewer } from '@/money/attachments/AttachmentsViewer';
 import { hasAttachments } from '@/money/attachments/receipt-file';
 import { ReceiptViewer } from '@/money/attachments/ReceiptViewer';

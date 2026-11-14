@@ -7,8 +7,7 @@ import {
   withInsets,
   type FakePlatform,
 } from '@/classroom/room/state/room-test-kit';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { RoomScreen } from './RoomScreen';
 
 const R = t.mobileRoom;

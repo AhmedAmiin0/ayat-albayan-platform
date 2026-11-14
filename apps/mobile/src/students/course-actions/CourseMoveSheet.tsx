@@ -1,12 +1,8 @@
 import { courseMoveBase, courseMoveErrorCode, type CourseMoveKind } from '@ab/client-core';
 import { useState, type ReactNode } from 'react';
 import { Modal, ScrollView } from 'react-native';
-import { useIsAdmin } from '@/core/auth';
+import { useIsAdmin, t, Screen, ScreenHeader, Button } from '@ab/mobile-kit';
 import { BookingModeProvider } from '@/booking';
-import { t } from '@/core/lib/i18n/i18n';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/inbox';
 import { CourseChangeFlow } from '@/sales-course';
 import { useMoveView, type SubRef } from './course-actions-api';

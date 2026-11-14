@@ -1,10 +1,5 @@
 import { ScrollView } from 'react-native';
-import { signOutDevice } from '@/core/lib/session/sign-out';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { KeyboardFrame } from '@/core/ui/layout/KeyboardFrame';
+import { signOutDevice, t, type, useTheme, AppText, Button, KeyboardFrame } from '@ab/mobile-kit';
 import { SetupFields } from './SetupFields';
 
 const S = t.teacherAuth.setup;

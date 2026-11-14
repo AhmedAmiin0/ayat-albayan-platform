@@ -1,7 +1,7 @@
 import { ASSISTANT_COMMISSION_STATUSES, sumByCurrency } from '@ab/shared';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useCommissions, type AssistantRow, type LedgerFilter } from '@/assistants/api/api';
 import { AssistantPills } from '@/assistants/list/AssistantPills';

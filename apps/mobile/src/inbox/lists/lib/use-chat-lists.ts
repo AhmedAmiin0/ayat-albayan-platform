@@ -1,7 +1,6 @@
 import type { ChatList } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 // The academy's chat lists «القوائم» (docs/22): ONE shared set for every admin and assistant. They only
 // organise the chats; nothing is ever sent because of a list.

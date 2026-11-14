@@ -1,6 +1,5 @@
 import { ActivityIndicator } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 
 interface SendButtonProps {
   label: string;

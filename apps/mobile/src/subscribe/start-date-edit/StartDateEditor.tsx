@@ -3,8 +3,7 @@ import type { QueryKey } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { DatePickerField } from '@/core/ui/form/date-picker';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { startDateErrorText, useStartDateEdit, type StartDatePackage } from './use-start-date-edit';
 

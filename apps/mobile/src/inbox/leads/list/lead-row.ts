@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { leadAge } from '@/inbox/shared/format';
 import { leadSourceWord } from '@/inbox/leads/detail/lead-words';
 import type { Lead } from '@/inbox/shared/types';

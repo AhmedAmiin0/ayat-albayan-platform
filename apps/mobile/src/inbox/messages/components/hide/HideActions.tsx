@@ -1,8 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { Button } from '@/core/ui/primitives/Button';
 import type { BubbleOffers } from '@/inbox/messages/hooks/bubble-offers';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { Note } from '@/more';

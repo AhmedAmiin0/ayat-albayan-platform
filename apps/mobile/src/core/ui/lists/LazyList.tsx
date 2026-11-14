@@ -1,7 +1,7 @@
 import { FlashList, type FlashListProps } from '@shopify/flash-list';
 import { type ComponentType, useMemo } from 'react';
 import { View, type ViewStyle } from 'react-native';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
+import { useTabBarInset } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 
 /** Inside Screen's 16pt gutter, on the screen's own margin colour (owner 2026-10-28: one container rule). */

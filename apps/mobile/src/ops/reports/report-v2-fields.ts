@@ -1,6 +1,5 @@
 import { reportV2Lines } from '@ab/client-core';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 import { reportFields, type FieldsReport, type ReportField } from './report-fields';
 
 /**

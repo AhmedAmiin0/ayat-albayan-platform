@@ -1,13 +1,9 @@
 import { forAudience, formatPhone, type TemplateView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ScreenHeader, BackButton, Button, ltr } from '@ab/mobile-kit';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Note } from '@/core/ui/feedback/Note';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { BackButton } from '@/core/ui/navigation/BackButton';
-import { Button } from '@/core/ui/primitives/Button';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { TemplateForm } from '@/inbox/composer/TemplateForm';
 import { TemplateList, templateName } from '@/inbox/composer/TemplateList';
 import { useApprovedTemplates } from '@/inbox/composer/TemplatePicker';

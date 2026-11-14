@@ -1,9 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { Share, View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
 import { joinLinkUrl, linkError } from './link-api';
 
 /** A fresh URL every tap (it is a short-lived secret: never kept), handed to the share sheet, which has Copy. */

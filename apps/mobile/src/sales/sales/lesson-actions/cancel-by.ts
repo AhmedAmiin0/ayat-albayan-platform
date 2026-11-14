@@ -5,7 +5,7 @@ import {
   type SalesCancel,
   type SalesScheduleLesson,
 } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 /** Who cancelled (POST /sales/lessons/:id/cancel `by`); none = «ألغتها الإدارة». */
 export type SalesCancelBy = NonNullable<SalesCancel['by']>;

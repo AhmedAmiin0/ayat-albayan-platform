@@ -7,8 +7,8 @@ import {
 } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { canOpen } from '@/core/auth/route-permissions';
-import type { Can } from '@/core/auth/use-permissions';
-import { apiFetch } from '@/core/lib/http/api';
+import { apiFetch } from '@ab/mobile-kit';
+import type { Can } from '@ab/mobile-kit';
 import { useInboxLive } from '@/inbox';
 import { badgeText } from './tab-badge';
 

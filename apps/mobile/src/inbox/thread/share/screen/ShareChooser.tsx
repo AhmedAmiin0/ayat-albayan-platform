@@ -1,10 +1,9 @@
 import type { ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
 import type { SharedItems } from '@/inbox/thread/share/read-share';
 import { SHARE_MAX_FILES, type ShareProblem, shareProblem } from '@/inbox/thread/share/share-rules';
 import { sendingText, type ShareStep } from '@/inbox/thread/share/use-share-send';

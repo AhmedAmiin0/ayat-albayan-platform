@@ -1,9 +1,8 @@
 import type { MeetingInviteeKind } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { useInviteeOptions } from './invite-api';
 import { fromOption, type DraftInvitee } from './invitee-draft';

@@ -2,12 +2,12 @@ import type { Permission } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import type { TabItem } from '@/core/ui/layout/AppNativeTabs';
 import { renderWithQuery, teacherPagesClient } from '@/test/query';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { pathKey } from '@ab/mobile-kit';
 import { TeacherTabs } from './TeacherTabs';
 
 const mockTabs = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: jest.fn(async () => ({ id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] })),
 }));
 jest.mock('@/core/ui/layout/AppNativeTabs', () => {

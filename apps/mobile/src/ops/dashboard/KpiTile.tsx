@@ -1,6 +1,5 @@
 import { Pressable, View } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import type { Kpi } from './kpis';
 
 /** One number with its label; saffron when work is waiting. A tile with a work list is a button. */

@@ -1,7 +1,6 @@
 import { type PresenceWatch, presenceWatchKey, watchPresence } from '@ab/client-core';
 import { useEffect, useState } from 'react';
-import { supabase } from '@/core/lib/http/supabase';
-import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
+import { supabase, useScreenFocused } from '@ab/mobile-kit';
 import { useAppActive } from './use-app-active';
 
 const IDLE: PresenceWatch = { live: false, online: new Set<string>() };

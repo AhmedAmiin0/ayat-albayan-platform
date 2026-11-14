@@ -1,8 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, StatusChip, type, useTheme, AppText } from '@ab/mobile-kit';
 import { ReportTextField } from '@/teacher/report/components/ReportTextField';
 import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
 import { Card } from '@/teacher/report/v2/ui/Card';

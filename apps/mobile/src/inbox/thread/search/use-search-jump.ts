@@ -1,6 +1,6 @@
 import { type RefObject, useEffect, useEffectEvent } from 'react';
 import type { FlatList } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { anchorAt, leaveAnchor, useAnchorParam } from '@/inbox/thread/anchor';
 import { useChatSearch } from './search-context';
 

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { UnreadCount, unreadText } from './UnreadCount';
 
 test('the number in a small circle; the reader hears the words', async () => {

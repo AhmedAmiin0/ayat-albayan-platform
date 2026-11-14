@@ -1,10 +1,6 @@
 import type { NotificationItem } from '@ab/shared';
 import { leadAge } from '@/inbox/shared/format';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { t, type, useTheme, AppText, ListRow, StatusChip } from '@ab/mobile-kit';
 
 interface NotificationRowProps {
   item: NotificationItem;

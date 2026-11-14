@@ -1,15 +1,15 @@
 import type { LessonView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking, Share, StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { mockClipboard } from '@/test/native-mocks';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { DetailsAbout } from './DetailsAbout';
 import type { DetailsRole } from './details-text';
 
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: () => new Promise(() => undefined),
 }));
 

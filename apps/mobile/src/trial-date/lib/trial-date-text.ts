@@ -11,9 +11,7 @@ import {
   type TrialOutcome,
 } from '@ab/shared';
 import { whenIn, type ViewerClock } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { t, locale, isolate } from '@ab/mobile-kit';
 
 /** Each outcome in the existing status grammar (docs/07 §6): saffron only where a report is due. */
 export const trialOutcomeStyle: Record<TrialOutcome, StatusStyle> = {

@@ -1,16 +1,17 @@
 import { PRESENCE_SELF_PATH } from '@ab/client-core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { realtime } from '@/test/presence-realtime';
 import { usePresenceSelf } from './use-presence-self';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('@/core/lib/http/supabase', () =>
+jest.mock('@ab/mobile-kit/lib/http/supabase', () =>
   jest.requireActual('@/test/presence-realtime').realtime.module(),
 );
 

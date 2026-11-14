@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { money } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
 import { balance, CHILD, profile, quote, saved } from './fixtures';
@@ -8,8 +8,8 @@ import { SubscribeScreen } from './SubscribeScreen';
 // «مبلغ مخصص» on the package price (owner 2026-11-02), the admin's «اشتراك جديد» / «جدّد الاشتراك».
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

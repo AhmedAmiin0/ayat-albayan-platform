@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { usePermissions } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
+import { usePermissions, t } from '@ab/mobile-kit';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { LeadFilterSheet } from './LeadFilterSheet';
 import { activeFilterCount, type LeadFilters } from './lead-filters';

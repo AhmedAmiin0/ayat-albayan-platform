@@ -1,6 +1,6 @@
 import { pushInTab } from '@/core/nav/back-within';
 import { useTabOpen } from '@/core/auth/use-tab-open';
-import { ListRow } from '@/core/ui/layout/ListRow';
+import { ListRow } from '@ab/mobile-kit';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import type { PendingReportRow, TaskRow, UnpaidRow } from './dashboard-types';
 import { pendingSubtitle, taskText, unpaidSubtitle } from './work-text';

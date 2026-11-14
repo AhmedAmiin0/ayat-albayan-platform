@@ -1,17 +1,14 @@
 import { formatPhone } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { ApiError, t, pathKey, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { GuardianCard } from './GuardianCard';
 
 // The family's numbers on the admin student file (owner 2026-10-29, «ربط بطالب موجود»).
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 

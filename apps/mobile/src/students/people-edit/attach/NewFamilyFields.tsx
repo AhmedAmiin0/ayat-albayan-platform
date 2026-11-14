@@ -1,7 +1,6 @@
 import type { NewFamilyForm } from '@ab/client-core';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { Note } from '@/more';
 import { PeopleChoice } from '@/students/people-edit/PeopleChoice';

@@ -1,9 +1,6 @@
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, Chevron, shape, type, useTheme } from '@ab/mobile-kit';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Chevron } from '@/core/ui/primitives/Chevron';
-import { shape, type, useTheme } from '@/theme';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 
 interface PickerRowProps {

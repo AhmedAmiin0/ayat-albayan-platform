@@ -1,6 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { usePausePreview } from './course-pause-api';
 import { previewLine } from './course-pause-text';
 

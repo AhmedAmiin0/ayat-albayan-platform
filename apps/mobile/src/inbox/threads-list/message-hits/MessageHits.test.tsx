@@ -1,7 +1,7 @@
 import { formatPhone, type MessageSearchHit } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { hitHref, MessageHits } from './MessageHits';
 import type { ThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import type { MessageHitsState } from './use-message-hits';

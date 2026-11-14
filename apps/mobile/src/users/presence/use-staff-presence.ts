@@ -1,10 +1,8 @@
 import { STAFF_PRESENCE_PATH, staffPresenceKey } from '@ab/client-core';
 import type { StaffPresence, StaffPresenceRow } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useIsAdmin } from '@/core/auth';
-import { apiFetch } from '@/core/lib/http/api';
+import { useIsAdmin, apiFetch, useScreenFocused } from '@ab/mobile-kit';
 import { usePresenceClock, usePresenceWatch } from '@/core/lib/presence';
-import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import { staffOrder, watchOrder } from './staff-order';
 
 /** Last seen moves by the minute at most (the API's throttle): re-read it once a minute. */

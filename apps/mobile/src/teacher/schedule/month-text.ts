@@ -1,7 +1,6 @@
 import { counted, dateText } from '@ab/shared';
 import { dayLabel } from '@/calendar';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 
 // What the «جدولي» month says (owner 2026-11-14): its name, the weekday heads, a cell's name.
 

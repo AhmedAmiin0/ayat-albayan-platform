@@ -1,18 +1,17 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { askMic, hold, lift, moveTo, openChat, perms, rec, replyToAsked, resetVoice, tick, voiceRow } from './voice-test-kit';
 
 // Hold to record, lift to send (owner 2026-10-27) on an Arabic phone (jest.setup: RTL). No real
 // recorder, upload or WhatsApp: expo-audio, the API and Storage are fakes.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
-jest.mock('@/core/lib/http/supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   supabase: { storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) } },
 }));
 jest.mock('expo-audio', () => jest.requireActual<typeof import('./voice-test-kit')>('./voice-test-kit').audioMock());

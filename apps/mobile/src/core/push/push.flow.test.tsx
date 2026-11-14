@@ -1,16 +1,14 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { supabase } from '@/core/lib/http/supabase';
+import { t, supabase, DEVICE_KEY, TOKEN_KEY } from '@ab/mobile-kit';
 import { native } from '@/test/native-mocks';
 import { GUARDIAN_PHONE } from '@/inbox/shared/flow-backend';
 import { pushBackend } from './flow-backend';
-import { DEVICE_KEY, TOKEN_KEY } from './registerPush';
 
 // Jest has no EAS config; registerPush needs the linked project's id.
 // Signed in with a valid token (live-session.test.ts covers the check itself).
-jest.mock('@/core/push/live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
+jest.mock('@ab/mobile-kit/push/live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
 jest.mock('expo-constants', () => ({
   __esModule: true,
   default: { expoConfig: { version: 'test', extra: { eas: { projectId: 'proj-flow' } } } },

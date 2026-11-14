@@ -1,5 +1,5 @@
 import type { LinkCandidate, UserDetail, UserRoleOption, UserView } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 
 // Shared by the users tests (not a test itself): the web's users-test-kit fixtures and a GET fake.
 

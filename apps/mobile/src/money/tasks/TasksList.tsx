@@ -1,10 +1,7 @@
 import type { AdminTaskView } from '@ab/shared';
 import { ActivityIndicator } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { useTheme } from '@/theme';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { TaskItem } from './TaskItem';
 

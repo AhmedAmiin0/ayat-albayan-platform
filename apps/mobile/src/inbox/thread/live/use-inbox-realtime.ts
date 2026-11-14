@@ -7,8 +7,7 @@ import {
 import { onlineManager } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
-import { supabase } from '@/core/lib/http/supabase';
-import { queryClient as client } from '@/core/lib/query/query-client';
+import { supabase, queryClient as client } from '@ab/mobile-kit';
 import { nudgeInboxStore, patchInboxStore } from '@/inbox/thread/local/store-session';
 import { refreshOpenChat } from './live-refresh';
 import { inboxLive } from './inbox-live';

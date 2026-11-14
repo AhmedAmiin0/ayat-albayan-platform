@@ -1,5 +1,5 @@
 import { dateText } from '@ab/shared';
-import { locale } from '@/core/lib/i18n/locale';
+import { locale } from '@ab/mobile-kit';
 
 // The month header's words in the UI language (Western digits, as the rest of the app). Pure.
 

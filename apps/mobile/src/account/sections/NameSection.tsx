@@ -1,6 +1,6 @@
 import { ACCOUNT_NAME_MAX, ACCOUNT_NAME_MIN, type AccountProfile } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { patchProfile } from '@/account/hooks/account-api';
 import { accountMessage } from '@/account/lib/account-errors';
 import { AccountCard } from '@/account/components/AccountCard';

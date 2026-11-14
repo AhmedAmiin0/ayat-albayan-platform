@@ -1,13 +1,9 @@
 import { formatPhone, type MessageSearchHit } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { useClockCycle } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { Avatar } from '@/core/ui/primitives/Avatar';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, Avatar, AppText, ltr, type, useTheme } from '@ab/mobile-kit';
 import { rowTime } from '@/inbox/messages/days/day-label';
 import { SearchMarks } from '@/inbox/thread/search';
-import { type, useTheme } from '@/theme';
 
 interface MessageHitRowProps {
   hit: MessageSearchHit;

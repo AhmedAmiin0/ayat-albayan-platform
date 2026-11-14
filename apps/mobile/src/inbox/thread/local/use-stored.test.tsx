@@ -19,7 +19,7 @@ const mockAnswer = async () => {
 };
 const mockAuth: { listener?: (event: string, s: { user: { id: string } } | null) => void } = {};
 const mockOff = jest.fn();
-jest.mock('@/core/lib/http/supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   supabase: {
     auth: {
       getSession: () => mockAnswer(),

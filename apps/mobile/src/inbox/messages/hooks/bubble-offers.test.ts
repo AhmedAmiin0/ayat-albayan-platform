@@ -1,6 +1,6 @@
 import { message } from '@/inbox/shared/thread-fixtures';
 import { bubbleOffers, downloadLabel, offersAny } from './bubble-offers';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 const photo = message({ id: 'f1', body: null, media_mime: 'image/jpeg', replyable: true, forwardable: true });
 const on = { enabled: true, teacher: false };

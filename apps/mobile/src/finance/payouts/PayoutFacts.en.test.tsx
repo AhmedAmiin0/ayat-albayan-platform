@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { t, isolate } from '@ab/mobile-kit';
 import { PAID } from '@/finance/shared/fixtures';
 import { PayoutFacts } from './PayoutFacts';
 

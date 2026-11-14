@@ -1,5 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { HISTORY_CAP } from '@/trial-date/lib/history-cap';
 
 interface ShowAllProps {

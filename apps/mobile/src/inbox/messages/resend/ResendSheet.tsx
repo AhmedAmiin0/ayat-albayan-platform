@@ -1,10 +1,7 @@
 import ar from '@ab/shared/i18n/ar.json';
 import { Modal, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';

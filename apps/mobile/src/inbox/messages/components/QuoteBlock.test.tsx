@@ -1,7 +1,7 @@
 import { type MessageQuote, type ReplyQuote, UNAVAILABLE_QUOTE } from '@ab/shared';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import type { ReactElement } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
@@ -13,8 +13,8 @@ import { QuoteBlock } from './QuoteBlock';
 // The quote on top of a bubble, as WhatsApp draws it (owner 2026-10-31): who wrote it, the snippet
 // with a file's icon, a photo's or PDF's thumb, a tap to the original, «رسالة غير متاحة».
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

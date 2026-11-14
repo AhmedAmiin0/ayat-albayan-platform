@@ -1,6 +1,6 @@
 import { bookingRequestSchema, counted } from '@ab/shared';
 import { maryam, SUN_17, THU_18, TUE_17 } from '@/booking/testing/fixtures';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { courseBlock, courseEnd, courseRequest } from './course-body';
 import { courseFixedText, courseRows } from './course-summary';
 import { courseView, STUDENT_ID } from '@/sales-course/testing/fixtures';

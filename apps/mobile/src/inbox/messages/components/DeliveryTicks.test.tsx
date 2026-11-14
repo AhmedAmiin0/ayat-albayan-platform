@@ -1,8 +1,7 @@
 import { MESSAGE_STATUSES, type MessageStatus } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { palette } from '@/theme';
+import { t, palette } from '@ab/mobile-kit';
 import { DeliveryTicks } from './DeliveryTicks';
 
 const KIND: Record<MessageStatus, string> = {

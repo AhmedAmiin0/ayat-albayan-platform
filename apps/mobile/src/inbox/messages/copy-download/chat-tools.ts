@@ -1,6 +1,5 @@
 import { Linking } from 'react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { fetchDownload } from '@/inbox/messages/hooks/thread-file';
 
 // «نسخ» and «تنزيل» in a chat (owner 2026-10-26), in one place: the installed APK has no sharing or

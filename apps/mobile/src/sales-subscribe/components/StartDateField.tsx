@@ -2,13 +2,11 @@ import { daysBefore, SALES_START_BACK_DAYS } from '@ab/shared';
 import { Switch, View } from 'react-native';
 import { dayLabel } from '@/booking';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
 import { DatePickerField } from '@/core/ui/form/date-picker';
 import { NoCommissionNote, UsedBeforeField } from '@/subscribe';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { type StartDraft, usedBeforeOf } from '@/sales-subscribe/lib/start-date';
 
 interface StartDateFieldProps {

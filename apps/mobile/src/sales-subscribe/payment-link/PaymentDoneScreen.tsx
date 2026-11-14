@@ -2,14 +2,16 @@ import { type Href, Redirect, router, useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useIsAdmin } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  useIsAdmin,
+  t,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+  Button,
+} from '@ab/mobile-kit';
 import { inTree, type TreeBase } from '@/core/nav/tree-base';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { Button } from '@/core/ui/primitives/Button';
 import { Note } from '@/more';
 import { STRIPE_FEATURE } from './flag';
 import { useLinkByToken } from './link-api';

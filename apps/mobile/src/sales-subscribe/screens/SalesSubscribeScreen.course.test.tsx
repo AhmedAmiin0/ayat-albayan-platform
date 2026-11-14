@@ -1,6 +1,6 @@
 import type { SalesCourseView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { bookedCourse, courseView } from '@/sales-course/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { familyOf, KID, kid, PHONE } from '@/sales-subscribe/testing/fixtures';
@@ -9,8 +9,8 @@ import { SalesSubscribeScreen } from './SalesSubscribeScreen';
 // «أيام الحلقات» on the chat's «اشتراك جديد» (owner 2026-11-06): for the resolved child (picked,
 // preselected or the only one) while GET /sales/booking/course lets her book its package.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: () => Promise.resolve(jest.requireActual('@/sales-subscribe/testing/fixtures').salesQuote),
 }));

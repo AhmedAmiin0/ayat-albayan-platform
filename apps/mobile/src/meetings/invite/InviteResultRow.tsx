@@ -1,11 +1,7 @@
 import type { MeetingInviteResult } from '@ab/shared';
 import { Share, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, Button, StatusChip } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { notSentHint, resultLabel } from './invite-text';
 
 const R = t.meetingInvites.results;

@@ -1,11 +1,12 @@
 import { act, renderHook } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import type { PushTree } from './notification-route';
 import { useNotificationHandling } from './useNotificationHandling';
 
 // A tap while a chat is open (its group on top of the root stack, above the tabs): a tab's screen pops
 // back to the tabs (dismissTo), since a push would stack a second tab host; another chat is a push.
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: async () => ({}) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: async () => ({}) }));
 const mockPush = jest.fn();
 const mockDismissTo = jest.fn();
 const mockTop = { name: '(admin-chat)' };

@@ -1,7 +1,6 @@
 import { Fragment } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useTheme } from '@/theme';
-import { raisedCard } from '@/core/ui/surface/surface';
+import { useTheme, raisedCard } from '@ab/mobile-kit';
 import type { TodayLesson } from '@/today/lib/today-lesson';
 import { LessonRow } from './LessonRow';
 

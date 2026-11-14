@@ -1,7 +1,7 @@
 import { textDir } from '@ab/shared';
 import type { ComponentProps } from 'react';
 import { I18nManager } from 'react-native';
-import { AppText } from './AppText';
+import { AppText } from '@ab/mobile-kit';
 
 type ContentTextProps = ComponentProps<typeof AppText> & {
   /** The user-authored text whose first strong letter decides the side (usually the children). */

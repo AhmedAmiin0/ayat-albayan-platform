@@ -1,7 +1,6 @@
 import { counted, formatAmount, packageProgress, type ClockCycle } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { t, isolate } from '@ab/mobile-kit';
 import type { PendingReportRow, TaskRow, UnpaidRow } from './dashboard-types';
 
 /** «باقة سهيلة قاربت على الانتهاء: …» (dashboard.task.<kind>, same wording as the web). */

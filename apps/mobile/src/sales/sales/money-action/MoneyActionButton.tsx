@@ -1,6 +1,5 @@
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button, type ButtonVariant } from '@/core/ui/primitives/Button';
+import { t, Button, type ButtonVariant } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { useMoneyAction } from './use-money-action';
 

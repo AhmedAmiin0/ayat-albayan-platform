@@ -2,8 +2,7 @@ import { sendViaWhatsApp, type WhatsAppSendResult, whatsappSendUrl } from '@ab/c
 import { type AppSendRefusal, appSendRefusal, type MessageView } from '@ab/shared';
 import { type MutationState, useMutation, useMutationState } from '@tanstack/react-query';
 import { Linking } from 'react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
 
 interface SendVars {

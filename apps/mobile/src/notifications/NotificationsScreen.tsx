@@ -3,20 +3,22 @@ import { router } from 'expo-router';
 import { openPushed } from '@/core/nav/back-within';
 import { useCallback } from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
-import { usePermissions } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  usePermissions,
+  t,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+  usePullRefresh,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { routeIn, type PushTree } from '@/core/push/notification-route';
-import { BackButton } from '@/core/ui/navigation';
 import { PillButton } from '@/core/ui/primitives/PillButton';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { NotificationRow } from './NotificationRow';
 import { useMarkRead, useNotifications } from './use-notifications';
-import { usePullRefresh } from '@/core/lib/query/pull-refresh';
 
 export interface NotificationsScreenProps {
   /** The tree it sits in: a row opens that tree's screen. */

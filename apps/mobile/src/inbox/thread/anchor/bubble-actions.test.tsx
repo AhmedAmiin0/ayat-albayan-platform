@@ -1,5 +1,6 @@
 import { anchoredThreadKey, anchoredThreadPrefix } from '@ab/client-core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { useHideMessage } from '@/inbox/messages/components/hide/use-hide-message';
@@ -10,8 +11,8 @@ import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
 // there at once (the window sits outside the live chat's key on purpose).
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 

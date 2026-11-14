@@ -1,5 +1,5 @@
 import { amountFromStripe, parseAmount, type PaymentKind, type PaymentMethod } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // «تعديل المبلغ» of a recorded payment (owner 2026-11-02). Pure: the API re-checks every amount.
 

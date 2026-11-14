@@ -1,6 +1,5 @@
 import { Pressable, ScrollView } from 'react-native';
-import { shape, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { shape, useTheme, AppText } from '@ab/mobile-kit';
 import { EMOJI } from './emoji-list';
 
 /**

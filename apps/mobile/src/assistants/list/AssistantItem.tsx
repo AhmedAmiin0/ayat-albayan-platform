@@ -1,7 +1,6 @@
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ListRow } from '@ab/mobile-kit';
 import { commissionText, salaryText } from '@/sales-money/lib/money-text';
-import { ListRow } from '@/core/ui/layout/ListRow';
 import type { AssistantRow } from '@/assistants/api/api';
 
 /** One salesperson (web assistant-columns): name, salary and commission; taps open their page. */

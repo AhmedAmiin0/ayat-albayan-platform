@@ -1,5 +1,4 @@
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { listErrorText } from './list-errors';
 
 test('the 409 codes: the name is taken, the 30-list limit', () => {

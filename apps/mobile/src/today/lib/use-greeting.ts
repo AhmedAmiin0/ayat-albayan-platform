@@ -1,6 +1,5 @@
-import { useMyProfile } from '@/account';
+import { useMyProfile, t } from '@ab/mobile-kit';
 import { useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
 import { firstName, greetingPart } from './today-plan';
 
 /**

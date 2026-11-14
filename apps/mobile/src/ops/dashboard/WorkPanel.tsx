@@ -1,7 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { InsetGroup } from '@/core/ui/surface/inset';
+import { t, EmptyState, InsetGroup } from '@ab/mobile-kit';
 import type { DashboardWork, WorkList, WorkTab } from './dashboard-types';
 import { Note } from '@/core/ui/feedback/Note';
 import { PendingRow, TaskListRow, UnpaidListRow } from './WorkRows';

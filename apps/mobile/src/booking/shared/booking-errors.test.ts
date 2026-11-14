@@ -1,5 +1,4 @@
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { bookFailure, isCodedRefusal } from './booking-errors';
 import { SUN_17 } from '@/booking/testing/fixtures';
 
