@@ -13,7 +13,7 @@ const SHOWN: Partial<Record<TemplateStatus, Shown>> = {
   rejected: 'rejected',
 };
 
-export interface StatusWord {
+interface StatusWord {
   tone: Tone;
   glyph: Glyph;
   label: string;

@@ -35,7 +35,7 @@ const fromRegistry = (b: AuthorTemplate['buttons'][number]): Shown =>
   (b.type === 'url' ? { type: 'url', text: b.text ?? '', url: b.url } : { type: b.type, text: b.text });
 
 /** What WhatsApp shows (display), else the registry's buttons, as edit buttons. */
-export function editButtonsOf(tpl: AuthorTemplate): TemplateEditButton[] {
+function editButtonsOf(tpl: AuthorTemplate): TemplateEditButton[] {
   const display = tpl.display?.buttons ?? [];
   const shown = display.length ? display : tpl.buttons.map(fromRegistry);
   return shown.flatMap((b, i) => AS_EDIT[b.type]?.(b, tpl.buttons[i]) ?? []);
