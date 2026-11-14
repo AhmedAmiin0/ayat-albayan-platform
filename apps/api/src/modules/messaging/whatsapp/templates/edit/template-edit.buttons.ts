@@ -23,7 +23,7 @@ export const hasForeignButtons = (row: TemplateRow): boolean =>
   shownButtons(row).some((b) => FOREIGN.has(b.type));
 
 /** The edit's buttons as WhatsApp will draw them (display.buttons). */
-export const displayOf = (buttons: readonly TemplateEditButton[]): TemplateDisplayButton[] =>
+const displayOf = (buttons: readonly TemplateEditButton[]): TemplateDisplayButton[] =>
   buttons.map((b) => ({ type: b.type, text: b.text, ...(b.type === 'url' ? { url: b.url } : {}) }));
 
 /** A code-bound template keeps its registry buttons (intents, links); only the words change. */

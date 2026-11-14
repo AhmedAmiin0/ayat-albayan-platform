@@ -14,11 +14,11 @@ import {
 // One edit of a template's words (owner 2026-11-14), pure: Meta's rules (which statuses, how often,
 // back to review), the code-bound rule (same variables and buttons), and Meta's body rules.
 
-export type EditRefusalCode =
+type EditRefusalCode =
   | 'not_editable' | 'edit_daily_limit' | 'edit_monthly_limit' | 'buttons_unsupported'
   | 'code_bound_variables' | 'code_bound_buttons' | 'reply_intent_required' | 'invalid_template';
 
-export interface EditRefusal {
+interface EditRefusal {
   refused: EditRefusalCode;
   route?: undefined;
   details?: Record<string, unknown>;

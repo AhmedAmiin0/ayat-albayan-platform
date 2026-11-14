@@ -15,7 +15,7 @@ import { isRefusal, planEdit, type EditPlan } from './template-edit.plan';
 import { refusalHttp } from './template-edit.refusal';
 
 /** Who edits: the admin (templates.manage) or an author (templates.author, the allow-list only). */
-export interface EditActor {
+interface EditActor {
   id: string;
   author: boolean;
 }
