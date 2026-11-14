@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { authorMayEdit, authorsTemplates, suggestedCategory, type AuthorEditable } from './author-rules.js';
 
+const ME = 'u-sales-1';
 const starter: AuthorEditable = {
   key: 'summer_offer', sales_starter: true, line: 'chat', header_format: null, status: 'approved',
+  created_by: ME,
 };
 
 describe('templates.author', () => {
@@ -13,9 +15,17 @@ describe('templates.author', () => {
     expect(authorsTemplates(null)).toBe(false);
   });
 
-  it('edits an allow-list template of the chat line that the code does not send', () => {
-    expect(authorMayEdit(starter)).toBe(true);
-    expect(authorMayEdit({ ...starter, status: 'rejected' })).toBe(true);
+  it('edits their own allow-list template of the chat line that the code does not send', () => {
+    expect(authorMayEdit(starter, ME)).toBe(true);
+    expect(authorMayEdit({ ...starter, status: 'rejected' }, ME)).toBe(true);
+  });
+
+  it("never edits another author's template, a seeded one, or with no signed-in user", () => {
+    expect(authorMayEdit({ ...starter, created_by: 'u-sales-2' }, ME)).toBe(false);
+    expect(authorMayEdit({ ...starter, created_by: null }, ME)).toBe(false);
+    expect(authorMayEdit({ ...starter, created_by: undefined }, undefined)).toBe(false);
+    expect(authorMayEdit(starter, undefined)).toBe(false);
+    expect(authorMayEdit({ ...starter, created_by: '' }, '')).toBe(false);
   });
 
   it('never edits off the allow-list, another line, code-bound, PDF, own-button or pending ones', () => {
@@ -28,7 +38,7 @@ describe('templates.author', () => {
       { ...starter, status: 'pending' },
       { ...starter, status: 'disabled' },
     ];
-    for (const t of refused) expect([t, authorMayEdit(t)]).toEqual([t, false]);
+    for (const t of refused) expect([t, authorMayEdit(t, ME)]).toEqual([t, false]);
   });
 
   it('picks MARKETING for an offer, UTILITY otherwise', () => {

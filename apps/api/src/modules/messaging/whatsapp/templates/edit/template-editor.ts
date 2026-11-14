@@ -60,11 +60,11 @@ export class TemplateEditor {
     throw refusalHttp('edit_conflict');
   }
 
-  /** 404, or 403 not_author_editable: an author edits only the allow-list's free templates. */
+  /** 404, or 403 not_author_editable: an author edits only their own free allow-list templates. */
   private async editable(key: string, actor: EditActor): Promise<TemplateRow> {
     const row = await this.queries.get(key);
     if (!row) throw notFound();
-    const refused = actor.author && !authorMayEdit(toTemplateView(row));
+    const refused = actor.author && !authorMayEdit(toTemplateView(row), actor.id);
     if (refused) throw refusalHttp('not_author_editable');
     return row;
   }

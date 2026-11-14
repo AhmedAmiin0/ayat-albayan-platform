@@ -14,10 +14,12 @@ vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch
 const S = t.templates.author;
 const chat = { line: 'chat' as const, sales_starter: true };
 const ROWS = [
-  template({ ...chat, key: 'offer_a', status: 'pending' }),
-  template({ ...chat, key: 'offer_b', status: 'rejected', last_error: 'INVALID_FORMAT' }),
-  template({ ...chat, key: 'lesson_reminder', status: 'approved' }),
-  template({ ...chat, key: 'offer_c', status: 'approved' }),
+  template({ ...chat, key: 'offer_a', status: 'pending', created_by: 'me' }),
+  template({ ...chat, key: 'offer_b', status: 'rejected', last_error: 'INVALID_FORMAT', created_by: 'me' }),
+  template({ ...chat, key: 'lesson_reminder', status: 'approved', created_by: 'me' }),
+  template({ ...chat, key: 'offer_c', status: 'approved', created_by: 'me' }),
+  template({ ...chat, key: 'offer_theirs', status: 'approved', created_by: 'someone-else' }),
+  template({ ...chat, key: 'offer_seeded', status: 'approved', created_by: null }),
 ];
 const editFor = (key: string) => screen.queryByRole('button', { name: t.templates.edit.openFor.replace('{name}', key) });
 
@@ -27,18 +29,20 @@ afterEach(() => {
 });
 
 describe('AuthorTemplatesPage', () => {
-  it('shows each status, Meta\'s reason, and «تعديل» only where the author may edit', async () => {
+  it('shows each status, Meta\'s reason, and «تعديل» only on the author\'s own editable ones', async () => {
     apiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { id: 'me' } : ROWS));
     renderWithClient(<AuthorTemplatesPage />);
     expect(await screen.findByText('offer_a')).toBeTruthy();
     expect(screen.getByText(S.status.pending)).toBeTruthy();
     expect(screen.getByText(S.status.rejected)).toBeTruthy();
     expect(screen.getByText(S.rejectedReason.replace('{reason}', 'INVALID_FORMAT'))).toBeTruthy();
-    expect(screen.getAllByText(S.status.approved)).toHaveLength(2);
+    expect(screen.getAllByText(S.status.approved)).toHaveLength(4);
     expect(editFor('offer_a')).toBeNull();
     expect(editFor('offer_b')).toBeTruthy();
     expect(editFor('lesson_reminder')).toBeNull();
     expect(editFor('offer_c')).toBeTruthy();
+    expect(editFor('offer_theirs')).toBeNull();
+    expect(editFor('offer_seeded')).toBeNull();
     expect(screen.getByText(S.codeBound)).toBeTruthy();
   });
 

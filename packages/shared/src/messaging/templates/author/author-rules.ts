@@ -17,14 +17,22 @@ export const AUTHOR_DAILY_LIMIT = 5;
 export const authorsTemplates = (who: TemplateSender | null | undefined): boolean =>
   (who?.permissions ?? []).includes(AUTHOR_PERMISSION);
 
-export type AuthorEditable = Pick<TemplateView, 'key' | 'sales_starter' | 'line' | 'header_format' | 'status'>;
+export type AuthorEditable = Pick<
+  TemplateView, 'key' | 'sales_starter' | 'line' | 'header_format' | 'status' | 'created_by'
+>;
+
+/** Did this user write it here? A seeded or imported one (created_by null) is nobody's. */
+const writtenBy = (t: AuthorEditable, userId: string | undefined): boolean =>
+  userId !== undefined && userId !== '' && t.created_by === userId;
 
 /**
- * May an author edit this template? On the allow-list, on the chat line, not code-bound, not a PDF
- * or own-button one, and in a status Meta lets one edit (not while pending review).
+ * May this author edit this template? Only their own (owner 2026-11-14): written by them, on the
+ * allow-list, on the chat line, not code-bound, not a PDF or own-button one, and in a status Meta
+ * lets one edit (not while pending review).
  */
-export function authorMayEdit(t: AuthorEditable): boolean {
+export function authorMayEdit(t: AuthorEditable, userId: string | undefined): boolean {
   const rules = [
+    writtenBy(t, userId),
     t.sales_starter,
     t.line === 'chat',
     !isCodeBound(t.key),
