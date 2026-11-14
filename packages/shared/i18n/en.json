@@ -7503,7 +7503,8 @@
       "notifications": "Notifications",
       "sending": "Sending and safety",
       "google": "Google sync",
-      "teachers": "Teacher pages"
+      "teachers": "Teacher pages",
+      "family": "Family app"
     },
     "all": "All",
     "clearSearch": "Clear search",
@@ -8134,7 +8135,11 @@
       "ttl": "Code lifetime (minutes)",
       "ttlHint": "After that a new code is needed.",
       "attempts": "Attempts per code",
-      "attemptsHint": "Once used up, a new code is needed."
+      "attemptsHint": "Once used up, a new code is needed.",
+      "chat": "In-app chat for families",
+      "chatHint": "When on, guardians and adult students message the teacher from the app and the family pages. When off, the chat is hidden and no message is accepted.",
+      "paymentInstructions": "Payment instructions for families",
+      "paymentInstructionsHint": "Shown under the amount due on the package page (e.g. bank transfer details). Leave empty to hide."
     },
     "teacherUsername": {
       "label": "Username",

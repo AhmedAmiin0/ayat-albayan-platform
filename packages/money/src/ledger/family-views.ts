@@ -1,4 +1,4 @@
-// The family app's money view (docs/50 §5): a reduction of StudentBalanceView (views.ts).
+// The family's money responses (docs/50 §5): reductions of the staff views in views.ts.
 
 /**
  * The family's reading of GET /students/:id/balance (docs/50 §5): lesson counts over the live

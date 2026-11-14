@@ -262,6 +262,7 @@
   "PortalChannelController.post": ["guardian","student"],
   "PortalChannelController.read": ["guardian","student"],
   "PortalChannelController.unread": ["guardian","student"],
+  "PortalController.history": ["guardian","student"],
   "PortalController.join": ["guardian","student"],
   "PortalController.me": ["guardian","student"],
   "PortalController.upcoming": ["guardian","student"],

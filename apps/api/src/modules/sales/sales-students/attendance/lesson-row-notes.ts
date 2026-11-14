@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { COURSE_PAUSE_REASON, zonedPartsIn } from '@ab/shared';
+import { AUTO_NO_SHOW_REASON, COURSE_PAUSE_REASON, zonedPartsIn } from '@ab/shared';
 import { z } from 'zod';
 import type { AttendanceLessonRow } from './student-attendance.rows';
 
@@ -18,6 +18,9 @@ type NoteLesson = Pick<
   | 'time_edit_was'
 >;
 
+/** What the reason rules read of a lesson (the family's history reads only these). */
+type ReasonLesson = Pick<NoteLesson, 'status' | 'cancel_reason' | 'starts_at' | 'rule'>;
+
 /** One-lesson cancels whose reason is shown (docs/47): by her, by the academy, the family's. */
 const REASON_STATUSES: ReadonlySet<string> = new Set([
   'cancelled_by_teacher',
@@ -25,7 +28,7 @@ const REASON_STATUSES: ReadonlySet<string> = new Set([
   'excused',
 ]);
 
-const isReasonStatus = (l: NoteLesson): boolean => REASON_STATUSES.has(l.status);
+const isReasonStatus = (l: ReasonLesson): boolean => REASON_STATUSES.has(l.status);
 
 /**
  * The lesson's day (in its rule's zone) is on or after the rule's last day: closed by ending the
@@ -37,13 +40,28 @@ export function seriesEnded(l: Pick<NoteLesson, 'starts_at' | 'rule'>): boolean 
   return zonedPartsIn(new Date(l.starts_at), rule.tz).date >= rule.ends_on;
 }
 
-const isPause = (l: NoteLesson): boolean => l.cancel_reason === COURSE_PAUSE_REASON;
+const isPause = (l: ReasonLesson): boolean => l.cancel_reason === COURSE_PAUSE_REASON;
 
 /** Whose cancel reasons a reader sees: the teacher never a series-end or stop text (docs/47). */
-export const reasonShown: Record<AttendanceReader, (l: NoteLesson) => boolean> = {
+export const reasonShown: Record<AttendanceReader, (l: ReasonLesson) => boolean> = {
   staff: isReasonStatus,
   teacher: (l) => isReasonStatus(l) && (isPause(l) || !seriesEnded(l)),
 };
+
+/** Texts that are the platform's own, never a family's excuse: the pause and the job's no-show. */
+const SYSTEM_REASONS: ReadonlySet<string | null> = new Set([
+  COURSE_PAUSE_REASON,
+  AUTO_NO_SHOW_REASON,
+]);
+
+/**
+ * The family's own excuse (docs/50 §5): an excused lesson's reason as the teacher may read it
+ * (never a series-end or stop text), and never the pause or a system text. null otherwise.
+ */
+export function familyReason(l: ReasonLesson): string | null {
+  const shown = l.status === 'excused' && reasonShown.teacher(l);
+  return shown && !SYSTEM_REASONS.has(l.cancel_reason) ? l.cancel_reason : null;
+}
 
 const iso = (at: string): string => new Date(at).toISOString();
 const wasTimes = z.object({ starts_at: z.string() });
