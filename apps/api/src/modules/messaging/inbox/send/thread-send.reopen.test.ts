@@ -49,7 +49,9 @@ beforeEach(() => {
 describe('ThreadSendService.template with reopen', () => {
   it('closed window: queued under the reopen key with its 24 h expiry', async () => {
     await service().template(ask(), NOW);
-    expect(stamp).toHaveBeenCalledWith({ phone: PHONE, line: 'chat', now: NOW });
+    expect(stamp).toHaveBeenCalledWith({
+      phone: PHONE, line: 'chat', now: NOW, by: { actorId: 'u1', key: 'free_trial_invite' },
+    });
     expect(queued()).toMatchObject({ dedup_key: STAMP.dedup, expires_at: STAMP.expiresAt });
   });
 

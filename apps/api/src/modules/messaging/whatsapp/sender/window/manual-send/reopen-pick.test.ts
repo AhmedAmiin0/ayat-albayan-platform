@@ -19,6 +19,7 @@ const bubble = (over: Partial<ReopenBubble> = {}): ReopenBubble => ({
   ...reopenOf(over),
   id: 'm-reopen',
   template_key: 'free_trial_invite',
+  created_by: 'other-staff',
   ...over,
 });
 
@@ -29,7 +30,10 @@ const pick = () =>
     { since: rows } as unknown as ReopenPickRepo,
     { read: setting } as unknown as WindowSettings,
   );
-const at = { phone: PHONE, line: 'chat' as const, now: NOW };
+const at = {
+  phone: PHONE, line: 'chat' as const, now: NOW,
+  by: { actorId: 'me', key: 'free_trial_invite' },
+};
 
 beforeEach(() => {
   rows.mockReset().mockResolvedValue([]);
@@ -54,6 +58,11 @@ describe('ReopenPick.stamp: the picked template takes the reopen key', () => {
     await expect(pick().stamp(at)).rejects.toMatchObject({
       response: { code: 'reopen_live' },
     });
+  });
+
+  it('my own retry of the same template: its key again (the outbox replays the first row)', async () => {
+    rows.mockResolvedValue([bubble({ status: 'queued', created_by: 'me', expires_at: null })]);
+    await expect(pick().stamp(at)).resolves.toMatchObject({ dedup: DAY });
   });
 
   it("today's tries all used: 409 reopen_tries_used", async () => {

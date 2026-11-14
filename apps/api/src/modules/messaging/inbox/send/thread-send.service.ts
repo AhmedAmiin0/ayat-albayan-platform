@@ -127,7 +127,7 @@ export class ThreadSendService {
     const missing = missingParams(template, s.input.params);
     if (missing.length) throw waHttpError('missing_params', 400, { missing });
     const thread = await this.queries.thread(s.phone);
-    const ask = { phone: s.phone, input: s.input, template, thread, now };
+    const ask = { phone: s.phone, actorId: s.actorId, input: s.input, template, thread, now };
     const reopen = await reopenStamp(this.reopens, ask);
     return this.outbox.queue({
       ...outboundBase(s, thread),

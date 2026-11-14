@@ -5,7 +5,8 @@ import { messagingWindowOpen, type ThreadRow } from '@/modules/messaging/inbox/t
 /** A thread template send that may be «إعادة فتح المحادثة» (owner 2026-11-14). */
 interface ReopenAsk {
   phone: string;
-  input: Pick<ThreadTemplate, 'reopen'>;
+  actorId: string;
+  input: Pick<ThreadTemplate, 'reopen' | 'key'>;
   template: Pick<TemplateView, 'line'>;
   thread: ThreadRow | null;
   now: Date;
@@ -24,5 +25,6 @@ export async function reopenStamp(
   ask: ReopenAsk,
 ): Promise<ReopenStamp | null> {
   if (!pick || !reopens(ask)) return null;
-  return pick.stamp({ phone: ask.phone, line: ask.template.line, now: ask.now });
+  const by = { actorId: ask.actorId, key: ask.input.key };
+  return pick.stamp({ phone: ask.phone, line: ask.template.line, now: ask.now, by });
 }

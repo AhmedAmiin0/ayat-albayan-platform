@@ -21,6 +21,21 @@ interface PickAt {
   phone: string;
   line: WaLine;
   now: Date;
+  /** Who sends which template: a retry of their own live reopen replays it (rule 8). */
+  by: { actorId: string; key: string };
+}
+
+/** The same staff member's live reopen of the same template: a retried POST, not a second. */
+const ownRetry = (r: ReopenBubble, by: PickAt['by']): boolean =>
+  r.created_by === by.actorId && r.template_key === by.key;
+
+/**
+ * A live reopen's key for the same sender's retry: the outbox meets that dedup key and answers
+ * the first row (replayed), so nothing new goes. Anyone else's: 409 reopen_live.
+ */
+function retryKey(live: ReopenBubble, by: PickAt['by']): string {
+  if (!live.dedup_key || !ownRetry(live, by)) throw waHttpError('reopen_live', 409);
+  return live.dedup_key;
 }
 
 const last4 = (phone: string): string => `…${phone.slice(-4)}`;
@@ -52,10 +67,12 @@ export class ReopenPick {
   async stamp(at: PickAt): Promise<ReopenStamp> {
     if (at.line !== 'chat') throw waHttpError('reopen_not_chat_line', 400);
     const rows = await this.repo.since(at.phone, dayBefore(at.now));
-    if (rows.some((r) => reopenLive(r, at.now))) throw waHttpError('reopen_live', 409);
+    const expiresAt = new Date(at.now.getTime() + DAY_MS).toISOString();
+    const live = rows.find((r) => reopenLive(r, at.now));
+    if (live) return { dedup: retryKey(live, at.by), expiresAt };
     const dedup = nextReopenKey(at.phone, rows, at.now);
     if (!dedup) throw waHttpError('reopen_tries_used', 409);
-    return { dedup, expiresAt: new Date(at.now.getTime() + DAY_MS).toISOString() };
+    return { dedup, expiresAt };
   }
 
   /**
@@ -69,7 +86,8 @@ export class ReopenPick {
         this.repo.since(view.phone_e164, dayBefore(now)),
         this.settings.read(),
       ]);
-      return { ...view, reopen_sent: sentOf(rows, now), ...preferred(settings.chat_reopen_template) };
+      const sent = sentOf(rows, now);
+      return { ...view, reopen_sent: sent, ...preferred(settings.chat_reopen_template) };
     } catch (e) {
       this.log.warn(`reopen state not read for ${last4(view.phone_e164)}: ${String(e)}`);
       return view;
