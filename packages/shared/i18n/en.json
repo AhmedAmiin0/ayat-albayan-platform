@@ -3624,7 +3624,17 @@
       "template_sync_off": "Template sync with WhatsApp is turned off in this environment",
       "allow_list_only": "Managing templates is for the admin only",
       "unknown_number": "This number no longer exists. Refresh the page and pick another number.",
-      "template_exists": "The registry already has a template with this name, or with this name and language. Pick another name."
+      "template_exists": "The registry already has a template with this name, or with this name and language. Pick another name.",
+      "code_bound_variables": "The platform sends this template by itself with a fixed number of variables: keep the same number and change the wording only.",
+      "code_bound_buttons": "The platform sends this template by itself with fixed buttons: keep their number, types, order and links; only their text may change.",
+      "edit_daily_limit": "This approved template was edited in the last 24 hours, and Meta allows one edit every 24 hours. Try again later.",
+      "edit_monthly_limit": "This approved template reached 10 edits in 30 days, the limit Meta allows.",
+      "not_editable": "A template under Meta review or disabled cannot be edited. Wait for the review, then try again.",
+      "not_author_editable": "You cannot edit this template: you can edit only the chat templates allowed to you that the platform does not send by itself.",
+      "author_daily_limit": "You reached the daily limit for new templates ({max} a day). Try again tomorrow.",
+      "reply_intent_required": "Either every quick reply has an action or none has one; a link button the sender completes needs an action on every quick reply.",
+      "buttons_unsupported": "This template has a call or copy-code button, which the platform cannot edit.",
+      "edit_conflict": "This template was edited or changed status while saving. Reload, check its text, then try again."
     },
     "checkedNow": "Template status checked",
     "buttons": "Buttons",
@@ -3718,6 +3728,58 @@
       "missing": "Unavailable templates ({count}):",
       "item": "{name} ({meta})",
       "fix": "To fix one: create the template in the CRM with the same name and language (Settings → Templates → New template, then sync from Meta), then mark it approved in the table."
+    },
+    "edit": {
+      "open": "Edit",
+      "openFor": "Edit template {name}",
+      "title": "Edit template",
+      "limitsTitle": "Meta's edit rules",
+      "limitApproved": "An approved template can be edited once every 24 hours, and up to 10 times in 30 days.",
+      "limitFixed": "The template's name, category and header do not change.",
+      "limitReview": "After an edit the template goes back to Meta review and is not sent until approved again.",
+      "codeBound": "The platform sends this template by itself: change the wording only, and keep the variables, buttons and links as they are.",
+      "nextAt": "The next edit is allowed at {when}.",
+      "localNote": "This template was not sent to Meta yet, so the edit is saved in the registry only.",
+      "save": "Save edit",
+      "saved": "The edit of “{name}” was sent to Meta for review.",
+      "savedLocal": "The edit of “{name}” was saved.",
+      "replyPlain": "Plain reply, no action",
+      "pendingNote": "The template is under Meta review; edit it once the result is in."
+    },
+    "author": {
+      "nav": "Templates",
+      "title": "Templates",
+      "intro": "The chat templates allowed to you. A new template goes straight to Meta and joins the send list once approved.",
+      "new": "New template",
+      "newTitle": "New template",
+      "newDescription": "Write the message and its variables. The template goes to Meta for review from the chat number as soon as you save.",
+      "key": "Template name on Meta (optional)",
+      "keyHint": "Lowercase English letters, digits and underscores. Leave it blank to have a name chosen.",
+      "categoryHint": "A message with an offer or a discount is “Marketing”, any other is “Utility”. The category was picked from the text; you may change it.",
+      "categories": {
+        "utility": "Utility",
+        "marketing": "Marketing"
+      },
+      "replies": "Quick reply buttons (optional)",
+      "repliesHint": "Up to {max} buttons, each with short text.",
+      "submit": "Send to Meta",
+      "submitted": "“{name}” was sent to Meta for review.",
+      "dailyLimit": "You can create {max} new templates a day.",
+      "status": {
+        "pending": "Under review",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "other": "Unavailable"
+      },
+      "rejectedReason": "Rejection reason: {reason}",
+      "mine": "Created by you",
+      "codeBound": "Sent by the platform",
+      "empty": "No templates are allowed to you yet.",
+      "preview": "Preview",
+      "loadError": "The templates could not be loaded. Try again.",
+      "retry": "Try again",
+      "close": "Close",
+      "back": "Back"
     }
   },
   "mobileAdmin": {
@@ -5861,7 +5923,8 @@
       "leads.link_family": "Link a lead's number to an existing student's family",
       "people.edit": "Edit students' and families' details",
       "students.attach_guardian": "Link a student to another guardian",
-      "people.switch_role": "Convert between student and guardian"
+      "people.switch_role": "Convert between student and guardian",
+      "templates.author": "Write chat templates"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -5881,7 +5944,8 @@
       "leads.link_family": "Adds the lead chat's number as a second number of a registered student's family, so the chat shows the family. It does not change who follows up the lead and makes no one responsible for the family. No message is sent.",
       "people.edit": "Edit any student's name, age, gender, level, time zone and notes, and the family's details and numbers. Never deletes or merges, never changes the status, program or teacher.",
       "students.attach_guardian": "Move the student to another family or to a new guardian by number. Packages, lessons and payments stay with the student; the old family stays. Also needs «Edit students' and families' details».",
-      "people.switch_role": "«The student is the guardian», converting a guardian into a student of their family, and converting a student record with no history into the family's guardian. Also needs «Edit students' and families' details»."
+      "people.switch_role": "«The student is the guardian», converting a guardian into a student of their family, and converting a student record with no history into the family's guardian. Also needs «Edit students' and families' details».",
+      "templates.author": "Create new templates sent to Meta from the chat number (they join the allowed list once approved) and edit that list's templates the platform does not send by itself. Does not grant managing every template."
     },
     "page": {
       "title": "Roles and permissions",

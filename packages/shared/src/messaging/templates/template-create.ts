@@ -39,35 +39,41 @@ const fixedText = (max: number) =>
     .nullable()
     .default(null);
 
-const buttonText = z.string().trim().min(1).max(TEMPLATE_LIMITS.buttonText);
+export const templateButtonText = z.string().trim().min(1).max(TEMPLATE_LIMITS.buttonText);
 
 /**
  * A URL button: https, its only variable a {{1}} suffix (params.buttons fills each by order);
  * `example` is that suffix's sample for Meta's reviewer.
  */
-const urlButton = z.object({
+export const templateUrlButton = z.object({
   type: z.literal('url'),
-  text: buttonText,
+  text: templateButtonText,
   url: z.string().trim().max(2000).regex(/^https:\/\/[^\s{}]+(\{\{1\}\})?$/),
   example: z.string().trim().min(1).max(TEMPLATE_LIMITS.sample).regex(/^\S+$/).optional(),
 });
 
 const replyButton = z.object({
   type: z.literal('quick_reply'),
-  text: buttonText,
+  text: templateButtonText,
   intent: z.enum(CREATE_REPLY_INTENTS),
 });
 
 /**
  * {{n}}'s name (one the composers label and prefill, or var_n) and its sample for Meta's reviewer.
  */
-const param = z.object({
+export const templateParam = z.object({
   name: z.string().regex(/^[a-z][a-z0-9_]{0,39}$/),
   sample: z.string().trim().min(1).max(TEMPLATE_LIMITS.sample),
 });
 
-const fewUrls = (list: readonly { type: string }[]) =>
+export const fewUrls = (list: readonly { type: string }[]): boolean =>
   list.filter((b) => b.type === 'url').length <= TEMPLATE_LIMITS.urlButtons;
+
+/** A footer: fixed words, no variable. */
+export const templateFooter = fixedText(TEMPLATE_LIMITS.footer);
+
+/** The body as typed: Meta's review rules are the API's (template-review.ts). */
+export const templateBody = z.string().trim().min(1).max(TEMPLATE_LIMITS.body);
 
 /** POST /messaging/templates: one new row, not submitted; params[i] is {{i+1}}. */
 export const templateCreateSchema = z.object({
@@ -76,11 +82,11 @@ export const templateCreateSchema = z.object({
   category: z.enum(['utility', 'marketing']),
   language: z.string().trim().regex(/^[a-z]{2,3}(_[A-Z]{2})?$/).default('ar'),
   header: fixedText(TEMPLATE_LIMITS.header),
-  body: z.string().trim().min(1).max(TEMPLATE_LIMITS.body),
-  footer: fixedText(TEMPLATE_LIMITS.footer),
-  params: z.array(param).max(BODY_SLOTS.length).default([]),
+  body: templateBody,
+  footer: templateFooter,
+  params: z.array(templateParam).max(BODY_SLOTS.length).default([]),
   buttons: z
-    .array(z.discriminatedUnion('type', [urlButton, replyButton]))
+    .array(z.discriminatedUnion('type', [templateUrlButton, replyButton]))
     .max(TEMPLATE_LIMITS.buttons)
     .refine(fewUrls, 'url_buttons')
     .default([]),

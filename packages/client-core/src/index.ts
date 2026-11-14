@@ -23,4 +23,5 @@ export * from './messaging/thread-pages/index.js';
 export * from './messaging/thread-sync/index.js';
 export * from './messaging/whatsapp-send/index.js';
 export * from './messaging/ticks/index.js';
+export * from './messaging/templates/index.js';
 export * from './teaching/teacher-home/index.js';

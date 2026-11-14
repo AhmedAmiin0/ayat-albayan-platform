@@ -32,6 +32,8 @@ export function toTemplateView(row: TemplateRow, numbers?: readonly ApprovalRow[
     number_id: row.number_id,
     crm_name: row.crm_name,
     crm_language: row.crm_language,
+    created_by: row.created_by,
+    approved_edits: row.approved_edits,
     ...(numbers ? { numbers: numbers.map(toApproval) } : {}),
   };
 }

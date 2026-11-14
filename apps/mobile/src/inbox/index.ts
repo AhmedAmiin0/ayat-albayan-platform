@@ -29,3 +29,5 @@ export {
   SpeakerIcon,
   SwitchCameraIcon,
 } from './thread/calls/screen/call-icons';
+// «القوالب» (owner 2026-11-14): list, create and edit; reached from «المزيد».
+export { TemplateCreateScreen, TemplateEditScreen, TemplatesScreen } from './composer/templates';

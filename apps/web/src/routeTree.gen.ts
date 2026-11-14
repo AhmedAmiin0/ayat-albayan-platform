@@ -82,6 +82,7 @@ import { Route as AdminSettingsIntegrationsRouteImport } from './routes/admin/se
 import { Route as AdminSettingsValuesRouteImport } from './routes/admin/settings.values'
 import { Route as AdminStudentsStudentIdRouteImport } from './routes/admin/students/$studentId'
 import { Route as AdminTeachersTeacherIdRouteImport } from './routes/admin/teachers/$teacherId'
+import { Route as SalesTemplatesIndexRouteImport } from './routes/sales/templates/index'
 import { Route as TeacherAvailabilityIndexRouteImport } from './routes/teacher/availability/index'
 import { Route as TeacherReportLessonIdRouteImport } from './routes/teacher/report.$lessonId'
 import { Route as TeacherReportsIndexRouteImport } from './routes/teacher/reports.index'
@@ -463,6 +464,11 @@ const AdminTeachersTeacherIdRoute = AdminTeachersTeacherIdRouteImport.update({
   path: '/$teacherId',
   getParentRoute: () => AdminTeachersRouteRoute,
 } as any)
+const SalesTemplatesIndexRoute = SalesTemplatesIndexRouteImport.update({
+  id: '/templates/',
+  path: '/templates/',
+  getParentRoute: () => SalesRoute,
+} as any)
 const TeacherAvailabilityIndexRoute =
   TeacherAvailabilityIndexRouteImport.update({
     id: '/availability/',
@@ -591,6 +597,7 @@ export interface FileRoutesByFullPath {
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
+  '/sales/templates/': typeof SalesTemplatesIndexRoute
   '/teacher/availability/': typeof TeacherAvailabilityIndexRoute
   '/teacher/reports/': typeof TeacherReportsIndexRoute
   '/teacher/students/': typeof TeacherStudentsIndexRoute
@@ -670,6 +677,7 @@ export interface FileRoutesByTo {
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
+  '/sales/templates': typeof SalesTemplatesIndexRoute
   '/teacher/availability': typeof TeacherAvailabilityIndexRoute
   '/teacher/reports': typeof TeacherReportsIndexRoute
   '/teacher/students': typeof TeacherStudentsIndexRoute
@@ -755,6 +763,7 @@ export interface FileRoutesById {
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
+  '/sales/templates/': typeof SalesTemplatesIndexRoute
   '/teacher/availability/': typeof TeacherAvailabilityIndexRoute
   '/teacher/reports/': typeof TeacherReportsIndexRoute
   '/teacher/students/': typeof TeacherStudentsIndexRoute
@@ -841,6 +850,7 @@ export interface FileRouteTypes {
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
     | '/teacher/students/$studentId'
+    | '/sales/templates/'
     | '/teacher/availability/'
     | '/teacher/reports/'
     | '/teacher/students/'
@@ -920,6 +930,7 @@ export interface FileRouteTypes {
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
     | '/teacher/students/$studentId'
+    | '/sales/templates'
     | '/teacher/availability'
     | '/teacher/reports'
     | '/teacher/students'
@@ -1004,6 +1015,7 @@ export interface FileRouteTypes {
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
     | '/teacher/students/$studentId'
+    | '/sales/templates/'
     | '/teacher/availability/'
     | '/teacher/reports/'
     | '/teacher/students/'
@@ -1547,6 +1559,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTeachersTeacherIdRouteImport
       parentRoute: typeof AdminTeachersRouteRoute
     }
+    '/sales/templates/': {
+      id: '/sales/templates/'
+      path: '/templates'
+      fullPath: '/sales/templates/'
+      preLoaderRoute: typeof SalesTemplatesIndexRouteImport
+      parentRoute: typeof SalesRoute
+    }
     '/teacher/availability/': {
       id: '/teacher/availability/'
       path: '/availability'
@@ -1780,6 +1799,7 @@ interface SalesRouteChildren {
   SalesSubscriptionsRoute: typeof SalesSubscriptionsRoute
   SalesTeachersRoute: typeof SalesTeachersRoute
   SalesIndexRoute: typeof SalesIndexRoute
+  SalesTemplatesIndexRoute: typeof SalesTemplatesIndexRoute
 }
 
 const SalesRouteChildren: SalesRouteChildren = {
@@ -1795,6 +1815,7 @@ const SalesRouteChildren: SalesRouteChildren = {
   SalesSubscriptionsRoute: SalesSubscriptionsRoute,
   SalesTeachersRoute: SalesTeachersRoute,
   SalesIndexRoute: SalesIndexRoute,
+  SalesTemplatesIndexRoute: SalesTemplatesIndexRoute,
 }
 
 const SalesRouteWithChildren = SalesRoute._addFileChildren(SalesRouteChildren)

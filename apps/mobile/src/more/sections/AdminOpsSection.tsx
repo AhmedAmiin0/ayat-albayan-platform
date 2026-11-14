@@ -11,6 +11,7 @@ const rows = () =>
     { route: 'dashboard', title: t.mobileAdmin.rows.dashboard, href: '/more/ops/dashboard' },
     { route: 'settings', title: t.mobileAdmin.rows.settings, href: '/more/ops/settings' },
     { route: 'activity', title: t.mobileAdmin.rows.activity, href: '/more/ops/activity' },
+    { route: 'templates', title: t.templates.author.nav, href: '/more/templates' },
   ] as const;
 
 /** «الإدارة»: the web admin screens that fit a phone: overview, academy settings, activity log (by permission). */

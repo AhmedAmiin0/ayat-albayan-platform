@@ -26,6 +26,7 @@ export * from './templates/templates.js';
 export * from './templates/template-number.js';
 export * from './templates/template-create.js';
 export * from './templates/free-text/free-text.js';
+export * from './templates/author/index.js';
 export * from './templates/teacher-lesson-v3.js';
 export * from './chat/thread-reopen.js';
 export * from './chat/ticks.js';

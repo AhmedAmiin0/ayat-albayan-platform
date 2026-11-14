@@ -16,6 +16,7 @@ import { MessagesRepo } from './messages/messages.repo';
 import { AppSendRepo } from './messages/app-send';
 import { SendGate } from './gate/send-gate';
 import { TemplatesRepo, type ApprovalRow } from './templates/catalog/templates.repo';
+import { TemplateAuthorRepo } from './templates/author/template-author.repo';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from './whatsapp.types';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
@@ -35,6 +36,7 @@ const clientMock = () => ({
   configured: vi.fn(() => false),
   getTemplates: vi.fn(),
   submitTemplate: vi.fn(),
+  editTemplate: vi.fn(),
   canUploadSamples: vi.fn(),
   uploadSample: vi.fn(),
 });
@@ -55,6 +57,7 @@ function mocks() {
     storage: { signedDownload: vi.fn() },
     sender: { kick: vi.fn() },
     audit: { record: vi.fn() },
+    authored: { createdSince: vi.fn(async () => 0) },
   };
 }
 
@@ -75,6 +78,7 @@ export async function whatsappApp(resolver: PermissionResolver = systemResolver)
     .overrideProvider(MessageSender).useValue(m.sender)
     .overrideProvider(SendGate).useValue(m.gate)
     .overrideProvider(AuditService).useValue(m.audit)
+    .overrideProvider(TemplateAuthorRepo).useValue(m.authored)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   await app.init();

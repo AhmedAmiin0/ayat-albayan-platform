@@ -2731,10 +2731,13 @@ export type Database = {
       };
       message_templates: {
         Row: {
+          approved_edits: string[];
           body_ar: string;
           buttons: NonNullable<Json>;
           category: Database['public']['Enums']['template_category'];
           crm_language: string | null;
+          created_at: string;
+          created_by: string | null;
           crm_name: string | null;
           display: Json | null;
           footer_ar: string | null;
@@ -2756,10 +2759,13 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          approved_edits?: string[];
           body_ar: string;
           buttons?: NonNullable<Json>;
           category?: Database['public']['Enums']['template_category'];
           crm_language?: string | null;
+          created_at?: string;
+          created_by?: string | null;
           crm_name?: string | null;
           display?: Json | null;
           footer_ar?: string | null;
@@ -2781,10 +2787,13 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          approved_edits?: string[];
           body_ar?: string;
           buttons?: NonNullable<Json>;
           category?: Database['public']['Enums']['template_category'];
           crm_language?: string | null;
+          created_at?: string;
+          created_by?: string | null;
           crm_name?: string | null;
           display?: Json | null;
           footer_ar?: string | null;
