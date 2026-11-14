@@ -6,6 +6,7 @@ const ROUTES: ['GET' | 'POST', string][] = [
   ['GET', `/portal/students/${S1}/lessons`],
   ['GET', `/portal/students/${S1}/reports`],
   ['GET', `/portal/students/${S1}/package`],
+  ['GET', `/portal/students/${S1}/history?status=attended`],
   ['POST', `/portal/students/${S1}/reports/f1000000-0000-4000-8000-000000000001/url`],
 ];
 
@@ -51,12 +52,13 @@ describe('/portal scope over HTTP', () => {
     }
     expect(t.lessons.ahead).not.toHaveBeenCalled();
     expect(t.reports.sent).not.toHaveBeenCalled();
-    expect(t.packages.packages).not.toHaveBeenCalled();
+    expect(t.money.studentBalance).not.toHaveBeenCalled();
+    expect(t.history.before).not.toHaveBeenCalled();
     expect(t.storage.signedDownload).not.toHaveBeenCalled();
   });
 
   it('a student never reaches a sibling (same guardian)', async () => {
-    for (const path of ['lessons', 'reports', 'package']) {
+    for (const path of ['lessons', 'reports', 'package', 'history?status=absent']) {
       expect((await t.call('GET', `/portal/students/${S2}/${path}`, 'student1')).statusCode).toBe(404);
     }
     expect((await t.call('GET', `/portal/students/${S2}/lessons`, 'guardianA')).statusCode).toBe(200);

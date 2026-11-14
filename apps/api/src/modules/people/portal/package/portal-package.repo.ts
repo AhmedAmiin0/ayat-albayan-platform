@@ -1,35 +1,37 @@
-import type { PackageSize, SubscriptionStatus } from '@ab/shared';
+import type { PortalPayment } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 
-/** A package without price, currency, fx, quote or notes. */
-interface PortalPackageRow {
-  id: string;
-  package: PackageSize | null;
-  duration: number;
-  lessons_total: number;
-  starts_on: string;
-  renews_on: string | null;
-  status: SubscriptionStatus;
-}
+/** A family's payment history is short; a long one shows its newest rows. */
+const PAYMENTS_LIMIT = 100;
+const PAYMENT_SELECT = 'paid_at, amount, currency, kind, subscription:subscriptions!inner(student_id)';
 
-/** «الباقة» reads (service role). The balance comes from BalanceQueries (v_subscription_balance). */
+/**
+ * «الباقة» reads (service role, the student already scoped). The balance itself is the staff one
+ * (PackagesService.studentBalance → toFamilyBalance).
+ */
 @Injectable()
 export class PortalPackageRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** The student's packages in FIFO order (as SubscriptionsQueries.forStudent): the last is the current one; never a cancelled one. */
-  async packages(studentId: string): Promise<PortalPackageRow[]> {
+  /**
+   * The student's payments over every package, newest first: date, amount, currency and kind only
+   * (never the receipt, the note, the method or who recorded it).
+   */
+  async payments(studentId: string): Promise<PortalPayment[]> {
     const { data, error } = await this.db
-      .from('subscriptions')
-      .select('id, package, duration, lessons_total, starts_on, renews_on, status')
-      .eq('student_id', studentId)
-      .neq('status', 'cancelled')
-      .order('starts_on')
-      .order('created_at')
-      .order('id');
+      .from('payments')
+      .select(PAYMENT_SELECT)
+      .eq('subscription.student_id', studentId)
+      .order('paid_at', { ascending: false })
+      .limit(PAYMENTS_LIMIT);
     if (error) throw dbError(error);
-    return data;
+    return data.map((p) => ({
+      paid_at: p.paid_at,
+      amount: p.amount,
+      currency: p.currency,
+      kind: p.kind,
+    }));
   }
 }

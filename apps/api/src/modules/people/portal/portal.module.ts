@@ -2,7 +2,10 @@ import { Module } from '@nestjs/common';
 import { SubscriptionsModule } from '@/modules/finance/subscriptions';
 import { ClassroomModule } from '@/modules/teaching/classroom';
 import { ChatNumber } from './home/chat-number';
+import { PortalHistoryRepo } from './history/portal-history.repo';
+import { PortalHistoryService } from './history/portal-history.service';
 import { PortalHomeService } from './home/portal-home.service';
+import { PortalLessonExtras } from './lessons/portal-lesson-extras';
 import { PortalLessonsRepo } from './lessons/portal-lessons.repo';
 import { PortalLessonsService } from './lessons/portal-lessons.service';
 import { PortalPackageRepo } from './package/portal-package.repo';
@@ -30,6 +33,9 @@ import { PortalScopeRepo } from './scope/portal-scope.repo';
     PortalReportsService,
     PortalPackageRepo,
     PortalPackageService,
+    PortalHistoryRepo,
+    PortalHistoryService,
+    PortalLessonExtras,
   ],
   exports: [PortalScopes],
 })

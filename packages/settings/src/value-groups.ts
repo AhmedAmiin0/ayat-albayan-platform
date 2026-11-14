@@ -6,7 +6,7 @@ import { TEACHER_PAGE_KEYS } from './domains/teaching/teacher-pages.js';
 // «i dont like long pages», «stick with table»). Kept apart from layout.ts, which still orders the
 // old single page; docs/26 26-P1 later moves `group`/`confirm`/`ownedBy` into the registry itself.
 
-/** The editable groups of «القيم», in list order (55 keys). */
+/** The editable groups of «القيم», in list order (57 keys). */
 export const VALUE_GROUPS = {
   schedule: SCHEDULE_KEYS,
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
@@ -36,6 +36,7 @@ export const VALUE_GROUPS = {
   sales: ['sales_auto_assign', 'sales_require_assignee', 'renewal_commission_enabled', 'renewal_commission_percent'],
   retention: ['recording_retention_days', 'activity_retention_days'],
   teachers: TEACHER_PAGE_KEYS,
+  family: ['family_chat_enabled', 'family_payment_instructions'],
 } as const satisfies Record<string, readonly SettingKey[]>;
 export type ValueGroupId = keyof typeof VALUE_GROUPS;
 export const VALUE_GROUP_IDS = Object.keys(VALUE_GROUPS) as ValueGroupId[];
@@ -80,5 +81,6 @@ export const VALUE_CONFIRM: Partial<Record<SettingKey, 'typed' | 'plain'>> = {
   whatsapp_calls_enabled: 'plain',
   crm_media_copy_all: 'plain',
   family_login_enabled: 'plain',
+  family_chat_enabled: 'plain',
   report_form_v2: 'plain',
 };

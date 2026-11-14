@@ -15,6 +15,7 @@ import { fakePresence } from '@/modules/people/presence/presence.fakes';
 import { ChannelPeopleRepo } from './channel-people.repo';
 import type { ChannelMessageRow, ChannelSummaryRow } from './channel.repo';
 import { ChannelRepo } from './channel.repo';
+import { FamilyChatSettings } from './family-chat.settings';
 
 export const ST = '52000000-0000-4000-8000-000000000001';
 /** Another family's child. */
@@ -109,6 +110,7 @@ export async function channelApp() {
     ),
   };
   const audit = { record: vi.fn(async () => undefined) };
+  const familyChat = { enabled: vi.fn(async () => true) }; // family_chat_enabled on, as before
   const presence = fakePresence();
   const push = {
     notifyProfiles: vi.fn(async () => undefined),
@@ -119,6 +121,7 @@ export async function channelApp() {
     [ChannelRepo, queries], [ChannelPeopleRepo, people], [PortalScopeRepo, scope],
     [TeachersRepo, teachers], [PushService, push], [ChannelEditsRepo, edits],
     [AuditService, audit], [PresenceRepo, presence.repo], [PresenceSettings, presence.settings],
+    [FamilyChatSettings, familyChat],
   ];
   const builder = overrides.reduce(
     (b, [token, value]) => b.overrideProvider(token).useValue(value),
@@ -142,5 +145,6 @@ export async function channelApp() {
     edits,
     audit,
     presence,
+    familyChat,
   };
 }
