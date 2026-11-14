@@ -76,9 +76,9 @@ describe('thread composer inside the 24 h window (R-LEAD-02)', () => {
 });
 
 describe('after the 24 h window: approved templates only', () => {
-  it('fixed notice; this audience’s approved templates; the lesson time is picked, never typed (rule 6)', async () => {
+  it('the reopen bar; this audience’s approved templates; the lesson time is picked, never typed (rule 6)', async () => {
     renderThread(false);
-    expect(await screen.findByText(t.inbox.sessionClosed)).toBeTruthy();
+    expect(await screen.findByText(t.inbox.reopenBar.closed)).toBeTruthy();
     expect(screen.queryByRole('textbox', { name: t.inbox.composer.messageLabel })).toBeNull();
     const select = await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate });
     await waitFor(() => expect(within(select).getAllByRole('option')).toHaveLength(2)); // «—» + one approved

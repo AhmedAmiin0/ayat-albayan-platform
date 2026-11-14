@@ -67,12 +67,12 @@ test('open window: one line of text makes the pill exactly 44pt (26 line + 8 + 8
   expect(pill.borderRadius).toBe(shape.radius.pill);
 });
 
-test('closed window: one compact note over a labelled «أرسل قالبًا», no free-text box', async () => {
+test('closed window: the reopen bar over a labelled «أرسل قالبًا», no free-text box', async () => {
   await open(CLOSED);
   expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
-  const note = screen.getByText(t.inbox.sessionClosed);
-  expect(note.props.testID).toBe('closed-note');
+  const note = screen.getByText(t.inbox.reopenBar.closed);
   expect(note.props.numberOfLines).toBeUndefined(); // never cut: it wraps
+  expect(screen.getByRole('button', { name: t.inbox.reopenBar.action })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
   expect(await screen.findByText(t.inbox.composer.chooseTemplate)).toBeTruthy();
 });

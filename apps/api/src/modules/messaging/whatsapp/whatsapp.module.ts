@@ -107,7 +107,7 @@ function lines(): WhatsappLines {
     CodeSend,
     PaymentHoldRepo,
     PaymentHolds,
-    WindowRepo,
+    WindowRepo, manualSend.ReopenPickRepo, manualSend.ReopenPick,
     manualSend.ReopenCancelRepo, manualSend.ReopenCancel,
     manualSend.AppSendAdoptRepo, manualSend.AppSendAdopt,
     manualSend.AppSendExpiryRepo, manualSend.AppSendExpiry,
@@ -133,7 +133,7 @@ function lines(): WhatsappLines {
     InboundMedia,
     WaMediaRetentionJob,
   ],
-  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore, ReopenRequest, manualSend.ReopenCancel],
+  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore, ReopenRequest, manualSend.ReopenCancel, manualSend.ReopenPick],
 })
 export class WhatsappModule implements OnModuleInit {
   /**

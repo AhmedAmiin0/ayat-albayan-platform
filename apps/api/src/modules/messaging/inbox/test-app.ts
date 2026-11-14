@@ -16,6 +16,7 @@ import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { ReopenRequest } from '@/modules/messaging/whatsapp/sender/window/reopen-request';
+import { ReopenPick } from '@/modules/messaging/whatsapp/sender/window/manual-send';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { TemplatesRepo, type ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -88,6 +89,8 @@ function mocks() {
     reopenRequest: {
       usable: vi.fn(async (): Promise<string | null> => 'template'),
     },
+    // Plain functions (vi.resetAllMocks keeps them): no reopen read, the thread as it is.
+    reopenPick: { thread: async <T>(view: T): Promise<T> => view, stamp: async () => null },
     hides: { target: vi.fn(), set: vi.fn(async () => true) },
     delta: { newer: vi.fn(), pending: vi.fn() },
     sync: { page: vi.fn(), tombstones: vi.fn() },
@@ -120,6 +123,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(MessageSender).useValue(m.sender)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(ReopenRequest).useValue(m.reopenRequest)
+    .overrideProvider(ReopenPick).useValue(m.reopenPick)
     .overrideProvider(InboxSettings).useValue(inboxSettings())
     .overrideProvider(MessageHideRepo).useValue(m.hides)
     .overrideProvider(DeltaRepo).useValue(m.delta)

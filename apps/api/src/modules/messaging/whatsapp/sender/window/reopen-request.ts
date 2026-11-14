@@ -94,15 +94,18 @@ export class ReopenRequest {
     const template = await this.template();
     const dedup = nextReopenKey(phone, rows, now);
     if (!template || !dedup) return failNow(template ? TRIES_USED : UNAVAILABLE);
-    await this.queue(reopenRow(row, { key: template.key, line: template.line, dedup, now }));
-    return { ...HELD, queued: dedup };
+    const at = { key: template.key, line: template.line, dedup, now };
+    const id = await this.queue(reopenRow(row, at));
+    // Deduped against a concurrent row (a staff pick): never this hold's to drop (review #727).
+    return id ? { ...HELD, queued: dedup } : HELD;
   }
 
   /** Queued (deduped) and, when this pass inserted it, audited under the sender. */
-  private async queue(reopen: TablesInsert<'messages'>): Promise<void> {
+  private async queue(reopen: TablesInsert<'messages'>): Promise<string | null> {
     const id = await this.repo.queueReopen(reopen);
     if (id) await this.audit?.record(reopen, id);
     this.log.log(`reopen template ${reopen.template_key ?? ''} queued for ${last4(reopen.phone_e164)}`);
+    return id;
   }
 
   /** The hold this plan was for missed: the reopen it queued goes unless a text still waits. */

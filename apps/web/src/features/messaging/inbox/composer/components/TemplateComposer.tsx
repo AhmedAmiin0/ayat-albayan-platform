@@ -1,4 +1,4 @@
-import { needsLesson, sendsAllTemplates } from '@ab/shared';
+import { needsLesson, sendsAllTemplates, type TemplateView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -24,6 +24,15 @@ export interface TemplateComposerProps {
   context: PrefillContext;
   /** A teacher's thread: only teacher templates, and only there. */
   teacher: boolean;
+  /** «إعادة فتح المحادثة»: only these, `initial` picked and filled; sent with reopen: true. */
+  reopen?: ReopenPick;
+}
+
+/** The reopen dialog's list (reopenChoices) and what it does once the template went. */
+export interface ReopenPick {
+  list: TemplateView[];
+  initial: TemplateView | null;
+  onSent: () => void;
 }
 
 /**
@@ -33,7 +42,7 @@ export interface TemplateComposerProps {
  * prefilled, a lesson time comes from the lesson picked (rule 6), and the preview is what they
  * read. The lesson is sent too, so a «تمام» reply links to it.
  */
-export function TemplateComposer({ phone, context, teacher }: TemplateComposerProps) {
+export function TemplateComposer({ phone, context, teacher, reopen }: TemplateComposerProps) {
   const queryClient = useQueryClient();
   const templates = useQuery({ ...templatesQuery, enabled: useReadsMessaging() });
   const me = useQuery(meQuery).data;
@@ -41,11 +50,13 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
   const noneAllowed = useNoneAllowed(teacher);
   // Teacher and sales modes are always restricted; in the admin inbox, a role without the permissions.
   const restricted = staff || (me ? !sendsAllTemplates(me) : false);
-  const approved = allowedTemplates(templates.data, teacher);
+  const approved = reopen?.list ?? allowedTemplates(templates.data, teacher);
   const lessons = context.lessons ?? [];
-  const [key, setKey] = useState('');
+  const first = reopen?.initial ?? null;
+  const [key, setKey] = useState(first?.key ?? '');
   const [lessonId, setLessonId] = useState('');
-  const [values, setValues] = useState<ParamValues>({});
+  const prefill = () => (first ? prefillParams(first, context) : {});
+  const [values, setValues] = useState<ParamValues>(prefill);
   const [tried, setTried] = useState(false);
   const requestId = useRef(crypto.randomUUID());
   const tpl = approved.find((x) => x.key === key);
@@ -64,6 +75,7 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
     onSuccess: async (view, sent, start) => {
       settleOwnSend(sent.phone, view.id, start);
       pick('');
+      reopen?.onSent();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
   });
@@ -85,7 +97,10 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
         if (!tpl || missingParams(tpl, values).length > 0 || (withLesson && !lessonId)) return;
         const lesson = lessonId ? { lessonId } : {};
         // Any registry key (a producer's, or a starter imported from Meta): the API validates it.
-        send.mutate({ phone, key: tpl.key, params: toParamsInput(tpl, values), clientRequestId: requestId.current, ...lesson });
+        const flag = reopen ? { reopen: true } : {};
+        const params = toParamsInput(tpl, values);
+        const clientRequestId = requestId.current;
+        send.mutate({ phone, key: tpl.key, params, clientRequestId, ...lesson, ...flag });
       }}
     >
       <Field label={t.inbox.composer.chooseTemplate}>

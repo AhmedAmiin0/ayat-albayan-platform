@@ -1,10 +1,12 @@
+export { type ChatSendState, staffMaySend, triesAfterWindow } from './chat-send.js';
 export {
-  afterWindowNote,
-  type AfterWindowNote,
-  type ChatSendState,
-  staffMaySend,
-  triesAfterWindow,
-} from './chat-send.js';
+  reopenChoices,
+  reopenTick,
+  windowBar,
+  type ReopenChoices,
+  type WindowBar,
+  type WindowBarInput,
+} from './window-bar.js';
 export { createPinStore, type PinStore } from './pin-store.js';
 export {
   markUnconfirmed,

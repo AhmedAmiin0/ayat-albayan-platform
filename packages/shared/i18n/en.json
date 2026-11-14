@@ -3021,8 +3021,13 @@
       "stickerSend": "Send sticker"
     },
     "sessionClosed": "24 hours have passed since their last message, so send a template.",
-    "tryAfterWindow": "The 24-hour window has ended: when you send, the welcome message goes first and your message goes after the family replies. To send it yourself now, tap «Send via WhatsApp» on the message after sending it.",
-    "tryAfterWindowWait": "We will reopen the conversation and send your message when the family replies. To send it now, tap «Send via WhatsApp» on the message after sending it.",
+    "reopenBar": {
+      "closed": "The 24-hour window has ended. Send a template to reopen the conversation.",
+      "action": "Reopen conversation",
+      "sent": "Template sent — the conversation reopens when the family replies",
+      "status": "Template status: {status}",
+      "held": "What you type now is kept and sent after the family replies."
+    },
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
@@ -3049,7 +3054,10 @@
       "media_handoff": "Files cannot be handed off to WhatsApp; retry here",
       "reply_not_in_thread": "The quoted message is not in this chat. Cancel the reply and try again",
       "giphy_failed": "Couldn’t reach GIPHY. Try again.",
-      "giphy_not_configured": "No GIPHY key in Integrations yet"
+      "giphy_not_configured": "No GIPHY key in Integrations yet",
+      "reopen_live": "A reopen template was already sent for this chat. Wait for the family to reply.",
+      "reopen_tries_used": "Today's reopen tries are used up. Try again tomorrow.",
+      "reopen_not_chat_line": "This template does not go from the chat number. Pick another one."
     },
     "line": {
       "replyFrom": "Your reply will be sent via: {line}"

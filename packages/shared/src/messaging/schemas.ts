@@ -60,6 +60,8 @@ export const threadTemplateSchema = z.object({
   params: templateParamsInputSchema,
   lessonId: z.uuid().optional(),
   clientRequestId: z.uuid().optional(),
+  /** «إعادة فتح المحادثة»: sent as this phone's reopen template (a closed chat-line window). */
+  reopen: z.boolean().optional(),
 });
 
 /** POST /threads/:phone/rating «إرسال تقييم الحلقة»: the API picks the lesson; the id makes a retry safe. */

@@ -104,10 +104,10 @@ async function startsWithTemplate(browser: Browser): Promise<void> {
   await expect(page.getByLabel(composer.paramNames.student_names, { exact: true })).toHaveValue(names.student);
   await page.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
 
-  // Queued as hers (sales dedup space); the thread now exists, its window closed: templates only.
+  // Queued as hers (sales dedup space); the thread exists, its window closed: the reopen bar.
   const log = page.getByRole('log', { name: ar.messages.log });
   await expect(log).toContainText(ar.inbox.templateLine.replace('{name}', ar.templates.names.booking_confirmation_plain));
-  await expect(page.getByText(ar.inbox.sessionClosed)).toBeVisible();
+  await expect(page.getByText(ar.inbox.reopenBar.closed)).toBeVisible();
   const sent = await lastOutbound(booked.phone);
   expect([sent.template_key, sent.created_by]).toEqual(['booking_confirmation_plain', me.id]);
   expect(sent.dedup_key).toMatch(new RegExp(`^sales:${me.id}:`));

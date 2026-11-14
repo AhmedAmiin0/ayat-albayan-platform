@@ -1,11 +1,9 @@
-import { afterWindowNote, triesAfterWindow } from '@ab/client-core';
+import { triesAfterWindow } from '@ab/client-core';
 import type { ThreadLesson, ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions } from '@/core/auth';
 import { ClosedRow } from '@/inbox/threads-list/ClosedRow';
-import { t } from '@/core/lib/i18n/i18n';
-import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { useComposerText, useForgetDraftOnLeave } from './draft-store';
 import { QuoteSheet } from './quote/QuoteSheet';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
@@ -18,6 +16,7 @@ import { SavedReplyPicker } from '@/inbox/saved-replies/components/SavedReplyPic
 import { SlashSuggestions } from '@/inbox/saved-replies/quick-list/SlashSuggestions';
 import { useSavedReplyDraft } from '@/inbox/saved-replies/hooks/use-saved-reply';
 import { TemplatePicker } from './TemplatePicker';
+import { ReopenSlot } from './reopen';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { sendState } from '@/inbox/thread/hooks/chat-window';
 import { errorLines, useComposerSend } from './use-composer-send';
@@ -26,17 +25,14 @@ import { errorLines, useComposerSend } from './use-composer-send';
  * Reply box (R-MOB-02, R-MSG-03) as WhatsApp Business (owner 2026-10-27): [pill: text · «عرض سعر» ·
  * paperclip] and the round microphone / «أرسل» (OpenRow); everything else is in the paperclip's sheet.
  * Within 24 h of their last message: free text, a photo or PDF, a voice note, plus a template (in the
- * paperclip's sheet). After that, on a Kapso chat line, staff still send all of it (tried, owner
- * 2026-11-01; 131047 shows on the bubble); else only an approved template, so a full-width line says
- * why (ClosedNote) over «أرسل قالبًا». The window is checked
- * against the device clock on every render (a refetch, a keystroke), not only when the thread loaded.
+ * paperclip's sheet). After it, on a Kapso chat line, staff still send all of it (owner 2026-11-01);
+ * else only a template. The window is checked against the device clock on every render.
  * «الردود السريعة» (owner 2026-10-25/26, staff only, as WhatsApp Business): «/» at a line's start docks
- * the list over the row, its tile in the paperclip's sheet opens the sheet; a pick fills the box and stages its file (the
- * chip). «أرسل» sends the text, then the file.
+ * the list over the row; a pick fills the box and stages its file. «أرسل» sends the text, then it.
  * «رد» (owner 2026-10-25): the quoted strip over the row; the text answers it (useComposerSend).
  * «تعديل» (2026-11-07): the edit bar instead; the text goes as a correction of that message.
- * Opening a closed chat sends nothing (owner 2026-11-07): the starter template goes on the first
- * send, which is held until the family replies; the «try» note (ClosedNote) says so.
+ * A known chat after the window (owner 2026-11-14, «like Kapso»): the reopen bar (ReopenSlot) and
+ * its sheet; under it the box on a Kapso line (held texts), else «أرسل قالبًا» (any template).
  * «عرض سعر» (owner 2026-10-26, staff with pricing.read): its sheet sends the offer or fills the box; the
  * box's text lives in draft-store for that.
  */
@@ -79,6 +75,7 @@ export function Composer({
   // Owner 2026-10-31 / 2026-11-01: a Kapso chat line still tries every staff send after the window.
   const trying = triesAfterWindow(chat, staff);
   const may = open || trying;
+  const teacher = !!thread?.teacher_id && !thread.guardian_id;
   const pick = () => setPicking(true);
   const type = (v: string) => {
     replies.typed(v);
@@ -93,7 +90,11 @@ export function Composer({
         <ErrorLine key={line} message={line} />
       ))}
       <GateNote />
-      {trying ? <ClosedNote known note={t.inbox[afterWindowNote(thread?.reopen_choice)]} /> : null}
+      <ReopenSlot
+        {...{ phone, thread, lessons, teacher, open }}
+        held={trying}
+        onSend={sendTemplate}
+      />
       {may ? <QuoteStrip /> : null}
       {may ? <EditStrip /> : null}
       {may && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
@@ -120,9 +121,10 @@ export function Composer({
           sending={pending}
           blocked={send.blocked}
         />
-      ) : (
+      ) : null}
+      {!may ? (
         <ClosedRow known={thread !== null} staff={staff} onTemplate={pick} onQuote={quote ? () => setQuoting(true) : undefined} />
-      )}
+      ) : null}
       {replies.sheet ? (
         <SavedReplyPicker
           contact={{ thread, student }}
@@ -135,7 +137,7 @@ export function Composer({
         visible={picker}
         lessons={lessons}
         contactName={thread?.display_name}
-        teacher={!!thread?.teacher_id && !thread.guardian_id}
+        teacher={teacher}
         onClose={closePicker}
         onSend={(out) => {
           closePicker();

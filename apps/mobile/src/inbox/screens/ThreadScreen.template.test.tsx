@@ -56,9 +56,9 @@ beforeEach(() => {
   mockApiSend.mockReset();
 });
 
-test('after 24 h (by the clock, whatever the cached flag): no free text, the reason verbatim', async () => {
+test('after 24 h (by the clock, whatever the cached flag): no free text, the reopen bar', async () => {
   await openClosedThread();
-  expect(screen.getByText('مرّت 24 ساعة على آخر رسالة منه، فأرسل قالبًا.')).toBeTruthy();
+  expect(await screen.findByTestId('reopen-bar')).toBeTruthy();
   expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
 });
 
