@@ -14,7 +14,7 @@ import { useComposerDraft } from '@/inbox/composer/draft-store';
 import { audienceOf, reopenAllowed } from './reopen-choices';
 
 /** Which sheet is open: «إعادة فتح المحادثة», «أرسِل الآن داخل قالب», or none. */
-export type Picking = 'reopen' | 'carry' | null;
+type Picking = 'reopen' | 'carry' | null;
 
 interface ReopenBarState {
   /** null: no thread yet (a new chat keeps its first-template row). */

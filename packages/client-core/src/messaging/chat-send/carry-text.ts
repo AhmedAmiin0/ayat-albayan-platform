@@ -20,6 +20,6 @@ export interface CarryTextInput {
   template: TemplateView | null;
 }
 
-/** The bar's second action: the reopen bar is shown, a draft is typed and the template is usable. */
+/** The bar's second action: the reopen bar shows, a draft is typed, the template is usable. */
 export const carriesText = (c: CarryTextInput): boolean =>
   c.bar === 'reopen' && c.draft.trim() !== '' && c.template?.status === 'approved';
