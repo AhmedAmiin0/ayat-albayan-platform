@@ -1,8 +1,17 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { TeacherReportLinkPage } from '@/features/reporting/reports';
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import { linkLessonId, TeacherReportLinkPage } from '@/features/reporting/reports';
 
-/** /teacher-report/:token — the teacher's signed link to one lesson's «تقرير الحلقة». No login. */
+/**
+ * /teacher-report/:token — «تقرير الحلقة» from WhatsApp. A lesson id (what is sent now, owner
+ * 2026-11-14) opens the signed-in /teacher/report/<id>; a signed token sent before keeps the
+ * no-login form until it expires.
+ */
 export const Route = createFileRoute('/(public)/teacher-report/$token')({
+  beforeLoad: ({ params }) => {
+    const lessonId = linkLessonId(params.token);
+    const to = '/teacher/report/$lessonId';
+    if (lessonId) redirect({ to, params: { lessonId }, replace: true, throw: true });
+  },
   component: TeacherReportLinkRoute,
 });
 

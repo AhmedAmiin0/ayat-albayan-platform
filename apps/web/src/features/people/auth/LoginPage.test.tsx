@@ -6,7 +6,7 @@ import { LoginPage } from './LoginPage';
 
 const signIn = vi.hoisted(() => vi.fn());
 vi.mock('./sign-in', () => ({ signIn, signInWithCode: vi.fn() }));
-vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
+vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useSearch: () => ({}) }));
 
 function renderPage() {
   return render(

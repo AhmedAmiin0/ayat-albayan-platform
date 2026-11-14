@@ -4,6 +4,7 @@ import type { Db } from '@/common/db/db.module';
 import { SENDING } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS, type StaleLead } from './send-stale';
 import { LANE_ROWS, type Lane } from './drain/lanes';
+import type { SentFile, WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** A queued outbound row with what expiry, staleness and the failure push need. */
 export interface DueMessage {
@@ -99,3 +100,9 @@ export async function holdAutomatic(db: Db, allowed: readonly string[] | null): 
   if (error) throw new Error(`automatic hold failed: ${error.message}`);
   return data.length;
 }
+
+/** What a send adds to the sent row: Evolution's text-for-a-template, a refused note's m4a. */
+export const sentExtras = (sent: WaSent): { sent_as_text?: true } & Partial<SentFile> => ({
+  ...(sent.asText ? { sent_as_text: true } : {}),
+  ...sent.media,
+});

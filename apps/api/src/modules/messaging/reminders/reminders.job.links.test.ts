@@ -5,8 +5,8 @@ import { at, fakeJob, sampleLesson } from './reminders.fakes';
 // owner 2026-11-06: teacher_lesson_v3 once approved (two link buttons), else the older reminder
 // with direct links. No short link is made on this path.
 
-const PAGE = 'https://app.example/teacher-report/rep-tok';
-const LINKS = { join: 'join-tok', report: { token: 'rep-tok', url: PAGE, exp: 0 } };
+const PAGE = 'https://app.example/teacher/report/L1';
+const LINKS = { join: 'join-tok', report: { suffix: 'L1', url: PAGE } };
 const coded = sampleLesson({
   meeting_link: 'https://meet.google.com/abc-defg-hij',
   students: [
@@ -29,7 +29,7 @@ describe('RemindersJob: the teacher reminder’s template and links', () => {
   });
   afterEach(() => vi.unstubAllEnvs());
 
-  it('teacher_lesson_v3 approved: the meeting URL in {{6}}, the two tokens as the button suffixes', async () => {
+  it('teacher_lesson_v3 approved: the meeting URL in {{6}}, the join token and the lesson id as the buttons', async () => {
     const teacherLinks = new Map([[coded.id, LINKS]]);
     const { job, queued, queries } = fakeJob({
       lessons: [coded],
@@ -46,12 +46,13 @@ describe('RemindersJob: the teacher reminder’s template and links', () => {
       '3': 'AB-0101',
       '5': '45 دقيقة',
       '6': 'https://meet.google.com/abc-defg-hij',
-      buttons: ['join-tok', 'rep-tok'],
+      buttons: ['join-tok', 'L1'],
     });
     expect(JSON.stringify(row?.template_params)).not.toContain('teacher-report');
+    expect(JSON.stringify(row?.template_params)).not.toContain('teacher/report');
   });
 
-  it('not approved: the older reminder, with the direct no-login page (no /r/ link)', async () => {
+  it('not approved: the older reminder, with the signed-in portal page (no /r/ link)', async () => {
     const { job, queued } = fakeJob({
       lessons: [coded],
       teacherLinks: new Map([[coded.id, LINKS]]),

@@ -4681,7 +4681,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/people/auth/reset/ResetFlow.test.tsx": {

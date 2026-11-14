@@ -276,6 +276,7 @@
         "people/teacher-isolation.spec.ts",
         "reporting/teacher-report-attachments.spec.ts",
         "reporting/teacher-report-draft.spec.ts",
+        "reporting/teacher-report-portal-link.spec.ts",
         "reporting/teacher-report-edit-window.spec.ts",
         "reporting/teacher-report-form-fields.spec.ts",
         "reporting/teacher-week-history.spec.ts",

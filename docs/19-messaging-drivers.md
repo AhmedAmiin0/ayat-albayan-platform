@@ -26,11 +26,27 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 | Template list paging | follow `paging.cursors.after` while `paging.next` is present | no `paging.next`: follow `after` while it is set **and** the page is full (100); same 20-page cap |
 | Create a template | `POST /{waba_id}/message_templates` | same |
 | Edit a rejected template | `POST /{template_id}` | `POST /{waba_id}/message_templates?hsm_id=<template_id>` (there is no `/{template_id}`) |
-| Outbound media (docs/21 D2) | `POST /{phone_number_id}/messages` with `{ type: 'image' \| 'document', [type]: { link, caption?, filename? } }`, the link a 7-day signed `wa-media/out/…` URL | same path and body (by link, never an upload) |
+| Outbound media (docs/21 D2) | `POST /{phone_number_id}/messages` with `{ type: 'image' \| 'document', [type]: { link, caption?, filename? } }`, the link a 7-day signed `wa-media/out/…` URL | same path and body (by link; only a voice note is uploaded) |
+| Voice note recorded in the app (2026-11-14) | `POST /{phone_number_id}/media` multipart (`messaging_product=whatsapp`, `type=audio/ogg` bare, file `voice.ogg` as `audio/ogg`) → `id`, then `{ type: 'audio', audio: { id, voice: true } }` | same path, body and `X-API-Key` (by uploaded id, never by link: see «Voice notes» below) |
 | Inbound media | `GET /{media_id}` → `url`, downloaded with the bearer | `GET /{media_id}?phone_number_id=<line>` → `download_url` (token inside, ~4 min), downloaded with **no credential at all**; Kapso's `url` (Meta's lookaside) is never used |
 | Sample uploads (Resumable Upload API) | `/{app_id}/uploads` with `WA_APP_ID` | none: `canUploadSamples()` is false, so submitting a document-header template (`report_ready`) answers 409 `needs_meta_driver` («حوِّل مزوّد الإرسال إلى Meta مباشرة»), not `needs_app_id` |
 | Errors | `{error:{message,type,code,error_subcode}}` | same shape (same `WaError` mapping) |
 | A refused credential | Meta code 190 / 10 / 200 only: the line's queue is held 15 min, uncounted (a Meta HTTP 401 without one of those codes is an ordinary error: retried, then failed; inbound media answers 410 `media_expired`) | a 401 / 403 without a Meta code of its own on a request that carried the key is tagged `credential: 'kapso'` (`graph.ts` `byDriver`): the queue is held the same way and the line paused, rows read `error_code = 'kapso_auth'` («رفض Kapso مفتاح المشروع — حدِّث KAPSO_API_KEY في «التكاملات»»), never Meta's Business Manager advice; inbound media and template submit answer 502 `kapso_auth`, and «افحص الخطوط» shows the same words. The credential-free `download_url` is never tagged, so its 401 / 403 is an expired link: 410 `media_expired`. One rule decides (shared `isWaAuthFailure`): Meta's code or the tag, never a bare HTTP status. |
+
+### Voice notes from the app (2026-11-14)
+
+The app records AAC m4a; the API transcodes it to ogg/opus (`voice-ogg.ts`: mono, 48 kHz, 24 kbps,
+voip, **no metadata, no chapters, bitexact**) and stores `voice.ogg` plus a copy of the recording,
+`voice.m4a`, in the request's `out/` folder. Sent by link, every note failed with 131053: Kapso
+re-uploaded it as `audio/ogg; codecs=opus` and Meta read it as `application/octet-stream` (the
+Android MP4 tags had been copied into OpusTags). Now a line whose driver uploads media
+(`driver-caps.ts` `mediaUpload`: meta, kapso) uploads the ogg with the bare type and sends it by
+media id (`sender/voice/voice-dispatch.ts`). A refused upload, or a send Meta refused outright (4xx,
+not `uncertain`), sends `voice.m4a` once instead, by link as plain audio, and the row's
+`media_mime` / `media_name` record it (`audio/mp4`, `voice.m4a`). A timeout never falls back (it may
+have been delivered). crm and evolution lines send by link as before; images and PDFs always go by
+link. A 131053 that arrives later on the status webhook still shows «لم تُرسل» with its reason. The
+web chat records no voice notes.
 
 ## Webhook
 
@@ -343,6 +359,14 @@ minute per IP, 60 per IP and link). No attachments on the link (they need a sess
 (no sign-in); signed-in teachers keep `/teacher/report/<id>`. Since 2026-11-06 the reminder carries the page
 itself (no short link). Code: `apps/api/src/modules/reporting/reports/teacher-link/`.
 
+**Since 2026-11-14 the sent link is the signed-in portal page** (owner: «send the portal url that is
+authenticated instead of the opened form»). `TeacherReportLinks.forLesson` gives `<WEB_ORIGIN>/teacher/report/<id>`
+and no token; teacher_lesson_v3's fixed button `…/teacher-report/{{1}}` now carries the lesson id, and the web
+route redirects a lesson id to `/teacher/report/<id>`. A signed-out teacher goes to `/login?redirect=<that page>`
+(then `/account-setup?redirect=…` on a code-made login) and lands on the report after signing in; only a
+same-origin path (`/…`, not `//` or `/\`) is followed. Tokens sent before keep the no-login form and its
+`/public/teacher-report/:token` API until the lesson's end + `report_teacher_edit_hours`, then expire on their own.
+
 ### teacher_lesson_v3, the join link and the legacy report bridge (owner 2026-11-06)
 
 «now we no more need url shortener»: the teacher's links are no longer shortened (`GET /r/<code>` keeps
@@ -350,7 +374,7 @@ answering links already sent; `short_links` stays; the report PDF's feedback lin
 `teacher_lesson_v3` (migration `20261106001300`, UTILITY, ar, notifications line, not_submitted until the admin
 submits it): body {{1}} teacher, {{2}} students, {{3}} codes, {{4}} time in the teacher's tz, {{5}} duration,
 {{6}} the meeting link (also in the text); URL buttons «ادخل الحلقة» `https://api.ayatalbayan.com/join/{{1}}` and
-«تقرير الحلقة» `https://app.ayatalbayan.com/teacher-report/{{1}}` (the report link is a button only). Definition:
+«تقرير الحلقة» `https://app.ayatalbayan.com/teacher-report/{{1}}` (a button only; {{1}} = the lesson id since 2026-11-14). Definition:
 `packages/shared/src/messaging/templates/teacher-lesson-v3.ts`; a send fills each URL button from
 `template_params.buttons` by URL order. Once approved, the same-day teacher reminder and the new-student alert
 go as it (their dedup keys unchanged); until then they keep their templates with direct links.
@@ -359,7 +383,7 @@ room (its stored http(s) link, or `/classroom/<id>` for a platform lesson or non
 still the token's teacher's and not cancelled/moved; else the `shortLinks.notFound` page. `GET <API>/report-link/
 legacy/*` (the old Vercel redirector forwards `/r/<path>` there): `teacher/report/<lessonId>` or the old Apps
 Script's `<AB-code>/<teacher name>/<…>` (the pair's lesson started in the last 24 h, else its next one today) →
-302 to that lesson's no-login report page; anything else the same «invalid link» page. Rate-limited per IP a
+302 to that lesson's signed-in report page (`/teacher/report/<id>`, since 2026-11-14); anything else the same «invalid link» page. Rate-limited per IP a
 minute (/join 60, legacy 10: its old shape is not signed) and 20 per IP and link. Code: `apps/api/src/modules/teaching/lesson-links/`.
 
 ### Report flow: report_ready → session_report_pdf (owner 2026-11-05)

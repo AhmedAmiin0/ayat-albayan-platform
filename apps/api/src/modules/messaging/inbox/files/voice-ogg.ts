@@ -10,12 +10,15 @@ export type FfmpegRun = (args: readonly string[]) => Promise<void>;
 const FFMPEG_TIMEOUT_MS = 30_000;
 
 /**
- * WhatsApp's voice note format (Meta audio-messages doc): ogg/opus, mono only. 24 kbps keeps a
- * note under Meta's 512 KB play-icon threshold for about 170 s.
+ * WhatsApp's voice note format (Meta audio-messages doc): ogg/opus, mono only (Meta names no
+ * sample rate). 24 kbps keeps a note under Meta's 512 KB play-icon threshold for about 170 s.
+ * No metadata, no chapters, bitexact: Android's MP4 tags (handler_name, vendor_id, …) copied into
+ * OpusTags made Meta read the ogg as application/octet-stream (131053, 2026-11-14).
  */
 export const voiceArgs = (input: string, output: string): string[] => [
   '-hide_banner', '-loglevel', 'error', '-y',
   '-i', input,
+  '-map_metadata', '-1', '-map_chapters', '-1', '-fflags', '+bitexact', '-flags:a', '+bitexact',
   '-vn', '-ac', '1', '-ar', '48000', '-c:a', 'libopus', '-b:a', '24k', '-application', 'voip',
   output,
 ];

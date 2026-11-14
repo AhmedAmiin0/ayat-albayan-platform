@@ -1,4 +1,6 @@
-import { baseMime, isReactionPayload, reactionRef, waSendKind, type TemplateDocument, type WaLine } from '@ab/shared';
+import {
+  isReactionPayload, reactionRef, waSendKind, type TemplateDocument, type WaLine,
+} from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, isSentFilePath, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
@@ -8,6 +10,7 @@ import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clien
 import { evolutionAutoOff } from '@/modules/messaging/whatsapp/drivers/evolution/evolution.client';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { quickReplyPayloads } from './send-plan';
+import { isVoiceOgg, sendVoiceById } from './voice/voice-dispatch';
 import type { DueMessage } from './sender.repo';
 import { isCallPermissionRequest } from '@/modules/messaging/whatsapp/messages/wa-call-permission';
 import { templateButtons, templateParams } from '@/modules/messaging/whatsapp/messages/wa-json';
@@ -111,14 +114,19 @@ export class MessageDispatch {
     throw new WaError('nothing to send: no approved template and no text', { code: 100, status: 0 });
   }
 
-  /** A file staff sent or forwarded from the chat: by link as its kind (waSendKind), its body as the caption, an ogg as a voice note. */
+  /** A chat file by link (waSendKind, body = caption); an ogg voice note by media id if it can. */
   private async sendFile(row: DueMessage, at: { via: SendVia; path: string }): Promise<WaSent> {
-    const url = await mediaLink(this.storage, at.path);
+    const client = this.client(at.via);
+    const voice = isVoiceOgg(row);
+    const link = (path: string) => mediaLink(this.storage, path);
+    const upload = voice ? client.voice?.() : null;
+    const note = { row, path: at.path, client, storage: this.storage, link };
+    if (upload) return sendVoiceById(note, upload);
+    const url = await link(at.path);
     const kind = waSendKind(row.media_mime ?? null);
     const filename = row.media_name ?? undefined;
-    // An ogg (a recorded note transcoded by the API, or a family's own forwarded) goes as a voice note.
-    const voice = baseMime(row.media_mime ?? null) === 'audio/ogg';
-    return this.client(at.via).sendDocument({ to: row.phone_e164, kind, url, filename, caption: row.body, replyTo: row.reply_to_wa_id, voice });
+    const input = { to: row.phone_e164, kind, url, filename, caption: row.body, voice };
+    return client.sendDocument({ ...input, replyTo: row.reply_to_wa_id });
   }
 
   private sendCallPermission(row: DueMessage, via: SendVia): Promise<WaSent> {

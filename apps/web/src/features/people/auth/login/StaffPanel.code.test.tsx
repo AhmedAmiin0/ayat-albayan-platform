@@ -8,7 +8,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', () => ({ apiFetch, apiSend }));
 vi.mock('@/features/people/auth/sign-in', () => ({ signIn: vi.fn(), signInWithCode: vi.fn() }));
-vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
+vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useSearch: () => ({}) }));
 
 const T = t.teacherAuth;
 

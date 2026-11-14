@@ -40,7 +40,7 @@ const run = async (over: { v3?: boolean; approved?: boolean }) => {
 describe('TeacherAlert with teacher_lesson_v3', () => {
   afterEach(() => vi.unstubAllEnvs());
 
-  it('approved: the first lesson as v3, its room in {{6}}, the join and report tokens as buttons', async () => {
+  it('approved: the first lesson as v3, its room in {{6}}, the join token and the lesson id as buttons', async () => {
     const { queries, links } = await run({ v3: true, approved: false });
     const [row] = queries.queue.mock.calls[0]?.[0] as {
       template_key: string;
@@ -51,7 +51,7 @@ describe('TeacherAlert with teacher_lesson_v3', () => {
     expect(row?.dedup_key).toBe('teacher_new_student:L1:T1');
     expect(row?.template_params).toMatchObject({
       '6': 'https://meet.google.com/abc-defg-hij',
-      buttons: ['join-L1', 'rep-L1'],
+      buttons: ['join-L1', 'L1'],
     });
     expect(links.forLesson).toHaveBeenCalledTimes(1);
   });

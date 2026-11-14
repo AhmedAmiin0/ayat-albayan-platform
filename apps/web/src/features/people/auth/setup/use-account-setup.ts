@@ -1,10 +1,10 @@
 import type { SubmitEvent } from 'react';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/lib/http/supabase';
 import { authApi } from '@/features/people/auth/login/auth-api';
 import { meQuery } from '@/features/people/auth/me';
+import { useLandAfterSignIn } from '@/features/people/auth/use-return-to';
 import { setupErrorText, setupFormProblem, type SetupForm } from './setup-errors';
 
 /**
@@ -14,7 +14,7 @@ import { setupErrorText, setupFormProblem, type SetupForm } from './setup-errors
  */
 function useSaveSetup() {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const land = useLandAfterSignIn();
   return useMutation({
     mutationFn: async (body: { email: string; password: string }) => {
       await authApi.setupAccount(body);
@@ -24,7 +24,8 @@ function useSaveSetup() {
       // The new email at once: /teacher's guard must not wait for the refreshed JWT on /auth/me.
       queryClient.setQueryData(meQuery.queryKey, (me) => (me ? { ...me, email: body.email } : me));
     },
-    onSuccess: () => navigate({ to: '/teacher' }),
+    // Her home, or the page she opened (a report link) before signing in (owner 2026-11-14).
+    onSuccess: () => land('/teacher'),
   });
 }
 

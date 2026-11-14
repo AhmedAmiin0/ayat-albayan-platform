@@ -6721,7 +6721,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 14
+      "count": 11
     }
   },
   "src/modules/messaging/whatsapp/sender/message.dispatch.voice.test.ts": {
@@ -10022,11 +10022,6 @@
   "src/modules/reporting/reports/teacher-link/teacher-link.files.ts": {
     "typescript/consistent-type-imports": {
       "count": 2
-    }
-  },
-  "src/modules/reporting/reports/teacher-link/teacher-link.issuer.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 1
     }
   },
   "src/modules/reporting/reports/teacher-link/teacher-link.limit.ts": {
