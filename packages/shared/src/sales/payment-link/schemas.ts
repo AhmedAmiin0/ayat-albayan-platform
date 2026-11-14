@@ -11,8 +11,19 @@ export const PAYMENT_LINK_KINDS = ['new', 'renewal'] as const;
 export type PaymentLinkKind = (typeof PAYMENT_LINK_KINDS)[number];
 export const PAYMENT_LINK_STATUSES = ['open', 'paid', 'expired', 'cancelled'] as const;
 export type PaymentLinkStatus = (typeof PAYMENT_LINK_STATUSES)[number];
-/** Checkout accepts the academy's two package currencies only. */
-export const PAYMENT_LINK_CURRENCIES = ['SAR', 'USD'] as const;
+/**
+ * The package currencies a link may carry: the 2-decimal ones (toMinorUnits ×100 is exact).
+ * KWD and OMR (3 decimals) stay out until Checkout, the webhook and refunds use per-currency
+ * minor units; the API refuses them before any package is made (400 currency_not_supported).
+ * Migration 20261115000100 holds the same list in payment_links_currency_check.
+ */
+export const PAYMENT_LINK_CURRENCIES = ['SAR', 'AED', 'QAR', 'USD'] as const;
+export type PaymentLinkCurrency = (typeof PAYMENT_LINK_CURRENCIES)[number];
+const linkCurrencySchema = z.enum(PAYMENT_LINK_CURRENCIES);
+
+/** Whether a payment link can be made in this package currency. */
+export const isLinkCurrency = (currency: string): currency is PaymentLinkCurrency =>
+  linkCurrencySchema.safeParse(currency).success;
 
 /** POST /sales/payment-links/quote: the calculator price shown as the reference (any student). */
 export const paymentLinkQuoteSchema = z.strictObject({ studentId: z.uuid(), pricing: subscriptionPricingSchema });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { paymentLinkCreateSchema } from './schemas.js';
+import { isLinkCurrency, PAYMENT_LINK_CURRENCIES, paymentLinkCreateSchema } from './schemas.js';
 
 const ID = '11111111-1111-4111-8111-111111111111';
 const BODY = { studentId: ID, kind: 'new', pricing: { tier: 'weekly' }, amount: 250, currency: 'SAR', clientRequestId: ID };
@@ -19,5 +19,11 @@ describe('payment link commands', () => {
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, teacherId: 'x' }).success).toBe(false);
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, lessonsUsedBefore: -1 }).success).toBe(false);
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, phone: '+966501112223' }).success).toBe(false);
+  });
+
+  it('link currencies: every 2-decimal package currency (QAR, AED too); never the 3-decimal ones', () => {
+    expect(PAYMENT_LINK_CURRENCIES).toEqual(['SAR', 'AED', 'QAR', 'USD']);
+    for (const c of ['SAR', 'AED', 'QAR', 'USD']) expect(isLinkCurrency(c)).toBe(true);
+    for (const c of ['KWD', 'OMR', 'EGP', 'qar', '']) expect(isLinkCurrency(c)).toBe(false);
   });
 });
