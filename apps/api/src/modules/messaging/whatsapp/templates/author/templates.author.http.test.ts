@@ -17,6 +17,10 @@ const body = {
   params: [{ name: 'var_1', sample: 'أحمد' }],
   buttons: [{ type: 'quick_reply', text: 'أريد التفاصيل' }],
 };
+const SALES = 's0000000-0000-4000-8000-000000000003';
+const OTHER_AUTHOR = 's0000000-0000-4000-8000-000000000099';
+/** A free allow-list template of the chat line (no code sends it). */
+const FREE = { line: 'chat' as const, sales_starter: true, meta_id: '9', buttons: [] };
 const edit = { body: 'عرض جديد يا {{1}} هذا الأسبوع', params: [{ name: 'var_1', sample: 'أحمد' }] };
 /** The roles matrix as an admin set it: templates.author granted to the classroom assistant's
  * role, and taken from the custom (sales-based) role. */
@@ -66,7 +70,7 @@ describe('templates.author routes', () => {
     expect(res.statusCode).toBe(201);
     expect(res.json()).toMatchObject({ line: 'chat', sales_starter: true, status: 'pending' });
     expect(t.templates.create).toHaveBeenCalledWith(expect.objectContaining({
-      line: 'chat', sales_starter: true, created_by: 's0000000-0000-4000-8000-000000000003',
+      line: 'chat', sales_starter: true, created_by: SALES,
     }));
     expect(t.chatClient.submitTemplate).toHaveBeenCalledTimes(1);
     expect(t.client.submitTemplate).not.toHaveBeenCalled();
@@ -94,28 +98,30 @@ describe('templates.author routes', () => {
   it('the list: the chat allow-list and the user\'s own, nothing else', async () => {
     rows.set('a', templateRow({ key: 'a', line: 'chat', sales_starter: true, status: 'rejected', last_error: 'x' }));
     rows.set('b', templateRow({ key: 'b', line: 'notifications', sales_starter: false }));
-    rows.set('c', templateRow({ key: 'c', line: 'chat', created_by: 's0000000-0000-4000-8000-000000000003' }));
+    rows.set('c', templateRow({ key: 'c', line: 'chat', created_by: SALES }));
     const res = await t.call({ method: 'GET', url: URL, token: 'sales' });
     expect(res.json().map((v: { key: string }) => v.key)).toEqual(['a', 'c']);
     expect(res.json()[0]).toMatchObject({ status: 'rejected', last_error: 'x' });
   });
 
-  it('sales edit only an allow-list template the code does not send', async () => {
-    rows.set('offer', templateRow({ key: 'offer', meta_name: 'offer', line: 'chat', sales_starter: true, meta_id: '9', buttons: [] }));
+  it('sales edit only their own allow-list template the code does not send', async () => {
+    rows.set('offer', templateRow({ ...FREE, key: 'offer', meta_name: 'offer', created_by: SALES }));
     t.chatClient.editTemplate.mockResolvedValue({ status: 'PENDING' });
     const ok = await t.call({ method: 'PATCH', url: `${URL}/offer`, token: 'sales', body: edit });
     expect([ok.statusCode, ok.json().status]).toEqual([200, 'pending']);
     expect(t.chatClient.editTemplate).toHaveBeenCalledTimes(1);
     rows.set('lesson_reminder', templateRow({ key: 'lesson_reminder', line: 'chat', sales_starter: true }));
     rows.set('other', templateRow({ key: 'other', line: 'chat', sales_starter: false }));
-    for (const key of ['lesson_reminder', 'other']) {
+    rows.set('theirs', templateRow({ ...FREE, key: 'theirs', created_by: OTHER_AUTHOR }));
+    rows.set('seeded', templateRow({ ...FREE, key: 'seeded', created_by: null }));
+    for (const key of ['lesson_reminder', 'other', 'theirs', 'seeded']) {
       const res = await t.call({ method: 'PATCH', url: `${URL}/${key}`, token: 'sales', body: edit });
       expect([key, res.statusCode, res.json().code]).toEqual([key, 403, 'not_author_editable']);
     }
   });
 
   it('an author adds no link and no button action (400); an intent is dropped', async () => {
-    rows.set('offer', templateRow({ key: 'offer', meta_name: 'offer', line: 'chat', sales_starter: true, meta_id: '9', buttons: [] }));
+    rows.set('offer', templateRow({ ...FREE, key: 'offer', meta_name: 'offer', created_by: SALES }));
     const link = { type: 'url', text: 'افتح', url: 'https://example.org' };
     const url = await t.call({ method: 'PATCH', url: `${URL}/offer`, token: 'sales', body: { ...edit, buttons: [link] } });
     expect(url.statusCode).toBe(400);

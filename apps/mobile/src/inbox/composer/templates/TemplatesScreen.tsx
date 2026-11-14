@@ -12,10 +12,10 @@ import { InsetGroup } from '@/core/ui/surface/inset';
 import { TemplateItem } from './TemplateItem';
 import { useTemplateList, useTemplateMode } from './templates-api';
 
-/** The admin edits any template Meta lets one edit; an author only what authorMayEdit allows. */
+/** The admin edits any template Meta lets one edit; an author only their own (authorMayEdit). */
 const MAY_EDIT = {
   admin: (tpl: AuthorTemplate) => editRoute(tpl.status) !== null,
-  author: authorMayEdit,
+  author: (tpl: AuthorTemplate, me: string) => authorMayEdit(tpl, me),
 } as const;
 
 /**
@@ -29,7 +29,7 @@ export function TemplatesScreen({ base }: { base: string }) {
   const list = useTemplateList(mode);
   const rows = list.data ?? [];
   const editOf = (tpl: AuthorTemplate) =>
-    MAY_EDIT[mode](tpl) ? () => router.push(`${base}/${encodeURIComponent(tpl.key)}`) : undefined;
+    MAY_EDIT[mode](tpl, me) ? () => router.push(`${base}/${encodeURIComponent(tpl.key)}`) : undefined;
   return (
     <Screen scroll>
       <ScreenHeader title={t.templates.author.title} subtitle={t.templates.author.intro} />
