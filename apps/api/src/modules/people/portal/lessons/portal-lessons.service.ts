@@ -1,5 +1,5 @@
 import { isOpenLesson, joinWindowConfig, PORTAL_LESSON_DAYS, type PortalLessons, type RoomJoinResult } from '@ab/shared';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { StudentLinkService } from '@/modules/teaching/classroom';
@@ -25,10 +25,10 @@ interface LessonCall {
 @Injectable()
 export class PortalLessonsService {
   constructor(
-    private readonly scopes: PortalScopes,
-    private readonly queries: PortalLessonsRepo,
-    private readonly rooms: StudentLinkService,
-    private readonly extras: PortalLessonExtras,
+    @Inject(PortalScopes) private readonly scopes: PortalScopes,
+    @Inject(PortalLessonsRepo) private readonly queries: PortalLessonsRepo,
+    @Inject(StudentLinkService) private readonly rooms: StudentLinkService,
+    @Inject(PortalLessonExtras) private readonly extras: PortalLessonExtras,
   ) {}
 
   async upcoming(call: LessonCall, now = new Date()): Promise<PortalLessons> {

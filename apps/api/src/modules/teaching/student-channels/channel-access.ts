@@ -4,7 +4,7 @@ import {
   familyChats,
   type ChannelSenderRole,
 } from '@ab/shared';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
 import { PortalScopes } from '@/modules/people/portal';
@@ -26,9 +26,9 @@ export type ChannelActor =
 @Injectable()
 export class AccessDeps {
   constructor(
-    readonly teachers: TeachersRepo,
-    readonly portal: PortalScopes,
-    readonly familyChat: FamilyChatSettings,
+    @Inject(TeachersRepo) readonly teachers: TeachersRepo,
+    @Inject(PortalScopes) readonly portal: PortalScopes,
+    @Inject(FamilyChatSettings) readonly familyChat: FamilyChatSettings,
   ) {}
 }
 
@@ -43,9 +43,9 @@ export class AccessDeps {
 @Injectable()
 export class ChannelAccess {
   constructor(
-    private readonly queries: ChannelRepo,
-    private readonly people: ChannelPeopleRepo,
-    private readonly deps: AccessDeps,
+    @Inject(ChannelRepo) private readonly queries: ChannelRepo,
+    @Inject(ChannelPeopleRepo) private readonly people: ChannelPeopleRepo,
+    @Inject(AccessDeps) private readonly deps: AccessDeps,
   ) {}
 
   async teacher(user: AuthUser, studentId: string): Promise<ChannelActor> {

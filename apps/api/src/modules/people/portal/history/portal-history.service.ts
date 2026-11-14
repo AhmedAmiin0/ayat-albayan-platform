@@ -7,7 +7,7 @@ import {
   type PortalMonth,
   type PortalStudent,
 } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { PortalReportsRepo } from '@/modules/people/portal/reports/portal-reports.repo';
 import { recordingByLesson } from '@/modules/people/portal/reports/portal-reports.mapper';
@@ -34,9 +34,9 @@ interface HistoryCall {
 @Injectable()
 export class PortalHistoryService {
   constructor(
-    private readonly scopes: PortalScopes,
-    private readonly lessons: PortalHistoryRepo,
-    private readonly reports: PortalReportsRepo,
+    @Inject(PortalScopes) private readonly scopes: PortalScopes,
+    @Inject(PortalHistoryRepo) private readonly lessons: PortalHistoryRepo,
+    @Inject(PortalReportsRepo) private readonly reports: PortalReportsRepo,
   ) {}
 
   async history(call: HistoryCall, now = new Date()): Promise<PortalHistory> {

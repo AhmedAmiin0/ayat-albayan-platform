@@ -9,7 +9,7 @@ import {
   type PortalReports,
   type RoomJoinResult,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -36,9 +36,9 @@ const UUID = new ParseUUIDPipe();
 @Controller('portal')
 export class PortalController {
   constructor(
-    private readonly home: PortalHomeService,
-    private readonly lessons: PortalLessonsService,
-    private readonly past: PortalHistoryService,
+    @Inject(PortalHomeService) private readonly home: PortalHomeService,
+    @Inject(PortalLessonsService) private readonly lessons: PortalLessonsService,
+    @Inject(PortalHistoryService) private readonly past: PortalHistoryService,
   ) {}
 
   @Get('me')
@@ -76,8 +76,8 @@ export class PortalController {
 @Controller('portal')
 export class PortalRecordsController {
   constructor(
-    private readonly reports: PortalReportsService,
-    private readonly packages: PortalPackageService,
+    @Inject(PortalReportsService) private readonly reports: PortalReportsService,
+    @Inject(PortalPackageService) private readonly packages: PortalPackageService,
   ) {}
 
   @Get('students/:id/reports')

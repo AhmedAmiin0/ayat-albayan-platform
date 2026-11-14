@@ -1,5 +1,5 @@
 import { PACKAGE_GUARDIAN_ONLY, type PortalPackageView } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden } from '@/common/http/errors';
 import { PackagesService } from '@/modules/finance/subscriptions';
@@ -16,10 +16,10 @@ import { PortalPackageRepo } from './portal-package.repo';
 @Injectable()
 export class PortalPackageService {
   constructor(
-    private readonly scopes: PortalScopes,
-    private readonly queries: PortalPackageRepo,
-    private readonly packages: PackagesService,
-    private readonly settings: PortalSettings,
+    @Inject(PortalScopes) private readonly scopes: PortalScopes,
+    @Inject(PortalPackageRepo) private readonly queries: PortalPackageRepo,
+    @Inject(PackagesService) private readonly packages: PackagesService,
+    @Inject(PortalSettings) private readonly settings: PortalSettings,
   ) {}
 
   async current(input: { user: AuthUser; studentId: string }): Promise<PortalPackageView> {

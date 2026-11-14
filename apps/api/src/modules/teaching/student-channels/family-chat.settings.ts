@@ -1,5 +1,5 @@
 import type { SettingKey } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { readSlice } from '@/common/settings/settings-slice';
 import { SettingsService } from '@/common/settings/settings.service';
 
@@ -12,7 +12,7 @@ const KEYS = ['family_chat_enabled'] as const satisfies readonly SettingKey[];
  */
 @Injectable()
 export class FamilyChatSettings {
-  constructor(private readonly store: SettingsService) {}
+  constructor(@Inject(SettingsService) private readonly store: SettingsService) {}
 
   async enabled(): Promise<boolean> {
     return (await readSlice(this.store, KEYS)).family_chat_enabled;

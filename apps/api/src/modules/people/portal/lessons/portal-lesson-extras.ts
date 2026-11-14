@@ -1,5 +1,5 @@
 import type { PortalLessons, PortalStudent } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PortalHistoryService } from '@/modules/people/portal/history/portal-history.service';
 import { PortalReportsService } from '@/modules/people/portal/reports/portal-reports.service';
 
@@ -13,8 +13,8 @@ type LessonExtras = Required<Pick<PortalLessons, 'prepare' | 'month'>>;
 @Injectable()
 export class PortalLessonExtras {
   constructor(
-    private readonly reports: PortalReportsService,
-    private readonly history: PortalHistoryService,
+    @Inject(PortalReportsService) private readonly reports: PortalReportsService,
+    @Inject(PortalHistoryService) private readonly history: PortalHistoryService,
   ) {}
 
   async of(student: PortalStudent, now: Date): Promise<LessonExtras> {

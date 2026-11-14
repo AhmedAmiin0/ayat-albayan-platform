@@ -7573,11 +7573,6 @@
       "count": 3
     }
   },
-  "src/modules/people/portal/history/portal-history.service.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 3
-    }
-  },
   "src/modules/people/portal/home/chat-number.ts": {
     "stylistic/max-len": {
       "count": 4
@@ -7587,11 +7582,6 @@
     }
   },
   "src/modules/people/portal/home/portal-home.service.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 2
-    }
-  },
-  "src/modules/people/portal/lessons/portal-lesson-extras.ts": {
     "typescript/consistent-type-imports": {
       "count": 2
     }
@@ -7618,16 +7608,8 @@
     }
   },
   "src/modules/people/portal/lessons/portal-lessons.service.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 4
-    },
     "stylistic/max-len": {
       "count": 6
-    }
-  },
-  "src/modules/people/portal/package/portal-package.service.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 4
     }
   },
   "src/modules/people/portal/portal-read-only.migration.test.ts": {
@@ -7641,9 +7623,6 @@
     }
   },
   "src/modules/people/portal/portal.controller.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 5
-    },
     "stylistic/max-len": {
       "count": 1
     },
@@ -7672,11 +7651,6 @@
   "src/modules/people/portal/portal.scope.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/modules/people/portal/portal.settings.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 1
     }
   },
   "src/modules/people/portal/reports/portal-reports.mapper.ts": {
@@ -14340,9 +14314,6 @@
     }
   },
   "src/modules/teaching/student-channels/channel-access.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 5
-    },
     "stylistic/max-len": {
       "count": 7
     }
@@ -14457,11 +14428,6 @@
     },
     "ab/zod-inputs": {
       "count": 4
-    }
-  },
-  "src/modules/teaching/student-channels/family-chat.settings.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 1
     }
   },
   "src/modules/teaching/student-channels/student-channels.migration.test.ts": {
