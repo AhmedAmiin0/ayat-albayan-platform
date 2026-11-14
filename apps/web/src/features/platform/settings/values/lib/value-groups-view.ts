@@ -48,6 +48,7 @@ const NEW_LABEL: Partial<Record<ValuesGroupId, string>> = {
   notifications: g.notifications,
   sending: g.sending,
   google: g.google,
+  family: g.family,
 };
 
 /** The group's name (today's section words where they exist). */
