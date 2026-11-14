@@ -17,7 +17,7 @@ const PERIODS = [
 ];
 
 /** «المواعيد المتاحة» lives in «المزيد» (the native tab bar holds five); this is its shortcut. */
-export const AVAILABILITY_HREF = '/teacher/more/availability';
+const AVAILABILITY_HREF = '/teacher/more/availability';
 
 const toAvailability = () => router.push(AVAILABILITY_HREF);
 

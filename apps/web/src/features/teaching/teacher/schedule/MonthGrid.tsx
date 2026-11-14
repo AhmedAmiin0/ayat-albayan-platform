@@ -1,4 +1,4 @@
-import { monthGrid, type MonthCell } from '@ab/client-core';
+import { monthCells, type MonthDayView } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
@@ -23,7 +23,7 @@ const CELL =
  * number and a count of her lessons; today ringed, the picked day filled, borrowed days muted.
  */
 export function MonthGrid({ month, today, picked, days, onPick }: MonthGridProps) {
-  const weeks = monthGrid(month);
+  const weeks = monthCells(month, { today, picked, days });
   return (
     <table aria-label={t.teacherSchedule.monthGrid} className="w-full table-fixed border-collapse">
       <thead>
@@ -38,10 +38,7 @@ export function MonthGrid({ month, today, picked, days, onPick }: MonthGridProps
           <tr key={week[0]?.date}>
             {week.map((cell) => (
               <td key={cell.date} className="p-0.5 align-top">
-                <DayCell
-                  {...{ cell, today, picked, onPick }}
-                  count={days.get(cell.date)?.length ?? 0}
-                />
+                <DayCell cell={cell} onPick={onPick} />
               </td>
             ))}
           </tr>
@@ -61,34 +58,25 @@ function WeekdayHead({ date }: { date: string }) {
   );
 }
 
-interface DayCellProps {
-  cell: MonthCell;
-  today: string;
-  picked: string | null;
-  count: number;
-  onPick: (date: string) => void;
-}
-
-function DayCell({ cell, today, picked, count, onPick }: DayCellProps) {
-  const isPicked = cell.date === picked;
+function DayCell({ cell, onPick }: { cell: MonthDayView; onPick: (date: string) => void }) {
   return (
     <button
       type="button"
-      aria-label={dayCellLabel(cell.date, count)}
-      aria-pressed={isPicked}
-      aria-current={cell.date === today ? 'date' : undefined}
+      aria-label={dayCellLabel(cell.date, cell.count)}
+      aria-pressed={cell.picked}
+      aria-current={cell.today ? 'date' : undefined}
       onClick={() => onPick(cell.date)}
       className={cn(
         CELL,
         !cell.inMonth && 'text-ink-3',
-        cell.date === today && 'ring-1 ring-gold',
-        isPicked && 'bg-lapis-wash font-semibold text-ink',
+        cell.today && 'ring-1 ring-gold',
+        cell.picked && 'bg-lapis-wash font-semibold text-ink',
       )}
     >
       <span className="tabular-nums">{dayNumber(cell.date)}</span>
-      {count > 0 && (
+      {cell.count > 0 && (
         <span className="rounded-full bg-gold-wash px-1.5 text-2xs font-semibold text-ink tabular-nums">
-          {count}
+          {cell.count}
         </span>
       )}
     </button>

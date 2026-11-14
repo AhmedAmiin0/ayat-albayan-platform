@@ -10,7 +10,12 @@ export {
   type Density,
   type HomePrefs,
 } from './home-prefs.js';
-export { lessonChange, type ChangeWho, type LessonChange } from './lesson-changes.js';
+export {
+  lessonChange,
+  type ChangeContext,
+  type ChangeWho,
+  type LessonChange,
+} from './lesson-changes.js';
 export {
   addMonths,
   lessonsByDay,
@@ -31,3 +36,10 @@ export {
   type PartsOptions,
 } from './alert-parts.js';
 export { alertLine, type AlertWords } from './alert-line.js';
+export { monthCells, type MonthCellsInput, type MonthDayView } from './month-cells.js';
+export {
+  prefSwitches,
+  type PrefSwitch,
+  type PrefSwitchGroups,
+  type PrefSwitchWords,
+} from './pref-switches.js';

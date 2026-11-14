@@ -1,4 +1,4 @@
-import { COURSE_PAUSE_REASON, type LessonView } from '@ab/shared';
+import { COURSE_PAUSE_REASON, isOpenLesson, type LessonView } from '@ab/shared';
 
 // «تنبيهات اليوم»: today's lessons cancelled or moved, with who and why (docs/47 move lines). Only
 // what the teacher may read: her own reason, a pause, a move reason on her own lessons. An admin's
@@ -15,7 +15,7 @@ export interface LessonChange {
   to: string | null;
 }
 
-export type ChangeLesson = Pick<
+type ChangeLesson = Pick<
   LessonView,
   'id' | 'status' | 'starts_at' | 'cancel_reason' | 'rescheduled_from_id'
 > & { time_edit?: LessonView['time_edit'] };
@@ -44,18 +44,31 @@ function closedChange(l: ChangeLesson, lessons: readonly ChangeLesson[]): Lesson
   return { who: rule.who, reason: rule.reason(l), from: null, to: movedTo(lessons, l.id) };
 }
 
+const RECENT_MS = 7 * 86_400_000;
+
+/** A time edit counts for a week; an older one is just the lesson's time now. */
+const editedFrom = (l: ChangeLesson, now: Date): string | undefined => {
+  const edit = l.time_edit;
+  const recent = edit && now.getTime() - Date.parse(edit.at) <= RECENT_MS;
+  return recent ? edit.was.starts_at : undefined;
+};
+
 /** An open lesson that replaced another one or had its time edited: where it came from. */
-function movedIn(l: ChangeLesson, lessons: readonly ChangeLesson[]): LessonChange | null {
+function movedIn(l: ChangeLesson, o: ChangeContext): LessonChange | null {
+  if (!isOpenLesson(l.status)) return null;
+  const lessons = o.lessons;
   const old = byId(lessons, l.rescheduled_from_id);
-  const from = old ? old.starts_at : editedFrom(l);
+  const from = old ? old.starts_at : editedFrom(l, o.now);
   if (from === undefined) return null;
   return { who: 'moved', reason: old ? old.cancel_reason : null, from, to: null };
 }
 
-const editedFrom = (l: ChangeLesson): string | undefined => l.time_edit?.was.starts_at;
+export interface ChangeContext {
+  /** Her lessons in the window, to find where a move came from or went. */
+  lessons: readonly ChangeLesson[];
+  now: Date;
+}
 
 /** What changed about a lesson, or null when nothing did. */
-export const lessonChange = (
-  l: ChangeLesson,
-  lessons: readonly ChangeLesson[],
-): LessonChange | null => closedChange(l, lessons) ?? movedIn(l, lessons);
+export const lessonChange = (l: ChangeLesson, o: ChangeContext): LessonChange | null =>
+  closedChange(l, o.lessons) ?? movedIn(l, o);

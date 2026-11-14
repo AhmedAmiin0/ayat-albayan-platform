@@ -9751,17 +9751,6 @@
       "count": 1
     }
   },
-  "src/teacher/screens/TeacherScheduleScreen.tsx": {
-    "ab/module-boundaries": {
-      "count": 6
-    },
-    "max-len": {
-      "count": 4
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
   "src/teacher/screens/TeacherStudentsScreen.tsx": {
     "max-len": {
       "count": 4

@@ -11,7 +11,7 @@ import { AlertRow, type AlertHandlers } from './AlertRow';
 import { useHomePrefs } from './home-prefs';
 import { useTodayAlerts } from './use-today-alerts';
 
-export interface TodayAlertsProps {
+interface TodayAlertsProps {
   lessons: readonly LessonView[];
   now: Date;
   tz: string;
@@ -19,7 +19,7 @@ export interface TodayAlertsProps {
   onReport: AlertHandlers['onReport'];
 }
 
-export const CUSTOMIZE_HREF = '/teacher/today/customize';
+const CUSTOMIZE_HREF = '/teacher/today/customize';
 const titleStyle = { fontFamily: type.ui[700], fontSize: 15, lineHeight: 24 } as const;
 
 /**

@@ -11020,9 +11020,6 @@
   "src/features/teaching/teacher/TeacherDashboard.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/features/teaching/teacher/api.ts": {
@@ -11031,14 +11028,6 @@
     },
     "ab/no-untyped-api-calls": {
       "count": 4
-    }
-  },
-  "src/features/teaching/teacher/lessons/LessonDayList.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/teaching/teacher/lessons/MyWeek.tsx": {
@@ -11721,11 +11710,6 @@
       "count": 1
     },
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/routes/teacher/calendar.tsx": {
-    "ab/module-boundaries": {
       "count": 1
     }
   },

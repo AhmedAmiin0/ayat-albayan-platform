@@ -15,6 +15,7 @@ export function PrefSwitch({ label, checked, onChange }: PrefSwitchProps) {
         <input
           type="checkbox"
           role="switch"
+          aria-checked={checked}
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
           className={switchInputClass}

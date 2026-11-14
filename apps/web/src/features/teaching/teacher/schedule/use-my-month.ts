@@ -1,11 +1,15 @@
 import { addMonths, lessonsByDay, monthOf, monthWindowIn } from '@ab/client-core';
-import { zonedPartsIn } from '@ab/shared';
+import { isClosedLesson, type LessonView, zonedPartsIn } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { myLessonsQuery } from '@/features/teaching/teacher/api';
 import { useFollowingDay } from '@/lib/time/use-following-day';
 import { useNow } from '@/lib/time/use-now';
 import { useViewerTz } from '@/lib/viewer-tz';
+
+/** Cancelled and moved-away lessons stay off the month, as on the phone (one count per lesson). */
+const shown = (data: readonly LessonView[] | undefined) =>
+  (data ?? []).filter((l) => !isClosedLesson(l.status));
 
 /**
  * The month view's state (owner 2026-11-14): the shown month (following the clock until she
@@ -28,7 +32,7 @@ export function useMyMonth() {
     today,
     month,
     lessons,
-    days: lessonsByDay(lessons.data ?? [], tz),
+    days: lessonsByDay(shown(lessons.data), tz),
     day: picked ?? fallbackDay,
     current: month === thisMonth,
     pick: setPicked,

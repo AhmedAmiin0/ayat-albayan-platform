@@ -37,6 +37,17 @@ describe('todayAlerts', () => {
     expect(out.map((a) => (a.kind === 'report' ? a.stage : a.kind))).toEqual(['write', 'resume', 'window']);
   });
 
+  it('a write waits for the end of the lesson', () => {
+    const running = lesson({ id: 'r', starts_at: '2026-11-14T08:30:00Z', ends_at: '2026-11-14T09:30:00Z', students: [{ id: 's', report: null }] as never });
+    expect(kinds({ lessons: [running] })).toEqual([]);
+  });
+
+  it('a move inside today shows once, on the new lesson', () => {
+    const old = lesson({ id: 'o', status: 'rescheduled', starts_at: '2026-11-14T10:00:00Z' });
+    const neu = lesson({ id: 'n', starts_at: '2026-11-14T12:00:00Z', rescheduled_from_id: 'o' });
+    expect(kinds({ lessons: [old, neu] })).toEqual(['changed:n']);
+  });
+
   it('only today in her zone, in start order', () => {
     const late = lesson({ id: 'late', status: 'cancelled_by_teacher', starts_at: '2026-11-14T15:00:00Z' });
     const early = lesson({ id: 'early', status: 'cancelled_by_teacher', starts_at: '2026-11-14T10:00:00Z' });
@@ -51,6 +62,7 @@ describe('todayAlerts', () => {
       bellRow({ id: 'n3', created_at: '2026-11-13T20:00:00Z' }),
       bellRow({ id: 'n4', kind: 'payment_received' }),
       bellRow({ id: 'n5', kind: 'new_message' }),
+      bellRow({ id: 'n6', kind: 'lesson_cancelled' }),
     ];
     expect(kinds({ bell })).toEqual(['bell:n1']);
   });

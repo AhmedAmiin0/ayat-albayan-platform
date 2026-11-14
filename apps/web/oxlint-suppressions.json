@@ -10985,9 +10985,6 @@
     }
   },
   "src/features/teaching/teacher/TeacherDashboard.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/module-boundaries": {
       "count": 2
     }
@@ -10998,14 +10995,6 @@
     },
     "ab/no-untyped-api-calls": {
       "count": 4
-    }
-  },
-  "src/features/teaching/teacher/lessons/LessonDayList.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/features/teaching/teacher/lessons/MyWeek.tsx": {
@@ -11690,11 +11679,6 @@
     "stylistic/max-len": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/routes/teacher/calendar.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }

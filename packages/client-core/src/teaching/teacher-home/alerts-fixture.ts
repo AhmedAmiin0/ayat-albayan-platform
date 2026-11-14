@@ -26,7 +26,7 @@ export const lesson = (o: Partial<LessonView> & { id: string }): LessonView => (
 });
 
 export const bellRow = (o: Partial<NotificationItem> & { id: string }): NotificationItem => ({
-  kind: 'lesson_cancelled',
+  kind: 'new_student',
   title: 'أُلغيت حلقة',
   body: 'نص',
   data: {},

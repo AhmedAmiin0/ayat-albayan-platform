@@ -2,7 +2,7 @@ import { Switch, View } from 'react-native';
 import { AppText } from '@/core/ui/primitives/AppText';
 import { type, useTheme } from '@/theme';
 
-export interface PrefSwitchRowProps {
+interface PrefSwitchRowProps {
   label: string;
   value: boolean;
   onChange: (value: boolean) => void;

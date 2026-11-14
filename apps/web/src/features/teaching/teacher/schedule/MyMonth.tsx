@@ -26,7 +26,7 @@ export function MyMonth({ toggle }: { toggle?: ReactNode }) {
   };
   return (
     <>
-      <MonthHead count={m.lessons.data?.length ?? 0} toggle={toggle} />
+      <MonthHead count={[...m.days.values()].flat().length} toggle={toggle} />
       <MonthNav month={m.month} current={m.current} onStep={m.step} onToday={m.toThisMonth} />
       <MonthBody m={m} onOpen={open} onDone={setNotice} />
       <TeacherLessonDrawer

@@ -22,7 +22,7 @@ export function MonthBody({ m, onOpen, onDone }: MonthBodyProps) {
   return (
     <div aria-busy={busy || undefined} className={cn(busy && 'opacity-60')}>
       <MonthGrid month={m.month} today={m.today} picked={day} days={m.days} onPick={m.pick} />
-      {lessons.data.length === 0 ? (
+      {m.days.size === 0 ? (
         <p className="mt-4 text-sm text-ink-2">{t.teacherSchedule.noLessonsMonth}</p>
       ) : (
         <PickedDay {...{ m, onOpen, onDone }} />

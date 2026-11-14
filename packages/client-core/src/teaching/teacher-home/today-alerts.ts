@@ -26,12 +26,15 @@ export interface AlertInput {
   shown: Readonly<Record<AlertKind, boolean>>;
 }
 
-/** Bell kinds about money or the inbox never reach this list (privacy; the bell still has them). */
+/**
+ * Bell kinds about money or the inbox never reach this list (privacy; the bell still has them),
+ * nor the lesson news the lesson alerts already say (a cancel, a move, a confirm request).
+ */
 const BELL_SHOWN: Readonly<Record<PushKind, boolean>> = {
   new_lead: false,
   new_message: false,
   reminder_failed: false,
-  lesson_needs_confirmation: true,
+  lesson_needs_confirmation: false,
   report_submitted: true,
   payment_due: false,
   new_student: true,
@@ -39,8 +42,8 @@ const BELL_SHOWN: Readonly<Record<PushKind, boolean>> = {
   google_sync_alert: false,
   channel_message: true,
   commission_earned: false,
-  lesson_rescheduled: true,
-  lesson_cancelled: true,
+  lesson_rescheduled: false,
+  lesson_cancelled: false,
   course_paused: true,
   course_resumed: true,
   payment_received: false,
@@ -58,7 +61,7 @@ const confirm: Make = (l, i) =>
 const LESSON_ALERTS: readonly (readonly [AlertKind, Make])[] = [
   ['soon', (l, i) => (isSoon(l, i.now) ? soon(l, i.now) : null)],
   ['confirm', confirm],
-  ['changed', (l, i) => changed(l, i.lessons)],
+  ['changed', (l, i) => changed(l, i.lessons, i.now)],
   ['report', (l, i) => report(l, i.now)],
 ];
 
@@ -69,14 +72,18 @@ const soon = (l: LessonView, now: Date): TodayAlert => ({
   minutes: Math.ceil(until(l, now) / 60_000),
 });
 
-function changed(l: LessonView, all: readonly LessonView[]): TodayAlert | null {
-  const change = lessonChange(l, all);
+function changed(l: LessonView, all: readonly LessonView[], now: Date): TodayAlert | null {
+  const change = lessonChange(l, { lessons: all, now });
   return change ? { kind: 'changed', key: `changed:${l.id}`, lesson: l, change } : null;
 }
 
+const teaching = (l: LessonView, now: Date) => Date.parse(l.ends_at) > now.getTime();
+
+/** A report still to write waits for the end of the lesson; a draft or the edit window shows. */
 function report(l: LessonView, now: Date): TodayAlert | null {
   const stage = reportStage(l, now);
-  if (stage === null || stage === 'done') return null;
+  const quiet = stage === null || stage === 'done' || (stage === 'write' && teaching(l, now));
+  if (quiet) return null;
   return { kind: 'report', key: `report:${l.id}`, lesson: l, stage };
 }
 
@@ -87,6 +94,10 @@ const bellAlerts = (i: AlertInput, day: string): TodayAlert[] =>
     .filter((n) => n.read_at === null && BELL_SHOWN[n.kind] && onDay(n.created_at, i, day))
     .map((item) => ({ kind: 'bell', key: `bell:${item.id}`, item }));
 
+/** A move inside today says it once, on the new lesson («… نُقلت من 13:00»). */
+const movedWithinDay = (a: TodayAlert, today: readonly LessonView[]) =>
+  a.kind === 'changed' && today.some((l) => l.rescheduled_from_id === a.lesson.id);
+
 /** Today's alerts kind by kind (soon, confirm, changed, report, bell), each in start order. */
 export function todayAlerts(input: AlertInput): TodayAlert[] {
   const day = localDateIn(input.now, input.tz);
@@ -96,5 +107,6 @@ export function todayAlerts(input: AlertInput): TodayAlert[] {
   const lessonAlerts = LESSON_ALERTS.filter(([kind]) => input.shown[kind]).flatMap(([, make]) =>
     today.map((l) => make(l, input)).filter((a): a is TodayAlert => a !== null),
   );
-  return input.shown.bell ? [...lessonAlerts, ...bellAlerts(input, day)] : lessonAlerts;
+  const alerts = lessonAlerts.filter((a) => !movedWithinDay(a, today));
+  return input.shown.bell ? [...alerts, ...bellAlerts(input, day)] : alerts;
 }
