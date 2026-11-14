@@ -10,7 +10,13 @@ import type { TemplateView } from './template-views.js';
  * Flagged by the chat line's import (template-import.ts); any other import comes unflagged. trial_reschedule
  * (owner 2026-10-18: «one more template to reschedule the meeting») is seeded by migration 460.
  */
-export const RESTRICTED_TEMPLATE_DEFAULTS = ['free_trial_invite', 'welcome_greeting', 'trial_reschedule'] as const;
+export const RESTRICTED_TEMPLATE_DEFAULTS = [
+  'free_trial_invite',
+  'welcome_greeting',
+  'trial_reschedule',
+  // Owner 2026-11-14: «a template that carries your text» (free-text.ts, «أرسِل الآن داخل قالب»).
+  'academy_message',
+] as const;
 
 /** Sent only by their own button (signed link, picked lesson): never from a composer's picker. */
 export const OWN_BUTTON_TEMPLATES: readonly string[] = ['lesson_feedback_request', 'lesson_join_link', 'lesson_rating'];

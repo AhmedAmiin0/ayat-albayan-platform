@@ -43,7 +43,8 @@ describe('starterRow — one chat-WABA template as a registry row', () => {
     });
   });
 
-  it.each(['free_trial_invite', 'welcome_greeting'])('%s (a restricted default) is imported flagged', (name) => {
+  const defaults = ['free_trial_invite', 'welcome_greeting', 'academy_message'];
+  it.each(defaults)('%s (a restricted default) is imported flagged', (name) => {
     expect(starterRow(meta({ name }), NOW)).toMatchObject({ key: name, sales_starter: true });
   });
 

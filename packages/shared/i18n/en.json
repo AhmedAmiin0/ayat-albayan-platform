@@ -3465,7 +3465,7 @@
     },
     "salesStarter": "Available to teachers and sales",
     "salesStarterFor": "{name}: available to teachers and sales",
-    "salesStarterIntro": "Teachers, sales, classroom assistants and any role without «Send all templates» see only the approved templates ticked in «Available to teachers and sales»: by default three, free_trial_invite, welcome_greeting and trial_reschedule. They start a conversation or resume it after 24 hours without a reply. Syncing with Meta adds each number's new templates and ticks only these three when they come from the chat line; it never changes your choice for an existing template. Each template is sent from the number in the «Number» column; the automatic reminders are not affected by this choice.",
+    "salesStarterIntro": "Teachers, sales, classroom assistants and any role without «Send all templates» see only the approved templates ticked in «Available to teachers and sales»: by default four, free_trial_invite, welcome_greeting, trial_reschedule and academy_message. They start a conversation or resume it after 24 hours without a reply. Syncing with Meta adds each number's new templates and ticks only these four when they come from the chat line; it never changes your choice for an existing template. Each template is sent from the number in the «Number» column; the automatic reminders are not affected by this choice.",
     "starterOn": "Teachers, sales and the other limited roles can now send this template",
     "starterOff": "Teachers, sales and the other limited roles can no longer send this template",
     "qualityScore": {
@@ -3500,7 +3500,8 @@
       "course_resumed": "Lessons resumed",
       "trial_reschedule": "Reschedule the trial lesson",
       "free_trial_invite": "Free trial lesson invitation",
-      "welcome_greeting": "Welcome message"
+      "welcome_greeting": "Welcome message",
+      "academy_message": "Academy message carrying your text"
     },
     "settings": {
       "title": "Sending settings",
