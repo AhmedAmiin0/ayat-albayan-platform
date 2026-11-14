@@ -1,3 +1,4 @@
+import type { QuoteResponse } from '@ab/shared';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { STUDENT_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/money.fakes';
@@ -25,7 +26,7 @@ const body = (currency: string) => ({
 });
 
 // 2026-11-14: a QAR link wrote its unpaid package, then payment_links_currency_check refused the
-// link (500, «تعذّر الحفظ»). QAR and AED now make links; KWD and OMR are refused before any write.
+// link (500, «تعذّر الحفظ»). Every catalog currency now makes a link; any other is refused first.
 describe('POST /sales/payment-links: the package currency', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
@@ -50,19 +51,23 @@ describe('POST /sales/payment-links: the package currency', () => {
     expect(s.links.insert).toHaveBeenCalledWith(link);
   });
 
-  it('KWD (3 decimals): 400 currency_not_supported, no package and no link', async () => {
+  it('KWD (Stripe thousandths): the package and its link in KWD', async () => {
     m.pricing.quote.mockResolvedValue({ ...WEEKLY_SA, currency: 'KWD' });
     const res = await call({ method: 'POST', url: URL, token: 'salesA', body: body('KWD') });
-    const json = res.json();
-    expect([res.statusCode, json.code, json.currency]).toEqual([400, 'currency_not_supported', 'KWD']);
-    expect(m.subs.insert).not.toHaveBeenCalled();
-    expect(s.links.insert).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(201);
+    expect(s.links.insert).toHaveBeenCalledWith(expect.objectContaining({ amount: 125 }));
   });
 
-  it('the quote says so first: the form shows the reason under the price', async () => {
-    m.pricing.quote.mockResolvedValue({ ...WEEKLY_SA, currency: 'OMR' });
+  it('a currency outside the catalog: 400 currency_not_supported, no package, no link', async () => {
+    const egp = { ...WEEKLY_SA, currency: 'EGP' } as unknown as QuoteResponse; // never from the catalog
+    m.pricing.quote.mockResolvedValue(egp);
+    const res = await call({ method: 'POST', url: URL, token: 'salesA', body: body('EGP') });
+    const json = res.json();
+    expect([res.statusCode, json.code, json.currency]).toEqual([400, 'currency_not_supported', 'EGP']);
+    expect(m.subs.insert).not.toHaveBeenCalled();
+    expect(s.links.insert).not.toHaveBeenCalled();
     const quote = { studentId: STUDENT_ID, pricing: PRICING };
-    const res = await call({ method: 'POST', url: `${URL}/quote`, token: 'salesA', body: quote });
-    expect([res.statusCode, res.json().code]).toEqual([400, 'currency_not_supported']);
+    const q = await call({ method: 'POST', url: `${URL}/quote`, token: 'salesA', body: quote });
+    expect([q.statusCode, q.json().code]).toEqual([400, 'currency_not_supported']);
   });
 });

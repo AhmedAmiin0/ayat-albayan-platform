@@ -1,4 +1,4 @@
-import { fromMinorUnits } from '@ab/shared';
+import { fromStripeAmount } from '@ab/shared';
 import { HttpException, Injectable } from '@nestjs/common';
 import type Stripe from 'stripe';
 import { errorCode } from '@/common/http/errors';
@@ -66,7 +66,7 @@ export class LinkRefunds {
 
   /** «إلغاء مع استرداد» (owner 2026-11-02): nothing reached the family; admins pay it by hand. */
   private async failed(refund: Stripe.Refund): Promise<string> {
-    const text = `${fromMinorUnits(refund.amount)} ${refund.currency.toUpperCase()} ${refund.id}`;
+    const text = `${fromStripeAmount(refund.amount, refund.currency)} ${refund.currency.toUpperCase()} ${refund.id}`;
     const title = ar.paymentLinks.bell.refundFailedTitle;
     const subject = `stripe_refund_failed:${refund.id}`;
     await this.deps.alerts.admins({ subject, title, text, link: null });
@@ -75,14 +75,14 @@ export class LinkRefunds {
 
   async disputed(dispute: Stripe.Dispute): Promise<string> {
     const link = await this.linkOfIntent(await this.clients.client(), idOf(dispute.payment_intent));
-    const text = `${fromMinorUnits(dispute.amount)} ${dispute.currency.toUpperCase()} — ${ar.paymentLinks.bell.disputeBody}`;
+    const text = `${fromStripeAmount(dispute.amount, dispute.currency)} ${dispute.currency.toUpperCase()} — ${ar.paymentLinks.bell.disputeBody}`;
     await this.deps.alerts.admins({ subject: `stripe_dispute:${dispute.id}`, title: ar.paymentLinks.bell.disputeTitle, text, link });
     return 'dispute_alert';
   }
 
   private async record(link: LinkRow, refund: Stripe.Refund): Promise<number> {
     const subscriptionId = link.subscription_id ?? '';
-    const amount = fromMinorUnits(refund.amount);
+    const amount = fromStripeAmount(refund.amount, refund.currency);
     const currency = refund.currency.toUpperCase();
     try {
       await this.deps.payments.create(

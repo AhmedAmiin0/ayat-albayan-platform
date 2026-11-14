@@ -21,9 +21,10 @@ describe('payment link commands', () => {
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, phone: '+966501112223' }).success).toBe(false);
   });
 
-  it('link currencies: every 2-decimal package currency (QAR, AED too); never the 3-decimal ones', () => {
-    expect(PAYMENT_LINK_CURRENCIES).toEqual(['SAR', 'AED', 'QAR', 'USD']);
-    for (const c of ['SAR', 'AED', 'QAR', 'USD']) expect(isLinkCurrency(c)).toBe(true);
-    for (const c of ['KWD', 'OMR', 'EGP', 'qar', '']) expect(isLinkCurrency(c)).toBe(false);
+  it('link currencies: every catalog currency, nothing else', () => {
+    const all = ['SAR', 'AED', 'QAR', 'KWD', 'OMR', 'USD'];
+    expect(PAYMENT_LINK_CURRENCIES).toEqual(all);
+    for (const c of all) expect(isLinkCurrency(c)).toBe(true);
+    for (const c of ['EGP', 'BHD', 'qar', '']) expect(isLinkCurrency(c)).toBe(false);
   });
 });

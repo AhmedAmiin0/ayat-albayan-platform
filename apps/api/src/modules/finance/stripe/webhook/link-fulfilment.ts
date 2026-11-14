@@ -1,4 +1,4 @@
-import { fromMinorUnits } from '@ab/shared';
+import { fromStripeAmount } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import type Stripe from 'stripe';
 import { conflict, errorCode } from '@/common/http/errors';
@@ -40,8 +40,8 @@ export class LinkFulfilment {
   async paid(session: Stripe.Checkout.Session, eventAt: number): Promise<string> {
     const link = await this.linkOf(session);
     if (!link?.subscription_id) return this.orphan(session, link);
-    const amount = fromMinorUnits(session.amount_total ?? 0);
     const currency = (session.currency ?? link.currency).toUpperCase();
+    const amount = fromStripeAmount(session.amount_total ?? 0, currency);
     let payment;
     try {
       await this.stillPayable(link.subscription_id, session.id);
@@ -93,7 +93,7 @@ export class LinkFulfilment {
   /** Our session (client_reference_id) but no link or no package any more: Stripe has the money, so the admins are told. */
   private async orphan(session: Stripe.Checkout.Session, link: LinkRow | null): Promise<string> {
     if (!link && !session.client_reference_id && !session.metadata?.payment_link_id) return 'not_ours';
-    const text = `${fromMinorUnits(session.amount_total ?? 0)} ${(session.currency ?? '').toUpperCase()} (${session.id})`;
+    const text = `${fromStripeAmount(session.amount_total ?? 0, session.currency ?? '')} ${(session.currency ?? '').toUpperCase()} (${session.id})`;
     await this.deps.alerts.admins({ subject: `payment_link_orphan:${session.id}`, title: ar.paymentLinks.bell.refusedTitle, text, link });
     return 'orphan_alerted';
   }
