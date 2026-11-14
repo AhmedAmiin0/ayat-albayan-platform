@@ -1,6 +1,5 @@
 import { useForm } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { Field } from '@/components/ui/form/field';
@@ -9,6 +8,7 @@ import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
 import { PasswordInput } from '@/features/people/auth/PasswordInput';
 import { signIn } from '@/features/people/auth/sign-in';
+import { useLandAfterSignIn } from '@/features/people/auth/use-return-to';
 
 const required = ({ value }: { value: string }) => (value.trim() ? undefined : t.common.required);
 
@@ -27,7 +27,7 @@ interface Props {
  */
 export function PasswordForm({ id, label, hint, children }: Props) {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const land = useLandAfterSignIn();
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
@@ -37,7 +37,7 @@ export function PasswordForm({ id, label, hint, children }: Props) {
       const result = await signIn({ email: value.identifier, password: value.password }, queryClient).catch(
         () => ({ ok: false, error: t.common.error }) as const,
       );
-      if (result.ok) await navigate({ to: result.home });
+      if (result.ok) await land(result.home);
       else setError(result.error);
     },
   });

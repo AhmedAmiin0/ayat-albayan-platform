@@ -7,7 +7,7 @@ import { LoginPage } from './LoginPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', () => ({ apiFetch, apiSend: vi.fn() }));
 vi.mock('./sign-in', () => ({ signIn: vi.fn(), signInWithCode: vi.fn() }));
-vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
+vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useSearch: () => ({}) }));
 
 function renderPage() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });

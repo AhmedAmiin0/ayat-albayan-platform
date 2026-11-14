@@ -6,7 +6,11 @@ import type { TemplateCreateInput } from './template-create.js';
 
 /** The join button's page: GET /join/<token> on the API (a signed, expiring 302 to the room). */
 export const TEACHER_JOIN_BUTTON_URL = 'https://api.ayatalbayan.com/join/{{1}}';
-/** The report button's page: the no-login report form of one lesson (/teacher-report/<token>). */
+/**
+ * The report button's page, fixed on Meta: {{1}} is the lesson id, and the web route redirects it
+ * to the signed-in portal /teacher/report/<id> (owner 2026-11-14); a token sent before that still
+ * opens the no-login form until it expires.
+ */
 export const TEACHER_REPORT_BUTTON_URL = 'https://app.ayatalbayan.com/teacher-report/{{1}}';
 
 /** {{1}}…{{6}} in order: the producer fills them (teacher-lesson.v3.ts in the API). */

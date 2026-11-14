@@ -14,9 +14,9 @@ const GONE: ReadonlySet<string> = new Set([
 
 /**
  * GET /report-link/legacy/<path> (owner 2026-11-06): the old Vercel report redirector's links,
- * answered with the no-login report page of exactly ONE lesson, issued for that lesson's current
- * teacher: (a) teacher/report/<lessonId>; (b) <studentCode>/<teacherName>/… → the pair's most
- * recent lesson started within 24 h, else its next one today. null → the «invalid link» page.
+ * answered with the signed-in portal report page of exactly ONE lesson (owner 2026-11-14):
+ * (a) teacher/report/<lessonId>; (b) <studentCode>/<teacherName>/… → the pair's most recent lesson
+ * started within 24 h, else its next one today. null → the «invalid link» page.
  */
 @Injectable()
 export class LegacyReportLinks {
@@ -28,7 +28,7 @@ export class LegacyReportLinks {
   async target(path: string, now: Date): Promise<string | null> {
     const lesson = await this.find(path, now);
     const open = lesson && !GONE.has(lesson.status) ? lesson : null;
-    return open ? ((await this.issue(open))?.url ?? null) : null;
+    return open ? (this.reports.forLesson(open)?.url ?? null) : null;
   }
 
   /** The one lesson the path names now; null when it names none. */
@@ -36,14 +36,6 @@ export class LegacyReportLinks {
     const parsed = parseLegacyPath(path);
     const lessonId = parsed ? await this.lessonOf(parsed, now) : null;
     return lessonId ? this.repo.lesson(lessonId) : null;
-  }
-
-  private issue(lesson: LinkLesson) {
-    return this.reports.forLesson({
-      id: lesson.id,
-      teacherId: lesson.teacher_id,
-      ends_at: lesson.ends_at,
-    });
   }
 
   private async lessonOf(parsed: LegacyPath, now: Date): Promise<string | null> {

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { teacherReminderCrm } from './teacher-lesson.crm';
 
 // owner 2026-11-06: no short links any more. The reminder's one-line {{2}} carries the lesson's own
-// meeting link and the teacher's no-login report page, both as they are.
+// meeting link and the teacher's signed-in report page, both as they are (owner 2026-11-14).
 
 const TEACHER = { display_name_ar: 'أ. خالد', tz: 'Africa/Cairo' };
 const STUDENTS = [{ name: 'سهيلة', code: 'AB-0101' }];
@@ -13,11 +13,11 @@ const LESSON = {
   students: STUDENTS,
 };
 const ORIGIN = 'https://app.example';
-const PAGE = `${ORIGIN}/teacher-report/tok`;
-const links = { join: 'join-tok', report: { token: 'tok', url: PAGE, exp: 0 } };
+const PAGE = `${ORIGIN}/teacher/report/L1`;
+const links = { join: 'join-tok', report: { suffix: 'L1', url: PAGE } };
 
 describe('teacherReminderCrm with direct links (the WABA {{2}} on either driver)', () => {
-  it('«تقرير الحلقة: <the no-login page>» next to the Meet link, still one line', () => {
+  it('«تقرير الحلقة: <the portal page>» next to the Meet link, still one line', () => {
     const line =
       teacherReminderCrm({ teacher: TEACHER, lesson: LESSON, origin: ORIGIN, links })?.body?.[1] ??
       '';

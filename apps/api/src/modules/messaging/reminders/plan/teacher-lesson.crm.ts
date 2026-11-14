@@ -10,7 +10,7 @@ import { classroomUrl, teacherReportUrl } from './reminders.links';
 /**
  * A v2 URL button's {{1}}: the path after the origin. The CRM's v2 buttons are really
  * meet.google.com/{{1}} and the old Vercel report redirector, which forwards to
- * /report-link/legacy/<path> (owner 2026-11-06): teacher/report/<id> opens the no-login page.
+ * /report-link/legacy/<path> (owner 2026-11-06): teacher/report/<id> opens the portal page.
  */
 const suffix = (url: string): string => url.replace(/^\/+/, '');
 
@@ -110,7 +110,7 @@ interface TeacherReminderInput {
   };
   /** The web origin (firstWebOrigin): both links absolute; '' = no CRM values. */
   origin: string;
-  /** The lesson's signed links (the job makes them); none keeps the signed-in report page. */
+  /** The lesson's links (the job makes them); none: the report page from the origin. */
   links?: TeacherLinks;
 }
 
@@ -123,7 +123,7 @@ export const ownJoin = (
   origin: string,
 ): string => lesson.meeting_link?.trim() || classroomUrl(origin, lesson.id);
 
-/** <join> and <report>: the lesson's own link, and the no-login report page (else signed-in). */
+/** <join> and <report>: the lesson's own link, and the signed-in portal report page. */
 function lineLinks(input: TeacherReminderInput): { join: string; report: string } {
   const { origin, links, lesson } = input;
   const report = links?.report.url ?? teacherReportUrl(origin, lesson.id);
@@ -134,8 +134,8 @@ function lineLinks(input: TeacherReminderInput): { join: string; report: string 
  * The same-day reminder as the CRM's teacher_lesson_reminder (the old script's: {{1}} the teacher,
  * {{2}} one line, no buttons): «<the time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) ·
  * رابط الحلقة: <join> · تقرير الحلقة: <report>». join: the lesson's own link, else our classroom;
- * report: the teacher's no-login report page (else the signed-in one). Direct links, no short
- * links (owner 2026-11-06). null when a value is missing: Meta's values only.
+ * report: the teacher's signed-in portal page (owner 2026-11-14). Direct links, no short links
+ * (owner 2026-11-06). null when a value is missing: Meta's values only.
  */
 export function teacherReminderCrm(input: TeacherReminderInput): CrmValues | null {
   const { lesson, origin } = input;

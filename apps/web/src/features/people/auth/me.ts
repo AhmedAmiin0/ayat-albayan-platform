@@ -5,6 +5,7 @@ import { redirect } from '@tanstack/react-router';
 import { apiFetch } from '@/lib/http/api';
 import { forgetWebPush } from '@/features/messaging/notifications/web-push/web-push';
 import { supabase } from '@/lib/http/supabase';
+import { returnSearchOf } from './return-to';
 
 export interface Me {
   id: string;
@@ -55,14 +56,21 @@ export const meQuery = queryOptions({
 /**
  * Route guard for beforeLoad: signed in and holding `role` (or any of several), else back to
  * /login. The role is the BASE SCOPE (which app, which home); pages inside are gated by permission.
+ * `back` (the page asked for, path + search): a signed-out user carries it to /login as
+ * `?redirect=` and lands there after sign-in (owner 2026-11-14); a guard without it is unchanged.
  */
-export async function requireRole(queryClient: QueryClient, role: UserRole | readonly UserRole[]): Promise<Me> {
+export async function requireRole(
+  queryClient: QueryClient,
+  role: UserRole | readonly UserRole[],
+  back?: string,
+): Promise<Me> {
   const me = await queryClient.ensureQueryData(meQuery).catch((error: unknown) => {
     if (isAccountDisabled(error)) throw redirect({ to: '/login' });
     throw error;
   });
   const allowed: readonly UserRole[] = typeof role === 'string' ? [role] : role;
-  if (!me?.role || !allowed.includes(me.role)) throw redirect({ to: '/login' });
+  const search = me ? {} : returnSearchOf(back);
+  if (!me?.role || !allowed.includes(me.role)) throw redirect({ to: '/login', search });
   return me;
 }
 

@@ -4,7 +4,7 @@ import type { AlertV3 } from './teacher-alert.plan';
 import type { AlertLessonRow } from './teacher-alert.repo';
 
 // teacher_lesson_v3's parts for the new-student alert (owner 2026-11-06): each teacher's first
-// lesson of the booking with its room ({{6}}) and its signed join and report tokens (the buttons).
+// lesson of the booking with its room ({{6}}), its signed join token and lesson id (the buttons).
 
 const log = new Logger('TeacherAlertV3');
 
