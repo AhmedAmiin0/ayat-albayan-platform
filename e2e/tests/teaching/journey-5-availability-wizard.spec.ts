@@ -16,7 +16,7 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     await resetAbrar(); // no availability, no lessons
     const family = await seedFamily('أم سارة', ['سارة']);
 
-    // The teacher, on «جدولي» › «المواعيد المتاحة»: one range, saved in Riyadh time.
+    // The teacher, on «المواعيد المتاحة»: one range, saved in Riyadh time.
     const teacher = await asRole('teacher');
     await openMyAvailability(teacher);
     await teacher.getByLabel(ar.availability.tz).selectOption('Asia/Riyadh');

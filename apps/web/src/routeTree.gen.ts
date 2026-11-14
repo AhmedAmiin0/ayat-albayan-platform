@@ -42,6 +42,7 @@ import { Route as SalesStudentsRouteImport } from './routes/sales/students'
 import { Route as SalesSubscriptionsRouteImport } from './routes/sales/subscriptions'
 import { Route as SalesTeachersRouteImport } from './routes/sales/teachers'
 import { Route as TeacherIndexRouteImport } from './routes/teacher/index'
+import { Route as TeacherAvailabilityRouteImport } from './routes/teacher/availability'
 import { Route as TeacherCalendarRouteImport } from './routes/teacher/calendar'
 import { Route as TeacherEarningsRouteImport } from './routes/teacher/earnings'
 import { Route as TeacherFeedbackRouteImport } from './routes/teacher/feedback'
@@ -254,6 +255,11 @@ const SalesTeachersRoute = SalesTeachersRouteImport.update({
 const TeacherIndexRoute = TeacherIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => TeacherRoute,
+} as any)
+const TeacherAvailabilityRoute = TeacherAvailabilityRouteImport.update({
+  id: '/availability',
+  path: '/availability',
   getParentRoute: () => TeacherRoute,
 } as any)
 const TeacherCalendarRoute = TeacherCalendarRouteImport.update({
@@ -535,6 +541,7 @@ export interface FileRoutesByFullPath {
   '/sales/students': typeof SalesStudentsRoute
   '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/sales/teachers': typeof SalesTeachersRoute
+  '/teacher/availability': typeof TeacherAvailabilityRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/earnings': typeof TeacherEarningsRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
@@ -613,6 +620,7 @@ export interface FileRoutesByTo {
   '/sales/students': typeof SalesStudentsRoute
   '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/sales/teachers': typeof SalesTeachersRoute
+  '/teacher/availability': typeof TeacherAvailabilityRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/earnings': typeof TeacherEarningsRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
@@ -697,6 +705,7 @@ export interface FileRoutesById {
   '/sales/students': typeof SalesStudentsRoute
   '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/sales/teachers': typeof SalesTeachersRoute
+  '/teacher/availability': typeof TeacherAvailabilityRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/earnings': typeof TeacherEarningsRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
@@ -782,6 +791,7 @@ export interface FileRouteTypes {
     | '/sales/students'
     | '/sales/subscriptions'
     | '/sales/teachers'
+    | '/teacher/availability'
     | '/teacher/calendar'
     | '/teacher/earnings'
     | '/teacher/feedback'
@@ -860,6 +870,7 @@ export interface FileRouteTypes {
     | '/sales/students'
     | '/sales/subscriptions'
     | '/sales/teachers'
+    | '/teacher/availability'
     | '/teacher/calendar'
     | '/teacher/earnings'
     | '/teacher/feedback'
@@ -943,6 +954,7 @@ export interface FileRouteTypes {
     | '/sales/students'
     | '/sales/subscriptions'
     | '/sales/teachers'
+    | '/teacher/availability'
     | '/teacher/calendar'
     | '/teacher/earnings'
     | '/teacher/feedback'
@@ -1252,6 +1264,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/teacher/'
       preLoaderRoute: typeof TeacherIndexRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/availability': {
+      id: '/teacher/availability'
+      path: '/availability'
+      fullPath: '/teacher/availability'
+      preLoaderRoute: typeof TeacherAvailabilityRouteImport
       parentRoute: typeof TeacherRoute
     }
     '/teacher/calendar': {
@@ -1780,6 +1799,7 @@ const SalesRouteChildren: SalesRouteChildren = {
 const SalesRouteWithChildren = SalesRoute._addFileChildren(SalesRouteChildren)
 
 interface TeacherRouteChildren {
+  TeacherAvailabilityRoute: typeof TeacherAvailabilityRoute
   TeacherCalendarRoute: typeof TeacherCalendarRoute
   TeacherEarningsRoute: typeof TeacherEarningsRoute
   TeacherFeedbackRoute: typeof TeacherFeedbackRoute
@@ -1795,6 +1815,7 @@ interface TeacherRouteChildren {
 }
 
 const TeacherRouteChildren: TeacherRouteChildren = {
+  TeacherAvailabilityRoute: TeacherAvailabilityRoute,
   TeacherCalendarRoute: TeacherCalendarRoute,
   TeacherEarningsRoute: TeacherEarningsRoute,
   TeacherFeedbackRoute: TeacherFeedbackRoute,

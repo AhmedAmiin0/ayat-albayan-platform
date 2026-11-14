@@ -27,9 +27,8 @@ export async function openMyLesson(page: Page, o: { name: RegExp; at: Date }): P
   return page.getByRole('dialog', { name: o.name });
 }
 
-/** «جدولي» › «المواعيد المتاحة»: her availability editor. */
+/** «المواعيد المتاحة» (/teacher/availability, its own page since owner 2026-11-14). */
 export async function openMyAvailability(page: Page): Promise<void> {
-  await page.goto('/teacher/calendar');
-  await page.getByRole('button', { name: ar.availability.title }).click();
-  await expect(page).toHaveURL(/view=availability/);
+  await page.goto('/teacher/availability');
+  await expect(page).toHaveURL(/\/teacher\/availability/);
 }

@@ -3,7 +3,9 @@ import { RefreshControl, ScrollView } from 'react-native';
 import { useLessonDetails } from '@/calendar';
 import { Screen } from '@/core/ui/layout/Screen';
 import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
+import { TodayAlerts, useHomePrefs } from '@/teacher/alerts';
 import { TeacherLessonSheet, useTimedNotice } from '@/teacher/lesson-actions';
+import { shownDay } from '@/teacher/today/day-prefs';
 import { TeacherDayEnd } from '@/teacher/today/TeacherDayEnd';
 import { TeacherHero } from '@/teacher/today/TeacherHero';
 import { TodayEnded } from '@/teacher/today/TodayEnded';
@@ -16,18 +18,22 @@ const toReport = (lessonId: string) => router.push(`/teacher/today/report/${less
 
 /**
  * «اليوم» (R-TCH-03, R-MOB-02, docs/48): one scroll, one pull. Her greeting and date, the notice
- * once an action lands, the hero (pickHero: her lesson under way or next) with ONE lead, «بقية
- * اليوم» as compact rows (one lead each; a tap opens the sheet with every action), the ended
- * lessons folded (each with its report lead), and the day end with her next lesson. Today's
- * lessons only (owner 2026-11-14). Offline the saved day stays with its «آخر تحديث» (R-MOB-03).
+ * once an action lands, «تنبيهات اليوم» with «تخصيص» (owner 2026-11-14), the hero (pickHero: her
+ * lesson under way or next) with ONE lead, «بقية اليوم» as compact rows (one lead each; a tap
+ * opens the sheet with every action), the ended lessons folded (each with its report lead), and
+ * the day end with her next lesson. Today's lessons only. Offline the saved day stays with its
+ * «آخر تحديث» (R-MOB-03).
  */
 export function TeacherTodayScreen() {
   const v = useTeacherToday();
   const notice = useTimedNotice();
   const details = useLessonDetails(v.ahead.data);
   const inset = useTabBarInset();
-  const rows = { onOpen: details.open, onReport: toReport, onNotice: notice.show };
-  const { day } = v;
+  const prefs = useHomePrefs();
+  const compact = prefs.density === 'compact';
+  const rows = { onOpen: details.open, onReport: toReport, onNotice: notice.show, compact };
+  const day = shownDay(v.day, prefs);
+  const alerts = { now: v.now, tz: v.tz, onOpen: details.open, onReport: toReport };
   const hero = day.hero;
   return (
     <Screen list>
@@ -39,6 +45,7 @@ export function TeacherTodayScreen() {
       >
         <TodayHeader now={v.now} tree="teacher" stale={v.stale} dateLine={v.dateLine} />
         {notice.text ? <Notice message={notice.text} /> : null}
+        {v.ahead.data ? <TodayAlerts {...alerts} lessons={v.ahead.data} /> : null}
         {hero ? (
           <TeacherHero
             key={hero.lesson.id}

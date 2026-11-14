@@ -21,6 +21,8 @@ interface TeacherLessonRowProps {
   onNotice: (text: string) => void;
   /** An ended row in the fold: the word and only its report lead (owner 2026-11-14). */
   quiet?: boolean;
+  /** «صفوف مضغوطة» (owner 2026-11-14): no students' clocks line. */
+  compact?: boolean;
 }
 
 const CHIP_MAX = 140;
@@ -62,7 +64,7 @@ export function TeacherLessonRow(p: TeacherLessonRowProps) {
       lesson={lesson}
       onReschedule={noMove}
       onOpen={p.onOpen}
-      meta={studentClocks(lesson, { tz, cycle })}
+      meta={p.compact ? '' : studentClocks(lesson, { tz, cycle })}
       word={word?.label}
       chip={
         // Capped so a long word («سيُرسل إلى الأسرة بعد …») never squeezes the names at 390 pt.

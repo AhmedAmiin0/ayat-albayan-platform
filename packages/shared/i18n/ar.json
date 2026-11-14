@@ -4473,10 +4473,6 @@
     "statements": "كشوف الشهر",
     "messages": "رسائل الطلاب"
   },
-  "teacherCalendar": {
-    "views": "عرض جدولي",
-    "lessons": "الحلقات"
-  },
   "teacherBoard": {
     "tab": "طلابي",
     "kinds": "حالة الطلاب",
@@ -8477,5 +8473,53 @@
     "addDay": "أضف يومًا",
     "farDay": "اختر الأيام في أسبوع واحد من أول حلقة",
     "removeRow": "احذف اليوم {n}"
+  },
+  "teacherAlerts": {
+    "title": "تنبيهات اليوم",
+    "empty": "لا تنبيهات اليوم",
+    "soon": "حلقة {names} {when}",
+    "confirm": "حلقة {names} الساعة {time} بانتظار تأكيدك",
+    "cancelledTeacher": "أُلغيت حلقة {names} ({time}) بطلبك",
+    "cancelledAdmin": "ألغت الإدارة حلقة {names} ({time})",
+    "movedTo": "نُقلت حلقة {names} من {time} إلى {to}",
+    "movedAway": "نُقلت حلقة {names} ({time}) إلى موعد آخر",
+    "movedFrom": "حلقة {names} الساعة {time}، نُقلت من {from}",
+    "reason": "السبب: {reason}",
+    "report": {
+      "write": "اكتب تقرير حلقة {names}",
+      "resume": "أكمل تقرير حلقة {names}",
+      "window": "تقرير حلقة {names} ما زال قابلًا للتعديل"
+    },
+    "open": "افتح الحلقة",
+    "markRead": "تحديد كمقروء",
+    "customize": "تخصيص",
+    "customizeTitle": "تخصيص صفحة اليوم",
+    "savedHere": "تُحفظ هذه الاختيارات على هذا الجهاز فقط.",
+    "alertsGroup": "التنبيهات",
+    "displayGroup": "العرض",
+    "kind": {
+      "soon": "حلقة تبدأ خلال ربع ساعة",
+      "confirm": "حلقات تنتظر تأكيدك",
+      "changed": "حلقات أُلغيت أو نُقلت",
+      "report": "تقارير للكتابة أو التعديل",
+      "bell": "إشعارات اليوم غير المقروءة"
+    },
+    "ended": "أظهر الحلقات المنتهية",
+    "hero": "أظهر بطاقة الحلقة الحالية",
+    "compact": "صفوف مضغوطة",
+    "done": "تم"
+  },
+  "teacherSchedule": {
+    "period": "مدة العرض",
+    "week": "الأسبوع",
+    "month": "الشهر",
+    "prevMonth": "الشهر السابق",
+    "nextMonth": "الشهر التالي",
+    "thisMonth": "هذا الشهر",
+    "noLessonsMonth": "لا توجد حلقات هذا الشهر",
+    "noLessonsDay": "لا توجد حلقات في هذا اليوم",
+    "monthGrid": "تقويم الشهر",
+    "dayCell": "{date}، {count}",
+    "noLessons": "لا حلقات"
   }
 }

@@ -18,7 +18,7 @@ describe('TeacherNav layout (owner, 2026-10-05: one compact bar on phones)', () 
 
   it('every link, «كشوف الشهر» included, is a 44px tap target with its whole word', () => {
     render(<TeacherNav />, { wrapper: teacherPagesWrapper(true) });
-    expect(screen.getAllByRole('link')).toHaveLength(8);
+    expect(screen.getAllByRole('link')).toHaveLength(9);
     for (const link of screen.getAllByRole('link')) expect(link.className).toContain('min-h-11');
     expect(screen.getByText(t.teacherNav.payouts).className).not.toContain('truncate');
   });

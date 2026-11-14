@@ -25,13 +25,14 @@ const statementsAlone = (open: GateOpen): boolean => !open('earnings') && open('
 
 /** The rows in order; the gated ones follow the academy switches (settings «صفحات المعلم»). */
 const ROWS: readonly MoreRow[] = [
+  // Owner 2026-11-14: a main page; the native tab bar holds five, so it leads «المزيد».
+  { title: t.availability.title, href: '/teacher/more/availability', visible: always },
   { title: t.teacherNav.students, href: '/teacher/more/students', visible: always },
   { title: t.teacherNav.messages, href: '/teacher/more/messages', visible: gated('messages') },
   { title: t.teacherNav.payouts, href: '/teacher/more/earnings', visible: gated('earnings') },
   { title: t.teacherNav.statements, href: '/teacher/more/payouts', visible: statementsAlone },
   { title: t.mobile.feedback.title, href: '/teacher/more/feedback', visible: gated('feedback') },
   { title: t.mobileClassroom.meetingsRow, href: '/teacher/more/meetings', visible: gated('meetings') },
-  { title: t.availability.title, href: '/teacher/more/availability', visible: always },
 ];
 
 /**
