@@ -10,5 +10,6 @@ export type CalendarView = (typeof CALENDAR_VIEWS)[number];
 const calendarSearch = z.object({ view: z.enum(CALENDAR_VIEWS).optional().catch(undefined) });
 export type TeacherCalendarSearch = z.infer<typeof calendarSearch>;
 
-export const parseTeacherCalendarSearch = (search: Record<string, unknown>): TeacherCalendarSearch =>
-  calendarSearch.parse(search);
+export const parseTeacherCalendarSearch = (
+  search: Record<string, unknown>,
+): TeacherCalendarSearch => calendarSearch.parse(search);
