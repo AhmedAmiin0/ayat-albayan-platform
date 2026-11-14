@@ -10,8 +10,9 @@ const sql = readFileSync(join(dir, '20261012000360_restricted_templates.sql'), '
 
 describe('migration 20261012000360: the restricted template allow-list', () => {
   it('flags exactly the defaults of its day, idempotently (only rows that differ are written)', () => {
-    // trial_reschedule joined the defaults later, seeded already flagged by migration 460.
-    const atTheTime = RESTRICTED_TEMPLATE_DEFAULTS.filter((k) => k !== 'trial_reschedule');
+    // Joined later: trial_reschedule (seeded flagged, migration 460), academy_message (11-14).
+    const later: readonly string[] = ['trial_reschedule', 'academy_message'];
+    const atTheTime = RESTRICTED_TEMPLATE_DEFAULTS.filter((k) => !later.includes(k));
     expect(atTheTime).toEqual(['free_trial_invite', 'welcome_greeting']);
     const list = atTheTime.map((k) => `'${k}'`).join(', ');
     expect(sql).toContain(`set sales_starter = (key in (${list}))`);
