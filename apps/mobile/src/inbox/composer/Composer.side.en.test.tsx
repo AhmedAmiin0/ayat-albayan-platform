@@ -56,5 +56,6 @@ test('closed window: the note on its own line; under it the icons on the left, Â
   await show(ago(3 * 24 * 60));
   const order = shown(leftToRight(screen.getByTestId('closed-row'), false));
   expect(order).toEqual([en.savedReplies.open, 'quote-button', c.sendTemplate]);
-  expect(screen.getByTestId('closed-note')).toBeTruthy();
+  expect(screen.queryByTestId('closed-note')).toBeNull(); // the reopen bar says why
+  expect(screen.getByTestId('reopen-bar')).toBeTruthy();
 });

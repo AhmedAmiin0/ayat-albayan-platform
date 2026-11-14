@@ -59,5 +59,6 @@ test('closed window: the note on its own line; under it «أرسل قالبًا�
   const order = shown(leftToRight(screen.getByTestId('closed-row'), true));
   expect(order).toEqual([t.inbox.composer.sendTemplate, 'quote-button', t.savedReplies.open]);
   expect(within(screen.getByTestId('closed-row')).queryByTestId('closed-note')).toBeNull();
-  expect(screen.getByTestId('closed-note')).toBeTruthy();
+  expect(screen.queryByTestId('closed-note')).toBeNull(); // the reopen bar says why
+  expect(screen.getByTestId('reopen-bar')).toBeTruthy();
 });

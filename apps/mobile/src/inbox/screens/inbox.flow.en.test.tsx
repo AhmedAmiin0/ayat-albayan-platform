@@ -32,6 +32,7 @@ test('English: rows without tags, thread, reply and the closed-session template 
 
   await fireEvent.press(screen.getByRole('button', { name: en.common.back }));
   await fireEvent.press(await screen.findByRole('button', { name: /أم يوسف/ }));
-  expect(await screen.findByText(en.inbox.sessionClosed)).toBeTruthy();
+  // No chat-line template in this backend: the bar says why, «Send template» stays under it.
+  expect(await screen.findByText(en.inbox.reopenBar.closed)).toBeTruthy();
   expect(screen.getByRole('button', { name: en.inbox.composer.sendTemplate })).toBeTruthy();
 });

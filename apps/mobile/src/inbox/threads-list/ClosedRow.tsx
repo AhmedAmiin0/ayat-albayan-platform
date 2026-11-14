@@ -10,17 +10,22 @@ import { SavedRepliesButton } from '@/inbox/saved-replies/components/SavedReplie
  * wraps word by word beside the button (owner 2026-10-27, a new number's note squeezed into a narrow
  * column); under it the row in reading order as OpenRow (it mirrors with the phone): «الردود السريعة»
  * dimmed with its reason (staff only), «عرض سعر» (its sheet still copies), then «أرسل قالبًا» filling
- * the rest. No pill, no microphone.
+ * the rest. No pill, no microphone. A known chat (owner 2026-11-14): the reopen bar says why above
+ * it (ReopenSlot), so no note here and «أرسل قالبًا» (any template) is the secondary action.
  */
 export function ClosedRow({ known, staff, onTemplate, onQuote }: { known: boolean; staff: boolean; onTemplate: () => void; onQuote?: (() => void) | undefined }) {
   return (
     <View style={{ gap: 6 }}>
-      <ClosedNote known={known} />
+      {known ? null : <ClosedNote known={false} />}
       <View testID="closed-row" style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         {staff ? <SavedRepliesButton open={false} onPress={() => undefined} /> : null}
         {onQuote ? <QuoteButton onPress={onQuote} /> : null}
         <View style={{ flex: 1 }}>
-          <Button label={t.inbox.composer.sendTemplate} onPress={onTemplate} />
+          <Button
+            variant={known ? 'secondary' : 'primary'}
+            label={t.inbox.composer.sendTemplate}
+            onPress={onTemplate}
+          />
         </View>
       </View>
     </View>

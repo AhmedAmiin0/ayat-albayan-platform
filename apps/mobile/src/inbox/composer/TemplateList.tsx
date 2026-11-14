@@ -20,18 +20,21 @@ interface TemplateListProps {
   /** A teacher's thread: only teacher templates, and only there. */
   teacher: boolean;
   onPick: (tpl: TemplateView) => void;
+  /** Narrows the list (the reopen sheet: chat-line templates only). */
+  only?: ((rows: TemplateView[]) => TemplateView[]) | undefined;
 }
 
 /**
  * The approved templates by their Arabic name and body, in one inset card (owner 2026-10-28: one
  * container rule): the chat's «اختر القالب» sheet and «محادثة جديدة»'s template step.
  */
-export function TemplateList({ templates, teacher, onPick }: TemplateListProps) {
+export function TemplateList({ templates, teacher, onPick, only }: TemplateListProps) {
   // Without templates.manage or templates.send_all, and always for sales, an assistant or a
   // teacher, only the admin's allow-list (owner 2026-10-12 / 10-15 / 10-18): none ticked (or not
   // imported yet) is not «nothing approved».
   const restricted = !useSendsAllTemplates();
-  const offered = (templates.data ?? []).filter((row) => forAudience(row.key, teacher));
+  const audience = (templates.data ?? []).filter((row) => forAudience(row.key, teacher));
+  const offered = only ? only(audience) : audience;
   const row = ({ item }: ListRenderItemInfo<TemplateView>) => (
     <ListRow title={templateName(item)} subtitle={item.body_ar} onPress={() => onPick(item)} />
   );
