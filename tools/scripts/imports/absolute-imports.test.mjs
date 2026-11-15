@@ -91,7 +91,7 @@ test('aliasOf / targetPath / codeFiles: tsconfig `@/*`, workspace names, sorted 
   });
   assert.deepEqual(aliasOf(root, 'apps/staff-web'), ALIAS);
   assert.equal(aliasOf(root, 'apps/api'), undefined);
-  assert.equal(targetPath(root, 'web'), 'apps/staff-web');
+  assert.equal(targetPath(root, 'staff-web'), 'apps/staff-web');
   assert.equal(targetPath(root, 'apps/staff-web/src/'), 'apps/staff-web/src');
   assert.deepEqual(codeFiles(root, 'apps/staff-web'), ['apps/staff-web/src/a/c.tsx', 'apps/staff-web/src/b.ts']);
 });
@@ -106,7 +106,7 @@ test('run: dry run counts and writes nothing; --write rewrites; an app without t
     'apps/api/src/a.ts': '',
   });
   const row = { workspace: 'apps/staff-web', files: 2, changed: 1, rewritten: 1, kept: 0 };
-  assert.deepEqual(run(root, { targets: ['web'], write: false }), [row]);
+  assert.deepEqual(run(root, { targets: ['staff-web'], write: false }), [row]);
   assert.equal(readFileSync(join(root, 'apps/staff-web/src/x/y.ts'), 'utf8'), text);
   assert.deepEqual(run(root, { targets: ['apps/staff-web/src/x/y.ts'], write: true }), [{ ...row, files: 1 }]);
   assert.equal(readFileSync(join(root, 'apps/staff-web/src/x/y.ts'), 'utf8'), text.replace('../a', '@/a'));
