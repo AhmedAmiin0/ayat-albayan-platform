@@ -1,7 +1,6 @@
 import type { StudentRecordingView } from '@ab/shared';
 import { Switch, View } from 'react-native';
-import { t, type, useTheme, AppText } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, type, useTheme, AppText, ErrorLine } from '@ab/mobile-kit';
 import { useSetVisibility, visibilityError } from './recording-actions';
 
 const V = t.mobileStudentFile.recordings.visible;

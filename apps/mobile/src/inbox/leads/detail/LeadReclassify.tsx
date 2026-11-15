@@ -2,9 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { apiSend, t, pathKey, Button } from '@ab/mobile-kit';
+import { apiSend, t, pathKey, Button, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 
 /**
  * R-LEAD-04 on mobile: «نقل لطلبات التوظيف» → inline confirm → POST /leads/:id/reclassify.

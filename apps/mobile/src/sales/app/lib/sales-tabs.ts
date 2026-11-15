@@ -1,7 +1,6 @@
 import { canOpen } from '@/core/auth/route-permissions';
-import { t } from '@ab/mobile-kit';
+import { t, type TabItem } from '@ab/mobile-kit';
 import type { Can } from '@ab/mobile-kit';
-import type { TabItem } from '@/core/ui/layout/AppNativeTabs';
 
 /**
  * The salesperson's bottom tabs, in the web SalesNav order with its gates, after the calm «اليوم»

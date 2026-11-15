@@ -1,7 +1,6 @@
 import { studentStatusStyle, type RegistrationCheckView, type RegistrationMatch } from '@ab/shared';
-import { t, EmptyState, ListRow, StatusChip, InsetGroup } from '@ab/mobile-kit';
+import { t, EmptyState, ListRow, StatusChip, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import type { CheckBy } from '@/registration-check/lib/registration-check';
 
 /**

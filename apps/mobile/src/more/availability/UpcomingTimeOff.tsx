@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { apiFetch, t, pathKey, ErrorState, InsetGroup } from '@ab/mobile-kit';
+import { apiFetch, t, pathKey, ErrorState, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { upcomingTimeOff } from '@/more/schedule';
-import { Section } from '@/core/ui/surface/Section';
 import { TimeOffRow } from './TimeOffRow';
 import type { TimeOff } from '@/core/lib/staff/types';
 

@@ -1,6 +1,5 @@
 import { AUTHOR_CATEGORIES, type AuthorCategory } from '@ab/shared';
-import { t, FilterPills, AppText, type, useTheme } from '@ab/mobile-kit';
-import { Section } from '@/core/ui/surface/Section';
+import { t, FilterPills, AppText, type, useTheme, Section } from '@ab/mobile-kit';
 
 interface CategoryPickerProps {
   value: AuthorCategory;

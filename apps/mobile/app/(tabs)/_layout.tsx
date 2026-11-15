@@ -1,8 +1,7 @@
-import { type Can, usePermissions, t } from '@ab/mobile-kit';
+import { type Can, usePermissions, t, AppNativeTabs, type TabItem } from '@ab/mobile-kit';
 import { canOpen, tabOpen } from '@/core/auth';
 import { useInboxBadge } from '@/core/nav/use-inbox-badge';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
-import { AppNativeTabs, type TabItem } from '@/core/ui/layout/AppNativeTabs';
 import { useInboxRealtime } from '@/inbox';
 
 // docs/07 §12 bottom tabs, native. The first tab sits at the inline-start (right in Arabic). A tab the held

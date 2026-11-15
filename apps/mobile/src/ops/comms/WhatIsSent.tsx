@@ -1,8 +1,17 @@
 import type { NotificationAudience } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { t, shape, type, useTheme, AppText, Chevron, ErrorState, InsetGroup } from '@ab/mobile-kit';
+import {
+  t,
+  shape,
+  type,
+  useTheme,
+  AppText,
+  Chevron,
+  ErrorState,
+  InsetGroup,
+  Section,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { useCatalogue } from '@/ops/notif-rules/hooks/use-catalogue';
 import { useSettings } from '@/ops/settings/use-settings';
 import { sentCounts, type SentRow } from './sent-counts';

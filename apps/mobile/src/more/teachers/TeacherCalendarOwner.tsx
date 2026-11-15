@@ -1,8 +1,16 @@
 import { TEACHER_CALENDAR_OWNERS, type TeacherCalendarOwner as Owner, type TeacherCalendarView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useIsAdmin, apiFetch, apiSend, t, pathKey, ErrorState, FilterPills } from '@ab/mobile-kit';
+import {
+  useIsAdmin,
+  apiFetch,
+  apiSend,
+  t,
+  pathKey,
+  ErrorState,
+  FilterPills,
+  Section,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 
 const fill = (template: string, n: number) => template.replace('{n}', String(n));
 

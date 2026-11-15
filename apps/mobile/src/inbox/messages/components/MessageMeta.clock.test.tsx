@@ -5,7 +5,7 @@ import { inbound } from '@/inbox/shared/thread-fixtures';
 
 // The bubble reads the device's zone (UTC under jest).
 
-jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
+jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 afterEach(() => setClockPref('auto'));
 
 test('a bubble’s time follows «تنسيق الوقت»: 14:30, then 2:30 م', async () => {

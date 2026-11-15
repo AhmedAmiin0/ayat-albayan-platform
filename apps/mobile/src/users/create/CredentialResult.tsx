@@ -1,8 +1,7 @@
 import type { IssuedCredential } from '@ab/shared';
 import { Share, View } from 'react-native';
-import { t, shape, type, useTheme, AppText, Button } from '@ab/mobile-kit';
+import { t, shape, type, useTheme, AppText, Button, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 
 export interface CredentialResultProps {
   title: string;

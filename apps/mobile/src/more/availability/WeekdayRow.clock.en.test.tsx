@@ -8,7 +8,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => false }));
+jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => false }));
 afterEach(() => setClockPref('auto'));
 
 const day = { weekday: 1, slots: [{ id: 's1', weekday: 1, start_time: '09:05', end_time: '12:00', tz: 'Asia/Riyadh' }] };

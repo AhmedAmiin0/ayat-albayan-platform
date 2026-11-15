@@ -7,6 +7,8 @@ export {
   saveAppearance,
   toColorScheme,
 } from './appearance/appearance';
+export { useAppearancePref } from './appearance/useAppearancePref';
+export { clockCycle, setClockPref, useClockCycle, useClockPref } from './clock/clock-store';
 export { isNetworkError } from './connectivity/network-error';
 export { ApiError, apiFetch, apiSend, type SendMethod, toQueryString } from './http/api';
 export { supabase } from './http/supabase';
@@ -20,3 +22,4 @@ export { usePullRefresh } from './query/pull-refresh';
 export { persistOptions, queryClient } from './query/query-client';
 export { listKey, type ListParams, pathKey } from './query/query-keys';
 export { signOutDevice } from './session/sign-out';
+export { useNow } from './time/use-now';

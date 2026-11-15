@@ -2,10 +2,9 @@ import { type ReactNode, useState } from 'react';
 import { FlatList, RefreshControl, View } from 'react-native';
 import { useLessonDetails } from '@/calendar';
 import { clockAt } from '@/inbox';
-import { t, Screen, useTabBarInset } from '@ab/mobile-kit';
+import { t, Screen, useTabBarInset, Notice, useNow } from '@ab/mobile-kit';
 import { DayState } from '@/today/components/DayState';
 import { EndedFold } from '@/today/components/EndedFold';
-import { Notice } from '@/today/components/Notice';
 import { QuietDay } from '@/today/components/QuietDay';
 import { RestSection } from '@/today/components/RestSection';
 import { SummaryCard } from '@/today/components/SummaryCard';
@@ -14,7 +13,6 @@ import { filterCounts, visibleLessons, type TodayFilter } from '@/today/lib/time
 import type { TodayLesson } from '@/today/lib/today-lesson';
 import { todayPlan, type Hero } from '@/today/lib/today-plan';
 import type { TodaySource } from '@/today/lib/today-source';
-import { useNow } from '@/core/lib/time/use-now';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** The lesson whose «تفاصيل الحلقة» is open (null: closed), and how to close it. */

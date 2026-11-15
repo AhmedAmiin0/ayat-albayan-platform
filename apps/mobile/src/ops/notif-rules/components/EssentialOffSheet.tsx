@@ -1,8 +1,7 @@
 import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, shape, useTheme, Button, Field, ScreenHeader } from '@ab/mobile-kit';
+import { t, shape, useTheme, Button, Field, ScreenHeader, ErrorLine } from '@ab/mobile-kit';
 import type { AppTextNode } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { ButtonRow } from '@/core/ui/actions';

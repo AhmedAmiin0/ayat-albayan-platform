@@ -10,8 +10,8 @@ import {
   InsetGroup,
   SignOutButton,
   locale,
+  AppearancePicker,
 } from '@ab/mobile-kit';
-import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { useTeacherMe } from '@/teacher/lib/queries';

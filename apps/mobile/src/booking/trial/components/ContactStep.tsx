@@ -1,8 +1,7 @@
 import type { Gender, LeadSource } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button, Field, FilterPills } from '@ab/mobile-kit';
+import { t, Button, Field, FilterPills, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 import { GENDER_PILLS, sourcePills, TZ_PILLS } from '@/booking/trial/lib/contact-pills';

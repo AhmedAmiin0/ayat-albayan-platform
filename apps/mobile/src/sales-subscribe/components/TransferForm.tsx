@@ -1,12 +1,10 @@
 import type { SalesMoneySubscriptionView, SalesPaymentView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button, Field } from '@ab/mobile-kit';
+import { t, Button, Field, ErrorLine, useNow } from '@ab/mobile-kit';
 import { AmountField } from '@/payments/components/AmountField';
 import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
 import { ShortfallNote } from '@/payments';
-import { useNow } from '@/core/lib/time/use-now';
 import { SalesReceiptField } from './SalesReceiptField';
 import { salesErrorText } from '@/sales-subscribe/lib/sales-errors';
 import { checkTransfer, draftFor, type TransferDraft } from '@/sales-subscribe/lib/transfer-form';

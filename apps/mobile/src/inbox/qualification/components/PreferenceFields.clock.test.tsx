@@ -4,7 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { PreferenceFields } from './PreferenceFields';
 import { qualForm } from '@/inbox/qualification/lib/qualification-form';
 
-jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
+jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 afterEach(() => setClockPref('auto'));
 
 const from = () => within(screen.getByLabelText(t.availability.from));

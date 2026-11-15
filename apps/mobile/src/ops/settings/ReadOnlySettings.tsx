@@ -1,7 +1,6 @@
 import type { AcademySettings } from '@ab/shared';
-import { t, ListRow, InsetGroup } from '@ab/mobile-kit';
+import { t, ListRow, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 
 /** Joins the web note with a caller's own line into one note (the overview stays one phone high). */
 export const readOnlyNoteText = (more?: string): string =>

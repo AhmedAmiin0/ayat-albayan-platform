@@ -10,9 +10,9 @@ import {
   ErrorState,
   FilterPills,
   NuqtaGlyph,
+  Section,
 } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import type { StudentRef } from '@/students/shared/types';
 import { DatePickerField } from '@/core/ui/form/date-picker';
 import { QuotePreview } from './QuotePreview';

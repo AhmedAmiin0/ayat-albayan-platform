@@ -1,8 +1,6 @@
 import { canSendViaWhatsApp, type MessageView } from '@ab/shared';
 import { View } from 'react-native';
-import { t, type, useTheme, AppText, Button, useHolds } from '@ab/mobile-kit';
-import { useNow } from '@/core/lib/time/use-now';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, type, useTheme, AppText, Button, useHolds, useNow, ErrorLine } from '@ab/mobile-kit';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { APP_SEND_ANSWERS, type AppSendLine as Line, appSendLineOf } from '@ab/client-core';
 import { AppSendAnswers } from './AppSendAnswers';

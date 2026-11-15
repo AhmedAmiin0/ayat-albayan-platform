@@ -1,8 +1,7 @@
 import { forAudience, formatPhone, type TemplateView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, ScreenHeader, BackButton, Button, ltr } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, ScreenHeader, BackButton, Button, ltr, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { TemplateForm } from '@/inbox/composer/TemplateForm';
 import { TemplateList, templateName } from '@/inbox/composer/TemplateList';

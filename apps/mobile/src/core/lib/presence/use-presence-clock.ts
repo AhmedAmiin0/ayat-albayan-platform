@@ -1,7 +1,6 @@
 import type { ClockCycle, Locale, PresenceText } from '@ab/shared';
 import { phoneTz, useClockCycle } from '@/core/lib/clock';
-import { t, locale } from '@ab/mobile-kit';
-import { useNow } from '@/core/lib/time/use-now';
+import { t, locale, useNow } from '@ab/mobile-kit';
 
 /** What presenceLine / lastMessageLine need besides the person: the viewer's clock and words. */
 export interface PresenceClock {

@@ -1,8 +1,7 @@
 import { teacherConfirmed } from '@ab/client-core';
 import { isRunningLesson } from '@ab/shared';
 import { View } from 'react-native';
-import { useNow } from '@/core/lib/time/use-now';
-import { t, StatusChip } from '@ab/mobile-kit';
+import { t, StatusChip, useNow } from '@ab/mobile-kit';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import { Tag } from '@/calendar/agenda/Tag';
 import type { DetailsLesson } from './details-text';

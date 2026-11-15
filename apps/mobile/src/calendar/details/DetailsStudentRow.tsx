@@ -1,9 +1,18 @@
 import { subscriptionStatusStyle, type Glyph, type Tone } from '@ab/shared';
 import { pushInTab } from '@/core/nav/back-within';
 import { Pressable, View } from 'react-native';
-import { useNow } from '@/core/lib/time/use-now';
 import { useStudentHref, useTreeBase } from '@/core/nav/tree-base';
-import { t, type, useTheme, AppText, Button, Chevron, Ltr, StatusChip } from '@ab/mobile-kit';
+import {
+  t,
+  type,
+  useTheme,
+  AppText,
+  Button,
+  Chevron,
+  Ltr,
+  StatusChip,
+  useNow,
+} from '@ab/mobile-kit';
 import {
   reportHref,
   reportState,

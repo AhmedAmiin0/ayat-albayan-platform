@@ -1,7 +1,6 @@
 import type { NotificationEntryView, NotificationsOverview } from '@ab/shared';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@ab/mobile-kit';
+import { t, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { reachLine } from '@/ops/notif-rules/lib/rule-words';
 import type { CatalogueToggles } from '@/ops/notif-rules/hooks/use-catalogue-toggles';

@@ -2,9 +2,8 @@ import { isRunningLesson, wallParts } from '@ab/shared';
 import type { SalesScheduleLesson } from '@ab/shared';
 import { Pressable, useWindowDimensions, View } from 'react-native';
 import { dayLabel } from '@/calendar';
-import { useNow } from '@/core/lib/time/use-now';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t, type, useTheme, AppText, toneColors, useInset } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, toneColors, useInset, useNow } from '@ab/mobile-kit';
 import { lessonClock, rowSubtitle, studentNames, viewerDayHint } from '@/today';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 

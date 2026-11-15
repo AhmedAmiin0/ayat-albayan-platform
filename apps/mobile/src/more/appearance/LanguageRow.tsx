@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { t, locale, setLocale, ListRow, InsetGroup } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, locale, setLocale, ListRow, InsetGroup, ErrorLine, Section } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { Section } from '@/core/ui/surface/Section';
 
 /**
  * «اللغة»: offers the other language by its own name (العربية / English). Every screen reads its

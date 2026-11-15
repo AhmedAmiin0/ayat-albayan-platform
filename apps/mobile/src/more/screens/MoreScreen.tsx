@@ -12,10 +12,10 @@ import {
   ScreenHeader,
   signOutDevice,
   InsetGroup,
+  AppearancePicker,
 } from '@ab/mobile-kit';
 import { SalesSection } from '@/sales/sales/components/SalesSection';
 import { AdminOpsSection } from '@/more/sections/AdminOpsSection';
-import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more/appearance/ClockFormatPicker';
 import { ClassroomSection } from '@/more/sections/ClassroomSection';
 import { FinanceSection } from '@/more/sections/FinanceSection';

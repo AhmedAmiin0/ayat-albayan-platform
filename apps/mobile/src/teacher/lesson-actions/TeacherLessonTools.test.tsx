@@ -12,7 +12,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
 }));
 // An hour before the fixture's 13:00Z start.
-jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T12:00:00Z') }));
+jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T12:00:00Z') }));
 
 const w = t.teacherBoard;
 

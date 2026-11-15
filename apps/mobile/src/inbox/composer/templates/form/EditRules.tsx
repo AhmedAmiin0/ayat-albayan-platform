@@ -1,8 +1,7 @@
 import { dateClockText, nextEditAt, type TemplateStatus } from '@ab/shared';
 import { useViewerClock } from '@/core/lib/clock';
-import { locale, t, AppText, type, useTheme } from '@ab/mobile-kit';
+import { locale, t, AppText, type, useTheme, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 
 interface EditRulesProps {
   status: TemplateStatus;
