@@ -1,4 +1,11 @@
-import { useMyProfile, t, ListRow, InsetGroup, SignOutButton } from '@ab/mobile-kit';
+import {
+  useMyProfile,
+  t,
+  BiometricSwitchRow,
+  ListRow,
+  InsetGroup,
+  SignOutButton,
+} from '@ab/mobile-kit';
 import { FamilyHeader, FamilyPage } from '@/nav';
 import { PushSwitchRow } from './PushSwitchRow';
 
@@ -17,6 +24,7 @@ export function FamilySettingsScreen() {
         <ListRow title={t.familyApp.settings.name} subtitle={profile.data?.full_name} />
         <PushSwitchRow />
       </InsetGroup>
+      <BiometricSwitchRow />
       <SignOutButton />
     </FamilyPage>
   );

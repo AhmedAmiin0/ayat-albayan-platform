@@ -1,6 +1,13 @@
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
-import { t, SignOutButton, Screen, ScreenHeader, InsetGroup } from '@ab/mobile-kit';
+import {
+  t,
+  BiometricSwitchRow,
+  SignOutButton,
+  Screen,
+  ScreenHeader,
+  InsetGroup,
+} from '@ab/mobile-kit';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
@@ -19,6 +26,7 @@ export function AssistantMoreScreen() {
       </InsetGroup>
       <AppearancePicker />
       <ClockFormatPicker />
+      <BiometricSwitchRow />
       <LanguageRow />
       <SignOutButton />
     </Screen>

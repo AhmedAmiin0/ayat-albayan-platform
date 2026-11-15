@@ -1,6 +1,14 @@
 import { router } from 'expo-router';
 import { allowedRows } from '@/core/auth/route-permissions';
-import { t, SignOutButton, ListRow, Screen, ScreenHeader, InsetGroup } from '@ab/mobile-kit';
+import {
+  t,
+  BiometricSwitchRow,
+  SignOutButton,
+  ListRow,
+  Screen,
+  ScreenHeader,
+  InsetGroup,
+} from '@ab/mobile-kit';
 import type { Can } from '@ab/mobile-kit';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
@@ -42,6 +50,7 @@ export function SalesMoreScreen({ can }: { can: Can }) {
       </InsetGroup>
       <AppearancePicker />
       <ClockFormatPicker />
+      <BiometricSwitchRow />
       <LanguageRow />
       <SignOutButton />
     </Screen>

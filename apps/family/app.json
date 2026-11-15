@@ -4,7 +4,7 @@
     "slug": "ayat-albayan-family",
     "owner": "holdmycup",
     "scheme": "ayatalbayanfamily",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "../mobile/assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -47,6 +47,12 @@
           "dark": {
             "backgroundColor": "#07110C"
           }
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "نحتاج إلى Face ID لفتح التطبيق بوجهك بدل إدخال الرمز في كل مرة."
         }
       ]
     ],

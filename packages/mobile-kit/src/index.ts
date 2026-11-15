@@ -3,6 +3,7 @@ export * from './root';
 export * from './push';
 export * from './lib';
 export * from './auth';
+export * from './biometric';
 export {
   glass,
   type GlassStop,
