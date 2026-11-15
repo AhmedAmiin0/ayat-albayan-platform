@@ -20,7 +20,7 @@ test('the family app.json reference to ../mobile/assets reads as ../staff-mobile
   assert.equal(currentRefs('{"icon":"../staff-mobile/assets/icon.png"}'), '{"icon":"../staff-mobile/assets/icon.png"}');
 });
 
-const line = (blob, path) => `100644 blob ${blob}\t${path}`;
+const line = (blob, path, mode = '100644') => `${mode} blob ${blob}\t${path}`;
 
 test('a pure folder move (same blobs, new paths) is no change', () => {
   const before = blobs([line('aaa', 'apps/mobile/assets/icon.png'), line('bbb', 'apps/mobile/eas.json')].join('\0'));
@@ -36,4 +36,10 @@ test('an edited, added or removed file is listed under its current path', () => 
     'apps/staff-mobile/plugins/x.ts',
     'patches/p.patch',
   ]);
+});
+
+test('a mode change alone (executable bit) is still a change', () => {
+  const before = blobs(line('aaa', 'apps/mobile/plugins/x.sh'));
+  const after = blobs(line('aaa', 'apps/staff-mobile/plugins/x.sh', '100755'));
+  assert.deepEqual(changedPaths(before, after), ['apps/staff-mobile/plugins/x.sh']);
 });

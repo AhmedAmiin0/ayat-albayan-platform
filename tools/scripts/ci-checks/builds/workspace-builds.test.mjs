@@ -46,5 +46,5 @@ test('staging web deploy and the mobile OTA workflow build <app>^...', () => {
 
 test('the automatic OTA follows every package the app bundles, not packages/shared alone', () => {
   const deploy = read('.github/workflows/deploy-staging.yml');
-  assert.match(deploy, /git diff -M100% --diff-filter=ACDMT --name-only "\$BASE" HEAD -- apps\/staff-mobile apps\/mobile packages /);
+  assert.match(deploy, /git diff --name-only "\$BASE" HEAD -- apps\/staff-mobile packages /);
 });

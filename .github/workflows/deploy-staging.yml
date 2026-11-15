@@ -126,8 +126,7 @@ jobs:
           NATIVE_BASE: ${{ vars.OTA_BASELINE_SHA || 'c140b4cc' }}
         run: |
           ota=false
-          # -M100% + no R: a file that only moved (apps/mobile → apps/staff-mobile, 2026-11-15) is no JS change.
-          js() { git diff -M100% --diff-filter=ACDMT --name-only "$BASE" HEAD -- apps/staff-mobile apps/mobile packages ':(exclude)packages/db/supabase' ':(exclude)packages/config' \
+          js() { git diff --name-only "$BASE" HEAD -- apps/staff-mobile packages ':(exclude)packages/db/supabase' ':(exclude)packages/config' \
             ':(glob,exclude)**/eslint-suppressions.json' ':(glob,exclude)**/oxlint-suppressions.json' \
             ':(glob,exclude)**/lint.blocks.mjs' ':(glob,exclude)**/*.test.ts' ':(glob,exclude)**/*.test.tsx' ':(glob,exclude)**/*.md'; }
           if [ -z "$BASE" ]; then echo "::notice::no earlier OTA or deploy known: no automatic OTA (run mobile by hand)"

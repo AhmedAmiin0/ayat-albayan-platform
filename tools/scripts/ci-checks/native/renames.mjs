@@ -29,13 +29,13 @@ const sibling = (dir) => `../${dir.slice('apps/'.length)}/`;
 export const currentRefs = (text) =>
   PAIRS.reduce((t, [now, old]) => t.replaceAll(sibling(old), sibling(now)), text);
 
-/** `git ls-tree -r -z` output → Map(current path → blob id). */
+/** `git ls-tree -r -z` output → Map(current path → "mode type blob"): a mode change counts too. */
 export function blobs(lsTree) {
   const entries = lsTree.split('\0').filter(Boolean).map((line) => line.split('\t'));
-  return new Map(entries.map(([meta, path]) => [currentPath(path), meta.split(' ')[2]]));
+  return new Map(entries.map(([meta, path]) => [currentPath(path), meta]));
 }
 
-/** Paths added, removed or edited between two trees (Map path → blob); a pure move is not listed. */
+/** Paths added, removed or edited between two trees (Map path → entry); a pure move is not listed. */
 export const changedPaths = (before, after) =>
   [...new Set([...before.keys(), ...after.keys()])].filter((p) => before.get(p) !== after.get(p)).sort();
 
