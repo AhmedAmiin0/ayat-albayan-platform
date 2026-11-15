@@ -4697,14 +4697,29 @@
   "familyApp": {
     "wrongApp": "This app is for families and students. Academy staff sign in to the staff app.",
     "signIn": {
-      "title": "Ayat Al-Bayan",
-      "intro": "Follow your children's lessons and reports in one place.",
-      "tabsLabel": "Who is signing in?",
-      "guardian": "Guardian",
-      "student": "Student",
-      "guardianIntro": "Sign in with the WhatsApp number the academy has on file; a code will reach you on WhatsApp.",
-      "codesOff": "WhatsApp codes are not available right now. Students can sign in with their code and password.",
-      "studentCode": "Student code"
+      "wordmark": "Ayat Al-Bayan",
+      "wordmarkArabic": "آيات البيان",
+      "welcome": "Follow lessons and reports in one place.",
+      "phoneHint": "The number on file at the academy. For another country, type the whole number starting with +.",
+      "phoneBad": "This number is incomplete or not valid for this country.",
+      "country": "Country: {name}. Tap to change.",
+      "countryTitle": "Choose the country",
+      "countries": {
+        "SA": "Saudi Arabia",
+        "AE": "United Arab Emirates",
+        "QA": "Qatar",
+        "KW": "Kuwait",
+        "OM": "Oman",
+        "BH": "Bahrain",
+        "EG": "Egypt"
+      },
+      "codeTitle": "Enter the code",
+      "codeSentTo": "If {phone} is on file, a six-digit code will reach it on WhatsApp. You can paste it here.",
+      "withPassword": "Sign in with the student code and password",
+      "withWhatsApp": "Sign in with the WhatsApp number",
+      "whatsappOff": "WhatsApp sign-in is not available yet.",
+      "studentCode": "Student code",
+      "studentCodeBad": "A student code looks like AB-1234."
     },
     "home": {
       "empty": "No students are linked to your account yet. Contact the academy.",

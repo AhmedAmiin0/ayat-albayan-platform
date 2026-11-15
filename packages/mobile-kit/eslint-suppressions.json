@@ -619,9 +619,6 @@
     }
   },
   "src/ui/startup/StartupOverlay.tsx": {
-    "max-len": {
-      "count": 2
-    },
     "no-restricted-syntax": {
       "count": 1
     }

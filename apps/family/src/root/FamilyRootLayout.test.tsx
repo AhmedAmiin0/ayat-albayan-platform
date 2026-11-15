@@ -105,8 +105,8 @@ test('a guardian lands on home: one card per child, and this device registers fo
 
 test('signed out: the family sign-in, no push registration', async () => {
   await open('out');
-  expect(await screen.findByText(t.familyApp.signIn.guardian)).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.familyApp.signIn.title })).toBeTruthy();
+  expect(await screen.findByText(t.familyApp.signIn.withPassword)).toBeTruthy();
+  expect(screen.getByLabelText(t.familyAuth.phone)).toBeTruthy();
   expect(registerPush).not.toHaveBeenCalled();
 });
 
@@ -129,5 +129,5 @@ test('signing out (the gate flips to out) swaps home for the sign-in', async () 
   await open('guardian');
   expect(await screen.findByText('سارة')).toBeTruthy();
   await act(async () => mockGate.set('out'));
-  expect(await screen.findByText(t.familyApp.signIn.student)).toBeTruthy();
+  expect(await screen.findByText(t.familyApp.signIn.withPassword)).toBeTruthy();
 });
