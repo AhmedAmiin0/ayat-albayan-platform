@@ -17,7 +17,8 @@ describe('env: WEB_ORIGIN, a list with the staff app first (docs/51 §4)', () =>
     expect(() => loadEnv({ ...BASE, WEB_ORIGIN: 'https://app.example.test/set-password' })).toThrow();
   });
 
-  it('defaults to the local staff app', () => {
+  it('defaults to the local staff app; empty stays allowed (no links)', () => {
     expect(loadEnv(BASE).WEB_ORIGIN).toBe('http://localhost:5173');
+    expect(loadEnv({ ...BASE, WEB_ORIGIN: '' }).WEB_ORIGIN).toBe('');
   });
 });
