@@ -41,3 +41,4 @@ export {
 } from './countdown-text.js';
 export { lessonWaitText, type WaitTextInput, type WaitWords } from './wait-text.js';
 export { seenStore, type SeenStorage, type SeenStore } from './seen-store.js';
+export { dayWord, lessonMinutes, type DayWord } from './day-word.js';
