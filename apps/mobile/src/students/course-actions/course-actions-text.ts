@@ -1,7 +1,7 @@
 import { courseStopErrorCode, courseStopLessonsText } from '@ab/client-core';
 import type { CourseStopPreview, CourseStopResult } from '@ab/shared';
-import { t } from '@ab/mobile-kit';
-import { localDay, money } from '@/payments';
+import { t, money } from '@ab/mobile-kit';
+import { localDay } from '@/payments';
 
 // What «إلغاء الاشتراك» says on mobile: the shared lines (@ab/client-core), the app's words.
 

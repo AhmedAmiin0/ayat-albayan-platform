@@ -1,9 +1,8 @@
 import { WA_LINES, type WaLine, type WaProvider } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions, t } from '@ab/mobile-kit';
+import { usePermissions, t, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { useSettings } from '@/ops/settings/use-settings';
 import { driverName, driverValues } from './line-driver';
 import { LineDriverRow } from './LineDriverRow';

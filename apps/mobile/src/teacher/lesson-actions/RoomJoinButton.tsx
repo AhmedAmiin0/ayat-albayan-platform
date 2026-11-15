@@ -1,8 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { useJoinClassroom } from '@/classroom';
-import { t, Button, type ButtonVariant } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, Button, type ButtonVariant, ErrorLine } from '@ab/mobile-kit';
 
 interface RoomJoinButtonProps {
   lesson: LessonView;

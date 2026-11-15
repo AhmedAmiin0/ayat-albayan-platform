@@ -12,8 +12,8 @@ import {
   type ThreadView,
 } from '@ab/shared';
 import type { Href } from 'expo-router';
-import { t, isolate, ltr } from '@ab/mobile-kit';
-import { money, partPaidLine } from '@/core/lib/money/format';
+import { t, isolate, ltr, money } from '@ab/mobile-kit';
+import { partPaidLine } from '@/core/lib/money/format';
 
 // A chat's «مشترك» / «الباقة خلصت» / «مش مشترك» and the subscribe button (R-SUB-01): pure, from
 // GET /threads/:phone `people`. The rules (badge, child chip, new vs renew) are @ab/shared's, so

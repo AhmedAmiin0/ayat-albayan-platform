@@ -1,8 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useApprovedTemplates } from '@/inbox/composer/TemplatePicker';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { askable, requestError } from './feedback-text';
 import { useSendFeedbackRequest } from './queries';

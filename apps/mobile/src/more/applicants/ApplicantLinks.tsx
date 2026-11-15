@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Linking, View } from 'react-native';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { ButtonRow, openIcon } from '@/core/ui/actions';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { safeLink } from './applicant-params';
 
 interface Props {

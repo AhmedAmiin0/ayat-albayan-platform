@@ -10,7 +10,7 @@ jest.mock('@/core/nav/back-within', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 // 16:50 Riyadh: the 16:00 lesson has started.
-jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T13:50:00Z') }));
+jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T13:50:00Z') }));
 
 const sent = { id: 'r', status: 'submitted' as const, sent_at: '2026-10-01T13:48:00Z' };
 const draft = { id: 'd', status: 'draft' as const };

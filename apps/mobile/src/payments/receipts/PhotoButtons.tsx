@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { ButtonRow } from '@/core/ui/actions';
 import { pickReceipt, type Receipt, type ReceiptSource } from '@/core/lib/receipts/receipt';

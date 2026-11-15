@@ -1,6 +1,5 @@
 import { quoteCustom, type QuotedTotal } from '@ab/client-core';
-import { t, usePermissions } from '@ab/mobile-kit';
-import { currencyName } from '@/payments';
+import { currencyName, t, usePermissions } from '@ab/mobile-kit';
 import { useCustomPrice } from '@/subscribe';
 
 const LABELS = { ...t.subscriptions.customPrice, currency: currencyName };

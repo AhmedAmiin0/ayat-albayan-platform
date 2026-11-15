@@ -1,11 +1,10 @@
 import type { SavedReply } from '@ab/shared';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
-import { t, useTheme, Button, ErrorState, IconButton, Screen } from '@ab/mobile-kit';
+import { t, useTheme, Button, ErrorState, IconButton, Screen, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { DownIcon, TrashIcon, UpIcon } from '@/inbox/shared/chat-icons';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useMoveReply, useSavedReplies } from '@/inbox/saved-replies/hooks/api';
 import { DeleteConfirm } from '@/inbox/saved-replies/components/DeleteConfirm';
 import { ReplyEditor } from '@/inbox/saved-replies/editor/ReplyEditor';

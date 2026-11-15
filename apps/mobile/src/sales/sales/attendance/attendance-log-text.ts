@@ -1,5 +1,6 @@
 import {
   dateText,
+  monthText,
   type AttendanceTableRow,
   type AttendanceTotalKind,
   type ClockCycle,
@@ -15,7 +16,6 @@ import { fill } from '@/sales/sales/lib/sales-text';
 // totals, a row's chip and tags. The chips are «الحضور»'s (ATTENDANCE_STYLE) and the lesson statuses'. Pure.
 
 const DAY_DATE = { weekday: 'short', day: 'numeric', month: 'numeric' } as const;
-const MONTH = { month: 'long', year: 'numeric' } as const;
 
 /** «الثلاثاء، 27/10»: the lesson's weekday and date on the viewer's calendar `tz`. */
 export function dayDateOf(iso: string, tz: string): string {
@@ -23,8 +23,7 @@ export function dayDateOf(iso: string, tz: string): string {
 }
 
 /** "2026-10" → «أكتوبر 2026». */
-export const monthOf = (month: string): string =>
-  dateText(new Date(`${month}-15T12:00:00Z`), { tz: 'UTC', locale }, MONTH);
+export const monthOf = (month: string): string => monthText(month, locale);
 
 /** The totals row, in the owner's order: حضر · غاب · بعذر · متأخر · ألغيت · أُجّلت. */
 export function totalsItems(totals: Record<AttendanceTotalKind, number>): { key: string; label: string; n: number }[] {

@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { apiSend, t, pathKey, type, useTheme, AppText, Button } from '@ab/mobile-kit';
+import { apiSend, t, pathKey, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 
 /**
  * «عيّن العملاء الذين بلا مسؤول» (admin, leads.assign): POST /leads/assign-unassigned spreads every

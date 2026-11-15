@@ -1,17 +1,19 @@
 import { act, fireEvent, renderRouter, screen } from 'expo-router/testing-library';
 import { t, queryClient, pathKey } from '@ab/mobile-kit';
+import Tabs from '../../app/(tabs)/_layout';
+import Home from '../../app/(tabs)/index';
 import Child from '../../app/child/[id]';
-import Home from '../../app/index';
 import Layout from '../../app/_layout';
 import Login from '../../app/login';
-import Settings from '../../app/settings';
 
-// docs/50 §7: the family app's own router root. Signed in (guardian / student) → home; out → the
-// sign-in. The gate is a settable status here (its role rules: verify-role.family.test.ts).
+// docs/50 §7: the family app's own router root. Signed in (guardian / student) → the tabs' home;
+// out → the sign-in. The gate is a settable status here (role rules: verify-role.family.test.ts).
 
 const mockApiFetch = jest.fn();
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({
+  registerPush: jest.fn(async () => undefined),
+}));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
@@ -35,27 +37,49 @@ const { registerPush } = jest.requireMock<{ registerPush: jest.Mock }>(
   '@ab/mobile-kit/push/registerPush',
 );
 
+const Blank = () => null;
 const routes = {
   _layout: Layout,
-  index: Home,
   login: Login,
-  settings: Settings,
+  '(tabs)/_layout': Tabs,
+  '(tabs)/index': Home,
+  '(tabs)/schedule': Blank,
+  '(tabs)/children': Blank,
+  '(tabs)/reports': Blank,
+  '(tabs)/account': Blank,
   'child/[id]': Child,
 };
 const me = { id: 'g1', role: 'guardian', permissions: ['self.portal'] };
-const children = [
-  { id: 's1', code: 'AB-0001', name: 'سارة' },
-  { id: 's2', code: 'AB-0002', name: 'يوسف' },
-];
+const kid = (id: string, name: string) => ({
+  id,
+  code: `AB-000${id.slice(1)}`,
+  name,
+  tz: 'Asia/Riyadh',
+  contact_is_self: false,
+});
+const children = [kid('s1', 'سارة'), kid('s2', 'يوسف')];
+const EMPTY: Record<string, unknown> = {
+  lessons: { lessons: [], prepare: null, month: { attended: 2, absent: 1 } },
+  reports: { reports: [] },
+  package: { package: null, payments: [], payment_instructions: '' },
+  history: { rows: [], next_cursor: null },
+};
+const studentRead = (path: string): unknown => EMPTY[path.split('?')[0]?.split('/')[4] ?? ''];
 
 const answer = (kind: string) =>
   mockApiFetch.mockImplementation(async (path: string) => {
     const body: Record<string, unknown> = {
       '/auth/me': me,
-      '/portal/me': { kind, students: kind === 'student' ? [children[0]] : children },
+      '/portal/me': {
+        kind,
+        students: kind === 'student' ? [children[0]] : children,
+        renew_url: null,
+      },
       '/auth/code/status': { available: true, staff: false },
     };
-    return body[path] ?? {};
+    return (
+      body[path] ?? studentRead(path) ?? { items: [], total: 0, page: 1, pageSize: 20, unread: 0 }
+    );
   });
 
 function open(gate: string, kind = 'guardian') {
@@ -74,7 +98,8 @@ test('a guardian lands on home: one card per child, and this device registers fo
   await open('guardian');
   expect(await screen.findByText('سارة')).toBeTruthy();
   expect(screen.getByText('يوسف')).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.familyApp.home.title })).toBeTruthy();
+  expect(screen.getByRole('header', { name: t.portal.app.home.greeting })).toBeTruthy();
+  expect(screen.getByText(t.portal.app.tabs.children)).toBeTruthy();
   expect(registerPush).toHaveBeenCalled();
 });
 
@@ -85,18 +110,19 @@ test('signed out: the family sign-in, no push registration', async () => {
   expect(registerPush).not.toHaveBeenCalled();
 });
 
-test('a card opens child/[id]', async () => {
+test("a card's head opens child/[id]", async () => {
   const guardian = open('guardian');
   await guardian;
   await fireEvent.press(await screen.findByRole('button', { name: /يوسف/ }));
   expect(guardian.getPathname()).toBe('/child/s2');
 });
 
-test('a student lands on their own page directly (no list)', async () => {
-  const student = open('student', 'student');
-  await student;
-  expect(await screen.findByText(t.familyApp.child.soon)).toBeTruthy();
-  expect(student.getPathname()).toBe('/child/s1');
+test('a student lands on their own page: their tabs, no «أبنائي»', async () => {
+  await open('student', 'student');
+  expect(await screen.findByText(t.portal.app.child.attendedSelf)).toBeTruthy();
+  expect(screen.getByText(t.portal.app.tabs.reports)).toBeTruthy();
+  expect(screen.queryByText(t.portal.app.tabs.children)).toBeNull();
+  expect(screen.queryByText(t.portal.packageTab)).toBeNull();
 });
 
 test('signing out (the gate flips to out) swaps home for the sign-in', async () => {

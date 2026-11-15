@@ -1,7 +1,6 @@
 import { bodyVarCount } from '@ab/client-core';
 import { TEMPLATE_LIMITS } from '@ab/shared';
-import { t, Field } from '@ab/mobile-kit';
-import { Section } from '@/core/ui/surface/Section';
+import { t, Field, Section } from '@ab/mobile-kit';
 import type { Draft } from './draft-input';
 import type { SetDraft } from './use-template-draft';
 

@@ -13,7 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 let mockNow = new Date('2026-10-01T12:00:00Z');
-jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => mockNow }));
+jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => mockNow }));
 
 const w = t.teacherBoard;
 const onClose = jest.fn();

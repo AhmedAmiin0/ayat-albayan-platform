@@ -1,5 +1,4 @@
-import { t, FilterPills } from '@ab/mobile-kit';
-import { Section } from '@/more';
+import { t, FilterPills, Section } from '@ab/mobile-kit';
 
 export type PayMethod = 'bank' | 'online';
 

@@ -1,9 +1,8 @@
 import { formatAmount, offerText } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t, pathKey } from '@ab/mobile-kit';
+import { currencyName, t, pathKey } from '@ab/mobile-kit';
 import { bulkSa } from '@/finance/pricing/fixtures';
-import { currencyName } from '@/payments';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { QuoteSheet } from './QuoteSheet';
 

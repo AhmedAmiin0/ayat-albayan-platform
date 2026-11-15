@@ -1,5 +1,4 @@
-import { t, ltr } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { t, ltr, money } from '@ab/mobile-kit';
 import { entry, student, subscription, teacher } from '@/sales/sales/testing/fixtures';
 import {
   fill,

@@ -1,10 +1,10 @@
-import type { PortalMe } from './portal-me';
+import type { PortalHome } from '@ab/shared';
 
-/** What home shows: placeholders, the error, the empty note, or the children's cards. */
+/** What a list of the login's students shows: placeholders, the error, the empty note, the list. */
 export type HomeState = 'loading' | 'error' | 'empty' | 'list';
 
 interface HomeRead {
-  data: PortalMe | undefined;
+  data: PortalHome | undefined;
   isError: boolean;
 }
 

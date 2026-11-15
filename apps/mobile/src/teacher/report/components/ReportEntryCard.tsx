@@ -12,8 +12,7 @@ import {
 import type { RefObject } from 'react';
 import type { ScrollView } from 'react-native';
 import { View } from 'react-native';
-import { t } from '@ab/mobile-kit';
-import { Section } from '@/core/ui/surface/Section';
+import { t, Section } from '@ab/mobile-kit';
 import { AttachmentsField } from './AttachmentsField';
 import { ChoiceChips } from './ChoiceChips';
 import { IdentityBlock, MeetingLink } from './IdentityBlock';

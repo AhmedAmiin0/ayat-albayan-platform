@@ -1,8 +1,7 @@
 import type { CorrectTo } from '@ab/shared';
 import { View } from 'react-native';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Note } from '@/core/ui/feedback/Note';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 

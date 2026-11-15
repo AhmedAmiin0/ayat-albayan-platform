@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { Field, type FieldProps } from '@ab/mobile-kit';
+import { Field, type FieldProps, ErrorLine } from '@ab/mobile-kit';
 
 interface TextFieldProps extends FieldProps {
   /** The validation message under the input (the web's Field `error`). */

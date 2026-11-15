@@ -11,7 +11,13 @@ const buildEnv = z.object({
   EAS_BUILD_PROJECT_ID: z.uuid().optional(),
 });
 
-/** The EAS project and its update URL once the id is known; unset: neither (no OTA yet). */
+/**
+ * The owner's EAS project @holdmycup/ayat-albayan-family (owner 2026-11-15; a project id is not a
+ * secret): every build and OTA has it without the env.
+ */
+const FAMILY_PROJECT_ID = 'ccc6c105-1f67-4b5e-ada5-c892bddaa95a';
+
+/** The EAS project and its update URL. */
 const easProject = (config: ExpoConfig, id: string): Partial<ExpoConfig> => ({
   extra: { ...config.extra, eas: { projectId: id } },
   updates: { ...config.updates, url: `https://u.expo.dev/${id}` },
@@ -26,10 +32,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const env = buildEnv.parse(process.env);
   const base = config as ExpoConfig;
   const firebase = env.GOOGLE_SERVICES_JSON;
-  const id = env.FAMILY_EAS_PROJECT_ID ?? env.EAS_BUILD_PROJECT_ID;
+  const id = env.FAMILY_EAS_PROJECT_ID ?? env.EAS_BUILD_PROJECT_ID ?? FAMILY_PROJECT_ID;
   return {
     ...base,
     android: { ...base.android, ...(firebase ? { googleServicesFile: firebase } : {}) },
-    ...(id ? easProject(base, id) : {}),
+    ...easProject(base, id),
   };
 };

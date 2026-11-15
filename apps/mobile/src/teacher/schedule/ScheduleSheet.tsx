@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { LessonDetailsSheet } from '@/calendar';
 import { JoinClassroomButton } from '@/classroom';
 import { TeacherLessonTools, useTimedNotice } from '@/teacher/lesson-actions';
-import { Notice } from '@/today';
+import { Notice } from '@ab/mobile-kit';
 
 /**
  * «تفاصيل الحلقة» of «جدولي» (teacher variant, docs/46 C7): its students, report state, «ادخل

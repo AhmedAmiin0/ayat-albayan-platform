@@ -6,8 +6,8 @@ import {
   type MyCommissionRow,
   type PaymentMethod,
 } from '@ab/shared';
-import { t, isolate, ltr } from '@ab/mobile-kit';
-import { currencyName, localDay, instantDay, money } from '@/core/lib/money/format';
+import { t, isolate, ltr, currencyName, money } from '@ab/mobile-kit';
+import { localDay, instantDay } from '@/core/lib/money/format';
 import { monthLabel } from '@/teacher/lib/payout-text';
 
 // The words of the salesperson's money (web EarningsTerms, StatementCard, terms-summary). Pure.

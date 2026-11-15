@@ -11,7 +11,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (p: string) => mockApiFetch(p),
 }));
 const mockPush = jest.fn();
-jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
+jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 jest.mock('expo-router', () => ({
   router: { push: (h: string) => mockPush(h), back: jest.fn(), replace: jest.fn() },
 }));

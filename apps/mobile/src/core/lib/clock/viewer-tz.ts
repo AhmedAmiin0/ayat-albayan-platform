@@ -1,7 +1,7 @@
 import { subscribeViewerTz, viewerTz } from '@ab/client-core';
 import type { ClockCycle } from '@ab/shared';
 import { useSyncExternalStore } from 'react';
-import { useClockCycle } from './clock-store';
+import { useClockCycle } from '@ab/mobile-kit';
 
 // The zone every time on screen reads in (docs/34 §2): the signed-in person's tz from /auth/me,
 // else the phone's, else the academy's. One store (@ab/client-core), set by useMeZone (auth).

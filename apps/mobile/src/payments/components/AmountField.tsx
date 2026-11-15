@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { TextInput, View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
-import { currencyName } from '@/core/lib/money/format';
+import { t, shape, type, useTheme, AppText, ErrorLine, currencyName } from '@ab/mobile-kit';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 
 interface AmountFieldProps {

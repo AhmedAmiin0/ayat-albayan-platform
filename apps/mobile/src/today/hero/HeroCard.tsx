@@ -1,5 +1,5 @@
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { ErrorLine } from '@ab/mobile-kit';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import { lessonClock, studentNames } from '@/today/lib/lesson-text';
 import type { Hero } from '@/today/lib/today-plan';

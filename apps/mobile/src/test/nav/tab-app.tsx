@@ -1,8 +1,7 @@
 import { renderRouter } from 'expo-router/testing-library';
 import type { ComponentType } from 'react';
-import { AppText } from '@ab/mobile-kit';
+import { AppText, AppNativeTabs } from '@ab/mobile-kit';
 import { TabStack, tabStackSettings } from '@/core/nav/TabStack';
-import { AppNativeTabs } from '@/core/ui/layout/AppNativeTabs';
 
 /** Test-only: the real tabs (Today, students, more) with the real tab stacks over stub screens. */
 const TABS = [

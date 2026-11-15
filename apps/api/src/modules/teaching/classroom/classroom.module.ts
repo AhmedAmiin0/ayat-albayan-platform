@@ -10,6 +10,7 @@ import { AssistantsService } from './assistants/assistants.service';
 import {
   CLASSROOM_CONFIG,
   CLASSROOM_WEB_ORIGIN,
+  FAMILY_JOIN_SECRET,
   firstWebOrigin,
   RECORDING_CONFIG,
   type ClassroomConfigSource,
@@ -19,7 +20,9 @@ import { ClassroomController, JoinLinkStaffController } from './classroom.contro
 import { ClassroomPublicController } from './classroom.public.controller';
 import { ClassroomRepo } from './classroom.repo';
 import { ClassroomSettings } from './classroom.settings';
+import { FamilyJoinLinks } from './family-link/family-join.links';
 import { GuestJoinService } from './join/guest-join.service';
+import { JoinLinkResolver } from './family-link/join-link.resolver';
 import { INTERNAL_MEETING_CONTROLLERS, INTERNAL_MEETING_PROVIDERS } from './internal-meetings/internal-meetings.providers';
 import { PublicJoinLimit } from './join/join-limit';
 import { JoinLinkCopyService } from './join/join-link.copy.service';
@@ -86,6 +89,7 @@ import { StudentLinkService } from './student-link/student-link.service';
     { provide: CLASSROOM_CONFIG, useFactory: (): ClassroomConfigSource => () => livekitEnv(loadEnv()) },
     { provide: CLASSROOM_WEB_ORIGIN, useFactory: (): string => firstWebOrigin(loadEnv().WEB_ORIGIN) },
     { provide: RECORDING_CONFIG, useFactory: (): RecordingConfig => recordingEnv(loadEnv()) },
+    { provide: FAMILY_JOIN_SECRET, useFactory: () => loadEnv().FEEDBACK_TOKEN_SECRET ?? null },
     // null: the http core's global fetch (tests bind a double).
     { provide: LIVEKIT_HTTP, useValue: null },
     { provide: PublicJoinLimit, useFactory: () => new PublicJoinLimit() },
@@ -100,6 +104,8 @@ import { StudentLinkService } from './student-link/student-link.service';
     StudentLinkService,
     StudentLinkAdminService,
     GuestJoinService,
+    FamilyJoinLinks,
+    JoinLinkResolver,
     JoinLinkService,
     JoinLinkStaffService,
     ShareGrantService,

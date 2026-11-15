@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { t, shape, type, useTheme, AppText, money } from '@ab/mobile-kit';
 import type { PeriodTotal } from '@/money/shared/types';
 
 /**

@@ -1,8 +1,7 @@
 import type { ChatList } from '@ab/shared';
 import { useState } from 'react';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { AutoListNote } from './AutoListNote';
 import { listErrorText } from '@/inbox/lists/lib/list-errors';
 import { ListNameForm } from './ListNameForm';

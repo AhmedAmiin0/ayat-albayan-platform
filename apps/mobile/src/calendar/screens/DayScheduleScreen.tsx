@@ -12,12 +12,12 @@ import {
   Screen,
   ScreenHeader,
   useTabBarInset,
+  Notice,
+  useNow,
 } from '@ab/mobile-kit';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { Note } from '@/core/ui/feedback/Note';
 import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
-import { Notice } from '@/today/components/Notice';
-import { useNow } from '@/core/lib/time/use-now';
 import { useLessonAction } from '@/today/lib/use-lesson-action';
 import { headerLine } from '@/calendar/agenda/agenda';
 import { AgendaItemRow } from '@/calendar/agenda/AgendaItemRow';

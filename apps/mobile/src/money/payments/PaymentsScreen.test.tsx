@@ -1,8 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { riyadhToday } from '@/calendar/lib/week';
-import { t, ltr } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { t, ltr, money } from '@ab/mobile-kit';
 import { payment } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { PaymentsScreen } from './PaymentsScreen';

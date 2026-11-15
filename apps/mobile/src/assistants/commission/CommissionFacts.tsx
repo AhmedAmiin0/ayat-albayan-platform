@@ -1,8 +1,8 @@
 import { formatAmount, type AssistantCommissionView } from '@ab/shared';
 import { View } from 'react-native';
-import { t, Ltr, StatusChip } from '@ab/mobile-kit';
+import { t, Ltr, StatusChip, money } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { instantDay, money } from '@/core/lib/money/format';
+import { instantDay } from '@/core/lib/money/format';
 import { AmountText } from '@/sales-money/components/AmountText';
 import { CardTitle } from '@/sales-money/components/CardTitle';
 import { commissionStatusStyle } from './commission-style';

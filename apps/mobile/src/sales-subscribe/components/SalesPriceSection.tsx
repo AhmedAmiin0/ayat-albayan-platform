@@ -1,8 +1,7 @@
 import type { SalesQuoteView } from '@ab/shared';
 import type { UseQueryResult } from '@tanstack/react-query';
-import { t, ErrorState } from '@ab/mobile-kit';
+import { t, ErrorState, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { SalesQuotePreview } from './SalesQuotePreview';
 import { salesErrorText } from '@/sales-subscribe/lib/sales-errors';
 

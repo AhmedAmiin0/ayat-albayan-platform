@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNow } from './use-now';
+import { useNow } from '@ab/mobile-kit';
 
 /**
  * A Date that changes only when the device's calendar day does (useNow underneath: a minute timer

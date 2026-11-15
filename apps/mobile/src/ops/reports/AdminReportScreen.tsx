@@ -4,7 +4,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import {
   apiFetch,
   t,
@@ -15,6 +14,7 @@ import {
   Screen,
   ScreenHeader,
   StatusChip,
+  ErrorLine,
 } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { openSigned } from '@/core/lib/http/open-signed';

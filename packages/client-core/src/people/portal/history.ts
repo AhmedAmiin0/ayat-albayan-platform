@@ -38,12 +38,20 @@ export interface HistoryMonth {
   rows: PortalHistoryRow[];
 }
 
-/** The rows under their month (on `tz`), in the order they came (newest first). */
-export function historyMonths(rows: readonly PortalHistoryRow[], tz: string): HistoryMonth[] {
-  const months = new Map<string, PortalHistoryRow[]>();
+/** Rows under their month («YYYY-MM» of `at(row)` on `tz`), in the order they came. */
+export function monthsOf<T>(
+  rows: readonly T[],
+  at: (row: T) => string,
+  tz: string,
+): { month: string; rows: T[] }[] {
+  const months = new Map<string, T[]>();
   for (const row of rows) {
-    const month = localDateIn(new Date(row.starts_at), tz).slice(0, 7);
+    const month = localDateIn(new Date(at(row)), tz).slice(0, 7);
     months.set(month, [...(months.get(month) ?? []), row]);
   }
   return [...months].map(([month, list]) => ({ month, rows: list }));
 }
+
+/** The rows under their month (on `tz`), in the order they came (newest first). */
+export const historyMonths = (rows: readonly PortalHistoryRow[], tz: string): HistoryMonth[] =>
+  monthsOf(rows, (row) => row.starts_at, tz);

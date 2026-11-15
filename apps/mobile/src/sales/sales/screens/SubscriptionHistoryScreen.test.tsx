@@ -1,6 +1,5 @@
 import { screen } from '@testing-library/react-native';
-import { ApiError, t, ltr } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { ApiError, t, ltr, money } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { history } from '@/sales/sales/testing/fixtures';
 import { SubscriptionHistoryScreen } from './SubscriptionHistoryScreen';

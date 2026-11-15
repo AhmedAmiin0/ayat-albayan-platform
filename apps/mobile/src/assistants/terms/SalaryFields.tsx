@@ -1,7 +1,5 @@
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Field } from '@ab/mobile-kit';
-import { Section } from '@/core/ui/surface/Section';
+import { t, Field, ErrorLine, Section } from '@ab/mobile-kit';
 import { CurrencyPills } from '@/assistants/list/CurrencyPills';
 import { fieldError } from '@/assistants/api/errors';
 import { StartDayPicker } from './StartDayPicker';

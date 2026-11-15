@@ -1,8 +1,7 @@
 import type { AssistantStatementView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@ab/mobile-kit';
+import { t, ErrorLine } from '@ab/mobile-kit';
 import { statementMonth } from '@/sales-money/lib/money-text';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { assistantsErrorText } from '@/assistants/api/errors';

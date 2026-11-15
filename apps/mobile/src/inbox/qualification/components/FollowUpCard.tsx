@@ -1,10 +1,9 @@
 import type { LeadFollowUp } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 import { followUpLines } from '@/inbox/qualification/lib/follow-up-text';
 import { Heading } from './Heading';

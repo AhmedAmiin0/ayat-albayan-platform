@@ -1,4 +1,4 @@
-import { addCalendarDays, addCalendarMonths, dateText } from '@ab/shared';
+import { addCalendarDays, addCalendarMonths, monthText } from '@ab/shared';
 import { locale } from '@ab/mobile-kit';
 
 // Calendar months (the date-fns facade, docs/34 §7): plain dates, no zone involved.
@@ -15,6 +15,5 @@ export function monthRange(ym: string): { from: string; to: string } {
 
 /** «أكتوبر 2026», Western digits. */
 export function monthLabel(ym: string): string {
-  const fields = { month: 'long', year: 'numeric' } as const;
-  return dateText(new Date(`${ym}-15T12:00:00Z`), { tz: 'UTC', locale }, fields);
+  return monthText(ym, locale);
 }

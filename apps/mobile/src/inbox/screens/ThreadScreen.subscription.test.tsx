@@ -1,7 +1,6 @@
 import type { ThreadPeople, ThreadView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { t, isolate } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { t, isolate, money } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from '@/inbox/subscription/people-fixtures';
 import { detail, PHONE, thread } from '@/inbox/shared/thread-fixtures';

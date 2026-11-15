@@ -82,3 +82,12 @@ export function engineTimeZone(): string | undefined {
 export function engineHourCycle(): string | undefined {
   return new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle;
 }
+
+/** «1 ديسمبر»…: `fields` of a calendar day «YYYY-MM-DD» (a day, not an instant: noon UTC). */
+export function calendarDayText(ymd: string, locale: Locale, fields: DateFields): string {
+  return dateText(new Date(`${ymd}T12:00:00Z`), { tz: 'UTC', locale }, fields);
+}
+
+/** «أكتوبر 2026» of a calendar month «YYYY-MM». */
+export const monthText = (ym: string, locale: Locale): string =>
+  calendarDayText(`${ym}-15`, locale, { month: 'long', year: 'numeric' });
