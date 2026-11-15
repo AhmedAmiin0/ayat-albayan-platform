@@ -4715,8 +4715,8 @@
       },
       "codeTitle": "Enter the code",
       "codeSentTo": "If {phone} is on file, a six-digit code will reach it on WhatsApp. You can paste it here.",
-      "withPassword": "Sign in with the student code and password",
-      "withWhatsApp": "Sign in with the WhatsApp number",
+      "withPassword": "Use the student code and password",
+      "withWhatsApp": "Use the WhatsApp number",
       "whatsappOff": "WhatsApp sign-in is not available yet.",
       "studentCode": "Student code",
       "studentCodeBad": "A student code looks like AB-1234."
