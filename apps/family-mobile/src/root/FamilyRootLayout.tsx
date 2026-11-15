@@ -11,7 +11,6 @@ import {
   useTheme,
 } from '@ab/mobile-kit';
 import { useFamilyCodes } from '@/sign-in';
-import { familyBrand } from './family-brand';
 import { isFamilySignedIn } from './family-gate';
 import { useFamilyPush } from './use-family-push';
 
@@ -46,7 +45,7 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
   const ready = boot.settled && meReady && (signedIn || codesKnown);
   useFamilyPush(ready && signedIn);
   return (
-    <RootFrame ready={ready} fontsLoaded={boot.fontsLoaded} brand={familyBrand()}>
+    <RootFrame ready={ready} fontsLoaded={boot.fontsLoaded}>
       <BiometricGate signedIn={signedIn}>
         <Stack
           screenOptions={{
@@ -62,6 +61,7 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
             <Stack.Screen name="report/[id]" />
             <Stack.Screen name="package/[id]" />
             <Stack.Screen name="alerts" />
+            <Stack.Screen name="profile" />
           </Stack.Protected>
           <Stack.Protected guard={gate === 'out'}>
             <Stack.Screen name="login" />

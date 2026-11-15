@@ -9,6 +9,7 @@ const enc = encodeURIComponent;
 export const childHref = (id: string) => `/child/${enc(id)}` as const;
 export const packageHref = (studentId: string) => `/package/${enc(studentId)}` as const;
 export const ALERTS_HREF = '/alerts';
+export const PROFILE_HREF = '/profile';
 
 interface ReportLink {
   studentId: string;

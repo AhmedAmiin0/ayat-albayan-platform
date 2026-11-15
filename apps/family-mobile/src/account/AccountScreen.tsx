@@ -1,4 +1,3 @@
-import type { PortalHome, PortalStudent } from '@ab/shared';
 import Constants from 'expo-constants';
 import {
   AppText,
@@ -11,25 +10,18 @@ import {
 } from '@ab/mobile-kit';
 import { FamilyHeader, FamilyPage } from '@/nav';
 import { ownStudent, usePortalMe } from '@/portal';
+import { whoLine } from '@/profile';
 import { AccountSettings } from './AccountSettings';
-import { ChildrenLinks } from './ChildrenLinks';
 import { ProfileCard } from './ProfileCard';
-
-/** «طالب · رمز الطالب AB-2041» or «ولي أمر». */
-const whoLine = (own: PortalStudent | null): string =>
-  own ? t.portal.app.account.student.replace('{code}', own.code) : t.portal.app.account.guardian;
 
 /** «الإصدار 1.0.0». */
 const versionLine = (): string =>
   t.portal.app.account.version.replace('{v}', Constants.expoConfig?.version ?? '');
 
-/** A guardian's children; none for a student. */
-const childrenOf = (me: PortalHome | undefined, own: PortalStudent | null) =>
-  own ? [] : (me?.students ?? []);
-
 /**
- * «حسابي» (docs/50 §6, canvas Account / StudentAccount): the name, a guardian's children, this
- * phone's notifications, the appearance; a student also changes their password. Sign out last.
+ * «حسابي» (docs/50 §6, canvas Account / StudentAccount): the card that opens the profile (where a
+ * guardian's children are), this phone's notifications, the appearance; a student also changes
+ * their password. Sign out last.
  */
 export function AccountScreen() {
   const { color } = useTheme();
@@ -42,8 +34,12 @@ export function AccountScreen() {
       header={<FamilyHeader title={t.portal.app.tabs.account} />}
       onRefresh={() => profile.refetch()}
     >
-      <ProfileCard name={name} line={whoLine(own)} />
-      <ChildrenLinks students={childrenOf(me, own)} />
+      <ProfileCard
+        name={name}
+        line={whoLine(own)}
+        photo={profile.data?.avatar_url ?? null}
+        seed={own?.id ?? null}
+      />
       <AccountSettings student={own !== null} />
       {own ? <PasswordSection /> : null}
       <SignOutButton />

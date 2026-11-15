@@ -252,7 +252,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/assistant-app/assistant-day.ts": {
@@ -1679,31 +1679,11 @@
       "count": 1
     }
   },
-  "src/core/ui/actions/ButtonRow.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/actions/row-fit.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/core/ui/connecting/bar-placement.test.tsx": {
     "stylistic/max-len": {
       "count": 2
     },
     "ab/no-restricted-syntax": {
-      "count": 2
-    }
-  },
-  "src/core/ui/feedback/InlineConfirm.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/feedback/InlineConfirm.tsx": {
-    "stylistic/max-len": {
       "count": 2
     }
   },
@@ -5380,11 +5360,6 @@
       "count": 1
     }
   },
-  "src/more/appearance/LanguageRow.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
   "src/more/applicants/ApplicantLinks.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -7310,7 +7285,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/sales/app/screens/SalesTabs.tsx": {
@@ -8953,7 +8928,7 @@
       "count": 3
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/teacher/screens/TeacherReportsScreen.test.tsx": {
