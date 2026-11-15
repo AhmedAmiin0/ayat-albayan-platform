@@ -56,7 +56,7 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
           }}
         >
           <Stack.Protected guard={signedIn}>
-            {/* The tabs, then the screens pushed above them (no tab bar under: rn-screens#4132). */}
+            {/* The tabs, then the screens pushed above them (no tab bar: rn-screens#4132). */}
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="child/[id]" />
             <Stack.Screen name="report/[id]" />
