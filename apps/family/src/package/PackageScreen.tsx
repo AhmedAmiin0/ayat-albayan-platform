@@ -22,8 +22,11 @@ export function PackageScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const me = usePortalMe();
   const refresh = useRefreshPortal();
-  const name = studentOf(me.data, id)?.name;
-  const title = name ? `${t.portal.packageTab} · ${name}` : t.portal.packageTab;
+  const student = studentOf(me.data, id);
+  const money = Boolean(me.data && student && seesMoney(portalViewer(me.data.kind, student)));
+  // No «الباقة» heading for a login that never sees money (a child's, through a stale link).
+  const title =
+    money && student ? `${t.portal.packageTab} · ${student.name}` : (student?.name ?? '');
   return (
     <FamilyPage header={<FamilyHeader title={title} back />} onRefresh={refresh}>
       <LoadState query={me}>{(data) => <PackageOf me={data} id={id} />}</LoadState>

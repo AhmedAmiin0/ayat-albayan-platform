@@ -18,7 +18,9 @@ export function ChildrenScreen() {
         data={me.data}
         isError={me.isError}
         onRetry={() => void me.refetch()}
-        card={(student) => <ChildSummaryCard student={student} />}
+        card={(student) => (
+          <ChildSummaryCard student={student} kind={me.data?.kind ?? 'guardian'} />
+        )}
       />
       <AppText style={{ fontSize: type.size.xs, color: color.ink3, textAlign: 'center' }}>
         {t.portal.app.children.note}

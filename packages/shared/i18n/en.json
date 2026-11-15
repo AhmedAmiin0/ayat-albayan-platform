@@ -134,7 +134,10 @@
         "joinFailed": "Could not open the lesson. Please try again.",
         "upcoming": "Upcoming lessons",
         "prepare": "Get ready for the lesson",
-        "fromReport": "From the report of {date}"
+        "fromReport": "From the report of {date}",
+        "nextLessonSelf": "Your next lesson",
+        "prepareSelf": "Get ready for your lesson",
+        "upcomingSelf": "Your upcoming lessons"
       },
       "month": {
         "attended": "Attended this month",
@@ -210,7 +213,6 @@
         "settings": "Settings",
         "pushGuardian": "Lesson times, new reports and schedule changes",
         "pushStudent": "Lesson times and new reports",
-        "password": "Change password",
         "version": "Version {v}"
       },
       "child": {

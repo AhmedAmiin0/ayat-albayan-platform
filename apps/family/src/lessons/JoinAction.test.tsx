@@ -37,7 +37,10 @@ test('a Meet lesson opens its own link, with a tap of vibration', async () => {
 });
 
 test('our classroom opens the signed room link in the browser', async () => {
-  mockSend.mockResolvedValue({ url: 'https://app.example/join/tok', expires_at: now.toISOString() });
+  mockSend.mockResolvedValue({
+    url: 'https://app.example/join/tok',
+    expires_at: now.toISOString(),
+  });
   await show(lesson(now, 5));
   await fireEvent.press(screen.getByRole('button', { name: t.portal.join }));
   await waitFor(() => expect(Linking.openURL).toHaveBeenCalledWith('https://app.example/join/tok'));

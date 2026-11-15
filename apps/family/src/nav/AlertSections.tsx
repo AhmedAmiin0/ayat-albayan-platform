@@ -1,7 +1,16 @@
 import { alertSections, alertTarget, type AlertGroup } from '@ab/client-core';
 import type { NotificationsPage, NotificationItem } from '@ab/shared';
 import { View } from 'react-native';
-import { AppText, EmptyState, InsetGroup, t, type, useMarkRead, useNow, useTheme } from '@ab/mobile-kit';
+import {
+  AppText,
+  EmptyState,
+  InsetGroup,
+  t,
+  type,
+  useMarkRead,
+  useNow,
+  useTheme,
+} from '@ab/mobile-kit';
 import { useFamilyClock } from '@/portal';
 import { AlertRow } from './AlertRow';
 import { openAlert } from './hrefs';

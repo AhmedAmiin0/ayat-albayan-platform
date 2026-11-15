@@ -12,7 +12,11 @@ export function UsedBar({ summary }: { summary: PackageSummary }) {
       <AppText style={{ fontFamily: type.ui[600], color: color.ink }}>{usedText(summary)}</AppText>
       <View style={{ height: 8, borderRadius: 4, backgroundColor: color.sunk, overflow: 'hidden' }}>
         <View
-          style={{ width: `${Math.round(ratio * 100)}%`, height: 8, backgroundColor: color.lapisFill }}
+          style={{
+            width: `${Math.round(ratio * 100)}%`,
+            height: 8,
+            backgroundColor: color.lapisFill,
+          }}
         />
       </View>
     </View>

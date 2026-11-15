@@ -16,7 +16,7 @@ interface ChildBodyProps {
 
 /** Each tab's panel; «المحادثة» stays off until family_chat_enabled and its screens exist. */
 const PANEL: Record<ChildTab, (p: ChildBodyProps) => ReactNode> = {
-  upcoming: (p) => <UpcomingPanel student={p.student} />,
+  upcoming: (p) => <UpcomingPanel student={p.student} own={p.kind === 'student'} />,
   attended: (p) => <HistoryPanel student={p.student} status="attended" />,
   absent: (p) => <HistoryPanel student={p.student} status="absent" />,
   package: (p) => <PackageBody student={p.student} />,

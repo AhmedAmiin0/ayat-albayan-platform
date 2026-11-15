@@ -23,8 +23,7 @@ const codes = (available: boolean) =>
   mockApiFetch.mockImplementation(async (path: string) =>
     path === '/auth/code/status' ? { available, staff: false } : {},
   );
-const show = () =>
-  renderWithQuery(<FamilySignInScreen />, freshQueryClient());
+const show = () => renderWithQuery(<FamilySignInScreen />, freshQueryClient());
 const toStudent = () => fireEvent.press(screen.getByText(t.familyApp.signIn.student));
 
 beforeEach(() => {

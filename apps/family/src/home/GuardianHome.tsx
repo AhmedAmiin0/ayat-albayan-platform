@@ -9,7 +9,7 @@ import { ChildHomeCard } from './ChildHomeCard';
 import { StudentsBody } from './StudentsBody';
 
 interface GuardianHomeProps {
-  me: PortalHome | undefined;
+  me: PortalHome;
   isError: boolean;
   onRetry: () => void;
 }
@@ -19,7 +19,7 @@ export function GuardianHome({ me, isError, onRetry }: GuardianHomeProps) {
   const { color } = useTheme();
   const refresh = useRefreshPortal();
   const A = t.portal.app.home;
-  const count = me?.students.length;
+  const count = me.students.length;
   return (
     <FamilyPage header={<GreetingHeader title={A.greeting} />} onRefresh={refresh}>
       <View
@@ -28,16 +28,14 @@ export function GuardianHome({ me, isError, onRetry }: GuardianHomeProps) {
         <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.lg, color: color.ink }}>
           {A.children}
         </AppText>
-        {count === undefined ? null : (
-          <AppText style={{ fontSize: type.size.xs, color: color.ink3 }}>{String(count)}</AppText>
-        )}
+        <AppText style={{ fontSize: type.size.xs, color: color.ink3 }}>{String(count)}</AppText>
       </View>
       <StudentsBody
         data={me}
         isError={isError}
         onRetry={onRetry}
         card={(student) => (
-          <ChildHomeCard student={student} money={seesMoney(portalViewer('guardian', student))} />
+          <ChildHomeCard student={student} money={seesMoney(portalViewer(me.kind, student))} />
         )}
       />
     </FamilyPage>

@@ -19,7 +19,9 @@ const READS: Record<string, unknown> = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockFetch.mockImplementation(async (path: string) => READS[path.split('?')[0]?.split('/')[4] ?? '']);
+  mockFetch.mockImplementation(
+    async (path: string) => READS[path.split('?')[0]?.split('/')[4] ?? ''],
+  );
 });
 
 test('a guardian: the four tabs; «الباقة» shows the transfer text', async () => {

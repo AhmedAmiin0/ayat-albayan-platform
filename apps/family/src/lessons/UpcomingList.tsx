@@ -10,10 +10,12 @@ interface UpcomingListProps {
   lessons: readonly PortalLesson[];
   student: PortalStudent;
   now: Date;
+  /** A student's own page: «حلقاتك القادمة». */
+  own?: boolean;
 }
 
 /** «الحلقات القادمة» after the next one: the day, the time range and the teacher. */
-export function UpcomingList({ lessons, student, now }: UpcomingListProps) {
+export function UpcomingList({ lessons, student, now, own = false }: UpcomingListProps) {
   const { color } = useTheme();
   const clock = { ...useFamilyClock(), tz: student.tz };
   const later = lessons.filter((l) => isAhead(l, now)).slice(1);
@@ -21,7 +23,7 @@ export function UpcomingList({ lessons, student, now }: UpcomingListProps) {
   return (
     <View style={{ gap: 8 }}>
       <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>
-        {t.portal.app.lesson.upcoming}
+        {own ? t.portal.app.lesson.upcomingSelf : t.portal.app.lesson.upcoming}
       </AppText>
       <InsetGroup>
         {later.map((lesson) => (

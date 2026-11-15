@@ -47,7 +47,7 @@ test('the name, the children, the notifications switch (on by default) and sign 
   await show();
   expect(await screen.findByText('أم سارة')).toBeTruthy();
   expect(await screen.findByText('سارة')).toBeTruthy();
-  expect(screen.queryByText(t.portal.app.account.password)).toBeNull();
+  expect(screen.queryByText(t.account.password.title)).toBeNull();
   await waitFor(() => expect(pushSwitch().props.value).toBe(true));
   await fireEvent.press(screen.getByRole('button', { name: t.auth.logout }));
   expect(mockSignOut).toHaveBeenCalled();

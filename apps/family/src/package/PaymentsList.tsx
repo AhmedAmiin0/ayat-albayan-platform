@@ -18,9 +18,9 @@ export function PaymentsList({ payments, tz }: { payments: readonly PortalPaymen
         {t.portal.payments}
       </AppText>
       <InsetGroup>
-        {payments.map((p) => (
+        {payments.map((p, i) => (
           <View
-            key={`${p.paid_at}-${p.amount}`}
+            key={`${p.paid_at}-${p.amount}-${i}`}
             style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 }}
           >
             <View style={{ flex: 1, gap: 2 }}>
@@ -35,7 +35,13 @@ export function PaymentsList({ payments, tz }: { payments: readonly PortalPaymen
                 )}
               </AppText>
             </View>
-            <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, color: color.ok }}>
+            <AppText
+              style={{
+                fontFamily: type.ui[600],
+                fontSize: type.size.xs,
+                color: p.kind === 'refund' ? color.act : color.ok,
+              }}
+            >
               {KIND_WORD[p.kind]()}
             </AppText>
           </View>

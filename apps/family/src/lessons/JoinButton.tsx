@@ -26,7 +26,7 @@ export function JoinButton({ onPress, busy, short = false }: JoinButtonProps) {
       disabled={busy}
       onPress={onPress}
       style={({ pressed }) => ({
-        minHeight: short ? 36 : 48,
+        minHeight: short ? 44 : 48,
         paddingHorizontal: 14,
         borderRadius: 10,
         flexDirection: 'row',

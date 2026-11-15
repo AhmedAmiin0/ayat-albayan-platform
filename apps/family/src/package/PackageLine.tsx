@@ -25,6 +25,7 @@ export function PackageLine({ view, studentId }: PackageLineProps) {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 8,
+        minHeight: 44,
         paddingTop: 10,
         borderTopWidth: 1,
         borderTopColor: color.rule,

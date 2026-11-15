@@ -11,6 +11,8 @@ interface PrepareCardProps {
   student: PortalStudent;
   /** The child's «القادمة»: both parts under their titles and a link to the report. */
   full?: boolean;
+  /** A student's own page: «استعد لحلقتك». */
+  own?: boolean;
 }
 
 /** The card's parts with text: the homework, then the next plan. */
@@ -19,6 +21,17 @@ const partsOf = (card: Prepare) =>
     { key: 'homework', title: t.portal.homework, text: card.homework },
     { key: 'next', title: t.portal.nextPlan, text: card.nextPlan },
   ].filter((p) => p.text !== null);
+
+/** «استعد لحلقتك» (a student's own page), «استعد للحلقة», or the home card's «ما المطلوب». */
+const TITLE: Record<'card' | 'child' | 'own', () => string> = {
+  card: () => t.portal.prepareTitle,
+  child: () => t.portal.app.lesson.prepare,
+  own: () => t.portal.app.lesson.prepareSelf,
+};
+const titleOf = (full: boolean, own: boolean): string => {
+  const key = own ? 'own' : 'child';
+  return TITLE[full ? key : 'card']();
+};
 
 interface FromReportProps {
   student: PortalStudent;
@@ -34,6 +47,8 @@ function FromReport({ student, reportId, at }: FromReportProps) {
   return (
     <Pressable
       accessibilityRole="link"
+      hitSlop={12}
+      style={{ minHeight: 44, justifyContent: 'center' }}
       onPress={() => openReport({ studentId: student.id, reportId })}
     >
       <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, color: color.lapis }}>
@@ -47,7 +62,7 @@ function FromReport({ student, reportId, at }: FromReportProps) {
  * «ما المطلوب للحلقة القادمة» (docs/50 §2): the newest sent report's homework and next plan, beside
  * a gold rule. On the home card one line; on the child's page both parts and «من تقرير …».
  */
-export function PrepareCard({ lessons, student, full = false }: PrepareCardProps) {
+export function PrepareCard({ lessons, student, full = false, own = false }: PrepareCardProps) {
   const { color } = useTheme();
   const card = prepareCard(lessons);
   if (!card) return null;
@@ -62,7 +77,7 @@ export function PrepareCard({ lessons, student, full = false }: PrepareCardProps
         <AppText
           style={{ fontFamily: type.ui[600], fontSize: type.size.xs, color: color.coverInk }}
         >
-          {full ? t.portal.app.lesson.prepare : t.portal.prepareTitle}
+          {titleOf(full, own)}
         </AppText>
         {shown.map((p) => (
           <View key={p.key} style={{ gap: 2 }}>

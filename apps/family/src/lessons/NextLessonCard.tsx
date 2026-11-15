@@ -15,6 +15,8 @@ interface NextLessonCardProps {
   student: PortalStudent;
   /** The child's «القادمة»: the time range, length, teacher and where it opens. */
   full?: boolean;
+  /** A student's own page: «حلقتك القادمة». */
+  own?: boolean;
 }
 
 /** The full card's lines: the time range and length, the teacher. */
@@ -33,32 +35,51 @@ function Details({ lesson, clock }: { lesson: PortalLesson; clock: ClockOptions 
   );
 }
 
+interface CardTopProps {
+  lesson: PortalLesson;
+  clock: ClockOptions;
+  now: Date;
+  full: boolean;
+  own: boolean;
+}
+
+/** «الحلقة القادمة · اليوم 6:30 م», and «الدخول متاح الآن» on the full card once it opens. */
+function CardTop({ lesson, clock, now, full, own }: CardTopProps) {
+  const { color } = useTheme();
+  const A = t.portal.app.lesson;
+  const words = { color: color.onLapis, fontSize: type.size.xs };
+  const open = windowStateAt(lesson.window, now) === 'open' || isLessonNow(lesson, now);
+  const title = own ? A.nextLessonSelf : t.portal.nextLesson;
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 8 }}>
+      <AppText style={{ ...words, flexShrink: 1, opacity: 0.92 }}>
+        {`${title} · ${whenText(new Date(lesson.starts_at), clock, now)}`}
+      </AppText>
+      {open && full ? (
+        <AppText style={{ ...words, fontFamily: type.ui[600] }}>{A.openNow}</AppText>
+      ) : null}
+    </View>
+  );
+}
+
 /**
  * The next lesson on the lapis card (canvas Home, Child): when, the live countdown, then
  * «ادخل الحلقة» once the window opens. Times on the student's own clock.
  */
-export function NextLessonCard({ lesson, student, full = false }: NextLessonCardProps) {
+export function NextLessonCard(props: NextLessonCardProps) {
+  const { lesson, student, full = false, own = false } = props;
   const { color } = useTheme();
   const now = useNow(TICK_MS);
   const clock = { ...useFamilyClock(), tz: student.tz };
-  const open = windowStateAt(lesson.window, now) === 'open' || isLessonNow(lesson, now);
-  const A = t.portal.app.lesson;
-  const words = { color: color.onLapis, fontSize: type.size.xs };
   const roomNote = full && lesson.way_in === 'classroom';
+  const note = { color: color.onLapis, fontSize: type.size.xs, opacity: 0.85 };
   return (
     <View style={{ gap: 10, padding: 14, borderRadius: 12, backgroundColor: color.lapisFill }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 8 }}>
-        <AppText style={{ ...words, flexShrink: 1, opacity: 0.92 }}>
-          {`${t.portal.nextLesson} · ${whenText(new Date(lesson.starts_at), clock, now)}`}
-        </AppText>
-        {open && full ? (
-          <AppText style={{ ...words, fontFamily: type.ui[600] }}>{A.openNow}</AppText>
-        ) : null}
-      </View>
+      <CardTop lesson={lesson} clock={clock} now={now} full={full} own={own} />
       {full ? <Details lesson={lesson} clock={clock} /> : null}
-      <Countdown lesson={lesson} now={now} />
+      <Countdown lesson={lesson} now={now} big={full} />
       <JoinAction lesson={lesson} student={student} now={now} />
-      {roomNote ? <AppText style={{ ...words, opacity: 0.85 }}>{A.roomNote}</AppText> : null}
+      {roomNote ? <AppText style={note}>{t.portal.app.lesson.roomNote}</AppText> : null}
     </View>
   );
 }

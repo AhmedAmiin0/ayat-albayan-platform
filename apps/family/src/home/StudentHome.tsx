@@ -4,7 +4,6 @@ import { ChildBody } from '@/child';
 import { FamilyPage, GreetingHeader } from '@/nav';
 import { useRefreshPortal } from '@/portal';
 
-
 /**
  * A student's home is their own page (docs/50 §6, canvas StudentHome): «أهلًا بك» over their
  * name, then «القادمة» / «حضرتها» / «غبت عنها» (and «الباقة» for an adult who pays: childTabs).

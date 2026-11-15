@@ -134,7 +134,10 @@
         "joinFailed": "تعذّر فتح الحلقة، أعد المحاولة.",
         "upcoming": "الحلقات القادمة",
         "prepare": "استعد للحلقة",
-        "fromReport": "من تقرير حلقة {date}"
+        "fromReport": "من تقرير حلقة {date}",
+        "nextLessonSelf": "حلقتك القادمة",
+        "prepareSelf": "استعد لحلقتك",
+        "upcomingSelf": "حلقاتك القادمة"
       },
       "month": {
         "attended": "حضر هذا الشهر",
@@ -210,7 +213,6 @@
         "settings": "الإعدادات",
         "pushGuardian": "موعد الحلقة، والتقارير الجديدة، وتغيير المواعيد",
         "pushStudent": "موعد الحلقة والتقارير الجديدة",
-        "password": "تغيير كلمة المرور",
         "version": "الإصدار {v}"
       },
       "child": {

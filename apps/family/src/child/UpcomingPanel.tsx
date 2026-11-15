@@ -5,7 +5,7 @@ import { NextLessonCard, PrepareCard, UpcomingList } from '@/lessons';
 import { useChildLessons } from '@/portal';
 
 /** «القادمة» (canvas Child): the next lesson with its join, «استعد للحلقة», the later lessons. */
-export function UpcomingPanel({ student }: { student: PortalStudent }) {
+export function UpcomingPanel({ student, own }: { student: PortalStudent; own: boolean }) {
   const now = useNow();
   const lessons = useChildLessons(student.id);
   if (!lessons.data) {
@@ -19,12 +19,12 @@ export function UpcomingPanel({ student }: { student: PortalStudent }) {
   return (
     <>
       {next ? (
-        <NextLessonCard lesson={next} student={student} full />
+        <NextLessonCard lesson={next} student={student} full own={own} />
       ) : (
         <EmptyState title={t.portal.lessonsEmpty} />
       )}
-      <PrepareCard lessons={lessons.data} student={student} full />
-      <UpcomingList lessons={lessons.data.lessons} student={student} now={now} />
+      <PrepareCard lessons={lessons.data} student={student} full own={own} />
+      <UpcomingList lessons={lessons.data.lessons} student={student} now={now} own={own} />
     </>
   );
 }
