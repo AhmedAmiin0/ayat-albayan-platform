@@ -4,6 +4,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { Dialog } from '@/components/ui/overlay/dialog';
 import { Toast } from '@/components/ui/overlay/toast';
 import { CalcSteps } from '@/features/finance/pricing';
+import { CustomAmountToggle, CustomPriceField } from '@/features/finance/subscriptions';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 import { fillComposer } from '@/features/messaging/inbox/saved-replies/lib/filter';
@@ -24,7 +25,8 @@ export interface QuoteDialogProps {
  * «عرض سعر» (owner 2026-10-26): the calculator's steps (pills only for the discount), the offer text
  * exactly as «حاسبة الأسعار» copies it, then send it in this chat, put it in the box to edit, or copy
  * it. Sending follows the text rule (useMaySend); where a text cannot go only copy works
- * (inbox.sessionClosed says why). Works for a lead with no
+ * (inbox.sessionClosed says why). «مبلغ مخصص» (owner 2026-11-15) beside the pills makes the typed
+ * amount the offer's total. Works for a lead with no
  * student; nothing is created.
  */
 export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
@@ -34,7 +36,9 @@ export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
   const [copied, setCopied] = useState<'ok' | 'failed' | null>(null);
   const may = useMaySend(thread);
   const text = offer.text;
-  const ready = text !== null && !offer.stale;
+  // «مبلغ مخصص» not a valid amount: like a stale price, nothing may leave.
+  const held = offer.stale || offer.invalid;
+  const ready = text !== null && !held;
   const edit = () => {
     if (!text) return;
     const now = getDraft(phone);
@@ -64,7 +68,13 @@ export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
   return (
     <Dialog title={t.inbox.quote.title} onClose={onClose} actions={actions}>
       <div className="grid gap-5">
-        <CalcSteps sel={offer.sel} onChange={offer.change} freeDiscount={false} />
+        <CalcSteps
+          sel={offer.sel}
+          onChange={offer.change}
+          freeDiscount={false}
+          discountExtra={<CustomAmountToggle {...offer.custom.toggle} />}
+        />
+        <CustomPriceField price={offer.custom} />
         <section aria-labelledby="quote-preview" aria-busy={offer.quote.isFetching} className="grid gap-1.5">
           <h3 id="quote-preview" className="text-xs font-semibold text-ink-2">
             {t.inbox.quote.preview}
@@ -72,7 +82,7 @@ export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
           {offer.quote.isError && <FormAlert>{t.common.error}</FormAlert>}
           {text === null && offer.quote.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
           {text !== null && (
-            <p data-testid="quote-text" className={cn('whitespace-pre-line rounded-md border border-rule bg-sunk p-3 text-sm text-ink', offer.stale && 'opacity-60')}>
+            <p data-testid="quote-text" className={cn('whitespace-pre-line rounded-md border border-rule bg-sunk p-3 text-sm text-ink', held && 'opacity-60')}>
               {text}
             </p>
           )}

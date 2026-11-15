@@ -3,6 +3,8 @@ import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { copyOrShare } from '@/core/lib/clipboard';
 import { t, shape, type, useTheme, AppText, ErrorState } from '@ab/mobile-kit';
 import { PricingSteps } from '@/finance';
+import { CustomAmountPill } from '@/payments';
+import { CustomPriceField } from '@/subscribe';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { ReplySheetFrame } from '@/inbox/saved-replies/quick-list/ReplySheetFrame';
@@ -21,6 +23,7 @@ interface QuoteSheetProps {
  * «عرض سعر» (owner 2026-10-26): the calculator's steps (pills only for the discount), the offer text
  * exactly as «حاسبة الأسعار» copies it, then send it in this chat, put it in the box to edit, or copy
  * it (copyOrShare: the share sheet when the clipboard fails). Works for a lead with no student; nothing is created.
+ * «مبلغ مخصص» (owner 2026-11-15) beside the pills makes the typed amount the offer's total.
  */
 export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
   const { color } = useTheme();
@@ -29,7 +32,9 @@ export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
   // «انسخ»: the clipboard, else the share sheet (it has Copy); a line says how it went.
   const [copied, setCopied] = useState<'copied' | 'shared' | 'failed' | null>(null);
   const text = sheet.text;
-  const ready = text !== null && !sheet.stale;
+  // «مبلغ مخصص» not a valid amount: like a stale price, nothing may leave.
+  const held = sheet.stale || sheet.invalid;
+  const ready = text !== null && !held;
   const edit = () => {
     if (!text) return;
     appendComposerText(phone, text);
@@ -41,7 +46,13 @@ export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
         <AppText accessibilityRole="header" style={{ fontFamily: type.ui[700], fontSize: type.size.lg, lineHeight: type.lineHeight(type.size.lg), color: color.ink }}>
           {t.inbox.quote.title}
         </AppText>
-        <PricingSteps selection={sheet.selection} onChange={sheet.change} freeDiscount={false} />
+        <PricingSteps
+          selection={sheet.selection}
+          onChange={sheet.change}
+          freeDiscount={false}
+          discountExtra={<CustomAmountPill on={sheet.custom.on} onChange={sheet.custom.setOn} />}
+        />
+        <CustomPriceField price={sheet.custom} />
         <View style={{ gap: 6 }}>
           <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>{t.inbox.quote.preview}</AppText>
           {text ? (
@@ -50,7 +61,7 @@ export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
               style={{
                 padding: 12, borderRadius: shape.radius.md, borderWidth: 1, borderColor: color.rule, backgroundColor: color.sunk,
                 fontFamily: type.ui[400], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink,
-                opacity: sheet.stale ? 0.6 : 1,
+                opacity: held ? 0.6 : 1,
               }}
             >
               {text}

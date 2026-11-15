@@ -16,6 +16,15 @@ export type PackageId = (typeof PACKAGE_IDS)[number];
 export const DISCOUNTS = [0, 5, 10, 15] as const;
 export const DISCOUNT_MAX = 100;
 
+/**
+ * The deepest pill's price, round(total × 0.85): the lowest «مبلغ مخصص» on the sales path
+ * (owner 2026-11-05). The API's assertSalesPrice and both apps' quote field use it; the admin
+ * has no floor.
+ */
+export function salesPriceFloor(total: number): number {
+  return Math.round(total * (1 - Math.max(...DISCOUNTS) / 100));
+}
+
 export interface Tier {
   id: 'starter' | 'standard' | 'premium' | 'bulk';
   lessons: number;
