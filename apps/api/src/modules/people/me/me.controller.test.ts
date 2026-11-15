@@ -10,7 +10,7 @@ import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'admin-1', email: 'a@x.com', role: 'admin', sessionId: 'sess-1' },
   teacher: { id: 'teacher-1', email: 't@x.com', role: 'teacher' },
-  guardian: { id: 'guardian-1', email: 'g@x.com', role: 'guardian' },
+  guardian: { id: 'guardian-1', email: 'g@x.com', role: 'guardian', sessionId: 'sess-g' },
 };
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
@@ -41,9 +41,12 @@ const call = ({ method, url, token = 'admin', body }: Call) =>
   app.inject({ method, url, headers: { authorization: `Bearer ${token}` }, payload: body });
 
 describe('/me/push-tokens HTTP (R-MOB-01)', () => {
-  it('is staff-only (notifications.push, every staff role since the bell): a guardian gets 403, no token 401', async () => {
+  it('needs notifications.push (every role; families since docs/50 §5.6): no token 401', async () => {
     const body = { token: TOKEN };
-    expect((await call({ method: 'PUT', url: '/me/push-tokens', token: 'guardian', body })).statusCode).toBe(403);
+    results['rpc:claim_push_device'] = [{ data: 'bound' }];
+    results.profiles = [{ data: { push_tokens: [] } }, {}];
+    const guardian = await call({ method: 'PUT', url: '/me/push-tokens', token: 'guardian', body });
+    expect(guardian.statusCode).toBe(200);
     expect((await call({ method: 'PUT', url: '/me/push-tokens', token: 'nope', body })).statusCode).toBe(401);
   });
 

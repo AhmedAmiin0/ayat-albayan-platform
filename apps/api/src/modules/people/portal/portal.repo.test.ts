@@ -57,11 +57,14 @@ describe('portal queries (service role, whitelisted selects)', () => {
     expect(await new PortalReportsRepo(fakeDb({}).db).visibleRecordings([])).toEqual([]);
   });
 
-  it('package: no money column, FIFO order', async () => {
-    const f = fakeDb({ subscriptions: [{ data: [] }] });
-    await new PortalPackageRepo(f.db).packages('s1');
-    expect(String(f.argsOf('subscriptions', 'select')?.[0])).not.toMatch(SECRET);
-    expect(f.calls.filter((c) => c.method === 'order').map((c) => c.args[0])).toEqual(['starts_on', 'created_at', 'id']);
+  it('payments: the student\'s, newest first, date amount currency kind only', async () => {
+    const paid = { paid_at: 'P', amount: 12.5, currency: 'SAR', kind: 'payment' };
+    const f = fakeDb({ payments: [{ data: [{ ...paid, subscription: { student_id: 's1' } }] }] });
+    expect(await new PortalPackageRepo(f.db).payments('s1')).toEqual([paid]);
+    expect(f.argsOf('payments', 'eq')).toEqual(['subscription.student_id', 's1']);
+    expect(f.argsOf('payments', 'order')).toEqual(['paid_at', { ascending: false }]);
+    const select = String(f.argsOf('payments', 'select')?.[0]);
+    expect(select).not.toMatch(/note|receipt|recorded_by|method|invoice|\*/);
   });
 
   it('a database error becomes an error', async () => {

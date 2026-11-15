@@ -26,3 +26,4 @@ export * from './messaging/whatsapp-send/index.js';
 export * from './messaging/ticks/index.js';
 export * from './messaging/templates/index.js';
 export * from './teaching/teacher-home/index.js';
+export * from './people/portal/index.js';

@@ -1,5 +1,5 @@
-import type { PortalReport } from '@ab/shared';
-import type { PortalRecordingRow, PortalReportRow } from './portal-reports.repo';
+import type { PortalPrepare, PortalReport } from '@ab/shared';
+import type { PortalRecordingRow, PortalReportRow, ReportTexts } from './portal-reports.repo';
 
 /** The newest visible recording per lesson (rows come newest first). */
 export function recordingByLesson(rows: readonly PortalRecordingRow[]): Map<string, string> {
@@ -18,5 +18,17 @@ export function toPortalReport(row: PortalReportRow, recordings: ReadonlyMap<str
     sent_at: row.sent_at ?? '',
     teacher: teacher ? { display_name_ar: teacher.display_name_ar, display_name_en: teacher.display_name_en } : null,
     recording_id: recordings.get(row.lesson_id) ?? null,
+  };
+}
+
+const textOf = (text: string | null | undefined): string | null => text?.trim() || null;
+
+/** «ما المطلوب للحلقة القادمة» (docs/50 §2) from the newest SENT report; blank reads null. */
+export function toPrepare(row: PortalReportRow, texts: ReportTexts | null): PortalPrepare {
+  return {
+    homework: textOf(texts?.homework),
+    next_plan: textOf(texts?.next_plan),
+    report_id: row.id,
+    lesson_starts_at: row.lesson?.starts_at ?? null,
   };
 }

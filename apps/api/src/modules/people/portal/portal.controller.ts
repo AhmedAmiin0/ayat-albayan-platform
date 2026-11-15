@@ -1,8 +1,21 @@
-import type { PortalFileUrl, PortalHome, PortalLessons, PortalPackageView, PortalReports, RoomJoinResult } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import {
+  portalHistoryQuerySchema,
+  type PortalFileUrl,
+  type PortalHistory,
+  type PortalHistoryQuery,
+  type PortalHome,
+  type PortalLessons,
+  type PortalPackageView,
+  type PortalReports,
+  type RoomJoinResult,
+} from '@ab/shared';
+import { Controller, Get, HttpCode, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodParam, ZodQuery } from '@/common/http/zod-inputs';
+import { PortalHistoryService } from './history/portal-history.service';
 import { PortalHomeService } from './home/portal-home.service';
 import { PortalLessonsService } from './lessons/portal-lessons.service';
 import { PortalPackageService } from './package/portal-package.service';
@@ -11,10 +24,11 @@ import { PortalReportsService } from './reports/portal-reports.service';
 const UUID = new ParseUUIDPipe();
 
 /**
- * The family portal (docs/31): a guardian login (their students) or a student login (itself), through
- * the self.portal scope key that only those base roles carry. Every :id is resolved by PortalScopes
- * first (404 student_not_found for anyone else's). Responses are whitelists: no money, notes, reasons,
- * teacher contacts or other families.
+ * The family portal (docs/31): a guardian login (their students) or a student login (itself),
+ * through the self.portal scope key that only those base roles carry. Every :id is resolved by
+ * PortalScopes first (404 student_not_found for anyone else's). Responses are whitelists: no notes,
+ * internal reasons, teacher contacts or other families; money only on the package of a guardian or
+ * an adult student (docs/50).
  */
 @ApiTags('portal')
 @ApiBearerAuth()
@@ -22,8 +36,9 @@ const UUID = new ParseUUIDPipe();
 @Controller('portal')
 export class PortalController {
   constructor(
-    private readonly home: PortalHomeService,
-    private readonly lessons: PortalLessonsService,
+    @Inject(PortalHomeService) private readonly home: PortalHomeService,
+    @Inject(PortalLessonsService) private readonly lessons: PortalLessonsService,
+    @Inject(PortalHistoryService) private readonly past: PortalHistoryService,
   ) {}
 
   @Get('me')
@@ -34,6 +49,16 @@ export class PortalController {
   @Get('students/:id/lessons')
   upcoming(@Param('id', UUID) studentId: string, @CurrentUser() user: AuthUser): Promise<PortalLessons> {
     return this.lessons.upcoming({ user, studentId });
+  }
+
+  /** «حضرها» / «غاب عنها» (docs/50 §5): a keyset page of past lessons, newest first. */
+  @Get('students/:id/history')
+  history(
+    @ZodParam('id', z.uuid()) studentId: string,
+    @ZodQuery(portalHistoryQuerySchema) query: PortalHistoryQuery,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PortalHistory> {
+    return this.past.history({ user, studentId, query });
   }
 
   /** «ادخل الحلقة» of a classroom lesson: the room join itself; 404, 409 not_classroom_lesson, 403, 410, 429, 503. */
@@ -51,8 +76,8 @@ export class PortalController {
 @Controller('portal')
 export class PortalRecordsController {
   constructor(
-    private readonly reports: PortalReportsService,
-    private readonly packages: PortalPackageService,
+    @Inject(PortalReportsService) private readonly reports: PortalReportsService,
+    @Inject(PortalPackageService) private readonly packages: PortalPackageService,
   ) {}
 
   @Get('students/:id/reports')

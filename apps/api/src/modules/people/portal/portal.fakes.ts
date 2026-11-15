@@ -8,14 +8,16 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { StorageService } from '@/common/storage/storage.service';
-import { BalanceRepo } from '@/modules/finance/subscriptions';
+import { PackagesService } from '@/modules/finance/subscriptions';
 import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
 import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
+import { PortalHistoryRepo } from './history/portal-history.repo';
 import { ChatNumber } from './home/chat-number';
 import type { PortalLessonRow } from './lessons/portal-lessons.repo';
 import { PortalLessonsRepo } from './lessons/portal-lessons.repo';
 import { PortalPackageRepo } from './package/portal-package.repo';
 import { PortalReportsRepo } from './reports/portal-reports.repo';
+import { familyFakes } from './portal.family.fakes';
 import { PortalScopeRepo } from './scope/portal-scope.repo';
 
 export const S1 = '51000000-0000-4000-8000-000000000001';
@@ -30,11 +32,14 @@ const kid = (id: string, name: string): PortalStudent => ({ id, code: 'AB-0201',
 const FAMILIES: Record<string, PortalStudent[]> = {
   'g-a': [kid(S1, 'سلمى'), kid(S2, 'يوسف')],
   's-1': [kid(S1, 'سلمى')],
+  's-2': [{ ...kid(S2, 'يوسف'), contact_is_self: true }],
   'g-b': [kid(S3, 'مريم')],
 };
 const USERS: Record<string, AuthUser> = {
   guardianA: { id: 'g-a', email: null, role: 'guardian' },
   student1: { id: 's-1', email: null, role: 'student' },
+  /** An adult student who is their own contact (contact_is_self). */
+  adult: { id: 's-2', email: null, role: 'student' },
   guardianB: { id: 'g-b', email: null, role: 'guardian' },
   admin: { id: 'ad', email: null, role: 'admin' },
   teacher: { id: 't1', email: null, role: 'teacher' },
@@ -53,6 +58,8 @@ export const lessonRow = (over: Partial<PortalLessonRow> = {}): PortalLessonRow 
     ...over,
   }) as PortalLessonRow;
 
+const SETTINGS = { meeting_link_auto: false, family_payment_instructions: 'تحويل' };
+
 export async function portalApp() {
   const scope = { studentsOf: vi.fn(async (id: string) => FAMILIES[id] ?? []) };
   const lessons = {
@@ -62,9 +69,10 @@ export async function portalApp() {
     sent: vi.fn(async () => [{ id: R1, lesson_id: L1, sent_at: '2026-10-20T18:00:00.000Z', pdf_path: `${S1}/${L1}.pdf`, notes: 'سر', lesson: { starts_at: '2026-10-20T16:00:00.000Z', teacher: { display_name_ar: 'أبرار', display_name_en: null } } }]),
     oneSent: vi.fn(async (): Promise<{ id: string; lesson_id: string; sent_at: string; pdf_path: string } | null> => ({ id: R1, lesson_id: L1, sent_at: '2026-10-20T18:00:00.000Z', pdf_path: `${S1}/${L1}.pdf` })),
     visibleRecordings: vi.fn(async () => [{ id: REC, lesson_id: L1, file_path: `lessons/${L1}/a.mp4` }]),
+    sentOf: vi.fn(async () => [{ id: R1, lesson_id: 'l-20' }]),
+    texts: vi.fn(async () => ({ homework: ' سورة الملك ', next_plan: '' })),
   };
-  const packages = { packages: vi.fn(async () => [{ id: 'p1', package: '8', duration: 30, lessons_total: 8, starts_on: '2026-10-01', renews_on: '2026-11-01', status: 'active', price: 290, currency: 'SAR', notes: 'سر' }]) };
-  const balances = { forStudents: vi.fn(async () => [{ subscription_id: 'p1', remaining: 5 }]), forSubscriptions: vi.fn() };
+  const { money, packages, history } = familyFakes();
   const classroom = {
     student: vi.fn(async () => ({ id: S1, name: 'سلمى أحمد' })),
     joinWindow: vi.fn(async () => ({ opensBeforeMin: 10, closesAfterMin: 15 })),
@@ -82,16 +90,18 @@ export async function portalApp() {
     .overrideProvider(PortalLessonsRepo).useValue(lessons)
     .overrideProvider(PortalReportsRepo).useValue(reports)
     .overrideProvider(PortalPackageRepo).useValue(packages)
-    .overrideProvider(BalanceRepo).useValue(balances)
+    .overrideProvider(PackagesService).useValue(money)
+    .overrideProvider(PortalHistoryRepo).useValue(history)
     .overrideProvider(StudentLinkRepo).useValue(classroom)
     .overrideProvider(RoomAdmission).useValue(admission)
     .overrideProvider(StorageService).useValue(storage)
     .overrideProvider(ChatNumber).useValue(chat)
-    .overrideProvider(SettingsService).useValue(fakeSettings({ meeting_link_auto: false }));
+    .overrideProvider(SettingsService).useValue(fakeSettings(SETTINGS));
   const app = await bootWith(builder, USERS);
   const call = (method: 'GET' | 'POST', url: string, who?: Who) =>
     app.inject({ method, url, headers: who ? { authorization: `Bearer ${who}` } : {} });
-  return { app, call, scope, lessons, reports, packages, balances, classroom, admission, storage, chat };
+  const fakes = { scope, lessons, reports, packages, money, history, classroom, admission };
+  return { app, call, ...fakes, storage, chat };
 }
 
 /** Every key at any depth of a JSON value. */

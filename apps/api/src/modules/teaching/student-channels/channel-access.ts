@@ -1,11 +1,17 @@
-import { CHANNEL_GUARDIAN_ONLY, familyChats, type ChannelSenderRole } from '@ab/shared';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  CHANNEL_GUARDIAN_ONLY,
+  FAMILY_CHAT_OFF,
+  familyChats,
+  type ChannelSenderRole,
+} from '@ab/shared';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
 import { PortalScopes } from '@/modules/people/portal';
 import { TeachersRepo } from '@/modules/people/teachers';
 import { ChannelPeopleRepo } from './channel-people.repo';
 import { ChannelRepo } from './channel.repo';
+import { FamilyChatSettings } from './family-chat.settings';
 
 /**
  * Who is in a channel and how: a participant writes and has read marks; a monitor only reads. `open`:
@@ -16,12 +22,13 @@ export type ChannelActor =
   | { mode: 'participant'; studentId: string; profileId: string; role: ChannelSenderRole; open: boolean }
   | { mode: 'monitor'; studentId: string; profileId: string; open: boolean };
 
-/** ChannelAccess's people lookups, grouped (max-params). */
+/** ChannelAccess's people lookups and the family chat switch, grouped (max-params). */
 @Injectable()
 export class AccessDeps {
   constructor(
-    readonly teachers: TeachersRepo,
-    readonly portal: PortalScopes,
+    @Inject(TeachersRepo) readonly teachers: TeachersRepo,
+    @Inject(PortalScopes) readonly portal: PortalScopes,
+    @Inject(FamilyChatSettings) readonly familyChat: FamilyChatSettings,
   ) {}
 }
 
@@ -31,13 +38,14 @@ export class AccessDeps {
  * (familyChats, owner 2026-10-29: a child's own login is 403 channel_guardian_only). Monitors (read-only): anyone
  * the route's student_channels.monitor key let in, and the owning assistant (sales ownership). Another
  * teacher, family or assistant is 404 student_not_found (as an unknown id).
+ * Every family path is 403 family_chat_off while settings.family_chat_enabled is off (docs/50 §2).
  */
 @Injectable()
 export class ChannelAccess {
   constructor(
-    private readonly queries: ChannelRepo,
-    private readonly people: ChannelPeopleRepo,
-    private readonly deps: AccessDeps,
+    @Inject(ChannelRepo) private readonly queries: ChannelRepo,
+    @Inject(ChannelPeopleRepo) private readonly people: ChannelPeopleRepo,
+    @Inject(AccessDeps) private readonly deps: AccessDeps,
   ) {}
 
   async teacher(user: AuthUser, studentId: string): Promise<ChannelActor> {
@@ -49,6 +57,8 @@ export class ChannelAccess {
 
   async family(user: AuthUser, studentId: string): Promise<ChannelActor> {
     const student = await this.deps.portal.student(user, studentId);
+    // After the scope: another family's id stays 404 whatever the switch (docs/50 §4).
+    if (!(await this.deps.familyChat.enabled())) throw forbidden(FAMILY_CHAT_OFF);
     if (user.role !== 'guardian' && user.role !== 'student') throw new ForbiddenException();
     if (!familyChats({ kind: user.role, contactIsSelf: student.contact_is_self })) throw forbidden(CHANNEL_GUARDIAN_ONLY);
     return { mode: 'participant', studentId, profileId: user.id, role: user.role, open: await this.queries.isOpen(studentId) };

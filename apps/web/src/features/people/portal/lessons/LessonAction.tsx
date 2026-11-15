@@ -1,10 +1,11 @@
-import { clockOf, isOpenLesson, type PortalLesson, type RoomJoinResult } from '@ab/shared';
+import { lessonWait, type LessonWait } from '@ab/client-core';
+import { clockOf, type PortalLesson, type RoomJoinResult } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { buttonVariants, Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { classroomErrorText, windowStateAt } from '@/features/teaching/classroom';
+import { classroomErrorText } from '@/features/teaching/classroom';
 import { t } from '@/lib/i18n/i18n';
-import { portalJoin } from '@/features/people/portal/api';
+import { portalApi } from '@/features/people/portal/api';
 import { type Clock, useClock } from '@/lib/clock';
 
 interface Props {
@@ -12,34 +13,43 @@ interface Props {
   studentId: string;
   tz: string;
   now: Date;
-  /** Our classroom admitted the student: the panel opens the room. */
+  /** Our classroom admitted the student: the card opens the room. */
   onJoined: (join: RoomJoinResult) => void;
 }
 
+type ZonedClock = Clock & { tz: string };
+
+/** Why there is no button (@ab/client-core lessonWait), in the family's words. */
+const WAIT_TEXT: Record<LessonWait, (lesson: PortalLesson, clock: ZonedClock) => string> = {
+  cancelled: () => t.portal.cancelled,
+  closed: () => t.portal.closed,
+  noWayIn: () => t.portal.noWayIn,
+  opensAt: (lesson, clock) =>
+    t.portal.opensAt.replace('{time}', clockOf(new Date(lesson.window.opens_at), clock)),
+};
+
 const Hint = ({ text }: { text: string }) => <p className="text-sm text-ink-2">{text}</p>;
 
-/** Why there is no button: cancelled, over, not open yet, or no way in known. */
-function waitText(lesson: PortalLesson, now: Date, clock: Clock & { tz: string }): string | null {
-  if (lesson.status.startsWith('cancelled')) return t.portal.cancelled;
-  const state = windowStateAt(lesson.window, now);
-  if (state === 'closed' || !isOpenLesson(lesson.status)) return t.portal.closed;
-  if (lesson.way_in === 'none') return t.portal.noWayIn;
-  if (state === 'early') return t.portal.opensAt.replace('{time}', clockOf(new Date(lesson.window.opens_at), clock));
-  // The API sends the external link only while the room is open; until the next refresh it may be missing.
-  return lesson.way_in === 'external' && !lesson.meeting_url ? t.portal.noWayIn : null;
-}
-
 /**
- * «ادخل الحلقة», only inside the join window: our classroom admits the student through the API and the
- * room opens here; an external lesson opens its own meeting link (sent only while the room is open).
+ * «ادخل الحلقة», only inside the join window: our classroom admits the student through the API and
+ * the room opens here; an external lesson opens its own meeting link (sent only while it is open).
  */
 export function LessonAction({ lesson, studentId, tz, now, onJoined }: Props) {
-  const join = useMutation({ mutationFn: () => portalJoin({ studentId, lessonId: lesson.id }), onSuccess: (room) => onJoined(room) });
-  const wait = waitText(lesson, now, { ...useClock(), tz });
-  if (wait) return <Hint text={wait} />;
+  const clock = useClock();
+  const join = useMutation({
+    mutationFn: () => portalApi.join({ studentId, lessonId: lesson.id }),
+    onSuccess: (room) => onJoined(room),
+  });
+  const wait = lessonWait(lesson, now);
+  if (wait) return <Hint text={WAIT_TEXT[wait](lesson, { ...clock, tz })} />;
   if (lesson.way_in === 'external' && lesson.meeting_url) {
     return (
-      <a href={lesson.meeting_url} target="_blank" rel="noopener noreferrer" className={buttonVariants({ size: 'lg' })}>
+      <a
+        href={lesson.meeting_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={buttonVariants({ size: 'lg' })}
+      >
         {t.portal.join}
       </a>
     );
@@ -47,7 +57,13 @@ export function LessonAction({ lesson, studentId, tz, now, onJoined }: Props) {
   return (
     <div className="grid gap-2">
       {join.isError && <FormAlert>{classroomErrorText(join.error)}</FormAlert>}
-      <Button type="button" size="lg" disabled={join.isPending} onClick={() => join.mutate()}>
+      <Button
+        type="button"
+        size="lg"
+        className="transition-transform active:scale-[0.98]"
+        disabled={join.isPending}
+        onClick={() => join.mutate()}
+      >
         {join.isPending ? t.portal.joining : t.portal.join}
       </Button>
     </div>

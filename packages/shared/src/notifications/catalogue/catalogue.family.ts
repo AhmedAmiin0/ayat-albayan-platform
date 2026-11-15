@@ -1,0 +1,23 @@
+import type { NotificationEntry } from './catalogue.types.js';
+
+// The family app's own pushes (docs/50 §5 item 6): to the guardian and the student logins only,
+// in their bell and on their devices. No WhatsApp (that stays the report PDF and the reminders).
+// On by default; the admin turns either off, or keeps its bell row only, on today's rule screen.
+
+const FAMILY = {
+  audience: 'guardian',
+  channels: ['bell', 'push'],
+  templates: [],
+  automatic: false,
+  manual: false,
+  essential: false,
+  locked: false,
+  defaults: { enabled: true },
+} as const;
+
+export const FAMILY_ENTRIES = [
+  // The lesson's join window opened (settings.join_opens_before_min): «ادخل الحلقة» works now.
+  { ...FAMILY, key: 'lesson_starting', pushKind: 'lesson_starting' },
+  // The lesson report reached the family (lesson_reports.sent_at stamped).
+  { ...FAMILY, key: 'report_sent', pushKind: 'report_sent' },
+] as const satisfies readonly NotificationEntry[];

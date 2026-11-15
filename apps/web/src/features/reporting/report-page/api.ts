@@ -1,6 +1,7 @@
+import { portalQueries } from '@ab/client-core';
 import { reportPageViewSchema, type ReportPageView } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@/lib/http/api';
 
 /** TanStack key of a report's live page. */
 export const reportPageKey = (publicId: string) => ['report-page', publicId] as const;
@@ -19,12 +20,7 @@ export const reportPageQuery = (publicId: string) =>
 
 /**
  * GET /report-pages/by-report/:reportId: the same page, opened from the lesson row of the
- * teacher's student file (docs/49). A report filed under another teacher id answers 404.
+ * teacher's student file (docs/49) or a family's attended lesson (docs/50); shared with the apps
+ * through @ab/client-core. A report the reader may not read answers 404.
  */
-export const reportPageByIdQuery = (reportId: string) =>
-  queryOptions<ReportPageView>({
-    queryKey: ['report-page', 'by-report', reportId],
-    queryFn: async () =>
-      reportPageViewSchema.parse(await apiFetch(`/report-pages/by-report/${reportId}`)),
-    retry: false,
-  });
+export const { reportPageByIdQuery } = portalQueries({ apiFetch, apiSend });

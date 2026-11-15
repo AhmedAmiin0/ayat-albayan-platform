@@ -29,10 +29,6 @@
   "portal": {
     "dashboardTitle": "متابعة الطالب",
     "myChildren": "أبنائي",
-    "myAccount": "حسابي",
-    "sections": "أقسام المتابعة",
-    "lessonsTab": "الحلقات القادمة",
-    "reportsTab": "تقارير الحلقات",
     "packageTab": "الباقة",
     "withTeacher": "مع {teacher}",
     "join": "ادخل الحلقة",
@@ -42,11 +38,7 @@
     "noWayIn": "سيصلكم رابط الحلقة قبل موعدها",
     "lessonsEmpty": "لا توجد حلقات في الأيام الأربعة عشر القادمة",
     "lessonsEmptyHint": "ستظهر هنا الحلقات فور حجزها.",
-    "reportsEmpty": "لا توجد تقارير مرسلة بعد",
-    "reportsEmptyHint": "يظهر هنا كل تقرير حلقة يُرسل إليكم.",
-    "reportOf": "تقرير حلقة {date}",
-    "sentOn": "أُرسل في {date}",
-    "openReport": "افتح التقرير",
+    "openReport": "افتح تقرير الحلقة",
     "openRecording": "شاهد التسجيل",
     "fileFailed": "تعذّر فتح الملف، أعد المحاولة.",
     "packageEmpty": "لا توجد باقة حالية",
@@ -57,7 +49,6 @@
     "minutes": "{n} دقيقة",
     "startsOn": "بداية الباقة",
     "renewsOn": "موعد التجديد",
-    "renew": "تواصل معنا للتجديد",
     "loadFailed": "تعذّر تحميل البيانات.",
     "retry": "أعد المحاولة",
     "noStudents": "لا يوجد طالب مرتبط بهذا الحساب بعد",
@@ -71,7 +62,53 @@
       "cancelled": "ملغاة"
     },
     "cancelled": "أُلغيت هذه الحلقة",
-    "remainingHint": "من كل باقات الطالب"
+    "remainingHint": "من كل باقات الطالب",
+    "upcomingTab": "القادمة",
+    "attendedTab": "حضرها",
+    "absentTab": "غاب عنها",
+    "childTabs": "أقسام متابعة الطالب",
+    "allChildren": "كل الأبناء",
+    "openChild": "عرض الحلقات والتقارير",
+    "code": "رقم الطالب: {code}",
+    "nextLesson": "الحلقة القادمة",
+    "now": "الحلقة جارية الآن",
+    "opensIn": "يُتاح الدخول بعد {time}",
+    "startsIn": "تبدأ الحلقة بعد {time}",
+    "days": {
+      "one": "يوم واحد",
+      "two": "يومان",
+      "few": "{n} أيام",
+      "other": "{n} يومًا"
+    },
+    "prepareTitle": "ما المطلوب للحلقة القادمة",
+    "homework": "الواجب المطلوب قبل الحلقة القادمة",
+    "nextPlan": "خطة الحلقة القادمة",
+    "thisMonth": "هذا الشهر",
+    "monthAttended": "حضر {n}",
+    "monthAbsent": "غاب {n}",
+    "usedOf": "{used} من {total}",
+    "usedOfHint": "الحلقات المستخدمة من الباقة",
+    "amountDue": "المبلغ المستحق",
+    "payments": "سجل المدفوعات",
+    "paymentInstructions": "طريقة الدفع",
+    "newReport": "جديد",
+    "newReports": {
+      "one": "تقرير جديد",
+      "two": "تقريران جديدان",
+      "few": "{n} تقارير جديدة",
+      "other": "{n} تقريرًا جديدًا"
+    },
+    "attendedEmpty": "لا توجد حلقات حضرها بعد",
+    "attendedEmptyHint": "تظهر هنا الحلقات التي حضرها الطالب مع تقاريرها.",
+    "absentEmpty": "لا توجد حلقات غاب عنها",
+    "absentEmptyHint": "تظهر هنا الحلقات التي غاب عنها الطالب.",
+    "excused": "غياب بعذر",
+    "absenceReason": "السبب: {reason}",
+    "more": "عرض المزيد",
+    "loadingMore": "جارٍ التحميل…",
+    "reportTitle": "تقرير الحلقة",
+    "backToLessons": "العودة إلى الحلقات",
+    "openPdf": "افتح ملف PDF"
   },
   "mobile": {
     "pushTitle": "تفعيل الإشعارات",
@@ -4057,6 +4094,14 @@
     "payment_received": {
       "title": "تم استلام دفعة",
       "body": "{student}: {amount}"
+    },
+    "lesson_starting": {
+      "title": "الحلقة على وشك البدء",
+      "body": "حلقة {student} في {when}: يمكنك الدخول الآن"
+    },
+    "report_sent": {
+      "title": "وصل تقرير الحلقة",
+      "body": "تقرير حلقة {student} في {when} متاح الآن"
     }
   },
   "bell": {
@@ -4286,7 +4331,9 @@
       "lesson_cancelled": "إلغاء حلقة",
       "course_paused": "إيقاف الحلقات مؤقتًا",
       "course_resumed": "استئناف الحلقات",
-      "payment_received": "تم استلام دفعة"
+      "payment_received": "تم استلام دفعة",
+      "lesson_starting": "الحلقة على وشك البدء",
+      "report_sent": "وصل تقرير الحلقة"
     },
     "paymentKind": {
       "payment": "دفعة",
@@ -6895,6 +6942,14 @@
       "payment_received": {
         "name": "تم استلام دفعة",
         "trigger": "عند تسجيل دفعة واردة لطالب، إلى الإدارة والمساعد المتابع للطالب"
+      },
+      "lesson_starting": {
+        "name": "الحلقة على وشك البدء",
+        "trigger": "عند فتح باب الدخول إلى الحلقة، إلى ولي الأمر والطالب في تطبيق الأسرة"
+      },
+      "report_sent": {
+        "name": "وصول تقرير الحلقة",
+        "trigger": "عند إرسال تقرير الحلقة إلى الأسرة، إلى ولي الأمر والطالب في تطبيق الأسرة"
       }
     }
   },
@@ -7478,7 +7533,8 @@
       "notifications": "الإشعارات",
       "sending": "الإرسال والحماية",
       "google": "مزامنة Google",
-      "teachers": "صفحات المعلم"
+      "teachers": "صفحات المعلم",
+      "family": "تطبيق الأسر"
     },
     "all": "الكل",
     "clearSearch": "امسح البحث",
@@ -7697,7 +7753,8 @@
       "notifications": "الإشعارات (للاطلاع)",
       "sending": "الإرسال والحماية (للاطلاع)",
       "google": "مزامنة Google (للاطلاع)",
-      "teachers": "صفحات المعلم"
+      "teachers": "صفحات المعلم",
+      "family": "تطبيق الأسر"
     },
     "name": "الاسم",
     "value": "القيمة",
@@ -8109,7 +8166,11 @@
       "ttl": "مدة صلاحية الرمز (بالدقائق)",
       "ttlHint": "بعدها يلزم طلب رمز جديد.",
       "attempts": "عدد المحاولات لكل رمز",
-      "attemptsHint": "بعد استنفادها يلزم طلب رمز جديد."
+      "attemptsHint": "بعد استنفادها يلزم طلب رمز جديد.",
+      "chat": "المحادثة داخل تطبيق الأسر",
+      "chatHint": "عند التشغيل يراسل ولي الأمر والطالب البالغ المعلم من التطبيق وصفحات الأسر. عند الإيقاف تختفي المحادثة ولا تُقبل أي رسالة.",
+      "paymentInstructions": "تعليمات الدفع للأسر",
+      "paymentInstructionsHint": "تظهر تحت المبلغ المستحق في صفحة الباقة (مثل بيانات التحويل البنكي). اتركها فارغة لإخفائها."
     },
     "teacherUsername": {
       "label": "اسم المستخدم",

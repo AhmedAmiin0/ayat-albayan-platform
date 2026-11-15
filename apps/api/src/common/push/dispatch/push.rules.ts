@@ -1,9 +1,9 @@
-import { notificationEntry, type NotificationKey, type PushKind } from '@ab/shared';
+import { notificationEntry, type NotificationKey, type AnyPushKind } from '@ab/shared';
 import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
 import { ruleOf } from '@/common/rules/rule-of';
 
 /** Each push kind's catalogue row (docs/23a §B3 P1–P9; catalogue.test.ts keeps them in step). */
-const ROW_OF: Record<PushKind, NotificationKey> = {
+const ROW_OF: Record<AnyPushKind, NotificationKey> = {
   new_lead: 'new_lead',
   new_message: 'new_message',
   lesson_needs_confirmation: 'lesson_needs_confirmation',
@@ -20,6 +20,8 @@ const ROW_OF: Record<PushKind, NotificationKey> = {
   course_paused: 'course_paused',
   course_resumed: 'course_resumed',
   payment_received: 'payment_received',
+  lesson_starting: 'lesson_starting',
+  report_sent: 'report_sent',
 };
 
 /** Where a staff notification goes: the bell row (push_notifications), and the browser / app push. */
@@ -33,7 +35,7 @@ export interface PushRoute {
  * channels → the bell row only. Rules unreadable (null snapshot): the bell row still (an alert is never
  * lost), no device push; a locked row (reminder_failed) keeps both. Pure.
  */
-export function pushRoute(snap: RulesSnapshot | null, kind: PushKind): PushRoute {
+export function pushRoute(snap: RulesSnapshot | null, kind: AnyPushKind): PushRoute {
   const key = ROW_OF[kind];
   if (!snap) return { bell: true, push: notificationEntry(key).locked };
   const rule = ruleOf(snap, key);

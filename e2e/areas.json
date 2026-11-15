@@ -81,6 +81,7 @@
         "sales/chat-subscribe.spec.ts",
         "platform/config-parity.api.spec.ts",
         "teaching/edit-session-time.spec.ts",
+        "people/family-portal.spec.ts",
         "people/family-sign-in.api.spec.ts",
         "people/family-sign-in.spec.ts",
         "reporting/feedback.spec.ts",
@@ -315,7 +316,8 @@
         "apps/api/src/modules/people/roles/",
         "apps/api/src/modules/people/me/",
         "apps/api/src/modules/people/portal/",
-        "apps/api/src/modules/people/presence/"
+        "apps/api/src/modules/people/presence/",
+        "apps/web/src/routes/portal.tsx"
       ],
       "specs": [
         "people/account.api.spec.ts",
@@ -323,6 +325,7 @@
         "people/account.spec.ts",
         "sales/assistant-scope.api.spec.ts",
         "people/assistants-admin.spec.ts",
+        "people/family-portal.spec.ts",
         "people/family-sign-in.api.spec.ts",
         "people/family-sign-in.spec.ts",
         "platform/forms-parity.spec.ts",

@@ -1,3 +1,4 @@
+import { FAMILY_ENTRIES } from './catalogue.family.js';
 import { MANUAL_ENTRIES, PUSH_ENTRIES } from './catalogue.other.js';
 import type { NotificationEntry } from './catalogue.types.js';
 import { SCHEDULE_ENTRIES } from './catalogue.schedule.js';
@@ -8,12 +9,14 @@ export * from './catalogue.types.js';
 /**
  * Every notification the academy sends (docs/23 §2b), in the order «ماذا يُرسل ومتى» lists them:
  * families' WhatsApp first (the schedule changes also to the teacher), then the hand sends, then
- * the staff's bell and push. A new producer needs a row here (catalogue.test.ts fails otherwise).
+ * the family app's pushes, then the staff's bell and push. A new producer needs a row here
+ * (catalogue.test.ts fails otherwise).
  */
 export const NOTIFICATION_CATALOGUE = [
   ...WHATSAPP_ENTRIES,
   ...SCHEDULE_ENTRIES,
   ...MANUAL_ENTRIES,
+  ...FAMILY_ENTRIES,
   ...PUSH_ENTRIES,
 ] as const;
 

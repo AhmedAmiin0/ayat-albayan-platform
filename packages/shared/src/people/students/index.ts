@@ -1,6 +1,7 @@
 export * from './status-flow.js';
 export * from './trial-dates.js';
 export * from './portal.js';
+export * from './portal-family.js';
 export * from './course-pause.js';
 export * from './course-stop.js';
 export * from './stop-refund.js';

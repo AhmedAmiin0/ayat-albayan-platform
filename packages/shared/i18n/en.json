@@ -29,10 +29,6 @@
   "portal": {
     "dashboardTitle": "Student progress",
     "myChildren": "My children",
-    "myAccount": "My account",
-    "sections": "Portal sections",
-    "lessonsTab": "Upcoming lessons",
-    "reportsTab": "Lesson reports",
     "packageTab": "Package",
     "withTeacher": "with {teacher}",
     "join": "Join the lesson",
@@ -42,11 +38,7 @@
     "noWayIn": "The lesson link will reach you before it starts",
     "lessonsEmpty": "No lessons in the next 14 days",
     "lessonsEmptyHint": "Lessons appear here as soon as they are booked.",
-    "reportsEmpty": "No reports sent yet",
-    "reportsEmptyHint": "Every lesson report sent to you appears here.",
-    "reportOf": "Report of the {date} lesson",
-    "sentOn": "Sent on {date}",
-    "openReport": "Open the report",
+    "openReport": "Open the lesson report",
     "openRecording": "Watch the recording",
     "fileFailed": "Couldn't open the file. Try again.",
     "packageEmpty": "No current package",
@@ -57,7 +49,6 @@
     "minutes": "{n} minutes",
     "startsOn": "Package start",
     "renewsOn": "Renewal date",
-    "renew": "Contact us to renew",
     "loadFailed": "Couldn't load the data.",
     "retry": "Try again",
     "noStudents": "No student is linked to this account yet",
@@ -71,7 +62,53 @@
       "cancelled": "Cancelled"
     },
     "cancelled": "This lesson was cancelled",
-    "remainingHint": "across all of the student’s packages"
+    "remainingHint": "across all of the student’s packages",
+    "upcomingTab": "Upcoming",
+    "attendedTab": "Attended",
+    "absentTab": "Missed",
+    "childTabs": "Student sections",
+    "allChildren": "All children",
+    "openChild": "View lessons and reports",
+    "code": "Student code: {code}",
+    "nextLesson": "Next lesson",
+    "now": "The lesson is on now",
+    "opensIn": "You can join in {time}",
+    "startsIn": "The lesson starts in {time}",
+    "days": {
+      "one": "1 day",
+      "two": "2 days",
+      "few": "{n} days",
+      "other": "{n} days"
+    },
+    "prepareTitle": "What to prepare for the next lesson",
+    "homework": "Homework before the next lesson",
+    "nextPlan": "Plan for the next lesson",
+    "thisMonth": "This month",
+    "monthAttended": "Attended {n}",
+    "monthAbsent": "Missed {n}",
+    "usedOf": "{used} of {total}",
+    "usedOfHint": "Lessons used from the package",
+    "amountDue": "Amount due",
+    "payments": "Payment history",
+    "paymentInstructions": "How to pay",
+    "newReport": "New",
+    "newReports": {
+      "one": "1 new report",
+      "two": "2 new reports",
+      "few": "{n} new reports",
+      "other": "{n} new reports"
+    },
+    "attendedEmpty": "No attended lessons yet",
+    "attendedEmptyHint": "Lessons the student attended appear here with their reports.",
+    "absentEmpty": "No missed lessons",
+    "absentEmptyHint": "Lessons the student missed appear here.",
+    "excused": "Excused absence",
+    "absenceReason": "Reason: {reason}",
+    "more": "Show more",
+    "loadingMore": "Loading…",
+    "reportTitle": "Lesson report",
+    "backToLessons": "Back to the lessons",
+    "openPdf": "Open the PDF"
   },
   "mobile": {
     "pushTitle": "Turn on notifications",
@@ -4057,6 +4094,14 @@
     "payment_received": {
       "title": "Payment received",
       "body": "{student}: {amount}"
+    },
+    "lesson_starting": {
+      "title": "Lesson starting soon",
+      "body": "{student}'s lesson at {when}: you can join now"
+    },
+    "report_sent": {
+      "title": "Lesson report received",
+      "body": "{student}'s lesson report for {when} is ready"
     }
   },
   "bell": {
@@ -4286,7 +4331,9 @@
       "lesson_cancelled": "Lesson cancelled",
       "course_paused": "Lessons paused",
       "course_resumed": "Lessons resumed",
-      "payment_received": "Payment received"
+      "payment_received": "Payment received",
+      "lesson_starting": "Lesson starting soon",
+      "report_sent": "Lesson report received"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -6895,6 +6942,14 @@
       "payment_received": {
         "name": "Payment received",
         "trigger": "When an incoming payment is recorded for a student, to the administration and the student's assistant"
+      },
+      "lesson_starting": {
+        "name": "Lesson starting soon",
+        "trigger": "When the lesson's join window opens, to the guardian and the student in the family app"
+      },
+      "report_sent": {
+        "name": "Lesson report received",
+        "trigger": "When the lesson report is sent to the family, to the guardian and the student in the family app"
       }
     }
   },
@@ -7478,7 +7533,8 @@
       "notifications": "Notifications",
       "sending": "Sending and safety",
       "google": "Google sync",
-      "teachers": "Teacher pages"
+      "teachers": "Teacher pages",
+      "family": "Family app"
     },
     "all": "All",
     "clearSearch": "Clear search",
@@ -7697,7 +7753,8 @@
       "notifications": "Notifications (view only)",
       "sending": "Sending and safety (view only)",
       "google": "Google sync (view only)",
-      "teachers": "Teacher pages"
+      "teachers": "Teacher pages",
+      "family": "Family app"
     },
     "name": "Name",
     "value": "Value",
@@ -8109,7 +8166,11 @@
       "ttl": "Code lifetime (minutes)",
       "ttlHint": "After that a new code is needed.",
       "attempts": "Attempts per code",
-      "attemptsHint": "Once used up, a new code is needed."
+      "attemptsHint": "Once used up, a new code is needed.",
+      "chat": "In-app chat for families",
+      "chatHint": "When on, guardians and adult students message the teacher from the app and the family pages. When off, the chat is hidden and no message is accepted.",
+      "paymentInstructions": "Payment instructions for families",
+      "paymentInstructionsHint": "Shown under the amount due on the package page (e.g. bank transfer details). Leave empty to hide."
     },
     "teacherUsername": {
       "label": "Username",

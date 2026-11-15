@@ -68,6 +68,8 @@ export const SETTINGS_LAYOUT = {
     'family_login_enabled',
     'login_code_ttl_minutes',
     'login_code_max_attempts',
+    'family_chat_enabled',
+    'family_payment_instructions',
     'presence_enabled',
     'recording_retention_days',
     'activity_retention_days',

@@ -18,6 +18,18 @@ export interface PortalRecordingRow {
   file_path: string;
 }
 
+/** A sent report of a lesson: which one, nothing of its content. */
+interface SentRef {
+  id: string;
+  lesson_id: string;
+}
+
+/** The two texts the family prepares from («الواجب», «خطة الحلقة القادمة»). */
+export interface ReportTexts {
+  homework: string | null;
+  next_plan: string | null;
+}
+
 const LIMIT = 60;
 
 /**
@@ -28,14 +40,37 @@ const LIMIT = 60;
 export class PortalReportsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async sent(studentId: string): Promise<PortalReportRow[]> {
-    const { data, error } = await this.sentQuery(studentId).order('sent_at', { ascending: false }).limit(LIMIT);
+  /** The newest sent reports first (`limit` 1: the one «ما المطلوب» reads). */
+  async sent(studentId: string, limit = LIMIT): Promise<PortalReportRow[]> {
+    const { data, error } = await this.sentQuery(studentId)
+      .order('sent_at', { ascending: false })
+      .limit(limit);
     if (error) throw dbError(error);
     return this.withLessons(data);
   }
 
   async oneSent(input: { studentId: string; reportId: string }): Promise<Omit<PortalReportRow, 'lesson'> | null> {
     const { data, error } = await this.sentQuery(input.studentId).eq('id', input.reportId).maybeSingle();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The sent reports of these lessons (the history's report_id). */
+  async sentOf(input: { studentId: string; lessonIds: readonly string[] }): Promise<SentRef[]> {
+    if (input.lessonIds.length === 0) return [];
+    const { data, error } = await this.sentQuery(input.studentId)
+      .in('lesson_id', [...input.lessonIds]);
+    if (error) throw dbError(error);
+    return data.map((r) => ({ id: r.id, lesson_id: r.lesson_id }));
+  }
+
+  /** «ما المطلوب» (docs/50 §2): the texts of a report the sent rule already picked. */
+  async texts(reportId: string): Promise<ReportTexts | null> {
+    const { data, error } = await this.db
+      .from('lesson_reports')
+      .select('homework, next_plan')
+      .eq('id', reportId)
+      .maybeSingle();
     if (error) throw dbError(error);
     return data;
   }

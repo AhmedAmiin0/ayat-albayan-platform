@@ -1,9 +1,10 @@
 import { isOpenLesson, joinWindowConfig, PORTAL_LESSON_DAYS, type PortalLessons, type RoomJoinResult } from '@ab/shared';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { StudentLinkService } from '@/modules/teaching/classroom';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
+import { PortalLessonExtras } from './portal-lesson-extras';
 import { toPortalLesson, wayIn } from './portal-lessons.mapper';
 import { PortalLessonsRepo } from './portal-lessons.repo';
 
@@ -19,27 +20,30 @@ interface LessonCall {
  * «الحلقات القادمة» (docs/31): the caller's student's lessons of the next PORTAL_LESSON_DAYS days (and the
  * one running now), with the way in. A classroom lesson's «ادخل الحلقة» is the student-link guest join
  * (StudentLinkService.portalJoin: same window, same (lesson, student) row, no token handed out).
+ * «ما المطلوب» and this month's counts ride along (PortalLessonExtras, docs/50).
  */
 @Injectable()
 export class PortalLessonsService {
   constructor(
-    private readonly scopes: PortalScopes,
-    private readonly queries: PortalLessonsRepo,
-    private readonly rooms: StudentLinkService,
+    @Inject(PortalScopes) private readonly scopes: PortalScopes,
+    @Inject(PortalLessonsRepo) private readonly queries: PortalLessonsRepo,
+    @Inject(StudentLinkService) private readonly rooms: StudentLinkService,
+    @Inject(PortalLessonExtras) private readonly extras: PortalLessonExtras,
   ) {}
 
   async upcoming(call: LessonCall, now = new Date()): Promise<PortalLessons> {
-    await this.scopes.student(call.user, call.studentId);
+    const student = await this.scopes.student(call.user, call.studentId);
     const values = await this.queries.readSettings();
     const win = joinWindowConfig(values);
     const since = new Date(now.getTime() - win.closesAfterMin * MIN_MS).toISOString();
     const until = new Date(now.getTime() + PORTAL_LESSON_DAYS * DAY_MS).toISOString();
-    const [rows, override] = await Promise.all([
+    const [rows, override, extras] = await Promise.all([
       this.queries.ahead({ studentId: call.studentId, since, until }),
       this.queries.override(call.studentId),
+      this.extras.of(student, now),
     ]);
     const ctx = { academyAuto: values.meeting_link_auto, override, classroom: this.rooms.classroomReady(), win, now };
-    return { lessons: rows.map((row) => toPortalLesson(row, ctx)) };
+    return { lessons: rows.map((row) => toPortalLesson(row, ctx)), ...extras };
   }
 
   /**

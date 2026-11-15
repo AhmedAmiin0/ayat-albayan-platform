@@ -525,7 +525,7 @@
   },
   "src/people/students/portal.ts": {
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/people/students/status-flow.test.ts": {

@@ -1,4 +1,4 @@
-import { webNotificationPath, type PushKind } from '@ab/shared';
+import { webNotificationPath, type AnyPushKind } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pushText, type PushText } from './expo/expo-push';
@@ -24,7 +24,7 @@ export interface PushEvent {
 
 /** One event for the given profiles (a teacher's new student, …). */
 export interface PushTarget extends PushEvent {
-  kind: PushKind;
+  kind: AnyPushKind;
   profileIds: readonly string[];
 }
 
@@ -56,7 +56,7 @@ export class PushService {
   ) {}
 
   /** Every enabled base-role admin (still filtered by permission per kind). */
-  async notifyAdmins(kind: PushKind, event: PushEvent): Promise<void> {
+  async notifyAdmins(kind: AnyPushKind, event: PushEvent): Promise<void> {
     try {
       await this.notifyProfiles({ ...event, kind, profileIds: await this.audience.adminIds() });
     } catch (e) {
@@ -69,7 +69,7 @@ export class PushService {
    * an unowned family, or no owner eligible) → every enabled salesperson. An admin owner's row
    * deduplicates against notifyAdmins (same dedup key), so it does not spread to the assistants.
    */
-  async notifySales(kind: PushKind, event: PushEvent, owners: readonly string[]): Promise<void> {
+  async notifySales(kind: AnyPushKind, event: PushEvent, owners: readonly string[]): Promise<void> {
     try {
       const owned = owners.length ? await this.audience.recipients(kind, owners) : [];
       const ids = owned.length ? owned.map((p) => p.id) : await this.audience.salesIds();

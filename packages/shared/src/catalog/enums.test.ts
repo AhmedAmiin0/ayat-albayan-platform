@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
 import * as E from '@ab/catalog';
 
@@ -28,7 +28,7 @@ const LABELLED: [keyof typeof ar.enums, readonly (string | number)[]][] = [
   ['messageStatus', E.MESSAGE_STATUSES],
   ['templateStatus', E.TEMPLATE_STATUSES],
   ['templateCategory', E.TEMPLATE_CATEGORIES],
-  ['pushKind', E.PUSH_KINDS],
+  ['pushKind', E.ALL_PUSH_KINDS],
   ['waLine', E.NUMBER_PURPOSES],
   ['feedbackKind', E.FEEDBACK_KINDS],
   ['feedbackRecommend', E.FEEDBACK_RECOMMEND],
@@ -37,6 +37,11 @@ const LABELLED: [keyof typeof ar.enums, readonly (string | number)[]][] = [
 describe('enums ↔ ar.json labels (rule 10, R-NFR-01)', () => {
   it.each(LABELLED)('every %s value has an Arabic label', (ns, values) => {
     expect(Object.keys(ar.enums[ns]).sort()).toEqual(values.map(String).sort());
+  });
+
+  it('the staff and family push kinds split the DB enum exactly, without overlap', () => {
+    expectTypeOf<E.AnyPushKind>().toEqualTypeOf<E.PushKind | E.FamilyPushKind>();
+    expect(new Set(E.ALL_PUSH_KINDS).size).toBe(E.ALL_PUSH_KINDS.length);
   });
 
   it('grade labels match the report form wording (docs/03 §2)', () => {

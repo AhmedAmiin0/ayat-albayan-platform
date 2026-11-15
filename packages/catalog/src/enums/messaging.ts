@@ -54,6 +54,19 @@ export const PUSH_KINDS = [
   'course_resumed',
   'payment_received',
 ] as const satisfies readonly Enums<'push_kind'>[];
+/**
+ * The family app's own kinds (docs/50 §5 item 6): a lesson's join window opened, its report was
+ * sent to the family. Kept apart from PUSH_KINDS, which the staff apps map exhaustively.
+ */
+export const FAMILY_PUSH_KINDS = [
+  'lesson_starting',
+  'report_sent',
+] as const satisfies readonly Enums<'push_kind'>[];
+/** Every push_kind the API stores or sends: staff kinds, then family kinds. */
+export const ALL_PUSH_KINDS = [
+  ...PUSH_KINDS,
+  ...FAMILY_PUSH_KINDS,
+] as const satisfies readonly AnyPushKind[];
 /** The two business WhatsApp numbers (docs/12 §13): a template leaves from its registry line (§13.18). */
 export const WA_LINES = ['notifications', 'chat'] as const satisfies readonly Enums<'wa_line'>[];
 /** Every wa_numbers purpose; `calls` never sends a regular message (docs/28 §10). */
@@ -66,7 +79,11 @@ export type MessageDirection = Enums<'message_direction'>;
 export type MessageStatus = Enums<'message_status'>;
 export type TemplateStatus = Enums<'template_status'>;
 export type TemplateCategory = Enums<'template_category'>;
-export type PushKind = Enums<'push_kind'>;
+/** A staff kind (the staff apps' exhaustive maps); AnyPushKind for whatever is stored or sent. */
+export type PushKind = (typeof PUSH_KINDS)[number];
+export type FamilyPushKind = (typeof FAMILY_PUSH_KINDS)[number];
+/** Any push_notifications.kind (the DB enum); the two lists cover it exactly (enums.test.ts). */
+export type AnyPushKind = Enums<'push_kind'>;
 /** A messaging line (sends and reply windows); never `calls` (docs/28 §10). */
 export type WaLine = (typeof WA_LINES)[number];
 /**

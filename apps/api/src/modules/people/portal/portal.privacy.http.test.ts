@@ -2,10 +2,10 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { keysOf, L1, portalApp, R1, REC, S1 } from './portal.fakes';
 
 type App = Awaited<ReturnType<typeof portalApp>>;
-/** Money, notes, reasons, contacts and storage internals: none may leave a portal route. */
+/** Money, notes, reasons, contacts and storage internals: none may leave these portal routes. */
 const SECRET = /price|amount|currency|fx|paid|payment|invoice|note|reason|phone|email|path|egress|meeting_mode|secret|سر/i;
 
-describe('/portal responses are whitelists (no money, notes or contacts)', () => {
+describe('/portal responses are whitelists (no money outside the package, notes or contacts)', () => {
   let t: App;
   beforeAll(async () => {
     // A fixed morning before the fixture lesson's join window (16:00 UTC, opens 15:50): under the real
@@ -20,7 +20,7 @@ describe('/portal responses are whitelists (no money, notes or contacts)', () =>
   });
 
   it('every read route', async () => {
-    const urls = ['/portal/me', `/portal/students/${S1}/lessons`, `/portal/students/${S1}/reports`, `/portal/students/${S1}/package`];
+    const urls = ['/portal/me', `/portal/students/${S1}/lessons`, `/portal/students/${S1}/reports`];
     for (const url of urls) {
       const res = await t.call('GET', url, 'guardianA');
       expect([url, res.statusCode]).toEqual([url, 200]);
@@ -29,16 +29,20 @@ describe('/portal responses are whitelists (no money, notes or contacts)', () =>
     }
   });
 
-  it('the package: name, lessons left over all packages, renewal date and status only', async () => {
-    const res = await t.call('GET', `/portal/students/${S1}/package`, 'student1');
-    expect(res.json()).toEqual({
-      package: { package: '8', duration: 30, lessons_total: 8, remaining: 5, starts_on: '2026-10-01', renews_on: '2026-11-01', status: 'active' },
+  it('the lessons carry «ما المطلوب» from the newest sent report and this month\'s counts', async () => {
+    const res = await t.call('GET', `/portal/students/${S1}/lessons`, 'student1');
+    expect(res.json().prepare).toEqual({
+      homework: 'سورة الملك',
+      next_plan: null,
+      report_id: R1,
+      lesson_starts_at: '2026-10-20T16:00:00.000Z',
     });
-    expect(t.balances.forStudents).toHaveBeenCalledWith([S1]);
-    t.balances.forStudents.mockResolvedValueOnce([{ subscription_id: 'p1', remaining: -2 }]);
-    expect((await t.call('GET', `/portal/students/${S1}/package`, 'student1')).json().package.remaining).toBe(0);
-    t.packages.packages.mockResolvedValueOnce([]);
-    expect((await t.call('GET', `/portal/students/${S1}/package`, 'student1')).json()).toEqual({ package: null });
+    expect(res.json().month).toEqual({ attended: 1, absent: 0 });
+    expect(t.reports.sent).toHaveBeenCalledWith(S1, 1);
+    expect(t.reports.texts).toHaveBeenCalledWith(R1);
+    t.reports.sent.mockResolvedValueOnce([]);
+    const none = await t.call('GET', `/portal/students/${S1}/lessons`, 'student1');
+    expect(none.json().prepare).toBeNull();
   });
 
   it('reports: sent ones newest first, with the visible recording id; no file path', async () => {

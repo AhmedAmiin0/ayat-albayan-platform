@@ -1,11 +1,11 @@
-import type { PortalFileUrl, PortalReports } from '@ab/shared';
+import type { PortalFileUrl, PortalPrepare, PortalReports } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { BUCKETS, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
-import { recordingByLesson, toPortalReport } from './portal-reports.mapper';
+import { recordingByLesson, toPortalReport, toPrepare } from './portal-reports.mapper';
 import { PortalReportsRepo } from './portal-reports.repo';
 
 interface FileCall {
@@ -31,6 +31,16 @@ export class PortalReportsService {
     const rows = await this.queries.sent(input.studentId);
     const recordings = recordingByLesson(await this.queries.visibleRecordings(rows.map((r) => r.lesson_id)));
     return { reports: rows.map((r) => toPortalReport(r, recordings)) };
+  }
+
+  /**
+   * «ما المطلوب» of a student the caller already scoped: the newest sent report's homework and next
+   * plan (never a draft); null without a sent report.
+   */
+  async prepare(studentId: string): Promise<PortalPrepare | null> {
+    const [newest] = await this.queries.sent(studentId, 1);
+    if (!newest) return null;
+    return toPrepare(newest, await this.queries.texts(newest.id));
   }
 
   /** 404 report_not_found: not this student's, not sent yet, or no PDF. */

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
 import en from '../../../i18n/en.json' with { type: 'json' };
-import { PUSH_KINDS } from '@ab/catalog';
+import { ALL_PUSH_KINDS } from '@ab/catalog';
 import { TEMPLATE_KEYS } from '../../messaging/templates/templates.js';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { NOTIFICATION_CATALOGUE, NOTIFICATION_KEYS, notificationEntry } from './catalogue.js';
@@ -15,7 +15,7 @@ describe('NOTIFICATION_CATALOGUE is complete', () => {
   });
 
   it('every push_kind has exactly one bell / push row', () => {
-    for (const kind of PUSH_KINDS) {
+    for (const kind of ALL_PUSH_KINDS) {
       const rows = NOTIFICATION_CATALOGUE.filter((e) => 'pushKind' in e && e.pushKind === kind);
       expect(rows.map((r) => r.key), kind).toEqual([kind]);
     }

@@ -1,5 +1,6 @@
 import type { UserRole } from './roles.js';
 import { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data.js';
+import { PORTAL_FIXED_GRANTS } from './catalog.portal.js';
 
 export { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data.js';
 
@@ -37,6 +38,12 @@ export function defaultGrantsOf(role: UserRole): Permission[] {
   return ROWS.filter((r) => r.area !== 'self' && r.grants.includes(role)).map((r) => r.key);
 }
 
+const NO_GRANTS: readonly Permission[] = [];
+
+/** A portal base role's fixed grants (catalog.portal.ts); none for a staff role. */
+const fixedGrantsOf = (role: UserRole): readonly Permission[] =>
+  PORTAL_FIXED_GRANTS[role] ?? NO_GRANTS;
+
 export interface EffectiveInput {
   /** profiles.role of the user: decides the self.* scope keys. */
   baseRole: UserRole | null;
@@ -50,7 +57,7 @@ export interface EffectiveInput {
 export function effectivePermissions(input: EffectiveInput): Permission[] {
   if (!input.baseRole) return [];
   const grants = input.allGrantable ? GRANTABLE_PERMISSIONS : GRANTABLE_PERMISSIONS.filter((p) => input.granted.includes(p));
-  return [...grants, ...selfPermissionsOf(input.baseRole)];
+  return [...grants, ...fixedGrantsOf(input.baseRole), ...selfPermissionsOf(input.baseRole)];
 }
 
 /** The system roles' effective sets: what the parity test compares with the old @Roles table. */
