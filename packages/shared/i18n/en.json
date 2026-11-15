@@ -108,7 +108,112 @@
     "loadingMore": "Loading…",
     "reportTitle": "Lesson report",
     "backToLessons": "Back to the lessons",
-    "openPdf": "Open the PDF"
+    "openPdf": "Open the PDF",
+    "app": {
+      "tabs": {
+        "nav": "Navigation",
+        "home": "Home",
+        "schedule": "Schedule",
+        "children": "My children",
+        "reports": "Reports",
+        "account": "Account"
+      },
+      "home": {
+        "greeting": "Welcome",
+        "children": "Your children",
+        "open": "Open {name}'s page"
+      },
+      "lesson": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "openNow": "You can join now",
+        "minutes": "{n} min",
+        "teacher": "Teacher: {name}",
+        "roomNote": "The lesson opens in the academy's room in your browser, with no second sign-in.",
+        "joinShort": "Join",
+        "joinFailed": "Could not open the lesson. Please try again.",
+        "upcoming": "Upcoming lessons",
+        "prepare": "Get ready for the lesson",
+        "fromReport": "From the report of {date}"
+      },
+      "month": {
+        "attended": "Attended this month",
+        "absent": "Missed this month"
+      },
+      "package": {
+        "line": "Package: {left} of {total} lessons left",
+        "renews": "Renews on {date}",
+        "due": "Due",
+        "title": "{n}-lesson package",
+        "perLesson": "{n} min per lesson",
+        "usedOf": "{used} of {total} used",
+        "start": "Start",
+        "renewal": "Renewal",
+        "afterTransfer": "After the transfer, the office records the payment and it shows here.",
+        "paid": "Paid",
+        "refund": "Refunded",
+        "open": "Package details"
+      },
+      "schedule": {
+        "title": "Schedule",
+        "mine": "My schedule",
+        "thisWeek": "This week",
+        "nextWeek": "Next week",
+        "laterWeek": "In two weeks",
+        "prev": "Previous week",
+        "next": "Next week",
+        "all": "All",
+        "filter": "Choose a child",
+        "today": "Today · {day}",
+        "empty": "No lessons this week.",
+        "emptyHint": "Lessons booked in the next 14 days show here."
+      },
+      "children": {
+        "lastReport": "Last report · {date}",
+        "noReport": "No report yet",
+        "upcoming": "Upcoming",
+        "attended": "Attended this month",
+        "absent": "Missed this month",
+        "left": "Left",
+        "note": "Each child's reports are on their page: «Attended» opens each lesson's report."
+      },
+      "history": {
+        "recording": "Lesson recording",
+        "reportPending": "The report is being written",
+        "attended": "Attended",
+        "noReason": "Absent without an excuse",
+        "reasonNote": "The reason shows as the teacher or the office recorded it."
+      },
+      "report": {
+        "title": "Lesson report",
+        "pdf": "Download the PDF report",
+        "recording": "Watch the recording",
+        "back": "Back"
+      },
+      "reports": {
+        "title": "My reports",
+        "thisMonth": "Reports this month",
+        "empty": "No reports yet.",
+        "emptyHint": "Each lesson's report shows here once the teacher sends it."
+      },
+      "alerts": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "week": "This week",
+        "older": "Earlier",
+        "markAll": "Mark all as read"
+      },
+      "account": {
+        "guardian": "Guardian",
+        "student": "Student · code {code}",
+        "children": "Children",
+        "settings": "Settings",
+        "pushGuardian": "Lesson times, new reports and schedule changes",
+        "pushStudent": "Lesson times and new reports",
+        "password": "Change password",
+        "version": "Version {v}"
+      }
+    }
   },
   "mobile": {
     "pushTitle": "Turn on notifications",
