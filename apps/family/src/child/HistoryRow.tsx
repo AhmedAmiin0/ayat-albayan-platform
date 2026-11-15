@@ -1,7 +1,7 @@
 import { isNewReport } from '@ab/client-core';
 import type { PortalHistoryRow, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
-import { AppText, raisedCard, t, type, useTheme } from '@ab/mobile-kit';
+import { raisedCard, t, useTheme } from '@ab/mobile-kit';
 import { DateTile, NewMark, PressCard, RowText, type RowNote } from '@/ui';
 import { dayTile, rangeText, teacherText } from '@/lessons';
 import { openReport } from '@/nav';

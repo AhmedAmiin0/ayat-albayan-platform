@@ -1,7 +1,7 @@
 import { isNewReport, reportAt } from '@ab/client-core';
 import type { PortalReport, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
-import { AppText, t, type, useTheme } from '@ab/mobile-kit';
+import { t, } from '@ab/mobile-kit';
 import { DateTile, NewMark, PressCard, RowText } from '@/ui';
 import { dayTile, teacherText } from '@/lessons';
 import { openReport } from '@/nav';
@@ -14,7 +14,6 @@ interface ReportRowProps {
 
 /** One sent report (canvas Reports): the lesson's day, the teacher, «جديد», the recording mark. */
 export function ReportRow({ report, student }: ReportRowProps) {
-  const { color } = useTheme();
   const clock = { ...useFamilyClock(), tz: student.tz };
   const fresh = isNewReport(report.id, useSeenReports());
   const link = { studentId: student.id, reportId: report.id, recordingId: report.recording_id };

@@ -1,7 +1,7 @@
 import type { PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
-import { Pressable, View } from 'react-native';
-import { AppText, Avatar, Chevron, Ltr, t, type, useTheme } from '@ab/mobile-kit';
+import { Pressable } from 'react-native';
+import { Chevron, t, useTheme } from '@ab/mobile-kit';
 import { NewMark, StudentIdentity } from '@/ui';
 import { childHref } from '@/nav';
 

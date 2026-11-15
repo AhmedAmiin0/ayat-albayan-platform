@@ -2,7 +2,7 @@ import { reportAt } from '@ab/client-core';
 import type { ClockOptions, PortalKind, PortalReport, PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { AppText, Avatar, Ltr, t, type, useTheme } from '@ab/mobile-kit';
+import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { Figure, NewMark, PressCard, StudentIdentity } from '@/ui';
 import { dateLine } from '@/lessons';
 import { childHref } from '@/nav';

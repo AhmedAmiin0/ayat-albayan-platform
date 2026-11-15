@@ -2,7 +2,7 @@ import { lessonMinutes, type WeekLesson } from '@ab/client-core';
 import type { ClockOptions } from '@ab/shared';
 import { clockOf } from '@ab/shared';
 import { View } from 'react-native';
-import { AppText, Avatar, t, type, useTheme } from '@ab/mobile-kit';
+import { Avatar, t, } from '@ab/mobile-kit';
 import { RowText } from '@/ui';
 import { JoinAction, rangeText, teacherText } from '@/lessons';
 
@@ -17,7 +17,6 @@ interface ScheduleRowProps {
 
 /** One lesson of the week: (the child ·) the time, the teacher and length, «ادخل» when open. */
 export function ScheduleRow({ entry, clock, now, named }: ScheduleRowProps) {
-  const { color } = useTheme();
   const { student, lesson } = entry;
   const time = named
     ? `${student.name} · ${clockOf(new Date(lesson.starts_at), clock)}`
