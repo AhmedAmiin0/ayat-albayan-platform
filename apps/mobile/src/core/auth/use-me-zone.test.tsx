@@ -1,7 +1,7 @@
 import { setViewerPersonTz, viewerTz } from '@ab/client-core';
 import { act, renderHook } from '@testing-library/react-native';
 import { useViewerTz } from '@/core/lib/clock';
-import { meTz, useMeZone } from './use-me-zone';
+import { meTz, useMeZone } from '@ab/mobile-kit';
 
 // jest.setup pins the device to Riyadh, so «no person tz» reads as Riyadh here.
 afterEach(() => setViewerPersonTz('Asia/Riyadh'));

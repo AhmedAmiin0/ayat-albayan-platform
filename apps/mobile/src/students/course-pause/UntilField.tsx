@@ -1,10 +1,8 @@
 import { addDays } from '@ab/shared';
 import { Switch, View } from 'react-native';
 import { StartDayPicker } from '@/assistants';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/more';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 
 interface UntilFieldProps {
   /** The pause's first day: the end is never before it. */

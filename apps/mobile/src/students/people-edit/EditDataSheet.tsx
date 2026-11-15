@@ -10,7 +10,7 @@ import {
 import type { PeopleEditView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { SheetActions } from '@/students/course-pause/SheetActions';
 import { FamilyEditFields } from './FamilyEditFields';

@@ -5,15 +5,15 @@ import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { clearChatMemory } from '@/inbox/thread/anchor';
 import { type ThreadCache, threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { useSendMessage } from '@/inbox/thread/hooks/use-thread';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { t } from '@/core/lib/i18n/i18n';
 import { PINS } from './pinned-send';
 
 // Review of PR #694 (2, round 4): the API says `replayed` when the pinned id gave back its FIRST
 // row and `same_request` when that row IS this correction; the app never rebuilds the prefix.
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 jest.mock('@/inbox/thread/hooks/inbox-sync', () => ({

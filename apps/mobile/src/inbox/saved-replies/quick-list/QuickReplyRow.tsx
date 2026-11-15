@@ -1,8 +1,6 @@
 import type { SavedReply } from '@ab/shared';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { t, type, useTheme, isolate } from '@ab/mobile-kit';
 import { AttachIcon } from '@/inbox/shared/chat-icons';
 import { HighlightText } from './HighlightText';
 

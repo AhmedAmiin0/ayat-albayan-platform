@@ -1,8 +1,7 @@
 import { View } from 'react-native';
-import { type, useTheme } from '@/theme';
+import { type, useTheme, AppText } from '@ab/mobile-kit';
 import { useClockCycle } from '@/core/lib/clock';
 import { slotRange, weekdayName, type WeekdaySlots } from '@/more/schedule';
-import { AppText } from '@/core/ui/primitives/AppText';
 
 /**
  * «الاتنين   16:00 – 18:00   20:00 – 22:00»: the day, then its ranges (wrapping). A row of the week's

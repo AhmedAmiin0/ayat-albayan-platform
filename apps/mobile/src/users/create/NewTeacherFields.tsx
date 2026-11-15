@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Choice } from '@/users/shared/Choice';
 import type { NewTeacherForm } from './create-form';
 import { TextField } from '@/users/shared/TextField';

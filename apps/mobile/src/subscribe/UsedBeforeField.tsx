@@ -1,12 +1,9 @@
 import { riyadhToday, usedBeforeMax } from '@ab/shared';
 import { useState } from 'react';
-import { useHolds } from '@/core/auth';
+import { useHolds, t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
 import { Stepper } from '@/finance';
 import { Note } from '@/more';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 
 interface UsedBeforeFieldProps {
   /** Already clamped to the package (usedBefore). */

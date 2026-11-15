@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react-native';
 import { StyleSheet, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { leftToRight } from '@/inbox/shared/physical-row.helpers';
 import { ChatHeader } from './ChatHeader';
 

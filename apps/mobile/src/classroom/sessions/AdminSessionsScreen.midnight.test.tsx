@@ -1,15 +1,15 @@
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 import { dayLabel } from '@/calendar/lib/week';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { AdminSessionsScreen } from './AdminSessionsScreen';
 
 // The owner (2026-10-27): the screen stays mounted for days, so the day must follow the clock.
 const mockApiFetch = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (...args: unknown[]) => mockApiFetch(...args),
   apiSend: jest.fn(),
 }));

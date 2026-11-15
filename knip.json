@@ -21,14 +21,8 @@
       "ignoreDependencies": ["babel-plugin-react-compiler", "zod"]
     },
     "apps/mobile": {
-      "entry": [
-        "index.ts",
-        "app/**/*.{ts,tsx}",
-        "app-family/**/*.{ts,tsx}",
-        "app.config.ts",
-        "jest.setup.cjs"
-      ],
-      "project": ["{app,app-family,src}/**/*.{ts,tsx}"],
+      "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
+      "project": ["{app,src}/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         "react-test-renderer",
         "expo-system-ui",
@@ -38,11 +32,21 @@
         "zod"
       ]
     },
+    "apps/family": {
+      "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
+      "project": ["{app,src}/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["react-test-renderer", "expo-system-ui", "expo-splash-screen", "zod"]
+    },
     "packages/db": {
       "ignore": ["src/types.ts", "supabase/**"]
     },
     "packages/client-core": {
       "ignoreDependencies": ["zod"]
+    },
+    "packages/mobile-kit": {
+      "entry": ["src/index.ts", "babel.cjs", "jest.base.cjs", "jest.shared.cjs"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["react-test-renderer"]
     },
     "tools/scripts": {
       "entry": ["**/*.{mjs,ts}", "!**/*.test.*"],

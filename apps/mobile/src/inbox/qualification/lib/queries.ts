@@ -1,10 +1,8 @@
 import type { AcademySettings, FollowUpNote } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString } from '@/core/lib/http/api';
+import { apiFetch, apiSend, toQueryString, pathKey, t } from '@ab/mobile-kit';
 import { patchCached, type Page } from '@/core/lib/query/paging';
-import { pathKey } from '@/core/lib/query/query-keys';
 import { isOffline } from '@/core/lib/money/payment-errors';
-import { t } from '@/core/lib/i18n/i18n';
 import type { Lead } from '@/inbox/shared/types';
 
 /**

@@ -1,8 +1,7 @@
 import type { MeetingCreated, MeetingView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { openRoom } from '@/classroom';
-import { apiFetch, apiSend } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 /** GET /meetings: all for an admin, else the caller's own and the ones they are invited to. Key ['meetings'] reaches every call below. */
 export const useMeetings = () =>

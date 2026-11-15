@@ -1,8 +1,6 @@
 import { counted } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 
 /** The drawn count: the number, «99+» above 99. */
 export const unreadText = (n: number): string => (n > 99 ? '99+' : String(n));

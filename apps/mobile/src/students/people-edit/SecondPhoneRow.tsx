@@ -1,10 +1,8 @@
 import { formatPhone, type PeopleEditView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button, ltr } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { Button } from '@/core/ui/primitives/Button';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { Note } from '@/more';
 import { removeSecondPhone, usePeopleWrite } from './people-edit-api';
 

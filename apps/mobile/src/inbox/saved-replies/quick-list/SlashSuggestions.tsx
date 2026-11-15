@@ -1,7 +1,6 @@
 import { FlatList, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, shape, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { shape, useTheme } from '@/theme';
 import { useSavedReplies } from '@/inbox/saved-replies/hooks/api';
 import { QuickReplyRow } from './QuickReplyRow';
 import { matchReplies } from '@/inbox/saved-replies/lib/reply-text';

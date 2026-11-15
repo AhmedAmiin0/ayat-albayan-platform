@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { AppText } from '@ab/mobile-kit';
 import { LazyList } from './LazyList';
 
 // A newest-first list (the chats) reorders without changing its length: a chat moves to the top.

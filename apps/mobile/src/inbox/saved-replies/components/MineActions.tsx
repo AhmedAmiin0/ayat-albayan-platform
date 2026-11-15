@@ -1,7 +1,5 @@
 import type { SavedReply } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
-import { IconButton } from '@/core/ui/primitives/IconButton';
+import { t, useTheme, IconButton } from '@ab/mobile-kit';
 import { EditIcon, TrashIcon } from '@/inbox/shared/chat-icons';
 
 /** A reply's «عدّل» and «احذف» at the end of its row (44pt each), named with its title. */

@@ -2,11 +2,7 @@ import type { Conflict } from '@ab/shared';
 import { View } from 'react-native';
 import { bookFailure, conflictLine, isCodedRefusal, ConflictNotice } from '@/booking';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
-import { type, useTheme } from '@/theme';
+import { t, AppText, ErrorState, NuqtaGlyph, type, useTheme } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 export interface CourseCheckNoticeProps {

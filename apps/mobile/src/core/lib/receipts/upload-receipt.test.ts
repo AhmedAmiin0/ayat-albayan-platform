@@ -1,12 +1,12 @@
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { SUB_ID } from '@/payments/fixtures';
 import type { Receipt } from './receipt';
 import { ReceiptUploadError, uploadReceipt } from './upload-receipt';
 
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiSend: jest.fn() }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiSend: jest.fn() }));
 const mockUpload = jest.fn();
 const mockFrom = jest.fn((bucket: string) => ({ bucket, uploadToSignedUrl: mockUpload }));
-jest.mock('@/core/lib/http/supabase', () => ({ supabase: { storage: { from: (b: string) => mockFrom(b) } } }));
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({ supabase: { storage: { from: (b: string) => mockFrom(b) } } }));
 
 const send = jest.mocked(apiSend);
 const receipt: Receipt = {

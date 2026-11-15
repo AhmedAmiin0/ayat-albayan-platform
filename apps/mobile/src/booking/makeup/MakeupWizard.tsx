@@ -4,12 +4,9 @@ import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { ScrollView, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, BackButton, Button, ScreenHeader, locale } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
-import { BackButton } from '@/core/ui/navigation';
-import { Button } from '@/core/ui/primitives/Button';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { BookedPanel } from '@/booking/shared/BookedPanel';
 import { bookFailure } from '@/booking/shared/booking-errors';
 import { InvoiceStep } from '@/booking/invoice/InvoiceStep';
@@ -20,7 +17,6 @@ import { SlotStep } from '@/booking/trial/components/SlotStep';
 import { stepsFor, type Step } from '@/booking/trial/lib/steps';
 import { TeacherStep } from '@/booking/trial/components/TeacherStep';
 import { useBookMakeup } from './use-book-makeup';
-import { locale } from '@/core/lib/i18n/locale';
 
 type Filter = { program: Program; gender: Gender | null };
 

@@ -1,8 +1,7 @@
 import { needsSetup } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import { apiFetch } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
 
 /** The /auth/me fields setup reads (the body keeps more; anything odd is «no setup»). */
 const meFields = z.looseObject({

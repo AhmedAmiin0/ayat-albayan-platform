@@ -1,7 +1,6 @@
 import type { ClockCycle } from '@ab/shared';
 import { bookFailure, type BookFailure } from '@/booking/shared/booking-errors';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { isOffline } from '@/core/lib/money/payment-errors';
 
 // What a failed PATCH /lessons/:id/time means (docs/10 §3: clients switch on `code`).

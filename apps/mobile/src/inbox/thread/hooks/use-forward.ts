@@ -1,7 +1,7 @@
 import type { ForwardResponse, ThreadForward } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { refreshInbox } from './inbox-sync';
 

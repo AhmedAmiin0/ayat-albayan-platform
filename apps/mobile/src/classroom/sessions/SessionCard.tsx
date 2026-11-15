@@ -1,13 +1,8 @@
 import { teacherName, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { shape, type, useTheme } from '@/theme';
+import { t, locale, shape, type, useTheme, AppText, StatusChip, Avatar } from '@ab/mobile-kit';
 import { lessonClock, studentNames, viewerDayHint } from '@/today';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { Avatar } from '@/core/ui/primitives/Avatar';
 import { SessionActions } from './SessionActions';
 import type { SessionGroup } from './sessions';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';

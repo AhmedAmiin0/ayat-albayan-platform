@@ -1,10 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { BackButton } from '@/core/ui/navigation';
-import { FilterPills } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { t, BackButton, FilterPills, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { MyEarningsView } from './MyEarningsView';
 import { MyPaymentsView } from './MyPaymentsView';
 import { MyWalletView } from '@/sales-money/wallet/MyWalletView';

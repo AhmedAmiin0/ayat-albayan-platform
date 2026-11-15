@@ -1,6 +1,6 @@
 import { CREDENTIAL_MODES, DEFAULT_PASSWORD_MIN, type CredentialMode } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Choice } from '@/users/shared/Choice';
 import { TextField } from '@/users/shared/TextField';

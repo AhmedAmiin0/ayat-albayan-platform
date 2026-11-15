@@ -1,11 +1,7 @@
 import type { CourseChangeResult } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, Button, NuqtaGlyph, type, useTheme } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
-import { type, useTheme } from '@/theme';
 
 /** After POST …/course/change 201: «تغيّرت أيام الحلقات», the course's new last day, and the way out. */
 export function CourseChangeDone({ result, onDone }: { result: CourseChangeResult; onDone: () => void }) {

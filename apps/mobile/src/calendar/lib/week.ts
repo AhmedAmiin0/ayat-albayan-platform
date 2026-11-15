@@ -10,8 +10,7 @@ import {
   weekStart,
   type DateFields,
 } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 
 // Calendar days for the mobile schedule (R-SCH-01, R-TCH-02): the week runs السبت → الجمعة on the
 // viewer's calendar (docs/34), like the web grid. Dates are local YYYY-MM-DD; pure, unit-tested.

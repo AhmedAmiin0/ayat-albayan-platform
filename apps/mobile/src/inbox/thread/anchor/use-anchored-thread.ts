@@ -1,8 +1,7 @@
 import { anchoredThreadPages } from '@ab/client-core';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useEffectEvent } from 'react';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { threadGet } from '@/inbox/thread/hooks/use-thread';
 import { useStoredTicks } from '@/inbox/thread/local';

@@ -2,7 +2,7 @@ import { uploadOnce } from '@ab/client-core';
 import type { ExpenseView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { expenseBody, type ExpenseDraft } from './expense-draft';
 import { uploadExpenseReceipt } from './upload-expense-receipt';
 

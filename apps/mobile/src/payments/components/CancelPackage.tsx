@@ -1,13 +1,8 @@
 import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { Field } from '@/core/ui/form/Field';
+import { ApiError, t, Field, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { type, useTheme } from '@/theme';
 
 type CancelBody = { reason?: string };
 

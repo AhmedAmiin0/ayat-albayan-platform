@@ -1,5 +1,5 @@
 import { slotUploader } from '@ab/client-core';
-import { supabase } from './supabase';
+import { supabase } from '@ab/mobile-kit';
 
 // The app's one direct upload (docs/45): the API signs a slot, the stored path's marker says where
 // it lives («minio:» → a PUT to its signed URL, anything else → Supabase Storage as before).

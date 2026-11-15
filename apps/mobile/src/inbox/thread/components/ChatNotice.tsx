@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { IconButton } from '@/core/ui/primitives/IconButton';
+import { t, shape, type, useTheme, AppText, IconButton } from '@ab/mobile-kit';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { CloseIcon } from '@/inbox/shared/chat-icons';
 

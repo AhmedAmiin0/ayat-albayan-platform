@@ -4,8 +4,7 @@ import { act, fireEvent, renderRouter, screen } from 'expo-router/testing-librar
 import { Text } from 'react-native';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import type { UserRole } from '@ab/shared';
-import { queryClient } from '@/core/lib/query/query-client';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { queryClient, pathKey } from '@ab/mobile-kit';
 import { fullAccessMe } from '@/test/staff-me';
 import { TabStack } from '@/core/nav/TabStack';
 import { useStudentHref, useTreeBase } from '@/core/nav/tree-base';
@@ -21,16 +20,16 @@ import TeacherLayout from '../../../app/teacher/_layout';
 // The real root, tree and chat-group layouts with stub screens: each tree's chat is its own route group
 // above the tabs (a full screen, react-native-screens#4132), behind its tree's gate, under the same URL.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 // /auth/me holding every permission of its role: nothing hidden, so each tree opens on its first tab.
 const mockMe = { answer: {} as object };
 const mockTeacher = { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async (path: string) =>
     path === '/auth/me' ? mockMe.answer : path === '/teachers/me' ? mockTeacher : { total: 0 },
 }));
-jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out' }));
+jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out' }));
 
 /** Any tree's chat: the links (TreeBase) and the mode (ThreadMode) its group gives it. */
 function ChatStub() {

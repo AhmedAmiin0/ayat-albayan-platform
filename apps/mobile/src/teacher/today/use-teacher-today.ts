@@ -1,9 +1,7 @@
 import { deviceTimeZone } from '@ab/shared';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { usePullRefresh } from '@/core/lib/query/pull-refresh';
+import { t, usePullRefresh, useScreenFocused } from '@ab/mobile-kit';
 import { useNow } from '@/core/lib/time/use-now';
-import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import { clockAt } from '@/inbox';
 import { aheadWindow } from '@/teacher/lib/day';
 import { useMyLessons } from '@/teacher/lib/queries';

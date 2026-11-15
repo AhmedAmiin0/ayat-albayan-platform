@@ -1,9 +1,6 @@
 import { type AlertAction, fillSlots } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { t, ListRow, AppText, type, useTheme } from '@ab/mobile-kit';
 import type { AlertRowView } from './use-today-alerts';
 
 export interface AlertHandlers {

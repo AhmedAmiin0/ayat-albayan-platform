@@ -1,9 +1,6 @@
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { BackButton } from '@/core/ui/navigation';
+import { t, type, useTheme, AppText, BackButton } from '@ab/mobile-kit';
 import { PresenceLabel } from '@/core/ui/feedback/PresenceLabel';
 import { ChatSearchBar, useChatSearch } from '@/inbox/thread/search';
 

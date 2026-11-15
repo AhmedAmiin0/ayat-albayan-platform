@@ -1,5 +1,4 @@
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { manageOf, meetingError, meetingsBase, meetingWhen } from './meeting-text';
 
 test('the time is on the Riyadh clock with Western digits', () => {

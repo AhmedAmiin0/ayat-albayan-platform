@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { pending } from '@/today/testing/fixtures';
 import { RowDefaultActions } from './RowDefaultActions';
 

@@ -3,12 +3,11 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 import { pickReceipt, type Receipt } from '@/core/lib/receipts/receipt';
 import { openIcon } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
 import { openSigned } from '@/core/lib/http/open-signed';
 import { reportErrorText, uploadAttachment } from '@/teacher/report/hooks/api';
 

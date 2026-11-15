@@ -1,5 +1,4 @@
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { type, useTheme, AppText } from '@ab/mobile-kit';
 
 /** A card's heading: 16pt bold ink, announced as a header. */
 export function CardTitle({ children }: { children: string }) {

@@ -1,8 +1,6 @@
 import { router } from 'expo-router';
 import { pushInTab } from '@/core/nav/back-within';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
-import { ListRow } from '@/core/ui/layout/ListRow';
+import { t, Button, ListRow } from '@ab/mobile-kit';
 import type { SalesSubscription } from '@/sales/sales/lib/sales-api';
 import { useSalesHrefs } from '@/sales/sales/lib/sales-href';
 import { startsLine, subscriptionSubtitle } from '@/sales/sales/lib/sales-text';

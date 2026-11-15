@@ -1,16 +1,15 @@
 import type { ReportFormResponse } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { reportFormKey } from '@/teacher/report/hooks/api';
 import { formResponse } from '@/teacher/report/testing/fixtures';
 import { ReportFormScreen } from './ReportFormScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
   apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
 }));
@@ -21,7 +20,7 @@ jest.mock('expo-router', () => ({
 const mockPick = jest.fn();
 jest.mock('@/core/lib/receipts/receipt', () => ({ pickReceipt: (s: string) => mockPick(s) }));
 const mockUpload = jest.fn();
-jest.mock('@/core/lib/http/supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   supabase: { storage: { from: () => ({ uploadToSignedUrl: (...a: unknown[]) => mockUpload(...a) }) } },
 }));
 

@@ -1,7 +1,6 @@
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { Button } from '@/core/ui/primitives/Button';
 import { CourseActionsSection } from '@/students';
 import { useCourseState } from '@/sales/sales/student/student-api';
 

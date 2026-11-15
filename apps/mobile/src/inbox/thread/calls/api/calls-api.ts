@@ -1,5 +1,5 @@
 import { callQueries, callSends } from '@ab/client-core';
-import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 
 // WhatsApp voice calls (docs/28 §4): the routes and queries live in @ab/client-core, the same as the

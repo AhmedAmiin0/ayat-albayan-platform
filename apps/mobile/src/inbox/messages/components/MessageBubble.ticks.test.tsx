@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { MessageBubble } from './MessageBubble';
 import { stamp } from '@/inbox/messages/hooks/message-text';

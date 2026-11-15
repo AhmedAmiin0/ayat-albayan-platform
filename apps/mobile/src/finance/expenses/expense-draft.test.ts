@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { checkExpense, emptyExpense, expenseBody } from './expense-draft';
 
 const NOW = new Date('2026-10-05T09:00:00Z');

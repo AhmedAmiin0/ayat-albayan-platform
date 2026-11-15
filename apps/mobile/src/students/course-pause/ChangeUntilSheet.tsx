@@ -1,5 +1,5 @@
 import type { CoursePauseView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ChangeUntilForm } from './ChangeUntilForm';
 import { PauseSheetFrame } from './PauseSheetFrame';
 

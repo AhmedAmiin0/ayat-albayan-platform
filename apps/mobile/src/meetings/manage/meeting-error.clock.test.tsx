@@ -1,15 +1,15 @@
 import { act, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { setClockPref } from '@/core/lib/clock';
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { meetingError } from './meeting-text';
 import { useEnterMeeting } from './use-enter-meeting';
 import { useMeetingManage } from './use-meeting-manage';
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 

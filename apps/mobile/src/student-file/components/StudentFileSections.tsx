@@ -1,10 +1,8 @@
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { usePermissions } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
+import { usePermissions, t, Button } from '@ab/mobile-kit';
 import { useStudentHref } from '@/core/nav/tree-base';
 import type { StudentProfile } from '@/students/shared/types';
-import { Button } from '@/core/ui/primitives/Button';
 import { CreateAccountButton } from '@/users/create/CreateAccountButton';
 import { ContactIsSelfCard } from './ContactIsSelfCard';
 import { JoinLinkCard } from './JoinLinkCard';

@@ -1,6 +1,5 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
 import type { Asking } from './use-meeting-manage';
 
 const L = t.meetings.internal;

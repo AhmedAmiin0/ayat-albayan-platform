@@ -23,8 +23,11 @@ test('the bundle task builds the workspace packages first and writes into ignore
   assert.match(read('.gitignore'), /^dist\/$/m);
 });
 
-test('the bundle uses the app Babel config, where app.json switches the React Compiler on', () => {
-  const app = JSON.parse(read('apps/mobile/app.json'));
-  assert.equal(app.expo.experiments.reactCompiler, true);
-  assert.match(read('apps/mobile/babel.config.cjs'), /babel-plugin-react-compiler/);
+test('each app bundles with the shared Babel config, where app.json switches the Compiler on', () => {
+  for (const dir of ['apps/mobile', 'apps/family']) {
+    const app = JSON.parse(read(`${dir}/app.json`));
+    assert.equal(app.expo.experiments.reactCompiler, true);
+    assert.match(read(`${dir}/babel.config.cjs`), /@ab\/mobile-kit\/babel/);
+  }
+  assert.match(read('packages/mobile-kit/babel.cjs'), /babel-plugin-react-compiler/);
 });

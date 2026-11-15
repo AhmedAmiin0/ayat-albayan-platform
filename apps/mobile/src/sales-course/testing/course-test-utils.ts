@@ -2,7 +2,7 @@ import type { SalesCourseView, SlotView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { pickLesson } from '@/booking/testing/lesson-times';
 import { maryam, noAvailability, slot, slotsAnswer, SUN_17, THU_18 } from '@/booking/testing/fixtures';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { courseView } from './fixtures';
 
 // Test-only helpers for the course wizard tests (the jest.mock calls stay in each test file).

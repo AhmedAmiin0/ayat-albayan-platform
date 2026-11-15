@@ -3,13 +3,7 @@ import { pushInTab } from '@/core/nav/back-within';
 import { Pressable, View } from 'react-native';
 import { useNow } from '@/core/lib/time/use-now';
 import { useStudentHref, useTreeBase } from '@/core/nav/tree-base';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { Chevron } from '@/core/ui/primitives/Chevron';
-import { Ltr } from '@/core/ui/primitives/Ltr';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { t, type, useTheme, AppText, Button, Chevron, Ltr, StatusChip } from '@ab/mobile-kit';
 import {
   reportHref,
   reportState,

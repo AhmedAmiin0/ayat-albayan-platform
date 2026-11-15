@@ -11,7 +11,7 @@ import {
 } from '@ab/shared';
 import { QueryClient, QueryClientContext, queryOptions, useQuery } from '@tanstack/react-query';
 import { useContext } from 'react';
-import { apiFetch } from '@/core/lib/http/api';
+import { apiFetch } from '@ab/mobile-kit';
 
 /**
  * GET /settings/public: the academy settings the app's buttons follow — the classroom join window,

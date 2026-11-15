@@ -1,5 +1,5 @@
 import type { NotificationEntryView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { catalogue } from '@/ops/shared/fixtures';
 import { sentCounts } from './sent-counts';
 

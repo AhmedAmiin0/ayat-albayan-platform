@@ -1,7 +1,7 @@
 import { DEFAULT_HOME_PREFS, HOME_PREFS_KEY } from '@ab/client-core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, fireEvent, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { HomeCustomizeScreen } from './HomeCustomizeScreen';
 import { resetHomePrefs } from './home-prefs';

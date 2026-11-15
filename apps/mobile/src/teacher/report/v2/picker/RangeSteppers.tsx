@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { AyahStepper } from './AyahStepper';
 import { setBound, type PendingText, type PickerDraft } from './picker-state';
 

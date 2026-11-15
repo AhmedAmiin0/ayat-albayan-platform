@@ -1,5 +1,5 @@
 import { AFTER_FIELDS, DONE_FIELDS, REPORT_RUBRICS } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // The form logic (valuesOf, submitProblem, shouldSave…) is tested in @ab/shared reports/form-values.
 

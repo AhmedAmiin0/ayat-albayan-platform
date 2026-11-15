@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { useTheme } from '@/theme';
+import { useTheme } from '@ab/mobile-kit';
 import { useTabListBack } from './use-tab-list-back';
 
 /**

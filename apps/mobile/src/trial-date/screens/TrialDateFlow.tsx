@@ -1,11 +1,7 @@
 import type { Program } from '@ab/shared';
 import { backOr } from '@/core/nav/back-within';
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { BackButton } from '@/core/ui/navigation';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { t, type, useTheme, AppText, BackButton, ScreenHeader } from '@ab/mobile-kit';
 import { useTrialHistory } from '@/trial-date/lib/queries';
 import { TrialDateWizard } from './TrialDateWizard';
 import { TrialHistoryList } from '@/trial-date/components/TrialHistoryList';

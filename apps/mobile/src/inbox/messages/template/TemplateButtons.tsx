@@ -1,10 +1,8 @@
 import { templateButtonLink, type TemplateDisplayButton } from '@ab/shared';
 import { Linking, Pressable, View, type ViewStyle } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { shape, type, useTheme, AppText, t } from '@ab/mobile-kit';
 import { ButtonIcon } from './template-icons';
 import { templateButtonHint, templateButtonLabel } from '@ab/client-core';
-import { t } from '@/core/lib/i18n/i18n';
 
 const words = t.inbox.templateBubble;
 

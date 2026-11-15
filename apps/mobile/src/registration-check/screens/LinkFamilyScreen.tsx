@@ -3,21 +3,24 @@ import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { usePermissions } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  usePermissions,
+  t,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+  AppText,
+  Button,
+  BackButton,
+  ltr,
+  type,
+  useTheme,
+} from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
-import { type, useTheme } from '@/theme';
 import { RegistrationResults } from '@/registration-check/components/RegistrationResults';
 import { linkFamilyErrorText, useLinkFamily } from '@/registration-check/lib/link-family';
 import { type CheckSearch, checkErrorText, searchOf, useRegistrationCheck } from '@/registration-check/lib/registration-check';

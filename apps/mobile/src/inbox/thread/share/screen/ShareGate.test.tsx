@@ -3,10 +3,7 @@ import { Stack } from 'expo-router';
 import { fireEvent, renderRouter, screen } from 'expo-router/testing-library';
 import * as Sharing from 'expo-sharing';
 import { Text } from 'react-native';
-import { type GateStatus, RootGateProvider } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
-import { queryClient } from '@/core/lib/query/query-client';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { type GateStatus, RootGateProvider, t, queryClient, pathKey } from '@ab/mobile-kit';
 import { fullAccessMe } from '@/test/staff-me';
 import { ShareGate } from './ShareGate';
 

@@ -3,10 +3,9 @@ import { pdfStatusStyle, reportStatusStyle, type ClockCycle, type ReportFormResp
 import { clockIn, useClockCycle, whenIn } from '@/core/lib/clock';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, StatusChip } from '@ab/mobile-kit';
 import { useNow } from '@/core/lib/time/use-now';
 import { Note } from '@/core/ui/feedback/Note';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { reportErrorText } from '@/teacher/report/hooks/api';
 import type { SaveState } from '@/teacher/report/hooks/use-autosave';
 import type { ReportEntryState } from '@/teacher/report/hooks/use-report-entry';

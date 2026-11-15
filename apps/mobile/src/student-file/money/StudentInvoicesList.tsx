@@ -1,9 +1,6 @@
 import type { InvoiceView } from '@ab/shared';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useStudentInvoices } from './money-queries';
 import { StudentInvoiceRow } from './StudentInvoiceRow';

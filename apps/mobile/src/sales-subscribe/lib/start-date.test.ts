@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { checkStart, type StartDraft, usedBeforeOf } from './start-date';
 
 const today = '2026-10-12';

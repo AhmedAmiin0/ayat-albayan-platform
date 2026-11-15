@@ -1,9 +1,6 @@
 import type { ReactNode } from 'react';
 import { Modal, ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { t, Button, Screen, ScreenHeader } from '@ab/mobile-kit';
 
 interface PauseSheetFrameProps {
   open: boolean;

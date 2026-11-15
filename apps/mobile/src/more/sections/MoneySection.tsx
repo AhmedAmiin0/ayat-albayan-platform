@@ -1,10 +1,8 @@
 import { router } from 'expo-router';
 import { allowedRows } from '@/core/auth/route-permissions';
-import type { Can } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
-import { ListRow } from '@/core/ui/layout/ListRow';
+import { t, ListRow, InsetGroup } from '@ab/mobile-kit';
+import type { Can } from '@ab/mobile-kit';
 import { Section } from '@/core/ui/surface/Section';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 const rows = () =>
   [

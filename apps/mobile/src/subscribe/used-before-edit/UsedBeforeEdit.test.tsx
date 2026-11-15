@@ -1,13 +1,12 @@
 import { screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
 import { press, show, stateOf, SUB } from './test-util';
 
 // «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): when the action shows at all.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

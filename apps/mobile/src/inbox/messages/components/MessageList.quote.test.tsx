@@ -1,8 +1,7 @@
 import type { MessageQuote, MessageView } from '@ab/shared';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { FlatList, StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { palette } from '@/theme';
+import { t, palette } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { ChatNotice } from '@/inbox/thread/components/ChatNotice';
@@ -12,8 +11,8 @@ import { LIT_MS } from '@/inbox/thread/hooks/use-jump';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
 // A bubble that answers another shows its quote on top; a tap goes to the original (owner 2026-10-25).
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
 }));
 

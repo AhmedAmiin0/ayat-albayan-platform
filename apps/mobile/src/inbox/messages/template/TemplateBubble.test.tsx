@@ -1,7 +1,7 @@
 import type { MessageTemplateBlock, MessageView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking, StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 import { delivered, inbound, PHONE } from '@/inbox/shared/thread-fixtures';

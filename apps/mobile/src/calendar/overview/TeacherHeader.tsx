@@ -2,11 +2,7 @@ import { teacherName } from '@ab/shared';
 import { pushInTab } from '@/core/nav/back-within';
 import { Pressable, View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Chevron } from '@/core/ui/primitives/Chevron';
+import { t, locale, shape, type, useTheme, AppText, Chevron } from '@ab/mobile-kit';
 import type { TeacherAgenda } from './overview';
 import { teacherMeta, timeOffLine, windowsLine } from './overview-text';
 

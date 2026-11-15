@@ -2,8 +2,7 @@ import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { OVERVIEW } from '@/calendar/overview/overview-fixtures';
 import { LessonRowActions } from './LessonRowActions';
-import { t } from '@/core/lib/i18n/i18n';
-import { palette } from '@/theme';
+import { t, palette } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 
 // An academy that requires lesson confirmation: «تأكيد» exists (OFF: LessonRowActions.no-confirm).

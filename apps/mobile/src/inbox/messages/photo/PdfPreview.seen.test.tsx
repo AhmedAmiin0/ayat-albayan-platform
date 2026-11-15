@@ -1,7 +1,7 @@
 import { pdfMetaLine, type MessageView } from '@ab/shared';
 import { act, screen } from '@testing-library/react-native';
 import type { ViewToken } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { SeenRowsContext, seenRows } from '@/inbox/messages/hooks/seen-rows';
 import { MessageFile } from '@/inbox/messages/components/MessageFile';
@@ -10,8 +10,8 @@ import { PHONE } from '@/inbox/shared/thread-fixtures';
 import { pdfDoc, pdfPage, pdfPath } from './photo-test-kit';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

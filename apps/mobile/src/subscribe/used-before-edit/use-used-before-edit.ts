@@ -1,9 +1,7 @@
 import { riyadhToday, usedBeforeEditOffered, usedBeforeStateSchema } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { z } from 'zod';
-import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, apiFetch, apiSend, pathKey, t } from '@ab/mobile-kit';
 
 /** The package as both cards hold it (the stepper's bounds come from the server's state). */
 export interface EditablePackage {

@@ -19,7 +19,7 @@ const channel = {
 
 /** The Supabase stub gains a realtime client; the app counts as open (AppState 'active'). */
 export function fakeRealtime(): void {
-  const { supabase } = jest.requireMock<{ supabase: object }>('@/core/lib/http/supabase');
+  const { supabase } = jest.requireMock<{ supabase: object }>('@ab/mobile-kit/lib/http/supabase');
   Object.assign(supabase, {
     channel: () => channel,
     removeChannel: () => Promise.resolve('ok'),

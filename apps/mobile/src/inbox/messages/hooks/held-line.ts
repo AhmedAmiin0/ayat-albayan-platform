@@ -1,5 +1,5 @@
 import { isAwaitingReply, type MessageView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { isUnconfirmed } from '@/inbox/thread/send/unconfirmed';
 
 type HeldRow = Pick<MessageView, 'status' | 'error_code'>;

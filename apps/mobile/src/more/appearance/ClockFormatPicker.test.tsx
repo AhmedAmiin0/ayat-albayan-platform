@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { clockCycle, setClockPref } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ClockFormatPicker } from './ClockFormatPicker';
 
 jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));

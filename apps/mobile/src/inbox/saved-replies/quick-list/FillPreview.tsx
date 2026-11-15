@@ -1,7 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 /** «شكل الرد»: the text as it will go into the box, updated with every keystroke. */
 export function FillPreview({ text }: { text: string }) {

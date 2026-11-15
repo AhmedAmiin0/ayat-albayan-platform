@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ClosedNote } from './ClosedNote';
 
 // The closed window's note, a full-width line over «أرسل قالبًا» (owner 2026-10-27): never cut, it wraps.

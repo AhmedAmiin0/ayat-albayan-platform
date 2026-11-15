@@ -1,10 +1,6 @@
 import type { TrialDateResult } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
+import { t, type, useTheme, AppText, Button, NuqtaGlyph } from '@ab/mobile-kit';
 import { whenLines } from '@/trial-date/lib/trial-date-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

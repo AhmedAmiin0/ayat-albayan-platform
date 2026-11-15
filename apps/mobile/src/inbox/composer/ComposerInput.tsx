@@ -1,9 +1,8 @@
 import type { RefObject } from 'react';
 import { Platform, TextInput } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, shape, type, useTheme } from '@ab/mobile-kit';
 import { textMax } from '@/inbox/composer/edit/text-target';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
-import { shape, type, useTheme } from '@/theme';
 
 export interface Selection {
   start: number;

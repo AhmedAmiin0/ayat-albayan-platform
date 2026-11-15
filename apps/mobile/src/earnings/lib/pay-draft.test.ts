@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { checkPayDraft, type PayDraft } from './pay-draft';
 
 const now = new Date('2026-10-03T10:00:00Z');

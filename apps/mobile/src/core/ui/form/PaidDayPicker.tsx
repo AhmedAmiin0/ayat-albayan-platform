@@ -1,8 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
 import { FormLabel } from './FormLabel';
 import { paidDayLabel } from '@/core/lib/money/paid-day';

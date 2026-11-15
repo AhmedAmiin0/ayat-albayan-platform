@@ -1,10 +1,8 @@
 import { allowedPeopleActions, type PeopleActionKind, type PeopleDone } from '@ab/client-core';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
+import { usePermissions, t, Button } from '@ab/mobile-kit';
 import { Note } from '@/more';
-import { Button } from '@/core/ui/primitives/Button';
 import { AttachSheet } from './attach/AttachSheet';
 import { ConvertSheet } from './convert/ConvertSheet';
 import { EditDataSheet } from './EditDataSheet';

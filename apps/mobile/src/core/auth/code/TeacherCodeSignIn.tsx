@@ -1,6 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
-import { CodeSignIn } from './CodeSignIn';
+import { t, Button, CodeSignIn } from '@ab/mobile-kit';
 
 /**
  * The teacher's «الدخول برمز واتساب» inside the login screen (docs/46 A8). `onBack` returns to the

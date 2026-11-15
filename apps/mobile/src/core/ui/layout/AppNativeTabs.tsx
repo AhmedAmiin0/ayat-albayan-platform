@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router/js-tabs';
-import { useTheme } from '@/theme';
+import { useTheme } from '@ab/mobile-kit';
 import { GlassTabBar } from './GlassTabBar';
 import type { TabIconName } from './tab-icons';
 

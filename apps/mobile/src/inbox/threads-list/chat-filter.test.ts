@@ -1,5 +1,5 @@
 import type { ThreadView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { choiceQuery, threadsEmptyTitle, waitingForReply } from './chat-filter';
 

@@ -1,7 +1,7 @@
 import { attachModel, emptyFamily, type AttachModel, type MoveChoice } from '@ab/client-core';
 import type { PeopleEditView } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import {
   moveFamily,
   useFamilySearch,

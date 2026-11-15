@@ -1,7 +1,7 @@
 import { callEntryText as entryText } from '@ab/client-core';
 import { formatPhone, type CallEntryKind, type CallView } from '@ab/shared';
-import type { Palette } from '@/theme';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
+import type { Palette } from '@ab/mobile-kit';
 
 /** «مكالمة صوتية صادرة · 2:14», «مكالمة واردة · 0:40», «مكالمة فائتة», «لم يُرَدّ», «مكالمة جارية». */
 export const callEntryText = (call: CallView): string => entryText(call, t.calls);

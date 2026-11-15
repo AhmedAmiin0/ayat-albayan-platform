@@ -113,5 +113,5 @@ write('apps/mobile/assets/android-icon-monochrome.png', encode(place(monochrome(
 // (monochrome stays white under clear pixels: Android only reads its alpha)
 write('apps/mobile/assets/splash-icon.png', emblem({ w: 1024, fill: 0.9 }));
 write('apps/mobile/assets/favicon.png', fav48);
-write('apps/mobile/assets/brand/mark.png', encode(tall(master, 192)));
-write('apps/mobile/assets/brand/mark-small.png', encode(wide(mushaf, 96)));
+write('packages/mobile-kit/assets/brand/mark.png', encode(tall(master, 192)));
+write('packages/mobile-kit/assets/brand/mark-small.png', encode(wide(mushaf, 96)));

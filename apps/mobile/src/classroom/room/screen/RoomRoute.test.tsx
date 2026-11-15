@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { LESSON, withInsets } from '@/classroom/room/state/room-test-kit';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { RoomRoute } from './RoomRoute';
 
 let mockParams: Record<string, string> = {};

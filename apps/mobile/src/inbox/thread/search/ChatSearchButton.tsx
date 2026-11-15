@@ -1,6 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { IconButton } from '@/core/ui/primitives/IconButton';
-import { useTheme } from '@/theme';
+import { t, IconButton, useTheme } from '@ab/mobile-kit';
 import { SearchIcon } from '@/inbox/shared/chat-icons';
 import { useChatSearch } from './search-context';
 

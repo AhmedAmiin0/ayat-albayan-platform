@@ -1,8 +1,6 @@
 import type { AssistantStatementLineView } from '@ab/shared';
 import { View } from 'react-native';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Ltr } from '@/core/ui/primitives/Ltr';
+import { type, useTheme, AppText, Ltr } from '@ab/mobile-kit';
 import { AmountText } from './AmountText';
 import { lineText } from '@/sales-money/lib/money-text';
 

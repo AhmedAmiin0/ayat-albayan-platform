@@ -1,5 +1,5 @@
 import type { PaymentView } from '@ab/shared';
-import { useHolds } from '@/core/auth/use-permissions';
+import { useHolds } from '@ab/mobile-kit';
 import { amountEditable } from './amount-edit';
 import { EditAmountButton } from './EditAmountButton';
 import { useAdminAmountEdit } from './use-amount-edit';

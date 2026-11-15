@@ -1,6 +1,5 @@
 import { isSavedReplyError } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { ChatFileError } from '@/inbox/composer/send-file';
 
 const codeOf = (error: unknown): unknown =>

@@ -3,18 +3,12 @@ import type { TeacherEarningView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { t, Button, BackButton, ErrorState, Screen, ScreenHeader, locale } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { EarningsHeader, type Tab } from '@/earnings/components/EarningsHeader';
 import { PaymentsList, SessionsList } from '@/earnings/components/EarningsList';
 import { PayForm } from '@/earnings/components/PayForm';
 import { useEarningsBalance, type SessionFilter } from '@/earnings/hooks/queries';
-import { locale } from '@/core/lib/i18n/locale';
 
 /**
  * «مستحقات» of a teacher (admin: More > المعلمين > teacher): the balance, the sessions with ticks,

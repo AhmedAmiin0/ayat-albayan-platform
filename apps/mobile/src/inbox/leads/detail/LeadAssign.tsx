@@ -1,13 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { View } from 'react-native';
-import { usePermissions } from '@/core/auth/use-permissions';
-import { apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
+import {
+  usePermissions,
+  apiSend,
+  t,
+  pathKey,
+  type,
+  useTheme,
+  AppText,
+  Button,
+  FilterPills,
+  type FilterPill,
+} from '@ab/mobile-kit';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import type { Lead } from '@/inbox/shared/types';
 import { useSalesPeople } from './use-sales-people';

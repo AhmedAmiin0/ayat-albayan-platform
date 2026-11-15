@@ -1,12 +1,9 @@
 import { normalizePhone } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Field, ScreenHeader, Button } from '@ab/mobile-kit';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Note } from '@/core/ui/feedback/Note';
-import { Field } from '@/core/ui/form/Field';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { Button } from '@/core/ui/primitives/Button';
 import { type FoundNumber, useLookupNumber } from './use-new-chat';
 
 interface PhoneStepProps {

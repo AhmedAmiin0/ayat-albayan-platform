@@ -1,9 +1,7 @@
 import type { StickerItem } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Image, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { threadFileQuery } from '@/inbox/messages/hooks/thread-file';
 
 /** A sticker's cell in the panel (WhatsApp's are 512×512 WebP, shown uncut). */

@@ -1,10 +1,8 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, StatusChip, Button } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { Button } from '@/core/ui/primitives/Button';
 import { TeacherCancelForm } from './TeacherCancelForm';
 import { useTeacherActs, type TeacherActs } from './use-teacher-acts';
 

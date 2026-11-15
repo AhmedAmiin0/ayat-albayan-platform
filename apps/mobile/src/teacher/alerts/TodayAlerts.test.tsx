@@ -3,7 +3,7 @@ import type { NotificationsPage } from '@ab/shared';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { held, later, NOW } from '@/teacher/today/testing/day-fixtures';
 import { resetHomePrefs, saveHomePrefs } from './home-prefs';
@@ -11,8 +11,8 @@ import { TodayAlerts } from './TodayAlerts';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn(() => Promise.resolve(undefined));
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
   apiSend: (...a: unknown[]) => mockApiSend(...(a as [])),
 }));

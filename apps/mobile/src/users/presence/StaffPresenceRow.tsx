@@ -1,11 +1,9 @@
 import { presenceLine } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import type { PresenceClock } from '@/core/lib/presence';
 import { PresenceLabel } from '@/core/ui/feedback/PresenceLabel';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { roleText } from '@/users/shared/format';
-import { type, useTheme } from '@/theme';
 import type { StaffLine } from './staff-order';
 
 /** One staff member: name and role, then «متصل الآن» (dot) / «آخر ظهور …» / «لم يظهر بعد». */

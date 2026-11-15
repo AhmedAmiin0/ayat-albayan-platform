@@ -1,14 +1,10 @@
 import { hourLabel, MEETING_DURATION_MAX, MEETING_DURATION_MIN } from '@ab/shared';
 import { useClockCycle } from '@/core/lib/clock';
-import { locale } from '@/core/lib/i18n/locale';
+import { locale, t, type, useTheme, AppText, FilterPills } from '@ab/mobile-kit';
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import { Note } from '@/core/ui/feedback/Note';
 import { Stepper } from '@/finance/pricing/Stepper';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { dayChipLabel, minutesText, tzNote } from '@/meetings/invite/invite-text';
 import { dateChoices, type Slot } from './schedule-time';
 

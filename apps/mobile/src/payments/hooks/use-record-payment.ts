@@ -2,7 +2,7 @@ import { pendingRequestId, uploadOnce } from '@ab/client-core';
 import type { PaymentView, StudentBalanceView } from '@ab/shared';
 import { useMutation, useQueryClient, type Query } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import type { Page } from '@/core/lib/query/paging';
 import { requestId } from '@/core/lib/http/request-id';
 import { useAttachmentPaths } from '@/payments/receipts/attachments';

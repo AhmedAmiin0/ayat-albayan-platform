@@ -1,7 +1,6 @@
 import { phoneE164 } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { requestSearch } from './search-request';
 
 /**

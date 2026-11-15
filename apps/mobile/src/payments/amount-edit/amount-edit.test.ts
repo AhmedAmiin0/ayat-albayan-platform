@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { amountEditable, checkNewAmount, salesAmountEditable } from './amount-edit';
 
 test('a new amount: positive, ≤ 2 decimals, Arabic digits too', () => {

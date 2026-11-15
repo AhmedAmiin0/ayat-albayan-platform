@@ -1,9 +1,7 @@
 import { MAX_SEGMENTS, segmentsOf, type ReportSegment, type SegmentKind } from '@ab/shared';
 import { fillSlots, rangeLabel, rangeMeta } from '@ab/client-core';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, locale, Button } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { gradePart } from '@/teacher/report/v2/hooks/content-edit';
 import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';

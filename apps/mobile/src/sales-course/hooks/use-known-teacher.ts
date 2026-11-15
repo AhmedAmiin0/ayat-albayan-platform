@@ -1,6 +1,6 @@
 import { teacherName, type Program } from '@ab/shared';
 import { useBookingTeachers } from '@/booking/shared/queries';
-import { locale } from '@/core/lib/i18n/locale';
+import { locale } from '@ab/mobile-kit';
 
 export interface KnownTeacher {
   /** Her name; '' until loaded or when she is no longer listed (no row is shown then). */

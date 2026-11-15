@@ -1,7 +1,5 @@
 import { Pressable } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, AppText } from '@ab/mobile-kit';
 import { useSmall } from '@/inbox/messages/components/MessageMeta';
 import type { MediaProblem } from './media-problem';
 

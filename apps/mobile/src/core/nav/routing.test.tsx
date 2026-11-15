@@ -1,25 +1,21 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Appearance, Text } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { queryClient } from '@/core/lib/query/query-client';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, queryClient, pathKey, APPEARANCE_KEY, registerPush } from '@ab/mobile-kit';
 import { fullAccessMe } from '@/test/staff-me';
-import { APPEARANCE_KEY } from '@/more/appearance/appearance';
 import { TabStack } from '@/core/nav/TabStack';
-import { registerPush } from '@/core/push/registerPush';
 import TabsLayout from '../../../app/(tabs)/_layout';
 import RootLayout from '../../../app/_layout';
 
 // The real root + tabs layouts with stub screens: proves the gate decides what can be reached.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 // Permissions and the inbox badge read the API: an admin holding every permission sees every tab.
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? jest.requireActual('@/test/staff-me').fullAccessMe('admin') : { total: 0 }),
 }));
-jest.mock('@/core/auth/use-auth-gate', () => {
+jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => {
   const { useState } = jest.requireActual('react');
   const gate = { initial: 'out', set: (() => undefined) as (mockStatus: string) => void };
   return {
@@ -31,7 +27,7 @@ jest.mock('@/core/auth/use-auth-gate', () => {
     },
   };
 });
-const { mockGate } = jest.requireMock('@/core/auth/use-auth-gate') as {
+const { mockGate } = jest.requireMock('@ab/mobile-kit/auth/use-auth-gate') as {
   mockGate: { initial: string; set: (s: string) => void };
 };
 

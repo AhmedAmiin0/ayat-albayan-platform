@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { clearChatMemory } from '@/inbox/thread/anchor';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
@@ -9,8 +9,8 @@ import { useQuoteSend } from './use-quote-sheet';
 // the sheet closes and opens again, until an answer; the first offer answering a retry is said.
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 jest.mock('@/inbox/thread/hooks/inbox-sync', () => ({

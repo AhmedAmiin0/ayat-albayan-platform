@@ -1,7 +1,7 @@
 import { DESCRIPTION_MAX } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { entriesAnswer, entryOf } from '@/ops/values/testing/entries-fixtures';
 import { labelOf } from '@/ops/values/lib/value-text';
@@ -9,12 +9,12 @@ import { WRITER } from '@/ops/values/testing/values-fixtures';
 import { ValuesScreen } from './ValuesScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
   apiSend: jest.fn(),
 }));
-jest.mock('@/core/lib/i18n/i18n-overrides', () => ({ refreshOverrides: jest.fn() }));
+jest.mock('@ab/mobile-kit/lib/i18n/i18n-overrides', () => ({ refreshOverrides: jest.fn() }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() } }));
 
 const d = t.mobileValues.description;

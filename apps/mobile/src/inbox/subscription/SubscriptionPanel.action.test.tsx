@@ -1,8 +1,7 @@
 import type { ThreadPeople } from '@ab/shared';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
-import { isolate, ltr } from '@/core/ui/primitives/Ltr';
+import { t, isolate, ltr } from '@ab/mobile-kit';
 import { child, CHILD_ID, family, usedUp } from './people-fixtures';
 import { SubscriptionPanel } from './SubscriptionPanel';
 

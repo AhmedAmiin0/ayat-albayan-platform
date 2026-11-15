@@ -7,10 +7,8 @@ import {
   type LessonView,
 } from '@ab/shared';
 import { clockIn, whenIn } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale, ltr } from '@ab/mobile-kit';
 import type { TreeBase } from '@/core/nav/tree-base';
-import { ltr } from '@/core/ui/primitives/Ltr';
 
 // What the lesson details sheet says (R-SCH-01): the viewer's time with every student's and the
 // teacher's own clock (the web drawer's wording), the length, the weekly series, each student's

@@ -1,13 +1,10 @@
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { localDay } from '@/core/lib/money/format';
 import { FormLabel } from '@/core/ui/form/FormLabel';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
 import { shiftDay } from './terms-form';
 
 interface StartDayPickerProps {

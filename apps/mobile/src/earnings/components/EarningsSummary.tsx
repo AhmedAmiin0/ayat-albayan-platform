@@ -1,8 +1,6 @@
 import type { TeacherEarningsBalanceView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { egp } from '@/earnings/lib/format';
 
 function Card({ label, amount, strong }: { label: string; amount: number; strong?: boolean }) {

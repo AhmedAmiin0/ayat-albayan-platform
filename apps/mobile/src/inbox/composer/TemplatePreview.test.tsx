@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { TemplatePreview } from './TemplatePreview';
 import { meetReminder, plainReminder } from '@/inbox/shared/thread-fixtures';

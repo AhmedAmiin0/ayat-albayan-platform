@@ -1,7 +1,6 @@
 import DateTimePicker from '@expo/ui/community/datetime-picker';
 import { useClockCycle } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
+import { t, useTheme } from '@ab/mobile-kit';
 
 interface NativePickerProps {
   mode: 'date' | 'time';

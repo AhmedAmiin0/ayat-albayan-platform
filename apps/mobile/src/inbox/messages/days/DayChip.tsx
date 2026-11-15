@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { CHIP_BORDER, CHIP_MARGIN, CHIP_PAD } from './top-band';
 
 /** A day separator (owner 2026-10-27, as WhatsApp): a small centred chip over the day's first message. */

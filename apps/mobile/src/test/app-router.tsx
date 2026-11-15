@@ -1,9 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter } from 'expo-router/testing-library';
-import type * as Token from '@/core/lib/http/access-token';
-import type * as Within from '@/core/lib/http/read-within';
-import { queryClient } from '@/core/lib/query/query-client';
-import { pathKey } from '@/core/lib/query/query-keys';
+import type * as Token from '@ab/mobile-kit/lib/http/access-token';
+import type * as Within from '@ab/mobile-kit/lib/http/read-within';
+import { queryClient, pathKey } from '@ab/mobile-kit';
 import type { NavState } from '@/core/nav/chat-groups';
 import { currentBackend, type FakeBackend, setBackend } from './fake-backend';
 import type * as Backend from './fake-backend';
@@ -21,12 +20,12 @@ jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('expo-device', () => jest.requireActual('./native-mocks').deviceMock());
 jest.mock('expo-notifications', () => jest.requireActual('./native-mocks').notificationsMock());
 jest.mock('expo-image-picker', () => jest.requireActual('./native-mocks').imagePickerMock());
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   // The real read deadline and token read around the fake answer (owner 2026-11-05: stuck reads).
   apiFetch: (url: string, init?: RequestInit) => {
-    const token = jest.requireActual<typeof Token>('@/core/lib/http/access-token');
-    const within = jest.requireActual<typeof Within>('@/core/lib/http/read-within');
+    const token = jest.requireActual<typeof Token>('@ab/mobile-kit/lib/http/access-token');
+    const within = jest.requireActual<typeof Within>('@ab/mobile-kit/lib/http/read-within');
     const backend = () => jest.requireActual<typeof Backend>('./fake-backend');
     const read = async () => {
       await token.accessToken();
@@ -37,7 +36,7 @@ jest.mock('@/core/lib/http/api', () => ({
   apiSend: (method: string, url: string, body?: unknown) =>
     jest.requireActual('./fake-backend').currentBackend().send(method, url, body),
 }));
-jest.mock('@/core/lib/http/supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   supabase: {
     auth: {
       getSession: jest.fn(async () => ({ data: { session: null }, error: null })),
@@ -56,7 +55,7 @@ jest.mock('@/core/lib/http/supabase', () => ({
     },
   },
 }));
-jest.mock('@/core/auth/use-auth-gate', () => {
+jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => {
   const { useState } = jest.requireActual('react');
   const gate = { initial: 'out', set: (() => undefined) as (mockStatus: string) => void };
   return {
@@ -68,7 +67,7 @@ jest.mock('@/core/auth/use-auth-gate', () => {
     },
   };
 });
-const { mockGate } = jest.requireMock('@/core/auth/use-auth-gate') as {
+const { mockGate } = jest.requireMock('@ab/mobile-kit/auth/use-auth-gate') as {
   mockGate: { initial: string; set: (status: string) => void };
 };
 

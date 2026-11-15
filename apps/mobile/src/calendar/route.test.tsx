@@ -1,12 +1,12 @@
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../app/(tabs)/_layout';
 
 // The More tab's stack gets the teacher calendar and «الجدول» (a static route beside teachers/[id]).
 // The tabs' permission and badge reads need the API: allow everything, no badge, in this routing test.
-jest.mock('@/core/auth/use-permissions', () => ({ usePermissions: () => () => true }));
+jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({ usePermissions: () => () => true }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
 jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
 

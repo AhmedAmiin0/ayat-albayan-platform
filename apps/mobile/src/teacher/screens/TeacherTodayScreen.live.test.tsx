@@ -1,14 +1,14 @@
 import { counted } from '@ab/shared';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { z } from 'zod';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { answer, held } from '@/teacher/today/testing/day-fixtures';
 import { TeacherTodayScreen } from './TeacherTodayScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), navigate: jest.fn() } }));
@@ -20,7 +20,7 @@ jest.mock('@/teacher/alerts', () => ({
   TodayAlerts: () => null,
 }));
 let mockFocused = true;
-jest.mock('@/core/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
+jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
 
 // docs/48 «Reactivity»: two GETs every 30 s, only while «اليوم» is in front.
 /** Ended 15 min ago in our classroom: its join window stays open until ends_at + 120 min. */

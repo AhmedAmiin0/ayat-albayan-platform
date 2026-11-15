@@ -1,7 +1,6 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ltr } from '@ab/mobile-kit';
 import type { AvailabilityRow } from '@/core/lib/staff/types';
 import { lesson } from '@/today/testing/fixtures';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { agendaDays, availabilityLine, headerLine, teacherClock } from './agenda';
 
 // Winter week (Cairo back on UTC+2 since 30 Oct): Saturday 31 Oct → Friday 6 Nov 2026.

@@ -1,9 +1,7 @@
 import type { QueryKey } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useHolds } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { useHolds, t, Button } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { StartDateEditor } from './StartDateEditor';
 import type { StartDatePackage } from './use-start-date-edit';

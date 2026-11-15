@@ -1,17 +1,16 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { riyadhToday } from '@/calendar/lib/week';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ltr } from '@ab/mobile-kit';
 import { money } from '@/core/lib/money/format';
 import { payment } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { PaymentsScreen } from './PaymentsScreen';
 import { monthLabel, monthRange, recentMonths } from '@/money/shared/months';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));

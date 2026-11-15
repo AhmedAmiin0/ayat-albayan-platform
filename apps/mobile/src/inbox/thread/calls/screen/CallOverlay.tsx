@@ -2,7 +2,7 @@ import type { PermissionAsk } from '@ab/client-core';
 import { formatPhone, type ActiveCallView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Modal } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import type { CallSessionApi } from '@/inbox/thread/calls/state/use-call-session';
 import { CallBar } from './CallBar';
 import { CallScreen } from './CallScreen';

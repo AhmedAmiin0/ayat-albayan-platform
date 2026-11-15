@@ -1,5 +1,5 @@
 import { addCalendarDays, addCalendarMonths, dateText } from '@ab/shared';
-import { locale } from '@/core/lib/i18n/locale';
+import { locale } from '@ab/mobile-kit';
 
 // Calendar months (the date-fns facade, docs/34 §7): plain dates, no zone involved.
 

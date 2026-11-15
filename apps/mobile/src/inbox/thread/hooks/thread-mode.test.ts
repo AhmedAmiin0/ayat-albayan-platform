@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { isOwnThread, senderText, threadBase, threadLink, type ThreadMode } from './thread-mode';
 import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 

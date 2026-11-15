@@ -1,14 +1,13 @@
 import { act, screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import TodayRoute from '../../app/(tabs)/index';
 import { pending } from './testing/fixtures';
 
 // Today's saved day offline (R-MOB-03) and pull to refresh.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 // The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.

@@ -1,7 +1,7 @@
 import type { ThreadStudentView } from '@ab/shared';
 import { type Href, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { inTree, type TreeBase, useTreeBase } from '@/core/nav/tree-base';
 import { ThreadMenu, type ThreadMenuItem } from './ThreadMenu';
 

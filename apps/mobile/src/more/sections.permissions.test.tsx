@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { AdminOpsSection } from './sections/AdminOpsSection';
 import { FinanceSection } from './sections/FinanceSection';
 import { MoneySection } from './sections/MoneySection';
 import { MoreScreen } from './screens/MoreScreen';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 const only = (...keys: string[]) => (p: string) => keys.includes(p);
 const row = (name: string) => screen.queryByRole('button', { name });

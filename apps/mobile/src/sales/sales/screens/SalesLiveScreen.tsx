@@ -3,17 +3,19 @@ import { useCallback } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo, View } from 'react-native';
 import { AssistantLessonItem } from '@/classroom/assistants/AssistantLessonItem';
 import { joinableRows } from '@/classroom/assistants/assistant-lessons';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
+import {
+  t,
+  useTheme,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+  useTabBarInset,
+  usePullRefresh,
+} from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useSalesLive } from '@/sales/sales/lib/sales-api';
-import { usePullRefresh } from '@/core/lib/query/pull-refresh';
 
 type Row = ReturnType<typeof joinableRows>[number];
 

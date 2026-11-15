@@ -2,17 +2,19 @@ import type { TeacherChannelRow } from '@ab/shared';
 import type { ReactElement } from 'react';
 import { router } from 'expo-router';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { BackButton } from '@/core/ui/navigation';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import {
+  t,
+  EmptyState,
+  ErrorState,
+  ListRow,
+  Screen,
+  ScreenHeader,
+  useTabBarInset,
+  BackButton,
+  StatusChip,
+  useTheme,
+} from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
-import { useTheme } from '@/theme';
 import { useTeacherChannels } from './channel-queries';
 
 const keyOf = (r: TeacherChannelRow) => r.student_id;

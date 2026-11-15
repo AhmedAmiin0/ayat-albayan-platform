@@ -1,10 +1,7 @@
 import { View } from 'react-native';
 import type { RoomPlatform } from '@/classroom/room/model/room-types';
 import type { useRoomPreview } from '@/classroom/room/state/use-room-preview';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { shape, type, useTheme } from '@/theme';
+import { t, AppText, Button, shape, type, useTheme } from '@ab/mobile-kit';
 import { CameraButton, MicButton } from './MediaButtons';
 import { PreviewNotice } from './PreviewNotice';
 

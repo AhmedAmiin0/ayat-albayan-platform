@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { type AccessibilityActionEvent, type GestureResponderEvent, I18nManager, View } from 'react-native';
-import { shape, useTheme } from '@/theme';
+import { shape, useTheme } from '@ab/mobile-kit';
 import { touchFraction, waveBars } from './voice-math';
 
 /** Once loaded: the screen reader's adjustable control (value in seconds, ±5 s). */

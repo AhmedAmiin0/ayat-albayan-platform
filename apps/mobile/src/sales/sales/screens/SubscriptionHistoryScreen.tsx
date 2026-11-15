@@ -1,10 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { BackButton } from '@/core/ui/navigation';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { t, BackButton, ltr, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { HistoryEntryCard } from '@/sales/sales/components/HistoryEntryCard';
 import { SalesLoadScreen } from '@/sales/sales/components/SalesLoadScreen';
 import { useSubscriptionHistory } from '@/sales/sales/lib/sales-api';

@@ -1,8 +1,6 @@
 import type { InvoiceView } from '@ab/shared';
 import { memo } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { t, ListRow, StatusChip } from '@ab/mobile-kit';
 import { invoiceStudents, invoiceSubtitle } from './invoice-text';
 import { useViewerTz } from '@/core/lib/clock';
 

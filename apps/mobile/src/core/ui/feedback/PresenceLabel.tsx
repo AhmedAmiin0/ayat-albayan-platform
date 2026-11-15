@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { type, useTheme, AppText } from '@ab/mobile-kit';
 
 interface PresenceLabelProps {
   /** «متصل الآن» / «آخر ظهور …» / «آخر رسالة …»; '' renders nothing. */

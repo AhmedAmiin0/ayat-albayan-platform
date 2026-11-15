@@ -1,9 +1,7 @@
 import { roleActions, toGuardianHint } from '@ab/client-core';
 import { Switch, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, Button } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
 import { Note } from '@/more';
 import type { PeopleSheetProps } from '@/students/people-edit/PeopleEditSection';
 import { useConvert } from './use-convert';

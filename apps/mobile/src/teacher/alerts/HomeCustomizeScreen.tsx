@@ -1,12 +1,8 @@
 import { type PrefSwitch, prefSwitches } from '@ab/client-core';
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Screen, ScreenHeader, BackButton, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { BackButton } from '@/core/ui/navigation';
-import { InsetGroup } from '@/core/ui/surface/inset';
 import { saveHomePrefs, useHomePrefs } from './home-prefs';
 import { PrefSwitchRow } from './PrefSwitchRow';
 

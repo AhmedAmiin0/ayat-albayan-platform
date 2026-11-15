@@ -2,12 +2,10 @@ import { teacherName } from '@ab/shared';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, BackButton, ScreenHeader, locale } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { useTreeBase } from '@/core/nav/tree-base';
-import { BackButton } from '@/core/ui/navigation';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { BookedPanel } from '@/booking/shared/BookedPanel';
 import { bookFailure } from '@/booking/shared/booking-errors';
 import { draftFromLead, type BookingLead, type StudentChoice, type TrialDraft } from '@/booking/trial/lib/draft';
@@ -16,7 +14,6 @@ import { stepsFor, type Step } from '@/booking/trial/lib/steps';
 import { useBookingMode } from '@/booking/shared/booking-mode';
 import { useBookTrial } from '@/booking/trial/lib/use-book-trial';
 import { WizardStep } from './WizardStep';
-import { locale } from '@/core/lib/i18n/locale';
 
 const stepNames = (): Record<Step, string> => ({
   contact: t.booking.steps.students,

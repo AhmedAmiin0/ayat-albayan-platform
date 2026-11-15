@@ -2,11 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { raisedCard } from '@/core/ui/surface/surface';
-import { type, useTheme } from '@/theme';
+import { t, Button, AppText, raisedCard, type, useTheme } from '@ab/mobile-kit';
 import { studentNames } from '@/today';
 import type { DayEndKind } from './teacher-day';
 

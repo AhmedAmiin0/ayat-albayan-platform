@@ -1,7 +1,7 @@
 import type { ThreadView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { act } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { memoryPort } from '@/test/node-sql';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
@@ -14,8 +14,8 @@ import { applyAs, plan } from '@/inbox/thread/store/store-fixtures';
 // «sent» shows the store's ✓✓ for the same last message (the owner's pending tick, one source).
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));

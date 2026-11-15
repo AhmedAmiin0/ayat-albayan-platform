@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { leaveAnchor } from './use-anchor-param';
 
 const PILL = { position: 'absolute', bottom: 12, start: 0, end: 0, alignItems: 'center' } as const;

@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import type { ThreadPeople } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { isolate } from '@ab/mobile-kit';
 import { child, family, usedUp } from './people-fixtures';
 import { SubscriptionPanel } from './SubscriptionPanel';
 

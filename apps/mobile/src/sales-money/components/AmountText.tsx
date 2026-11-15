@@ -1,6 +1,5 @@
 import { money } from '@/core/lib/money/format';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { type, useTheme, AppText } from '@ab/mobile-kit';
 
 interface AmountTextProps {
   amount: number;

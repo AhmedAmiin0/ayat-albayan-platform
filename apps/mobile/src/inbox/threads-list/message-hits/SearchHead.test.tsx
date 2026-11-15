@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { SearchHead } from './SearchHead';
 
 // Above the chats while searching (docs/37): the hint at 1–2 characters, «المحادثات» when both

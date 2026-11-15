@@ -7,12 +7,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Modal } from 'react-native';
-import { apiFetch } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { Button } from '@/core/ui/primitives/Button';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import { apiFetch, t, pathKey, Button, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { TemplateForm } from './TemplateForm';
 import { TemplateList, templateName } from './TemplateList';
 import type { Outgoing } from '@/inbox/thread/hooks/use-thread';

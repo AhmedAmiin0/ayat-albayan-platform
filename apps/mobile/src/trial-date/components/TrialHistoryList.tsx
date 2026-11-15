@@ -1,10 +1,7 @@
 import type { TrialHistory } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
+import { t, type, useTheme, AppText, ErrorState } from '@ab/mobile-kit';
 import { HISTORY_CAP } from '@/trial-date/lib/history-cap';
 import { countText } from '@/trial-date/lib/trial-date-text';
 import { ShowAll } from './ShowAll';

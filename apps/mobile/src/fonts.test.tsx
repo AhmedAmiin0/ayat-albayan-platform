@@ -1,8 +1,7 @@
 import { render as renderRaw, screen } from '@testing-library/react-native';
 import type { ReactElement } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { queryClient } from '@/core/lib/query/query-client';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { queryClient, pathKey } from '@ab/mobile-kit';
 import { fullAccessMe } from '@/test/staff-me';
 import RootLayout from '../app/_layout';
 
@@ -11,7 +10,7 @@ import RootLayout from '../app/_layout';
 const mockUseFonts = jest.fn();
 const mockGate = jest.fn();
 jest.mock('expo-font', () => ({ useFonts: (map: object) => mockUseFonts(map) }));
-jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => mockGate() }));
+jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => ({ useAuthGate: () => mockGate() }));
 jest.mock('expo-router', () => {
   const { createElement, Fragment } = jest.requireActual('react');
   const { Text } = jest.requireActual('react-native');

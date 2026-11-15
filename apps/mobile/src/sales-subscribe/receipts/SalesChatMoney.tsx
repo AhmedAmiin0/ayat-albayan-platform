@@ -1,7 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import { router } from 'expo-router';
-import { useHolds } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
+import { useHolds, t } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { openPackages, useSalesFamily } from '@/sales-subscribe/lib/family';

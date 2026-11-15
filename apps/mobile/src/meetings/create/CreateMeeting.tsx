@@ -1,9 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { usePermissions, t, Button } from '@ab/mobile-kit';
 import { CreateMeetingDone } from './CreateMeetingDone';
 import { CreateMeetingForm } from './CreateMeetingForm';
 import { createMeetingWith } from '@/meetings/invite/invite-api';

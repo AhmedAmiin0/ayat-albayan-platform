@@ -1,10 +1,6 @@
 import { canRetryCode, canSendViaWhatsApp, type MessageView } from '@ab/shared';
 import { Linking } from 'react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { ApiError, t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
 import { errorLine } from '@/inbox/messages/hooks/message-text';

@@ -1,8 +1,7 @@
 import { parseWaMarkup, type WaSpan, type WaStyle } from '@ab/shared';
 import type { ReactNode } from 'react';
 import type { TextProps, TextStyle } from 'react-native';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type } from '@/theme';
+import { AppText, type } from '@ab/mobile-kit';
 
 type Mark = keyof WaStyle;
 

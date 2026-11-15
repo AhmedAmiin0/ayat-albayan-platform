@@ -6,13 +6,12 @@ import {
   SITE_COUNTRIES,
 } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
 import { DiscountField } from '@/finance/pricing/DiscountField';
 import type { PlanChoice } from '@/finance/pricing/selection';
 import { Stepper } from '@/finance/pricing/Stepper';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import type { SubscribeForm } from './subscribe-form';
 
 const p = t.pricing;

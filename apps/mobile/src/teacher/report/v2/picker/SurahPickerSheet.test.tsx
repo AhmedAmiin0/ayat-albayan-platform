@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { startDraft } from './picker-state';
 import { SurahPickerSheet } from './SurahPickerSheet';
 

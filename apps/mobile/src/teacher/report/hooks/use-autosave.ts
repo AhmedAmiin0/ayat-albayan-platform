@@ -1,7 +1,7 @@
 import { AUTOSAVE_MS, draftBody, shouldSave, type DraftBody, type FormValues, type ReportFormResponse, type ReportView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { pathKey } from '@ab/mobile-kit';
 import { saveDraft, withReport } from './api';
 
 export type SaveState = { kind: 'idle' } | { kind: 'saving' } | { kind: 'saved'; at: Date } | { kind: 'failed' };

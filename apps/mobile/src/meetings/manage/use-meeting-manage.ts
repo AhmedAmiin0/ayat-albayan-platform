@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { endMeeting, newMeetingLink } from './api';
 import { cancelMeeting } from '@/meetings/invite/invite-api';
 import { inviteError } from '@/meetings/invite/invite-text';

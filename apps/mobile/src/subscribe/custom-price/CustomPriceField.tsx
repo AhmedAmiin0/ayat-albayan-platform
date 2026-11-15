@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { AmountField, currencyName } from '@/payments';
 import type { CustomPrice } from './use-custom-price';

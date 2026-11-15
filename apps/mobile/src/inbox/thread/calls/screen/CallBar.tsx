@@ -3,9 +3,7 @@ import type { ActiveCallView } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSyncExternalStore } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { PhoneIcon } from './call-icons';
 
 /** Below a screen's header (ChatHeader / ScreenHeader are ~52pt). */

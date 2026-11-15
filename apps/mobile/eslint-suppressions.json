@@ -126,17 +126,6 @@
       "count": 3
     }
   },
-  "src/account/hooks/queries.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    },
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/account/hooks/use-account-action.ts": {
     "max-len": {
       "count": 1
@@ -1111,6 +1100,11 @@
       "count": 1
     }
   },
+  "src/calendar/live/LiveBadge.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
   "src/calendar/overview/PeriodSwitcher.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -1420,42 +1414,6 @@
       "count": 1
     }
   },
-  "src/core/auth/forgot/AuthAlert.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/auth/forgot/ForgotPassword.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/auth/forgot/auth-errors.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/auth/forgot/use-forgot.ts": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 2
-    }
-  },
-  "src/core/auth/login-notice.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/auth/role-claim.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    }
-  },
   "src/core/auth/route-permissions.test.ts": {
     "max-len": {
       "count": 1
@@ -1466,43 +1424,9 @@
       "count": 4
     }
   },
-  "src/core/auth/sign-in.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/core/auth/sign-in.username.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/auth/use-auth-gate.ts": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/core/auth/use-permissions.ts": {
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 7
-    }
-  },
   "src/core/auth/use-tab-open.ts": {
     "max-len": {
       "count": 1
-    }
-  },
-  "src/core/auth/verify-role.ts": {
-    "max-len": {
-      "count": 4
     }
   },
   "src/core/lib/clipboard.ts": {
@@ -1533,135 +1457,8 @@
       "count": 4
     }
   },
-  "src/core/lib/connectivity/connectivity-machine.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/connectivity/connectivity-machine.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/connectivity/connectivity-store.ts": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 3
-    },
-    "@typescript-eslint/no-meaningless-void-operator": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/core/lib/connectivity/connectivity.ts": {
-    "@typescript-eslint/restrict-template-expressions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/lib/connectivity/probe.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/lib/http/api.connectivity.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/http/api.test.ts": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 1
-    }
-  },
-  "src/core/lib/http/api.ts": {
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
-    },
-    "@typescript-eslint/unbound-method": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/lib/http/client-tag.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/core/lib/http/env.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 3
-    }
-  },
   "src/core/lib/http/request-id.ts": {
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/http/supabase.ts": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 2
-    }
-  },
-  "src/core/lib/i18n/i18n-overrides.test.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/i18n/i18n-overrides.ts": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "no-restricted-globals": {
-      "count": 1
-    }
-  },
-  "src/core/lib/i18n/locale-switch.phone.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/i18n/locale-switch.ts": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/i18n/locale.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/log/log.ts": {
-    "no-console": {
       "count": 1
     }
   },
@@ -1741,37 +1538,6 @@
       "count": 3
     },
     "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/lib/query/pull-refresh.ts": {
-    "max-len": {
-      "count": 2
-    },
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/lib/query/query-client.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/query/query-client.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/core/lib/query/query-keys.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/query/query-keys.ts": {
-    "max-len": {
       "count": 1
     }
   },
@@ -1923,25 +1689,12 @@
       "count": 1
     }
   },
-  "src/core/push/device-key.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/core/push/flow-backend.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 3
     },
     "ab/module-boundaries": {
       "count": 2
-    }
-  },
-  "src/core/push/live-session.test.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/core/push/notification-route.roles.test.ts": {
@@ -1965,11 +1718,6 @@
       "count": 1
     }
   },
-  "src/core/push/permission.test.ts": {
-    "@typescript-eslint/no-unsafe-enum-assignment": {
-      "count": 1
-    }
-  },
   "src/core/push/push-data.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
@@ -1979,35 +1727,6 @@
     }
   },
   "src/core/push/push.flow.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/push/registerPush.device-key.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/push/registerPush.forbidden.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/push/registerPush.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/push/silence-push.ts": {
     "max-len": {
       "count": 1
     }
@@ -2059,82 +1778,6 @@
       "count": 1
     }
   },
-  "src/core/ui/connecting/BarCard.test.tsx": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/ui/connecting/BarCard.tsx": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/ui/connecting/CheckBadge.test.tsx": {
-    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/connecting/CheckBadge.tsx": {
-    "max-len": {
-      "count": 5
-    },
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/ui/connecting/ConnectingBar.test.tsx": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 1
-    },
-    "@typescript-eslint/no-meaningless-void-operator": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/core/ui/connecting/ConnectingBar.tsx": {
-    "max-len": {
-      "count": 3
-    },
-    "no-restricted-syntax": {
-      "count": 2
-    }
-  },
-  "src/core/ui/connecting/ConnectingDots.test.tsx": {
-    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/connecting/ConnectingDots.tsx": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/core/ui/connecting/HeaderConnectingBar.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/connecting/TopConnectingBar.test.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/connecting/TopConnectingBar.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/core/ui/connecting/bar-placement.test.tsx": {
     "max-len": {
       "count": 2
@@ -2143,47 +1786,7 @@
       "count": 2
     }
   },
-  "src/core/ui/connecting/use-bar-phase.test.ts": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 5
-    },
-    "@typescript-eslint/no-meaningless-void-operator": {
-      "count": 5
-    }
-  },
-  "src/core/ui/connecting/use-bar-phase.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/ui/connecting/use-bar-reveal.ts": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 1
-    },
-    "@typescript-eslint/no-meaningless-void-operator": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/ui/connecting/use-screen-focus.ts": {
-    "max-len": {
-      "count": 1
-    },
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/core/ui/feedback/ErrorLine.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/feedback/ErrorState.tsx": {
     "max-len": {
       "count": 1
     }
@@ -2208,40 +1811,8 @@
       "count": 1
     }
   },
-  "src/core/ui/feedback/StatusChip.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/core/ui/feedback/lesson-status.ts": {
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/form/Field.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/form/Field.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/core/ui/form/FilterPills.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    },
-    "max-lines-per-function": {
       "count": 1
     }
   },
@@ -2297,69 +1868,14 @@
       "count": 2
     }
   },
-  "src/core/ui/layout/KeyboardFrame.test.tsx": {
-    "max-len": {
-      "count": 3
-    },
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/core/ui/layout/KeyboardFrame.tsx": {
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/ui/layout/ListRow.tsx": {
-    "max-len": {
-      "count": 7
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
   "src/core/ui/layout/PhoneText.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/core/ui/layout/Screen.inset.test.tsx": {
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/ui/layout/Screen.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/layout/Screen.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 8
-    },
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/ui/layout/ScreenHeader.tsx": {
-    "max-len": {
-      "count": 5
-    },
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
   "src/core/ui/layout/TabBadge.tsx": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/core/ui/layout/tab-bar-inset.ts": {
-    "no-restricted-syntax": {
-      "count": 1
     }
   },
   "src/core/ui/layout/use-pill-offset.ts": {
@@ -2386,11 +1902,6 @@
       "count": 1
     }
   },
-  "src/core/ui/lists/ListRowTitle.tsx": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/core/ui/lists/ReportRows.tsx": {
     "max-len": {
       "count": 10
@@ -2402,166 +1913,12 @@
       "count": 1
     }
   },
-  "src/core/ui/motion/use-cycle.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/motion/use-cycle.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/motion/use-pulse.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/ui/primitives/AppText.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/primitives/AppText.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/primitives/Avatar.test.tsx": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/core/ui/primitives/Avatar.tsx": {
-    "max-len": {
-      "count": 9
-    },
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/ui/primitives/Button.tsx": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/core/ui/primitives/Chevron.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/primitives/Chevron.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/core/ui/primitives/ContentText.tsx": {
     "max-len": {
       "count": 1
     }
   },
   "src/core/ui/primitives/GlassGradient.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/primitives/IconButton.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/core/ui/primitives/Ltr.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/primitives/Mark.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/primitives/NuqtaGlyph.tsx": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/ui/startup/RetryButton.tsx": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/core/ui/startup/StartupEmblem.test.tsx": {
-    "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/startup/StartupOverlay.test.tsx": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 1
-    },
-    "@typescript-eslint/no-meaningless-void-operator": {
-      "count": 1
-    }
-  },
-  "src/core/ui/startup/StartupOverlay.tsx": {
-    "max-len": {
-      "count": 2
-    },
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/ui/startup/StartupScreen.test.tsx": {
-    "@typescript-eslint/no-confusing-void-expression": {
-      "count": 1
-    },
-    "@typescript-eslint/no-meaningless-void-operator": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/core/ui/startup/StartupScreen.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/startup/StartupStatus.tsx": {
-    "max-len": {
-      "count": 3
-    },
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/ui/startup/startup-mode.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/startup/use-startup-stage.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/surface/inset.test.tsx": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/core/ui/surface/inset.tsx": {
-    "max-len": {
-      "count": 8
-    },
-    "no-restricted-syntax": {
-      "count": 3
-    }
-  },
-  "src/core/ui/surface/surface.ts": {
     "max-len": {
       "count": 1
     }
@@ -4880,9 +4237,6 @@
     }
   },
   "src/inbox/saved-replies/quick-list/use-fill-reply.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -5773,11 +5127,6 @@
       "count": 1
     }
   },
-  "src/calendar/live/LiveBadge.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/meetings/create/CreateMeetingDone.tsx": {
     "max-len": {
       "count": 3
@@ -6145,11 +5494,6 @@
   },
   "src/more/appearance/LanguageRow.tsx": {
     "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/more/appearance/appearance.ts": {
-    "max-len": {
       "count": 1
     }
   },

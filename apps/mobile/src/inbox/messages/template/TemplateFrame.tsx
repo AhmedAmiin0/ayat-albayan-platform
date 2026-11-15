@@ -1,9 +1,7 @@
 import type { MessageTemplateBlock, TemplateHeader } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { AttachIcon } from '@/inbox/shared/chat-icons';
 import { DocumentIcon } from '@/inbox/shared/composer-icons';

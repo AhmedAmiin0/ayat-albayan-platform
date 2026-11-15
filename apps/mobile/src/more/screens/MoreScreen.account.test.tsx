@@ -2,14 +2,13 @@ import { avatarTone, avatarTones } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { router } from 'expo-router';
-import { PROFILE_KEY } from '@/account/hooks/queries';
-import { t } from '@/core/lib/i18n/i18n';
+import { PROFILE_KEY, t } from '@ab/mobile-kit';
 import { profileFixture, savedProfile } from '@/test/account';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { MoreScreen } from './MoreScreen';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 const seeded = (profile = profileFixture) => {
   const client = createTestQueryClient();

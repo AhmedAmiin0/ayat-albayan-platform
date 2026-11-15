@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { palette } from '@/theme';
+import { palette } from '@ab/mobile-kit';
 import { PicksList } from './PicksList';
 
 const picks = ['2026-11-01T15:00:00.000Z', '2026-11-03T15:00:00.000Z'];

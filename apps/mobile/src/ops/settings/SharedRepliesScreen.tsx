@@ -1,13 +1,8 @@
 import type { SavedReply } from '@ab/shared';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, useTheme, Button, ErrorState, IconButton, Screen } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { IconButton } from '@/core/ui/primitives/IconButton';
-import { Screen } from '@/core/ui/layout/Screen';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { DownIcon, TrashIcon, UpIcon } from '@/inbox/shared/chat-icons';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';

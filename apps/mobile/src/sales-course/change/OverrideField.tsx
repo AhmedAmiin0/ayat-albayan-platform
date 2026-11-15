@@ -1,7 +1,6 @@
 import type { Conflict } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { Field } from '@/core/ui/form/Field';
+import { t, Field } from '@ab/mobile-kit';
 import type { ChangeTarget } from './change-body';
 
 interface OverrideInput {

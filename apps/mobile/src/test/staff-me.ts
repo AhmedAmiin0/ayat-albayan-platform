@@ -1,6 +1,6 @@
 import { GRANTABLE_PERMISSIONS, selfPermissionsOf, type UserRole } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { pathKey } from '@ab/mobile-kit';
 
 // Tests that are not about permissions sign in as staff holding every key: since docs/27 E2 (owner D6)
 // nothing is granted until /auth/me has answered, where it used to hide nothing.

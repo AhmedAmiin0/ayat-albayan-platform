@@ -1,7 +1,7 @@
 import type { ChannelMessageView } from '@ab/shared';
 import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ChannelBubble } from './ChannelBubble';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).

@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { paidAtFor, paidDayLabel } from './paid-day';
 
 // Thursday 1 Oct 2026, 00:20 in Riyadh (still 30 Sep in UTC).

@@ -1,7 +1,6 @@
 import { liveDotState, type LiveDotState } from '@ab/client-core';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
+import { t, useTheme } from '@ab/mobile-kit';
 import { useInboxLive } from './inbox-live';
 
 /** The words a screen reader hears, and the dot's colour (existing palette, no new colour). */

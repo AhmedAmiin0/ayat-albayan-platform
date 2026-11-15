@@ -1,7 +1,6 @@
 import type { ChannelMessageView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
-import { Button } from '@/core/ui/primitives/Button';
 import type { ChannelRef } from '@/student-file/channel/channel-queries';
 import { ChannelMenuSteps } from './ChannelMenuSteps';
 

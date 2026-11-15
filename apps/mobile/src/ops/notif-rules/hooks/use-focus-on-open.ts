@@ -1,6 +1,6 @@
 import { useEffect, type RefObject } from 'react';
 import { focusNode } from '@/core/lib/a11y-focus';
-import type { AppTextNode } from '@/core/ui/primitives/AppText';
+import type { AppTextNode } from '@ab/mobile-kit';
 
 /** After the sheet's slide-in, so the node exists on both platforms. */
 const FOCUS_DELAY_MS = 250;

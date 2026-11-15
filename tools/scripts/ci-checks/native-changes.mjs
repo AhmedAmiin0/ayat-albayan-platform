@@ -2,29 +2,31 @@
 // An OTA update only swaps JavaScript; a native dependency, plugin or app.json native field needs an APK.
 // Usage: node tools/scripts/ci-checks/native-changes.mjs <lastBuildCommit> [easProfile]   exit 1 = native change found.
 // easProfile (default preview) is the build the OTA targets: a side profile (stripe-test) compares ITS app.
+// Env APP_DIR (default apps/mobile): the Expo app compared; mobile.yml app=family sets apps/family.
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const MOBILE = 'apps/mobile';
+const MOBILE = /^apps\/[a-z][a-z-]*$/.exec(process.env.APP_DIR ?? '')?.[0] ?? 'apps/mobile';
 // runtimeVersion.policy is appVersion, so `version` decides which builds an update reaches.
 const NATIVE_KEYS = ['version', 'sdkVersion', 'plugins', 'android', 'ios', 'scheme', 'newArchEnabled',
   'jsEngine', 'runtimeVersion', 'owner', 'slug', 'name', 'icon', 'splash', 'orientation', 'userInterfaceStyle',
   'notification', 'androidStatusBar', 'updates'];
 // Bundled into the binary (app.json icon/adaptive icon/splash = top-level assets) or deciding how it is
 // built: a change needs an APK. Images in assets/<folder>/ (tabs, brand) are imported from JS and travel
-// inside the OTA bundle, so they are not native.
-const NATIVE_PATHS = [`${MOBILE}/assets`, `${MOBILE}/eas.json`, `${MOBILE}/plugins`, 'patches'];
-const isNativeAsset = (f) => /^apps\/mobile\/assets\/[^/]+$/.test(f);
+// inside the OTA bundle, so they are not native (apps/family's app.json uses apps/mobile's).
+const ASSETS = [...new Set([`${MOBILE}/assets`, 'apps/mobile/assets'])];
+const NATIVE_PATHS = [...ASSETS, `${MOBILE}/eas.json`, `${MOBILE}/plugins`, 'patches'];
+const isNativeAsset = (f) => new RegExp(`^(${MOBILE}|apps/mobile)/assets/[^/]+$`).test(f);
 // docs/38: config plugins write native code at prebuild, pnpm patches native sources (not tests).
 const isNativeSource = (f) =>
-  /^(apps\/mobile\/plugins|patches)\//.test(f) && !/(\.test\.|__snapshots__)/.test(f);
-// eas.json profiles that never build the normal app (docs/30: the separate Stripe test app): editing one is no
-// reason for a new preview / production APK. Every other part of eas.json still is. For a side profile's own
-// OTA it is the reverse: only that profile (and the non-build parts) decide.
-export const SIDE_PROFILES = ['stripe-test'];
+  new RegExp(`^(${MOBILE}/plugins|patches)/`).test(f) && !/(\.test\.|__snapshots__)/.test(f);
+// eas.json profiles that never build the normal app (docs/30 Stripe test app; docs/50 family-*, now apps/family):
+// editing one is no reason for a new preview / production APK. Every other part of eas.json still is. For a
+// side profile's own OTA it is the reverse: only that profile (and the non-build parts) decide.
+export const SIDE_PROFILES = ['stripe-test', 'family-preview', 'family-production'];
 // A profile's EXPO_PUBLIC_* env is inlined into the JS bundle, never the binary: an OTA brings
 // its own value (mobile.yml's EAS update step), so changing one needs no APK (docs/30).
 const nativeEnv = (env) => Object.fromEntries(Object.entries(env ?? {}).filter(([k]) => !k.startsWith('EXPO_PUBLIC_')));
@@ -50,7 +52,6 @@ const JS_ONLY_AT = { '@shopify/flash-list': /^\D*2\./ };
 const jsOnly = (name, version) =>
   String(version).startsWith('workspace:') ||
   (name in JS_ONLY_AT ? JS_ONLY_AT[name].test(String(version)) : JS_ONLY_DEPS.some((r) => r.test(name)));
-
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 
 /** changes: the files changed since the build, and the eas.json profile the OTA targets (default preview). */

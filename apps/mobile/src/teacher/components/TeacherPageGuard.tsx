@@ -2,11 +2,8 @@ import type { TeacherGate } from '@ab/shared';
 import { Redirect } from 'expo-router';
 import type { ComponentType, ReactNode } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
+import { t, ErrorState, Screen, useTheme } from '@ab/mobile-kit';
 import { useTeacherGateState, type TeacherGateState } from '@/teacher/lib/teacher-pages';
-import { useTheme } from '@/theme';
 
 const SPINNER = { paddingVertical: 32 };
 

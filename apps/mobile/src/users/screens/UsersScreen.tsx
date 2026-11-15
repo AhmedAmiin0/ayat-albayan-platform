@@ -2,17 +2,19 @@ import type { UserView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
-import type { Can } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  useTheme,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
+import type { Can } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { useTheme } from '@/theme';
-import { BackButton } from '@/core/ui/navigation';
 import { PillButton } from '@/core/ui/primitives/PillButton';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { FIRST_VIEW, USERS_PAGE_SIZE, type UsersView } from '@/users/shared/api';
 import { backToMore } from '@/users/shared/nav';

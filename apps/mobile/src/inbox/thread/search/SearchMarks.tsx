@@ -1,6 +1,5 @@
 import { highlightParts } from '@ab/shared';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { useTheme } from '@/theme';
+import { AppText, useTheme } from '@ab/mobile-kit';
 
 const MARK = { fontWeight: '700', textDecorationLine: 'underline' } as const;
 

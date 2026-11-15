@@ -3,9 +3,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice } from '@/booking';
 import { ErrorLine } from '@/inbox';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { Button } from '@/core/ui/primitives/Button';
 import {
   lessonDuration,
   MoveReason,

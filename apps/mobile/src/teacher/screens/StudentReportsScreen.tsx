@@ -1,9 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Screen, ScreenHeader, BackButton } from '@ab/mobile-kit';
 import { backWithin } from '@/core/nav/back-within';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { BackButton } from '@/core/ui/navigation';
 import { useStudentName } from '@/ops/reports/use-student-name';
 import { ReportsPane } from '@/teacher/student-file';
 

@@ -1,6 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
-import { IconButton } from '@/core/ui/primitives/IconButton';
+import { t, useTheme, IconButton } from '@ab/mobile-kit';
 import { PriceIcon } from '@/inbox/shared/chat-icons';
 
 /** «عرض سعر» in the composer row (admin and sales with pricing.read, never a teacher): opens the sheet. */

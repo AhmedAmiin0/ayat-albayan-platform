@@ -2,7 +2,7 @@ import type { PeopleDone } from '@ab/client-core';
 import type { PeopleEditView } from '@ab/shared';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { ComponentType } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { PauseSheetFrame } from '@/students/course-pause/PauseSheetFrame';
 

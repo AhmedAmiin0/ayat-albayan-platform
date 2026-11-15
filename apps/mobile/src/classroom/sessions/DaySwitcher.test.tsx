@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { DaySwitcher } from './DaySwitcher';
 
 test('docs/07 «الأزرار»: previous | today | next as one ButtonRow, in that order', async () => {

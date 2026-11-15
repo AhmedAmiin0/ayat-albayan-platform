@@ -1,16 +1,16 @@
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ChatFileError, pickChatFile, sendChatFile } from './send-file';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
 
 // The pill's camera and a recorded voice note (owner 2026-10-27).
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
-jest.mock('@/core/lib/http/supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   supabase: { storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) } },
 }));
 jest.mock('expo-image-picker', () => ({

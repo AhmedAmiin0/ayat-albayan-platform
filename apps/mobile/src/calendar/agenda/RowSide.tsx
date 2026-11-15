@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import { LiveBadge } from '@/calendar/live/LiveBadge';
 import { Tag } from './Tag';

@@ -3,15 +3,13 @@ import { useViewerTz } from '@/core/lib/clock';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError, t, InsetGroup } from '@ab/mobile-kit';
 import { ErrorLine } from '@/inbox';
-import { t } from '@/core/lib/i18n/i18n';
 import { Note } from '@/more';
 import { SmallHeading as SectionLabel } from '@/sales/sales/components/SmallHeading';
 import { ReportHistoryRow } from '@/core/ui/lists/ReportRows';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { openStudentReportPdf } from './student-api';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 /** 409 pdf_not_ready says so; anything else (offline, gone) the general error. */
 const pdfError = (e: unknown): string =>

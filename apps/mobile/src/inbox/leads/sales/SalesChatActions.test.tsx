@@ -1,5 +1,5 @@
 import { screen, waitFor, within } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { familyOf, familyThread, kid } from '@/sales-subscribe/testing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { SalesChatActions } from './SalesChatActions';
@@ -8,8 +8,8 @@ import { thread } from '@/inbox/shared/thread-fixtures';
 // The action strip shows only once a pill will: no empty band over a family chat (review of #112),
 // and none over a lead's chat (owner 2026-10-30: «تسجيل طالب جديد» moved into the header's «⋮»).
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));

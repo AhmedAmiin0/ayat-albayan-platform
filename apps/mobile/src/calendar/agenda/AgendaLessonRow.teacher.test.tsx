@@ -1,12 +1,11 @@
 import { screen } from '@testing-library/react-native';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { t } from '@/core/lib/i18n/i18n';
+import { AppText, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { AgendaLessonRow } from './AgendaLessonRow';
 
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: () => new Promise(() => undefined),
 }));
 // 16:50 Riyadh: the 16:00–16:45 lesson ended; its classroom window stays open (docs/48).

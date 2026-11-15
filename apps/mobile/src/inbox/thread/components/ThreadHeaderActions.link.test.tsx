@@ -1,7 +1,7 @@
 import type { ThreadView } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { TreeBaseProvider, type TreeBase } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { answer } from '@/inbox/lists/lib/list-fixtures';
@@ -10,8 +10,8 @@ import { detail, inbound, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
 // «ربط بطالب موجود» (owner 2026-10-29) in the chat's «⋮»: leads.link_family, a lead's chat with no family.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({

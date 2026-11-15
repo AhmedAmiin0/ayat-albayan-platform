@@ -1,7 +1,5 @@
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { palette, shape, type } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, palette, shape, type, AppText } from '@ab/mobile-kit';
 
 /** «إغلاق» at the top start of a full-screen viewer (photo, video), light on the black in either scheme. */
 export function ViewerClose({ onClose, label = t.common.close }: { onClose: () => void; label?: string }) {

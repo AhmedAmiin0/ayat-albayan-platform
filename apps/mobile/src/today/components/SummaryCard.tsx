@@ -1,9 +1,6 @@
 import { Fragment } from 'react';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
-import { raisedCard } from '@/core/ui/surface/surface';
+import { t, AppText, type, useTheme, raisedCard } from '@ab/mobile-kit';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { TODAY_FILTERS, type TodayFilter } from '@/today/lib/timeline';
 

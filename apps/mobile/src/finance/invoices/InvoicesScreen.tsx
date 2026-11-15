@@ -1,11 +1,8 @@
 import type { InvoiceView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, BackButton, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { BackButton } from '@/core/ui/navigation';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { InvoiceRow } from './InvoiceRow';
 import { useInvoices } from '@/finance/shared/queries';
 import { StaleNote, StateNote } from '@/finance/shared/StateNote';

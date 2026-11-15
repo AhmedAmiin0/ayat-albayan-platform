@@ -7,8 +7,7 @@ import {
 } from '@ab/client-core';
 import type { SalesCourseView, SalesStudentDetails } from '@ab/shared';
 import { useQuery, type QueryKey } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
 import { useSalesCourse } from '@/sales-course';
 import { openSigned } from '@/core/lib/http/open-signed';
 

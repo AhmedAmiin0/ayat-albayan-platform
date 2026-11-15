@@ -1,8 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { booked, maryam, SUN_17 } from '@/booking/testing/fixtures';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { ApiError, t, pathKey } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { fakeCourseApi, isDisabled, press, walkToReview } from '@/sales-course/testing/course-test-utils';
@@ -12,8 +10,8 @@ import { fakeNow } from '@/test/fake-now';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

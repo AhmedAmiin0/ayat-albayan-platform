@@ -1,14 +1,18 @@
 import { Redirect, router } from 'expo-router';
 import { ActivityIndicator } from 'react-native';
-import { type GateStatus, usePermissions, useRootGate } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  type GateStatus,
+  usePermissions,
+  useRootGate,
+  t,
+  Screen,
+  ScreenHeader,
+  Button,
+  useTheme,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { Button } from '@/core/ui/primitives/Button';
 import { shareHome, shareHref } from '@/inbox/thread/share/share-href';
 import { useDropShare } from '@/inbox/thread/share/use-shared-items';
-import { useTheme } from '@/theme';
 
 const s = t.inbox.share;
 

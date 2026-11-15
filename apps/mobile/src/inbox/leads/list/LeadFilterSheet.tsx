@@ -1,13 +1,17 @@
 import { LEAD_SOURCES, NO_ASSIGNEE, type LeadSource } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Modal, ScrollView, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import {
+  t,
+  type,
+  useTheme,
+  AppText,
+  Button,
+  FilterPills,
+  type FilterPill,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { AssignUnassigned } from '@/inbox/leads/detail/AssignUnassigned';
 import { activeFilterCount, NO_FILTERS, type LeadFilters } from './lead-filters';
 import { leadSortChoices, leadSortFromValue, leadSortValue } from './lead-sort';

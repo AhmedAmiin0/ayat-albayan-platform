@@ -1,15 +1,13 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { ApiError, t, isolate } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ALL, ASSISTANT, routes, statement } from '@/assistants/api/fixtures';
 import { StatementsPanel } from './StatementsPanel';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
   apiSend: (...a: unknown[]) => mockApiSend(...a),
 }));

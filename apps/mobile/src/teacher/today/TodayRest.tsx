@@ -1,11 +1,8 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, InsetGroup, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { InsetGroup } from '@/core/ui/surface/inset';
 import { TeacherLessonRow } from '@/teacher/lessons/TeacherLessonRow';
-import { type, useTheme } from '@/theme';
 
 export interface RowHandlers {
   onOpen: (lesson: LessonView) => void;

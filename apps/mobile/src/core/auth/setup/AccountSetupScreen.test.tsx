@@ -1,23 +1,22 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { AccountSetupScreen } from './AccountSetupScreen';
 
 const mockApiSend = jest.fn();
 const mockRefresh = jest.fn();
 const mockRefetch = jest.fn();
 const mockSignOut = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
 }));
-jest.mock('@/core/lib/http/supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   supabase: { auth: { signInWithPassword: (c: unknown) => mockRefresh(c) } },
 }));
-jest.mock('@/core/lib/query/query-client', () => ({
+jest.mock('@ab/mobile-kit/lib/query/query-client', () => ({
   queryClient: { refetchQueries: (q: unknown) => mockRefetch(q) },
 }));
-jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: () => mockSignOut() }));
+jest.mock('@ab/mobile-kit/lib/session/sign-out', () => ({ signOutDevice: () => mockSignOut() }));
 
 const S = t.teacherAuth.setup;
 

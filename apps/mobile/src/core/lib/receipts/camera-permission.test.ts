@@ -1,6 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
 import { Alert, Linking, type AlertButton } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ensureCameraPermission } from './camera-permission';
 
 jest.mock('expo-image-picker', () => ({

@@ -1,9 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { Ltr } from '@/core/ui/primitives/Ltr';
-import { shape, type, useTheme } from '@/theme';
+import { t, AppText, Button, Ltr, shape, type, useTheme } from '@ab/mobile-kit';
 import type { Candidate } from '@/booking/shared/booking-errors';
 
 export interface DuplicateNoticeProps {

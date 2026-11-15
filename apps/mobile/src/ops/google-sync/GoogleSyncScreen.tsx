@@ -1,6 +1,4 @@
-import { useHolds, useIsAdmin } from '@/core/auth/use-permissions';
-import { t } from '@/core/lib/i18n/i18n';
-import { Screen } from '@/core/ui/layout/Screen';
+import { useHolds, useIsAdmin, t, Screen } from '@ab/mobile-kit';
 import { GoogleSyncCard } from './GoogleSyncCard';
 import { SubScreenHeader } from '@/ops/shared/SubScreenHeader';
 

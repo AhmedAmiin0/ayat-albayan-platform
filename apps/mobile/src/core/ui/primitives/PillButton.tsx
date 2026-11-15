@@ -1,7 +1,5 @@
 import { Pressable } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from './AppText';
-import { pressScale } from './Button';
+import { shape, type, useTheme, AppText, pressScale } from '@ab/mobile-kit';
 
 interface PillButtonProps {
   label: string;

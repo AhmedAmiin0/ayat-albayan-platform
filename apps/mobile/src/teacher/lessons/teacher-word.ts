@@ -1,6 +1,6 @@
 import { minutesLeft, teacherLessonState, type TeacherLessonState } from '@ab/client-core';
 import { counted, type Glyph, type LessonView, type Tone } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // The teacher's own word for a lesson (docs/48 «State word lookup»): one per state, the same on
 // the «اليوم» rows, the hero chip and «جدولي». Each chip shows the nuqta AND the word (docs/07).

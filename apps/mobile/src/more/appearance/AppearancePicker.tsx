@@ -1,6 +1,5 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
-import type { AppearancePref } from './appearance';
+import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
+import type { AppearancePref } from '@ab/mobile-kit';
 import { Section } from '@/core/ui/surface/Section';
 import { useAppearancePref } from './useAppearancePref';
 

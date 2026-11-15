@@ -1,11 +1,7 @@
 import { packageProgress, teacherName, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Linking, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, locale, shape, type, useTheme, AppText, ltr } from '@ab/mobile-kit';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
 
 const cities: Record<string, string | undefined> = t.tz;

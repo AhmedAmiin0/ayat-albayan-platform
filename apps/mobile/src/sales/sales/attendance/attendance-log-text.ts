@@ -6,8 +6,7 @@ import {
   type StatusStyle,
 } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 import type { LessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { ATTENDANCE_STYLE } from '@/sales/sales/student/attendance-text';
 import { fill } from '@/sales/sales/lib/sales-text';

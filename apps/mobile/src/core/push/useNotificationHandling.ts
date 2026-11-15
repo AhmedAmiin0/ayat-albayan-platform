@@ -4,7 +4,7 @@ import { router, useNavigationContainerRef } from 'expo-router';
 import { openPushed } from '@/core/nav/back-within';
 import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
-import { usePermissions } from '@/core/auth/use-permissions';
+import { usePermissions } from '@ab/mobile-kit';
 import { refreshInbox, refreshLists, resumeInbox } from '@/inbox/thread/hooks/inbox-sync';
 import { isThreadHref, overChat } from '@/core/nav/chat-groups';
 import { pushKind, pushPhone, routeIn, type PushTree } from './notification-route';

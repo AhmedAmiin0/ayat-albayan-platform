@@ -6,8 +6,7 @@ import {
   type SalesTeacherView,
 } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
 
 // The salesperson's pages (docs/16, web parity with apps/web/src/features/sales): read-only, no money.
 

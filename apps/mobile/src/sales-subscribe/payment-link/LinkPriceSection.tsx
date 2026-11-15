@@ -1,12 +1,9 @@
 import type { PaymentLinkQuoteView } from '@ab/shared';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, ErrorState, AppText, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { planText } from '@/subscribe';
-import { type, useTheme } from '@/theme';
 import { linkErrorText, minLine, referenceLine } from './link-text';
 
 interface LinkPriceSectionProps {

@@ -1,14 +1,14 @@
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, AppState, type AppStateStatus } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { hold, lift, openChat, rec, resetVoice, tick } from './voice-test-kit';
 
 // A screen reader's tap, the bin, leaving the app and a call (owner 2026-10-27; RTL).
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 let mockInCall = false;
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

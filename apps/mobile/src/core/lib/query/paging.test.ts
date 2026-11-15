@@ -1,5 +1,5 @@
 import { flattenPages, nextPageParam, patchCached, type Page } from './paging';
-import { listKey, pathKey } from './query-keys';
+import { listKey, pathKey } from '@ab/mobile-kit';
 
 const page = <T>(items: T[], n: number, total: number): Page<T> => ({
   items,

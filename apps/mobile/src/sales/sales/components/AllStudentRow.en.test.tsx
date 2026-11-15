@@ -3,9 +3,8 @@ import { formatPhone } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { I18nManager } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ltr } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { student } from '@/sales/sales/testing/fixtures';
 import { AllStudentRow } from './AllStudentRow';
 

@@ -1,6 +1,5 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ltr } from '@ab/mobile-kit';
 import { money } from '@/core/lib/money/format';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { entry, student, subscription, teacher } from '@/sales/sales/testing/fixtures';
 import {
   fill,

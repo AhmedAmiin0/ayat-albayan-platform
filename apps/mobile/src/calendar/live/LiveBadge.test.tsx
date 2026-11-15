@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { lesson } from '@/today/testing/fixtures';
 import { LiveBadge } from './LiveBadge';

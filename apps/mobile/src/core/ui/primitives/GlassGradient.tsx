@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
-import type { GlassStop } from '@/theme';
+import type { GlassStop } from '@ab/mobile-kit';
 
 interface GlassGradientProps {
   /** Unique within its Svg root. */

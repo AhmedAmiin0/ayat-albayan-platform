@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import type { PushTree } from './notification-route';
 import { useNotificationHandling } from './useNotificationHandling';
@@ -22,7 +23,9 @@ let change: ((state: AppStateStatus) => void) | undefined;
 beforeEach(() => {
   change = undefined;
   jest.spyOn(AppState, 'addEventListener').mockImplementation((_type, fn) => {
-    change = fn;
+    // The hook's own listener is the first (its effect runs before the provider mounts the
+    // client, whose focus manager listens too).
+    change ??= fn;
     return { remove: jest.fn() };
   });
 });

@@ -1,6 +1,6 @@
 import type { ChannelMessageView } from '@ab/shared';
 import { render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ChannelBubble } from './ChannelBubble';
 
 // Owner 2026-10-30: an edited message shows «تم التعديل» by its time; a deleted one only its line.

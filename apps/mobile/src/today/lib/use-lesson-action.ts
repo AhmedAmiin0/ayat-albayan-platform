@@ -1,7 +1,6 @@
 import { CANCEL_STATUS, type CancelRequest, type CorrectTo, type LessonStatus } from '@ab/shared';
 import { useEffect } from 'react';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import {
   type StatusChange,
   type StatusRequest,

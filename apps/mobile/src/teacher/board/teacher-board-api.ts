@@ -4,8 +4,7 @@ import {
   teacherStudentHeadSchema,
 } from '@ab/client-core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
 
 /**
  * GET /teachers/me/students/:id/attendance?month= (docs/46 C5): her own lessons with one of her

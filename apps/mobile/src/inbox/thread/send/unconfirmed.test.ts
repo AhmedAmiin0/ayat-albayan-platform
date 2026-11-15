@@ -1,6 +1,6 @@
 import { SEND_UNCONFIRMED } from '@ab/client-core';
 import type { ThreadDetail } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { heldLine } from '@/inbox/messages/hooks/held-line';
 import { clearChatMemory } from '@/inbox/thread/anchor';
 import { message } from '@/inbox/shared/thread-fixtures';

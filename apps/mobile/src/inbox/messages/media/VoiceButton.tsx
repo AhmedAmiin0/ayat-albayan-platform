@@ -1,6 +1,5 @@
 import { Pressable } from 'react-native';
-import { shape, useTheme } from '@/theme';
-import { pressScale } from '@/core/ui/primitives/Button';
+import { shape, useTheme, pressScale } from '@ab/mobile-kit';
 import { PauseIcon, PlayIcon } from '@/inbox/shared/chat-icons';
 import { Spinner } from './Spinner';
 

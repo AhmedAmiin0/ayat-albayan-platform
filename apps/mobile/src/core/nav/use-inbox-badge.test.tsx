@@ -1,12 +1,13 @@
 import { INBOX_FALLBACK_MS, INBOX_LIST_REFRESH_MS } from '@ab/client-core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import type { ReactNode } from 'react';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { inboxLive } from '@/inbox/thread/live';
 import { badgePollMs, useInboxBadge } from './use-inbox-badge';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 const THREADS = '/threads?unread=true&page=1&pageSize=1';
 

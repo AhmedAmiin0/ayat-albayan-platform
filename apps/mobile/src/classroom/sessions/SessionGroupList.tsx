@@ -1,9 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { SessionCard } from './SessionCard';
 import { SESSION_GROUPS, type SessionGroup } from './sessions';
 

@@ -6,7 +6,7 @@ import { SalesSubscriptionRow } from './SalesSubscriptionRow';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 // Nothing is owed or due here: the row's money action stays hidden (SalesSubscriptionsScreen.money.test).
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: jest.fn(async () => ({ students: [] })) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: jest.fn(async () => ({ students: [] })) }));
 
 const sub = { id: 'sub1', student: { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد' }, package: '8', status: 'active', starts_on: null, lessons_total: 8 };
 beforeEach(() => jest.mocked(router.push).mockClear());

@@ -1,11 +1,9 @@
 import { ASSISTANT_COMMISSION_TYPES, type AssistantCommissionType } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Field, FilterPills } from '@ab/mobile-kit';
 import { Section } from '@/core/ui/surface/Section';
 import { FormLabel } from '@/core/ui/form/FormLabel';
-import { Field } from '@/core/ui/form/Field';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { CurrencyPills } from '@/assistants/list/CurrencyPills';
 import { fieldError } from '@/assistants/api/errors';
 import type { TermsFieldsProps } from '@/assistants/terms/SalaryFields';

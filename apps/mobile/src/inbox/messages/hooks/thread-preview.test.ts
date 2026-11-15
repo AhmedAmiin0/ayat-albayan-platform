@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { threadPreview } from './message-text';
 import { thread } from '@/inbox/shared/thread-fixtures';
 

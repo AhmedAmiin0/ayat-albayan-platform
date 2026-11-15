@@ -1,14 +1,14 @@
 import { DEFAULT_RENEWAL_PRICING, type SalesMoneySubscriptionView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { details } from '@/sales/sales/student/fixtures';
 import { subscription } from '@/sales/sales/testing/fixtures';
 import { SalesSubscriptionsScreen } from './SalesSubscriptionsScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: unknown) => mockPush(mockHref), back: jest.fn() } }));
 

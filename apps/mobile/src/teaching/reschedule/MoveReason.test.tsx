@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { MoveReason } from './MoveReason';
 
 test('«سبب تغيير الموعد (اختياري)»: a labelled box, the teacher-sees-it hint, typing reported', async () => {

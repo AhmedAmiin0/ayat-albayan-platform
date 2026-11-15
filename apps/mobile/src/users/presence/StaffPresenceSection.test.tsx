@@ -1,19 +1,18 @@
 import { STAFF_PRESENCE_PATH } from '@ab/client-core';
 import type { StaffPresenceRow } from '@ab/shared';
 import { act, screen, waitFor, within } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { realtime } from '@/test/presence-realtime';
 import { fullAccessMe } from '@/test/staff-me';
 import { StaffPresenceSection } from './StaffPresenceSection';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('@/core/lib/http/supabase', () =>
+jest.mock('@ab/mobile-kit/lib/http/supabase', () =>
   jest.requireActual('@/test/presence-realtime').realtime.module(),
 );
 

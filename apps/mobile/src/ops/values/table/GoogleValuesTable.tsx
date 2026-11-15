@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { useGoogleStatus } from '@/ops/google-sync/google-status';
 import { googleValues } from '@/ops/values/lib/google-values';

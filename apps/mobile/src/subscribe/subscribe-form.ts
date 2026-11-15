@@ -8,8 +8,7 @@ import {
   type SiteCountry,
   type SubscriptionPricing,
 } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { isOffline } from '@/core/lib/money/payment-errors';
 import type { PlanChoice } from '@/finance/pricing/selection';
 import { localDate } from '@/today/lib/timeline';

@@ -10,12 +10,10 @@ import {
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { bookFailure, dayStartUtc, LessonTimesStep } from '@/booking';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, BackButton, ScreenHeader } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
-import { BackButton } from '@/core/ui/navigation';
 import { Note } from '@/more';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { courseRequest } from '@/sales-course/lib/course-body';
 import { useBookCourse } from '@/sales-course/hooks/course-queries';
 import { CourseConfirm } from './CourseConfirm';

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FlatList, ScrollView, View } from 'react-native';
 import { currentMonth } from '@/finance/shared/month';
 import { MonthPicker } from '@/finance/shared/MonthPicker';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useStatements, type AssistantRow, type StatementFilter } from '@/assistants/api/api';
 import { AssistantPills } from '@/assistants/list/AssistantPills';

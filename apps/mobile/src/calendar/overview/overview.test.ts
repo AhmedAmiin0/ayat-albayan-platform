@@ -1,6 +1,5 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ltr } from '@ab/mobile-kit';
 import { formatTimeOff } from '@/more/schedule';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { dayCounts, teacherAgendas, type AgendaItem, type TeacherFilter } from './overview';
 import { abrar, omar, OVERVIEW, sara } from './overview-fixtures';
 import { freeLabel, spanClock, teacherMeta, timeOffLine, windowsLine } from './overview-text';

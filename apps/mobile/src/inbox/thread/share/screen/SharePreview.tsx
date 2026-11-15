@@ -1,10 +1,8 @@
 import { counted } from '@ab/shared';
 import { Image, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, AppText, shape, type, useTheme } from '@ab/mobile-kit';
 import type { SharedFile, SharedItems } from '@/inbox/thread/share/read-share';
 import { sharedKind } from '@/inbox/thread/share/share-rules';
-import { shape, type, useTheme } from '@/theme';
 
 const s = t.inbox.share;
 

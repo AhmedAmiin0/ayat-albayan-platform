@@ -1,8 +1,7 @@
 import type { StudentAttendanceTable } from '@ab/shared';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { type Href, router } from 'expo-router';
-import { apiFetch } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
 import type { TreeBase } from '@/core/nav/tree-base';
 import { openStudentReportPdf } from '@/sales/sales/student/student-api';
 

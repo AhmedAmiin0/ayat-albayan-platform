@@ -1,6 +1,5 @@
 import { ACCOUNT_ERRORS, type AccountError } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 
 /** Where a message shows: under one field, or under the section's button («form»). */
 export type AccountField =

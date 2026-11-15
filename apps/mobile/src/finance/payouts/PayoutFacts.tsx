@@ -1,12 +1,8 @@
 import { payoutStatusStyle, type PayoutView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, shape, type, useTheme, AppText, StatusChip, isolate } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { breakdownLines, monthLabel, payoutWhen } from '@/teacher/lib/payout-text';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { isolate } from '@/core/ui/primitives/Ltr';
 import { amountText } from '@/finance/shared/format';
 import { dueOf } from './payout-actions';
 

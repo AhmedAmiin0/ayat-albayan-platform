@@ -1,8 +1,7 @@
 import { View } from 'react-native';
 import { currentMonth } from '@/finance/shared/month';
 import { MonthPicker } from '@/finance/shared/MonthPicker';
-import { t } from '@/core/lib/i18n/i18n';
-import { FilterPills } from '@/core/ui/form/FilterPills';
+import { t, FilterPills } from '@ab/mobile-kit';
 
 type Span = 'all' | 'one';
 

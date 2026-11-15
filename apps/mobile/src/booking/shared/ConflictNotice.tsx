@@ -1,8 +1,5 @@
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { shape, type, useTheme } from '@/theme';
+import { t, AppText, Button, shape, type, useTheme } from '@ab/mobile-kit';
 
 export interface ConflictNoticeProps {
   /** One Arabic line per clash (booking.conflict.<kind>). */

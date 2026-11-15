@@ -1,7 +1,6 @@
 import { CONFLICT_KINDS, type ClockCycle, type Conflict } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { isOffline } from '@/core/lib/money/payment-errors';
 
 // What a failed POST /booking means for the trial wizard (docs/10 §3: clients switch on `code`).

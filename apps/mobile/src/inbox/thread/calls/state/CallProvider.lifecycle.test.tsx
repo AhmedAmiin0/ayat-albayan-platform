@@ -1,13 +1,13 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { AppState, type AppStateStatus, Vibration } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ON, routes } from './call-test-kit';
 import { mountCalls as mount, placed } from './call-test-mount';
 
 const mockFetch = jest.fn();
 const mockSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (...a: unknown[]) => mockFetch(...a),
   apiSend: (...a: unknown[]) => mockSend(...a),
 }));

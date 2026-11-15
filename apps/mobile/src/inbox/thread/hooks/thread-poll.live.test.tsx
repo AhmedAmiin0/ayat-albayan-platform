@@ -1,5 +1,6 @@
 import { INBOX_FALLBACK_MS, INBOX_REFRESH_MS, THREAD_FULL_LIVE_MS, THREAD_FULL_MS } from '@ab/client-core';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { detail, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 import { inboxLive } from '@/inbox/thread/live/inbox-live';
@@ -9,11 +10,11 @@ import { useThread } from './use-thread';
 // net for a quietly dead socket (its events re-read it sooner); not connected it polls every 10 s.
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('@/core/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => true }));
+jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => true }));
 
 const wait = (ms: number) => act(() => jest.advanceTimersByTimeAsync(ms));
 

@@ -1,12 +1,8 @@
 import { fillReply, replySlots, type ReplySlot, type SavedReply, type SavedReplyValues } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, type, useTheme, AppText, Button, Field } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { Field } from '@/core/ui/form/Field';
 import { FillPreview } from './FillPreview';
 import { slotKeyboard, slotLabel } from './slot-field';
 

@@ -1,7 +1,6 @@
 import type { MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
 
 // The salesperson's own money pages (R-ASST-06, web apps/web/src/features/sales/api.ts). The API
 // answers only for the caller; amounts stay per currency, never summed across them.

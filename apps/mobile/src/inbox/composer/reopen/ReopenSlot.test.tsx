@@ -1,6 +1,6 @@
 import type { TemplateView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { plainReminder, thread } from '@/inbox/shared/thread-fixtures';
 import { ReopenSlot } from './ReopenSlot';
@@ -8,8 +8,8 @@ import { ReopenSlot } from './ReopenSlot';
 // «إعادة فتح المحادثة» (owner 2026-11-14): the button opens the sheet on the academy's template,
 // prefilled and editable, and the send is marked as the reopen. Fakes only: nothing is sent.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 

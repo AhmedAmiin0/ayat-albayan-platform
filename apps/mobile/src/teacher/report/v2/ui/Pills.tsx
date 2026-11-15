@@ -1,6 +1,5 @@
 import { Pressable, View, type DimensionValue } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 interface PillsProps<V extends string> {
   /** The group's spoken name («تقييم التسميع», «الحضور»). */

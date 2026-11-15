@@ -1,10 +1,7 @@
 import { counted, formatAmount } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, shape, type, useTheme, AppText, ltr } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { FxNote } from './FxNote';
 import type { QuoteResponse } from './use-quote';
 

@@ -1,8 +1,5 @@
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Chevron } from '@/core/ui/primitives/Chevron';
+import { t, shape, type, useTheme, AppText, Chevron } from '@ab/mobile-kit';
 import { monthTitle } from './calendar-text';
 
 interface MonthHeaderProps {

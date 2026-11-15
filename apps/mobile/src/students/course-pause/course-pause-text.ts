@@ -1,6 +1,6 @@
 import { coursePauseBanner, coursePauseErrorCode, coursePausePreviewText } from '@ab/client-core';
 import type { CoursePauseResult, CoursePauseView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { localDay } from '@/payments';
 
 // What «إيقاف مؤقت» says on mobile: the shared lines (@ab/client-core) with the app's words and day format. Pure.

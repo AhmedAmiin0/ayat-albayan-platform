@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { palette } from '@/theme';
+import { palette } from '@ab/mobile-kit';
 import { jana, lesson, yusuf } from '@/today/testing/fixtures';
 import { MakeupAction } from './MakeupAction';
 

@@ -1,6 +1,6 @@
 import type { NotificationsPage } from '@ab/shared';
 import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { markedRead } from './notifications-cache';
 
 // The bell (R-NOT-01): GET /me/notifications (newest 20, polled) and POST /me/notifications/read.

@@ -1,8 +1,7 @@
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button } from '@ab/mobile-kit';
 import { useStudentHref } from '@/core/nav/tree-base';
 import { useStudentBalance } from '@/payments/hooks/queries';
-import { Button } from '@/core/ui/primitives/Button';
 import { renewHref } from './renew';
 import type { StudentRef } from '@/students/shared/types';
 

@@ -1,10 +1,6 @@
 import { type Href, router } from 'expo-router';
-import { useHolds } from '@/core/auth/use-permissions';
+import { useHolds, t, useTheme, Button, IconButton } from '@ab/mobile-kit';
 import { CheckPersonIcon } from '@/inbox/shared/chat-icons';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
-import { IconButton } from '@/core/ui/primitives/IconButton';
 
 /**
  * «تحقق من التسجيل» in a sales header (the chat thread, the «الطلاب» tab): opens the registration

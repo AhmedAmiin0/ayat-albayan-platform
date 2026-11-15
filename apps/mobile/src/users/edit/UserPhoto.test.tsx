@@ -1,7 +1,7 @@
 import { avatarTone, avatarTones } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { DETAIL } from '@/users/shared/fixtures';
 import { UserPhoto } from './UserPhoto';

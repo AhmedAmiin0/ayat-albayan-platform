@@ -1,7 +1,6 @@
 import type { SalesFamilyView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useHolds } from '@/core/auth';
-import { apiFetch } from '@/core/lib/http/api';
+import { useHolds, apiFetch } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { useSalesStudent } from '@/sales/sales/student/student-api';
 import { type MoneyAction, pickMoneyAction } from './money-action';

@@ -1,6 +1,6 @@
 import { OPEN_COURSE, type PushKind } from '@ab/shared';
 import { canOpen } from '@/core/auth/route-permissions';
-import type { Can } from '@/core/auth/use-permissions';
+import type { Can } from '@ab/mobile-kit';
 import { pushField, pushKind, pushPhone } from './push-data';
 
 // The sales and classroom-assistant trees (owner 2026-10-12: a bell in every staff portal). Each

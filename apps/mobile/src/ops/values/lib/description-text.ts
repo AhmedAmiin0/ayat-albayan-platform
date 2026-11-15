@@ -1,6 +1,5 @@
 import { DESCRIPTION_MAX, type ConfigEntry, type Locale, type Permission } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 
 // «القيم» on the phone: a key's description (docs/26 §3) and who may edit it (§2f, §5).
 

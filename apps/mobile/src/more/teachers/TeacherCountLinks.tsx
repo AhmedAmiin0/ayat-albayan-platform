@@ -1,10 +1,8 @@
 import type { StudentListKind } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { KIND_LABEL } from '@/students/list/student-kinds';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import type { TeacherListItem } from '@/core/lib/staff/types';
 
 const L = t.studentLists;

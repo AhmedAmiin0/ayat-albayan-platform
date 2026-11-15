@@ -3,10 +3,7 @@ import type { ActiveCallView } from '@ab/shared';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSyncExternalStore } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { IconButton } from '@/core/ui/primitives/IconButton';
+import { t, type, useTheme, AppText, IconButton, Avatar } from '@ab/mobile-kit';
 import {
   ChevronDownIcon,
   HangUpIcon,
@@ -15,7 +12,6 @@ import {
   PhoneIcon,
   SpeakerIcon,
 } from './call-icons';
-import { Avatar } from '@/core/ui/primitives/Avatar';
 import { CallerName } from './CallerName';
 import { RoundButton } from './RoundButton';
 

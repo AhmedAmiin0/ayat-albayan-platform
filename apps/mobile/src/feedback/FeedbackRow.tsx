@@ -2,15 +2,10 @@ import { memo } from 'react';
 import { formatPhone } from '@ab/shared';
 import { View } from 'react-native';
 import { phoneTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, shape, type, useTheme, AppText, ltr, NuqtaGlyph, StatusChip } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { localDate } from '@/today';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { answerLine } from './feedback-text';
 import type { FeedbackListRow } from './types';
 

@@ -1,7 +1,7 @@
 import type { SalesPaymentView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { useAttachmentPaths } from '@/payments/receipts/attachments';
 import { refreshFamily } from '@/sales-subscribe/lib/family';

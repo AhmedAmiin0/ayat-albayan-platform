@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { receivable } from '@/money/shared/fixtures';
 import { daysLateText, filterReceivables, fxMissingText, isSevere } from './receivables';
 

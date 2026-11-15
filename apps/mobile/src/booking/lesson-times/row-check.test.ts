@@ -1,5 +1,5 @@
 import { slot, SUN_17 } from '@/booking/testing/fixtures';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { besideTimes, rowCheck } from './row-check';
 
 const viewer = { tz: 'Asia/Riyadh', cycle: '24' } as const;

@@ -9,8 +9,8 @@ import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
 // Owner 2026-10-27 (screenshot): the floating «الأربعاء» was drawn over the inline «الأحد». As
 // WhatsApp, it hides while an inline separator is in its band and comes back once it scrolled past.
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
 }));
 

@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { CorrectOutcome } from './CorrectOutcome';
 
 test('the title, its hint and one button per target, each sending its status', async () => {

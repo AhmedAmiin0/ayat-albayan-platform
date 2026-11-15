@@ -1,7 +1,6 @@
 import { localizedName } from '@ab/shared';
 import { View } from 'react-native';
-import { locale } from '@/core/lib/i18n/locale';
-import { Avatar } from '@/core/ui/primitives/Avatar';
+import { locale, Avatar } from '@ab/mobile-kit';
 import { DetailsLine } from './DetailsGroup';
 import type { DetailsLesson } from './details-text';
 

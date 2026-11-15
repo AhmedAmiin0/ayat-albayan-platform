@@ -1,5 +1,5 @@
 import type { LeadStatus, ThreadView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import type { ChatChoice } from '@/inbox/lists/components/ChatListChips';
 
 /** What GET /threads is asked for a choice; «بانتظار ردّك» reads every chat and filters here (waitingForReply). */

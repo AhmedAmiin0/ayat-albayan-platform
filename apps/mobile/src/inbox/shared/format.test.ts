@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { clockAt, leadAge, pluralForm } from './format';
 
 const NOW = new Date('2026-10-01T12:00:00Z');

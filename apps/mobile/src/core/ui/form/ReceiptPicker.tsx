@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Image, View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, shape, useTheme, Button } from '@ab/mobile-kit';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
-import { shape, useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
 import { FormLabel } from './FormLabel';
 import { pickReceipt, type Receipt, type ReceiptSource } from '@/core/lib/receipts/receipt';

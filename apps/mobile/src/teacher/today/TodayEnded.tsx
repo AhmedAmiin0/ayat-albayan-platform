@@ -1,5 +1,5 @@
 import type { LessonView } from '@ab/shared';
-import { InsetGroup } from '@/core/ui/surface/inset';
+import { InsetGroup } from '@ab/mobile-kit';
 import { TeacherLessonRow } from '@/teacher/lessons/TeacherLessonRow';
 import { EndedFold } from '@/today';
 import type { RowHandlers } from './TodayRest';

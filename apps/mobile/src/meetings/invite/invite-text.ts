@@ -1,9 +1,7 @@
 import { dateText, type ClockCycle, type MeetingInviteResult, type MeetingView } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
 import { cityOf } from '@/booking/shared/slots';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { ApiError, t, locale } from '@ab/mobile-kit';
 
 const L = t.meetingInvites;
 const errors: Record<string, string | undefined> = L.errors;

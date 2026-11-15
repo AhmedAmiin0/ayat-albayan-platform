@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Modal, Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, useTheme } from '@/theme';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, shape, useTheme, Button } from '@ab/mobile-kit';
 import type { PanelMedia } from './panel-api';
 import { PanelBody, PanelTabs, type PanelTab } from './PanelTabs';
 

@@ -1,6 +1,6 @@
 import { ApiError } from '@ab/client-core';
 import { renderHook, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
 import { useAnchoredThread } from './use-anchored-thread';
@@ -14,8 +14,8 @@ jest.mock('@/inbox/thread/hooks/chat-actions', () => ({
   useChatActions: () => ({ say: mockSay }),
 }));
 const mockGet = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockGet(p),
 }));
 

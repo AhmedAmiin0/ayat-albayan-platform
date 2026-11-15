@@ -1,5 +1,5 @@
 import { formatPhone, MAX_MEETING_INVITEES, normalizePhone, type MeetingInviteeInput, type MeetingInviteeOption } from '@ab/shared';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { ltr } from '@ab/mobile-kit';
 
 // The invitees picked before a create: what the chip says and what POST /meetings receives. A staff
 // member or student is keyed by id, a phone by its E.164 form, so picking one twice adds it once.

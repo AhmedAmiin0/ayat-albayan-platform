@@ -1,10 +1,7 @@
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, type, useTheme, AppText, Avatar } from '@ab/mobile-kit';
 import { HangUpIcon, PhoneIcon } from './call-icons';
-import { Avatar } from '@/core/ui/primitives/Avatar';
 import { CallerName } from './CallerName';
 import { RoundButton } from './RoundButton';
 

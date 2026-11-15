@@ -1,9 +1,7 @@
 import { isPackageEnded, studentStatusStyle, type ClockCycle, type TeacherStudentView } from '@ab/shared';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { t, ListRow, StatusChip } from '@ab/mobile-kit';
 
 /** «الحلقة الجاية: الأحد 5 أكتوبر 17:00» in the teacher's own time zone, or «مفيش حلقة جاية». */
 function nextLessonLine(startsAt: string | null, tz: string, cycle: ClockCycle): string {

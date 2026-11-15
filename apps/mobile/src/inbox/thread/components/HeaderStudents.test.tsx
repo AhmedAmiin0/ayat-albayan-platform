@@ -1,7 +1,7 @@
 import type { ThreadStudentView } from '@ab/shared';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { type TreeBase, TreeBaseProvider } from '@/core/nav/tree-base';
 import { child, CHILD_ID } from '@/inbox/subscription/people-fixtures';
 import { ChatHeader } from './ChatHeader';

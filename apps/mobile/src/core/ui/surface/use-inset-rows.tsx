@@ -1,5 +1,5 @@
 import { type ReactElement, type ReactNode, useCallback } from 'react';
-import { InsetCell, InsetSeparator } from './inset';
+import { InsetCell, InsetSeparator } from '@ab/mobile-kit';
 
 /** Any list's renderItem (it may read only `item`): FlatList and FlashList both pass the index too. */
 type RenderItem<I> = (info: I) => ReactNode;

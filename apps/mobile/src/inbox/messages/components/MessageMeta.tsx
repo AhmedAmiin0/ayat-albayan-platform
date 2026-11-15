@@ -1,9 +1,7 @@
 import { canSendViaWhatsApp, type ClockCycle, type MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { DeliveryTicks } from './DeliveryTicks';
 import { lineWord } from '@/inbox/shared/line-words';
 import { clock, deliveryTimes, errorLine, queuedLine } from '@/inbox/messages/hooks/message-text';

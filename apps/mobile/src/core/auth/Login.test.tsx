@@ -1,12 +1,11 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, setLoginNotice } from '@ab/mobile-kit';
 import Login from '../../../app/login';
-import { setLoginNotice } from './login-notice';
 
 const mockSignIn = jest.fn();
-jest.mock('@/core/auth/sign-in', () => ({ signIn: (c: unknown) => mockSignIn(c) }));
+jest.mock('@ab/mobile-kit/auth/sign-in', () => ({ signIn: (c: unknown) => mockSignIn(c) }));
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 beforeEach(() => jest.clearAllMocks());
 

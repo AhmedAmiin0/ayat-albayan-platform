@@ -3,9 +3,7 @@ import type { UserRole } from '@ab/shared';
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import * as Sharing from 'expo-sharing';
 import { Text } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { queryClient } from '@/core/lib/query/query-client';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, queryClient, pathKey } from '@ab/mobile-kit';
 import { TabStack } from '@/core/nav/TabStack';
 import { useTreeBase } from '@/core/nav/tree-base';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
@@ -31,11 +29,11 @@ jest.mock('expo-sharing', () => ({
     mockShare.payloads = [];
   }),
 }));
-jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 const mockMe = { answer: {} as object };
 const mockTeacher = { id: 't1', display_name_ar: 'نور', tz: 'Africa/Cairo', students: [] };
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async (path: string) =>
     ({ '/auth/me': mockMe.answer, '/teachers/me': mockTeacher })[path] ?? { total: 0 },
 }));
@@ -44,8 +42,8 @@ const mockWatch = (listener: () => void) => {
   mockGate.seen.add(listener);
   return () => mockGate.seen.delete(listener);
 };
-jest.mock('@/core/auth/use-auth-gate', () => ({
-  ...jest.requireActual('@/core/auth/use-auth-gate'),
+jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => ({
+  ...jest.requireActual('@ab/mobile-kit/auth/use-auth-gate'),
   useAuthGate: () => jest.requireActual('react').useSyncExternalStore(mockWatch, () => mockGate.now),
 }));
 const moveGate = (gate: string) =>

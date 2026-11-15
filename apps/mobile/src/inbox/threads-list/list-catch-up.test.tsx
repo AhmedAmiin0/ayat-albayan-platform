@@ -1,5 +1,6 @@
 import type { MessageStatus, ThreadView } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { cachedThread, delivered, detail, inbound, listCache, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { refreshLists, threadListKey } from '@/inbox/thread/hooks/inbox-sync';
@@ -11,12 +12,12 @@ import { useThreadList } from './use-thread-list';
 // docs/43 §2 (the owner's «pending in the list»): the list row follows the tick its chat merged.
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 let mockFocused = true;
-jest.mock('@/core/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
+jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
 
 const KEY = ['threads', 'list', { search: '', unread: false }];
 const row = (last_status: MessageStatus): ThreadView => ({ ...thread, last_status });

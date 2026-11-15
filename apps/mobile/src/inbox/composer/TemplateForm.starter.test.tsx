@@ -1,6 +1,6 @@
 import type { TemplateView } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { TemplateForm } from './TemplateForm';
 import { plainReminder } from '@/inbox/shared/thread-fixtures';
 

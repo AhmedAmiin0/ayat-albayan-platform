@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { pickChatFile } from '@/inbox/composer/send-file';
 import { MINE, REPLIES } from '@/inbox/saved-replies/testing/fixtures';
@@ -8,12 +8,12 @@ import { SavedRepliesSheet } from './SavedRepliesSheet';
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 const mockUpload = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
-jest.mock('@/core/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } } }));
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } } }));
 jest.mock('@/inbox/composer/send-file', () => ({ ...jest.requireActual('@/inbox/composer/send-file'), pickChatFile: jest.fn() }));
 
 const onPick = jest.fn();

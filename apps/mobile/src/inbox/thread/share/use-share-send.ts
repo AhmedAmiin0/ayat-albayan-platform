@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { touchInbox } from '@/inbox/thread/hooks/inbox-sync';
 import { refreshSent } from '@/inbox/thread/hooks/use-thread';

@@ -1,12 +1,9 @@
 import { channelBubbleActions } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
 import type { ChannelRef } from '@/student-file/channel/channel-queries';
-import { type, useTheme } from '@/theme';
 import { channelChangeError, useChannelChange } from './use-channel-change';
 import { ChannelEditForm } from './ChannelEditForm';
 

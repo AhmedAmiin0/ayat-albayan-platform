@@ -2,14 +2,16 @@ import type { ReceivableRow } from '@ab/shared';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
+import {
+  t,
+  useTheme,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  Screen,
+  useTabBarInset,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useReceivables } from '@/money/shared/queries';

@@ -1,17 +1,25 @@
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
-import { type GateStatus, useAuthGate, useMeId, useMeReady } from '@/core/auth';
+import {
+  type GateStatus,
+  useAuthGate,
+  useMeId,
+  useMeReady,
+  RootFrame,
+  RootProviders,
+  useRootBoot,
+  useTheme,
+} from '@ab/mobile-kit';
 import { usePresenceSelf } from '@/core/lib/presence';
-import { ROOM_SCREEN, RootFrame, RootProviders, useRootBoot } from '@/core/root';
+import { ROOM_SCREEN } from '@/core/root';
 import { clearInboxOnSignOut, StaffCalls } from '@/inbox';
-import { useTheme } from '@/theme';
 
 /**
  * Fonts + language + translation overrides + session gate (useRootBoot), then one stack: admins
  * (tabs), teachers /teacher (a real segment: no URL shared with the admin's), sales /sales, the
  * classroom assistant /assistant, everyone else /login. Each tree's chat group
  * (react-native-screens#4132, no URL segment) sits in its guard, after it. Stack.Protected moves it
- * on a gate flip; screens read useRootGate. The family app has its own root (app-family/, docs/50).
+ * on a gate flip; screens read useRootGate. The family app is apps/family (docs/50).
  */
 export default function RootLayout() {
   const gate = useAuthGate();

@@ -1,8 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, palette } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { palette } from '@/theme';
 import { clearComposerDrafts } from '@/inbox/composer/draft-store';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
@@ -10,8 +9,8 @@ import { ThreadsList } from './ThreadsList';
 
 // Review 2026-10-29 #4 / C3: a half-written reply survives leaving the chat and shows on its row.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: jest.fn(),
 }));

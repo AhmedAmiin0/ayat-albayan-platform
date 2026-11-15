@@ -8,9 +8,7 @@ import type {
 } from '@ab/shared';
 import { reportErrorWords } from '@ab/client-core';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { ApiError, apiFetch, apiSend, t, pathKey } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 

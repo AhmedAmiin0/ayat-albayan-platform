@@ -1,7 +1,7 @@
+import { renderApp, resetApp } from '@/test/app-router';
 import { LOCALE_STORAGE_KEY } from '@ab/shared';
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
-import { renderApp, resetApp } from '@/test/app-router';
 import { inboxBackend } from '@/inbox/shared/flow-backend';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
 

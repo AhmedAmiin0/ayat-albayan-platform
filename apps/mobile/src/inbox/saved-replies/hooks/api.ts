@@ -1,6 +1,6 @@
 import type { SavedReply, SavedReplyCreate, SavedReplyUpdate, SignedUpload } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/core/lib/http/api';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import { ChatFileError, type ChatFilePick } from '@/inbox/composer/send-file';
 

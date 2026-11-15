@@ -1,11 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t, ltr } from '@ab/mobile-kit';
 import type { AvailabilityRow, Teacher } from '@/core/lib/staff/types';
 import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { cancelled, done, lesson, muscat, pending } from '@/today/testing/fixtures';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { TeacherCalendarScreen } from './TeacherCalendarScreen';
 
 // The first render in this file pays the cold transform of the whole calendar tree, which exceeded the
@@ -13,8 +11,8 @@ import { TeacherCalendarScreen } from './TeacherCalendarScreen';
 jest.setTimeout(120_000);
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({

@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { leadSortChoices, leadSortFromValue, leadSortValue } from './lead-sort';
 
 test('every choice round-trips through its select value', () => {

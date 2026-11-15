@@ -1,13 +1,14 @@
 import { messageSearchKey } from '@ab/client-core';
 import { renderHook, waitFor } from '@testing-library/react-native';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useMessageHits } from './use-message-hits';
 
 // The global search's pages: asked from 3 characters, never written to disk (noPersist).
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (...mockArgs: unknown[]) => mockApiFetch(...mockArgs),
 }));
 

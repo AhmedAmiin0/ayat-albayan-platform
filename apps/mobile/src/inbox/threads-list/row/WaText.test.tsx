@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
-import { type } from '@/theme';
+import { type } from '@ab/mobile-kit';
 import { spanStyle, WaText } from './WaText';
 
 const P = { bold: false, italic: false, strike: false, mono: false };

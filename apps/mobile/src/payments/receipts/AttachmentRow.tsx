@@ -1,8 +1,5 @@
 import { Image, View } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
+import { shape, type, useTheme, AppText, Button, NuqtaGlyph } from '@ab/mobile-kit';
 import type { Attachment } from './attachments';
 
 interface AttachmentRowProps {

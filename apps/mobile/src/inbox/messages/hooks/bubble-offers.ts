@@ -6,7 +6,7 @@ import {
   isChatViewMime,
   type MessageView,
 } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { mediaKind } from './message-text';
 
 /** What a bubble's long-press menu offers, in WhatsApp's order: رد، نسخ النص، إعادة توجيه، تنزيل. */

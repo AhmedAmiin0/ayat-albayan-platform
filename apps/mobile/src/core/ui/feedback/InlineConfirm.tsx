@@ -1,10 +1,7 @@
 import type { Ref } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
+import { t, shape, type, useTheme, Button, AppText } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions/ButtonRow';
-import { Button } from '@/core/ui/primitives/Button';
-import { AppText } from '@/core/ui/primitives/AppText';
 
 interface InlineConfirmProps {
   /** The question, e.g. «شكلها طلب توظيف مش طالب.» */

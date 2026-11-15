@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, useTheme } from '@/theme';
+import { t, shape, useTheme } from '@ab/mobile-kit';
 
 interface MenuSheetProps {
   open: boolean;

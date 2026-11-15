@@ -1,7 +1,7 @@
 import { AVATAR_MAX_BYTES, type StaffPhotoView } from '@ab/shared';
 import { type QueryKey, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { pickAvatar } from '@/account/lib/avatar';
 import { removeStaffPhoto, staffPhotoError, uploadStaffPhoto } from './staff-photo-api';
 

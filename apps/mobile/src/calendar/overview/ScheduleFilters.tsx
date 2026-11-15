@@ -1,7 +1,6 @@
 import { GENDERS, PROGRAMS } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
+import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
 import type { ScheduleView, TeacherFilter } from './overview';
 import { dayLabel } from '@/calendar/lib/week';
 

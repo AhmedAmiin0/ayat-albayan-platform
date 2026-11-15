@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react-native';
 import { booked, SUN_17 } from '@/booking/testing/fixtures';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { fakeCourseApi, isDisabled, press, walkToReview } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen';
@@ -10,8 +10,8 @@ import { fakeNow } from '@/test/fake-now';
 // Hold mode (owner 2026-11-06): unpaid with an open payment link, «احجز» keeps a draft.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

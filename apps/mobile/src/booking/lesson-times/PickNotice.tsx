@@ -3,15 +3,12 @@ import { wallParts, type Conflict } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, NuqtaGlyph, type, useTheme } from '@ab/mobile-kit';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Note } from '@/core/ui/feedback/Note';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { conflictLine } from '@/booking/shared/booking-errors';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
 import { SlotButton } from '@/teaching';
-import { type, useTheme } from '@/theme';
 
 interface PickNoticeProps {
   state: PickState;

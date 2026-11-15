@@ -1,12 +1,11 @@
 import { act, fireEvent, screen } from '@testing-library/react-native';
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend, t } from '@ab/mobile-kit';
 import { focusNode } from '@/core/lib/a11y-focus';
-import { t } from '@/core/lib/i18n/i18n';
 import { renderWithQuery } from '@/test/query';
 import { StaffPhotoControl } from './StaffPhotoControl';
 
 jest.mock('@/core/lib/a11y-focus', () => ({ focusNode: jest.fn(() => true) }));
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiSend: jest.fn() }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiSend: jest.fn() }));
 
 const s = t.staffPhoto;
 const focused = jest.mocked(focusNode);

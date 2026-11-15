@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { AgendaLessonRow } from '@/calendar/agenda/AgendaLessonRow';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { lesson } from '@/today/testing/fixtures';
 
 test('the agenda row (admin schedule and teacher calendar) carries «ادخل الحلقة»', async () => {
@@ -15,8 +15,8 @@ test('a cancelled row does not', async () => {
   expect(screen.queryByRole('button', { name: t.classroom.enter })).toBeNull();
 });
 
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: () => new Promise(() => undefined),
 }));
 

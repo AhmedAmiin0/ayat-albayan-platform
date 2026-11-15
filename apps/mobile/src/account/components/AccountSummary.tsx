@@ -1,8 +1,6 @@
 import type { AccountProfile } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { roleLabel } from '@/account/hooks/queries';
 
 /** Who is signed in (R-ACC-01): the role, and that the name families see is the admin's to change. */

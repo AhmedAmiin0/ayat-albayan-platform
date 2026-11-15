@@ -1,11 +1,8 @@
 import { effectiveLinkStatus, type PaymentLinkView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, StatusChip, ListRow, Button } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { Button } from '@/core/ui/primitives/Button';
 import { ErrorLine } from '@/inbox';
 import { instantDay, money } from '@/payments';
 import { fill } from '@/sales/sales';

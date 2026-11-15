@@ -1,15 +1,15 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { act, fireEvent, screen } from 'expo-router/testing-library';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { pushInTab } from '@/core/nav/back-within';
 import { StudentScreen } from '@/students/screens/StudentScreen';
 import { createTestQueryClient } from '@/test/query';
 import { openTabApp, tabApp, TabsLayout } from '@/test/nav/tab-app';
 
 // The real tab stacks and StudentScreen (its profile still loading) under the real tabs.
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: () => new Promise(() => undefined),
 }));
 

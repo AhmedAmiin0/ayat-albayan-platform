@@ -1,9 +1,6 @@
 import type { AccountProfile } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, type, useTheme, AppText, ltr } from '@ab/mobile-kit';
 import { changeEmail } from '@/account/hooks/account-api';
 import { accountMessage } from '@/account/lib/account-errors';
 import { AccountCard } from '@/account/components/AccountCard';

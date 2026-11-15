@@ -1,13 +1,9 @@
 import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
 import { View } from 'react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t, type, useTheme, FilterPills, AppText } from '@ab/mobile-kit';
 import { useOptimisticStatus, type StatusChange, type StatusRequest } from '@/core/lib/query/use-optimistic-status';
-import { type, useTheme } from '@/theme';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import type { StudentRef } from '@/students/shared/types';
-import { AppText } from '@/core/ui/primitives/AppText';
 
 /** Students have no /status route: PATCH /students/:id, a compare-and-set on the status shown (R-STU-05). */
 type StudentStatusChange = StatusChange<StudentStatus> & { expected: StudentStatus };

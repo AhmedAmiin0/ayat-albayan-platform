@@ -7,10 +7,17 @@ name: mobile
 # refused when a native dependency, plugin or app.json native field changed since the last build.
 # profile stripe-test (owner 2026-10-28, docs/30): the separate Stripe TEST app (eas.json `stripe-test`,
 # APP_VARIANT=stripetest, no FCM push): its APK, or an OTA to its own channel compared with its own last build.
-# Every automatic run (deploy-staging) sends no profile, so it stays preview.
+# app family (owner 2026-11-14, docs/50 §7): the separate family app apps/family (its own EAS project
+# @holdmycup/ayat-albayan-family, linked or created by `eas init` first): its eas.json `preview` APK, or an
+# OTA to its channel preview compared with its own last build. profile and branch apply to the staff app only.
+# Every automatic run (deploy-staging) sends no app and no profile, so it stays the staff app's preview.
 # deploy-staging.yml «plan» finds the last preview OTA by this title (tools/scripts/env/deploy-baseline.mjs):
-# a stripe-test run is titled «... stripe-test», so it is never taken for a preview OTA.
-run-name: mobile ${{ inputs.action }} ${{ inputs.profile == 'stripe-test' && 'stripe-test' || inputs.branch }}
+# a stripe-test run is titled «... stripe-test» and a family run «... family-preview», so neither is ever taken
+# for the staff app's preview OTA.
+run-name: >-
+  mobile ${{ inputs.action }}
+  ${{ inputs.app == 'family' && 'family-preview'
+  || inputs.profile == 'stripe-test' && 'stripe-test' || inputs.branch }}
 on:
   workflow_dispatch:
     inputs:
@@ -20,12 +27,17 @@ on:
         options: [build-android-apk, ota-update, both]
         default: ota-update
       branch:
-        description: EAS update branch and environment (the preview APK listens to preview)
+        description: Staff app only, EAS update branch and environment (the preview APK listens to preview)
         type: choice
         options: [preview, development]
         default: preview
+      app:
+        description: "staff (apps/mobile, the normal app) or family (apps/family, guardians and students: docs/50)"
+        type: choice
+        options: [staff, family]
+        default: staff
       profile:
-        description: "Which app: preview (the normal one) or stripe-test (the separate Stripe test APK, channel stripe-test; branch is then ignored)"
+        description: "Staff app only: preview (the normal one) or stripe-test (the separate Stripe test APK, channel stripe-test; branch is then ignored)"
         type: choice
         options: [preview, stripe-test]
         default: preview
@@ -43,6 +55,8 @@ concurrency:
 
 env:
   EAS_CLI: eas-cli@24.10.0
+  # The Expo project every step works in, and its native-change guard's app (native-changes.mjs).
+  APP_DIR: ${{ inputs.app == 'family' && 'apps/family' || 'apps/mobile' }}
 
 jobs:
   build:
@@ -63,17 +77,28 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+      # Both apps, whichever this run ships (a missing file is skipped: plain grep would exit 2 and pass).
       - name: Never re-add forcesRTL
-        run: "! grep -n forcesRTL apps/mobile/app.json apps/mobile/app.config.ts"
+        run: |
+          for f in apps/{mobile,family}/app.json apps/{mobile,family}/app.config.ts; do
+            [ ! -f "$f" ] || ! grep -n forcesRTL "$f" || exit 1
+          done
       # `eas build` loads the app config, which resolves the config plugins (expo-router ...) from
       # node_modules: without the install it fails «Failed to resolve plugin for module "expo-router"» (run 39154529791).
       - run: pnpm i --frozen-lockfile
-      - name: EAS build (Android APK of the chosen profile, built on Expo's servers)
-        id: eas
-        working-directory: apps/mobile
+      # The family app's EAS project: linked or created, its id exported (eas-init-family.sh).
+      - name: Link the family EAS project (eas init)
+        if: ${{ inputs.app == 'family' }}
+        working-directory: apps/family
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          PROFILE: ${{ inputs.profile || 'preview' }}
+        run: bash ../../tools/scripts/ci-checks/eas-init-family.sh
+      - name: EAS build (Android APK of the chosen profile, built on Expo's servers)
+        id: eas
+        working-directory: ${{ env.APP_DIR }}
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          PROFILE: ${{ inputs.app == 'family' && 'preview' || inputs.profile || 'preview' }}
         # pipefail: a failed build still fails the step through the tee. The build page link it prints (expo.dev,
         # no secret) goes to the release notes (job «release»).
         run: |
@@ -103,8 +128,12 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+      # Both apps, whichever this run ships (a missing file is skipped: plain grep would exit 2 and pass).
       - name: Never re-add forcesRTL
-        run: "! grep -n forcesRTL apps/mobile/app.json apps/mobile/app.config.ts"
+        run: |
+          for f in apps/{mobile,family}/app.json apps/{mobile,family}/app.config.ts; do
+            [ ! -f "$f" ] || ! grep -n forcesRTL "$f" || exit 1
+          done
       # Install BEFORE the guard: `eas build:list` loads the app config, which resolves the config plugins
       # (expo-router ...) from node_modules. No secret is present in this step.
       - run: pnpm i --frozen-lockfile
@@ -112,12 +141,23 @@ jobs:
       # which only exist after a build:
       # without it `eas update` fails with "While trying to resolve module `@ab/shared`" (run 37498286784).
       - run: pnpm --filter "mobile^..." build
+        if: ${{ inputs.app != 'family' }}
+      - run: pnpm --filter "family^..." build
+        if: ${{ inputs.app == 'family' }}
+      # The family app's EAS project: linked or created, its id exported (eas-init-family.sh).
+      - name: Link the family EAS project (eas init)
+        if: ${{ inputs.app == 'family' }}
+        working-directory: apps/family
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: bash ../../tools/scripts/ci-checks/eas-init-family.sh
+      # APP_DIR (workflow env) tells native-changes.mjs which app to compare; the last build is that app's own.
       - name: Native-change guard (OTA = JavaScript only)
-        working-directory: apps/mobile
+        working-directory: ${{ env.APP_DIR }}
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           FORCE: ${{ inputs.force_ota }}
-          PROFILE: ${{ inputs.profile || 'preview' }}
+          PROFILE: ${{ inputs.app == 'family' && 'preview' || inputs.profile || 'preview' }}
         run: |
           test -n "$EXPO_TOKEN" || { echo "::error::add the secret EXPO_TOKEN to the environment mobile"; exit 1; }
           last=$(npx --yes "$EAS_CLI" build:list --platform android --build-profile "$PROFILE" --status finished --limit 1 --json --non-interactive \
@@ -134,9 +174,10 @@ jobs:
             exit 1
           fi
           if [ "$rc" != 0 ]; then echo "::warning::force_ota ticked: shipping the OTA despite the native change"; fi
-      # The stripe-test app has no FCM (app.config.ts drops googleServicesFile), so it never needs the file.
+      # The stripe-test app has no FCM (app.config.ts drops googleServicesFile), so it never needs the file. The
+      # family app's file is its own EAS project's GOOGLE_SERVICES_JSON file variable (docs/50 §8), not this secret.
       - name: Write the Firebase file (only if the secret exists)
-        if: ${{ inputs.profile != 'stripe-test' }}
+        if: ${{ inputs.app != 'family' && inputs.profile != 'stripe-test' }}
         env:
           GOOGLE_SERVICES_JSON_SECRET: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: |
@@ -145,16 +186,24 @@ jobs:
             echo "GOOGLE_SERVICES_JSON=$RUNNER_TEMP/google-services.json" >> "$GITHUB_ENV"
           fi
       - name: EAS update
-        working-directory: apps/mobile
+        working-directory: ${{ env.APP_DIR }}
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           EAS_BRANCH: ${{ inputs.branch }}
-          PROFILE: ${{ inputs.profile || 'preview' }}
+          APP: ${{ inputs.app || 'staff' }}
+          PROFILE: ${{ inputs.app == 'family' && 'preview' || inputs.profile || 'preview' }}
           COMMIT: ${{ github.sha }}
           # Stripe go live (owner 2026-11-01, docs/30): the normal app's OTA has the pay-link buttons too, like
           # eas.json `preview`. They show only when GET /stripe/feature says so (the API's switch and keys).
           EXPO_PUBLIC_FEATURE_STRIPE: "1"
         run: |
+          if [ "$APP" = family ]; then
+            # apps/family/eas.json preview: channel and environment preview, no Stripe flag (its env decides).
+            unset EXPO_PUBLIC_FEATURE_STRIPE
+            npx --yes "$EAS_CLI" update --channel preview --environment preview \
+              --message "Family OTA from GitHub ${COMMIT:0:7}" --non-interactive
+            exit 0
+          fi
           if [ "$PROFILE" = stripe-test ]; then
             # The eas.json stripe-test env (Stripe UI on, the test app's config) and its own channel / environment.
             export EXPO_PUBLIC_FEATURE_STRIPE=1 APP_VARIANT=stripetest
@@ -192,12 +241,16 @@ jobs:
         if: ${{ needs.build.result == 'success' }}
         env:
           KIND: apk
-          PROFILE: ${{ inputs.profile || 'preview' }}
+          # The family APK: mobile-family-v<version>-b<run> (release-tag.mjs prefixes a non-preview profile).
+          PROFILE: ${{ inputs.app == 'family' && 'family' || inputs.profile || 'preview' }}
           EAS_URL: ${{ needs.build.outputs.eas_url }}
-        run: VERSION=$(jq -r .expo.version apps/mobile/app.json) node tools/scripts/ci-checks/release-tags/release-tag.mjs
+        run: VERSION=$(jq -r .expo.version "$APP_DIR/app.json") node tools/scripts/ci-checks/release-tags/release-tag.mjs
       - name: Tag the OTA
         if: ${{ needs.ota.result == 'success' }}
         env:
           KIND: ota
-          CHANNEL: ${{ inputs.profile == 'stripe-test' && 'stripe-test' || inputs.branch }}
+          # ota-family-preview-<day>-<n> for the family app: never the staff app's ota-preview-… family of tags.
+          CHANNEL: >-
+            ${{ inputs.app == 'family' && 'family-preview'
+            || inputs.profile == 'stripe-test' && 'stripe-test' || inputs.branch }}
         run: node tools/scripts/ci-checks/release-tags/release-tag.mjs

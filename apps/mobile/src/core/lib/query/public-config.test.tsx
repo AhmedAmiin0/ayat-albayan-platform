@@ -1,12 +1,13 @@
 import { PUBLIC_SETTING_DEFAULTS, type LessonView } from '@ab/shared';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import { livePhase } from '@/calendar/live/live-filter';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { publicConfigQuery, useJoinWindow, usePublicConfig, useUploadMaxBytes } from './public-config';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (...mockArgs: unknown[]) => mockApiFetch(...mockArgs),
 }));
 

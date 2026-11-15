@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 import { Note } from '@/core/ui/feedback/Note';
 import { NativePicker } from './NativePicker';

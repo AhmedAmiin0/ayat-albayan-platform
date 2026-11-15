@@ -1,15 +1,14 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { myStudent } from '@/sales-money/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
-import { type } from '@/theme';
 import { AllStudentsScreen } from './AllStudentsScreen';
 import { student } from '@/sales/sales/testing/fixtures';
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
 const page = (items: unknown[]) => ({ items, total: items.length, page: 1, pageSize: 25 });

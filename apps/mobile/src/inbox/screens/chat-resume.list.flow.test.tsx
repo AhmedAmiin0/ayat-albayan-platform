@@ -1,6 +1,6 @@
 import { renderApp, resetApp } from '@/test/app-router';
 import { act, screen } from '@testing-library/react-native';
-import { supabase } from '@/core/lib/http/supabase';
+import { supabase } from '@ab/mobile-kit';
 import { READ_TIMEOUT_MS } from '@ab/client-core';
 import { inboxBackend } from '@/inbox/shared/flow-backend';
 import {

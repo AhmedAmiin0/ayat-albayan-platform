@@ -1,6 +1,5 @@
 import { Switch, View } from 'react-native';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { AppText, type, useTheme } from '@ab/mobile-kit';
 
 interface PrefSwitchRowProps {
   label: string;

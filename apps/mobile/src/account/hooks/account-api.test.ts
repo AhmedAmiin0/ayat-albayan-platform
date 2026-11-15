@@ -1,12 +1,12 @@
-import { apiSend } from '@/core/lib/http/api';
+import { apiSend } from '@ab/mobile-kit';
 import { profileFixture } from '@/test/account';
 import { AvatarUploadError, uploadAvatar } from './account-api';
 import type { PickedAvatar } from '@/account/lib/avatar';
 
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiSend: jest.fn() }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiSend: jest.fn() }));
 const mockUpload = jest.fn();
 const mockFrom = jest.fn((bucket: string) => ({ bucket, uploadToSignedUrl: mockUpload }));
-jest.mock('@/core/lib/http/supabase', () => ({ supabase: { storage: { from: (b: string) => mockFrom(b) } } }));
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({ supabase: { storage: { from: (b: string) => mockFrom(b) } } }));
 
 const send = jest.mocked(apiSend);
 const avatar: PickedAvatar = { uri: 'file:///cache/me.jpg', mime: 'image/jpeg', bytes: new Uint8Array([1, 2, 3]).buffer, size: 3 };

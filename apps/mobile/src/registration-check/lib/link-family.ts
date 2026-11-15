@@ -1,8 +1,6 @@
 import type { LeadFamilyLinked } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ApiError, apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { ApiError, apiSend, t, pathKey } from '@ab/mobile-kit';
 
 // «ربط بطالب موجود» (owner 2026-10-29): the lead chat's number becomes the second number of an existing
 // student's family. POST /leads/:id/link-family { code } → 200 { linked }; never an id or a phone.

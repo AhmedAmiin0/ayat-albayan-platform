@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { summary } from '@/ops/shared/fixtures';
 import { kpisOf } from './kpis';
 

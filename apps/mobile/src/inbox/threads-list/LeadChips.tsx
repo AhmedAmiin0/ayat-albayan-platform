@@ -1,5 +1,5 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import type { ChatChoice } from '@/inbox/lists/components/ChatListChips';
 import { ListChip } from '@/inbox/lists/components/ListChip';
 

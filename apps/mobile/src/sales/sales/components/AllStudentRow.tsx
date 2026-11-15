@@ -1,12 +1,10 @@
 import { studentStatusStyle, type SalesStudentView } from '@ab/shared';
 import { pushInTab } from '@/core/nav/back-within';
 import { memo } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ListRow, StatusChip } from '@ab/mobile-kit';
 import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
 import { Note } from '@/core/ui/feedback/Note';
-import { ListRow } from '@/core/ui/layout/ListRow';
 import { PhoneText } from '@/core/ui/layout/PhoneText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { fill, guardianLine, studentSubtitle } from '@/sales/sales/lib/sales-text';
 import { RosterLines } from '@/sales/sales/roster/RosterLines';
 

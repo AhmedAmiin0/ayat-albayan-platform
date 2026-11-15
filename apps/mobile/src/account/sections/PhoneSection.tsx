@@ -1,7 +1,6 @@
 import type { AccountProfile } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { patchProfile } from '@/account/hooks/account-api';
 import { accountMessage } from '@/account/lib/account-errors';
 import { AccountCard } from '@/account/components/AccountCard';

@@ -1,22 +1,17 @@
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native';
 import { canOpen } from '@/core/auth/route-permissions';
-import type { Can } from '@/core/auth/use-permissions';
+import { t, ListRow, Screen, ScreenHeader, useTabBarInset, InsetGroup } from '@ab/mobile-kit';
+import type { Can } from '@ab/mobile-kit';
 import { addDays, riyadhToday } from '@/calendar';
 import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { AssistantLessonsList } from '@/classroom/assistants/AssistantLessonsList';
 import { DaySwitcher } from '@/classroom/sessions/DaySwitcher';
 import { useNow } from '@/core/lib/time/use-now';
-import { t } from '@/core/lib/i18n/i18n';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { Note } from '@/core/ui/feedback/Note';
 import { HeldBell } from '@/notifications/HeldBell';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { assistantDay } from './assistant-day';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**
  * «حلقاتي» (web /assistant/ AssistantHome): the open lessons of the students they assist, today

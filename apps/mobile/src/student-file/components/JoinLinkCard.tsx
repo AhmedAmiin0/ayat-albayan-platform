@@ -2,12 +2,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Share, View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { apiSend, t, AppText, Button } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 
 const J = t.mobileStudentFile.joinLink;

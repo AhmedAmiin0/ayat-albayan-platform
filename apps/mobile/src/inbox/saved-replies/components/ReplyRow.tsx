@@ -1,10 +1,7 @@
 import type { SavedReply } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { useInset } from '@/core/ui/surface/inset';
+import { t, type, useTheme, AppText, useInset } from '@ab/mobile-kit';
 import { AttachIcon } from '@/inbox/shared/chat-icons';
 
 interface ReplyRowProps {

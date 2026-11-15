@@ -1,6 +1,5 @@
 import type { ClockCycle } from '@ab/shared';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { rescheduleFailure } from '@/teaching';
 
 /** The confirm's own wording for lesson_ended and invalid_transition; the lessons wording for anything else. */

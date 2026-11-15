@@ -1,8 +1,7 @@
 import { router } from 'expo-router';
 import { RefreshControl, ScrollView } from 'react-native';
 import { useLessonDetails } from '@/calendar';
-import { Screen } from '@/core/ui/layout/Screen';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
+import { Screen, useTabBarInset } from '@ab/mobile-kit';
 import { TodayAlerts, useHomePrefs } from '@/teacher/alerts';
 import { TeacherLessonSheet, useTimedNotice } from '@/teacher/lesson-actions';
 import { shownDay } from '@/teacher/today/day-prefs';

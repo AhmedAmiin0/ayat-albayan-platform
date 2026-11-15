@@ -1,14 +1,13 @@
 import type { Permission } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
-import { PROFILE_KEY } from '@/account/hooks/queries';
-import { t } from '@/core/lib/i18n/i18n';
+import { PROFILE_KEY, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { TodayHeader } from './TodayHeader';
 
 // The header's bell: the admin's always; the salesperson's only with notifications.push (as «المحادثات»).
 let mockHeld: Permission[] = [];
-jest.mock('@/core/auth', () => ({
-  ...jest.requireActual('@/core/auth'),
+jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({
+  ...jest.requireActual('@ab/mobile-kit/auth/use-permissions'),
   useHolds: (p: Permission) => mockHeld.includes(p),
 }));
 jest.mock('@/notifications/BellButton', () => {

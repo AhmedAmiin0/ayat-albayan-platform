@@ -3,19 +3,22 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { ScrollView } from 'react-native';
 import { AssistantsSection } from '@/classroom/assistants/AssistantsSection';
-import { ApiError, apiFetch } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import {
+  ApiError,
+  apiFetch,
+  t,
+  pathKey,
+  Button,
+  BackButton,
+  ErrorState,
+  ltr,
+  Screen,
+  ScreenHeader,
+} from '@ab/mobile-kit';
 import { useStudentHref } from '@/core/nav/tree-base';
 import { MessageSearchRow } from '@/inbox';
 import { StudentFileSections } from '@/student-file/components/StudentFileSections';
 import { TrialDateSection } from '@/trial-date/components/TrialDateSection';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { CoursePauseSection } from '@/students/course-pause/CoursePauseSection';
 import { CourseActionsSection } from '@/students/course-actions/CourseActionsSection';
 import { PeopleEditSection } from '@/students/people-edit/PeopleEditSection';

@@ -1,14 +1,10 @@
 import type { SalesPaymentView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, Button, NuqtaGlyph } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { money } from '@/core/lib/money/format';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
 import { ButtonRow } from '@/core/ui/actions';
-import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 
 interface TransferDoneProps {
   payment: SalesPaymentView;

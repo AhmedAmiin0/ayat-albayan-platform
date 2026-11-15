@@ -1,8 +1,7 @@
 import type { SalesCourseView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { t, pathKey } from '@ab/mobile-kit';
 import { bookedCourse, courseView } from '@/sales-course/testing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { details } from './fixtures';
@@ -12,8 +11,8 @@ import { SalesStudentScreen } from './SalesStudentScreen';
 // (`mine`, the ownership rule) or ANY with sales.renew_any, once a course exists; before it
 // «أيام الحلقات» (owner 2026-11-06); «إلغاء الاشتراك» whatever `mine` says.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({

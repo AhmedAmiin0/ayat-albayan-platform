@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
 import { addDays, riyadhToday, weekStart } from '@/calendar/lib/week';
 import type { DashboardWork, Summary } from './dashboard-types';
 

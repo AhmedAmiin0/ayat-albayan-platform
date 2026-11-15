@@ -1,4 +1,4 @@
-import { type } from '@/theme';
+import { type } from '@ab/mobile-kit';
 
 /** The button's own sides: 12pt padding and the 1pt edge, each side (Button.tsx). */
 const SIDES = 2 * (12 + 1);

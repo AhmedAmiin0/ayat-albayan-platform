@@ -1,7 +1,6 @@
 import type { BookingTeacherOption, Gender, Program, SlotsResponse } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
 import { bookingPath, useBookingMode } from './booking-mode';
 
 /** GET /booking/teachers?program&gender? (docs/10 route 12; sales: /sales/booking/teachers): active teachers by name, with load. */

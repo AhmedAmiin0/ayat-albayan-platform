@@ -1,8 +1,7 @@
 import { reportPageViewSchema, type ReportPageView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Linking } from 'react-native';
-import { apiFetch } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
 
 /** Which page: a link's public id (ayatalbayan://report/<id>), or a list's report uuid. */
 interface PageParams {

@@ -1,8 +1,6 @@
 import { View } from 'react-native';
 import type { RoomPlatform, RoomTile } from '@/classroom/room/model/room-types';
-import { t } from '@/core/lib/i18n/i18n';
-import { Avatar } from '@/core/ui/primitives/Avatar';
-import { shape, useTheme } from '@/theme';
+import { t, Avatar, shape, useTheme } from '@ab/mobile-kit';
 import { TileCaption } from './TileCaption';
 
 interface ParticipantTileProps {

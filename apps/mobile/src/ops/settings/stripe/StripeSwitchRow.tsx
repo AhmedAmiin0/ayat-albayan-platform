@@ -1,6 +1,4 @@
-import { useHolds, useIsAdmin } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
-import { SwitchRow } from '@/core/ui/form/SwitchRow';
+import { useHolds, useIsAdmin, t, SwitchRow } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { useIntegrations, useSaveIntegrationValues } from '@/ops/comms/use-line-drivers';
 import { STRIPE_FEATURE } from '@/sales-subscribe';

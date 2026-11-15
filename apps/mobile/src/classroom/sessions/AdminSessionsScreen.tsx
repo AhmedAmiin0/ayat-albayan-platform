@@ -1,15 +1,17 @@
 import { router } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import { addDays, riyadhNoon, riyadhToday } from '@/calendar';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+  AppText,
+} from '@ab/mobile-kit';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { useJoinWindow } from '@/core/lib/query/public-config';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { useDayLessons } from '@/today/lib/use-day-lessons';
 import { DaySwitcher } from './DaySwitcher';
 import { SessionGroupList } from './SessionGroupList';

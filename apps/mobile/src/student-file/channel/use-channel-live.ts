@@ -1,9 +1,8 @@
 import { channelKey, subscribeChannelMessages } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { supabase } from '@/core/lib/http/supabase';
+import { supabase, useScreenFocused } from '@ab/mobile-kit';
 import { useAppActive } from '@/core/lib/presence';
-import { useScreenFocused } from '@/core/ui/connecting/use-screen-focus';
 import type { ChannelRef } from './channel-queries';
 
 interface Live {

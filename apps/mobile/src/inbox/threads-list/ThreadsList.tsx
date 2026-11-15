@@ -1,12 +1,9 @@
 import type { ThreadView } from '@ab/shared';
 import { type ReactNode, useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, EmptyState, ErrorState, ScreenHeader } from '@ab/mobile-kit';
 import { useTreeBase } from '@/core/nav/tree-base';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { clockAt } from '@/inbox/shared/format';
 import { InboxHeaderActions } from './InboxHeaderActions';

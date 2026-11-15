@@ -1,7 +1,7 @@
 import { replyRights, type ReplyLesson, type ThreadLesson } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState, type ReactNode } from 'react';
-import { useHolds, usePermissions } from '@/core/auth';
+import { useHolds, usePermissions } from '@ab/mobile-kit';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { refreshChat } from '@/inbox/thread/hooks/inbox-sync';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';

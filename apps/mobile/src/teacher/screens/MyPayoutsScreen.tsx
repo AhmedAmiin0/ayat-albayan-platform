@@ -1,17 +1,21 @@
 import { payoutStatusStyle, type PayoutView } from '@ab/shared';
 import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  shape,
+  type,
+  useTheme,
+  AppText,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+  StatusChip,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { egp } from '@/earnings/lib/format';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { breakdownLines, monthLabel, payoutSummary, payoutWhen } from '@/teacher/lib/payout-text';
 import { useMyPayouts } from '@/teacher/lib/queries';
 

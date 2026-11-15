@@ -1,5 +1,5 @@
 import { USER_ROLES, type UserRole, type UserRoleOption } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Choice } from '@/users/shared/Choice';
 import { roleOptionName, roleText } from '@/users/shared/format';

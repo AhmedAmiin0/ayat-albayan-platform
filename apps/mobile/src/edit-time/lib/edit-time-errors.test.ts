@@ -1,5 +1,4 @@
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { editTimeFailure, failureCode, isStale } from './edit-time-errors';
 
 const api = (status: number, code: string, extra: object = {}) => new ApiError(status, { code, ...extra });

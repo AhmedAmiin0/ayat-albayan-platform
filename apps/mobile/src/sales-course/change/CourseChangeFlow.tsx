@@ -2,12 +2,8 @@ import { changePicks, changePrefillFrom, type BookedCourse, type SalesCourseView
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { bookFailure, dayStartUtc, LessonTimesStep } from '@/booking';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, AppText, BackButton, ScreenHeader, type, useTheme } from '@ab/mobile-kit';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { BackButton } from '@/core/ui/navigation';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { type, useTheme } from '@/theme';
 import { daysText } from '@/sales-course/lib/course-days';
 import { changeRequest, withOverride, withTeacher, type ChangeTarget } from './change-body';
 import { useChangeCourse } from './change-queries';

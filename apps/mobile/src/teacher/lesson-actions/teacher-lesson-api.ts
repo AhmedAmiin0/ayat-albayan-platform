@@ -3,11 +3,8 @@ import { cancelAnswerSchema, confirmAnswerSchema, teacherLessonPaths } from '@ab
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { z } from 'zod';
-import { isNetworkError } from '@/core/lib/connectivity/network-error';
-import { ApiError, apiSend } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { isNetworkError, ApiError, apiSend, t, pathKey } from '@ab/mobile-kit';
 import { patchCached, type Patch } from '@/core/lib/query/paging';
-import { pathKey } from '@/core/lib/query/query-keys';
 
 // docs/46 C3/C4: the teacher's own lesson routes (self.teacher), never the admin's /lessons/:id/*.
 

@@ -1,14 +1,14 @@
 import { act, screen } from '@testing-library/react-native';
 import { useContext } from 'react';
 import { renderWithQuery } from '@/test/query';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { AppText } from '@ab/mobile-kit';
 import { inbound, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { BubbleActionsContext, type BubbleChatActions, ChatActionsContext, type ChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ChatActionsProvider } from './ChatActionsProvider';
 
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
 }));
 

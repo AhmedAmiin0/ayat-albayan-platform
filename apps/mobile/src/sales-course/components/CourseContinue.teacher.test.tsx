@@ -1,6 +1,6 @@
 import { counted, type BookedCourse } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
@@ -13,8 +13,8 @@ import { bookedCourse, courseView } from '@/sales-course/testing/fixtures';
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: jest.fn(),
 }));

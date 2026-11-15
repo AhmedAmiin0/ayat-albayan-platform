@@ -1,13 +1,13 @@
 import type { LessonView } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
+import { ApiError } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { useTeacherCancel, useTeacherConfirm } from './teacher-lesson-api';
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
 }));
 

@@ -1,11 +1,8 @@
 import { channelTimeText } from '@ab/client-core';
 import { splitLinks, type ChannelMessageView } from '@ab/shared';
 import { Linking, Pressable, View, type ViewStyle } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, locale, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { useClockCycle } from '@/core/lib/clock';
-import { locale } from '@/core/lib/i18n/locale';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 
 const small = {

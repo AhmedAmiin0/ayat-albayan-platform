@@ -4,19 +4,21 @@ import { useState } from 'react';
 import { SectionList } from 'react-native';
 import { JoinAround } from '@/classroom';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+  useTabBarInset,
+} from '@ab/mobile-kit';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { Note } from '@/core/ui/feedback/Note';
 import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
 import { Notice } from '@/today/components/Notice';
 import { useNow } from '@/core/lib/time/use-now';
 import { useLessonAction } from '@/today/lib/use-lesson-action';
-import { BackButton } from '@/core/ui/navigation';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { useTabBarInset } from '@/core/ui/layout/tab-bar-inset';
 import { headerLine } from '@/calendar/agenda/agenda';
 import { AgendaItemRow } from '@/calendar/agenda/AgendaItemRow';
 import { AgendaLessonRow } from '@/calendar/agenda/AgendaLessonRow';

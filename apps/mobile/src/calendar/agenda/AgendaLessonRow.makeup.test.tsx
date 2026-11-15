@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import type { LessonView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { lesson } from '@/today/testing/fixtures';
 import { AgendaLessonRow } from './AgendaLessonRow';
 

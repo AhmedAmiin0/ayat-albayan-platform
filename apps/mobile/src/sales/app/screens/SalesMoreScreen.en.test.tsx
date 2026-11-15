@@ -1,7 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
-import { PROFILE_KEY } from '@/account/hooks/queries';
-import { t } from '@/core/lib/i18n/i18n';
+import { PROFILE_KEY, t } from '@ab/mobile-kit';
 import { profileFixture } from '@/test/account';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { SalesMoreScreen } from './SalesMoreScreen';

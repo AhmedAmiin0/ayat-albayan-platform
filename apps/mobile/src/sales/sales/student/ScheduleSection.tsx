@@ -1,10 +1,8 @@
 import type { SalesStudentSchedule } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/more';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { SmallHeading as SectionLabel } from '@/sales/sales/components/SmallHeading';
 import { slotLines, slotMeta, weeklyLine } from './schedule-text';
 import { UpcomingLessons } from './UpcomingLessons';

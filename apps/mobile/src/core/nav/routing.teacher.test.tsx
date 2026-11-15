@@ -1,24 +1,20 @@
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { supabase } from '@/core/lib/http/supabase';
+import { supabase, t, queryClient, pathKey, registerPush } from '@ab/mobile-kit';
 import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { queryClient } from '@/core/lib/query/query-client';
-import { pathKey } from '@/core/lib/query/query-keys';
 import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { fullAccessMe } from '@/test/staff-me';
 import { TabStack } from '@/core/nav/TabStack';
-import { registerPush } from '@/core/push/registerPush';
 import TabsLayout from '../../../app/(tabs)/_layout';
 import RootLayout from '../../../app/_layout';
 import TeacherLayout from '../../../app/teacher/_layout';
 
 // The real root, admin and teacher layouts with stub screens: the gate decides who reaches what.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
-jest.mock('@/core/auth/use-auth-gate', () => {
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => {
   const { useState } = jest.requireActual('react');
   const gate = { initial: 'out', set: (() => undefined) as (mockStatus: string) => void };
   return {
@@ -30,7 +26,7 @@ jest.mock('@/core/auth/use-auth-gate', () => {
     },
   };
 });
-const { mockGate } = jest.requireMock('@/core/auth/use-auth-gate') as {
+const { mockGate } = jest.requireMock('@ab/mobile-kit/auth/use-auth-gate') as {
   mockGate: { initial: string; set: (s: string) => void };
 };
 

@@ -15,30 +15,27 @@ const root = import.meta.dirname;
 // c-row move adds its domain here in the same PR that moves ALL of src/<domain>/ into
 // src/<domain>/<module>/ (a listed domain makes each sub-folder its own module).
 const DOMAINS = ['sales'];
-// app-family/: the family app's own expo-router root (docs/50 §7), linted as app/ is.
-const APP = ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}', 'app-family/**/*.{ts,tsx}'];
-const TSX = ['src/**/*.tsx', 'app/**/*.tsx', 'app-family/**/*.tsx'];
+const APP = ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'];
+const TSX = ['src/**/*.tsx', 'app/**/*.tsx'];
 const TEXT = {
   name: 'react-native',
   importNames: ['Text'],
-  message: 'Use AppText from @/core/ui/primitives/AppText.',
+  message: 'Use AppText from @ab/mobile-kit.',
 };
 const ROUTES = {
   group: routeImportGroup({ prefix: '@/', exempt: ['core'], domains: DOMAINS }),
   message: 'Import the feature index (@/<feature>), not its internals.',
 };
-// docs/36 «Stays exempt»: the reach wrapper, the connectivity probe and the local file:// reads
-// call fetch (H-1): supabase-js's transport (a kept SDK, docs/36 §3.2) gets the read deadline;
-// docs/38: the shared files' cached copies (file://) are read as pickPdf reads its copy.
+// docs/36 «Stays exempt»: the local file:// reads call fetch (H-1; the HTTP client's own reads
+// are in @ab/mobile-kit). docs/38: the shared files' cached copies (file://) are read as pickPdf
+// reads its copy.
 const FETCH = [
-  'src/core/lib/http/api.ts',
-  'src/core/lib/http/auth-fetch.ts',
-  'src/core/lib/connectivity/probe.ts',
   'src/inbox/composer/send-file.ts',
   'src/inbox/thread/share/shared-file.ts',
   'src/inbox/composer/voice/send-voice.ts',
 ];
-const API = '(^|/)http/api(\\.js)?$';
+// apiFetch / apiSend come from the shared kit (@ab/mobile-kit) or its http/api module.
+const API = '(^|/)http/api(\\.js)?$|^@ab/mobile-kit$';
 
 export default {
   react: true,
@@ -61,13 +58,13 @@ export default {
     // RTL: a raw Text with no textAlign can sit at the physical left (docs/07 §14.1).
     {
       files: TSX,
-      ignores: ['src/core/ui/primitives/AppText.tsx', '**/*.test.tsx'],
+      ignores: ['**/*.test.tsx'],
       rules: { 'no-restricted-imports': ['error', { paths: [TEXT] }] },
     },
     // docs/27 §1 rules 5–6: a route file imports a feature only through its index (`@/inbox`);
     // `@/core/**` is shared.
     {
-      files: ['app/**/*.tsx', 'app-family/**/*.tsx'],
+      files: ['app/**/*.tsx'],
       ignores: ['**/*.test.tsx'],
       rules: { 'no-restricted-imports': ['error', { paths: [TEXT], patterns: [ROUTES] }] },
     },

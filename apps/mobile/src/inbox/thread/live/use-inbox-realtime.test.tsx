@@ -1,7 +1,7 @@
 import { chatLiveKey } from '@ab/client-core';
 import { act, renderHook } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
-import { queryClient as client } from '@/core/lib/query/query-client';
+import { queryClient as client } from '@ab/mobile-kit';
 import { cachedThread, detail, inbound } from '@/inbox/shared/thread-fixtures';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { threadPollKey } from '@/inbox/thread/hooks/thread-poll';
@@ -26,7 +26,7 @@ const mockSupabase = {
   getChannels: jest.fn(() => []),
   realtime: { setAuth: jest.fn(async () => undefined), disconnect: jest.fn(async () => 'ok') },
 };
-jest.mock('@/core/lib/http/supabase', () => ({
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   get supabase() {
     return mockSupabase; // read at use, after this file's consts exist
   },

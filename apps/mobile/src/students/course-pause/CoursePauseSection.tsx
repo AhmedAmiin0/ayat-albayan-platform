@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useHolds } from '@/core/auth';
-import { t } from '@/core/lib/i18n/i18n';
+import { useHolds, t, Button } from '@ab/mobile-kit';
 import { Note } from '@/more';
-import { Button } from '@/core/ui/primitives/Button';
 import { useCoursePause } from './course-pause-api';
 import { CoursePauseBanner } from './CoursePauseBanner';
 import { CoursePauseForm } from './CoursePauseForm';

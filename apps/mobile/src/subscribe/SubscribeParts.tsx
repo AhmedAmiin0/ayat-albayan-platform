@@ -1,17 +1,20 @@
 import type { QuoteResponse } from '@ab/shared';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  type,
+  useTheme,
+  AppText,
+  Button,
+  ErrorState,
+  FilterPills,
+  NuqtaGlyph,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
 import type { StudentRef } from '@/students/shared/types';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { DatePickerField } from '@/core/ui/form/date-picker';
-import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
 import { QuotePreview } from './QuotePreview';
 import { subscribeErrorText } from './subscribe-form';
 

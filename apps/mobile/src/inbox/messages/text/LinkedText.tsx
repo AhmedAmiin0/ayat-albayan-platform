@@ -1,10 +1,8 @@
 import { splitLinks } from '@ab/shared';
 import { Fragment, useState } from 'react';
 import { Linking } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { appOpenUrl, STRIPE_FEATURE } from '@/core/lib/stripe-flag';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import type { BubbleActions } from '@/inbox/messages/hooks/bubble-actions';
 import { useSmall } from '@/inbox/messages/components/MessageMeta';

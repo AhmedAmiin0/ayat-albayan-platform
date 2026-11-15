@@ -1,9 +1,7 @@
 import { NO_TEACHER, teacherName, PROGRAMS, STUDENT_PACKAGE_FILTERS, tzChoices, tzOptionLabel } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { FilterPills } from '@/core/ui/form/FilterPills';
+import { t, FilterPills, locale } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
-import { locale } from '@/core/lib/i18n/locale';
 import { SORT_CHOICES, type FilterKey, type StudentFilters } from './student-filters';
 import type { TeacherOption } from './use-student-list-data';
 

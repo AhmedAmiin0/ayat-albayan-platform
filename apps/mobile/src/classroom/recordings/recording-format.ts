@@ -1,6 +1,6 @@
 import { dateText, type ClockCycle, type Glyph, type LessonRecordingView, type Tone } from '@ab/shared';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
-import { locale } from '@/core/lib/i18n/locale';
+import { locale } from '@ab/mobile-kit';
 
 /** Where a recording list comes from: a lesson (admin, its teacher) or an internal meeting (admin, creator). */
 export interface RecordingSource {

@@ -1,7 +1,6 @@
 import { View } from 'react-native';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { AppText, shape, type, useTheme } from '@ab/mobile-kit';
 import { MicOffIcon } from '@/inbox';
-import { shape, type, useTheme } from '@/theme';
 
 interface TileCaptionProps {
   name: string;

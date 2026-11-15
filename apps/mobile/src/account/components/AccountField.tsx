@@ -1,8 +1,6 @@
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Field, type FieldProps } from '@/core/ui/form/Field';
+import { type, useTheme, AppText, Field, type FieldProps } from '@ab/mobile-kit';
 
 interface AccountFieldProps extends FieldProps {
   /** The field's own message (account.errors.*), announced as an alert under it. */

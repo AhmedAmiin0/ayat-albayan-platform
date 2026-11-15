@@ -1,7 +1,6 @@
 import type { SalesChatReceipt } from '@ab/shared';
 import { Image, View } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { useChatReceiptThumb } from './chat-receipts';
 
 const SIZE = 56;

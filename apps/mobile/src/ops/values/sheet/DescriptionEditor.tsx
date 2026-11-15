@@ -1,11 +1,9 @@
 import { DESCRIPTION_MAX, type SettingKey } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button, Field } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
-import { Field } from '@/core/ui/form/Field';
 import { useDescriptionEditor } from '@/ops/values/hooks/use-description-editor';
 
 export interface DescriptionEditorProps {

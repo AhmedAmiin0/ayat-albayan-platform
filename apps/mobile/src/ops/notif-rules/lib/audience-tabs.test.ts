@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { catalogue } from '@/ops/shared/fixtures';
 import { audienceTabs, rowsOf } from './audience-tabs';
 

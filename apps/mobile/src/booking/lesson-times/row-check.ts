@@ -1,8 +1,7 @@
 import { lessonAt, nearestFree, pickState, type LessonRow, type PickState } from '@ab/client-core';
 import { otherZoneClock, type SlotsResponse } from '@ab/shared';
 import type { ViewerClock } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 
 // One lesson row's reading (owner 2026-11-07): its instant in the student's zone, what the slot
 // data says about it (pickState), the nearest free times when it is busy or outside availability,

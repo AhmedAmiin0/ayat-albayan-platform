@@ -2,13 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { Appearance } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { APPEARANCE_KEY } from '@/more/appearance/appearance';
+import { t, APPEARANCE_KEY, signOutDevice } from '@ab/mobile-kit';
 import { MoreScreen } from './MoreScreen';
-import { signOutDevice } from '@/core/lib/session/sign-out';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('@/core/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 let setScheme: jest.SpyInstance;
 

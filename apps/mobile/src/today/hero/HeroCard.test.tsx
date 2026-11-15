@@ -1,12 +1,12 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { allowedLessonEvents } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { confirmingQueryClient, noConfirmQueryClient, renderWithQuery } from '@/test/query';
 import { lesson, muscat, pending } from '@/today/testing/fixtures';
 import { HeroCard } from './HeroCard';
 
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: () => new Promise(() => undefined),
 }));
 

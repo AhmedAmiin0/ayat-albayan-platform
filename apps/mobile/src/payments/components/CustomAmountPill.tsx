@@ -1,7 +1,5 @@
 import { Pressable } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { shape, type, useTheme } from '@/theme';
+import { t, AppText, shape, type, useTheme } from '@ab/mobile-kit';
 
 interface CustomAmountPillProps {
   on: boolean;

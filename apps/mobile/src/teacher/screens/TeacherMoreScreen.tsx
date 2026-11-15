@@ -2,18 +2,20 @@ import { teacherName, type TeacherGate } from '@ab/shared';
 import { type Href, router } from 'expo-router';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
-import { t } from '@/core/lib/i18n/i18n';
+import {
+  t,
+  ListRow,
+  Screen,
+  ScreenHeader,
+  InsetGroup,
+  SignOutButton,
+  locale,
+} from '@ab/mobile-kit';
 import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { InsetGroup } from '@/core/ui/surface/inset';
 import { useTeacherMe } from '@/teacher/lib/queries';
 import { useTeacherGateOpen } from '@/teacher/lib/teacher-pages';
-import { SignOutButton } from '@/core/auth';
-import { locale } from '@/core/lib/i18n/locale';
 
 type GateOpen = (gate: TeacherGate) => boolean;
 interface MoreRow { title: string; href: Href; visible: (open: GateOpen) => boolean }

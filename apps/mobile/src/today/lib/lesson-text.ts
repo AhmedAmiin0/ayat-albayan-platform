@@ -7,9 +7,7 @@ import {
   type ClockCycle,
 } from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, ltr, locale } from '@ab/mobile-kit';
 import { localDate } from './timeline';
 import type { TodayLesson } from './today-lesson';
 

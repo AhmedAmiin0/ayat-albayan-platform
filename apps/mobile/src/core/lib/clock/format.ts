@@ -7,7 +7,7 @@ import {
   lessonWhenAt,
   type ClockCycle,
 } from '@ab/shared';
-import { locale } from '@/core/lib/i18n/locale';
+import { locale } from '@ab/mobile-kit';
 
 // The shared clock formatters bound to this run's UI language: screens pass the cycle from
 // useClockCycle(), so a change of «تنسيق الوقت» re-renders them with the new form.

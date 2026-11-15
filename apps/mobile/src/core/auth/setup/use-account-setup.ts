@@ -1,10 +1,6 @@
 import { accountSetupSchema } from '@ab/shared';
 import { useState } from 'react';
-import { authApi, authErrorText } from '@/core/auth/forgot';
-import { supabase } from '@/core/lib/http/supabase';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { queryClient } from '@/core/lib/query/query-client';
+import { authApi, authErrorText, supabase, t, pathKey, queryClient } from '@ab/mobile-kit';
 import { setupRefusal } from './setup-words';
 
 interface SetupInput {

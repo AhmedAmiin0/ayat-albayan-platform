@@ -1,6 +1,5 @@
 import { formatPhone } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, ltr } from '@ab/mobile-kit';
 import {
   checkedLine,
   driverLine,

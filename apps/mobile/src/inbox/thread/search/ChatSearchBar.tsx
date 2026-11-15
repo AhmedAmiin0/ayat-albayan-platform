@@ -1,12 +1,8 @@
 import { canStep, searchStatus, type SearchStep } from '@ab/client-core';
 import { TextInput, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Chevron } from '@/core/ui/primitives/Chevron';
-import { IconButton } from '@/core/ui/primitives/IconButton';
+import { t, AppText, Chevron, IconButton, type, useTheme } from '@ab/mobile-kit';
 import { DownIcon, UpIcon } from '@/inbox/shared/chat-icons';
 import { useSmall } from '@/inbox/messages/components/MessageMeta';
-import { type, useTheme } from '@/theme';
 import type { ChatSearchValue } from './search-context';
 
 /** The header's own row (ChatHeader): 52pt, the back chevron's box at the screen's edge. */

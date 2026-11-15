@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, FilterPills } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { InviteeChips } from './InviteeChips';
 import { InviteeSearch } from './InviteeSearch';
 import { addInvitee, isFull, removeInvitee, type DraftInvitee } from './invitee-draft';

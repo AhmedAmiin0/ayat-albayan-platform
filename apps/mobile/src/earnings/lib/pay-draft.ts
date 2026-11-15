@@ -1,5 +1,5 @@
 import { amountProblem, parseAmount, type PaymentMethod } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { paidAtFor } from '@/core/lib/money/paid-day';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 import { egp } from './format';

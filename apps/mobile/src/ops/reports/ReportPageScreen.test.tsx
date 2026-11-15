@@ -1,15 +1,15 @@
 import type { ReportPageView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ReportPageScreen } from './ReportPageScreen';
 
 // Invented data: no real student, teacher or family.
 const mockApiFetch = jest.fn();
 const mockParams = jest.fn((): object => ({ reportId: '00000000-0000-4000-8000-0000000000f1' }));
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('expo-router', () => ({

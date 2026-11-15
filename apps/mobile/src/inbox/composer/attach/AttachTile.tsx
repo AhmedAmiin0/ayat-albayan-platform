@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { shape, type, useTheme } from '@/theme';
+import { AppText, shape, type, useTheme } from '@ab/mobile-kit';
 
 interface AttachTileProps {
   /** The full name, for the screen reader («الردود السريعة»). */

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { shape, useTheme } from '@/theme';
+import { shape, useTheme } from '@ab/mobile-kit';
 import { PillContents, type PillProps } from '@/inbox/composer/pill/ComposerPill';
 import { RoundAction } from '@/inbox/composer/pill/RoundAction';
 import { MicHold } from '@/inbox/composer/voice/MicHold';

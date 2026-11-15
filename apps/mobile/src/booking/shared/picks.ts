@@ -1,7 +1,7 @@
 import type { BookingPickFields } from '@ab/client-core';
 import { wallParts } from '@ab/shared';
 import { hhmm, type ViewerClock } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { cityOf } from './slots';
 
 // A weekly package's picks (owner 2026-10-18: «اختر موعدًا لكل يوم»): one free slot per weekday of

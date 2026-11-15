@@ -1,18 +1,17 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { cachedThread, detail, PHONE } from '@/inbox/shared/thread-fixtures';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ltr } from '@ab/mobile-kit';
 import { pickDay } from '@/test/pickers/native-picker';
 import { localDay, money } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { balance, CHILD, profile, quote, saved, SISTER } from './fixtures';
 import { SubscribeScreen } from './SubscribeScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

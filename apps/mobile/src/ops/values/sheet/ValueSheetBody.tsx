@@ -1,13 +1,9 @@
 import type { SettingKey, SettingMeta } from '@ab/shared';
 import { View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, type, useTheme, AppText, Button, ScreenHeader } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SheetNotes, SheetNotice } from './SheetNotes';
 import { SheetQuestion } from './SheetQuestion';
 import { ValueEditor } from './ValueEditor';

@@ -5,17 +5,19 @@ import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { apiFetch } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
+import {
+  apiFetch,
+  t,
+  pathKey,
+  Button,
+  BackButton,
+  ErrorState,
+  Screen,
+  ScreenHeader,
+  StatusChip,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Button } from '@/core/ui/primitives/Button';
-import { BackButton } from '@/core/ui/navigation';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { openSigned } from '@/core/lib/http/open-signed';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
 import { ReportFieldRow } from './ReportFieldRow';
 import { adminReportFields } from './report-v2-fields';
 

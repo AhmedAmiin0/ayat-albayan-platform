@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button } from '@ab/mobile-kit';
 import { AmountEditSheet } from './AmountEditSheet';
 import type { AmountEditMutation } from './use-amount-edit';
 

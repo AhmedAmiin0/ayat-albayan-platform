@@ -1,11 +1,11 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import type { PendingReportRow, UnpaidRow } from './dashboard-types';
 import { PendingRow, UnpaidListRow } from './WorkRows';
 
 let mockHeld: string[] = [];
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: async () => ({ permissions: mockHeld }) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: async () => ({ permissions: mockHeld }) }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
 

@@ -1,14 +1,14 @@
 import { renderHook, waitFor } from '@testing-library/react-native';
+import { registerPush } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { registerPush } from './registerPush';
 import { useNotificationHandling } from './useNotificationHandling';
 import { usePushRegistration } from './usePushRegistration';
 
 // The sales and classroom-assistant trees: registration waits for /auth/me to list notifications.push.
-jest.mock('./registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 jest.mock('./useNotificationHandling', () => ({ useNotificationHandling: jest.fn() }));
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 const mount = (tree: 'sales' | 'assistant') =>
   renderHook(() => usePushRegistration(tree), { wrapper: queryWrapper(createTestQueryClient({ meFromApi: true })) });

@@ -2,7 +2,7 @@ import { anchoredThreadPrefix } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { pathKey } from '@ab/mobile-kit';
 import { listsKey } from '@/inbox/lists/lib/use-chat-lists';
 import { changeLists } from '@/inbox/thread/live/list-marks';
 import { nudgeInboxStore } from '@/inbox/thread/local/store-session';

@@ -1,6 +1,6 @@
 import { lessonStatusStyle } from '@ab/shared';
 import { UPCOMING_LESSON_STYLE } from '@ab/client-core';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { lessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { byScheduleStatus, scheduleStatusCounts, statusPill } from './schedule-status';
 

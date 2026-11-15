@@ -1,21 +1,20 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { lesson, muscat, pending } from './testing/fixtures';
 import { openSheet, openToday, inSheet } from './testing/today-sheet';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 // The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 // The greeting's first name reads /me/profile (TodayHeader.test); here it would take the day's mocked answers.
-jest.mock('@/account/hooks/queries', () => ({
-  ...jest.requireActual('@/account/hooks/queries'),
+jest.mock('@ab/mobile-kit/lib/profile/my-profile', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/profile/my-profile'),
   useMyProfile: () => ({ data: undefined }),
 }));
 

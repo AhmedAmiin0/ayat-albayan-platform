@@ -1,7 +1,7 @@
 import type { CourseMoveKind } from '@ab/client-core';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { PauseSheetFrame } from '@/students/course-pause/PauseSheetFrame';
 import { ActionButtons, useActionKeys, type Open } from './ActionButtons';

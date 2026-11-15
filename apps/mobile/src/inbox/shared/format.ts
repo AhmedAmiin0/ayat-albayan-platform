@@ -1,6 +1,6 @@
 import type { ClockCycle, ThreadView } from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // Display helpers for the inbox. Hermes has no Intl.RelativeTimeFormat / PluralRules, so the age
 // is built from ar.json forms (Egyptian «من 3 أيام»), Western digits only (docs/07 §2).

@@ -1,6 +1,6 @@
 import type { PushKind } from '@ab/shared';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { pathKey } from '@ab/mobile-kit';
 import type { PushTree } from './notification-route';
 
 // docs/48 MOBILE PUSH MAP: a foreground push refreshes the teacher's screens within seconds.

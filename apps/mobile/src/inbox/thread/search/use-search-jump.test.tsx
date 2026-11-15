@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-native';
 import type { ReactNode, RefObject } from 'react';
 import type { FlatList } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ChatSearchContext, type ChatSearchValue } from './search-context';
 import { useSearchJump } from './use-search-jump';
 

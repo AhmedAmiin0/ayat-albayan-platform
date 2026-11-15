@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { Modal, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Screen, ScreenHeader, Button } from '@ab/mobile-kit';
 import { currencyName, money } from '@/core/lib/money/format';
 import { paymentErrorText } from '@/core/lib/money/payment-errors';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { Note } from '@/core/ui/feedback/Note';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
-import { Button } from '@/core/ui/primitives/Button';
 import { Section } from '@/core/ui/surface/Section';
 import { AmountField } from '@/payments/components/AmountField';
 import { checkNewAmount } from './amount-edit';

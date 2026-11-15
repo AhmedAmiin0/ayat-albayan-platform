@@ -1,10 +1,7 @@
 import { View } from 'react-native';
 import { dayLabel } from '@/calendar';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
 
 interface DaySwitcherProps {
   /** YYYY-MM-DD on the Riyadh calendar. */

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { huda } from '@/inbox/shared/fixtures';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { ContactStep } from './ContactStep';
 import { draftFromLead } from '@/booking/trial/lib/draft';
 

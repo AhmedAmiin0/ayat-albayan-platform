@@ -1,4 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { viewerDayHint } from './lesson-text';
 
 // GET /lessons/day and /sales/schedule page by Riyadh days (docs/34 b). Sunday 1 Nov 2026 00:30 in

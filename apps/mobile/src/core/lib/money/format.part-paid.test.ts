@@ -1,5 +1,4 @@
-import { t } from '@/core/lib/i18n/i18n';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, ltr } from '@ab/mobile-kit';
 import { paidLine, paidOf, partPaidLine, shortfallLine } from './format';
 
 // Owner 2026-10-28 («Why is this unpaid»): 81 SAR with 80 received stays unpaid; the line says why.

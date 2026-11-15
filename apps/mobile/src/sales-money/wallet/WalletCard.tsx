@@ -1,8 +1,6 @@
 import type { WalletTotals } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { type, useTheme } from '@/theme';
+import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import { MoneyCard } from '@/sales-money/components/MoneyCard';
 import { byCurrency, walletMoney } from '@/sales-money/lib/money-text';
 

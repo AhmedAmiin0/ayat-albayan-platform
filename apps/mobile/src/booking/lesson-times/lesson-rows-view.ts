@@ -1,6 +1,6 @@
 import { pastRows, picksFromRows, repeatedDays, type LessonRow } from '@ab/client-core';
 import { counted, pickProgress } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 // What the step shows around its rows: the picks they make, the repeated weekdays, whether
 // «التالي» opens, the heading note, the course's progress and whether a day can be added or

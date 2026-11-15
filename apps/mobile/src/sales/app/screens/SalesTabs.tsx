@@ -1,4 +1,5 @@
-import { canOpen, usePermissions } from '@/core/auth';
+import { usePermissions } from '@ab/mobile-kit';
+import { canOpen } from '@/core/auth';
 import { useInboxBadge } from '@/core/nav/use-inbox-badge';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { usePushRegistration } from '@/core/push/usePushRegistration';

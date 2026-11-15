@@ -1,5 +1,5 @@
 import { chatListErrorWords } from '@ab/client-core';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 /**
  * The inline line under a list's name field: the 409s (the name is taken, 30 lists already), a

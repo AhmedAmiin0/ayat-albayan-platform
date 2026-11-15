@@ -1,8 +1,6 @@
 import type { SavedReplyScope } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 const TABS = (): { value: SavedReplyScope; label: string }[] => [
   { value: 'shared', label: t.savedReplies.tabShared },

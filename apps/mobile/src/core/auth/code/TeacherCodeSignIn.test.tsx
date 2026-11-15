@@ -1,15 +1,14 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { TeacherCodeSignIn } from './TeacherCodeSignIn';
 
 const mockApiSend = jest.fn();
 const mockSignInWithCode = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
 }));
-jest.mock('@/core/auth/sign-in', () => ({ signInWithCode: (b: unknown) => mockSignInWithCode(b) }));
+jest.mock('@ab/mobile-kit/auth/sign-in', () => ({ signInWithCode: (b: unknown) => mockSignInWithCode(b) }));
 
 const onBack = jest.fn();
 

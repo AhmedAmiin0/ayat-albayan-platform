@@ -1,6 +1,6 @@
 import { renderRouter, screen, within } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { glass, palette } from '@/theme';
+import { glass, palette } from '@ab/mobile-kit';
 import { AppNativeTabs, type TabItem } from './AppNativeTabs';
 
 // The capsule «like iOS» (docs/29 §7): where it floats, its active capsule, and that nothing around

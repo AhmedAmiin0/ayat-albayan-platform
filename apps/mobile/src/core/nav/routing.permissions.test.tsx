@@ -1,9 +1,7 @@
 import { act, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { pathKey } from '@/core/lib/query/query-keys';
-import { queryClient } from '@/core/lib/query/query-client';
+import { t, pathKey, queryClient } from '@ab/mobile-kit';
 import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../../app/(tabs)/_layout';
 import RootLayout from '../../../app/_layout';
@@ -11,7 +9,7 @@ import TeacherLayout from '../../../app/teacher/_layout';
 
 // Permission-aware tabs: the real layouts, /auth/me answered by the test.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@/core/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 type MeAnswer = { role: string; permissions: string[] };
 const mockMe = { answer: null as null | MeAnswer, pending: null as null | Promise<MeAnswer> };
 const mockApiFetch = jest.fn(async (path: string) => {
@@ -24,8 +22,8 @@ const mockApiFetch = jest.fn(async (path: string) => {
   if (path === '/settings/public') return publicConfig;
   return { total: 0 };
 });
-jest.mock('@/core/lib/http/api', () => ({ ...jest.requireActual('@/core/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
-jest.mock('@/core/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'admin' }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'admin' }));
 
 // The teacher page switches on, so these routing tests gate «المحادثات» by the permission.
 const switchKeys = Object.values(TEACHER_PAGE_SWITCH);

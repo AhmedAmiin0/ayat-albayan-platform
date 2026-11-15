@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { restoreAppearance, saveAppearance, type AppearancePref } from './appearance';
+import { restoreAppearance, saveAppearance, type AppearancePref } from '@ab/mobile-kit';
 
 /**
  * The «المظهر» setting: [current choice, choose]. Mounting also restores the saved choice, which

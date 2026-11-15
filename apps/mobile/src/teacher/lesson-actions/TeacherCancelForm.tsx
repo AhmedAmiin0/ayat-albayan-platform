@@ -1,11 +1,10 @@
 import { teacherCancelSchema } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Field } from '@ab/mobile-kit';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { Note } from '@/core/ui/feedback/Note';
-import { Field } from '@/core/ui/form/Field';
 import { teacherActionError, useTeacherCancel } from './teacher-lesson-api';
 
 interface TeacherCancelFormProps {

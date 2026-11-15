@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
-import { apiSend } from '@/core/lib/http/api';
-import { pathKey } from '@/core/lib/query/query-keys';
+import { apiSend, pathKey } from '@ab/mobile-kit';
 
 /** The amount edit the sheet runs: the new amount in, nothing back (the lists refetch). */
 export type AmountEditMutation = ReturnType<typeof useAmountEdit>;

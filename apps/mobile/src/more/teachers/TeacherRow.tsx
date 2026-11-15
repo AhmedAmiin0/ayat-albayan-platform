@@ -2,12 +2,7 @@ import { memo } from 'react';
 import { teacherName, teacherStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
-import { Avatar } from '@/core/ui/primitives/Avatar';
+import { t, locale, type, useTheme, AppText, StatusChip, Avatar } from '@ab/mobile-kit';
 import { TeacherCountLinks } from './TeacherCountLinks';
 import type { TeacherListItem } from '@/core/lib/staff/types';
 

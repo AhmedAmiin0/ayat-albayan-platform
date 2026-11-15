@@ -1,8 +1,7 @@
 import { SEND_UNCONFIRMED } from '@ab/client-core';
 import type { ThreadDetail } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { clearChatMemory } from '@/inbox/thread/anchor';
@@ -17,8 +16,8 @@ import { chatSendError } from './send-error';
 // puts the text back and pins the id; only an ANSWER (2xx or 4xx) releases it. Nothing from reads.
 
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 jest.mock('@/inbox/thread/hooks/inbox-sync', () => ({

@@ -1,5 +1,5 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { answer, withLists, withoutLists } from '@/inbox/lists/lib/list-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
@@ -8,8 +8,8 @@ import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 
 // Review 2026-10-29 #13 / C5: the call and ONE «⋮» in the header, so the name gets the width.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({

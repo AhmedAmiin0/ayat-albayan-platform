@@ -1,12 +1,10 @@
 import { formatPhone, normalizePhone, teacherName } from '@ab/shared';
 import type { ViewerClock } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, ltr, locale } from '@ab/mobile-kit';
 import type { InvoiceDraft } from '@/booking/shared/contract';
 import type { TrialDraft } from './draft';
 import type { MakeupDraft } from '@/booking/makeup/makeup-draft';
 import { whenText } from '@/booking/shared/slots';
-import { locale } from '@/core/lib/i18n/locale';
 
 export type SummaryRow = [label: string, value: string];
 

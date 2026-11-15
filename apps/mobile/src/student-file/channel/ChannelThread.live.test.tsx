@@ -1,13 +1,13 @@
 import type { ChannelPage } from '@ab/shared';
 import { act, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ChannelThread } from './ChannelThread';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
@@ -16,7 +16,7 @@ const mockRt: { filter?: unknown; insert?: () => void; status?: (s: string) => v
   channel: jest.fn(),
   remove: jest.fn(async () => 'ok'),
 };
-jest.mock('@/core/lib/http/supabase', () => {
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => {
   const ch = {
     on: (_t: string, filter: unknown, cb: () => void) => Object.assign(mockRt, { filter, insert: cb }) && ch,
     subscribe: (cb: (s: string) => void) => Object.assign(mockRt, { status: cb }) && ch,

@@ -1,5 +1,5 @@
 import { REPORT_RUBRICS, type ReportPageReport } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 
 /** What the fields read: a ReportView (GET /reports/:id) or the live page's saved report. */
 export type FieldsReport = Omit<ReportPageReport, 'version' | 'submitted_at' | 'edited_at'>;

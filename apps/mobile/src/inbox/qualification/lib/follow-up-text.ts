@@ -1,6 +1,6 @@
 import { FOLLOW_UP_STATUSES, type ClockCycle } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import type { LeadProfile } from './queries';
 
 const statuses: readonly string[] = FOLLOW_UP_STATUSES;

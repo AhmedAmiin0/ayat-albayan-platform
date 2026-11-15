@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "آيات البيان",
+    "slug": "ayat-albayan-family",
+    "owner": "holdmycup",
+    "scheme": "ayatalbayanfamily",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "../mobile/assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "extra": {
+      "router": {}
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ayatalbayan.family"
+    },
+    "android": {
+      "package": "com.ayatalbayan.family",
+      "blockedPermissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
+      "adaptiveIcon": {
+        "backgroundColor": "#FDF8F0",
+        "foregroundImage": "../mobile/assets/android-icon-foreground.png",
+        "backgroundImage": "../mobile/assets/android-icon-background.png",
+        "monochromeImage": "../mobile/assets/android-icon-monochrome.png"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-localization",
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "defaultChannel": "default"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "../mobile/assets/splash-icon.png",
+          "imageWidth": 200,
+          "backgroundColor": "#FDF8F0",
+          "dark": {
+            "backgroundColor": "#07110C"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "reactCompiler": true
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    }
+  }
+}

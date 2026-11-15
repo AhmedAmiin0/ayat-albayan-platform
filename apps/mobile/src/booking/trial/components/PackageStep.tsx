@@ -1,9 +1,7 @@
 import type { PackageSize } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, Button, FilterPills, type FilterPill } from '@ab/mobile-kit';
 import { FormLabel } from '@/core/ui/form/FormLabel';
-import { Button } from '@/core/ui/primitives/Button';
-import { FilterPills, type FilterPill } from '@/core/ui/form/FilterPills';
 import type { TrialDraft } from '@/booking/trial/lib/draft';
 import { DurationPills } from './DurationPills';
 import { PAID_SIZES } from '@/booking/trial/lib/package-choice';

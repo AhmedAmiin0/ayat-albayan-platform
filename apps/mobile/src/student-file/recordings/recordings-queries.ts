@@ -1,10 +1,9 @@
 import type { StudentRecordingsPage } from '@ab/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { apiFetch, toQueryString } from '@/core/lib/http/api';
+import { apiFetch, toQueryString, listKey } from '@ab/mobile-kit';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { flattenPages, nextPageParam } from '@/core/lib/query/paging';
-import { listKey } from '@/core/lib/query/query-keys';
 
 const PAGE_SIZE = 10;
 

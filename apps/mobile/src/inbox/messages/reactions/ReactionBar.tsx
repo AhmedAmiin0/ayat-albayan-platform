@@ -1,9 +1,7 @@
 import { reactionName, tappedReaction } from '@ab/client-core';
 import { REACTION_EMOJIS, type MessageView } from '@ab/shared';
 import { Pressable, View, type ViewStyle } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, useTheme, AppText } from '@ab/mobile-kit';
 
 interface ReactionBarProps {
   message: MessageView;

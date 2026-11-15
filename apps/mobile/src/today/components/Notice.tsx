@@ -1,7 +1,5 @@
 import { View } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { NuqtaGlyph } from '@/core/ui/primitives/NuqtaGlyph';
+import { shape, type, useTheme, AppText, NuqtaGlyph } from '@ab/mobile-kit';
 
 /**
  * The inverse note after a lesson change lands (docs/07 §10 toast look, inline: «الحلقة اتلغت»).

@@ -1,6 +1,6 @@
 import { type MessageView, senderLine, type ThreadView } from '@ab/shared';
 import { createContext, type ReactNode, useContext } from 'react';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { threadHref } from './thread-cache';
 
 /**

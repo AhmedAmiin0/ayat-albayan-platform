@@ -1,7 +1,6 @@
 import type { StickerItem } from '@ab/shared';
 import { ActivityIndicator, ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { useTheme } from '@/theme';
+import { t, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { type PanelMedia, usePanelSend, useStickers } from './panel-api';
 import { StickerRow } from './StickerCell';

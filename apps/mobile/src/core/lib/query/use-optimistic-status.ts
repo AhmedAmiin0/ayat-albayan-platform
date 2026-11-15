@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend, type SendMethod } from '@/core/lib/http/api';
+import { apiSend, type SendMethod, pathKey } from '@ab/mobile-kit';
 import { patchCached } from './paging';
-import { pathKey } from './query-keys';
 
 export interface StatusChange<S extends string> {
   id: string;

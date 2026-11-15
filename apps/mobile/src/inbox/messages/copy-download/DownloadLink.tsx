@@ -1,9 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { downloadLabel } from '@/inbox/messages/hooks/bubble-offers';
 import { downloadFile, downloadProblem } from './chat-tools';
 import { useSmall } from '@/inbox/messages/components/MessageMeta';

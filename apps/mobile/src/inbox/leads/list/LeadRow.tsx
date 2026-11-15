@@ -1,10 +1,7 @@
 import { formatPhone } from '@ab/shared';
 import { router } from 'expo-router';
 import { memo } from 'react';
-import { Avatar } from '@/core/ui/primitives/Avatar';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { ltr } from '@/core/ui/primitives/Ltr';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { Avatar, ListRow, ltr, StatusChip } from '@ab/mobile-kit';
 import { leadStatusChip } from '@/inbox/leads/detail/lead-words';
 import type { Lead } from '@/inbox/shared/types';
 import { leadRowSubtitle } from './lead-row';

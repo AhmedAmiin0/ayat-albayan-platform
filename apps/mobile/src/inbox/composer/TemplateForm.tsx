@@ -15,11 +15,8 @@ import {
 } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { Button } from '@/core/ui/primitives/Button';
+import { t, Button, Field, FilterPills } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { Field } from '@/core/ui/form/Field';
-import { FilterPills } from '@/core/ui/form/FilterPills';
 import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { TemplatePreview } from './TemplatePreview';
 import { FreeTextField } from '@/inbox/composer/free-text/FreeTextField';

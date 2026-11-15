@@ -1,11 +1,8 @@
 import { formatPhone } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ListRow, ltr, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { ListRow } from '@/core/ui/layout/ListRow';
-import { ltr } from '@/core/ui/primitives/Ltr';
 import { useSettings } from '@/ops/settings/use-settings';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 /**
  * «الرقم المعلن للأسر» (docs/23 §2d): academy_whatsapp_e164 from GET /settings, LTR, read-only here

@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 import { setClockPref } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { PreferenceFields } from './PreferenceFields';
 import { qualForm } from '@/inbox/qualification/lib/qualification-form';
 

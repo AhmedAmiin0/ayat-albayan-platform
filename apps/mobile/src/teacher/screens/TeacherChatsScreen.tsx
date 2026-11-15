@@ -1,5 +1,5 @@
 import { ThreadsList } from '@/inbox/threads-list/ThreadsList';
-import { Screen } from '@/core/ui/layout/Screen';
+import { Screen } from '@ab/mobile-kit';
 
 /**
  * The teacher's «المحادثات» (R-TCH-03, R-MSG-05): the shared thread list in teacher mode — the

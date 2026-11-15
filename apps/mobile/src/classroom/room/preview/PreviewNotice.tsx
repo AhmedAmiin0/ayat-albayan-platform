@@ -1,8 +1,5 @@
 import { Linking, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { Button } from '@/core/ui/primitives/Button';
-import { type, useTheme } from '@/theme';
+import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 
 const P = t.mobileRoom.permission;
 

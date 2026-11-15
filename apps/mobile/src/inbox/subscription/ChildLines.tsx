@@ -1,8 +1,6 @@
 import type { ThreadStudentView } from '@ab/shared';
 import { ScrollView, View } from 'react-native';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { StatusChip } from '@/core/ui/feedback/StatusChip';
+import { type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import type { FamilySummary } from './subscription-summary';
 import { childChip, dueLine, packageText } from './subscription-words';
 

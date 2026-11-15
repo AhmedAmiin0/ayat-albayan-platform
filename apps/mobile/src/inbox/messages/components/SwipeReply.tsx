@@ -1,6 +1,6 @@
 import { type ReactNode, useMemo, useState } from 'react';
 import { Animated, I18nManager, PanResponder, View } from 'react-native';
-import { useTheme } from '@/theme';
+import { useTheme } from '@ab/mobile-kit';
 import { ReplyIcon } from '@/inbox/shared/chat-icons';
 import { SWIPE_MAX as MAX, swipeAnswers, swipeClaims, swipeOffset } from '@/inbox/messages/hooks/swipe';
 

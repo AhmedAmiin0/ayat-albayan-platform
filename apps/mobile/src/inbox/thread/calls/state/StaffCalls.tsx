@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
-import type { GateStatus } from '@/core/auth';
+import type { GateStatus } from '@ab/mobile-kit';
 import { applyPlaybackMode } from '@/inbox/thread/calls/rtc/audio-route';
 import { CallProvider } from './CallProvider';
 

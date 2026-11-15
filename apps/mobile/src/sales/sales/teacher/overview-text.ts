@@ -1,8 +1,7 @@
 import { inWeekOrder, wallParts, type ClockCycle, type SalesOverviewStudent } from '@ab/shared';
 import type { SalesTeacherOverview, SalesTeacherSlot } from '@ab/shared';
 import { hhmm } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, ltr } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales/lib/sales-text';
 
 // A teacher's «الجدول» and «الحضور» in words (owner 2026-10-28). Pure, unit-tested.

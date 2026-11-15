@@ -1,8 +1,6 @@
 import { inWeekOrder, localizedName, wallParts, type ClockCycle, type SalesWeeklySlot } from '@ab/shared';
 import { hhmm, type ViewerClock } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, locale, ltr } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales/lib/sales-text';
 
 // «الجدول» of «تفاصيل الطالب» in words (owner 2026-10-27): a weekly slot's days and time (viewer), the

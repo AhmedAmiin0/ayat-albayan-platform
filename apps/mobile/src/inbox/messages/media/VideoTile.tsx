@@ -1,11 +1,8 @@
 import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { palette, shape, type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, palette, shape, type, useTheme, AppText, pressScale } from '@ab/mobile-kit';
 import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
-import { pressScale } from '@/core/ui/primitives/Button';
 import { MediaNote, problemText, RetryLine } from '@/inbox/messages/photo/MediaNote';
 import { PlayIcon } from '@/inbox/shared/chat-icons';
 import { Spinner } from './Spinner';

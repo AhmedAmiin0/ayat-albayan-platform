@@ -1,10 +1,8 @@
 import type { MessageView } from '@ab/shared';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { AppText } from '@/core/ui/primitives/AppText';
+import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import { clockAt } from '@/inbox/shared/format';
 import { MessageMeta, useSmall } from '@/inbox/messages/components/MessageMeta';
-import { type, useTheme } from '@/theme';
 
 /**
  * A message hidden from the platform (owner 2026-10-30): a muted placeholder that says it is still

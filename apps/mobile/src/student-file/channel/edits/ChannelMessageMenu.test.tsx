@@ -1,15 +1,14 @@
 import type { ChannelMessageView, ChannelPage } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
-import { ApiError } from '@/core/lib/http/api';
-import { t } from '@/core/lib/i18n/i18n';
+import { ApiError, t } from '@ab/mobile-kit';
 import { ChannelThread } from '@/student-file/channel/ChannelThread';
 import { renderWithQuery } from '@/test/query';
 
 // Owner 2026-10-30: «تعديل» (15 min) and «حذف للجميع» (48 h) for the sender; the admin deletes any.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));

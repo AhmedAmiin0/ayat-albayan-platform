@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react-native';
-import { Button } from '@/core/ui/primitives/Button';
+import { Button } from '@ab/mobile-kit';
 import { copyIcon, openIcon } from './action-icons';
 
 test.each([

@@ -1,12 +1,8 @@
 import { useState } from 'react';
 
-import { t } from '@/core/lib/i18n/i18n';
+import { t, EmptyState, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { EmptyState } from '@/core/ui/feedback/EmptyState';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { LazyList } from '@/core/ui/lists/LazyList';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { StudentFilterBar } from '@/students/list/StudentFilterBar';
 import { activeCount, listParams, NO_FILTERS, type StudentFilters } from '@/students/list/student-filters';

@@ -1,11 +1,8 @@
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, BackButton, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { UpcomingTimeOff } from '@/more/availability/UpcomingTimeOff';
 import { WeeklyAvailability } from '@/more/availability/WeeklyAvailability';
-import { BackButton } from '@/core/ui/navigation';
-import { Screen } from '@/core/ui/layout/Screen';
-import { ScreenHeader } from '@/core/ui/layout/ScreenHeader';
 import { useTeacherMe } from '@/teacher/lib/queries';
 
 /** My weekly availability and upcoming time-off, read-only (R-TCH-02): the admin edits them. */

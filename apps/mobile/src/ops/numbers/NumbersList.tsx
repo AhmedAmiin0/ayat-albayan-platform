@@ -1,12 +1,10 @@
 import type { NumberView, ParityView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
+import { t, ErrorState, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Section } from '@/core/ui/surface/Section';
-import { ErrorState } from '@/core/ui/feedback/ErrorState';
 import { NumberRow } from './NumberRow';
 import { parityLine, sourceLine } from './numbers-words';
 import { useNumbers, useParity } from './use-numbers';
-import { InsetGroup } from '@/core/ui/surface/inset';
 
 const n = t.numbers;
 

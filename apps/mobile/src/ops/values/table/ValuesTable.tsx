@@ -1,10 +1,7 @@
 import type { AcademySettings, SettingKey } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { t } from '@/core/lib/i18n/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/core/ui/primitives/AppText';
-import { InsetGroup } from '@/core/ui/surface/inset';
+import { t, type, useTheme, AppText, InsetGroup } from '@ab/mobile-kit';
 import { useSavingKeys } from '@/ops/values/hooks/use-save-value';
 import { editorOf } from '@/ops/values/lib/value-draft';
 import { labelOf, valueText } from '@/ops/values/lib/value-text';

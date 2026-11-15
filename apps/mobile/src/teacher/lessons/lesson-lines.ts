@@ -1,6 +1,5 @@
 import { otherZoneClock, type ClockCycle, type LessonView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
+import { t, locale } from '@ab/mobile-kit';
 import { durationLabel, studentTimes } from '@/today';
 
 // The teacher's lesson lines (docs/48): her row's «عند الطالب 15:00» and the hero's subtitle. The

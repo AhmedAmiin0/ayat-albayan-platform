@@ -9,9 +9,7 @@ import {
   type SalesStudentView,
 } from '@ab/shared';
 import { hhmm } from '@/core/lib/clock';
-import { t } from '@/core/lib/i18n/i18n';
-import { locale } from '@/core/lib/i18n/locale';
-import { ltr } from '@/core/ui/primitives/Ltr';
+import { t, locale, ltr } from '@ab/mobile-kit';
 import { fill, packageLabel, statusLabel, viewerDate } from '@/sales/sales/lib/sales-text';
 
 // «كل الطلاب»'s extra lines (owner 2026-10-30: «Show all the students to the assistants with

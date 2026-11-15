@@ -1,6 +1,6 @@
 import type { TemplateView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
-import { t } from '@/core/lib/i18n/i18n';
+import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, plainReminder, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
@@ -8,8 +8,8 @@ import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 // Owner 2026-11-14 («reopen like Kapso»): after the 24 h window a known chat shows the reopen bar.
 // A Kapso chat line (try_after_window) keeps the box under it: staff texts are held as before.
 const mockApiFetch = jest.fn();
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: jest.fn(),
 }));

@@ -1,11 +1,12 @@
 import { renderHook } from '@testing-library/react-native';
 import type { ReportView } from '@ab/shared';
+
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { reportView } from '@/teacher/report/testing/fixtures';
 import { useReportEntry } from './use-report-entry';
 
-jest.mock('@/core/lib/http/api', () => ({
-  ...jest.requireActual('@/core/lib/http/api'),
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: jest.fn(),
   apiSend: jest.fn(),
 }));

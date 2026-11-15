@@ -1,6 +1,5 @@
 import { counted, type ThreadStudentView } from '@ab/shared';
-import { t } from '@/core/lib/i18n/i18n';
-import { isolate } from '@/core/ui/primitives/Ltr';
+import { t, isolate } from '@ab/mobile-kit';
 import { childChip, running } from './subscription-words';
 
 // A family's one folded line over the chat (owner 2026-10-29: the messages get the room): pure.

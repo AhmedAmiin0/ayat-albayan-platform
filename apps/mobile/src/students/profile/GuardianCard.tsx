@@ -3,15 +3,11 @@ import { router } from 'expo-router';
 import { Linking, Pressable, View } from 'react-native';
 import { inTree, useInChat, useTreeBase } from '@/core/nav/tree-base';
 import { threadHref } from '@/inbox';
-import { t } from '@/core/lib/i18n/i18n';
-import { shape, type, useTheme } from '@/theme';
+import { t, shape, type, useTheme, Button, Ltr, AppText } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { Button } from '@/core/ui/primitives/Button';
-import { Ltr } from '@/core/ui/primitives/Ltr';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import type { StudentProfile } from '@/students/shared/types';
 import { SecondPhone } from './SecondPhone';
-import { AppText } from '@/core/ui/primitives/AppText';
 
 /**
  * ولي الأمر: name, LTR phone, then ONE ButtonRow (docs/07 §6 «الأزرار»): «اتصال» (tel:, outlined) |
