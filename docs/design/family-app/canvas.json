@@ -1,0 +1,33 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-11-14T20:45:00Z"},
+  "title": "Family app design",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 390, "h": 844, "title": "تسجيل الدخول", "is_interactive": true, "radius": 28},
+    "Home.dc.html": {"x": 470, "y": 0, "w": 390, "h": 1060, "title": "الرئيسية — كل الأبناء", "is_interactive": true, "radius": 28},
+    "Child.dc.html": {"x": 940, "y": 0, "w": 390, "h": 1000, "title": "الابن — القادمة", "is_interactive": true, "radius": 28},
+    "Attended.dc.html": {"x": 1410, "y": 0, "w": 390, "h": 900, "title": "الابن — حضرها", "is_interactive": true, "radius": 28},
+    "Report.dc.html": {"x": 0, "y": 1180, "w": 390, "h": 1380, "title": "تقرير الحلقة", "is_interactive": true, "radius": 28},
+    "Absent.dc.html": {"x": 470, "y": 1180, "w": 390, "h": 844, "title": "الابن — غاب عنها", "is_interactive": true, "radius": 28},
+    "Package.dc.html": {"x": 940, "y": 1180, "w": 390, "h": 1060, "title": "الباقة (ولي الأمر فقط)", "is_interactive": true, "radius": 28},
+    "Schedule.dc.html": {"x": 0, "y": 2900, "w": 390, "h": 1040, "title": "تبويب: الجدول", "is_interactive": true, "radius": 28},
+    "Children.dc.html": {"x": 470, "y": 2900, "w": 390, "h": 900, "title": "ولي الأمر — تبويب: أبنائي", "is_interactive": true, "radius": 28},
+    "Account.dc.html": {"x": 940, "y": 2900, "w": 390, "h": 960, "title": "تبويب: حسابي", "is_interactive": true, "radius": 28},
+    "Alerts.dc.html": {"x": 1410, "y": 2900, "w": 390, "h": 960, "title": "الإشعارات (من الجرس أعلى الشاشة)", "is_interactive": true, "radius": 28},
+    "StudentHome.dc.html": {"x": 0, "y": 4400, "w": 390, "h": 1080, "title": "الطالب — الرئيسية", "is_interactive": true, "radius": 28},
+    "StudentSchedule.dc.html": {"x": 470, "y": 4400, "w": 390, "h": 900, "title": "الطالب — الجدول", "is_interactive": true, "radius": 28},
+    "Reports.dc.html": {"x": 940, "y": 4400, "w": 390, "h": 960, "title": "الطالب — التقارير", "is_interactive": true, "radius": 28},
+    "StudentAccount.dc.html": {"x": 1410, "y": 4400, "w": 390, "h": 900, "title": "الطالب — حسابي", "is_interactive": true, "radius": 28}
+  },
+  "order": ["Main.dc.html", "Home.dc.html", "Child.dc.html", "Attended.dc.html", "Report.dc.html", "Absent.dc.html", "Package.dc.html", "Schedule.dc.html", "Children.dc.html", "Account.dc.html", "Alerts.dc.html", "StudentHome.dc.html", "StudentSchedule.dc.html", "Reports.dc.html", "StudentAccount.dc.html"],
+  "notes": {
+    "title": {"x": 0, "y": -300, "text": "تطبيق العائلات — ولي الأمر", "kind": "title1", "maxW": 1800},
+    "studentTitle": {"x": 0, "y": 4100, "text": "الطالب — بلا «أبنائي» ولا باقة", "kind": "title1", "maxW": 1800},
+    "chat": {"x": 1410, "y": 1180, "text": "المحادثة مغلقة من «القيم» افتراضيًا: لا تبويب ولا أيقونة محادثة، ولا روابط واتساب داخل التطبيق.", "w": 340, "color": "teal"},
+    "student": {"x": 1410, "y": 1700, "text": "شريط ولي الأمر: الرئيسية · الجدول · أبنائي · حسابي (تقارير كل ابن داخل صفحته). شريط الطالب: الرئيسية · الجدول · التقارير · حسابي، والطالب يدخل مباشرة إلى صفحته. الجرس أعلى الشاشة للإشعارات. الطالب الصغير لا يرى الباقة ولا أي مبلغ.", "w": 340, "color": "orange"},
+    "join": {"x": 1410, "y": 2220, "text": "«ادخل الحلقة» يفتح ما هو مفعّل للمعلم: Google Meet أو غرفة الأكاديمية (تُسجَّل الحلقة فيها فقط).", "w": 340, "color": "green"}
+  },
+  "designSystems": []
+}
