@@ -10,7 +10,7 @@ import {
 } from '@ab/mobile-kit';
 import { FamilyHeader, FamilyPage } from '@/nav';
 import { ownStudent, usePortalMe } from '@/portal';
-import { whoLine } from '@/profile';
+import { accountCard } from './account-card';
 import { AccountSettings } from './AccountSettings';
 import { ProfileCard } from './ProfileCard';
 
@@ -28,18 +28,12 @@ export function AccountScreen() {
   const profile = useMyProfile();
   const me = usePortalMe().data;
   const own = me ? ownStudent(me) : null;
-  const name = profile.data?.full_name ?? own?.name ?? '';
   return (
     <FamilyPage
       header={<FamilyHeader title={t.portal.app.tabs.account} />}
       onRefresh={() => profile.refetch()}
     >
-      <ProfileCard
-        name={name}
-        line={whoLine(own)}
-        photo={profile.data?.avatar_url ?? null}
-        seed={own?.id ?? null}
-      />
+      <ProfileCard {...accountCard(profile.data, own)} />
       <AccountSettings student={own !== null} />
       {own ? <PasswordSection /> : null}
       <SignOutButton />
