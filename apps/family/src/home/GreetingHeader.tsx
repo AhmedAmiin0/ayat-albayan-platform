@@ -1,0 +1,36 @@
+import { dateText, type PortalStudent } from '@ab/shared';
+import { View } from 'react-native';
+import { AppText, Avatar, Mark, type, useNow, useTheme } from '@ab/mobile-kit';
+import { FamilyBell } from '@/nav';
+import { useFamilyClock } from '@/portal';
+
+interface GreetingHeaderProps {
+  /** The big line: «أهلًا بك», or the student's name under it. */
+  title: string;
+  /** The small line over it: today's date, or «أهلًا بك» for a student. */
+  over?: string;
+  /** A student's own home shows their avatar instead of the academy's mark. */
+  student?: PortalStudent;
+}
+
+/** Home's top (canvas Home, StudentHome): the mark, today's date over «أهلًا بك», the bell. */
+export function GreetingHeader({ title, over, student }: GreetingHeaderProps) {
+  const { color } = useTheme();
+  const clock = useFamilyClock();
+  const today = dateText(useNow(), clock, { weekday: 'long', day: 'numeric', month: 'long' });
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8 }}>
+      {student ? <Avatar name={student.name} id={student.id} decorative /> : <Mark size={44} />}
+      <View style={{ flex: 1 }}>
+        <AppText style={{ fontSize: type.size.xs, color: color.ink3 }}>{over ?? today}</AppText>
+        <AppText
+          accessibilityRole="header"
+          style={{ fontFamily: type.display, fontSize: type.size.h4, color: color.ink }}
+        >
+          {title}
+        </AppText>
+      </View>
+      <FamilyBell />
+    </View>
+  );
+}

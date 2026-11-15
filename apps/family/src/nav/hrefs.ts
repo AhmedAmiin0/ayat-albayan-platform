@@ -1,0 +1,48 @@
+import type { AlertTarget } from '@ab/client-core';
+import { router } from 'expo-router';
+import { markReportSeen } from '@/portal';
+
+// The family app's pushed screens (outside the tabs group: no tab bar under them, rn-screens#4132).
+
+const enc = encodeURIComponent;
+
+export const childHref = (id: string) => `/child/${enc(id)}` as const;
+export const packageHref = (studentId: string) => `/package/${enc(studentId)}` as const;
+export const ALERTS_HREF = '/alerts';
+
+export interface ReportLink {
+  studentId: string;
+  reportId: string;
+  /** A recording staff made visible to the student, else null. */
+  recordingId?: string | null;
+}
+
+export function reportHref({ studentId, reportId, recordingId }: ReportLink): string {
+  const query = new URLSearchParams({
+    student: studentId,
+    ...(recordingId && { rec: recordingId }),
+  });
+  return `/report/${enc(reportId)}?${query.toString()}`;
+}
+
+/** Opens a report and marks it opened on this phone («جديد» goes at once). */
+export function openReport(link: ReportLink): void {
+  markReportSeen(link.reportId);
+  router.push(reportHref(link));
+}
+
+type Openers = { [K in AlertTarget['screen']]: (t: Extract<AlertTarget, { screen: K }>) => void };
+
+const OPEN: Openers = {
+  report: (t) => openReport(t),
+  child: (t) => router.push(childHref(t.studentId)),
+  package: (t) => router.push(packageHref(t.studentId)),
+  schedule: () => router.navigate('/schedule'),
+};
+
+/** A bell row's target (@ab/client-core alertTarget). */
+export function openAlert(target: AlertTarget): void {
+  // TypeScript cannot pair a union member with its own key's opener; the map above is checked.
+  const open = OPEN[target.screen] as (t: AlertTarget) => void;
+  open(target);
+}

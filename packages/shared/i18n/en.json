@@ -212,6 +212,11 @@
         "pushStudent": "Lesson times and new reports",
         "password": "Change password",
         "version": "Version {v}"
+      },
+      "child": {
+        "attendedSelf": "Attended",
+        "absentSelf": "Missed",
+        "chat": "Chat"
       }
     }
   },
