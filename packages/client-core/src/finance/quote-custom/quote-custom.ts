@@ -23,13 +23,27 @@ interface QuoteCustomOpts {
   labels: Labels;
 }
 
-/** The field's line: not an amount, or under the sales floor («أقل مبلغ مسموح: …»). */
-function errorOf(check: CustomTotal, labels: Labels, currency: string): string | null {
-  if (check.ok) return null;
-  const min = (n: number) =>
-    labels.min.replace('{amount}', formatAmount(n)).replace('{currency}', labels.currency(currency));
-  return check.reason === 'below' ? min(check.min) : labels.invalid;
+/** Off, or on with a valid amount: what the sheet uses. */
+export interface QuoteCustomState {
+  total: number | undefined;
+  valid: boolean;
+  error: string | null;
 }
+
+type Failure = Extract<CustomTotal, { ok: false }>;
+
+const OFF: QuoteCustomState = { total: undefined, valid: true, error: null };
+
+/** The field's line: not an amount, or under the sales floor («أقل مبلغ مسموح: …»). */
+function failureText(failure: Failure, labels: Labels, currency: string): string {
+  if (failure.reason === 'invalid') return labels.invalid;
+  const amount = formatAmount(failure.min);
+  return labels.min.replace('{amount}', amount).replace('{currency}', labels.currency(currency));
+}
+
+/** The sales floor of the quote's total; none for the admin or before a quote. */
+const floorOf = (o: QuoteCustomOpts): number | null =>
+  o.quote === undefined || o.admin ? null : salesPriceFloor(o.quote.total);
 
 /**
  * «مبلغ مخصص» on the chat's «عرض سعر» (owner 2026-11-15), web and mobile. The sales path has the
@@ -37,13 +51,10 @@ function errorOf(check: CustomTotal, labels: Labels, currency: string): string |
  * Off: no `total` (the offer is today's), valid, no error. On: `total` once the amount is valid;
  * `valid` gates send, edit and copy; `error` is the field's line, said as soon as it is typed.
  */
-export function quoteCustom(o: QuoteCustomOpts) {
-  const floored = o.quote !== undefined && !o.admin;
-  const check = customTotal(o.typed.text, floored && o.quote ? salesPriceFloor(o.quote.total) : null);
-  const on = o.typed.on;
-  return {
-    total: on && check.ok ? check.amount : undefined,
-    valid: !on || check.ok,
-    error: on ? errorOf(check, o.labels, o.quote?.currency ?? '') : null,
-  };
+export function quoteCustom(o: QuoteCustomOpts): QuoteCustomState {
+  if (!o.typed.on) return OFF;
+  const check = customTotal(o.typed.text, floorOf(o));
+  return check.ok
+    ? { total: check.amount, valid: true, error: null }
+    : { total: undefined, valid: false, error: failureText(check, o.labels, o.quote?.currency ?? '') };
 }
