@@ -5,7 +5,7 @@ import {
   type PortalLesson,
   type PortalStudent,
 } from '@ab/shared';
-import { isAhead } from './lesson-window.js';
+import { isAhead } from '../lesson-window.js';
 
 // «الجدول» (docs/50 §6, the canvas's Schedule): one academy week (السبت → الجمعة) of the lessons
 // still ahead, across every child of a guardian (or a student's own), on the viewer's clock.

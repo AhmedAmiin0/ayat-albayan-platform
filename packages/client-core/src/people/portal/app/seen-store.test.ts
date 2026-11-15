@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { SEEN_REPORTS_KEY } from './report-seen.js';
+import { SEEN_REPORTS_KEY } from '../report-seen.js';
 import { seenStore } from './seen-store.js';
 
 const memory = (saved: string | null) => {

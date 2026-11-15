@@ -1,4 +1,4 @@
-import { parseSeen, SEEN_REPORTS_KEY, withSeen } from './report-seen.js';
+import { parseSeen, SEEN_REPORTS_KEY, withSeen } from '../report-seen.js';
 
 // «جديد» on a device whose storage answers later (the app's AsyncStorage): the opened report ids
 // as an external store (useSyncExternalStore). Read once on first use; a mark shows at once on
