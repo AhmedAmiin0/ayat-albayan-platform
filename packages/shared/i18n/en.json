@@ -120,7 +120,8 @@
       "home": {
         "greeting": "Welcome",
         "children": "Your children",
-        "open": "Open {name}'s page"
+        "open": "Open {name}'s page",
+        "noToday": "No lessons today."
       },
       "lesson": {
         "today": "Today",

@@ -1,6 +1,6 @@
 import type { PortalLesson, PortalStudent } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { scheduleWeek, weekSchedule } from './week-schedule.js';
+import { scheduleWeek, todaySchedule, weekSchedule } from './week-schedule.js';
 
 const student = (id: string): PortalStudent => ({
   id, code: `AB-${id}`, name: id, tz: 'Asia/Riyadh', contact_is_self: false,
@@ -54,5 +54,23 @@ describe('weekSchedule', () => {
     const next = weekSchedule({ children, tz, offset: 1, only: null }, now);
     expect(next.map((d) => d.day)).toEqual(['2026-11-15']);
     expect(weekSchedule({ children: [], tz, offset: 0, only: null }, now)).toEqual([]);
+  });
+});
+
+describe('todaySchedule', () => {
+  const a = student('a');
+  // 09:00 in Riyadh: 08:00 has closed, 15:00 is ahead, 00:30 tomorrow (the 11th in UTC) is not.
+  const lessons = [
+    lesson('done', '2026-11-11T05:00:00.000Z'),
+    lesson('later', '2026-11-11T12:00:00.000Z'),
+    lesson('midnight', '2026-11-11T21:30:00.000Z'),
+  ];
+
+  it("keeps today's lessons ahead on the viewer clock; null when none are left", () => {
+    const today = todaySchedule({ children: [{ student: a, lessons }], tz }, now);
+    expect(today?.day).toBe('2026-11-11');
+    expect(today?.lessons.map((l) => l.lesson.id)).toEqual(['later']);
+    const none = todaySchedule({ children: [{ student: a, lessons: lessons.slice(2) }], tz }, now);
+    expect(none).toBeNull();
   });
 });

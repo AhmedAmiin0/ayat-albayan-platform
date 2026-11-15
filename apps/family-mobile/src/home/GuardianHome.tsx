@@ -6,6 +6,7 @@ import { FamilyPage, GreetingHeader } from '@/nav';
 import { useRefreshPortal } from '@/portal';
 import { ChildHomeCard } from './ChildHomeCard';
 import { StudentsBody } from './StudentsBody';
+import { TodayLessons } from './TodayLessons';
 
 interface GuardianHomeProps {
   me: PortalHome;
@@ -13,7 +14,7 @@ interface GuardianHomeProps {
   onRetry: () => void;
 }
 
-/** A guardian's home (canvas Home): «أبناؤك» and one card per child; pull to refresh. */
+/** A guardian's home (canvas Home): «اليوم», «أبناؤك» and one card per child; pull to refresh. */
 export function GuardianHome({ me, isError, onRetry }: GuardianHomeProps) {
   const { color } = useTheme();
   const refresh = useRefreshPortal();
@@ -21,6 +22,7 @@ export function GuardianHome({ me, isError, onRetry }: GuardianHomeProps) {
   const count = me.students.length;
   return (
     <FamilyPage header={<GreetingHeader title={A.greeting} />} onRefresh={refresh}>
+      <TodayLessons students={me.students} />
       <View
         style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}
       >

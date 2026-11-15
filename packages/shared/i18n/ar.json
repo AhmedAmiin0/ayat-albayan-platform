@@ -120,7 +120,8 @@
       "home": {
         "greeting": "أهلًا بك",
         "children": "أبناؤك",
-        "open": "افتح صفحة {name}"
+        "open": "افتح صفحة {name}",
+        "noToday": "لا توجد حلقات اليوم."
       },
       "lesson": {
         "today": "اليوم",
