@@ -13,7 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 // An hour before the fixture lesson's 13:00Z start.
-jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T12:00:00Z') }));
+jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T12:00:00Z') }));
 
 const w = t.teacherBoard;
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };

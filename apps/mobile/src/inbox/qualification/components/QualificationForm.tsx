@@ -1,9 +1,8 @@
 import type { LeadQualificationPatch } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { Heading } from './Heading';
 import { PreferenceFields } from './PreferenceFields';
 import { qualForm, qualPatch, type QualErrors, type QualForm } from '@/inbox/qualification/lib/qualification-form';

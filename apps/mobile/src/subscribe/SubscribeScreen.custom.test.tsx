@@ -1,6 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { t, money } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { balance, CHILD, profile, quote, saved } from './fixtures';
 import { SubscribeScreen } from './SubscribeScreen';

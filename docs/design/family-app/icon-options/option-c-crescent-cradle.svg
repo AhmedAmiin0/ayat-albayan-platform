@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- Option C «crescent cradle»: a wide gold crescent holding an open book, one small star, on
+       the deep green. Palette tokens only: goldOnCover #064e3b, leather #ecfdf5, goldSoft #e4c97e. -->
+  <defs>
+    <mask id="cradle">
+      <rect width="1024" height="1024" fill="#fff"/>
+      <circle cx="512" cy="430" r="250" fill="#000"/>
+    </mask>
+  </defs>
+  <rect id="bg" width="1024" height="1024" fill="#064e3b"/>
+  <g id="glyph" transform="translate(512 512) scale(0.9) translate(-512 -500)">
+    <circle cx="512" cy="480" r="270" fill="#e4c97e" mask="url(#cradle)"/>
+    <path d="M500 420 C450 388 380 380 312 396 L312 600 C380 586 450 592 500 624 Z" fill="#ecfdf5"/>
+    <path d="M524 420 C574 388 644 380 712 396 L712 600 C644 586 574 592 524 624 Z" fill="#ecfdf5"/>
+    <path d="M512 262 L526 296 L560 300 L534 322 L542 356 L512 338 L482 356 L490 322 L464 300 L498 296 Z"
+      fill="#e4c97e"/>
+  </g>
+</svg>

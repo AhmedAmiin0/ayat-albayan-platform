@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import { useJoinClassroom } from '@/classroom/links/use-join-classroom';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import type { TodayLesson } from '@/today/lib/today-lesson';

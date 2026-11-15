@@ -6,8 +6,7 @@ import {
   type PaymentLinkView,
   type StatusStyle,
 } from '@ab/shared';
-import { ApiError, t, ltr } from '@ab/mobile-kit';
-import { currencyName } from '@/payments';
+import { ApiError, t, ltr, currencyName } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales';
 
 // «رابط دفع» words and checks (docs/30). Pure: the API re-checks every amount.

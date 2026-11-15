@@ -1,8 +1,7 @@
 import { riyadhToday, type CoursePauseView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, shape, type, useTheme, AppText, Button } from '@ab/mobile-kit';
-import { ErrorLine } from '@/inbox';
+import { t, shape, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { useResumePause } from './course-pause-api';

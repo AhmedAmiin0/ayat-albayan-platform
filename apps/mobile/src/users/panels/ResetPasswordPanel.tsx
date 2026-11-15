@@ -1,10 +1,8 @@
 import type { CredentialMode, IssuedCredential, UserDetail } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t } from '@ab/mobile-kit';
+import { t, ErrorLine, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { resetPassword } from '@/users/shared/api';
 import { CredentialPicker } from '@/users/create/CredentialPicker';
 import { CredentialResult } from '@/users/create/CredentialResult';

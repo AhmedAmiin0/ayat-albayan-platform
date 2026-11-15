@@ -8,11 +8,11 @@ import {
   Screen,
   ScreenHeader,
   InsetGroup,
+  AppearancePicker,
 } from '@ab/mobile-kit';
 import type { Can } from '@ab/mobile-kit';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
-import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { PaymentLinksRow } from '@/sales-subscribe';

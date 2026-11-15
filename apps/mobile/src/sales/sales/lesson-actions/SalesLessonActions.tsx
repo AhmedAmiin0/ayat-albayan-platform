@@ -1,9 +1,8 @@
 import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions, t, Button } from '@ab/mobile-kit';
+import { usePermissions, t, Button, useNow } from '@ab/mobile-kit';
 import { useJoinOpen } from '@/classroom';
-import { useNow } from '@/core/lib/time/use-now';
 import { ButtonRow } from '@/core/ui/actions';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { salesCancelRights } from './cancel-by';

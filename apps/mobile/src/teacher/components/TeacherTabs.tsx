@@ -1,6 +1,5 @@
 import { canOpen } from '@/core/auth/route-permissions';
-import { type Can, usePermissions, t } from '@ab/mobile-kit';
-import { AppNativeTabs, type TabItem } from '@/core/ui/layout/AppNativeTabs';
+import { type Can, usePermissions, t, AppNativeTabs, type TabItem } from '@ab/mobile-kit';
 import { useTeacherPageOn } from '@/teacher/lib/teacher-pages';
 import { TeacherScope } from './TeacherScope';
 

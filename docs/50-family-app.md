@@ -163,7 +163,7 @@ Missing (build):
 - **Builds** (GitHub → Actions → mobile → Run workflow on develop, **app = family**; `profile` and `branch` are staff-only):
   - every step runs in `apps/family` with its own `preview` profile: `build-android-apk` = its APK, `ota-update` = an OTA to its channel `preview`, compared with its own last build (native-change guard);
   - first, `eas init --non-interactive --force` links the EAS project `@holdmycup/ayat-albayan-family`, or creates it on the first run. Its id goes to `FAMILY_EAS_PROJECT_ID` for the run's later steps and is printed in the run summary (it is not a secret);
-  - the owner keeps that id permanently: commit it into `apps/family/app.config.ts` as the `FAMILY_EAS_PROJECT_ID` fallback (ask a Claude session), so Expo's build servers and every later run have it without the env;
+  - the id is committed: `apps/family/app.config.ts` falls back to `ccc6c105-1f67-4b5e-ada5-c892bddaa95a` (`FAMILY_EAS_PROJECT_ID ?? EAS_BUILD_PROJECT_ID ?? <that id>`, owner 2026-11-15), so Expo's build servers and every later run have it without the env; the workflow's `eas init` step stays;
   - run titles are `mobile <action> family-preview`; release tags `mobile-family-v<version>-b<run>` (APK) and `ota-family-preview-<day>-<n>` (OTA);
   - deploy-staging's automatic OTA stays **staff only** (it dispatches mobile.yml without `app`, i.e. staff); a family OTA is always run by hand.
 - **Owner, before families can sign in:**

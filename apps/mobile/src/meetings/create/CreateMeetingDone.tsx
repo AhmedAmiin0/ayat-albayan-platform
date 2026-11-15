@@ -1,8 +1,7 @@
 import type { MeetingCreateResult } from '@ab/shared';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useViewerTz } from '@/core/lib/clock';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
 import { InviteResults } from '@/meetings/invite/InviteResults';
 import { MeetingLinkShare } from '@/meetings/manage/MeetingLinkShare';

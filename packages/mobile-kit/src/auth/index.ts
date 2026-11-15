@@ -1,5 +1,6 @@
 export { type Audience, setAudience } from './audience';
 export { CodeSignIn } from './code/CodeSignIn';
+export { useCodeSignIn } from './code/use-code-sign-in';
 export { AuthAlert } from './forgot/AuthAlert';
 export { AuthHint } from './forgot/AuthHint';
 export { CodeField } from './forgot/CodeField';

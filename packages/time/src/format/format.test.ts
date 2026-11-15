@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dateRangeText, dateText, engineHourCycle } from './format.js';
+import { calendarDayText, dateRangeText, dateText, engineHourCycle, monthText } from './format.js';
 import { zonedFieldsIn } from '../zone/index.js';
 
 // The words half of the facade (docs/34 §7): the same strings Intl gave the apps before.
@@ -40,5 +40,12 @@ describe('engineHourCycle', () => {
   it('is what Intl resolves for an hour in the default locale', () => {
     const hc = new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle;
     expect(engineHourCycle()).toBe(hc);
+  });
+});
+
+describe('calendarDayText / monthText', () => {
+  it('a calendar day and month, whatever the host zone', () => {
+    expect(monthText('2026-10', 'ar')).toBe('أكتوبر 2026');
+    expect(calendarDayText('2026-12-01', 'en', { day: 'numeric', month: 'long' })).toBe('1 December');
   });
 });

@@ -7,8 +7,8 @@ import {
   Screen,
   ScreenHeader,
   InsetGroup,
+  AppearancePicker,
 } from '@ab/mobile-kit';
-import { AppearancePicker } from '@/more/appearance/AppearancePicker';
 import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
 

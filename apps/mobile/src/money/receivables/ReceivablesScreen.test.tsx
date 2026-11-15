@@ -1,6 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t, ltr } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { t, ltr, money } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { receivable, receivablesView } from '@/money/shared/fixtures';
 import { ReceivablesScreen } from './ReceivablesScreen';

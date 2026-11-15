@@ -3,19 +3,9 @@ import { cancelOffered, countsForMoney, isCancelled, owesMore, packageProgress, 
 import { pushInTab } from '@/core/nav/back-within';
 import { View } from 'react-native';
 import { useTabOpen } from '@/core/auth/use-tab-open';
-import {
-  apiSend,
-  pathKey,
-  t,
-  type,
-  useTheme,
-  AppText,
-  Button,
-  ListRow,
-  StatusChip,
-} from '@ab/mobile-kit';
+import { apiSend, pathKey, t, type, useTheme, AppText, Button, ListRow, StatusChip, money } from '@ab/mobile-kit';
 import { CancelPackage } from '@/payments';
-import { money, packageName, paidLine } from '@/core/lib/money/format';
+import { packageName, paidLine } from '@/core/lib/money/format';
 
 /** The web's renewal highlight: saffron «فاضل حلقتان» once the package is at the alert threshold. */
 function subscriptionProgress(sub: SubscriptionView, threshold?: number) {

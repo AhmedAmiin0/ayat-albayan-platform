@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import type { SalesCancel } from '@ab/shared';
-import { ErrorLine } from '@/inbox';
-import { t, Field, FilterPills } from '@ab/mobile-kit';
+import { t, Field, FilterPills, ErrorLine } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { Note } from '@/more';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';

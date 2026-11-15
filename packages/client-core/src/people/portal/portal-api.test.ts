@@ -70,4 +70,13 @@ describe('portal sends', () => {
     apiSend.mockResolvedValueOnce({ url: 1 });
     await expect(sends.join({ studentId: 's1', lessonId: 'l1' })).rejects.toThrow();
   });
+
+  it('asks for the signed room link the phone browser opens, and checks its shape', async () => {
+    const link = { url: 'https://app.example.org/join/x', expires_at: '2026-10-27T16:45:00.000Z' };
+    apiSend.mockResolvedValueOnce(link);
+    await expect(sends.roomLink({ studentId: 's1', lessonId: 'l1' })).resolves.toEqual(link);
+    expect(apiSend).toHaveBeenLastCalledWith('POST', '/portal/students/s1/lessons/l1/room-link');
+    apiSend.mockResolvedValueOnce({ url: 'x' });
+    await expect(sends.roomLink({ studentId: 's1', lessonId: 'l1' })).rejects.toThrow();
+  });
 });

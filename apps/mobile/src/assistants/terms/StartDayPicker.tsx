@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { localDay } from '@/core/lib/money/format';
 import { FormLabel } from '@/core/ui/form/FormLabel';

@@ -1,7 +1,6 @@
-import { usePermissions } from '@ab/mobile-kit';
+import { usePermissions, AppNativeTabs } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
-import { AppNativeTabs } from '@/core/ui/layout/AppNativeTabs';
 import { assistantTabItems } from './assistant-tabs';
 
 /**

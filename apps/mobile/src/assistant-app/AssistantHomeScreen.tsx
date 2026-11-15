@@ -1,13 +1,20 @@
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native';
 import { canOpen } from '@/core/auth/route-permissions';
-import { t, ListRow, Screen, ScreenHeader, useTabBarInset, InsetGroup } from '@ab/mobile-kit';
+import {
+  t,
+  ListRow,
+  Screen,
+  ScreenHeader,
+  useTabBarInset,
+  InsetGroup,
+  useNow,
+} from '@ab/mobile-kit';
 import type { Can } from '@ab/mobile-kit';
 import { addDays, riyadhToday } from '@/calendar';
 import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { AssistantLessonsList } from '@/classroom/assistants/AssistantLessonsList';
 import { DaySwitcher } from '@/classroom/sessions/DaySwitcher';
-import { useNow } from '@/core/lib/time/use-now';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { Note } from '@/core/ui/feedback/Note';
 import { HeldBell } from '@/notifications/HeldBell';

@@ -2,8 +2,7 @@ import { RIYADH_TZ, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice } from '@/booking';
-import { ErrorLine } from '@/inbox';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import {
   lessonDuration,

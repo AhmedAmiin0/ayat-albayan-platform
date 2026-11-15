@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { opensAtLine } from './join-text';
 import { type JoinableLesson, useJoinClassroom } from './use-join-classroom';

@@ -1,6 +1,5 @@
 import { isEditableValueKey, SETTING_DEFAULTS, VALUE_CONFIRM, type SettingKey, type SettingMeta } from '@ab/shared';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { formatAt } from '@/ops/activity/activity-format';
 import { DevKey } from './DevKey';

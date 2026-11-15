@@ -1,9 +1,8 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { addDays, agendaDays, useLessonDetails, viewerToday, weekStart, weekWindow } from '@/calendar';
 import { useViewerTz } from '@/core/lib/clock';
-import { usePullRefresh, useScreenFocused } from '@ab/mobile-kit';
+import { usePullRefresh, useScreenFocused, useNow } from '@ab/mobile-kit';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
-import { useNow } from '@/core/lib/time/use-now';
 import { useMyAvailability, useMyLessons, useTeacherMe } from '@/teacher/lib/queries';
 
 /**

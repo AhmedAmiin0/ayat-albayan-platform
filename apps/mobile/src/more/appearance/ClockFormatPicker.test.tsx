@@ -3,7 +3,7 @@ import { clockCycle, setClockPref } from '@/core/lib/clock';
 import { t } from '@ab/mobile-kit';
 import { ClockFormatPicker } from './ClockFormatPicker';
 
-jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
+jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 
 afterEach(() => setClockPref('auto'));
 

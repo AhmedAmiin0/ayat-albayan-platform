@@ -7609,7 +7609,7 @@
   },
   "src/modules/people/portal/lessons/portal-lessons.service.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/people/portal/portal-read-only.migration.test.ts": {
@@ -12316,7 +12316,7 @@
   },
   "src/modules/teaching/classroom/join/join-link.staff.service.ts": {
     "typescript/consistent-type-imports": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/join/join-link.token.ts": {
@@ -12326,7 +12326,7 @@
   },
   "src/modules/teaching/classroom/join/join.block.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "typescript/use-unknown-in-catch-callback-variable": {
       "count": 1
@@ -12394,7 +12394,7 @@
   },
   "src/modules/teaching/classroom/join/room-join.trial.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/join/room-open.controller.ts": {
@@ -13025,7 +13025,7 @@
   },
   "src/modules/teaching/classroom/student-link/student-link.service.test.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/use-unknown-in-catch-callback-variable": {
       "count": 2
@@ -13042,7 +13042,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 10
     }
   },
   "src/modules/teaching/classroom/test-app.ts": {

@@ -3,7 +3,7 @@ import type { LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { JoinClassroomButton } from '@/classroom';
 import { usePlatformClassroom, useJoinWindow } from '@/core/lib/query/public-config';
-import { useNow } from '@/core/lib/time/use-now';
+import { useNow } from '@ab/mobile-kit';
 import { RoomJoinButton } from './RoomJoinButton';
 import { TeacherLessonTools } from './TeacherLessonTools';
 

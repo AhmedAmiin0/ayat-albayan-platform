@@ -1,8 +1,7 @@
 import { TEMPLATE_LIMITS, type TemplateEditButton } from '@ab/shared';
 import { View } from 'react-native';
-import { t, Field, Button } from '@ab/mobile-kit';
+import { t, Field, Button, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import type { SetDraft } from './use-template-draft';
 
 interface ButtonsFieldProps {

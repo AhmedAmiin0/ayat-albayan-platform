@@ -12,7 +12,7 @@ export {
 export {
   clockParts, countdownParts, lessonClock, type CountdownParts, type LessonClock,
 } from './countdown.js';
-export { historyMonths, historyRows, type HistoryMonth } from './history.js';
+export { historyMonths, historyRows, monthsOf, type HistoryMonth } from './history.js';
 export {
   packageSummary, paymentInstructions, signedAmount, type PackageSummary,
 } from './package-view.js';
@@ -24,3 +24,8 @@ export { prepareCard, type PrepareCard } from './prepare.js';
 export {
   SEEN_REPORTS_KEY, isNewReport, newReportCount, parseSeen, withSeen,
 } from './report-seen.js';
+export {
+  lessonClockText, type CountdownWords,
+} from './countdown-text.js';
+export { lessonWaitText, type WaitTextInput, type WaitWords } from './wait-text.js';
+export * from './app/index.js';

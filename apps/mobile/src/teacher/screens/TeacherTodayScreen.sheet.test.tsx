@@ -16,7 +16,7 @@ const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
   router: { push: (h: string) => mockPush(h), navigate: jest.fn() },
 }));
-jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
+jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
 
 const w = t.teacherBoard;
 const openRow = (names: string) =>

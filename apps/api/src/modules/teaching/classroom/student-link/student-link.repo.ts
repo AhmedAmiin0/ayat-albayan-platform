@@ -10,6 +10,8 @@ type StudentLinkRow = Pick<Tables<'student_join_links'>, 'id' | 'student_id' | '
 export type StudentLesson = Pick<Tables<'lessons'>, 'id' | 'starts_at' | 'ends_at' | 'room_opened_at'> & {
   teacher_name: string;
 };
+/** What the (lesson, student) row needs of its lesson: the id and the end (its expiry). */
+type LinkLesson = Pick<StudentLesson, 'id' | 'ends_at'>;
 type LessonEmbed = Pick<Tables<'lessons'>, 'id' | 'starts_at' | 'ends_at' | 'room_opened_at'> & {
   teacher: { display_name_ar: string } | null;
 };
@@ -77,7 +79,7 @@ export class StudentLinkRepo {
    * from the room (classroom_blocks.join_link_id) holds on every later join. Its token is never handed
    * out (the student's own link is the credential); it only exists because the row needs one.
    */
-  async lessonLinkId(input: { lesson: StudentLesson; studentId: string }): Promise<string> {
+  async lessonLinkId(input: { lesson: LinkLesson; studentId: string }): Promise<string> {
     const found = await this.findLessonLink(input.lesson.id, input.studentId);
     if (found) return found;
     const row = {

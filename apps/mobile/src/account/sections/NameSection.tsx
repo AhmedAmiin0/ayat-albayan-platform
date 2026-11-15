@@ -1,11 +1,7 @@
 import { ACCOUNT_NAME_MAX, ACCOUNT_NAME_MIN, type AccountProfile } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@ab/mobile-kit';
+import { t, accountMessage, AccountCard, AccountField, useAccountAction } from '@ab/mobile-kit';
 import { patchProfile } from '@/account/hooks/account-api';
-import { accountMessage } from '@/account/lib/account-errors';
-import { AccountCard } from '@/account/components/AccountCard';
-import { AccountField } from '@/account/components/AccountField';
-import { useAccountAction } from '@/account/hooks/use-account-action';
 
 const hint = t.account.name.hint.replace('{min}', String(ACCOUNT_NAME_MIN)).replace('{max}', String(ACCOUNT_NAME_MAX));
 

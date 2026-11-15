@@ -6,9 +6,8 @@ import {
   SITE_COUNTRIES,
 } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
+import { t, FilterPills, type FilterPill, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { DiscountField } from '@/finance/pricing/DiscountField';
 import type { PlanChoice } from '@/finance/pricing/selection';
 import { Stepper } from '@/finance/pricing/Stepper';

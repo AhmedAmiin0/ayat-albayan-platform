@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { ButtonRow } from '@/core/ui/actions';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { type ChatFileSource, pickChatFile } from '@/inbox/composer/send-file';
 import { uploadReplyFile } from '@/inbox/saved-replies/hooks/api';
 import { replyError } from '@/inbox/saved-replies/lib/reply-error';

@@ -1,0 +1,59 @@
+import { formatPhone } from '@ab/shared';
+import { useState } from 'react';
+import { View } from 'react-native';
+import { AppText, AuthAlert, Button, ltr, ResendButton, t, type, useTheme } from '@ab/mobile-kit';
+import { progressIcon } from '@/sign-in/progress';
+import { CodeBoxes } from './CodeBoxes';
+import { isWholeCode } from './code-digits';
+import type { WhatsAppSignIn } from './use-whatsapp-sign-in';
+
+/**
+ * Step 2: «أدخل الرمز» for the number it went to, the six boxes (typed, pasted or autofilled;
+ * the sixth digit signs in without a tap), the resend countdown and «غيّر الرقم». A refused code
+ * empties the boxes for the next try.
+ */
+export function CodeStep({ sign }: { sign: WhatsAppSignIn }) {
+  const { color } = useTheme();
+  const { flow } = sign;
+  const [code, setCode] = useState('');
+  const verify = async (next: string) => {
+    const refused = await sign.verify(next);
+    // Only the refused code goes: digits typed meanwhile stay.
+    if (refused !== null) setCode((now) => (now === next ? '' : now));
+  };
+  const change = (next: string) => {
+    setCode(next);
+    if (isWholeCode(next) && next !== code && !flow.busy) void verify(next);
+  };
+  const to = ltr(formatPhone(flow.target ?? ''));
+  return (
+    <View style={{ gap: 14 }}>
+      <AppText
+        accessibilityRole="header"
+        style={{ fontFamily: type.ui[700], fontSize: type.size.h4, color: color.ink }}
+      >
+        {t.familyApp.signIn.codeTitle}
+      </AppText>
+      <AppText style={{ fontSize: type.size.sm, lineHeight: 22, color: color.ink2 }}>
+        {t.familyApp.signIn.codeSentTo.replace('{phone}', to)}
+      </AppText>
+      <CodeBoxes value={code} onChange={change} refused={flow.error !== null && code === ''} />
+      {flow.error ? <AuthAlert text={flow.error} /> : null}
+      <Button
+        label={flow.busy ? t.familyAuth.verifying : t.familyAuth.verify}
+        busy={flow.busy}
+        disabled={!isWholeCode(code)}
+        icon={progressIcon(flow.busy)}
+        onPress={() => void verify(code)}
+      />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <ResendButton
+          resendIn={flow.resendIn}
+          busy={flow.busy}
+          onPress={() => void sign.resend()}
+        />
+        <Button variant="ghost" label={t.familyAuth.changePhone} onPress={sign.changePhone} />
+      </View>
+    </View>
+  );
+}

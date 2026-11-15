@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, shape, useTheme, Button, Field, AppText } from '@ab/mobile-kit';
+import { t, shape, useTheme, Button, Field, AppText, ErrorLine } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
 
 interface UnpayConfirmProps {

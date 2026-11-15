@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { Field, type FieldProps } from '@ab/mobile-kit';
+import { Field, type FieldProps, ErrorLine } from '@ab/mobile-kit';
 
 /** A people edit field: the 44pt Field, and under it the refusal of the last save. */
 export function PeopleField({ error, ...field }: FieldProps & { error?: string | null }) {

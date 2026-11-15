@@ -13,9 +13,9 @@ import {
   ltr,
   type,
   useTheme,
+  ErrorLine,
 } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 

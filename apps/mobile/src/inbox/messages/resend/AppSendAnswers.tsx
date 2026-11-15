@@ -5,9 +5,7 @@ import {
   appSendLineOf,
 } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
-import { t, Button } from '@ab/mobile-kit';
-import { useNow } from '@/core/lib/time/use-now';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, Button, useNow, ErrorLine } from '@ab/mobile-kit';
 import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
 
 interface ButtonsProps {

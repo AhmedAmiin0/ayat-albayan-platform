@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { RefreshControl, ScrollView } from 'react-native';
 import { useLessonDetails } from '@/calendar';
-import { Screen, useTabBarInset } from '@ab/mobile-kit';
+import { Screen, useTabBarInset, Notice } from '@ab/mobile-kit';
 import { TodayAlerts, useHomePrefs } from '@/teacher/alerts';
 import { TeacherLessonSheet, useTimedNotice } from '@/teacher/lesson-actions';
 import { shownDay } from '@/teacher/today/day-prefs';
@@ -11,7 +11,7 @@ import { TodayEnded } from '@/teacher/today/TodayEnded';
 import { TodayLoad } from '@/teacher/today/TodayLoad';
 import { TodayRest } from '@/teacher/today/TodayRest';
 import { useTeacherToday } from '@/teacher/today/use-teacher-today';
-import { Notice, TodayHeader } from '@/today';
+import { TodayHeader } from '@/today';
 
 const toReport = (lessonId: string) => router.push(`/teacher/today/report/${lessonId}`);
 

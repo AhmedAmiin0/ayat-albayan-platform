@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react-native';
 import { setClockPref } from '@/core/lib/clock';
 import { WeekdayRow } from './WeekdayRow';
 
-jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
+jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 afterEach(() => setClockPref('auto'));
 
 const day = { weekday: 1, slots: [{ id: 's1', weekday: 1, start_time: '16:00', end_time: '18:30', tz: 'Asia/Riyadh' }] };

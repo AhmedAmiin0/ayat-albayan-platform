@@ -1,8 +1,8 @@
 import type { PaymentView } from '@ab/shared';
 import { View } from 'react-native';
-import { t, type, useTheme, AppText } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, money } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
-import { instantDay, money } from '@/core/lib/money/format';
+import { instantDay } from '@/core/lib/money/format';
 import { isPending } from '@/payments/lib/optimistic';
 import { useRecentPayments } from '@/payments/hooks/queries';
 import { useViewerTz } from '@/core/lib/clock';

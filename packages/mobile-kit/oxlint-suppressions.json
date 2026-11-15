@@ -1,4 +1,31 @@
 {
+  "src/account/account-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 1
+    }
+  },
+  "src/account/account-errors.ts": {
+    "ab/no-shape-checks": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    },
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "typescript/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "src/account/password-checks.ts": {
+    "ab/no-if-chains": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/auth/forgot/AuthAlert.tsx": {
     "stylistic/max-len": {
       "count": 2
@@ -234,6 +261,11 @@
   },
   "src/lib/query/query-keys.ts": {
     "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/notifications/use-notifications.ts": {
+    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -587,9 +619,6 @@
     }
   },
   "src/ui/startup/StartupOverlay.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }

@@ -2,7 +2,7 @@ import { lessonWhenAt, type ReportPageView } from '@ab/shared';
 import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
 import { locale } from '@/lib/i18n/locale';
-import { pageLines } from './page-lines';
+import { pageLines } from '@ab/client-core';
 import { ReportPageFiles } from './ReportPageFiles';
 
 export interface ReportPageBodyProps {

@@ -27,13 +27,21 @@ interface StartupStatusProps {
   onRetry: () => void;
   /** Maps a font family to undefined until the bundled fonts are registered. */
   font: (family: string) => string | undefined;
+  /** A branded cover's own ink and dots (StartupBrand); none: the theme's ink-3 and gold. */
+  tone?: { text: string; dots: string };
 }
 
 /** «جارٍ الاتصال» with the gold dots (the live region), then from 10 s the hint and «إعادة المحاولة». */
-export function StartupStatus({ stage, still, onRetry, font }: StartupStatusProps) {
+export function StartupStatus({ stage, still, onRetry, font, tone }: StartupStatusProps) {
   const { color } = useTheme();
   const c = t.mobile.connection;
-  const line = (size: number) => ({ fontSize: size, lineHeight: type.lineHeight(size), color: color.ink3, textAlign: 'center' as const });
+  const ink = tone ?? { text: color.ink3, dots: color.gold };
+  const line = (size: number) => ({
+    fontSize: size,
+    lineHeight: type.lineHeight(size),
+    color: ink.text,
+    textAlign: 'center' as const,
+  });
   return (
     <>
       <View style={{ marginTop: 8, minHeight: type.lineHeight(STATUS), justifyContent: 'center' }}>
@@ -41,7 +49,7 @@ export function StartupStatus({ stage, still, onRetry, font }: StartupStatusProp
           <FadeIn>
             <View accessible accessibilityLiveRegion="polite" accessibilityLabel={c.startupConnecting} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
               <AppText style={{ ...line(STATUS), fontFamily: font(type.ui[500]) }}>{c.startupConnecting}</AppText>
-              <ConnectingDots color={color.gold} still={still} />
+              <ConnectingDots color={ink.dots} still={still} />
             </View>
           </FadeIn>
         ) : null}

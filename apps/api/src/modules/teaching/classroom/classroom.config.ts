@@ -21,5 +21,11 @@ export type RecordingConfig = RecordingEnv | null;
 /** Injection token for the web app's origin (the first of WEB_ORIGIN), the host of /join/:token. */
 export const CLASSROOM_WEB_ORIGIN = Symbol('CLASSROOM_WEB_ORIGIN');
 
+/**
+ * Injection token for the family join link's secret (FEEDBACK_TOKEN_SECRET, the public-link
+ * secret); null = the family app gets no browser link (503) and no such token verifies.
+ */
+export const FAMILY_JOIN_SECRET = Symbol('FAMILY_JOIN_SECRET');
+
 /** The first origin of WEB_ORIGIN (a comma list), without a trailing slash. */
 export const firstWebOrigin = (webOrigin: string): string => (webOrigin.split(',')[0] ?? '').trim().replace(/\/+$/, '');

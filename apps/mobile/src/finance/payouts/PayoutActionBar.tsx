@@ -1,8 +1,7 @@
 import type { PayoutView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { financeErrorText } from '@/finance/shared/errors';

@@ -2,9 +2,8 @@ import { canSalesConfirm, isRunningLesson, type SalesScheduleLesson } from '@ab/
 import { useState } from 'react';
 import { LessonDetailsSheet } from '@/calendar';
 import { JoinClassroomButton } from '@/classroom';
-import { useHolds, usePermissions, t } from '@ab/mobile-kit';
+import { useHolds, usePermissions, t, useNow } from '@ab/mobile-kit';
 import { Note } from '@/more';
-import { useNow } from '@/core/lib/time/use-now';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { offersCancel, salesCancelRights } from '@/sales/sales/lesson-actions/cancel-by';
 import { canChangeLesson } from '@/sales/sales/lesson-actions/lesson-actions-api';

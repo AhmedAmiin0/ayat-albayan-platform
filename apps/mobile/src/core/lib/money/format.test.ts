@@ -1,14 +1,8 @@
 import { t, ltr } from '@ab/mobile-kit';
 import { subscription } from '@/payments/fixtures';
-import { instantDay, localDay, money, packageFrom, packageName, paidOf, usedOf } from './format';
+import { instantDay, localDay, packageFrom, packageName, paidOf, usedOf } from './format';
 
 const SAR = t.pricing.currencies.SAR;
-
-test('money: isolated Western amount, then the Arabic currency sign or the ISO code', () => {
-  expect(money(145, 'SAR')).toBe(`${ltr('145')} ${SAR}`);
-  expect(money(1061.5, 'USD')).toBe(`${ltr('1,061.5')} ${t.pricing.currencies.USD}`);
-  expect(money(300, 'EGP')).toBe(`${ltr('300')} ${ltr('EGP')}`);
-});
 
 test('packageName: the catalog size, or the count for a custom package', () => {
   expect(packageName({ package: '8', lessons_total: 8 })).toBe(t.enums.packageSize['8']);

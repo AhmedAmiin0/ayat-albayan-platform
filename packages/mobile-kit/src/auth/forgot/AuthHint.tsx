@@ -1,15 +1,20 @@
 import { AppText } from '../../ui/primitives/AppText';
 import { type, useTheme } from '../../theme';
 
-/** A quiet line under a sign-in field («اسم المستخدم هو كود الطالب…»). */
-export function AuthHint({ text }: { text: string }) {
+/** quiet: a hint; bad: what is wrong with the field while it is typed (read out politely). */
+type HintTone = 'quiet' | 'bad';
+
+/** A quiet line under a sign-in field («اسم المستخدم هو كود الطالب…»), or what is wrong with it. */
+export function AuthHint({ text, tone = 'quiet' }: { text: string; tone?: HintTone }) {
   const { color } = useTheme();
+  const ink: Record<HintTone, string> = { quiet: color.ink2, bad: color.bad };
   return (
     <AppText
+      accessibilityLiveRegion={tone === 'bad' ? 'polite' : undefined}
       style={{
         fontSize: type.size.xs,
         lineHeight: type.lineHeight(type.size.xs),
-        color: color.ink2,
+        color: ink[tone],
       }}
     >
       {text}

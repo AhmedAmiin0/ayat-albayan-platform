@@ -1,7 +1,6 @@
 import type { ClockPref } from '@ab/shared';
 import { useClockPref } from '@/core/lib/clock';
-import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
-import { Section } from '@/core/ui/surface/Section';
+import { t, FilterPills, type FilterPill, Section } from '@ab/mobile-kit';
 
 const clockPills = (): readonly FilterPill<ClockPref>[] => [
   { value: 'auto', label: t.clock.auto },

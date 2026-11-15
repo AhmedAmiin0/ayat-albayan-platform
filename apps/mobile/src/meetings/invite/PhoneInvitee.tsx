@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button, Field } from '@ab/mobile-kit';
+import { t, Button, Field, ErrorLine } from '@ab/mobile-kit';
 import { fromPhone, type DraftInvitee } from './invitee-draft';
 
 const L = t.meetingInvites;

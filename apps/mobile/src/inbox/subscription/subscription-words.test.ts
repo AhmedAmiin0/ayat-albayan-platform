@@ -1,6 +1,6 @@
 import { subscriptionStatusStyle } from '@ab/shared';
-import { t, isolate, ltr } from '@ab/mobile-kit';
-import { money, partPaidLine } from '@/core/lib/money/format';
+import { t, isolate, ltr, money } from '@ab/mobile-kit';
+import { partPaidLine } from '@/core/lib/money/format';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from './people-fixtures';
 import { badgeChip, childChip, dueLine, packageText, subscribeAction } from './subscription-words';
 

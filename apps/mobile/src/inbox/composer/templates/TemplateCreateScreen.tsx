@@ -3,8 +3,7 @@ import {
 } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { t, Field, Screen, ScreenHeader, Button } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, Field, Screen, ScreenHeader, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import {
   authorPayload, BodyFields, ButtonsField, CategoryPicker, DraftPreview, EMPTY_DRAFT,

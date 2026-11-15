@@ -1,7 +1,6 @@
 import type { PaymentView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApiError, t, pathKey } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { ApiError, t, pathKey, money } from '@ab/mobile-kit';
 import { payment } from '@/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { PaymentItem } from './PaymentItem';

@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "آيات البيان",
+    "name": "Ayat Al-Bayan",
     "slug": "ayat-albayan-family",
     "owner": "holdmycup",
     "scheme": "ayatalbayanfamily",
     "version": "0.2.0",
     "orientation": "portrait",
-    "icon": "../mobile/assets/icon.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "extra": {
       "router": {}
@@ -22,10 +22,10 @@
         "android.permission.FOREGROUND_SERVICE"
       ],
       "adaptiveIcon": {
-        "backgroundColor": "#FDF8F0",
-        "foregroundImage": "../mobile/assets/android-icon-foreground.png",
-        "backgroundImage": "../mobile/assets/android-icon-background.png",
-        "monochromeImage": "../mobile/assets/android-icon-monochrome.png"
+        "backgroundColor": "#064E3B",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
       }
     },
     "plugins": [
@@ -41,11 +41,13 @@
       [
         "expo-splash-screen",
         {
-          "image": "../mobile/assets/splash-icon.png",
-          "imageWidth": 200,
-          "backgroundColor": "#FDF8F0",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160,
+          "resizeMode": "contain",
+          "backgroundColor": "#064E3B",
           "dark": {
-            "backgroundColor": "#07110C"
+            "image": "./assets/splash-icon.png",
+            "backgroundColor": "#18201D"
           }
         }
       ],

@@ -11,8 +11,8 @@ import {
   Button,
   FilterPills,
   type FilterPill,
+  ErrorLine,
 } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import type { Lead } from '@/inbox/shared/types';
 import { useSalesPeople } from './use-sales-people';
 

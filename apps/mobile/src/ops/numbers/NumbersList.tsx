@@ -1,7 +1,6 @@
 import type { NumberView, ParityView } from '@ab/shared';
-import { t, ErrorState, InsetGroup } from '@ab/mobile-kit';
+import { t, ErrorState, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { NumberRow } from './NumberRow';
 import { parityLine, sourceLine } from './numbers-words';
 import { useNumbers, useParity } from './use-numbers';

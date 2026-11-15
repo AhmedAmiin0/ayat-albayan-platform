@@ -1,7 +1,6 @@
 import type { SettingKey, SettingMeta } from '@ab/shared';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, type, useTheme, AppText, Button, ScreenHeader } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, Button, ScreenHeader, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { ButtonRow } from '@/core/ui/actions';
 import { SheetNotes, SheetNotice } from './SheetNotes';

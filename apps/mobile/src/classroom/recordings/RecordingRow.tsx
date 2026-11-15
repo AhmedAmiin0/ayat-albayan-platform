@@ -1,8 +1,7 @@
 import type { LessonRecordingView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, type, useTheme, AppText, Button, StatusChip } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, Button, StatusChip, ErrorLine } from '@ab/mobile-kit';
 import { RECORDING_CHIP, recordingTime, type RecordingSource } from './recording-format';
 import { playRecording } from './recordings-api';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

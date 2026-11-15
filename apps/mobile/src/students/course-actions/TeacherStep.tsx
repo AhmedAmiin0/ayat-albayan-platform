@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, Button } from '@ab/mobile-kit';
-import { ErrorLine } from '@/inbox';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { useTeacherOptions } from './course-actions-api';
 import { SheetLines } from './SheetLines';
 
