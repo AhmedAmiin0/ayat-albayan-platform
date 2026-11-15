@@ -1,6 +1,6 @@
 import type { SalesMoneySubscriptionView } from '@ab/shared';
-import { t } from '@ab/mobile-kit';
-import { money, packageName } from '@/core/lib/money/format';
+import { t, money } from '@ab/mobile-kit';
+import { packageName } from '@/core/lib/money/format';
 
 // Words for one of her open packages. Pure.
 

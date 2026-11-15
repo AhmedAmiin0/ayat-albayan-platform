@@ -1,9 +1,9 @@
 import type { MyPaymentRow } from '@ab/shared';
 import { View } from 'react-native';
-import { t, type, useTheme, AppText, isolate, Ltr } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, isolate, Ltr, money } from '@ab/mobile-kit';
 import { AttachmentsViewer } from '@/money/attachments/AttachmentsViewer';
 import { hasAttachments } from '@/money/attachments/receipt-file';
-import { instantDay, money } from '@/core/lib/money/format';
+import { instantDay } from '@/core/lib/money/format';
 import { useViewerTz } from '@/core/lib/clock';
 import { SalesAmountEdit } from '@/payments';
 

@@ -39,7 +39,7 @@ export function ReportBody({ view }: { view: ReportPageView }) {
           >
             <AppText style={{ fontSize: type.size.xs, color: color.ink3 }}>{line.label}</AppText>
             <AppText selectable style={{ color: line.value ? color.ink : color.ink3 }}>
-              {line.value ?? t.mobileAdmin.reports.noContent}
+              {line.value ?? t.portal.app.report.blank}
             </AppText>
           </View>
         ))}

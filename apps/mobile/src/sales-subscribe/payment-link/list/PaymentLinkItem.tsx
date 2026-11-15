@@ -1,9 +1,9 @@
 import { effectiveLinkStatus, type PaymentLinkView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, StatusChip, ListRow, Button, ErrorLine } from '@ab/mobile-kit';
+import { t, StatusChip, ListRow, Button, ErrorLine, money } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { instantDay, money } from '@/payments';
+import { instantDay } from '@/payments';
 import { fill } from '@/sales/sales';
 import { useCancelLink } from '@/sales-subscribe/payment-link/link-api';
 import { linkErrorText, linkStatusStyle } from '@/sales-subscribe/payment-link/link-text';

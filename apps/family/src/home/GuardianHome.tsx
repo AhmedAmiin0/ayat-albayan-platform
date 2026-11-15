@@ -5,7 +5,6 @@ import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { FamilyPage, GreetingHeader } from '@/nav';
 import { useRefreshPortal } from '@/portal';
 import { ChildHomeCard } from './ChildHomeCard';
-
 import { StudentsBody } from './StudentsBody';
 
 interface GuardianHomeProps {

@@ -1,21 +1,19 @@
 import { nextLesson } from '@ab/client-core';
-import type { PortalStudent } from '@ab/shared';
-import { EmptyState, ErrorState, SkeletonCard, t, useNow } from '@ab/mobile-kit';
+import type { PortalLessons, PortalStudent } from '@ab/shared';
+import { EmptyState, t, useNow } from '@ab/mobile-kit';
 import { NextLessonCard, PrepareCard, UpcomingList } from '@/lessons';
+import { LoadState } from '@/nav';
 import { useChildLessons } from '@/portal';
 
-/** «القادمة» (canvas Child): the next lesson with its join, «استعد للحلقة», the later lessons. */
-export function UpcomingPanel({ student, own }: { student: PortalStudent; own: boolean }) {
+interface UpcomingProps {
+  student: PortalStudent;
+  /** A student's own page (their own words). */
+  own: boolean;
+}
+
+function Upcoming({ lessons, student, own }: UpcomingProps & { lessons: PortalLessons }) {
   const now = useNow();
-  const lessons = useChildLessons(student.id);
-  if (!lessons.data) {
-    return lessons.isError ? (
-      <ErrorState onRetry={() => void lessons.refetch()} />
-    ) : (
-      <SkeletonCard />
-    );
-  }
-  const next = nextLesson(lessons.data.lessons, now);
+  const next = nextLesson(lessons.lessons, now);
   return (
     <>
       {next ? (
@@ -23,8 +21,18 @@ export function UpcomingPanel({ student, own }: { student: PortalStudent; own: b
       ) : (
         <EmptyState title={t.portal.lessonsEmpty} />
       )}
-      <PrepareCard lessons={lessons.data} student={student} full own={own} />
-      <UpcomingList lessons={lessons.data.lessons} student={student} now={now} own={own} />
+      <PrepareCard lessons={lessons} student={student} full own={own} />
+      <UpcomingList lessons={lessons.lessons} student={student} now={now} own={own} />
     </>
+  );
+}
+
+/** «القادمة» (canvas Child): the next lesson with its join, «استعد للحلقة», the later lessons. */
+export function UpcomingPanel({ student, own }: UpcomingProps) {
+  const lessons = useChildLessons(student.id);
+  return (
+    <LoadState query={lessons}>
+      {(data) => <Upcoming lessons={data} student={student} own={own} />}
+    </LoadState>
   );
 }

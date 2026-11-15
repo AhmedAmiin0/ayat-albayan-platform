@@ -1,7 +1,6 @@
 import type { ReceivablesView } from '@ab/shared';
 import { View } from 'react-native';
-import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { t, shape, type, useTheme, AppText, money } from '@ab/mobile-kit';
 import { fxMissingText } from './receivables';
 
 /** Total owed in the reporting currency, then each currency's own total; the FX gap if any. */

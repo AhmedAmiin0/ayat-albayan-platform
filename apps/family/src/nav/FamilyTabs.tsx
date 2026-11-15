@@ -1,4 +1,4 @@
-import { FAMILY_TABS, familyTabs, type FamilyTab } from '@ab/client-core';
+import { FAMILY_TABS, hasFamilyTab, type FamilyTab } from '@ab/client-core';
 import { AppNativeTabs, t, type TabIconName, type TabItem } from '@ab/mobile-kit';
 import { usePortalMe } from '@/portal';
 
@@ -28,12 +28,13 @@ const COMMON: readonly FamilyTab[] = ['home', 'schedule', 'account'];
  */
 export function FamilyTabs() {
   const kind = usePortalMe().data?.kind;
-  const shown = kind ? familyTabs(kind) : COMMON;
+  const shown = (tab: FamilyTab): boolean =>
+    kind ? hasFamilyTab(kind, tab) : COMMON.includes(tab);
   const tabs: TabItem[] = FAMILY_TABS.map((tab) => ({
     name: ROUTE[tab],
     title: t.portal.app.tabs[tab],
     icon: ICON[tab],
-    hidden: !shown.includes(tab),
+    hidden: !shown(tab),
   }));
   return <AppNativeTabs tabs={tabs} />;
 }

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Modal, View } from 'react-native';
-import { t, Screen, ScreenHeader, Button, ErrorLine, Section } from '@ab/mobile-kit';
-import { currencyName, money } from '@/core/lib/money/format';
+import { t, Screen, ScreenHeader, Button, ErrorLine, Section, currencyName, money } from '@ab/mobile-kit';
 import { paymentErrorText } from '@/core/lib/money/payment-errors';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { Note } from '@/core/ui/feedback/Note';

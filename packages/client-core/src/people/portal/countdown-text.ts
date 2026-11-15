@@ -15,7 +15,7 @@ export interface CountdownWords {
 }
 
 /** «يومان 03:15:20», or just «03:15:20» under a day (Western digits). */
-export const leftText = (parts: CountdownParts, words: Pick<CountdownWords, 'days'>): string =>
+const leftText = (parts: CountdownParts, words: Pick<CountdownWords, 'days'>): string =>
   parts.days > 0 ? `${counted(words.days, parts.days)} ${clockParts(parts)}` : clockParts(parts);
 
 type Counting = Exclude<LessonClock['kind'], 'now'>;

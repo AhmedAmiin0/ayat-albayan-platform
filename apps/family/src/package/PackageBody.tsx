@@ -1,7 +1,8 @@
 import { paymentInstructions } from '@ab/client-core';
-import type { PortalStudent } from '@ab/shared';
+import type { PortalPackageView, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
-import { AppText, EmptyState, ErrorState, SkeletonCard, t, type, useTheme } from '@ab/mobile-kit';
+import { AppText, EmptyState, t, type, useTheme } from '@ab/mobile-kit';
+import { LoadState } from '@/nav';
 import { useChildPackage } from '@/portal';
 import { PackageCard } from './PackageCard';
 import { PaymentsList } from './PaymentsList';
@@ -27,25 +28,27 @@ function Instructions({ text }: { text: string }) {
   );
 }
 
+/** The package, how to pay, the payments. */
+function PackageView({ view, tz }: { view: PortalPackageView; tz: string }) {
+  const text = paymentInstructions(view);
+  return (
+    <>
+      {view.package ? (
+        <PackageCard pkg={view.package} />
+      ) : (
+        <EmptyState title={t.portal.packageEmpty} />
+      )}
+      {text ? <Instructions text={text} /> : null}
+      <PaymentsList payments={view.payments} tz={tz} />
+    </>
+  );
+}
+
 /**
  * «الباقة» (docs/50 §2, canvas Package): a guardian's or an adult student's only (the caller
  * checks seesMoney): the package, the amount due, how to pay, the payments.
  */
 export function PackageBody({ student }: { student: PortalStudent }) {
   const pkg = useChildPackage(student.id, true);
-  if (!pkg.data) {
-    return pkg.isError ? <ErrorState onRetry={() => void pkg.refetch()} /> : <SkeletonCard />;
-  }
-  const text = paymentInstructions(pkg.data);
-  return (
-    <>
-      {pkg.data.package ? (
-        <PackageCard pkg={pkg.data.package} />
-      ) : (
-        <EmptyState title={t.portal.packageEmpty} />
-      )}
-      {text ? <Instructions text={text} /> : null}
-      <PaymentsList payments={pkg.data.payments} tz={student.tz} />
-    </>
-  );
+  return <LoadState query={pkg}>{(view) => <PackageView view={view} tz={student.tz} />}</LoadState>;
 }

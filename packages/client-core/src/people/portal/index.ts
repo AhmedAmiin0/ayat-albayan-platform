@@ -37,7 +37,7 @@ export {
   childSummary, reportAt, reportMonths, type ChildSummary, type ChildSummaryInput,
 } from './child-summary.js';
 export {
-  leftText, lessonClockText, type CountdownWords,
+  lessonClockText, type CountdownWords,
 } from './countdown-text.js';
 export { lessonWaitText, type WaitTextInput, type WaitWords } from './wait-text.js';
 export { seenStore, type SeenStorage, type SeenStore } from './seen-store.js';

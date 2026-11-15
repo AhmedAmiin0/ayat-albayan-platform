@@ -1,17 +1,8 @@
 import { historyMonths, historyRows } from '@ab/client-core';
-import type { PortalHistoryStatus, PortalStudent } from '@ab/shared';
-import { View } from 'react-native';
-import {
-  AppText,
-  Button,
-  EmptyState,
-  ErrorState,
-  SkeletonCard,
-  t,
-  type,
-  useTheme,
-} from '@ab/mobile-kit';
-import { monthTitle } from '@/lessons';
+import type { PortalHistory, PortalHistoryStatus, PortalStudent } from '@ab/shared';
+import { AppText, Button, EmptyState, t, type, useTheme } from '@ab/mobile-kit';
+import { MonthSection } from '@/lessons';
+import { LoadState } from '@/nav';
 import { useChildHistory } from '@/portal';
 import { HistoryRow } from './HistoryRow';
 
@@ -25,36 +16,34 @@ const EMPTY: Record<PortalHistoryStatus, () => string> = {
   absent: () => t.portal.absentEmpty,
 };
 
+/** The loaded pages under their months, or the empty note. */
+function HistoryMonths({ pages, ...p }: HistoryPanelProps & { pages: readonly PortalHistory[] }) {
+  const months = historyMonths(historyRows(pages, p.status), p.student.tz);
+  if (months.length === 0) return <EmptyState title={EMPTY[p.status]()} />;
+  return months.map(({ month, rows }) => (
+    <MonthSection key={month} month={month}>
+      {rows.map((row) => (
+        <HistoryRow key={row.lesson_id} row={row} student={p.student} />
+      ))}
+    </MonthSection>
+  ));
+}
+
 /** «حضرها» / «غاب عنها» (canvas Attended, Absent): newest first, by month, «عرض المزيد». */
 export function HistoryPanel({ student, status }: HistoryPanelProps) {
   const { color } = useTheme();
   const history = useChildHistory(student.id, status);
-  if (!history.data) {
-    return history.isError ? (
-      <ErrorState onRetry={() => void history.refetch()} />
-    ) : (
-      <SkeletonCard />
-    );
-  }
-  const months = historyMonths(historyRows(history.data.pages, status), student.tz);
-  if (months.length === 0) return <EmptyState title={EMPTY[status]()} />;
+  const more = history.isFetchingNextPage;
   return (
     <>
-      {months.map(({ month, rows }) => (
-        <View key={month} style={{ gap: 8 }}>
-          <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.sm, color: color.ink2 }}>
-            {monthTitle(month)}
-          </AppText>
-          {rows.map((row) => (
-            <HistoryRow key={row.lesson_id} row={row} student={student} />
-          ))}
-        </View>
-      ))}
+      <LoadState query={history}>
+        {(data) => <HistoryMonths pages={data.pages} student={student} status={status} />}
+      </LoadState>
       {history.hasNextPage ? (
         <Button
           variant="secondary"
-          label={history.isFetchingNextPage ? t.portal.loadingMore : t.portal.more}
-          busy={history.isFetchingNextPage}
+          label={more ? t.portal.loadingMore : t.portal.more}
+          busy={more}
           onPress={() => void history.fetchNextPage()}
         />
       ) : null}

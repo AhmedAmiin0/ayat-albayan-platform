@@ -11,7 +11,7 @@ export { ShortfallNote } from './components/ShortfallNote';
 export { AmountField } from './components/AmountField';
 // «مبلغ مخصص»: the payment link's amount and the package price (subscribe, sales-subscribe).
 export { CustomAmountPill } from './components/CustomAmountPill';
-export { currencyName, instantDay, localDay, money } from '@/core/lib/money/format';
+export { instantDay, localDay } from '@/core/lib/money/format';
 // «تعديل المبلغ» (owner 2026-11-02): «كل المدفوعات» (money) and «مدفوعاتي» (sales-money).
 export { AdminAmountEdit } from './amount-edit/AdminAmountEdit';
 export { SalesAmountEdit } from './amount-edit/SalesAmountEdit';

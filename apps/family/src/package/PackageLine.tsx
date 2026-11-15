@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { AppText, Chevron, t, type, useTheme } from '@ab/mobile-kit';
 import { packageHref } from '@/nav';
-import { dayDate, leftText } from './package-text';
+import { dayDate, lessonsLeftText } from './package-text';
 
 interface PackageLineProps {
   view: PortalPackageView;
@@ -33,7 +33,9 @@ export function PackageLine({ view, studentId }: PackageLineProps) {
       })}
     >
       <View style={{ flex: 1 }}>
-        <AppText style={{ fontSize: type.size.sm, color: color.ink2 }}>{leftText(summary)}</AppText>
+        <AppText style={{ fontSize: type.size.sm, color: color.ink2 }}>
+          {lessonsLeftText(summary)}
+        </AppText>
         {summary.renewsOn ? (
           <AppText style={{ fontSize: type.size.xs, color: color.ink3 }}>
             {t.portal.app.package.renews.replace('{date}', dayDate(summary.renewsOn))}

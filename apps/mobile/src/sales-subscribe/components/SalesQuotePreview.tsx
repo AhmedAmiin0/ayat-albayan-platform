@@ -1,8 +1,7 @@
 import type { SalesQuoteView } from '@ab/shared';
 import { View } from 'react-native';
-import { t, shape, type, useTheme, AppText, ltr } from '@ab/mobile-kit';
+import { t, shape, type, useTheme, AppText, ltr, money } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { money } from '@/core/lib/money/format';
 import { planText } from '@/subscribe/QuotePreview';
 
 /**

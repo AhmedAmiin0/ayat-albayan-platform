@@ -1,9 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { cachedThread, detail, PHONE } from '@/inbox/shared/thread-fixtures';
-import { t, ltr } from '@ab/mobile-kit';
+import { t, ltr, money } from '@ab/mobile-kit';
 import { pickDay } from '@/test/pickers/native-picker';
-import { localDay, money } from '@/core/lib/money/format';
+import { localDay } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { balance, CHILD, profile, quote, saved, SISTER } from './fixtures';
 import { SubscribeScreen } from './SubscribeScreen';

@@ -1,7 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
-import { t } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { t, money } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { receivable, receivablesView } from '@/money/shared/fixtures';
 import { ReceivablesScreen } from './ReceivablesScreen';

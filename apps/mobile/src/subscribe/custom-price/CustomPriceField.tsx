@@ -1,7 +1,7 @@
 import { View } from 'react-native';
-import { t } from '@ab/mobile-kit';
+import { t, currencyName } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { AmountField, currencyName } from '@/payments';
+import { AmountField } from '@/payments';
 import type { CustomPrice } from './use-custom-price';
 
 const c = t.subscriptions.customPrice;

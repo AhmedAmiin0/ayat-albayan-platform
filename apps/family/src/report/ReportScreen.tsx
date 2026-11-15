@@ -1,16 +1,18 @@
 import { lessonWhenAt, type ClockOptions, type ReportPageView } from '@ab/shared';
 import { useLocalSearchParams } from 'expo-router';
+import { z } from 'zod';
 import { t } from '@ab/mobile-kit';
 import { FamilyHeader, FamilyPage, LoadState } from '@/nav';
 import { useFamilyClock, useReportPage } from '@/portal';
 import { ReportBody } from './ReportBody';
 import { ReportFiles } from './ReportFiles';
 
-interface ReportParams {
-  [key: string]: string;
-  id: string;
-  student: string;
-}
+/** report/[id]?student=&rec= (rule 12: route params are parsed, never trusted). */
+const paramsSchema = z.object({
+  id: z.string().min(1),
+  student: z.string().min(1),
+  rec: z.string().min(1).optional(),
+});
 
 /** «سارة · الخميس 13 نوفمبر 6:30 م» on the student's clock. */
 const whoWhen = (view: ReportPageView, clock: ClockOptions): string =>
@@ -22,7 +24,7 @@ const whoWhen = (view: ReportPageView, clock: ClockOptions): string =>
  * When the content cannot be read, the PDF still opens by the portal's signed link.
  */
 export function ReportScreen() {
-  const params = useLocalSearchParams<ReportParams & { rec?: string }>();
+  const params = paramsSchema.parse(useLocalSearchParams());
   const page = useReportPage(params.id);
   const clock = useFamilyClock();
   const view = page.data;

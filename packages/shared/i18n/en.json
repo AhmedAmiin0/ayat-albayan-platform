@@ -111,7 +111,6 @@
     "openPdf": "Open the PDF",
     "app": {
       "tabs": {
-        "nav": "Navigation",
         "home": "Home",
         "schedule": "Schedule",
         "children": "My children",
@@ -168,8 +167,7 @@
         "all": "All",
         "filter": "Choose a child",
         "today": "Today · {day}",
-        "empty": "No lessons this week.",
-        "emptyHint": "Lessons booked in the next 14 days show here."
+        "empty": "No lessons this week."
       },
       "children": {
         "lastReport": "Last report · {date}",
@@ -191,13 +189,12 @@
         "title": "Lesson report",
         "pdf": "Download the PDF report",
         "recording": "Watch the recording",
-        "back": "Back"
+        "blank": "Not written"
       },
       "reports": {
         "title": "My reports",
         "thisMonth": "Reports this month",
-        "empty": "No reports yet.",
-        "emptyHint": "Each lesson's report shows here once the teacher sends it."
+        "empty": "No reports yet."
       },
       "alerts": {
         "today": "Today",
@@ -4709,21 +4706,14 @@
       "studentCode": "Student code"
     },
     "home": {
-      "title": "My children",
       "empty": "No students are linked to your account yet. Contact the academy.",
-      "open": "Open the student's page",
-      "loading": "Loading students…",
-      "settings": "Settings"
+      "loading": "Loading students…"
     },
     "child": {
-      "title": "Student page",
-      "soon": "Upcoming lessons, reports and the package will show here soon."
+      "title": "Student page"
     },
     "settings": {
-      "title": "Settings",
-      "name": "Name",
-      "notifications": "Notifications on this device",
-      "notificationsHint": "Lesson and report alerts on this phone."
+      "notifications": "Notifications on this device"
     }
   },
   "teacherNav": {

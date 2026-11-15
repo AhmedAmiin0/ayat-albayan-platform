@@ -1,4 +1,5 @@
-import type { PortalKind, PortalReport, PortalStudent } from '@ab/shared';
+import { reportAt } from '@ab/client-core';
+import type { ClockOptions, PortalKind, PortalReport, PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { AppText, Avatar, Ltr, t, type, useTheme } from '@ab/mobile-kit';
@@ -9,13 +10,10 @@ import { useChildSummary, useFamilyClock } from '@/portal';
 const count = (n: number | null): string => (n === null ? '–' : String(n));
 
 /** «آخر تقرير · الخميس 13 نوفمبر», or «لم يصل تقرير بعد». */
-function lastReportLine(last: PortalReport | null, clock: Parameters<typeof dateLine>[1]): string {
+function lastReportLine(last: PortalReport | null, clock: ClockOptions): string {
   const C = t.portal.app.children;
   if (!last) return C.noReport;
-  return C.lastReport.replace(
-    '{date}',
-    dateLine(new Date(last.lesson_starts_at ?? last.sent_at), clock),
-  );
+  return C.lastReport.replace('{date}', dateLine(new Date(reportAt(last)), clock));
 }
 
 /** One child on «أبنائي» (canvas Children): the last report, «جديد», and the counts → the child. */

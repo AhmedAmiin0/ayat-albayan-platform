@@ -1,7 +1,7 @@
 import { scheduleWeek, weekSchedule } from '@ab/client-core';
-import { dateText } from '@ab/shared';
+import { calendarDayText } from '@ab/shared';
 import { useState } from 'react';
-import { useNow } from '@ab/mobile-kit';
+import { locale, useNow } from '@ab/mobile-kit';
 import { useChildrenLessons, useFamilyClock, usePortalMe } from '@/portal';
 
 /** The join button lights up within a few seconds of the window. */
@@ -23,11 +23,7 @@ export function useWeek() {
   const only = chip === ALL ? null : chip;
   const bounds = scheduleWeek(now, clock.tz, offset);
   const day = (d: string): string =>
-    dateText(
-      new Date(`${d}T12:00:00Z`),
-      { ...clock, tz: 'UTC' },
-      { day: 'numeric', month: 'long' },
-    );
+    calendarDayText(d, locale, { day: 'numeric', month: 'long' });
   return {
     students,
     named: me?.kind === 'guardian',

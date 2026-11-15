@@ -17,19 +17,20 @@ interface ReportFilesProps {
 export function ReportFiles({ studentId, reportId, pdfUrl, recordingId }: ReportFilesProps) {
   const { color } = useTheme();
   const file = useOpenFile();
+  const recording = useOpenFile();
   const url = useOpenUrl();
   const R = t.portal.app.report;
   const pdf = (): void =>
     pdfUrl ? url.mutate(pdfUrl) : file.mutate({ studentId, kind: 'reports', id: reportId });
-  const failed = file.isError || url.isError;
+  const failed = file.isError || url.isError || recording.isError;
   return (
     <View style={{ gap: 10 }}>
       {recordingId ? (
         <Button
           variant="secondary"
           label={R.recording}
-          busy={file.isPending}
-          onPress={() => file.mutate({ studentId, kind: 'recordings', id: recordingId })}
+          busy={recording.isPending}
+          onPress={() => recording.mutate({ studentId, kind: 'recordings', id: recordingId })}
         />
       ) : null}
       <Button label={R.pdf} busy={file.isPending || url.isPending} onPress={pdf} />

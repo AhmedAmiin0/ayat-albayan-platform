@@ -12,9 +12,6 @@ import { t, currencyName, locale, ltr, money } from '@ab/mobile-kit';
 
 // Money lines (docs/07 §2: Western digits, LTR values isolated). Strings come from ar.json only.
 
-/** «ر.س» and «145 ر.س» moved to the kit (both apps write money): kept here for staff imports. */
-export { currencyName, money } from '@ab/mobile-kit';
-
 /** «8 حلقات في الشهر», or «10 حلقات» for a custom count (package null). */
 export function packageName(sub: Pick<SubscriptionView, 'package' | 'lessons_total'>): string {
   return sub.package ? t.enums.packageSize[sub.package] : counted(t.today.count, sub.lessons_total);
