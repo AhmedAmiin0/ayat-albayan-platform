@@ -1,4 +1,4 @@
-import { parseAmount } from '../ledger/amount.js';
+import { parseAmount } from '../ledger/index.js';
 
 /** A typed «مبلغ مخصص»: the amount, or why not (not an amount, or under `min`). */
 export type CustomTotal =

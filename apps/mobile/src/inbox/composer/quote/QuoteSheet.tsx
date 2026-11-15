@@ -22,8 +22,8 @@ interface QuoteSheetProps {
 /**
  * «عرض سعر» (owner 2026-10-26): the calculator's steps (pills only for the discount), the offer text
  * exactly as «حاسبة الأسعار» copies it, then send it in this chat, put it in the box to edit, or copy
- * it (copyOrShare: the share sheet when the clipboard fails). «مبلغ مخصص» (owner 2026-11-15) beside
- * the pills makes the typed amount the offer's total. Works for a lead with no student; nothing is created.
+ * it (copyOrShare: the share sheet when the clipboard fails). Works for a lead with no student; nothing is created.
+ * «مبلغ مخصص» (owner 2026-11-15) beside the pills makes the typed amount the offer's total.
  */
 export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
   const { color } = useTheme();

@@ -30,7 +30,8 @@ const off = (name: string) => screen.getByRole('button', { name }).hasAttribute(
 async function show(admin = false) {
   granted.clear();
   if (admin) granted.add('subscriptions.write');
-  renderWithClient(<QuoteDialog thread={thread({ phone_e164: '+966501234567', session_open: true })} onClose={vi.fn()} onFilled={vi.fn()} />);
+  const th = thread({ phone_e164: '+966501234567', session_open: true });
+  renderWithClient(<QuoteDialog thread={th} onClose={vi.fn()} onFilled={vi.fn()} />);
   await screen.findByTestId('quote-text');
 }
 const type = (value: string) => fireEvent.change(field(), { target: { value } });
@@ -59,7 +60,7 @@ it('on: starts from the quote’s price; the typed amount is the offer’s total
   expect(off(q.send)).toBe(false);
 });
 
-it('sales: under the deepest pill’s price says the minimum and holds send, edit and copy', async () => {
+it('sales: under the deepest pill’s price says the minimum, nothing may leave', async () => {
   await show();
   fireEvent.click(toggle());
   type('100');

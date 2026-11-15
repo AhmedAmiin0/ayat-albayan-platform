@@ -25,7 +25,8 @@ export function assertSalesDiscount(pricing: { discount?: number }): void {
 /**
  * «مبلغ مخصص» on her path (owner 2026-11-05): the same floor as the pills (salesPriceFloor in
  * @ab/shared), or a 1 SAR package plus her own recorded transfer would earn the commission:
- * 403 discount_not_allowed with the lowest price. The admin's POST /subscriptions never calls it (unrestricted).
+ * 403 discount_not_allowed with the lowest price. The admin's POST /subscriptions never calls it
+ * (unrestricted).
  */
 export function assertSalesPrice(price: { amount: number; total: number; currency: string }): void {
   const min = salesPriceFloor(price.total);

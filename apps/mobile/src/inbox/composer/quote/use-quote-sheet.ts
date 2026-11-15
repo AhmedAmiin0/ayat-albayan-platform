@@ -19,7 +19,7 @@ function initialSelection(phone: string): PricingSelection {
  * The sheet's choice and its quote from GET /pricing/quote. `text` is the calculator's own offer
  * (offerText with ar.pricing: the guardian reads Arabic whatever the UI language); null while the
  * first quote loads. `stale`: the card still holds the previous choice's price, so nothing may leave.
- * `custom`: «مبلغ مخصص» (useQuoteCustom); while its amount is not valid, `invalid` holds everything.
+ * `custom`: «مبلغ مخصص» (useQuoteCustom); while its amount is not valid, `invalid` holds all.
  */
 export function useQuoteSheet(phone: string) {
   const [selection, setSelection] = useState(() => initialSelection(phone));
