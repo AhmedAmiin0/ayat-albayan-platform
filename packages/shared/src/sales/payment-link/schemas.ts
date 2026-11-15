@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { localDate } from '../../schemas/index.js';
 import type { PaymentMethod } from '@ab/catalog';
-import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '@ab/money';
+import { CURRENCY_ISOS, currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '@ab/money';
 
 // «رابط دفع» (owner 2026-10-28, docs/30-stripe-test.md; with FEATURE_STRIPE (test or live)): the assistant agrees an amount with
 // the family in the chat and sends a Stripe Checkout link; the verified webhook records the payment. Strict
@@ -11,8 +11,19 @@ export const PAYMENT_LINK_KINDS = ['new', 'renewal'] as const;
 export type PaymentLinkKind = (typeof PAYMENT_LINK_KINDS)[number];
 export const PAYMENT_LINK_STATUSES = ['open', 'paid', 'expired', 'cancelled'] as const;
 export type PaymentLinkStatus = (typeof PAYMENT_LINK_STATUSES)[number];
-/** Checkout accepts the academy's two package currencies only. */
-export const PAYMENT_LINK_CURRENCIES = ['SAR', 'USD'] as const;
+/**
+ * The package currencies a link may carry: every catalog currency (KWD / OMR in Stripe's
+ * thousandths, toStripeAmount). The API refuses any other before a package is made (400
+ * currency_not_supported). Migration 20261115000100 holds the same list in
+ * payment_links_currency_check; a new catalog currency needs a migration first (its test pins it).
+ */
+export const PAYMENT_LINK_CURRENCIES = CURRENCY_ISOS;
+type PaymentLinkCurrency = (typeof PAYMENT_LINK_CURRENCIES)[number];
+const linkCurrencySchema = z.enum(PAYMENT_LINK_CURRENCIES);
+
+/** Whether a payment link can be made in this package currency. */
+export const isLinkCurrency = (currency: string): currency is PaymentLinkCurrency =>
+  linkCurrencySchema.safeParse(currency).success;
 
 /** POST /sales/payment-links/quote: the calculator price shown as the reference (any student). */
 export const paymentLinkQuoteSchema = z.strictObject({ studentId: z.uuid(), pricing: subscriptionPricingSchema });

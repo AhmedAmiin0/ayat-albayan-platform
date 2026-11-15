@@ -1,4 +1,4 @@
-import { linkAmountProblem, minLinkAmount, type PaymentLinkCreate, type PaymentLinkQuote, type PaymentLinkQuoteView, type PaymentLinkView, type QuoteResponse } from '@ab/shared';
+import { isLinkCurrency, linkAmountProblem, minLinkAmount, type PaymentLinkCreate, type PaymentLinkQuote, type PaymentLinkQuoteView, type PaymentLinkView, type QuoteResponse } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
@@ -84,10 +84,19 @@ export class LinkCreate {
     return this.deps.views.one(row, now);
   }
 
-  /** The catalog quote, the site's discount pills only (403 discount_not_allowed). */
+  /**
+   * The catalog quote, the site's discount pills only (403 discount_not_allowed), in a
+   * currency a link can carry (400 currency_not_supported: KWD, OMR). Checked here, so the
+   * quote says so and a create never writes the package before payment_links_currency_check
+   * refuses the link (2026-11-14: a QAR link did).
+   */
   private async quoted(input: PaymentLinkQuote): Promise<QuoteResponse> {
     assertSalesDiscount(input.pricing);
-    return this.creator.quote(input);
+    const quote = await this.creator.quote(input);
+    if (!isLinkCurrency(quote.currency)) {
+      throw badRequest('currency_not_supported', { currency: quote.currency });
+    }
+    return quote;
   }
 
   /**

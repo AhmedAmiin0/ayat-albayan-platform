@@ -3,9 +3,26 @@ import type { PaymentLinkStatus } from './schemas.js';
 
 // Pure rules of the payment links (docs/30-stripe-test.md), shared by the API, the web and the mobile app.
 
-/** SAR and USD have 2 decimals: 290.5 → 29050. */
+/** The platform's own cents (every stored amount has 2 decimals): 290.5 → 29050. */
 export const toMinorUnits = toCents;
 export const fromMinorUnits = (minor: number): number => Math.round(minor) / 100;
+
+/** Stripe's three-decimal currencies; every other link currency counts in 1/100. */
+const STRIPE_THREE_DECIMALS = new Set(['KWD', 'OMR', 'BHD', 'JOD', 'TND']);
+/** Stripe's minor units per platform cent: 10 for KWD / OMR, else 1. */
+const centScale = (currency: string): number =>
+  STRIPE_THREE_DECIMALS.has(currency.toUpperCase()) ? 10 : 1;
+
+/**
+ * An amount as Stripe counts it in `currency`: 290.5 SAR → 29050, 12.5 KWD → 12500. Built from
+ * the 2-decimal cents, so a KWD / OMR amount always ends in 0 (Stripe refuses any other).
+ */
+export const toStripeAmount = (amount: number, currency: string): number =>
+  toCents(amount) * centScale(currency);
+
+/** Stripe's minor units back to a stored amount (2 decimals): 12500 KWD → 12.5. */
+export const fromStripeAmount = (minor: number, currency: string): number =>
+  Math.round(minor / centScale(currency)) / 100;
 
 /** The lowest amount the admin's cap allows (null = no cap: anything above 0). */
 export function minLinkAmount(reference: number, maxDiscountPct: number | null): number | null {

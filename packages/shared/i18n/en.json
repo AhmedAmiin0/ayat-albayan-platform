@@ -8251,6 +8251,7 @@
       "link_processing": "This link's payment is being processed; wait for the result before cancelling it.",
       "stripe_not_configured": "The Stripe keys are not saved in the settings yet.",
       "stripe_unavailable": "Stripe could not be reached; the link was not cancelled. Try again.",
+      "currency_not_supported": "A payment link cannot be made in this package's currency ({currency}). Record the payment as a bank transfer.",
       "generic": "Could not create the link; try again."
     },
     "web": {

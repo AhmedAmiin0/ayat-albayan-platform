@@ -19,6 +19,15 @@ describe('Checkout Session parameters', () => {
     expect(p.payment_intent_data?.metadata).toEqual(p.metadata);
     expect(Object.keys(p)).not.toContain('payment_method_types');
   });
+
+  it('per currency: QAR in hundredths, KWD / OMR in thousandths ending in 0', () => {
+    const ctx = { payOrigin: 'https://api.example.com', now: NOW };
+    const unit = (currency: string, amount: number) =>
+      checkoutParams(linkRow({ currency, amount }), ctx).line_items?.[0]?.price_data;
+    expect(unit('QAR', 122)).toMatchObject({ currency: 'qar', unit_amount: 12200 });
+    expect(unit('KWD', 12.5)).toMatchObject({ currency: 'kwd', unit_amount: 12500 });
+    expect(unit('OMR', 12.25)).toMatchObject({ currency: 'omr', unit_amount: 12250 });
+  });
 });
 
 describe('the public view', () => {
