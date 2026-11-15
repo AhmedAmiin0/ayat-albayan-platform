@@ -16,7 +16,7 @@ import { LIVEKIT_SHAPE } from './env.livekit';
 import { STRIPE_SHAPE } from './env.stripe';
 import { STORAGE_SHAPE } from './env.storage';
 import { SENDER_SHAPE } from './whatsapp/env.sender';
-import { webOrigin } from './env.web-origin';
+import { webOrigin } from '@/common/http/public-origin';
 
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider, isGraphEnv } from './whatsapp/env.whatsapp';
 export { lineGaps, duplicatePhone, bootGaps, DUPLICATE_CHAT_PHONE } from './env.gaps';
