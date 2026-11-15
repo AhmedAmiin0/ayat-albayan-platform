@@ -71,14 +71,39 @@ test('switch off: background and foreground change nothing', () => {
   ).toBe(off);
 });
 
-test('the OS prompt backgrounding the app (iOS Face ID) never re-covers it', () => {
+test('the OS prompt passing through inactive (iOS Face ID) leaves the app open after it', () => {
   const prompting = lockReducer(on, { type: 'prompt' });
-  expect(lockReducer(prompting, { type: 'hide', at: 5 })).toBe(prompting);
-  expect(lockReducer(prompting, { type: 'show', at: 5 })).toBe(prompting);
+  const back = run(
+    [
+      { type: 'hide', at: 5 },
+      { type: 'show', at: 6 },
+    ],
+    prompting,
+  );
+  expect(back).toMatchObject({ phase: 'prompting', hiddenAt: null });
+  expect(lockReducer(back, { type: 'success' }).phase).toBe('open');
 });
 
-test('biometrics removed: the lock turns itself off, the app opens', () => {
-  expect(lockReducer(on, { type: 'removed' })).toMatchObject({ enabled: false, phase: 'open' });
+test('backgrounded during the dissolve: covered after it, locked again after 5 minutes', () => {
+  const left = run([{ type: 'prompt' }, { type: 'hide', at: 5 }, { type: 'success' }], on);
+  expect(left).toMatchObject({ phase: 'covered', hiddenAt: 5 });
+  expect(lockReducer(left, { type: 'show', at: 5 + LOCK_AFTER_MS }).phase).toBe('locked');
+  expect(lockReducer(left, { type: 'show', at: 6 }).phase).toBe('open');
+});
+
+test('biometrics removed while covered: off, but never opens (only the sign-in is left)', () => {
+  expect(lockReducer(on, { type: 'removed' })).toMatchObject({
+    enabled: false,
+    phase: 'locked',
+    failed: true,
+  });
+  const prompting = lockReducer(on, { type: 'prompt' });
+  expect(lockReducer(prompting, { type: 'removed' }).phase).toBe('locked');
+  expect(lockReducer(open, { type: 'removed' })).toMatchObject({ enabled: false, phase: 'open' });
+});
+
+test('the settings switch off keeps the open app open', () => {
+  expect(lockReducer(open, { type: 'disabled' })).toMatchObject({ enabled: false, phase: 'open' });
 });
 
 test('enabled turns the flag on without locking the open app', () => {
@@ -94,6 +119,7 @@ test('sign-out (the other way) clears the flag and stays covered until a new sig
   expect(lockReducer(open, { type: 'signedOut' })).toMatchObject({ enabled: false, phase: 'open' });
 });
 
-test('a sign-in never opens a locked app (a restored session emits it too)', () => {
-  expect(lockReducer(on, { type: 'signedIn' })).toBe(on);
+test('a fresh sign-in (a password or code; bio-lock never sends it for a restored session) opens', () => {
+  expect(lockReducer(on, { type: 'signedIn' })).toMatchObject({ enabled: false, phase: 'open' });
+  expect(lockReducer(open, { type: 'signedIn' })).toBe(open);
 });

@@ -1,16 +1,17 @@
 import { useSyncExternalStore } from 'react';
 import type { BioFlags } from '../biometric/core/flags';
-import { type BioSnapshot, BioLockStore } from '../biometric/core/lock-store';
+import type { BioSnapshot } from '../biometric/core/lock-deps';
+import { BioLockStore } from '../biometric/core/lock-store';
 import type { BioNative } from '../biometric/core/native';
 
-// Test-only: the biometric lock with its native modules mocked, for
-// `jest.mock('…/biometric/core/bio-lock', () => jest.requireActual('…/testing/bio-lock'))`.
+// Test-only: the biometric lock with its native modules mocked. Use it as the bio-lock module:
+// jest.mock('…/core/bio-lock', () => jest.requireActual('…/testing/bio-lock').bioLockMock).
 
 type Answer = { success: true } | { success: false; error: string };
 
 const flags = { on: false, declined: false };
 let types = [1];
-export const auth = {
+const auth = {
   hasHardwareAsync: jest.fn(async () => true),
   isEnrolledAsync: jest.fn(async () => true),
   supportedAuthenticationTypesAsync: jest.fn(async () => types),
@@ -31,9 +32,9 @@ const make = () =>
   });
 
 /** The current store; reset() swaps in a fresh one, bioLock always reaches the current. */
-export const fake = { lock: make() };
+const fake = { lock: make() };
 
-export const bioLock = {
+const bioLock = {
   getSnapshot: () => fake.lock.getSnapshot(),
   subscribe: (l: () => void) => fake.lock.subscribe(l),
   unlock: () => fake.lock.unlock(),
@@ -44,21 +45,32 @@ export const bioLock = {
   decline: () => fake.lock.decline(),
 };
 
-export function useBioLock(): BioSnapshot {
+function useBioLock(): BioSnapshot {
   return useSyncExternalStore(bioLock.subscribe, bioLock.getSnapshot);
 }
 
 /** A new store (still 'checking'), the flags cleared and the prompt answering yes. */
-export function reset(): void {
+function reset(): void {
   Object.assign(flags, { on: false, declined: false });
   types = [1];
   auth.authenticateAsync.mockReset().mockResolvedValue({ success: true });
+  auth.isEnrolledAsync.mockReset().mockResolvedValue(true);
   fake.lock = make();
 }
 
 /** The flag read: as at app start with this flag and these methods. */
-export async function boot(opts: { enabled: boolean; types?: number[] }): Promise<void> {
+interface BootOptions {
+  enabled: boolean;
+  types?: number[];
+  enrolled?: boolean;
+}
+
+async function boot(opts: BootOptions): Promise<void> {
   flags.on = opts.enabled;
+  auth.isEnrolledAsync.mockResolvedValue(opts.enrolled ?? true);
   types = opts.types ?? [1];
   await fake.lock.boot();
 }
+
+/** What the mocked bio-lock module exports (bioLock, useBioLock) and the test's handles. */
+export const bioLockMock = { bioLock, useBioLock, fake, auth, reset, boot };

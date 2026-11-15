@@ -13,7 +13,8 @@ import type { BioKind } from '../core/device';
 import { useDissolve } from './use-dissolve';
 
 interface LockScreenProps {
-  kind: BioKind;
+  /** null: the biometrics are gone; only «الدخول بطريقة أخرى» is left (fails closed). */
+  kind: BioKind | null;
   /** The last prompt was cancelled or failed: say so, wait for a tap. */
   failed: boolean;
 }
@@ -59,8 +60,15 @@ export function LockScreen({ kind, failed }: LockScreenProps) {
             {B.failed}
           </AppText>
         ) : null}
-        <Button label={B.unlock[kind]} onPress={() => void bioLock.unlock().then(open)} />
-        <Button variant="ghost" label={B.otherWay} onPress={other} busy={leaving} />
+        {kind ? (
+          <Button label={B.unlock[kind]} onPress={() => void bioLock.unlock().then(open)} />
+        ) : null}
+        <Button
+          variant={kind ? 'ghost' : 'primary'}
+          label={B.otherWay}
+          onPress={other}
+          busy={leaving}
+        />
       </View>
     </Animated.View>
   );

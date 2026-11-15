@@ -1,28 +1,6 @@
-import { authenticate, type BioKind, type BioOutcome, enrolledKind } from './device';
-import type { BioFlags } from './flags';
-import { INITIAL_LOCK, type LockEvent, lockReducer, type LockState } from './lock-machine';
-import type { BioNative } from './native';
-
-export interface BioSnapshot {
-  lock: LockState;
-  /** The device's method, once known (null: no biometrics, the feature hides). */
-  kind: BioKind | null;
-  /** «استخدم البصمة للدخول في المرة القادمة؟» is waiting (a fresh sign-in, never declined). */
-  offer: boolean;
-}
-
-export interface BioText {
-  reason: string;
-  enableReason: string;
-  cancel: string;
-}
-
-export interface BioLockDeps {
-  native: BioNative;
-  flags: BioFlags;
-  /** The OS prompt's words, read when it opens (the i18n bundle). */
-  text: () => BioText;
-}
+import { authenticate, type BioKind, type BioOutcome, enrolledKind, feel } from './device';
+import type { BioLockDeps, BioSnapshot } from './lock-deps';
+import { INITIAL_LOCK, type LockEvent, lockReducer } from './lock-machine';
 
 type Listener = () => void;
 
@@ -47,15 +25,18 @@ export class BioLockStore {
     return () => void this.listeners.delete(listener);
   };
 
-  /** Reads the flag and the device: a flag whose biometrics are gone turns itself off. */
+  /**
+   * Reads the flag and the device. A flag whose biometrics are gone (or unreadable) turns itself
+   * off, but never opens the app: the lock stays with «الدخول بطريقة أخرى» (fails closed).
+   */
   boot = async (): Promise<void> => {
     const [on, kind] = await Promise.all([
       this.deps.flags.enabled(),
       enrolledKind(this.deps.native),
     ]);
     this.set({ kind });
-    this.send({ type: 'loaded', enabled: on && kind !== null });
-    if (on && !kind) await this.deps.flags.setEnabled(false);
+    this.send({ type: 'loaded', enabled: on });
+    if (on && !kind) this.removed();
   };
 
   /** The lock's button and its automatic prompt: the OS prompt, then a haptic either way. */
@@ -63,7 +44,11 @@ export class BioLockStore {
     if (this.snap.lock.phase !== 'locked') return 'busy';
     this.send({ type: 'prompt' });
     const { reason, cancel } = this.deps.text();
-    const result = await authenticate(this.deps.native, { reason, cancel });
+    const raw = await authenticate(this.deps.native, { reason, cancel });
+    // «unavailable» can be passing (a busy sensor): removed only when the device says so again.
+    const gone = raw === 'removed' && (await enrolledKind(this.deps.native)) === null;
+    const result: BioOutcome = gone || raw === 'success' ? raw : 'fail';
+    feel(this.deps.native, result === 'success');
     this.outcome[result]();
     return result;
   };
@@ -80,7 +65,7 @@ export class BioLockStore {
     const { enableReason, cancel } = this.deps.text();
     const result = await authenticate(this.deps.native, { reason: enableReason, cancel });
     const ok = result === 'success';
-    this.feel(ok);
+    feel(this.deps.native, ok);
     if (ok) await this.deps.flags.setEnabled(true);
     this.set({
       offer: false,
@@ -91,7 +76,7 @@ export class BioLockStore {
 
   /** The settings switch off: the flag goes, the app stays as it is. */
   disable = (): void => {
-    this.send({ type: 'removed' });
+    this.send({ type: 'disabled' });
     void this.deps.flags.setEnabled(false);
   };
 
@@ -103,12 +88,16 @@ export class BioLockStore {
 
   /** A fresh sign-in: offer once, if the device can and nobody said «ليس الآن» on it. */
   signedIn = async (): Promise<void> => {
+    const wasOn = this.snap.lock.enabled;
     this.send({ type: 'signedIn' });
-    const [declined, kind] = await Promise.all([
+    // A flag left by a killed sign-out: the new sign-in clears it (and is offered again).
+    if (wasOn && !this.snap.lock.enabled) await this.deps.flags.setEnabled(false);
+    const [declined, on, kind] = await Promise.all([
       this.deps.flags.declined(),
+      this.deps.flags.enabled(),
       enrolledKind(this.deps.native),
     ]);
-    this.set({ kind, offer: !declined && !this.snap.lock.enabled && kind !== null });
+    this.set({ kind, offer: !declined && !on && kind !== null });
   };
 
   /** Every sign-out path (the button, «الدخول بطريقة أخرى», a refused refresh) clears the flag. */
@@ -123,18 +112,14 @@ export class BioLockStore {
 
   private readonly outcome: Record<BioOutcome, () => void> = {
     // Stays 'prompting' while the lock dissolves; finish() opens the app.
-    success: () => this.feel(true),
-    fail: () => {
-      this.feel(false);
-      this.send({ type: 'fail' });
-    },
-    removed: this.disable,
+    success: () => undefined,
+    fail: () => this.send({ type: 'fail' }),
+    removed: () => this.removed(),
   };
 
-  private feel(ok: boolean): void {
-    const haptics = this.deps.native.haptics;
-    const type = haptics?.NotificationFeedbackType[ok ? 'Success' : 'Error'];
-    void haptics?.notificationAsync(type).catch(() => undefined);
+  private removed(): void {
+    this.set({ kind: null, lock: lockReducer(this.snap.lock, { type: 'removed' }) });
+    void this.deps.flags.setEnabled(false);
   }
 
   private send(event: LockEvent): void {

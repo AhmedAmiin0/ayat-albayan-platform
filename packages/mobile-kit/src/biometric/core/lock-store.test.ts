@@ -87,21 +87,46 @@ test('background past 5 minutes locks again; under it the app opens', async () =
   expect(s.phase()).toBe('locked');
 });
 
-test('biometrics removed from the device: off at boot, flag cleared, no lock', async () => {
+test('biometrics removed from the device: off at boot, flag cleared, the lock stays (sign-in)', async () => {
   const s = setup({ enabled: true, enrolled: false });
   await s.lock.boot();
-  expect(s.phase()).toBe('open');
+  expect(s.lock.getSnapshot()).toMatchObject({
+    kind: null,
+    lock: { enabled: false, phase: 'locked', failed: true },
+  });
   expect(s.flags.on).toBe(false);
-  expect(s.lock.getSnapshot().kind).toBeNull();
+  expect(await s.lock.autoPrompt()).toBe('busy');
 });
 
-test('biometrics removed while locked: the prompt says not_enrolled, the lock turns off', async () => {
+test('removed while locked (not_enrolled, confirmed): off, but the app stays covered', async () => {
   const s = setup({ enabled: true });
   await s.lock.boot();
   s.auth.authenticateAsync.mockResolvedValueOnce({ success: false, error: 'not_enrolled' });
+  s.auth.isEnrolledAsync.mockResolvedValueOnce(false);
   expect(await s.lock.unlock()).toBe('removed');
-  expect(s.lock.getSnapshot().lock).toMatchObject({ enabled: false, phase: 'open' });
+  expect(s.lock.getSnapshot()).toMatchObject({
+    kind: null,
+    lock: { enabled: false, phase: 'locked', failed: true },
+  });
   expect(s.flags.on).toBe(false);
+});
+
+test('a passing not_available (busy sensor, still enrolled) is a plain failure', async () => {
+  const s = setup({ enabled: true });
+  await s.lock.boot();
+  s.auth.authenticateAsync.mockResolvedValueOnce({ success: false, error: 'not_available' });
+  expect(await s.lock.unlock()).toBe('fail');
+  expect(s.lock.getSnapshot().lock).toMatchObject({ enabled: true, phase: 'locked', failed: true });
+  expect(s.flags.on).toBe(true);
+});
+
+test('a flag left by a killed sign-out: the next fresh sign-in clears it and opens', async () => {
+  const s = setup({ enabled: true });
+  await s.lock.boot();
+  await s.lock.signedIn();
+  expect(s.phase()).toBe('open');
+  expect(s.flags.on).toBe(false);
+  expect(s.lock.getSnapshot().offer).toBe(true);
 });
 
 test('fallback (signed out): flag cleared, covered until the next sign-in', async () => {

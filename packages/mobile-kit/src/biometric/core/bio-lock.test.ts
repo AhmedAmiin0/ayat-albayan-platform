@@ -5,6 +5,8 @@ import type { BioLockStore } from './lock-store';
 
 // What feeds the lock: the app's foreground state and the session's sign-in / sign-out events.
 
+jest.unmock('./bio-lock');
+
 type OnApp = (next: AppStateStatus) => void;
 type OnAuth = (event: AuthChangeEvent, session: Session | null) => void;
 
@@ -41,8 +43,9 @@ test('a fresh sign-in (no session before) asks for the offer', () => {
   expect(s.lock.signedIn).toHaveBeenCalledTimes(1);
 });
 
-test('a restored session never offers, even when SIGNED_IN follows it', () => {
+test('a restored session never offers: SIGNED_IN before or after INITIAL_SESSION', () => {
   const s = setup();
+  s.auth('SIGNED_IN', session);
   s.auth('INITIAL_SESSION', session);
   s.auth('SIGNED_IN', session);
   s.auth('TOKEN_REFRESHED', session);

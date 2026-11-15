@@ -6,14 +6,17 @@ import { t } from '../../lib/i18n/i18n';
 import { signOutDevice } from '../../lib/session/sign-out';
 import { freshQueryClient, renderWithQuery } from '../../testing/query';
 import { bioLock } from '../core/bio-lock';
-import type * as Fake from '../../testing/bio-lock';
+import type { bioLockMock } from '../../testing/bio-lock';
 import { BiometricGate } from './BiometricGate';
 
 // The gate over a signed-in app, with the store's native modules mocked (testing/bio-lock).
 
-jest.mock('../core/bio-lock', () => jest.requireActual<object>('../../testing/bio-lock'));
+jest.mock(
+  '../core/bio-lock',
+  () => jest.requireActual<{ bioLockMock: object }>('../../testing/bio-lock').bioLockMock,
+);
 jest.mock('../../lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
-const fake = jest.requireMock<typeof Fake>('../core/bio-lock');
+const fake = jest.requireMock<typeof bioLockMock>('../core/bio-lock');
 
 const metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -97,4 +100,13 @@ test('the offer after a fresh sign-in: «ليس الآن» hides it for good', a
   await fireEvent.press(screen.getByRole('button', { name: t.biometric.notNow }));
   expect(screen.queryByText(t.biometric.offerTitle.fingerprint)).toBeNull();
   expect(bioLock.getSnapshot().offer).toBe(false);
+});
+
+test('biometrics gone with the flag on: no unlock button, only the other way (fails closed)', async () => {
+  await fake.boot({ enabled: true, enrolled: false });
+  await app();
+  expect(screen.getByTestId('biometric-lock')).toBeTruthy();
+  expect(screen.queryByText('المحتوى')).toBeNull();
+  expect(screen.queryByRole('button', { name: t.biometric.unlock.fingerprint })).toBeNull();
+  expect(screen.getByRole('button', { name: t.biometric.otherWay })).toBeTruthy();
 });

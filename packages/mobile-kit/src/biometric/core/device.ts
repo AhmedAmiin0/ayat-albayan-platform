@@ -51,3 +51,10 @@ export async function authenticate(native: BioNative, text: PromptText): Promise
     return 'fail';
   }
 }
+
+/** A success / error haptic (none without the module). */
+export function feel(native: BioNative, ok: boolean): void {
+  const haptics = native.haptics;
+  const type = haptics?.NotificationFeedbackType[ok ? 'Success' : 'Error'];
+  void haptics?.notificationAsync(type).catch(() => undefined);
+}

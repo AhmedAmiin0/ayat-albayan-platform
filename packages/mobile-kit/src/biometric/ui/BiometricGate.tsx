@@ -22,7 +22,7 @@ const hiddenWhile = (covering: boolean) =>
 
 /** The lock screen proper, or the plain cover (reading the flag, backgrounded, signing out). */
 function LockLayer({ kind, lock }: { kind: BioKind | null; lock: LockState }) {
-  return kind && showsLock(lock) ? <LockScreen kind={kind} failed={lock.failed} /> : <LockCover />;
+  return showsLock(lock) ? <LockScreen kind={kind} failed={lock.failed} /> : <LockCover />;
 }
 
 /**
