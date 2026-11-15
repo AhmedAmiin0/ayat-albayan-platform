@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, readdirSync, readFileSync, statSync, writeFileS
 import { tmpdir } from 'node:os';
 import { posix } from 'node:path';
 
-/** A throw-away monorepo: `{ 'apps/web/src/a.ts': 'text' }` → its root folder. */
+/** A throw-away monorepo: `{ 'apps/staff-web/src/a.ts': 'text' }` → its root folder. */
 export function makeRepo(files: Record<string, string>): string {
   const root = mkdtempSync(posix.join(tmpdir(), 'move-module-'));
   for (const [file, text] of Object.entries(files)) {

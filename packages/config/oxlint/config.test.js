@@ -21,7 +21,7 @@ test('packageOverrides: base rules, .ts complexity, JS-only rules, tests, then t
 });
 
 test('packageOverrides: the React flavour adds the hooks rules and browser globals', () => {
-  const { overrides } = packageOverrides({ dir: 'apps/web', react: true, blocks: [] });
+  const { overrides } = packageOverrides({ dir: 'apps/staff-web', react: true, blocks: [] });
   const react = overrides.find((o) => o.env?.browser);
   assert.equal(level(react, 'react/rules-of-hooks'), 'error');
   assert.equal(level(react, 'react-hooks-js/config'), 'error');
@@ -32,7 +32,7 @@ test('packageOverrides: the React flavour adds the hooks rules and browser globa
 test('compose: .oxlintrc.json first, type-aware, every package scoped, plugins registered', () => {
   const packages = [
     { dir: 'packages/db', react: false, blocks: [{ ignores: ['src/types.ts'] }] },
-    { dir: 'apps/web', react: true, blocks: [] },
+    { dir: 'apps/staff-web', react: true, blocks: [] },
   ];
   const config = compose({ oxlintrc, packages });
   assert.equal(config.options.typeAware, true);
@@ -43,5 +43,5 @@ test('compose: .oxlintrc.json first, type-aware, every package scoped, plugins r
     ['ab', 'stylistic', 'react-hooks-js'],
   );
   const dirs = new Set(config.overrides.map((o) => o.files[0].split('/').slice(0, 2).join('/')));
-  assert.deepEqual([...dirs], ['packages/db', 'apps/web']);
+  assert.deepEqual([...dirs], ['packages/db', 'apps/staff-web']);
 });

@@ -1,7 +1,7 @@
 {
   "name": "@ab/mobile-kit",
   "private": true,
-  "description": "Shared React Native code of the staff app (apps/mobile) and the family app (apps/family): source, built by each app's Metro.",
+  "description": "Shared React Native code of the staff app (apps/staff-mobile) and the family app (apps/family-mobile): source, built by each app's Metro.",
   "exports": {
     ".": "./src/index.ts",
     "./auth/audience": "./src/auth/audience.ts",

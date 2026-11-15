@@ -7,7 +7,7 @@ name: mobile
 # refused when a native dependency, plugin or app.json native field changed since the last build.
 # profile stripe-test (owner 2026-10-28, docs/30): the separate Stripe TEST app (eas.json `stripe-test`,
 # APP_VARIANT=stripetest, no FCM push): its APK, or an OTA to its own channel compared with its own last build.
-# app family (owner 2026-11-14, docs/50 §7): the separate family app apps/family (its own EAS project
+# app family (owner 2026-11-14, docs/50 §7): the separate family app apps/family-mobile (its own EAS project
 # @holdmycup/ayat-albayan-family, linked or created by `eas init` first): its eas.json `preview` APK, or an
 # OTA to its channel preview compared with its own last build. profile and branch apply to the staff app only.
 # Every automatic run (deploy-staging) sends no app and no profile, so it stays the staff app's preview.
@@ -32,7 +32,7 @@ on:
         options: [preview, development]
         default: preview
       app:
-        description: "staff (apps/mobile, the normal app) or family (apps/family, guardians and students: docs/50)"
+        description: "staff (apps/staff-mobile, the normal app) or family (apps/family-mobile, guardians and students: docs/50)"
         type: choice
         options: [staff, family]
         default: staff
@@ -56,7 +56,7 @@ concurrency:
 env:
   EAS_CLI: eas-cli@24.10.0
   # The Expo project every step works in, and its native-change guard's app (native-changes.mjs).
-  APP_DIR: ${{ inputs.app == 'family' && 'apps/family' || 'apps/mobile' }}
+  APP_DIR: ${{ inputs.app == 'family' && 'apps/family-mobile' || 'apps/staff-mobile' }}
 
 jobs:
   build:
@@ -80,7 +80,7 @@ jobs:
       # Both apps, whichever this run ships (a missing file is skipped: plain grep would exit 2 and pass).
       - name: Never re-add forcesRTL
         run: |
-          for f in apps/{mobile,family}/app.json apps/{mobile,family}/app.config.ts; do
+          for f in apps/{staff-mobile,family-mobile}/app.json apps/{staff-mobile,family-mobile}/app.config.ts; do
             [ ! -f "$f" ] || ! grep -n forcesRTL "$f" || exit 1
           done
       # `eas build` loads the app config, which resolves the config plugins (expo-router ...) from
@@ -89,7 +89,7 @@ jobs:
       # The family app's EAS project: linked or created, its id exported (eas-init-family.sh).
       - name: Link the family EAS project (eas init)
         if: ${{ inputs.app == 'family' }}
-        working-directory: apps/family
+        working-directory: apps/family-mobile
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: bash ../../tools/scripts/ci-checks/eas-init-family.sh
@@ -131,7 +131,7 @@ jobs:
       # Both apps, whichever this run ships (a missing file is skipped: plain grep would exit 2 and pass).
       - name: Never re-add forcesRTL
         run: |
-          for f in apps/{mobile,family}/app.json apps/{mobile,family}/app.config.ts; do
+          for f in apps/{staff-mobile,family-mobile}/app.json apps/{staff-mobile,family-mobile}/app.config.ts; do
             [ ! -f "$f" ] || ! grep -n forcesRTL "$f" || exit 1
           done
       # Install BEFORE the guard: `eas build:list` loads the app config, which resolves the config plugins
@@ -140,14 +140,14 @@ jobs:
       # Metro resolves @ab/shared (and the packages cut from it) through their `exports` (dist/index.js),
       # which only exist after a build:
       # without it `eas update` fails with "While trying to resolve module `@ab/shared`" (run 37498286784).
-      - run: pnpm --filter "mobile^..." build
+      - run: pnpm --filter "staff-mobile^..." build
         if: ${{ inputs.app != 'family' }}
-      - run: pnpm --filter "family^..." build
+      - run: pnpm --filter "family-mobile^..." build
         if: ${{ inputs.app == 'family' }}
       # The family app's EAS project: linked or created, its id exported (eas-init-family.sh).
       - name: Link the family EAS project (eas init)
         if: ${{ inputs.app == 'family' }}
-        working-directory: apps/family
+        working-directory: apps/family-mobile
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: bash ../../tools/scripts/ci-checks/eas-init-family.sh
@@ -198,7 +198,7 @@ jobs:
           EXPO_PUBLIC_FEATURE_STRIPE: "1"
         run: |
           if [ "$APP" = family ]; then
-            # apps/family/eas.json preview: channel and environment preview, no Stripe flag (its env decides).
+            # apps/family-mobile/eas.json preview: channel and environment preview, no Stripe flag (its env decides).
             unset EXPO_PUBLIC_FEATURE_STRIPE
             npx --yes "$EAS_CLI" update --channel preview --environment preview \
               --message "Family OTA from GitHub ${COMMIT:0:7}" --non-interactive

@@ -13,25 +13,25 @@ import { buildGraph } from './graph.mjs';
 import { BUNDLES, changedKeys, keyUsers } from './i18n.mjs';
 
 /** Files e2e never sees (the existing «e2e» gate in ci.yml skips the job when only these change). */
-const NO_E2E = /^(apps\/mobile\/|docs\/|tools\/migrate\/|tools\/scripts\/)|\.md$/;
+const NO_E2E = /^(apps\/staff-mobile\/|docs\/|tools\/migrate\/|tools\/scripts\/)|\.md$/;
 /** Always the full suite, even inside the paths below (shells, auth, the selection itself, …). */
 const FULL = [
   /^tools\/scripts\/(ci-checks\/e2e-shards\.mjs|ci-checks\/e2e-areas\/|env\/)/,
-  /^apps\/web\/src\/(routeTree\.gen\.ts|components\/shell\/|features\/people\/auth\/)/,
+  /^apps\/staff-web\/src\/(routeTree\.gen\.ts|components\/shell\/|features\/people\/auth\/)/,
 ];
 /** Unit tests, lint and code-health baselines, env examples: nothing e2e runs. */
 const UNIT =
-  /\.test\.(ts|tsx|mjs)$|\/__snapshots__\/|^apps\/web\/src\/(test\/|test-setup\.ts$|i18n-literals\.allow\.json$)|(^|\/)((eslint|oxlint)-suppressions\.json|eslint\.config\.(js|mjs)|lint\.blocks\.mjs|\.env\.example)$|^refactor\/|^knip\.json$/;
+  /\.test\.(ts|tsx|mjs)$|\/__snapshots__\/|^apps\/staff-web\/src\/(test\/|test-setup\.ts$|i18n-literals\.allow\.json$)|(^|\/)((eslint|oxlint)-suppressions\.json|eslint\.config\.(js|mjs)|lint\.blocks\.mjs|\.env\.example)$|^refactor\/|^knip\.json$/;
 /** Code followed through the import graph. */
 const GRAPHED =
-  /^(apps\/web\/src\/(features|components|routes)\/|apps\/api\/src\/modules\/|packages\/(core|i18n|time|catalog|settings|money|schedule|shared|client-core)\/src\/)/;
-const ROUTES = 'apps/web/src/routes/';
+  /^(apps\/staff-web\/src\/(features|components|routes)\/|apps\/api\/src\/modules\/|packages\/(core|i18n|time|catalog|settings|money|schedule|shared|client-core)\/src\/)/;
+const ROUTES = 'apps/staff-web/src/routes/';
 const SPEC = /^e2e\/tests\/(?:[^/]+\/)*[^/]+\.spec\.ts$/;
 /** Registries that import every route / module: not a use (the route or module itself is). */
-const REGISTRY = /^apps\/web\/src\/routeTree\.gen\.ts$|^apps\/api\/src\/app\.module\.ts$/;
+const REGISTRY = /^apps\/staff-web\/src\/routeTree\.gen\.ts$|^apps\/api\/src\/app\.module\.ts$/;
 /** Code between a changed file and a page or module: followed further, never decides by itself. */
 const PASS =
-  /^(apps\/web\/src\/(features|components|lib)\/|apps\/api\/src\/scripts\/|packages\/(core|i18n|time|catalog|settings|money|schedule|shared|client-core)\/src\/|e2e\/(scripts|support\/(?!(?:[^/]+\/)*(?:global-setup|durations-reporter)))|e2e\/tests\/(?:[^/]+\/)*(?![^/]*\.setup\.)[^/]+\.ts$)/;
+  /^(apps\/staff-web\/src\/(features|components|lib)\/|apps\/api\/src\/scripts\/|packages\/(core|i18n|time|catalog|settings|money|schedule|shared|client-core)\/src\/|e2e\/(scripts|support\/(?!(?:[^/]+\/)*(?:global-setup|durations-reporter)))|e2e\/tests\/(?:[^/]+\/)*(?![^/]*\.setup\.)[^/]+\.ts$)/;
 /** The area whose page lists every UI string: runs on any key change. */
 const EVERY_KEY_AREA = 'translations';
 
@@ -88,12 +88,12 @@ function bundleUsers({ root, file, base, graph: g }) {
   const after = JSON.parse(readFileSync(join(root, file), 'utf8'));
   const keys = changedKeys(before, after);
   // The mobile app reads the same bundles: a key only it reads is known, and needs no e2e.
-  const mobile = execFileSync('git', ['ls-files', 'apps/mobile'], { cwd: root, encoding: 'utf8' })
+  const mobile = execFileSync('git', ['ls-files', 'apps/staff-mobile'], { cwd: root, encoding: 'utf8' })
     .split('\n')
     .filter((f) => /\.(ts|tsx)$/.test(f) && !/\.test\./.test(f));
   const read = (f) => [f, readFileSync(join(root, f), 'utf8')];
   const sources = new Map([...[...g.files].map(read), ...mobile.map(read)]);
-  const { users, unknown } = keyUsers(keys, sources, (f) => f.startsWith('apps/mobile/'));
+  const { users, unknown } = keyUsers(keys, sources, (f) => f.startsWith('apps/staff-mobile/'));
   if (unknown.length)
     return { reason: `${file}: no reader found for ${unknown.slice(0, 3).join(', ')}` };
   return { users: [...users], keys: keys.length };

@@ -6,7 +6,7 @@
       "inputs": [
         "$TURBO_EXTENDS$",
         "$TURBO_ROOT$/packages/db/supabase/migrations/**",
-        "$TURBO_ROOT$/apps/web/public/brand/**"
+        "$TURBO_ROOT$/apps/staff-web/public/brand/**"
       ]
     }
   }

@@ -5,7 +5,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 
-const W = 'apps/web/src';
+const W = 'apps/staff-web/src';
 export const AREAS = {
   areas: {
     inbox: {

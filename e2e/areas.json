@@ -10,10 +10,10 @@
     "inbox": {
       "about": "chat: the inbox pages and the thread, chat-list, saved-reply, call, follow-up and push APIs",
       "paths": [
-        "apps/web/src/routes/admin/(people)/inbox.tsx",
-        "apps/web/src/routes/sales/inbox.tsx",
-        "apps/web/src/routes/teacher/inbox.tsx",
-        "apps/web/src/routes/teacher/messages.tsx",
+        "apps/staff-web/src/routes/admin/(people)/inbox.tsx",
+        "apps/staff-web/src/routes/sales/inbox.tsx",
+        "apps/staff-web/src/routes/teacher/inbox.tsx",
+        "apps/staff-web/src/routes/teacher/messages.tsx",
         "apps/api/src/modules/messaging/inbox/",
         "apps/api/src/modules/messaging/chat-lists/",
         "apps/api/src/modules/messaging/saved-replies/",
@@ -61,8 +61,8 @@
     "whatsapp": {
       "about": "sending and receiving: webhook, WhatsApp lines, the sender jobs, reminders, notification rules, numbers, the communications settings page",
       "paths": [
-        "apps/web/src/routes/admin/settings.communications.tsx",
-        "apps/web/src/routes/admin/communications.tsx",
+        "apps/staff-web/src/routes/admin/settings.communications.tsx",
+        "apps/staff-web/src/routes/admin/communications.tsx",
         "apps/api/src/modules/messaging/webhook/",
         "apps/api/src/modules/messaging/whatsapp/",
         "apps/api/src/modules/messaging/messaging-jobs/",
@@ -147,11 +147,11 @@
     "schedule": {
       "about": "lessons, the schedule and booking pages, the teacher calendar",
       "paths": [
-        "apps/web/src/routes/admin/(ops)/schedule.tsx",
-        "apps/web/src/routes/admin/(ops)/book.tsx",
-        "apps/web/src/routes/teacher/calendar.tsx",
-        "apps/web/src/routes/teacher/index.tsx",
-        "apps/web/src/routes/sales/schedule.tsx",
+        "apps/staff-web/src/routes/admin/(ops)/schedule.tsx",
+        "apps/staff-web/src/routes/admin/(ops)/book.tsx",
+        "apps/staff-web/src/routes/teacher/calendar.tsx",
+        "apps/staff-web/src/routes/teacher/index.tsx",
+        "apps/staff-web/src/routes/sales/schedule.tsx",
         "apps/api/src/modules/teaching/booking/",
         "apps/api/src/modules/teaching/course-stop/",
         "apps/api/src/modules/teaching/scheduling/",
@@ -218,14 +218,14 @@
     "classroom": {
       "about": "live classrooms, internal meetings, student links and recordings",
       "paths": [
-        "apps/web/src/routes/admin/(ops)/classrooms.tsx",
-        "apps/web/src/routes/classroom.$lessonId.tsx",
-        "apps/web/src/routes/meeting.$id.tsx",
-        "apps/web/src/routes/(public)/join.$linkToken.tsx",
-        "apps/web/src/routes/(public)/s.$token.tsx",
-        "apps/web/src/routes/(public)/m.$token.tsx",
-        "apps/web/src/routes/sales/live.tsx",
-        "apps/web/src/routes/sales/meetings.tsx",
+        "apps/staff-web/src/routes/admin/(ops)/classrooms.tsx",
+        "apps/staff-web/src/routes/classroom.$lessonId.tsx",
+        "apps/staff-web/src/routes/meeting.$id.tsx",
+        "apps/staff-web/src/routes/(public)/join.$linkToken.tsx",
+        "apps/staff-web/src/routes/(public)/s.$token.tsx",
+        "apps/staff-web/src/routes/(public)/m.$token.tsx",
+        "apps/staff-web/src/routes/sales/live.tsx",
+        "apps/staff-web/src/routes/sales/meetings.tsx",
         "apps/api/src/modules/teaching/classroom/",
         "apps/api/src/modules/teaching/student-recordings/",
         "apps/api/src/modules/teaching/student-channels/"
@@ -257,12 +257,12 @@
     "reports": {
       "about": "lesson reports (teacher form, admin view, PDF) and lesson ratings",
       "paths": [
-        "apps/web/src/routes/teacher/report.$lessonId.tsx",
-        "apps/web/src/routes/teacher/reports.index.tsx",
-        "apps/web/src/routes/teacher/reports.$studentId.tsx",
-        "apps/web/src/routes/teacher/students.$studentId.tsx",
-        "apps/web/src/routes/admin/students/$studentId_.reports.tsx",
-        "apps/web/src/routes/admin/students/$studentId_.reports.$lessonId.tsx",
+        "apps/staff-web/src/routes/teacher/report.$lessonId.tsx",
+        "apps/staff-web/src/routes/teacher/reports.index.tsx",
+        "apps/staff-web/src/routes/teacher/reports.$studentId.tsx",
+        "apps/staff-web/src/routes/teacher/students.$studentId.tsx",
+        "apps/staff-web/src/routes/admin/students/$studentId_.reports.tsx",
+        "apps/staff-web/src/routes/admin/students/$studentId_.reports.$lessonId.tsx",
         "apps/api/src/modules/reporting/reports/",
         "apps/api/src/modules/reporting/report-pdf/",
         "apps/api/src/modules/teaching/lesson-rating/",
@@ -289,9 +289,9 @@
     "feedback": {
       "about": "student feedback («رأيك يهمّنا»)",
       "paths": [
-        "apps/web/src/routes/(public)/feedback.$token.tsx",
-        "apps/web/src/routes/admin/(ops)/feedback.tsx",
-        "apps/web/src/routes/teacher/feedback.tsx",
+        "apps/staff-web/src/routes/(public)/feedback.$token.tsx",
+        "apps/staff-web/src/routes/admin/(ops)/feedback.tsx",
+        "apps/staff-web/src/routes/teacher/feedback.tsx",
         "apps/api/src/modules/teaching/feedback/"
       ],
       "specs": ["reporting/feedback.spec.ts"]
@@ -299,15 +299,15 @@
     "people": {
       "about": "students, guardians, teachers, assistants, users, roles, the account page",
       "paths": [
-        "apps/web/src/routes/admin/students/route.tsx",
-        "apps/web/src/routes/admin/students/$studentId.tsx",
-        "apps/web/src/routes/admin/teachers/route.tsx",
-        "apps/web/src/routes/admin/teachers/$teacherId.tsx",
-        "apps/web/src/routes/admin/assistants/",
-        "apps/web/src/routes/admin/(people)/users.tsx",
-        "apps/web/src/routes/admin/(people)/roles.tsx",
-        "apps/web/src/routes/teacher/students.index.tsx",
-        "apps/web/src/routes/account/index.tsx",
+        "apps/staff-web/src/routes/admin/students/route.tsx",
+        "apps/staff-web/src/routes/admin/students/$studentId.tsx",
+        "apps/staff-web/src/routes/admin/teachers/route.tsx",
+        "apps/staff-web/src/routes/admin/teachers/$teacherId.tsx",
+        "apps/staff-web/src/routes/admin/assistants/",
+        "apps/staff-web/src/routes/admin/(people)/users.tsx",
+        "apps/staff-web/src/routes/admin/(people)/roles.tsx",
+        "apps/staff-web/src/routes/teacher/students.index.tsx",
+        "apps/staff-web/src/routes/account/index.tsx",
         "apps/api/src/modules/people/students/",
         "apps/api/src/modules/people/guardians/",
         "apps/api/src/modules/people/teachers/",
@@ -317,7 +317,7 @@
         "apps/api/src/modules/people/me/",
         "apps/api/src/modules/people/portal/",
         "apps/api/src/modules/people/presence/",
-        "apps/web/src/routes/portal.tsx"
+        "apps/staff-web/src/routes/portal.tsx"
       ],
       "specs": [
         "people/account.api.spec.ts",
@@ -365,10 +365,10 @@
     "sales": {
       "about": "leads, job applicants and the sales/assistant portal",
       "paths": [
-        "apps/web/src/routes/admin/(people)/leads.tsx",
-        "apps/web/src/routes/admin/(people)/job-applicants.tsx",
-        "apps/web/src/routes/sales/",
-        "apps/web/src/routes/assistant/index.tsx",
+        "apps/staff-web/src/routes/admin/(people)/leads.tsx",
+        "apps/staff-web/src/routes/admin/(people)/job-applicants.tsx",
+        "apps/staff-web/src/routes/sales/",
+        "apps/staff-web/src/routes/assistant/index.tsx",
         "apps/api/src/modules/sales/"
       ],
       "specs": [
@@ -404,10 +404,10 @@
     "finance": {
       "about": "payments, subscriptions, pricing, invoices, expenses, payouts and earnings",
       "paths": [
-        "apps/web/src/routes/admin/(finance)/",
-        "apps/web/src/routes/teacher/payouts.tsx",
-        "apps/web/src/routes/teacher/earnings.tsx",
-        "apps/web/src/routes/admin/teachers/$teacherId_.earnings.tsx",
+        "apps/staff-web/src/routes/admin/(finance)/",
+        "apps/staff-web/src/routes/teacher/payouts.tsx",
+        "apps/staff-web/src/routes/teacher/earnings.tsx",
+        "apps/staff-web/src/routes/admin/teachers/$teacherId_.earnings.tsx",
         "apps/api/src/modules/finance/"
       ],
       "specs": [
@@ -452,8 +452,8 @@
     "dashboard": {
       "about": "the admin dashboard, activity log and CSV exports",
       "paths": [
-        "apps/web/src/routes/admin/index.tsx",
-        "apps/web/src/routes/admin/(ops)/activity.tsx",
+        "apps/staff-web/src/routes/admin/index.tsx",
+        "apps/staff-web/src/routes/admin/(ops)/activity.tsx",
         "apps/api/src/modules/reporting/dashboard/",
         "apps/api/src/modules/reporting/exports/"
       ],
@@ -482,11 +482,11 @@
     "settings": {
       "about": "settings pages, translations, Google sync",
       "paths": [
-        "apps/web/src/routes/admin/settings.tsx",
-        "apps/web/src/routes/admin/settings.appearance.tsx",
-        "apps/web/src/routes/admin/settings.integrations.tsx",
-        "apps/web/src/routes/admin/settings.values.tsx",
-        "apps/web/src/routes/admin/settings.google.tsx",
+        "apps/staff-web/src/routes/admin/settings.tsx",
+        "apps/staff-web/src/routes/admin/settings.appearance.tsx",
+        "apps/staff-web/src/routes/admin/settings.integrations.tsx",
+        "apps/staff-web/src/routes/admin/settings.values.tsx",
+        "apps/staff-web/src/routes/admin/settings.google.tsx",
         "apps/api/src/modules/platform/google-sync/"
       ],
       "specs": [
@@ -508,7 +508,7 @@
     "translations": {
       "about": "the translations page and the catalogue of every UI string (any ar.json/en.json key change runs it)",
       "paths": [
-        "apps/web/src/routes/admin/(ops)/translations.tsx",
+        "apps/staff-web/src/routes/admin/(ops)/translations.tsx",
         "apps/api/src/modules/platform/translations/"
       ],
       "specs": ["platform/locale.spec.ts", "platform/translations.spec.ts"]

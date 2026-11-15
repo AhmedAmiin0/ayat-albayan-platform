@@ -6,7 +6,7 @@ const text = (body) => () => body;
 
 test('isQueries: a *queries.ts(x) name or a class XQueries, in TypeScript only', () => {
   assert.equal(isQueries('apps/api/src/a/leads.queries.ts', text('')), true);
-  assert.equal(isQueries('apps/mobile/src/inbox/use-thread-queries.tsx', text('')), true);
+  assert.equal(isQueries('apps/staff-mobile/src/inbox/use-thread-queries.tsx', text('')), true);
   assert.equal(isQueries('apps/api/src/a/calls.fakes.ts', text('export class FakeCallsQueries {}')), true);
   assert.equal(isQueries('apps/api/src/a/leads.repo.ts', text('export class LeadsRepo {}')), false);
   assert.equal(isQueries('apps/api/src/a/leads.queries.test.ts', text('')), false);

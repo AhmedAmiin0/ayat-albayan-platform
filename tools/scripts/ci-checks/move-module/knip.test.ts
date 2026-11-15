@@ -11,7 +11,7 @@ const KNIP = `{
       "entry": ["src/main.ts", "src/scripts/*.ts"],
       "ignore": ["src/{a,b}/index.ts"]
     },
-    "apps/web": { "entry": ["src/main.ts"] }
+    "apps/staff-web": { "entry": ["src/main.ts"] }
   }
 }
 `;
@@ -32,12 +32,12 @@ test('two workspaces rewritten in one pass; the root workspace follows repo path
     'knip.json': KNIP,
     'tools/x.mjs': '',
     'apps/api/src/main.ts': '',
-    'apps/web/src/main.ts': '',
+    'apps/staff-web/src/main.ts': '',
     'refactor/moves/k.json': map({
       moves: [
         { from: 'tools/x.mjs', to: 'tools/y/x.mjs' },
         { from: 'apps/api/src/main.ts', to: 'apps/api/src/boot/' },
-        { from: 'apps/web/src/main.ts', to: 'apps/web/src/app/main.ts' },
+        { from: 'apps/staff-web/src/main.ts', to: 'apps/staff-web/src/app/main.ts' },
       ],
     }),
   });

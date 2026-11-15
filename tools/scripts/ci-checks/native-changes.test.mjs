@@ -22,13 +22,13 @@ test('app name, icon, splash, orientation, theme, notification, status bar and u
 });
 
 test('changed asset or eas.json files are reported', () => {
-  const found = nativeChanges(snap(base), snap(base), { files: ['apps/mobile/assets/icon.png', 'apps/mobile/eas.json'] });
-  assert.deepEqual(found, ['apps/mobile/assets/icon.png changed', 'apps/mobile/eas.json changed']);
+  const found = nativeChanges(snap(base), snap(base), { files: ['apps/staff-mobile/assets/icon.png', 'apps/staff-mobile/eas.json'] });
+  assert.deepEqual(found, ['apps/staff-mobile/assets/icon.png changed', 'apps/staff-mobile/eas.json changed']);
 });
 
 test('images in an assets sub-folder are imported from JS and ship by OTA', () => {
-  const files = ['apps/mobile/assets/tabs/inbox.png', 'apps/mobile/assets/brand/mark.png', 'apps/mobile/assets/splash-icon.png'];
-  assert.deepEqual(nativeChanges(snap(base), snap(base), { files }), ['apps/mobile/assets/splash-icon.png changed']);
+  const files = ['apps/staff-mobile/assets/tabs/inbox.png', 'apps/staff-mobile/assets/brand/mark.png', 'apps/staff-mobile/assets/splash-icon.png'];
+  assert.deepEqual(nativeChanges(snap(base), snap(base), { files }), ['apps/staff-mobile/assets/splash-icon.png changed']);
 });
 
 test('pure-JS packages (google fonts, tanstack, supabase-js, zod, workspace) are not native', () => {
@@ -77,16 +77,16 @@ const PROFILES = { preview: { channel: 'preview' }, production: { channel: 'prod
 test('eas.json: a side profile (the Stripe test app, docs/30) is not native; a normal profile is', () => {
   const before = { ...snap(base), eas: eas(PROFILES) };
   const side = { ...snap(base), eas: eas({ ...PROFILES, 'stripe-test': { channel: 'stripe-test', env: { APP_VARIANT: 'stripetest' } } }) };
-  assert.deepEqual(nativeChanges(before, side, { files: ['apps/mobile/eas.json'] }), []);
+  assert.deepEqual(nativeChanges(before, side, { files: ['apps/staff-mobile/eas.json'] }), []);
   const preview = { ...snap(base), eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1' } } }) };
-  assert.deepEqual(nativeChanges(before, preview, { files: ['apps/mobile/eas.json'] }), ['apps/mobile/eas.json changed']);
+  assert.deepEqual(nativeChanges(before, preview, { files: ['apps/staff-mobile/eas.json'] }), ['apps/staff-mobile/eas.json changed']);
 });
 
 test('eas.json: an EXPO_PUBLIC_* env value is bundled JS, not native (docs/30: the Stripe flag on preview)', () => {
   const before = { ...snap(base), eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1' } } }) };
   const flagged = { ...snap(base), eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1', EXPO_PUBLIC_FEATURE_STRIPE: '1' } } }) };
-  assert.deepEqual(nativeChanges(before, flagged, { files: ['apps/mobile/eas.json'] }), []);
-  assert.deepEqual(nativeChanges({ ...snap(base), eas: eas(PROFILES) }, flagged, { files: ['apps/mobile/eas.json'] }), ['apps/mobile/eas.json changed']);
+  assert.deepEqual(nativeChanges(before, flagged, { files: ['apps/staff-mobile/eas.json'] }), []);
+  assert.deepEqual(nativeChanges({ ...snap(base), eas: eas(PROFILES) }, flagged, { files: ['apps/staff-mobile/eas.json'] }), ['apps/staff-mobile/eas.json changed']);
 });
 
 const CONFIG = `import type { ConfigContext, ExpoConfig } from 'expo/config';
@@ -120,10 +120,10 @@ test('app.config.ts: a change to the normal app counts; one that cannot be evalu
 test('a stripe-test OTA: only its own eas.json profile counts; the normal profiles do not', () => {
   const side = (env) => ({ ...snap(base), eas: eas({ ...PROFILES, 'stripe-test': { channel: 'stripe-test', env } }) });
   const before = side({ APP_VARIANT: 'stripetest' });
-  const files = { files: ['apps/mobile/eas.json'], profile: 'stripe-test' };
+  const files = { files: ['apps/staff-mobile/eas.json'], profile: 'stripe-test' };
   const preview = { ...before, eas: eas({ ...PROFILES, preview: { channel: 'preview', env: { X: '1' } }, 'stripe-test': JSON.parse(before.eas).build['stripe-test'] }) };
   assert.deepEqual(nativeChanges(before, preview, files), []);
-  assert.deepEqual(nativeChanges(before, side({ APP_VARIANT: 'stripetest', Y: '1' }), files), ['apps/mobile/eas.json changed']);
+  assert.deepEqual(nativeChanges(before, side({ APP_VARIANT: 'stripetest', Y: '1' }), files), ['apps/staff-mobile/eas.json changed']);
   assert.equal(variantOf(before.eas, 'stripe-test'), 'stripetest');
   assert.equal(variantOf(before.eas, 'preview'), undefined);
   assert.equal(variantOf('{', 'preview'), undefined);

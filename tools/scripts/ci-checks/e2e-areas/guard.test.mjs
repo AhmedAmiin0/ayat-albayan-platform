@@ -15,11 +15,11 @@ const specs = [
   'db.sql.spec.ts',
 ];
 const files = [
-  'apps/web/src/routes/admin/(people)/inbox.tsx',
-  'apps/web/src/routes/admin/(finance)/payments.tsx',
-  'apps/web/src/routes/admin/translations.tsx',
-  'apps/web/src/routes/admin/payments/route.tsx',
-  'apps/web/src/routes/admin/payments/$id.tsx',
+  'apps/staff-web/src/routes/admin/(people)/inbox.tsx',
+  'apps/staff-web/src/routes/admin/(finance)/payments.tsx',
+  'apps/staff-web/src/routes/admin/translations.tsx',
+  'apps/staff-web/src/routes/admin/payments/route.tsx',
+  'apps/staff-web/src/routes/admin/payments/$id.tsx',
   'apps/api/src/modules/messaging/inbox/a.ts',
 ];
 

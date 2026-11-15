@@ -6,8 +6,8 @@ import { suppressionsMoved } from './baselines.mjs';
 // importers' ab/module-boundaries entries shrink in the same move PR.
 const RULE = 'ab/module-boundaries';
 const PARENT = 'ab/no-parent-imports';
-const FILE = 'apps/mobile/eslint-suppressions.json';
-const MOVES = [['apps/mobile/src/more/Note.tsx', 'apps/mobile/src/core/ui/feedback/Note.tsx']];
+const FILE = 'apps/staff-mobile/eslint-suppressions.json';
+const MOVES = [['apps/staff-mobile/src/more/Note.tsx', 'apps/staff-mobile/src/core/ui/feedback/Note.tsx']];
 const base = {
   'src/more/Note.tsx': { 'max-lines': { count: 1 } },
   'src/inbox/a.tsx': { [RULE]: { count: 3 }, [PARENT]: { count: 2 }, 'max-lines': { count: 1 } },

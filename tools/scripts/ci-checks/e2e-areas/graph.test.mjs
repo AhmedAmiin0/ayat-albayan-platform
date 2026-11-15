@@ -47,9 +47,9 @@ test('ownExports: declarations and local export lists, not re-exports', () => {
 
 test('edges point at the file that declares a name, through barrels and export *', () => {
   const g = buildGraph(root);
-  const inbox = 'apps/web/src/features/messaging/inbox/';
+  const inbox = 'apps/staff-web/src/features/messaging/inbox/';
   assert.deepEqual(
-    [...g.edges.get('apps/web/src/routes/admin/(people)/inbox.tsx')],
+    [...g.edges.get('apps/staff-web/src/routes/admin/(people)/inbox.tsx')],
     [`${inbox}InboxPage.tsx`, `${inbox}register.ts`],
   );
   assert.ok(g.edges.get(`${inbox}Bubble.tsx`).has('packages/shared/src/phone.ts'));
@@ -59,17 +59,17 @@ test('edges point at the file that declares a name, through barrels and export *
 
 test('reverseClosure follows importers and stops where told', () => {
   const g = buildGraph(root);
-  const all = reverseClosure(g, ['apps/web/src/features/messaging/inbox/Badge.tsx']);
-  assert.ok(all.has('apps/web/src/routes/admin.tsx') && all.has('apps/web/src/routeTree.gen.ts'));
-  const stopped = reverseClosure(g, ['apps/web/src/features/messaging/inbox/Badge.tsx'], (f) =>
+  const all = reverseClosure(g, ['apps/staff-web/src/features/messaging/inbox/Badge.tsx']);
+  assert.ok(all.has('apps/staff-web/src/routes/admin.tsx') && all.has('apps/staff-web/src/routeTree.gen.ts'));
+  const stopped = reverseClosure(g, ['apps/staff-web/src/features/messaging/inbox/Badge.tsx'], (f) =>
     f.endsWith('routeTree.gen.ts'),
   );
-  assert.ok(!stopped.has('apps/web/src/routeTree.gen.ts'));
+  assert.ok(!stopped.has('apps/staff-web/src/routeTree.gen.ts'));
 });
 
 test('resolveSpec: `@/` is the importing app\'s src (web and api), `../` stays relative', () => {
-  const files = new Set(['apps/web/src/lib/i18n.ts', 'apps/api/src/common/x.ts', 'apps/api/src/m/y/index.ts']);
-  assert.equal(resolveSpec(files, 'apps/web/src/a/b.tsx', '@/lib/i18n'), 'apps/web/src/lib/i18n.ts');
+  const files = new Set(['apps/staff-web/src/lib/i18n.ts', 'apps/api/src/common/x.ts', 'apps/api/src/m/y/index.ts']);
+  assert.equal(resolveSpec(files, 'apps/staff-web/src/a/b.tsx', '@/lib/i18n'), 'apps/staff-web/src/lib/i18n.ts');
   assert.equal(resolveSpec(files, 'apps/api/src/m/z.ts', '@/common/x.js'), 'apps/api/src/common/x.ts');
   assert.equal(resolveSpec(files, 'apps/api/src/m/z.ts', '@/m/y'), 'apps/api/src/m/y/index.ts');
   assert.equal(resolveSpec(files, 'apps/api/src/m/z.ts', '../common/x'), 'apps/api/src/common/x.ts');

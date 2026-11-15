@@ -8,11 +8,11 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const script = fileURLToPath(new URL('./pure-move-check.mjs', import.meta.url));
-const SUPP = 'apps/web/eslint-suppressions.json';
+const SUPP = 'apps/staff-web/eslint-suppressions.json';
 const suppressions = (moved, count = 2) =>
   `${JSON.stringify({ 'src/a.ts': { 'ab/module-boundaries': { count: 1 } }, [moved]: { 'ab/module-boundaries': { count } } }, null, 2)}\n`;
 
-/** A repo whose head moves apps/web/src/lib/api.ts to src/core/ with the suppressions file as `edit` writes it. */
+/** A repo whose head moves apps/staff-web/src/lib/api.ts to src/core/ with the suppressions file as `edit` writes it. */
 function repo(edit) {
   const dir = mkdtempSync(join(tmpdir(), 'pure-move-supp-'));
   const git = (...a) => execFileSync('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', ...a], { cwd: dir, encoding: 'utf8' });
@@ -21,14 +21,14 @@ function repo(edit) {
     writeFileSync(join(dir, f), text);
   };
   git('init', '-q', '-b', 'base');
-  write('apps/web/src/lib/api.ts', 'export const api = 1;\n'.repeat(20));
-  write('apps/web/src/a.ts', 'export const a = 1;\n');
+  write('apps/staff-web/src/lib/api.ts', 'export const api = 1;\n'.repeat(20));
+  write('apps/staff-web/src/a.ts', 'export const a = 1;\n');
   write(SUPP, suppressions('src/lib/api.ts'));
   git('add', '.');
   git('commit', '-qm', 'base');
   git('checkout', '-qb', 'head');
-  mkdirSync(join(dir, 'apps/web/src/core'));
-  renameSync(join(dir, 'apps/web/src/lib/api.ts'), join(dir, 'apps/web/src/core/api.ts'));
+  mkdirSync(join(dir, 'apps/staff-web/src/core'));
+  renameSync(join(dir, 'apps/staff-web/src/lib/api.ts'), join(dir, 'apps/staff-web/src/core/api.ts'));
   write(SUPP, edit);
   git('add', '-A');
   git('commit', '-qm', 'move');

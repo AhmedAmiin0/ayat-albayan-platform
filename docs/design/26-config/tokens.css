@@ -1,5 +1,5 @@
 /* Ayat Al-Bayan, settings redesign mockups (docs/26).
-   Colour tokens = the app's live «Emerald Mint» palette, copied from apps/web/src/styles/tokens.css (owner 2026-10-23: «keep the colors»). Shared classes = docs/07 §4–§7, §10, §14.
+   Colour tokens = the app's live «Emerald Mint» palette, copied from apps/staff-web/src/styles/tokens.css (owner 2026-10-23: «keep the colors»). Shared classes = docs/07 §4–§7, §10, §14.
    No external URLs: fonts are family stacks only. Logical properties only.
    Theme: follows the device; the board's «المظهر» radios (#theme-light / #theme-dark) force one, no script. */
 

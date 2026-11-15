@@ -27,7 +27,7 @@ test('folder names are kebab-case only (they go into a regex)', () => {
   assert.throws(() => routeImportGroup({ prefix: '@/', exempt: ['core'], domains: ['x|y'] }), /kebab-case/);
 });
 
-/** Lints one route import with the generated group, as apps/mobile does. */
+/** Lints one route import with the generated group, as apps/staff-mobile does. */
 async function routeErrors(spec, domains) {
   const group = routeImportGroup({ prefix: '@/', exempt: ['core'], domains });
   const eslint = new ESLint({

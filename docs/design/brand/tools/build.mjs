@@ -94,24 +94,24 @@ write(`${BRAND}/logo-mushaf-transparent.png`, encode(matte(crop(mushaf, opaqueBo
 // Web: favicons (≤ 32 px is the Mushaf crop; the full emblem is illegible there), touch + PWA icons
 // on the brand paper, and the two <Mark> images (components/ui/mark.tsx).
 const fav16 = small({ w: 16 }), fav32 = small({ w: 32 }), fav48 = emblem({ w: 48 });
-write('apps/web/public/favicon.ico', ico([{ size: 16, png: fav16 }, { size: 32, png: fav32 }, { size: 48, png: fav48 }]));
-write('apps/web/public/favicon-16.png', fav16);
-write('apps/web/public/favicon-32.png', fav32);
-write('apps/web/public/apple-touch-icon.png', emblem({ w: 180, fill: 0.8, bg: PAPER }));
-write('apps/web/public/icon-192.png', emblem({ w: 192, fill: 0.8, bg: PAPER }));
-write('apps/web/public/icon-512.png', emblem({ w: 512, fill: 0.8, bg: PAPER }));
-write('apps/web/public/brand/mark.png', encode(tall(master, 192)));
-write('apps/web/public/brand/mark-small.png', encode(wide(mushaf, 96)));
+write('apps/staff-web/public/favicon.ico', ico([{ size: 16, png: fav16 }, { size: 32, png: fav32 }, { size: 48, png: fav48 }]));
+write('apps/staff-web/public/favicon-16.png', fav16);
+write('apps/staff-web/public/favicon-32.png', fav32);
+write('apps/staff-web/public/apple-touch-icon.png', emblem({ w: 180, fill: 0.8, bg: PAPER }));
+write('apps/staff-web/public/icon-192.png', emblem({ w: 192, fill: 0.8, bg: PAPER }));
+write('apps/staff-web/public/icon-512.png', emblem({ w: 512, fill: 0.8, bg: PAPER }));
+write('apps/staff-web/public/brand/mark.png', encode(tall(master, 192)));
+write('apps/staff-web/public/brand/mark-small.png', encode(wide(mushaf, 96)));
 
 // Expo: iOS icon must be opaque; the adaptive foreground keeps the emblem inside the 66 dp safe
 // circle of the 108 dp canvas (fill 0.5); monochrome is the line art Android 13 tints.
-write('apps/mobile/assets/icon.png', emblem({ w: 1024, fill: 0.8, bg: PAPER }));
-write('apps/mobile/assets/android-icon-foreground.png', emblem({ w: 1024, fill: 0.5 }));
+write('apps/staff-mobile/assets/icon.png', emblem({ w: 1024, fill: 0.8, bg: PAPER }));
+write('apps/staff-mobile/assets/android-icon-foreground.png', emblem({ w: 1024, fill: 0.5 }));
 const solid = (w, c) => ({ width: w, height: w, data: Float32Array.from({ length: w * w * 4 }, (_, i) => (i % 4 === 3 ? 1 : c[i % 4])) });
-write('apps/mobile/assets/android-icon-background.png', encode(solid(1024, PAPER), true));
-write('apps/mobile/assets/android-icon-monochrome.png', encode(place(monochrome(master, PAPER), { w: 1024, fill: 0.5 })));
+write('apps/staff-mobile/assets/android-icon-background.png', encode(solid(1024, PAPER), true));
+write('apps/staff-mobile/assets/android-icon-monochrome.png', encode(place(monochrome(master, PAPER), { w: 1024, fill: 0.5 })));
 // (monochrome stays white under clear pixels: Android only reads its alpha)
-write('apps/mobile/assets/splash-icon.png', emblem({ w: 1024, fill: 0.9 }));
-write('apps/mobile/assets/favicon.png', fav48);
+write('apps/staff-mobile/assets/splash-icon.png', emblem({ w: 1024, fill: 0.9 }));
+write('apps/staff-mobile/assets/favicon.png', fav48);
 write('packages/mobile-kit/assets/brand/mark.png', encode(tall(master, 192)));
 write('packages/mobile-kit/assets/brand/mark-small.png', encode(wide(mushaf, 96)));
