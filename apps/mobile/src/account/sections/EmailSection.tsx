@@ -1,11 +1,18 @@
 import type { AccountProfile } from '@ab/shared';
 import { useState } from 'react';
-import { t, type, useTheme, AppText, ltr } from '@ab/mobile-kit';
+import {
+  t,
+  type,
+  useTheme,
+  AppText,
+  ltr,
+  accountMessage,
+  AccountCard,
+  AccountField,
+  passwordInput,
+  useAccountAction,
+} from '@ab/mobile-kit';
 import { changeEmail } from '@/account/hooks/account-api';
-import { accountMessage } from '@/account/lib/account-errors';
-import { AccountCard } from '@/account/components/AccountCard';
-import { AccountField, passwordInput } from '@/account/components/AccountField';
-import { useAccountAction } from '@/account/hooks/use-account-action';
 
 /** «البريد الإلكتروني» (R-ACC-03): the sign-in email, changed at once, with the current password. */
 export function EmailSection({ profile }: { profile: AccountProfile }) {

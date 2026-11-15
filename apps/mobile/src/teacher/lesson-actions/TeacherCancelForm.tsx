@@ -1,8 +1,7 @@
 import { teacherCancelSchema } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, Field } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, Field, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { Note } from '@/core/ui/feedback/Note';
 import { teacherActionError, useTeacherCancel } from './teacher-lesson-api';

@@ -1,7 +1,13 @@
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
-import { t, SignOutButton, Screen, ScreenHeader, InsetGroup } from '@ab/mobile-kit';
-import { AppearancePicker } from '@/more/appearance/AppearancePicker';
+import {
+  t,
+  SignOutButton,
+  Screen,
+  ScreenHeader,
+  InsetGroup,
+  AppearancePicker,
+} from '@ab/mobile-kit';
 import { ClockFormatPicker } from '@/more';
 import { LanguageRow } from '@/more/appearance/LanguageRow';
 

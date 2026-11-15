@@ -7,9 +7,8 @@ import {
   STUDENTS_MAX,
   STUDENTS_MIN,
 } from '@ab/shared';
-import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
+import { t, FilterPills, type FilterPill, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { DiscountField } from './DiscountField';
 import type { CountryChoice, PlanChoice, Selection } from './selection';
 import { Stepper } from './Stepper';

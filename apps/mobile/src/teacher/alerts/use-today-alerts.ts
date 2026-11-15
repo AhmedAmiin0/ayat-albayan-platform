@@ -8,9 +8,8 @@ import {
 } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useHolds, t, locale } from '@ab/mobile-kit';
+import { useHolds, t, locale, notificationsListQuery } from '@ab/mobile-kit';
 import { useClockCycle } from '@/core/lib/clock';
-import { notificationsListQuery } from '@/notifications';
 import { studentNames } from '@/today';
 import { useHomePrefs } from './home-prefs';
 

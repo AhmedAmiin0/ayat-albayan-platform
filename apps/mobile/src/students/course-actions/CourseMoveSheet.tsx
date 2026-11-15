@@ -1,9 +1,8 @@
 import { courseMoveBase, courseMoveErrorCode, type CourseMoveKind } from '@ab/client-core';
 import { useState, type ReactNode } from 'react';
 import { Modal, ScrollView } from 'react-native';
-import { useIsAdmin, t, Screen, ScreenHeader, Button } from '@ab/mobile-kit';
+import { useIsAdmin, t, Screen, ScreenHeader, Button, ErrorLine } from '@ab/mobile-kit';
 import { BookingModeProvider } from '@/booking';
-import { ErrorLine } from '@/inbox';
 import { CourseChangeFlow } from '@/sales-course';
 import { useMoveView, type SubRef } from './course-actions-api';
 import { SheetLines } from './SheetLines';

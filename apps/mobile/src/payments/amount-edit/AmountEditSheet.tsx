@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Modal, View } from 'react-native';
-import { t, Screen, ScreenHeader, Button } from '@ab/mobile-kit';
+import { t, Screen, ScreenHeader, Button, ErrorLine, Section } from '@ab/mobile-kit';
 import { currencyName, money } from '@/core/lib/money/format';
 import { paymentErrorText } from '@/core/lib/money/payment-errors';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { AmountField } from '@/payments/components/AmountField';
 import { checkNewAmount } from './amount-edit';
 import type { AmountEditMutation } from './use-amount-edit';

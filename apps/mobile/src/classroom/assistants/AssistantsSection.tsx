@@ -1,9 +1,16 @@
 import type { AssistantView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { usePermissions, pathKey, t, Button, ListRow, InsetGroup } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import {
+  usePermissions,
+  pathKey,
+  t,
+  Button,
+  ListRow,
+  InsetGroup,
+  ErrorLine,
+  Section,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { assignAssistant, removeAssistant, useAllAssistants, useStudentAssistants } from './assistants-api';
 import { AssistantPicker } from './AssistantPicker';
 

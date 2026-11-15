@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { openRoom, useRoomsInApp } from '@/classroom/room/state/open-room';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { joinError } from './join-text';
-import { useNow } from '@/core/lib/time/use-now';
+import { useNow } from '@ab/mobile-kit';
 
 /** What joining needs of a lesson (an assistant's session has no more than this). */
 export type JoinableLesson = Pick<LessonView, 'id' | 'status' | 'starts_at' | 'ends_at' | 'room_opened_at'>;

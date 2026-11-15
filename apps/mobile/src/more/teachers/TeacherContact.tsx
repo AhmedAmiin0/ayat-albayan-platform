@@ -1,7 +1,6 @@
 import { clickToChatLink, formatPhone, teacherName } from '@ab/shared';
 import { Linking } from 'react-native';
-import { t, type, useTheme, Button, Ltr, locale } from '@ab/mobile-kit';
-import { Section } from '@/core/ui/surface/Section';
+import { t, type, useTheme, Button, Ltr, locale, Section } from '@ab/mobile-kit';
 import type { Teacher } from '@/core/lib/staff/types';
 
 /** «رقم التواصل»: the LTR phone and a WhatsApp chat. Nothing at all when no phone is on file. */

@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { copyOrShare } from '@/core/lib/clipboard';
-import { t, shape, type, useTheme, AppText, ErrorState } from '@ab/mobile-kit';
+import { t, shape, type, useTheme, AppText, ErrorState, ErrorLine } from '@ab/mobile-kit';
 import { PricingSteps } from '@/finance';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { ReplySheetFrame } from '@/inbox/saved-replies/quick-list/ReplySheetFrame';
 import { appendComposerText } from '@/inbox/composer/draft-store';

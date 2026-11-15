@@ -11,7 +11,7 @@ import { SalesTeacherScreen } from './SalesTeacherScreen';
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 't1' }) }));
-jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
+jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 
 const o = t.sales.teachers.overview;
 const overview: SalesTeacherOverview = {

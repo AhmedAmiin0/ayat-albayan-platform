@@ -5,7 +5,6 @@ import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo, View } from 'react-native';
 import { useLessonDetails, riyadhToday } from '@/calendar';
 import { SchedulePeriod } from '@/calendar/overview/SchedulePeriod';
-import { useNow } from '@/core/lib/time/use-now';
 import {
   t,
   locale,
@@ -18,6 +17,7 @@ import {
   ScreenHeader,
   useTabBarInset,
   usePullRefresh,
+  useNow,
 } from '@ab/mobile-kit';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';

@@ -3,8 +3,7 @@ import { bodyVarCount } from '@ab/client-core';
 import { editRoute, isCodeBound } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { t, ErrorState, Screen, ScreenHeader, Button } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, ErrorState, Screen, ScreenHeader, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import {
   BodyFields, ButtonsField, DraftPreview, draftOf, editPayload, EditRules, useTemplateDraft,

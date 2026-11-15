@@ -2,9 +2,8 @@ import { memo } from 'react';
 import { gradeStyle, type PendingReportView, type ReportSummaryView, type TeacherReportView } from '@ab/shared';
 import { editableNow } from '@ab/client-core';
 import { router } from 'expo-router';
-import { t, Button, ListRow, StatusChip } from '@ab/mobile-kit';
+import { t, Button, ListRow, StatusChip, useNow } from '@ab/mobile-kit';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
-import { useNow } from '@/core/lib/time/use-now';
 
 // The rows of «التقارير». A row opens the lesson's report form (to write, edit or read it) or a
 // student's history; the API decides what may still change (can_edit).

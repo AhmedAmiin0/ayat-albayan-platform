@@ -1,9 +1,8 @@
 import ar from '@ab/shared/i18n/ar.json';
 import { Modal, Pressable, View } from 'react-native';
-import { t, shape, type, useTheme, AppText, Button } from '@ab/mobile-kit';
+import { t, shape, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { ButtonRow } from '@/core/ui/actions';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { useSendMessage } from '@/inbox/thread/hooks/use-thread';
 import { chatSendError } from '@/inbox/thread/send/send-error';

@@ -1,7 +1,6 @@
 import { ActivityIndicator, View } from 'react-native';
-import { t, shape, type, useTheme, AppText, ErrorState, StatusChip } from '@ab/mobile-kit';
+import { t, shape, type, useTheme, AppText, ErrorState, StatusChip, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { googleStatusText, useGoogleStatus, type GoogleStatusText } from './google-status';
 
 function Line({ children, tone }: { children: string; tone?: 'bad' }) {

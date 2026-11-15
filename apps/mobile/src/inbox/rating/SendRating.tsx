@@ -12,10 +12,10 @@ import {
   useTheme,
   AppText,
   Button,
+  ErrorLine,
 } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { refreshInbox } from '@/inbox/thread/hooks/inbox-sync';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { threadPath } from '@/inbox/thread/hooks/thread-cache';

@@ -1,8 +1,7 @@
 import type { Conflict } from '@ab/shared';
 import { View } from 'react-native';
 import { bookFailure, conflictLine, isCodedRefusal, ConflictNotice } from '@/booking';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, AppText, ErrorState, NuqtaGlyph, type, useTheme } from '@ab/mobile-kit';
+import { t, AppText, ErrorState, NuqtaGlyph, type, useTheme, ErrorLine } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 export interface CourseCheckNoticeProps {

@@ -1,7 +1,6 @@
 import { counted } from '@ab/shared';
-import { t, Button, ErrorState, InsetGroup } from '@ab/mobile-kit';
+import { t, Button, ErrorState, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { NumberRow } from '@/ops/numbers/NumberRow';
 import { useNumbers } from '@/ops/numbers/use-numbers';
 

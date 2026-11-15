@@ -13,7 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
 }));
 let mockNow = new Date('2026-10-01T13:10:00Z');
-jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => mockNow }));
+jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => mockNow }));
 
 const onReport = jest.fn();
 const props = { onDetails: jest.fn(), onNotice: jest.fn(), onReport };

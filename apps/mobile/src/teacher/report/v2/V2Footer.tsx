@@ -1,9 +1,8 @@
 import type { ReportFormResponse } from '@ab/shared';
 import { View } from 'react-native';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { useClockCycle } from '@/core/lib/clock';
 import { ButtonRow } from '@/core/ui/actions';
-import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
 import { reportErrorText } from '@/teacher/report/hooks/api';
 import { SentNote, saveLine } from '@/teacher/report/components/ReportFooter';

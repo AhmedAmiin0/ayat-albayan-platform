@@ -1,7 +1,6 @@
 import type { AssistantCommissionView } from '@ab/shared';
 import { useState } from 'react';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { money } from '@/core/lib/money/format';
 import { MoneyCard } from '@/sales-money/components/MoneyCard';
 import { assistantsErrorText } from '@/assistants/api/errors';

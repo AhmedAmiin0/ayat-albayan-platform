@@ -2,10 +2,17 @@ import type { AttendanceTableRow } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import { ApiError, t, BackButton, EmptyState, Screen, ScreenHeader } from '@ab/mobile-kit';
+import {
+  ApiError,
+  t,
+  BackButton,
+  EmptyState,
+  Screen,
+  ScreenHeader,
+  ErrorLine,
+} from '@ab/mobile-kit';
 import { useClockCycle } from '@/core/lib/clock';
 import { useStudentHref, useTreeBase } from '@/core/nav/tree-base';
-import { ErrorLine } from '@/inbox';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { SalesLoadScreen } from '@/sales/sales/components/SalesLoadScreen';
 import { AttendanceLogHead } from './AttendanceLogHead';

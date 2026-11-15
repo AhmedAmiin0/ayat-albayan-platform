@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
+import { t, AppText, Button, type, useTheme, ErrorLine } from '@ab/mobile-kit';
 import type { BookFailure } from '@/booking/shared/booking-errors';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
 import type { StudentChoice, TrialDraft } from '@/booking/trial/lib/draft';

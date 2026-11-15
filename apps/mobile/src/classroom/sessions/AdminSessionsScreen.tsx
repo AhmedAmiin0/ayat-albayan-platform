@@ -9,6 +9,7 @@ import {
   Screen,
   ScreenHeader,
   AppText,
+  useNow,
 } from '@ab/mobile-kit';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { useJoinWindow } from '@/core/lib/query/public-config';
@@ -16,7 +17,6 @@ import { useDayLessons } from '@/today/lib/use-day-lessons';
 import { DaySwitcher } from './DaySwitcher';
 import { SessionGroupList } from './SessionGroupList';
 import { groupSessions, SESSION_GROUPS } from './sessions';
-import { useNow } from '@/core/lib/time/use-now';
 
 /**
  * «الحلقات المباشرة» (admin): every teacher's lessons of a Riyadh day in three groups (now,

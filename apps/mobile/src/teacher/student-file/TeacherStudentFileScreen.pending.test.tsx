@@ -21,8 +21,8 @@ jest.mock('expo-router', () => ({
   },
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
-jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-11-11T12:00:00Z') }));
-jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
+jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-11-11T12:00:00Z') }));
+jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 
 const pending = (lessonId: string, studentId: string): PendingReportView => ({
   lesson_id: lessonId,

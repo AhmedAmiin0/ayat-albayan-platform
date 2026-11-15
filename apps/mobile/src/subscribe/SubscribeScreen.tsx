@@ -4,7 +4,6 @@ import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import {
   apiFetch,
   t,
@@ -15,6 +14,7 @@ import {
   ltr,
   Screen,
   ScreenHeader,
+  ErrorLine,
 } from '@ab/mobile-kit';
 import type { StudentProfile, StudentRef } from '@/students/shared/types';
 import { localDate } from '@/today';

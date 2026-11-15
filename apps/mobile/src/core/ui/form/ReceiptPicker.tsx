@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Image, View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, shape, useTheme, Button } from '@ab/mobile-kit';
+import { t, shape, useTheme, Button, ErrorLine } from '@ab/mobile-kit';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { ButtonRow } from '@/core/ui/actions';
 import { FormLabel } from './FormLabel';
