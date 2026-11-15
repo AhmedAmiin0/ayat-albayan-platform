@@ -8,7 +8,7 @@ import { join, posix } from 'node:path';
 import { ownExports, parseImports } from './parse.mjs';
 
 export const ROOTS = [
-  'apps/web/src',
+  'apps/staff-web/src',
   'apps/api/src',
   'packages/core/src',
   'packages/i18n/src',

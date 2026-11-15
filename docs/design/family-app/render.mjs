@@ -1,6 +1,6 @@
 // Renders the family app's icon options (docs/design/family-app/icon-options/*.svg) to PNG, once,
 // in a cloud session (never in CI, never in the app): the preview sheets for the owner and option
-// A's Expo set in apps/family/assets. Uses the Chromium + Playwright the cloud image ships, so no
+// A's Expo set in apps/family-mobile/assets. Uses the Chromium + Playwright the cloud image ships, so no
 // new dependency:  node docs/design/family-app/render.mjs [option-file.svg]
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const OPTIONS = join(here, 'icon-options');
-const ASSETS = join(here, '../../../apps/family/assets');
+const ASSETS = join(here, '../../../apps/family-mobile/assets');
 const WIRED = process.argv[2] ?? 'option-a-book-crescent.svg';
 /** The glyph's square on the splash (centre 512, 514): the native splash and the in-app mark. */
 const GLYPH_BOX = '252 254 520 520';

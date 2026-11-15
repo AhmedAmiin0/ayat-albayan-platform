@@ -29,7 +29,7 @@ const files = {
     // HMAC pepper of the WhatsApp sign-in codes (>= 32 chars, docs/30); local only.
     LOGIN_CODE_PEPPER: 'local-login-code-pepper-0123456789-abcdef',
   },
-  'apps/web/.env.local': {
+  'apps/staff-web/.env.local': {
     VITE_SUPABASE_URL: s.API_URL,
     VITE_SUPABASE_ANON_KEY: s.ANON_KEY,
     VITE_API_URL: 'http://localhost:3000',

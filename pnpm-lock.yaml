@@ -137,7 +137,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(@types/node@24.19.0)(jsdom@30.1.1(@noble/hashes@1.8.0))(vite@8.3.2(@types/node@24.19.0)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
-  apps/family:
+  apps/family-mobile:
     dependencies:
       '@ab/client-core':
         specifier: workspace:*
@@ -246,7 +246,7 @@ importers:
         specifier: ~6.0.3
         version: 6.0.3
 
-  apps/mobile:
+  apps/staff-mobile:
     dependencies:
       '@ab/client-core':
         specifier: workspace:*
@@ -400,7 +400,7 @@ importers:
         specifier: ~6.0.3
         version: 6.0.3
 
-  apps/web:
+  apps/staff-web:
     dependencies:
       '@ab/client-core':
         specifier: workspace:*
@@ -550,12 +550,12 @@ importers:
       postgres:
         specifier: ^3.4.9
         version: 3.4.9
+      staff-web:
+        specifier: workspace:*
+        version: link:../apps/staff-web
       typescript:
         specifier: ~6.0.3
         version: 6.0.3
-      web:
-        specifier: workspace:*
-        version: link:../apps/web
 
   packages/catalog:
     dependencies:

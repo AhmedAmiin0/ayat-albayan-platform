@@ -11,7 +11,7 @@ import { parseNameStatus } from '../pure-move-check.mjs';
 
 const MAP = /^refactor\/moves\/[^/]+\.json$/;
 const STARTUP = /^(e2e\/|\.github\/)|(^|\/)([^/]+\.config\.[cm]?[jt]s|tsconfig[^/]*\.json|routeTree\.gen\.ts)$/;
-const ROUTES = /^apps\/web\/src\/routes\//;
+const ROUTES = /^apps\/staff-web\/src\/routes\//;
 
 /** Map text → number of identifier renames (a `renames` that is not an object counts as one). */
 const renamesIn = (text) => {

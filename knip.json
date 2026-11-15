@@ -18,13 +18,13 @@
       "ignore": ["src/modules/*/*/index.ts"],
       "ignoreDependencies": ["@fontsource/amiri", "@fontsource/ibm-plex-sans-arabic"]
     },
-    "apps/web": {
+    "apps/staff-web": {
       "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignore": ["src/routeTree.gen.ts"],
       "ignoreDependencies": ["babel-plugin-react-compiler", "zod"]
     },
-    "apps/mobile": {
+    "apps/staff-mobile": {
       "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
       "project": ["{app,src}/**/*.{ts,tsx}"],
       "ignoreDependencies": [
@@ -36,7 +36,7 @@
         "zod"
       ]
     },
-    "apps/family": {
+    "apps/family-mobile": {
       "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
       "project": ["{app,src}/**/*.{ts,tsx}"],
       "ignoreDependencies": ["react-test-renderer", "expo-system-ui", "expo-splash-screen", "zod"]
@@ -73,7 +73,7 @@
         "scripts/*.ts"
       ],
       "project": ["**/*.ts"],
-      "ignoreDependencies": ["api", "web"]
+      "ignoreDependencies": ["api", "staff-web"]
     }
   },
   "ignoreUnresolved": ["vite/client"]

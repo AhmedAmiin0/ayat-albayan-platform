@@ -28,8 +28,8 @@ test('ruleOf: Oxlint diagnostic codes → config rule keys; no code is a parse e
 });
 
 test('packageOf: the deepest package folder holding the file, else none', () => {
-  const dirs = ['apps/web', 'docs/design/brand/tools', 'tools/scripts'];
-  assert.equal(packageOf('apps/web/src/a.ts', dirs), 'apps/web');
+  const dirs = ['apps/staff-web', 'docs/design/brand/tools', 'tools/scripts'];
+  assert.equal(packageOf('apps/staff-web/src/a.ts', dirs), 'apps/staff-web');
   assert.equal(packageOf('apps/webx/a.ts', dirs), '');
   assert.equal(packageOf('docs/design/brand/tools/x.mjs', dirs), 'docs/design/brand/tools');
 });
@@ -37,13 +37,13 @@ test('packageOf: the deepest package folder holding the file, else none', () => 
 test('countsOf: per package, package-relative file, per rule', () => {
   const d = (filename, code) => ({ filename, code });
   const report = [
-    d('apps/web/src/a.ts', 'eslint(max-depth)'),
-    d('apps/web/src/a.ts', 'eslint(max-depth)'),
-    d('apps/web/src/a.ts', 'ab(no-if-chains)'),
+    d('apps/staff-web/src/a.ts', 'eslint(max-depth)'),
+    d('apps/staff-web/src/a.ts', 'eslint(max-depth)'),
+    d('apps/staff-web/src/a.ts', 'ab(no-if-chains)'),
     d('root.js', 'eslint(no-console)'),
   ];
-  assert.deepEqual(countsOf(report, ['apps/web']), {
-    'apps/web': { 'src/a.ts': { 'max-depth': { count: 2 }, 'ab/no-if-chains': { count: 1 } } },
+  assert.deepEqual(countsOf(report, ['apps/staff-web']), {
+    'apps/staff-web': { 'src/a.ts': { 'max-depth': { count: 2 }, 'ab/no-if-chains': { count: 1 } } },
     '': { 'root.js': { 'no-console': { count: 1 } } },
   });
 });

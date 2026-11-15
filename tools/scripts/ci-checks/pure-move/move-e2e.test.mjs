@@ -12,8 +12,8 @@ const step = job.steps.find((s) => s.id === 'move');
 
 const MAP = { status: 'A', from: 'refactor/moves/a1.json', to: 'refactor/moves/a1.json' };
 const mv = (from, to) => ({ status: 'R100', from, to });
-const FOLDER = mv('apps/web/src/features/inbox/a.ts', 'apps/web/src/features/messaging/inbox/a.ts');
-const IMPORTER = { status: 'M', from: 'apps/web/src/features/x.ts', to: 'apps/web/src/features/x.ts' };
+const FOLDER = mv('apps/staff-web/src/features/inbox/a.ts', 'apps/staff-web/src/features/messaging/inbox/a.ts');
+const IMPORTER = { status: 'M', from: 'apps/staff-web/src/features/x.ts', to: 'apps/staff-web/src/features/x.ts' };
 const verdict = (entries, map = {}) => moveVerdict(entries, () => JSON.stringify({ id: 'a1', seq: 1, moves: [], ...map }));
 
 test('ci: the step runs move-e2e then pure-move-check, and only its «false» wins over the diff', () => {
@@ -37,9 +37,9 @@ test('no map, identifier renames or a malformed renames keep e2e', () => {
 });
 
 test('a file-name change, a route move or anything e2e reads at start-up keeps e2e', () => {
-  assert.match(verdict([MAP, mv('apps/web/src/students.ts', 'apps/web/src/pupils.ts')]).reason, /changes its name/);
-  assert.match(verdict([MAP, mv('apps/web/src/routes/admin/a.tsx', 'apps/web/src/routes/admin/x/a.tsx')]).reason, /route/);
-  for (const f of ['e2e/playwright.config.ts', 'e2e/support/core/global-setup.ts', 'apps/web/vite.config.ts', 'apps/api/tsconfig.json', '.github/workflows/ci.yml', 'apps/web/src/routeTree.gen.ts']) {
+  assert.match(verdict([MAP, mv('apps/staff-web/src/students.ts', 'apps/staff-web/src/pupils.ts')]).reason, /changes its name/);
+  assert.match(verdict([MAP, mv('apps/staff-web/src/routes/admin/a.tsx', 'apps/staff-web/src/routes/admin/x/a.tsx')]).reason, /route/);
+  for (const f of ['e2e/playwright.config.ts', 'e2e/support/core/global-setup.ts', 'apps/staff-web/vite.config.ts', 'apps/api/tsconfig.json', '.github/workflows/ci.yml', 'apps/staff-web/src/routeTree.gen.ts']) {
     assert.match(verdict([MAP, FOLDER, { status: 'M', from: f, to: f }]).reason, /read when e2e starts/, f);
   }
 });

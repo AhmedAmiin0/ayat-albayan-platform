@@ -8,12 +8,12 @@ import { parse } from 'yaml';
 
 const read = (p) => readFileSync(fileURLToPath(new URL(`../../../${p}`, import.meta.url)), 'utf8');
 const ci = parse(read('.github/workflows/ci.yml'));
-const mobile = JSON.parse(read('apps/mobile/package.json'));
+const mobile = JSON.parse(read('apps/staff-mobile/package.json'));
 const turbo = JSON.parse(read('turbo.json'));
 
 test('ci verify bundles the mobile app with Metro for android', () => {
   const row = ci.jobs.verify.strategy.matrix.include.find((r) => r.name === 'bundle mobile');
-  assert.deepEqual(row, { name: 'bundle mobile', task: 'bundle', filter: '--filter=mobile' });
+  assert.deepEqual(row, { name: 'bundle mobile', task: 'bundle', filter: '--filter=staff-mobile' });
   assert.match(mobile.scripts.bundle, /^expo export --platform android /);
 });
 
@@ -24,7 +24,7 @@ test('the bundle task builds the workspace packages first and writes into ignore
 });
 
 test('each app bundles with the shared Babel config, where app.json switches the Compiler on', () => {
-  for (const dir of ['apps/mobile', 'apps/family']) {
+  for (const dir of ['apps/staff-mobile', 'apps/family-mobile']) {
     const app = JSON.parse(read(`${dir}/app.json`));
     assert.equal(app.expo.experiments.reactCompiler, true);
     assert.match(read(`${dir}/babel.config.cjs`), /@ab\/mobile-kit\/babel/);

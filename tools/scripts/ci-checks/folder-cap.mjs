@@ -22,8 +22,8 @@ export function appRoots(root) {
   const under = (group, sub) => dirs(root, group).map((d) => join(group, d.name, sub).replace(/\/$/, ''));
   return {
     api: ['apps/api/src'],
-    web: ['apps/web/src'],
-    mobile: ['apps/mobile/src', 'apps/mobile/app'],
+    web: ['apps/staff-web/src'],
+    mobile: ['apps/staff-mobile/src', 'apps/staff-mobile/app'],
     packages: under('packages', 'src').filter((p) => existsSync(join(root, p))),
     tools: under('tools', ''),
   };

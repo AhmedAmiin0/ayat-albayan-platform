@@ -7,7 +7,7 @@ import { selectSpecs } from './select.mjs';
 const root = makeRepo();
 after(() => rmSync(root, { recursive: true, force: true }));
 const pick = (...files) => selectSpecs({ root, files, base: 'HEAD' });
-const W = 'apps/web/src/features';
+const W = 'apps/staff-web/src/features';
 
 test('a chat-only change runs the chat specs only', () => {
   assert.deepEqual(pick(`${W}/messaging/inbox/InboxPage.tsx`), {
@@ -46,7 +46,7 @@ test('a migration, the lockfile, a common API file, an e2e helper or the workflo
   for (const f of [
     'packages/db/supabase/migrations/2_more.sql',
     'pnpm-lock.yaml',
-    'apps/web/package.json',
+    'apps/staff-web/package.json',
     'apps/api/src/common/auth/guard.ts',
     'apps/api/src/app.module.ts',
     'e2e/support/open.ts',
@@ -54,7 +54,7 @@ test('a migration, the lockfile, a common API file, an e2e helper or the workflo
     '.github/workflows/ci.yml',
     'tools/scripts/ci-checks/e2e-shards.mjs',
     'tools/scripts/ci-checks/e2e-areas/select.mjs',
-    'apps/web/src/components/shell/Nav.tsx',
+    'apps/staff-web/src/components/shell/Nav.tsx',
   ])
     assert.equal(pick(f).full, true, f);
 });
@@ -62,21 +62,21 @@ test('a migration, the lockfile, a common API file, an e2e helper or the workflo
 test('a file no area lists runs everything', () => {
   write(
     root,
-    'apps/web/src/routes/admin/unmapped.tsx',
+    'apps/staff-web/src/routes/admin/unmapped.tsx',
     "import { InboxPage } from '@/features/messaging/inbox';\n",
   );
   try {
     const r = selectSpecs({
       root,
-      files: ['apps/web/src/routes/admin/unmapped.tsx'],
+      files: ['apps/staff-web/src/routes/admin/unmapped.tsx'],
       base: 'HEAD',
     });
     assert.equal(r.full, true);
     assert.match(r.reason, /unmapped\.tsx/);
   } finally {
-    rmSync(`${root}/apps/web/src/routes/admin/unmapped.tsx`);
+    rmSync(`${root}/apps/staff-web/src/routes/admin/unmapped.tsx`);
   }
-  assert.equal(pick('apps/web/src/features/x/style.css').full, true);
+  assert.equal(pick('apps/staff-web/src/features/x/style.css').full, true);
 });
 
 test('docs, unit tests, baselines and the mobile app run no e2e spec', () => {
@@ -85,7 +85,7 @@ test('docs, unit tests, baselines and the mobile app run no e2e spec', () => {
       'docs/notes.md',
       `${W}/messaging/inbox/Bubble.test.tsx`,
       'refactor/folder-cap/web.json',
-      'apps/mobile/src/a.tsx',
+      'apps/staff-mobile/src/a.tsx',
     ),
     {
       full: false,

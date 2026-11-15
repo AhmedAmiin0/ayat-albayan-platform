@@ -22,29 +22,29 @@ test('api image: installs api..., builds api^... before the api itself', () => {
   assert.doesNotMatch(run, NAMED_PACKAGE_BUILD, 'no hand-kept package list');
 });
 
-test('mobile EAS build: post-install builds mobile^...', () => {
-  const pkg = JSON.parse(read('apps/mobile/package.json'));
+test('mobile EAS build: post-install builds staff-mobile^...', () => {
+  const pkg = JSON.parse(read('apps/staff-mobile/package.json'));
   const script = pkg.scripts['eas-build-post-install'];
-  assert.equal(script, 'pnpm --dir ../.. --filter "mobile^..." build');
+  assert.equal(script, 'pnpm --dir ../.. --filter "staff-mobile^..." build');
   assert.doesNotMatch(script, NAMED_PACKAGE_BUILD);
 });
 
 test('the pattern catches the old hand-kept lists', () => {
   assert.match('pnpm --filter @ab/shared build', NAMED_PACKAGE_BUILD);
   assert.match('pnpm --dir ../.. --filter @ab/shared --filter @ab/client-core build', NAMED_PACKAGE_BUILD);
-  assert.doesNotMatch('pnpm --filter "web^..." build', NAMED_PACKAGE_BUILD);
+  assert.doesNotMatch('pnpm --filter "staff-web^..." build', NAMED_PACKAGE_BUILD);
 });
 
 test('staging web deploy and the mobile OTA workflow build <app>^...', () => {
   const deploy = read('.github/workflows/deploy-staging.yml');
-  assert.match(deploy, /pnpm --filter "web\^\.\.\." build/);
+  assert.match(deploy, /pnpm --filter "staff-web\^\.\.\." build/);
   assert.doesNotMatch(deploy, NAMED_PACKAGE_BUILD);
   const mobile = read('.github/workflows/mobile.yml');
-  assert.match(mobile, /pnpm --filter "mobile\^\.\.\." build/);
+  assert.match(mobile, /pnpm --filter "staff-mobile\^\.\.\." build/);
   assert.doesNotMatch(mobile, NAMED_PACKAGE_BUILD);
 });
 
 test('the automatic OTA follows every package the app bundles, not packages/shared alone', () => {
   const deploy = read('.github/workflows/deploy-staging.yml');
-  assert.match(deploy, /git diff --name-only "\$BASE" HEAD -- apps\/mobile packages /);
+  assert.match(deploy, /git diff --name-only "\$BASE" HEAD -- apps\/staff-mobile packages /);
 });

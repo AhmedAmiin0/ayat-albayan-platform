@@ -11,7 +11,7 @@ import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-const mobilePkg = fileURLToPath(new URL('../../../apps/mobile/package.json', import.meta.url));
+const mobilePkg = fileURLToPath(new URL('../../../apps/staff-mobile/package.json', import.meta.url));
 const workspace = readFileSync(fileURLToPath(new URL('../../../pnpm-workspace.yaml', import.meta.url)), 'utf8');
 const fromMobile = createRequire(mobilePkg);
 const sharingRoot = dirname(fromMobile.resolve('expo-sharing/package.json'));
@@ -22,7 +22,7 @@ const PATCHED = [
   'if (uri.scheme == ContentResolver.SCHEME_CONTENT) contentResolver.openInputStream(uri)',
 ];
 
-test('apps/mobile asks autolinking to build expo-sharing from source', () => {
+test('apps/staff-mobile asks autolinking to build expo-sharing from source', () => {
   const pkg = JSON.parse(readFileSync(mobilePkg, 'utf8'));
   assert.ok(pkg.expo.autolinking.android.buildFromSource.includes('expo-sharing'));
 });

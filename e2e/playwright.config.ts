@@ -140,7 +140,7 @@ export default defineConfig({
     },
     {
       command: `pnpm exec vite --port ${WEB_PORT} --strictPort`,
-      cwd: '../apps/web',
+      cwd: '../apps/staff-web',
       url: WEB_URL,
       // The open inbox refreshes every second (10 s in the app): a status chip shows without a 10 s wait.
       env: { VITE_API_URL: `http://localhost:${API_PORT}`, VITE_INBOX_REFRESH_MS: '1000' },

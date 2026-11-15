@@ -68,7 +68,7 @@ Exists (paths on develop):
   - a guardian by phone + WhatsApp code;
   - a student by student code + password; the first password is set with a code sent to the guardian's phone;
   - settings `family_login_enabled` (default off), `login_code_ttl_minutes`, `login_code_max_attempts`;
-  - web panel apps/web/src/features/people/auth/family/FamilyPanel.tsx.
+  - web panel apps/staff-web/src/features/people/auth/family/FamilyPanel.tsx.
 - **Portal API** (apps/api/src/modules/people/portal/):
   - `GET /portal/me`;
   - `…/students/:id/lessons` (next 14 days + running);
@@ -79,11 +79,11 @@ Exists (paths on develop):
   - `…/package` (no money).
   - Types: packages/shared/src/people/students/portal.ts.
 - **Report content** for a family: `GET /report-pages/by-report/:id` (apps/api/src/modules/reporting/report-page/).
-- **Web portal:** apps/web/src/routes/portal.tsx → features/people/portal/PortalHome.tsx (child switcher; tabs lessons / reports / package / chat).
+- **Web portal:** apps/staff-web/src/routes/portal.tsx → features/people/portal/PortalHome.tsx (child switcher; tabs lessons / reports / package / chat).
 - **Chat:** student_channels (migrations 800/971/993) and their endpoints; realtime signal + polling in packages/client-core/src/messaging/channels/.
 - **Push:** apps/api/src/common/push/; `profiles.push_tokens` + `push_device_sessions`; `PUT /me/push-tokens` (needs `notifications.push`); kinds in packages/catalog/src/enums/messaging.ts; rules off/bell/push (push.rules.ts).
   - Family schedule notices are already planned in `schedule-notices/notice.plan.ts` (`familyParts`), but are dropped: guardian/student lack `notifications.push`.
-- **Mobile app** apps/mobile:
+- **Mobile app** apps/staff-mobile:
   - one expo-router app with a guarded stack per staff role;
   - guardians/students get the «wrongApp» notice;
   - `app.config.ts` already builds a second app identity (the `stripetest` variant, own package id).
@@ -133,14 +133,14 @@ Missing (build):
 
 **The app** (owner 2026-11-14: a separate app, not a variant of the staff app):
 - A separate app on the phone: its own name, icon, Android package / iOS bundle `com.ayatalbayan.family`, scheme `ayatalbayanfamily`, own EAS project and update channels.
-- **`apps/family`**: its own Expo project (package `family`, slug `ayat-albayan-family`, owner `holdmycup`), with the family routes only (expo-router `app/`) and the same scripts as apps/mobile: `lint`, `typecheck`, `test` (jest-expo), `bundle` (`expo export --platform android`), `eas-build-post-install` (`pnpm --filter "family^..." build`).
+- **`apps/family-mobile`**: its own Expo project (package `family-mobile`, slug `ayat-albayan-family`, owner `holdmycup`), with the family routes only (expo-router `app/`) and the same scripts as apps/staff-mobile: `lint`, `typecheck`, `test` (jest-expo), `bundle` (`expo export --platform android`), `eas-build-post-install` (`pnpm --filter "family-mobile^..." build`).
   - `eas.json`: profiles `preview` (APK, channel and environment `preview`) and `production` (channel `production`).
   - `app.config.ts` reads `FAMILY_EAS_PROJECT_ID` (→ `extra.eas.projectId` and `updates.url`; unset = no updates url) and `GOOGLE_SERVICES_JSON` (→ `android.googleServicesFile`).
 - **`packages/mobile-kit`** (`@ab/mobile-kit`): what both apps share (theme, UI kit, auth session, push registration, i18n). A **source** package: no build step; Metro, jest and tsc read its `.ts` sources.
-- **apps/mobile** is the staff app again: no family routes, no `family-*` EAS profiles. The staff app keeps showing «wrongApp» to families; the family app shows it to staff.
-- **No in-app room route for now:** the staff app's classroom (LiveKit) stays staff code in apps/mobile; it is not in the kit.
+- **apps/staff-mobile** is the staff app again: no family routes, no `family-*` EAS profiles. The staff app keeps showing «wrongApp» to families; the family app shows it to staff.
+- **No in-app room route for now:** the staff app's classroom (LiveKit) stays staff code in apps/staff-mobile; it is not in the kit.
 - The constraint stays: **no copied screen, hook or helper** between the two apps: what both need moves into `@ab/mobile-kit` (or `@ab/client-core` when the web needs it too).
-- **CI** (`ci.yml` «verify»): lint and typecheck cover every workspace; `test family` runs the family app and `@ab/mobile-kit` (jest-expo, own machine); `bundle family` runs the Metro bundle. A change only under apps/mobile, apps/family or packages/mobile-kit skips the e2e machines.
+- **CI** (`ci.yml` «verify»): lint and typecheck cover every workspace; `test family` runs the family app and `@ab/mobile-kit` (jest-expo, own machine); `bundle family` runs the Metro bundle. A change only under apps/staff-mobile, apps/family-mobile or packages/mobile-kit skips the e2e machines.
 
 **Shared client logic:**
 - Portal queries (keys, fetchers, zod schemas) and view-model rules go in `@ab/client-core` (e.g. `messaging`-style folder `people/portal/`). Both web `PortalHome` and the app use them.
@@ -158,12 +158,12 @@ Missing (build):
 - **PRs, in order (each green on CI, merged by the owner's session):**
   1. API + shared: history, prepare, package money + child block, `family_chat_enabled`, push grant + kinds, `payment_instructions`.
   2. `@ab/client-core` portal + web pages.
-  3. The family app (`apps/family` + `@ab/mobile-kit`) and its screens.
+  3. The family app (`apps/family-mobile` + `@ab/mobile-kit`) and its screens.
   4. e2e: guardian sees all children + attended/absent + package; a child student never sees money; chat hidden when off.
 - **Builds** (GitHub → Actions → mobile → Run workflow on develop, **app = family**; `profile` and `branch` are staff-only):
-  - every step runs in `apps/family` with its own `preview` profile: `build-android-apk` = its APK, `ota-update` = an OTA to its channel `preview`, compared with its own last build (native-change guard);
+  - every step runs in `apps/family-mobile` with its own `preview` profile: `build-android-apk` = its APK, `ota-update` = an OTA to its channel `preview`, compared with its own last build (native-change guard);
   - first, `eas init --non-interactive --force` links the EAS project `@holdmycup/ayat-albayan-family`, or creates it on the first run. Its id goes to `FAMILY_EAS_PROJECT_ID` for the run's later steps and is printed in the run summary (it is not a secret);
-  - the id is committed: `apps/family/app.config.ts` falls back to `ccc6c105-1f67-4b5e-ada5-c892bddaa95a` (`FAMILY_EAS_PROJECT_ID ?? EAS_BUILD_PROJECT_ID ?? <that id>`, owner 2026-11-15), so Expo's build servers and every later run have it without the env; the workflow's `eas init` step stays;
+  - the id is committed: `apps/family-mobile/app.config.ts` falls back to `ccc6c105-1f67-4b5e-ada5-c892bddaa95a` (`FAMILY_EAS_PROJECT_ID ?? EAS_BUILD_PROJECT_ID ?? <that id>`, owner 2026-11-15), so Expo's build servers and every later run have it without the env; the workflow's `eas init` step stays;
   - run titles are `mobile <action> family-preview`; release tags `mobile-family-v<version>-b<run>` (APK) and `ota-family-preview-<day>-<n>` (OTA);
   - deploy-staging's automatic OTA stays **staff only** (it dispatches mobile.yml without `app`, i.e. staff); a family OTA is always run by hand.
 - **Owner, before families can sign in:**
@@ -178,5 +178,5 @@ Missing (build):
 - Pagination sizes; skeleton and animation details within the theme.
 - Whether `prepare` rides on the lessons response or has its own route.
 - Where the report "seen" mark lives.
-- Exact build wiring inside apps/family and what moves into `@ab/mobile-kit`.
+- Exact build wiring inside apps/family-mobile and what moves into `@ab/mobile-kit`.
 - Naming of new files.

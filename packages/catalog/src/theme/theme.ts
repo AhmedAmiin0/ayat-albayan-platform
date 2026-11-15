@@ -1,4 +1,4 @@
-// The ONE source of colour values (docs/07 §3, §12); apps/web/src/styles/tokens.css carries the same
+// The ONE source of colour values (docs/07 §3, §12); apps/staff-web/src/styles/tokens.css carries the same
 // hex (tokens.test.ts there diffs the two). Owner, 2026-10-05 («Emerald Mint»): white pages, an emerald
 // action with white text on its fill, a light mint sidebar (dark green text) in light, a SOFT
 // green-grey dark mode (never near-black), no beige/cream. Green for «done/ok», amber only for «دورك»,

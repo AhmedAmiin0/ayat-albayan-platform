@@ -53,7 +53,7 @@ test('classifies renames, path rewrites, barrels, config and the rest', () => {
   assert.equal(classify({ status: 'D', from: 'a.ts', to: 'a.ts' }, read).kind, 'bad');
   assert.equal(classify({ status: 'M', from: 'docs/x.md', to: 'docs/x.md' }, read).kind, 'paths');
   assert.equal(classify({ status: 'M', from: '.github/workflows/ci.yml', to: '.github/workflows/ci.yml' }, read).kind, 'config');
-  assert.equal(classify({ status: 'M', from: 'apps/web/vitest.config.ts', to: 'apps/web/vitest.config.ts' }, read).kind, 'config');
+  assert.equal(classify({ status: 'M', from: 'apps/staff-web/vitest.config.ts', to: 'apps/staff-web/vitest.config.ts' }, read).kind, 'config');
   assert.equal(classify({ status: 'M', from: 'packages/db/x.sql', to: 'packages/db/x.sql' }, read).kind, 'bad');
 });
 
@@ -136,9 +136,9 @@ test('a shrunk folder-cap allow-list is a baseline edit, a grown one fails, a ne
   assert.equal(classify({ status: 'A', from: 'refactor/moves/b1.json', to: 'refactor/moves/b1.json' }, read).kind, 'config');
 });
 
-test('an @/ path in a mobile route file (apps/mobile/app) resolves to the app src', () => {
-  const file = 'apps/mobile/app/login.tsx';
-  const ctx = { from: file, to: file, table: renameTable([['apps/mobile/src/ui/AppText.tsx', 'apps/mobile/src/core/ui/primitives/AppText.tsx']]) };
+test('an @/ path in a mobile route file (apps/staff-mobile/app) resolves to the app src', () => {
+  const file = 'apps/staff-mobile/app/login.tsx';
+  const ctx = { from: file, to: file, table: renameTable([['apps/staff-mobile/src/ui/AppText.tsx', 'apps/staff-mobile/src/core/ui/primitives/AppText.tsx']]) };
   const src = "import { AppText } from '@/ui/AppText';\n";
   assert.equal(onlyPathsChanged(src, src.replace('@/ui/AppText', '@/core/ui/primitives/AppText'), ctx), true);
   assert.equal(onlyPathsChanged(src, src.replace('@/ui/AppText', '@/core/ui/AppText'), ctx), false);
