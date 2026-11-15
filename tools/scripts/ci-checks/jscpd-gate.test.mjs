@@ -6,10 +6,10 @@ const dup = (a, b) => ({ firstFile: { name: a }, secondFile: { name: b } });
 const report = {
   statistics: { total: { clones: 4, duplicatedLines: 40 } },
   duplicates: [
-    dup('apps/web/src/a.ts', 'apps/mobile/src/a.ts'),
-    dup('apps/web/src/a.ts', 'apps/web/src/b.ts'),
-    dup('apps/web/src/x/fixtures.ts', 'apps/mobile/src/x/fixtures.ts'),
-    dup('apps/api/src/m/m.fakes.ts', 'apps/mobile/src/m.ts'),
+    dup('apps/staff-web/src/a.ts', 'apps/staff-mobile/src/a.ts'),
+    dup('apps/staff-web/src/a.ts', 'apps/staff-web/src/b.ts'),
+    dup('apps/staff-web/src/x/fixtures.ts', 'apps/staff-mobile/src/x/fixtures.ts'),
+    dup('apps/api/src/m/m.fakes.ts', 'apps/staff-mobile/src/m.ts'),
   ],
 };
 
@@ -32,7 +32,7 @@ test('check: equal to or below the base branch passes; above it fails', () => {
 test('all packages are one unit: a clone between two packages is not cross-app, one with an app is', () => {
   const split = {
     statistics: { total: { clones: 2, duplicatedLines: 20 } },
-    duplicates: [dup('packages/core/src/a.ts', 'packages/money/src/b.ts'), dup('packages/core/src/a.ts', 'apps/web/src/c.ts')],
+    duplicates: [dup('packages/core/src/a.ts', 'packages/money/src/b.ts'), dup('packages/core/src/a.ts', 'apps/staff-web/src/c.ts')],
   };
   assert.deepEqual(measure(split), { clones: 2, duplicatedLines: 20, crossApp: 1 });
 });

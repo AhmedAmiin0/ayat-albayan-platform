@@ -8,13 +8,13 @@ const snap = (pkg = {}) => ({ appJson: JSON.stringify({ expo }), appConfig: 'x',
 
 test('a local config plugin and a pnpm patch are native; their tests and snapshots are not', () => {
   const files = [
-    'apps/mobile/plugins/share-intent/app.plugin.ts',
-    'apps/mobile/plugins/share-intent/app.plugin.test.ts',
-    'apps/mobile/plugins/share-intent/__snapshots__/app.plugin.test.ts.snap',
+    'apps/staff-mobile/plugins/share-intent/app.plugin.ts',
+    'apps/staff-mobile/plugins/share-intent/app.plugin.test.ts',
+    'apps/staff-mobile/plugins/share-intent/__snapshots__/app.plugin.test.ts.snap',
     'patches/expo-sharing@57.0.24.patch',
   ];
   assert.deepEqual(nativeChanges(snap(), snap(), { files }), [
-    'apps/mobile/plugins/share-intent/app.plugin.ts changed',
+    'apps/staff-mobile/plugins/share-intent/app.plugin.ts changed',
     'patches/expo-sharing@57.0.24.patch changed',
   ]);
 });
@@ -27,28 +27,28 @@ test('package.json "expo" (autolinking buildFromSource) is native', () => {
 
 test('APP_DIR picks the Expo app compared: the family app has its plugins, and its icons are mobile\'s', async () => {
   const prior = process.env.APP_DIR;
-  process.env.APP_DIR = 'apps/family';
+  process.env.APP_DIR = 'apps/family-mobile';
   try {
     const family = await import('./native-changes.mjs?app=family');
-    const files = ['apps/family/assets/icon.png', 'apps/family/plugins/x.ts', 'apps/mobile/assets/icon.png'];
+    const files = ['apps/family-mobile/assets/icon.png', 'apps/family-mobile/plugins/x.ts', 'apps/staff-mobile/assets/icon.png'];
     assert.deepEqual(family.nativeChanges(snap(), snap(), { files }), [
-      'apps/family/assets/icon.png changed',
-      'apps/family/plugins/x.ts changed',
-      // apps/family/app.json's icon, adaptive icon and splash are apps/mobile/assets files.
-      'apps/mobile/assets/icon.png changed',
+      'apps/family-mobile/assets/icon.png changed',
+      'apps/family-mobile/plugins/x.ts changed',
+      // apps/family-mobile/app.json's icon, adaptive icon and splash are apps/staff-mobile/assets files.
+      'apps/staff-mobile/assets/icon.png changed',
     ]);
   } finally {
     if (prior === undefined) delete process.env.APP_DIR;
     else process.env.APP_DIR = prior;
   }
-  // Unset (every staff run and deploy-staging): apps/mobile, as before.
-  assert.deepEqual(nativeChanges(snap(), snap(), { files: ['apps/family/assets/icon.png'] }), []);
+  // Unset (every staff run and deploy-staging): apps/staff-mobile, as before.
+  assert.deepEqual(nativeChanges(snap(), snap(), { files: ['apps/family-mobile/assets/icon.png'] }), []);
 });
 
-test('the old family-* profiles of apps/mobile/eas.json are side profiles: removing them is no APK', () => {
+test('the old family-* profiles of apps/staff-mobile/eas.json are side profiles: removing them is no APK', () => {
   const eas = (build) => ({ ...snap(), eas: JSON.stringify({ build }) });
   const preview = { preview: { channel: 'preview' } };
   const family = { 'family-preview': { channel: 'family-preview', env: { APP_VARIANT: 'family' } } };
-  const files = { files: ['apps/mobile/eas.json'] };
+  const files = { files: ['apps/staff-mobile/eas.json'] };
   assert.deepEqual(nativeChanges(eas({ ...preview, ...family }), eas(preview), files), []);
 });

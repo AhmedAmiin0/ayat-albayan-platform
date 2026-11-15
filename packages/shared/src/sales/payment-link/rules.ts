@@ -42,7 +42,7 @@ export function effectiveLinkStatus(link: { status: PaymentLinkStatus; expires_a
 }
 
 /**
- * The Stripe test app's Android package (apps/mobile app.config.ts: app.json's package + '.stripetest'; its
+ * The Stripe test app's Android package (apps/staff-mobile app.config.ts: app.json's package + '.stripetest'; its
  * app-config.stripe.test.ts pins this): the pay page names it to bring the payer back into that app.
  */
 export const STRIPE_TEST_APP_PACKAGE = 'com.ayatalbayan.admin.stripetest';

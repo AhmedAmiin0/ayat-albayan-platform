@@ -5,7 +5,7 @@
 // leaves the alias folder (`../package.json` from src/, `../(tabs)/x` in mobile app/) stay;
 // nothing else changes. Deterministic (sorted files, span edits only): a second run finds nothing.
 // Usage: pnpm imports:absolute -- <workspace|paths…> [--write]   (dry run without --write)
-//   workspace: api, web, mobile or apps/<name>; paths: files or folders inside one or more apps.
+//   workspace: api, staff-web, staff-mobile or apps/<name>; paths: files or folders inside one or more apps.
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -15,7 +15,7 @@ import { applyEdits, specifierNodes } from '../ci-checks/move-module/specifiers.
 const CODE = /\.[cm]?[jt]sx?$/;
 const SKIP = new Set(['node_modules', 'dist', 'coverage', '.expo', '.turbo', 'playwright-report', 'test-results']);
 
-/** `{ scope: 'apps/web', dir: 'apps/web/src' }` from the app tsconfig's `@/*` path. */
+/** `{ scope: 'apps/staff-web', dir: 'apps/staff-web/src' }` from the app tsconfig's `@/*` path. */
 export function aliasOf(root, scope) {
   const file = posix.join(root, scope, 'tsconfig.json');
   if (!existsSync(file)) return undefined;

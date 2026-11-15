@@ -41,8 +41,8 @@ pnpm i                         # CI or a cloud session
 pnpm supabase start            # local stack (packages/db): CI only (ci.yml e2e job)
 pnpm turbo dev                 # api :3000, web :5173, wa-stub :4010: no remote place to run (the e2e job starts its servers through Playwright webServer)
 pnpm turbo lint typecheck test # CI or a cloud session, with the ^build builds they depend on
-pnpm turbo e2e                 # playwright (apps/web against seeded db): CI only (ci.yml e2e job)
-pnpm --filter mobile start     # expo: no remote place to run; mobile is verified by CI «test mobile»/«bundle mobile» and mobile.yml
+pnpm turbo e2e                 # playwright (apps/staff-web against seeded db): CI only (ci.yml e2e job)
+pnpm --filter staff-mobile start # expo: no remote place to run; mobile is verified by CI «test mobile»/«bundle mobile» and mobile.yml
 pnpm migrate:dry && pnpm migrate:apply   # tools/migrate: follows tools/migrate/RUNBOOK.md until the owner decides
 ```
 

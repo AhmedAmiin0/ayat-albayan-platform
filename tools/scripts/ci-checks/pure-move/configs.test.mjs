@@ -36,10 +36,10 @@ test('refactor/: maps added or extended and docs pass; any other file there fail
 });
 
 test('root knip.json: workspace-relative paths follow moves inside their workspace only', () => {
-  const base = JSON.stringify({ workspaces: { '.': { entry: ['tools/x.mjs'] }, 'apps/api': { entry: ['src/main.ts'] }, 'apps/web': { entry: ['src/main.ts'] } } });
-  const head = JSON.stringify({ workspaces: { '.': { entry: ['tools/y/x.mjs'] }, 'apps/api': { entry: ['src/boot/main.ts'] }, 'apps/web': { entry: ['src/main.ts'] } } });
+  const base = JSON.stringify({ workspaces: { '.': { entry: ['tools/x.mjs'] }, 'apps/api': { entry: ['src/main.ts'] }, 'apps/staff-web': { entry: ['src/main.ts'] } } });
+  const head = JSON.stringify({ workspaces: { '.': { entry: ['tools/y/x.mjs'] }, 'apps/api': { entry: ['src/boot/main.ts'] }, 'apps/staff-web': { entry: ['src/main.ts'] } } });
   assert.equal(knipConfigMoved({ base, head }, R), true);
-  assert.equal(knipConfigMoved({ base, head: head.replace('"apps/web":{"entry":["src/main.ts"]', '"apps/web":{"entry":["src/boot/main.ts"]') }, R), false);
+  assert.equal(knipConfigMoved({ base, head: head.replace('"apps/staff-web":{"entry":["src/main.ts"]', '"apps/staff-web":{"entry":["src/boot/main.ts"]') }, R), false);
   assert.equal(knipConfigMoved({ base, head: head.replace('"src/boot/main.ts"]', '"src/boot/main.ts"],"ignore":["x"]') }, R), false);
   assert.equal(verdict('knip.json', [base, head]), 'config');
 });

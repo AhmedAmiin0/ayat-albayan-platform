@@ -39,10 +39,10 @@ test('keyPattern: full paths, quoted keys, template prefixes and parents taken w
 test('keyUsers: unknown keys and ignored readers', () => {
   const src = new Map([
     ['web/a.ts', 't.inbox.title'],
-    ['apps/mobile/b.ts', 't.pay.title'],
+    ['apps/staff-mobile/b.ts', 't.pay.title'],
   ]);
   const r = keyUsers(['inbox.title', 'pay.title', 'gone.key'], src, (f) =>
-    f.startsWith('apps/mobile/'),
+    f.startsWith('apps/staff-mobile/'),
   );
   assert.deepEqual([...r.users], ['web/a.ts']);
   assert.deepEqual(r.unknown, ['gone.key']);

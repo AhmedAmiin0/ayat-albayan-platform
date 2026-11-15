@@ -3,8 +3,8 @@ import { test } from 'node:test';
 import { suppressionsMoved } from './baselines.mjs';
 
 const RULE = 'ab/no-parent-imports';
-const FILE = 'apps/web/eslint-suppressions.json';
-const MOVES = [['apps/web/src/a/x.ts', 'apps/web/src/b/x.ts']];
+const FILE = 'apps/staff-web/eslint-suppressions.json';
+const MOVES = [['apps/staff-web/src/a/x.ts', 'apps/staff-web/src/b/x.ts']];
 const base = {
   'src/a/x.ts': { [RULE]: { count: 3 }, 'max-lines': { count: 1 } },
   'src/c/y.ts': { [RULE]: { count: 2 } },

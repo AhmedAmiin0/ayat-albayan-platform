@@ -72,7 +72,7 @@ jobs:
   #  - migrations: false only when the last deploy that pushed migrations is known (tools/scripts/env/deploy-baseline.mjs)
   #    AND nothing under packages/db/supabase/migrations/ changed since. FAIL SAFE: an unknown or unfound
   #    baseline, an API or git error, or an empty output all leave the gated migrate job ON.
-  #  - ota: true only when apps/mobile or packages/ (the JS the app bundles) changed since the last green
+  #  - ota: true only when apps/staff-mobile or packages/ (the JS the app bundles) changed since the last green
   #    preview OTA (else since the last deploy) AND native-changes.mjs finds no native change since the last
   #    APK (repository variable OTA_BASELINE_SHA, default c140b4cc). Anything unclear = no OTA.
   plan:
@@ -126,7 +126,8 @@ jobs:
           NATIVE_BASE: ${{ vars.OTA_BASELINE_SHA || 'c140b4cc' }}
         run: |
           ota=false
-          js() { git diff --name-only "$BASE" HEAD -- apps/mobile packages ':(exclude)packages/db/supabase' ':(exclude)packages/config' \
+          # -M100% + no R: a file that only moved (apps/mobile → apps/staff-mobile, 2026-11-15) is no JS change.
+          js() { git diff -M100% --diff-filter=ACDMT --name-only "$BASE" HEAD -- apps/staff-mobile apps/mobile packages ':(exclude)packages/db/supabase' ':(exclude)packages/config' \
             ':(glob,exclude)**/eslint-suppressions.json' ':(glob,exclude)**/oxlint-suppressions.json' \
             ':(glob,exclude)**/lint.blocks.mjs' ':(glob,exclude)**/*.test.ts' ':(glob,exclude)**/*.test.tsx' ':(glob,exclude)**/*.md'; }
           if [ -z "$BASE" ]; then echo "::notice::no earlier OTA or deploy known: no automatic OTA (run mobile by hand)"
@@ -201,8 +202,8 @@ jobs:
         run: |
           test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile
-          pnpm --filter "web^..." build >/dev/null
-          pnpm --filter web build
+          pnpm --filter "staff-web^..." build >/dev/null
+          pnpm --filter staff-web build
 
       - name: SSH key
         env:
@@ -325,7 +326,7 @@ jobs:
         if: ${{ !inputs.env_only }}
         run: |
           ssh target "rm -rf $DEST/web.new && mkdir -p $DEST/web.new"
-          tar -C apps/web/dist -cf - . | ssh target "tar --no-same-owner -x -C $DEST/web.new && chmod -R o+rX $DEST/web.new \
+          tar -C apps/staff-web/dist -cf - . | ssh target "tar --no-same-owner -x -C $DEST/web.new && chmod -R o+rX $DEST/web.new \
             && rm -rf $DEST/web.old && { [ ! -d $DEST/web ] || mv $DEST/web $DEST/web.old; } && mv $DEST/web.new $DEST/web"
 
       - name: Health check

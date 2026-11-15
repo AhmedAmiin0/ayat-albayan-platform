@@ -7,7 +7,7 @@ import type {
 } from '@ab/shared';
 
 // TODO(R-RPT-02): lift these additive fields into @ab/shared money/dashboard-views.ts (foundation,
-// read-only for this builder); apps/web/src/features/dashboard/types.ts mirrors them until then.
+// read-only for this builder); apps/staff-web/src/features/dashboard/types.ts mirrors them until then.
 
 export type SourceKey = SourceRow['source'];
 

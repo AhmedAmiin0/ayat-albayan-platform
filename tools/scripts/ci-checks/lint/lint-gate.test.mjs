@@ -26,9 +26,9 @@ test('aboveBase: equal or below the base branch passes with nothing to edit; abo
 
 test('gone: an entry whose file was deleted or moved fails (ESLint never lints that file)', () => {
   const byFile = { 'src/a.ts': { complexity: { count: 1 } }, 'src/old.ts': { 'max-depth': { count: 2 } } };
-  const exists = (path) => path === 'apps/web/src/a.ts';
-  assert.deepEqual(gone('apps/web', byFile, exists), ['gone: apps/web/src/old.ts (eslint . --prune-suppressions)']);
-  assert.deepEqual(gone('apps/web', {}, exists), []);
+  const exists = (path) => path === 'apps/staff-web/src/a.ts';
+  assert.deepEqual(gone('apps/staff-web', byFile, exists), ['gone: apps/staff-web/src/old.ts (eslint . --prune-suppressions)']);
+  assert.deepEqual(gone('apps/staff-web', {}, exists), []);
 });
 
 test('oxlintSuppressed: a rule oxlint runs may have no suppressed violation, whatever its prefix', () => {

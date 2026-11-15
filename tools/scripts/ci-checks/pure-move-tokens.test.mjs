@@ -38,7 +38,7 @@ test('template literals with ${…} and quotes inside stay one literal', () => {
 });
 
 test('a relative literal may be re-based so it names the same place from the moved file', () => {
-  const move = { subs, from: 'apps/mobile/src/push/a.test.ts', to: 'apps/mobile/src/core/push/a.test.ts' };
+  const move = { subs, from: 'apps/staff-mobile/src/push/a.test.ts', to: 'apps/staff-mobile/src/core/push/a.test.ts' };
   assert.equal(rebasedLiteral("'../../app'", "'../../../app'", move), true);
   assert.equal(rebasedLiteral('`../../app/(${tree}-chat)`', '`../../../app/(${tree}-chat)`', move), true);
   assert.equal(rebasedLiteral("'../../app'", "'../../../src'", move), false, 'another place');

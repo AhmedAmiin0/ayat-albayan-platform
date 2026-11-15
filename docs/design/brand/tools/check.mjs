@@ -31,7 +31,7 @@ assert.ok(mushaf.width > mushaf.height * 1.6, 'Mushaf crop is the wide book on i
 assert.equal(px(mushaf, Math.round(mushaf.width / 2), 2)[3], 0, 'nothing above the spine');
 
 // iOS icon is opaque paper at the corner; adaptive foreground is clear at the corner
-assert.deepEqual(px(read('apps/mobile/assets/icon.png'), 0, 0).map((v) => Math.round(v * 255)), [253, 248, 240, 255]);
-assert.equal(px(read('apps/mobile/assets/android-icon-foreground.png'), 0, 0)[3], 0);
+assert.deepEqual(px(read('apps/staff-mobile/assets/icon.png'), 0, 0).map((v) => Math.round(v * 255)), [253, 248, 240, 255]);
+assert.equal(px(read('apps/staff-mobile/assets/android-icon-foreground.png'), 0, 0)[3], 0);
 
 console.log('brand exports OK');

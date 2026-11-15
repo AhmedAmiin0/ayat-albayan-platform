@@ -6,12 +6,12 @@ const config = {
   rules: { eqeqeq: 'error' },
   overrides: [
     {
-      files: ['apps/web/**/*'],
+      files: ['apps/staff-web/**/*'],
       rules: { complexity: ['error', { max: 8 }], 'no-console': 'error' },
     },
-    { files: ['apps/web/**/*.ts'], rules: { complexity: ['error', { max: 6 }] } },
+    { files: ['apps/staff-web/**/*.ts'], rules: { complexity: ['error', { max: 6 }] } },
     {
-      files: ['apps/web/**/*.test.*'],
+      files: ['apps/staff-web/**/*.test.*'],
       excludeFiles: ['**/keep.test.ts'],
       rules: { 'no-console': 'off' },
     },
@@ -19,16 +19,16 @@ const config = {
 };
 
 test('oxlintRulesFor: overrides in order, excludeFiles skip one, off drops the rule', () => {
-  assert.deepEqual(oxlintRulesFor(config, 'apps/web/a.tsx'), {
+  assert.deepEqual(oxlintRulesFor(config, 'apps/staff-web/a.tsx'), {
     eqeqeq: 'error',
     complexity: ['error', { max: 8 }],
     'no-console': 'error',
   });
-  assert.deepEqual(Object.keys(oxlintRulesFor(config, 'apps/web/a.test.ts')), [
+  assert.deepEqual(Object.keys(oxlintRulesFor(config, 'apps/staff-web/a.test.ts')), [
     'eqeqeq',
     'complexity',
   ]);
-  assert.equal(oxlintRulesFor(config, 'apps/web/keep.test.ts')['no-console'], 'error');
+  assert.equal(oxlintRulesFor(config, 'apps/staff-web/keep.test.ts')['no-console'], 'error');
 });
 
 test('optionsOf: ESLint [2, {}] and a bare level carry no options', () => {
@@ -42,12 +42,12 @@ test('fileDiff + summarize: a rule off in Oxlint, or with other options, per rul
     '@typescript-eslint/x': [2],
     off: [0],
   };
-  const diff = fileDiff(eslint, oxlintRulesFor(config, 'apps/web/a.ts'));
+  const diff = fileDiff(eslint, oxlintRulesFor(config, 'apps/staff-web/a.ts'));
   assert.deepEqual(diff, { lost: ['@typescript-eslint/x'], options: ['complexity'] });
-  const lines = summarize([{ file: 'apps/web/a.ts', ...diff }], ['apps/web/b.ts']);
+  const lines = summarize([{ file: 'apps/staff-web/a.ts', ...diff }], ['apps/staff-web/b.ts']);
   assert.deepEqual(lines, [
-    'off in Oxlint: @typescript-eslint/x (1 files, e.g. apps/web/a.ts)',
-    'other options: complexity (1 files, e.g. apps/web/a.ts)',
-    'not linted by Oxlint: apps/web/b.ts',
+    'off in Oxlint: @typescript-eslint/x (1 files, e.g. apps/staff-web/a.ts)',
+    'other options: complexity (1 files, e.g. apps/staff-web/a.ts)',
+    'not linted by Oxlint: apps/staff-web/b.ts',
   ]);
 });

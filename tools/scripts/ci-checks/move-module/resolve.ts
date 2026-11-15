@@ -2,7 +2,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { posix } from 'node:path';
 import { ts } from 'ts-morph';
 
-/** A tsconfig `paths` alias such as `@/*` → `apps/web/src/*`, valid for files under `scope`. */
+/** A tsconfig `paths` alias such as `@/*` → `apps/staff-web/src/*`, valid for files under `scope`. */
 export interface Alias {
   prefix: string;
   dir: string;
