@@ -2,7 +2,8 @@
 // An OTA update only swaps JavaScript; a native dependency, plugin or app.json native field needs an APK.
 // Usage: node tools/scripts/ci-checks/native-changes.mjs <lastBuildCommit> [easProfile]   exit 1 = native change found.
 // easProfile (default preview) is the build the OTA targets: a side profile (stripe-test) compares ITS app.
-// Env APP_DIR (default apps/staff-mobile): the Expo app compared; mobile.yml app=family: apps/family-mobile.
+// Env APP_DIR (default apps/staff-mobile): the Expo app compared; mobile.yml app=family sets
+// apps/family-mobile.
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -16,7 +17,7 @@ const NATIVE_KEYS = ['version', 'sdkVersion', 'plugins', 'android', 'ios', 'sche
   'notification', 'androidStatusBar', 'updates'];
 // Bundled into the binary (app.json icon/adaptive icon/splash = top-level assets) or deciding how it is
 // built: a change needs an APK. Images in assets/<folder>/ (tabs, brand) are imported from JS and travel
-// inside the OTA bundle, so they are not native (apps/family-mobile's app.json uses apps/staff-mobile's).
+// inside the OTA bundle, so they are not native (family-mobile's app.json uses staff-mobile's).
 const ASSETS = [...new Set([`${MOBILE}/assets`, 'apps/staff-mobile/assets'])];
 const NATIVE_PATHS = [...ASSETS, `${MOBILE}/eas.json`, `${MOBILE}/plugins`, 'patches'];
 const isNativeAsset = (f) => new RegExp(`^(${MOBILE}|apps/staff-mobile)/assets/[^/]+$`).test(f);
@@ -105,7 +106,7 @@ export async function configOut(source, appJson, variant) {
   }
 }
 
-// A build made before the folder move is read at its old paths, compared by content (native/renames.mjs).
+// A build from before the folder move is read at its old paths, by content (native/renames.mjs).
 const show = (ref, file) => readAt(ref, MOBILE, file);
 const changedSince = (ref) => changedFiles(ref, NATIVE_PATHS);
 /** The APP_VARIANT an eas.json profile builds with (undefined = the normal app). */

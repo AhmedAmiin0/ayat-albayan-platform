@@ -1,5 +1,5 @@
 // Two apps on the phone (docs/50 §7): the staff app (apps/staff-mobile) and the family app
-// (apps/family-mobile). Who may stay signed in, and the «wrongApp» notice, follow the app's audience,
+// (family-mobile). Who may stay signed in, and the «wrongApp» notice, follow the app's audience,
 // which each app's entry (index.ts) names once, before its first screen.
 
 export type Audience = 'staff' | 'family';

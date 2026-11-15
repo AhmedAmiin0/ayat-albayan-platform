@@ -3,7 +3,7 @@ import { t } from '@ab/mobile-kit';
 import type { StudentListItem } from '@/students/shared/types';
 
 /**
- * The row's one «دورك» note, same rule as the web list (apps/staff-web …/student-note.ts): a current
+ * The row's one «دورك» note, same rule as the web list (staff-web …/student-note.ts): a current
  * (new, trial, pending_subscription, active, pending_renewal or expired) student with no teacher. The only alert the list API can back today.
  * TODO(R-MOB-02): package/report/trial-today notes once the list response carries them.
  */

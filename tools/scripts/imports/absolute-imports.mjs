@@ -5,7 +5,7 @@
 // leaves the alias folder (`../package.json` from src/, `../(tabs)/x` in mobile app/) stay;
 // nothing else changes. Deterministic (sorted files, span edits only): a second run finds nothing.
 // Usage: pnpm imports:absolute -- <workspace|paths…> [--write]   (dry run without --write)
-//   workspace: api, staff-web, staff-mobile or apps/<name>; paths: files or folders inside one or more apps.
+//   workspace: api, staff-web, staff-mobile or apps/<name>; paths: files or folders inside apps.
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';

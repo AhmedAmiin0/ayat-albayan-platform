@@ -1,10 +1,14 @@
 // The Expo apps moved folders (owner 2026-11-15): apps/mobile → apps/staff-mobile, apps/family →
-// apps/family-mobile. The last APK may predate the move, so native-changes.mjs reads that build's files at
-// their old paths, names them by the new ones and compares by content: a file that only moved is no change.
+// apps/family-mobile. The last APK may predate the move, so native-changes.mjs reads that build's
+// files at their old paths, names them by the new ones and compares by content: a file that only
+// moved is no change.
 import { execFileSync } from 'node:child_process';
 
 /** Current app folder → its folder before the move. */
-export const LEGACY_DIRS = { 'apps/staff-mobile': 'apps/mobile', 'apps/family-mobile': 'apps/family' };
+export const LEGACY_DIRS = {
+  'apps/staff-mobile': 'apps/mobile',
+  'apps/family-mobile': 'apps/family',
+};
 const PAIRS = Object.entries(LEGACY_DIRS);
 const under = (path, dir) => path === dir || path.startsWith(`${dir}/`);
 
@@ -16,7 +20,8 @@ export function currentPath(path) {
 
 /** The pathspecs plus their pre-move twins, so a commit from before the move is read too. */
 export function withLegacy(paths) {
-  const twin = (p) => PAIRS.filter(([now]) => under(p, now)).map(([now, old]) => old + p.slice(now.length));
+  const twin = (p) =>
+    PAIRS.filter(([now]) => under(p, now)).map(([now, old]) => old + p.slice(now.length));
   const twins = paths.flatMap(twin);
   return [...new Set([...paths, ...twins])];
 }
@@ -29,17 +34,20 @@ const sibling = (dir) => `../${dir.slice('apps/'.length)}/`;
 export const currentRefs = (text) =>
   PAIRS.reduce((t, [now, old]) => t.replaceAll(sibling(old), sibling(now)), text);
 
-/** `git ls-tree -r -z` output → Map(current path → "mode type blob"): a mode change counts too. */
+/** `git ls-tree -r -z` output → Map(current path → "mode type blob"): a mode change counts. */
 export function blobs(lsTree) {
   const entries = lsTree.split('\0').filter(Boolean).map((line) => line.split('\t'));
   return new Map(entries.map(([meta, path]) => [currentPath(path), meta]));
 }
 
-/** Paths added, removed or edited between two trees (Map path → entry); a pure move is not listed. */
-export const changedPaths = (before, after) =>
-  [...new Set([...before.keys(), ...after.keys()])].filter((p) => before.get(p) !== after.get(p)).sort();
+/** Paths added, removed or edited between two trees (Map path → entry); a pure move is none. */
+export function changedPaths(before, after) {
+  const all = [...new Set([...before.keys(), ...after.keys()])];
+  return all.filter((p) => before.get(p) !== after.get(p)).sort();
+}
 
-const git = (args) => execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+const QUIET = { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] };
+const git = (args) => execFileSync('git', args, QUIET);
 const gitShow = (spec) => {
   try {
     return git(['show', spec]);
@@ -56,7 +64,7 @@ export function readAt(ref, dir, file) {
 
 const tree = (ref, paths) => blobs(git(['ls-tree', '-r', '-z', ref, '--', ...withLegacy(paths)]));
 
-/** Files under `paths` whose content differs between `ref` and HEAD (by content: a move is no change). */
+/** Files under `paths` whose content differs between `ref` and HEAD (a move is no change). */
 export function changedFiles(ref, paths) {
   try {
     return changedPaths(tree(ref, paths), tree('HEAD', paths));

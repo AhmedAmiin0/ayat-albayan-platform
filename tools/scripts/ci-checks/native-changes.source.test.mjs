@@ -34,7 +34,7 @@ test('APP_DIR picks the Expo app compared: the family app has its plugins, and i
     assert.deepEqual(family.nativeChanges(snap(), snap(), { files }), [
       'apps/family-mobile/assets/icon.png changed',
       'apps/family-mobile/plugins/x.ts changed',
-      // apps/family-mobile/app.json's icon, adaptive icon and splash are apps/staff-mobile/assets files.
+      // family-mobile's app.json icon, adaptive icon and splash are apps/staff-mobile/assets files.
       'apps/staff-mobile/assets/icon.png changed',
     ]);
   } finally {

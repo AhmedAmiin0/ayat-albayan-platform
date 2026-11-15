@@ -8,7 +8,7 @@ import {
 import { ruleFromSlot } from '@/booking/shared/slots';
 
 // POST /lessons/:id/reschedule bodies (R-SCH-07, docs/10 route 8), as the web builds them
-// (apps/staff-web/src/features/schedule/reschedule.ts). Mobile has no «احجز رغم التعارض»: no override.
+// (staff-web/src/features/schedule/reschedule.ts). Mobile has no «احجز رغم التعارض»: no override.
 
 export type Scope = 'one' | 'rule';
 type Duration = (typeof DURATIONS)[number];

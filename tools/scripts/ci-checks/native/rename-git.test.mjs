@@ -1,5 +1,6 @@
-// End to end on a scratch git repo: the staff app moves apps/mobile → apps/staff-mobile and the family app
-// apps/family → apps/family-mobile (its icons now ../staff-mobile/assets): no native change, so the OTA goes.
+// End to end on a scratch git repo: the staff app moves apps/mobile → apps/staff-mobile and the
+// family app apps/family → apps/family-mobile (its icons now ../staff-mobile/assets): no native
+// change, so the OTA goes.
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
@@ -15,29 +16,35 @@ const put = (path, text) => {
   mkdirSync(join(dir, path, '..'), { recursive: true });
   writeFileSync(join(dir, path), text);
 };
-const familyJson = (to) => JSON.stringify({ expo: { name: 'f', icon: `../${to}/assets/icon.png` } });
-const guard = (env) => spawnSync('node', [SCRIPT, first, 'preview'], { cwd: dir, encoding: 'utf8', env: { ...process.env, ...env } });
+const familyJson = (to) =>
+  JSON.stringify({ expo: { name: 'f', icon: `../${to}/assets/icon.png` } });
+const guard = (env) => {
+  const opts = { cwd: dir, encoding: 'utf8', env: { ...process.env, ...env } };
+  return spawnSync('node', [SCRIPT, first, 'preview'], opts);
+};
+const pkg = (name) => JSON.stringify({ name, dependencies: { expo: '57' } });
 let first = '';
 
 before(() => {
   git('init', '-q');
   git('config', 'user.email', 'ci@example.invalid');
   git('config', 'user.name', 'ci');
-  put('apps/mobile/app.json', JSON.stringify({ expo: { name: 's', version: '1.0.0', plugins: ['expo-router'] } }));
-  put('apps/mobile/package.json', JSON.stringify({ name: 'mobile', dependencies: { expo: '57' } }));
+  const staff = { name: 's', version: '1.0.0', plugins: ['expo-router'] };
+  put('apps/mobile/app.json', JSON.stringify({ expo: staff }));
+  put('apps/mobile/package.json', pkg('mobile'));
   put('apps/mobile/eas.json', JSON.stringify({ build: { preview: { channel: 'preview' } } }));
   put('apps/mobile/assets/icon.png', 'png');
   put('apps/mobile/plugins/p.ts', 'export {}');
   put('apps/family/app.json', familyJson('mobile'));
-  put('apps/family/package.json', JSON.stringify({ name: 'family', dependencies: { expo: '57' } }));
+  put('apps/family/package.json', pkg('family'));
   git('add', '-A');
   git('commit', '-qm', 'build');
   first = git('rev-parse', 'HEAD');
   git('mv', 'apps/mobile', 'apps/staff-mobile');
   git('mv', 'apps/family', 'apps/family-mobile');
   put('apps/family-mobile/app.json', familyJson('staff-mobile'));
-  put('apps/staff-mobile/package.json', JSON.stringify({ name: 'staff-mobile', dependencies: { expo: '57' } }));
-  put('apps/family-mobile/package.json', JSON.stringify({ name: 'family-mobile', dependencies: { expo: '57' } }));
+  put('apps/staff-mobile/package.json', pkg('staff-mobile'));
+  put('apps/family-mobile/package.json', pkg('family-mobile'));
   git('add', '-A');
   git('commit', '-qm', 'rename');
 });
