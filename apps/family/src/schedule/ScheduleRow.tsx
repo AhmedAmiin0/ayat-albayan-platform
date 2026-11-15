@@ -3,6 +3,7 @@ import type { ClockOptions } from '@ab/shared';
 import { clockOf } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, Avatar, t, type, useTheme } from '@ab/mobile-kit';
+import { RowText } from '@/ui';
 import { JoinAction, rangeText, teacherText } from '@/lessons';
 
 interface ScheduleRowProps {
@@ -25,12 +26,7 @@ export function ScheduleRow({ entry, clock, now, named }: ScheduleRowProps) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 }}>
       {named ? <Avatar name={student.name} id={student.id} size="sm" decorative /> : null}
-      <View style={{ flex: 1, gap: 2 }}>
-        <AppText style={{ fontFamily: type.ui[600], color: color.ink }}>{time}</AppText>
-        <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>
-          {`${teacherText(lesson.teacher)} · ${length}`}
-        </AppText>
-      </View>
+      <RowText title={time} line={`${teacherText(lesson.teacher)} · ${length}`} />
       <JoinAction lesson={lesson} student={student} now={now} short />
     </View>
   );

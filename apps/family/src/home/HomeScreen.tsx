@@ -1,6 +1,7 @@
 import type { PortalHome } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
-import { FamilyPage, GreetingHeader, LoadState } from '@/nav';
+import { LoadState } from '@/ui';
+import { FamilyPage, GreetingHeader } from '@/nav';
 import { ownStudent, usePortalMe } from '@/portal';
 import { GuardianHome } from './GuardianHome';
 import { StudentHome } from './StudentHome';

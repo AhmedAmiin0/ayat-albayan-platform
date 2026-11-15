@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking, Vibration } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { lesson, student } from '@/testing/portal-fixtures';
+import { lesson, student } from '@/portal/portal.fixtures';
 import { JoinAction } from './JoinAction';
 
 const mockSend = jest.fn();

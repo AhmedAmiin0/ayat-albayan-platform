@@ -2,7 +2,6 @@ import { dayWord, type DayWord } from '@ab/client-core';
 import {
   clockOf,
   dateText,
-  monthText,
   teacherName,
   type ClockOptions,
   type PortalLesson,
@@ -19,7 +18,7 @@ const DAY_WORD: Record<DayWord, () => string> = {
 };
 
 /** «اليوم» / «غدًا» / «الأحد 16 نوفمبر». */
-export function dayText(at: Date, clock: ClockOptions, now: Date): string {
+function dayText(at: Date, clock: ClockOptions, now: Date): string {
   const word = dayWord(at, now, clock.tz);
   return word
     ? DAY_WORD[word]()
@@ -46,6 +45,3 @@ export const dateLine = (at: Date, clock: ClockOptions): string =>
 
 /** The teacher's name in the UI language. */
 export const teacherText = (teacher: PortalTeacher): string => teacherName(teacher, locale);
-
-/** «نوفمبر 2026» of a «YYYY-MM» month. */
-export const monthTitle = (month: string): string => monthText(month, locale);

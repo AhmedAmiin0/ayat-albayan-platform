@@ -10,7 +10,7 @@ export const childHref = (id: string) => `/child/${enc(id)}` as const;
 export const packageHref = (studentId: string) => `/package/${enc(studentId)}` as const;
 export const ALERTS_HREF = '/alerts';
 
-export interface ReportLink {
+interface ReportLink {
   studentId: string;
   reportId: string;
   /** A recording staff made visible to the student, else null. */

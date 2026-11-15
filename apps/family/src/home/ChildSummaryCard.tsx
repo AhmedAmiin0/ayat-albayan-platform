@@ -3,8 +3,9 @@ import type { ClockOptions, PortalKind, PortalReport, PortalStudent } from '@ab/
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { AppText, Avatar, Ltr, t, type, useTheme } from '@ab/mobile-kit';
-import { dateLine, Figure, NewMark } from '@/lessons';
-import { childHref, PressCard } from '@/nav';
+import { Figure, NewMark, PressCard, StudentIdentity } from '@/ui';
+import { dateLine } from '@/lessons';
+import { childHref } from '@/nav';
 import { useChildSummary, useFamilyClock } from '@/portal';
 
 const count = (n: number | null): string => (n === null ? '–' : String(n));
@@ -30,14 +31,9 @@ export function ChildSummaryCard({ student, kind }: { student: PortalStudent; ki
       onPress={() => router.push(childHref(student.id))}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <Avatar name={student.name} id={student.id} decorative />
-        <View style={{ flex: 1, gap: 2 }}>
-          <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>
-            {student.name}
-          </AppText>
-          <Ltr style={{ fontSize: type.size.xs, color: color.ink2 }}>{student.code}</Ltr>
+        <StudentIdentity student={student}>
           <AppText style={{ fontSize: type.size.xs, color: color.ink3 }}>{lastLine}</AppText>
-        </View>
+        </StudentIdentity>
         {s.newReports > 0 ? <NewMark /> : null}
       </View>
       <View style={{ flexDirection: 'row', gap: 8 }}>

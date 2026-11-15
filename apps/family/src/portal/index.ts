@@ -1,4 +1,4 @@
-export { portal, portalSend } from './api';
+export { portalSend } from './api';
 export { ownStudent, studentOf, usePortalMe } from './use-portal-me';
 export {
   useChildHistory,

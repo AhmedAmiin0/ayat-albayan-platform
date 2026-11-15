@@ -1,6 +1,7 @@
 import type { PortalHome } from '@ab/shared';
 import { EmptyState, t } from '@ab/mobile-kit';
-import { FamilyHeader, FamilyPage, LoadState } from '@/nav';
+import { LoadState } from '@/ui';
+import { FamilyHeader, FamilyPage } from '@/nav';
 import { ownStudent, usePortalMe, useRefreshPortal } from '@/portal';
 import { OwnReports } from './OwnReports';
 

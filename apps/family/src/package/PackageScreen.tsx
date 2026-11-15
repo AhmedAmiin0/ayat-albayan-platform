@@ -2,7 +2,8 @@ import { portalViewer, seesMoney } from '@ab/client-core';
 import type { PortalHome } from '@ab/shared';
 import { useLocalSearchParams } from 'expo-router';
 import { EmptyState, t } from '@ab/mobile-kit';
-import { FamilyHeader, FamilyPage, LoadState } from '@/nav';
+import { LoadState } from '@/ui';
+import { FamilyHeader, FamilyPage } from '@/nav';
 import { studentOf, usePortalMe, useRefreshPortal } from '@/portal';
 import { PackageBody } from './PackageBody';
 

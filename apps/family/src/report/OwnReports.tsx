@@ -2,8 +2,7 @@ import { reportMonths } from '@ab/client-core';
 import { localDateIn, type PortalReport, type PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { EmptyState, t, useNow } from '@ab/mobile-kit';
-import { Figure, MonthSection } from '@/lessons';
-import { LoadState } from '@/nav';
+import { Figure, LoadState, MonthSection } from '@/ui';
 import { useChildReports } from '@/portal';
 import { ReportRow } from './ReportRow';
 

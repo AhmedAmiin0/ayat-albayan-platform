@@ -1,8 +1,8 @@
 import { nextLesson } from '@ab/client-core';
 import type { PortalLessons, PortalStudent } from '@ab/shared';
 import { EmptyState, t, useNow } from '@ab/mobile-kit';
+import { LoadState } from '@/ui';
 import { NextLessonCard, PrepareCard, UpcomingList } from '@/lessons';
-import { LoadState } from '@/nav';
 import { useChildLessons } from '@/portal';
 
 interface UpcomingProps {

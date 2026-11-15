@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { AppText, type, useTheme } from '@ab/mobile-kit';
 
-export type FigureTone = 'ok' | 'bad' | 'act' | 'ink';
+type FigureTone = 'ok' | 'bad' | 'act' | 'ink';
 
 interface FigureProps {
   value: string;

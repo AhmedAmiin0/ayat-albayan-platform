@@ -2,8 +2,9 @@ import { isNewReport } from '@ab/client-core';
 import type { PortalHistoryRow, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, raisedCard, t, type, useTheme } from '@ab/mobile-kit';
-import { DateTile, dayTile, NewMark, rangeText, teacherText } from '@/lessons';
-import { openReport, PressCard } from '@/nav';
+import { DateTile, NewMark, PressCard, RowText, type RowNote } from '@/ui';
+import { dayTile, rangeText, teacherText } from '@/lessons';
+import { openReport } from '@/nav';
 import { useFamilyClock, useSeenReports } from '@/portal';
 
 interface HistoryRowProps {
@@ -32,25 +33,18 @@ export function HistoryRow({ row, student }: HistoryRowProps) {
   const seen = useSeenReports();
   const fresh = row.report_id !== null && isNewReport(row.report_id, seen);
   const pending = row.outcome === 'attended' && row.report_id === null;
+  const notes: RowNote[] = [
+    ...(pending ? [{ text: t.portal.app.history.reportPending, tone: 'quiet' as const }] : []),
+    ...(row.recording_id ? [{ text: t.portal.app.history.recording, tone: 'link' as const }] : []),
+  ];
   const body = (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
       <DateTile {...dayTile(new Date(row.starts_at), clock)} />
-      <View style={{ flex: 1, gap: 2 }}>
-        <AppText style={{ fontFamily: type.ui[600], color: color.ink }}>{headline(row)}</AppText>
-        <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>
-          {`${rangeText(row, clock)} · ${teacherText(row.teacher)}`}
-        </AppText>
-        {pending ? (
-          <AppText style={{ fontSize: type.size['2xs'], color: color.ink3 }}>
-            {t.portal.app.history.reportPending}
-          </AppText>
-        ) : null}
-        {row.recording_id ? (
-          <AppText style={{ fontSize: type.size['2xs'], color: color.lapis }}>
-            {t.portal.app.history.recording}
-          </AppText>
-        ) : null}
-      </View>
+      <RowText
+        title={headline(row)}
+        line={`${rangeText(row, clock)} · ${teacherText(row.teacher)}`}
+        notes={notes}
+      />
       {fresh ? <NewMark /> : null}
     </View>
   );

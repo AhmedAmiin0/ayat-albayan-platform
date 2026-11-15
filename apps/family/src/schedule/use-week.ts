@@ -22,8 +22,7 @@ export function useWeek() {
   const now = useNow(TICK_MS);
   const only = chip === ALL ? null : chip;
   const bounds = scheduleWeek(now, clock.tz, offset);
-  const day = (d: string): string =>
-    calendarDayText(d, locale, { day: 'numeric', month: 'long' });
+  const day = (d: string): string => calendarDayText(d, locale, { day: 'numeric', month: 'long' });
   return {
     students,
     named: me?.kind === 'guardian',

@@ -2,7 +2,7 @@ import { newReportCount } from '@ab/client-core';
 import type { PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { raisedCard, useTheme } from '@ab/mobile-kit';
-import { LoadState } from '@/nav';
+import { LoadState } from '@/ui';
 import { PackageLine } from '@/package';
 import { useChildLessons, useChildPackage, useChildReports, useSeenReports } from '@/portal';
 import { CardFigures } from './CardFigures';

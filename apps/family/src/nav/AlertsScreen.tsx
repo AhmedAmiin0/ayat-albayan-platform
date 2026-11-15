@@ -1,9 +1,9 @@
 import { View } from 'react-native';
 import { Button, t, useMarkRead, useNotifications } from '@ab/mobile-kit';
+import { LoadState } from '@/ui';
 import { AlertSections } from './AlertSections';
 import { FamilyHeader } from './FamilyHeader';
 import { FamilyPage } from './FamilyPage';
-import { LoadState } from './LoadState';
 
 /**
  * «الإشعارات» (canvas Alerts), pushed above the tabs: GET /me/notifications by day; a tap marks

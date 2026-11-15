@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { AppText, type, useTheme } from '@ab/mobile-kit';
-import { monthTitle } from './lesson-text';
+import { monthText } from '@ab/shared';
+import { AppText, locale, type, useTheme } from '@ab/mobile-kit';
 
 /** «نوفمبر 2026» over that month's rows (past lessons, reports). */
 export function MonthSection({ month, children }: { month: string; children: ReactNode }) {
@@ -12,7 +12,7 @@ export function MonthSection({ month, children }: { month: string; children: Rea
         accessibilityRole="header"
         style={{ fontFamily: type.ui[700], fontSize: type.size.sm, color: color.ink2 }}
       >
-        {monthTitle(month)}
+        {monthText(month, locale)}
       </AppText>
       {children}
     </View>

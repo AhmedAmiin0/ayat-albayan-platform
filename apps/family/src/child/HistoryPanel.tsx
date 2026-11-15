@@ -1,8 +1,7 @@
 import { historyMonths, historyRows } from '@ab/client-core';
 import type { PortalHistory, PortalHistoryStatus, PortalStudent } from '@ab/shared';
 import { AppText, Button, EmptyState, t, type, useTheme } from '@ab/mobile-kit';
-import { MonthSection } from '@/lessons';
-import { LoadState } from '@/nav';
+import { LoadState, MonthSection } from '@/ui';
 import { useChildHistory } from '@/portal';
 import { HistoryRow } from './HistoryRow';
 

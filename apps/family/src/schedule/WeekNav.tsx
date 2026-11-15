@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { AppText, Chevron, IconButton, t, type, useTheme } from '@ab/mobile-kit';
 
 /** The weeks the API covers (the next 14 days reach into the third week). */
-export const LAST_WEEK = 2;
+const LAST_WEEK = 2;
 
 const TITLE: readonly (() => string)[] = [
   () => t.portal.app.schedule.thisWeek,

@@ -2,8 +2,8 @@ import { packageSummary } from '@ab/client-core';
 import type { PortalMonth, PortalPackageView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@ab/mobile-kit';
+import { Figure } from '@/ui';
 import { amountText } from '@/package';
-import { Figure } from '@/lessons';
 
 interface CardFiguresProps {
   month: PortalMonth | undefined;

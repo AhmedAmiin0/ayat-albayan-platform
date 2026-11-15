@@ -2,8 +2,8 @@ import { isAhead } from '@ab/client-core';
 import type { PortalLesson, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, InsetGroup, t, type, useTheme } from '@ab/mobile-kit';
+import { DateTile } from '@/ui';
 import { useFamilyClock } from '@/portal';
-import { DateTile } from './DateTile';
 import { dayTile, rangeText, teacherText } from './lesson-text';
 
 interface UpcomingListProps {
