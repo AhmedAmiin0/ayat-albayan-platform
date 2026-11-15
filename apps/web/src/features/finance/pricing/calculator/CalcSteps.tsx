@@ -11,6 +11,7 @@ import {
   STUDENTS_MIN,
   type PackageId,
 } from '@ab/shared';
+import type { ReactNode } from 'react';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
 import { OTHER, type Selection } from '@/features/finance/pricing/api';
@@ -48,13 +49,15 @@ export interface CalcStepsProps {
   onChange: (patch: Partial<Selection>) => void;
   /** The free 0–100 field beside the pills (the calculator); the chat's «عرض سعر» has the pills only. */
   freeDiscount?: boolean;
+  /** Beside the pills: the chat's «مبلغ مخصص» (owner 2026-11-15). */
+  discountExtra?: ReactNode;
 }
 
 /**
  * The five calculator steps (docs/08 §3): country, duration, package, students, discount. Shared by
  * «حاسبة الأسعار» and the chat's «عرض سعر» sheet.
  */
-export function CalcSteps({ sel, onChange, freeDiscount = true }: CalcStepsProps) {
+export function CalcSteps({ sel, onChange, freeDiscount = true, discountExtra }: CalcStepsProps) {
   const weekly = sel.pkg === 'weekly';
   return (
     <div className="grid content-start gap-6">
@@ -125,6 +128,7 @@ export function CalcSteps({ sel, onChange, freeDiscount = true }: CalcStepsProps
             <span aria-hidden="true">%</span>
           </span>
         )}
+        {discountExtra}
       </SegmentStep>
     </div>
   );

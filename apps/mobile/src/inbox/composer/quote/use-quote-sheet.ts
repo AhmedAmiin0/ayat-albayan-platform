@@ -7,6 +7,7 @@ import { DEFAULT_PRICING, type PricingSelection, useQuote } from '@/finance';
 import { t } from '@ab/mobile-kit';
 import { PINS, pinnedId, useReplayed } from '@/inbox/thread/send/pinned-send';
 import { chatSendError } from '@/inbox/thread/send/send-error';
+import { useQuoteCustom } from './use-quote-custom';
 import { sendKey, useSendMessage } from '@/inbox/thread/hooks/use-thread';
 
 /** The calculator's default choice, with the country of the chat's number (+966 → SA …, else USD). */
@@ -18,16 +19,20 @@ function initialSelection(phone: string): PricingSelection {
  * The sheet's choice and its quote from GET /pricing/quote. `text` is the calculator's own offer
  * (offerText with ar.pricing: the guardian reads Arabic whatever the UI language); null while the
  * first quote loads. `stale`: the card still holds the previous choice's price, so nothing may leave.
+ * `custom`: «مبلغ مخصص» (useQuoteCustom); while its amount is not valid, `invalid` holds everything.
  */
 export function useQuoteSheet(phone: string) {
   const [selection, setSelection] = useState(() => initialSelection(phone));
   const quote = useQuote(selection);
+  const custom = useQuoteCustom(quote.data);
   return {
     selection,
     change: (patch: Partial<PricingSelection>) => setSelection((s) => ({ ...s, ...patch })),
     quote,
-    text: quote.data ? offerText(quote.data, ar.pricing) : null,
+    text: quote.data ? offerText(quote.data, ar.pricing, custom.total) : null,
     stale: quote.isPlaceholderData,
+    custom: custom.price,
+    invalid: !custom.valid,
   };
 }
 

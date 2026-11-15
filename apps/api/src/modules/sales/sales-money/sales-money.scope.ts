@@ -1,4 +1,4 @@
-import { DISCOUNTS } from '@ab/shared';
+import { DISCOUNTS, salesPriceFloor } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -22,15 +22,10 @@ export function assertSalesDiscount(pricing: { discount?: number }): void {
   if (!DISCOUNTS.some((d) => d === discount)) throw forbidden('discount_not_allowed');
 }
 
-/** The deepest pill's price (round(total × 0.85)): the lowest she may set as «مبلغ مخصص». */
-export function salesPriceFloor(total: number): number {
-  return Math.round(total * (1 - Math.max(...DISCOUNTS) / 100));
-}
-
 /**
- * «مبلغ مخصص» on her path (owner 2026-11-05): the same floor as the pills, or a 1 SAR
- * package plus her own recorded transfer would earn the commission: 403 discount_not_allowed
- * with the lowest price. The admin's POST /subscriptions never calls it (unrestricted).
+ * «مبلغ مخصص» on her path (owner 2026-11-05): the same floor as the pills (salesPriceFloor in
+ * @ab/shared), or a 1 SAR package plus her own recorded transfer would earn the commission:
+ * 403 discount_not_allowed with the lowest price. The admin's POST /subscriptions never calls it (unrestricted).
  */
 export function assertSalesPrice(price: { amount: number; total: number; currency: string }): void {
   const min = salesPriceFloor(price.total);
