@@ -57,4 +57,21 @@ describe('offerText (docs/08 §3, site WhatsApp copy)', () => {
   it('formats amounts with Western digits and commas', () => {
     expect([5, 1061, 1234567].map(formatAmount)).toEqual(['5', '1,061', '1,234,567']);
   });
+
+  it('a «مبلغ مخصص» total replaces the total and drops the discount lines', () => {
+    const q = quote({ ...base, tier: 'standard', country: 'QA', discount: 10 });
+    const lines = offerText(q, ar.pricing, 1500).split('\n');
+    expect(lines.slice(1)).toEqual([
+      'عدد الطلاب: 1',
+      'الإجمالي: 1,500 ر.ق',
+      'جميع الباقات تبدأ بجلسة تجريبية مجانية بالكامل — جرّب أولاً ثم قرّر.',
+    ]);
+    expect(lines[0]).toBe(offerText(q, ar.pricing).split('\n')[0]);
+  });
+
+  it('no override: the same text as before, discount lines and all', () => {
+    const q = quote({ ...base, tier: 'starter', discount: 5 });
+    expect(offerText(q, ar.pricing, undefined)).toBe(offerText(q, ar.pricing));
+    expect(offerText(q, ar.pricing).split('\n')).toHaveLength(6);
+  });
 });

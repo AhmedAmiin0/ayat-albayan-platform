@@ -3,6 +3,7 @@ import ar from '@ab/shared/i18n/ar.json';
 import { useIsMutating, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { quotePins } from './quote-id';
+import { useQuoteCustom } from './use-quote-custom';
 import { INITIAL_SELECTION, OTHER, quoteQuery, type Selection, useDebounced } from '@/features/finance/pricing';
 import { sendText } from '@/features/messaging/inbox/api/api';
 import { replayedOther, SEND_UNCONFIRMED } from '@ab/client-core';
@@ -22,17 +23,21 @@ export function initialSelection(phone: string): Selection {
  * The sheet's choice and its quote (GET /pricing/quote, debounced as on the calculator). `text` is
  * the calculator's own offer (offerText with ar.pricing: the guardian reads Arabic whatever the UI
  * language); null until the first quote. `stale`: the price shown is still the previous choice's.
+ * `custom`: «مبلغ مخصص» (useQuoteCustom); while its amount is not valid, `invalid` holds all.
  */
 export function useQuoteOffer(phone: string) {
   const [sel, setSel] = useState(() => initialSelection(phone));
   const asked = useDebounced(sel);
   const quote = useQuery(quoteQuery(asked));
+  const custom = useQuoteCustom(quote.data);
   return {
     sel,
     change: (patch: Partial<Selection>) => setSel((s) => ({ ...s, ...patch })),
     quote,
-    text: quote.data ? offerText(quote.data, ar.pricing) : null,
+    text: quote.data ? offerText(quote.data, ar.pricing, custom.total) : null,
     stale: sel !== asked || quote.isPlaceholderData,
+    custom: custom.price,
+    invalid: !custom.valid,
   };
 }
 

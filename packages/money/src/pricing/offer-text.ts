@@ -34,19 +34,22 @@ function packageLine(q: Quote, t: OfferLabels): string {
   return `${name} (${sessions} - ${t.durations[String(q.duration)] ?? q.duration} ${t.perCircle})`;
 }
 
-export function offerText(q: Quote, t: OfferLabels): string {
+/**
+ * The offer, one line per item. `total`: a «مبلغ مخصص» typed on the quote (owner 2026-11-15);
+ * it is the only total said, so the discount lines, which would contradict it, are dropped.
+ */
+export function offerText(q: Quote, t: OfferLabels, total?: number): string {
   const money = (n: number) => `${formatAmount(n)} ${t.currencies[q.currency]}`;
-  const lines = [
-    `${t.waIntro} ${packageLine(q, t)}`,
-    `${t.studentsLabel}: ${q.students}`,
-    `${t.total}: ${money(q.total)}`,
-  ];
-  if (q.discount > 0) {
-    lines.push(
-      `${t.discountLabel}: ${q.discount}%`,
-      `${t.afterDiscount}: ${money(q.afterDiscount)}`,
-    );
-  }
-  lines.push(t.trialNote);
-  return lines.join('\n');
+  const head = [`${t.waIntro} ${packageLine(q, t)}`, `${t.studentsLabel}: ${q.students}`];
+  const priced = total === undefined ? pricedLines(q, t, money) : [`${t.total}: ${money(total)}`];
+  return [...head, ...priced, t.trialNote].join('\n');
+}
+
+/** The calculator's total, then the discount and the price after it when there is one. */
+function pricedLines(q: Quote, t: OfferLabels, money: (n: number) => string): string[] {
+  const discounted = q.discount > 0;
+  const discount = discounted
+    ? [`${t.discountLabel}: ${q.discount}%`, `${t.afterDiscount}: ${money(q.afterDiscount)}`]
+    : [];
+  return [`${t.total}: ${money(q.total)}`, ...discount];
 }

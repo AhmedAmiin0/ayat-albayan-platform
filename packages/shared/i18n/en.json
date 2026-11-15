@@ -2160,7 +2160,8 @@
     "customPrice": {
       "label": "Package price ({currency})",
       "quoted": "Calculator price: {amount} {currency}",
-      "invalid": "Enter an amount above zero with at most 2 decimals."
+      "invalid": "Enter an amount above zero with at most 2 decimals.",
+      "min": "Lowest allowed amount: {amount} {currency}"
     }
   },
   "payments": {

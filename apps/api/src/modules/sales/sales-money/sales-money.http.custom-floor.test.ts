@@ -3,7 +3,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
-import { salesPriceFloor } from './sales-money.scope';
+import { salesPriceFloor } from '@ab/shared';
 
 // «مبلغ مخصص» (owner 2026-11-05 review): the assistant's custom price has the pills' floor
 // (the weekly SA quote is 145: at least round(145 × 0.85) = 123); the admin's POST /subscriptions
