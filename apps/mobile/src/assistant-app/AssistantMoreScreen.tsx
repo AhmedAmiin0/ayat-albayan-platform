@@ -2,6 +2,7 @@ import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
 import {
   t,
+  BiometricSwitchRow,
   SignOutButton,
   Screen,
   ScreenHeader,
@@ -25,6 +26,7 @@ export function AssistantMoreScreen() {
       </InsetGroup>
       <AppearancePicker />
       <ClockFormatPicker />
+      <BiometricSwitchRow />
       <LanguageRow />
       <SignOutButton />
     </Screen>

@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { allowedRows } from '@/core/auth/route-permissions';
 import {
   t,
+  BiometricSwitchRow,
   SignOutButton,
   ListRow,
   Screen,
@@ -49,6 +50,7 @@ export function SalesMoreScreen({ can }: { can: Can }) {
       </InsetGroup>
       <AppearancePicker />
       <ClockFormatPicker />
+      <BiometricSwitchRow />
       <LanguageRow />
       <SignOutButton />
     </Screen>

@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import {
+  BiometricGate,
   type GateStatus,
   useAuthGate,
   useMeReady,
@@ -46,25 +47,27 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
   useFamilyPush(ready && signedIn);
   return (
     <RootFrame ready={ready} fontsLoaded={boot.fontsLoaded} brand={familyBrand()}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: SCREEN_ANIMATION,
-          contentStyle: { backgroundColor: color.margin },
-        }}
-      >
-        <Stack.Protected guard={signedIn}>
-          {/* The tabs, then the screens pushed above them (no tab bar under: rn-screens#4132). */}
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="child/[id]" />
-          <Stack.Screen name="report/[id]" />
-          <Stack.Screen name="package/[id]" />
-          <Stack.Screen name="alerts" />
-        </Stack.Protected>
-        <Stack.Protected guard={gate === 'out'}>
-          <Stack.Screen name="login" />
-        </Stack.Protected>
-      </Stack>
+      <BiometricGate signedIn={signedIn}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: SCREEN_ANIMATION,
+            contentStyle: { backgroundColor: color.margin },
+          }}
+        >
+          <Stack.Protected guard={signedIn}>
+            {/* The tabs, then the screens pushed above them (no tab bar: rn-screens#4132). */}
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="child/[id]" />
+            <Stack.Screen name="report/[id]" />
+            <Stack.Screen name="package/[id]" />
+            <Stack.Screen name="alerts" />
+          </Stack.Protected>
+          <Stack.Protected guard={gate === 'out'}>
+            <Stack.Screen name="login" />
+          </Stack.Protected>
+        </Stack>
+      </BiometricGate>
     </RootFrame>
   );
 }

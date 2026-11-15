@@ -4,7 +4,7 @@
     "slug": "ayat-albayan-admin",
     "owner": "holdmycup",
     "scheme": "ayatalbayan",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -83,6 +83,12 @@
           "android": {
             "audioType": "communication"
           }
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "نحتاج إلى Face ID لفتح التطبيق بوجهك بدل إدخال الرمز في كل مرة."
         }
       ]
     ],

@@ -8806,5 +8806,33 @@
     "monthGrid": "Month calendar",
     "dayCell": "{date}, {count}",
     "noLessons": "No lessons"
+  },
+  "biometric": {
+    "method": {
+      "fingerprint": "fingerprint",
+      "face": "Face ID",
+      "iris": "iris"
+    },
+    "offerTitle": {
+      "fingerprint": "Use your fingerprint to sign in next time?",
+      "face": "Use Face ID to sign in next time?",
+      "iris": "Use your iris to sign in next time?"
+    },
+    "offerBody": "Open the app with one touch, no code or password. You can turn this off in settings at any time.",
+    "enable": "Turn on",
+    "notNow": "Not now",
+    "unlock": {
+      "fingerprint": "Sign in with fingerprint",
+      "face": "Sign in with Face ID",
+      "iris": "Sign in with iris"
+    },
+    "otherWay": "Sign in another way",
+    "greeting": "Welcome back, {name}",
+    "locked": "The app is locked",
+    "failed": "Not verified. Try again.",
+    "promptReason": "Confirm it's you to open the app",
+    "enableReason": "Confirm it's you to turn on biometric sign-in",
+    "cancel": "Cancel",
+    "settingHint": "The app locks when opened and after five minutes in the background, and opens only with your biometrics."
   }
 }

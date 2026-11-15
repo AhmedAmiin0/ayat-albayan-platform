@@ -50,6 +50,12 @@
             "backgroundColor": "#18201D"
           }
         }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "نحتاج إلى Face ID لفتح التطبيق بوجهك بدل إدخال الرمز في كل مرة."
+        }
       ]
     ],
     "experiments": {

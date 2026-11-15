@@ -39,7 +39,14 @@ test('LiveKit (docs/35): its expo plugin with the communication audio type, no s
   ]);
 });
 
-test('version 0.6.0, the APK with the push sync task (docs/43 §5) and @expo/ui (an OTA never reaches 0.5.x); no forcesRTL', () => {
-  expect(app.expo.version).toBe('0.6.0');
+test('version 0.7.0, the APK with the biometric lock modules (an OTA never reaches 0.6.x); no forcesRTL', () => {
+  expect(app.expo.version).toBe('0.7.0');
   expect(JSON.stringify(app)).not.toContain('forcesRTL');
+});
+
+test('Face ID: the local-authentication plugin carries the iOS usage text', () => {
+  expect(plugin('expo-local-authentication')).toEqual([
+    'expo-local-authentication',
+    { faceIDPermission: expect.stringContaining('Face ID') },
+  ]);
 });
