@@ -7,6 +7,7 @@ import {
   type PortalLessons,
   type PortalPackageView,
   type PortalReports,
+  type PortalRoomLink,
   type RoomJoinResult,
 } from '@ab/shared';
 import { Controller, Get, HttpCode, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
@@ -66,6 +67,20 @@ export class PortalController {
   @HttpCode(200)
   join(@Param('id', UUID) studentId: string, @Param('lessonId', UUID) lessonId: string, @CurrentUser() user: AuthUser): Promise<RoomJoinResult> {
     return this.lessons.join({ user, studentId, lessonId });
+  }
+
+  /**
+   * The family app's «ادخل الحلقة» in the phone's browser: a signed /join link of the lesson, no
+   * second sign-in, until its room closes; 404, 409 not_classroom_lesson, 410, 429, 503.
+   */
+  @Post('students/:id/lessons/:lessonId/room-link')
+  @HttpCode(200)
+  roomLink(
+    @ZodParam('id', z.uuid()) studentId: string,
+    @ZodParam('lessonId', z.uuid()) lessonId: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PortalRoomLink> {
+    return this.lessons.roomLink({ user, studentId, lessonId });
   }
 }
 

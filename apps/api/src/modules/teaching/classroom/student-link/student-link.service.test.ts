@@ -2,6 +2,7 @@ import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, OPEN, queries, STUDENT_ID } from '@/modules/teaching/classroom/classroom.fakes';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
+import { familyLinks } from '@/modules/teaching/classroom/family-link/family-link.fakes';
 import { hashLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 import { admissionOf, moderation, recorder } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { LATER_LESSON, LESSON_LINK_ID, STUDENT_LESSON, STUDENT_TOKEN, studentLinkQueries } from './student-link.fakes';
@@ -11,7 +12,12 @@ import { StudentLinkService } from './student-link.service';
 let q: ReturnType<typeof studentLinkQueries>;
 let mod: ReturnType<typeof moderation>;
 const service = (limit = new PublicJoinLimit()) =>
-  new StudentLinkService(q as unknown as StudentLinkRepo, limit, admissionOf({ q: queries(), mod, rec: recorder(), config: CONFIG }));
+  new StudentLinkService(
+    q as unknown as StudentLinkRepo,
+    limit,
+    admissionOf({ q: queries(), mod, rec: recorder(), config: CONFIG }),
+    familyLinks(),
+  );
 const view = (now = OPEN, token = STUDENT_TOKEN) => service().view({ token, ip: '9.9.9.9' }, now);
 const join = (over: { now?: Date; body?: unknown; token?: string } = {}) =>
   service().join({ token: over.token ?? STUDENT_TOKEN, ip: '9.9.9.9', body: over.body }, over.now ?? OPEN);

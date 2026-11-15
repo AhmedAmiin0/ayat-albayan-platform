@@ -9,6 +9,8 @@ import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { StorageService } from '@/common/storage/storage.service';
 import { PackagesService } from '@/modules/finance/subscriptions';
+import { FAMILY_JOIN_SECRET } from '@/modules/teaching/classroom/classroom.config';
+import { FAMILY_SECRET } from '@/modules/teaching/classroom/family-link/family-link.fakes';
 import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
 import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
 import { PortalHistoryRepo } from './history/portal-history.repo';
@@ -94,6 +96,7 @@ export async function portalApp() {
     .overrideProvider(PortalHistoryRepo).useValue(history)
     .overrideProvider(StudentLinkRepo).useValue(classroom)
     .overrideProvider(RoomAdmission).useValue(admission)
+    .overrideProvider(FAMILY_JOIN_SECRET).useValue(FAMILY_SECRET)
     .overrideProvider(StorageService).useValue(storage)
     .overrideProvider(ChatNumber).useValue(chat)
     .overrideProvider(SettingsService).useValue(fakeSettings(SETTINGS));

@@ -1,4 +1,11 @@
-import { isOpenLesson, joinWindowConfig, PORTAL_LESSON_DAYS, type PortalLessons, type RoomJoinResult } from '@ab/shared';
+import {
+  isOpenLesson,
+  joinWindowConfig,
+  PORTAL_LESSON_DAYS,
+  type PortalLessons,
+  type PortalRoomLink,
+  type RoomJoinResult,
+} from '@ab/shared';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
@@ -14,6 +21,17 @@ const MIN_MS = 60_000;
 interface LessonCall {
   user: AuthUser;
   studentId: string;
+}
+
+interface RoomCall extends LessonCall {
+  lessonId: string;
+}
+
+/** What StudentLinkService takes for one lesson of the login's own student. */
+interface PortalRoomInput {
+  lessonId: string;
+  studentId: string;
+  profileId: string;
 }
 
 /**
@@ -51,7 +69,21 @@ export class PortalLessonsService {
    * link gives it. 404 lesson_not_found / no_lesson, 409 not_classroom_lesson, 403 join_not_open_yet,
    * 410 join_closed, 429, 503 classroom_not_configured.
    */
-  async join(call: LessonCall & { lessonId: string }, now = new Date()): Promise<RoomJoinResult> {
+  async join(call: RoomCall, now = new Date()): Promise<RoomJoinResult> {
+    return this.rooms.portalJoin(await this.classroomLesson(call), now);
+  }
+
+  /**
+   * The family app's «ادخل الحلقة» in the phone's browser (docs/50 §2, §7): a signed /join link of
+   * the lesson, no second sign-in, until its room closes. Same checks as join(), before the window
+   * too (the guest page refuses early joins): 404 lesson_not_found / no_lesson, 409, 410, 429, 503.
+   */
+  async roomLink(call: RoomCall, now = new Date()): Promise<PortalRoomLink> {
+    return this.rooms.portalRoomLink(await this.classroomLesson(call), now);
+  }
+
+  /** join() and roomLink()'s guard: the login's own student, on an open classroom lesson. */
+  private async classroomLesson(call: RoomCall): Promise<PortalRoomInput> {
     await this.scopes.student(call.user, call.studentId);
     const row = await this.queries.one({ studentId: call.studentId, lessonId: call.lessonId });
     if (!row) throw notFound('lesson_not_found');
@@ -61,6 +93,6 @@ export class PortalLessonsService {
       throw new HttpException({ code: 'not_classroom_lesson', message: 'not_classroom_lesson' }, HttpStatus.CONFLICT);
     }
     if (!isOpenLesson(row.status)) throw new HttpException({ code: 'join_closed', message: 'join_closed' }, HttpStatus.GONE);
-    return this.rooms.portalJoin({ lessonId: row.id, studentId: call.studentId, profileId: call.user.id }, now);
+    return { lessonId: row.id, studentId: call.studentId, profileId: call.user.id };
   }
 }
