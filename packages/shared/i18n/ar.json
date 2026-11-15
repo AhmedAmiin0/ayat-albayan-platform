@@ -2269,7 +2269,8 @@
     "customPrice": {
       "label": "سعر الباقة ({currency})",
       "quoted": "سعر الحاسبة: {amount} {currency}",
-      "invalid": "أدخل مبلغًا أكبر من صفر بخانتين عشريتين على الأكثر."
+      "invalid": "أدخل مبلغًا أكبر من صفر بخانتين عشريتين على الأكثر.",
+      "min": "أقل مبلغ مسموح: {amount} {currency}"
     }
   },
   "payments": {

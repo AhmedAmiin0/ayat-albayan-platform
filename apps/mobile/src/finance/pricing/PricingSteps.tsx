@@ -7,6 +7,7 @@ import {
   STUDENTS_MAX,
   STUDENTS_MIN,
 } from '@ab/shared';
+import type { ReactNode } from 'react';
 import { t, FilterPills, type FilterPill, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { DiscountField } from './DiscountField';
@@ -39,13 +40,16 @@ interface PricingStepsProps {
   onChange: (patch: Partial<Selection>) => void;
   /** The free 0–100 field beside the pills (the calculator); the chat's «عرض سعر» has the pills only. */
   freeDiscount?: boolean;
+  /** Under the pills: the chat's «مبلغ مخصص» (owner 2026-11-15). */
+  discountExtra?: ReactNode;
 }
 
 /**
  * The site's five steps: country, duration, lessons a week (or a custom count), students, discount.
  * Shared by «حاسبة الأسعار» and the chat's «عرض سعر» sheet.
  */
-export function PricingSteps({ selection: s, onChange, freeDiscount = true }: PricingStepsProps) {
+export function PricingSteps(props: PricingStepsProps) {
+  const { selection: s, onChange, freeDiscount = true, discountExtra } = props;
   return (
     <>
       <Section title={p.steps.country}>
@@ -107,6 +111,7 @@ export function PricingSteps({ selection: s, onChange, freeDiscount = true }: Pr
           role="radiogroup"
         />
         {freeDiscount ? <DiscountField value={s.discount} onChange={(discount) => onChange({ discount })} /> : null}
+        {discountExtra}
       </Section>
     </>
   );
