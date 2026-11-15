@@ -1,4 +1,4 @@
-import { authenticate, type BioKind, type BioOutcome, enrolledKind, feel } from './device';
+import { authenticate, type BioOutcome, enrolledKind, feel } from './device';
 import type { BioLockDeps, BioSnapshot } from './lock-deps';
 import { INITIAL_LOCK, type LockEvent, lockReducer } from './lock-machine';
 
