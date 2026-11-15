@@ -90,19 +90,6 @@
       "count": 1
     }
   },
-  "src/account/components/AccountCard.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/account/components/AccountField.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/account/components/AccountHeaderAvatar.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -123,29 +110,7 @@
       "count": 3
     },
     "ab/no-untyped-api-calls": {
-      "count": 6
-    }
-  },
-  "src/account/hooks/use-account-action.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/account/lib/account-errors.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    },
-    "typescript/no-unsafe-assignment": {
-      "count": 1
+      "count": 5
     }
   },
   "src/account/lib/avatar.test.ts": {
@@ -156,17 +121,6 @@
   "src/account/lib/avatar.ts": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/account/lib/password-checks.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-if-chains": {
-      "count": 1
     }
   },
   "src/account/screens/AccountScreen.avatar.test.tsx": {
@@ -222,14 +176,6 @@
   "src/account/sections/NameSection.tsx": {
     "typescript/no-confusing-void-expression": {
       "count": 2
-    }
-  },
-  "src/account/sections/PasswordSection.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
     }
   },
   "src/account/sections/PhoneSection.tsx": {
@@ -306,7 +252,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/assistant-app/assistant-day.ts": {
@@ -1169,7 +1115,7 @@
       "count": 7
     },
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/calendar/screens/TeacherCalendarScreen.test.tsx": {
@@ -1430,21 +1376,6 @@
       "count": 1
     }
   },
-  "src/core/lib/clock/clock-store.device.test.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/core/lib/clock/clock-store.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/core/lib/clock/device-clock.ts": {
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
   "src/core/lib/clock/format.ts": {
     "stylistic/max-len": {
       "count": 4
@@ -1607,11 +1538,6 @@
       "count": 1
     }
   },
-  "src/core/lib/time/use-now.test.ts": {
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
-    }
-  },
   "src/core/nav/ChatStack.tsx": {
     "stylistic/max-len": {
       "count": 4
@@ -1771,11 +1697,6 @@
       "count": 2
     }
   },
-  "src/core/ui/feedback/ErrorLine.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/core/ui/feedback/InlineConfirm.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -1814,58 +1735,9 @@
       "count": 1
     }
   },
-  "src/core/ui/layout/AppNativeTabs.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/layout/GlassTab.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/layout/GlassTabBar.motion.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/layout/GlassTabBar.shape.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/layout/GlassTabBar.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/layout/GlassTabBar.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-restricted-syntax": {
-      "count": 2
-    }
-  },
   "src/core/ui/layout/PhoneText.tsx": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/core/ui/layout/TabBadge.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/layout/use-pill-offset.ts": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/core/ui/lists/LazyList.test.tsx": {
@@ -1899,11 +1771,6 @@
     }
   },
   "src/core/ui/primitives/ContentText.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/core/ui/primitives/GlassGradient.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -5518,11 +5385,6 @@
       "count": 1
     }
   },
-  "src/more/appearance/useAppearancePref.ts": {
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/more/applicants/ApplicantLinks.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -5726,11 +5588,6 @@
       "count": 1
     }
   },
-  "src/notifications/BellButton.test.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/notifications/HeldBell.test.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -5766,24 +5623,9 @@
       "count": 1
     }
   },
-  "src/notifications/notifications-cache.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/notifications/notifications-cache.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/notifications/use-bell-signal.ts": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/notifications/use-notifications.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/ops/activity/ActivityFilterBar.tsx": {
@@ -7468,7 +7310,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/app/screens/SalesTabs.tsx": {
@@ -9111,7 +8953,7 @@
       "count": 3
     },
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     }
   },
   "src/teacher/screens/TeacherReportsScreen.test.tsx": {

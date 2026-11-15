@@ -1,6 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApiError, t, ltr } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { ApiError, t, ltr, money } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyKey } from '@/sales-subscribe/lib/family';
 import { familyOf, KID, KID2, kid, openSub, PHONE, salesQuote, SUB } from '@/sales-subscribe/testing/fixtures';

@@ -1,29 +1,23 @@
 import { router } from 'expo-router';
-import { t, ScreenHeader, BackButton, Button } from '@ab/mobile-kit';
+import { ScreenHeader, BackButton } from '@ab/mobile-kit';
+import { FamilyBell } from './FamilyBell';
 
 interface FamilyHeaderProps {
   title: string;
-  /** A «رجوع» before the title (a screen pushed on top of home). */
+  /** A line under the title. */
+  subtitle?: string;
+  /** A pushed screen: «رجوع» before the title and no bell. A tab screen: the bell at the end. */
   back?: boolean;
-  /** «الإعدادات» at the inline-end (home and a student's own page). */
-  settings?: boolean;
 }
 
-/** The family app's screen header: its title, optional «رجوع», optional «الإعدادات». */
-export function FamilyHeader({ title, back = false, settings = false }: FamilyHeaderProps) {
+/** The family app's screen header: its title, then «رجوع» (pushed) or the bell (a tab). */
+export function FamilyHeader({ title, subtitle, back = false }: FamilyHeaderProps) {
   return (
     <ScreenHeader
       title={title}
+      subtitle={subtitle}
       leading={back ? <BackButton onPress={() => router.back()} /> : undefined}
-      trailing={
-        settings ? (
-          <Button
-            variant="ghost"
-            label={t.familyApp.home.settings}
-            onPress={() => router.push('/settings')}
-          />
-        ) : undefined
-      }
+      trailing={back ? undefined : <FamilyBell />}
     />
   );
 }

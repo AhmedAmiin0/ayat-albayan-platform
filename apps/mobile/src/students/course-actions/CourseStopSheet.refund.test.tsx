@@ -1,6 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t, pathKey } from '@ab/mobile-kit';
-import { money } from '@/payments';
+import { t, pathKey, money } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { CourseActionsSection } from './CourseActionsSection';
 import { BASE, serve, stopPreview, SUB } from './fixtures';

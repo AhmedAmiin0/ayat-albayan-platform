@@ -1,6 +1,5 @@
-import { t, InsetGroup } from '@ab/mobile-kit';
+import { t, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { Section } from '@/core/ui/surface/Section';
 import { MonthRow } from './MonthRow';
 import { activeMonths } from './summary-lines';
 import type { FinanceSummary } from './summary-types';

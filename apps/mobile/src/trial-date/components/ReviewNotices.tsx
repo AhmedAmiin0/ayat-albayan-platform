@@ -1,5 +1,5 @@
 import { type BookFailure, ConflictNotice } from '@/booking';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { ErrorLine } from '@ab/mobile-kit';
 
 interface ReviewNoticesProps {
   /** The check's clashes, one line each (booking.conflict.<kind>). */

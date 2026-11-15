@@ -15,11 +15,11 @@ import {
   ltr,
   type,
   useTheme,
+  ErrorLine,
 } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { ErrorLine } from '@/inbox';
 import { Note } from '@/more';
 import { RegistrationResults } from '@/registration-check/components/RegistrationResults';
 import { linkFamilyErrorText, useLinkFamily } from '@/registration-check/lib/link-family';

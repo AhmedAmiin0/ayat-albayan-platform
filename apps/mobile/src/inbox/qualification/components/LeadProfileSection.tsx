@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { t, Button } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import type { Lead } from '@/inbox/shared/types';
 import { FollowUpCard } from './FollowUpCard';
 import { QualificationForm } from './QualificationForm';

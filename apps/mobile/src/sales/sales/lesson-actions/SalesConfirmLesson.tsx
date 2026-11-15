@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { ErrorLine } from '@/inbox';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { confirmFailureText } from './confirm-lesson';
 import { useSalesConfirm } from './lesson-actions-api';

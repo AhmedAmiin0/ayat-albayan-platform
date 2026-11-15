@@ -8,8 +8,7 @@ import {
   type SalesTeacherView,
 } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
-import { t, locale, ltr } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { t, locale, ltr, money } from '@ab/mobile-kit';
 import type { SalesSubscription } from './sales-api';
 
 // Row lines of the salesperson's pages (docs/16), same words as the web. Western digits; dates and

@@ -1,12 +1,12 @@
-import { lessonWait, type LessonWait } from '@ab/client-core';
-import { clockOf, type PortalLesson, type RoomJoinResult } from '@ab/shared';
+import { lessonWait, lessonWaitText } from '@ab/client-core';
+import type { PortalLesson, RoomJoinResult } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { buttonVariants, Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { classroomErrorText } from '@/features/teaching/classroom';
 import { t } from '@/lib/i18n/i18n';
 import { portalApi } from '@/features/people/portal/api';
-import { type Clock, useClock } from '@/lib/clock';
+import { useClock } from '@/lib/clock';
 
 interface Props {
   lesson: PortalLesson;
@@ -16,17 +16,6 @@ interface Props {
   /** Our classroom admitted the student: the card opens the room. */
   onJoined: (join: RoomJoinResult) => void;
 }
-
-type ZonedClock = Clock & { tz: string };
-
-/** Why there is no button (@ab/client-core lessonWait), in the family's words. */
-const WAIT_TEXT: Record<LessonWait, (lesson: PortalLesson, clock: ZonedClock) => string> = {
-  cancelled: () => t.portal.cancelled,
-  closed: () => t.portal.closed,
-  noWayIn: () => t.portal.noWayIn,
-  opensAt: (lesson, clock) =>
-    t.portal.opensAt.replace('{time}', clockOf(new Date(lesson.window.opens_at), clock)),
-};
 
 const Hint = ({ text }: { text: string }) => <p className="text-sm text-ink-2">{text}</p>;
 
@@ -41,7 +30,8 @@ export function LessonAction({ lesson, studentId, tz, now, onJoined }: Props) {
     onSuccess: (room) => onJoined(room),
   });
   const wait = lessonWait(lesson, now);
-  if (wait) return <Hint text={WAIT_TEXT[wait](lesson, { ...clock, tz })} />;
+  const hint = wait && lessonWaitText(wait, lesson, { words: t.portal, clock: { ...clock, tz } });
+  if (hint) return <Hint text={hint} />;
   if (lesson.way_in === 'external' && lesson.meeting_url) {
     return (
       <a

@@ -1,8 +1,8 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { dayLabel } from '@/booking/shared/slots';
-import { t } from '@ab/mobile-kit';
+import { t, money } from '@ab/mobile-kit';
 import { dayOf, dialogProps, pickDay } from '@/test/pickers/native-picker';
-import { localDay, money } from '@/core/lib/money/format';
+import { localDay } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';

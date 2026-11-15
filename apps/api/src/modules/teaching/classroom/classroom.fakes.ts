@@ -62,6 +62,7 @@ export function queries() {
     }),
     insertLink: vi.fn().mockResolvedValue(linkRow()),
     linkByHash: vi.fn().mockResolvedValue(linkRow()),
+    linkById: vi.fn(async (id: string) => linkRow({ id, student_id: STUDENT_ID })),
     openRoom: vi.fn(async (_id: string, at: string) => ({ ...LESSON, room_opened_at: at })),
     joinWindow: vi.fn().mockResolvedValue(DEFAULT_JOIN_WINDOW),
   };

@@ -1,7 +1,5 @@
 import { View } from 'react-native';
-import { t, Button, Field, FilterPills } from '@ab/mobile-kit';
-import { Section } from '@/core/ui/surface/Section';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, Button, Field, FilterPills, Section, ErrorLine } from '@ab/mobile-kit';
 import {
   ALL,
   ENTITIES,

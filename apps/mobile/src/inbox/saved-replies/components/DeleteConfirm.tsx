@@ -1,8 +1,7 @@
 import type { SavedReply } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@ab/mobile-kit';
+import { t, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useDeleteReply } from '@/inbox/saved-replies/hooks/api';
 import { replyError } from '@/inbox/saved-replies/lib/reply-error';
 

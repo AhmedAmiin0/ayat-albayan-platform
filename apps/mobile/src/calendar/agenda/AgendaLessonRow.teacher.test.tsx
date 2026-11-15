@@ -9,7 +9,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: () => new Promise(() => undefined),
 }));
 // 16:50 Riyadh: the 16:00–16:45 lesson ended; its classroom window stays open (docs/48).
-jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T13:50:00Z') }));
+jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T13:50:00Z') }));
 
 const row = lesson({ id: 'a', status: 'confirmed' });
 

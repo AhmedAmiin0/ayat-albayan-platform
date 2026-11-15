@@ -1,8 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { View } from 'react-native';
-import { t } from '@ab/mobile-kit';
+import { t, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
 
 /**

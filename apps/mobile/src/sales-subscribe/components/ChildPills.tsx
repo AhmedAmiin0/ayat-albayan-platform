@@ -1,6 +1,5 @@
 import type { SalesFamilyStudent } from '@ab/shared';
-import { t, FilterPills, ltr } from '@ab/mobile-kit';
-import { Section } from '@/core/ui/surface/Section';
+import { t, FilterPills, ltr, Section } from '@ab/mobile-kit';
 
 interface ChildPillsProps {
   students: readonly SalesFamilyStudent[];

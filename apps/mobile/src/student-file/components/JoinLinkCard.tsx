@@ -1,8 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Share, View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { apiSend, t, AppText, Button } from '@ab/mobile-kit';
+import { apiSend, t, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';

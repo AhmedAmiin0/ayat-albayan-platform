@@ -6612,7 +6612,7 @@
   },
   "src/modules/people/portal/lessons/portal-lessons.service.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/people/portal/portal-read-only.migration.test.ts": {
@@ -10605,7 +10605,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/join/lesson-role.service.ts": {
@@ -10661,7 +10661,7 @@
   },
   "src/modules/teaching/classroom/join/room-join.trial.test.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/join/room-open.controller.ts": {
@@ -11199,7 +11199,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.service.ts": {
@@ -11210,7 +11210,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 11
+      "count": 10
     }
   },
   "src/modules/teaching/classroom/test-app.ts": {

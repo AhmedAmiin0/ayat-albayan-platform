@@ -1,14 +1,12 @@
 import { PAYMENT_METHODS, type ExpenseCategoryView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button, Field, FilterPills } from '@ab/mobile-kit';
+import { t, Button, Field, FilterPills, ErrorLine, useNow } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { AmountField } from '@/payments/components/AmountField';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
 import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
-import { useNow } from '@/core/lib/time/use-now';
 import { activeCategories, categoryLabel } from './categories';
 import { checkExpense, emptyExpense, type ExpenseDraft } from './expense-draft';
 import { financeErrorText } from '@/finance/shared/errors';

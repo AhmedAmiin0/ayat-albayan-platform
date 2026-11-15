@@ -1,8 +1,7 @@
 import { riyadhToday, type CoursePauseView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '@ab/mobile-kit';
-import { ErrorLine } from '@/inbox';
+import { t, ErrorLine } from '@ab/mobile-kit';
 import { useChangeUntil } from './course-pause-api';
 import { pauseErrorText } from './course-pause-text';
 import { SheetActions } from './SheetActions';

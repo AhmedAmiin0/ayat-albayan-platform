@@ -1,5 +1,5 @@
-import { t } from '@ab/mobile-kit';
-import { AmountField, currencyName } from '@/payments';
+import { t, currencyName } from '@ab/mobile-kit';
+import { AmountField } from '@/payments';
 import { fill } from '@/sales/sales';
 import { LinkPriceSection } from './LinkPriceSection';
 import type { LinkPay } from './use-link-pay';

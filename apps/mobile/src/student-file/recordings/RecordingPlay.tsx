@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Linking, View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button } from '@ab/mobile-kit';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
 
 const R = t.mobileStudentFile.recordings;
 

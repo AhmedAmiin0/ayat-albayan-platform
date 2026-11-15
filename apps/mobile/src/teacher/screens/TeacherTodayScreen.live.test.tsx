@@ -12,7 +12,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), navigate: jest.fn() } }));
-jest.mock('@/core/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
+jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
 // «تنبيهات اليوم» adds a second observer of the bell's polled query, which trips @sinonjs fake
 // timers' interval bookkeeping here; its own tests cover it (teacher/alerts).
 jest.mock('@/teacher/alerts', () => ({

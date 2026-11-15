@@ -10,12 +10,12 @@ import {
   Screen,
   ScreenHeader,
   useMyProfile,
+  PasswordSection,
 } from '@ab/mobile-kit';
 import { AccountSummary } from '@/account/components/AccountSummary';
 import { AvatarSection } from '@/account/sections/AvatarSection';
 import { EmailSection } from '@/account/sections/EmailSection';
 import { NameSection } from '@/account/sections/NameSection';
-import { PasswordSection } from '@/account/sections/PasswordSection';
 import { PhoneSection } from '@/account/sections/PhoneSection';
 
 export interface AccountScreenProps {

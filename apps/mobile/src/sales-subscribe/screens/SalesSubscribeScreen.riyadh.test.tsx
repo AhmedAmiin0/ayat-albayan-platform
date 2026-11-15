@@ -1,6 +1,6 @@
 import { screen, waitFor, fireEvent } from '@testing-library/react-native';
-import { t } from '@ab/mobile-kit';
-import { localDay, money } from '@/core/lib/money/format';
+import { t, money } from '@ab/mobile-kit';
+import { localDay } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';

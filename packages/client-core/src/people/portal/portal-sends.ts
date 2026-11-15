@@ -1,9 +1,17 @@
-import { JOIN_ROLES, portalFileUrlSchema, type PortalFileUrl, type RoomJoinResult } from '@ab/shared';
+import {
+  JOIN_ROLES,
+  portalFileUrlSchema,
+  portalRoomLinkSchema,
+  type PortalFileUrl,
+  type PortalRoomLink,
+  type RoomJoinResult,
+} from '@ab/shared';
 import { z } from 'zod';
 import type { ApiClient } from '../../core/http/index.js';
 
-// The family portal's two writes: the guest admission to our classroom (inside the window only)
-// and a signed link to a sent report's PDF (5 minutes) or a visible recording (an hour).
+// The family portal's writes: the guest admission to our classroom (inside the window only), the
+// signed /join link that opens it in the phone's browser (no second sign-in), and a signed link
+// to a sent report's PDF (5 minutes) or a visible recording (an hour).
 
 /** POST …/join's answer (@ab/schedule's RoomJoinResult), checked at the boundary (rule 12). */
 export const roomJoinResultSchema = z.object({
@@ -30,6 +38,8 @@ export interface PortalFileInput {
 
 export interface PortalSends {
   join: (input: PortalJoinInput) => Promise<RoomJoinResult>;
+  /** The lesson's room in the system browser: a signed /join URL, valid until the room closes. */
+  roomLink: (input: PortalJoinInput) => Promise<PortalRoomLink>;
   fileUrl: (input: PortalFileInput) => Promise<PortalFileUrl>;
 }
 
@@ -42,6 +52,8 @@ export function portalSends(client: ApiClient): PortalSends {
   return {
     join: ({ studentId, lessonId }) =>
       post(`${studentPath(studentId)}/lessons/${enc(lessonId)}/join`, roomJoinResultSchema),
+    roomLink: ({ studentId, lessonId }) =>
+      post(`${studentPath(studentId)}/lessons/${enc(lessonId)}/room-link`, portalRoomLinkSchema),
     fileUrl: ({ studentId, kind, id }) =>
       post(`${studentPath(studentId)}/${kind}/${enc(id)}/url`, portalFileUrlSchema),
   };

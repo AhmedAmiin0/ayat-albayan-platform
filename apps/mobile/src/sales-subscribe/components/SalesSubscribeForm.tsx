@@ -1,8 +1,7 @@
 import { chatBinding, RIYADH_TZ, type SalesFamilyStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { useHolds, t, Button } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { useHolds, t, Button, ErrorLine } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { CustomAmountPill } from '@/payments';
 import { CustomPriceField, quoteLessons, renewalForm, useCustomPrice } from '@/subscribe';

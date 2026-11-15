@@ -10,7 +10,7 @@ import {
 } from '@ab/client-core';
 import { isOpenLesson, type LessonView } from '@ab/shared';
 import { usePlatformClassroom, useJoinWindow } from '@/core/lib/query/public-config';
-import { useNow } from '@/core/lib/time/use-now';
+import { useNow } from '@ab/mobile-kit';
 import { useTeacherActs, type TeacherActs } from '@/teacher/lesson-actions';
 
 /** What a lead button needs to draw and press itself. */

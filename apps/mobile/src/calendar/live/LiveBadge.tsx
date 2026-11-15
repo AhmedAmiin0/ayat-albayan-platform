@@ -1,6 +1,5 @@
 import type { LessonView } from '@ab/shared';
-import { useNow } from '@/core/lib/time/use-now';
-import { t, StatusChip } from '@ab/mobile-kit';
+import { t, StatusChip, useNow } from '@ab/mobile-kit';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { livePhase } from './live-filter';
 

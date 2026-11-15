@@ -1,11 +1,15 @@
 import type { AccountProfile } from '@ab/shared';
 import { useState } from 'react';
-import { t, Button } from '@ab/mobile-kit';
+import {
+  t,
+  Button,
+  accountMessage,
+  AccountCard,
+  AccountField,
+  passwordInput,
+  useAccountAction,
+} from '@ab/mobile-kit';
 import { patchProfile } from '@/account/hooks/account-api';
-import { accountMessage } from '@/account/lib/account-errors';
-import { AccountCard } from '@/account/components/AccountCard';
-import { AccountField, passwordInput } from '@/account/components/AccountField';
-import { useAccountAction } from '@/account/hooks/use-account-action';
 
 /**
  * «رقم الهاتف» (R-ACC-02): E.164 typed with its country code (the API normalises and checks it);

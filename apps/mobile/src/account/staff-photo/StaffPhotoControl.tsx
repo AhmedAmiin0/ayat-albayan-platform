@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, Avatar, Button, AppText, type, useTheme } from '@ab/mobile-kit';
+import { t, Avatar, Button, AppText, type, useTheme, AccountCard } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { AccountCard } from '@/account/components/AccountCard';
 import { useConfirmFocus } from './use-confirm-focus';
 import { type StaffPhotoOptions, useStaffPhoto } from './use-staff-photo';
 

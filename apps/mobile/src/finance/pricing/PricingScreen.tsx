@@ -1,8 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, ScrollView } from 'react-native';
-import { t, useTheme, BackButton, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
-import { Section } from '@/core/ui/surface/Section';
+import { t, useTheme, BackButton, ErrorState, Screen, ScreenHeader, Section } from '@ab/mobile-kit';
 import { OfferActions } from './OfferActions';
 import { PricingSteps } from './PricingSteps';
 import { QuoteCard } from './QuoteCard';

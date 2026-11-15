@@ -1,6 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t, ApiError } from '@ab/mobile-kit';
-import { money } from '@/core/lib/money/format';
+import { t, ApiError, money } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { balance, profile, quote, saved } from './fixtures';
 import { SubscribeScreen } from './SubscribeScreen';

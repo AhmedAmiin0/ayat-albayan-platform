@@ -5,7 +5,7 @@ import { student } from '@/sales/sales/testing/fixtures';
 import { AllStudentRow } from './AllStudentRow';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
-jest.mock('@/core/lib/clock/device-clock', () => ({ deviceUses24: () => false }));
+jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => false }));
 
 const S = t.sales.allStudents;
 const asma = { display_name_ar: 'أسماء حسين', display_name_en: null };

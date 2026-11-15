@@ -13,8 +13,7 @@ import {
 import type { CourseStopPreview, StopRefund } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useHolds, t, Field, FilterPills } from '@ab/mobile-kit';
-import { money } from '@/payments';
+import { useHolds, t, Field, FilterPills, money } from '@ab/mobile-kit';
 import { SheetLines } from './SheetLines';
 
 type Set = (patch: Partial<StopMoneyState>) => void;

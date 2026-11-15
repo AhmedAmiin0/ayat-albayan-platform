@@ -1,9 +1,7 @@
 import { dueOf, PAYMENT_METHODS, type PaymentMethod, type StudentBalanceView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Button, FilterPills, type FilterPill } from '@ab/mobile-kit';
-import { useNow } from '@/core/lib/time/use-now';
+import { t, Button, FilterPills, type FilterPill, ErrorLine, useNow } from '@ab/mobile-kit';
 import { AmountField } from './AmountField';
 import { AttachmentsField } from '@/payments/receipts/AttachmentsField';
 import { FormLabel } from '@/core/ui/form/FormLabel';

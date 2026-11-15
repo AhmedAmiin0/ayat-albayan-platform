@@ -1,8 +1,7 @@
 import { confirmedChipShown, confirmedNow, teacherCanAct } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@ab/mobile-kit';
-import { useNow } from '@/core/lib/time/use-now';
+import { t, useNow } from '@ab/mobile-kit';
 import { teacherActionError, useTeacherConfirm } from './teacher-lesson-api';
 
 /**

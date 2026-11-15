@@ -1,8 +1,7 @@
 import { type MessageView, replyLesson, replyNote, type ReplyNote } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t, locale, type, AppText, Button } from '@ab/mobile-kit';
-import { useNow } from '@/core/lib/time/use-now';
+import { t, locale, type, AppText, Button, useNow } from '@ab/mobile-kit';
 import { useSmall } from '@/inbox/messages/components/MessageMeta';
 import { useReplyActions } from './reply-actions-context';
 import { ReplyConfirmButton } from './ReplyConfirmButton';

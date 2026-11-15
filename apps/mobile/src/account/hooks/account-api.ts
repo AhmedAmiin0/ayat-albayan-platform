@@ -3,7 +3,8 @@ import { apiSend } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { PickedAvatar } from '@/account/lib/avatar';
 
-// The /me writes (R-ACC-02..05). Each answers the fresh profile, except the password (204).
+// The /me writes (R-ACC-02..05). Each answers the fresh profile
+// (the password, which every login may change, is the kit's: @ab/mobile-kit account).
 
 interface ProfilePatch {
   full_name?: string;
@@ -15,9 +16,6 @@ export const patchProfile = (body: ProfilePatch) => apiSend<AccountProfile>('PAT
 
 export const changeEmail = (body: { email: string; current_password: string }) =>
   apiSend<AccountProfile>('PUT', '/me/email', body);
-
-export const changePassword = (body: { current_password: string; new_password: string }) =>
-  apiSend<undefined>('PUT', '/me/password', body);
 
 export const removeAvatar = () => apiSend<AccountProfile>('DELETE', '/me/avatar');
 

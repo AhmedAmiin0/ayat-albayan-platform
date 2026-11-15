@@ -1,8 +1,6 @@
 import { ASSISTANT_COMMISSION_TYPES, type AssistantCommissionType } from '@ab/shared';
 import { View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
-import { t, Field, FilterPills } from '@ab/mobile-kit';
-import { Section } from '@/core/ui/surface/Section';
+import { t, Field, FilterPills, ErrorLine, Section } from '@ab/mobile-kit';
 import { FormLabel } from '@/core/ui/form/FormLabel';
 import { CurrencyPills } from '@/assistants/list/CurrencyPills';
 import { fieldError } from '@/assistants/api/errors';

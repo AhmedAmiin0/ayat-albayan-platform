@@ -1,9 +1,8 @@
 import { replyConfirmPath, type ConfirmRoute } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { apiSend, pathKey, t, Button } from '@ab/mobile-kit';
+import { apiSend, pathKey, t, Button, ErrorLine } from '@ab/mobile-kit';
 import { confirmFailureText } from '@/sales/sales';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { refreshChat } from '@/inbox/thread/hooks/inbox-sync';
 
 interface ReplyConfirmButtonProps {

@@ -96,7 +96,20 @@ export class ClassroomRepo {
   }
 
   async linkByHash(hash: string): Promise<JoinLinkRow | null> {
-    const { data, error } = await this.db.from('lesson_join_links').select('*').eq('token_hash', hash).maybeSingle();
+    return this.linkWhere('token_hash', hash);
+  }
+
+  /** The (lesson, student) row a family join token resolves to (StudentLinkRepo.lessonLinkId). */
+  async linkById(id: string): Promise<JoinLinkRow | null> {
+    return this.linkWhere('id', id);
+  }
+
+  private async linkWhere(column: 'id' | 'token_hash', value: string): Promise<JoinLinkRow | null> {
+    const { data, error } = await this.db
+      .from('lesson_join_links')
+      .select('*')
+      .eq(column, value)
+      .maybeSingle();
     if (error) throw dbError(error);
     return data;
   }

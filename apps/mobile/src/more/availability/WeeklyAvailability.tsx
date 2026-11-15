@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, t, pathKey, ErrorState, InsetGroup } from '@ab/mobile-kit';
+import { apiFetch, t, pathKey, ErrorState, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { groupByWeekday, gridTz, tzLabel } from '@/more/schedule';
-import { Section } from '@/core/ui/surface/Section';
 import type { AvailabilityRow, Teacher } from '@/core/lib/staff/types';
 import { WeekdayRow } from './WeekdayRow';
 

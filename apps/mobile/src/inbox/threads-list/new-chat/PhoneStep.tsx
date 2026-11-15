@@ -1,8 +1,7 @@
 import { normalizePhone } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, Field, ScreenHeader, Button } from '@ab/mobile-kit';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
+import { t, Field, ScreenHeader, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { type FoundNumber, useLookupNumber } from './use-new-chat';
 

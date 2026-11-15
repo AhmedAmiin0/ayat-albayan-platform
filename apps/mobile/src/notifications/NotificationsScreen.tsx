@@ -12,13 +12,14 @@ import {
   Screen,
   ScreenHeader,
   usePullRefresh,
+  useMarkRead,
+  useNotifications,
 } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { routeIn, type PushTree } from '@/core/push/notification-route';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { NotificationRow } from './NotificationRow';
-import { useMarkRead, useNotifications } from './use-notifications';
 
 export interface NotificationsScreenProps {
   /** The tree it sits in: a row opens that tree's screen. */

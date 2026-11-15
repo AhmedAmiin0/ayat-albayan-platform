@@ -1,9 +1,8 @@
 import type { InvoiceView } from '@ab/shared';
 import { memo, useState } from 'react';
 import { Linking, View } from 'react-native';
-import { ErrorLine } from '@/core/ui/feedback/ErrorLine';
 import { invoiceSubtitle } from '@/finance/invoices/invoice-text';
-import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { invoiceDownloadUrl } from './money-queries';
 import { useViewerTz } from '@/core/lib/clock';
 

@@ -2,8 +2,8 @@ import type { ReceivableRow } from '@ab/shared';
 import { pushInTab } from '@/core/nav/back-within';
 import { View } from 'react-native';
 import { useTabOpen } from '@/core/auth/use-tab-open';
-import { t, type, useTheme, AppText, ListRow } from '@ab/mobile-kit';
-import { money, paidOf } from '@/core/lib/money/format';
+import { t, type, useTheme, AppText, ListRow, money } from '@ab/mobile-kit';
+import { paidOf } from '@/core/lib/money/format';
 import { daysLateText, isSevere } from './receivables';
 
 /** Student + code, guardian under it; the amount owed and how late at the inline-end. Opens the payment form (only when the Students tab is open to the role). */
