@@ -1,11 +1,10 @@
-import { childTabs, type ChildTab } from '@ab/client-core';
+import { childTabs, childTabWord, type ChildTab } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { Animated, View } from 'react-native';
 import { FilterPills, t } from '@ab/mobile-kit';
 import { PackageBody } from '@/package';
 import { HistoryPanel } from './HistoryPanel';
-import { tabWord } from './tab-words';
 import { UpcomingPanel } from './UpcomingPanel';
 import { useTabMotion } from './use-tab-motion';
 
@@ -39,7 +38,7 @@ export function ChildBody({ student, kind }: ChildBodyProps) {
   return (
     <View style={{ gap: 16 }}>
       <FilterPills
-        items={tabs.map((value) => ({ value, label: tabWord(value, kind) }))}
+        items={tabs.map((value) => ({ value, label: childTabWord(value, kind, t.portal) }))}
         value={tab}
         onChange={choose}
         accessibilityLabel={t.portal.childTabs}

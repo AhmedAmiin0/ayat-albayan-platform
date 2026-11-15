@@ -1,6 +1,7 @@
 import { normalizeArabic } from '@ab/shared';
 import type { Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
+import { FAMILY_URL } from '../core/family-host';
 import { resetAbrar, withSql } from '../core/schedule';
 import { seedPackageStudent } from '../finance/money';
 import { codeSentTo, codesSent, post } from './family-sign-in';
@@ -72,10 +73,9 @@ export async function seedPortalFamily(): Promise<PortalFamily> {
   });
 }
 
-/** The guardian signs in on /login with the phone on file and the WhatsApp code the stub got. */
+/** The guardian signs in on the family host with the phone on file and the stub's code. */
 export async function guardianSignIn(page: Page, phone: string): Promise<void> {
-  await page.goto('/login');
-  await page.getByRole('tab', { name: ar.familyAuth.tabs.family }).click();
+  await page.goto(`${FAMILY_URL}/login`);
   await page.getByLabel(ar.familyAuth.phone).fill(phone);
   await page.getByRole('button', { name: ar.familyAuth.sendCode }).click();
   await expect(page.getByText(ar.familyAuth.codeSent)).toBeVisible();
@@ -85,7 +85,7 @@ export async function guardianSignIn(page: Page, phone: string): Promise<void> {
   await expect(page).toHaveURL(/\/portal/);
 }
 
-/** The child's first password (code to the guardian's phone), then «الدخول باسم المستخدم». */
+/** The child's first password (code to the guardian's phone), then the student code + password. */
 export async function studentSignIn(page: Page, family: PortalFamily): Promise<void> {
   const password = `Child-e2e-${String(Date.now() % 100_000)}`;
   const before = await codesSent(family.phone);
@@ -93,10 +93,9 @@ export async function studentSignIn(page: Page, family: PortalFamily): Promise<v
   const code = await codeSentTo(family.phone, before);
   const reset = await post('/auth/password/reset', { identifier: family.first.code, code, password });
   expect(reset.status).toBe(204);
-  await page.goto('/login');
-  await page.getByRole('tab', { name: ar.familyAuth.tabs.family }).click();
-  await page.getByRole('button', { name: ar.familyAuth.withUsername }).click();
-  await page.getByLabel(ar.familyAuth.username).fill(family.first.code);
+  await page.goto(`${FAMILY_URL}/login`);
+  await page.getByRole('button', { name: ar.familyApp.signIn.withPassword }).click();
+  await page.getByLabel(ar.familyApp.signIn.studentCode).fill(family.first.code);
   await page.getByLabel(ar.auth.password, { exact: true }).fill(password);
   await page.getByRole('button', { name: ar.auth.submit, exact: true }).click();
   await expect(page).toHaveURL(/\/portal/);

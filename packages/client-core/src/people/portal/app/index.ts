@@ -13,3 +13,4 @@ export {
 } from './child-summary.js';
 export { seenStore, type SeenStorage, type SeenStore } from './seen-store.js';
 export { dayWord, lessonMinutes, type DayWord } from './day-word.js';
+export { childTabWord, type ChildTabWords } from './tab-word.js';

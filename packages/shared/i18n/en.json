@@ -8834,5 +8834,17 @@
     "enableReason": "Confirm it's you to turn on biometric sign-in",
     "cancel": "Cancel",
     "settingHint": "The app locks when opened and after five minutes in the background, and opens only with your biometrics."
+  },
+  "familyWeb": {
+    "moved": {
+      "title": "The family pages have moved",
+      "body": "Guardians and students now have their own address. Open it and sign in again, then add it to your Home Screen to get notifications.",
+      "open": "Open the family pages"
+    },
+    "loginLink": "Family and students sign-in",
+    "loginLinkHint": "Guardians and students sign in on their own pages.",
+    "nav": "Family pages sections",
+    "toStaffApp": "Open the academy team's platform",
+    "familySignIn": "Family and student sign-in"
   }
 }

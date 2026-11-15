@@ -6,10 +6,10 @@ import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { closeCodes, openCodes } from '../../support/people/family-sign-in';
 import { guardianSignIn, seedPortalFamily, studentSignIn } from '../../support/people/family-portal';
 
-// The family portal (docs/50 §8 step 4) on the real API and seeded data: a guardian sees every
-// child, the attended and missed lessons and the package with its payments; a child's own login
-// never sees money (not even a /package request); the teacher chat is hidden while
-// family_chat_enabled is off (its default). No WhatsApp link on any family page.
+// The family pages on the family host (docs/51, owner 2026-11-15) on the real API and seeded data:
+// a guardian sees every child on the home, each child's attended and missed lessons and the
+// package with its payments; a child's own login never sees money (not even a /package request)
+// nor «أبنائي»; no teacher chat while family_chat_enabled is off. No WhatsApp link anywhere.
 
 const P = ar.portal;
 const MONEY = new RegExp([P.amountDue, P.payments, P.paymentInstructions, P.usedOfHint].join('|'));
@@ -17,7 +17,7 @@ const MONEY = new RegExp([P.amountDue, P.payments, P.paymentInstructions, P.used
 const PACKAGE_READ = /\/portal\/students\/[^/]+\/package(\?|$)/;
 const CHANNEL_READ = /\/portal\/students\/[^/]+\/channel\//;
 
-test.describe('family portal /portal', () => {
+test.describe('family pages on the family host', () => {
   test.skip(SINGLE_LINE, 'E2E_LINES=single: no chat line, so no sign-in codes');
   test.beforeEach(async () => {
     test.skip(test.info().project.name !== 'desktop', 'one browser: sign-in codes are rate limited');
@@ -40,6 +40,10 @@ test.describe('family portal /portal', () => {
     await expect(first.getByText(family.first.code)).toBeVisible();
     await expect(first.getByRole('region', { name: P.packageTab })).toContainText(/\d+ من \d+/);
 
+    const nav = page.getByRole('navigation', { name: ar.familyWeb.nav });
+    await expect(nav.getByRole('link', { name: P.app.tabs.children })).toBeVisible();
+    await expect(nav.getByRole('link', { name: P.app.tabs.reports })).toHaveCount(0);
+
     await first.getByRole('button', { name: P.openChild }).click();
     await expect(page.getByRole('heading', { name: family.first.name })).toBeVisible();
     const tabs = page.getByRole('tab');
@@ -60,7 +64,7 @@ test.describe('family portal /portal', () => {
     await expect(page.getByRole('region', { name: P.payments })).toBeVisible();
     await expect(page.locator('a[href*="wa.me"], a[href*="whatsapp"]')).toHaveCount(0);
 
-    await page.getByRole('button', { name: P.allChildren }).click();
+    await page.getByRole('link', { name: P.allChildren }).click();
     await expect(page.getByRole('article', { name: family.second.name })).toBeVisible();
     await page.context().close();
   });
@@ -74,11 +78,14 @@ test.describe('family portal /portal', () => {
     await studentSignIn(page, family);
 
     await expect(page.getByRole('heading', { name: family.first.name })).toBeVisible();
-    await expect(page.getByRole('tab')).toHaveText([P.upcomingTab, P.attendedTab, P.absentTab]);
-    await expect(page.getByRole('button', { name: P.allChildren })).toHaveCount(0);
-    await page.getByRole('tab', { name: P.attendedTab }).click();
+    const own = P.app.child;
+    await expect(page.getByRole('tab')).toHaveText([P.upcomingTab, own.attendedSelf, own.absentSelf]);
+    const nav = page.getByRole('navigation', { name: ar.familyWeb.nav });
+    await expect(nav.getByRole('link', { name: P.app.tabs.reports })).toBeVisible();
+    await expect(nav.getByRole('link', { name: P.app.tabs.children })).toHaveCount(0);
+    await page.getByRole('tab', { name: own.attendedSelf }).click();
     await expect(page.getByRole('button', { name: P.openReport }).first()).toBeVisible();
-    await page.getByRole('tab', { name: P.absentTab }).click();
+    await page.getByRole('tab', { name: own.absentSelf }).click();
     await expect(page.getByRole('tabpanel').getByRole('listitem')).not.toHaveCount(0);
 
     await expect(page.locator('body')).not.toContainText(MONEY);

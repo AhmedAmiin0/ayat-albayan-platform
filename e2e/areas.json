@@ -317,7 +317,8 @@
         "apps/api/src/modules/people/me/",
         "apps/api/src/modules/people/portal/",
         "apps/api/src/modules/people/presence/",
-        "apps/staff-web/src/routes/portal.tsx"
+        "apps/staff-web/src/routes/portal.tsx",
+        "apps/family-web/src/routes/"
       ],
       "specs": [
         "people/account.api.spec.ts",

@@ -4,3 +4,4 @@ export { REPORT_TIMEOUT_MS, reportSession, type SessionEvent } from '@ab/web-kit
 export { type Can, usePermissions } from '@ab/web-kit/auth/use-permissions';
 export { AccountSetupPage, requireSetupPending, requireTeacherPortal } from './setup';
 export { parseReturnSearch } from '@ab/web-kit/auth/return-to';
+export { FamilyMoved, leaveForFamilyHost } from './family-host';

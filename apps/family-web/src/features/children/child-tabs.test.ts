@@ -1,0 +1,25 @@
+import { describe, expect, it } from 'vitest';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { kid } from '@ab/web-kit/portal/portal.fixtures';
+import { parseChildSearch, shownTab, tabOptions } from './child-tabs';
+
+describe('a child page’s tabs', () => {
+  it('a guardian sees the package; a child’s own login never does, in its own words', () => {
+    expect(tabOptions('guardian', kid()).map((o) => o.value)).toEqual([
+      'upcoming', 'attended', 'absent', 'package',
+    ]);
+    const own = tabOptions('student', kid());
+    expect(own.map((o) => o.label)).toEqual([
+      t.portal.upcomingTab, t.portal.app.child.attendedSelf, t.portal.app.child.absentSelf,
+    ]);
+    expect(tabOptions('student', kid({ contact_is_self: true })).map((o) => o.value)).toContain('package');
+  });
+
+  it('?tab= opens a tab the login has, else «القادمة»; junk is dropped', () => {
+    const tabs = tabOptions('student', kid());
+    expect(shownTab(tabs, 'absent')).toBe('absent');
+    expect(shownTab(tabs, 'package')).toBe('upcoming');
+    expect(parseChildSearch({ tab: 'x' })).toEqual({});
+    expect(parseChildSearch({ tab: 'package' })).toEqual({ tab: 'package' });
+  });
+});
