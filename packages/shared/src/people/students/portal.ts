@@ -109,3 +109,10 @@ export type PortalReports = z.infer<typeof portalReportsSchema>;
 /** POST …/reports/:id/url (5 minutes) and …/recordings/:id/url (an hour): a signed link. */
 export const portalFileUrlSchema = z.object({ url: z.string(), expires_at: z.string() });
 export type PortalFileUrl = z.infer<typeof portalFileUrlSchema>;
+
+/**
+ * POST …/lessons/:lessonId/room-link (docs/50 §2, §7): the family app opens our classroom in the
+ * phone's browser through this signed /join link, no second sign-in; it dies when the room closes.
+ */
+export const portalRoomLinkSchema = z.object({ url: z.string(), expires_at: z.string() });
+export type PortalRoomLink = z.infer<typeof portalRoomLinkSchema>;

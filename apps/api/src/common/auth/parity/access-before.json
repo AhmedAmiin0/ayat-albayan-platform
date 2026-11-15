@@ -265,6 +265,7 @@
   "PortalController.history": ["guardian","student"],
   "PortalController.join": ["guardian","student"],
   "PortalController.me": ["guardian","student"],
+  "PortalController.roomLink": ["guardian","student"],
   "PortalController.upcoming": ["guardian","student"],
   "PortalRecordsController.currentPackage": ["guardian","student"],
   "PortalRecordsController.recordingUrl": ["guardian","student"],

@@ -4,6 +4,7 @@ import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo'
 import { ADMIN, LESSON_ID, LINK_TOKEN, linkRow, OPEN, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { GuestJoinService } from './guest-join.service';
 import { PublicJoinLimit } from './join-limit';
+import { resolverOf } from '@/modules/teaching/classroom/family-link/family-link.fakes';
 import { admissionOf, moderation, recorder, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RoomJoinService } from './room-join.service';
 import { readerOf } from '@/common/settings/settings.fakes';
@@ -14,7 +15,12 @@ let mod: ReturnType<typeof moderation>;
 const deps = () => ({ q, mod, rec: recorder() });
 const staffJoin = (user = TEACHER) => new RoomJoinService(rolesOf(deps()), admissionOf(deps()), readerOf(ClassroomSettings)).join({ user, lessonId: LESSON_ID }, OPEN);
 const guestJoin = () =>
-  new GuestJoinService(q as unknown as ClassroomRepo, new PublicJoinLimit(), admissionOf(deps())).join(
+  new GuestJoinService(
+    q as unknown as ClassroomRepo,
+    new PublicJoinLimit(),
+    admissionOf(deps()),
+    resolverOf(q),
+  ).join(
     { linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } },
     OPEN,
   );
