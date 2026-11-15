@@ -19,13 +19,15 @@ export function useCodeSignIn(codes: CodeRoutes = authApi.staffCodes) {
   const [busy, setBusy] = useState(false);
   const timer = useCountdown();
 
-  const run = async (work: () => Promise<string | null>) => {
+  /** The refusal (also in `error`), or null: sent / signed in (the caller's haptic, docs/50). */
+  const run = async (work: () => Promise<string | null>): Promise<string | null> => {
     setBusy(true);
     setError(null);
     const refused = await work().catch((e: unknown) => authErrorText(e, t.common.error));
     // On success the auth gate swaps the screen; stay busy till then.
     if (refused !== null) setBusy(false);
     setError(refused);
+    return refused;
   };
 
   const send = (raw = phone) =>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- Option B «book + light»: a gold sun rising out of an open book, three short rays, on the
+       deep green. Palette tokens only: goldOnCover #064e3b, leather #ecfdf5, goldSoft #e4c97e. -->
+  <rect id="bg" width="1024" height="1024" fill="#064e3b"/>
+  <g id="glyph" transform="translate(512 512) scale(0.92) translate(-512 -500)">
+    <circle cx="512" cy="430" r="92" fill="#e4c97e"/>
+    <g stroke="#e4c97e" stroke-width="26" stroke-linecap="round">
+      <line x1="512" y1="270" x2="512" y2="304"/>
+      <line x1="390" y1="320" x2="414" y2="344"/>
+      <line x1="634" y1="320" x2="610" y2="344"/>
+    </g>
+    <path d="M500 500 C440 460 352 450 262 470 L262 690 C352 670 440 678 500 718 Z" fill="#ecfdf5"/>
+    <path d="M524 500 C584 460 672 450 762 470 L762 690 C672 670 584 678 524 718 Z" fill="#ecfdf5"/>
+  </g>
+</svg>

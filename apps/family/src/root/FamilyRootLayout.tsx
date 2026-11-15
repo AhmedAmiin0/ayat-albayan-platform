@@ -9,6 +9,7 @@ import {
   useRootBoot,
   useTheme,
 } from '@ab/mobile-kit';
+import { familyBrand } from './family-brand';
 import { isFamilySignedIn } from './family-gate';
 import { useFamilyPush } from './use-family-push';
 
@@ -39,7 +40,7 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
   const ready = boot.settled && meReady;
   useFamilyPush(ready && signedIn);
   return (
-    <RootFrame ready={ready} fontsLoaded={boot.fontsLoaded}>
+    <RootFrame ready={ready} fontsLoaded={boot.fontsLoaded} brand={familyBrand()}>
       <Stack
         screenOptions={{
           headerShown: false,
