@@ -29,7 +29,8 @@ function headline(row: PortalHistoryRow): string {
 export function HistoryRow({ row, student }: HistoryRowProps) {
   const { color } = useTheme();
   const clock = { ...useFamilyClock(), tz: student.tz };
-  const fresh = row.report_id !== null && isNewReport(row.report_id, useSeenReports());
+  const seen = useSeenReports();
+  const fresh = row.report_id !== null && isNewReport(row.report_id, seen);
   const pending = row.outcome === 'attended' && row.report_id === null;
   const body = (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>

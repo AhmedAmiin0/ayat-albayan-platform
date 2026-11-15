@@ -16,6 +16,7 @@ export { refreshOverrides } from './i18n/i18n-overrides';
 export { t } from './i18n/i18n';
 export { setLocale } from './i18n/locale-switch';
 export { locale } from './i18n/locale';
+export { currencyName, money } from './money/money';
 export { logWarning } from './log/log';
 export { PROFILE_KEY, useMyProfile } from './profile/my-profile';
 export { usePullRefresh } from './query/pull-refresh';

@@ -1,5 +1,5 @@
 import { Pressable } from 'react-native';
-import Svg, { Path, Rect } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { AppText, pressScale, t, type, useTheme } from '@ab/mobile-kit';
 
 interface JoinButtonProps {
@@ -49,7 +49,7 @@ export function JoinButton({ onPress, busy, short = false }: JoinButtonProps) {
         strokeLinejoin="round"
       >
         <Path d="M15 10l4.6-2.3A1 1 0 0 1 21 8.6v6.8a1 1 0 0 1-1.4.9L15 14" />
-        <Rect x={3} y={6} width={12} height={12} rx={2} />
+        <Path d="M5 6h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
       </Svg>
       <AppText
         style={{

@@ -1,9 +1,7 @@
+import type { PortalHome, PortalStudent } from '@ab/shared';
 import Constants from 'expo-constants';
-import { View } from 'react-native';
 import {
-  AppearancePicker,
   AppText,
-  InsetGroup,
   PasswordSection,
   SignOutButton,
   t,
@@ -13,9 +11,21 @@ import {
 } from '@ab/mobile-kit';
 import { FamilyHeader, FamilyPage } from '@/nav';
 import { ownStudent, usePortalMe } from '@/portal';
+import { AccountSettings } from './AccountSettings';
 import { ChildrenLinks } from './ChildrenLinks';
 import { ProfileCard } from './ProfileCard';
-import { PushSwitchRow } from './PushSwitchRow';
+
+/** «طالب · رمز الطالب AB-2041» or «ولي أمر». */
+const whoLine = (own: PortalStudent | null): string =>
+  own ? t.portal.app.account.student.replace('{code}', own.code) : t.portal.app.account.guardian;
+
+/** «الإصدار 1.0.0». */
+const versionLine = (): string =>
+  t.portal.app.account.version.replace('{v}', Constants.expoConfig?.version ?? '');
+
+/** A guardian's children; none for a student. */
+const childrenOf = (me: PortalHome | undefined, own: PortalStudent | null) =>
+  own ? [] : (me?.students ?? []);
 
 /**
  * «حسابي» (docs/50 §6, canvas Account / StudentAccount): the name, a guardian's children, this
@@ -26,30 +36,19 @@ export function AccountScreen() {
   const profile = useMyProfile();
   const me = usePortalMe().data;
   const own = me ? ownStudent(me) : null;
-  const A = t.portal.app.account;
   const name = profile.data?.full_name ?? own?.name ?? '';
-  const line = own ? A.student.replace('{code}', own.code) : A.guardian;
-  const version = Constants.expoConfig?.version ?? '';
   return (
     <FamilyPage
       header={<FamilyHeader title={t.portal.app.tabs.account} />}
       onRefresh={() => profile.refetch()}
     >
-      <ProfileCard name={name} line={line} />
-      {me && !own ? <ChildrenLinks students={me.students} /> : null}
-      <View style={{ gap: 8 }}>
-        <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.sm, color: color.ink2 }}>
-          {A.settings}
-        </AppText>
-        <InsetGroup>
-          <PushSwitchRow hint={own ? A.pushStudent : A.pushGuardian} />
-        </InsetGroup>
-        <AppearancePicker />
-      </View>
+      <ProfileCard name={name} line={whoLine(own)} />
+      <ChildrenLinks students={childrenOf(me, own)} />
+      <AccountSettings student={own !== null} />
       {own ? <PasswordSection /> : null}
       <SignOutButton />
       <AppText style={{ fontSize: type.size['2xs'], color: color.ink3, textAlign: 'center' }}>
-        {A.version.replace('{v}', version)}
+        {versionLine()}
       </AppText>
     </FamilyPage>
   );

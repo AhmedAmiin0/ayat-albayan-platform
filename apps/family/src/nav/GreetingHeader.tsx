@@ -1,7 +1,7 @@
 import { dateText, type PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, Avatar, Mark, type, useNow, useTheme } from '@ab/mobile-kit';
-import { FamilyBell } from '@/nav';
+import { FamilyBell } from './FamilyBell';
 import { useFamilyClock } from '@/portal';
 
 interface GreetingHeaderProps {

@@ -11,3 +11,4 @@ export {
 export { markReportSeen, useSeenReports } from './use-seen';
 export { useRefreshPortal } from './use-refresh';
 export { useFamilyClock } from './use-family-clock';
+export { useChildSummary } from './use-child-summary';

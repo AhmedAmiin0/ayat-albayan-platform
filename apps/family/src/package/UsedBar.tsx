@@ -1,0 +1,20 @@
+import type { PackageSummary } from '@ab/client-core';
+import { View } from 'react-native';
+import { AppText, type, useTheme } from '@ab/mobile-kit';
+import { usedText } from './package-text';
+
+/** «استُخدمت 8 من 12» over a bar of the lessons used. */
+export function UsedBar({ summary }: { summary: PackageSummary }) {
+  const { color } = useTheme();
+  const ratio = summary.total > 0 ? Math.min(1, summary.used / summary.total) : 0;
+  return (
+    <View style={{ gap: 6 }}>
+      <AppText style={{ fontFamily: type.ui[600], color: color.ink }}>{usedText(summary)}</AppText>
+      <View style={{ height: 8, borderRadius: 4, backgroundColor: color.sunk, overflow: 'hidden' }}>
+        <View
+          style={{ width: `${Math.round(ratio * 100)}%`, height: 8, backgroundColor: color.lapisFill }}
+        />
+      </View>
+    </View>
+  );
+}

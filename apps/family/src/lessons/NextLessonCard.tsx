@@ -1,5 +1,5 @@
 import { isLessonNow, lessonMinutes, windowStateAt } from '@ab/client-core';
-import type { PortalLesson, PortalStudent } from '@ab/shared';
+import type { ClockOptions, PortalLesson, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, t, type, useNow, useTheme } from '@ab/mobile-kit';
 import { useFamilyClock } from '@/portal';
@@ -17,6 +17,22 @@ interface NextLessonCardProps {
   full?: boolean;
 }
 
+/** The full card's lines: the time range and length, the teacher. */
+function Details({ lesson, clock }: { lesson: PortalLesson; clock: ClockOptions }) {
+  const { color } = useTheme();
+  const A = t.portal.app.lesson;
+  const minutes = A.minutes.replace('{n}', String(lessonMinutes(lesson)));
+  const words = { color: color.onLapis, fontSize: type.size.xs };
+  return (
+    <>
+      <AppText style={{ ...words, fontFamily: type.ui[600], fontSize: type.size.base }}>
+        {`${rangeText(lesson, clock)} · ${minutes}`}
+      </AppText>
+      <AppText style={words}>{A.teacher.replace('{name}', teacherText(lesson.teacher))}</AppText>
+    </>
+  );
+}
+
 /**
  * The next lesson on the lapis card (canvas Home, Child): when, the live countdown, then
  * «ادخل الحلقة» once the window opens. Times on the student's own clock.
@@ -25,34 +41,24 @@ export function NextLessonCard({ lesson, student, full = false }: NextLessonCard
   const { color } = useTheme();
   const now = useNow(TICK_MS);
   const clock = { ...useFamilyClock(), tz: student.tz };
-  const at = new Date(lesson.starts_at);
   const open = windowStateAt(lesson.window, now) === 'open' || isLessonNow(lesson, now);
   const A = t.portal.app.lesson;
-  const minutes = lessonMinutes(lesson);
   const words = { color: color.onLapis, fontSize: type.size.xs };
+  const roomNote = full && lesson.way_in === 'classroom';
   return (
     <View style={{ gap: 10, padding: 14, borderRadius: 12, backgroundColor: color.lapisFill }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 8 }}>
         <AppText style={{ ...words, flexShrink: 1, opacity: 0.92 }}>
-          {`${t.portal.nextLesson} · ${whenText(at, clock, now)}`}
+          {`${t.portal.nextLesson} · ${whenText(new Date(lesson.starts_at), clock, now)}`}
         </AppText>
         {open && full ? (
           <AppText style={{ ...words, fontFamily: type.ui[600] }}>{A.openNow}</AppText>
         ) : null}
       </View>
-      {full ? (
-        <AppText style={{ ...words, fontFamily: type.ui[600], fontSize: type.size.base }}>
-          {`${rangeText(lesson, clock)} · ${A.minutes.replace('{n}', String(minutes))}`}
-        </AppText>
-      ) : null}
-      {full ? (
-        <AppText style={words}>{A.teacher.replace('{name}', teacherText(lesson.teacher))}</AppText>
-      ) : null}
+      {full ? <Details lesson={lesson} clock={clock} /> : null}
       <Countdown lesson={lesson} now={now} />
       <JoinAction lesson={lesson} student={student} now={now} />
-      {full && lesson.way_in === 'classroom' ? (
-        <AppText style={{ ...words, opacity: 0.85 }}>{A.roomNote}</AppText>
-      ) : null}
+      {roomNote ? <AppText style={{ ...words, opacity: 0.85 }}>{A.roomNote}</AppText> : null}
     </View>
   );
 }

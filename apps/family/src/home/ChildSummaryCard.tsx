@@ -1,43 +1,29 @@
-import { childSummary, portalViewer, seesMoney } from '@ab/client-core';
-import type { PortalStudent } from '@ab/shared';
+import type { PortalReport, PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { AppText, Avatar, Ltr, t, type, useNow, useTheme } from '@ab/mobile-kit';
-import { dateLine, NewMark } from '@/lessons';
+import { AppText, Avatar, Ltr, t, type, useTheme } from '@ab/mobile-kit';
+import { dateLine, Figure, NewMark } from '@/lessons';
 import { childHref, PressCard } from '@/nav';
-import {
-  useChildLessons,
-  useChildPackage,
-  useChildReports,
-  useFamilyClock,
-  useSeenReports,
-} from '@/portal';
-import { Figure } from '@/lessons';
+import { useChildSummary, useFamilyClock } from '@/portal';
+
 
 const count = (n: number | null): string => (n === null ? '–' : String(n));
+
+/** «آخر تقرير · الخميس 13 نوفمبر», or «لم يصل تقرير بعد». */
+function lastReportLine(last: PortalReport | null, clock: Parameters<typeof dateLine>[1]): string {
+  const C = t.portal.app.children;
+  if (!last) return C.noReport;
+  return C.lastReport.replace('{date}', dateLine(new Date(last.lesson_starts_at ?? last.sent_at), clock));
+}
 
 /** One child on «أبنائي» (canvas Children): the last report, «جديد», and the counts → the child. */
 export function ChildSummaryCard({ student }: { student: PortalStudent }) {
   const { color } = useTheme();
   const clock = { ...useFamilyClock(), tz: student.tz };
-  const money = seesMoney(portalViewer('guardian', student));
-  const s = childSummary(
-    {
-      lessons: useChildLessons(student.id).data,
-      reports: useChildReports(student.id).data,
-      pkg: useChildPackage(student.id, money).data,
-      seen: useSeenReports(),
-    },
-    useNow(),
-  );
+  const s = useChildSummary(student);
+  const money = s.money;
   const C = t.portal.app.children;
-  const last = s.lastReport;
-  const lastLine = last
-    ? C.lastReport.replace(
-        '{date}',
-        dateLine(new Date(last.lesson_starts_at ?? last.sent_at), clock),
-      )
-    : C.noReport;
+  const lastLine = lastReportLine(s.lastReport, clock);
   return (
     <PressCard
       label={`${student.name} ${student.code}`}

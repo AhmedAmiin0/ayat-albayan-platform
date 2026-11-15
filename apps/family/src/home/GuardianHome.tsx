@@ -2,10 +2,10 @@ import { portalViewer, seesMoney } from '@ab/client-core';
 import type { PortalHome } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
-import { FamilyPage } from '@/nav';
+import { FamilyPage, GreetingHeader } from '@/nav';
 import { useRefreshPortal } from '@/portal';
 import { ChildHomeCard } from './ChildHomeCard';
-import { GreetingHeader } from './GreetingHeader';
+
 import { StudentsBody } from './StudentsBody';
 
 interface GuardianHomeProps {

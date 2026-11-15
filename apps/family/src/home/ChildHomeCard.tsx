@@ -1,12 +1,13 @@
-import { newReportCount, nextLesson } from '@ab/client-core';
+import { newReportCount } from '@ab/client-core';
 import type { PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
-import { AppText, SkeletonCard, raisedCard, t, type, useNow, useTheme } from '@ab/mobile-kit';
-import { NextLessonCard, PrepareCard } from '@/lessons';
+import { raisedCard, useTheme } from '@ab/mobile-kit';
+import { LoadState } from '@/nav';
 import { PackageLine } from '@/package';
 import { useChildLessons, useChildPackage, useChildReports, useSeenReports } from '@/portal';
 import { CardFigures } from './CardFigures';
 import { CardHead } from './CardHead';
+import { CardLessons } from './CardLessons';
 
 interface ChildHomeCardProps {
   student: PortalStudent;
@@ -20,22 +21,19 @@ interface ChildHomeCardProps {
  */
 export function ChildHomeCard({ student, money }: ChildHomeCardProps) {
   const { color } = useTheme();
-  const now = useNow();
   const lessons = useChildLessons(student.id);
-  const pkg = useChildPackage(student.id, money);
+  const pkg = useChildPackage(student.id, money).data;
   const reports = useChildReports(student.id).data?.reports ?? [];
   const fresh = newReportCount(reports, useSeenReports());
-  const next = lessons.data ? nextLesson(lessons.data.lessons, now) : null;
-  const muted = { fontSize: type.size.sm, color: color.ink3 };
+  const shownPkg = money ? pkg : undefined;
   return (
     <View style={{ ...raisedCard(color, 16), padding: 16, gap: 14 }}>
       <CardHead student={student} newReports={fresh} />
-      {lessons.data ? null : <SkeletonCard />}
-      {lessons.data && next ? <NextLessonCard lesson={next} student={student} /> : null}
-      {lessons.data && !next ? <AppText style={muted}>{t.portal.lessonsEmpty}</AppText> : null}
-      {lessons.data ? <PrepareCard lessons={lessons.data} student={student} /> : null}
-      <CardFigures month={lessons.data?.month} pkg={money ? pkg.data : undefined} />
-      {money && pkg.data ? <PackageLine view={pkg.data} studentId={student.id} /> : null}
+      <LoadState query={lessons}>
+        {(data) => <CardLessons lessons={data} student={student} />}
+      </LoadState>
+      <CardFigures month={lessons.data?.month} pkg={shownPkg} />
+      {shownPkg ? <PackageLine view={shownPkg} studentId={student.id} /> : null}
     </View>
   );
 }

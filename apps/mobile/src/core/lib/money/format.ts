@@ -8,21 +8,12 @@ import {
   type OwedPackage,
   type SubscriptionView,
 } from '@ab/shared';
-import { t, locale, ltr } from '@ab/mobile-kit';
+import { t, currencyName, locale, ltr, money } from '@ab/mobile-kit';
 
 // Money lines (docs/07 §2: Western digits, LTR values isolated). Strings come from ar.json only.
 
-const currencyNames: Record<string, string | undefined> = t.pricing.currencies;
-
-/** «ر.س» for the site currencies, else the isolated ISO code («EGP»). */
-export function currencyName(currency: string): string {
-  return currencyNames[currency] ?? ltr(currency);
-}
-
-/** «145 ر.س»: the isolated amount, then the currency. */
-export function money(amount: number, currency: string): string {
-  return `${ltr(formatAmount(amount))} ${currencyName(currency)}`;
-}
+/** «ر.س» and «145 ر.س» moved to the kit (both apps write money): kept here for staff imports. */
+export { currencyName, money } from '@ab/mobile-kit';
 
 /** «8 حلقات في الشهر», or «10 حلقات» for a custom count (package null). */
 export function packageName(sub: Pick<SubscriptionView, 'package' | 'lessons_total'>): string {
