@@ -6,6 +6,7 @@ import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
 import {
   t,
+  BiometricSwitchRow,
   Button,
   ListRow,
   Screen,
@@ -53,6 +54,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
       <ClassroomSection can={can} />
       <AppearancePicker />
       <ClockFormatPicker />
+      <BiometricSwitchRow />
       <LanguageRow />
       <View style={{ alignItems: 'flex-start' }}>
         <Button variant="ghost" label={t.auth.logout} onPress={logout} busy={leaving} />

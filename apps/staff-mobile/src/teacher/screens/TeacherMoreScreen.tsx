@@ -4,6 +4,7 @@ import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
 import {
   t,
+  BiometricSwitchRow,
   ListRow,
   Screen,
   ScreenHeader,
@@ -60,6 +61,7 @@ export function TeacherMoreScreen() {
       </InsetGroup>
       <AppearancePicker />
       <ClockFormatPicker />
+      <BiometricSwitchRow />
       <LanguageRow />
       <SignOutButton />
     </Screen>

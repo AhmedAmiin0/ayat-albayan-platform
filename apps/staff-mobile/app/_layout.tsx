@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import {
+  BiometricGate,
   type GateStatus,
   useAuthGate,
   useMeId,
@@ -58,38 +59,41 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
   usePresenceSelf(useMeId(ready && signedIn));
   return (
     <RootFrame ready={ready} fontsLoaded={fontsLoaded}>
-      <StaffCalls gate={gate}>
-        <Stack
-          screenOptions={{ headerShown: false, contentStyle: { backgroundColor: color.margin } }}
-        >
-          <Stack.Protected guard={gate === 'admin'}>
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="(admin-chat)" />
-          </Stack.Protected>
-          <Stack.Protected guard={gate === 'teacher'}>
-            <Stack.Screen name="teacher" />
-            <Stack.Screen name="(teacher-chat)" />
-          </Stack.Protected>
-          <Stack.Protected guard={gate === 'sales'}>
-            <Stack.Screen name="sales" />
-            <Stack.Screen name="(sales-chat)" />
-          </Stack.Protected>
-          {/* Back from Stripe into the app (pay-return): whoever makes payment links. */}
-          <Stack.Protected guard={gate === 'admin' || gate === 'sales'}>
-            <Stack.Screen name="pay-done" />
-          </Stack.Protected>
-          <Stack.Protected guard={gate === 'assistant'}>
-            <Stack.Screen name="assistant" />
-          </Stack.Protected>
-          <Stack.Protected guard={signedIn}>
-            <Stack.Screen name="room/[kind]/[id]" options={ROOM_SCREEN} />
-            <Stack.Screen name="share" />
-          </Stack.Protected>
-          <Stack.Protected guard={gate === 'out'}>
-            <Stack.Screen name="login" />
-          </Stack.Protected>
-        </Stack>
-      </StaffCalls>
+      {/* «الدخول بالبصمة»: off by default, nothing changes until the user turns it on. */}
+      <BiometricGate signedIn={signedIn}>
+        <StaffCalls gate={gate}>
+          <Stack
+            screenOptions={{ headerShown: false, contentStyle: { backgroundColor: color.margin } }}
+          >
+            <Stack.Protected guard={gate === 'admin'}>
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="(admin-chat)" />
+            </Stack.Protected>
+            <Stack.Protected guard={gate === 'teacher'}>
+              <Stack.Screen name="teacher" />
+              <Stack.Screen name="(teacher-chat)" />
+            </Stack.Protected>
+            <Stack.Protected guard={gate === 'sales'}>
+              <Stack.Screen name="sales" />
+              <Stack.Screen name="(sales-chat)" />
+            </Stack.Protected>
+            {/* Back from Stripe into the app (pay-return): whoever makes payment links. */}
+            <Stack.Protected guard={gate === 'admin' || gate === 'sales'}>
+              <Stack.Screen name="pay-done" />
+            </Stack.Protected>
+            <Stack.Protected guard={gate === 'assistant'}>
+              <Stack.Screen name="assistant" />
+            </Stack.Protected>
+            <Stack.Protected guard={signedIn}>
+              <Stack.Screen name="room/[kind]/[id]" options={ROOM_SCREEN} />
+              <Stack.Screen name="share" />
+            </Stack.Protected>
+            <Stack.Protected guard={gate === 'out'}>
+              <Stack.Screen name="login" />
+            </Stack.Protected>
+          </Stack>
+        </StaffCalls>
+      </BiometricGate>
     </RootFrame>
   );
 }

@@ -71,3 +71,12 @@ jest.mock('./src/lib/i18n/i18n-overrides', () => ({
 // needs another viewer calls setViewerPersonTz itself and resets it after.
 jest.mock('@ab/shared', () => ({ ...jest.requireActual('@ab/shared'), deviceTimeZone: () => 'Asia/Riyadh' }));
 require('@ab/client-core').setViewerPersonTz('Asia/Riyadh');
+
+// The biometric lock (src/biometric): a still store with no biometrics on the device, so the apps'
+// screens render as without the feature (no lock, no switch, no offer) and tests that stub Supabase
+// partially never reach its auth listener. The lock's own tests unmock it or reset the fake.
+jest.mock('./src/biometric/core/bio-lock', () => {
+  const { bioLockMock } = require('./src/testing/bio-lock');
+  void bioLockMock.boot({ enabled: false, enrolled: false });
+  return bioLockMock;
+});
