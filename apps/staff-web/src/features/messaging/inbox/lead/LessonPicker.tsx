@@ -1,9 +1,9 @@
 import { joinNames, lessonWhenAt, type ThreadLesson } from '@ab/shared';
-import { Field } from '@/components/ui/form/field';
-import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
-import { useClock } from '@/lib/clock';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Select } from '@ab/web-kit/components/ui/form/select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 const CITIES: Record<string, string | undefined> = t.tz;
 

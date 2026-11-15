@@ -3,14 +3,14 @@ import { ApiError } from '@ab/client-core';
 import ar from '@ab/shared/i18n/ar.json';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ChatActionsProvider } from '@/features/messaging/inbox/shared/ChatActionsProvider';
 import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ResendAsk } from './ResendAsk';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
 
 // Meta's 131060 on a new number's first message (owner 2026-10-27): «اطلب إعادة الإرسال».
 const unavailable = message({

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { PortalShell } from '@/components/shell/nav/SectionShells';
-import { requireRole } from '@/features/people/auth/me';
+import { requireRole } from '@ab/web-kit/auth/me';
 
 // The family portal (docs/31): PortalShell renders the page itself at /portal (no child routes).
 export const Route = createFileRoute('/portal')({

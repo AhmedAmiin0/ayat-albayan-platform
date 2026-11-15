@@ -27,7 +27,7 @@ async function bootstrap(): Promise<void> {
   // X-AB-Client hits per route × build (docs/26 §2f). No allowedHeaders below: @fastify/cors reflects the request's headers.
   registerClientUsage(app, app.get(ClientUsageService));
   // credentials: the report page's HttpOnly cookie (same-site web app, its listed origins only).
-  app.enableCors({ origin: env.WEB_ORIGIN.split(','), credentials: true });
+  app.enableCors({ origin: env.WEB_ORIGIN.split(',').map((o) => o.trim()), credentials: true });
   if (servesPublicHttp(role)) setupOpenApi(app);
   // SIGTERM (a rolling deploy): stop taking connections, finish the requests in flight, stop the jobs' timers.
   app.enableShutdownHooks();

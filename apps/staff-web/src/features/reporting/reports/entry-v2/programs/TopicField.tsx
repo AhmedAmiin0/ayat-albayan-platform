@@ -1,6 +1,6 @@
-import { Field } from '@/components/ui/form/field';
-import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n/i18n';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface TopicFieldProps {
   label: string;

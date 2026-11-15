@@ -1,13 +1,13 @@
 import type { Hero } from '@ab/client-core';
 import { clockOf, counted, isOpenLesson, type LessonView, type TeacherMe } from '@ab/shared';
 import { useId } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { ButtonRow } from '@/components/ui/layout/button-row';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
 import { joinHint } from '@/features/teaching/classroom';
 import { studentNames, studentTimes } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
-import { type Clock, useClock } from '@/lib/clock';
-import { useJoinWindow } from '@/lib/settings/public-config';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { type Clock, useClock } from '@ab/web-kit/lib/clock';
+import { useJoinWindow } from '@ab/web-kit/lib/settings/public-config';
 import { JoinLink } from '@/features/teaching/teacher/lessons/JoinLink';
 import { TeacherLessonLead } from '@/features/teaching/teacher/lessons/parts/TeacherLessonLead';
 import { useTeacherPlan } from '@/features/teaching/teacher/lessons/parts/use-teacher-plan';

@@ -1,4 +1,4 @@
-export { Drawer, type DrawerProps } from './Drawer';
+export { Drawer, type DrawerProps } from '@ab/web-kit/components/ui/overlay/Drawer';
 export {
   approveProposal,
   cancelLesson,

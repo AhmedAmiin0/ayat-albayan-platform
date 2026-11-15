@@ -1,9 +1,9 @@
 import type { LineHealthView, NotificationEntryView } from '@ab/shared';
 import { useState } from 'react';
-import { ScrollX } from '@/components/ui/layout/scroll-x';
-import { Tabs, tabIds } from '@/components/ui/layout/tabs';
-import { usePhone } from '@/components/ui/layout/use-narrow';
-import { t } from '@/lib/i18n/i18n';
+import { ScrollX } from '@ab/web-kit/components/ui/layout/scroll-x';
+import { Tabs, tabIds } from '@ab/web-kit/components/ui/layout/tabs';
+import { usePhone } from '@ab/web-kit/components/ui/layout/use-narrow';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { audienceTabs, rowsOf, type AudienceTab } from '@/features/messaging/notification-catalogue/catalogue-tabs';
 import { ManualTable } from './ManualTable';
 import { RulePhoneRow } from '@/features/messaging/notification-rules/phone/RulePhoneRow';

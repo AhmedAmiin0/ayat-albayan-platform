@@ -4,14 +4,14 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYMENT } from '@/features/finance/subscriptions/money-fixture';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AttachmentsDialog } from './AttachmentsDialog';
 import { PaymentsPage } from '@/features/finance/payments/PaymentsPage';
 import type { PaymentsUrlSearch } from '@/features/finance/payments/search';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const row = (id: string, legacy = false): PaymentAttachmentView => ({ id, mime: 'image/jpeg', size: 9, url: `https://signed/${id}`, expires_at: '', legacy });
 

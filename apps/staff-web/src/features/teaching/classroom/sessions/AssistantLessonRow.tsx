@@ -1,8 +1,8 @@
 import { clockOf, type AssistantLessonView } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
-import { useClock } from '@/lib/clock';
-import { clockDir, viewerZone } from '@/lib/clock-text';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { clockDir, viewerZone } from '@ab/web-kit/lib/clock-text';
 
 /** One session of the assistant's list (AssistantHome, and sales' running lessons): time, students, teacher, «ادخل الحلقة». */
 export function AssistantLessonRow({ lesson }: { lesson: AssistantLessonView }) {

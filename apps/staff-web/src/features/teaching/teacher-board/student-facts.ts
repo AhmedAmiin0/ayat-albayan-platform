@@ -1,8 +1,8 @@
 import { counted, PROGRAMS, TEACHER_STUDENT_KINDS, type TeacherStudentKind } from '@ab/shared';
 import { useQueries, type UseQueryResult } from '@tanstack/react-query';
 import { z } from 'zod';
-import { apiFetch } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // docs/48 web-students: «القرآن الكريم · جزء عمّ · 9 سنوات» under each name on the board, joined
 // by id from GET /teachers/me/students?kind= (no API change; TeacherMe is not widened).

@@ -1,13 +1,13 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
-import { home, kid, soonLesson } from './portal.fixtures';
-import { portalApi } from './portal.api-fixture';
-import { renderPortal } from './portal.render';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { home, kid, soonLesson } from '@ab/web-kit/portal/portal.fixtures';
+import { portalApi } from '@ab/web-kit/portal/portal.api-fixture';
+import { renderPortal } from '@ab/web-kit/portal/portal.render';
 import { PortalHome } from './PortalHome';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const MONEY = /SAR|ر\.س|ريال|مستحق|مدفوعات|طريقة الدفع/;
 

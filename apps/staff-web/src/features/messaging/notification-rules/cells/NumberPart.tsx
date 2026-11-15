@@ -1,7 +1,7 @@
 import type { LineHealthView, NotificationEntryView } from '@ab/shared';
 import { useId } from 'react';
-import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n/i18n';
+import { Select } from '@ab/web-kit/components/ui/form/select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { NumberParts } from '@/features/messaging/notification-catalogue/NumberParts';
 import { approvalWord, fillText } from '@/features/messaging/notification-rules/rule-text';
 import { numberName, useRules } from '@/features/messaging/notification-rules/rules-context';

@@ -4,14 +4,16 @@ import { draftFromLead } from '@/features/teaching/booking/booking-entries';
 import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { lastOwnSend, recordOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { registerDrafts } from '@/features/messaging/inbox/sales/register-drafts';
-import { signOut } from './sign-in';
+import { rememberUntilSessionEnd } from '@/features/messaging/inbox/shared/tab-memory';
+import { signOut } from '@ab/web-kit/auth/sign-in';
 
 const auth = vi.hoisted(() => ({ signOut: vi.fn(async () => undefined) }));
-vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('./session-activity', () => ({ reportSession: vi.fn(async () => undefined) }));
-vi.mock('@/features/messaging/notifications/web-push/web-push', () => ({ forgetWebPush: vi.fn(async () => undefined) }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
+vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession: vi.fn(async () => undefined) }));
+vi.mock('@ab/web-kit/push/web-push', () => ({ forgetWebPush: vi.fn(async () => undefined) }));
 
 const PHONE = '+966501234567';
+rememberUntilSessionEnd();
 
 describe('signOut on a shared PC forgets this tab’s chat memories (m11)', () => {
   it('the reply drafts, her own sends and the registration drafts are gone', async () => {

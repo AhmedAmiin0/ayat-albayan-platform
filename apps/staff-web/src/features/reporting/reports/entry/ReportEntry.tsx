@@ -9,8 +9,8 @@ import {
   type TextKey,
 } from '@ab/shared';
 import { useRef } from 'react';
-import { RequiredLegend, RequiredMark } from '@/components/ui/form/label';
-import { t } from '@/lib/i18n/i18n';
+import { RequiredLegend, RequiredMark } from '@ab/web-kit/components/ui/form/label';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AttachmentsField } from './AttachmentsField';
 import { AttendanceField } from './AttendanceField';
 import { GradePicker } from './GradePicker';

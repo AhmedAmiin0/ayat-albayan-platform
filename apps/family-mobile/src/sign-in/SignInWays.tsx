@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { AuthHint, Button, StepStage, t, useA11yPref, useStepMotion } from '@ab/mobile-kit';
 import { StudentSignIn } from '@/sign-in/password';
 import { WhatsAppSignIn } from '@/sign-in/whatsapp';
-import { firstWay, OTHER_WAY, type SignInWay, WAY_DIRECTION } from './sign-in-way';
+import { firstWay, OTHER_WAY, type SignInWay, WAY_DIRECTION } from '@ab/client-core';
 
 const WAYS: Record<SignInWay, (codes: boolean) => ReactNode> = {
   whatsapp: () => <WhatsAppSignIn />,

@@ -1,19 +1,19 @@
 import { PAYMENT_METHODS, round2, type PaymentMethod } from '@ab/shared';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { Field } from '@/components/ui/form/field';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Input } from '@/components/ui/form/input';
-import { Select } from '@/components/ui/form/select';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Select } from '@ab/web-kit/components/ui/form/select';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { PayoutView } from '@/features/finance/payouts/api';
 import { usePayPayout } from './use-pay-payout';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { useUploadMaxBytes } from '@/lib/settings/public-config';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 
 type Props = { payout: PayoutView; onClose: () => void; onSaved: () => void };
 

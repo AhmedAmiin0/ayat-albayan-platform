@@ -1,9 +1,9 @@
 import type { MessageView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { MouseEvent } from 'react';
-import { Button, buttonVariants } from '@/components/ui/form/button';
+import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { errorCode } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { handOffMessage, markSentManually, retryMessage } from '@/features/messaging/inbox/api/api';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 import { canRetry, canSendByHand, isHandedOff } from '@/features/messaging/inbox/messages/lib/message-notes';

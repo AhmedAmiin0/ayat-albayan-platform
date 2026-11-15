@@ -1,6 +1,6 @@
 import type { CurrencyTotals } from '@ab/shared';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** The totals a statement froze: one line per currency, «الراتب + العمولات + التسويات = الإجمالي». Never mixed. */
 export function StatementTotals({ totals }: { totals: Readonly<Record<string, CurrencyTotals>> }) {

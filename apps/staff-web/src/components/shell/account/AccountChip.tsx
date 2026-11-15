@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { Avatar } from '@/components/ui/display/avatar';
+import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import { avatarSeed } from '@/features/people/account';
 import { profileQuery } from '@/features/people/account/api';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface AccountChipProps {
   /** The signed-in email (/auth/me), shown under «حسابي» in the block variant. */

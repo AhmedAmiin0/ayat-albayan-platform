@@ -14,6 +14,7 @@ export { domainModuleRegex, routeImportGroup } from './eslint-domains.js';
 export { reactRestrictions } from './eslint-react.js';
 export { SYNTAX, syntaxExempt } from './eslint-syntax.js';
 export { a11yRules } from './jsx-a11y.js';
+export { webBlocks } from './lint-web.js';
 
 /**
  * A library package's blocks: `module` folders reach each other only through their index.ts

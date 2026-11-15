@@ -1,15 +1,15 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Logo } from '@/components/ui/display/mark';
-import { t } from '@/lib/i18n/i18n';
-import { ClassroomRoom } from '@/features/teaching/classroom/room/components/ClassroomRoom';
-import { classroomErrorText } from '@/features/teaching/classroom/room/livekit/errors';
+import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Logo } from '@ab/web-kit/components/ui/display/mark';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
+import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
 import { joinByStudentLink, studentLinkView } from '@/features/teaching/classroom/api/meetings-api';
-import type { RoomClient } from '@/features/teaching/classroom/room/components/room-types';
+import type { RoomClient } from '@ab/web-kit/classroom/room/components/room-types';
 import { StudentLessonPanel } from './StudentLessonPanel';
-import { useNow } from '@/lib/time/use-now';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
 
 const REFRESH_MS = 30_000;
 

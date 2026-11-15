@@ -1,11 +1,11 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { FACTS, kid, ME, MISSED, NEXT, renderBoard, rowOf, when } from './board-fixture';
 
 const navigate = vi.hoisted(() => vi.fn());
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
   useNavigate: () => navigate,

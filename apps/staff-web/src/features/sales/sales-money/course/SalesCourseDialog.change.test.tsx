@@ -3,14 +3,14 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CHECK, routeChangeSend } from '@/features/teaching/booking/course-change/change-fixture';
 import { ABRAR, SLOT } from '@/features/teaching/booking/wizard-fixture';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { COURSE_STUDENT_ID, COURSE_VIEW, NEXT_SUN, NEXT_SUN_LATER, NEXT_WED, PREVIOUS, RENEWAL_VIEW, routeRenewal } from './course-fixture';
 import { SalesCourseDialog } from './SalesCourseDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 // The course to change, booked ahead from Sunday 11 October (its own first week, after today).

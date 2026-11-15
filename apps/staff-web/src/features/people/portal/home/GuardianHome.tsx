@@ -1,7 +1,7 @@
 import { portalViewer, seesMoney } from '@ab/client-core';
 import type { PortalHome } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { ChildCard } from './ChildCard';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ChildCard } from '@ab/web-kit/portal/home/ChildCard';
 
 interface Props {
   home: PortalHome;

@@ -1,16 +1,16 @@
 import type { ClockCycle, RoomJoinResult } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { useClock } from '@/lib/clock';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
-import { CLASSROOM_KEY, joinRoom } from '@/features/teaching/classroom/api/api';
-import { ClassroomRoom } from '@/features/teaching/classroom/room/components/ClassroomRoom';
-import { classroomErrorText, opensAtOf } from '@/features/teaching/classroom/room/livekit/errors';
-import type { RoomClient } from '@/features/teaching/classroom/room/components/room-types';
-import { opensAtText } from '@/features/teaching/classroom/room/livekit/window-hint';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { CLASSROOM_KEY, joinRoom } from '@ab/web-kit/classroom/api/api';
+import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
+import { classroomErrorText, opensAtOf } from '@ab/web-kit/classroom/room/livekit/errors';
+import type { RoomClient } from '@ab/web-kit/classroom/room/components/room-types';
+import { opensAtText } from '@ab/web-kit/classroom/room/livekit/window-hint';
 
 /** Who mints the token: the lesson's room by default, an internal meeting's (joinMeeting) otherwise. */
 type Joiner = (id: string) => Promise<RoomJoinResult>;

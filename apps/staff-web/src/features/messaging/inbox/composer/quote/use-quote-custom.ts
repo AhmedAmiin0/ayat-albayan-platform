@@ -1,7 +1,7 @@
 import { quoteCustom, type QuotedTotal } from '@ab/client-core';
 import { currencySymbol, useCustomPrice } from '@/features/finance/subscriptions';
 import { usePermissions } from '@/features/people/auth';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const LABELS = { ...t.subscriptions.customPrice, currency: currencySymbol };
 

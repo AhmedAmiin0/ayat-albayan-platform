@@ -1,7 +1,7 @@
 import { clockOf, weekStart, weekWindowIn, zonedPartsIn } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Window } from '@/features/teaching/schedule/api';
-import type { Clock } from '@/lib/clock';
+import type { Clock } from '@ab/web-kit/lib/clock';
 
 // Slot grid helpers (R-SCH-06): weeks run السبت → الجمعة in the viewer's zone (docs/34), the grid's
 // big times are the viewer's and the small ones the student's zone (R-SCH-01). Pure, unit-tested.

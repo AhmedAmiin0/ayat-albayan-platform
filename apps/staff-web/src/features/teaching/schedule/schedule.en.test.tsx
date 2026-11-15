@@ -7,16 +7,16 @@ import { JOUD, lesson, SUHAILA } from './lesson/lesson-fixture';
 import { LessonDetails } from './lesson/LessonDetails';
 import { studentNames } from './lesson/lessons';
 import { ProposalsPanel } from './reschedule/ProposalsPanel';
-import { locale } from '@/lib/i18n/locale';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 
 // The UI in English (LTR): dates, joiners and the proposal arrow follow it, not the Arabic default.
-vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 const PENDING = { id: 'p1', proposed_starts_at: '2026-10-05T15:00:00.000Z', note: null, created_at: '2026-10-03T08:00:00.000Z' };
-vi.mock('@/lib/http/api', async (orig) => ({
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({
   ...(await orig<object>()),
   apiFetch: vi.fn(async () => [lesson({ pending_proposal: PENDING })]),
 }));

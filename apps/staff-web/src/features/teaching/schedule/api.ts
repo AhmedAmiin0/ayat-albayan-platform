@@ -1,8 +1,9 @@
 import type { CancelRequest, Conflict, LessonView, RescheduleRequest, SlotsResponse, StatusRouteEvent, ScheduleOverview } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
+import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { errorCode } from '@ab/web-kit/lib/http/error-code';
 import { bookingBase, type BookingMode } from '@/features/teaching/booking/mode';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { LessonTimeEdit, TimeEditResult } from './edit-time/edit-time.contract';
 
 // Phase 2 lesson routes (docs/10 §5). Commands camelCase, responses LessonView rows.
@@ -95,12 +96,7 @@ export const approveProposal = ({ id, override }: { id: string; override?: strin
 
 export const rejectProposal = (id: string) => apiSend<LessonView>('POST', `/lesson-proposals/${id}/reject`);
 
-/** Domain error code of an API failure (`{ code }`, docs/10 §3), else null. */
-export function errorCode(error: unknown): string | null {
-  if (!(error instanceof ApiError)) return null;
-  const body = error.body as { code?: unknown } | null;
-  return typeof body?.code === 'string' ? body.code : null;
-}
+export { errorCode };
 
 /** The clashes of a 409 `{ code: 'conflict', conflicts }`, else null. */
 export function conflictsOf(error: unknown): Conflict[] | null {

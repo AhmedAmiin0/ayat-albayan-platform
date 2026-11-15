@@ -1,12 +1,12 @@
 import { PAYMENT_METHODS } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Button } from '@/components/ui/form/button';
-import { Ltr } from '@/components/ui/display/ltr';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { PaymentView } from './api';
 import { amountEditable } from './amount/amount-check';
 

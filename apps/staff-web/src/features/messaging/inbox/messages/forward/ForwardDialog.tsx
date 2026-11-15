@@ -1,12 +1,12 @@
 import { FORWARD_MAX_TARGETS, type ForwardResponse, type MessageView, type ThreadView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { SearchInput } from '@/components/ui/form/search-input';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
 import { useDebounced } from '@/features/finance/pricing/use-debounced';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { threadsQuery } from '@/features/messaging/inbox/api/api';
 import { forwardMessage } from '@/features/messaging/inbox/api/api.forward';
 import { ForwardList } from './ForwardList';

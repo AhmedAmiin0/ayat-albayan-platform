@@ -1,11 +1,11 @@
 import type { NotificationAudience } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { Skeleton } from '@/components/ui/display/skeleton';
-import { usePermissions } from '@/features/people/auth/use-permissions';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { settingsQuery } from '@/lib/settings/settings-api';
 import type { AudienceTab } from '@/features/messaging/notification-catalogue/catalogue-tabs';
 import { NumbersLine } from '@/features/messaging/notification-catalogue/NumbersLine';

@@ -1,10 +1,10 @@
 import type { SalesHistoryEntry } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { Ltr } from '@/components/ui/display/ltr';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const status = (s: string | null): string => (s ? (STATUS[s] ?? s) : '—');

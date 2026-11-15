@@ -1,14 +1,14 @@
 import { sameClockAt, type OverviewTeacher } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Avatar } from '@/components/ui/display/avatar';
+import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';
 import { loadLabel } from '@/features/reporting/dashboard/today/TeacherLoad';
 import { formatTimeOff } from '@/features/people/teachers/time-off/time-off';
-import { t } from '@/lib/i18n/i18n';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { timeInCity } from '@/features/teaching/schedule/lesson/lessons';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface TeacherCellProps {
   teacher: OverviewTeacher;

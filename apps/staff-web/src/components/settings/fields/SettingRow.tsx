@@ -1,6 +1,6 @@
 import { useId, type ReactNode } from 'react';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { cn } from '@/lib/utils';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { cn } from '@ab/web-kit/lib/utils';
 
 /** What the settings page adds to a row: a notes line, a reset button and danger styling. */
 export interface RowExtras {

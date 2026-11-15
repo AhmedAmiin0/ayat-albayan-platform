@@ -1,6 +1,6 @@
 import { DEFAULT_JOIN_WINDOW, isOpenLesson, joinWindow, type JoinWindowConfig, type LessonView } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { lessonStatusText, type LessonStatusChip } from '@/lib/settings/lesson-status-text';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { lessonStatusText, type LessonStatusChip } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 /** The three groups of /admin/classrooms, in reading order. */
 export const SESSION_GROUPS = ['now', 'upcoming', 'ended'] as const;

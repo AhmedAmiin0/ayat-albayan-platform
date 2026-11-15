@@ -1,6 +1,6 @@
 import type { LineHealthView, NotificationEntryView, NotificationRuleView } from '@ab/shared';
-import { cn } from '@/lib/utils';
-import { t } from '@/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ChannelsPart } from '@/features/messaging/notification-rules/cells/ChannelsPart';
 import { NamePart } from '@/features/messaging/notification-rules/cells/NamePart';
 import { NumberPart } from '@/features/messaging/notification-rules/cells/NumberPart';

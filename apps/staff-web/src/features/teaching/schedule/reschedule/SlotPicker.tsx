@@ -2,17 +2,17 @@ import { addDays, weekStart, zonedPartsIn } from '@ab/shared';
 import type { SlotsResponse, SlotView } from '@ab/shared';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Icon } from '@/components/ui/display/icon';
-import { tzCity } from '@/components/ui/form/time-zone-select';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
 import { useBookingMode } from '@/features/teaching/booking/mode';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { slotsQuery } from '@/features/teaching/schedule/api';
 import { SlotGrid, type SlotGridProps } from '@/features/teaching/schedule/grid/SlotGrid';
 import { bookableWindow, currentWeekStart } from './slots';
 import { dayMonthLabel } from '@/features/teaching/schedule/tz';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface SlotPickerProps {
   teacherId: string;

@@ -1,6 +1,6 @@
-import { Field } from '@/components/ui/form/field';
-import { controlClass } from '@/components/ui/form/input';
-import { cn } from '@/lib/utils';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { controlClass } from '@ab/web-kit/components/ui/form/input';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface ReportTextFieldProps {
   label: string;

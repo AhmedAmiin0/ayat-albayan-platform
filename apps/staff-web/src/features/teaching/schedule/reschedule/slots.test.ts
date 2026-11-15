@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { bookableWindow, byLocalDay, currentWeekStart, zoneLabel } from './slots';
 import { RIYADH_TZ } from '@ab/shared';
-import { locale } from '@/lib/i18n/locale';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;

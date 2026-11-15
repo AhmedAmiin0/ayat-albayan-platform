@@ -3,7 +3,7 @@ import { AUTHOR_DAILY_LIMIT, type TemplateAuthorInput, type TemplateEditInput } 
 import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 import { templateErrorText } from '@/features/messaging/templates/api';
-import { ApiError, apiFetch, apiSend, type SendMethod } from '@/lib/http/api';
+import { ApiError, apiFetch, apiSend, type SendMethod } from '@ab/web-kit/lib/http/api';
 
 // «تعديل» and sales authoring (owner 2026-11-14). The admin edits through templates.manage's route;
 // an author (templates.author) lists, creates and edits through /messaging/templates/authored.

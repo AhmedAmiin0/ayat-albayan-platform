@@ -1,6 +1,6 @@
 import { Pressable } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
-import type { Country } from './countries';
+import type { Country } from '@ab/client-core';
 
 /** The number field's start: the country's flag and calling code; a tap opens «اختر الدولة». */
 export function CountryButton({ country, onPress }: { country: Country; onPress: () => void }) {

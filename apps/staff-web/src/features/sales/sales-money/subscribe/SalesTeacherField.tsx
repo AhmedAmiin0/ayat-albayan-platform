@@ -2,10 +2,10 @@ import { teacherChoice, type TeacherPick } from '@ab/client-core';
 import type { SalesFamilyStudent, SalesTeacherOption } from '@ab/shared';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Field } from '@/components/ui/form/field';
-import { Select } from '@/components/ui/form/select';
-import { apiFetch } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Select } from '@ab/web-kit/components/ui/form/select';
+import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export const salesTeachersQuery = queryOptions({
   queryKey: ['sales', 'subscriptions', 'teachers'],

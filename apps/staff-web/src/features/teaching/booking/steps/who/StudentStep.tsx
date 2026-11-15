@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Ltr } from '@/components/ui/display/ltr';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { studentListQuery } from '@/features/people/students/api';
 import { StudentSearch } from '@/features/people/students/list/StudentSearch';
 import type { StudentRef } from '@/features/people/students/types';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { PickedStudent } from '@/features/teaching/booking/draft/draft';
 
 export interface StudentStepProps {

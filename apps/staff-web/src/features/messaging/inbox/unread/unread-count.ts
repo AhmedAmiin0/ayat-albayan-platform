@@ -1,6 +1,6 @@
 import { liveInterval, UNREAD_COUNT_KEY, UNREAD_COUNT_PATH, unreadTotal } from '@ab/client-core';
-import { ApiError, apiFetch } from '@/lib/http/api';
-import { env } from '@/lib/http/env';
+import { ApiError, apiFetch } from '@ab/web-kit/lib/http/api';
+import { env } from '@ab/web-kit/lib/http/env';
 import { inboxLive } from '@/features/messaging/inbox/api/live';
 
 /** A signed-out session (401) is not retried: the next poll, or the sign-in, asks again. */

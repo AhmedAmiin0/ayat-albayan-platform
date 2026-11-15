@@ -2,7 +2,7 @@ import type { ReplyLesson, ThreadDetail } from '@ab/shared';
 import type { InfiniteData, QueryClient } from '@tanstack/react-query';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { detail, message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { useHide } from '@/features/messaging/inbox/messages/hide/use-hide';
@@ -16,7 +16,7 @@ import { MessageActions } from './MessageActions';
 // too (it sits outside the live chat's key on purpose).
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch: vi.fn() }));
 vi.mock('@/features/people/auth', () => ({ usePermissions: () => ({ can: () => true }) }));
 vi.mock('@/features/messaging/inbox/messages/reply-actions/RescheduleLessonDrawer', () => ({
   RescheduleLessonDrawer: ({ onMoved }: { onMoved: () => void }) => (

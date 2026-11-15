@@ -1,11 +1,11 @@
 import { fillSlots, rangeSummary } from '@ab/client-core';
 import { surahName, type SurahRange } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { SearchInput } from '@/components/ui/form/search-input';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { AyahStepper } from './AyahStepper';
 import { clampRange, surahStart, type PickTarget } from './picker-state';
 import { SurahList } from './SurahList';

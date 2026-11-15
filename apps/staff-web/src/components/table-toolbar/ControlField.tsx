@@ -1,6 +1,6 @@
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
-import { Select } from '@/components/ui/form/select';
+import { Select } from '@ab/web-kit/components/ui/form/select';
 import type { ColumnFilterControl } from './types';
 
 /** «تصفية حسب {col}»: every filter control's accessible name (the panel and the search box). */

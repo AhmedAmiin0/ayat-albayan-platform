@@ -1,7 +1,7 @@
 import type { TemplateNumberSyncView } from '@ab/shared';
 import { z } from 'zod';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // «مزامنة القوالب مع هذا الرقم» in words (docs/23c decision 9, owner 2026-11-07): every code the
 // endpoint answers, as a refused call or as a sync that failed, through one lookup map. Pure.

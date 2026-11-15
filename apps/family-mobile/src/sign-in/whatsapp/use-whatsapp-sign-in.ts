@@ -1,8 +1,8 @@
+import { checkPhone, type Country, defaultCountry } from '@ab/client-core';
 import { authApi, useA11yPref, useCodeSignIn, useStepMotion } from '@ab/mobile-kit';
+import { getLocales } from 'expo-localization';
 import { useState } from 'react';
 import { feel } from '@/sign-in/feedback';
-import { type Country, defaultCountry } from '@/sign-in/phone/countries';
-import { checkPhone } from '@/sign-in/phone/phone-check';
 
 export type WhatsAppStep = 'phone' | 'code';
 
@@ -15,7 +15,8 @@ export function useWhatsAppSignIn() {
   const flow = useCodeSignIn(authApi.familyCodes);
   const still = useA11yPref('reduceMotion');
   const motion = useStepMotion<WhatsAppStep>('phone', still);
-  const [country, setCountry] = useState<Country>(() => defaultCountry());
+  const region = (): string | null | undefined => getLocales().at(0)?.regionCode;
+  const [country, setCountry] = useState<Country>(() => defaultCountry(region()));
   const [typed, setTyped] = useState('');
   const check = checkPhone(country, typed);
 

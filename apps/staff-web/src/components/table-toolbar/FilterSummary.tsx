@@ -1,6 +1,6 @@
 import { counted } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 
 /** «2 مفعّلة، 14 نتيجة»; «لا توجد تصفية مفعّلة» when none is set; the count alone when the total is unknown. */
 export function filterSummary(count: number, resultCount?: number): string {

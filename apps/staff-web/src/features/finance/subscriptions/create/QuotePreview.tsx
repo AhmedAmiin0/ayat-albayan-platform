@@ -1,8 +1,8 @@
 import type { SubscriptionPricing } from '@ab/shared';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { FxNote } from '@/features/finance/pricing/calculator/FxNote';
 import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/pricing/format';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { apiErrorText } from '@/features/finance/subscriptions/format';
 import { useSubscriptionQuote } from './use-subscription-quote';

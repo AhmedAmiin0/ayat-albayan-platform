@@ -22,7 +22,13 @@
       "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignore": ["src/routeTree.gen.ts"],
-      "ignoreDependencies": ["babel-plugin-react-compiler", "zod"]
+      "ignoreDependencies": ["zod"]
+    },
+    "apps/family-web": {
+      "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignore": ["src/routeTree.gen.ts"],
+      "ignoreDependencies": ["zod"]
     },
     "apps/staff-mobile": {
       "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
@@ -51,6 +57,10 @@
       "entry": ["src/index.ts", "babel.cjs", "jest.base.cjs", "jest.shared.cjs"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignoreDependencies": ["react-test-renderer"]
+    },
+    "packages/web-kit": {
+      "entry": ["src/**/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"]
     },
     "tools/scripts": {
       "entry": ["**/*.{mjs,ts}", "!**/*.test.*"],

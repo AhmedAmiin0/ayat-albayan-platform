@@ -1,8 +1,8 @@
 import { durationText, lessonWhenAt, payoutLockOf } from '@ab/shared';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
-import type { Clock } from '@/lib/clock';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { Clock } from '@ab/web-kit/lib/clock';
 
 // «عدّل الوقت» wording (R-SCH-11): lengths with their unit, «قبل ← بعد» sides, the locked month. Pure.
 

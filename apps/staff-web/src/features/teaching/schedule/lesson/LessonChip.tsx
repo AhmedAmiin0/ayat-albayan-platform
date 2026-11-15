@@ -1,16 +1,16 @@
 import { clockOf, type LessonView, subscriptionStatusStyle, type Tone } from '@ab/shared';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { tzCity } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n/i18n';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { cn } from '@/lib/utils';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { cn } from '@ab/web-kit/lib/utils';
 import { studentNames } from './lessons';
 import { LessonTags } from './LessonTags';
 import { zoneLabel } from '@/features/teaching/schedule/reschedule/slots';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
-import { clockDir } from '@/lib/clock-text';
-import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { clockDir } from '@ab/web-kit/lib/clock-text';
+import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 // Literal class strings so Tailwind's scanner sees them (docs/07 §6 status chip tones).
 const EDGE: Record<Tone, string> = {

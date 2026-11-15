@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # Which parts changed. e2e drives apps/staff-web against the API and database, so a change that only
+  # Which parts changed. e2e drives both web apps (apps/staff-web, apps/family-web) against the API and database, so a change that only
   # touches the mobile apps (apps/staff-mobile, apps/family-mobile and their shared packages/mobile-kit,
   # which apps/staff-web never imports), docs, the migration tool or other scripts skips the e2e machines; a docs-only change
   # (docs/**, *.md; not docs/09, which workflows.test.mjs reads, nor the linted docs/design/brand/tools) also
@@ -143,9 +143,13 @@ jobs:
           # The family app (docs/50 §7) and the source package both apps share: jest-expo like mobile, on their
           # own machine so the staff app's 5 minutes do not grow.
           - { name: test family, task: test, filter: --filter=family-mobile --filter=@ab/mobile-kit }
+          # The family web app and the web kit both web apps build from source (docs/51 §2), on their own machine.
+          - { name: test family web, task: test, filter: --filter=family-web --filter=@ab/web-kit, vcache: family-web }
           - name: test others
             task: test
-            filter: '--filter=!staff-web --filter=!api --filter=!staff-mobile --filter=!family-mobile --filter=!@ab/mobile-kit'
+            filter: >-
+              --filter=!staff-web --filter=!api --filter=!family-web --filter=!@ab/web-kit
+              --filter=!staff-mobile --filter=!family-mobile --filter=!@ab/mobile-kit
             vcache: others
           # Metro bundle of each mobile app (docs/32 x0, critic correction 11): the same Babel config as an OTA, so
           # React Compiler output, Metro resolution errors and barrel require cycles fail here, not after `eas update`.
@@ -172,7 +176,7 @@ jobs:
         env:
           LOCK: ${{ hashFiles('pnpm-lock.yaml') }}
           CONF: >-
-            ${{ hashFiles('*/*/vitest.config.mts', 'apps/staff-web/vite.config.ts', 'tsconfig*.json',
+            ${{ hashFiles('*/*/vitest.config.mts', '*/*/vite.config.ts', 'packages/config/vite.js', 'tsconfig*.json',
             '*/*/tsconfig*.json', 'packages/config/tsconfig/**') }}
           SHARD: ${{ matrix.vcache }}
         run: echo "prefix=vitest-$RUNNER_OS-$LOCK-$CONF-$SHARD-" >> "$GITHUB_OUTPUT"

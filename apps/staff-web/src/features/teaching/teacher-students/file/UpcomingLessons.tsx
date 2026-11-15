@@ -1,8 +1,8 @@
 import type { AttendanceTableRow } from '@ab/shared';
 import { DataTable } from '@/components/data-table/DataTable';
 import { attendanceColumns } from '@/features/teaching/teacher-board';
-import { useClock } from '@/lib/clock';
-import { t } from '@/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface UpcomingLessonsProps {
   /** Her lessons with the student in the next 14 days, cancelled and moved ones included. */

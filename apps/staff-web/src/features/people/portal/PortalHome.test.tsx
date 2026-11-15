@@ -1,14 +1,14 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
-import { home, soonLesson } from './portal.fixtures';
-import { portalApi, type Answers } from './portal.api-fixture';
-import { renderPortal } from './portal.render';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { home, soonLesson } from '@ab/web-kit/portal/portal.fixtures';
+import { portalApi, type Answers } from '@ab/web-kit/portal/portal.api-fixture';
+import { renderPortal } from '@ab/web-kit/portal/portal.render';
 import { PortalHome } from './PortalHome';
-import { reloadSeenReports } from './use-seen-reports';
+import { reloadSeenReports } from '@ab/web-kit/portal/use-seen-reports';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const prepare = { homework: 'سورة الملك', next_plan: null, report_id: 'r9', lesson_starts_at: null };
 const answers: Answers = {

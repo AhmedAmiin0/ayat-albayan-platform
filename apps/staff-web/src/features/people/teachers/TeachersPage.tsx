@@ -1,17 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { Button } from '@/components/ui/form/button';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { EmptyState } from '@/components/ui/display/empty-state';
-import { Icon } from '@/components/ui/display/icon';
-import { PageHead } from '@/components/ui/layout/page';
-import { Pager } from '@/components/ui/layout/pager';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { Pager } from '@ab/web-kit/components/ui/layout/pager';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list/list-url';
 import { teachersPageQuery, type Page, type Teacher, type TeacherListRow } from './api';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { teacherColumns } from './teacher-columns';
 import { TeacherDialog } from './form/TeacherDialog';
 

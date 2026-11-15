@@ -1,6 +1,6 @@
 import { ATTENDANCES, type Attendance } from '@ab/shared';
-import { RadioChips } from '@/components/ui/form/radio-chips';
-import { t } from '@/lib/i18n/i18n';
+import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface AttendanceFieldProps {
   name: string;

@@ -1,6 +1,6 @@
 import { zonedPartsIn } from '@ab/shared';
 import { dayMonthLabel } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { gradeOfScore, type SeriesKey } from './chart';
 
 /** «التقدير العام» or the rubric's form wording. */

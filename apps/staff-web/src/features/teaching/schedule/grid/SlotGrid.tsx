@@ -1,12 +1,12 @@
 import { clockOf, type SlotView, weekDates, weekdayOf } from '@ab/shared';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { byLocalDay, zoneLabel } from '@/features/teaching/schedule/reschedule/slots';
 import { dayMonthLabel } from '@/features/teaching/schedule/tz';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
-import { clockDir } from '@/lib/clock-text';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { clockDir } from '@ab/web-kit/lib/clock-text';
 
 export interface SlotGridProps {
   /** Saturday of the week shown (the viewer's zone). */

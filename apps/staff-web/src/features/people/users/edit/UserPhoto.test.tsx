@@ -1,11 +1,11 @@
 import { avatarTone } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { DETAIL, granted, renderWithClient } from '@/features/people/users/users-test-kit';
 import { UserPhoto } from './UserPhoto';
 
-vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }) }));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }) }));
 
 const PHOTO = 'https://sb.test/avatars/u1.png';
 const photoOf = (name: string) => t.staffPhoto.photoOf.replace('{name}', name);

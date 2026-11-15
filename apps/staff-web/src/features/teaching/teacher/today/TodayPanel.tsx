@@ -1,9 +1,9 @@
 import { type HomePrefs, nextOpenLesson, pickHero } from '@ab/client-core';
 import { counted, type LessonView, type TeacherMe } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { EmptyState } from '@/components/ui/display/empty-state';
+import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { lessonsOnDay } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TeacherLessonRow } from '@/features/teaching/teacher/lessons/TeacherLessonRow';
 import { NextLesson } from './NextLesson';
 import { type DayKind, splitToday, type TodaySplit } from './split-today';

@@ -1,6 +1,6 @@
 import type { LessonView } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { useNow } from '@/lib/time/use-now';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { reportFormHref, reportOpen } from '@/features/reporting/reports/paths';
 import { ReportLink } from './ReportLink';
 import { TeacherReportLinks } from './TeacherReportLinks';

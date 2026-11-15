@@ -1,6 +1,6 @@
 import { guardianUpdateSchema, type GuardianUpdate, type LeadSource } from '@ab/shared';
 import { phoneError, requiredError } from '@/features/people/students/create/create-student';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { GuardianDetail } from './api';
 
 /** «تعديل ولي الأمر» (research-forms item 10). Inputs hold strings; '' means "not set". */

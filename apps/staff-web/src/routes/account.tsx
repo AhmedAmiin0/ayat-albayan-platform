@@ -2,7 +2,7 @@ import { USER_ROLES } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { PortalShell, SHELL_OF } from '@/components/shell/nav/SectionShells';
-import { meQuery, requireRole } from '@/features/people/auth/me';
+import { meQuery, requireRole } from '@ab/web-kit/auth/me';
 
 /**
  * /account «حسابي» (R-ACC-01..05): every signed-in role, inside the shell that role normally gets

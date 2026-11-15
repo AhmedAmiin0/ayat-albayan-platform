@@ -1,7 +1,7 @@
 import type { HomePrefs } from '@ab/client-core';
 import type { LessonView, TeacherMe } from '@ab/shared';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { cn } from '@/lib/utils';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { cn } from '@ab/web-kit/lib/utils';
 import { LoadRetry } from './LoadRetry';
 import { TodayPanel } from './today/TodayPanel';
 

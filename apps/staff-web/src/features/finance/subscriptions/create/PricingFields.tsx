@@ -6,12 +6,12 @@ import {
   SITE_COUNTRIES,
 } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { Field } from '@/components/ui/form/field';
-import { Input } from '@/components/ui/form/input';
-import { Select } from '@/components/ui/form/select';
-import { SegmentedControl } from '@/components/ui/form/segmented-control';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Select } from '@ab/web-kit/components/ui/form/select';
+import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
 import { durationLabel, packageCopy } from '@/features/finance/pricing/format';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { PricingForm } from './pricing-form';
 
 type Props = {

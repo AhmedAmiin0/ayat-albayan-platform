@@ -16,6 +16,7 @@ import { LIVEKIT_SHAPE } from './env.livekit';
 import { STRIPE_SHAPE } from './env.stripe';
 import { STORAGE_SHAPE } from './env.storage';
 import { SENDER_SHAPE } from './whatsapp/env.sender';
+import { webOrigin } from './env.web-origin';
 
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider, isGraphEnv } from './whatsapp/env.whatsapp';
 export { lineGaps, duplicatePhone, bootGaps, DUPLICATE_CHAT_PHONE } from './env.gaps';
@@ -31,7 +32,7 @@ export { googleEnv, googleRedirectUri, type GoogleEnv, type GoogleEndpoints } fr
 // The integration keys (@ab/shared INTEGRATION_KEYS) may also come from the database (loadEnv).
 const schema = z.object({
   PORT: z.coerce.number().default(3000),
-  WEB_ORIGIN: z.string().default('http://localhost:5173'),
+  WEB_ORIGIN: webOrigin,
   SUPABASE_URL: z.url(),
   SUPABASE_JWT_SECRET: z.string().min(32).optional(),
   /** Server-only key for the DbModule client (bypasses RLS; Nest guards enforce access). */

@@ -1,9 +1,8 @@
+import type { Country, PhoneState } from '@ab/client-core';
 import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { AppText, shape, t, type, useTheme } from '@ab/mobile-kit';
-import type { Country } from './countries';
 import { CountryButton } from './CountryButton';
-import type { PhoneState } from './phone-check';
 
 interface PhoneFieldProps {
   country: Country;

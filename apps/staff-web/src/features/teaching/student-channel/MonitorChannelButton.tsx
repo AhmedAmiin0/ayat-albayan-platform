@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n/i18n';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { ChannelThread } from './ChannelThread';
 
 /** The owning assistant's «المحادثة» on a row of «طلابي»: the student's channel, read-only, in a panel. */

@@ -3,7 +3,7 @@ import {
   QUICK_REPLY_INTENTS, type QuickReplyIntent, type TemplateDisplayButton,
 } from '@ab/shared';
 import { varsOf, type DraftVar } from '@/features/messaging/templates/create/template-draft';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // «تعديل» (owner 2026-11-14): the form's state as typed, prefilled from the row. The buttons are
 // what WhatsApp shows (display), else the registry's; a quick reply keeps its action by index.

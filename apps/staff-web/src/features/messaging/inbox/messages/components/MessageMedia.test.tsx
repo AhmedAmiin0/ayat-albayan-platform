@@ -1,14 +1,14 @@
 import type { MessageView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageMedia } from './MessageMedia';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const SIGNED = 'https://storage.test/wa-media/m-1.png?token=x';
 const FILE_PATH = '/threads/%2B966501234567/messages/m-1/file';

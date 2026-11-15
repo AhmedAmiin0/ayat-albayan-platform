@@ -12,8 +12,8 @@ import {
   type PackageId,
 } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n/i18n';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { OTHER, type Selection } from '@/features/finance/pricing/api';
 import { SegmentStep } from './SegmentStep';
 import { Stepper } from './Stepper';

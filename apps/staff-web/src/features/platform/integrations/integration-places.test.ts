@@ -1,6 +1,6 @@
 import { INTEGRATION_GROUPS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import {
   EVOLUTION_GROUPS,
   groupsMatch,

@@ -1,12 +1,12 @@
 import type { PortalHome as Home } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { EmptyState } from '@/components/ui/display/empty-state';
-import { t } from '@/lib/i18n/i18n';
-import { portalHomeQuery } from './api';
+import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { portalHomeQuery } from '@ab/web-kit/portal/api';
 import { ChildView } from './child/ChildView';
 import { GuardianHome } from './home/GuardianHome';
-import { LoadState } from './LoadState';
+import { LoadState } from '@ab/web-kit/portal/LoadState';
 
 /** A student's own login lands on their own screen; a guardian on every child, then one. */
 function Landing({ home }: { home: Home }) {

@@ -1,6 +1,6 @@
 import { messageTicks, TICK_PATHS, tickTone, tickWord, type MessageStatus, type TickTone } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 
 // Read is the WhatsApp-like blue (--read), the rest the tick grey (--tick); failed is saffron, the
 // «دورك» tone of its row word and the bubble's ring.

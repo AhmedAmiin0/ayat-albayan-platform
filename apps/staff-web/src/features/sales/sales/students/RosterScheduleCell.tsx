@@ -1,6 +1,6 @@
 import type { SalesStudentView } from '@ab/shared';
-import { useClock } from '@/lib/clock';
-import { viewerZone } from '@/lib/clock-text';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { viewerZone } from '@ab/web-kit/lib/clock-text';
 import { rosterScheduleLine } from './roster-text';
 
 /** A «كل الطلاب» row's weekly schedule in the viewer's zone and 12 / 24 h (owner 2026-10-30). */

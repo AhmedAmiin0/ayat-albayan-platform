@@ -1,11 +1,11 @@
 import type { TeacherMe } from '@ab/shared';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { PageHead } from '@/components/ui/layout/page';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
 import { teacherMeQuery } from '@/features/teaching/teacher';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { loadState, type LoadState } from './load-state';
 import { MeError } from './MeError';
 import { StudentsBoard } from './StudentsBoard';

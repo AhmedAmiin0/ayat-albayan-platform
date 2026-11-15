@@ -8,7 +8,7 @@ const inboxRealtime = vi.hoisted(() => vi.fn<(enabled: boolean) => void>());
 const appShell = vi.hoisted(() => vi.fn((props: Shell) => <div>{props.nav ?? props.topNav}</div>));
 const perms = vi.hoisted(() => ({ loaded: false }));
 vi.mock('@/components/shell/layout/AppShell', () => ({ AppShell: appShell }));
-vi.mock('@/features/people/auth/use-permissions', () => ({
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ loaded: perms.loaded, permissions: [], can: () => perms.loaded }),
 }));
 vi.mock('@/components/shell/nav/AdminNav', () => ({ AdminNav: () => <nav>admin-nav</nav> }));

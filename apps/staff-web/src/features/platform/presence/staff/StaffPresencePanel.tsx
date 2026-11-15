@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Icon } from '@/components/ui/display/icon';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { meQuery } from '@/features/people/auth';
 import { staffPresenceQuery } from '@/features/platform/presence/api';
 import { presenceOrder, withOnline } from '@/features/platform/presence/presence-pick';
 import { usePresenceClock } from '@/features/platform/presence/use-presence-clock';
 import { usePresenceWatch } from '@/features/platform/presence/use-presence-watch';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { StaffPresenceBody } from './StaffPresenceBody';
 
 /** «حالة الفريق» on «المستخدمون» (docs/33 §2): only an admin (base role) is shown the staff. */

@@ -1,6 +1,6 @@
 import { type AcademySettings, GATE_CONFIRM_TEXT, type GateSwitch } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/lib/http/api';
+import { apiSend } from '@ab/web-kit/lib/http/api';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 import type { SettingSwitchOptions } from '@/lib/settings/use-setting-switch';
 

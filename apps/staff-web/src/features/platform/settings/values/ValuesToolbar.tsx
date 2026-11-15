@@ -1,8 +1,8 @@
 import { useId } from 'react';
-import { Icon } from '@/components/ui/display/icon';
-import { SearchInput } from '@/components/ui/form/search-input';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import type { ValuesFilter } from './values-search';
 
 const v = t.settingsValues;

@@ -1,6 +1,6 @@
 import { Modal, Pressable, View } from 'react-native';
 import { AppText, shape, t, type, useTheme } from '@ab/mobile-kit';
-import { COUNTRIES, type Country } from './countries';
+import { COUNTRIES, type Country } from '@ab/client-core';
 import { CountryRow } from './CountryRow';
 
 interface CountryPickerProps {

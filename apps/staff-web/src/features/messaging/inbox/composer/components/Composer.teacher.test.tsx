@@ -1,18 +1,18 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Composer } from './Composer';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 // Opening a closed window sends nothing (owner 2026-11-07): apiSend must stay untouched.
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch,
   apiSend,
 }));
-vi.mock('@/lib/http/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
 
 const THREAD = { phone_e164: '+966501234567', session_open: false, last_inbound_at: null, guardian_id: 'g1', teacher_id: null };
 function show(role: 'admin' | 'teacher') {

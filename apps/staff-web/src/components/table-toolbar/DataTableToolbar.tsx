@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
 import type { DataTableFilters } from '@/components/data-table/data-table-features';
 import { ControlField, filterByLabel } from './ControlField';

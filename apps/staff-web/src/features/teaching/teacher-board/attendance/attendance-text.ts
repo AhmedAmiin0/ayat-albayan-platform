@@ -1,7 +1,7 @@
 import { dateText, lessonWhenAt, type AttendanceTableRow, type AttendanceTotalKind } from '@ab/shared';
-import type { Clock } from '@/lib/clock';
-import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
+import type { Clock } from '@ab/web-kit/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 // What the web «سجل الحضور» says (docs/46 C5): month names, the totals line, a row's tags.
 

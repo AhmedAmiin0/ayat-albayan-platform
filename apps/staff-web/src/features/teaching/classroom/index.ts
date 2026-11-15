@@ -12,7 +12,7 @@ export {
   removeAssistant,
   sendJoinLink,
   studentAssistantsQuery,
-} from './api/api';
+} from '@ab/web-kit/classroom/api/api';
 export {
   issueStudentLink,
   joinByStudentLink,
@@ -21,13 +21,13 @@ export {
   studentLinkView,
 } from './api/meetings-api';
 export { ClassroomActions } from './join/ClassroomActions';
-export { ClassroomRoom } from './room/components/ClassroomRoom';
+export { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
 export { CopyLinkButton, copyStudentLink } from './join/CopyLinkButton';
 export { GuestJoinPage } from './join/GuestJoinPage';
 export { EnterButton, type JoinableLesson, JoinButton } from './join/JoinButton';
 export { StaffJoinButton } from './join/StaffJoinButton';
-export { RecordingOffAlert, RecordingsPanel } from './recordings/RecordingsPanel';
-export { RECORDING_TONE, recordingTime } from './recordings/recording-format';
+export { RecordingOffAlert, RecordingsPanel } from '@ab/web-kit/classroom/recordings/RecordingsPanel';
+export { RECORDING_TONE, recordingTime } from '@ab/web-kit/classroom/recordings/recording-format';
 export {
   type DataPacketIn,
   type DataSendOptions,
@@ -39,14 +39,14 @@ export {
   type RoomSnapshot,
   type RoomStatus,
   type TileView,
-} from './room/components/room-types';
+} from '@ab/web-kit/classroom/room/components/room-types';
 export {
   classroomErrorKey,
   classroomErrorText,
   mediaErrorText,
   opensAtOf,
-} from './room/livekit/errors';
+} from '@ab/web-kit/classroom/room/livekit/errors';
 export { AssistantLessonRow } from './sessions/AssistantLessonRow';
 export { AssistantsManager } from './sessions/AssistantsManager';
 export { StudentJoinLink } from './student-link/StudentJoinLink';
-export { joinHint } from './room/livekit/window-hint';
+export { joinHint } from '@ab/web-kit/classroom/room/livekit/window-hint';

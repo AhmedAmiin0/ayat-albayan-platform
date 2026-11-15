@@ -1,8 +1,8 @@
 import { TEMPLATE_LIMITS } from '@ab/shared';
-import { Field } from '@/components/ui/form/field';
-import { controlClass, Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { controlClass, Input } from '@ab/web-kit/components/ui/form/input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 
 const S = t.templates.create;
 

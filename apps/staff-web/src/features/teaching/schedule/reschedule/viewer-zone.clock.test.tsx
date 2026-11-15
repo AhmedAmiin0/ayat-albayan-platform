@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ConflictNotice } from './ConflictNotice';
 import { ProposalsPanel } from './ProposalsPanel';
 
@@ -14,7 +14,7 @@ import { ProposalsPanel } from './ProposalsPanel';
 // UTC+2 again (Riyadh UTC+3), so 14:00Z reads 17:00 → 16:00. test-setup pins Riyadh first.
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const AT = '2026-11-01T14:00:00.000Z';
 const busy: Conflict = { kind: 'teacher_busy', startsAt: AT, endsAt: AT };

@@ -1,13 +1,13 @@
 import type { TrialHistory } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { ScrollX } from '@/components/ui/layout/scroll-x';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { ScrollX } from '@ab/web-kit/components/ui/layout/scroll-x';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { rowTexts } from './history-text';
 import { trialOutcomeStyle } from './outcome-style';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /** Rows shown before «عرض كل المواعيد»: the history stays a compact block. */
 export const TRIAL_ROWS_SHOWN = 5;

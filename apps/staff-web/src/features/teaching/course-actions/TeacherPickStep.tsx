@@ -1,10 +1,10 @@
 import type { BookingTeacherOption, ProfileCourseView } from '@ab/shared';
-import { Button } from '@/components/ui/form/button';
-import { Field } from '@/components/ui/form/field';
-import { Input } from '@/components/ui/form/input';
-import { SegmentedControl } from '@/components/ui/form/segmented-control';
-import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
+import { Select } from '@ab/web-kit/components/ui/form/select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface TeacherDraft {
   teacherId: string;

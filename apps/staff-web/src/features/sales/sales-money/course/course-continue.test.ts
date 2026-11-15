@@ -1,11 +1,11 @@
 import { courseOpensOn, prefillDays, type SalesCourseView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { adjustText, continuePlan, continueText } from './course-continue';
 import { courseDraft } from './course-draft';
 import { COURSE_SUB, COURSE_VIEW, NEXT_SUN, NEXT_WED, PREVIOUS, RENEWAL_VIEW } from './course-fixture';
-import { locale } from '@/lib/i18n/locale';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;

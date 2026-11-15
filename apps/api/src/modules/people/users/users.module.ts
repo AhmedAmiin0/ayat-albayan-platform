@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { firstOrigin } from '@/common/http/public-origin';
 import { loadEnv } from '@/config/env/env';
 import { RolesModule } from '@/modules/people/roles/roles.module';
 import { UserAccess } from './users.access';
@@ -36,7 +37,8 @@ import { AUTH_ADMIN, USERS_CONFIG, type UsersConfig } from './store/users.store'
         const env = loadEnv();
         return {
           passwordMinLength: env.AUTH_PASSWORD_MIN_LENGTH,
-          setPasswordUrl: `${env.WEB_ORIGIN.replace(/\/+$/, '')}/set-password`,
+          // The staff app (the first origin), never the whole list (docs/51 §4).
+          setPasswordUrl: `${firstOrigin(env.WEB_ORIGIN)}/set-password`,
         };
       },
     },

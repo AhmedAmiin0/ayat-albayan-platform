@@ -1,14 +1,14 @@
 import { clockOf, type Conflict, lessonWhenAt, sameClockAt } from '@ab/shared';
 import { useId, useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Field } from '@/components/ui/form/field';
-import { Input } from '@/components/ui/form/input';
-import { ButtonRow } from '@/components/ui/layout/button-row';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { tzCity } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n/i18n';
-import { type Clock, useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { type Clock, useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { revealOnMount } from '@/lib/dom/mount-refs';
 
 /** How many clashes are listed before «وفيه {n} تعارض كمان». */

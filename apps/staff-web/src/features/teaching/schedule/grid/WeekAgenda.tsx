@@ -1,9 +1,9 @@
 import { weekdayOf } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
-import { Avatar } from '@/components/ui/display/avatar';
-import { t } from '@/lib/i18n/i18n';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { cn } from '@/lib/utils';
+import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { cn } from '@ab/web-kit/lib/utils';
 import { LessonChipList } from '@/features/teaching/schedule/lesson/LessonChip';
 import { dayMonthLabel } from '@/features/teaching/schedule/tz';
 
