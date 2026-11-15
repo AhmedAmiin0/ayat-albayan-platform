@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Animated, I18nManager } from 'react-native';
-import { useStageHeight } from './use-stage-height';
 import type { StepMotion } from './use-step-motion';
 
 /** How far a step slides on its way in or out (pt); 0 under Reduce Motion (a cross-fade). */
@@ -19,7 +18,7 @@ interface StepStageProps<K extends string> {
  * step takes no touches and is hidden from screen readers.
  */
 export function StepStage<K extends string>({ motion, render, still }: StepStageProps<K>) {
-  const stage = useStageHeight(still);
+  const { stage } = motion;
   const reading = I18nManager.isRTL ? -1 : 1;
   const way = motion.direction === 'forward' ? 1 : -1;
   const shift = still ? 0 : SLIDE * reading * way;
@@ -33,6 +32,7 @@ export function StepStage<K extends string>({ motion, render, still }: StepStage
         <Animated.View
           key={motion.previous}
           testID="step-leaving"
+          onLayout={stage.measure(motion.previous, false)}
           pointerEvents="none"
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
@@ -50,7 +50,7 @@ export function StepStage<K extends string>({ motion, render, still }: StepStage
       )}
       <Animated.View
         key={motion.current}
-        onLayout={stage.onLayout}
+        onLayout={stage.measure(motion.current, true)}
         style={{ opacity: p, transform: [{ translateX: enter }] }}
       >
         {render(motion.current)}

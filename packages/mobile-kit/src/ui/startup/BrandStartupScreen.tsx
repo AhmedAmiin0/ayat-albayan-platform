@@ -10,7 +10,7 @@ import type { StartupMode } from './startup-mode';
 import { StartupStatus } from './StartupStatus';
 import { useStartupStage } from './use-startup-stage';
 
-/** The native splash's image at its size, in the window's exact centre; the screen's one label. */
+/** The native splash's image at its size, in the window's exact centre, with the busy label. */
 function CentredMark({ brand }: { brand: StartupBrand }) {
   const size = brand.markSize;
   return (
@@ -24,6 +24,7 @@ function CentredMark({ brand }: { brand: StartupBrand }) {
         testID="startup-mark"
         source={brand.mark}
         resizeMode="contain"
+        onLoadEnd={brand.onShown}
         style={{ width: size, height: size }}
       />
     </View>
@@ -54,8 +55,10 @@ export function BrandStartupScreen(props: BrandStartupScreenProps) {
   const { stage, restart } = useStartupStage(mode);
   const [shown] = useState(() => new Animated.Value(0));
   const font = (family: string) => (fontsLoaded ? family : undefined);
-  const reveal = () =>
+  const reveal = () => {
+    brand.onShown?.();
     Animated.timing(shown, { toValue: 1, duration: motion.base, useNativeDriver: true }).start();
+  };
   const retry = () => {
     restart();
     onRetry();

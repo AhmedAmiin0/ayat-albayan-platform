@@ -15,8 +15,9 @@ const BOXES = Array.from({ length: CODE_LENGTH }, (_, i) => i);
 
 /**
  * The one-time code as six boxes (docs/50 §4). One real input lies over them, nearly invisible:
- * it takes the keyboard, a long-press «لصق» of WhatsApp's «copy code» and the OS's one-time-code
- * autofill, so a paste fills every box at once. The boxes only draw it, LTR in both languages.
+ * it takes the keyboard, a long-press «لصق» of WhatsApp's «copy code» (or the keyboard's clipboard
+ * chip), so a paste fills every box at once; the OS's code autofill where it offers one. The
+ * boxes only draw it (hidden from screen readers), LTR in both languages.
  */
 export function CodeBoxes({ value, onChange, refused }: CodeBoxesProps) {
   const [focused, setFocused] = useState(true);
@@ -27,7 +28,11 @@ export function CodeBoxes({ value, onChange, refused }: CodeBoxesProps) {
   };
   return (
     <View style={{ direction: 'ltr' }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}
+      >
         {BOXES.map((i) => (
           <CodeBox key={i} digit={value[i] ?? ''} look={look(i)} />
         ))}

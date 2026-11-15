@@ -18,7 +18,8 @@ export function CodeStep({ sign }: { sign: WhatsAppSignIn }) {
   const [code, setCode] = useState('');
   const verify = async (next: string) => {
     const refused = await sign.verify(next);
-    if (refused !== null) setCode('');
+    // Only the refused code goes: digits typed meanwhile stay.
+    if (refused !== null) setCode((now) => (now === next ? '' : now));
   };
   const change = (next: string) => {
     setCode(next);
@@ -36,7 +37,7 @@ export function CodeStep({ sign }: { sign: WhatsAppSignIn }) {
       <AppText style={{ fontSize: type.size.sm, lineHeight: 22, color: color.ink2 }}>
         {t.familyApp.signIn.codeSentTo.replace('{phone}', to)}
       </AppText>
-      <CodeBoxes value={code} onChange={change} refused={flow.error !== null} />
+      <CodeBoxes value={code} onChange={change} refused={flow.error !== null && code === ''} />
       {flow.error ? <AuthAlert text={flow.error} /> : null}
       <Button
         label={flow.busy ? t.familyAuth.verifying : t.familyAuth.verify}

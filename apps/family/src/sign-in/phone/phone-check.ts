@@ -36,5 +36,7 @@ export function checkPhone(country: Country, typed: string): PhoneCheck {
     return judge(`+${whole}`, whole.length >= MIN_INTERNATIONAL);
   }
   const national = digits.replace(/^0/, '');
-  return judge(`${country.dial}${national}`, national.length >= country.digits);
+  const whole = national.length >= country.digits;
+  // Short of the country's length it is never «ok», even where E.164 alone would pass (BH).
+  return whole ? judge(`${country.dial}${national}`, true) : { state: 'typing', e164: null };
 }

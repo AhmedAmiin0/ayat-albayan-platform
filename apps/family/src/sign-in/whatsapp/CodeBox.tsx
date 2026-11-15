@@ -4,7 +4,7 @@ import { AppText, shape, type, useTheme } from '@ab/mobile-kit';
 /** rest: the 3:1 input edge; next: the box the next digit goes in; refused: the last try failed. */
 export type BoxLook = 'rest' | 'next' | 'refused';
 
-/** One box of the one-time code: 46 × 56, the digit at 23 pt; drawing only (CodeBoxes types). */
+/** One box of the one-time code (up to 52 wide, 46:56; six fit 312 pt), drawing only. */
 export function CodeBox({ digit, look }: { digit: string; look: BoxLook }) {
   const { color } = useTheme();
   const edge: Record<BoxLook, string> = {
@@ -16,8 +16,9 @@ export function CodeBox({ digit, look }: { digit: string; look: BoxLook }) {
     <View
       testID="code-box"
       style={{
-        width: 46,
-        height: 56,
+        flex: 1,
+        maxWidth: 52,
+        aspectRatio: 46 / 56,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: shape.radius.lg,

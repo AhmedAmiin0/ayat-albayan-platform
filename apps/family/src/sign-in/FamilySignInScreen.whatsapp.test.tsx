@@ -69,7 +69,7 @@ test('a Saudi 05… number → the family code route in E.164, a success haptic,
     phone: '+966500000005',
   });
   expect(mockFeel).toHaveBeenCalledWith('success');
-  expect(screen.getAllByTestId('code-box')).toHaveLength(6);
+  expect(screen.getAllByTestId('code-box', { includeHiddenElements: true })).toHaveLength(6);
 });
 
 test('the country picker sets the calling code', async () => {

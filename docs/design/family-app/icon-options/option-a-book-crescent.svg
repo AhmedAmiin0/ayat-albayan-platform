@@ -11,9 +11,9 @@
   <rect id="bg" width="1024" height="1024" fill="#064e3b"/>
   <g id="glyph" transform="translate(512 512) scale(0.92) translate(-512 -478)">
     <circle cx="512" cy="300" r="84" fill="#e4c97e" mask="url(#moon)"/>
-    <path d="M500 450 C446 414 372 404 296 420 L296 668 C372 652 446 660 500 696 Z" fill="#ecfdf5"/>
-    <path d="M524 450 C578 414 652 404 728 420 L728 668 C652 652 578 660 524 696 Z" fill="#ecfdf5"/>
+    <path d="M496 450 C442 414 372 404 296 420 L296 668 C372 652 442 660 496 694 Z" fill="#ecfdf5"/>
+    <path d="M528 450 C582 414 652 404 728 420 L728 668 C652 652 582 660 528 694 Z" fill="#ecfdf5"/>
     <path d="M284 698 C372 682 452 690 512 728 C572 690 652 682 740 698" fill="none"
-      stroke="#e4c97e" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+      stroke="#e4c97e" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
 </svg>

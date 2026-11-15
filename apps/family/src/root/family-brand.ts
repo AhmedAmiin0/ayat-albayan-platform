@@ -1,3 +1,4 @@
+import * as SplashScreen from 'expo-splash-screen';
 import { palette, type StartupBrand, t } from '@ab/mobile-kit';
 import splash from '../../assets/splash-icon.png';
 
@@ -13,6 +14,8 @@ export const familyBrand = (): StartupBrand => ({
   markSize: SPLASH_IMAGE_WIDTH,
   title: t.familyApp.signIn.wordmark,
   subtitle: t.familyApp.signIn.wordmarkArabic,
+  // index.ts keeps the native splash up until the cover's mark is drawn (no bare frame).
+  onShown: () => void SplashScreen.hideAsync().catch(() => undefined),
   tone: {
     light: {
       background: palette.light.coverInk,

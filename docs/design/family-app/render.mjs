@@ -19,6 +19,8 @@ const noBg = (svg) => svg.replace(/<rect id="bg"[^>]*\/>/, '');
 const mono = (svg) =>
   noBg(svg).replace('</svg>', '<style>#glyph *{fill:#fff;stroke:#fff}</style></svg>');
 const solid = (svg) => svg.replace(/<g id="glyph"[\s\S]*<\/g>\s*<\/svg>/, '</svg>');
+/** The full-bleed icon (iOS, legacy Android): no adaptive mask crops it, so the glyph is larger. */
+const fullBleed = (svg) => svg.replace(/scale\(([\d.]+)\)/, (_, k) => `scale(${(k * 1.4).toFixed(3)})`);
 const cropped = (svg) => noBg(svg).replace('viewBox="0 0 1024 1024"', `viewBox="${GLYPH_BOX}"`);
 
 async function shot(page, { html, size, file }) {
@@ -56,7 +58,7 @@ for (const name of readdirSync(OPTIONS).filter((f) => f.endsWith('.svg'))) {
 }
 const svg = readFileSync(join(OPTIONS, WIRED), 'utf8');
 const set = {
-  'icon.png': svg,
+  'icon.png': fullBleed(svg),
   'android-icon-foreground.png': noBg(svg),
   'android-icon-background.png': solid(svg),
   'android-icon-monochrome.png': mono(svg),

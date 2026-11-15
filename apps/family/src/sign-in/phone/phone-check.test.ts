@@ -20,6 +20,8 @@ test('the picked country decides the calling code (Qatar 8, Egypt 10)', () => {
   expect(checkPhone(country('QA'), '5555 1234').e164).toBe('+97455551234');
   expect(checkPhone(country('EG'), '010 0000 0005').e164).toBe('+201000000005');
   expect(checkPhone(country('KW'), '6000').state).toBe('typing');
+  expect(checkPhone(country('BH'), '36001').state).toBe('typing');
+  expect(checkPhone(country('BH'), '3600 1234').e164).toBe('+97336001234');
 });
 
 test('a whole number with + or 00 ignores the picker (another country)', () => {

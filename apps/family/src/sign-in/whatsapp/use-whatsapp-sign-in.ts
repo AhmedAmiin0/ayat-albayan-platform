@@ -25,7 +25,10 @@ export function useWhatsAppSignIn() {
     feel(refused);
     if (refused === null) motion.go('code');
   };
-  const resend = async () => feel(await flow.send(flow.target ?? check.e164 ?? ''));
+  const resend = async () => {
+    if (flow.target === null) return;
+    feel(await flow.send(flow.target));
+  };
   const verify = async (code: string) => {
     const refused = await flow.verify(code);
     feel(refused);

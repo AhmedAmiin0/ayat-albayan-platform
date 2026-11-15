@@ -48,5 +48,6 @@ test('Reduce Motion: a cross-fade, no spring and no scale', async () => {
   await readyNow();
   expect(spring).not.toHaveBeenCalled();
   expect(timing).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ toValue: 0 }));
-  expect(screen.getByTestId('startup-screen').parent).toHaveStyle({ transform: [] });
+  const cover = screen.getByTestId('startup-screen').parent;
+  expect(cover?.props.style).not.toHaveProperty('1.transform');
 });

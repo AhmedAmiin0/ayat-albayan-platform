@@ -26,4 +26,7 @@ export interface StartupBrand {
   title: string;
   subtitle: string;
   tone: Record<ThemeName, StartupTone>;
+  /** The mark is drawn: the app hides its native splash now (expo-splash-screen), so the
+   *  hand-off never shows a frame without it. */
+  onShown?: () => void;
 }

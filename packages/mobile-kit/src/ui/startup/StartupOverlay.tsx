@@ -41,11 +41,19 @@ const LEAVE: Record<Leave, Run> = {
 const leaveOf = (branded: boolean, still: boolean): Leave =>
   branded && !still ? 'materialize' : 'fade';
 
-/** The cover's opacity, and while it materializes its growth (1 → 1.08 as it clears). */
-function coverMotion(opacity: Animated.Value, leave: Leave) {
-  const scale = opacity.interpolate({ inputRange: [0, 1], outputRange: [OPEN_SCALE, 1] });
-  return { opacity, transform: leave === 'materialize' ? [{ scale }] : [] };
+/** The cover's opacity (the staff cover: that alone); a materializing one also grows. */
+interface CoverStyle {
+  opacity: Animated.Value;
+  transform?: { scale: Animated.AnimatedInterpolation<number> }[];
 }
+
+const COVER: Record<Leave, (opacity: Animated.Value) => CoverStyle> = {
+  fade: (opacity) => ({ opacity }),
+  materialize: (opacity) => {
+    const scale = opacity.interpolate({ inputRange: [0, 1], outputRange: [OPEN_SCALE, 1] });
+    return { opacity, transform: [{ scale }] };
+  },
+};
 
 interface StartupOverlayProps {
   /** Fonts, language and the session gate are settled: the real screen is mounted underneath. */
@@ -83,7 +91,7 @@ export function StartupOverlay({ ready, onRetry, fontsLoaded, brand }: StartupOv
   return (
     <Animated.View
       pointerEvents={ready ? 'none' : 'auto'}
-      style={[StyleSheet.absoluteFill, coverMotion(opacity, leave)]}
+      style={[StyleSheet.absoluteFill, COVER[leave](opacity)]}
     >
       {brand ? (
         <BrandStartupScreen brand={brand} mode={mode} onRetry={onRetry} fontsLoaded={fontsLoaded} />
