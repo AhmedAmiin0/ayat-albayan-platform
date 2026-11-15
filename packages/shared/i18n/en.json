@@ -213,6 +213,16 @@
         "pushStudent": "Lesson times and new reports",
         "version": "Version {v}"
       },
+      "profile": {
+        "title": "Profile",
+        "open": "Opens your profile",
+        "details": "My details",
+        "name": "Name",
+        "whatsapp": "WhatsApp number",
+        "email": "Email",
+        "code": "Student code",
+        "note": "To change your details, message the academy."
+      },
       "child": {
         "attendedSelf": "Attended",
         "absentSelf": "Missed",

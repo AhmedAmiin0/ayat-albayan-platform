@@ -1,8 +1,13 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { t, setLocale } from '@ab/mobile-kit';
+import { StyleSheet } from 'react-native';
+import { t } from '../../lib/i18n/i18n';
+import { setLocale } from '../../lib/i18n/locale-switch';
+import { palette } from '../../theme';
 import { LanguageRow } from './LanguageRow';
 
-jest.mock('@ab/mobile-kit/lib/i18n/locale-switch', () => ({ setLocale: jest.fn(async () => 'reloading') }));
+jest.mock('../../lib/i18n/locale-switch', () => ({
+  setLocale: jest.fn(async () => 'reloading'),
+}));
 
 beforeEach(() => jest.clearAllMocks());
 
@@ -31,4 +36,26 @@ test('a restart that failed says to reopen the app (the choice is saved)', async
   await fireEvent.press(screen.getByRole('button', { name: 'English' }));
   await fireEvent.press(screen.getByRole('button', { name: t.common.confirm }));
   expect(await screen.findByText(t.language.restartManually)).toBeTruthy();
+});
+
+test('compact (signed out): quiet ink-2 text, an outlined confirm, then the switch', async () => {
+  await render(<LanguageRow compact />);
+  expect(screen.queryByRole('header', { name: t.language.label })).toBeNull();
+  const label = StyleSheet.flatten(screen.getByText('English').props.style);
+  expect(label).toMatchObject({ color: palette.light.ink2 });
+  await fireEvent.press(screen.getByRole('button', { name: 'English' }));
+  const confirm = screen.getByRole('button', { name: t.common.confirm });
+  expect(StyleSheet.flatten(confirm.props.style)).toMatchObject({
+    backgroundColor: palette.light.raised,
+  });
+  await fireEvent.press(confirm);
+  expect(setLocale).toHaveBeenCalledWith('en');
+});
+
+test('a choice that could not be saved says so', async () => {
+  jest.mocked(setLocale).mockResolvedValueOnce('error');
+  await render(<LanguageRow compact />);
+  await fireEvent.press(screen.getByRole('button', { name: 'English' }));
+  await fireEvent.press(screen.getByRole('button', { name: t.common.confirm }));
+  expect(await screen.findByText(t.common.error)).toBeTruthy();
 });

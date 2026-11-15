@@ -14,13 +14,13 @@ import {
   signOutDevice,
   InsetGroup,
   AppearancePicker,
+  LanguageRow,
 } from '@ab/mobile-kit';
 import { SalesSection } from '@/sales/sales/components/SalesSection';
 import { AdminOpsSection } from '@/more/sections/AdminOpsSection';
 import { ClockFormatPicker } from '@/more/appearance/ClockFormatPicker';
 import { ClassroomSection } from '@/more/sections/ClassroomSection';
 import { FinanceSection } from '@/more/sections/FinanceSection';
-import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { MoneySection } from '@/more/sections/MoneySection';
 
 /**

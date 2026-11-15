@@ -8,9 +8,9 @@ import {
   ScreenHeader,
   InsetGroup,
   AppearancePicker,
+  LanguageRow,
 } from '@ab/mobile-kit';
 import { ClockFormatPicker } from '@/more';
-import { LanguageRow } from '@/more/appearance/LanguageRow';
 
 /** The classroom assistant's «المزيد»: «حسابي» (R-ACC-01), the appearance, the language and sign-out. */
 export function AssistantMoreScreen() {

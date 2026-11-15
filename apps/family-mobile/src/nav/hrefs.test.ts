@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { openAlert, reportHref } from './hrefs';
+import { openAlert, PROFILE_HREF, reportHref } from './hrefs';
 
 const mockMark = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), navigate: jest.fn() } }));
@@ -12,6 +12,10 @@ test('a report link carries the student and, when visible, the recording', () =>
   expect(reportHref({ studentId: 's1', reportId: 'r1', recordingId: 'v1' })).toBe(
     '/report/r1?student=s1&rec=v1',
   );
+});
+
+test('the profile is one pushed page, app/profile', () => {
+  expect(PROFILE_HREF).toBe('/profile');
 });
 
 test('a bell row opens its report (marked seen), child, package or the week', () => {

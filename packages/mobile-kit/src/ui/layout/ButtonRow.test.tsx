@@ -1,11 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { Button } from '@ab/mobile-kit';
+import { Button } from '../primitives/Button';
 import { ButtonRow } from './ButtonRow';
 
-const layout = (width: number) => ({ nativeEvent: { layout: { width, height: 48, x: 0, y: 0 } } });
+const layout = (width: number) => ({
+  nativeEvent: { layout: { width, height: 48, x: 0, y: 0 } },
+});
 const flat = (id: string) => StyleSheet.flatten(screen.getByTestId(id).props.style);
-const cells = () => screen.getAllByTestId('button-row-cell').map((c) => StyleSheet.flatten(c.props.style));
+const cells = () =>
+  screen.getAllByTestId('button-row-cell').map((c) => StyleSheet.flatten(c.props.style));
 
 const row = (
   <ButtonRow testID="row">
@@ -23,7 +26,7 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
 }));
 beforeEach(() => mockFontScale.mockReturnValue(1));
 
-test('peer buttons share the row equally (flex 1 each), with the gap token, null children dropped', async () => {
+test('peer buttons share the row equally (flex 1 each), the gap token, nulls dropped', async () => {
   await render(row);
   await fireEvent(screen.getByTestId('row'), 'layout', layout(328));
   expect(flat('row')).toMatchObject({ flexDirection: 'row', gap: 8, alignSelf: 'stretch' });
@@ -31,7 +34,7 @@ test('peer buttons share the row equally (flex 1 each), with the gap token, null
     { flex: 1, minWidth: 0 },
     { flex: 1, minWidth: 0 },
   ]);
-  expect(screen.getAllByRole('button').map((b) => b.props.accessibilityLabel ?? null)).toHaveLength(2);
+  expect(screen.getAllByRole('button')).toHaveLength(2);
 });
 
 test('a narrow row stacks the buttons full width instead of clipping a label', async () => {

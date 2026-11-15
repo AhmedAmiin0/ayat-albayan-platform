@@ -1,10 +1,12 @@
-import { type } from '@ab/mobile-kit';
+import { type } from '../../theme';
 
 /** The button's own sides: 12pt padding and the 1pt edge, each side (Button.tsx). */
 const SIDES = 2 * (12 + 1);
 /** A leading icon (16–18pt) and its 8pt gap. */
 const ICON = 24;
-/** Average advance of a letter and of a space, in em, at ui 600 (generous: a wrong «fits» clips). */
+/**
+ * Average advance of a letter and of a space, in em, at ui 600 (generous: a wrong «fits» clips).
+ */
 const LETTER = 0.52;
 const SPACE = 0.3;
 

@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { TopConnectingBar } from '../ui/connecting/TopConnectingBar';
-import type { StartupBrand } from '../ui/startup/startup-brand';
 import { StartupOverlay } from '../ui/startup/StartupOverlay';
 import { useTheme } from '../theme';
 import { retryStartup } from './RootProviders';
@@ -12,12 +11,10 @@ interface RootFrameProps {
   ready: boolean;
   fontsLoaded: boolean;
   children: ReactNode;
-  /** The app's own startup look (the family app, docs/50); none: the staff app's. */
-  brand?: StartupBrand;
 }
 
 /** The app's frame once ready (status bar, reconnecting bar, stack); the startup overlay on top. */
-export function RootFrame({ ready, fontsLoaded, children, brand }: RootFrameProps) {
+export function RootFrame({ ready, fontsLoaded, children }: RootFrameProps) {
   const { color } = useTheme();
   return (
     <>
@@ -28,12 +25,7 @@ export function RootFrame({ ready, fontsLoaded, children, brand }: RootFrameProp
           {children}
         </View>
       ) : null}
-      <StartupOverlay
-        ready={ready}
-        onRetry={retryStartup}
-        fontsLoaded={fontsLoaded}
-        brand={brand}
-      />
+      <StartupOverlay ready={ready} onRetry={retryStartup} fontsLoaded={fontsLoaded} />
     </>
   );
 }

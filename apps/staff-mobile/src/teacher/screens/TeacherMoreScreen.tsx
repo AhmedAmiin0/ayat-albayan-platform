@@ -12,9 +12,9 @@ import {
   SignOutButton,
   locale,
   AppearancePicker,
+  LanguageRow,
 } from '@ab/mobile-kit';
 import { ClockFormatPicker } from '@/more';
-import { LanguageRow } from '@/more/appearance/LanguageRow';
 import { useTeacherMe } from '@/teacher/lib/queries';
 import { useTeacherGateOpen } from '@/teacher/lib/teacher-pages';
 
