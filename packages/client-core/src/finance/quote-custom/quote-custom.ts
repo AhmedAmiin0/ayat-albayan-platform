@@ -24,7 +24,7 @@ interface QuoteCustomOpts {
 }
 
 /** Off, or on with a valid amount: what the sheet uses. */
-export interface QuoteCustomState {
+interface QuoteCustomState {
   total: number | undefined;
   valid: boolean;
   error: string | null;
