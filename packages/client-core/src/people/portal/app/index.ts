@@ -1,7 +1,7 @@
 // The family app's own rules (docs/50 §6), shared with the family web pages.
 export { FAMILY_TABS, familyTabs, hasFamilyTab, type FamilyTab } from './family-tabs.js';
 export {
-  scheduleWeek, weekSchedule,
+  scheduleWeek, todaySchedule, weekSchedule,
   type ChildLessons, type WeekDay, type WeekInput, type WeekLesson,
 } from './week-schedule.js';
 export {
