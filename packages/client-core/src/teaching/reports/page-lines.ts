@@ -1,5 +1,5 @@
-import { reportV2Lines, type ReportLine, type ReportV2Text } from '@ab/client-core';
 import type { ReportPageReport } from '@ab/shared';
+import { reportV2Lines, type ReportLine, type ReportV2Text } from './v2-lines.js';
 
 /** The original form's text answers, in its words. */
 export interface V1Words {
@@ -10,8 +10,9 @@ export interface V1Words {
 }
 
 /**
- * The page's lines: the new form's (reportV2Lines, as the admin and the app read it); an original
- * form report adds its four text answers after the attendance and the program.
+ * The report page's lines (the web page and the family app): the new form's (reportV2Lines, as
+ * the admin reads it); an original form report adds its four text answers after the attendance
+ * and the program.
  */
 export function pageLines(
   report: ReportPageReport,
