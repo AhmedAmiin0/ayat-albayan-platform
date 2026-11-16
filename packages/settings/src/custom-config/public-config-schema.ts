@@ -19,7 +19,7 @@ const settingsShape = Object.fromEntries(
 const DEFAULT_ANSWER = { ...PUBLIC_SETTING_DEFAULTS, custom: {} };
 
 const answerSchema = z
-  .object({ ...settingsShape, custom: z.record(z.string(), z.json()).catch({}) })
+  .object({ ...settingsShape, custom: z.record(z.string(), z.json()).default({}).catch({}) })
   .catch(DEFAULT_ANSWER);
 
 /**

@@ -14,6 +14,8 @@ describe('GET /settings/public as the apps read it', () => {
   it('a missing or odd value reads as its default; one never fails the answer', () => {
     const parsed = publicConfigSchema.parse({ upload_max_mb: 'ten', custom: 7 });
     expect(parsed).toEqual(defaults);
+    // No custom key at all (an older API): an empty object, never a missing key.
+    expect(publicConfigSchema.parse({ upload_max_mb: 'ten' })).toEqual(defaults);
   });
 
   it('a body that is not an object reads as the defaults; no body at all fails', () => {
