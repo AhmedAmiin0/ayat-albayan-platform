@@ -42,17 +42,16 @@ describe('weekSchedule', () => {
   ];
 
   it('merges the children by day and start, ahead and not cancelled only', () => {
-    const days = weekSchedule({ children, tz, offset: 0, only: null }, now);
+    const days = weekSchedule({ children, tz, offset: 0 }, now);
     expect(days.map((d) => [d.day, d.lessons.map((l) => l.lesson.id)])).toEqual([
       ['2026-11-12', ['b1', 'a1']],
     ]);
     expect(days[0]?.lessons[0]?.student.id).toBe('b');
   });
 
-  it('a chip keeps one child; next week holds the later lessons', () => {
-    expect(weekSchedule({ children, tz, offset: 0, only: 'a' }, now)[0]?.lessons).toHaveLength(1);
-    const next = weekSchedule({ children, tz, offset: 1, only: null }, now);
+  it('next week holds the later lessons; no child, no days', () => {
+    const next = weekSchedule({ children, tz, offset: 1 }, now);
     expect(next.map((d) => d.day)).toEqual(['2026-11-15']);
-    expect(weekSchedule({ children: [], tz, offset: 0, only: null }, now)).toEqual([]);
+    expect(weekSchedule({ children: [], tz, offset: 0 }, now)).toEqual([]);
   });
 });

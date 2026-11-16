@@ -24,12 +24,12 @@ export function useWeek() {
   const bounds = scheduleWeek(now, clock.tz, offset);
   const day = (d: string): string => calendarDayText(d, locale, { day: 'numeric', month: 'long' });
   return {
-    /** A student's own week («جدولي»). */
-    own: kind === 'student',
+    /** A student's own week («جدولي»), also while /portal/me loads (as before the picker). */
+    own: kind !== 'guardian',
     offset,
     setOffset,
     range: `${day(bounds.from)} – ${day(bounds.to)}`,
-    days: weekSchedule({ children: reads.children, tz: clock.tz, offset, only: null }, now),
+    days: weekSchedule({ children: reads.children, tz: clock.tz, offset }, now),
     loading: reads.loading || pick.state === 'loading',
     failed: reads.failed,
     retry: reads.retry,
