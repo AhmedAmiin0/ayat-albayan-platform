@@ -1,5 +1,6 @@
 import type { PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { AppText, t, type, useA11yPref, useTheme } from '@ab/mobile-kit';
 import { FamilyHeader, FamilyPage } from '@/nav';
 import { useFamilyPick, usePickChild, usePortalMe, useRefreshPortal } from '@/portal';
@@ -8,19 +9,20 @@ import { ChildSummaryCard } from './ChildSummaryCard';
 import { StudentsBody } from './StudentsBody';
 
 /**
- * «اختر الطالب» (owner 2026-11-16): one card per child, rising in one after another; a press
- * makes the app that child's (saved on the phone) and goes home. Forced after sign-in for a
- * guardian of several children with no pick yet (no way back to a childless home); pushed from
- * «حسابي» to switch, with «رجوع».
+ * «اختر الطالب» (owner 2026-11-16): the title, one card per child rising in one after another,
+ * then the hint; a press makes the app that child's (saved on the phone) and goes home. Forced
+ * after sign-in for a guardian of several children with no pick yet (no way back to a childless
+ * home); pushed from «حسابي» to switch, with «رجوع» and no hint.
  */
 export function PickChildScreen() {
   const { color } = useTheme();
   const me = usePortalMe();
-  const switching = useFamilyPick().state === 'one';
+  const pick = useFamilyPick();
+  // Read once: the pick a press makes must not swap the header while the screen slides away.
+  const [switching] = useState(() => pick.state === 'one');
   const pickChild = usePickChild();
   const refresh = useRefreshPortal();
   const still = useA11yPref('reduceMotion');
-  const P = t.portal.app.pick;
   const students = me.data?.students ?? [];
   const kind = me.data?.kind ?? 'guardian';
   const choose = (student: PortalStudent) => () => {
@@ -29,8 +31,10 @@ export function PickChildScreen() {
     router.dismissTo('/');
   };
   return (
-    <FamilyPage header={<FamilyHeader title={P.title} back={switching} />} onRefresh={refresh}>
-      <AppText style={{ fontSize: type.size.sm, color: color.ink2 }}>{P.hint}</AppText>
+    <FamilyPage
+      header={<FamilyHeader title={t.portal.app.pick.title} back={switching} />}
+      onRefresh={refresh}
+    >
       <StudentsBody
         data={me.data}
         isError={me.isError}
@@ -41,6 +45,11 @@ export function PickChildScreen() {
           </Rise>
         )}
       />
+      {switching || students.length === 0 ? null : (
+        <AppText style={{ fontSize: type.size.xs, color: color.ink3, textAlign: 'center' }}>
+          {t.portal.app.pick.hint}
+        </AppText>
+      )}
     </FamilyPage>
   );
 }

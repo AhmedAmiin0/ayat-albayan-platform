@@ -38,10 +38,11 @@ const mockAnswer = (path: string): unknown => {
   );
 };
 
-/** Signed in as g1 (the root loads /auth/me before any screen). */
-function show() {
+/** Signed in as g1 (the root loads /auth/me before any screen); `cached`: /portal/me read too. */
+function show(cached = false) {
   const client = freshQueryClient();
   client.setQueryData(pathKey('/auth/me'), ME);
+  if (cached) client.setQueryData(pathKey('/portal/me'), mockAnswer('/portal/me'));
   return renderWithQuery(<PickChildScreen />, client);
 }
 
@@ -63,4 +64,12 @@ test("a press saves the child under this profile and goes to the child's home", 
       JSON.stringify({ profileId: 'g1', studentId: 's2' }),
     ),
   );
+});
+
+// After the press above, g1 works as يوسف: «حسابي» pushes the picker over the tabs.
+test('switching: «رجوع» back to «حسابي» and no hint', async () => {
+  await show(true);
+  expect(await screen.findByRole('button', { name: t.common.back })).toBeTruthy();
+  expect(screen.getByRole('button', { name: /سارة/ })).toBeTruthy();
+  expect(screen.queryByText(t.portal.app.pick.hint)).toBeNull();
 });

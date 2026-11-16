@@ -115,8 +115,8 @@ Missing (build):
 | Screen | Content |
 |---|---|
 | Sign-in | Guardian: phone + WhatsApp code. Student: code + password, «أول دخول؟», forgot. Reuse the API and web panel logic. |
-| Home (guardian) | Owner 2026-11-16: the app works as one child at a time. One child: that child's page (as the student's home, in the guardian's words, with «الباقة»). Two or more: «اختر الطالب» first. |
-| «اختر الطالب» (guardian of 2+) | Right after sign-in, and from «حسابي» › «تبديل الطالب»: one card per child (next lesson, counts, package bar, last report). A tap saves the pick on the phone under the signed-in profile (another account on the same phone never inherits it) and opens that child's home. Tabs: الرئيسية · الجدول · التقارير · حسابي of that child (no «أبنائي»). Push and link pages (child, report, package) are never filtered by the pick. |
+| Home (guardian) | Owner 2026-11-16: the app works as one child at a time. One child: that child's page (as the student's home, in the guardian's words, with «الباقة»; today's date over the child's name, not «أهلًا بك»). Two or more: «اختر الطالب» first. |
+| «اختر الطالب» (guardian of 2+) | Right after sign-in, and from «حسابي» › «تبديل الطالب»: one card per child (next lesson, counts, package bar, last report). A tap saves the pick on the phone under the signed-in profile (another account on the same phone never inherits it) and opens that child's home. Tabs: الرئيسية · الجدول · التقارير · حسابي of that child (no «أبنائي»); its name sits under «الجدول» and «التقارير». The hint «يمكنك تبديل الطالب لاحقًا من «حسابي».» sits under the cards on the forced picker only; from «حسابي» the picker has «رجوع». Push and link pages (child, report, package) are never filtered by the pick. |
 | Home (student) | Their own child screen directly (no list). |
 | Child | Tabs: «القادمة» (upcoming + prepare card), «حضرها» (attended → report), «غاب عنها» (absent), «الباقة» (guardian / adult only). |
 | Report | The report content, PDF button, recording player when visible. |

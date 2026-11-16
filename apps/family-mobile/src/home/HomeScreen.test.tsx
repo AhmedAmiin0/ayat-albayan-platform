@@ -50,6 +50,8 @@ beforeAll(() => AsyncStorage.setItem(PICKED_CHILD_KEY, SAVED));
 test("this profile's saved pick: that child's page, «حضرها» and «الباقة»", async () => {
   await show('g1');
   expect(await screen.findByRole('header', { name: 'يوسف' })).toBeTruthy();
+  // Today's date over the name: «أهلًا بك» would hail the parent by the child's name.
+  expect(screen.queryByText(t.portal.app.home.greeting)).toBeNull();
   expect(screen.getByRole('tab', { name: t.portal.attendedTab })).toBeTruthy();
   expect(screen.getByRole('tab', { name: t.portal.packageTab })).toBeTruthy();
 });

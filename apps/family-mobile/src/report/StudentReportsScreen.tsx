@@ -1,21 +1,23 @@
 import { EmptyState, t } from '@ab/mobile-kit';
 import { LoadState } from '@/ui';
 import { FamilyHeader, FamilyPage } from '@/nav';
-import { useFamilyPick, usePortalMe, useRefreshPortal } from '@/portal';
+import { useFamilyPick, usePickedChild, usePortalMe, useRefreshPortal } from '@/portal';
 import { OwnReports } from './OwnReports';
 
 /**
  * «التقارير» (canvas Reports): the sent reports of the student in view, newest first, by month;
- * «تقاريري» for a student's own. The tab shows only once that student is known (familyTabs).
+ * «تقاريري» for a student's own, the picked child's name under the title for a guardian of
+ * several. The tab shows only once that student is known (familyTabs).
  */
 export function StudentReportsScreen() {
   const me = usePortalMe();
   const pick = useFamilyPick();
+  const child = usePickedChild();
   const refresh = useRefreshPortal();
   const R = t.portal.app;
   const title = me.data?.kind === 'student' ? R.reports.title : R.tabs.reports;
   return (
-    <FamilyPage header={<FamilyHeader title={title} />} onRefresh={refresh}>
+    <FamilyPage header={<FamilyHeader title={title} subtitle={child?.name} />} onRefresh={refresh}>
       <LoadState query={me}>
         {() =>
           pick.state === 'one' ? (
