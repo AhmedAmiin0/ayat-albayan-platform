@@ -8,12 +8,20 @@
 -- Family sign-in (POST /auth/code/*) looks any number up in guardian_phones: a student's own number opens the
 -- student's login, a main or second number the guardian's; the code goes to that number.
 --   * «not is_primary» no longer means «the family's second number»: one_second, the main-number mirror and
---     remove_family_phone now leave student rows alone; the API's family-number readers filter student_id too.
+--     remove_family_phone now leave student rows alone, and so do the student / guardian profile readers and
+--     «تعديل البيانات» in the API. The chat, ownership and search readers (v_threads, my_sales_phones,
+--     students_chat_list_auto, familyOfPhone, sales-family, sales-ownership, family-search) keep treating it as
+--     a number of the family, on purpose: the child's chat is the family's.
 --   * set_student_phone (service role, the staff «تعديل البيانات» PATCH) sets, moves or removes the number with its
 --     audit row in one transaction. guardian_phones_second still refuses a teacher's number ('teacher_number') and
 --     joins «مشترك» for an active family; teachers_not_family_number already refuses any non-primary number.
---   * The number follows its student to another family (students_phone_follow); deleting the student (merge,
---     «تحويل إلى ولي أمر») drops it with the row.
+--   * A number that stops opening a login signs that login out (public.revoke_user_sessions, migration 285): a
+--     student's number moved or removed (set_student_phone), a family's second number removed (remove_family_phone).
+--   * The number follows its student to another family (students_phone_follow). merge_students (020) re-points
+--     this FK like every other (guardian_phones_student_moved): the merged student's number moves to the kept
+--     student and the kept student's family only while the kept one has none; else it is dropped with the merged
+--     row. Audited either way ('student_phone'). «تحويل إلى ولي أمر» drops it with the row (the API's snapshot
+--     keeps it).
 -- RLS: unchanged. guardian_phones keeps RLS on, the admin and the family's assistant read, insert / update / delete
 -- stay revoked from authenticated at table level (the new column included). Idempotent.
 -- SQL test plan (local DB, begin … rollback):
@@ -28,6 +36,16 @@
 --   h. delete the student → the row is gone.
 --   i. as an authenticated teacher of that student: select from guardian_phones → 0 rows; insert → permission
 --      denied. An unknown student → 'student_not_found'.
+--   j. merge_students(kept, merged) where only the merged student (another family) has a number → the row names
+--      the kept student and the kept student's family, one 'student_phone' audit row on the kept student.
+--   k. merge_students where both have a number → the merge commits; the kept student's number stays, the merged
+--      one's is gone, one 'student_phone' audit row on the merged student.
+--   l. a student with a login: set_student_phone moving or removing the number → its auth.sessions gone; a first
+--      set leaves them. remove_family_phone on a family with a login → the guardian login's sessions gone.
+--   m. insert a teacher, or update a teacher's phone, to a child's own number → 'family_number' (23505).
+--   n. link_family_phone on a lead whose number is a child's own number → 'number_taken' for another family's
+--      student code; false and the lead converted for a code of the same family.
+--   o. set_student_phone for a family with an active child → the number is in the 'subscribed' list («مشترك»).
 
 set local lock_timeout = '5s';
 
@@ -70,6 +88,9 @@ begin
   if not found then
     raise exception 'phone_not_found' using errcode = 'P0001';
   end if;
+  -- That number opened the family's login: its sessions end (the main number signs in again).
+  perform public.revoke_user_sessions(g.profile_id) from public.guardians g
+   where g.id = p_guardian and g.profile_id is not null;
   insert into public.audit_log (actor_id, entity, entity_id, action, before)
     values (p_actor, 'guardians', p_guardian, 'phone_removed', jsonb_build_object('phone_e164', p_phone));
 end $$;
@@ -83,10 +104,12 @@ create or replace function public.set_student_phone(p_student uuid, p_actor uuid
   language plpgsql security definer set search_path = '' as $$
 declare
   v_guardian uuid;
+  v_login uuid;
   v_before text;
 begin
   -- The student row lock serialises this with a second call and with a family move.
-  select s.guardian_id into v_guardian from public.students s where s.id = p_student for update;
+  select s.guardian_id, s.profile_id into v_guardian, v_login
+    from public.students s where s.id = p_student for update;
   if not found then
     raise exception 'student_not_found' using errcode = 'P0001';
   end if;
@@ -100,6 +123,8 @@ begin
   insert into public.audit_log (actor_id, entity, entity_id, action, before, after)
     values (p_actor, 'students', p_student, 'student_phone',
             jsonb_build_object('phone_e164', v_before), jsonb_build_object('phone_e164', p_phone));
+  -- The old number no longer opens the student's login: its sessions end. A first number signs nobody out.
+  perform public.revoke_user_sessions(v_login) where v_before is not null and v_login is not null;
   return true;
 end $$;
 revoke execute on function public.set_student_phone(uuid, uuid, text) from public, anon, authenticated;
@@ -119,9 +144,37 @@ create trigger students_phone_follow after update of guardian_id on public.stude
   for each row when (old.guardian_id is distinct from new.guardian_id)
   execute function public.students_phone_follow();
 
+-- 7. merge_students (020) re-points every single-column FK to students, this one too (as 191 / 272 handle
+-- theirs). The merged student's number moves only while the kept student has none, and then to the kept
+-- student's family as well; else the move is skipped and the number goes with the merged row (cascade).
+create or replace function public.guardian_phones_student_moved() returns trigger
+  language plpgsql security definer set search_path = '' as $$
+begin
+  if exists (select 1 from public.guardian_phones gp where gp.student_id = new.student_id) then
+    insert into public.audit_log (actor_id, entity, entity_id, action, before, after)
+      values (null, 'students', old.student_id, 'student_phone', jsonb_build_object('phone_e164', old.phone_e164),
+              jsonb_build_object('phone_e164', null, 'merged_into', new.student_id));
+    return null;
+  end if;
+  select s.guardian_id into new.guardian_id from public.students s where s.id = new.student_id;
+  insert into public.audit_log (actor_id, entity, entity_id, action, before, after)
+    values (null, 'students', new.student_id, 'student_phone',
+            jsonb_build_object('phone_e164', null, 'merged_from', old.student_id),
+            jsonb_build_object('phone_e164', new.phone_e164));
+  return new;
+end $$;
+revoke all on function public.guardian_phones_student_moved() from public, anon, authenticated;
+
+drop trigger if exists guardian_phones_student_moved on public.guardian_phones;
+create trigger guardian_phones_student_moved before update of student_id on public.guardian_phones
+  for each row when (old.student_id is distinct from new.student_id and new.student_id is not null)
+  execute function public.guardian_phones_student_moved();
+
 -- Down (manual, after the code rollback):
+--   drop trigger if exists guardian_phones_student_moved on public.guardian_phones;
 --   drop trigger if exists students_phone_follow on public.students;
---   drop function if exists public.students_phone_follow(), public.set_student_phone(uuid, uuid, text);
+--   drop function if exists public.guardian_phones_student_moved(), public.students_phone_follow(),
+--     public.set_student_phone(uuid, uuid, text);
 --   restore 973's guardians_phone_mirror() and remove_family_phone(uuid, text, uuid) bodies;
 --   delete from public.guardian_phones where student_id is not null;
 --   drop index if exists public.guardian_phones_one_second;

@@ -48,6 +48,31 @@ describe("migration 20261117000100: a student's own number in guardian_phones", 
     expect(flat).toContain('update public.guardian_phones set guardian_id = new.guardian_id');
   });
 
+  it('a merge moves the number only while the kept student has none, with the kept family', () => {
+    expect(flat).toContain(
+      'before update of student_id on public.guardian_phones for each row when (old.student_id is distinct from new.student_id and new.student_id is not null)',
+    );
+    expect(flat).toContain('where gp.student_id = new.student_id) then');
+    expect(flat).toContain('return null;');
+    expect(flat).toContain(
+      'select s.guardian_id into new.guardian_id from public.students s where s.id = new.student_id;',
+    );
+    expect(flat).toContain("'merged_into'");
+    expect(flat).toContain("'merged_from'");
+    expect(flat).toContain(
+      'revoke all on function public.guardian_phones_student_moved() from public, anon, authenticated;',
+    );
+  });
+
+  it('a number that stops opening a login signs that login out', () => {
+    expect(flat).toContain(
+      'perform public.revoke_user_sessions(v_login) where v_before is not null and v_login is not null;',
+    );
+    expect(flat).toContain(
+      'perform public.revoke_user_sessions(g.profile_id) from public.guardians g where g.id = p_guardian and g.profile_id is not null;',
+    );
+  });
+
   it('no new policy and no grant to authenticated (reads stay admin + family assistant)', () => {
     expect(sql).not.toMatch(/create policy/i);
     expect(sql).not.toMatch(/grant [a-z, ]+ to authenticated/i);
