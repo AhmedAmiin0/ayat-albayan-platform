@@ -12,6 +12,12 @@ export const FAMILY_APP_SETTINGS = {
     type: 'bool', default: false,
     labelKey: 'familyAuth.settings.chat', hintKey: 'familyAuth.settings.chatHint',
   },
+  /** Owner 2026-11-16: the room inside the family app (off = the browser, as before). */
+  family_meetings_in_app: {
+    module: 'family_app', group: 'family', reachesFamilies: true, public: true,
+    type: 'bool', default: false,
+    labelKey: 'familyAuth.settings.meetings', hintKey: 'familyAuth.settings.meetingsHint',
+  },
   family_payment_instructions: {
     module: 'family_app', group: 'family', reachesFamilies: true,
     type: 'string', default: '', minLength: 0, maxLength: 1000,

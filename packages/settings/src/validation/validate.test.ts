@@ -44,7 +44,7 @@ describe('public settings', () => {
         'academy_contact', 'academy_whatsapp_e164', 'join_closes_after_min', 'join_opens_before_min', 'lesson_confirmation_required',
         'makeup_window_days', 'meeting_link_auto', 'meetings_in_app', 'recording_consent_notice', 'upload_max_mb',
         ...TEACHER_PAGE_KEYS,
-        'family_chat_enabled',
+        'family_chat_enabled', 'family_meetings_in_app',
       ].sort(),
     );
     expect(publicSettings({ ...SETTING_DEFAULTS, messaging_enabled: true })).toEqual(PUBLIC_SETTING_DEFAULTS);

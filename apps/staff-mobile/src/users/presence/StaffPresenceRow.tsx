@@ -1,8 +1,7 @@
 import { presenceLine } from '@ab/shared';
 import { View } from 'react-native';
-import { t, AppText, type, useTheme } from '@ab/mobile-kit';
+import { t, AppText, PresenceLabel, type, useTheme } from '@ab/mobile-kit';
 import type { PresenceClock } from '@/core/lib/presence';
-import { PresenceLabel } from '@/core/ui/feedback/PresenceLabel';
 import { roleText } from '@/users/shared/format';
 import type { StaffLine } from './staff-order';
 

@@ -23,3 +23,9 @@ test('only scheduled / confirmed lessons count', () => {
     expect(livePhase(lesson({ id: 'c', status }), now)).toBeNull();
   }
 });
+
+test('a wider join window (the academy setting) makes a lesson «soon» earlier', () => {
+  const now = at('2026-10-01T12:30:00Z');
+  expect(livePhase(row, now)).toBeNull();
+  expect(livePhase(row, now, { opensBeforeMin: 45, closesAfterMin: 120 })).toBe('soon');
+});

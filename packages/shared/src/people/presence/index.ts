@@ -1,4 +1,5 @@
 export { maySeePresence, type PresencePair } from './presence-rules.js';
+export { channelPresenceSchema } from './presence.schemas.js';
 export { presenceWhen, type PresenceWhenInput, type PresenceWords } from './presence-when.js';
 export {
   isOnline,

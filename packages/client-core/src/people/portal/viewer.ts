@@ -1,9 +1,10 @@
-import { familyChats, type PortalKind, type PortalStudent } from '@ab/shared';
+import type { PortalKind, PortalStudent, PublicSettingKey } from '@ab/shared';
 import { z } from 'zod';
 
 // Who sees what in the family portal (docs/50 §2, §4): a guardian and an adult student who is
 // their own contact see the package and its money; a child's own login never does (nor asks).
-// The teacher chat shows only while settings.family_chat_enabled is on AND familyChats allows it.
+// The teacher chat shows to every family login, a child's too (owner 2026-11-16), while
+// settings.family_chat_enabled is on.
 
 export type PortalViewer = 'guardian' | 'adult' | 'child';
 
@@ -33,16 +34,23 @@ const SEES_MONEY: Readonly<Record<PortalViewer, boolean>> = {
 
 export const seesMoney = (viewer: PortalViewer): boolean => SEES_MONEY[viewer];
 
+/** A public bool from GET /settings/public: on only when it is exactly true (unknown = off). */
+const publicFlag = (key: PublicSettingKey): ((publicConfig: unknown) => boolean) => {
+  const on = z.object({ [key]: z.literal(true) });
+  return (publicConfig) => on.safeParse(publicConfig).success;
+};
+
 /** The public setting's key (packages/settings, public: true, default false). */
 export const FAMILY_CHAT_SETTING = 'family_chat_enabled';
 
-const familyChatSchema = z.object({ [FAMILY_CHAT_SETTING]: z.boolean().catch(false) });
+/** settings.family_chat_enabled; off while unknown (its default). */
+export const familyChatOn = publicFlag(FAMILY_CHAT_SETTING);
 
-/** settings.family_chat_enabled from GET /settings/public; off while unknown (its default). */
-export function familyChatOn(publicConfig: unknown): boolean {
-  const parsed = familyChatSchema.safeParse(publicConfig ?? {});
-  return parsed.success && parsed.data[FAMILY_CHAT_SETTING];
-}
+/** The room inside the family app (packages/settings, public: true, default false). */
+export const FAMILY_MEETINGS_SETTING = 'family_meetings_in_app';
+
+/** settings.family_meetings_in_app; off (the browser) while unknown. */
+export const familyMeetingsOn = publicFlag(FAMILY_MEETINGS_SETTING);
 
 /** The child screen's tabs, in order (docs/50 §6). */
 export const CHILD_TABS = ['upcoming', 'attended', 'absent', 'package', 'chat'] as const;
@@ -57,13 +65,12 @@ export interface ChildTabsInput {
 
 /** Which tabs this login sees for this student. */
 export function childTabs({ kind, student, chatOn }: ChildTabsInput): ChildTab[] {
-  const chats = chatOn && familyChats({ kind, contactIsSelf: student.contact_is_self });
   const shown: Record<ChildTab, boolean> = {
     upcoming: true,
     attended: true,
     absent: true,
     package: seesMoney(portalViewer(kind, student)),
-    chat: chats,
+    chat: chatOn,
   };
   return CHILD_TABS.filter((tab) => shown[tab]);
 }

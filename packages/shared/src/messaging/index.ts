@@ -56,6 +56,7 @@ export * from './calls/call-machine.js';
 export * from './calls/call-entry.js';
 export * from './calls/call-schemas.js';
 export * from './channel/channel.js';
+export * from './channel/channel.schemas.js';
 export * from './message-actions/index.js';
 export * from './payload/index.js';
 export * from './markers/wa-markup.js';

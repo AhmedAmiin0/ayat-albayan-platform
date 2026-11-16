@@ -1,0 +1,20 @@
+import { channelMode, liveChannelId } from '@ab/client-core';
+import { useState } from 'react';
+import { useChannel, useMarkRead, type ChannelRef } from './channel-api';
+import { useChannelLive } from './use-channel-live';
+
+/**
+ * The thread's data (docs/31 §2): its pages, live over the socket once joined and polled as the
+ * fallback; its mode (write, read, closed: channelMode); its newest page; and, for a participant,
+ * the read mark up to the newest message.
+ */
+export function useChannelThread(refs: ChannelRef) {
+  const [live, setLive] = useState(false);
+  const query = useChannel(refs, live);
+  const first = query.data?.pages[0];
+  const mode = channelMode(refs.audience, first);
+  const newest = mode === 'write' ? first?.messages.at(-1)?.created_at : undefined;
+  useChannelLive(refs, { channelId: liveChannelId(mode, first), onLive: setLive });
+  useMarkRead(refs, newest);
+  return { query, mode, first };
+}

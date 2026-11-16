@@ -1,9 +1,4 @@
-import {
-  CHANNEL_GUARDIAN_ONLY,
-  FAMILY_CHAT_OFF,
-  familyChats,
-  type ChannelSenderRole,
-} from '@ab/shared';
+import { FAMILY_CHAT_OFF, type ChannelSenderRole } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
@@ -34,8 +29,8 @@ export class AccessDeps {
 
 /**
  * docs/31 §2, rule 9 server-side. Participants: the student's current teacher(s) (channel_teacher_ids), the
- * guardian login of the student, and the student's own login only when the student is their own contact
- * (familyChats, owner 2026-10-29: a child's own login is 403 channel_guardian_only). Monitors (read-only): anyone
+ * guardian login of the student, and the student's own login, a child's too (owner 2026-11-16: «the child
+ * can chat normally»). Monitors (read-only): anyone
  * the route's student_channels.monitor key let in, and the owning assistant (sales ownership). Another
  * teacher, family or assistant is 404 student_not_found (as an unknown id).
  * Every family path is 403 family_chat_off while settings.family_chat_enabled is off (docs/50 §2).
@@ -56,11 +51,10 @@ export class ChannelAccess {
   }
 
   async family(user: AuthUser, studentId: string): Promise<ChannelActor> {
-    const student = await this.deps.portal.student(user, studentId);
+    await this.deps.portal.student(user, studentId);
     // After the scope: another family's id stays 404 whatever the switch (docs/50 §4).
     if (!(await this.deps.familyChat.enabled())) throw forbidden(FAMILY_CHAT_OFF);
     if (user.role !== 'guardian' && user.role !== 'student') throw new ForbiddenException();
-    if (!familyChats({ kind: user.role, contactIsSelf: student.contact_is_self })) throw forbidden(CHANNEL_GUARDIAN_ONLY);
     return { mode: 'participant', studentId, profileId: user.id, role: user.role, open: await this.queries.isOpen(studentId) };
   }
 

@@ -21,7 +21,8 @@ async function tabsOf(answers: Answers): Promise<(string | null)[]> {
   return screen.getAllByRole('tab').map((x) => x.textContent);
 }
 
-// docs/50 §2: the chat only while family_chat_enabled is on AND familyChats allows it.
+// docs/50 §2: the chat for every family login, a child's too (owner 2026-11-16), while
+// family_chat_enabled is on.
 describe('PortalHome: the teacher chat tab', () => {
   afterEach(() => apiFetch.mockReset());
 
@@ -35,8 +36,8 @@ describe('PortalHome: the teacher chat tab', () => {
     expect(await screen.findByRole('tab', { name: `${t.studentChannel.portalTab} (3)` })).toBeTruthy();
   });
 
-  it('setting on: a child’s own login still has no chat', async () => {
-    expect(await tabsOf({ ...ON, me: child })).not.toContain(t.studentChannel.portalTab);
-    expect(apiFetch).not.toHaveBeenCalledWith(expect.stringContaining('/channel/'));
+  it('setting on: a child’s own login chats too (owner 2026-11-16)', async () => {
+    await tabsOf({ ...ON, me: child });
+    expect(await screen.findByRole('tab', { name: `${t.studentChannel.portalTab} (3)` })).toBeTruthy();
   });
 });

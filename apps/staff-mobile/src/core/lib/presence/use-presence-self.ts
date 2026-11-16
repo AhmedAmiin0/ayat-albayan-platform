@@ -2,8 +2,7 @@ import { PRESENCE_SELF_PATH, presenceSelfKey, trackSelf } from '@ab/client-core'
 import type { PresenceSelf } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { apiFetch, supabase } from '@ab/mobile-kit';
-import { useAppActive } from './use-app-active';
+import { apiFetch, supabase, useAppActive } from '@ab/mobile-kit';
 
 /** The setting rarely changes: read once in a while, not per screen. */
 const SELF_STALE_MS = 15 * 60_000;

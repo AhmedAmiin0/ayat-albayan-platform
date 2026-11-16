@@ -112,11 +112,10 @@ below are updated accordingly (migrations `20261029000971`–`972`).
    existing student (new rows only). `merge_students` moves the merged student's messages into the kept
    channel.
 3. **Participants** (read and write, on an open channel): the family side is the guardian's login
-   (`guardians.profile_id`; for a child) or the student's own login (`students.profile_id`) ONLY when the
-   student is their own contact (`students.contact_is_self`; owner 2026-10-29: the direct student chat is for
-   students without guardians). A child's own login has no channel at all (the stricter choice: no read, no
-   write; 403 `channel_guardian_only`, the portal hides the tab; RLS gives it nothing) — `familyChats`
-   (`@ab/shared`). The teacher side is the student's CURRENT teacher(s): `channel_teacher_ids(student)` = the assigned teacher
+   (`guardians.profile_id`) and the student's own login (`students.profile_id`), a child's included (owner
+   2026-11-16: «the child can chat normally»; this replaced the 2026-10-29 guardian-only rule and its 403
+   `channel_guardian_only`; migration `20261116000100_child_chat` opens `can_read_channel` and
+   `presence_can_watch` to it). The teacher side is the student's CURRENT teacher(s): `channel_teacher_ids(student)` = the assigned teacher
    (`students.teacher_id`) or the teacher of an open lesson of the student running now or starting within a
    day (a substitute on the day; a lesson booked weeks ahead with another teacher grants nothing yet). It is the
    current part of the teacher scope (`teacher_student_ids`, migration 165), whose 90-day look-back keeps

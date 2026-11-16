@@ -18,7 +18,7 @@ Families stop depending on WhatsApp messages and Google links to follow their ch
 |---|---|
 | Guardian | Home with ALL their children at a glance; per child: upcoming lessons + join, attended lessons + reports, absent lessons, package (incl. money) |
 | Student, adult who is their own contact (`students.contact_is_self`) | Same as a guardian, for themselves only |
-| Student, child | Upcoming lessons + join, attended + reports, absent. **Never money or the package screen** |
+| Student, child | Upcoming lessons + join, attended + reports, absent, the teacher chat (owner 2026-11-16). **Never money or the package screen** |
 
 Per lesson:
 - **Upcoming:** day/time in the viewer's tz; a live countdown; «ادخل الحلقة».
@@ -26,7 +26,8 @@ Per lesson:
 - **Attended:** opens the report (same content as the parent PDF: recited, new memorisation, revision, tajweed/theory, grades, notes, homework, next plan) + the PDF + the recording when one is visible (`visible_to_student`).
 - **Absent:** date, and the reason when one was recorded.
 
-**Join (on from day one, no switch):** «ادخل الحلقة» opens whatever is enabled for that lesson: the external link (Google Meet) or the in-house room (LiveKit, inside the app / page). Today's rule `wayIn()` (portal-lessons.mapper.ts) and `POST /portal/students/:id/lessons/:lessonId/join` already decide and serve this; reuse them, never a second rule.
+**Join (on from day one):** «ادخل الحلقة» opens whatever is enabled for that lesson: the external link (Google Meet) or the in-house room (LiveKit). Today's rule `wayIn()` (portal-lessons.mapper.ts) and `POST /portal/students/:id/lessons/:lessonId/join` already decide and serve this; reuse them, never a second rule.
+- In the family app the in-house room opens **inside the app** only while `family_meetings_in_app` is on (bool, default **false**, public, «القيم» › family, `reachesFamilies`; owner 2026-11-16) and the app is 0.3.0 or later (§7). Otherwise it opens in the phone's browser through the signed room link, as before. `familyMeetingsOn()` (`@ab/client-core`) reads it; the web pages do not change.
 
 **Package (guardian / adult student only):**
 - package name and duration;
@@ -40,7 +41,8 @@ Per lesson:
   - the API refuses every family channel read/write: 403 `family_chat_off`;
   - no chat tab or icon on web or mobile;
   - no teacher push for family messages.
-- While on: today's teacher↔family channel (`apps/api/src/modules/teaching/student-channels/`, write rules in `channel-access.ts`) works as it does now.
+- While on: today's teacher↔family channel (`apps/api/src/modules/teaching/student-channels/`, write rules in `channel-access.ts`) works as it does now, for every family login: the guardian, an adult student and a child's own login (owner 2026-11-16 «the child can chat normally»; migration `20261116000100_child_chat` opens RLS and presence to it).
+- Switch it on together with the teachers' `teacher_student_messages_enabled`. With only the family switch on, a family message pushes the teacher to `/teacher/more/messages/:id` and `guardedTeacherRoute` sends them to «اليوم»; with only the teacher switch on, no family message arrives.
 
 **No WhatsApp inside the app or the family web pages.** «there is no whats app messages its all in app chat»: remove the `renew_url` wa.me link from `PortalHome` and every family screen. WhatsApp reminders and report PDFs keep going out exactly as today («not now, after we full migrate»).
 
@@ -138,7 +140,7 @@ Missing (build):
   - `app.config.ts` reads `FAMILY_EAS_PROJECT_ID` (→ `extra.eas.projectId` and `updates.url`; unset = no updates url) and `GOOGLE_SERVICES_JSON` (→ `android.googleServicesFile`).
 - **`packages/mobile-kit`** (`@ab/mobile-kit`): what both apps share (theme, UI kit, auth session, push registration, i18n). A **source** package: no build step; Metro, jest and tsc read its `.ts` sources.
 - **apps/staff-mobile** is the staff app again: no family routes, no `family-*` EAS profiles. The staff app keeps showing «wrongApp» to families; the family app shows it to staff.
-- **No in-app room route for now:** the staff app's classroom (LiveKit) stays staff code in apps/staff-mobile; it is not in the kit.
+- **The in-app room is in the kit** (owner 2026-11-16): the LiveKit classroom moved from apps/staff-mobile into `@ab/mobile-kit`, and both apps use it. The family app shows it only while `family_meetings_in_app` is on (§2) and only on family APK **0.3.0** or later (the LiveKit native packages). On 0.2.0, or with the switch off, the lesson opens in the browser.
 - The constraint stays: **no copied screen, hook or helper** between the two apps: what both need moves into `@ab/mobile-kit` (or `@ab/client-core` when the web needs it too).
 - **CI** (`ci.yml` «verify»): lint and typecheck cover every workspace; `test family` runs the family app and `@ab/mobile-kit` (jest-expo, own machine); `bundle family` runs the Metro bundle. A change only under apps/staff-mobile, apps/family-mobile or packages/mobile-kit skips the e2e machines.
 
@@ -172,6 +174,9 @@ Missing (build):
   - in the family EAS project's `preview` and `production` environments, set the same `EXPO_PUBLIC_*` variables the staff project has (`EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_WEB_ORIGIN`);
   - choose the app's name and icon (default: «آيات البيان», the academy logo).
 - **Then:** a family APK (mobile → `build-android-apk`, app = family); Play Store later.
+- **In-app lessons and chat (owner 2026-11-16, both off by default):**
+  - after families install the 0.3.0 APK, switch `family_meetings_in_app` on in «القيم» › family;
+  - switch `family_chat_enabled` and `teacher_student_messages_enabled` on together (§2).
 
 ## 9. Left to the builder
 

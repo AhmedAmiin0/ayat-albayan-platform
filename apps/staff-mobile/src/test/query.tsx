@@ -1,12 +1,16 @@
-import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH, type PublicSettings } from '@ab/shared';
+import { TEACHER_PAGE_SWITCH, type PublicSettings } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ReactElement } from 'react';
-import { publicConfigQuery } from '@/core/lib/query/public-config';
-import { freshQueryClient, renderWithQuery as render } from '@ab/mobile-kit/testing/query';
+import {
+  freshQueryClient,
+  renderWithQuery as render,
+  seedPublicConfig,
+} from '@ab/mobile-kit/testing/query';
 import { seedFullAccess } from './staff-me';
 
-// Test-only helpers: the shared fresh client (@ab/mobile-kit), signed in as staff.
-export { queryWrapper } from '@ab/mobile-kit/testing/query';
+// Test-only helpers: the shared fresh client and settings seed (@ab/mobile-kit), signed in as
+// staff.
+export { queryWrapper, seedPublicConfig } from '@ab/mobile-kit/testing/query';
 
 interface TestClientOptions {
   /** The test answers GET /auth/me through its apiFetch mock: nothing seeded. */
@@ -23,12 +27,6 @@ export function createTestQueryClient({ meFromApi = false }: TestClientOptions =
 /** `await renderWithQuery(<Screen />)`; seed with `client.setQueryData(key, data)` before or after. */
 export const renderWithQuery = (ui: ReactElement, client = createTestQueryClient()) =>
   render(ui, client);
-
-/** GET /settings/public as `patch` over the defaults (e.g. lesson_confirmation_required: true). */
-export function seedPublicConfig(client: QueryClient, patch: Partial<PublicSettings>): void {
-  const data = { ...PUBLIC_SETTING_DEFAULTS, custom: {}, ...patch };
-  client.setQueryData(publicConfigQuery.queryKey, data);
-}
 
 /** A test client for an academy that requires lesson confirmation (the default, 2026-11-03). */
 export function confirmingQueryClient(options: TestClientOptions = {}): QueryClient {
