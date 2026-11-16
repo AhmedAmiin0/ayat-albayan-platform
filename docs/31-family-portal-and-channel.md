@@ -120,11 +120,16 @@ below are updated accordingly (migrations `20261029000971`–`972`).
    day (a substitute on the day; a lesson booked weeks ahead with another teacher grants nothing yet). It is the
    current part of the teacher scope (`teacher_student_ids`, migration 165), whose 90-day look-back keeps
    reports readable but must not keep a chat: a teacher change moves access at once — the new teacher reads
-   the whole history, the old one nothing. The owning assistant (sales ownership, `ownershipOf`: her leads'
-   families and the students she brought) is a participant too (owner 2026-11-16: «yes it can write also»):
+   the whole history, the old one nothing. The assistant in the chat's ONE seat is a participant too (owner
+   2026-11-16: «yes it can write also»; seat rule below):
    she writes as `sender_role = 'sales'` (migration `20261116000200_channel_sales_sender`), marks read, and
    edits / deletes her own messages; the others see her name and «مسؤول المتابعة». On a closed channel she
    still reads the history as a monitor (decision 2). Another assistant is 404.
+   **One assistant seat per chat** (owner 2026-11-16: «any assistant can subscribe to the chating channel but
+   only 1», «who brought the student have the priority»; migration `20261116000300_channel_seat`):
+   `student_channels.assistant_id`, started with `students.brought_by`; any assistant takes a free seat (a
+   holder no longer `sales` counts as free), the bringer takes it from anyone, otherwise 409
+   `channel_seat_taken`; the holder leaves it. The seat is not ownership: no money, lead or commission scope.
 4. **Monitors are read-only**: anyone holding the permission `student_channels.monitor` (catalog, area
    messaging; the system admin by default, grantable to custom roles). A monitor has no send route: a post
    from a monitor is 403. Every monitor screen says «للاطلاع فقط».
@@ -137,7 +142,7 @@ below are updated accordingly (migrations `20261029000971`–`972`).
    as the fallback: 60 s while the socket is joined (`CHANNEL_LIVE_FALLBACK_MS`), 15 s while it is down;
    mobile joins only while the screen is shown and the app is in the foreground, and TanStack's focus refetch
    catches up on return. Only a participant's open thread joins the socket; monitors, the lists and the
-   badges keep polling as before (RLS tells only the admin and the owning assistant among monitors). Threads open on the newest message (web scrolls to it, mobile is an inverted
+   badges keep polling as before (RLS tells only the admin and the seat holder among monitors). Threads open on the newest message (web scrolls to it, mobile is an inverted
    list); a time shows its day when it is not today. Unread counts per participant
    (`channel_reads.last_read_at`), counting the other side only: a teacher counts the family's and the
    assistant's messages (never a co-teacher's), the family the teacher's and the assistant's, the assistant
@@ -146,8 +151,8 @@ below are updated accordingly (migrations `20261029000971`–`972`).
    unread; a monitor never marks anything read.
 7. **Notifications** (owner 2026-11-16 «all 4 will receive the message»): every message pushes kind
    `channel_message` to everyone in the chat but its writer: the current teacher(s), the guardian and the
-   student logins (only while `family_chat_enabled` is on; a child too) and the owning assistant(s)
-   (`studentOwnerIds`, the owner route's rule). Never an admin. Its catalogue row follows the notification
+   student logins (only while `family_chat_enabled` is on; a child too) and the seat holder (one
+   assistant, none while the seat is free). Never an admin. Its catalogue row follows the notification
    settings (off → nothing, bell only → no device push). The bell row reads «رسالة في محادثة {student}» /
    «{name}: {text}» (up to 80 characters) and opens that chat (teacher, assistant, family app). No WhatsApp.
 8. **Trial students: no chat in the trial** (owner 2026-10-29, answers the open question). The channel opens
@@ -161,7 +166,7 @@ below are updated accordingly (migrations `20261029000971`–`972`).
 | Teacher | `GET /teachers/me/channels` (my current students, last message, unread), `GET/POST /teachers/me/channels/:studentId/messages`, `POST …/read` | `self.teacher` |
 | Family | `GET/POST /portal/students/:id/channel/messages`, `POST /portal/students/:id/channel/read`, `GET /portal/students/:id/channel/unread` | `self.portal` |
 | Admin monitor | `GET /students/:id/channel/messages` | `student_channels.monitor` |
-| Owning assistant | `GET/POST /sales/students/:id/channel/messages`, `POST …/read`, `GET …/unread`, `PATCH/DELETE …/messages/:messageId` (owned students only) | `self.sales` |
+| Seated assistant | `GET/POST /sales/students/:id/channel/messages`, `POST …/read`, `GET …/unread`, `PATCH/DELETE …/messages/:messageId` (the seat holder only); `GET/PUT/DELETE …/channel/seat` (any assistant: read, take, leave) | `self.sales` |
 
 `GET …/messages?before=<iso>` pages back 50 at a time, newest page first. A message view is
 `{ id, body, sender_role, sender_name, mine, created_at }`: names only (the teacher's display name, the
@@ -178,7 +183,7 @@ migration check refuses a new file that sorts before the base branch's latest.
 
 `student_channels (id, student_id unique, created_at)`, `channel_messages (id, channel_id, sender_profile_id,
 sender_role, body check 1..2000, created_at)`, `channel_reads (channel_id, profile_id, last_read_at, primary
-key both)`. RLS on all three: a participant, the owning assistant and the admin read
+key both)`. RLS on all three: a participant, the seat holder and the admin read
 (`can_read_channel`); a profile reads its own read marks; no client writes (the API is the writer). Checked
 against a local stack when written: the trigger, the backfill, a teacher change, another family refused, a
 merge.
