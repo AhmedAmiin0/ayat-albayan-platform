@@ -1,5 +1,6 @@
 import type { ComponentProps } from 'react';
 import type { RoomPlatform } from '@/classroom/room/model/room-types';
+import { deviceMemory } from './device-memory';
 import { liveKitNative, type LiveKitNative } from './livekit-native';
 import { nativeAudio } from './native-audio';
 import { createNativeClient } from './native-client';
@@ -20,9 +21,9 @@ export function nativeRoomPlatform(): RoomPlatform | null {
   const { RTCView } = n.rtc;
   return {
     createClient: () => createNativeClient(n),
-    // The tile's video is the TrackReference built in native-client.ts.
-    Video: ({ video, mirror }) => (
-      <VideoTrack trackRef={video as TrackRef} mirror={mirror} objectFit="cover" style={fill} />
+    // The tile's video is the TrackReference built in native-store.ts; a screen is never cropped.
+    Video: ({ video, mirror, fit }) => (
+      <VideoTrack trackRef={video as TrackRef} mirror={mirror} objectFit={fit} style={fill} />
     ),
     PreviewVideo: ({ streamUrl }) => (
       <RTCView streamURL={streamUrl} mirror objectFit="cover" style={fill} />
@@ -30,5 +31,6 @@ export function nativeRoomPlatform(): RoomPlatform | null {
     openPreview: () => openPreview(n),
     media: { check: checkCamMic, ask: askCamMic },
     audio: nativeAudio(n),
+    devices: deviceMemory,
   };
 }

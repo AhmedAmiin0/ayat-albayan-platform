@@ -2,6 +2,7 @@ import { createNativeClient } from './native-client';
 import { fakeLivekit, fakeParticipant } from './fake-livekit';
 import type { LiveKitNative } from './livekit-native';
 
+const JOIN = { url: 'wss://lk', token: 't', role: 'teacher', chat: true } as const;
 const setup = () => {
   const f = fakeLivekit();
   const client = createNativeClient({ lk: f.lk } as LiveKitNative);
@@ -11,7 +12,7 @@ const setup = () => {
 test('connect, then the wished devices; a refused camera never fails the join', async () => {
   const { client, room, local } = setup();
   local.setCameraEnabled.mockRejectedValueOnce(new Error('NotAllowedError'));
-  await client.connect({ url: 'wss://lk', token: 't' }, { mic: true, cam: true });
+  await client.connect(JOIN, { mic: true, cam: true });
   expect(room.connect).toHaveBeenCalledWith('wss://lk', 't');
   expect(local.setMicrophoneEnabled).toHaveBeenCalledWith(true);
   expect(local.setCameraEnabled).toHaveBeenCalledWith(true, { facingMode: 'user' });
@@ -38,9 +39,12 @@ test('events rebuild the tiles and reach the listeners; reconnecting and back', 
 test.each([
   [2, 'duplicate'],
   [4, 'removed'],
-  // DeleteRoom: «إنهاء» or the max-duration job (meeting_max_minutes).
+  // DeleteRoom: «إنهاء الحلقة للجميع» or the max-duration job (meeting_max_minutes).
   [5, 'ended'],
-  [undefined, 'ended'],
+  [10, 'ended'],
+  // The network, a server restart: dropped, with «ادخل مرة أخرى».
+  [3, 'dropped'],
+  [undefined, 'dropped'],
 ] as const)('a disconnect (reason %s) closes as %s', (reason, status) => {
   const { client, emit } = setup();
   emit('Disconnected', reason);
@@ -66,4 +70,21 @@ test('mic, camera and the switch go to the local participant; disconnect leaves'
 test('no camera published: the switch keeps the front camera', async () => {
   const { client } = setup();
   expect(await client.switchCamera()).toBe(true);
+});
+
+test('dropped while joining (#bug): the join fails instead of going live on a dead room', async () => {
+  const { client, local, emit } = setup();
+  local.setMicrophoneEnabled.mockImplementationOnce(async () => emit('Disconnected', 3));
+  await expect(client.connect(JOIN, { mic: true, cam: false })).rejects.toThrow('dropped');
+  expect(client.snapshot().status).toBe('dropped');
+});
+
+test('a rejoin after an ended room starts afresh; the recording follows LiveKit', async () => {
+  const { client, room, emit } = setup();
+  emit('Disconnected', 3);
+  await client.connect(JOIN, { mic: false, cam: false });
+  expect(client.snapshot().status).toBe('connected');
+  room.isRecording = true;
+  emit('RecordingStatusChanged');
+  expect(client.snapshot().recording).toBe(true);
 });

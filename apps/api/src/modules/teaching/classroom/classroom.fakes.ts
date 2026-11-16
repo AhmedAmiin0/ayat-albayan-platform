@@ -24,6 +24,7 @@ export const LESSON: JoinLesson = {
   ends_at: '2026-10-05T17:00:00.000Z',
   status: 'scheduled',
   room_opened_at: null,
+  room_ended_at: null,
 };
 export const OPEN = new Date('2026-10-05T16:05:00Z');
 export const EARLY = new Date('2026-10-05T15:00:00Z');

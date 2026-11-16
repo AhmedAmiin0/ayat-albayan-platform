@@ -7,7 +7,7 @@ const setup = () => {
   const client = createNativeClient({ lk: f.lk } as LiveKitNative);
   return { ...f, client };
 };
-const JOIN = { url: 'wss://lk', token: 't' };
+const JOIN = { url: 'wss://lk', token: 't', role: 'teacher', chat: true } as const;
 const MEDIA = { mic: true, cam: true };
 
 test('closed before the join: connect never reaches LiveKit', async () => {

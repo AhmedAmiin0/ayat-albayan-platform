@@ -1,15 +1,39 @@
-import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type WindowLesson } from '@ab/shared';
+import {
+  DEFAULT_JOIN_WINDOW,
+  isClosedLesson,
+  joinWindow,
+  roomEnded,
+  type JoinWindowConfig,
+  type WindowLesson,
+} from '@ab/shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-/** 403 join_not_open_yet (with opens_at) before the window (room_opened_at counts), 410 join_closed after it. */
-export function assertWindowOpen(lesson: WindowLesson, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): void {
+/** What the gates read of a lesson: its window, and the «إنهاء الحلقة للجميع» stamp. */
+export type GateLesson = WindowLesson & { room_ended_at?: string | null };
+
+const gone = (code: string): HttpException => new HttpException({ code, message: code }, HttpStatus.GONE);
+
+/** 410 lesson_ended: the teacher or an admin ended it for everyone (lessons.room_ended_at). */
+export function assertNotEnded(lesson: GateLesson): void {
+  if (roomEnded(lesson)) throw gone('lesson_ended');
+}
+
+/** 410 join_closed: the lesson was cancelled or moved to another row, so it has no room any more. */
+export function assertLessonHeld(lesson: { status: string }): void {
+  if (isClosedLesson(lesson.status)) throw gone('join_closed');
+}
+
+/**
+ * 410 lesson_ended once ended for everyone; 403 join_not_open_yet (with opens_at) before the window
+ * (room_opened_at counts), 410 join_closed after it.
+ */
+export function assertWindowOpen(lesson: GateLesson, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): void {
+  assertNotEnded(lesson);
   const w = joinWindow(lesson, now, win);
   if (w.state === 'early') {
     throw new HttpException({ code: 'join_not_open_yet', message: 'join_not_open_yet', opens_at: w.opens_at }, HttpStatus.FORBIDDEN);
   }
-  if (w.state === 'closed') {
-    throw new HttpException({ code: 'join_closed', message: 'join_closed' }, HttpStatus.GONE);
-  }
+  if (w.state === 'closed') throw gone('join_closed');
 }
 
 /** 503 classroom_not_configured: LIVEKIT_* are not set on this server. */

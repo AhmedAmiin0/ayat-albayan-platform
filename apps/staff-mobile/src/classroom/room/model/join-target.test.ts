@@ -18,6 +18,9 @@ test('the browser fallback is the web page of the same room', () => {
 
 test('the route and its params round-trip; anything else is refused', () => {
   expect(roomRoute(meeting)).toBe(`/room/meeting/${ID}`);
+  expect(roomRoute(lesson, { direct: true, studentId: 's 1' })).toBe(
+    `/room/lesson/${ID}?direct=1&student=s%201`,
+  );
   expect(parseTarget('meeting', ID)).toEqual(meeting);
   expect(parseTarget('lesson', ID)).toEqual(lesson);
   expect(parseTarget('other', ID)).toBeNull();
@@ -35,6 +38,8 @@ test('the handed-over token is read once', () => {
   const join = { url: 'wss://x', token: 't', room: 'r', role: 'admin' as const };
   handOff(lesson, join);
   expect(takeHandoff(meeting)).toBeNull();
-  expect(takeHandoff(lesson)).toEqual({ url: 'wss://x', token: 't' });
+  expect(takeHandoff(lesson)).toEqual({ url: 'wss://x', token: 't', role: 'admin', chat: true });
+  handOff(lesson, { ...join, role: 'guest', chat: false });
+  expect(takeHandoff(lesson)).toMatchObject({ role: 'guest', chat: false });
   expect(takeHandoff(lesson)).toBeNull();
 });

@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 import { usePermissions } from '@ab/mobile-kit';
 import { refreshInbox, refreshLists, resumeInbox } from '@/inbox/thread/hooks/inbox-sync';
-import { isThreadHref, overChat } from '@/core/nav/chat-groups';
+import { isThreadHref, overChat, overRoom } from '@/core/nav/chat-groups';
 import { pushKind, pushPhone, routeIn, type PushTree } from './notification-route';
 import { refreshForPush } from './push-refresh';
 
@@ -78,10 +78,12 @@ export function useNotificationHandling(tree: PushTree = 'admin'): void {
     const open = (response: Notifications.NotificationResponse | null) => {
       // Read defensively: the native module hands over plain JSON.
       const href = routeIn(tree, response?.notification?.request?.content?.data, canRef.current);
-      if (!href) return;
+      const root = nav.isReady() ? nav.getRootState() : undefined;
+      // In the live room, a tap never navigates: it stacked the tabs over the lesson (#bug).
+      if (!href || overRoom(root)) return;
       // Over a chat (a full screen above the tabs), a tab's screen pops back to the tabs: a push
       // would stack a second tab host. Another chat is pushed inside the chat's own group.
-      if (overChat(nav.isReady() ? nav.getRootState() : undefined) && !isThreadHref(href)) {
+      if (overChat(root) && !isThreadHref(href)) {
         router.dismissTo(href, { withAnchor: true });
       } else {
         openPushed(href);

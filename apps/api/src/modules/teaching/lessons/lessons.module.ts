@@ -20,6 +20,8 @@ import { LessonTimeController } from './time-edit/lesson-time.controller';
 import { LessonStatusService } from './status/lesson-status.service';
 import { LessonStore } from './store/lesson-store';
 import { LessonViews } from './store/lesson-views';
+import { LessonViewExtras } from './store/lesson-view-extras';
+import { ROOM_STATE_PROVIDERS } from '@/modules/teaching/classroom';
 import { LessonsController } from './lessons.controller';
 import { LessonsRepo } from './lessons.repo';
 import { LessonsSettings } from './lessons.settings';
@@ -84,6 +86,8 @@ import { TeacherLessonDeps, TeacherLessonService } from './teacher-me/teacher-le
     LessonStore,
     LessonTimeService,
     LessonViews,
+    LessonViewExtras,
+    ...ROOM_STATE_PROVIDERS,
     LessonsRepo,
     LessonsSettings,
     OverviewRepo,

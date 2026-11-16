@@ -4,6 +4,8 @@ import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 interface RoomNoticeProps {
   testID: string;
   message: string;
+  /** A second, quieter line under the message. */
+  detail?: string | undefined;
   /** A wait (checking, joining): a spinner and no buttons. */
   busy?: boolean;
   /** «حاول مرة أخرى» / «ادخل مرة أخرى»; absent when there is no way back in (removed). */
@@ -15,7 +17,7 @@ interface RoomNoticeProps {
  * A step with one line: connecting, a failure, or the room closed (ended, removed, opened
  * elsewhere).
  */
-export function RoomNotice({ testID, message, busy, again, onBack }: RoomNoticeProps) {
+export function RoomNotice({ testID, message, detail, busy, again, onBack }: RoomNoticeProps) {
   const { color } = useTheme();
   return (
     <View
@@ -35,6 +37,11 @@ export function RoomNotice({ testID, message, busy, again, onBack }: RoomNoticeP
       >
         {message}
       </AppText>
+      {detail ? (
+        <AppText style={{ textAlign: 'center', fontSize: type.size.sm, color: color.coverInk }}>
+          {detail}
+        </AppText>
+      ) : null}
       {again ? <Button label={again.label} onPress={again.onPress} /> : null}
       {onBack && !busy ? (
         <Button label={t.mobileRoom.back} variant="secondary" onPress={onBack} />

@@ -12,7 +12,7 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { parseOrThrow } from '@/common/http/http';
 import { FamilyJoinLinks } from '@/modules/teaching/classroom/family-link/family-join.links';
-import { assertWindowOpen } from '@/modules/teaching/classroom/join/join-gate';
+import { assertNotEnded, assertWindowOpen } from '@/modules/teaching/classroom/join/join-gate';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
 import {
   hashLinkToken,
@@ -90,12 +90,14 @@ export class StudentLinkService {
   /**
    * The family app's browser link (docs/50 §2, §7): a signed /join link of ONE lesson of that
    * student until its room closes, taken by the guest page through portalJoin's row. Issued before
-   * the window too (the page refuses early joins). 404 no_lesson (not theirs or over), 429, 503.
+   * the window too (the page refuses early joins). 404 no_lesson (not theirs or over), 410
+   * lesson_ended (ended for everyone), 429, 503.
    */
   async portalRoomLink(input: PortalLessonInput, now = new Date()): Promise<PortalRoomLink> {
     const key = { ip: `portal-link:${input.profileId}`, token: input.lessonId };
     this.limit.assert(key, now.getTime());
     const { lesson, win } = await this.portalLesson(input, now);
+    assertNotEnded(lesson);
     const closesAt = linkExpiry(lesson, win);
     return this.family.issue({ lessonId: lesson.id, studentId: input.studentId, closesAt });
   }

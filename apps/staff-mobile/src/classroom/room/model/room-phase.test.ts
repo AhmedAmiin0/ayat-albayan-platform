@@ -82,3 +82,21 @@ test('retry goes back to the preview from a failure or a closed room only', () =
   });
   expect(nextPhase(live, { type: 'retry' })).toBe(live);
 });
+
+test('a 410 lesson_ended join and a host’s end close as «انتهت الحلقة»; a drop as dropped', () => {
+  expect(nextPhase({ step: 'joining' }, { type: 'ended' })).toEqual({ step: 'closed', why: 'ended' });
+  expect(nextPhase(live, { type: 'ended' })).toBe(live);
+  expect(nextPhase(live, { type: 'status', status: 'dropped' })).toEqual({
+    step: 'closed',
+    why: 'dropped',
+  });
+});
+
+test('back from the settings: the preview notice follows the new answer', () => {
+  const blocked: RoomPhase = { step: 'preview', notice: 'blocked' };
+  expect(nextPhase(blocked, { type: 'rechecked', answer: G })).toEqual({
+    step: 'preview',
+    notice: null,
+  });
+  expect(nextPhase(live, { type: 'rechecked', answer: G })).toBe(live);
+});

@@ -4,6 +4,7 @@ import {
   type GateStatus,
   useAuthGate,
   useMeReady,
+  useProfileLocaleSync,
   type RootBoot,
   RootFrame,
   RootProviders,
@@ -12,10 +13,8 @@ import {
 } from '@ab/mobile-kit';
 import { useFamilyCodes } from '@/sign-in';
 import { isFamilySignedIn } from './family-gate';
+import { screenAnimation } from './screen-animation';
 import { useFamilyPush } from './use-family-push';
-
-/** Native slide between the family screens (docs/50 §6: smooth transitions). */
-const SCREEN_ANIMATION = 'slide_from_right';
 
 /**
  * The family app's root (app/_layout, docs/50 §7): the shared boot, providers and frame
@@ -45,13 +44,15 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
   const codesKnown = useFamilyCodes() !== undefined;
   const ready = boot.settled && meReady && (signedIn || codesKnown);
   useFamilyPush(ready && signedIn);
+  // The login's own language (profiles.locale): a different one switches the app (reload).
+  useProfileLocaleSync(ready && signedIn);
   return (
     <RootFrame ready={ready} fontsLoaded={boot.fontsLoaded}>
       <BiometricGate signedIn={signedIn}>
         <Stack
           screenOptions={{
             headerShown: false,
-            animation: SCREEN_ANIMATION,
+            animation: screenAnimation(),
             contentStyle: { backgroundColor: color.margin },
           }}
         >

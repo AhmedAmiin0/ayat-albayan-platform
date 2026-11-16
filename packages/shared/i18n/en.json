@@ -212,12 +212,39 @@
       "child": {
         "attendedSelf": "Attended",
         "absentSelf": "Missed",
-        "chat": "Chat"
+        "chat": "Chat",
+        "chatUnread": "Chat, {n} unread"
       },
       "pick": {
         "title": "Choose a student",
         "hint": "You can switch the student later from “Account”.",
-        "switch": "Switch student"
+        "switch": "Switch student",
+        "open": "Switch student: {name}",
+        "shown": "Now showing {name}’s page",
+        "next": "Next lesson · {when}",
+        "current": "Showing now",
+        "me": "Me"
+      },
+      "live": {
+        "justNow": "Started just now",
+        "since": {
+          "one": "Started 1 minute ago",
+          "two": "Started 2 minutes ago",
+          "few": "Started {n} minutes ago",
+          "other": "Started {n} minutes ago"
+        },
+        "teacherIn": "The teacher is in the room now",
+        "othersIn": "In the room now",
+        "roles": {
+          "teacher": "{name}",
+          "student": "{name}",
+          "guardian": "{name}",
+          "staff": "{name} (lesson assistant)",
+          "guest": "{name} (guest)"
+        },
+        "row": "Live now",
+        "rowTeacher": "Live now · the teacher is in",
+        "join": "Join now"
       }
     }
   },
@@ -1445,6 +1472,25 @@
     "ended": "You left the room",
     "duplicate": "You joined from another device or window, so the room closed here",
     "missing": "Your entry expired; join again from the list",
+    "sdkFailed": "The lesson cannot run inside the app on this device; open it in the browser",
+    "left": {
+      "title": "You left the lesson",
+      "body": "The lesson is still running, and you can go back in now."
+    },
+    "leaveAsk": {
+      "title": "Leave the lesson?",
+      "body": "You can join again while the lesson is running.",
+      "stay": "Stay in the lesson"
+    },
+    "remember": "We keep this choice, so next time you join straight away.",
+    "chatLocked": "The chat with the teacher opens after subscribing",
+    "host": {
+      "endAll": "End the lesson for everyone",
+      "endConfirm": "The lesson will end for everyone. End it?",
+      "endAction": "End now",
+      "ending": "Ending…",
+      "keep": "Go back"
+    },
     "permission": {
       "title": "Camera and microphone",
       "body": "The app needs the microphone so others can hear you, and the camera so they can see you. You can turn either off at any time.",
@@ -1465,6 +1511,10 @@
       "switchCamera": "Switch camera",
       "speaker": "Speaker",
       "earpiece": "Earpiece",
+      "headset": "Headset",
+      "bluetooth": "Bluetooth",
+      "audio": "Audio",
+      "chat": "Chat",
       "leave": "Leave"
     },
     "native": {
@@ -4214,6 +4264,10 @@
     "report_sent": {
       "title": "Lesson report received",
       "body": "{student}'s lesson report for {when} is ready"
+    },
+    "lesson_live": {
+      "title": "Lesson started",
+      "body": "The teacher started {student}'s lesson: join now"
     }
   },
   "bell": {
@@ -4445,7 +4499,8 @@
       "course_resumed": "Lessons resumed",
       "payment_received": "Payment received",
       "lesson_starting": "Lesson starting soon",
-      "report_sent": "Lesson report received"
+      "report_sent": "Lesson report received",
+      "lesson_live": "Lesson started"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -4945,7 +5000,10 @@
     "nextLesson": "Your next lesson: {when} · {names}",
     "noneSoon": "No lessons in the next two weeks",
     "openSchedule": "Open my schedule",
-    "noOther": "No other lessons today"
+    "noOther": "No other lessons today",
+    "waiting": "Your student is waiting",
+    "waitingLine": "{name} is waiting for you in the room",
+    "liveNow": "The lesson is running now"
   },
   "live": {
     "now": "Live now"
@@ -5011,6 +5069,7 @@
       "join_not_open_yet": "The room is not open yet; it opens 15 minutes before the lesson",
       "join_closed": "The lesson time is over",
       "link_invalid": "This link is not valid",
+      "lesson_ended": "This lesson has ended and cannot be joined again",
       "link_expired": "This link has expired",
       "too_many_requests": "Too many attempts, try again in a moment",
       "template_not_approved": "Meta has not approved the lesson link template yet",
@@ -7070,6 +7129,10 @@
       "report_sent": {
         "name": "Lesson report received",
         "trigger": "When the lesson report is sent to the family, to the guardian and the student in the family app"
+      },
+      "lesson_live": {
+        "name": "Lesson started",
+        "trigger": "When the teacher enters the lesson room, to the guardian and the student in the family app"
       }
     }
   },

@@ -1,4 +1,4 @@
-import { packageSummary, reportAt } from '@ab/client-core';
+import { isSelfChild, packageSummary, reportAt } from '@ab/client-core';
 import type { ClockOptions, PortalKind, PortalReport, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, Chevron, t, type, useTheme } from '@ab/mobile-kit';
@@ -9,6 +9,10 @@ import { useChildPackage, useChildSummary, useFamilyClock } from '@/portal';
 import { ChildNextLine } from './ChildNextLine';
 
 const count = (n: number | null): string => (n === null ? '–' : String(n));
+
+/** «أنا» on a guardian's own card (canvas Adult); else the student's name. */
+const selfName = (kind: PortalKind, student: PortalStudent): string | undefined =>
+  isSelfChild(kind, student) ? t.portal.app.pick.me : undefined;
 
 /** «آخر تقرير · الخميس 13 نوفمبر», or «لم يصل تقرير بعد». */
 function lastReportLine(last: PortalReport | null, clock: ClockOptions): string {
@@ -47,7 +51,7 @@ export function ChildSummaryCard({ student, kind, onPress }: ChildSummaryCardPro
       style={{ gap: 14 }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <StudentIdentity student={student} />
+        <StudentIdentity student={student} name={selfName(kind, student)} />
         {s.newReports > 0 ? <NewMark /> : null}
         <Chevron to="next" color={color.ink3} />
       </View>

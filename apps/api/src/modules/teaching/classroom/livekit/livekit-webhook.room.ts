@@ -1,19 +1,30 @@
-/** A participant_left event: who left which room (the room may now be empty). */
-interface LeftEvent {
+import { z } from 'zod';
+
+/** participant_joined / participant_left: who came into or left which room (it may now be empty). */
+export interface ParticipantEvent {
+  kind: 'joined' | 'left';
   room: string;
   identity: string;
 }
 
+const KIND = { participant_joined: 'joined', participant_left: 'left' } as const;
+
+/** LiveKit's WebhookEvent as far as presence reads it (protojson; other fields pass). */
+const participantEventSchema = z.object({
+  event: z.enum(['participant_joined', 'participant_left']),
+  room: z.object({ name: z.string().min(1) }),
+  participant: z.object({ identity: z.string().optional() }).optional(),
+});
+
 const obj = (v: unknown): Record<string, unknown> | null => (v && typeof v === 'object' ? (v as Record<string, unknown>) : null);
 const text = (v: unknown): string | null => (typeof v === 'string' && v ? v : null);
 
-/** participant_left with a room name, else null (every other event). */
-export function leftEventOf(event: unknown): LeftEvent | null {
-  const e = obj(event);
-  if (e?.event !== 'participant_left') return null;
-  const room = text(obj(e.room)?.name);
-  if (!room) return null;
-  return { room, identity: text(obj(e.participant)?.identity) ?? '' };
+/** participant_joined / participant_left with a room name, else null (every other event). */
+export function participantEventOf(event: unknown): ParticipantEvent | null {
+  const parsed = participantEventSchema.safeParse(event);
+  if (!parsed.success) return null;
+  const { event: name, room, participant } = parsed.data;
+  return { kind: KIND[name], room: room.name, identity: participant?.identity ?? '' };
 }
 
 /** ParticipantInfo.kind EGRESS (protojson name, or 2): the recorder itself, not a person. */

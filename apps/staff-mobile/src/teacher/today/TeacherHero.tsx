@@ -1,4 +1,4 @@
-import type { Hero } from '@ab/client-core';
+import { isRoomLive, type Hero } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { useJoinClassroom } from '@/classroom';
@@ -8,7 +8,7 @@ import { ButtonRow } from '@/core/ui/actions';
 import { Note } from '@/core/ui/feedback/Note';
 import { heroLead, HeroFrame, lessonClock, studentNames } from '@/today';
 import { heroLine } from '@/teacher/lessons/lesson-lines';
-import { teacherWord } from '@/teacher/lessons/teacher-word';
+import { teacherWord, waitingLine } from '@/teacher/lessons/teacher-word';
 import { TeacherRowAction } from '@/teacher/lessons/TeacherRowAction';
 import { useTeacherPlan } from '@/teacher/lessons/use-teacher-plan';
 import { earlyLine, heroButtons } from './hero-parts';
@@ -32,9 +32,11 @@ export function TeacherHero({ hero, onDetails, ...o }: TeacherHeroProps) {
   const clock = { tz: useViewerTz(), cycle: useClockCycle() };
   const { plan, ctx } = useTeacherPlan(lesson, o);
   const { win } = useJoinClassroom(lesson);
-  const word = hero.kind === 'next' ? teacherWord(lesson, now) : null;
+  // The room's word shows on a running lesson too: «الطالب ينتظرك» (canvas RoomXTeacherToday).
+  const word = hero.kind === 'next' || isRoomLive(lesson.room) ? teacherWord(lesson, now) : null;
   const { lead, peer } = heroButtons(plan);
   const early = earlyLine({ win, way: ctx.way, clock });
+  const waiting = waitingLine(lesson, now);
   return (
     <HeroFrame
       lead={heroLead(hero)}
@@ -51,6 +53,7 @@ export function TeacherHero({ hero, onDetails, ...o }: TeacherHeroProps) {
           <Button variant="secondary" label={t.today.details} onPress={onDetails} />
         </ButtonRow>
         {early ? <Note>{early}</Note> : null}
+        {waiting ? <Note>{waiting}</Note> : null}
       </View>
     </HeroFrame>
   );

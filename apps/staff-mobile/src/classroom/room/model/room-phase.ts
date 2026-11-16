@@ -1,10 +1,11 @@
 import type { CamMicAnswer, RoomStatus } from './room-types';
 
 /**
- * Why the room closed: the user left, LiveKit ended it, the staff removed them, or it opened
- * elsewhere.
+ * Why the room closed: the user left, it was ended for everyone (the host's «إنهاء الحلقة للجميع»,
+ * the server's DeleteRoom, a 410 lesson_ended join), the connection dropped, the staff removed
+ * them, or it opened elsewhere. Only `left` and `dropped` offer «ادخل مرة أخرى».
  */
-export type ClosedWhy = 'left' | 'ended' | 'removed' | 'duplicate';
+export type ClosedWhy = 'left' | 'ended' | 'dropped' | 'removed' | 'duplicate';
 
 /** The room screen's steps (docs/35 §3): explain → preview → joining → live, or failed / closed. */
 export type RoomPhase =
@@ -22,6 +23,10 @@ export type PhaseEvent =
   | { type: 'join' }
   | { type: 'joined' }
   | { type: 'failed'; message: string }
+  /** The join was refused with 410 lesson_ended: the host ended it for everyone. */
+  | { type: 'ended' }
+  /** Back from the device settings: the permissions read again. */
+  | { type: 'rechecked'; answer: CamMicAnswer }
   | { type: 'status'; status: RoomStatus }
   | { type: 'leave' }
   | { type: 'retry' };
@@ -39,6 +44,7 @@ export function answerNotice(answer: CamMicAnswer | null): 'denied' | 'blocked' 
 
 const CLOSING: Partial<Record<RoomStatus, ClosedWhy>> = {
   ended: 'ended',
+  dropped: 'dropped',
   removed: 'removed',
   duplicate: 'duplicate',
 };
@@ -69,6 +75,11 @@ const RULES: Rules = {
   join: { from: ['preview'], to: () => ({ step: 'joining' }) },
   joined: { from: ['joining'], to: () => ({ step: 'live' }) },
   failed: { from: ['joining'], to: (e) => ({ step: 'failed', message: e.message }) },
+  ended: { from: ['joining'], to: () => ({ step: 'closed', why: 'ended' }) },
+  rechecked: {
+    from: ['preview'],
+    to: (e) => ({ step: 'preview', notice: answerNotice(e.answer) }),
+  },
   // Only from live: a disconnect that follows our own «غادر» stays «left».
   status: {
     from: ['live'],

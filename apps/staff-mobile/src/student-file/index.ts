@@ -5,3 +5,4 @@ export { TeacherStudentRecordingsScreen } from './screens/TeacherStudentRecordin
 export { AdminChannelScreen, SalesChannelScreen, TeacherChannelScreen } from './channel/ChannelScreen';
 export { TeacherChannelsScreen } from './channel/TeacherChannelsScreen';
 export { RecordingsButton } from './recordings/RecordingsButton';
+export { useTeacherChannels } from './channel/channel-queries';

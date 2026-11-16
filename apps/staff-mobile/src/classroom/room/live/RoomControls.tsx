@@ -1,19 +1,24 @@
 import { View } from 'react-native';
+import type { AudioOutput } from '@/classroom/room/model/audio-output';
 import { t } from '@ab/mobile-kit';
-import { HangUpIcon, PhoneIcon, RoundButton, SpeakerIcon, SwitchCameraIcon } from '@/inbox';
+import { HangUpIcon, RoundButton } from '@/inbox';
 import { CameraButton, MicButton } from '@/classroom/room/preview/MediaButtons';
+import { AudioButton } from './AudioButton';
+import { ChatButton } from './ChatButton';
 
 interface RoomControlsState {
   micOn: boolean;
   camOn: boolean;
-  speaker: boolean;
+  output: AudioOutput | null;
+  /** «المحادثة» and its unread count; null = no chat control in this room. */
+  chatUnread: number | null;
 }
 
 export interface RoomControlsActions {
   toggleMic: () => void;
   toggleCam: () => void;
-  switchCamera: () => void;
-  toggleSpeaker: () => void;
+  nextOutput: () => void;
+  openChat: () => void;
   leave: () => void;
 }
 
@@ -22,11 +27,9 @@ interface RoomControlsProps {
   actions: RoomControlsActions;
 }
 
-const C = t.mobileRoom.controls;
-
 /**
- * The in-room row, the calls' round buttons (docs/35 §3): كتم, الكاميرا, تبديل, مكبر الصوت /
- * السماعة, غادر.
+ * The in-room row, the calls' round buttons (docs/35 §3, canvas RoomXChat): كتم, الكاميرا, the
+ * audio output, المحادثة, غادر. «بدّل الكاميرا» sits on one's own tile.
  */
 export function RoomControls({ state, actions }: RoomControlsProps) {
   return (
@@ -40,23 +43,12 @@ export function RoomControls({ state, actions }: RoomControlsProps) {
     >
       <MicButton on={state.micOn} onPress={actions.toggleMic} />
       <CameraButton on={state.camOn} onPress={actions.toggleCam} />
-      {state.camOn ? (
-        <RoundButton
-          label={C.switchCamera}
-          tone="plain"
-          onPress={actions.switchCamera}
-          icon={(ink) => <SwitchCameraIcon color={ink} />}
-        />
-      ) : null}
+      <AudioButton output={state.output} onPress={actions.nextOutput} />
+      {state.chatUnread === null ? null : (
+        <ChatButton unread={state.chatUnread} onPress={actions.openChat} />
+      )}
       <RoundButton
-        label={state.speaker ? C.speaker : C.earpiece}
-        tone="plain"
-        pressed={state.speaker}
-        onPress={actions.toggleSpeaker}
-        icon={(ink) => (state.speaker ? <SpeakerIcon color={ink} /> : <PhoneIcon color={ink} />)}
-      />
-      <RoundButton
-        label={C.leave}
+        label={t.mobileRoom.controls.leave}
         tone="end"
         onPress={actions.leave}
         icon={(ink) => <HangUpIcon color={ink} size={26} />}

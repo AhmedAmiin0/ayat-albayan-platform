@@ -1,17 +1,41 @@
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { t, AppText, type, useTheme } from '@ab/mobile-kit';
+import { t, AppText, shape, type, useTheme } from '@ab/mobile-kit';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 
 interface RoomTopBarProps {
   title: string;
-  /** e.g. «عدد المشاركين: 3» while in the room. */
-  subtitle?: string | null;
+  /** In the room: «المشاركون · 3», which opens the participants panel. */
+  people?: { count: number; open: () => void } | null;
+  /** «جارٍ التسجيل»: the in-room recording notice (canvas RoomXTeacher). */
+  recording: boolean;
   onBrowser: () => void;
 }
 
-/** The room's header: its name, and «فتح في المتصفح» on every step (docs/35 §3). */
-export function RoomTopBar({ title, subtitle, onBrowser }: RoomTopBarProps) {
+/** «جارٍ التسجيل»: a small red-edged pill. */
+function RecordingPill() {
+  const { color } = useTheme();
+  return (
+    <AppText
+      testID="room-recording"
+      accessibilityLiveRegion="polite"
+      style={{
+        alignSelf: 'flex-start',
+        paddingHorizontal: 8,
+        borderRadius: shape.radius.pill,
+        borderWidth: 1,
+        borderColor: color.badSolid,
+        fontSize: type.size.xs,
+        color: color.coverInk,
+      }}
+    >
+      {t.classroom.recordingNow}
+    </AppText>
+  );
+}
+
+/** The room's header: its name, the recording notice, the participants, «فتح في المتصفح». */
+export function RoomTopBar({ title, people, recording, onBrowser }: RoomTopBarProps) {
   const { color } = useTheme();
   const insets = useSafeAreaInsets();
   return (
@@ -22,10 +46,10 @@ export function RoomTopBar({ title, subtitle, onBrowser }: RoomTopBarProps) {
         paddingBottom: 8,
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
+        gap: 8,
       }}
     >
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, gap: 2 }}>
         <AppText
           accessibilityRole="header"
           numberOfLines={1}
@@ -33,12 +57,15 @@ export function RoomTopBar({ title, subtitle, onBrowser }: RoomTopBarProps) {
         >
           {title}
         </AppText>
-        {subtitle ? (
-          <AppText style={{ fontSize: type.size.xs, color: color.coverInk, opacity: 0.8 }}>
-            {subtitle}
-          </AppText>
-        ) : null}
+        {recording ? <RecordingPill /> : null}
       </View>
+      {people ? (
+        <PillButton
+          label={`${t.classroom.people} · ${people.count}`}
+          accessibilityLabel={t.mobileRoom.count.replace('{n}', String(people.count))}
+          onPress={people.open}
+        />
+      ) : null}
       <PillButton label={t.mobileRoom.openInBrowser} onPress={onBrowser} />
     </View>
   );

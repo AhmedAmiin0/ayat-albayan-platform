@@ -1,3 +1,4 @@
+import { chatOpen, type RoomJoinResult } from '@ab/shared';
 import type { RoomCredentials, RoomTarget } from './room-types';
 import { targetKey } from './join-target';
 
@@ -6,8 +7,16 @@ import { targetKey } from './join-target';
 // API again then.
 const pending = new Map<string, RoomCredentials>();
 
-export function handOff(target: RoomTarget, join: RoomCredentials): void {
-  pending.set(targetKey(target), { url: join.url, token: join.token });
+/** What the room keeps of the join answer: the connection, one's role, and the chat (trial: off). */
+export const credentialsOf = (join: RoomJoinResult): RoomCredentials => ({
+  url: join.url,
+  token: join.token,
+  role: join.role,
+  chat: chatOpen(join),
+});
+
+export function handOff(target: RoomTarget, join: RoomJoinResult): void {
+  pending.set(targetKey(target), credentialsOf(join));
 }
 
 export function takeHandoff(target: RoomTarget): RoomCredentials | null {

@@ -56,11 +56,12 @@ export const PUSH_KINDS = [
 ] as const satisfies readonly Enums<'push_kind'>[];
 /**
  * The family app's own kinds (docs/50 §5 item 6): a lesson's join window opened, its report was
- * sent to the family. Kept apart from PUSH_KINDS, which the staff apps map exhaustively.
+ * sent to the family, the teacher entered its room (lesson_live, «بدأت الحلقة», owner 2026-11-16). Kept apart from PUSH_KINDS, which the staff apps map exhaustively.
  */
 export const FAMILY_PUSH_KINDS = [
   'lesson_starting',
   'report_sent',
+  'lesson_live',
 ] as const satisfies readonly Enums<'push_kind'>[];
 /** Every push_kind the API stores or sends: staff kinds, then family kinds. */
 export const ALL_PUSH_KINDS = [

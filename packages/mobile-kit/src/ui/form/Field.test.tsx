@@ -38,3 +38,10 @@ test('an ltr field sits in a direction ltr View, with its eye toggle in that sam
   expect(inputStyle(t.auth.password).textAlign).toBeUndefined();
   expect(screen.getByTestId('password-toggle').parent).toBe(input.parent);
 });
+
+test('a password field is an LTR island like the identifier, even without `ltr`', async () => {
+  await render(<Field label={t.auth.password} secureTextEntry value="pw" />);
+  const input = screen.getByLabelText(t.auth.password);
+  expect(input.parent?.props.style).toEqual({ direction: 'ltr' });
+  expect(screen.getByTestId('password-toggle').parent).toBe(input.parent);
+});

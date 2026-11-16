@@ -1,20 +1,31 @@
+import { useState } from 'react';
 import { View } from 'react-native';
 import { gridRows } from '@/classroom/room/model/room-grid';
 import type { RoomPlatform, RoomTile } from '@/classroom/room/model/room-types';
 import { t, AppText, type, useTheme } from '@ab/mobile-kit';
-import { ParticipantTile } from './ParticipantTile';
+import { ParticipantTile, type TileActions } from './ParticipantTile';
 
 interface ParticipantGridProps {
   tiles: readonly RoomTile[];
   Video: RoomPlatform['Video'];
-  front: boolean;
+  actions: Pick<TileActions, 'front' | 'switchCamera'>;
 }
 
-/** The grid (docs/35 §3): a shared screen on its own row first, the cameras one or two per row. */
-export function ParticipantGrid({ tiles, Video, front }: ParticipantGridProps) {
+/**
+ * The grid (docs/35 §3): a shared screen on its own row first, the cameras one or two per row.
+ * «تكبير» gives a shared screen the whole grid until «تصغير» (or the share stops).
+ */
+export function ParticipantGrid({ tiles, Video, actions }: ParticipantGridProps) {
   const { color } = useTheme();
-  const rows = gridRows(tiles);
+  const [zoomed, setZoomed] = useState<string | null>(null);
+  const big = tiles.find((x) => x.screen && x.key === zoomed);
+  const rows = big ? [[big]] : gridRows(tiles);
   const alone = tiles.filter((x) => !x.screen).length <= 1;
+  const tileActions: TileActions = {
+    ...actions,
+    zoomed: big ? big.key : null,
+    zoom: (key) => setZoomed((was) => (was === key ? null : key)),
+  };
   return (
     <View testID="room-grid" style={{ flex: 1, gap: 8, paddingHorizontal: 8 }}>
       {rows.map((row) => (
@@ -23,11 +34,11 @@ export function ParticipantGrid({ tiles, Video, front }: ParticipantGridProps) {
           style={{ flex: row[0]?.screen ? 2 : 1, flexDirection: 'row', gap: 8 }}
         >
           {row.map((tile) => (
-            <ParticipantTile key={tile.key} tile={tile} Video={Video} front={front} />
+            <ParticipantTile key={tile.key} tile={tile} Video={Video} actions={tileActions} />
           ))}
         </View>
       ))}
-      {alone ? (
+      {alone && !big ? (
         <AppText
           accessibilityLiveRegion="polite"
           style={{ textAlign: 'center', fontSize: type.size.sm, color: color.coverInk }}

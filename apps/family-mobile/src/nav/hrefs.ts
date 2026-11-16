@@ -43,6 +43,9 @@ const OPEN: Openers = {
   child: (t) => router.push(childHref(t.studentId)),
   package: (t) => router.push(packageHref(t.studentId)),
   chat: (t) => router.push(chatHref(t.studentId)),
+  // «بدأت الحلقة»: the child's page, where the live card's «ادخل الآن» opens the lesson (the room
+  // itself inside the app arrives with the native room).
+  live: (t) => router.push(childHref(t.studentId)),
   schedule: () => router.navigate('/schedule'),
 };
 

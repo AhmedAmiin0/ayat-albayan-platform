@@ -50,8 +50,9 @@ const GRANTED: CamMicAnswer = { mic: 'granted', cam: 'granted' };
 export interface FakePlatform extends RoomPlatform {
   client: FakeClient;
   stopPreview: jest.Mock;
-  audio: { start: jest.Mock; stop: jest.Mock; route: jest.Mock };
+  audio: { start: jest.Mock; stop: jest.Mock; current: jest.Mock; next: jest.Mock };
   media: { check: jest.Mock; ask: jest.Mock };
+  devices: { load: jest.Mock; save: jest.Mock };
 }
 
 export function fakePlatform(
@@ -64,7 +65,7 @@ export function fakePlatform(
     client,
     stopPreview,
     createClient: () => client,
-    Video: ({ mirror }) => <View testID={mirror ? 'video-mirrored' : 'video'} />,
+    Video: ({ mirror, fit }) => <View testID={mirror ? 'video-mirrored' : `video-${fit}`} />,
     PreviewVideo: ({ streamUrl }) => <View testID={`preview-${streamUrl}`} />,
     openPreview: jest.fn(() => Promise.resolve({ streamUrl: 'cam-1', stop: stopPreview })),
     media: {
@@ -74,18 +75,24 @@ export function fakePlatform(
     audio: {
       start: jest.fn(() => Promise.resolve()),
       stop: jest.fn(() => Promise.resolve()),
-      route: jest.fn(() => Promise.resolve()),
+      current: jest.fn(() => Promise.resolve('headset')),
+      next: jest.fn(() => Promise.resolve('speaker')),
     },
+    // No choice kept yet: the preview shows (the first time).
+    devices: { load: jest.fn(() => Promise.resolve(null)), save: jest.fn(() => Promise.resolve()) },
   };
 }
 
 export function tile(over: Partial<RoomTile> = {}): RoomTile {
   return {
     key: 'p1:camera',
+    identity: 'guest-0123456789ab',
+    role: 'guest',
     name: 'Suhaila',
     local: false,
     screen: false,
     micOn: true,
+    camOn: false,
     speaking: false,
     video: null,
     ...over,
@@ -93,7 +100,7 @@ export function tile(over: Partial<RoomTile> = {}): RoomTile {
 }
 
 export const LESSON = { kind: 'lesson', id: '0a5c2b1e-6c3e-4d61-9a43-1b2f9b8e7d10' } as const;
-export const CREDS = { url: 'wss://lk.example.org', token: 'tok-1' };
+export const CREDS = { url: 'wss://lk.example.org', token: 'tok-1', role: 'teacher', chat: true } as const;
 
 const METRICS = {
   frame: { x: 0, y: 0, width: 390, height: 844 },

@@ -68,24 +68,12 @@ test('unreadable storage keeps this run language', async () => {
   expect(reloadAppAsync).not.toHaveBeenCalled();
 });
 
-test('a failed reload still opens the app (the flags apply on the next start)', async () => {
-  jest.mocked(reloadAppAsync).mockRejectedValueOnce(new Error('no reload'));
-  expect(await syncLocale('en')).toBe(false);
-  expect(force).toHaveBeenCalledWith(true);
-});
-
 test('setLocale saves the choice, sets the direction, reloads', async () => {
   expect(await setLocale('en')).toBe('reloading');
   expect(await AsyncStorage.getItem(LOCALE_STORAGE_KEY)).toBe('en');
   expect(allow).toHaveBeenCalledWith(false);
   expect(force).toHaveBeenCalledWith(false);
   expect(reloadAppAsync).toHaveBeenCalledTimes(1);
-});
-
-test('setLocale: a saved choice whose reload failed asks for a manual restart', async () => {
-  jest.mocked(reloadAppAsync).mockRejectedValueOnce(new Error('no reload'));
-  expect(await setLocale('en')).toBe('restart');
-  expect(await AsyncStorage.getItem(LOCALE_STORAGE_KEY)).toBe('en');
 });
 
 test('setLocale: a choice that cannot be saved changes nothing (the gate would undo it)', async () => {

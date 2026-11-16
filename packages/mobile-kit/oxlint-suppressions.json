@@ -453,17 +453,6 @@
       "count": 3
     }
   },
-  "src/ui/form/FilterPills.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/ui/layout/KeyboardFrame.test.tsx": {
     "no-nested-ternary": {
       "count": 1

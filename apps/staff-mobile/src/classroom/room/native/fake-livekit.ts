@@ -25,6 +25,7 @@ export function fakeLivekit() {
   const room = {
     localParticipant: local,
     remoteParticipants: new Map<string, ReturnType<typeof fakeParticipant>>(),
+    isRecording: false,
     on(ev: string, h: Handler) {
       handlers.set(ev, [...(handlers.get(ev) ?? []), h]);
       return room;
@@ -38,7 +39,12 @@ export function fakeLivekit() {
     Room: jest.fn(() => room),
     RoomEvent,
     Track: { Source: { Camera: 'camera', ScreenShare: 'screen_share' } },
-    DisconnectReason: { DUPLICATE_IDENTITY: 2, PARTICIPANT_REMOVED: 4, ROOM_DELETED: 5 },
+    DisconnectReason: {
+      DUPLICATE_IDENTITY: 2,
+      PARTICIPANT_REMOVED: 4,
+      ROOM_DELETED: 5,
+      ROOM_CLOSED: 10,
+    },
   };
   return { lk: lk as unknown as LiveKitNative['lk'], room, local, emit };
 }

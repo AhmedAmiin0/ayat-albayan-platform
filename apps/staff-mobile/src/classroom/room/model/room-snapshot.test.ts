@@ -23,6 +23,7 @@ const person = (identity: string, over: Partial<P> = {}): P => ({
 const roomOf = (local: P, remotes: P[]): RoomLike<P> => ({
   local,
   remotes,
+  recording: false,
   publication: (p, s) => p.pubs[s],
   videoRef: (p, s) => `${p.identity}/${s}`,
 });
@@ -55,4 +56,17 @@ test('a muted or unsubscribed camera shows the name card', () => {
     null,
     null,
   ]);
+});
+
+test('each tile names its identity and role (the token metadata), and the recording shows', () => {
+  const her = person('teacher-0123456789ab', { metadata: '{"role":"teacher"}' });
+  const guest = person('guest-1', { metadata: 'not json', isCameraEnabled: true });
+  const room = { ...roomOf(person('me'), [her, guest]), recording: true };
+  const snap = snapshotOf(room, 'connected');
+  expect(snap.tiles.map((x) => [x.identity, x.role, x.camOn])).toEqual([
+    ['me', null, false],
+    ['teacher-0123456789ab', 'teacher', false],
+    ['guest-1', null, true],
+  ]);
+  expect(snap.recording).toBe(true);
 });

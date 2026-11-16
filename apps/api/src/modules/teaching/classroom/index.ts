@@ -12,9 +12,7 @@ export { ClassroomModule } from './classroom.module';
 export { ClassroomSettings, type ClassroomSettingsValues } from './classroom.settings';
 export { StudentLinkService } from './student-link/student-link.service';
 export {
-  checkLink,
   hashLinkToken,
-  type LinkCheck,
   linkExpiry,
   looksLikeLinkToken,
   newLinkToken,
@@ -35,3 +33,5 @@ export {
   RecordingRepo,
   type RecordingRow,
 } from './recordings/recording.repo';
+export { LessonRoomStates, type RoomLesson } from './live/lesson-room-states';
+export { ROOM_STATE_PROVIDERS } from './live/live.providers';

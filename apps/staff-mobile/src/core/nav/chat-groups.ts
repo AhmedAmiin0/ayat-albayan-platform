@@ -22,6 +22,19 @@ export function overChat(root: NavState | undefined): boolean {
   return top ? CHAT_GROUPS.includes(top.name) : false;
 }
 
+/** The in-app room's root routes: the room itself and the channel sheet over it. */
+const ROOM_ROUTES: readonly string[] = ['room/[kind]/[id]', 'room-chat/[studentId]'];
+
+/**
+ * Is the in-app room on top of the root stack? A tapped push then never navigates: it would stack
+ * the tabs over the live lesson (or drop it); the banner and the bell keep the push.
+ */
+export function overRoom(root: NavState | undefined): boolean {
+  const stack = root?.routes[0]?.state;
+  const top = stack?.routes[stack.index ?? stack.routes.length - 1];
+  return top ? ROOM_ROUTES.includes(top.name) : false;
+}
+
 /** A link to a chat itself (admin, sales or teacher): it opens inside the chat group. */
 export function isThreadHref(href: string): boolean {
   return /^\/(sales\/)?inbox\/thread\/|^\/teacher\/chats\/[^/?]+/.test(href);

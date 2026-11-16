@@ -16,3 +16,4 @@ export {
   type SignInApi,
   type SignInError,
 } from './sign-in.js';
+export { meLocaleOf, meLocalePath, meLocaleSend } from './locale.js';

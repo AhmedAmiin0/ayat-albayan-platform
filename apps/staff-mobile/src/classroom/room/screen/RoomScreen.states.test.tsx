@@ -1,9 +1,10 @@
-import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import {
   CREDS,
   fakePlatform,
   LESSON,
+  tile,
   withInsets,
   type FakePlatform,
 } from '@/classroom/room/state/room-test-kit';
@@ -42,7 +43,9 @@ test('alone in the room: «بانتظار البقية…»; reconnecting shows 
 });
 
 test.each([
-  ['ended', R.ended, true],
+  // Ended for everyone (#bug: it read «خرجت من الغرفة» with a way back): «انتهت الحلقة», no rejoin.
+  ['ended', t.classroom.closedHint, false],
+  ['dropped', R.left.title, true],
   ['duplicate', R.duplicate, true],
   ['removed', t.classroom.error.removed_from_room, false],
 ] as const)(
@@ -57,10 +60,11 @@ test.each([
   },
 );
 
-test('the server closed the room (#476): «ادخل مرة أخرى» joins again, its audio stays on', async () => {
+test('the connection dropped (#476): «ادخل مرة أخرى» joins again, its audio stays on', async () => {
   await live();
-  await act(async () => p.client.push({ status: 'ended' }));
-  // LiveKit's events while the new connect runs still carry the old «ended».
+  await act(async () => p.client.push({ status: 'dropped' }));
+  expect(screen.getByText(R.left.body)).toBeTruthy();
+  // LiveKit's events while the new connect runs still carry the old «dropped».
   p.client.connect.mockImplementationOnce(async () => {
     p.client.push({ micOn: true });
     p.client.push({ status: 'connected' });
@@ -95,22 +99,31 @@ test('a connect failure says so; «رجوع» closes the screen', async () => {
   expect(onExit).toHaveBeenCalled();
 });
 
-test('the controls: mute, camera, switch camera, speaker ↔ earpiece', async () => {
+test('the controls: mute, camera, the switch on one’s tile, the next audio output', async () => {
   await live();
+  const me = tile({ key: 'me:camera', local: true, camOn: true, video: {} });
+  await act(async () => p.client.push({ tiles: [me] }));
   await press(R.controls.mute);
   expect(p.client.setMic).toHaveBeenCalledWith(false);
   await press(R.controls.switchCamera);
   expect(p.client.switchCamera).toHaveBeenCalled();
   await press(R.controls.camera);
   expect(p.client.setCamera).toHaveBeenCalledWith(false);
-  await press(R.controls.speaker);
-  expect(p.audio.route).toHaveBeenLastCalledWith(false);
-  expect(await screen.findByRole('button', { name: R.controls.earpiece })).toBeTruthy();
+  await press(R.controls.headset);
+  expect(p.audio.next).toHaveBeenLastCalledWith('headset');
+  expect(await screen.findByRole('button', { name: R.controls.speaker })).toBeTruthy();
 });
 
-test('«غادر» leaves the room, stops the audio and closes the screen', async () => {
+test('«غادر» asks first (#bug); «ابقَ في الحلقة» stays, «غادر» leaves and closes', async () => {
   await live();
   await press(R.controls.leave);
+  expect(screen.getByText(R.leaveAsk.title)).toBeTruthy();
+  await press(R.leaveAsk.stay);
+  expect(screen.queryByTestId('room-leave')).toBeNull();
+  expect(p.client.disconnect).not.toHaveBeenCalled();
+  await press(R.controls.leave);
+  const ask = within(screen.getByTestId('room-leave'));
+  await fireEvent.press(ask.getByRole('button', { name: R.controls.leave }));
   expect(p.client.disconnect).toHaveBeenCalled();
   expect(p.audio.stop).toHaveBeenCalled();
   expect(onExit).toHaveBeenCalled();

@@ -73,3 +73,14 @@ test('with the tabs on top (no chat open), a tap is a push, as before', async ()
   expect(mockPush).toHaveBeenCalledWith('/students/s9');
   expect(mockDismissTo).not.toHaveBeenCalled();
 });
+
+test.each(['room/[kind]/[id]', 'room-chat/[studentId]'])(
+  'in the live room (%s), a tap never navigates over the lesson (#bug: tabs stacked over it)',
+  async (top) => {
+    mockTop.name = top;
+    await tapIn('teacher', { kind: 'report_submitted' });
+    await tapIn('admin', { kind: 'new_message', phone: PHONE });
+    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockDismissTo).not.toHaveBeenCalled();
+  },
+);

@@ -18,6 +18,8 @@ const FAMILY = {
 export const FAMILY_ENTRIES = [
   // The lesson's join window opened (settings.join_opens_before_min): «ادخل الحلقة» works now.
   { ...FAMILY, key: 'lesson_starting', pushKind: 'lesson_starting' },
+  // The teacher entered the lesson room («بدأت الحلقة»): the push opens the room straight in.
+  { ...FAMILY, key: 'lesson_live', pushKind: 'lesson_live' },
   // The lesson report reached the family (lesson_reports.sent_at stamped).
   { ...FAMILY, key: 'report_sent', pushKind: 'report_sent' },
 ] as const satisfies readonly NotificationEntry[];

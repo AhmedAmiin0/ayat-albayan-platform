@@ -1,6 +1,7 @@
 import { guestJoinSchema, type ClockCycle } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState, type SubmitEvent } from 'react';
+import { z } from 'zod';
 import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
@@ -33,11 +34,20 @@ interface Props {
   intro?: string;
   /** A refused join in the page's own words (a meeting's, meetingJoinProblem); the lesson's by default. */
   problem?: (error: unknown) => string;
+  /** The link names its student (the family app's signed link): no name step, the API takes theirs. */
+  knownStudent?: boolean;
 }
 
-/** /join/:linkToken for a student or guardian (and /m/:token for a meeting): a name, then the room. No login, no app shell. */
+/** What the form sends: the typed name, or nothing at all for a link that names its student. */
+const KNOWN_STUDENT = z.object({});
+
+/**
+ * /join/:linkToken for a student or guardian (and /m/:token for a meeting): a name, then the room.
+ * No login, no app shell. The family app's link already names the student: just «ادخل».
+ */
 export function GuestJoinPage(props: Props) {
   const { linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = t.classroom.guest.intro, problem } = props;
+  const known = props.knownStudent === true;
   const { cycle } = useClock();
   const problemOf = problem ?? ((e: unknown) => problemText(e, cycle));
   const [name, setName] = useState('');
@@ -49,9 +59,9 @@ export function GuestJoinPage(props: Props) {
   }
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
-    const parsed = guestJoinSchema.safeParse({ name });
+    const parsed = (known ? KNOWN_STUDENT : guestJoinSchema).safeParse({ name });
     setMissing(!parsed.success);
-    if (parsed.success) join.mutate({ linkToken, name: parsed.data.name });
+    if (parsed.success) join.mutate({ linkToken, ...parsed.data });
   };
   return (
     <main className="min-h-dvh bg-page px-4 py-6 sm:py-10">
@@ -62,11 +72,13 @@ export function GuestJoinPage(props: Props) {
         </div>
         <Cartouche>{title}</Cartouche>
         <p className="text-body text-ink-2">{intro}</p>
-        <Field label={t.classroom.guest.name} required {...(missing && { error: t.common.required })}>
-          {(p) => (
-            <Input {...p} value={name} maxLength={30} autoComplete="off" placeholder={t.classroom.guest.namePlaceholder} onChange={(e) => setName(e.target.value)} />
-          )}
-        </Field>
+        {known ? null : (
+          <Field label={t.classroom.guest.name} required {...(missing && { error: t.common.required })}>
+            {(p) => (
+              <Input {...p} value={name} maxLength={30} autoComplete="off" placeholder={t.classroom.guest.namePlaceholder} onChange={(e) => setName(e.target.value)} />
+            )}
+          </Field>
+        )}
         {join.isError && <FormAlert>{problemOf(join.error)}</FormAlert>}
         <RecordedNotice />
         <Button type="submit" size="lg" disabled={join.isPending}>

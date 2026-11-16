@@ -93,7 +93,6 @@ export interface TeacherChannelRow {
   unread: number;
 }
 
-/** The family's or the teacher's unread total (badges). */
-export interface ChannelUnread {
-  unread: number;
-}
+/** The family's or the teacher's unread total (badges): GET …/channel/unread, parsed by the clients. */
+export const channelUnreadSchema = z.object({ unread: z.number().int().nonnegative() });
+export type ChannelUnread = z.infer<typeof channelUnreadSchema>;

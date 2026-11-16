@@ -13,12 +13,18 @@ function readLocale(): Locale {
 
 export const locale: Locale = readLocale();
 
-/** Saves the choice and reloads, so every string and format comes up in `next`. */
-export function setLocale(next: Locale): void {
+/** Saves the choice for the next load; false when the browser blocks storage (private mode). */
+export function saveLocale(next: Locale): boolean {
   try {
     localStorage.setItem(LOCALE_STORAGE_KEY, next);
+    return true;
   } catch {
-    // storage blocked: the reload keeps the current language
+    return false;
   }
+}
+
+/** Saves the choice and reloads, so every string and format comes up in `next`. */
+export function setLocale(next: Locale): void {
+  saveLocale(next); // storage blocked: the reload keeps the current language
   location.reload();
 }

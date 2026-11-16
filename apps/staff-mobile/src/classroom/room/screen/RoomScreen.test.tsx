@@ -28,20 +28,23 @@ beforeEach(() => {
 });
 
 test("allowed already: the preview with one's camera, then «انضم الآن» joins with the handed-over token", async () => {
-  handOff(LESSON, CREDS);
+  handOff(LESSON, { ...CREDS, room: 'lesson-1' });
   await mount();
   expect(await screen.findByTestId('preview-cam-1')).toBeTruthy();
   await press(R.preview.join);
   expect(fetchJoin).not.toHaveBeenCalled();
   expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: true, cam: true });
+  expect(p.devices.save).toHaveBeenCalledWith({ mic: true, cam: true });
   expect(p.stopPreview).toHaveBeenCalled();
   expect(p.audio.start).toHaveBeenCalled();
-  expect(p.audio.route).toHaveBeenCalledWith(true);
+  // Never the loudspeaker forced over a headset (#bug): the button names LiveKit's own choice.
+  expect(p.audio.next).not.toHaveBeenCalled();
+  expect(await screen.findByRole('button', { name: R.controls.headset })).toBeTruthy();
   const tiles = [tile(), tile({ key: 'me:camera', local: true, video: {} })];
   await act(async () => p.client.push({ status: 'connected', micOn: true, camOn: true, tiles }));
   expect(screen.getByTestId('room-grid')).toBeTruthy();
   expect(screen.getByTestId('video-mirrored')).toBeTruthy();
-  expect(screen.getByText(R.count.replace('{n}', '2'))).toBeTruthy();
+  expect(screen.getByRole('button', { name: R.count.replace('{n}', '2') })).toBeTruthy();
   expect(screen.getByLabelText('Suhaila')).toBeTruthy();
   expect(screen.queryByText(t.classroom.waiting)).toBeNull();
 });

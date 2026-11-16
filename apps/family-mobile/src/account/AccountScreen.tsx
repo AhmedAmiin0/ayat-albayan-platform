@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '@ab/mobile-kit';
 import { FamilyHeader, FamilyPage } from '@/nav';
-import { ownStudent, usePortalMe } from '@/portal';
+import { ownStudent, usePickedChild, usePortalMe } from '@/portal';
 import { accountCard } from './account-card';
 import { AccountSettings } from './AccountSettings';
 import { ProfileCard } from './ProfileCard';
@@ -29,9 +29,10 @@ export function AccountScreen() {
   const profile = useMyProfile();
   const me = usePortalMe().data;
   const own = me ? ownStudent(me) : null;
+  const child = usePickedChild();
   return (
     <FamilyPage
-      header={<FamilyHeader title={t.portal.app.tabs.account} />}
+      header={<FamilyHeader title={t.portal.app.tabs.account} child={child} />}
       onRefresh={() => profile.refetch()}
     >
       <ProfileCard {...accountCard(profile.data, own)} />

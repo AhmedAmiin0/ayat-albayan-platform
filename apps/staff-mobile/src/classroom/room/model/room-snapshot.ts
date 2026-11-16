@@ -1,3 +1,4 @@
+import { roleOfMeta } from '@ab/shared';
 import type { RoomSnapshot, RoomStatus, RoomTile } from './room-types';
 
 // The few LiveKit shapes the grid reads, structurally (livekit-client is loaded lazily, docs/35):
@@ -13,6 +14,8 @@ export interface PublicationLike {
 export interface ParticipantLike {
   identity: string;
   name?: string | undefined;
+  /** The token's metadata: `{"role": …}` (participantMeta). */
+  metadata?: string | undefined;
   isSpeaking: boolean;
   isMicrophoneEnabled: boolean;
   isCameraEnabled: boolean;
@@ -21,6 +24,8 @@ export interface ParticipantLike {
 export interface RoomLike<P extends ParticipantLike> {
   local: P;
   remotes: readonly P[];
+  /** LiveKit's egress is recording the room. */
+  recording: boolean;
   /** The participant's publication of a source, if any. */
   publication: (p: P, source: SourceName) => PublicationLike | undefined;
   /** A track reference for the platform's Video. */
@@ -32,7 +37,15 @@ const shown = (pub: PublicationLike | undefined): boolean =>
 
 function tilesOf<P extends ParticipantLike>(room: RoomLike<P>, p: P, local: boolean): RoomTile[] {
   const name = p.name?.trim() ? p.name.trim() : p.identity;
-  const base = { name, local, micOn: p.isMicrophoneEnabled, speaking: p.isSpeaking };
+  const base = {
+    identity: p.identity,
+    role: roleOfMeta(p.metadata),
+    name,
+    local,
+    micOn: p.isMicrophoneEnabled,
+    camOn: p.isCameraEnabled,
+    speaking: p.isSpeaking,
+  };
   const cam = room.publication(p, 'camera');
   const tiles: RoomTile[] = [
     {
@@ -68,5 +81,6 @@ export function snapshotOf<P extends ParticipantLike>(
     tiles,
     micOn: room.local.isMicrophoneEnabled,
     camOn: room.local.isCameraEnabled,
+    recording: room.recording,
   };
 }

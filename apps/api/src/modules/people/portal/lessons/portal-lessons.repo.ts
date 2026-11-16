@@ -11,6 +11,8 @@ export interface PortalLessonRow {
   ends_at: string;
   status: LessonStatus;
   room_opened_at: string | null;
+  /** «إنهاء الحلقة للجميع» (migration 20261117000100); optional in test fakes. */
+  room_ended_at?: string | null;
   meeting_link: string | null;
   teacher: { display_name_ar: string; display_name_en: string | null; meeting_mode: string | null } | null;
   /** Every attendee id: one = the student's override link may apply, more = a group lesson. */
@@ -21,7 +23,7 @@ interface Embed {
   lesson: PortalLessonRow | null;
 }
 
-const LESSON = 'id, starts_at, ends_at, status, room_opened_at, meeting_link, teacher:teachers(display_name_ar, display_name_en, meeting_mode), lesson_students(student_id)';
+const LESSON = 'id, starts_at, ends_at, status, room_opened_at, room_ended_at, meeting_link, teacher:teachers(display_name_ar, display_name_en, meeting_mode), lesson_students(student_id)';
 
 /** «الحلقات القادمة» reads (service role; PortalScopes already decided the student is the caller's). */
 @Injectable()

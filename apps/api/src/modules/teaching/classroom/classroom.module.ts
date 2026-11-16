@@ -29,6 +29,7 @@ import { JoinLinkCopyService } from './join/join-link.copy.service';
 import { JoinLinkService } from './join/join-link.service';
 import { JoinLinkStaffService } from './join/join-link.staff.service';
 import { KickService } from './moderation/kick.service';
+import { RoomPersonRepo } from './moderation/room-person.repo';
 import { LessonRoleService } from './join/lesson-role.service';
 import { LIVEKIT_HTTP, LivekitApi } from './livekit/livekit-api';
 import { LivekitWebhookController } from './livekit/livekit-webhook.controller';
@@ -39,6 +40,8 @@ import { MuteLimit } from './moderation/mute-limit';
 import { LessonMuteController, MeetingMuteController } from './moderation/mute.controller';
 import { MeetingMuteService, MuteService } from './moderation/mute.service';
 import { MAX_DURATION_PROVIDERS } from './max-duration/max-duration.providers';
+import { LIVE_ROOM_CONTROLLERS, LIVE_ROOM_PROVIDERS } from './live/live.providers';
+import { LessonRoomStates } from './live/lesson-room-states';
 import { MeetingRecordingListService, RecordingListService, RecordingViews } from './recordings/recording-list.service';
 import { MeetingRecordingsController, RecordingStatusController } from './recordings/recordings.controller';
 import { RecordingLifecycle } from './recordings/recording.lifecycle';
@@ -83,6 +86,7 @@ import { StudentLinkService } from './student-link/student-link.service';
     StudentLinkPublicController,
     StudentLinkAdminController,
     ...INTERNAL_MEETING_CONTROLLERS,
+    ...LIVE_ROOM_CONTROLLERS,
   ],
   providers: [
     // Read per use: LIVEKIT_* may come from the database's integration config (no restart).
@@ -122,15 +126,17 @@ import { StudentLinkService } from './student-link/student-link.service';
     RecordingLifecycle,
     RoomAdmission,
     KickService,
+    RoomPersonRepo,
     RecordingListService,
     RecordingViews,
     MeetingRecordingListService,
     LivekitWebhookService,
     ...INTERNAL_MEETING_PROVIDERS,
     ...MAX_DURATION_PROVIDERS,
+    ...LIVE_ROOM_PROVIDERS,
   ],
   // The student file's recordings (modules/student-recordings) sign links and read rows the same way; the
   // family portal (modules/people/portal) admits its own student like the student's link does.
-  exports: [RecordingViews, RecordingRepo, StudentLinkService],
+  exports: [RecordingViews, RecordingRepo, StudentLinkService, LessonRoomStates],
 })
 export class ClassroomModule {}

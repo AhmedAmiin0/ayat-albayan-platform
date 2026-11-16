@@ -1,16 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { fireEvent, renderHook, screen, waitFor } from '@testing-library/react-native';
 import { PICKED_CHILD_KEY } from '@ab/client-core';
-import { router } from 'expo-router';
 import { pathKey, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { PICK_HREF } from '@/nav';
+import { closeChildSwitch, useChildSwitch } from '@/nav';
 import { student } from '@/portal/portal.fixtures';
 import { SwitchChildRow } from './SwitchChildRow';
 
 // «حسابي» › «تبديل الطالب» (owner 2026-11-16): only for a guardian of two or more children.
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: jest.fn(async (path: string) => mockAnswers[path.split('?')[0] ?? '']),
@@ -35,14 +33,18 @@ async function show(kind: string, students: unknown[]) {
 const SAVED = JSON.stringify({ profileId: 'g1', studentId: 's2' });
 beforeAll(() => AsyncStorage.setItem(PICKED_CHILD_KEY, SAVED));
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  closeChildSwitch();
+});
 
-test('a guardian of two: the child the app works as; a press opens «اختر الطالب»', async () => {
+test('a guardian of two: the child the app works as; a press opens the children sheet', async () => {
   await show('guardian', [sara, yusuf]);
   expect(await screen.findByText(t.portal.app.pick.switch)).toBeTruthy();
   expect(screen.getByText('يوسف')).toBeTruthy();
   await fireEvent.press(screen.getByText(t.portal.app.pick.switch));
-  expect(router.push).toHaveBeenCalledWith(PICK_HREF);
+  const sheet = await renderHook(() => useChildSwitch());
+  expect(sheet.result.current.open).toBe(true);
 });
 
 test('a guardian of one child or a student: no switch', async () => {

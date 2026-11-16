@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
 import { locale } from '../../lib/i18n/locale';
-import { setLocale } from '../../lib/i18n/locale-switch';
+import { chooseLocale } from '../../lib/i18n/profile-locale';
 import { shape, type, useTheme } from '../../theme';
 import { ErrorLine } from '../feedback/ErrorLine';
 import { InlineConfirm } from '../feedback/InlineConfirm';
@@ -14,7 +14,7 @@ import { InsetGroup } from '../surface/inset';
 import { Section } from '../surface/Section';
 
 /** What a switch that did not restart says: nothing, reopen the app (saved), or the error. */
-const NOTE: Record<Awaited<ReturnType<typeof setLocale>>, () => string | null> = {
+const NOTE: Record<Awaited<ReturnType<typeof chooseLocale>>, () => string | null> = {
   reloading: () => null,
   restart: () => t.language.restartManually,
   error: () => t.common.error,
@@ -63,7 +63,8 @@ function QuietSwitch({ other, onPress }: { other: Locale; onPress: () => void })
 /**
  * «اللغة»: offers the other language by its own name (العربية / English). Every screen reads its
  * strings once, at start, so switching restarts the app: one short confirm first. If the restart
- * itself fails, it says to reopen the app (the choice is saved and applies then). Signed out the
+ * itself fails, it says to reopen the app (the choice is saved and applies then). Signed in, the
+ * login's profile is written first (chooseLocale: PATCH /me/locale). Signed out the
  * confirm is outlined: the form's own send button stays the one filled green action on screen.
  */
 export function LanguageRow({ compact }: LanguageRowProps) {
@@ -74,7 +75,7 @@ export function LanguageRow({ compact }: LanguageRowProps) {
   const ask = () => setAsking(true);
   const confirm = () => {
     setBusy(true);
-    void setLocale(other).then((r) => {
+    void chooseLocale(other).then((r) => {
       setBusy(false);
       setNote(NOTE[r]());
     });

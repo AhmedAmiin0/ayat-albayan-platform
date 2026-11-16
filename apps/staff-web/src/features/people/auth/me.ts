@@ -1,10 +1,11 @@
-import { pathKey, setViewerPersonTz } from '@ab/client-core';
+import { meLocaleOf, pathKey, setViewerPersonTz } from '@ab/client-core';
 import type { Permission, UserRole } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
 import { apiFetch } from '@/lib/http/api';
 import { forgetWebPush } from '@/features/messaging/notifications/web-push/web-push';
 import { supabase } from '@/lib/http/supabase';
+import { followProfileLocale } from '@/lib/i18n/profile-locale';
 import { returnSearchOf } from './return-to';
 
 export interface Me {
@@ -15,6 +16,8 @@ export interface Me {
   permissions: Permission[];
   /** The person's own IANA zone (docs/34 §2); null → this browser's zone. */
   tz?: string | null;
+  /** The login's UI language (profiles.locale); read through meLocaleOf (zod). */
+  locale?: string;
 }
 
 /** 403 account_disabled: the profile was disabled while the token was still valid (checked structurally, no import of ApiError). */
@@ -41,6 +44,7 @@ export const meQuery = queryOptions({
     try {
       const me = await apiFetch<Me>('/auth/me');
       setViewerPersonTz(me.tz); // every time on screen now reads in the person's zone
+      followProfileLocale(meLocaleOf(me)); // the login's language: a reload when it differs
       return { ...me, permissions: me.permissions ?? [] };
     } catch (error) {
       if (isAccountDisabled(error)) {

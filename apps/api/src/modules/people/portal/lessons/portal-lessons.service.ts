@@ -2,6 +2,8 @@ import {
   isOpenLesson,
   joinWindowConfig,
   PORTAL_LESSON_DAYS,
+  type LessonRoomState,
+  type PortalLesson,
   type PortalLessons,
   type PortalRoomLink,
   type RoomJoinResult,
@@ -16,6 +18,10 @@ import { toPortalLesson, wayIn } from './portal-lessons.mapper';
 import { PortalLessonsRepo } from './portal-lessons.repo';
 
 const DAY_MS = 86_400_000;
+
+/** The live room only where there is one (absent otherwise, as an older API sent). */
+const withRoom = (lesson: PortalLesson, room: LessonRoomState | null | undefined): PortalLesson =>
+  room ? { ...lesson, room } : lesson;
 const MIN_MS = 60_000;
 
 interface LessonCall {
@@ -61,7 +67,9 @@ export class PortalLessonsService {
       this.extras.of(student, now),
     ]);
     const ctx = { academyAuto: values.meeting_link_auto, override, classroom: this.rooms.classroomReady(), win, now };
-    return { lessons: rows.map((row) => toPortalLesson(row, ctx)), ...extras };
+    const rooms = await this.extras.rooms(rows, now);
+    const lesson = (row: (typeof rows)[number]) => withRoom(toPortalLesson(row, ctx), rooms.get(row.id));
+    return { lessons: rows.map(lesson), ...extras };
   }
 
   /**

@@ -1,12 +1,12 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
-import { setLocale } from '../../lib/i18n/locale-switch';
+import { chooseLocale } from '../../lib/i18n/profile-locale';
 import { palette } from '../../theme';
 import { LanguageRow } from './LanguageRow';
 
-jest.mock('../../lib/i18n/locale-switch', () => ({
-  setLocale: jest.fn(async () => 'reloading'),
+jest.mock('../../lib/i18n/profile-locale', () => ({
+  chooseLocale: jest.fn(async () => 'reloading'),
 }));
 
 beforeEach(() => jest.clearAllMocks());
@@ -17,9 +17,9 @@ test('«اللغة» offers English by its own name; asks first (restart), then 
   expect(screen.queryByRole('button', { name: t.language.ar })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: 'English' }));
   expect(screen.getByText(t.language.restart)).toBeTruthy();
-  expect(setLocale).not.toHaveBeenCalled();
+  expect(chooseLocale).not.toHaveBeenCalled();
   await fireEvent.press(screen.getByRole('button', { name: t.common.confirm }));
-  expect(setLocale).toHaveBeenCalledWith('en');
+  expect(chooseLocale).toHaveBeenCalledWith('en');
 });
 
 test('إلغاء keeps the language', async () => {
@@ -27,11 +27,11 @@ test('إلغاء keeps the language', async () => {
   await fireEvent.press(screen.getByRole('button', { name: 'English' }));
   await fireEvent.press(screen.getByRole('button', { name: t.common.cancel }));
   expect(screen.queryByText(t.language.restart)).toBeNull();
-  expect(setLocale).not.toHaveBeenCalled();
+  expect(chooseLocale).not.toHaveBeenCalled();
 });
 
 test('a restart that failed says to reopen the app (the choice is saved)', async () => {
-  jest.mocked(setLocale).mockResolvedValueOnce('restart');
+  jest.mocked(chooseLocale).mockResolvedValueOnce('restart');
   await render(<LanguageRow />);
   await fireEvent.press(screen.getByRole('button', { name: 'English' }));
   await fireEvent.press(screen.getByRole('button', { name: t.common.confirm }));
@@ -49,11 +49,11 @@ test('compact (signed out): quiet ink-2 text, an outlined confirm, then the swit
     backgroundColor: palette.light.raised,
   });
   await fireEvent.press(confirm);
-  expect(setLocale).toHaveBeenCalledWith('en');
+  expect(chooseLocale).toHaveBeenCalledWith('en');
 });
 
 test('a choice that could not be saved says so', async () => {
-  jest.mocked(setLocale).mockResolvedValueOnce('error');
+  jest.mocked(chooseLocale).mockResolvedValueOnce('error');
   await render(<LanguageRow compact />);
   await fireEvent.press(screen.getByRole('button', { name: 'English' }));
   await fireEvent.press(screen.getByRole('button', { name: t.common.confirm }));

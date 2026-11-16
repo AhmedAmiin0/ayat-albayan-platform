@@ -1,4 +1,6 @@
 import { LESSON_STATUSES } from '@ab/catalog';
+import { LOCALES } from '@ab/core';
+import { lessonRoomStateSchema } from '@ab/schedule';
 import { z } from 'zod';
 
 // The family portal (/portal, docs/31, docs/50): what a guardian or student login reads. Whitelists
@@ -27,6 +29,8 @@ export const portalHomeSchema = z.object({
    * Kept for old app builds only (docs/50 §2: no WhatsApp link in family pages); no page reads it.
    */
   renew_url: z.string().nullable(),
+  /** The login's own language (profiles.locale): the app switches to it. Absent: an older API. */
+  locale: z.enum(LOCALES).optional(),
 });
 export type PortalHome = z.infer<typeof portalHomeSchema>;
 export type PortalKind = PortalHome['kind'];
@@ -61,6 +65,8 @@ export const portalLessonSchema = z.object({
   /** Only for `external`, and only while the window is open. */
   meeting_url: z.string().nullable(),
   window: joinWindowSchema,
+  /** Who is in the room now / «انتهت الحلقة» (lessonRoomStateSchema). Absent: an older API. */
+  room: lessonRoomStateSchema.nullable().optional(),
 });
 export type PortalLesson = z.infer<typeof portalLessonSchema>;
 

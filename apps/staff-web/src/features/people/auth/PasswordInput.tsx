@@ -14,13 +14,14 @@ type Props = FieldControlProps & {
 /**
  * Password with an eye at the inline-end (docs/design login, .pw): a toggle button named «إظهار»
  * (aria-pressed) that shows the typed text, which matters most on touch keyboards. The name must
- * not contain «كلمة السر»: e2e finds the input by that label. RTL like the reference, so the
- * button and the input's end padding sit on the same side.
+ * not contain «كلمة السر»: e2e finds the input by that label. An LTR island like the email on
+ * every caller (dots and Latin characters start at the left in either UI language): the wrapper,
+ * not the input alone, so the button and the input's end padding sit on the same side.
  */
 export function PasswordInput({ value, onValue, autoComplete = 'current-password', ...field }: Props) {
   const [shown, setShown] = useState(false);
   return (
-    <div className="relative">
+    <div dir="ltr" className="relative">
       <Input
         {...field}
         type={shown ? 'text' : 'password'}

@@ -18,7 +18,8 @@ interface RoomPreviewProps {
 }
 
 /**
- * One's own camera before joining, the mic / camera toggles, the permission notice, «انضم الآن».
+ * One's own camera before joining (the first time only: the choice is kept, canvas RoomXPreview),
+ * the mic / camera toggles, the permission notice, the recording notice, «انضم الآن».
  */
 export function RoomPreview({ PreviewVideo, preview, notice, onJoin }: RoomPreviewProps) {
   const { color } = useTheme();
@@ -46,6 +47,9 @@ export function RoomPreview({ PreviewVideo, preview, notice, onJoin }: RoomPrevi
         <MicButton on={preview.wanted.mic} onPress={preview.toggleMic} />
         <CameraButton on={preview.wanted.cam} onPress={preview.toggleCam} />
       </View>
+      <AppText style={{ fontSize: type.size.xs, color: color.coverInk, textAlign: 'center' }}>
+        {`${t.classroom.recordedNotice} · ${R.remember}`}
+      </AppText>
       <Button label={R.preview.join} onPress={onJoin} />
     </View>
   );

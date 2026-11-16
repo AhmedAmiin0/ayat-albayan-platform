@@ -16,6 +16,16 @@ interface Admission {
   ttlSeconds?: number;
 }
 
+/**
+ * A guest's token connects for this long at most (LiveKit refreshes it while they stay connected),
+ * so a removed guest cannot reconnect with a token they kept (the next join is refused).
+ */
+export const GUEST_TOKEN_TTL_S = 15 * 60;
+
+/** The guest's lifetime is capped; a staff login's is what the caller asked (else the default). */
+const ttlOf = (input: Admission): number | undefined =>
+  input.role === 'guest' ? Math.min(input.ttlSeconds ?? GUEST_TOKEN_TTL_S, GUEST_TOKEN_TTL_S) : input.ttlSeconds;
+
 /** 403 removed_from_room: this login or link was removed from the lesson's room. */
 const removedFromRoom = (): HttpException =>
   new HttpException({ code: 'removed_from_room', message: 'removed_from_room' }, HttpStatus.FORBIDDEN);
@@ -51,7 +61,7 @@ export class RoomAdmission {
     if (blocked) throw removedFromRoom();
     const room = lessonRoomName(input.lessonId);
     const identity = newIdentity(input.role);
-    const token = mintToken(config, { room, role: input.role, name: input.name, identity, ttlSeconds: input.ttlSeconds }, now);
+    const token = mintToken(config, { room, role: input.role, name: input.name, identity, ttlSeconds: ttlOf(input) }, now);
     await this.moderation.addParticipant({
       lesson_id: input.lessonId,
       identity,
