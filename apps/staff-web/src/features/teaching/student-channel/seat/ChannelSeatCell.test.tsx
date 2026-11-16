@@ -95,9 +95,9 @@ describe('OpenSeatChat (a chat notification, ?student=)', () => {
     expect(await screen.findByText('غدًا إن شاء الله')).toBeTruthy();
   });
 
-  it('not hers: nothing opens', async () => {
+  it('not hers (taken over meanwhile): a short card says who follows it', async () => {
     show(huda, <OpenSeatChat studentId="s1" onClose={vi.fn()} />);
-    await waitFor(() => expect(apiFetch).toHaveBeenCalledWith(SEAT));
+    expect(await screen.findByText(S.heldBy.replace('{name}', 'هدى'))).toBeTruthy();
     expect(screen.queryByRole('button', { name: S.leave })).toBeNull();
   });
 });
