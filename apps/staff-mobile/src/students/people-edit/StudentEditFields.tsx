@@ -3,11 +3,17 @@ import { View } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { PeopleChoice } from './PeopleChoice';
-import { PeopleField } from './PeopleField';
+import { type FieldSpec, PeopleFields } from './PeopleFields';
 import { genderItems, zoneItems } from './zone-items';
 
 const E = t.peopleEdit;
 const TEXTS = ['name', 'level', 'memorized', 'goal', 'riwaya', 'notes'] as const;
+/** The text fields; the student's own WhatsApp (sign-in, owner 2026-11-17) is optional. */
+const SPECS: FieldSpec<(typeof TEXTS)[number] | 'phone_e164' | 'age'>[] = [
+  ...TEXTS.map((key) => ({ key, label: E.fields[key] })),
+  { key: 'phone_e164', label: E.fields.studentPhone, phone: true },
+  { key: 'age', label: E.fields.age, keyboardType: 'number-pad' },
+];
 
 interface StudentEditFieldsProps {
   value: StudentForm;
@@ -25,21 +31,11 @@ export function StudentEditFields(props: StudentEditFieldsProps) {
   return (
     <View style={{ gap: 12 }}>
       <SectionLabel>{E.studentSection}</SectionLabel>
-      {TEXTS.filter(notesFilter(notes)).map((key) => (
-        <PeopleField
-          key={key}
-          label={E.fields[key]}
-          value={value[key]}
-          error={error(key)}
-          onChangeText={(v) => onChange({ [key]: v })}
-        />
-      ))}
-      <PeopleField
-        label={E.fields.age}
-        value={value.age}
-        keyboardType="number-pad"
-        error={error('age')}
-        onChangeText={(age) => onChange({ age })}
+      <PeopleFields
+        specs={SPECS.filter((s) => notesFilter(notes)(s.key))}
+        value={value}
+        error={error}
+        onChange={onChange}
       />
       <PeopleChoice
         label={E.fields.gender}
