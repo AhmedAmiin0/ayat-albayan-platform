@@ -45,6 +45,8 @@ export function channelSeats(client: ApiClient) {
       queryKey: channelSeatKey(studentId),
       queryFn: () => client.apiFetch(seatPath(studentId)).then(parse),
       staleTime: SEAT_STALE_MS,
+      // A refusal or an odd answer is shown as no cell at once, never asked again per row.
+      retry: false as const,
     }),
     seatMutations: (studentId: string, done: () => Promise<unknown>) => ({
       take: { mutationFn: () => take(studentId), onSettled: done },
