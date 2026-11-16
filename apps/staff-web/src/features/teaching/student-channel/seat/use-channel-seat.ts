@@ -13,11 +13,8 @@ export function useChannelSeat(studentId: string) {
   const client = useQueryClient();
   const done = () => client.invalidateQueries({ queryKey: channelSeatKey(studentId) });
   const { take, leave } = seats.seatMutations(studentId, done);
-  return {
-    query: useQuery(seats.seatQuery(studentId)),
-    take: useMutation(take),
-    leave: useMutation(leave),
-  };
+  const query = useQuery(seats.seatQuery(studentId));
+  return { query, take: useMutation(take), leave: useMutation(leave) };
 }
 
 export type ChannelSeatApi = ReturnType<typeof useChannelSeat>;
