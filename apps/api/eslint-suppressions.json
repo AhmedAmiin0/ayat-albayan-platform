@@ -12252,12 +12252,12 @@
   },
   "src/modules/teaching/student-channels/channel.repo.ts": {
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/teaching/student-channels/channel.service.ts": {
     "max-len": {
-      "count": 6
+      "count": 1
     }
   },
   "src/modules/teaching/student-channels/controllers/channel-page.ts": {

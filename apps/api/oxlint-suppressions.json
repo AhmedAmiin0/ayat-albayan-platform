@@ -14344,7 +14344,7 @@
   },
   "src/modules/teaching/student-channels/channel.repo.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/teaching/student-channels/channel.service.ts": {
@@ -14352,7 +14352,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 1
     }
   },
   "src/modules/teaching/student-channels/controllers/channel-page.ts": {
