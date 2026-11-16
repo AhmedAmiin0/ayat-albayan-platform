@@ -120,11 +120,14 @@ below are updated accordingly (migrations `20261029000971`–`972`).
    day (a substitute on the day; a lesson booked weeks ahead with another teacher grants nothing yet). It is the
    current part of the teacher scope (`teacher_student_ids`, migration 165), whose 90-day look-back keeps
    reports readable but must not keep a chat: a teacher change moves access at once — the new teacher reads
-   the whole history, the old one nothing.
-4. **Monitors are read-only in v1**: the owning assistant (sales ownership, `ownershipOf`: her leads' families
-   and the students she brought) and anyone holding the new permission `student_channels.monitor` (catalog,
-   area messaging; the system admin by default, grantable to custom roles). A monitor has no send route: a
-   post from a monitor is 403. Every monitor screen says «للاطلاع فقط».
+   the whole history, the old one nothing. The owning assistant (sales ownership, `ownershipOf`: her leads'
+   families and the students she brought) is a participant too (owner 2026-11-16: «yes it can write also»):
+   she writes as `sender_role = 'sales'` (migration `20261116000200_channel_sales_sender`), marks read, and
+   edits / deletes her own messages; the others see her name and «مسؤول المتابعة». On a closed channel she
+   still reads the history as a monitor (decision 2). Another assistant is 404.
+4. **Monitors are read-only**: anyone holding the permission `student_channels.monitor` (catalog, area
+   messaging; the system admin by default, grantable to custom roles). A monitor has no send route: a post
+   from a monitor is 403. Every monitor screen says «للاطلاع فقط».
 5. **Text only**, 1–2000 characters (trimmed), links clickable with the shared `splitLinks`.
 6. **Live over a socket, never WhatsApp** (owner 2026-10-29). Supabase Realtime `postgres_changes` (INSERT on
    `channel_messages`, filtered `channel_id=eq.<id>` from the page's `channel_id`); the table joins the
@@ -136,15 +139,17 @@ below are updated accordingly (migrations `20261029000971`–`972`).
    catches up on return. Only a participant's open thread joins the socket; monitors, the lists and the
    badges keep polling as before (RLS tells only the admin and the owning assistant among monitors). Threads open on the newest message (web scrolls to it, mobile is an inverted
    list); a time shows its day when it is not today. Unread counts per participant
-   (`channel_reads.last_read_at`), counting the other side only: a teacher counts the family's messages (never
-   a co-teacher's), the family the teacher's. Opening a thread marks it read up to the newest message shown
+   (`channel_reads.last_read_at`), counting the other side only: a teacher counts the family's and the
+   assistant's messages (never a co-teacher's), the family the teacher's and the assistant's, the assistant
+   the teacher's and the family's. Opening a thread marks it read up to the newest message shown
    (`POST …/read { at }`, never later than now), so a message that arrives after the screen read stays
    unread; a monitor never marks anything read.
-7. **Notifications**: a message from the family pushes to the current teacher(s) only, through the existing
-   push service, new kind `channel_message` (its catalogue row `channel_message` follows the notification
-   settings like every staff kind: off → nothing, bell only → no device push). The bell row quotes up to 80
-   characters, and it stays in that teacher's bell after a teacher change. A teacher's message notifies
-   nobody (the family reads it in the portal). No WhatsApp; nothing to monitors.
+7. **Notifications** (owner 2026-11-16 «all 4 will receive the message»): every message pushes kind
+   `channel_message` to everyone in the chat but its writer: the current teacher(s), the guardian and the
+   student logins (only while `family_chat_enabled` is on; a child too) and the owning assistant(s)
+   (`studentOwnerIds`, the owner route's rule). Never an admin. Its catalogue row follows the notification
+   settings (off → nothing, bell only → no device push). The bell row reads «رسالة في محادثة {student}» /
+   «{name}: {text}» (up to 80 characters) and opens that chat (teacher, assistant, family app). No WhatsApp.
 8. **Trial students: no chat in the trial** (owner 2026-10-29, answers the open question). The channel opens
    only after the subscription and the assignment (decision 2), matching the WhatsApp rule (no teacher ↔
    family chat before the subscription, owner 2026-10-11).
@@ -156,7 +161,7 @@ below are updated accordingly (migrations `20261029000971`–`972`).
 | Teacher | `GET /teachers/me/channels` (my current students, last message, unread), `GET/POST /teachers/me/channels/:studentId/messages`, `POST …/read` | `self.teacher` |
 | Family | `GET/POST /portal/students/:id/channel/messages`, `POST /portal/students/:id/channel/read`, `GET /portal/students/:id/channel/unread` | `self.portal` |
 | Admin monitor | `GET /students/:id/channel/messages` | `student_channels.monitor` |
-| Sales monitor | `GET /sales/students/:id/channel/messages` (owned students only) | `self.sales` |
+| Owning assistant | `GET/POST /sales/students/:id/channel/messages`, `POST …/read`, `GET …/unread`, `PATCH/DELETE …/messages/:messageId` (owned students only) | `self.sales` |
 
 `GET …/messages?before=<iso>` pages back 50 at a time, newest page first. A message view is
 `{ id, body, sender_role, sender_name, mine, created_at }`: names only (the teacher's display name, the
@@ -187,9 +192,9 @@ row 38). Rollback notes at the end of each file. SQL spec: `e2e/tests/sales/chan
 ### Apps
 
 - Web: teacher «رسائل الطلاب» (`/teacher/messages`); the portal tab «المحادثة مع المعلم/ة»; the admin's student
-  page and the assistant's «طلابي» list open the read-only thread.
-- Mobile (JS only, OTA): teacher «المزيد» → «رسائل الطلاب» (list + thread); the admin's student file and the
-  assistant's «طلابي» rows open the read-only thread.
+  page opens the read-only thread; the assistant's «طلابي» rows open the thread with its composer.
+- Mobile (JS only, OTA): teacher «المزيد» → «رسائل الطلاب» (list + thread); the admin's student file opens the
+  read-only thread; the assistant's «طلابي» rows open the thread with its composer.
 
 ### Edit and delete (owner 2026-10-30: «also add edit and delete message ability»)
 
@@ -206,7 +211,7 @@ WhatsApp Business app can (those arrive as `smb_message_echoes` edit / revoke, m
 - Rules live in `packages/shared/src/messaging/message-actions` (`channelActions`, `canHideMessages`,
   `canUnhideMessages`); the API enforces each one (`ChannelEdits`, `MessageHideService`). Errors:
   403 `not_your_message` / `edit_window_closed` / `delete_window_closed`, 409 `message_deleted`.
-- `PATCH` / `DELETE …/messages/:messageId` on the teacher and portal channel routes; `DELETE` on the
+- `PATCH` / `DELETE …/messages/:messageId` on the teacher, portal and owning-assistant channel routes; `DELETE` on the
   admin's monitor route; `POST` / `DELETE /threads/:phone/messages/:messageId/hide`.
 - An edit keeps the earlier text in `channel_message_edits` (admin read only, never shown); a delete
   moves the text there and leaves `body = '-'` (never served). Bubbles show «تم التعديل» /

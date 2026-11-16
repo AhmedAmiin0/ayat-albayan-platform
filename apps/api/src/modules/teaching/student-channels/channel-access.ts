@@ -30,8 +30,8 @@ export class AccessDeps {
 /**
  * docs/31 §2, rule 9 server-side. Participants: the student's current teacher(s) (channel_teacher_ids), the
  * guardian login of the student, and the student's own login, a child's too (owner 2026-11-16: «the child
- * can chat normally»). Monitors (read-only): anyone
- * the route's student_channels.monitor key let in, and the owning assistant (sales ownership). Another
+ * can chat normally»), and the owning assistant (sales ownership; owner 2026-11-16 «yes it can write
+ * also»). Monitors (read-only): anyone the route's student_channels.monitor key let in. Another
  * teacher, family or assistant is 404 student_not_found (as an unknown id).
  * Every family path is 403 family_chat_off while settings.family_chat_enabled is off (docs/50 §2).
  */
@@ -64,9 +64,13 @@ export class ChannelAccess {
     return { mode: 'monitor', studentId, profileId: user.id, open: await this.queries.isOpen(studentId) };
   }
 
-  /** The owning assistant: her leads' families and the students she brought (ownershipOf). */
+  /**
+   * The owning assistant (her leads' families, the students she brought: ownershipOf) writes as
+   * 'sales' on an open channel; a closed one she still reads as before, as a monitor.
+   */
   async owner(user: AuthUser, studentId: string): Promise<ChannelActor> {
     if (!(await this.people.ownedStudentIds(user.id)).includes(studentId)) throw notFound('student_not_found');
-    return { mode: 'monitor', studentId, profileId: user.id, open: await this.queries.isOpen(studentId) };
+    const seat = { studentId, profileId: user.id, open: await this.queries.isOpen(studentId) };
+    return seat.open ? { ...seat, mode: 'participant', role: 'sales' } : { ...seat, mode: 'monitor' };
   }
 }

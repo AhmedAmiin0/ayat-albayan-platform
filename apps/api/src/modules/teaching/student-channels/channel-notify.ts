@@ -1,36 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
+import { PresenceRepo } from '@/modules/people/presence';
 import type { ChannelActor } from './channel-access';
 import { ChannelPeopleRepo } from './channel-people.repo';
 import type { ChannelMessageRow } from './channel.repo';
-import { ChannelRepo } from './channel.repo';
+import { FamilyChatSettings } from './family-chat.settings';
 
 /** The push quotes this much of the message. */
 const PREVIEW = 80;
 
 /**
- * docs/31 §2: a message from the family pushes to the student's current teacher(s) only, kind
- * channel_message (its notification rule decides bell / push, PushService). A teacher's message notifies
- * nobody; monitors never. No WhatsApp. Never throws (PushService swallows its own failures).
+ * docs/31 §2 (owner 2026-11-16 «all 4 will receive the message»): a participant's message pushes
+ * kind channel_message to everyone in the chat but its sender: the student's current teacher(s),
+ * the guardian and the student logins (only while family_chat_enabled is on) and the owning
+ * assistant(s). The assistant writes too (owner 2026-11-16 «yes it can write also»): hers
+ * reaches the teacher(s) and the family, never herself. Never an admin. Its notification rule
+ * decides bell / push (PushService). No WhatsApp. Never throws (PushService swallows its own
+ * failures; ChannelService catches the rest).
  */
 @Injectable()
 export class ChannelNotify {
   constructor(
-    private readonly queries: ChannelRepo,
-    private readonly people: ChannelPeopleRepo,
-    private readonly push: PushService,
+    @Inject(ChannelPeopleRepo) private readonly people: ChannelPeopleRepo,
+    @Inject(PresenceRepo) private readonly presence: PresenceRepo,
+    @Inject(FamilyChatSettings) private readonly familyChat: FamilyChatSettings,
+    @Inject(PushService) private readonly push: PushService,
   ) {}
 
   async sent(actor: ChannelActor, message: ChannelMessageRow): Promise<void> {
-    if (actor.mode !== 'participant' || actor.role === 'teacher') return;
-    const profiles = await this.people.teacherProfiles(await this.queries.teacherIds(actor.studentId));
-    const [student] = await this.people.students([actor.studentId]);
+    if (actor.mode !== 'participant') return;
+    const { studentId, profileId } = actor;
+    const [members, owners, familyOn, [student], names] = await Promise.all([
+      this.presence.channelPeople(studentId),
+      this.people.ownerIds(studentId),
+      this.familyChat.enabled(),
+      this.people.students([studentId]),
+      this.people.names([profileId]),
+    ]);
+    // A family login hears the chat only while it may open it.
+    const inChat = members.filter((m) => familyOn || m.role === 'teacher');
+    const ids = new Set([...inChat.map((m) => m.profile_id), ...owners]);
+    ids.delete(profileId);
     await this.push.notifyProfiles({
       kind: 'channel_message',
-      profileIds: profiles,
+      profileIds: [...ids],
       subject: message.id,
-      vars: { student: student?.name ?? '', text: message.body.slice(0, PREVIEW) },
-      data: { studentId: actor.studentId },
+      vars: {
+        student: student?.name ?? '',
+        name: names.get(profileId) ?? ar.studentChannel.roles[actor.role],
+        text: message.body.slice(0, PREVIEW),
+      },
+      data: { studentId },
     });
   }
 }

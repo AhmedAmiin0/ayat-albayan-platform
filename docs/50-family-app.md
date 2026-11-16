@@ -40,8 +40,9 @@ Per lesson:
 - While off:
   - the API refuses every family channel read/write: 403 `family_chat_off`;
   - no chat tab or icon on web or mobile;
-  - no teacher push for family messages.
+  - no family message, so no push from one; a teacher's message pushes only the other teachers and the assistant.
 - While on: today's teacher↔family channel (`apps/api/src/modules/teaching/student-channels/`, write rules in `channel-access.ts`) works as it does now, for every family login: the guardian, an adult student and a child's own login (owner 2026-11-16 «the child can chat normally»; migration `20261116000100_child_chat` opens RLS and presence to it).
+- Every message reaches the teacher, the guardian, the student and the owning assistant, except its writer (owner 2026-11-16, `channel-notify.ts`): a bell row (kind `channel_message`) that opens the chat (`chatHref` in the family app). Device push to family phones waits for the family app's Firebase.
 - Switch it on together with the teachers' `teacher_student_messages_enabled`. With only the family switch on, a family message pushes the teacher to `/teacher/more/messages/:id` and `guardedTeacherRoute` sends them to «اليوم»; with only the teacher switch on, no family message arrives.
 
 **No WhatsApp inside the app or the family web pages.** «there is no whats app messages its all in app chat»: remove the `renew_url` wa.me link from `PortalHome` and every family screen. WhatsApp reminders and report PDFs keep going out exactly as today («not now, after we full migrate»).

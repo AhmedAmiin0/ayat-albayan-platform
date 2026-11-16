@@ -17,7 +17,8 @@ describe('migration 800: student channels', () => {
     expect(code).toContain('student_id uuid not null unique references public.students (id) on delete cascade');
     expect(code).toContain(`check (char_length(body) between 1 and ${CHANNEL_BODY_MAX})`);
     const roles = [...(/sender_role in \(([^)]*)\)/.exec(code)?.[1] ?? '').matchAll(/'([a-z]+)'/g)].map((m) => m[1]);
-    expect(roles).toEqual([...CHANNEL_SENDER_ROLES]);
+    // 'sales' came with 20261116000200 (channel-sales-sender.migration.test.ts).
+    expect(roles).toEqual(CHANNEL_SENDER_ROLES.filter((r) => r !== 'sales'));
     expect(code).toContain('primary key (channel_id, profile_id)');
   });
 

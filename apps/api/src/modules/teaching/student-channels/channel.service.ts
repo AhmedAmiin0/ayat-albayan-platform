@@ -58,9 +58,10 @@ export class ChannelService {
     await this.queries.setReadMark({ channelId: await this.queries.channelOf(actor.studentId), profileId: actor.profileId, at: upTo });
   }
 
+  /** A participant's unread on an open channel (a monitor never marks anything read: none). */
   async unread(actor: ChannelActor): Promise<ChannelUnread> {
-    if (closed(actor)) return { unread: 0 };
-    const countRoles = unreadRolesFor(actor.mode === 'participant' ? actor.role : null);
+    if (actor.mode !== 'participant' || !actor.open) return { unread: 0 };
+    const countRoles = unreadRolesFor(actor.role);
     const [sum] = await this.queries.summaries({ profileId: actor.profileId, studentIds: [actor.studentId], countRoles });
     return { unread: sum?.unread ?? 0 };
   }

@@ -31,7 +31,7 @@ const thread = (audience: Audience) =>
   renderWithQuery(<ChannelThread refs={{ audience, studentId: 's1' }} />, freshQueryClient());
 
 async function hold(audience: Audience, m: ChannelMessageView) {
-  mockApiFetch.mockResolvedValue(page([m], audience !== 'teacher'));
+  mockApiFetch.mockResolvedValue(page([m], audience === 'admin'));
   await thread(audience);
   await fireEvent(await screen.findByTestId(`channel-bubble-${m.id}`), 'longPress');
   return within(screen.getByTestId('channel-message-menu'));
@@ -82,8 +82,19 @@ test("the admin deletes anyone's message (moderation), asked first", async () =>
   );
 });
 
+test('the owning assistant edits her own message through her route (owner 2026-11-16)', async () => {
+  const menu = await hold('sales', msg({ sender_role: 'sales', sender_name: 'سارة' }));
+  await fireEvent.press(menu.getByRole('button', { name: a.edit }));
+  await fireEvent.changeText(menu.getByLabelText(a.editTitle), 'موعد التجديد غدًا');
+  await fireEvent.press(menu.getByRole('button', { name: a.save }));
+  const path = '/sales/students/s1/channel/messages/m1';
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('PATCH', path, { body: 'موعد التجديد غدًا' }),
+  );
+});
+
 async function noMenu(audience: 'teacher' | 'sales', m: ChannelMessageView) {
-  mockApiFetch.mockResolvedValue(page([m], audience === 'sales'));
+  mockApiFetch.mockResolvedValue(page([m]));
   await thread(audience);
   await fireEvent(await screen.findByTestId(`channel-bubble-${m.id}`), 'longPress');
   expect(screen.queryByTestId('channel-message-menu')).toBeNull();
@@ -91,4 +102,5 @@ async function noMenu(audience: 'teacher' | 'sales', m: ChannelMessageView) {
 
 test("no menu on someone else's message", () => noMenu('teacher', msg({ mine: false })));
 test('no menu on a deleted message', () => noMenu('teacher', msg({ deleted: true, body: '' })));
-test('no menu for the owning assistant (sales)', () => noMenu('sales', msg({ mine: false })));
+test("the owning assistant: no menu on the teacher's message", () =>
+  noMenu('sales', msg({ mine: false })));

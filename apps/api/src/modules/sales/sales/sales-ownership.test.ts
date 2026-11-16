@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
-import { guardianOwnerIds, ownershipOf } from './sales-ownership';
+import { guardianOwnerIds, ownershipOf, studentOwnerIds } from './sales-ownership';
 
 describe('guardianOwnerIds (who owns a family, docs/21 §6)', () => {
   it('the union of brought_by and converted-lead assigned_to, nulls dropped, deduplicated', async () => {
@@ -17,6 +17,29 @@ describe('guardianOwnerIds (who owns a family, docs/21 §6)', () => {
     expect(await guardianOwnerIds(fakeDb({ students: [{ data: [] }], leads: [{ data: [] }] }).db, 'g1')).toEqual([]);
     const { db } = fakeDb({ students: [{ data: [] }], leads: [{ error: { message: 'boom' } }] });
     await expect(guardianOwnerIds(db, 'g1')).rejects.toBeDefined();
+  });
+});
+
+describe('studentOwnerIds (who owns one student: a chat message, a payment)', () => {
+  it('who brought it and who holds its family’s lead, nulls dropped, each once', async () => {
+    const { db, argsOf } = fakeDb({
+      students: [{ data: { brought_by: 'A', guardian_id: 'g1' } }],
+      leads: [{ data: [{ assigned_to: 'B' }, { assigned_to: 'A' }, { assigned_to: null }] }],
+    });
+    expect(await studentOwnerIds(db, 's1')).toEqual(['A', 'B']);
+    expect(argsOf('students', 'eq')).toEqual(['id', 's1']);
+    expect(argsOf('leads', 'eq')).toEqual(['converted_guardian_id', 'g1']);
+  });
+
+  it('an unknown student or nobody: []; a database error is thrown', async () => {
+    expect(await studentOwnerIds(fakeDb({ students: [{ data: null }] }).db, 's1')).toEqual([]);
+    const none = fakeDb({
+      students: [{ data: { brought_by: null, guardian_id: 'g1' } }],
+      leads: [{ data: [] }],
+    });
+    expect(await studentOwnerIds(none.db, 's1')).toEqual([]);
+    const { db } = fakeDb({ students: [{ error: { message: 'boom' } }] });
+    await expect(studentOwnerIds(db, 's1')).rejects.toBeDefined();
   });
 });
 

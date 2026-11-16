@@ -7,13 +7,15 @@ import {
 import { z } from 'zod';
 
 // «الإشعارات» of the family app (canvas Alerts): where a bell row opens (its report, the child's
-// lessons, the package or the week) and the rows under «اليوم» / «أمس» / «هذا الأسبوع» / «أقدم».
-// A row's `data` is untrusted (NotificationItem): every id is parsed before it becomes a target.
+// lessons, the package, the teacher chat or the week) and the rows under «اليوم» / «أمس» / «هذا
+// الأسبوع» / «أقدم». A row's `data` is untrusted (NotificationItem): every id is parsed before it
+// becomes a target.
 
 export type AlertTarget =
   | { screen: 'report'; studentId: string; reportId: string }
   | { screen: 'child'; studentId: string }
   | { screen: 'package'; studentId: string }
+  | { screen: 'chat'; studentId: string }
   | { screen: 'schedule' };
 
 type Data = NotificationItem['data'];
@@ -27,15 +29,15 @@ const toReport: Reader = (data) => {
   return parsed.success ? { screen: 'report', ...parsed.data } : null;
 };
 
-/** The child's own screen (or the package), else the week when no child is named. */
+/** The child's own screen (or the package, or the chat), else the week when no child is named. */
 const toStudent =
-  (screen: 'child' | 'package'): Reader =>
+  (screen: 'child' | 'package' | 'chat'): Reader =>
   (data) => {
     const parsed = studentData.safeParse(data);
     return parsed.success ? { screen, studentId: parsed.data.studentId } : { screen: 'schedule' };
   };
 
-/** The kinds a family's bell receives (family pushes + schedule notices); others open nothing. */
+/** The kinds a family's bell receives (family pushes, schedule notices, the chat); others: none. */
 const TARGETS: Partial<Record<AnyPushKind, Reader>> = {
   report_sent: toReport,
   lesson_starting: toStudent('child'),
@@ -44,6 +46,8 @@ const TARGETS: Partial<Record<AnyPushKind, Reader>> = {
   course_paused: toStudent('child'),
   course_resumed: toStudent('child'),
   payment_received: toStudent('package'),
+  // Owner 2026-11-16: a message in the child's chat with the teacher opens that chat.
+  channel_message: toStudent('chat'),
 };
 
 /** Where tapping the row goes; null = it only marks the row read. */

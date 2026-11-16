@@ -11,17 +11,11 @@ interface MessageRef extends ChannelRef {
   messageId: string;
 }
 
-function pathOf(ref: MessageRef): string {
-  const path = channelMessagePath(ref);
-  if (!path) throw new Error('no edit route for this audience');
-  return path;
-}
-
 export const editChannelMessage = (ref: MessageRef & { body: string }) =>
-  apiSend<ChannelMessageView>('PATCH', pathOf(ref), { body: ref.body });
+  apiSend<ChannelMessageView>('PATCH', channelMessagePath(ref), { body: ref.body });
 
 export const deleteChannelMessage = (ref: MessageRef) =>
-  apiSend<ChannelMessageView>('DELETE', pathOf(ref));
+  apiSend<ChannelMessageView>('DELETE', channelMessagePath(ref));
 
 /** The API's refusal in words (a closed window, not yours, already deleted); else «try again». */
 export function editProblem(e: unknown): string {

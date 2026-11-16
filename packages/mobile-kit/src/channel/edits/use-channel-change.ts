@@ -21,7 +21,7 @@ export function useChannelChange(ref: ChannelRef) {
       client.invalidateQueries({ queryKey: channelKey(ref.audience, ref.studentId) }),
       client.invalidateQueries({ queryKey: TEACHER_CHANNELS_KEY }),
     ]);
-  const path = (messageId: string) => channelMessagePath({ ...ref, messageId }) ?? '';
+  const path = (messageId: string) => channelMessagePath({ ...ref, messageId });
   const edit = useMutation({
     mutationFn: (input: { id: string; body: string }) =>
       apiSend('PATCH', path(input.id), { body: input.body }),

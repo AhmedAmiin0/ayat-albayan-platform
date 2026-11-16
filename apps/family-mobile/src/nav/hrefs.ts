@@ -42,6 +42,7 @@ const OPEN: Openers = {
   report: (t) => openReport(t),
   child: (t) => router.push(childHref(t.studentId)),
   package: (t) => router.push(packageHref(t.studentId)),
+  chat: (t) => router.push(chatHref(t.studentId)),
   schedule: () => router.navigate('/schedule'),
 };
 

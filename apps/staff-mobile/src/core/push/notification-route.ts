@@ -45,7 +45,7 @@ const ROUTES: Record<PushKind, (data: unknown) => string> = {
   new_student: toStudent,
   meeting_invite: () => ADMIN_MEETINGS,
   google_sync_alert: () => ADMIN_SETTINGS,
-  // docs/31 §2: teachers only; never sent to an admin.
+  // docs/31 §2: the chat's teacher, family and assistant; never sent to an admin.
   channel_message: () => '/',
   // «محفظتي» (owner 2026-10-29): salespeople only; never sent to an admin.
   commission_earned: () => '/',

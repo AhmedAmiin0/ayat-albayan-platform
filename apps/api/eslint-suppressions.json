@@ -12223,11 +12223,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/channel-notify.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/student-channels/channel-open.migration.test.ts": {
     "max-len": {
       "count": 1
@@ -12244,7 +12239,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/student-channels/channel.fakes.ts": {
@@ -12283,9 +12278,6 @@
   "src/modules/teaching/student-channels/controllers/channel.monitor.controller.ts": {
     "ab/zod-inputs": {
       "count": 4
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/student-channels/controllers/channel.portal.controller.ts": {
@@ -12310,11 +12302,6 @@
     }
   },
   "src/modules/teaching/student-channels/student-channels.migration.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/student-channels/student-channels.module.ts": {
     "max-len": {
       "count": 1
     }

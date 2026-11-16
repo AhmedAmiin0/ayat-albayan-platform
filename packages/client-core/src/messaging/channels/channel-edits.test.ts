@@ -22,7 +22,7 @@ const msg = (over: Partial<ChannelMessageView> = {}): ChannelMessageView => ({
 const now = (min: number) => new Date(Date.parse(at) + min * 60_000);
 
 describe('channel edit / delete for the clients', () => {
-  it('paths per audience; the owning assistant has none', () => {
+  it('paths per audience, the owning assistant’s too (owner 2026-11-16)', () => {
     expect(channelMessagePath({ audience: 'teacher', studentId: 's', messageId: 'm' })).toBe(
       '/teachers/me/channels/s/messages/m',
     );
@@ -32,11 +32,13 @@ describe('channel edit / delete for the clients', () => {
     expect(channelMessagePath({ audience: 'admin', studentId: 's', messageId: 'm' })).toBe(
       '/students/s/channel/messages/m',
     );
-    expect(channelMessagePath({ audience: 'sales', studentId: 's', messageId: 'm' })).toBeNull();
+    expect(channelMessagePath({ audience: 'sales', studentId: 's', messageId: 'm' })).toBe(
+      '/sales/students/s/channel/messages/m',
+    );
     expect(threadHidePath('+966501234567', 'm')).toBe('/threads/%2B966501234567/messages/m/hide');
   });
 
-  it("the sender's windows; the admin deletes any; sales nothing; a deleted bubble nothing", () => {
+  it("the sender's windows (sales too); the admin deletes any; a deleted bubble nothing", () => {
     expect(channelBubbleActions({ audience: 'portal', message: msg(), now: now(10) })).toEqual({
       edit: true,
       delete: true,
@@ -52,9 +54,12 @@ describe('channel edit / delete for the clients', () => {
       channelBubbleActions({ audience: 'admin', message: msg({ mine: false }), now: now(9999) }),
     ).toEqual({ edit: false, delete: true });
     expect(channelBubbleActions({ audience: 'sales', message: msg(), now: now(1) })).toEqual({
-      edit: false,
-      delete: false,
+      edit: true,
+      delete: true,
     });
+    expect(
+      channelBubbleActions({ audience: 'sales', message: msg({ mine: false }), now: now(1) }),
+    ).toEqual({ edit: false, delete: false });
     expect(
       channelBubbleActions({ audience: 'admin', message: msg({ deleted: true }), now: now(1) }),
     ).toEqual({ edit: false, delete: false });

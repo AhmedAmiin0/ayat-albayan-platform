@@ -16,19 +16,18 @@ describe('student channel access over HTTP', () => {
   afterAll(() => t.app.close());
   beforeEach(() => vi.clearAllMocks());
 
-  it('participants read: the current teacher, the guardian, the student login', async () => {
-    for (const [who, url] of [['teacher', TEACHER], ['guardian', PORTAL], ['student', PORTAL]] as [Who, string][]) {
+  it('participants read: the current teacher, the guardian, the student login, the owning assistant (owner 11-16)', async () => {
+    for (const [who, url] of [['teacher', TEACHER], ['guardian', PORTAL], ['student', PORTAL], ['sales', SALES]] as [Who, string][]) {
       const res = await t.call('GET', url, who);
       expect([who, res.statusCode, res.json().read_only]).toEqual([who, 200, false]);
     }
   });
 
-  it('monitors read with read_only: the admin (student_channels.monitor) and the owning assistant', async () => {
+  it('the monitor reads with read_only: the admin (student_channels.monitor)', async () => {
     expect((await t.call('GET', ADMIN, 'admin')).json().read_only).toBe(true);
-    expect((await t.call('GET', SALES, 'sales')).json().read_only).toBe(true);
   });
 
-  it('a monitor cannot post or mark read anywhere: 403', async () => {
+  it('nobody posts or marks read on another audience\'s route: 403', async () => {
     for (const who of ['admin', 'sales', 'assistant'] as Who[]) {
       for (const url of [TEACHER, PORTAL]) expect([who, url, (await t.post(url, who, { body: 'x' })).statusCode]).toEqual([who, url, 403]);
     }

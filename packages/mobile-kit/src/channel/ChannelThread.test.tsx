@@ -69,10 +69,22 @@ test('a monitor reads with «للاطلاع فقط», no composer, and never mar
 });
 
 test('an empty channel says so', async () => {
-  mockApiFetch.mockResolvedValue(page({ messages: [] }));
-  await thread({ audience: 'sales', studentId: 's1' });
+  mockApiFetch.mockResolvedValue(page({ messages: [], read_only: true }));
+  await thread({ audience: 'admin', studentId: 's1' });
   expect(await screen.findByText(c.empty)).toBeTruthy();
   expect(screen.queryByLabelText(c.messageLabel)).toBeNull();
+});
+
+test('the owning assistant writes and marks read through her route (owner 2026-11-16)', async () => {
+  await thread({ audience: 'sales', studentId: 's1' });
+  const read = { at: '2026-10-27T10:05:00.000Z' };
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/students/s1/channel/read', read),
+  );
+  await fireEvent.changeText(screen.getByLabelText(c.messageLabel), 'مرحبًا');
+  await fireEvent.press(screen.getByRole('button', { name: c.send }));
+  const path = '/sales/students/s1/channel/messages';
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', path, { body: 'مرحبًا' }));
 });
 
 test('a failed send says so and keeps the text', async () => {

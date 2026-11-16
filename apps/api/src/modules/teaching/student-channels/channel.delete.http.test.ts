@@ -6,6 +6,7 @@ const M = 'd4000000-0000-4000-8000-000000000001';
 const PORTAL = `/portal/students/${ST}/channel/messages/${M}`;
 const TEACHER = `/teachers/me/channels/${ST}/messages/${M}`;
 const ADMIN = `/students/${ST}/channel/messages/${M}`;
+const SALES = `/sales/students/${ST}/channel/messages/${M}`;
 const ago = (ms: number) => new Date(Date.now() - ms).toISOString();
 const HOUR = 3_600_000;
 
@@ -68,13 +69,21 @@ describe('DELETE …/messages/:id: delete for everyone', () => {
     );
   });
 
-  it('other monitors cannot delete: sales on the admin route 403, the owning assistant has no route', async () => {
+  it("sales on the admin route 403; on her own route the teacher's message is not hers", async () => {
     expect((await t.call('DELETE', ADMIN, 'sales')).statusCode).toBe(403);
-    expect(
-      (await t.call('DELETE', `/sales/students/${ST}/channel/messages/${M}`, 'sales')).statusCode,
-    ).toBe(404);
+    expect((await t.call('DELETE', SALES, 'sales')).json().code).toBe('not_your_message');
+    expect((await t.call('DELETE', SALES, 'otherSales')).statusCode).toBe(404);
     expect((await t.call('DELETE', TEACHER, 'oldTeacher')).statusCode).toBe(404);
     expect(t.edits.remove).not.toHaveBeenCalled();
+  });
+
+  it('the owning assistant deletes her own message for everyone (owner 2026-11-16)', async () => {
+    t.edits.message.mockResolvedValueOnce(
+      messageRow({ id: M, sender_profile_id: 'p-sa', sender_role: 'sales', created_at: ago(HOUR) }),
+    );
+    const res = await t.call('DELETE', SALES, 'sales');
+    expect([res.statusCode, res.json().deleted]).toEqual([200, true]);
+    expect(t.edits.remove).toHaveBeenCalledWith(expect.objectContaining({ id: M, actor: 'p-sa' }));
   });
 
   it('already deleted: 409 message_deleted', async () => {

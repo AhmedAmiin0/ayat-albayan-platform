@@ -5,8 +5,8 @@ import { clockOf, dateText, localDateIn, type ChannelPage, type ClockCycle, type
 
 export type ChannelAudience = 'teacher' | 'portal' | 'admin' | 'sales';
 
-/** Only participants write and mark read; monitors read. */
-export const CHANNEL_WRITES: Readonly<Record<ChannelAudience, boolean>> = { teacher: true, portal: true, admin: false, sales: false };
+/** Participants write and mark read (the owning assistant too, owner 11-16); the monitor reads. */
+export const CHANNEL_WRITES: Readonly<Record<ChannelAudience, boolean>> = { teacher: true, portal: true, admin: false, sales: true };
 
 /** The thread re-reads this often while it is on screen (the inbox polls the same way). */
 export const CHANNEL_REFRESH_MS = 15_000;
