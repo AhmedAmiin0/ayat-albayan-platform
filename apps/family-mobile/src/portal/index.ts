@@ -9,6 +9,7 @@ export {
   useReportPage,
 } from './use-child-reads';
 export { markReportSeen, useSeenReports } from './use-seen';
+export { useFamilyPick, usePickChild, usePickedChild } from './use-pick';
 export { useRefreshPortal } from './use-refresh';
 export { useFamilyClock } from './use-family-clock';
 export { useChildSummary } from './use-child-summary';

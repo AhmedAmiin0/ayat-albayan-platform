@@ -13,6 +13,7 @@ import { ownStudent, usePortalMe } from '@/portal';
 import { accountCard } from './account-card';
 import { AccountSettings } from './AccountSettings';
 import { ProfileCard } from './ProfileCard';
+import { SwitchChildRow } from './SwitchChildRow';
 
 /** «الإصدار 1.0.0». */
 const versionLine = (): string =>
@@ -20,8 +21,8 @@ const versionLine = (): string =>
 
 /**
  * «حسابي» (docs/50 §6, canvas Account / StudentAccount): the card that opens the profile (where a
- * guardian's children are), this phone's notifications, the appearance; a student also changes
- * their password. Sign out last.
+ * guardian's children are), «تبديل الطالب» for a guardian of several, this phone's
+ * notifications, the appearance; a student also changes their password. Sign out last.
  */
 export function AccountScreen() {
   const { color } = useTheme();
@@ -34,6 +35,7 @@ export function AccountScreen() {
       onRefresh={() => profile.refetch()}
     >
       <ProfileCard {...accountCard(profile.data, own)} />
+      <SwitchChildRow />
       <AccountSettings student={own !== null} />
       {own ? <PasswordSection /> : null}
       <SignOutButton />

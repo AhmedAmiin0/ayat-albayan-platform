@@ -113,15 +113,12 @@
       "tabs": {
         "home": "Home",
         "schedule": "Schedule",
-        "children": "My children",
         "reports": "Reports",
         "account": "Account"
       },
       "home": {
         "greeting": "Welcome",
-        "children": "Your children",
-        "open": "Open {name}'s page",
-        "noToday": "No lessons today."
+        "open": "Open {name}'s page"
       },
       "lesson": {
         "today": "Today",
@@ -139,14 +136,7 @@
         "prepareSelf": "Get ready for your lesson",
         "upcomingSelf": "Your upcoming lessons"
       },
-      "month": {
-        "attended": "Attended this month",
-        "absent": "Missed this month"
-      },
       "package": {
-        "line": "Package: {left} of {total} lessons left",
-        "renews": "Renews on {date}",
-        "due": "Due",
         "title": "{n}-lesson package",
         "perLesson": "{n} min per lesson",
         "usedOf": "{used} of {total} used",
@@ -154,8 +144,7 @@
         "renewal": "Renewal",
         "afterTransfer": "After the transfer, the office records the payment and it shows here.",
         "paid": "Paid",
-        "refund": "Refunded",
-        "open": "Package details"
+        "refund": "Refunded"
       },
       "schedule": {
         "title": "Schedule",
@@ -165,8 +154,6 @@
         "laterWeek": "In two weeks",
         "prev": "Previous week",
         "next": "Next week",
-        "all": "All",
-        "filter": "Choose a child",
         "today": "Today · {day}",
         "empty": "No lessons this week."
       },
@@ -176,8 +163,7 @@
         "upcoming": "Upcoming",
         "attended": "Attended this month",
         "absent": "Missed this month",
-        "left": "Left",
-        "note": "Each child's reports are on their page: «Attended» opens each lesson's report."
+        "left": "Left"
       },
       "history": {
         "recording": "Lesson recording",
@@ -227,6 +213,11 @@
         "attendedSelf": "Attended",
         "absentSelf": "Missed",
         "chat": "Chat"
+      },
+      "pick": {
+        "title": "Choose a student",
+        "hint": "You can switch the student later from “Account”.",
+        "switch": "Switch student"
       }
     }
   },

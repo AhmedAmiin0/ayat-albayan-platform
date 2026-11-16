@@ -19,9 +19,9 @@ const SCREEN_ANIMATION = 'slide_from_right';
 
 /**
  * The family app's root (app/_layout, docs/50 §7): the shared boot, providers and frame
- * (@ab/mobile-kit), one stack. A guardian or a student gets the tabs (home, schedule, children or
- * reports, account) and the pushed child, chat, report, package and alerts; everyone else the
- * sign-in.
+ * (@ab/mobile-kit), one stack. A guardian or a student gets the tabs (home, schedule, reports,
+ * account), the pushed child, chat, report, package and alerts, and «اختر الطالب» (pick-child)
+ * for a guardian of several children; everyone else the sign-in.
  * Staff are signed out by the gate with the inverted «wrongApp» notice
  * (role-claim / login-notice follow the app's audience, set in index.ts).
  */
@@ -64,6 +64,7 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
             <Stack.Screen name="package/[id]" />
             <Stack.Screen name="alerts" />
             <Stack.Screen name="profile" />
+            <Stack.Screen name="pick-child" />
           </Stack.Protected>
           <Stack.Protected guard={gate === 'out'}>
             <Stack.Screen name="login" />

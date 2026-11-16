@@ -9,7 +9,7 @@ interface GreetingHeaderProps {
   title: string;
   /** The small line over it: today's date, or «أهلًا بك» for a student. */
   over?: string;
-  /** A student's own home shows their avatar instead of the academy's mark. */
+  /** The home of the student in view shows their avatar instead of the academy's mark. */
   student?: PortalStudent;
 }
 

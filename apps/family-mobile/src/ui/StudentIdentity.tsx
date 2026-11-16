@@ -9,7 +9,7 @@ interface StudentIdentityProps {
   children?: ReactNode;
 }
 
-/** A child's avatar, name and code (home and «أبنائي» cards). */
+/** A child's avatar, name and code (the «اختر الطالب» cards). */
 export function StudentIdentity({ student, children }: StudentIdentityProps) {
   const { color } = useTheme();
   return (

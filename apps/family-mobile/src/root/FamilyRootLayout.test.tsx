@@ -2,12 +2,15 @@ import { act, fireEvent, renderRouter, screen } from 'expo-router/testing-librar
 import { t, queryClient, pathKey } from '@ab/mobile-kit';
 import Tabs from '../../app/(tabs)/_layout';
 import Home from '../../app/(tabs)/index';
+import Reports from '../../app/(tabs)/reports';
 import Child from '../../app/child/[id]';
+import PickChild from '../../app/pick-child';
 import Layout from '../../app/_layout';
 import Login from '../../app/login';
 
-// docs/50 §7: the family app's own router root. Signed in (guardian / student) → the tabs' home;
-// out → the sign-in. The gate is a settable status here (role rules: verify-role.family.test.ts).
+// docs/50 §7: the family app's own router root. Signed in (guardian / student) → the tabs' home of
+// the student in view («اختر الطالب» first for a guardian of several); out → the sign-in. The gate
+// is a settable status here (role rules: verify-role.family.test.ts).
 
 const mockApiFetch = jest.fn();
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
@@ -44,20 +47,16 @@ const routes = {
   '(tabs)/_layout': Tabs,
   '(tabs)/index': Home,
   '(tabs)/schedule': Blank,
-  '(tabs)/children': Blank,
-  '(tabs)/reports': Blank,
+  '(tabs)/reports': Reports,
   '(tabs)/account': Blank,
   'child/[id]': Child,
+  'pick-child': PickChild,
 };
-const me = { id: 'g1', role: 'guardian', permissions: ['self.portal'] };
 const kid = (id: string, name: string) => ({
-  id,
-  code: `AB-000${id.slice(1)}`,
-  name,
-  tz: 'Asia/Riyadh',
-  contact_is_self: false,
+  id, code: `AB-000${id.slice(1)}`, name, tz: 'Asia/Riyadh', contact_is_self: false,
 });
-const children = [kid('s1', 'سارة'), kid('s2', 'يوسف')];
+const sara = kid('s1', 'سارة');
+const yusuf = kid('s2', 'يوسف');
 const EMPTY: Record<string, unknown> = {
   lessons: { lessons: [], prepare: null, month: { attended: 2, absent: 1 } },
   reports: { reports: [] },
@@ -66,27 +65,31 @@ const EMPTY: Record<string, unknown> = {
 };
 const studentRead = (path: string): unknown => EMPTY[path.split('?')[0]?.split('/')[4] ?? ''];
 
-const answer = (kind: string) =>
+interface SignIn {
+  gate: string;
+  kind?: string;
+  students?: ReturnType<typeof kid>[];
+  /** The profile id (a saved pick is this profile's only). */
+  id?: string;
+  url?: string;
+}
+
+/** Signs in as `gate` with /portal/me listing `students` (one child by default). */
+function open({ gate, kind = 'guardian', students = [sara], id = 'g1', url = '/' }: SignIn) {
+  const me = { id, role: kind, permissions: ['self.portal'] };
   mockApiFetch.mockImplementation(async (path: string) => {
     const body: Record<string, unknown> = {
       '/auth/me': me,
-      '/portal/me': {
-        kind,
-        students: kind === 'student' ? [children[0]] : children,
-        renew_url: null,
-      },
+      '/portal/me': { kind, students, renew_url: null },
       '/auth/code/status': { available: true, staff: false },
     };
     return (
       body[path] ?? studentRead(path) ?? { items: [], total: 0, page: 1, pageSize: 20, unread: 0 }
     );
   });
-
-function open(gate: string, kind = 'guardian') {
-  answer(kind);
   mockGate.initial = gate;
   if (gate !== 'out') queryClient.setQueryData(pathKey('/auth/me'), me);
-  return renderRouter(routes, { initialUrl: '/' });
+  return renderRouter(routes, { initialUrl: url });
 }
 
 beforeEach(() => {
@@ -94,40 +97,53 @@ beforeEach(() => {
   queryClient.clear();
 });
 
-test('a guardian lands on home: one card per child, and this device registers for pushes', async () => {
-  await open('guardian');
-  expect(await screen.findByText('سارة')).toBeTruthy();
-  expect(screen.getByText('يوسف')).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.portal.app.home.greeting })).toBeTruthy();
-  expect(screen.getByText(t.portal.app.tabs.children)).toBeTruthy();
+test("a guardian of one child: that child's page with «الباقة», no picker", async () => {
+  const guardian = open({ gate: 'guardian' });
+  await guardian;
+  expect(await screen.findByRole('tab', { name: t.portal.packageTab })).toBeTruthy();
+  expect(screen.getByRole('header', { name: 'سارة' })).toBeTruthy();
+  expect(await screen.findByText(t.portal.app.tabs.reports)).toBeTruthy();
+  expect(guardian.getPathname()).toBe('/');
   expect(registerPush).toHaveBeenCalled();
 });
 
 test('signed out: the family sign-in, no push registration', async () => {
-  await open('out');
+  await open({ gate: 'out' });
   expect(await screen.findByText(t.familyApp.signIn.withPassword)).toBeTruthy();
   expect(screen.getByLabelText(t.familyAuth.phone)).toBeTruthy();
   expect(registerPush).not.toHaveBeenCalled();
 });
 
-test("a card's head opens child/[id]", async () => {
-  const guardian = open('guardian');
+test('two children, none picked: «اختر الطالب»; a card makes the app that child', async () => {
+  const guardian = open({ gate: 'guardian', students: [sara, yusuf], id: 'g-two' });
   await guardian;
+  expect(await screen.findByText(t.portal.app.pick.hint)).toBeTruthy();
+  expect(guardian.getPathname()).toBe('/pick-child');
   await fireEvent.press(await screen.findByRole('button', { name: /يوسف/ }));
+  expect(await screen.findByRole('header', { name: 'يوسف' })).toBeTruthy();
+  expect(guardian.getPathname()).toBe('/');
+  await fireEvent.press(await screen.findByText(t.portal.app.tabs.reports));
+  expect(await screen.findByText(t.portal.app.reports.empty)).toBeTruthy();
+});
+
+test('a link to a child opens with no pick (never filtered by it)', async () => {
+  const students = [sara, yusuf];
+  const guardian = open({ gate: 'guardian', students, id: 'g-link', url: '/child/s2' });
+  await guardian;
+  expect(await screen.findByText('AB-0002')).toBeTruthy();
   expect(guardian.getPathname()).toBe('/child/s2');
 });
 
-test('a student lands on their own page: their tabs, no «أبنائي»', async () => {
-  await open('student', 'student');
+test('a student lands on their own page: their tabs, no package, never the picker', async () => {
+  await open({ gate: 'student', kind: 'student' });
   expect(await screen.findByText(t.portal.app.child.attendedSelf)).toBeTruthy();
   expect(screen.getByText(t.portal.app.tabs.reports)).toBeTruthy();
-  expect(screen.queryByText(t.portal.app.tabs.children)).toBeNull();
   expect(screen.queryByText(t.portal.packageTab)).toBeNull();
 });
 
 test('signing out (the gate flips to out) swaps home for the sign-in', async () => {
-  await open('guardian');
-  expect(await screen.findByText('سارة')).toBeTruthy();
+  await open({ gate: 'guardian' });
+  expect(await screen.findByRole('header', { name: 'سارة' })).toBeTruthy();
   await act(async () => mockGate.set('out'));
   expect(await screen.findByText(t.familyApp.signIn.withPassword)).toBeTruthy();
 });

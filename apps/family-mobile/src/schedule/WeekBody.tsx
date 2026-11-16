@@ -17,7 +17,7 @@ const FACE: Record<Face, (week: Week) => ReactNode> = {
   empty: () => <EmptyState title={t.portal.app.schedule.empty} />,
   days: (week) =>
     week.days.map((d) => (
-      <ScheduleDay key={d.day} day={d} clock={week.clock} now={week.now} named={week.named} />
+      <ScheduleDay key={d.day} day={d} clock={week.clock} now={week.now} />
     )),
 };
 
