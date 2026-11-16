@@ -44,8 +44,19 @@ export class ChannelPeopleRepo {
     return (await ownershipOf(this.db, profileId)).studentIds;
   }
 
-  /** The same ownership read backwards: who owns this student (a chat message's assistants). */
-  ownerIds(studentId: string): Promise<string[]> {
-    return studentOwnerIds(this.db, studentId);
+  /**
+   * The same ownership read backwards, the salespeople only (whom the owner route lets in): a
+   * chat message's assistants. An admin who brought the student or holds its lead is not one.
+   */
+  async ownerIds(studentId: string): Promise<string[]> {
+    const owners = await studentOwnerIds(this.db, studentId);
+    if (owners.length === 0) return [];
+    const { data, error } = await this.db
+      .from('profiles')
+      .select('id')
+      .in('id', owners)
+      .eq('role', 'sales');
+    if (error) throw dbError(error);
+    return data.map((p) => p.id);
   }
 }

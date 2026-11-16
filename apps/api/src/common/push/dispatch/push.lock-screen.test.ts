@@ -49,6 +49,14 @@ describe('lockScreenText', () => {
     expect(list.body).toBe('كُتب تقرير حلقة سهيلة وعلي مع مريم');
   });
 
+  it('a chat message (owner 2026-11-16): the student and the writer by first name', () => {
+    const vars = { student: 'سهيلة أحمد', name: 'أم سهيلة أحمد', text: 'متى الحلقة؟' };
+    expect(lockScreenText({ kind: 'channel_message', vars })).toEqual({
+      title: 'رسالة في محادثة سهيلة',
+      body: 'أم سهيلة: متى الحلقة؟',
+    });
+  });
+
   it('an overriding title is masked too', () => {
     expect(lockScreenText({ kind: 'new_message', vars: { name: PHONE, text: 'x' }, title: `طلب من ${PHONE}` }).title).toBe('طلب من •••0123');
   });
