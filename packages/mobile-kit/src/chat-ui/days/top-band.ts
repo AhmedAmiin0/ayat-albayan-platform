@@ -14,7 +14,10 @@ export interface Viewport {
   length: number;
 }
 
-/** A row on screen that carries a day separator: its message id, label, and its chip's top in the row. */
+/**
+ * A row on screen that carries a day separator: its message id, label, and its chip's top in the
+ * row.
+ */
 export interface Separator {
   key: string;
   label: string;
@@ -31,7 +34,9 @@ export interface BandInput {
   label: string | null;
 }
 
-/** DayChip's box (it reads these): margin, padding and border, vertical; its pill starts 4 + 6 down. */
+/**
+ * DayChip's box (it reads these): margin, padding and border, vertical; its pill starts 4 + 6 down.
+ */
 export const CHIP_MARGIN = 6;
 export const CHIP_PAD = 3;
 export const CHIP_BORDER = 1;
@@ -43,7 +48,8 @@ export const FLOAT_TOP = 4;
 const AIR = 4;
 
 /**
- * How far under the list's visual top the cell's top edge is. Inverted: the content's far end is the
+ * How far under the list's visual top the cell's top edge is. Inverted: the content's far end is
+ * the
  * visual top, and each cell is flipped back upright, so its top edge is its frame's far end.
  */
 export function cellTop(frame: Frame, view: Viewport): number {

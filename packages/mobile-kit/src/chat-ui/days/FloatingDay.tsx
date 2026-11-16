@@ -9,7 +9,10 @@ interface FloatingDayProps {
   onChip?: (layout: LayoutRectangle) => void;
 }
 
-/** The day of the topmost message while she scrolls (useTopDay), over the top of the list. */
+/**
+ * The day of the topmost message while she scrolls (the staff thread's useTopDay), over the top of
+ * the list.
+ */
 export function FloatingDay({ label, opacity, onChip }: FloatingDayProps) {
   if (!label) return null;
   return (
@@ -17,7 +20,14 @@ export function FloatingDay({ label, opacity, onChip }: FloatingDayProps) {
       pointerEvents="none"
       testID="floating-day"
       onLayout={(e) => onChip?.(e.nativeEvent.layout)}
-      style={{ position: 'absolute', top: FLOAT_TOP, start: 0, end: 0, alignItems: 'center', opacity }}
+      style={{
+        position: 'absolute',
+        top: FLOAT_TOP,
+        start: 0,
+        end: 0,
+        alignItems: 'center',
+        opacity,
+      }}
     >
       <DayChip label={label} />
     </Animated.View>

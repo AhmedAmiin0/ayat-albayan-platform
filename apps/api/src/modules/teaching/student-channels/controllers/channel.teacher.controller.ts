@@ -53,7 +53,7 @@ export class TeacherChannelsController {
     @ZodBody(channelPostSchema) body: z.output<typeof channelPostSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelMessageView> {
-    return this.channels.post(await this.access.teacher(user, studentId), body.body);
+    return this.channels.post(await this.access.teacher(user, studentId), body);
   }
 
   @Post(':studentId/read')

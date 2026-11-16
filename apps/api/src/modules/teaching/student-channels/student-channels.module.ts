@@ -5,18 +5,29 @@ import { TeachersModule } from '@/modules/people/teachers';
 import { AccessDeps, ChannelAccess } from './channel-access';
 import { CHANNEL_CONTROLLERS } from './controllers/channel.controllers';
 import { ChannelEditsRepo } from './channel-edits.repo';
-import { ChannelEdits } from './channel-edits.service';
+import { ChannelEdits, ChannelEditsAfter } from './channel-edits.service';
 import { ChannelNotify } from './channel-notify';
 import { ChannelPeopleRepo } from './channel-people.repo';
 import { ChannelRepo } from './channel.repo';
 import { ChannelService, TeacherChannelList } from './channel.service';
 import { FamilyChatSettings } from './family-chat.settings';
+import { ChannelMedia } from './media/channel-media.service';
+import { ChannelBell } from './notify/channel-bell';
+import { ChannelBellRepo } from './notify/channel-bell.repo';
+import { ChannelMembers } from './reads/channel-members';
+import { ChannelReadState } from './reads/channel-read-state';
+import { ChannelReadsRepo } from './reads/channel-reads.repo';
+import { ChannelReadsService } from './reads/channel-reads.service';
+import { ChannelSendInputs } from './send/channel-send-inputs';
+import { ChannelSender } from './send/channel-sender';
+import { ChannelViews } from './views/channel-views.service';
 
 /**
  * The student channel (docs/31 §2): an in-platform teacher ↔ family chat per student, opened by the
  * students INSERT trigger (migration 800); the owning assistant writes too (owner 2026-11-16),
  * student_channels.monitor only reads.
- * PushService comes from the global PushModule. Edit / delete (owner 2026-10-30): ChannelEdits.
+ * PushService and StorageService come from global modules. Edit / delete (owner 2026-10-30):
+ * ChannelEdits.
  */
 @Module({
   imports: [PortalModule, PresenceModule, TeachersModule],
@@ -32,6 +43,17 @@ import { FamilyChatSettings } from './family-chat.settings';
     TeacherChannelList,
     ChannelEditsRepo,
     ChannelEdits,
+    ChannelEditsAfter,
+    ChannelMedia,
+    ChannelBellRepo,
+    ChannelBell,
+    ChannelMembers,
+    ChannelReadsRepo,
+    ChannelReadState,
+    ChannelReadsService,
+    ChannelSendInputs,
+    ChannelSender,
+    ChannelViews,
   ],
 })
 export class StudentChannelsModule {}

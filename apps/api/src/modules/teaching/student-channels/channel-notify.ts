@@ -6,9 +6,7 @@ import type { ChannelActor } from './channel-access';
 import { ChannelPeopleRepo } from './channel-people.repo';
 import type { ChannelMessageRow } from './channel.repo';
 import { FamilyChatSettings } from './family-chat.settings';
-
-/** The push quotes this much of the message. */
-const PREVIEW = 80;
+import { previewOf } from '@/modules/teaching/student-channels/notify/preview';
 
 /**
  * docs/31 §2 (owner 2026-11-16 «all 4 will receive the message»): a participant's message pushes
@@ -49,7 +47,7 @@ export class ChannelNotify {
       vars: {
         student: student?.name ?? '',
         name: names.get(profileId) ?? ar.studentChannel.roles[actor.role],
-        text: message.body.slice(0, PREVIEW),
+        text: previewOf(message),
       },
       data: { studentId },
     });

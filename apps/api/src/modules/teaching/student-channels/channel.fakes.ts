@@ -1,5 +1,4 @@
-// Test fixtures and HTTP harness for the student channel (test-only, excluded from the build by
-// *.fakes.ts).
+// Test fixtures and HTTP harness for the student channel (test-only, excluded from the build).
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '@/app.module';
@@ -16,6 +15,12 @@ import { ChannelPeopleRepo } from './channel-people.repo';
 import type { ChannelMessageRow, ChannelSummaryRow } from './channel.repo';
 import { ChannelRepo } from './channel.repo';
 import { FamilyChatSettings } from './family-chat.settings';
+import { channelExtras } from './testing/channel-extras.fakes';
+import { ChannelBellRepo } from './notify/channel-bell.repo';
+import { ChannelReadsRepo } from './reads/channel-reads.repo';
+import type { NewChannelMessage } from './send/channel-row';
+import { StorageService } from '@/common/storage/storage.service';
+import type { ChannelClosedReason } from '@ab/shared';
 
 export const ST = '52000000-0000-4000-8000-000000000001';
 /** Another family's child. */
@@ -53,12 +58,14 @@ export async function channelApp() {
     channelOf: vi.fn(async () => CH),
     isOpen: vi.fn(async () => true),
     page: vi.fn(async (): Promise<ChannelMessageRow[]> => [messageRow()]),
-    insert: vi.fn(async (row: { body: string; sender_profile_id: string; sender_role: string }) =>
-      messageRow({ id: 'm2', ...row }),
-    ),
-    setReadMark: vi.fn(
-      async (row: { channelId: string; profileId: string; at: string }) => void row,
-    ),
+    insert: vi.fn(async (row: NewChannelMessage) => ({
+      row: messageRow({ id: 'm2', ...row }),
+      created: true,
+    })),
+    closedReason: vi.fn(async (): Promise<ChannelClosedReason | null> => 'not_subscribed'),
+    setReadMark: vi.fn(async (row: { channelId: string; profileId: string; at: string }) => {
+      void row;
+    }),
     teacherIds: vi.fn(async (): Promise<string[]> => ['t1']),
     teacherStudentIds: vi.fn(async () => [ST]),
     summaries: vi.fn(async (): Promise<ChannelSummaryRow[]> => [
@@ -77,13 +84,7 @@ export async function channelApp() {
         .filter((id) => id === ST || id === OTHER)
         .map((id) => ({ id, name: 'سلمى', code: 'AB-0201' })),
     ),
-    names: vi.fn(
-      async () =>
-        new Map([
-          ['p-g', 'أم سلمى'],
-          ['p-t1', 'أبرار'],
-        ]),
-    ),
+    names: vi.fn(async () => new Map([['p-g', 'أم سلمى'], ['p-t1', 'أبرار']])),
     ownedStudentIds: vi.fn(async (id: string) => (id === 'p-sa' ? [ST] : [])),
     ownerIds: vi.fn(async (): Promise<string[]> => ['p-sa']),
   };
@@ -108,7 +109,9 @@ export async function channelApp() {
     remove: vi.fn(async (c: { id: string; at: string }): Promise<ChannelMessageRow | null> =>
       messageRow({ id: c.id, body: '-', deleted_at: c.at }),
     ),
+    deletedIds: vi.fn(async (_ids: readonly string[]) => new Set<string>()),
   };
+  const extras = channelExtras();
   const audit = { record: vi.fn(async () => undefined) };
   const familyChat = { enabled: vi.fn(async () => true) }; // family_chat_enabled on, as before
   const presence = fakePresence();
@@ -121,7 +124,8 @@ export async function channelApp() {
     [ChannelRepo, queries], [ChannelPeopleRepo, people], [PortalScopeRepo, scope],
     [TeachersRepo, teachers], [PushService, push], [ChannelEditsRepo, edits],
     [AuditService, audit], [PresenceRepo, presence.repo], [PresenceSettings, presence.settings],
-    [FamilyChatSettings, familyChat],
+    [FamilyChatSettings, familyChat], [ChannelReadsRepo, extras.reads],
+    [ChannelBellRepo, extras.bell], [StorageService, extras.storage],
   ];
   const builder = overrides.reduce(
     (b, [token, value]) => b.overrideProvider(token).useValue(value),
@@ -132,19 +136,6 @@ export async function channelApp() {
     app.inject({ method, url, headers: { authorization: `Bearer ${who}` } });
   const send = (method: 'POST' | 'PATCH') => (url: string, who: Who, payload: object) =>
     app.inject({ method, url, headers: { authorization: `Bearer ${who}` }, payload });
-  return {
-    app,
-    call,
-    post: send('POST'),
-    patch: send('PATCH'),
-    queries,
-    people,
-    scope,
-    teachers,
-    push,
-    edits,
-    audit,
-    presence,
-    familyChat,
-  };
+  const fakes = { queries, people, scope, teachers, push, edits, audit, presence, familyChat };
+  return { app, call, post: send('POST'), patch: send('PATCH'), ...fakes, ...extras };
 }

@@ -1,8 +1,25 @@
 import { Pressable, View } from 'react-native';
-import { t, palette, shape, type, AppText } from '@ab/mobile-kit';
+import { t } from '../../lib/i18n/i18n';
+import { palette, shape, type } from '../../theme';
+import { AppText } from '../../ui/primitives/AppText';
 
-/** «إغلاق» at the top start of a full-screen viewer (photo, video), light on the black in either scheme. */
-export function ViewerClose({ onClose, label = t.common.close }: { onClose: () => void; label?: string }) {
+const BUTTON = {
+  minHeight: shape.control.touch,
+  minWidth: shape.control.touch,
+  justifyContent: 'center',
+  paddingHorizontal: 8,
+} as const;
+
+/**
+ * «إغلاق» at the top start of a full-screen viewer (photo, video), light on black in either scheme.
+ */
+export function ViewerClose({
+  onClose,
+  label = t.common.close,
+}: {
+  onClose: () => void;
+  label?: string;
+}) {
   return (
     <View style={{ flexDirection: 'row', paddingHorizontal: 8 }}>
       <Pressable
@@ -10,9 +27,13 @@ export function ViewerClose({ onClose, label = t.common.close }: { onClose: () =
         accessibilityLabel={label}
         onPress={onClose}
         hitSlop={8}
-        style={{ minHeight: shape.control.touch, minWidth: shape.control.touch, justifyContent: 'center', paddingHorizontal: 8 }}
+        style={BUTTON}
       >
-        <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.body, color: palette.dark.ink }}>{t.common.close}</AppText>
+        <AppText
+          style={{ fontFamily: type.ui[600], fontSize: type.size.body, color: palette.dark.ink }}
+        >
+          {t.common.close}
+        </AppText>
       </Pressable>
     </View>
   );

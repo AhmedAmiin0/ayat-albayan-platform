@@ -1,44 +1,22 @@
 import {
   CHANNEL_PAGE_SIZE,
-  CHANNEL_SENDER_ROLES,
-  type ChannelMessageView,
+  type ChannelClosedReason,
   type ChannelPage,
   type ChannelSenderRole,
   type TeacherChannelRow,
 } from '@ab/shared';
+import {
+  roleOf,
+  toMessageView,
+  type ViewContext,
+} from '@/modules/teaching/student-channels/views/message-view';
 import type { ChannelStudent } from './channel-people.repo';
 import type { ChannelMessageRow, ChannelSummaryRow } from './channel.repo';
 
-const roleOf = (r: string | null): ChannelSenderRole =>
-  CHANNEL_SENDER_ROLES.find((x) => x === r) ?? 'guardian';
-
-/**
- * Whitelist: the text, who (role and name), mine or not, when, edited / deleted. Never a profile
- * id.
- */
-export function toMessageView(
-  row: ChannelMessageRow,
-  ctx: { me: string; names: ReadonlyMap<string, string> },
-): ChannelMessageView {
-  const sender = row.sender_profile_id;
-  const deleted = Boolean(row.deleted_at);
-  return {
-    id: row.id,
-    body: deleted ? '' : row.body,
-    sender_role: roleOf(row.sender_role),
-    sender_name: sender ? (ctx.names.get(sender) ?? '') : '',
-    mine: sender !== null && sender === ctx.me,
-    created_at: row.created_at,
-    edited: !deleted && Boolean(row.edited_at),
-    deleted,
-  };
-}
-
 /** A page read newest first (one extra row = more to load), shown oldest first. */
-interface PageContext {
-  me: string;
-  names: ReadonlyMap<string, string>;
+interface PageContext extends ViewContext {
   readOnly: boolean;
+  closedReason: ChannelClosedReason | null;
   studentName: string;
   open: boolean;
   channelId: string;
@@ -53,6 +31,7 @@ export function toPage(rows: readonly ChannelMessageRow[], ctx: PageContext): Ch
     has_more: rows.length > CHANNEL_PAGE_SIZE,
     read_only: ctx.readOnly,
     open: ctx.open,
+    closed_reason: ctx.open ? null : ctx.closedReason,
     channel_id: ctx.channelId,
   };
 }

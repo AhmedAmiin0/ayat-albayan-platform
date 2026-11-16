@@ -1,6 +1,5 @@
 import { stripWaMarkup, type ThreadView } from '@ab/shared';
-import { t, AppText, type, useTheme } from '@ab/mobile-kit';
-import { DeliveryTicks } from '@/inbox/messages/components/DeliveryTicks';
+import { t, AppText, type, useTheme, DeliveryTicks } from '@ab/mobile-kit';
 import { threadPreview } from '@/inbox/messages/hooks/message-text';
 import { WaText } from './WaText';
 

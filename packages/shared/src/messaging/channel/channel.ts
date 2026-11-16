@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { channelAttachmentInputSchema } from './channel-media.js';
 
 // The student channel (docs/31 §2): an in-platform text chat between a student's family, the
 // student's current teacher(s) and the owning assistant (owner 2026-11-16 «yes it can write also»),
@@ -11,11 +12,28 @@ export const CHANNEL_BODY_MAX = 2000;
 /** One page of a thread (`?before=` pages back). */
 export const CHANNEL_PAGE_SIZE = 50;
 
-/** POST …/messages. */
-export const channelPostSchema = z.object({
-  body: z.string().trim().min(1).max(CHANNEL_BODY_MAX),
-});
+const text = z.string().trim().max(CHANNEL_BODY_MAX);
+
+/**
+ * POST …/messages: text, a file (with an optional caption) or both, maybe a reply. `client_id`
+ * (a uuid per send, sent by every new app) makes a resend return the stored message.
+ */
+export const channelPostSchema = z
+  .object({
+    body: text.default(''),
+    client_id: z.uuid().optional(),
+    reply_to_id: z.uuid().optional(),
+    attachment: channelAttachmentInputSchema.optional(),
+  })
+  .refine((p) => p.body !== '' || p.attachment !== undefined, {
+    message: 'empty_message',
+    path: ['body'],
+  });
 export type ChannelPost = z.output<typeof channelPostSchema>;
+
+/** PATCH …/messages/:id: a text message's new text (a file is never edited). */
+export const channelEditSchema = z.object({ body: text.min(1) });
+export type ChannelEdit = z.output<typeof channelEditSchema>;
 
 /** GET …/messages?before=<iso>. */
 export const channelPageQuerySchema = z.object({
@@ -26,52 +44,10 @@ export const channelPageQuerySchema = z.object({
 export const CHANNEL_SENDER_ROLES = ['teacher', 'guardian', 'student', 'sales'] as const;
 export type ChannelSenderRole = (typeof CHANNEL_SENDER_ROLES)[number];
 
-export interface ChannelMessageView {
-  id: string;
-  body: string;
-  sender_role: ChannelSenderRole;
-  /**
-   * The teacher's display name, the student's, the guardian's or the assistant's name; empty once
-   * the login is gone.
-   */
-  sender_name: string;
-  /** Written by the caller. */
-  mine: boolean;
-  created_at: string;
-  /**
-   * Changed by its sender after sending: «تم التعديل» (the earlier text is kept for audit, never
-   * shown).
-   */
-  edited: boolean;
-  /** Deleted for everyone: «تم حذف هذه الرسالة», body empty. */
-  deleted: boolean;
-}
-
 /** POST …/read: read up to the newest message shown (never later than now); now when absent. */
 export const channelReadSchema = z.object({
   at: z.iso.datetime({ offset: true }).optional(),
 });
-
-/** A thread page: oldest first within the page. */
-export interface ChannelPage {
-  /** Whose channel it is (the header names the student). */
-  student_name: string;
-  messages: ChannelMessageView[];
-  has_more: boolean;
-  /** A monitor's view: no composer, «للاطلاع فقط». */
-  read_only: boolean;
-  /**
-   * Subscribed AND a teacher assigned (channelOpen, owner 2026-10-29). Closed: a participant gets
-   * no
-   * messages and no composer, only «تُفتح المحادثة مع المعلم بعد الاشتراك»; a monitor still reads.
-   */
-  open: boolean;
-  /**
-   * The Realtime filter (channel_messages.channel_id); RLS decides what the socket tells each
-   * viewer.
-   */
-  channel_id: string;
-}
 
 /** POST …/messages or …/read on a closed channel (409). */
 export const CHANNEL_NOT_OPEN = 'channel_not_open';
@@ -79,21 +55,32 @@ export const CHANNEL_NOT_OPEN = 'channel_not_open';
 /** students.status before the subscription: the channel stays closed (never during the trial). */
 const BEFORE_SUBSCRIPTION: readonly string[] = ['new', 'trial', 'pending_subscription'];
 
+interface StudentGate {
+  status: string;
+  teacher_id: string | null;
+}
+
 /** Migration 971 channel_is_open: subscribed (past the trial) and students.teacher_id assigned. */
-export const channelOpen = (s: { status: string; teacher_id: string | null }): boolean =>
+export const channelOpen = (s: StudentGate): boolean =>
   s.teacher_id !== null && !BEFORE_SUBSCRIPTION.includes(s.status);
 
-/** GET /teachers/me/channels: one row per current student. */
-export interface TeacherChannelRow {
-  student_id: string;
-  student_name: string;
-  student_code: string;
-  last_message: Pick<ChannelMessageView, 'body' | 'sender_role' | 'created_at' | 'deleted'> | null;
-  /** Messages from the family (guardian, student) and the assistant after my last read. */
-  unread: number;
+/** Why a participant's channel is closed (null while open); the apps pick the closed line. */
+export const CHANNEL_CLOSED_REASONS = ['not_subscribed', 'no_teacher', 'family_chat_off'] as const;
+export type ChannelClosedReason = (typeof CHANNEL_CLOSED_REASONS)[number];
+
+/**
+ * The closed line's reason: before the subscription first, then no teacher. A family viewer
+ * while settings.family_chat_enabled is off: family_chat_off before anything else.
+ */
+export function channelClosedReason(
+  s: StudentGate,
+  viewer: { family: boolean; familyChatOn: boolean },
+): ChannelClosedReason | null {
+  if (viewer.family && !viewer.familyChatOn) return 'family_chat_off';
+  const reasons: [boolean, ChannelClosedReason][] = [
+    [BEFORE_SUBSCRIPTION.includes(s.status), 'not_subscribed'],
+    [s.teacher_id === null, 'no_teacher'],
+  ];
+  return reasons.find(([applies]) => applies)?.[1] ?? null;
 }
 
-/** The family's or the teacher's unread total (badges). */
-export interface ChannelUnread {
-  unread: number;
-}

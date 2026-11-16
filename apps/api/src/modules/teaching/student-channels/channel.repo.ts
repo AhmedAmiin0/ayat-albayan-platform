@@ -1,17 +1,19 @@
-import { CHANNEL_PAGE_SIZE, channelOpen, type ChannelSenderRole } from '@ab/shared';
+import {
+  CHANNEL_PAGE_SIZE,
+  channelClosedReason,
+  channelOpen,
+  type ChannelClosedReason,
+  type ChannelSenderRole,
+} from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
+import type { ChannelMessageRow, NewChannelMessage } from './send/channel-row';
 
-export interface ChannelMessageRow {
-  id: string;
-  body: string;
-  sender_profile_id: string | null;
-  sender_role: string;
-  created_at: string;
-  edited_at?: string | null;
-  deleted_at?: string | null;
-}
+export type { ChannelMessageRow } from './send/channel-row';
+
+/** A unique violation: here, the same client_id resent (channel_messages_client_idx). */
+const DUPLICATE = '23505';
 
 export interface ChannelSummaryRow {
   student_id: string;
@@ -23,7 +25,8 @@ export interface ChannelSummaryRow {
   last_deleted?: boolean | null;
 }
 
-export const COLUMNS = 'id, body, sender_profile_id, sender_role, created_at, edited_at, deleted_at' as const;
+export const COLUMNS =
+  'id, body, sender_profile_id, sender_role, created_at, edited_at, deleted_at, kind, attachment_path, attachment_mime, attachment_size, attachment_name, attachment_duration_ms, reply_to_id, quote_body, quote_kind, quote_sender_name, quote_sender_role, client_id' as const;
 
 /** Student channel reads and writes (migration 800; service role, ChannelAccess decides who may ask). */
 @Injectable()
@@ -52,24 +55,58 @@ export class ChannelRepo {
     return data;
   }
 
-  async insert(row: { channel_id: string; sender_profile_id: string; sender_role: ChannelSenderRole; body: string }): Promise<ChannelMessageRow> {
-    const { data, error } = await this.db.from('channel_messages').insert(row).select(COLUMNS).single();
+  /**
+   * The new row, `created`; a resend of the same client_id (insert refused by the unique index)
+   * answers the stored row, not created.
+   */
+  async insert(row: NewChannelMessage): Promise<{ row: ChannelMessageRow; created: boolean }> {
+    const insert = this.db.from('channel_messages').insert(row);
+    const { data, error } = await insert.select(COLUMNS).single();
+    if (!error) return { row: data, created: true };
+    const stored = error.code === DUPLICATE && row.client_id ? await this.sent(row) : null;
+    if (!stored) throw dbError(error);
+    return { row: stored, created: false };
+  }
+
+  private async sent(row: NewChannelMessage): Promise<ChannelMessageRow | null> {
+    const { data, error } = await this.db
+      .from('channel_messages')
+      .select(COLUMNS)
+      .eq('channel_id', row.channel_id)
+      .eq('sender_profile_id', row.sender_profile_id)
+      .eq('client_id', row.client_id ?? '')
+      .maybeSingle();
     if (error) throw dbError(error);
     return data;
   }
 
-  /** A participant read the thread up to now (never called for a monitor). */
+  /**
+   * A participant read the thread up to `at` (never called for a monitor). channel_mark_read
+   * never moves the mark back: a late, older request leaves it where it is.
+   */
   async setReadMark(input: { channelId: string; profileId: string; at: string }): Promise<void> {
-    const row = { channel_id: input.channelId, profile_id: input.profileId, last_read_at: input.at };
-    const { error } = await this.db.from('channel_reads').upsert(row, { onConflict: 'channel_id,profile_id' });
+    const args = { p_channel: input.channelId, p_profile: input.profileId, p_at: input.at };
+    const { error } = await this.db.rpc('channel_mark_read', args);
     if (error) throw dbError(error);
   }
 
-  /** channelOpen, the rule of channel_is_open (migration 971): subscribed (past the trial) and a teacher assigned. */
+  /** channelOpen, as channel_is_open (migration 971): subscribed (past the trial), a teacher assigned. */
   async isOpen(studentId: string): Promise<boolean> {
-    const { data, error } = await this.db.from('students').select('status, teacher_id').eq('id', studentId).maybeSingle();
+    const s = await this.gate(studentId);
+    return s !== null && channelOpen(s);
+  }
+
+  /** Why a participant finds the channel closed (channelClosedReason); null while open. */
+  async closedReason(studentId: string): Promise<ChannelClosedReason | null> {
+    const s = await this.gate(studentId);
+    return s ? channelClosedReason(s, { family: false, familyChatOn: true }) : 'not_subscribed';
+  }
+
+  private async gate(studentId: string) {
+    const read = this.db.from('students').select('status, teacher_id').eq('id', studentId);
+    const { data, error } = await read.maybeSingle();
     if (error) throw dbError(error);
-    return data !== null && channelOpen(data);
+    return data;
   }
 
   /** The student's current teachers (teachers.id), channel_teacher_ids. */

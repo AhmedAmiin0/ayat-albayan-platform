@@ -1,6 +1,21 @@
-import { atEnd, BARS, nextRate, rateLabel, stepTo, touchFraction, voiceClock, waveBars } from './voice-math';
+import {
+  atEnd,
+  BARS,
+  nextRate,
+  rateLabel,
+  stepTo,
+  touchFraction,
+  voiceClock,
+  waveBars,
+} from './voice-math';
 
-const time = (over: Partial<Parameters<typeof voiceClock>[0]> = {}) => ({ playing: false, currentTime: 0, duration: 65, didJustFinish: false, ...over });
+const time = (over: Partial<Parameters<typeof voiceClock>[0]> = {}) => ({
+  playing: false,
+  currentTime: 0,
+  duration: 65,
+  didJustFinish: false,
+  ...over,
+});
 
 test('the waveform: 28 bars, 0.25–1, the same for the same message id on every call', () => {
   const bars = waveBars('b1111111-1111-4111-8111-111111111111');
@@ -19,10 +34,14 @@ test('the speed chip cycles 1× → 1.5× → 2× → 1×', () => {
 test('a touch on the waveform counts from the reading start: the right edge in Arabic', () => {
   expect(touchFraction(50, 200, false)).toBe(0.25);
   expect(touchFraction(50, 200, true)).toBe(0.75);
-  expect([touchFraction(-5, 200, false), touchFraction(500, 200, false), touchFraction(10, 0, false)]).toEqual([0, 1, 0]);
+  expect([
+    touchFraction(-5, 200, false),
+    touchFraction(500, 200, false),
+    touchFraction(10, 0, false),
+  ]).toEqual([0, 1, 0]);
 });
 
-test('the screen reader\'s ±5 s stays inside the note', () => {
+test("the screen reader's ±5 s stays inside the note", () => {
   expect([stepTo(10, 65, 5), stepTo(2, 65, -5), stepTo(63, 65, 5)]).toEqual([15, 0, 65]);
 });
 
@@ -35,5 +54,9 @@ test('the time: the length when not playing, the position while playing or pause
 });
 
 test('at the end once it finished or reached its length', () => {
-  expect([atEnd(time({ didJustFinish: true })), atEnd(time({ currentTime: 65 })), atEnd(time({ currentTime: 10 }))]).toEqual([true, true, false]);
+  expect([
+    atEnd(time({ didJustFinish: true })),
+    atEnd(time({ currentTime: 65 })),
+    atEnd(time({ currentTime: 10 })),
+  ]).toEqual([true, true, false]);
 });

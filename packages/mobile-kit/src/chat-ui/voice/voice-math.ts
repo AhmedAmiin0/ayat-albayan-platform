@@ -1,11 +1,13 @@
-import { mediaTime } from '@/inbox/messages/hooks/media-time';
+import { mediaTime } from './media-time';
 
 /** Bars in a voice note's waveform, about WhatsApp's count at bubble width. */
 export const BARS = 28;
 
 /**
- * ponytail: NOT the real waveform (that needs the audio decoded, a native module): bar heights 0.25–1,
- * seeded from the message id (FNV-1a, then xorshift32), so a note looks the same on every render and run.
+ * ponytail: NOT the real waveform (that needs the audio decoded, a native module): bar heights
+ * 0.25–1,
+ * seeded from the message id (FNV-1a, then xorshift32), so a note looks the same on every render
+ * and run.
  */
 export function waveBars(seed: string, count: number = BARS): number[] {
   let h = 0x811c9dc5;
@@ -31,7 +33,10 @@ export function nextRate(rate: Rate): Rate {
 
 export const rateLabel = (rate: Rate): string => `${rate}×`;
 
-/** Where a touch `x` (from the left edge) falls, 0–1 from the reading start: in Arabic (RTL) the right edge. */
+/**
+ * Where a touch `x` (from the left edge) falls, 0–1 from the reading start: in Arabic (RTL) the
+ * right edge.
+ */
 export function touchFraction(x: number, width: number, rtl: boolean): number {
   if (!(width > 0)) return 0;
   const f = Math.min(1, Math.max(0, x / width));
@@ -52,9 +57,13 @@ interface VoiceTime {
 }
 
 /** At the end: the next «تشغيل» starts over. */
-export const atEnd = (s: VoiceTime): boolean => s.didJustFinish || (s.duration > 0 && s.currentTime >= s.duration);
+export const atEnd = (s: VoiceTime): boolean =>
+  s.didJustFinish || (s.duration > 0 && s.currentTime >= s.duration);
 
-/** The time beside the waveform: elapsed while playing or paused midway; else the length; empty until known. */
+/**
+ * The time beside the waveform: elapsed while playing or paused midway; else the length; empty
+ * until known.
+ */
 export function voiceClock(s: VoiceTime): string {
   if (!atEnd(s) && (s.playing || s.currentTime > 0)) return mediaTime(s.currentTime);
   return s.duration > 0 ? mediaTime(s.duration) : '';

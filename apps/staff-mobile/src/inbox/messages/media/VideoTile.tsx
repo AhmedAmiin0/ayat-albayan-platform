@@ -1,11 +1,19 @@
 import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { t, palette, shape, type, useTheme, AppText, pressScale } from '@ab/mobile-kit';
+import {
+  t,
+  palette,
+  shape,
+  type,
+  useTheme,
+  AppText,
+  pressScale,
+  PlayIcon,
+  Spinner,
+} from '@ab/mobile-kit';
 import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
 import { MediaNote, problemText, RetryLine } from '@/inbox/messages/photo/MediaNote';
-import { PlayIcon } from '@/inbox/shared/chat-icons';
-import { Spinner } from './Spinner';
 import { useFileOnTap } from './use-file-on-tap';
 import { VideoModal } from './VideoModal';
 

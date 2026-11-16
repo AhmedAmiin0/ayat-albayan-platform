@@ -1,8 +1,11 @@
 import { View } from 'react-native';
-import { shape, type, useTheme, AppText } from '@ab/mobile-kit';
+import { shape, type, useTheme } from '../../theme';
+import { AppText } from '../../ui/primitives/AppText';
 import { CHIP_BORDER, CHIP_MARGIN, CHIP_PAD } from './top-band';
 
-/** A day separator (owner 2026-10-27, as WhatsApp): a small centred chip over the day's first message. */
+/**
+ * A day separator (owner 2026-10-27, as WhatsApp): a small centred chip over the day's first row.
+ */
 export function DayChip({ label, testID }: { label: string; testID?: string }) {
   const { color } = useTheme();
   return (
@@ -21,7 +24,12 @@ export function DayChip({ label, testID }: { label: string; testID?: string }) {
       }}
     >
       <AppText
-        style={{ fontFamily: type.ui[600], fontSize: type.size['2xs'], lineHeight: type.lineHeight(type.size['2xs']), color: color.ink2 }}
+        style={{
+          fontFamily: type.ui[600],
+          fontSize: type.size['2xs'],
+          lineHeight: type.lineHeight(type.size['2xs']),
+          color: color.ink2,
+        }}
       >
         {label}
       </AppText>

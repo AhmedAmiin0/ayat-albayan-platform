@@ -8351,7 +8351,8 @@
       "teacher": "Teacher",
       "guardian": "Guardian",
       "student": "Student",
-      "sales": "Follow-up owner"
+      "sales": "Follow-up owner",
+      "unknown": "Chat member"
     },
     "listEmpty": "No current students yet",
     "listEmptyHint": "The chat of every student you teach now appears here.",
@@ -8364,6 +8365,50 @@
     "hide": "Hide the chat",
     "closed": "The chat with the teacher opens after the subscription",
     "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher.",
+    "closedReasons": {
+      "not_subscribed": "The chat with the teacher opens after the subscription",
+      "no_teacher": "The chat opens once the student has a teacher.",
+      "family_chat_off": "The chat with the teacher is not available right now."
+    },
+    "kinds": {
+      "text": "Message",
+      "photo": "Photo",
+      "pdf": "PDF file",
+      "voice": "Voice message"
+    },
+    "media": {
+      "attach": "Attach a file",
+      "photo": "Photo",
+      "pdf": "PDF file",
+      "record": "Record a voice message",
+      "recording": "Recording…",
+      "stop": "Stop recording",
+      "cancel": "Cancel",
+      "uploading": "Uploading the file…",
+      "open": "Open the file",
+      "play": "Play",
+      "pause": "Pause",
+      "tooLarge": "The file is larger than the limit ({n} MB).",
+      "badType": "This file type is not supported. Send a photo, a PDF or a voice message.",
+      "failed": "Couldn't upload the file. Try again."
+    },
+    "reply": {
+      "action": "Reply",
+      "replyingTo": "Replying to {name}",
+      "cancel": "Cancel the reply",
+      "deleted": "Deleted message"
+    },
+    "reads": {
+      "action": "Message info",
+      "title": "Who read the message",
+      "read": "Read",
+      "unread": "Not read yet",
+      "none": "Nobody yet",
+      "failed": "Couldn't load who read it."
+    },
+    "sent": "Sent",
+    "readByAll": "Read by everyone",
+    "pending": "Sending",
     "actions": {
       "menu": "Message options",
       "edit": "Edit",
@@ -8382,7 +8427,13 @@
         "edit_window_closed": "The 15-minute edit window has passed.",
         "delete_window_closed": "The 48-hour delete window has passed.",
         "not_your_message": "You can only edit or delete your own messages.",
-        "message_deleted": "This message was already deleted."
+        "message_deleted": "This message was already deleted.",
+        "channel_read_only": "You can only view this chat.",
+        "channel_not_open": "The chat is closed now, so messages cannot be edited or deleted.",
+        "family_chat_off": "The chat with the teacher is not available right now.",
+        "attachment_path": "Couldn't find the uploaded file. Send it again.",
+        "reply_not_found": "Couldn't find the message you are replying to.",
+        "not_a_text_message": "Only a message's text can be edited, not files."
       }
     }
   },

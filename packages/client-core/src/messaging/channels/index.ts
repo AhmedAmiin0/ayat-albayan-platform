@@ -9,6 +9,7 @@ export {
   channelMessagesPath,
   channelPresencePath,
   channelReadPath,
+  channelUploadPath,
   channelTimeText,
   olderCursor,
   portalUnreadPath,
@@ -30,6 +31,7 @@ export {
   channelBubbleActions,
   channelEditError,
   channelMessagePath,
+  channelReadsPath,
   threadHidePath,
 } from './channel-edits.js';
 export {

@@ -16,6 +16,9 @@ describe('MinIO applies the Supabase bucket limits (docs/45)', () => {
     ['wa-media', 15 * 1024 * 1024, 'video/mp4', true],
     ['recordings', 5e9, 'video/mp4', true],
     ['reports', 1000, '', false],
+    ['channel-media', 15 * 1024 * 1024, 'application/pdf', true],
+    ['channel-media', 1000, 'video/mp4', false],
+    ['channel-media', 1000, 'audio/webm', true],
   ] as const)('%s, %i bytes, %s → %s', (...row) => {
     const [bucket, size, contentType, ok] = row;
     expect(withinBucketRule(bucket, { size, contentType })).toBe(ok);

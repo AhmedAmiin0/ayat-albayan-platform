@@ -1,17 +1,8 @@
-import { Line } from './chat-icons';
-
-interface IconProps {
-  color: string;
-  size?: number;
-}
+import { type ChatIconProps as IconProps, IconLine as Line } from '@ab/mobile-kit';
 
 // The typing bar's own icons (owner 2026-10-27, as WhatsApp), drawn as chat-icons' Line. Never
 // mirrored (a microphone, a camera and a face read the same both ways); hidden from screen readers.
 
-/** «سجّل رسالة صوتية»: a microphone on its stand. */
-export const MicIcon = (p: IconProps) => (
-  <Line {...p} d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3ZM5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6" />
-);
 /** «الكاميرا»: a camera body with its lens. */
 export const CameraIcon = (p: IconProps) => (
   <Line {...p} d="M4 8h3l1.5-2.5h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1ZM12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" />

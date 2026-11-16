@@ -1,8 +1,8 @@
 import type { MessageView } from '@ab/shared';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t, AppText, type, useTheme } from '@ab/mobile-kit';
+import { t, AppText, type, useTheme, useSmallText } from '@ab/mobile-kit';
 import { clockAt } from '@/inbox/shared/format';
-import { MessageMeta, useSmall } from '@/inbox/messages/components/MessageMeta';
+import { MessageMeta } from '@/inbox/messages/components/MessageMeta';
 
 /**
  * A message hidden from the platform (owner 2026-10-30): a muted placeholder that says it is still
@@ -10,7 +10,7 @@ import { MessageMeta, useSmall } from '@/inbox/messages/components/MessageMeta';
  */
 export function HiddenBody({ message: m }: { message: MessageView }) {
   const { color } = useTheme();
-  const small = useSmall();
+  const small = useSmallText();
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const hidden = m.hidden;

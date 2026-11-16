@@ -8476,10 +8476,10 @@
   },
   "src/features/sales/sales/search.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/dot-notation": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/sales/sales/students/AllStudents.tsx": {
@@ -10856,29 +10856,7 @@
       "count": 1
     }
   },
-  "src/features/teaching/student-channel/ChannelThread.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 8
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
   "src/features/teaching/student-channel/MonitorChannel.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/student-channel/MonitorChannelButton.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -10907,14 +10885,6 @@
   "src/features/teaching/student-channel/edit/edit-api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/student-channel/edit/use-bubble-editing.ts": {
-    "react/purity": {
-      "count": 1
     }
   },
   "src/features/teaching/student-channel/use-channel-live.ts": {

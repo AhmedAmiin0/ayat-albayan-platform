@@ -5,7 +5,7 @@ import { MediaNote, problemText, RetryLine } from '@/inbox/messages/photo/MediaN
 import { ensureAudioMode } from './playback';
 import { useFileOnTap } from './use-file-on-tap';
 import { VoicePlayback } from './VoicePlayback';
-import { VoiceRow } from './VoiceRow';
+import { VoiceRow } from '@ab/mobile-kit';
 
 interface VoiceNoteProps {
   message: MessageView;

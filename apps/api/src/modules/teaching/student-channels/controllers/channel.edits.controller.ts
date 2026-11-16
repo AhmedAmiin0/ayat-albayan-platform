@@ -1,4 +1,4 @@
-import { channelPostSchema, type ChannelMessageView, type ChannelPost } from '@ab/shared';
+import { channelEditSchema, type ChannelEdit, type ChannelMessageView } from '@ab/shared';
 import { Body, Controller, Delete, Param, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -67,7 +67,7 @@ export class ChannelEditsController {
   @Permissions('self.sales')
   async salesEdit(
     @ZodParams(salesIds) p: SalesIds,
-    @ZodBody(channelPostSchema) body: ChannelPost,
+    @ZodBody(channelEditSchema) body: ChannelEdit,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelMessageView> {
     const actor = await this.access.owner(user, p.id);
@@ -92,4 +92,4 @@ export class ChannelEditsController {
   }
 }
 
-const textOf = (body: unknown): string => parseOrThrow(channelPostSchema, body).body;
+const textOf = (body: unknown): string => parseOrThrow(channelEditSchema, body).body;

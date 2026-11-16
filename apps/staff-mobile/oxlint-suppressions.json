@@ -2495,14 +2495,6 @@
       "count": 3
     }
   },
-  "src/inbox/composer/pill/RoundAction.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/inbox/composer/quote/QuoteActions.test.tsx": {
     "stylistic/max-len": {
       "count": 2
@@ -2977,22 +2969,6 @@
       "count": 4
     }
   },
-  "src/inbox/messages/components/DeliveryTicks.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/components/DeliveryTicks.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 9
-    }
-  },
   "src/inbox/messages/components/MessageBubble.side.en.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -3011,7 +2987,7 @@
       "count": 1
     },
     "no-nested-ternary": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 13
@@ -3107,37 +3083,8 @@
       "count": 6
     }
   },
-  "src/inbox/messages/components/MessageMeta.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 7
-    }
-  },
   "src/inbox/messages/components/QuoteStrip.test.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/components/QuoteStrip.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/components/SwipeReply.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/components/SwipeReply.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/no-restricted-syntax": {
       "count": 1
     }
   },
@@ -3160,14 +3107,6 @@
   },
   "src/inbox/messages/components/hide/use-hide-message.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/components/swipe-reply.helpers.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
       "count": 1
     }
   },
@@ -3194,11 +3133,6 @@
       "count": 2
     }
   },
-  "src/inbox/messages/days/DayChip.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/inbox/messages/days/day-label.ts": {
     "complexity": {
       "count": 1
@@ -3213,11 +3147,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/inbox/messages/days/top-band.ts": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/inbox/messages/days/use-day-band.ts": {
@@ -3255,11 +3184,6 @@
       "count": 1
     }
   },
-  "src/inbox/messages/hooks/bubble-side.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/inbox/messages/hooks/message-text.test.ts": {
     "stylistic/max-len": {
       "count": 4
@@ -3286,11 +3210,6 @@
   },
   "src/inbox/messages/hooks/quote-thumb.ts": {
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/hooks/swipe.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -3332,11 +3251,6 @@
       "count": 1
     }
   },
-  "src/inbox/messages/media/Spinner.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/inbox/messages/media/VideoModal.tsx": {
     "stylistic/max-len": {
       "count": 2
@@ -3356,14 +3270,6 @@
     },
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/inbox/messages/media/VoiceButton.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/inbox/messages/media/VoiceNote.test.tsx": {
@@ -3390,22 +3296,6 @@
       "count": 1
     }
   },
-  "src/inbox/messages/media/VoiceRow.tsx": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/inbox/messages/media/Waveform.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 4
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/inbox/messages/media/playback.test.ts": {
     "typescript/consistent-type-imports": {
       "count": 1
@@ -3427,16 +3317,6 @@
       "count": 1
     }
   },
-  "src/inbox/messages/media/voice-math.test.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/inbox/messages/media/voice-math.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    }
-  },
   "src/inbox/messages/media/voice-test-kit.tsx": {
     "stylistic/max-len": {
       "count": 4
@@ -3451,20 +3331,6 @@
   "src/inbox/messages/photo/MediaNote.tsx": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/inbox/messages/photo/PdfPage.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/inbox/messages/photo/PdfPreview.test.tsx": {
@@ -3487,19 +3353,6 @@
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
-    }
-  },
-  "src/inbox/messages/photo/PdfStrip.tsx": {
-    "stylistic/max-len": {
-      "count": 5
-    }
-  },
-  "src/inbox/messages/photo/PdfViewer.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 11
     }
   },
   "src/inbox/messages/photo/PhotoPreview.test.tsx": {
@@ -3526,16 +3379,6 @@
       "count": 1
     }
   },
-  "src/inbox/messages/photo/PhotoViewer.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/inbox/messages/photo/ViewerClose.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/inbox/messages/photo/media-problem.ts": {
     "complexity": {
       "count": 1
@@ -3553,28 +3396,6 @@
   "src/inbox/messages/photo/photo-test-kit.tsx": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/inbox/messages/photo/use-zoom.ts": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 7
-    },
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/photo/zoom.ts": {
-    "stylistic/max-len": {
-      "count": 6
     }
   },
   "src/inbox/messages/reactions/ReactionBar.tsx": {
@@ -4163,11 +3984,6 @@
     }
   },
   "src/inbox/screens/reply-forward.flow.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/inbox/shared/chat-icons.tsx": {
     "stylistic/max-len": {
       "count": 1
     }

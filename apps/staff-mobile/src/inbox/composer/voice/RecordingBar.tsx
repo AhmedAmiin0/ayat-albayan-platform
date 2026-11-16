@@ -10,8 +10,8 @@ import {
   IconButton,
   Ltr,
   useA11yPref,
+  mediaTime,
 } from '@ab/mobile-kit';
-import { mediaTime } from '@/inbox/messages/hooks/media-time';
 import { TrashIcon } from '@/inbox/shared/chat-icons';
 import { keptTake, meterLevel } from './voice-machine';
 import type { VoiceUi } from './use-voice';

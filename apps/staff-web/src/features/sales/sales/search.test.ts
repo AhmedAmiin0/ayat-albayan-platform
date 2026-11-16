@@ -22,6 +22,14 @@ describe('the view filters of «الطلاب» and «محفظتي»', () => {
     expect(parseStudentsSearch({ view: 'mine' })).toEqual({ view: 'mine' });
     expect(parseStudentsSearch({ view: 'all' })).toEqual({});
     expect(parseStudentsSearch({})).toEqual({});
+  });
+
+  it('?chat= opens a student\'s chat (a uuid only, beside the view)', () => {
+    const id = '0b6f3c1e-8a4d-4c2b-9e7f-1a2b3c4d5e6f';
+    expect(parseStudentsSearch({ chat: id })).toEqual({ chat: id });
+    expect(parseStudentsSearch({ view: 'mine', chat: id })).toEqual({ view: 'mine', chat: id });
+    expect(parseStudentsSearch({ chat: 'x' })).toEqual({});
+    expect(parseStudentsSearch({ chat: 5 })).toEqual({});
     expect(parseMoneySearch({ view: 'payments' })).toEqual({ view: 'payments' });
     expect(parseMoneySearch({ view: 'statements' })).toEqual({ view: 'statements' });
     expect(parseMoneySearch({ view: 'earnings' })).toEqual({});

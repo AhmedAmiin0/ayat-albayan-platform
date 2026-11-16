@@ -33,6 +33,13 @@ export function channelBubbleActions(input: {
   });
 }
 
+/** GET …/messages/:id/reads: who of the chat read this message («معلومات الرسالة»). */
+export const channelReadsPath = (input: {
+  audience: ChannelAudience;
+  studentId: string;
+  messageId: string;
+}): string => `${channelMessagePath(input)}/reads`;
+
 /** POST hides, DELETE shows again («حذف من المنصة» / «إظهار» on a WhatsApp bubble). */
 export const threadHidePath = (phone: string, messageId: string): string =>
   `/threads/${encodeURIComponent(phone)}/messages/${messageId}/hide`;
@@ -43,6 +50,10 @@ export const CHANNEL_EDIT_ERRORS = [
   'delete_window_closed',
   'not_your_message',
   'message_deleted',
+  'channel_read_only',
+  'channel_not_open',
+  'family_chat_off',
+  'not_a_text_message',
 ] as const;
 export type ChannelEditError = (typeof CHANNEL_EDIT_ERRORS)[number];
 

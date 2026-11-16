@@ -37,7 +37,7 @@ export class SalesChannelController {
     @ZodBody(channelPostSchema) body: ChannelPost,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelMessageView> {
-    return this.channels.post(await this.access.owner(user, studentId), body.body);
+    return this.channels.post(await this.access.owner(user, studentId), body);
   }
 
   @Post('read')

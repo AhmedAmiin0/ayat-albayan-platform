@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { SendIcon } from './chat-icons';
+import { SendIcon } from './chat-glyphs';
 
 // English (LTR): «أرسل» sits on the right, the plane points right as drawn.
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -11,5 +11,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 
 test('SendIcon is not mirrored in LTR', async () => {
   await render(<SendIcon color="#000" />);
-  expect(StyleSheet.flatten(screen.getByTestId('send-icon').props.style).transform).toEqual([{ scaleX: 1 }]);
+  expect(StyleSheet.flatten(screen.getByTestId('send-icon').props.style).transform).toEqual([
+    { scaleX: 1 },
+  ]);
 });

@@ -1,7 +1,8 @@
 import { MESSAGE_STATUSES, type MessageStatus } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t, palette } from '@ab/mobile-kit';
+import { t } from '../../lib/i18n/i18n';
+import { palette } from '../../theme';
 import { DeliveryTicks } from './DeliveryTicks';
 
 const KIND: Record<MessageStatus, string> = {
@@ -59,14 +60,20 @@ test('failed says «لم تُرسل» beside its «!»; sent by hand «يدوي�
 test('in a list row: hidden from the reader (the row says the word), no failed word (its chip does)', async () => {
   await render(<DeliveryTicks status="failed" inList />);
   expect(screen.queryByLabelText(word.failed)).toBeNull();
-  expect(screen.getByTestId('ticks-failed', hidden).props.importantForAccessibility).toBe('no-hide-descendants');
+  expect(screen.getByTestId('ticks-failed', hidden).props.importantForAccessibility).toBe(
+    'no-hide-descendants',
+  );
   expect(screen.queryByText(word.failed, hidden)).toBeNull();
-  expect(screen.getByTestId('ticks-failed', hidden).props.onStartShouldSetResponder).toBeUndefined();
+  expect(
+    screen.getByTestId('ticks-failed', hidden).props.onStartShouldSetResponder,
+  ).toBeUndefined();
 });
 
 test('«يدويًا» is text: drawn in the muted text ink, not the tick grey', async () => {
   await render(<DeliveryTicks status="sent_manually" />);
-  expect(StyleSheet.flatten(screen.getByText(t.messages.manualTick).props.style).color).toBe(palette.light.ink3);
+  expect(StyleSheet.flatten(screen.getByText(t.messages.manualTick).props.style).color).toBe(
+    palette.light.ink3,
+  );
 });
 
 test('the admin’s row that did not go out: a button that says why, and a tap opens its sheet', async () => {

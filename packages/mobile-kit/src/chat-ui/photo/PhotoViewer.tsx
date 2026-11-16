@@ -1,22 +1,23 @@
-import type { MessageView } from '@ab/shared';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Animated, Image, Modal, StatusBar, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { shape, useTheme, useA11yPref } from '@ab/mobile-kit';
-import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
+import { useA11yPref } from '../../ui/primitives/use-a11y-pref';
 import { useZoom } from './use-zoom';
 import { ViewerClose } from './ViewerClose';
+import { ViewerFooter } from './ViewerFooter';
 
 interface PhotoViewerProps {
   uri: string;
   /** Its kind and caption, for the screen reader. */
   label: string;
-  message: MessageView;
-  phone: string;
+  /** Under the photo on a raised pill (the chat's «تنزيل»). */
+  footer?: ReactNode;
   onClose: () => void;
 }
 
-/** The photo at full size, pinch to zoom 1×–4×, pan when zoomed, a double tap 1× ⇄ 2.5× (use-zoom). */
+/**
+ * The photo at full size, pinch to zoom 1×–4×, pan when zoomed, a double tap 1× ⇄ 2.5× (use-zoom).
+ */
 function ZoomPhoto({ uri, label }: { uri: string; label: string }) {
   const window = useWindowDimensions();
   // The pan limit is the photo's area (under «إغلاق», above «تنزيل»), measured once laid out.
@@ -25,7 +26,9 @@ function ZoomPhoto({ uri, label }: { uri: string; label: string }) {
   return (
     <View
       style={{ flex: 1, overflow: 'hidden' }}
-      onLayout={(e) => setSize({ width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height })}
+      onLayout={(e) =>
+        setSize({ width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height })
+      }
       {...zoom.handlers}
     >
       <Animated.View style={[{ flex: 1 }, zoom.style]}>
@@ -47,19 +50,20 @@ function ZoomPhoto({ uri, label }: { uri: string; label: string }) {
  * A chat photo full screen (owner 2026-10-26), RN core only (no native module: the APK updates by
  * OTA): black, the photo uncut, «إغلاق» at the top start, Android's back closes it, «تنزيل» below.
  */
-export function PhotoViewer({ uri, label, message, phone, onClose }: PhotoViewerProps) {
-  const { color } = useTheme();
+export function PhotoViewer({ uri, label, footer, onClose }: PhotoViewerProps) {
   return (
-    <Modal testID="photo-viewer" visible animationType="fade" statusBarTranslucent onRequestClose={onClose}>
+    <Modal
+      testID="photo-viewer"
+      visible
+      animationType="fade"
+      statusBarTranslucent
+      onRequestClose={onClose}
+    >
       <StatusBar barStyle="light-content" />
       <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: 'black' }}>
         <ViewerClose onClose={onClose} />
         <ZoomPhoto uri={uri} label={label} />
-        <View style={{ alignItems: 'center', paddingVertical: 8 }}>
-          <View style={{ paddingHorizontal: 16, borderRadius: shape.radius.lg, backgroundColor: color.raised }}>
-            <DownloadLink message={message} phone={phone} />
-          </View>
-        </View>
+        <ViewerFooter>{footer}</ViewerFooter>
       </SafeAreaView>
     </Modal>
   );

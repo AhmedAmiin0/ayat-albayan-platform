@@ -4,6 +4,7 @@ import type { ChannelMessageView } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { ChannelBubble } from '@/features/teaching/student-channel/ChannelBubble';
+import { channelMessage } from '@/features/teaching/student-channel/channel.fixtures';
 
 const MIN = 60_000;
 
@@ -11,19 +12,21 @@ const MIN = 60_000;
 export const msg = (
   minutesAgo: number,
   over: Partial<ChannelMessageView> = {},
-): ChannelMessageView => ({
-  id: 'm1',
-  body: 'See you tomorrow',
-  sender_role: 'teacher',
-  sender_name: 'Abrar',
-  mine: true,
-  created_at: new Date(Date.now() - minutesAgo * MIN).toISOString(),
-  edited: false,
-  deleted: false,
-  ...over,
-});
+): ChannelMessageView =>
+  channelMessage({
+    body: 'See you tomorrow',
+    sender_role: 'teacher',
+    sender_name: 'Abrar',
+    mine: true,
+    created_at: new Date(Date.now() - minutesAgo * MIN).toISOString(),
+    ...over,
+  });
 
-export function showBubble(message: ChannelMessageView, audience: ChannelAudience = 'teacher') {
+export function showBubble(
+  message: ChannelMessageView,
+  audience: ChannelAudience = 'teacher',
+  mode: 'write' | 'read' = audience === 'admin' ? 'read' : 'write',
+) {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
@@ -35,6 +38,7 @@ export function showBubble(message: ChannelMessageView, audience: ChannelAudienc
           tz="Asia/Riyadh"
           refs={{ audience, studentId: 's1' }}
           now={new Date()}
+          mode={mode}
         />
       </ol>
     </QueryClientProvider>,

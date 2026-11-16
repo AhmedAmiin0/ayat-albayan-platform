@@ -1,74 +1,95 @@
 import { useLayoutEffect, useState } from 'react';
-import { Animated, type GestureResponderHandlers, PanResponder } from 'react-native';
-import { clampPan, distance, isDoubleTap, isTap, pinchScale, type Point, toggleScale } from './zoom';
-
-interface ZoomProps {
-  size: { width: number; height: number };
-  reduceMotion: boolean;
-}
-
-interface Frame {
-  scale: number;
-  offset: Point;
-}
+import {
+  type Animated,
+  type GestureResponderEvent,
+  type GestureResponderHandlers,
+  PanResponder,
+  type PanResponderGestureState,
+} from 'react-native';
+import {
+  clampPan,
+  distance,
+  isDoubleTap,
+  isTap,
+  pinchScale,
+  type Point,
+  toggleScale,
+} from './zoom';
+import { createZoomView, ORIGIN, type ZoomProps, type ZoomView } from './zoom-view';
 
 interface Zoom {
   handlers: GestureResponderHandlers;
   /** For the Animated.View around the photo: pan first, so the offset is in screen points. */
-  style: { transform: [{ translateX: Animated.Value }, { translateY: Animated.Value }, { scale: Animated.Value }] };
+  style: {
+    transform: [
+      { translateX: Animated.Value },
+      { translateY: Animated.Value },
+      { scale: Animated.Value },
+    ];
+  };
 }
 
-const ORIGIN: Point = { x: 0, y: 0 };
+interface Gesture {
+  panStart: Point;
+  lastTap: number;
+  pinch: null | { startScale: number; startDistance: number };
+}
 
-/** The responder and its values, made once; `update` hands it the latest props (the window may rotate). */
+/** Two fingers: scale by how far they spread from where the pinch began. */
+function pinch(view: ZoomView, g: Gesture, p: { touches: Point[]; props: ZoomProps }) {
+  const [a, b] = p.touches;
+  if (!a || !b) return false;
+  const d = distance(a, b);
+  g.pinch ??= { startScale: view.frame.scale, startDistance: d };
+  const next = pinchScale({ ...g.pinch, distance: d });
+  const offset = clampPan({ offset: view.frame.offset, scale: next, size: p.props.size });
+  view.apply({ scale: next, offset }, false);
+  return true;
+}
+
+/** One finger on a zoomed photo: pan, only as far as the photo reaches. */
+function pan(view: ZoomView, g: Gesture, p: { move: PanResponderGestureState; props: ZoomProps }) {
+  if (g.pinch || view.frame.scale <= 1) return;
+  const at = { x: g.panStart.x + p.move.dx, y: g.panStart.y + p.move.dy };
+  const offset = clampPan({ offset: at, scale: view.frame.scale, size: p.props.size });
+  view.apply({ scale: view.frame.scale, offset }, false);
+}
+
+/** A single tap is remembered for the next one; a drag, a pinch or a double tap starts afresh. */
+function release(view: ZoomView, g: Gesture, move: PanResponderGestureState) {
+  const tap = g.pinch === null && isTap(move.dx, move.dy);
+  g.pinch = null;
+  const now = Date.now();
+  const double = tap && isDoubleTap(g.lastTap, now);
+  g.lastTap = tap && !double ? now : 0;
+  if (double) view.apply({ scale: toggleScale(view.frame.scale), offset: ORIGIN }, true);
+}
+
+const touchesOf = (e: GestureResponderEvent): Point[] =>
+  e.nativeEvent.touches.map((t) => ({ x: t.pageX, y: t.pageY }));
+
+/** The responder and its values, made once; `update` hands it the latest props (it may rotate). */
 function createZoom(initial: ZoomProps): { zoom: Zoom; update: (p: ZoomProps) => void } {
   let props = initial;
-  const scale = new Animated.Value(1);
-  const x = new Animated.Value(0);
-  const y = new Animated.Value(0);
-  const s = { view: { scale: 1, offset: ORIGIN } as Frame, panStart: ORIGIN, lastTap: 0, pinch: null as null | { startScale: number; startDistance: number } };
-  const apply = (view: Frame, animate: boolean) => {
-    s.view = view;
-    if (!animate || props.reduceMotion) {
-      scale.setValue(view.scale);
-      x.setValue(view.offset.x);
-      y.setValue(view.offset.y);
-      return;
-    }
-    const to = (value: Animated.Value, toValue: number) => Animated.timing(value, { toValue, duration: 180, useNativeDriver: true });
-    Animated.parallel([to(scale, view.scale), to(x, view.offset.x), to(y, view.offset.y)]).start();
-  };
+  const view = createZoomView(() => props);
+  const g: Gesture = { panStart: ORIGIN, lastTap: 0, pinch: null };
   const responder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onMoveShouldSetPanResponder: () => true,
     onPanResponderGrant: () => {
-      s.panStart = s.view.offset;
-      s.pinch = null;
+      g.panStart = view.frame.offset;
+      g.pinch = null;
     },
-    onPanResponderMove: (e, g) => {
-      const size = props.size;
-      const [a, b] = e.nativeEvent.touches;
-      if (a && b) {
-        const d = distance({ x: a.pageX, y: a.pageY }, { x: b.pageX, y: b.pageY });
-        s.pinch ??= { startScale: s.view.scale, startDistance: d };
-        const next = pinchScale({ ...s.pinch, distance: d });
-        return apply({ scale: next, offset: clampPan({ offset: s.view.offset, scale: next, size }) }, false);
-      }
-      if (s.pinch || s.view.scale <= 1) return;
-      const offset = clampPan({ offset: { x: s.panStart.x + g.dx, y: s.panStart.y + g.dy }, scale: s.view.scale, size });
-      apply({ scale: s.view.scale, offset }, false);
+    onPanResponderMove: (e, move) => {
+      if (pinch(view, g, { touches: touchesOf(e), props })) return;
+      pan(view, g, { move, props });
     },
-    onPanResponderRelease: (_e, g) => {
-      const pinched = s.pinch !== null;
-      s.pinch = null;
-      const now = Date.now();
-      const double = !pinched && isTap(g.dx, g.dy) && isDoubleTap(s.lastTap, now);
-      // A single tap is remembered for the next one; a drag, a pinch or a double tap starts afresh.
-      s.lastTap = !pinched && isTap(g.dx, g.dy) && !double ? now : 0;
-      if (double) apply({ scale: toggleScale(s.view.scale), offset: ORIGIN }, true);
-    },
+    onPanResponderRelease: (_e, move) => release(view, g, move),
   });
-  const zoom: Zoom = { handlers: responder.panHandlers, style: { transform: [{ translateX: x }, { translateY: y }, { scale }] } };
+  const style: Zoom['style'] = {
+    transform: [{ translateX: view.x }, { translateY: view.y }, { scale: view.scale }],
+  };
+  const zoom: Zoom = { handlers: responder.panHandlers, style };
   return {
     zoom,
     update: (p) => {

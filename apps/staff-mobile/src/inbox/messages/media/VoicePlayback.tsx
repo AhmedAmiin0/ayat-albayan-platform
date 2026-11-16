@@ -1,9 +1,16 @@
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { mediaProgress, mediaTime } from '@/inbox/messages/hooks/media-time';
 import { claimPlayback, releasePlayback } from './playback';
-import { atEnd, nextRate, type Rate, stepTo, voiceClock } from './voice-math';
-import { VoiceRow } from './VoiceRow';
+import {
+  mediaProgress,
+  mediaTime,
+  atEnd,
+  nextRate,
+  type Rate,
+  stepTo,
+  voiceClock,
+  VoiceRow,
+} from '@ab/mobile-kit';
 
 interface VoicePlaybackProps {
   id: string;

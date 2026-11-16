@@ -1,17 +1,8 @@
-import { I18nManager, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import { type ChatIconProps as IconProps, hiddenIcon as hidden, IconLine as Line } from '@ab/mobile-kit';
 
-interface IconProps {
-  color: string;
-  size?: number;
-}
-
-// Line icons for the chat's icon buttons (24px grid, 1.75 stroke, as the tab icons). Decorative:
-// each IconButton names its action. Hidden from screen readers here as Chevron is.
-const hidden = {
-  accessibilityElementsHidden: true,
-  importantForAccessibility: 'no-hide-descendants',
-} as const;
+// Line icons for the chat's icon buttons (the kit's IconLine: 24px grid, 1.75 stroke). Decorative:
+// each IconButton names its action; the chat's shared glyphs (play, reply, send…) are the kit's.
 
 /** «بحث» inside the chat: a magnifier. */
 export const SearchIcon = (p: IconProps) => <Line {...p} d="M16.5 10.5a6 6 0 1 1-12 0 6 6 0 0 1 12 0ZM15 15l5 5" />;
@@ -36,40 +27,6 @@ export function TemplateIcon({ color, size = 22 }: IconProps) {
   );
 }
 
-/**
- * «أرسل»: a paper plane pointing away from the box, toward the inline-end where the round button
- * sits; mirrored in Arabic (owner 2026-10-27: the bar follows the phone's direction, as WhatsApp).
- */
-export function SendIcon({ color, size = 20 }: IconProps) {
-  return (
-    <View testID="send-icon" style={{ transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }] }}>
-      <Svg
-        {...hidden}
-        viewBox="0 0 24 24"
-        width={size}
-        height={size}
-        fill="none"
-        stroke={color}
-        strokeWidth={1.9}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <Path d="M4 12 3 4l18 8-18 8 1-8Zm0 0h8" />
-      </Svg>
-    </View>
-  );
-}
-
-/** One stroked path on the 24 grid; composer-icons draws its own with it. */
-export function Line({ color, size = 22, d }: IconProps & { d: string }) {
-  return (
-    <Svg {...hidden} viewBox="0 0 24 24" width={size} height={size} fill="none" stroke={color}
-      strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-      <Path d={d} />
-    </Svg>
-  );
-}
-
 /** «أرفق صورة أو ملف PDF»: a paperclip. */
 export const AttachIcon = (p: IconProps) => (
   <Line {...p} d="m20 11.5-7.8 7.8a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4L15 6.9" />
@@ -89,10 +46,6 @@ export const TrashIcon = (p: IconProps) => <Line {...p} d="M4 7h16M10 11v6M14 11
 /** «إلى الأعلى» / «إلى الأسفل»: a chevron up; flipped for down. */
 export const UpIcon = (p: IconProps) => <Line {...p} d="m6 15 6-6 6 6" />;
 export const DownIcon = (p: IconProps) => <Line {...p} d="m6 9 6 6 6-6" />;
-/** «تشغيل»: a triangle pointing right in both directions (a media control, never mirrored). */
-export const PlayIcon = (p: IconProps) => <Line {...p} d="M7 4.5v15l12-7.5-12-7.5Z" />;
-/** «إيقاف مؤقت»: two bars. */
-export const PauseIcon = (p: IconProps) => <Line {...p} d="M8 5v14M16 5v14" />;
 /** «محادثة جديدة»: a speech bubble with a plus (start a chat by number). */
 export const ComposeIcon = (p: IconProps) => (
   <Line {...p} d="M20 11.5a7.5 7.5 0 0 1-11 6.6L4 19.5l1.4-4.6A7.5 7.5 0 1 1 20 11.5ZM12.5 8.5v6M9.5 11.5h6" />
@@ -101,17 +54,8 @@ export const ComposeIcon = (p: IconProps) => (
 export const CopyIcon = (p: IconProps) => <Line {...p} d="M9 9h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10a1 1 0 0 1 1-1ZM16 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" />;
 /** «خيارات المحادثة»: three dots, upright (the header's one overflow, review 2026-10-29 #13). */
 export const MoreIcon = (p: IconProps) => <Line {...p} d="M12 5h.01M12 12h.01M12 19h.01" />;
-/** «إلغاء الرد»: a cross. */
-export const CloseIcon = (p: IconProps) => <Line {...p} d="M6 6l12 12M18 6 6 18" />;
 /** A chat picked for «إعادة توجيه». */
 export const CheckIcon = (p: IconProps) => <Line {...p} d="m5 12.5 4.5 4.5L19 7" />;
-/** «رد», revealed behind a bubble as it is swiped: a curved arrow back, mirrored in RTL (as on the web). */
-export const ReplyIcon = (p: IconProps) => (
-  <View style={{ transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }] }}>
-    <Line {...p} d="M10 7 4 12l6 5M4 12h10a6 6 0 0 1 6 6" />
-  </View>
-);
-
 /** «تحقق من التسجيل»: a person with a check mark (is this number already a student?). */
 export function CheckPersonIcon({ color, size = 22 }: IconProps) {
   return (
