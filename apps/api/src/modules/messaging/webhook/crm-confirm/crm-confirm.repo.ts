@@ -22,7 +22,7 @@ export interface ConfirmWrite {
 }
 
 /** Created in the span, at most `limit` (the newest first). */
-export interface UncertainSpan {
+interface UncertainSpan {
   since: Date;
   until: Date;
   limit: number;

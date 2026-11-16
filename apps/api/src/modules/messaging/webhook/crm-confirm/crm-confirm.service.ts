@@ -22,7 +22,7 @@ export interface Pending {
 type Matcher = (item: CrmMessage, phone: string | null | undefined) => MatchResult;
 
 /** One row and the CRM messages it may be (one conversation, or every one of its contact). */
-export interface RowInput {
+interface RowInput {
   row: UncertainRow;
   items: readonly CrmMessage[];
   phone: string | null | undefined;
