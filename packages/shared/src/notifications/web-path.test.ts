@@ -48,9 +48,10 @@ describe('webNotificationPath (R-NOT-01)', () => {
     expect(webNotificationPath({ kind: 'channel_message', studentId: id }, 'assistant')).toBe('/assistant');
   });
 
-  it('channel_message for the owning assistant (owner 2026-11-16): «طلابي», each row opens its chat', () => {
+  it('channel_message for the owning assistant (owner 2026-11-16): «طلابي» with that chat open', () => {
     const data = { kind: 'channel_message', studentId: STUDENT };
-    expect(webNotificationPath(data, 'sales')).toBe('/sales/students?view=mine');
+    expect(webNotificationPath(data, 'sales')).toBe(`/sales/students?view=mine&chat=${STUDENT}`);
+    expect(webNotificationPath({ kind: 'channel_message' }, 'sales')).toBe('/sales/students?view=mine');
     expect(webNotificationPath(data, 'guardian')).toBe('/portal');
   });
 

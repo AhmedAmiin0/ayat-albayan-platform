@@ -50,7 +50,7 @@ const MEETINGS: Record<Area, string> = {
  */
 const CHANNEL: Record<Area, (studentId: string | null) => string> = {
   teacher: (id) => (id ? `/teacher/messages?student=${id}` : '/teacher/messages'),
-  sales: () => '/sales/students?view=mine',
+  sales: (id) => (id ? `/sales/students?view=mine&chat=${id}` : '/sales/students?view=mine'),
   admin: () => HOME_BY_ROLE.admin,
   assistant: () => HOME_BY_ROLE.assistant,
 };
