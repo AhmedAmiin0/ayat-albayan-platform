@@ -17,6 +17,12 @@ async function signIn(w: World, phone: string) {
 const failure = (p: Promise<unknown>) => p.then(() => 'signed in', (e: unknown) => errorCode(e));
 const codeLogins = (w: World) => w.auth.users.filter((u) => u.email.endsWith('@family.invalid'));
 
+/** g1's second number, or s1's own one, is now this number instead (one per family / student). */
+function numberIs(w: World, phone: string, studentId: string | null) {
+  w.subjects.numbers = w.subjects.numbers.filter((n) => n.studentId !== studentId);
+  w.subjects.numbers.push({ phone, guardianId: 'g1', studentId });
+}
+
 /** s1 already has a login of its own (made by its first password, or by staff). */
 function studentLogin(w: World, login: { role: 'student' | 'guardian'; disabled: boolean }) {
   w.subjects.profiles.push({ id: 'p-s1', phone: null, ...login });
@@ -40,9 +46,28 @@ describe("a family's second number", () => {
 
   it("an admin's number is refused after a right code, and nothing is made", async () => {
     const w = signInWorld();
-    w.subjects.numbers.push({ phone: PHONES.admin, guardianId: 'g1', studentId: null });
+    numberIs(w, PHONES.admin, null);
     expect(await failure(signIn(w, PHONES.admin))).toBe('phone_belongs_to_staff');
     expect(codeLogins(w)).toEqual([]);
+  });
+
+  it('a family that already has a login, reached through a staff number: 409, no session', async () => {
+    const w = signInWorld();
+    await signIn(w, PHONES.guardian);
+    numberIs(w, PHONES.admin, null);
+    expect(await failure(signIn(w, PHONES.admin))).toBe('phone_belongs_to_staff');
+    expect(w.auth.links).toHaveLength(1);
+  });
+
+  it('a code opens only with the number it was sent to (one subject, two numbers)', async () => {
+    const w = signInWorld();
+    await w.family.request({ phone: PHONES.second }, IP);
+    await w.kit.idle();
+    const code = w.send.lastTo(PHONES.second);
+    const typedMain = w.family.verify({ phone: PHONES.guardian, code }, IP);
+    expect(await failure(typedMain)).toBe('invalid_code');
+    const session = await w.family.verify({ phone: PHONES.second, code }, IP);
+    expect(session.token_hash).toBe('hash-of-g-g1@family.invalid');
   });
 });
 
@@ -80,10 +105,18 @@ describe("a student's own number", () => {
     expect(await failure(signIn(w, PHONES.student))).toBe('account_disabled');
   });
 
-  it("a teacher's own login number does not block a student", async () => {
+  it("a teacher login holding the child's number does not block the child", async () => {
     const w = signInWorld();
-    w.subjects.numbers.push({ phone: PHONES.teacher, guardianId: 'g1', studentId: 's1' });
-    expect(await failure(signIn(w, PHONES.teacher))).toBe('signed in');
+    const teacher = w.subjects.profiles.find((p) => p.id === 'p-teacher');
+    if (teacher) teacher.phone = PHONES.student;
+    expect(await failure(signIn(w, PHONES.student))).toBe('signed in');
+  });
+
+  it("an admin's number as the child's own: 409 after a right code, no student login", async () => {
+    const w = signInWorld();
+    numberIs(w, PHONES.admin, 's1');
+    expect(await failure(signIn(w, PHONES.admin))).toBe('phone_belongs_to_staff');
+    expect(w.auth.users.some((u) => u.email === 's-s1@family.invalid')).toBe(false);
   });
 
   it('a student sign-in code never sets a password', async () => {

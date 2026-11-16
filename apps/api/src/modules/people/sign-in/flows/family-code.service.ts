@@ -44,13 +44,14 @@ export class FamilyCodeService {
 
   /**
    * 401 invalid_code (one message for every failure), 409 phone_belongs_to_staff, 403
-   * account_disabled, 503 codes_unavailable.
+   * account_disabled, 503 codes_unavailable. A code opens only with the number it was sent to
+   * (the family's numbers share one subject).
    */
   async verify(body: CodeVerify, ip: string): Promise<CodeSession> {
     await this.kit.guard('check', { ip, identifier: body.phone });
     if (!(await this.available())) throw codesUnavailable();
     const login = await this.lookup(body.phone);
-    const check = { purposes: ['sign_in'] as const, code: body.code };
+    const check = { purposes: ['sign_in'] as const, code: body.code, phone: login?.phone };
     if (!login || !(await this.kit.check({ subject: subjectOf(login), ...check }))) {
       throw invalidCode();
     }

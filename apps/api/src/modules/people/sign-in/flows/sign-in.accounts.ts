@@ -56,7 +56,7 @@ export class SignInAccounts {
     }
     const userId =
       login.kind === 'student'
-        ? await this.students.forCode(login.rec)
+        ? await this.students.forCode(login)
         : await this.provision.guardian(login.rec);
     return this.sessionOf(userId);
   }
