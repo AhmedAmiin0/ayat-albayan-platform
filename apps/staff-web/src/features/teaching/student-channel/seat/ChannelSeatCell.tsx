@@ -17,7 +17,7 @@ interface SeatView extends SeatRow {
 
 const S = t.studentChannel.seat;
 
-/** «يتابعها {name}»: who follows the chat now. */
+/** «في عهدة {name}»: who follows the chat now (gender-neutral MSA). */
 const heldBy = (name: string) => (
   <span className="text-sm text-ink-3">{S.heldBy.replace('{name}', name)}</span>
 );
