@@ -5,8 +5,11 @@ import { apiErrorCode, type ApiClient } from '../../core/http/index.js';
 // chating channel but only 1»; «who brought the student have the priority»), the same for web and
 // mobile: plain TanStack Query options (no React here); each app spreads them into its hooks.
 
-/** What an assistant sees for one student: hers (the chat opens), hers to take, another's. */
-export type SeatState = 'mine' | 'take' | 'held';
+/**
+ * What an assistant sees for one student: hers (the chat opens), free to take, another
+ * assistant's that she may take over (she brought the student), another's.
+ */
+export type SeatState = 'mine' | 'take' | 'takeover' | 'held';
 
 /** Why a take failed: another assistant got there first (409), or anything else. */
 export type SeatError = 'taken' | 'failed';
@@ -24,10 +27,13 @@ const seatPath = (studentId: string): string =>
 
 const parse = (r: unknown): ChannelSeat => channelSeatSchema.parse(r);
 
-/** Mine → the chat; free, a former assistant's or my own student's → take it; else whose it is. */
+/** A former assistant's seat reads as free (holder null), so a holder here is a colleague. */
+const takeState = (seat: ChannelSeat): SeatState => (seat.holder ? 'takeover' : 'take');
+
+/** Mine → the chat; free → take it; my own student's, held → take it over; else whose it is. */
 export function seatState(seat: ChannelSeat): SeatState {
   if (seat.mine) return 'mine';
-  return seat.canTake ? 'take' : 'held';
+  return seat.canTake ? takeState(seat) : 'held';
 }
 
 export const seatError = (e: unknown): SeatError =>

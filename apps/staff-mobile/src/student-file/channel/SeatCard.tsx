@@ -24,27 +24,38 @@ const ERRORS: Readonly<Record<SeatError, string>> = {
   failed: t.studentChannel.actions.failed,
 };
 
-/** Free, a former assistant's or my own student's → «تولَّ المحادثة»; else who follows it. */
+const holderOf = (data: ChannelSeat): string => data.holder?.name ?? '';
+
+/** Why, «تولَّ المحادثة» or «انقل المحادثة إليك», and why it failed. */
+const takeBody = ({ take }: ChannelSeatApi, hint: string, label: string) => (
+  <>
+    <Note>{hint}</Note>
+    <Button
+      label={take.isPending ? S.taking : label}
+      busy={take.isPending}
+      onPress={() => take.mutate()}
+    />
+    {take.error ? <ErrorLine message={ERRORS[seatError(take.error)]} /> : null}
+  </>
+);
+
+/**
+ * Free (a former assistant's too) → «تولَّ المحادثة»; my own student's, held by a colleague →
+ * who, and «انقل المحادثة إليك»; else who follows it.
+ */
 const BODY: Readonly<Record<SeatState, (seat: ChannelSeatApi, data: ChannelSeat) => ReactNode>> = {
   mine: () => null,
-  held: (_seat, data) => <Note>{S.heldBy.replace('{name}', data.holder?.name ?? '')}</Note>,
-  take: ({ take }) => (
-    <>
-      <Note>{S.takeHint}</Note>
-      <Button
-        label={take.isPending ? S.taking : S.take}
-        busy={take.isPending}
-        onPress={() => take.mutate()}
-      />
-      {take.error ? <ErrorLine message={ERRORS[seatError(take.error)]} /> : null}
-    </>
-  ),
+  held: (_seat, data) => <Note>{S.heldBy.replace('{name}', holderOf(data))}</Note>,
+  take: (seat) => takeBody(seat, S.takeHint, S.take),
+  takeover: (seat, data) =>
+    takeBody(seat, S.takeOverHint.replace('{name}', holderOf(data)), S.takeOver),
 };
 
 /**
  * A student chat that is not mine (owner 2026-11-16 «any assistant can subscribe to the chating
- * channel but only 1»): a calm card with who follows it, or «تولَّ المحادثة» when it is free or I
- * brought the student («who brought the student have the priority»). Taken, the chat replaces it.
+ * channel but only 1»): a calm card with who follows it, «تولَّ المحادثة» when it is free, or
+ * «انقل المحادثة إليك» from the colleague named when I brought the student («who brought the
+ * student have the priority»). Taken, the chat replaces it.
  */
 export function SeatCard({ seat }: { seat: ChannelSeatApi }) {
   const { color } = useTheme();

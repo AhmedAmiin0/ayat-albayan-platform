@@ -8476,7 +8476,7 @@
   },
   "src/features/sales/sales/search.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/dot-notation": {
       "count": 4
@@ -8500,11 +8500,6 @@
   "src/features/sales/sales/students/PortalList.tsx": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/features/sales/sales/students/SalesStudents.tsx": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/features/sales/sales/students/my-student-columns.tsx": {
@@ -10864,7 +10859,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     },
     "ab/no-restricted-syntax": {
       "count": 1

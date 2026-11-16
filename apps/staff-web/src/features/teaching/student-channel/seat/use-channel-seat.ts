@@ -1,4 +1,4 @@
-import { channelSeatKey, channelSeats } from '@ab/client-core';
+import { CHANNEL_REFRESH_MS, channelSeatKey, channelSeats } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 
@@ -18,3 +18,11 @@ export function useChannelSeat(studentId: string) {
 }
 
 export type ChannelSeatApi = ReturnType<typeof useChannelSeat>;
+
+/**
+ * While a chat is open (a row reads its seat once a minute): the seat read at once and then like
+ * the thread, so a takeover by the student's bringer closes it and the row says who follows it.
+ */
+export function useSeatWatch(studentId: string) {
+  useQuery({ ...seats.seatQuery(studentId), staleTime: 0, refetchInterval: CHANNEL_REFRESH_MS });
+}

@@ -11,10 +11,10 @@ import {
   Screen,
   ScreenHeader,
 } from '@ab/mobile-kit';
-import { useStudentHref } from '@/core/nav/tree-base';
 import { MessageSearchRow } from '@/inbox';
 import { Note } from '@/more';
 import { CoursePauseSection, PeopleEditSection } from '@/students';
+import { SalesChannelButton } from '@/student-file';
 import { SalesLoadScreen } from '@/sales/sales/components/SalesLoadScreen';
 import { familyChatHref } from '@/sales/sales/lib/sales-href';
 import { fill } from '@/sales/sales/lib/sales-text';
@@ -54,7 +54,6 @@ export function SalesStudentScreen() {
   const student = useSalesStudent(id);
   // sales.renew_any (owner 2026-11-01): the money action of ANY student, not only hers.
   const renewsAny = useHolds('sales.renew_any');
-  const to = useStudentHref();
   const data = student.data;
   if (!data) return <SalesLoadScreen title={t.sales.student.title} query={student} notFound={t.sales.student.notFound} />;
   const mine = data.mine !== false;
@@ -81,12 +80,7 @@ export function SalesStudentScreen() {
           {phone ? (
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
-          {/* The student's chat (owner 2026-11-16): hers if she holds its seat, else the card. */}
-          <Button
-            variant="secondary"
-            label={t.studentChannel.monitorTitle}
-            onPress={() => router.push(to(`/sales/students/channel/${data.student.id}`))}
-          />
+          <SalesChannelButton studentId={data.student.id} />
           {acts ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
           <FamilySection family={data.family} phone={phone} />
           <CoursePauseSection studentId={data.student.id} />

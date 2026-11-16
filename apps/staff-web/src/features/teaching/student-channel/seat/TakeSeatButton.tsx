@@ -11,12 +11,20 @@ const ERRORS: Readonly<Record<SeatError, string>> = {
   failed: t.studentChannel.actions.failed,
 };
 
+interface TakeSeatButtonProps {
+  seat: ChannelSeatApi;
+  /** «تولَّ المحادثة» for a free seat, «انقل المحادثة إليك» to take over my own student's. */
+  label: string;
+  /** The takeover's why, as the button's tooltip. */
+  hint?: string;
+}
+
 /**
- * «تولَّ المحادثة» (owner 2026-11-16): a free seat, one a former assistant left behind, or the
- * student I brought («who brought the student have the priority»). Once mine, the row's chat
- * button takes its place.
+ * Take the seat (owner 2026-11-16): a free one, one a former assistant left behind, or the
+ * student I brought, from whoever holds it («who brought the student have the priority»). Once
+ * mine, the row's chat button takes its place.
  */
-export function TakeSeatButton({ seat }: { seat: ChannelSeatApi }) {
+export function TakeSeatButton({ seat, label, hint }: TakeSeatButtonProps) {
   const { error, isPending, mutate } = seat.take;
   return (
     <div className="grid justify-items-start gap-1">
@@ -25,9 +33,10 @@ export function TakeSeatButton({ seat }: { seat: ChannelSeatApi }) {
         variant="secondary"
         size="sm"
         disabled={isPending}
+        title={hint}
         onClick={() => mutate()}
       >
-        {isPending ? S.taking : S.take}
+        {isPending ? S.taking : label}
       </Button>
       {error ? (
         <span role="alert" className="text-xs text-danger">

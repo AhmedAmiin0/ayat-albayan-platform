@@ -51,6 +51,15 @@ test('free: «تولَّ المحادثة» sends PUT; taken first by another (4
   expect(await screen.findByText(S.taken)).toBeTruthy();
 });
 
+test('my own student, held by a colleague: her name, and «انقل المحادثة إليك» sends PUT', async () => {
+  seatIs({ holder: { id: 'p-b', name: 'هدى' }, mine: false, bringer: true, canTake: true });
+  mockApiSend.mockReturnValue(new Promise(() => undefined));
+  await renderWithQuery(<SalesChannelScreen />);
+  expect(await screen.findByText(S.takeOverHint.replace('{name}', 'هدى'))).toBeTruthy();
+  fireEvent.press(screen.getByText(S.takeOver));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PUT', SEAT));
+});
+
 test('mine: the chat with «مغادرة المحادثة» in its header, which frees the seat', async () => {
   seatIs({ holder: { id: 'p-a', name: 'سارة' }, mine: true, bringer: true, canTake: false });
   mockApiSend.mockResolvedValue(undefined);

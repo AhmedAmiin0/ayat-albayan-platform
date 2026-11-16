@@ -8368,6 +8368,8 @@
       "take": "Take this chat",
       "taking": "Taking…",
       "takeHint": "Once you take it, you write here and get its messages.",
+      "takeOver": "Move this chat to you",
+      "takeOverHint": "You registered this student, so you can move the chat from {name} to you.",
       "leave": "Leave this chat",
       "heldBy": "Followed by {name}",
       "taken": "Another assistant follows this chat"

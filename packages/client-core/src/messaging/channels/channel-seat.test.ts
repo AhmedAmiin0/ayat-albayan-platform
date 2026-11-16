@@ -42,10 +42,11 @@ describe('channelSeats', () => {
 });
 
 describe('seatState and seatError', () => {
-  it('mine → the chat; free or my student → take; another assistant\'s → held', () => {
+  it('mine → the chat; free → take; my student held → take over; another\'s → held', () => {
     expect(seatState({ ...HELD, holder: { id: 'me', name: 'سارة' }, mine: true })).toBe('mine');
     expect(seatState({ ...HELD, holder: null, canTake: true })).toBe('take');
-    expect(seatState({ ...HELD, bringer: true, canTake: true })).toBe('take');
+    expect(seatState({ ...HELD, holder: null, bringer: true, canTake: true })).toBe('take');
+    expect(seatState({ ...HELD, bringer: true, canTake: true })).toBe('takeover');
     expect(seatState(HELD)).toBe('held');
   });
 

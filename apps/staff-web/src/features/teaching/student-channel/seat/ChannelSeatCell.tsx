@@ -15,15 +15,31 @@ interface SeatView extends SeatRow {
   holder: string;
 }
 
-/** Mine → the chat; free, a former assistant's or my own student's → take it; else whose it is. */
+const S = t.studentChannel.seat;
+
+/** «يتابعها {name}»: who follows the chat now. */
+const heldBy = (name: string) => (
+  <span className="text-sm text-ink-3">{S.heldBy.replace('{name}', name)}</span>
+);
+
+/**
+ * Mine → the chat; free (a former assistant's too) → take it; my own student's, held by a
+ * colleague → who, and move it to me; else whose it is.
+ */
 const VIEW: Readonly<Record<SeatState, (v: SeatView) => ReactNode>> = {
   mine: (v) => <SeatChatButton studentId={v.studentId} studentName={v.studentName} seat={v.seat} />,
-  take: (v) => <TakeSeatButton seat={v.seat} />,
-  held: (v) => (
-    <span className="text-sm text-ink-3">
-      {t.studentChannel.seat.heldBy.replace('{name}', v.holder)}
-    </span>
+  take: (v) => <TakeSeatButton seat={v.seat} label={S.take} />,
+  takeover: (v) => (
+    <div className="grid justify-items-start gap-1">
+      {heldBy(v.holder)}
+      <TakeSeatButton
+        seat={v.seat}
+        label={S.takeOver}
+        hint={S.takeOverHint.replace('{name}', v.holder)}
+      />
+    </div>
   ),
+  held: (v) => heldBy(v.holder),
 };
 
 /**
