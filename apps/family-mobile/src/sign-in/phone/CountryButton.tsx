@@ -1,5 +1,5 @@
 import { Pressable } from 'react-native';
-import { AppText, t, type, useTheme } from '@ab/mobile-kit';
+import { AppText, Ltr, t, type, useTheme } from '@ab/mobile-kit';
 import type { Country } from './countries';
 
 /** The number field's start: the country's flag and calling code; a tap opens «اختر الدولة». */
@@ -22,7 +22,8 @@ export function CountryButton({ country, onPress }: { country: Country; onPress:
       })}
     >
       <AppText style={{ fontSize: 20 }}>{country.flag}</AppText>
-      <AppText style={{ fontSize: type.size.base, color: color.ink }}>{country.dial}</AppText>
+      {/* An LTR island: bare, an Arabic (RTL) line on Android prints «966+». */}
+      <Ltr style={{ fontSize: type.size.base, color: color.ink }}>{country.dial}</Ltr>
     </Pressable>
   );
 }
