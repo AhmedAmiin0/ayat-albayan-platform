@@ -10,7 +10,10 @@ import type { FamilyChatSettings } from './family-chat.settings';
 // Owner 2026-11-16 «all 4 will receive the message teacher guardian student and the assistant»:
 // everyone in the chat but the sender; the family only while family_chat_enabled is on.
 
-type Person = { profile_id: string; role: ChannelSenderRole };
+interface Person {
+  profile_id: string;
+  role: ChannelSenderRole;
+}
 const TEACHER: Person = { profile_id: 'p-t', role: 'teacher' };
 const GUARDIAN: Person = { profile_id: 'p-g', role: 'guardian' };
 const STUDENT: Person = { profile_id: 'p-s', role: 'student' };
