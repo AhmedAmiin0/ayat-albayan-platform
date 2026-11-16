@@ -18,13 +18,26 @@ interface Edit<P> {
 const phoneAware = (e: unknown): unknown =>
   e instanceof ConflictException ? conflict('phone_taken') : e;
 
-/** A guardian edit also names whether the actor is the admin (who may move a login's number). */
-interface GuardianEdit extends Edit<PeopleGuardianPatch> {
+/** An edit that also names whether the actor is the admin (who may move a login's number). */
+interface AdminEdit<P> extends Edit<P> {
   admin: boolean;
 }
 
 const movesPhone = (before: GuardianRow, patch: PeopleGuardianPatch): boolean =>
   patch.phone_e164 !== undefined && patch.phone_e164 !== before.phone_e164;
+
+/**
+ * A student's own number receives that student's sign-in codes (owner 2026-11-17): with a login
+ * linked, only the admin moves it (as LOGINS below for the main number).
+ */
+const guardsOwnPhone = (student: StudentRow, admin: boolean): boolean =>
+  !admin && student.profile_id !== null;
+
+interface OwnPhone {
+  student: StudentRow;
+  phone: string | null;
+  edit: AdminEdit<unknown>;
+}
 
 interface Logins {
   family: GuardianRow;
@@ -54,9 +67,16 @@ export class PeopleEditService {
     private readonly audit: AuditService,
   ) {}
 
-  async editStudent({ id, patch, actorId }: Edit<PeopleStudentPatch>): Promise<StudentRow> {
+  /**
+   * The student's own number goes first, through set_student_phone (its own audit row, 409
+   * phone_taken / teacher_number / student_login_phone); then the other fields.
+   */
+  async editStudent(edit: AdminEdit<PeopleStudentPatch>): Promise<StudentRow> {
+    const { id, actorId } = edit;
     const before = await this.repo.student(id);
     if (!before) throw notFound('student_not_found');
+    const { phone_e164: phone, ...patch } = edit.patch;
+    if (phone !== undefined) await this.ownPhone({ student: before, phone, edit });
     if (Object.keys(patch).length === 0) return before;
     const after = await this.students.update(id, patch, actorId);
     const change = changedFields({ before, after }, Object.keys(patch));
@@ -70,7 +90,8 @@ export class PeopleEditService {
     return after;
   }
 
-  async editGuardian({ id, patch, actorId, admin }: GuardianEdit): Promise<GuardianRow> {
+  async editGuardian(edit: AdminEdit<PeopleGuardianPatch>): Promise<GuardianRow> {
+    const { id, patch, actorId, admin } = edit;
     const before = await this.repo.guardian(id);
     if (!before) throw notFound('guardian_not_found');
     if (!admin && movesPhone(before, patch)) await this.assertNoLogin(before);
@@ -98,5 +119,11 @@ export class PeopleEditService {
     const children = await this.repo.children(family.id);
     const code = LOGINS.find(([, has]) => has({ family, children }))?.[0];
     if (code) throw conflict(code);
+  }
+
+  private async ownPhone(input: OwnPhone): Promise<void> {
+    const { student, phone, edit } = input;
+    if (guardsOwnPhone(student, edit.admin)) throw conflict('student_login_phone');
+    await this.repo.setStudentPhone({ studentId: student.id, phone, actorId: edit.actorId });
   }
 }

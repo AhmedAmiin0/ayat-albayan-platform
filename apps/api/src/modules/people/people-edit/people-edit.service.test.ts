@@ -47,6 +47,7 @@ describe('PeopleEditService «تعديل البيانات»', () => {
         id: 's1',
         patch: { name: 'سهيلة أحمد', notes: 'جديدة' },
         actorId: 'u1',
+        admin: true,
       }),
     ).resolves.toEqual(after);
     expect(t.argsOf('students', 'update')?.[0]).toMatchObject({
@@ -67,11 +68,12 @@ describe('PeopleEditService «تعديل البيانات»', () => {
 
   it('an empty body writes and audits nothing; an unknown student → 404 student_not_found', async () => {
     const t = setup({ students: [{ data: STUDENT }, { data: null }] });
-    await expect(t.service.editStudent({ id: 's1', patch: {}, actorId: 'u1' })).resolves.toEqual(
+    const edit = { patch: {}, actorId: 'u1', admin: false };
+    await expect(t.service.editStudent({ id: 's1', ...edit })).resolves.toEqual(
       STUDENT,
     );
     await expect(
-      t.service.editStudent({ id: 'x', patch: { name: 'x' }, actorId: 'u1' }),
+      t.service.editStudent({ ...edit, id: 'x', patch: { name: 'x' } }),
     ).rejects.toMatchObject({ response: { code: 'student_not_found' } });
     expect(t.calls.filter((c) => c.method === 'update' || c.method === 'insert')).toEqual([]);
   });
