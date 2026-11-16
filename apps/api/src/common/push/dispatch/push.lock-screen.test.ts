@@ -55,6 +55,11 @@ describe('lockScreenText', () => {
       title: 'رسالة في محادثة سهيلة',
       body: 'أم سهيلة: متى الحلقة؟',
     });
+    // A titled teacher and the role word of a writer without a name stay whole.
+    const named = (name: string) =>
+      lockScreenText({ kind: 'channel_message', vars: { ...vars, name } });
+    expect(named('أ. هدى علي').body).toBe('أ. هدى: متى الحلقة؟');
+    expect(named('ولي الأمر').body).toBe('ولي الأمر: متى الحلقة؟');
   });
 
   it('an overriding title is masked too', () => {
