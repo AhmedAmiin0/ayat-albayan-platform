@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react-native';
 import { ltr } from '@ab/mobile-kit';
-import type { Country } from './countries';
+import { defaultCountry } from './countries';
 import { CountryButton } from './CountryButton';
 
-const saudi: Country = { code: 'SA', dial: '+966', digits: 9, flag: '🇸🇦' };
+const saudi = defaultCountry('SA');
 
 // Owner 2026-11-17: in Arabic the field showed «966+». A calling code has no strong letter, so on
 // Android an RTL line prints the «+» last unless the code sits in an LTR isolate (kit Ltr).

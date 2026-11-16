@@ -1,11 +1,11 @@
 import { Pressable } from 'react-native';
-import { AppText, Ltr, t, type, useTheme } from '@ab/mobile-kit';
-import type { Country } from './countries';
+import { AppText, locale, Ltr, t, type, useTheme } from '@ab/mobile-kit';
+import { type Country, nameOf } from './countries';
 
 /** The number field's start: the country's flag and calling code; a tap opens «اختر الدولة». */
 export function CountryButton({ country, onPress }: { country: Country; onPress: () => void }) {
   const { color } = useTheme();
-  const name = t.familyApp.signIn.countries[country.code];
+  const name = nameOf(country, locale);
   return (
     <Pressable
       accessibilityRole="button"

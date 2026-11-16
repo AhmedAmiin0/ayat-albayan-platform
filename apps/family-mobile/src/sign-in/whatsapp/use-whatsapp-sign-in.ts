@@ -2,6 +2,7 @@ import { authApi, useA11yPref, useCodeSignIn, useStepMotion } from '@ab/mobile-k
 import { useState } from 'react';
 import { feel } from '@/sign-in/feedback';
 import { type Country, defaultCountry } from '@/sign-in/phone/countries';
+import { splitInternational } from '@/sign-in/phone/country-dial';
 import { checkPhone } from '@/sign-in/phone/phone-check';
 
 export type WhatsAppStep = 'phone' | 'code';
@@ -18,6 +19,12 @@ export function useWhatsAppSignIn() {
   const [country, setCountry] = useState<Country>(() => defaultCountry());
   const [typed, setTyped] = useState('');
   const check = checkPhone(country, typed);
+  // A whole number pasted or autofilled («+44 7700…», «0044…»): its country, then the rest.
+  const onTyped = (text: string) => {
+    const split = splitInternational(text, country);
+    setCountry(split?.country ?? country);
+    setTyped(split?.national ?? text);
+  };
 
   const send = async () => {
     if (check.e164 === null || flow.busy) return;
@@ -43,7 +50,7 @@ export function useWhatsAppSignIn() {
     flow,
     motion,
     still,
-    phone: { country, setCountry, typed, setTyped, check },
+    phone: { country, setCountry, typed, setTyped: onTyped, check },
     send,
     resend,
     verify,
