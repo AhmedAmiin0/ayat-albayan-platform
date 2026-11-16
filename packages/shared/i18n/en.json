@@ -3395,7 +3395,8 @@
         "number_taken": "This number is registered to another family",
         "family_has_second_number": "This family already has a second number",
         "teacher_number": "This is a teacher's number; it cannot be linked to a family",
-        "lead_has_family": "This number is another family's main number"
+        "lead_has_family": "This number is another family's main number",
+        "guardian_has_login": "This family has a login, and a second number signs in to it with a WhatsApp code. The admin adds it."
       }
     },
     "pdf": {

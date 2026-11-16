@@ -43,13 +43,14 @@ describe('POST /leads/:id/link-family «ربط بطالب موجود» (leads.li
   it('the admin links by code: 200 { linked } only, the code trimmed and upper-cased, the actor passed on', async () => {
     const res = await call('admin', { code: ' ab-0183 ' });
     expect([res.statusCode, res.json()]).toEqual([200, { linked: true }]);
-    expect(service.link).toHaveBeenCalledWith({ leadId: ID, code: 'AB-0183', actorId: 'admin-1' });
+    expect(service.link).toHaveBeenCalledWith({ leadId: ID, code: 'AB-0183', actorId: 'admin-1', admin: true });
   });
 
   it('the system sales role and a teacher → 403; a role granted leads.link_family passes', async () => {
     for (const token of ['sales', 'teacher']) expect((await call(token, { code: 'AB-0183' })).statusCode).toBe(403);
     expect(service.link).not.toHaveBeenCalled();
     expect((await call('granted', { code: 'AB-0183' })).statusCode).toBe(200);
+    expect(service.link).toHaveBeenCalledWith(expect.objectContaining({ actorId: 'granted-1', admin: false }));
   });
 
   it('a bad body or lead id → 400, the service is never called', async () => {

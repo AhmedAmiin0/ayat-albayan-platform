@@ -5,7 +5,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { conflict, notFound } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
 
-type LinkInput = { leadId: string; code: string; actorId: string };
+type LinkInput = { leadId: string; code: string; actorId: string; admin: boolean };
 
 const NOT_FOUND: readonly string[] = ['lead_not_found', 'student_not_found'];
 
@@ -30,17 +30,28 @@ function linkError(error: PostgrestError): Error {
  * leads.assigned_to: linking makes nobody an owner of that family. A retry is idempotent (linked: false).
  * 404 lead_not_found / student_not_found; 409 number_taken, family_has_second_number, teacher_number,
  * lead_has_family (the number is another family's main number).
+ * A second number opens the family's login (owner 2026-11-17): once that login exists, only the
+ * admin adds one (as the main number, PeopleEditService), else 409 guardian_has_login.
  */
 @Injectable()
 export class LeadFamilyService {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async link({ leadId, code, actorId }: LinkInput): Promise<LeadFamilyLinked> {
+  async link({ leadId, code, actorId, admin }: LinkInput): Promise<LeadFamilyLinked> {
+    if (!admin) await this.assertNoLogin(code);
     const call = () => this.db.rpc('link_family_phone', { p_lead: leadId, p_code: code, p_actor: actorId });
     let { data, error } = await call();
     // Once more after a lost race: the number's new holder answers (this family → false, another → its 409).
     if (lostRace(error)) ({ data, error } = await call());
     if (error) throw linkError(error);
     return { linked: data === true };
+  }
+
+  /** An unknown code passes: link_family_phone answers 404 student_not_found. */
+  private async assertNoLogin(code: string): Promise<void> {
+    const query = this.db.from('students').select('guardian:guardians!inner(profile_id)');
+    const { data, error } = await query.eq('code', code).maybeSingle();
+    if (error) throw dbError(error);
+    if (data?.guardian.profile_id) throw conflict('guardian_has_login');
   }
 }
