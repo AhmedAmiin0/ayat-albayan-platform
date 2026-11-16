@@ -1316,16 +1316,6 @@
       "count": 1
     }
   },
-  "src/classroom/room/state/fetch-join.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/state/open-room.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/classroom/sessions/AdminSessionsScreen.midnight.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1

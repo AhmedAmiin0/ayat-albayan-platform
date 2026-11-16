@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
-import { LessonRoomStates } from '@/modules/teaching/classroom';
+import { LessonRoomStates } from '@/modules/teaching/lessons/live-room/lesson-room-states';
 import { AutoHeldRepo } from '@/modules/teaching/lessons/auto-held/auto-held.repo';
 
 /**

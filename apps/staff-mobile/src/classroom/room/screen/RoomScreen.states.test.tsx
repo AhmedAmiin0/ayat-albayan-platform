@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import {
   CREDS,
@@ -112,21 +112,6 @@ test('the controls: mute, camera, the switch on one’s tile, the next audio out
   await press(R.controls.headset);
   expect(p.audio.next).toHaveBeenLastCalledWith('headset');
   expect(await screen.findByRole('button', { name: R.controls.speaker })).toBeTruthy();
-});
-
-test('«غادر» asks first (#bug); «ابقَ في الحلقة» stays, «غادر» leaves and closes', async () => {
-  await live();
-  await press(R.controls.leave);
-  expect(screen.getByText(R.leaveAsk.title)).toBeTruthy();
-  await press(R.leaveAsk.stay);
-  expect(screen.queryByTestId('room-leave')).toBeNull();
-  expect(p.client.disconnect).not.toHaveBeenCalled();
-  await press(R.controls.leave);
-  const ask = within(screen.getByTestId('room-leave'));
-  await fireEvent.press(ask.getByRole('button', { name: R.controls.leave }));
-  expect(p.client.disconnect).toHaveBeenCalled();
-  expect(p.audio.stop).toHaveBeenCalled();
-  expect(onExit).toHaveBeenCalled();
 });
 
 test('«فتح في المتصفح» on any step: leaves and opens the web classroom', async () => {

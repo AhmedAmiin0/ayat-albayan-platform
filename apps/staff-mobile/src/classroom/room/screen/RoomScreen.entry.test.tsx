@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { AppState } from 'react-native';
+import { AppState, type AppStateStatus } from 'react-native';
 import {
   CREDS,
   fakePlatform,
@@ -34,13 +34,17 @@ beforeEach(() => {
 test('a later join reuses the kept choice and skips the preview', async () => {
   p.devices.load.mockResolvedValue({ mic: false, cam: true });
   await mount();
-  await waitFor(() => expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: false, cam: true }));
+  await waitFor(() =>
+    expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: false, cam: true }),
+  );
   expect(screen.queryByTestId('room-preview')).toBeNull();
 });
 
 test('from the «بدأت الحلقة» push: straight in with the microphone on, even the first time', async () => {
   await mount(true);
-  await waitFor(() => expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: true, cam: true }));
+  await waitFor(() =>
+    expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: true, cam: true }),
+  );
   expect(p.devices.save).not.toHaveBeenCalled();
 });
 
@@ -48,7 +52,9 @@ test('from the push without the permissions: only they are asked, then in', asyn
   p = fakePlatform({ mic: 'denied', cam: 'denied' });
   await mount(true);
   await fireEvent.press(await screen.findByRole('button', { name: R.permission.allow }));
-  await waitFor(() => expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: true, cam: true }));
+  await waitFor(() =>
+    expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: true, cam: true }),
+  );
   expect(p.media.ask).toHaveBeenCalled();
 });
 
@@ -61,7 +67,7 @@ test('a 410 lesson_ended join: «انتهت الحلقة» with no way back', as
 });
 
 test('back from the settings with the permission given: the blocked notice goes (#bug)', async () => {
-  const listeners: ((s: string) => void)[] = [];
+  const listeners: ((s: AppStateStatus) => void)[] = [];
   jest.spyOn(AppState, 'addEventListener').mockImplementation((_e, fn) => {
     listeners.push(fn);
     return { remove: jest.fn() };

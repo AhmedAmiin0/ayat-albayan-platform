@@ -1,6 +1,6 @@
 import type { LessonRoomState } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { RoomPresenceRepo } from './room-presence.repo';
+import { RoomInsideRepo } from './room-inside.repo';
 import { roomStateOf } from './room-state.mapper';
 
 /** What a lesson payload gives: its times and the «إنهاء الحلقة للجميع» stamp. */
@@ -28,7 +28,7 @@ const nearNow = (l: RoomLesson, now: number): boolean =>
 export class LessonRoomStates {
   private readonly log = new Logger(LessonRoomStates.name);
 
-  constructor(@Inject(RoomPresenceRepo) private readonly presence: RoomPresenceRepo) {}
+  constructor(@Inject(RoomInsideRepo) private readonly presence: RoomInsideRepo) {}
 
   async of(lessons: readonly RoomLesson[], now: Date): Promise<Map<string, LessonRoomState | null>> {
     const near = lessons.filter((l) => nearNow(l, now.getTime())).map((l) => l.id);

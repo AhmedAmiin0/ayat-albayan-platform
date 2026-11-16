@@ -3,7 +3,6 @@ import { LessonEndRepo } from './lesson-end.repo';
 import { LessonEndService } from './lesson-end.service';
 import { LessonLiveRepo } from './lesson-live.repo';
 import { LessonLivePush } from './lesson-live.push';
-import { LessonRoomStates } from './lesson-room-states';
 import { RoomPresenceRepo } from './room-presence.repo';
 import { RoomPresenceService } from './room-presence.service';
 
@@ -17,10 +16,6 @@ export const LIVE_ROOM_PROVIDERS = [
   LessonEndService,
   LessonLiveRepo,
   LessonLivePush,
-  LessonRoomStates,
   RoomPresenceRepo,
   RoomPresenceService,
 ];
-
-/** What the lesson rows (LessonsModule) and the portal read: the `room` of each lesson. */
-export const ROOM_STATE_PROVIDERS = [RoomPresenceRepo, LessonRoomStates];

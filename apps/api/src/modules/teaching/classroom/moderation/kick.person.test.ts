@@ -18,7 +18,7 @@ const kick = () =>
   new KickService(rolesOf({ q: queries() }), mod as unknown as ModerationRepo, new LivekitApi(CONFIG, h), persons as unknown as RoomPersonRepo)
     .remove({ user: ADMIN, lessonId: LESSON_ID, identity: 'guest-0123456789ab' });
 const removed = () =>
-  h.mock.calls.filter(([url]) => String(url).endsWith('/RemoveParticipant')).map(([, init]) => sentBody(init).identity);
+  h.mock.calls.filter(([url]) => String(url).endsWith('/RemoveParticipant')).map(([, init]) => (sentBody(init) as { identity: string }).identity);
 
 beforeEach(() => {
   mod = moderation();
@@ -31,7 +31,7 @@ describe('«إخراج» keeps the person out', () => {
     persons.principalsOf.mockResolvedValue([{ joinLinkId: LINK }, { joinLinkId: WHATSAPP_LINK }]);
     await kick();
     expect(persons.principalsOf).toHaveBeenCalledWith(LESSON_ID, { joinLinkId: LINK });
-    const blocked = mod.block.mock.calls.map(([input]: [{ principal: unknown }]) => input.principal);
+    const blocked = mod.block.mock.calls.map((call) => (call[0] as { principal: unknown }).principal);
     expect(blocked).toEqual([{ joinLinkId: LINK }, { joinLinkId: WHATSAPP_LINK }]);
   });
 

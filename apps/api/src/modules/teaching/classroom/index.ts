@@ -33,5 +33,3 @@ export {
   RecordingRepo,
   type RecordingRow,
 } from './recordings/recording.repo';
-export { LessonRoomStates, type RoomLesson } from './live/lesson-room-states';
-export { ROOM_STATE_PROVIDERS } from './live/live.providers';

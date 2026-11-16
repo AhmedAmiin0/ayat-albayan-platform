@@ -9,10 +9,11 @@ import type { DeviceMemory, MediaWish } from '@/classroom/room/model/room-types'
 const KEY = 'ab.room.devices';
 const wishSchema = z.object({ mic: z.boolean(), cam: z.boolean() });
 
+const decodeJson: (text: string) => unknown = JSON.parse;
+
 const parse = (raw: string | null): MediaWish | null => {
   try {
-    const got = wishSchema.safeParse(JSON.parse(raw ?? 'null'));
-    return got.success ? got.data : null;
+    return wishSchema.nullable().catch(null).parse(decodeJson(raw ?? 'null'));
   } catch {
     return null;
   }

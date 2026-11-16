@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SubscriptionsModule } from '@/modules/finance/subscriptions';
 import { ClassroomModule } from '@/modules/teaching/classroom';
+import { LessonRoomStates, RoomInsideRepo } from '@/modules/teaching/lessons';
 import { ChatNumber } from './home/chat-number';
 import { PortalHistoryRepo } from './history/portal-history.repo';
 import { PortalHistoryService } from './history/portal-history.service';
@@ -36,6 +37,8 @@ import { PortalScopeRepo } from './scope/portal-scope.repo';
     PortalHistoryRepo,
     PortalHistoryService,
     PortalLessonExtras,
+    LessonRoomStates,
+    RoomInsideRepo,
   ],
   exports: [PortalScopes],
 })

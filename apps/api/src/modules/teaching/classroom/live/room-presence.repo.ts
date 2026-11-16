@@ -5,11 +5,6 @@ import { dbError } from '@/common/http/http';
 
 type ParticipantRow = Tables<'classroom_participants'>;
 
-/** Someone inside a lesson room now: their row, and the student of the guest link they came by. */
-export type PresenceRow = Pick<ParticipantRow, 'lesson_id' | 'name' | 'role' | 'entered_at'> & {
-  link: { student_id: string | null } | null;
-};
-
 /** One webhook's participant: the lesson of its room, the LiveKit identity, the event's time. */
 export interface PresenceEvent {
   lessonId: string;
@@ -17,12 +12,10 @@ export interface PresenceEvent {
   at: string;
 }
 
-const INSIDE = 'lesson_id, name, role, entered_at, link:lesson_join_links(student_id)';
-const LIMIT = 500;
-
 /**
  * Who is inside a lesson room now (migration 20261117000110, on classroom_participants): LiveKit's
- * participant_joined / participant_left stamp the admitted identity's row. Service role only.
+ * participant_joined / participant_left stamp the admitted identity's row (the lessons module's
+ * RoomInsideRepo reads them for the lesson payloads). Service role only.
  */
 @Injectable()
 export class RoomPresenceRepo {
@@ -56,20 +49,5 @@ export class RoomPresenceRepo {
       .not('entered_at', 'is', null)
       .is('left_at', null);
     if (error) throw dbError(error);
-  }
-
-  /** Everyone inside these lessons' rooms now, earliest arrival first. */
-  async inside(lessonIds: readonly string[]): Promise<PresenceRow[]> {
-    if (lessonIds.length === 0) return [];
-    const { data, error } = await this.db
-      .from('classroom_participants')
-      .select(INSIDE)
-      .in('lesson_id', [...lessonIds])
-      .not('entered_at', 'is', null)
-      .is('left_at', null)
-      .order('entered_at')
-      .limit(LIMIT);
-    if (error) throw dbError(error);
-    return data;
   }
 }

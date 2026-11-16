@@ -1,17 +1,11 @@
-import type { RoomJoinResult } from '@ab/shared';
 import { router } from 'expo-router';
 import { Linking } from 'react-native';
 import { handOff } from '@/classroom/room/model/join-handoff';
-import {
-  joinPath,
-  roomRoute,
-  roomWebUrl,
-  type RoomEntry,
-} from '@/classroom/room/model/join-target';
+import { roomRoute, roomWebUrl, type RoomEntry } from '@/classroom/room/model/join-target';
 import { roomMode } from '@/classroom/room/model/room-mode';
 import type { RoomTarget } from '@/classroom/room/model/room-types';
 import { liveKitNative } from '@/classroom/room/native/livekit-native';
-import { apiSend } from '@ab/mobile-kit';
+import { postJoin } from '@/classroom/room/state/fetch-join';
 import { usePublicConfig } from '@/core/lib/query/public-config';
 
 /** settings.meetings_in_app (public, default on): rooms open inside the app (docs/35). */
@@ -37,7 +31,7 @@ const afterSheet = (): Promise<void> => new Promise((r) => setTimeout(r, SHEET_C
  * room screen that cannot start: it read «انتهت صلاحية الدخول» and sent the user round again).
  */
 export async function openRoom(target: RoomTarget, inApp: boolean, options: OpenOptions = {}) {
-  const join = await apiSend<RoomJoinResult>('POST', joinPath(target));
+  const join = await postJoin(target);
   if (roomMode(inApp, liveKitNative() !== null) === 'browser') {
     await Linking.openURL(roomWebUrl(target));
     return;

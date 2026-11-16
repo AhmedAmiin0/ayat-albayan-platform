@@ -21,7 +21,8 @@ import { LessonStatusService } from './status/lesson-status.service';
 import { LessonStore } from './store/lesson-store';
 import { LessonViews } from './store/lesson-views';
 import { LessonViewExtras } from './store/lesson-view-extras';
-import { ROOM_STATE_PROVIDERS } from '@/modules/teaching/classroom';
+import { LessonRoomStates } from './live-room/lesson-room-states';
+import { RoomInsideRepo } from './live-room/room-inside.repo';
 import { LessonsController } from './lessons.controller';
 import { LessonsRepo } from './lessons.repo';
 import { LessonsSettings } from './lessons.settings';
@@ -87,7 +88,8 @@ import { TeacherLessonDeps, TeacherLessonService } from './teacher-me/teacher-le
     LessonTimeService,
     LessonViews,
     LessonViewExtras,
-    ...ROOM_STATE_PROVIDERS,
+    LessonRoomStates,
+    RoomInsideRepo,
     LessonsRepo,
     LessonsSettings,
     OverviewRepo,
@@ -107,6 +109,7 @@ import { TeacherLessonDeps, TeacherLessonService } from './teacher-me/teacher-le
   ],
   exports: [
     LessonCancelService,
+    LessonRoomStates,
     LessonStatusService,
     LessonViews,
     OutcomeCorrection,

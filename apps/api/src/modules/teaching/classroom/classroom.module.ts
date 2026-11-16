@@ -41,7 +41,6 @@ import { LessonMuteController, MeetingMuteController } from './moderation/mute.c
 import { MeetingMuteService, MuteService } from './moderation/mute.service';
 import { MAX_DURATION_PROVIDERS } from './max-duration/max-duration.providers';
 import { LIVE_ROOM_CONTROLLERS, LIVE_ROOM_PROVIDERS } from './live/live.providers';
-import { LessonRoomStates } from './live/lesson-room-states';
 import { MeetingRecordingListService, RecordingListService, RecordingViews } from './recordings/recording-list.service';
 import { MeetingRecordingsController, RecordingStatusController } from './recordings/recordings.controller';
 import { RecordingLifecycle } from './recordings/recording.lifecycle';
@@ -137,6 +136,6 @@ import { StudentLinkService } from './student-link/student-link.service';
   ],
   // The student file's recordings (modules/student-recordings) sign links and read rows the same way; the
   // family portal (modules/people/portal) admits its own student like the student's link does.
-  exports: [RecordingViews, RecordingRepo, StudentLinkService, LessonRoomStates],
+  exports: [RecordingViews, RecordingRepo, StudentLinkService],
 })
 export class ClassroomModule {}

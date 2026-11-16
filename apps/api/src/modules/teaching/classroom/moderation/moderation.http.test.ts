@@ -24,7 +24,8 @@ describe('classroom moderation routes', () => {
     const res = await h.call({ method: 'POST', url: remove() });
     expect(res.statusCode).toBe(204);
     expect(h.moderation.block).toHaveBeenCalledWith(expect.objectContaining({ principal: { joinLinkId: participantRow().join_link_id } }));
-    expect(h.http.mock.calls[0]?.[0]).toMatch(/RemoveParticipant$/);
+    expect(h.http.mock.calls[0]?.[0]).toMatch(/UpdateParticipant$/);
+    expect(h.http.mock.calls[1]?.[0]).toMatch(/RemoveParticipant$/);
   });
 
   it('POST …/remove: 401 without a login, 403 for a guardian, 403 cannot_remove for an assistant', async () => {

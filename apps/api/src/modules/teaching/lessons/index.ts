@@ -22,3 +22,5 @@ export {
 } from './status/lesson-status.service';
 export { ATTENDANCE, outcomeChange, type OutcomeInput } from './status/outcomes';
 export { TeacherMeRepo } from './teacher-me/teacher-me.repo';
+export { LessonRoomStates, type RoomLesson } from './live-room/lesson-room-states';
+export { RoomInsideRepo } from './live-room/room-inside.repo';

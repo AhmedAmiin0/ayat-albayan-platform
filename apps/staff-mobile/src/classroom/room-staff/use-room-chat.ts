@@ -1,3 +1,4 @@
+import type { TeacherChannelRow } from '@ab/shared';
 import { router } from 'expo-router';
 import type { RoomChat } from '@/classroom/room/screen/RoomScreen';
 import { useHolds } from '@ab/mobile-kit';
@@ -17,6 +18,10 @@ function useAudience(): StaffAudience | null {
   return monitor ? 'admin' : null;
 }
 
+/** The teacher's unread count in this student's channel (0 when the list has no row). */
+const unreadOf = (rows: readonly TeacherChannelRow[], studentId: string): number =>
+  rows.find((r) => r.student_id === studentId)?.unread ?? 0;
+
 /**
  * The in-room «المحادثة» of the staff app (owner 2026-11-16, canvas RoomXTeacherChat): THE student
  * channel (never a LiveKit chat), as a sheet over the live room, with the teacher's unread count.
@@ -24,11 +29,10 @@ function useAudience(): StaffAudience | null {
  */
 export function useRoomChat(studentId: string | null): RoomChat | null {
   const audience = useAudience();
-  const rows = useTeacherChannels(audience === 'teacher' && studentId !== null).data;
+  const rows = useTeacherChannels(audience === 'teacher' && studentId !== null).data ?? [];
   if (!studentId || !audience) return null;
-  const unread = rows?.find((r) => r.student_id === studentId)?.unread ?? 0;
   return {
-    unread,
+    unread: unreadOf(rows, studentId),
     open: () => router.push(roomChatRoute(studentId, audience)),
     whenLocked: 'hide',
   };

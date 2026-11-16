@@ -1,5 +1,5 @@
 import type { LessonRoomState, RoomPresence, RoomPresenceRole } from '@ab/shared';
-import type { PresenceRow } from './room-presence.repo';
+import type { PresenceRow } from './room-inside.repo';
 
 // Presence rows → the `room` of a lesson payload (lessonRoomStateSchema). Pure.
 

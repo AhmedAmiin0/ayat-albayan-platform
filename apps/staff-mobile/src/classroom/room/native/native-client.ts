@@ -17,7 +17,7 @@ export function createNativeClient({ lk }: LiveKitNative): RoomClient {
   const ensureOpen = () => {
     if (closed) throw new Error('room client closed');
   };
-  // A disconnect while joining (the network, DeleteRoom) fails the join: never «live» on a dead room.
+  // A disconnect while joining (the network, DeleteRoom) fails the join: never live on a dead room.
   const ensureAlive = () => {
     if (store.closed()) throw new Error('room dropped while joining');
   };

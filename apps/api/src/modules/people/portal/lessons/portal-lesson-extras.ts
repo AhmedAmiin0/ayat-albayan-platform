@@ -2,7 +2,7 @@ import type { LessonRoomState, PortalLessons, PortalStudent } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { PortalHistoryService } from '@/modules/people/portal/history/portal-history.service';
 import { PortalReportsService } from '@/modules/people/portal/reports/portal-reports.service';
-import { LessonRoomStates, type RoomLesson } from '@/modules/teaching/classroom';
+import { LessonRoomStates, type RoomLesson } from '@/modules/teaching/lessons';
 
 type LessonExtras = Required<Pick<PortalLessons, 'prepare' | 'month'>>;
 
