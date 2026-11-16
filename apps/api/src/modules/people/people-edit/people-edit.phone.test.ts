@@ -71,6 +71,26 @@ describe("PeopleEditService: the student's own number", () => {
     await expect(admin.edit({ phone_e164: OWN }, true)).resolves.toEqual(login);
   });
 
+  it('the number is written last: a refused number leaves the other fields saved', async () => {
+    const after = { ...STUDENT, name: 'سهيلة أحمد' };
+    const error = { code: '23505', message: 'guardian_phones_pkey' };
+    const t = setup({
+      students: [{ data: STUDENT }, { data: STUDENT }, { data: after }],
+      [RPC]: [{ error }],
+      audit_log: [{}],
+    });
+    expect(await refusal(t.edit({ name: 'سهيلة أحمد', phone_e164: OWN }))).toEqual([409, 'phone_taken']);
+    const writes = t.calls.filter((c) => c.method === 'update' || c.method === 'rpc');
+    expect(writes.map((c) => c.method)).toEqual(['update', 'rpc']);
+  });
+
+  it('student_login_phone is said before any field is written', async () => {
+    const t = setup({ students: [{ data: { ...STUDENT, profile_id: 'p1' } }] });
+    const refused = await refusal(t.edit({ name: 'سهيلة أحمد', phone_e164: OWN }));
+    expect(refused).toEqual([409, 'student_login_phone']);
+    expect(t.calls.filter((c) => c.method === 'update' || c.method === 'rpc')).toEqual([]);
+  });
+
   it.each([
     [{ code: '23505', message: 'guardian_phones_pkey' }, 409, 'phone_taken'],
     [{ code: 'P0001', message: 'teacher_number' }, 409, 'teacher_number'],

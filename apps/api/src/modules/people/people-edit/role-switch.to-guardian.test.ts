@@ -23,7 +23,7 @@ describe('«تحويل إلى ولي أمر» (a student row that is really the 
         entity: 'students',
         entity_id: 's1',
         action: 'to_guardian_snapshot',
-        before: STUDENT,
+        before: { ...STUDENT, own_phone_e164: null },
       }),
       expect.objectContaining({
         entity: 'guardians',
@@ -33,6 +33,19 @@ describe('«تحويل إلى ولي أمر» (a student row that is really the 
         after: expect.objectContaining({ name: 'أحمد', from_student: 's1' }),
       }),
     ]);
+  });
+
+  it("the copy keeps the student's own number, which the delete drops (owner 2026-11-17)", async () => {
+    const t = setup({
+      ...none(),
+      students: [{ data: STUDENT }, { data: [STUDENT] }],
+      guardians: [{ data: GUARDIAN }, { data: { ...GUARDIAN, name: 'أحمد' } }],
+      guardian_phones: [{ data: { phone_e164: '+966500000007' } }],
+      audit_log: [{}, {}],
+    });
+    await t.service.studentToGuardian('s1', 'u1');
+    expect(t.argsOf('guardian_phones', 'eq')).toEqual(['student_id', 's1']);
+    expect(audits(t)[0]).toMatchObject({ before: { own_phone_e164: '+966500000007' } });
   });
 
   it('refuses a row with any history (the tables listed) or a login, before any write', async () => {

@@ -33,11 +33,7 @@ const movesPhone = (before: GuardianRow, patch: PeopleGuardianPatch): boolean =>
 const guardsOwnPhone = (student: StudentRow, admin: boolean): boolean =>
   !admin && student.profile_id !== null;
 
-interface OwnPhone {
-  student: StudentRow;
-  phone: string | null;
-  edit: AdminEdit<unknown>;
-}
+type StudentFields = Omit<PeopleStudentPatch, 'phone_e164'>;
 
 interface Logins {
   family: GuardianRow;
@@ -68,25 +64,20 @@ export class PeopleEditService {
   ) {}
 
   /**
-   * The student's own number goes first, through set_student_phone (its own audit row, 409
-   * phone_taken / teacher_number / student_login_phone); then the other fields.
+   * 409 student_login_phone before anything is written; then the other fields; the student's own
+   * number last, through set_student_phone (its own audit row): a refused number (409 phone_taken /
+   * teacher_number) leaves only the number unsaved.
    */
   async editStudent(edit: AdminEdit<PeopleStudentPatch>): Promise<StudentRow> {
     const { id, actorId } = edit;
     const before = await this.repo.student(id);
     if (!before) throw notFound('student_not_found');
     const { phone_e164: phone, ...patch } = edit.patch;
-    if (phone !== undefined) await this.ownPhone({ student: before, phone, edit });
-    if (Object.keys(patch).length === 0) return before;
-    const after = await this.students.update(id, patch, actorId);
-    const change = changedFields({ before, after }, Object.keys(patch));
-    await this.audit.record({
-      actorId,
-      entity: 'students',
-      entityId: id,
-      action: 'people_edit',
-      ...change,
-    });
+    if (phone !== undefined && guardsOwnPhone(before, edit.admin)) {
+      throw conflict('student_login_phone');
+    }
+    const after = await this.fields(before, { id, patch, actorId });
+    if (phone !== undefined) await this.repo.setStudentPhone({ studentId: id, phone, actorId });
     return after;
   }
 
@@ -121,9 +112,18 @@ export class PeopleEditService {
     if (code) throw conflict(code);
   }
 
-  private async ownPhone(input: OwnPhone): Promise<void> {
-    const { student, phone, edit } = input;
-    if (guardsOwnPhone(student, edit.admin)) throw conflict('student_login_phone');
-    await this.repo.setStudentPhone({ studentId: student.id, phone, actorId: edit.actorId });
+  private async fields(before: StudentRow, edit: Edit<StudentFields>): Promise<StudentRow> {
+    const { id, patch, actorId } = edit;
+    if (Object.keys(patch).length === 0) return before;
+    const after = await this.students.update(id, patch, actorId);
+    const change = changedFields({ before, after }, Object.keys(patch));
+    await this.audit.record({
+      actorId,
+      entity: 'students',
+      entityId: id,
+      action: 'people_edit',
+      ...change,
+    });
+    return after;
   }
 }

@@ -22,8 +22,9 @@ interface SelfInput {
  *  - «تحويل إلى ولي أمر»: a student row that is really the parent. Only while it has no history at
  * all (409 student_has_records { tables }) and no login of its own (409 student_has_login: the
  * users module refuses a role change on a linked login, role_change_linked). A full audit copy is
- * written first, the history checked again, then the empty row is removed and the family takes its
- * name; the other children, the phones and the money stay as they are. Not one transaction (no
+ * written first (with the student's own number, which goes with the row), the history checked
+ * again, then the empty row is removed and the family takes its name; the other children, the
+ * family's numbers and the money stay as they are. Not one transaction (no
  * migration): the window between the last check and the delete is one round trip.
  */
 @Injectable()
@@ -71,8 +72,10 @@ export class RoleSwitchService {
     await this.assertEmpty(studentId);
     const guardian = await this.repo.guardian(student.guardian_id);
     if (!guardian) throw notFound('guardian_not_found');
-    // The full copy is written BEFORE the delete: a failed audit insert deletes nothing.
-    const copy = { actorId, entity: 'students', entityId: studentId, before: student };
+    // The full copy (the student's own number too, which the delete drops) is written BEFORE the
+    // delete: a failed audit insert deletes nothing.
+    const before = { ...student, own_phone_e164: await this.records.ownPhone(studentId) };
+    const copy = { actorId, entity: 'students', entityId: studentId, before };
     await this.audit.record({ ...copy, action: 'to_guardian_snapshot' });
     await this.assertEmpty(studentId);
     const removed = await this.records.removeEmpty(studentId);
