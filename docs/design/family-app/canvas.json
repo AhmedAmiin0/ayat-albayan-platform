@@ -1,33 +1,963 @@
 {
   "v": 3,
-  "createdOnFiles": {"v": 1, "at": "2026-11-14T20:45:00Z"},
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-14T20:45:00Z"
+  },
   "title": "Family app design",
-  "launch": {"view": "canvas"},
+  "launch": {
+    "view": "canvas"
+  },
   "pages": [],
   "boards": {
-    "Main.dc.html": {"x": 0, "y": 0, "w": 390, "h": 844, "title": "تسجيل الدخول", "is_interactive": true, "radius": 28},
-    "Home.dc.html": {"x": 470, "y": 0, "w": 390, "h": 1060, "title": "الرئيسية — كل الأبناء", "is_interactive": true, "radius": 28},
-    "Child.dc.html": {"x": 940, "y": 0, "w": 390, "h": 1000, "title": "الابن — القادمة", "is_interactive": true, "radius": 28},
-    "Attended.dc.html": {"x": 1410, "y": 0, "w": 390, "h": 900, "title": "الابن — حضرها", "is_interactive": true, "radius": 28},
-    "Report.dc.html": {"x": 0, "y": 1180, "w": 390, "h": 1380, "title": "تقرير الحلقة", "is_interactive": true, "radius": 28},
-    "Absent.dc.html": {"x": 470, "y": 1180, "w": 390, "h": 844, "title": "الابن — غاب عنها", "is_interactive": true, "radius": 28},
-    "Package.dc.html": {"x": 940, "y": 1180, "w": 390, "h": 1060, "title": "الباقة (ولي الأمر فقط)", "is_interactive": true, "radius": 28},
-    "Schedule.dc.html": {"x": 0, "y": 2900, "w": 390, "h": 1040, "title": "تبويب: الجدول", "is_interactive": true, "radius": 28},
-    "Children.dc.html": {"x": 470, "y": 2900, "w": 390, "h": 900, "title": "ولي الأمر — تبويب: أبنائي", "is_interactive": true, "radius": 28},
-    "Account.dc.html": {"x": 940, "y": 2900, "w": 390, "h": 960, "title": "تبويب: حسابي", "is_interactive": true, "radius": 28},
-    "Alerts.dc.html": {"x": 1410, "y": 2900, "w": 390, "h": 960, "title": "الإشعارات (من الجرس أعلى الشاشة)", "is_interactive": true, "radius": 28},
-    "StudentHome.dc.html": {"x": 0, "y": 4400, "w": 390, "h": 1080, "title": "الطالب — الرئيسية", "is_interactive": true, "radius": 28},
-    "StudentSchedule.dc.html": {"x": 470, "y": 4400, "w": 390, "h": 900, "title": "الطالب — الجدول", "is_interactive": true, "radius": 28},
-    "Reports.dc.html": {"x": 940, "y": 4400, "w": 390, "h": 960, "title": "الطالب — التقارير", "is_interactive": true, "radius": 28},
-    "StudentAccount.dc.html": {"x": 1410, "y": 4400, "w": 390, "h": 900, "title": "الطالب — حسابي", "is_interactive": true, "radius": 28}
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "تسجيل الدخول",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Home.dc.html": {
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 1060,
+      "title": "الرئيسية — كل الأبناء",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Child.dc.html": {
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 1000,
+      "title": "الابن — القادمة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Attended.dc.html": {
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 900,
+      "title": "الابن — حضرها",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Report.dc.html": {
+      "x": 0,
+      "y": 1180,
+      "w": 390,
+      "h": 1380,
+      "title": "تقرير الحلقة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Absent.dc.html": {
+      "x": 470,
+      "y": 1180,
+      "w": 390,
+      "h": 844,
+      "title": "الابن — غاب عنها",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Package.dc.html": {
+      "x": 940,
+      "y": 1180,
+      "w": 390,
+      "h": 1060,
+      "title": "الباقة (ولي الأمر فقط)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Schedule.dc.html": {
+      "x": 0,
+      "y": 2900,
+      "w": 390,
+      "h": 1040,
+      "title": "تبويب: الجدول",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Children.dc.html": {
+      "x": 470,
+      "y": 2900,
+      "w": 390,
+      "h": 900,
+      "title": "ولي الأمر — تبويب: أبنائي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Account.dc.html": {
+      "x": 940,
+      "y": 2900,
+      "w": 390,
+      "h": 960,
+      "title": "تبويب: حسابي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Alerts.dc.html": {
+      "x": 1410,
+      "y": 2900,
+      "w": 390,
+      "h": 960,
+      "title": "الإشعارات (من الجرس أعلى الشاشة)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "StudentHome.dc.html": {
+      "x": 0,
+      "y": 4400,
+      "w": 390,
+      "h": 1080,
+      "title": "الطالب — الرئيسية",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "StudentSchedule.dc.html": {
+      "x": 470,
+      "y": 4400,
+      "w": 390,
+      "h": 900,
+      "title": "الطالب — الجدول",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Reports.dc.html": {
+      "x": 940,
+      "y": 4400,
+      "w": 390,
+      "h": 960,
+      "title": "الطالب — التقارير",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "StudentAccount.dc.html": {
+      "x": 1410,
+      "y": 4400,
+      "w": 390,
+      "h": 900,
+      "title": "الطالب — حسابي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "SwitchHome.dc.html": {
+      "x": 0,
+      "y": 5850,
+      "w": 390,
+      "h": 844,
+      "title": "ولي الأمر — اسم الطالب أعلى الشاشة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "SwitchSheet.dc.html": {
+      "x": 470,
+      "y": 5850,
+      "w": 390,
+      "h": 844,
+      "title": "لمسة على الاسم: اختر الطالب",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "SwitchDone.dc.html": {
+      "x": 940,
+      "y": 5850,
+      "w": 390,
+      "h": 844,
+      "title": "بعد التبديل: تنبيه قصير",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "SwitchReports.dc.html": {
+      "x": 1410,
+      "y": 5850,
+      "w": 390,
+      "h": 844,
+      "title": "التقارير: الاسم نفسه أعلى التبويب",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Adult.dc.html": {
+      "x": 1880,
+      "y": 5850,
+      "w": 390,
+      "h": 844,
+      "title": "طالب بلا ولي أمر (دخل برقمه)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "FamilyChatEntry.dc.html": {
+      "x": 0,
+      "y": 7200,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — «المحادثة» آخر الأقسام",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "FamilyChatThread.dc.html": {
+      "x": 470,
+      "y": 7200,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — المحادثة مع المعلم/ة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "FamilyChatClosed.dc.html": {
+      "x": 940,
+      "y": 7200,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — قبل الاشتراك",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "StaffChatList.dc.html": {
+      "x": 1410,
+      "y": 7200,
+      "w": 390,
+      "h": 844,
+      "title": "المعلم/ة — المزيد › رسائل الطلاب",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "StaffChatThread.dc.html": {
+      "x": 1880,
+      "y": 7200,
+      "w": 390,
+      "h": 844,
+      "title": "المعلم/ة — المحادثة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "AssistantChatThread.dc.html": {
+      "x": 2350,
+      "y": 7200,
+      "w": 390,
+      "h": 844,
+      "title": "مسؤول المتابعة — المحادثة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomPreview.dc.html": {
+      "x": 0,
+      "y": 8520,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — قبل الدخول",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomAlone.dc.html": {
+      "x": 470,
+      "y": 8520,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — بانتظار البقية",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomLive.dc.html": {
+      "x": 940,
+      "y": 8520,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — مع المعلمة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomShare.dc.html": {
+      "x": 1410,
+      "y": 8520,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — المعلمة تعرض شاشتها",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomClosed.dc.html": {
+      "x": 1880,
+      "y": 8520,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — أُغلقت الغرفة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXFamilyEntry.dc.html": {
+      "x": 0,
+      "y": 9850,
+      "w": 390,
+      "h": 844,
+      "title": "الرئيسية: المحادثة بجانب الجرس",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXFamilyThread.dc.html": {
+      "x": 470,
+      "y": 9850,
+      "w": 390,
+      "h": 1013,
+      "title": "المحادثة: الأسرة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXReply.dc.html": {
+      "x": 940,
+      "y": 9850,
+      "w": 390,
+      "h": 844,
+      "title": "الرد على رسالة مع الرموز",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXAttach.dc.html": {
+      "x": 1410,
+      "y": 9850,
+      "w": 390,
+      "h": 844,
+      "title": "إرفاق صورة أو ملف",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXVoice.dc.html": {
+      "x": 1880,
+      "y": 9850,
+      "w": 390,
+      "h": 844,
+      "title": "تسجيل رسالة صوتية",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXMenu.dc.html": {
+      "x": 2350,
+      "y": 9850,
+      "w": 390,
+      "h": 844,
+      "title": "خيارات الرسالة (ضغط مطوّل)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXTeacherList.dc.html": {
+      "x": 2820,
+      "y": 9850,
+      "w": 390,
+      "h": 844,
+      "title": "المعلم/ة: رسائل الطلاب",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXTeacherThread.dc.html": {
+      "x": 3290,
+      "y": 9850,
+      "w": 390,
+      "h": 926,
+      "title": "المعلم/ة: المحادثة بملء الشاشة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXClosed.dc.html": {
+      "x": 3760,
+      "y": 9850,
+      "w": 390,
+      "h": 844,
+      "title": "قبل فتح المحادثة (للطرفين)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXLive.dc.html": {
+      "x": 4230,
+      "y": 9850,
+      "w": 390,
+      "h": 1100,
+      "title": "الدخول إلى الحلقة من المحادثة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXLiveHome.dc.html": {
+      "x": 0,
+      "y": 11450,
+      "w": 390,
+      "h": 880,
+      "title": "الرئيسية — الحلقة جارية الآن",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXLivePush.dc.html": {
+      "x": 470,
+      "y": 11450,
+      "w": 390,
+      "h": 1100,
+      "title": "إشعار «بدأت الحلقة» وسطر الجدول",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXTeacherToday.dc.html": {
+      "x": 940,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "المعلمة — الطالب ينتظر في الغرفة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXPreview.dc.html": {
+      "x": 1410,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — قبل الدخول (أول مرة)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXLiveFamily.dc.html": {
+      "x": 1880,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — العائلة، المعلمة تتحدث",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXParticipants.dc.html": {
+      "x": 2350,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "المشاركون — للعرض فقط",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXTeacher.dc.html": {
+      "x": 2820,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "المعلمة — الحلقة مع أدوات الإدارة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXShare.dc.html": {
+      "x": 3290,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — السبورة على المسرح",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXNotice.dc.html": {
+      "x": 3760,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — كتمك المعلم، وإعادة الاتصال",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXLeave.dc.html": {
+      "x": 4230,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — تأكيد المغادرة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXLeft.dc.html": {
+      "x": 4700,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — خرجت منها بنفسك",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXEnded.dc.html": {
+      "x": 5170,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — أنهتها المعلمة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LessonXFamilyCard.dc.html": {
+      "x": 0,
+      "y": 13050,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — أزرار الحلقة القادمة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LessonXFamilyConfirmed.dc.html": {
+      "x": 470,
+      "y": 13050,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — بعد تأكيد الحضور",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LessonXDecline.dc.html": {
+      "x": 940,
+      "y": 13050,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — الاعتذار عن الحلقة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LessonXReschedule.dc.html": {
+      "x": 1410,
+      "y": 13050,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — طلب موعد آخر",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LessonXPending.dc.html": {
+      "x": 1880,
+      "y": 13050,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — الطلب بانتظار الموافقة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LessonXPush.dc.html": {
+      "x": 2350,
+      "y": 13050,
+      "w": 390,
+      "h": 1100,
+      "title": "الأسرة — التذكير وحالات الجدول",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LessonXStaffRequests.dc.html": {
+      "x": 2820,
+      "y": 13050,
+      "w": 390,
+      "h": 1100,
+      "title": "المعلم/ة — ردود الأسر",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LessonXStaffAnswer.dc.html": {
+      "x": 3290,
+      "y": 13050,
+      "w": 390,
+      "h": 844,
+      "title": "المعلم/ة — اقترح موعدًا آخر",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LessonXFamilyAnswer.dc.html": {
+      "x": 3760,
+      "y": 13050,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — رد المعلم/ة على الطلب",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXFamilyThreadDark.dc.html": {
+      "x": 0,
+      "y": 14650,
+      "w": 390,
+      "h": 1013,
+      "title": "المحادثة: الأسرة — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXTeacherThreadDark.dc.html": {
+      "x": 470,
+      "y": 14650,
+      "w": 390,
+      "h": 926,
+      "title": "المعلم/ة: المحادثة بملء الشاشة — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "ChatXFamilyEntryDark.dc.html": {
+      "x": 940,
+      "y": 14650,
+      "w": 390,
+      "h": 844,
+      "title": "الرئيسية: المحادثة بجانب الجرس — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "SwitchSheetDark.dc.html": {
+      "x": 1410,
+      "y": 14650,
+      "w": 390,
+      "h": 844,
+      "title": "لمسة على الاسم: اختر الطالب — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXLiveHomeDark.dc.html": {
+      "x": 1880,
+      "y": 14650,
+      "w": 390,
+      "h": 880,
+      "title": "الرئيسية — الحلقة جارية الآن — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LessonXFamilyCardDark.dc.html": {
+      "x": 2350,
+      "y": 14650,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — أزرار الحلقة القادمة — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXLiveFamilyDark.dc.html": {
+      "x": 2820,
+      "y": 14650,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — العائلة، المعلمة تتحدث — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXTeacherDark.dc.html": {
+      "x": 3290,
+      "y": 14650,
+      "w": 390,
+      "h": 844,
+      "title": "المعلمة — الحلقة مع أدوات الإدارة — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXChat.dc.html": {
+      "x": 5640,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — المحادثة مفتوحة (الأسرة)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXTeacherChat.dc.html": {
+      "x": 6110,
+      "y": 11450,
+      "w": 390,
+      "h": 844,
+      "title": "المعلمة — المحادثة مفتوحة في الحلقة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXChatDark.dc.html": {
+      "x": 3760,
+      "y": 14650,
+      "w": 390,
+      "h": 844,
+      "title": "الحلقة — المحادثة مفتوحة (الأسرة) — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RoomXTeacherChatDark.dc.html": {
+      "x": 4230,
+      "y": 14650,
+      "w": 390,
+      "h": 844,
+      "title": "المعلمة — المحادثة في الحلقة — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LoginFamily.dc.html": {
+      "x": 0,
+      "y": 16250,
+      "w": 390,
+      "h": 844,
+      "title": "تسجيل الدخول — الأسرة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LoginStaff.dc.html": {
+      "x": 470,
+      "y": 16250,
+      "w": 390,
+      "h": 844,
+      "title": "تسجيل الدخول — الموظفون (زر اللغة جديد)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LoginFamilyDark.dc.html": {
+      "x": 940,
+      "y": 16250,
+      "w": 390,
+      "h": 844,
+      "title": "تسجيل الدخول — الأسرة — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LoginStaffDark.dc.html": {
+      "x": 1410,
+      "y": 16250,
+      "w": 390,
+      "h": 844,
+      "title": "تسجيل الدخول — الموظفون — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LogoGreen.dc.html": {
+      "x": 1880,
+      "y": 16250,
+      "w": 390,
+      "h": 844,
+      "title": "شعار تطبيق الأسرة: شعار الموظفين على الأخضر",
+      "is_interactive": true,
+      "radius": 28
+    }
   },
-  "order": ["Main.dc.html", "Home.dc.html", "Child.dc.html", "Attended.dc.html", "Report.dc.html", "Absent.dc.html", "Package.dc.html", "Schedule.dc.html", "Children.dc.html", "Account.dc.html", "Alerts.dc.html", "StudentHome.dc.html", "StudentSchedule.dc.html", "Reports.dc.html", "StudentAccount.dc.html"],
+  "order": [
+    "Main.dc.html",
+    "Home.dc.html",
+    "Child.dc.html",
+    "Attended.dc.html",
+    "Report.dc.html",
+    "Absent.dc.html",
+    "Package.dc.html",
+    "Schedule.dc.html",
+    "Children.dc.html",
+    "Account.dc.html",
+    "Alerts.dc.html",
+    "StudentHome.dc.html",
+    "StudentSchedule.dc.html",
+    "Reports.dc.html",
+    "StudentAccount.dc.html",
+    "SwitchHome.dc.html",
+    "SwitchSheet.dc.html",
+    "SwitchDone.dc.html",
+    "SwitchReports.dc.html",
+    "Adult.dc.html",
+    "FamilyChatEntry.dc.html",
+    "FamilyChatThread.dc.html",
+    "FamilyChatClosed.dc.html",
+    "StaffChatList.dc.html",
+    "StaffChatThread.dc.html",
+    "AssistantChatThread.dc.html",
+    "RoomPreview.dc.html",
+    "RoomAlone.dc.html",
+    "RoomLive.dc.html",
+    "RoomShare.dc.html",
+    "RoomClosed.dc.html",
+    "ChatXFamilyEntry.dc.html",
+    "ChatXFamilyThread.dc.html",
+    "ChatXReply.dc.html",
+    "ChatXAttach.dc.html",
+    "ChatXVoice.dc.html",
+    "ChatXMenu.dc.html",
+    "ChatXTeacherList.dc.html",
+    "ChatXTeacherThread.dc.html",
+    "ChatXClosed.dc.html",
+    "ChatXLive.dc.html",
+    "RoomXLiveHome.dc.html",
+    "RoomXLivePush.dc.html",
+    "RoomXTeacherToday.dc.html",
+    "RoomXPreview.dc.html",
+    "RoomXLiveFamily.dc.html",
+    "RoomXParticipants.dc.html",
+    "RoomXTeacher.dc.html",
+    "RoomXShare.dc.html",
+    "RoomXNotice.dc.html",
+    "RoomXLeave.dc.html",
+    "RoomXLeft.dc.html",
+    "RoomXEnded.dc.html",
+    "LessonXFamilyCard.dc.html",
+    "LessonXFamilyConfirmed.dc.html",
+    "LessonXDecline.dc.html",
+    "LessonXReschedule.dc.html",
+    "LessonXPending.dc.html",
+    "LessonXPush.dc.html",
+    "LessonXStaffRequests.dc.html",
+    "LessonXStaffAnswer.dc.html",
+    "LessonXFamilyAnswer.dc.html",
+    "ChatXFamilyThreadDark.dc.html",
+    "ChatXTeacherThreadDark.dc.html",
+    "ChatXFamilyEntryDark.dc.html",
+    "SwitchSheetDark.dc.html",
+    "RoomXLiveHomeDark.dc.html",
+    "LessonXFamilyCardDark.dc.html",
+    "RoomXLiveFamilyDark.dc.html",
+    "RoomXTeacherDark.dc.html",
+    "RoomXChat.dc.html",
+    "RoomXTeacherChat.dc.html",
+    "RoomXChatDark.dc.html",
+    "RoomXTeacherChatDark.dc.html",
+    "LoginFamily.dc.html",
+    "LoginStaff.dc.html",
+    "LoginFamilyDark.dc.html",
+    "LoginStaffDark.dc.html",
+    "LogoGreen.dc.html"
+  ],
   "notes": {
-    "title": {"x": 0, "y": -300, "text": "تطبيق العائلات — ولي الأمر", "kind": "title1", "maxW": 1800},
-    "studentTitle": {"x": 0, "y": 4100, "text": "الطالب — بلا «أبنائي» ولا باقة", "kind": "title1", "maxW": 1800},
-    "chat": {"x": 1410, "y": 1180, "text": "المحادثة مغلقة من «القيم» افتراضيًا: لا تبويب ولا أيقونة محادثة، ولا روابط واتساب داخل التطبيق.", "w": 340, "color": "teal"},
-    "student": {"x": 1410, "y": 1700, "text": "شريط ولي الأمر: الرئيسية · الجدول · أبنائي · حسابي (تقارير كل ابن داخل صفحته). شريط الطالب: الرئيسية · الجدول · التقارير · حسابي، والطالب يدخل مباشرة إلى صفحته. الجرس أعلى الشاشة للإشعارات. الطالب الصغير لا يرى الباقة ولا أي مبلغ.", "w": 340, "color": "orange"},
-    "join": {"x": 1410, "y": 2220, "text": "«ادخل الحلقة» يفتح ما هو مفعّل للمعلم: Google Meet أو غرفة الأكاديمية (تُسجَّل الحلقة فيها فقط).", "w": 340, "color": "green"}
+    "title": {
+      "x": 0,
+      "y": -300,
+      "text": "تطبيق العائلات — ولي الأمر",
+      "kind": "title1",
+      "maxW": 1800
+    },
+    "studentTitle": {
+      "x": 0,
+      "y": 4100,
+      "text": "الطالب — بلا «أبنائي» ولا باقة",
+      "kind": "title1",
+      "maxW": 1800
+    },
+    "chat": {
+      "x": 1410,
+      "y": 1180,
+      "text": "المحادثة مغلقة من «القيم» افتراضيًا: لا تبويب ولا أيقونة محادثة، ولا روابط واتساب داخل التطبيق.",
+      "w": 340,
+      "color": "teal"
+    },
+    "student": {
+      "x": 1410,
+      "y": 1700,
+      "text": "شريط ولي الأمر: الرئيسية · الجدول · أبنائي · حسابي (تقارير كل ابن داخل صفحته). شريط الطالب: الرئيسية · الجدول · التقارير · حسابي، والطالب يدخل مباشرة إلى صفحته. الجرس أعلى الشاشة للإشعارات. الطالب الصغير لا يرى الباقة ولا أي مبلغ.",
+      "w": 340,
+      "color": "orange"
+    },
+    "join": {
+      "x": 1410,
+      "y": 2220,
+      "text": "«ادخل الحلقة» يفتح ما هو مفعّل للمعلم: Google Meet أو غرفة الأكاديمية (تُسجَّل الحلقة فيها فقط).",
+      "w": 340,
+      "color": "green"
+    },
+    "switchTitle": {
+      "x": 0,
+      "y": 5600,
+      "text": "التبديل بين الأبناء، والطالب بلا ولي أمر",
+      "kind": "title1",
+      "maxW": 2270
+    },
+    "switchNote": {
+      "x": 2350,
+      "y": 5850,
+      "text": "ولي أمر له أكثر من ابن: اسم الطالب المعروض وصورته أعلى كل تبويب. لمسة على الاسم تفتح القائمة، ولمسة على ابن آخر تبدّل كل الصفحات، ثم يظهر تنبيه قصير باسمه. القائمة تُظهر «تقرير جديد» لكل ابن. شاشة «اختر الطالب» الكاملة عند أول دخول فقط. الإشعار عن أي ابن يفتح صفحته مباشرة.",
+      "w": 340,
+      "color": "blue"
+    },
+    "adultNote": {
+      "x": 2350,
+      "y": 6330,
+      "text": "طالب سجّل برقمه هو، بلا ولي أمر: يدخل إلى صفحته مباشرة، بلا قائمة ولا اسم للتبديل. يرى «أهلًا بك» و«حضرتها» و«الباقة» لأنه هو من يدفع. اليوم يرى كلمات ولي الأمر، وهذا ما سيُصلح. إن كان على رقمه أبناء أيضًا تظهر القائمة و«أنا» أولها.",
+      "w": 340,
+      "color": "green"
+    },
+    "chatTitle": {
+      "x": 0,
+      "y": 6950,
+      "text": "المحادثة عند تفعيلها — الأسرة والموظفون (كما في الكود)",
+      "kind": "title1",
+      "maxW": 2740
+    },
+    "chatNote": {
+      "x": 2820,
+      "y": 7200,
+      "text": "منسوخة من الكود كما هي، والشاشة واحدة للجميع. الأسرة: «المحادثة» آخر الأقسام في صفحة الطالب، محادثة واحدة لكل طالب، بلا شريط سفلي. يكتب فيها المعلم/ة وولي الأمر والطالب ومسؤول المتابعة. المعلم/ة: «المزيد» ← «رسائل الطلاب». مسؤول المتابعة: «طلابي» ← المحادثة. ملاحظتان من الكود: مع خمسة أقسام يخرج «المحادثة» جزئيًا عن الشاشة، ونص الرسالة بلا خط ولا حجم محدد.",
+      "w": 340,
+      "color": "teal"
+    },
+    "roomTitle": {
+      "x": 0,
+      "y": 8270,
+      "text": "الحلقة داخل التطبيق — شاشة تطبيق الموظفين نفسها",
+      "kind": "title1",
+      "maxW": 2270
+    },
+    "roomNote": {
+      "x": 2350,
+      "y": 8520,
+      "text": "شاشة تطبيق الموظفين كما هي، والمعلم/ة والأسرة يرونها بالشكل نفسه. لا أدوات للمعلم داخل التطبيق: كتم الآخرين والإخراج والتسجيلات في المتصفح فقط. للأسرة بعد نقلها إلى التطبيق (نسخة 0.3.0، خلف «الحلقات داخل التطبيق»). اليوم «ادخل الحلقة» عند الأسرة يفتح المتصفح. «فتح في المتصفح» يفتح رابط الموظفين، فيجب أن يفتح رابط الأسرة. مكان الرسم الرمادي يظهر الفيديو.",
+      "w": 340,
+      "color": "blue"
+    },
+    "chatXTitle": {
+      "x": 0,
+      "y": 9600,
+      "text": "المحادثة بعد التحسين — بأجزاء محادثة واتساب (الأسرة والموظفون)",
+      "kind": "title1",
+      "maxW": 4620
+    },
+    "chatXNote": {
+      "x": 4700,
+      "y": 9850,
+      "text": "تصميم مقترح، لا كود بعد. يحتاج إلى عمل في الخادم: الرد على رسالة، والصور والملفات والصوت، وعلامات القراءة («قُرئت»)، و«جارٍ الكتابة». أما فواصل الأيام وألوان الأسماء والرموز والشريط بترتيب واتساب فلا تحتاج إلى الخادم. الملفات والصوت والقوائم الأصلية تحتاج إلى الإصدار 0.3.0.",
+      "w": 340,
+      "color": "teal"
+    },
+    "roomXTitle": {
+      "x": 0,
+      "y": 11200,
+      "text": "الحلقة داخل التطبيق بعد التحسين — الدخول المباشر وأدوات المعلم/ة",
+      "kind": "title1",
+      "maxW": 6500
+    },
+    "roomXNote": {
+      "x": 6580,
+      "y": 11450,
+      "text": "تصميم مقترح. الدخول بلمسة واحدة حين تكون الحلقة جارية، والمعاينة في المرة الأولى فقط. يحتاج إلى قرارك: إظهار من في الغرفة، وإشعار «بدأت الحلقة»، وزر «إنهاء الحلقة للجميع». يتطلب LiveKit و@expo/ui في الإصدار 0.3.0.",
+      "w": 340,
+      "color": "blue"
+    },
+    "lessonXTitle": {
+      "x": 0,
+      "y": 12800,
+      "text": "تأكيد الحضور والاعتذار وطلب موعد آخر — الأسرة والموظفون",
+      "kind": "title1",
+      "maxW": 4150
+    },
+    "lessonXNote": {
+      "x": 4230,
+      "y": 13050,
+      "text": "تصميم مقترح على القواعد الحالية. قرارات: من يرد على طلب الأسرة (اليوم الإدارة فقط)، وماذا يحدث للحلقة بعد اعتذار مجاني، وخطر احتساب الحلقة غيابًا إذا لم يُرد على الطلب.",
+      "w": 340,
+      "color": "orange"
+    },
+    "darkTitle": {
+      "x": 0,
+      "y": 14400,
+      "text": "الوضع الليلي — الشاشات نفسها بألوان الوضع الليلي في التطبيق",
+      "kind": "title1",
+      "maxW": 4620
+    },
+    "darkNote": {
+      "x": 4700,
+      "y": 14650,
+      "text": "الألوان من لوحة الوضع الليلي في التطبيق نفسه، لكل لون حسب دوره. لا تغيير في النصوص ولا في التخطيط. كل نص بتباين 4.5:1 على الأقل. يتبع التطبيق إعداد الهاتف تلقائيًا.",
+      "w": 340,
+      "color": "purple"
+    },
+    "loginTitle": {
+      "x": 0,
+      "y": 16000,
+      "text": "تسجيل الدخول وشعار تطبيق الأسرة",
+      "kind": "title1",
+      "maxW": 2270
+    },
+    "loginNote": {
+      "x": 2350,
+      "y": 16250,
+      "text": "زر اللغة موجود في دخول الأسرة، وجديد في دخول الموظفين في المكان نفسه. اليوم تُحفظ اللغة على الجهاز فقط؛ حفظها في الحساب من الخادم لم يُبنَ بعد.",
+      "w": 340,
+      "color": "blue"
+    }
   },
   "designSystems": []
 }
