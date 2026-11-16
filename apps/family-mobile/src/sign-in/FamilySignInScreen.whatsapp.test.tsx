@@ -47,7 +47,7 @@ beforeEach(() => {
 test('no tabs: the academy emblem, the wordmark, the welcome, the number, the password one tap away', async () => {
   await show();
   expect(await screen.findByLabelText(t.familyAuth.phone)).toBeTruthy();
-  // The academy emblem, the logo of ayatalbayan.com (owner 2026-11-16); decorative, so hidden from a11y.
+  // The academy emblem (ayatalbayan.com's logo, owner 2026-11-16); decorative: hidden from a11y.
   expect(screen.getByTestId('mark-large', { includeHiddenElements: true })).toBeTruthy();
   expect(screen.getByRole('header', { name: `${s.wordmark}، ${s.wordmarkArabic}` })).toBeTruthy();
   expect(screen.getByText(s.welcome)).toBeTruthy();
