@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { errorCode } from '@/common/http/errors';
 import { PHONES } from '@/modules/people/sign-in/sign-in.fakes.accounts';
 import { signInWorld } from '@/modules/people/sign-in/sign-in.world';
 
@@ -13,7 +14,7 @@ async function signIn(w: World, phone: string) {
   return w.family.verify({ phone, code: w.send.lastTo(phone) }, IP);
 }
 
-const failure = (p: Promise<unknown>) => p.then(() => 'signed in').catch((e: Error) => e.message);
+const failure = (p: Promise<unknown>) => p.then(() => 'signed in', (e: unknown) => errorCode(e));
 const codeLogins = (w: World) => w.auth.users.filter((u) => u.email.endsWith('@family.invalid'));
 
 /** s1 already has a login of its own (made by its first password, or by staff). */

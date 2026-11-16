@@ -1,6 +1,8 @@
 import type { PeopleStudentPatch } from '@ab/shared';
+import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { AuditService } from '@/common/audit/audit.service';
+import { errorCode } from '@/common/http/errors';
 import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { GuardiansService } from '@/modules/people/guardians';
 import { StudentsService } from '@/modules/people/students';
@@ -24,10 +26,11 @@ function setup(results: Record<string, FakeResult[]>) {
   return { ...fake, edit };
 }
 
+const statusOf = (e: unknown) => (e instanceof HttpException ? e.getStatus() : 0);
 const refusal = (p: Promise<unknown>) =>
   p.then(
     () => 'saved',
-    (e: { status?: number; response?: { code?: string } }) => [e.status, e.response?.code],
+    (e: unknown) => [statusOf(e), errorCode(e)],
   );
 
 describe("PeopleEditService: the student's own number", () => {
