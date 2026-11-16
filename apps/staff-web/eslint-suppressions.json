@@ -8566,7 +8566,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/sales/sales/subscriptions/HistoryEntryCard.tsx": {
@@ -10912,11 +10912,6 @@
     }
   },
   "src/features/teaching/student-channel/MonitorChannel.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/student-channel/MonitorChannelButton.tsx": {
     "max-len": {
       "count": 1
     }
