@@ -76,6 +76,7 @@ test("the student's own number is sent as E.164 (owner 2026-11-17)", async () =>
   await renderWithQuery(<PeopleEditSection studentId="s1" />, clientWith(PEOPLE_KEYS));
   await fireEvent.press(screen.getByRole('button', { name: E.editData }));
   await screen.findByDisplayValue('أم سهيلة');
+  expect(screen.getByText(E.studentPhoneHint)).toBeTruthy();
   await fireEvent.changeText(screen.getByLabelText(E.fields.studentPhone), '+966 50 000 0007');
   await fireEvent.press(screen.getByRole('button', { name: E.save }));
   expect(await screen.findByText(E.saved)).toBeTruthy();
