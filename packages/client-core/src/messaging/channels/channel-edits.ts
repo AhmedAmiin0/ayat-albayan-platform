@@ -1,25 +1,20 @@
 import { channelActions, type ChannelActions, type ChannelMessageView } from '@ab/shared';
-import type { ChannelAudience } from './channels.js';
+import { channelMessagesPath, type ChannelAudience } from './channels.js';
 
 // «تعديل» / «حذف للجميع» in the student channel (owner 2026-10-30) for web and mobile. The API
 // enforces
 // the same rule; the menu only offers what it would accept now.
 
-const BASE: Readonly<Record<ChannelAudience, (id: string) => string>> = {
-  teacher: (id) => `/teachers/me/channels/${id}`,
-  portal: (id) => `/portal/students/${id}/channel`,
-  admin: (id) => `/students/${id}/channel`,
-  // The owning assistant edits and deletes her own messages (owner 2026-11-16).
-  sales: (id) => `/sales/students/${id}/channel`,
-};
-
-/** PATCH (edit) / DELETE (delete for everyone) …/messages/:id. */
+/**
+ * PATCH (edit) / DELETE (delete for everyone) …/messages/:id, on every audience's route (the
+ * owning assistant's too, owner 2026-11-16).
+ */
 export function channelMessagePath(input: {
   audience: ChannelAudience;
   studentId: string;
   messageId: string;
 }): string {
-  return `${BASE[input.audience](input.studentId)}/messages/${input.messageId}`;
+  return `${channelMessagesPath(input)}/${input.messageId}`;
 }
 
 /**
