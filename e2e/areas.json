@@ -348,6 +348,7 @@
         "platform/shell-menu.spec.ts",
         "people/student-filters.spec.ts",
         "people/student-lists.spec.ts",
+        "people/student-own-phone.api.spec.ts",
         "people/student-profile.spec.ts",
         "teaching/student-recordings-api.spec.ts",
         "people/student-statuses.spec.ts",
