@@ -269,17 +269,23 @@ no `wa_message_id`, `error_code` `uncertain` / `crm_uncertain`, created in the l
   db: no such crm row (the normal case: staff sent it from the CRM's dashboard) → nothing, no CRM call.
   Otherwise `GET /conversations/{conversation_id}/messages?limit=50` (finds the item with that wamid) and
   `GET /conversations/{conversation_id}` (its contact's phone, made E.164 with `waIdToE164`).
-- **Fallback sweep** `crm-confirm-sweep`, every 5 min, rows 2 min – 6 h old, at most 10 a pass:
+- **The read** is every uncertain row of the last 6 h 10 min (newest first, at most 500; a full read is not
+  trusted and confirms nothing), kept to the crm ones in code. One CRM account = one WhatsApp number is
+  assumed: every crm line and number shares `WACRM_API_BASE` / `WACRM_API_KEY`.
+- **Fallback sweep** `crm-confirm-sweep`, every 5 min, rows 2 min – 6 h old, at most 10 a pass (those
+  never tried, or tried longest ago, first: no row starves the others):
   `GET /contacts?search=<E.164 digits>` (the contact whose phone is exactly the row's E.164), `GET
   /conversations?contact_id=…` (first 3), then the same messages list.
 - **One matcher** (`crm-match.ts`) for both: same E.164; the row created within [CRM `created_at` − 10 min,
   + 1 min]; a template row whose CRM name (`crmTemplateName`, or its `meta_name`, as `crm-body.ts` may send
   it) is the item's `template_name`, or a text row whose body equals `content_text` after folding whitespace;
   an outbound item whose wamid no row holds. Exactly ONE row, else nothing changes (counts logged, the
-  phone's last 4 digits only). The sweep also needs exactly one CRM item for the row.
+  phone's last 4 digits only). Both paths also need exactly one CRM message for the row (a resend from the
+  CRM's dashboard within the window leaves it as is).
 - **One compare-and-set** (still failed, no wamid, still uncertain; the `ManualEchoRepo` shape): the wamid,
   the event's status (sweep: the CRM item's), `sent_at` = the CRM's `created_at`, error cleared; then
-  `stampDelivered`. Later statuses move it on as any row.
+  `stampDelivered`. Later statuses move it on as any row; a status that lost the race to another status of
+  the same wamid moves the row once it holds the wamid.
 - **Never a resend, never a pause.** No match leaves the row uncertain for staff. The lookups have their own
   error handling (5 s each, never the sender's plan or credential hold, never a push, nothing marked
   failed): a 401 / 403 logs «CRM key lacks <scope>: uncertain sends are not confirmed» once per process

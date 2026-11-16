@@ -21,7 +21,7 @@ export interface ConfirmWrite {
   patch: TablesUpdate<'messages'>;
 }
 
-/** Created in the span, at most `limit` (the oldest first). */
+/** Created in the span, at most `limit` (the newest first). */
 export interface UncertainSpan {
   since: Date;
   until: Date;
@@ -45,7 +45,7 @@ export class CrmConfirmRepo {
       .in('error_code', [...UNCERTAIN_CODES])
       .gte('created_at', span.since.toISOString())
       .lte('created_at', span.until.toISOString())
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: false })
       .limit(span.limit);
     if (error) throw fail('uncertain rows read', error.message);
     return data;

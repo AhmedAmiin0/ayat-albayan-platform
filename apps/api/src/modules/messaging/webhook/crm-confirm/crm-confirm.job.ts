@@ -1,5 +1,10 @@
 import { waIdToE164 } from '@ab/shared';
-import { Injectable, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  type OnApplicationBootstrap,
+  type OnModuleDestroy,
+} from '@nestjs/common';
 import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import type { CrmLookup, CrmMessage } from '@/modules/messaging/whatsapp';
@@ -11,21 +16,22 @@ import { LOOKBACK_MS, type UncertainRow } from './crm-match';
 // and matched by the SAME matcher as the webhook. Never a resend; a lookup failure ends the pass
 // (the next one retries).
 
-export const EVERY_MS = 5 * 60_000;
+const EVERY_MS = 5 * 60_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
 const FIRST_RUN_MS = 3 * 60_000;
 /** A row younger than this may still get its webhook: left to it. */
 const MIN_AGE_MS = 2 * 60_000;
 /** Rows looked up per pass (each costs 3+ CRM calls; the CRM allows 120 a minute). */
-export const MAX_ROWS = 10;
-/** Every uncertain row read, so a look-alike outside the pass still makes a match ambiguous. */
-const READ_ROWS = 100;
+const MAX_ROWS = 10;
 const MAX_CONVERSATIONS = 3;
 
-const oldEnough =
-  (cutoff: number) =>
-  (r: UncertainRow): boolean =>
-    Date.parse(r.created_at) <= cutoff;
+/** Old enough for the sweep (2 min), still within the lookback (6 h). */
+const due =
+  (now: number) =>
+  (r: UncertainRow): boolean => {
+    const age = now - Date.parse(r.created_at);
+    return age >= MIN_AGE_MS && age <= LOOKBACK_MS;
+  };
 
 @BackgroundJob({ name: 'crm-confirm-sweep' })
 @Injectable()
@@ -37,7 +43,10 @@ export class CrmConfirmSweepJob implements OnApplicationBootstrap, OnModuleDestr
     run: () => this.runOnce(),
   });
 
-  constructor(private readonly confirm: CrmConfirm) {}
+  /** row id → when a pass last looked it up: the least recently tried go first (no starving). */
+  private tried = new Map<string, number>();
+
+  constructor(@Inject(CrmConfirm) private readonly confirm: CrmConfirm) {}
 
   onApplicationBootstrap(): void {
     this.ticker.start();
@@ -49,17 +58,30 @@ export class CrmConfirmSweepJob implements OnApplicationBootstrap, OnModuleDestr
 
   /** One pass; never throws. The rows confirmed. */
   async runOnce(now = new Date()): Promise<number> {
-    const span = { since: new Date(now.getTime() - LOOKBACK_MS), until: now, limit: READ_ROWS };
     return this.confirm.guarded(async () => {
-      const p = await this.confirm.pending(span);
-      return p ? this.pass(p, now.getTime() - MIN_AGE_MS) : 0;
+      const p = await this.confirm.pending(now);
+      return p ? this.pass(p, now.getTime()) : 0;
     }, 0);
   }
 
-  private async pass(p: Pending, cutoff: number): Promise<number> {
+  /** This pass's rows: due, never tried or tried longest ago first, newest first among equals. */
+  private pick(rows: readonly UncertainRow[], now: number): UncertainRow[] {
+    const last = (r: UncertainRow): number => this.tried.get(r.id) ?? 0;
+    const picked = rows
+      .filter(due(now))
+      .sort((a, b) => last(a) - last(b))
+      .slice(0, MAX_ROWS);
+    const kept = rows.flatMap((r): [string, number][] =>
+      this.tried.has(r.id) ? [[r.id, last(r)]] : [],
+    );
+    this.tried = new Map([...kept, ...picked.map((r): [string, number] => [r.id, now])]);
+    return picked;
+  }
+
+  private async pass(p: Pending, now: number): Promise<number> {
     let rows = p.rows;
     let confirmed = 0;
-    for (const row of p.rows.filter(oldEnough(cutoff)).slice(0, MAX_ROWS)) {
+    for (const row of this.pick(p.rows, now)) {
       const done = await this.row({ lookup: p.lookup, rows }, row);
       rows = done ? rows.filter((r) => r.id !== row.id) : rows;
       confirmed += done ? 1 : 0;
@@ -76,17 +98,7 @@ export class CrmConfirmSweepJob implements OnApplicationBootstrap, OnModuleDestr
     const contact = contacts.find((c) => waIdToE164(c.phone ?? '') === row.phone_e164);
     if (!contact) return false;
     const items = await messagesOf(p.lookup, contact.id);
-    const matcher = await this.confirm.matcher(
-      p.rows,
-      items.flatMap((i) => i.whatsapp_message_id ?? []),
-    );
-    const hits = items.filter((i) => matcher(i, contact.phone).row?.id === row.id);
-    const [item] = hits;
-    if (!item) return false;
-    return this.confirm.write(
-      { row: hits.length === 1 ? row : null, count: hits.length },
-      { item },
-    );
+    return this.confirm.confirmRow({ row, items, phone: contact.phone }, p.rows);
   }
 }
 

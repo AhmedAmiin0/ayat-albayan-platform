@@ -1,5 +1,5 @@
 import { ar } from '@/common/infra/i18n/server-text';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { CrmConfirm } from '@/modules/messaging/webhook/crm-confirm';
 import { ExternalStatus } from '@/modules/messaging/webhook/external/external-status';
@@ -30,7 +30,7 @@ export class StatusService {
     private readonly queries: WebhookRepo,
     private readonly push: PushService,
     private readonly external: ExternalStatus,
-    private readonly crm: CrmConfirm,
+    @Inject(CrmConfirm) private readonly crm: CrmConfirm,
   ) {}
 
   async handle(e: StatusEvent): Promise<void> {

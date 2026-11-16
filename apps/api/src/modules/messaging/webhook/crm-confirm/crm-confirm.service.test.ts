@@ -61,7 +61,7 @@ describe('CrmConfirm.adopt', () => {
 
   it('the one matching row gets the wamid, the event status and the CRM time', async () => {
     const f = scriptedFetch(
-      ok([crmMessage({ id: 'x', whatsapp_message_id: 'w.2' }), crmMessage()]),
+      ok([crmMessage({ id: 'x', whatsapp_message_id: 'w.2', template_name: 'other' }), crmMessage()]),
       CONVERSATION,
     );
     const { svc, repo } = confirmOf([uncertainRow()], f.fetch);
@@ -103,5 +103,29 @@ describe('CrmConfirm.adopt', () => {
     expect(warn).toHaveBeenCalledWith(
       'CRM key lacks messages:read: uncertain sends are not confirmed',
     );
+  });
+
+  it('a second CRM message like the row (a resend from the dashboard): left as is', async () => {
+    const twin = crmMessage({ id: 'cm-2', whatsapp_message_id: 'w.2' });
+    const f = scriptedFetch(ok([twin, crmMessage()]), CONVERSATION);
+    const { svc, repo } = confirmOf([uncertainRow()], f.fetch);
+    await expect(svc.adopt(event())).resolves.toBe(false);
+    expect(repo.attach).not.toHaveBeenCalled();
+  });
+
+  it('lost to a concurrent status of the same wamid: true, so the status path moves it', async () => {
+    const f = scriptedFetch(ok([crmMessage()]), CONVERSATION);
+    const { svc, repo } = confirmOf([uncertainRow()], f.fetch);
+    repo.attach.mockResolvedValueOnce(false);
+    repo.held.mockResolvedValueOnce(new Set()).mockResolvedValueOnce(new Set(['wamid.crm-1']));
+    await expect(svc.adopt(event())).resolves.toBe(true);
+  });
+
+  it('a full read (500 uncertain rows) is not trusted: no CRM call', async () => {
+    const f = scriptedFetch();
+    const { svc, repo } = confirmOf([], f.fetch);
+    repo.uncertain.mockResolvedValueOnce(Array.from({ length: 500 }, () => uncertainRow()));
+    await expect(svc.adopt(event())).resolves.toBe(false);
+    expect(f.requests).toHaveLength(0);
   });
 });

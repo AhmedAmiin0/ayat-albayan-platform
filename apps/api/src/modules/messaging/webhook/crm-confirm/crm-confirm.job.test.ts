@@ -86,4 +86,15 @@ describe('CrmConfirmSweepJob', () => {
     await s.job.runOnce(NOW);
     expect(s.f.requests).toHaveLength(10);
   });
+
+  it('the next pass tries the rows the last one did not reach first', async () => {
+    const rows = Array.from({ length: 12 }, (_, i) =>
+      uncertainRow({ id: `m${String(i)}`, phone_e164: `+2010000001${String(i).padStart(2, '0')}` }),
+    );
+    const s = sweep(rows, ...Array.from({ length: 20 }, () => ok([])));
+    await s.job.runOnce(NOW);
+    await s.job.runOnce(new Date(NOW.getTime() + 300_000));
+    const searched = s.f.requests.slice(10).map((r) => r.url.split('search=')[1]);
+    expect(searched.slice(0, 2)).toEqual(['201000000110', '201000000111']);
+  });
 });

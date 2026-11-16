@@ -18,7 +18,7 @@ import {
 // the pass.
 
 /** A lookup never waits as long as a send: the webhook answers within its budget. */
-export const LOOKUP_TIMEOUT_MS = 5_000;
+const LOOKUP_TIMEOUT_MS = 5_000;
 /** The newest messages read per conversation. */
 const PAGE = 50;
 const REFUSED: ReadonlySet<number> = new Set([401, 403]);

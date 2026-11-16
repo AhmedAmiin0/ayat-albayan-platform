@@ -14,6 +14,8 @@ const MINUTE = 60_000;
 /** The row was created at most 10 min before the CRM wrote the message, at most 1 min after. */
 const BEFORE_MS = 10 * MINUTE;
 const AFTER_MS = MINUTE;
+/** Read this far back: a row just past the lookback still makes a look-alike ambiguous. */
+export const READ_BACK_MS = LOOKBACK_MS + BEFORE_MS;
 
 /** A failed crm row with no wamid, as the match reads it. */
 export type UncertainRow = Pick<
@@ -35,7 +37,7 @@ export type TemplateNames = ReadonlyMap<string, readonly string[]>;
 /**
  * The CRM's message: its contact's phone as the CRM gives it, and whether a row holds its wamid.
  */
-export interface CrmSent {
+interface CrmSent {
   item: CrmMessage;
   phone: string | null | undefined;
   held: boolean;
