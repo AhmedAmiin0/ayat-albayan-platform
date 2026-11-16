@@ -16,6 +16,7 @@ import type { Contact, OutboundRow, WebhookRepo } from './webhook.repo';
 import { QuickReplies } from './inbound/webhook.quick-reply';
 import { StatusService } from './status/webhook.status.service';
 import { externalServices } from './external/external.fakes';
+import type { CrmConfirm } from './crm-confirm';
 
 export const LESSON_ID = '00000000-0000-4000-8000-0000000000a1';
 export const GUARDIAN_ID = '00000000-0000-4000-8000-0000000000b1';
@@ -121,6 +122,7 @@ export function services(d: Deps = fakeDeps()) {
   const store = new InboundStore(queries, d.leads as unknown as LeadsService, d.ratings as unknown as RatingStore);
   const inbound = new InboundService(store, replies, push);
   const external = externalServices(d.queries);
-  const statuses = new StatusService(queries, push, external.status);
-  return { ...d, replies, inbound, statuses, external };
+  const crm = { adopt: vi.fn().mockResolvedValue(false) };
+  const statuses = new StatusService(queries, push, external.status, crm as unknown as CrmConfirm);
+  return { ...d, replies, inbound, statuses, external, crm };
 }

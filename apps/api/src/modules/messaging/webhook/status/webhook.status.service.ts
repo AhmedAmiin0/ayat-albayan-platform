@@ -1,6 +1,7 @@
 import { ar } from '@/common/infra/i18n/server-text';
 import { Injectable } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
+import { CrmConfirm } from '@/modules/messaging/webhook/crm-confirm';
 import { ExternalStatus } from '@/modules/messaging/webhook/external/external-status';
 import type { EchoEvent, StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 import { WebhookRepo, type OutboundRow } from '@/modules/messaging/webhook/webhook.repo';
@@ -18,9 +19,10 @@ export function failedLabel(row: Pick<OutboundRow, 'template_key' | 'body'>): st
 
 /**
  * Meta delivery statuses → our outbound rows (R-MSG-05), matched by wa_message_id. A status for a
- * wamid we hold no row for is ignored (the CRM's, before cut-over), except on a Kapso number: there
- * staff also send from Kapso's inbox, so the message is read back and stored first (external/), and
- * its later statuses move it forward here. failed → reminder_failed push (only for a row we had).
+ * wamid we hold no row for is ignored, except on a Kapso number (staff also send from Kapso's
+ * inbox: the message is read back and stored first, external/) and from the CRM's webhook (a
+ * timed-out send it did make is confirmed, crm-confirm/); later statuses move it forward here.
+ * failed → reminder_failed push (only for a row we had).
  */
 @Injectable()
 export class StatusService {
@@ -28,6 +30,7 @@ export class StatusService {
     private readonly queries: WebhookRepo,
     private readonly push: PushService,
     private readonly external: ExternalStatus,
+    private readonly crm: CrmConfirm,
   ) {}
 
   async handle(e: StatusEvent): Promise<void> {
@@ -39,8 +42,13 @@ export class StatusService {
         continue;
       }
       // Stored (with this status) or found stored: the next pass moves it on if it is behind.
-      if (attempt > 0 || !(await this.external.adopt(e))) return;
+      if (attempt > 0 || !(await this.adopt(e))) return;
     }
+  }
+
+  /** The CRM's status confirms a timed-out send; any other is read back from Kapso (or ignored). */
+  private adopt(e: StatusEvent): Promise<boolean> {
+    return e.crm ? this.crm.adopt(e) : this.external.adopt(e);
   }
 
   /** false = another status landed meanwhile (compare-and-set lost): read the row again. */

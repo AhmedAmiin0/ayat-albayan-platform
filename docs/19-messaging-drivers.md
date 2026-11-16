@@ -171,7 +171,7 @@ line stays off (`duplicate_chat_phone`, boot log `WA_CHAT_PROVIDER (crm, same as
 | 401 / 403, 400 `whatsapp_not_configured` | `credential: 'crm'` (the key, or the CRM's own WhatsApp connection, is down: the line, not the message): the queue is held 15 min, uncounted, line paused, one push a day; rows read `crm_auth` («رفض نظام CRM مفتاح الواجهة…»). A 403 naming a scope («missing the 'templates:read' scope») also keeps it as `missingScope`: «مزامنة» / «إرسال إلى ميتا» read `crm_scope_missing` with that scope (docs/39) |
 | 429 | queued until `Retry-After` (default 1 min, max 1 h), uncounted, `crm_rate_limited` (120 req/min per key); the line pauses for the rest of the pass, **no** «token refused» push |
 | 502 `meta_error`, 500 `template_malformed`, any other 4xx, a 3xx | failed at once with `crm_<code>` and the CRM's message (nothing was sent). Redirects are never followed (`redirect: 'manual'`); a body that is not the CRM's envelope is kept as `http_<status>` only |
-| 500 `internal`, other 5xx, a timeout, a connection lost after the request left | `uncertain` (the CRM may have reached Meta before failing its own insert). **No idempotency key: never resent automatically** |
+| 500 `internal`, other 5xx, a timeout (15 s, `DEFAULT_TIMEOUT_MS`, kept), a connection lost after the request left | `uncertain` (the CRM may have reached Meta before failing its own insert, or sent it after our abort: incident 2026-11-15). **No idempotency key: never resent automatically.** Staff read «لم يتأكد الإرسال بعد»; the CRM's status webhook (or the 5-minute sweep) confirms it with the read scopes `conversations:read`, `messages:read`, `contacts:read` («Confirming an uncertain send» below) |
 
 The `WA_ALLOWED_RECIPIENTS` allow-list and `messaging_enabled` gate are unchanged and run before any client.
 One factory (`client-factory.ts` `whatsappClient`) builds every line's and number's client. Module mode: a
@@ -254,10 +254,42 @@ t=<unix>,v1=<hex>` with v1 = HMAC-SHA256(`WACRM_WEBHOOK_SECRET`, `${t}.${rawBody
 than 5 minutes from now = 401 (replay); unset secret = every POST 401. Deduped on the payload `id` (in memory
 per instance, 10 min; a duplicate elsewhere is harmless, statuses only move forward; a failed write answers
 500 and forgets the id). `message.status_updated` → the existing delivery-status path by `wa_message_id`
-(ticks; the CRM's conversation id is not stored). `message.received` / `conversation.created` → logged, 200.
+(ticks; the CRM's conversation id is never stored on a row, only kept on the event for the confirm below).
+`message.received` / `conversation.created` → logged, 200.
 Never sends anything. Checked against wacrm `98b5bd2` (`src/lib/webhooks/sign.ts`, `deliver.ts`): same header,
 same `t=…,v1=…` format, the HMAC key is the whole `whsec_…` string (never base64-decoded), 300 s tolerance,
 envelope `{id, event, occurred_at, account_id, data:{whatsapp_message_id, conversation_id, status}}`.
+
+**Confirming an uncertain send** (incident 2026-11-15: a template send took the CRM ~18 s, our 15 s abort
+marked it `uncertain` although the family got it; the owner: confirm with the CRM, do not raise the timeout).
+Code: `webhook/crm-confirm/`, lookups `drivers/crm/crm-lookup.ts`. A row it may confirm: outbound, `failed`,
+no `wa_message_id`, `error_code` `uncertain` / `crm_uncertain`, created in the last 6 h, sent through the CRM
+(its number's driver in module mode, else its line's).
+- **Main path, the CRM's status webhook.** A `message.status_updated` for a wamid no row holds first reads our
+  db: no such crm row (the normal case: staff sent it from the CRM's dashboard) → nothing, no CRM call.
+  Otherwise `GET /conversations/{conversation_id}/messages?limit=50` (finds the item with that wamid) and
+  `GET /conversations/{conversation_id}` (its contact's phone, made E.164 with `waIdToE164`).
+- **Fallback sweep** `crm-confirm-sweep`, every 5 min, rows 2 min – 6 h old, at most 10 a pass:
+  `GET /contacts?search=<E.164 digits>` (the contact whose phone is exactly the row's E.164), `GET
+  /conversations?contact_id=…` (first 3), then the same messages list.
+- **One matcher** (`crm-match.ts`) for both: same E.164; the row created within [CRM `created_at` − 10 min,
+  + 1 min]; a template row whose CRM name (`crmTemplateName`, or its `meta_name`, as `crm-body.ts` may send
+  it) is the item's `template_name`, or a text row whose body equals `content_text` after folding whitespace;
+  an outbound item whose wamid no row holds. Exactly ONE row, else nothing changes (counts logged, the
+  phone's last 4 digits only). The sweep also needs exactly one CRM item for the row.
+- **One compare-and-set** (still failed, no wamid, still uncertain; the `ManualEchoRepo` shape): the wamid,
+  the event's status (sweep: the CRM item's), `sent_at` = the CRM's `created_at`, error cleared; then
+  `stampDelivered`. Later statuses move it on as any row.
+- **Never a resend, never a pause.** No match leaves the row uncertain for staff. The lookups have their own
+  error handling (5 s each, never the sender's plan or credential hold, never a push, nothing marked
+  failed): a 401 / 403 logs «CRM key lacks <scope>: uncertain sends are not confirmed» once per process
+  and stops; a 429, a 5xx or a timeout skips the pass.
+- **Scopes** (the owner adds them to the notifications line's CRM key, in the CRM): `conversations:read`,
+  `messages:read`, `contacts:read`. «افحص الخطوط» lists the missing ones as `crm_read_scopes_missing`
+  («ينقص مفتاح واجهة نظام CRM صلاحية …، فلا يُؤكَّد …»).
+- **Staff see** a failed `uncertain` / `crm_uncertain` row as «لم يتأكد الإرسال بعد» (same «!» and saffron
+  tone, `bubbleWord` in `packages/shared` ticks.ts, web and mobile), reason «قد تكون وصلت. ننتظر تأكيد نظام
+  CRM؛ لا تُعِد الإرسال قبل التحقق من واتساب.», never «لم تُرسل».
 
 **Delivery ticks: one click in «التكاملات»** (owner 2026-11-01). wacrm `98b5bd2` has no UI for outgoing
 webhooks (its public API only), and it shows an endpoint's signing secret once, at creation. So under

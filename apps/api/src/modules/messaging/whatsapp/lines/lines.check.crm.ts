@@ -11,6 +11,8 @@ import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 const CRM_SEND_SCOPE = 'messages:send';
 /** The scopes «مزامنة» and «إرسال إلى ميتا» need on a crm line (docs/39). */
 const CRM_TEMPLATE_SCOPES = ['templates:read', 'templates:write'] as const;
+/** The read scopes that confirm a timed-out send (docs/19 «Confirming an uncertain send»). */
+const CRM_READ_SCOPES = ['conversations:read', 'messages:read', 'contacts:read'] as const;
 
 const meSchema = z.object({ key: z.object({ scopes: z.array(z.string()) }) });
 
@@ -23,7 +25,10 @@ interface CrmCheckInput {
 }
 
 type CallError = LineCheckView['errors'][number];
-type ScopeFacts = Pick<LineCheckView, 'crm_send_scope' | 'crm_template_scopes_missing'>;
+type ScopeFacts = Pick<
+  LineCheckView,
+  'crm_send_scope' | 'crm_template_scopes_missing' | 'crm_read_scopes_missing'
+>;
 
 /** The key's scopes (GET /me); a refused key or a failed call is an errors[] entry (scopes unknown). */
 async function scopesOf(conn: CrmConn): Promise<{ scopes: string[] | null; error?: CallError }> {
@@ -37,13 +42,18 @@ async function scopesOf(conn: CrmConn): Promise<{ scopes: string[] | null; error
   }
 }
 
-const UNKNOWN: ScopeFacts = { crm_send_scope: null, crm_template_scopes_missing: null };
+const UNKNOWN: ScopeFacts = {
+  crm_send_scope: null,
+  crm_template_scopes_missing: null,
+  crm_read_scopes_missing: null,
+};
 
-/** messages:send, and the template scopes the key lacks; both unknown (null) when /me failed. */
+/** messages:send, and the template / read scopes the key lacks; unknown (null) when /me failed. */
 const scopeFacts = (scopes: readonly string[] | null): ScopeFacts =>
   (scopes ? {
     crm_send_scope: scopes.includes(CRM_SEND_SCOPE),
     crm_template_scopes_missing: CRM_TEMPLATE_SCOPES.filter((s) => !scopes.includes(s)),
+    crm_read_scopes_missing: CRM_READ_SCOPES.filter((s) => !scopes.includes(s)),
   } : UNKNOWN);
 
 /**
