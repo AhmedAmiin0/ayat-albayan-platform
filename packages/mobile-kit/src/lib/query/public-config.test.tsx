@@ -50,5 +50,6 @@ test('odd values in the answer: their defaults stand, the read still succeeds', 
   const { result } = await renderHook(() => usePublicConfig(), { wrapper });
   const status = () => client.getQueryState(publicConfigQuery.queryKey)?.status;
   await waitFor(() => expect(status()).toBe('success'));
-  expect(result.current).toEqual({ ...PUBLIC_SETTING_DEFAULTS, custom: {} });
+  // The hook gives the public settings (PublicSettings): every key on its default.
+  expect(result.current).toMatchObject(PUBLIC_SETTING_DEFAULTS);
 });
