@@ -14,7 +14,7 @@ export interface SavedPick {
   studentId: string;
 }
 
-export interface PickState {
+export interface PickStoreState {
   /** The saved pick is read (or could not be). */
   ready: boolean;
   saved: SavedPick | null;
@@ -23,7 +23,7 @@ export interface PickState {
 export interface PickStore {
   subscribe: (listener: () => void) => () => void;
   /** The same object until something changes (useSyncExternalStore). */
-  current: () => PickState;
+  current: () => PickStoreState;
   pick: (choice: SavedPick) => void;
 }
 
@@ -45,7 +45,7 @@ function parsePick(raw: string | null): SavedPick | null {
 
 /** This login's saved student id (another profile's pick is none) and whether it is known. */
 export function savedFor(
-  state: PickState,
+  state: PickStoreState,
   profileId: string,
 ): { savedId: string | null; ready: boolean } {
   const saved = state.saved?.profileId === profileId ? state.saved : null;
@@ -53,10 +53,10 @@ export function savedFor(
 }
 
 export function pickStore(storage: SeenStorage): PickStore {
-  let state: PickState = { ready: false, saved: null };
+  let state: PickStoreState = { ready: false, saved: null };
   let reading: Promise<void> | null = null;
   const listeners = new Set<() => void>();
-  const update = (next: Partial<PickState>): void => {
+  const update = (next: Partial<PickStoreState>): void => {
     state = { ...state, ...next };
     for (const listener of listeners) listener();
   };
