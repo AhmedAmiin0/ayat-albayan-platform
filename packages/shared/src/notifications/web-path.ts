@@ -45,12 +45,13 @@ const MEETINGS: Record<Area, string> = {
 };
 
 /**
- * A chat message (docs/31 §2): the teacher's «رسائل الطلاب» on that student; the owning
- * assistant's «طلابي», where each row opens its chat; nobody else gets the kind (home).
+ * A chat message (docs/31 §2): the teacher's «رسائل الطلاب» on that student; the seated
+ * assistant's «كل الطلاب» (the seat is not «طلابي»: owner 2026-11-16 «… but only 1»), where her
+ * row opens its chat; nobody else gets the kind (home).
  */
 const CHANNEL: Record<Area, (studentId: string | null) => string> = {
   teacher: (id) => (id ? `/teacher/messages?student=${id}` : '/teacher/messages'),
-  sales: () => '/sales/students?view=mine',
+  sales: () => '/sales/students',
   admin: () => HOME_BY_ROLE.admin,
   assistant: () => HOME_BY_ROLE.assistant,
 };
