@@ -29,11 +29,11 @@ export function TakeSeatButton({ seat }: { seat: ChannelSeatApi }) {
       >
         {isPending ? S.taking : S.take}
       </Button>
-      {error && (
+      {error ? (
         <span role="alert" className="text-xs text-danger">
           {ERRORS[seatError(error)]}
         </span>
-      )}
+      ) : null}
     </div>
   );
 }
