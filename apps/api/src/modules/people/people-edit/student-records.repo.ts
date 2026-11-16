@@ -68,7 +68,7 @@ export class StudentRecordsRepo {
     return data;
   }
 
-  /** The student's own WhatsApp number (guardian_phones.student_id): the delete cascades it away. */
+  /** The student's own number (guardian_phones.student_id): the delete cascades it away. */
   async ownPhone(id: string): Promise<string | null> {
     const query = this.db.from('guardian_phones').select('phone_e164').eq('student_id', id);
     const { data, error } = await query.maybeSingle();

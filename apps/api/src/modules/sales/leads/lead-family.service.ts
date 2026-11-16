@@ -31,7 +31,8 @@ function linkError(error: PostgrestError): Error {
  * 404 lead_not_found / student_not_found; 409 number_taken, family_has_second_number, teacher_number,
  * lead_has_family (the number is another family's main number).
  * A second number opens the family's login (owner 2026-11-17): once that login exists, only the
- * admin adds one (as the main number, PeopleEditService), else 409 guardian_has_login.
+ * admin adds one (as the main number, PeopleEditService), else 409 guardian_has_login, a
+ * non-admin's retry on such a family included (not linked: false).
  */
 @Injectable()
 export class LeadFamilyService {
