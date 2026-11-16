@@ -14,6 +14,6 @@ export {
 export { seenStore, type SeenStorage, type SeenStore } from './seen-store.js';
 export { familyPick, picksChild, type FamilyPick } from './family-pick.js';
 export {
-  PICKED_CHILD_KEY, pickStore, savedFor, type PickStoreState, type PickStore, type SavedPick,
+  PICKED_CHILD_KEY, pickStore, savedFor, type PickStore, type PickStoreState, type SavedPick,
 } from './pick-store.js';
 export { dayWord, lessonMinutes, type DayWord } from './day-word.js';
