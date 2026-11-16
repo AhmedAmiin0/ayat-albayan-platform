@@ -1,15 +1,22 @@
+import type { PortalStudent } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { familyTabs, hasFamilyTab } from './family-tabs.js';
 
+const student: PortalStudent = {
+  id: 's1', code: 'AB-0001', name: 's1', tz: 'Asia/Riyadh', contact_is_self: false,
+};
+
 describe('familyTabs', () => {
-  it('a guardian: home, schedule, children, account', () => {
-    expect(familyTabs('guardian')).toEqual(['home', 'schedule', 'children', 'account']);
-    expect(hasFamilyTab('guardian', 'reports')).toBe(false);
+  it('a student in view (own, or the child a guardian works as): their reports have a tab', () => {
+    const one = { state: 'one', student } as const;
+    expect(familyTabs(one)).toEqual(['home', 'schedule', 'reports', 'account']);
+    expect(hasFamilyTab(one, 'reports')).toBe(true);
   });
 
-  it('a student never gets «أبنائي»; their reports have a tab', () => {
-    expect(familyTabs('student')).toEqual(['home', 'schedule', 'reports', 'account']);
-    expect(hasFamilyTab('student', 'children')).toBe(false);
-    expect(hasFamilyTab('student', 'reports')).toBe(true);
+  it('no student yet, or none: no «التقارير»', () => {
+    for (const state of ['loading', 'choose', 'empty'] as const) {
+      expect(familyTabs({ state })).toEqual(['home', 'schedule', 'account']);
+      expect(hasFamilyTab({ state }, 'reports')).toBe(false);
+    }
   });
 });

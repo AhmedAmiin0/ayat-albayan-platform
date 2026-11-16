@@ -8,11 +8,10 @@ interface ScheduleDayProps {
   day: WeekDay;
   clock: ClockOptions;
   now: Date;
-  named: boolean;
 }
 
 /** One day of the week: «اليوم · الأحد 16» or «الثلاثاء 18», then its lessons in one card. */
-export function ScheduleDay({ day, clock, now, named }: ScheduleDayProps) {
+export function ScheduleDay({ day, clock, now }: ScheduleDayProps) {
   const { color } = useTheme();
   const first = day.lessons[0];
   const at = new Date(first?.lesson.starts_at ?? now);
@@ -34,7 +33,7 @@ export function ScheduleDay({ day, clock, now, named }: ScheduleDayProps) {
         {day.lessons.map((entry, i) => (
           <View key={entry.lesson.id}>
             {i > 0 ? <InsetSeparator /> : null}
-            <ScheduleRow entry={entry} clock={clock} now={now} named={named} />
+            <ScheduleRow entry={entry} clock={clock} now={now} />
           </View>
         ))}
       </InsetGroup>

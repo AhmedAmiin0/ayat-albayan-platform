@@ -64,12 +64,3 @@ export function weekSchedule(input: WeekInput, now: Date): WeekDay[] {
   for (const { entry, day } of dated) days.set(day, [...(days.get(day) ?? []), entry]);
   return [...days].map(([day, lessons]) => ({ day, lessons }));
 }
-
-type TodayInput = Pick<WeekInput, 'children' | 'tz'>;
-
-/** The home's «اليوم»: today's lessons still ahead across every child, or null when none. */
-export function todaySchedule(input: TodayInput, now: Date): WeekDay | null {
-  const today = localDateIn(now, input.tz);
-  const days = weekSchedule({ ...input, offset: 0, only: null }, now);
-  return days.find((d) => d.day === today) ?? null;
-}

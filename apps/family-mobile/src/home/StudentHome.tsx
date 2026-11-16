@@ -1,14 +1,21 @@
-import type { PortalStudent } from '@ab/shared';
+import type { PortalKind, PortalStudent } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 import { ChildBody } from '@/child';
 import { FamilyPage, GreetingHeader } from '@/nav';
 import { useRefreshPortal } from '@/portal';
 
+interface StudentHomeProps {
+  student: PortalStudent;
+  /** Who reads it: the student («حضرتها») or their guardian («حضرها», and «الباقة»). */
+  kind: PortalKind;
+}
+
 /**
- * A student's home is their own page (docs/50 §6, canvas StudentHome): «أهلًا بك» over their
- * name, then «القادمة» / «حضرتها» / «غبت عنها» (and «الباقة» for an adult who pays: childTabs).
+ * Home is the page of the student in view (docs/50 §6, canvas StudentHome): «أهلًا بك» over their
+ * name, then «القادمة» / «حضرها» / «غاب عنها» and «الباقة» for a viewer who sees money (childTabs).
+ * A student reads their own; a guardian the child they work as, with the guardian's words.
  */
-export function StudentHome({ student }: { student: PortalStudent }) {
+export function StudentHome({ student, kind }: StudentHomeProps) {
   const refresh = useRefreshPortal();
   return (
     <FamilyPage
@@ -17,7 +24,7 @@ export function StudentHome({ student }: { student: PortalStudent }) {
       }
       onRefresh={refresh}
     >
-      <ChildBody student={student} kind="student" />
+      <ChildBody student={student} kind={kind} />
     </FamilyPage>
   );
 }

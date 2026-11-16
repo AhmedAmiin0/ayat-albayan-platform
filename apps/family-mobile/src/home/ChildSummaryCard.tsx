@@ -1,11 +1,9 @@
 import { packageSummary, reportAt } from '@ab/client-core';
 import type { ClockOptions, PortalKind, PortalReport, PortalStudent } from '@ab/shared';
-import { router } from 'expo-router';
 import { View } from 'react-native';
 import { AppText, Chevron, t, type, useTheme } from '@ab/mobile-kit';
 import { Figure, NewMark, PressCard, StudentIdentity } from '@/ui';
 import { dateLine } from '@/lessons';
-import { childHref } from '@/nav';
 import { UsedBar } from '@/package';
 import { useChildPackage, useChildSummary, useFamilyClock } from '@/portal';
 import { ChildNextLine } from './ChildNextLine';
@@ -28,14 +26,15 @@ function PackageBar({ studentId }: { studentId: string }) {
 interface ChildSummaryCardProps {
   student: PortalStudent;
   kind: PortalKind;
+  /** The whole card is one button (on «اختر الطالب»: work as this child). */
+  onPress: () => void;
 }
 
 /**
- * One child on «أبنائي» (canvas Children), read top-down: who (and «جديد» when a report waits),
- * the next lesson, the counts, the package for money viewers, the last report; one button that
- * opens the child.
+ * One child on «اختر الطالب» (canvas Children), read top-down: who (and «جديد» when a report
+ * waits), the next lesson, the counts, the package for money viewers, the last report; one button.
  */
-export function ChildSummaryCard({ student, kind }: ChildSummaryCardProps) {
+export function ChildSummaryCard({ student, kind, onPress }: ChildSummaryCardProps) {
   const { color } = useTheme();
   const clock = { ...useFamilyClock(), tz: student.tz };
   const s = useChildSummary(student, kind);
@@ -44,7 +43,7 @@ export function ChildSummaryCard({ student, kind }: ChildSummaryCardProps) {
     <PressCard
       label={`${student.name} ${student.code}`}
       hint={t.portal.app.home.open.replace('{name}', student.name)}
-      onPress={() => router.push(childHref(student.id))}
+      onPress={onPress}
       style={{ gap: 14 }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>

@@ -1,23 +1,30 @@
-import type { PortalHome } from '@ab/shared';
 import { EmptyState, t } from '@ab/mobile-kit';
 import { LoadState } from '@/ui';
 import { FamilyHeader, FamilyPage } from '@/nav';
-import { ownStudent, usePortalMe, useRefreshPortal } from '@/portal';
+import { useFamilyPick, usePortalMe, useRefreshPortal } from '@/portal';
 import { OwnReports } from './OwnReports';
 
-function ReportsOf({ me }: { me: PortalHome }) {
-  const student = ownStudent(me);
-  if (!student) return <EmptyState title={t.portal.noStudents} />;
-  return <OwnReports student={student} />;
-}
-
-/** «تقاريري» (a student's tab, canvas Reports): their own sent reports, newest first, by month. */
+/**
+ * «التقارير» (canvas Reports): the sent reports of the student in view, newest first, by month;
+ * «تقاريري» for a student's own. The tab shows only once that student is known (familyTabs).
+ */
 export function StudentReportsScreen() {
   const me = usePortalMe();
+  const pick = useFamilyPick();
   const refresh = useRefreshPortal();
+  const R = t.portal.app;
+  const title = me.data?.kind === 'student' ? R.reports.title : R.tabs.reports;
   return (
-    <FamilyPage header={<FamilyHeader title={t.portal.app.reports.title} />} onRefresh={refresh}>
-      <LoadState query={me}>{(data) => <ReportsOf me={data} />}</LoadState>
+    <FamilyPage header={<FamilyHeader title={title} />} onRefresh={refresh}>
+      <LoadState query={me}>
+        {() =>
+          pick.state === 'one' ? (
+            <OwnReports key={pick.student.id} student={pick.student} />
+          ) : (
+            <EmptyState title={t.portal.noStudents} />
+          )
+        }
+      </LoadState>
     </FamilyPage>
   );
 }

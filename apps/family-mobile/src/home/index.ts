@@ -1,2 +1,2 @@
 export { HomeScreen } from './HomeScreen';
-export { ChildrenScreen } from './ChildrenScreen';
+export { PickChildScreen } from './PickChildScreen';

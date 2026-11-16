@@ -1,14 +1,12 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import type { PortalKind, PortalStudent } from '@ab/shared';
-import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { childHref } from '@/nav';
 import { lesson, student } from '@/portal/portal.fixtures';
 import { ChildSummaryCard } from './ChildSummaryCard';
 
 const mockFetch = jest.fn();
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+const onPress = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (path: string) => mockFetch(path),
@@ -46,7 +44,10 @@ function serve(lessons: unknown[]) {
 }
 
 const show = (kind: PortalKind, who: PortalStudent = student()) =>
-  renderWithQuery(<ChildSummaryCard student={who} kind={kind} />, freshQueryClient());
+  renderWithQuery(
+    <ChildSummaryCard student={who} kind={kind} onPress={onPress} />,
+    freshQueryClient(),
+  );
 const used = t.portal.app.package.usedOf.replace('{used}', '8').replace('{total}', '12');
 
 beforeEach(() => jest.clearAllMocks());
@@ -63,11 +64,11 @@ test('a guardian: the next lesson, the counts, the package, the last report', as
   expect(screen.getByText(new RegExp(`^${C.lastReport.replace('{date}', '')}`))).toBeTruthy();
 });
 
-test('the whole card is one button that opens the child', async () => {
+test('the whole card is one button', async () => {
   serve([]);
   await show('guardian');
   await fireEvent.press(screen.getByRole('button', { name: /سارة/ }));
-  expect(router.push).toHaveBeenCalledWith(childHref(student().id));
+  expect(onPress).toHaveBeenCalled();
 });
 
 test('no lesson ahead: the calm note once the lessons are known', async () => {
