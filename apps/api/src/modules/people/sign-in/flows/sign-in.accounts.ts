@@ -1,11 +1,13 @@
 import { isFamilyEmail, parseIdentifier, type CodeSession, type PasswordSession } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { Provisioner } from '@/modules/people/sign-in/accounts/provision';
+import { conflict } from '@/common/http/errors';
+import { blocksFamily, Provisioner } from '@/modules/people/sign-in/accounts/provision';
+import { StudentLogins } from '@/modules/people/sign-in/accounts/student-login';
 import {
   AUTH_GATE,
   SUBJECT_STORE,
   type AuthGate,
-  type GuardianRec,
+  type FamilyLogin,
   type SubjectStore,
   type TeacherRec,
 } from '@/modules/people/sign-in/sign-in.ports';
@@ -14,6 +16,10 @@ import type { PasswordTarget } from './targets';
 import { teacherLoginId } from './teacher-destination';
 
 type LoginKind = 'student' | 'username' | 'phone';
+interface CodeLogin {
+  userId: string;
+  session: CodeSession;
+}
 
 /** The account side of the sign-in flows: the records, GoTrue and lazy provisioning. */
 @Injectable()
@@ -22,10 +28,11 @@ export class SignInAccounts {
     @Inject(SUBJECT_STORE) private readonly subjects: SubjectStore,
     @Inject(AUTH_GATE) private readonly auth: AuthGate,
     private readonly provision: Provisioner,
+    @Inject(StudentLogins) private readonly students: StudentLogins,
   ) {}
 
-  guardianByPhone(phone: string): Promise<GuardianRec | null> {
-    return this.subjects.guardianByPhone(phone);
+  familyByPhone(phone: string): Promise<FamilyLogin | null> {
+    return this.subjects.familyByPhone(phone);
   }
 
   teacherByPhone(phone: string): Promise<TeacherRec | null> {
@@ -37,17 +44,29 @@ export class SignInAccounts {
     return teacher.login ? isFamilyEmail(await this.auth.emailOf(teacher.login.id)) : false;
   }
 
-  /** The guardian's login (made at the first verified code) and its session. 401 invalid_code. */
-  async guardianSession(guardian: GuardianRec): Promise<{ userId: string; session: CodeSession }> {
-    return this.sessionOf(await this.provision.guardian(guardian));
+  /**
+   * The login a family number opens (made at the first verified code) and its session: a
+   * student's own number → the student's login, any other → the guardian's. 409
+   * phone_belongs_to_staff when the matched number is a non-teacher staff profile's (checked at
+   * every sign-in, whichever number), 403 account_disabled, 401 invalid_code.
+   */
+  async familySession(login: FamilyLogin): Promise<CodeLogin> {
+    if (blocksFamily(await this.subjects.staffByPhone(login.phone))) {
+      throw conflict('phone_belongs_to_staff');
+    }
+    const userId =
+      login.kind === 'student'
+        ? await this.students.forCode(login.rec)
+        : await this.provision.guardian(login.rec);
+    return this.sessionOf(userId);
   }
 
   /** The teacher's login (made at her first verified code, docs/46 A3) and its session. */
-  async teacherSession(teacher: TeacherRec): Promise<{ userId: string; session: CodeSession }> {
+  async teacherSession(teacher: TeacherRec): Promise<CodeLogin> {
     return this.sessionOf(await this.provision.teacher(teacher));
   }
 
-  private async sessionOf(userId: string): Promise<{ userId: string; session: CodeSession }> {
+  private async sessionOf(userId: string): Promise<CodeLogin> {
     const email = await this.auth.emailOf(userId);
     if (!email) throw invalidCode();
     return { userId, session: await this.auth.magicLink(email) };

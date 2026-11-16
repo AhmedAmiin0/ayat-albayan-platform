@@ -1,12 +1,22 @@
 import { normalizePhone, type CodeRequest, type CodeSession, type CodeVerify } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
+import type { FamilyLogin } from '@/modules/people/sign-in/sign-in.ports';
 import { SignInAccounts } from './sign-in.accounts';
 import { codesUnavailable, invalidCode, SignInKit } from './sign-in.kit';
 
+/** The audit trail's `via` of a family code sign-in, per the login the number opened. */
+const VIA = { guardian: 'phone', student: 'student_phone' } as const satisfies Record<
+  FamilyLogin['kind'],
+  string
+>;
+
+const subjectOf = (login: FamilyLogin) => ({ kind: login.kind, id: login.rec.id });
+
 /**
- * The family's sign-in (docs/30 §1): the guardian row's phone + a WhatsApp code. The first verified
- * code makes the guardian login (lazy). The session is minted by GoTrue: only the magic link's
- * token hash leaves, and the client trades it with verifyOtp.
+ * The family's sign-in (docs/30 §1): a family number on file + a WhatsApp code. The family's main
+ * or second number opens the guardian login, a student's own number the student's login (owner
+ * 2026-11-17). The first verified code makes the login (lazy). The session is minted by GoTrue:
+ * only the magic link's token hash leaves, and the client trades it with verifyOtp.
  */
 @Injectable()
 export class FamilyCodeService {
@@ -39,30 +49,25 @@ export class FamilyCodeService {
   async verify(body: CodeVerify, ip: string): Promise<CodeSession> {
     await this.kit.guard('check', { ip, identifier: body.phone });
     if (!(await this.available())) throw codesUnavailable();
-    const phone = normalizePhone(body.phone);
-    const guardian = phone.ok ? await this.accounts.guardianByPhone(phone.e164) : null;
-    if (!guardian) throw invalidCode();
-    const ok = await this.kit.check({
-      subject: { kind: 'guardian', id: guardian.id },
-      purposes: ['sign_in'],
-      code: body.code,
-    });
-    if (!ok) throw invalidCode();
-    const { userId, session } = await this.accounts.guardianSession(guardian);
-    await this.kit.record({ userId, action: 'code_sign_in', via: 'phone' });
+    const login = await this.lookup(body.phone);
+    const check = { purposes: ['sign_in'] as const, code: body.code };
+    if (!login || !(await this.kit.check({ subject: subjectOf(login), ...check }))) {
+      throw invalidCode();
+    }
+    const { userId, session } = await this.accounts.familySession(login);
+    await this.kit.record({ userId, action: 'code_sign_in', via: VIA[login.kind] });
     return session;
   }
 
-  /** The code goes to the guardian row's own phone: the typed number is only the lookup key. */
-  private async send(raw: string): Promise<void> {
+  private async lookup(raw: string): Promise<FamilyLogin | null> {
     const phone = normalizePhone(raw);
-    if (!phone.ok || !(await this.available())) return;
-    const guardian = await this.accounts.guardianByPhone(phone.e164);
-    if (!guardian) return;
-    await this.kit.issue({
-      purpose: 'sign_in',
-      subject: { kind: 'guardian', id: guardian.id },
-      phone: guardian.phone,
-    });
+    return phone.ok ? this.accounts.familyByPhone(phone.e164) : null;
+  }
+
+  /** The code goes to the matched number ON FILE: the typed number is only the lookup key. */
+  private async send(raw: string): Promise<void> {
+    const login = (await this.available()) ? await this.lookup(raw) : null;
+    if (!login) return;
+    await this.kit.issue({ purpose: 'sign_in', subject: subjectOf(login), phone: login.phone });
   }
 }
