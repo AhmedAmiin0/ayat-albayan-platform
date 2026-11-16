@@ -18,7 +18,9 @@ const STUDENTS = [
 const IDS = PROFILES.map((p) => p.id);
 const event = { subject: 'lesson:l1', vars: { student: 'سهيلة', when: 'الأحد 5:00 م' } };
 
-async function told(kind: 'lesson_starting' | 'payment_received' | 'report_sent') {
+type Kind = 'lesson_starting' | 'payment_received' | 'report_sent' | 'channel_message';
+
+async function told(kind: Kind) {
   const { db, writes } = fakePushDb(PROFILES, { students: STUDENTS });
   const { transport, devices } = fakeExpo();
   await pushService(db, { transport }).notifyProfiles({ ...event, kind, profileIds: IDS });
@@ -47,6 +49,11 @@ describe('PushService: family kinds and readers', () => {
       .map((w) => (w.value as { dedup_key?: string }).dedup_key);
     // The second upsert hits the key already written: no new row, so no second push.
     expect(keys).toEqual(['report_sent:lesson:l1:g1', 'report_sent:lesson:l1:g1']);
+  });
+
+  it('a chat message (owner 2026-11-16): the guardian, both students and the teacher', async () => {
+    const { rows } = await told('channel_message');
+    expect(rows).toEqual(['g1', 'kid', 'adult', 't1']);
   });
 
   it('money news: the guardian and the adult student, never the child', async () => {

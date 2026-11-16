@@ -14321,14 +14321,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/channel-notify.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 3
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/student-channels/channel-open.migration.test.ts": {
     "stylistic/max-len": {
       "count": 1

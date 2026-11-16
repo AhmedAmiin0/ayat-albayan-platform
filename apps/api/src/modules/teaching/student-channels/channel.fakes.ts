@@ -85,7 +85,7 @@ export async function channelApp() {
         ]),
     ),
     ownedStudentIds: vi.fn(async (id: string) => (id === 'p-sa' ? [ST] : [])),
-    teacherProfiles: vi.fn(async () => ['p-t1']),
+    ownerIds: vi.fn(async (): Promise<string[]> => ['p-sa']),
   };
   const own = (contactIsSelf: boolean) => [
     { id: ST, code: 'AB-0201', name: 'سلمى', tz: 'Asia/Riyadh', contact_is_self: contactIsSelf },

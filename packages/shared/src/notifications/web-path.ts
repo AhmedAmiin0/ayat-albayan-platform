@@ -44,6 +44,17 @@ const MEETINGS: Record<Area, string> = {
   assistant: '/assistant',
 };
 
+/**
+ * A chat message (docs/31 §2): the teacher's «رسائل الطلاب» on that student; the owning
+ * assistant's «طلابي», where each row opens its chat; nobody else gets the kind (home).
+ */
+const CHANNEL: Record<Area, (studentId: string | null) => string> = {
+  teacher: (id) => (id ? `/teacher/messages?student=${id}` : '/teacher/messages'),
+  sales: () => '/sales/students?view=mine',
+  admin: () => HOME_BY_ROLE.admin,
+  assistant: () => HOME_BY_ROLE.assistant,
+};
+
 /** The teacher sees the lesson on their calendar; anyone else opens the student. */
 const lessonPath = (area: Area, data: Data): string =>
   area === 'teacher' ? '/teacher/calendar' : student(area, data);
@@ -62,12 +73,7 @@ const ROUTES: Record<AnyPushKind, (area: Area, data: Data) => string> = {
   },
   // «مزامنة Google» (docs/24, docs/26b §1); only admins get this kind.
   google_sync_alert: (area) => (area === 'admin' ? '/admin/settings/google' : HOME_BY_ROLE[area]),
-  // docs/31 §2: the teacher's «رسائل الطلاب» on that student; only teachers get this kind.
-  channel_message: (area, data) => {
-    const id = uuid(data, 'studentId');
-    if (area !== 'teacher') return HOME_BY_ROLE[area];
-    return id ? `/teacher/messages?student=${id}` : '/teacher/messages';
-  },
+  channel_message: (area, data) => CHANNEL[area](uuid(data, 'studentId')),
   // «محفظتي» (owner 2026-10-29): the salesperson's wallet; only sales get this kind.
   commission_earned: (area) => (area === 'sales' ? '/sales/earnings' : HOME_BY_ROLE[area]),
   // A schedule change (owner 2026-10-30): the lesson on the teacher's calendar, else the student.

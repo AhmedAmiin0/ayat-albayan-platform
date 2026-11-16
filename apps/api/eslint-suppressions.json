@@ -12223,11 +12223,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/channel-notify.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/student-channels/channel-open.migration.test.ts": {
     "max-len": {
       "count": 1

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
-import { ownershipOf } from '@/modules/sales/sales';
+import { ownershipOf, studentOwnerIds } from '@/modules/sales/sales';
 
 export interface ChannelStudent {
   id: string;
@@ -44,11 +44,8 @@ export class ChannelPeopleRepo {
     return (await ownershipOf(this.db, profileId)).studentIds;
   }
 
-  /** The profiles of these teachers (a teacher without a login gets no push). */
-  async teacherProfiles(teacherIds: readonly string[]): Promise<string[]> {
-    if (teacherIds.length === 0) return [];
-    const { data, error } = await this.db.from('teachers').select('profile_id').in('id', [...teacherIds]);
-    if (error) throw dbError(error);
-    return data.flatMap((t) => (t.profile_id ? [t.profile_id] : []));
+  /** The same ownership read backwards: who owns this student (a chat message's assistants). */
+  ownerIds(studentId: string): Promise<string[]> {
+    return studentOwnerIds(this.db, studentId);
   }
 }

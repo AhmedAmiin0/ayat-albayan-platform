@@ -140,11 +140,12 @@ below are updated accordingly (migrations `20261029000971`–`972`).
    a co-teacher's), the family the teacher's. Opening a thread marks it read up to the newest message shown
    (`POST …/read { at }`, never later than now), so a message that arrives after the screen read stays
    unread; a monitor never marks anything read.
-7. **Notifications**: a message from the family pushes to the current teacher(s) only, through the existing
-   push service, new kind `channel_message` (its catalogue row `channel_message` follows the notification
-   settings like every staff kind: off → nothing, bell only → no device push). The bell row quotes up to 80
-   characters, and it stays in that teacher's bell after a teacher change. A teacher's message notifies
-   nobody (the family reads it in the portal). No WhatsApp; nothing to monitors.
+7. **Notifications** (owner 2026-11-16 «all 4 will receive the message»): every message pushes kind
+   `channel_message` to everyone in the chat but its writer: the current teacher(s), the guardian and the
+   student logins (only while `family_chat_enabled` is on; a child too) and the owning assistant(s)
+   (`studentOwnerIds`, the owner route's rule). Never an admin. Its catalogue row follows the notification
+   settings (off → nothing, bell only → no device push). The bell row reads «رسالة في محادثة {student}» /
+   «{name}: {text}» (up to 80 characters) and opens that chat (teacher, assistant, family app). No WhatsApp.
 8. **Trial students: no chat in the trial** (owner 2026-10-29, answers the open question). The channel opens
    only after the subscription and the assignment (decision 2), matching the WhatsApp rule (no teacher ↔
    family chat before the subscription, owner 2026-10-11).

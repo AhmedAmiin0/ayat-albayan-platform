@@ -1597,11 +1597,6 @@
       "count": 1
     }
   },
-  "src/core/push/notification-route.roles.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/core/push/notification-route.ts": {
     "no-nested-ternary": {
       "count": 1

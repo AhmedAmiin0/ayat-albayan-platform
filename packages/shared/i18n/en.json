@@ -4171,8 +4171,8 @@
       "body": "{reason}"
     },
     "channel_message": {
-      "title": "New message from a student's family",
-      "body": "{student}: {text}"
+      "title": "Message in {student}'s chat",
+      "body": "{name}: {text}"
     },
     "commission_earned": {
       "title": "New commission",
@@ -7036,8 +7036,8 @@
         "trigger": "When the Google account link expires or a teacher has no mapped calendar"
       },
       "channel_message": {
-        "name": "Family message in the student channel",
-        "trigger": "When the student or guardian writes in the student channel"
+        "name": "Message in the student chat",
+        "trigger": "When someone writes in the student chat: to the teacher, the guardian, the student and the student's assistant, except the writer"
       },
       "commission_earned": {
         "name": "New assistant commission",

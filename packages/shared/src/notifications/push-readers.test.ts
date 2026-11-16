@@ -11,7 +11,8 @@ const LESSON = [
   'course_resumed',
 ] as const;
 const MONEY = ['payment_due', 'payment_received', 'commission_earned'] as const;
-const FAMILY_NEWS = [...FAMILY_PUSH_KINDS, ...LESSON];
+// Owner 2026-11-16: everyone in the student's chat hears its messages, a child login too.
+const FAMILY_NEWS = [...FAMILY_PUSH_KINDS, ...LESSON, 'channel_message' as const];
 
 describe('pushReaderOf', () => {
   it('staff roles are staff; a guardian is family', () => {
@@ -28,13 +29,13 @@ describe('pushReaderOf', () => {
 });
 
 describe('readerMayGet', () => {
-  it('a child: the lesson and report kinds only, never money', () => {
+  it('a child: the lesson and report kinds and the teacher chat, never money', () => {
     for (const kind of FAMILY_NEWS) expect(readerMayGet('child', kind)).toBe(true);
     for (const kind of MONEY) expect(readerMayGet('child', kind), kind).toBe(false);
     expect(readerMayGet('child', 'new_message')).toBe(false);
   });
 
-  it('a family: lessons, reports and their own money news; never staff work', () => {
+  it('a family: lessons, reports, the chat and their own money news; never staff work', () => {
     for (const kind of FAMILY_NEWS) expect(readerMayGet('family', kind)).toBe(true);
     expect(readerMayGet('family', 'payment_received')).toBe(true);
     expect(readerMayGet('family', 'commission_earned')).toBe(false);

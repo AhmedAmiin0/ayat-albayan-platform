@@ -27,6 +27,15 @@ describe('alertTarget', () => {
     });
     expect(alertTarget(item({ kind: 'new_lead', data: { studentId: S } }))).toBeNull();
   });
+
+  it('a chat message opens that child’s chat (owner 2026-11-16); a bad id the week', () => {
+    expect(alertTarget(item({ kind: 'channel_message', data: { studentId: S } }))).toEqual({
+      screen: 'chat', studentId: S,
+    });
+    expect(alertTarget(item({ kind: 'channel_message', data: { studentId: '../x' } }))).toEqual({
+      screen: 'schedule',
+    });
+  });
 });
 
 describe('alertSections', () => {

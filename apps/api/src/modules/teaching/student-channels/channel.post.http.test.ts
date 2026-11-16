@@ -13,21 +13,21 @@ describe('student channel messages over HTTP', () => {
   afterAll(() => t.app.close());
   beforeEach(() => vi.clearAllMocks());
 
-  it('a family message is stored trimmed with its role, read for the sender, and pushes to the current teacher only', async () => {
+  it('a family message is stored trimmed with its role, read for the sender, and pushes everyone else in the chat', async () => {
     const res = await t.post(`${PORTAL}/messages`, 'guardian', { body: '  متى الحلقة القادمة؟  ' });
     expect(res.statusCode).toBe(201);
     expect(t.queries.insert).toHaveBeenCalledWith({ channel_id: CH, sender_profile_id: 'p-g', sender_role: 'guardian', body: 'متى الحلقة القادمة؟' });
     expect(t.queries.setReadMark).toHaveBeenCalledWith(expect.objectContaining({ channelId: CH, profileId: 'p-g' }));
     expect(t.push.notifyProfiles).toHaveBeenCalledWith({
-      kind: 'channel_message', profileIds: ['p-t1'], subject: 'm2', vars: { student: 'سلمى', text: 'متى الحلقة القادمة؟' }, data: { studentId: ST },
+      kind: 'channel_message', profileIds: ['p-t1', 'p-s', 'p-sa'], subject: 'm2', vars: { student: 'سلمى', name: 'أم سلمى', text: 'متى الحلقة القادمة؟' }, data: { studentId: ST },
     });
     expect(res.json()).toEqual({ id: 'm2', body: 'متى الحلقة القادمة؟', sender_role: 'guardian', sender_name: 'أم سلمى', mine: true, created_at: '2026-10-27T10:00:00.000Z', edited: false, deleted: false });
   });
 
-  it('a teacher message notifies nobody; a student login writes as student', async () => {
+  it('a teacher message pushes the family and the assistant (owner 11-16); a student login writes as student', async () => {
     await t.post(`${TEACHER}/messages`, 'teacher', { body: 'الحلقة غدًا' });
     expect(t.queries.insert).toHaveBeenCalledWith(expect.objectContaining({ sender_role: 'teacher', sender_profile_id: 'p-t1' }));
-    expect(t.push.notifyProfiles).not.toHaveBeenCalled();
+    expect(t.push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ profileIds: ['p-g', 'p-s', 'p-sa'], vars: expect.objectContaining({ name: 'أبرار' }) }));
     await t.post(`${PORTAL}/messages`, 'student', { body: 'شكرًا' });
     expect(t.queries.insert).toHaveBeenLastCalledWith(expect.objectContaining({ sender_role: 'student' }));
   });
