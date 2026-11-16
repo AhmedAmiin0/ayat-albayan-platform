@@ -22,7 +22,9 @@ interface CrmClientOpts {
   allowed?: readonly string[] | null;
 }
 
-const DEFAULT_TIMEOUT_MS = 15_000;
+// 2026-11-15: a booking confirmation took the CRM ~18 s and was delivered after our 15 s abort
+// marked it «uncertain». 30 s stays well inside the send claim lease (CLAIM_LEASE_MS, 2 min).
+const DEFAULT_TIMEOUT_MS = 30_000;
 
 /** The runtime fetch for CRM calls: this file's one global use (H-1). */
 export const crmFetch: FetchLike = fetch;
