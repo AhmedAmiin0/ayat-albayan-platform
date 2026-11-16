@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyKey } from '@/sales-subscribe/lib/family';
-import { linkMessage, referenceLine } from '@/sales-subscribe/payment-link/link-text';
+import { linkMessage, minLine, referenceLine } from '@/sales-subscribe/payment-link/link-text';
 import { familyOf, KID, kid, PHONE, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { linkQuote, paymentLink } from '@/sales-subscribe/testing/link-fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
@@ -80,9 +80,9 @@ test('a child due for a renewal: no kind is sent, the API derives it from her pr
   expect(created()).not.toHaveProperty('kind');
 });
 
-test('below the admin minimum: refused before posting', async () => {
+test('below the lowest amount: refused before posting, the line names the amount', async () => {
   await createLink('100');
-  expect(await screen.findByText(pl.error.discount_too_large)).toBeTruthy();
+  expect(await screen.findAllByText(minLine(162, 'SAR'))).toHaveLength(2); // the hint and the error
   expect(created()).toBeUndefined();
 });
 

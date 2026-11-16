@@ -7,7 +7,7 @@ export {
   stripeFeatureQuery,
 } from './api';
 export { paymentLinkErrorText } from './errors';
-export { fillText, linkMessage, moneySlots } from './link-text';
+export { fillText, linkMessage, minAmountText, moneySlots } from './link-text';
 export { parsePayReturn } from './pay/pay-screen';
 export { PayPage } from './pay/PayPage';
 export { stripeBuild } from './stripe-build';

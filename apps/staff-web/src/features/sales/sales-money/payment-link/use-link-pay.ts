@@ -1,15 +1,15 @@
-import {
-  linkAmountProblem,
-  type PaymentLinkCreate,
-  type PaymentLinkQuoteView,
-  type PaymentLinkView,
-  type SubscriptionPricing,
+import type {
+  PaymentLinkCreate,
+  PaymentLinkQuoteView,
+  PaymentLinkView,
+  SubscriptionPricing,
 } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useDebounced } from '@/features/finance/pricing';
 import {
   createPaymentLink,
+  minAmountText,
   PAYMENT_LINKS_KEY,
   quotePaymentLink,
 } from '@/features/sales/payment-links';
@@ -32,13 +32,12 @@ type Opts = {
 const positive = (text: string, amount: number) =>
   text.trim() !== '' && Number.isFinite(amount) && amount > 0;
 
-/** The amount's problem, as text: > 0, and not below the admin's cap (linkAmountProblem). */
+/** The amount's problem, as text: > 0, and not below the quote's lowest amount, which it names. */
 function amountProblem(text: string, q: PaymentLinkQuoteView): string | null {
   const amount = Number(text);
   if (!positive(text, amount)) return t.paymentLinks.web.amountPositive;
-  const reference = q.quote.afterDiscount;
-  const problem = linkAmountProblem({ amount, reference, maxDiscountPct: q.max_discount_pct });
-  return problem ? t.paymentLinks.error[problem] : null;
+  const min = q.min_amount ?? 0;
+  return amount < min ? minAmountText(min, q.quote.currency) : null;
 }
 
 /**

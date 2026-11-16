@@ -3,15 +3,30 @@ import { paymentLink } from '@/sales-subscribe/testing/link-fixtures';
 import { agreedLine, checkAmount, linkErrorText, linkMessage, minLine, referenceLine } from './link-text';
 
 const pl = t.paymentLinks;
-const CAP = { reference: 180, maxDiscountPct: 10 };
+const FLOOR = { min: 162, currency: 'SAR' };
 
-test('the agreed amount: positive, ≤ 2 decimals, Arabic digits too, not below the cap', () => {
-  expect(checkAmount('170', CAP)).toEqual({ ok: true, amount: 170 });
-  expect(checkAmount('١٦٢', CAP)).toEqual({ ok: true, amount: 162 });
-  expect(checkAmount('161.99', CAP)).toEqual({ ok: false, error: pl.error.discount_too_large });
-  expect(checkAmount('0', CAP)).toEqual({ ok: false, error: t.salesMoney.error.amount });
-  expect(checkAmount('', CAP)).toEqual({ ok: false, error: t.salesMoney.error.amount });
-  expect(checkAmount('1', { reference: 180, maxDiscountPct: null })).toEqual({ ok: true, amount: 1 });
+test('the agreed amount: positive, ≤ 2 decimals, Arabic digits too, not below the lowest amount', () => {
+  expect(checkAmount('170', FLOOR)).toEqual({ ok: true, amount: 170 });
+  expect(checkAmount('١٦٢', FLOOR)).toEqual({ ok: true, amount: 162 });
+  expect(checkAmount('0', FLOOR)).toEqual({ ok: false, error: t.salesMoney.error.amount });
+  expect(checkAmount('', FLOOR)).toEqual({ ok: false, error: t.salesMoney.error.amount });
+  expect(checkAmount('1', { min: null, currency: 'SAR' })).toEqual({ ok: true, amount: 1 });
+});
+
+test('below the lowest amount: the line names it (10 on a 180 package, 2026-11-16)', () => {
+  const low = { ok: false, error: minLine(162, 'SAR') };
+  expect(checkAmount('161.99', FLOOR)).toEqual(low);
+  expect(checkAmount('10', { min: 153, currency: 'SAR' })).toEqual({
+    ok: false,
+    error: minLine(153, 'SAR'),
+  });
+});
+
+test('an amount the API refused under the floor says the lowest amount, never the pills’ line', () => {
+  const pills = new ApiError(403, { code: 'discount_not_allowed', min: 153, currency: 'SAR' });
+  expect(linkErrorText(pills)).toBe(minLine(153, 'SAR'));
+  const cap = new ApiError(400, { code: 'discount_too_large', min: 162, currency: 'SAR' });
+  expect(linkErrorText(cap, 'fallback')).toBe(minLine(162, 'SAR'));
 });
 
 test('the chat text: the student, the lessons, the amount and the platform link', () => {

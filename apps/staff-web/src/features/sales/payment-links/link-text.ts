@@ -10,6 +10,10 @@ export function fillText(template: string, values: Record<string, string | numbe
 /** The `{amount} {currency}` pair of a paymentLinks string: «290» and «ر.س». */
 export const moneySlots = (amount: number, currency: string) => ({ amount: formatAmount(amount), currency: currencySymbol(currency) });
 
+/** «أقل مبلغ مسموح به: 153 ر.س»: the lowest agreed amount of a link (the quote's min_amount). */
+export const minAmountText = (min: number, currency: string): string =>
+  fillText(t.paymentLinks.minAmount, moneySlots(min, currency));
+
 /** «إرسال في المحادثة»: the text she sends herself, the link's url on its own line. */
 export function linkMessage(link: Pick<PaymentLinkView, 'student' | 'lessons' | 'amount' | 'currency' | 'url'>): string {
   return fillText(t.paymentLinks.message, { student: link.student.name, lessons: link.lessons, ...moneySlots(link.amount, link.currency), url: link.url });

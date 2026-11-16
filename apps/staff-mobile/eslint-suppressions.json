@@ -6998,7 +6998,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/sales-subscribe/payment-link/list/PaymentLinkItem.test.tsx": {
@@ -7013,9 +7013,6 @@
   },
   "src/sales-subscribe/payment-link/use-link-pay.ts": {
     "complexity": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },

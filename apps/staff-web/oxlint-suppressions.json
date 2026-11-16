@@ -7700,11 +7700,6 @@
       "count": 6
     }
   },
-  "src/features/sales/payment-links/errors.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/features/sales/payment-links/link-text.ts": {
     "stylistic/max-len": {
       "count": 2

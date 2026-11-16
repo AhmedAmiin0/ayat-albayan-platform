@@ -7028,7 +7028,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -7046,9 +7046,6 @@
   },
   "src/sales-subscribe/payment-link/use-link-pay.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },

@@ -5,6 +5,7 @@ import { ApiError } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
 import { PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
+import { minAmountText } from '@/features/sales/payment-links';
 import { answer, LINK_QUOTE } from '@/features/sales/sales-money/payment-link/link.fixture';
 import { SALES_QUOTE, student } from '@/features/sales/sales-money/sales-money-fixture';
 import { SalesMoneyFlow } from '@/features/sales/sales-money/SalesMoneyFlow';
@@ -67,12 +68,13 @@ describe('«اشتراك جديد» → «دفع إلكتروني» (owner 2026-
     expect(screen.queryByText(t.salesMoney.price)).toBeNull();
   });
 
-  it('refuses an amount below the cap or not above 0, before anything is created', async () => {
+  it('refuses an amount below the lowest (naming it) or not above 0, before anything is created', async () => {
     await online();
     customOn();
     fireEvent.change(amountBox(), { target: { value: String(Number(LINK_QUOTE.min_amount) - 1) } });
     await create();
-    expect(screen.getByText(P.error.discount_too_large)).toBeTruthy();
+    const lowest = minAmountText(Number(LINK_QUOTE.min_amount), 'SAR');
+    expect(screen.getAllByText(lowest)).toHaveLength(2); // the hint and the error
     fireEvent.change(amountBox(), { target: { value: '0' } });
     expect(screen.getByText(P.web.amountPositive)).toBeTruthy();
     expect(posted('/sales/payment-links')).toHaveLength(0);

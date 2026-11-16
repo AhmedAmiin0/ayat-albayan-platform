@@ -3,6 +3,7 @@ import {
   effectiveLinkStatus,
   fromMinorUnits,
   linkAmountProblem,
+  linkFloor,
   minLinkAmount,
   paymentLinkUrl,
   toMinorUnits,
@@ -23,6 +24,15 @@ describe('payment link rules (docs/30)', () => {
     expect(linkAmountProblem({ amount: 261, reference: 290, maxDiscountPct: 10 })).toBeNull();
     expect(linkAmountProblem({ amount: 260.99, reference: 290, maxDiscountPct: 10 })).toBe('discount_too_large');
     expect(linkAmountProblem({ amount: 400, reference: 290, maxDiscountPct: 0 })).toBeNull();
+  });
+
+  it('the lowest amount: the pills’ floor or the admin’s cap, the higher', () => {
+    const quote = { total: 180, afterDiscount: 180 };
+    expect(linkFloor(quote, null)).toBe(153);
+    expect(linkFloor(quote, 10)).toBe(162);
+    expect(linkFloor(quote, 40)).toBe(153);
+    // The 15 % pill already taken: the cap counts from the pill's price, the floor from the total.
+    expect(linkFloor({ total: 180, afterDiscount: 153 }, 10)).toBe(153);
   });
 
   it('an open link past expires_at reads expired; other statuses stay', () => {

@@ -24,10 +24,9 @@ interface LinkPayInput {
   phone: string;
 }
 
-/** The amount checked against the quote's price and the admin's cap; none before a price. */
+/** The amount checked against the quote's lowest amount; none before a price. */
 const checkOf = (text: string, priced: PaymentLinkQuoteView | undefined) =>
-  priced &&
-  checkAmount(text, { reference: priced.quote.afterDiscount, maxDiscountPct: priced.max_discount_pct });
+  priced && checkAmount(text, { min: priced.min_amount, currency: priced.quote.currency });
 
 /**
  * «دفع إلكتروني» inside «اشتراك جديد» (owner 2026-10-29, docs/30, FEATURE_STRIPE test or live):

@@ -1,4 +1,5 @@
 import { toCents } from '@ab/core';
+import { salesPriceFloor } from '@ab/money';
 import type { PaymentLinkStatus } from './schemas.js';
 
 // Pure rules of the payment links (docs/30-stripe-test.md), shared by the API, the web and the mobile app.
@@ -28,6 +29,19 @@ export const fromStripeAmount = (minor: number, currency: string): number =>
 export function minLinkAmount(reference: number, maxDiscountPct: number | null): number | null {
   if (maxDiscountPct === null) return null;
   return Math.ceil((toMinorUnits(reference) * (100 - maxDiscountPct)) / 100 - 1e-9) / 100;
+}
+
+/**
+ * The lowest agreed amount of a link, the one the quote carries and both apps say and check: the
+ * pills' floor (salesPriceFloor of the quote's total, owner 2026-11-05) or the admin's cap
+ * (minLinkAmount), the higher. create() refuses anything below it.
+ */
+export function linkFloor(
+  quote: { total: number; afterDiscount: number },
+  maxDiscountPct: number | null,
+): number {
+  const cap = minLinkAmount(quote.afterDiscount, maxDiscountPct) ?? 0;
+  return Math.max(salesPriceFloor(quote.total), cap);
 }
 
 /** 'discount_too_large' when the agreed amount is below the cap's minimum. */

@@ -1,6 +1,6 @@
 import type { PaymentLinkQuoteView } from '@ab/shared';
 import { FormAlert } from '@/components/ui/form/form-alert';
-import { fillText, moneySlots, paymentLinkErrorText } from '@/features/sales/payment-links';
+import { fillText, minAmountText, moneySlots, paymentLinkErrorText } from '@/features/sales/payment-links';
 import { t } from '@/lib/i18n/i18n';
 
 type Props = {
@@ -20,7 +20,7 @@ export function LinkQuote({ quote, fetching, error, custom }: Props) {
         <>
           <p className="text-sm font-semibold text-ink">{fillText(t.paymentLinks.referencePrice, moneySlots(quote.quote.afterDiscount, quote.quote.currency))}</p>
           {custom && quote.min_amount !== null && (
-            <p className="text-xs text-ink-3">{fillText(t.paymentLinks.minAmount, moneySlots(quote.min_amount, quote.quote.currency))}</p>
+            <p className="text-xs text-ink-3">{minAmountText(quote.min_amount, quote.quote.currency)}</p>
           )}
         </>
       ) : (

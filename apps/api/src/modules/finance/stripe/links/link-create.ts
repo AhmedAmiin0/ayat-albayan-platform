@@ -1,4 +1,4 @@
-import { isLinkCurrency, linkAmountProblem, minLinkAmount, type PaymentLinkCreate, type PaymentLinkQuote, type PaymentLinkQuoteView, type PaymentLinkView, type QuoteResponse } from '@ab/shared';
+import { isLinkCurrency, linkAmountProblem, linkFloor, type PaymentLinkCreate, type PaymentLinkQuote, type PaymentLinkQuoteView, type PaymentLinkView, type QuoteResponse } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
@@ -32,10 +32,12 @@ export class LinkCreate {
     private readonly extra: LinkCreateDeps,
   ) {}
 
+  /** `min_amount` is the lowest amount create() takes (linkFloor): the form says and checks it. */
   async quote(input: PaymentLinkQuote): Promise<PaymentLinkQuoteView> {
     const quote = await this.quoted(input);
     const max_discount_pct = loadEnv().STRIPE_MAX_DISCOUNT_PCT ?? null;
-    return { quote: toSalesQuote(quote), max_discount_pct, min_amount: minLinkAmount(quote.afterDiscount, max_discount_pct) };
+    const min_amount = linkFloor(quote, max_discount_pct);
+    return { quote: toSalesQuote(quote), max_discount_pct, min_amount };
   }
 
   async create(input: PaymentLinkCreate, user: AuthUser, now = new Date()): Promise<PaymentLinkView> {
@@ -50,7 +52,7 @@ export class LinkCreate {
     if (input.kind === 'renewal' && student.priced.length === 0) throw badRequest('not_a_renewal');
     const quote = await this.quoted(input);
     const maxDiscountPct = loadEnv().STRIPE_MAX_DISCOUNT_PCT ?? null;
-    const min_amount = minLinkAmount(quote.afterDiscount, maxDiscountPct);
+    const min_amount = linkFloor(quote, maxDiscountPct);
     if (input.currency !== quote.currency) throw badRequest('currency_mismatch', { currency: quote.currency });
     const reference = quote.afterDiscount;
     const problem = linkAmountProblem({ amount: input.amount, reference, maxDiscountPct });

@@ -73,10 +73,10 @@ describe('POST /sales/payment-links: the package as «اشتراك جديد» ma
     expect(m.subs.insert).not.toHaveBeenCalled();
   });
 
-  it('quote: the calculator price and the cap’s minimum', async () => {
+  it('quote: the calculator price and the lowest amount (the cap’s 116 is under the pills’ floor)', async () => {
     vi.stubEnv('STRIPE_MAX_DISCOUNT_PCT', '20');
     const res = await call({ method: 'POST', url: '/sales/payment-links/quote', token: 'salesA', body: { studentId: STUDENT_ID, pricing: { tier: 'weekly' } } });
-    expect(res.json()).toMatchObject({ quote: { afterDiscount: 145, currency: 'SAR' }, max_discount_pct: 20, min_amount: 116 });
+    expect(res.json()).toMatchObject({ quote: { afterDiscount: 145, currency: 'SAR' }, max_discount_pct: 20, min_amount: 123 });
   });
 
   it('list: hers only, by the status it reads as now; cancel: an open link, its package cancelled', async () => {
