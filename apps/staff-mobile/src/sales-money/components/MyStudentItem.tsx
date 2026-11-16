@@ -1,4 +1,5 @@
 import type { MyStudentRow } from '@ab/shared';
+import { router } from 'expo-router';
 import { pushInTab } from '@/core/nav/back-within';
 import { View } from 'react-native';
 import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
@@ -15,18 +16,20 @@ const S = t.assistantPortal.students;
 /**
  * One student I brought (web my-student-columns): the readable code, the guardian's phone (owner
  * 2026-10-27), when, whether the first subscription is paid, and my own commission. Never a price or
- * another person's money. In the sales tree a tap opens the student's teacher–family channel,
- * read-only (docs/31 §2: the owning assistant monitors it); the name, the row's header, opens the
- * student's file in either tree (owner 2026-10-30).
+ * another person's money. In the sales tree a tap opens the student's teacher–family chat,
+ * where she writes too (docs/31 §2, owner 2026-11-16): a full screen in (sales-chat), pushed as
+ * is (no tab list to anchor). The name, the row's header, opens the student's file in either tree
+ * (owner 2026-10-30).
  */
 export function MyStudentItem({ student }: { student: MyStudentRow }) {
   const tz = useViewerTz();
   const c = student.commission;
   const base = useTreeBase();
   const open = () => pushInTab(studentDetailsHref(base, student.id));
+  const chat = () => router.push(`/sales/students/channel/${student.id}`);
   return (
     <ListRow
-      {...(base === '/sales' && { onPress: () => pushInTab(`/sales/students/channel/${student.id}`) })}
+      {...(base === '/sales' && { onPress: chat })}
       titleLink={{ onPress: open, label: t.sales.allStudents.openStudent.replace('{name}', student.name) }}
       title={student.name}
       meta={student.code}
