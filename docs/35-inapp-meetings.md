@@ -81,6 +81,9 @@ names no package, so it serves the fork as well.
   meetings too (`mobileRoom.native.*`).
 - `expo.version` **0.3.0 → 0.4.0**. `runtimeVersion` follows the app version, so an OTA built from this code
   never reaches the 0.3.0 APK, which lacks the module. `native-changes.mjs` reports this PR as a native change.
+- **Family app** (docs/50 §7, owner 2026-11-16): the room is in `@ab/mobile-kit`, behind
+  `family_meetings_in_app` (default off), and needs family APK **0.3.0** (the native packages above). On 0.2.0,
+  or with the switch off, the lesson opens in the browser as before.
 - `SYSTEM_ALERT_WINDOW` stays blocked. Screen **sharing** from the phone is not offered
   (`enableScreenShareService` stays off: no MediaProjection service runs).
 

@@ -78,7 +78,7 @@ const DEFAULTS_LITERAL = Object.freeze({
   teacher_earnings_enabled: false,
   teacher_statements_enabled: false, teacher_feedback_enabled: false,
   teacher_internal_meetings_enabled: false, teacher_scheduled_meetings_enabled: false,
-  family_chat_enabled: false, family_payment_instructions: '',
+  family_chat_enabled: false, family_payment_instructions: '', family_meetings_in_app: false,
 });
 
 const surface: Record<string, unknown> = root;
@@ -88,9 +88,9 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expect(surface[name]).toBeDefined();
   });
 
-  it('SETTING_DEFAULTS holds the 69 keys with today\'s values', () => {
-    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(69);
-    expect(root.SETTING_KEYS).toHaveLength(69);
+  it('SETTING_DEFAULTS holds the 70 keys with today\'s values', () => {
+    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(70);
+    expect(root.SETTING_KEYS).toHaveLength(70);
     expect(root.SETTING_DEFAULTS).toEqual(DEFAULTS_LITERAL);
   });
 
@@ -118,7 +118,7 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
       | 'teacher_student_messages_enabled' | 'teacher_earnings_enabled'
       | 'teacher_statements_enabled'
       | 'teacher_feedback_enabled' | 'teacher_internal_meetings_enabled'
-      | 'teacher_scheduled_meetings_enabled' | 'family_chat_enabled'
+      | 'teacher_scheduled_meetings_enabled' | 'family_chat_enabled' | 'family_meetings_in_app'
     >();
     expectTypeOf<PublicSettings>().toEqualTypeOf<Pick<AcademySettings, PublicSettingKey>>();
     expectTypeOf<keyof PublicConfig>().toEqualTypeOf<PublicSettingKey | 'custom'>();

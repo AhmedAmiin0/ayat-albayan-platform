@@ -6,6 +6,7 @@ export * from './auth';
 export * from './biometric';
 export * from './notifications';
 export * from './account';
+export * from './channel';
 export {
   glass,
   type GlassStop,

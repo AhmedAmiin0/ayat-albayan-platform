@@ -7702,11 +7702,6 @@
       "count": 1
     }
   },
-  "src/modules/people/presence/presence.repo.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/people/presence/presence.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 2
@@ -14315,7 +14310,7 @@
   },
   "src/modules/teaching/student-channels/channel-access.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/modules/teaching/student-channels/channel-edits.service.ts": {

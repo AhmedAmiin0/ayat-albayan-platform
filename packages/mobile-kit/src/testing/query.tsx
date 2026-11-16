@@ -1,6 +1,8 @@
+import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react-native';
 import type { ReactElement, ReactNode } from 'react';
+import { publicConfigQuery } from '../lib/query/public-config';
 
 // Test-only helpers both apps use: a fresh client per test. No retries; gcTime Infinity so nothing
 // is collected mid-test and no 5-minute gc timer keeps the jest worker alive after a mutation.
@@ -25,4 +27,10 @@ export function queryWrapper(client: QueryClient) {
 export async function renderWithQuery(ui: ReactElement, client: QueryClient) {
   const result = await render(ui, { wrapper: queryWrapper(client) });
   return { ...result, client };
+}
+
+/** GET /settings/public as `patch` over the defaults (e.g. lesson_confirmation_required: true). */
+export function seedPublicConfig(client: QueryClient, patch: Partial<PublicSettings>): void {
+  const data = { ...PUBLIC_SETTING_DEFAULTS, custom: {}, ...patch };
+  client.setQueryData(publicConfigQuery.queryKey, data);
 }

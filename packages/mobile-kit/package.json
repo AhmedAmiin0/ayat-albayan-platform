@@ -23,6 +23,7 @@
     "./lib/time/use-now": "./src/lib/time/use-now.ts",
     "./push/live-session": "./src/push/live-session.ts",
     "./push/registerPush": "./src/push/registerPush.ts",
+    "./testing/presence-realtime": "./src/testing/presence-realtime.ts",
     "./testing/query": "./src/testing/query.tsx",
     "./ui/connecting/use-screen-focus": "./src/ui/connecting/use-screen-focus.ts",
     "./ui/tabs/AppNativeTabs": "./src/ui/tabs/AppNativeTabs.tsx",

@@ -51,14 +51,13 @@ describe('student channel: closed before the subscription and the assignment', (
     expect(t.queries.isOpen).toHaveBeenCalledWith(ST);
   });
 
-  it('the family side: the guardian and a contact_is_self student chat; a child’s own login is 403', async () => {
+  it('the family side: the guardian, an adult student and a child’s own login all chat (owner 11-16)', async () => {
     t.queries.isOpen.mockResolvedValue(true);
     expect((await t.call('GET', `${PORTAL}/messages`, 'student')).statusCode).toBe(200);
     for (const route of ['messages', 'unread']) {
-      const res = await t.call('GET', `${PORTAL}/${route}`, 'child');
-      expect([route, res.statusCode, res.json().code]).toEqual([route, 403, 'channel_guardian_only']);
+      expect([route, (await t.call('GET', `${PORTAL}/${route}`, 'child')).statusCode]).toEqual([route, 200]);
     }
-    expect((await t.post(`${PORTAL}/messages`, 'child', { body: 'x' })).statusCode).toBe(403);
-    expect(t.queries.insert).not.toHaveBeenCalled();
+    expect((await t.post(`${PORTAL}/messages`, 'child', { body: 'السلام عليكم' })).statusCode).toBe(201);
+    expect(t.queries.insert).toHaveBeenCalledWith(expect.objectContaining({ sender_role: 'student' }));
   });
 });

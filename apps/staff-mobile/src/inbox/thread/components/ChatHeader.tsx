@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { t, type, useTheme, AppText, BackButton } from '@ab/mobile-kit';
-import { PresenceLabel } from '@/core/ui/feedback/PresenceLabel';
+import { t, type, useTheme, AppText, BackButton, PresenceLabel } from '@ab/mobile-kit';
 import { ChatSearchBar, useChatSearch } from '@/inbox/thread/search';
 
 interface ChatHeaderProps {

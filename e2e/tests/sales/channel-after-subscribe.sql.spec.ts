@@ -5,7 +5,8 @@ import { USERS } from '../../support/core/users';
 // Migrations 20261029000971–972 (owner 2026-10-29): the student channel opens once the student is
 // subscribed (past the trial) AND has an assigned teacher; before that neither the teacher nor the family
 // reads a message (RLS, also what Realtime checks per subscriber); monitors always read. The family side is
-// the guardian's login, or the student's own login only when they are their own contact (contact_is_self).
+// the guardian's login and the student's own login, a child's too (owner 2026-11-16, migration
+// 20261116000100_child_chat).
 // Rolled back; the e2e stack has no Realtime service, so the publication step is not exercised here.
 
 async function login(tx: Tx, input: { tag: string; role: 'guardian' | 'student' }): Promise<string> {
@@ -49,12 +50,11 @@ test.describe('student channel opens after the subscription (20261029000971–97
     });
   });
 
-  test('a child’s own login never reads; a student who is their own contact does', async () => {
+  test('the student’s own login reads once open, a child’s too (owner 2026-11-16)', async () => {
     await rolledBack(async (tx) => {
       const s = await seed(tx);
-      await tx`update public.students set status = 'active' where id = ${s.student}`;
       expect(await reads(tx, s.own)).toBe(0);
-      await tx`update public.students set contact_is_self = true where id = ${s.student}`;
+      await tx`update public.students set status = 'active' where id = ${s.student}`;
       expect(await reads(tx, s.own)).toBe(1);
     });
   });

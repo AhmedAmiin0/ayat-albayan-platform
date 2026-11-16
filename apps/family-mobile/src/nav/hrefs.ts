@@ -8,6 +8,8 @@ const enc = encodeURIComponent;
 
 export const childHref = (id: string) => `/child/${enc(id)}` as const;
 export const packageHref = (studentId: string) => `/package/${enc(studentId)}` as const;
+/** A child's chat with the teacher (family_chat_enabled, docs/50 §6). */
+export const chatHref = (studentId: string) => `/chat/${enc(studentId)}` as const;
 export const ALERTS_HREF = '/alerts';
 export const PROFILE_HREF = '/profile';
 

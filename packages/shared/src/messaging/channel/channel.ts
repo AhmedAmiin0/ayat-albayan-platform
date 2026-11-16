@@ -75,27 +75,12 @@ export interface ChannelPage {
 /** POST …/messages or …/read on a closed channel (409). */
 export const CHANNEL_NOT_OPEN = 'channel_not_open';
 
-/**
- * A family route of a child's own login (403): the guardian chats for a child (owner 2026-10-29).
- */
-export const CHANNEL_GUARDIAN_ONLY = 'channel_guardian_only';
-
 /** students.status before the subscription: the channel stays closed (never during the trial). */
 const BEFORE_SUBSCRIPTION: readonly string[] = ['new', 'trial', 'pending_subscription'];
 
 /** Migration 971 channel_is_open: subscribed (past the trial) and students.teacher_id assigned. */
 export const channelOpen = (s: { status: string; teacher_id: string | null }): boolean =>
   s.teacher_id !== null && !BEFORE_SUBSCRIPTION.includes(s.status);
-
-/**
- * Who chats on the family side (owner 2026-10-29): the guardian's login, or the student's own login
- * only
- * when the student is their own contact (contact_is_self). A child's own login has no chat at all.
- */
-export const familyChats = (login: {
-  kind: 'guardian' | 'student';
-  contactIsSelf: boolean;
-}): boolean => login.kind === 'guardian' || login.contactIsSelf;
 
 /** GET /teachers/me/channels: one row per current student. */
 export interface TeacherChannelRow {

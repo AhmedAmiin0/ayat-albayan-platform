@@ -1449,22 +1449,6 @@
       "count": 2
     }
   },
-  "src/core/lib/query/public-config.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/core/lib/query/public-config.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/core/lib/query/use-optimistic-status.test.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -1687,16 +1671,6 @@
       "count": 2
     }
   },
-  "src/core/ui/feedback/MenuSheet.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/core/ui/feedback/Note.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/core/ui/feedback/lesson-status.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -1747,11 +1721,6 @@
       "count": 10
     },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/ui/primitives/ContentText.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -7887,49 +7856,6 @@
       "count": 1
     }
   },
-  "src/student-file/channel/ChannelBubble.side.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/student-file/channel/ChannelBubble.tsx": {
-    "react/purity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/student-file/channel/ChannelComposer.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/student-file/channel/ChannelThread.live.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "typescript/no-unnecessary-condition": {
-      "count": 2
-    }
-  },
-  "src/student-file/channel/ChannelThread.tsx": {
-    "react/purity": {
-      "count": 1
-    },
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 5
-    }
-  },
   "src/student-file/channel/TeacherChannelsScreen.test.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -7944,35 +7870,6 @@
     }
   },
   "src/student-file/channel/channel-queries.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 4
-    }
-  },
-  "src/student-file/channel/edits/ChannelMenuSteps.tsx": {
-    "react/purity": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/student-file/channel/edits/use-channel-change.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
-  "src/student-file/channel/use-channel-live.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/student-file/channel/use-channel-presence.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
     }

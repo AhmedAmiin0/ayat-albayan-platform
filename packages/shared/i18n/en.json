@@ -8297,7 +8297,9 @@
       "attempts": "Attempts per code",
       "attemptsHint": "Once used up, a new code is needed.",
       "chat": "In-app chat for families",
-      "chatHint": "When on, guardians and adult students message the teacher from the app and the family pages. When off, the chat is hidden and no message is accepted.",
+      "chatHint": "When on, guardians and adult students message the teacher from the app and the family pages. When off, the chat is hidden and no message is accepted. Turn it on together with the teachers' «Student messages» page; with only one of the two on, teachers cannot open family messages.",
+      "meetings": "Lessons inside the family app",
+      "meetingsHint": "When on, lessons held in the academy's room open inside the family app with audio and video. When off, they open in the browser as before. Needs family app version 0.3.0 or later; older versions always open the browser. Nothing changes on the website.",
       "paymentInstructions": "Payment instructions for families",
       "paymentInstructionsHint": "Shown under the amount due on the package page (e.g. bank transfer details). Leave empty to hide."
     },
