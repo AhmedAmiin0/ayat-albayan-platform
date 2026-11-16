@@ -21,6 +21,11 @@ describe('a thread page as the apps read it (docs/31 §2)', () => {
     expect(channelPageSchema.parse(page)).toEqual(page);
   });
 
+  it('reads the owning assistant’s message (owner 2026-11-16 «yes it can write also»)', () => {
+    const sales = { ...page.messages[0], sender_role: 'sales' };
+    expect(channelPageSchema.safeParse({ ...page, messages: [sales] }).success).toBe(true);
+  });
+
   it('refuses an answer that is not a page (an unknown sender, no messages)', () => {
     const stranger = { ...page.messages[0], sender_role: 'admin' };
     expect(channelPageSchema.safeParse({ ...page, messages: [stranger] }).success).toBe(false);

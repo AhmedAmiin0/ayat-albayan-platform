@@ -14334,7 +14334,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -14380,9 +14380,6 @@
     "typescript/consistent-type-imports": {
       "count": 2
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/zod-inputs": {
       "count": 4
     }
@@ -14418,11 +14415,6 @@
     }
   },
   "src/modules/teaching/student-channels/student-channels.migration.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/student-channels/student-channels.module.ts": {
     "stylistic/max-len": {
       "count": 1
     }

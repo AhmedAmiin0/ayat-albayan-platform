@@ -6,9 +6,9 @@ import { ChannelPeopleRepo } from './channel-people.repo';
 // them (who brought it, who holds its family's lead), salespeople only, never an admin.
 
 const PROFILES = [
-  { id: 's1', role: 'sales' },
-  { id: 's2', role: 'sales' },
-  { id: 'a1', role: 'admin' },
+  { id: 's1', role: 'sales', full_name: 'سارة' },
+  { id: 's2', role: 'sales', full_name: 'هدى' },
+  { id: 'a1', role: 'admin', full_name: 'المدير' },
 ];
 
 function repo(broughtBy: string | null, leadOwners: (string | null)[]) {
@@ -45,5 +45,12 @@ describe('ChannelPeopleRepo.ownerIds', () => {
   it('an admin owner is left out; nobody owns the student → none', async () => {
     expect(await repo('a1', ['s2']).ownerIds('st1')).toEqual(['s2']);
     expect(await repo(null, []).ownerIds('st1')).toEqual([]);
+  });
+});
+
+// Owner 2026-11-16 «yes it can write also»: her bubble and push carry her name.
+describe('ChannelPeopleRepo.names', () => {
+  it('an assistant who wrote is named by her profile; an admin profile is not', async () => {
+    expect(await repo(null, []).names(['s1', 'a1'])).toEqual(new Map([['s1', 'سارة']]));
   });
 });

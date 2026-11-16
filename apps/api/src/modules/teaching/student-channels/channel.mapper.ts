@@ -57,9 +57,19 @@ export function toPage(rows: readonly ChannelMessageRow[], ctx: PageContext): Ch
   };
 }
 
-/** What counts as unread for a participant: the other side's messages (a co-teacher's never). */
-export const unreadRolesFor = (role: ChannelSenderRole | null): ChannelSenderRole[] =>
-  role === 'teacher' ? ['guardian', 'student'] : ['teacher'];
+/**
+ * What counts as unread for a participant: everyone else's messages, never their own side's (a
+ * co-teacher's, the other family login's, a co-owner assistant's).
+ */
+const UNREAD_ROLES: Readonly<Record<ChannelSenderRole, readonly ChannelSenderRole[]>> = {
+  teacher: ['guardian', 'student', 'sales'],
+  guardian: ['teacher', 'sales'],
+  student: ['teacher', 'sales'],
+  sales: ['teacher', 'guardian', 'student'],
+};
+
+export const unreadRolesFor = (role: ChannelSenderRole): readonly ChannelSenderRole[] =>
+  UNREAD_ROLES[role];
 
 /** The teacher's list: newest activity first, then by name (Arabic collation). */
 export function toTeacherRows(

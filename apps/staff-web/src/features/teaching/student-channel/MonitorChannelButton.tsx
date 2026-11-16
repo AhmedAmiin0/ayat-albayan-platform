@@ -5,7 +5,10 @@ import { t } from '@/lib/i18n/i18n';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { ChannelThread } from './ChannelThread';
 
-/** The owning assistant's «المحادثة» on a row of «طلابي»: the student's channel, read-only, in a panel. */
+/**
+ * The owning assistant's «المحادثة» on a row of «طلابي»: the student's channel in a panel, where
+ * she writes too (owner 2026-11-16); a closed channel stays read-only.
+ */
 export function MonitorChannelButton({ studentId, studentName }: { studentId: string; studentName: string }) {
   const tz = useViewerTz();
   const [open, setOpen] = useState(false);

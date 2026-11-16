@@ -4,7 +4,7 @@ import { t, ChannelScreen } from '@ab/mobile-kit';
 
 type StaffAudience = Exclude<ChannelAudience, 'portal'>;
 
-/** The teacher writes in «رسائل الطلاب»; the admin and the owning assistant monitor. */
+/** The teacher's «رسائل الطلاب»; the chat between the teacher and the family for the others. */
 const TITLE: Readonly<Record<StaffAudience, 'title' | 'monitorTitle'>> = {
   teacher: 'title',
   admin: 'monitorTitle',
@@ -14,7 +14,7 @@ const TITLE: Readonly<Record<StaffAudience, 'title' | 'monitorTitle'>> = {
 /**
  * A student channel screen (the shared kit's): the teacher's thread
  * (/teacher/more/messages/:studentId), the admin's read-only view (/students/channel/:id) and the
- * owning assistant's (/sales/students/channel/:id).
+ * owning assistant's (/sales/students/channel/:id), where she writes too (owner 2026-11-16).
  */
 function StaffChannelScreen({ audience }: { audience: StaffAudience }) {
   const params = useLocalSearchParams<{ id?: string; studentId?: string }>();

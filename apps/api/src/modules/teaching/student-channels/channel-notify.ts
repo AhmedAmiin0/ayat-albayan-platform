@@ -14,8 +14,10 @@ const PREVIEW = 80;
  * docs/31 §2 (owner 2026-11-16 «all 4 will receive the message»): a participant's message pushes
  * kind channel_message to everyone in the chat but its sender: the student's current teacher(s),
  * the guardian and the student logins (only while family_chat_enabled is on) and the owning
- * assistant(s). Never an admin. Its notification rule decides bell / push (PushService). No
- * WhatsApp. Never throws (PushService swallows its own failures; ChannelService catches the rest).
+ * assistant(s). The assistant writes too (owner 2026-11-16 «yes it can write also»): hers
+ * reaches the teacher(s) and the family, never herself. Never an admin. Its notification rule
+ * decides bell / push (PushService). No WhatsApp. Never throws (PushService swallows its own
+ * failures; ChannelService catches the rest).
  */
 @Injectable()
 export class ChannelNotify {

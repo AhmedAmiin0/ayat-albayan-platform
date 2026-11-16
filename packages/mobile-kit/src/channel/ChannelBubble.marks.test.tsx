@@ -39,6 +39,11 @@ test('deleted: only «تم حذف هذه الرسالة», no text and no link',
   expect(screen.queryByRole('link')).toBeNull();
 });
 
+test('the assistant’s bubble: her name and her role word (owner 2026-11-16)', async () => {
+  await bubble({ sender_role: 'sales', sender_name: 'سارة', mine: false });
+  expect(screen.getByText(`سارة · ${t.studentChannel.roles.sales}`)).toBeTruthy();
+});
+
 test('a long press only where an action applies', async () => {
   await bubble({}, jest.fn());
   expect(screen.getByTestId('channel-bubble-m1').props.accessibilityHint).toBe(a.menu);

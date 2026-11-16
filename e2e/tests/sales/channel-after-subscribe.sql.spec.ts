@@ -6,7 +6,7 @@ import { USERS } from '../../support/core/users';
 // subscribed (past the trial) AND has an assigned teacher; before that neither the teacher nor the family
 // reads a message (RLS, also what Realtime checks per subscriber); monitors always read. The family side is
 // the guardian's login and the student's own login, a child's too (owner 2026-11-16, migration
-// 20261116000100_child_chat).
+// 20261116000100_child_chat); the owning assistant writes too (20261116000200).
 // Rolled back; the e2e stack has no Realtime service, so the publication step is not exercised here.
 
 async function login(tx: Tx, input: { tag: string; role: 'guardian' | 'student' }): Promise<string> {
@@ -56,6 +56,20 @@ test.describe('student channel opens after the subscription (20261029000971–97
       expect(await reads(tx, s.own)).toBe(0);
       await tx`update public.students set status = 'active' where id = ${s.student}`;
       expect(await reads(tx, s.own)).toBe(1);
+    });
+  });
+
+  test('the owning assistant writes too: sender_role sales passes the check, another role does not (20261116000200)', async () => {
+    await rolledBack(async (tx) => {
+      const s = await seed(tx);
+      const insert = (role: string) => tx`insert into public.channel_messages (channel_id, sender_role, body)
+        select id, ${role}::text, 'موعد التجديد غدًا' from public.student_channels where student_id = ${s.student}`;
+      await insert('sales');
+      await tx`savepoint other_role`;
+      await expect(insert('admin')).rejects.toThrow(/channel_messages_sender_role_check/);
+      await tx`rollback to savepoint other_role`;
+      const sales = await tx`select 1 from public.channel_messages where sender_role = 'sales' and body = 'موعد التجديد غدًا'`;
+      expect(sales).toHaveLength(1);
     });
   });
 

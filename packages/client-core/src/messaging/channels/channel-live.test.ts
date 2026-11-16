@@ -73,8 +73,10 @@ describe('channelPollMs and channelMode', () => {
     expect(channelMode('teacher', { open: false, read_only: false })).toBe('closed');
     expect(channelMode('portal', { open: true, read_only: false })).toBe('write');
     expect(channelMode('admin', { open: false, read_only: true })).toBe('read');
-    expect(channelMode('sales', undefined)).toBe('read');
     expect(channelMode('teacher', undefined)).toBe('write');
+    // The owning assistant writes on an open channel; a closed one she reads (owner 2026-11-16).
+    expect(channelMode('sales', { open: true, read_only: false })).toBe('write');
+    expect(channelMode('sales', { open: false, read_only: true })).toBe('read');
   });
 
   it('the socket joins a participant’s open channel only; a monitor polls', () => {

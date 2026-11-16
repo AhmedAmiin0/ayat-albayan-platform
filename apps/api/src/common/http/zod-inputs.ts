@@ -98,3 +98,8 @@ class ZodParamPipe<S extends z.ZodType> implements PipeTransform<unknown, Promis
 export function ZodParam(name: string, schema: z.ZodType, fail?: ParamFailure): ParameterDecorator {
   return Param(name, new ZodParamPipe(schema, fail));
 }
+
+/** `@ZodParams(schema) ids` replaces `@Param() raw` + check: every `:param` as one object. */
+export function ZodParams(schema: z.ZodType<object>): ParameterDecorator {
+  return Param(new ZodParamPipe(schema));
+}

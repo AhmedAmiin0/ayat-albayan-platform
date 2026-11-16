@@ -69,9 +69,22 @@ describe('ChannelThread (docs/31 §2)', () => {
     apiFetch.mockImplementation(async (path: string) =>
       path.includes('?before=') ? older : channelPage({ has_more: true }),
     );
+    apiSend.mockResolvedValue({});
     show('sales');
     fireEvent.click(await screen.findByRole('button', { name: c.older }));
     expect(await screen.findByText('أقدم')).toBeTruthy();
     expect(apiFetch).toHaveBeenLastCalledWith('/sales/students/s1/channel/messages?before=2026-10-27T10%3A00%3A00.000Z');
+  });
+
+  it('the owning assistant writes and marks read through her route (owner 2026-11-16)', async () => {
+    apiFetch.mockResolvedValue(channelPage());
+    apiSend.mockResolvedValue({});
+    show('sales');
+    const read = { at: '2026-10-27T10:05:00.000Z' };
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/students/s1/channel/read', read));
+    fireEvent.change(screen.getByLabelText(c.messageLabel), { target: { value: 'مرحبًا' } });
+    fireEvent.click(screen.getByRole('button', { name: c.send }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/students/s1/channel/messages', { body: 'مرحبًا' }));
+    expect(screen.queryByText(c.readOnly)).toBeNull();
   });
 });

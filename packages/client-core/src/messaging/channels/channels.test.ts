@@ -15,8 +15,10 @@ describe('student channel paths and pages (docs/31 §2)', () => {
     expect(channelReadPath('portal', 's1')).toBe('/portal/students/s1/channel/read');
   });
 
-  it('only participants write', () => {
-    expect(CHANNEL_WRITES).toEqual({ teacher: true, portal: true, admin: false, sales: false });
+  it('participants write, the owning assistant too (owner 2026-11-16); the admin monitor reads', () => {
+    expect(CHANNEL_WRITES).toEqual({ teacher: true, portal: true, admin: false, sales: true });
+    expect(channelReadPath('sales', 's1')).toBe('/sales/students/s1/channel/read');
+    expect(channelMessagesPath({ audience: 'sales', studentId: 's1' })).toBe('/sales/students/s1/channel/messages');
   });
 
   it('pages: the next cursor is the oldest shown while more exist; all pages read oldest first', () => {

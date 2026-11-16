@@ -10,8 +10,9 @@ import { pageFor } from './channel-page';
 const UUID = new ParseUUIDPipe();
 
 /**
- * Monitors' read-only views (docs/31 §2): any student's channel with student_channels.monitor, and the
- * owning assistant's own students (sales ownership). No send or read route exists for them.
+ * The staff pages (docs/31 §2): the monitor's read-only view of any student's channel
+ * (student_channels.monitor; no send or read route), and the owning assistant's page of her own
+ * students (sales ownership), where she writes too (SalesChannelController, owner 2026-11-16).
  */
 @ApiTags('student-channels')
 @ApiBearerAuth()

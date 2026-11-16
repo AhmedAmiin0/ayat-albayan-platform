@@ -5,33 +5,32 @@ import type { ChannelAudience } from './channels.js';
 // enforces
 // the same rule; the menu only offers what it would accept now.
 
-const BASE: Readonly<Record<ChannelAudience, ((id: string) => string) | null>> = {
+const BASE: Readonly<Record<ChannelAudience, (id: string) => string>> = {
   teacher: (id) => `/teachers/me/channels/${id}`,
   portal: (id) => `/portal/students/${id}/channel`,
   admin: (id) => `/students/${id}/channel`,
-  // The owning assistant only reads: no edit or delete route.
-  sales: null,
+  // The owning assistant edits and deletes her own messages (owner 2026-11-16).
+  sales: (id) => `/sales/students/${id}/channel`,
 };
 
-/** PATCH (edit) / DELETE (delete for everyone) …/messages/:id; null where the audience has none. */
+/** PATCH (edit) / DELETE (delete for everyone) …/messages/:id. */
 export function channelMessagePath(input: {
   audience: ChannelAudience;
   studentId: string;
   messageId: string;
-}): string | null {
-  const base = BASE[input.audience];
-  return base ? `${base(input.studentId)}/messages/${input.messageId}` : null;
+}): string {
+  return `${BASE[input.audience](input.studentId)}/messages/${input.messageId}`;
 }
 
-const NONE: ChannelActions = { edit: false, delete: false };
-
-/** What this viewer's menu offers on one bubble now: the admin (moderation) deletes any message. */
+/**
+ * What this viewer's menu offers on one bubble now: the sender's own windows, the owning
+ * assistant's too; the admin (moderation) deletes any message.
+ */
 export function channelBubbleActions(input: {
   audience: ChannelAudience;
   message: ChannelMessageView;
   now: Date;
 }): ChannelActions {
-  if (input.audience === 'sales') return NONE;
   return channelActions({
     message: input.message,
     moderator: input.audience === 'admin',

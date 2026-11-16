@@ -18,6 +18,7 @@ const SENDER: Record<ChannelSenderRole, string> = {
   teacher: 'p-t',
   guardian: 'p-g',
   student: 'p-s',
+  sales: 'p-a',
 };
 /** The student login has no name row: its role word stands in. */
 const NAMES: ReadonlyMap<string, string> = new Map([['p-t', 'أ. هدى'], ['p-g', 'أم سارة']]);
@@ -73,6 +74,12 @@ describe('ChannelNotify: who hears a chat message', () => {
 
   it('a student → the teacher, the guardian and the assistant', async () => {
     expect(await toldIds('student')).toEqual(['p-t', 'p-g', 'p-a']);
+  });
+
+  it('the assistant (owner 11-16 «yes it can write also») → the teacher, guardian and student', async () => {
+    expect(await toldIds('sales')).toEqual(['p-t', 'p-g', 'p-s']);
+    expect(await toldIds('sales', { familyOn: false })).toEqual(['p-t']);
+    expect((await told('sales'))?.vars).toMatchObject({ name: 'مسؤول المتابعة' });
   });
 
   it('one push of kind channel_message: who wrote, about which student, the preview', async () => {

@@ -8350,7 +8350,8 @@
     "roles": {
       "teacher": "Teacher",
       "guardian": "Guardian",
-      "student": "Student"
+      "student": "Student",
+      "sales": "Follow-up owner"
     },
     "listEmpty": "No current students yet",
     "listEmptyHint": "The chat of every student you teach now appears here.",

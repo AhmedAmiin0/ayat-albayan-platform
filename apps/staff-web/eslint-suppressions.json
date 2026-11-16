@@ -10918,7 +10918,7 @@
   },
   "src/features/teaching/student-channel/MonitorChannelButton.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/student-channel/TeacherMessagesPage.test.tsx": {
