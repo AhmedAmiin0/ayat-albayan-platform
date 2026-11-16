@@ -36,8 +36,8 @@ test('reads GET /settings/public; the hooks follow the academy values', async ()
   };
   mockApiFetch.mockResolvedValue(answer);
   const wrapper = queryWrapper(freshQueryClient());
-  const read = () => ({ win: useJoinWindow(), max: useUploadMaxBytes() });
-  const { result } = await renderHook(read, { wrapper });
+  const useRead = () => ({ win: useJoinWindow(), max: useUploadMaxBytes() });
+  const { result } = await renderHook(useRead, { wrapper });
   await waitFor(() => expect(result.current.win.opensBeforeMin).toBe(45));
   expect(result.current.max).toBe(3 * 1024 * 1024);
   expect(mockApiFetch).toHaveBeenCalledWith('/settings/public');

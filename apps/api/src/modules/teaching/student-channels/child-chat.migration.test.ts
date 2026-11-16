@@ -6,8 +6,11 @@ import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 // Owner 2026-11-16 «the child can chat normally»: read as text, no database in unit tests.
 const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 const sql = strip(readFileSync(join(MIGRATIONS_DIR, '20261116000100_child_chat.sql'), 'utf8'));
-const body = (fn: string) =>
-  new RegExp(`function public\.${fn}[\s\S]*?\$\$([\s\S]*?)\$\$`).exec(sql)?.[1] ?? '';
+/** The SQL between a function's two `$$` (its body). */
+const body = (fn: string): string => {
+  const start = sql.indexOf('$$', sql.indexOf(`function public.${fn}(`)) + 2;
+  return sql.slice(start, sql.indexOf('$$', start));
+};
 
 describe('migration 20261116000100: a child login chats', () => {
   it('can_read_channel: any own student login on an open channel, contact_is_self no longer asked', () => {

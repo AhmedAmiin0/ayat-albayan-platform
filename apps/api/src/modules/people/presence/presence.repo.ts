@@ -89,7 +89,8 @@ export class PresenceRepo {
     check(error, 'channel student read');
     if (!s) return [];
     // The student's own login chats too, a child's included (owner 2026-11-16).
-    const self: ChannelPerson[] = s.profile_id ? [{ profile_id: s.profile_id, role: 'student' }] : [];
+    const self: ChannelPerson[] =
+      s.profile_id ? [{ profile_id: s.profile_id, role: 'student' }] : [];
     if (!s.guardian_id) return self;
     const g = await this.db
       .from('guardians')
