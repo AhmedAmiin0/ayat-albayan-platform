@@ -57,7 +57,7 @@ export async function guardianOwnerIds(db: Db, guardianId: string): Promise<stri
 }
 
 /**
- * Who owns one student (ownershipOf read backwards, as ChannelAccess.owner lets her in): who
+ * Who owns one student (ownershipOf read backwards; the chat's seat is not ownership): who
  * brought it and who holds the lead its family came from; never a sibling's assistant.
  */
 export async function studentOwnerIds(db: Db, studentId: string): Promise<string[]> {

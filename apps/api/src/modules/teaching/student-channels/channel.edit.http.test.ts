@@ -68,7 +68,7 @@ describe('PATCH …/messages/:id: edit in the student channel', () => {
     expect(t.edits.edit).not.toHaveBeenCalled();
   });
 
-  it('the owning assistant edits her own text (owner 2026-11-16); another assistant is 404', async () => {
+  it('the seated assistant edits her own text (owner 2026-11-16); another assistant is 404', async () => {
     t.edits.message.mockResolvedValue(
       messageRow({ id: M, sender_profile_id: 'p-sa', sender_role: 'sales', created_at: ago(MIN) }),
     );

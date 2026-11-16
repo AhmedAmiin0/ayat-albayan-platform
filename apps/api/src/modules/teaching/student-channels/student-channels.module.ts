@@ -11,11 +11,13 @@ import { ChannelPeopleRepo } from './channel-people.repo';
 import { ChannelRepo } from './channel.repo';
 import { ChannelService, TeacherChannelList } from './channel.service';
 import { FamilyChatSettings } from './family-chat.settings';
+import { ChannelSeatRepo } from './seat/channel-seat.repo';
+import { ChannelSeatService } from './seat/channel-seat.service';
 
 /**
  * The student channel (docs/31 §2): an in-platform teacher ↔ family chat per student, opened by the
- * students INSERT trigger (migration 800); the owning assistant writes too (owner 2026-11-16),
- * student_channels.monitor only reads.
+ * students INSERT trigger (migration 800); the one assistant in its seat writes too (owner
+ * 2026-11-16, ChannelSeatService), student_channels.monitor only reads.
  * PushService comes from the global PushModule. Edit / delete (owner 2026-10-30): ChannelEdits.
  */
 @Module({
@@ -32,6 +34,8 @@ import { FamilyChatSettings } from './family-chat.settings';
     TeacherChannelList,
     ChannelEditsRepo,
     ChannelEdits,
+    ChannelSeatRepo,
+    ChannelSeatService,
   ],
 })
 export class StudentChannelsModule {}
