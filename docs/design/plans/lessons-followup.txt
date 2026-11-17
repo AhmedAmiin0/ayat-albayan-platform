@@ -71,24 +71,28 @@ C1. Setting recording_media 'audio' | 'video', default 'audio' (today's behaviou
 C2. The stream route serves video/mp4 too (A1 is media-agnostic).
     Do NOT build the video player screens yet. Boards RecXFamilyVideoPlayer(+Dark), RecXFamilyListMixed, RecXWebFamilyVideo, RecXWebAdminRecordingMedia and RecXStaffAdminRecordingMedia are under owner review on the design canvas.
 
-E. WEB PLAYER = VIDSTACK (owner 2026-11-17: «Vidstack»)
-E1. Add @vidstack/react, pinned exactly at 1.15.7 (peer react ^18 || ^19), to apps/staff-web only. One RecordingPlayer component replaces the hand-built <audio> player (features/teaching/lesson-files/player/AudioPlayer.tsx and its PlayerButtons/SeekBar) in the portal recordings, the portal lesson page and the staff lists.
-    The same component plays audio now and video later.
-E2. Use a CUSTOM layout from Vidstack's headless components (Controls, PlayButton, SeekButton ±10 s, TimeSlider, time, playback rate 1×/1.5×/2×, FullscreenButton for video), styled with our Tailwind tokens:
+E. WEB PLAYER = VIDEO.JS 10 (owner 2026-11-17: «Vidstack», then the link videojs.org?utm_source=vidstack)
+   vidstack.io says «Vidstack has a new home: Video.js 10». Video.js 10 is the same team's ground-up rewrite, stable since 10.0.0 (2026-10-01).
+E1. Add @videojs/react, pinned EXACTLY at 10.2.0 (released 2026-10-22, >2 weeks old; peer react ^18 || ^19; it is built with react-compiler-runtime), to apps/staff-web only.
+    Add NONE of its optional media peers: progressive MP3/MP4 needs none, and @videojs/hlsjs-video comes only with HLS.
+    Read its docs first (Context7 /videojs or videojs.org docs for v10 React).
+    One RecordingPlayer component replaces the hand-built <audio> player (features/teaching/lesson-files/player/AudioPlayer.tsx, PlayerButtons, SeekBar) in the portal recordings, the portal lesson page and the staff lists. The same component plays audio now and video later.
+E2. CUSTOM UI from v10's composable React components (play, seek ±10 s, time slider, time, playback rate 1×/1.5×/2×, fullscreen for video), styled with our Tailwind tokens:
     - RTL-correct;
     - times as LTR islands;
     - Arabic labels from packages/shared i18n (ar.json + en.json).
-    Do NOT use DefaultLayout. It must have:
+    Do NOT use a stock skin. It must have:
     - no download item;
-    - no PiP button: disablePictureInPicture and controlsList="nodownload noplaybackrate" on the provider's media element;
+    - no PiP: disablePictureInPicture and controlsList="nodownload noplaybackrate" on the media element;
     - the context menu prevented;
     - playsInline.
     Keep the resume line «من حيث توقفت / ابدأ من البداية» on the existing client-core ListenState.
-E3. Source = the stream ticket URL from A2, given as { src, type } with type audio/mpeg or video/mp4 from the recording's media field (the URL has no extension).
-    A ticket that expires mid-play is renewed through a new ticket on the next play/seek error, without losing the position.
-    The video watermark (D) is an overlay child inside the MediaPlayer, so it stays on top in fullscreen.
+    If v10 lacks a needed piece, say so in the PR body; do not hack around it.
+E3. Source = the stream ticket URL from A2, with an explicit type audio/mpeg or video/mp4 from the recording's media field (the URL has no extension).
+    A ticket that expires mid-play is renewed through a new ticket on the next play/seek error, keeping the position.
+    The video watermark (D) is an overlay inside the player container, so it stays on top in fullscreen.
 E4. Lazy-load the player (dynamic import at the lesson/recordings panels) so the portal's first bundle does not grow. React Compiler idioms: no useMemo/useCallback; effects only in named hooks; ≤ 150 lines per file.
-E5. No HLS now. Vidstack loads hls.js only for an HLS source, so there is no cost today. Encrypted HLS (AES-128 segments + per-viewer key route + ffmpeg packaging) is a separate step, only on the owner's go.
+E5. No HLS now (owner: «or leave it»). Encrypted HLS (AES-128 segments + per-viewer key route + ffmpeg packaging + @videojs/hlsjs-video) is a separate step, only on the owner's go.
     Phones keep expo-audio / expo-video (web libraries do not run natively).
 
 D. THE LANE'S SECURITY PLAN ITEMS STILL OPEN
