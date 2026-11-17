@@ -15,6 +15,7 @@ import {
 import { StorageService } from '@/common/storage/storage.service';
 import type { ChannelActor } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelRepo } from '@/modules/teaching/student-channels/channel.repo';
+import { matchesUpload, type StoredObject } from './channel-upload-check';
 
 const BUCKET = BUCKETS.channelMedia;
 
@@ -46,17 +47,23 @@ export class ChannelMedia {
     return this.storage.signedUpload({ bucket: BUCKET, path, file: slot });
   }
 
-  /** The posted file, checked: this channel's folder, uploaded (and within the bucket's rule). */
+  /**
+   * The posted file, checked: this channel's folder, uploaded, and the stored object is the file
+   * claimed (type, size, the type's cap, extension: matchesUpload). Else 400 attachment_path.
+   */
   async verified(
     channelId: string,
     file: ChannelAttachmentInput | undefined,
   ): Promise<ChannelAttachmentInput | undefined> {
     if (!file) return undefined;
-    const ok =
-      isPathOf(file.path, channelId) &&
-      (await this.storage.exists({ bucket: BUCKET, path: file.path }));
-    if (!ok) throw badRequest('attachment_path');
+    const stored = isPathOf(file.path, channelId) ? await this.stored(file.path) : null;
+    if (!matchesUpload(file, stored)) throw badRequest('attachment_path');
     return file;
+  }
+
+  /** The object's size and type; a store failure counts as not there. */
+  private stored(path: string): Promise<StoredObject> {
+    return this.storage.info({ bucket: BUCKET, path }).catch(() => null);
   }
 
   /** 1 h GET URLs by stored path; a storage failure leaves the links out (the page still loads). */

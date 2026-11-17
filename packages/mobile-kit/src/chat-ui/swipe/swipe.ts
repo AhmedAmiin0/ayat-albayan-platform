@@ -17,8 +17,7 @@ interface Move {
 /**
  * `dir` is the translateX sign of the inline-END: right (1) in English, left (-1) in Arabic. As
  * WhatsApp, every bubble (ours and theirs) answers with a swipe toward the end, uncovering the
- * reply
- * icon at the row's start (SwipeReply).
+ * reply icon at the row's start (SwipeReply).
  */
 type Dir = 1 | -1;
 

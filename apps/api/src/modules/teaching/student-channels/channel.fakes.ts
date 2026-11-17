@@ -18,7 +18,7 @@ import { FamilyChatSettings } from './family-chat.settings';
 import { channelExtras } from './testing/channel-extras.fakes';
 import { ChannelBellRepo } from './notify/channel-bell.repo';
 import { ChannelReadsRepo } from './reads/channel-reads.repo';
-import type { NewChannelMessage } from './send/channel-row';
+import type { ClientSend, NewChannelMessage } from './send/channel-row';
 import { StorageService } from '@/common/storage/storage.service';
 import type { ChannelClosedReason } from '@ab/shared';
 
@@ -62,6 +62,7 @@ export async function channelApp() {
       row: messageRow({ id: 'm2', ...row }),
       created: true,
     })),
+    byClientId: vi.fn(async (_send: ClientSend): Promise<ChannelMessageRow | null> => null),
     closedReason: vi.fn(async (): Promise<ChannelClosedReason | null> => 'not_subscribed'),
     setReadMark: vi.fn(async (row: { channelId: string; profileId: string; at: string }) => {
       void row;

@@ -27,10 +27,6 @@ export function TemplateIcon({ color, size = 22 }: IconProps) {
   );
 }
 
-/** «أرفق صورة أو ملف PDF»: a paperclip. */
-export const AttachIcon = (p: IconProps) => (
-  <Line {...p} d="m20 11.5-7.8 7.8a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4L15 6.9" />
-);
 /** «الردود السريعة»: a speech bubble with a lightning bolt (a ready answer). */
 export const SavedReplyIcon = (p: IconProps) => (
   <Line {...p} d="M20 11.5a7.5 7.5 0 0 1-11 6.6L4 19.5l1.4-4.6A7.5 7.5 0 1 1 20 11.5ZM13 7.5l-3 4.5h4l-3 4.5" />

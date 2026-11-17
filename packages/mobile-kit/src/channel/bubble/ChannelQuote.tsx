@@ -1,6 +1,8 @@
 import type { ChannelReplyView } from '@ab/shared';
 import { QuoteCard } from '../../chat-ui/quote/QuoteCard';
-import { FILE_ICON, quoteSender, quoteText } from './quote-text';
+import { QuoteGlyph } from './QuoteGlyph';
+import { quoteSender, quoteText } from './quote-text';
+import { ROLE_INK } from './role-ink';
 
 interface ChannelQuoteProps {
   reply: ChannelReplyView;
@@ -8,14 +10,15 @@ interface ChannelQuoteProps {
   onJump?: (id: string) => void;
 }
 
-/** The message a bubble answers, on top of it (the kit's QuoteCard). */
+/** The message a bubble answers, on top of it (the kit's QuoteCard) in its sender's role ink. */
 export function ChannelQuote({ reply, onJump }: ChannelQuoteProps) {
   return (
     <QuoteCard
       id={reply.id}
       sender={quoteSender(reply)}
       text={quoteText(reply)}
-      icon={reply.deleted ? null : FILE_ICON[reply.kind]}
+      glyph={<QuoteGlyph kind={reply.kind} deleted={reply.deleted} />}
+      tone={ROLE_INK[reply.sender_role]}
       onJump={onJump}
     />
   );

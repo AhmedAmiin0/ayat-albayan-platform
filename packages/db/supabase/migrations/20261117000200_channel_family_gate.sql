@@ -2,8 +2,8 @@
 -- (docs/50 §2: «all chat in app is turned off by default from the config»; docs/31 §2).
 --
 -- The API already answers 403 family_chat_off on every family route while the switch is off, but
--- RLS still let a guardian or student login read the channel directly (Realtime, the channel-media
--- bucket). can_read_channel (latest body: 20261116000100_child_chat.sql) now gates its guardian and
+-- RLS still let a guardian or student login read the channel directly (Realtime).
+-- can_read_channel (latest body: 20261116000100_child_chat.sql) now gates its guardian and
 -- student branches on the switch: jsonb true only; a missing row is off (the settings default).
 -- The teacher, owning assistant and admin branches are unchanged. presence_can_watch reads
 -- can_read_channel, so a family login also stops seeing the teacher's presence while it is off.

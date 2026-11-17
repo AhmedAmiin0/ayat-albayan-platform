@@ -1,5 +1,6 @@
 import { threadMessages, type ChannelAudience } from '@ab/client-core';
 import type { ChannelPage, ChannelParticipantView } from '@ab/shared';
+import type { ReactNode } from 'react';
 import { t } from '../lib/i18n/i18n';
 import { Screen } from '../ui/layout/Screen';
 import { ChannelThread } from './ChannelThread';
@@ -14,9 +15,11 @@ interface ChannelScreenProps {
   title?: string;
   /** The app's picker, recorder and player; absent → text only. */
   media?: ChannelMediaPort;
+  /** A line under the head (the room's «الحلقة الآن» banner); absent → none. */
+  banner?: ReactNode;
 }
 
-/** The family sees who they talk to (the teacher first); staff see the student. */
+/** The family sees who they talk to (the first teacher); staff see the student. */
 const AVATAR: Readonly<Record<ChannelAudience, 'people' | 'student'>> = {
   portal: 'people',
   teacher: 'student',
@@ -35,16 +38,16 @@ const participantsOf = (pages: readonly ChannelPage[] | undefined): ChannelParti
  * A student channel screen (docs/31 §2), the same in both apps: the head (avatar, title, the
  * people, presence), then the thread. The app reads the student from its route.
  */
-export function ChannelScreen({ refs, title, media }: ChannelScreenProps) {
+export function ChannelScreen({ refs, title, media, banner }: ChannelScreenProps) {
   // The same query the thread reads (one request): it names the student and the people.
   const pages = useChannel(refs).data?.pages;
   const student = pages?.[0]?.student_name ?? '';
-  const { others, line } = headerPeople({
+  const { others, line, teacher } = headerPeople({
     participants: participantsOf(pages),
     messages: threadMessages(pages),
     you: t.studentChannel.you,
   });
-  const avatar = AVATAR[refs.audience] === 'people' ? (others[0] ?? student) : student;
+  const avatar = AVATAR[refs.audience] === 'people' ? (teacher ?? others[0] ?? student) : student;
   return (
     <Screen chat>
       <ChannelHeader
@@ -53,6 +56,7 @@ export function ChannelScreen({ refs, title, media }: ChannelScreenProps) {
         avatarName={avatar}
         names={line.join(t.studentChannel.namesJoin)}
       />
+      {banner}
       <ChannelThread refs={refs} media={media} />
     </Screen>
   );

@@ -10,11 +10,11 @@ export interface RoundActionProps {
   /** «أرسل» only: nothing to send, or a send on its way. */
   disabled?: boolean;
   onSend?: () => void;
+  /** The circle's side: 44pt (the staff inbox) unless given (the channel's 48). */
+  size?: number;
 }
 
 const CIRCLE = {
-  width: shape.control.touch,
-  height: shape.control.touch,
   borderRadius: shape.radius.pill,
   alignItems: 'center',
   justifyContent: 'center',
@@ -22,11 +22,11 @@ const CIRCLE = {
 
 /**
  * The round 44pt button at the row's end (owner 2026-10-27, as WhatsApp): the microphone while
- * there
- * is nothing else to send (the caller's hold wraps it), «أرسل» otherwise, its plane mirrored in
- * Arabic. The icon crossfades in 120 ms when the mode changes; not with «Reduce Motion».
+ * there is nothing else to send (the caller's hold wraps it), «أرسل» otherwise, its plane mirrored
+ * in Arabic. The icon crossfades in 120 ms when the mode changes; not with «Reduce Motion».
  */
-export function RoundAction({ mode, disabled = false, onSend }: RoundActionProps) {
+export function RoundAction(p: RoundActionProps) {
+  const { mode, disabled = false, onSend, size = shape.control.touch } = p;
   const { color } = useTheme();
   const fade = useModeFade(mode);
   const Glyph = mode === 'mic' ? MicIcon : SendIcon;
@@ -37,7 +37,10 @@ export function RoundAction({ mode, disabled = false, onSend }: RoundActionProps
   );
   if (mode === 'mic') {
     return (
-      <View testID="mic-circle" style={{ ...CIRCLE, backgroundColor: color.lapisFill }}>
+      <View
+        testID="mic-circle"
+        style={{ ...CIRCLE, width: size, height: size, backgroundColor: color.lapisFill }}
+      >
         {icon}
       </View>
     );
@@ -47,6 +50,7 @@ export function RoundAction({ mode, disabled = false, onSend }: RoundActionProps
       variant="filled"
       label={t.inbox.composer.send}
       disabled={disabled}
+      size={size}
       onPress={() => onSend?.()}
     >
       {icon}

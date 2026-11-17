@@ -2,7 +2,6 @@ import type { ChannelMessageView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
 import { MenuSheet } from '../../ui/feedback/MenuSheet';
-import { Button } from '../../ui/primitives/Button';
 import type { ChannelRef } from '../channel-api';
 import { ChannelMenuSteps, type MenuExits } from './ChannelMenuSteps';
 import type { MenuOffers } from './menu-offers';
@@ -15,9 +14,9 @@ interface ChannelMessageMenuProps extends MenuExits {
 }
 
 /**
- * A long press on a channel bubble (ChatXMenu): «ردّ», «معلومات الرسالة», «تعديل» (the sender, 15
- * minutes) and «حذف للجميع» (the sender, 48 hours; the admin any message), only what menuOffers
- * allows now. The sheet rises over the keyboard while the edit box has it.
+ * A long press on a channel bubble (ChatXMenu): «رد», «تعديل» (the sender, 15 minutes), «حذف
+ * للجميع» (the sender, 48 hours; the admin any message) and «معلومات الرسالة», only what menuOffers
+ * allows now; the scrim closes it. The sheet rises over the keyboard while the edit box has it.
  */
 export function ChannelMessageMenu({ refs, held, ...exits }: ChannelMessageMenuProps) {
   const inset = useKeyboardInset();
@@ -32,7 +31,6 @@ export function ChannelMessageMenu({ refs, held, ...exits }: ChannelMessageMenuP
         {held ? (
           <ChannelMenuSteps refs={refs} message={held.message} offers={held.offers} {...exits} />
         ) : null}
-        <Button variant="secondary" label={t.common.cancel} onPress={exits.onClose} />
       </View>
     </MenuSheet>
   );

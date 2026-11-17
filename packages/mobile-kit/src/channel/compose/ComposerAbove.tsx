@@ -5,7 +5,9 @@ import { Spinner } from '../../chat-ui/voice/Spinner';
 import { t } from '../../lib/i18n/i18n';
 import { type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
-import { FILE_ICON, quoteSender, quoteText } from '../bubble/quote-text';
+import { QuoteGlyph } from '../bubble/QuoteGlyph';
+import { quoteSender, quoteText } from '../bubble/quote-text';
+import { ROLE_INK } from '../bubble/role-ink';
 
 interface ComposerAboveProps {
   /** A refusal or a failure in words, or null. */
@@ -44,7 +46,8 @@ export function ComposerAbove(p: ComposerAboveProps) {
         <QuoteBar
           sender={quoteSender(p.replyTo)}
           text={quoteText(p.replyTo)}
-          icon={FILE_ICON[p.replyTo.kind]}
+          glyph={<QuoteGlyph kind={p.replyTo.kind} deleted={p.replyTo.deleted} />}
+          tone={ROLE_INK[p.replyTo.sender_role]}
           onCancel={p.onCancelReply}
         />
       ) : null}

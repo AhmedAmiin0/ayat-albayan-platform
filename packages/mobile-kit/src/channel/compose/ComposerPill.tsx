@@ -1,47 +1,52 @@
-import { useRef } from 'react';
-import { TextInput } from 'react-native';
-import { CloseIcon } from '../../chat-ui/icons/chat-glyphs';
+import type { RefObject } from 'react';
+import { TextInput, type TextInputSelectionChangeEvent } from 'react-native';
+import { AttachIcon, EmojiIcon, KeyboardIcon } from '../../chat-ui/icons/composer-icons';
 import { t } from '../../lib/i18n/i18n';
 import { type, useTheme } from '../../theme';
 import { IconButton } from '../../ui/primitives/IconButton';
-import { ClipIcon, EmojiIcon } from './compose-icons';
+import { RecordingPill } from './RecordingPill';
 
 interface ComposerPillProps {
+  input: RefObject<TextInput | null>;
   text: string;
   onText: (text: string) => void;
-  /** A voice note is being recorded: only its ✕ shows. */
+  onSelection: (selection: { start: number; end: number }) => void;
+  /** The emoji panel is open: its button goes back to the keyboard. */
+  emoji: boolean;
+  onEmoji: () => void;
+  /** The box takes the focus: the emoji panel gives way to the keyboard. */
+  onFocus: () => void;
+  /** A voice note is being recorded, and its clock: the recording bar instead. */
   recording: boolean;
+  recordedMs: number;
   onCancelRecording: () => void;
-  /** «إرفاق ملف»; absent where the app picks no files. */
+  /** «أرفق صورة أو ملف PDF»; absent where the app picks no files. */
   onAttach?: () => void;
 }
 
 /**
- * The pill's contents in reading order (ChatX boards): the emoji button (it opens the phone's
- * keyboard, emoji included), the text box (16pt), the clip. While recording: its ✕.
+ * The pill's contents in reading order (ChatX boards): the emoji button (it opens the emoji panel,
+ * then «لوحة المفاتيح» goes back), the text box (16/24), the clip; 44pt buttons. While recording:
+ * the dot, its clock and ✕.
  */
 export function ComposerPill(p: ComposerPillProps) {
   const { color } = useTheme();
-  const input = useRef<TextInput>(null);
   const c = t.studentChannel;
-  if (p.recording) {
-    return (
-      <IconButton label={c.media.cancel} onPress={p.onCancelRecording}>
-        <CloseIcon color={color.bad} />
-      </IconButton>
-    );
-  }
+  if (p.recording) return <RecordingPill ms={p.recordedMs} onCancel={p.onCancelRecording} />;
+  const onSelect = (e: TextInputSelectionChangeEvent) => p.onSelection(e.nativeEvent.selection);
   return (
     <>
-      <IconButton compact label={c.emoji} onPress={() => input.current?.focus()}>
-        <EmojiIcon color={color.ink3} />
+      <IconButton label={p.emoji ? c.keyboard : c.emoji} onPress={p.onEmoji}>
+        {p.emoji ? <KeyboardIcon color={color.ink3} /> : <EmojiIcon color={color.ink3} />}
       </IconButton>
       <TextInput
-        ref={input}
+        ref={p.input}
         accessibilityLabel={c.messageLabel}
         multiline
         value={p.text}
         onChangeText={p.onText}
+        onSelectionChange={onSelect}
+        onFocus={p.onFocus}
         placeholder={c.placeholder}
         placeholderTextColor={color.ink3}
         style={{
@@ -49,15 +54,17 @@ export function ComposerPill(p: ComposerPillProps) {
           minHeight: 46,
           maxHeight: 140,
           paddingVertical: 11,
-          paddingHorizontal: 4,
+          paddingStart: 12,
+          paddingEnd: 4,
           fontFamily: type.ui[400],
           fontSize: type.size.base,
+          lineHeight: 24,
           color: color.ink,
         }}
       />
       {p.onAttach ? (
-        <IconButton compact label={c.media.attach} onPress={p.onAttach}>
-          <ClipIcon color={color.lapis} />
+        <IconButton label={c.media.attach} onPress={p.onAttach}>
+          <AttachIcon color={color.lapis} />
         </IconButton>
       ) : null}
     </>

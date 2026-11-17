@@ -15,15 +15,13 @@ interface ReadsRow {
 /** One section of «من قرأ الرسالة»: its title, then a row per person (or «لا أحد بعد»). */
 export function ReadsList({ title, rows }: { title: string; rows: readonly ReadsRow[] }) {
   const { color } = useTheme();
-  const small = useSmallText();
+  const small = useSmallText('ink3');
   return (
     <View style={{ gap: 4 }}>
       <AppText accessibilityRole="header" style={{ ...small, fontFamily: type.ui[600] }}>
         {title}
       </AppText>
-      {rows.length === 0 ? (
-        <AppText style={small}>{t.studentChannel.reads.none}</AppText>
-      ) : null}
+      {rows.length === 0 ? <AppText style={small}>{t.studentChannel.reads.none}</AppText> : null}
       {rows.map((row) => (
         <View key={row.key} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <AppText style={{ flex: 1, fontSize: type.size.sm, color: color.ink }}>

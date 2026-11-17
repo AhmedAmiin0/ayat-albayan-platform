@@ -1,5 +1,6 @@
 import { type ReactNode, useState } from 'react';
 import { View } from 'react-native';
+import type { Palette } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
 import { DeliveryTicks, type DeliveryTicksProps } from '../ticks/DeliveryTicks';
 import { useSmallText } from './use-small-text';
@@ -15,6 +16,8 @@ export interface BubbleMetaProps {
   lead?: string | null;
   /** A mark right before the time (a correction's). */
   mark?: ReactNode;
+  /** The small print's ink: ink-2 (the staff inbox) unless given (the channel's ink-3). */
+  ink?: keyof Palette;
 }
 
 const ROW = {
@@ -30,8 +33,8 @@ const ROW = {
  * on the ticks shows their times under the row, so an older message's long times wrap in the
  * bubble.
  */
-export function BubbleMeta({ time, ticks, lead, mark }: BubbleMetaProps) {
-  const small = useSmallText();
+export function BubbleMeta({ time, ticks, lead, mark, ink }: BubbleMetaProps) {
+  const small = useSmallText(ink);
   const [open, setOpen] = useState(false);
   const times = ticks?.times ?? '';
   return (
@@ -45,10 +48,7 @@ export function BubbleMeta({ time, ticks, lead, mark }: BubbleMetaProps) {
         </View>
       </View>
       {open && times ? (
-        <AppText
-          testID="ticks-times"
-          style={{ ...small, alignSelf: 'flex-end', textAlign: 'right' }}
-        >
+        <AppText testID="ticks-times" style={{ ...small, alignSelf: 'flex-end' }}>
           {times}
         </AppText>
       ) : null}

@@ -46,10 +46,11 @@ export function OpenThread({ thread, pages, refs, tz, head }: Props) {
       <div ref={end} />
       {mode === 'write' && (
         <ChannelComposer
+          key={draftKey(refs)}
           draft={draftKey(refs)}
-          pending={send.isPending}
-          failed={send.isError}
-          onSend={(body) => send.mutateAsync(body)}
+          pending={send.pending}
+          failed={send.failed}
+          onSend={send.send}
         />
       )}
     </section>

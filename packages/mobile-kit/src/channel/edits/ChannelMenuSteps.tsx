@@ -1,11 +1,14 @@
 import type { ChannelMessageView } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { t } from '../../lib/i18n/i18n';
-import { Button } from '../../ui/primitives/Button';
+import { View } from 'react-native';
+import { ReplyIcon } from '../../chat-ui/icons/chat-glyphs';
 import type { ChannelRef } from '../channel-api';
 import { ChannelDeleteStep } from './ChannelDeleteStep';
 import { ChannelEditForm } from './ChannelEditForm';
+import { EditIcon, InfoIcon, TrashIcon } from './menu-icons';
 import type { MenuOffers } from './menu-offers';
+import { MenuRow } from './MenuRow';
 import { channelChangeError, useChannelChange } from './use-channel-change';
 
 type Step = 'menu' | 'edit' | 'delete';
@@ -33,18 +36,33 @@ const leave = (p: StepProps, exit: (m: ChannelMessageView) => void) => () => {
   exit(p.message);
 };
 
-/** The menu's rows (ChatXMenu): only what menuOffers allows now. */
+/**
+ * The menu's rows (ChatXMenu), edge to edge in the sheet: «رد», «تعديل», «حذف للجميع», «معلومات
+ * الرسالة», only what menuOffers allows now. A tap outside closes it (no «إلغاء» row).
+ */
 const menuRows = (p: StepProps): ReactNode => {
   const a = t.studentChannel;
-  const row = (on: boolean, label: string, onPress: () => void) =>
-    on ? <Button variant="secondary" label={label} onPress={onPress} /> : null;
+  const { reply, edit, reads } = p.offers;
   return (
-    <>
-      {row(p.offers.reply, a.reply.action, leave(p, p.onReply))}
-      {row(p.offers.reads, a.reads.action, leave(p, p.onReads))}
-      {row(p.offers.edit, a.actions.edit, () => p.go('edit'))}
-      {row(p.offers.delete, a.actions.deleteForAll, () => p.go('delete'))}
-    </>
+    <View style={{ marginHorizontal: -16 }}>
+      {reply ? (
+        <MenuRow label={a.reply.action} Icon={ReplyIcon} onPress={leave(p, p.onReply)} />
+      ) : null}
+      {edit ? (
+        <MenuRow label={a.actions.edit} Icon={EditIcon} onPress={() => p.go('edit')} />
+      ) : null}
+      {p.offers.delete ? (
+        <MenuRow
+          danger
+          label={a.actions.deleteForAll}
+          Icon={TrashIcon}
+          onPress={() => p.go('delete')}
+        />
+      ) : null}
+      {reads ? (
+        <MenuRow label={a.reads.action} Icon={InfoIcon} onPress={leave(p, p.onReads)} />
+      ) : null}
+    </View>
   );
 };
 

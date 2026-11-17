@@ -1,14 +1,10 @@
-import { channelKey, channelMode, liveChannelId } from '@ab/client-core';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { channelMode, liveChannelId } from '@ab/client-core';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import {
-  CHANNEL_COUNT_KEYS,
-  channelQuery,
-  sendChannelMessage,
-  type ChannelRef,
-} from '@/features/teaching/student-channel/api';
+import { channelQuery, type ChannelRef } from '@/features/teaching/student-channel/api';
 import { useChannelLive } from '@/features/teaching/student-channel/use-channel-live';
 import { useNow } from '@/lib/time/use-now';
+import { useChannelSend } from './use-channel-send';
 import { useMarkRead } from './use-mark-read';
 
 /**
@@ -19,7 +15,6 @@ import { useMarkRead } from './use-mark-read';
  */
 export function useChannelThread(refs: ChannelRef) {
   const { audience, studentId } = refs;
-  const client = useQueryClient();
   const [live, setLive] = useState(false);
   const query = useInfiniteQuery(channelQuery({ audience, studentId }, live));
   const first = query.data?.pages[0];
@@ -27,14 +22,6 @@ export function useChannelThread(refs: ChannelRef) {
   useChannelLive(refs, { channelId: liveChannelId(mode, first), onLive: setLive });
   const newest = first?.messages.at(-1);
   useMarkRead(refs, { enabled: mode === 'write', at: newest?.created_at });
-  const send = useMutation({
-    mutationFn: (body: string) => sendChannelMessage({ audience, studentId, body }),
-    onSettled: () =>
-      Promise.all(
-        [channelKey(audience, studentId), ...CHANNEL_COUNT_KEYS].map((queryKey) =>
-          client.invalidateQueries({ queryKey }),
-        ),
-      ),
-  });
+  const send = useChannelSend(refs);
   return { query, first, mode, newest, send, now: useNow() };
 }

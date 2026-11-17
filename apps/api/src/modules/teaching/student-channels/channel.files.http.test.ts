@@ -71,6 +71,16 @@ describe('student channel files over HTTP', () => {
     expect(t.queries.insert).not.toHaveBeenCalled();
   });
 
+  it('a stored object that is not the claimed file (type or size) is 400 attachment_path', async () => {
+    const claims = [{ ...PHOTO, size: 1024 }, { ...PHOTO, mime: 'image/png' }];
+    for (const claim of claims) {
+      const res = await t.post(`${PORTAL}/messages`, 'guardian', { attachment: { ...claim, path: UPLOADED } });
+      expect([res.statusCode, res.json().code]).toEqual([400, 'attachment_path']);
+    }
+    expect(t.storage.info).toHaveBeenCalledWith({ bucket: 'channel-media', path: UPLOADED });
+    expect(t.queries.insert).not.toHaveBeenCalled();
+  });
+
   it('a page signs its files once; a file deleted for everyone has no link', async () => {
     const file = { kind: 'voice', attachment_path: UPLOADED, attachment_mime: 'audio/mp4' };
     const extra = { attachment_size: 9, attachment_name: 'v.m4a', attachment_duration_ms: 4200 };

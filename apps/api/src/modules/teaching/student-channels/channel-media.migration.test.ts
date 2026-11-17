@@ -44,13 +44,14 @@ describe('migration 20261117000100: files, replies, client ids, forward-only rea
     expect(sql).toContain('from public, anon, authenticated;\ngrant execute on function public.channel_mark_read(uuid, uuid, timestamptz) to service_role;');
   });
 
-  it('the private bucket takes the shared types and cap; participants read, nobody writes', () => {
+  it('the private bucket takes the shared types and cap; no client policy (the API signs)', () => {
     expect(sql).toContain(`('${BUCKETS.channelMedia}', '${BUCKETS.channelMedia}', false, ${CHANNEL_MEDIA_MAX_BYTES},`);
     const mimes = quoted(/array\[([^\]]*)\]/.exec(sql)?.[1] ?? '');
     expect(mimes.sort()).toEqual([...CHANNEL_MEDIA_MIMES].sort());
-    expect(sql).toContain("using (bucket_id = 'channel-media' and public.can_read_channel_media(name));");
-    expect(sql).toContain('where c.id::text = split_part(p_name, \'/\', 1) and public.can_read_channel(c.id))');
-    expect(sql).not.toMatch(/for (insert|update|delete|all) to authenticated/);
+    // A file deleted for everyone must stay unreadable: no read policy, the draft's is dropped.
+    expect(sql).not.toMatch(/create policy [^;]* on storage\.objects/);
+    expect(sql).toContain('drop policy if exists storage_channel_media_read on storage.objects;');
+    expect(sql).toContain('drop function if exists public.can_read_channel_media(text);');
   });
 
   it('a message’s bell rows are found by their key prefix', () => {

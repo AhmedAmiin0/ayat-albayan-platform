@@ -8,7 +8,7 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
-import type { ChannelMessageRow, NewChannelMessage } from './send/channel-row';
+import type { ChannelMessageRow, ClientSend, NewChannelMessage } from './send/channel-row';
 
 export type { ChannelMessageRow } from './send/channel-row';
 
@@ -63,18 +63,21 @@ export class ChannelRepo {
     const insert = this.db.from('channel_messages').insert(row);
     const { data, error } = await insert.select(COLUMNS).single();
     if (!error) return { row: data, created: true };
-    const stored = error.code === DUPLICATE && row.client_id ? await this.sent(row) : null;
+    const send = { channelId: row.channel_id, profileId: row.sender_profile_id };
+    const resent = error.code === DUPLICATE && row.client_id;
+    const stored = resent ? await this.byClientId({ ...send, clientId: resent }) : null;
     if (!stored) throw dbError(error);
     return { row: stored, created: false };
   }
 
-  private async sent(row: NewChannelMessage): Promise<ChannelMessageRow | null> {
+  /** The row this sender already stored under this client id (a resend), if any. */
+  async byClientId(send: ClientSend): Promise<ChannelMessageRow | null> {
     const { data, error } = await this.db
       .from('channel_messages')
       .select(COLUMNS)
-      .eq('channel_id', row.channel_id)
-      .eq('sender_profile_id', row.sender_profile_id)
-      .eq('client_id', row.client_id ?? '')
+      .eq('channel_id', send.channelId)
+      .eq('sender_profile_id', send.profileId)
+      .eq('client_id', send.clientId)
       .maybeSingle();
     if (error) throw dbError(error);
     return data;

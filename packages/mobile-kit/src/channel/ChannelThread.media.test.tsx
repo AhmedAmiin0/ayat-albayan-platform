@@ -32,9 +32,11 @@ afterAll(() => {
 
 beforeEach(() => {
   mockApiFetch.mockReset().mockResolvedValue(channelPage());
-  mockApiSend.mockReset().mockImplementation(async (_m: string, path: string) =>
-    path.endsWith('/upload-url') ? signed : {},
-  );
+  mockApiSend
+    .mockReset()
+    .mockImplementation(async (_m: string, path: string) =>
+      path.endsWith('/upload-url') ? signed : {},
+    );
   put.mockClear();
   globalThis.fetch = put as never;
 });

@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
-import { type, useTheme } from '../../theme';
+import { type Palette, type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
-import { ContentText } from '../../ui/primitives/ContentText';
-import { QUOTE_BOX, QUOTE_LINE, quoteLabel, quoteLine } from './quote-style';
+import { QUOTE_BOX, QUOTE_LINE, quoteLabel } from './quote-style';
+import { QuoteText } from './QuoteText';
 
 export interface QuoteCardProps {
   /** The quoted message's id: its testID and what `onJump` gets. */
@@ -15,6 +15,10 @@ export interface QuoteCardProps {
   text: string;
   /** A file's emoji before the text. */
   icon?: string | null;
+  /** A drawn file icon before the text, in place of the emoji (the student channel). */
+  glyph?: ReactNode;
+  /** The bar's and the sender's colour: the brand (default), or the sender's role ink. */
+  tone?: keyof Palette;
   /** A photo's or PDF's thumb at the inline-end. */
   thumb?: ReactNode;
   /** Goes to the original; absent, the card is plain. */
@@ -24,10 +28,10 @@ export interface QuoteCardProps {
 /**
  * The message a bubble answers, on top of it as WhatsApp draws it (owner 2026-10-31): a bar at the
  * inline-start, who sent it, its first line (a file's icon and kind), a thumb at the end. A tap
- * goes
- * to the original. 44pt tall at least (two short lines + padding).
+ * goes to the original. 44pt tall at least (two short lines + padding).
  */
-export function QuoteCard({ id, sender, text, icon, thumb, onJump }: QuoteCardProps) {
+export function QuoteCard(p: QuoteCardProps) {
+  const { id, sender, text, thumb, onJump, tone = 'lapis' } = p;
   const { color } = useTheme();
   return (
     <Pressable
@@ -39,7 +43,7 @@ export function QuoteCard({ id, sender, text, icon, thumb, onJump }: QuoteCardPr
       onPress={() => onJump?.(id)}
       style={({ pressed }) => ({
         ...QUOTE_BOX,
-        borderStartColor: color.lapis,
+        borderStartColor: color[tone],
         backgroundColor: pressed ? color.neutralSoft : color.sunk,
       })}
     >
@@ -47,18 +51,12 @@ export function QuoteCard({ id, sender, text, icon, thumb, onJump }: QuoteCardPr
         {sender ? (
           <AppText
             numberOfLines={1}
-            style={{ ...QUOTE_LINE, fontFamily: type.ui[600], color: color.lapis }}
+            style={{ ...QUOTE_LINE, fontFamily: type.ui[600], color: color[tone] }}
           >
             {sender}
           </AppText>
         ) : null}
-        <ContentText
-          source={text}
-          numberOfLines={1}
-          style={{ ...QUOTE_LINE, fontFamily: type.ui[400], color: color.ink2 }}
-        >
-          {quoteLine(icon, text)}
-        </ContentText>
+        <QuoteText text={text} icon={p.icon} glyph={p.glyph} style={QUOTE_LINE} />
       </View>
       {thumb}
     </Pressable>

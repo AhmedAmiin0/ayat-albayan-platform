@@ -6,10 +6,12 @@ import { BubbleText } from './BubbleText';
 
 /** The words: «تم حذف هذه الرسالة» once deleted, else the text or a file's caption (if any). */
 export function BubbleContent({ message: m }: { message: ChannelMessageView }) {
-  const small = useSmallText();
+  const small = useSmallText('ink3');
   if (m.deleted) {
     return (
-      <AppText style={{ ...small, fontStyle: 'italic' }}>{t.studentChannel.actions.deleted}</AppText>
+      <AppText style={{ ...small, fontStyle: 'italic' }}>
+        {t.studentChannel.actions.deleted}
+      </AppText>
     );
   }
   return m.body ? <BubbleText body={m.body} /> : null;

@@ -1,7 +1,7 @@
+import { atOrAfter, micros } from '@ab/shared';
 import type { ChannelParticipantView, ChannelReads } from '@ab/shared';
 import type { ChannelMember } from '@/modules/teaching/student-channels/reads/channel-members';
 import type { ReadMark } from '@/modules/teaching/student-channels/reads/channel-reads.repo';
-import { atOrAfter, micros } from '@/modules/teaching/student-channels/reads/instant';
 
 interface Message {
   created_at: string;

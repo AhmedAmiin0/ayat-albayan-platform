@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { Keyboard, Platform } from 'react-native';
 
 /** iOS tells before the keyboard moves, Android after. */
-const EVENTS = Platform.OS === 'ios'
-  ? ({ show: 'keyboardWillShow', hide: 'keyboardWillHide' } as const)
-  : ({ show: 'keyboardDidShow', hide: 'keyboardDidHide' } as const);
+const EVENTS =
+  Platform.OS === 'ios'
+    ? ({ show: 'keyboardWillShow', hide: 'keyboardWillHide' } as const)
+    : ({ show: 'keyboardDidShow', hide: 'keyboardDidHide' } as const);
 
 /**
  * How tall the keyboard is over a bottom sheet (0 when closed): the sheet pads its foot by it, so

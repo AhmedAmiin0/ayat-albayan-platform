@@ -17,7 +17,12 @@ interface ThreadBodyProps {
   mode: 'write' | 'read';
   /** The newest page (read-only: why). */
   first: ChannelPage | undefined;
+  /** In a sheet (the lesson room): its frame starts at the window's top, not under the inset. */
+  frame?: ThreadFrame;
 }
+
+/** Where the thread is mounted: a screen of its own, or a sheet over another one. */
+export type ThreadFrame = 'screen' | 'sheet';
 
 /** «للاطلاع فقط», and for a monitor of a closed channel why nobody writes yet. */
 const readOnlyText = (page: ChannelPage | undefined): string =>
@@ -31,7 +36,7 @@ type Held = { message: ChannelMessageView; offers: MenuOffers } | null;
  * An open thread: the list, the composer for a writer («للاطلاع فقط» for a monitor), the message
  * menu, the quote being answered and «من قرأ الرسالة».
  */
-export function ThreadBody({ refs, query, mode, first }: ThreadBodyProps) {
+export function ThreadBody({ refs, query, mode, first, frame = 'screen' }: ThreadBodyProps) {
   const [held, setHeld] = useState<Held>(null);
   const [replyTo, setReplyTo] = useState<ChannelMessageView | null>(null);
   const [readsOf, setReadsOf] = useState<string | null>(null);
@@ -42,9 +47,15 @@ export function ThreadBody({ refs, query, mode, first }: ThreadBodyProps) {
     onReads: (m: ChannelMessageView) => setReadsOf(m.id),
   };
   return (
-    <KeyboardFrame style={{ flex: 1 }}>
+    <KeyboardFrame style={{ flex: 1 }} inScreen={frame === 'screen'}>
       {writes ? null : <Note>{readOnlyText(first)}</Note>}
-      <ChannelList refs={refs} query={query} mode={mode} actions={actions} />
+      <ChannelList
+        refs={refs}
+        query={query}
+        mode={mode}
+        actions={actions}
+        heldId={held?.message.id ?? null}
+      />
       {writes ? (
         <View style={{ paddingTop: 4, paddingBottom: 8 }}>
           <ChannelComposer refs={refs} replyTo={replyTo} onReplyDone={() => setReplyTo(null)} />

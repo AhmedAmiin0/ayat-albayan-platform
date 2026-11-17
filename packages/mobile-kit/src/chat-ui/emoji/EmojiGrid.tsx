@@ -1,6 +1,9 @@
 import { Pressable, ScrollView } from 'react-native';
-import { shape, useTheme, AppText } from '@ab/mobile-kit';
+import { shape, useTheme } from '../../theme';
+import { AppText } from '../../ui/primitives/AppText';
 import { EMOJI } from './emoji-list';
+
+const GRID = { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' } as const;
 
 /**
  * The curated emoji (owner 2026-10-27) in a wrapping row that mirrors with the phone, each 44pt and
@@ -9,7 +12,7 @@ import { EMOJI } from './emoji-list';
 export function EmojiGrid({ onPick }: { onPick: (emoji: string) => void }) {
   const { color } = useTheme();
   return (
-    <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+    <ScrollView contentContainerStyle={GRID}>
       {EMOJI.map((e) => (
         <Pressable
           key={e}

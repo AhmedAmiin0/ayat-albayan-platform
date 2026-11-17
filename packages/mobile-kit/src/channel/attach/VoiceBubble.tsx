@@ -6,10 +6,12 @@ interface VoiceBubbleProps {
   id: string;
   url: string;
   durationMs: number | null;
+  /** The message's menu, as a long press on the play button. */
+  onLongPress?: () => void;
 }
 
 /** A voice note (ChatXVoice): the kit's VoiceRow, played through the app's player. */
-export function VoiceBubble({ id, url, durationMs }: VoiceBubbleProps) {
+export function VoiceBubble({ id, url, durationMs, onLongPress }: VoiceBubbleProps) {
   const voice = useVoice({ url, durationMs });
   return (
     <VoiceRow
@@ -20,6 +22,7 @@ export function VoiceBubble({ id, url, durationMs }: VoiceBubbleProps) {
       progress={voice.progress}
       clock={voice.clock}
       onToggle={voice.toggle}
+      onLongPress={onLongPress}
       onSeek={voice.seek}
     />
   );

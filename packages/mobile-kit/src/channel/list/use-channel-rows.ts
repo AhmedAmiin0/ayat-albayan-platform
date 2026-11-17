@@ -2,7 +2,7 @@ import { threadMessages } from '@ab/client-core';
 import { chatDayKey, type ChannelPage } from '@ab/shared';
 import { phoneTz } from '../../lib/clock/phone-tz';
 import { useNow } from '../../lib/time/use-now';
-import { channelDayLabel } from './day-label';
+import { chatDayLabel } from '../../chat-ui/days/day-label';
 import { channelRows, unreadBand } from './list-rows';
 import { useOpeningReadMark } from './use-read-mark';
 
@@ -21,7 +21,7 @@ export function useChannelRows({ pages, more }: RowsSource) {
   const rows = channelRows({
     messages,
     dayKey: (iso) => chatDayKey(new Date(iso), tz),
-    dayText: (iso) => channelDayLabel(iso, { now, tz }),
+    dayText: (iso) => chatDayLabel(iso, { now, tz }),
     band,
     more,
   });

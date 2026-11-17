@@ -46,6 +46,13 @@ export interface NewChannelMessage
   client_id?: string;
 }
 
+/** A sender's send id in a channel: the key of a resend (channel_messages_client_idx). */
+export interface ClientSend {
+  channelId: string;
+  profileId: string;
+  clientId: string;
+}
+
 /** The file's columns and kind (a checked upload); nothing for a text message. */
 export function fileColumns(
   file: ChannelAttachmentInput | undefined,

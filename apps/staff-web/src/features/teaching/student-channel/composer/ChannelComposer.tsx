@@ -1,13 +1,16 @@
+import { remainingDraft } from '@ab/client-core';
 import { CHANNEL_BODY_MAX } from '@ab/shared';
 import type { KeyboardEvent, SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
-import { afterSend } from './composer-text';
 import { useChannelDraft } from './use-channel-draft';
 
 interface Props {
-  /** The chat's draft key (draftKey): the unsent text survives closing the panel. */
+  /**
+   * The chat's draft key (draftKey): the unsent text survives closing the panel. The thread keys
+   * the composer by it too, so switching the student never carries one chat's text to another.
+   */
   draft: string;
   pending: boolean;
   failed: boolean;
@@ -34,7 +37,10 @@ export function ChannelComposer({ draft, pending, failed, onSend }: Props) {
     e.preventDefault();
     if (!body || tooLong || pending) return;
     const sent = text;
-    void onSend(body).then(() => setText((now) => afterSend(now, sent)), () => undefined);
+    void onSend(body).then(
+      () => setText((current) => remainingDraft({ current, sent })),
+      () => undefined,
+    );
   };
   return (
     <form onSubmit={submit} className="grid gap-2 border-t border-rule pt-3">

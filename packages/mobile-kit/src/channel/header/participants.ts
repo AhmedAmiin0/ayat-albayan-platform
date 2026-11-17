@@ -8,6 +8,8 @@ interface HeaderPeople {
   others: string[];
   /** The others, then «أنت» when the viewer is in the chat; empty while nobody else is known. */
   line: string[];
+  /** The first teacher among the others (the API lists them first): the family's avatar. */
+  teacher: string | null;
 }
 
 type Speaker = Pick<ChannelMessageView, 'mine' | 'sender_name'>;
@@ -35,6 +37,10 @@ const speakers = (messages: readonly Speaker[]): string[] => [
 const membersOf = (participants: readonly ChannelParticipantView[]): string[] =>
   participants.filter((p) => !p.me && named(p.name)).map((p) => p.name.trim());
 
+/** The first other teacher by name, or null (none in the list, or an older API). */
+const firstTeacher = (participants: readonly ChannelParticipantView[]): string | null =>
+  participants.find((p) => !p.me && p.role === 'teacher' && named(p.name))?.name.trim() ?? null;
+
 /** Is the viewer in the chat: a member flagged me, or (no member list) always. */
 const isIn = (participants: readonly ChannelParticipantView[]): boolean =>
   participants.length === 0 || participants.some((p) => p.me);
@@ -47,5 +53,6 @@ export function headerPeople({ participants, messages, you }: PeopleSource): Hea
   const all = participants.length > 0 ? membersOf(participants) : speakers(messages);
   const others = all.slice(0, MAX_NAMES);
   const me = isIn(participants) ? [you] : [];
-  return { others, line: others.length > 0 ? [...others, ...me] : [] };
+  const line = others.length > 0 ? [...others, ...me] : [];
+  return { others, line, teacher: firstTeacher(participants) };
 }

@@ -4,9 +4,13 @@ export { BubbleMeta, type BubbleMetaProps } from './bubble/BubbleMeta';
 export { BUBBLE_PAD, BubbleShell, type BubbleShellProps } from './bubble/BubbleShell';
 export { type BubbleSide, bubbleSide } from './bubble/bubble-side';
 export { useSmallText } from './bubble/use-small-text';
+export { AttachTile } from './composer/AttachTile';
 export { ComposerBar, type ComposerBarProps } from './composer/ComposerBar';
 export { RoundAction, type RoundActionProps } from './composer/RoundAction';
 export { DayChip } from './days/DayChip';
+export { chatDayLabel } from './days/day-label';
+export { EmojiGrid } from './emoji/EmojiGrid';
+export { insertAt } from './emoji/emoji-list';
 export { FloatingDay } from './days/FloatingDay';
 export {
   CHIP_BOX,
@@ -17,6 +21,13 @@ export {
   type Viewport,
 } from './days/top-band';
 export { CloseIcon, MicIcon, PauseIcon, PlayIcon, ReplyIcon, SendIcon } from './icons/chat-glyphs';
+export {
+  AttachIcon,
+  CameraIcon,
+  DocumentIcon,
+  EmojiIcon,
+  GalleryIcon,
+} from './icons/composer-icons';
 export { type ChatIconProps, hiddenIcon, IconLine } from './icons/icon-line';
 export { PhotoViewer } from './photo/PhotoViewer';
 export { ViewerClose } from './photo/ViewerClose';
@@ -26,6 +37,7 @@ export { QuoteUnavailable } from './quote/QuoteUnavailable';
 export { SwipeReply } from './swipe/SwipeReply';
 export { DeliveryTicks, type DeliveryTicksProps } from './ticks/DeliveryTicks';
 export { mediaProgress, mediaTime } from './voice/media-time';
+export { RecDot } from './voice/RecDot';
 export { Spinner } from './voice/Spinner';
 export { atEnd, nextRate, type Rate, stepTo, voiceClock } from './voice/voice-math';
 export { VoiceRow, type VoiceRowProps } from './voice/VoiceRow';

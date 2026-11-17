@@ -58,4 +58,13 @@ describe('channel files: types and size caps (migration 20261117000100)', () => 
       false,
     );
   });
+
+  it('a file name loses its control and bidi characters; nothing left is refused', () => {
+    const spoof = { ...file('application/pdf', 10), path: 'c1/f.pdf', name: ' \u202Efdp.exe\u200F ' };
+    expect(channelAttachmentInputSchema.parse(spoof).name).toBe('fdp.exe');
+    const bare = { ...spoof, name: '\u2066\u202E\u0007' };
+    expect(channelAttachmentInputSchema.safeParse(bare).success).toBe(false);
+    const long = channelUploadSchema.parse({ ...file('image/png', 1), name: 'ب'.repeat(300) });
+    expect(long.name).toHaveLength(200);
+  });
 });

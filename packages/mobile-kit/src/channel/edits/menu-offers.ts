@@ -1,5 +1,6 @@
 import { channelBubbleActions, type ChannelAudience } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
+import { isPending } from '../send/pending';
 
 export interface MenuOffers {
   reply: boolean;
@@ -18,20 +19,18 @@ interface OffersInput {
 }
 
 /**
- * What a long press offers on one bubble now (ChatXMenu). Edit and delete only where the API takes
- * them: a participant in write mode within the windows (channelBubbleActions), or the admin's
- * moderation delete; never a read-only monitor (the API answers channel_read_only).
+ * What a long press offers on one bubble now (ChatXMenu). Who may edit or delete is the shared
+ * rule (channelBubbleActions: a writer within the windows, the admin's moderation); never a
+ * deleted message nor one still on its way.
  */
 export function menuOffers(input: OffersInput): MenuOffers {
   const may = channelBubbleActions(input);
-  const writes = input.mode === 'write';
-  const changes = writes || input.audience === 'admin';
-  const live = !input.message.deleted;
+  const live = !input.message.deleted && !isPending(input.message);
   return {
-    reply: writes && live,
+    reply: input.mode === 'write' && live,
     reads: input.message.mine && live,
-    edit: changes && may.edit,
-    delete: changes && may.delete,
+    edit: live && may.edit,
+    delete: live && may.delete,
   };
 }
 

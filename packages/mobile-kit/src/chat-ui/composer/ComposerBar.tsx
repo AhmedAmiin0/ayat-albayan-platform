@@ -9,6 +9,8 @@ export interface ComposerBarProps {
   action: ReactNode;
   /** A line over the row (a voice note's state). */
   above?: ReactNode;
+  /** The pill's least height: 44pt (the staff inbox) unless given (the channel's 48). */
+  size?: number;
 }
 
 const PILL = {
@@ -26,7 +28,7 @@ const PILL = {
  * so it mirrors with the phone (the round button on the right in English, on the left in Arabic).
  * Presentational only: the caller fills the pill and the action.
  */
-export function ComposerBar({ pill, action, above }: ComposerBarProps) {
+export function ComposerBar({ pill, action, above, size }: ComposerBarProps) {
   const { color } = useTheme();
   return (
     <View style={{ gap: 4 }}>
@@ -34,7 +36,12 @@ export function ComposerBar({ pill, action, above }: ComposerBarProps) {
       <View testID="open-row" style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 6 }}>
         <View
           testID="composer-pill"
-          style={{ ...PILL, borderColor: color.ruleInput, backgroundColor: color.raised }}
+          style={{
+            ...PILL,
+            minHeight: size ?? PILL.minHeight,
+            borderColor: color.ruleInput,
+            backgroundColor: color.raised,
+          }}
         >
           {pill}
         </View>

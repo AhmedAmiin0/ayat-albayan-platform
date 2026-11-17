@@ -1,6 +1,7 @@
 import {
   CHANNEL_NOT_OPEN,
   CHANNEL_PAGE_SIZE,
+  micros,
   type ChannelMessageView,
   type ChannelPage,
   type ChannelPost,
@@ -15,7 +16,6 @@ import { ChannelPeopleRepo } from './channel-people.repo';
 import { toPage, toTeacherRows, unreadRolesFor } from './channel.mapper';
 import { ChannelRepo } from './channel.repo';
 import { TeachersRepo } from '@/modules/people/teachers';
-import { micros } from '@/modules/teaching/student-channels/reads/instant';
 import { ChannelSender } from '@/modules/teaching/student-channels/send/channel-sender';
 import { ChannelViews } from '@/modules/teaching/student-channels/views/channel-views.service';
 

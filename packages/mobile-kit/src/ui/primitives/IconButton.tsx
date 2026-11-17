@@ -12,12 +12,15 @@ interface IconButtonProps {
   disabled?: boolean;
   /** Narrower (34pt) inside a crowded bar such as the chat pill; hitSlop keeps the 44pt target. */
   compact?: boolean;
+  /** Its height (and width unless compact); 44pt by default, 48 for the channel's send circle. */
+  size?: number;
   testID?: string;
   children: ReactNode;
 }
 
 /** A 44pt square (circle when filled) holding one drawn icon, for rows with no room for a label. */
 export function IconButton({ label, onPress, variant = 'ghost', ...p }: IconButtonProps) {
+  const size = p.size ?? shape.control.touch;
   const { color } = useTheme();
   const off = p.disabled === true;
   const filled = variant === 'filled';
@@ -31,8 +34,8 @@ export function IconButton({ label, onPress, variant = 'ghost', ...p }: IconButt
       onPress={onPress}
       hitSlop={p.compact ? { left: 5, right: 5 } : undefined}
       style={({ pressed }) => ({
-        width: p.compact ? 34 : shape.control.touch,
-        height: shape.control.touch,
+        width: p.compact ? 34 : size,
+        height: size,
         borderRadius: filled ? shape.radius.pill : shape.radius.md,
         alignItems: 'center',
         justifyContent: 'center',

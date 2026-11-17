@@ -2,11 +2,7 @@ import type { ChannelAttachmentView, ChannelMessageView } from '@ab/shared';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
-import {
-  ChannelMediaContext,
-  type ChannelMediaPort,
-  type ChannelVoiceStatus,
-} from '../media-port';
+import { ChannelMediaContext, type ChannelMediaPort, type ChannelVoiceStatus } from '../media-port';
 import { channelMessage } from '../testing/channel-fixtures';
 import { AttachmentBody } from './AttachmentBody';
 

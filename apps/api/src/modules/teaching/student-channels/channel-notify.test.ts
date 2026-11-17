@@ -6,6 +6,7 @@ import type { ChannelActor } from './channel-access';
 import { ChannelNotify } from './channel-notify';
 import type { ChannelPeopleRepo } from './channel-people.repo';
 import type { FamilyChatSettings } from './family-chat.settings';
+import { ChannelMembers } from './reads/channel-members';
 
 // Owner 2026-11-16 «all 4 will receive the message teacher guardian student and the assistant»:
 // everyone in the chat but the sender; the family only while family_chat_enabled is on.
@@ -42,10 +43,14 @@ function notifier(setup: Setup = {}) {
       new Map([...NAMES].filter(([id]) => ids.includes(id))),
     ),
   };
+  const inChat = new ChannelMembers(
+    { channelPeople: vi.fn(async () => members) } as unknown as PresenceRepo,
+    people as unknown as ChannelPeopleRepo,
+    { enabled: vi.fn(async () => familyOn) } as unknown as FamilyChatSettings,
+  );
   const notify = new ChannelNotify(
     people as unknown as ChannelPeopleRepo,
-    { channelPeople: vi.fn(async () => members) } as unknown as PresenceRepo,
-    { enabled: vi.fn(async () => familyOn) } as unknown as FamilyChatSettings,
+    inChat,
     push as unknown as PushService,
   );
   return { notify, push };

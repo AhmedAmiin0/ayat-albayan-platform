@@ -1,5 +1,5 @@
-import { chatDay, chatDayKey, type ClockCycle, dateText, dayParts } from '@ab/shared';
-import { t, locale } from '@ab/mobile-kit';
+import { chatDay, chatDayKey, type ClockCycle } from '@ab/shared';
+import { chatDayLabel } from '@ab/mobile-kit';
 import { clock, deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 
 // The day separators of a chat, as WhatsApp (owner 2026-10-27): «اليوم», «أمس», the weekday within
@@ -11,20 +11,9 @@ interface DayOptions {
   tz?: string;
 }
 
-const DAY_MONTH = { day: 'numeric', month: 'long' } as const;
-const DAY_MONTH_YEAR = { ...DAY_MONTH, year: 'numeric' } as const;
-const pad = (n: number): string => String(n).padStart(2, '0');
-
-/** The separator's words for the day of `iso`. */
+/** The separator's words for the day of `iso` (the kit's chatDayLabel, in the device's zone). */
 export function dayLabel(iso: string, { now = new Date(), tz = deviceTimeZone() }: DayOptions = {}): string {
-  const day = chatDay(new Date(iso), { now, tz });
-  if (day.kind === 'today') return t.inbox.dayToday;
-  if (day.kind === 'yesterday') return t.inbox.dayYesterday;
-  const weekdays: Record<string, string> = t.enums.weekday;
-  if (day.kind === 'weekday') return weekdays[String(day.weekday)] ?? '';
-  // The calendar date at noon UTC, formatted in UTC: the same day whatever the device's zone.
-  const at = new Date(`${day.year ?? dayParts(now, tz).year}-${pad(day.month)}-${pad(day.day)}T12:00:00Z`);
-  return dateText(at, { tz: 'UTC', locale }, day.year === null ? DAY_MONTH : DAY_MONTH_YEAR);
+  return chatDayLabel(iso, { now, tz });
 }
 
 /**

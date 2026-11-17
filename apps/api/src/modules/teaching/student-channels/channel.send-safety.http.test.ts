@@ -30,6 +30,21 @@ describe('student channel sends: safe to repeat, never a 500 after the insert', 
     expect(t.push.notifyProfiles).not.toHaveBeenCalled();
   });
 
+  it('a resend whose quoted message was deleted since: the stored row, no reply check', async () => {
+    const stored = messageRow({ id: 'm9', sender_profile_id: 'p-g', client_id: CLIENT });
+    t.queries.byClientId.mockResolvedValueOnce(stored);
+    t.edits.message.mockResolvedValueOnce(null);
+    const post = { body: 'نعم', reply_to_id: 'a7000000-0000-4000-8000-000000000002', client_id: CLIENT };
+    const res = await t.post(`${PORTAL}/messages`, 'guardian', post);
+    expect([res.statusCode, res.json().id]).toEqual([201, 'm9']);
+    expect(t.queries.byClientId).toHaveBeenCalledWith(
+      expect.objectContaining({ profileId: 'p-g', clientId: CLIENT }),
+    );
+    expect(t.edits.message).not.toHaveBeenCalled();
+    expect(t.queries.insert).not.toHaveBeenCalled();
+    expect(t.push.notifyProfiles).not.toHaveBeenCalled();
+  });
+
   it('a failing read mark, push or name lookup after the insert: still 201 with the message', async () => {
     t.queries.setReadMark.mockRejectedValueOnce(new Error('db down'));
     t.push.notifyProfiles.mockRejectedValueOnce(new Error('push down'));

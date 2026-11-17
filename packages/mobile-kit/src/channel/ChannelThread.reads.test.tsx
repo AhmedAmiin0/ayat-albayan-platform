@@ -33,9 +33,9 @@ const reads = {
 };
 
 beforeEach(() => {
-  mockApiFetch.mockReset().mockImplementation(async (path: string) =>
-    path.endsWith('/reads') ? reads : page,
-  );
+  mockApiFetch
+    .mockReset()
+    .mockImplementation(async (path: string) => (path.endsWith('/reads') ? reads : page));
   mockApiSend.mockReset().mockResolvedValue({});
 });
 
@@ -55,7 +55,9 @@ test('a long press on my ticks: who read it (with the time) and who not yet', as
 
 test('the band sits over the first message after the page’s mark, and the mark moves on', async () => {
   const marked = { ...page, my_last_read_at: '2026-10-27T09:30:00.000Z' };
-  mockApiFetch.mockImplementation(async (path: string) => (path.endsWith('/reads') ? reads : marked));
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path.endsWith('/reads') ? reads : marked,
+  );
   const client = freshQueryClient();
   await renderWithQuery(<ChannelThread refs={{ audience: 'teacher', studentId: 's1' }} />, client);
   expect(await screen.findByText(c.unread.replace('{n}', '1'))).toBeTruthy();
@@ -84,6 +86,8 @@ test('in the background the thread is not marked read', async () => {
   expect(await screen.findByText('جديدة')).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
   await act(async () => listeners.forEach((fn) => fn('active')));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', READ_PATH, expect.anything()));
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('POST', READ_PATH, expect.anything()),
+  );
   Object.defineProperty(AppState, 'currentState', { value: 'active', configurable: true });
 });

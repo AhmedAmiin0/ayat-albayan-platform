@@ -29,3 +29,27 @@ test('the band: everyone else’s messages after the mark; none without a mark',
   expect(unreadBand(messages, '2026-10-27T11:00:00.000Z')).toBeNull();
   expect(unreadBand(messages, null)).toBeNull();
 });
+
+test('the rhythm: 4pt on the same side, 8pt on a change, 0 under a chip; a follow-up', () => {
+  const same = { sender_name: 'فاطمة', sender_role: 'teacher' as const };
+  const thread = [
+    channelMessage({ id: 'a', created_at: '2026-10-27T09:00:00.000Z', ...same }),
+    channelMessage({ id: 'b', created_at: '2026-10-27T09:01:00.000Z', ...same }),
+    channelMessage({ id: 'c', created_at: '2026-10-27T09:02:00.000Z', mine: true }),
+    channelMessage({ id: 'd', created_at: '2026-10-27T09:03:00.000Z', mine: true }),
+  ];
+  const band = { id: 'd', count: 1 };
+  const rows = channelRows({ messages: thread, dayKey: day, dayText: day, band, more: false });
+  expect(rows.map((r) => [r.message.id, r.space, r.followUp])).toEqual([
+    ['d', 4, false],
+    ['c', 8, false],
+    ['b', 4, true],
+    ['a', 0, false],
+  ]);
+});
+
+test('the band compares to the microsecond: a message 0.5 ms after the mark is unread', () => {
+  const late = [at('x', '2026-10-27T10:00:00.123900Z')];
+  expect(unreadBand(late, '2026-10-27T10:00:00.123400Z')).toEqual({ id: 'x', count: 1 });
+  expect(unreadBand(late, '2026-10-27T10:00:00.123900Z')).toBeNull();
+});

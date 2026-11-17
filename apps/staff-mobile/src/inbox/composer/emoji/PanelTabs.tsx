@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { t, FilterPills } from '@ab/mobile-kit';
-import { EmojiGrid } from './EmojiGrid';
+import { t, EmojiGrid, FilterPills } from '@ab/mobile-kit';
 import type { PanelMedia } from './panel-api';
 import { GifTab } from './GifTab';
 import { StickerTab } from './StickerTab';

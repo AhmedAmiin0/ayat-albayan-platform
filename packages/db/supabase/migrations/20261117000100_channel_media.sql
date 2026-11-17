@@ -10,18 +10,19 @@
 -- 2. channel_mark_read(channel, profile, at): a read mark only ever moves forward (a late request
 --    with an older instant never makes read messages unread again). Service role only.
 -- 3. Bucket channel-media ({channel_id}/{uuid}.{ext}, private): images and voice notes up to
---    10 MiB (the API checks the per-type cap), PDFs up to 15 MiB. Read: whoever may read the
---    channel (can_read_channel); no client writes (the API signs every upload).
+--    10 MiB (the API checks the per-type cap), PDFs up to 15 MiB. No client policy at all: the
+--    API signs every upload and every read with the service role, so a file deleted for everyone
+--    stays unreadable to a participant who kept its path.
 -- 4. An index to find a message's bell rows (push_notifications kind channel_message, dedup key
 --    channel_message:{message_id}:{profile_id}) when the message is edited or deleted.
 --
 -- Expand only: new nullable or defaulted columns, one relaxed check validated apart, new indexes on
--- a small table, one function, one bucket, one storage policy. Idempotent. Writes no row but the
--- bucket. lock_timeout keeps the brief ACCESS EXCLUSIVE locks from queueing traffic.
+-- a small table, one function, one bucket. Idempotent. Writes no row but the bucket.
+-- lock_timeout keeps the brief ACCESS EXCLUSIVE locks from queueing traffic.
 --
 -- MANUAL ROLLBACK (only after the code rollback and once no file or empty body is left): drop the
---   new columns, indexes, constraints, channel_mark_read, can_read_channel_media, the policy
---   storage_channel_media_read and the bucket; add back check (char_length(body) between 1 and 2000).
+--   new columns, indexes, constraints, channel_mark_read and the bucket; add back
+--   check (char_length(body) between 1 and 2000).
 
 set local lock_timeout = '5s';
 
@@ -88,16 +89,7 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 on conflict (id) do update set public = false, file_size_limit = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
 
--- Compares text, so a malformed object name never makes the policy throw.
-create or replace function public.can_read_channel_media(p_name text) returns boolean
-  language sql stable security definer set search_path = '' as $$
-  select exists (
-    select 1 from public.student_channels c
-    where c.id::text = split_part(p_name, '/', 1) and public.can_read_channel(c.id))
-$$;
-revoke execute on function public.can_read_channel_media(text) from public, anon;
-grant execute on function public.can_read_channel_media(text) to authenticated, service_role;
-
+-- No storage.objects policy for channel-media (see 3): an earlier draft of this migration had a
+-- participant read policy; a database that ran that draft loses it here.
 drop policy if exists storage_channel_media_read on storage.objects;
-create policy storage_channel_media_read on storage.objects for select to authenticated
-  using (bucket_id = 'channel-media' and public.can_read_channel_media(name));
+drop function if exists public.can_read_channel_media(text);

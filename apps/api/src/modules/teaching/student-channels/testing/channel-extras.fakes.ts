@@ -17,7 +17,9 @@ export function channelExtras() {
       token: 'tok',
       signed_url: `https://storage.test/${slot.path}`,
     })),
-    exists: vi.fn(async (ref: { path: string }) => ref.path === UPLOADED),
+    info: vi.fn(async (ref: { path: string }) =>
+      ref.path === UPLOADED ? { size: 2048, contentType: 'image/jpeg' } : null,
+    ),
     signedDownloads: vi.fn(
       async (input: { paths: readonly string[] }) =>
         new Map(input.paths.map((p) => [p, `https://storage.test/get/${p}`])),

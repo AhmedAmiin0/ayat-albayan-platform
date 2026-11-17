@@ -1,16 +1,20 @@
+import { newClientId } from '@ab/client-core';
 import { useState } from 'react';
 import type { ChannelRef } from '../channel-api';
 import { useChannelMedia, type ChannelPickedFile } from '../media-port';
 import { fileErrorText } from '../send/channel-file';
-import { newClientId } from '../send/client-id';
-import type { ComposerReply } from './use-composer';
 import { useSendFile } from '../send/use-channel-send';
+import type { ComposerReply } from './use-composer';
 
 type Picker = (() => Promise<ChannelPickedFile | null>) | undefined;
 
+/** A source the app's port offers, as a tap; absent → no tile. */
+const tapOf = (picker: Picker, pick: (p: Picker) => Promise<void>) =>
+  picker ? () => void pick(picker) : undefined;
+
 /**
- * Photos, PDFs and voice notes through the app's port (pickers, recorder): each picked file is
- * uploaded and sent with a client_id of its own, answering the quoted message if any.
+ * Photos (the gallery or the camera), PDFs and voice notes through the app's port: each picked
+ * file is uploaded and sent with a client_id of its own, answering the quoted message if any.
  */
 export function useAttach(ref: ChannelRef, reply: ComposerReply) {
   const port = useChannelMedia();
@@ -25,9 +29,14 @@ export function useAttach(ref: ChannelRef, reply: ComposerReply) {
     const file = await (picker?.() ?? Promise.resolve(null)).catch(() => null);
     if (file) sendFile(file);
   };
+  const sources = {
+    photo: tapOf(port.pickPhoto, pick),
+    camera: tapOf(port.pickCamera, pick),
+    pdf: tapOf(port.pickPdf, pick),
+  };
   return {
-    photo: port.pickPhoto ? () => void pick(port.pickPhoto) : undefined,
-    pdf: port.pickPdf ? () => void pick(port.pickPdf) : undefined,
+    sources,
+    any: Object.values(sources).some(Boolean),
     sendFile,
     uploading: send.isPending,
     error: send.isError ? fileErrorText(send.error, last) : null,

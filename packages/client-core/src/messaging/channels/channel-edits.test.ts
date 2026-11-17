@@ -47,35 +47,75 @@ describe('channel edit / delete for the clients', () => {
   });
 
   it("the sender's windows (sales too); the admin deletes any; a deleted bubble nothing", () => {
-    expect(channelBubbleActions({ audience: 'portal', message: msg(), now: now(10) })).toEqual({
+    expect(
+      channelBubbleActions({ audience: 'portal', mode: 'write', message: msg(), now: now(10) }),
+    ).toEqual({
       edit: true,
       delete: true,
     });
-    expect(channelBubbleActions({ audience: 'teacher', message: msg(), now: now(20) })).toEqual({
+    expect(
+      channelBubbleActions({ audience: 'teacher', mode: 'write', message: msg(), now: now(20) }),
+    ).toEqual({
       edit: false,
       delete: true,
     });
     expect(
-      channelBubbleActions({ audience: 'teacher', message: msg({ mine: false }), now: now(1) }),
+      channelBubbleActions({
+        audience: 'teacher',
+        mode: 'write',
+        message: msg({ mine: false }),
+        now: now(1),
+      }),
     ).toEqual({ edit: false, delete: false });
     expect(
-      channelBubbleActions({ audience: 'admin', message: msg({ mine: false }), now: now(9999) }),
+      channelBubbleActions({
+        audience: 'admin',
+        mode: 'read',
+        message: msg({ mine: false }),
+        now: now(9999),
+      }),
     ).toEqual({ edit: false, delete: true });
-    expect(channelBubbleActions({ audience: 'sales', message: msg(), now: now(1) })).toEqual({
+    expect(
+      channelBubbleActions({ audience: 'sales', mode: 'write', message: msg(), now: now(1) }),
+    ).toEqual({
       edit: true,
       delete: true,
     });
     expect(
-      channelBubbleActions({ audience: 'sales', message: msg({ mine: false }), now: now(1) }),
+      channelBubbleActions({
+        audience: 'sales',
+        mode: 'write',
+        message: msg({ mine: false }),
+        now: now(1),
+      }),
     ).toEqual({ edit: false, delete: false });
     expect(
-      channelBubbleActions({ audience: 'admin', message: msg({ deleted: true }), now: now(1) }),
+      channelBubbleActions({
+        audience: 'admin',
+        mode: 'read',
+        message: msg({ deleted: true }),
+        now: now(1),
+      }),
     ).toEqual({ edit: false, delete: false });
+  });
+
+  it('only a writer or the admin changes: a monitor or a closed chat gets nothing', () => {
+    const mine = msg();
+    for (const mode of ['read', 'closed'] as const) {
+      expect(channelBubbleActions({ audience: 'sales', mode, message: mine, now: now(1) })).toEqual(
+        { edit: false, delete: false },
+      );
+    }
+    expect(
+      channelBubbleActions({ audience: 'admin', mode: 'read', message: mine, now: now(1) }),
+    ).toEqual({ edit: false, delete: true });
   });
 
   it('a file is deleted, never edited', () => {
     const voice = msg({ kind: 'voice', body: '' });
-    expect(channelBubbleActions({ audience: 'portal', message: voice, now: now(1) })).toEqual({
+    expect(
+      channelBubbleActions({ audience: 'portal', mode: 'write', message: voice, now: now(1) }),
+    ).toEqual({
       edit: false,
       delete: true,
     });

@@ -1,9 +1,9 @@
 import { channelActions, type ChannelActions, type ChannelMessageView } from '@ab/shared';
+import type { ChannelMode } from './channel-live.js';
 import { channelMessagesPath, type ChannelAudience } from './channels.js';
 
 // «تعديل» / «حذف للجميع» in the student channel (owner 2026-10-30) for web and mobile. The API
-// enforces
-// the same rule; the menu only offers what it would accept now.
+// enforces the same rule; the menu only offers what it would accept now.
 
 /**
  * PATCH (edit) / DELETE (delete for everyone) …/messages/:id, on every audience's route (the
@@ -17,20 +17,31 @@ export function channelMessagePath(input: {
   return `${channelMessagesPath(input)}/${input.messageId}`;
 }
 
+const NONE: ChannelActions = { edit: false, delete: false };
+
+/**
+ * Who may change a message at all: a writer on a participant's open channel, or the admin's
+ * moderation. A monitor, the owning assistant on a closed chat, gets 403 channel_read_only.
+ */
+const mayChange = (audience: ChannelAudience, mode: ChannelMode): boolean =>
+  mode === 'write' || audience === 'admin';
+
 /**
  * What this viewer's menu offers on one bubble now: the sender's own windows, the owning
- * assistant's too; the admin (moderation) deletes any message.
+ * assistant's too, in write mode; the admin (moderation) deletes any message.
  */
 export function channelBubbleActions(input: {
   audience: ChannelAudience;
+  mode: ChannelMode;
   message: ChannelMessageView;
   now: Date;
 }): ChannelActions {
-  return channelActions({
+  const actions = channelActions({
     message: input.message,
     moderator: input.audience === 'admin',
     now: input.now,
   });
+  return mayChange(input.audience, input.mode) ? actions : NONE;
 }
 
 /** GET …/messages/:id/reads: who of the chat read this message («معلومات الرسالة»). */

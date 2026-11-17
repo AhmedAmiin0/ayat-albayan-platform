@@ -1,9 +1,7 @@
 import { Animated, Modal, Pressable, StyleSheet, View } from 'react-native';
-import { t, shape, useTheme } from '@ab/mobile-kit';
+import { t, shape, useTheme, AttachTile, CameraIcon, DocumentIcon, EmojiIcon, GalleryIcon } from '@ab/mobile-kit';
 import { SavedReplyIcon, TemplateIcon } from '@/inbox/shared/chat-icons';
-import { CameraIcon, DocumentIcon, EmojiIcon, GalleryIcon } from '@/inbox/shared/composer-icons';
 import type { ChatFileSource } from '@/inbox/composer/send-file';
-import { AttachTile } from './AttachTile';
 import { useSwipeClose } from './use-swipe-close';
 
 interface AttachSheetProps {

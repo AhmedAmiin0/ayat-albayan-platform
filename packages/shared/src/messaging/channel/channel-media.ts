@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { cleanFileName } from '../chat/chat-files.js';
 
 // Photos, PDFs and voice notes in the student channel (docs/31 §2). The API signs an upload into
 // the private channel-media bucket ({channel_id}/{uuid}.{ext}), the app PUTs the file, then posts
@@ -57,7 +58,12 @@ const TOO_LARGE = { message: 'attachment_too_large', path: ['size'] };
 const fileFields = {
   mime: z.enum(CHANNEL_MEDIA_MIMES, { message: 'attachment_type' }),
   size: z.int().min(1).max(CHANNEL_MEDIA_MAX_BYTES, { message: 'attachment_too_large' }),
-  name: z.string().trim().min(1).max(200),
+  // Shown to the other side: no control or bidi characters (a spoofed «‮fdp.exe»), ≤ 200.
+  name: z
+    .string()
+    .max(1000)
+    .transform((raw) => cleanFileName(raw))
+    .pipe(z.string().min(1)),
 };
 
 /** POST …/attachments/upload-url: the file about to be sent (→ SignedUpload). */

@@ -1,17 +1,22 @@
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
-import { shape, type, useTheme } from '../../theme';
+import { type Palette, shape, type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
-import { ContentText } from '../../ui/primitives/ContentText';
 import { IconButton } from '../../ui/primitives/IconButton';
 import { CloseIcon } from '../icons/chat-glyphs';
-import { quoteLabel, quoteLine } from './quote-style';
+import { quoteLabel } from './quote-style';
+import { QuoteText } from './QuoteText';
 
 export interface QuoteBarProps {
   /** Who sent the answered message; null hides it. */
   sender: string | null;
   text: string;
   icon?: string | null;
+  /** A drawn file icon in place of the emoji (the student channel). */
+  glyph?: ReactNode;
+  /** The bar's and the sender's colour: the brand (default), or the sender's role ink. */
+  tone?: keyof Palette;
   /** ✕: stop answering it. */
   onCancel: () => void;
 }
@@ -31,12 +36,13 @@ const LINE = { fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm)
  * so the thread keeps its reading height. The sender keeps its width; the quoted line sits on the
  * side of its own language (ContentText) and is cut first.
  */
-export function QuoteBar({ sender, text, icon, onCancel }: QuoteBarProps) {
+export function QuoteBar(p: QuoteBarProps) {
+  const { sender, text, onCancel, tone = 'lapis' } = p;
   const { color } = useTheme();
   return (
     <View
       testID="reply-strip"
-      style={{ ...BAR, borderStartColor: color.lapis, backgroundColor: color.sunk }}
+      style={{ ...BAR, borderStartColor: color[tone], backgroundColor: color.sunk }}
     >
       <View
         testID="reply-strip-line"
@@ -52,19 +58,13 @@ export function QuoteBar({ sender, text, icon, onCancel }: QuoteBarProps) {
               flexShrink: 0,
               maxWidth: '45%',
               fontFamily: type.ui[600],
-              color: color.lapis,
+              color: color[tone],
             }}
           >
             {`${sender} ·`}
           </AppText>
         ) : null}
-        <ContentText
-          source={text}
-          numberOfLines={1}
-          style={{ ...LINE, flex: 1, fontFamily: type.ui[400], color: color.ink2 }}
-        >
-          {quoteLine(icon, text)}
-        </ContentText>
+        <QuoteText text={text} icon={p.icon} glyph={p.glyph} style={{ ...LINE, flex: 1 }} />
       </View>
       <IconButton label={t.inbox.reply.cancel} onPress={onCancel}>
         <CloseIcon color={color.ink2} size={18} />

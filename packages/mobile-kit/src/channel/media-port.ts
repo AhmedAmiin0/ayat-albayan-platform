@@ -36,10 +36,14 @@ export interface ChannelRecorder {
   /** The note to send, or null when nothing was recorded. */
   stop: () => Promise<ChannelPickedFile | null>;
   cancel: () => void;
+  /** How long the note has been recording, for the bar's clock; absent → the kit counts. */
+  elapsedMs?: () => number;
 }
 
 export interface ChannelMediaPort {
   pickPhoto?: () => Promise<ChannelPickedFile | null>;
+  /** A photo taken now with the camera (its permission asked by the app). */
+  pickCamera?: () => Promise<ChannelPickedFile | null>;
   pickPdf?: () => Promise<ChannelPickedFile | null>;
   recorder?: ChannelRecorder;
   playVoice?: (input: {

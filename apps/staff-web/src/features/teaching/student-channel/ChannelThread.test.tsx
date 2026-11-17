@@ -34,7 +34,7 @@ describe('ChannelThread (docs/31 §2)', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/channel/read', { at: '2026-10-27T10:05:00.000Z' }));
     fireEvent.change(screen.getByLabelText(c.messageLabel), { target: { value: '  شكرًا  ' } });
     fireEvent.click(screen.getByRole('button', { name: c.send }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/channel/messages', { body: 'شكرًا' }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/channel/messages', { body: 'شكرًا', client_id: expect.any(String) }));
     expect(screen.queryByText(c.readOnly)).toBeNull();
   });
 
@@ -86,7 +86,7 @@ describe('ChannelThread (docs/31 §2)', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/students/s1/channel/read', read));
     fireEvent.change(screen.getByLabelText(c.messageLabel), { target: { value: 'مرحبًا' } });
     fireEvent.click(screen.getByRole('button', { name: c.send }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/students/s1/channel/messages', { body: 'مرحبًا' }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/students/s1/channel/messages', { body: 'مرحبًا', client_id: expect.any(String) }));
     expect(screen.queryByText(c.readOnly)).toBeNull();
   });
 });

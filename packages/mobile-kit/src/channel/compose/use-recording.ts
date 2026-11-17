@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { useChannelMedia, type ChannelPickedFile } from '../media-port';
+import { useElapsed } from './use-elapsed';
 
 /**
  * A voice note through the app's recorder (ChatXVoice): a tap on the microphone records, «أرسل»
- * stops and sends it, ✕ drops it. No recorder in this app: `available` is false (no microphone).
+ * stops and sends it, ✕ drops it; `ms` is its clock. No recorder in this app: `available` is false
+ * (no microphone).
  */
 export function useRecording(onDone: (file: ChannelPickedFile) => void) {
   const recorder = useChannelMedia().recorder;
   const [on, setOn] = useState(false);
+  const ms = useElapsed(on, recorder?.elapsedMs);
   const start = async () => {
     const started = (await recorder?.start().catch(() => false)) ?? false;
     setOn(started);
@@ -24,6 +27,7 @@ export function useRecording(onDone: (file: ChannelPickedFile) => void) {
   return {
     available: recorder !== undefined,
     on,
+    ms,
     start: () => void start(),
     stop: () => void stop(),
     cancel,

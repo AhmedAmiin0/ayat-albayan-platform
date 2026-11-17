@@ -36,3 +36,12 @@ describe('the view filters of «الطلاب» and «محفظتي»', () => {
     expect(parseMoneySearch({ view: 'mine' })).toEqual({});
   });
 });
+
+describe('parseStudentsSearch: one zod object for view and chat', () => {
+  it('a malformed view keeps a valid chat, and the reverse; no undefined keys', () => {
+    const id = '0b6f3c1e-8a4d-4c2b-9e7f-1a2b3c4d5e6f';
+    expect(parseStudentsSearch({ view: 7, chat: id })).toStrictEqual({ chat: id });
+    expect(parseStudentsSearch({ view: 'mine', chat: [id] })).toStrictEqual({ view: 'mine' });
+    expect(parseStudentsSearch({ view: 'all', chat: 'x', other: 1 })).toStrictEqual({});
+  });
+});

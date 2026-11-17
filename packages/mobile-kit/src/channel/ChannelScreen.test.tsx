@@ -21,9 +21,11 @@ const page = channelPage({
 });
 
 beforeEach(() => {
-  mockApiFetch.mockReset().mockImplementation(async (path: string) =>
-    path.endsWith('/presence') ? { enabled: false, peers: [] } : page,
-  );
+  mockApiFetch
+    .mockReset()
+    .mockImplementation(async (path: string) =>
+      path.endsWith('/presence') ? { enabled: false, peers: [] } : page,
+    );
 });
 
 test('the family’s head: the app’s title with the student, the people, «أنت» last', async () => {

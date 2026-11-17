@@ -26,3 +26,10 @@ test('a deleted message offers nothing', () => {
     false,
   );
 });
+
+test('a message still on its way offers nothing', () => {
+  const pending = channelMessage({ id: 'pending:c1', mine: true, created_at: mine.created_at });
+  expect(offersAny(menuOffers({ audience: 'teacher', mode: 'write', message: pending, now }))).toBe(
+    false,
+  );
+});

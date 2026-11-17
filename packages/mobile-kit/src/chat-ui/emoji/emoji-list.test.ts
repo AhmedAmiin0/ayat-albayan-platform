@@ -8,7 +8,10 @@ test('about 80 emoji, none twice', () => {
 
 describe('insertAt', () => {
   it('at the caret, in Arabic and English text alike; the caret moves past it', () => {
-    expect(insertAt('السلام عليكم', { start: 6, end: 6 }, '🌹')).toEqual({ text: 'السلام🌹 عليكم', caret: 8 });
+    expect(insertAt('السلام عليكم', { start: 6, end: 6 }, '🌹')).toEqual({
+      text: 'السلام🌹 عليكم',
+      caret: 8,
+    });
     expect(insertAt('Hi', { start: 2, end: 2 }, '👋')).toEqual({ text: 'Hi👋', caret: 4 });
   });
 

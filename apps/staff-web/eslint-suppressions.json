@@ -10881,9 +10881,6 @@
   "src/features/teaching/student-channel/ChannelThread.live.test.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 2
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/features/teaching/student-channel/ChannelThread.test.tsx": {
@@ -10917,7 +10914,7 @@
       "count": 5
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/student-channel/edit/edit-api.ts": {
