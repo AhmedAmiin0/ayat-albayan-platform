@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { balanceOf, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
@@ -31,6 +31,6 @@ test('a current package: the row with what it does opens the payment screen', as
 test('no package: no row', async () => {
   serve(balanceOf());
   await renderWithQuery(<PayRow studentId="s1" />);
-  await screen.findByText(() => true).catch(() => null);
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/balance'));
   expect(screen.queryByRole('button', { name: t.courseCard.pay })).toBeNull();
 });
