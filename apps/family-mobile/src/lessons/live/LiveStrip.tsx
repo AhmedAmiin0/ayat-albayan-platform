@@ -29,7 +29,7 @@ export function LiveStrip({ live }: { live: LiveRoom }) {
       <View style={{ flexDirection: 'row' }}>
         {live.people.slice(0, FACES).map((p, i) => (
           <View
-            key={`${p.role}-${p.name}`}
+            key={`${p.role}-${p.name ?? String(i)}`}
             // A 2pt ring of the strip's green parts the overlapping faces.
             style={{
               marginStart: i === 0 ? 0 : -10,
