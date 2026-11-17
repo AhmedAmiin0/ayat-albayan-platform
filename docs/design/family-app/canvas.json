@@ -1186,6 +1186,236 @@
       "h": 1080,
       "title": "الإعدادات — القيم: نوع تسجيل الحلقات",
       "is_interactive": true
+    },
+    "LinkXWebList.dc.html": {
+      "x": 0,
+      "y": 27800,
+      "w": 1280,
+      "h": 1230,
+      "title": "الموظفون على الويب — الروابط المختصرة",
+      "is_interactive": true
+    },
+    "LinkXWebListDark.dc.html": {
+      "x": 1360,
+      "y": 27800,
+      "w": 1280,
+      "h": 1230,
+      "title": "الموظفون على الويب — الروابط المختصرة (الوضع الليلي)",
+      "is_interactive": true
+    },
+    "LinkXWebCreate.dc.html": {
+      "x": 2720,
+      "y": 27800,
+      "w": 1280,
+      "h": 1740,
+      "title": "الموظفون على الويب — رابط جديد",
+      "is_interactive": true
+    },
+    "LinkXWebDetail.dc.html": {
+      "x": 4080,
+      "y": 27800,
+      "w": 1280,
+      "h": 1580,
+      "title": "الموظفون على الويب — تفاصيل الرابط",
+      "is_interactive": true
+    },
+    "LinkXGateSignedIn.dc.html": {
+      "x": 0,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — متابعة باسم المستخدم",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateSignedInDark.dc.html": {
+      "x": 470,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — متابعة باسم المستخدم — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGatePhone.dc.html": {
+      "x": 940,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — تأكيد الرقم: العنوان مخفي قبل التحقق",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGatePhoneDark.dc.html": {
+      "x": 1410,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — تأكيد الرقم: العنوان مخفي قبل التحقق — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGatePhoneError.dc.html": {
+      "x": 1880,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — رقم غير صحيح (ومكان «محاولات كثيرة» و«غير متاح»)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateCode.dc.html": {
+      "x": 2350,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — رمز واتساب",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateCodeDark.dc.html": {
+      "x": 2820,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — رمز واتساب — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateCodeError.dc.html": {
+      "x": 3290,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — رمز غير صحيح (ومكان «محاولات كثيرة» و«غير متاح»)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateNotFound.dc.html": {
+      "x": 3760,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — رابط غير موجود: قبل تأكيد الرقم",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateNotFoundDark.dc.html": {
+      "x": 4230,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — رابط غير موجود: قبل تأكيد الرقم — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateExpired.dc.html": {
+      "x": 4700,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — انتهت الصلاحية: قبل تأكيد الرقم",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateExpiredDark.dc.html": {
+      "x": 5170,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — انتهت الصلاحية: قبل تأكيد الرقم — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateRevoked.dc.html": {
+      "x": 5640,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — أُلغي الرابط: قبل تأكيد الرقم",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateRevokedDark.dc.html": {
+      "x": 6110,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — أُلغي الرابط: قبل تأكيد الرقم — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateRestricted.dc.html": {
+      "x": 6580,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — غير مخصّص له: بعد التحقق (مسجّل الدخول)",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateRestrictedDark.dc.html": {
+      "x": 7050,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — غير مخصّص له: بعد التحقق (مسجّل الدخول) — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateFull.dc.html": {
+      "x": 7520,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — اكتمل العدد: بعد التحقق",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXGateFullDark.dc.html": {
+      "x": 7990,
+      "y": 29840,
+      "w": 390,
+      "h": 844,
+      "title": "الرابط المختصر — اكتمل العدد: بعد التحقق — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXStaffList.dc.html": {
+      "x": 0,
+      "y": 30984,
+      "w": 390,
+      "h": 1100,
+      "title": "الروابط المختصرة — القائمة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXStaffCreate.dc.html": {
+      "x": 470,
+      "y": 30984,
+      "w": 390,
+      "h": 1144,
+      "title": "الروابط المختصرة — رابط جديد",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXStaffPeople.dc.html": {
+      "x": 940,
+      "y": 30984,
+      "w": 390,
+      "h": 1100,
+      "title": "الروابط المختصرة — اختيار الأشخاص",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "LinkXStaffDetail.dc.html": {
+      "x": 1410,
+      "y": 30984,
+      "w": 390,
+      "h": 1612,
+      "title": "الروابط المختصرة — تفاصيل الرابط",
+      "is_interactive": true,
+      "radius": 28
     }
   },
   "order": [
@@ -1305,6 +1535,32 @@
     "RecXWebFamilyRecordings.dc.html",
     "RecXWebFamilyVideo.dc.html",
     "RecXWebAdminRecordingMedia.dc.html",
+    "LinkXWebList.dc.html",
+    "LinkXWebListDark.dc.html",
+    "LinkXWebCreate.dc.html",
+    "LinkXWebDetail.dc.html",
+    "LinkXGateSignedIn.dc.html",
+    "LinkXGateSignedInDark.dc.html",
+    "LinkXGatePhone.dc.html",
+    "LinkXGatePhoneDark.dc.html",
+    "LinkXGatePhoneError.dc.html",
+    "LinkXGateCode.dc.html",
+    "LinkXGateCodeDark.dc.html",
+    "LinkXGateCodeError.dc.html",
+    "LinkXGateNotFound.dc.html",
+    "LinkXGateNotFoundDark.dc.html",
+    "LinkXGateExpired.dc.html",
+    "LinkXGateExpiredDark.dc.html",
+    "LinkXGateRevoked.dc.html",
+    "LinkXGateRevokedDark.dc.html",
+    "LinkXGateRestricted.dc.html",
+    "LinkXGateRestrictedDark.dc.html",
+    "LinkXGateFull.dc.html",
+    "LinkXGateFullDark.dc.html",
+    "LinkXStaffList.dc.html",
+    "LinkXStaffCreate.dc.html",
+    "LinkXStaffPeople.dc.html",
+    "LinkXStaffDetail.dc.html",
     "RecXWebFamilyLesson.dc.html",
     "RecXWebStaffRecordings.dc.html",
     "RecXWebStaffLessonFiles.dc.html",
@@ -1529,6 +1785,13 @@
       "text": "نسخة الويب من لوحات الجوال نفسها: المحادثة بشكل واتساب، والحلقة الجارية مع المحادثة في لوحة جانبية و«إنهاء الحلقة للجميع»، وخيارات الأسرة وطلباتها عند الموظفين.",
       "w": 340,
       "color": "blue"
+    },
+    "linksTitle": {
+      "x": 0,
+      "y": 27540,
+      "text": "الروابط المختصرة — الإدارة والمبيعات وصفحة الزائر",
+      "kind": "title1",
+      "maxW": 1800
     }
   },
   "designSystems": []
