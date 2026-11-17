@@ -81,6 +81,19 @@ test('the country picker sets the calling code', async () => {
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/code/request', { phone: '+97455551234' });
 });
 
+test('any country: a pasted whole number picks its own; the picker finds one by name', async () => {
+  await show();
+  await typePhone('+44 7700 900123');
+  expect(screen.getByLabelText(t.familyAuth.phone)).toHaveProp('value', '7700900123');
+  expect(screen.getByRole('button', { name: /المملكة المتحدة/ })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: /الدولة/ }));
+  await fireEvent.changeText(screen.getByLabelText(s.countrySearch), 'Pakistan');
+  await fireEvent.press(screen.getByRole('radio', { name: /باكستان/ }));
+  await typePhone('0300 1234567');
+  await fireEvent.press(sendButton());
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/code/request', { phone: '+923001234567' });
+});
+
 test('a pasted code fills the boxes and signs in without a tap', async () => {
   mockWithCode.mockResolvedValue({ ok: true });
   await toCode();
