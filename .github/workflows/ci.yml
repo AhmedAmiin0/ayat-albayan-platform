@@ -127,6 +127,19 @@ jobs:
             && node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD; then
             echo "e2e=false" | tee -a "$GITHUB_OUTPUT"; echo "::notice::pure folder move: e2e skipped"
           fi
+      - name: TEMP shard durations of the newest green develop run (ci-faster-2 item 4; removed before merge)
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?branch=develop&event=push&status=success&per_page=1" --jq '.workflow_runs[0].id')
+          echo "develop run: $run"
+          gh run download "$run" -R "$GITHUB_REPOSITORY" -p 'e2e-durations-push-*' -D "$RUNNER_TEMP/dur"
+          ls "$RUNNER_TEMP"/dur/*/
+          echo "DURATIONS-BEGIN"
+          node tools/scripts/ci-checks/e2e-shards.mjs merge "$RUNNER_TEMP"/dur/*/e2e-durations.json | jq -c .
+          echo "DURATIONS-END"
       # PRs only. Any failure leaves the selection out: plan.mjs (or the e2e job's fallback) = full suite.
       - name: e2e specs
         id: e2e
