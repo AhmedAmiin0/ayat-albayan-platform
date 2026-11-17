@@ -173,8 +173,6 @@
   "apps/staff-mobile/src/teacher/report/components/AttachmentsField.tsx types AttachmentsFieldProps",
   "apps/staff-mobile/src/teacher/report/components/ReportTextField.tsx types ReportTextFieldProps",
   "apps/staff-mobile/src/teaching/reschedule/RescheduleForm.tsx types RescheduleFormProps",
-  "apps/staff-mobile/src/teaching/reschedule/SlotButton.tsx types SlotButtonProps",
-  "apps/staff-mobile/src/teaching/reschedule/SlotPicker.tsx types SlotPickerProps",
   "apps/staff-mobile/src/teaching/reschedule/fixtures.ts exports busy",
   "apps/staff-mobile/src/test/account.ts exports fetchWithProfile",
   "apps/staff-mobile/src/test/fake-backend.ts types Call",
