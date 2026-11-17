@@ -11,7 +11,9 @@ vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>())
 const TABS = t.portal.app.tabs;
 const names = () => screen.getAllByRole('link').map((link) => link.textContent);
 
-beforeEach(() => apiFetch.mockReset());
+beforeEach(() => {
+  apiFetch.mockReset();
+});
 
 describe('the family bar (owner 2026-11-16)', () => {
   it('a student: الرئيسية · الجدول · التقارير · حسابي', async () => {

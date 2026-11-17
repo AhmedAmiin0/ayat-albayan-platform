@@ -23,7 +23,9 @@ const meIs = (me: ReturnType<typeof home>) =>
     String(path).endsWith('/portal/me') ? Promise.resolve(me) : new Promise(() => undefined),
   );
 
-beforeEach(() => apiFetch.mockReset());
+beforeEach(() => {
+  apiFetch.mockReset();
+});
 
 describe('«اختر الطالب» (owner 2026-11-16)', () => {
   it('a student, or a guardian of one child, goes straight to that student’s page', async () => {
