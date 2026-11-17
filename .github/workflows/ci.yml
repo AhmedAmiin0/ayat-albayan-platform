@@ -171,7 +171,11 @@ jobs:
             opts: --concurrency=3 --continue --log-prefix=task
             heap: --max-old-space-size=6144
             args: '-- -f "$GITHUB_WORKSPACE/tools/scripts/ci-checks/lint/parity/eslint-findings.mjs"'
-          - { name: typecheck, task: typecheck }
+          # Every typecheck and both Metro bundles (only the two Expo apps have a bundle task) in one turbo graph;
+          # a red row's log names the failing task. Metro bundle of each mobile app (docs/32 x0, critic correction
+          # 11): the same Babel config as an OTA, so React Compiler output, Metro resolution errors and barrel
+          # require cycles fail here, not after `eas update`.
+          - { name: typecheck + bundles, task: typecheck bundle }
           - { name: test web 1/4, task: test, filter: --filter=staff-web, args: '-- --shard=1/4', vcache: web-1-4 }
           - { name: test web 2/4, task: test, filter: --filter=staff-web, args: '-- --shard=2/4', vcache: web-2-4 }
           - { name: test web 3/4, task: test, filter: --filter=staff-web, args: '-- --shard=3/4', vcache: web-3-4 }
@@ -182,17 +186,8 @@ jobs:
           # jest-expo by file path (--shard), its transform cache kept like vitest's (`jcache`).
           - { name: test mobile 1/2, task: test, filter: --filter=staff-mobile, args: '-- --shard=1/2', jcache: mobile-1-2 }
           - { name: test mobile 2/2, task: test, filter: --filter=staff-mobile, args: '-- --shard=2/2', jcache: mobile-2-2 }
-          # The family app (docs/50 §7) and the source package both apps share: jest-expo like mobile, on their
-          # own machine so the staff app's 5 minutes do not grow.
-          - { name: test family, task: test, filter: --filter=family-mobile --filter=@ab/mobile-kit }
-          - name: test others
-            task: test
-            filter: '--filter=!staff-web --filter=!api --filter=!staff-mobile --filter=!family-mobile --filter=!@ab/mobile-kit'
-            vcache: others
-          # Metro bundle of each mobile app (docs/32 x0, critic correction 11): the same Babel config as an OTA, so
-          # React Compiler output, Metro resolution errors and barrel require cycles fail here, not after `eas update`.
-          - { name: bundle mobile, task: bundle, filter: --filter=staff-mobile }
-          - { name: bundle family, task: bundle, filter: --filter=family-mobile }
+          # Every other package, the family app (docs/50 §7) and the source package both apps share included.
+          - { name: test others, task: test, filter: '--filter=!staff-web --filter=!api --filter=!staff-mobile', vcache: others }
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

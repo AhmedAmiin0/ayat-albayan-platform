@@ -12,8 +12,8 @@ const mobile = JSON.parse(read('apps/staff-mobile/package.json'));
 const turbo = JSON.parse(read('turbo.json'));
 
 test('ci verify bundles the mobile app with Metro for android', () => {
-  const row = ci.jobs.verify.strategy.matrix.include.find((r) => r.name === 'bundle mobile');
-  assert.deepEqual(row, { name: 'bundle mobile', task: 'bundle', filter: '--filter=staff-mobile' });
+  const row = ci.jobs.verify.strategy.matrix.include.find((r) => r.name === 'typecheck + bundles');
+  assert.deepEqual(row, { name: 'typecheck + bundles', task: 'typecheck bundle' });
   assert.match(mobile.scripts.bundle, /^expo export --platform android /);
 });
 
