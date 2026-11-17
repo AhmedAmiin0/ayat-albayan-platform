@@ -2,12 +2,14 @@ import {
   courseCardKey,
   courseCardPath,
   courseExtendPreviewPath,
+  lessonAtPath,
+  lessonIn,
   parseCourseCard,
   parseExtendPreview,
   postCourseExtend,
   type CardTree,
 } from '@ab/client-core';
-import type { CourseExtendResult } from '@ab/shared';
+import type { CourseCardLesson, CourseExtendResult, LessonView } from '@ab/shared';
 import { queryOptions, useMutation } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/http/api';
 import { useInvalidateCourseActions } from '@/features/teaching/course-actions/api';
@@ -26,6 +28,17 @@ export const extendPreviewQuery = (input: { studentId: string; subscriptionId: s
   queryOptions({
     queryKey: [...courseCardKey(input.studentId), 'extend', input.subscriptionId],
     queryFn: async () => parseExtendPreview(await apiFetch(courseExtendPreviewPath(input))),
+  });
+
+/**
+ * A card lesson's full view for the admin's drawer (GET /lessons over its minute, lessons.read);
+ * null = moved or cancelled meanwhile. Not under ['lessons']: the drawer's refresh would empty it.
+ */
+export const cardLessonQuery = (lesson: CourseCardLesson) =>
+  queryOptions({
+    queryKey: ['course-card-lesson', lesson.id],
+    queryFn: async () => lessonIn(await apiFetch<LessonView[]>(lessonAtPath(lesson.startsAt)), lesson.id),
+    staleTime: 0,
   });
 
 /** POST «مدّ الجدول», then the re-read (the card, the student, the lessons). */

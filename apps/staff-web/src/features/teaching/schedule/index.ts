@@ -23,6 +23,7 @@ export { CORRECT_BY_LABEL, type CorrectBy } from './correct/correct-by';
 export { CorrectLessonChoice } from './correct/CorrectLessonChoice';
 export { CorrectOutcome } from './correct/CorrectOutcome';
 export { LessonActions, type LessonActionsProps } from './lesson/LessonActions';
+export { LessonDrawer, type LessonDrawerProps } from './lesson/LessonDrawer';
 export { type ChipLesson, LessonChip, type LessonChipProps } from './lesson/LessonChip';
 export { LessonTags } from './lesson/LessonTags';
 export {
