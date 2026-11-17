@@ -109,12 +109,10 @@ describe('StopCourseDialog: the money choices', () => {
     });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'paid' } });
-    // The transfer is «الخطوة التالية» in its own block; the admins get a bell.
     expect(await screen.findByText(words.next.replace('{amount}', money(290)))).toBeTruthy();
     expect(screen.getByText(words.notifiedAdmins)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: words.close }));
-    const head = words.doneRefund.replace('{amount}', money(290));
-    expect(onDone).toHaveBeenCalledWith(head);
+    expect(onDone).toHaveBeenCalledWith(words.doneRefund.replace('{amount}', money(290)));
   });
 
   it('a custom refund: 0 .. net paid; above it the error shows early and nothing is sent', async () => {

@@ -52,20 +52,25 @@ export const courseResumePreviewPath = (studentId: string): string =>
 
 const MINUTE_MS = 60_000;
 
-/**
- * GET /lessons over the minute a lesson starts (lessons.read): the admin's full view of a card's
- * upcoming lesson (or a reply's), picked from the answer by id with `lessonIn`.
- */
-export function lessonAtPath(startsAt: string): string {
+/** GET /lessons over the minute a lesson starts (lessons.read). */
+const lessonAtPath = (startsAt: string): string => {
   const start = Date.parse(startsAt);
   const from = encodeURIComponent(new Date(start).toISOString());
   const to = encodeURIComponent(new Date(start + MINUTE_MS).toISOString());
   return `/lessons?from=${from}&to=${to}`;
-}
+};
 
-/** The lesson of that id in a GET /lessons answer; null = gone (moved or cancelled meanwhile). */
-export const lessonIn = <L extends { id: string }>(rows: readonly L[], id: string): L | null =>
-  rows.find((l) => l.id === id) ?? null;
+/**
+ * The admin's full view of one lesson (a card's upcoming one, a reply's): GET /lessons over the
+ * minute it starts, picked by id; null = moved or cancelled meanwhile. `fetch` is the app's.
+ */
+export async function readLessonAt<L extends { id: string }>(
+  fetch: (path: string) => Promise<readonly L[]>,
+  lesson: { id: string; startsAt: string },
+): Promise<L | null> {
+  const rows = await fetch(lessonAtPath(lesson.startsAt));
+  return rows.find((l) => l.id === lesson.id) ?? null;
+}
 
 export const parseCourseCard = (data: unknown): CourseCardView => courseCardSchema.parse(data);
 export const parseExtendPreview = (data: unknown): CourseExtendPreview =>

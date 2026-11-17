@@ -1,11 +1,13 @@
 import type { PortalLessonAssets, PortalStudent } from '@ab/shared';
 import { Button } from '@/components/ui/form/button';
+import { useClock } from '@/lib/clock';
 import { t } from '@/lib/i18n/i18n';
-import { LessonWhen } from '@/features/people/portal/lessons/LessonWhen';
 import { LoadState } from '@/features/people/portal/LoadState';
 import type { OpenReport } from '@/features/people/portal/report/ReportView';
+import { LessonParts } from './LessonParts';
+import { lessonLine, lessonTitle } from './lesson-words';
 import { PortalFileList } from './PortalFileList';
-import { RecordingPlayer } from './RecordingPlayer';
+import { ReportSummary } from './ReportSummary';
 import { usePortalLesson } from './use-recordings';
 
 interface Props {
@@ -15,15 +17,16 @@ interface Props {
 }
 
 function Body({ view, student, onOpenReport }: Omit<Props, 'lessonId'> & { view: PortalLessonAssets }) {
-  // Oldest part first, so the parts play in order.
-  const parts = [...view.recordings].reverse();
+  const clock = { ...useClock(), tz: student.tz };
   const reportId = view.report_id;
   return (
     <div className="grid gap-4">
-      <h2 className="text-body font-bold">
-        <LessonWhen startsAt={view.lesson_starts_at} tz={student.tz} />
-      </h2>
-      {parts.map((rec) => <RecordingPlayer key={rec.id} studentId={student.id} id={rec.id} />)}
+      <div className="grid gap-0.5">
+        <h2 className="text-body font-bold">{lessonTitle(view.lesson_starts_at, clock)}</h2>
+        <p className="text-sm text-ink-3">{lessonLine(view, { name: student.name, clock })}</p>
+      </div>
+      <LessonParts studentId={student.id} recordings={view.recordings} />
+      {reportId && <ReportSummary reportId={reportId} />}
       {reportId && (
         <Button
           type="button"
@@ -34,7 +37,7 @@ function Body({ view, student, onOpenReport }: Omit<Props, 'lessonId'> & { view:
           {t.lessonFiles.openReport}
         </Button>
       )}
-      <PortalFileList studentId={student.id} files={view.files} />
+      <PortalFileList studentId={student.id} reportId={reportId} files={view.files} />
     </div>
   );
 }

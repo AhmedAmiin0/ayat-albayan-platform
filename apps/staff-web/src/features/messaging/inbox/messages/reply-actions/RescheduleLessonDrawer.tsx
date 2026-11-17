@@ -1,4 +1,4 @@
-import { lessonAtPath, lessonIn } from '@ab/client-core';
+import { readLessonAt } from '@ab/client-core';
 import type { LessonView, ReplyLesson } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Drawer, RescheduleForm, studentNames } from '@/features/teaching/schedule';
@@ -9,9 +9,8 @@ import { t } from '@/lib/i18n/i18n';
  * The reply's lesson as the admin's form needs it: GET /lessons?from&to (lessons.read) over the minute
  * it starts, picked by id. Not under ['lessons']: the form's own refresh would empty the drawer.
  */
-async function readLesson(lesson: ReplyLesson): Promise<LessonView | null> {
-  return lessonIn(await apiFetch<LessonView[]>(lessonAtPath(lesson.starts_at)), lesson.id);
-}
+const readLesson = (lesson: ReplyLesson): Promise<LessonView | null> =>
+  readLessonAt<LessonView>(apiFetch, { id: lesson.id, startsAt: lesson.starts_at });
 
 export interface RescheduleLessonDrawerProps {
   lesson: ReplyLesson;

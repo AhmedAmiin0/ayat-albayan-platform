@@ -42,7 +42,11 @@ export function CourseCardPanel({ studentId, tree = 'admin', chatPhone }: Course
       <div className="grid gap-5 sm:grid-cols-2">
         <section aria-label={t.courseCard.courseGroup} className={GROUP}>
           <h3 className={HEAD}>{t.courseCard.courseGroup}</h3>
-          <CoursePauseAction studentId={studentId} onDone={setNotice} hint={t.courseCard.hints.pause} />
+          <CoursePauseAction
+            studentId={studentId}
+            onDone={setNotice}
+            hint={t.courseCard.hints.pause}
+          />
           {subscriptionId && (
             <CourseActions
               {...shared}

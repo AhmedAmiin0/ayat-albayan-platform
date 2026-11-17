@@ -1,4 +1,4 @@
-import { listenState } from '@ab/client-core';
+import { listenState, recordingMinutes } from '@ab/client-core';
 import {
   clockOf, counted, teacherName, type PortalRecording, type PortalStudent,
 } from '@ab/shared';
@@ -9,7 +9,7 @@ import { DateTile, PressCard, RowText, type RowNote } from '@/ui';
 import { dayTile } from '@/lessons';
 import { useFamilyClock } from '@/portal';
 import { lessonHref } from './hrefs';
-import { listenNote, minutesOf } from './listen-note';
+import { listenNote } from './listen-note';
 
 interface RecordingRowProps {
   row: PortalRecording;
@@ -27,7 +27,7 @@ export function RecordingRow({ row, student, parts }: RecordingRowProps) {
   const line = t.lessonFiles.rowMeta
     .replace('{teacher}', teacher)
     .replace('{time}', clockOf(at, clock))
-    .replace('{minutes}', minutesOf(row.duration_seconds));
+    .replace('{minutes}', recordingMinutes(row.duration_seconds));
   const split: RowNote = { text: counted(t.lessonFiles.parts, parts), tone: 'quiet' };
   const notes: RowNote[] = [
     ...(parts > 1 ? [split] : []),

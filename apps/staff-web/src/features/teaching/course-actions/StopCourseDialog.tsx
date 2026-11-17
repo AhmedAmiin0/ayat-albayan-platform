@@ -51,7 +51,8 @@ export function StopCourseDialog(props: StopCourseDialogProps) {
     if (live && !check.blocked && !stop.isPending) stop.mutate();
   };
   if (finished) {
-    return <StopDoneDialog done={finished} chat={props.chat} onClose={() => props.onDone(finished.head)} />;
+    const close = () => props.onDone(finished.head);
+    return <StopDoneDialog done={finished} chat={props.chat} onClose={close} />;
   }
   const error = preview.error ?? stop.error;
   const actions = (

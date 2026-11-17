@@ -33,8 +33,8 @@ beforeEach(() => {
   mockApiSend.mockResolvedValue(MOVED);
 });
 
-const openRequest = async () => {
-  await renderWithQuery(<FamilyRequests />, confirmingQueryClient());
+const openRequest = async (slotsPath?: string) => {
+  await renderWithQuery(<FamilyRequests slotsPath={slotsPath} />, confirmingQueryClient());
   expect(await screen.findByText(`${P.familyRequests} · 1`)).toBeTruthy();
   await fireEvent.press(screen.getByText('يوسف أحمد AB-0147'));
 };
@@ -54,10 +54,19 @@ test('«وافق على الموعد» approves the asked time', async () => {
 test('«ارفض الطلب» asks for the note the family reads, then declines with it', async () => {
   await openRequest();
   await fireEvent.press(screen.getByRole('button', { name: P.rejectRequest }));
+  expect(screen.getByPlaceholderText(P.decisionNotePlaceholder)).toBeTruthy();
   await fireEvent.changeText(screen.getByLabelText(P.decisionNote), 'لا يتوفر وقت آخر');
   await fireEvent.press(screen.getByRole('button', { name: P.rejectRequest }));
   await waitFor(() =>
     expect(mockApiSend).toHaveBeenCalledWith('POST', '/family-requests/p1/reject', { note: 'لا يتوفر وقت آخر' }),
+  );
+});
+
+test('«اختر موعدًا آخر» reads the assistant’s own slot grid in her tree', async () => {
+  await openRequest('/sales/booking/slots');
+  await fireEvent.press(screen.getByRole('button', { name: P.pickOther }));
+  await waitFor(() =>
+    expect(mockApiFetch).toHaveBeenCalledWith(expect.stringMatching(/^\/sales\/booking\/slots\?/)),
   );
 });
 

@@ -52,4 +52,14 @@ describe('a family «اطلب موعدًا آخر» on the staff web (owner 2026
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(P.requestRejected));
     expect(apiSend).toHaveBeenCalledWith('POST', '/lesson-proposals/p1/reject', { note: 'لا يتوفر وقت' });
   });
+
+  it('«اختر موعدًا آخر» opens the move form; the box says when the family sent it', async () => {
+    apiFetch.mockResolvedValue({ teacher_tz: 'Asia/Riyadh', step_min: 30, slots: [] });
+    wrap(<LessonDrawer lesson={lesson({ pending_proposal: ASKED })} onClose={vi.fn()} onDone={vi.fn()} />);
+    const drawer = screen.getByRole('dialog');
+    expect(within(drawer).getByText(new RegExp(P.sentAt.replace('{when}', '')))).toBeTruthy();
+    expect(within(drawer).getByText(P.pickOtherHint)).toBeTruthy();
+    fireEvent.click(within(drawer).getByRole('button', { name: P.pickOther }));
+    expect(await within(drawer).findByRole('heading', { name: t.lessons.rescheduleTitle })).toBeTruthy();
+  });
 });

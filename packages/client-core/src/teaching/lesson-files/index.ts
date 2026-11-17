@@ -4,5 +4,7 @@ export {
   pickProblem, titleOf, uploadLessonFile,
   type PickedFile, type UploadDeps, type UploadInput, type UploadProblem,
 } from './upload-flow.js';
-export { partsByLesson, recordingMonths } from './recording-months.js';
+export {
+  partChoices, partsByLesson, recordingMinutes, recordingMonths, type PartWords,
+} from './recording-months.js';
 export { fileLineOf, fileTitleOf, megabytes, type FileWords } from './file-size.js';

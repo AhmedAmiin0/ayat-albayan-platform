@@ -2,11 +2,10 @@ import {
   courseCardKey,
   courseCardPath,
   courseExtendPreviewPath,
-  lessonAtPath,
-  lessonIn,
   parseCourseCard,
   parseExtendPreview,
   postCourseExtend,
+  readLessonAt,
   type CardTree,
 } from '@ab/client-core';
 import type { CourseCardLesson, CourseExtendResult, LessonView } from '@ab/shared';
@@ -37,7 +36,7 @@ export const extendPreviewQuery = (input: { studentId: string; subscriptionId: s
 export const cardLessonQuery = (lesson: CourseCardLesson) =>
   queryOptions({
     queryKey: ['course-card-lesson', lesson.id],
-    queryFn: async () => lessonIn(await apiFetch<LessonView[]>(lessonAtPath(lesson.startsAt)), lesson.id),
+    queryFn: () => readLessonAt<LessonView>(apiFetch, lesson),
     staleTime: 0,
   });
 

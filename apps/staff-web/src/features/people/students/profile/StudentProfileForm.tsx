@@ -132,8 +132,16 @@ export function StudentProfileForm({ student, chatPhone }: StudentProfileFormPro
         </form.Subscribe>
         {message && (message.ok ? <SavedNote>{message.text}</SavedNote> : <FormAlert>{message.text}</FormAlert>)}
       </div>
-      <StatusRouteDialogs studentId={student.id} ask={status.ask} chatPhone={chatPhone}
-        onClose={status.close} onDone={(text) => { status.close(); setMessage({ ok: true, text }); }} />
+      <StatusRouteDialogs
+        studentId={student.id}
+        ask={status.ask}
+        chatPhone={chatPhone}
+        onClose={status.close}
+        onDone={(text) => {
+          status.close();
+          setMessage({ ok: true, text });
+        }}
+      />
     </form>
   );
 }

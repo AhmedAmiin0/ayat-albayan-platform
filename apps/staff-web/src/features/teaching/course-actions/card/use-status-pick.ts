@@ -30,13 +30,13 @@ export function useStatusPick(studentId: string) {
   const decide = (card: CourseCardView | null, set: () => void) => {
     setState(card ? 'idle' : 'failed');
     const subscriptionId = card?.subscriptionId ?? null;
-    if (subscriptionId) return setAsk({ route: 'stop', subscriptionId });
-    if (card) set();
+    if (subscriptionId) setAsk({ route: 'stop', subscriptionId });
+    if (card && !subscriptionId) set();
   };
   const stop = async (set: () => void) => {
     setState('pending');
     const query = { ...courseCardQuery({ studentId, tree: 'admin' }), staleTime: CARD_FRESH_MS };
-    decide(await client.fetchQuery(query).catch(() => null), set);
+    decide(await client.query(query).catch(() => null), set);
   };
   const routes: Record<StatusRoute, (set: () => void) => void> = {
     set: (set) => set(),
