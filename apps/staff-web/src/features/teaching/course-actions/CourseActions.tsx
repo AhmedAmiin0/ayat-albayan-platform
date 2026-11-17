@@ -7,6 +7,7 @@ import { ExtendDialog } from './card/ExtendDialog';
 import { ChangeTeacherDialog } from './ChangeTeacherDialog';
 import { ChangeTimesDialog } from './ChangeTimesDialog';
 import { StopCourseDialog } from './StopCourseDialog';
+import type { StopChat } from './StopDoneDialog';
 
 export interface CourseActionsProps {
   studentId: string;
@@ -20,7 +21,15 @@ export interface CourseActionsProps {
   extend?: boolean;
   /** false: no «تغيير المعلم» / «تغيير موعد الحلقات» (no course booked yet: no dead end). */
   moves?: boolean;
+  /** The card's group (owner 2026-11-17): «الدورة» (the moves) or «الباقة والمدفوعات» (the stop). */
+  group?: Group;
+  /** The guardian's phone: the stop's done block opens the chat. */
+  chatPhone?: string | undefined;
 }
+
+type Group = 'course' | 'package';
+/** Which groups render: one, or both (absent). */
+const shows = (group: Group | undefined, own: Group): boolean => group === undefined || group === own;
 
 type Open = 'stop' | 'teacher' | 'times' | 'extend' | null;
 type Can = (key: 'students.change_teacher' | 'courses.reschedule') => boolean;
@@ -48,7 +57,7 @@ function moveItems(can: Can, props: Pick<CourseActionsProps, 'moves' | 'extend'>
  * Admins and sales, any student; not teachers.
  */
 export function CourseActions(props: CourseActionsProps) {
-  const { studentId, subscriptionId, mode, onDone } = props;
+  const { studentId, subscriptionId, mode, onDone, chatPhone } = props;
   const { can } = usePermissions();
   const [open, setOpen] = useState<Open>(null);
   const words = t.courseActions;
@@ -63,10 +72,11 @@ export function CourseActions(props: CourseActionsProps) {
   };
   return (
     <>
-      {moveItems(can, props).map((i) => (
-        <ActionItem key={i.open} label={i.label} hint={i.hint} onClick={() => setOpen(i.open)} />
-      ))}
-      {can('subscriptions.stop') && (
+      {shows(props.group, 'course') &&
+        moveItems(can, props).map((i) => (
+          <ActionItem key={i.open} label={i.label} hint={i.hint} onClick={() => setOpen(i.open)} />
+        ))}
+      {shows(props.group, 'package') && can('subscriptions.stop') && (
         <ActionItem
           label={words.stop.action}
           hint={t.courseCard.hints.stop}
@@ -77,7 +87,9 @@ export function CourseActions(props: CourseActionsProps) {
       {open === 'teacher' && <ChangeTeacherDialog {...shared} mode={mode} />}
       {open === 'times' && <ChangeTimesDialog {...shared} mode={mode} />}
       {open === 'extend' && <ExtendDialog {...shared} />}
-      {open === 'stop' && <StopCourseDialog {...shared} />}
+      {open === 'stop' && (
+        <StopCourseDialog {...shared} chat={chatPhone ? { phone: chatPhone, mode } : undefined} />
+      )}
     </>
   );
 }

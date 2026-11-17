@@ -43,7 +43,11 @@ export function UploadBox({ lessonId }: { lessonId: string }) {
         aria-label={F.pickFile}
         accept="image/*,application/pdf,audio/*"
         disabled={queue.busy}
-        onChange={(e) => void queue.pick([...(e.target.files ?? [])])}
+        onChange={(e) => {
+          const files = [...(e.target.files ?? [])];
+          e.target.value = '';
+          void queue.pick(files);
+        }}
         className="text-sm"
       />
       <UploadQueue items={queue.items} />

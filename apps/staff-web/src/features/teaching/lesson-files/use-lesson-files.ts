@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { openAfter } from '@/features/people/portal';
+import { pdfUrl } from '@/features/reporting/reports';
 import { lessonFiles } from './api';
 
 /** GET /lessons/:id/files: the lesson's recordings, reports and files (admin, its teacher). */
@@ -36,6 +37,13 @@ export function useRecordingVisibility() {
 export function useOpenFile() {
   return useMutation({
     mutationFn: (id: string) => openAfter(async () => (await lessonFiles.fileUrl(id)).url),
+  });
+}
+
+/** «تقرير الحلقة (PDF)»: the report's signed PDF link in a new tab. */
+export function useOpenReportPdf() {
+  return useMutation({
+    mutationFn: (reportId: string) => openAfter(async () => (await pdfUrl(reportId)).url),
   });
 }
 

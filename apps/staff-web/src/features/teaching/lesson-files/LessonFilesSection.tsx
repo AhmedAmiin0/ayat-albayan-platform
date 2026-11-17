@@ -2,6 +2,7 @@ import type { LessonAssets } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { LessonFileItem } from './LessonFileItem';
 import { RecordingItem } from './RecordingItem';
+import { ReportPdfItem } from './ReportPdfItem';
 import { UploadBox } from './UploadBox';
 import { useLessonAssets } from './use-lesson-files';
 
@@ -12,8 +13,11 @@ function Body({ data }: { data: LessonAssets }) {
   return (
     <>
       {data.recordings.map((rec) => <RecordingItem key={rec.id} rec={rec} group={group} />)}
-      {data.files.length > 0 ? (
-        <ul className="grid">{data.files.map((f) => <LessonFileItem key={f.id} file={f} />)}</ul>
+      {data.files.length + data.reports.length > 0 ? (
+        <ul className="grid">
+          {data.files.map((f) => <LessonFileItem key={f.id} file={f} />)}
+          {data.reports.map((r) => <ReportPdfItem key={r.id} report={r} named={group} />)}
+        </ul>
       ) : (
         <p className="text-xs text-ink-3">{F.noFiles}</p>
       )}

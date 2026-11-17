@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n/i18n';
 import { recordingLine } from './file-words';
 import { AudioPlayer } from './player/AudioPlayer';
 import { useRecordingVisibility } from './use-lesson-files';
+import { VisibleBox } from './VisibleBox';
 
 const R = t.studentRecordings;
 
@@ -26,16 +27,11 @@ export function RecordingItem({ rec, group }: Props) {
       </p>
       {rec.url && <AudioPlayer id={rec.id} url={rec.url} label={t.lessonFiles.recording} />}
       {rec.status === 'done' && (
-        <label className="flex min-h-11 items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={rec.visible_to_student}
-            disabled={group || toggle.isPending}
-            onChange={(e) => toggle.mutate({ id: rec.id, visible: e.target.checked })}
-            className="size-4 accent-[var(--lapis)]"
-          />
-          <span className="font-semibold">{t.lessonFiles.visible}</span>
-        </label>
+        <VisibleBox
+          checked={rec.visible_to_student}
+          disabled={group || toggle.isPending}
+          onChange={(visible) => toggle.mutate({ id: rec.id, visible })}
+        />
       )}
       {group && rec.status === 'done' && <p className="text-xs text-ink-3">{R.visible.groupLesson}</p>}
       {toggle.isError && <FormAlert>{R.visible.failed}</FormAlert>}
