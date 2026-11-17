@@ -12,7 +12,7 @@ import {
   type AudioRecorder,
   type AudioStatus,
 } from 'expo-audio';
-import { claimPlayback, releasePlayback, voiceOptions } from '@/inbox';
+import { claimPlayback, releasePlayback, voiceOptions } from '@/core/lib/audio';
 
 // The student chat's voice notes on the staff phone (expo-audio 57): the inbox's recording preset
 // (AAC in MP4, mono, 48 kbps), a recorder made on the first tap (never at mount: an older APK

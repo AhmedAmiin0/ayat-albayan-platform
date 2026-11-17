@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Modal, StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { t, palette, useA11yPref, Spinner, ViewerClose } from '@ab/mobile-kit';
-import { claimPlayback, releasePlayback } from './playback';
+import { claimPlayback, releasePlayback } from '@/core/lib/audio';
 
 interface VideoModalProps {
   id: string;

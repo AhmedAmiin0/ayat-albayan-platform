@@ -1,6 +1,6 @@
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { claimPlayback, releasePlayback } from './playback';
+import { claimPlayback, releasePlayback } from '@/core/lib/audio';
 import {
   mediaProgress,
   mediaTime,

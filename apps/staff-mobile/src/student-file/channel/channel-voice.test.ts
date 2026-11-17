@@ -25,7 +25,7 @@ const mockPlayer = {
   }),
 };
 const mockClaim = jest.fn();
-jest.mock('@/inbox', () => ({
+jest.mock('@/core/lib/audio', () => ({
   voiceOptions: () => ({ numberOfChannels: 1 }),
   claimPlayback: (...args: unknown[]) => mockClaim(...args),
   releasePlayback: jest.fn(),

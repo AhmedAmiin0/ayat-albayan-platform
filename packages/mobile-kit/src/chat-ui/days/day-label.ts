@@ -1,4 +1,4 @@
-import { chatDay, type ChatDay, dateText, dayParts } from '@ab/shared';
+import { chatDay, type ChatDay, clockOf, type ClockCycle, dateText, dayParts } from '@ab/shared';
 import { t } from '../../lib/i18n/i18n';
 import { locale } from '../../lib/i18n/locale';
 
@@ -41,4 +41,18 @@ const WORDS: Readonly<Record<ChatDay['kind'], (day: ChatDay, clock: DayClock) =>
 export function chatDayLabel(iso: string, clock: DayClock): string {
   const day = chatDay(new Date(iso), clock);
   return WORDS[day.kind](day, clock);
+}
+
+/**
+ * A chat row's time, as WhatsApp's chat list (the inbox and «رسائل الطلاب»): the clock today, else
+ * the day's words (chatDayLabel); '' without a valid time.
+ */
+export function chatRowTime(
+  iso: string | null | undefined,
+  clock: DayClock & { cycle: ClockCycle },
+): string {
+  if (!iso || !Number.isFinite(Date.parse(iso))) return '';
+  const at = new Date(iso);
+  if (chatDay(at, clock).kind !== 'today') return chatDayLabel(iso, clock);
+  return clockOf(at, { tz: clock.tz, cycle: clock.cycle, locale });
 }

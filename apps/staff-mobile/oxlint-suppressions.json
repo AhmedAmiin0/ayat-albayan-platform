@@ -2651,7 +2651,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/inbox/composer/voice/use-voice.ts": {
@@ -3283,19 +3283,6 @@
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
-    }
-  },
-  "src/inbox/messages/media/playback.test.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/media/playback.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/inbox/messages/media/use-file-on-tap.ts": {

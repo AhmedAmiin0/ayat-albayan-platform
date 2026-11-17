@@ -1,6 +1,6 @@
-import { chatDay, chatDayKey, type ClockCycle } from '@ab/shared';
-import { chatDayLabel } from '@ab/mobile-kit';
-import { clock, deviceTimeZone } from '@/inbox/messages/hooks/message-text';
+import { chatDayKey, type ClockCycle } from '@ab/shared';
+import { chatDayLabel, chatRowTime } from '@ab/mobile-kit';
+import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 
 // The day separators of a chat, as WhatsApp (owner 2026-10-27): «اليوم», «أمس», the weekday within
 // the last 6 days, else «29 سبتمبر» (and the year when it is not this year). The device's zone, as
@@ -22,8 +22,7 @@ export function dayLabel(iso: string, { now = new Date(), tz = deviceTimeZone() 
  * React Compiler would keep from the first render.
  */
 export function rowTime(iso: string | null | undefined, cycle: ClockCycle, { now, tz = deviceTimeZone() }: DayOptions & { now: Date }): string {
-  if (!iso || !Number.isFinite(Date.parse(iso))) return '';
-  return chatDay(new Date(iso), { now, tz }).kind === 'today' ? clock(iso, cycle, tz) : dayLabel(iso, { now, tz });
+  return chatRowTime(iso, { now, tz, cycle });
 }
 
 /**

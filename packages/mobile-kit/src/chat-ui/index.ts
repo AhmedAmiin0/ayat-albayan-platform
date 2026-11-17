@@ -8,7 +8,7 @@ export { AttachTile } from './composer/AttachTile';
 export { ComposerBar, type ComposerBarProps } from './composer/ComposerBar';
 export { RoundAction, type RoundActionProps } from './composer/RoundAction';
 export { DayChip } from './days/DayChip';
-export { chatDayLabel } from './days/day-label';
+export { chatDayLabel, chatRowTime } from './days/day-label';
 export { EmojiGrid } from './emoji/EmojiGrid';
 export { insertAt } from './emoji/emoji-list';
 export { FloatingDay } from './days/FloatingDay';

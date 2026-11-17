@@ -2666,7 +2666,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/inbox/composer/voice/use-voice.ts": {
@@ -3292,19 +3292,6 @@
     },
     "no-restricted-syntax": {
       "count": 4
-    }
-  },
-  "src/inbox/messages/media/playback.test.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/media/playback.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/inbox/messages/media/use-file-on-tap.ts": {

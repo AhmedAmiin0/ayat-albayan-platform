@@ -1,6 +1,8 @@
 import { setAudioModeAsync } from 'expo-audio';
 
-type Playback = typeof import('./playback');
+import type * as PlaybackModule from './playback';
+
+type Playback = typeof PlaybackModule;
 // A fresh module per test: the registry and the audio mode are module state.
 const fresh = (): Playback => {
   let mod: Playback | undefined;

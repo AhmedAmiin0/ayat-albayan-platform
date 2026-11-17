@@ -1,8 +1,17 @@
 import type { TeacherChannelRow } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { type, useTheme, AppText, Avatar, ListRow, useClockCycle, useNow } from '@ab/mobile-kit';
-import { rowTime } from '@/inbox';
+import {
+  type,
+  useTheme,
+  AppText,
+  Avatar,
+  ListRow,
+  chatRowTime,
+  phoneTz,
+  useClockCycle,
+  useNow,
+} from '@ab/mobile-kit';
 import { CountBadge } from './CountBadge';
 import { previewOf } from './teacher-row';
 
@@ -15,7 +24,7 @@ export function TeacherChannelItem({ item }: { item: TeacherChannelRow }) {
   const cycle = useClockCycle();
   const now = useNow();
   const unread = item.unread > 0;
-  const time = rowTime(item.last_message?.created_at, cycle, { now });
+  const time = chatRowTime(item.last_message?.created_at, { now, tz: phoneTz(), cycle });
   const timeStyle = {
     fontFamily: type.ui[unread ? 600 : 500],
     fontSize: type.size['2xs'],
