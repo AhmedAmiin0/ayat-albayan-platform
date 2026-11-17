@@ -8,11 +8,18 @@ interface PhoneSource {
 }
 
 /**
- * The phone ON FILE of each code target: the lesson's teacher; the student's guardian only once
- * the report was sent to them (as the portal and the signed-in page: never before).
+ * The report's teacher may still get a code: active, and still the lesson's teacher (as
+ * TeacherLinkAccess checks the link's teacher). A teacher who left or was replaced: none (A3).
+ */
+const stillTeaches = ({ teacher, lesson }: PageFacts): boolean =>
+  teacher.status === 'active' && lesson.teacher_id === teacher.id;
+
+/**
+ * The phone ON FILE of each code target: the lesson's teacher while stillTeaches; the student's
+ * guardian only once the report was sent to them (as the portal and the signed-in page).
  */
 const PHONES: Record<ReportCodeTarget, (s: PhoneSource) => string | null> = {
-  teacher: (s) => s.facts.teacher.phone_e164,
+  teacher: (s) => (stillTeaches(s.facts) ? s.facts.teacher.phone_e164 : null),
   family: (s) => (s.sent ? (s.facts.student.guardian?.phone_e164 ?? null) : null),
 };
 

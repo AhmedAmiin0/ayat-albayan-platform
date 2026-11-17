@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { errorCode } from '@/common/http/errors';
 import { Provisioner } from '@/modules/people/sign-in/accounts/provision';
+import { StudentLogins } from '@/modules/people/sign-in/accounts/student-login';
 import { FakeAudit } from '@/modules/people/sign-in/sign-in.fakes';
 import { FakeAuth, FakeSubjects, PHONES } from '@/modules/people/sign-in/sign-in.fakes.accounts';
 import { SignInAccounts } from './sign-in.accounts';
@@ -9,23 +10,34 @@ import type { PasswordTarget } from './targets';
 const setup = () => {
   const subjects = new FakeSubjects();
   const auth = new FakeAuth();
-  const provision = new Provisioner(subjects, auth, new FakeAudit().asPort());
-  return { subjects, auth, accounts: new SignInAccounts(subjects, auth, provision) };
+  const audit = new FakeAudit().asPort();
+  const provision = new Provisioner(subjects, auth, audit);
+  const students = new StudentLogins(subjects, auth, audit);
+  return { subjects, auth, accounts: new SignInAccounts(subjects, auth, provision, students) };
 };
 
 const codeOf = async (p: Promise<unknown>) => errorCode(await p.catch((e: unknown) => e));
 const code = { purpose: 'reset_password' as const, subject: { kind: 'profile' as const, id: 'x' } };
 
 describe('SignInAccounts', () => {
-  it('guardianSession makes the guardian login once and returns its magic-link session', async () => {
+  it('familySession makes the guardian login once and returns its magic-link session', async () => {
     const { auth, accounts } = setup();
-    const guardian = await accounts.guardianByPhone(PHONES.guardian);
-    expect(guardian).not.toBeNull();
-    const first = await accounts.guardianSession(guardian ?? fail());
+    const guardian = await accounts.familyByPhone(PHONES.guardian);
+    expect(guardian?.kind).toBe('guardian');
+    const first = await accounts.familySession(guardian ?? fail());
     expect(first.session.type).toBe('magiclink');
     expect(auth.links).toHaveLength(1);
-    const again = await accounts.guardianSession(guardian ?? fail());
+    const again = await accounts.familySession(guardian ?? fail());
     expect(again.userId).toBe(first.userId);
+  });
+
+  it("familySession opens the student's own login for a student's number", async () => {
+    const { subjects, accounts } = setup();
+    const student = await accounts.familyByPhone(PHONES.student);
+    expect(student?.kind).toBe('student');
+    const { userId, session } = await accounts.familySession(student ?? fail());
+    expect(session.token_hash).toBe('hash-of-s-s1@family.invalid');
+    expect(subjects.students[0]?.profileId).toBe(userId);
   });
 
   it("passwordSession signs in by username or a teacher's phone (docs/46 A5), never by email", async () => {

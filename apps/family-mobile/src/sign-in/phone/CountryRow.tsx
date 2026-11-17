@@ -1,6 +1,6 @@
 import { Pressable, View } from 'react-native';
-import { AppText, Ltr, t, type, useTheme } from '@ab/mobile-kit';
-import type { Country } from './countries';
+import { AppText, locale, Ltr, type, useTheme } from '@ab/mobile-kit';
+import { type Country, nameOf } from './countries';
 
 interface CountryRowProps {
   country: Country;
@@ -11,7 +11,7 @@ interface CountryRowProps {
 /** One country in the picker: flag, name, calling code; the picked one ticked and announced. */
 export function CountryRow({ country, picked, onPick }: CountryRowProps) {
   const { color } = useTheme();
-  const name = t.familyApp.signIn.countries[country.code];
+  const name = nameOf(country, locale);
   return (
     <Pressable
       accessibilityRole="radio"

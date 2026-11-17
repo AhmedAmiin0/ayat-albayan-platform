@@ -65,3 +65,19 @@ test('a bundle change without a base commit runs everything', () => {
   write(root, BUNDLE, JSON.stringify(base));
   assert.equal(selectSpecs({ root, files: [BUNDLE] }).full, true);
 });
+
+test('a string only the family app or the mobile kit reads is known and needs no page spec', () => {
+  const fam = { ...base, fam: { title: 'العائلة' }, kit: { ok: 'حسنا' } };
+  const repo = makeRepo({
+    [BUNDLE]: JSON.stringify(fam),
+    'apps/family-mobile/src/home.tsx': 'export const a = t.fam.title;\n',
+    'packages/mobile-kit/src/ok.tsx': 'export const b = t.kit.ok;\n',
+  });
+  try {
+    write(repo, BUNDLE, JSON.stringify({ ...fam, fam: { title: 'الأسرة' }, kit: { ok: 'تم' } }));
+    const r = selectSpecs({ root: repo, files: [BUNDLE], base: 'HEAD' });
+    assert.deepEqual([r.full, r.specs], [false, ['translations.spec.ts']]);
+  } finally {
+    rmSync(repo, { recursive: true, force: true });
+  }
+});

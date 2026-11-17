@@ -1,12 +1,14 @@
 import { expect, test } from '@playwright/test';
 import { as, family, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { assistant, student } from '../../support/sales/assistant';
 
 // Migrations 20261029000971–972 (owner 2026-10-29): the student channel opens once the student is
 // subscribed (past the trial) AND has an assigned teacher; before that neither the teacher nor the family
 // reads a message (RLS, also what Realtime checks per subscriber); monitors always read. The family side is
 // the guardian's login and the student's own login, a child's too (owner 2026-11-16, migration
-// 20261116000100_child_chat); the owning assistant writes too (20261116000200).
+// 20261116000100_child_chat); the owning assistant writes too (20261116000200), and only the one
+// assistant in the chat's seat reads it (20261117090200, owner 2026-11-16 «… but only 1»).
 // Rolled back; the e2e stack has no Realtime service, so the publication step is not exercised here.
 
 async function login(tx: Tx, input: { tag: string; role: 'guardian' | 'student' }): Promise<string> {
@@ -70,6 +72,21 @@ test.describe('student channel opens after the subscription (20261029000971–97
       await tx`rollback to savepoint other_role`;
       const sales = await tx`select 1 from public.channel_messages where sender_role = 'sales' and body = 'موعد التجديد غدًا'`;
       expect(sales).toHaveLength(1);
+    });
+  });
+
+  test('one assistant seat: a new student seats its bringer; only the holder reads (20261117090200)', async () => {
+    await rolledBack(async (tx) => {
+      const s = await seed(tx);
+      const bringer = await assistant(tx, 'ch961-sales-a');
+      const other = await assistant(tx, 'ch961-sales-b');
+      const brought = await student(tx, { phone: '+966500000962', broughtBy: bringer });
+      const [seat] = await tx<{ assistant_id: string | null }[]>`select assistant_id
+        from public.student_channels where student_id = ${brought}`;
+      expect(seat?.assistant_id).toBe(bringer);
+      expect(await reads(tx, other)).toBe(0);
+      await tx`update public.student_channels set assistant_id = ${other} where student_id = ${s.student}`;
+      expect([await reads(tx, other), await reads(tx, bringer)]).toEqual([1, 0]);
     });
   });
 

@@ -6,6 +6,7 @@
       "inputs": [
         "$TURBO_EXTENDS$",
         "$TURBO_ROOT$/.github/workflows/**",
+        "$TURBO_ROOT$/.github/actions/**",
         "$TURBO_ROOT$/deploy/**",
         "$TURBO_ROOT$/docs/09-deployment.md",
         "$TURBO_ROOT$/packages/db/supabase/migrations/**",

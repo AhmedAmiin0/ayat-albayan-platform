@@ -1,4 +1,4 @@
-import { messageTicks, TICK_PATHS, tickTone, tickWord, type MessageStatus, type TickTone } from '@ab/shared';
+import { bubbleWord, messageTicks, TICK_PATHS, tickTone, type MessageStatus, type TickTone } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
 
@@ -12,22 +12,31 @@ export interface DeliveryTicksProps {
   times?: string;
   /** In a thread row: its own «لم تُرسل» already says failed, so the ticks carry no word for it. */
   inList?: boolean;
+  /** The row's error_code: a send that may have gone reads «لم يتأكد الإرسال بعد» (bubbleWord). */
+  errorCode?: string | null;
   className?: string;
 }
 
 // Text needs AA, unlike the glyph: «يدويًا» in the muted text ink, «لم تُرسل» inherits saffron.
-const WORD = { failed: { text: t.enums.messageStatus.failed, ink: '' }, manual: { text: t.messages.manualTick, ink: 'text-ink-3' } } as const;
+const WORD = {
+  failed: { text: t.enums.messageStatus.failed, ink: '' },
+  unconfirmed: { text: t.messages.unconfirmedTick, ink: '' },
+  manual: { text: t.messages.manualTick, ink: 'text-ink-3' },
+} as const;
 
 /**
  * WhatsApp-style ticks on OUR message (packages/shared ticks.ts): an image named by the status word,
  * the times on hover. As in WhatsApp, delivered vs read is the same two ticks told apart by colour
  * only (docs/07 principle 3 carve-out): the word goes to assistive tech and the hover title. Failed
- * has its own «!» and says «لم تُرسل» (as on mobile); sent by hand keeps its short word «يدويًا».
+ * has its own «!» and says «لم تُرسل» (as on mobile), or «لم يتأكد الإرسال بعد» when the send may
+ * have gone (bubbleWord, docs/19); sent by hand keeps its short word «يدويًا».
  */
-export function DeliveryTicks({ status, times, inList = false, className }: DeliveryTicksProps) {
+export function DeliveryTicks(props: DeliveryTicksProps) {
+  const { status, times, inList = false, className, errorCode } = props;
   const kind = messageTicks(status);
-  const word = t.enums.messageStatus[status];
-  const shown = tickWord(kind, inList);
+  const shown = bubbleWord(status, errorCode, inList);
+  const unconfirmed = bubbleWord(status, errorCode) === 'unconfirmed';
+  const word = unconfirmed ? WORD.unconfirmed.text : t.enums.messageStatus[status];
   return (
     <span
       role="img"

@@ -63,6 +63,14 @@ describe('public sign-in routes (docs/30 §6)', () => {
     expect(Object.keys(res.json()).sort()).toEqual(['token_hash', 'type']);
   });
 
+  it("POST /auth/code/verify with a student's own number opens the student's login", async () => {
+    await h.post('/auth/code/request', { phone: PHONES.student }, nextIp());
+    await settle();
+    const code = h.send.lastTo(PHONES.student);
+    const res = await h.post('/auth/code/verify', { phone: PHONES.student, code }, nextIp());
+    expect([res.statusCode, res.json().token_hash]).toEqual([200, 'hash-of-s-s1@family.invalid']);
+  });
+
   it('POST /auth/login: a session, or 401 invalid_credentials', async () => {
     const ok = await h.post(
       '/auth/login',

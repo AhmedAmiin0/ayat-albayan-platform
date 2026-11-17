@@ -23,7 +23,8 @@ interface MakerPorts {
 /**
  * The auth user + profile + link of one lazy login (docs/30 §2). Exactly one profile per record:
  * the link is written only while the record has none. A lost race or a failure removes a user THIS
- * call created, never one it found (a login left by an earlier attempt, or anyone's real login).
+ * call created, never one it found (a login left by an earlier attempt, or anyone's real login)
+ * nor one another call linked meanwhile.
  */
 export class LoginMaker {
   constructor(private readonly ports: MakerPorts) {}
@@ -33,7 +34,7 @@ export class LoginMaker {
     const left = await this.ports.auth.idByEmail(input.email);
     const id = left ?? (await this.create(input));
     if (left) await this.adopt(left, input);
-    const drop = () => (left ? Promise.resolve() : this.ports.auth.removeUser(id));
+    const drop = () => (left ? Promise.resolve() : this.dropMade(id));
     const linked = await this.attach(id, input).catch(async (e: unknown) => {
       await drop().catch(() => undefined);
       throw e;
@@ -52,6 +53,15 @@ export class LoginMaker {
     }
     if (!existing) await subjects.insertProfile({ id, ...input.profile });
     return subjects.link({ kind: input.record.kind, recordId: input.record.id, profileId: id });
+  }
+
+  /**
+   * The user this call made, removed unless another call adopted and linked it meanwhile (a
+   * child's first password and a WhatsApp code for the same student can run together).
+   */
+  private async dropMade(id: string): Promise<void> {
+    if (await this.ports.subjects.isLinked(id)) return;
+    await this.ports.auth.removeUser(id);
   }
 
   private create(input: MakeInput): Promise<string> {

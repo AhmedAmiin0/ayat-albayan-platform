@@ -13,3 +13,18 @@ export const CRM_SENT = {
 
 /** The CRM's failure envelope. */
 export const crmFailure = (status: number, code: string, message = `${code} message`) => ({ status, body: { error: { code, message } } });
+
+/** A CRM message as GET /conversations/{id}/messages lists it (an outbound template by default). */
+export const crmMessage = (over: Record<string, unknown> = {}) => ({
+  id: 'cm-1',
+  conversation_id: 'c-1',
+  direction: 'outbound',
+  sender_type: 'api',
+  content_type: 'template',
+  content_text: null,
+  template_name: 'booking_confirmation',
+  whatsapp_message_id: 'wamid.crm-1',
+  status: 'delivered',
+  created_at: '2026-11-15T20:27:18.000Z',
+  ...over,
+});

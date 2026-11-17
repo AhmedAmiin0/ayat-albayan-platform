@@ -14,9 +14,22 @@
       ],
       "outputs": ["dist/**"]
     },
-    "lint": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "$TURBO_ROOT$/.oxlintrc.json"] },
+    "lint": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "$TURBO_ROOT$/.oxlintrc.json",
+        "$TURBO_ROOT$/tools/scripts/ci-checks/lint/parity/eslint-findings.mjs"
+      ],
+      "outputs": [".lint/**"]
+    },
     "typecheck": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md"] },
-    "test": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md"] },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md"],
+      "passThroughEnv": ["JEST_CACHE_DIR"]
+    },
     "bundle": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md"] },
     "e2e": {
       "dependsOn": ["^build"],

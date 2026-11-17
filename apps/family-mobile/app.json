@@ -4,7 +4,7 @@
     "slug": "ayat-albayan-family",
     "owner": "holdmycup",
     "scheme": "ayatalbayanfamily",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -29,6 +29,7 @@
       }
     },
     "plugins": [
+      "./plugins/no-audio-capture/app.plugin.ts",
       "expo-router",
       "expo-localization",
       "expo-font",
@@ -48,6 +49,38 @@
           "dark": {
             "image": "./assets/splash-icon.png",
             "backgroundColor": "#18201D"
+          }
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "نحتاج إلى الكاميرا لتصوير الصور وإرسالها إلى الأكاديمية، وللظهور بالفيديو في الحلقات من داخل التطبيق.",
+          "photosPermission": "نحتاج إلى الصور لاختيار صورة وإرسالها إلى الأكاديمية.",
+          "microphonePermission": "نحتاج إلى الميكروفون لتسجيل الرسائل الصوتية، وللتحدث في الحلقات من داخل التطبيق."
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "نحتاج إلى الميكروفون لتسجيل الرسائل الصوتية، وللتحدث في الحلقات من داخل التطبيق.",
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": false
+        }
+      ],
+      "expo-video",
+      [
+        "@config-plugins/react-native-webrtc",
+        {
+          "microphonePermission": "نحتاج إلى الميكروفون لتسجيل الرسائل الصوتية، وللتحدث في الحلقات من داخل التطبيق.",
+          "cameraPermission": "نحتاج إلى الكاميرا لتصوير الصور وإرسالها إلى الأكاديمية، وللظهور بالفيديو في الحلقات من داخل التطبيق."
+        }
+      ],
+      [
+        "@livekit/react-native-expo-plugin",
+        {
+          "android": {
+            "audioType": "communication"
           }
         }
       ],

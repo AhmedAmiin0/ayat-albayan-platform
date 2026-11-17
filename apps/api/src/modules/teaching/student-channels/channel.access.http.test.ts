@@ -16,7 +16,7 @@ describe('student channel access over HTTP', () => {
   afterAll(() => t.app.close());
   beforeEach(() => vi.clearAllMocks());
 
-  it('participants read: the current teacher, the guardian, the student login, the owning assistant (owner 11-16)', async () => {
+  it('participants read: the current teacher, the guardian, the student login, the seat holder (owner 11-16)', async () => {
     for (const [who, url] of [['teacher', TEACHER], ['guardian', PORTAL], ['student', PORTAL], ['sales', SALES]] as [Who, string][]) {
       const res = await t.call('GET', url, who);
       expect([who, res.statusCode, res.json().read_only]).toEqual([who, 200, false]);

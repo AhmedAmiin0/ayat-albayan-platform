@@ -5,6 +5,7 @@ import type { PeopleEditView } from '@ab/shared';
 const student: PeopleEditView['student'] = {
   has_records: false,
   has_login: false,
+  phone_e164: null,
   contact_is_self: false,
   teacher_gender_pref: null,
   notes: null,

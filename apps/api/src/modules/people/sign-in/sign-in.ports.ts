@@ -62,9 +62,14 @@ export interface StudentRec {
   name: string;
   tz: string;
   profileId: string | null;
-  /** The guardian's phone: where the student's codes go. */
+  /** The guardian's main phone: where the student's password codes go. */
   guardianPhone: string;
 }
+
+/** A family number on file (guardian_phones) and whose login it opens; `phone`: the code's. */
+export type FamilyLogin =
+  | { kind: 'guardian'; phone: string; rec: GuardianRec }
+  | { kind: 'student'; phone: string; rec: StudentRec };
 
 export interface ProfileRec {
   id: string;
@@ -98,6 +103,8 @@ export interface NewProfile {
 
 export interface SubjectStore {
   guardianByPhone(phone: string): Promise<GuardianRec | null>;
+  /** Any family number (guardianByPhone: the main one only): main, second, a student's own. */
+  familyByPhone(phone: string): Promise<FamilyLogin | null>;
   studentByCode(code: string): Promise<StudentRec | null>;
   profileById(id: string): Promise<ProfileRec | null>;
   profileByUsername(username: string): Promise<ProfileRec | null>;

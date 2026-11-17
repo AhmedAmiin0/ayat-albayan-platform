@@ -8,6 +8,7 @@ import {
 import { evolutionBase, evolutionInternalHosts } from './evolution.js';
 import { parseAllowedRecipients } from './recipients.js';
 import { STORAGE_VALUE_CHECKS } from './storage.js';
+import { httpsUrl, livekitUrl } from './urls.js';
 
 // The value checks of the plain keys, consistent with apps/api/src/config/env/env.ts (the API also re-checks
 // every DB value with its own env schema before using it).
@@ -16,7 +17,8 @@ import { STORAGE_VALUE_CHECKS } from './storage.js';
 export const INTEGRATION_VALUE_MAX = 4096;
 
 const id = z.string().min(1).max(200);
-const url = z.url().max(INTEGRATION_VALUE_MAX);
+/** A base that carries a key or a token (T1): https only, http on localhost (urls.ts). */
+const url = httpsUrl.max(INTEGRATION_VALUE_MAX);
 const recipients = z
   .string()
   .max(INTEGRATION_VALUE_MAX)
@@ -72,7 +74,7 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   WA_TEMPLATE_SYNC: z.stringbool(),
   CALLS_STUN_URLS: iceUrls,
   CALLS_TURN_URLS: iceUrls,
-  LIVEKIT_URL: url,
+  LIVEKIT_URL: livekitUrl.max(INTEGRATION_VALUE_MAX),
   EXPO_API_BASE: url,
   WEB_PUSH_VAPID_PUBLIC_KEY: vapidPublicKey,
   WEB_PUSH_SUBJECT: vapidSubject,

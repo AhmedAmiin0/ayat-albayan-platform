@@ -8471,7 +8471,7 @@
   },
   "src/features/sales/sales/search.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/dot-notation": {
       "count": 4
@@ -8497,14 +8497,9 @@
       "count": 3
     }
   },
-  "src/features/sales/sales/students/SalesStudents.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/features/sales/sales/students/my-student-columns.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -10859,7 +10854,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -10869,11 +10864,6 @@
     }
   },
   "src/features/teaching/student-channel/MonitorChannel.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/student-channel/MonitorChannelButton.tsx": {
     "stylistic/max-len": {
       "count": 1
     }

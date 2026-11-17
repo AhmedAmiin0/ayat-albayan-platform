@@ -15,8 +15,8 @@ const S = t.assistantPortal.students;
 /**
  * One student I brought (web my-student-columns): the readable code, the guardian's phone (owner
  * 2026-10-27), when, whether the first subscription is paid, and my own commission. Never a price or
- * another person's money. In the sales tree a tap opens the student's teacher–family channel,
- * read-only (docs/31 §2: the owning assistant monitors it); the name, the row's header, opens the
+ * another person's money. In the sales tree a tap opens the student's chat (docs/31 §2: hers
+ * when she holds its one seat, else who follows it or «تولَّ المحادثة»); the name opens the
  * student's file in either tree (owner 2026-10-30).
  */
 export function MyStudentItem({ student }: { student: MyStudentRow }) {

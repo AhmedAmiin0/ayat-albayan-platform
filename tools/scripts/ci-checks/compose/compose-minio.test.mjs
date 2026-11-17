@@ -82,7 +82,8 @@ test('init: one shot, after MinIO, its script read-only from the shipped checkou
 
 test('init.sh: private buckets, an app user limited to object calls, refuses weak keys', () => {
   assert.ok(initSh.includes(`BUCKETS="${BUCKETS}"`));
-  assert.ok(backupSh.includes(`BUCKETS="${BUCKETS}"`), 'the backup copies the same buckets');
+  const backedUp = BUCKETS.replace(' recordings', '');
+  assert.ok(backupSh.includes(`BUCKETS="${backedUp}"`), 'the backup copies them all but recordings');
   assert.match(initSh, /PREFIX="\$\{MINIO_BUCKET_PREFIX:-\}"/);
   assert.match(initSh, /mc mb --ignore-existing "\$ALIAS\/\$PREFIX\$b"/);
   assert.match(initSh, /mc anonymous set none "\$ALIAS\/\$PREFIX\$b"/);

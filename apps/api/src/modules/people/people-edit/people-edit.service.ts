@@ -18,13 +18,22 @@ interface Edit<P> {
 const phoneAware = (e: unknown): unknown =>
   e instanceof ConflictException ? conflict('phone_taken') : e;
 
-/** A guardian edit also names whether the actor is the admin (who may move a login's number). */
-interface GuardianEdit extends Edit<PeopleGuardianPatch> {
+/** An edit that also names whether the actor is the admin (who may move a login's number). */
+interface AdminEdit<P> extends Edit<P> {
   admin: boolean;
 }
 
 const movesPhone = (before: GuardianRow, patch: PeopleGuardianPatch): boolean =>
   patch.phone_e164 !== undefined && patch.phone_e164 !== before.phone_e164;
+
+/**
+ * A student's own number receives that student's sign-in codes (owner 2026-11-17): with a login
+ * linked, only the admin moves it (as LOGINS below for the main number).
+ */
+const guardsOwnPhone = (student: StudentRow, admin: boolean): boolean =>
+  !admin && student.profile_id !== null;
+
+type StudentFields = Omit<PeopleStudentPatch, 'phone_e164'>;
 
 interface Logins {
   family: GuardianRow;
@@ -54,23 +63,26 @@ export class PeopleEditService {
     private readonly audit: AuditService,
   ) {}
 
-  async editStudent({ id, patch, actorId }: Edit<PeopleStudentPatch>): Promise<StudentRow> {
+  /**
+   * 409 student_login_phone before anything is written; then the other fields; the student's own
+   * number last, through set_student_phone (its own audit row): a refused number (409 phone_taken /
+   * teacher_number) leaves only the number unsaved.
+   */
+  async editStudent(edit: AdminEdit<PeopleStudentPatch>): Promise<StudentRow> {
+    const { id, actorId } = edit;
     const before = await this.repo.student(id);
     if (!before) throw notFound('student_not_found');
-    if (Object.keys(patch).length === 0) return before;
-    const after = await this.students.update(id, patch, actorId);
-    const change = changedFields({ before, after }, Object.keys(patch));
-    await this.audit.record({
-      actorId,
-      entity: 'students',
-      entityId: id,
-      action: 'people_edit',
-      ...change,
-    });
+    const { phone_e164: phone, ...patch } = edit.patch;
+    if (phone !== undefined && guardsOwnPhone(before, edit.admin)) {
+      throw conflict('student_login_phone');
+    }
+    const after = await this.fields(before, { id, patch, actorId });
+    if (phone !== undefined) await this.repo.setStudentPhone({ studentId: id, phone, actorId });
     return after;
   }
 
-  async editGuardian({ id, patch, actorId, admin }: GuardianEdit): Promise<GuardianRow> {
+  async editGuardian(edit: AdminEdit<PeopleGuardianPatch>): Promise<GuardianRow> {
+    const { id, patch, actorId, admin } = edit;
     const before = await this.repo.guardian(id);
     if (!before) throw notFound('guardian_not_found');
     if (!admin && movesPhone(before, patch)) await this.assertNoLogin(before);
@@ -98,5 +110,20 @@ export class PeopleEditService {
     const children = await this.repo.children(family.id);
     const code = LOGINS.find(([, has]) => has({ family, children }))?.[0];
     if (code) throw conflict(code);
+  }
+
+  private async fields(before: StudentRow, edit: Edit<StudentFields>): Promise<StudentRow> {
+    const { id, patch, actorId } = edit;
+    if (Object.keys(patch).length === 0) return before;
+    const after = await this.students.update(id, patch, actorId);
+    const change = changedFields({ before, after }, Object.keys(patch));
+    await this.audit.record({
+      actorId,
+      entity: 'students',
+      entityId: id,
+      action: 'people_edit',
+      ...change,
+    });
+    return after;
   }
 }

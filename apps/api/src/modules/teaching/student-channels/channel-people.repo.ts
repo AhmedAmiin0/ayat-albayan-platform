@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
-import { ownershipOf, studentOwnerIds } from '@/modules/sales/sales';
 
 export interface ChannelStudent {
   id: string;
@@ -55,24 +54,19 @@ export class ChannelPeopleRepo {
     return data.map((p): [string, string] => [p.id, p.full_name]);
   }
 
-  /** The students an assistant owns (sales ownership: her leads' families, the students she brought). */
-  async ownedStudentIds(profileId: string): Promise<string[]> {
-    return (await ownershipOf(this.db, profileId)).studentIds;
-  }
-
   /**
-   * The same ownership read backwards, the salespeople only (whom the owner route lets in): a
-   * chat message's assistants. An admin who brought the student or holds its lead is not one.
+   * The chat's one assistant (owner 2026-11-16 «… but only 1»): the seat holder
+   * (student_channels.assistant_id) while she is still a salesperson; null when free.
    */
-  async ownerIds(studentId: string): Promise<string[]> {
-    const owners = await studentOwnerIds(this.db, studentId);
-    if (owners.length === 0) return [];
+  async assistantId(studentId: string): Promise<string | null> {
     const { data, error } = await this.db
-      .from('profiles')
-      .select('id')
-      .in('id', owners)
-      .eq('role', 'sales');
+      .from('student_channels')
+      .select('assistant_id')
+      .eq('student_id', studentId)
+      .maybeSingle();
     if (error) throw dbError(error);
-    return data.map((p) => p.id);
+    const id = data?.assistant_id;
+    if (!id) return null;
+    return (await this.salesNames([id])).length > 0 ? id : null;
   }
 }

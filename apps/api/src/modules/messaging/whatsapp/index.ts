@@ -2,6 +2,8 @@ export { CodeSend } from './direct/code-send';
 export { isCrmHistoryRow, looksCrmHistory } from './messages/crm-history/crm-history-url';
 export { crmFetch } from './drivers/crm/crm.client';
 export { type CrmConn, crmJson } from './drivers/crm/crm-http';
+export { type CrmLookup, crmLookup, CrmLookupError } from './drivers/crm/crm-lookup';
+export type { CrmMessage } from './drivers/crm/crm-lookup.schemas';
 export type { FetchLike } from './drivers/meta/graph';
 export { SendGate } from './gate/send-gate';
 export { WaError } from './whatsapp.types';

@@ -5,8 +5,9 @@ type App = Awaited<ReturnType<typeof channelApp>>;
 const SALES = `/sales/students/${ST}/channel`;
 const NAMES = new Map([['p-sa', 'سارة'], ['p-g', 'أم سلمى'], ['p-t1', 'أبرار']]);
 
-// Owner 2026-11-16 «yes it can write also»: the owning assistant writes in her students' chats.
-describe('the owning assistant in the student chat over HTTP', () => {
+// Owner 2026-11-16 «yes it can write also»: the assistant in the chat's seat («… but only 1»)
+// writes there; any other assistant is 404 (channel.seat.http.test.ts takes and leaves it).
+describe('the seated assistant in the student chat over HTTP', () => {
   let t: App;
   beforeAll(async () => {
     t = await channelApp();

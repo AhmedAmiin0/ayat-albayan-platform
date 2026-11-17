@@ -43,14 +43,11 @@ test('the automatic OTA only dispatches mobile.yml ota-update to preview on deve
 });
 
 test('ci: check covers changes, every verify job, the guards and the refactor job; docs-only passes only when both were skipped', () => {
-  assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify', 'guards', 'refactor', 'lint-parity']);
+  assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify', 'guards', 'refactor']);
   const run = ci.jobs.check.steps.map((s) => s.run).join('\n');
   assert.match(run, /test "\$CHANGES" = success/);
-  assert.match(
-    run,
-    /\[ "\$CODE" = false \] && \[ "\$VERIFY" = skipped \] && \[ "\$GUARDS" = skipped \] && \[ "\$PARITY" = skipped \]/,
-  );
-  assert.match(run, /test "\$GUARDS" = success\n\s*test "\$PARITY" = success/);
+  assert.match(run, /\[ "\$CODE" = false \] && \[ "\$VERIFY" = skipped \] && \[ "\$GUARDS" = skipped \]; then/);
+  assert.match(run, /test "\$VERIFY" = success\n\s*test "\$GUARDS" = success/);
   assert.match(
     run,
     /test "\$REFACTOR" = success \|\| \{ \[ "\$GITHUB_EVENT_NAME" != pull_request \]/,
@@ -73,13 +70,7 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries 
   // A rule the PR turns on (named only in the head's ESLint configs) gets its one-time baseline.
   assert.match(lint, /--configs "\$RUNNER_TEMP\/configs-base\.txt" "\$RUNNER_TEMP\/configs-head\.txt"/);
   assert.equal(ci.jobs.guards.steps[0].with?.['fetch-depth'], 0);
-  assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true'");
-});
-
-test('ci: a red lint prints the pruned suppressions to commit', () => {
-  const step = ci.jobs.verify.steps.find((s) => s.name?.startsWith('Suppressions to prune'));
-  assert.equal(step?.if, "failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'");
-  assert.match(step.run, /pnpm lint:prune .*\|\| true\n.*git --no-pager diff -- '\*eslint-suppressions\.json'/);
+  assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true' && needs.changes.outputs.verified != 'true'");
 });
 
 test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {

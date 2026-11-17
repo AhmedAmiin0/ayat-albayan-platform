@@ -76,6 +76,9 @@ export interface ChannelPage {
 /** POST …/messages or …/read on a closed channel (409). */
 export const CHANNEL_NOT_OPEN = 'channel_not_open';
 
+/** PUT …/channel/seat while another assistant holds it and I did not bring the student (409). */
+export const CHANNEL_SEAT_TAKEN = 'channel_seat_taken';
+
 /** students.status before the subscription: the channel stays closed (never during the trial). */
 const BEFORE_SUBSCRIPTION: readonly string[] = ['new', 'trial', 'pending_subscription'];
 
