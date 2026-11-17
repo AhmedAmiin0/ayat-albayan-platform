@@ -8619,7 +8619,14 @@
       "reasonRequired": "This field is required",
       "cancelsOn": "Cancelled lessons: {dates}",
       "doneStatus": "The student is now: {status}",
-      "next": "Next step: transfer {amount} to the family by hand and tell the family and the teacher in the chat."
+      "next": "Transfer {amount} to the family by hand, and tell the family and the teacher in the chat.",
+      "nextTitle": "Next step",
+      "nextTell": "Tell the family and the teacher in the chat.",
+      "notifiedTitle": "Who was told",
+      "notifiedFamily": "Family: no message",
+      "notifiedTeacher": "Teacher: no message",
+      "notifiedAdmins": "Admins: a bell alert",
+      "close": "Done"
     },
     "teacher": {
       "action": "Change teacher",
@@ -8711,6 +8718,7 @@
     "noPackage": "No current package",
     "upcoming": "Upcoming lessons",
     "noUpcoming": "No upcoming lessons",
+    "courseGroup": "Course",
     "actions": "Course actions",
     "packageActions": "Package and payments",
     "hints": {
@@ -8722,13 +8730,10 @@
       "pay": "Added to the current package payments",
       "stop": "Upcoming lessons are cancelled; you choose what is refunded or still owed"
     },
-    "renew": "Renew subscription",
     "pay": "Record a payment",
     "statusNote": "Choosing “Paused” opens “Pause”, and choosing “Stopped” opens “Cancel subscription”.",
     "whatHappens": "What will happen",
-    "notifyTitle": "Who is told:",
     "notifyNone": "Neither the family nor the teacher is told automatically; tell them in the chat.",
-    "notifyBoth": "A WhatsApp message goes to the family and the teacher.",
     "extend": {
       "action": "Extend schedule",
       "title": "Extend schedule",
