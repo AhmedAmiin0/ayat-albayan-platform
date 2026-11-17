@@ -46,8 +46,9 @@ const KNOWN_STUDENT = z.object({});
  * No login, no app shell. The family app's link already names the student: just «ادخل».
  */
 export function GuestJoinPage(props: Props) {
-  const { linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = t.classroom.guest.intro, problem } = props;
   const known = props.knownStudent === true;
+  const words = known ? t.classroom.guest.introKnown : t.classroom.guest.intro;
+  const { linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = words, problem } = props;
   const { cycle } = useClock();
   const problemOf = problem ?? ((e: unknown) => problemText(e, cycle));
   const [name, setName] = useState('');

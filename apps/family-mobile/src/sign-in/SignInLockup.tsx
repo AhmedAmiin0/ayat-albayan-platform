@@ -4,11 +4,6 @@ import { AppText, Mark, t, type, useTheme, Wordmark } from '@ab/mobile-kit';
 const TILE = 76;
 /** The emblem inside the tile (canvas LoginFamily: 59 of 76). */
 const MARK = 59;
-/**
- * The family tile's deep green (owner 2026-11-16, canvas LogoGreen): the brand green in both
- * themes, as the app icon's background; the staff mark keeps its own ivory on it.
- */
-const FAMILY_TILE_GREEN = '#064E3B';
 
 /**
  * The top of the family sign-in (docs/50 §5 «Hierarchy»): the staff mushaf mark, unchanged, on the
@@ -27,7 +22,8 @@ export function SignInLockup() {
           borderRadius: 17,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: FAMILY_TILE_GREEN,
+          // The deep brand green in both themes (canvas LogoGreen).
+          backgroundColor: color.brandTile,
         }}
       >
         <Mark size={MARK} />

@@ -4267,7 +4267,7 @@
     },
     "lesson_live": {
       "title": "Lesson started",
-      "body": "The teacher started {student}'s lesson: join now"
+      "body": "Tap to join {student}'s lesson now, with your microphone on."
     }
   },
   "bell": {
@@ -5043,6 +5043,7 @@
     "guest": {
       "title": "Join the lesson",
       "intro": "Type your name and join right away, no sign-up.",
+      "introKnown": "Join the lesson right away, no sign-up.",
       "name": "Your name",
       "namePlaceholder": "e.g. Suhaila",
       "join": "Join the lesson"

@@ -1,6 +1,6 @@
 import { Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { AppText, pressScale, t, type, useTheme } from '@ab/mobile-kit';
+import { AppText, pressScale, shape, t, type, useTheme } from '@ab/mobile-kit';
 
 interface JoinButtonProps {
   onPress: () => void;
@@ -35,7 +35,7 @@ export function JoinButton({ onPress, busy, short = false, live = false }: JoinB
       style={({ pressed }) => ({
         minHeight: short ? 44 : 48,
         paddingHorizontal: 14,
-        borderRadius: 10,
+        borderRadius: shape.radius.md,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',

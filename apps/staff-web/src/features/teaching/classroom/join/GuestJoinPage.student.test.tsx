@@ -29,6 +29,8 @@ describe('GuestJoinPage for a link that names its student', () => {
     );
     const client = open(true);
     expect(screen.queryByLabelText(new RegExp(t.classroom.guest.name))).toBeNull();
+    expect(screen.getByText(t.classroom.guest.introKnown)).toBeTruthy();
+    expect(screen.queryByText(t.classroom.guest.intro)).toBeNull();
     expect(screen.getByText(t.classroom.recordedNotice)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.classroom.guest.join }));
     await waitFor(() => expect(client.connect).toHaveBeenCalledWith('wss://lk', 'g'));
@@ -39,5 +41,6 @@ describe('GuestJoinPage for a link that names its student', () => {
   it('an anonymous link still asks the name first', () => {
     open(false);
     expect(screen.getByLabelText(new RegExp(t.classroom.guest.name))).toBeTruthy();
+    expect(screen.getByText(t.classroom.guest.intro)).toBeTruthy();
   });
 });
