@@ -1,17 +1,27 @@
 import { memo } from 'react';
 import { isChatViewMime, type MessageView, pdfCaptionIsName } from '@ab/shared';
-import { type GestureResponderEvent, Linking, Pressable, View, type ViewStyle } from 'react-native';
-import { useHolds, t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
+import { type GestureResponderEvent, Linking, Pressable, type ViewStyle } from 'react-native';
+import {
+  useHolds,
+  t,
+  type,
+  useTheme,
+  AppText,
+  useSmallText,
+  BubbleShell,
+  BUBBLE_PAD as PAD,
+  bubbleSide,
+  SwipeReply,
+} from '@ab/mobile-kit';
 import { holdTop, useBubbleActions } from '@/inbox/messages/hooks/bubble-actions';
 import { ReactionPill } from '@/inbox/messages/reactions/ReactionPill';
 import { useBubbleChatActions } from '@/inbox/thread/hooks/chat-actions';
-import { bubbleSide, stickerBubble } from '@/inbox/messages/hooks/bubble-side';
+import { stickerBubble } from '@/inbox/messages/hooks/bubble-side';
 import { MessageActions } from './MessageActions';
 import { MessageFile } from './MessageFile';
-import { FailReason, MessageMeta, useSmall } from './MessageMeta';
+import { FailReason, MessageMeta } from './MessageMeta';
 import { mediaLine, templateLine } from '@/inbox/messages/hooks/message-text';
 import { QuoteBlock } from './QuoteBlock';
-import { SwipeReply } from './SwipeReply';
 import { LinkedText } from '@/inbox/messages/text/LinkedText';
 import { ResendAsk } from '@/inbox/messages/resend/ResendAsk';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
@@ -39,9 +49,6 @@ function MediaLine({ label, url, file }: { label: string; url: string | null; fi
   );
 }
 
-/** The bubble's padding: a template's button rows reach past it to the edges. */
-const PAD = { x: 10, bottom: 6 };
-
 export interface MessageBubbleProps {
   message: MessageView;
   phone: string;
@@ -60,7 +67,6 @@ export interface MessageBubbleProps {
  * outboundNotes); retry / sent-by-hand stay the admin's, behind a tap on «! لم تُرسل» or the reason, as WhatsApp (FailedSheet, R-MSG-05).
  */
 export const MessageBubble = memo(function MessageBubble({ message: m, phone, onJump, highlight = false }: MessageBubbleProps) {
-  const { color } = useTheme();
   // «رد» / «إعادة توجيه» (owner 2026-10-25): a long press opens the menu, a swipe answers.
   const touch = useBubbleActions(m);
   // «تفاعل» (owner 2026-10-27): the row floats over the held bubble; the pill names who reacted.
@@ -70,7 +76,7 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
   const admin = mode === 'admin';
   // The sales tree has no thread mode either: the actions' endpoints need messages.manage (admin-only).
   const manages = useHolds('messages.manage');
-  const small = useSmall();
+  const small = useSmallText();
   const ours = m.direction === 'outbound';
   const media = mediaLine(m);
   // A photo, PDF, voice note or video we can serve (W6): opened or played from the bubble.
@@ -84,19 +90,9 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
   const caption = pdfCaptionIsName(m) ? null : m.body;
   const a11yOn = caption ? 'body' : m.template_key ? 'template' : null;
   const side = bubbleSide(ours);
+  // A template's buttons span the bubble (WhatsApp): never a sliver, rows clipped to its corners.
   const box: ViewStyle = {
-    alignSelf: side.align,
-    maxWidth: '88%',
-    gap: 4,
-    paddingHorizontal: PAD.x,
-    paddingVertical: PAD.bottom,
-    borderRadius: shape.radius.lg,
-    // A template's buttons span the bubble (WhatsApp): never a sliver, rows clipped to its corners.
     ...(m.template?.buttons.length ? { minWidth: 240, overflow: 'hidden' as const } : {}),
-    ...(side.outer === 'start' ? { borderTopStartRadius: shape.radius.xs } : { borderTopEndRadius: shape.radius.xs }),
-    borderWidth: 1,
-    borderColor: highlight ? color.lapis : ours ? color.lapisWash : color.rule,
-    backgroundColor: ours ? color.lapisWash : color.raised,
     ...stickerBubble(m, mode === 'teacher'),
   };
   const content = m.hidden ? <HiddenBody message={m} /> : (
@@ -128,19 +124,20 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
     </>
   );
   const pill = <ReactionPill message={m} side={side.outer === 'start' ? 'start' : 'end'} onPress={() => openReactors(m)} />;
+  const shell = { ours, highlight, style: box, testID: `bubble-${m.id}` };
   if (!touch.has) {
     return (
       <>
-        <View testID={`bubble-${m.id}`} style={box}>{content}</View>
+        <BubbleShell {...shell}>{content}</BubbleShell>
         {pill}
       </>
     );
   }
   return (
     <SwipeReply onReply={touch.swipe}>
-      <Pressable testID={`bubble-${m.id}`} accessible={false} onLongPress={hold} delayLongPress={350} style={box}>
+      <BubbleShell {...shell} onLongPress={hold}>
         {content}
-      </Pressable>
+      </BubbleShell>
       {pill}
     </SwipeReply>
   );

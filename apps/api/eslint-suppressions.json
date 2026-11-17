@@ -12195,11 +12195,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/channel-edits.service.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/student-channels/channel-open.migration.test.ts": {
     "max-len": {
       "count": 1
@@ -12231,12 +12226,12 @@
   },
   "src/modules/teaching/student-channels/channel.repo.ts": {
     "max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/modules/teaching/student-channels/channel.service.ts": {
     "max-len": {
-      "count": 10
+      "count": 1
     }
   },
   "src/modules/teaching/student-channels/controllers/channel-page.ts": {

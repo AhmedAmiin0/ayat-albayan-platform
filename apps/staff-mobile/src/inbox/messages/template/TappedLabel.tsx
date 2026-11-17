@@ -1,7 +1,6 @@
 import { tappedButton, type MessageView } from '@ab/shared';
 import { View } from 'react-native';
-import { t, type, useTheme, AppText } from '@ab/mobile-kit';
-import { ReplyIcon } from '@/inbox/shared/chat-icons';
+import { t, type, useTheme, AppText, ReplyIcon } from '@ab/mobile-kit';
 
 /** Theirs, from a tap on a template button: a small «ضغطة زرّ» mark over the tapped label (the body). */
 export function TappedLabel({ message: m }: { message: MessageView }) {

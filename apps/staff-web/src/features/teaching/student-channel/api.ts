@@ -26,21 +26,31 @@ export interface ChannelRef {
 export const channelQuery = ({ audience, studentId }: ChannelRef, live = false) =>
   infiniteQueryOptions({
     queryKey: channelKey(audience, studentId),
-    queryFn: ({ pageParam }) => apiFetch<ChannelPage>(channelMessagesPath({ audience, studentId, before: pageParam || undefined })),
+    queryFn: ({ pageParam }) =>
+      apiFetch<ChannelPage>(
+        channelMessagesPath({ audience, studentId, before: pageParam || undefined }),
+      ),
     initialPageParam: '',
     getNextPageParam: olderCursor,
     refetchInterval: () => (document.hasFocus() ? channelPollMs(live) : false),
   });
 
-export const sendChannelMessage = (ref: ChannelRef & { body: string }) =>
-  apiSend<ChannelMessageView>('POST', channelMessagesPath(ref), { body: ref.body });
+/** `clientId` (rule 8): a retry of the same text resends its id and gets the stored message. */
+export const sendChannelMessage = (ref: ChannelRef & { body: string; clientId: string }) =>
+  apiSend<ChannelMessageView>('POST', channelMessagesPath(ref), {
+    body: ref.body,
+    client_id: ref.clientId,
+  });
 
 /** Read up to the newest message shown (the API never moves the mark past now). */
 export const markChannelRead = ({ audience, studentId, at }: ChannelRef & { at: string }) =>
   apiSend<unknown>('POST', channelReadPath(audience, studentId), { at });
 
 /** The list and badge keys a read or a send changes (never the open thread itself). */
-export const CHANNEL_COUNT_KEYS = [['channel', 'teacher', 'list'], ['channel', 'portal']] as const;
+export const CHANNEL_COUNT_KEYS = [
+  ['channel', 'teacher', 'list'],
+  ['channel', 'portal'],
+] as const;
 
 export const teacherChannelsQuery = queryOptions({
   queryKey: ['channel', 'teacher', 'list'],

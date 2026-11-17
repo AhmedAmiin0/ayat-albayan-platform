@@ -15,6 +15,8 @@ interface Props {
   refs: ChannelRef;
   /** The thread's one ticking clock (ChannelThread): bubbles gain their date at midnight. */
   now: Date;
+  /** This viewer's mode: «تعديل» / «حذف للجميع» only where the API accepts them. */
+  mode: 'write' | 'read';
 }
 
 const a = t.studentChannel.actions;
@@ -25,9 +27,9 @@ const a = t.studentChannel.actions;
  * «خيارات
  * الرسالة» beside it where «تعديل» / «حذف للجميع» are allowed (owner 2026-10-30).
  */
-export function ChannelBubble({ message: m, tz, refs, now }: Props) {
+export function ChannelBubble({ message: m, tz, refs, now, mode }: Props) {
   const clock = useClock();
-  const tools = useBubbleEditing({ refs, message: m });
+  const tools = useBubbleEditing({ refs, message: m, at: { now, mode } });
   const roles = t.studentChannel.roles;
   const who = m.mine
     ? t.studentChannel.you

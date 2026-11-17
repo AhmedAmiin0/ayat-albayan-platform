@@ -25,11 +25,27 @@ test('a partial state (no index) reads its last route as the top', () => {
   expect(overChat(partial)).toBe(true);
 });
 
-test.each(['/inbox/thread/%2B1', '/sales/inbox/thread/%2B1', '/teacher/chats/%2B1'])('%s is a chat', (href) => {
+test.each([
+  '/inbox/thread/%2B1',
+  '/sales/inbox/thread/%2B1',
+  '/teacher/chats/%2B1',
+  '/students/channel/s1',
+  '/sales/students/channel/s1',
+  '/teacher/more/messages/s1',
+])('%s is a chat', (href) => {
   expect(isThreadHref(href)).toBe(true);
 });
 
-test.each(['/inbox', '/inbox/a1', '/teacher/chats', '/students/s9', '/sales/more/earnings?view=payments', '/'])(
+test.each([
+  '/inbox',
+  '/inbox/a1',
+  '/teacher/chats',
+  '/students/s9',
+  '/sales/students',
+  '/teacher/more/messages',
+  '/sales/more/earnings?view=payments',
+  '/',
+])(
   '%s is not a chat',
   (href) => {
     expect(isThreadHref(href)).toBe(false);

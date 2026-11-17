@@ -1,48 +1,24 @@
 import type { TeacherChannelRow } from '@ab/shared';
 import type { ReactElement } from 'react';
 import { router } from 'expo-router';
-import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
-import {
-  t,
-  EmptyState,
-  ErrorState,
-  ListRow,
-  Screen,
-  ScreenHeader,
-  useTabBarInset,
-  BackButton,
-  StatusChip,
-  useTheme,
-} from '@ab/mobile-kit';
+import { FlatList, type ListRenderItemInfo } from 'react-native';
+import { t, EmptyState, Screen, ScreenHeader, useTabBarInset, BackButton } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useTeacherChannels } from './channel-queries';
+import { ListWaiting } from './list/ListWaiting';
+import { TeacherChannelItem } from './list/TeacherChannelItem';
 
 const keyOf = (r: TeacherChannelRow) => r.student_id;
 
-/** The last message, «تم حذف هذه الرسالة» once deleted for everyone, else «لا رسائل بعد». */
-const previewOf = (r: TeacherChannelRow): string => {
-  if (!r.last_message) return t.studentChannel.noMessageYet;
-  return r.last_message.deleted ? t.studentChannel.actions.deleted : r.last_message.body;
-};
-
-function renderRow({ item }: ListRenderItemInfo<TeacherChannelRow>): ReactElement {
-  return (
-    <ListRow
-      title={item.student_name}
-      meta={item.student_code}
-      subtitle={previewOf(item)}
-      trailing={item.unread > 0 ? <StatusChip size="sm" tone="act" glyph="fill" label={t.studentChannel.unread.replace('{n}', String(item.unread))} /> : undefined}
-      onPress={() => router.push(`/teacher/more/messages/${item.student_id}`)}
-    />
-  );
-}
+const renderRow = ({ item }: ListRenderItemInfo<TeacherChannelRow>): ReactElement => (
+  <TeacherChannelItem item={item} />
+);
 
 /**
  * «رسائل الطلاب» (docs/31 §2): one row per current student, newest activity first, my unread count;
  * the count on the title's line, the rows in one inset card inside the gutter (owner 2026-10-28).
  */
 export function TeacherChannelsScreen() {
-  const { color } = useTheme();
   const inset = useTabBarInset();
   const list = useTeacherChannels();
   const rows = useInsetRows(renderRow, list.data?.length ?? 0);
@@ -63,10 +39,8 @@ export function TeacherChannelsScreen() {
         ListEmptyComponent={
           list.data ? (
             <EmptyState title={t.studentChannel.listEmpty} />
-          ) : list.isError ? (
-            <ErrorState message={t.studentChannel.loadFailed} onRetry={() => void list.refetch()} />
           ) : (
-            <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+            <ListWaiting list={list} />
           )
         }
         {...rows}

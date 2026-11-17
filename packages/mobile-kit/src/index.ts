@@ -7,6 +7,7 @@ export * from './biometric';
 export * from './notifications';
 export * from './account';
 export * from './channel';
+export * from './chat-ui';
 export {
   glass,
   type GlassStop,

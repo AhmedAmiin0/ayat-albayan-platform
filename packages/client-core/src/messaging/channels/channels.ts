@@ -43,6 +43,10 @@ export const channelPresencePath = (audience: ChannelAudience, studentId: string
 /** POST …/read (participants only). */
 export const channelReadPath = (audience: ChannelAudience, studentId: string): string => `${BASE[audience](studentId)}/read`;
 
+/** POST …/attachments/upload-url (participants): where to PUT a photo, PDF or voice note. */
+export const channelUploadPath = (audience: ChannelAudience, studentId: string): string =>
+  `${BASE[audience](studentId)}/attachments/upload-url`;
+
 export const channelKey = (audience: ChannelAudience, studentId: string) => ['channel', audience, studentId] as const;
 
 /** The teacher's list and the family's unread badge. */

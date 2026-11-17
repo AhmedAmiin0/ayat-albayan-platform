@@ -14292,14 +14292,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/channel-edits.service.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 4
-    },
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/student-channels/channel-open.migration.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -14328,15 +14320,15 @@
   },
   "src/modules/teaching/student-channels/channel.repo.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/modules/teaching/student-channels/channel.service.ts": {
     "typescript/consistent-type-imports": {
-      "count": 4
+      "count": 1
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 1
     }
   },
   "src/modules/teaching/student-channels/controllers/channel-page.ts": {

@@ -2,6 +2,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { channelApp, CH, messageRow, ST } from './channel.fakes';
 
 type App = Awaited<ReturnType<typeof channelApp>>;
+/** A text message: no file, no quote, nobody else has read it yet, no client id. */
+const NEW_FIELDS = { kind: 'text', attachment: null, reply_to: null, read_by_all: false, client_id: null };
 const TEACHER = `/teachers/me/channels/${ST}`;
 const PORTAL = `/portal/students/${ST}/channel`;
 
@@ -21,7 +23,7 @@ describe('student channel messages over HTTP', () => {
     expect(t.push.notifyProfiles).toHaveBeenCalledWith({
       kind: 'channel_message', profileIds: ['p-t1', 'p-s', 'p-sa'], subject: 'm2', vars: { student: 'سلمى', name: 'أم سلمى', text: 'متى الحلقة القادمة؟' }, data: { studentId: ST },
     });
-    expect(res.json()).toEqual({ id: 'm2', body: 'متى الحلقة القادمة؟', sender_role: 'guardian', sender_name: 'أم سلمى', mine: true, created_at: '2026-10-27T10:00:00.000Z', edited: false, deleted: false });
+    expect(res.json()).toEqual({ id: 'm2', body: 'متى الحلقة القادمة؟', sender_role: 'guardian', sender_name: 'أم سلمى', mine: true, created_at: '2026-10-27T10:00:00.000Z', edited: false, deleted: false, ...NEW_FIELDS });
   });
 
   it('a teacher message pushes the family and the assistant (owner 11-16); a student login writes as student', async () => {

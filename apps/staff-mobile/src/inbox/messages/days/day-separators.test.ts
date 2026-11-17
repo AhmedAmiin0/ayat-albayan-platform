@@ -2,8 +2,8 @@ import type { MessageView } from '@ab/shared';
 import type { ViewToken } from 'react-native';
 import { dayLabel } from './day-label';
 import { separatorsOf, topmost } from './day-separators';
-import { CHIP_MARGIN } from './top-band';
 import { message } from '@/inbox/shared/thread-fixtures';
+import { CHIP_MARGIN } from '@ab/mobile-kit';
 
 // The separators on screen, from the rows as they are now (owner 2026-10-27: the floating day).
 const at = (id: string, created_at: string, direction: 'inbound' | 'outbound' = 'inbound') =>

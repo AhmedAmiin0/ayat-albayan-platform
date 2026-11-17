@@ -35,7 +35,13 @@ export function overRoom(root: NavState | undefined): boolean {
   return top ? ROOM_ROUTES.includes(top.name) : false;
 }
 
-/** A link to a chat itself (admin, sales or teacher): it opens inside the chat group. */
+/** A WhatsApp chat (admin, sales or teacher). */
+const THREAD = /^\/(sales\/)?inbox\/thread\/|^\/teacher\/chats\/[^/?]+/;
+
+/** A student's teacher–family chat (admin, owning assistant, teacher): in a chat group too. */
+const STUDENT_CHAT = /^\/(sales\/)?students\/channel\/[^/?]+|^\/teacher\/more\/messages\/[^/?]+/;
+
+/** A link to a chat itself (a WhatsApp thread or a student chat): it opens in its chat group. */
 export function isThreadHref(href: string): boolean {
-  return /^\/(sales\/)?inbox\/thread\/|^\/teacher\/chats\/[^/?]+/.test(href);
+  return THREAD.test(href) || STUDENT_CHAT.test(href);
 }
