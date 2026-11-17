@@ -1,5 +1,5 @@
 import { testFlagBodySchema, type TestFlagBody, type TestFlagResult } from '@ab/shared';
-import { Controller, Patch } from '@nestjs/common';
+import { Controller, Inject, Patch } from '@nestjs/common';
 import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -14,7 +14,7 @@ const idSchema = z.uuid();
 @ApiBearerAuth()
 @Controller('admin/users')
 export class UserTestController {
-  constructor(private readonly accounts: TestAccountsService) {}
+  constructor(@Inject(TestAccountsService) private readonly accounts: TestAccountsService) {}
 
   @Patch(':id/test')
   @Permissions('users.write')
@@ -32,7 +32,7 @@ export class UserTestController {
 @ApiBearerAuth()
 @Controller('students')
 export class StudentTestController {
-  constructor(private readonly accounts: TestAccountsService) {}
+  constructor(@Inject(TestAccountsService) private readonly accounts: TestAccountsService) {}
 
   @Patch(':id/test')
   @Permissions('students.write')

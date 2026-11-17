@@ -1,6 +1,6 @@
 import type { RoomJoinResult, TestFlags } from '@ab/shared';
 import { joinWindowConfig } from '@ab/shared';
-import { Injectable, Optional } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { TestFlagReader } from '@/common/auth/test-flag';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -28,7 +28,7 @@ export class RoomJoinService {
     private readonly roles: LessonRoleService,
     private readonly admission: RoomAdmission,
     private readonly settings: ClassroomSettings,
-    @Optional() private readonly flags?: TestFlagReader,
+    @Optional() @Inject(TestFlagReader) private readonly flags?: TestFlagReader,
   ) {}
 
   async join(input: JoinInput, now = new Date()): Promise<RoomJoinResult> {

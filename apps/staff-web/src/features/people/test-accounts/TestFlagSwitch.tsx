@@ -29,6 +29,7 @@ export function TestFlagSwitch({ target, row, enabled = true }: TestFlagSwitchPr
   const save = useSetTestFlag();
   const settled = { onSettled: () => setAsked(null) };
   const confirm = (next: boolean) => save.mutate({ target, id: row.id, isTest: next }, settled);
+  const shown = asked ?? row.is_test === true;
   if (!enabled) return null;
   return (
     <div className="grid gap-2">
@@ -37,7 +38,8 @@ export function TestFlagSwitch({ target, row, enabled = true }: TestFlagSwitchPr
           <input
             type="checkbox"
             role="switch"
-            checked={asked ?? row.is_test === true}
+            checked={shown}
+            aria-checked={shown}
             disabled={save.isPending}
             onChange={(e) => setAsked(e.target.checked)}
             className={switchInputClass}
