@@ -23,7 +23,7 @@ export class LessonMuteController {
   @Post()
   @HttpCode(204)
   async mute(@Param() params: Record<string, string>, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    this.limit.assert(user.id);
+    this.limit.assert(user);
     await this.mutes.lesson({ user, body, ...(await targetOf(params)) });
   }
 }
@@ -42,7 +42,7 @@ export class MeetingMuteController {
   @Post()
   @HttpCode(204)
   async mute(@Param() params: Record<string, string>, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    this.limit.assert(user.id);
+    this.limit.assert(user);
     await this.mutes.meeting({ user, body, ...(await targetOf(params)) });
   }
 }

@@ -14,7 +14,11 @@ const ROW = {
 describe('students queries (R-STU-01, R-NFR-08)', () => {
   it('phone search finds the family’s students by any of its numbers (main or second), in any format', async () => {
     const phones = [{ guardian_id: 'g1' }, { guardian_id: 'g2' }, { guardian_id: 'g1' }];
-    const { db, argsOf } = fakeDb({ guardian_phones: [{ data: phones }], v_student_list: [{ data: [ROW], count: 1 }] });
+    const { db, argsOf } = fakeDb({
+      guardian_phones: [{ data: phones }],
+      v_student_list: [{ data: [ROW], count: 1 }],
+      students: [{ data: [] }],
+    });
     const page = await listStudents(db, { search: '0501234567', page: 1, pageSize: 20 });
     expect(argsOf('guardian_phones', 'ilike')).toEqual(['phone_e164', '%501234567%']);
     expect(argsOf('v_student_list', 'or')).toEqual(['guardian_id.in.(g1,g2),code.ilike.*501234567*']);

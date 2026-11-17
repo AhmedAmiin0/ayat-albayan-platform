@@ -10,7 +10,10 @@ export class AccountDisabledError extends Error {
 
 /** The AuthGuard's source of a user's effective permission set (DB-backed in the app). */
 export const PERMISSION_RESOLVER = Symbol('PERMISSION_RESOLVER');
-export type PermissionResolver = (user: AuthUser) => Promise<readonly Permission[]>;
+export type PermissionResolver = ((user: AuthUser) => Promise<readonly Permission[]>) & {
+  /** profiles.is_test (docs/56); absent (tests, systemResolver) = a real user. */
+  isTest?: (user: AuthUser) => Promise<boolean>;
+};
 
 /**
  * The five system roles as seeded, without a DB: what tests that boot AppModule plug in with

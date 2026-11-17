@@ -26,7 +26,7 @@ export const LATER_LESSON: StudentLesson = {
 /** Mocked StudentLinkQueries with the happy-path defaults. */
 export function studentLinkQueries() {
   return {
-    student: vi.fn().mockResolvedValue({ id: STUDENT_ID, name: 'سهيلة محمد' }),
+    student: vi.fn().mockResolvedValue({ id: STUDENT_ID, name: 'سهيلة محمد', is_test: false }),
     saveLink: vi.fn().mockResolvedValue(undefined),
     linkByHash: vi.fn(async (hash: string) =>
       hash === hashLinkToken(STUDENT_TOKEN) ? ({ id: 'sl1', student_id: STUDENT_ID, revoked_at: null as string | null }) : null,

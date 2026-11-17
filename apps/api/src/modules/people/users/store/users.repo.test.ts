@@ -25,7 +25,7 @@ const listRow = {
 
 describe('UsersRepo', () => {
   it('lists through admin_list_users with the page as limit / offset and the total of the first row', async () => {
-    const { db, argsOf } = fakeDb({ 'rpc:admin_list_users': [{ data: [listRow] }] });
+    const { db, argsOf } = fakeDb({ 'rpc:admin_list_users': [{ data: [listRow] }], profiles: [{ data: [] }] });
     const out = await new UsersRepo(db).list({
       page: 3,
       pageSize: 10,

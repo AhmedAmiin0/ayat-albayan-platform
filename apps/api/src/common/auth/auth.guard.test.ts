@@ -30,7 +30,11 @@ const fakeVerify: TokenVerifier = async (token) => {
   return user;
 };
 // The accountant holds a custom role (base admin) with payments.read only.
-const resolver: PermissionResolver = async (user) => (user.id === 'c1' ? ['payments.read'] : systemResolver(user));
+// The teacher is a test account (profiles.is_test, read by the resolver from the database).
+const resolver: PermissionResolver = Object.assign(
+  async (user: AuthUser) => (user.id === 'c1' ? ['payments.read' as const] : systemResolver(user)),
+  { isTest: async (user: AuthUser) => user.id === 't1' },
+);
 
 describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
   let app: NestFastifyApplication;
@@ -68,7 +72,18 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
   it('GET /auth/me returns the verified user and their permissions', async () => {
     const res = await get('/auth/me', 'accountant-token');
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ ...USERS['accountant-token'], permissions: ['payments.read'], tz: 'Africa/Cairo' });
+    expect(res.json()).toEqual({
+      ...USERS['accountant-token'],
+      permissions: ['payments.read'],
+      tz: 'Africa/Cairo',
+      is_test: false,
+    });
+  });
+
+  it('GET /auth/me: is_test from the resolver (the database), never from the token', async () => {
+    const res = await get('/auth/me', 'teacher-token');
+    expect(res.json()).toMatchObject({ is_test: true });
+    expect(res.json()).not.toHaveProperty('isTest');
   });
 
   it('GET /auth/me answers a user without a role, with no permissions', async () => {
