@@ -26,7 +26,8 @@ test('apt + Chromium first, then the manifests, pnpm fetch, and only then the so
   assert.ok(at('\n    pnpm fetch') < at('\nCOPY . .'));
   assert.match(dockerfile, /pnpm install --offline --frozen-lockfile --store-dir \/pnpm\/store --filter "api\.\.\."/);
   assert.equal(dockerfile.match(/--mount=type=cache,id=ayat-pnpm-store,target=\/pnpm\/store/g)?.length, 2);
-  assert.match(dockerfile, /pnpm install --offline --frozen-lockfile --prod --store-dir \/pnpm\/store --filter "api\.\.\."/);
+  // Never --offline: the layer cache can hold «deps» while the store mount is empty.
+  assert.match(dockerfile, /pnpm install --prefer-offline --frozen-lockfile --prod --store-dir \/pnpm\/store --filter "api\.\.\."/);
 });
 
 test('the runtime keeps its user, workdir, port, health check and command', () => {

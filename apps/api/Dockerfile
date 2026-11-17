@@ -79,10 +79,12 @@ COPY . .
 RUN pnpm --filter "api^..." build \
  && pnpm --filter api build
 # A fresh production install (a --prod install over the full one would keep every dev package in
-# node_modules/.pnpm): 609 MB of node_modules become 278 MB.
+# node_modules/.pnpm): 609 MB of node_modules become 278 MB. --prefer-offline, not --offline: «deps»
+# may come from the layer cache while the store mount is empty (CI's GitHub cache never holds
+# mounts; BuildKit may evict one on its own), and then the missing packages are downloaded.
 RUN --mount=type=cache,id=ayat-pnpm-store,target=/pnpm/store \
     find . -name node_modules -type d -prune -exec rm -rf {} + \
- && pnpm install --offline --frozen-lockfile --prod --store-dir /pnpm/store --filter "api..."
+ && pnpm install --prefer-offline --frozen-lockfile --prod --store-dir /pnpm/store --filter "api..."
 
 FROM runtime-base
 COPY --from=build --chown=node:node /repo /repo
