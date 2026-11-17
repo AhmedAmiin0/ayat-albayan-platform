@@ -35,3 +35,15 @@ test('the jest cache is wired like vitest: keyed on lockfile + configs, PRs save
   const tasks = JSON.parse(read('turbo.json')).tasks;
   assert.deepEqual(tasks.test.passThroughEnv, ['JEST_CACHE_DIR'], 'not in the hash: same results');
 });
+
+test('ci: a red lint prints the pruned suppressions to commit', () => {
+  const step = ci.jobs.verify.steps.find((x) => x.name?.startsWith('Suppressions to prune'));
+  assert.equal(step?.if, "failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'");
+  // Only after ESLint's stale-suppressions message, only for the packages that printed it.
+  assert.match(step.run, /grep -F 'suppressions left that do not occur anymore' \|\| true\)\n.*if \[ -z "\$stale" \]; then .*exit 0; fi/);
+  assert.match(step.run, /--filter=\\1\/p' <<< "\$stale"/);
+  assert.match(step.run, /turbo lint --force --continue --concurrency=3 \$filters -- --prune-suppressions .*\|\| true\n.*git --no-pager diff -- '\*eslint-suppressions\.json'/);
+  const turbo = ci.jobs.verify.steps.find((x) => x.id === 'turbo').run;
+  assert.match(turbo, /set -o pipefail\n.*\| tee "\$RUNNER_TEMP\/turbo\.log" \|\| status=\$\?/s);
+  assert.match(ci.jobs.verify.strategy.matrix.include.find((r) => r.task === 'lint').opts, /--log-prefix=task/);
+});

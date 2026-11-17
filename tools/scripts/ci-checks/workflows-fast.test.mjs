@@ -73,12 +73,6 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries 
   assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true' && needs.changes.outputs.verified != 'true'");
 });
 
-test('ci: a red lint prints the pruned suppressions to commit', () => {
-  const step = ci.jobs.verify.steps.find((s) => s.name?.startsWith('Suppressions to prune'));
-  assert.equal(step?.if, "failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'");
-  assert.match(step.run, /pnpm lint:prune .*\|\| true\n.*git --no-pager diff -- '\*eslint-suppressions\.json'/);
-});
-
 test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {
   assert.match(ci.jobs.e2e.if, /vars\.RUN_E2E != 'false'/);
   // The matrix comes from «changes»; its fallback (pushes, any failure) is the full one (e2e-areas/workflow.test.mjs).
