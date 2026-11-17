@@ -9,7 +9,7 @@ import { useRoomScreen, type RoomScreenInput } from './use-room-screen';
 
 export type { RoomChat } from './use-room-screen';
 
-export interface RoomScreenProps extends Omit<RoomScreenInput, 'fetchJoin'> {
+interface RoomScreenProps extends Omit<RoomScreenInput, 'fetchJoin'> {
   platform: RoomPlatform;
   target: RoomTarget;
   /** Tests inject the join; the app posts the room's join endpoint. */

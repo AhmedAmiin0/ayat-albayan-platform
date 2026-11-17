@@ -13,7 +13,7 @@ import type {
 } from '@/classroom/room/model/room-types';
 import { roomFailure } from './room-failure';
 
-export interface JoinInput {
+interface JoinInput {
   client: RoomClient;
   platform: RoomPlatform;
   target: RoomTarget;
@@ -26,7 +26,7 @@ export interface JoinInput {
 }
 
 /** One's role and the chat flag of the current join (null before the first one). */
-export type JoinedAs = Pick<RoomCredentials, 'role' | 'chat'>;
+type JoinedAs = Pick<RoomCredentials, 'role' | 'chat'>;
 
 /** A refusal that means the lesson was ended for everyone (410 lesson_ended): no way back. */
 const endedForAll = (e: unknown): boolean => apiErrorCode(e) === 'lesson_ended';

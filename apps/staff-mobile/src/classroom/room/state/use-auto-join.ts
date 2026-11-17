@@ -11,7 +11,7 @@ interface AutoJoinInput {
 }
 
 /** What an entry without the preview turns on; null = show the preview (the first time). */
-export function autoWish(direct: boolean, remembered: MediaWish | null): MediaWish | null {
+function autoWish(direct: boolean, remembered: MediaWish | null): MediaWish | null {
   if (direct) return { mic: true, cam: remembered?.cam ?? true };
   return remembered;
 }

@@ -11,6 +11,12 @@ import { RoomPersonRepo } from './room-person.repo';
 
 const asJoinRole = (role: string): JoinRole | null => JOIN_ROLES.find((r) => r === role) ?? null;
 
+interface BlockInput {
+  lessonId: string;
+  target: ParticipantRow;
+  blockedBy: string;
+}
+
 interface KickInput {
   user: AuthUser;
   lessonId: string;
@@ -33,7 +39,7 @@ export class KickService {
     private readonly persons: RoomPersonRepo,
   ) {}
 
-  /** 404 participant_not_found, 403 cannot_remove, 503 classroom_not_configured, 502 LiveKit refused. */
+  /** 404 participant_not_found, 403 cannot_remove, 503 classroom_not_configured, 502 LiveKit. */
   async remove(input: KickInput): Promise<void> {
     if (!this.livekit.configured) throw notConfigured();
     const { lesson, role } = await this.roles.resolve(input.user, input.lessonId);
@@ -48,14 +54,15 @@ export class KickService {
   }
 
   /** Blocks the person's every principal; answers every identity of theirs (the target's first). */
-  private async block(input: { lessonId: string; target: ParticipantRow; blockedBy: string }): Promise<string[]> {
+  private async block(input: BlockInput): Promise<string[]> {
     const { lessonId, target } = input;
     const principal = principalOf(target);
     if (!principal) return [target.identity];
     const principals = await this.persons.principalsOf(lessonId, principal);
     const who = { identity: target.identity, role: target.role, name: target.name };
     for (const p of principals) {
-      await this.moderation.block({ lessonId, principal: p, blockedBy: input.blockedBy, target: who });
+      const blockedBy = input.blockedBy;
+      await this.moderation.block({ lessonId, principal: p, blockedBy, target: who });
     }
     const others = await this.persons.identitiesOf(lessonId, principals);
     return [...new Set([target.identity, ...others])];

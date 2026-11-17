@@ -4,7 +4,10 @@ import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 
 /** Someone inside a lesson room now: their row, and the student of the guest link they came by. */
-export type PresenceRow = Pick<Tables<'classroom_participants'>, 'lesson_id' | 'name' | 'role' | 'entered_at'> & {
+export type PresenceRow = Pick<
+  Tables<'classroom_participants'>,
+  'lesson_id' | 'name' | 'role' | 'entered_at'
+> & {
   link: { student_id: string | null } | null;
 };
 

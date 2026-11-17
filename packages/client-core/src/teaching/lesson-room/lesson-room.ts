@@ -40,10 +40,13 @@ export function lessonRoomSends(client: ApiClient): LessonRoomSends {
       lessonEndResultSchema.parse(await client.apiSend<unknown>('POST', lessonEndPath(lessonId))),
     mute,
     muteAll: async ({ lessonId, identities }) => {
-      const calls = identities.map((identity) => mute({ lessonId, identity, source: 'microphone' }));
+      const calls = identities.map((identity) =>
+        mute({ lessonId, identity, source: 'microphone' }),
+      );
       const failed = (await Promise.allSettled(calls)).find((r) => r.status === 'rejected');
       if (failed) throw failed.reason;
     },
-    remove: ({ lessonId, identity }) => client.apiSend('POST', lessonRemovePath(lessonId, identity)),
+    remove: ({ lessonId, identity }) =>
+      client.apiSend('POST', lessonRemovePath(lessonId, identity)),
   };
 }

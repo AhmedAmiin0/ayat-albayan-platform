@@ -1,7 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { meLocaleOf, meLocalePath, meLocaleSend } from './locale.js';
 
-const client = (answer: unknown) => ({ apiFetch: vi.fn(), apiSend: vi.fn().mockResolvedValue(answer) });
+const client = (answer: unknown) => ({
+  apiFetch: vi.fn(),
+  apiSend: vi.fn().mockResolvedValue(answer),
+});
 
 describe('meLocaleOf', () => {
   it('reads the language of /auth/me or /portal/me', () => {

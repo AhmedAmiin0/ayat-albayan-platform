@@ -5,16 +5,16 @@ import { roomRoute, roomWebUrl, type RoomEntry } from '@/classroom/room/model/jo
 import { roomMode } from '@/classroom/room/model/room-mode';
 import type { RoomTarget } from '@/classroom/room/model/room-types';
 import { liveKitNative } from '@/classroom/room/native/livekit-native';
-import { postJoin } from '@/classroom/room/state/fetch-join';
+import { joinAnswer, sendJoin } from '@/classroom/room/state/fetch-join';
 import { usePublicConfig } from '@/core/lib/query/public-config';
 
 /** settings.meetings_in_app (public, default on): rooms open inside the app (docs/35). */
 export const useRoomsInApp = (): boolean => usePublicConfig().meetings_in_app;
 
 /** A page sheet's slide-out: the room is pushed once it is gone. */
-export const SHEET_CLOSE_MS = 350;
+const SHEET_CLOSE_MS = 350;
 
-export interface OpenOptions extends RoomEntry {
+interface OpenOptions extends RoomEntry {
   /**
    * The press sits in a page sheet (a Modal): it closes first, else Android keeps the Modal's
    * window above the new room screen.
@@ -31,12 +31,12 @@ const afterSheet = (): Promise<void> => new Promise((r) => setTimeout(r, SHEET_C
  * room screen that cannot start: it read «انتهت صلاحية الدخول» and sent the user round again).
  */
 export async function openRoom(target: RoomTarget, inApp: boolean, options: OpenOptions = {}) {
-  const join = await postJoin(target);
+  const answer = await sendJoin(target);
   if (roomMode(inApp, liveKitNative() !== null) === 'browser') {
     await Linking.openURL(roomWebUrl(target));
     return;
   }
-  handOff(target, join);
+  handOff(target, joinAnswer(answer));
   if (options.closeSheet) {
     options.closeSheet();
     await afterSheet();

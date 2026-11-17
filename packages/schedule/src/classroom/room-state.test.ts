@@ -7,7 +7,10 @@ describe('lessonRoomStateSchema', () => {
     const room = {
       liveSince: '2026-11-16T10:00:00.000Z',
       endedAt: null,
-      inRoom: [{ name: 'أ. مريم', role: 'teacher' }, { name: 'سارة', role: 'student' }],
+      inRoom: [
+        { name: 'أ. مريم', role: 'teacher' },
+        { name: 'سارة', role: 'student' },
+      ],
     };
     expect(lessonRoomStateSchema.parse(room)).toEqual(room);
   });
@@ -31,7 +34,7 @@ describe('roomEnded', () => {
 });
 
 describe('canEndLesson («إنهاء الحلقة للجميع»)', () => {
-  it('is the teacher\'s or an admin\'s only', () => {
+  it("is the teacher's or an admin's only", () => {
     const roles = ['teacher', 'admin', 'assistant', 'sales', 'guest', null] as const;
     expect(roles.map(canEndLesson)).toEqual([true, true, false, false, false, false]);
   });

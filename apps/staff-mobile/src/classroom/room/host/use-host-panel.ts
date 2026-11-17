@@ -17,7 +17,7 @@ const DONE: Record<MuteSource, string> = { microphone: M.micDone, camera: M.camD
 const named = (line: string, name: string) => line.replace('{name}', name);
 
 /** The cameras (one per person), not the shared screens. */
-export const peopleOf = (tiles: readonly RoomTile[]): RoomTile[] => tiles.filter((x) => !x.screen);
+const peopleOf = (tiles: readonly RoomTile[]): RoomTile[] => tiles.filter((x) => !x.screen);
 
 /**
  * The participants panel's state (canvas RoomXTeacher): per person mute / camera off / «إخراج»

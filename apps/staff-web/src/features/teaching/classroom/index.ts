@@ -25,7 +25,6 @@ export { ClassroomActions } from './join/ClassroomActions';
 export { ClassroomRoom } from './room/components/ClassroomRoom';
 export { CopyLinkButton, copyStudentLink } from './join/CopyLinkButton';
 export { GuestJoinPage } from './join/GuestJoinPage';
-export { namesItsStudent } from './join/family-token';
 export { EnterButton, type JoinableLesson, JoinButton } from './join/JoinButton';
 export { StaffJoinButton } from './join/StaffJoinButton';
 export { RecordedNotice } from './recordings/RecordedNotice';

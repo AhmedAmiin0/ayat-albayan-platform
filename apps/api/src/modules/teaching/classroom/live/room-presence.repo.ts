@@ -21,11 +21,15 @@ export interface PresenceEvent {
 export class RoomPresenceRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** participant_joined: inside now; entered_at keeps the first arrival. null: not one we admitted. */
+  /** participant_joined: inside now; entered_at keeps the first arrival. null: not admitted. */
   async entered(e: PresenceEvent): Promise<Pick<ParticipantRow, 'role'> | null> {
     const match = { lesson_id: e.lessonId, identity: e.identity };
     const rows = () => this.db.from('classroom_participants');
-    const { data, error } = await rows().update({ left_at: null }).match(match).select('role').maybeSingle();
+    const { data, error } = await rows()
+      .update({ left_at: null })
+      .match(match)
+      .select('role')
+      .maybeSingle();
     if (error) throw dbError(error);
     if (!data) return null;
     const first = await rows().update({ entered_at: e.at }).match(match).is('entered_at', null);
@@ -36,11 +40,14 @@ export class RoomPresenceRepo {
   /** participant_left: no longer inside. */
   async left(e: PresenceEvent): Promise<void> {
     const match = { lesson_id: e.lessonId, identity: e.identity };
-    const { error } = await this.db.from('classroom_participants').update({ left_at: e.at }).match(match);
+    const { error } = await this.db
+      .from('classroom_participants')
+      .update({ left_at: e.at })
+      .match(match);
     if (error) throw dbError(error);
   }
 
-  /** «إنهاء الحلقة للجميع»: everyone inside is out (LiveKit closes the room without more events). */
+  /** «إنهاء الحلقة للجميع»: everyone inside is out (LiveKit closes the room, no more events). */
   async leaveAll(lessonId: string, at: string): Promise<void> {
     const { error } = await this.db
       .from('classroom_participants')

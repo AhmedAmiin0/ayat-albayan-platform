@@ -1,8 +1,8 @@
+import { firstName, looksLikeFamilyToken } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClassroomRepo, type JoinLinkRow } from '@/modules/teaching/classroom/classroom.repo';
 import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
 import { FamilyJoinLinks } from './family-join.links';
-import { looksLikeFamilyToken } from './family-join.token';
 import { hashLinkToken, looksLikeLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 
 type TokenKind = 'random' | 'family' | 'none';
@@ -39,6 +39,12 @@ export class JoinLinkResolver {
 
   resolve(token: string, now: Date): Promise<JoinLinkRow | null> {
     return this.byKind[tokenKind(token)](token, now);
+  }
+
+  /** The name a family link enters with: the student's first name (≤ 30); null without one. */
+  async studentName(link: Pick<JoinLinkRow, 'student_id'>): Promise<string | null> {
+    const student = link.student_id ? await this.students.student(link.student_id) : null;
+    return student ? (firstName(student.name) || student.name).slice(0, 30) : null;
   }
 
   private async familyRow(token: string, now: Date): Promise<JoinLinkRow | null> {

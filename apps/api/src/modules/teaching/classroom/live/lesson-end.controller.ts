@@ -1,8 +1,10 @@
 import type { LessonEndResult } from '@ab/shared';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodParam } from '@/common/http/zod-inputs';
 import { LessonEndService } from './lesson-end.service';
 
 /** «إنهاء الحلقة للجميع»: the lesson's teacher or an admin (the service decides, per lesson). */
@@ -16,7 +18,10 @@ export class LessonEndController {
   /** 200 {endedAt} (idempotent: the first end's time); 404 lesson_not_found, 403. */
   @Post('end')
   @HttpCode(200)
-  end(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<LessonEndResult> {
+  end(
+    @ZodParam('id', z.uuid()) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<LessonEndResult> {
     return this.ends.end({ user, lessonId: id });
   }
 }

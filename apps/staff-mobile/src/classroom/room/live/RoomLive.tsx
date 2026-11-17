@@ -6,7 +6,7 @@ import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import { ParticipantGrid } from './ParticipantGrid';
 import { RoomControls, type RoomControlsActions } from './RoomControls';
 
-export interface LiveControls extends RoomControlsActions {
+interface LiveControls extends RoomControlsActions {
   output: AudioOutput | null;
   front: boolean;
   switchCamera: () => void;

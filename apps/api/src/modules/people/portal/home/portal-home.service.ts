@@ -5,7 +5,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { ChatNumber } from './chat-number';
 
-/** GET /portal/me: the switcher (my students, or myself), the login's language, the renewal link. */
+/** GET /portal/me: the switcher (my students, or myself), the login's language, renewal link. */
 @Injectable()
 export class PortalHomeService {
   private readonly log = new Logger(PortalHomeService.name);
@@ -16,7 +16,7 @@ export class PortalHomeService {
     private readonly me: MeZoneRepo,
   ) {}
 
-  /** `locale` only when the profile holds a language the apps speak (else the app keeps its own). */
+  /** `locale` only when the profile holds a language the apps speak (else the app keeps its). */
   async home(user: AuthUser): Promise<PortalHome> {
     const reads = [this.scopes.of(user), this.renewUrl(), this.me.localeOf(user.id)] as const;
     const [scope, renew_url, locale] = await Promise.all(reads);

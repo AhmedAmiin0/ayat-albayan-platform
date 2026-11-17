@@ -15,10 +15,16 @@ let mod: ReturnType<typeof moderation>;
 let h: ReturnType<typeof http>;
 let persons: ReturnType<typeof roomPersons>;
 const kick = () =>
-  new KickService(rolesOf({ q: queries() }), mod as unknown as ModerationRepo, new LivekitApi(CONFIG, h), persons as unknown as RoomPersonRepo)
-    .remove({ user: ADMIN, lessonId: LESSON_ID, identity: 'guest-0123456789ab' });
+  new KickService(
+    rolesOf({ q: queries() }),
+    mod as unknown as ModerationRepo,
+    new LivekitApi(CONFIG, h),
+    persons as unknown as RoomPersonRepo,
+  ).remove({ user: ADMIN, lessonId: LESSON_ID, identity: 'guest-0123456789ab' });
 const removed = () =>
-  h.mock.calls.filter(([url]) => String(url).endsWith('/RemoveParticipant')).map(([, init]) => (sentBody(init) as { identity: string }).identity);
+  h.mock.calls
+    .filter(([url]) => url.endsWith('/RemoveParticipant'))
+    .map(([, init]) => (sentBody(init) as { identity: string }).identity);
 
 beforeEach(() => {
   mod = moderation();
@@ -31,7 +37,9 @@ describe('«إخراج» keeps the person out', () => {
     persons.principalsOf.mockResolvedValue([{ joinLinkId: LINK }, { joinLinkId: WHATSAPP_LINK }]);
     await kick();
     expect(persons.principalsOf).toHaveBeenCalledWith(LESSON_ID, { joinLinkId: LINK });
-    const blocked = mod.block.mock.calls.map((call) => (call[0] as { principal: unknown }).principal);
+    const blocked = mod.block.mock.calls.map(
+      (call) => (call[0] as { principal: unknown }).principal,
+    );
     expect(blocked).toEqual([{ joinLinkId: LINK }, { joinLinkId: WHATSAPP_LINK }]);
   });
 
@@ -43,7 +51,7 @@ describe('«إخراج» keeps the person out', () => {
 
   it('revokes before removing, so a reconnecting client hears and sends nothing', async () => {
     await kick();
-    const methods = h.mock.calls.map(([url]) => String(url).split('/').pop());
+    const methods = h.mock.calls.map(([url]) => url.split('/').pop());
     expect(methods).toEqual(['UpdateParticipant', 'RemoveParticipant']);
   });
 });

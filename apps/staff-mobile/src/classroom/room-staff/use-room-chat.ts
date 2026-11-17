@@ -7,7 +7,7 @@ import { useTeacherChannels } from '@/student-file';
 type StaffAudience = 'teacher' | 'admin';
 
 /** The staff app's channel sheet over the room (app/room-chat/[studentId].tsx). */
-export const roomChatRoute = (studentId: string, audience: StaffAudience): string =>
+const roomChatRoute = (studentId: string, audience: StaffAudience): string =>
   `/room-chat/${encodeURIComponent(studentId)}?audience=${audience}`;
 
 /** The teacher writes in her student's channel; an admin with the monitor reads it. */

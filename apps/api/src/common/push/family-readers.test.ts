@@ -40,7 +40,7 @@ describe('familyReaders', () => {
 });
 
 describe('familyTargets', () => {
-  it('one target per login, with the event data and the reader\'s student', () => {
+  it("one target per login, with the event data and the reader's student", () => {
     const event = { kind: 'lesson_live' as const, subject: 'lesson:l1', data: { lessonId: 'l1' } };
     const at = '2026-11-14T16:00:00Z';
     const [target] = familyTargets(event, { at, students: [student('s1')] });

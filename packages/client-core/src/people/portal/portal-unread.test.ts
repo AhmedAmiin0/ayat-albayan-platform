@@ -5,7 +5,7 @@ import { PORTAL_REFRESH_MS, portalQueries } from './portal-api.js';
 const apiFetch = vi.fn(async (): Promise<unknown> => ({ unread: 3 }));
 const client = { apiFetch, apiSend: vi.fn() } as unknown as ApiClient;
 
-describe('portalUnreadQuery («المحادثة»\'s badge)', () => {
+describe("portalUnreadQuery («المحادثة»'s badge)", () => {
   it('reads GET /portal/students/:id/channel/unread under the portal key, every 30 s', async () => {
     const q = portalQueries(client).portalUnreadQuery('s1');
     expect(q.queryKey).toEqual(['portal', 'students', 's1', 'channel', 'unread']);

@@ -16,7 +16,9 @@ const withAutoHeld = (view: LessonView, held: ReadonlySet<string>): LessonView =
   held.has(view.id) ? { ...view, auto_held: true } : view;
 
 /** The live room only where there is one (absent otherwise, as an older API sent). */
-const withRoom = (view: LessonView, rooms: ReadonlyMap<string, LessonRoomState | null>): LessonView => {
+type Rooms = ReadonlyMap<string, LessonRoomState | null>;
+
+const withRoom = (view: LessonView, rooms: Rooms): LessonView => {
   const room = rooms.get(view.id);
   return room ? { ...view, room } : view;
 };

@@ -68,7 +68,8 @@ export class PortalLessonsService {
     ]);
     const ctx = { academyAuto: values.meeting_link_auto, override, classroom: this.rooms.classroomReady(), win, now };
     const rooms = await this.extras.rooms(rows, now);
-    const lesson = (row: (typeof rows)[number]) => withRoom(toPortalLesson(row, ctx), rooms.get(row.id));
+    const lesson = (row: (typeof rows)[number]) =>
+      withRoom(toPortalLesson(row, ctx), rooms.get(row.id));
     return { lessons: rows.map(lesson), ...extras };
   }
 

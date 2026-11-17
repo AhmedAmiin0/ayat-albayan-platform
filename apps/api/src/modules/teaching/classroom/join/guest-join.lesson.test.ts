@@ -1,8 +1,19 @@
-import { HttpException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
-import { admissionOf, moderation, recorder } from '@/modules/teaching/classroom/moderation/moderation.fakes';
-import { CONFIG, LESSON, LINK_TOKEN, linkRow, OPEN, queries } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  admissionOf,
+  moderation,
+  recorder,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  CONFIG,
+  LESSON,
+  LINK_TOKEN,
+  linkRow,
+  OPEN,
+  queries,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import { resolverOf } from '@/modules/teaching/classroom/family-link/family-link.fakes';
 import { GuestJoinService } from './guest-join.service';
 import { PublicJoinLimit } from './join-limit';
@@ -18,8 +29,10 @@ const service = () =>
     admissionOf({ q, mod: moderation(), rec, config: CONFIG }),
     resolverOf(q),
   );
-const join = (now = OPEN) => service().join({ linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } }, now);
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+const join = (now = OPEN) =>
+  service().join({ linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } }, now);
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: unknown) => e)) as HttpException;
 
 beforeEach(() => {
   q = queries();
@@ -29,7 +42,11 @@ beforeEach(() => {
 describe('the /join door and the lesson behind the link', () => {
   it('a lesson moved later keeps its link: the stored expiry was the old time, the new window decides', async () => {
     q.linkByHash.mockResolvedValue(linkRow({ expires_at: '2026-10-05T19:00:00.000Z' }));
-    q.lesson.mockResolvedValue({ ...LESSON, starts_at: '2026-10-06T16:00:00.000Z', ends_at: '2026-10-06T17:00:00.000Z' });
+    q.lesson.mockResolvedValue({
+      ...LESSON,
+      starts_at: '2026-10-06T16:00:00.000Z',
+      ends_at: '2026-10-06T17:00:00.000Z',
+    });
     await expect(join(new Date('2026-10-06T16:05:00Z'))).resolves.toMatchObject({ role: 'guest' });
   });
 

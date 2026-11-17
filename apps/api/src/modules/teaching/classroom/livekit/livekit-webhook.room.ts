@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-/** participant_joined / participant_left: who came into or left which room (it may now be empty). */
+/** participant_joined / participant_left: who came into or left which room (maybe now empty). */
 export interface ParticipantEvent {
   kind: 'joined' | 'left';
   room: string;

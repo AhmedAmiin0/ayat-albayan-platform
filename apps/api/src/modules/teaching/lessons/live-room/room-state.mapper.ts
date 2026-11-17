@@ -12,9 +12,11 @@ const STAFF_ROLE: Readonly<Record<string, RoomPresenceRole>> = {
 };
 
 /** A guest by a student's link (the family app, the student's link) is the student's side. */
-const guestRole = (row: PresenceRow): RoomPresenceRole => (row.link?.student_id ? 'student' : 'guest');
+const guestRole = (row: PresenceRow): RoomPresenceRole =>
+  row.link?.student_id ? 'student' : 'guest';
 
-export const presenceRole = (row: PresenceRow): RoomPresenceRole => STAFF_ROLE[row.role] ?? guestRole(row);
+export const presenceRole = (row: PresenceRow): RoomPresenceRole =>
+  STAFF_ROLE[row.role] ?? guestRole(row);
 
 /** One entry per person shown (two windows of one link are one person). */
 function people(rows: readonly PresenceRow[]): RoomPresence[] {
@@ -33,7 +35,10 @@ const earliest = (rows: readonly PresenceRow[]): string | null =>
  * Ended for everyone: nobody inside any more. Not ended and nobody inside: null (no live state).
  * Else live since the earliest arrival of those inside now.
  */
-export function roomStateOf(input: { endedAt: string | null; inside: readonly PresenceRow[] }): LessonRoomState | null {
+export function roomStateOf(input: {
+  endedAt: string | null;
+  inside: readonly PresenceRow[];
+}): LessonRoomState | null {
   const inside = input.endedAt === null ? input.inside : [];
   if (input.endedAt === null && inside.length === 0) return null;
   return { liveSince: earliest(inside), endedAt: input.endedAt, inRoom: people(inside) };

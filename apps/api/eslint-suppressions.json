@@ -10539,11 +10539,6 @@
       "count": 4
     }
   },
-  "src/modules/teaching/classroom/join/join-gate.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/classroom/join/join-limit.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -10592,7 +10587,7 @@
   },
   "src/modules/teaching/classroom/join/join-link.token.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/join/join.block.test.ts": {
@@ -10727,7 +10722,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/livekit/livekit-webhook.service.test.ts": {
@@ -11032,14 +11027,6 @@
     },
     "max-len": {
       "count": 3
-    }
-  },
-  "src/modules/teaching/classroom/moderation/kick.service.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/teaching/classroom/moderation/moderation.controller.ts": {

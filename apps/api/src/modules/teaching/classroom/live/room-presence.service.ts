@@ -7,14 +7,14 @@ import { RoomPresenceRepo, type PresenceEvent } from './room-presence.repo';
 /** The lesson behind a lesson room's event with an identity; null for a meeting or a bare event. */
 function presenceOf(e: ParticipantEvent, now: Date): PresenceEvent | null {
   const target = targetOfRoom(e.room);
-  const ours = target?.kind === 'lesson' && e.identity !== '';
-  return ours && target ? { lessonId: target.id, identity: e.identity, at: now.toISOString() } : null;
+  if (target?.kind !== 'lesson' || e.identity === '') return null;
+  return { lessonId: target.id, identity: e.identity, at: now.toISOString() };
 }
 
 /**
- * LiveKit's participant_joined / participant_left on a lesson room (owner 2026-11-16): who is inside
- * now (RoomPresenceRepo), and «بدأت الحلقة» to the family when the lesson's teacher comes in. Never
- * throws: the webhook must acknowledge, every failure is logged.
+ * LiveKit's participant_joined / participant_left on a lesson room (owner 2026-11-16): who is
+ * inside now (RoomPresenceRepo), and «بدأت الحلقة» to the family when the lesson's teacher comes
+ * in. Never throws: the webhook must acknowledge, every failure is logged.
  */
 @Injectable()
 export class RoomPresenceService {

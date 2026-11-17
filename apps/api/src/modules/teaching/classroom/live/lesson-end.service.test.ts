@@ -1,6 +1,12 @@
-import { HttpException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ADMIN, ASSISTANT, LESSON_ID, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  ADMIN,
+  ASSISTANT,
+  LESSON_ID,
+  queries,
+  TEACHER,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import type { RoomCloser } from '@/modules/teaching/classroom/max-duration/room-closer';
 import { rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import type { LessonEndRepo } from './lesson-end.repo';
@@ -12,7 +18,12 @@ let ends: { stamp: ReturnType<typeof vi.fn> };
 let presence: { leaveAll: ReturnType<typeof vi.fn> };
 let closer: { configured: boolean; close: ReturnType<typeof vi.fn> };
 const service = () =>
-  new LessonEndService(rolesOf({ q: queries() }), ends as unknown as LessonEndRepo, presence as unknown as RoomPresenceRepo, closer as unknown as RoomCloser);
+  new LessonEndService(
+    rolesOf({ q: queries() }),
+    ends as unknown as LessonEndRepo,
+    presence as unknown as RoomPresenceRepo,
+    closer as unknown as RoomCloser,
+  );
 const end = (user = TEACHER) => service().end({ user, lessonId: LESSON_ID }, NOW);
 
 beforeEach(() => {
@@ -22,7 +33,7 @@ beforeEach(() => {
 });
 
 describe('«إنهاء الحلقة للجميع» (POST /lessons/:id/end)', () => {
-  it('the lesson\'s teacher stamps it, empties the room state and closes the LiveKit room', async () => {
+  it("the lesson's teacher stamps it, empties the room state and closes the LiveKit room", async () => {
     await expect(end()).resolves.toEqual({ endedAt: NOW.toISOString() });
     expect(ends.stamp).toHaveBeenCalledWith(LESSON_ID, NOW.toISOString());
     expect(presence.leaveAll).toHaveBeenCalledWith(LESSON_ID, NOW.toISOString());
@@ -35,7 +46,7 @@ describe('«إنهاء الحلقة للجميع» (POST /lessons/:id/end)', () 
   });
 
   it('403 for an assistant: only the teacher or an admin ends it', async () => {
-    const err = (await end(ASSISTANT).catch((e: HttpException) => e)) as HttpException;
+    const err = (await end(ASSISTANT).catch((e: unknown) => e)) as HttpException;
     expect(err.getStatus()).toBe(403);
     expect(ends.stamp).not.toHaveBeenCalled();
   });

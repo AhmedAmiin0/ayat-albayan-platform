@@ -1,6 +1,6 @@
+import { looksLikeFamilyToken } from '@ab/shared';
 import { createFileRoute } from '@tanstack/react-router';
 import { GuestJoinPage } from '@/features/teaching/classroom/join/GuestJoinPage';
-import { namesItsStudent } from '@/features/teaching/classroom';
 import { lessonPathOfLink } from '@/features/teaching/classroom/join/staff-link';
 import { StaffLinkGate } from '@/features/teaching/classroom/join/StaffLinkGate';
 
@@ -15,7 +15,7 @@ function JoinRoute() {
   const { linkToken } = Route.useParams();
   return (
     <StaffLinkGate linkKey={linkToken} resolve={() => lessonPathOfLink(linkToken)}>
-      <GuestJoinPage linkToken={linkToken} knownStudent={namesItsStudent(linkToken)} />
+      <GuestJoinPage linkToken={linkToken} knownStudent={looksLikeFamilyToken(linkToken)} />
     </StaffLinkGate>
   );
 }

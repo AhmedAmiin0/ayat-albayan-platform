@@ -9,7 +9,10 @@ export const isRoomLive = (room: LessonRoomState | null | undefined): boolean =>
   !!room && room.endedAt === null && room.liveSince !== null && room.inRoom.length > 0;
 
 /** Whole minutes since the room went live (0 in its first minute); null when it is not live. */
-export function roomLiveMinutes(room: LessonRoomState | null | undefined, now: Date): number | null {
+export function roomLiveMinutes(
+  room: LessonRoomState | null | undefined,
+  now: Date,
+): number | null {
   if (!room || !isRoomLive(room) || room.liveSince === null) return null;
   return Math.max(0, Math.floor((now.getTime() - Date.parse(room.liveSince)) / MIN_MS));
 }

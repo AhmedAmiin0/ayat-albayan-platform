@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migrations 20261117000100..120 (owner 2026-11-16). No database runs in unit tests: this pins them.
+// Migrations 20261117000100..120 (owner 2026-11-16). No database in unit tests: this pins them.
 const code = (file: string) =>
   readFileSync(join(MIGRATIONS_DIR, file), 'utf8')
     .split('\n')
@@ -13,7 +13,9 @@ const code = (file: string) =>
 describe('migration 100: «إنهاء الحلقة للجميع»', () => {
   it('adds lessons.room_ended_at re-runnably, granting nothing', () => {
     const sql = code('20261117000100_lesson_room_end.sql');
-    expect(sql).toContain('alter table public.lessons add column if not exists room_ended_at timestamptz;');
+    expect(sql).toContain(
+      'alter table public.lessons add column if not exists room_ended_at timestamptz;',
+    );
     expect(sql).not.toMatch(/grant |policy/i);
   });
 });
@@ -38,8 +40,14 @@ describe('migration 120: a time edit resets the room', () => {
   });
 
   it('keeps the teacher confirmation reset and the service-role-only grant', () => {
-    expect(sql).toContain('teacher_confirmed_at = case when v_moved then null else l.teacher_confirmed_at end');
-    expect(sql).toContain('revoke execute on function public.edit_lesson_time(jsonb) from public, anon, authenticated;');
-    expect(sql).toContain('grant execute on function public.edit_lesson_time(jsonb) to service_role;');
+    expect(sql).toContain(
+      'teacher_confirmed_at = case when v_moved then null else l.teacher_confirmed_at end',
+    );
+    expect(sql).toContain(
+      'revoke execute on function public.edit_lesson_time(jsonb) from public, anon, authenticated;',
+    );
+    expect(sql).toContain(
+      'grant execute on function public.edit_lesson_time(jsonb) to service_role;',
+    );
   });
 });

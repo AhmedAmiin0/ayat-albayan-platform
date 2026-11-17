@@ -18,10 +18,9 @@ const modules: Record<string, unknown> = NativeModules;
 
 /**
  * Does this binary carry LiveKit's native module? An APK built before docs/35 does not: its rooms
- * open in the browser. Cheap (no JS of the SDK is loaded), so the join buttons can ask it on every
- * press.
+ * open in the browser. Checked before the SDK's JS is required.
  */
-export const nativeRoomAvailable = (): boolean => modules.LivekitReactNativeModule != null;
+const nativeRoomAvailable = (): boolean => modules.LivekitReactNativeModule != null;
 
 let cached: LiveKitNative | null | undefined;
 

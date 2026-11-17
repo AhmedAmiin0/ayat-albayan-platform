@@ -29,7 +29,16 @@ describe('the live room', () => {
 
   it('«الطالب ينتظرك»: the family inside, the teacher not yet', () => {
     expect(studentWaiting(room())).toBe(true);
-    expect(studentWaiting(room({ inRoom: [{ name: 'أ. مريم', role: 'teacher' }, { name: 'سارة', role: 'student' }] }))).toBe(false);
+    expect(
+      studentWaiting(
+        room({
+          inRoom: [
+            { name: 'أ. مريم', role: 'teacher' },
+            { name: 'سارة', role: 'student' },
+          ],
+        }),
+      ),
+    ).toBe(false);
     expect(studentWaiting(room({ inRoom: [{ name: 'أ. مريم', role: 'teacher' }] }))).toBe(false);
   });
 

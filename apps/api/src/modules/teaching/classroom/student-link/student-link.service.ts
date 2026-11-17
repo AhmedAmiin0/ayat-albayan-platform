@@ -24,7 +24,6 @@ import { StudentLinkRepo, type StudentLesson } from './student-link.repo';
 
 const MS = 1000;
 const ONE_DAY_S = 86_400;
-
 type PublicCall = { token: string; ip: string };
 interface PortalLessonInput {
   lessonId: string;
@@ -90,8 +89,7 @@ export class StudentLinkService {
   /**
    * The family app's browser link (docs/50 §2, §7): a signed /join link of ONE lesson of that
    * student until its room closes, taken by the guest page through portalJoin's row. Issued before
-   * the window too (the page refuses early joins). 404 no_lesson (not theirs or over), 410
-   * lesson_ended (ended for everyone), 429, 503.
+   * the window too (the page refuses early joins). 404 no_lesson, 410 lesson_ended, 429, 503.
    */
   async portalRoomLink(input: PortalLessonInput, now = new Date()): Promise<PortalRoomLink> {
     const key = { ip: `portal-link:${input.profileId}`, token: input.lessonId };

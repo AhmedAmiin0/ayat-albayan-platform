@@ -8,7 +8,8 @@ import { accountKit, ME, PASSWORD } from './account.fakes';
 
 // R-ACC-01..05: every signed-in role, always the caller (no id in any path).
 
-const localeRepo = () => ({ setLocale: vi.fn().mockResolvedValue(undefined) }) as unknown as MeZoneRepo;
+const localeRepo = () =>
+  ({ setLocale: vi.fn().mockResolvedValue(undefined) }) as unknown as MeZoneRepo;
 
 const HANDLERS = [
   'profile',

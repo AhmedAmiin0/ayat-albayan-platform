@@ -11,8 +11,8 @@ import { RoomPresenceRepo } from './room-presence.repo';
  * «إنهاء الحلقة للجميع» (POST /lessons/:id/end, owner 2026-11-16), as «إنهاء» ends a meeting: the
  * lesson's teacher or an admin stamps lessons.room_ended_at (every join gate then answers 410
  * lesson_ended, so «ادخل مرة أخرى» cannot reopen it), nobody counts as inside any more, and the
- * LiveKit room closes for everyone (a running recording is stopped first, its file kept). Idempotent:
- * a second end answers the first time. A LiveKit failure is logged; the stamp already holds.
+ * LiveKit room closes for everyone (a running recording is stopped first, its file kept).
+ * Idempotent: a second end answers the first time. A LiveKit failure is logged; the stamp holds.
  */
 @Injectable()
 export class LessonEndService {
@@ -26,7 +26,10 @@ export class LessonEndService {
   ) {}
 
   /** 404 lesson_not_found, 403 not the lesson's teacher nor an admin. */
-  async end(input: { user: AuthUser; lessonId: string }, now = new Date()): Promise<LessonEndResult> {
+  async end(
+    input: { user: AuthUser; lessonId: string },
+    now = new Date(),
+  ): Promise<LessonEndResult> {
     const { lesson, role } = await this.roles.resolve(input.user, input.lessonId);
     if (!canEndLesson(role)) throw new ForbiddenException();
     const endedAt = await this.ends.stamp(lesson.id, now.toISOString());

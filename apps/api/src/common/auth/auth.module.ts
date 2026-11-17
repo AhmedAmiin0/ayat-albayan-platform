@@ -27,12 +27,17 @@ export class AuthController {
   @Get('me')
   @SignedIn()
   async me(@CurrentUser() user: AuthUser): Promise<AuthMe> {
-    const [tz, locale] = await Promise.all([this.zones.zoneOf(user.id), this.zones.localeOf(user.id)]);
+    const reads = [this.zones.zoneOf(user.id), this.zones.localeOf(user.id)] as const;
+    const [tz, locale] = await Promise.all(reads);
     return { ...user, permissions: user.permissions ?? [], tz, locale };
   }
 }
 
-type AuthMe = AuthUser & { permissions: readonly string[]; tz: string | null; locale: Locale | null };
+type AuthMe = AuthUser & {
+  permissions: readonly string[];
+  tz: string | null;
+  locale: Locale | null;
+};
 
 /** Global so the roles module can clear the permission cache after a change, and PushAudience can check a recipient's permissions. */
 @Global()

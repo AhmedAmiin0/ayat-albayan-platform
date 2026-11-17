@@ -11,14 +11,15 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 /** What the gates read of a lesson: its window, and the «إنهاء الحلقة للجميع» stamp. */
 export type GateLesson = WindowLesson & { room_ended_at?: string | null };
 
-const gone = (code: string): HttpException => new HttpException({ code, message: code }, HttpStatus.GONE);
+const gone = (code: string): HttpException =>
+  new HttpException({ code, message: code }, HttpStatus.GONE);
 
 /** 410 lesson_ended: the teacher or an admin ended it for everyone (lessons.room_ended_at). */
 export function assertNotEnded(lesson: GateLesson): void {
   if (roomEnded(lesson)) throw gone('lesson_ended');
 }
 
-/** 410 join_closed: the lesson was cancelled or moved to another row, so it has no room any more. */
+/** 410 join_closed: the lesson was cancelled or moved to another row: it has no room any more. */
 export function assertLessonHeld(lesson: { status: string }): void {
   if (isClosedLesson(lesson.status)) throw gone('join_closed');
 }
@@ -27,7 +28,11 @@ export function assertLessonHeld(lesson: { status: string }): void {
  * 410 lesson_ended once ended for everyone; 403 join_not_open_yet (with opens_at) before the window
  * (room_opened_at counts), 410 join_closed after it.
  */
-export function assertWindowOpen(lesson: GateLesson, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): void {
+export function assertWindowOpen(
+  lesson: GateLesson,
+  now: Date,
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): void {
   assertNotEnded(lesson);
   const w = joinWindow(lesson, now, win);
   if (w.state === 'early') {
