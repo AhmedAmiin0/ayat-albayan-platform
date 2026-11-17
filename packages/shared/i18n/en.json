@@ -496,8 +496,10 @@
       "noPreference": "No preference",
       "phone": "WhatsApp number (with country code)",
       "country": "Country",
-      "secondPhone": "Family's second number"
+      "secondPhone": "Family's second number",
+      "studentPhone": "Student's WhatsApp number (optional, with country code)"
     },
+    "studentPhoneHint": "The student signs in to the app with it, by a code sent on WhatsApp.",
     "removeSecond": "Remove the second number",
     "removeSecondConfirm": "Remove the second number {phone} from the family? Its chat becomes a lead chat again.",
     "save": "Save",
@@ -538,7 +540,9 @@
       "guardian_has_self": "The guardian is already a student of their family.",
       "student_has_records": "Not possible: the student has lessons, packages, payments, reports or messages.",
       "student_has_login": "Not possible: the student has a login. The admin unlinks it first.",
-      "phone_taken": "This number belongs to another family.",
+      "phone_taken": "This number already belongs to another family or student.",
+      "teacher_number": "This is a teacher's number; it cannot be a student's.",
+      "student_login_phone": "A student with a login keeps their number: sign-in codes go to it. The admin can change it.",
       "duplicate_student": "A student with the same name is already in the family.",
       "student_not_found": "This student does not exist.",
       "guardian_not_found": "The guardian does not exist.",
@@ -3391,7 +3395,8 @@
         "number_taken": "This number is registered to another family",
         "family_has_second_number": "This family already has a second number",
         "teacher_number": "This is a teacher's number; it cannot be linked to a family",
-        "lead_has_family": "This number is another family's main number"
+        "lead_has_family": "This number is another family's main number",
+        "guardian_has_login": "This family has a login, and a second number signs in to it with a WhatsApp code. The admin adds it."
       }
     },
     "pdf": {
@@ -8234,7 +8239,7 @@
       "family": "Families and students",
       "staff": "Academy team"
     },
-    "familyIntro": "Parent or adult student: sign in with the WhatsApp number the academy has on file, and we will send you a code on WhatsApp.",
+    "familyIntro": "Parent or student: sign in with the WhatsApp number the academy has on file, and we will send you a code on WhatsApp.",
     "phone": "WhatsApp number",
     "phoneHint": "The number on file at the academy, with the country code.",
     "sendCode": "Send the code",

@@ -36,6 +36,7 @@ export const VIEW: PeopleEditView = {
     memorized: null,
     name: 'سهيلة',
     notes: null,
+    phone_e164: null,
     riwaya: null,
     teacher_gender_pref: null,
     tz: 'Africa/Cairo',

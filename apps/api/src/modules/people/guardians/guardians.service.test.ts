@@ -40,6 +40,8 @@ describe('GuardiansService (R-STU-02, R-STU-04)', () => {
     await expect(svc.get('nope')).rejects.toBeInstanceOf(NotFoundException);
     await expect(svc.get('g1')).resolves.toEqual({ ...G, students: [], phones });
     expect(String(argsOf('guardians', 'select')?.[0])).toContain('phones:guardian_phones(phone_e164, is_primary, created_at)');
+    // A student's own number (owner 2026-11-17) is the student's, not one of the family's numbers.
+    expect(argsOf('guardians', 'is')).toEqual(['phones.student_id', null]);
   });
 
   it('findByPhone looks up the exact E.164 number', async () => {

@@ -1,3 +1,4 @@
+import { phoneE164 } from '@ab/core';
 import { z } from 'zod';
 import { guardianCreateSchema, studentCreateSchema } from './people.js';
 
@@ -9,7 +10,8 @@ import { guardianCreateSchema, studentCreateSchema } from './people.js';
  * The student fields an assistant edits. Admin-only (PATCH /students/:id): status and
  * expected_status (automatic moves), program (pricing), teacher_id (assignment) and
  * meeting_link_override. guardian_id and contact_is_self have their own audited actions below. No
- * `.default()` here: a partial body never resets a field it does not name.
+ * `.default()` here: a partial body never resets a field it does not name. `phone_e164`: the
+ * student's own WhatsApp (owner 2026-11-17), a sign-in number; null removes it.
  */
 export const peopleStudentPatchSchema = studentCreateSchema
   .pick({
@@ -25,6 +27,7 @@ export const peopleStudentPatchSchema = studentCreateSchema
     teacher_gender_pref: true,
   })
   .partial()
+  .extend({ phone_e164: phoneE164.nullable().optional() })
   .strict();
 export type PeopleStudentPatch = z.output<typeof peopleStudentPatchSchema>;
 
@@ -74,7 +77,9 @@ export const peopleIdSchema = z.guid();
  * The 409 codes of the moves and conversions (404 student_not_found / guardian_not_found aside):
  * same_guardian, guardian_changed (a race), family_has_self (another child already holds the
  * number), guardian_has_self, student_has_records (lessons, packages, payments, reports or chat
- * messages would be orphaned), student_has_login, phone_taken, duplicate_student.
+ * messages would be orphaned), student_has_login, phone_taken, duplicate_student; a student's own
+ * number: teacher_number (a teacher's), student_login_phone (an assistant moving the number of a
+ * student with a login).
  */
 export const PEOPLE_EDIT_ERRORS = [
   'same_guardian',
@@ -86,6 +91,8 @@ export const PEOPLE_EDIT_ERRORS = [
   'guardian_has_login',
   'self_has_login',
   'phone_taken',
+  'teacher_number',
+  'student_login_phone',
   'duplicate_student',
   'student_not_found',
   'guardian_not_found',

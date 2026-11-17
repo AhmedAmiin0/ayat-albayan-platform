@@ -75,6 +75,8 @@ export async function getStudentProfile(db: Db, id: string): Promise<StudentProf
     .from('students')
     .select(PROFILE_COLUMNS)
     .eq('id', id)
+    // The family's numbers only: a student's own number (owner 2026-11-17) is not one.
+    .is('guardian.phones.student_id', null)
     .maybeSingle();
   if (error) throw dbError(error);
   if (!data) throw new NotFoundException();

@@ -26,13 +26,18 @@ export const peopleEditStudentSchema = z.object({
   notes: text.optional(),
   teacher_gender_pref: gender,
   contact_is_self: z.boolean(),
+  /** The student's own WhatsApp (sign-in, owner 2026-11-17), E.164; null = none. */
+  phone_e164: z.string().nullable(),
   has_login: z.boolean(),
   /** Lessons, packages, money, reports, messages…: «تحويل إلى ولي أمر» is refused. */
   has_records: z.boolean(),
 });
 export type PeopleEditStudent = z.infer<typeof peopleEditStudentSchema>;
 
-/** The family: every number (main and second) and every child, this student included. */
+/**
+ * The family: its own numbers (main and second; a student's own number is the student's) and
+ * every child, this student included.
+ */
 export const peopleEditFamilySchema = z.object({
   id: z.string(),
   name: z.string(),

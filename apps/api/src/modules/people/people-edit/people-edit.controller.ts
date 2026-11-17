@@ -31,7 +31,8 @@ const notesRule = (user: AuthUser): z.ZodType => (isAdmin(user) ? z.object({}) :
  * admin's: people.edit, never students.write / guardians.write (those also create, delete and
  * merge). Any student or family. 400 for an admin-only field (status, program, teacher, meeting
  * link, source) and for notes from anyone but the admin, 404 student_not_found /
- * guardian_not_found, 409 phone_taken.
+ * guardian_not_found, 409 phone_taken; a student's own number also 409 teacher_number /
+ * student_login_phone (owner 2026-11-17).
  */
 @ApiTags('people')
 @ApiBearerAuth()
@@ -61,7 +62,8 @@ export class PeopleEditController {
   ): Promise<{ id: string }> {
     parseOrThrow(notesRule(user), patch);
     await this.owners.student(user, id);
-    const row = await this.people.editStudent({ id, patch, actorId: user.id });
+    const edit = { id, patch, actorId: user.id, admin: isAdmin(user) };
+    const row = await this.people.editStudent(edit);
     return { id: row.id };
   }
 

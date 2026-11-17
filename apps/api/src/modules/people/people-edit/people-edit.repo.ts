@@ -1,16 +1,38 @@
 import type { Tables } from '@ab/db';
-import { Inject, Injectable } from '@nestjs/common';
+import { type HttpException, Inject, Injectable } from '@nestjs/common';
+import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
+import { conflict, notFound } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
 
 export type StudentRow = Tables<'students'>;
 export type GuardianRow = Tables<'guardians'>;
 
+// `own`: the student's own WhatsApp (guardian_phones.student_id, owner 2026-11-17); the family's
+// `phones` are its main and second numbers only (the .is filter in view()).
 const VIEW = [
   'id, code, name, age, gender, level, memorized, goal, riwaya, tz, notes, teacher_gender_pref',
   'contact_is_self, profile_id, guardian:guardians(id, name, phone_e164, country, tz, notes, profile_id',
   'phones:guardian_phones(phone_e164, is_primary), students(id, code, name, contact_is_self))',
+  'own:guardian_phones!guardian_phones_student_id_fkey(phone_e164)',
 ].join(', ');
+
+/** The refusals of set_student_phone, by SQLSTATE (23505) or P0001 message. */
+const PHONE_ERRORS: Record<string, (() => HttpException) | undefined> = {
+  '23505': () => conflict('phone_taken'),
+  teacher_number: () => conflict('teacher_number'),
+  student_not_found: () => notFound('student_not_found'),
+};
+
+const phoneError = (e: PostgrestError): Error =>
+  PHONE_ERRORS[e.code === 'P0001' ? e.message : e.code]?.() ?? dbError(e);
+
+/** The student's own number: set or moved (a phone) or removed (null), by `actorId`. */
+interface StudentPhone {
+  studentId: string;
+  phone: string | null;
+  actorId: string;
+}
 
 type Fields = Pick<
   StudentRow,
@@ -26,7 +48,8 @@ type Family = Pick<
   students: Sibling[];
 };
 type Extra = 'tz' | 'notes' | 'teacher_gender_pref' | 'contact_is_self' | 'profile_id';
-export type ViewRow = Fields & Pick<StudentRow, Extra> & { guardian: Family | null };
+export type ViewRow = Fields &
+  Pick<StudentRow, Extra> & { guardian: Family | null; own: { phone_e164: string } | null };
 export type Child = Pick<
   StudentRow,
   'id' | 'code' | 'name' | 'contact_is_self' | 'brought_by' | 'profile_id'
@@ -46,9 +69,18 @@ export class PeopleEditRepo {
 
   async view(id: string): Promise<ViewRow | null> {
     const query = this.db.from('students').select(VIEW).eq('id', id);
-    const { data, error } = await query.maybeSingle<ViewRow>();
+    const family = query.is('guardian.phones.student_id', null);
+    const { data, error } = await family.maybeSingle<ViewRow>();
     if (error) throw dbError(error);
     return data;
+  }
+
+  /** One transaction with its audit row (set_student_phone, migration 20261117090100). */
+  async setStudentPhone({ studentId, phone, actorId }: StudentPhone): Promise<void> {
+    const base = { p_student: studentId, p_actor: actorId };
+    const args = phone ? { ...base, p_phone: phone } : base;
+    const { error } = await this.db.rpc('set_student_phone', args);
+    if (error) throw phoneError(error);
   }
 
   async student(id: string): Promise<StudentRow | null> {

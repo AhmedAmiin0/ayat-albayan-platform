@@ -17,9 +17,29 @@ describe('PeopleViewService, GET /people/students/:id', () => {
   it('the logins and the history as yes / no, never a profile id', async () => {
     const view = await setup({ ...none(), students: [{ data: ROW }] }).view('s1', false);
     expect(view).toEqual({
-      student: { id: 's1', code: 'AB-0183', name: 'سهيلة', has_login: true, has_records: false },
+      student: {
+        id: 's1',
+        code: 'AB-0183',
+        name: 'سهيلة',
+        phone_e164: null,
+        has_login: true,
+        has_records: false,
+      },
       guardian: { id: 'g1', name: 'أم سهيلة', has_login: false, phones: [], students: [] },
     });
+  });
+
+  it("the student's own number (owner 2026-11-17), never among the family's numbers", async () => {
+    const fake = fakeDb({
+      ...none(),
+      students: [{ data: { ...ROW, own: { phone_e164: '+966500000007' } } }],
+    });
+    const records = new StudentRecordsRepo(fake.db);
+    const service = new PeopleViewService(new PeopleEditRepo(fake.db), records);
+    expect((await service.view('s1', false)).student.phone_e164).toBe('+966500000007');
+    const select = String(fake.argsOf('students', 'select')?.[0]);
+    expect(select).toContain('own:guardian_phones!guardian_phones_student_id_fkey(phone_e164)');
+    expect(fake.argsOf('students', 'is')).toEqual(['guardian.phones.student_id', null]);
   });
 
   it('any history row → has_records; an unknown student → 404 student_not_found', async () => {

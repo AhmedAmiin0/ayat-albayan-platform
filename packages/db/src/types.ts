@@ -1488,6 +1488,7 @@ export type Database = {
           guardian_id: string;
           is_primary: boolean;
           phone_e164: string;
+          student_id: string | null;
         };
         Insert: {
           created_at?: string;
@@ -1495,6 +1496,7 @@ export type Database = {
           guardian_id: string;
           is_primary?: boolean;
           phone_e164: string;
+          student_id?: string | null;
         };
         Update: {
           created_at?: string;
@@ -1502,6 +1504,7 @@ export type Database = {
           guardian_id?: string;
           is_primary?: boolean;
           phone_e164?: string;
+          student_id?: string | null;
         };
         Relationships: [
           {
@@ -1509,6 +1512,13 @@ export type Database = {
             columns: ['guardian_id'];
             isOneToOne: false;
             referencedRelation: 'guardians';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'guardian_phones_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: true;
+            referencedRelation: 'students';
             referencedColumns: ['id'];
           },
         ];
@@ -6083,6 +6093,10 @@ export type Database = {
       remove_family_phone: {
         Args: { p_guardian: string; p_phone: string; p_actor: string };
         Returns: undefined;
+      };
+      set_student_phone: {
+        Args: { p_student: string; p_actor: string; p_phone?: string };
+        Returns: boolean;
       };
       teacher_channel_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };

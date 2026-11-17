@@ -1,7 +1,7 @@
 import type { CodeSession, PasswordSession } from '@ab/shared';
 import { ConflictException } from '@nestjs/common';
 import type { AuthGate, GuardianRec, LinkKind, NewProfile, ProfileRec } from './sign-in.ports';
-import type { StudentRec, SubjectStore, TeacherRec } from './sign-in.ports';
+import type { FamilyLogin, StudentRec, SubjectStore, TeacherRec } from './sign-in.ports';
 
 // Example people only (no real data): one family with an adult contact and a child, staff with phones.
 
@@ -10,6 +10,9 @@ export const PHONES = {
   teacher: '+966500000002',
   admin: '+966500000003',
   newTeacher: '+966500000005',
+  /** g1's second number and s1's own number (guardian_phones, owner 2026-11-17). */
+  second: '+966500000006',
+  student: '+966500000007',
   other: '+966500000009',
 };
 
@@ -32,7 +35,19 @@ export class FakeSubjects implements SubjectStore {
     { id: 'p-teacher', role: 'teacher', disabled: false, phone: PHONES.teacher, username: 'omar' },
     { id: 'p-admin', role: 'admin', disabled: false, phone: PHONES.admin },
   ];
-
+  /** Second and students' own numbers (guardian_phones); main numbers come from `guardians`. */
+  numbers: { phone: string; guardianId: string; studentId: string | null }[] = [
+    { phone: PHONES.second, guardianId: 'g1', studentId: null },
+    { phone: PHONES.student, guardianId: 'g1', studentId: 's1' },
+  ];
+  familyByPhone(phone: string): Promise<FamilyLogin | null> {
+    const row = this.numbers.find((n) => n.phone === phone);
+    const guardian = this.guardians.find((g) => g.phone === phone || g.id === row?.guardianId);
+    const student = this.students.find((s) => s.id === row?.studentId);
+    const login: FamilyLogin | null = student ? { kind: 'student', phone, rec: student } : null;
+    const main: FamilyLogin | null = guardian ? { kind: 'guardian', phone, rec: guardian } : null;
+    return Promise.resolve(login ?? main);
+  }
   async guardianByPhone(phone: string) {
     return this.guardians.find((g) => g.phone === phone) ?? null;
   }
