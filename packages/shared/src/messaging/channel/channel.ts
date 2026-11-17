@@ -87,3 +87,5 @@ export function channelClosedReason(
   return reasons.find(([applies]) => applies)?.[1] ?? null;
 }
 
+/** The family's or the teacher's unread total (badges): GET …/channel/unread, parsed. */
+export const channelUnreadSchema = z.object({ unread: z.number().int().nonnegative() });

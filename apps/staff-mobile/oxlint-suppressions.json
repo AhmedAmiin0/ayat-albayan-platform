@@ -1218,16 +1218,7 @@
     }
   },
   "src/classroom/links/join-text.ts": {
-    "complexity": {
-      "count": 1
-    },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
       "count": 1
     }
   },
@@ -1296,26 +1287,6 @@
       "count": 2
     },
     "typescript/no-deprecated": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/model/cam-mic.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/model/room-grid.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/state/fetch-join.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/state/open-room.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -1632,9 +1603,6 @@
     }
   },
   "src/core/push/useNotificationHandling.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     },
@@ -4234,25 +4202,9 @@
       "count": 3
     }
   },
-  "src/inbox/thread/calls/screen/RoundButton.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 4
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/inbox/thread/calls/screen/call-avatar.test.tsx": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/inbox/thread/calls/screen/call-icons.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/inbox/thread/calls/state/CallProvider.cancel.test.tsx": {

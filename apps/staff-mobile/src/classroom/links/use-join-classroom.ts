@@ -1,17 +1,22 @@
 import { isOpenLesson, joinWindow, type LessonView } from '@ab/shared';
-import { useRef, useState } from 'react';
-import { openRoom, useRoomsInApp } from '@/classroom/room/state/open-room';
+import { use, useRef, useState } from 'react';
+import { openRoom, useRoomsInApp } from '@/classroom/room-staff/open-room';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { joinError } from './join-text';
+import { SheetLeave } from './sheet-leave';
 import { useNow } from '@ab/mobile-kit';
 
 /** What joining needs of a lesson (an assistant's session has no more than this). */
-export type JoinableLesson = Pick<LessonView, 'id' | 'status' | 'starts_at' | 'ends_at' | 'room_opened_at'>;
+export type JoinableLesson = Pick<LessonView, 'id' | 'status' | 'starts_at' | 'ends_at' | 'room_opened_at'> & {
+  /** The lesson's students: the first one's channel is the in-room «المحادثة». */
+  students?: readonly { id: string }[];
+};
 
 /**
  * «ادخل الحلقة»: the join window (re-checked every minute) and the press. A press asks the API first
  * (POST /lessons/:id/room/join) so a refusal reads in the app, and only on success opens the room:
  * inside the app (docs/35, settings.meetings_in_app) or the web classroom in the system browser.
+ * Inside a page sheet (SheetLeave) the sheet closes first.
  * `win` is null for a lesson that is no longer open.
  */
 export function useJoinClassroom(lesson: JoinableLesson) {
@@ -21,6 +26,7 @@ export function useJoinClassroom(lesson: JoinableLesson) {
   const inFlight = useRef(false);
   const config = useJoinWindow();
   const inApp = useRoomsInApp();
+  const closeSheet = use(SheetLeave) ?? undefined;
   const win = isOpenLesson(lesson.status) ? joinWindow(lesson, now, config) : null;
   const join = async () => {
     if (inFlight.current) return;
@@ -28,7 +34,8 @@ export function useJoinClassroom(lesson: JoinableLesson) {
     setBusy(true);
     setError(null);
     try {
-      await openRoom({ kind: 'lesson', id: lesson.id }, inApp);
+      const studentId = lesson.students?.[0]?.id;
+      await openRoom({ kind: 'lesson', id: lesson.id }, inApp, { closeSheet, studentId });
     } catch (e) {
       setError(joinError(e));
     } finally {

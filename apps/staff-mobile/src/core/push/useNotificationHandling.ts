@@ -1,14 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
-import { router, useNavigationContainerRef } from 'expo-router';
-import { openPushed } from '@/core/nav/back-within';
+import { useNavigationContainerRef } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 import { usePermissions } from '@ab/mobile-kit';
 import { refreshInbox, refreshLists, resumeInbox } from '@/inbox/thread/hooks/inbox-sync';
-import { isThreadHref, overChat } from '@/core/nav/chat-groups';
 import { pushKind, pushPhone, routeIn, type PushTree } from './notification-route';
 import { refreshForPush } from './push-refresh';
+import { tapRouter } from './tap-route';
 
 /** An admin push in the foreground still shows: banner, notification list and sound. */
 export const FOREGROUND: Notifications.NotificationBehavior = {
@@ -75,23 +74,20 @@ export function useNotificationHandling(tree: PushTree = 'admin'): void {
   // The root navigator, read at tap time: the tabs that mount this hook sit under an open chat.
   const nav = useNavigationContainerRef();
   useEffect(() => {
+    const taps = tapRouter(nav);
     const open = (response: Notifications.NotificationResponse | null) => {
       // Read defensively: the native module hands over plain JSON.
       const href = routeIn(tree, response?.notification?.request?.content?.data, canRef.current);
-      if (!href) return;
-      // Over a chat (a full screen above the tabs), a tab's screen pops back to the tabs: a push
-      // would stack a second tab host. Another chat is pushed inside the chat's own group.
-      if (overChat(nav.isReady() ? nav.getRootState() : undefined) && !isThreadHref(href)) {
-        router.dismissTo(href, { withAnchor: true });
-      } else {
-        openPushed(href);
-      }
+      if (href) taps.open(href);
     };
     open(takeLastResponse()); // the tap that started the app, if any
     const sub = Notifications.addNotificationResponseReceivedListener((response) => {
       takeLastResponse();
       open(response);
     });
-    return () => sub.remove();
+    return () => {
+      sub.remove();
+      taps.stop();
+    };
   }, [tree, nav]);
 }

@@ -12,9 +12,7 @@ export { ClassroomModule } from './classroom.module';
 export { ClassroomSettings, type ClassroomSettingsValues } from './classroom.settings';
 export { StudentLinkService } from './student-link/student-link.service';
 export {
-  checkLink,
   hashLinkToken,
-  type LinkCheck,
   linkExpiry,
   looksLikeLinkToken,
   newLinkToken,

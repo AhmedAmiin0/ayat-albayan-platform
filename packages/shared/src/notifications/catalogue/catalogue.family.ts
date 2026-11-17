@@ -20,4 +20,6 @@ export const FAMILY_ENTRIES = [
   { ...FAMILY, key: 'lesson_starting', pushKind: 'lesson_starting' },
   // The lesson report reached the family (lesson_reports.sent_at stamped).
   { ...FAMILY, key: 'report_sent', pushKind: 'report_sent' },
+  // The teacher entered the lesson room («بدأت الحلقة»): the push opens the room straight in.
+  { ...FAMILY, key: 'lesson_live', pushKind: 'lesson_live' },
 ] as const satisfies readonly NotificationEntry[];

@@ -33,11 +33,18 @@ function undo(state: BoardState, own: { id: string; by: string }): BoardState {
   return strokes.length === state.strokes.length ? state : { ...state, strokes };
 }
 
-/** Strokes from anyone in the room; the flags only from the staff. */
+/**
+ * Strokes only from someone who may draw (the staff, an allowed guest), as a 'draw' is: a guest
+ * without the grant could otherwise paint the board through a sync answer. A guest relays only
+ * its own strokes (none signed with another's identity); the staff relay the whole board. Flags
+ * only from the staff.
+ */
 function sync(state: BoardState, { msg, from }: BoardInput): BoardState {
-  if (msg.t !== 'sync' || from.role === null) return state;
-  const merged = merge(state, msg.strokes);
-  if (!canManageBoard(from.role)) return merged;
+  if (msg.t !== 'sync' || !canDraw(from, state)) return state;
+  const staff = canManageBoard(from.role);
+  const strokes = staff ? msg.strokes : msg.strokes.filter((s) => s.by === from.identity);
+  const merged = merge(state, strokes);
+  if (!staff) return merged;
   return { ...merged, studentsCanDraw: msg.studentsCanDraw, open: msg.open, allowed: msg.allowed };
 }
 

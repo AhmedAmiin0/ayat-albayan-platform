@@ -1225,16 +1225,7 @@
     }
   },
   "src/classroom/links/join-text.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "complexity": {
       "count": 1
     }
   },
@@ -1304,26 +1295,6 @@
     },
     "max-len": {
       "count": 3
-    }
-  },
-  "src/classroom/room/model/cam-mic.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/model/room-grid.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/state/fetch-join.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/state/open-room.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/classroom/sessions/AdminSessionsScreen.midnight.test.tsx": {
@@ -1654,9 +1625,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "complexity": {
       "count": 1
     },
     "max-len": {
@@ -4232,25 +4200,9 @@
       "count": 3
     }
   },
-  "src/inbox/thread/calls/screen/RoundButton.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 4
-    }
-  },
   "src/inbox/thread/calls/screen/call-avatar.test.tsx": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/inbox/thread/calls/screen/call-icons.tsx": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/inbox/thread/calls/state/CallProvider.cancel.test.tsx": {

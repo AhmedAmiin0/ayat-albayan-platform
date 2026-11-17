@@ -27,6 +27,12 @@ it('dark tokens are soft green-grey with a separate link colour', () => {
   expect(c.cover).toBe('#18201d'); // the dark sidebar
 });
 
+// The family sign-in tile (owner 2026-11-16, canvas LogoGreen): the same deep green in both themes.
+it('the brand tile is the deep green in light and dark', () => {
+  expect(palette.light.brandTile).toBe('#064e3b');
+  expect(palette.dark.brandTile).toBe('#064e3b');
+});
+
 // OKLCH hue in degrees (Björn Ottosson's matrices), to keep the one-meaning colours apart.
 const lin = (v: number) => {
   const c = v / 255;

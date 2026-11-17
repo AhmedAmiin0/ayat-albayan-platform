@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { ForgotPassword, PasswordSignIn, SignInFrame, t, Button } from '@ab/mobile-kit';
+import { ForgotPassword, LanguageRow, PasswordSignIn, SignInFrame, t, Button } from '@ab/mobile-kit';
 import { TeacherCodeSignIn, useStaffCodes } from '@/core/auth';
 
 /**
  * password: identifier + password; code: a teacher's WhatsApp code (docs/46 A8); forgot: the reset.
+ * Under every mode the other language by its own name (LoginStaff board), as on the family sign-in.
  */
 type Mode = 'password' | 'code' | 'forgot';
 
@@ -29,6 +30,7 @@ export default function Login() {
           <Button variant="ghost" label={t.familyAuth.forgot} onPress={() => setMode('forgot')} />
         </PasswordSignIn>
       ) : null}
+      <LanguageRow compact />
     </SignInFrame>
   );
 }

@@ -3,15 +3,18 @@ import {
   avatarSetSchema,
   avatarUploadSchema,
   emailChangeSchema,
+  localeUpdateSchema,
   passwordChangeSchema,
   profileUpdateSchema,
   type AccountProfile,
+  type LocaleUpdate,
   type SignedUpload,
 } from '@ab/shared';
 import { Controller, Delete, Get, HttpCode, Inject, Patch, Post, Put } from '@nestjs/common';
 import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, SignedIn } from '@/common/auth/decorators';
+import { MeZoneRepo } from '@/common/auth/me-zone.repo';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { AccountAvatarService } from './account.avatar.service';
@@ -32,7 +35,18 @@ export class AccountController {
     private readonly account: AccountService,
     private readonly avatar: AccountAvatarService,
     @Inject(AccountSetupService) private readonly firstSetup: AccountSetupService,
+    @Inject(MeZoneRepo) private readonly me: MeZoneRepo,
   ) {}
+
+  /** «اللغة» (owner 2026-11-16): the login's own language, read back by /auth/me and /portal/me. */
+  @Patch('locale')
+  async setLocale(
+    @ZodBody(localeUpdateSchema) body: LocaleUpdate,
+    @CurrentUser() user: AuthUser,
+  ): Promise<LocaleUpdate> {
+    await this.me.setLocale(user.id, body.locale);
+    return { locale: body.locale };
+  }
 
   /** A code-made teacher login's email + password, once (docs/46 A4); 409 setup_done after. */
   @Put('setup')

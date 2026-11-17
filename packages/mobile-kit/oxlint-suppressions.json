@@ -316,6 +316,32 @@
       "count": 1
     }
   },
+  "src/room/model/cam-mic.ts": {
+    "no-nested-ternary": {
+      "count": 1
+    }
+  },
+  "src/room/model/room-grid.ts": {
+    "no-nested-ternary": {
+      "count": 1
+    }
+  },
+  "src/ui/call/RoundButton.tsx": {
+    "complexity": {
+      "count": 1
+    },
+    "no-nested-ternary": {
+      "count": 4
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/ui/call/call-icons.tsx": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
   "src/ui/connecting/BarCard.test.tsx": {
     "stylistic/max-len": {
       "count": 3
@@ -443,17 +469,6 @@
     }
   },
   "src/ui/form/Field.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/ui/form/FilterPills.tsx": {
     "max-lines-per-function": {
       "count": 1
     },

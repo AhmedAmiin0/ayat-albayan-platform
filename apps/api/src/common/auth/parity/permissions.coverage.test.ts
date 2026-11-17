@@ -19,6 +19,7 @@ const ACCOUNT = [
   'profile',
   'removeAvatar',
   'setAvatar',
+  'setLocale',
   'setup',
   'updateProfile',
 ].map((h) => `AccountController.${h}`);

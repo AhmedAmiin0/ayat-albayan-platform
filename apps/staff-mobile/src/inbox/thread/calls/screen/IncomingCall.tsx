@@ -1,9 +1,7 @@
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { t, type, useTheme, AppText, Avatar } from '@ab/mobile-kit';
-import { HangUpIcon, PhoneIcon } from './call-icons';
+import { t, type, useTheme, AppText, Avatar, HangUpIcon, PhoneIcon, RoundButton } from '@ab/mobile-kit';
 import { CallerName } from './CallerName';
-import { RoundButton } from './RoundButton';
 
 interface IncomingCallProps {
   name: string;

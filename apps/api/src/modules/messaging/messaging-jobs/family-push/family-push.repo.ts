@@ -2,11 +2,12 @@ import { joinWindowConfig, OPEN_LESSON_STATUSES, type JoinWindowConfig } from '@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
+import { FAMILY_STUDENT_SELECT } from '@/common/push/family-readers';
 import { ClassroomSettings } from '@/modules/teaching/classroom';
 import { STARTED_GRACE_MIN, type FamilyLesson, type SentReport } from './family-push.plan';
 import { lessonOf, reportOf } from './family-push.mapper';
 
-const STUDENT = 'id, name, tz, profile_id, guardian:guardians(profile_id, tz)';
+const STUDENT = FAMILY_STUDENT_SELECT;
 const LESSON = `id, starts_at, ends_at, room_opened_at, lesson_students(student:students(${STUDENT}))`;
 const REPORT = `id, lesson_id, sent_at, link:lesson_students(lesson:lessons(starts_at), student:students(${STUDENT}))`;
 /** A room staff opened earlier than this before the start is told of once it is this close. */

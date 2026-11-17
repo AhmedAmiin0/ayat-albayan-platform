@@ -3,9 +3,9 @@ import type { Conflict } from './conflicts.js';
 import type { LessonEvent } from './state-machine.js';
 import type { LessonTimeEditView, TimeEditMode } from './series/time-edit.js';
 import type { TeacherMeetingMode } from '../classroom/meeting-mode.js';
+import type { LessonRoomState } from '../classroom/index.js';
 
-// Phase 2 API response shapes (docs/10-phase2-contracts.md §3). Responses are snake_case like
-// every other API row; instants are ISO-8601 UTC strings; tz fields are IANA ids.
+// Phase 2 API response shapes (docs/10-phase2-contracts.md §3): snake_case rows, ISO UTC, IANA tz.
 
 /** One student on a lesson. */
 export interface LessonStudentView {
@@ -44,8 +44,7 @@ export interface LessonView {
   course_subscription_id?: string | null;
   /** A حجز تعويضي: replaces a missed lesson, never consumes a package unit (lessons.makeup_of_id). */
   makeup?: boolean;
-  /** For a makeup: the missed lesson it replaces. */
-  makeup_of?: { id: string; starts_at: string } | null;
+  makeup_of?: { id: string; starts_at: string } | null; // a makeup's missed lesson
   /** avatar_url: the teacher's photo (a short-lived signed URL), on staff views only; null/absent = initials. */
   teacher: { id: string; display_name_ar: string; display_name_en?: string | null; tz: string; avatar_url?: string | null };
   starts_at: string;
@@ -68,6 +67,7 @@ export interface LessonView {
   rescheduled_from_id: string | null;
   /** «افتح الحلقة الآن»: the room opened early (joinWindow); «حلقة فورية»: never consumes a package. */
   room_opened_at?: string | null;
+  room?: LessonRoomState | null; // who is in, «إنهاء للجميع»; null: nobody, not ended
   instant?: boolean;
   students: LessonStudentView[];
   /** allowedLessonEvents(status) minus what the caller's role may not do. */

@@ -13,6 +13,7 @@ export const STUDENT_LESSON: StudentLesson = {
   starts_at: LESSON.starts_at,
   ends_at: LESSON.ends_at,
   room_opened_at: null,
+  room_ended_at: null,
   teacher_name: 'أبرار',
 };
 /** Two days later, same hours. */

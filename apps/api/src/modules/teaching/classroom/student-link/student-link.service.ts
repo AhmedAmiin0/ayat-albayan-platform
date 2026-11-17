@@ -2,17 +2,15 @@ import {
   firstName,
   joinWindow,
   pickStudentLesson,
+  roomNameOfStudent,
   studentJoinSchema,
-  type JoinWindowConfig,
-  type PortalRoomLink,
-  type RoomJoinResult,
-  type StudentLinkView,
 } from '@ab/shared';
+import type { JoinWindowConfig, PortalRoomLink, RoomJoinResult, StudentLinkView } from '@ab/shared';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { parseOrThrow } from '@/common/http/http';
 import { FamilyJoinLinks } from '@/modules/teaching/classroom/family-link/family-join.links';
-import { assertWindowOpen } from '@/modules/teaching/classroom/join/join-gate';
+import { assertNotEnded, assertWindowOpen } from '@/modules/teaching/classroom/join/join-gate';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
 import {
   hashLinkToken,
@@ -24,7 +22,6 @@ import { StudentLinkRepo, type StudentLesson } from './student-link.repo';
 
 const MS = 1000;
 const ONE_DAY_S = 86_400;
-
 type PublicCall = { token: string; ip: string };
 interface PortalLessonInput {
   lessonId: string;
@@ -90,12 +87,13 @@ export class StudentLinkService {
   /**
    * The family app's browser link (docs/50 §2, §7): a signed /join link of ONE lesson of that
    * student until its room closes, taken by the guest page through portalJoin's row. Issued before
-   * the window too (the page refuses early joins). 404 no_lesson (not theirs or over), 429, 503.
+   * the window too (the page refuses early joins). 404 no_lesson, 410 lesson_ended, 429, 503.
    */
   async portalRoomLink(input: PortalLessonInput, now = new Date()): Promise<PortalRoomLink> {
     const key = { ip: `portal-link:${input.profileId}`, token: input.lessonId };
     this.limit.assert(key, now.getTime());
     const { lesson, win } = await this.portalLesson(input, now);
+    assertNotEnded(lesson);
     const closesAt = linkExpiry(lesson, win);
     return this.family.issue({ lessonId: lesson.id, studentId: input.studentId, closesAt });
   }
@@ -127,7 +125,7 @@ export class StudentLinkService {
     const { lesson, student, win, now } = input;
     const joinLinkId = await this.queries.lessonLinkId({ lesson, studentId: student.id });
     const closesS = Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) - Math.floor(now.getTime() / MS);
-    const shown = (input.name ?? (firstName(student.name) || student.name)).slice(0, 30);
+    const shown = input.name?.slice(0, 30) ?? roomNameOfStudent(student.name);
     return this.admission.admit(
       { lessonId: lesson.id, role: 'guest', name: shown, principal: { joinLinkId }, ttlSeconds: Math.min(closesS, ONE_DAY_S) },
       now,

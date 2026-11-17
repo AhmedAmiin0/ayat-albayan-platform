@@ -15,21 +15,30 @@ export const RELOAD_KEY = 'ab.locale.reload';
 /** What «اللغة» got: restarting now, saved but needs a manual restart, or nothing changed. */
 type SwitchResult = 'reloading' | 'restart' | 'error';
 
-/**
- * Persists `next`'s direction natively, then reloads the JS. Both flags: RN's isRTL is
- * forced || (allowed && phone language is RTL), so an Arabic phone set to English needs allow off.
- * Returns whether a reload is under way.
- */
-async function reloadInto(next: Locale): Promise<boolean> {
-  const rtl = next === 'ar';
+/** Both native direction flags: RN's isRTL is forced || (allowed && the phone language is RTL). */
+function persistDirection(of: Locale): void {
+  const rtl = of === 'ar';
   I18nManager.allowRTL(rtl);
   I18nManager.forceRTL(rtl);
+}
+
+/**
+ * Persists `next`'s direction natively, then reloads the JS (an Arabic phone set to English needs
+ * allow off too). A failed reload puts this run's direction back and drops the marker: the flags
+ * are persisted, so leaving `next`'s would open the next cold start in a direction no gate chose,
+ * with no marker to explain it (a mirrored layout under the other language's strings).
+ * Returns whether a reload is under way.
+ */
+async function reloadInto(next: Locale, current: Locale): Promise<boolean> {
+  persistDirection(next);
   try {
     await AsyncStorage.setItem(RELOAD_KEY, next);
     await reloadAppAsync();
     return true;
   } catch {
-    return false; // The flags are saved: the next cold start opens in `next`.
+    persistDirection(current);
+    await AsyncStorage.removeItem(RELOAD_KEY).catch(() => undefined);
+    return false; // The gate (syncLocale) retries on the next cold start.
   }
 }
 
@@ -64,7 +73,7 @@ export async function syncLocale(current: Locale = locale): Promise<boolean> {
     if (pending !== null) await AsyncStorage.removeItem(RELOAD_KEY).catch(() => undefined);
     return false;
   }
-  if (pending !== wanted) return reloadInto(wanted);
+  if (pending !== wanted) return reloadInto(wanted, current);
   if (__DEV__) logWarning(`locale: the native direction did not switch to ${wanted}`);
   return false;
 }
@@ -79,7 +88,7 @@ export async function setLocale(next: Locale): Promise<SwitchResult> {
   } catch {
     return 'error';
   }
-  return (await reloadInto(next)) ? 'reloading' : 'restart';
+  return (await reloadInto(next, locale)) ? 'reloading' : 'restart';
 }
 
 /** app/_layout: false until the UI language matches the wanted one (or a reload is under way). */

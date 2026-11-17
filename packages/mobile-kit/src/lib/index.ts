@@ -16,6 +16,7 @@ export { supabase } from './http/supabase';
 export { refreshOverrides } from './i18n/i18n-overrides';
 export { t } from './i18n/i18n';
 export { setLocale } from './i18n/locale-switch';
+export { useProfileLocaleSync } from './i18n/use-profile-locale-sync';
 export { locale } from './i18n/locale';
 export { currencyName, money } from './money/money';
 export { logWarning } from './log/log';

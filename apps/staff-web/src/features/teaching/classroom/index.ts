@@ -26,6 +26,7 @@ export { CopyLinkButton, copyStudentLink } from './join/CopyLinkButton';
 export { GuestJoinPage } from './join/GuestJoinPage';
 export { EnterButton, type JoinableLesson, JoinButton } from './join/JoinButton';
 export { StaffJoinButton } from './join/StaffJoinButton';
+export { RecordedNotice } from './recordings/RecordedNotice';
 export { RecordingOffAlert, RecordingsPanel } from './recordings/RecordingsPanel';
 export { RECORDING_TONE, recordingTime } from './recordings/recording-format';
 export {

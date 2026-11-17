@@ -821,32 +821,41 @@ export type Database = {
       };
       classroom_participants: {
         Row: {
+          entered_at: string | null;
           id: string;
           identity: string;
           join_link_id: string | null;
           joined_at: string;
+          left_at: string | null;
           lesson_id: string;
           name: string;
+          presence_at: string | null;
           role: string;
           user_id: string | null;
         };
         Insert: {
+          entered_at?: string | null;
           id?: string;
           identity: string;
           join_link_id?: string | null;
           joined_at?: string;
+          left_at?: string | null;
           lesson_id: string;
           name: string;
+          presence_at?: string | null;
           role: string;
           user_id?: string | null;
         };
         Update: {
+          entered_at?: string | null;
           id?: string;
           identity?: string;
           join_link_id?: string | null;
           joined_at?: string;
+          left_at?: string | null;
           lesson_id?: string;
           name?: string;
+          presence_at?: string | null;
           role?: string;
           user_id?: string | null;
         };
@@ -2114,6 +2123,7 @@ export type Database = {
           id: string;
           lesson_id: string;
           revoked_at: string | null;
+          sent_for_student_id: string | null;
           student_id: string | null;
           token_hash: string;
         };
@@ -2124,6 +2134,7 @@ export type Database = {
           id?: string;
           lesson_id: string;
           revoked_at?: string | null;
+          sent_for_student_id?: string | null;
           student_id?: string | null;
           token_hash: string;
         };
@@ -2134,6 +2145,7 @@ export type Database = {
           id?: string;
           lesson_id?: string;
           revoked_at?: string | null;
+          sent_for_student_id?: string | null;
           student_id?: string | null;
           token_hash?: string;
         };
@@ -2534,6 +2546,7 @@ export type Database = {
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
+          room_ended_at: string | null;
           room_opened_at: string | null;
           rule_id: string | null;
           starts_at: string;
@@ -2563,6 +2576,7 @@ export type Database = {
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
+          room_ended_at?: string | null;
           room_opened_at?: string | null;
           rule_id?: string | null;
           starts_at: string;
@@ -2592,6 +2606,7 @@ export type Database = {
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
+          room_ended_at?: string | null;
           room_opened_at?: string | null;
           rule_id?: string | null;
           starts_at?: string;
@@ -3486,7 +3501,7 @@ export type Database = {
           disabled_reason: string | null;
           full_name: string;
           id: string;
-          locale: string;
+          locale: string | null;
           phone_e164: string | null;
           push_tokens: string[];
           role: Database['public']['Enums']['user_role'];
@@ -3503,7 +3518,7 @@ export type Database = {
           disabled_reason?: string | null;
           full_name: string;
           id: string;
-          locale?: string;
+          locale?: string | null;
           phone_e164?: string | null;
           push_tokens?: string[];
           role: Database['public']['Enums']['user_role'];
@@ -3520,7 +3535,7 @@ export type Database = {
           disabled_reason?: string | null;
           full_name?: string;
           id?: string;
-          locale?: string;
+          locale?: string | null;
           phone_e164?: string | null;
           push_tokens?: string[];
           role?: Database['public']['Enums']['user_role'];
@@ -6260,7 +6275,8 @@ export type Database = {
         | 'course_resumed'
         | 'payment_received'
         | 'lesson_starting'
-        | 'report_sent';
+        | 'report_sent'
+        | 'lesson_live';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -6465,6 +6481,7 @@ export const Constants = {
         'payment_received',
         'lesson_starting',
         'report_sent',
+        'lesson_live',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],

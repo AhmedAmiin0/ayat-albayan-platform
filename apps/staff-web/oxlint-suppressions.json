@@ -192,11 +192,6 @@
       "count": 1
     }
   },
-  "src/components/shell/account/LanguageSwitch.test.tsx": {
-    "typescript/no-misused-spread": {
-      "count": 1
-    }
-  },
   "src/components/shell/account/LogoutButton.tsx": {
     "ab/module-boundaries": {
       "count": 1

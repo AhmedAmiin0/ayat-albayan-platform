@@ -36,6 +36,8 @@ export function allowedTarget(url, argv) {
 export const SET_NULL_DEPENDENTS = [
   { table: 'job_applicants', column: 'from_lead_id', parent: 'leads' },
   { table: 'schedule_rules', column: 'created_from_lead_id', parent: 'leads' },
+  // A WhatsApp lesson link sent for a demo student (migration 20261117100170).
+  { table: 'lesson_join_links', column: 'sent_for_student_id', parent: 'students' },
   { table: 'messages', column: 'lead_id', parent: 'leads' },
   { table: 'messages', column: 'guardian_id', parent: 'guardians' },
   // A reply a demo teacher sent from the inbox keeps its «بعتها:» (migration 164).
