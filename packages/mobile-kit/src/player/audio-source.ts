@@ -1,6 +1,6 @@
 // The player's one door to the native audio module (owner 2026-11-17): the UI and its rules
-// (@ab/client-core playerReducer) never import a media library. expo-audio plugs in behind
-// createAudioSource (expo-audio-source.ts) once the native module ships.
+// (@ab/client-core playerReducer) never import a media library. Each app passes its own
+// CreateAudioSource to <AudioPlayer> (family-mobile: the expo-audio adapter).
 
 /** What the media reports back; positions and lengths in seconds. */
 export interface AudioSourceEvents {

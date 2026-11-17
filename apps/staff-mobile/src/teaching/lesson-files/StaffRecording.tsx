@@ -2,6 +2,7 @@ import type { LessonAssetRecording } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, AudioPlayer, ErrorLine, SwitchRow, t, type, useTheme } from '@ab/mobile-kit';
 import { useRecordingVisibility } from './api';
+import { openInPhonePlayer } from './open-in-phone';
 
 const R = t.studentRecordings;
 const SHOWN: Readonly<Record<string, string>> = { true: R.visible.on, false: R.visible.off };
@@ -22,7 +23,9 @@ export function StaffRecording({ rec, group }: StaffRecordingProps) {
       <AppText style={{ fontFamily: type.ui[600], color: color.ink }}>
         {`${t.lessonFiles.recording} · ${R.status[rec.status]}`}
       </AppText>
-      {rec.url ? <AudioPlayer id={rec.id} url={rec.url} /> : null}
+      {rec.url ? (
+        <AudioPlayer id={rec.id} url={rec.url} createSource={openInPhonePlayer} />
+      ) : null}
       {done ? (
         <SwitchRow
           label={t.lessonFiles.visible}

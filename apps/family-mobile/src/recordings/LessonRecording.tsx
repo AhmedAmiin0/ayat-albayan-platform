@@ -1,5 +1,6 @@
 import { AudioPlayer, Section, t } from '@ab/mobile-kit';
 import { LoadState } from '@/ui';
+import { createAudioSource } from './player/expo-audio-source';
 import { useRecordingUrl } from './use-assets';
 
 interface LessonRecordingProps {
@@ -15,7 +16,9 @@ export function LessonRecording({ studentId, recordingId, title }: LessonRecordi
   return (
     <Section title={title || t.lessonFiles.recording}>
       <LoadState query={link}>
-        {(data) => <AudioPlayer id={recordingId} url={data.url} />}
+        {(data) => (
+          <AudioPlayer id={recordingId} url={data.url} createSource={createAudioSource} />
+        )}
       </LoadState>
     </Section>
   );

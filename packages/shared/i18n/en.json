@@ -9084,7 +9084,7 @@
     "removeFailed": "The file could not be removed. Try again.",
     "kind": "File type",
     "pickFile": "Choose a file",
-    "pickerSoon": "Picking files from the phone is not available in this version yet.",
+    "cameraRationale": "We need the camera to photograph the homework page or the whiteboard and add it to the lesson files.",
     "teacherFiles": "Teacher files · {n}",
     "addedAt": "Added {when}",
     "reportPdfNote": "Generated from the report and sent to the family with it; it cannot be removed here.",

@@ -39,11 +39,11 @@ beforeEach(() => {
   mockApiSend.mockReset().mockResolvedValue({ ...file, visible_to_family: false });
 });
 
-test('the recording, the files, and the picker note while the native pickers are missing', async () => {
+test('the recording, the files, and the three pickers', async () => {
   await renderWithQuery(<LessonFilesScreen />);
   expect(await screen.findByText('ورقة الواجب')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/lessons/l1/files');
-  expect(screen.getByText(F.pickerSoon)).toBeTruthy();
+  expect(screen.getByRole('button', { name: F.sources.camera })).toBeTruthy();
   expect(screen.getByRole('button', { name: t.audioPlayer.play })).toBeTruthy();
 });
 

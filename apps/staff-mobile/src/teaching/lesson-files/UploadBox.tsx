@@ -3,10 +3,10 @@ import { LESSON_FILE_KINDS, type LessonFileKind } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import {
-  AppText, Button, ButtonRow, ErrorLine, FilterPills, Note, SwitchRow, t, type, useTheme,
+  AppText, Button, ButtonRow, ErrorLine, FilterPills, SwitchRow, t, type, useTheme,
 } from '@ab/mobile-kit';
 import { useUploadFile } from './api';
-import { PICK_SOURCES, pickersReady, pickFile, type PickSource } from './pick-file';
+import { PICK_SOURCES, pickFile, type PickSource } from './pick-file';
 
 const F = t.lessonFiles;
 const PROBLEM: Record<UploadProblem, string> = {
@@ -40,21 +40,17 @@ export function UploadBox({ lessonId }: { lessonId: string }) {
       <AppText style={{ ...small, color: color.ink3 }}>{F.hint}</AppText>
       <FilterPills items={KINDS} value={kind} onChange={setKind} accessibilityLabel={F.kind} />
       <SwitchRow label={F.visible} value={visible} onChange={setVisible} />
-      {pickersReady() ? (
-        <ButtonRow>
-          {PICK_SOURCES.map((s) => (
-            <Button
-              key={s}
-              variant="secondary"
-              label={F.sources[s]}
-              busy={upload.isPending}
-              onPress={() => void pick(s)}
-            />
-          ))}
-        </ButtonRow>
-      ) : (
-        <Note>{F.pickerSoon}</Note>
-      )}
+      <ButtonRow>
+        {PICK_SOURCES.map((s) => (
+          <Button
+            key={s}
+            variant="secondary"
+            label={F.sources[s]}
+            busy={upload.isPending}
+            onPress={() => void pick(s)}
+          />
+        ))}
+      </ButtonRow>
       {upload.isPending ? (
         <AppText style={{ ...small, color: color.ink3 }}>{F.uploading}</AppText>
       ) : null}

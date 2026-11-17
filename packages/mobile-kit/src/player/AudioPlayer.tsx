@@ -7,7 +7,6 @@ import { AppText } from '../ui/primitives/AppText';
 import { ltr } from '../ui/primitives/Ltr';
 import { raisedCard } from '../ui/surface/surface';
 import type { CreateAudioSource } from './audio-source';
-import { createAudioSource } from './expo-audio-source';
 import { PlayerControls } from './PlayerControls';
 import { ProgressBar } from './ProgressBar';
 import { useAudioPlayer, type AudioPlayerControls } from './use-audio-player';
@@ -18,8 +17,8 @@ interface AudioPlayerProps {
   id: string;
   /** A signed link (an hour). */
   url: string;
-  /** Tests pass a fake; the app uses the native adapter. */
-  createSource?: CreateAudioSource;
+  /** The media, from the app (family: expo-audio; tests: a fake). The kit has no media module. */
+  createSource: CreateAudioSource;
 }
 
 /** «من حيث توقفت: 12:40 · ابدأ من البداية», while the saved stop is ahead of the start. */
@@ -42,9 +41,9 @@ function ResumeLine({ player, from }: { player: AudioPlayerControls; from: numbe
 
 /**
  * The in-app audio player (owner 2026-11-17): play/pause, ±10 s, speed, and the saved stop.
- * The media itself is behind an AudioSource (expo-audio-source.ts).
+ * The media itself is behind the AudioSource the app passes in.
  */
-export function AudioPlayer({ id, url, createSource = createAudioSource }: AudioPlayerProps) {
+export function AudioPlayer({ id, url, createSource }: AudioPlayerProps) {
   const { color } = useTheme();
   const from = resumeAt(useResumeMap(), id);
   const player = useAudioPlayer({ id, url, startAt: from, createSource });
