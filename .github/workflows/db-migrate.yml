@@ -37,9 +37,15 @@ on:
 permissions:
   contents: read
 
+# A pull_request run is read-only and secret-free, so it gets its own per-PR group. Sharing the apply
+# group let every lane push replace the deploy's PENDING migrate (GitHub keeps one pending run per
+# group): on 11-17 02:51 a PR run cancelled production's. The apply group has a new name, so branches
+# still carrying the old file (group db-migrate-staging) can never collide with it.
 concurrency:
-  group: db-migrate-staging
-  cancel-in-progress: false
+  group: >-
+    ${{ github.event_name == 'pull_request'
+    && format('db-migrate-pr-{0}', github.event.pull_request.number) || 'db-migrate-apply' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   # No secrets, no environment: safe for any PR, including forks.
@@ -83,7 +89,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
       - name: supabase db push (staging)
         env:
           DB_URL: ${{ secrets.STAGING_DATABASE_URL }}

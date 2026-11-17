@@ -36,7 +36,7 @@ describe('the teacher report link: attachments (no login)', () => {
     expect(h.storage.signedUpload).toHaveBeenCalledWith(
       expect.objectContaining({ bucket: 'report-attachments' }),
     );
-    h.storage.exists.mockResolvedValue(true);
+    h.storage.head.mockResolvedValue(Uint8Array.of(0x89, 0x50, 0x4e, 0x47));
     h.files.add.mockResolvedValue({
       id: ATTACHMENT_ID,
       storage_path: PATH,

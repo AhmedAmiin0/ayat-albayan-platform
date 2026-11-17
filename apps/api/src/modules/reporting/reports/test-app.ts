@@ -48,7 +48,7 @@ function mocks() {
     lessons: { lessonNumbers: vi.fn(), packages: vi.fn(), memory: vi.fn() },
     history: { submitted: vi.fn(), lessons: vi.fn(), sequence: vi.fn(), student: vi.fn(), taught: vi.fn(), pending: vi.fn() },
     files: { add: vi.fn(), get: vi.fn(), remove: vi.fn(), pdfName: vi.fn() },
-    storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn(), upload: vi.fn() },
+    storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), head: vi.fn(), remove: vi.fn(), upload: vi.fn() },
     teachers: { idByProfile: vi.fn() },
     mine: { page: vi.fn(), students: vi.fn() },
     settings: fakeSettings(),

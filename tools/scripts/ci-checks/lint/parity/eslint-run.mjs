@@ -2,12 +2,13 @@
 // it (in the package folder, 6 GB heap, three packages at a time): every finding it reports, under
 // Oxlint rule names (oxlintName, docs/31b §2), with repo-relative paths.
 import { spawn, spawnSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { oxlintName } from '@ab/config/oxlint';
 import { readJson } from '../json-file.mjs';
 import { eslintReport } from '../oxlint/schemas.mjs';
+import { FINDINGS } from './eslint-findings.mjs';
 
 const CONCURRENCY = 3;
 const env = { ...process.env, NODE_OPTIONS: '--max-old-space-size=6144' };
@@ -32,7 +33,7 @@ function lintPackage({ root, dir, tmp }) {
 }
 
 /** A report's messages as findings; a parse error (no rule) is `parse-error`. */
-const findingsOf = (root, report) =>
+export const findingsOf = (root, report) =>
   report.flatMap(({ filePath, messages }) =>
     messages.map((m) => ({
       file: relative(root, filePath),
@@ -54,6 +55,21 @@ export async function runEslint(root, dirs) {
   };
   await Promise.all(Array.from({ length: CONCURRENCY }, worker));
   return reports.flatMap((report) => findingsOf(root, report));
+}
+
+/**
+ * The findings verify lint saved under `saved` (<saved>/<dir>/.lint/eslint.json, from
+ * eslint-findings.mjs). FAIL SAFE: a package with no saved file (an old cache entry) is linted
+ * here.
+ */
+export async function savedFindings({ root, dirs, saved }) {
+  const file = (dir) => join(saved, dir, FINDINGS);
+  const missing = dirs.filter((dir) => !existsSync(file(dir)));
+  for (const dir of missing) console.log(`${dir}: no saved ESLint findings, linting it here`);
+  const read = dirs
+    .filter((dir) => existsSync(file(dir)))
+    .flatMap((dir) => findingsOf(root, readJson(file(dir), eslintReport)));
+  return [...read, ...(await runEslint(root, missing))];
 }
 
 const SOURCES = ['*.js', '*.jsx', '*.ts', '*.tsx', '*.mjs', '*.cjs', '*.mts', '*.cts'];

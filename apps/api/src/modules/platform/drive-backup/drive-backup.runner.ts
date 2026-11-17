@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, type Bucket } from '@/common/storage/storage.paths';
-import type { MinioEnv, StorageEnv } from '@/config/env/env.storage';
+import type { MinioEnv } from '@/config/env/env.storage';
 import {
   classify,
   errorText,
@@ -32,15 +32,17 @@ const NO_COUNTS: Pick<BackupState, 'waiting' | 'skipped' | 'skipped_count'> = {
 
 interface RunInput {
   api: DriveBackupApi;
-  cfg: StorageEnv;
   minio: MinioEnv;
   now: Date;
   signal: AbortSignal | undefined;
 }
 
-/** Every bucket; recordings only while they are written to MinIO at all (MINIO_RECORDINGS). */
-export const bucketsOf = (cfg: Pick<StorageEnv, 'recordings'>): Bucket[] =>
-  Object.values(BUCKETS).filter((b) => cfg.recordings || b !== BUCKETS.recordings);
+/**
+ * Every bucket but recordings (REC-4): a recording deleted by an admin or by retention must not
+ * live on in a Drive archive.
+ */
+export const bucketsOf = (): Bucket[] =>
+  Object.values(BUCKETS).filter((b) => b !== BUCKETS.recordings);
 
 /**
  * One backup night (docs/45 §5): only with MINIO_DRIVE_BACKUP on, MinIO configured and the Google
@@ -76,7 +78,7 @@ export class DriveBackupRunner {
     const drive = await this.connect(input.signal);
     if (!drive) return 'not_connected';
     const { api, token } = drive;
-    return this.run({ api, cfg, minio, now, signal: input.signal }).then(
+    return this.run({ api, minio, now, signal: input.signal }).then(
       () => 'ran' as const,
       (e: unknown) => this.failed({ e, now, token }).then(() => 'failed' as const),
     );
@@ -106,7 +108,7 @@ export class DriveBackupRunner {
       store: this.data.store,
       api,
       source,
-      buckets: bucketsOf(input.cfg),
+      buckets: bucketsOf(),
       caps: DEFAULT_CAPS,
       ...(input.signal && { signal: input.signal }),
     };

@@ -1,0 +1,29 @@
+# The pnpm store, restored from the Actions cache (after pnpm/action-setup and setup-node; ci-faster-2 item 8).
+# setup-node's `cache: pnpm` saved a ~400 MB store per lockfile per ref, most of the 10 GB cache budget, so
+# turbo and vitest entries were evicted after ~44 h. Now every job only restores: the exact lockfile's store,
+# else the newest one (an older store still saves most downloads; `pnpm i --frozen-lockfile` fetches the rest).
+# Only ci «baselines» (develop) saves, once per lockfile (outputs `hit`, `key`, `dir`).
+name: pnpm store
+description: Restore the pnpm store keyed on pnpm-lock.yaml
+outputs:
+  hit:
+    description: "'true' when the exact lockfile's store was restored"
+    value: ${{ steps.restore.outputs.cache-hit }}
+  key:
+    description: The exact key (pnpm-store-<os>-<lockfile hash>)
+    value: ${{ steps.restore.outputs.cache-primary-key }}
+  dir:
+    description: The store folder
+    value: ${{ steps.dir.outputs.dir }}
+runs:
+  using: composite
+  steps:
+    - id: dir
+      shell: bash
+      run: echo "dir=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+    - id: restore
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ steps.dir.outputs.dir }}
+        key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: pnpm-store-${{ runner.os }}-

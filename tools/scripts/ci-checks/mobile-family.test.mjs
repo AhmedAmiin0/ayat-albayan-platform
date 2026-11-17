@@ -70,12 +70,14 @@ test('forcesRTL stays out of both apps', () => {
   }
 });
 
-test('ci: the family app and @ab/mobile-kit get tests and a Metro bundle; others exclude them', () => {
+test('ci: the family app and @ab/mobile-kit get tests and a Metro bundle', () => {
   const rows = ci.jobs.verify.strategy.matrix.include;
   const row = (name) => rows.find((r) => r.name === name);
-  assert.equal(row('test family').filter, '--filter=family-mobile --filter=@ab/mobile-kit');
-  assert.deepEqual(row('bundle family'), { name: 'bundle family', task: 'bundle', filter: '--filter=family-mobile' });
-  assert.match(row('test others').filter, /--filter=!staff-mobile --filter=!family-mobile --filter=!@ab\/mobile-kit$/);
+  // test others runs them (no exclusion); typecheck + bundles bundles every app with a bundle task.
+  assert.equal(row('test others').filter, '--filter=!staff-web --filter=!api --filter=!staff-mobile');
+  assert.deepEqual(row('typecheck + bundles'), { name: 'typecheck + bundles', task: 'typecheck bundle' });
+  const family = JSON.parse(read('apps/family-mobile/package.json'));
+  assert.match(family.scripts.bundle, /^expo export --platform android /);
 });
 
 test('ci: a change only to the mobile apps or their kit skips the e2e machines', () => {
