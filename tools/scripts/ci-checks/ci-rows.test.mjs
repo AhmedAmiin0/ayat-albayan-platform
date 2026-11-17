@@ -65,3 +65,15 @@ test('pnpm store: every job restores through the local action; only develop base
   const save = ci.jobs.baselines.steps.find((s) => s.uses === 'actions/cache/save@v4');
   assert.equal(save.if, "steps.store.outputs.hit != 'true'");
 });
+
+test('deploy-staging: «web» builds the app beside plan/migrate; deploy needs it and builds nothing', () => {
+  const deploy = parse(read('.github/workflows/deploy-staging.yml')).jobs;
+  assert.deepEqual([deploy.web.needs, deploy.web.environment], ['preflight', 'develop']);
+  const build = deploy.web.steps.find((s) => s.name === 'Build the web app');
+  assert.match(build.run, /pnpm --filter staff-web build$/m);
+  assert.deepEqual(deploy.deploy.needs, ['preflight', 'migrate', 'web']);
+  assert.match(deploy.deploy.if, /needs\.web\.result == 'success' \|\| \(inputs\.env_only && needs\.web\.result == 'skipped'\)/);
+  const get = deploy.deploy.steps.find((s) => s.uses === 'actions/download-artifact@v4');
+  assert.deepEqual(get.with, { name: 'staff-web-dist', path: 'apps/staff-web/dist' });
+  assert.doesNotMatch(JSON.stringify(deploy.deploy.steps), /pnpm/);
+});
