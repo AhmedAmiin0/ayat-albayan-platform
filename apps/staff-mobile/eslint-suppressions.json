@@ -1306,16 +1306,6 @@
       "count": 3
     }
   },
-  "src/classroom/room/model/cam-mic.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/model/room-grid.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
   "src/classroom/sessions/AdminSessionsScreen.midnight.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
@@ -4427,25 +4417,9 @@
       "count": 3
     }
   },
-  "src/inbox/thread/calls/screen/RoundButton.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 4
-    }
-  },
   "src/inbox/thread/calls/screen/call-avatar.test.tsx": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/inbox/thread/calls/screen/call-icons.tsx": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/inbox/thread/calls/state/CallProvider.cancel.test.tsx": {

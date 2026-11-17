@@ -7,6 +7,7 @@ jest.mock('@livekit/react-native', () => ({ registerGlobals: () => mockRegister(
   virtual: true,
 });
 jest.mock('livekit-client', () => ({ Room: jest.fn() }), { virtual: true });
+jest.mock('@livekit/react-native-webrtc', () => ({ RTCView: jest.fn() }), { virtual: true });
 
 afterEach(() => {
   delete modules.LivekitReactNativeModule;

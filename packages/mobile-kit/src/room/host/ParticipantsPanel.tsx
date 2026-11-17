@@ -1,7 +1,9 @@
 import type { RoomPresence } from '@ab/shared';
+import { BottomSheet } from '@expo/ui';
 import { ScrollView, View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
-import { Button, InlineConfirm, Notice } from '../../ui';
+import { type, useTheme } from '../../theme';
+import { AppText, Button, InlineConfirm, Notice } from '../../ui';
 import { PersonRow } from './PersonRow';
 import type { useHostPanel } from './use-host-panel';
 
@@ -71,28 +73,28 @@ export function ParticipantsPanel(props: ParticipantsPanelProps) {
       testID="room-people"
     >
       <View style={{ gap: 12 }}>
-      <AppText
-        accessibilityRole="header"
-        style={{ fontFamily: type.ui[700], fontSize: 18, color: color.ink }}
-      >
-        {title}
-      </AppText>
-      {panel.notice ? <Notice message={panel.notice} /> : null}
-      {panel.canMuteAll ? (
-        <Button variant="secondary" label={t.classroom.mute.all} onPress={panel.muteAll} />
-      ) : null}
-      <ScrollView style={{ flexGrow: 0 }} contentContainerStyle={{ gap: 12 }}>
-        {panel.people.map((p) => (
-          <PersonRow key={p.key} person={p} panel={panel} presence={presence} />
-        ))}
-      </ScrollView>
-      <View style={{ gap: 8 }}>
-        <KickConfirm panel={panel} />
-        <EndForAll panel={panel} />
-        {onBrowser ? (
-          <Button variant="ghost" label={t.mobileRoom.openInBrowser} onPress={onBrowser} />
+        <AppText
+          accessibilityRole="header"
+          style={{ fontFamily: type.ui[700], fontSize: 18, color: color.ink }}
+        >
+          {title}
+        </AppText>
+        {panel.notice ? <Notice message={panel.notice} /> : null}
+        {panel.canMuteAll ? (
+          <Button variant="secondary" label={t.classroom.mute.all} onPress={panel.muteAll} />
         ) : null}
-      </View>
+        <ScrollView style={{ flexGrow: 0 }} contentContainerStyle={{ gap: 12 }}>
+          {panel.people.map((p) => (
+            <PersonRow key={p.key} person={p} panel={panel} presence={presence} />
+          ))}
+        </ScrollView>
+        <View style={{ gap: 8 }}>
+          <KickConfirm panel={panel} />
+          <EndForAll panel={panel} />
+          {onBrowser ? (
+            <Button variant="ghost" label={t.mobileRoom.openInBrowser} onPress={onBrowser} />
+          ) : null}
+        </View>
       </View>
     </BottomSheet>
   );
