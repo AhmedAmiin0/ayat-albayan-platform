@@ -1,5 +1,6 @@
+import { SHORT_LINK_GATE_PATH } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { apiPublicOrigin } from '@/common/http/public-origin';
+import { apiPublicOrigin, firstOrigin } from '@/common/http/public-origin';
 import { loadEnv } from '@/config/env/env';
 import { allowedHosts, isAllowedTarget } from './short-link.allow';
 import { looksLikeShortCode, newShortCode } from './short-link.code';
@@ -22,8 +23,22 @@ interface ShortLinkTarget {
 const CODE_TRIES = 3;
 const httpsBase = (raw: string): boolean => /^https:\/\/[^/\s]+\/(?:[^\s]*\/)?$/.test(raw);
 
+/** The kind of the links the admin and sales make (docs/19 «Managed links»). */
+export const MANAGED_KIND = 'managed';
+
 const expired = (row: ShortLinkRow, now: Date): boolean =>
   row.expires_at !== null && Date.parse(row.expires_at) <= now.getTime();
+/** Opens now: not past its expiry and not stopped (expired / revoked by the cron or an admin). */
+export const isLive = (row: ShortLinkRow, now: Date): boolean =>
+  row.status === 'active' && !expired(row, now);
+
+/** A managed link goes to the web gate (sign-in or WhatsApp code), a system link to its target. */
+const REDIRECTS: Record<'managed' | 'system', (row: ShortLinkRow) => string> = {
+  managed: (row) => `${firstOrigin(loadEnv().WEB_ORIGIN)}${SHORT_LINK_GATE_PATH}${row.code}`,
+  system: (row) => row.target_url,
+};
+const redirectOf = (row: ShortLinkRow): string =>
+  REDIRECTS[row.kind === MANAGED_KIND ? 'managed' : 'system'](row);
 
 /**
  * The in-house short links (owner 2026-11-05, docs/19 «Short links»): the platform's own instead of
@@ -42,7 +57,7 @@ export class ShortLinks {
   async forTarget(input: ShortLinkTarget): Promise<string> {
     const env = loadEnv();
     const hosts = allowedHosts([...env.WEB_ORIGIN.split(','), apiPublicOrigin()]);
-    if (!isAllowedTarget(input.url, hosts))
+    if (input.kind === MANAGED_KIND || !isAllowedTarget(input.url, hosts))
       throw new Error(`short link refused: target not allowed (${input.kind})`);
     const key = { kind: input.kind, subject: input.subject };
     const target = { target_url: input.url, expires_at: input.expiresAt?.toISOString() ?? null };
@@ -50,10 +65,18 @@ export class ShortLinks {
     return `${await this.base()}${row.code}`;
   }
 
-  /** The live target of a code; null when unknown, malformed or expired. */
+  /**
+   * Where GET /r/:code sends the visitor: a system link's target, a managed link's web gate; null
+   * when unknown, malformed, expired or revoked.
+   */
   async resolve(code: string, now: Date): Promise<string | null> {
-    const row = looksLikeShortCode(code) ? await this.repo.byCode(code) : null;
-    return row && !expired(row, now) ? row.target_url : null;
+    const row = await this.row(code);
+    return row && isLive(row, now) ? redirectOf(row) : null;
+  }
+
+  /** The row of a well-formed code (any kind); null when unknown or malformed. */
+  row(code: string): Promise<ShortLinkRow | null> {
+    return looksLikeShortCode(code) ? this.repo.byCode(code) : Promise.resolve(null);
   }
 
   /**

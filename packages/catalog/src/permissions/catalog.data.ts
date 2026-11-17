@@ -3,12 +3,11 @@
 // it by default (seeded in 20261005000220 and later migrations); the system admin holds every grantable permission.
 // Adding one: a row here, its i18n labels (permissions.items), a seed migration for its system roles, @Permissions('…').
 import { PEOPLE_EDIT_ROWS } from './catalog.people-edit.js';
-
+import { SHORT_LINK_ROWS } from './catalog.short-links.js';
 /** Matrix sections, in display order. `self` is never shown: it follows the base role. */
 export const PERMISSION_AREAS = ['people', 'students', 'teachers', 'schedule', 'classroom', 'reports',
   'messaging', 'finance', 'system', 'self'] as const;
 export type PermissionArea = (typeof PERMISSION_AREAS)[number];
-
 type Grant = 'teacher' | 'assistant' | 'sales' | 'guardian' | 'student';
 const T: Grant[] = ['teacher'];
 const TS: Grant[] = ['teacher', 'sales'];
@@ -86,6 +85,7 @@ export const PERMISSION_ROWS = [
   // restricted allow-list: free_trial_invite and welcome_greeting by default (restricted-templates.ts).
   { key: 'templates.send_all', area: 'messaging', grants: [] },
   { key: 'templates.author', area: 'messaging', grants: ['sales'] }, // «القوالب» (2026-11-14)
+  ...SHORT_LINK_ROWS,
   // docs/31 §2: read every student channel (teacher ↔ family), read-only. The admin by default; the owning
   // assistant reads her own students' channels without it (sales ownership).
   { key: 'student_channels.monitor', area: 'messaging', grants: [] },
