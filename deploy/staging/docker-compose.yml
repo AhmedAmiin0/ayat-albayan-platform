@@ -25,12 +25,16 @@ x-app: &app
   logging: *log
   # SIGTERM: Fastify stops taking connections and finishes the requests in flight (main.ts).
   stop_grace_period: 30s
+  # Every 30 s once healthy (it was 5 s: three containers × node -e ≈ 10 % of a core around the clock on a 2-vCPU
+  # VPS shared with the CRM). While starting, every 5 s (start_interval, Docker Engine 25+) for start_period
+  # 180 s = roll.sh's whole healthy() wait (90 × 2 s): a fresh container is seen healthy as soon as before.
   healthcheck:
     test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
-    interval: 5s
+    interval: 30s
     timeout: 3s
     retries: 3
-    start_period: 60s
+    start_period: 180s
+    start_interval: 5s
 
 x-shared-env: &shared-env
   # Shared cache (docs/09 «Shared cache»), on every app process. Redis down = the database, never an error.
@@ -134,10 +138,12 @@ services:
     # The socket exists only once this run listens (a stale one is removed first): no second node in 128 MB.
     healthcheck:
       test: ["CMD", "test", "-S", "/run/pdf/pdf.sock"]
-      interval: 5s
+      # Like the app services (x-app above): 30 s once healthy, 5 s through roll.sh's 180 s wait.
+      interval: 30s
       timeout: 3s
       retries: 3
-      start_period: 30s
+      start_period: 180s
+      start_interval: 5s
     deploy:
       resources:
         limits:
