@@ -161,6 +161,11 @@
       "count": 4
     }
   },
+  "ci-checks/e2e-areas/select-bundle.mjs": {
+    "ab/no-shape-checks": {
+      "count": 2
+    }
+  },
   "ci-checks/e2e-shards.mjs": {
     "ab/no-shape-checks": {
       "count": 1

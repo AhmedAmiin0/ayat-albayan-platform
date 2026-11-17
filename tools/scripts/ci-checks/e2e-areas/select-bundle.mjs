@@ -1,24 +1,23 @@
-// i18n bundle changes for select.mjs: the files that read a changed key (i18n.mjs), the mobile
-// apps' and their kit's readers known but ignored (staff-web, api and e2e never import them).
+// i18n bundle changes for select.mjs (node built-ins only: ci «changes» has no install): the
+// files that read a changed key (i18n.mjs), the mobile apps' and their kit's readers known but
+// ignored (staff-web, api and e2e never import them).
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { z } from 'zod';
-import { parseJson, readJson } from '../lint/json-file.mjs';
 import { changedKeys, keyUsers } from './i18n.mjs';
 
 /** The area whose page lists every UI string: runs on any key change. */
 const EVERY_KEY_AREA = 'translations';
 const MOBILE = /^(apps\/(staff|family)-mobile|packages\/mobile-kit)\//;
-/** An i18n bundle: nested key → string objects (changedKeys walks them). */
-const bundle = z.record(z.string(), z.unknown());
 
 /** The files that read a changed key of one bundle, or { reason } for the full suite. */
 function bundleUsers({ root, file, base, graph: g }) {
   if (!base) return { reason: `${file} changed and there is no base commit to compare` };
+  // Plain JSON.parse: ci «changes» runs this before any install, so no zod here (changedKeys walks
+  // whatever the bundle holds, and a bad bundle throws: the CLI then runs the full suite).
   const shown = execFileSync('git', ['show', `${base}:${file}`], { cwd: root, encoding: 'utf8' });
-  const before = parseJson(shown, bundle);
-  const after = readJson(join(root, file), bundle);
+  const before = JSON.parse(shown);
+  const after = JSON.parse(readFileSync(join(root, file), 'utf8'));
   const keys = changedKeys(before, after);
   // The mobile apps read the same bundles: a key only they read is known, and needs no e2e.
   const listed = ['ls-files', 'apps/staff-mobile', 'apps/family-mobile', 'packages/mobile-kit'];
