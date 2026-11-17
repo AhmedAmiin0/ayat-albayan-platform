@@ -1,4 +1,3 @@
-import { statusRoute } from '@ab/client-core';
 import { GENDERS, PROGRAMS, STUDENT_STATUSES } from '@ab/shared';
 import { useForm } from '@tanstack/react-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -17,7 +16,7 @@ import { saveProfile } from './save-profile';
 import { SavedNote } from './SavedNote';
 import { ContactIsSelfField } from './FactFields';
 import type { StudentProfile } from '@/features/people/students/types';
-import { type StatusAsk, StatusRouteDialogs } from '@/features/teaching/course-actions';
+import { StatusRouteDialogs, useStatusPick } from '@/features/teaching/course-actions';
 
 type SelectName = 'gender' | 'program' | 'status' | 'teacher_id';
 type FieldName = Exclude<keyof ProfileValues, 'contact_is_self'>;
@@ -28,32 +27,31 @@ const FIELDS: FieldName[] = [
   'goal', 'riwaya', 'tz', 'meeting_link_override', 'notes',
 ];
 const LTR: FieldName[] = ['meeting_link_override', 'age'];
-/** «موقوف مؤقتًا» / «متوقف» open their dialogs (owner 2026-11-17); the link's own hint. */
+/** The link's own hint; the status's comes from useStatusPick (its note, or «جارٍ التحميل»). */
 const HINTS: Partial<Record<FieldName, string>> = {
-  status: t.courseCard.statusNote,
   meeting_link_override: t.students.meetingLinkHint,
 };
 const SELECTS: readonly FieldName[] = ['gender', 'program', 'status', 'teacher_id'];
 const isSelect = (name: FieldName): name is SelectName => SELECTS.includes(name);
 
-/** «موقوف مؤقتًا» / «متوقف» lead to their dialogs (owner 2026-11-17); null = set it. */
-function routeOf(name: SelectName, value: string): StatusAsk {
-  const status = name === 'status' ? STUDENT_STATUSES.find((s) => s === value) : undefined;
-  const route = status ? statusRoute(status) : 'set';
-  return route === 'set' ? null : route;
-}
+/** The status picked, or undefined for every other select. */
+const statusOf = (name: SelectName, value: string) =>
+  name === 'status' ? STUDENT_STATUSES.find((s) => s === value) : undefined;
 
 /** Editable student profile (R-STU-05), saved with PATCH /students/:id. */
 export function StudentProfileForm({ student }: { student: StudentProfile }) {
   const queryClient = useQueryClient();
   const { data: teachers = [] } = useQuery(teacherOptionsQuery);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
-  const [ask, setAsk] = useState<StatusAsk>(null);
+  // «موقوف مؤقتًا» / «متوقف» lead to their dialogs (owner 2026-11-17); the rest are set at once.
+  const status = useStatusPick(student.id);
   const pick = (name: SelectName, value: string, set: (v: never) => void) => {
-    const route = routeOf(name, value);
-    if (route) setAsk(route);
-    else set(value as never);
+    const picked = statusOf(name, value);
+    const put = () => set(value as never);
+    if (picked) status.pick(picked, put);
+    else put();
   };
+  const hintOf = (name: FieldName) => (name === 'status' ? status.hint : HINTS[name]);
 
   const selects: Record<SelectName, { value: string; label: string }[]> = {
     gender: [{ value: '', label: '—' }, ...GENDERS.map((g) => ({ value: g, label: t.enums.gender[g] }))],
@@ -98,7 +96,7 @@ export function StudentProfileForm({ student }: { student: StudentProfile }) {
       {FIELDS.map((name) => (
         <form.Field key={name} name={name}>
           {(field) => (
-            <Field id={`p-${name}`} label={PROFILE_LABELS[name]} hint={HINTS[name]}>
+            <Field id={`p-${name}`} label={PROFILE_LABELS[name]} hint={hintOf(name)}>
               {(p) =>
                 name === 'tz' ? (
                   <TimeZoneSelect {...p} value={field.state.value} onValue={(tz) => field.handleChange(tz)} />
@@ -128,8 +126,8 @@ export function StudentProfileForm({ student }: { student: StudentProfile }) {
         </form.Subscribe>
         {message && (message.ok ? <SavedNote>{message.text}</SavedNote> : <FormAlert>{message.text}</FormAlert>)}
       </div>
-      <StatusRouteDialogs studentId={student.id} ask={ask} onClose={() => setAsk(null)}
-        onDone={(text) => { setAsk(null); setMessage({ ok: true, text }); }} />
+      <StatusRouteDialogs studentId={student.id} ask={status.ask} chatPhone={student.guardian.phone_e164}
+        onClose={status.close} onDone={(text) => { status.close(); setMessage({ ok: true, text }); }} />
     </form>
   );
 }

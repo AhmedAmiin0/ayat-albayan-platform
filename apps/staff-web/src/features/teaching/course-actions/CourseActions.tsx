@@ -7,7 +7,6 @@ import { ExtendDialog } from './card/ExtendDialog';
 import { ChangeTeacherDialog } from './ChangeTeacherDialog';
 import { ChangeTimesDialog } from './ChangeTimesDialog';
 import { StopCourseDialog } from './StopCourseDialog';
-import type { StopChat } from './StopDoneDialog';
 
 export interface CourseActionsProps {
   studentId: string;

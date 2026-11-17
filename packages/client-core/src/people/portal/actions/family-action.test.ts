@@ -40,7 +40,9 @@ describe('a family lesson action (owner 2026-11-17)', () => {
 
 describe('familyFailureText', () => {
   const words = {
-    errors: { proposal_pending: 'p', lesson_started: 's', no_request: 'n', date_in_past: 'd' },
+    errors: {
+      proposal_pending: 'p', lesson_started: 's', no_request: 'n', date_in_past: 'd', group_lesson: 'g',
+    },
     failed: 'f',
   };
   it('a known refusal in its own words, anything else the general one', () => {

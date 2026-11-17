@@ -1,13 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
 import { CoursePauseSheet } from '@/features/teaching/course-pause';
 import { StopCourseDialog } from '@/features/teaching/course-actions/StopCourseDialog';
-import { courseCardQuery } from './api';
-
-export type StatusAsk = 'pause' | 'stop' | null;
+import type { StatusAsk } from './use-status-pick';
 
 interface StatusRouteDialogsProps {
   studentId: string;
   ask: StatusAsk;
+  /** The guardian's phone: the stop's done block opens the chat. */
+  chatPhone?: string | undefined;
   onClose: () => void;
   /** Done: the form says what changed. */
   onDone: (message: string) => void;
@@ -15,13 +14,11 @@ interface StatusRouteDialogsProps {
 
 /**
  * The status field's dialogs (owner 2026-11-17): «موقوف مؤقتًا» opens «إيقاف الدورة مؤقتًا» and
- * «متوقف» opens «إلغاء الاشتراك» of the current package (the card's), never a bare status change.
+ * «متوقف» opens «إلغاء الاشتراك» of the current package (useStatusPick), never a bare change.
  */
-export function StatusRouteDialogs({ studentId, ask, onClose, onDone }: StatusRouteDialogsProps) {
-  const card = useQuery({ ...courseCardQuery({ studentId, tree: 'admin' }), enabled: ask === 'stop' });
-  const subscriptionId = card.data?.subscriptionId ?? null;
-  const shared = { studentId, onClose, onDone };
-  if (ask === 'pause') return <CoursePauseSheet {...shared} />;
-  if (ask !== 'stop' || subscriptionId === null) return null;
-  return <StopCourseDialog {...shared} subscriptionId={subscriptionId} />;
+export function StatusRouteDialogs({ ask, chatPhone, ...shared }: StatusRouteDialogsProps) {
+  if (ask?.route === 'pause') return <CoursePauseSheet {...shared} />;
+  if (ask?.route !== 'stop') return null;
+  const chat = chatPhone ? { phone: chatPhone, mode: 'admin' as const } : undefined;
+  return <StopCourseDialog {...shared} subscriptionId={ask.subscriptionId} chat={chat} />;
 }

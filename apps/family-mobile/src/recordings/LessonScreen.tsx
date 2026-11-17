@@ -1,7 +1,7 @@
-import { lessonWhenAt } from '@ab/shared';
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 import { t } from '@ab/mobile-kit';
+import { dateLine, rangeText } from '@/lessons';
 import { FamilyHeader, FamilyPage } from '@/nav';
 import { studentOf, useFamilyClock, usePortalMe } from '@/portal';
 import { LoadState } from '@/ui';
@@ -12,8 +12,9 @@ import { useLessonAssets } from './use-assets';
 const paramsSchema = z.object({ id: z.string().min(1), student: z.string().min(1) });
 
 /**
- * «صفحة الحلقة» (canvas RecXFamilyLesson), pushed above the tabs: the lesson's recording in the
- * in-app player, its report, and the files staff shared, once the report was sent.
+ * «حلقة الثلاثاء 11 نوفمبر» (canvas RecXFamilyLesson), pushed above the tabs, «name · 6:30 – 7:15
+ * م» under it: the lesson's recording in the in-app player, its report, and the files staff
+ * shared, once the report was sent.
  */
 export function LessonScreen() {
   const params = paramsSchema.parse(useLocalSearchParams());
@@ -21,13 +22,18 @@ export function LessonScreen() {
   const page = useLessonAssets(input);
   const student = studentOf(usePortalMe().data, params.student);
   const clock = { ...useFamilyClock(), tz: student?.tz ?? 'UTC' };
-  const when = page.data && lessonWhenAt(new Date(page.data.lesson_starts_at), clock);
+  const lesson = page.data;
+  const title = lesson
+    ? t.lessonFiles.lessonOf.replace('{when}', dateLine(new Date(lesson.lesson_starts_at), clock))
+    : t.lessonFiles.lessonPage;
+  const range = lesson
+    && rangeText({ starts_at: lesson.lesson_starts_at, ends_at: lesson.lesson_ends_at }, clock);
   return (
     <FamilyPage
       header={
         <FamilyHeader
-          title={t.lessonFiles.lessonPage}
-          subtitle={when && `${student?.name ?? ''} · ${when}`}
+          title={title}
+          subtitle={range && [student?.name, range].filter(Boolean).join(' · ')}
           back
         />
       }

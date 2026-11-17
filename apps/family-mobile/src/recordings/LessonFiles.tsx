@@ -14,9 +14,10 @@ interface LessonFilesProps {
 export function LessonFiles({ studentId, reportId, files }: LessonFilesProps) {
   const pdf = useOpenFile();
   const open = useOpenLessonFile(studentId);
-  const count = t.lessonFiles.count.replace('{n}', String(files.length + 1));
+  // The report's PDF is one of the files.
+  const title = t.lessonFiles.header.replace('{n}', String(files.length + 1));
   return (
-    <Section title={`${t.lessonFiles.title} · ${count}`}>
+    <Section title={title}>
       <InsetGroup>
         <ListRow
           title={t.lessonFiles.reportPdf}

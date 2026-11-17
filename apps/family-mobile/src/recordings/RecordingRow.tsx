@@ -1,5 +1,7 @@
 import { listenState } from '@ab/client-core';
-import { teacherName, type PortalRecording, type PortalStudent } from '@ab/shared';
+import {
+  clockOf, counted, teacherName, type PortalRecording, type PortalStudent,
+} from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { locale, t, useResumeMap } from '@ab/mobile-kit';
@@ -16,23 +18,26 @@ interface RecordingRowProps {
   parts: number;
 }
 
-/** One recording (canvas RecXFamilyList): the day, the teacher and length, where you stopped. */
+/** One recording (canvas RecXFamilyList): the day, teacher · time · length, where you stopped. */
 export function RecordingRow({ row, student, parts }: RecordingRowProps) {
   const clock = { ...useFamilyClock(), tz: student.tz };
   const state = listenState(useResumeMap(), row.id);
   const teacher = row.teacher ? teacherName(row.teacher, locale) : '';
+  const at = new Date(row.lesson_starts_at);
   const line = t.lessonFiles.rowMeta
     .replace('{teacher}', teacher)
+    .replace('{time}', clockOf(at, clock))
     .replace('{minutes}', minutesOf(row.duration_seconds));
+  const split: RowNote = { text: counted(t.lessonFiles.parts, parts), tone: 'quiet' };
   const notes: RowNote[] = [
-    ...(parts > 1 ? [{ text: t.lessonFiles.parts.replace('{n}', String(parts)), tone: 'quiet' as const }] : []),
+    ...(parts > 1 ? [split] : []),
     { text: listenNote(state), tone: state.kind === 'new' ? 'link' : 'quiet' },
   ];
   const open = () => router.push(lessonHref({ studentId: student.id, lessonId: row.lesson_id }));
   return (
     <PressCard label={t.lessonFiles.recording} onPress={open}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <DateTile {...dayTile(new Date(row.lesson_starts_at), clock)} />
+        <DateTile {...dayTile(at, clock)} />
         <RowText title={t.lessonFiles.recording} line={line} notes={notes} />
       </View>
     </PressCard>

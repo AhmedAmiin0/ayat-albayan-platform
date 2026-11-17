@@ -1866,7 +1866,7 @@
     },
     "visible": {
       "label": "Show to the student",
-      "on": "Ready to show to the student and guardian once their portal is on.",
+      "on": "Appears on the lesson report page once it is sent to the family.",
       "off": "Hidden from the student and guardian.",
       "failed": "Could not change the visibility. Try again.",
       "groupLesson": "A group lesson's recording cannot be shown to a student: it holds the lesson of more than one student."
@@ -9039,7 +9039,6 @@
     "back": "Back 10 seconds",
     "forward": "Forward 10 seconds",
     "speed": "Speed",
-    "speedOf": "Speed {speed}",
     "resumeFrom": "Where you stopped: {at}",
     "startOver": "Start from the beginning",
     "failed": "The recording could not be played. Try again.",
@@ -9050,7 +9049,12 @@
   },
   "lessonFiles": {
     "title": "Lesson files",
-    "count": "{n} files",
+    "count": {
+      "one": "1 file",
+      "two": "2 files",
+      "few": "{n} files",
+      "other": "{n} files"
+    },
     "recording": "Lesson recording",
     "recordings": "Recordings",
     "recordingsHint": "Audio recordings of lessons in the academy room. They play in the app and continue where you stopped.",
@@ -9059,13 +9063,18 @@
     "isNew": "New",
     "stoppedAt": "Stopped at {at}",
     "heard": "Listened in full",
-    "parts": "Recorded in {n} parts",
-    "rowMeta": "{teacher} · {minutes} min",
+    "parts": {
+      "one": "Recorded in 1 part",
+      "two": "Recorded in 2 parts",
+      "few": "Recorded in {n} parts",
+      "other": "Recorded in {n} parts"
+    },
+    "rowMeta": "{teacher} · {time} · {minutes} min",
     "lessonPage": "Lesson page",
     "lessonOf": "Lesson of {when}",
     "report": "Lesson report",
     "openReport": "Read the full report",
-    "reportPdf": "Lesson report PDF",
+    "reportPdf": "Lesson report (PDF)",
     "teacher": "Teacher: {name}",
     "kinds": {
       "homework": "Homework file",
@@ -9088,7 +9097,7 @@
     "hint": "An image, PDF or audio recording, up to 25 MB per file.",
     "visible": "Visible to the student and guardian",
     "hidden": "Hidden: only the teacher and the administration see it.",
-    "familyNote": "These files appear to the student and guardian on the lesson page once its report is sent.",
+    "familyNote": "These files appear to the student and guardian on the lesson report page once it is sent.",
     "uploading": "Uploading…",
     "uploaded": "File uploaded",
     "tooLarge": "The file is too large; the limit is 25 MB",
@@ -9108,6 +9117,24 @@
       "gallery": "Gallery",
       "camera": "Camera",
       "document": "Document"
-    }
+    },
+    "partsCount": {
+      "one": "1 part",
+      "two": "2 parts",
+      "few": "{n} parts",
+      "other": "{n} parts"
+    },
+    "part": "Part {n}",
+    "partOption": "Part {n} · {minutes} min",
+    "partsLabel": "Recording parts",
+    "header": "Lesson files · {n}",
+    "reportSummary": "From this lesson's report",
+    "emptyMeet": "{name}'s lessons held on Google Meet are not recorded.",
+    "emptyRoom": "When a lesson is held in the academy room, its recording appears here once its report is sent and the academy makes it available. Group lesson recordings are not shown.",
+    "removeConfirm": "Remove this file from the lesson?",
+    "removeConfirmBody": "The student and guardian will no longer see it, and it cannot be restored.",
+    "duration": "Duration: {at}",
+    "size": "Size: {size}",
+    "waiting": "Waiting"
   }
 }

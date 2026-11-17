@@ -1,4 +1,4 @@
-import { dayWord, type DayWord } from '@ab/client-core';
+import { dayWord, lessonMinutes, type DayWord } from '@ab/client-core';
 import {
   clockOf,
   dateText,
@@ -45,3 +45,36 @@ export const dateLine = (at: Date, clock: ClockOptions): string =>
 
 /** The teacher's name in the UI language. */
 export const teacherText = (teacher: PortalTeacher): string => teacherName(teacher, locale);
+
+const LESSON_DAY: Record<DayWord, () => string> = {
+  today: () => t.portal.actions.lessonToday,
+  tomorrow: () => t.portal.actions.lessonTomorrow,
+};
+
+/** «حلقة الغد» / «حلقة اليوم» / «حلقة الإثنين 17 نوفمبر». */
+function lessonName(at: Date, clock: ClockOptions, now: Date): string {
+  const word = dayWord(at, now, clock.tz);
+  return word ? LESSON_DAY[word]() : t.portal.actions.lessonOn.replace('{date}', dateLine(at, clock));
+}
+
+/** «خيارات الحلقة»'s words for one lesson (canvas LessonXDecline). */
+export interface OptionsTitle {
+  /** «حلقة الغد · 6:30 م – 7:15 م». */
+  heading: string;
+  /** «الإثنين 17 نوفمبر · مع فاطمة · 45 دقيقة». */
+  subline: string;
+  /** «الاعتذار عن حلقة الغد». */
+  decline: string;
+}
+
+export function optionsTitle(lesson: PortalLesson, clock: ClockOptions, now: Date): OptionsTitle {
+  const at = new Date(lesson.starts_at);
+  const name = lessonName(at, clock, now);
+  const teacher = t.portal.withTeacher.replace('{teacher}', teacherText(lesson.teacher));
+  const minutes = t.portal.app.lesson.minutes.replace('{n}', String(lessonMinutes(lesson)));
+  return {
+    heading: `${name} · ${rangeText(lesson, clock)}`,
+    subline: [dateLine(at, clock), teacher, minutes].join(' · '),
+    decline: t.portal.actions.declineTitleOf.replace('{lesson}', name),
+  };
+}
