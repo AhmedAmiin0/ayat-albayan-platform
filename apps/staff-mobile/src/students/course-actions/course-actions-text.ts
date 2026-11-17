@@ -1,4 +1,10 @@
-import { courseStopErrorCode, courseStopLessonsText, datesText } from '@ab/client-core';
+import {
+  courseStopErrorCode,
+  courseStopLessonsText,
+  datesText,
+  stopDoneLines,
+  type StopDone,
+} from '@ab/client-core';
 import type { CourseStopPreview, CourseStopResult } from '@ab/shared';
 import { t, money } from '@ab/mobile-kit';
 import { localDay } from '@/payments';
@@ -42,18 +48,18 @@ export function stopLines(input: StopLinesInput): string[] {
 }
 
 /**
- * After a stop (owner 2026-11-17, «shows the result after»): what was done (with the refund's
- * amount), the student's status now, and the manual transfer still to do when there is one.
+ * After a stop (owner 2026-11-17, board CourseXStopDone): what was done (with the refund's
+ * amount), the student's status now, «الخطوة التالية» and who was told.
  */
-export function doneText(result: CourseStopResult, currency: string): string {
-  const s = t.courseActions.stop;
-  const refund = result.refund;
-  const head = refund ? s.doneRefund.replace('{amount}', money(refund.amount, currency)) : s.done;
-  const status = s.doneStatus.replace('{status}', t.enums.studentStatus[result.studentStatus]);
-  const by = refund?.manual ?? 0;
-  const manual = by > 0 ? [s.next.replace('{amount}', money(by, currency))] : [];
-  return [head, status, ...manual].join('\n');
-}
+export const stopDoneOf = (result: CourseStopResult, currency: string): StopDone =>
+  stopDoneLines({
+    result,
+    words: t.courseActions.stop,
+    format: {
+      money: (amount) => money(amount, currency),
+      status: (status) => t.enums.studentStatus[status],
+    },
+  });
 
 /** «أُلغي الاشتراك في …» and its reason, for a package already cancelled. */
 export function stoppedLines(stopped: NonNullable<CourseStopPreview['stopped']>): string[] {

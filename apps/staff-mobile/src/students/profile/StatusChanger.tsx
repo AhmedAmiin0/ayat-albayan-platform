@@ -1,4 +1,4 @@
-import { apiErrorCode, statusRoute } from '@ab/client-core';
+import { apiErrorCode, statusRoute, type StatusRoute } from '@ab/client-core';
 import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -11,7 +11,7 @@ import {
 import { Note } from '@/more';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { useActionKeys } from '@/students/course-actions/ActionButtons';
-import { useCurrentSubscription } from '@/students/course-actions/course-actions-api';
+import { useCurrentPackage } from '@/students/course-actions/course-actions-api';
 import { StatusSheets, type StatusAsk } from '@/students/course-card/StatusSheets';
 import type { StudentRef } from '@/students/shared/types';
 
@@ -36,28 +36,47 @@ const statusPills = (saving: boolean) => STUDENT_STATUSES.map((s) => ({
   disabled: saving,
 }));
 
+/** «متوقف» while the package is read: «جارٍ التحميل», or the error when it cannot be read. */
+type StopRead = 'idle' | 'waiting' | 'failed';
+const STOP_READ_LINE: Record<Exclude<StopRead, 'idle'>, () => string> = {
+  waiting: () => t.common.loading,
+  failed: () => t.common.error,
+};
+
 /**
  * One tap sets the status (PATCH /students/:id), shown at once everywhere it is cached; a failure
  * puts the old status back and says so here (R-MOB-03). If the status moved meanwhile (409
  * `status_changed`), nothing is written and the refetched current status is shown (R-STU-05).
  * «موقوف مؤقتًا» / «متوقف» open the pause / the stop of the current package instead (owner
- * 2026-11-17); without a package «متوقف» is set at once, as before.
+ * 2026-11-17); without a package «متوقف» is set at once, as before. While the package is not
+ * known yet «متوقف» waits for it (never mistaken for «no package»); a failed read says so.
  */
 export function StatusChanger({ student }: { student: StudentRef }) {
   const change = useOptimisticStatus<StudentStatus, StudentStatusChange>(STATUS);
   const keys = useActionKeys();
-  const sub = useCurrentSubscription({ studentId: student.id, given: undefined, keys });
+  const sub = useCurrentPackage({ studentId: student.id, given: undefined, keys });
   const [ask, setAsk] = useState<StatusAsk>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [read, setRead] = useState<StopRead>('idle');
+  const setNow = (status: StudentStatus) =>
+    change.mutate({ id: student.id, status, expected: student.status });
+  const stop = async () => {
+    setRead('waiting');
+    const id = sub.id === undefined ? await sub.settle() : sub.id;
+    setRead(id === undefined ? 'failed' : 'idle');
+    if (id) setAsk('stop');
+    if (id === null) setNow('churned');
+  };
+  const routes: Record<StatusRoute, (status: StudentStatus) => void> = {
+    set: setNow,
+    pause: () => setAsk('pause'),
+    stop: () => void stop(),
+  };
   const set = (status: StudentStatus) => {
-    if (change.isPending || status === student.status) return;
-    const route = statusRoute(status);
+    if (change.isPending || read === 'waiting' || status === student.status) return;
     setNotice(null);
-    if (route === 'set' || (route === 'stop' && sub === null)) {
-      change.mutate({ id: student.id, status, expected: student.status });
-      return;
-    }
-    setAsk(route);
+    setRead('idle');
+    routes[statusRoute(status)](status);
   };
   const done = (text: string) => {
     setAsk(null);
@@ -75,6 +94,7 @@ export function StatusChanger({ student }: { student: StudentRef }) {
       />
       <Note>{t.courseCard.statusNote}</Note>
       {notice ? <Note>{notice}</Note> : null}
+      {read === 'idle' ? null : <Note>{STOP_READ_LINE[read]()}</Note>}
       {change.isError ? (
         <ErrorLine
           message={statusChanged(change.error) ? t.students.statusChanged : t.common.error}
@@ -82,7 +102,7 @@ export function StatusChanger({ student }: { student: StudentRef }) {
       ) : null}
       <StatusSheets
         studentId={student.id}
-        subscriptionId={sub}
+        subscriptionId={sub.id ?? null}
         ask={ask}
         onClose={() => setAsk(null)}
         onDone={done}

@@ -1,4 +1,4 @@
-import { courseStopBody, stopFormCheck } from '@ab/client-core';
+import { courseStopBody, stopFormCheck, type StopDone } from '@ab/client-core';
 import type { CourseStopResult } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -8,15 +8,18 @@ import { useViewerTz } from '@/core/lib/clock';
 import { Note } from '@/more';
 import { SheetActions } from '@/students/course-pause/SheetActions';
 import { useStopCourse, useStopPreview, type SubRef } from './course-actions-api';
-import { doneText, stopErrorText, stopLines, stoppedLines } from './course-actions-text';
+import { stopDoneOf, stopErrorText, stopLines, stoppedLines } from './course-actions-text';
+import { StopDoneView } from './StopDoneView';
 import { StopMoneyChoice, useStopMoney } from './StopMoneyChoice';
 import { SheetLines } from './SheetLines';
 
 interface CourseStopFormProps {
   sub: SubRef;
-  /** After the stop: what changed («أُلغي…», the refund, the status, the next step). */
+  /** «تم» after the stop: what was done («أُلغي…», with the refund), said where it opened. */
   onDone: (text: string) => void;
   onClose: () => void;
+  /** The guardian's phone: the done block's «افتح المحادثة». */
+  chatPhone?: string | undefined;
 }
 
 /**
@@ -25,8 +28,9 @@ interface CourseStopFormProps {
  * reason, then «تأكيد الإلغاء» (danger) beside «رجوع» with one clientRequestId per sheet (rule
  * 8). A package already cancelled shows when and why instead. The money is the person's choice
  * (owner 2026-11-06); the reason's and the custom amount's errors are client-core's (2026-11-17).
+ * Then the done block in the same sheet (StopDoneView).
  */
-export function CourseStopForm({ sub, onDone, onClose }: CourseStopFormProps) {
+export function CourseStopForm({ sub, onDone, onClose, chatPhone }: CourseStopFormProps) {
   const [reason, setReason] = useState('');
   const [tried, setTried] = useState(false);
   const [requestId] = useState(newRequestId);
@@ -34,7 +38,12 @@ export function CourseStopForm({ sub, onDone, onClose }: CourseStopFormProps) {
   const preview = useStopPreview(sub);
   const stop = useStopCourse(sub.studentId);
   const view = useStopMoney(preview.data);
+  const [finished, setFinished] = useState<StopDone | null>(null);
   const s = t.courseActions.stop;
+  if (finished) {
+    const close = () => onDone(finished.head);
+    return <StopDoneView done={finished} chatPhone={chatPhone} onClose={close} />;
+  }
   if (!preview.data) {
     if (preview.isError) return <ErrorLine message={stopErrorText(preview.error)} />;
     return <SheetLines lines={[t.common.loading]} />;
@@ -46,7 +55,7 @@ export function CourseStopForm({ sub, onDone, onClose }: CourseStopFormProps) {
     setTried(true);
     if (check.blocked) return;
     const input = { subscriptionId: sub.subscriptionId, reason, clientRequestId: requestId };
-    const onSuccess = (result: CourseStopResult) => onDone(doneText(result, currency));
+    const onSuccess = (result: CourseStopResult) => setFinished(stopDoneOf(result, currency));
     stop.mutate(courseStopBody({ ...input, ask: view.ask }), { onSuccess });
   };
   const keeps = view.state.mode !== 'refund';

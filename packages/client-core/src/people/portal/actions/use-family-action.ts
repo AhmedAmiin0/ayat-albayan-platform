@@ -24,7 +24,9 @@ interface ActionOptions {
 
 export interface FamilyActionPorts {
   useMutation: (options: ActionOptions) => ActionMutation;
-  useQueryClient: () => { invalidateQueries: (f: { queryKey: readonly string[] }) => Promise<void> };
+  useQueryClient: () => {
+    invalidateQueries: (f: { queryKey: readonly string[] }) => Promise<void>;
+  };
   sends: PortalLessonSends;
   /** portal.actions in the app's language (read at render: the language may change). */
   words: () => FailureWords;
