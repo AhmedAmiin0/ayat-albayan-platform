@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>تغيير موعد حلقة واحدة</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#047857}a:hover{color:#065f46}
+</style>
+</helmet>
+<div style="width: 390px; height: 940px; box-sizing: border-box; direction: rtl; font-family: 'Noto Sans Arabic', system-ui, sans-serif; background: #f3f7f5; color: #17201c; position: relative; overflow: hidden">
+<div aria-hidden="true" style="position: absolute; top: 0; inset-inline: 0; height: 64px; background: #f3f7f5"></div>
+  <span aria-hidden="true" style="position: absolute; inset: 0; background: rgba(15, 30, 22, 0.42)"></span>
+  <div role="dialog" aria-modal="true" aria-labelledby="sheet-title" style="position: absolute; top: 44px; inset-inline: 0; bottom: 0; display: flex; flex-direction: column; gap: 16px; padding: 8px 16px 0px; box-sizing: border-box; border-radius: 12px 12px 0 0; background: #f3f7f5; overflow: hidden">
+    <div style="display: flex; align-items: center; gap: 12px; min-height: 48px">
+      <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><h1 id="sheet-title" style="margin: 0; font-size: 20px; font-weight: 700; line-height: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">تغيير موعد الحلقة</h1></div><a href="CourseXActions.dc.html" style="display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 12px; box-sizing: border-box; border-radius: 8px; border: 1px solid transparent; background: transparent; color: #047857; font-family: inherit; font-size: 15px; font-weight: 600; line-height: 24px; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">إغلاق</a>
+    </div>
+    <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 16px; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700; line-height: 24px">يوسف خالد · فاطمة الزهراء</span><span style="font-size: 14px; font-weight: 500; line-height: 22px; color: #2f3a35">الموعد الحالي: الأحد 22 نوفمبر 6:30 م بتوقيتك</span></div>
+      <div style="display: flex; flex-direction: column; gap: 2px"><span id="scope" style="font-size: 13px; font-weight: 600; line-height: 20px; color: #2f3a35">يشمل التغيير</span><div role="radiogroup" aria-labelledby="scope" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 0"><button type="button" role="radio" aria-checked="true" style="flex-shrink: 0; min-height: 44px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #ecfdf5; background: #ecfdf5; color: #047857; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 22px; font-variant-numeric: tabular-nums">هذه الحلقة فقط</button><button type="button" role="radio" aria-checked="false" style="flex-shrink: 0; min-height: 44px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #e2e8e5; background: #ffffff; color: #17201c; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 22px; font-variant-numeric: tabular-nums">هذه الحلقة وكل ما بعدها</button></div></div>
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; align-items: center; gap: 4px"><button type="button" aria-label="الأسبوع السابق" style="width: 44px; height: 44px; flex-shrink: 0; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #77857d; background: #ffffff; color: #17201c;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button><h2 style="flex-grow: 1; margin: 0; text-align: center; font-size: 15px; font-weight: 600; line-height: 24px">22 نوفمبر – 28 نوفمبر</h2><button type="button" aria-label="الأسبوع التالي" style="width: 44px; height: 44px; flex-shrink: 0; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #77857d; background: #ffffff; color: #17201c;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button></div>
+        <span id="day-label" style="font-size: 13px; font-weight: 600; line-height: 20px; color: #2f3a35">اختر اليوم</span>
+        <div role="radiogroup" aria-labelledby="day-label" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 0"><button type="button" role="radio" aria-checked="true" style="flex-shrink: 0; min-height: 44px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #ecfdf5; background: #ecfdf5; color: #047857; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 22px; font-variant-numeric: tabular-nums">الإثنين 23 نوفمبر</button><button type="button" role="radio" aria-checked="false" style="flex-shrink: 0; min-height: 44px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #e2e8e5; background: #ffffff; color: #17201c; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 22px; font-variant-numeric: tabular-nums">الأربعاء 25 نوفمبر</button><button type="button" role="radio" aria-checked="false" style="flex-shrink: 0; min-height: 44px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #e2e8e5; background: #ffffff; color: #17201c; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 22px; font-variant-numeric: tabular-nums">الخميس 26 نوفمبر</button></div>
+        <span id="slot-label" style="font-size: 13px; font-weight: 600; line-height: 20px; color: #2f3a35">المواعيد المتاحة</span><span style="font-size: 13px; font-weight: 400; line-height: 21px; color: #4f5b55">الأوقات بتوقيتك (القاهرة)</span>
+        <div role="radiogroup" aria-labelledby="slot-label" style="display: flex; flex-wrap: wrap; gap: 8px"><button type="button" role="radio" aria-checked="false" style="min-width: 88px; min-height: 44px; padding: 6px 12px; box-sizing: border-box; border-radius: 8px; border: 1px solid #77857d; background: #ffffff; color: #17201c; font-family: inherit; font-size: 15px; font-weight: 600; line-height: 24px">4:00 م</button><button type="button" role="radio" aria-checked="false" style="min-width: 88px; min-height: 44px; padding: 6px 12px; box-sizing: border-box; border-radius: 8px; border: 1px solid #77857d; background: #ffffff; color: #17201c; font-family: inherit; font-size: 15px; font-weight: 600; line-height: 24px">4:45 م</button><button type="button" role="radio" aria-checked="true" style="min-width: 88px; min-height: 44px; padding: 6px 12px; box-sizing: border-box; border-radius: 8px; border: 1px solid #17201c; background: #17201c; color: #f5f8f6; font-family: inherit; font-size: 15px; font-weight: 600; line-height: 24px">5:30 م</button><button type="button" role="radio" aria-checked="false" style="min-width: 88px; min-height: 44px; padding: 6px 12px; box-sizing: border-box; border-radius: 8px; border: 1px solid #77857d; background: #ffffff; color: #17201c; font-family: inherit; font-size: 15px; font-weight: 600; line-height: 24px">7:30 م</button></div>
+        <span aria-live="polite" style="font-size: 14px; font-weight: 500; line-height: 22px; color: #2f3a35">الموعد الذي اخترته: الإثنين 23 نوفمبر 5:30 م بتوقيتك</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><label for="move-reason" style="font-size: 13px; font-weight: 600; line-height: 20px; color: #2f3a35">سبب تغيير الموعد (اختياري)</label><textarea id="move-reason" rows="2" style="min-height: 44px; height: 72px; width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #77857d; border-radius: 8px; background: #ffffff; color: #17201c; font-family: inherit; font-size: 16px; line-height: 26px; resize: none">طلب ولي الأمر</textarea><span style="font-size: 13px; font-weight: 400; line-height: 21px; color: #4f5b55">يظهر هذا السبب للمعلم/ة في ملف الطالب</span></div>
+    </div>
+    <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; margin-inline: -16px; padding: 12px 16px 34px; border-top: 1px solid #e2e8e5; background: #f3f7f5"><span style="font-size: 13px; font-weight: 400; line-height: 21px; color: #4f5b55">ستُرسل لولي الأمر رسالة واتساب بالموعد الجديد لتأكيد الحضور</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px"><a href="CourseXMoveDone.dc.html" style="flex: 1 1 140px; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 12px; box-sizing: border-box; border-radius: 8px; border: 1px solid transparent; background: #047857; color: #ffffff; font-family: inherit; font-size: 15px; font-weight: 600; line-height: 24px; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">تغيير الموعد</a><a href="CourseXActions.dc.html" style="flex: 1 1 140px; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 12px; box-sizing: border-box; border-radius: 8px; border: 1px solid #77857d; background: #ffffff; color: #17201c; font-family: inherit; font-size: 15px; font-weight: 600; line-height: 24px; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">رجوع</a></div></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":940}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

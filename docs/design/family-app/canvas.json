@@ -729,6 +729,402 @@
       "title": "المعلمة — تأكيد إنهاء الحلقة للجميع",
       "is_interactive": true,
       "radius": 28
+    },
+    "CourseXActions.dc.html": {
+      "x": 0,
+      "y": 17600,
+      "w": 390,
+      "h": 1100,
+      "title": "إجراءات الدورة — ملف الطالب",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXActionsDark.dc.html": {
+      "x": 470,
+      "y": 17600,
+      "w": 390,
+      "h": 1100,
+      "title": "إجراءات الدورة — ملف الطالب — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXPause.dc.html": {
+      "x": 940,
+      "y": 17600,
+      "w": 390,
+      "h": 1100,
+      "title": "إيقاف مؤقت — المعاينة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXResume.dc.html": {
+      "x": 1410,
+      "y": 17600,
+      "w": 390,
+      "h": 960,
+      "title": "الدورة موقوفة — الاستئناف",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXStop.dc.html": {
+      "x": 1880,
+      "y": 17600,
+      "w": 390,
+      "h": 1040,
+      "title": "إلغاء الاشتراك — الاختيار المالي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXStopDone.dc.html": {
+      "x": 2350,
+      "y": 17600,
+      "w": 390,
+      "h": 844,
+      "title": "إلغاء الاشتراك — تم",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXRenew.dc.html": {
+      "x": 2820,
+      "y": 17600,
+      "w": 390,
+      "h": 844,
+      "title": "جدّد الاشتراك — الخطوة التالية",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXExtend.dc.html": {
+      "x": 3290,
+      "y": 17600,
+      "w": 390,
+      "h": 980,
+      "title": "مدّ الجدول — التأكيد",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXChange.dc.html": {
+      "x": 3760,
+      "y": 17600,
+      "w": 390,
+      "h": 860,
+      "title": "تغيير المعلم — المراجعة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXChangeDone.dc.html": {
+      "x": 4230,
+      "y": 17600,
+      "w": 390,
+      "h": 844,
+      "title": "تغيير المعلم — تم",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXMove.dc.html": {
+      "x": 4700,
+      "y": 17600,
+      "w": 390,
+      "h": 940,
+      "title": "تغيير موعد حلقة واحدة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXMoveDone.dc.html": {
+      "x": 5170,
+      "y": 17600,
+      "w": 390,
+      "h": 844,
+      "title": "تغيير موعد الحلقة — تم",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CourseXWebPanel.dc.html": {
+      "x": 0,
+      "y": 19070,
+      "w": 1280,
+      "h": 1380,
+      "title": "الإدارة — ملف الطالب: الدورة والباقة",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "CourseXWebStop.dc.html": {
+      "x": 1360,
+      "y": 19070,
+      "w": 1280,
+      "h": 1380,
+      "title": "الإدارة — إلغاء الاشتراك: معاينة قبل التأكيد",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "CourseXWebStopDark.dc.html": {
+      "x": 2720,
+      "y": 19070,
+      "w": 1280,
+      "h": 1380,
+      "title": "الإدارة — إلغاء الاشتراك (الوضع الداكن)",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "CourseXWebDone.dc.html": {
+      "x": 4080,
+      "y": 19070,
+      "w": 1280,
+      "h": 1440,
+      "title": "الإدارة — بعد إلغاء الاشتراك: ما تغيّر ومن أُبلغ",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "RecXFamilyList.dc.html": {
+      "x": 0,
+      "y": 20880,
+      "w": 390,
+      "h": 1040,
+      "title": "الأسرة — «التسجيلات» قسم في صفحة الابن",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXFamilyListEmpty.dc.html": {
+      "x": 470,
+      "y": 20880,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — التسجيلات: حلقات Meet لا تُسجَّل",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXFamilyPlayer.dc.html": {
+      "x": 940,
+      "y": 20880,
+      "w": 390,
+      "h": 1100,
+      "title": "الأسرة — مشغّل التسجيل داخل التطبيق",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXLessonFiles.dc.html": {
+      "x": 1410,
+      "y": 20880,
+      "w": 390,
+      "h": 1000,
+      "title": "الأسرة — ملفات الحلقة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXFamilyLesson.dc.html": {
+      "x": 1880,
+      "y": 20880,
+      "w": 390,
+      "h": 844,
+      "title": "الأسرة — صفحة الحلقة: التسجيل والتقرير والملفات",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXFamilyListDark.dc.html": {
+      "x": 2350,
+      "y": 20880,
+      "w": 390,
+      "h": 1040,
+      "title": "الأسرة — التسجيلات — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXFamilyPlayerDark.dc.html": {
+      "x": 2820,
+      "y": 20880,
+      "w": 390,
+      "h": 1100,
+      "title": "الأسرة — مشغّل التسجيل — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXStaffRecordings.dc.html": {
+      "x": 3290,
+      "y": 20880,
+      "w": 390,
+      "h": 1100,
+      "title": "المعلم/ة — تسجيلات الحلقات",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXStaffLessonFiles.dc.html": {
+      "x": 3760,
+      "y": 20880,
+      "w": 390,
+      "h": 844,
+      "title": "المعلم/ة — ملفات الحلقة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXStaffUpload.dc.html": {
+      "x": 4230,
+      "y": 20880,
+      "w": 390,
+      "h": 844,
+      "title": "المعلم/ة — أضف ملفًا للحلقة",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXStaffReportLink.dc.html": {
+      "x": 4700,
+      "y": 20880,
+      "w": 390,
+      "h": 1100,
+      "title": "المعلم/ة — تقرير الحلقة وملفاتها",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXStaffRecordingsDark.dc.html": {
+      "x": 5170,
+      "y": 20880,
+      "w": 390,
+      "h": 1100,
+      "title": "المعلم/ة — تسجيلات الحلقات — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXWebFamilyRecordings.dc.html": {
+      "x": 0,
+      "y": 22350,
+      "w": 1280,
+      "h": 2483,
+      "title": "الأسرة على الويب — التسجيلات",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "RecXWebFamilyLesson.dc.html": {
+      "x": 1360,
+      "y": 22350,
+      "w": 1280,
+      "h": 1711,
+      "title": "الأسرة على الويب — صفحة الحلقة: التسجيل والتقرير والملفات",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "RecXWebStaffRecordings.dc.html": {
+      "x": 2720,
+      "y": 22350,
+      "w": 1280,
+      "h": 2308,
+      "title": "الموظفون على الويب — التسجيلات",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "RecXWebStaffLessonFiles.dc.html": {
+      "x": 4080,
+      "y": 22350,
+      "w": 1280,
+      "h": 2044,
+      "title": "الموظفون على الويب — ملفات الحلقة",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "RecXWebStaffRecordingsDark.dc.html": {
+      "x": 5440,
+      "y": 22350,
+      "w": 1280,
+      "h": 2308,
+      "title": "الموظفون على الويب — التسجيلات (الوضع الليلي)",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "ChatXWebStaff.dc.html": {
+      "x": 0,
+      "y": 25203,
+      "w": 1280,
+      "h": 1566,
+      "title": "رسائل الطلاب على الويب — المعلم/ة ومسؤول المتابعة",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "ChatXWebFamily.dc.html": {
+      "x": 1360,
+      "y": 25203,
+      "w": 1280,
+      "h": 2176,
+      "title": "المحادثة مع المعلم/ة على الويب — الأسرة",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "ChatXWebStaffDark.dc.html": {
+      "x": 2720,
+      "y": 25203,
+      "w": 1280,
+      "h": 1566,
+      "title": "رسائل الطلاب على الويب — الوضع الليلي",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "LessonXWebFamily.dc.html": {
+      "x": 4080,
+      "y": 25203,
+      "w": 1280,
+      "h": 1450,
+      "title": "الويب · الأسرة: خيارات الحلقة وطلب موعد آخر",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "LessonXWebStaff.dc.html": {
+      "x": 5440,
+      "y": 25203,
+      "w": 1280,
+      "h": 1120,
+      "title": "الويب · الإدارة: طلبات الأسر في جدول الحلقات",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "LessonXWebFamilyDark.dc.html": {
+      "x": 6800,
+      "y": 25203,
+      "w": 1280,
+      "h": 1450,
+      "title": "الويب · الأسرة: خيارات الحلقة وطلب موعد آخر — ليلي",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "RoomXWebLiveCard.dc.html": {
+      "x": 8160,
+      "y": 25203,
+      "w": 1280,
+      "h": 1135,
+      "title": "الأسرة على الويب: الحلقة جارية الآن",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "RoomXWebRoomChat.dc.html": {
+      "x": 9520,
+      "y": 25203,
+      "w": 1280,
+      "h": 880,
+      "title": "المعلمة على الويب: الحلقة والمحادثة مفتوحة",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
+    },
+    "RoomXWebRoomChatDark.dc.html": {
+      "x": 10880,
+      "y": 25203,
+      "w": 1280,
+      "h": 880,
+      "title": "المعلمة على الويب: الحلقة والمحادثة (ليلي)",
+      "is_interactive": true,
+      "radius": 12,
+      "expand": "fill"
     }
   },
   "order": [
@@ -811,7 +1207,49 @@
     "LoginFamilyDark.dc.html",
     "LoginStaffDark.dc.html",
     "LogoGreen.dc.html",
-    "RoomXEndAll.dc.html"
+    "RoomXEndAll.dc.html",
+    "CourseXActions.dc.html",
+    "CourseXActionsDark.dc.html",
+    "CourseXPause.dc.html",
+    "CourseXResume.dc.html",
+    "CourseXStop.dc.html",
+    "CourseXStopDone.dc.html",
+    "CourseXRenew.dc.html",
+    "CourseXExtend.dc.html",
+    "CourseXChange.dc.html",
+    "CourseXChangeDone.dc.html",
+    "CourseXMove.dc.html",
+    "CourseXMoveDone.dc.html",
+    "CourseXWebPanel.dc.html",
+    "CourseXWebStop.dc.html",
+    "CourseXWebStopDark.dc.html",
+    "CourseXWebDone.dc.html",
+    "RecXFamilyList.dc.html",
+    "RecXFamilyListEmpty.dc.html",
+    "RecXFamilyPlayer.dc.html",
+    "RecXLessonFiles.dc.html",
+    "RecXFamilyLesson.dc.html",
+    "RecXFamilyListDark.dc.html",
+    "RecXFamilyPlayerDark.dc.html",
+    "RecXStaffRecordings.dc.html",
+    "RecXStaffLessonFiles.dc.html",
+    "RecXStaffUpload.dc.html",
+    "RecXStaffReportLink.dc.html",
+    "RecXStaffRecordingsDark.dc.html",
+    "RecXWebFamilyRecordings.dc.html",
+    "RecXWebFamilyLesson.dc.html",
+    "RecXWebStaffRecordings.dc.html",
+    "RecXWebStaffLessonFiles.dc.html",
+    "RecXWebStaffRecordingsDark.dc.html",
+    "ChatXWebStaff.dc.html",
+    "ChatXWebFamily.dc.html",
+    "ChatXWebStaffDark.dc.html",
+    "LessonXWebFamily.dc.html",
+    "LessonXWebStaff.dc.html",
+    "LessonXWebFamilyDark.dc.html",
+    "RoomXWebLiveCard.dc.html",
+    "RoomXWebRoomChat.dc.html",
+    "RoomXWebRoomChatDark.dc.html"
   ],
   "notes": {
     "title": {
@@ -965,6 +1403,62 @@
       "x": 2350,
       "y": 16250,
       "text": "زر اللغة موجود في دخول الأسرة، وجديد في دخول الموظفين في المكان نفسه. اليوم تُحفظ اللغة على الجهاز فقط؛ حفظها في الحساب من الخادم لم يُبنَ بعد.",
+      "w": 340,
+      "color": "blue"
+    },
+    "courseTitle": {
+      "x": 0,
+      "y": 17350,
+      "text": "إجراءات الدورة بعد التحسين — الجوال",
+      "kind": "title1",
+      "maxW": 5560
+    },
+    "courseNote": {
+      "x": 5640,
+      "y": 17600,
+      "w": 340,
+      "color": "orange",
+      "text": "مجموعة واحدة «الدورة والباقة» فيها الملخص والحلقات القادمة. كل إجراء يعرض ما سيحدث قبل التأكيد، والنتيجة بعده ومن أُبلغ. اختيار «موقوف مؤقتًا» أو «توقف» من «الحالة» يمر بنافذتي الإيقاف والإلغاء. «مدّ الجدول» يحتاج إضافة في الخادم."
+    },
+    "courseWebTitle": {
+      "x": 0,
+      "y": 18820,
+      "text": "إجراءات الدورة بعد التحسين — الويب",
+      "kind": "title1",
+      "maxW": 5360
+    },
+    "t20880": {
+      "x": 0,
+      "y": 20630,
+      "text": "التسجيلات وملفات الحلقة — الجوال (الأسرة والموظفون)",
+      "kind": "title1",
+      "maxW": 5560
+    },
+    "n20880": {
+      "x": 5640,
+      "y": 20880,
+      "text": "اليوم تُسجَّل الحلقات داخل غرفة الأكاديمية صوتًا فقط، ولا ترى الأسرة إلا ما يُظهره المعلم مع التقرير. الجديد: شاشة «التسجيلات»، ومشغّل داخل التطبيق يكمل من حيث توقفت، و«ملفات الحلقة»، و«أضف ملفًا للحلقة» للمعلم.",
+      "w": 340,
+      "color": "teal"
+    },
+    "t22350": {
+      "x": 0,
+      "y": 22100,
+      "text": "التسجيلات وملفات الحلقة — الويب",
+      "kind": "title1",
+      "maxW": 6720
+    },
+    "t25203": {
+      "x": 0,
+      "y": 24953,
+      "text": "المحادثة والحلقة وخيارات الحلقة — الويب",
+      "kind": "title1",
+      "maxW": 12160
+    },
+    "n25203": {
+      "x": 12240,
+      "y": 25203,
+      "text": "نسخة الويب من لوحات الجوال نفسها: المحادثة بشكل واتساب، والحلقة الجارية مع المحادثة في لوحة جانبية و«إنهاء الحلقة للجميع»، وخيارات الأسرة وطلباتها عند الموظفين.",
       "w": 340,
       "color": "blue"
     }
