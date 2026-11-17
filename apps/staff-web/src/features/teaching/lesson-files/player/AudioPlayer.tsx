@@ -1,4 +1,5 @@
 import { formatClock, resumeAt } from '@ab/client-core';
+import { Ltr } from '@/components/ui/display/ltr';
 import { Button } from '@/components/ui/form/button';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { t } from '@/lib/i18n/i18n';
@@ -32,7 +33,10 @@ export function AudioPlayer({ id, url, label }: Props) {
       </audio>
       {from > 0 && state.position > 0 && (
         <p className="flex items-center justify-between text-xs text-ink-3">
-          <span>{P.resumeFrom.replace('{at}', formatClock(from))}</span>
+          <span>
+            {P.resumeFrom.replace('{at}', '')}
+            <Ltr>{formatClock(from)}</Ltr>
+          </span>
           <Button type="button" variant="ghost" size="sm" onClick={controls.startOver}>
             {P.startOver}
           </Button>

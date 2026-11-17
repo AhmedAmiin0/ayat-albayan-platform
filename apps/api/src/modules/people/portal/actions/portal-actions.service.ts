@@ -13,7 +13,7 @@ import {
   LessonCancelService,
   LessonStatusService,
 } from '@/modules/teaching/lessons';
-import { familyOf } from '@/modules/people/portal/lessons/portal-lesson-family';
+import { familyOf, isGroupLesson } from '@/modules/people/portal/lessons/portal-lesson-family';
 import {
   PortalLessonsRepo,
   type PortalLessonRow,
@@ -31,9 +31,6 @@ export interface OwnLesson {
   student: PortalStudent;
   row: PortalLessonRow;
 }
-
-/** More than one student: the family's buttons would act on the others' lesson too. */
-const isGroupLesson = (row: PortalLessonRow): boolean => row.lesson_students.length > 1;
 
 /** The lesson services the family's buttons reuse (one injectable keeps the constructor small). */
 @Injectable()

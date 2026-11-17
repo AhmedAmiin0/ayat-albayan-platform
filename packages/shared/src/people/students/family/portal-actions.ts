@@ -33,6 +33,8 @@ export type PortalLessonRequest = z.infer<typeof portalLessonRequestSchema>;
  */
 export const portalLessonFamilySchema = z.object({
   counts: z.boolean(),
+  /** More than one student: the lesson is the academy's to move or cancel (409 group_lesson). */
+  group: z.boolean(),
   request: portalLessonRequestSchema.nullable(),
 });
 export type PortalLessonFamily = z.infer<typeof portalLessonFamilySchema>;

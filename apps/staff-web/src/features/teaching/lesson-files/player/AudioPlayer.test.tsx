@@ -31,8 +31,22 @@ describe('AudioPlayer (web)', () => {
     const audio = loaded();
     fireEvent.click(screen.getByRole('button', { name: P.forward }));
     expect(audio.currentTime).toBe(10);
-    fireEvent.click(screen.getByRole('button', { name: P.speedOf.replace('{speed}', '1×') }));
+    fireEvent.click(screen.getByRole('radio', { name: '1.5×' }));
     expect(audio.playbackRate).toBe(1.5);
+    expect(screen.getByRole<HTMLInputElement>('radio', { name: '1.5×' }).checked).toBe(true);
+  });
+
+  it('seeks with the slider keys (RTL: the left arrow moves forward) and keeps times LTR', () => {
+    const audio = loaded();
+    const slider = screen.getByRole('slider', { name: P.seek });
+    document.documentElement.dir = 'rtl';
+    fireEvent.keyDown(slider, { key: 'ArrowLeft' });
+    expect(audio.currentTime).toBe(10);
+    fireEvent.keyDown(slider, { key: 'End' });
+    expect(audio.currentTime).toBe(120);
+    expect(slider.getAttribute('aria-valuenow')).toBe('120');
+    expect(screen.getByText('2:00', { selector: 'bdi' }).getAttribute('dir')).toBe('ltr');
+    document.documentElement.dir = '';
   });
 
   it('shows the failure', () => {

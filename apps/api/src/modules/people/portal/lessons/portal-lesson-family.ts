@@ -36,6 +36,9 @@ export function latestRequest(
   };
 }
 
+/** More than one student: the family's buttons would act on the others' lesson too. */
+export const isGroupLesson = (row: PortalLessonRow): boolean => row.lesson_students.length > 1;
+
 /**
  * «خيارات الحلقة» (owner 2026-11-17). `counts`: an excused lesson's own outcome
  * (lesson_students.chargeable); any other, whether «أعتذر» now would count from the package —
@@ -52,6 +55,7 @@ export function familyOf(row: PortalLessonRow, ctx: FamilyContext): PortalLesson
   });
   return {
     counts: excused ? (own?.chargeable ?? true) : preview,
+    group: isGroupLesson(row),
     request: latestRequest(ctx.requests, row.id),
   };
 }

@@ -35,4 +35,10 @@ describe('the family block of a portal lesson (owner 2026-11-17)', () => {
     expect(latestRequest([req({ lesson_id: 'other' })], L1)).toBeNull();
     expect(latestRequest([req({ status: 'approved' })], L1)).toBeNull();
   });
+
+  it('a lesson with more than one student is a group lesson (its options are the academy\'s)', () => {
+    expect(familyOf(lessonRow(), ctx('2026-10-25T10:00:00Z')).group).toBe(false);
+    const group = lessonRow({ lesson_students: [{ student_id: S1 }, { student_id: 'other' }] });
+    expect(familyOf(group, ctx('2026-10-25T10:00:00Z')).group).toBe(true);
+  });
 });
