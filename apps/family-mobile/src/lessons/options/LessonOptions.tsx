@@ -1,10 +1,10 @@
 import { FAMILY_NOTICE, lessonOptions, type FamilyAction, type LessonOption } from '@ab/client-core';
 import type { PortalLesson, PortalStudent } from '@ab/shared';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Button, t } from '@ab/mobile-kit';
 import { useFamilyAction } from '@/portal';
 import { AskTimeSheet } from './AskTimeSheet';
-import { OptionsMenu } from './OptionsMenu';
+import { OptionsMenu, type OptionsTitle } from './OptionsMenu';
 
 type Sheet = 'menu' | 'ask' | null;
 
@@ -12,17 +12,27 @@ interface LessonOptionsProps {
   lesson: PortalLesson;
   student: PortalStudent;
   now: Date;
-  /** The menu's heading («حلقة الغد · 6:30 م – 7:15 م»). */
-  heading: string;
+  /** The menu's heading, date line and excuse title. */
+  title: OptionsTitle;
   /** What the card says once an action lands. */
   onNotice: (message: string) => void;
+  /**
+   * What opens the menu (a list row): handed `open`, or null when the lesson offers nothing.
+   * Default: the card's «خيارات الحلقة» button, and nothing without options.
+   */
+  children?: (open: (() => void) | null) => ReactNode;
 }
 
+const menuButton = (open: (() => void) | null) =>
+  open ? <Button variant="secondary" label={t.portal.actions.menuTitle} onPress={open} /> : null;
+
 /**
- * «خيارات الحلقة» on the lesson card (owner 2026-11-17: «add button to accept or reject or
- * reschedule»): the family's own buttons, never the WhatsApp quick reply. Nothing once it started.
+ * «خيارات الحلقة» on the lesson card and the list rows (owner 2026-11-17: «add button to accept or
+ * reject or reschedule»): the family's own buttons, never the WhatsApp quick reply. Nothing once
+ * it started, nor on a group lesson.
  */
-export function LessonOptions({ lesson, student, now, heading, onNotice }: LessonOptionsProps) {
+export function LessonOptions(props: LessonOptionsProps) {
+  const { lesson, student, now, title, onNotice, children = menuButton } = props;
   const [sheet, setSheet] = useState<Sheet>(null);
   const action = useFamilyAction();
   const ids = { studentId: student.id, lessonId: lesson.id };
@@ -36,13 +46,13 @@ export function LessonOptions({ lesson, student, now, heading, onNotice }: Lesso
   };
   const pick = (o: Exclude<LessonOption, 'decline'>) =>
     o === 'request' ? open('ask') : action.send({ kind: o, ...ids }, finish(o));
-  if (lessonOptions(lesson, now).length === 0) return null;
+  if (lessonOptions(lesson, now).length === 0) return children(null);
   return (
     <>
-      <Button variant="secondary" label={t.portal.actions.menuTitle} onPress={() => open('menu')} />
+      {children(() => open('menu'))}
       <OptionsMenu
         lesson={lesson}
-        heading={heading}
+        title={title}
         now={now}
         open={sheet === 'menu'}
         busy={action.busy}
