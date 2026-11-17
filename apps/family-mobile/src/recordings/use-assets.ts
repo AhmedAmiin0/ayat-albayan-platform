@@ -6,6 +6,8 @@ import { assets } from './api';
 
 /** A signed link lasts an hour; it is minted again after 50 minutes. */
 const LINK_FRESH_MS = 50 * 60_000;
+/** A signed link expires: never on the disk cache (a restart would replay a dead link). */
+const meta = { noPersist: true };
 
 export function useChildRecordings(studentId: string) {
   return useQuery({ ...assets.portalRecordingsQuery(studentId), subscribed: useScreenFocused() });
@@ -21,6 +23,7 @@ export function useRecordingUrl(input: { studentId: string; recordingId: string 
     queryKey: ['portal-recording-url', input.studentId, input.recordingId],
     queryFn: () => portalSend.fileUrl({ ...input, kind: 'recordings', id: input.recordingId }),
     staleTime: LINK_FRESH_MS,
+    meta,
   });
 }
 
@@ -30,6 +33,7 @@ export function useLessonFileUrl(input: { studentId: string; fileId: string }) {
     queryKey: ['portal-lesson-file-url', input.studentId, input.fileId],
     queryFn: () => assets.lessonFileUrl(input),
     staleTime: LINK_FRESH_MS,
+    meta,
   });
 }
 

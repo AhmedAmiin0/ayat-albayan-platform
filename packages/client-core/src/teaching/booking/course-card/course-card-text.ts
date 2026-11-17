@@ -5,8 +5,10 @@ import { counted, type CourseCardView, type PluralForm } from '@ab/shared';
 // date formats are injected (each app's `t.courseCard`, its own day labels).
 
 export type CountWords = Readonly<Record<PluralForm | 'zero', string>>;
-const count = (words: CountWords, n: number): string => (n === 0 ? words.zero : counted(words, n));
-const fill = (text: string, key: string, value: string): string => text.split(`{${key}}`).join(value);
+/** The zero form, else the plural form of n. */
+export const count = (words: CountWords, n: number): string =>
+  n === 0 ? words.zero : counted(words, n);
+export const fill = (text: string, key: string, value: string): string => text.split(`{${key}}`).join(value);
 
 /** The day labels of these instants, joined («الأحد 22 نوفمبر، الثلاثاء 24 نوفمبر»). */
 export const datesText = (instants: readonly string[], day: (instant: string) => string): string =>

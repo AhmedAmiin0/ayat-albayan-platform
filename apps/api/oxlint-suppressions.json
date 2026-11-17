@@ -7661,11 +7661,6 @@
       "count": 2
     }
   },
-  "src/modules/people/portal/reports/portal-reports.repo.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
   "src/modules/people/portal/reports/portal-reports.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 3

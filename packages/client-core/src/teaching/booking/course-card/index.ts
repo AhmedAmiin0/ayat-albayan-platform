@@ -29,3 +29,8 @@ export {
   resumePreviewLines,
   type ResumeWords,
 } from './course-card-text.js';
+export {
+  packageCardLines,
+  type PackageLines,
+  type PackageWords,
+} from './course-card-package.js';
