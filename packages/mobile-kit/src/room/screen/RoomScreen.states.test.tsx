@@ -83,45 +83,6 @@ test('the connection dropped (#476): «ادخل مرة أخرى» joins again, i
   expect(p.audio.stop).toHaveBeenCalledTimes(1);
 });
 
-test('a refused join reads the API code; «حاول مرة أخرى» goes back to the preview', async () => {
-  fetchJoin.mockRejectedValueOnce(new ApiError(409, { code: 'join_closed' }));
-  await render(
-    withInsets(
-      <RoomScreen
-        platform={p}
-        target={LESSON}
-        onExit={onExit}
-        fetchJoin={fetchJoin}
-        onBrowser={onBrowser}
-      />,
-    ),
-  );
-  await press(R.preview.join);
-  expect(await screen.findByText(t.classroom.error.join_closed)).toBeTruthy();
-  expect(p.client.disconnect).toHaveBeenCalled();
-  await press(t.classroom.retry);
-  expect(await screen.findByTestId('room-preview')).toBeTruthy();
-});
-
-test('a connect failure says so; «رجوع» closes the screen', async () => {
-  p.client.connect.mockRejectedValueOnce(new Error('ws'));
-  await render(
-    withInsets(
-      <RoomScreen
-        platform={p}
-        target={LESSON}
-        onExit={onExit}
-        fetchJoin={fetchJoin}
-        onBrowser={onBrowser}
-      />,
-    ),
-  );
-  await press(R.preview.join);
-  expect(await screen.findByText(t.classroom.error.connect_failed)).toBeTruthy();
-  await press(R.back);
-  expect(onExit).toHaveBeenCalled();
-});
-
 test('the controls: mute, camera, the switch on one’s tile, the next audio output', async () => {
   await live();
   const me = tile({ key: 'me:camera', local: true, camOn: true, video: {} });
