@@ -4,20 +4,17 @@ import type { StorageService } from '@/common/storage/storage.service';
 import type { PortalRecordingRow, PortalReportsRepo, PortalScopes } from '@/modules/people/portal';
 import { FILE, fileRow, GUARDIAN, LESSON } from '@/modules/teaching/student-recordings/lesson-files/lesson-files.fakes';
 import type { LessonFilesRepo } from '@/modules/teaching/student-recordings/lesson-files/lesson-files.repo';
-import type { PortalAssetsRepo } from './portal-assets.repo';
 import { PortalAssetsService } from './portal-assets.service';
 
 const S = 'S1';
 const scopes = { student: vi.fn() };
 const reports = { sentLessons: vi.fn(), visibleRecordings: vi.fn() };
-const assets = { lessonOf: vi.fn() };
-const files = { ofLesson: vi.fn(), byId: vi.fn() };
+const files = { ofLesson: vi.fn(), byId: vi.fn(), lessonOf: vi.fn() };
 const storage = { signedDownload: vi.fn() };
 const service = () =>
   new PortalAssetsService(
     scopes as unknown as PortalScopes,
     reports as unknown as PortalReportsRepo,
-    assets as unknown as PortalAssetsRepo,
     files as unknown as LessonFilesRepo,
     storage as unknown as StorageService,
   );
@@ -44,7 +41,7 @@ describe('PortalAssetsService.recordings', () => {
 
 describe('PortalAssetsService.lesson', () => {
   it('ties the report, the recordings and the visible files of a sent lesson', async () => {
-    assets.lessonOf.mockResolvedValue({ id: LESSON, starts_at: 'a', ends_at: 'b', teacher: null });
+    files.lessonOf.mockResolvedValue({ id: LESSON, starts_at: 'a', ends_at: 'b', teacher: null });
     files.ofLesson.mockResolvedValue([fileRow()]);
     const out = await service().lesson({ user: GUARDIAN, studentId: S, lessonId: LESSON });
     expect(out.report_id).toBe('REP');

@@ -8,7 +8,6 @@ import { PortalReportsRepo, PortalScopes } from '@/modules/people/portal';
 import { portalLessonFile } from '@/modules/teaching/student-recordings/lesson-files/lesson-files.mapper';
 import { LessonFilesRepo } from '@/modules/teaching/student-recordings/lesson-files/lesson-files.repo';
 import { portalRecording } from './portal-assets.mapper';
-import { PortalAssetsRepo } from './portal-assets.repo';
 
 interface StudentCall {
   user: AuthUser;
@@ -24,7 +23,6 @@ export class PortalAssetsService {
   constructor(
     @Inject(PortalScopes) private readonly scopes: PortalScopes,
     @Inject(PortalReportsRepo) private readonly reports: PortalReportsRepo,
-    @Inject(PortalAssetsRepo) private readonly assets: PortalAssetsRepo,
     @Inject(LessonFilesRepo) private readonly files: LessonFilesRepo,
     @Inject(StorageService) private readonly storage: StorageService,
   ) {}
@@ -41,7 +39,7 @@ export class PortalAssetsService {
   async lesson(call: StudentCall & { lessonId: string }): Promise<PortalLessonAssets> {
     await this.scopes.student(call.user, call.studentId);
     const reportId = (await this.reports.sentLessons(call.studentId)).get(call.lessonId);
-    const lesson = reportId ? await this.assets.lessonOf(call) : null;
+    const lesson = reportId ? await this.files.lessonOf(call) : null;
     if (!lesson || !reportId) throw notFound('lesson_not_found');
     const [recordings, files] = await Promise.all([
       this.reports.visibleRecordings([lesson.id]),

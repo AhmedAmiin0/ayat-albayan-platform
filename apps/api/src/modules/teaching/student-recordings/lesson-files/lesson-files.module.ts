@@ -8,7 +8,6 @@ import { LessonFilesController } from './lesson-files.controller';
 import { LessonFilesRepo } from './lesson-files.repo';
 import { LessonFilesService } from './lesson-files.service';
 import { PortalAssetsController } from './portal/portal-assets.controller';
-import { PortalAssetsRepo } from './portal/portal-assets.repo';
 import { PortalAssetsService } from './portal/portal-assets.service';
 
 /**
@@ -24,7 +23,6 @@ import { PortalAssetsService } from './portal/portal-assets.service';
     LessonFilesAccess,
     LessonFilesService,
     LessonAssetsService,
-    PortalAssetsRepo,
     PortalAssetsService,
   ],
 })

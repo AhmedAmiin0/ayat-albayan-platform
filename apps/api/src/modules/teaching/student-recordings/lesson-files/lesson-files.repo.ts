@@ -6,6 +6,17 @@ import { dbError } from '@/common/http/http';
 export type LessonFileRow = Tables<'lesson_files'>;
 export type LessonRef = Pick<Tables<'lessons'>, 'id' | 'teacher_id' | 'starts_at' | 'ends_at'>;
 
+/** A lesson as the family page reads it. */
+interface FamilyLessonRef {
+  id: string;
+  starts_at: string;
+  ends_at: string;
+  teacher: { display_name_ar: string; display_name_en: string | null } | null;
+}
+
+const FAMILY_LESSON =
+  'id, starts_at, ends_at, teacher:teachers(display_name_ar, display_name_en), lesson_students!inner(student_id)';
+
 /** lesson_files (service role; the services decide who may ask, rule 9). */
 @Injectable()
 export class LessonFilesRepo {
@@ -19,6 +30,19 @@ export class LessonFilesRepo {
       .maybeSingle();
     if (error) throw dbError(error);
     return data;
+  }
+
+  /** The lesson when this student attended it; null otherwise (404 for the family). */
+  async lessonOf(input: { studentId: string; lessonId: string }): Promise<FamilyLessonRef | null> {
+    const { data, error } = await this.db
+      .from('lessons')
+      .select(FAMILY_LESSON)
+      .eq('id', input.lessonId)
+      .eq('lesson_students.student_id', input.studentId)
+      .maybeSingle();
+    if (error) throw dbError(error);
+    if (!data) return null;
+    return { id: data.id, starts_at: data.starts_at, ends_at: data.ends_at, teacher: data.teacher };
   }
 
   /** The lesson's files, newest first; `familyOnly` keeps the ones shown to the family. */
@@ -36,8 +60,23 @@ export class LessonFilesRepo {
     return data;
   }
 
+  /** Idempotent: a retried register of the same object returns the row it already made. */
   async add(row: TablesInsert<'lesson_files'>): Promise<LessonFileRow> {
-    const { data, error } = await this.db.from('lesson_files').insert(row).select('*').single();
+    const { data, error } = await this.db
+      .from('lesson_files')
+      .upsert(row, { onConflict: 'storage_path', ignoreDuplicates: true })
+      .select('*')
+      .maybeSingle();
+    if (error) throw dbError(error);
+    return data ?? this.byPath(row.storage_path);
+  }
+
+  private async byPath(path: string): Promise<LessonFileRow> {
+    const { data, error } = await this.db
+      .from('lesson_files')
+      .select('*')
+      .eq('storage_path', path)
+      .single();
     if (error) throw dbError(error);
     return data;
   }

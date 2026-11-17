@@ -5,7 +5,7 @@ import type { LessonFileRow, LessonRef } from './lesson-files.repo';
 
 export const LESSON = '11111111-1111-4111-8111-111111111111';
 export const FILE = '22222222-2222-4222-8222-222222222222';
-export const TEACHER_ID = 'T1';
+const TEACHER_ID = 'T1';
 
 const user = (id: string, role: AuthUser['role']): AuthUser => ({ id, email: null, role });
 export const ADMIN = user('admin-1', 'admin');
