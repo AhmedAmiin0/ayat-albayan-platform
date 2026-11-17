@@ -9,7 +9,10 @@ const DAY_MONTH = { day: 'numeric', month: 'long' } as const;
 const DAY_MONTH_YEAR = { ...DAY_MONTH, year: 'numeric' } as const;
 const pad = (n: number): string => String(n).padStart(2, '0');
 
-type DayClock = { now: Date; tz: string };
+interface DayClock {
+  now: Date;
+  tz: string;
+}
 
 /** The calendar date at noon UTC, formatted in UTC: the same day whatever the device's zone. */
 function dateWords(day: ChatDay, clock: DayClock): string {

@@ -2,13 +2,13 @@ import { FlatList, View } from 'react-native';
 import { FloatingDay } from '../../chat-ui/days/FloatingDay';
 import { t } from '../../lib/i18n/i18n';
 import { EmptyState } from '../../ui/feedback/EmptyState';
-import { Button } from '../../ui/primitives/Button';
 import type { ChannelRef, useChannel } from '../channel-api';
 import { CellFrames, ChannelCell } from './ChannelCell';
 import { ChannelRowItem, type RowActions } from './ChannelRowItem';
 import { useFloatingDay } from './use-floating-day';
 import { useChannelRows } from './use-channel-rows';
 import { useJump } from './use-jump';
+import { OlderButton } from './OlderButton';
 
 interface ChannelListProps {
   refs: ChannelRef;
@@ -42,14 +42,6 @@ export function ChannelList({ refs, query, mode, actions, heldId }: ChannelListP
       </View>
     );
   }
-  const older = query.hasNextPage ? (
-    <Button
-      variant="ghost"
-      label={t.studentChannel.older}
-      busy={query.isFetchingNextPage}
-      onPress={() => void query.fetchNextPage()}
-    />
-  ) : null;
   return (
     <View style={{ flex: 1, marginHorizontal: -GUTTER }}>
       <CellFrames value={floating.frame}>
@@ -71,7 +63,7 @@ export function ChannelList({ refs, query, mode, actions, heldId }: ChannelListP
               actions={{ ...actions, onJump: jump }}
             />
           )}
-          ListFooterComponent={older}
+          ListFooterComponent={<OlderButton query={query} />}
           onViewableItemsChanged={floating.onViewable}
           onScrollToIndexFailed={onScrollToIndexFailed}
           {...floating.scroll}

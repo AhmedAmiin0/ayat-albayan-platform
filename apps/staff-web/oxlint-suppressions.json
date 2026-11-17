@@ -10841,9 +10841,6 @@
     }
   },
   "src/features/teaching/student-channel/ChannelThread.live.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "typescript/no-unnecessary-condition": {
       "count": 2
     }
@@ -10876,7 +10873,7 @@
   },
   "src/features/teaching/student-channel/api.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-untyped-api-calls": {
       "count": 5

@@ -59,8 +59,13 @@ beforeEach(() => {
 test('closed (no subscription or teacher yet): the closed line and no socket', async () => {
   mockApiFetch.mockResolvedValue(page({ open: false, messages: [] }));
   await thread({ audience: 'teacher', studentId: 's1' });
-  expect(await screen.findByText(c.closed)).toBeTruthy();
-  expect(screen.getByText(c.closedWho)).toBeTruthy();
+  expect(await screen.findByText(c.closedCard.title)).toBeTruthy();
+  expect(screen.getByText(c.closedCard.body)).toBeTruthy();
+  expect(
+    screen.getByLabelText(
+      `${c.closedCard.steps.subscribe}، ${c.closedCard.current}، ${c.closedCard.notes.subscribe}`,
+    ),
+  ).toBeTruthy();
   expect(screen.queryByLabelText(c.messageLabel)).toBeNull();
   expect(mockRt.channel).not.toHaveBeenCalled();
   expect(mockApiSend).not.toHaveBeenCalled();
@@ -86,9 +91,20 @@ test('a monitor of a closed channel still reads, told why the others cannot writ
   expect(screen.getByText('السلام عليكم')).toBeTruthy();
 });
 
-test('the closed line follows the reason (studentChannel.closedReasons)', async () => {
+test('the closed card follows the reason: no teacher yet → subscribed, the teacher is next', async () => {
   const closed = page({ open: false, messages: [], closed_reason: 'no_teacher' });
   mockApiFetch.mockResolvedValue(closed);
   await thread({ audience: 'portal', studentId: 's1' });
-  expect(await screen.findByText(c.closedReasons.no_teacher)).toBeTruthy();
+  const steps = c.closedCard.steps;
+  expect(await screen.findByLabelText(`${steps.subscribe}، ${c.closedCard.done}`)).toBeTruthy();
+  const teacher = `${steps.teacher}، ${c.closedCard.current}، ${c.closedCard.notes.teacher}`;
+  expect(screen.getByLabelText(teacher)).toBeTruthy();
+});
+
+test('the chat switched off for the family: the title only, no steps', async () => {
+  const closed = page({ open: false, messages: [], closed_reason: 'family_chat_off' });
+  mockApiFetch.mockResolvedValue(closed);
+  await thread({ audience: 'portal', studentId: 's1' });
+  expect(await screen.findByText(c.closedReasons.family_chat_off)).toBeTruthy();
+  expect(screen.queryByText(c.closedCard.body)).toBeNull();
 });

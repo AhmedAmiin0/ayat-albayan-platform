@@ -63,16 +63,7 @@ export function ChannelComposer({ refs, replyTo, onReplyDone }: ChannelComposerP
           />
         }
         pill={pill}
-        action={
-          <ComposerAction
-            mic={!box.hasText && voice.available && !voice.on}
-            recording={voice.on}
-            canSend={box.canSend}
-            onRecord={voice.start}
-            onStop={voice.stop}
-            onSend={box.submit}
-          />
-        }
+        action={<ComposerAction box={box} voice={voice} />}
       />
       {emoji.open ? (
         <View testID="channel-emoji" style={{ height: 240, paddingTop: 8 }}>

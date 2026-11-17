@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { palette } from '../../theme';
 import { t } from '../../lib/i18n/i18n';
 import { QuoteBar } from './QuoteBar';
 import { QuoteCard } from './QuoteCard';
@@ -32,4 +33,21 @@ test('the bar over the composer: one label, ✕ cancels', async () => {
   expect(line.props.accessibilityLabel).toBe(`${t.inbox.reply.strip}: Huda: See you`);
   await fireEvent.press(screen.getByLabelText(t.inbox.reply.cancel));
   expect(onCancel).toHaveBeenCalled();
+});
+
+test('a tone colours the bar and the sender; a drawn glyph stands in for the emoji', async () => {
+  await render(<QuoteCard id="q2" sender="هدى" text="صورة" tone="act" glyph={<Text>G</Text>} />);
+  const card = StyleSheet.flatten(screen.getByTestId('quote-q2').props.style);
+  expect(card.borderStartColor).toBe(palette.light.act);
+  expect(StyleSheet.flatten(screen.getByText('هدى').props.style).color).toBe(palette.light.act);
+  expect(screen.getByText('G')).toBeTruthy();
+  expect(screen.getByText('صورة')).toBeTruthy();
+});
+
+test('the bar takes a tone too; the brand by default', async () => {
+  await render(<QuoteBar sender="هدى" text="صورة" onCancel={jest.fn()} />);
+  const bar = () => StyleSheet.flatten(screen.getByTestId('reply-strip').props.style);
+  expect(bar().borderStartColor).toBe(palette.light.lapis);
+  await render(<QuoteBar sender="هدى" text="صورة" tone="ink2" onCancel={jest.fn()} />);
+  expect(bar().borderStartColor).toBe(palette.light.ink2);
 });

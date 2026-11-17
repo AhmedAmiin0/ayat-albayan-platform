@@ -2,29 +2,28 @@ import { Pressable } from 'react-native';
 import { RoundAction } from '../../chat-ui/composer/RoundAction';
 import { t } from '../../lib/i18n/i18n';
 import { shape } from '../../theme';
+import type { useComposer } from './use-composer';
+import type { useRecording } from './use-recording';
 
 interface ComposerActionProps {
-  /** The microphone: no text yet and the app records. */
-  mic: boolean;
-  /** A voice note is being recorded: «أرسل» stops and sends it. */
-  recording: boolean;
-  canSend: boolean;
-  onRecord: () => void;
-  onStop: () => void;
-  onSend: () => void;
+  box: Pick<ReturnType<typeof useComposer>, 'hasText' | 'canSend' | 'submit'>;
+  voice: Pick<ReturnType<typeof useRecording>, 'available' | 'on' | 'start' | 'stop'>;
 }
 
 /** The channel's circle (ChatX boards): 48pt. */
 const SIZE = shape.control.comfort;
 
-/** The round button at the bar's end: the microphone, or «أرسل» (a text or the recording). */
-export function ComposerAction(p: ComposerActionProps) {
-  if (p.mic) {
+/**
+ * The round button at the bar's end: the microphone while there is no text and the app records,
+ * else «أرسل» (the text, or the recording: it stops and sends it).
+ */
+export function ComposerAction({ box, voice }: ComposerActionProps) {
+  if (!box.hasText && voice.available && !voice.on) {
     return (
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={t.studentChannel.media.record}
-        onPress={p.onRecord}
+        onPress={voice.start}
       >
         <RoundAction mode="mic" size={SIZE} />
       </Pressable>
@@ -34,8 +33,8 @@ export function ComposerAction(p: ComposerActionProps) {
     <RoundAction
       mode="send"
       size={SIZE}
-      disabled={!p.recording && !p.canSend}
-      onSend={p.recording ? p.onStop : p.onSend}
+      disabled={!voice.on && !box.canSend}
+      onSend={voice.on ? voice.stop : box.submit}
     />
   );
 }

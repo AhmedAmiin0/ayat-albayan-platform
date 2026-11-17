@@ -3,6 +3,7 @@ import { t } from '../../lib/i18n/i18n';
 import { type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
 import type { ClosedStep } from './closed-steps';
+import { CurrentPill } from './CurrentPill';
 import { StepMark } from './StepMark';
 
 /** The line under a step: «تم.» once done, else what happens in it. */
@@ -40,22 +41,7 @@ export function ClosedStepRow({ step, n }: { step: ClosedStep; n: number }) {
           >
             {c.steps[step.key]}
           </AppText>
-          {current ? (
-            <AppText
-              style={{
-                paddingHorizontal: 8,
-                borderRadius: 999,
-                overflow: 'hidden',
-                backgroundColor: color.lapisWash,
-                color: color.lapis,
-                fontFamily: type.ui[600],
-                fontSize: type.size['2xs'],
-                lineHeight: 19,
-              }}
-            >
-              {c.current}
-            </AppText>
-          ) : null}
+          {current ? <CurrentPill /> : null}
         </View>
         {note ? (
           <AppText style={{ fontSize: type.size.xs, lineHeight: 20, color: color.ink2 }}>

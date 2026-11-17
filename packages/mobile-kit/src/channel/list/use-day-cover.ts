@@ -52,25 +52,25 @@ export function useDayCover() {
   const [band] = useState(() => {
     const check = () => setCovered(isCovered(live.current));
     return {
-      viewable(tokens: readonly ViewToken<ChannelRow>[]) {
+      viewable: (tokens: readonly ViewToken<ChannelRow>[]) => {
         live.current.tokens = tokens;
         check();
       },
-      scroll({ nativeEvent: { contentOffset, layoutMeasurement } }: Scroll) {
+      scroll: ({ nativeEvent: { contentOffset, layoutMeasurement } }: Scroll) => {
         live.current.view = { offset: contentOffset.y, length: layoutMeasurement.height };
         check();
       },
-      layout({ height }: LayoutRectangle) {
+      layout: ({ height }: LayoutRectangle) => {
         live.current.view = { offset: live.current.view?.offset ?? 0, length: height };
         check();
       },
-      frame(key: string, frame: LayoutRectangle | null) {
+      frame: (key: string, frame: LayoutRectangle | null) => {
         const frames = live.current.frames;
         if (frame) frames.set(key, { y: frame.y, height: frame.height });
         else frames.delete(key);
         check();
       },
-      chip({ height }: LayoutRectangle) {
+      chip: ({ height }: LayoutRectangle) => {
         live.current.chip = Math.max(0, height - 2 * CHIP_MARGIN);
         check();
       },

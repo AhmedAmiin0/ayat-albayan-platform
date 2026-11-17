@@ -29,7 +29,7 @@ interface ComposerPillProps {
  * then «لوحة المفاتيح» goes back), the text box (16/24), the clip; 44pt buttons. While recording:
  * the dot, its clock and ✕.
  */
-export function ComposerPill(p: ComposerPillProps) {
+export function ComposerPill({ input, ...p }: ComposerPillProps) {
   const { color } = useTheme();
   const c = t.studentChannel;
   if (p.recording) return <RecordingPill ms={p.recordedMs} onCancel={p.onCancelRecording} />;
@@ -40,7 +40,7 @@ export function ComposerPill(p: ComposerPillProps) {
         {p.emoji ? <KeyboardIcon color={color.ink3} /> : <EmojiIcon color={color.ink3} />}
       </IconButton>
       <TextInput
-        ref={p.input}
+        ref={input}
         accessibilityLabel={c.messageLabel}
         multiline
         value={p.text}

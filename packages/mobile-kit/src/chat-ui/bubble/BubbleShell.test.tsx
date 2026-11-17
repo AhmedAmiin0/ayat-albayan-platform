@@ -44,3 +44,34 @@ test('the caller style goes last; a long press makes it a press target', async (
   await fireEvent(screen.getByTestId('b'), 'longPress');
   expect(onLongPress).toHaveBeenCalled();
 });
+
+test('a follow-up has no tail corner; staff (no a11y props) leave the focus to the contents', async () => {
+  await render(
+    <BubbleShell ours tail={false} testID="b" onLongPress={jest.fn()}>
+      <Text>hi</Text>
+    </BubbleShell>,
+  );
+  expect(box().borderTopEndRadius).toBe(shape.radius.lg);
+  expect(screen.getByTestId('b').props.accessible).toBe(false);
+});
+
+test('with its accessibility actions it is one stop: its label, hint and action', async () => {
+  const onAction = jest.fn();
+  await render(
+    <BubbleShell
+      ours
+      testID="b"
+      onLongPress={jest.fn()}
+      accessibilityLabel="أنت: hi"
+      accessibilityHint="hint"
+      accessibilityActions={[{ name: 'longpress' }]}
+      onAccessibilityAction={onAction}
+    >
+      <Text>hi</Text>
+    </BubbleShell>,
+  );
+  const shell = screen.getByTestId('b');
+  expect(shell.props).toMatchObject({ accessible: true, accessibilityLabel: 'أنت: hi' });
+  await fireEvent(shell, 'accessibilityAction', { nativeEvent: { actionName: 'longpress' } });
+  expect(onAction).toHaveBeenCalled();
+});

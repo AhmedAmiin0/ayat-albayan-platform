@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react-native';
+import { Text } from 'react-native';
 import { t } from '../lib/i18n/i18n';
 import { freshQueryClient, renderWithQuery } from '../testing/query';
 import { ChannelScreen } from './ChannelScreen';
@@ -59,4 +60,11 @@ test('staff: the student’s name is the title', async () => {
   const refs = { audience: 'teacher', studentId: 's1' } as const;
   await renderWithQuery(<ChannelScreen refs={refs} />, freshQueryClient());
   expect(await screen.findByRole('header', { name: 'يوسف' })).toBeTruthy();
+});
+
+test('a banner slot under the head (the room’s live lesson)', async () => {
+  const refs = { audience: 'portal', studentId: 's1' } as const;
+  const banner = <Text testID="live-banner">الحلقة الآن</Text>;
+  await renderWithQuery(<ChannelScreen refs={refs} banner={banner} />, freshQueryClient());
+  expect(await screen.findByTestId('live-banner')).toBeTruthy();
 });

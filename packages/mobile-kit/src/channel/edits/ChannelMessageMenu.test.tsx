@@ -1,8 +1,10 @@
 import type { ChannelMessageView, ChannelPage } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { ApiError } from '../../lib/http/api';
 import { t } from '../../lib/i18n/i18n';
 import { freshQueryClient, renderWithQuery } from '../../testing/query';
+import { palette } from '../../theme';
 import { ChannelThread } from '../ChannelThread';
 import { channelMessage, channelPage } from '../testing/channel-fixtures';
 
@@ -125,4 +127,14 @@ test('a closed chat refusal is said in its own words', async () => {
   await fireEvent.press(menu.getByRole('button', { name: a.deleteForAll }));
   await fireEvent.press(menu.getByRole('button', { name: a.deleteConfirm }));
   expect(await menu.findByText(a.errors.channel_not_open)).toBeTruthy();
+});
+
+test('the menu (ChatXMenu): its rows in order, no «إلغاء» row; the held bubble is lit', async () => {
+  const menu = await hold('teacher', msg({}));
+  const names = menu.getAllByRole('button').map((b) => b.props.accessibilityLabel);
+  const c = t.studentChannel;
+  expect(names).toEqual([c.reply.action, a.edit, a.deleteForAll, c.reads.action]);
+  expect(menu.queryByRole('button', { name: t.common.cancel })).toBeNull();
+  const box = StyleSheet.flatten(screen.getByTestId('channel-bubble-m1').props.style);
+  expect(box.borderColor).toBe(palette.light.lapis);
 });

@@ -11,10 +11,14 @@ const file = (over: Partial<ChannelAttachmentView> = {}): ChannelAttachmentView 
   ...{ mime: 'application/pdf', size: 245_760, name: 'خطة الحفظ', duration_ms: null, url: URL },
   ...over,
 });
-const body = (m: Partial<ChannelMessageView>, port: ChannelMediaPort = {}) =>
+const body = (
+  m: Partial<ChannelMessageView>,
+  port: ChannelMediaPort = {},
+  onLongPress?: () => void,
+) =>
   render(
     <ChannelMediaContext value={port}>
-      <AttachmentBody message={channelMessage(m)} />
+      <AttachmentBody message={channelMessage(m)} onLongPress={onLongPress} />
     </ChannelMediaContext>,
   );
 const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
@@ -62,4 +66,35 @@ test('a deleted file (no link) and a text message show nothing', async () => {
   expect(screen.queryByTestId('channel-photo')).toBeNull();
   await body({ kind: 'text' });
   expect(screen.toJSON()).toBeNull();
+});
+
+test.each([
+  ['photo', 'channel-photo', file({ mime: 'image/jpeg' })],
+  ['pdf', 'channel-pdf', file()],
+] as const)(
+  'a long press on a %s opens the message menu, said to a screen reader',
+  async (kind, id, f) => {
+    const onLongPress = jest.fn();
+    await body({ kind, attachment: f }, {}, onLongPress);
+    const target = screen.getByTestId(id);
+    expect(target.props.accessibilityHint).toBe(t.studentChannel.actions.menuHint);
+    await fireEvent(target, 'longPress');
+    expect(onLongPress).toHaveBeenCalled();
+  },
+);
+
+test('a long press on a voice note’s button opens the message menu', async () => {
+  const onLongPress = jest.fn();
+  await body(
+    { kind: 'voice', attachment: file({ mime: 'audio/mp4', duration_ms: 7000 }) },
+    {},
+    onLongPress,
+  );
+  await fireEvent(screen.getByRole('button', { name: /رسالة صوتية/ }), 'longPress');
+  expect(onLongPress).toHaveBeenCalled();
+});
+
+test('a PDF says its size to a screen reader too', async () => {
+  await body({ kind: 'pdf', attachment: file() });
+  expect(screen.getByTestId('channel-pdf').props.accessibilityLabel).toContain(t.inbox.pdf.type);
 });

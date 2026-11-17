@@ -50,7 +50,7 @@ const open = (media: ChannelMediaPort) =>
 test('a photo: the signed upload, then the message that carries it', async () => {
   await open({ pickPhoto: async () => file() });
   await fireEvent.press(await screen.findByRole('button', { name: c.media.attach }));
-  await fireEvent.press(screen.getByRole('button', { name: c.media.photo }));
+  await fireEvent.press(screen.getByRole('button', { name: c.media.gallery }));
   const upload = { mime: 'image/jpeg', size: 3, name: 'photo.jpg' };
   await waitFor(() =>
     expect(mockApiSend).toHaveBeenCalledWith('POST', `${BASE}/attachments/upload-url`, upload),
@@ -69,7 +69,7 @@ test('a photo: the signed upload, then the message that carries it', async () =>
 test('a type the chat does not take is refused before any upload', async () => {
   await open({ pickPdf: async () => file({ mime: 'text/plain', name: 'a.txt' }) });
   await fireEvent.press(await screen.findByRole('button', { name: c.media.attach }));
-  await fireEvent.press(screen.getByRole('button', { name: c.media.pdf }));
+  await fireEvent.press(screen.getByRole('button', { name: c.media.document }));
   expect(await screen.findByText(c.media.badType)).toBeTruthy();
   expect(put).not.toHaveBeenCalled();
 });
