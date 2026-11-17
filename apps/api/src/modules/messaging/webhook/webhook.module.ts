@@ -34,6 +34,13 @@ import { ExternalRepo } from './external/external.repo';
 import { ExternalStore } from './external/external.store';
 import { ManualEcho, ManualEchoRepo } from './external/manual-echo';
 import { KapsoHistory } from './external/kapso-history';
+import {
+  CRM_CONFIRM_SOURCE,
+  CrmConfirm,
+  CrmConfirmRepo,
+  CrmConfirmSweepJob,
+  liveCrmConfirmSource,
+} from './crm-confirm';
 import { InboundCatchUpJob } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.job';
 import { InboundCatchUpRepo } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.repo';
 import { InboundCatchUp } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.service';
@@ -84,6 +91,11 @@ import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inb
     // «التكاملات» › the CRM's delivery-ticks webhook in one click (docs/19 «crm driver»).
     { provide: CRM_WEBHOOK_SOURCE, useFactory: liveCrmWebhookSource },
     CrmWebhookRegistrar,
+    // A timed-out crm send confirmed from the CRM (docs/19 «Confirming an uncertain send»).
+    { provide: CRM_CONFIRM_SOURCE, useFactory: liveCrmConfirmSource },
+    CrmConfirmRepo,
+    CrmConfirm,
+    CrmConfirmSweepJob,
     // Evolution API numbers (docs/19 «Evolution driver»): inbound, ticks, connection state.
     EvolutionWebhookService,
     EvolutionStateRepo,

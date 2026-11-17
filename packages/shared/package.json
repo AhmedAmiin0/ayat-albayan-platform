@@ -12,7 +12,8 @@
       "default": "./dist/testing/index.js"
     },
     "./i18n/ar.json": "./i18n/ar.json",
-    "./i18n/en.json": "./i18n/en.json"
+    "./i18n/en.json": "./i18n/en.json",
+    "./data/countries.json": "./data/countries.json"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

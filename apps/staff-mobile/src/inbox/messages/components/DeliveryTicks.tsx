@@ -1,10 +1,10 @@
 import {
+  bubbleWord,
   type MessageStatus,
   messageTicks,
   TICK_PATHS,
   tickTone,
   type TickTone,
-  tickWord,
 } from '@ab/shared';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -27,9 +27,15 @@ export interface DeliveryTicksProps {
   actionLabel?: string;
   /** In a thread row: the row's label already says the word (no separate stop), its chip «لم تُرسل». */
   inList?: boolean;
+  /** The row's error_code: a send that may have gone reads «لم يتأكد الإرسال بعد» (bubbleWord). */
+  errorCode?: string | null;
 }
 
-const WORD = { failed: t.enums.messageStatus.failed, manual: t.messages.manualTick } as const;
+const WORD = {
+  failed: t.enums.messageStatus.failed,
+  unconfirmed: t.messages.unconfirmedTick,
+  manual: t.messages.manualTick,
+} as const;
 
 /**
  * WhatsApp-style ticks on OUR message (packages/shared ticks.ts), the web's DeliveryTicks drawn with
@@ -38,11 +44,14 @@ const WORD = { failed: t.enums.messageStatus.failed, manual: t.messages.manualTi
  * assistive tech and the long press. Failed has its own «!» and word; sent by hand «يدويًا». The
  * admin's row that did not go out is a button instead: a tap opens its sheet (retry, by hand).
  */
-export function DeliveryTicks({ status, times, onLongPress, onPress, actionLabel, inList = false }: DeliveryTicksProps) {
+export function DeliveryTicks(props: DeliveryTicksProps) {
+  const { status, times, onLongPress, onPress, actionLabel, inList = false, errorCode } = props;
   const { color } = useTheme();
   const kind = messageTicks(status);
   const ink = color[INK[tickTone(kind)]];
-  const wordKind = tickWord(kind, inList);
+  const wordKind = bubbleWord(status, errorCode, inList);
+  const unconfirmed = bubbleWord(status, errorCode) === 'unconfirmed';
+  const label = unconfirmed ? WORD.unconfirmed : t.enums.messageStatus[status];
   const word = wordKind ? WORD[wordKind] : null;
   const body = (
     <>
@@ -87,7 +96,7 @@ export function DeliveryTicks({ status, times, onLongPress, onPress, actionLabel
       </View>
     );
   }
-  const named = times ? `${t.enums.messageStatus[status]} · ${times}` : t.enums.messageStatus[status];
+  const named = times ? `${label} · ${times}` : label;
   const a11y = {
     accessible: true,
     accessibilityRole: onPress ? ('button' as const) : ('image' as const),

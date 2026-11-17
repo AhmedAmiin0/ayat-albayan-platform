@@ -1,23 +1,16 @@
-import { Image, View } from 'react-native';
-import { AppText, t, type, useTheme, Wordmark } from '@ab/mobile-kit';
-import icon from '../../assets/icon.png';
-
-const TILE = 76;
+import { View } from 'react-native';
+import { AppText, Mark, t, type, useTheme, Wordmark } from '@ab/mobile-kit';
 
 /**
- * The top of the family sign-in (docs/50 §5 «Hierarchy»): the family mark on its deep-green tile,
- * the wordmark «Ayat Al-Bayan» over «آيات البيان», and one line of welcome. Not the staff emblem.
+ * The top of the family sign-in (docs/50 §5 «Hierarchy»): the academy emblem, the same logo as
+ * ayatalbayan.com (owner 2026-11-16 «use the logo from the project»), the wordmark «Ayat Al-Bayan»
+ * over «آيات البيان», and one line of welcome.
  */
 export function SignInLockup() {
   const { color } = useTheme();
   return (
     <View style={{ alignItems: 'center', gap: 12, marginBottom: 12 }}>
-      <Image
-        source={icon}
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-        style={{ width: TILE, height: TILE, borderRadius: TILE * 0.23 }}
-      />
+      <Mark size={88} />
       <Wordmark
         title={t.familyApp.signIn.wordmark}
         subtitle={t.familyApp.signIn.wordmarkArabic}

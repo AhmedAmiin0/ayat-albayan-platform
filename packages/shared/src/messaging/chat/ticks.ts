@@ -32,6 +32,33 @@ export function tickWord(kind: TickKind, inList = false): 'failed' | 'manual' | 
   return kind === 'manual' ? 'manual' : null;
 }
 
+/**
+ * The sender's codes for «may have gone» (the CRM answered after our timeout, docs/19
+ * «Confirming an uncertain send»): never «لم تُرسل», the CRM's confirmation is awaited.
+ */
+const UNCONFIRMED_CODES: readonly string[] = ['uncertain', 'crm_uncertain'];
+
+/** A failed row that may have reached the family: «لم يتأكد الإرسال بعد», same «!» and tone. */
+export const sendUnconfirmed = (
+  status: MessageStatus,
+  errorCode: string | null | undefined,
+): boolean => status === 'failed' && UNCONFIRMED_CODES.includes(errorCode ?? '');
+
+export type BubbleWord = 'failed' | 'unconfirmed' | 'manual';
+
+/**
+ * tickWord on a bubble: its failed word reads «لم يتأكد الإرسال بعد» (t.messages.unconfirmedTick)
+ * when the send may have gone.
+ */
+export function bubbleWord(
+  status: MessageStatus,
+  errorCode?: string | null,
+  inList = false,
+): BubbleWord | null {
+  const word = tickWord(messageTicks(status), inList);
+  return word === 'failed' && sendUnconfirmed(status, errorCode) ? 'unconfirmed' : word;
+}
+
 // Stroked paths on the 20px / 1.6-stroke icon grid (web components/ui/icon.tsx). Ticks are not
 // directional: WhatsApp draws them the same way in Arabic and English.
 const CLOCK = 'M15.5 10a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0ZM10 7v3l2 1.3';

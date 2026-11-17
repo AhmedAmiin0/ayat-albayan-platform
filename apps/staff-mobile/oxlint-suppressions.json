@@ -2990,7 +2990,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/inbox/messages/components/MessageBubble.side.en.test.tsx": {
