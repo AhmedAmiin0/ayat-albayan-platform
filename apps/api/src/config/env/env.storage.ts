@@ -24,6 +24,12 @@ export const STORAGE_SHAPE = {
   MINIO_BUCKET_PREFIX: opt(minioBucketPrefix),
   MINIO_ACCESS_KEY: opt(minioAccessKey),
   MINIO_SECRET_KEY: optionalSecret,
+  /**
+   * The LiveKit egress's own MinIO user, put-only on <prefix>recordings/* (docs/45 §1a): env
+   * only (never the DB, never returned). Unset = the egress gets the app key, with a boot warning.
+   */
+  MINIO_EGRESS_ACCESS_KEY: opt(minioAccessKey),
+  MINIO_EGRESS_SECRET_KEY: optionalSecret,
   /** Lesson and meeting recordings into MinIO: its own switch, off by default (docs/45 §1). */
   MINIO_RECORDINGS: z.preprocess(blankIsUnset, z.stringbool().default(false)),
   /** A nightly compressed copy of the MinIO buckets on Google Drive: off by default (docs/45). */
@@ -39,14 +45,23 @@ const minioSchema = z.object({
   MINIO_SECRET_KEY: z.string().min(1),
 });
 
+const egressSchema = z.object({
+  MINIO_EGRESS_ACCESS_KEY: minioAccessKey,
+  MINIO_EGRESS_SECRET_KEY: z.string().min(1),
+});
+
+/** An S3 key pair. */
+export interface S3Keys {
+  accessKey: string;
+  secretKey: string;
+}
+
 /** A MinIO server the API can talk to (internal endpoint) and sign for (public URL). */
-export interface MinioEnv {
+export interface MinioEnv extends S3Keys {
   endpoint: string;
   publicUrl: string;
   region: string;
   bucketPrefix: string;
-  accessKey: string;
-  secretKey: string;
 }
 
 export interface StorageEnv {
@@ -57,6 +72,8 @@ export interface StorageEnv {
   recordings: boolean;
   /** MINIO_DRIVE_BACKUP: the worker uploads compressed archives of MinIO to Google Drive. */
   driveBackup: boolean;
+  /** MINIO_EGRESS_*: the egress's write-only keys; null (or absent) = the app key (warned). */
+  egress?: S3Keys | null;
 }
 
 type StorageSource = Partial<Record<keyof typeof STORAGE_SHAPE, unknown>>;
@@ -79,5 +96,19 @@ export function storageEnv(env: StorageSource): StorageEnv {
     : null;
   const flag = z.boolean().catch(false);
   const recordings = flag.parse(env.MINIO_RECORDINGS);
-  return { driver, minio, recordings, driveBackup: flag.parse(env.MINIO_DRIVE_BACKUP) };
+  const driveBackup = flag.parse(env.MINIO_DRIVE_BACKUP);
+  return { driver, minio, recordings, driveBackup, egress: egressKeys(env) };
+}
+
+function egressKeys(env: StorageSource): S3Keys | null {
+  const e = egressSchema.safeParse(env).data;
+  return e ? { accessKey: e.MINIO_EGRESS_ACCESS_KEY, secretKey: e.MINIO_EGRESS_SECRET_KEY } : null;
+}
+
+/** The boot warning while MinIO is set up but the egress still gets the app's full key. */
+export function egressKeyWarning(s: StorageEnv): string | null {
+  const appKeyFallback = s.minio !== null && !s.egress;
+  return appKeyFallback
+    ? 'MINIO_EGRESS_ACCESS_KEY / MINIO_EGRESS_SECRET_KEY unset: recordings use the app key'
+    : null;
 }

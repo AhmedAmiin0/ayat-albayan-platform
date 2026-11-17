@@ -119,7 +119,7 @@ The server `.env` is **merged**, never replaced (`tools/scripts/env/env-merge.mj
 
 **Built-in defaults** (a variable of the same name overrides): `SSH_HOST` 148.230.116.195, `SSH_USER` root, `DEPLOY_DIR` /opt/ayat-albayan-staging, `SUPABASE_PROJECT_REF` knxfwiimjcifwckhwbim, `API_URL` and `VITE_API_URL` https://api.ayatalbayan.com, `VITE_SUPABASE_URL` https://knxfwiimjcifwckhwbim.supabase.co, `WA_API_BASE` https://graph.facebook.com. The workflow no longer sets the WhatsApp phone number id or the messaging switch at all (see «GitHub Actions» below).
 
-**Optional** (empty = the server keeps its value): secrets `SSH_KNOWN_HOSTS`, `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`, `FEEDBACK_TOKEN_SECRET`, `LOGIN_CODE_PEPPER`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN`; variables `SUPABASE_URL`, `WEB_ORIGIN`, `WA_API_VERSION`, `WA_APP_ID`, `LIVEKIT_URL`, `RECORDING_S3_ENDPOINT`, `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET`, `EXPO_API_BASE`, `FX_API_URL`.
+**Optional** (empty = the server keeps its value): secrets `SSH_KNOWN_HOSTS`, `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`, `FEEDBACK_TOKEN_SECRET`, `LOGIN_CODE_PEPPER`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN`, `MINIO_EGRESS_ACCESS_KEY`, `MINIO_EGRESS_SECRET_KEY`; variables `SUPABASE_URL`, `WEB_ORIGIN`, `WA_API_VERSION`, `WA_APP_ID`, `LIVEKIT_URL`, `RECORDING_S3_ENDPOINT`, `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET`, `EXPO_API_BASE`, `FX_API_URL`.
 
 On every run: the web app is built on the runner before anything on the server changes; if `/health` fails after the swap, the previous API code and web build are restored automatically (migrations are not undone); the run summary shows the commit and links.
 
@@ -402,6 +402,7 @@ Since 2026-10-31 no PR edits `refactor/guards/` to record an improvement, so PRs
 | `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN` | Meta app; optional, empty keeps the server's value | `deploy-staging` |
 | `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` | LiveKit project; optional | `deploy-staging` |
 | `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN` | Optional server keys | `deploy-staging` |
+| `MINIO_EGRESS_ACCESS_KEY`, `MINIO_EGRESS_SECRET_KEY` | Optional: the LiveKit egress's put-only MinIO user (docs/45 §1a) | `deploy-staging` |
 | `EXPO_TOKEN` | expo.dev → Account → Access tokens | `mobile` |
 | `GOOGLE_SERVICES_JSON` | Firebase `google-services.json` content; optional if the EAS `preview` environment already holds it | `mobile` (OTA) |
 | `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` | console.anthropic.com key, or `claude setup-token` | `claude-tasks` (the only secret it sees); `CLAUDE_CODE_OAUTH_TOKEN` also `claude-code-review` |

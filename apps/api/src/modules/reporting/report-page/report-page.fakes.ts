@@ -66,7 +66,7 @@ export function pageRow(over: Partial<PageReportRow> = {}): PageReportRow {
 
 export function pageFacts(): PageFacts {
   return {
-    lesson: { starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z' },
+    lesson: { starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z', teacher_id: 't1' },
     student: {
       name: 'سهيلة',
       code: 'AB-0001',
@@ -74,6 +74,12 @@ export function pageFacts(): PageFacts {
       profile_id: 'student-profile',
       guardian: { id: 'g1', profile_id: 'guardian-profile', phone_e164: '+15550000001' },
     },
-    teacher: { display_name_ar: 'أبرار', profile_id: 'teacher-profile', phone_e164: '+15550000002' },
+    teacher: {
+      id: 't1',
+      display_name_ar: 'أبرار',
+      profile_id: 'teacher-profile',
+      phone_e164: '+15550000002',
+      status: 'active',
+    },
   };
 }

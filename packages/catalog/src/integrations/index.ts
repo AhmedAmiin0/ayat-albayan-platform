@@ -6,3 +6,4 @@ export * from './driver-keys.js';
 export * from './wa-errors.js';
 export * from './evolution.js';
 export * from './storage.js';
+export * from './urls.js';

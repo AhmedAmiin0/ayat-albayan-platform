@@ -109,8 +109,8 @@ describe('DriveBackupRunner (docs/45 §5)', () => {
     expect(t.connection.authFailed).toHaveBeenCalledOnce();
   });
 
-  it('recordings only when they go to MinIO at all', () => {
-    expect(bucketsOf({ recordings: false })).not.toContain('recordings');
-    expect(bucketsOf({ recordings: true })).toContain('recordings');
+  it('never backs up recordings (REC-4), every other bucket yes', () => {
+    expect(bucketsOf()).not.toContain('recordings');
+    expect(bucketsOf()).toContain('report-attachments');
   });
 });

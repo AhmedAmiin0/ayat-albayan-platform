@@ -951,11 +951,6 @@
       "count": 8
     }
   },
-  "src/common/storage/file-sniff.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/common/storage/storage.avatar-path.test.ts": {
     "max-len": {
       "count": 1
