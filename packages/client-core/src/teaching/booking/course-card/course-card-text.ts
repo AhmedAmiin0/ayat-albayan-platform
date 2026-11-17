@@ -99,3 +99,24 @@ export function extendPreviewLines(input: {
   const end = preview.endsOn ? [fill(words.endsOn, 'date', format.date(preview.endsOn))] : [];
   return [books, ...end];
 }
+
+export interface ExtendDoneWords {
+  /** «حُجزت حلقتان» (zero: nothing was left to book). */
+  done: CountWords;
+  /** «آخر حلقة في {date}». */
+  endsOn: string;
+  /** Some new lessons clash (stored on them, never blocking). */
+  clashes: string;
+}
+
+/** After «مدّ الجدول»: what it booked, the new last day, and the clashes line when some. */
+export function extendDoneLines(input: {
+  result: { inserted: number; endsOn: string | null; conflicts: number };
+  words: ExtendDoneWords;
+  date: (local: string) => string;
+}): string[] {
+  const { result, words, date } = input;
+  const end = result.endsOn ? [fill(words.endsOn, 'date', date(result.endsOn))] : [];
+  const clashes = result.conflicts > 0 ? [words.clashes] : [];
+  return [count(words.done, result.inserted), ...end, ...clashes];
+}

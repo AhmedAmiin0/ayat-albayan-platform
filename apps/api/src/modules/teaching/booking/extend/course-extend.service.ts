@@ -6,8 +6,10 @@ import {
   type CourseExtendResult,
 } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
+import { conflict } from '@/common/http/errors';
+import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { RuleExtendService } from '@/modules/teaching/scheduling';
-import { CourseExtendReader, type ExtendTarget } from './course-extend.reader';
+import { CourseExtendReader, type ExtendTarget, type PlannedExtend } from './course-extend.reader';
 import { CourseExtendRepo } from './course-extend.repo';
 
 const WEEK = 7 * DAY_MS;
@@ -32,16 +34,17 @@ export class CourseExtend {
     @Inject(CourseExtendReader) private readonly reader: CourseExtendReader,
     @Inject(CourseExtendRepo) private readonly repo: CourseExtendRepo,
     @Inject(RuleExtendService) private readonly rules: RuleExtendService,
+    @Inject(CourseDraftRepo) private readonly packages: CourseDraftRepo,
   ) {}
 
   async preview(target: ExtendTarget): Promise<CourseExtendPreview> {
-    const { id, plan } = await this.reader.plan(target, this.repo);
+    const { id, plan } = await this.planned(target);
     const starts = plan.starts.map((d) => d.toISOString());
     return { subscriptionId: id, starts, tz: plan.tz, endsOn: plan.endsOn, notified: [] };
   }
 
   async extend(target: ExtendTarget & { subscriptionId: string }): Promise<CourseExtendResult> {
-    const { id, plan } = await this.reader.plan(target, this.repo);
+    const { id, plan } = await this.planned(target);
     const result = { subscriptionId: id, inserted: 0, endsOn: plan.courseEnd, conflicts: 0 };
     if (plan.endsOn === null) return result;
     await this.repo.extendRules(plan.ruleIds, plan.endsOn);
@@ -53,5 +56,13 @@ export class CourseExtend {
       result.conflicts += out.conflicts.length;
     }
     return { ...result, endsOn: plan.endsOn };
+  }
+
+  /** The reader's plan; 409 already_cancelled for a stopped package (it is never extended). */
+  private async planned(target: ExtendTarget): Promise<PlannedExtend> {
+    const planned = await this.reader.plan(target);
+    const status = await this.packages.status(planned.id);
+    if (status === 'cancelled') throw conflict('already_cancelled');
+    return planned;
   }
 }

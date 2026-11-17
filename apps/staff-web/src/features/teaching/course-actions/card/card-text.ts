@@ -1,10 +1,5 @@
-import { courseCardLines, extendPreviewLines } from '@ab/client-core';
-import {
-  counted,
-  type CourseCardView,
-  type CourseExtendPreview,
-  type CourseExtendResult,
-} from '@ab/shared';
+import { courseCardLines, extendDoneLines, extendPreviewLines } from '@ab/client-core';
+import type { CourseCardView, CourseExtendPreview, CourseExtendResult } from '@ab/shared';
 import { dateLabel, dayIn } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 
@@ -23,8 +18,6 @@ export const extendLines = (preview: CourseExtendPreview, tz: string): string[] 
 
 /** «حُجزت حلقتان · آخر حلقة في …» and the clashes line when some were stored. */
 export function extendDoneText(result: CourseExtendResult): string {
-  const c = t.courseCard.extend;
-  const head = result.inserted === 0 ? c.done.zero : counted(c.done, result.inserted);
-  const end = result.endsOn ? [t.courseActions.endsOn.replace('{date}', dateLabel(result.endsOn))] : [];
-  return [head, ...end, ...(result.conflicts > 0 ? [c.clashes] : [])].join(' · ');
+  const words = { ...t.courseCard.extend, endsOn: t.courseActions.endsOn };
+  return extendDoneLines({ result, words, date: dateLabel }).join(' · ');
 }

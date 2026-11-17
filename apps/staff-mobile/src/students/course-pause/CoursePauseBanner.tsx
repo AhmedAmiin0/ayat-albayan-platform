@@ -7,7 +7,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { useResumePause } from './course-pause-api';
 import { bannerLines, pauseErrorText, resumedText } from './course-pause-text';
 import { ChangeUntilSheet } from './ChangeUntilSheet';
-import { useResumeAsk } from './use-resume-ask';
+import { useResumeAsk } from '@/students/course-card/use-resume-ask';
 
 interface CoursePauseBannerProps {
   studentId: string;

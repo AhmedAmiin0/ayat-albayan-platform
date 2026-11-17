@@ -1,3 +1,4 @@
+import type { CourseLessonFact } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { planExtend, type ExtendRuleRow } from './course-extend.plan';
 
@@ -12,7 +13,7 @@ const MON: ExtendRuleRow = {
   ends_on: '2026-11-16',
 };
 const WED: ExtendRuleRow = { ...MON, id: 'rb', byday: [3], start_time_local: '18:30:00' };
-const held = (n: number) =>
+const held = (n: number): CourseLessonFact[] =>
   Array.from({ length: n }, () => ({
     status: 'completed' as const,
     chargeable: true,
@@ -35,7 +36,9 @@ describe('planExtend', () => {
   });
 
   it('a cancelled lesson gives its place back; a full package books nothing', () => {
-    const cancelled = { ...held(1)[0], status: 'cancelled_by_admin' as const };
+    const cancelled: CourseLessonFact = {
+      ...{ status: 'cancelled_by_admin', chargeable: false, makeup: false, instant: false },
+    };
     const lessons = [...held(7), cancelled];
     const one = planExtend({ rules: [MON], lessonsTotal: 8, lessons, now: NOW });
     expect(one?.starts).toHaveLength(1);

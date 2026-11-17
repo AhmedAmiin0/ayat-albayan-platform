@@ -1,7 +1,7 @@
 import { t } from '@ab/mobile-kit';
 import { useViewerTz } from '@/core/lib/clock';
-import { resumeLines } from '@/students/course-card/card-text';
-import { useResumePreview } from '@/students/course-card/course-card-api';
+import { resumeLines } from './card-text';
+import { useResumePreview } from './course-card-api';
 
 /**
  * «استئناف الدورة الآن؟» with what it does (owner 2026-11-17): the lessons back with their dates

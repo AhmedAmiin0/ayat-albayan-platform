@@ -24,7 +24,7 @@ export interface ExtendRuleRow {
   ends_on: string | null;
 }
 
-export interface ExtendFacts {
+interface ExtendFacts {
   rules: readonly ExtendRuleRow[];
   /** The lessons the course books (courseLessonCount). */
   lessonsTotal: number;

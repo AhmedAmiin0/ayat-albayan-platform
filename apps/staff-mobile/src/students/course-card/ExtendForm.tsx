@@ -1,5 +1,5 @@
-import { courseExtendErrorCode, type CountWords } from '@ab/client-core';
-import { counted, type CourseExtendResult } from '@ab/shared';
+import { courseExtendErrorCode, extendDoneLines } from '@ab/client-core';
+import type { CourseExtendResult } from '@ab/shared';
 import { View } from 'react-native';
 import { t, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/more';
@@ -17,14 +17,10 @@ interface ExtendFormProps {
   onDone: (text: string) => void;
 }
 
-const count = (words: CountWords, n: number): string => (n === 0 ? words.zero : counted(words, n));
-
 /** «حُجزت حلقتان» with the new last day, and the clashes line when some were stored. */
 function doneText(result: CourseExtendResult): string {
-  const c = t.courseCard.extend;
-  const end = result.endsOn ? [t.courseActions.endsOn.replace('{date}', localDay(result.endsOn))] : [];
-  const clashes = result.conflicts > 0 ? [c.clashes] : [];
-  return [count(c.done, result.inserted), ...end, ...clashes].join('\n');
+  const words = { ...t.courseCard.extend, endsOn: t.courseActions.endsOn };
+  return extendDoneLines({ result, words, date: localDay }).join('\n');
 }
 
 /**

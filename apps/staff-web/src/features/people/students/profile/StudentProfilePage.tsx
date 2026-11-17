@@ -33,9 +33,9 @@ import { MonitorChannel } from '@/features/teaching/student-channel';
 import { usePermissions } from '@/features/people/auth';
 import { CourseCardPanel } from '@/features/teaching/course-actions';
 
-/** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */
+/** Once the package ended «جدّد الاشتراك» leads the head; before, it waits in «⋯» (2026-11-17). */
 const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
-  ended ? { primary: nodes.renew, extra: nodes.book } : { primary: nodes.book, extra: null };
+  ended ? { primary: nodes.renew, extra: nodes.book } : { primary: nodes.book, extra: nodes.renew };
 
 /**
  * Student profile (R-STU-04, R-STU-05) inside the shell's Page: the name is the cartouche, then
@@ -83,7 +83,8 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       {t.booking.open}
     </Link>
   );
-  const head = headOf(isPackageEnded(student.status), { renew: <RenewSubscriptionButton student={student} primary />, book });
+  const ended = isPackageEnded(student.status);
+  const head = headOf(ended, { renew: <RenewSubscriptionButton student={student} primary={ended} />, book });
 
   return (
     <>

@@ -7,7 +7,7 @@ import { Dialog } from '@/components/ui/overlay/dialog';
 import { t } from '@/lib/i18n/i18n';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { resumeCoursePause, resumePreviewQuery, useInvalidatePause } from './api';
-import { resumeLines } from './pause-lines';
+import { resumeLines } from './pause-form';
 
 interface ResumeCourseDialogProps {
   studentId: string;

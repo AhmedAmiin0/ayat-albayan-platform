@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   courseCardLines,
+  extendDoneLines,
   extendPreviewLines,
   pausePreviewLines,
   resumePreviewLines,
@@ -55,5 +56,13 @@ describe('course card lines (owner 2026-11-17)', () => {
       'تُحجز اثنتان: 11-22، 11-24',
       'آخر حلقة [2026-11-24]',
     ]);
+  });
+
+  it('after «مدّ الجدول»: booked, the new last day, the clashes', () => {
+    const words = { done: plain('حُجزت'), endsOn: 'حتى {date}', clashes: 'تعارض' };
+    const result = { inserted: 2, endsOn: '2026-11-24', conflicts: 1 };
+    expect(extendDoneLines({ result, words, date })).toEqual(['حُجزت', 'حتى [2026-11-24]', 'تعارض']);
+    const none = { inserted: 0, endsOn: null, conflicts: 0 };
+    expect(extendDoneLines({ result: none, words, date })).toEqual(['لا حُجزت']);
   });
 });

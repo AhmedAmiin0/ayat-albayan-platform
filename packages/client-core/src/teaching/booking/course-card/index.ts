@@ -20,6 +20,8 @@ export {
   courseCardLines,
   type CountWords,
   datesText,
+  extendDoneLines,
+  type ExtendDoneWords,
   type ExtendWords,
   extendPreviewLines,
   pausePreviewLines,

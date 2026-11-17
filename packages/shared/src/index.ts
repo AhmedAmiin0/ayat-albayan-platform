@@ -44,6 +44,7 @@ export * from './sales/course/course-follow.js';
 export * from './sales/course/course-change.js';
 export * from './sales/course/course-draft.js';
 export * from './sales/course/course-picks.js';
+export * from './sales/course/course-card.js';
 export * from './people/users/index.js';
 export * from './people/account/index.js';
 export * from './people/presence/index.js';

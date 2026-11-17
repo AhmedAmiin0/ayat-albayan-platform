@@ -9,4 +9,3 @@ export * from './course-stop.js';
 export * from './stop-refund.js';
 export * from './stop-choices.js';
 export * from './board-students.js';
-export * from './course-card.js';

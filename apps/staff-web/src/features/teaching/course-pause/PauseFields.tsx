@@ -7,8 +7,7 @@ import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { coursePausePreviewQuery } from './api';
-import { pauseLines } from './pause-lines';
-import { draftProblem, type PauseDraft } from './pause-form';
+import { draftProblem, pauseLines, type PauseDraft } from './pause-form';
 
 interface PauseFieldsProps {
   studentId: string;

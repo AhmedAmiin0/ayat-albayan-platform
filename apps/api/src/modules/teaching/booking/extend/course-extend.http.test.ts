@@ -60,7 +60,7 @@ describe('GET / POST /students/:id/course-extend', () => {
   });
 
   it('a stopped package is 409 already_cancelled; a teacher 403', async () => {
-    t().m.extendRepo.status.mockResolvedValue('cancelled');
+    t().m.drafts.status.mockResolvedValue('cancelled');
     const res = await t().post('admin', URL, { subscriptionId: SUB_ID });
     expect([res.statusCode, res.json().code]).toEqual([409, 'already_cancelled']);
     expect((await t().get('teacher', URL)).statusCode).toBe(403);

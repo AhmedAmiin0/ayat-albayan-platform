@@ -8690,7 +8690,7 @@
     "teacherEnd": "{teacher} · last lesson on {date}",
     "endsOn": "Last lesson on {date}",
     "unbooked": {
-      "zero": "",
+      "zero": "Every lesson of the package has a date",
       "one": "1 lesson has no date yet",
       "two": "2 lessons have no dates yet",
       "few": "{n} lessons have no dates yet",
