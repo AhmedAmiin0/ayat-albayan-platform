@@ -2495,11 +2495,6 @@
       "count": 1
     }
   },
-  "src/inbox/composer/emoji/emoji-list.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/inbox/composer/pill/ComposerPill.test.tsx": {
     "max-len": {
       "count": 3
@@ -2650,10 +2645,7 @@
   },
   "src/inbox/composer/voice/RecordingBar.tsx": {
     "max-len": {
-      "count": 3
-    },
-    "no-restricted-syntax": {
-      "count": 1
+      "count": 2
     }
   },
   "src/inbox/composer/voice/VoiceNoteLine.tsx": {
@@ -3143,9 +3135,6 @@
     }
   },
   "src/inbox/messages/days/day-label.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 7
     }
@@ -7633,14 +7622,6 @@
   },
   "src/student-file/channel/TeacherChannelsScreen.test.tsx": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/student-file/channel/TeacherChannelsScreen.tsx": {
-    "max-len": {
-      "count": 1
-    },
-    "no-nested-ternary": {
       "count": 1
     }
   },

@@ -21,9 +21,11 @@ const page = {
 };
 
 beforeEach(() => {
-  mockFetch.mockReset().mockImplementation(async (path: string) =>
-    path.endsWith('/presence') ? { enabled: false, peers: [] } : page,
-  );
+  mockFetch
+    .mockReset()
+    .mockImplementation(async (path: string) =>
+      path.endsWith('/presence') ? { enabled: false, peers: [] } : page,
+    );
 });
 
 test('the teacher’s chat: the student’s name, attach and the microphone (the staff port)', async () => {

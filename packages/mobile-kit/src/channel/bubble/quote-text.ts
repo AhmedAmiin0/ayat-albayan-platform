@@ -1,4 +1,4 @@
-import type { ChannelMessageKind, ChannelReplyView } from '@ab/shared';
+import type { ChannelReplyView } from '@ab/shared';
 import { t } from '../../lib/i18n/i18n';
 
 /** The quoted message's line: its first words, a file's kind, or «رسالة محذوفة». */

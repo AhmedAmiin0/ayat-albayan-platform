@@ -10,7 +10,7 @@ import { useEffect, useRef } from 'react';
 import { claimPlayback, releasePlayback } from '@/inbox/messages/media/playback';
 
 /** AAC in MP4, mono, 48 kbps (~360 KB a minute), with the level for the bars. Read when mounted: never at import. */
-const voiceOptions = (): RecordingOptions => ({ ...RecordingPresets.HIGH_QUALITY, numberOfChannels: 1, bitRate: 48_000, isMeteringEnabled: true });
+export const voiceOptions = (): RecordingOptions => ({ ...RecordingPresets.HIGH_QUALITY, numberOfChannels: 1, bitRate: 48_000, isMeteringEnabled: true });
 const OWNER = 'voice-recorder';
 
 /** recording; asked = the system prompt was shown (the next press records, as WhatsApp); blocked = only Settings can allow it. */

@@ -7,23 +7,19 @@ import type {
 import {
   AudioModule,
   createAudioPlayer,
-  RecordingPresets,
   requestRecordingPermissionsAsync,
   setAudioModeAsync,
   type AudioRecorder,
   type AudioStatus,
 } from 'expo-audio';
+import { claimPlayback, releasePlayback, voiceOptions } from '@/inbox';
 
-// The student chat's voice notes on the staff phone (expo-audio 57): a recorder made on the first
-// tap (never at mount: an older APK without the native recorder only gets «false»), and one player
-// per note, made on its first tap.
+// The student chat's voice notes on the staff phone (expo-audio 57): the inbox's recording preset
+// (AAC in MP4, mono, 48 kbps), a recorder made on the first tap (never at mount: an older APK
+// without the native recorder only gets «false»), and one player per note, made on its first tap.
+// As in the inbox, one sound at a time (claimPlayback): a note that starts pauses the other.
 
-/** AAC in MP4, mono, 48 kbps (~360 KB a minute). Read when recording: never at import. */
-const voiceOptions = () => ({
-  ...RecordingPresets.HIGH_QUALITY,
-  numberOfChannels: 1,
-  bitRate: 48_000,
-});
+const RECORDER = 'channel-recorder';
 
 /** The recorded m4a's bytes: fetch on the local file (as a picked PDF is read in the inbox). */
 async function voiceFile(uri: string, durationMs: number): Promise<ChannelPickedFile> {
@@ -33,6 +29,7 @@ async function voiceFile(uri: string, durationMs: number): Promise<ChannelPicked
 
 /** Stops and frees a recorder; never throws. */
 async function finish(rec: AudioRecorder): Promise<string | null> {
+  releasePlayback(RECORDER);
   try {
     if (rec.isRecording) await rec.stop();
     return rec.uri;
@@ -43,7 +40,24 @@ async function finish(rec: AudioRecorder): Promise<string | null> {
   }
 }
 
-/** The microphone as the chat's port wants it: start (permission first), stop → the file, drop. */
+/** Mic access, the audio mode, then a prepared recorder that records; throws on any failure. */
+async function record(): Promise<AudioRecorder> {
+  await setAudioModeAsync({ allowsRecording: true, playsInSilentMode: true });
+  const rec = new AudioModule.AudioRecorder(voiceOptions());
+  try {
+    await rec.prepareToRecordAsync();
+    rec.record();
+    return rec;
+  } catch (e) {
+    rec.release();
+    throw e;
+  }
+}
+
+/**
+ * The microphone as the chat's port wants it: start (permission first; false when it may not or
+ * cannot record, the recorder freed), stop → the file, drop; its clock for the bar.
+ */
 export function createChannelRecorder(): ChannelRecorder {
   let current: AudioRecorder | null = null;
   const take = () => {
@@ -51,15 +65,20 @@ export function createChannelRecorder(): ChannelRecorder {
     current = null;
     return rec;
   };
+  const cancel = () => {
+    const rec = take();
+    if (rec) void finish(rec);
+  };
   const start = async (): Promise<boolean> => {
-    const allowed = await requestRecordingPermissionsAsync();
-    if (!allowed.granted) return false;
-    await setAudioModeAsync({ allowsRecording: true, playsInSilentMode: true });
-    const rec = new AudioModule.AudioRecorder(voiceOptions());
-    current = rec;
-    await rec.prepareToRecordAsync();
-    rec.record();
-    return true;
+    try {
+      const allowed = await requestRecordingPermissionsAsync();
+      if (!allowed.granted) return false;
+      current = await record();
+      claimPlayback(RECORDER, cancel);
+      return true;
+    } catch {
+      return false;
+    }
   };
   const stop = async (): Promise<ChannelPickedFile | null> => {
     const rec = take();
@@ -68,11 +87,8 @@ export function createChannelRecorder(): ChannelRecorder {
     const uri = await finish(rec);
     return uri ? voiceFile(uri, ms) : null;
   };
-  const cancel = () => {
-    const rec = take();
-    if (rec) void finish(rec);
-  };
-  return { start, stop, cancel };
+  const elapsedMs = () => current?.getStatus().durationMillis ?? 0;
+  return { start, stop, cancel, elapsedMs };
 }
 
 const statusOf = (s: AudioStatus): ChannelVoiceStatus => ({
@@ -89,14 +105,20 @@ export function playChannelVoice(input: {
   const mode = { playsInSilentMode: true, allowsRecording: false };
   void setAudioModeAsync(mode).catch(() => undefined);
   const player = createAudioPlayer(input.url);
+  const id = `channel-voice:${input.url}`;
   const sub = player.addListener('playbackStatusUpdate', (s) => {
     input.onStatus(statusOf(s));
     if (s.didJustFinish) void player.seekTo(0);
   });
+  const play = () => {
+    claimPlayback(id, () => player.pause());
+    player.play();
+  };
   return {
-    toggle: () => (player.playing ? player.pause() : player.play()),
+    toggle: () => (player.playing ? player.pause() : play()),
     seek: (fraction) => void player.seekTo(fraction * player.duration),
     release: () => {
+      releasePlayback(id);
       sub.remove();
       player.remove();
     },

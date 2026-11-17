@@ -7,7 +7,7 @@ import { MenuSheet } from '../../ui/feedback/MenuSheet';
 import { AppText } from '../../ui/primitives/AppText';
 
 /** Each source the app's port offers; absent → no tile. */
-export interface AttachSources {
+interface AttachSources {
   photo?: () => void;
   camera?: () => void;
   pdf?: () => void;
