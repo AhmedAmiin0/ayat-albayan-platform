@@ -14,8 +14,30 @@ const overflow = (page: Page) =>
   page.evaluate<number>('document.scrollingElement.scrollWidth - window.innerWidth');
 
 async function settle(page: Page, path: string): Promise<void> {
+  // TEMP diagnostic (PR #759): which requests keep the page busy.
+  const open = new Map<object, string>();
+  const seen: string[] = [];
+  const add = (r: { url: () => string }) => {
+    open.set(r, r.url());
+    seen.push(r.url());
+  };
+  const done = (r: object) => open.delete(r);
+  page.on('request', add);
+  page.on('requestfinished', done);
+  page.on('requestfailed', done);
+  const t0 = Date.now();
   await page.goto(path);
-  await page.waitForLoadState('networkidle');
+  try {
+    await page.waitForLoadState('networkidle', { timeout: 20_000 });
+  } catch (e) {
+    console.log('DIAG', path, [...open.values()], seen.slice(-40));
+    throw e;
+  } finally {
+    console.log('DIAG settle', path, Date.now() - t0, 'ms', seen.length, 'requests');
+    page.off('request', add);
+    page.off('requestfinished', done);
+    page.off('requestfailed', done);
+  }
 }
 
 test.describe('no horizontal overflow on the main screens', () => {
