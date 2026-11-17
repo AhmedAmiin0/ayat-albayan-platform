@@ -35,6 +35,9 @@ test('a push that changes a cache key file runs everything (develop writes the c
     'tsconfig.base.json',
     'apps/api/tsconfig.json',
     'packages/config/tsconfig/base.json',
+    'apps/staff-mobile/babel.config.cjs',
+    'apps/family-mobile/jest.config.cjs',
+    'packages/mobile-kit/jest.base.cjs',
   ])
     assert.equal(verdict([artifact()], ['docs/x.md', f]), false, f);
   assert.equal(verdict([artifact()], ['apps/api/src/tsconfig-ish.ts']), true);

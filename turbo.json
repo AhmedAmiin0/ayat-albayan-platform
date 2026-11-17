@@ -25,7 +25,11 @@
       "outputs": [".lint/**"]
     },
     "typecheck": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md"] },
-    "test": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md"] },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md"],
+      "passThroughEnv": ["JEST_CACHE_DIR"]
+    },
     "bundle": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md"] },
     "e2e": {
       "dependsOn": ["^build"],

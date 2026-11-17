@@ -179,7 +179,9 @@ jobs:
           - { name: test api 1/3, task: test, filter: --filter=api, args: '-- --shard=1/3', vcache: api-1-3 }
           - { name: test api 2/3, task: test, filter: --filter=api, args: '-- --shard=2/3', vcache: api-2-3 }
           - { name: test api 3/3, task: test, filter: --filter=api, args: '-- --shard=3/3', vcache: api-3-3 }
-          - { name: test mobile, task: test, filter: --filter=staff-mobile }
+          # jest-expo by file path (--shard), its transform cache kept like vitest's (`jcache`).
+          - { name: test mobile 1/2, task: test, filter: --filter=staff-mobile, args: '-- --shard=1/2', jcache: mobile-1-2 }
+          - { name: test mobile 2/2, task: test, filter: --filter=staff-mobile, args: '-- --shard=2/2', jcache: mobile-2-2 }
           # The family app (docs/50 §7) and the source package both apps share: jest-expo like mobile, on their
           # own machine so the staff app's 5 minutes do not grow.
           - { name: test family, task: test, filter: --filter=family-mobile --filter=@ab/mobile-kit }
@@ -205,27 +207,32 @@ jobs:
       - name: Turbo cache (GitHub Actions cache)
         uses: rharkor/caching-for-turbo@760158c05c47e7a764f78e9a22ca3b5a6ed8c52e # v2.5.2
       # A new lockfile, vitest config or tsconfig (swc and oxc read compilerOptions) starts empty; otherwise the
-      # newest cache of this shard (this branch's, else the base branch's).
-      - name: Vitest transform cache key
+      # newest cache of this shard (this branch's, else the base branch's). jest (`jcache`, staff-mobile): the
+      # same with the Babel and jest configs.
+      - name: Transform cache key
         id: vkey
-        if: matrix.vcache
+        if: matrix.vcache || matrix.jcache
         env:
           LOCK: ${{ hashFiles('pnpm-lock.yaml') }}
           CONF: >-
-            ${{ hashFiles('*/*/vitest.config.mts', 'apps/staff-web/vite.config.ts', 'tsconfig*.json',
-            '*/*/tsconfig*.json', 'packages/config/tsconfig/**') }}
-          SHARD: ${{ matrix.vcache }}
-        run: echo "prefix=vitest-$RUNNER_OS-$LOCK-$CONF-$SHARD-" >> "$GITHUB_OUTPUT"
-      - name: Restore the vitest transform cache
+            ${{ matrix.vcache && hashFiles('*/*/vitest.config.mts', 'apps/staff-web/vite.config.ts', 'tsconfig*.json',
+            '*/*/tsconfig*.json', 'packages/config/tsconfig/**') || hashFiles('*/*/babel.config.cjs',
+            '*/*/jest.config.cjs', '*/*/jest.setup.cjs', 'packages/mobile-kit/jest.base.cjs', 'packages/mobile-kit/babel.cjs') }}
+          KIND: ${{ matrix.vcache && 'vitest' || 'jest' }}
+          SHARD: ${{ matrix.vcache || matrix.jcache }}
+        run: |
+          echo "prefix=$KIND-$RUNNER_OS-$LOCK-$CONF-$SHARD-" >> "$GITHUB_OUTPUT"
+          echo "dir=node_modules/.$KIND-cache" >> "$GITHUB_OUTPUT"
+      - name: Restore the transform cache
         id: vcache
-        if: matrix.vcache
+        if: matrix.vcache || matrix.jcache
         uses: actions/cache/restore@v4
         with:
-          path: node_modules/.vitest-cache
+          path: ${{ steps.vkey.outputs.dir }}
           key: ${{ steps.vkey.outputs.prefix }}${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: ${{ steps.vkey.outputs.prefix }}
-      - name: Mark the restored vitest cache
-        if: matrix.vcache
+      - name: Mark the restored transform cache
+        if: matrix.vcache || matrix.jcache
         run: touch "$RUNNER_TEMP/vitest-start"
       - id: turbo
         run: |
@@ -236,22 +243,25 @@ jobs:
           exit "$status"
         env:
           NODE_OPTIONS: ${{ matrix.heap }}
-      # Saved only when vitest wrote new transforms (not when turbo replayed the task), also after a red test (the
+          JEST_CACHE_DIR: ${{ matrix.jcache && format('{0}/node_modules/.jest-cache', github.workspace) || '' }}
+      # Saved only when vitest (or jest) wrote new transforms (not when turbo replayed the task), also after a red test (the
       # transforms are still right). A PR saves only when it restored nothing (~50 MB per shard), so the Actions
       # cache holds develop's newest set.
-      - name: New vitest transforms?
+      - name: New transforms?
         id: vwrote
-        if: ${{ !cancelled() && matrix.vcache }}
+        if: ${{ !cancelled() && (matrix.vcache || matrix.jcache) }}
+        env:
+          DIR: ${{ steps.vkey.outputs.dir }}
         run: |
-          new=$(find node_modules/.vitest-cache -type f -newer "$RUNNER_TEMP/vitest-start" -print -quit 2>/dev/null || true)
+          new=$(find "$DIR" -type f -newer "$RUNNER_TEMP/vitest-start" -print -quit 2>/dev/null || true)
           [ -z "$new" ] || echo "new=true" >> "$GITHUB_OUTPUT"
-      - name: Save the vitest transform cache
+      - name: Save the transform cache
         if: >-
           ${{ !cancelled() && steps.vwrote.outputs.new == 'true'
           && (github.event_name != 'pull_request' || steps.vcache.outputs.cache-matched-key == '') }}
         uses: actions/cache/save@v4
         with:
-          path: node_modules/.vitest-cache
+          path: ${{ steps.vkey.outputs.dir }}
           key: ${{ steps.vcache.outputs.cache-primary-key }}
       # ESLint fails on a suppression that no longer occurs (a fixed long line, a split function). On a red lint
       # the log shows the pruned eslint-suppressions.json to commit (or run `pnpm lint:prune` in a cloud session,

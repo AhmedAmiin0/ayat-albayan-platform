@@ -18,6 +18,8 @@ const TREE = /^[0-9a-f]{40}$/;
 /** The files the default-branch pnpm, vitest and jest caches are keyed on (ci.yml hashFiles). */
 const CACHE_KEYS = [
   /^pnpm-lock\.yaml$/,
+  /^[^/]+\/[^/]+\/(babel\.config|jest\.config|jest\.setup)\.cjs$/,
+  /^packages\/mobile-kit\/(jest\.base|babel)\.cjs$/,
   /^[^/]+\/[^/]+\/vitest\.config\.mts$/,
   /^apps\/staff-web\/vite\.config\.ts$/,
   /^([^/]+\/[^/]+\/)?tsconfig[^/]*\.json$/,
