@@ -34,9 +34,12 @@ async function seed(tx: Tx) {
   return { teacher, teacherId: t.id, student, guardian, own, admin: await userId(tx, USERS.admin.email) };
 }
 
-const familyChat = (tx: Tx, on: boolean) => tx`insert into public.settings (key, value)
-  values ('family_chat_enabled', ${on ? 'true' : 'false'}::jsonb)
-  on conflict (key) do update set value = excluded.value`;
+// A boolean parameter would reach jsonb as the string "true" (settings_kind refuses it): literals.
+const familyChat = (tx: Tx, on: boolean) =>
+  on
+    ? tx`insert into public.settings (key, value) values ('family_chat_enabled', 'true')
+        on conflict (key) do update set value = 'true'`
+    : tx`update public.settings set value = 'false' where key = 'family_chat_enabled'`;
 
 const reads = (tx: Tx, uid: string) =>
   as(tx, uid, async () => (await tx<{ id: string }[]>`select id from public.channel_messages where body = 'السلام عليكم'`).length);
