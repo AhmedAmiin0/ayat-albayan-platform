@@ -51,11 +51,13 @@ const app = {
   '(admin-chat)/inbox/thread/[phone]': ChatStub,
   '(admin-chat)/inbox/student/[id]': StudentFileStub,
   '(admin-chat)/inbox/student/[id]/attendance': stub('chat-attendance'),
+  '(admin-chat)/students/channel/[id]': ChatStub,
   'teacher/_layout': TeacherLayout,
   'teacher/today/_layout': TabStack,
   'teacher/today/index': stub('teacher-today'),
   '(teacher-chat)/_layout': TeacherChatLayout,
   '(teacher-chat)/teacher/chats/[phone]': ChatStub,
+  '(teacher-chat)/teacher/more/messages/[studentId]': ChatStub,
   'sales/_layout': SalesLayout,
   'sales/inbox/_layout': TabStack,
   'sales/inbox/index': stub('sales-inbox'),
@@ -63,6 +65,7 @@ const app = {
   '(sales-chat)/sales/inbox/thread/[phone]': ChatStub,
   '(sales-chat)/sales/inbox/student/[id]': StudentFileStub,
   '(sales-chat)/sales/inbox/student/[id]/attendance': stub('chat-attendance'),
+  '(sales-chat)/sales/students/channel/[id]': ChatStub,
 };
 
 const PHONE = '+966552147730';
@@ -126,4 +129,16 @@ test.each([
   await act(async () => nav.back());
   expect(await screen.findByText('student-file')).toBeTruthy();
   expect(router.pathname()).toBe(file);
+});
+
+// A student's teacher–family chat sat in the tabs, so the floating tab bar covered «أرسل».
+test.each([
+  { tree: 'admin', path: '/students/channel/s1', group: '(admin-chat)' },
+  { tree: 'sales', path: '/sales/students/channel/s1', group: '(sales-chat)' },
+  { tree: 'teacher', path: '/teacher/more/messages/s1', group: '(teacher-chat)' },
+])('$tree: the student chat $path opens in $group, a full screen with no tab bar', async ({ tree, path, group }) => {
+  const router = await open(tree, path);
+  expect(await screen.findByText(/^chat /)).toBeTruthy();
+  expect([router.pathname(), router.segments()[0]]).toEqual([path, group]);
+  expect(screen.queryAllByRole('button')).toHaveLength(0);
 });

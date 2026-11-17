@@ -557,35 +557,71 @@ export type Database = {
       };
       channel_messages: {
         Row: {
+          attachment_duration_ms: number | null;
+          attachment_mime: string | null;
+          attachment_name: string | null;
+          attachment_path: string | null;
+          attachment_size: number | null;
           body: string;
           channel_id: string;
+          client_id: string | null;
           created_at: string;
           deleted_at: string | null;
           deleted_by: string | null;
           edited_at: string | null;
           id: string;
+          kind: string;
+          quote_body: string | null;
+          quote_kind: string | null;
+          quote_sender_name: string | null;
+          quote_sender_role: string | null;
+          reply_to_id: string | null;
           sender_profile_id: string | null;
           sender_role: string;
         };
         Insert: {
+          attachment_duration_ms?: number | null;
+          attachment_mime?: string | null;
+          attachment_name?: string | null;
+          attachment_path?: string | null;
+          attachment_size?: number | null;
           body: string;
           channel_id: string;
+          client_id?: string | null;
           created_at?: string;
           deleted_at?: string | null;
           deleted_by?: string | null;
           edited_at?: string | null;
           id?: string;
+          kind?: string;
+          quote_body?: string | null;
+          quote_kind?: string | null;
+          quote_sender_name?: string | null;
+          quote_sender_role?: string | null;
+          reply_to_id?: string | null;
           sender_profile_id?: string | null;
           sender_role: string;
         };
         Update: {
+          attachment_duration_ms?: number | null;
+          attachment_mime?: string | null;
+          attachment_name?: string | null;
+          attachment_path?: string | null;
+          attachment_size?: number | null;
           body?: string;
           channel_id?: string;
+          client_id?: string | null;
           created_at?: string;
           deleted_at?: string | null;
           deleted_by?: string | null;
           edited_at?: string | null;
           id?: string;
+          kind?: string;
+          quote_body?: string | null;
+          quote_kind?: string | null;
+          quote_sender_name?: string | null;
+          quote_sender_role?: string | null;
+          reply_to_id?: string | null;
           sender_profile_id?: string | null;
           sender_role?: string;
         };
@@ -609,6 +645,13 @@ export type Database = {
             columns: ['sender_profile_id'];
             isOneToOne: false;
             referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'channel_messages_reply_to_id_fkey';
+            columns: ['reply_to_id'];
+            isOneToOne: false;
+            referencedRelation: 'channel_messages';
             referencedColumns: ['id'];
           },
         ];
@@ -6076,6 +6119,10 @@ export type Database = {
           student_id: string;
           unread: number;
         }[];
+      };
+      channel_mark_read: {
+        Args: { p_at: string; p_channel: string; p_profile: string };
+        Returns: undefined;
       };
       channel_teacher_ids: { Args: { p_student_id: string }; Returns: string[] };
       assign_student_teacher: {

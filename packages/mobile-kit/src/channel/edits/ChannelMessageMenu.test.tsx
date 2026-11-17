@@ -1,9 +1,12 @@
 import type { ChannelMessageView, ChannelPage } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { ApiError } from '../../lib/http/api';
 import { t } from '../../lib/i18n/i18n';
 import { freshQueryClient, renderWithQuery } from '../../testing/query';
+import { palette } from '../../theme';
 import { ChannelThread } from '../ChannelThread';
+import { channelMessage, channelPage } from '../testing/channel-fixtures';
 
 // Owner 2026-10-30: «تعديل» (15 min) and «حذف للجميع» (48 h) for the sender; the admin deletes any.
 const mockApiFetch = jest.fn();
@@ -17,15 +20,14 @@ jest.mock('../../lib/http/api', () => ({
 const a = t.studentChannel.actions;
 const inText = (s: string) => new RegExp(s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
 const ago = (min: number) => new Date(Date.now() - min * 60_000).toISOString();
-const msg = (over: Partial<ChannelMessageView>): ChannelMessageView => ({
-  ...{ id: 'm1', body: 'الحلقة غدًا', sender_role: 'teacher', sender_name: 'أبرار' },
-  ...{ mine: true, created_at: ago(5), edited: false, deleted: false },
-  ...over,
-});
-const page = (messages: ChannelMessageView[], readOnly = false): ChannelPage => ({
-  ...{ student_name: 'سلمى', messages, has_more: false, read_only: readOnly },
-  ...{ open: true, channel_id: '' },
-});
+const msg = (over: Partial<ChannelMessageView>): ChannelMessageView =>
+  channelMessage({
+    ...{ body: 'الحلقة غدًا', sender_role: 'teacher', sender_name: 'أبرار' },
+    ...{ mine: true, created_at: ago(5) },
+    ...over,
+  });
+const page = (messages: ChannelMessageView[], readOnly = false): ChannelPage =>
+  channelPage({ messages, read_only: readOnly });
 type Audience = 'teacher' | 'admin' | 'sales';
 const thread = (audience: Audience) =>
   renderWithQuery(<ChannelThread refs={{ audience, studentId: 's1' }} />, freshQueryClient());
@@ -100,7 +102,39 @@ async function noMenu(audience: 'teacher' | 'sales', m: ChannelMessageView) {
   expect(screen.queryByTestId('channel-message-menu')).toBeNull();
 }
 
-test("no menu on someone else's message", () => noMenu('teacher', msg({ mine: false })));
+/** Someone else's message: «ردّ» only, never edit or delete (the API refuses them). */
+async function replyOnly(audience: 'teacher' | 'sales', m: ChannelMessageView) {
+  const menu = await hold(audience, m);
+  expect(menu.getByRole('button', { name: t.studentChannel.reply.action })).toBeTruthy();
+  expect(menu.queryByRole('button', { name: a.edit })).toBeNull();
+  expect(menu.queryByRole('button', { name: a.deleteForAll })).toBeNull();
+}
+
+test("someone else's message: reply only", () => replyOnly('teacher', msg({ mine: false })));
 test('no menu on a deleted message', () => noMenu('teacher', msg({ deleted: true, body: '' })));
-test("the owning assistant: no menu on the teacher's message", () =>
-  noMenu('sales', msg({ mine: false })));
+test("the owning assistant: reply only on the teacher's message", () =>
+  replyOnly('sales', msg({ mine: false })));
+
+test('a read-only view offers no edit or delete on my message (the API refuses them)', async () => {
+  const menu = await hold('admin', msg({ mine: true, created_at: ago(1) }));
+  expect(menu.queryByRole('button', { name: a.edit })).toBeNull();
+  expect(menu.queryByRole('button', { name: t.studentChannel.reply.action })).toBeNull();
+});
+
+test('a closed chat refusal is said in its own words', async () => {
+  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'channel_not_open' }));
+  const menu = await hold('teacher', msg({}));
+  await fireEvent.press(menu.getByRole('button', { name: a.deleteForAll }));
+  await fireEvent.press(menu.getByRole('button', { name: a.deleteConfirm }));
+  expect(await menu.findByText(a.errors.channel_not_open)).toBeTruthy();
+});
+
+test('the menu (ChatXMenu): its rows in order, no «إلغاء» row; the held bubble is lit', async () => {
+  const menu = await hold('teacher', msg({}));
+  const names = menu.getAllByRole('button').map((b) => b.props.accessibilityLabel);
+  const c = t.studentChannel;
+  expect(names).toEqual([c.reply.action, a.edit, a.deleteForAll, c.reads.action]);
+  expect(menu.queryByRole('button', { name: t.common.cancel })).toBeNull();
+  const box = StyleSheet.flatten(screen.getByTestId('channel-bubble-m1').props.style);
+  expect(box.borderColor).toBe(palette.light.lapis);
+});

@@ -1,10 +1,9 @@
 import { baseMime, isGifMessage, isPdfMime, isPlayableMime, type MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
-import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
+import { t, shape, type, useTheme, AppText, useSmallText } from '@ab/mobile-kit';
 import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
 import { mediaKind } from '@/inbox/messages/hooks/message-text';
-import { useSmall } from './MessageMeta';
 import { useThreadFile } from '@/inbox/messages/hooks/thread-file';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { VideoTile } from '@/inbox/messages/media/VideoTile';
@@ -23,7 +22,7 @@ type State = { step: 'idle' | 'loading' } | { step: 'problem'; problem: MediaPro
  */
 function FileOpener({ message: m, phone, kind }: { message: MessageView; phone: string; kind: string }) {
   const { color } = useTheme();
-  const small = useSmall();
+  const small = useSmallText();
   const fetchFile = useThreadFile(phone, m.id);
   const [state, setState] = useState<State>({ step: 'idle' });
 

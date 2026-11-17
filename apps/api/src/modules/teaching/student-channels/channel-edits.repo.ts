@@ -4,7 +4,8 @@ import { dbError } from '@/common/http/http';
 import { COLUMNS, type ChannelMessageRow } from './channel.repo';
 
 /**
- * A deleted message's body: the check stays 1..2000 and the API never serves it (migration 993).
+ * A deleted message's body: never empty (a text message's check needs a character), never served
+ * (migration 993); its file stays stored, its link is never signed again.
  */
 export const DELETED_BODY = '-';
 
@@ -36,6 +37,18 @@ export class ChannelEditsRepo {
       .maybeSingle();
     if (error) throw dbError(error);
     return data;
+  }
+
+  /** Of these messages, the ones deleted for everyone (a reply's quote then shows deleted). */
+  async deletedIds(ids: readonly string[]): Promise<Set<string>> {
+    if (ids.length === 0) return new Set<string>();
+    const { data, error } = await this.db
+      .from('channel_messages')
+      .select('id')
+      .in('id', [...new Set(ids)])
+      .not('deleted_at', 'is', null);
+    if (error) throw dbError(error);
+    return new Set(data.map((r) => r.id));
   }
 
   /** New text, stamped edited; null when it was deleted meanwhile (compare-and-set). */

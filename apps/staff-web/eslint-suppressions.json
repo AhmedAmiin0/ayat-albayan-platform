@@ -8530,7 +8530,7 @@
   },
   "src/features/sales/sales/search.ts": {
     "@typescript-eslint/dot-notation": {
-      "count": 4
+      "count": 3
     },
     "max-len": {
       "count": 1
@@ -10876,9 +10876,6 @@
   "src/features/teaching/student-channel/ChannelThread.live.test.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 2
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/features/teaching/student-channel/ChannelThread.test.tsx": {
@@ -10886,23 +10883,6 @@
       "count": 1
     },
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/student-channel/ChannelThread.tsx": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 7
-    },
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "no-restricted-syntax": {
       "count": 1
     }
   },
@@ -10929,13 +10909,10 @@
       "count": 5
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/student-channel/edit/edit-api.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 2
     }

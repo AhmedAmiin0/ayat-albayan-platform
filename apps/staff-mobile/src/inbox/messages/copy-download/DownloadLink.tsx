@@ -1,10 +1,9 @@
 import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
+import { t, shape, type, useTheme, AppText, useSmallText } from '@ab/mobile-kit';
 import { downloadLabel } from '@/inbox/messages/hooks/bubble-offers';
 import { downloadFile, downloadProblem } from './chat-tools';
-import { useSmall } from '@/inbox/messages/components/MessageMeta';
 
 /**
  * «تنزيل» on a file chip (owner 2026-10-26): a fresh signed URL, handed to the phone's browser to save
@@ -12,7 +11,7 @@ import { useSmall } from '@/inbox/messages/components/MessageMeta';
  */
 export function DownloadLink({ message: m, phone }: { message: MessageView; phone: string }) {
   const { color } = useTheme();
-  const small = useSmall();
+  const small = useSmallText();
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
   const run = async () => {

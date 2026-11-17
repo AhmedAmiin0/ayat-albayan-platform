@@ -2,10 +2,8 @@ import { useVideoPlayer, type VideoPlayerStatus, VideoView } from 'expo-video';
 import { useEffect, useState } from 'react';
 import { Modal, StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { t, palette, useA11yPref } from '@ab/mobile-kit';
-import { ViewerClose } from '@/inbox/messages/photo/ViewerClose';
-import { claimPlayback, releasePlayback } from './playback';
-import { Spinner } from './Spinner';
+import { t, palette, useA11yPref, Spinner, ViewerClose } from '@ab/mobile-kit';
+import { claimPlayback, releasePlayback } from '@/core/lib/audio';
 
 interface VideoModalProps {
   id: string;

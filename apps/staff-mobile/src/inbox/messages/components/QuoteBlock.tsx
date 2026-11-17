@@ -1,8 +1,7 @@
 import { isUnavailableQuote, type MessageQuote, quoteIcon, type ReplyQuote } from '@ab/shared';
 import { useState } from 'react';
-import { Image, Pressable, View } from 'react-native';
-import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
-import { ContentText } from '@/core/ui/primitives/ContentText';
+import { Image } from 'react-native';
+import { shape, QuoteCard, QuoteUnavailable } from '@ab/mobile-kit';
 import { useBubbleChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { useQuoteThumb } from '@/inbox/messages/hooks/quote-thumb';
 import { quoteSender, quoteText } from '@/inbox/messages/hooks/quote-text';
@@ -14,18 +13,6 @@ export interface QuoteBlockProps {
   /** Scrolls to the original and lights it up (MessageList); absent, the block is plain. */
   onJump?: (id: string) => void;
 }
-
-const LINE = { fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) };
-const BOX = {
-  minHeight: shape.control.touch,
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: 8,
-  paddingVertical: 4,
-  paddingHorizontal: 8,
-  borderStartWidth: 3,
-  borderRadius: shape.radius.sm,
-} as const;
 
 /** A quoted photo's or PDF's thumb at the inline-end, as WhatsApp; nothing when it cannot load. */
 function QuoteThumb({ quote, phone }: { quote: MessageQuote; phone: string }) {
@@ -42,65 +29,21 @@ function QuoteThumb({ quote, phone }: { quote: MessageQuote; phone: string }) {
   );
 }
 
-/** «رسالة غير متاحة»: WhatsApp quoted a message we never stored; greyed, nothing to tap. */
-function Unavailable() {
-  const { color } = useTheme();
-  return (
-    <View
-      testID="quote-unavailable"
-      style={{ ...BOX, borderStartColor: color.ruleStrong, backgroundColor: color.sunk }}
-    >
-      <AppText numberOfLines={1} style={{ ...LINE, fontFamily: type.ui[400], color: color.ink3 }}>
-        {t.inbox.reply.unavailable}
-      </AppText>
-    </View>
-  );
-}
-
 /**
- * The message a bubble answers, on top of it as WhatsApp draws it (owner 2026-10-31): a mint bar
- * at the inline-start, who sent it, its first line (a file's icon and kind), a photo's or PDF's
- * thumb at the end. A tap goes to the original. 44pt tall at least (two short lines + padding).
+ * The message a bubble answers, on top of it as WhatsApp draws it (the kit's QuoteCard): the chat's
+ * sender name, a photo's or PDF's thumb at the end (signed by the staff API).
  */
 export function QuoteBlock({ quote, phone, onJump }: QuoteBlockProps) {
-  const { color } = useTheme();
   const { threadName } = useBubbleChatActions();
-  if (isUnavailableQuote(quote)) return <Unavailable />;
-  const sender = quoteSender(quote, threadName);
-  const text = quoteText(quote);
-  const icon = quoteIcon(quote);
+  if (isUnavailableQuote(quote)) return <QuoteUnavailable />;
   return (
-    <Pressable
-      testID={`quote-${quote.id}`}
-      accessibilityRole="button"
-      accessibilityLabel={[sender, text].filter(Boolean).join(': ')}
-      accessibilityHint={t.inbox.reply.jump}
-      disabled={!onJump}
-      onPress={() => onJump?.(quote.id)}
-      style={({ pressed }) => ({
-        ...BOX,
-        borderStartColor: color.lapis,
-        backgroundColor: pressed ? color.neutralSoft : color.sunk,
-      })}
-    >
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        {sender ? (
-          <AppText
-            numberOfLines={1}
-            style={{ ...LINE, fontFamily: type.ui[600], color: color.lapis }}
-          >
-            {sender}
-          </AppText>
-        ) : null}
-        <ContentText
-          source={text}
-          numberOfLines={1}
-          style={{ ...LINE, fontFamily: type.ui[400], color: color.ink2 }}
-        >
-          {icon ? `${icon} ${text}` : text}
-        </ContentText>
-      </View>
-      {phone ? <QuoteThumb quote={quote} phone={phone} /> : null}
-    </Pressable>
+    <QuoteCard
+      id={quote.id}
+      sender={quoteSender(quote, threadName)}
+      text={quoteText(quote)}
+      icon={quoteIcon(quote)}
+      thumb={phone ? <QuoteThumb quote={quote} phone={phone} /> : null}
+      onJump={onJump}
+    />
   );
 }

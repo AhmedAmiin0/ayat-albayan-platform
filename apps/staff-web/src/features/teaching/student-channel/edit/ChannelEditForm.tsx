@@ -1,5 +1,5 @@
 import { CHANNEL_BODY_MAX } from '@ab/shared';
-import { useState, type SubmitEvent } from 'react';
+import { useState, type KeyboardEvent, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 
@@ -12,9 +12,16 @@ interface Props {
 
 const a = t.studentChannel.actions;
 
+/** Esc closes the edit box only, never the panel around the chat (its draft stays too). */
+function cancelOnEscape(e: KeyboardEvent, onCancel: () => void): void {
+  if (e.key !== 'Escape') return;
+  e.stopPropagation();
+  onCancel();
+}
+
 /**
  * «تعديل» in place of the text: the same limits as the composer; Esc or «إلغاء» leaves it
- * unchanged.
+ * unchanged (Esc closes only this box).
  */
 export function ChannelEditForm({ initial, pending, onSave, onCancel }: Props) {
   const [text, setText] = useState(initial);
@@ -33,7 +40,7 @@ export function ChannelEditForm({ initial, pending, onSave, onCancel }: Props) {
         value={text}
         // The user just asked to edit this text: the cursor goes there.
         ref={(el) => el?.focus()}
-        onKeyDown={(e) => e.key === 'Escape' && onCancel()}
+        onKeyDown={(e) => cancelOnEscape(e, onCancel)}
         onChange={(e) => setText(e.target.value)}
         className="min-h-11 w-full resize-y rounded-md border border-input bg-raised px-3 py-2 text-body"
       />

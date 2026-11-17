@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import { t, shape, type, useTheme, AppText, IconButton } from '@ab/mobile-kit';
+import { t, shape, type, useTheme, AppText, IconButton, CloseIcon } from '@ab/mobile-kit';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
-import { CloseIcon } from '@/inbox/shared/chat-icons';
 
 /** A notice with nothing to read twice goes by itself after this long (ms). */
 const NOTICE_MS = 5000;

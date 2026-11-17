@@ -7,8 +7,10 @@ import { assistant, student } from '../../support/sales/assistant';
 // subscribed (past the trial) AND has an assigned teacher; before that neither the teacher nor the family
 // reads a message (RLS, also what Realtime checks per subscriber); monitors always read. The family side is
 // the guardian's login and the student's own login, a child's too (owner 2026-11-16, migration
-// 20261116000100_child_chat); the owning assistant writes too (20261116000200), and only the one
-// assistant in the chat's seat reads it (20261117090200, owner 2026-11-16 «… but only 1»).
+// 20261116000100_child_chat); the assistant writes too (20261116000200), and only the one
+// assistant in the chat's seat reads it (20261117090200, owner 2026-11-16 «… but only 1»). The
+// family reads only while settings.family_chat_enabled is on (20261117090400), so the seed turns
+// it on.
 // Rolled back; the e2e stack has no Realtime service, so the publication step is not exercised here.
 
 async function login(tx: Tx, input: { tag: string; role: 'guardian' | 'student' }): Promise<string> {
@@ -31,8 +33,16 @@ async function seed(tx: Tx) {
   const [ch] = await tx<{ id: string }[]>`select id from public.student_channels where student_id = ${student}`;
   if (!ch) throw new Error('channel not opened by the trigger');
   await tx`insert into public.channel_messages (channel_id, sender_role, body) values (${ch.id}, 'guardian', 'السلام عليكم')`;
+  await familyChat(tx, true);
   return { teacher, teacherId: t.id, student, guardian, own, admin: await userId(tx, USERS.admin.email) };
 }
+
+// A boolean parameter would reach jsonb as the string "true" (settings_kind refuses it): literals.
+const familyChat = (tx: Tx, on: boolean) =>
+  on
+    ? tx`insert into public.settings (key, value) values ('family_chat_enabled', 'true')
+        on conflict (key) do update set value = 'true'`
+    : tx`update public.settings set value = 'false' where key = 'family_chat_enabled'`;
 
 const reads = (tx: Tx, uid: string) =>
   as(tx, uid, async () => (await tx<{ id: string }[]>`select id from public.channel_messages where body = 'السلام عليكم'`).length);
@@ -58,6 +68,17 @@ test.describe('student channel opens after the subscription (20261029000971–97
       expect(await reads(tx, s.own)).toBe(0);
       await tx`update public.students set status = 'active' where id = ${s.student}`;
       expect(await reads(tx, s.own)).toBe(1);
+    });
+  });
+
+  test('family chat off (20261117090400): the family reads nothing, staff do', async () => {
+    await rolledBack(async (tx) => {
+      const s = await seed(tx);
+      await tx`update public.students set status = 'active' where id = ${s.student}`;
+      await familyChat(tx, false);
+      const family = [await reads(tx, s.guardian), await reads(tx, s.own)];
+      const staff = [await reads(tx, s.teacher), await reads(tx, s.admin)];
+      expect([...family, ...staff]).toEqual([0, 0, 1, 1]);
     });
   });
 

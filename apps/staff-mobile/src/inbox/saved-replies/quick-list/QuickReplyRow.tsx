@@ -1,7 +1,6 @@
 import type { SavedReply } from '@ab/shared';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { t, type, useTheme, isolate } from '@ab/mobile-kit';
-import { AttachIcon } from '@/inbox/shared/chat-icons';
+import { t, type, useTheme, isolate, AttachIcon } from '@ab/mobile-kit';
 import { HighlightText } from './HighlightText';
 
 interface QuickReplyRowProps {
