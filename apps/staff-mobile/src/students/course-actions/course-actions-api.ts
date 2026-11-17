@@ -45,7 +45,7 @@ const idOf = (data: CourseStopPreview | ProfileCourseView): string =>
   'course' in data ? data.course.subscriptionId : data.subscriptionId;
 
 /** The current package: its id, null = none (404, or no key to ask), undefined = not known yet. */
-export type CurrentPackage = string | null | undefined;
+type CurrentPackage = string | null | undefined;
 
 /** A 404 (subscription_not_found) answers «no package»; any other failure leaves it unknown. */
 const noPackage = (error: unknown): boolean => error instanceof ApiError && error.status === 404;
