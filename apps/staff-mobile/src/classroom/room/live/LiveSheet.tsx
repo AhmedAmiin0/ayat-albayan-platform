@@ -1,3 +1,4 @@
+import type { RoomPresence } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { ParticipantsPanel } from '@/classroom/room/host/ParticipantsPanel';
@@ -13,6 +14,8 @@ interface LiveSheetProps {
   panel: ReturnType<typeof useHostPanel>;
   onClose: () => void;
   onLeave: () => void;
+  presence: readonly RoomPresence[];
+  onBrowser: () => void;
 }
 
 /** A trial lesson's «المحادثة»: it opens after subscribing (canvas RoomXChat, the family). */
@@ -21,16 +24,16 @@ function ChatLocked({ onClose }: Pick<LiveSheetProps, 'onClose'>) {
   return (
     <RoomSheet testID="room-chat-locked" title={t.mobileRoom.controls.chat} onClose={onClose}>
       <AppText style={{ fontSize: type.size.sm, color: color.ink2 }}>
-        {t.mobileRoom.chatLocked}
+        {t.studentChannel.closed}
       </AppText>
     </RoomSheet>
   );
 }
 
 /** The participants, the leave question or the locked chat: never two at once. */
-export function LiveSheet({ which, panel, onClose, onLeave }: LiveSheetProps) {
+export function LiveSheet({ which, panel, onClose, onLeave, ...room }: LiveSheetProps) {
   const sheets: Record<SheetName, () => ReactNode> = {
-    people: () => <ParticipantsPanel panel={panel} onClose={onClose} />,
+    people: () => <ParticipantsPanel panel={panel} onClose={onClose} {...room} />,
     leave: () => <LeaveSheet onLeave={onLeave} onStay={onClose} />,
     chatLocked: () => <ChatLocked onClose={onClose} />,
   };

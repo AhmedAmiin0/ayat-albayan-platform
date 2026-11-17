@@ -22,7 +22,7 @@ describe('followProfileLocale', () => {
   });
 
   it('nothing to do: no answer yet (older API), or the run already shows it', async () => {
-    expect(await followProfileLocale(null, 'ar')).toBe(false);
+    expect(await followProfileLocale(undefined, 'ar')).toBe(false);
     expect(await followProfileLocale('ar', 'ar')).toBe(false);
     expect(setLocale).not.toHaveBeenCalled();
   });

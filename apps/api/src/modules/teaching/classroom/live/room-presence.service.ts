@@ -4,17 +4,29 @@ import { targetOfRoom } from '@/modules/teaching/classroom/recordings/recording-
 import { LessonLivePush } from './lesson-live.push';
 import { RoomPresenceRepo, type PresenceEvent } from './room-presence.repo';
 
-/** The lesson behind a lesson room's event with an identity; null for a meeting or a bare event. */
+/** A participant's event names who; room_finished names the room only. */
+const NEEDS_IDENTITY: Readonly<Record<ParticipantEvent['kind'], boolean>> = {
+  joined: true,
+  left: true,
+  finished: false,
+};
+
+const missingWho = (e: ParticipantEvent): boolean => NEEDS_IDENTITY[e.kind] && e.identity === '';
+
+/**
+ * The lesson behind a lesson room's event, at the event's own time (the receipt time only when
+ * LiveKit sent none); null for a meeting, or a participant event without an identity.
+ */
 function presenceOf(e: ParticipantEvent, now: Date): PresenceEvent | null {
   const target = targetOfRoom(e.room);
-  if (target?.kind !== 'lesson' || e.identity === '') return null;
-  return { lessonId: target.id, identity: e.identity, at: now.toISOString() };
+  if (target?.kind !== 'lesson' || missingWho(e)) return null;
+  return { lessonId: target.id, identity: e.identity, at: e.at ?? now.toISOString() };
 }
 
 /**
- * LiveKit's participant_joined / participant_left on a lesson room (owner 2026-11-16): who is
- * inside now (RoomPresenceRepo), and «بدأت الحلقة» to the family when the lesson's teacher comes
- * in. Never throws: the webhook must acknowledge, every failure is logged.
+ * LiveKit's participant_joined / participant_left / room_finished on a lesson room (owner
+ * 2026-11-16): who is inside now (RoomPresenceRepo, in LiveKit's order), and «بدأت الحلقة» to the
+ * family when the lesson's teacher comes in. Never throws: the webhook must acknowledge.
  */
 @Injectable()
 export class RoomPresenceService {
@@ -22,6 +34,7 @@ export class RoomPresenceService {
   private readonly apply: Record<ParticipantEvent['kind'], (e: PresenceEvent) => Promise<void>> = {
     joined: (e) => this.joined(e),
     left: (e) => this.presence.left(e),
+    finished: (e) => this.presence.leaveAll(e.lessonId, e.at),
   };
 
   constructor(

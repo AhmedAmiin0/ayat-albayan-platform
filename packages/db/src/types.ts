@@ -786,6 +786,7 @@ export type Database = {
           left_at: string | null;
           lesson_id: string;
           name: string;
+          presence_at: string | null;
           role: string;
           user_id: string | null;
         };
@@ -798,6 +799,7 @@ export type Database = {
           left_at?: string | null;
           lesson_id: string;
           name: string;
+          presence_at?: string | null;
           role: string;
           user_id?: string | null;
         };
@@ -810,6 +812,7 @@ export type Database = {
           left_at?: string | null;
           lesson_id?: string;
           name?: string;
+          presence_at?: string | null;
           role?: string;
           user_id?: string | null;
         };
@@ -2067,6 +2070,7 @@ export type Database = {
           id: string;
           lesson_id: string;
           revoked_at: string | null;
+          sent_for_student_id: string | null;
           student_id: string | null;
           token_hash: string;
         };
@@ -2077,6 +2081,7 @@ export type Database = {
           id?: string;
           lesson_id: string;
           revoked_at?: string | null;
+          sent_for_student_id?: string | null;
           student_id?: string | null;
           token_hash: string;
         };
@@ -2087,6 +2092,7 @@ export type Database = {
           id?: string;
           lesson_id?: string;
           revoked_at?: string | null;
+          sent_for_student_id?: string | null;
           student_id?: string | null;
           token_hash?: string;
         };
@@ -3442,7 +3448,7 @@ export type Database = {
           disabled_reason: string | null;
           full_name: string;
           id: string;
-          locale: string;
+          locale: string | null;
           phone_e164: string | null;
           push_tokens: string[];
           role: Database['public']['Enums']['user_role'];
@@ -3459,7 +3465,7 @@ export type Database = {
           disabled_reason?: string | null;
           full_name: string;
           id: string;
-          locale?: string;
+          locale?: string | null;
           phone_e164?: string | null;
           push_tokens?: string[];
           role: Database['public']['Enums']['user_role'];
@@ -3476,7 +3482,7 @@ export type Database = {
           disabled_reason?: string | null;
           full_name?: string;
           id?: string;
-          locale?: string;
+          locale?: string | null;
           phone_e164?: string | null;
           push_tokens?: string[];
           role?: Database['public']['Enums']['user_role'];

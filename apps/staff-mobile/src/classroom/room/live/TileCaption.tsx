@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { AppText, palette, shape, type, useTheme } from '@ab/mobile-kit';
+import { AppText, shape, type, useTheme } from '@ab/mobile-kit';
 import { MicOffIcon } from '@/inbox';
 
 interface TileCaptionProps {
@@ -8,40 +8,34 @@ interface TileCaptionProps {
 }
 
 /**
- * The caption sits on the dark scrim over video in BOTH themes: the light theme's coverInk is dark
- * green (unreadable there), so the ink is the dark theme's light cover ink, always.
+ * The name at the tile's foot (start side) with a struck mic while muted, on a SOLID inverse chip:
+ * a translucent scrim over video left it at 2.3–3.4:1; inverse / onInverse holds AA in both themes.
  */
-export const SCRIM_INK = palette.dark.coverInk;
-
-/** The name at the tile's foot (start side), on the scrim, with a struck mic while muted. */
 export function TileCaption({ name, muted }: TileCaptionProps) {
   const { color } = useTheme();
   return (
     <View
+      testID="tile-caption"
       importantForAccessibility="no-hide-descendants"
       accessibilityElementsHidden
       style={{
         position: 'absolute',
         bottom: 6,
         start: 6,
-        end: 6,
+        maxWidth: '90%',
         flexDirection: 'row',
         alignItems: 'center',
         gap: 4,
+        paddingHorizontal: 6,
+        borderRadius: shape.radius.sm,
+        backgroundColor: color.inverse,
       }}
     >
-      {muted ? <MicOffIcon color={SCRIM_INK} size={16} /> : null}
+      {muted ? <MicOffIcon color={color.onInverse} size={16} /> : null}
       <AppText
-        testID="tile-caption"
+        testID="tile-caption-name"
         numberOfLines={1}
-        style={{
-          flexShrink: 1,
-          fontSize: type.size.xs,
-          color: SCRIM_INK,
-          backgroundColor: color.scrim,
-          paddingHorizontal: 6,
-          borderRadius: shape.radius.sm,
-        }}
+        style={{ flexShrink: 1, fontSize: type.size.xs, color: color.onInverse }}
       >
         {name}
       </AppText>

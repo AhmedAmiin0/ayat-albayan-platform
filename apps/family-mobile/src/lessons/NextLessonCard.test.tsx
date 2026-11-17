@@ -1,4 +1,4 @@
-import type { RoomPresence } from '@ab/shared';
+import { PUBLIC_CONFIG_QUERY_KEY, PUBLIC_SETTING_DEFAULTS, type RoomPresence } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@ab/mobile-kit';
@@ -49,4 +49,14 @@ test('not live (nobody inside): the countdown card as before', async () => {
   await show(lesson(new Date(), 30));
   expect(screen.queryByText(L.teacherIn)).toBeNull();
   expect(screen.getByRole('timer')).toBeTruthy();
+});
+
+test('live with the room in the app: «تدخل الغرفة مباشرةً…» instead of the browser note', async () => {
+  const client = freshQueryClient();
+  const config = { ...PUBLIC_SETTING_DEFAULTS, custom: {}, family_meetings_in_app: true };
+  client.setQueryData(PUBLIC_CONFIG_QUERY_KEY, config);
+  await renderWithQuery(<NextLessonCard lesson={liveLesson()} student={student()} full />, client);
+  expect(screen.getByText(t.portal.app.lesson.roomNoteLive)).toBeTruthy();
+  expect(screen.queryByText(t.portal.app.lesson.roomNote)).toBeNull();
+  expect(screen.getByRole('header', { name: t.portal.now })).toBeTruthy();
 });

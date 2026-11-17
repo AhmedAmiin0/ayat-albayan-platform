@@ -12,10 +12,14 @@ describe('meLocaleOf', () => {
     expect(meLocaleOf({ kind: 'guardian', students: [], locale: 'ar' })).toBe('ar');
   });
 
-  it('is null while loading, from an older API, or for an unknown language', () => {
-    expect(meLocaleOf(undefined)).toBeNull();
-    expect(meLocaleOf({ id: 'u' })).toBeNull();
-    expect(meLocaleOf({ locale: 'fr' })).toBeNull();
+  it('is null when the login never chose a language', () => {
+    expect(meLocaleOf({ id: 'u', locale: null })).toBeNull();
+  });
+
+  it('is undefined while loading, from an older API, or for an unknown language', () => {
+    expect(meLocaleOf(undefined)).toBeUndefined();
+    expect(meLocaleOf({ id: 'u' })).toBeUndefined();
+    expect(meLocaleOf({ locale: 'fr' })).toBeUndefined();
   });
 });
 

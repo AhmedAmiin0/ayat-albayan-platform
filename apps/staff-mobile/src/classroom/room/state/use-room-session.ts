@@ -19,12 +19,15 @@ export interface RoomSessionInput {
   fetchJoin: (target: RoomTarget) => Promise<RoomCredentials>;
   /** Opened from the «بدأت الحلقة» push: no preview, the microphone on. */
   direct?: boolean;
+  /** Keep the device choice and skip the preview next time (the family's room only). */
+  rememberChoice?: boolean;
 }
 
 const START: RoomPhase = { step: 'checking' };
 
 /** The room screen's whole state: its phase, LiveKit's snapshot, the preview and the controls. */
-export function useRoomSession({ platform, target, fetchJoin, direct = false }: RoomSessionInput) {
+export function useRoomSession(input: RoomSessionInput) {
+  const { platform, target, fetchJoin, direct = false, rememberChoice = false } = input;
   const [client] = useState(() => platform.createClient());
   const [phase, dispatch] = useReducer(nextPhase, START);
   const snap = useSyncExternalStore(client.subscribe, client.snapshot);
@@ -41,7 +44,13 @@ export function useRoomSession({ platform, target, fetchJoin, direct = false }: 
     onJoined: () => void controls.syncOutput(),
   });
   const joinWith = (wish: MediaWish) => room.join(preview.answer, wish);
-  useAutoJoin({ phase, devices: platform.devices, direct, join: (w) => void joinWith(w) });
+  useAutoJoin({
+    phase,
+    devices: platform.devices,
+    direct,
+    remember: rememberChoice,
+    join: (w) => void joinWith(w),
+  });
   const answer = async (ask: boolean) => {
     const got = ask ? await platform.media.ask() : null;
     if (got) preview.setAnswer(got);
@@ -55,12 +64,14 @@ export function useRoomSession({ platform, target, fetchJoin, direct = false }: 
     joined: room.joined,
     allow: () => answer(true),
     skip: () => answer(false),
-    /** «انضم الآن»: the preview's choice is kept for the next joins. */
+    /** «انضم الآن»: the preview's choice is kept for the next joins (the push reads it too). */
     join: async () => {
       void platform.devices.save(preview.wanted);
       await joinWith(preview.wanted);
     },
     leave: room.leave,
+    /** One's own «إنهاء الحلقة للجميع» went through: final, no rejoin. */
+    endedForAll: () => dispatch({ type: 'ended' }),
     retry: () => dispatch({ type: 'retry' }),
   };
 }

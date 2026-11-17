@@ -1,6 +1,7 @@
 import { isSelfChild, newReportCount, nextLesson } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
-import { Avatar, ListRow, t, useNow, useTheme } from '@ab/mobile-kit';
+import { Pressable, View } from 'react-native';
+import { AppText, Avatar, Ltr, t, type, useNow, useTheme } from '@ab/mobile-kit';
 import Svg, { Path } from 'react-native-svg';
 import { whenText } from '@/lessons';
 import { NewMark } from '@/ui';
@@ -33,27 +34,50 @@ interface ChildSwitchRowProps {
   onPress: () => void;
 }
 
+/** Name («أنا» on a guardian's own row), the code on its own LTR line, the next lesson. */
+function RowWords({ name, code, next }: { name: string; code: string; next?: string }) {
+  const { color } = useTheme();
+  const small = { fontSize: type.size.xs, color: color.ink2 };
+  return (
+    <View style={{ flex: 1, gap: 2 }}>
+      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>
+        {name}
+      </AppText>
+      <Ltr style={{ ...small, alignSelf: 'flex-start' }}>{code}</Ltr>
+      {next ? <AppText style={small}>{next}</AppText> : null}
+    </View>
+  );
+}
+
 /**
- * One child in the switch sheet (canvas SwitchSheet): avatar, name («أنا» for a guardian's own
- * row), code, the next lesson; ✓ on the current one, «جديد» while a report waits unopened.
+ * One child in the switch sheet (canvas SwitchSheet): avatar, name, code, the next lesson; the
+ * current one on the green wash with ✓ (selected), «جديد» while a report waits unopened.
  */
 export function ChildSwitchRow({ student, kind, current, onPress }: ChildSwitchRowProps) {
   const { color } = useTheme();
   const reports = useChildReports(student.id).data?.reports ?? [];
   const fresh = newReportCount(reports, useSeenReports()) > 0;
   const name = isSelfChild(kind, student) ? t.portal.app.pick.me : student.name;
-  const mark = fresh ? <NewMark /> : undefined;
   const next = useNextLine(student);
   return (
-    <ListRow
-      leading={<Avatar name={student.name} id={student.id} decorative />}
-      title={name}
-      meta={student.code}
-      metaStrong
-      subtitle={next}
-      trailing={current ? <Check color={color.lapis} /> : mark}
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected: current }}
       onPress={onPress}
-      accessibilityHint={current ? t.portal.app.pick.current : undefined}
-    />
+      style={({ pressed }) => ({
+        minHeight: 64,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        backgroundColor: current || pressed ? color.lapisWash : undefined,
+      })}
+    >
+      <Avatar name={student.name} id={student.id} decorative />
+      <RowWords name={name} code={student.code} next={next} />
+      {fresh ? <NewMark /> : null}
+      {current ? <Check color={color.lapis} /> : null}
+    </Pressable>
   );
 }

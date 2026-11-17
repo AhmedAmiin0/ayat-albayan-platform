@@ -46,7 +46,8 @@ test('the guardian who studies first as «أنا», then the children; ✓ on th
   expect(rows[0]).toHaveTextContent(new RegExp(t.portal.app.pick.me));
   expect(rows[1]).toHaveTextContent(/سارة أحمد/);
   expect(rows[2]).toHaveTextContent(/يوسف أحمد/);
-  expect(rows[2]?.props.accessibilityHint).toBe(t.portal.app.pick.current);
+  expect(rows[2]?.props.accessibilityState).toMatchObject({ selected: true });
+  expect(rows[1]?.props.accessibilityState).toMatchObject({ selected: false });
   expect(screen.getByText(/AB-0002/)).toBeTruthy();
 });
 
@@ -68,4 +69,11 @@ test('a press works as that child, closes the sheet and says whose page shows', 
     open: false,
     notice: t.portal.app.pick.shown.replace('{name}', 'سارة'),
   });
+});
+
+test("the guardian's own row says «تُعرض الآن صفحتك»", async () => {
+  await show();
+  await fireEvent.press(await screen.findByText(t.portal.app.pick.me));
+  const sheet = await renderHook(() => useChildSwitch());
+  expect(sheet.result.current.notice).toBe(t.portal.app.pick.shownSelf);
 });

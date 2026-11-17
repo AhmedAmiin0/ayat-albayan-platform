@@ -27,6 +27,17 @@ function tileName(tile: RoomTile): string {
   return tile.local ? t.classroom.you : tile.name;
 }
 
+/** «سهيلة، ضيف، الميكروفون مغلق، يتحدث»: the parts that apply, joined with «، ». */
+function tileLabel(tile: RoomTile, name: string): string {
+  const parts = [
+    name,
+    tile.role && !tile.screen ? t.classroom.roles[tile.role] : null,
+    !tile.micOn && !tile.screen ? t.classroom.muted : null,
+    tile.speaking ? t.classroom.speaking : null,
+  ];
+  return parts.filter((x) => x !== null).join('، ');
+}
+
 /** The tile's corner button: «تكبير» on a screen, «بدّل الكاميرا» on one's own camera. */
 function Corner({ tile, actions }: Pick<ParticipantTileProps, 'tile' | 'actions'>) {
   const S = t.classroom.stage;
@@ -67,13 +78,13 @@ export function ParticipantTile({ tile, Video, actions }: ParticipantTileProps) 
         borderRadius: shape.radius.lg,
         overflow: 'hidden',
         backgroundColor: color.leatherDeep,
-        borderWidth: 2,
+        borderWidth: 3,
         borderColor: tile.speaking ? color.gold : 'transparent',
       }}
     >
       <View
         accessible
-        accessibilityLabel={muted ? `${name}, ${t.classroom.muted}` : name}
+        accessibilityLabel={tileLabel(tile, name)}
         style={{ flex: 1 }}
       >
         {tile.video ? (

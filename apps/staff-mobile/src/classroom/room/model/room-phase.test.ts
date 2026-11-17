@@ -83,9 +83,17 @@ test('retry goes back to the preview from a failure or a closed room only', () =
   expect(nextPhase(live, { type: 'retry' })).toBe(live);
 });
 
-test('a 410 lesson_ended join and a host’s end close as «انتهت الحلقة»; a drop as dropped', () => {
-  expect(nextPhase({ step: 'joining' }, { type: 'ended' })).toEqual({ step: 'closed', why: 'ended' });
-  expect(nextPhase(live, { type: 'ended' })).toBe(live);
+test('a 410 lesson_ended join or one’s own end is final; a drop is dropped', () => {
+  expect(nextPhase({ step: 'joining' }, { type: 'ended' })).toEqual({
+    step: 'closed',
+    why: 'endedAll',
+  });
+  // One's own «إنهاء الحلقة للجميع» lands live, or after LiveKit's DeleteRoom closed the room.
+  expect(nextPhase(live, { type: 'ended' })).toEqual({ step: 'closed', why: 'endedAll' });
+  expect(nextPhase({ step: 'preview', notice: null }, { type: 'ended' })).toEqual({
+    step: 'preview',
+    notice: null,
+  });
   expect(nextPhase(live, { type: 'status', status: 'dropped' })).toEqual({
     step: 'closed',
     why: 'dropped',

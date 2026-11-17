@@ -1,3 +1,4 @@
+import type { RoomPresence } from '@ab/shared';
 import { ScrollView, View } from 'react-native';
 import { RoomSheet } from '@/classroom/room/live/RoomSheet';
 import { t, Button, InlineConfirm, Notice } from '@ab/mobile-kit';
@@ -10,6 +11,10 @@ const K = t.classroom.kick;
 interface ParticipantsPanelProps {
   panel: ReturnType<typeof useHostPanel>;
   onClose: () => void;
+  /** Who the lesson says is inside: a family-link guest's role in words. */
+  presence: readonly RoomPresence[];
+  /** «فتح في المتصفح»: here while in the room (the header has no room for it). */
+  onBrowser: () => void;
 }
 
 /** «إخراج {name} من الحلقة؟»: the web room's question and its consequence. */
@@ -50,7 +55,7 @@ function EndForAll({ panel }: Pick<ParticipantsPanelProps, 'panel'>) {
  * «كتم الجميع», per person mute / camera off / «إخراج», and «إنهاء الحلقة للجميع». Read-only for
  * everyone else.
  */
-export function ParticipantsPanel({ panel, onClose }: ParticipantsPanelProps) {
+export function ParticipantsPanel({ panel, onClose, presence, onBrowser }: ParticipantsPanelProps) {
   const title = `${t.classroom.people} · ${panel.people.length}`;
   return (
     <RoomSheet testID="room-people" title={title} onClose={onClose}>
@@ -60,12 +65,13 @@ export function ParticipantsPanel({ panel, onClose }: ParticipantsPanelProps) {
       ) : null}
       <ScrollView style={{ flexGrow: 0 }} contentContainerStyle={{ gap: 12 }}>
         {panel.people.map((p) => (
-          <PersonRow key={p.key} person={p} panel={panel} />
+          <PersonRow key={p.key} person={p} panel={panel} presence={presence} />
         ))}
       </ScrollView>
       <View style={{ gap: 8 }}>
         <KickConfirm panel={panel} />
         <EndForAll panel={panel} />
+        <Button variant="ghost" label={t.mobileRoom.openInBrowser} onPress={onBrowser} />
       </View>
     </RoomSheet>
   );

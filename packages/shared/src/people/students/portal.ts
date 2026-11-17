@@ -29,8 +29,8 @@ export const portalHomeSchema = z.object({
    * Kept for old app builds only (docs/50 §2: no WhatsApp link in family pages); no page reads it.
    */
   renew_url: z.string().nullable(),
-  /** The login's own language (profiles.locale): the app switches to it. Absent: an older API. */
-  locale: z.enum(LOCALES).optional(),
+  /** The login's own language (profiles.locale): the app switches to it. null: never chosen. */
+  locale: z.enum(LOCALES).nullable().optional(),
 });
 export type PortalHome = z.infer<typeof portalHomeSchema>;
 export type PortalKind = PortalHome['kind'];

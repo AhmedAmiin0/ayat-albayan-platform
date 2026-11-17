@@ -12,22 +12,27 @@ export interface PresenceEvent {
   at: string;
 }
 
+/** Only an event newer than the last one the row applied (presence_at, migration 150). */
+const olderThan = (at: string): string => `presence_at.is.null,presence_at.lt.${at}`;
+
 /**
- * Who is inside a lesson room now (migration 20261117000110, on classroom_participants): LiveKit's
- * participant_joined / participant_left stamp the admitted identity's row (the lessons module's
- * RoomInsideRepo reads them for the lesson payloads). Service role only.
+ * Who is inside a lesson room now (migrations 20261117000110 / 150, on classroom_participants):
+ * LiveKit's participant_joined / participant_left stamp the admitted identity's row in LiveKit's
+ * order (an older or retried event changes nothing); the lessons module's RoomInsideRepo reads them
+ * for the lesson payloads. Service role only.
  */
 @Injectable()
 export class RoomPresenceRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** participant_joined: inside now; entered_at keeps the first arrival. null: not admitted. */
+  /** participant_joined: inside now; entered_at keeps the first arrival. null: not ours or stale. */
   async entered(e: PresenceEvent): Promise<Pick<ParticipantRow, 'role'> | null> {
     const match = { lesson_id: e.lessonId, identity: e.identity };
     const rows = () => this.db.from('classroom_participants');
     const { data, error } = await rows()
-      .update({ left_at: null })
+      .update({ left_at: null, presence_at: e.at })
       .match(match)
+      .or(olderThan(e.at))
       .select('role')
       .maybeSingle();
     if (error) throw dbError(error);
@@ -37,24 +42,37 @@ export class RoomPresenceRepo {
     return data;
   }
 
-  /** participant_left: no longer inside. */
+  /** participant_left: no longer inside (unless a newer join already came). */
   async left(e: PresenceEvent): Promise<void> {
     const match = { lesson_id: e.lessonId, identity: e.identity };
     const { error } = await this.db
       .from('classroom_participants')
-      .update({ left_at: e.at })
-      .match(match);
+      .update({ left_at: e.at, presence_at: e.at })
+      .match(match)
+      .or(olderThan(e.at));
     if (error) throw dbError(error);
   }
 
-  /** «إنهاء الحلقة للجميع»: everyone inside is out (LiveKit closes the room, no more events). */
+  /** «إنهاء الحلقة للجميع» / room_finished: everyone inside is out (LiveKit sends no more events). */
   async leaveAll(lessonId: string, at: string): Promise<void> {
     const { error } = await this.db
       .from('classroom_participants')
-      .update({ left_at: at })
+      .update({ left_at: at, presence_at: at })
       .eq('lesson_id', lessonId)
       .not('entered_at', 'is', null)
       .is('left_at', null);
     if (error) throw dbError(error);
+  }
+
+  /** Is anyone inside this lesson's room now? */
+  async anyInside(lessonId: string): Promise<boolean> {
+    const { count, error } = await this.db
+      .from('classroom_participants')
+      .select('id', { count: 'exact', head: true })
+      .eq('lesson_id', lessonId)
+      .not('entered_at', 'is', null)
+      .is('left_at', null);
+    if (error) throw dbError(error);
+    return (count ?? 0) > 0;
   }
 }

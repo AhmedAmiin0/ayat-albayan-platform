@@ -40,7 +40,12 @@ export function useRoomScreen({ onExit, host, chat, ...input }: RoomScreenInput)
   const session = useRoomSession(input);
   const [sheet, setSheet] = useState<SheetName | null>(null);
   const live = session.phase.step === 'live';
-  const panel = useHostPanel(host ?? null, roleOf(session.joined), [...session.snap.tiles]);
+  const panel = useHostPanel({
+    host: host ?? null,
+    me: roleOf(session.joined),
+    tiles: session.snap.tiles,
+    onEnded: session.endedForAll,
+  });
   const guard = useLeaveGuard(live, () => setSheet('leave'));
   const leave = () => {
     guard.release();

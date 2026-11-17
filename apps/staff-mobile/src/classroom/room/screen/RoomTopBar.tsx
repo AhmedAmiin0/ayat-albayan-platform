@@ -1,41 +1,29 @@
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { t, AppText, shape, type, useTheme } from '@ab/mobile-kit';
-import { PillButton } from '@/core/ui/primitives/PillButton';
+import type { RoomTile } from '@/classroom/room/model/room-types';
+import { AppText, type, useTheme } from '@ab/mobile-kit';
+import { PeoplePill } from './PeoplePill';
+import { RecordingPill } from './RecordingPill';
+
+interface LiveHeader {
+  people: readonly RoomTile[];
+  openPeople: () => void;
+  recording: boolean;
+  /** «04:12» since one joined. */
+  elapsed: string | null;
+}
 
 interface RoomTopBarProps {
   title: string;
-  /** In the room: «المشاركون · 3», which opens the participants panel. */
-  people?: { count: number; open: () => void } | null;
-  /** «جارٍ التسجيل»: the in-room recording notice (canvas RoomXTeacher). */
-  recording: boolean;
-  onBrowser: () => void;
+  /** In the room only: the recording notice and the people pill. */
+  live: LiveHeader | null;
 }
 
-/** «جارٍ التسجيل»: a small red-edged pill. */
-function RecordingPill() {
-  const { color } = useTheme();
-  return (
-    <AppText
-      testID="room-recording"
-      accessibilityLiveRegion="polite"
-      style={{
-        alignSelf: 'flex-start',
-        paddingHorizontal: 8,
-        borderRadius: shape.radius.pill,
-        borderWidth: 1,
-        borderColor: color.badSolid,
-        fontSize: type.size.xs,
-        color: color.coverInk,
-      }}
-    >
-      {t.classroom.recordingNow}
-    </AppText>
-  );
-}
-
-/** The room's header: its name, the recording notice, the participants, «فتح في المتصفح». */
-export function RoomTopBar({ title, people, recording, onBrowser }: RoomTopBarProps) {
+/**
+ * The room's header: its name; in the room «جارٍ التسجيل · 04:12» and the people pill. «فتح في
+ * المتصفح» lives in the participants panel and the steps before the room (it overflowed 358pt).
+ */
+export function RoomTopBar({ title, live }: RoomTopBarProps) {
   const { color } = useTheme();
   const insets = useSafeAreaInsets();
   return (
@@ -49,7 +37,7 @@ export function RoomTopBar({ title, people, recording, onBrowser }: RoomTopBarPr
         gap: 8,
       }}
     >
-      <View style={{ flex: 1, gap: 2 }}>
+      <View style={{ flex: 1, gap: 4 }}>
         <AppText
           accessibilityRole="header"
           numberOfLines={1}
@@ -57,16 +45,9 @@ export function RoomTopBar({ title, people, recording, onBrowser }: RoomTopBarPr
         >
           {title}
         </AppText>
-        {recording ? <RecordingPill /> : null}
+        {live?.recording ? <RecordingPill elapsed={live.elapsed} /> : null}
       </View>
-      {people ? (
-        <PillButton
-          label={`${t.classroom.people} · ${people.count}`}
-          accessibilityLabel={t.mobileRoom.count.replace('{n}', String(people.count))}
-          onPress={people.open}
-        />
-      ) : null}
-      <PillButton label={t.mobileRoom.openInBrowser} onPress={onBrowser} />
+      {live ? <PeoplePill people={live.people} onPress={live.openPeople} /> : null}
     </View>
   );
 }

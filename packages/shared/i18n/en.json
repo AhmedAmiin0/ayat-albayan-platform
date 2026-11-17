@@ -63,7 +63,7 @@
     },
     "cancelled": "This lesson was cancelled",
     "remainingHint": "across all of the student’s packages",
-    "upcomingTab": "Upcoming",
+    "upcomingTab": "Next",
     "attendedTab": "Attended",
     "absentTab": "Missed",
     "childTabs": "Student sections",
@@ -127,6 +127,7 @@
         "minutes": "{n} min",
         "teacher": "Teacher: {name}",
         "roomNote": "The lesson opens in the academy's room in your browser, with no second sign-in.",
+        "roomNoteLive": "You enter the room directly, microphone on and camera off.",
         "joinShort": "Join",
         "joinFailed": "Could not open the lesson. Please try again.",
         "upcoming": "Upcoming lessons",
@@ -217,18 +218,18 @@
       },
       "pick": {
         "title": "Choose a student",
-        "hint": "You can switch the student later from “Account”.",
+        "hint": "You can switch the student later from their name at the top of any page.",
         "switch": "Switch student",
         "open": "Switch student: {name}",
         "shown": "Now showing {name}’s page",
+        "shownSelf": "Now showing your page",
         "next": "Next lesson · {when}",
-        "current": "Showing now",
         "me": "Me"
       },
       "live": {
         "justNow": "Started just now",
         "since": {
-          "one": "Started 1 minute ago",
+          "one": "Started a minute ago",
           "two": "Started 2 minutes ago",
           "few": "Started {n} minutes ago",
           "other": "Started {n} minutes ago"
@@ -1469,7 +1470,6 @@
     "back": "Back",
     "count": "Participants: {n}",
     "connecting": "Connecting…",
-    "ended": "You left the room",
     "duplicate": "You joined from another device or window, so the room closed here",
     "missing": "Your entry expired; join again from the list",
     "sdkFailed": "The lesson cannot run inside the app on this device; open it in the browser",
@@ -1483,7 +1483,8 @@
       "stay": "Stay in the lesson"
     },
     "remember": "We keep this choice, so next time you join straight away.",
-    "chatLocked": "The chat with the teacher opens after subscribing",
+    "dropped": "The connection to the lesson was lost",
+    "mutedHint": "You can turn the microphone back on with the «Mute» button.",
     "host": {
       "endAll": "End the lesson for everyone",
       "endConfirm": "The lesson will end for everyone. End it?",
@@ -1514,6 +1515,7 @@
       "headset": "Headset",
       "bluetooth": "Bluetooth",
       "audio": "Audio",
+      "output": "Audio output: {name}",
       "chat": "Chat",
       "leave": "Leave"
     },
@@ -5003,6 +5005,7 @@
     "noOther": "No other lessons today",
     "waiting": "Your student is waiting",
     "waitingLine": "{name} is waiting for you in the room",
+    "waitingSince": "Came in {age}",
     "liveNow": "The lesson is running now"
   },
   "live": {
@@ -5071,6 +5074,7 @@
       "join_closed": "The lesson time is over",
       "link_invalid": "This link is not valid",
       "lesson_ended": "This lesson has ended and cannot be joined again",
+      "lesson_not_live": "The lesson cannot be ended now: its time has not started and nobody is in the room",
       "link_expired": "This link has expired",
       "too_many_requests": "Too many attempts, try again in a moment",
       "template_not_approved": "Meta has not approved the lesson link template yet",

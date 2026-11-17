@@ -23,16 +23,16 @@ interface AudioButtonProps {
 }
 
 /**
- * The output in use, by name: «مكبر الصوت», «السماعة», «سماعة الرأس», «سماعة بلوتوث»; a press
- * steps to the next one the phone has.
+ * The output in use, by name: «مكبر الصوت», «السماعة», «سماعة الرأس», «سماعة بلوتوث» (read out as
+ * «مخرج الصوت: …», not a toggle); a press steps to the next one the phone has.
  */
 export function AudioButton({ output, onPress }: AudioButtonProps) {
   const look = LOOK[output ?? 'system'];
   return (
     <RoundButton
       label={look.label}
+      accessibilityLabel={C.output.replace('{name}', look.label)}
       tone="plain"
-      pressed={output === 'speaker'}
       onPress={onPress}
       icon={look.icon}
     />

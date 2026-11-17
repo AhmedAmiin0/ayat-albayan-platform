@@ -28,7 +28,16 @@ export function LiveStrip({ live }: { live: LiveRoom }) {
     >
       <View style={{ flexDirection: 'row' }}>
         {live.people.slice(0, FACES).map((p, i) => (
-          <View key={`${p.role}-${p.name}`} style={{ marginStart: i === 0 ? 0 : -10 }}>
+          <View
+            key={`${p.role}-${p.name}`}
+            // A 2pt ring of the strip's green parts the overlapping faces.
+            style={{
+              marginStart: i === 0 ? 0 : -10,
+              borderWidth: 2,
+              borderRadius: 999,
+              borderColor: color.lapisHover,
+            }}
+          >
             <Avatar name={p.name} decorative />
           </View>
         ))}

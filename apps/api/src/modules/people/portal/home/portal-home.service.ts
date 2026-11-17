@@ -16,11 +16,11 @@ export class PortalHomeService {
     @Inject(MeZoneRepo) private readonly me: MeZoneRepo,
   ) {}
 
-  /** `locale` only when the profile holds a language the apps speak (else the app keeps its). */
+  /** `locale`: null while the login never chose one (the app keeps its own). */
   async home(user: AuthUser): Promise<PortalHome> {
     const reads = [this.scopes.of(user), this.renewUrl(), this.me.localeOf(user.id)] as const;
     const [scope, renew_url, locale] = await Promise.all(reads);
-    return { kind: scope.kind, students: scope.students, renew_url, ...(locale && { locale }) };
+    return { kind: scope.kind, students: scope.students, renew_url, locale };
   }
 
   /** A failed number read never breaks the page: the link is simply not shown. */

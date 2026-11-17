@@ -16,6 +16,14 @@ const M = t.classroom.mute;
 const DONE: Record<MuteSource, string> = { microphone: M.micDone, camera: M.camDone };
 const named = (line: string, name: string) => line.replace('{name}', name);
 
+interface HostPanelInput {
+  host: RoomHost | null;
+  me: JoinRole | null;
+  tiles: readonly RoomTile[];
+  /** One's own «إنهاء الحلقة للجميع» went through: the room closes for good. */
+  onEnded: () => void;
+}
+
 /** The cameras (one per person), not the shared screens. */
 const peopleOf = (tiles: readonly RoomTile[]): RoomTile[] => tiles.filter((x) => !x.screen);
 
@@ -24,7 +32,7 @@ const peopleOf = (tiles: readonly RoomTile[]): RoomTile[] => tiles.filter((x) =>
  * (asked first, the web's wording), «كتم الجميع», and «إنهاء الحلقة للجميع» (asked first). No host
  * (the family) or a role without these powers: the list only. The tiles update by themselves.
  */
-export function useHostPanel(host: RoomHost | null, me: JoinRole | null, tiles: RoomTile[]) {
+export function useHostPanel({ host, me, tiles, onEnded }: HostPanelInput) {
   const [kick, setKick] = useState<RoomTile | null>(null);
   const [ending, setEnding] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -62,6 +70,6 @@ export function useHostPanel(host: RoomHost | null, me: JoinRole | null, tiles: 
       host && kick && run(host.remove(kick.identity), named(t.classroom.kick.done, kick.name)),
     askEnd: () => setEnding(true),
     cancelEnd: () => setEnding(false),
-    confirmEnd: () => host && run(host.end(), null),
+    confirmEnd: () => host && run(host.end().then(onEnded), null),
   };
 }

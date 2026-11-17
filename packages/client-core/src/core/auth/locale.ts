@@ -8,12 +8,16 @@ import type { ApiClient } from '../http/index.js';
 /** PATCH: the signed-in login's own language (any role, guardians and students too). */
 export const meLocalePath = '/me/locale';
 
-const answerLocale = z.object({ locale: z.enum(LOCALES) });
+const answerLocale = z.object({ locale: z.enum(LOCALES).nullable() });
 
-/** The `locale` of a /auth/me or /portal/me answer; null while loading, or from an older API. */
-export function meLocaleOf(me: unknown): Locale | null {
+/**
+ * The `locale` of a /auth/me or /portal/me answer: the login's choice, null when it never chose
+ * one (the app then teaches it the device's choice), undefined when the answer has none (loading,
+ * an older API, an unknown language).
+ */
+export function meLocaleOf(me: unknown): Locale | null | undefined {
   const parsed = answerLocale.safeParse(me);
-  return parsed.success ? parsed.data.locale : null;
+  return parsed.success ? parsed.data.locale : undefined;
 }
 
 /** Writes the login's language; resolves with the stored one (parsed, rule 12). */

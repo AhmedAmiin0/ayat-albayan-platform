@@ -3,7 +3,10 @@ import { View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { liveText } from './live-text';
 
-/** The live card's top (canvas RoomXLiveHome): «● الحلقة جارية الآن», then how long it has run. */
+/**
+ * The live card's top (canvas RoomXLiveHome): «● الحلقة جارية الآن» (the card's heading for a
+ * screen reader), then how long it has run.
+ */
 export function LiveTop({ live }: { live: LiveRoom }) {
   const { color } = useTheme();
   const words = { color: color.onLapis, fontSize: type.size.xs };
@@ -20,7 +23,9 @@ export function LiveTop({ live }: { live: LiveRoom }) {
             backgroundColor: color.ok,
           }}
         />
-        <AppText style={{ ...words, fontFamily: type.ui[700] }}>{t.portal.now}</AppText>
+        <AppText accessibilityRole="header" style={{ ...words, fontFamily: type.ui[700] }}>
+          {t.portal.now}
+        </AppText>
       </View>
       <AppText accessibilityRole="timer" style={words}>
         {liveText(live).since}

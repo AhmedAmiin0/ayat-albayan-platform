@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Pressable } from 'react-native';
-import { palette, useTheme } from '@ab/mobile-kit';
+import { useTheme } from '@ab/mobile-kit';
 
 interface TileActionProps {
   label: string;
@@ -8,9 +8,7 @@ interface TileActionProps {
   icon: (ink: string) => ReactNode;
 }
 
-const INK = palette.dark.coverInk;
-
-/** A small round button on a tile's top corner, on the scrim: «بدّل الكاميرا», «تكبير». */
+/** A small round button on a tile's top corner, a solid inverse chip: «بدّل الكاميرا», «تكبير». */
 export function TileAction({ label, onPress, icon }: TileActionProps) {
   const { color } = useTheme();
   return (
@@ -28,10 +26,10 @@ export function TileAction({ label, onPress, icon }: TileActionProps) {
         borderRadius: 18,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: color.scrim,
+        backgroundColor: color.inverse,
       }}
     >
-      {icon(INK)}
+      {icon(color.onInverse)}
     </Pressable>
   );
 }

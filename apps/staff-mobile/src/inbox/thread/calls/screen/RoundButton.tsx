@@ -11,10 +11,12 @@ interface RoundButtonProps {
   /** A toggle (كتم, مكبر الصوت): its state is read out and the circle fills. */
   pressed?: boolean;
   icon: (ink: string) => ReactNode;
+  /** The spoken name when it says more than the word under the circle (a count, a route). */
+  accessibilityLabel?: string;
 }
 
 /** A call control (WhatsApp's round buttons): a 64pt circle and its word under it. */
-export function RoundButton({ label, tone, onPress, pressed, icon }: RoundButtonProps) {
+export function RoundButton({ label, tone, onPress, pressed, icon, ...a11y }: RoundButtonProps) {
   const { color } = useTheme();
   // A visible edge on the cover (≥ 3:1 non-text contrast): the neutral control is outlined in coverInk
   // and fills with it while on; «إنهاء» / «رفض» and «قبول» are their solid action fills.
@@ -25,7 +27,7 @@ export function RoundButton({ label, tone, onPress, pressed, icon }: RoundButton
     <View style={{ alignItems: 'center', gap: 8, minWidth: 72 }}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={label}
+        accessibilityLabel={a11y.accessibilityLabel ?? label}
         accessibilityState={pressed === undefined ? undefined : { selected: pressed }}
         onPress={onPress}
         style={({ pressed: down }) => ({ width: 64, height: 64, borderRadius: 32, backgroundColor: fill, ...edge, alignItems: 'center', justifyContent: 'center', opacity: down ? 0.85 : 1 })}

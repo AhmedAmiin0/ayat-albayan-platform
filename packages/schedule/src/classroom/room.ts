@@ -53,6 +53,7 @@ export const CLASSROOM_ERRORS = [
   'cannot_grant_share',
   'cannot_mute',
   'lesson_ended',
+  'lesson_not_live',
 ] as const;
 export type ClassroomError = (typeof CLASSROOM_ERRORS)[number];
 

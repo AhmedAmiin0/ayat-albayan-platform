@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import { principalColumns, type Principal } from './moderation.repo';
+import { personLinkIds, type LessonStudentRow, type LinkRow } from './room-person.mapper';
 
 const LIMIT = 50;
 
@@ -13,9 +14,8 @@ const idsOf = (principals: readonly Principal[], column: Column): string[] =>
 
 /**
  * «إخراج» keeps a PERSON out, not one row (owner 2026-11-16, room server bugs): every guest link of
- * theirs in this lesson and every LiveKit identity (window) they hold now. A guest's links: in a
- * lesson with one student, every link of the lesson is that student's family's (the WhatsApp ones
- * carry no student); in a group lesson, the rows of the same student. A staff login is itself.
+ * theirs in this lesson (personLinkIds: their family's students' links) and every LiveKit identity
+ * (window) they hold now. A staff login is itself.
  */
 @Injectable()
 export class RoomPersonRepo {
@@ -25,15 +25,8 @@ export class RoomPersonRepo {
   async principalsOf(lessonId: string, principal: Principal): Promise<Principal[]> {
     const linkId = principalColumns(principal).join_link_id;
     if (!linkId) return [principal];
-    const [links, students] = await Promise.all([
-      this.links(lessonId),
-      this.studentCount(lessonId),
-    ]);
-    const own = links.find((l) => l.id === linkId)?.student_id ?? null;
-    const samePerson = (l: { student_id: string | null }) =>
-      students <= 1 || (own !== null && l.student_id === own);
-    const ids = new Set([linkId, ...links.filter(samePerson).map((l) => l.id)]);
-    return [...ids].map((joinLinkId) => ({ joinLinkId }));
+    const [links, students] = await Promise.all([this.links(lessonId), this.students(lessonId)]);
+    return personLinkIds(linkId, { links, students }).map((joinLinkId) => ({ joinLinkId }));
   }
 
   /** Every identity those principals were admitted with in this lesson and not seen leaving. */
@@ -56,21 +49,21 @@ export class RoomPersonRepo {
     return data.map((r) => r.identity);
   }
 
-  private async links(lessonId: string): Promise<{ id: string; student_id: string | null }[]> {
+  private async links(lessonId: string): Promise<LinkRow[]> {
     const { data, error } = await this.db
       .from('lesson_join_links')
-      .select('id, student_id')
+      .select('id, student_id, sent_for_student_id')
       .eq('lesson_id', lessonId);
     if (error) throw dbError(error);
     return data;
   }
 
-  private async studentCount(lessonId: string): Promise<number> {
-    const { count, error } = await this.db
+  private async students(lessonId: string): Promise<LessonStudentRow[]> {
+    const { data, error } = await this.db
       .from('lesson_students')
-      .select('student_id', { count: 'exact', head: true })
+      .select('student_id, student:students(guardian_id)')
       .eq('lesson_id', lessonId);
     if (error) throw dbError(error);
-    return count ?? 0;
+    return data.map((r) => ({ student_id: r.student_id, guardian_id: r.student?.guardian_id ?? null }));
   }
 }

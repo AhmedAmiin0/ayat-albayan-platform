@@ -13,7 +13,7 @@ export function ChildSwitchList() {
   const { color } = useTheme();
   const me = usePortalMe().data;
   const pick = useFamilyPick();
-  const switchTo = useSwitchChild();
+  const switchTo = useSwitchChild(me?.kind ?? 'guardian');
   if (!me) return null;
   const currentId = pick.state === 'one' ? pick.student.id : null;
   return (

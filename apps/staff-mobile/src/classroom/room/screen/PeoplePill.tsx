@@ -1,0 +1,45 @@
+import { Pressable, View } from 'react-native';
+import type { RoomTile } from '@/classroom/room/model/room-types';
+import { t, AppText, Avatar, shape, type, useTheme } from '@ab/mobile-kit';
+
+interface PeoplePillProps {
+  people: readonly RoomTile[];
+  onPress: () => void;
+}
+
+/**
+ * The room's people at a glance (canvas RoomXTeacher): up to three overlapping 28pt faces and the
+ * count, a 44pt pill read as «عدد المشاركين: 3»; it opens the participants panel.
+ */
+export function PeoplePill({ people, onPress }: PeoplePillProps) {
+  const { color } = useTheme();
+  const n = people.length;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={t.mobileRoom.count.replace('{n}', String(n))}
+      onPress={onPress}
+      style={{
+        height: 44,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        paddingHorizontal: 8,
+        borderRadius: shape.radius.pill,
+        borderWidth: 1,
+        borderColor: color.coverInk,
+      }}
+    >
+      <View style={{ flexDirection: 'row' }}>
+        {people.slice(0, 3).map((p, i) => (
+          <View key={p.key} style={{ marginStart: i === 0 ? 0 : -10 }}>
+            <Avatar name={p.name} size="sm" decorative />
+          </View>
+        ))}
+      </View>
+      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.sm, color: color.coverInk }}>
+        {String(n)}
+      </AppText>
+    </Pressable>
+  );
+}
