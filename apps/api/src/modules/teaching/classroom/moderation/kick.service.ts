@@ -1,5 +1,5 @@
 import { canRemove, JOIN_ROLES, lessonRoomName, type JoinRole } from '@ab/shared';
-import { BadGatewayException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadGatewayException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
@@ -36,7 +36,7 @@ export class KickService {
     private readonly roles: LessonRoleService,
     private readonly moderation: ModerationRepo,
     private readonly livekit: LivekitApi,
-    private readonly persons: RoomPersonRepo,
+    @Inject(RoomPersonRepo) private readonly persons: RoomPersonRepo,
   ) {}
 
   /** 404 participant_not_found, 403 cannot_remove, 503 classroom_not_configured, 502 LiveKit. */

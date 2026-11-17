@@ -1,5 +1,5 @@
 import { canEndLesson, type LessonEndResult } from '@ab/shared';
-import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
 import { RoomCloser } from '@/modules/teaching/classroom/max-duration/room-closer';
@@ -19,10 +19,10 @@ export class LessonEndService {
   private readonly log = new Logger(LessonEndService.name);
 
   constructor(
-    private readonly roles: LessonRoleService,
-    private readonly ends: LessonEndRepo,
-    private readonly presence: RoomPresenceRepo,
-    private readonly closer: RoomCloser,
+    @Inject(LessonRoleService) private readonly roles: LessonRoleService,
+    @Inject(LessonEndRepo) private readonly ends: LessonEndRepo,
+    @Inject(RoomPresenceRepo) private readonly presence: RoomPresenceRepo,
+    @Inject(RoomCloser) private readonly closer: RoomCloser,
   ) {}
 
   /** 404 lesson_not_found, 403 not the lesson's teacher nor an admin. */

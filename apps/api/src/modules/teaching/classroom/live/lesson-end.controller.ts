@@ -1,5 +1,5 @@
 import type { LessonEndResult } from '@ab/shared';
-import { Controller, HttpCode, Post } from '@nestjs/common';
+import { Controller, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -13,7 +13,7 @@ import { LessonEndService } from './lesson-end.service';
 @Permissions('classroom.host')
 @Controller('lessons/:id')
 export class LessonEndController {
-  constructor(private readonly ends: LessonEndService) {}
+  constructor(@Inject(LessonEndService) private readonly ends: LessonEndService) {}
 
   /** 200 {endedAt} (idempotent: the first end's time); 404 lesson_not_found, 403. */
   @Post('end')

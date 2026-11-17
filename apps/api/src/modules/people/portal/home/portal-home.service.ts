@@ -1,5 +1,5 @@
 import { clickToChatLink, type PortalHome } from '@ab/shared';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { MeZoneRepo } from '@/common/auth/me-zone.repo';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
@@ -13,7 +13,7 @@ export class PortalHomeService {
   constructor(
     private readonly scopes: PortalScopes,
     private readonly chat: ChatNumber,
-    private readonly me: MeZoneRepo,
+    @Inject(MeZoneRepo) private readonly me: MeZoneRepo,
   ) {}
 
   /** `locale` only when the profile holds a language the apps speak (else the app keeps its). */

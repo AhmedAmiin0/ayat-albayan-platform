@@ -26,7 +26,7 @@ export class LivekitWebhookService {
     @Inject(CLASSROOM_CONFIG) private readonly source: ClassroomConfigSource,
     private readonly recordings: RecordingRepo,
     private readonly lifecycle: RecordingLifecycle,
-    private readonly presence: RoomPresenceService,
+    @Inject(RoomPresenceService) private readonly presence: RoomPresenceService,
   ) {}
 
   async handle(post: WebhookPost, now = new Date()): Promise<void> {

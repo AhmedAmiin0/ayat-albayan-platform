@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
 import { LessonRoomStates } from '@/modules/teaching/lessons/live-room/lesson-room-states';
 import { AutoHeldRepo } from '@/modules/teaching/lessons/auto-held/auto-held.repo';
@@ -10,8 +10,8 @@ import { AutoHeldRepo } from '@/modules/teaching/lessons/auto-held/auto-held.rep
 @Injectable()
 export class LessonViewExtras {
   constructor(
-    readonly photos: StaffPhotos,
-    readonly autoHeld: AutoHeldRepo,
-    readonly rooms: LessonRoomStates,
+    @Inject(StaffPhotos) readonly photos: StaffPhotos,
+    @Inject(AutoHeldRepo) readonly autoHeld: AutoHeldRepo,
+    @Inject(LessonRoomStates) readonly rooms: LessonRoomStates,
   ) {}
 }
