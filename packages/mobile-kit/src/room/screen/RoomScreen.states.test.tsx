@@ -7,7 +7,6 @@ import {
   withInsets,
   type FakePlatform,
 } from '../state/room-test-kit';
-import { ApiError } from '../../lib/http/api';
 import { t } from '../../lib/i18n/i18n';
 import { RoomScreen } from './RoomScreen';
 

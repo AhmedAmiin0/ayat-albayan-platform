@@ -1,9 +1,8 @@
-import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import {
   CREDS,
   fakePlatform,
   LESSON,
-  tile,
   withInsets,
   type FakePlatform,
 } from '../state/room-test-kit';
@@ -18,22 +17,6 @@ const onExit = jest.fn();
 const onBrowser = jest.fn();
 const press = async (label: string) =>
   fireEvent.press(await screen.findByRole('button', { name: label }));
-
-async function live() {
-  await render(
-    withInsets(
-      <RoomScreen
-        platform={p}
-        target={LESSON}
-        onExit={onExit}
-        fetchJoin={fetchJoin}
-        onBrowser={onBrowser}
-      />,
-    ),
-  );
-  await press(R.preview.join);
-  await act(async () => p.client.push({ status: 'connected', micOn: true, camOn: true }));
-}
 
 beforeEach(() => {
   jest.clearAllMocks();

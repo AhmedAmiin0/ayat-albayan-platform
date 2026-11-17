@@ -1218,16 +1218,7 @@
     }
   },
   "src/classroom/links/join-text.ts": {
-    "complexity": {
-      "count": 1
-    },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
       "count": 1
     }
   },
