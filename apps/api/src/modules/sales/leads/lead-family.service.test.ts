@@ -5,10 +5,10 @@ import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { LeadFamilyService } from './lead-family.service';
 
 const RPC = 'rpc:link_family_phone';
-const INPUT = { leadId: 'l1', code: 'AB-0183', actorId: 'u1' };
+const INPUT = { leadId: 'l1', code: 'AB-0183', actorId: 'u1', admin: true };
 
-function setup(results: FakeResult[]) {
-  const f = fakeDb({ [RPC]: results });
+function setup(results: FakeResult[], students: FakeResult[] = []) {
+  const f = fakeDb({ [RPC]: results, students });
   return { ...f, svc: new LeadFamilyService(f.db) };
 }
 
@@ -60,6 +60,27 @@ describe('LeadFamilyService.link «ربط بطالب موجود»', () => {
     const again = setup([{ error: pkey }, { error: pkey }]);
     expect(await failure(again.svc.link(INPUT))).toEqual([409, 'number_taken']);
     expect(again.trips).toEqual([RPC, RPC]);
+  });
+
+  it('a non-admin: 409 guardian_has_login once the family has a login, nothing written', async () => {
+    const t = setup([], [{ data: { guardian: { profile_id: 'p-g1' } } }]);
+    expect(await failure(t.svc.link({ ...INPUT, admin: false }))).toEqual([409, 'guardian_has_login']);
+    expect(t.trips).toEqual(['students']);
+    expect(t.argsOf('students', 'eq')).toEqual(['code', 'AB-0183']);
+  });
+
+  it('a non-admin links a family without a login, or an unknown code reaches the function', async () => {
+    for (const data of [{ guardian: { profile_id: null } }, null]) {
+      const t = setup([{ data: true }], [{ data }]);
+      expect(await t.svc.link({ ...INPUT, admin: false })).toEqual({ linked: true });
+      expect(t.trips).toEqual(['students', RPC]);
+    }
+  });
+
+  it('the admin is never asked about the login', async () => {
+    const t = setup([{ data: true }]);
+    await t.svc.link(INPUT);
+    expect(t.trips).toEqual([RPC]);
   });
 
   it('any other database error is a server error, not a 4xx', async () => {

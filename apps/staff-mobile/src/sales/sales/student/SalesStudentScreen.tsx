@@ -14,6 +14,7 @@ import {
 import { MessageSearchRow } from '@/inbox';
 import { Note } from '@/more';
 import { PeopleEditSection } from '@/students';
+import { SalesChannelButton } from '@/student-file';
 import { SalesLoadScreen } from '@/sales/sales/components/SalesLoadScreen';
 import { familyChatHref } from '@/sales/sales/lib/sales-href';
 import { fill } from '@/sales/sales/lib/sales-text';
@@ -79,6 +80,7 @@ export function SalesStudentScreen() {
           {phone ? (
             <Button variant="secondary" label={`${t.sales.student.chat} ${ltr(formatPhone(phone))}`} onPress={() => router.push(familyChatHref('/sales', phone))} />
           ) : null}
+          <SalesChannelButton studentId={data.student.id} />
           {acts ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
           <FamilySection family={data.family} phone={phone} />
           <StudentCourseSection

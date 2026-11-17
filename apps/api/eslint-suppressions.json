@@ -12210,11 +12210,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/channel-access.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
   "src/modules/teaching/student-channels/channel-edits.service.ts": {
     "complexity": {
       "count": 1
@@ -12233,9 +12228,6 @@
       "count": 1
     },
     "max-depth": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },

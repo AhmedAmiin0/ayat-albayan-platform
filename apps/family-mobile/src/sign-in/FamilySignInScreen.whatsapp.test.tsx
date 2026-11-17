@@ -44,9 +44,11 @@ beforeEach(() => {
   mockApiSend.mockResolvedValue(undefined);
 });
 
-test('no tabs: the wordmark, the welcome, the number first and the password one tap away', async () => {
+test('no tabs: the academy emblem, the wordmark, the welcome, the number, the password one tap away', async () => {
   await show();
   expect(await screen.findByLabelText(t.familyAuth.phone)).toBeTruthy();
+  // The academy emblem (ayatalbayan.com's logo, owner 2026-11-16); decorative: hidden from a11y.
+  expect(screen.getByTestId('mark-large', { includeHiddenElements: true })).toBeTruthy();
   expect(screen.getByRole('header', { name: `${s.wordmark}، ${s.wordmarkArabic}` })).toBeTruthy();
   expect(screen.getByText(s.welcome)).toBeTruthy();
   expect(screen.getByRole('button', { name: s.withPassword })).toBeTruthy();
@@ -79,6 +81,19 @@ test('the country picker sets the calling code', async () => {
   await typePhone('5555 1234');
   await fireEvent.press(sendButton());
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/code/request', { phone: '+97455551234' });
+});
+
+test('any country: a pasted whole number picks its own; the picker finds one by name', async () => {
+  await show();
+  await typePhone('+44 7700 900123');
+  expect(screen.getByLabelText(t.familyAuth.phone)).toHaveProp('value', '7700900123');
+  expect(screen.getByRole('button', { name: /المملكة المتحدة/ })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: /الدولة/ }));
+  await fireEvent.changeText(screen.getByLabelText(s.countrySearch), 'Pakistan');
+  await fireEvent.press(screen.getByRole('radio', { name: /باكستان/ }));
+  await typePhone('0300 1234567');
+  await fireEvent.press(sendButton());
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/code/request', { phone: '+923001234567' });
 });
 
 test('a pasted code fills the boxes and signs in without a tap', async () => {

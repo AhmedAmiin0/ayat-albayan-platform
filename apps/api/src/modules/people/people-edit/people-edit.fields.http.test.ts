@@ -56,6 +56,18 @@ describe('/people/* bodies', () => {
     );
   });
 
+  it("the student's own number: E.164 on the way in, blank = removal, junk = 400", async () => {
+    const url = `/people/students/${S}`;
+    expect((await patch(url, { phone_e164: '00966 50 000 0007' })).statusCode).toBe(200);
+    expect((await patch(url, { phone_e164: '' })).statusCode).toBe(200);
+    expect((await patch(url, { phone_e164: 'abc' })).statusCode).toBe(400);
+    const sent = (phone: string | null) =>
+      expect.objectContaining({ patch: { phone_e164: phone }, admin: false });
+    expect(mocks.people.editStudent).toHaveBeenCalledTimes(2);
+    expect(mocks.people.editStudent).toHaveBeenNthCalledWith(1, sent('+966500000007'));
+    expect(mocks.people.editStudent).toHaveBeenNthCalledWith(2, sent(null));
+  });
+
   it.each(STUDENT_ADMIN_ONLY)(
     'refuses the admin-only student field %o (400, nothing written)',
     async (body) => {

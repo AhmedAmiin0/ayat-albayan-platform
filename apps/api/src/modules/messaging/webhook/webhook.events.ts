@@ -52,6 +52,11 @@ export interface StatusEvent {
   line?: NumberPurpose | null;
   numberId?: string;
   phoneNumberId?: string;
+  /**
+   * Came in on POST /webhooks/wacrm: the CRM's own conversation id (never Meta's), so an unknown
+   * wamid is confirmed against a timed-out send (crm-confirm/).
+   */
+  crm?: { conversationId: string | null };
 }
 
 /**

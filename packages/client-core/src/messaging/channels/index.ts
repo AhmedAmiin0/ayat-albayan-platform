@@ -25,6 +25,13 @@ export {
 } from './channel-live.js';
 export { type TeacherPick, teacherChoice } from './teacher-pick.js';
 export {
+  channelSeatKey,
+  channelSeats,
+  seatErrorText,
+  type SeatState,
+  seatState,
+} from './channel-seat.js';
+export {
   CHANNEL_EDIT_ERRORS,
   type ChannelEditError,
   channelBubbleActions,

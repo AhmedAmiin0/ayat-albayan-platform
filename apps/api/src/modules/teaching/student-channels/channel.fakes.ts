@@ -16,6 +16,8 @@ import { ChannelPeopleRepo } from './channel-people.repo';
 import type { ChannelMessageRow, ChannelSummaryRow } from './channel.repo';
 import { ChannelRepo } from './channel.repo';
 import { FamilyChatSettings } from './family-chat.settings';
+import { ChannelSeatRepo } from './seat/channel-seat.repo';
+import { fakeSeats } from './seat/seat.fakes';
 
 export const ST = '52000000-0000-4000-8000-000000000001';
 /** Another family's child. */
@@ -84,8 +86,7 @@ export async function channelApp() {
           ['p-t1', 'أبرار'],
         ]),
     ),
-    ownedStudentIds: vi.fn(async (id: string) => (id === 'p-sa' ? [ST] : [])),
-    ownerIds: vi.fn(async (): Promise<string[]> => ['p-sa']),
+    assistantId: vi.fn(async (): Promise<string | null> => 'p-sa'), // the seat holder
   };
   const own = (contactIsSelf: boolean) => [
     { id: ST, code: 'AB-0201', name: 'سلمى', tz: 'Asia/Riyadh', contact_is_self: contactIsSelf },
@@ -112,6 +113,7 @@ export async function channelApp() {
   const audit = { record: vi.fn(async () => undefined) };
   const familyChat = { enabled: vi.fn(async () => true) }; // family_chat_enabled on, as before
   const presence = fakePresence();
+  const seats = fakeSeats([ST, OTHER]);
   const push = {
     notifyProfiles: vi.fn(async () => undefined),
     notifyAdmins: vi.fn(),
@@ -121,7 +123,7 @@ export async function channelApp() {
     [ChannelRepo, queries], [ChannelPeopleRepo, people], [PortalScopeRepo, scope],
     [TeachersRepo, teachers], [PushService, push], [ChannelEditsRepo, edits],
     [AuditService, audit], [PresenceRepo, presence.repo], [PresenceSettings, presence.settings],
-    [FamilyChatSettings, familyChat],
+    [FamilyChatSettings, familyChat], [ChannelSeatRepo, seats.repo],
   ];
   const builder = overrides.reduce(
     (b, [token, value]) => b.overrideProvider(token).useValue(value),
@@ -130,21 +132,10 @@ export async function channelApp() {
   const app = await bootWith(builder, USERS);
   const call = (method: 'GET' | 'POST' | 'DELETE', url: string, who: Who) =>
     app.inject({ method, url, headers: { authorization: `Bearer ${who}` } });
-  const send = (method: 'POST' | 'PATCH') => (url: string, who: Who, payload: object) =>
+  const send = (method: 'POST' | 'PATCH' | 'PUT') => (url: string, who: Who, payload: object) =>
     app.inject({ method, url, headers: { authorization: `Bearer ${who}` }, payload });
   return {
-    app,
-    call,
-    post: send('POST'),
-    patch: send('PATCH'),
-    queries,
-    people,
-    scope,
-    teachers,
-    push,
-    edits,
-    audit,
-    presence,
-    familyChat,
+    ...{ app, call, post: send('POST'), patch: send('PATCH'), put: send('PUT') },
+    ...{ queries, people, scope, teachers, push, edits, audit, presence, familyChat, seats },
   };
 }

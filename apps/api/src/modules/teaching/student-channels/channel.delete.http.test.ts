@@ -77,7 +77,7 @@ describe('DELETE …/messages/:id: delete for everyone', () => {
     expect(t.edits.remove).not.toHaveBeenCalled();
   });
 
-  it('the owning assistant deletes her own message for everyone (owner 2026-11-16)', async () => {
+  it('the seated assistant deletes her own message for everyone (owner 2026-11-16)', async () => {
     t.edits.message.mockResolvedValueOnce(
       messageRow({ id: M, sender_profile_id: 'p-sa', sender_role: 'sales', created_at: ago(HOUR) }),
     );

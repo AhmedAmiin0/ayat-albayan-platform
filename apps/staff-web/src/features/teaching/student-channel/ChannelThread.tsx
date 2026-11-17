@@ -1,4 +1,10 @@
-import { channelKey, channelMode, liveChannelId, threadMessages } from '@ab/client-core';
+import {
+  channelKey,
+  channelMode,
+  channelSeatKey,
+  liveChannelId,
+  threadMessages,
+} from '@ab/client-core';
 import { useInfiniteQuery, useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { EmptyState } from '@/components/ui/display/empty-state';
@@ -18,6 +24,16 @@ const NOTE = 'rounded-md border border-rule bg-sunk px-3 py-2 text-sm text-ink-2
 const readOnlyText = (open: boolean | undefined) =>
   open === false ? `${t.studentChannel.readOnly} ${t.studentChannel.closedMonitor}` : t.studentChannel.readOnly;
 const refreshCounts = (client: QueryClient) => Promise.all(CHANNEL_COUNT_KEYS.map((queryKey) => client.invalidateQueries({ queryKey })));
+/**
+ * After a send: the thread, the counts and the assistant's seat (owner 2026-11-16): a 404 there
+ * means the student's bringer took the chat over, and the re-read seat says so at once.
+ */
+const afterSend = (client: QueryClient, { audience, studentId }: ChannelRef) =>
+  Promise.all([
+    client.invalidateQueries({ queryKey: channelKey(audience, studentId) }),
+    client.invalidateQueries({ queryKey: channelSeatKey(studentId) }),
+    refreshCounts(client),
+  ]);
 
 interface Props {
   refs: ChannelRef;
@@ -48,7 +64,7 @@ export function ChannelThread({ refs, tz, named = false }: Props) {
   const now = useNow();
   const send = useMutation({
     mutationFn: (body: string) => sendChannelMessage({ audience, studentId, body }),
-    onSettled: () => Promise.all([client.invalidateQueries({ queryKey: channelKey(audience, studentId) }), refreshCounts(client)]),
+    onSettled: () => afterSend(client, refs),
   });
   useEffect(() => {
     end.current?.scrollIntoView?.({ block: 'end' });

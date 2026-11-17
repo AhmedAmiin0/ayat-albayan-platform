@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@ab/mobile-kit';
+import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { clientWith, PEOPLE_KEYS, VIEW } from './people-edit.fixtures';
 import { PeopleEditSection } from './PeopleEditSection';
@@ -48,4 +48,15 @@ test('after «تحويل إلى ولي أمر» the screen is told to leave', as
   await fireEvent.press(screen.getByRole('button', { name: E.confirm }));
   await waitFor(() => expect(onRemoved).toHaveBeenCalled());
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/people/students/s1/to-guardian', undefined);
+});
+
+test('a refused student number reads in MSA (409 student_login_phone)', async () => {
+  mockApiFetch.mockReset().mockResolvedValue(VIEW);
+  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'student_login_phone' }));
+  await renderWithQuery(<PeopleEditSection studentId="s1" />, clientWith(PEOPLE_KEYS));
+  await fireEvent.press(screen.getByRole('button', { name: E.editData }));
+  await screen.findByDisplayValue('أم سهيلة');
+  await fireEvent.changeText(screen.getByLabelText(E.fields.studentPhone), '+966500000007');
+  await fireEvent.press(screen.getByRole('button', { name: E.save }));
+  await waitFor(() => expect(screen.getByText(E.errors.student_login_phone)).toBeTruthy());
 });

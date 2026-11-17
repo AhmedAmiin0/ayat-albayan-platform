@@ -22,6 +22,6 @@ export class LeadFamilyController {
   @Permissions('leads.link_family')
   link(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<LeadFamilyLinked> {
     const { code } = parseOrThrow(leadFamilyLinkSchema, body);
-    return this.family.link({ leadId: id, code, actorId: user.id });
+    return this.family.link({ leadId: id, code, actorId: user.id, admin: user.role === 'admin' });
   }
 }

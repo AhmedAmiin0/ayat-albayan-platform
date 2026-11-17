@@ -3,6 +3,7 @@ import { REPORT_CODES } from '@/common/http/report-codes';
 import { loadEnv } from '@/config/env/env';
 import { SupabaseAuthGate } from './accounts/auth-gate.supabase';
 import { Provisioner } from './accounts/provision';
+import { StudentLogins } from './accounts/student-login';
 import { SubjectsRepo } from './accounts/subjects.repo';
 import { CodeIssuer } from './codes/code-issuer';
 import { ReportCodesAdapter } from './codes/report-codes.adapter';
@@ -44,6 +45,7 @@ import { SignInSettings } from './sign-in.settings';
     CodeIssuer,
     SignInLimits,
     Provisioner,
+    StudentLogins,
     SignInSettings,
     ReportCodesAdapter,
     { provide: REPORT_CODES, useExisting: ReportCodesAdapter },

@@ -13,11 +13,12 @@ const PREVIEW = 80;
 /**
  * docs/31 §2 (owner 2026-11-16 «all 4 will receive the message»): a participant's message pushes
  * kind channel_message to everyone in the chat but its sender: the student's current teacher(s),
- * the guardian and the student logins (only while family_chat_enabled is on) and the owning
- * assistant(s). The assistant writes too (owner 2026-11-16 «yes it can write also»): hers
- * reaches the teacher(s) and the family, never herself. Never an admin. Its notification rule
- * decides bell / push (PushService). No WhatsApp. Never throws (PushService swallows its own
- * failures; ChannelService catches the rest).
+ * the guardian and the student logins (only while family_chat_enabled is on) and the one
+ * assistant in the seat (owner 2026-11-16 «… but only 1»; none while it is free). The assistant
+ * writes too (owner 2026-11-16 «yes it can write also»): hers reaches the teacher(s) and the
+ * family, never herself. Never an admin. Its notification rule decides bell / push
+ * (PushService). No WhatsApp. Never throws (PushService swallows its own failures;
+ * ChannelService catches the rest).
  */
 @Injectable()
 export class ChannelNotify {
@@ -31,16 +32,16 @@ export class ChannelNotify {
   async sent(actor: ChannelActor, message: ChannelMessageRow): Promise<void> {
     if (actor.mode !== 'participant') return;
     const { studentId, profileId } = actor;
-    const [members, owners, familyOn, [student], names] = await Promise.all([
+    const [members, assistant, familyOn, [student], names] = await Promise.all([
       this.presence.channelPeople(studentId),
-      this.people.ownerIds(studentId),
+      this.people.assistantId(studentId),
       this.familyChat.enabled(),
       this.people.students([studentId]),
       this.people.names([profileId]),
     ]);
     // A family login hears the chat only while it may open it.
     const inChat = members.filter((m) => familyOn || m.role === 'teacher');
-    const ids = new Set([...inChat.map((m) => m.profile_id), ...owners]);
+    const ids = new Set([...inChat.map((m) => m.profile_id), ...(assistant ? [assistant] : [])]);
     ids.delete(profileId);
     await this.push.notifyProfiles({
       kind: 'channel_message',

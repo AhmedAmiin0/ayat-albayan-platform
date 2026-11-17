@@ -1,35 +1,39 @@
+import { CountryListSchema, type CountryData, flagOf, type Locale } from '@ab/shared';
+import data from '@ab/shared/data/countries.json';
 import { getLocales } from 'expo-localization';
 
-/** The academy's countries (the API's phone list, @ab/core phone.ts, plus Bahrain). */
-export type CountryCode = 'SA' | 'AE' | 'QA' | 'KW' | 'OM' | 'BH' | 'EG';
-
-export interface Country {
-  code: CountryCode;
-  /** The calling code, «+966». */
-  dial: string;
-  /** National digits of a WhatsApp (mobile) number, without the leading 0. */
-  digits: number;
+export interface Country extends CountryData {
+  /** 🇸🇦: from the ISO code, no image. */
   flag: string;
 }
 
-const SAUDI: Country = { code: 'SA', dial: '+966', digits: 9, flag: '🇸🇦' };
+/** Every country with a calling code (one shared list, zod-checked as it is read). */
+export const COUNTRIES: readonly Country[] = CountryListSchema.parse(data).map((c) => ({
+  ...c,
+  flag: flagOf(c.code),
+}));
 
-export const COUNTRIES: readonly Country[] = [
-  SAUDI,
-  { code: 'AE', dial: '+971', digits: 9, flag: '🇦🇪' },
-  { code: 'QA', dial: '+974', digits: 8, flag: '🇶🇦' },
-  { code: 'KW', dial: '+965', digits: 8, flag: '🇰🇼' },
-  { code: 'OM', dial: '+968', digits: 8, flag: '🇴🇲' },
-  { code: 'BH', dial: '+973', digits: 8, flag: '🇧🇭' },
-  { code: 'EG', dial: '+20', digits: 10, flag: '🇪🇬' },
-];
+/** The academy's usual countries, after the phone's own in the picker. */
+export const USUAL = ['SA', 'EG', 'AE', 'QA', 'KW', 'OM', 'BH'] as const;
 
-const byCode = (code: string | null | undefined) => COUNTRIES.find((c) => c.code === code);
+const byCode = new Map(COUNTRIES.map((c) => [c.code, c]));
+const countryByCode = (code: string | null | undefined): Country | undefined =>
+  byCode.get((code ?? '').toUpperCase());
 
-/** The country a number starts in: the phone's region when it is one of ours, else Saudi Arabia. */
-export function defaultCountry(region = getLocales().at(0)?.regionCode): Country {
-  return byCode(region) ?? SAUDI;
+function listed(code: string): Country {
+  const country = countryByCode(code);
+  if (country === undefined) throw new Error(`countries.json has no ${code}`);
+  return country;
+}
+const SAUDI = listed('SA');
+
+/** The phone's region («GB»), or null when the OS does not say. */
+export const phoneRegion = (): string | null => getLocales().at(0)?.regionCode ?? null;
+
+/** The country a number starts in: the phone's region when known, else Saudi Arabia. */
+export function defaultCountry(region = phoneRegion()): Country {
+  return countryByCode(region) ?? SAUDI;
 }
 
-/** For the picker: a country by code (an unknown code keeps the current one). */
-export const countryOf = (code: CountryCode, current: Country): Country => byCode(code) ?? current;
+/** The country's name in the UI language. */
+export const nameOf = (country: CountryData, lang: Locale): string => country[lang];

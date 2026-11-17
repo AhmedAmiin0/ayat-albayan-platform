@@ -16,9 +16,13 @@ export function toEditView(
   facts: { family: Family; hasRecords: boolean; notes: boolean },
 ): PeopleEditView {
   // `guardian` is replaced by the checked family; dropped by the rest spread.
-  const { profile_id, guardian, ...student } = row;
+  const { profile_id, guardian, own, ...student } = row;
   const { profile_id: familyLogin, ...family } = facts.family;
-  const shown = { has_login: profile_id !== null, has_records: facts.hasRecords };
+  const shown = {
+    phone_e164: own?.phone_e164 ?? null,
+    has_login: profile_id !== null,
+    has_records: facts.hasRecords,
+  };
   return {
     student: { ...notesIf(student, facts.notes), ...shown },
     guardian: { ...notesIf(family, facts.notes), has_login: familyLogin !== null },

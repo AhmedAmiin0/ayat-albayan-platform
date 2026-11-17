@@ -532,8 +532,10 @@
       "noPreference": "No preference",
       "phone": "WhatsApp number (with country code)",
       "country": "Country",
-      "secondPhone": "Family's second number"
+      "secondPhone": "Family's second number",
+      "studentPhone": "Student's WhatsApp number (optional, with country code)"
     },
+    "studentPhoneHint": "The student signs in to the app with it, by a code sent on WhatsApp.",
     "removeSecond": "Remove the second number",
     "removeSecondConfirm": "Remove the second number {phone} from the family? Its chat becomes a lead chat again.",
     "save": "Save",
@@ -574,7 +576,9 @@
       "guardian_has_self": "The guardian is already a student of their family.",
       "student_has_records": "Not possible: the student has lessons, packages, payments, reports or messages.",
       "student_has_login": "Not possible: the student has a login. The admin unlinks it first.",
-      "phone_taken": "This number belongs to another family.",
+      "phone_taken": "This number already belongs to another family or student.",
+      "teacher_number": "This is a teacher's number; it cannot be a student's.",
+      "student_login_phone": "A student with a login keeps their number: sign-in codes go to it. The admin can change it.",
       "duplicate_student": "A student with the same name is already in the family.",
       "student_not_found": "This student does not exist.",
       "guardian_not_found": "The guardian does not exist.",
@@ -3450,7 +3454,8 @@
         "number_taken": "This number is registered to another family",
         "family_has_second_number": "This family already has a second number",
         "teacher_number": "This is a teacher's number; it cannot be linked to a family",
-        "lead_has_family": "This number is another family's main number"
+        "lead_has_family": "This number is another family's main number",
+        "guardian_has_login": "This family has a login, and a second number signs in to it with a WhatsApp code. The admin adds it."
       }
     },
     "pdf": {
@@ -3791,6 +3796,7 @@
         "crmScopeMissing": "The CRM API key is valid but lacks the messages:send scope, so this line will not send. Update it in «Communications» → «Safety».",
         "crmScopeOk": "The CRM API key is valid and has the send scope",
         "crmTemplateScopesMissing": "The CRM API key lacks {scopes}, so this number's templates neither sync nor go for review from here. Update it in «Communications» → «Safety» → «CRM API key».",
+        "crmReadScopesMissing": "The CRM API key lacks {scopes}, so a send that timed out is not confirmed from the CRM and stays «Not confirmed yet». Add the scope to the key in the CRM.",
         "metaReady": "Ready to send directly through Meta",
         "metaAppSecretSet": "The Meta app secret is set, so signed inbound messages are accepted",
         "metaAppSecretMissing": "The Meta app secret is not set, so inbound messages from Meta will be refused",
@@ -4064,6 +4070,7 @@
     "deliveredAt": "Delivered {time}",
     "readAt": "Read {time}",
     "manualTick": "manually",
+    "unconfirmedTick": "Not confirmed yet",
     "attempts": "Attempts: {n} of {max}",
     "nextAttempt": "Next attempt {time}",
     "sendingNow": "Sending now",
@@ -4110,7 +4117,8 @@
       "handed_off": "Waiting for you to confirm you sent it yourself",
       "stale": "No longer needed: the lesson was cancelled or changed, or the lead replied or asked to stop messages",
       "auto_off": "Not sent because automatic messages are off — turn them on in Settings, then try again",
-      "uncertain": "We're not sure it was sent — check WhatsApp before sending it again",
+      "uncertain": "It may have arrived. We are waiting for the CRM to confirm it; don't send it again before checking WhatsApp.",
+      "crm_uncertain": "It may have arrived. We are waiting for the CRM to confirm it; don't send it again before checking WhatsApp.",
       "template_not_approved": "The template isn't approved by Meta yet",
       "network": "We couldn't reach WhatsApp",
       "internal": "The platform hit an error while sending",
@@ -4766,19 +4774,12 @@
       "wordmark": "Ayat Al-Bayan",
       "wordmarkArabic": "آيات البيان",
       "welcome": "Follow lessons and reports in one place.",
-      "phoneHint": "The number on file at the academy. For another country, type the whole number starting with +.",
+      "phoneHint": "The number on file at the academy. Pick the country, or paste the whole number starting with +.",
       "phoneBad": "This number is incomplete or not valid for this country.",
       "country": "Country: {name}. Tap to change.",
       "countryTitle": "Choose the country",
-      "countries": {
-        "SA": "Saudi Arabia",
-        "AE": "United Arab Emirates",
-        "QA": "Qatar",
-        "KW": "Kuwait",
-        "OM": "Oman",
-        "BH": "Bahrain",
-        "EG": "Egypt"
-      },
+      "countrySearch": "Search by country name or calling code",
+      "countryNone": "No country matches this name or code.",
       "codeTitle": "Enter the code",
       "codeSentTo": "If {phone} is on file, a six-digit code will reach it on WhatsApp. You can paste it here.",
       "withPassword": "Use the student code and password",
@@ -8306,7 +8307,7 @@
       "family": "Families and students",
       "staff": "Academy team"
     },
-    "familyIntro": "Parent or adult student: sign in with the WhatsApp number the academy has on file, and we will send you a code on WhatsApp.",
+    "familyIntro": "Parent or student: sign in with the WhatsApp number the academy has on file, and we will send you a code on WhatsApp.",
     "phone": "WhatsApp number",
     "phoneHint": "The number on file at the academy, with the country code.",
     "sendCode": "Send the code",
@@ -8432,6 +8433,16 @@
     "hide": "Hide the chat",
     "closed": "The chat with the teacher opens after the subscription",
     "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher.",
+    "seat": {
+      "take": "Take this chat",
+      "taking": "Taking…",
+      "takeHint": "Once you take it, you write here and get its messages.",
+      "takeOver": "Move this chat to you",
+      "takeOverHint": "You registered this student, so you can move the chat from {name} to you.",
+      "leave": "Leave this chat",
+      "heldBy": "Followed by {name}",
+      "taken": "Another assistant follows this chat"
+    },
     "actions": {
       "menu": "Message options",
       "edit": "Edit",

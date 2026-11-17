@@ -11,8 +11,8 @@ const UUID = new ParseUUIDPipe();
 
 /**
  * The staff pages (docs/31 §2): the monitor's read-only view of any student's channel
- * (student_channels.monitor; no send or read route), and the owning assistant's page of her own
- * students (sales ownership), where she writes too (SalesChannelController, owner 2026-11-16).
+ * (student_channels.monitor; no send or read route), and the page of the one assistant in the
+ * chat's seat, where she writes too (SalesChannelController, owner 2026-11-16).
  */
 @ApiTags('student-channels')
 @ApiBearerAuth()
@@ -32,6 +32,6 @@ export class MonitorChannelController {
   @Get('sales/students/:id/channel/messages')
   @Permissions('self.sales')
   async salesMessages(@Param('id', UUID) studentId: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<ChannelPage> {
-    return pageFor(this.channels, await this.access.owner(user, studentId), query);
+    return pageFor(this.channels, await this.access.assistant(user, studentId), query);
   }
 }

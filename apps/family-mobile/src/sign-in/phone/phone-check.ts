@@ -1,5 +1,6 @@
 import { asciiDigits, normalizePhone } from '@ab/shared';
 import type { Country } from './countries';
+import { isInternational } from './country-dial';
 
 /** empty: nothing typed; typing: too short to judge; ok: a WhatsApp number; bad: cannot be. */
 export type PhoneState = 'empty' | 'typing' | 'ok' | 'bad';
@@ -10,33 +11,34 @@ interface PhoneCheck {
   e164: string | null;
 }
 
-/** Shortest whole international number we judge (+ and 8 digits, the E.164 floor). */
-const MIN_INTERNATIONAL = 8;
+/** E.164: at most 15 digits after the «+». */
+const E164_MAX = 15;
+const EMPTY: PhoneCheck = { state: 'empty', e164: null };
 
-const digitsOf = (typed: string) => asciiDigits(typed).replace(/\D/g, '');
-/** Typed with «+» or «00»: a whole international number, the picker is ignored. */
-const isInternational = (typed: string) => /^\s*(\+|00)/.test(asciiDigits(typed));
+/** Can more digits still make it a number the API takes? 0-padded: the rules are digit classes. */
+function canGrow(e164: string): boolean {
+  const room = Math.max(0, E164_MAX - (e164.length - 1));
+  const longer = Array.from({ length: room + 1 }, (_, k) => `${e164}${'0'.repeat(k)}`);
+  return longer.some((n) => normalizePhone(n).ok);
+}
 
-function judge(e164: string, enough: boolean): PhoneCheck {
+/** The API's own rule (@ab/core normalizePhone), so the field and the server never disagree. */
+function judge(e164: string): PhoneCheck {
   const parsed = normalizePhone(e164);
   if (parsed.ok) return { state: 'ok', e164: parsed.e164 };
-  return { state: enough ? 'bad' : 'typing', e164: null };
+  return { state: canGrow(e164) ? 'typing' : 'bad', e164: null };
 }
 
 /**
  * The number field while it is typed (docs/50 §4: E.164, a country picker, inline validation):
  * the national number in the picked country (a leading 0 dropped: «05…» → «+9665…»), or a
- * whole number typed with + / 00. «typing» until it is long enough to say it is wrong.
+ * whole number typed with + / 00. «typing» while more digits could still make it right.
  */
 export function checkPhone(country: Country, typed: string): PhoneCheck {
-  const digits = digitsOf(typed);
-  if (digits === '') return { state: 'empty', e164: null };
-  if (isInternational(typed)) {
-    const whole = digits.replace(/^00/, '');
-    return judge(`+${whole}`, whole.length >= MIN_INTERNATIONAL);
-  }
-  const national = digits.replace(/^0/, '');
-  const whole = national.length >= country.digits;
-  // Short of the country's length it is never «ok», even where E.164 alone would pass (BH).
-  return whole ? judge(`${country.dial}${national}`, true) : { state: 'typing', e164: null };
+  const digits = asciiDigits(typed).replace(/\D/g, '');
+  if (digits === '') return EMPTY;
+  const whole = isInternational(typed)
+    ? `+${digits.replace(/^00/, '')}`
+    : `${country.dial}${digits.replace(/^0/, '')}`;
+  return judge(whole);
 }

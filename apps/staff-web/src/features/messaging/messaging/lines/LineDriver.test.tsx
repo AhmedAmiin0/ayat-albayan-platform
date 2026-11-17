@@ -59,4 +59,15 @@ describe('LineDriver (docs/19)', () => {
     rerender(<LineDriver view={{ ...view, crm_template_scopes_missing: null }} />);
     expect(document.body.textContent).not.toContain('templates:');
   });
+
+  it('a crm key without the read scopes says a timed-out send is not confirmed (docs/19)', () => {
+    const view = { provider: 'crm' as const, gaps: [], duplicate_chat_phone: false };
+    const [before] = s.crmReadScopesMissing.split('{scopes}');
+    const lacking = ['conversations:read', 'messages:read'];
+    const missing = { ...view, crm_read_scopes_missing: lacking };
+    const { rerender } = render(<LineDriver view={missing} />);
+    expect(document.body.textContent).toContain(`${before ?? ''}conversations:read, messages:read`);
+    rerender(<LineDriver view={{ ...view, crm_read_scopes_missing: [] }} />);
+    expect(document.body.textContent).not.toContain(':read');
+  });
 });

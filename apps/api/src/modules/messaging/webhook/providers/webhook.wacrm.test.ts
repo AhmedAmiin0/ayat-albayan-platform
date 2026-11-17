@@ -7,11 +7,11 @@ const NOW = new Date('2026-10-25T08:00:00Z');
 const env = (event: string, data: unknown, over: Record<string, unknown> = {}) => ({ id: 'd-1', event, occurred_at: '2026-10-25T07:59:00.000Z', account_id: 'a', data, ...over });
 
 describe('parseWacrm', () => {
-  it('message.status_updated → a status event by wamid at occurred_at, without the CRM conversation id', () => {
+  it('message.status_updated → a status event by wamid at occurred_at, the CRM conversation id kept apart', () => {
     expect(parseWacrm(env('message.status_updated', { whatsapp_message_id: 'wamid.1', conversation_id: 'c', status: 'read' }), NOW)).toEqual({
       id: 'd-1',
       kind: 'status',
-      status: { waMessageId: 'wamid.1', status: 'read', at: new Date('2026-10-25T07:59:00.000Z'), errorCode: null, errorText: null, conversationId: null, pricingCategory: null },
+      status: { waMessageId: 'wamid.1', status: 'read', at: new Date('2026-10-25T07:59:00.000Z'), errorCode: null, errorText: null, conversationId: null, pricingCategory: null, crm: { conversationId: 'c' } },
     });
   });
 
