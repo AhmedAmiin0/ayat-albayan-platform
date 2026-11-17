@@ -8365,6 +8365,16 @@
     "hide": "Hide the chat",
     "closed": "The chat with the teacher opens after the subscription",
     "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher.",
+    "seat": {
+      "take": "Take this chat",
+      "taking": "Taking…",
+      "takeHint": "Once you take it, you write here and get its messages.",
+      "takeOver": "Move this chat to you",
+      "takeOverHint": "You registered this student, so you can move the chat from {name} to you.",
+      "leave": "Leave this chat",
+      "heldBy": "Followed by {name}",
+      "taken": "Another assistant follows this chat"
+    },
     "actions": {
       "menu": "Message options",
       "edit": "Edit",

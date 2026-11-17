@@ -14308,11 +14308,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/channel-access.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    }
-  },
   "src/modules/teaching/student-channels/channel-edits.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 4
@@ -14331,9 +14326,6 @@
       "count": 1
     },
     "max-depth": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     },
     "ab/no-shape-checks": {

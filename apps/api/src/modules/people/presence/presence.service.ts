@@ -15,7 +15,7 @@ import { PresenceSettings } from './presence.settings';
 interface ChannelSeat {
   viewer: AuthUser;
   studentId: string;
-  /** A participant (teacher, family) rather than a monitor (admin, owning assistant). */
+  /** A participant (teacher, family) rather than a monitor (admin; closed: the seat holder). */
   participant: boolean;
   /** channel_is_open: a participant of a closed channel sees nobody. */
   open: boolean;

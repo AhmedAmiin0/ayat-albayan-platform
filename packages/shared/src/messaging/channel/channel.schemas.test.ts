@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ChannelPage } from './channel.js';
-import { channelPageSchema } from './channel.schemas.js';
+import { channelPageSchema, channelSeatSchema } from './channel.schemas.js';
 
 const page: ChannelPage = {
   student_name: 'سلمى',
@@ -30,5 +30,22 @@ describe('a thread page as the apps read it (docs/31 §2)', () => {
     const stranger = { ...page.messages[0], sender_role: 'admin' };
     expect(channelPageSchema.safeParse({ ...page, messages: [stranger] }).success).toBe(false);
     expect(channelPageSchema.safeParse({ ...page, messages: undefined }).success).toBe(false);
+  });
+});
+
+// Owner 2026-11-16 «… but only 1»: the seat answer, a name only.
+describe('the assistant seat as the apps read it', () => {
+  const held = { holder: { id: 'p1', name: 'سارة' }, mine: false, bringer: false, canTake: false };
+
+  it('reads a held seat and a free one', () => {
+    expect(channelSeatSchema.parse(held)).toEqual(held);
+    const free = { ...held, holder: null, canTake: true };
+    expect(channelSeatSchema.parse(free)).toEqual(free);
+  });
+
+  it('drops anything but the name, refuses a missing flag', () => {
+    const phone = { ...held, holder: { ...held.holder, phone: '+966500000000' } };
+    expect(channelSeatSchema.parse(phone).holder).toEqual(held.holder);
+    expect(channelSeatSchema.safeParse({ ...held, canTake: undefined }).success).toBe(false);
   });
 });

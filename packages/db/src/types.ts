@@ -4076,21 +4076,31 @@ export type Database = {
       };
       student_channels: {
         Row: {
+          assistant_id: string | null;
           created_at: string;
           id: string;
           student_id: string;
         };
         Insert: {
+          assistant_id?: string | null;
           created_at?: string;
           id?: string;
           student_id: string;
         };
         Update: {
+          assistant_id?: string | null;
           created_at?: string;
           id?: string;
           student_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'student_channels_assistant_id_fkey';
+            columns: ['assistant_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'student_channels_student_id_fkey';
             columns: ['student_id'];
