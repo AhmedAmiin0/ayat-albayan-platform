@@ -9061,11 +9061,8 @@
     }
   },
   "src/today/screens/TodayScreen.tsx": {
-    "ab/module-boundaries": {
-      "count": 3
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/today/testing/today-sheet.tsx": {
