@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t } from '../../lib/i18n/i18n';
-import { freeSlotDays, zoneNote, type ViewerClock } from '../../lib/time/slots/slot-text';
-import { type, useTheme } from '../../theme';
-import { FilterPills } from '../form/FilterPills';
-import { FormLabel } from '../form/FormLabel';
-import { AppText } from '../primitives/AppText';
+import { t } from '../../../lib/i18n/i18n';
+import { freeSlotDays, zoneNote, type ViewerClock } from '../../../lib/time/slots/slot-text';
+import { type, useTheme } from '../../../theme';
+import { FilterPills } from '../FilterPills';
+import { FormLabel } from '../FormLabel';
+import { AppText } from '../../primitives/AppText';
 import { SlotButton } from './SlotButton';
 
 export interface WeekSlotsProps {

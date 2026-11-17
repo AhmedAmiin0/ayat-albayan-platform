@@ -1,11 +1,11 @@
 import { formatClock, resumeAt } from '@ab/client-core';
 import { Pressable, View } from 'react-native';
-import { t } from '../lib/i18n/i18n';
-import { type, useTheme } from '../theme';
-import { ErrorLine } from '../ui/feedback/ErrorLine';
-import { AppText } from '../ui/primitives/AppText';
-import { ltr } from '../ui/primitives/Ltr';
-import { raisedCard } from '../ui/surface/surface';
+import { t } from '../../../lib/i18n/i18n';
+import { type, useTheme } from '../../../theme';
+import { ErrorLine } from '../../feedback/ErrorLine';
+import { AppText } from '../../primitives/AppText';
+import { ltr } from '../../primitives/Ltr';
+import { raisedCard } from '../../surface/surface';
 import type { CreateAudioSource } from './audio-source';
 import { PlayerControls } from './PlayerControls';
 import { ProgressBar } from './ProgressBar';

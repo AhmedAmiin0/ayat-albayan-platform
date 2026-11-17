@@ -1,7 +1,7 @@
 import { View } from 'react-native';
-import { t } from '../../lib/i18n/i18n';
-import { Note } from '../feedback/Note';
-import { Field } from '../form/Field';
+import { t } from '../../../lib/i18n/i18n';
+import { Note } from '../../feedback/Note';
+import { Field } from '../Field';
 
 interface MoveReasonProps {
   value: string;

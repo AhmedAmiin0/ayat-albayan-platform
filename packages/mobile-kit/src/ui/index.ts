@@ -28,7 +28,7 @@ export { AppText, type AppTextNode } from './primitives/AppText';
 export { Avatar } from './primitives/Avatar';
 export { Button, type ButtonVariant, pressScale } from './primitives/Button';
 export { Chevron } from './primitives/Chevron';
-export { SquareButton } from './picker/SquareButton';
+export { SquareButton } from './form/picker/SquareButton';
 export { ContentText } from './primitives/ContentText';
 export { IconButton } from './primitives/IconButton';
 export { isolate, Ltr, ltr } from './primitives/Ltr';
@@ -44,7 +44,7 @@ export { Section } from './surface/Section';
 export { hairline, raisedCard } from './surface/surface';
 export { AppNativeTabs, type TabItem } from './tabs/AppNativeTabs';
 export type { TabIconName } from './tabs/tab-icons';
-export * from './picker';
+export * from './form/picker';
 // The calls' round controls and line icons (the staff app's calls and the lesson room). Mic and
 // camera carry a Call prefix: chat-ui exports its own composer MicIcon / CameraIcon.
 export { RoundButton } from './call/RoundButton';

@@ -1,10 +1,10 @@
 import { PLAYER_SPEEDS, speedLabel, type PlayerSpeed } from '@ab/client-core';
 import { View } from 'react-native';
-import { t } from '../lib/i18n/i18n';
-import { type, useTheme } from '../theme';
-import { FilterPills } from '../ui/form/FilterPills';
-import { AppText } from '../ui/primitives/AppText';
-import { IconButton } from '../ui/primitives/IconButton';
+import { t } from '../../../lib/i18n/i18n';
+import { type, useTheme } from '../../../theme';
+import { FilterPills } from '../FilterPills';
+import { AppText } from '../../primitives/AppText';
+import { IconButton } from '../../primitives/IconButton';
 import { PlayerIcon } from './PlayerIcon';
 import type { AudioPlayerControls } from './use-audio-player';
 

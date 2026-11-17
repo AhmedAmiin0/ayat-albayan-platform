@@ -1,8 +1,8 @@
 import { Pressable, View } from 'react-native';
-import { t } from '../../lib/i18n/i18n';
-import { shape, type, useTheme } from '../../theme';
-import { AppText } from '../primitives/AppText';
-import { Chevron } from '../primitives/Chevron';
+import { t } from '../../../lib/i18n/i18n';
+import { shape, type, useTheme } from '../../../theme';
+import { AppText } from '../../primitives/AppText';
+import { Chevron } from '../../primitives/Chevron';
 import { SquareButton } from './SquareButton';
 
 /** The period's label: body size, semibold, tabular digits. */

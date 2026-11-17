@@ -3,10 +3,10 @@ import { useState } from 'react';
 import {
   I18nManager, View, type AccessibilityActionEvent, type GestureResponderEvent,
 } from 'react-native';
-import { t } from '../lib/i18n/i18n';
-import { shape, type, useTheme } from '../theme';
-import { AppText } from '../ui/primitives/AppText';
-import { ltr } from '../ui/primitives/Ltr';
+import { t } from '../../../lib/i18n/i18n';
+import { shape, type, useTheme } from '../../../theme';
+import { AppText } from '../../primitives/AppText';
+import { ltr } from '../../primitives/Ltr';
 
 interface SeekBarProps {
   position: number;

@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { Modal, ScrollView } from 'react-native';
-import { t } from '../../lib/i18n/i18n';
-import { Screen } from '../layout/Screen';
-import { ScreenHeader } from '../layout/ScreenHeader';
-import { Button } from '../primitives/Button';
+import { t } from '../../../lib/i18n/i18n';
+import { Screen } from '../../layout/Screen';
+import { ScreenHeader } from '../../layout/ScreenHeader';
+import { Button } from '../../primitives/Button';
 
 interface RescheduleFrameProps {
   open: boolean;

@@ -1,12 +1,12 @@
 import { localDateIn } from '@ab/shared';
 import type { ReactElement } from 'react';
 import { View } from 'react-native';
-import { t } from '../../lib/i18n/i18n';
-import { whenText, type ViewerClock } from '../../lib/time/slots/slot-text';
-import { weekLabel } from '../../lib/time/slots/week';
-import { type, useTheme } from '../../theme';
-import { ErrorState } from '../feedback/ErrorState';
-import { AppText } from '../primitives/AppText';
+import { t } from '../../../lib/i18n/i18n';
+import { whenText, type ViewerClock } from '../../../lib/time/slots/slot-text';
+import { weekLabel } from '../../../lib/time/slots/week';
+import { type, useTheme } from '../../../theme';
+import { ErrorState } from '../../feedback/ErrorState';
+import { AppText } from '../../primitives/AppText';
 import { PeriodSwitcher } from './PeriodSwitcher';
 import type { SlotWeek } from './use-slot-week';
 import { WeekSlots, type WeekSlotsProps } from './WeekSlots';

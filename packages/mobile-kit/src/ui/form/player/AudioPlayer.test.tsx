@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { I18nManager } from 'react-native';
-import { t } from '../lib/i18n/i18n';
+import { t } from '../../../lib/i18n/i18n';
 import type { AudioSource, AudioSourceEvents, CreateAudioSource } from './audio-source';
 import { AudioPlayer } from './AudioPlayer';
 

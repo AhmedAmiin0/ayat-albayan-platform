@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Pressable } from 'react-native';
-import { shape, useTheme } from '../../theme';
+import { shape, useTheme } from '../../../theme';
 
 interface SquareButtonProps {
   /** The spoken name. */
