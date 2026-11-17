@@ -231,9 +231,12 @@ jobs:
           # The exact commit ci passed on (auto), or the chosen branch (by hand).
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       # env-merge.mjs and the summary need node only (no install): the web app comes built from job «web».
+      # No pnpm here, so no package-manager cache: setup-node v5 reads packageManager from package.json and
+      # fails «Unable to locate executable file: pnpm» (deploy 44011104775, 11-17 03:40).
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
+          package-manager-cache: false
       - name: The web app built by job «web» (before anything on the server changes)
         if: ${{ !inputs.env_only }}
         uses: actions/download-artifact@v4
