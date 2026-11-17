@@ -86,14 +86,17 @@ export class PortalLessonsRepo {
     return data?.meeting_link_override ?? null;
   }
 
-  /** The family requests on these lessons (owner 2026-11-17), any status; [] without lessons. */
-  async requests(lessonIds: readonly string[]): Promise<PortalRequestRow[]> {
-    if (lessonIds.length === 0) return [];
+  /**
+   * The family requests this login sent on these lessons (owner 2026-11-17), any status; [] without
+   * lessons. Another login's request (the other guardian's) is not this one's to see.
+   */
+  async requests(input: { lessonIds: readonly string[]; userId: string }): Promise<PortalRequestRow[]> {
+    if (input.lessonIds.length === 0) return [];
     const { data, error } = await this.db
       .from('lesson_proposals')
       .select(REQUEST)
-      .in('lesson_id', [...lessonIds])
-      .eq('requested_by', 'family');
+      .in('lesson_id', [...input.lessonIds])
+      .match({ requested_by: 'family', created_by: input.userId });
     if (error) throw dbError(error);
     return data;
   }

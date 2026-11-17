@@ -62,7 +62,8 @@ export class PortalLessonsService {
       this.extras.of(student, now),
     ]);
     const ctx = { academyAuto: values.meeting_link_auto, override, classroom: this.rooms.classroomReady(), win, now };
-    const requests = await this.queries.requests(rows.map((r) => r.id));
+    const lessonIds = rows.map((r) => r.id);
+    const requests = await this.queries.requests({ lessonIds, userId: call.user.id });
     const lateCancelHours = values.late_cancel_hours ?? null;
     const fam = { studentId: call.studentId, now, lateCancelHours, requests };
     const lessons = rows.map((r) => ({ ...toPortalLesson(r, ctx), family: familyOf(r, fam) }));

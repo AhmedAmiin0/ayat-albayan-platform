@@ -47,7 +47,7 @@ describe('POST /portal/students/:id/lessons/:lessonId/{confirm,cancel,request,wi
     expect(spies.request).toHaveBeenCalledWith(expect.objectContaining({ lessonId: L1, body: { startsAt: LATER, note: 'اختبار' } }));
     expect((await post(`${base()}/request`, 'guardianA', { startsAt: '2026-10-28 16:00' })).statusCode).toBe(400);
     expect((await post(`${base()}/withdraw`, 'guardianA')).statusCode).toBe(200);
-    expect(spies.withdraw).toHaveBeenCalledWith(L1);
+    expect(spies.withdraw).toHaveBeenCalledWith(L1, expect.objectContaining({ id: 'g-a' }));
   });
 
   it("another family's student → 404; a staff login → 403; a started lesson → 409; nothing done", async () => {
@@ -58,5 +58,17 @@ describe('POST /portal/students/:id/lessons/:lessonId/{confirm,cancel,request,wi
     expect([late.statusCode, late.json().code]).toEqual([409, 'lesson_started']);
     expect(spies.confirm).not.toHaveBeenCalled();
     expect(spies.cancel).not.toHaveBeenCalled();
+  });
+
+  it('a group lesson → 409 group_lesson: the family never acts on the other students’ lesson', async () => {
+    const group = [{ student_id: S1 }, { student_id: 'other-student' }];
+    t.lessons.one.mockResolvedValue(lessonRow({ status: 'scheduled', lesson_students: group }));
+    for (const action of ['confirm', 'cancel', 'withdraw']) {
+      const res = await post(`${base()}/${action}`, 'guardianA');
+      expect([res.statusCode, res.json().code]).toEqual([409, 'group_lesson']);
+    }
+    expect(spies.confirm).not.toHaveBeenCalled();
+    expect(spies.cancel).not.toHaveBeenCalled();
+    expect(spies.withdraw).not.toHaveBeenCalled();
   });
 });

@@ -21,7 +21,7 @@ export class CourseCardController {
 }
 
 /**
- * The same card on the assistant's «تفاصيل الطالب» (owner 2026-11-17): self.sales_students, ANY
+ * The same card on the assistant's «تفاصيل الطالب» (owner 2026-11-17): self.sales_academy, ANY
  * student (owner 2026-10-30, «Make all assistants see all»), as GET /sales/students/:id.
  */
 @ApiTags('course-actions')

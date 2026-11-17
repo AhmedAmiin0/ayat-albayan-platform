@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LESSON_STATUSES } from '@ab/catalog';
+import { LESSON_STATUSES, SUBSCRIPTION_STATUSES } from '@ab/catalog';
 
 // «الدورة والباقة» (owner 2026-11-17): one group on the student file (admin) and on the sales
 // screen with the course summary, the upcoming lessons and «مدّ الجدول» (book the package's
@@ -16,12 +16,30 @@ export const courseCardLessonSchema = z.object({
 });
 export type CourseCardLesson = z.infer<typeof courseCardLessonSchema>;
 
+/** The card's package (owner 2026-11-17: «بقيت 3 حلقات», «12 حلقة · 9 من 12 · دُفع X من Y»). */
+export const courseCardPackageSchema = z.object({
+  status: z.enum(SUBSCRIPTION_STATUSES),
+  lessonsTotal: z.number().int(),
+  /** This package's lessons used (FIFO) and left (never below 0). */
+  used: z.number().int(),
+  left: z.number().int(),
+  paid: z.number(),
+  /** What the package is owed for (owedFor: a stopped course's stored decision). */
+  owed: z.number(),
+  currency: z.string(),
+  /** «يُتوقع أن تنتهي يوم …» (an instant); null = not known. */
+  projectedEndAt: z.string().nullable(),
+});
+export type CourseCardPackage = z.infer<typeof courseCardPackageSchema>;
+
 /**
  * GET /students/:id/course-card (admin) and /sales/students/:id/course-card (assistant): the
  * current package's course. `course` null = no course booked (a package not booked yet).
  */
 export const courseCardSchema = z.object({
   subscriptionId: z.string().nullable(),
+  /** The package's numbers; null without one (absent from an older API). */
+  package: courseCardPackageSchema.nullable().default(null),
   course: z
     .object({
       teacherName: z.string().nullable(),
