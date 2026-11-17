@@ -1,8 +1,7 @@
 import type { CourseCardLesson } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { InsetGroup, ListRow, t } from '@ab/mobile-kit';
-import { dayLabel } from '@/booking';
+import { InsetGroup, ListRow, slotDayLabel, t } from '@ab/mobile-kit';
 import { clockIn, useViewerClock } from '@/core/lib/clock';
 import { Note } from '@/core/ui/feedback/Note';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
@@ -36,7 +35,7 @@ export function UpcomingList({ lessons }: { lessons: readonly CourseCardLesson[]
         {lessons.map((l) => (
           <ListRow
             key={l.id}
-            title={dayLabel(new Date(l.startsAt), viewer.tz)}
+            title={slotDayLabel(new Date(l.startsAt), viewer.tz)}
             subtitle={clockIn(new Date(l.startsAt), viewer.tz, viewer.cycle)}
             trailing={<LessonStatusChip status={l.status} size="sm" />}
             onPress={() => setPicked(l)}

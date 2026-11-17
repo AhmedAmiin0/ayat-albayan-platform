@@ -30,7 +30,9 @@ export function RequestSheet({ request, onClose, slotsPath }: RequestSheetProps)
   );
 }
 
-function RequestBody({ request, onClose, slotsPath }: RequestSheetProps & { request: FamilyRequestView }) {
+type BodyProps = RequestSheetProps & { request: FamilyRequestView };
+
+function RequestBody({ request, onClose, slotsPath }: BodyProps) {
   const { color } = useTheme();
   const viewer = useViewerClock();
   const tz = request.students[0]?.tz ?? viewer.tz;

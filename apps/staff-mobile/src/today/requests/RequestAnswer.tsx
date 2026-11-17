@@ -36,7 +36,9 @@ export function RequestAnswer({ request, onDone, slotsPath }: RequestAnswerProps
   };
   const fields: Record<Mode, ReactElement | null> = {
     answer: null,
-    other: <OtherSlot request={request} slotsPath={slotsPath} value={startsAt} onPick={setStartsAt} />,
+    other: (
+      <OtherSlot request={request} slotsPath={slotsPath} value={startsAt} onPick={setStartsAt} />
+    ),
     decline: (
       <MoveReason
         value={note}
