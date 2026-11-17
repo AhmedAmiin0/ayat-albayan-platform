@@ -1,41 +1,53 @@
-import { speedLabel } from '@ab/client-core';
+import { PLAYER_SPEEDS, speedLabel, type PlayerSpeed } from '@ab/client-core';
 import { View } from 'react-native';
 import { t } from '../lib/i18n/i18n';
 import { type, useTheme } from '../theme';
+import { FilterPills } from '../ui/form/FilterPills';
 import { AppText } from '../ui/primitives/AppText';
 import { IconButton } from '../ui/primitives/IconButton';
 import { PlayerIcon } from './PlayerIcon';
 import type { AudioPlayerControls } from './use-audio-player';
 
-/** «10 ↺» · play/pause · «↻ 10», then «السرعة 1×» (tap for the next speed). */
+type SpeedKey = `${PlayerSpeed}`;
+const SPEEDS = PLAYER_SPEEDS.map((s) => ({ value: `${s}` as SpeedKey, label: speedLabel(s) }));
+const SPEED_OF = Object.fromEntries(PLAYER_SPEEDS.map((s) => [`${s}`, s])) as Record<
+  SpeedKey,
+  PlayerSpeed
+>;
+
+/** «10 ↺» · play/pause · «↻ 10», then «السرعة» as three choices 1× · 1.5× · 2×. */
 export function PlayerControls({ player }: { player: AudioPlayerControls }) {
   const { color } = useTheme();
   const playing = player.state.status === 'playing';
-  const speed = speedLabel(player.state.speed);
   const ten = { fontSize: type.size['2xs'], color: color.ink3 };
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
-      <IconButton label={t.audioPlayer.back} onPress={() => player.skip(-1)}>
-        <PlayerIcon name="back" color={color.ink2} />
-        <AppText style={ten}>10</AppText>
-      </IconButton>
-      <IconButton
-        variant="filled"
-        label={playing ? t.audioPlayer.pause : t.audioPlayer.play}
-        onPress={player.toggle}
-        testID="player-toggle"
-      >
-        <PlayerIcon name={playing ? 'pause' : 'play'} color={color.onLapis} />
-      </IconButton>
-      <IconButton label={t.audioPlayer.forward} onPress={() => player.skip(1)}>
-        <PlayerIcon name="forward" color={color.ink2} />
-        <AppText style={ten}>10</AppText>
-      </IconButton>
-      <IconButton label={t.audioPlayer.speedOf.replace('{speed}', speed)} onPress={player.cycleSpeed}>
-        <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.lapis }}>
-          {speed}
-        </AppText>
-      </IconButton>
+    <View style={{ gap: 12, alignItems: 'center' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+        <IconButton label={t.audioPlayer.back} onPress={() => player.skip(-1)}>
+          <PlayerIcon name="back" color={color.ink2} />
+          <AppText style={ten}>10</AppText>
+        </IconButton>
+        <IconButton
+          variant="filled"
+          label={playing ? t.audioPlayer.pause : t.audioPlayer.play}
+          onPress={player.toggle}
+          testID="player-toggle"
+        >
+          <PlayerIcon name={playing ? 'pause' : 'play'} color={color.onLapis} />
+        </IconButton>
+        <IconButton label={t.audioPlayer.forward} onPress={() => player.skip(1)}>
+          <PlayerIcon name="forward" color={color.ink2} />
+          <AppText style={ten}>10</AppText>
+        </IconButton>
+      </View>
+      <FilterPills
+        role="radiogroup"
+        wrap
+        accessibilityLabel={t.audioPlayer.speed}
+        items={SPEEDS}
+        value={`${player.state.speed}`}
+        onChange={(v) => player.setSpeed(SPEED_OF[v])}
+      />
     </View>
   );
 }

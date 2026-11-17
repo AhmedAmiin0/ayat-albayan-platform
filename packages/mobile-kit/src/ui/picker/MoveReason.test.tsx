@@ -15,3 +15,8 @@ test("the family's note: its own label and no hint", async () => {
   expect(screen.getByLabelText('ملاحظة')).toBeTruthy();
   expect(screen.queryByText(t.reschedule.reasonHint)).toBeNull();
 });
+
+test("the answer's reply: an example as the placeholder", async () => {
+  await render(<MoveReason value="" onChange={jest.fn()} label="ردّ" placeholder="مثلًا: لا وقت" />);
+  expect(screen.getByPlaceholderText('مثلًا: لا وقت')).toBeTruthy();
+});

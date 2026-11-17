@@ -46,7 +46,8 @@ describe('AudioPlayer (web)', () => {
     fireEvent.keyDown(slider, { key: 'End' });
     expect(audio.currentTime).toBe(120);
     expect(slider.getAttribute('aria-valuenow')).toBe('120');
-    expect(screen.getByText('2:00', { selector: 'bdi' }).getAttribute('dir')).toBe('ltr');
+    const times = screen.getAllByText('2:00', { selector: 'bdi' });
+    expect(times.map((el) => el.getAttribute('dir'))).toEqual(['ltr', 'ltr']);
     document.documentElement.dir = '';
   });
 

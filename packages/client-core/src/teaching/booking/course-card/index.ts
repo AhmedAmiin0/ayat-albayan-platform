@@ -8,6 +8,8 @@ export {
   courseExtendPreviewPath,
   courseResumePreviewPath,
   extendOffered,
+  lessonAtPath,
+  lessonIn,
   parseCourseCard,
   parseExtendPreview,
   postCourseExtend,

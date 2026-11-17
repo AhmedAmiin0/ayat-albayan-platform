@@ -50,7 +50,11 @@ export function AudioPlayer({ id, url, createSource }: AudioPlayerProps) {
   return (
     <View style={[raisedCard(color, 16), { padding: 16, gap: 14 }]}>
       <ResumeLine player={player} from={from} />
-      <ProgressBar position={player.state.position} duration={player.state.duration} />
+      <ProgressBar
+        position={player.state.position}
+        duration={player.state.duration}
+        seek={player.seek}
+      />
       <PlayerControls player={player} />
       {player.state.status === 'failed' ? <ErrorLine message={t.audioPlayer.failed} /> : null}
     </View>

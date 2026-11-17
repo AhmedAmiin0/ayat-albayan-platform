@@ -16,7 +16,7 @@ function fakeSource() {
   return { media, create, box };
 }
 
-test('plays, pauses, skips 10 s and cycles the speed through the source', async () => {
+test('plays, pauses, skips 10 s and picks a speed through the source', async () => {
   const f = fakeSource();
   await render(<AudioPlayer id="R1" url="https://x/r.mp3" createSource={f.create} />);
   await act(() => f.box.events?.onLoaded(120));
@@ -26,8 +26,23 @@ test('plays, pauses, skips 10 s and cycles the speed through the source', async 
   expect(f.media.pause).toHaveBeenCalled();
   await fireEvent.press(screen.getByRole('button', { name: t.audioPlayer.forward }));
   expect(f.media.seekTo).toHaveBeenLastCalledWith(10);
-  await fireEvent.press(screen.getByRole('button', { name: t.audioPlayer.speedOf.replace('{speed}', '1×') }));
+  await fireEvent.press(screen.getByRole('radio', { name: '1.5×' }));
   expect(f.media.setRate).toHaveBeenCalledWith(1.5);
+  expect(screen.getByRole('radio', { name: '1.5×' }).props.accessibilityState).toMatchObject({
+    checked: true,
+  });
+});
+
+test('the bar seeks: a tap lands on its share, a screen reader swipe moves 10 s', async () => {
+  const f = fakeSource();
+  await render(<AudioPlayer id="R3" url="https://x/r.mp3" createSource={f.create} />);
+  await act(() => f.box.events?.onLoaded(120));
+  const bar = screen.getByRole('adjustable', { name: t.audioPlayer.seek });
+  await fireEvent(bar, 'layout', { nativeEvent: { layout: { width: 200 } } });
+  await fireEvent(bar, 'responderGrant', { nativeEvent: { locationX: 50 } });
+  expect(f.media.seekTo).toHaveBeenLastCalledWith(30);
+  await fireEvent(bar, 'accessibilityAction', { nativeEvent: { actionName: 'increment' } });
+  expect(f.media.seekTo).toHaveBeenLastCalledWith(40);
 });
 
 test('shows the failure and frees the source on leave', async () => {

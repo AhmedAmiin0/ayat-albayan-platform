@@ -7,11 +7,18 @@ import { useFamilyRequests } from './family-requests-api';
 import { RequestRow } from './RequestRow';
 import { RequestSheet } from './RequestSheet';
 
+const bodySize = { fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body) };
+
+interface FamilyRequestsProps {
+  /** The assistant's tree: her slot grid (GET /sales/booking/slots); default staff's. */
+  slotsPath?: string;
+}
+
 /**
  * «طلبات الأسر · N» on «اليوم» (owner 2026-11-17): the families' «اطلب موعدًا آخر» this admin
  * (all) or assistant (her families) answers; a row opens the answer sheet. Nothing when none.
  */
-export function FamilyRequests() {
+export function FamilyRequests({ slotsPath }: FamilyRequestsProps) {
   const { color } = useTheme();
   const viewer = useViewerClock();
   const requests = useFamilyRequests();
@@ -23,7 +30,7 @@ export function FamilyRequests() {
     <View style={{ gap: 8 }}>
       <AppText
         accessibilityRole="header"
-        style={{ fontFamily: type.ui[700], fontSize: 15, lineHeight: 24, color: color.ink }}
+        style={{ fontFamily: type.ui[700], ...bodySize, color: color.ink }}
       >
         {`${t.lessons.proposal.familyRequests} · ${list.length}`}
       </AppText>
@@ -35,7 +42,7 @@ export function FamilyRequests() {
           </Fragment>
         ))}
       </View>
-      <RequestSheet request={open} onClose={() => setOpen(null)} />
+      <RequestSheet request={open} onClose={() => setOpen(null)} slotsPath={slotsPath} />
     </View>
   );
 }

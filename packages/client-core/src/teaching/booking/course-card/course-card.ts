@@ -50,6 +50,23 @@ export function courseExtendPreviewPath(input: {
 export const courseResumePreviewPath = (studentId: string): string =>
   `${student(studentId)}/course-pause/resume-preview`;
 
+const MINUTE_MS = 60_000;
+
+/**
+ * GET /lessons over the minute a lesson starts (lessons.read): the admin's full view of a card's
+ * upcoming lesson (or a reply's), picked from the answer by id with `lessonIn`.
+ */
+export function lessonAtPath(startsAt: string): string {
+  const start = Date.parse(startsAt);
+  const from = encodeURIComponent(new Date(start).toISOString());
+  const to = encodeURIComponent(new Date(start + MINUTE_MS).toISOString());
+  return `/lessons?from=${from}&to=${to}`;
+}
+
+/** The lesson of that id in a GET /lessons answer; null = gone (moved or cancelled meanwhile). */
+export const lessonIn = <L extends { id: string }>(rows: readonly L[], id: string): L | null =>
+  rows.find((l) => l.id === id) ?? null;
+
 export const parseCourseCard = (data: unknown): CourseCardView => courseCardSchema.parse(data);
 export const parseExtendPreview = (data: unknown): CourseExtendPreview =>
   courseExtendPreviewSchema.parse(data);

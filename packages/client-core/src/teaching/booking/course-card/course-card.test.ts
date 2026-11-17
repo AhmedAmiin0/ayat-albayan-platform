@@ -6,6 +6,8 @@ import {
   courseExtendPreviewPath,
   courseResumePreviewPath,
   extendOffered,
+  lessonAtPath,
+  lessonIn,
   parseCourseCard,
   statusRoute,
 } from './course-card.js';
@@ -48,5 +50,13 @@ describe('«الدورة والباقة» paths and rules (owner 2026-11-17)', (
   it('«مدّ الجدول»\'s refusals in words; anything else is generic', () => {
     expect(courseExtendErrorCode(new ApiError(409, { code: 'course_paused' }))).toBe('course_paused');
     expect(courseExtendErrorCode(new ApiError(500, { code: 'boom' }))).toBe('generic');
+  });
+
+  it('a card lesson is read over the minute it starts, then picked by id', () => {
+    expect(lessonAtPath('2099-10-04T14:00:00Z')).toBe(
+      '/lessons?from=2099-10-04T14%3A00%3A00.000Z&to=2099-10-04T14%3A01%3A00.000Z',
+    );
+    expect(lessonIn([{ id: 'a' }, { id: 'b' }], 'b')).toEqual({ id: 'b' });
+    expect(lessonIn([{ id: 'a' }], 'b')).toBeNull();
   });
 });

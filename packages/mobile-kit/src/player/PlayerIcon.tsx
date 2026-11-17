@@ -1,6 +1,6 @@
 import Svg, { Path } from 'react-native-svg';
 
-export type PlayerIconName = 'play' | 'pause' | 'back' | 'forward';
+type PlayerIconName = 'play' | 'pause' | 'back' | 'forward';
 
 /** Drawn on a 24 grid; the skip arrows carry «10» beside them in the button. */
 const PATHS: Readonly<Record<PlayerIconName, string>> = {

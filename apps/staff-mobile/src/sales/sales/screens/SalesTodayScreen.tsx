@@ -17,7 +17,7 @@ export function SalesTodayScreen() {
   return (
     <TodayLayout
       source={SALES_DAY}
-      requests={<FamilyRequests />}
+      requests={<FamilyRequests slotsPath="/sales/booking/slots" />}
       hero={(hero, onDetails) => <HeroCard hero={hero} onDetails={onDetails} />}
       sheet={(details) => <SalesLessonSheet lesson={details.lesson} onClose={details.close} />}
     />

@@ -12,6 +12,8 @@ type Mode = 'answer' | 'other' | 'decline';
 interface RequestAnswerProps {
   request: FamilyRequestView;
   onDone: () => void;
+  /** The assistant's slot grid (GET /sales/booking/slots); default staff's. */
+  slotsPath?: string;
 }
 
 const P = () => t.lessons.proposal;
@@ -21,7 +23,7 @@ const P = () => t.lessons.proposal;
  * same reschedule) or «ارفض الطلب» with a note the family reads. A clash that appeared since the
  * family asked is a 409 with «اختر موعدًا آخر»; booking over it stays on the web.
  */
-export function RequestAnswer({ request, onDone }: RequestAnswerProps) {
+export function RequestAnswer({ request, onDone, slotsPath }: RequestAnswerProps) {
   const [mode, setMode] = useState<Mode>('answer');
   const [startsAt, setStartsAt] = useState<string | null>(null);
   const [note, setNote] = useState('');
@@ -34,12 +36,13 @@ export function RequestAnswer({ request, onDone }: RequestAnswerProps) {
   };
   const fields: Record<Mode, ReactElement | null> = {
     answer: null,
-    other: <OtherSlot request={request} value={startsAt} onPick={setStartsAt} />,
+    other: <OtherSlot request={request} slotsPath={slotsPath} value={startsAt} onPick={setStartsAt} />,
     decline: (
       <MoveReason
         value={note}
         onChange={setNote}
         label={P().decisionNote}
+        placeholder={P().decisionNotePlaceholder}
         hint={P().decisionNoteHint}
       />
     ),
@@ -101,12 +104,13 @@ function AnswerButtons({ mode, busy, picked, onApprove, onReject, onMode }: Answ
 
 interface OtherSlotProps {
   request: FamilyRequestView;
+  slotsPath?: string;
   value: string | null;
   onPick: (startsAt: string) => void;
 }
 
 /** «اختر موعدًا آخر»: a free slot of the same teacher, on the staff clock. */
-function OtherSlot({ request, value, onPick }: OtherSlotProps) {
+function OtherSlot({ request, slotsPath, value, onPick }: OtherSlotProps) {
   const { teacher, students } = request;
   const lesson = { id: request.lesson_id, starts_at: request.starts_at, teacher, students };
   return (
@@ -116,6 +120,7 @@ function OtherSlot({ request, value, onPick }: OtherSlotProps) {
       tz={students[0]?.tz ?? teacher.tz}
       value={value}
       onPick={onPick}
+      slotsPath={slotsPath}
     />
   );
 }
