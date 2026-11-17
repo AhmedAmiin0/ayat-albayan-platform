@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { AppText, Avatar, type, useTheme } from '@ab/mobile-kit';
+import { AppText, Avatar, t, type, useTheme } from '@ab/mobile-kit';
 import type { Waiting } from '@/teacher/lessons/teacher-word';
 
 /**
@@ -13,7 +13,7 @@ export function WaitingStrip({ who }: { who: Waiting }) {
       testID="teacher-waiting"
       role="status"
       accessible
-      accessibilityLabel={`${who.line}، ${who.since}`}
+      accessibilityLabel={[who.line, who.since].join(t.common.listSeparator)}
       style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}
     >
       <View style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>

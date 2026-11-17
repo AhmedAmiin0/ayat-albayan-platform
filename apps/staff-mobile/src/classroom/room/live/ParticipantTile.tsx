@@ -35,7 +35,7 @@ function tileLabel(tile: RoomTile, name: string): string {
     !tile.micOn && !tile.screen ? t.classroom.muted : null,
     tile.speaking ? t.classroom.speaking : null,
   ];
-  return parts.filter((x) => x !== null).join('، ');
+  return parts.filter((x) => x !== null).join(t.common.listSeparator);
 }
 
 /** The tile's corner button: «تكبير» on a screen, «بدّل الكاميرا» on one's own camera. */
