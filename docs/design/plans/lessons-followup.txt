@@ -1,0 +1,88 @@
+LESSONS LANE FOLLOW-UP (branch feat/lessons-course-recordings, PR #759). Owner 2026-11-17.
+
+Owner words:
+- «apply security rules to prevent users from stealing the session recorded videos … or stealing the assets»
+- «or sniffing the video streams»
+- On API streaming and sha256 hashing: «yes add both».
+- «recorded session could be audio or video it depends on the config of the admin».
+
+What the code does today (map of PR #759, 11-17):
+- Every recording and lesson file is handed to clients as a presigned MinIO GET link (1 h, SIGNED_URL_SECONDS.ui), via:
+  - POST /portal/students/:id/recordings/:rid/url
+  - POST /portal/students/:id/lesson-files/:fileId/url
+  - POST /lesson-files/:id/url
+  - the pre-signed staff lists: student-recordings.service.ts:31-37, lesson-assets.service.ts:34-48, recording-list.service.ts:37-55, moderation and meetings recordings.
+- Phone: expo-audio plays the bare URL (expo-audio-source.ts:57). The report screen opens recordings in the browser through Linking.openURL (ReportFiles.tsx:28-34 → use-open-file.ts:13).
+- Web: <audio src={signedUrl}> (lesson-files/player/AudioPlayer.tsx:31). Recordings also open in a new tab from ReportView (FileButtons.tsx:24-27 → open-file.ts:12).
+- No content hash is stored anywhere. s3-client.ts:14 uses checksums WHEN_REQUIRED.
+- There is no video player for recordings anywhere.
+- Recordings are hard-wired to audio: egress-request.ts:33 sets audio_only.
+
+A. STREAM THROUGH THE API (no storage link ever reaches a device)
+A1. One stream route per asset kind:
+    - GET /portal/students/:id/recordings/:rid/stream
+    - GET /portal/students/:id/lesson-files/:fileId/stream
+    - GET /lessons/:id/recordings/:rid/stream (staff)
+    - GET /lesson-files/:id/stream (staff)
+    The same access checks run as the current /url mints, on EVERY request:
+    - family: scope, sent report, visibility;
+    - staff: StudentRecordingAccess / lesson access.
+    Each route proxies the object from MinIO (or the old Supabase store by path marker) with HTTP Range:
+    - 206 + Content-Range / Accept-Ranges / Content-Length;
+    - Content-Type from the stored mime;
+    - Cache-Control: no-store;
+    - Content-Disposition: inline;
+    - X-Content-Type-Options: nosniff.
+    The S3 GetObject Body is piped to the Fastify reply; never buffer a whole file. zod parses params and the Range header.
+A2. Auth:
+    - Phone sends Authorization: Bearer (expo-audio and expo-video sources take { uri, headers }).
+    - The web <audio>/<video>/<img> cannot send headers, so the API mints a stream ticket: POST …/stream-ticket answers an opaque HMAC token bound to profile + asset + exp, 5 min, secret from env/Vault. The stream route accepts ?t= and re-checks access on every request. A copied URL dies in ≤ 5 min and only works for that one asset.
+A3. Delete the recording /url mints and stop pre-signing in every staff list: rows carry ids; play uses the stream route.
+    - Lesson-file links become streams too.
+    - The report PDF keeps its 300 s link: out of scope.
+A4. Phone: remove Linking.openURL for recordings (the report screen opens the in-app lesson screen instead). Add a test that no recording or lesson-file URL reaches Linking.
+    Web: remove the new-tab path for recordings. The player <audio>/<video> gets:
+    - controlsList="nodownload noplaybackrate";
+    - disablePictureInPicture;
+    - onContextMenu prevented;
+    - no native controls (keep the custom ones).
+A5. Audit one row per playback START (who, which asset, when), not per Range request. Rate-cap stream starts per profile.
+
+B. SHA-256 FOR EVERY RECORDING AND LESSON FILE (integrity, duplicates, proof)
+B1. Migration (lane slot 2026111710xx after 20261117100200):
+    - nullable column sha256 text check (sha256 ~ '^[0-9a-f]{64}$') on the recordings rows table and on lesson_files (and report attachments, if they share the store);
+    - RLS unchanged; load supabase-postgres-best-practices.
+B2. Compute server-side by streaming the object through createHash('sha256'). Never buffer.
+    - lesson files: in the register step (POST /lessons/:id/files) before the upsert (25 MiB cap);
+    - recordings: when a recording turns 'done', as an idempotent pg-boss job (dedup key = recording id).
+    - Backfill existing rows with the same job, once.
+B3. Use it:
+    - the stream route sends ETag "<sha256>" and honours If-Range;
+    - a lesson file with the same sha256 on the same lesson returns the existing row (no second object);
+    - a weekly integrity job re-hashes objects and sets integrity_failed_at on a mismatch. Staff lists show it as a status; no push or WhatsApp (owner: no notifications).
+
+C. RECORDING TYPE = ADMIN CHOICE (backend now; the video player UI waits for the owner's OK on the boards)
+C1. Setting recording_media 'audio' | 'video', default 'audio' (today's behaviour), seeded by the module in the DB config (values «القيم», key + Arabic label + description; config-in-db rule).
+    egress-request.ts picks:
+    - audio: today's audio_only MP3 64 kbps;
+    - video: RoomComposite MP4 at a light preset, about 540p, about 1.5 Mbps.
+    The path extension follows: .mp3 / .mp4. mediaOfPath already tells them apart.
+    The description says, in owner Arabic, that video loads the server much more.
+C2. The stream route serves video/mp4 too (A1 is media-agnostic).
+    Do NOT build the video player screens yet. Boards RecXFamilyVideoPlayer(+Dark), RecXFamilyListMixed, RecXWebFamilyVideo, RecXWebAdminRecordingMedia and RecXStaffAdminRecordingMedia are under owner review on the design canvas.
+
+D. THE LANE'S SECURITY PLAN ITEMS STILL OPEN
+Read docs/design/plans/security-lessons-course-recordings.txt on this branch: git show origin/design/family-canvas:docs/design/plans/security-lessons-course-recordings.txt. Notably:
+- FLAG_SECURE via expo-screen-capture on the recording, lesson and lesson-file screens (family APK 0.3.0 has it), and iOS capture pause;
+- a faint moving web watermark with the viewer's student code on the player and file viewer;
+- lesson-file upload path bound to the uploader ({lessonId}/{profileId}/{uuid}.{ext});
+- lesson-file guards.
+
+TESTS: unit tests next to every change. Cover:
+- Range parsing and the 206 headers (zod);
+- ticket mint/verify/expiry/wrong-asset;
+- access re-check per request;
+- the sha256 stream helper;
+- the job dedup;
+- the setting → egress body.
+The e2e SQL spec covers the migration.
