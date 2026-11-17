@@ -33,7 +33,10 @@ export function useVoice({ url, durationMs }: VoiceInput) {
   };
   const toggle = () => {
     const p = ensure();
-    if (p) return p.toggle();
+    if (p) {
+      p.toggle();
+      return;
+    }
     openOutside(url);
   };
   const total = status.durationMs || (durationMs ?? 0);
