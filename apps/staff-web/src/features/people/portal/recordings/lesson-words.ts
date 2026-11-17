@@ -30,7 +30,10 @@ export function lessonLine(
 }
 
 /** «مع مريم عبد الله · 17:00 · 44 دقيقة · جزءان» of one lesson's row. */
-export function rowLine(row: PortalRecording, input: { parts: number; clock: ClockOptions }): string {
+export function rowLine(
+  row: PortalRecording,
+  input: { parts: number; clock: ClockOptions },
+): string {
   const minutes = t.portal.app.lesson.minutes.replace('{n}', recordingMinutes(row.duration_seconds));
   return [
     withTeacher(row.teacher),

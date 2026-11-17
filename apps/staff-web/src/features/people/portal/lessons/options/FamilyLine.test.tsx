@@ -34,7 +34,8 @@ describe('what the family asked, on the web card (owner 2026-11-17)', () => {
   });
 
   it('confirmed ahead: «أكّدتم حضور سلمى لهذه الحلقة»', () => {
-    renderPortal(<FamilyLine lesson={lesson({ family: { group: false, counts: false, request: null } })} {...who} />);
+    const confirmed = lesson({ family: { group: false, counts: false, request: null } });
+    renderPortal(<FamilyLine lesson={confirmed} {...who} />);
     expect(screen.getByText(A.confirmedLine.replace('{student}', 'سلمى'))).toBeTruthy();
   });
 });

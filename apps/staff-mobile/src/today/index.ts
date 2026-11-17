@@ -17,3 +17,4 @@ export {
   viewerDayHint,
 } from './lib/lesson-text';
 export { FamilyRequests } from './requests/FamilyRequests';
+export { AdminLessonSheet } from './screens/AdminLessonSheet';

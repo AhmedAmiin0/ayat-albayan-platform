@@ -35,6 +35,17 @@ const LABEL: Record<Mode, string> = {
   courseChange: t.booking.courseChange.changeDays,
 };
 
+/** The drawer's form; «اختر موعدًا آخر» of a family's request opens the move on the asked week. */
+function useDrawerMode() {
+  const [mode, setMode] = useState<Mode>('view');
+  const [near, setNear] = useState<string | undefined>(undefined);
+  const reschedule = (at?: string) => {
+    setNear(at);
+    setMode('reschedule');
+  };
+  return { mode, setMode, near, reschedule };
+}
+
 /** «تصحيح حالة الحلقة» under the actions (owner 2026-11-03; the admin's page, lessons.write). */
 function CorrectSlot({ lesson }: { lesson: LessonView }) {
   return <CorrectOutcome lesson={{ ...lesson, auto: lesson.auto_held === true }} area="admin" />;
@@ -47,13 +58,7 @@ function CorrectSlot({ lesson }: { lesson: LessonView }) {
  * lesson (R-SCH-10, R-PAY-03), «تصحيح حالة الحلقة» on an ended or auto-settled one (owner 2026-11-03), «عدّل الوقت» (same lesson, new time; R-SCH-11) and, on an assistant course's lesson, «تغيير أيام الحلقات» (owner 2026-10-18). Switching form moves focus to it (it replaced the button that had focus).
  */
 export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
-  const [mode, setMode] = useState<Mode>('view');
-  // «اختر موعدًا آخر» of a family's request opens the move form on the asked week.
-  const [near, setNear] = useState<string | undefined>(undefined);
-  const reschedule = (at?: string) => {
-    setNear(at);
-    setMode('reschedule');
-  };
+  const { mode, setMode, near, reschedule } = useDrawerMode();
   const panel = useRef<HTMLDivElement>(null);
   useFocusOnChange(panel, mode);
   const done = (message: string) => {

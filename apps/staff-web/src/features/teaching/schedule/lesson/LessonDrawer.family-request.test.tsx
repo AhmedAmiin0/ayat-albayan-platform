@@ -55,7 +55,8 @@ describe('a family «اطلب موعدًا آخر» on the staff web (owner 2026
 
   it('«اختر موعدًا آخر» opens the move form; the box says when the family sent it', async () => {
     apiFetch.mockResolvedValue({ teacher_tz: 'Asia/Riyadh', step_min: 30, slots: [] });
-    wrap(<LessonDrawer lesson={lesson({ pending_proposal: ASKED })} onClose={vi.fn()} onDone={vi.fn()} />);
+    const asked = lesson({ pending_proposal: ASKED });
+    wrap(<LessonDrawer lesson={asked} onClose={vi.fn()} onDone={vi.fn()} />);
     const drawer = screen.getByRole('dialog');
     expect(within(drawer).getByText(new RegExp(P.sentAt.replace('{when}', '')))).toBeTruthy();
     expect(within(drawer).getByText(P.pickOtherHint)).toBeTruthy();

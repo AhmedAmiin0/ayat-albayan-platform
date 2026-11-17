@@ -1,14 +1,9 @@
 import type { LessonView } from '@ab/shared';
-import { useState } from 'react';
-import { LessonDetailsSheet } from '@/calendar';
-import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
-import { JoinAround } from '@/classroom';
-import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
-import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
 import { HeroCard } from '@/today/hero/HeroCard';
 import type { TodaySource } from '@/today/lib/today-source';
 import { useDayLessons } from '@/today/lib/use-day-lessons';
 import { useLessonAction } from '@/today/lib/use-lesson-action';
+import { AdminLessonSheet } from './AdminLessonSheet';
 import { TodayLayout } from './TodayLayout';
 import { FamilyRequests } from '@/today/requests/FamilyRequests';
 
@@ -23,8 +18,6 @@ const ADMIN_DAY: TodaySource<LessonView> = { tree: 'admin', useDay: useDayLesson
  */
 export function TodayScreen() {
   const action = useLessonAction();
-  const [moving, setMoving] = useState<LessonView | null>(null);
-  const [editing, setEditing] = useState<LessonView | null>(null);
   return (
     <TodayLayout
       source={ADMIN_DAY}
@@ -40,22 +33,7 @@ export function TodayScreen() {
         />
       )}
       sheet={(details) => (
-        <LessonDetailsSheet
-          lesson={details.lesson}
-          role="admin"
-          onClose={details.close}
-          actions={(lesson) => (
-            <JoinAround lesson={lesson}>
-              <LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} onEditTime={setEditing} onLeave={details.close} />
-            </JoinAround>
-          )}
-          sheets={
-            <>
-              <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
-              <EditTimeSheet lesson={editing} onClose={() => setEditing(null)} />
-            </>
-          }
-        />
+        <AdminLessonSheet lesson={details.lesson} onClose={details.close} action={action} />
       )}
     />
   );
