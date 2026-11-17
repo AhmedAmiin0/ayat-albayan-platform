@@ -6,7 +6,7 @@ import type {
   ShortLinkPerson,
   ShortLinkUpdate,
 } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict } from '@/common/http/errors';
 import type { ShortLinkRow } from '@/modules/platform/short-links';
@@ -25,10 +25,10 @@ export type SentDetail = ShortLinkDetail & { send: SendSummary | null };
 @Injectable()
 export class ShortLinksAdmin {
   constructor(
-    private readonly writes: ManagedLinks,
-    private readonly reads: ManagedReads,
-    private readonly sender: LinkSend,
-    private readonly targets: LinkTargets,
+    @Inject(ManagedLinks) private readonly writes: ManagedLinks,
+    @Inject(ManagedReads) private readonly reads: ManagedReads,
+    @Inject(LinkSend) private readonly sender: LinkSend,
+    @Inject(LinkTargets) private readonly targets: LinkTargets,
   ) {}
 
   async create(body: ShortLinkCreate, user: AuthUser): Promise<SentDetail> {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { badRequest } from '@/common/http/errors';
 import { loadEnv } from '@/config/env/env';
 import { isAllowedTarget, ShortLinks, ShortLinksSettings } from '@/modules/platform/short-links';
@@ -11,8 +11,8 @@ import { expiryOf, managedHosts } from './managed.rules';
 @Injectable()
 export class LinkTargets {
   constructor(
-    private readonly settings: ShortLinksSettings,
-    private readonly links: ShortLinks,
+    @Inject(ShortLinksSettings) private readonly settings: ShortLinksSettings,
+    @Inject(ShortLinks) private readonly links: ShortLinks,
   ) {}
 
   async assertTarget(url: string): Promise<void> {

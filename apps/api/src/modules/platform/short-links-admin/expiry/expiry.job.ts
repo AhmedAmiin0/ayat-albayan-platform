@@ -3,6 +3,7 @@ import {
   Logger,
   type OnApplicationBootstrap,
   type OnModuleDestroy,
+  Inject,
 } from '@nestjs/common';
 import { Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
@@ -34,7 +35,7 @@ export class LinkExpiryJob implements OnApplicationBootstrap, OnModuleDestroy {
     }),
   ];
 
-  constructor(private readonly expiry: LinkExpiry) {}
+  constructor(@Inject(LinkExpiry) private readonly expiry: LinkExpiry) {}
 
   onApplicationBootstrap(): void {
     this.tickers.forEach((t) => t.start());

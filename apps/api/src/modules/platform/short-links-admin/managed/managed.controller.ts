@@ -12,7 +12,7 @@ import {
   type ShortLinkPerson,
   type ShortLinkUpdate,
 } from '@ab/shared';
-import { Controller, Get, Patch, Post } from '@nestjs/common';
+import { Controller, Get, Patch, Post, Inject } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -32,7 +32,7 @@ const code = () => ZodParam('code', shortCodeSchema, () => notFound('short_link_
 @Permissions('short_links.manage')
 @Controller('short-links')
 export class ManagedLinksController {
-  constructor(private readonly admin: ShortLinksAdmin) {}
+  constructor(@Inject(ShortLinksAdmin) private readonly admin: ShortLinksAdmin) {}
 
   @Get()
   list(

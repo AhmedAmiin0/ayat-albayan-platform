@@ -4,7 +4,7 @@ import type {
   ShortLinkPage,
   ShortLinkPerson,
 } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { LinkPeopleRepo } from '@/modules/platform/short-links-admin/people';
 import type { ShortLinkRow } from '@/modules/platform/short-links';
@@ -26,10 +26,10 @@ const ids = (values: (string | null)[]): string[] => [
 @Injectable()
 export class ManagedReads {
   constructor(
-    private readonly links: ManagedLinksRepo,
-    private readonly users: LinkUsersRepo,
-    private readonly people: LinkPeopleRepo,
-    private readonly targets: LinkTargets,
+    @Inject(ManagedLinksRepo) private readonly links: ManagedLinksRepo,
+    @Inject(LinkUsersRepo) private readonly users: LinkUsersRepo,
+    @Inject(LinkPeopleRepo) private readonly people: LinkPeopleRepo,
+    @Inject(LinkTargets) private readonly targets: LinkTargets,
   ) {}
 
   async list(query: ShortLinkListQuery, user: AuthUser): Promise<ShortLinkPage> {

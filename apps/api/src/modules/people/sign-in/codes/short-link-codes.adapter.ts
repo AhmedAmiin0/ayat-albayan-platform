@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import type { LinkVisitor, ShortLinkCodes } from '@/common/http/short-link-codes';
 import { CodeIssuer } from './code-issuer';
 import { SignInLimits } from './code-limits';
@@ -23,8 +23,8 @@ const PURPOSE = 'short_link' as const;
 @Injectable()
 export class ShortLinkCodesAdapter implements ShortLinkCodes {
   constructor(
-    private readonly codes: CodeIssuer,
-    private readonly limits: SignInLimits,
+    @Inject(CodeIssuer) private readonly codes: CodeIssuer,
+    @Inject(SignInLimits) private readonly limits: SignInLimits,
   ) {}
 
   sendable(): Promise<boolean> {

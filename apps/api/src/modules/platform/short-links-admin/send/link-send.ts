@@ -1,5 +1,5 @@
 import { SHORT_LINK_TEMPLATE } from '@ab/shared';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Outbox } from '@/modules/messaging/inbox';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp';
 import { LinkPeopleRepo } from '@/modules/platform/short-links-admin/people';
@@ -44,10 +44,10 @@ export class LinkSend {
   private readonly log = new Logger(LinkSend.name);
 
   constructor(
-    private readonly templates: TemplateRegistry,
-    private readonly outbox: Outbox,
-    private readonly users: LinkUsersRepo,
-    private readonly people: LinkPeopleRepo,
+    @Inject(TemplateRegistry) private readonly templates: TemplateRegistry,
+    @Inject(Outbox) private readonly outbox: Outbox,
+    @Inject(LinkUsersRepo) private readonly users: LinkUsersRepo,
+    @Inject(LinkPeopleRepo) private readonly people: LinkPeopleRepo,
   ) {}
 
   async sendAll(link: LinkToSend, now = new Date()): Promise<SendSummary> {

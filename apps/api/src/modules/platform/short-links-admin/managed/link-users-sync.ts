@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { badRequest } from '@/common/http/errors';
 import { LinkPeopleRepo } from '@/modules/platform/short-links-admin/people';
 import { LinkUsersRepo } from './link-users.repo';
@@ -11,8 +11,8 @@ import { diffUsers, type WantedUsers } from './managed.rules';
 @Injectable()
 export class LinkUsersSync {
   constructor(
-    private readonly users: LinkUsersRepo,
-    private readonly people: LinkPeopleRepo,
+    @Inject(LinkUsersRepo) private readonly users: LinkUsersRepo,
+    @Inject(LinkPeopleRepo) private readonly people: LinkPeopleRepo,
   ) {}
 
   async replace(code: string, wanted: WantedUsers & { actorId: string }): Promise<void> {

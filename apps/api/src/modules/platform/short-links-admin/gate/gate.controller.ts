@@ -7,7 +7,7 @@ import {
   type ShortLinkOtpStart,
   type ShortLinkOtpVerify,
 } from '@ab/shared';
-import { Controller, Get, Header, HttpCode, Ip, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Header, HttpCode, Ip, Post, UseGuards, Inject } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Public, SignedIn } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -28,7 +28,7 @@ const code = () => ZodParam('code', shortCodeSchema, () => notFound('short_link_
 @UseGuards(GateLimit)
 @Controller('public/short-links/:code')
 export class GatePublicController {
-  constructor(private readonly gate: GateService) {}
+  constructor(@Inject(GateService) private readonly gate: GateService) {}
 
   @Get()
   @Header('Cache-Control', 'no-store')
@@ -65,7 +65,7 @@ export class GatePublicController {
 @UseGuards(GateLimit)
 @Controller('public/short-links/:code')
 export class GateSignedInController {
-  constructor(private readonly gate: GateService) {}
+  constructor(@Inject(GateService) private readonly gate: GateService) {}
 
   @Post('open')
   @HttpCode(200)

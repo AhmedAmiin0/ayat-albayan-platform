@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ShortLinksSettings } from '@/modules/platform/short-links';
 import { LinkExpiryRepo } from './expiry.repo';
 
@@ -15,8 +15,8 @@ export const purgeCutoff = (now: Date, days: number): Date =>
 @Injectable()
 export class LinkExpiry {
   constructor(
-    private readonly repo: LinkExpiryRepo,
-    private readonly settings: ShortLinksSettings,
+    @Inject(LinkExpiryRepo) private readonly repo: LinkExpiryRepo,
+    @Inject(ShortLinksSettings) private readonly settings: ShortLinksSettings,
   ) {}
 
   expire(now = new Date()): Promise<number> {

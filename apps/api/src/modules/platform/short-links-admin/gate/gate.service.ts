@@ -35,9 +35,9 @@ export class GateService {
   private readonly log = new Logger(GateService.name);
 
   constructor(
-    private readonly links: ShortLinks,
-    private readonly users: LinkUsersRepo,
-    private readonly people: LinkPeopleRepo,
+    @Inject(ShortLinks) private readonly links: ShortLinks,
+    @Inject(LinkUsersRepo) private readonly users: LinkUsersRepo,
+    @Inject(LinkPeopleRepo) private readonly people: LinkPeopleRepo,
     @Inject(SHORT_LINK_CODES) private readonly codes: ShortLinkCodes,
   ) {}
 

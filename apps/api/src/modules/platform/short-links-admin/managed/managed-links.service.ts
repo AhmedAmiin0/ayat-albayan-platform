@@ -1,5 +1,5 @@
 import type { ShortLinkCreate, ShortLinkUpdate } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict } from '@/common/http/errors';
@@ -38,10 +38,10 @@ const listOf = (body: ShortLinkUpdate): { profileIds: string[]; phones: string[]
 @Injectable()
 export class ManagedLinks {
   constructor(
-    private readonly links: ManagedLinksRepo,
-    private readonly sync: LinkUsersSync,
-    private readonly targets: LinkTargets,
-    private readonly audit: AuditService,
+    @Inject(ManagedLinksRepo) private readonly links: ManagedLinksRepo,
+    @Inject(LinkUsersSync) private readonly sync: LinkUsersSync,
+    @Inject(LinkTargets) private readonly targets: LinkTargets,
+    @Inject(AuditService) private readonly audit: AuditService,
   ) {}
 
   async create(body: ShortLinkCreate, user: AuthUser, now = new Date()): Promise<ShortLinkRow> {

@@ -1,4 +1,4 @@
-import { Injectable, type CanActivate, type ExecutionContext } from '@nestjs/common';
+import { Injectable, type CanActivate, type ExecutionContext, Inject } from '@nestjs/common';
 import { RateLimitRepo } from '@/common/http/rate-limit.repo';
 
 interface GateRequest {
@@ -13,7 +13,7 @@ interface GateRequest {
  */
 @Injectable()
 export class GateLimit implements CanActivate {
-  constructor(private readonly limits: RateLimitRepo) {}
+  constructor(@Inject(RateLimitRepo) private readonly limits: RateLimitRepo) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const req = ctx.switchToHttp().getRequest<GateRequest>();
