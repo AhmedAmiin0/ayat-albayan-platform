@@ -26,7 +26,8 @@ describe('packageCardLines', () => {
   });
 
   it('nothing left says the zero form; an unknown end is null', () => {
-    const lines = packageCardLines({ pkg: { ...pkg, left: 0, projectedEndAt: null }, words, format });
+    const done = { ...pkg, left: 0, projectedEndAt: null };
+    const lines = packageCardLines({ pkg: done, words, format });
     expect(lines.left).toBe('انتهت');
     expect(lines.end).toBeNull();
   });
