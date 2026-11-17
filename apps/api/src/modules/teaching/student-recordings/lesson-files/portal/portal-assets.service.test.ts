@@ -1,20 +1,22 @@
 import { NotFoundException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';
-import type { PortalScopes } from '@/modules/people/portal';
+import type { PortalRecordingRow, PortalReportsRepo, PortalScopes } from '@/modules/people/portal';
 import { FILE, fileRow, GUARDIAN, LESSON } from '@/modules/teaching/student-recordings/lesson-files/lesson-files.fakes';
 import type { LessonFilesRepo } from '@/modules/teaching/student-recordings/lesson-files/lesson-files.repo';
-import type { PortalAssetsRepo, PortalRecordingRow } from './portal-assets.repo';
+import type { PortalAssetsRepo } from './portal-assets.repo';
 import { PortalAssetsService } from './portal-assets.service';
 
 const S = 'S1';
 const scopes = { student: vi.fn() };
-const assets = { sentReports: vi.fn(), visibleRecordings: vi.fn(), lessonOf: vi.fn() };
+const reports = { sentLessons: vi.fn(), visibleRecordings: vi.fn() };
+const assets = { lessonOf: vi.fn() };
 const files = { ofLesson: vi.fn(), byId: vi.fn() };
 const storage = { signedDownload: vi.fn() };
 const service = () =>
   new PortalAssetsService(
     scopes as unknown as PortalScopes,
+    reports as unknown as PortalReportsRepo,
     assets as unknown as PortalAssetsRepo,
     files as unknown as LessonFilesRepo,
     storage as unknown as StorageService,
@@ -26,15 +28,15 @@ const rec: PortalRecordingRow = {
 
 beforeEach(() => {
   vi.resetAllMocks();
-  assets.sentReports.mockResolvedValue(new Map([[LESSON, 'REP']]));
-  assets.visibleRecordings.mockResolvedValue([rec]);
+  reports.sentLessons.mockResolvedValue(new Map([[LESSON, 'REP']]));
+  reports.visibleRecordings.mockResolvedValue([rec]);
 });
 
 describe('PortalAssetsService.recordings', () => {
   it('lists visible recordings of sent lessons, with the report id and no path', async () => {
     const out = await service().recordings({ user: GUARDIAN, studentId: S });
     expect(scopes.student).toHaveBeenCalledWith(GUARDIAN, S);
-    expect(assets.visibleRecordings).toHaveBeenCalledWith([LESSON]);
+    expect(reports.visibleRecordings).toHaveBeenCalledWith([LESSON]);
     expect(out.items[0]).toMatchObject({ id: 'R', report_id: 'REP', duration_seconds: 2640 });
     expect(JSON.stringify(out)).not.toContain('secret');
   });
@@ -51,7 +53,7 @@ describe('PortalAssetsService.lesson', () => {
   });
 
   it('answers 404 before the report was sent', async () => {
-    assets.sentReports.mockResolvedValue(new Map());
+    reports.sentLessons.mockResolvedValue(new Map());
     await expect(service().lesson({ user: GUARDIAN, studentId: S, lessonId: LESSON }))
       .rejects.toBeInstanceOf(NotFoundException);
   });

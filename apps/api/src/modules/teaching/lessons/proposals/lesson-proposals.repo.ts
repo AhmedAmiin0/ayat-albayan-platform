@@ -27,7 +27,6 @@ type NewProposal = {
 type Decision = {
   status: 'approved' | 'rejected';
   decided_by: string;
-  new_lesson_id?: string;
   /** The answer's note, shown to the family (owner 2026-11-17). */
   decision_note?: string | null;
 };
@@ -68,12 +67,34 @@ export class LessonProposalRepo {
     return data.length > 0;
   }
 
-  /** The family's «سحب الطلب»: their pending request on the lesson → withdrawn; false = none. */
-  async withdraw(lessonId: string): Promise<boolean> {
+  /**
+   * approve()'s claim lost to a failed move: approved → pending again (by the same decider). A new
+   * request the family sent meanwhile holds the one pending slot: then this one stays approved.
+   */
+  async release(id: string): Promise<void> {
+    const { error } = await this.db
+      .from('lesson_proposals')
+      .update({ status: 'pending', decided_by: null, decided_at: null })
+      .eq('id', id)
+      .eq('status', 'approved');
+    if (error && error.code !== '23505') throw dbError(error);
+  }
+
+  /** The approved proposal's moved lesson. */
+  async link(id: string, newLessonId: string): Promise<void> {
+    const { error } = await this.db
+      .from('lesson_proposals')
+      .update({ new_lesson_id: newLessonId })
+      .eq('id', id);
+    if (error) throw dbError(error);
+  }
+
+  /** The family's «سحب الطلب»: the asker's own pending request → withdrawn; false = none. */
+  async withdraw(input: { lessonId: string; userId: string }): Promise<boolean> {
     const { data, error } = await this.db
       .from('lesson_proposals')
       .update({ status: 'withdrawn', decided_at: new Date().toISOString() })
-      .eq('lesson_id', lessonId)
+      .match({ lesson_id: input.lessonId, created_by: input.userId })
       .eq('requested_by', 'family')
       .eq('status', 'pending')
       .select('id');

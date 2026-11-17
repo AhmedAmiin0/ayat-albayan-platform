@@ -6,9 +6,9 @@ import {
 } from '@ab/shared';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { badRequest, conflict } from '@/common/http/errors';
+import { badRequest, conflict, forbidden } from '@/common/http/errors';
 import { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
-import { LessonProposalRepo } from './lesson-proposals.repo';
+import { LessonProposalRepo, type ProposalRow } from './lesson-proposals.repo';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { RescheduleOneService } from '@/modules/teaching/lessons/reschedule/reschedule-one.service';
 import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
@@ -19,6 +19,9 @@ type DecideInput = { proposalId: string; actor: AuthUser };
 type ApproveInput = DecideInput & { body: ProposalApprove };
 /** `note`: the answer's note, the family reads it with the decline (owner 2026-11-17). */
 type RejectInput = DecideInput & { note?: string };
+
+/** An assistant (base role sales) never books over a clash. */
+const overrideRefused = (actor: AuthUser): boolean => actor.role === 'sales';
 
 /** A teacher's «اقترح ميعاد تاني» for their own open lesson (R-SCH-08). Returns the lesson id. */
 @Injectable()
@@ -66,10 +69,27 @@ export class ProposalDecisionService {
     return this.proposals.pendingLessonIds(by);
   }
 
-  /** Returns the new lesson's id. */
+  /**
+   * Returns the new lesson's id. The proposal is claimed first (pending → approved, 409
+   * proposal_decided when it was answered or withdrawn meanwhile), then the lesson moves; a failed
+   * move (409 conflict, …) hands the claim back. 403 override_not_allowed: an assistant never
+   * books over a clash (as sales-booking.scope.ts).
+   */
   async approve({ proposalId, body, actor }: ApproveInput): Promise<string> {
+    if (body.override && overrideRefused(actor)) throw forbidden('override_not_allowed');
     const proposal = await this.pending(proposalId);
-    const newId = await this.reschedule.reschedule({
+    const claimed = await this.proposals.decide(proposalId, { status: 'approved', decided_by: actor.id });
+    if (!claimed) throw conflict('proposal_decided');
+    const newId = await this.move(proposal, { body, actor }).catch(async (e: unknown) => {
+      await this.proposals.release(proposalId);
+      throw e;
+    });
+    await this.proposals.link(proposalId, newId);
+    return newId;
+  }
+
+  private move(proposal: ProposalRow, { body, actor }: Omit<ApproveInput, 'proposalId'>) {
+    return this.reschedule.reschedule({
       lessonId: proposal.lesson_id,
       body: {
         scope: 'one',
@@ -80,9 +100,6 @@ export class ProposalDecisionService {
       },
       actor,
     });
-    // The lesson is moved either way; a lost race here only leaves the proposal unmarked.
-    await this.proposals.decide(proposalId, { status: 'approved', decided_by: actor.id, new_lesson_id: newId });
-    return newId;
   }
 
   /** Returns the (unchanged) lesson's id. */

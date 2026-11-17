@@ -4,7 +4,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { BUCKETS, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { PortalScopes } from '@/modules/people/portal';
+import { PortalReportsRepo, PortalScopes } from '@/modules/people/portal';
 import { portalLessonFile } from '@/modules/teaching/student-recordings/lesson-files/lesson-files.mapper';
 import { LessonFilesRepo } from '@/modules/teaching/student-recordings/lesson-files/lesson-files.repo';
 import { portalRecording } from './portal-assets.mapper';
@@ -23,6 +23,7 @@ interface StudentCall {
 export class PortalAssetsService {
   constructor(
     @Inject(PortalScopes) private readonly scopes: PortalScopes,
+    @Inject(PortalReportsRepo) private readonly reports: PortalReportsRepo,
     @Inject(PortalAssetsRepo) private readonly assets: PortalAssetsRepo,
     @Inject(LessonFilesRepo) private readonly files: LessonFilesRepo,
     @Inject(StorageService) private readonly storage: StorageService,
@@ -31,19 +32,19 @@ export class PortalAssetsService {
   /** Newest first; every visible part of a lesson, each with its lesson's report id. */
   async recordings(call: StudentCall): Promise<PortalRecordings> {
     await this.scopes.student(call.user, call.studentId);
-    const sent = await this.assets.sentReports(call.studentId);
-    const rows = await this.assets.visibleRecordings([...sent.keys()]);
+    const sent = await this.reports.sentLessons(call.studentId);
+    const rows = await this.reports.visibleRecordings([...sent.keys()]);
     return { items: rows.map((r) => portalRecording(r, sent.get(r.lesson_id) ?? null)) };
   }
 
   /** 404 lesson_not_found unless the student attended it and its report was sent. */
   async lesson(call: StudentCall & { lessonId: string }): Promise<PortalLessonAssets> {
     await this.scopes.student(call.user, call.studentId);
-    const reportId = (await this.assets.sentReports(call.studentId)).get(call.lessonId);
+    const reportId = (await this.reports.sentLessons(call.studentId)).get(call.lessonId);
     const lesson = reportId ? await this.assets.lessonOf(call) : null;
     if (!lesson || !reportId) throw notFound('lesson_not_found');
     const [recordings, files] = await Promise.all([
-      this.assets.visibleRecordings([lesson.id]),
+      this.reports.visibleRecordings([lesson.id]),
       this.files.ofLesson({ lessonId: lesson.id, familyOnly: true }),
     ]);
     return {
@@ -61,7 +62,7 @@ export class PortalAssetsService {
   async fileUrl(call: StudentCall & { fileId: string }): Promise<PortalFileUrl> {
     await this.scopes.student(call.user, call.studentId);
     const row = await this.files.byId(call.fileId);
-    const sent = row?.visible_to_family ? await this.assets.sentReports(call.studentId) : null;
+    const sent = row?.visible_to_family ? await this.reports.sentLessons(call.studentId) : null;
     if (!row || !sent?.has(row.lesson_id)) throw notFound('lesson_file_not_found');
     const ref = { bucket: BUCKETS.attachments, path: row.storage_path };
     return this.storage.signedDownload({ ...ref, seconds: SIGNED_URL_SECONDS.ui });

@@ -1,5 +1,5 @@
 import { durationSeconds, mediaOfPath, type PortalRecording } from '@ab/shared';
-import type { PortalRecordingRow } from './portal-assets.repo';
+import type { PortalRecordingRow } from '@/modules/people/portal';
 
 /** The family's whitelist of a recording: no path or egress id; the report it came with. */
 export function portalRecording(row: PortalRecordingRow, reportId: string | null): PortalRecording {
