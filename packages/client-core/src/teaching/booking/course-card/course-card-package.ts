@@ -18,6 +18,23 @@ export interface PackageWords {
   projectedEnd: string;
 }
 
+/** The app's `t` (both apps read the same ar.json / en.json), as far as the card needs it. */
+export interface PackageCatalog {
+  courseCard: { left: CountWords };
+  today: { count: Readonly<Record<PluralForm, string>> };
+  subscriptions: { usedOf: string; projectedEnd: string };
+  payments: { paidOf: string };
+}
+
+/** The card's package words from the app's `t`. */
+export const packageWordsOf = (t: PackageCatalog): PackageWords => ({
+  left: t.courseCard.left,
+  lessons: t.today.count,
+  usedOf: t.subscriptions.usedOf,
+  paidOf: t.payments.paidOf,
+  projectedEnd: t.subscriptions.projectedEnd,
+});
+
 interface PackageFormat {
   /** «360 ر.س». */
   money: (amount: number, currency: string) => string;

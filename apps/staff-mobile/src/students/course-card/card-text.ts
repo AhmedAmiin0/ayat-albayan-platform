@@ -2,6 +2,7 @@ import {
   courseCardLines,
   extendPreviewLines,
   packageCardLines,
+  packageWordsOf,
   pausePreviewLines,
   resumePreviewLines,
 } from '@ab/client-core';
@@ -32,13 +33,7 @@ export const cardLines = (course: NonNullable<CourseCardView['course']>) =>
 export const packageLines = (pkg: CourseCardPackage, tz: string) =>
   packageCardLines({
     pkg,
-    words: {
-      left: t.courseCard.left,
-      lessons: t.today.count,
-      usedOf: t.subscriptions.usedOf,
-      paidOf: t.payments.paidOf,
-      projectedEnd: t.subscriptions.projectedEnd,
-    },
+    words: packageWordsOf(t),
     format: { money, day: dayIn(tz) },
   });
 

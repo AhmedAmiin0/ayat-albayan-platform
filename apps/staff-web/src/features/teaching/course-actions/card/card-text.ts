@@ -3,6 +3,7 @@ import {
   extendDoneLines,
   extendPreviewLines,
   packageCardLines,
+  packageWordsOf,
 } from '@ab/client-core';
 import type {
   CourseCardPackage,
@@ -24,13 +25,7 @@ export const cardLines = (course: NonNullable<CourseCardView['course']>) =>
 export const packageLines = (pkg: CourseCardPackage, tz: string) =>
   packageCardLines({
     pkg,
-    words: {
-      left: t.courseCard.left,
-      lessons: t.today.count,
-      usedOf: t.subscriptions.usedOf,
-      paidOf: t.payments.paidOf,
-      projectedEnd: t.subscriptions.projectedEnd,
-    },
+    words: packageWordsOf(t),
     format: { money: moneyText, day: dayIn(tz) },
   });
 

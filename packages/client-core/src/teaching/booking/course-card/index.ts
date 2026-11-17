@@ -31,7 +31,9 @@ export {
   type ResumeWords,
 } from './course-card-text.js';
 export {
+  type PackageCatalog,
   packageCardLines,
+  packageWordsOf,
   type PackageLines,
   type PackageWords,
 } from './course-card-package.js';

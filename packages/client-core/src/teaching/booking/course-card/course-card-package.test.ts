@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { packageCardLines, type PackageWords } from './course-card-package.js';
+import { packageCardLines, packageWordsOf, type PackageWords } from './course-card-package.js';
 
 // «الدورة والباقة»'s headline and package line (owner 2026-11-17, board CourseXActions).
 const plural = (one: string, n: string) => ({ one, two: n, few: n, other: n });
@@ -29,5 +29,15 @@ describe('packageCardLines', () => {
     const lines = packageCardLines({ pkg: { ...pkg, left: 0, projectedEndAt: null }, words, format });
     expect(lines.left).toBe('انتهت');
     expect(lines.end).toBeNull();
+  });
+
+  it('the words come from the app\'s catalog', () => {
+    const t = {
+      courseCard: { left: words.left },
+      today: { count: words.lessons },
+      subscriptions: { usedOf: words.usedOf, projectedEnd: words.projectedEnd },
+      payments: { paidOf: words.paidOf },
+    };
+    expect(packageWordsOf(t)).toEqual(words);
   });
 });
