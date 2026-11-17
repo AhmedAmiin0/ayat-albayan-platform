@@ -18,3 +18,4 @@ export {
 } from './lib/lesson-text';
 export { FamilyRequests } from './requests/FamilyRequests';
 export { AdminLessonSheet } from './screens/AdminLessonSheet';
+export { useLessonAction } from './lib/use-lesson-action';

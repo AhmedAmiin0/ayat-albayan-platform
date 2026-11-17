@@ -9,8 +9,10 @@ import {
   parseExtendPreview,
   parseResumePreview,
   postCourseExtend,
+  readLessonAt,
   type CardTree,
 } from '@ab/client-core';
+import type { CourseCardLesson, LessonView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
 
@@ -23,6 +25,18 @@ export const useCourseCard = (input: { studentId: string; tree: CardTree }) =>
     queryKey: [...courseCardKey(input.studentId), input.tree],
     queryFn: async () => parseCourseCard(await apiFetch(courseCardPath(input))),
     enabled: input.studentId !== '',
+  });
+
+/**
+ * A card lesson's full view for the admin's sheet (GET /lessons over its minute, lessons.read),
+ * only once tapped; null = moved or cancelled meanwhile.
+ */
+export const useCardLesson = (lesson: CourseCardLesson | null) =>
+  useQuery({
+    queryKey: ['course-card-lesson', lesson?.id],
+    queryFn: () => (lesson ? readLessonAt<LessonView>(apiFetch, lesson) : null),
+    enabled: lesson !== null,
+    staleTime: 0,
   });
 
 /** GET «مدّ الجدول»'s preview of the package. */
