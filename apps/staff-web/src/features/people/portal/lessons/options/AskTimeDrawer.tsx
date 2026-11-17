@@ -1,4 +1,5 @@
-import type { PortalLesson, PortalStudent } from '@ab/shared';
+import { lessonMinutes } from '@ab/client-core';
+import { firstName, type PortalLesson, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -13,6 +14,7 @@ import {
   WeekSlotsFrame,
 } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
+import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { familySlotsQuery } from '@/features/people/portal/api';
 import { LessonWhen } from '@/features/people/portal/lessons/LessonWhen';
@@ -27,6 +29,13 @@ interface AskTimeDrawerProps {
 }
 
 const A = t.portal.actions;
+
+/** «حلقة يوسف مع أ. فاطمة · 45 دقيقة». */
+const sublineOf = (lesson: PortalLesson, student: PortalStudent): string =>
+  A.askSubline
+    .replace('{student}', firstName(student.name))
+    .replace('{teacher}', teacherLabel(lesson.teacher))
+    .replace('{minutes}', t.portal.app.lesson.minutes.replace('{n}', String(lessonMinutes(lesson))));
 
 /**
  * «اطلب موعدًا آخر» (canvas LessonXWebFamily): the staff slot grid's week frame over the family's
@@ -49,7 +58,7 @@ export function AskTimeDrawer(props: AskTimeDrawerProps) {
     <Drawer title={A.request} onClose={onClose}>
       <div className="grid gap-4 p-4">
         <div className="grid gap-1">
-          <p className="font-semibold">{student.name}</p>
+          <p className="font-semibold">{sublineOf(lesson, student)}</p>
           <LessonWhen startsAt={lesson.starts_at} tz={student.tz} />
         </div>
         <WeekSlotsFrame

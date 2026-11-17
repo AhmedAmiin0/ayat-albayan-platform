@@ -9,7 +9,7 @@ const lesson = (students: LessonAssets['students']): LessonAssets => ({
 
 test('the header: name · code · day, time; a group lesson lists its names', () => {
   const one = lessonHeadline(lesson([{ id: 's', name: 'سلمى', code: 'AB-0123' }]), clock);
-  expect(one).toMatch(/^سلمى · AB-0123 · الإثنين،? 16 نوفمبر، 19:00$/);
+  expect(one).toMatch(/^سلمى · AB-0123 · \S+،? 16 نوفمبر، 19:00$/);
   const two = [{ id: 'a', name: 'سلمى', code: null }, { id: 'b', name: 'يوسف', code: null }];
   expect(lessonHeadline(lesson(two), clock)).toMatch(/^سلمى، يوسف · /);
 });

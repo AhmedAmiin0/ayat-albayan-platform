@@ -45,7 +45,7 @@ export function LessonCard({ lesson, student }: Props) {
           {t.portal.withTeacher.replace('{teacher}', teacherLabel(lesson.teacher))}
         </p>
       )}
-      <FamilyLine lesson={lesson} tz={student.tz} />
+      <FamilyLine lesson={lesson} student={student} now={now} />
       <LessonCountdown lesson={lesson} now={now} />
       <LessonAction
         lesson={lesson}
