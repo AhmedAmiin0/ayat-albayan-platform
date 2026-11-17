@@ -76,7 +76,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
       # Both apps, whichever this run ships (a missing file is skipped: plain grep would exit 2 and pass).
       - name: Never re-add forcesRTL
         run: |
@@ -127,7 +127,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
       # Both apps, whichever this run ships (a missing file is skipped: plain grep would exit 2 and pass).
       - name: Never re-add forcesRTL
         run: |

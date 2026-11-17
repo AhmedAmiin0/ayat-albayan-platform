@@ -47,3 +47,21 @@ test('ci: a red lint prints the pruned suppressions to commit', () => {
   assert.match(turbo, /set -o pipefail\n.*\| tee "\$RUNNER_TEMP\/turbo\.log" \|\| status=\$\?/s);
   assert.match(ci.jobs.verify.strategy.matrix.include.find((r) => r.task === 'lint').opts, /--log-prefix=task/);
 });
+
+test('pnpm store: every job restores through the local action; only develop baselines saves', () => {
+  const action = parse(read('.github/actions/pnpm-store/action.yml'));
+  const restore = action.runs.steps.find((s) => s.id === 'restore');
+  assert.equal(restore.uses, 'actions/cache/restore@v4');
+  assert.match(restore.with.key, /^pnpm-store-\$\{\{ runner\.os \}\}-\$\{\{ hashFiles\('pnpm-lock\.yaml'\) \}\}$/);
+  for (const file of ['ci', 'deploy-staging', 'mobile', 'db-migrate', 'staging-test-account']) {
+    const text = read(`.github/workflows/${file}.yml`);
+    assert.doesNotMatch(text, /cache: pnpm/, file);
+    assert.match(text, /uses: \.\/\.github\/actions\/pnpm-store/, file);
+  }
+  const saves = Object.entries(ci.jobs).filter(([, j]) =>
+    (j.steps ?? []).some((s) => s.uses === 'actions/cache/save@v4' && /store/.test(s.with.key)),
+  );
+  assert.deepEqual(saves.map(([name]) => name), ['baselines']);
+  const save = ci.jobs.baselines.steps.find((s) => s.uses === 'actions/cache/save@v4');
+  assert.equal(save.if, "steps.store.outputs.hit != 'true'");
+});

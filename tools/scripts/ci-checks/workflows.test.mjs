@@ -132,7 +132,7 @@ test('db apply needs staging-db, mobile jobs need mobile, claude-tasks binds no 
 test('third-party actions are pinned to a full commit SHA', () => {
   for (const w of workflows) {
     for (const [, j] of jobsOf(w)) for (const s of j.steps ?? []) {
-      if (!s.uses || /^(actions|pnpm)\//.test(s.uses)) continue;
+      if (!s.uses || /^(actions|pnpm)\/|^\.\/\.github\/actions\//.test(s.uses)) continue;
       assert.match(s.uses, /^[\w.-]+\/[\w.-]+@[0-9a-f]{40}$/, `${w.file}: ${s.uses}`);
     }
   }

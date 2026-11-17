@@ -101,7 +101,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - if: steps.skip.outputs.try == 'true'
+        uses: ./.github/actions/pnpm-store
       - name: Same tree verified on a PR?
         id: verified
         if: steps.skip.outputs.try == 'true'
@@ -207,7 +208,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
       - run: pnpm i --frozen-lockfile
       - name: Oxlint
         if: matrix.task == 'lint'
@@ -255,8 +256,8 @@ jobs:
           NODE_OPTIONS: ${{ matrix.heap }}
           JEST_CACHE_DIR: ${{ matrix.jcache && format('{0}/node_modules/.jest-cache', github.workspace) || '' }}
       # Saved only when vitest (or jest) wrote new transforms (not when turbo replayed the task), also after a red test (the
-      # transforms are still right). A PR saves only when it restored nothing (~50 MB per shard), so the Actions
-      # cache holds develop's newest set.
+      # transforms are still right), and only when nothing was restored, i.e. a new lockfile or config (~50 MB per
+      # shard): one entry per key prefix instead of a new one per develop run, so the Actions cache keeps room for turbo.
       - name: New transforms?
         id: vwrote
         if: ${{ !cancelled() && (matrix.vcache || matrix.jcache) }}
@@ -266,9 +267,7 @@ jobs:
           new=$(find "$DIR" -type f -newer "$RUNNER_TEMP/vitest-start" -print -quit 2>/dev/null || true)
           [ -z "$new" ] || echo "new=true" >> "$GITHUB_OUTPUT"
       - name: Save the transform cache
-        if: >-
-          ${{ !cancelled() && steps.vwrote.outputs.new == 'true'
-          && (github.event_name != 'pull_request' || steps.vcache.outputs.cache-matched-key == '') }}
+        if: ${{ !cancelled() && steps.vwrote.outputs.new == 'true' && steps.vcache.outputs.cache-matched-key == '' }}
         uses: actions/cache/save@v4
         with:
           path: ${{ steps.vkey.outputs.dir }}
@@ -374,7 +373,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
       - run: pnpm i --frozen-lockfile
       # The base branch's own tree, with its jscpd report, for the count gates below. A git error fails the step.
       - name: Base branch checkout (on a PR)
@@ -429,8 +428,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - id: store
+        uses: ./.github/actions/pnpm-store
       - run: pnpm i --frozen-lockfile
+      # The one place the pnpm store is saved (.github/actions/pnpm-store): once per lockfile, from develop
+      # (readable by every PR), after dropping the packages this lockfile no longer uses.
+      - name: Prune the pnpm store (new lockfile only)
+        if: steps.store.outputs.hit != 'true'
+        run: pnpm store prune
+      - if: steps.store.outputs.hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ steps.store.outputs.dir }}
+          key: ${{ steps.store.outputs.key }}
       - run: pnpm guard:knip -- --write
       - run: pnpm guard:queries -- --write
       - name: Commit the pruned lists
@@ -533,7 +543,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
       - run: pnpm i --frozen-lockfile
       # In the background: the browser and the build below get ready at the same time (was ~80 s in a row).
       # Measured 2026-10-23: caching the images (docker save/load, 0.9 GB) was SLOWER than pulling them

@@ -95,7 +95,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
       # deploy-baseline.mjs reads the GitHub API through tools/scripts' HTTP client (zod): install
       # only the @ab/scripts workspace, no build. A failed install fails plan, and migrate then runs.
       - run: pnpm --filter @ab/scripts install --frozen-lockfile
@@ -185,7 +185,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
 
       - name: Build the web app (before anything on the server changes)
         if: ${{ !inputs.env_only }}
