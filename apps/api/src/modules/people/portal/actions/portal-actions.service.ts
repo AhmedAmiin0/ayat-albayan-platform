@@ -27,7 +27,7 @@ export interface ActionCall {
 }
 
 /** The login's own student and that student's lesson, as ahead() checked them. */
-export interface OwnLesson {
+interface OwnLesson {
   student: PortalStudent;
   row: PortalLessonRow;
 }

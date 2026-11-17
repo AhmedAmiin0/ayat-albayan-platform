@@ -17,6 +17,7 @@ import { BookingWriter } from './core/booking.writer';
 import { ConflictContext } from './plan/conflict-context';
 import { CourseCardController, SalesCourseCardController } from './card/course-card.controller';
 import { CourseCards } from './card/course-card.service';
+import { CourseCardCourse } from './card/course-card.course';
 import { CourseChangeController } from './course-change/course-change.controller';
 import { CourseLessonRepo } from './course-change/course-change.lessons';
 import { CourseChangeNotices } from './course-change/notices/course-change.notices';
@@ -107,6 +108,7 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     ProfileCourse,
     ProfileCourseRepo,
     CourseCards,
+    CourseCardCourse,
     CourseExtend,
     CourseExtendReader,
     CourseExtendRepo,

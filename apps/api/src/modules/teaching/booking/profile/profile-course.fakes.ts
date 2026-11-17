@@ -86,7 +86,8 @@ function reset(m: ReturnType<typeof mocks>): void {
   m.lessons.openFrom.mockResolvedValue([{ id: 'l9', status: 'scheduled', rule_id: 'ra' }]);
   m.lessons.held.mockResolvedValue(new Set(['ra:2026-10-19', 'rb:2026-10-21']));
   m.sales.ownership.mockResolvedValue(NOT_MINE);
-  m.packages.studentBalance.mockResolvedValue({ student_id: S1, remaining: 0, current: null, packages: [] });
+  const balance = { student_id: S1, remaining: 0, current: null, packages: [] };
+  m.packages.studentBalance.mockResolvedValue(balance);
   m.repo.currentSubscription.mockResolvedValue(SUB_ID);
   m.repo.studentTeacher.mockResolvedValue(T_OLD);
   m.repo.teacher.mockResolvedValue({ id: T_NEW, status: 'active' });

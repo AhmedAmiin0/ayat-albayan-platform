@@ -12,7 +12,7 @@ export const PICK_SOURCES = ['gallery', 'camera', 'document'] as const;
 export type PickSource = (typeof PICK_SOURCES)[number];
 
 /** A picked file (its bytes, name, type and size), or null when the user backed out. */
-export type PickFile = (source: PickSource) => Promise<PickedFile | null>;
+type PickFile = (source: PickSource) => Promise<PickedFile | null>;
 
 /** The picked asset before its bytes are read. */
 interface Picked {

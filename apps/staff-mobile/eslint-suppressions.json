@@ -954,7 +954,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     },
     "max-len": {
       "count": 1
@@ -1055,7 +1055,7 @@
   },
   "src/calendar/overview/overview-text.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -1978,9 +1978,6 @@
     }
   },
   "src/edit-time/lib/edit-time-text.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -4995,9 +4992,6 @@
     }
   },
   "src/meetings/invite/invite-text.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     },
@@ -6579,7 +6573,7 @@
   },
   "src/sales-course/lib/course-summary.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 3

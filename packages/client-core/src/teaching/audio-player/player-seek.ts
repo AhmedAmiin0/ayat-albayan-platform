@@ -19,7 +19,7 @@ const JUMPS: Record<string, (duration: number) => number> = {
   End: (duration) => duration,
 };
 
-export interface SeekKey {
+interface SeekKey {
   key: string;
   position: number;
   duration: number;
@@ -36,7 +36,7 @@ export function seekByKey(input: SeekKey): number | null {
   return to === undefined ? null : clampPosition(to, input.duration);
 }
 
-export interface SeekPoint {
+interface SeekPoint {
   /** The touch's distance from the bar's physical left edge. */
   x: number;
   width: number;

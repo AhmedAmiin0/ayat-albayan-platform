@@ -947,7 +947,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     },
     "typescript/restrict-template-expressions": {
       "count": 1
@@ -1051,7 +1051,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/calendar/overview/overview.test.ts": {
@@ -1965,9 +1965,6 @@
   "src/edit-time/lib/edit-time-text.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/edit-time/lib/queries.ts": {
@@ -5022,9 +5019,6 @@
     "stylistic/max-len": {
       "count": 5
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -6609,7 +6603,7 @@
       "count": 3
     },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/sales-course/screens/CourseScreen.change.test.tsx": {
