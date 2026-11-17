@@ -1,7 +1,7 @@
 import type { ChannelAudience } from '@ab/client-core';
 import { useLocalSearchParams } from 'expo-router';
 import { t, ChannelScreen } from '@ab/mobile-kit';
-import { useStaffChannelMedia } from './use-staff-channel-media';
+import { useStaffChannelMedia } from './media/use-staff-channel-media';
 
 type StaffAudience = Extract<ChannelAudience, 'teacher' | 'admin'>;
 

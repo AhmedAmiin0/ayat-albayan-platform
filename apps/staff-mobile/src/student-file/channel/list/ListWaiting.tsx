@@ -1,6 +1,6 @@
 import { ActivityIndicator } from 'react-native';
 import { t, ErrorState, useTheme } from '@ab/mobile-kit';
-import type { useTeacherChannels } from './channel-queries';
+import type { useTeacherChannels } from '@/student-file/channel/channel-queries';
 
 /** While the list is not in: its error with a retry, else the spinner. */
 export function ListWaiting({ list }: { list: ReturnType<typeof useTeacherChannels> }) {

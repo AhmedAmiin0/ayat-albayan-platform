@@ -5,8 +5,8 @@ import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { t, EmptyState, Screen, ScreenHeader, useTabBarInset, BackButton } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useTeacherChannels } from './channel-queries';
-import { ListWaiting } from './ListWaiting';
-import { TeacherChannelItem } from './TeacherChannelItem';
+import { ListWaiting } from './list/ListWaiting';
+import { TeacherChannelItem } from './list/TeacherChannelItem';
 
 const keyOf = (r: TeacherChannelRow) => r.student_id;
 

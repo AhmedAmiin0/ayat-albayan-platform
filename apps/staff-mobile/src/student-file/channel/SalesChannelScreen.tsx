@@ -3,7 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { t, Button, ChannelScreen } from '@ab/mobile-kit';
 import { SeatCard } from './SeatCard';
 import { useChannelSeat } from './use-channel-seat';
-import { useStaffChannelMedia } from './use-staff-channel-media';
+import { useStaffChannelMedia } from './media/use-staff-channel-media';
 
 /**
  * The assistant's view of a student chat (/sales/students/channel/:id; owner 2026-11-16 «any
