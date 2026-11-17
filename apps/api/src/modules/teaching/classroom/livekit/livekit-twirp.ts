@@ -51,7 +51,7 @@ export const egressAnswer = z
   .looseObject({ egress_id: z.unknown().optional(), egressId: z.unknown().optional() })
   .catch({});
 
-/** ParticipantPermission with nothing to publish, subscribe to or send (a removal cuts it first). */
+/** ParticipantPermission with nothing to publish, subscribe to or send (a removal's first cut). */
 export const NO_PERMISSION = {
   can_subscribe: false,
   can_publish: false,

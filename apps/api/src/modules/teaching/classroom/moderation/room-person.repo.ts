@@ -64,6 +64,6 @@ export class RoomPersonRepo {
       .select('student_id, student:students(guardian_id)')
       .eq('lesson_id', lessonId);
     if (error) throw dbError(error);
-    return data.map((r) => ({ student_id: r.student_id, guardian_id: r.student?.guardian_id ?? null }));
+    return data.map((r) => ({ student_id: r.student_id, guardian_id: r.student.guardian_id }));
   }
 }

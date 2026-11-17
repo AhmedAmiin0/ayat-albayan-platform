@@ -92,7 +92,7 @@ export class LivekitApi {
     });
   }
 
-  /** «إخراج»: permissions revoked first (UpdateParticipant), then disconnected; gone counts as done. */
+  /** «إخراج»: permissions revoked (UpdateParticipant), then disconnected; gone counts as done. */
   async revokeAndRemove(input: { room: string; identity: string }): Promise<void> {
     const grant = { roomAdmin: true, room: input.room };
     const body = { ...input, permission: NO_PERMISSION };

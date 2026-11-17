@@ -14,7 +14,7 @@ export interface RoomLesson {
 /** The `room` of each lesson by id (LessonRoomStates.of). */
 export type RoomStates = ReadonlyMap<string, LessonRoomState | null>;
 
-/** A payload with its live room, only where there is one (absent otherwise, as an older API sent). */
+/** A payload with its live room, only where there is one (absent otherwise, as before). */
 export function withRoom<T extends { id: string; room?: LessonRoomState | null }>(
   item: T,
   rooms: RoomStates,

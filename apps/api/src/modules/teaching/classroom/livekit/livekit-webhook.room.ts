@@ -33,8 +33,10 @@ const participantEventSchema = z.object({
 const obj = (v: unknown): Record<string, unknown> | null => (v && typeof v === 'object' ? (v as Record<string, unknown>) : null);
 const text = (v: unknown): string | null => (typeof v === 'string' && v ? v : null);
 
-const isoOf = (seconds: string | number | undefined): string | null =>
-  seconds === undefined || Number(seconds) === 0 ? null : new Date(Number(seconds) * S_MS).toISOString();
+function isoOf(seconds: string | number | undefined): string | null {
+  const s = Number(seconds ?? 0);
+  return s === 0 ? null : new Date(s * S_MS).toISOString();
+}
 
 /** A participant or room_finished event with a room name, else null (every other event). */
 export function participantEventOf(event: unknown): ParticipantEvent | null {

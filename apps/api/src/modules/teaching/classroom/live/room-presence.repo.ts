@@ -25,7 +25,7 @@ const olderThan = (at: string): string => `presence_at.is.null,presence_at.lt.${
 export class RoomPresenceRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** participant_joined: inside now; entered_at keeps the first arrival. null: not ours or stale. */
+  /** participant_joined: inside now; entered_at keeps the first arrival. null: unknown or stale. */
   async entered(e: PresenceEvent): Promise<Pick<ParticipantRow, 'role'> | null> {
     const match = { lesson_id: e.lessonId, identity: e.identity };
     const rows = () => this.db.from('classroom_participants');
@@ -53,7 +53,7 @@ export class RoomPresenceRepo {
     if (error) throw dbError(error);
   }
 
-  /** «إنهاء الحلقة للجميع» / room_finished: everyone inside is out (LiveKit sends no more events). */
+  /** «إنهاء الحلقة للجميع» / room_finished: everyone inside is out (no more events follow). */
   async leaveAll(lessonId: string, at: string): Promise<void> {
     const { error } = await this.db
       .from('classroom_participants')

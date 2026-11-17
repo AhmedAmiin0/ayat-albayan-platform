@@ -4,6 +4,12 @@ import { PortalHistoryService } from '@/modules/people/portal/history/portal-his
 import { PortalReportsService } from '@/modules/people/portal/reports/portal-reports.service';
 import { familyNamed, LessonRoomStates, type RoomLesson, type RoomStates } from '@/modules/teaching/lessons';
 
+/** The read's time and the login's students (whom the family may know by name). */
+interface FamilyNow {
+  now: Date;
+  family: readonly string[];
+}
+
 type LessonExtras = Required<Pick<PortalLessons, 'prepare' | 'month'>>;
 
 /**
@@ -23,7 +29,7 @@ export class PortalLessonExtras {
    * The `room` of each lesson (LessonRoomStates: only those near now are looked up), naming only
    * the teacher and this family's students (owner 2026-11-16, review): others by role.
    */
-  rooms(lessons: readonly RoomLesson[], at: { now: Date; family: readonly string[] }): Promise<RoomStates> {
+  rooms(lessons: readonly RoomLesson[], at: FamilyNow): Promise<RoomStates> {
     return this.live.of(lessons, at.now, familyNamed(at.family));
   }
 
