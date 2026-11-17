@@ -747,3 +747,10 @@ Owner choices (cost and infra only)
 5. Worker CPU priority: `cpu_shares: 256` on ayat-worker (a priority), or `cpus: "1"` (a cap), or neither.
 6. Lesson-file PDF/image cap: 10 MiB (fits ayat-pdf's 128 MB), or 25 MiB as the board says with more ayat-pdf memory.
 7. HLS in production needs MINIO_RECORDINGS on (recordings then live on the shared VPS disk, ~29 MB per hour of audio, plus the same again in hls/ while the sources stay). With it off, MEDIA_HLS=true packs nothing and everything stays progressive.
+
+OWNER ANSWERS (2026-11-17), these override the «Owner choices» above:
+1. Video recordings: allowed ON THIS SERVER now («option 2»). The admin «نوع تسجيل الحلقات» = فيديو starts video egress. When the server is too busy / egress refuses a video start, the lesson falls back to an AUDIO recording, and that fallback is itself a FEATURE FLAG in «القيم» (`recording_video_fallback_audio`, default on; off = a refused video start is logged and the lesson is not recorded). Show the admin the CPU/RAM warning beside the choice.
+2. Recordings storage: MinIO ON (MINIO_RECORDINGS), so encrypted HLS packs recordings. Disk on the shared server grows (~29 MB/h audio, ~300–600 MB/h video, plus the HLS copy).
+3. Originals after packing: KEEP them (no deletion; a lost key only falls back to the protected progressive stream).
+4. Lesson-file PDF/image cap: 10 MiB (fits ayat-pdf's memory).
+Defaults taken (no owner objection): HLS backfill of old family-visible recordings one at a time while no room records; worker cpu_shares 256 (lower priority than the CRM); stamps per lesson date.
