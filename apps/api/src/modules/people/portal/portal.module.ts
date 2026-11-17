@@ -48,6 +48,6 @@ import { PortalScopeRepo } from './scope/portal-scope.repo';
     PortalLessonActions,
     PortalSlotsService,
   ],
-  exports: [PortalScopes],
+  exports: [PortalScopes, PortalReportsRepo],
 })
 export class PortalModule {}

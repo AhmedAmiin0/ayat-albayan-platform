@@ -8,9 +8,6 @@ import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { recordingByLesson, toPortalReport, toPrepare } from './portal-reports.mapper';
 import { PortalReportsRepo } from './portal-reports.repo';
 
-/** How far back a recording's sent report is looked up (the «التسجيلات» list goes this far). */
-const SENT_SCAN = 1000;
-
 interface FileCall {
   user: AuthUser;
   studentId: string;
@@ -58,8 +55,8 @@ export class PortalReportsService {
   async recordingUrl(call: FileCall): Promise<PortalFileUrl> {
     await this.scopes.student(call.user, call.studentId);
     // Every sent report, not the list's newest 60: an old recording still opens.
-    const rows = await this.queries.sent(call.studentId, SENT_SCAN);
-    const visible = await this.queries.visibleRecordings(rows.map((r) => r.lesson_id));
+    const sent = await this.queries.sentLessons(call.studentId);
+    const visible = await this.queries.visibleRecordings([...sent.keys()]);
     const row = visible.find((r) => r.id === call.id);
     if (!row) throw notFound('recording_not_found');
     // A video player keeps range-requesting the same URL while it plays: the UI lifetime (an hour).

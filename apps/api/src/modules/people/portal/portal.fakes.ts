@@ -73,6 +73,7 @@ export async function portalApp() {
     oneSent: vi.fn(async (): Promise<{ id: string; lesson_id: string; sent_at: string; pdf_path: string } | null> => ({ id: R1, lesson_id: L1, sent_at: '2026-10-20T18:00:00.000Z', pdf_path: `${S1}/${L1}.pdf` })),
     visibleRecordings: vi.fn(async () => [{ id: REC, lesson_id: L1, file_path: `lessons/${L1}/a.mp4` }]),
     sentOf: vi.fn(async () => [{ id: R1, lesson_id: 'l-20' }]),
+    sentLessons: vi.fn(async () => new Map([[L1, R1]])),
     texts: vi.fn(async () => ({ homework: ' سورة الملك ', next_plan: '' })),
   };
   const { money, packages, history } = familyFakes();
