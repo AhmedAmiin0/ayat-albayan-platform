@@ -1,5 +1,5 @@
 import { t } from '../../lib/i18n/i18n';
-import { CameraIcon, CameraOffIcon, MicIcon, MicOffIcon, RoundButton } from '../../ui';
+import { CallCameraIcon, CameraOffIcon, CallMicIcon, MicOffIcon, RoundButton } from '../../ui';
 
 const C = t.mobileRoom.controls;
 
@@ -16,7 +16,7 @@ export function MicButton({ on, onPress }: ToggleProps) {
       tone="plain"
       pressed={!on}
       onPress={onPress}
-      icon={(ink) => (on ? <MicIcon color={ink} /> : <MicOffIcon color={ink} />)}
+      icon={(ink) => (on ? <CallMicIcon color={ink} /> : <MicOffIcon color={ink} />)}
     />
   );
 }
@@ -29,7 +29,7 @@ export function CameraButton({ on, onPress }: ToggleProps) {
       tone="plain"
       pressed={on}
       onPress={onPress}
-      icon={(ink) => (on ? <CameraIcon color={ink} /> : <CameraOffIcon color={ink} />)}
+      icon={(ink) => (on ? <CallCameraIcon color={ink} /> : <CameraOffIcon color={ink} />)}
     />
   );
 }

@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
 import { AppText, Button } from '../../ui';
 import { type, useTheme } from '../../theme';
-import { CameraIcon, MicIcon } from '../../ui';
+import { CallCameraIcon, CallMicIcon } from '../../ui';
 
 const P = t.mobileRoom.permission;
 
@@ -24,8 +24,8 @@ export function RoomPermission({ onAllow, onSkip, onBrowser }: RoomPermissionPro
       style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 24, gap: 16 }}
     >
       <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16 }}>
-        <MicIcon color={color.coverInk} size={32} />
-        <CameraIcon color={color.coverInk} size={32} />
+        <CallMicIcon color={color.coverInk} size={32} />
+        <CallCameraIcon color={color.coverInk} size={32} />
       </View>
       <AppText
         accessibilityRole="header"
