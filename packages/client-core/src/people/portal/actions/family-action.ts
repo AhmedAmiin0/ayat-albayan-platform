@@ -1,5 +1,5 @@
 import type { PortalActionResult } from '@ab/shared';
-import { apiErrorCode } from '../../core/http/index.js';
+import { apiErrorCode } from '../../../core/http/index.js';
 import type { FamilyLessonInput, PortalLessonSends } from './lesson-sends.js';
 
 // One family lesson action (owner 2026-11-17), as the family app and the web portal send it, and

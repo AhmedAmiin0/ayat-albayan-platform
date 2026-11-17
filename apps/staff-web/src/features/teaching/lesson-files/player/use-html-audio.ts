@@ -1,4 +1,6 @@
-import { initialPlayer, playerReducer, type PlayerEvent, type PlayerState } from '@ab/client-core';
+import {
+  initialPlayer, playerReducer, type PlayerEvent, type PlayerSpeed, type PlayerState,
+} from '@ab/client-core';
 import { useReducer, useState, type SyntheticEvent } from 'react';
 import { saveResume } from './use-resume';
 
@@ -22,7 +24,8 @@ export interface HtmlAudio {
   controls: {
     toggle: () => void;
     skip: (direction: 1 | -1) => void;
-    cycleSpeed: () => void;
+    setSpeed: (speed: PlayerSpeed) => void;
+    seek: (position: number) => void;
     startOver: () => void;
   };
 }
@@ -88,8 +91,12 @@ function controlsOf({ send, save, playing, failed }: ControlDeps): HtmlAudio['co
       media.currentTime = s.position;
       save(s);
     }),
-    cycleSpeed: () => send({ type: 'speed' }, (s, media) => {
+    setSpeed: (speed) => send({ type: 'speed', speed }, (s, media) => {
       media.playbackRate = s.speed;
+    }),
+    seek: (position) => send({ type: 'seek', position }, (s, media) => {
+      media.currentTime = s.position;
+      save(s);
     }),
     startOver: () => send({ type: 'seek', position: 0 }, (_s, media) => {
       media.currentTime = 0;

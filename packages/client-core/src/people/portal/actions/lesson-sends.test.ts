@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../core/http/index.js';
+import type { ApiClient } from '../../../core/http/index.js';
 import { portalLessonSends, portalSlotsQuery } from './lesson-sends.js';
 
 const RESULT = { lesson_id: 'l1', status: 'confirmed', counts: false };

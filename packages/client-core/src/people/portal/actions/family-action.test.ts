@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError } from '../../core/http/index.js';
+import { ApiError } from '../../../core/http/index.js';
 import { FAMILY_NOTICE, familyErrorOf, familyFailureText, runFamilyAction } from './family-action.js';
 import type { PortalLessonSends } from './lesson-sends.js';
 
