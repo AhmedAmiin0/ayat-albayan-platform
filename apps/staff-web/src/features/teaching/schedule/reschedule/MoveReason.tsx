@@ -13,13 +13,15 @@ export interface MoveReasonProps {
   label?: string;
   /** Default: the teacher reads it in the student file. */
   hint?: string;
+  /** An example of what to write («مثلًا: …»). */
+  placeholder?: string;
 }
 
 /**
  * «سبب تغيير الموعد (اختياري)» on a one-lesson move (docs/47, owner call 4): free text the teacher
  * reads in the student file, said so under the field.
  */
-export function MoveReason({ value, onChange, label, hint }: MoveReasonProps) {
+export function MoveReason({ value, onChange, label, hint, placeholder }: MoveReasonProps) {
   return (
     <Field label={label ?? t.reschedule.reason} hint={hint ?? t.reschedule.reasonHint}>
       {(control) => (
@@ -27,6 +29,7 @@ export function MoveReason({ value, onChange, label, hint }: MoveReasonProps) {
           {...control}
           rows={2}
           maxLength={MAX}
+          placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className={cn(controlClass, 'field-sizing-content min-h-16 py-2 leading-relaxed')}

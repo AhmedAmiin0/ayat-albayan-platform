@@ -23,13 +23,15 @@ export interface RescheduleFormProps {
   lesson: LessonView;
   onBack: () => void;
   onDone: (message: string) => void;
+  /** The week the grid opens on (a family's asked time); default the lesson's own. */
+  near?: string;
 }
 
 /**
  * «تغيير الميعاد» (R-SCH-07, journey 4): pick the new start on the teacher's slot grid; a clash
  * comes back as a 409 and is shown in Arabic with «اختار ميعاد تاني» or book-anyway + reason.
  */
-export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) {
+export function RescheduleForm({ lesson, onBack, onDone, near }: RescheduleFormProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const queryClient = useQueryClient();
   const [scope, setScope] = useState<Scope>('one');
@@ -64,7 +66,7 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
           durationMin={durationMin(lesson)}
           studentIds={lesson.students.map((s) => s.id)}
           studentTz={tz}
-          near={lesson.starts_at}
+          near={near ?? lesson.starts_at}
           value={startsAt}
           onPick={(slot) => {
             move.reset();

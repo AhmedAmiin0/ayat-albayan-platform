@@ -48,6 +48,12 @@ function CorrectSlot({ lesson }: { lesson: LessonView }) {
  */
 export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
   const [mode, setMode] = useState<Mode>('view');
+  // «اختر موعدًا آخر» of a family's request opens the move form on the asked week.
+  const [near, setNear] = useState<string | undefined>(undefined);
+  const reschedule = (at?: string) => {
+    setNear(at);
+    setMode('reschedule');
+  };
   const panel = useRef<HTMLDivElement>(null);
   useFocusOnChange(panel, mode);
   const done = (message: string) => {
@@ -62,7 +68,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
             <LessonDetails lesson={lesson} onEditTime={() => setMode('editTime')} />
             <ClassroomActions lesson={lesson} />
             <LessonInvoice lesson={lesson} />
-            <ProposalBox lesson={lesson} onDone={done} />
+            <ProposalBox lesson={lesson} onDone={done} onPickOther={reschedule} />
             <LessonReportLinks lesson={lesson} role="admin" />
             <LessonFilesSection lessonId={lesson.id} />
             <LessonActions
@@ -70,7 +76,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
               proposalLeads={Boolean(lesson.pending_proposal)}
               onDone={done}
               onCancel={() => setMode('cancel')}
-              onReschedule={() => setMode('reschedule')}
+              onReschedule={() => reschedule()}
               onChangeCourse={() => setMode('courseChange')}
             />
             <CorrectSlot lesson={lesson} />
@@ -81,7 +87,9 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
         {mode === 'cancel' && (
           <CancelForm lesson={lesson} onBack={() => setMode('view')} onDone={done} />
         )}
-        {mode === 'reschedule' && <RescheduleForm lesson={lesson} onBack={() => setMode('view')} onDone={done} />}
+        {mode === 'reschedule' && (
+          <RescheduleForm lesson={lesson} near={near} onBack={() => setMode('view')} onDone={done} />
+        )}
         {mode === 'editTime' && <EditTimeForm lesson={lesson} onBack={() => setMode('view')} onDone={done} />}
         {mode === 'courseChange' && lesson.course_subscription_id && (
           <AdminCourseChange subscriptionId={lesson.course_subscription_id} onBack={() => setMode('view')} onDone={done} />

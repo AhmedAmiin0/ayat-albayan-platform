@@ -15,26 +15,43 @@ interface ProposalAnswerProps {
   note: { value: string; onChange: (value: string) => void };
   onApprove: () => void;
   onReject: () => void;
+  /** «اختر موعدًا آخر» (a family's request): the move form on the week they asked for. */
+  onPickOther: () => void;
 }
 
-/** «وافق على الموعد» / «ارفض» (a family's request: «ارفض الطلب» with its note). */
+const P = t.lessons.proposal;
+
+/**
+ * «وافق على الموعد» / «ارفض» (canvas LessonXWebStaff); a family's request adds the reply they
+ * read, «اختر موعدًا آخر» (the move form on the requested week) and «ارفض الطلب».
+ */
 export function ProposalAnswer(props: ProposalAnswerProps) {
-  const { words, busy, error, note, onApprove, onReject } = props;
-  const P = t.lessons.proposal;
+  const { words, busy, error, note, onApprove, onReject, onPickOther } = props;
   return (
     <>
       {error ? <FormAlert>{lessonErrorText(error)}</FormAlert> : null}
       {words.family && (
-        <MoveReason {...note} label={P.decisionNote} hint={P.decisionNoteHint} />
+        <MoveReason
+          {...note}
+          label={P.decisionNote}
+          hint={P.decisionNoteHint}
+          placeholder={P.decisionNotePlaceholder}
+        />
       )}
       <ButtonRow>
         <Button type="button" disabled={busy} onClick={onApprove}>
           {P.approve}
         </Button>
+        {words.family && (
+          <Button type="button" variant="secondary" disabled={busy} onClick={onPickOther}>
+            {P.pickOther}
+          </Button>
+        )}
         <Button type="button" variant="secondary" disabled={busy} onClick={onReject}>
           {words.reject}
         </Button>
       </ButtonRow>
+      {words.family && <p className="text-xs text-ink-3">{P.pickOtherHint}</p>}
     </>
   );
 }
