@@ -12,7 +12,8 @@
 #                 layout stays as it was: pdf-assets.ts reads apps/staff-web/public/brand/mark.png.
 # The pnpm store lives in a BuildKit cache mount (never in a layer): a lockfile change downloads only
 # the new packages. Measured in CI (job «image», cold): runtime-base 50 s and deps 45 s, both skipped
-# by a source-only change; the build 30 s, the prod install 10 s and the final COPY 7 s.
+# by a source-only change; the build 30 s, the prod install 10 s and the final COPY 7 s. Any
+# workspace package.json (even an app the api never imports) reruns «deps»: pnpm needs them all.
 
 # Report PDFs (R-REP-03): the headless Chromium that playwright-core pins, its system libraries, and
 # Amiri as the Arabic fallback font. The PDF embeds its own Amiri + IBM Plex Sans Arabic
