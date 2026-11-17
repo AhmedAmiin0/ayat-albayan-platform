@@ -1,10 +1,9 @@
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
-import { LessonDetailsSheet } from '@/calendar';
-import { LessonRowActions } from '@/calendar/agenda/LessonRowActions';
+import { LessonDetailsSheet, LessonRowActions } from '@/calendar';
 import { JoinAround } from '@/classroom';
-import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
-import { RescheduleSheet } from '@/teaching/reschedule/RescheduleSheet';
+import { EditTimeSheet } from '@/edit-time';
+import { RescheduleSheet } from '@/teaching';
 import type { useLessonAction } from '@/today/lib/use-lesson-action';
 
 interface AdminLessonSheetProps {
@@ -21,7 +20,8 @@ interface AdminLessonSheetProps {
  * The admin's «تفاصيل الحلقة» (Today, a student's «الحلقات القادمة»): the row's actions under the
  * status («تأكيد», «غيّر الميعاد», «عدّل الوقت», «إلغاء», «ادخل الحلقة») with their sheets.
  */
-export function AdminLessonSheet({ lesson, onClose, action, hereStudentId }: AdminLessonSheetProps) {
+export function AdminLessonSheet(props: AdminLessonSheetProps) {
+  const { lesson, onClose, action, hereStudentId } = props;
   const [moving, setMoving] = useState<LessonView | null>(null);
   const [editing, setEditing] = useState<LessonView | null>(null);
   return (
