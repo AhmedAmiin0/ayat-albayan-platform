@@ -36,6 +36,7 @@ export {
   useHideRights,
   useHolds,
   useIsAdmin,
+  useIsTestAccount,
   useMeActor,
   useMeId,
   useMeReady,

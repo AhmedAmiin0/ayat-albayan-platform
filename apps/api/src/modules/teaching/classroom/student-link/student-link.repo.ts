@@ -5,6 +5,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 import { dbError } from '@/common/http/http';
 import { hashLinkToken, linkExpiry, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import type { LinkStudent } from './student-link.flags';
 
 type StudentLinkRow = Pick<Tables<'student_join_links'>, 'id' | 'student_id' | 'revoked_at'>;
 type LessonTimes = 'id' | 'starts_at' | 'ends_at' | 'room_opened_at' | 'room_ended_at';
@@ -33,8 +34,9 @@ export class StudentLinkRepo {
     return joinWindowConfig(await this.settings.read());
   }
 
-  async student(id: string): Promise<{ id: string; name: string } | null> {
-    const { data, error } = await this.db.from('students').select('id, name').eq('id', id).maybeSingle();
+  /** is_test: the student half of the double condition (docs/56). */
+  async student(id: string): Promise<LinkStudent | null> {
+    const { data, error } = await this.db.from('students').select('id, name, is_test').eq('id', id).maybeSingle();
     if (error) throw dbError(error);
     return data;
   }

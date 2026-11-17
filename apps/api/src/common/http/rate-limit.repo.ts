@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { canSkip, userOnlyFlags } from '@ab/shared';
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 
@@ -9,6 +10,11 @@ interface PublicTake {
   /** Plain bucket keys (digested here) and each one's max in the window. */
   buckets: readonly { key: string; max: number }[];
   windowMs: number;
+  /**
+   * The signed-in profile's is_test (docs/56): a test login is not counted. The public routes have
+   * no signed-in profile and leave it out, so they always count.
+   */
+  userIsTest?: boolean;
 }
 
 /**
@@ -23,6 +29,7 @@ export class RateLimitRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async takeOrThrow(take: PublicTake): Promise<void> {
+    if (canSkip('rate_limits', userOnlyFlags(take.userIsTest))) return;
     const { data, error } = await this.db.rpc('rate_limit_take', {
       p_buckets: take.buckets.map((b) => digest(b.key)),
       p_maxes: take.buckets.map((b) => b.max),

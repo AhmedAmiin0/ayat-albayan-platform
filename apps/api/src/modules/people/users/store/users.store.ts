@@ -19,6 +19,8 @@ export interface UserRow {
   linked: LinkedRecord | null;
   /** A teacher's sign-in username (docs/30). */
   username?: string | null;
+  /** profiles.is_test (docs/56); absent = a real login. */
+  is_test?: boolean;
   /** Detail only (the list RPC does not return them). */
   locale?: string | null;
   tz?: string;

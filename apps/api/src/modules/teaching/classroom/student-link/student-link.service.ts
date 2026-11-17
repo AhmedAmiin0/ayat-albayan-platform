@@ -10,7 +10,11 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { parseOrThrow } from '@/common/http/http';
 import { FamilyJoinLinks } from '@/modules/teaching/classroom/family-link/family-join.links';
-import { assertNotEnded, assertWindowOpen } from '@/modules/teaching/classroom/join/join-gate';
+import {
+  assertNotEnded,
+  assertWindowOpen,
+  windowCheckFor,
+} from '@/modules/teaching/classroom/join/join-gate';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
 import {
   hashLinkToken,
@@ -18,18 +22,14 @@ import {
   looksLikeLinkToken,
 } from '@/modules/teaching/classroom/join/join-link.token';
 import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
+import { flagsOf, type LinkStudent, type PortalLessonInput } from './student-link.flags';
 import { StudentLinkRepo, type StudentLesson } from './student-link.repo';
 
 const MS = 1000;
 const ONE_DAY_S = 86_400;
 type PublicCall = { token: string; ip: string };
-interface PortalLessonInput {
-  lessonId: string;
-  studentId: string;
-  profileId: string;
-}
 type PortalLesson = Omit<Resolved, 'lesson'> & { lesson: StudentLesson };
-type Resolved = { student: { id: string; name: string }; lesson: StudentLesson | null; win: JoinWindowConfig };
+type Resolved = { student: LinkStudent; lesson: StudentLesson | null; win: JoinWindowConfig };
 
 /**
  * The student's own link (/s/<token>, no login): «حلقتك القادمة …» and «ادخل الحلقة» for whichever
@@ -76,11 +76,13 @@ export class StudentLinkService {
    * login's own. The same guest admission as join() for ONE lesson of that student, through the one
    * (lesson, student) link row, so a room removal holds and no token is handed out (the WhatsApp link on
    * that row keeps working). 404 no_lesson (not theirs or over), 403 join_not_open_yet, 410, 429, 503.
+   * A test login on a test student skips the window; a test login is not rate limited (docs/56).
    */
   async portalJoin(input: PortalLessonInput, now = new Date()): Promise<RoomJoinResult> {
-    this.limit.assert({ ip: `portal:${input.profileId}`, token: input.lessonId }, now.getTime());
+    const key = { ip: `portal:${input.profileId}`, token: input.lessonId, userIsTest: input.userIsTest };
+    this.limit.assert(key, now.getTime());
     const { student, lesson, win } = await this.portalLesson(input, now);
-    assertWindowOpen(lesson, now, win);
+    windowCheckFor(flagsOf(input, student))(lesson, now, win);
     return this.admitTo({ lesson, student, win, now });
   }
 
@@ -90,7 +92,7 @@ export class StudentLinkService {
    * the window too (the page refuses early joins). 404 no_lesson, 410 lesson_ended, 429, 503.
    */
   async portalRoomLink(input: PortalLessonInput, now = new Date()): Promise<PortalRoomLink> {
-    const key = { ip: `portal-link:${input.profileId}`, token: input.lessonId };
+    const key = { ip: `portal-link:${input.profileId}`, token: input.lessonId, userIsTest: input.userIsTest };
     this.limit.assert(key, now.getTime());
     const { lesson, win } = await this.portalLesson(input, now);
     assertNotEnded(lesson);
@@ -121,7 +123,7 @@ export class StudentLinkService {
     }
   }
 
-  private async admitTo(input: { lesson: StudentLesson; student: { id: string; name: string }; win: JoinWindowConfig; now: Date; name?: string }): Promise<RoomJoinResult> {
+  private async admitTo(input: { lesson: StudentLesson; student: LinkStudent; win: JoinWindowConfig; now: Date; name?: string }): Promise<RoomJoinResult> {
     const { lesson, student, win, now } = input;
     const joinLinkId = await this.queries.lessonLinkId({ lesson, studentId: student.id });
     const closesS = Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) - Math.floor(now.getTime() / MS);

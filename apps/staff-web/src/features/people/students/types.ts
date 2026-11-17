@@ -17,6 +17,8 @@ export type StudentListItem = StudentRef & {
   package_remaining?: number | null;
   /** On an active weekly schedule rule. */
   has_weekly?: boolean;
+  /** A test student (docs/56); absent from an older API = real. */
+  is_test?: boolean;
 };
 
 export type StudentProfile = StudentRef & {
@@ -34,6 +36,8 @@ export type StudentProfile = StudentRef & {
   notes: string | null;
   /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); absent from an older API = false. */
   contact_is_self?: boolean;
+  /** A test student (docs/56); absent from an older API = real. */
+  is_test?: boolean;
   /** phones: the main number and a second one (owner 2026-10-29); absent from an older API (secondPhoneOf). */
   guardian: { id: string; name: string; phone_e164: string; phones?: FamilyPhone[] };
   teacher: { id: string; display_name_ar: string; meeting_link: string | null } | null;

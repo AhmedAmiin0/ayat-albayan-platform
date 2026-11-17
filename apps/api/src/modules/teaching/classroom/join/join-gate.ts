@@ -1,9 +1,11 @@
 import {
+  canSkip,
   DEFAULT_JOIN_WINDOW,
   isClosedLesson,
   joinWindow,
   roomEnded,
   type JoinWindowConfig,
+  type TestFlags,
   type WindowLesson,
 } from '@ab/shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
@@ -40,6 +42,17 @@ export function assertWindowOpen(
   }
   if (w.state === 'closed') throw gone('join_closed');
 }
+
+type WindowCheck = typeof assertWindowOpen;
+/** Skips the window only: a lesson ended for everyone stays closed to a test login too. */
+const windowSkipped: WindowCheck = (lesson) => assertNotEnded(lesson);
+
+/**
+ * The window check for these flags (docs/56): no window only when a test login joins a lesson of
+ * test students (canSkip('join_window'), the double condition); anyone else gets assertWindowOpen.
+ */
+export const windowCheckFor = (flags: TestFlags): WindowCheck =>
+  canSkip('join_window', flags) ? windowSkipped : assertWindowOpen;
 
 /** 503 classroom_not_configured: LIVEKIT_* are not set on this server. */
 export const notConfigured = (): HttpException =>

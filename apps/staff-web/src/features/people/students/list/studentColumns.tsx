@@ -5,6 +5,7 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { pickColumn } from '@/features/people/assistants/students/pick-column';
 import type { PickColumn } from '@/features/people/assistants/students/use-student-pick';
+import { TestChip } from '@/features/people/test-accounts';
 import { t } from '@/lib/i18n/i18n';
 import { stacked } from './stacked-rows';
 import { studentNote } from '@/features/people/students/profile/student-note';
@@ -46,6 +47,7 @@ export function studentColumns(onOpen: (studentId: string) => void, pick?: PickC
           >
             {c.getValue()}
           </button>
+          <TestChip when={c.row.original.is_test === true} className="mt-1" />
           {/* TODO(R-STU-05): «9 سنين، الرياض» sub-line once the list returns age (no city column yet). */}
           <StudentNote text={studentNote(c.row.original)} className="mt-[3px] hidden text-2xs @max-[940px]:block" />
         </>

@@ -3561,6 +3561,7 @@ export type Database = {
           disabled_reason: string | null;
           full_name: string;
           id: string;
+          is_test: boolean;
           locale: string | null;
           phone_e164: string | null;
           push_tokens: string[];
@@ -3578,6 +3579,7 @@ export type Database = {
           disabled_reason?: string | null;
           full_name: string;
           id: string;
+          is_test?: boolean;
           locale?: string | null;
           phone_e164?: string | null;
           push_tokens?: string[];
@@ -3595,6 +3597,7 @@ export type Database = {
           disabled_reason?: string | null;
           full_name?: string;
           id?: string;
+          is_test?: boolean;
           locale?: string | null;
           phone_e164?: string | null;
           push_tokens?: string[];
@@ -4522,6 +4525,7 @@ export type Database = {
           goal: string | null;
           guardian_id: string;
           id: string;
+          is_test: boolean;
           level: string | null;
           meeting_link_override: string | null;
           memorized: string | null;
@@ -4550,6 +4554,7 @@ export type Database = {
           goal?: string | null;
           guardian_id: string;
           id?: string;
+          is_test?: boolean;
           level?: string | null;
           meeting_link_override?: string | null;
           memorized?: string | null;
@@ -4578,6 +4583,7 @@ export type Database = {
           goal?: string | null;
           guardian_id?: string;
           id?: string;
+          is_test?: boolean;
           level?: string | null;
           meeting_link_override?: string | null;
           memorized?: string | null;
@@ -6280,6 +6286,10 @@ export type Database = {
       report_of_path: { Args: { p_name: string }; Returns: string };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };
       create_recurring_expense_drafts: { Args: { p_month: string }; Returns: number };
+      set_test_flag: {
+        Args: { p_actor: string; p_id: string; p_is_test: boolean; p_kind: string };
+        Returns: Json;
+      };
       set_assistant_terms: {
         Args: { p: Json; p_actor: string; p_assistant: string };
         Returns: undefined;

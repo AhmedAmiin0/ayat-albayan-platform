@@ -9297,5 +9297,17 @@
     "duration": "Duration: {at}",
     "size": "Size: {size}",
     "waiting": "Waiting"
+  },
+  "testAccounts": {
+    "chip": "Test",
+    "userSwitch": "Test account",
+    "studentSwitch": "Test student",
+    "hint": "This mode grants no extra access to any data.",
+    "confirmOn": "A test account skips the watermark, rate limits, the lesson join window and the screen-capture block, with test students only. The whole family changes. Continue?",
+    "confirmOff": "Every check applies again, for the whole family. Continue?",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "mismatch": "A family cannot mix a test account with a real student.",
+    "failed": "The change could not be saved. Try again."
   }
 }

@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { dbPermissionResolver } from './db-permission.resolver';
 import { PermissionCache } from './permission.cache';
+import { TestFlagReader } from './test-flag/test-flag.reader';
+import type { TestFlagRepo } from './test-flag/test-flag.repo';
 import { AccountDisabledError, can } from './permissions';
 import type { AuthUser } from './verify-token';
 
@@ -13,10 +15,18 @@ const roleRow = (key: string, isSystem: boolean, perms: string[]) => ({
 
 function setup(tables: Record<string, FakeResult[]>) {
   const fake = fakeDb(tables);
-  return { ...fake, resolve: dbPermissionResolver({ db: fake.db, cache: new PermissionCache() }) };
+  const flags = new TestFlagReader({ ofProfile: async (id: string) => id === 'tester' } as TestFlagRepo);
+  const resolve = dbPermissionResolver({ db: fake.db, cache: new PermissionCache(), flags });
+  return { ...fake, resolve };
 }
 
 describe('dbPermissionResolver', () => {
+  it('isTest: profiles.is_test through TestFlagReader, never from the token', async () => {
+    const { resolve } = setup({});
+    await expect(resolve.isTest?.(user('guardian', 'tester'))).resolves.toBe(true);
+    await expect(resolve.isTest?.(user('admin'))).resolves.toBe(false);
+  });
+
   it('reads the system role of profiles.role when role_id is null', async () => {
     const { resolve, calls } = setup({
       profiles: [{ data: { role: 'teacher', role_id: null } }],
