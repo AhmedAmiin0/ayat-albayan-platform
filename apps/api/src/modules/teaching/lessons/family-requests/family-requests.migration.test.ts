@@ -6,7 +6,6 @@ import { describe, expect, it } from 'vitest';
 const dir = join(__dirname, '../../../../../../../packages/db/supabase/migrations');
 const sql = readFileSync(join(dir, '20261117100100_family_lesson_requests.sql'), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trimStart().startsWith('--')).join('\n');
-const view = code.slice(code.indexOf('view public.portal_lesson_requests'), code.indexOf('revoke all'));
 
 describe('migration 20261117100100: the family requests', () => {
   it('adds the requester and the answer note re-runnably; the new enum values only added', () => {
@@ -17,12 +16,9 @@ describe('migration 20261117100100: the family requests', () => {
     expect(code).toContain("alter type public.push_kind add value if not exists 'lesson_request_declined'");
   });
 
-  it("a portal login sees its own students' family requests only, without staff or teacher ids", () => {
-    expect(view).toContain('security_invoker = false');
-    expect(view).toContain("p.requested_by = 'family'");
-    expect(view).toContain('ls.student_id in (select public.portal_student_ids())');
-    expect(view).not.toMatch(/teacher_id|decided_by|created_by/);
-    expect(code).toContain('revoke all on public.portal_lesson_requests from public, anon');
+  it('no portal view: a portal login reads its own requests through the API only', () => {
+    expect(code).not.toContain('portal_lesson_requests');
+    expect(code).not.toContain('security_invoker');
   });
 
   it("the owning assistant reads her families' requests (RLS)", () => {
