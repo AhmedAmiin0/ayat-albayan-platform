@@ -1,2 +1,2 @@
-/** The owning assistant's student chat: a full screen above her tabs (no bar over «أرسل»). */
+/** The assistant's student chat (her seat first): a full screen above her tabs. */
 export { SalesChannelScreen as default } from '@/student-file';

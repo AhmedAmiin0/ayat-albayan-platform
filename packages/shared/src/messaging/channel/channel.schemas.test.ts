@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ChannelPage } from './channel-views.js';
-import { channelPageSchema, channelReadsSchema } from './channel.schemas.js';
+import { channelPageSchema, channelReadsSchema, channelSeatSchema } from './channel.schemas.js';
 
 const message = {
   ...{ id: 'm1', body: 'السلام عليكم', sender_role: 'guardian' as const, sender_name: 'أم سلمى' },
@@ -91,5 +91,22 @@ describe('a message’s reads', () => {
     };
     expect(channelReadsSchema.parse(reads).unread).toEqual([{ name: 'سلمى', role: 'unknown' }]);
     expect(channelReadsSchema.safeParse({ read: [] }).success).toBe(false);
+  });
+});
+
+// Owner 2026-11-16 «… but only 1»: the seat answer, a name only.
+describe('the assistant seat as the apps read it', () => {
+  const held = { holder: { id: 'p1', name: 'سارة' }, mine: false, bringer: false, canTake: false };
+
+  it('reads a held seat and a free one', () => {
+    expect(channelSeatSchema.parse(held)).toEqual(held);
+    const free = { ...held, holder: null, canTake: true };
+    expect(channelSeatSchema.parse(free)).toEqual(free);
+  });
+
+  it('drops anything but the name, refuses a missing flag', () => {
+    const phone = { ...held, holder: { ...held.holder, phone: '+966500000000' } };
+    expect(channelSeatSchema.parse(phone).holder).toEqual(held.holder);
+    expect(channelSeatSchema.safeParse({ ...held, canTake: undefined }).success).toBe(false);
   });
 });

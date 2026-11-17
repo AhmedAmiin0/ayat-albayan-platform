@@ -5,6 +5,7 @@ import { Select } from '@/components/ui/form/select';
 import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
 import { t } from '@/lib/i18n/i18n';
 import { TextField } from '@/features/people/students/people-edit/TextField';
+import { StudentPhoneField } from './StudentPhoneField';
 
 const F = t.peopleEdit.fields;
 const TEXTS = ['name', 'level', 'memorized', 'goal', 'riwaya', 'notes'] as const;
@@ -47,6 +48,11 @@ export function StudentFields({ value, onChange, invalid, notes }: StudentFields
           onValue={(v) => onChange({ [key]: v })}
         />
       ))}
+      <StudentPhoneField
+        value={value.phone_e164}
+        error={error('phone_e164')}
+        onValue={(phone_e164) => onChange({ phone_e164 })}
+      />
       <TextField
         label={F.age}
         value={value.age}

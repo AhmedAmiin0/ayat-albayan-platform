@@ -34,7 +34,7 @@ describe('student channel presence over HTTP', () => {
     });
   });
 
-  it('the teacher and the owning assistant see the family app users, not the teacher', async () => {
+  it('the teacher and the seated assistant see the family app users, not the teacher', async () => {
     expect(ids((await t.call('GET', TEACHER, 'teacher')).json())).toEqual(['p-g', 'p-s']);
     expect(ids((await t.call('GET', SALES, 'sales')).json())).toEqual(['p-g', 'p-s']);
   });

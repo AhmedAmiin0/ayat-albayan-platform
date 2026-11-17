@@ -27,10 +27,10 @@ export const blocksFamily = (holder: ProfileRec | null): boolean =>
   holder !== null && holder.role !== 'teacher';
 
 /** A login the code may open: present, enabled and of the record's own role. */
-const usableAs = (p: ProfileRec | null, role: UserRole): p is ProfileRec =>
+export const usableAs = (p: ProfileRec | null, role: UserRole): p is ProfileRec =>
   p !== null && !p.disabled && p.role === role;
 
-const refused = (): never => {
+export const refused = (): never => {
   throw forbidden('account_disabled');
 };
 

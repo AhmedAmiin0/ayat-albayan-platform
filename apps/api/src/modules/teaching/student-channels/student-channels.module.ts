@@ -20,12 +20,14 @@ import { ChannelReadsRepo } from './reads/channel-reads.repo';
 import { ChannelReadsService } from './reads/channel-reads.service';
 import { ChannelSendInputs } from './send/channel-send-inputs';
 import { ChannelSender } from './send/channel-sender';
+import { ChannelSeatRepo } from './seat/channel-seat.repo';
+import { ChannelSeatService } from './seat/channel-seat.service';
 import { ChannelViews } from './views/channel-views.service';
 
 /**
  * The student channel (docs/31 §2): an in-platform teacher ↔ family chat per student, opened by the
- * students INSERT trigger (migration 800); the owning assistant writes too (owner 2026-11-16),
- * student_channels.monitor only reads.
+ * students INSERT trigger (migration 800); the one assistant in its seat writes too (owner
+ * 2026-11-16, ChannelSeatService), student_channels.monitor only reads.
  * PushService and StorageService come from global modules. Edit / delete (owner 2026-10-30):
  * ChannelEdits.
  */
@@ -54,6 +56,8 @@ import { ChannelViews } from './views/channel-views.service';
     ChannelSendInputs,
     ChannelSender,
     ChannelViews,
+    ChannelSeatRepo,
+    ChannelSeatService,
   ],
 })
 export class StudentChannelsModule {}

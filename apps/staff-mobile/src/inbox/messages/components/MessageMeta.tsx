@@ -32,6 +32,7 @@ function ticksOf(m: MessageView, cycle: ClockCycle, onTicksPress?: () => void) {
   const times = deliveryTimes(m, { cycle });
   return {
     status: m.status,
+    errorCode: m.error_code,
     times,
     onPress: onTicksPress,
     actionLabel: onTicksPress ? action : undefined,

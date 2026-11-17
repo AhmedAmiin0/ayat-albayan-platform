@@ -10,7 +10,7 @@ import {
 const MiB = 1024 * 1024;
 const file = (mime: string, size: number) => ({ mime, size, name: 'ملف' });
 
-describe('channel files: types and size caps (migration 20261117000100)', () => {
+describe('channel files: types and size caps (migration 20261117090300)', () => {
   it('photos and voice notes up to 10 MiB, a PDF up to 15 MiB', () => {
     expect(channelUploadSchema.safeParse(file('image/png', 10 * MiB)).success).toBe(true);
     expect(channelUploadSchema.safeParse(file('image/jpeg', 10 * MiB + 1)).success).toBe(false);

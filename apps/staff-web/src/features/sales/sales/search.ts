@@ -15,18 +15,17 @@ export function parseSalesSubscriptionsSearch(s: Record<string, unknown>): { kin
 /** /sales/students search: anything malformed is dropped (`.catch`), never an error page. */
 const studentsSearch = z.object({
   view: z.literal('mine').optional().catch(undefined),
-  chat: z.string().regex(UUID).optional().catch(undefined),
+  student: z.string().regex(UUID).optional().catch(undefined),
 });
 type StudentsSearch = z.infer<typeof studentsSearch>;
 
 /**
  * /sales/students: `?view=mine` filters to «طلابي»; every student is the default and stays out of
- * the URL. `?chat=<student id>` opens that student's chat in a panel (a chat push, a lead family's
- * child who is not in «طلابي»).
+ * the URL. `?student=<uuid>` opens that student's chat (a chat notification, owner 2026-11-16).
  */
 export function parseStudentsSearch(s: Record<string, unknown>): StudentsSearch {
-  const { view, chat } = studentsSearch.parse(s);
-  return { ...(view ? { view } : {}), ...(chat ? { chat } : {}) };
+  const { view, student } = studentsSearch.parse(s);
+  return { ...(view ? { view } : {}), ...(student ? { student } : {}) };
 }
 
 /** /sales/earnings «محفظتي»: `?view=statements` «الكشوف», `?view=payments` «مدفوعاتي»; «العمولات» is the default. */

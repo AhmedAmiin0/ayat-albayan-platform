@@ -161,21 +161,9 @@
       "count": 4
     }
   },
-  "ci-checks/e2e-areas/select.mjs": {
-    "ab/no-if-chains": {
-      "count": 2
-    },
+  "ci-checks/e2e-areas/select-bundle.mjs": {
     "ab/no-shape-checks": {
       "count": 2
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 10
-    },
-    "max-len": {
-      "count": 5
     }
   },
   "ci-checks/e2e-shards.mjs": {

@@ -8502,14 +8502,9 @@
       "count": 3
     }
   },
-  "src/features/sales/sales/students/SalesStudents.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/features/sales/sales/students/my-student-columns.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1

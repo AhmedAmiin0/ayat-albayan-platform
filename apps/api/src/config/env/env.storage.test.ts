@@ -17,6 +17,7 @@ describe('storage config (docs/45)', () => {
       minio: null,
       recordings: false,
       driveBackup: false,
+      egress: null,
     });
   });
 
@@ -34,6 +35,7 @@ describe('storage config (docs/45)', () => {
       },
       recordings: false,
       driveBackup: false,
+      egress: null,
     });
   });
 

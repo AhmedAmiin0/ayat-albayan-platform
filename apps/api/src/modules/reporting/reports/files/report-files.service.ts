@@ -8,6 +8,7 @@ import type {
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { attachmentPath, BUCKETS, isPathOf } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
+import { SNIFF_BYTES, sniffMime } from '@/common/storage/file-sniff';
 import { reportFileName } from '@/modules/reporting/report-pdf/report-ready';
 import { badRequest, conflict } from '@/common/http/errors';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
@@ -56,11 +57,16 @@ export class ReportFilesService {
     return this.storage.signedUpload({ bucket: BUCKETS.attachments, path: attachmentPath({ reportId: id, mime: file.mime }), file });
   }
 
-  /** R8: registers an uploaded object; the path must be under this report and exist (400 attachment_path). */
+  /**
+   * R8: registers an uploaded object; the path must be under this report and exist (400
+   * attachment_path), and its first bytes must be the mime it was sent as (400 attachment_type).
+   */
   async register({ id, user, file }: FileRef & { file: AttachmentRegister }): Promise<ReportAttachmentView> {
     await this.gate.editable(id, user);
-    const ref = { bucket: BUCKETS.attachments, path: file.path };
-    if (!isPathOf(file.path, id) || !(await this.storage.exists(ref))) throw badRequest('attachment_path');
+    if (!isPathOf(file.path, id)) throw badRequest('attachment_path');
+    const head = await this.storage.head({ bucket: BUCKETS.attachments, path: file.path }, SNIFF_BYTES);
+    if (!head) throw badRequest('attachment_path');
+    if (sniffMime(head) !== file.mime) throw badRequest('attachment_type');
     return this.files.add({ report_id: id, storage_path: file.path, mime: file.mime, size: file.size, created_by: callerActor(user) });
   }
 

@@ -64,7 +64,7 @@ export class ChannelFilesController {
     @ZodBody(channelUploadSchema) file: ChannelUpload,
     @CurrentUser() user: AuthUser,
   ): Promise<SignedUpload> {
-    return this.media.uploadUrl(await this.access.owner(user, studentId), file);
+    return this.media.uploadUrl(await this.access.assistant(user, studentId), file);
   }
 
   @Get(`teachers/me/channels/:studentId/${READS}`)
@@ -91,7 +91,7 @@ export class ChannelFilesController {
     @ZodParams(studentIds) p: StudentIds,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelReads> {
-    return this.reads.reads(await this.access.owner(user, p.id), p.messageId);
+    return this.reads.reads(await this.access.assistant(user, p.id), p.messageId);
   }
 
   @Get(`students/:id/channel/${READS}`)

@@ -13,10 +13,10 @@ import { BUCKETS } from '@/common/storage/storage.paths';
 // The chat upgrade (docs/31 §2), read as text: no database in unit tests (applied twice and
 // exercised on a scratch Postgres 16 when written).
 const strip = (s: string) => s.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
-const sql = strip(readFileSync(join(MIGRATIONS_DIR, '20261117000100_channel_media.sql'), 'utf8'));
+const sql = strip(readFileSync(join(MIGRATIONS_DIR, '20261117090300_channel_media.sql'), 'utf8'));
 const quoted = (list: string) => [...list.matchAll(/'([a-z0-9/]+)'/g)].map((m) => m[1]);
 
-describe('migration 20261117000100: files, replies, client ids, forward-only read marks', () => {
+describe('migration 20261117090300: files, replies, client ids, forward-only read marks', () => {
   it('the kinds and the body rule match the shared contract; empty only with a file', () => {
     expect(quoted(/check \(kind in \(([^)]*)\)/.exec(sql)?.[1] ?? '')).toEqual([...CHANNEL_MESSAGE_KINDS]);
     expect(sql).toContain(

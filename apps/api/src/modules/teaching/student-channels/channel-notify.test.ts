@@ -9,7 +9,8 @@ import type { FamilyChatSettings } from './family-chat.settings';
 import { ChannelMembers } from './reads/channel-members';
 
 // Owner 2026-11-16 «all 4 will receive the message teacher guardian student and the assistant»:
-// everyone in the chat but the sender; the family only while family_chat_enabled is on.
+// everyone in the chat but the sender; the family only while family_chat_enabled is on; the
+// assistant is the one in the seat («… but only 1»).
 
 interface Person {
   profile_id: string;
@@ -29,15 +30,16 @@ const NAMES: ReadonlyMap<string, string> = new Map([['p-t', 'أ. هدى'], ['p-g
 
 interface Setup {
   members?: Person[];
-  owners?: string[];
+  /** The seat holder (owner 2026-11-16 «… but only 1»); null = a free seat. */
+  assistant?: string | null;
   familyOn?: boolean;
 }
 
 function notifier(setup: Setup = {}) {
-  const { members = [TEACHER, GUARDIAN, STUDENT], owners = ['p-a'], familyOn = true } = setup;
+  const { members = [TEACHER, GUARDIAN, STUDENT], assistant = 'p-a', familyOn = true } = setup;
   const push = { notifyProfiles: vi.fn(async (_target: PushTarget) => undefined) };
   const people = {
-    ownerIds: vi.fn(async () => owners),
+    assistantId: vi.fn(async () => assistant),
     students: vi.fn(async () => [{ id: 'st1', name: 'سارة', code: 'AB-0201' }]),
     names: vi.fn(async (ids: readonly string[]) =>
       new Map([...NAMES].filter(([id]) => ids.includes(id))),
@@ -106,15 +108,15 @@ describe('ChannelNotify: who hears a chat message', () => {
     expect(await toldIds('teacher', { familyOn: false })).toEqual(['p-a']);
   });
 
-  it('a student without a login, a guardian without one, no owner: only who exists', async () => {
+  it('a student without a login, a guardian without one, a free seat: only who exists', async () => {
     expect(await toldIds('teacher', { members: [TEACHER, GUARDIAN] })).toEqual(['p-g', 'p-a']);
     expect(await toldIds('teacher', { members: [TEACHER, STUDENT] })).toEqual(['p-s', 'p-a']);
-    expect(await toldIds('guardian', { owners: [] })).toEqual(['p-t', 'p-s']);
+    expect(await toldIds('guardian', { assistant: null })).toEqual(['p-t', 'p-s']);
   });
 
-  it('never the sender, each once (an owner who also teaches the student)', async () => {
-    const ids = await toldIds('teacher', { owners: ['p-t', 'p-a', 'p-a'] });
-    expect(ids).toEqual(['p-g', 'p-s', 'p-a']);
+  it('one assistant only: the seat holder, never the sender', async () => {
+    expect(await toldIds('teacher', { assistant: 'p-b' })).toEqual(['p-g', 'p-s', 'p-b']);
+    expect(await toldIds('sales', { assistant: 'p-a' })).toEqual(['p-t', 'p-g', 'p-s']);
   });
 
   it('a monitor writes nothing and so notifies nobody', async () => {

@@ -1,18 +1,17 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import { SalesChannelDialog } from './SalesChannelDialog';
+import { SeatChatDialog } from './SeatChatDialog';
+import type { ChannelSeatApi } from './use-channel-seat';
 
-/**
- * The owning assistant's «المحادثة» on a row of «طلابي»: the student's channel in a panel, where
- * she writes too (owner 2026-11-16); a closed channel stays read-only.
- */
-interface Props {
+interface SeatChatButtonProps {
   studentId: string;
   studentName: string;
+  seat: ChannelSeatApi;
 }
 
-export function MonitorChannelButton({ studentId, studentName }: Props) {
+/** The seat holder's «المحادثة» (owner 2026-11-16): opens the student's chat panel. */
+export function SeatChatButton({ studentId, studentName, seat }: SeatChatButtonProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -20,9 +19,10 @@ export function MonitorChannelButton({ studentId, studentName }: Props) {
         {t.studentChannel.open}
       </Button>
       {open && (
-        <SalesChannelDialog
+        <SeatChatDialog
           studentId={studentId}
           studentName={studentName}
+          seat={seat}
           onClose={() => setOpen(false)}
         />
       )}

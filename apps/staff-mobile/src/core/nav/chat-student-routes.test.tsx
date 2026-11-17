@@ -1,7 +1,12 @@
 import { AdminReportScreen, AdminStudentReportsScreen } from '@/ops';
 import { PaymentScreen } from '@/payments';
 import { AttendanceLogScreen, SalesStudentScreen } from '@/sales/sales';
-import { AdminChannelScreen, StudentMoneyScreen, StudentRecordingsScreen } from '@/student-file';
+import {
+  AdminChannelScreen,
+  SalesChannelScreen,
+  StudentMoneyScreen,
+  StudentRecordingsScreen,
+} from '@/student-file';
 import { StudentScreen } from '@/students';
 import { SubscribeScreen } from '@/subscribe';
 import { TrialDateScreen } from '@/trial-date';
@@ -17,6 +22,7 @@ import AdminSubscribe from '../../../app/(admin-chat)/inbox/student/subscribe';
 import AdminTrialDate from '../../../app/(admin-chat)/inbox/student/trial-date/[studentId]';
 import SalesAttendance from '../../../app/(sales-chat)/sales/inbox/student/[id]/attendance';
 import SalesFile from '../../../app/(sales-chat)/sales/inbox/student/[id]';
+import SalesChannel from '../../../app/(sales-chat)/sales/inbox/student/channel/[id]';
 import { chatStudentHref } from './tree-base';
 
 // Review 2026-10-30: every route the student file opened from a chat links to (useStudentHref) has its copy in
@@ -34,6 +40,7 @@ test.each([
   ['/students/trial-date/s1', '/inbox/student/trial-date/s1', [AdminTrialDate, TrialDateScreen]],
   ['/sales/students/s1', '/sales/inbox/student/s1', [SalesFile, SalesStudentScreen]],
   ['/sales/students/s1/attendance', '/sales/inbox/student/s1/attendance', [SalesAttendance, AttendanceLogScreen]],
+  ['/sales/students/channel/s1', '/sales/inbox/student/channel/s1', [SalesChannel, SalesChannelScreen]],
 ] as const)('%s from a chat opens %s, the same screen', (tab, chat, [copy, screen]) => {
   expect(chatStudentHref(tab)).toBe(chat);
   expect(copy).toBe(screen);

@@ -55,14 +55,14 @@ describe('report PDF (R6, R12) and attachments (R7–R10; R-REP-02/03)', () => {
   });
 
   it('register: only an uploaded path under this report (400 attachment_path)', async () => {
-    h.storage.exists.mockResolvedValue(true);
+    h.storage.head.mockResolvedValue(Uint8Array.of(0x89, 0x50, 0x4e, 0x47));
     h.files.add.mockResolvedValue(FILE);
     const ok = await h.call({ method: 'POST', url: `${BASE}/attachments`, body: { mime: 'image/png', size: 900, path: FILE.storage_path } });
     expect(ok.statusCode).toBe(201);
     expect(h.files.add).toHaveBeenCalledWith(expect.objectContaining({ report_id: REPORT_ID, storage_path: FILE.storage_path }));
     const other = await h.call({ method: 'POST', url: `${BASE}/attachments`, body: { mime: 'image/png', size: 9, path: 'other/x.png' } });
     expect(other.json().code).toBe('attachment_path');
-    h.storage.exists.mockResolvedValue(false);
+    h.storage.head.mockResolvedValue(null);
     const missing = await h.call({ method: 'POST', url: `${BASE}/attachments`, body: { mime: 'image/png', size: 9, path: FILE.storage_path } });
     expect(missing.json().code).toBe('attachment_path');
   });

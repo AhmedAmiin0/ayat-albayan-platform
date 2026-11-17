@@ -11,7 +11,8 @@ DEST="${1:-/var/backups/ayat-minio}"
 NETWORK=ayat-albayan-staging_default
 # The MinIO image, as pinned in docker-compose.yml (compose-minio.test.mjs keeps them equal).
 MC_IMAGE=cgr.dev/chainguard/minio@sha256:aea6c163749e1caca37f907976dcf337177ddf5f558808f2aa591618fd3a6eef
-BUCKETS="reports report-attachments receipts invoices wa-media recordings avatars channel-media"
+# Every bucket but recordings (REC-4): a deleted or expired recording must not live on in a backup.
+BUCKETS="reports report-attachments receipts invoices wa-media avatars channel-media"
 
 # One value of an env file (the last line for that key), without sourcing the whole file.
 val() { sed -n "s/^$2=//p" "$DIR/$1" 2>/dev/null | tail -n 1; }

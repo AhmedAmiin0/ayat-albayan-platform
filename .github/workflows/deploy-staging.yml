@@ -95,7 +95,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
       # deploy-baseline.mjs reads the GitHub API through tools/scripts' HTTP client (zod): install
       # only the @ab/scripts workspace, no build. A failed install fails plan, and migrate then runs.
       - run: pnpm --filter @ab/scripts install --frozen-lockfile
@@ -154,10 +154,59 @@ jobs:
       ref: ${{ github.event.workflow_run.head_sha || github.sha }}
     secrets: inherit
 
+  # The web app, built while plan and migrate run (ci-faster-2 item 10): the same commit and the same VITE_* values
+  # of the environment «develop» as before; «deploy» downloads it and still waits for migrate. A failed build stops
+  # the deploy before anything on the server changes.
+  web:
+    needs: preflight
+    if: ${{ needs.preflight.outputs.ready == 'true' && !inputs.env_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: develop
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # The exact commit ci passed on (auto), or the chosen branch (by hand).
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - uses: ./.github/actions/pnpm-store
+
+      - name: Build the web app
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.ayatalbayan.com' }}
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.STAGING_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
+          # Public by design; accepted as a variable or a secret.
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY || secrets.STAGING_SUPABASE_ANON_KEY }}
+          # Stripe go live (owner 2026-11-01, docs/30): the pay-link buttons are built in. They still show only
+          # when GET /stripe/feature says so («الدفع الإلكتروني» on and both keys saved); without the API's
+          # FEATURE_STRIPE that route is 404 and nothing shows.
+          VITE_FEATURE_STRIPE: "1"
+        run: |
+          test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
+          pnpm i --frozen-lockfile
+          pnpm --filter "staff-web^..." build >/dev/null
+          pnpm --filter staff-web build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: staff-web-dist
+          path: apps/staff-web/dist
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 1
+
   deploy:
-    needs: [preflight, migrate]
-    # A skipped migrate (env_only / migrate unticked) is fine; a failed or declined one stops the deploy.
-    if: ${{ !cancelled() && needs.preflight.outputs.ready == 'true' && (needs.migrate.result == 'success' || needs.migrate.result == 'skipped') }}
+    needs: [preflight, migrate, web]
+    # A skipped migrate (env_only / migrate unticked) is fine; a failed or declined one stops the deploy. The web build
+    # must pass (skipped only on an env-only run).
+    if: >-
+      ${{ !cancelled() && needs.preflight.outputs.ready == 'true'
+      && (needs.migrate.result == 'success' || needs.migrate.result == 'skipped')
+      && (needs.web.result == 'success' || (inputs.env_only && needs.web.result == 'skipped')) }}
     runs-on: ubuntu-latest
     # A build, five health waits (≤ 3 min each) and, on failure, the rollback's build and roll: a cancelled run
     # (failure() false) would skip the rollback.
@@ -181,28 +230,16 @@ jobs:
         with:
           # The exact commit ci passed on (auto), or the chosen branch (by hand).
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-      - uses: pnpm/action-setup@v4
+      # env-merge.mjs and the summary need node only (no install): the web app comes built from job «web».
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
-          cache: pnpm
-
-      - name: Build the web app (before anything on the server changes)
+      - name: The web app built by job «web» (before anything on the server changes)
         if: ${{ !inputs.env_only }}
-        env:
-          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.ayatalbayan.com' }}
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.STAGING_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
-          # Public by design; accepted as a variable or a secret.
-          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY || secrets.STAGING_SUPABASE_ANON_KEY }}
-          # Stripe go live (owner 2026-11-01, docs/30): the pay-link buttons are built in. They still show only
-          # when GET /stripe/feature says so («الدفع الإلكتروني» on and both keys saved); without the API's
-          # FEATURE_STRIPE that route is 404 and nothing shows.
-          VITE_FEATURE_STRIPE: "1"
-        run: |
-          test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
-          pnpm i --frozen-lockfile
-          pnpm --filter "staff-web^..." build >/dev/null
-          pnpm --filter staff-web build
+        uses: actions/download-artifact@v4
+        with:
+          name: staff-web-dist
+          path: apps/staff-web/dist
 
       - name: SSH key
         env:
@@ -238,6 +275,8 @@ jobs:
           LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
           RECORDING_S3_ACCESS_KEY: ${{ secrets.RECORDING_S3_ACCESS_KEY }}
           RECORDING_S3_SECRET: ${{ secrets.RECORDING_S3_SECRET }}
+          MINIO_EGRESS_ACCESS_KEY: ${{ secrets.MINIO_EGRESS_ACCESS_KEY }}
+          MINIO_EGRESS_SECRET_KEY: ${{ secrets.MINIO_EGRESS_SECRET_KEY }}
           EXPO_ACCESS_TOKEN: ${{ secrets.EXPO_ACCESS_TOKEN }}
           # … and variables:
           SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.STAGING_SUPABASE_URL }}
@@ -259,7 +298,8 @@ jobs:
           keys="SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY SUPABASE_JWT_SECRET WEB_ORIGIN WA_API_BASE WA_API_VERSION
             WA_WABA_ID WA_ACCESS_TOKEN WA_APP_ID WA_APP_SECRET WA_VERIFY_TOKEN
             FEEDBACK_TOKEN_SECRET LOGIN_CODE_PEPPER LIVEKIT_URL LIVEKIT_API_KEY LIVEKIT_API_SECRET RECORDING_S3_ENDPOINT RECORDING_S3_REGION
-            RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL"
+            RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL
+            MINIO_EGRESS_ACCESS_KEY MINIO_EGRESS_SECRET_KEY"
           node tools/scripts/env/env-merge.mjs current.env $keys > new.env
           if cmp -s current.env new.env; then echo "server .env unchanged"; else
             ssh target "cp $DEST/.env $DEST/.env.bak-\$(date +%F-%H%M%S) 2>/dev/null || true; umask 077; cat > $DEST/.env.new && mv $DEST/.env.new $DEST/.env" < new.env

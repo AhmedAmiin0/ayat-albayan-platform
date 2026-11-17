@@ -1,10 +1,10 @@
 import {
+  bubbleWord,
   type MessageStatus,
   messageTicks,
   type TickKind,
   tickTone,
   type TickTone,
-  tickWord,
 } from '@ab/shared';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
@@ -35,10 +35,18 @@ export interface DeliveryTicksProps {
   inList?: boolean;
   /** A long press of its own (the student channel's «من قرأ الرسالة») instead of the times. */
   onHold?: () => void;
+  /** The row's error_code: a send that may have gone reads «لم يتأكد الإرسال بعد» (bubbleWord). */
+  errorCode?: string | null;
 }
 
-const named = ({ status, times }: DeliveryTicksProps): string =>
-  times ? `${t.enums.messageStatus[status]} · ${times}` : t.enums.messageStatus[status];
+/** The status word: a send that may have gone (docs/19) is not «لم تُرسل». */
+const statusWord = ({ status, errorCode }: DeliveryTicksProps): string =>
+  bubbleWord(status, errorCode) === 'unconfirmed'
+    ? t.messages.unconfirmedTick
+    : t.enums.messageStatus[status];
+
+const named = (p: DeliveryTicksProps): string =>
+  p.times ? `${statusWord(p)} · ${p.times}` : statusWord(p);
 
 const labelOf = (p: DeliveryTicksProps): string =>
   p.actionLabel ? `${named(p)} — ${p.actionLabel}` : named(p);
@@ -60,7 +68,8 @@ export function DeliveryTicks(p: DeliveryTicksProps) {
   const { color } = useTheme();
   const kind: TickKind = messageTicks(p.status);
   const ink = color[INK[tickTone(kind)]];
-  const body = <TickGlyph kind={kind} ink={ink} word={tickWord(kind, p.inList)} />;
+  const word = bubbleWord(p.status, p.errorCode, p.inList);
+  const body = <TickGlyph kind={kind} ink={ink} word={word} />;
   // A tap in a list is the row's tap: no Pressable, and hidden from the reader (the row says it).
   if (p.inList)
     return (

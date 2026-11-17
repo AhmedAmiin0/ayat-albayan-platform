@@ -57,6 +57,14 @@ test('failed says «لم تُرسل» beside its «!»; sent by hand «يدوي�
   expect(screen.getByText(t.messages.manualTick)).toBeTruthy();
 });
 
+test('a send that may have gone: «لم يتأكد الإرسال بعد», the same «!» and saffron (docs/19)', async () => {
+  await render(<DeliveryTicks status="failed" errorCode="crm_uncertain" />);
+  expect(screen.getByText(t.messages.unconfirmedTick)).toBeTruthy();
+  expect(screen.queryByText(word.failed)).toBeNull();
+  expect(screen.getByLabelText(t.messages.unconfirmedTick).props.testID).toBe('ticks-failed');
+  expect(screen.getByTestId('ticks-glyph', hidden).props.color).toBe(palette.light.act);
+});
+
 test('in a list row: hidden from the reader (the row says the word), no failed word (its chip does)', async () => {
   await render(<DeliveryTicks status="failed" inList />);
   expect(screen.queryByLabelText(word.failed)).toBeNull();

@@ -96,4 +96,11 @@ describe('SubjectsQueries', () => {
     ).resolves.toBe(true);
     expect(trips).toEqual(['teachers']);
   });
+
+  it('familyByPhone reads guardian_phones (any family number, owner 2026-11-17)', async () => {
+    const { db, trips, argsOf } = fakeDb({ guardian_phones: [{ data: null }] });
+    await expect(new SubjectsRepo(db).familyByPhone('+966500000006')).resolves.toBeNull();
+    expect(trips).toEqual(['guardian_phones']);
+    expect(argsOf('guardian_phones', 'eq')).toEqual(['phone_e164', '+966500000006']);
+  });
 });

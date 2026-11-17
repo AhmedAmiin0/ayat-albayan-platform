@@ -3,20 +3,19 @@ import { useLocalSearchParams } from 'expo-router';
 import { t, ChannelScreen } from '@ab/mobile-kit';
 import { useStaffChannelMedia } from './use-staff-channel-media';
 
-type StaffAudience = Exclude<ChannelAudience, 'portal'>;
+type StaffAudience = Extract<ChannelAudience, 'teacher' | 'admin'>;
 
 /** The teacher's chat is titled by the student; the others see whose chat it is first. */
 const TITLE: Readonly<Record<StaffAudience, 'monitorTitle' | null>> = {
   teacher: null,
   admin: 'monitorTitle',
-  sales: 'monitorTitle',
 };
 
 /**
  * A student channel screen (the shared kit's): the teacher's thread
- * (/teacher/more/messages/:studentId), the admin's read-only view (/students/channel/:id) and the
- * owning assistant's (/sales/students/channel/:id), where she writes too (owner 2026-11-16). The
- * staff phone gives the chat its pickers, microphone and player.
+ * (/teacher/more/messages/:studentId) and the admin's read-only view (/students/channel/:id). The
+ * assistant's (/sales/students/channel/:id) reads her seat first: SalesChannelScreen. The staff
+ * phone gives the chat its pickers, microphone and player.
  */
 function StaffChannelScreen({ audience }: { audience: StaffAudience }) {
   const params = useLocalSearchParams<{ id?: string; studentId?: string }>();
@@ -34,4 +33,3 @@ function StaffChannelScreen({ audience }: { audience: StaffAudience }) {
 
 export const TeacherChannelScreen = () => <StaffChannelScreen audience="teacher" />;
 export const AdminChannelScreen = () => <StaffChannelScreen audience="admin" />;
-export const SalesChannelScreen = () => <StaffChannelScreen audience="sales" />;

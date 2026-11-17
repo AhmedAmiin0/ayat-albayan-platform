@@ -79,13 +79,17 @@ test('a file no area lists runs everything', () => {
   assert.equal(pick('apps/staff-web/src/features/x/style.css').full, true);
 });
 
-test('docs, unit tests, baselines and the mobile app run no e2e spec', () => {
+test('docs, unit tests, baselines, both mobile apps, their kit and the API parity fixture run no spec', () => {
   assert.deepEqual(
     pick(
       'docs/notes.md',
       `${W}/messaging/inbox/Bubble.test.tsx`,
       'refactor/folder-cap/web.json',
       'apps/staff-mobile/src/a.tsx',
+      'apps/family-mobile/app.json',
+      'apps/family-mobile/src/home.tsx',
+      'packages/mobile-kit/src/button.tsx',
+      'apps/api/src/common/auth/parity/access-before.json',
     ),
     {
       full: false,
@@ -130,4 +134,13 @@ test('a layout route also runs the specs of the pages it renders', () => {
     'detail.spec.ts',
     'layout.spec.ts',
   ]);
+});
+
+test('the full-suite reason names every file that forces it, not only the first', () => {
+  const r = pick('pnpm-lock.yaml', `${W}/x/style.css`, 'docs/notes.md');
+  assert.equal(r.full, true);
+  assert.equal(
+    r.reason,
+    `pnpm-lock.yaml is not mapped to e2e areas; ${W}/x/style.css is not mapped to e2e areas`,
+  );
 });

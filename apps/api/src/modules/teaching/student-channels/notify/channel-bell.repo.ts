@@ -5,7 +5,7 @@ import { dbError } from '@/common/http/http';
 /**
  * The bell rows of one channel message (push_notifications kind channel_message, dedup key
  * channel_message:{message_id}:{profile_id}, PushService), found by that key's prefix
- * (push_notifications_channel_subject_idx, migration 20261117000100).
+ * (push_notifications_channel_subject_idx, migration 20261117090300).
  */
 @Injectable()
 export class ChannelBellRepo {

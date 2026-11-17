@@ -1,4 +1,4 @@
-import { channelKey, sendIdFor, type SendAttempt } from '@ab/client-core';
+import { channelKey, channelSeatKey, sendIdFor, type SendAttempt } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import {
@@ -14,7 +14,8 @@ type LastAttempt = SendAttempt & { chat: string };
 /**
  * The composer's send: each text carries a client_id; a failed send's id is kept, so sending the
  * same text again in the same chat is a retry the API answers with the stored message (never a
- * double).
+ * double). After a send: the thread, the counts and the assistant's seat (owner 2026-11-16): a
+ * 404 there means the student's bringer took the chat over, and the re-read seat says so at once.
  */
 export function useChannelSend(refs: ChannelRef) {
   const { audience, studentId } = refs;
@@ -27,8 +28,8 @@ export function useChannelSend(refs: ChannelRef) {
     },
     onSettled: () =>
       Promise.all(
-        [channelKey(audience, studentId), ...CHANNEL_COUNT_KEYS].map((queryKey) =>
-          client.invalidateQueries({ queryKey }),
+        [channelKey(audience, studentId), channelSeatKey(studentId), ...CHANNEL_COUNT_KEYS].map(
+          (queryKey) => client.invalidateQueries({ queryKey }),
         ),
       ),
   });

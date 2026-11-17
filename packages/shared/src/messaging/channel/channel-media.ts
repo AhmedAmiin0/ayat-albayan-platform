@@ -3,9 +3,9 @@ import { cleanFileName } from '../chat/chat-files.js';
 
 // Photos, PDFs and voice notes in the student channel (docs/31 §2). The API signs an upload into
 // the private channel-media bucket ({channel_id}/{uuid}.{ext}), the app PUTs the file, then posts
-// the message with that path. The limits here = the bucket's (migration 20261117000100).
+// the message with that path. The limits here = the bucket's (migration 20261117090300).
 
-/** channel_messages.kind (migration 20261117000100). */
+/** channel_messages.kind (migration 20261117090300). */
 export const CHANNEL_MESSAGE_KINDS = ['text', 'photo', 'pdf', 'voice'] as const;
 export type ChannelMessageKind = (typeof CHANNEL_MESSAGE_KINDS)[number];
 export type ChannelFileKind = Exclude<ChannelMessageKind, 'text'>;

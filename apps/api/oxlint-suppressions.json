@@ -1018,11 +1018,6 @@
       "count": 2
     }
   },
-  "src/common/storage/file-sniff.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/common/storage/probe/storage-health.ts": {
     "typescript/consistent-type-imports": {
       "count": 1
@@ -14308,11 +14303,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/channel-access.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    }
-  },
   "src/modules/teaching/student-channels/channel-open.migration.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -14323,9 +14313,6 @@
       "count": 1
     },
     "max-depth": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     },
     "ab/no-shape-checks": {

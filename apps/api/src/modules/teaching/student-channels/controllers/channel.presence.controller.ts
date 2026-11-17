@@ -62,7 +62,7 @@ export class ChannelPresenceController {
     @Param('id', UUID) id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
-    return this.of(user, await this.access.owner(user, id));
+    return this.of(user, await this.access.assistant(user, id));
   }
 
   private of(viewer: AuthUser, actor: ChannelActor): Promise<ChannelPresence> {

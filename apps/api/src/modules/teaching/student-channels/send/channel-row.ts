@@ -1,7 +1,7 @@
 import type { ChannelAttachmentInput, ChannelFileKind, ChannelSenderRole } from '@ab/shared';
 import { channelKindOf, channelMessageKindOf } from '@ab/shared';
 
-// The columns a sent message adds to channel_messages (migration 20261117000100): its file and
+// The columns a sent message adds to channel_messages (migration 20261117090300): its file and
 // the snapshot of the message it answers.
 
 export interface ChannelFileColumns {
@@ -19,7 +19,7 @@ export interface ChannelQuoteColumns {
   quote_sender_role: string | null;
 }
 
-/** A channel_messages row; the columns of 993 and 20261117000100 may be absent in fakes. */
+/** A channel_messages row; the columns of 993 and 20261117090300 may be absent in fakes. */
 export interface ChannelMessageRow
   extends Partial<ChannelFileColumns>, Partial<ChannelQuoteColumns> {
   id: string;

@@ -18,10 +18,10 @@ const CHAT_ROLES: Partial<Record<string, ChannelSenderRole>> = {
 const inChat = (role: ChannelSenderRole, familyOn: boolean): boolean =>
   familyOn || role === 'teacher';
 
-/** The chat's people (a family login only while the switch is on), then its owners, each once. */
+/** The chat's people (a family login only while the switch is on), then its seat holder, once. */
 function membersOf(input: {
   people: readonly { profile_id: string; role: string }[];
-  owners: readonly string[];
+  assistant: string | null;
   familyOn: boolean;
 }): ChannelMember[] {
   const members = new Map<string, ChannelSenderRole>();
@@ -29,14 +29,15 @@ function membersOf(input: {
     const role = CHAT_ROLES[p.role];
     if (role && inChat(role, input.familyOn)) members.set(p.profile_id, role);
   }
-  for (const id of input.owners) if (!members.has(id)) members.set(id, 'sales');
+  const seat = input.assistant;
+  if (seat && !members.has(seat)) members.set(seat, 'sales');
   return [...members].map(([profileId, role]) => ({ profileId, role }));
 }
 
 /**
  * Who is in a student's chat now, as ChannelNotify pushes them: the current teacher(s), the
- * guardian and student logins (only while family_chat_enabled is on) and the owning assistant(s).
- * Never a monitor.
+ * guardian and student logins (only while family_chat_enabled is on) and the one assistant in the
+ * chat's seat (student_channels.assistant_id; owner 2026-11-16 «… but only 1»). Never a monitor.
  */
 @Injectable()
 export class ChannelMembers {
@@ -47,11 +48,11 @@ export class ChannelMembers {
   ) {}
 
   async of(studentId: string): Promise<ChannelMember[]> {
-    const [people, owners, familyOn] = await Promise.all([
+    const [people, assistant, familyOn] = await Promise.all([
       this.presence.channelPeople(studentId),
-      this.people.ownerIds(studentId),
+      this.people.assistantId(studentId),
       this.familyChat.enabled(),
     ]);
-    return membersOf({ people, owners, familyOn });
+    return membersOf({ people, assistant, familyOn });
   }
 }

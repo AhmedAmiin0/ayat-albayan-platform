@@ -39,7 +39,7 @@ export function toPage(rows: readonly ChannelMessageRow[], ctx: PageContext): Ch
 
 /**
  * What counts as unread for a participant: everyone else's messages, never their own side's (a
- * co-teacher's, the other family login's, a co-owner assistant's).
+ * co-teacher's, the other family login's, an earlier seat holder's).
  */
 const UNREAD_ROLES: Readonly<Record<ChannelSenderRole, readonly ChannelSenderRole[]>> = {
   teacher: ['guardian', 'student', 'sales'],

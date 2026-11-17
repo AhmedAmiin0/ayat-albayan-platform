@@ -82,3 +82,17 @@ export const channelReadsSchema: z.ZodType<ChannelReads> = z.object({
   read: z.array(z.object({ name: z.string(), role: senderRole, at: z.string() })),
   unread: z.array(z.object({ name: z.string(), role: senderRole })),
 });
+
+/**
+ * GET / PUT /sales/students/:id/channel/seat (owner 2026-11-16 «any assistant can subscribe to
+ * the chating channel but only 1»): who holds the one assistant seat (a name only, never a phone
+ * or email; null = free, a holder who is no longer an assistant too), whether it is mine, whether
+ * I brought the student (priority: she takes it from anyone) and whether I may take it now.
+ */
+export const channelSeatSchema = z.object({
+  holder: z.object({ id: z.string(), name: z.string() }).nullable(),
+  mine: z.boolean(),
+  bringer: z.boolean(),
+  canTake: z.boolean(),
+});
+export type ChannelSeat = z.infer<typeof channelSeatSchema>;

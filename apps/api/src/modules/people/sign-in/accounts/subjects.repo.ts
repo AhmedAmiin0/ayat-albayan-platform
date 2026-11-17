@@ -4,6 +4,7 @@ import { dbError } from '@/common/http/http';
 import { conflict } from '@/common/http/errors';
 import {
   isStaff,
+  type FamilyLogin,
   type GuardianRec,
   type LinkKind,
   type NewProfile,
@@ -12,6 +13,7 @@ import {
   type SubjectStore,
   type TeacherRec,
 } from '@/modules/people/sign-in/sign-in.ports';
+import { familyByPhone } from './family-subjects.repo';
 import { teacherByPhone } from './teacher-subjects.repo';
 
 const PROFILE = 'id, role, disabled_at, phone_e164';
@@ -81,6 +83,10 @@ export class SubjectsRepo implements SubjectStore {
 
   teacherByPhone(phone: string): Promise<TeacherRec | null> {
     return teacherByPhone(this.db, phone);
+  }
+
+  familyByPhone(phone: string): Promise<FamilyLogin | null> {
+    return familyByPhone(this.db, phone);
   }
 
   async insertProfile(row: NewProfile): Promise<void> {

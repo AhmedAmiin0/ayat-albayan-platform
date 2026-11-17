@@ -17,6 +17,7 @@ export const VIEW: PeopleEditView = {
     notes: null,
     teacher_gender_pref: null,
     contact_is_self: false,
+    phone_e164: null,
     has_login: false,
     has_records: false,
   },

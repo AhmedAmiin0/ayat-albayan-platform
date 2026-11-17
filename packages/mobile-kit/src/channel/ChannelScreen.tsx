@@ -17,6 +17,8 @@ interface ChannelScreenProps {
   media?: ChannelMediaPort;
   /** A line under the head (the room's «الحلقة الآن» banner); absent → none. */
   banner?: ReactNode;
+  /** A header action at the end (the seated assistant's «مغادرة المحادثة»); absent → none. */
+  trailing?: ReactNode;
 }
 
 /** The family sees who they talk to (the first teacher); staff see the student. */
@@ -38,7 +40,7 @@ const participantsOf = (pages: readonly ChannelPage[] | undefined): ChannelParti
  * A student channel screen (docs/31 §2), the same in both apps: the head (avatar, title, the
  * people, presence), then the thread. The app reads the student from its route.
  */
-export function ChannelScreen({ refs, title, media, banner }: ChannelScreenProps) {
+export function ChannelScreen({ refs, title, media, banner, trailing }: ChannelScreenProps) {
   // The same query the thread reads (one request): it names the student and the people.
   const pages = useChannel(refs).data?.pages;
   const student = pages?.[0]?.student_name ?? '';
@@ -55,6 +57,7 @@ export function ChannelScreen({ refs, title, media, banner }: ChannelScreenProps
         title={titleOf(title, student)}
         avatarName={avatar}
         names={line.join(t.studentChannel.namesJoin)}
+        trailing={trailing}
       />
       {banner}
       <ChannelThread refs={refs} media={media} />

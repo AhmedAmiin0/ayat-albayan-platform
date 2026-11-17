@@ -1,23 +1,25 @@
-import { TICK_PATHS, type TickKind } from '@ab/shared';
+import { type BubbleWord, TICK_PATHS, type TickKind } from '@ab/shared';
 import Svg, { Path } from 'react-native-svg';
 import { t } from '../../lib/i18n/i18n';
 import { type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
 
-type Word = 'failed' | 'manual';
-
-const WORD: Record<Word, () => string> = {
+const WORD: Record<BubbleWord, () => string> = {
   failed: () => t.enums.messageStatus.failed,
+  unconfirmed: () => t.messages.unconfirmedTick,
   manual: () => t.messages.manualTick,
 };
 
 interface TickGlyphProps {
   kind: TickKind;
   ink: string;
-  word: Word | null;
+  word: BubbleWord | null;
 }
 
-/** The ticks' image and, for failed / by hand, their word («لم تُرسل», «يدويًا»). */
+/**
+ * The ticks' image and, for failed / by hand, their word («لم تُرسل», «يدويًا»; a send that may
+ * have gone «لم يتأكد الإرسال بعد»).
+ */
 export function TickGlyph({ kind, ink, word }: TickGlyphProps) {
   const { color } = useTheme();
   return (

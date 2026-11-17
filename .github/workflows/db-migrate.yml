@@ -83,7 +83,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
       - name: supabase db push (staging)
         env:
           DB_URL: ${{ secrets.STAGING_DATABASE_URL }}

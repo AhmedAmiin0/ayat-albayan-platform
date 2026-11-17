@@ -31,5 +31,7 @@ describe('env: recordings (optional, all five or none)', () => {
 
   it('a malformed endpoint fails the boot', () => {
     expect(() => loadEnv({ ...BASE, ...S3, RECORDING_S3_ENDPOINT: 'not a url' })).toThrow();
+    // T1: its keys sign every upload, so never plain http to a remote host.
+    expect(() => loadEnv({ ...BASE, ...S3, RECORDING_S3_ENDPOINT: 'http://s3.example.test' })).toThrow();
   });
 });

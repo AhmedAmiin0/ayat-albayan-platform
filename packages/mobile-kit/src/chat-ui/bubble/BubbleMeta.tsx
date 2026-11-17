@@ -5,7 +5,10 @@ import { AppText } from '../../ui/primitives/AppText';
 import { DeliveryTicks, type DeliveryTicksProps } from '../ticks/DeliveryTicks';
 import { useSmallText } from './use-small-text';
 
-type Ticks = Pick<DeliveryTicksProps, 'status' | 'times' | 'onPress' | 'actionLabel' | 'onHold'>;
+type Ticks = Pick<
+  DeliveryTicksProps,
+  'status' | 'times' | 'onPress' | 'actionLabel' | 'onHold' | 'errorCode'
+>;
 
 export interface BubbleMetaProps {
   /** The clock (and e.g. «تم التعديل ·» before it), already formatted. */

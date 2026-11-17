@@ -43,7 +43,7 @@ export const SET_NULL_DEPENDENTS = [
   // A WhatsApp call with a demo family keeps its chat links (docs/28).
   { table: 'wa_calls', column: 'lead_id', parent: 'leads' },
   { table: 'wa_calls', column: 'guardian_id', parent: 'guardians' },
-  // A reply quoting a demo message (migration 20261117000100); the demo replies go with it.
+  // A reply quoting a demo message (migration 20261117090300); the demo replies go with it.
   { table: 'channel_messages', column: 'reply_to_id', parent: 'channel_messages' },
 ];
 

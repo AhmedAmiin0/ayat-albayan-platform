@@ -1,11 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { SalesStudents } from '@/features/sales/sales/students/SalesStudents';
 import { parseStudentsSearch } from '@/features/sales/sales/search';
-import { SalesChannelDialog } from '@/features/teaching/student-channel';
 
 /**
  * /sales/students?view=mine «الطلاب» — every student of the academy; «طلابي» is a filter.
- * `?chat=<id>` opens that student's chat over the list (a chat push lands here).
+ * ?student=<id> opens that student's chat (a chat notification).
  */
 export const Route = createFileRoute('/sales/students')({
   validateSearch: parseStudentsSearch,
@@ -13,13 +12,11 @@ export const Route = createFileRoute('/sales/students')({
 });
 
 function SalesStudentsRoute() {
-  const { view = 'all', chat } = Route.useSearch();
+  const { view = 'all', student } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const toView = (next: 'all' | 'mine') => void navigate({ search: next === 'mine' ? { view: next } : {} });
-  return (
-    <>
-      <SalesStudents view={view} onView={toView} />
-      {chat && <SalesChannelDialog studentId={chat} onClose={() => toView(view)} />}
-    </>
-  );
+  const onView = (next: typeof view) =>
+    void navigate({ search: next === 'mine' ? { view: next } : {} });
+  // A chat notification (?student=): closing the chat clears it from the URL.
+  const chat = student ? { studentId: student, onClose: () => onView(view) } : undefined;
+  return <SalesStudents view={view} onView={onView} chat={chat} />;
 }

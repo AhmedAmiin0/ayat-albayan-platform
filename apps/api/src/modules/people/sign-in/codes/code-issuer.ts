@@ -4,6 +4,7 @@ import {
   CODE_STORE,
   type CodePurpose,
   type CodeStore,
+  type LiveCode,
   type Subject,
 } from '@/modules/people/sign-in/sign-in.ports';
 import { SignInSettings } from '@/modules/people/sign-in/sign-in.settings';
@@ -18,6 +19,14 @@ export interface CodeTarget {
   purpose: CodePurpose;
   subject: Subject;
   phone: string;
+}
+
+/** With `phone`, only a code sent to that number counts (a family has several numbers). */
+interface CodeCheck {
+  subject: Subject;
+  purposes: readonly CodePurpose[];
+  code: string;
+  phone?: string;
 }
 
 /**
@@ -101,12 +110,9 @@ export class CodeIssuer {
    * true once for the newest live code of the subject (purposes given): each try is counted in SQL
    * before the constant-time compare, and a match is spent by compare-and-set (no replay, no race).
    */
-  async check(
-    input: { subject: Subject; purposes: readonly CodePurpose[]; code: string },
-    now = new Date(),
-  ): Promise<boolean> {
+  async check(input: CodeCheck, now = new Date()): Promise<boolean> {
     const pepper = this.settings.config.pepper;
-    const row = pepper ? await this.store.latest(input.subject, input.purposes) : null;
+    const row = pepper ? await this.latest(input) : null;
     if (
       !pepper ||
       !row ||
@@ -124,6 +130,12 @@ export class CodeIssuer {
     )
       return false;
     return this.store.spend(row.id);
+  }
+
+  /** The subject's newest code, while it went to the number checked (when one is given). */
+  private async latest(input: CodeCheck): Promise<LiveCode | null> {
+    const row = await this.store.latest(input.subject, input.purposes);
+    return input.phone === undefined || row?.phone === input.phone ? row : null;
   }
 
   /**

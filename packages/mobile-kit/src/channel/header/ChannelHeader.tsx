@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { type, useTheme } from '../../theme';
 import { BackButton } from '../../ui/navigation/BackButton';
@@ -14,13 +15,16 @@ interface ChannelHeaderProps {
   avatarName: string;
   /** The chat's people, «أنت» last; '' while nothing is loaded. */
   names: string;
+  /** A header action at the end (the seated assistant's «مغادرة المحادثة»). */
+  trailing?: ReactNode;
 }
 
 /**
  * The chat's head (ChatXFamilyThread / ChatXTeacherThread): «رجوع», the avatar, the title on one
  * line, the people under it, then «متصل الآن» / «آخر ظهور …» when presence allows it.
  */
-export function ChannelHeader({ refs, title, avatarName, names }: ChannelHeaderProps) {
+export function ChannelHeader(props: ChannelHeaderProps) {
+  const { refs, title, avatarName, names, trailing } = props;
   const { color } = useTheme();
   const small = {
     fontFamily: type.ui[500],
@@ -54,6 +58,7 @@ export function ChannelHeader({ refs, title, avatarName, names }: ChannelHeaderP
         ) : null}
         <ChannelPresenceLine refs={refs} />
       </View>
+      {trailing}
     </View>
   );
 }

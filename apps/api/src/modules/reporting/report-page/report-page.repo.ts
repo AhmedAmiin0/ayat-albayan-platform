@@ -33,7 +33,11 @@ export class ReportPageRepo {
     row: Pick<PageReportRow, 'lesson_id' | 'student_id' | 'teacher_id'>,
   ): Promise<PageFacts | null> {
     const [lesson, student, teacher] = await Promise.all([
-      this.db.from('lessons').select('starts_at, ends_at').eq('id', row.lesson_id).maybeSingle(),
+      this.db
+        .from('lessons')
+        .select('starts_at, ends_at, teacher_id')
+        .eq('id', row.lesson_id)
+        .maybeSingle(),
       this.db
         .from('students')
         .select('name, code, tz, profile_id, guardian:guardians(id, profile_id, phone_e164)')
@@ -41,7 +45,7 @@ export class ReportPageRepo {
         .maybeSingle(),
       this.db
         .from('teachers')
-        .select('display_name_ar, profile_id, phone_e164')
+        .select('id, display_name_ar, profile_id, phone_e164, status')
         .eq('id', row.teacher_id)
         .maybeSingle(),
     ]);

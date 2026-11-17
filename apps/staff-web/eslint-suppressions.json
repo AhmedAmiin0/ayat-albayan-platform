@@ -8556,17 +8556,12 @@
       "count": 3
     }
   },
-  "src/features/sales/sales/students/SalesStudents.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/features/sales/sales/students/my-student-columns.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/sales/sales/subscriptions/HistoryEntryCard.tsx": {
