@@ -48,13 +48,13 @@ test('nothing paid: cancel, no reason → an empty body; a 409 has_lessons is sa
 test('money already paid: no cancel offered', async () => {
   serve(balanceOf(fresh(50)));
   await renderWithQuery(<BalanceCard studentId="s1" />);
-  expect(await screen.findByText(t.payments.mobile.record)).toBeTruthy();
+  expect(await screen.findByText(/دُفع /)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.subscriptions.cancel.action })).toBeNull();
 });
 
 test('lessons already used (FIFO, any rule): no cancel offered', async () => {
   serve(balanceOf(subscription({ paid: 0 })));
   await renderWithQuery(<BalanceCard studentId="s1" />);
-  expect(await screen.findByText(t.payments.mobile.record)).toBeTruthy();
+  expect(await screen.findByText(/دُفع /)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.subscriptions.cancel.action })).toBeNull();
 });
