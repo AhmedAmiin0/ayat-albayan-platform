@@ -25,6 +25,8 @@ const serve = (seat: ChannelSeat) =>
 
 function show(seat: ChannelSeat, ui = <ChannelSeatCell studentId="s1" studentName="سلمى" />) {
   serve(seat);
+  // The open thread marks itself read through apiSend; a test may override this answer.
+  apiSend.mockResolvedValue(undefined);
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(<QueryClientProvider client={client}>{ui}</QueryClientProvider>);
 }
@@ -87,7 +89,10 @@ describe('ChannelSeatCell', () => {
 });
 
 describe('OpenSeatChat (a chat notification, ?student=)', () => {
-  afterEach(() => apiFetch.mockReset());
+  afterEach(() => {
+    apiFetch.mockReset();
+    apiSend.mockReset();
+  });
 
   it('her seat: the chat opens at once, the thread naming the student', async () => {
     show(mine, <OpenSeatChat studentId="s1" onClose={vi.fn()} />);

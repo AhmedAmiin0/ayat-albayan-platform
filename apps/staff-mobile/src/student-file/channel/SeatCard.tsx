@@ -1,4 +1,4 @@
-import { seatError, seatState, type SeatError, type SeatState } from '@ab/client-core';
+import { seatErrorText, seatState, type SeatState } from '@ab/client-core';
 import type { ChannelSeat } from '@ab/shared';
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
@@ -18,12 +18,6 @@ import type { ChannelSeatApi } from './use-channel-seat';
 
 const S = t.studentChannel.seat;
 
-/** 409: another assistant got there first; anything else: try again. */
-const ERRORS: Readonly<Record<SeatError, string>> = {
-  taken: S.taken,
-  failed: t.studentChannel.actions.failed,
-};
-
 const holderOf = (data: ChannelSeat): string => data.holder?.name ?? '';
 
 /** Why, «تولَّ المحادثة» or «انقل المحادثة إليك», and why it failed. */
@@ -35,7 +29,7 @@ const takeBody = ({ take }: ChannelSeatApi, hint: string, label: string) => (
       busy={take.isPending}
       onPress={() => take.mutate()}
     />
-    {take.error ? <ErrorLine message={ERRORS[seatError(take.error)]} /> : null}
+    {take.error ? <ErrorLine message={seatErrorText(take.error, t.studentChannel)} /> : null}
   </>
 );
 

@@ -46,7 +46,7 @@ test('free: «تولَّ المحادثة» sends PUT; taken first by another (4
   mockApiSend.mockRejectedValue(new ApiError(409, { code: 'channel_seat_taken' }));
   await renderWithQuery(<SalesChannelScreen />);
   expect(await screen.findByText(S.takeHint)).toBeTruthy();
-  fireEvent.press(screen.getByText(S.take));
+  await fireEvent.press(screen.getByText(S.take));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PUT', SEAT));
   expect(await screen.findByText(S.taken)).toBeTruthy();
 });
@@ -56,7 +56,7 @@ test('my own student, held by a colleague: her name, and «انقل المحاد
   mockApiSend.mockReturnValue(new Promise(() => undefined));
   await renderWithQuery(<SalesChannelScreen />);
   expect(await screen.findByText(S.takeOverHint.replace('{name}', 'هدى'))).toBeTruthy();
-  fireEvent.press(screen.getByText(S.takeOver));
+  await fireEvent.press(screen.getByText(S.takeOver));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PUT', SEAT));
 });
 
@@ -64,6 +64,6 @@ test('mine: the chat with «مغادرة المحادثة» in its header, which
   seatIs({ holder: { id: 'p-a', name: 'سارة' }, mine: true, bringer: true, canTake: false });
   mockApiSend.mockResolvedValue(undefined);
   await renderWithQuery(<SalesChannelScreen />);
-  fireEvent.press(await screen.findByText(S.leave));
+  await fireEvent.press(await screen.findByText(S.leave));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('DELETE', SEAT));
 });

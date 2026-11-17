@@ -1,7 +1,7 @@
 import type { ChannelSeat } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError, type ApiClient } from '../../core/http/index.js';
-import { channelSeatKey, channelSeats, seatError, seatState } from './channel-seat.js';
+import { channelSeatKey, channelSeats, seatError, seatErrorText, seatState } from './channel-seat.js';
 
 // Owner 2026-11-16 «any assistant can subscribe to the chating channel but only 1» and «who
 // brought the student have the priority»: the seat both apps read and write.
@@ -54,5 +54,11 @@ describe('seatState and seatError', () => {
     expect(seatError(new ApiError(409, { code: 'channel_seat_taken' }))).toBe('taken');
     expect(seatError(new ApiError(500, null))).toBe('failed');
     expect(seatError(new TypeError('offline'))).toBe('failed');
+  });
+
+  it('seatErrorText: the app\'s words for «taken» or for a failed write', () => {
+    const words = { seat: { taken: 'taken first' }, actions: { failed: 'try again' } };
+    expect(seatErrorText(new ApiError(409, { code: 'channel_seat_taken' }), words)).toBe('taken first');
+    expect(seatErrorText(new TypeError('offline'), words)).toBe('try again');
   });
 });

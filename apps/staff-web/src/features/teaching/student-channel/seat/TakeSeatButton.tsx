@@ -1,15 +1,9 @@
-import { seatError, type SeatError } from '@ab/client-core';
+import { seatErrorText } from '@ab/client-core';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
 import type { ChannelSeatApi } from './use-channel-seat';
 
 const S = t.studentChannel.seat;
-
-/** 409: another assistant got there first; anything else: try again. */
-const ERRORS: Readonly<Record<SeatError, string>> = {
-  taken: S.taken,
-  failed: t.studentChannel.actions.failed,
-};
 
 interface TakeSeatButtonProps {
   seat: ChannelSeatApi;
@@ -40,7 +34,7 @@ export function TakeSeatButton({ seat, label, hint }: TakeSeatButtonProps) {
       </Button>
       {error ? (
         <span role="alert" className="text-xs text-danger">
-          {ERRORS[seatError(error)]}
+          {seatErrorText(error, t.studentChannel)}
         </span>
       ) : null}
     </div>

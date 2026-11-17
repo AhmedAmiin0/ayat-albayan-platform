@@ -20,7 +20,31 @@ export type SeatError = 'taken' | 'failed';
  */
 const SEAT_STALE_MS = 60_000;
 
-export const channelSeatKey = (studentId: string) => ['channel', 'seat', studentId] as const;
+type SeatKey = readonly ['channel', 'seat', string];
+
+export const channelSeatKey = (studentId: string): SeatKey => ['channel', 'seat', studentId];
+
+/** useQuery options for one student's seat. */
+interface SeatQuery {
+  queryKey: SeatKey;
+  queryFn: () => Promise<ChannelSeat>;
+  staleTime: number;
+  retry: false;
+}
+
+/** useMutation options for one seat write; `onSettled` re-reads the seat. */
+interface SeatMutation<T> {
+  mutationFn: () => Promise<T>;
+  onSettled: () => Promise<unknown>;
+}
+
+interface ChannelSeats {
+  seatQuery: (studentId: string) => SeatQuery;
+  seatMutations: (
+    studentId: string,
+    done: () => Promise<unknown>,
+  ) => { take: SeatMutation<ChannelSeat>; leave: SeatMutation<void> };
+}
 
 const seatPath = (studentId: string): string =>
   `/sales/students/${encodeURIComponent(studentId)}/channel/seat`;
@@ -39,13 +63,29 @@ export function seatState(seat: ChannelSeat): SeatState {
 export const seatError = (e: unknown): SeatError =>
   apiErrorCode(e) === CHANNEL_SEAT_TAKEN ? 'taken' : 'failed';
 
+/** The app's i18n `studentChannel` words that a failed take needs. */
+interface SeatErrorWords {
+  seat: { taken: string };
+  actions: { failed: string };
+}
+
+const SEAT_ERROR_TEXT: Readonly<Record<SeatError, (words: SeatErrorWords) => string>> = {
+  taken: (words) => words.seat.taken,
+  failed: (words) => words.actions.failed,
+};
+
+/** The line under a failed take: another assistant got there first (409), or try again. */
+export const seatErrorText = (e: unknown, words: SeatErrorWords): string =>
+  SEAT_ERROR_TEXT[seatError(e)](words);
+
 /**
  * The seat's read and its two writes, bound to an app's API client. `seatMutations(id, done)`:
  * useMutation options for «تولَّ المحادثة» and «مغادرة المحادثة»; `done` re-reads the seat.
  */
-export function channelSeats(client: ApiClient) {
-  const take = (studentId: string) => client.apiSend('PUT', seatPath(studentId)).then(parse);
-  const leave = (studentId: string) => client.apiSend('DELETE', seatPath(studentId));
+export function channelSeats(client: ApiClient): ChannelSeats {
+  const take = (studentId: string): Promise<ChannelSeat> =>
+    client.apiSend('PUT', seatPath(studentId)).then(parse);
+  const leave = (studentId: string): Promise<void> => client.apiSend('DELETE', seatPath(studentId));
   return {
     seatQuery: (studentId: string) => ({
       queryKey: channelSeatKey(studentId),

@@ -27,8 +27,7 @@ export { type TeacherPick, teacherChoice } from './teacher-pick.js';
 export {
   channelSeatKey,
   channelSeats,
-  type SeatError,
-  seatError,
+  seatErrorText,
   type SeatState,
   seatState,
 } from './channel-seat.js';
