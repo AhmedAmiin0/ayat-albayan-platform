@@ -23,12 +23,12 @@ const status = z.enum(SHORT_LINK_STATUSES).catch('expired');
 const audience = z.enum(SHORT_LINK_AUDIENCES).catch('listed');
 const sendStatus = z.enum(SHORT_LINK_SEND_STATUSES).catch('failed');
 
-export const personOf = (people: People, id: string | null): Person | null => {
+const personOf = (people: People, id: string | null): Person | null => {
   const p = id ? people.get(id) : undefined;
   return p ? { id: p.id, name: p.full_name, role: p.role } : null;
 };
 
-export interface RowParts {
+interface RowParts {
   row: ShortLinkRow;
   base: string;
   people: People;

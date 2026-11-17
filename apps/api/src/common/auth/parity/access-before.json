@@ -537,6 +537,17 @@
   "TeacherLinkController.draftV2": "public",
   "TeacherLinkController.submitV2": "public",
   "ShortLinksController.go": "public",
+  "GatePublicController.view": "public",
+  "GatePublicController.start": "public",
+  "GatePublicController.verify": "public",
+  "GateSignedInController.open": "signed-in",
+  "ManagedLinksController.list": ["admin","sales"],
+  "ManagedLinksController.people": ["admin","sales"],
+  "ManagedLinksController.create": ["admin","sales"],
+  "ManagedLinksController.detail": ["admin","sales"],
+  "ManagedLinksController.update": ["admin","sales"],
+  "ManagedLinksController.revoke": ["admin","sales"],
+  "ManagedLinksController.resend": ["admin","sales"],
   "TeacherJoinController.go": "public",
   "LegacyReportLinkController.go": "public"
 }

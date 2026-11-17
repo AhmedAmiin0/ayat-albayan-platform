@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { phoneE164 } from '@ab/core';
-import { loginCode } from '../people/users/sign-in.js';
+import { loginCode } from '../people/users/index.js';
 
 // Managed short links (owner 2026-11-17, docs/19 «Short links»): the admin / sales bodies and the
 // public gate's bodies, shared by the API (authoritative), the web and the mobile app.
@@ -44,7 +44,10 @@ export const shortLinkCreateSchema = z
     phones: phones.default([]),
     sendWhatsapp: z.boolean().default(false),
   })
-  .refine((v) => !needsUsers(v) || hasUsers(v), { message: 'users_required', path: ['profileIds'] });
+  .refine((v) => !needsUsers(v) || hasUsers(v), {
+    message: 'users_required',
+    path: ['profileIds'],
+  });
 export type ShortLinkCreate = z.infer<typeof shortLinkCreateSchema>;
 
 /** PATCH /short-links/:code: a given user list replaces the old one. */

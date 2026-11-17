@@ -9,7 +9,7 @@ import {
   type LinkUserRow,
 } from '@/modules/platform/short-links-admin/managed/link-users.repo';
 
-export interface LinkToSend {
+interface LinkToSend {
   row: ShortLinkRow;
   shortUrl: string;
   actorId: string;

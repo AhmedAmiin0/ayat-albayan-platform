@@ -8,7 +8,7 @@ import { MANAGED_KIND, type ShortLinkRow } from '@/modules/platform/short-links'
 /** Postgres unique_violation: the code already exists (the caller draws another). */
 const UNIQUE = '23505';
 
-export interface ListScope {
+interface ListScope {
   query: ShortLinkListQuery;
   /** null = every owner (short_links.all); else only this creator's links. */
   owner: string | null;

@@ -8,7 +8,7 @@ export type LinkVisitRow = Tables<'short_link_visits'>;
 type VisitArgs = Database['public']['Functions']['short_link_record_visit']['Args'];
 
 /** How many listed users and distinct visitors each link has (the list's counts). */
-export interface LinkCounts {
+interface LinkCounts {
   users: Map<string, number>;
   visitors: Map<string, number>;
 }

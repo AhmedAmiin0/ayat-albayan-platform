@@ -10,7 +10,7 @@ export type Visitor =
   | { kind: 'phone'; phone: string; owner: PhoneOwner };
 
 /** short_link_record_visit's arguments: who the visit row is keyed by and whom it matched. */
-export interface VisitKey {
+interface VisitKey {
   p_profile: string | null;
   p_phone: string | null;
   p_matched_profile: string | null;
@@ -54,7 +54,7 @@ export const isReturning = (visits: readonly LinkVisitRow[], v: Visitor): boolea
   );
 };
 
-export interface ListFacts {
+interface ListFacts {
   users: readonly LinkUserRow[];
   /** The phone on file of each listed profile (the WhatsApp send's phone sources). */
   listedPhones: ReadonlyMap<string, string>;

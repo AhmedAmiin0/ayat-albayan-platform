@@ -19,15 +19,3 @@ export const linkRow = (over: Partial<ShortLinkRow> = {}): ShortLinkRow => ({
   status: 'active',
   ...over,
 });
-
-/** A managed link (kind managed, subject = code) made by `owner`. */
-export const managedRow = (over: Partial<ShortLinkRow> = {}): ShortLinkRow =>
-  linkRow({
-    kind: 'managed',
-    subject: over.code ?? 'Ab12Cd34Ef',
-    title: 'رابط التسجيل',
-    target_url: 'https://app.example.com/register',
-    expires_at: '2026-11-24T12:00:00.000Z',
-    created_by: '00000000-0000-4000-8000-0000000000b1',
-    ...over,
-  });

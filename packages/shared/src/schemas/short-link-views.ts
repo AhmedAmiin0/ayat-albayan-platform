@@ -3,7 +3,7 @@ import {
   SHORT_LINK_AUDIENCES,
   SHORT_LINK_SEND_STATUSES,
   SHORT_LINK_STATUSES,
-} from './schemas.js';
+} from './short-links.js';
 
 // What the short-link routes answer (docs/19 «Short links»), as zod schemas the clients parse.
 
@@ -27,7 +27,10 @@ export const shortLinkRowSchema = z.object({
 });
 export type ShortLinkRow = z.infer<typeof shortLinkRowSchema>;
 
-export const shortLinkPageSchema = z.object({ rows: z.array(shortLinkRowSchema), total: z.number() });
+export const shortLinkPageSchema = z.object({
+  rows: z.array(shortLinkRowSchema),
+  total: z.number(),
+});
 export type ShortLinkPage = z.infer<typeof shortLinkPageSchema>;
 
 export const shortLinkUserSchema = z.object({

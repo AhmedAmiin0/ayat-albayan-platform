@@ -13,7 +13,12 @@ const rows: Record<string, ShortLinkRow> = {
   Ab12Cd34Ef: linkRow(),
   Old12Cd34Ef: linkRow({ code: 'Old12Cd34Ef', expires_at: new Date(NOW - 1000).toISOString() }),
   Mg12Cd34Ef: linkRow({ code: 'Mg12Cd34Ef', kind: 'managed', expires_at: LATER }),
-  Rv12Cd34Ef: linkRow({ code: 'Rv12Cd34Ef', kind: 'managed', expires_at: LATER, status: 'revoked' }),
+  Rv12Cd34Ef: linkRow({
+    code: 'Rv12Cd34Ef',
+    kind: 'managed',
+    expires_at: LATER,
+    status: 'revoked',
+  }),
 };
 
 describe('GET /r/:code (public)', () => {

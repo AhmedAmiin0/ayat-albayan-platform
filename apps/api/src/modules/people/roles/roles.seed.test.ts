@@ -38,7 +38,6 @@ function seeded(key: string): string[] {
   const block = SQL.match(new RegExp(`\\('${key}', array\\[([^\\]]*)\\]\\)`));
   return block?.[1] ? [...block[1].matchAll(/'([a-z_.]+)'/g)].map((m) => m[1] ?? '') : [];
 }
-
 function addedLater(key: string): string[] {
   const inserts = LATER.matchAll(/select r\.id, '([a-z_.]+)' from public\.roles r where [^;]*?r\.key in \(([^)]*)\)/g);
   return [...[...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? ''), ...byHand(key)];
