@@ -17,7 +17,7 @@ export interface TestFlagWrite {
 const flippedSchema = z
   .object({ id: z.uuid(), is_test: z.boolean(), profiles: z.array(z.uuid()) })
   .nullable();
-export type Flipped = NonNullable<z.infer<typeof flippedSchema>>;
+type Flipped = NonNullable<z.infer<typeof flippedSchema>>;
 
 /** 23514 test_family_mismatch: a family login would link to a student of the other kind. */
 const MISMATCH = '23514';
