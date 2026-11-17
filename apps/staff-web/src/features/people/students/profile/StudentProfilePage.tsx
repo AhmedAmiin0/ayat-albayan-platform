@@ -57,6 +57,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   }
   // The family's second number (owner 2026-10-29), linked from a lead chat; removed from «تعديل ولي الأمر».
   const second = secondPhoneOf(student.guardian.phones);
+  const chatPhone = student.guardian.phone_e164;
   const meta = [
     [t.students.code, <Ltr key="c">{student.code ?? '—'}</Ltr>],
     [t.students.guardian, (
@@ -119,14 +120,14 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       </dl>
       <StudentFamily siblings={student.siblings} contactIsSelf={student.contact_is_self ?? false} />
       <TrialDatesSection student={student} />
-      <CourseCardPanel studentId={student.id} chatPhone={student.guardian.phone_e164} />
+      <CourseCardPanel studentId={student.id} chatPhone={chatPhone} />
       <BalanceCard student={student} />
       <StudentPayments studentId={student.id} />
       <StudentInvoices studentId={student.id} />
       <StudentRecordings studentId={student.id} role="admin" />
       {can('student_channels.monitor') && <MonitorChannel studentId={student.id} audience="admin" />}
       <TestFlagSwitch target="student" row={student} enabled={can('students.write')} />
-      <StudentProfileForm key={student.id} student={student} chatPhone={student.guardian.phone_e164} />
+      <StudentProfileForm key={student.id} student={student} chatPhone={chatPhone} />
       <AssistantsManager studentId={student.id} />
       <BroughtByField studentId={student.id} />
       <StudentJoinLink studentId={student.id} />
