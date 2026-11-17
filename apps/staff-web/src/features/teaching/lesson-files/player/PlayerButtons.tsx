@@ -15,7 +15,7 @@ interface Props {
 }
 
 type SpeedKey = `${PlayerSpeed}`;
-const SPEEDS = PLAYER_SPEEDS.map((s) => ({ value: `${s}` as SpeedKey, label: speedLabel(s) }));
+const SPEEDS = PLAYER_SPEEDS.map((s) => ({ value: `${s}` as const, label: speedLabel(s) }));
 const SPEED_OF = Object.fromEntries(PLAYER_SPEEDS.map((s) => [`${s}`, s])) as Record<
   SpeedKey,
   PlayerSpeed

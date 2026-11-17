@@ -1,4 +1,4 @@
-import { apiErrorCode, statusRoute, type StatusRoute } from '@ab/client-core';
+import { apiErrorCode } from '@ab/client-core';
 import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -10,10 +10,9 @@ import {
 } from '@/core/lib/query/use-optimistic-status';
 import { Note } from '@/more';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
-import { useActionKeys } from '@/students/course-actions/ActionButtons';
-import { useCurrentPackage, useHeldPackage } from '@/students/course-actions/course-actions-api';
-import { StatusSheets, type StatusAsk } from '@/students/course-card/StatusSheets';
+import { StatusSheets } from '@/students/course-card/StatusSheets';
 import type { StudentRef } from '@/students/shared/types';
+import { useStatusPick } from './use-status-pick';
 
 /** No /status route: PATCH /students/:id, a compare-and-set on the status shown (R-STU-05). */
 type StudentStatusChange = StatusChange<StudentStatus> & { expected: StudentStatus };
@@ -42,13 +41,6 @@ interface StatusChangerProps {
   chatPhone?: string | undefined;
 }
 
-/** «متوقف» while the package is read: «جارٍ التحميل», or the error when it cannot be read. */
-type StopRead = 'idle' | 'waiting' | 'failed';
-const STOP_READ_LINE: Record<Exclude<StopRead, 'idle'>, string> = {
-  waiting: t.common.loading,
-  failed: t.common.error,
-};
-
 /**
  * One tap sets the status (PATCH /students/:id), shown at once everywhere it is cached; a failure
  * puts the old status back and says so here (R-MOB-03). If the status moved meanwhile (409
@@ -59,34 +51,17 @@ const STOP_READ_LINE: Record<Exclude<StopRead, 'idle'>, string> = {
  */
 export function StatusChanger({ student, chatPhone }: StatusChangerProps) {
   const change = useOptimisticStatus<StudentStatus, StudentStatusChange>(STATUS);
-  const keys = useActionKeys();
-  const sub = useCurrentPackage({ studentId: student.id, given: undefined, keys });
-  const [ask, setAsk] = useState<StatusAsk>(null);
   const [notice, setNotice] = useState<string | null>(null);
-  const [read, setRead] = useState<StopRead>('idle');
-  const stopping = useHeldPackage(sub.id ?? null, ask === 'stop');
-  const setNow = (status: StudentStatus) =>
-    change.mutate({ id: student.id, status, expected: student.status });
-  const stop = async () => {
-    setRead('waiting');
-    const id = sub.id === undefined ? await sub.settle() : sub.id;
-    setRead(id === undefined ? 'failed' : 'idle');
-    if (id) setAsk('stop');
-    if (id === null) setNow('churned');
-  };
-  const routes: Record<StatusRoute, (status: StudentStatus) => void> = {
-    set: setNow,
-    pause: () => setAsk('pause'),
-    stop: () => void stop(),
-  };
+  const route = useStatusPick(student.id, (status) =>
+    change.mutate({ id: student.id, status, expected: student.status }),
+  );
   const set = (status: StudentStatus) => {
-    if (change.isPending || read === 'waiting' || status === student.status) return;
+    if (change.isPending || route.waiting || status === student.status) return;
     setNotice(null);
-    setRead('idle');
-    routes[statusRoute(status)](status);
+    route.pick(status);
   };
   const done = (text: string) => {
-    setAsk(null);
+    route.close();
     setNotice(text);
   };
   return (
@@ -101,7 +76,7 @@ export function StatusChanger({ student, chatPhone }: StatusChangerProps) {
       />
       <Note>{t.courseCard.statusNote}</Note>
       {notice ? <Note>{notice}</Note> : null}
-      {read === 'idle' ? null : <Note>{STOP_READ_LINE[read]}</Note>}
+      {route.line ? <Note>{route.line}</Note> : null}
       {change.isError ? (
         <ErrorLine
           message={statusChanged(change.error) ? t.students.statusChanged : t.common.error}
@@ -109,10 +84,10 @@ export function StatusChanger({ student, chatPhone }: StatusChangerProps) {
       ) : null}
       <StatusSheets
         studentId={student.id}
-        subscriptionId={stopping}
+        subscriptionId={route.stopping}
         chatPhone={chatPhone}
-        ask={ask}
-        onClose={() => setAsk(null)}
+        ask={route.ask}
+        onClose={route.close}
         onDone={done}
       />
     </View>
