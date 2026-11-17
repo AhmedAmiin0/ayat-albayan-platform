@@ -36,6 +36,7 @@ describe('GET /students/:id/course-card', () => {
     const res = await t.get('admin', `/students/${S1}/course-card`);
     expect(res.json()).toEqual({
       subscriptionId: SUB_ID,
+      package: null,
       course: {
         ...{ teacherName: 'فاطمة', days: COURSE.days, tz: 'Asia/Riyadh', endsOn: '2026-11-23' },
         ...{ lastAt: '2026-11-02T14:00:00Z', lessonsTotal: 8, unbooked: 6 },
@@ -43,6 +44,17 @@ describe('GET /students/:id/course-card', () => {
       upcoming: [{ id: 'u1', startsAt: '2026-11-18T14:00:00Z', status: 'confirmed' }],
     });
     expect(t.m.repo.upcoming).toHaveBeenCalledWith(['ra', 'rb'], 8);
+  });
+
+  it('the package: left, used, what was paid of what it is owed for', async () => {
+    const balance = { lessons_used: 9, remaining: 3, projected_end_at: '2026-11-24T15:30:00Z' };
+    const sub = { id: SUB_ID, status: 'active', lessons_total: 12, paid: 300, price: 360 };
+    const packages = [{ ...sub, currency: 'SAR', balance }];
+    t.m.packages.studentBalance.mockResolvedValue({ remaining: 3, current: null, packages });
+    expect((await t.get('admin', `/students/${S1}/course-card`)).json().package).toEqual({
+      ...{ status: 'active', lessonsTotal: 12, used: 9, left: 3, paid: 300, owed: 360 },
+      ...{ currency: 'SAR', projectedEndAt: '2026-11-24T15:30:00Z' },
+    });
   });
 
   it('the assistant reads the same card; a teacher 403', async () => {
@@ -55,6 +67,7 @@ describe('GET /students/:id/course-card', () => {
     t.m.repo.currentSubscription.mockRejectedValue(new NotFoundException());
     expect((await t.get('admin', `/students/${S1}/course-card`)).json()).toEqual({
       subscriptionId: null,
+      package: null,
       course: null,
       upcoming: [],
     });

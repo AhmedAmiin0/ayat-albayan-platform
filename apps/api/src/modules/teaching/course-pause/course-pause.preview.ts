@@ -1,6 +1,5 @@
 import {
   addDays,
-  coursePauseProblem,
   pausedDays,
   resumeDayOf,
   riyadhToday,
@@ -10,7 +9,8 @@ import {
   type CourseResumePreview,
 } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { conflict } from '@/common/http/errors';
+import { assertPauseDates, assertStudent } from './course-pause.guards';
 import { CoursePauseRepo } from './course-pause.repo';
 
 interface PreviewQuery {
@@ -35,11 +35,10 @@ export class CoursePausePreviews {
 
   /** «ستُلغى N حلقات»: open lessons from max(now, from) to the day after until (or all). */
   async preview(studentId: string, q: PreviewQuery): Promise<CoursePausePreview> {
-    await this.assertStudent(studentId);
+    await assertStudent(this.queries, studentId);
     const from = q.from ?? riyadhToday();
     const until = q.until ?? null;
-    const problem = coursePauseProblem({ from, until, today: riyadhToday() });
-    if (problem) throw badRequest(problem);
+    assertPauseDates(from, until);
     const start = new Date(Math.max(Date.now(), riyadhStart(from).getTime()));
     const end = until === null ? null : riyadhStart(addDays(until, 1));
     const starts = await this.queries.previewStarts({ studentId, start, end });
@@ -50,7 +49,7 @@ export class CoursePausePreviews {
 
   /** «استئناف الدورة الآن؟»: the lessons booked back from today and the days the package moves. */
   async resume(studentId: string): Promise<CourseResumePreview> {
-    await this.assertStudent(studentId);
+    await assertStudent(this.queries, studentId);
     const open = await this.queries.openPause(studentId);
     const row = open ? await this.queries.pause(open.id) : null;
     if (!row) throw conflict('pause_not_open');
@@ -60,9 +59,5 @@ export class CoursePausePreviews {
     const started = row.from_date <= today;
     const days = started ? pausedDays({ from: row.from_date, until: row.until_date, today }) : 0;
     return { back, extendDays: days };
-  }
-
-  private async assertStudent(studentId: string): Promise<void> {
-    if (!(await this.queries.studentExists(studentId))) throw notFound('student_not_found');
   }
 }

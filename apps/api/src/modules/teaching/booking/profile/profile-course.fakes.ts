@@ -6,6 +6,7 @@ import { AppModule } from '@/app.module';
 import { bootWith, ROLE_ADMIN, ROLE_SALES, ROLE_USERS } from '@/common/auth/auth.fakes';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
+import { PackagesService } from '@/modules/finance/subscriptions';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { ConflictChecker, RuleExtendService } from '@/modules/teaching/scheduling';
 import {
@@ -61,6 +62,7 @@ function mocks() {
     ruleExtend: { extend: vi.fn() },
     options: { list: vi.fn() },
     sales: { ownership: vi.fn() },
+    packages: { studentBalance: vi.fn() },
   };
 }
 
@@ -84,6 +86,7 @@ function reset(m: ReturnType<typeof mocks>): void {
   m.lessons.openFrom.mockResolvedValue([{ id: 'l9', status: 'scheduled', rule_id: 'ra' }]);
   m.lessons.held.mockResolvedValue(new Set(['ra:2026-10-19', 'rb:2026-10-21']));
   m.sales.ownership.mockResolvedValue(NOT_MINE);
+  m.packages.studentBalance.mockResolvedValue({ student_id: S1, remaining: 0, current: null, packages: [] });
   m.repo.currentSubscription.mockResolvedValue(SUB_ID);
   m.repo.studentTeacher.mockResolvedValue(T_OLD);
   m.repo.teacher.mockResolvedValue({ id: T_NEW, status: 'active' });
@@ -107,6 +110,8 @@ export async function profileApp(
     .useValue(fakeSettings(settings))
     .overrideProvider(SalesRepo)
     .useValue(m.sales)
+    .overrideProvider(PackagesService)
+    .useValue(m.packages)
     .overrideProvider(ConflictChecker)
     .useValue(m.checker)
     .overrideProvider(CourseChangeRepo)

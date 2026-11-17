@@ -1,5 +1,4 @@
 import {
-  coursePauseProblem,
   riyadhToday,
   type CoursePauseResult,
   type CoursePauseResume,
@@ -8,7 +7,8 @@ import {
   type CoursePauseUntil,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { conflict, notFound } from '@/common/http/errors';
+import { assertPauseDates, assertStudent } from './course-pause.guards';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import { toPauseView, type RpcOut } from './course-pause.mapper';
 import { CoursePauseRepo } from './course-pause.repo';
@@ -40,7 +40,7 @@ export class CoursePauseService {
   ) {}
 
   async state(studentId: string): Promise<CoursePauseState> {
-    await this.assertStudent(studentId);
+    await assertStudent(this.queries, studentId);
     const views = (await this.queries.pauses(studentId)).map(toPauseView);
     return { open: views.find((v) => v.resumed_at === null) ?? null, history: views.filter((v) => v.resumed_at !== null) };
   }
@@ -48,7 +48,7 @@ export class CoursePauseService {
   async start({ studentId, body, actor }: StartInput): Promise<CoursePauseResult> {
     const from = body.fromDate ?? riyadhToday();
     const until = body.untilDate ?? null;
-    this.check(from, until);
+    assertPauseDates(from, until);
     const p = { student_id: studentId, from_date: from, until_date: until, reason: body.reason ?? null, actor: actor.id };
     const out = await this.queries.call('course_pause_start', p);
     const result = await this.done(out, actor.id);
@@ -70,7 +70,7 @@ export class CoursePauseService {
    * pause_not_open when nothing was paused.
    */
   async resume({ studentId, body, actor }: ResumeInput): Promise<CoursePauseResult> {
-    await this.assertStudent(studentId);
+    await assertStudent(this.queries, studentId);
     const open = await this.queries.openPause(studentId);
     const subscriptionId = body.subscriptionId;
     if (open && (subscriptionId === undefined || subscriptionId === open.subscription_id)) return this.resumePause(open.id, actor.id);
@@ -110,19 +110,10 @@ export class CoursePauseService {
     return { pause: toPauseView(row), cancelled: out.cancelled.length, left: out.left.length, reopened, conflicts };
   }
 
-  private check(from: string, until: string | null): void {
-    const problem = coursePauseProblem({ from, until, today: riyadhToday() });
-    if (problem) throw badRequest(problem);
-  }
-
   private async openId(studentId: string): Promise<string> {
-    await this.assertStudent(studentId);
+    await assertStudent(this.queries, studentId);
     const open = await this.queries.openPause(studentId);
     if (!open) throw conflict('pause_not_open');
     return open.id;
-  }
-
-  private async assertStudent(studentId: string): Promise<void> {
-    if (!(await this.queries.studentExists(studentId))) throw notFound('student_not_found');
   }
 }

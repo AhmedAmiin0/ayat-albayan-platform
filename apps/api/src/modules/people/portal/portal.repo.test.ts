@@ -44,6 +44,13 @@ describe('portal queries (service role, whitelisted selects)', () => {
     expect(String(f.argsOf('lesson_reports', 'select')?.[0])).toBe('id, lesson_id, sent_at, pdf_path');
   });
 
+  it('sent lessons: lesson → report of every sent report, one read, no lesson join', async () => {
+    const f = fakeDb({ lesson_reports: [{ data: [{ id: 'r1', lesson_id: 'l1' }] }] });
+    expect(await new PortalReportsRepo(f.db).sentLessons('s1')).toEqual(new Map([['l1', 'r1']]));
+    expect(f.argsOf('lesson_reports', 'limit')).toEqual([1000]);
+    expect(f.trips).toEqual(['lesson_reports']);
+  });
+
   it('recordings: visible_to_student and done only; a group lesson is dropped', async () => {
     const one = [{ student_id: 's1' }];
     const lesson = (students: unknown[]) => ({ starts_at: 'S', teacher: null, lesson_students: students });

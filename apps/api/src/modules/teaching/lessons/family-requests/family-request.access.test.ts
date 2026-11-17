@@ -8,7 +8,9 @@ import { FamilyRequestAccess } from './family-request.access';
 
 const SALES: AuthUser = { id: 'sa-1', email: null, role: 'sales' };
 const OTHER_SALES: AuthUser = { id: 'sa-2', email: null, role: 'sales' };
-const owners = { ownerIds: vi.fn(async () => ['sa-1']) };
+const owners = {
+  ownersOf: vi.fn(async (ids: readonly string[]) => new Map(ids.map((id) => [id, ['sa-1']]))),
+};
 const FAMILY_ROW = { id: 'p1', lesson_id: 'l1', requested_by: 'family' };
 
 const access = (proposal: object | null = FAMILY_ROW) =>
@@ -23,14 +25,21 @@ describe('FamilyRequestAccess: admins and the owning assistant answer (owner 202
   it('an admin answers any; the assistant who owns the student hers only; a teacher none', async () => {
     expect(await access().mayAnswer(ADMIN, [STUDENT_ID])).toBe(true);
     expect(await access().mayAnswer(SALES, [STUDENT_ID])).toBe(true);
-    expect(owners.ownerIds).toHaveBeenCalledWith([STUDENT_ID]);
+    expect(owners.ownersOf).toHaveBeenCalledWith([STUDENT_ID]);
     expect(await access().mayAnswer(OTHER_SALES, [STUDENT_ID])).toBe(false);
     expect(await access().mayAnswer(TEACHER, [STUDENT_ID])).toBe(false);
   });
 
-  it('the list keeps the lessons this user answers', async () => {
+  it('the list keeps the lessons this user answers, the owners read once', async () => {
+    owners.ownersOf.mockClear();
     expect((await access().visible(SALES, [view('a'), view('b')])).map((l) => l.id)).toEqual(['a', 'b']);
+    expect(owners.ownersOf).toHaveBeenCalledTimes(1);
     expect(await access().visible(OTHER_SALES, [view('a')])).toEqual([]);
+    expect(await access().visible(TEACHER, [view('a')])).toEqual([]);
+  });
+  it('an assistant answers only when every student on the lesson is hers', async () => {
+    owners.ownersOf.mockResolvedValueOnce(new Map([[STUDENT_ID, ['sa-1']], ['s-2', ['sa-2']]]));
+    expect(await access().mayAnswer(SALES, [STUDENT_ID, 's-2'])).toBe(false);
   });
 
   it("404 for an unknown id or a teacher's proposal; 403 not_your_student for another's family", async () => {
