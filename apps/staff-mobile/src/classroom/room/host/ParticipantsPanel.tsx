@@ -14,7 +14,7 @@ interface ParticipantsPanelProps {
   /** Who the lesson says is inside: a family-link guest's role in words. */
   presence: readonly RoomPresence[];
   /** «فتح في المتصفح»: here while in the room (the header has no room for it). */
-  onBrowser: () => void;
+  onBrowser: (() => void) | null;
 }
 
 /** «إخراج {name} من الحلقة؟»: the web room's question and its consequence. */
@@ -71,7 +71,9 @@ export function ParticipantsPanel({ panel, onClose, presence, onBrowser }: Parti
       <View style={{ gap: 8 }}>
         <KickConfirm panel={panel} />
         <EndForAll panel={panel} />
-        <Button variant="ghost" label={t.mobileRoom.openInBrowser} onPress={onBrowser} />
+        {onBrowser ? (
+          <Button variant="ghost" label={t.mobileRoom.openInBrowser} onPress={onBrowser} />
+        ) : null}
       </View>
     </RoomSheet>
   );

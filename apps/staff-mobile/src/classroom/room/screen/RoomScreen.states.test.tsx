@@ -1,5 +1,4 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
-import { Linking } from 'react-native';
 import {
   CREDS,
   fakePlatform,
@@ -15,12 +14,21 @@ const R = t.mobileRoom;
 let p: FakePlatform;
 const fetchJoin = jest.fn(async () => CREDS);
 const onExit = jest.fn();
+const onBrowser = jest.fn();
 const press = async (label: string) =>
   fireEvent.press(await screen.findByRole('button', { name: label }));
 
 async function live() {
   await render(
-    withInsets(<RoomScreen platform={p} target={LESSON} onExit={onExit} fetchJoin={fetchJoin} />),
+    withInsets(
+      <RoomScreen
+        platform={p}
+        target={LESSON}
+        onExit={onExit}
+        fetchJoin={fetchJoin}
+        onBrowser={onBrowser}
+      />,
+    ),
   );
   await press(R.preview.join);
   await act(async () => p.client.push({ status: 'connected', micOn: true, camOn: true }));
@@ -29,7 +37,6 @@ async function live() {
 beforeEach(() => {
   jest.clearAllMocks();
   p = fakePlatform();
-  jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
 });
 
 test('alone in the room: «بانتظار البقية…»; reconnecting shows its line and keeps the grid', async () => {
@@ -78,7 +85,15 @@ test('the connection dropped (#476): «ادخل مرة أخرى» joins again, i
 test('a refused join reads the API code; «حاول مرة أخرى» goes back to the preview', async () => {
   fetchJoin.mockRejectedValueOnce(new ApiError(409, { code: 'join_closed' }));
   await render(
-    withInsets(<RoomScreen platform={p} target={LESSON} onExit={onExit} fetchJoin={fetchJoin} />),
+    withInsets(
+      <RoomScreen
+        platform={p}
+        target={LESSON}
+        onExit={onExit}
+        fetchJoin={fetchJoin}
+        onBrowser={onBrowser}
+      />,
+    ),
   );
   await press(R.preview.join);
   expect(await screen.findByText(t.classroom.error.join_closed)).toBeTruthy();
@@ -90,7 +105,15 @@ test('a refused join reads the API code; «حاول مرة أخرى» goes back 
 test('a connect failure says so; «رجوع» closes the screen', async () => {
   p.client.connect.mockRejectedValueOnce(new Error('ws'));
   await render(
-    withInsets(<RoomScreen platform={p} target={LESSON} onExit={onExit} fetchJoin={fetchJoin} />),
+    withInsets(
+      <RoomScreen
+        platform={p}
+        target={LESSON}
+        onExit={onExit}
+        fetchJoin={fetchJoin}
+        onBrowser={onBrowser}
+      />,
+    ),
   );
   await press(R.preview.join);
   expect(await screen.findByText(t.classroom.error.connect_failed)).toBeTruthy();
@@ -120,9 +143,7 @@ test('«فتح في المتصفح» sits in the participants panel (not the hea
   await press(R.count.replace('{n}', '0'));
   await press(R.openInBrowser);
   expect(p.client.disconnect).toHaveBeenCalled();
-  expect(Linking.openURL).toHaveBeenCalledWith(
-    `https://app.ayatalbayan.com/classroom/${LESSON.id}`,
-  );
+  expect(onBrowser).toHaveBeenCalled();
   expect(onExit).toHaveBeenCalled();
 });
 
@@ -138,7 +159,15 @@ test('left while the token was awaited: the client is closed and the audio stopp
   fetchJoin.mockImplementationOnce(() => new Promise((r) => (give = r)));
   p.client.connect.mockRejectedValueOnce(new Error('room client closed'));
   await render(
-    withInsets(<RoomScreen platform={p} target={LESSON} onExit={onExit} fetchJoin={fetchJoin} />),
+    withInsets(
+      <RoomScreen
+        platform={p}
+        target={LESSON}
+        onExit={onExit}
+        fetchJoin={fetchJoin}
+        onBrowser={onBrowser}
+      />,
+    ),
   );
   await press(R.preview.join);
   await screen.unmount();

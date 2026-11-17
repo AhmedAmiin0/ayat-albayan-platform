@@ -1,5 +1,5 @@
 import { classroomUrl, meetingUrl } from '@/classroom/links/web-origin';
-import type { RoomKind, RoomTarget } from './room-types';
+import type { RoomKind, RoomTarget } from '@/classroom/room/model/room-types';
 
 const KINDS: readonly RoomKind[] = ['lesson', 'meeting'];
 
@@ -34,6 +34,3 @@ export function parseTarget(kind: unknown, id: unknown): RoomTarget | null {
   if (!k || typeof id !== 'string' || !/^[0-9a-f-]{8,64}$/i.test(id)) return null;
   return { kind: k, id };
 }
-
-/** One key per room, for the token handoff. */
-export const targetKey = (target: RoomTarget): string => `${target.kind}:${target.id}`;

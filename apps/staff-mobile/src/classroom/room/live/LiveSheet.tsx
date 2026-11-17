@@ -15,7 +15,7 @@ interface LiveSheetProps {
   onClose: () => void;
   onLeave: () => void;
   presence: readonly RoomPresence[];
-  onBrowser: () => void;
+  onBrowser: (() => void) | null;
 }
 
 /** A trial lesson's «المحادثة»: it opens after subscribing (canvas RoomXChat, the family). */

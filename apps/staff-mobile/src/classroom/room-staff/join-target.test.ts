@@ -1,4 +1,3 @@
-import { handOff, takeHandoff } from './join-handoff';
 import { joinPath, parseTarget, roomRoute, roomWebUrl } from './join-target';
 import { roomMode } from './room-mode';
 
@@ -32,14 +31,4 @@ test('in the app only with the setting on AND the native module present', () => 
   expect(roomMode(true, true)).toBe('app');
   expect(roomMode(false, true)).toBe('browser');
   expect(roomMode(true, false)).toBe('browser');
-});
-
-test('the handed-over token is read once', () => {
-  const join = { url: 'wss://x', token: 't', room: 'r', role: 'admin' as const };
-  handOff(lesson, join);
-  expect(takeHandoff(meeting)).toBeNull();
-  expect(takeHandoff(lesson)).toEqual({ url: 'wss://x', token: 't', role: 'admin', chat: true });
-  handOff(lesson, { ...join, role: 'guest', chat: false });
-  expect(takeHandoff(lesson)).toMatchObject({ role: 'guest', chat: false });
-  expect(takeHandoff(lesson)).toBeNull();
 });

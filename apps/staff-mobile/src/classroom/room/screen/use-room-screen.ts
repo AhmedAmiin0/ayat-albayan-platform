@@ -1,10 +1,8 @@
 import type { RoomPresence } from '@ab/shared';
 import { useState } from 'react';
-import { Linking } from 'react-native';
 import type { RoomHost } from '@/classroom/room/host/host-types';
 import { useHostPanel } from '@/classroom/room/host/use-host-panel';
 import type { SheetName } from '@/classroom/room/live/LiveSheet';
-import { roomWebUrl } from '@/classroom/room/model/join-target';
 import { useRoomSession, type RoomSessionInput } from '@/classroom/room/state/use-room-session';
 import { useLeaveGuard, type BackSource } from './use-leave-guard';
 
@@ -22,6 +20,8 @@ export interface RoomScreenInput extends RoomSessionInput {
   chat?: RoomChat | null | undefined;
   /** Who the lesson says is inside (its `room.inRoom`), where the app knows it. */
   presence?: readonly RoomPresence[] | undefined;
+  /** «فتح في المتصفح»: the app opens its web room (it leaves the room first); absent: none. */
+  onBrowser?: (() => void) | undefined;
   /** The navigator's `beforeRemove`: Android's back asks first while in the room. */
   backSource?: BackSource | undefined;
 }
@@ -43,7 +43,7 @@ function chatControl(chat: RoomChat | null, locked: boolean, explain: () => void
  * exits), «فتح في المتصفح» and the chat control.
  */
 export function useRoomScreen(props: RoomScreenInput) {
-  const { onExit, host, chat, presence, backSource, ...input } = props;
+  const { onExit, host, chat, presence, backSource, onBrowser, ...input } = props;
   const session = useRoomSession(input);
   const [sheet, setSheet] = useState<SheetName | null>(null);
   const live = session.phase.step === 'live';
@@ -68,11 +68,13 @@ export function useRoomScreen(props: RoomScreenInput) {
     closeSheet: () => setSheet(null),
     leave,
     back: onExit,
-    browser: () => {
-      leave();
-      onExit();
-      void Linking.openURL(roomWebUrl(input.target));
-    },
+    browser: onBrowser
+      ? () => {
+          leave();
+          onExit();
+          onBrowser();
+        }
+      : null,
     chat: chatControl(chat ?? null, lockedChat(session.joined), () => setSheet('chatLocked')),
   };
 }

@@ -42,3 +42,17 @@ export { Section } from './surface/Section';
 export { hairline, raisedCard } from './surface/surface';
 export { AppNativeTabs, type TabItem } from './tabs/AppNativeTabs';
 export type { TabIconName } from './tabs/tab-icons';
+// The calls' round controls and line icons (the staff app's calls and the lesson room).
+export { RoundButton } from './call/RoundButton';
+export {
+  CallArrowIcon,
+  CameraIcon,
+  CameraOffIcon,
+  ChevronDownIcon,
+  HangUpIcon,
+  MicIcon,
+  MicOffIcon,
+  PhoneIcon,
+  SpeakerIcon,
+  SwitchCameraIcon,
+} from './call/call-icons';

@@ -56,7 +56,8 @@ export interface RoomEndProps {
   /** «حاول مرة أخرى» / «ادخل مرة أخرى»: back to the preview, with a fresh token. */
   onAgain: () => void;
   onBack: () => void;
-  onBrowser: () => void;
+  /** «فتح في المتصفح» after a failure; null where the app offers no web room. */
+  onBrowser: (() => void) | null;
 }
 
 /** «المعلم/ة في الغرفة الآن» on RoomXLeft, when the lesson says so. */
@@ -72,7 +73,7 @@ export function RoomEnd({ phase, kind, presence, onAgain, onBack, onBrowser }: R
         message={phase.message}
         icon={(ink) => <AlertIcon color={ink} size={40} />}
         again={{ label: t.classroom.retry, onPress: onAgain }}
-        browser={{ label: t.mobileRoom.openInBrowser, onPress: onBrowser }}
+        browser={onBrowser ? { label: t.mobileRoom.openInBrowser, onPress: onBrowser } : undefined}
         onBack={onBack}
       />
     );

@@ -7,7 +7,7 @@ import {
 } from '@ab/client-core';
 import type { JoinRole, MuteSource } from '@ab/shared';
 import { useState } from 'react';
-import { joinError } from '@/classroom/links/join-text';
+import { classroomError } from '@/classroom/room/state/room-failure';
 import type { RoomTile } from '@/classroom/room/model/room-types';
 import { t } from '@ab/mobile-kit';
 import type { RoomHost } from './host-types';
@@ -44,7 +44,7 @@ export function useHostPanel({ host, me, tiles, onEnded }: HostPanelInput) {
     setBusy(true);
     setNotice(null);
     void work
-      .then(() => setNotice(done), (e: unknown) => setNotice(joinError(e)))
+      .then(() => setNotice(done), (e: unknown) => setNotice(classroomError(e)))
       .finally(() => {
         setBusy(false);
         setKick(null);

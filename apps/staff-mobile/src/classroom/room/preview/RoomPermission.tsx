@@ -8,7 +8,7 @@ interface RoomPermissionProps {
   onAllow: () => void;
   onSkip: () => void;
   /** «فتح في المتصفح»: the web room instead. */
-  onBrowser: () => void;
+  onBrowser: (() => void) | null;
 }
 
 /**
@@ -43,7 +43,9 @@ export function RoomPermission({ onAllow, onSkip, onBrowser }: RoomPermissionPro
       </AppText>
       <Button label={P.allow} onPress={onAllow} />
       <Button label={P.skip} variant="secondary" onPress={onSkip} />
-      <Button label={t.mobileRoom.openInBrowser} variant="ghost" onPress={onBrowser} />
+      {onBrowser ? (
+        <Button label={t.mobileRoom.openInBrowser} variant="ghost" onPress={onBrowser} />
+      ) : null}
     </View>
   );
 }

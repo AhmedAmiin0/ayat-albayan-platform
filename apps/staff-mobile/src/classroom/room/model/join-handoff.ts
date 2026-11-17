@@ -1,11 +1,13 @@
 import { chatOpen, type RoomJoinResult } from '@ab/shared';
 import type { RoomCredentials, RoomTarget } from './room-types';
-import { targetKey } from './join-target';
 
 // The token the press already fetched, handed to the room screen in memory: never a route param, a
 // log or the query cache. Read once (take), so a stale token is never reused; the screen asks the
 // API again then.
 const pending = new Map<string, RoomCredentials>();
+
+/** One key per room. */
+const targetKey = (target: RoomTarget): string => `${target.kind}:${target.id}`;
 
 /** What the room keeps of the join answer: the connection, one's role, the chat (trial: off). */
 export const credentialsOf = (join: RoomJoinResult): RoomCredentials => ({
