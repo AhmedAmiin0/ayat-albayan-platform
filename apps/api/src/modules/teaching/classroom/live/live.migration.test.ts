@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migrations 20261117000100..120 (owner 2026-11-16). No database in unit tests: this pins them.
+// Migrations 20261117100100..120 (owner 2026-11-16). No database in unit tests: this pins them.
 const code = (file: string) =>
   readFileSync(join(MIGRATIONS_DIR, file), 'utf8')
     .split('\n')
@@ -12,7 +12,7 @@ const code = (file: string) =>
 
 describe('migration 100: «إنهاء الحلقة للجميع»', () => {
   it('adds lessons.room_ended_at re-runnably, granting nothing', () => {
-    const sql = code('20261117000100_lesson_room_end.sql');
+    const sql = code('20261117100100_lesson_room_end.sql');
     expect(sql).toContain(
       'alter table public.lessons add column if not exists room_ended_at timestamptz;',
     );
@@ -22,7 +22,7 @@ describe('migration 100: «إنهاء الحلقة للجميع»', () => {
 
 describe('migration 110: who is inside the room', () => {
   it('adds entered_at / left_at and a partial index of those inside', () => {
-    const sql = code('20261117000110_room_presence.sql');
+    const sql = code('20261117100110_room_presence.sql');
     expect(sql).toContain('add column if not exists entered_at timestamptz');
     expect(sql).toContain('add column if not exists left_at timestamptz');
     expect(sql).toContain('create index if not exists classroom_participants_inside_idx');
@@ -31,7 +31,7 @@ describe('migration 110: who is inside the room', () => {
 });
 
 describe('migration 120: a time edit resets the room', () => {
-  const sql = code('20261117000120_edit_lesson_time_room.sql');
+  const sql = code('20261117100120_edit_lesson_time_room.sql');
 
   it('a moved lesson loses «افتح الحلقة الآن»', () => {
     expect(sql).toContain('create or replace function public.edit_lesson_time(p jsonb)');
@@ -52,7 +52,7 @@ describe('migration 120: a time edit resets the room', () => {
 });
 
 describe('migration 140: «اللغة» unset until chosen', () => {
-  const sql = code('20261117000140_profile_locale_unset.sql');
+  const sql = code('20261117100140_profile_locale_unset.sql');
 
   it("nullable with no default; the default 'ar' cleared, a deliberate 'en' kept; ar/en only", () => {
     expect(sql).toContain('alter column locale drop not null, alter column locale drop default');
@@ -65,10 +65,10 @@ describe('migration 140: «اللغة» unset until chosen', () => {
 
 describe('migrations 150 / 170: presence order, whom a sent link is for', () => {
   it('adds the columns re-runnably', () => {
-    expect(code('20261117000150_room_presence_order.sql')).toContain(
+    expect(code('20261117100150_room_presence_order.sql')).toContain(
       'add column if not exists presence_at timestamptz',
     );
-    const links = code('20261117000170_join_link_sent_for.sql');
+    const links = code('20261117100170_join_link_sent_for.sql');
     expect(links).toContain(
       'add column if not exists sent_for_student_id uuid references public.students (id) on delete set null',
     );
@@ -77,7 +77,7 @@ describe('migrations 150 / 170: presence order, whom a sent link is for', () => 
 });
 
 describe('migration 160: edit_lesson_time, review fixes', () => {
-  const sql = code('20261117000160_edit_lesson_time_pushes.sql');
+  const sql = code('20261117100160_edit_lesson_time_pushes.sql');
 
   it('the end clears only when the start moves', () => {
     expect(sql).toContain('room_ended_at = case when v_moved then null else l.room_ended_at end');

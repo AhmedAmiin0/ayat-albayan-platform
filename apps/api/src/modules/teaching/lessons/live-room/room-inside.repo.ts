@@ -15,7 +15,7 @@ const INSIDE = 'lesson_id, name, role, entered_at, link:lesson_join_links(studen
 const LIMIT = 500;
 
 /**
- * Who is inside lesson rooms now (migration 20261117000110): the rows the classroom's LiveKit
+ * Who is inside lesson rooms now (migration 20261117100110): the rows the classroom's LiveKit
  * webhook stamped entered and not left (RoomPresenceRepo writes them). Service role, read only.
  */
 @Injectable()

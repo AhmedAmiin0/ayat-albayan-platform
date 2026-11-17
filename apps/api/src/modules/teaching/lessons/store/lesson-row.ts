@@ -26,7 +26,7 @@ export type LessonRow = {
   rescheduled_from_id: string | null;
   /** Migration 190: the room opened early, and an instant lesson; optional in test fakes. */
   room_opened_at?: string | null;
-  /** «إنهاء الحلقة للجميع» (migration 20261117000100); optional in test fakes. */
+  /** «إنهاء الحلقة للجميع» (migration 20261117100100); optional in test fakes. */
   room_ended_at?: string | null;
   instant?: boolean;
   /** The missed lesson this حجز تعويضي replaces (R-SCH-10); optional in test fakes. */

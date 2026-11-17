@@ -36,7 +36,7 @@ export interface NewProfile {
   role_id: string | null;
   full_name: string;
   phone_e164: string | null;
-  /** null: never chosen (the app keeps its own, migration 20261117000140). */
+  /** null: never chosen (the app keeps its own, migration 20261117100140). */
   locale: string | null;
   tz: string;
 }

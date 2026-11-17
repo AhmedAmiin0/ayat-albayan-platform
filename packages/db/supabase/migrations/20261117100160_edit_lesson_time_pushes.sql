@@ -1,4 +1,4 @@
--- edit_lesson_time (latest: 20261117000120), review fixes (owner 2026-11-16):
+-- edit_lesson_time (latest: 20261117100120), review fixes (owner 2026-11-16):
 --   room_ended_at clears only when the start moves (an edit of the length keeps an ended lesson
 --   ended), like room_opened_at;
 --   a re-timed open lesson frees the family pushes' dedup keys of that lesson (lesson_starting,
@@ -6,7 +6,7 @@
 --   family hears «الحلقة على وشك البدء» / «بدأت الحلقة» again for the new time (A→B→A never collides).
 -- Everything else unchanged. Service role only, as before.
 -- RLS / grants: unchanged (the function is security invoker; revoke/grant restated below).
--- MANUAL ROLLBACK: re-run the function from 20261117000120_edit_lesson_time_room.sql.
+-- MANUAL ROLLBACK: re-run the function from 20261117100120_edit_lesson_time_room.sql.
 
 create or replace function public.edit_lesson_time(p jsonb) returns void
   language plpgsql set search_path = '' as $$

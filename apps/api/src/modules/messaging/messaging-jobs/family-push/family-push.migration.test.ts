@@ -34,9 +34,9 @@ describe('migration 310: the sweep’s index on sent reports', () => {
   });
 });
 
-describe('migration 20261117000130: «بدأت الحلقة»', () => {
+describe('migration 20261117100130: «بدأت الحلقة»', () => {
   it('adds lesson_live alone, re-runnably, granting nothing', () => {
-    const sql = code('20261117000130_lesson_live_push_kind.sql');
+    const sql = code('20261117100130_lesson_live_push_kind.sql');
     expect(sql.trim()).toBe("alter type public.push_kind add value if not exists 'lesson_live';");
   });
 });

@@ -11,7 +11,7 @@ export interface PortalLessonRow {
   ends_at: string;
   status: LessonStatus;
   room_opened_at: string | null;
-  /** «إنهاء الحلقة للجميع» (migration 20261117000100); optional in test fakes. */
+  /** «إنهاء الحلقة للجميع» (migration 20261117100100); optional in test fakes. */
   room_ended_at?: string | null;
   meeting_link: string | null;
   teacher: { display_name_ar: string; display_name_en: string | null; meeting_mode: string | null } | null;

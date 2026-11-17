@@ -16,7 +16,7 @@ export interface PresenceEvent {
 const olderThan = (at: string): string => `presence_at.is.null,presence_at.lt.${at}`;
 
 /**
- * Who is inside a lesson room now (migrations 20261117000110 / 150, on classroom_participants):
+ * Who is inside a lesson room now (migrations 20261117100110 / 150, on classroom_participants):
  * LiveKit's participant_joined / participant_left stamp the admitted identity's row in LiveKit's
  * order (an older or retried event changes nothing); the lessons module's RoomInsideRepo reads them
  * for the lesson payloads. Service role only.

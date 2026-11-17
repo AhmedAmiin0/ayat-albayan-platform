@@ -6,7 +6,7 @@ export interface LinkRow {
   id: string;
   /** The (lesson, student) row of the portal / the student's link. */
   student_id: string | null;
-  /** Whom a link sent by WhatsApp was for (migration 20261117000170); null on older rows. */
+  /** Whom a link sent by WhatsApp was for (migration 20261117100170); null on older rows. */
   sent_for_student_id: string | null;
 }
 

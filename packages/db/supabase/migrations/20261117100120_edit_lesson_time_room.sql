@@ -1,6 +1,6 @@
 -- A time edit resets the lesson room (owner 2026-11-16, room server bugs): room_opened_at survived a
 -- move, so a lesson opened early and moved to tomorrow stayed joinable now; room_ended_at (migration
--- 20261117000100) would keep a re-timed lesson shut. edit_lesson_time (latest: 20261111000200) is
+-- 20261117100100) would keep a re-timed lesson shut. edit_lesson_time (latest: 20261111000200) is
 -- unchanged except the two room columns: room_opened_at clears when the start moves, room_ended_at
 -- on every edit. Service role only, as before.
 -- RLS / grants: unchanged (the function is security invoker; revoke/grant restated below).
