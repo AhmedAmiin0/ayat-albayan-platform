@@ -3,12 +3,15 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t, type, useTheme, AppText, ErrorLine, whenText } from '@ab/mobile-kit';
-import { studentNames } from '@/today';
 import { MoveFields } from './MoveFields';
 import { MoveReason } from '@ab/mobile-kit';
 import { useReschedule } from './queries';
 import { familyTz, lessonDuration, type Scope } from './reschedule-body';
 import { RescheduleDone } from './RescheduleDone';
+
+/** «جودى خالد، يوسف أحمد»: the lesson's students in the heading. */
+const namesOf = (lesson: LessonView) =>
+  lesson.students.map((s) => s.name).join(t.common.listSeparator);
 
 export interface RescheduleFormProps {
   lesson: LessonView;
@@ -33,7 +36,7 @@ export function RescheduleForm({ lesson, onClose, onDone }: RescheduleFormProps)
   if (move.data) return <RescheduleDone moved={move.data} scope={scope} tz={tz} onClose={onDone ?? onClose} />;
   return (
     <View style={{ gap: 16 }}>
-      <RescheduleHeading names={studentNames(lesson)} startsAt={lesson.starts_at} tz={tz} />
+      <RescheduleHeading names={namesOf(lesson)} startsAt={lesson.starts_at} tz={tz} />
       {durationMin === null ? (
         <ErrorLine message={t.reschedule.badDuration} />
       ) : (

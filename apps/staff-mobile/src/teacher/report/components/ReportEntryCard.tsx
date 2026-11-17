@@ -19,7 +19,7 @@ import { IdentityBlock, MeetingLink } from './IdentityBlock';
 import { ReportFooter } from './ReportFooter';
 import { ReportTextField } from './ReportTextField';
 import { RubricSection } from './RubricSection';
-import { LessonFilesLink } from '@/teaching';
+import { LessonFilesLink } from '@/core/nav/LessonFilesLink';
 import { useReportEntry } from '@/teacher/report/hooks/use-report-entry';
 import { useScrollToInvalid } from '@/teacher/report/hooks/use-scroll-to-invalid';
 

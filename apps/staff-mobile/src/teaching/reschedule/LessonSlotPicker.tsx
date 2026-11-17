@@ -1,6 +1,5 @@
-import type { LessonView } from '@ab/shared';
+import { localDateIn, type LessonView } from '@ab/shared';
 import { SlotPicker, useSlotWeek } from '@ab/mobile-kit';
-import { localDate } from '@/today';
 import { useRescheduleSlots } from './queries';
 import { useViewerClock } from '@/core/lib/clock';
 
@@ -44,7 +43,7 @@ export function LessonSlotPicker(props: LessonSlotPickerProps) {
     ...edit,
     ...(slotsPath ? { path: slotsPath, lessonId: lesson.id } : {}),
   });
-  const notBefore = fromLessonDay ? localDate(new Date(lesson.starts_at), tz) : '';
+  const notBefore = fromLessonDay ? localDateIn(new Date(lesson.starts_at), tz) : '';
   return (
     <SlotPicker
       week={week}

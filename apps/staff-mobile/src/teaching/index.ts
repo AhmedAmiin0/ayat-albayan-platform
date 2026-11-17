@@ -6,4 +6,4 @@ export { RescheduleSheet } from './reschedule/RescheduleSheet';
 export { LessonSlotPicker } from './reschedule/LessonSlotPicker';
 export { CorrectOutcome } from './correct/CorrectOutcome';
 export { reasonField } from './reschedule/reschedule-body';
-export { LessonFilesLink, LessonFilesScreen, TeacherLessonFilesScreen } from './lesson-files';
+export { LessonFilesScreen, TeacherLessonFilesScreen } from './lesson-files';

@@ -8,7 +8,7 @@ import { RecordingPlay } from './RecordingPlay';
 import { RecordingVisibility } from './RecordingVisibility';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 import { useStableHandler } from '@/core/lib/stable-handler';
-import { LessonFilesLink } from '@/teaching';
+import { LessonFilesLink } from '@/core/nav/LessonFilesLink';
 
 const R = t.mobileStudentFile.recordings;
 const CHIP = {

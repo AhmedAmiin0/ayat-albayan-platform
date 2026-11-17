@@ -1,7 +1,7 @@
 import { attended, type ReportFormEntry, type ReportFormResponse } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@ab/mobile-kit';
-import { LessonFilesLink } from '@/teaching';
+import { LessonFilesLink } from '@/core/nav/LessonFilesLink';
 import { useV2Entry } from './hooks/use-v2-entry';
 import { AbsentCard } from './sections/AbsentCard';
 import { ArabicSection } from './sections/ArabicSection';
