@@ -81,9 +81,10 @@ test('«إلغاء مع استرداد»: unattended by default, everything paid
   expect(screen.getByText(summary(300, 0))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await sent({ refund: { choice: 'paid' } });
-  const done = await screen.findByText(s.doneRefund.replace('{amount}', sar(300)), { exact: false });
-  // owner 2026-11-17: the result says the status now and the transfer still to do by hand.
-  expect(done.props.children).toContain(s.next.replace('{amount}', sar(300)));
+  // owner 2026-11-17 (CourseXStopDone): the transfer is «الخطوة التالية» in its own block.
+  expect(await screen.findByText(s.doneRefund.replace('{amount}', sar(300)))).toBeTruthy();
+  expect(screen.getByText(s.next.replace('{amount}', sar(300)))).toBeTruthy();
+  expect(screen.getByText(s.notifiedAdmins)).toBeTruthy();
 });
 
 test('without subscriptions.refund (sales by default): never below attended × rate', async () => {
