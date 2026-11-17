@@ -1,4 +1,5 @@
 import type { Json } from '@ab/db';
+import { storageKeyOf, storageProviderOf, type StorageProvider } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { BUCKETS } from '@/common/storage/storage.paths';
@@ -13,6 +14,16 @@ interface EraseInput {
   now: Date;
   audit: { action: string; before?: Json; after: Json };
 }
+
+/**
+ * The other place a copy of a stored path may sit (REC-4): a «minio:» recording may still have
+ * its Supabase original under the same key (from before the cut-over or the bulk copy). A
+ * Supabase path's MinIO twin is StorageService.remove's own job.
+ */
+const TWIN: Record<StorageProvider, (path: string) => string | null> = {
+  minio: (path) => storageKeyOf(path),
+  supabase: () => null,
+};
 
 /**
  * Deletes one recording: the file first (a failure leaves the row and no audit row, so a retry
@@ -33,6 +44,7 @@ export class RecordingEraser {
   /** true when this call deleted the recording, false when another call already had. */
   async erase(input: EraseInput): Promise<boolean> {
     await this.storage.remove({ bucket: BUCKETS.recordings, path: input.filePath });
+    await this.removeTwin(input.filePath);
     if ((await this.queries.markDeleted(input.id, input.now.toISOString())) !== 1) return false;
     try {
       await this.audit.record({ actorId: input.actorId, entity: 'lesson_recordings', entityId: input.id, ...input.audit });
@@ -40,5 +52,15 @@ export class RecordingEraser {
       this.log.error(`recording ${input.id} deleted but its audit row failed: ${String(e)}`);
     }
     return true;
+  }
+  /** Best effort, like StorageService's MinIO twin: the recording itself is already gone. */
+  private async removeTwin(filePath: string): Promise<void> {
+    const twin = TWIN[storageProviderOf(filePath)](filePath);
+    if (twin === null) return;
+    try {
+      await this.storage.remove({ bucket: BUCKETS.recordings, path: twin });
+    } catch (e) {
+      this.log.warn(`recording copy ${twin} not removed: ${String(e)}`);
+    }
   }
 }

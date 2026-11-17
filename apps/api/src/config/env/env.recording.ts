@@ -1,4 +1,19 @@
+import { httpsUrl } from '@ab/shared';
+import { z } from 'zod';
 import type { Env } from './env';
+import { blankIsUnset, optionalSecret } from './env.blank';
+
+/**
+ * Lesson recordings: the Supabase Storage S3 endpoint the LiveKit egress uploads the MP4s to,
+ * https only (its keys sign every upload; T1). All five or none: unset = lessons are not recorded.
+ */
+export const RECORDING_SHAPE = {
+  RECORDING_S3_ENDPOINT: z.preprocess(blankIsUnset, httpsUrl.optional()),
+  RECORDING_S3_REGION: optionalSecret,
+  RECORDING_S3_BUCKET: optionalSecret,
+  RECORDING_S3_ACCESS_KEY: optionalSecret,
+  RECORDING_S3_SECRET: optionalSecret,
+};
 
 /** Where the LiveKit egress uploads lesson recordings (Supabase Storage through its S3 protocol). */
 export interface RecordingEnv {

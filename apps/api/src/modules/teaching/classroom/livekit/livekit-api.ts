@@ -37,7 +37,8 @@ const twirpHttp = (url: string, transport: FetchLike | null): Http =>
     base: () => twirpBase(url),
     headers: () => Promise.resolve({}),
     timeoutMs: TIMEOUT_MS,
-    redirect: 'follow',
+    // A signed server token never follows a redirect to another host (T1).
+    redirect: 'error',
     errorBody: twirpErrorSchema,
     errors: TWIRP_ERRORS,
     ...(transport ? { fetch: transport } : {}),

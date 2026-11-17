@@ -238,6 +238,8 @@ jobs:
           LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
           RECORDING_S3_ACCESS_KEY: ${{ secrets.RECORDING_S3_ACCESS_KEY }}
           RECORDING_S3_SECRET: ${{ secrets.RECORDING_S3_SECRET }}
+          MINIO_EGRESS_ACCESS_KEY: ${{ secrets.MINIO_EGRESS_ACCESS_KEY }}
+          MINIO_EGRESS_SECRET_KEY: ${{ secrets.MINIO_EGRESS_SECRET_KEY }}
           EXPO_ACCESS_TOKEN: ${{ secrets.EXPO_ACCESS_TOKEN }}
           # … and variables:
           SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.STAGING_SUPABASE_URL }}
@@ -259,7 +261,8 @@ jobs:
           keys="SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY SUPABASE_JWT_SECRET WEB_ORIGIN WA_API_BASE WA_API_VERSION
             WA_WABA_ID WA_ACCESS_TOKEN WA_APP_ID WA_APP_SECRET WA_VERIFY_TOKEN
             FEEDBACK_TOKEN_SECRET LOGIN_CODE_PEPPER LIVEKIT_URL LIVEKIT_API_KEY LIVEKIT_API_SECRET RECORDING_S3_ENDPOINT RECORDING_S3_REGION
-            RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL"
+            RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL
+            MINIO_EGRESS_ACCESS_KEY MINIO_EGRESS_SECRET_KEY"
           node tools/scripts/env/env-merge.mjs current.env $keys > new.env
           if cmp -s current.env new.env; then echo "server .env unchanged"; else
             ssh target "cp $DEST/.env $DEST/.env.bak-\$(date +%F-%H%M%S) 2>/dev/null || true; umask 077; cat > $DEST/.env.new && mv $DEST/.env.new $DEST/.env" < new.env

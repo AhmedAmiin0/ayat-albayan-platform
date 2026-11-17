@@ -30,4 +30,17 @@ describe('report code targets', () => {
     expect(phoneChoices({ facts, sent: false }).map((c) => c.to)).toEqual(['teacher']);
     expect(phoneOf({ facts, sent: false }, 'family')).toBeNull();
   });
+
+  it('a teacher no longer active gets no code (A3)', () => {
+    const facts = pageFacts();
+    const left = { ...facts, teacher: { ...facts.teacher, status: 'inactive' as const } };
+    expect(phoneOf({ facts: left, sent: true }, 'teacher')).toBeNull();
+    expect(phoneChoices({ facts: left, sent: true }).map((c) => c.to)).toEqual(['family']);
+  });
+
+  it('a lesson reassigned to another teacher: the report\'s teacher gets no code (A3)', () => {
+    const facts = pageFacts();
+    const moved = { ...facts, lesson: { ...facts.lesson, teacher_id: 't2' } };
+    expect(phoneOf({ facts: moved, sent: true }, 'teacher')).toBeNull();
+  });
 });
