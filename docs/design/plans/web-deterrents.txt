@@ -1,0 +1,43 @@
+WEB DETERRENTS + PHONE CAPTURE BLOCK (owner 2026-11-17)
+
+Owner words: «users should not be able to open inspect devtools or record the screen».
+Told: the web cannot truly block either one. The owner chose «Web deterrents only»: everything stays on the web (no app-only, no paid DRM).
+Shared by:
+- the lessons follow-up: recordings, the lesson-file viewer;
+- the room follow-up: the web live room.
+
+WEB (apps/staff-web), ONLY on protected surfaces: the recording player, the lesson-file viewer and the live room. Never app-wide (staff work, accessibility).
+W1. Devtools guard, one named hook useDevtoolsGuard(onOpen) in features/teaching/protection/ (effects only in named hooks).
+    - Use disable-devtool, pinned exactly 0.3.9 (MIT). Configure LOW-false-positive detectors only. No auto-redirect, no window close, no `debugger` freezes for normal users.
+    - On detection:
+      - pause every player on the page;
+      - blur the protected content (CSS filter) under an overlay «أغلق أدوات المطوّر لمتابعة المشاهدة»;
+      - write ONE audit event devtools_detected (profile, surface, asset id; rate-limited).
+    - Clear the overlay when it closes. Never log the user out (false positives).
+W2. Keys and menus on those surfaces:
+    - prevent F12, Ctrl/Cmd+Shift+I/J/C, Ctrl/Cmd+U (view source), Ctrl/Cmd+S (save) and Ctrl/Cmd+P (print);
+    - preventDefault contextmenu, dragstart and selectstart on the player, file viewer and video tiles;
+    - @media print hides them.
+W3. Visible watermark, one component ViewerWatermark:
+    - the viewer's code (student code for families; staff short code for staff) + the date;
+    - low opacity, slowly moving, pointer-events none;
+    - above video (in fullscreen too: inside the player container), file pages and live room video tiles.
+    Server-rendered PDF/image pages also burn it in (web-media-safety spec).
+W4. Test accounts: watermark skipped only with canSkip('watermark', { userIsTest, studentIsTest }) (docs/design/plans/test-accounts.txt). The devtools guard is NOT skippable (the owner did not choose it).
+W5. Honesty in the PR body: the guard is a deterrent (menu-opened devtools, other browsers and proxies bypass it). The real protection is server-side (tickets, encrypted HLS, no raw links) plus the watermark for traceability.
+
+PHONES (family-mobile and staff-mobile; expo-screen-capture is in family APK 0.3.0)
+P1. Android: usePreventScreenCapture (FLAG_SECURE) on the recording player, the lesson and lesson-file screens, and the in-app room. Screenshots and recordings come out black.
+P2. iOS: addScreenshotListener plus the capture-state listener. While screen recording/mirroring is active:
+    - hide the video and file content behind a notice «أوقف تسجيل الشاشة لمتابعة المشاهدة»;
+    - audit capture_detected once.
+P3. Both skip only with canSkip('screen_capture', { userIsTest, studentIsTest }).
+P4. Release builds carry no JS debugger or dev menu (verify the app config; no change if already so).
+    The staff app needs its next APK for expo-screen-capture if it is not yet in its native deps; say so in the PR body.
+
+TESTS: unit tests for:
+- the hook's reaction (pause + blur + one audit event);
+- the key/menu blocking;
+- the watermark text and the test-account skip;
+- the iOS capture-state notice;
+- the Android preventScreenCapture call on each protected screen.

@@ -110,3 +110,5 @@ TESTS: unit tests next to every change. Cover:
 - the job dedup;
 - the setting → egress body.
 The e2e SQL spec covers the migration.
+
+F. WEB DETERRENTS + PHONE CAPTURE BLOCK: implement docs/design/plans/web-deterrents.txt (owner 2026-11-17 «Web deterrents only») for the recording player, the lesson-file viewer and the lesson/recording screens.
