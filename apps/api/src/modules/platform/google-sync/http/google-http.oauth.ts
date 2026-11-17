@@ -4,7 +4,7 @@ import type { HttpFailure } from '@/common/infra/http/failure';
 import { createHttp } from '@/common/infra/http/http';
 import type { GoogleEnv } from '@/config/env/env';
 import type { GoogleOAuth } from '@/modules/platform/google-sync/google-client.port';
-import { toGoogleError } from './google-http';
+import { toGoogleError } from './google-error';
 
 export function oauthClient(env: GoogleEnv): OAuth2Client {
   return new OAuth2Client({

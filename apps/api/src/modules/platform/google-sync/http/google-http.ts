@@ -1,73 +1,76 @@
 import type { OAuth2Client } from 'google-auth-library';
+import type { z } from 'zod';
+import type { ErrorTable } from '@/common/infra/http/errors';
+import { Passthrough } from '@/common/infra/http/failure';
+import { createHttp } from '@/common/infra/http/http';
+import type { Http, JsonCall } from '@/common/infra/http/http.types';
 import type { GoogleEndpoints } from '@/config/env/env';
-import { GoogleApiError } from '@/modules/platform/google-sync/google-client.port';
+import {
+  Gone,
+  GOOGLE_ERRORS,
+  googleErrorSchema,
+  LOOKUP_ERRORS,
+  toGoogleError,
+} from './google-error';
 
-type RequestOpts = Parameters<OAuth2Client['request']>[0];
-type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+/** Today's `timeout: 30_000, retry: false`: the core never retries (backoff and pg-boss do). */
+const TIMEOUT_MS = 30_000;
 
-/** One authorised call: the OAuth2Client adds the bearer and refreshes it (google-auth-library). */
-interface HttpCall {
-  method: Method;
-  url: string;
-  query?: Record<string, string>;
-  body?: unknown;
-  headers?: Record<string, string>;
-}
-
-/** Google's reason: `error.errors[0].reason`, `error.status`, or the OAuth `error` string. */
-function reasonOf(data: unknown): string {
-  if (data && typeof data === 'object' && 'error' in data) {
-    const err = (data as { error: unknown }).error;
-    if (typeof err === 'string') return err;
-    if (err && typeof err === 'object') {
-      const e = err as { errors?: { reason?: string }[]; status?: string };
-      return e.errors?.[0]?.reason ?? e.status ?? 'error';
-    }
+/**
+ * The bearer from google-auth-library, refreshed when it is about to expire. A failed refresh is
+ * the GoogleApiError it was before (invalid_grant → auth), not a network failure.
+ */
+async function bearerOf(auth: OAuth2Client): Promise<Record<string, string>> {
+  try {
+    return Object.fromEntries(await auth.getRequestHeaders());
+  } catch (e) {
+    throw new Passthrough(toGoogleError(e));
   }
-  return 'error';
 }
 
-/** Any failure → GoogleApiError(status, reason); no status (network) → 0 'network'. Never a token. */
-export function toGoogleError(e: unknown): GoogleApiError {
-  if (e instanceof GoogleApiError) return e;
-  const err = e as { status?: number; response?: { status?: number; data?: unknown }; message?: string };
-  const status = err.response?.status ?? err.status ?? 0;
-  const reason = err.response?.data !== undefined ? reasonOf(err.response.data) : /invalid_grant/.test(err.message ?? '') ? 'invalid_grant' : 'network';
-  return new GoogleApiError(status, reason);
+interface Profile {
+  auth: OAuth2Client;
+  endpoints: GoogleEndpoints;
+  errors: ErrorTable<Error>;
 }
+
+/** Google's profile of the one outbound client (docs/36 h7): global fetch, redirects followed. */
+const googleHttp = (p: Profile): Http =>
+  createHttp({
+    name: 'google',
+    base: () => p.endpoints.api,
+    headers: () => bearerOf(p.auth),
+    timeoutMs: TIMEOUT_MS,
+    redirect: 'follow',
+    errorBody: googleErrorSchema,
+    errors: p.errors,
+  });
+
+const nullIfGone = (e: unknown): null => {
+  if (e instanceof Gone) return null;
+  throw e;
+};
 
 /** The REST layer shared by the Calendar, Drive and Sheets adapters. */
 export class GoogleHttp {
-  constructor(
-    private readonly auth: OAuth2Client,
-    readonly endpoints: GoogleEndpoints,
-  ) {}
+  private readonly http: Http;
+  private readonly lookup: Http;
 
-  async send<T>(call: HttpCall): Promise<T> {
-    const opts: RequestOpts = {
-      method: call.method,
-      url: call.url,
-      ...(call.query ? { params: call.query } : {}),
-      ...(call.body !== undefined ? { data: call.body } : {}),
-      ...(call.headers ? { headers: call.headers } : {}),
-      timeout: 30_000,
-      retry: false,
-    };
-    try {
-      const res = await this.auth.request<T>(opts);
-      return res.data;
-    } catch (e) {
-      throw toGoogleError(e);
-    }
+  constructor(
+    auth: OAuth2Client,
+    readonly endpoints: GoogleEndpoints,
+  ) {
+    this.http = googleHttp({ auth, endpoints, errors: GOOGLE_ERRORS });
+    this.lookup = googleHttp({ auth, endpoints, errors: LOOKUP_ERRORS });
+  }
+
+  /** One authorised call; its answer parsed by `call.schema`. */
+  send<S extends z.ZodType>(call: JsonCall<S>): Promise<z.output<S>> {
+    return this.http.json(call);
   }
 
   /** null on 404 / 410 (deleted by someone in Google). */
-  async maybe<T>(call: HttpCall): Promise<T | null> {
-    try {
-      return await this.send<T>(call);
-    } catch (e) {
-      if (e instanceof GoogleApiError && (e.status === 404 || e.status === 410)) return null;
-      throw e;
-    }
+  maybe<S extends z.ZodType>(call: JsonCall<S>): Promise<z.output<S> | null> {
+    return this.lookup.json(call).catch(nullIfGone);
   }
 }
