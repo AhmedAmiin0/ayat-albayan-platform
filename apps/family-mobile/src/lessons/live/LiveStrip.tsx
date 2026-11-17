@@ -8,7 +8,8 @@ const FACES = 3;
 
 /**
  * Who is in the room now (canvas RoomXLiveHome), on the deeper green: their faces overlapping,
- * «المعلم/ة في الغرفة الآن» over the names with their role.
+ * «المعلم/ة في الغرفة الآن» over the names with their role (a role word for one the portal does
+ * not name).
  */
 export function LiveStrip({ live }: { live: LiveRoom }) {
   const { color } = useTheme();
@@ -27,9 +28,9 @@ export function LiveStrip({ live }: { live: LiveRoom }) {
       }}
     >
       <View style={{ flexDirection: 'row' }}>
-        {live.people.slice(0, FACES).map((p, i) => (
+        {text.faces.slice(0, FACES).map((face, i) => (
           <View
-            key={`${p.role}-${p.name ?? String(i)}`}
+            key={`${face}-${String(i)}`}
             // A 2pt ring of the strip's green parts the overlapping faces.
             style={{
               marginStart: i === 0 ? 0 : -10,
@@ -38,7 +39,7 @@ export function LiveStrip({ live }: { live: LiveRoom }) {
               borderColor: color.lapisHover,
             }}
           >
-            <Avatar name={p.name} decorative />
+            <Avatar name={face} decorative />
           </View>
         ))}
       </View>

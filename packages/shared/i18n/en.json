@@ -243,6 +243,13 @@
           "staff": "{name} (lesson assistant)",
           "guest": "{name} (guest)"
         },
+        "unnamed": {
+          "teacher": "The teacher",
+          "student": "A student",
+          "guardian": "A guardian",
+          "staff": "Lesson assistant",
+          "guest": "Guest"
+        },
         "row": "Live now",
         "rowTeacher": "Live now · the teacher is in",
         "join": "Join now"

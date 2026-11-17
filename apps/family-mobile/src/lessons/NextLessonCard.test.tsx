@@ -60,3 +60,9 @@ test('live with the room in the app: «تدخل الغرفة مباشرةً…»
   expect(screen.queryByText(t.portal.app.lesson.roomNote)).toBeNull();
   expect(screen.getByRole('header', { name: t.portal.now })).toBeTruthy();
 });
+
+test('a person the portal names by role only: the role word, and their face too', async () => {
+  await show(liveLesson([{ name: 'فاطمة', role: 'teacher' }, { role: 'guest' }]));
+  expect(screen.getByText(`فاطمة · ${L.unnamed.guest}`)).toBeTruthy();
+  expect(screen.getAllByTestId('avatar-initials', { includeHiddenElements: true })).toHaveLength(2);
+});

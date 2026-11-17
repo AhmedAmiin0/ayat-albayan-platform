@@ -39,6 +39,8 @@ export interface LiveRoomWords {
   othersIn: string;
   /** How a person is named by role: «{name}», «{name} (مساعد حلقة)». */
   roles: Readonly<Record<RoomPresenceRole, string>>;
+  /** A person the portal names by role only (privacy): «المعلم/ة», «ضيف». */
+  unnamed: Readonly<Record<RoomPresenceRole, string>>;
   /** The schedule row: «جارية الآن». */
   row: string;
   /** The schedule row with the teacher in: «جارية الآن · المعلم/ة في الغرفة». */
@@ -51,16 +53,21 @@ export interface LiveRoomText {
   title: string;
   /** «فاطمة · مريم (مساعد حلقة)». */
   who: string;
+  /** Each person's avatar name, in order: their name, else their role word. */
+  faces: string[];
   row: string;
 }
 
 /** The card's and the row's words for a live room. */
 export function liveRoomText(live: LiveRoom, words: LiveRoomWords): LiveRoomText {
-  const name = (p: RoomPresence): string => words.roles[p.role].split('{name}').join(p.name);
+  // The portal names only the teacher and the family's own students; others come by role.
+  const name = (p: RoomPresence): string =>
+    p.name === undefined ? words.unnamed[p.role] : words.roles[p.role].split('{name}').join(p.name);
   return {
     since: live.minutes < 1 ? words.justNow : counted(words.since, live.minutes),
     title: live.teacherIn ? words.teacherIn : words.othersIn,
     who: live.people.map(name).join(' · '),
+    faces: live.people.map((p) => p.name ?? words.unnamed[p.role]),
     row: live.teacherIn ? words.rowTeacher : words.row,
   };
 }

@@ -23,6 +23,13 @@ const words: LiveRoomWords = {
     staff: '{name} (مساعد حلقة)',
     guest: '{name} (ضيف)',
   },
+  unnamed: {
+    teacher: 'المعلم/ة',
+    student: 'طالب',
+    guardian: 'ولي أمر',
+    staff: 'مساعد حلقة',
+    guest: 'ضيف',
+  },
   row: 'جارية الآن',
   rowTeacher: 'جارية الآن · المعلم في الغرفة',
 };
@@ -55,6 +62,7 @@ describe('liveRoomText', () => {
       since: '4 دقائق',
       title: 'المعلم في الغرفة',
       who: 'فاطمة · مريم (مساعد حلقة)',
+      faces: ['فاطمة', 'مريم'],
       row: 'جارية الآن · المعلم في الغرفة',
     });
   });
@@ -68,5 +76,14 @@ describe('liveRoomText', () => {
       who: 'يوسف',
       row: 'جارية الآن',
     });
+  });
+});
+
+describe('a person named by role only (privacy)', () => {
+  it('reads the role word, never a stray comma, and the face takes it too', () => {
+    const people = [teacher, { role: 'guest' as const }, { role: 'staff' as const }];
+    const text = liveRoomText({ minutes: 2, teacherIn: true, people }, words);
+    expect(text.who).toBe('فاطمة · ضيف · مساعد حلقة');
+    expect(text.faces).toEqual(['فاطمة', 'ضيف', 'مساعد حلقة']);
   });
 });
