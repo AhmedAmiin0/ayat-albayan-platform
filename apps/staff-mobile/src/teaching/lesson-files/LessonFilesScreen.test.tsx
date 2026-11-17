@@ -29,6 +29,7 @@ const assets = (students: Student[] = [{ id: 's1', name: 'سلمى', code: 'AB-0
   lesson_id: 'l1', starts_at: '2026-11-16T16:00:00.000Z', ends_at: '2026-11-16T16:45:00.000Z', students,
   recordings: [{
     id: 'r1', status: 'done', duration_seconds: 2530, size_bytes: 19_000_000, media: 'audio',
+    started_at: '2026-11-16T16:00:00.000Z', ended_at: '2026-11-16T16:42:10.000Z',
     visible_to_student: false, url: 'https://files.example/r.mp3',
   }],
   reports: [], files: [file],
@@ -65,4 +66,14 @@ test('a group lesson’s recording stays hidden, with the reason', async () => {
   ]));
   await renderWithQuery(<LessonFilesScreen />);
   expect(await screen.findByText(t.studentRecordings.visible.groupLesson)).toBeTruthy();
+});
+
+test('«أزل الملف» asks once more before the file goes', async () => {
+  await renderWithQuery(<LessonFilesScreen />);
+  await fireEvent.press(await screen.findByRole('button', { name: F.remove }));
+  expect(mockApiSend).not.toHaveBeenCalledWith('DELETE', '/lesson-files/f1');
+  expect(screen.getByText(`${F.removeConfirm} ${F.removeConfirmBody}`)).toBeTruthy();
+  const [, confirm] = screen.getAllByRole('button', { name: F.remove });
+  await fireEvent.press(confirm ?? screen.getByRole('button', { name: F.remove }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('DELETE', '/lesson-files/f1'));
 });

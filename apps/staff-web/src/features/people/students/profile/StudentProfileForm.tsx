@@ -38,8 +38,14 @@ const isSelect = (name: FieldName): name is SelectName => SELECTS.includes(name)
 const statusOf = (name: SelectName, value: string) =>
   name === 'status' ? STUDENT_STATUSES.find((s) => s === value) : undefined;
 
+interface StudentProfileFormProps {
+  student: StudentProfile;
+  /** The guardian's phone: the stop's done block opens the chat. */
+  chatPhone?: string | undefined;
+}
+
 /** Editable student profile (R-STU-05), saved with PATCH /students/:id. */
-export function StudentProfileForm({ student }: { student: StudentProfile }) {
+export function StudentProfileForm({ student, chatPhone }: StudentProfileFormProps) {
   const queryClient = useQueryClient();
   const { data: teachers = [] } = useQuery(teacherOptionsQuery);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
@@ -126,7 +132,7 @@ export function StudentProfileForm({ student }: { student: StudentProfile }) {
         </form.Subscribe>
         {message && (message.ok ? <SavedNote>{message.text}</SavedNote> : <FormAlert>{message.text}</FormAlert>)}
       </div>
-      <StatusRouteDialogs studentId={student.id} ask={status.ask} chatPhone={student.guardian.phone_e164}
+      <StatusRouteDialogs studentId={student.id} ask={status.ask} chatPhone={chatPhone}
         onClose={status.close} onDone={(text) => { status.close(); setMessage({ ok: true, text }); }} />
     </form>
   );

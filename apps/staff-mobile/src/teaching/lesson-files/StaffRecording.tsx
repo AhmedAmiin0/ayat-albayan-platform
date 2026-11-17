@@ -1,7 +1,11 @@
 import type { LessonAssetRecording } from '@ab/shared';
 import { View } from 'react-native';
-import { AppText, AudioPlayer, ErrorLine, SwitchRow, t, type, useTheme } from '@ab/mobile-kit';
+import {
+  AppText, AudioPlayer, ErrorLine, locale, SwitchRow, t, type, useTheme,
+} from '@ab/mobile-kit';
+import { useViewerClock } from '@/core/lib/clock';
 import { useRecordingVisibility } from './api';
+import { recordingMeta } from './file-words';
 import { openInPhonePlayer } from './open-in-phone';
 
 const R = t.studentRecordings;
@@ -13,16 +17,21 @@ interface StaffRecordingProps {
   group: boolean;
 }
 
-/** «تسجيل الحلقة» (canvas RecXStaffLessonFiles): state, player, «يراه الطالب وولي الأمر». */
+/**
+ * «تسجيل الحلقة» (canvas RecXStaffLessonFiles): state, «7:00 م – 7:42 م · المدة · الحجم», the
+ * player, «يراه الطالب وولي الأمر».
+ */
 export function StaffRecording({ rec, group }: StaffRecordingProps) {
   const { color } = useTheme();
   const toggle = useRecordingVisibility();
   const done = rec.status === 'done';
+  const meta = recordingMeta(rec, { ...useViewerClock(), locale });
   return (
     <View style={{ gap: 8 }}>
       <AppText style={{ fontFamily: type.ui[600], color: color.ink }}>
         {`${t.lessonFiles.recording} · ${R.status[rec.status]}`}
       </AppText>
+      <AppText style={{ fontSize: type.size.xs, color: color.ink3 }}>{meta}</AppText>
       {rec.url ? (
         <AudioPlayer id={rec.id} url={rec.url} createSource={openInPhonePlayer} />
       ) : null}

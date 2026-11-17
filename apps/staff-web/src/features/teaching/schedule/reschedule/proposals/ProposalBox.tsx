@@ -10,7 +10,7 @@ import {
   LESSONS_KEY,
   rejectProposal,
 } from '@/features/teaching/schedule/api';
-import { ConflictNotice } from './ConflictNotice';
+import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { ProposalAnswer } from './ProposalAnswer';
 import { useClock } from '@/lib/clock';
 import { proposalWords } from './proposal-words';

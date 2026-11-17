@@ -16,7 +16,7 @@ import { LessonDetails } from './LessonDetails';
 import { LessonInvoice } from './LessonInvoice';
 import { studentNames } from './lessons';
 import { MakeupAction } from '@/features/teaching/schedule/reschedule/MakeupAction';
-import { ProposalBox } from '@/features/teaching/schedule/reschedule/ProposalBox';
+import { ProposalBox } from '@/features/teaching/schedule/reschedule/proposals/ProposalBox';
 import { RescheduleForm } from '@/features/teaching/schedule/reschedule/RescheduleForm';
 
 export interface LessonDrawerProps {

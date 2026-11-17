@@ -43,6 +43,6 @@ export {
   type ViewerClock,
   whenText,
   zoneNote,
-} from './slots/slot-text';
-export { weekLabel } from './slots/week';
+} from './time/slots/slot-text';
+export { weekLabel } from './time/slots/week';
 export { useNow } from './time/use-now';

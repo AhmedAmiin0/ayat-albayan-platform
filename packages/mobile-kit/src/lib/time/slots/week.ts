@@ -1,6 +1,6 @@
 import { addDays, dateText, type DateFields } from '@ab/shared';
-import { t } from '../i18n/i18n';
-import { locale } from '../i18n/locale';
+import { t } from '../../i18n/i18n';
+import { locale } from '../../i18n/locale';
 
 // Calendar days are formatted at UTC noon in UTC: the device's own zone never shifts them.
 const SHORT: DateFields = { day: 'numeric', month: 'long' };

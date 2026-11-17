@@ -105,11 +105,16 @@ describe('StopCourseDialog: the money choices', () => {
     apiSend.mockResolvedValue({
       subscriptionId: SUB,
       refund: { amount: 290, card: 0, manual: 290 },
+      studentStatus: 'churned',
     });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'paid' } });
-    const next = expect.stringContaining(words.next.replace('{amount}', money(290)));
-    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(next));
+    // The transfer is «الخطوة التالية» in its own block; the admins get a bell.
+    expect(await screen.findByText(words.next.replace('{amount}', money(290)))).toBeTruthy();
+    expect(screen.getByText(words.notifiedAdmins)).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: words.close }));
+    const head = words.doneRefund.replace('{amount}', money(290));
+    expect(onDone).toHaveBeenCalledWith(head);
   });
 
   it('a custom refund: 0 .. net paid; above it the error shows early and nothing is sent', async () => {

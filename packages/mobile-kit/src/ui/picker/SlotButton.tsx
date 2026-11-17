@@ -1,6 +1,6 @@
 import { Pressable } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
-import { slotTimes, type ViewerClock } from '../../lib/slots/slot-text';
+import { slotTimes, type ViewerClock } from '../../lib/time/slots/slot-text';
 import { shape, type, useTheme } from '../../theme';
 import { AppText } from '../primitives/AppText';
 

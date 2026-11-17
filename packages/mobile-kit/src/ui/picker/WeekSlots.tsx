@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
-import { freeSlotDays, zoneNote, type ViewerClock } from '../../lib/slots/slot-text';
+import { freeSlotDays, zoneNote, type ViewerClock } from '../../lib/time/slots/slot-text';
 import { type, useTheme } from '../../theme';
 import { FilterPills } from '../form/FilterPills';
 import { FormLabel } from '../form/FormLabel';

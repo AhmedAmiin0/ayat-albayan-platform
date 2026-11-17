@@ -7,9 +7,9 @@ import {
   sameClockAt,
   type ClockCycle,
 } from '@ab/shared';
-import { t } from '../i18n/i18n';
-import { locale } from '../i18n/locale';
-import { ltr } from '../../ui/primitives/Ltr';
+import { t } from '../../i18n/i18n';
+import { locale } from '../../i18n/locale';
+import { ltr } from '../../../ui/primitives/Ltr';
 
 // A slot picker's words (R-SCH-06, docs/34), shared by the staff app and the family app: the
 // viewer's time first and the student's own clock beside it when it differs. Picked, never typed

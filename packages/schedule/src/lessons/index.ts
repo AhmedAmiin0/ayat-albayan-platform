@@ -3,7 +3,7 @@ export * from './conflicts.js';
 export * from './state-machine.js';
 export * from './series/time-edit.js';
 export type * from './views.js';
-export * from './proposals.js';
+export * from './proposals/proposals.js';
 export * from './series/series-days.js';
 export type * from './overview.js';
 export * from './teacher-name.js';

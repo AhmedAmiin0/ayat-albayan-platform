@@ -3,7 +3,7 @@ import { FormAlert } from '@/components/ui/form/form-alert';
 import { ButtonRow } from '@/components/ui/layout/button-row';
 import { t } from '@/lib/i18n/i18n';
 import { lessonErrorText } from '@/features/teaching/schedule/api';
-import { MoveReason } from './MoveReason';
+import { MoveReason } from '@/features/teaching/schedule/reschedule/MoveReason';
 import type { ProposalWords } from './proposal-words';
 
 interface ProposalAnswerProps {

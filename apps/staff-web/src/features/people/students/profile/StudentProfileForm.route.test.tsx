@@ -41,10 +41,24 @@ describe('StudentProfileForm: the status leads to the pause and the stop', () =>
     expect(statusSelect().value).toBe('active');
   });
 
-  it('«متوقف» without a package changes nothing and opens nothing', async () => {
+  it('«متوقف» without a package is set at once, as on mobile; no dialog', async () => {
     renderForm();
     fireEvent.change(statusSelect(), { target: { value: 'churned' } });
-    expect(statusSelect().value).toBe('active');
+    await vi.waitFor(() => expect(statusSelect().value).toBe('churned'));
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('«متوقف» with a package opens «إلغاء الاشتراك» of it and keeps the status', async () => {
+    const stop = { subscriptionId: 'sub1', futureLessons: 0, activeRules: 0, paid: 0, currency: 'SAR' };
+    api.apiFetch.mockImplementation(async (path: string) => {
+      if (path.endsWith('/course-card')) return { subscriptionId: 'sub1', course: null, upcoming: [] };
+      if (path.includes('/course-stop')) return { ...stop, stopped: null, refundUnavailable: false };
+      return [];
+    });
+    renderForm();
+    fireEvent.change(statusSelect(), { target: { value: 'churned' } });
+    expect(await screen.findByRole('dialog', { name: t.courseActions.stop.title })).toBeTruthy();
+    expect(statusSelect().value).toBe('active');
+    expect(api.apiFetch).toHaveBeenCalledWith('/students/s1/course-stop?subscriptionId=sub1');
   });
 });

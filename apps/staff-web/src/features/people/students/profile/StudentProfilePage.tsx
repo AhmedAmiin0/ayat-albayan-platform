@@ -124,7 +124,11 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <StudentInvoices studentId={student.id} />
       <StudentRecordings studentId={student.id} role="admin" />
       {can('student_channels.monitor') && <MonitorChannel studentId={student.id} audience="admin" />}
-      <StudentProfileForm key={student.id} student={student} />
+      <StudentProfileForm
+        key={student.id}
+        student={student}
+        chatPhone={student.guardian.phone_e164}
+      />
       <AssistantsManager studentId={student.id} />
       <BroughtByField studentId={student.id} />
       <StudentJoinLink studentId={student.id} />
