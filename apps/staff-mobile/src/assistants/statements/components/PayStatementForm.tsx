@@ -2,9 +2,18 @@ import { PAYMENT_METHODS, type AssistantStatementView, type PaymentMethod } from
 import { useState } from 'react';
 import { View } from 'react-native';
 import type { PayDraft } from '@/finance/payouts/payout-actions';
-import { t, Button, Field, FilterPills, type FilterPill, ErrorLine, useNow, money } from '@ab/mobile-kit';
+import {
+  t,
+  Button,
+  Field,
+  FilterPills,
+  type FilterPill,
+  ErrorLine,
+  useNow,
+  money,
+  FormLabel,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
 import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
 import { statementMonth } from '@/sales-money/lib/money-text';

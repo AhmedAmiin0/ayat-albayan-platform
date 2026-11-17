@@ -1,6 +1,7 @@
 import { attended, type ReportFormEntry, type ReportFormResponse } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@ab/mobile-kit';
+import { LessonFilesLink } from '@/teaching';
 import { useV2Entry } from './hooks/use-v2-entry';
 import { AbsentCard } from './sections/AbsentCard';
 import { ArabicSection } from './sections/ArabicSection';
@@ -24,7 +25,8 @@ interface ReportEntryCardV2Props {
 /**
  * One student's new «تقرير الحلقة» (form_version 2, docs/design/report-form): الحضور and البرنامج,
  * then either the absent card or the program's content (Quran parts by surah and ayah, Arabic
- * skills, Islamic studies), the overall grade, homework, next lesson and the note to the family.
+ * skills, Islamic studies), the overall grade, homework, next lesson, the note to the family and
+ * «ملفات الحلقة» (the lesson's recording and files, canvas RecXStaffReportLink).
  */
 export function ReportEntryCardV2({ form, entry, tz }: ReportEntryCardV2Props) {
   const s = useV2Entry(entry);
@@ -47,6 +49,7 @@ export function ReportEntryCardV2({ form, entry, tz }: ReportEntryCardV2Props) {
           <HomeworkCard s={s} />
           <NextPlanCard s={s} />
           <FamilyNoteCard s={s} />
+          <LessonFilesLink lessonId={form.lesson.id} admin={false} />
         </>
       ) : (
         <AbsentCard s={s} />

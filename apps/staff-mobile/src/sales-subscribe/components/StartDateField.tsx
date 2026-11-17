@@ -1,7 +1,6 @@
 import { daysBefore, SALES_START_BACK_DAYS } from '@ab/shared';
 import { Switch, View } from 'react-native';
-import { dayLabel } from '@/booking';
-import { t, type, useTheme, AppText, ErrorLine, Section } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, ErrorLine, Section, slotDayLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { DatePickerField } from '@/core/ui/form/date-picker';
 import { NoCommissionNote, UsedBeforeField } from '@/subscribe';
@@ -50,7 +49,7 @@ export function StartDateField({ canSet, days, academyToday, draft, onChange, er
   if (!canSet) {
     return (
       <Section title={m.startsOn}>
-        <Note>{m.startsOnDefault.replace('{date}', dayLabel(new Date(`${academyToday}T12:00:00Z`), 'UTC'))}</Note>
+        <Note>{m.startsOnDefault.replace('{date}', slotDayLabel(new Date(`${academyToday}T12:00:00Z`), 'UTC'))}</Note>
       </Section>
     );
   }

@@ -1,7 +1,6 @@
 import { View } from 'react-native';
-import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
+import { t, FilterPills, type FilterPill, FormLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 import type { BookingKind } from '@/booking/shared/contract';
 import type { TrialDraft } from '@/booking/trial/lib/draft';
 

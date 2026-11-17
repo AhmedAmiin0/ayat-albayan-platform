@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, Button, ErrorLine } from '@ab/mobile-kit';
+import { t, Button, ErrorLine, FormLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 import { ChatMediaSheet } from './ChatMediaSheet';
 import type { InvoiceDraft } from '@/booking/shared/contract';
 import { InvoiceActions } from './InvoiceActions';

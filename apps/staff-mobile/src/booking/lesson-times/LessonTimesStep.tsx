@@ -2,12 +2,11 @@ import { weekBounds } from '@ab/client-core';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { useViewerClock } from '@/core/lib/clock';
-import { t, ErrorState, Button } from '@ab/mobile-kit';
+import { t, ErrorState, Button, cityOf, FormLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 import { PicksList } from '@/booking/shared/PicksList';
 import { useSlots } from '@/booking/shared/queries';
-import { cityOf, slotWindow, windowStart } from '@/booking/shared/slots';
+import { slotWindow, windowStart } from '@/booking/shared/slots';
 import {
   excludeParams,
   type SlotMulti,

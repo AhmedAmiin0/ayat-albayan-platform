@@ -10,15 +10,14 @@ import type {
   CoursePausePreview,
   CourseResumePreview,
 } from '@ab/shared';
-import { t } from '@ab/mobile-kit';
-import { dayLabel } from '@/booking';
+import { t, slotDayLabel } from '@ab/mobile-kit';
 import { localDay } from '@/payments';
 
 // What «الدورة والباقة» and its previews say on mobile: the shared lines (@ab/client-core) with
 // the app's words and day formats (the viewer's zone for an instant). Pure.
 
 /** «الأحد 22 نوفمبر» of an instant in the viewer's zone. */
-export const dayIn = (tz: string) => (instant: string): string => dayLabel(new Date(instant), tz);
+export const dayIn = (tz: string) => (instant: string): string => slotDayLabel(new Date(instant), tz);
 
 /** The card's teacher · last day line and «بقيت حلقتان بلا مواعيد». */
 export const cardLines = (course: NonNullable<CourseCardView['course']>) =>

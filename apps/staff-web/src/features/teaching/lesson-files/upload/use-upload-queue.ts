@@ -1,7 +1,7 @@
 import { pickProblem, type PickedFile, type UploadProblem } from '@ab/client-core';
 import type { LessonFileKind } from '@ab/shared';
 import { useRef, useState } from 'react';
-import { useUploadFile } from './use-lesson-files';
+import { useUploadFile } from '@/features/teaching/lesson-files/use-lesson-files';
 
 /** One picked file's line: waiting, on its way, up, or why not. */
 export type QueueState = 'queued' | 'uploading' | 'done' | UploadProblem;

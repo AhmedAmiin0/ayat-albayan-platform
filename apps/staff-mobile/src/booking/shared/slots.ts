@@ -38,6 +38,3 @@ export function ruleFromSlot(
     weekday: weekdayOfDate(startsOn),
   };
 }
-
-/** The slot words: moved to the kit (the family's «اطلب موعدًا آخر» reads them too). */
-export { cityOf, freeSlotDays, slotDayLabel as dayLabel, whenText } from '@ab/mobile-kit';

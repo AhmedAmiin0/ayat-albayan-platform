@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { whenText } from '@/booking';
-import { t, type, useTheme, AppText } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, whenText } from '@ab/mobile-kit';
 import { studentNames } from '@/today';
 import { lengthOf } from '@/edit-time/lib/edit-time-body';
 import { lengthText } from '@/edit-time/lib/edit-time-text';

@@ -1,7 +1,6 @@
 import { RIYADH_TZ, type ClockCycle, type OverviewTeacher, type OverviewTimeOff, type Span } from '@ab/shared';
 import { teacherLoad } from '@/booking/trial/components/TeacherStep';
-import { cityOf } from '@/booking/shared/slots';
-import { t } from '@ab/mobile-kit';
+import { t, cityOf } from '@ab/mobile-kit';
 import { formatTimeOff } from '@/more/schedule';
 import { clockIn, isolated, rangeOf } from '@/core/lib/clock';
 

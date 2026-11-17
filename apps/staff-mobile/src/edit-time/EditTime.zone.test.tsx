@@ -1,7 +1,6 @@
 import { setViewerPersonTz } from '@ab/client-core';
 import { act, screen } from '@testing-library/react-native';
-import { whenText } from '@/booking/shared/slots';
-import { t } from '@ab/mobile-kit';
+import { t, whenText } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { EditTimeHeader } from './components/EditTimeHeader';
 import { upcoming } from './testing/fixtures';

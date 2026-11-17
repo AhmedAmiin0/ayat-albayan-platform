@@ -2,11 +2,19 @@ import { counted, togglePick } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { useViewerClock, zoneNote } from '@/core/lib/clock';
-import { t, AppText, ErrorState, SlotButton, type, useTheme } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import {
+  t,
+  AppText,
+  ErrorState,
+  SlotButton,
+  type,
+  useTheme,
+  FormLabel,
+  freeSlotDays,
+} from '@ab/mobile-kit';
 import { MultiFooter } from './MultiFooter';
 import { useSlots } from '@/booking/shared/queries';
-import { freeSlotDays, slotWindow, windowStart } from '@/booking/shared/slots';
+import { slotWindow, windowStart } from '@/booking/shared/slots';
 
 /** A weekly package: one slot per weekday of the family's zone, each with its own time. */
 export interface SlotMulti {

@@ -52,6 +52,8 @@ export function assetRecording(row: AssetRecordingRow, url: string | null): Less
   return {
     id: row.id,
     status,
+    started_at: row.started_at,
+    ended_at: row.ended_at,
     duration_seconds: durationSeconds(row.started_at, row.ended_at),
     size_bytes: row.size_bytes,
     media: mediaOfPath(row.file_path),

@@ -1,9 +1,8 @@
 import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { whenText } from '@/booking';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t, type, useTheme, AppText, ErrorLine } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, ErrorLine, whenText } from '@ab/mobile-kit';
 import { studentNames } from '@/today';
 import { MoveFields } from './MoveFields';
 import { MoveReason } from '@ab/mobile-kit';

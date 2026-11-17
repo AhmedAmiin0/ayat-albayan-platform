@@ -25,6 +25,7 @@ export const assets = (over: Partial<LessonAssets> = {}): LessonAssets => ({
   recordings: [
     {
       id: 'rec-1', status: 'done', duration_seconds: 2640, size_bytes: 22_020_096,
+      started_at: '2026-11-16T16:00:00.000Z', ended_at: '2026-11-16T16:44:00.000Z',
       media: 'audio', visible_to_student: false, url: 'https://files.example/rec.mp3',
     },
   ],

@@ -1,8 +1,7 @@
 import { DURATIONS, type Duration } from '@ab/shared';
 import { View } from 'react-native';
-import { t, FilterPills } from '@ab/mobile-kit';
+import { t, FilterPills, FormLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 
 const lengths: Record<string, string | undefined> = t.enums.duration;
 const pills = () =>

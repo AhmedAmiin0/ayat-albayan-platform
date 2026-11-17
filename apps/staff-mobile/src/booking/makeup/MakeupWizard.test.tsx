@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { ApiError, t } from '@ab/mobile-kit';
+import { ApiError, t, whenText } from '@ab/mobile-kit';
 import { pickReceipt } from '@/core/lib/receipts/receipt';
 import { renderWithQuery } from '@/test/query';
 import { booked, maryam, SUN_17 } from '@/booking/testing/fixtures';
@@ -7,7 +7,6 @@ import { uploadInvoice } from '@/booking/invoice/invoice-upload';
 import type { MakeupSource } from './makeup-draft';
 import { MakeupWizard } from './MakeupWizard';
 import { fakeBookingApi, PHOTO, PREVIEW } from '@/booking/testing/test-utils';
-import { whenText } from '@/booking/shared/slots';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 

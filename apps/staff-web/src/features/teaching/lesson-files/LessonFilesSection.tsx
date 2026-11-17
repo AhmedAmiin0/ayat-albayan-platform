@@ -3,7 +3,7 @@ import { t } from '@/lib/i18n/i18n';
 import { LessonFileItem } from './LessonFileItem';
 import { RecordingItem } from './RecordingItem';
 import { ReportPdfItem } from './ReportPdfItem';
-import { UploadBox } from './UploadBox';
+import { UploadBox } from './upload/UploadBox';
 import { useLessonAssets } from './use-lesson-files';
 
 const F = t.lessonFiles;

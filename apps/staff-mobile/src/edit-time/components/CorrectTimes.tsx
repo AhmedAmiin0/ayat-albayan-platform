@@ -2,8 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { dayLabel } from '@/calendar';
 import { useViewerClock, zoneNote } from '@/core/lib/clock';
-import { t, type, useTheme, AppText, SlotButton } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import { t, type, useTheme, AppText, SlotButton, FormLabel } from '@ab/mobile-kit';
 import { localDate } from '@/today';
 import { correctStarts } from '@/edit-time/lib/edit-time-body';
 

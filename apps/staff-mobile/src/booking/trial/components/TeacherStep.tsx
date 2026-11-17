@@ -17,8 +17,8 @@ import {
   type,
   useTheme,
   locale,
+  FormLabel,
 } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 import { useBookingTeachers } from '@/booking/shared/queries';
 
 export interface TeacherStepProps {

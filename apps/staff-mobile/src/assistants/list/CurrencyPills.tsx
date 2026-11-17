@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { FormLabel } from '@/core/ui/form/FormLabel';
-import { FilterPills, ErrorLine, currencyName } from '@ab/mobile-kit';
+import { FilterPills, ErrorLine, currencyName, FormLabel } from '@ab/mobile-kit';
 import { TERM_CURRENCIES } from '@/assistants/terms/terms-form';
 
 interface CurrencyPillsProps {
