@@ -4,18 +4,13 @@ import { useEffect } from 'react';
 import { meQuery } from '../../auth/use-permissions';
 import { followProfileLocale } from './profile-locale';
 
-const ME_HASH = hashKey(meQuery().queryKey);
-
 /**
- * A live /auth/me answer: a fetch that succeeded. Not the persisted copy of an earlier run (a
+ * A live answer: a fetch that succeeded. Not the persisted copy of an earlier run (a
  * restore is no fetch), which may predate a «اللغة» switch and would switch straight back, and not
  * a setQueryData (manual).
  */
-const isLiveMe = (event: QueryCacheNotifyEvent): boolean =>
-  event.type === 'updated' &&
-  event.action.type === 'success' &&
-  event.action.manual !== true &&
-  event.query.queryHash === ME_HASH;
+const isLiveSuccess = (event: QueryCacheNotifyEvent): boolean =>
+  event.type === 'updated' && event.action.type === 'success' && event.action.manual !== true;
 
 /**
  * After sign-in: the language of the login (GET /auth/me `locale`) when it differs from this run's
@@ -27,8 +22,10 @@ export function useProfileLocaleSync(signedIn: boolean): void {
   const client = useQueryClient();
   useEffect(() => {
     if (!signedIn) return undefined;
+    const me = hashKey(meQuery().queryKey); // read here, not at import: tests mock use-permissions
     return client.getQueryCache().subscribe((event) => {
-      if (isLiveMe(event)) void followProfileLocale(meLocaleOf(event.query.state.data));
+      const live = isLiveSuccess(event) && event.query.queryHash === me;
+      if (live) void followProfileLocale(meLocaleOf(event.query.state.data));
     });
   }, [client, signedIn]);
 }
