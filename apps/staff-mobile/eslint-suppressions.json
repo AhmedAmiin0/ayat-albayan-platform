@@ -6377,7 +6377,7 @@
   },
   "src/sales-course/change/CourseChangeDone.tsx": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales-course/change/CourseChangeFlow.tsx": {
@@ -8083,9 +8083,6 @@
   },
   "src/students/course-pause/PausePreviewLine.tsx": {
     "max-len": {
-      "count": 3
-    },
-    "no-nested-ternary": {
       "count": 1
     }
   },
@@ -8234,14 +8231,6 @@
       "count": 3
     }
   },
-  "src/students/profile/RenewButton.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/students/profile/SecondPhone.test.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
@@ -8269,11 +8258,6 @@
   "src/students/profile/StatusChanger.test.tsx": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/students/profile/StatusChanger.tsx": {
-    "max-len": {
-      "count": 3
     }
   },
   "src/students/profile/StudentFacts.tsx": {

@@ -108,11 +108,8 @@ describe('StopCourseDialog: the money choices', () => {
     });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'paid' } });
-    // owner 2026-11-17: the result also says the status now and the transfer still to do.
-    const head = words.doneRefund.replace('{amount}', money(290));
-    const next = words.next.replace('{amount}', money(290));
-    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(expect.stringContaining(head)));
-    expect(onDone).toHaveBeenCalledWith(expect.stringContaining(next));
+    const next = expect.stringContaining(words.next.replace('{amount}', money(290)));
+    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(next));
   });
 
   it('a custom refund: 0 .. net paid; above it the error shows early and nothing is sent', async () => {

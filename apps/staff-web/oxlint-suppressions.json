@@ -5106,12 +5106,9 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "ab/no-restricted-syntax": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
@@ -9933,7 +9930,7 @@
   },
   "src/features/teaching/course-actions/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 6
+      "count": 4
     }
   },
   "src/features/teaching/course-pause/ChangeUntilDialog.tsx": {
@@ -10794,9 +10791,6 @@
   },
   "src/features/teaching/schedule/reschedule/ProposalBox.tsx": {
     "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },

@@ -4,7 +4,7 @@ import { PAUSE, pauseApp, STUDENT } from './course-pause.fakes';
 type App = Awaited<ReturnType<typeof pauseApp>>;
 const URL = `/students/${STUDENT}/course-pause/resume-preview`;
 
-// owner 2026-11-17: «استئناف الدورة الآن؟» says which lessons come back and how far the package moves.
+// owner 2026-11-17: «استئناف الدورة الآن؟» says the lessons back and how far the package moves.
 describe('GET /students/:id/course-pause/resume-preview', () => {
   let t: App;
   beforeAll(async () => {

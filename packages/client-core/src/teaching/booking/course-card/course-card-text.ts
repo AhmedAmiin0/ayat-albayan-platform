@@ -59,7 +59,7 @@ export function pausePreviewLines(input: {
   const { preview, words, day } = input;
   const cancels = fill(count(words.cancels, preview.lessons), 'dates', datesText(preview.starts ?? [], day));
   const days = preview.extend_days;
-  const extend = days === null || days === undefined ? words.extendOpen : count(words.extendDays, days);
+  const extend = days == null ? words.extendOpen : count(words.extendDays, days);
   return [cancels, extend];
 }
 

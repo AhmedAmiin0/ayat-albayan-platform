@@ -1,7 +1,9 @@
 import type { CourseCardView } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
 import { Permissions } from '@/common/auth/decorators';
+import { ZodParam } from '@/common/http/zod-inputs';
 import { CourseCards } from './course-card.service';
 
 /** «الدورة والباقة» on the admin's student file (owner 2026-11-17): students.read. */
@@ -10,10 +12,10 @@ import { CourseCards } from './course-card.service';
 @Permissions('students.read')
 @Controller('students/:id/course-card')
 export class CourseCardController {
-  constructor(private readonly cards: CourseCards) {}
+  constructor(@Inject(CourseCards) private readonly cards: CourseCards) {}
 
   @Get()
-  card(@Param('id', ParseUUIDPipe) id: string): Promise<CourseCardView> {
+  card(@ZodParam('id', z.uuid()) id: string): Promise<CourseCardView> {
     return this.cards.card(id);
   }
 }
@@ -27,10 +29,10 @@ export class CourseCardController {
 @Permissions('self.sales_academy')
 @Controller('sales/students/:id/course-card')
 export class SalesCourseCardController {
-  constructor(private readonly cards: CourseCards) {}
+  constructor(@Inject(CourseCards) private readonly cards: CourseCards) {}
 
   @Get()
-  card(@Param('id', ParseUUIDPipe) id: string): Promise<CourseCardView> {
+  card(@ZodParam('id', z.uuid()) id: string): Promise<CourseCardView> {
     return this.cards.card(id);
   }
 }

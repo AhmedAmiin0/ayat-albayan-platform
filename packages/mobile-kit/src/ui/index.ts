@@ -28,6 +28,7 @@ export { AppText, type AppTextNode } from './primitives/AppText';
 export { Avatar } from './primitives/Avatar';
 export { Button, type ButtonVariant, pressScale } from './primitives/Button';
 export { Chevron } from './primitives/Chevron';
+export { SquareButton } from './primitives/SquareButton';
 export { ContentText } from './primitives/ContentText';
 export { IconButton } from './primitives/IconButton';
 export { isolate, Ltr, ltr } from './primitives/Ltr';

@@ -1,5 +1,5 @@
 import { courseLessonCount } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, notFound } from '@/common/http/errors';
 import { CourseLessonRepo } from '@/modules/teaching/booking/course-change/course-change.lessons';
@@ -7,8 +7,14 @@ import { CourseChangeRepo } from '@/modules/teaching/booking/course-change/cours
 import { CourseChange } from '@/modules/teaching/booking/course-change/course-change.service';
 import { actorOf } from '@/modules/teaching/booking/profile/profile-course.service';
 import { ProfileCourseRepo } from '@/modules/teaching/booking/profile/profile-course.repo';
-import { CourseExtendRepo } from './course-extend.repo';
+import type { CourseExtendRepo } from './course-extend.repo';
 import { planExtend, type ExtendPlan } from './course-extend.plan';
+
+/** The package «مدّ الجدول» books and its plan. */
+export interface PlannedExtend {
+  id: string;
+  plan: ExtendPlan;
+}
 
 export interface ExtendTarget {
   studentId: string;
@@ -25,13 +31,13 @@ export interface ExtendTarget {
 @Injectable()
 export class CourseExtendReader {
   constructor(
-    private readonly profile: ProfileCourseRepo,
-    private readonly course: CourseChange,
-    private readonly rules: CourseChangeRepo,
-    private readonly lessons: CourseLessonRepo,
+    @Inject(ProfileCourseRepo) private readonly profile: ProfileCourseRepo,
+    @Inject(CourseChange) private readonly course: CourseChange,
+    @Inject(CourseChangeRepo) private readonly rules: CourseChangeRepo,
+    @Inject(CourseLessonRepo) private readonly lessons: CourseLessonRepo,
   ) {}
 
-  async plan(target: ExtendTarget, repo: CourseExtendRepo): Promise<{ id: string; plan: ExtendPlan }> {
+  async plan(target: ExtendTarget, repo: CourseExtendRepo): Promise<PlannedExtend> {
     const { studentId } = target;
     const id = target.subscriptionId ?? (await this.profile.currentSubscription(studentId));
     const sub = await this.course.owned(id, actorOf(target.user));

@@ -13,7 +13,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { CoursePausePreviews } from './course-pause.preview';
 import { CoursePauseService } from './course-pause.service';
 
@@ -52,7 +52,7 @@ export class CoursePauseController {
   /** What «استئناف الدورة» does now: the lessons booked back, the days the package moves. */
   @Get('resume-preview')
   @Permissions('courses.pause')
-  resumePreview(@Param('id', ParseUUIDPipe) id: string): Promise<CourseResumePreview> {
+  resumePreview(@ZodParam('id', z.uuid()) id: string): Promise<CourseResumePreview> {
     return this.previews.resume(id);
   }
 

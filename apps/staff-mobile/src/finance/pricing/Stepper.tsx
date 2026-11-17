@@ -1,5 +1,5 @@
-import { Pressable, View } from 'react-native';
-import { t, shape, type, useTheme, AppText, Ltr } from '@ab/mobile-kit';
+import { View } from 'react-native';
+import { t, type, useTheme, AppText, Ltr, SquareButton } from '@ab/mobile-kit';
 import { stepValue } from './step-value';
 
 export interface StepperProps {
@@ -30,25 +30,7 @@ interface StepButtonProps {
 function StepButton({ glyph, name, hint, disabled, onPress }: StepButtonProps) {
   const { color } = useTheme();
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={name}
-      accessibilityHint={hint}
-      accessibilityState={{ disabled }}
-      disabled={disabled}
-      onPress={onPress}
-      style={({ pressed }) => ({
-        width: shape.control.touch,
-        height: shape.control.touch,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: shape.radius.md,
-        borderWidth: 1,
-        borderColor: color.ruleInput,
-        backgroundColor: pressed ? color.lapisWash : color.raised,
-        opacity: disabled ? 0.45 : 1,
-      })}
-    >
+    <SquareButton label={name} hint={hint} disabled={disabled} pressed="wash" onPress={onPress}>
       <AppText
         style={{
           fontFamily: type.ui[600],
@@ -59,7 +41,7 @@ function StepButton({ glyph, name, hint, disabled, onPress }: StepButtonProps) {
       >
         {glyph}
       </AppText>
-    </Pressable>
+    </SquareButton>
   );
 }
 

@@ -3,6 +3,16 @@ import { t } from '../../lib/i18n/i18n';
 import { shape, type, useTheme } from '../../theme';
 import { AppText } from '../primitives/AppText';
 import { Chevron } from '../primitives/Chevron';
+import { SquareButton } from '../primitives/SquareButton';
+
+/** The period's label: body size, semibold, tabular digits. */
+const headStyle = (ink: string) => ({
+  color: ink,
+  fontFamily: type.ui[600],
+  fontSize: type.size.body,
+  lineHeight: type.lineHeight(type.size.body),
+  fontVariant: ['tabular-nums' as const],
+});
 
 export interface PeriodSwitcherProps {
   /** «3 أكتوبر – 9 أكتوبر» or «الخميس 1 أكتوبر». */
@@ -30,15 +40,7 @@ export function PeriodSwitcher(props: PeriodSwitcherProps) {
       <Arrow label={props.prevLabel} to="prev" onPress={props.onPrev} disabled={props.canPrev === false} />
       <AppText
         accessibilityRole="header"
-        style={{
-          flex: 1,
-          textAlign: 'center',
-          fontFamily: type.ui[600],
-          fontSize: type.size.body,
-          lineHeight: type.lineHeight(type.size.body),
-          color: color.ink,
-          fontVariant: ['tabular-nums'],
-        }}
+        style={{ flex: 1, textAlign: 'center', ...headStyle(color.ink) }}
       >
         {props.label}
       </AppText>
@@ -81,25 +83,8 @@ interface ArrowProps {
 function Arrow({ label, to, onPress, disabled = false }: ArrowProps) {
   const { color } = useTheme();
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityState={{ disabled }}
-      disabled={disabled}
-      onPress={onPress}
-      style={({ pressed }) => ({
-        opacity: disabled ? 0.45 : 1,
-        width: shape.control.touch,
-        height: shape.control.touch,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: shape.radius.md,
-        borderWidth: 1,
-        borderColor: color.ruleInput,
-        backgroundColor: pressed ? color.sunk : color.raised,
-      })}
-    >
+    <SquareButton label={label} onPress={onPress} disabled={disabled}>
       <Chevron to={to} color={color.ink} />
-    </Pressable>
+    </SquareButton>
   );
 }

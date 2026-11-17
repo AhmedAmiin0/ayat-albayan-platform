@@ -9,9 +9,7 @@ export {
   cityOf,
   dayLabel,
   dayStartUtc,
-  freeSlotDays,
   ruleFromSlot,
-  slotTimes,
   whenText,
 } from './shared/slots';
 export {

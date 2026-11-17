@@ -29,7 +29,7 @@ export const cityOf = (tz: string): string => cities[tz] ?? ltr(tz);
 /** «الأوقات بتوقيتك (القاهرة)»: the note over times read in the viewer's zone `tz`. */
 export const zoneNote = (tz: string): string => t.schedule.zoneNote.replace('{city}', cityOf(tz));
 
-export interface SlotDay<S> {
+interface SlotDay<S> {
   /** The viewer's local date, YYYY-MM-DD. */
   date: string;
   /** «الأحد 4 أكتوبر». */

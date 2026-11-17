@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError } from '../../core/http/index.js';
-import { FAMILY_NOTICE, familyErrorOf, runFamilyAction } from './family-action.js';
+import { FAMILY_NOTICE, familyErrorOf, familyFailureText, runFamilyAction } from './family-action.js';
 import type { PortalLessonSends } from './lesson-sends.js';
 
 const ids = { studentId: 's1', lessonId: 'l1' };
@@ -35,5 +35,16 @@ describe('a family lesson action (owner 2026-11-17)', () => {
     expect(familyErrorOf(new ApiError(409, { code: 'proposal_pending' }))).toBe('proposal_pending');
     expect(familyErrorOf(new ApiError(409, { code: 'boom' }))).toBeNull();
     expect(familyErrorOf(new Error('offline'))).toBeNull();
+  });
+});
+
+describe('familyFailureText', () => {
+  const words = {
+    errors: { proposal_pending: 'p', lesson_started: 's', no_request: 'n', date_in_past: 'd' },
+    failed: 'f',
+  };
+  it('a known refusal in its own words, anything else the general one', () => {
+    expect(familyFailureText(new ApiError(409, { code: 'no_request' }), words)).toBe('n');
+    expect(familyFailureText(new Error('x'), words)).toBe('f');
   });
 });

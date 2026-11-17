@@ -4,7 +4,7 @@ import {
   type ProposalApprove,
   type ProposalRequester,
 } from '@ab/shared';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict } from '@/common/http/errors';
 import { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
@@ -58,7 +58,7 @@ export class ProposalDecisionService {
   constructor(
     private readonly proposals: LessonProposalRepo,
     private readonly reschedule: RescheduleOneService,
-    private readonly declined: RequestDeclinePush,
+    @Inject(RequestDeclinePush) private readonly declined: RequestDeclinePush,
   ) {}
 
   /** Lessons with a proposal waiting for an answer, oldest first. */

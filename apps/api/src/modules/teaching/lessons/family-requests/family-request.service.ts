@@ -1,5 +1,5 @@
 import { isOpenLesson, type PortalRequest } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict } from '@/common/http/errors';
 import { LessonProposalRepo } from '@/modules/teaching/lessons/proposals/lesson-proposals.repo';
@@ -25,8 +25,8 @@ export const isAheadOpen = (l: Pick<LessonRow, 'status' | 'starts_at'>, now: Dat
 @Injectable()
 export class FamilyRequestService {
   constructor(
-    private readonly proposals: LessonProposalRepo,
-    private readonly store: LessonStore,
+    @Inject(LessonProposalRepo) private readonly proposals: LessonProposalRepo,
+    @Inject(LessonStore) private readonly store: LessonStore,
   ) {}
 
   /** 409 lesson_started / proposal_pending, 400 date_in_past. */

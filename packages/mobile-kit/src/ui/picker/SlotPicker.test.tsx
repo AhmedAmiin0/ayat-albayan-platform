@@ -7,6 +7,8 @@ const week: SlotWeek = {
   week: '2026-11-14',
   thisWeek: '2026-11-14',
   now: new Date('2026-11-16T10:00:00Z'),
+  from: '2026-11-16T10:00:00.000Z',
+  to: '2026-11-20T21:00:00.000Z',
   prev: jest.fn(),
   next: jest.fn(),
   today: jest.fn(),

@@ -1,7 +1,7 @@
 import { isChargeable, type PortalLessonFamily, type PortalLessonRequest } from '@ab/shared';
 import type { PortalLessonRow, PortalRequestRow } from './portal-lessons.repo';
 
-export interface FamilyContext {
+interface FamilyContext {
   /** The caller's student on the lesson (its own chargeable flag). */
   studentId: string;
   now: Date;

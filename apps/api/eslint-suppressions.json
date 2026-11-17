@@ -9506,7 +9506,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/modules/teaching/booking/core/booking.course-label.ts": {
@@ -11291,7 +11291,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/teaching/course-pause/course-pause.service.test.ts": {
@@ -11304,7 +11304,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 16
+      "count": 13
     }
   },
   "src/modules/teaching/course-stop/course-stop.controller.ts": {
@@ -12197,9 +12197,6 @@
   },
   "src/modules/teaching/scheduling/scheduling.module.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },

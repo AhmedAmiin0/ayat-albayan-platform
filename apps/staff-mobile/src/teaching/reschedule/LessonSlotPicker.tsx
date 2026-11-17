@@ -10,7 +10,7 @@ type SlotLesson = Pick<LessonView, 'id' | 'starts_at'> & {
   students: readonly { id: string }[];
 };
 
-export interface LessonSlotPickerProps {
+interface LessonSlotPickerProps {
   lesson: SlotLesson;
   durationMin: number;
   /** The family's zone: the small clocks. */

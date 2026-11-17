@@ -5131,11 +5131,8 @@
     }
   },
   "src/features/people/students/profile/StudentProfileForm.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
     "max-len": {
-      "count": 6
+      "count": 5
     },
     "max-lines-per-function": {
       "count": 1
@@ -9983,7 +9980,7 @@
   },
   "src/features/teaching/course-actions/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 6
+      "count": 4
     }
   },
   "src/features/teaching/course-pause/ChangeUntilDialog.tsx": {

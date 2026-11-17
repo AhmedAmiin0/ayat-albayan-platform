@@ -1,5 +1,5 @@
 import type { LessonView, UserRole } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
 import { LessonProposalRepo } from '@/modules/teaching/lessons/proposals/lesson-proposals.repo';
@@ -23,9 +23,9 @@ export class FamilyRequestAccess {
   };
 
   constructor(
-    private readonly owners: TeacherCancelRepo,
-    private readonly proposals: LessonProposalRepo,
-    private readonly store: LessonStore,
+    @Inject(TeacherCancelRepo) private readonly owners: TeacherCancelRepo,
+    @Inject(LessonProposalRepo) private readonly proposals: LessonProposalRepo,
+    @Inject(LessonStore) private readonly store: LessonStore,
   ) {}
 
   mayAnswer(user: AuthUser, studentIds: readonly string[]): Promise<boolean> {

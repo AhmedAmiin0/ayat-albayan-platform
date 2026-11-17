@@ -11058,7 +11058,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/modules/teaching/booking/core/booking.course-label.ts": {
@@ -13137,7 +13137,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/teaching/course-pause/course-pause.service.test.ts": {
@@ -13153,7 +13153,7 @@
       "count": 4
     },
     "stylistic/max-len": {
-      "count": 16
+      "count": 13
     }
   },
   "src/modules/teaching/course-stop/course-stop.controller.ts": {
@@ -13594,7 +13594,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/teaching/lessons/lessons.module.ts": {
@@ -14286,9 +14286,6 @@
     }
   },
   "src/modules/teaching/scheduling/scheduling.module.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     }

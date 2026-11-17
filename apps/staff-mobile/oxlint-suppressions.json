@@ -818,9 +818,6 @@
     },
     "stylistic/max-len": {
       "count": 6
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/booking/trial/components/TrialWizard.tsx": {
@@ -1042,14 +1039,6 @@
   "src/calendar/live/LiveBadge.tsx": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/calendar/overview/PeriodSwitcher.tsx": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/calendar/overview/TeacherHeader.tsx": {
@@ -1671,11 +1660,6 @@
       "count": 1
     }
   },
-  "src/core/ui/form/FormLabel.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/core/ui/form/SearchField.tsx": {
     "stylistic/max-len": {
       "count": 3
@@ -1890,9 +1874,6 @@
   },
   "src/edit-time/components/CorrectTimes.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
       "count": 1
     }
   },
@@ -6423,7 +6404,7 @@
   },
   "src/sales-course/change/CourseChangeDone.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales-course/change/CourseChangeFlow.tsx": {
@@ -8137,11 +8118,8 @@
     }
   },
   "src/students/course-pause/PausePreviewLine.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/students/course-pause/PauseSheetFrame.tsx": {
@@ -8286,14 +8264,6 @@
       "count": 3
     }
   },
-  "src/students/profile/RenewButton.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/students/profile/SecondPhone.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -8321,11 +8291,6 @@
   "src/students/profile/StatusChanger.test.tsx": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/students/profile/StatusChanger.tsx": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/students/profile/StudentFacts.tsx": {
@@ -8874,34 +8839,12 @@
   },
   "src/teaching/reschedule/RescheduleSheet.tsx": {
     "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/teaching/reschedule/SlotButton.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/teaching/reschedule/SlotPicker.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/teaching/reschedule/queries.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "ab/no-untyped-api-calls": {
       "count": 2
@@ -9144,7 +9087,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/today/screens/TodayScreen.tsx": {

@@ -20,9 +20,8 @@ interface StatusRouteDialogsProps {
 export function StatusRouteDialogs({ studentId, ask, onClose, onDone }: StatusRouteDialogsProps) {
   const card = useQuery({ ...courseCardQuery({ studentId, tree: 'admin' }), enabled: ask === 'stop' });
   const subscriptionId = card.data?.subscriptionId ?? null;
-  if (ask === 'pause') return <CoursePauseSheet studentId={studentId} onClose={onClose} onDone={onDone} />;
+  const shared = { studentId, onClose, onDone };
+  if (ask === 'pause') return <CoursePauseSheet {...shared} />;
   if (ask !== 'stop' || subscriptionId === null) return null;
-  return (
-    <StopCourseDialog studentId={studentId} subscriptionId={subscriptionId} onClose={onClose} onDone={onDone} />
-  );
+  return <StopCourseDialog {...shared} subscriptionId={subscriptionId} />;
 }

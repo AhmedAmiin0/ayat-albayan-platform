@@ -4,12 +4,12 @@ import {
   type CourseExtendPreview,
   type CourseExtendResult,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import type { z } from 'zod';
+import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { CourseExtend } from './course-extend.service';
 
 /**
@@ -23,12 +23,12 @@ import { CourseExtend } from './course-extend.service';
 @Permissions('courses.reschedule')
 @Controller('students/:id/course-extend')
 export class CourseExtendController {
-  constructor(private readonly extend: CourseExtend) {}
+  constructor(@Inject(CourseExtend) private readonly extend: CourseExtend) {}
 
   /** `?subscriptionId=` (absent = the current package): the lessons it would book. */
   @Get()
   preview(
-    @Param('id', ParseUUIDPipe) id: string,
+    @ZodParam('id', z.uuid()) id: string,
     @ZodQuery(courseExtendQuerySchema) query: z.output<typeof courseExtendQuerySchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<CourseExtendPreview> {
@@ -39,7 +39,7 @@ export class CourseExtendController {
   @Post()
   @HttpCode(200)
   book(
-    @Param('id', ParseUUIDPipe) id: string,
+    @ZodParam('id', z.uuid()) id: string,
     @ZodBody(courseExtendSchema) body: z.output<typeof courseExtendSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<CourseExtendResult> {

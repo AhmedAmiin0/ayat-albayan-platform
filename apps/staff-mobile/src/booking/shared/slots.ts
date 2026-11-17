@@ -40,4 +40,4 @@ export function ruleFromSlot(
 }
 
 /** The slot words: moved to the kit (the family's «اطلب موعدًا آخر» reads them too). */
-export { cityOf, freeSlotDays, slotDayLabel as dayLabel, slotTimes, whenText } from '@ab/mobile-kit';
+export { cityOf, freeSlotDays, slotDayLabel as dayLabel, whenText } from '@ab/mobile-kit';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '../../../core/http/api-error.js';
+import { ApiError } from '../../../core/http/index.js';
 import {
   courseCardPath,
   courseExtendErrorCode,

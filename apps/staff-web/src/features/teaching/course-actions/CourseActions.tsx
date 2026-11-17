@@ -23,6 +23,23 @@ export interface CourseActionsProps {
 }
 
 type Open = 'stop' | 'teacher' | 'times' | 'extend' | null;
+type Can = (key: 'students.change_teacher' | 'courses.reschedule') => boolean;
+
+/** The moves offered, in the board's order, each with what it does (owner 2026-11-17). */
+function moveItems(can: Can, props: Pick<CourseActionsProps, 'moves' | 'extend'>) {
+  const words = t.courseActions;
+  const hints = t.courseCard.hints;
+  const moves = props.moves !== false;
+  const times = can('courses.reschedule');
+  const teacher = moves && can('students.change_teacher');
+  const extend = props.extend === true && times;
+  const items = [
+    { open: 'teacher', label: words.teacher.action, hint: hints.teacher, on: teacher },
+    { open: 'times', label: words.times.action, hint: hints.times, on: moves && times },
+    { open: 'extend', label: t.courseCard.extend.action, hint: hints.extend, on: extend },
+  ] as const;
+  return items.filter((i) => i.on);
+}
 
 /**
  * The student profile's course actions (owner 2026-10-30), each behind its own key, with what it
@@ -35,8 +52,6 @@ export function CourseActions(props: CourseActionsProps) {
   const { can } = usePermissions();
   const [open, setOpen] = useState<Open>(null);
   const words = t.courseActions;
-  const hints = t.courseCard.hints;
-  const moves = props.moves !== false;
   const shared = {
     studentId,
     subscriptionId,
@@ -46,26 +61,15 @@ export function CourseActions(props: CourseActionsProps) {
       onDone(message);
     },
   };
-  const times = can('courses.reschedule');
-  const on = {
-    teacher: moves && can('students.change_teacher'),
-    times: moves && times,
-    extend: props.extend === true && times,
-  };
-  const items = [
-    { open: 'teacher', label: words.teacher.action, hint: hints.teacher, on: on.teacher },
-    { open: 'times', label: words.times.action, hint: hints.times, on: on.times },
-    { open: 'extend', label: t.courseCard.extend.action, hint: hints.extend, on: on.extend },
-  ] as const;
   return (
     <>
-      {items.filter((i) => i.on).map((i) => (
+      {moveItems(can, props).map((i) => (
         <ActionItem key={i.open} label={i.label} hint={i.hint} onClick={() => setOpen(i.open)} />
       ))}
       {can('subscriptions.stop') && (
         <ActionItem
           label={words.stop.action}
-          hint={hints.stop}
+          hint={t.courseCard.hints.stop}
           onClick={() => setOpen('stop')}
           danger
         />

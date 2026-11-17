@@ -64,7 +64,8 @@ describe('StopCourseDialog «إلغاء الاشتراك» (owner 2026-10-30)', 
     fireEvent.change(dialog.getByLabelText(words.reason), { target: { value: '  سفر الأسرة ' } });
     apiSend.mockResolvedValue({ subscriptionId: SUB, cancelledLessons: 4, endedRules: 1 });
     fireEvent.click(confirm() as HTMLButtonElement);
-    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(expect.stringContaining(words.done)));
+    const done = expect.stringContaining(words.done);
+    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(done));
     expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-stop', {
       subscriptionId: SUB,
       reason: 'سفر الأسرة',

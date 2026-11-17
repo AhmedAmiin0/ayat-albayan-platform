@@ -24,17 +24,20 @@ const NOW = new Date('2026-11-17T06:00:00Z');
 
 describe('planExtend', () => {
   it('2 of 8 left without a date: Wed 18 and Mon 23, each on its own time', () => {
-    const plan = planExtend({ rules: [MON, WED], lessonsTotal: 8, lessons: held(6), now: NOW });
+    const facts = { rules: [MON, WED], lessonsTotal: 8, lessons: held(6), now: NOW };
+    const plan = planExtend(facts);
     expect(plan?.starts.map((d) => d.toISOString())).toEqual([
       '2026-11-18T15:30:00.000Z',
       '2026-11-23T14:00:00.000Z',
     ]);
-    expect(plan).toMatchObject({ ruleIds: ['ra', 'rb'], courseEnd: '2026-11-16', endsOn: '2026-11-23' });
+    expect(plan).toMatchObject({ ruleIds: ['ra', 'rb'], courseEnd: '2026-11-16' });
+    expect(plan?.endsOn).toBe('2026-11-23');
   });
 
   it('a cancelled lesson gives its place back; a full package books nothing', () => {
     const cancelled = { ...held(1)[0], status: 'cancelled_by_admin' as const };
-    const one = planExtend({ rules: [MON], lessonsTotal: 8, lessons: [...held(7), cancelled], now: NOW });
+    const lessons = [...held(7), cancelled];
+    const one = planExtend({ rules: [MON], lessonsTotal: 8, lessons, now: NOW });
     expect(one?.starts).toHaveLength(1);
     const none = planExtend({ rules: [MON], lessonsTotal: 8, lessons: held(8), now: NOW });
     expect([none?.starts, none?.endsOn]).toEqual([[], null]);
@@ -50,7 +53,8 @@ describe('planExtend', () => {
 
   it('a paused set says so; no capped rule is null', () => {
     const paused = { ...MON, status: 'paused' as const };
-    expect(planExtend({ rules: [paused], lessonsTotal: 8, lessons: [], now: NOW })?.paused).toBe(true);
+    const facts = { rules: [paused], lessonsTotal: 8, lessons: [], now: NOW };
+    expect(planExtend(facts)?.paused).toBe(true);
     const open = { ...MON, ends_on: null };
     expect(planExtend({ rules: [open], lessonsTotal: 8, lessons: [], now: NOW })).toBeNull();
   });

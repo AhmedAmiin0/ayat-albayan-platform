@@ -15,7 +15,7 @@ const WAITING: readonly LessonOption[] = ['confirm', 'withdraw', 'decline'];
 const OPEN: readonly LessonOption[] = ['confirm', 'request', 'decline'];
 
 /** Open and not started: the family may still act on it. */
-export const isActionable = (l: Pick<PortalLesson, 'status' | 'starts_at'>, now: Date): boolean =>
+const isActionable = (l: Pick<PortalLesson, 'status' | 'starts_at'>, now: Date): boolean =>
   isOpenLesson(l.status) && Date.parse(l.starts_at) > now.getTime();
 
 const isWaiting = (l: PortalLesson): boolean => l.family?.request?.status === 'pending';

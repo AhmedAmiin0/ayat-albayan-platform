@@ -1,7 +1,7 @@
 import type { FamilyRequestView, LessonView } from '@ab/shared';
 
 /** «طلبات الأسر»'s row of a lesson with a pending family request; null for any other. */
-export function toFamilyRequest(l: LessonView): FamilyRequestView | null {
+function toFamilyRequest(l: LessonView): FamilyRequestView | null {
   const p = l.pending_proposal;
   if (p?.requested_by !== 'family') return null;
   return {

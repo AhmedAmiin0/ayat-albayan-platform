@@ -69,7 +69,8 @@ describe('ChangeTeacherDialog «تغيير المعلم» (owner 2026-10-30)', (
       startsAt: SUN,
     });
     fireEvent.click(screen.getByRole('button', { name: t.booking.courseChange.submit }));
-    await waitFor(() => expect(onDone).toHaveBeenCalledWith(expect.stringContaining(words.teacher.done)));
+    const done = expect.stringContaining(words.teacher.done);
+    await waitFor(() => expect(onDone).toHaveBeenCalledWith(done));
     expect(apiSend).toHaveBeenCalledWith(
       'POST',
       '/students/s1/course-teacher/change',

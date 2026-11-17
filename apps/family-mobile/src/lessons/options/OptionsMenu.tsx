@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AppText, Button, ErrorLine, MenuSheet, t, type, useTheme } from '@ab/mobile-kit';
 import { DeclineForm } from './DeclineForm';
 
-export interface OptionsMenuProps {
+interface OptionsMenuProps {
   lesson: PortalLesson;
   /** «حلقة الغد · 6:30 م – 7:15 م». */
   heading: string;

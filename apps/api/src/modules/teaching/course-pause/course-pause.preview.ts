@@ -9,14 +9,19 @@ import {
   type CoursePausePreview,
   type CourseResumePreview,
 } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { CoursePauseRepo } from './course-pause.repo';
+
+interface PreviewQuery {
+  from?: string;
+  until?: string;
+}
 
 /** Riyadh midnight at the start of `date` (UTC instant). */
 const riyadhStart = (date: string): Date => startOfLocalDay(date, RIYADH_TZ);
 
-/** The days a resume on the day after `until` moves the package; null = open-ended (counted then). */
+/** The days a resume the day after `until` moves the package; null = open-ended (counted then). */
 const extendDaysOf = (from: string, until: string | null): number | null =>
   until === null ? null : pausedDays({ from, until, today: addDays(until, 1) });
 
@@ -26,10 +31,10 @@ const extendDaysOf = (from: string, until: string | null): number | null =>
  */
 @Injectable()
 export class CoursePausePreviews {
-  constructor(private readonly queries: CoursePauseRepo) {}
+  constructor(@Inject(CoursePauseRepo) private readonly queries: CoursePauseRepo) {}
 
-  /** The sheet's «ستُلغى N حلقات»: open lessons from max(now, from) until the day after until (or all). */
-  async preview(studentId: string, q: { from?: string; until?: string }): Promise<CoursePausePreview> {
+  /** «ستُلغى N حلقات»: open lessons from max(now, from) to the day after until (or all). */
+  async preview(studentId: string, q: PreviewQuery): Promise<CoursePausePreview> {
     await this.assertStudent(studentId);
     const from = q.from ?? riyadhToday();
     const until = q.until ?? null;
@@ -39,7 +44,8 @@ export class CoursePausePreviews {
     const end = until === null ? null : riyadhStart(addDays(until, 1));
     const starts = await this.queries.previewStarts({ studentId, start, end });
     const extend = extendDaysOf(from, until);
-    return { from_date: from, until_date: until, lessons: starts.length, starts, extend_days: extend };
+    const window = { from_date: from, until_date: until };
+    return { ...window, lessons: starts.length, starts, extend_days: extend };
   }
 
   /** «استئناف الدورة الآن؟»: the lessons booked back from today and the days the package moves. */

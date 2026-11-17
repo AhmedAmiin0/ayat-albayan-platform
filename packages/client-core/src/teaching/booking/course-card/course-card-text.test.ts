@@ -28,7 +28,8 @@ describe('course card lines (owner 2026-11-17)', () => {
       teacher: 'فاطمة · [2026-11-24]',
       unbooked: 'بلا موعد اثنتان: {dates}',
     });
-    const none = courseCardLines({ course: { ...course, teacherName: null, unbooked: 0 }, words: cardWords, date });
+    const bare = { ...course, teacherName: null, unbooked: 0 };
+    const none = courseCardLines({ course: bare, words: cardWords, date });
     expect(none).toEqual({ teacher: 'حتى [2026-11-24]', unbooked: null });
   });
 

@@ -36,7 +36,7 @@ const HINTS: Partial<Record<FieldName, string>> = {
 const SELECTS: readonly FieldName[] = ['gender', 'program', 'status', 'teacher_id'];
 const isSelect = (name: FieldName): name is SelectName => SELECTS.includes(name);
 
-/** Where a picked select value leads: «موقوف مؤقتًا» / «متوقف» to their dialogs (owner 2026-11-17). */
+/** «موقوف مؤقتًا» / «متوقف» lead to their dialogs (owner 2026-11-17); null = set it. */
 function routeOf(name: SelectName, value: string): StatusAsk {
   const status = name === 'status' ? STUDENT_STATUSES.find((s) => s === value) : undefined;
   const route = status ? statusRoute(status) : 'set';
@@ -103,7 +103,8 @@ export function StudentProfileForm({ student }: { student: StudentProfile }) {
                 name === 'tz' ? (
                   <TimeZoneSelect {...p} value={field.state.value} onValue={(tz) => field.handleChange(tz)} />
                 ) : isSelect(name) ? (
-                  <Select {...p} value={field.state.value} onChange={(e) => pick(name, e.target.value, field.handleChange)}>
+                  <Select {...p} value={field.state.value}
+                    onChange={(e) => pick(name, e.target.value, field.handleChange)}>
                     {selects[name].map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                   </Select>
                 ) : (

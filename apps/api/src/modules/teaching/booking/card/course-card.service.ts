@@ -5,7 +5,7 @@ import {
   type BookedCourse,
   type CourseCardView,
 } from '@ab/shared';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CourseLessonRepo } from '@/modules/teaching/booking/course-change/course-change.lessons';
 import { CourseChangeRepo } from '@/modules/teaching/booking/course-change/course-change.repo';
 import { CourseChangeViews } from '@/modules/teaching/booking/course-change/course-change.view';
@@ -27,10 +27,10 @@ const orNull = (e: unknown): null => {
 @Injectable()
 export class CourseCards {
   constructor(
-    private readonly profile: ProfileCourseRepo,
-    private readonly views: CourseChangeViews,
-    private readonly rules: CourseChangeRepo,
-    private readonly lessons: CourseLessonRepo,
+    @Inject(ProfileCourseRepo) private readonly profile: ProfileCourseRepo,
+    @Inject(CourseChangeViews) private readonly views: CourseChangeViews,
+    @Inject(CourseChangeRepo) private readonly rules: CourseChangeRepo,
+    @Inject(CourseLessonRepo) private readonly lessons: CourseLessonRepo,
   ) {}
 
   async card(studentId: string): Promise<CourseCardView> {
@@ -41,7 +41,8 @@ export class CourseCards {
     const upcoming = await this.profile.upcoming(ruleIds, COURSE_CARD_UPCOMING);
     const listed = upcoming.map((l) => ({ id: l.id, startsAt: l.starts_at, status: l.status }));
     if (!course) return { subscriptionId: id, course: null, upcoming: listed };
-    return { subscriptionId: id, course: await this.summary(course, studentId, ruleIds), upcoming: listed };
+    const summary = await this.summary(course, studentId, ruleIds);
+    return { subscriptionId: id, course: summary, upcoming: listed };
   }
 
   private async summary(course: BookedCourse, studentId: string, ruleIds: string[]) {

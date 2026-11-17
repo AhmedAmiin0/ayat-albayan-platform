@@ -5,7 +5,7 @@ import {
   type CourseExtendPreview,
   type CourseExtendResult,
 } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { RuleExtendService } from '@/modules/teaching/scheduling';
 import { CourseExtendReader, type ExtendTarget } from './course-extend.reader';
 import { CourseExtendRepo } from './course-extend.repo';
@@ -29,9 +29,9 @@ function weeksTo(endsOn: string, tz: string, now: Date): number {
 @Injectable()
 export class CourseExtend {
   constructor(
-    private readonly reader: CourseExtendReader,
-    private readonly repo: CourseExtendRepo,
-    private readonly rules: RuleExtendService,
+    @Inject(CourseExtendReader) private readonly reader: CourseExtendReader,
+    @Inject(CourseExtendRepo) private readonly repo: CourseExtendRepo,
+    @Inject(RuleExtendService) private readonly rules: RuleExtendService,
   ) {}
 
   async preview(target: ExtendTarget): Promise<CourseExtendPreview> {

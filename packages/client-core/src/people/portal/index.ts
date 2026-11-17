@@ -38,6 +38,6 @@ export {
   type CountsLine, type LessonOption, type RequestChip,
 } from './lesson-options.js';
 export {
-  FAMILY_NOTICE, familyErrorOf, runFamilyAction, type FamilyAction,
+  FAMILY_NOTICE, familyFailureText, runFamilyAction, type FamilyAction,
 } from './family-action.js';
 export * from './app/index.js';

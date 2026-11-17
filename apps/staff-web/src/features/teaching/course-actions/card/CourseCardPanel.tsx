@@ -5,8 +5,7 @@ import { CoursePauseAction, CoursePausePanel } from '@/features/teaching/course-
 import { t } from '@/lib/i18n/i18n';
 import { CourseActions } from '@/features/teaching/course-actions/CourseActions';
 import { courseCardQuery } from './api';
-import { CardLessons } from './CardLessons';
-import { CardSummary } from './CardSummary';
+import { CardBody } from './CardBody';
 
 interface CourseCardPanelProps {
   studentId: string;
@@ -24,14 +23,13 @@ interface CourseCardPanelProps {
 export function CourseCardPanel({ studentId, tree = 'admin' }: CourseCardPanelProps) {
   const card = useQuery(courseCardQuery({ studentId, tree })).data;
   const [notice, setNotice] = useState<string | null>(null);
-  const booked = card?.course != null;
+  const booked = Boolean(card?.course);
   return (
     <section aria-labelledby="course-card" className="mb-6 grid gap-3 rounded-lg border border-rule p-4">
       <h2 id="course-card" className="text-base font-semibold text-ink">
         {t.courseCard.title}
       </h2>
-      {card && <CardSummary card={card} />}
-      {card && booked && <CardLessons lessons={card.upcoming} />}
+      <CardBody card={card} />
       {notice && (
         <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">
           {notice}
@@ -40,7 +38,11 @@ export function CourseCardPanel({ studentId, tree = 'admin' }: CourseCardPanelPr
       <CoursePausePanel studentId={studentId} onDone={setNotice} />
       <h3 className="text-xs font-semibold text-ink-3">{t.courseCard.actions}</h3>
       <div className="flex flex-wrap items-start gap-4">
-        <CoursePauseAction studentId={studentId} onDone={setNotice} hint={t.courseCard.hints.pause} />
+        <CoursePauseAction
+          studentId={studentId}
+          onDone={setNotice}
+          hint={t.courseCard.hints.pause}
+        />
         {card?.subscriptionId && (
           <CourseActions
             studentId={studentId}

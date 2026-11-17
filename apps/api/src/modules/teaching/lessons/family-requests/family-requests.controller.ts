@@ -6,12 +6,12 @@ import {
   type ProposalApprove,
   type ProposalReject,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { z } from 'zod';
 import { ProposalDecisionService } from '@/modules/teaching/lessons/proposals/lesson-proposals.service';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { FamilyRequestAccess } from './family-request.access';
@@ -29,9 +29,9 @@ import { familyRequests } from './family-request.mapper';
 @Controller('family-requests')
 export class FamilyRequestsController {
   constructor(
-    private readonly views: LessonViews,
-    private readonly deciding: ProposalDecisionService,
-    private readonly access: FamilyRequestAccess,
+    @Inject(LessonViews) private readonly views: LessonViews,
+    @Inject(ProposalDecisionService) private readonly deciding: ProposalDecisionService,
+    @Inject(FamilyRequestAccess) private readonly access: FamilyRequestAccess,
   ) {}
 
   /** Oldest first; a closed lesson's request is moot and left out. */

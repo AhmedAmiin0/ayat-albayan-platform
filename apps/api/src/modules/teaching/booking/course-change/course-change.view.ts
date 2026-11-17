@@ -22,7 +22,10 @@ const unlinkedRow = (sub: CourseSub, r: ChangeRule): CourseRuleRow => ({
 });
 
 /** A package's student and its course (null = none booked). */
-type Booked = { student: CourseChangeView['student']; course: BookedCourse | null };
+interface Booked {
+  student: CourseChangeView['student'];
+  course: BookedCourse | null;
+}
 
 /** GET /booking/course/change?subscriptionId= (the admin): the course's current days, for the change dialog. */
 @Injectable()

@@ -65,7 +65,7 @@ export class CourseStop {
     const [refund, owe, starts] = await Promise.all([
       this.refunds.preview(input.user, subRef),
       this.refunds.owe(subRef),
-      this.repo.starts(live ? plan.lessons.map((l) => l.id) : []),
+      this.repo.starts(plan.lessons.map((l) => l.id)),
     ]);
     return {
       subscriptionId: sub.id,

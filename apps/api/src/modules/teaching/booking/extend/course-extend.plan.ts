@@ -70,7 +70,16 @@ function seriesOf(set: readonly ExtendRuleRow[], startsOn: string): SeriesRule |
   );
   const byday = dayTimes.map((d) => d.weekday).sort((a, b) => a - b);
   const time = hhmm(head.start_time_local);
-  return { byday, dayTimes, startTimeLocal: time, tz: head.tz, durationMin, startsOn, single: false };
+  const tz = head.tz;
+  return { byday, dayTimes, startTimeLocal: time, tz, durationMin, startsOn, single: false };
+}
+
+/** The lessons booked from the series and the new last day (null when nothing is booked). */
+function booked(rule: SeriesRule, facts: ExtendFacts): Pick<ExtendPlan, 'starts' | 'endsOn'> {
+  const left = Math.max(0, courseRemaining(facts.lessonsTotal, facts.lessons));
+  const starts = plannedCourseStarts({ rule, now: facts.now, lessonsTotal: left });
+  const last = starts.at(-1);
+  return { starts, endsOn: last ? localDateOf(last, rule.tz) : null };
 }
 
 /**
@@ -79,16 +88,12 @@ function seriesOf(set: readonly ExtendRuleRow[], startsOn: string): SeriesRule |
  */
 export function planExtend(facts: ExtendFacts): ExtendPlan | null {
   const set = latestSet(facts.rules);
-  const courseEnd = set[0]?.ends_on;
-  const tz = set[0]?.tz;
-  if (!courseEnd || !tz) return null;
-  const today = wallParts(facts.now.toISOString(), tz).date;
+  const head = set[0];
+  if (!head?.ends_on) return null;
+  const courseEnd = head.ends_on;
+  const today = wallParts(facts.now.toISOString(), head.tz).date;
   const rule = seriesOf(set, later(addDays(courseEnd, 1), today));
   if (!rule) return null;
-  const left = Math.max(0, courseRemaining(facts.lessonsTotal, facts.lessons));
-  const starts = plannedCourseStarts({ rule, now: facts.now, lessonsTotal: left });
-  const last = starts.at(-1);
-  const endsOn = last ? localDateOf(last, tz) : null;
   const paused = set.some((r) => r.status === 'paused');
-  return { ruleIds: set.map((r) => r.id), tz, courseEnd, starts, endsOn, paused };
+  return { ruleIds: set.map((r) => r.id), tz: head.tz, courseEnd, ...booked(rule, facts), paused };
 }

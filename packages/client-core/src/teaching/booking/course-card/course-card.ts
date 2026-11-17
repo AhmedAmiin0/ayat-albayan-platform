@@ -9,7 +9,7 @@ import {
   type CourseResumePreview,
   type StudentStatus,
 } from '@ab/shared';
-import { apiErrorCode } from '../../../core/http/api-error-code.js';
+import { apiErrorCode } from '../../../core/http/index.js';
 import { courseActionsKey } from '../course-actions.js';
 
 // «الدورة والباقة» (owner 2026-11-17) for web and mobile: the card's and «مدّ الجدول»'s paths,
@@ -38,7 +38,10 @@ export const courseCardKey = (studentId: string): readonly ['course-actions', st
 export const courseExtendPath = (studentId: string): string => `${student(studentId)}/course-extend`;
 
 /** GET «مدّ الجدول»'s preview of one package. */
-export function courseExtendPreviewPath(input: { studentId: string; subscriptionId: string }): string {
+export function courseExtendPreviewPath(input: {
+  studentId: string;
+  subscriptionId: string;
+}): string {
   const q = encodeURIComponent(input.subscriptionId);
   return `${courseExtendPath(input.studentId)}?subscriptionId=${q}`;
 }

@@ -11,7 +11,7 @@ export type FamilyAction =
   | (FamilyLessonInput & { kind: 'request'; startsAt: string; note?: string })
   | (FamilyLessonInput & { kind: 'withdraw' });
 
-export type FamilyNotice = 'confirmedNotice' | 'declinedNotice' | 'sentNotice' | 'withdrawnNotice';
+type FamilyNotice = 'confirmedNotice' | 'declinedNotice' | 'sentNotice' | 'withdrawnNotice';
 
 export const FAMILY_NOTICE: Readonly<Record<FamilyAction['kind'], FamilyNotice>> = {
   confirm: 'confirmedNotice',
@@ -27,7 +27,7 @@ type Of<K extends FamilyAction['kind']> = Extract<FamilyAction, { kind: K }>;
 
 const RUNS: Readonly<Record<FamilyAction['kind'], Run>> = {
   confirm: (s, a) => s.confirm(a),
-  cancel: (s, a) => s.cancel(a as Of<'cancel'>),
+  cancel: (s, a) => s.cancel(a),
   request: (s, a) => s.request(a as Of<'request'>),
   withdraw: (s, a) => s.withdraw(a),
 };
@@ -39,10 +39,22 @@ export const runFamilyAction =
     RUNS[a.kind](sends, a);
 
 /** The family's own words for a refused action (portal.actions.errors.<code>), or null. */
-export const FAMILY_ERRORS = ['proposal_pending', 'lesson_started', 'no_request', 'date_in_past'] as const;
-export type FamilyError = (typeof FAMILY_ERRORS)[number];
+const FAMILY_ERRORS = ['proposal_pending', 'lesson_started', 'no_request', 'date_in_past'] as const;
+type FamilyError = (typeof FAMILY_ERRORS)[number];
 
 export function familyErrorOf(error: unknown): FamilyError | null {
   const code = apiErrorCode(error);
   return FAMILY_ERRORS.find((c) => c === code) ?? null;
+}
+
+/** portal.actions' words for a refusal: one per known code, else the general one. */
+interface FailureWords {
+  errors: Readonly<Record<FamilyError, string>>;
+  failed: string;
+}
+
+/** A refused action in the family's words (both the family app and the web portal say it). */
+export function familyFailureText(error: unknown, words: FailureWords): string {
+  const known = familyErrorOf(error);
+  return known ? words.errors[known] : words.failed;
 }
