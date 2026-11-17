@@ -19,8 +19,8 @@ export function meLocaleOf(me: unknown): Locale | null {
 /** Writes the login's language; resolves with the stored one (parsed, rule 12). */
 export const meLocaleSend =
   (client: ApiClient) =>
-  async (locale: Locale): Promise<Locale> => {
+  (locale: Locale): Promise<Locale> => {
     const body = localeUpdateSchema.parse({ locale });
-    const answer = await client.apiSend<unknown>('PATCH', meLocalePath, body);
-    return localeUpdateSchema.parse(answer).locale;
+    const answer = client.apiSend('PATCH', meLocalePath, body);
+    return answer.then((r: unknown) => localeUpdateSchema.parse(r).locale);
   };

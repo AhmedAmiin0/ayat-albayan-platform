@@ -75,8 +75,15 @@ function pillLook(color: Colors, selected: boolean) {
 /** A radio is checked, a tab selected; a disabled one says so. */
 const a11yState = (radio: boolean, selected: boolean, disabled = false) => ({
   ...(radio ? { checked: selected } : { selected }),
-  disabled,
+  ...(disabled ? { disabled } : {}),
 });
+
+/** The glyph's ink: the selected green, else its status tone. */
+const glyphInk = (color: Colors, item: FilterPill<string>, selected: boolean) =>
+  selected ? pillLook(color, selected).fg : toneColors(color, item.tone ?? 'neutral').fg;
+
+/** « 12» after the word when the API gave a count. */
+const countText = (count: number | undefined) => (count === undefined ? '' : ` ${count}`);
 
 /** A radio keeps the 44pt touch height, a tab 36; a fitted strip's pill is tighter. */
 const box = (radio: boolean, tight: boolean, disabled = false) => ({
@@ -94,9 +101,7 @@ export function PillButton<V extends string>(props: PillButtonProps<V>) {
   const { item, selected, radio, tight, onPress } = props;
   const { color } = useTheme();
   const look = pillLook(color, selected);
-  const tone = toneColors(color, item.tone ?? 'neutral').fg;
   const badge = shownBadge(item.badge);
-  const count = item.count === undefined ? '' : ` ${item.count}`;
   return (
     <Pressable
       accessibilityRole={radio ? 'radio' : 'tab'}
@@ -116,7 +121,9 @@ export function PillButton<V extends string>(props: PillButtonProps<V>) {
         backgroundColor: look.fill,
       }}
     >
-      {item.glyph ? <NuqtaGlyph shape={item.glyph} color={selected ? look.fg : tone} /> : null}
+      {item.glyph ? (
+        <NuqtaGlyph shape={item.glyph} color={glyphInk(color, item, selected)} />
+      ) : null}
       <AppText
         style={{
           fontFamily: type.ui[600],
@@ -127,7 +134,7 @@ export function PillButton<V extends string>(props: PillButtonProps<V>) {
         }}
       >
         {item.label}
-        {count}
+        {countText(item.count)}
       </AppText>
       {badge ? <Badge count={badge.count} /> : null}
     </Pressable>

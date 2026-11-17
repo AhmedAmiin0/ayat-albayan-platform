@@ -9,7 +9,7 @@ import {
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 /** What the gates read of a lesson: its window, and the «إنهاء الحلقة للجميع» stamp. */
-export type GateLesson = WindowLesson & { room_ended_at?: string | null };
+type GateLesson = WindowLesson & { room_ended_at?: string | null };
 
 const gone = (code: string): HttpException =>
   new HttpException({ code, message: code }, HttpStatus.GONE);

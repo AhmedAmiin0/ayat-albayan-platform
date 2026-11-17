@@ -3,7 +3,7 @@ import type { Conflict } from './conflicts.js';
 import type { LessonEvent } from './state-machine.js';
 import type { LessonTimeEditView, TimeEditMode } from './series/time-edit.js';
 import type { TeacherMeetingMode } from '../classroom/meeting-mode.js';
-import type { LessonRoomState } from '../classroom/room-state.js';
+import type { LessonRoomState } from '../classroom/index.js';
 
 // Phase 2 API response shapes (docs/10-phase2-contracts.md §3): snake_case rows, ISO UTC, IANA tz.
 

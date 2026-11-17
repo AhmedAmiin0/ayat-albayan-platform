@@ -49,7 +49,7 @@ export function familyReaders(students: readonly FamilyStudent[]): Reader[] {
 }
 
 /** What every target of one event shares: its kind, subject (the dedup key) and data. */
-export type FamilyEvent = Omit<PushTarget, 'vars' | 'profileIds'>;
+type FamilyEvent = Omit<PushTarget, 'vars' | 'profileIds'>;
 
 /**
  * One push per family login: {student} and {when} (the lesson's time on their clock) filled, the

@@ -35,9 +35,11 @@ export interface LessonRoomSends {
 export function lessonRoomSends(client: ApiClient): LessonRoomSends {
   const mute: LessonRoomSends['mute'] = ({ lessonId, identity, source }) =>
     client.apiSend('POST', lessonMutePath(lessonId, identity), { source });
+  const ended = async (lessonId: string): Promise<unknown> =>
+    client.apiSend('POST', lessonEndPath(lessonId));
   return {
     end: async (lessonId) =>
-      lessonEndResultSchema.parse(await client.apiSend<unknown>('POST', lessonEndPath(lessonId))),
+      lessonEndResultSchema.parse(await ended(lessonId)),
     mute,
     muteAll: async ({ lessonId, identities }) => {
       const calls = identities.map((identity) =>

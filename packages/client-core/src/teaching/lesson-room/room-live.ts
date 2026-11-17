@@ -1,6 +1,7 @@
 import type { LessonRoomState } from '@ab/shared';
 
-// «الحلقة جارية الآن · منذ ١٢ دقيقة» and «الطالب ينتظرك» from a lesson's `room` (lessonRoomStateSchema).
+// «الحلقة جارية الآن · منذ ١٢ دقيقة» and «الطالب ينتظرك» from a lesson's `room`
+// (lessonRoomStateSchema).
 
 const MIN_MS = 60_000;
 

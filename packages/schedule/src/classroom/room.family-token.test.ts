@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { looksLikeFamilyToken } from './family-token.js';
+import { looksLikeFamilyToken } from './room.js';
 
 describe('looksLikeFamilyToken', () => {
   it('70 url-safe characters: a family join token', () => {

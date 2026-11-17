@@ -4,7 +4,7 @@ import { z } from 'zod';
 // since when, from LiveKit's participant_joined / participant_left webhooks, and the «إنهاء الحلقة
 // للجميع» stamp (lessons.room_ended_at). Rides on the staff lesson rows and the portal lessons.
 
-/** How a person in the room is named to the others: never a login role the family should not see. */
+/** How a person in the room is named to the others: never a login role the family must not see. */
 export const ROOM_PRESENCE_ROLES = ['teacher', 'student', 'guardian', 'staff', 'guest'] as const;
 export type RoomPresenceRole = (typeof ROOM_PRESENCE_ROLES)[number];
 

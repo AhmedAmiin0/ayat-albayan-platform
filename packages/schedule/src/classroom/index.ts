@@ -9,4 +9,3 @@ export * from './meeting-invites.js';
 export * from './student-recordings.js';
 export * from './meeting-mode.js';
 export * from './room-state.js';
-export * from './family-token.js';
