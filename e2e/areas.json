@@ -573,6 +573,7 @@
     "finance/teacher-earnings-rls.sql.spec.ts",
     "finance/teacher-earnings.sql.spec.ts",
     "people/teacher-isolation.sql.spec.ts",
+    "people/test-accounts.sql.spec.ts",
     "teaching/teacher-meeting-mode.sql.spec.ts",
     "finance/teacher-payments.sql.spec.ts",
     "people/teacher-rls.sql.spec.ts",
