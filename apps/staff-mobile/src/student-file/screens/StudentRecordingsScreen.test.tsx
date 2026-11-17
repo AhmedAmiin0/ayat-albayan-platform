@@ -58,7 +58,7 @@ test('play refetches for a fresh signed link and opens it in the system player',
   await screen.findAllByText(R.status.done);
   mockApiFetch.mockClear();
   serve([recording({ url: 'https://files.test/fresh.mp3?t=2' })]);
-  await fireEvent.press(screen.getByText(R.play));
+  await fireEvent.press(await screen.findByText(R.play));
   await waitFor(() => expect(openURL).toHaveBeenCalledWith('https://files.test/fresh.mp3?t=2'));
   expect(recordingCalls()).toEqual(['/students/s1/recordings?page=1&pageSize=10']);
 });
@@ -103,7 +103,8 @@ test('without recordings.manage there is no delete and the switch is read-only',
   await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findAllByText(R.status.done);
   await waitFor(() => expect(screen.queryByText(R.delete.action)).toBeNull());
-  expect(screen.getByRole('switch', { name: R.visible.label }).props.accessibilityState?.disabled ?? screen.getByRole('switch').props.disabled).toBeTruthy();
+  const visible = await screen.findByRole('switch', { name: R.visible.label });
+  expect(visible.props.accessibilityState?.disabled ?? screen.getByRole('switch').props.disabled).toBeTruthy();
 });
 
 test('teacher mode never shows delete; an empty list and an error have their states', async () => {
