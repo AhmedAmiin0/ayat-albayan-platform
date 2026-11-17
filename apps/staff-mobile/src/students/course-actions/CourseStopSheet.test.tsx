@@ -73,7 +73,7 @@ test('the done block opens the guardian\'s chat (the sheet closes first)', async
   await fireEvent.changeText(await screen.findByPlaceholderText(s.reasonHint), 'سفر');
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await fireEvent.press(await screen.findByRole('button', { name: t.students.family.openChat }));
-  expect(mockPush).toHaveBeenCalledWith(expect.objectContaining({ params: { phone: PHONE } }));
+  expect(mockPush).toHaveBeenCalledWith(`/inbox/thread/${encodeURIComponent(PHONE)}`);
 });
 
 test('a refused stop says why and keeps the sheet', async () => {

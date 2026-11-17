@@ -8,7 +8,7 @@ import {
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '@/common/http/errors';
-import { assertPauseDates, assertStudent } from './course-pause.guards';
+import { assertPauseDates, assertStudent } from './preview/course-pause.guards';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import { toPauseView, type RpcOut } from './course-pause.mapper';
 import { CoursePauseRepo } from './course-pause.repo';

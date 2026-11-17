@@ -14,7 +14,7 @@ import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
-import { CoursePausePreviews } from './course-pause.preview';
+import { CoursePausePreviews } from './preview/course-pause.preview';
 import { CoursePauseService } from './course-pause.service';
 
 /**

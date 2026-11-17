@@ -1,6 +1,6 @@
 import { coursePauseProblem, riyadhToday } from '@ab/shared';
 import { badRequest, notFound } from '@/common/http/errors';
-import type { CoursePauseRepo } from './course-pause.repo';
+import type { CoursePauseRepo } from '@/modules/teaching/course-pause/course-pause.repo';
 
 // The checks the pause's writes and its previews share (one copy for both).
 

@@ -11,7 +11,7 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { assertPauseDates, assertStudent } from './course-pause.guards';
-import { CoursePauseRepo } from './course-pause.repo';
+import { CoursePauseRepo } from '@/modules/teaching/course-pause/course-pause.repo';
 
 interface PreviewQuery {
   from?: string;
