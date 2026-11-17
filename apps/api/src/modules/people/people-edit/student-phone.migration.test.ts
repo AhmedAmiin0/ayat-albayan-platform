@@ -2,11 +2,11 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261117000100 read as text (owner 2026-11-17): a student's own WhatsApp number.
-const sql = readFileSync(migrationPath('20261117000100_student_own_phone.sql'), 'utf8');
+// Migration 20261117090100 read as text (owner 2026-11-17): a student's own WhatsApp number.
+const sql = readFileSync(migrationPath('20261117090100_student_own_phone.sql'), 'utf8');
 const flat = sql.replace(/\s+/g, ' ');
 
-describe("migration 20261117000100: a student's own number in guardian_phones", () => {
+describe("migration 20261117090100: a student's own number in guardian_phones", () => {
   it('a unique student_id (cascading with the student), never a main number', () => {
     expect(sql).toContain("set local lock_timeout = '5s';");
     expect(flat).toContain('add column if not exists student_id uuid');

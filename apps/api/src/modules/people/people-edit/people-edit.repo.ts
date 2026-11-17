@@ -75,7 +75,7 @@ export class PeopleEditRepo {
     return data;
   }
 
-  /** One transaction with its audit row (set_student_phone, migration 20261117000100). */
+  /** One transaction with its audit row (set_student_phone, migration 20261117090100). */
   async setStudentPhone({ studentId, phone, actorId }: StudentPhone): Promise<void> {
     const base = { p_student: studentId, p_actor: actorId };
     const args = phone ? { ...base, p_phone: phone } : base;
