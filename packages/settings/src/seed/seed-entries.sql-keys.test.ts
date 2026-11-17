@@ -31,6 +31,7 @@ const DOC_READERS = {
   'public.presence_enabled': ['presence_enabled'],
   'public.renewal_commission_enabled': ['renewal_commission_enabled'],
   'public.renewal_commission_off_since': ['renewal_commission_enabled'],
+  'public.can_read_channel': ['family_chat_enabled'],
 };
 
 describe('every key a SQL reader names is seeded (docs/26 §2b)', () => {

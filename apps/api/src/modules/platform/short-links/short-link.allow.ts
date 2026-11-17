@@ -19,6 +19,24 @@ export function allowedHosts(origins: readonly string[]): Set<string> {
   return new Set([...hosts, MEET_HOST]);
 }
 
+/** A bare host name (lower case letters, digits, dots, dashes; one dot at least). */
+const hostName = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .regex(/^(?=.{4,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/);
+
+/**
+ * short_link_extra_hosts (managed links only, docs/19): a comma or space separated list of hosts
+ * the admin added in «القيم». Anything that is not a bare host is skipped.
+ */
+export function extraHosts(raw: string): string[] {
+  return raw.split(/[\s,]+/).flatMap((h) => {
+    const parsed = hostName.safeParse(h);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
+
 /** https, no user:password, on an allowed host (exact, port included). */
 export function isAllowedTarget(url: string, hosts: ReadonlySet<string>): boolean {
   const parsed = httpsUrl.safeParse(url);

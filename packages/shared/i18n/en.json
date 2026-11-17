@@ -4604,6 +4604,9 @@
       "lessonConfirmationRequired": "When on (the default) a lesson shows \"Needs confirmation\" until the family replies \"Yes\" or the admin team confirms it. Every lesson that has ended is deducted from the package, confirmed or not. After the grace period a confirmed lesson is recorded as held; an unconfirmed one is recorded as absent when the platform sent the family's reminder and no reply came, and otherwise stays \"Needs confirmation\" for an assistant to resolve. When off, no lesson shows \"Needs confirmation\" and a lesson counts as held after the grace period unless another status was recorded.",
       "lessonOutcomeGraceMinutes": "Minutes after a lesson's end before its status is recorded automatically (held or absent). Default: 30 minutes.",
       "shortLinkBase": "The address the platform's short links start with, e.g. https://example.com/r/ (must start with https:// and end with /). Empty = the platform API's address followed by /r/.",
+      "shortLinkDefaultDays": "How many days a short link made by the admin or sales team stays valid when no expiry is given. Default: 7 days.",
+      "shortLinkPurgeDays": "This many days after a short link expires, it is deleted with its user list and visits. Default: 30 days.",
+      "shortLinkExtraHosts": "Other hosts a short link may open besides the platform and Google Meet, comma separated, e.g. forms.example.com. The link must be https.",
       "teacherChatsEnabled": "When on, teachers who hold the chats permission see the «Chats» page on the website and its tab in the mobile app. When off, the page is hidden and teachers cannot open it; the chats and their data do not change. Admins, sales and assistants are not affected.",
       "teacherStudentMessagesEnabled": "When on, teachers see the «Student messages» page. When off, it is hidden on the website and under «More» in the mobile app and teachers cannot open it; the messages stay saved.",
       "teacherEarningsEnabled": "When on, teachers see the «My earnings» page. When off, it is hidden on the website and in the mobile app and teachers cannot open it; earnings and their calculation do not change.",
@@ -4643,6 +4646,9 @@
     "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson",
     "lessonOutcomeGraceMinutes": "Grace after a lesson ends before its status is recorded (minutes)",
     "shortLinkBase": "Short links base",
+    "shortLinkDefaultDays": "Short link lifetime (days)",
+    "shortLinkPurgeDays": "Delete short links after expiry (days)",
+    "shortLinkExtraHosts": "Extra hosts for short links",
     "teacherChatsEnabled": "Teacher «Chats» page",
     "teacherStudentMessagesEnabled": "Teacher «Student messages» page",
     "teacherEarningsEnabled": "Teacher «My earnings» page",
@@ -6193,7 +6199,9 @@
       "people.edit": "Edit students' and families' details",
       "students.attach_guardian": "Link a student to another guardian",
       "people.switch_role": "Convert between student and guardian",
-      "templates.author": "Write chat templates"
+      "templates.author": "Write chat templates",
+      "short_links.manage": "Short links",
+      "short_links.all": "All short links"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -6214,7 +6222,9 @@
       "people.edit": "Edit any student's name, age, gender, level, time zone and notes, and the family's details and numbers. Never deletes or merges, never changes the status, program or teacher.",
       "students.attach_guardian": "Move the student to another family or to a new guardian by number. Packages, lessons and payments stay with the student; the old family stays. Also needs «Edit students' and families' details».",
       "people.switch_role": "«The student is the guardian», converting a guardian into a student of their family, and converting a student record with no history into the family's guardian. Also needs «Edit students' and families' details».",
-      "templates.author": "Create new templates sent to Meta from the chat number (they join the allowed list once approved) and edit that list's templates the platform does not send by itself. Does not grant managing every template."
+      "templates.author": "Create new templates sent to Meta from the chat number (they join the allowed list once approved) and edit that list's templates the platform does not send by itself. Does not grant managing every template.",
+      "short_links.manage": "Create short links to platform pages, Google Meet or allowed hosts, choose who may open them, how many users and for how long, and send them by WhatsApp. Without «All short links» a user sees only their own links.",
+      "short_links.all": "See, edit and revoke the short links the whole team made, not only one's own."
     },
     "page": {
       "title": "Roles and permissions",

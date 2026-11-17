@@ -4026,32 +4026,187 @@ export type Database = {
         };
         Relationships: [];
       };
-      short_links: {
+      short_link_users: {
         Row: {
+          added_by: string | null;
           code: string;
           created_at: string;
-          expires_at: string | null;
-          kind: string;
-          subject: string;
-          target_url: string;
+          id: string;
+          phone_e164: string | null;
+          profile_id: string | null;
+          send_attempts: number;
+          send_error: string | null;
+          send_status: string;
+          sent_at: string | null;
+        };
+        Insert: {
+          added_by?: string | null;
+          code: string;
+          created_at?: string;
+          id?: string;
+          phone_e164?: string | null;
+          profile_id?: string | null;
+          send_attempts?: number;
+          send_error?: string | null;
+          send_status?: string;
+          sent_at?: string | null;
+        };
+        Update: {
+          added_by?: string | null;
+          code?: string;
+          created_at?: string;
+          id?: string;
+          phone_e164?: string | null;
+          profile_id?: string | null;
+          send_attempts?: number;
+          send_error?: string | null;
+          send_status?: string;
+          sent_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'short_link_users_added_by_fkey';
+            columns: ['added_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'short_link_users_code_fkey';
+            columns: ['code'];
+            isOneToOne: false;
+            referencedRelation: 'short_links';
+            referencedColumns: ['code'];
+          },
+          {
+            foreignKeyName: 'short_link_users_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      short_link_visits: {
+        Row: {
+          code: string;
+          first_at: string;
+          id: string;
+          last_at: string;
+          matched_guardian_id: string | null;
+          matched_profile_id: string | null;
+          opens: number;
+          phone_e164: string | null;
+          profile_id: string | null;
         };
         Insert: {
           code: string;
-          created_at?: string;
-          expires_at?: string | null;
-          kind: string;
-          subject: string;
-          target_url: string;
+          first_at?: string;
+          id?: string;
+          last_at?: string;
+          matched_guardian_id?: string | null;
+          matched_profile_id?: string | null;
+          opens?: number;
+          phone_e164?: string | null;
+          profile_id?: string | null;
         };
         Update: {
           code?: string;
+          first_at?: string;
+          id?: string;
+          last_at?: string;
+          matched_guardian_id?: string | null;
+          matched_profile_id?: string | null;
+          opens?: number;
+          phone_e164?: string | null;
+          profile_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'short_link_visits_code_fkey';
+            columns: ['code'];
+            isOneToOne: false;
+            referencedRelation: 'short_links';
+            referencedColumns: ['code'];
+          },
+          {
+            foreignKeyName: 'short_link_visits_matched_guardian_id_fkey';
+            columns: ['matched_guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'guardians';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'short_link_visits_matched_profile_id_fkey';
+            columns: ['matched_profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'short_link_visits_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      short_links: {
+        Row: {
+          audience: string;
+          code: string;
+          created_at: string;
+          created_by: string | null;
+          expires_at: string | null;
+          id: string;
+          kind: string;
+          max_users: number | null;
+          send_whatsapp: boolean;
+          status: string;
+          subject: string;
+          target_url: string;
+          title: string | null;
+        };
+        Insert: {
+          audience?: string;
+          code: string;
           created_at?: string;
+          created_by?: string | null;
           expires_at?: string | null;
+          id?: string;
+          kind: string;
+          max_users?: number | null;
+          send_whatsapp?: boolean;
+          status?: string;
+          subject: string;
+          target_url: string;
+          title?: string | null;
+        };
+        Update: {
+          audience?: string;
+          code?: string;
+          created_at?: string;
+          created_by?: string | null;
+          expires_at?: string | null;
+          id?: string;
           kind?: string;
+          max_users?: number | null;
+          send_whatsapp?: boolean;
+          status?: string;
           subject?: string;
           target_url?: string;
+          title?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'short_links_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       sticker_favourites: {
         Row: {
@@ -5896,6 +6051,16 @@ export type Database = {
       };
       integration_secret_clear: { Args: { p_key: string }; Returns: boolean };
       pick_trial_date: { Args: { p: Json }; Returns: Json };
+      short_link_record_visit: {
+        Args: {
+          p_code: string;
+          p_matched_guardian: string | null;
+          p_matched_profile: string | null;
+          p_phone: string | null;
+          p_profile: string | null;
+        };
+        Returns: string;
+      };
       stripe_secret_clear: { Args: { p_name: string }; Returns: boolean };
       stripe_secret_name_ok: { Args: { p_name: string }; Returns: boolean };
       stripe_secret_read: { Args: { p_name: string }; Returns: string };

@@ -2,10 +2,10 @@ import type { PasswordSession, CodeSession, UserRole } from '@ab/shared';
 
 // Family accounts (docs/30): what the sign-in flows read and write, as ports so the flows are tested
 // on in-memory fakes (sign-in.fakes.ts) and run on Supabase (codes.queries, subjects.queries, auth-gate).
-
-/** report_view: a report page's code (owner 2026-11-06), subject = the report. */
-export type CodePurpose = 'sign_in' | 'reset_password' | 'set_password' | 'report_view';
-export type SubjectKind = 'guardian' | 'student' | 'profile' | 'report' | 'teacher';
+/** report_view: a report page (2026-11-06); short_link: a managed link's gate (2026-11-17). */
+type AccountPurpose = 'sign_in' | 'reset_password' | 'set_password';
+export type CodePurpose = AccountPurpose | 'report_view' | 'short_link';
+export type SubjectKind = 'guardian' | 'student' | 'profile' | 'report' | 'teacher' | 'short_link';
 
 /** Who a code is for: guardians / students / profiles (staff) / lesson_reports / teachers .id. */
 export interface Subject {

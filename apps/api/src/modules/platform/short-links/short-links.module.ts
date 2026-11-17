@@ -13,6 +13,6 @@ import { ShortLinksSettings } from './short-links.settings';
 @Module({
   controllers: [ShortLinksController],
   providers: [RateLimitRepo, ShortLinksRepo, ShortLinksSettings, ShortLinksLimit, ShortLinks],
-  exports: [ShortLinks],
+  exports: [ShortLinks, ShortLinksSettings],
 })
 export class ShortLinksModule {}
