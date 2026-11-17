@@ -40,17 +40,51 @@ only once an admin switches `STORAGE_DRIVER` in «التكاملات» › «ا�
 - **Recordings** have their **own switch**, `MINIO_RECORDINGS` (default off): `STORAGE_DRIVER=minio` alone never
   starts recording onto the shared disk. With both on, LiveKit egress uploads every lesson and meeting recording to
   `MINIO_PUBLIC_URL` with the app user's key in the egress request; recordings are **not capped** (§7). Off: they
-  go to `RECORDING_S3_*` (Supabase) as before, or nothing is recorded when that is not set. A dedicated put-only
-  user for recordings is a later hardening.
+  go to `RECORDING_S3_*` (Supabase) as before, or nothing is recorded when that is not set. The egress signs
+  with its own put-only user when `MINIO_EGRESS_*` is set (§1a); the app key only while it is not (boot warning).
 - **Deletes.** A delete follows the path's marker; for a Supabase path it also removes the same key in MinIO when
   MinIO is configured (best effort, never failing the delete), so a file the bulk copy (§6) duplicated never
   outlives its row.
+  Deleting a recording (admin or retention) with a `minio:` path also removes the same key in the Supabase
+  recordings bucket (REC-4, best effort).
 - **Old reports re-rendered** after the cut-over get a new MinIO copy; their old Supabase copy stays in place
   (cleaning those up is a later step).
 - «اختبار الاتصال» in «التخزين» puts, reads and deletes a probe object under `_probe/` in the reports bucket
   through `MINIO_ENDPOINT`, then does what the apps do through `MINIO_PUBLIC_URL`: a `PUT` to a signed slot
   (`If-None-Match: *`) and a signed `GET` of it, then deletes it. A wrong public address or Caddy site fails it
   with «storage_public_failed». `/health` only asks the internal endpoint (every 30 s; it never writes).
+
+### 1a. The egress's write-only user (T2/REC-5)
+
+The LiveKit egress gets an S3 key in every egress request, so that key must not be able to read or list
+anything: a leaked egress key may only add recordings. Its policy (MinIO policy JSON; `<prefix>` is
+`MINIO_BUCKET_PREFIX`, empty on production):
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:PutObject", "s3:AbortMultipartUpload", "s3:ListMultipartUploadParts"],
+      "Resource": ["arn:aws:s3:::<prefix>recordings/*"]
+    }
+  ]
+}
+```
+
+Owner, over the SSH tunnel (never in git; random 40-character secret):
+
+```bash
+mc admin policy create ayat egress-put egress-put.json
+mc admin user add ayat <egress-access-key> <egress-secret>
+mc admin policy attach ayat egress-put --user <egress-access-key>
+```
+
+Then `MINIO_EGRESS_ACCESS_KEY` / `MINIO_EGRESS_SECRET_KEY` go into the server env (the deploy merges them
+from the GitHub environment's secrets of the same names). They are env-only: never in «التكاملات», never
+returned by the API; both or neither (one alone counts as unset). Unset = the egress gets the app key and the
+API logs `MINIO_EGRESS_ACCESS_KEY / MINIO_EGRESS_SECRET_KEY unset` once at boot.
 
 ## 2. Config keys («التكاملات» › «التخزين»; database + Vault, `.env` only bootstraps)
 
@@ -185,7 +219,8 @@ Never save `STORAGE_DRIVER=minio` before «اختبار الاتصال» passes:
 
 ## 5. Backups
 
-Daily copy of every bucket to `/var/backups/ayat-minio` with `deploy/staging/minio/backup.sh`: a one-shot
+Daily copy of every bucket but `recordings` (REC-4: a deleted or expired recording must not live on in a
+backup; the Drive backup §5.1 leaves them out too) to `/var/backups/ayat-minio` with `deploy/staging/minio/backup.sh`: a one-shot
 container of the pinned MinIO image (it ships `mc`; run as uid 0 only to write the root-only folder) on the project network, with the app user's keys from `minio.env` (read
 and list is all it needs; never root). Host crontab (`crontab -e` as root):
 

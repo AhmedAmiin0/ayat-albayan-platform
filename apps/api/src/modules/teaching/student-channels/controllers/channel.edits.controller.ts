@@ -1,10 +1,12 @@
-import { channelPostSchema, type ChannelMessageView } from '@ab/shared';
+import { channelEditSchema, type ChannelEdit, type ChannelMessageView } from '@ab/shared';
 import { Body, Controller, Delete, Param, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden } from '@/common/http/errors';
 import { parseOrThrow } from '@/common/http/http';
+import { ZodBody, ZodParams } from '@/common/http/zod-inputs';
 import { ChannelAccess } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelEdits } from '@/modules/teaching/student-channels/channel-edits.service';
 import { messageParams } from './channel-message-params';
@@ -12,12 +14,15 @@ import { messageParams } from './channel-message-params';
 type Params = Record<string, string | undefined>;
 const TEACHER = 'teachers/me/channels/:studentId/messages/:messageId';
 const PORTAL = 'portal/students/:id/channel/messages/:messageId';
+const SALES = 'sales/students/:id/channel/messages/:messageId';
+const salesIds = z.object({ id: z.uuid(), messageId: z.uuid() });
+type SalesIds = z.output<typeof salesIds>;
 
 /**
  * «تعديل» / «حذف للجميع» (owner 2026-10-30): the sender edits their own text (15 min) and
- * deletes their own message (48 h) on the participant routes; the admin deletes any message on the
- * monitor route (moderation). ChannelAccess resolves the caller as for reading; ChannelEdits holds
- * the rules.
+ * deletes their own message (48 h) on the participant routes, the seated assistant's too (owner
+ * 2026-11-16); the admin deletes any message on the monitor route (moderation). ChannelAccess
+ * resolves the caller as for reading; ChannelEdits holds the rules.
  */
 @ApiTags('student-channels')
 @ApiBearerAuth()
@@ -58,6 +63,24 @@ export class ChannelEditsController {
     return this.edits.remove({ actor: await this.access.family(user, studentId), messageId });
   }
 
+  @Patch(SALES)
+  @Permissions('self.sales')
+  async salesEdit(
+    @ZodParams(salesIds) p: SalesIds,
+    @ZodBody(channelEditSchema) body: ChannelEdit,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ChannelMessageView> {
+    const actor = await this.access.assistant(user, p.id);
+    return this.edits.edit({ actor, messageId: p.messageId, body: body.body });
+  }
+
+  @Delete(SALES)
+  @Permissions('self.sales')
+  async salesDelete(@ZodParams(salesIds) p: SalesIds, @CurrentUser() user: AuthUser) {
+    const actor = await this.access.assistant(user, p.id);
+    return this.edits.remove({ actor, messageId: p.messageId });
+  }
+
   /** Moderation: the admin only (another holder of student_channels.monitor is 403). */
   @Delete('students/:id/channel/messages/:messageId')
   @Permissions('student_channels.monitor')
@@ -69,4 +92,4 @@ export class ChannelEditsController {
   }
 }
 
-const textOf = (body: unknown): string => parseOrThrow(channelPostSchema, body).body;
+const textOf = (body: unknown): string => parseOrThrow(channelEditSchema, body).body;

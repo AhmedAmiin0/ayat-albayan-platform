@@ -36,7 +36,11 @@ describe('channel bubble menu: what it offers now', () => {
     expect(offered(msg(9999, { mine: false }), 'admin')).toEqual([a.deleteForAll]);
   });
 
-  it('the owning assistant (sales) gets nothing', () => {
-    expect(offered(msg(1), 'sales')).toEqual([]);
+  it('the owning assistant edits and deletes her own messages only (owner 2026-11-16)', () => {
+    expect(offered(msg(1), 'sales')).toEqual([a.edit, a.deleteForAll]);
+  });
+
+  it("the owning assistant: no menu on someone else's message", () => {
+    expect(offered(msg(1, { mine: false }), 'sales')).toEqual([]);
   });
 });

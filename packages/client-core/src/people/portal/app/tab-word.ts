@@ -1,30 +1,31 @@
-import type { PortalKind } from '@ab/shared';
 import type { ChildTab } from '../viewer.js';
 
 // A child page's tab names (docs/50 §6), shared by the family app and the family web pages: a
-// student reads their own page («حضرتها»), a guardian their child's («حضرها»). Each app passes
-// its `t.portal`.
+// login that reads its own page (a student, an adult: readsOwn) sees «حضرتها», a guardian their
+// child's «حضرها». Each app passes its `t`.
 
 export interface ChildTabWords {
-  upcomingTab: string;
-  attendedTab: string;
-  absentTab: string;
-  packageTab: string;
-  app: { child: { attendedSelf: string; absentSelf: string; chat: string } };
+  portal: {
+    upcomingTab: string;
+    attendedTab: string;
+    absentTab: string;
+    packageTab: string;
+    app: { child: { attendedSelf: string; absentSelf: string; chat: string } };
+  };
+  lessonFiles: { recordings: string };
 }
-
-const OWN: Readonly<Record<PortalKind, boolean>> = { guardian: false, student: true };
 
 type Word = (words: ChildTabWords, own: boolean) => string;
 
 const WORD: Readonly<Record<ChildTab, Word>> = {
-  upcoming: (w) => w.upcomingTab,
-  attended: (w, own) => (own ? w.app.child.attendedSelf : w.attendedTab),
-  absent: (w, own) => (own ? w.app.child.absentSelf : w.absentTab),
-  package: (w) => w.packageTab,
-  chat: (w) => w.app.child.chat,
+  upcoming: (w) => w.portal.upcomingTab,
+  attended: (w, own) => (own ? w.portal.app.child.attendedSelf : w.portal.attendedTab),
+  absent: (w, own) => (own ? w.portal.app.child.absentSelf : w.portal.absentTab),
+  recordings: (w) => w.lessonFiles.recordings,
+  package: (w) => w.portal.packageTab,
+  chat: (w) => w.portal.app.child.chat,
 };
 
-/** The child tab's word for this login. */
-export const childTabWord = (tab: ChildTab, kind: PortalKind, words: ChildTabWords): string =>
-  WORD[tab](words, OWN[kind]);
+/** The child tab's word; `own`: readsOwn(portalViewer(kind, student)). */
+export const childTabWord = (tab: ChildTab, own: boolean, words: ChildTabWords): string =>
+  WORD[tab](words, own);

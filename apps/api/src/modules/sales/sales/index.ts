@@ -8,6 +8,7 @@ export {
   NO_OWNERSHIP,
   ownershipOf,
   type SalesOwnership,
+  studentOwnerIds,
 } from './sales-ownership';
 export { enforcesOwnership, SalesOwnershipRule } from './rule/sales-ownership-rule';
 export { type SalesScope, SalesScopes } from './sales-scope';

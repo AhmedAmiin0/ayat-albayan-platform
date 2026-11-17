@@ -15,16 +15,21 @@ export interface RenewSubscriptionButtonProps {
 }
 
 /**
- * «جدّد الاشتراك» on the student profile (owner 2026-10-15): only while the package ended
- * (pending_renewal / expired). Opens «اشتراك جديد» for this student, the calculator prefilled
- * from the last package (the profile's balance query, its `current`).
+ * «جدّد الاشتراك» on the student profile (owner 2026-10-15): once the package ended
+ * (pending_renewal / expired), and ANY time the student has a package (owner 2026-11-17: the new
+ * package starts on the day picked in the dialog). Opens «اشتراك جديد» for this student, the
+ * calculator prefilled from the last package (the profile's balance query, its `current`).
  */
+/** Package-ended, or a package to renew from (owner 2026-11-17: ANY time). */
+const offered = (ended: boolean, balance: { current: unknown } | undefined): boolean =>
+  ended || Boolean(balance?.current);
+
 export function RenewSubscriptionButton({ student, primary = false }: RenewSubscriptionButtonProps) {
   const ended = isPackageEnded(student.status);
-  const balance = useQuery({ ...studentBalanceQuery(student.id), enabled: ended });
+  const balance = useQuery(studentBalanceQuery(student.id));
   const [open, setOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  if (!ended) return null;
+  if (!offered(ended, balance.data)) return null;
   return (
     <>
       <Button type="button" variant={primary ? 'primary' : 'secondary'} disabled={balance.isPending} onClick={() => setOpen(true)}>

@@ -1,9 +1,9 @@
-import type { FamilyTab } from '@ab/client-core';
+import { familyTabs, type FamilyTab } from '@ab/client-core';
 import { Link } from '@tanstack/react-router';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { TAB_ICON, TAB_PATH, tabsOf } from './tab-links';
-import { usePortalHome } from './use-portal-home';
+import { TAB_ICON, TAB_PATH } from './tab-links';
+import { useFamilyPick } from './use-family-pick';
 
 const ITEM =
   'flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 rounded-md px-1 text-2xs ' +
@@ -21,11 +21,12 @@ function TabLink({ tab }: { tab: FamilyTab }) {
 }
 
 /**
- * The family bar (owner 2026-11-15): a guardian الرئيسية · الجدول · أبنائي · حسابي, a student
- * الرئيسية · الجدول · التقارير · حسابي. A bottom bar on phones, a side rail on wide screens.
+ * The family bar (owner 2026-11-16): the student in view's الرئيسية · الجدول · التقارير · حسابي;
+ * no «التقارير» until that student is known (a guardian of several picks one first). A bottom
+ * bar on phones, a side rail on wide screens.
  */
 export function TabBar() {
-  const tabs = tabsOf(usePortalHome().data?.kind);
+  const tabs = familyTabs(useFamilyPick());
   return (
     <nav
       aria-label={t.familyWeb.nav}

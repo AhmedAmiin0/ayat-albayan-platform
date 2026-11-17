@@ -2,16 +2,15 @@ import { RIYADH_TZ, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice } from '@/booking';
-import { t, Button, ErrorLine } from '@ab/mobile-kit';
+import { t, Button, ErrorLine, MoveReason } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import {
   lessonDuration,
-  MoveReason,
+  LessonSlotPicker,
   reasonField,
   RescheduleDone,
   rescheduleFailure,
   RescheduleHeading,
-  SlotPicker,
 } from '@/teaching';
 import { useSalesReschedule } from './lesson-actions-api';
 
@@ -51,7 +50,7 @@ export function SalesRescheduleForm({ lesson, onDone }: SalesRescheduleFormProps
       ) : failure?.kind === 'conflict' ? (
         <ConflictNotice lines={failure.lines} onChangeSlot={() => pick(null)} />
       ) : (
-        <SlotPicker lesson={lesson} durationMin={durationMin} tz={tz} value={startsAt} onPick={pick} slotsPath="/sales/booking/slots" />
+        <LessonSlotPicker lesson={lesson} durationMin={durationMin} tz={tz} value={startsAt} onPick={pick} slotsPath="/sales/booking/slots" />
       )}
       <MoveReason value={reason} onChange={setReason} />
       {failure?.kind === 'error' ? <ErrorLine message={failure.text} /> : null}

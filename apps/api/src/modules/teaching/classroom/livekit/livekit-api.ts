@@ -9,7 +9,13 @@ import {
   type ClassroomConfigSource,
 } from '@/modules/teaching/classroom/classroom.config';
 import { mintServerToken, type ServerGrant } from './livekit-token';
-import { ignoredAnswer, LivekitError, TWIRP_ERRORS, twirpErrorSchema } from './livekit-twirp';
+import {
+  ignoredAnswer,
+  LivekitError,
+  NO_PERMISSION,
+  TWIRP_ERRORS,
+  twirpErrorSchema,
+} from './livekit-twirp';
 
 export { LivekitError } from './livekit-twirp';
 
@@ -37,7 +43,8 @@ const twirpHttp = (url: string, transport: FetchLike | null): Http =>
     base: () => twirpBase(url),
     headers: () => Promise.resolve({}),
     timeoutMs: TIMEOUT_MS,
-    redirect: 'follow',
+    // A signed server token never follows a redirect to another host (T1).
+    redirect: 'error',
     errorBody: twirpErrorSchema,
     errors: TWIRP_ERRORS,
     ...(transport ? { fetch: transport } : {}),
@@ -84,6 +91,17 @@ export class LivekitApi {
     await this.call({ method, body: input, grant }, ignoredAnswer).catch((e: unknown) => {
       if (!isGone(e)) throw e;
     });
+  }
+
+  /** «إخراج»: permissions revoked (UpdateParticipant), then disconnected; gone counts as done. */
+  async revokeAndRemove(input: { room: string; identity: string }): Promise<void> {
+    const grant = { roomAdmin: true, room: input.room };
+    const body = { ...input, permission: NO_PERMISSION };
+    const method = 'livekit.RoomService/UpdateParticipant';
+    await this.call({ method, body, grant }, ignoredAnswer).catch((e: unknown) => {
+      if (!isGone(e)) throw e;
+    });
+    await this.removeParticipant(input);
   }
 
   /**

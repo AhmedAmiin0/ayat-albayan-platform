@@ -1,6 +1,5 @@
 import { Pressable, View } from 'react-native';
-import { t, AppText, Chevron, shape, type, useTheme, ErrorLine } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import { t, AppText, Chevron, shape, type, useTheme, ErrorLine, FormLabel } from '@ab/mobile-kit';
 
 interface PickerRowProps {
   label: string;

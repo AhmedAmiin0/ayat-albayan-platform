@@ -6,7 +6,7 @@ import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { cn } from '@ab/web-kit/lib/utils';
 import { studentNames } from './lessons';
 import { LessonTags } from './LessonTags';
-import { zoneLabel } from '@/features/teaching/schedule/reschedule/slots';
+import { zoneLabel } from '@ab/web-kit/schedule/slots';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { clockDir } from '@ab/web-kit/lib/clock-text';

@@ -39,8 +39,8 @@ describe('reportErrorText / fileLabel', () => {
   });
 
   it('attachments read by kind and size', () => {
-    expect(fileLabel({ mime: 'application/pdf', size: 2_097_152 })).toBe('ملف PDF · 2.0 ميجا');
-    expect(fileLabel({ mime: 'audio/mpeg', size: 10 })).toBe('تسجيل صوتي · 0.1 ميجا');
-    expect(fileLabel({ mime: 'image/png', size: 524_288 })).toBe('صورة · 0.5 ميجا');
+    expect(fileLabel({ mime: 'application/pdf', size: 2_097_152 })).toBe('ملف PDF · 2.0 ميغابايت');
+    expect(fileLabel({ mime: 'audio/mpeg', size: 10 })).toBe('تسجيل صوتي · 0.1 ميغابايت');
+    expect(fileLabel({ mime: 'image/png', size: 524_288 })).toBe('صورة · 0.5 ميغابايت');
   });
 });

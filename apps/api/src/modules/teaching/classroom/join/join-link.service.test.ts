@@ -47,6 +47,7 @@ describe('«أرسل رابط الحلقة»', () => {
       token_hash: hashLinkToken(sent),
       expires_at: '2026-10-05T19:00:00.000Z',
       created_by: ADMIN.id,
+      sent_for_student_id: STUDENT_ID,
     });
     expect(JSON.stringify(q.insertLink.mock.calls)).not.toContain(sent);
   });

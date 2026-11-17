@@ -70,6 +70,15 @@ describe('recordings into MinIO', () => {
     expect(on.egressTarget('recordings')).toMatchObject({ bucket: 'recordings' });
   });
 
+  it('the egress signs with the write-only egress keys when set, else the app key', () => {
+    const on = { driver: 'minio', minio: MINIO, recordings: true, driveBackup: false } as const;
+    const egress = { accessKey: 'egress', secretKey: 'egress-s' };
+    const keyed = setup({ ...on, egress }).storage.egressTarget('recordings');
+    expect(keyed).toMatchObject({ accessKey: 'egress', secret: 'egress-s' });
+    const fallback = setup({ ...on, egress: null }).storage.egressTarget('recordings');
+    expect(fallback).toMatchObject({ accessKey: 'k', secret: 's' });
+  });
+
   it('no egress target while the switch is off', () => {
     const off = setup({ driver: 'minio', minio: MINIO, recordings: false, driveBackup: false }).storage;
     expect(off.egressTarget('recordings')).toBeNull();

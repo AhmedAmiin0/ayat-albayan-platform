@@ -28,7 +28,8 @@ function TeacherSteps({ studentId, mode, view, teachers, onDone }: StepsProps) {
   const teacher = teachers.find((x) => x.id === draft.teacherId);
   const done = async () => {
     await invalidate();
-    onDone(t.courseActions.teacher.done);
+    const named = t.courseActions.teacher.reviewNew.replace('{name}', teacher?.display_name_ar ?? '');
+    onDone(`${t.courseActions.teacher.done} · ${named}`);
   };
   if (moving && teacher) {
     return (

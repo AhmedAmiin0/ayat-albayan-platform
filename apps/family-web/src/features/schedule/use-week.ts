@@ -1,6 +1,6 @@
 import { weekSchedule } from '@ab/client-core';
 import type { PortalStudent } from '@ab/shared';
-import { useQueries } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
@@ -10,29 +10,23 @@ import { portalLessonsQuery } from '@ab/web-kit/portal/api';
 export const MAX_OFFSET = 2;
 
 /**
- * «الجدول» (canvas Schedule): every child's lessons at once, one academy week of what is still
- * ahead (@ab/client-core weekSchedule), a week offset and one child's filter.
+ * «الجدول» (canvas StudentSchedule): the lessons of the student in view (owner 2026-11-16), one
+ * academy week of what is still ahead (@ab/client-core weekSchedule) and a week offset.
  */
-export function useWeek(students: readonly PortalStudent[]) {
+export function useWeek(student: PortalStudent) {
   const [offset, setOffset] = useState(0);
-  const [only, setOnly] = useState<string | null>(null);
   const tz = useViewerTz();
-  const reads = useQueries({ queries: students.map((s) => portalLessonsQuery(s.id)) });
-  const children = students.map((student, i) => ({
-    student,
-    lessons: reads[i]?.data?.lessons ?? [],
-  }));
-  const days = weekSchedule({ children, tz, offset, only }, useNow());
+  const read = useQuery(portalLessonsQuery(student.id));
+  const children = [{ student, lessons: read.data?.lessons ?? [] }];
+  const days = weekSchedule({ children, tz, offset }, useNow());
   return {
     days,
     tz,
     offset,
     setOffset,
-    only,
-    setOnly,
-    loading: reads.some((r) => r.isPending),
-    failed: reads.length > 0 && reads.every((r) => r.isError),
-    retry: () => Promise.all(reads.map((r) => r.refetch())),
+    loading: read.isPending,
+    failed: read.isError,
+    retry: () => read.refetch(),
   };
 }
 

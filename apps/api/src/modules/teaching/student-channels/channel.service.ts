@@ -1,66 +1,80 @@
-import { CHANNEL_NOT_OPEN, type ChannelMessageView, type ChannelPage, type ChannelUnread, type TeacherChannelRow } from '@ab/shared';
-import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import {
+  CHANNEL_NOT_OPEN,
+  CHANNEL_PAGE_SIZE,
+  micros,
+  type ChannelMessageView,
+  type ChannelPage,
+  type ChannelPost,
+  type ChannelUnread,
+  type TeacherChannelRow,
+} from '@ab/shared';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, notFound } from '@/common/http/errors';
 import type { ChannelActor } from './channel-access';
-import { ChannelNotify } from './channel-notify';
 import { ChannelPeopleRepo } from './channel-people.repo';
-import { toMessageView, toPage, toTeacherRows, unreadRolesFor } from './channel.mapper';
+import { toPage, toTeacherRows, unreadRolesFor } from './channel.mapper';
 import { ChannelRepo } from './channel.repo';
 import { TeachersRepo } from '@/modules/people/teachers';
+import { ChannelSender } from '@/modules/teaching/student-channels/send/channel-sender';
+import { ChannelViews } from '@/modules/teaching/student-channels/views/channel-views.service';
 
-/** A participant's write on a closed channel (before the subscription or the teacher's assignment). */
+/** A participant's write on a closed channel (before the subscription or the assignment). */
 const closed = (actor: ChannelActor): boolean => actor.mode === 'participant' && !actor.open;
 
 /** The student channel (docs/31 §2) once ChannelAccess has resolved the caller. */
 @Injectable()
 export class ChannelService {
-  private readonly log = new Logger(ChannelService.name);
-
   constructor(
-    private readonly queries: ChannelRepo,
-    private readonly people: ChannelPeopleRepo,
-    private readonly notify: ChannelNotify,
+    @Inject(ChannelRepo) private readonly queries: ChannelRepo,
+    @Inject(ChannelPeopleRepo) private readonly people: ChannelPeopleRepo,
+    @Inject(ChannelSender) private readonly sender: ChannelSender,
+    @Inject(ChannelViews) private readonly views: ChannelViews,
   ) {}
 
   /**
-   * A page, oldest first within it; a monitor's says read_only. Reading never marks anything read. Closed
-   * for a participant: no messages at all (`open` false), the apps show the closed line.
+   * A page, oldest first within it; a monitor's says read_only. Reading never marks anything read.
+   * Closed for a participant: no messages at all (`open` false) and why (`closed_reason`), the apps
+   * show its line.
    */
   async page(actor: ChannelActor, before?: string): Promise<ChannelPage> {
     const channelId = await this.queries.channelOf(actor.studentId);
-    const [rows, [student]] = await Promise.all([closed(actor) ? [] : this.queries.page({ channelId, before }), this.people.students([actor.studentId])]);
-    const names = await this.people.names(rows.flatMap((r) => (r.sender_profile_id ? [r.sender_profile_id] : [])));
-    const ctx = { me: actor.profileId, names, readOnly: actor.mode === 'monitor', studentName: student?.name ?? '' };
-    return toPage(rows, { ...ctx, open: actor.open, channelId });
+    const [rows, [student], closedReason] = await Promise.all([
+      closed(actor) ? [] : this.queries.page({ channelId, before }),
+      this.people.students([actor.studentId]),
+      actor.open ? null : this.queries.closedReason(actor.studentId),
+    ]);
+    const shown = rows.slice(0, CHANNEL_PAGE_SIZE);
+    const viewer = { profileId: actor.profileId, studentId: actor.studentId, channelId };
+    const ctx = await this.views.page(shown, viewer);
+    const readOnly = actor.mode === 'monitor';
+    const page = { readOnly, studentName: student?.name ?? '', closedReason, channelId };
+    return toPage(rows, { ...ctx, ...page, open: actor.open });
   }
 
-  /** 403 for a monitor (read-only in v1), 409 channel_not_open while closed; the push goes after the row is stored. */
-  async post(actor: ChannelActor, body: string): Promise<ChannelMessageView> {
-    if (actor.mode !== 'participant') throw new ForbiddenException();
-    if (!actor.open) throw conflict(CHANNEL_NOT_OPEN);
-    const channelId = await this.queries.channelOf(actor.studentId);
-    const row = await this.queries.insert({ channel_id: channelId, sender_profile_id: actor.profileId, sender_role: actor.role, body });
-    await this.queries.setReadMark({ channelId, profileId: actor.profileId, at: row.created_at });
-    await this.notify.sent(actor, row).catch((e: unknown) => this.log.warn(`channel push failed: ${String(e)}`));
-    const names = await this.people.names([actor.profileId]);
-    return toMessageView(row, { me: actor.profileId, names });
+  /** Text, a file or both, maybe a reply (ChannelSender). */
+  post(actor: ChannelActor, post: ChannelPost): Promise<ChannelMessageView> {
+    return this.sender.post(actor, post);
   }
 
   /**
-   * A participant has seen the thread up to `at` (the newest message shown; never later than now), so a
-   * message that arrived after the screen read stays unread. 403 for a monitor.
+   * A participant has seen the thread up to `at` (the newest message shown, kept to the
+   * microsecond; never later than now), so a message that arrived after the screen read stays
+   * unread. The mark never moves back (channel_mark_read). 403 for a monitor.
    */
   async read(actor: ChannelActor, at?: string, now = new Date()): Promise<void> {
     if (actor.mode !== 'participant') throw new ForbiddenException();
     if (!actor.open) throw conflict(CHANNEL_NOT_OPEN);
-    const upTo = at && Date.parse(at) < now.getTime() ? new Date(at).toISOString() : now.toISOString();
-    await this.queries.setReadMark({ channelId: await this.queries.channelOf(actor.studentId), profileId: actor.profileId, at: upTo });
+    const nowIso = now.toISOString();
+    const upTo = at && micros(at) < micros(nowIso) ? at : nowIso;
+    const channelId = await this.queries.channelOf(actor.studentId);
+    await this.queries.setReadMark({ channelId, profileId: actor.profileId, at: upTo });
   }
 
+  /** A participant's unread on an open channel (a monitor never marks anything read: none). */
   async unread(actor: ChannelActor): Promise<ChannelUnread> {
-    if (closed(actor)) return { unread: 0 };
-    const countRoles = unreadRolesFor(actor.mode === 'participant' ? actor.role : null);
+    if (actor.mode !== 'participant' || !actor.open) return { unread: 0 };
+    const countRoles = unreadRolesFor(actor.role);
     const [sum] = await this.queries.summaries({ profileId: actor.profileId, studentIds: [actor.studentId], countRoles });
     return { unread: sum?.unread ?? 0 };
   }

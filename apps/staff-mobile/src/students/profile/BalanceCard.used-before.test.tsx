@@ -43,6 +43,6 @@ test('the current package offers the edit, which opens on the server state', asy
 test('without subscriptions.edit_terms: not offered', async () => {
   serve(ME);
   await renderWithQuery(<BalanceCard studentId="s1" />, createTestQueryClient({ meFromApi: true }));
-  expect(await screen.findByText(t.payments.mobile.record)).toBeTruthy();
+  expect(await screen.findByText(t.subscriptions.balance)).toBeTruthy();
   expect(screen.queryByRole('button', { name: e.action })).toBeNull();
 });

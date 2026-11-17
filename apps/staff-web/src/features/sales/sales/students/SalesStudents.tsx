@@ -1,3 +1,4 @@
+import { OpenSeatChat } from '@/features/teaching/student-channel';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AllStudents } from './AllStudents';
 import { MyStudents } from './MyStudents';
@@ -6,8 +7,18 @@ import { ViewHead } from '@/features/sales/sales/ViewHead';
 
 export type StudentsView = 'all' | 'mine';
 
-/** /sales/students «الطلاب»: every student of the academy, or «طلابي» (the ones I brought, with my commission). */
-export function SalesStudents({ view, onView }: { view: StudentsView; onView: (view: StudentsView) => void }) {
+interface SalesStudentsProps {
+  view: StudentsView;
+  onView: (view: StudentsView) => void;
+  /** A chat notification's student (`?student=`): her chat opens over the list. */
+  chat?: { studentId: string; onClose: () => void };
+}
+
+/**
+ * /sales/students «الطلاب»: every student of the academy, or «طلابي» (the ones I brought, with my
+ * commission).
+ */
+export function SalesStudents({ view, onView, chat }: SalesStudentsProps) {
   return (
     <>
       <ViewHead
@@ -23,6 +34,7 @@ export function SalesStudents({ view, onView }: { view: StudentsView; onView: (v
         <RegistrationCheckButton />
       </ViewHead>
       {view === 'mine' ? <MyStudents /> : <AllStudents />}
+      {chat && <OpenSeatChat studentId={chat.studentId} onClose={chat.onClose} />}
     </>
   );
 }

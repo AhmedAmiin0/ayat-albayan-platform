@@ -1,22 +1,2 @@
-import { type, useTheme, AppText } from '@ab/mobile-kit';
-
-/**
- * Small ink-3 line: a hint («المواعيد بتوقيت الرياض») or an empty note («مفيش إجازات»). `alert`: a line that
- * replaces what was just done («أُزيل الرقم الثاني»), announced by the screen reader.
- */
-export function Note({ children, alert = false }: { children: string; alert?: boolean }) {
-  const { color } = useTheme();
-  return (
-    <AppText
-      accessibilityRole={alert ? 'alert' : undefined}
-      style={{
-        fontFamily: type.ui[400],
-        fontSize: type.size.xs,
-        lineHeight: type.lineHeight(type.size.xs),
-        color: color.ink3,
-      }}
-    >
-      {children}
-    </AppText>
-  );
-}
+// Moved to the shared kit (the family chat shows it too).
+export { Note } from '@ab/mobile-kit';

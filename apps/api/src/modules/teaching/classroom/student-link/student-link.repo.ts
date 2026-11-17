@@ -5,14 +5,16 @@ import { DB, type Db } from '@/common/db/db.module';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 import { dbError } from '@/common/http/http';
 import { hashLinkToken, linkExpiry, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import type { LinkStudent } from './student-link.flags';
 
 type StudentLinkRow = Pick<Tables<'student_join_links'>, 'id' | 'student_id' | 'revoked_at'>;
-export type StudentLesson = Pick<Tables<'lessons'>, 'id' | 'starts_at' | 'ends_at' | 'room_opened_at'> & {
+type LessonTimes = 'id' | 'starts_at' | 'ends_at' | 'room_opened_at' | 'room_ended_at';
+export type StudentLesson = Pick<Tables<'lessons'>, LessonTimes> & {
   teacher_name: string;
 };
 /** What the (lesson, student) row needs of its lesson: the id and the end (its expiry). */
 type LinkLesson = Pick<StudentLesson, 'id' | 'ends_at'>;
-type LessonEmbed = Pick<Tables<'lessons'>, 'id' | 'starts_at' | 'ends_at' | 'room_opened_at'> & {
+type LessonEmbed = Pick<Tables<'lessons'>, LessonTimes> & {
   teacher: { display_name_ar: string } | null;
 };
 
@@ -32,8 +34,9 @@ export class StudentLinkRepo {
     return joinWindowConfig(await this.settings.read());
   }
 
-  async student(id: string): Promise<{ id: string; name: string } | null> {
-    const { data, error } = await this.db.from('students').select('id, name').eq('id', id).maybeSingle();
+  /** is_test: the student half of the double condition (docs/56). */
+  async student(id: string): Promise<LinkStudent | null> {
+    const { data, error } = await this.db.from('students').select('id, name, is_test').eq('id', id).maybeSingle();
     if (error) throw dbError(error);
     return data;
   }
@@ -57,7 +60,9 @@ export class StudentLinkRepo {
     const since = new Date(now.getTime() - closesAfterMin * 60_000).toISOString();
     const { data, error } = await this.db
       .from('lessons')
-      .select('id, starts_at, ends_at, room_opened_at, teacher:teachers(display_name_ar), lesson_students!inner(student_id)')
+      .select(
+        'id, starts_at, ends_at, room_opened_at, room_ended_at, teacher:teachers(display_name_ar), lesson_students!inner(student_id)',
+      )
       .eq('lesson_students.student_id', studentId)
       .in('status', [...OPEN_LESSON_STATUSES])
       .gte('ends_at', since)
@@ -70,6 +75,7 @@ export class StudentLinkRepo {
       starts_at: l.starts_at,
       ends_at: l.ends_at,
       room_opened_at: l.room_opened_at,
+      room_ended_at: l.room_ended_at,
       teacher_name: l.teacher?.display_name_ar ?? '',
     }));
   }

@@ -18,6 +18,8 @@ describe('GET /students/:id/course-stop', () => {
     expect(res.json()).toEqual({
       subscriptionId: SUB,
       futureLessons: 1,
+      // owner 2026-11-17: the sheet lists the lessons it cancels.
+      futureStarts: ['2026-11-18T14:00:00Z'],
       activeRules: 2,
       paid: 290,
       currency: 'SAR',

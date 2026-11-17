@@ -1,8 +1,7 @@
 import { lessonWhenAt, type ReportPageView } from '@ab/shared';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { pageLines } from '@ab/client-core';
+import { reportLines } from './lines';
 import { ReportPageFiles } from './ReportPageFiles';
 
 export interface ReportPageBodyProps {
@@ -16,8 +15,7 @@ export function ReportPageBody({ view, head = true }: ReportPageBodyProps) {
   const clock = useClock();
   const s = t.reportPage;
   const when = lessonWhenAt(new Date(view.lesson.starts_at), { tz: view.tz, ...clock });
-  const text = { v2: t.reports.v2, grade: t.enums.grade, program: t.enums.program, lang: locale };
-  const lines = pageLines(view.report, { text, v1: t.reports });
+  const lines = reportLines(view.report);
   return (
     <article className="grid gap-4" aria-label={s.title}>
       {head && (

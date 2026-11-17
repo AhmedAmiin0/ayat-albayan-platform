@@ -1,9 +1,8 @@
 import { PAYMENT_METHODS, earningIdsOf, payCeiling, type PaymentMethod, type TeacherEarningView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, Button, FilterPills, type FilterPill, ErrorLine, useNow } from '@ab/mobile-kit';
+import { t, Button, FilterPills, type FilterPill, ErrorLine, useNow, FormLabel } from '@ab/mobile-kit';
 import { AmountField } from '@/payments/components/AmountField';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
 import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
 import { Note } from '@/core/ui/feedback/Note';

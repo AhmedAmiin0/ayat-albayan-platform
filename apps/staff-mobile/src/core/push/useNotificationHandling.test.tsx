@@ -14,7 +14,11 @@ const mockPush = jest.fn();
 // The root stack shows the tabs (no chat open): every tap is a push (useNotificationHandling.chat.test).
 const mockTabsRoot = { routes: [{ name: '__root', state: { index: 0, routes: [{ name: '(tabs)' }] } }] };
 // One ref for every render, like the real hook: a fresh object would re-run the tap effect on any re-render.
-const mockNav = { isReady: () => true, getRootState: () => mockTabsRoot };
+const mockNav = {
+  isReady: () => true,
+  getRootState: () => mockTabsRoot,
+  addListener: () => () => undefined,
+};
 jest.mock('expo-router', () => ({
   router: { push: (mockHref: string) => mockPush(mockHref) },
   useNavigationContainerRef: () => mockNav,

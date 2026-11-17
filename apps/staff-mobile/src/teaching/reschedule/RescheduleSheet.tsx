@@ -1,7 +1,5 @@
 import type { LessonView } from '@ab/shared';
-import type { ReactNode } from 'react';
-import { Modal, ScrollView } from 'react-native';
-import { t, Button, Screen, ScreenHeader } from '@ab/mobile-kit';
+import { RescheduleFrame } from '@ab/mobile-kit';
 import { RescheduleForm } from './RescheduleForm';
 
 interface RescheduleSheetProps {
@@ -21,27 +19,5 @@ export function RescheduleSheet({ lesson, onClose, onDone }: RescheduleSheetProp
     <RescheduleFrame open={lesson !== null} onClose={onClose}>
       {lesson ? <RescheduleForm key={lesson.id} lesson={lesson} onClose={onClose} onDone={onDone} /> : null}
     </RescheduleFrame>
-  );
-}
-
-/** The «تغيير ميعاد الحلقة» page sheet around a form (the admin's, or sales' one-lesson form). */
-export function RescheduleFrame({ open, onClose, children }: { open: boolean; onClose: () => void; children: ReactNode }) {
-  return (
-    <Modal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <Screen sheet>
-        <ScreenHeader
-          size="h2"
-          title={t.lessons.rescheduleTitle}
-          trailing={<Button variant="ghost" label={t.common.close} onPress={onClose} />}
-        />
-        <ScrollView
-          style={{ flex: 1, marginHorizontal: -16 }}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          {children}
-        </ScrollView>
-      </Screen>
-    </Modal>
   );
 }

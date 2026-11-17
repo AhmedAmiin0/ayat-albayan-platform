@@ -55,3 +55,24 @@ export async function guardianOwnerIds(db: Db, guardianId: string): Promise<stri
   const ids = [...brought.data.map((s) => s.brought_by), ...leads.data.map((l) => l.assigned_to)];
   return uniq(ids.flatMap((id) => (id ? [id] : [])));
 }
+
+/**
+ * Who owns one student (ownershipOf read backwards; the chat's seat is not ownership): who
+ * brought it and who holds the lead its family came from; never a sibling's assistant.
+ */
+export async function studentOwnerIds(db: Db, studentId: string): Promise<string[]> {
+  const { data, error } = await db
+    .from('students')
+    .select('brought_by, guardian_id')
+    .eq('id', studentId)
+    .maybeSingle();
+  if (error) throw dbError(error);
+  if (!data) return [];
+  const leads = await db
+    .from('leads')
+    .select('assigned_to')
+    .eq('converted_guardian_id', data.guardian_id);
+  if (leads.error) throw dbError(leads.error);
+  const ids = [data.brought_by, ...leads.data.map((l) => l.assigned_to)];
+  return uniq(ids.flatMap((id) => (id ? [id] : [])));
+}

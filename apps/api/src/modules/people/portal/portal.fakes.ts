@@ -15,12 +15,14 @@ import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission'
 import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
 import { PortalHistoryRepo } from './history/portal-history.repo';
 import { ChatNumber } from './home/chat-number';
-import type { PortalLessonRow } from './lessons/portal-lessons.repo';
+import type { PortalLessonRow, PortalRequestRow } from './lessons/portal-lessons.repo';
 import { PortalLessonsRepo } from './lessons/portal-lessons.repo';
 import { PortalPackageRepo } from './package/portal-package.repo';
 import { PortalReportsRepo } from './reports/portal-reports.repo';
 import { familyFakes } from './portal.family.fakes';
 import { PortalScopeRepo } from './scope/portal-scope.repo';
+import { MeZoneRepo } from '@/common/auth/me-zone.repo';
+import { RoomInsideRepo } from '@/modules/teaching/lessons';
 
 export const S1 = '51000000-0000-4000-8000-000000000001';
 export const S2 = '51000000-0000-4000-8000-000000000002';
@@ -66,12 +68,14 @@ export async function portalApp() {
   const scope = { studentsOf: vi.fn(async (id: string) => FAMILIES[id] ?? []) };
   const lessons = {
     readSettings: vi.fn(async () => ({ meeting_link_auto: false, join_opens_before_min: 10, join_closes_after_min: 120 })),
-    ahead: vi.fn(async () => [lessonRow()]), one: vi.fn(async (): Promise<PortalLessonRow | null> => lessonRow()), override: vi.fn(async (): Promise<string | null> => null) };
+    ahead: vi.fn(async () => [lessonRow()]), one: vi.fn(async (): Promise<PortalLessonRow | null> => lessonRow()), override: vi.fn(async (): Promise<string | null> => null),
+    requests: vi.fn(async (): Promise<PortalRequestRow[]> => []) };
   const reports = {
     sent: vi.fn(async () => [{ id: R1, lesson_id: L1, sent_at: '2026-10-20T18:00:00.000Z', pdf_path: `${S1}/${L1}.pdf`, notes: 'سر', lesson: { starts_at: '2026-10-20T16:00:00.000Z', teacher: { display_name_ar: 'أبرار', display_name_en: null } } }]),
     oneSent: vi.fn(async (): Promise<{ id: string; lesson_id: string; sent_at: string; pdf_path: string } | null> => ({ id: R1, lesson_id: L1, sent_at: '2026-10-20T18:00:00.000Z', pdf_path: `${S1}/${L1}.pdf` })),
     visibleRecordings: vi.fn(async () => [{ id: REC, lesson_id: L1, file_path: `lessons/${L1}/a.mp4` }]),
     sentOf: vi.fn(async () => [{ id: R1, lesson_id: 'l-20' }]),
+    sentLessons: vi.fn(async () => new Map([[L1, R1]])),
     texts: vi.fn(async () => ({ homework: ' سورة الملك ', next_plan: '' })),
   };
   const { money, packages, history } = familyFakes();
@@ -99,6 +103,8 @@ export async function portalApp() {
     .overrideProvider(FAMILY_JOIN_SECRET).useValue(FAMILY_SECRET)
     .overrideProvider(StorageService).useValue(storage)
     .overrideProvider(ChatNumber).useValue(chat)
+    .overrideProvider(RoomInsideRepo).useValue({ inside: async () => [] })
+    .overrideProvider(MeZoneRepo).useValue({ zoneOf: async () => null, localeOf: async () => 'ar' })
     .overrideProvider(SettingsService).useValue(fakeSettings(SETTINGS));
   const app = await bootWith(builder, USERS);
   const call = (method: 'GET' | 'POST', url: string, who?: Who) =>

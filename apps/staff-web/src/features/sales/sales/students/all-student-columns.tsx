@@ -4,6 +4,7 @@ import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { PeopleEditActions } from '@/features/people/students';
+import { ChannelSeatCell } from '@/features/teaching/student-channel';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { rosterAttendanceLine, rosterPackageLine } from './roster-text';
 import { RosterScheduleCell } from './RosterScheduleCell';
@@ -75,6 +76,16 @@ export const allStudentColumns = col.columns([
     header: () => t.sales.allStudents.attendance,
     meta: { className: 'text-sm text-ink-2 max-sm:order-9 max-sm:basis-full' },
   }),
+  // docs/31 §2: any student's chat, one assistant seat (owner 2026-11-16 «… but only 1»):
+  // mine → the chat, free or my own student → «تولَّ المحادثة», else who follows it.
+  col.display({
+    id: 'channel',
+    header: () => t.studentChannel.open,
+    cell: (c) => (
+      <ChannelSeatCell studentId={c.row.original.id} studentName={c.row.original.name} />
+    ),
+    meta: { className: 'max-sm:order-10' },
+  }),
 ]);
 
 /** Owner 2026-11-02: «تعديل البيانات» · «ربط بولي أمر آخر» · «تحويل», with people.edit. */
@@ -82,5 +93,5 @@ export const peopleEditColumn = col.display({
   id: 'people',
   header: () => t.peopleEdit.editData,
   cell: (c) => <PeopleEditActions studentId={c.row.original.id} />,
-  meta: { className: 'max-sm:order-10 max-sm:basis-full' },
+  meta: { className: 'max-sm:order-11 max-sm:basis-full' },
 });

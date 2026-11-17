@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { channelPage } from './channel.fixtures';
+import { channelMessage, channelPage } from './channel.fixtures';
 import { ChannelThread } from './ChannelThread';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -34,7 +34,7 @@ describe('ChannelThread (docs/31 §2)', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/channel/read', { at: '2026-10-27T10:05:00.000Z' }));
     fireEvent.change(screen.getByLabelText(c.messageLabel), { target: { value: '  شكرًا  ' } });
     fireEvent.click(screen.getByRole('button', { name: c.send }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/channel/messages', { body: 'شكرًا' }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/channel/messages', { body: 'شكرًا', client_id: expect.any(String) }));
     expect(screen.queryByText(c.readOnly)).toBeNull();
   });
 
@@ -64,14 +64,29 @@ describe('ChannelThread (docs/31 §2)', () => {
   });
 
   it('«الرسائل الأقدم» pages back by the oldest message shown', async () => {
-    const older = channelPage({ messages: [{ id: 'm0', body: 'أقدم', sender_role: 'guardian', sender_name: '', mine: false, created_at: '2026-10-26T10:00:00.000Z', edited: false, deleted: false }] });
+    const older = channelPage({
+      messages: [channelMessage({ id: 'm0', body: 'أقدم', sender_name: '', created_at: '2026-10-26T10:00:00.000Z' })],
+    });
     // By path: the header's presence line reads its own route (docs/33) beside the thread's pages.
     apiFetch.mockImplementation(async (path: string) =>
       path.includes('?before=') ? older : channelPage({ has_more: true }),
     );
+    apiSend.mockResolvedValue({});
     show('sales');
     fireEvent.click(await screen.findByRole('button', { name: c.older }));
     expect(await screen.findByText('أقدم')).toBeTruthy();
     expect(apiFetch).toHaveBeenLastCalledWith('/sales/students/s1/channel/messages?before=2026-10-27T10%3A00%3A00.000Z');
+  });
+
+  it('the owning assistant writes and marks read through her route (owner 2026-11-16)', async () => {
+    apiFetch.mockResolvedValue(channelPage());
+    apiSend.mockResolvedValue({});
+    show('sales');
+    const read = { at: '2026-10-27T10:05:00.000Z' };
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/students/s1/channel/read', read));
+    fireEvent.change(screen.getByLabelText(c.messageLabel), { target: { value: 'مرحبًا' } });
+    fireEvent.click(screen.getByRole('button', { name: c.send }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/students/s1/channel/messages', { body: 'مرحبًا', client_id: expect.any(String) }));
+    expect(screen.queryByText(c.readOnly)).toBeNull();
   });
 });

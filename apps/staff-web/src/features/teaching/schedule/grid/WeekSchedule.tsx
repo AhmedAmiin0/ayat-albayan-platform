@@ -20,13 +20,13 @@ import { DayBoard } from './DayBoard';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer';
 import { filterLessons } from '@/features/teaching/schedule/lesson/lessons';
 import { boardRows, dayWindow, filterTeachers, type BoardRow } from '@/features/teaching/schedule/overview';
-import { ProposalsPanel } from '@/features/teaching/schedule/reschedule/ProposalsPanel';
+import { ProposalsPanel } from '@/features/teaching/schedule/reschedule/proposals/ProposalsPanel';
 import { ScheduleCounts } from '@/features/teaching/schedule/ScheduleCounts';
 import { ScheduleFilters } from '@/features/teaching/schedule/filters/ScheduleFilters';
 import { ScheduleNav } from '@/features/teaching/schedule/ScheduleNav';
 import { SyncScheduleButton } from '@/features/teaching/schedule/SyncScheduleButton';
 import type { ScheduleSearch } from '@/features/teaching/schedule/filters/search';
-import { currentWeekStart } from '@/features/teaching/schedule/reschedule/slots';
+import { currentWeekStart } from '@ab/web-kit/schedule/slots';
 import { WeekGrid } from './WeekGrid';
 import { HeadActions } from '@ab/web-kit/components/ui/layout/head-actions';
 

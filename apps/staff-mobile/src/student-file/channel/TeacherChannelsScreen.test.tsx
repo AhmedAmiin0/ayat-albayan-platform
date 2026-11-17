@@ -19,12 +19,28 @@ const c = t.studentChannel;
 
 test('«رسائل الطلاب»: my current students with the last message and the unread count; a tap opens the thread', async () => {
   mockApiFetch.mockResolvedValue([
-    { student_id: 's1', student_name: 'سلمى', student_code: 'AB-0201', unread: 2, last_message: { body: 'متى الحلقة؟', sender_role: 'guardian', created_at: '2026-10-27T10:00:00.000Z' } },
-    { student_id: 's2', student_name: 'يوسف', student_code: 'AB-0202', unread: 0, last_message: null },
+    {
+      student_id: 's1',
+      student_name: 'سلمى',
+      student_code: 'AB-0201',
+      unread: 2,
+      last_message: {
+        body: 'متى الحلقة؟',
+        sender_role: 'guardian',
+        created_at: '2026-10-27T10:00:00.000Z',
+      },
+    },
+    {
+      student_id: 's2',
+      student_name: 'يوسف',
+      student_code: 'AB-0202',
+      unread: 0,
+      last_message: null,
+    },
   ]);
   await renderWithQuery(<TeacherChannelsScreen />);
-  expect(await screen.findByText('متى الحلقة؟')).toBeTruthy();
-  expect(screen.getByText(c.unread.replace('{n}', '2'))).toBeTruthy();
+  expect(await screen.findByText(`${c.roles.guardian}: متى الحلقة؟`)).toBeTruthy();
+  expect(screen.getByLabelText(c.unread.replace('{n}', '2'))).toHaveTextContent('2');
   expect(screen.getByText(c.noMessageYet)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/channels');
   fireEvent.press(screen.getByText('سلمى'));

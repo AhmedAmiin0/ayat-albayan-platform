@@ -47,18 +47,18 @@ test('rows: count, teacher, duration, size, status chips; a deleted row has no p
   expect(screen.getByText(`${R.teacher}: أبرار`)).toBeTruthy();
   expect(screen.getByText(`${R.duration}: 30:00`)).toBeTruthy();
   expect(screen.getByText(`${R.size}: ${R.sizeMb.replace('{n}', '48')}`)).toBeTruthy();
-  expect(screen.getByText(R.status.done)).toBeTruthy();
-  expect(screen.getByText(R.status.deleted)).toBeTruthy();
+  expect(screen.getAllByText(R.status.done)).toHaveLength(2); // the state pill and the chip
+  expect(screen.getAllByText(R.status.deleted)).toHaveLength(2);
   expect(screen.getAllByText(R.play)).toHaveLength(1);
 });
 
 test('play refetches for a fresh signed link and opens it in the system player', async () => {
   serve();
   await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
-  await screen.findByText(R.status.done);
+  await screen.findAllByText(R.status.done);
   mockApiFetch.mockClear();
   serve([recording({ url: 'https://files.test/fresh.mp3?t=2' })]);
-  await fireEvent.press(screen.getByText(R.play));
+  await fireEvent.press(await screen.findByText(R.play));
   await waitFor(() => expect(openURL).toHaveBeenCalledWith('https://files.test/fresh.mp3?t=2'));
   expect(recordingCalls()).toEqual(['/students/s1/recordings?page=1&pageSize=10']);
 });
@@ -90,7 +90,7 @@ test('delete asks first, then DELETEs; a 409 says it is still recording', async 
 test('date and teacher pills filter on the server', async () => {
   serve();
   await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
-  await screen.findByText(R.status.done);
+  await screen.findAllByText(R.status.done);
   await fireEvent.press(await screen.findByRole('tab', { name: 'منى' }));
   await waitFor(() => expect(recordingCalls().some((p) => p.includes('teacherId=t2'))).toBe(true));
   await fireEvent.press(screen.getByRole('tab', { name: R.filters.last7 }));
@@ -101,9 +101,10 @@ test('without recordings.manage there is no delete and the switch is read-only',
   permissions = ['recordings.read'];
   serve([recording()]);
   await renderWithQuery(<StudentRecordingsScreen />, createTestQueryClient({ meFromApi: true }));
-  await screen.findByText(R.status.done);
+  await screen.findAllByText(R.status.done);
   await waitFor(() => expect(screen.queryByText(R.delete.action)).toBeNull());
-  expect(screen.getByRole('switch', { name: R.visible.label }).props.accessibilityState?.disabled ?? screen.getByRole('switch').props.disabled).toBeTruthy();
+  const visible = await screen.findByRole('switch', { name: R.visible.label });
+  expect(visible.props.accessibilityState?.disabled ?? screen.getByRole('switch').props.disabled).toBeTruthy();
 });
 
 test('teacher mode never shows delete; an empty list and an error have their states', async () => {

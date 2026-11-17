@@ -22,6 +22,10 @@ describe('the view filters of «الطلاب» and «محفظتي»', () => {
     expect(parseStudentsSearch({ view: 'mine' })).toEqual({ view: 'mine' });
     expect(parseStudentsSearch({ view: 'all' })).toEqual({});
     expect(parseStudentsSearch({})).toEqual({});
+    expect(parseStudentsSearch({ view: 'mine', student: ID })).toEqual({ view: 'mine', student: ID });
+    expect(parseStudentsSearch({ student: ID })).toEqual({ student: ID });
+    expect(parseStudentsSearch({ student: 'x' })).toEqual({});
+    expect(parseStudentsSearch({ student: 5, view: 'mine' })).toEqual({ view: 'mine' });
     expect(parseMoneySearch({ view: 'payments' })).toEqual({ view: 'payments' });
     expect(parseMoneySearch({ view: 'statements' })).toEqual({ view: 'statements' });
     expect(parseMoneySearch({ view: 'earnings' })).toEqual({});

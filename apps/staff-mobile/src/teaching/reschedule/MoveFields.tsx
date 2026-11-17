@@ -3,12 +3,11 @@ import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice, ruleFromSlot } from '@/booking';
 import { DayChips } from '@/inbox/qualification/components/DayChips';
-import { t, Button, FilterPills, ErrorLine } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import { t, Button, FilterPills, ErrorLine, FormLabel } from '@ab/mobile-kit';
 import type { useReschedule } from './queries';
 import { repeatDays, rescheduleBody, seriesDays, type Scope } from './reschedule-body';
 import { useRescheduleFailure, type RescheduleFailure } from './reschedule-errors';
-import { SlotPicker } from './SlotPicker';
+import { LessonSlotPicker } from './LessonSlotPicker';
 
 const scopePills = () =>
   (['one', 'rule'] as const).map((s) => ({ value: s, label: t.lessons.scope[s] }));
@@ -59,7 +58,7 @@ export function MoveFields({ lesson, durationMin, tz, move, scope, onScope, reas
       {failure?.kind === 'conflict' ? (
         <ConflictNotice lines={failure.lines} onChangeSlot={() => pick(null)} />
       ) : (
-        <SlotPicker
+        <LessonSlotPicker
           lesson={lesson}
           durationMin={durationMin}
           tz={tz}

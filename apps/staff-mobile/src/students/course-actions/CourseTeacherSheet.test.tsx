@@ -45,6 +45,9 @@ test('the current teacher is named, never offered; same days go straight to the 
   const teacherId = noAvailability.id;
   const check = expect.objectContaining({ subscriptionId: SUB, teacherId, byday: [0, 4] });
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', `${PATH}/check`, check));
+  // owner 2026-11-17: the review names the new teacher.
+  const named = c.teacher.reviewNew.replace('{name}', noAvailability.display_name_ar);
+  expect(screen.getByText(named)).toBeTruthy();
   await pressEnabled(t.booking.courseChange.submit);
   await waitFor(() =>
     expect(mockApiSend).toHaveBeenCalledWith(
@@ -54,6 +57,7 @@ test('the current teacher is named, never offered; same days go straight to the 
     ),
   );
   expect(await screen.findByText(t.booking.courseChange.done)).toBeTruthy();
+  expect(screen.getByText(named)).toBeTruthy();
 });
 
 test('a course that cannot be read says why', async () => {

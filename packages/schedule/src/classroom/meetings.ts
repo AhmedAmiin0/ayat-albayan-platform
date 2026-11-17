@@ -62,3 +62,6 @@ export interface StudentJoinLinkUrl {
 
 /** The first word of a name: what the student's page greets with. */
 export const firstName = (name: string): string => name.trim().split(/\s+/)[0] ?? '';
+
+/** How a student shows in the lesson room (a guest name, ≤ 30): the first name, else the name. */
+export const roomNameOfStudent = (name: string): string => (firstName(name) || name).slice(0, 30);

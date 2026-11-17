@@ -1,5 +1,5 @@
-import { reportMonths } from '@ab/client-core';
-import { dateText, type PortalHome, type PortalStudent } from '@ab/shared';
+import { portalViewer, readsOwn, reportMonths } from '@ab/client-core';
+import { dateText, type PortalKind, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -36,15 +36,23 @@ function Reports({ student }: { student: PortalStudent }) {
   );
 }
 
-/** A student's «التقارير» (their tab): every sent report, newest first, by month. */
-export function StudentReportsPage({ home }: { home: PortalHome }) {
-  const own = home.students[0];
+interface Props {
+  student: PortalStudent;
+  kind: PortalKind;
+}
+
+/**
+ * «التقارير» (canvas Reports): the sent reports of the student in view, newest first, by month;
+ * «تقاريري» for a student's or an adult's own (owner 2026-11-16).
+ */
+export function StudentReportsPage({ student, kind }: Props) {
+  const own = readsOwn(portalViewer(kind, student));
   return (
     <section aria-labelledby="reports-title" className="grid gap-4">
       <h1 id="reports-title" className="font-display text-h2 font-bold">
-        {t.portal.app.reports.title}
+        {own ? t.portal.app.reports.title : t.portal.app.tabs.reports}
       </h1>
-      {own ? <Reports student={own} /> : <EmptyState title={t.portal.noStudents} />}
+      <Reports student={student} />
     </section>
   );
 }

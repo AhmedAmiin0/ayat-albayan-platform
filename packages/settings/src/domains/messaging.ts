@@ -93,4 +93,19 @@ export const MESSAGING_SETTINGS = {
     type: 'string', default: '', minLength: 0, maxLength: 100,
     labelKey: 'settings.shortLinkBase', hintKey: 'settings.hints.shortLinkBase',
   },
+  /** Managed short links (owner 2026-11-17, docs/19): a new link's lifetime when none is given. */
+  short_link_default_days: {
+    module: 'messaging', group: 'reports', type: 'int', default: 7, min: 1, max: 365,
+    labelKey: 'settings.shortLinkDefaultDays', hintKey: 'settings.hints.shortLinkDefaultDays',
+  },
+  /** Days after expiry before a managed link, its users and its visits are deleted. */
+  short_link_purge_days: {
+    module: 'messaging', group: 'reports', type: 'int', default: 30, min: 1, max: 365,
+    labelKey: 'settings.shortLinkPurgeDays', hintKey: 'settings.hints.shortLinkPurgeDays',
+  },
+  /** Extra https hosts a managed link may open (comma separated; empty = our origins + Meet). */
+  short_link_extra_hosts: {
+    module: 'messaging', group: 'reports', type: 'string', default: '', minLength: 0, maxLength: 500,
+    labelKey: 'settings.shortLinkExtraHosts', hintKey: 'settings.hints.shortLinkExtraHosts',
+  },
 } as const satisfies Record<string, SettingDef>;

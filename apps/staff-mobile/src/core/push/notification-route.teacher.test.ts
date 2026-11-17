@@ -1,4 +1,5 @@
 import { PUSH_KINDS } from '@ab/shared';
+import { isThreadHref } from '@/core/nav/chat-groups';
 import { notificationsHref, routeIn, teacherRouteFor } from './notification-route';
 
 const PHONE = '+966552147730';
@@ -41,4 +42,7 @@ test('a family message in a student channel opens «رسائل الطلاب» on
   expect(teacherRouteFor({ kind: 'channel_message', studentId: 's-1' })).toBe('/teacher/more/messages/s-1');
   expect(teacherRouteFor({ kind: 'channel_message' })).toBe('/teacher/more/messages');
   expect(teacherRouteFor({ kind: 'channel_message', studentId: '../x' })).toBe('/teacher/more/messages');
+  // A chat (app/(teacher-chat)): pushed as is, above her tabs; the list stays a tab screen.
+  expect(isThreadHref('/teacher/more/messages/s-1')).toBe(true);
+  expect(isThreadHref('/teacher/more/messages')).toBe(false);
 });

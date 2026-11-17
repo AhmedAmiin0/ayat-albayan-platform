@@ -1,8 +1,8 @@
-import { checkPhone, type Country, defaultCountry } from '@ab/client-core';
+import { checkPhone, type Country, defaultCountry, splitInternational } from '@ab/client-core';
 import { authApi, useA11yPref, useCodeSignIn, useStepMotion } from '@ab/mobile-kit';
-import { getLocales } from 'expo-localization';
 import { useState } from 'react';
 import { feel } from '@/sign-in/feedback';
+import { phoneRegion } from '@/sign-in/phone/countries';
 
 export type WhatsAppStep = 'phone' | 'code';
 
@@ -15,10 +15,15 @@ export function useWhatsAppSignIn() {
   const flow = useCodeSignIn(authApi.familyCodes);
   const still = useA11yPref('reduceMotion');
   const motion = useStepMotion<WhatsAppStep>('phone', still);
-  const region = (): string | null | undefined => getLocales().at(0)?.regionCode;
-  const [country, setCountry] = useState<Country>(() => defaultCountry(region()));
+  const [country, setCountry] = useState<Country>(() => defaultCountry(phoneRegion()));
   const [typed, setTyped] = useState('');
   const check = checkPhone(country, typed);
+  // A whole number pasted or autofilled («+44 7700…», «0044…»): its country, then the rest.
+  const onTyped = (text: string) => {
+    const split = splitInternational(text, country);
+    setCountry(split?.country ?? country);
+    setTyped(split?.national ?? text);
+  };
 
   const send = async () => {
     if (check.e164 === null || flow.busy) return;
@@ -44,7 +49,7 @@ export function useWhatsAppSignIn() {
     flow,
     motion,
     still,
-    phone: { country, setCountry, typed, setTyped, check },
+    phone: { country, setCountry, typed, setTyped: onTyped, check },
     send,
     resend,
     verify,

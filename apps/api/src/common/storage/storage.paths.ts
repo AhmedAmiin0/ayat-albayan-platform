@@ -17,6 +17,7 @@ export const BUCKETS = {
   recordings: 'recordings',
   /** Profile photos (migration 20261012000370, R-ACC-05). */
   avatars: 'avatars',
+  channelMedia: 'channel-media',
 } as const;
 export type Bucket = (typeof BUCKETS)[keyof typeof BUCKETS];
 

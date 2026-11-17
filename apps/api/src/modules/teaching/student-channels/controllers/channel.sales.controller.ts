@@ -1,0 +1,92 @@
+import {
+  channelPostSchema,
+  channelReadSchema,
+  type ChannelMessageView,
+  type ChannelPost,
+  type ChannelSeat,
+  type ChannelUnread,
+} from '@ab/shared';
+import { Controller, Delete, Get, HttpCode, Inject, Post, Put } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { ChannelAccess } from '@/modules/teaching/student-channels/channel-access';
+import { ChannelService } from '@/modules/teaching/student-channels/channel.service';
+import { ChannelSeatService } from '@/modules/teaching/student-channels/seat/channel-seat.service';
+
+const id = z.uuid();
+
+/**
+ * The assistant in the chat (owner 2026-11-16 «yes it can write also», docs/31 §2): sends, read
+ * marks and her unread count, as the teacher and the family do, for the one assistant in the
+ * chat's seat («any assistant can subscribe to the chating channel but only 1»); any other
+ * assistant is 404. The seat: any assistant reads it and takes a free one, the student's bringer
+ * takes it from anyone («who brought the student have the priority»), the holder leaves it. Her
+ * page stays GET …/messages (MonitorChannelController).
+ */
+@ApiTags('student-channels')
+@ApiBearerAuth()
+@Permissions('self.sales')
+@Controller('sales/students/:id/channel')
+export class SalesChannelController {
+  constructor(
+    @Inject(ChannelAccess) private readonly access: ChannelAccess,
+    @Inject(ChannelService) private readonly channels: ChannelService,
+    @Inject(ChannelSeatService) private readonly seats: ChannelSeatService,
+  ) {}
+
+  @Post('messages')
+  async post(
+    @ZodParam('id', id) studentId: string,
+    @ZodBody(channelPostSchema) body: ChannelPost,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ChannelMessageView> {
+    return this.channels.post(await this.access.assistant(user, studentId), body);
+  }
+
+  @Post('read')
+  @HttpCode(204)
+  async read(
+    @ZodParam('id', id) studentId: string,
+    @ZodBody(channelReadSchema, { orEmpty: true }) body: z.output<typeof channelReadSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    await this.channels.read(await this.access.assistant(user, studentId), body.at);
+  }
+
+  @Get('unread')
+  async unread(
+    @ZodParam('id', id) studentId: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ChannelUnread> {
+    return this.channels.unread(await this.access.assistant(user, studentId));
+  }
+
+  @Get('seat')
+  async seat(
+    @ZodParam('id', id) studentId: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ChannelSeat> {
+    return this.seats.view(user.id, studentId);
+  }
+
+  /** Take the seat: free, or I brought the student; 409 channel_seat_taken otherwise. */
+  @Put('seat')
+  async takeSeat(
+    @ZodParam('id', id) studentId: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ChannelSeat> {
+    return this.seats.take(user.id, studentId);
+  }
+
+  @Delete('seat')
+  @HttpCode(204)
+  async leaveSeat(
+    @ZodParam('id', id) studentId: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    await this.seats.leave(user.id, studentId);
+  }
+}

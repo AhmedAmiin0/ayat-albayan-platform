@@ -8,6 +8,8 @@ export interface FieldSpec<K extends string> {
   /** A phone: an LTR island with the phone pad. */
   phone?: boolean;
   keyboardType?: KeyboardTypeOptions;
+  /** A line under the field saying what it is for. */
+  hint?: string;
 }
 
 interface PeopleFieldsProps<K extends string> {
@@ -30,6 +32,7 @@ export function PeopleFields<K extends string>({
       key={s.key}
       label={s.label}
       value={value[s.key]}
+      hint={s.hint}
       ltr={s.phone === true}
       keyboardType={s.phone ? 'phone-pad' : s.keyboardType}
       error={error(s.key)}

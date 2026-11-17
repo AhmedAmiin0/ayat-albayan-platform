@@ -9,7 +9,7 @@ import { isAhead } from '../lesson-window.js';
 import { monthsOf } from '../history.js';
 import { newReportCount } from '../report-seen.js';
 
-// «أبنائي» (canvas Children) and the student's «التقارير»: a child's card in numbers, from the
+// «اختر الطالب» (canvas Children) and «التقارير»: a child's card in numbers, from the
 // reads the app already holds (each may still be loading: undefined), and the reports by month.
 
 export interface ChildSummary {

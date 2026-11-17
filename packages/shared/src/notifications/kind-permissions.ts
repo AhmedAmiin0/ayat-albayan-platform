@@ -36,7 +36,9 @@ export const PUSH_KIND_PERMISSIONS: Readonly<Record<AnyPushKind, readonly Permis
   payment_received: BELL,
   // docs/50 §5.6: a lesson's join window opened; its report was sent to the family.
   lesson_starting: FAMILY,
+  lesson_live: FAMILY,
   report_sent: FAMILY,
+  lesson_request_declined: FAMILY,
 };
 
 /** May a profile holding `held` be told about `kind`? */

@@ -1,33 +1,35 @@
 import type { ChannelAudience } from '@ab/client-core';
-import { router, useLocalSearchParams } from 'expo-router';
-import { t, Screen, ScreenHeader, BackButton } from '@ab/mobile-kit';
-import { ChannelPresenceLine } from './ChannelPresenceLine';
-import { ChannelThread } from './ChannelThread';
-import { useChannel } from './channel-queries';
+import { useLocalSearchParams } from 'expo-router';
+import { t, ChannelScreen } from '@ab/mobile-kit';
+import { useStaffChannelMedia } from './media/use-staff-channel-media';
+
+type StaffAudience = Extract<ChannelAudience, 'teacher' | 'admin'>;
+
+/** The teacher's chat is titled by the student; the others see whose chat it is first. */
+const TITLE: Readonly<Record<StaffAudience, 'monitorTitle' | null>> = {
+  teacher: null,
+  admin: 'monitorTitle',
+};
 
 /**
- * A student channel screen: the teacher's thread (/teacher/more/messages/:studentId), the admin's
- * read-only view (/students/channel/:id) and the owning assistant's (/sales/students/channel/:id).
+ * A student channel screen (the shared kit's): the teacher's thread
+ * (/teacher/more/messages/:studentId) and the admin's read-only view (/students/channel/:id). The
+ * assistant's (/sales/students/channel/:id) reads her seat first: SalesChannelScreen. The staff
+ * phone gives the chat its pickers, microphone and player.
  */
-function ChannelScreen({ audience }: { audience: ChannelAudience }) {
+function StaffChannelScreen({ audience }: { audience: StaffAudience }) {
   const params = useLocalSearchParams<{ id?: string; studentId?: string }>();
   const studentId = params.studentId ?? params.id ?? '';
-  // The same query the thread reads (one request): it names the student.
-  const name = useChannel({ audience, studentId }).data?.pages[0]?.student_name || undefined;
-  const title = audience === 'teacher' ? t.studentChannel.title : t.studentChannel.monitorTitle;
+  const key = TITLE[audience];
+  const media = useStaffChannelMedia();
   return (
-    <Screen chat>
-      <ScreenHeader
-        title={title}
-        subtitle={name}
-        leading={<BackButton onPress={() => router.back()} />}
-      />
-      <ChannelPresenceLine refs={{ audience, studentId }} />
-      <ChannelThread refs={{ audience, studentId }} />
-    </Screen>
+    <ChannelScreen
+      refs={{ audience, studentId }}
+      title={key ? t.studentChannel[key] : undefined}
+      media={media}
+    />
   );
 }
 
-export const TeacherChannelScreen = () => <ChannelScreen audience="teacher" />;
-export const AdminChannelScreen = () => <ChannelScreen audience="admin" />;
-export const SalesChannelScreen = () => <ChannelScreen audience="sales" />;
+export const TeacherChannelScreen = () => <StaffChannelScreen audience="teacher" />;
+export const AdminChannelScreen = () => <StaffChannelScreen audience="admin" />;

@@ -28,7 +28,8 @@ interface AuthRequest {
  * Global guard (R-AUTH-01): verifies the Supabase JWT, resolves the user's permissions from their
  * role (PERMISSION_RESOLVER, cached) onto req.user, then enforces @Permissions(). @Public skips
  * everything; @SignedIn needs a valid token only. A route with neither and no permission is
- * refused (fail closed; the coverage test keeps that from happening).
+ * refused (fail closed; the coverage test keeps that from happening). isTest: profiles.is_test
+ * (the resolver's, false on any doubt), for the four checks a test account may skip (docs/56).
  */
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -48,7 +49,7 @@ export class AuthGuard implements CanActivate {
     const user = await this.authenticate(req.headers['authorization']);
     const signedIn = this.reflector.getAllAndOverride<boolean>(SIGNED_IN, targets);
     const permissions = await this.permissionsOf(user, signedIn);
-    req.user = { ...user, permissions };
+    req.user = { ...user, permissions, isTest: await this.isTest(user) };
 
     if (signedIn) return true;
     const needed = this.reflector.getAllAndOverride<Permission | undefined>(PERMISSION, targets);
@@ -69,6 +70,11 @@ export class AuthGuard implements CanActivate {
       this.log.warn(`permissions unavailable for ${user.id}: ${e instanceof Error ? e.message : 'unknown'}`);
       return [];
     }
+  }
+
+  /** profiles.is_test (the resolver's, cached, false on any doubt); none wired (tests) = false. */
+  private async isTest(user: AuthUser): Promise<boolean> {
+    return (await this.resolve.isTest?.(user)) ?? false;
   }
 
   private async authenticate(header: string | string[] | undefined): Promise<AuthUser> {

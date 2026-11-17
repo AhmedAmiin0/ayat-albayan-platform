@@ -19,12 +19,8 @@ vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>())
 
 const words = t.courseActions.stop;
 const refund = {
-  paid: 290,
-  perLesson: 50,
-  attended: 3,
-  ratePercent: 100,
-  charged: 150,
-  refund: 140,
+  ...{ paid: 290, perLesson: 50, attended: 3 },
+  ...{ ratePercent: 100, charged: 150, refund: 140 },
 };
 const PREVIEW = {
   subscriptionId: SUB,
@@ -105,22 +101,25 @@ describe('StopCourseDialog: the money choices', () => {
     apiSend.mockResolvedValue({
       subscriptionId: SUB,
       refund: { amount: 290, card: 0, manual: 290 },
+      studentStatus: 'churned',
     });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'paid' } });
-    await vi.waitFor(() =>
-      expect(onDone).toHaveBeenCalledWith(words.doneRefund.replace('{amount}', money(290))),
-    );
+    expect(await screen.findByText(words.next.replace('{amount}', money(290)))).toBeTruthy();
+    expect(screen.getByText(words.notifiedAdmins)).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: words.close }));
+    expect(onDone).toHaveBeenCalledWith(words.doneRefund.replace('{amount}', money(290)));
   });
 
-  it('a custom refund: 0 .. net paid; above it the confirm is off', async () => {
+  it('a custom refund: 0 .. net paid; above it the error shows early and nothing is sent', async () => {
     const { dialog } = await open(KEYS);
     fireEvent.click(dialog.getByRole('radio', { name: words.withRefund }));
     fireEvent.click(dialog.getByRole('radio', { name: words.refundCustom }));
     const field = dialog.getByLabelText(words.customAmount);
     fireEvent.change(field, { target: { value: '290.01' } });
-    expect(confirm().disabled).toBe(true);
     expect(dialog.getByText(t.courseActions.errors.refund_exceeds_allowed)).toBeTruthy();
+    fireEvent.click(confirm());
+    expect(apiSend).not.toHaveBeenCalled();
     fireEvent.change(field, { target: { value: '100' } });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'custom', amount: 100 } });

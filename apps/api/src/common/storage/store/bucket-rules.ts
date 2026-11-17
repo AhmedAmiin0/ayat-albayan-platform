@@ -1,10 +1,12 @@
+import { CHANNEL_MEDIA_MAX_BYTES, CHANNEL_MEDIA_MIMES } from '@ab/shared';
 import type { Bucket } from '@/common/storage/storage.paths';
 import type { ObjectInfo } from './object-store';
 
 // Supabase buckets refuse an oversize or unlisted file at upload (file_size_limit,
-// allowed_mime_types: migrations 122, 170, 189, 260, 370, 500). MinIO has no such limits, so the
-// S3 adapter applies the same ones when a client-uploaded object is checked (exists): a file over
-// the cap or of another type is not there for the API, as it never was with Supabase.
+// allowed_mime_types: migrations 122, 170, 189, 260, 370, 500, 20261117090300). MinIO has no such
+// limits, so the S3 adapter applies the same ones when a client-uploaded object is checked
+// (exists): a file over the cap or of another type is not there for the API, as it never was
+// with Supabase.
 
 const MiB = 1024 * 1024;
 const IMAGES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'];
@@ -35,6 +37,8 @@ export const BUCKET_RULES: Record<Bucket, BucketRule> = {
   'wa-media': { maxBytes: 16 * MiB, mimes: WA },
   recordings: { maxBytes: null, mimes: ['video/mp4', 'audio/mpeg'] },
   avatars: { maxBytes: 2 * MiB, mimes: ['image/jpeg', 'image/png', 'image/webp'] },
+  /** The student chat's files (migration 20261117090300); the API checks each type's own cap. */
+  'channel-media': { maxBytes: CHANNEL_MEDIA_MAX_BYTES, mimes: CHANNEL_MEDIA_MIMES },
 };
 
 /** «image/jpeg; charset=…» → «image/jpeg». */

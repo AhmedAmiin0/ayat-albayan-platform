@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Image, View } from 'react-native';
-import { t, shape, useTheme, Button, ErrorLine } from '@ab/mobile-kit';
+import { t, shape, useTheme, Button, ErrorLine, FormLabel } from '@ab/mobile-kit';
 import { useUploadMaxBytes } from '@/core/lib/query/public-config';
 import { ButtonRow } from '@/core/ui/actions';
-import { FormLabel } from './FormLabel';
 import { pickReceipt, type Receipt, type ReceiptSource } from '@/core/lib/receipts/receipt';
 
 interface ReceiptPickerProps {

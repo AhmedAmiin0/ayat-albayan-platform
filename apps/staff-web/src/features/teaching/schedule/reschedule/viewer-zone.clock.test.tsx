@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ConflictNotice } from './ConflictNotice';
-import { ProposalsPanel } from './ProposalsPanel';
+import { ProposalsPanel } from './proposals/ProposalsPanel';
 
 // The React Compiler builds these components (vite.config.ts): a time read from the viewer-zone
 // store during render would stay memoised. Each one switches the zone in place (a sign-in's

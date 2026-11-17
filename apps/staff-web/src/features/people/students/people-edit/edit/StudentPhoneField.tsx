@@ -1,0 +1,23 @@
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { TextField } from '@/features/people/students/people-edit/TextField';
+
+interface StudentPhoneFieldProps {
+  value: string;
+  onValue: (value: string) => void;
+  /** The refusal of the last save. */
+  error?: string;
+}
+
+/** The student's own WhatsApp (owner 2026-11-17): optional, E.164, their sign-in number. */
+export function StudentPhoneField({ value, onValue, error }: StudentPhoneFieldProps) {
+  return (
+    <TextField
+      label={t.peopleEdit.fields.studentPhone}
+      hint={t.peopleEdit.studentPhoneHint}
+      value={value}
+      inputMode="tel"
+      error={error}
+      onValue={onValue}
+    />
+  );
+}

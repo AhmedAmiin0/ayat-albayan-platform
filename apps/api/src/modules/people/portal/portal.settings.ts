@@ -5,13 +5,15 @@ import { SettingsService } from '@/common/settings/settings.service';
 
 /**
  * The join window and the academy's default meeting mode (meeting_link_auto), for «الحلقات
- * القادمة»; the payment instructions under the package's amount due (docs/50 §5).
+ * القادمة»; the payment instructions under the package's amount due (docs/50 §5); the late
+ * cancel rule «أعتذر عن الحلقة» previews (owner 2026-11-17).
  */
 const KEYS = [
   'meeting_link_auto',
   'join_opens_before_min',
   'join_closes_after_min',
   'family_payment_instructions',
+  'late_cancel_hours',
 ] as const satisfies readonly SettingKey[];
 export type PortalSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

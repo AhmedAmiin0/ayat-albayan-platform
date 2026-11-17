@@ -1,43 +1,55 @@
 import { channelActions, type ChannelActions, type ChannelMessageView } from '@ab/shared';
-import type { ChannelAudience } from './channels.js';
+import type { ChannelMode } from './channel-live.js';
+import { channelMessagesPath, type ChannelAudience } from './channels.js';
 
 // «تعديل» / «حذف للجميع» in the student channel (owner 2026-10-30) for web and mobile. The API
-// enforces
-// the same rule; the menu only offers what it would accept now.
+// enforces the same rule; the menu only offers what it would accept now.
 
-const BASE: Readonly<Record<ChannelAudience, ((id: string) => string) | null>> = {
-  teacher: (id) => `/teachers/me/channels/${id}`,
-  portal: (id) => `/portal/students/${id}/channel`,
-  admin: (id) => `/students/${id}/channel`,
-  // The owning assistant only reads: no edit or delete route.
-  sales: null,
-};
-
-/** PATCH (edit) / DELETE (delete for everyone) …/messages/:id; null where the audience has none. */
+/**
+ * PATCH (edit) / DELETE (delete for everyone) …/messages/:id, on every audience's route (the
+ * owning assistant's too, owner 2026-11-16).
+ */
 export function channelMessagePath(input: {
   audience: ChannelAudience;
   studentId: string;
   messageId: string;
-}): string | null {
-  const base = BASE[input.audience];
-  return base ? `${base(input.studentId)}/messages/${input.messageId}` : null;
+}): string {
+  return `${channelMessagesPath(input)}/${input.messageId}`;
 }
 
 const NONE: ChannelActions = { edit: false, delete: false };
 
-/** What this viewer's menu offers on one bubble now: the admin (moderation) deletes any message. */
+/**
+ * Who may change a message at all: a writer on a participant's open channel, or the admin's
+ * moderation. A monitor, the owning assistant on a closed chat, gets 403 channel_read_only.
+ */
+const mayChange = (audience: ChannelAudience, mode: ChannelMode): boolean =>
+  mode === 'write' || audience === 'admin';
+
+/**
+ * What this viewer's menu offers on one bubble now: the sender's own windows, the owning
+ * assistant's too, in write mode; the admin (moderation) deletes any message.
+ */
 export function channelBubbleActions(input: {
   audience: ChannelAudience;
+  mode: ChannelMode;
   message: ChannelMessageView;
   now: Date;
 }): ChannelActions {
-  if (input.audience === 'sales') return NONE;
-  return channelActions({
+  const actions = channelActions({
     message: input.message,
     moderator: input.audience === 'admin',
     now: input.now,
   });
+  return mayChange(input.audience, input.mode) ? actions : NONE;
 }
+
+/** GET …/messages/:id/reads: who of the chat read this message («معلومات الرسالة»). */
+export const channelReadsPath = (input: {
+  audience: ChannelAudience;
+  studentId: string;
+  messageId: string;
+}): string => `${channelMessagePath(input)}/reads`;
 
 /** POST hides, DELETE shows again («حذف من المنصة» / «إظهار» on a WhatsApp bubble). */
 export const threadHidePath = (phone: string, messageId: string): string =>
@@ -49,6 +61,10 @@ export const CHANNEL_EDIT_ERRORS = [
   'delete_window_closed',
   'not_your_message',
   'message_deleted',
+  'channel_read_only',
+  'channel_not_open',
+  'family_chat_off',
+  'not_a_text_message',
 ] as const;
 export type ChannelEditError = (typeof CHANNEL_EDIT_ERRORS)[number];
 

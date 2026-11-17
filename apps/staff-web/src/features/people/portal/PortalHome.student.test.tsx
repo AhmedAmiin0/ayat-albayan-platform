@@ -30,7 +30,9 @@ describe('PortalHome: a student’s own login', () => {
     expect(screen.queryByText(t.portal.myChildren)).toBeNull();
     expect(screen.queryByRole('button', { name: t.portal.allChildren })).toBeNull();
     const tabs = screen.getAllByRole('tab').map((x) => x.textContent);
-    expect(tabs).toEqual([t.portal.upcomingTab, t.portal.attendedTab, t.portal.absentTab]);
+    expect(tabs).toEqual([
+      t.portal.upcomingTab, t.portal.attendedTab, t.portal.absentTab, t.lessonFiles.recordings,
+    ]);
     expect(await screen.findByRole('button', { name: t.portal.join })).toBeTruthy();
     fireEvent.click(screen.getByRole('tab', { name: t.portal.attendedTab }));
     expect(await screen.findByText(t.portal.attendedEmpty)).toBeTruthy();

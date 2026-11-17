@@ -8,7 +8,7 @@ export type GrantShare = (input: { identity: string; allow: boolean }) => Promis
  * The participants route of this room: /lessons/:id/room/participants or
  * /meetings/:id/participants; null for a room of neither kind.
  */
-export function participantsBase(room: string): string | null {
+function participantsBase(room: string): string | null {
   const meetingId = meetingIdOfRoom(room);
   const lessonId = lessonIdOfRoom(room);
   if (meetingId !== null) return `/meetings/${meetingId}/participants`;

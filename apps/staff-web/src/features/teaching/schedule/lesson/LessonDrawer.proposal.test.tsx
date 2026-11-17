@@ -54,7 +54,7 @@ describe('LessonDrawer — teacher proposals and generated clashes (R-SCH-08, R-
     const { drawer, onDone } = renderDrawer(lesson({ pending_proposal: PENDING }));
     fireEvent.click(within(drawer).getByRole('button', { name: t.lessons.proposal.reject }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.lessons.proposal.rejected));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/lesson-proposals/p1/reject');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/lesson-proposals/p1/reject', {});
   });
 
   it('a lesson the daily job generated over a clash says so, with the teacher clock', () => {

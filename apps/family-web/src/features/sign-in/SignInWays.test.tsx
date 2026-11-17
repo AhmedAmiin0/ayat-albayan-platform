@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { renderAt } from '@/test/render-at';
 import { SignInWays } from './SignInWays';
@@ -11,6 +11,11 @@ vi.mock('@ab/web-kit/auth/login/auth-api', async (orig) => {
 });
 
 const S = t.familyApp.signIn;
+
+// A bare «ar» names no region: the number starts in Saudi Arabia (jsdom says en-US, the US).
+beforeEach(() => {
+  vi.spyOn(navigator, 'language', 'get').mockReturnValue('ar');
+});
 
 describe('one sign-in for guardians and students (owner 2026-11-15)', () => {
   it('codes on: WhatsApp first, the student code one tap away and back', async () => {
@@ -31,7 +36,7 @@ describe('one sign-in for guardians and students (owner 2026-11-15)', () => {
     expect(screen.getByText(S.phoneBad)).toBeTruthy();
     fireEvent.change(phone, { target: { value: '0500000005' } });
     fireEvent.click(screen.getByRole('button', { name: t.familyAuth.sendCode }));
-    expect(await screen.findByText(t.familyAuth.codeSent)).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: S.codeTitle })).toBeTruthy();
     expect(request).toHaveBeenCalledWith('+966500000005');
   });
 

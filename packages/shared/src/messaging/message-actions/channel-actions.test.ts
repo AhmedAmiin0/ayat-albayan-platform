@@ -44,4 +44,16 @@ describe('channel edit / delete rule (owner 2026-10-30)', () => {
       delete: false,
     });
   });
+
+  it('a photo, PDF or voice note is never edited, only deleted (the student chat upgrade)', () => {
+    for (const kind of ['photo', 'pdf', 'voice'] as const) {
+      const file = { ...mine, kind };
+      expect(channelActions({ message: file, moderator: false, now: now(0) })).toEqual({
+        edit: false,
+        delete: true,
+      });
+    }
+    const text = { ...mine, kind: 'text' as const };
+    expect(channelActions({ message: text, moderator: false, now: now(0) }).edit).toBe(true);
+  });
 });

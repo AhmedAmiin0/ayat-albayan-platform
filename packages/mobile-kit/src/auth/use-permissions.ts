@@ -7,13 +7,15 @@ import {
   type Permission,
 } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
+import { z } from 'zod';
 import { apiFetch } from '../lib/http/api';
 import { pathKey } from '../lib/query/query-keys';
 import { useMeZone } from './use-me-zone';
 
 export { permissionsOf, type Can };
 
-const meQuery = () => ({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+/** GET /auth/me: role, permissions, tz and locale; one query for every hook that reads it. */
+export const meQuery = () => ({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
 
 /**
  * Dynamic roles: the app stays role-gated (admin, teacher, sales and assistant trees, verify-role.ts), and the
@@ -85,4 +87,12 @@ export function useMeActor(): CorrectionActor | null {
   const me = useQuery(meQuery());
   const id: unknown = meLoaded(me.data) ? Reflect.get(me.data, 'id') : null;
   return typeof id === 'string' ? { id, role: roleOf(me.data) } : null;
+}
+
+const testFlagSchema = z.object({ is_test: z.literal(true) });
+
+/** /auth/me `is_test` (docs/56): the «تجريبي» chip; false until it answers and on an older API. */
+export function useIsTestAccount(): boolean {
+  const me = useQuery(meQuery());
+  return testFlagSchema.safeParse(me.data).success;
 }

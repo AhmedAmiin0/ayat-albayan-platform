@@ -4,17 +4,13 @@ import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { errorCode } from '@ab/web-kit/lib/http/error-code';
 import { bookingBase, type BookingMode } from '@/features/teaching/booking/mode';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { Window } from '@ab/web-kit/schedule/slots';
 import type { LessonTimeEdit, TimeEditResult } from './edit-time/edit-time.contract';
 
 // Phase 2 lesson routes (docs/10 §5). Commands camelCase, responses LessonView rows.
 
 /** Invalidate after any lesson write: the week grid, the teacher dashboard and slot pickers. */
 export const LESSONS_KEY = ['lessons'] as const;
-
-export interface Window {
-  from: Date;
-  to: Date;
-}
 
 /**
  * GET /lessons/overview?from&to (≤ 31 days): every teacher with hours, time off, load and free
@@ -84,7 +80,7 @@ export const rescheduleLesson = ({ id, body }: { id: string; body: RescheduleReq
 export const editLessonTime = ({ id, body }: { id: string; body: LessonTimeEdit }) =>
   apiSend<TimeEditResult>('PATCH', `/lessons/${id}/time`, body);
 
-/** GET /lesson-proposals —lessons with a teacher's pending «اقترح ميعاد تاني» (R-SCH-08). */
+/** GET /lesson-proposals: a teacher's or a family's pending «اقترح موعدًا آخر» (R-SCH-08). */
 export const proposalsQuery = queryOptions({
   queryKey: [...LESSONS_KEY, 'proposals'],
   queryFn: () => apiFetch<LessonView[]>('/lesson-proposals'),
@@ -94,7 +90,9 @@ export const proposalsQuery = queryOptions({
 export const approveProposal = ({ id, override }: { id: string; override?: string }) =>
   apiSend<LessonView>('POST', `/lesson-proposals/${id}/approve`, override ? { override: { reason: override } } : {});
 
-export const rejectProposal = (id: string) => apiSend<LessonView>('POST', `/lesson-proposals/${id}/reject`);
+/** `note`: the answer the family reads with a declined «اطلب موعدًا آخر» (owner 2026-11-17). */
+export const rejectProposal = ({ id, note }: { id: string; note?: string }) =>
+  apiSend<LessonView>('POST', `/lesson-proposals/${id}/reject`, note ? { note } : {});
 
 export { errorCode };
 

@@ -15,10 +15,13 @@ interface Props {
   backLabel: string;
   /** Fields between the code and the submit button (the new password). */
   children?: ReactNode;
+  /** Above the boxes instead of «إن كان الحساب موجودًا…» (the family sign-in names the number). */
+  note?: ReactNode;
 }
 
 /** The code sent on WhatsApp: «إن كان الحساب موجودًا…», the six boxes, resend after a countdown. */
-export function CodeStep({ flow, submitLabel, busyLabel, onSubmit, backLabel, children }: Props) {
+export function CodeStep(props: Props) {
+  const { flow, submitLabel, busyLabel, onSubmit, backLabel, children, note } = props;
   const resend = () => {
     if (flow.target !== null) void flow.request(flow.target);
   };
@@ -31,7 +34,7 @@ export function CodeStep({ flow, submitLabel, busyLabel, onSubmit, backLabel, ch
         onSubmit();
       }}
     >
-      <StatusNote>{t.familyAuth.codeSent}</StatusNote>
+      {note ?? <StatusNote>{t.familyAuth.codeSent}</StatusNote>}
       <CodeBoxes digits={flow.digits} onDigits={flow.setDigits} invalid={flow.error === t.familyAuth.errors.invalid_code || flow.error === t.familyAuth.errors.code_incomplete} />
       {children}
       {flow.error && <FormAlert>{flow.error}</FormAlert>}

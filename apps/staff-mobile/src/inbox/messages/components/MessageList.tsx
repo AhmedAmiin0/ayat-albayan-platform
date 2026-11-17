@@ -1,7 +1,7 @@
 import { type CallView, chatDayKey, senderLine } from '@ab/shared';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
-import { t, useTheme, EmptyState } from '@ab/mobile-kit';
+import { t, useTheme, EmptyState, FloatingDay } from '@ab/mobile-kit';
 import { useStableHandler } from '@/core/lib/stable-handler';
 import { logRows, type LogRow } from '@/inbox/thread/calls/entries/log-rows';
 import { useCallBack, useThreadCalls } from '@/inbox/thread/calls/entries/use-thread-calls';
@@ -12,7 +12,6 @@ import { MessageRow } from '@/inbox/messages/list/MessageRow';
 import { rowCorrections } from '@/inbox/messages/components/correction/correction-context';
 import { dayLabel, hasDayChip } from '@/inbox/messages/days/day-label';
 import { CellFrames } from '@/inbox/messages/days/DayCell';
-import { FloatingDay } from '@/inbox/messages/days/FloatingDay';
 import { useTopDay } from '@/inbox/messages/days/use-top-day';
 import { threadMessages } from '@/inbox/thread/hooks/thread-cache';
 import { useJump } from '@/inbox/thread/hooks/use-jump';

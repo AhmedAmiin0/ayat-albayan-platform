@@ -1,11 +1,16 @@
-import { isLessonNow, lessonMinutes, windowStateAt } from '@ab/client-core';
-import type { ClockOptions, PortalLesson, PortalStudent } from '@ab/shared';
+import { isLessonNow, lessonMinutes, liveRoom, windowStateAt } from '@ab/client-core';
+import { firstName, type ClockOptions, type PortalLesson, type PortalStudent } from '@ab/shared';
+import { useState } from 'react';
 import { View } from 'react-native';
-import { AppText, t, type, useNow, useTheme } from '@ab/mobile-kit';
+import { AppText, Notice, t, type, useNow, useTheme } from '@ab/mobile-kit';
 import { useFamilyClock } from '@/portal';
+import { CardFooter, SOFT_INK } from './CardFooter';
 import { Countdown } from './Countdown';
 import { JoinAction } from './JoinAction';
 import { rangeText, teacherText, whenText } from './lesson-text';
+import { LiveStrip, LiveTop } from './live';
+import { LessonChip } from './options/LessonChip';
+import { RequestLine } from './options/RequestLine';
 
 /** The countdown and the join button follow the clock every second. */
 const TICK_MS = 1000;
@@ -19,8 +24,15 @@ interface NextLessonCardProps {
   own?: boolean;
 }
 
-/** The full card's lines: the time range and length, the teacher. */
-function Details({ lesson, clock }: { lesson: PortalLesson; clock: ClockOptions }) {
+interface DetailsProps {
+  lesson: PortalLesson;
+  student: PortalStudent;
+  clock: ClockOptions;
+  now: Date;
+}
+
+/** The full card's lines: the time range and length, the teacher, what the family did. */
+function Details({ lesson, student, clock, now }: DetailsProps) {
   const { color } = useTheme();
   const A = t.portal.app.lesson;
   const minutes = A.minutes.replace('{n}', String(lessonMinutes(lesson)));
@@ -31,6 +43,13 @@ function Details({ lesson, clock }: { lesson: PortalLesson; clock: ClockOptions 
         {`${rangeText(lesson, clock)} · ${minutes}`}
       </AppText>
       <AppText style={words}>{A.teacher.replace('{name}', teacherText(lesson.teacher))}</AppText>
+      <RequestLine
+        lesson={lesson}
+        clock={clock}
+        ink={color.onLapis}
+        now={now}
+        student={firstName(student.name)}
+      />
     </>
   );
 }
@@ -52,34 +71,52 @@ function CardTop({ lesson, clock, now, full, own }: CardTopProps) {
   const title = own ? A.nextLessonSelf : t.portal.nextLesson;
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 8 }}>
-      <AppText style={{ ...words, flexShrink: 1, opacity: 0.92 }}>
+      <AppText style={{ ...words, flexShrink: 1, opacity: SOFT_INK }}>
         {`${title} · ${whenText(new Date(lesson.starts_at), clock, now)}`}
       </AppText>
       {open && full ? (
         <AppText style={{ ...words, fontFamily: type.ui[600] }}>{A.openNow}</AppText>
-      ) : null}
+      ) : (
+        <LessonChip lesson={lesson} />
+      )}
     </View>
   );
 }
 
 /**
- * The next lesson on the lapis card (canvas Home, Child): when, the live countdown, then
- * «ادخل الحلقة» once the window opens. Times on the student's own clock.
+ * The next lesson on the lapis card (canvas Home, Child): when and its chip, the live countdown,
+ * then «ادخل الحلقة» once the window opens; the full card adds what the family asked and
+ * «خيارات الحلقة» (owner 2026-11-17), its result said above the card. The student's own clock.
+ * While the room is live (canvas RoomXLiveHome): «الحلقة جارية الآن», how long, who is inside,
+ * «ادخل الآن».
  */
 export function NextLessonCard(props: NextLessonCardProps) {
   const { lesson, student, full = false, own = false } = props;
   const { color } = useTheme();
   const now = useNow(TICK_MS);
   const clock = { ...useFamilyClock(), tz: student.tz };
-  const roomNote = full && lesson.way_in === 'classroom';
-  const note = { color: color.onLapis, fontSize: type.size.xs, opacity: 0.85 };
+  const [notice, setNotice] = useState<string | null>(null);
+  const live = liveRoom(lesson, now);
+  const top = { lesson, clock, now, full, own };
   return (
-    <View style={{ gap: 10, padding: 14, borderRadius: 12, backgroundColor: color.lapisFill }}>
-      <CardTop lesson={lesson} clock={clock} now={now} full={full} own={own} />
-      {full ? <Details lesson={lesson} clock={clock} /> : null}
-      <Countdown lesson={lesson} now={now} big={full} />
-      <JoinAction lesson={lesson} student={student} now={now} />
-      {roomNote ? <AppText style={note}>{t.portal.app.lesson.roomNote}</AppText> : null}
+    <View style={{ gap: 10 }}>
+      {notice ? <Notice message={notice} /> : null}
+      <View style={{ gap: 10, padding: 14, borderRadius: 12, backgroundColor: color.lapisFill }}>
+        {live ? <LiveTop live={live} /> : <CardTop {...top} />}
+        {full ? <Details lesson={lesson} student={student} clock={clock} now={now} /> : null}
+        {live ? <LiveStrip live={live} /> : <Countdown lesson={lesson} now={now} big={full} />}
+        <JoinAction lesson={lesson} student={student} now={now} live={live !== null} />
+        {full ? (
+          <CardFooter
+            lesson={lesson}
+            student={student}
+            clock={clock}
+            now={now}
+            live={live !== null}
+            onNotice={setNotice}
+          />
+        ) : null}
+      </View>
     </View>
   );
 }

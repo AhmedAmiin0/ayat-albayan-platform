@@ -1,31 +1,45 @@
-import { lessonMinutes, type WeekLesson } from '@ab/client-core';
-import type { ClockOptions } from '@ab/shared';
-import { clockOf } from '@ab/shared';
+import { lessonMinutes, liveRoom, type WeekLesson } from '@ab/client-core';
+import { firstName, type ClockOptions } from '@ab/shared';
 import { View } from 'react-native';
-import { Avatar, t, } from '@ab/mobile-kit';
+import { t, useTheme } from '@ab/mobile-kit';
 import { RowText } from '@/ui';
-import { JoinAction, rangeText, teacherText } from '@/lessons';
+import {
+  JoinAction, LessonChip, LiveLine, OptionsRow, rangeText, RequestLine, teacherText,
+} from '@/lessons';
 
 interface ScheduleRowProps {
   entry: WeekLesson;
   /** The viewer's clock (the week is on the phone's zone). */
   clock: ClockOptions;
   now: Date;
-  /** A guardian's week names the child on each row. */
-  named: boolean;
 }
 
-/** One lesson of the week: (the child ·) the time, the teacher and length, «ادخل» when open. */
-export function ScheduleRow({ entry, clock, now, named }: ScheduleRowProps) {
+/**
+ * One lesson of the week: the time, the teacher and length (opening «خيارات الحلقة»), «جارية
+ * الآن» while its room is live (canvas RoomXLivePush), its chip, «ادخل» when open.
+ */
+export function ScheduleRow({ entry, clock, now }: ScheduleRowProps) {
   const { student, lesson } = entry;
-  const time = named
-    ? `${student.name} · ${clockOf(new Date(lesson.starts_at), clock)}`
-    : rangeText(lesson, clock);
+  const { color } = useTheme();
   const length = t.portal.app.lesson.minutes.replace('{n}', String(lessonMinutes(lesson)));
+  const live = liveRoom(lesson, now);
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 }}>
-      {named ? <Avatar name={student.name} id={student.id} size="sm" decorative /> : null}
-      <RowText title={time} line={`${teacherText(lesson.teacher)} · ${length}`} />
+      <OptionsRow lesson={lesson} student={student} clock={clock} now={now}>
+        <RowText
+          title={rangeText(lesson, clock)}
+          line={`${teacherText(lesson.teacher)} · ${length}`}
+        />
+        {live ? <LiveLine live={live} /> : null}
+        <RequestLine
+          lesson={lesson}
+          clock={{ ...clock, tz: student.tz }}
+          ink={color.ink2}
+          now={now}
+          student={firstName(student.name)}
+        />
+      </OptionsRow>
+      <LessonChip lesson={lesson} />
       <JoinAction lesson={lesson} student={student} now={now} short />
     </View>
   );

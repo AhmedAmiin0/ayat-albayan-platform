@@ -1,3 +1,4 @@
+import { lessonRemovePath } from '@ab/client-core';
 import type { LessonRecordingView, RecordingStatus } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
@@ -21,7 +22,7 @@ export function meetingIdOfRoom(room: string): string | null {
  * 404 participant_not_found; afterwards the API refuses their joins with removed_from_room.
  */
 export const removeParticipant = ({ lessonId, identity }: { lessonId: string; identity: string }) =>
-  apiSend('POST', `/lessons/${lessonId}/room/participants/${encodeURIComponent(identity)}/remove`);
+  apiSend('POST', lessonRemovePath(lessonId, identity));
 
 /** POST /meetings/:id/participants/:identity/remove: disconnects someone (no lasting block). */
 export const removeMeetingParticipant = (who: { meetingId: string; identity: string }) =>

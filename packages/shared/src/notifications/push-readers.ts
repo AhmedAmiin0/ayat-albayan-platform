@@ -9,7 +9,9 @@ export type PushReader = 'staff' | 'family' | 'child';
 /** A lesson or its report: what every family reader may hear about. */
 const LESSON_PUSH_KINDS = [
   'lesson_starting',
+  'lesson_live',
   'report_sent',
+  'lesson_request_declined',
   'lesson_rescheduled',
   'lesson_cancelled',
   'course_paused',
@@ -22,6 +24,9 @@ const MONEY_PUSH_KINDS = [
   'payment_received',
 ] as const satisfies readonly AnyPushKind[];
 
+/** The student's chat with the teacher (owner 2026-11-16): every family reader, a child too. */
+const CHAT_PUSH_KINDS = ['channel_message'] as const satisfies readonly AnyPushKind[];
+
 const among =
   (kinds: readonly AnyPushKind[]) =>
   (kind: AnyPushKind): boolean =>
@@ -29,8 +34,8 @@ const among =
 
 const READS: Readonly<Record<PushReader, (kind: AnyPushKind) => boolean>> = {
   staff: () => true,
-  family: among([...LESSON_PUSH_KINDS, ...MONEY_PUSH_KINDS]),
-  child: among(LESSON_PUSH_KINDS),
+  family: among([...LESSON_PUSH_KINDS, ...MONEY_PUSH_KINDS, ...CHAT_PUSH_KINDS]),
+  child: among([...LESSON_PUSH_KINDS, ...CHAT_PUSH_KINDS]),
 };
 
 /** A student login reads as family only when it is its own contact (students.contact_is_self). */

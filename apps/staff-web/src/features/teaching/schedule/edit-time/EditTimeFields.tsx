@@ -8,7 +8,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { validLength } from './edit-time';
 import { lengthText } from './edit-time-text';
 import type { TimeEditMode } from './edit-time.contract';
-import { dateLabel, dayMonthLabel } from '@/features/teaching/schedule/tz';
+import { dateLabel, dayMonthLabel } from '@ab/web-kit/schedule/tz';
 import { ClockOptions } from '@ab/web-kit/lib/clock-options';
 import { clockDir } from '@ab/web-kit/lib/clock-text';
 import { type Clock, useClock } from '@ab/web-kit/lib/clock';

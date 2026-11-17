@@ -17,10 +17,3 @@ export const hashLinkToken = (token: string): string => createHash('sha256').upd
 /** A link dies when its classroom closes (settings.join_closes_after_min after the lesson ends, at creation). */
 export const linkExpiry = (lesson: { ends_at: string }, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): string =>
   roomClosesAt(lesson, win);
-
-export type LinkCheck = 'ok' | 'revoked' | 'expired';
-
-export function checkLink(row: { expires_at: string; revoked_at: string | null }, now: Date): LinkCheck {
-  if (row.revoked_at) return 'revoked';
-  return Date.parse(row.expires_at) <= now.getTime() ? 'expired' : 'ok';
-}

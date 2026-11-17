@@ -1,14 +1,20 @@
 import type { AlertTarget } from '@ab/client-core';
 import { router } from 'expo-router';
 import { markReportSeen } from '@/portal';
+import { roomHref, roomsInAppNow } from '@/room';
 
 // The family app's pushed screens (outside the tabs group: no tab bar under them, rn-screens#4132).
 
 const enc = encodeURIComponent;
 
 export const childHref = (id: string) => `/child/${enc(id)}` as const;
-export const packageHref = (studentId: string) => `/package/${enc(studentId)}` as const;
+const packageHref = (studentId: string) => `/package/${enc(studentId)}` as const;
+/** A child's chat with the teacher (family_chat_enabled, docs/50 §6). */
+export const chatHref = (studentId: string) => `/chat/${enc(studentId)}` as const;
 export const ALERTS_HREF = '/alerts';
+export const PROFILE_HREF = '/profile';
+/** «اختر الطالب»: forced for a guardian with no pick yet, pushed from «حسابي» to switch. */
+export const PICK_HREF = '/pick-child';
 
 interface ReportLink {
   studentId: string;
@@ -37,6 +43,11 @@ const OPEN: Openers = {
   report: (t) => openReport(t),
   child: (t) => router.push(childHref(t.studentId)),
   package: (t) => router.push(packageHref(t.studentId)),
+  chat: (t) => router.push(chatHref(t.studentId)),
+  // «بدأت الحلقة»: straight into the room, the microphone on, while lessons open in the app;
+  // else the child's page, where the live card's «ادخل الآن» opens the browser room.
+  live: (t) =>
+    router.push(roomsInAppNow() ? roomHref({ ...t, direct: true }) : childHref(t.studentId)),
   schedule: () => router.navigate('/schedule'),
 };
 

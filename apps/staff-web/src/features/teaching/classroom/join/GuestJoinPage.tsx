@@ -1,4 +1,4 @@
-import { guestJoinSchema, type ClockCycle } from '@ab/shared';
+import { guestJoinSchema, type ClockCycle, type RoomJoinResult } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState, type SubmitEvent } from 'react';
 import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
@@ -27,31 +27,56 @@ interface Props {
   linkToken: string;
   make?: () => RoomClient;
   /** The public join call: the lesson link's by default, an internal meeting's (/m/:token) otherwise. */
-  joinWith?: typeof joinAsGuest;
+  joinWith?: NamedJoin;
   /** Heading and intro; the lesson's words by default. */
   title?: string;
   intro?: string;
   /** A refused join in the page's own words (a meeting's, meetingJoinProblem); the lesson's by default. */
   problem?: (error: unknown) => string;
+  /** The link names its student (the family app's signed link): no name step, the API takes theirs. */
+  knownStudent?: boolean;
 }
 
-/** /join/:linkToken for a student or guardian (and /m/:token for a meeting): a name, then the room. No login, no app shell. */
+/** A join with the name typed on the page (the lesson link's, a meeting's). */
+type NamedJoin = (input: { linkToken: string; name: string }) => Promise<RoomJoinResult>;
+type Send = () => Promise<RoomJoinResult>;
+
+interface SendInput {
+  known: boolean;
+  linkToken: string;
+  name: string;
+  joinWith: NamedJoin;
+}
+
+/** The call the form makes: no name when the link names its student; null = no name typed. */
+function sendFor({ known, linkToken, name, joinWith }: SendInput): Send | null {
+  if (known) return () => joinAsGuest({ linkToken });
+  const parsed = guestJoinSchema.safeParse({ name });
+  return parsed.success ? () => joinWith({ linkToken, name: parsed.data.name }) : null;
+}
+
+/**
+ * /join/:linkToken for a student or guardian (and /m/:token for a meeting): a name, then the room.
+ * No login, no app shell. The family app's link already names the student: just «ادخل».
+ */
 export function GuestJoinPage(props: Props) {
-  const { linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = t.classroom.guest.intro, problem } = props;
+  const known = props.knownStudent === true;
+  const words = known ? t.classroom.guest.introKnown : t.classroom.guest.intro;
+  const { linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = words, problem } = props;
   const { cycle } = useClock();
   const problemOf = problem ?? ((e: unknown) => problemText(e, cycle));
   const [name, setName] = useState('');
   const [missing, setMissing] = useState(false);
-  const join = useMutation({ mutationFn: joinWith });
+  const join = useMutation({ mutationFn: (send: Send) => send() });
 
   if (join.data) {
     return <ClassroomRoom join={join.data} {...(make && { make })} onRejoin={() => join.reset()} />;
   }
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
-    const parsed = guestJoinSchema.safeParse({ name });
-    setMissing(!parsed.success);
-    if (parsed.success) join.mutate({ linkToken, name: parsed.data.name });
+    const send = sendFor({ known, linkToken, name, joinWith });
+    setMissing(send === null);
+    if (send) join.mutate(send);
   };
   return (
     <main className="min-h-dvh bg-page px-4 py-6 sm:py-10">
@@ -62,11 +87,13 @@ export function GuestJoinPage(props: Props) {
         </div>
         <Cartouche>{title}</Cartouche>
         <p className="text-body text-ink-2">{intro}</p>
-        <Field label={t.classroom.guest.name} required {...(missing && { error: t.common.required })}>
-          {(p) => (
-            <Input {...p} value={name} maxLength={30} autoComplete="off" placeholder={t.classroom.guest.namePlaceholder} onChange={(e) => setName(e.target.value)} />
-          )}
-        </Field>
+        {known ? null : (
+          <Field label={t.classroom.guest.name} required {...(missing && { error: t.common.required })}>
+            {(p) => (
+              <Input {...p} value={name} maxLength={30} autoComplete="off" placeholder={t.classroom.guest.namePlaceholder} onChange={(e) => setName(e.target.value)} />
+            )}
+          </Field>
+        )}
         {join.isError && <FormAlert>{problemOf(join.error)}</FormAlert>}
         <RecordedNotice />
         <Button type="submit" size="lg" disabled={join.isPending}>

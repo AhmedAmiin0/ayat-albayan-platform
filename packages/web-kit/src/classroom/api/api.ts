@@ -16,6 +16,12 @@ import { viewerZone } from '@ab/web-kit/lib/clock-text';
 
 export const CLASSROOM_KEY = ['classroom'] as const;
 
+/** A public join: the link, and the name typed on the page (none when the link names the student). */
+interface GuestJoinInput {
+  linkToken: string;
+  name?: string;
+}
+
 /** POST /lessons/:id/room/join: staff, with their own login. A fresh identity per call. */
 export const joinRoom = (lessonId: string) => apiSend<RoomJoinResult>('POST', `/lessons/${lessonId}/room/join`);
 
@@ -27,8 +33,11 @@ function parseBody(text: string): unknown {
   }
 }
 
-/** POST /public/join/:linkToken: the guest's name, no login (plain fetch: never the staff session token). */
-export async function joinAsGuest({ linkToken, name }: { linkToken: string; name: string }): Promise<RoomJoinResult> {
+/**
+ * POST /public/join/:linkToken: the guest's name, no login (plain fetch: never the staff session
+ * token). No name for a link that names its student (the family app's): the API takes the student's.
+ */
+export async function joinAsGuest({ linkToken, name }: GuestJoinInput): Promise<RoomJoinResult> {
   const res = await fetch(`${env.apiUrl}/public/join/${encodeURIComponent(linkToken)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

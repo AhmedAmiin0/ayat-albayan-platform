@@ -1,7 +1,6 @@
 import { View } from 'react-native';
-import { t, AppText, type, useTheme } from '@ab/mobile-kit';
+import { t, AppText, type, useTheme, whenText } from '@ab/mobile-kit';
 import type { MakeupSource } from './makeup-draft';
-import { whenText } from '@/booking/shared/slots';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** What the makeup is for, over every step: «للطالب يوسف» and the lesson he missed, with its time. */

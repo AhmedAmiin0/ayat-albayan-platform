@@ -8,22 +8,23 @@ Names (rename #735): `apps/staff-web` (package `staff-web`), `apps/staff-mobile`
 
 - **Folder and stack.** `apps/family-web`, the same stack as apps/staff-web: React 19, Vite, TanStack Router + Query, Tailwind 4, React Compiler. Package name `family-web`, dev port 5174.
 - **Host.** `https://family.ayatalbayan.com` (default; the owner confirms). `*.ayatalbayan.com` already resolves to the VPS, and the host Caddy issues TLS automatically (docs/09 L5).
-- **Brand.** The family app's English name «Ayat Al-Bayan» and its family icon (`apps/family-mobile/assets/icon.png`, #738), not the staff mushaf mark: favicon, manifest icons, title, theme colour `#064E3B`. The manifest `start_url` is `/portal`.
-- **Paths:** `/login` (family sign-in only), `/portal` (home), `/schedule`, `/children` and `/children/$studentId` (guardian), `/reports` (student), `/report/$reportId`, `/alerts`, `/account`, and `/` → `/portal`.
+- **Brand.** The family app's English name «Ayat Al-Bayan» and the academy emblem (owner 2026-11-16 «use the logo from the project», #748, #753), not the old book-and-crescent icon. The sign-in shows the kit `Mark` (`docs/design/brand/logo-mark.png`, served from `public/brand/`) on the deep-green tile (`bg-brand-tile` = theme.ts `brandTile`). Favicon and manifest icons are the staff set (the same emblem on ivory) until a green-ground set is made from `apps/family-mobile/assets/icon.png` (open item). Title; theme colour `#064E3B`. The manifest `start_url` is `/portal`.
+- **Paths:** `/login` (family sign-in only), `/portal` (home: the page of the student in view), `/schedule`, `/reports`, `/children` («اختر الطالب», a guardian of several), `/children/$studentId` (a push or link target, never filtered by the pick), `/report/$reportId`, `/alerts`, `/account`, and `/` → `/portal`.
 - The portal logic comes from `@ab/client-core` `people/portal/**`, including `people/portal/app/*` (family-tabs, week-schedule, alerts, child-summary, seen-store, day-word); the web and the family mobile app use the same rules.
 - **Signed-link pages stay on `app.`:** `/report`, `/feedback`, `/join`, `/s`, `/m`, `/pay`. Meta fixed `app.` in the approved template buttons, and the API builds these links from the first `WEB_ORIGIN`.
 
 ### 1a. Owner changes, 2026-11-15 (the family mobile app ships them)
 
 1. **One sign-in for guardians and students, no tabs.** Default: WhatsApp number → code. Secondary, one tap away: «الدخول برمز الطالب وكلمة المرور» («أول دخول؟» / «نسيت كلمة المرور؟» send a code to the guardian). While WhatsApp codes are off: the password form and one line saying why. Owner: «whatsapp works always, the app code is optional».
-   - The pure sign-in logic (sign-in-way, student-code, phone-check, countries, code-digits) MOVED from apps/family-mobile to `@ab/client-core` `people/family-auth/` with its tests; both apps import it.
+   - The pure sign-in logic (sign-in-way, student-code, phone-check, countries, country-dial, country-search, code-digits) MOVED from apps/family-mobile to `@ab/client-core` `people/family-auth/` with its tests; both apps import it.
+   - The web mirrors the app (#741, #752): one LTR number field with the country (flag, «+966» as an LTR island) at its start; «اختر الدولة» lists every country, the region of the browser's language tag and the usual ones first, searchable; a whole number pasted picks its country. The code step: «أدخل الرمز» for the number, the sixth digit signs in, a refused code empties the boxes.
    - «من يسجّل الدخول؟» (one number, several accounts): the API answers one account per number today (`guardianByPhone`) and the family mobile app has no picker either; it needs an API change first (open item).
    - The staff `/login` keeps the staff form; its family tab becomes a link to the family host once it is live (§3).
 2. **Navigation = the family mobile app (#739).**
-   - Guardian bar: الرئيسية · الجدول · أبنائي · حسابي. Reports live inside each child.
-   - Student bar: الرئيسية · الجدول · التقارير · حسابي. A student never sees money, the package or «أبنائي».
+   - One bar for every login (develop #746, owner 2026-11-16): الرئيسية · الجدول · التقارير · حسابي, all of the student in view (`familyTabs(familyPick(…))`); «التقارير» waits until that student is known.
+   - A guardian of several children picks one on «اختر الطالب» (shown in place of the home until then, saved per profile in this browser: `pickStore`) and switches from the child's name on top of every page. A student never sees money or the package.
    - A bell with an unread badge at the top → الإشعارات.
-   - Chat stays hidden while `family_chat_enabled` is off.
+   - Chat stays hidden while `family_chat_enabled` is off. Open item: the web has no chat tab even when it is on (the thread lives in apps/staff-web `student-channel`); a «chat» alert opens the child's page.
    - Wide screens: a side rail or top nav; phones: a bottom bar.
 3. **No biometric on the web.**
 4. **Join inside the page:** the classroom room is in the kit (§2); a Meet lesson opens its Meet URL.
@@ -36,9 +37,10 @@ Names (rename #735): `apps/staff-web` (package `staff-web`), `apps/staff-mobile`
   - the tokens and `index.css`, with `@source "./"` so each app's Tailwind sees the kit's classes;
   - `lib/`: the HTTP client binding and `env.ts` (with `familyOrigin` / `staffOrigin`), i18n, clock, theme, `use-now`, viewer zone, public config, money text, `session-end` (an app registers its tab memories; the kit forgets them when the session ends);
   - `boot/`: `startApp` (texts and overrides first) and `renderApp` (theme, push binding, router);
-  - `auth/`: the session (`sign-in`, `me`, `session-activity`, return-to), the code steps, `PasswordInput`, `PasswordForm`, `PhoneSignIn`, `ResetFlow`;
+  - `auth/`: the session (`sign-in`, `me`, `session-activity`, return-to), the code steps, `PasswordInput`, `PasswordForm`, `PhoneSignIn`, `ResetFlow`, and the «تجريبي» chips (`TestChip`, `MeTestChip`, docs/56);
   - `push/`: web push subscribe/forget and `public/sw.js` (served at `/sw.js` of both apps by the config factory);
-  - `report/` (`ReportPage`, one component mounted by both apps) and `portal/` (the portal's lessons, history, report, package and home cards);
+  - `report/` (`ReportPage`, one component mounted by both apps) and `portal/` (the portal's lessons with the family's lesson options, history, report, recordings, package and home cards);
+  - `schedule/` (the week slot grid, `WeekSlotsFrame`, `MoveReason`, slots and date labels: staff rescheduling and the family's «اطلب موعدًا آخر») and `lesson-files/` (the audio player and file words: staff «ملفات الحلقة» and the family's «التسجيلات»);
   - `classroom/`: the LiveKit room (room, board, mute, kick, share, recordings, stage and their API) — families join inside the page.
 - **apps/staff-web imports these from the kit:** a move, no copies. `@ab/config` has the shared configs: `@ab/config/vite` (`webConfig`), `@ab/config/eslint-web` (`webReactConfig`) and `webBlocks` in `@ab/config/lint`, so the three web workspaces' configs are not clones.
 - **jscpd** cross-app clones: zero.

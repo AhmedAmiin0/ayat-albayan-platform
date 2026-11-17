@@ -1,4 +1,6 @@
+import { canSkip, userOnlyFlags } from '@ab/shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.rate-limit';
 
 /** Mutes per staff login per 10 minutes: «كتم الجميع» in a full class is one call per student. */
@@ -15,9 +17,10 @@ export class MuteLimit {
     this.perUser = new WindowCounter(max);
   }
 
-  /** 429 too_many_requests when this login's bucket is full. */
-  assert(userId: string, now = Date.now()): void {
-    if (!this.perUser.allow(userId, now)) {
+  /** 429 too_many_requests when this login's bucket is full; a test login is not counted. */
+  assert(user: Pick<AuthUser, 'id' | 'isTest'>, now = Date.now()): void {
+    if (canSkip('rate_limits', userOnlyFlags(user.isTest))) return;
+    if (!this.perUser.allow(user.id, now)) {
       throw new HttpException({ code: 'too_many_requests', message: 'too_many_requests' }, HttpStatus.TOO_MANY_REQUESTS);
     }
   }

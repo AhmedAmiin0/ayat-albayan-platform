@@ -46,9 +46,11 @@ describe('guest join', () => {
     expect(a.startsWith('guest-')).toBe(true);
   });
 
-  it('the token ends where the classroom closes, never later', async () => {
-    const c = decode((await join({ now: new Date('2026-10-05T18:30:00Z') })).token);
-    expect(c.exp).toBe(Date.parse('2026-10-05T19:00:00Z') / 1000);
+  it('the token connects for 15 minutes at most (a removed guest cannot keep one), never past the close', async () => {
+    const early = decode((await join({ now: new Date('2026-10-05T16:00:00Z') })).token);
+    expect(early.exp).toBe(Date.parse('2026-10-05T16:15:00Z') / 1000);
+    const late = decode((await join({ now: new Date('2026-10-05T18:52:00Z') })).token);
+    expect(late.exp).toBe(Date.parse('2026-10-05T19:00:00Z') / 1000);
   });
 
   it('is valid from 15 minutes before the lesson: 403 join_not_open_yet earlier', async () => {
@@ -74,11 +76,11 @@ describe('a bad link', () => {
     expect(q.linkByHash).not.toHaveBeenCalled();
   });
 
-  it('410 link_expired after its expiry, and when revoked', async () => {
-    q.linkByHash.mockResolvedValue(linkRow({ expires_at: '2026-10-05T16:00:00.000Z' }));
-    expect((await fail(join())).getResponse()).toMatchObject({ code: 'link_expired' });
+  it('410 link_expired when revoked', async () => {
     q.linkByHash.mockResolvedValue(linkRow({ revoked_at: '2026-10-05T10:00:00Z' }));
-    expect((await fail(join())).getStatus()).toBe(410);
+    const err = await fail(join());
+    expect(err.getStatus()).toBe(410);
+    expect(err.getResponse()).toMatchObject({ code: 'link_expired' });
   });
 
   it('404 when the link points at a lesson that is gone', async () => {

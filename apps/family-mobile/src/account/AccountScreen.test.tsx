@@ -1,7 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { router } from 'expo-router';
 import { t, PUSH_OPT_OUT_KEY } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { PROFILE_HREF } from '@/nav';
 import { AccountScreen } from './AccountScreen';
 
 const mockRegister = jest.fn(async () => undefined);
@@ -43,10 +45,19 @@ beforeEach(async () => {
 const show = () => renderWithQuery(<AccountScreen />, freshQueryClient());
 const pushSwitch = () => screen.getByLabelText(t.familyApp.settings.notifications);
 
-test('the name, the children, the notifications switch (on by default) and sign out', async () => {
+test('the name card opens the profile (the children live there now)', async () => {
+  const { client } = await show();
+  expect(await screen.findByText(t.portal.app.account.guardian)).toBeTruthy();
+  // Every read is in (/portal/me lists a child), and still no children here.
+  await waitFor(() => expect(client.isFetching()).toBe(0));
+  expect(screen.queryByText('سارة')).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: /أم سارة/ }));
+  expect(router.push).toHaveBeenCalledWith(PROFILE_HREF);
+});
+
+test('the name, the notifications switch (on by default) and sign out', async () => {
   await show();
   expect(await screen.findByText('أم سارة')).toBeTruthy();
-  expect(await screen.findByText('سارة')).toBeTruthy();
   expect(screen.queryByText(t.account.password.title)).toBeNull();
   await waitFor(() => expect(pushSwitch().props.value).toBe(true));
   await fireEvent.press(screen.getByRole('button', { name: t.auth.logout }));

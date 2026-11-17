@@ -22,9 +22,13 @@ const student = (status: string) => ({
   siblings: [],
 });
 
+/** The file's lists answer lists; '/students/s1' alone would also catch its sub-paths. */
+const LISTS = [['/students/s1/assistants', []], ['/assistants', []]] as const;
+
 function renderPage(status: string) {
   routeFetch(apiFetch, [
     ['/students/s1/balance', balanceOf([WEEKLY])],
+    ...LISTS,
     ['/students/s1', student(status)],
   ]);
   renderWithClient(<StudentProfilePage studentId="s1" />);
@@ -37,8 +41,18 @@ describe('StudentProfilePage «جدّد الاشتراك» (owner 2026-10-15)', 
     expect(screen.getByRole('link', { name: t.booking.open }).getAttribute('href')).toBe('/admin/book?studentId=s1');
   });
 
-  it('a subscribed or not-yet-subscribed student: no renewal', async () => {
+  it('owner 2026-11-17: a subscribed student renews ANY time (the start day picked in the dialog)', async () => {
     renderPage('active');
+    expect(await screen.findByRole('button', { name: t.students.renew })).toBeTruthy();
+  });
+
+  it('a student without any package: no renewal', async () => {
+    routeFetch(apiFetch, [
+      ['/students/s1/balance', balanceOf([])],
+      ...LISTS,
+      ['/students/s1', student('new')],
+    ]);
+    renderWithClient(<StudentProfilePage studentId="s1" />);
     await screen.findByRole('link', { name: t.booking.open });
     expect(screen.queryByRole('button', { name: t.students.renew })).toBeNull();
   });

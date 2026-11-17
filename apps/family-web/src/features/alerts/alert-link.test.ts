@@ -22,6 +22,18 @@ describe('alertLink: where a bell row opens on the family pages', () => {
     });
   });
 
+  it('a live lesson or a chat message opens the child’s page («القادمة»)', () => {
+    expect(alertLink({ screen: 'live', studentId: 's1', lessonId: 'l1' }, 'guardian')).toEqual({
+      to: '/children/$studentId',
+      params: { studentId: 's1' },
+      search: { tab: undefined },
+    });
+    expect(alertLink({ screen: 'chat', studentId: 's1' }, 'student')).toEqual({
+      to: '/portal',
+      search: { tab: undefined },
+    });
+  });
+
   it('no child named: the week', () => {
     expect(alertLink({ screen: 'schedule' }, 'student')).toEqual({ to: '/schedule' });
   });

@@ -19,28 +19,42 @@ function GapNames({ gaps }: { gaps: readonly string[] }) {
   );
 }
 
-type ScopeView = Partial<Pick<LineCheckView, 'crm_send_scope' | 'crm_template_scopes_missing'>>;
+type ScopeView = Partial<
+  Pick<LineCheckView, 'crm_send_scope' | 'crm_template_scopes_missing' | 'crm_read_scopes_missing'>
+>;
+
+/** «ينقص … صلاحية {scopes} …» with the scopes as an LTR island; nothing when none is lacking. */
+interface ScopeNoteProps {
+  text: string;
+  lacking: readonly string[] | null | undefined;
+}
+
+function ScopeNote({ text, lacking }: ScopeNoteProps) {
+  const [before, after = ''] = text.split('{scopes}');
+  if (!lacking?.length) return null;
+  return (
+    <p className="text-act">
+      {before}
+      <Ltr className={WRAP}>{lacking.join(', ')}</Ltr>
+      {after}
+    </p>
+  );
+}
 type DriverView = Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone'> & ScopeView;
 
 /**
- * A crm line's key (GET /me): messages:send or not, and the template scopes «مزامنة» and «إرسال إلى
- * ميتا» need (docs/39) when it lacks them. Unknown (the call failed) shows nothing.
+ * A crm line's key (GET /me): messages:send or not, the template scopes «مزامنة» and «إرسال إلى
+ * ميتا» need (docs/39), and the read scopes that confirm a timed-out send (docs/19), when it lacks
+ * them. Unknown (the call failed) shows nothing.
  */
 function CrmScopes({ view }: { view: ScopeView }) {
   const s = t.templates.settings.lines;
-  const lacking = view.crm_template_scopes_missing ?? [];
-  const [before, after = ''] = s.crmTemplateScopesMissing.split('{scopes}');
   return (
     <>
       {view.crm_send_scope === false && <p className="text-act">{s.crmScopeMissing}</p>}
       {view.crm_send_scope === true && <p className="text-ok">{s.crmScopeOk}</p>}
-      {lacking.length > 0 && (
-        <p className="text-act">
-          {before}
-          <Ltr className={WRAP}>{lacking.join(', ')}</Ltr>
-          {after}
-        </p>
-      )}
+      <ScopeNote text={s.crmTemplateScopesMissing} lacking={view.crm_template_scopes_missing} />
+      <ScopeNote text={s.crmReadScopesMissing} lacking={view.crm_read_scopes_missing} />
     </>
   );
 }

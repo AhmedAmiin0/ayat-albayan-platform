@@ -4,7 +4,8 @@ import { fakeExpo, fakePushDb, flushPushes, pushService } from '@/common/push/pu
 import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import type { FamilyPushRepo } from './family-push.repo';
 import { FamilyPushService } from './family-push.service';
-import type { FamilyLesson, FamilyStudent, SentReport } from './family-push.plan';
+import type { FamilyStudent } from '@/common/push/family-readers';
+import type { FamilyLesson, SentReport } from './family-push.plan';
 
 const NOW = new Date('2026-11-14T16:00:00Z');
 const min = (m: number) => new Date(NOW.getTime() + m * 60_000).toISOString();

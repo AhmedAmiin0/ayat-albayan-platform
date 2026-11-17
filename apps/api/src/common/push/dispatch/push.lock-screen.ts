@@ -30,8 +30,13 @@ export function redact(text: string): string {
   return text.replace(EMAIL, '•••').replace(AMOUNT, '•••').replace(PHONE, maskPhone);
 }
 
-/** Compound first names («عبد الرحمن», «أبو بكر»): the first word alone means nothing. */
-const NAME_PREFIXES: ReadonlySet<string> = new Set(['عبد', 'أبو', 'ابو', 'أبي', 'أم', 'ام']);
+/**
+ * Compound first names («عبد الرحمن», «أبو بكر»), a title («أ. هدى») and a chat's role word
+ * («ولي الأمر»): the first word alone means nothing.
+ */
+const NAME_PREFIXES: ReadonlySet<string> = new Set([
+  'عبد', 'أبو', 'ابو', 'أبي', 'أم', 'ام', 'أ.', 'ولي',
+]);
 
 function firstName(value: string): string {
   const [first = value, second] = value.trim().split(/\s+/);

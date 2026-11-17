@@ -49,6 +49,18 @@ describe('people-edit forms', () => {
       'phone_e164',
     ]);
   });
+
+  it("the student's own number: E.164, sent only when changed, blank removes it", () => {
+    const initial = studentFormOf({ ...VIEW.student, phone_e164: '+966500000007' });
+    expect(initial.phone_e164).toBe('+966500000007');
+    const moved = studentPatchOf(initial, { ...initial, phone_e164: '00966 50 000 0008' });
+    expect(moved).toEqual({ patch: { phone_e164: '+966500000008' }, invalid: [] });
+    const removed = studentPatchOf(initial, { ...initial, phone_e164: ' ' });
+    expect(removed).toEqual({ patch: { phone_e164: null }, invalid: [] });
+    const bad = studentPatchOf(initial, { ...initial, phone_e164: 'abc' });
+    expect(bad.invalid).toEqual(['phone_e164']);
+    expect(studentFormOf(VIEW.student).phone_e164).toBe('');
+  });
 });
 
 describe('newFamilyOf', () => {

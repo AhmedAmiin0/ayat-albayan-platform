@@ -10,10 +10,12 @@ interface CoursePauseActionProps {
   studentId: string;
   /** «أُوقفت الدورة مؤقتًا»: the page's toast (the head's «⋯» menu hides its children on phones). */
   onDone: (message: string) => void;
+  /** What the action does, under it («الدورة والباقة», owner 2026-11-17). */
+  hint?: string;
 }
 
 /** «إيقاف مؤقت» in the student file's head: only with courses.pause and while no pause is open. */
-export function CoursePauseAction({ studentId, onDone }: CoursePauseActionProps) {
+export function CoursePauseAction({ studentId, onDone, hint }: CoursePauseActionProps) {
   const { can } = usePermissions();
   const allowed = can('courses.pause');
   const state = useQuery({ ...coursePauseQuery(studentId), enabled: allowed });
@@ -22,9 +24,12 @@ export function CoursePauseAction({ studentId, onDone }: CoursePauseActionProps)
   return (
     <>
       {offered && (
-        <Button type="button" variant="secondary" onClick={() => setSheet(true)}>
-          {t.coursePause.action}
-        </Button>
+        <div className="grid justify-items-start gap-1">
+          <Button type="button" variant="secondary" onClick={() => setSheet(true)}>
+            {t.coursePause.action}
+          </Button>
+          {hint && <p className="text-xs text-ink-3">{hint}</p>}
+        </div>
       )}
       {sheet && (
         <CoursePauseSheet

@@ -26,6 +26,10 @@ const LINKS: Linkers = {
   }),
   child: ({ studentId }, kind) => CHILD_PAGE[kind](studentId),
   package: ({ studentId }, kind) => CHILD_PAGE[kind](studentId, 'package'),
+  // No chat on the family web yet (family_chat_enabled defaults off): the child's page.
+  chat: ({ studentId }, kind) => CHILD_PAGE[kind](studentId),
+  // «بدأت الحلقة»: «القادمة», where the lesson's card joins the room in the page.
+  live: ({ studentId }, kind) => CHILD_PAGE[kind](studentId),
   schedule: () => ({ to: '/schedule' }),
 };
 

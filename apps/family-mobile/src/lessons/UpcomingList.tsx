@@ -1,10 +1,13 @@
 import { isAhead } from '@ab/client-core';
-import type { PortalLesson, PortalStudent } from '@ab/shared';
+import { firstName, type PortalLesson, type PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, InsetGroup, t, type, useTheme } from '@ab/mobile-kit';
 import { DateTile } from '@/ui';
 import { useFamilyClock } from '@/portal';
 import { dayTile, rangeText, teacherText } from './lesson-text';
+import { LessonChip } from './options/LessonChip';
+import { RequestLine } from './options/RequestLine';
+import { OptionsRow } from './OptionsRow';
 
 interface UpcomingListProps {
   lessons: readonly PortalLesson[];
@@ -14,7 +17,10 @@ interface UpcomingListProps {
   own?: boolean;
 }
 
-/** «الحلقات القادمة» after the next one: the day, the time range and the teacher. */
+/**
+ * «الحلقات القادمة» after the next one: the day, the time range and the teacher; a row opens
+ * «خيارات الحلقة» (OptionsRow).
+ */
 export function UpcomingList({ lessons, student, now, own = false }: UpcomingListProps) {
   const { color } = useTheme();
   const clock = { ...useFamilyClock(), tz: student.tz };
@@ -32,14 +38,22 @@ export function UpcomingList({ lessons, student, now, own = false }: UpcomingLis
             style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 }}
           >
             <DateTile {...dayTile(new Date(lesson.starts_at), clock)} />
-            <View style={{ flex: 1, gap: 2 }}>
+            <OptionsRow lesson={lesson} student={student} clock={clock} now={now}>
               <AppText style={{ fontFamily: type.ui[600], color: color.ink }}>
                 {rangeText(lesson, clock)}
               </AppText>
               <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>
                 {teacherText(lesson.teacher)}
               </AppText>
-            </View>
+              <RequestLine
+                lesson={lesson}
+                clock={clock}
+                ink={color.ink2}
+                now={now}
+                student={firstName(student.name)}
+              />
+            </OptionsRow>
+            <LessonChip lesson={lesson} />
           </View>
         ))}
       </InsetGroup>

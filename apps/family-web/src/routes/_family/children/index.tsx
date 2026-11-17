@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ChildrenPage } from '@/features/children';
-import { requireTab, WithHome } from '@/features/shell';
+import { PickChildPage } from '@/features/children';
+import { requirePicker, WithHome } from '@/features/shell';
 
-/** «أبنائي»: a guardian's tab only. */
+/** «اختر الطالب»: a guardian of several children switches the child the pages work as. */
 export const Route = createFileRoute('/_family/children/')({
-  beforeLoad: ({ context }) => requireTab(context, 'children'),
-  component: () => <WithHome>{(home) => <ChildrenPage home={home} />}</WithHome>,
+  beforeLoad: ({ context }) => requirePicker(context),
+  component: () => <WithHome>{(home) => <PickChildPage home={home} />}</WithHome>,
 });

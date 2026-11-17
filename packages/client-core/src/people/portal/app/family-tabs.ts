@@ -1,20 +1,24 @@
-import type { PortalKind } from '@ab/shared';
+import type { FamilyPick } from './family-pick.js';
 
-// The family app's bottom tabs per login (owner 2026-11-15, docs/50 §6): a guardian follows their
-// children («أبنائي»), a student their own reports. A student never gets «أبنائي» (nor money:
-// seesMoney). Reports of a guardian's child live inside the child («حضرها» → the report).
+// The family app's bottom tabs (owner 2026-11-15, 2026-11-16, docs/50 §6): every login works as
+// one student at a time (a guardian picks a child: family-pick.ts), so the bar is the student's,
+// الرئيسية · الجدول · التقارير · حسابي. «التقارير» waits for that student (none: never shown).
 
-export const FAMILY_TABS = ['home', 'schedule', 'children', 'reports', 'account'] as const;
+export const FAMILY_TABS = ['home', 'schedule', 'reports', 'account'] as const;
 export type FamilyTab = (typeof FAMILY_TABS)[number];
 
-const TABS_OF: Readonly<Record<PortalKind, readonly FamilyTab[]>> = {
-  guardian: ['home', 'schedule', 'children', 'account'],
-  student: ['home', 'schedule', 'reports', 'account'],
+const NO_STUDENT: readonly FamilyTab[] = ['home', 'schedule', 'account'];
+
+const TABS_OF: Readonly<Record<FamilyPick['state'], readonly FamilyTab[]>> = {
+  one: FAMILY_TABS,
+  loading: NO_STUDENT,
+  choose: NO_STUDENT,
+  empty: NO_STUDENT,
 };
 
-/** The tab bar of this login, in order (the first sits at the inline-start). */
-export const familyTabs = (kind: PortalKind): readonly FamilyTab[] => TABS_OF[kind];
+/** The tab bar for the student in view, in order (the first sits at the inline-start). */
+export const familyTabs = (pick: FamilyPick): readonly FamilyTab[] => TABS_OF[pick.state];
 
-/** Whether this login's bar has `tab` (a hidden tab is a protected route: unreachable). */
-export const hasFamilyTab = (kind: PortalKind, tab: FamilyTab): boolean =>
-  TABS_OF[kind].includes(tab);
+/** Whether the bar has `tab` (a hidden tab is a protected route: unreachable). */
+export const hasFamilyTab = (pick: FamilyPick, tab: FamilyTab): boolean =>
+  familyTabs(pick).includes(tab);

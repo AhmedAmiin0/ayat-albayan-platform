@@ -58,6 +58,14 @@ describe('NOTIFICATION_CATALOGUE matches today', () => {
     expect(NOTIFICATION_CATALOGUE.filter((e) => e.locked).map((e) => e.key)).toEqual(['reminder_failed']);
   });
 
+  it('a chat message reaches its teacher, the family and the assistant (owner 2026-11-16)', () => {
+    expect(notificationEntry('channel_message')).toMatchObject({
+      audience: 'teacher',
+      alsoTo: ['guardian', 'staff'],
+      channels: ['bell', 'push'],
+    });
+  });
+
   it('hand sends are WhatsApp only and never automatic; staff rows never use WhatsApp', () => {
     for (const e of NOTIFICATION_CATALOGUE) {
       if (e.manual) expect([e.automatic, [...e.channels]], e.key).toEqual([false, ['whatsapp']]);

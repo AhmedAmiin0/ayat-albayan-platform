@@ -28,6 +28,16 @@ describe('LessonAction «ادخل الحلقة»', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lessons/l1/join');
   });
 
+  it('our classroom says «تُسجَّل هذه الجلسة» before the join, as every other door into the room', () => {
+    show({});
+    expect(screen.getByText(t.classroom.recordedNotice)).toBeTruthy();
+  });
+
+  it('an external lesson (not our recorder) has no recording notice', () => {
+    show({ way_in: 'external', meeting_url: 'https://meet.example.org/abc' });
+    expect(screen.queryByText(t.classroom.recordedNotice)).toBeNull();
+  });
+
   it('a cancelled lesson says so; a finished one says the time is over, before anything else', () => {
     show({ status: 'cancelled_by_teacher', way_in: 'none' });
     expect(screen.getByText(t.portal.cancelled)).toBeTruthy();

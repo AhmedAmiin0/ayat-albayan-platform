@@ -21,7 +21,8 @@ forgot password), R-NFR-02/03 (RLS, audit).
 
 | Who | Tab on /login | Identifier | Secret | Profile (role) |
 |-----|---------------|------------|--------|----------------|
-| The family's WhatsApp contact: a parent, or an adult student who is their own contact | «الأسرة والطلاب» | the guardian row's phone | a 6-digit WhatsApp code | `guardian`, linked by `guardians.profile_id` |
+| The family's WhatsApp contact: a parent, or an adult student who is their own contact | «الأسرة والطلاب» | the family's main **or second** number (`guardian_phones`) | a 6-digit WhatsApp code, sent to that number | `guardian`, linked by `guardians.profile_id` |
+| A student with a WhatsApp number of their own (owner 2026-11-17, phone first) | «الأسرة والطلاب» | the student's own number (`guardian_phones.student_id`, set by staff in «تعديل البيانات») | a 6-digit WhatsApp code, sent to that number | `student` (the same `s-<id>` login as the password), made at the first code |
 | A child student | «الأسرة والطلاب» → «اسم المستخدم» | `students.code` (case-insensitive: `ab-1234` works) | a password the student chose | `student`, linked by `students.profile_id` |
 | A child's first sign-in («أول دخول؟») | «الأسرة والطلاب» | `students.code` | a code sent to the **guardian's** phone, then a new password | creates the `student` profile |
 | Teacher | «فريق الأكاديمية» | the username the admin picked **or** their email | password | `teacher` (unchanged) |

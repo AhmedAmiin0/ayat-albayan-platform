@@ -2,17 +2,25 @@ import { type MessageView, pdfBubbleName, pdfMetaLine } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
-import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
+import {
+  t,
+  shape,
+  type,
+  useTheme,
+  AppText,
+  useSmallText,
+  A4,
+  imageRatio,
+  PdfBadge,
+  PdfStrip,
+} from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
-import { useSmall } from '@/inbox/messages/components/MessageMeta';
 import { finalError, pdfPageQuery } from '@/inbox/messages/hooks/thread-file';
 import { useSeen } from '@/inbox/messages/hooks/seen-rows';
 import { MediaNote, problemText } from './MediaNote';
 import { mediaProblem } from './media-problem';
-import { A4, imageRatio } from './PdfPage';
-import { PdfBadge, PdfStrip } from './PdfStrip';
-import { PdfViewer } from './PdfViewer';
+import { ThreadPdfViewer } from './ThreadPdfViewer';
 
 interface PdfPreviewProps {
   message: MessageView;
@@ -42,7 +50,7 @@ const resigned = new Set<string>();
  */
 export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: PdfPreviewProps) {
   const { color } = useTheme();
-  const small = useSmall();
+  const small = useSmallText();
   const client = useQueryClient();
   const query = pdfPageQuery(phone, m.id, 1);
   const first = useQuery({ ...query, enabled: useSeen(m.id) });
@@ -131,7 +139,7 @@ export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: P
         </View>
       </Pressable>
       <DownloadLink message={m} phone={phone} />
-      {open && doc ? <PdfViewer message={m} phone={phone} doc={doc} name={name} onClose={() => setOpen(false)} /> : null}
+      {open && doc ? <ThreadPdfViewer message={m} phone={phone} doc={doc} name={name} onClose={() => setOpen(false)} /> : null}
     </View>
   );
 }

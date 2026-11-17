@@ -1,8 +1,17 @@
 import type { ChannelPage } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { CHANNEL_WRITES, channelMessagesPath, channelReadPath, channelTimeText, olderCursor, threadMessages } from './channels.js';
+import {
+  CHANNEL_WRITES,
+  channelMessagesPath,
+  channelReadPath,
+  channelTimeText,
+  channelUploadPath,
+  olderCursor,
+  threadMessages,
+} from './channels.js';
 
-const msg = (id: string, at: string) => ({ id, body: id, sender_role: 'guardian' as const, sender_name: '', mine: false, created_at: at, edited: false, deleted: false });
+const NEW = { kind: 'text', attachment: null, reply_to: null, read_by_all: false, client_id: null } as const;
+const msg = (id: string, at: string) => ({ id, body: id, sender_role: 'guardian' as const, sender_name: '', mine: false, created_at: at, edited: false, deleted: false, ...NEW });
 
 describe('student channel paths and pages (docs/31 §2)', () => {
   it('each audience reads its own route; before is encoded', () => {
@@ -13,15 +22,21 @@ describe('student channel paths and pages (docs/31 §2)', () => {
       '/sales/students/s1/channel/messages?before=2026-10-27T10%3A00%3A00%2B03%3A00',
     );
     expect(channelReadPath('portal', 's1')).toBe('/portal/students/s1/channel/read');
+    expect(channelUploadPath('teacher', 's1')).toBe('/teachers/me/channels/s1/attachments/upload-url');
+    expect(channelUploadPath('sales', 's1')).toBe('/sales/students/s1/channel/attachments/upload-url');
   });
 
-  it('only participants write', () => {
-    expect(CHANNEL_WRITES).toEqual({ teacher: true, portal: true, admin: false, sales: false });
+  it('participants write, the owning assistant too (owner 2026-11-16); the admin monitor reads', () => {
+    expect(CHANNEL_WRITES).toEqual({ teacher: true, portal: true, admin: false, sales: true });
+    expect(channelReadPath('sales', 's1')).toBe('/sales/students/s1/channel/read');
+    expect(channelMessagesPath({ audience: 'sales', studentId: 's1' })).toBe('/sales/students/s1/channel/messages');
   });
 
   it('pages: the next cursor is the oldest shown while more exist; all pages read oldest first', () => {
-    const newest: ChannelPage = { student_name: 'سلمى', messages: [msg('c', '3'), msg('d', '4')], has_more: true, read_only: false, open: true, channel_id: 'c1' };
-    const older: ChannelPage = { student_name: 'سلمى', messages: [msg('a', '1'), msg('b', '2')], has_more: false, read_only: false, open: true, channel_id: 'c1' };
+    const base = { student_name: 'سلمى', read_only: false, open: true, closed_reason: null, channel_id: 'c1' };
+    const people = { participants: [], my_last_read_at: null };
+    const newest: ChannelPage = { ...base, ...people, messages: [msg('c', '3'), msg('d', '4')], has_more: true };
+    const older: ChannelPage = { ...base, ...people, messages: [msg('a', '1'), msg('b', '2')], has_more: false };
     expect(olderCursor(newest)).toBe('3');
     expect(olderCursor(older)).toBeUndefined();
     expect(threadMessages([newest, older]).map((m) => m.id)).toEqual(['a', 'b', 'c', 'd']);

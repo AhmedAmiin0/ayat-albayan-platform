@@ -4,12 +4,11 @@ import {
   AgendaDayView,
   availabilityLine,
   headerLine,
-  PeriodSwitcher,
   weekLabel,
   weekStart,
 } from '@/calendar';
 import { useClockCycle, zoneNote } from '@/core/lib/clock';
-import { t, ErrorState, useTabBarInset } from '@ab/mobile-kit';
+import { t, ErrorState, PeriodSwitcher, useTabBarInset } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { ScheduleSheet } from './ScheduleSheet';
 import { useScheduleWeek } from './use-schedule-week';

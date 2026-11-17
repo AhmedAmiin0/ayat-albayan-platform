@@ -13,7 +13,8 @@ const CONFIG_GROUPS: Record<string, string[]> = {
     'lesson_confirmation_required', 'lesson_outcome_grace_minutes'],
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
     'meeting_link_auto', 'meetings_in_app'],
-  reports: ['report_teacher_edit_minutes', 'report_teacher_edit_hours', 'report_form_v2', 'short_link_base'],
+  reports: ['report_teacher_edit_minutes', 'report_teacher_edit_hours', 'report_form_v2', 'short_link_base',
+    'short_link_default_days', 'short_link_purge_days', 'short_link_extra_hosts'],
   accounts: ['reporting_currency', 'renewal_alert_remaining', 'subscription_expiry_days', 'flag_future_lessons_when_unpaid', 'refund_attended_rate_percent', 'fx_fresh_hours'],
   payouts: ['payout_count_late', 'payout_count_no_show', 'payout_count_trials'],
   uploads: ['upload_max_mb'],
@@ -25,7 +26,7 @@ const CONFIG_GROUPS: Record<string, string[]> = {
   teachers: ['teacher_chats_enabled', 'teacher_student_messages_enabled', 'teacher_earnings_enabled',
     'teacher_statements_enabled', 'teacher_feedback_enabled', 'teacher_internal_meetings_enabled',
     'teacher_scheduled_meetings_enabled'],
-  family: ['family_chat_enabled', 'family_payment_instructions'],
+  family: ['family_chat_enabled', 'family_meetings_in_app', 'family_payment_instructions'],
 };
 /** docs/26 §1: the 8 notification keys (owned by «الإشعارات» from 23-P4) and the send-gate keys. */
 const NOTIFICATION_KEYS = [
@@ -43,9 +44,9 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
     expect(missing).toEqual([]);
   });
 
-  it('the 48 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + renewal_commission_enabled, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33, + sales_require_assignee, docs/16 row 39, + lesson_confirmation_required, lesson_outcome_grace_minutes, + short_link_base, + refund_attended_rate_percent, + report_teacher_edit_minutes, docs/46, + the 7 teacher page switches, + the 2 family app keys, docs/50) sit in their «القيم» group, scope config', () => {
+  it('the 48 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + renewal_commission_enabled, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33, + sales_require_assignee, docs/16 row 39, + lesson_confirmation_required, lesson_outcome_grace_minutes, + short_link_base, + refund_attended_rate_percent, + report_teacher_edit_minutes, docs/46, + the 7 teacher page switches, + the 3 family app keys, docs/50, + the 3 managed short link keys, docs/19) sit in their «القيم» group, scope config', () => {
     const config = Object.values(CONFIG_GROUPS).flat();
-    expect(config).toHaveLength(57);
+    expect(config).toHaveLength(61);
     for (const [group, keys] of Object.entries(CONFIG_GROUPS)) expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });

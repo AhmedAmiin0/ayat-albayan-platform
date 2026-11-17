@@ -68,6 +68,14 @@ export class StudentRecordsRepo {
     return data;
   }
 
+  /** The student's own number (guardian_phones.student_id): the delete cascades it away. */
+  async ownPhone(id: string): Promise<string | null> {
+    const query = this.db.from('guardian_phones').select('phone_e164').eq('student_id', id);
+    const { data, error } = await query.maybeSingle();
+    if (error) throw dbError(error);
+    return data?.phone_e164 ?? null;
+  }
+
   /** null = gone or given a login meanwhile; 409 student_has_records when a row appeared. */
   async removeEmpty(id: string): Promise<StudentRow | null> {
     const query = this.db.from('students').delete().eq('id', id).is('profile_id', null);

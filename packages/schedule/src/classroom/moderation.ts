@@ -72,3 +72,6 @@ export interface LessonRecordingView {
   /** Signed download link (1 h) once the file exists; null while recording or on failure. */
   url: string | null;
 }
+
+/** «إنهاء الحلقة للجميع» (POST /lessons/:id/end) is the lesson's teacher's or an admin's. */
+export const canEndLesson = (actor: JoinRole | null): boolean => actor === 'teacher' || actor === 'admin';

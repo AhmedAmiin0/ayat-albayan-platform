@@ -1,9 +1,4 @@
-import {
-  CHANNEL_GUARDIAN_ONLY,
-  FAMILY_CHAT_OFF,
-  familyChats,
-  type ChannelSenderRole,
-} from '@ab/shared';
+import { FAMILY_CHAT_OFF, type ChannelSenderRole } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
@@ -14,9 +9,10 @@ import { ChannelRepo } from './channel.repo';
 import { FamilyChatSettings } from './family-chat.settings';
 
 /**
- * Who is in a channel and how: a participant writes and has read marks; a monitor only reads. `open`:
- * channel_is_open (owner 2026-10-29: subscribed and a teacher assigned); a closed one is the participants'
- * empty closed state (409 channel_not_open on a write) while a monitor still reads.
+ * Who is in a channel and how: a participant writes and has read marks; a monitor only reads.
+ * `open`: channel_is_open (owner 2026-10-29: subscribed and a teacher assigned); a closed one is
+ * the participants' empty closed state (409 channel_not_open on a write) while a monitor still
+ * reads.
  */
 export type ChannelActor =
   | { mode: 'participant'; studentId: string; profileId: string; role: ChannelSenderRole; open: boolean }
@@ -33,10 +29,11 @@ export class AccessDeps {
 }
 
 /**
- * docs/31 §2, rule 9 server-side. Participants: the student's current teacher(s) (channel_teacher_ids), the
- * guardian login of the student, and the student's own login only when the student is their own contact
- * (familyChats, owner 2026-10-29: a child's own login is 403 channel_guardian_only). Monitors (read-only): anyone
- * the route's student_channels.monitor key let in, and the owning assistant (sales ownership). Another
+ * docs/31 §2, rule 9 server-side. Participants: the student's current teacher(s)
+ * (channel_teacher_ids), the guardian login of the student, and the student's own login, a
+ * child's too (owner 2026-11-16: «the child can chat normally»), and the one assistant in the
+ * chat's seat (owner 2026-11-16: «any assistant can subscribe to the chating channel but only
+ * 1»). Monitors (read-only): anyone the route's student_channels.monitor key let in. Another
  * teacher, family or assistant is 404 student_not_found (as an unknown id).
  * Every family path is 403 family_chat_off while settings.family_chat_enabled is off (docs/50 §2).
  */
@@ -56,11 +53,10 @@ export class ChannelAccess {
   }
 
   async family(user: AuthUser, studentId: string): Promise<ChannelActor> {
-    const student = await this.deps.portal.student(user, studentId);
+    await this.deps.portal.student(user, studentId);
     // After the scope: another family's id stays 404 whatever the switch (docs/50 §4).
     if (!(await this.deps.familyChat.enabled())) throw forbidden(FAMILY_CHAT_OFF);
     if (user.role !== 'guardian' && user.role !== 'student') throw new ForbiddenException();
-    if (!familyChats({ kind: user.role, contactIsSelf: student.contact_is_self })) throw forbidden(CHANNEL_GUARDIAN_ONLY);
     return { mode: 'participant', studentId, profileId: user.id, role: user.role, open: await this.queries.isOpen(studentId) };
   }
 
@@ -70,9 +66,14 @@ export class ChannelAccess {
     return { mode: 'monitor', studentId, profileId: user.id, open: await this.queries.isOpen(studentId) };
   }
 
-  /** The owning assistant: her leads' families and the students she brought (ownershipOf). */
-  async owner(user: AuthUser, studentId: string): Promise<ChannelActor> {
-    if (!(await this.people.ownedStudentIds(user.id)).includes(studentId)) throw notFound('student_not_found');
-    return { mode: 'monitor', studentId, profileId: user.id, open: await this.queries.isOpen(studentId) };
+  /**
+   * The seat holder (ChannelPeopleRepo.assistantId; owner 2026-11-16 «… but only 1») writes as
+   * 'sales' on an open channel and reads a closed one as a monitor. The seat is not sales
+   * ownership: it grants no money, lead or commission scope.
+   */
+  async assistant(user: AuthUser, studentId: string): Promise<ChannelActor> {
+    if ((await this.people.assistantId(studentId)) !== user.id) throw notFound('student_not_found');
+    const seat = { studentId, profileId: user.id, open: await this.queries.isOpen(studentId) };
+    return seat.open ? { ...seat, mode: 'participant', role: 'sales' } : { ...seat, mode: 'monitor' };
   }
 }

@@ -7,7 +7,7 @@ import { mapListRow } from './users.rows';
 import type { RefRow, UserRow } from './users.store';
 
 const PROFILE =
-  'id, full_name, role, role_id, disabled_at, disabled_reason, phone_e164, locale, tz, created_at, username';
+  'id, full_name, role, role_id, disabled_at, disabled_reason, phone_e164, locale, tz, created_at, username, is_test';
 
 /** A family login's synthetic email (docs/30 §2) is never shown. */
 const visibleEmail = (email: string | undefined): string | null =>
@@ -38,7 +38,17 @@ export class UsersRepo {
       listArgs(query, query.pageSize, (query.page - 1) * query.pageSize),
     );
     if (error) throw dbError(error);
-    return { rows: data.map(mapListRow), total: data[0]?.total ?? (await this.totalBeyond(query)) };
+    const tests = await this.testLogins(data.map((r) => r.id));
+    const rows = data.map((r) => ({ ...mapListRow(r), is_test: tests.has(r.id) }));
+    return { rows, total: data[0]?.total ?? (await this.totalBeyond(query)) };
+  }
+
+  /** The page's test logins (profiles.is_test, docs/56), for the «تجريبي» chip. */
+  private async testLogins(ids: readonly string[]): Promise<Set<string>> {
+    if (ids.length === 0) return new Set();
+    const { data, error } = await this.db.from('profiles').select('id').in('id', ids).eq('is_test', true);
+    if (error) throw dbError(error);
+    return new Set(data.map((p) => p.id));
   }
 
   /** A page past the last has no row to carry the total: the first row of page 1 does. */
@@ -66,6 +76,7 @@ export class UsersRepo {
       id: p.id,
       email: visibleEmail(auth.data.user?.email),
       username: p.username,
+      is_test: p.is_test,
       full_name: p.full_name,
       phone_e164: p.phone_e164,
       role: p.role,

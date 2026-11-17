@@ -12,7 +12,8 @@ import type { LineMode } from './whatsapp/env.whatsapp';
 import { WEB_PUSH_SHAPE } from './env.web-push';
 import { CALLS_SHAPE } from './env.calls';
 import { LOGIN_CODE_SHAPE } from './env.login-code';
-import { LIVEKIT_SHAPE } from './env.livekit';
+import { LIVEKIT_SHAPE, overlayPinned } from './env.livekit';
+import { RECORDING_SHAPE } from './env.recording';
 import { STRIPE_SHAPE } from './env.stripe';
 import { STORAGE_SHAPE } from './env.storage';
 import { SENDER_SHAPE } from './whatsapp/env.sender';
@@ -86,16 +87,7 @@ const schema = z.object({
   ...LOGIN_CODE_SHAPE, ...LIVEKIT_SHAPE,
   GIPHY_API_KEY: optionalSecret,
   ...STRIPE_SHAPE,
-  ...STORAGE_SHAPE, ...SENDER_SHAPE,
-  /**
-   * Lesson recordings (env.recording.ts): the Supabase Storage S3 endpoint the LiveKit egress
-   * uploads the MP4s to. All five or none: unset = lessons are not recorded, nothing else changes.
-   */
-  RECORDING_S3_ENDPOINT: z.preprocess(blankIsUnset, z.url().optional()),
-  RECORDING_S3_REGION: optionalSecret,
-  RECORDING_S3_BUCKET: optionalSecret,
-  RECORDING_S3_ACCESS_KEY: optionalSecret,
-  RECORDING_S3_SECRET: optionalSecret,
+  ...STORAGE_SHAPE, ...SENDER_SHAPE, ...RECORDING_SHAPE,
   /**
    * How long the academy settings stay cached in memory (ms, default 30 s). A PATCH /settings on
    * this instance clears the cache at once; the TTL covers other instances and direct SQL writes.
@@ -143,7 +135,7 @@ export function validOverlay(raw: Readonly<Record<string, string>>, onBad: (key:
   const out: Record<string, string> = {};
   for (const [key, value] of Object.entries(raw)) {
     if (!isIntegrationKey(key) || value.trim() === '') continue;
-    if (schema.shape[key].safeParse(value).success) out[key] = value;
+    if (schema.shape[key].safeParse(value).success && overlayPinned(key, value)) out[key] = value;
     else onBad(key);
   }
   return out;

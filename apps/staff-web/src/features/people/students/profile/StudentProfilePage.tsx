@@ -31,12 +31,12 @@ import { CreateAccountButton } from '@/features/people/users/create/CreateAccoun
 import { TrialDatesSection } from '@/features/teaching/booking/trial-date/TrialDatesSection';
 import { MonitorChannel } from '@/features/teaching/student-channel';
 import { usePermissions } from '@/features/people/auth';
-import { CoursePauseAction, CoursePausePanel } from '@/features/teaching/course-pause';
-import { ProfileCourseActions } from '@/features/teaching/course-actions';
+import { CourseCardPanel } from '@/features/teaching/course-actions';
+import { TestChip, TestFlagSwitch } from '@/features/people/test-accounts';
 
-/** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */
+/** Once the package ended «جدّد الاشتراك» leads the head; before, it waits in «⋯» (2026-11-17). */
 const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
-  ended ? { primary: nodes.renew, extra: nodes.book } : { primary: nodes.book, extra: null };
+  ended ? { primary: nodes.renew, extra: nodes.book } : { primary: nodes.book, extra: nodes.renew };
 
 /**
  * Student profile (R-STU-04, R-STU-05) inside the shell's Page: the name is the cartouche, then
@@ -55,9 +55,9 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
     const notFound = error instanceof ApiError && error.status === 404;
     return <FormAlert>{notFound ? t.common.notFound : t.common.error}</FormAlert>;
   }
-
   // The family's second number (owner 2026-10-29), linked from a lead chat; removed from «تعديل ولي الأمر».
   const second = secondPhoneOf(student.guardian.phones);
+  const chatPhone = student.guardian.phone_e164;
   const meta = [
     [t.students.code, <Ltr key="c">{student.code ?? '—'}</Ltr>],
     [t.students.guardian, (
@@ -84,13 +84,15 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       {t.booking.open}
     </Link>
   );
-  const head = headOf(isPackageEnded(student.status), { renew: <RenewSubscriptionButton student={student} primary />, book });
+  const ended = isPackageEnded(student.status);
+  const head = headOf(ended, { renew: <RenewSubscriptionButton student={student} primary={ended} />, book });
 
   return (
     <>
       <PageHead className="mb-3">
         <Cartouche>{student.name}</Cartouche>
         <StatusChip {...studentStatusStyle[student.status]} label={t.enums.studentStatus[student.status]} />
+        <TestChip when={student.is_test === true} />
         <HeadActions
           primary={head.primary}
           more={
@@ -103,13 +105,10 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                 {t.guardians.edit}
               </Button>
               <CreateAccountButton student={student} />
-              <CoursePauseAction studentId={student.id} onDone={setNotice} />
-              <ProfileCourseActions studentId={student.id} onDone={setNotice} />
             </>
           }
         />
       </PageHead>
-      <CoursePausePanel studentId={student.id} onDone={setNotice} />
       <PeopleEditActions studentId={student.id} onRemoved={setRemoved} />
       <dl className="mb-6 flex flex-wrap gap-x-7 gap-y-2 border-b border-rule pb-4 text-sm">
         {meta.map(([term, value]) => (
@@ -121,12 +120,14 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       </dl>
       <StudentFamily siblings={student.siblings} contactIsSelf={student.contact_is_self ?? false} />
       <TrialDatesSection student={student} />
+      <CourseCardPanel studentId={student.id} chatPhone={chatPhone} />
       <BalanceCard student={student} />
       <StudentPayments studentId={student.id} />
       <StudentInvoices studentId={student.id} />
       <StudentRecordings studentId={student.id} role="admin" />
       {can('student_channels.monitor') && <MonitorChannel studentId={student.id} audience="admin" />}
-      <StudentProfileForm key={student.id} student={student} />
+      <TestFlagSwitch target="student" row={student} enabled={can('students.write')} />
+      <StudentProfileForm key={student.id} student={student} chatPhone={chatPhone} />
       <AssistantsManager studentId={student.id} />
       <BroughtByField studentId={student.id} />
       <StudentJoinLink studentId={student.id} />

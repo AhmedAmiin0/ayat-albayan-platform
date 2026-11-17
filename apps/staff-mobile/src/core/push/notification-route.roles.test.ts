@@ -7,10 +7,13 @@ const PHONE = '+966552147730';
 
 /**
  * Does an expo-router file serve this href (`x.tsx`, `x/index.tsx`, or a `[phone].tsx` last segment),
- * in the tree or in its full-screen chat group (`app/(sales-chat)/sales/…`, same URL)?
+ * in the tree or in its full-screen chat group (`app/(sales-chat)/sales/…`, same URL)? A student
+ * chat's id is its `channel/[id].tsx`.
  */
 function routeExists(href: string, tree = ''): boolean {
-  const path = href.replace(/\/[^/]*%2B\d+$/, '/[phone]');
+  const path = href
+    .replace(/\/[^/]*%2B\d+$/, '/[phone]')
+    .replace(/\/channel\/[\w-]+$/, '/channel/[id]');
   const files = ['../../../app', `../../../app/(${tree}-chat)`].flatMap((root) => [`${root}${path}`, `${root}${path}/index`]);
   return files.some((file) => {
     try {
@@ -35,6 +38,8 @@ test.each([
   [{ kind: 'lesson_needs_confirmation', lessonId: 'l1' }, '/sales/today'],
   [{ kind: 'google_sync_alert' }, '/sales/more'],
   [{ kind: 'commission_earned', commissionId: 'c1' }, '/sales/more/earnings'],
+  [{ kind: 'channel_message', studentId: 's-1' }, '/sales/students/channel/s-1'],
+  [{ kind: 'channel_message', studentId: '../x' }, '/sales/students'],
 ])('a salesperson tapping %j opens %s', (data, href) => {
   expect(salesRouteFor(data)).toBe(href);
 });
@@ -49,6 +54,7 @@ test('without inbox.read a message opens «المزيد»; without self.sales_ac
   expect(salesRouteFor({ kind: 'lesson_needs_confirmation' }, none)).toBe('/sales/more');
   expect(salesRouteFor({ kind: 'commission_earned' }, none)).toBe('/sales/more');
   expect(salesRouteFor({ kind: 'commission_earned' }, only('self.sales_earnings'))).toBe('/sales/more/earnings');
+  expect(salesRouteFor({ kind: 'channel_message', studentId: 's-1' }, none)).toBe('/sales/more');
 });
 
 test.each([

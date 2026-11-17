@@ -6,6 +6,7 @@ import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { formatDateTime } from '@/features/sales/leads';
+import { TestChip } from '@/features/people/test-accounts';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useClock } from '@ab/web-kit/lib/clock';
 
@@ -46,6 +47,7 @@ const NameCell = memo(function NameCell({ user, onOpen }: { user: UserView; onOp
       >
         {user.full_name}
       </button>
+      <TestChip when={user.is_test === true} />
     </span>
   );
 });

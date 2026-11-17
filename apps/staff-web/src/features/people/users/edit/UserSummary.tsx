@@ -2,6 +2,7 @@ import type { UserDetail } from '@ab/shared';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { formatDateTime } from '@/features/sales/leads';
+import { TestChip } from '@/features/people/test-accounts';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useClock } from '@ab/web-kit/lib/clock';
 
@@ -18,6 +19,7 @@ export function UserSummary({ user }: { user: UserDetail }) {
         <dd>
           <StatusChip tone={disabled ? 'bad' : 'ok'} glyph={disabled ? 'struck' : 'fill'} label={t.users.status[user.status]} />
         </dd>
+        <TestChip when={user.is_test === true} />
       </div>
       {disabled && user.disabled_reason && <p className="text-xs text-ink-2">{t.users.detail.disabledReason.replace('{reason}', user.disabled_reason)}</p>}
       <div className="flex flex-wrap gap-2">

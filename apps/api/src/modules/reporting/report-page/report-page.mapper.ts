@@ -63,7 +63,7 @@ export function toPageView(input: {
     public_id: row.public_id,
     student: { name: facts.student.name },
     teacher: { name: facts.teacher.display_name_ar },
-    lesson: facts.lesson,
+    lesson: { starts_at: facts.lesson.starts_at, ends_at: facts.lesson.ends_at },
     tz: facts.student.tz,
     report: pageReport(row),
     attachments: pageFiles(row, urls),

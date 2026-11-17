@@ -19,6 +19,7 @@ import { IdentityBlock, MeetingLink } from './IdentityBlock';
 import { ReportFooter } from './ReportFooter';
 import { ReportTextField } from './ReportTextField';
 import { RubricSection } from './RubricSection';
+import { LessonFilesLink } from '@/core/nav/LessonFilesLink';
 import { useReportEntry } from '@/teacher/report/hooks/use-report-entry';
 import { useScrollToInvalid } from '@/teacher/report/hooks/use-scroll-to-invalid';
 
@@ -92,6 +93,7 @@ export function ReportEntryCard({ form, entry, tz, scroll }: ReportEntryCardProp
       <RubricSection s={s} locked={locked} register={register} />
       <Section title={t.reports.notesTitle}>{AFTER_FIELDS.map(text)}</Section>
       <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments} editable={!locked} />
+      <LessonFilesLink lessonId={form.lesson.id} admin={false} />
       <ReportFooter s={s} block={form.submit_block} tz={tz} />
     </View>
   );

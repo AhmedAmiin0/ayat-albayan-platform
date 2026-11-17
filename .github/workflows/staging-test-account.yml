@@ -57,7 +57,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: pnpm
+      - uses: ./.github/actions/pnpm-store
       - run: pnpm i --frozen-lockfile
       - name: Build @ab/shared (normalizeArabic for the student's name)
         run: pnpm turbo build --filter=@ab/shared

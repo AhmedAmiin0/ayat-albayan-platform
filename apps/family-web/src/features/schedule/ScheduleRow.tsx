@@ -13,11 +13,11 @@ import { LessonWhen } from '@ab/web-kit/portal/lessons/LessonWhen';
 const TICK_MS = 1_000;
 
 /**
- * One lesson of the week on the viewer's clock (the days above are theirs too): the child (a
- * guardian's several), the teacher, the length, and «ادخل الحلقة» once the window opens — the
- * room opens over the page (a Meet lesson opens its link).
+ * One lesson of the week on the viewer's clock (the days above are theirs too): the teacher, the
+ * length, and «ادخل الحلقة» once the window opens — the room opens over the page (a Meet lesson
+ * opens its link).
  */
-export function ScheduleRow({ entry, showChild }: { entry: WeekLesson; showChild: boolean }) {
+export function ScheduleRow({ entry }: { entry: WeekLesson }) {
   const { lesson, student } = entry;
   const now = useNow(TICK_MS);
   const tz = useViewerTz();
@@ -41,8 +41,6 @@ export function ScheduleRow({ entry, showChild }: { entry: WeekLesson; showChild
         )}
       </div>
       <p className="text-sm text-ink-2">
-        {showChild && <span className="font-semibold text-ink">{student.name}</span>}
-        {showChild && ' · '}
         {t.portal.app.lesson.teacher.replace('{name}', teacherLabel(lesson.teacher))}
         {' · '}
         {t.portal.app.lesson.minutes.replace('{n}', String(lessonMinutes(lesson)))}

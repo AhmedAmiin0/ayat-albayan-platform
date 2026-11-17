@@ -1,4 +1,5 @@
 import {
+  courseActionsKey,
   coursePauseKey,
   coursePausePath,
   coursePausePreviewPath,
@@ -36,6 +37,7 @@ function useRefresh(studentId: string) {
   return () =>
     Promise.all([
       client.invalidateQueries({ queryKey: coursePauseKey(studentId) }),
+      client.invalidateQueries({ queryKey: courseActionsKey(studentId) }),
       client.invalidateQueries({ queryKey: pathKey('/students') }),
       client.invalidateQueries({ queryKey: pathKey('/sales') }),
       client.invalidateQueries({ queryKey: pathKey('/lessons') }),

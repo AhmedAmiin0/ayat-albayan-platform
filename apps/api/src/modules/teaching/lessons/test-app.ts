@@ -21,6 +21,7 @@ import { AlertsRepo } from '@/modules/finance/subscriptions/alerts/alerts.repo';
 import { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags.service';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { RoomInsideRepo } from './live-room/room-inside.repo';
 import { AutoHeldRepo } from './auto-held/auto-held.repo';
 import { LessonProposalRepo } from './proposals/lesson-proposals.repo';
 import { LessonsRepo } from './lessons.repo';
@@ -68,7 +69,11 @@ function mocks() {
     cancelPush: { notify: vi.fn() },
     unpaid: { studentIds: vi.fn() },
     photos: fakePhotos().photos,
-    proposals: { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() },
+    proposals: {
+      create: vi.fn(), get: vi.fn(), decide: vi.fn(async () => true),
+      release: vi.fn(), link: vi.fn(),
+      pendingLessonIds: vi.fn(),
+    },
     autoHeld: { openEnded: vi.fn(), packages: vi.fn(), correctable: vi.fn() },
     // ScheduleNotices' reads and queue (no DB here); a lesson read as null notifies nobody.
     notices: {
@@ -105,6 +110,7 @@ export async function lessonsApp() {
     .overrideProvider(StudentTrialRepo).useValue({ studentsOfTrialLessons: async () => [], lessonsOf: async () => [] })
     .overrideProvider(UnpaidFlags).useValue(m.unpaid)
     .overrideProvider(StaffPhotos).useValue(m.photos)
+    .overrideProvider(RoomInsideRepo).useValue({ inside: async () => [] })
     .overrideProvider(ScheduleNoticesRepo).useValue(m.notices)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

@@ -10,12 +10,15 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { StudentLinkService } from '@/modules/teaching/classroom';
+import { withRoom } from '@/modules/teaching/lessons';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { PortalLessonExtras } from './portal-lesson-extras';
+import { familyOf } from './portal-lesson-family';
 import { toPortalLesson, wayIn } from './portal-lessons.mapper';
 import { PortalLessonsRepo } from './portal-lessons.repo';
 
 const DAY_MS = 86_400_000;
+
 const MIN_MS = 60_000;
 
 interface LessonCall {
@@ -32,6 +35,7 @@ interface PortalRoomInput {
   lessonId: string;
   studentId: string;
   profileId: string;
+  userIsTest: boolean;
 }
 
 /**
@@ -50,7 +54,7 @@ export class PortalLessonsService {
   ) {}
 
   async upcoming(call: LessonCall, now = new Date()): Promise<PortalLessons> {
-    const student = await this.scopes.student(call.user, call.studentId);
+    const { student, family } = await this.scopes.withFamily(call.user, call.studentId);
     const values = await this.queries.readSettings();
     const win = joinWindowConfig(values);
     const since = new Date(now.getTime() - win.closesAfterMin * MIN_MS).toISOString();
@@ -61,7 +65,16 @@ export class PortalLessonsService {
       this.extras.of(student, now),
     ]);
     const ctx = { academyAuto: values.meeting_link_auto, override, classroom: this.rooms.classroomReady(), win, now };
-    return { lessons: rows.map((row) => toPortalLesson(row, ctx)), ...extras };
+    const rooms = await this.extras.rooms(rows, { now, family });
+    const lessonIds = rows.map((r) => r.id);
+    const requests = await this.queries.requests({ lessonIds, userId: call.user.id });
+    const lateCancelHours = values.late_cancel_hours ?? null;
+    const fam = { studentId: call.studentId, now, lateCancelHours, requests };
+    const lesson = (row: (typeof rows)[number]) => ({
+      ...withRoom(toPortalLesson(row, ctx), rooms),
+      family: familyOf(row, fam),
+    });
+    return { lessons: rows.map(lesson), ...extras };
   }
 
   /**
@@ -93,6 +106,7 @@ export class PortalLessonsService {
       throw new HttpException({ code: 'not_classroom_lesson', message: 'not_classroom_lesson' }, HttpStatus.CONFLICT);
     }
     if (!isOpenLesson(row.status)) throw new HttpException({ code: 'join_closed', message: 'join_closed' }, HttpStatus.GONE);
-    return { lessonId: row.id, studentId: call.studentId, profileId: call.user.id };
+    const userIsTest = call.user.isTest === true;
+    return { lessonId: row.id, studentId: call.studentId, profileId: call.user.id, userIsTest };
   }
 }

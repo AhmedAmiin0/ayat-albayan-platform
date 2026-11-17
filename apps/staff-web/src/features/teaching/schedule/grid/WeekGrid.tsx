@@ -10,7 +10,7 @@ import { boardRows, hoursText, teacherDay } from '@/features/teaching/schedule/o
 import { ScheduleTrack } from './ScheduleTrack';
 import { TeacherCell } from './TeacherCell';
 import { WeekAgenda } from './WeekAgenda';
-import { dayMonthLabel } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel } from '@ab/web-kit/schedule/tz';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface WeekGridProps {

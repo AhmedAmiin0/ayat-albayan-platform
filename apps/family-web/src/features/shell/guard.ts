@@ -1,4 +1,4 @@
-import { hasFamilyTab, type FamilyTab } from '@ab/client-core';
+import { picksChild } from '@ab/client-core';
 import type { QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
 import { isAccountDisabled, meQuery } from '@ab/web-kit/auth/me';
@@ -45,14 +45,14 @@ export async function requireFamily(queryClient: QueryClient, back: string): Pro
   return ARRIVE[arrival](queryClient, back);
 }
 
-interface TabGuard {
+interface PageGuard {
   queryClient: QueryClient;
   visitor: Visitor;
 }
 
-/** A tab this login's bar lacks (a student's «أبنائي», a guardian's «التقارير») goes home. */
-export async function requireTab(guard: TabGuard, tab: FamilyTab): Promise<void> {
+/** «اختر الطالب» is a guardian of several children's (owner 2026-11-16); anyone else goes home. */
+export async function requirePicker(guard: PageGuard): Promise<void> {
   if (guard.visitor !== 'family') return;
   const home = await guard.queryClient.query({ ...portalHomeQuery, staleTime: 'static' });
-  if (!hasFamilyTab(home.kind, tab)) redirect({ to: '/portal', throw: true });
+  if (!picksChild(home)) redirect({ to: '/portal', throw: true });
 }

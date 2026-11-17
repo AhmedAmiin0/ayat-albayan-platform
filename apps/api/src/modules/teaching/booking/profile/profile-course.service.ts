@@ -30,7 +30,7 @@ interface Move {
  */
 const ownsOnly = (user: AuthUser): boolean => user.role === 'sales' && !can(user, 'sales.renew_any');
 
-const actorOf = (user: AuthUser): ChangeActor => ({
+export const actorOf = (user: AuthUser): ChangeActor => ({
   user,
   role: user.role === 'admin' ? 'admin' : 'sales',
   anyStudent: !ownsOnly(user),

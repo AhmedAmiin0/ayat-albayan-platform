@@ -30,7 +30,9 @@ describe('AllStudents: every student\'s schedule and attendance (owner 2026-10-3
     expect(screen.getByText(t.sales.allStudents.noSchedule)).toBeTruthy();
     expect(screen.getByText(t.sales.allStudents.noHeldRecent)).toBeTruthy();
     expect(screen.getAllByText(t.sales.allStudents.schedule).length).toBeGreaterThan(0);
-    expect(apiFetch).toHaveBeenCalledTimes(1);
+    // The roster comes in the one list read; each row's chat seat is read on its own (docs/31 §2).
+    const reads = apiFetch.mock.calls.filter(([path]) => !String(path).endsWith('/channel/seat'));
+    expect(reads).toHaveLength(1);
   });
 
   it('an old cache without the fields: empty cells, the rest as before', async () => {

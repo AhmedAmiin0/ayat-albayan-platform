@@ -1,4 +1,9 @@
-import { lessonProposalRequestSchema, proposalApproveSchema, type LessonView } from '@ab/shared';
+import {
+  lessonProposalRequestSchema,
+  proposalApproveSchema,
+  proposalRejectSchema,
+  type LessonView,
+} from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -9,8 +14,9 @@ import { LessonProposeService, ProposalDecisionService } from './lesson-proposal
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 
 /**
- * Teacher self-service «اقترح ميعاد تاني» and the admin's answer (R-SCH-08). Every route returns
- * LessonView(s); a lesson's pending proposal is LessonView.pending_proposal.
+ * Teacher self-service «اقترح ميعاد تاني» and the admin's answer (R-SCH-08), to the
+ * families' «اطلب موعدًا آخر» too (requested_by 'family'; a reject's `note` reaches them).
+ * Every route returns LessonView(s); a lesson's pending proposal is LessonView.pending_proposal.
  */
 @ApiTags('lessons')
 @ApiBearerAuth()
@@ -58,8 +64,10 @@ export class LessonProposalsController {
   @HttpCode(200)
   async reject(
     @Param('id', ParseUUIDPipe) id: string,
+    @ZodBody(proposalRejectSchema, { orEmpty: true }) req: z.output<typeof proposalRejectSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
-    return this.views.one(await this.deciding.reject({ proposalId: id, actor: user }), 'admin');
+    const lessonId = await this.deciding.reject({ proposalId: id, actor: user, note: req.note });
+    return this.views.one(lessonId, 'admin');
   }
 }

@@ -35,7 +35,17 @@ export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<St
   // The view's columns read as nullable; the base columns (and has_weekly's exists) never are.
   const { data, error, count } = await query.range(from, to).overrideTypes<StudentListRow[], { merge: false }>();
   if (error) throw dbError(error);
-  return { items: data.map(toListItem), total: count ?? 0, page: q.page, pageSize: q.pageSize };
+  const tests = await testStudents(db, data.map((r) => r.id));
+  const items = data.map((r) => ({ ...toListItem(r), is_test: tests.has(r.id) }));
+  return { items, total: count ?? 0, page: q.page, pageSize: q.pageSize };
+}
+
+/** The page's test students (students.is_test, docs/56), for the «تجريبي» chip. */
+async function testStudents(db: Db, ids: readonly string[]): Promise<Set<string>> {
+  if (ids.length === 0) return new Set();
+  const { data, error } = await db.from('students').select('id').in('id', ids).eq('is_test', true);
+  if (error) throw dbError(error);
+  return new Set(data.map((s) => s.id));
 }
 
 /**
@@ -75,6 +85,8 @@ export async function getStudentProfile(db: Db, id: string): Promise<StudentProf
     .from('students')
     .select(PROFILE_COLUMNS)
     .eq('id', id)
+    // The family's numbers only: a student's own number (owner 2026-11-17) is not one.
+    .is('guardian.phones.student_id', null)
     .maybeSingle();
   if (error) throw dbError(error);
   if (!data) throw new NotFoundException();

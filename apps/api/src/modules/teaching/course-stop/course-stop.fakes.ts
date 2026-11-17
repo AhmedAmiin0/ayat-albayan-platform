@@ -55,7 +55,10 @@ export const STOPPED = {
 
 function mocks() {
   return {
-    repo: { current: vi.fn(), subscription: vi.fn(), plan: vi.fn(), paid: vi.fn(), stop: vi.fn() },
+    repo: {
+      ...{ current: vi.fn(), subscription: vi.fn(), plan: vi.fn(), paid: vi.fn() },
+      ...{ stop: vi.fn(), starts: vi.fn() },
+    },
     writes: { recorded: vi.fn() },
     events: { changed: vi.fn(), onChanged: vi.fn(), onScheduleChange: vi.fn() },
     refunds: { pkg: vi.fn(), money: vi.fn(), intents: vi.fn() },
@@ -93,6 +96,7 @@ function reset(m: ReturnType<typeof mocks>): void {
   });
   m.repo.current.mockResolvedValue(subRow());
   m.repo.paid.mockResolvedValue(290);
+  m.repo.starts.mockImplementation(async (ids: string[]) => ids.map(() => '2026-11-18T14:00:00Z'));
   m.repo.stop.mockResolvedValue(STOPPED);
   m.writes.recorded.mockResolvedValue(undefined);
   m.events.changed.mockResolvedValue(undefined);

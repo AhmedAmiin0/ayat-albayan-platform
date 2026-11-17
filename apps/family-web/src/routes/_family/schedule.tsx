@@ -1,7 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { WithPick } from '@/features/children';
 import { SchedulePage } from '@/features/schedule';
-import { WithHome } from '@/features/shell';
 
+/** «الجدول»: the student in view's week. */
 export const Route = createFileRoute('/_family/schedule')({
-  component: () => <WithHome>{(home) => <SchedulePage home={home} />}</WithHome>,
+  component: () => (
+    <WithPick>
+      {(student, home) => <SchedulePage student={student} kind={home.kind} />}
+    </WithPick>
+  ),
 });

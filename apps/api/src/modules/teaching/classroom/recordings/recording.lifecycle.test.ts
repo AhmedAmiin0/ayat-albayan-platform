@@ -3,7 +3,7 @@ import { CONFIG, LESSON_ID } from '@/modules/teaching/classroom/classroom.fakes'
 import type { FetchLike } from '@/common/infra/http/failure';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
-import { leftEventOf, peopleIn } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
+import { participantEventOf, peopleIn } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
 import { recordingQueries } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RecordingLifecycle } from './recording.lifecycle';
 import type { RecordingRepo } from './recording.repo';
@@ -70,9 +70,10 @@ describe('RecordingLifecycle', () => {
 
 describe('webhook room helpers', () => {
   it('participant_left with a room; people without recorders', () => {
-    expect(leftEventOf({ event: 'participant_left', room: { name: 'r' }, participant: { identity: 'g' } })).toEqual({ room: 'r', identity: 'g' });
-    expect(leftEventOf({ event: 'participant_left', room: {} })).toBeNull();
-    expect(leftEventOf({ event: 'room_started', room: { name: 'r' } })).toBeNull();
+    expect(participantEventOf({ event: 'participant_left', room: { name: 'r' }, participant: { identity: 'g' } })).toEqual({ kind: 'left', room: 'r', identity: 'g', at: null });
+    expect(participantEventOf({ event: 'participant_joined', room: { name: 'r' } })).toEqual({ kind: 'joined', room: 'r', identity: '', at: null });
+    expect(participantEventOf({ event: 'participant_left', room: {} })).toBeNull();
+    expect(participantEventOf({ event: 'room_started', room: { name: 'r' } })).toBeNull();
     expect(peopleIn({ participants: [EGRESS, { identity: 'a', kind: 2 }, { identity: 'b' }, { identity: 'c' }, 'junk'] }, 'c')).toEqual(['b']);
     expect(peopleIn({})).toEqual([]);
   });

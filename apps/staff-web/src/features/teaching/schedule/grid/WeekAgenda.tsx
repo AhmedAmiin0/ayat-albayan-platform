@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { cn } from '@ab/web-kit/lib/utils';
 import { LessonChipList } from '@/features/teaching/schedule/lesson/LessonChip';
-import { dayMonthLabel } from '@/features/teaching/schedule/tz';
+import { dayMonthLabel } from '@ab/web-kit/schedule/tz';
 
 interface AgendaRow {
   id: string;

@@ -1,0 +1,52 @@
+import {
+  portalFileUrlSchema,
+  portalLessonAssetsSchema,
+  portalRecordingsSchema,
+  type PortalFileUrl,
+  type PortalLessonAssets,
+  type PortalRecordings,
+} from '@ab/shared';
+import type { ApiClient } from '../../core/http/index.js';
+import { pathKey } from '../../core/keys/index.js';
+
+// The family's «التسجيلات» and lesson page (web portal and the family app), under the portal's
+// key so the portal's one invalidation refreshes them too.
+
+const enc = encodeURIComponent;
+const student = (id: string) => `/portal/students/${enc(id)}`;
+
+interface Read<T> {
+  queryKey: string[];
+  queryFn: () => Promise<T>;
+  refetchOnWindowFocus: boolean;
+}
+
+interface PortalLessonInput {
+  studentId: string;
+  lessonId: string;
+}
+
+export interface PortalAssetsApi {
+  portalRecordingsQuery: (studentId: string) => Read<PortalRecordings>;
+  portalLessonAssetsQuery: (input: PortalLessonInput) => Read<PortalLessonAssets>;
+  /** A fresh 1-hour link to one visible lesson file. */
+  lessonFileUrl: (input: { studentId: string; fileId: string }) => Promise<PortalFileUrl>;
+}
+
+export function portalAssetsApi(client: ApiClient): PortalAssetsApi {
+  const read = <T>(path: string, schema: { parse: (v: unknown) => T }): Read<T> => ({
+    queryKey: pathKey(path),
+    queryFn: async () => schema.parse(await client.apiFetch(path)),
+    refetchOnWindowFocus: true,
+  });
+  return {
+    portalRecordingsQuery: (studentId) =>
+      read(`${student(studentId)}/recordings`, portalRecordingsSchema),
+    portalLessonAssetsQuery: ({ studentId, lessonId }) =>
+      read(`${student(studentId)}/lessons/${enc(lessonId)}/files`, portalLessonAssetsSchema),
+    lessonFileUrl: ({ studentId, fileId }) =>
+      client
+        .apiSend('POST', `${student(studentId)}/lesson-files/${enc(fileId)}/url`)
+        .then((r: unknown) => portalFileUrlSchema.parse(r)),
+  };
+}

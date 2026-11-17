@@ -6,9 +6,9 @@ import { type, useTheme, type Theme } from '../../theme';
 import { AppText } from './AppText';
 
 /** sm 28 (schedule rows), md 36 (lists, headers), lg 64 (a person's page), xl 96 (the call screens), as on the web. */
-type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
+type AvatarSize = 'sm' | 'md' | 'row' | 'lg' | 'xl';
 
-const DIAMETER: Record<AvatarSize, number> = { sm: 28, md: 36, lg: 64, xl: 96 };
+const DIAMETER: Record<AvatarSize, number> = { sm: 28, md: 36, row: 44, lg: 64, xl: 96 };
 
 /** The web's person glyph (icon `teacher`, 20 grid): a head and shoulders, for a name with no letter. */
 const PERSON = 'M13 6.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM4 16.5c1.1-2.9 3.3-4.3 6-4.3s4.9 1.4 6 4.3';

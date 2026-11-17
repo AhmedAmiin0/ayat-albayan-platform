@@ -46,6 +46,8 @@ export class GuardiansService {
       .from('guardians')
       .select('*, students(id, code, name, status), phones:guardian_phones(phone_e164, is_primary, created_at)')
       .eq('id', id)
+      // A student's own number (student_id, owner 2026-11-17) is the student's, not the family's.
+      .is('phones.student_id', null)
       .maybeSingle();
     if (error) throw dbError(error);
     if (!data) throw new NotFoundException();

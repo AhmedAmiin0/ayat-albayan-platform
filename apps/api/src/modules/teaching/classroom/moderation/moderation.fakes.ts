@@ -9,7 +9,7 @@ import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role
 import { signJwt } from '@/modules/teaching/classroom/livekit/livekit-token';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
-import type { ModerationRepo, ParticipantRow } from './moderation.repo';
+import type { ModerationRepo, ParticipantRow, Principal } from './moderation.repo';
 import type { RecordingRow } from '@/modules/teaching/classroom/recordings/recording.repo';
 import type { RecordingStarter } from '@/modules/teaching/classroom/recordings/recording.starter';
 import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
@@ -31,6 +31,9 @@ export const participantRow = (over: Partial<ParticipantRow> = {}): ParticipantR
   join_link_id: '00000000-0000-4000-8000-0000000000f1',
   name: 'سهيلة',
   joined_at: '2026-10-05T16:01:00.000Z',
+  entered_at: null,
+  left_at: null,
+  presence_at: null,
   ...over,
 });
 
@@ -60,6 +63,12 @@ export function moderation() {
     block: vi.fn().mockResolvedValue(undefined),
   };
 }
+
+/** Mocked RoomPersonRepo: the person is the one principal, holding no other identity. */
+export const roomPersons = () => ({
+  principalsOf: vi.fn(async (_lessonId: string, p: Principal) => [p]),
+  identitiesOf: vi.fn().mockResolvedValue([]),
+});
 
 /** Mocked RecordingQueries: the claim succeeds. */
 export function recordingQueries() {

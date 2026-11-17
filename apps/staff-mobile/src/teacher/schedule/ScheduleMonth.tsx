@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import type { LessonView } from '@ab/shared';
 import { RefreshControl, ScrollView } from 'react-native';
-import { AgendaDayView, headerLine, PeriodSwitcher, useLessonDetails } from '@/calendar';
+import { AgendaDayView, headerLine, useLessonDetails } from '@/calendar';
+import { PeriodSwitcher } from '@ab/mobile-kit';
 import { useClockCycle, zoneNote } from '@/core/lib/clock';
 import { t, usePullRefresh, ErrorState, useTabBarInset } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

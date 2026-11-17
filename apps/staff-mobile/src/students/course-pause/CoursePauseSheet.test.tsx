@@ -80,7 +80,7 @@ test('a refused start says why and keeps the sheet open', async () => {
 
 test('«إلغاء» closes the sheet without a write', async () => {
   await openSheet();
-  await fireEvent.press(screen.getByRole('button', { name: t.common.cancel }));
+  await fireEvent.press(screen.getByRole('button', { name: t.common.back }));
   expect(screen.queryByRole('header', { name: c.title })).toBeNull();
   expect(mockApiSend).not.toHaveBeenCalled();
 });

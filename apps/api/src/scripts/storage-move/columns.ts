@@ -16,6 +16,7 @@ export interface PathColumn {
 export const MOVED_COLUMNS: readonly PathColumn[] = [
   { table: 'lesson_reports', column: 'pdf_path', bucket: BUCKETS.reports },
   { table: 'report_attachments', column: 'storage_path', bucket: BUCKETS.attachments },
+  { table: 'lesson_files', column: 'storage_path', bucket: BUCKETS.attachments },
   { table: 'payments', column: 'receipt_path', bucket: BUCKETS.receipts },
   { table: 'payment_attachments', column: 'path', bucket: BUCKETS.receipts },
   { table: 'expenses', column: 'receipt_path', bucket: BUCKETS.receipts },
@@ -27,6 +28,7 @@ export const MOVED_COLUMNS: readonly PathColumn[] = [
   { table: 'messages', column: 'media_path', bucket: BUCKETS.waMedia },
   { table: 'profiles', column: 'avatar_path', bucket: BUCKETS.avatars },
   { table: 'teachers', column: 'avatar_path', bucket: BUCKETS.avatars },
+  { table: 'channel_messages', column: 'attachment_path', bucket: BUCKETS.channelMedia },
   {
     table: 'lesson_recordings',
     column: 'file_path',

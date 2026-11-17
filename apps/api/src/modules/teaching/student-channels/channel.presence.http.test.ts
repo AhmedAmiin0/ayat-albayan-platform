@@ -22,8 +22,8 @@ describe('student channel presence over HTTP', () => {
     t.presence.settings.enabled.mockResolvedValue(true);
   });
 
-  it('a family sees its teacher only (never itself, never the other family login)', async () => {
-    for (const who of ['guardian', 'student'] as Who[]) {
+  it('a family, a child login too, sees its teacher only (never itself)', async () => {
+    for (const who of ['guardian', 'student', 'child'] as Who[]) {
       const res = await t.call('GET', PORTAL, who);
       expect([who, res.statusCode, ids(res.json())]).toEqual([who, 200, ['p-t1']]);
     }
@@ -34,7 +34,7 @@ describe('student channel presence over HTTP', () => {
     });
   });
 
-  it('the teacher and the owning assistant see the family app users, not the teacher', async () => {
+  it('the teacher and the seated assistant see the family app users, not the teacher', async () => {
     expect(ids((await t.call('GET', TEACHER, 'teacher')).json())).toEqual(['p-g', 'p-s']);
     expect(ids((await t.call('GET', SALES, 'sales')).json())).toEqual(['p-g', 'p-s']);
   });
@@ -50,7 +50,6 @@ describe('student channel presence over HTTP', () => {
       (await t.call('GET', `/portal/students/${OTHER}/channel/presence`, 'guardian')).statusCode,
     ).toBe(404);
     expect((await t.call('GET', SALES, 'otherSales')).statusCode).toBe(404);
-    expect((await t.call('GET', PORTAL, 'child')).statusCode).toBe(403);
     expect((await t.call('GET', TEACHER, 'guardian')).statusCode).toBe(403);
     expect((await t.call('GET', ADMIN, 'sales')).statusCode).toBe(403);
     expect((await t.call('GET', ADMIN, 'assistant')).statusCode).toBe(403);

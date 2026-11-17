@@ -30,7 +30,8 @@ const AFTER_COPY: readonly string[] = [
   'teacher_chats_enabled', 'teacher_student_messages_enabled', 'teacher_earnings_enabled',
   'teacher_statements_enabled', 'teacher_feedback_enabled', 'teacher_internal_meetings_enabled',
   'teacher_scheduled_meetings_enabled',
-  'family_chat_enabled', 'family_payment_instructions',
+  'family_chat_enabled', 'family_payment_instructions', 'family_meetings_in_app',
+  'short_link_default_days', 'short_link_purge_days', 'short_link_extra_hosts',
 ];
 
 describe('migration config_describe', () => {

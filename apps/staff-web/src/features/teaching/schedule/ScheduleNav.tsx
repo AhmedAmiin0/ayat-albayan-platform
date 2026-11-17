@@ -4,7 +4,7 @@ import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { ScheduleSearch } from './filters/search';
-import { dayMonthLabel } from './tz';
+import { dayMonthLabel } from '@ab/web-kit/schedule/tz';
 
 export interface ScheduleNavProps {
   search: ScheduleSearch;

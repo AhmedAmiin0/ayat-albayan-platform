@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { buttonVariants, Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
+import { RecordedNotice } from '@ab/web-kit/classroom/recordings/RecordedNotice';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { portalApi } from '@ab/web-kit/portal/api';
 import { useClock } from '@ab/web-kit/lib/clock';
@@ -21,7 +22,8 @@ const Hint = ({ text }: { text: string }) => <p className="text-sm text-ink-2">{
 
 /**
  * «ادخل الحلقة», only inside the join window: our classroom admits the student through the API and
- * the room opens here; an external lesson opens its own meeting link (sent only while it is open).
+ * the room opens here, after «تُسجَّل هذه الجلسة» like every other door into it (consent); an
+ * external lesson opens its own meeting link (sent only while it is open).
  */
 export function LessonAction({ lesson, studentId, tz, now, onJoined }: Props) {
   const clock = useClock();
@@ -47,6 +49,7 @@ export function LessonAction({ lesson, studentId, tz, now, onJoined }: Props) {
   return (
     <div className="grid gap-2">
       {join.isError && <FormAlert>{classroomErrorText(join.error)}</FormAlert>}
+      <RecordedNotice />
       <Button
         type="button"
         size="lg"

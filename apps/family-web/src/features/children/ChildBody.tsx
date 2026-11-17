@@ -7,6 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { HistoryPanel } from '@ab/web-kit/portal/history/HistoryPanel';
 import { LessonsPanel } from '@ab/web-kit/portal/lessons/LessonsPanel';
 import { PackagePanel } from '@ab/web-kit/portal/package/PackagePanel';
+import { RecordingsPanel } from '@ab/web-kit/portal/recordings/RecordingsPanel';
 import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
 import { shownTab, tabOptions } from './child-tabs';
 
@@ -27,6 +28,7 @@ const PANEL: Readonly<Record<ChildTab, Panel>> = {
     <HistoryPanel student={student} status="attended" onOpenReport={open} />
   ),
   absent: (student, open) => <HistoryPanel student={student} status="absent" onOpenReport={open} />,
+  recordings: (student, open) => <RecordingsPanel student={student} onOpenReport={open} />,
   package: (student) => <PackagePanel student={student} />,
   chat: () => null,
 };
@@ -34,8 +36,8 @@ const PANEL: Readonly<Record<ChildTab, Panel>> = {
 const PREFIX = 'child';
 
 /**
- * One child's page body (docs/50 §6, canvas Child): القادمة · حضرها · غاب عنها · الباقة (the
- * last only for a viewer who sees money). A report opens on its own page (/report/<id>).
+ * One child's page body (docs/50 §6, canvas Child): القادمة · حضرها · غاب عنها · التسجيلات ·
+ * الباقة (the last only for a viewer who sees money). A report opens on its own page.
  */
 export function ChildBody({ student, kind, tab, onTab }: Props) {
   const navigate = useNavigate();

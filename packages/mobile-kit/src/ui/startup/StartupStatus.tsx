@@ -27,15 +27,13 @@ interface StartupStatusProps {
   onRetry: () => void;
   /** Maps a font family to undefined until the bundled fonts are registered. */
   font: (family: string) => string | undefined;
-  /** A branded cover's own ink and dots (StartupBrand); none: the theme's ink-3 and gold. */
-  tone?: { text: string; dots: string };
 }
 
 /** «جارٍ الاتصال» with the gold dots (the live region), then from 10 s the hint and «إعادة المحاولة». */
-export function StartupStatus({ stage, still, onRetry, font, tone }: StartupStatusProps) {
+export function StartupStatus({ stage, still, onRetry, font }: StartupStatusProps) {
   const { color } = useTheme();
   const c = t.mobile.connection;
-  const ink = tone ?? { text: color.ink3, dots: color.gold };
+  const ink = { text: color.ink3, dots: color.gold };
   const line = (size: number) => ({
     fontSize: size,
     lineHeight: type.lineHeight(size),

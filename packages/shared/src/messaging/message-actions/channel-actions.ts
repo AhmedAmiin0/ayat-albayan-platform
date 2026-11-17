@@ -1,4 +1,4 @@
-import type { ChannelMessageView } from '../channel/channel.js';
+import type { ChannelMessageView } from '../channel/channel-views.js';
 
 // Edit and delete in the in-app channel (owner 2026-10-30: «also add edit and delete message
 // ability»).
@@ -10,9 +10,13 @@ export const CHANNEL_EDIT_WINDOW_MS = 15 * 60_000;
 export const CHANNEL_DELETE_WINDOW_MS = 48 * 3_600_000;
 
 /**
- * What the rule reads of a message: whose it is, when it was written, whether it is already gone.
+ * What the rule reads of a message: whose it is, when it was written, whether it is already gone,
+ * and its kind (only a text message is edited; absent = text, as before files).
  */
-export type ChannelActionMessage = Pick<ChannelMessageView, 'mine' | 'created_at' | 'deleted'>;
+export type ChannelActionMessage = Pick<ChannelMessageView, 'mine' | 'created_at' | 'deleted'> &
+  Partial<Pick<ChannelMessageView, 'kind'>>;
+
+const isText = (m: ChannelActionMessage): boolean => (m.kind ?? 'text') === 'text';
 
 export interface ChannelActionInput {
   message: ChannelActionMessage;
@@ -35,7 +39,7 @@ export function channelActions(input: ChannelActionInput): ChannelActions {
   if (m.deleted) return { edit: false, delete: false };
   if (input.moderator) return { edit: false, delete: true };
   return {
-    edit: m.mine && within(input, CHANNEL_EDIT_WINDOW_MS),
+    edit: m.mine && isText(m) && within(input, CHANNEL_EDIT_WINDOW_MS),
     delete: m.mine && within(input, CHANNEL_DELETE_WINDOW_MS),
   };
 }

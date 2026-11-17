@@ -1,9 +1,11 @@
 import { isPackageEnded, renewalPricing, type LastPackage, type StudentStatus } from '@ab/shared';
 
-// «جدّد الاشتراك» on the admin student file (owner 2026-10-15): only once the package ended
-// (pending_renewal, expired). It opens the existing «اشتراك جديد» screen in the students tab,
-// prefilled from the student's last package (renewalPricing, shared with web: its tier or custom
-// count, lesson length, discount and country), titled as a renewal.
+// «جدّد الاشتراك» on the admin student file (owner 2026-10-15): once the package ended
+// (pending_renewal, expired), and ANY time the student has a package (owner 2026-11-17: the new
+// package starts on the day picked on the subscribe screen). It opens the existing «اشتراك
+// جديد» screen in the students tab, prefilled from the student's last package (renewalPricing,
+// shared with web: its tier or custom count, lesson length, discount and country), titled as a
+// renewal.
 
 interface RenewHref {
   pathname: '/students/subscribe';
@@ -31,11 +33,11 @@ function prefillOf(last: LastPackage | null | undefined): Omit<RenewHref['params
   };
 }
 
-/** The subscribe screen's route for this student; null while the status is not package-ended. */
+/** The subscribe screen's route for this student; null without a package and not package-ended. */
 export function renewHref(
   student: { id: string; status: StudentStatus },
   last: LastPackage | null | undefined,
 ): RenewHref | null {
-  if (!isPackageEnded(student.status)) return null;
+  if (!isPackageEnded(student.status) && !last) return null;
   return { pathname: '/students/subscribe', params: { studentId: student.id, renew: '1', ...prefillOf(last) } };
 }

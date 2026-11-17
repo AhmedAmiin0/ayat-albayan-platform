@@ -1,11 +1,15 @@
 import { PATH_METADATA } from '@nestjs/common/constants';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import type { MeZoneRepo } from '@/common/auth/me-zone.repo';
 import { PERMISSION, SIGNED_IN } from '@/common/auth/decorators';
 import { bodyPipeOf } from '@/common/http/zod-inputs.test-util';
 import { AccountController } from './account.controller';
 import { accountKit, ME, PASSWORD } from './account.fakes';
 
 // R-ACC-01..05: every signed-in role, always the caller (no id in any path).
+
+const localeRepo = () =>
+  ({ setLocale: vi.fn().mockResolvedValue(undefined) }) as unknown as MeZoneRepo;
 
 const HANDLERS = [
   'profile',
@@ -16,6 +20,7 @@ const HANDLERS = [
   'setAvatar',
   'removeAvatar',
   'setup',
+  'setLocale',
 ] as const;
 
 describe('AccountController', () => {
@@ -34,7 +39,7 @@ describe('AccountController', () => {
 
   it('acts on the token’s user and ignores ids in the body', async () => {
     const kit = accountKit();
-    const controller = new AccountController(kit.account, kit.avatar, kit.setup);
+    const controller = new AccountController(kit.account, kit.avatar, kit.setup, localeRepo());
     const body = await bodyPipeOf(
       AccountController,
       'updateProfile',
@@ -47,7 +52,7 @@ describe('AccountController', () => {
 
   it('validates bodies before the services run (400 validation_failed)', async () => {
     const kit = accountKit();
-    const controller = new AccountController(kit.account, kit.avatar, kit.setup);
+    const controller = new AccountController(kit.account, kit.avatar, kit.setup, localeRepo());
     // @ZodBody's pipe runs before the handler, so no service call happens.
     const updateProfile = bodyPipeOf(AccountController, 'updateProfile');
     const changePassword = bodyPipeOf(AccountController, 'changePassword');

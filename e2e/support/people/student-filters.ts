@@ -18,7 +18,7 @@ export function filterSeed(stamp: string): Omit<FilterSeed, 'teacherId'> {
   return {
     teacherName: `معلمة الفلاتر ${stamp}`,
     guardianPhone: `+9665${stamp}99`,
-    names: { active: n('مشترك'), trial: n('تجريبي'), paused: n('متوقف'), unassigned: n('بدون') },
+    names: { active: n('مشترك'), trial: n('تجريبي'), paused: n('موقوف'), unassigned: n('بدون') },
   };
 }
 

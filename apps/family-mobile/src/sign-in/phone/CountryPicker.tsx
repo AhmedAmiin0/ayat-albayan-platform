@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { Modal, Pressable, View } from 'react-native';
-import { AppText, shape, t, type, useTheme } from '@ab/mobile-kit';
-import { COUNTRIES, type Country } from '@ab/client-core';
-import { CountryRow } from './CountryRow';
+import { AppText, locale, shape, t, type, useTheme } from '@ab/mobile-kit';
+import { type Country, orderCountries, searchCountries } from '@ab/client-core';
+import { phoneRegion } from './countries';
+import { CountryList } from './CountryList';
+import { CountrySearch } from './CountrySearch';
 
 interface CountryPickerProps {
   open: boolean;
@@ -10,19 +13,33 @@ interface CountryPickerProps {
   onClose: () => void;
 }
 
-/** «اختر الدولة»: a sheet of the academy's countries (flag, name, calling code). */
+/**
+ * «اختر الدولة»: every country (flag, name, calling code), the phone's own and the academy's usual
+ * ones first, searchable by name or code; a virtualised list.
+ */
 export function CountryPicker({ open, current, onPick, onClose }: CountryPickerProps) {
   const { color } = useTheme();
+  const [query, setQuery] = useState('');
+  const shown = searchCountries(orderCountries(phoneRegion(), locale), query);
+  const close = () => {
+    setQuery('');
+    onClose();
+  };
+  const pick = (country: Country) => {
+    setQuery('');
+    onPick(country);
+  };
   return (
-    <Modal visible={open} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal visible={open} transparent animationType="slide" onRequestClose={close}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={t.common.close}
-        onPress={onClose}
+        onPress={close}
         style={{ flex: 1, backgroundColor: color.scrim }}
       />
       <View
         style={{
+          height: '80%',
           backgroundColor: color.page,
           borderTopStartRadius: shape.radius.lg * 2,
           borderTopEndRadius: shape.radius.lg * 2,
@@ -43,11 +60,8 @@ export function CountryPicker({ open, current, onPick, onClose }: CountryPickerP
         >
           {t.familyApp.signIn.countryTitle}
         </AppText>
-        <View accessibilityRole="radiogroup">
-          {COUNTRIES.map((c) => (
-            <CountryRow key={c.code} country={c} picked={c.code === current.code} onPick={onPick} />
-          ))}
-        </View>
+        <CountrySearch query={query} onQuery={setQuery} />
+        <CountryList countries={shown} current={current} onPick={pick} />
       </View>
     </Modal>
   );

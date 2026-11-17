@@ -10,7 +10,7 @@ import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { Drawer } from '@ab/web-kit/components/ui/overlay/Drawer';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
-import { currentWeekStart } from '@/features/teaching/schedule/reschedule/slots';
+import { currentWeekStart } from '@ab/web-kit/schedule/slots';
 import { dayMonthLabel } from '@/features/teaching/schedule';
 import { WeekGrid } from '@/features/teaching/schedule/grid/WeekGrid';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

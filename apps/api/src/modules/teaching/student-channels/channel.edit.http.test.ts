@@ -5,6 +5,7 @@ type App = Awaited<ReturnType<typeof channelApp>>;
 const M = 'd4000000-0000-4000-8000-000000000001';
 const PORTAL = `/portal/students/${ST}/channel/messages/${M}`;
 const TEACHER = `/teachers/me/channels/${ST}/messages/${M}`;
+const SALES = `/sales/students/${ST}/channel/messages/${M}`;
 const ago = (ms: number) => new Date(Date.now() - ms).toISOString();
 const MIN = 60_000;
 
@@ -63,7 +64,19 @@ describe('PATCH …/messages/:id: edit in the student channel', () => {
   it("someone else's message: 403 not_your_message (the teacher cannot edit the guardian's text)", async () => {
     const res = await t.patch(TEACHER, 'teacher', { body: 'x' });
     expect([res.statusCode, res.json().code]).toEqual([403, 'not_your_message']);
+    expect((await t.patch(SALES, 'sales', { body: 'x' })).json().code).toBe('not_your_message');
     expect(t.edits.edit).not.toHaveBeenCalled();
+  });
+
+  it('the seated assistant edits her own text (owner 2026-11-16); another assistant is 404', async () => {
+    t.edits.message.mockResolvedValue(
+      messageRow({ id: M, sender_profile_id: 'p-sa', sender_role: 'sales', created_at: ago(MIN) }),
+    );
+    const res = await t.patch(SALES, 'sales', { body: 'موعد التجديد بعد غد' });
+    expect([res.statusCode, res.json().edited]).toEqual([200, true]);
+    expect(t.edits.edit).toHaveBeenCalledWith(expect.objectContaining({ id: M, actor: 'p-sa' }));
+    expect((await t.patch(SALES, 'otherSales', { body: 'x' })).statusCode).toBe(404);
+    expect((await t.patch(`/sales/students/${ST}/channel/messages/nope`, 'sales', { body: 'x' })).statusCode).toBe(400);
   });
 
   it("a deleted message is 409 message_deleted; an unknown or other channel's id is 404", async () => {

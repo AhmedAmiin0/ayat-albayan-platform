@@ -1,8 +1,6 @@
 import { canSendViaWhatsApp, type ClockCycle, type MessageView } from '@ab/shared';
-import { useState } from 'react';
-import { Pressable, View } from 'react-native';
-import { t, type, useTheme, AppText } from '@ab/mobile-kit';
-import { DeliveryTicks } from './DeliveryTicks';
+import { Pressable } from 'react-native';
+import { t, type, AppText, BubbleMeta, useSmallText } from '@ab/mobile-kit';
 import { lineWord } from '@/inbox/shared/line-words';
 import { clock, deliveryTimes, errorLine, queuedLine } from '@/inbox/messages/hooks/message-text';
 import { senderText } from '@/inbox/thread/hooks/thread-mode';
@@ -10,22 +8,13 @@ import { useClockCycle } from '@/core/lib/clock';
 import { WhatsAppStatusLine } from '@/inbox/messages/resend/WhatsAppSendLine';
 import { CorrectedMark } from '@/inbox/messages/components/correction/CorrectedMark';
 
-export function useSmall() {
-  const { color } = useTheme();
-  return {
-    fontFamily: type.ui[500],
-    fontSize: type.size['2xs'],
-    lineHeight: type.lineHeight(type.size['2xs']),
-    color: color.ink2,
-    fontVariant: ['tabular-nums' as const],
-  };
-}
-
 /**
  * When (the time only: the day is in the separator above, owner 2026-10-27), the line it came in
- * on or left from (a plain word), and for ours the delivery ticks; a row scheduled later says when it goes; who sent ours («أرسلها: سارة», «رسالة تلقائية»). A long press on the ticks shows their
+ * on or left from (a plain word), and for ours the delivery ticks; a row scheduled later says when
+ * it goes; who sent ours («أرسلها: سارة», «رسالة تلقائية»). A long press on the ticks shows their
  * times on a line of their own under this row, so an older message's long times wrap in the bubble.
- * `onTicksPress`: the admin's row that did not go out (a tap on «! لم تُرسل» or the queued clock opens
+ * `onTicksPress`: the admin's row that did not go out (a tap on «! لم تُرسل» or the queued clock
+ * opens
  * FailedSheet); the reader hears why it failed, or «أرسلها بنفسك» for a queued one.
  */
 /** The time, after «تم التعديل» for an edited message (owner 2026-10-30), as WhatsApp. */
@@ -36,38 +25,43 @@ const timeOf = (m: MessageView, cycle: ClockCycle): string =>
 const queuedAction = (m: MessageView): string =>
   canSendViaWhatsApp(m) ? t.messages.whatsappSend.action : t.messages.clickToChat;
 
-export function MessageMeta({ message: m, onTicksPress }: { message: MessageView; onTicksPress?: () => void }) {
+/** What the ticks say and do: ours only; the admin's stuck row is a button (FailedSheet). */
+function ticksOf(m: MessageView, cycle: ClockCycle, onTicksPress?: () => void) {
+  if (m.direction !== 'outbound') return undefined;
+  const action = m.status === 'failed' ? errorLine(m) : queuedAction(m);
+  const times = deliveryTimes(m, { cycle });
+  return {
+    status: m.status,
+    errorCode: m.error_code,
+    times,
+    onPress: onTicksPress,
+    actionLabel: onTicksPress ? action : undefined,
+  };
+}
+
+export function MessageMeta({
+  message: m,
+  onTicksPress,
+}: {
+  message: MessageView;
+  onTicksPress?: () => void;
+}) {
   const cycle = useClockCycle();
-  const small = useSmall();
-  const [open, setOpen] = useState(false);
+  const small = useSmallText();
   const later = queuedLine(m, { cycle });
   const sender = senderText(m);
-  const times = m.direction === 'outbound' ? deliveryTimes(m, { cycle }) : '';
   return (
     <>
       {sender ? <AppText style={small}>{sender}</AppText> : null}
-      {/* As WhatsApp: at the bubble's inline-end, the ticks right after the time (the web's order). */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 8 }}>
-        {m.line ? <AppText style={small}>{lineWord(m.line)}</AppText> : null}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          <CorrectedMark />
-          <AppText style={small}>{timeOf(m, cycle)}</AppText>
-          {m.direction === 'outbound' ? (
-            <DeliveryTicks
-              status={m.status}
-              times={times}
-              onLongPress={() => setOpen((v) => !v)}
-              onPress={onTicksPress}
-              actionLabel={onTicksPress ? (m.status === 'failed' ? errorLine(m) : queuedAction(m)) : undefined}
-            />
-          ) : null}
-        </View>
-      </View>
-      {open && times ? (
-        <AppText testID="ticks-times" style={{ ...small, alignSelf: 'flex-end', textAlign: 'right' }}>
-          {times}
-        </AppText>
-      ) : null}
+      {/*
+        As WhatsApp: at the bubble's inline-end, the ticks right after the time (the web's order).
+      */}
+      <BubbleMeta
+        time={timeOf(m, cycle)}
+        ticks={ticksOf(m, cycle, onTicksPress)}
+        lead={m.line ? lineWord(m.line) : null}
+        mark={<CorrectedMark />}
+      />
       {later ? <AppText style={small}>{later}</AppText> : null}
       {/* «أرسل عبر واتساب» (2026-11-06): a failed row's comes after its reason (FailReason). */}
       {m.status === 'failed' ? null : <WhatsAppStatusLine message={m} phone={m.phone_e164} />}
@@ -76,14 +70,24 @@ export function MessageMeta({ message: m, onTicksPress }: { message: MessageView
 }
 
 /**
- * «السبب: …» under a failed send, for everyone (the web's outboundNotes). The admin's is a button to
+ * «السبب: …» under a failed send, for everyone (the web's outboundNotes). The admin's is a button
+ * to
  * the same sheet as «! لم تُرسل» (a wide target, as WhatsApp's tap on the failed row), cut to two
  * lines since the sheet shows it in full; anyone else reads it whole, its remedy included.
  */
-export function FailReason({ message: m, onPress }: { message: MessageView; onPress?: () => void }) {
-  const small = useSmall();
+export function FailReason({
+  message: m,
+  onPress,
+}: {
+  message: MessageView;
+  onPress?: () => void;
+}) {
+  const small = useSmallText();
   const text = (
-    <AppText numberOfLines={onPress ? 2 : undefined} style={{ ...small, fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) }}>
+    <AppText
+      numberOfLines={onPress ? 2 : undefined}
+      style={{ ...small, fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) }}
+    >
       {errorLine(m)}
     </AppText>
   );
@@ -91,7 +95,9 @@ export function FailReason({ message: m, onPress }: { message: MessageView; onPr
     <Pressable accessibilityRole="button" hitSlop={{ top: 8, bottom: 8 }} onPress={onPress}>
       {text}
     </Pressable>
-  ) : text;
+  ) : (
+    text
+  );
   return (
     <>
       {reason}

@@ -18,3 +18,4 @@ export * from './seed/entries.js';
 export * from './value-groups.js';
 export * from './custom-config/index.js';
 export * from './custom-config/public-config.js';
+export * from './custom-config/public-config-schema.js';

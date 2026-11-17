@@ -15,6 +15,9 @@ vi.mock('@/features/people/auth', async (orig) => ({
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
 const words = t.courseActions.stop;
 const PREVIEW = {
@@ -31,8 +34,9 @@ const PREVIEW = {
 function open(stopped: unknown = null) {
   apiFetch.mockResolvedValue({ ...PREVIEW, stopped });
   const onDone = vi.fn();
+  const chat = { phone: '+201000000000', mode: 'admin' as const };
   renderWithClient(
-    <StopCourseDialog studentId="s1" subscriptionId={SUB} onClose={vi.fn()} onDone={onDone} />,
+    <StopCourseDialog studentId="s1" subscriptionId={SUB} onClose={vi.fn()} onDone={onDone} chat={chat} />,
   );
   const dialog = within(screen.getByRole('dialog', { name: words.title }));
   return { dialog, onDone };
@@ -54,14 +58,26 @@ describe('StopCourseDialog «إلغاء الاشتراك» (owner 2026-10-30)', 
     expect(apiFetch).toHaveBeenCalledWith(`/students/s1/course-stop?subscriptionId=${SUB}`);
   });
 
-  it('needs a reason, then posts it trimmed with one request id and closes with «done»', async () => {
+  it('needs a reason, posts it trimmed with one request id, then the done block', async () => {
     const { dialog, onDone } = open();
     await dialog.findByText(words.schedule);
-    expect(confirm()?.disabled).toBe(true);
-    fireEvent.change(dialog.getByLabelText(words.reason), { target: { value: '  سفر الأسرة ' } });
-    apiSend.mockResolvedValue({ subscriptionId: SUB, cancelledLessons: 4, endedRules: 1 });
+    // owner 2026-11-17: an empty reason says so clearly on «تأكيد الإلغاء», nothing is sent.
     fireEvent.click(confirm() as HTMLButtonElement);
-    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(words.done));
+    expect(await dialog.findByText(words.reasonRequired)).toBeTruthy();
+    expect(apiSend).not.toHaveBeenCalled();
+    fireEvent.change(dialog.getByLabelText(words.reason), { target: { value: '  سفر الأسرة ' } });
+    const result = { subscriptionId: SUB, cancelledLessons: 4, endedRules: 1, refund: null };
+    apiSend.mockResolvedValue({ ...result, studentStatus: 'churned' });
+    fireEvent.click(confirm() as HTMLButtonElement);
+    // owner 2026-11-17 (board CourseXWebDone): the status now, the next step, who was told, chat.
+    expect(await screen.findByText(words.done)).toBeTruthy();
+    const status = words.doneStatus.replace('{status}', t.enums.studentStatus.churned);
+    for (const line of [status, words.nextTitle, words.nextTell, words.notifiedFamily])
+      expect(screen.getByText(line)).toBeTruthy();
+    const chat = screen.getByRole('link', { name: t.students.family.openChat });
+    expect(chat.getAttribute('href')).toContain('/admin/inbox?phone=%2B201000000000');
+    fireEvent.click(screen.getByRole('button', { name: words.close }));
+    expect(onDone).toHaveBeenCalledWith(words.done);
     expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-stop', {
       subscriptionId: SUB,
       reason: 'سفر الأسرة',

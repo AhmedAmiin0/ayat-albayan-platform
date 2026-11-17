@@ -43,7 +43,10 @@ describe('«التواصل» › «نظرة عامة»', () => {
     const rows = within(table(h.whatCaption)).getAllByRole('row').slice(1);
     expect(rows.map((r) => within(r).getByRole('rowheader').textContent)).toEqual(Object.values(t.notificationCatalogue.audience));
     const guardian = rows[0] as HTMLElement;
-    const guardians = CATALOGUE.entries.filter((e) => !e.manual && e.audience === 'guardian');
+    // A row that also reaches the guardian (a schedule change, a chat message) counts here too.
+    const toGuardian = (e: (typeof CATALOGUE.entries)[number]) =>
+      e.audience === 'guardian' || (e.also_to ?? []).includes('guardian');
+    const guardians = CATALOGUE.entries.filter((e) => !e.manual && toGuardian(e));
     const cells = within(guardian).getAllByRole('cell').map((c) => c.textContent);
     const on = guardians.filter((e) => e.state === 'on').length;
     expect(cells.slice(0, 2)).toEqual([String(on), String(guardians.length - on)]);

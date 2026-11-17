@@ -1183,7 +1183,7 @@
   },
   "tests/sales/channel-after-subscribe.sql.spec.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "tests/sales/journey-7-assistant-cycle.spec.ts": {

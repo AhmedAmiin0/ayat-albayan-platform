@@ -45,7 +45,13 @@
     "apps/family-mobile": {
       "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
       "project": ["{app,src}/**/*.{ts,tsx}"],
-      "ignoreDependencies": ["react-test-renderer", "expo-system-ui", "expo-splash-screen", "zod"]
+      "ignoreDependencies": [
+        "react-test-renderer",
+        "expo-system-ui",
+        "expo-splash-screen",
+        "expo-document-picker",
+        "zod"
+      ]
     },
     "packages/db": {
       "ignore": ["src/types.ts", "supabase/**"]
@@ -56,7 +62,14 @@
     "packages/mobile-kit": {
       "entry": ["src/index.ts", "babel.cjs", "jest.base.cjs", "jest.shared.cjs"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": ["react-test-renderer"]
+      "ignoreDependencies": [
+        "react-test-renderer",
+        "@expo/ui",
+        "@livekit/react-native",
+        "@livekit/react-native-webrtc",
+        "livekit-client",
+        "expo-screen-capture"
+      ]
     },
     "packages/web-kit": {
       "entry": ["src/**/*.{ts,tsx}"],

@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
+import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
+
+type Teacher = { display_name_ar: string; display_name_en: string | null } | null;
 
 /** A sent report (whitelisted select: never the teacher's form fields or notes). */
 export interface PortalReportRow {
@@ -8,14 +11,18 @@ export interface PortalReportRow {
   lesson_id: string;
   sent_at: string | null;
   pdf_path: string | null;
-  lesson: { starts_at: string; teacher: { display_name_ar: string; display_name_en: string | null } | null } | null;
+  lesson: { starts_at: string; teacher: Teacher } | null;
 }
 
-/** A recording the family may see, with the facts that decide it. */
+/** A recording the family may play, with what its list and lesson page show. */
 export interface PortalRecordingRow {
   id: string;
   lesson_id: string;
   file_path: string;
+  started_at: string;
+  ended_at: string | null;
+  size_bytes: number | null;
+  lesson: { starts_at: string; teacher: Teacher };
 }
 
 /** A sent report of a lesson: which one, nothing of its content. */
@@ -31,10 +38,15 @@ export interface ReportTexts {
 }
 
 const LIMIT = 60;
+/** Old enough families are not cut at the list's page: an old recording still opens. */
+const SCAN = 1000;
+const REC = 'id, lesson_id, file_path, started_at, ended_at, size_bytes, lessons!inner(starts_at, teacher:teachers(display_name_ar, display_name_en), lesson_students(student_id))';
+type Reply<T> = PromiseLike<{ data: T | null; error: PostgrestError | null }>;
 
 /**
- * «تقارير الحلقات» reads (service role, the student already scoped). Sent = submitted, the PDF ready and
- * the report_ready message gone (sent_at): the same PDFs the family received on WhatsApp.
+ * «تقارير الحلقات» reads (service role, the student already scoped). Sent = submitted, the PDF
+ * ready and the report_ready message gone (sent_at): the same PDFs the family received on
+ * WhatsApp. The one reader of «sent» and of the family's recordings (reports, «التسجيلات»).
  */
 @Injectable()
 export class PortalReportsRepo {
@@ -49,8 +61,18 @@ export class PortalReportsRepo {
     return this.withLessons(data);
   }
 
-  async oneSent(input: { studentId: string; reportId: string }): Promise<Omit<PortalReportRow, 'lesson'> | null> {
-    const { data, error } = await this.sentQuery(input.studentId).eq('id', input.reportId).maybeSingle();
+  /** lesson_id → report id of every sent report (no lesson read). */
+  async sentLessons(studentId: string): Promise<Map<string, string>> {
+    const data = await rows(this.sentQuery(studentId).order('sent_at', { ascending: false })
+      .limit(SCAN));
+    return new Map(data.map((r) => [r.lesson_id, r.id]));
+  }
+
+  async oneSent(
+    input: { studentId: string; reportId: string },
+  ): Promise<Omit<PortalReportRow, 'lesson'> | null> {
+    const { data, error } = await this.sentQuery(input.studentId).eq('id', input.reportId)
+      .maybeSingle();
     if (error) throw dbError(error);
     return data;
   }
@@ -58,9 +80,7 @@ export class PortalReportsRepo {
   /** The sent reports of these lessons (the history's report_id). */
   async sentOf(input: { studentId: string; lessonIds: readonly string[] }): Promise<SentRef[]> {
     if (input.lessonIds.length === 0) return [];
-    const { data, error } = await this.sentQuery(input.studentId)
-      .in('lesson_id', [...input.lessonIds]);
-    if (error) throw dbError(error);
+    const data = await rows(this.sentQuery(input.studentId).in('lesson_id', [...input.lessonIds]));
     return data.map((r) => ({ id: r.id, lesson_id: r.lesson_id }));
   }
 
@@ -75,33 +95,37 @@ export class PortalReportsRepo {
     return data;
   }
 
-  /** lesson_reports reaches lessons only through lesson_students (composite key): a second read. */
-  private async withLessons(rows: readonly Omit<PortalReportRow, 'lesson'>[]): Promise<PortalReportRow[]> {
-    if (rows.length === 0) return [];
-    const { data, error } = await this.db
-      .from('lessons')
-      .select('id, starts_at, teacher:teachers(display_name_ar, display_name_en)')
-      .in('id', [...new Set(rows.map((r) => r.lesson_id))]);
-    if (error) throw dbError(error);
-    const byId = new Map(data.map((l) => [l.id, { starts_at: l.starts_at, teacher: l.teacher }]));
-    return rows.map((r) => ({ ...r, lesson: byId.get(r.lesson_id) ?? null }));
-  }
-
   /**
-   * Finished recordings of these lessons that staff made visible to the student (visible_to_student,
-   * default off), on one-student lessons only: a group file is every student's session.
+   * Finished recordings of these lessons that staff made visible to the student
+   * (visible_to_student, default off), newest first, on one-student lessons only: a group file
+   * is every student's session.
    */
   async visibleRecordings(lessonIds: readonly string[]): Promise<PortalRecordingRow[]> {
     if (lessonIds.length === 0) return [];
-    const { data, error } = await this.db
+    const data = await rows(this.db
       .from('lesson_recordings')
-      .select('id, lesson_id, file_path, lessons!inner(lesson_students(student_id))')
+      .select(REC)
       .in('lesson_id', [...lessonIds])
       .eq('visible_to_student', true)
       .eq('status', 'done')
-      .order('started_at', { ascending: false });
-    if (error) throw dbError(error);
-    return data.flatMap((r) => (r.lesson_id && r.lessons.lesson_students.length === 1 ? [{ id: r.id, lesson_id: r.lesson_id, file_path: r.file_path }] : []));
+      .order('started_at', { ascending: false }));
+    return data.flatMap(({ lessons, lesson_id, ...r }) =>
+      lesson_id && lessons.lesson_students.length === 1
+        ? [{ ...r, lesson_id, lesson: { starts_at: lessons.starts_at, teacher: lessons.teacher } }]
+        : []);
+  }
+
+  /** lesson_reports reaches lessons only through lesson_students (composite key): 2nd read. */
+  private async withLessons(
+    sent: readonly Omit<PortalReportRow, 'lesson'>[],
+  ): Promise<PortalReportRow[]> {
+    if (sent.length === 0) return [];
+    const data = await rows(this.db
+      .from('lessons')
+      .select('id, starts_at, teacher:teachers(display_name_ar, display_name_en)')
+      .in('id', [...new Set(sent.map((r) => r.lesson_id))]));
+    const byId = new Map(data.map((l) => [l.id, { starts_at: l.starts_at, teacher: l.teacher }]));
+    return sent.map((r) => ({ ...r, lesson: byId.get(r.lesson_id) ?? null }));
   }
 
   private sentQuery(studentId: string) {
@@ -113,4 +137,11 @@ export class PortalReportsRepo {
       .eq('pdf_status', 'ready')
       .not('sent_at', 'is', null);
   }
+}
+
+/** The rows of a list read; a database error throws. */
+async function rows<T>(query: Reply<T[]>): Promise<T[]> {
+  const { data, error } = await query;
+  if (error) throw dbError(error);
+  return data ?? [];
 }

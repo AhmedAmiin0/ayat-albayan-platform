@@ -9,6 +9,7 @@ export type MovedLesson = OpenCourseLesson & { rule_id: string | null; starts_at
 /** A lesson of the course, its rule and local day (a rule without subscription_id is bounded). */
 interface CourseLesson extends CourseLessonFact {
   id: string;
+  starts_at: string;
   rule_id: string | null;
   local_date: string | null;
 }
@@ -27,7 +28,7 @@ export class CourseLessonRepo {
       this.db
         .from('lessons')
         .select(
-          'id, rule_id, local_date, status, instant, makeup_of_id, lesson_students!inner(student_id, chargeable)',
+          'id, rule_id, local_date, starts_at, status, instant, makeup_of_id, lesson_students!inner(student_id, chargeable)',
         )
         .in('rule_id', [...input.ruleIds])
         .eq('lesson_students.student_id', input.studentId)
@@ -37,6 +38,7 @@ export class CourseLessonRepo {
     );
     return rows.map((l) => ({
       id: l.id,
+      starts_at: l.starts_at,
       rule_id: l.rule_id,
       local_date: l.local_date,
       status: l.status,

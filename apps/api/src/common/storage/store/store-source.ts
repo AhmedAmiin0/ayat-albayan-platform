@@ -53,15 +53,19 @@ export class StoreSource {
     return copied ? this.minio() : null;
   }
 
-  /** MinIO's S3 target for an outside writer (public URL: it may run off this host). */
+  /**
+   * MinIO's S3 target for an outside writer (public URL: it may run off this host), signed with
+   * the write-only egress keys when set (MINIO_EGRESS_*); the app key only while they are unset.
+   */
   minioTarget(bucket: Bucket) {
     const m = this.minioEnv();
+    const keys = this.sources.config().egress ?? m;
     const target = {
       endpoint: m.publicUrl,
       region: m.region,
       bucket: `${m.bucketPrefix}${bucket}`,
     };
-    return { ...target, accessKey: m.accessKey, secret: m.secretKey };
+    return { ...target, accessKey: keys.accessKey, secret: keys.secretKey };
   }
 
   private minioEnv(): MinioEnv {

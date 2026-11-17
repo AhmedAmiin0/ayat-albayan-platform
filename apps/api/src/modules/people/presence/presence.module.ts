@@ -10,7 +10,8 @@ import { PresenceSettings } from './presence.settings';
 /**
  * Online status and last seen (owner 2026-10-30, docs/33): the throttled last-seen write on every
  * authenticated request (a global interceptor), GET /presence/me and /presence/staff. The student
- * channel's presence routes use the exported PresenceService.
+ * channel's presence routes use the exported PresenceService; its pushes, PresenceRepo's
+ * channelPeople (who is in the chat).
  */
 @Module({
   controllers: [PresenceController],
@@ -21,6 +22,6 @@ import { PresenceSettings } from './presence.settings';
     LastSeenService,
     { provide: APP_INTERCEPTOR, useClass: LastSeenInterceptor },
   ],
-  exports: [PresenceService],
+  exports: [PresenceService, PresenceRepo],
 })
 export class PresenceModule {}

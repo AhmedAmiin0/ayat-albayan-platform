@@ -1,4 +1,5 @@
-import type { FamilyLesson, FamilyStudent, SentReport } from './family-push.plan';
+import type { FamilyStudent } from '@/common/push/family-readers';
+import type { FamilyLesson, SentReport } from './family-push.plan';
 
 // The sweep's rows (FamilyPushRepo's selects) → the plan's shapes.
 

@@ -15,3 +15,5 @@ export { instantDay, localDay } from '@/core/lib/money/format';
 // «تعديل المبلغ» (owner 2026-11-02): «كل المدفوعات» (money) and «مدفوعاتي» (sales-money).
 export { AdminAmountEdit } from './amount-edit/AdminAmountEdit';
 export { SalesAmountEdit } from './amount-edit/SalesAmountEdit';
+// «جدّد الاشتراك» in «الدورة والباقة» waits for the balance (owner 2026-11-17).
+export { useStudentBalance } from './hooks/queries';

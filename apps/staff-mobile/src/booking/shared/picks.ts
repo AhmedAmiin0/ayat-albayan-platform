@@ -1,8 +1,7 @@
 import type { BookingPickFields } from '@ab/client-core';
 import { wallParts } from '@ab/shared';
 import { hhmm, type ViewerClock } from '@/core/lib/clock';
-import { t } from '@ab/mobile-kit';
-import { cityOf } from './slots';
+import { t, cityOf } from '@ab/mobile-kit';
 
 // A weekly package's picks (owner 2026-10-18: «اختر موعدًا لكل يوم»): one free slot per weekday of
 // the family's zone, each with its own time. The draft keeps the earliest as startsAt and the

@@ -6,12 +6,13 @@ import { TEACHER_PAGE_KEYS } from './domains/teaching/teacher-pages.js';
 // «i dont like long pages», «stick with table»). Kept apart from layout.ts, which still orders the
 // old single page; docs/26 26-P1 later moves `group`/`confirm`/`ownedBy` into the registry itself.
 
-/** The editable groups of «القيم», in list order (57 keys). */
+/** The editable groups of «القيم», in list order (58 keys). */
 export const VALUE_GROUPS = {
   schedule: SCHEDULE_KEYS,
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
     'meeting_link_auto', 'meetings_in_app'],
-  reports: ['report_teacher_edit_minutes', 'report_teacher_edit_hours', 'report_form_v2', 'short_link_base'],
+  reports: ['report_teacher_edit_minutes', 'report_teacher_edit_hours', 'report_form_v2', 'short_link_base',
+    'short_link_default_days', 'short_link_purge_days', 'short_link_extra_hosts'],
   accounts: [
     'reporting_currency',
     'renewal_alert_remaining',
@@ -36,7 +37,7 @@ export const VALUE_GROUPS = {
   sales: ['sales_auto_assign', 'sales_require_assignee', 'renewal_commission_enabled', 'renewal_commission_percent'],
   retention: ['recording_retention_days', 'activity_retention_days'],
   teachers: TEACHER_PAGE_KEYS,
-  family: ['family_chat_enabled', 'family_payment_instructions'],
+  family: ['family_chat_enabled', 'family_meetings_in_app', 'family_payment_instructions'],
 } as const satisfies Record<string, readonly SettingKey[]>;
 export type ValueGroupId = keyof typeof VALUE_GROUPS;
 export const VALUE_GROUP_IDS = Object.keys(VALUE_GROUPS) as ValueGroupId[];

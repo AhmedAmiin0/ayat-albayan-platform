@@ -18,7 +18,7 @@ interface Props {
 
 /**
  * One child (docs/50 §6): «القادمة» / «حضرها» / «غاب عنها» / «الباقة» (guardian and adult only) /
- * the teacher chat (while family_chat_enabled is on and familyChats allows it). A report opens
+ * the teacher chat (while family_chat_enabled is on, for every login). A report opens
  * over the tabs and comes back to the same tab.
  */
 export function ChildView({ kind, student, onBack }: Props) {

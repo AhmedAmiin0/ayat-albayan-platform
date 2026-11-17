@@ -23,10 +23,10 @@ test.describe('family sign-in on the family host', () => {
     await expect(page.getByRole('tab')).toHaveCount(0);
     await page.getByLabel(ar.familyAuth.phone).fill(f.phone);
     await page.getByRole('button', { name: ar.familyAuth.sendCode }).click();
-    await expect(page.getByText(ar.familyAuth.codeSent)).toBeVisible();
+    await expect(page.getByRole('heading', { name: ar.familyApp.signIn.codeTitle })).toBeVisible();
     const code = await codeSentTo(f.phone);
+    // The sixth digit signs in on its own (no verify tap).
     await page.getByLabel(ar.familyAuth.codeDigit.replace('{n}', '1')).fill(code);
-    await page.getByRole('button', { name: ar.familyAuth.verify }).click();
     await expect(page).toHaveURL(/\/portal/);
     await page.context().close();
   });

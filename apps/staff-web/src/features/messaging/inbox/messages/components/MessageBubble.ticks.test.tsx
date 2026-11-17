@@ -72,6 +72,16 @@ describe('MessageBubble delivery ticks (WhatsApp-style)', () => {
     expect(within(bubble).getByRole('img').getAttribute('class')).toContain('text-act');
   });
 
+  it('a send that may have gone reads «لم يتأكد الإرسال بعد», never «لم تُرسل» (docs/19)', () => {
+    const bubble = renderBubble({ status: 'failed', error_code: 'uncertain' });
+    const ticks = within(bubble).getByRole('img', { name: t.messages.unconfirmedTick });
+    expect(ticks.textContent).toBe(t.messages.unconfirmedTick);
+    expect(ticks.getAttribute('class')).toContain('text-act');
+    const reason = t.messages.errorLine.replace('{reason}', t.messages.errors.uncertain);
+    expect(within(bubble).getByText(reason)).toBeTruthy();
+    expect(bubble.textContent).not.toContain(t.enums.messageStatus.failed);
+  });
+
   it('theirs carries no ticks', () => {
     expect(within(renderBubble({ direction: 'inbound' })).queryByRole('img')).toBeNull();
   });

@@ -44,14 +44,24 @@ describe('portal queries (service role, whitelisted selects)', () => {
     expect(String(f.argsOf('lesson_reports', 'select')?.[0])).toBe('id, lesson_id, sent_at, pdf_path');
   });
 
+  it('sent lessons: lesson → report of every sent report, one read, no lesson join', async () => {
+    const f = fakeDb({ lesson_reports: [{ data: [{ id: 'r1', lesson_id: 'l1' }] }] });
+    expect(await new PortalReportsRepo(f.db).sentLessons('s1')).toEqual(new Map([['l1', 'r1']]));
+    expect(f.argsOf('lesson_reports', 'limit')).toEqual([1000]);
+    expect(f.trips).toEqual(['lesson_reports']);
+  });
+
   it('recordings: visible_to_student and done only; a group lesson is dropped', async () => {
+    const one = [{ student_id: 's1' }];
+    const lesson = (students: unknown[]) => ({ starts_at: 'S', teacher: null, lesson_students: students });
     const f = fakeDb({
       lesson_recordings: [{ data: [
-        { id: 'a', lesson_id: 'l1', file_path: 'f1', lessons: { lesson_students: [{ student_id: 's1' }] } },
-        { id: 'b', lesson_id: 'l2', file_path: 'f2', lessons: { lesson_students: [{ student_id: 's1' }, { student_id: 's2' }] } },
+        { id: 'a', lesson_id: 'l1', file_path: 'f1', lessons: lesson(one) },
+        { id: 'b', lesson_id: 'l2', file_path: 'f2', lessons: lesson([...one, { student_id: 's2' }]) },
       ] }],
     });
-    expect(await new PortalReportsRepo(f.db).visibleRecordings(['l1', 'l2'])).toEqual([{ id: 'a', lesson_id: 'l1', file_path: 'f1' }]);
+    const out = await new PortalReportsRepo(f.db).visibleRecordings(['l1', 'l2']);
+    expect(out).toEqual([{ id: 'a', lesson_id: 'l1', file_path: 'f1', lesson: { starts_at: 'S', teacher: null } }]);
     const eqs = f.calls.filter((c) => c.table === 'lesson_recordings' && c.method === 'eq').map((c) => c.args);
     expect(eqs).toEqual([['visible_to_student', true], ['status', 'done']]);
     expect(await new PortalReportsRepo(fakeDb({}).db).visibleRecordings([])).toEqual([]);

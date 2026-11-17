@@ -1,6 +1,11 @@
 import { Module } from '@nestjs/common';
 import { SubscriptionsModule } from '@/modules/finance/subscriptions';
 import { ClassroomModule } from '@/modules/teaching/classroom';
+import { BookingModule } from '@/modules/teaching/booking';
+import { LessonsModule } from '@/modules/teaching/lessons';
+import { PortalActionDeps, PortalLessonActions } from './actions/portal-actions.service';
+import { PortalLessonActionsController } from './actions/portal-actions.controller';
+import { PortalSlotsService } from './actions/portal-slots.service';
 import { ChatNumber } from './home/chat-number';
 import { PortalHistoryRepo } from './history/portal-history.repo';
 import { PortalHistoryService } from './history/portal-history.service';
@@ -17,10 +22,13 @@ import { PortalReportsService } from './reports/portal-reports.service';
 import { PortalScopes } from './scope/portal-scope';
 import { PortalScopeRepo } from './scope/portal-scope.repo';
 
-/** The family portal's API (docs/31): /portal/*, guardian and student logins only. */
+/**
+ * The family portal's API (docs/31): /portal/*, guardian and student logins only; the family's
+ * lesson actions reuse the lessons module's services and the booking slot grid (owner 2026-11-17).
+ */
 @Module({
-  imports: [ClassroomModule, SubscriptionsModule],
-  controllers: [PortalController, PortalRecordsController],
+  imports: [ClassroomModule, LessonsModule, SubscriptionsModule, BookingModule],
+  controllers: [PortalController, PortalRecordsController, PortalLessonActionsController],
   providers: [
     PortalScopeRepo,
     PortalScopes,
@@ -36,7 +44,10 @@ import { PortalScopeRepo } from './scope/portal-scope.repo';
     PortalHistoryRepo,
     PortalHistoryService,
     PortalLessonExtras,
+    PortalActionDeps,
+    PortalLessonActions,
+    PortalSlotsService,
   ],
-  exports: [PortalScopes],
+  exports: [PortalScopes, PortalReportsRepo],
 })
 export class PortalModule {}

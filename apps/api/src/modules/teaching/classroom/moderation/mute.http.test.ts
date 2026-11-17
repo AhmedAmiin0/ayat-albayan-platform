@@ -73,7 +73,7 @@ describe('mute routes', () => {
 
   it('429 too_many_requests once a login has used up its mutes', async () => {
     const limit = h.app.get(MuteLimit);
-    for (let i = 0; i < MUTES_PER_WINDOW; i += 1) limit.assert(OTHER_TEACHER.id);
+    for (let i = 0; i < MUTES_PER_WINDOW; i += 1) limit.assert(OTHER_TEACHER);
     const res = await h.call({ method: 'POST', url: lesson(), token: 'other', body: { source: 'microphone' } });
     expect([res.statusCode, res.json().code]).toEqual([429, 'too_many_requests']);
   });

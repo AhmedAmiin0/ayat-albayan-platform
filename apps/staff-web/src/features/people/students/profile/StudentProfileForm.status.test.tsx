@@ -50,12 +50,12 @@ describe('StudentProfileForm status safety (R-STU-05)', () => {
   });
 
   it('a changed status goes out with the loaded status as expected_status', async () => {
-    api.updateStudent.mockResolvedValue({ ...STUDENT, status: 'paused' });
+    api.updateStudent.mockResolvedValue({ ...STUDENT, status: 'expired' });
     renderForm();
-    fireEvent.change(statusSelect(), { target: { value: 'paused' } });
+    fireEvent.change(statusSelect(), { target: { value: 'expired' } });
     save();
     await screen.findByText(t.students.updated);
-    expect(sentPatch()).toMatchObject({ status: 'paused', expected_status: 'trial' });
+    expect(sentPatch()).toMatchObject({ status: 'expired', expected_status: 'trial' });
     save();
     await waitFor(() => expect(api.updateStudent).toHaveBeenCalledTimes(2));
     expect(sentPatch(1)).not.toHaveProperty('status'); // saved: no longer a change
@@ -65,7 +65,7 @@ describe('StudentProfileForm status safety (R-STU-05)', () => {
     api.updateStudent.mockRejectedValueOnce(new ApiError(409, { code: 'status_changed', message: 'status_changed' }));
     api.fetchStudent.mockResolvedValue({ ...STUDENT, status: 'pending_subscription' });
     renderForm();
-    fireEvent.change(statusSelect(), { target: { value: 'churned' } });
+    fireEvent.change(statusSelect(), { target: { value: 'expired' } });
     save();
     expect((await screen.findByRole('alert')).textContent).toBe(t.students.statusChanged);
     expect(api.fetchStudent).toHaveBeenCalled();
@@ -77,7 +77,7 @@ describe('StudentProfileForm status safety (R-STU-05)', () => {
   });
 
   it('an untouched form follows a refetched student and expects its new status', async () => {
-    api.updateStudent.mockResolvedValue({ ...STUDENT, status: 'paused' });
+    api.updateStudent.mockResolvedValue({ ...STUDENT, status: 'expired' });
     const client = new QueryClient();
     const view = (student: StudentProfile) => (
       <QueryClientProvider client={client}><StudentProfileForm student={student} /></QueryClientProvider>
@@ -85,10 +85,10 @@ describe('StudentProfileForm status safety (R-STU-05)', () => {
     const { rerender } = render(view(STUDENT));
     rerender(view({ ...STUDENT, status: 'active' })); // e.g. a payment moved it
     await waitFor(() => expect(statusSelect().value).toBe('active'));
-    fireEvent.change(statusSelect(), { target: { value: 'paused' } });
+    fireEvent.change(statusSelect(), { target: { value: 'expired' } });
     save();
     await screen.findByText(t.students.updated);
-    expect(sentPatch()).toMatchObject({ status: 'paused', expected_status: 'active' });
+    expect(sentPatch()).toMatchObject({ status: 'expired', expected_status: 'active' });
   });
 
   it('any other failure keeps the generic error', async () => {

@@ -557,35 +557,71 @@ export type Database = {
       };
       channel_messages: {
         Row: {
+          attachment_duration_ms: number | null;
+          attachment_mime: string | null;
+          attachment_name: string | null;
+          attachment_path: string | null;
+          attachment_size: number | null;
           body: string;
           channel_id: string;
+          client_id: string | null;
           created_at: string;
           deleted_at: string | null;
           deleted_by: string | null;
           edited_at: string | null;
           id: string;
+          kind: string;
+          quote_body: string | null;
+          quote_kind: string | null;
+          quote_sender_name: string | null;
+          quote_sender_role: string | null;
+          reply_to_id: string | null;
           sender_profile_id: string | null;
           sender_role: string;
         };
         Insert: {
+          attachment_duration_ms?: number | null;
+          attachment_mime?: string | null;
+          attachment_name?: string | null;
+          attachment_path?: string | null;
+          attachment_size?: number | null;
           body: string;
           channel_id: string;
+          client_id?: string | null;
           created_at?: string;
           deleted_at?: string | null;
           deleted_by?: string | null;
           edited_at?: string | null;
           id?: string;
+          kind?: string;
+          quote_body?: string | null;
+          quote_kind?: string | null;
+          quote_sender_name?: string | null;
+          quote_sender_role?: string | null;
+          reply_to_id?: string | null;
           sender_profile_id?: string | null;
           sender_role: string;
         };
         Update: {
+          attachment_duration_ms?: number | null;
+          attachment_mime?: string | null;
+          attachment_name?: string | null;
+          attachment_path?: string | null;
+          attachment_size?: number | null;
           body?: string;
           channel_id?: string;
+          client_id?: string | null;
           created_at?: string;
           deleted_at?: string | null;
           deleted_by?: string | null;
           edited_at?: string | null;
           id?: string;
+          kind?: string;
+          quote_body?: string | null;
+          quote_kind?: string | null;
+          quote_sender_name?: string | null;
+          quote_sender_role?: string | null;
+          reply_to_id?: string | null;
           sender_profile_id?: string | null;
           sender_role?: string;
         };
@@ -609,6 +645,13 @@ export type Database = {
             columns: ['sender_profile_id'];
             isOneToOne: false;
             referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'channel_messages_reply_to_id_fkey';
+            columns: ['reply_to_id'];
+            isOneToOne: false;
+            referencedRelation: 'channel_messages';
             referencedColumns: ['id'];
           },
         ];
@@ -778,32 +821,41 @@ export type Database = {
       };
       classroom_participants: {
         Row: {
+          entered_at: string | null;
           id: string;
           identity: string;
           join_link_id: string | null;
           joined_at: string;
+          left_at: string | null;
           lesson_id: string;
           name: string;
+          presence_at: string | null;
           role: string;
           user_id: string | null;
         };
         Insert: {
+          entered_at?: string | null;
           id?: string;
           identity: string;
           join_link_id?: string | null;
           joined_at?: string;
+          left_at?: string | null;
           lesson_id: string;
           name: string;
+          presence_at?: string | null;
           role: string;
           user_id?: string | null;
         };
         Update: {
+          entered_at?: string | null;
           id?: string;
           identity?: string;
           join_link_id?: string | null;
           joined_at?: string;
+          left_at?: string | null;
           lesson_id?: string;
           name?: string;
+          presence_at?: string | null;
           role?: string;
           user_id?: string | null;
         };
@@ -1488,6 +1540,7 @@ export type Database = {
           guardian_id: string;
           is_primary: boolean;
           phone_e164: string;
+          student_id: string | null;
         };
         Insert: {
           created_at?: string;
@@ -1495,6 +1548,7 @@ export type Database = {
           guardian_id: string;
           is_primary?: boolean;
           phone_e164: string;
+          student_id?: string | null;
         };
         Update: {
           created_at?: string;
@@ -1502,6 +1556,7 @@ export type Database = {
           guardian_id?: string;
           is_primary?: boolean;
           phone_e164?: string;
+          student_id?: string | null;
         };
         Relationships: [
           {
@@ -1509,6 +1564,13 @@ export type Database = {
             columns: ['guardian_id'];
             isOneToOne: false;
             referencedRelation: 'guardians';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'guardian_phones_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: true;
+            referencedRelation: 'students';
             referencedColumns: ['id'];
           },
         ];
@@ -2053,6 +2115,60 @@ export type Database = {
           },
         ];
       };
+      lesson_files: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          kind: string;
+          lesson_id: string;
+          mime: string;
+          size: number;
+          storage_path: string;
+          title: string | null;
+          visible_to_family: boolean;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          kind: string;
+          lesson_id: string;
+          mime: string;
+          size: number;
+          storage_path: string;
+          title?: string | null;
+          visible_to_family?: boolean;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          kind?: string;
+          lesson_id?: string;
+          mime?: string;
+          size?: number;
+          storage_path?: string;
+          title?: string | null;
+          visible_to_family?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_files_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_files_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       lesson_join_links: {
         Row: {
           created_at: string;
@@ -2061,6 +2177,7 @@ export type Database = {
           id: string;
           lesson_id: string;
           revoked_at: string | null;
+          sent_for_student_id: string | null;
           student_id: string | null;
           token_hash: string;
         };
@@ -2071,6 +2188,7 @@ export type Database = {
           id?: string;
           lesson_id: string;
           revoked_at?: string | null;
+          sent_for_student_id?: string | null;
           student_id?: string | null;
           token_hash: string;
         };
@@ -2081,6 +2199,7 @@ export type Database = {
           id?: string;
           lesson_id?: string;
           revoked_at?: string | null;
+          sent_for_student_id?: string | null;
           student_id?: string | null;
           token_hash?: string;
         };
@@ -2114,11 +2233,13 @@ export type Database = {
           created_by: string | null;
           decided_at: string | null;
           decided_by: string | null;
+          decision_note: string | null;
           id: string;
           lesson_id: string;
           new_lesson_id: string | null;
           note: string | null;
           proposed_starts_at: string;
+          requested_by: string;
           status: Database['public']['Enums']['proposal_status'];
           teacher_id: string;
         };
@@ -2127,11 +2248,13 @@ export type Database = {
           created_by?: string | null;
           decided_at?: string | null;
           decided_by?: string | null;
+          decision_note?: string | null;
           id?: string;
           lesson_id: string;
           new_lesson_id?: string | null;
           note?: string | null;
           proposed_starts_at: string;
+          requested_by?: string;
           status?: Database['public']['Enums']['proposal_status'];
           teacher_id: string;
         };
@@ -2140,11 +2263,13 @@ export type Database = {
           created_by?: string | null;
           decided_at?: string | null;
           decided_by?: string | null;
+          decision_note?: string | null;
           id?: string;
           lesson_id?: string;
           new_lesson_id?: string | null;
           note?: string | null;
           proposed_starts_at?: string;
+          requested_by?: string;
           status?: Database['public']['Enums']['proposal_status'];
           teacher_id?: string;
         };
@@ -2481,6 +2606,7 @@ export type Database = {
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
+          room_ended_at: string | null;
           room_opened_at: string | null;
           rule_id: string | null;
           starts_at: string;
@@ -2510,6 +2636,7 @@ export type Database = {
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
+          room_ended_at?: string | null;
           room_opened_at?: string | null;
           rule_id?: string | null;
           starts_at: string;
@@ -2539,6 +2666,7 @@ export type Database = {
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
+          room_ended_at?: string | null;
           room_opened_at?: string | null;
           rule_id?: string | null;
           starts_at?: string;
@@ -3433,7 +3561,8 @@ export type Database = {
           disabled_reason: string | null;
           full_name: string;
           id: string;
-          locale: string;
+          is_test: boolean;
+          locale: string | null;
           phone_e164: string | null;
           push_tokens: string[];
           role: Database['public']['Enums']['user_role'];
@@ -3450,7 +3579,8 @@ export type Database = {
           disabled_reason?: string | null;
           full_name: string;
           id: string;
-          locale?: string;
+          is_test?: boolean;
+          locale?: string | null;
           phone_e164?: string | null;
           push_tokens?: string[];
           role: Database['public']['Enums']['user_role'];
@@ -3467,7 +3597,8 @@ export type Database = {
           disabled_reason?: string | null;
           full_name?: string;
           id?: string;
-          locale?: string;
+          is_test?: boolean;
+          locale?: string | null;
           phone_e164?: string | null;
           push_tokens?: string[];
           role?: Database['public']['Enums']['user_role'];
@@ -3958,32 +4089,187 @@ export type Database = {
         };
         Relationships: [];
       };
-      short_links: {
+      short_link_users: {
         Row: {
+          added_by: string | null;
           code: string;
           created_at: string;
-          expires_at: string | null;
-          kind: string;
-          subject: string;
-          target_url: string;
+          id: string;
+          phone_e164: string | null;
+          profile_id: string | null;
+          send_attempts: number;
+          send_error: string | null;
+          send_status: string;
+          sent_at: string | null;
+        };
+        Insert: {
+          added_by?: string | null;
+          code: string;
+          created_at?: string;
+          id?: string;
+          phone_e164?: string | null;
+          profile_id?: string | null;
+          send_attempts?: number;
+          send_error?: string | null;
+          send_status?: string;
+          sent_at?: string | null;
+        };
+        Update: {
+          added_by?: string | null;
+          code?: string;
+          created_at?: string;
+          id?: string;
+          phone_e164?: string | null;
+          profile_id?: string | null;
+          send_attempts?: number;
+          send_error?: string | null;
+          send_status?: string;
+          sent_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'short_link_users_added_by_fkey';
+            columns: ['added_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'short_link_users_code_fkey';
+            columns: ['code'];
+            isOneToOne: false;
+            referencedRelation: 'short_links';
+            referencedColumns: ['code'];
+          },
+          {
+            foreignKeyName: 'short_link_users_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      short_link_visits: {
+        Row: {
+          code: string;
+          first_at: string;
+          id: string;
+          last_at: string;
+          matched_guardian_id: string | null;
+          matched_profile_id: string | null;
+          opens: number;
+          phone_e164: string | null;
+          profile_id: string | null;
         };
         Insert: {
           code: string;
-          created_at?: string;
-          expires_at?: string | null;
-          kind: string;
-          subject: string;
-          target_url: string;
+          first_at?: string;
+          id?: string;
+          last_at?: string;
+          matched_guardian_id?: string | null;
+          matched_profile_id?: string | null;
+          opens?: number;
+          phone_e164?: string | null;
+          profile_id?: string | null;
         };
         Update: {
           code?: string;
+          first_at?: string;
+          id?: string;
+          last_at?: string;
+          matched_guardian_id?: string | null;
+          matched_profile_id?: string | null;
+          opens?: number;
+          phone_e164?: string | null;
+          profile_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'short_link_visits_code_fkey';
+            columns: ['code'];
+            isOneToOne: false;
+            referencedRelation: 'short_links';
+            referencedColumns: ['code'];
+          },
+          {
+            foreignKeyName: 'short_link_visits_matched_guardian_id_fkey';
+            columns: ['matched_guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'guardians';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'short_link_visits_matched_profile_id_fkey';
+            columns: ['matched_profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'short_link_visits_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      short_links: {
+        Row: {
+          audience: string;
+          code: string;
+          created_at: string;
+          created_by: string | null;
+          expires_at: string | null;
+          id: string;
+          kind: string;
+          max_users: number | null;
+          send_whatsapp: boolean;
+          status: string;
+          subject: string;
+          target_url: string;
+          title: string | null;
+        };
+        Insert: {
+          audience?: string;
+          code: string;
           created_at?: string;
+          created_by?: string | null;
           expires_at?: string | null;
+          id?: string;
+          kind: string;
+          max_users?: number | null;
+          send_whatsapp?: boolean;
+          status?: string;
+          subject: string;
+          target_url: string;
+          title?: string | null;
+        };
+        Update: {
+          audience?: string;
+          code?: string;
+          created_at?: string;
+          created_by?: string | null;
+          expires_at?: string | null;
+          id?: string;
           kind?: string;
+          max_users?: number | null;
+          send_whatsapp?: boolean;
+          status?: string;
           subject?: string;
           target_url?: string;
+          title?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'short_links_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       sticker_favourites: {
         Row: {
@@ -4066,21 +4352,31 @@ export type Database = {
       };
       student_channels: {
         Row: {
+          assistant_id: string | null;
           created_at: string;
           id: string;
           student_id: string;
         };
         Insert: {
+          assistant_id?: string | null;
           created_at?: string;
           id?: string;
           student_id: string;
         };
         Update: {
+          assistant_id?: string | null;
           created_at?: string;
           id?: string;
           student_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'student_channels_assistant_id_fkey';
+            columns: ['assistant_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'student_channels_student_id_fkey';
             columns: ['student_id'];
@@ -4229,6 +4525,7 @@ export type Database = {
           goal: string | null;
           guardian_id: string;
           id: string;
+          is_test: boolean;
           level: string | null;
           meeting_link_override: string | null;
           memorized: string | null;
@@ -4257,6 +4554,7 @@ export type Database = {
           goal?: string | null;
           guardian_id: string;
           id?: string;
+          is_test?: boolean;
           level?: string | null;
           meeting_link_override?: string | null;
           memorized?: string | null;
@@ -4285,6 +4583,7 @@ export type Database = {
           goal?: string | null;
           guardian_id?: string;
           id?: string;
+          is_test?: boolean;
           level?: string | null;
           meeting_link_override?: string | null;
           memorized?: string | null;
@@ -5818,6 +6117,16 @@ export type Database = {
       };
       integration_secret_clear: { Args: { p_key: string }; Returns: boolean };
       pick_trial_date: { Args: { p: Json }; Returns: Json };
+      short_link_record_visit: {
+        Args: {
+          p_code: string;
+          p_matched_guardian: string | null;
+          p_matched_profile: string | null;
+          p_phone: string | null;
+          p_profile: string | null;
+        };
+        Returns: string;
+      };
       stripe_secret_clear: { Args: { p_name: string }; Returns: boolean };
       stripe_secret_name_ok: { Args: { p_name: string }; Returns: boolean };
       stripe_secret_read: { Args: { p_name: string }; Returns: string };
@@ -5977,6 +6286,10 @@ export type Database = {
       report_of_path: { Args: { p_name: string }; Returns: string };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };
       create_recurring_expense_drafts: { Args: { p_month: string }; Returns: number };
+      set_test_flag: {
+        Args: { p_actor: string; p_id: string; p_is_test: boolean; p_kind: string };
+        Returns: Json;
+      };
       set_assistant_terms: {
         Args: { p: Json; p_actor: string; p_assistant: string };
         Returns: undefined;
@@ -6057,6 +6370,10 @@ export type Database = {
           unread: number;
         }[];
       };
+      channel_mark_read: {
+        Args: { p_at: string; p_channel: string; p_profile: string };
+        Returns: undefined;
+      };
       channel_teacher_ids: { Args: { p_student_id: string }; Returns: string[] };
       assign_student_teacher: {
         Args: { p_student: string; p_teacher: string; p_actor: string };
@@ -6073,6 +6390,10 @@ export type Database = {
       remove_family_phone: {
         Args: { p_guardian: string; p_phone: string; p_actor: string };
         Returns: undefined;
+      };
+      set_student_phone: {
+        Args: { p_student: string; p_actor: string; p_phone?: string };
+        Returns: boolean;
       };
       teacher_channel_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
@@ -6170,7 +6491,7 @@ export type Database = {
       payout_status: 'draft' | 'approved' | 'paid';
       pdf_status: 'pending' | 'rendering' | 'ready' | 'failed';
       program: 'quran' | 'arabic' | 'islamic_studies';
-      proposal_status: 'pending' | 'approved' | 'rejected';
+      proposal_status: 'pending' | 'approved' | 'rejected' | 'withdrawn';
       push_kind:
         | 'new_lead'
         | 'new_message'
@@ -6189,7 +6510,9 @@ export type Database = {
         | 'course_resumed'
         | 'payment_received'
         | 'lesson_starting'
-        | 'report_sent';
+        | 'report_sent'
+        | 'lesson_live'
+        | 'lesson_request_declined';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -6374,7 +6697,7 @@ export const Constants = {
       payout_status: ['draft', 'approved', 'paid'],
       pdf_status: ['pending', 'rendering', 'ready', 'failed'],
       program: ['quran', 'arabic', 'islamic_studies'],
-      proposal_status: ['pending', 'approved', 'rejected'],
+      proposal_status: ['pending', 'approved', 'rejected', 'withdrawn'],
       push_kind: [
         'new_lead',
         'new_message',
@@ -6394,6 +6717,8 @@ export const Constants = {
         'payment_received',
         'lesson_starting',
         'report_sent',
+        'lesson_live',
+        'lesson_request_declined',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],

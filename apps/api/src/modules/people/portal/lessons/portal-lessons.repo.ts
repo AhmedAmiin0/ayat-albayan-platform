@@ -7,21 +7,45 @@ import { PortalSettings, type PortalSettingsValues } from '@/modules/people/port
 /** A lesson row as the portal reads it (whitelisted select; mapped again before it leaves). */
 export interface PortalLessonRow {
   id: string;
+  /** For the family slots (the lesson's own teacher); never sent to the family. */
+  teacher_id?: string;
   starts_at: string;
   ends_at: string;
   status: LessonStatus;
   room_opened_at: string | null;
+  /** «إنهاء الحلقة للجميع» (migration 20261117100100); optional in test fakes. */
+  room_ended_at?: string | null;
   meeting_link: string | null;
   teacher: { display_name_ar: string; display_name_en: string | null; meeting_mode: string | null } | null;
   /** Every attendee id: one = the student's override link may apply, more = a group lesson. */
-  lesson_students: { student_id: string }[];
+  lesson_students: { student_id: string; chargeable?: boolean }[];
+}
+
+/** A family's «اطلب موعدًا آخر» on one of the lessons (lesson_proposals requested_by 'family'). */
+export interface PortalRequestRow {
+  id: string;
+  lesson_id: string;
+  status: string;
+  proposed_starts_at: string;
+  note: string | null;
+  decision_note: string | null;
+  decided_at: string | null;
+  created_at: string;
+}
+
+/** PortalLessonsRepo.requests: these lessons, sent by this login. */
+interface RequestsOf {
+  lessonIds: readonly string[];
+  userId: string;
 }
 
 interface Embed {
   lesson: PortalLessonRow | null;
 }
 
-const LESSON = 'id, starts_at, ends_at, status, room_opened_at, meeting_link, teacher:teachers(display_name_ar, display_name_en, meeting_mode), lesson_students(student_id)';
+const LESSON = 'id, teacher_id, starts_at, ends_at, status, room_opened_at, room_ended_at, meeting_link, teacher:teachers(display_name_ar, display_name_en, meeting_mode), lesson_students(student_id, chargeable)';
+/** The family's own words and the academy's answer to them; never a teacher's proposal. */
+const REQUEST = 'id, lesson_id, status, proposed_starts_at, note, decision_note, decided_at, created_at';
 
 /** «الحلقات القادمة» reads (service role; PortalScopes already decided the student is the caller's). */
 @Injectable()
@@ -68,5 +92,20 @@ export class PortalLessonsRepo {
     const { data, error } = await this.db.from('students').select('meeting_link_override').eq('id', studentId).maybeSingle();
     if (error) throw dbError(error);
     return data?.meeting_link_override ?? null;
+  }
+
+  /**
+   * The family requests this login sent on these lessons (owner 2026-11-17), any status; [] without
+   * lessons. Another login's request (the other guardian's) is not this one's to see.
+   */
+  async requests(input: RequestsOf): Promise<PortalRequestRow[]> {
+    if (input.lessonIds.length === 0) return [];
+    const { data, error } = await this.db
+      .from('lesson_proposals')
+      .select(REQUEST)
+      .in('lesson_id', [...input.lessonIds])
+      .match({ requested_by: 'family', created_by: input.userId });
+    if (error) throw dbError(error);
+    return data;
   }
 }

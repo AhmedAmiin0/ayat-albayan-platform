@@ -103,7 +103,13 @@ export function MessageBubble(props: MessageBubbleProps) {
             <span aria-hidden="true">{clockText(m.created_at, clock)}</span>
             <span className="sr-only">{fullTime(m.created_at, clock)}</span>
           </time>
-          {outbound && <DeliveryTicks status={m.status} times={deliveryTitle(m, clock)} />}
+          {outbound && (
+            <DeliveryTicks
+              status={m.status}
+              errorCode={m.error_code}
+              times={deliveryTitle(m, clock)}
+            />
+          )}
         </footer>
         {m.template && <TemplateButtons buttons={m.template.buttons} />}
         <div className={cn(rows && 'pb-2.5 empty:hidden')}>

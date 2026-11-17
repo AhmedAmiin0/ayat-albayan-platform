@@ -3,7 +3,7 @@
 Owner 2026-11-07: «go with oxlint» — move the whole lint to Oxlint (OXC) to speed CI, with **zero lost
 coverage**. Measured before: develop CI run 42328736019, job `verify (lint)` = 318 s (Oxlint's first
 pass + ESLint per package through turbo, type-aware). Oxlint with every rule of every package
-(type-aware) takes about 50 s on a 4-core machine (this doc's measure; CI: job «lint parity (oxlint)»).
+(type-aware) takes about 50 s on a 4-core machine (this doc's measure; CI: «verify (lint + parity (oxlint))»).
 
 Status: **PR 1 (parity) only.** ESLint still gates CI (`verify (lint)`); Oxlint runs beside it with the
 same rules, its own baseline and a parity check. **PR 2 (Oxlint only, ESLint removed) is blocked** until
@@ -101,10 +101,18 @@ today's ESLint suppressions under Oxlint names: 9 736 of 9 801 entries identical
 absolute-import sweep); the rest are the
 §3.1 misses (lower) and §3.2 extras (higher). `--suppress-all` wrote it once; nothing else may.
 
-## 5. Parity check (`pnpm lint:parity`, CI «lint parity (oxlint)»)
+## 5. Parity check (`pnpm lint:parity`, CI «verify (lint + parity (oxlint))»)
 
-Runs ESLint over every package with no suppressions and Oxlint with `oxlint.full.config.ts`, both
-timed (job summary). Fails when:
+Compares ESLint's findings over every package with no suppressions against Oxlint with
+`oxlint.full.config.ts`, both timed (job summary). Locally it runs both. In CI it runs neither
+again (2026-11-17, docs/design/plans ci-faster-2): the lint row's `turbo lint` saves each package's
+findings through the formatter `parity/eslint-findings.mjs` (`<package>/.lint/eslint.json`, a turbo
+output, so a replayed package restores it). ESLint 10 moves a finding that `eslint-suppressions.json`
+covers into `suppressedMessages` with `suppressions: [{ kind: 'file' }]`; the file holds `messages`
+plus those, which is exactly the run with no suppressions (inline `eslint-disable`, kind `directive`,
+stays out in both). `LINT_PARITY_ESLINT=<repo root>` reads those files and lints any package that has
+none; `LINT_PARITY_OXLINT=oxlint-report.json` reads the report `pnpm lint:oxfull` wrote one step
+earlier with the same arguments. Fails when:
 
 - **findings**: a finding ESLint reports is not one Oxlint reports (same file + line + rule after §2;
   same file + rule at most 3 lines away pairs as `moved`), beyond the reviewed count its rule has in

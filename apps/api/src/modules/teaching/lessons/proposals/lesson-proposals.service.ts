@@ -1,16 +1,27 @@
-import { isOpenLesson, type LessonProposalRequest, type ProposalApprove } from '@ab/shared';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  isOpenLesson,
+  type LessonProposalRequest,
+  type ProposalApprove,
+  type ProposalRequester,
+} from '@ab/shared';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { badRequest, conflict } from '@/common/http/errors';
+import { badRequest, conflict, forbidden } from '@/common/http/errors';
 import { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
-import { LessonProposalRepo } from './lesson-proposals.repo';
+import { LessonProposalRepo, type ProposalRow } from './lesson-proposals.repo';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { RescheduleOneService } from '@/modules/teaching/lessons/reschedule/reschedule-one.service';
 import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
+import { RequestDeclinePush } from './request-decline.push';
 
 type ProposeInput = { lessonId: string; body: LessonProposalRequest; actor: AuthUser };
 type DecideInput = { proposalId: string; actor: AuthUser };
 type ApproveInput = DecideInput & { body: ProposalApprove };
+/** `note`: the answer's note, the family reads it with the decline (owner 2026-11-17). */
+type RejectInput = DecideInput & { note?: string };
+
+/** An assistant (base role sales) never books over a clash. */
+const overrideRefused = (actor: AuthUser): boolean => actor.role === 'sales';
 
 /** A teacher's «اقترح ميعاد تاني» for their own open lesson (R-SCH-08). Returns the lesson id. */
 @Injectable()
@@ -39,47 +50,68 @@ export class LessonProposeService {
 }
 
 /**
- * The admin's answer (R-SCH-08). Approving IS a reschedule of that one lesson — conflict check
- * (409 conflict unless override.reason), the move and the guardian's confirmation in one
- * transaction — then the proposal is marked. Rejecting only marks it.
+ * Staff's answer to a teacher's proposal or a family's request (R-SCH-08). Approving IS a
+ * reschedule of that one lesson — conflict check (409 conflict unless override.reason), the move
+ * and the family notice in one transaction — then the proposal is marked; `startsAt` moves it to
+ * another free time instead («اختر موعدًا آخر»). Rejecting marks it, with the answer's note; a
+ * family's request then hears it (RequestDeclinePush).
  */
 @Injectable()
 export class ProposalDecisionService {
   constructor(
     private readonly proposals: LessonProposalRepo,
     private readonly reschedule: RescheduleOneService,
+    @Inject(RequestDeclinePush) private readonly declined: RequestDeclinePush,
   ) {}
 
   /** Lessons with a proposal waiting for an answer, oldest first. */
-  pendingLessonIds(): Promise<string[]> {
-    return this.proposals.pendingLessonIds();
+  pendingLessonIds(by?: ProposalRequester): Promise<string[]> {
+    return this.proposals.pendingLessonIds(by);
   }
 
-  /** Returns the new lesson's id. */
+  /**
+   * Returns the new lesson's id. The proposal is claimed first (pending → approved, 409
+   * proposal_decided when it was answered or withdrawn meanwhile), then the lesson moves; a failed
+   * move (409 conflict, …) hands the claim back. 403 override_not_allowed: an assistant never
+   * books over a clash (as sales-booking.scope.ts).
+   */
   async approve({ proposalId, body, actor }: ApproveInput): Promise<string> {
+    if (body.override && overrideRefused(actor)) throw forbidden('override_not_allowed');
     const proposal = await this.pending(proposalId);
-    const newId = await this.reschedule.reschedule({
+    const claimed = await this.proposals.decide(proposalId, { status: 'approved', decided_by: actor.id });
+    if (!claimed) throw conflict('proposal_decided');
+    const newId = await this.move(proposal, { body, actor }).catch(async (e: unknown) => {
+      await this.proposals.release(proposalId);
+      throw e;
+    });
+    await this.proposals.link(proposalId, newId);
+    return newId;
+  }
+
+  private move(proposal: ProposalRow, { body, actor }: Omit<ApproveInput, 'proposalId'>) {
+    return this.reschedule.reschedule({
       lessonId: proposal.lesson_id,
       body: {
         scope: 'one',
-        startsAt: proposal.proposed_starts_at,
+        startsAt: body.startsAt ?? proposal.proposed_starts_at,
         override: body.override,
         // docs/47: her proposal's note is the move reason the student file shows.
         ...(proposal.note ? { reason: proposal.note } : {}),
       },
       actor,
     });
-    // The lesson is moved either way; a lost race here only leaves the proposal unmarked.
-    await this.proposals.decide(proposalId, { status: 'approved', decided_by: actor.id, new_lesson_id: newId });
-    return newId;
   }
 
   /** Returns the (unchanged) lesson's id. */
-  async reject({ proposalId, actor }: DecideInput): Promise<string> {
+  async reject({ proposalId, actor, note }: RejectInput): Promise<string> {
     const proposal = await this.pending(proposalId);
-    if (!(await this.proposals.decide(proposalId, { status: 'rejected', decided_by: actor.id }))) {
-      throw conflict('proposal_decided');
-    }
+    const answer = { status: 'rejected' as const, decided_by: actor.id };
+    const decided = await this.proposals.decide(proposalId, {
+      ...answer,
+      ...(note ? { decision_note: note } : {}),
+    });
+    if (!decided) throw conflict('proposal_decided');
+    await this.declined.notify({ ...proposal, decision_note: note ?? null });
     return proposal.lesson_id;
   }
 

@@ -44,6 +44,18 @@ const MEETINGS: Record<Area, string> = {
   assistant: '/assistant',
 };
 
+/**
+ * A chat message (docs/31 §2): the teacher's «رسائل الطلاب» on that student; for the seated
+ * assistant (the seat is not «طلابي»: owner 2026-11-16 «… but only 1») «الطلاب» with that
+ * student's chat open; nobody else gets the kind (home).
+ */
+const CHANNEL: Record<Area, (studentId: string | null) => string> = {
+  teacher: (id) => (id ? `/teacher/messages?student=${id}` : '/teacher/messages'),
+  sales: (id) => (id ? `/sales/students?student=${id}` : '/sales/students'),
+  admin: () => HOME_BY_ROLE.admin,
+  assistant: () => HOME_BY_ROLE.assistant,
+};
+
 /** The teacher sees the lesson on their calendar; anyone else opens the student. */
 const lessonPath = (area: Area, data: Data): string =>
   area === 'teacher' ? '/teacher/calendar' : student(area, data);
@@ -62,12 +74,7 @@ const ROUTES: Record<AnyPushKind, (area: Area, data: Data) => string> = {
   },
   // «مزامنة Google» (docs/24, docs/26b §1); only admins get this kind.
   google_sync_alert: (area) => (area === 'admin' ? '/admin/settings/google' : HOME_BY_ROLE[area]),
-  // docs/31 §2: the teacher's «رسائل الطلاب» on that student; only teachers get this kind.
-  channel_message: (area, data) => {
-    const id = uuid(data, 'studentId');
-    if (area !== 'teacher') return HOME_BY_ROLE[area];
-    return id ? `/teacher/messages?student=${id}` : '/teacher/messages';
-  },
+  channel_message: (area, data) => CHANNEL[area](uuid(data, 'studentId')),
   // «محفظتي» (owner 2026-10-29): the salesperson's wallet; only sales get this kind.
   commission_earned: (area) => (area === 'sales' ? '/sales/earnings' : HOME_BY_ROLE[area]),
   // A schedule change (owner 2026-10-30): the lesson on the teacher's calendar, else the student.
@@ -80,7 +87,9 @@ const ROUTES: Record<AnyPushKind, (area: Area, data: Data) => string> = {
   // The family app's kinds (docs/50 §5.6) reach only portal logins (their home, '/portal'); a
   // staff area never gets them, so it opens its home.
   lesson_starting: (area) => HOME_BY_ROLE[area],
+  lesson_live: (area) => HOME_BY_ROLE[area],
   report_sent: (area) => HOME_BY_ROLE[area],
+  lesson_request_declined: (area) => HOME_BY_ROLE[area],
 };
 
 /** «احجز أيام الحلقات» (owner 2026-11-06): the family chat, wizard open; else the student. */

@@ -29,8 +29,15 @@ export const PUSH_ENTRIES = [
   { ...STAFF, key: 'meeting_invite', audience: 'staff', pushKind: 'meeting_invite' },
   // docs/24: the Google link expired or a teacher has no calendar; admins, the bell only (no push).
   { ...STAFF, channels: ['bell'], key: 'google_sync_alert', audience: 'staff', pushKind: 'google_sync_alert' },
-  // docs/31 §2: a family's message in a student channel, to the student's current teacher(s) only.
-  { ...STAFF, key: 'channel_message', audience: 'teacher', pushKind: 'channel_message' },
+  // docs/31 §2 (owner 2026-11-16): a message in a student's chat, to everyone in it but its writer:
+  // the current teacher(s), the guardian and the student (family_chat_enabled) and the assistant.
+  {
+    ...STAFF,
+    key: 'channel_message',
+    audience: 'teacher',
+    alsoTo: ['guardian', 'staff'],
+    pushKind: 'channel_message',
+  },
   // «محفظتي» (owner 2026-10-29): a commission earned, to the assistant who brought the student; the bell only.
   { ...STAFF, channels: ['bell'], key: 'commission_earned', audience: 'staff', pushKind: 'commission_earned' },
   // Owner 2026-11-05: a payment came in → the admins and the student's assistant.

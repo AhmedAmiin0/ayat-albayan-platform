@@ -7,9 +7,15 @@ import {
   type ViewToken,
 } from 'react-native';
 import { dayLabel } from './day-label';
-import { CHIP_BOX, CHIP_MARGIN, chipCovered, type Frame, type Viewport } from './top-band';
 import { type DayRow, type Loaded, separatorsOf, topmost } from './day-separators';
-import { type } from '@ab/mobile-kit';
+import {
+  type,
+  CHIP_BOX,
+  CHIP_MARGIN,
+  chipCovered,
+  type Frame,
+  type Viewport,
+} from '@ab/mobile-kit';
 
 type Scroll = NativeSyntheticEvent<NativeScrollEvent>;
 

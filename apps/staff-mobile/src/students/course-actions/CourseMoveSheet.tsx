@@ -36,13 +36,8 @@ export function CourseMoveSheet({ sub, kind, onClose, onDone }: CourseMoveSheetP
     const currentId = view.data.course.teacherId;
     return <TeacherStep studentId={sub.studentId} currentId={currentId} onPick={setTeacher} />;
   };
-  const target = {
-    path,
-    title,
-    teacherId: teacher?.teacherId,
-    review: teacher?.keep,
-    override: admin,
-  };
+  const picked = { teacherId: teacher?.teacherId, review: teacher?.keep, lines: teacher?.lines };
+  const target = { path, title, override: admin, ...picked };
   const close = <Button variant="ghost" label={t.common.close} onPress={onClose} />;
   return (
     <Modal visible animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>

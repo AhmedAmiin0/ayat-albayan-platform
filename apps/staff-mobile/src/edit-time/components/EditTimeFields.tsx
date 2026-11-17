@@ -1,8 +1,7 @@
 import { DURATIONS, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { t, type, useTheme, AppText, Field, FilterPills } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
-import { SlotPicker } from '@/teaching/reschedule/SlotPicker';
+import { t, type, useTheme, AppText, Field, FilterPills, FormLabel } from '@ab/mobile-kit';
+import { LessonSlotPicker } from '@/teaching/reschedule/LessonSlotPicker';
 import { CorrectTimes } from './CorrectTimes';
 import { isBookable, REASON_MAX, type EditState } from '@/edit-time/lib/edit-time-body';
 import { lengthText } from '@/edit-time/lib/edit-time-text';
@@ -48,7 +47,7 @@ export function EditTimeFields({ lesson, mode, state, tz, now, onPick, onDuratio
         // An odd recorded length has no slot grid (the API takes 30 / 45 / 60 / 90): pick a length first.
         <AppText style={note}>{t.editTime.pickLength}</AppText>
       ) : (
-        <SlotPicker
+        <LessonSlotPicker
           lesson={lesson}
           durationMin={state.durationMin}
           tz={tz}

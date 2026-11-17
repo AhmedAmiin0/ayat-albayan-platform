@@ -7,7 +7,7 @@ import { FamilyPage } from './FamilyPage';
 
 /**
  * «الإشعارات» (canvas Alerts), pushed above the tabs: GET /me/notifications by day; a tap marks
- * the row read and opens its report, child or package (@ab/client-core alertTarget);
+ * the row read and opens its report, child, package or chat (@ab/client-core alertTarget);
  * «تعليم الكل كمقروء» while any is unread.
  */
 export function AlertsScreen() {

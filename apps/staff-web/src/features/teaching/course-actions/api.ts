@@ -1,6 +1,8 @@
 import {
   courseActionsKey,
   courseStopBody,
+  stopDoneLines,
+  type StopDone,
   courseMoveBase,
   courseMoveErrorCode,
   courseMoveViewPath,
@@ -40,27 +42,6 @@ export const courseStopPreviewQuery = (input: Course) =>
 export const stopCourse = (studentId: string, body: CourseStopRequest) =>
   apiSend<CourseStopResult>('POST', courseStopPath(studentId), body);
 
-/** Which GET resolves the student's current package: the first one the viewer may call. */
-export type CurrentVia = 'stop' | CourseMoveKind;
-
-/**
- * The student's current package id, from the server (no subscriptionId: the newest live one)
- * through a route the viewer holds; 404 subscription_not_found = nothing to act on.
- */
-export const currentCourseQuery = (studentId: string, via: CurrentVia) =>
-  queryOptions({
-    queryKey: [...courseActionsKey(studentId), 'current', via],
-    queryFn: async (): Promise<string> => {
-      if (via === 'stop') {
-        return (await apiFetch<CourseStopPreview>(courseStopPath(studentId))).subscriptionId;
-      }
-      const path = `${courseMoveBase({ studentId, kind: via })}/change`;
-      return (await apiFetch<ProfileCourseView>(path)).course.subscriptionId;
-    },
-    retry: false,
-  });
-
-/** The course to change, with «من تاريخ»'s default (the next lesson). */
 export const profileCourseQuery = (input: Course & { kind: CourseMoveKind }) =>
   queryOptions({
     queryKey: [...courseActionsKey(input.studentId), input.kind, input.subscriptionId],
@@ -110,19 +91,24 @@ type StopInput = Course & {
   reason: string;
   /** The money choice: `refund` («إلغاء مع استرداد») or `owe` («إلغاء فقط»). */
   ask: StopMoneyAsk;
-  onDone: (message: string) => void;
+  onDone: (done: StopDone) => void;
 };
 
-/** The toast: «أُلغي الاشتراك…», with the refund's amount when there was one. */
-function doneText(result: CourseStopResult, currency: string): string {
-  const words = t.courseActions.stop;
-  const refund = result.refund;
-  return refund
-    ? words.doneRefund.replace('{amount}', moneyText(refund.amount, currency))
-    : words.done;
-}
+/**
+ * What the stop did (owner 2026-11-17, board CourseXWebDone): «أُلغي الاشتراك…» (with the
+ * refund's amount), the student's status now, «الخطوة التالية» and who was told.
+ */
+export const stopDoneOf = (result: CourseStopResult, currency: string): StopDone =>
+  stopDoneLines({
+    result,
+    words: t.courseActions.stop,
+    format: {
+      money: (amount) => moneyText(amount, currency),
+      status: (status) => t.enums.studentStatus[status],
+    },
+  });
 
-/** POST the stop with one idempotency key per dialog (rule 8), then re-read and the toast. */
+/** POST the stop with one idempotency key per dialog (rule 8), then re-read and the done block. */
 export function useStopCourse(input: StopInput & { currency: string }) {
   const { studentId, subscriptionId, onDone } = input;
   const [requestId] = useState(() => crypto.randomUUID());
@@ -137,7 +123,7 @@ export function useStopCourse(input: StopInput & { currency: string }) {
     mutationFn: () => stopCourse(studentId, courseStopBody(body)),
     onSuccess: async (result) => {
       await invalidate();
-      onDone(doneText(result, input.currency));
+      onDone(stopDoneOf(result, input.currency));
     },
   });
 }

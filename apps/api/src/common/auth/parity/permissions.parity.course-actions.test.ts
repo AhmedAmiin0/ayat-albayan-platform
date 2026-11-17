@@ -28,9 +28,12 @@ describe('the student profile course actions', () => {
     expect(gated('students.change_teacher')).toEqual(
       ['change', 'check', 'options', 'view'].map((h) => `CourseTeacherController.${h}`),
     );
-    expect(gated('courses.reschedule')).toEqual(
-      ['change', 'check', 'view'].map((h) => `CourseTimesController.${h}`),
-    );
+    // «مدّ الجدول» (owner 2026-11-17) shares the times' key: admins and assistants.
+    expect(gated('courses.reschedule')).toEqual([
+      'CourseExtendController.book',
+      'CourseExtendController.preview',
+      ...['change', 'check', 'view'].map((h) => `CourseTimesController.${h}`),
+    ]);
   });
 
   it.each(['subscriptions.stop', 'students.change_teacher', 'courses.reschedule'] as const)(

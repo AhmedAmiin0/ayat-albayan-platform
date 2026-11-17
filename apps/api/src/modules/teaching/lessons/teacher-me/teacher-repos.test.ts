@@ -22,8 +22,8 @@ describe('TeacherConfirmRepo', () => {
 describe('TeacherCancelRepo.ownerIds', () => {
   it('who brought each student and who holds their family\'s lead, once each', async () => {
     const f = fakeDb({
-      students: [{ data: [{ brought_by: 'a1', guardian_id: 'g1' }, { brought_by: null, guardian_id: 'g1' }] }],
-      leads: [{ data: [{ assigned_to: 'a2' }, { assigned_to: 'a1' }, { assigned_to: null }] }],
+      students: [{ data: [{ id: 's1', brought_by: 'a1', guardian_id: 'g1' }, { id: 's2', brought_by: null, guardian_id: 'g1' }] }],
+      leads: [{ data: [{ assigned_to: 'a2', converted_guardian_id: 'g1' }, { assigned_to: 'a1', converted_guardian_id: 'g1' }, { assigned_to: null, converted_guardian_id: 'g1' }] }],
     });
     expect(await new TeacherCancelRepo(f.db).ownerIds(['s1', 's2'])).toEqual(['a1', 'a2']);
     expect(f.argsOf('students', 'in')).toEqual(['id', ['s1', 's2']]);
@@ -34,5 +34,15 @@ describe('TeacherCancelRepo.ownerIds', () => {
     const f = fakeDb({});
     expect(await new TeacherCancelRepo(f.db).ownerIds([])).toEqual([]);
     expect(f.calls).toEqual([]);
+  });
+
+  it("ownersOf: each student's own owners, in the same two reads", async () => {
+    const f = fakeDb({
+      students: [{ data: [{ id: 's1', brought_by: 'a1', guardian_id: 'g1' }, { id: 's2', brought_by: null, guardian_id: 'g2' }] }],
+      leads: [{ data: [{ assigned_to: 'a2', converted_guardian_id: 'g2' }] }],
+    });
+    const owners = await new TeacherCancelRepo(f.db).ownersOf(['s1', 's2', 's1']);
+    expect(Object.fromEntries(owners)).toEqual({ s1: ['a1'], s2: ['a2'] });
+    expect(f.argsOf('students', 'in')).toEqual(['id', ['s1', 's2']]);
   });
 });

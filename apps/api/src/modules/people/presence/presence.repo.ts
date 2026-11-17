@@ -83,13 +83,14 @@ export class PresenceRepo {
   private async familyPeople(studentId: string): Promise<ChannelPerson[]> {
     const { data: s, error } = await this.db
       .from('students')
-      .select('guardian_id, profile_id, contact_is_self')
+      .select('guardian_id, profile_id')
       .eq('id', studentId)
       .maybeSingle();
     check(error, 'channel student read');
     if (!s) return [];
+    // The student's own login chats too, a child's included (owner 2026-11-16).
     const self: ChannelPerson[] =
-      s.profile_id && s.contact_is_self ? [{ profile_id: s.profile_id, role: 'student' }] : [];
+      s.profile_id ? [{ profile_id: s.profile_id, role: 'student' }] : [];
     if (!s.guardian_id) return self;
     const g = await this.db
       .from('guardians')

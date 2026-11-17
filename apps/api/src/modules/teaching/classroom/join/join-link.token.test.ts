@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkLink, hashLinkToken, linkExpiry, looksLikeLinkToken, newLinkToken } from './join-link.token';
+import { hashLinkToken, linkExpiry, looksLikeLinkToken, newLinkToken } from './join-link.token';
 
 describe('newLinkToken', () => {
   it('is 32 URL-safe characters, short enough for a path parameter and a WhatsApp button', () => {
@@ -26,20 +26,8 @@ describe('hashLinkToken', () => {
   });
 });
 
-describe('linkExpiry and checkLink', () => {
-  const ends_at = '2026-10-05T17:00:00.000Z';
-
+describe('linkExpiry', () => {
   it('a link dies 2 hours after the lesson ends', () => {
-    expect(linkExpiry({ ends_at })).toBe('2026-10-05T19:00:00.000Z');
-  });
-
-  it('is ok until the expiry instant, then expired', () => {
-    const row = { expires_at: linkExpiry({ ends_at }), revoked_at: null };
-    expect(checkLink(row, new Date('2026-10-05T18:59:59Z'))).toBe('ok');
-    expect(checkLink(row, new Date('2026-10-05T19:00:00Z'))).toBe('expired');
-  });
-
-  it('a revoked link is refused even when it has time left', () => {
-    expect(checkLink({ expires_at: '2099-01-01T00:00:00Z', revoked_at: '2026-10-05T10:00:00Z' }, new Date('2026-10-05T11:00:00Z'))).toBe('revoked');
+    expect(linkExpiry({ ends_at: '2026-10-05T17:00:00.000Z' })).toBe('2026-10-05T19:00:00.000Z');
   });
 });

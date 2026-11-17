@@ -5,9 +5,14 @@ import { renewHref } from './renew';
 
 const priced = (o: QuoteOptions) => ({ ...quote(o), fx: null });
 
-test('only a package-ended student (pending_renewal, expired) can renew', () => {
+test('without a package only a package-ended student (pending_renewal, expired) can renew', () => {
   const shown = STUDENT_STATUSES.filter((status) => renewHref({ id: 's1', status }, null) !== null);
   expect(shown).toEqual(['pending_renewal', 'expired']);
+});
+
+test('with a package the admin renews ANY time (owner 2026-11-17)', () => {
+  const shown = STUDENT_STATUSES.filter((s) => renewHref({ id: 's1', status: s }, subscription()) !== null);
+  expect(shown).toEqual(STUDENT_STATUSES);
 });
 
 test('a tier: its plan, lesson length, discount and country, titled as a renewal', () => {

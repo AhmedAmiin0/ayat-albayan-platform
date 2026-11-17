@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { home, kid, soonLesson } from '@ab/web-kit/portal/portal.fixtures';
+import { kid, soonLesson } from '@ab/web-kit/portal/portal.fixtures';
 import { renderAt } from '@/test/render-at';
 import { SchedulePage } from './SchedulePage';
 
@@ -12,22 +12,18 @@ const S = t.portal.app.schedule;
 
 beforeEach(() => apiFetch.mockReset());
 
-describe('«الجدول»', () => {
-  it('a guardian: the week across children, a child filter, each lesson with its child', async () => {
-    apiFetch.mockImplementation(async (path?: string) =>
-      String(path).includes('/s1/') ? { lessons: [soonLesson()] } : { lessons: [] },
-    );
-    renderAt(<SchedulePage home={home()} />);
-    expect(await screen.findByText(kid().name, { selector: 'span' })).toBeTruthy();
-    expect(screen.getByRole('group', { name: S.filter })).toBeTruthy();
+describe('«الجدول» of the student in view (owner 2026-11-16)', () => {
+  it('a guardian: the picked child’s week under «الجدول»', async () => {
+    apiFetch.mockResolvedValue({ lessons: [soonLesson()] });
+    renderAt(<SchedulePage student={kid()} kind="guardian" />);
+    expect(await screen.findAllByRole('listitem')).toHaveLength(1);
     expect(screen.getByRole('heading', { name: S.title })).toBeTruthy();
   });
 
-  it('a student: «جدولي», no filter, and the empty week', async () => {
+  it('a student: «جدولي» and the empty week', async () => {
     apiFetch.mockResolvedValue({ lessons: [] });
-    renderAt(<SchedulePage home={home({ kind: 'student', students: [kid()] })} />);
+    renderAt(<SchedulePage student={kid()} kind="student" />);
     expect(await screen.findByText(S.empty)).toBeTruthy();
     expect(screen.getByRole('heading', { name: S.mine })).toBeTruthy();
-    expect(screen.queryByRole('group', { name: S.filter })).toBeNull();
   });
 });

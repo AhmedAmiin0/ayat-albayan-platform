@@ -14,6 +14,7 @@ import { ResetPasswordDialog } from '@/features/people/users/actions/ResetPasswo
 import { UserActions, type ActionMode } from '@/features/people/users/actions/UserActions';
 import { UserEditFields } from './UserEditFields';
 import { UserPhoto } from './UserPhoto';
+import { TestFlagSwitch } from '@/features/people/test-accounts';
 import { UserSummary } from './UserSummary';
 import type { FormErrors } from '@/features/people/users/validation';
 
@@ -75,6 +76,7 @@ export function UserEditor({ user, options, canWrite, onClose, onDone }: UserEdi
       <div className="grid gap-4">
         <UserPhoto user={user} canWrite={canWrite} />
         <UserSummary user={user} />
+        <TestFlagSwitch target="user" row={user} enabled={canWrite} />
         <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
           <UserEditFields form={form} onChange={setForm} errors={errors} options={options} readOnly={!canWrite} roleLocked={!!user.linked} />
           {save.error && <FormAlert>{userErrorText(save.error)}</FormAlert>}

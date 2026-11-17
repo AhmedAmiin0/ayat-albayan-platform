@@ -62,7 +62,7 @@ test('the socket volume: a 64 KB tmpfs, only ayat-pdf and the two API copies (re
   assert.deepEqual(pdf.volumes, [SOCK]);
   for (const name of ['ayat-api-a', 'ayat-api-b']) assert.ok(services[name].volumes.includes(`${SOCK}:ro`), name);
   assert.match(dockerfile, /install -d -o node -g node -m 0700 \/run\/pdf/, 'the mount point, node-owned like the tmpfs');
-  assert.match(dockerfile, /^FROM node:[\d.]+-slim$/m, 'the official node image: node is uid 1000 (the tmpfs uid)');
+  assert.match(dockerfile, /^FROM node:[\d.]+-slim AS runtime-base$/m, 'the official node image: node is uid 1000 (the tmpfs uid)');
 });
 
 test('healthy once it listens, rolled before the copies but never gating them, stopped by the old-layout rollback', () => {

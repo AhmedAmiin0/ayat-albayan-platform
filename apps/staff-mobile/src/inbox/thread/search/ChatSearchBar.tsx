@@ -1,8 +1,7 @@
 import { canStep, searchStatus, type SearchStep } from '@ab/client-core';
 import { TextInput, View } from 'react-native';
-import { t, AppText, Chevron, IconButton, type, useTheme } from '@ab/mobile-kit';
+import { t, AppText, Chevron, IconButton, type, useTheme, useSmallText } from '@ab/mobile-kit';
 import { DownIcon, UpIcon } from '@/inbox/shared/chat-icons';
-import { useSmall } from '@/inbox/messages/components/MessageMeta';
 import type { ChatSearchValue } from './search-context';
 
 /** The header's own row (ChatHeader): 52pt, the back chevron's box at the screen's edge. */
@@ -33,7 +32,7 @@ const ARROWS: { dir: SearchStep; Icon: typeof UpIcon }[] = [
  */
 export function ChatSearchBar({ search: s }: { search: ChatSearchValue }) {
   const { color } = useTheme();
-  const small = useSmall();
+  const small = useSmallText();
   const status = searchStatus(
     { ...s, index: s.state.index },
     { ...t.inbox.chatSearch, error: t.common.error },

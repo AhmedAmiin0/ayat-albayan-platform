@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { firstOrigin } from '@/common/http/public-origin';
 import { loadEnv } from '@/config/env/env';
 import { RolesModule } from '@/modules/people/roles/roles.module';
+import { TestAccountsModule } from '@/modules/people/test-accounts';
 import { UserAccess } from './users.access';
 import { SupabaseAuthAdmin } from './auth/users.auth.supabase';
 import { StaffPhotoController } from './photo/staff-photo.controller';
@@ -16,9 +17,12 @@ import { UserProfileWriter } from './update/users.profile-writer';
 import { UsersUpdateService } from './update/users.update.service';
 import { AUTH_ADMIN, USERS_CONFIG, type UsersConfig } from './store/users.store';
 
-/** «المستخدمون» (owner, 2026-10-06). PermissionCache comes from AuthModule, AuditService from AuditModule. */
+/**
+ * «المستخدمون» (owner, 2026-10-06), with the test-account switches (TestAccountsModule).
+ * PermissionCache comes from AuthModule, AuditService from AuditModule.
+ */
 @Module({
-  imports: [RolesModule],
+  imports: [RolesModule, TestAccountsModule],
   controllers: [UsersController, StaffPhotoController],
   providers: [
     UsersService,

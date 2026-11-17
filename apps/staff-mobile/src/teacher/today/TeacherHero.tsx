@@ -8,10 +8,11 @@ import { ButtonRow } from '@/core/ui/actions';
 import { Note } from '@/core/ui/feedback/Note';
 import { heroLead, HeroFrame, lessonClock, studentNames } from '@/today';
 import { heroLine } from '@/teacher/lessons/lesson-lines';
-import { teacherWord } from '@/teacher/lessons/teacher-word';
+import { waiting } from '@/teacher/lessons/teacher-word';
 import { TeacherRowAction } from '@/teacher/lessons/TeacherRowAction';
 import { useTeacherPlan } from '@/teacher/lessons/use-teacher-plan';
-import { earlyLine, heroButtons } from './hero-parts';
+import { earlyLine, heroButtons, heroWord } from './hero-parts';
+import { WaitingStrip } from './WaitingStrip';
 
 interface TeacherHeroProps {
   hero: Hero<LessonView>;
@@ -32,9 +33,10 @@ export function TeacherHero({ hero, onDetails, ...o }: TeacherHeroProps) {
   const clock = { tz: useViewerTz(), cycle: useClockCycle() };
   const { plan, ctx } = useTeacherPlan(lesson, o);
   const { win } = useJoinClassroom(lesson);
-  const word = hero.kind === 'next' ? teacherWord(lesson, now) : null;
+  const word = heroWord(hero, now);
   const { lead, peer } = heroButtons(plan);
   const early = earlyLine({ win, way: ctx.way, clock });
+  const who = waiting(lesson, now);
   return (
     <HeroFrame
       lead={heroLead(hero)}
@@ -44,6 +46,7 @@ export function TeacherHero({ hero, onDetails, ...o }: TeacherHeroProps) {
       subtitle={heroLine(lesson, clock)}
     >
       {ctx.acts.error ? <ErrorLine message={ctx.acts.error} /> : null}
+      {who ? <WaitingStrip who={who} /> : null}
       <View style={{ gap: 4 }}>
         <ButtonRow testID="teacher-hero-actions">
           {lead ? <TeacherRowAction action={lead} variant="primary" ctx={ctx} /> : null}

@@ -171,7 +171,7 @@ line stays off (`duplicate_chat_phone`, boot log `WA_CHAT_PROVIDER (crm, same as
 | 401 / 403, 400 `whatsapp_not_configured` | `credential: 'crm'` (the key, or the CRM's own WhatsApp connection, is down: the line, not the message): the queue is held 15 min, uncounted, line paused, one push a day; rows read `crm_auth` («رفض نظام CRM مفتاح الواجهة…»). A 403 naming a scope («missing the 'templates:read' scope») also keeps it as `missingScope`: «مزامنة» / «إرسال إلى ميتا» read `crm_scope_missing` with that scope (docs/39) |
 | 429 | queued until `Retry-After` (default 1 min, max 1 h), uncounted, `crm_rate_limited` (120 req/min per key); the line pauses for the rest of the pass, **no** «token refused» push |
 | 502 `meta_error`, 500 `template_malformed`, any other 4xx, a 3xx | failed at once with `crm_<code>` and the CRM's message (nothing was sent). Redirects are never followed (`redirect: 'manual'`); a body that is not the CRM's envelope is kept as `http_<status>` only |
-| 500 `internal`, other 5xx, a timeout, a connection lost after the request left | `uncertain` (the CRM may have reached Meta before failing its own insert). **No idempotency key: never resent automatically** |
+| 500 `internal`, other 5xx, a timeout (15 s, `DEFAULT_TIMEOUT_MS`, kept), a connection lost after the request left | `uncertain` (the CRM may have reached Meta before failing its own insert, or sent it after our abort: incident 2026-11-15). **No idempotency key: never resent automatically.** Staff read «لم يتأكد الإرسال بعد»; the CRM's status webhook (or the 5-minute sweep) confirms it with the read scopes `conversations:read`, `messages:read`, `contacts:read` («Confirming an uncertain send» below) |
 
 The `WA_ALLOWED_RECIPIENTS` allow-list and `messaging_enabled` gate are unchanged and run before any client.
 One factory (`client-factory.ts` `whatsappClient`) builds every line's and number's client. Module mode: a
@@ -254,10 +254,48 @@ t=<unix>,v1=<hex>` with v1 = HMAC-SHA256(`WACRM_WEBHOOK_SECRET`, `${t}.${rawBody
 than 5 minutes from now = 401 (replay); unset secret = every POST 401. Deduped on the payload `id` (in memory
 per instance, 10 min; a duplicate elsewhere is harmless, statuses only move forward; a failed write answers
 500 and forgets the id). `message.status_updated` → the existing delivery-status path by `wa_message_id`
-(ticks; the CRM's conversation id is not stored). `message.received` / `conversation.created` → logged, 200.
+(ticks; the CRM's conversation id is never stored on a row, only kept on the event for the confirm below).
+`message.received` / `conversation.created` → logged, 200.
 Never sends anything. Checked against wacrm `98b5bd2` (`src/lib/webhooks/sign.ts`, `deliver.ts`): same header,
 same `t=…,v1=…` format, the HMAC key is the whole `whsec_…` string (never base64-decoded), 300 s tolerance,
 envelope `{id, event, occurred_at, account_id, data:{whatsapp_message_id, conversation_id, status}}`.
+
+**Confirming an uncertain send** (incident 2026-11-15: a template send took the CRM ~18 s, our 15 s abort
+marked it `uncertain` although the family got it; the owner: confirm with the CRM, do not raise the timeout).
+Code: `webhook/crm-confirm/`, lookups `drivers/crm/crm-lookup.ts`. A row it may confirm: outbound, `failed`,
+no `wa_message_id`, `error_code` `uncertain` / `crm_uncertain`, created in the last 6 h, sent through the CRM
+(its number's driver in module mode, else its line's).
+- **Main path, the CRM's status webhook.** A `message.status_updated` for a wamid no row holds first reads our
+  db: no such crm row (the normal case: staff sent it from the CRM's dashboard) → nothing, no CRM call.
+  Otherwise `GET /conversations/{conversation_id}/messages?limit=50` (finds the item with that wamid) and
+  `GET /conversations/{conversation_id}` (its contact's phone, made E.164 with `waIdToE164`).
+- **The read** is every uncertain row of the last 6 h 10 min (newest first, at most 500; a full read is not
+  trusted and confirms nothing), kept to the crm ones in code. One CRM account = one WhatsApp number is
+  assumed: every crm line and number shares `WACRM_API_BASE` / `WACRM_API_KEY`.
+- **Fallback sweep** `crm-confirm-sweep`, every 5 min, rows 2 min – 6 h old, at most 10 a pass (those
+  never tried, or tried longest ago, first: no row starves the others):
+  `GET /contacts?search=<E.164 digits>` (the contact whose phone is exactly the row's E.164), `GET
+  /conversations?contact_id=…` (first 3), then the same messages list.
+- **One matcher** (`crm-match.ts`) for both: same E.164; the row created within [CRM `created_at` − 10 min,
+  + 1 min]; a template row whose CRM name (`crmTemplateName`, or its `meta_name`, as `crm-body.ts` may send
+  it) is the item's `template_name`, or a text row whose body equals `content_text` after folding whitespace;
+  an outbound item whose wamid no row holds. Exactly ONE row, else nothing changes (counts logged, the
+  phone's last 4 digits only). Both paths also need exactly one CRM message for the row (a resend from the
+  CRM's dashboard within the window leaves it as is).
+- **One compare-and-set** (still failed, no wamid, still uncertain; the `ManualEchoRepo` shape): the wamid,
+  the event's status (sweep: the CRM item's), `sent_at` = the CRM's `created_at`, error cleared; then
+  `stampDelivered`. Later statuses move it on as any row; a status that lost the race to another status of
+  the same wamid moves the row once it holds the wamid.
+- **Never a resend, never a pause.** No match leaves the row uncertain for staff. The lookups have their own
+  error handling (5 s each, never the sender's plan or credential hold, never a push, nothing marked
+  failed): a 401 / 403 logs «CRM key lacks <scope>: uncertain sends are not confirmed» once per process
+  and stops; a 429, a 5xx or a timeout skips the pass.
+- **Scopes** (the owner adds them to the notifications line's CRM key, in the CRM): `conversations:read`,
+  `messages:read`, `contacts:read`. «افحص الخطوط» lists the missing ones as `crm_read_scopes_missing`
+  («ينقص مفتاح واجهة نظام CRM صلاحية …، فلا يُؤكَّد …»).
+- **Staff see** a failed `uncertain` / `crm_uncertain` row as «لم يتأكد الإرسال بعد» (same «!» and saffron
+  tone, `bubbleWord` in `packages/shared` ticks.ts, web and mobile), reason «قد تكون وصلت. ننتظر تأكيد نظام
+  CRM؛ لا تُعِد الإرسال قبل التحقق من واتساب.», never «لم تُرسل».
 
 **Delivery ticks: one click in «التكاملات»** (owner 2026-11-01). wacrm `98b5bd2` has no UI for outgoing
 webhooks (its public API only), and it shows an endpoint's signing secret once, at creation. So under
@@ -346,6 +384,87 @@ refreshed. The base is the setting `short_link_base` («القيم» → الت�
 a short domain later is that one value (it must serve `/r/<code>` from the API). Kinds: `teacher_report`
 (subject = lesson id), `classroom` (lesson id), `feedback` (`<lesson id>:<student id>`). Code:
 `apps/api/src/modules/platform/short-links/`.
+
+#### Managed links for the admin and sales (owner 2026-11-17)
+
+«a url shortener that saves the code in the db and the target url and the number of allowed users and if it is
+user specified or not and if it should be sent via whatsapp … if they are system users show me who they are, if not
+we will require whatsapp otp», «link is many to many with the users». Server only in this round (the screens are being
+designed). Code: `apps/api/src/modules/platform/short-links-admin/`; bodies and views: `packages/shared/src/short-links/`.
+
+**Tables** (migrations `20261117130100`–`130300`; RLS on, no client policy, no grant to anon / authenticated: the
+API's service role only; times UTC):
+- `short_links` gains `id` (uuid, the audit rows' entity id), `created_by` (profile), `title`, `max_users` (null =
+  unlimited, distinct visitors), `audience` (`anyone` | `listed`), `send_whatsapp`, `status` (`active` | `expired`
+  | `revoked`). A managed link is `kind = 'managed'`, `subject = code`, always with a title and an expiry. System
+  links keep the new columns' defaults (active, anyone) and work exactly as before.
+- `short_link_users`: the many-to-many link ↔ user list: `code` (fk, on delete cascade), `profile_id` and/or
+  `phone_e164` (E.164, at least one), unique per link and profile and per link and phone, `added_by`, and the
+  WhatsApp state `send_status` (`not_sent` | `queued` | `failed`), `send_error`, `send_attempts`, `sent_at`.
+- `short_link_visits`: one row per DISTINCT visitor per link: a signed-in `profile_id` OR a verified `phone_e164`
+  (exactly one), `matched_profile_id` / `matched_guardian_id` when a verified phone belongs to a known login or
+  family number, `first_at`, `last_at`, `opens`. `short_link_record_visit()` writes it under a lock on the link
+  row, so max_users holds under parallel opens.
+- `login_codes` takes purpose and subject kind `short_link`.
+
+**Permissions**: `short_links.manage` (system admin and sales) on every admin route; `short_links.all` (admin) sees
+and changes every link, without it a user sees only the links they made (others' answer the same 404).
+
+**Admin routes** (zod bodies in `@ab/shared`):
+`GET /short-links` (paged; `status`, `owner`, `search` on the title) · `GET /short-links/people?search=` (the
+picker: enabled profiles by name or phone; the existing `/users` search needs `users.read`, which sales lack) ·
+`POST /short-links` (`title`, `targetUrl`, `expiresAt` default now + `short_link_default_days`, `maxUsers`,
+`audience`, `profileIds[]`, `phones[]` E.164, `sendWhatsapp`) · `GET /short-links/:code` (the link, its users with
+their send state, its visitors: system users by name and role, verified phones with the matched person and family)
+· `PATCH /short-links/:code` (title, expiry: a new one reactivates an expired link, max users, the user list
+which replaces the old one; kept rows keep their send state) · `POST /short-links/:code/revoke` ·
+`POST /short-links/:code/resend`. Targets: https on our web / API origins, Google Meet, or a host of
+`short_link_extra_hosts` (400 `target_not_allowed`). Audit rows (entity `short_links`): `short_link_create`,
+`short_link_revoke`, `short_link_resend`.
+
+**Gate flow**: `GET /r/<code>` of a managed link answers 302 to the web gate `<WEB_ORIGIN>/l/<code>` (system links
+keep the direct 302; an expired or revoked link is the usual 404). The gate's public API (60 a minute per IP, 20 per
+IP and code; never cached; unknown and system codes are the same 404 `short_link_not_found`):
+`GET /public/short-links/:code` (title, `state` open | gone, `needs: sign_in_or_code`, `codesAvailable`; never the
+target) · `POST …/open` with the caller's JWT (a signed-in user: the visit by profile) · `POST …/otp/start`
+`{ phone }` (any country; always 202; a code goes out only while the link is live and, for a listed link, only to
+a listed phone) · `POST …/otp/verify` `{ phone, code }` (401 `invalid_code`). The codes are the family sign-in's
+(`SHORT_LINK_CODES` port on `CodeIssuer`: HMAC, TTL and attempts from the settings, per-phone limits, the
+site-wide breaker, `account_code` on the chat line), bound to (link, phone). `open` and `verify` answer
+`{ outcome: 'open', target }` or `{ outcome: 'gone' | 'not_allowed' | 'limit_reached' }`.
+
+**Decision table** (`gate.decision.ts`, first row wins):
+
+| # | condition | outcome |
+|---|---|---|
+| 1 | revoked, expired, or past `expires_at` | `gone` |
+| 2 | audience `listed` and the visitor is not a listed user (by profile, by phone, by its matched login, or as a listed profile's phone on file) | `not_allowed` |
+| 3 | `max_users` distinct visitors already, and the visitor is NEW | `limit_reached` |
+| 4 | otherwise | record / increment the visit, `open` with the target |
+
+**WhatsApp send** (on create when `sendWhatsapp`, and on resend): to every listed user's phone (a profile's phone
+from its login, else its teacher row, its family row, its student's family) through the Outbox, ALWAYS the
+template `short_link` on the NOTIFICATIONS line; dedup key `short_link:<code>:<user row>:<attempt>`. Until the
+template is approved every row is recorded `failed` / `template_not_approved`: never free text, never another line.
+
+**Template the owner creates in Meta** (seeded `not_submitted` in «القوالب»): name `short_link`, language `ar`,
+category UTILITY, body:
+
+```
+السلام عليكم ورحمة الله وبركاته
+أرسلت إليكم أكاديمية آيات البيان رابطًا بعنوان: {{1}}
+يمكنكم فتحه من الرابط {{2}} أو من الزر أدناه.
+```
+
+footer «أكاديمية آيات البيان», one URL button «فتح الرابط» → `https://app.ayatalbayan.com/l/{{1}}` (the button's
+`{{1}}` is the link's code). `{{1}}` = the title, `{{2}}` = the short URL.
+
+**Cron** (`LinkExpiryJob`, in-process Ticker on the worker; pg_cron is not enabled): every 15 minutes active managed
+links past `expires_at` become `expired`; once a day managed links whose `expires_at` is older than
+`short_link_purge_days` are deleted with their users and visits. Both by cutoff: a second pass changes nothing.
+
+**Settings** («القيم» → التقارير, config-in-db, seeded by the registry): `short_link_default_days` (7),
+`short_link_purge_days` (30), `short_link_extra_hosts` (empty; comma separated hosts, e.g. `forms.example.org`).
 
 ### Teacher report link (owner 2026-11-05: «activate reports from teacher»)
 

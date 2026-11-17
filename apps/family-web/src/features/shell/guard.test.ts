@@ -1,8 +1,8 @@
 import { QueryClient } from '@tanstack/react-query';
 import { isRedirect } from '@tanstack/react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { home } from '@ab/web-kit/portal/portal.fixtures';
-import { requireFamily, requireTab } from './guard';
+import { home, kid } from '@ab/web-kit/portal/portal.fixtures';
+import { requireFamily, requirePicker } from './guard';
 
 const signOut = vi.hoisted(() => vi.fn(async () => undefined));
 vi.mock('@ab/web-kit/auth/sign-in', () => ({ signOut }));
@@ -44,21 +44,22 @@ describe('requireFamily (docs/51 §3)', () => {
   });
 });
 
-describe('requireTab: a tab the login lacks goes home', () => {
-  const guard = (kind: 'guardian' | 'student') => {
+describe('requirePicker: «اختر الطالب» is a guardian of several children’s', () => {
+  const guard = (over: Parameters<typeof home>[0]) => {
     const queryClient = new QueryClient();
-    queryClient.setQueryData(['portal-me'], home({ kind }));
+    queryClient.setQueryData(['portal-me'], home(over));
     return { queryClient, visitor: 'family' as const };
   };
 
-  it('«أبنائي» is a guardian’s, «التقارير» a student’s', async () => {
-    await expect(requireTab(guard('guardian'), 'children')).resolves.toBeUndefined();
-    expect(isRedirect(await thrown(requireTab(guard('student'), 'children')))).toBe(true);
-    expect(isRedirect(await thrown(requireTab(guard('guardian'), 'reports')))).toBe(true);
+  it('a guardian of two picks; a student or a guardian of one goes home', async () => {
+    await expect(requirePicker(guard({ kind: 'guardian' }))).resolves.toBeUndefined();
+    expect(isRedirect(await thrown(requirePicker(guard({ kind: 'student' }))))).toBe(true);
+    const one = guard({ kind: 'guardian', students: [kid()] });
+    expect(isRedirect(await thrown(requirePicker(one)))).toBe(true);
   });
 
   it('a staff visitor reads no portal (the notice shows instead)', async () => {
     const queryClient = new QueryClient();
-    await expect(requireTab({ queryClient, visitor: 'staff' }, 'children')).resolves.toBeUndefined();
+    await expect(requirePicker({ queryClient, visitor: 'staff' })).resolves.toBeUndefined();
   });
 });

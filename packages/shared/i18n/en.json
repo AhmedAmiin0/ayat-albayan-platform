@@ -63,7 +63,7 @@
     },
     "cancelled": "This lesson was cancelled",
     "remainingHint": "across all of the student’s packages",
-    "upcomingTab": "Upcoming",
+    "upcomingTab": "Next",
     "attendedTab": "Attended",
     "absentTab": "Missed",
     "childTabs": "Student sections",
@@ -113,13 +113,11 @@
       "tabs": {
         "home": "Home",
         "schedule": "Schedule",
-        "children": "My children",
         "reports": "Reports",
         "account": "Account"
       },
       "home": {
         "greeting": "Welcome",
-        "children": "Your children",
         "open": "Open {name}'s page"
       },
       "lesson": {
@@ -129,6 +127,7 @@
         "minutes": "{n} min",
         "teacher": "Teacher: {name}",
         "roomNote": "The lesson opens in the academy's room in your browser, with no second sign-in.",
+        "roomNoteLive": "You enter the room directly, microphone on and camera off.",
         "joinShort": "Join",
         "joinFailed": "Could not open the lesson. Please try again.",
         "upcoming": "Upcoming lessons",
@@ -138,14 +137,7 @@
         "prepareSelf": "Get ready for your lesson",
         "upcomingSelf": "Your upcoming lessons"
       },
-      "month": {
-        "attended": "Attended this month",
-        "absent": "Missed this month"
-      },
       "package": {
-        "line": "Package: {left} of {total} lessons left",
-        "renews": "Renews on {date}",
-        "due": "Due",
         "title": "{n}-lesson package",
         "perLesson": "{n} min per lesson",
         "usedOf": "{used} of {total} used",
@@ -153,8 +145,7 @@
         "renewal": "Renewal",
         "afterTransfer": "After the transfer, the office records the payment and it shows here.",
         "paid": "Paid",
-        "refund": "Refunded",
-        "open": "Package details"
+        "refund": "Refunded"
       },
       "schedule": {
         "title": "Schedule",
@@ -164,8 +155,6 @@
         "laterWeek": "In two weeks",
         "prev": "Previous week",
         "next": "Next week",
-        "all": "All",
-        "filter": "Choose a child",
         "today": "Today · {day}",
         "empty": "No lessons this week."
       },
@@ -175,8 +164,7 @@
         "upcoming": "Upcoming",
         "attended": "Attended this month",
         "absent": "Missed this month",
-        "left": "Left",
-        "note": "Each child's reports are on their page: «Attended» opens each lesson's report."
+        "left": "Left"
       },
       "history": {
         "recording": "Lesson recording",
@@ -212,10 +200,101 @@
         "pushStudent": "Lesson times and new reports",
         "version": "Version {v}"
       },
+      "profile": {
+        "title": "Profile",
+        "open": "Opens your profile",
+        "details": "My details",
+        "name": "Name",
+        "whatsapp": "WhatsApp number",
+        "email": "Email",
+        "code": "Student code",
+        "note": "To change your details, message the academy."
+      },
       "child": {
         "attendedSelf": "Attended",
         "absentSelf": "Missed",
-        "chat": "Chat"
+        "chat": "Chat",
+        "chatUnread": "Chat, {n} unread"
+      },
+      "pick": {
+        "title": "Choose a student",
+        "hint": "You can switch the student later from their name at the top of any page.",
+        "switch": "Switch student",
+        "open": "Switch student: {name}",
+        "shown": "Now showing {name}’s page",
+        "shownSelf": "Now showing your page",
+        "next": "Next lesson · {when}",
+        "me": "Me"
+      },
+      "live": {
+        "justNow": "Started just now",
+        "since": {
+          "one": "Started a minute ago",
+          "two": "Started 2 minutes ago",
+          "few": "Started {n} minutes ago",
+          "other": "Started {n} minutes ago"
+        },
+        "teacherIn": "The teacher is in the room now",
+        "othersIn": "In the room now",
+        "roles": {
+          "teacher": "{name}",
+          "student": "{name}",
+          "guardian": "{name}",
+          "staff": "{name} (lesson assistant)",
+          "guest": "{name} (guest)"
+        },
+        "unnamed": {
+          "teacher": "The teacher",
+          "student": "A student",
+          "guardian": "A guardian",
+          "staff": "Lesson assistant",
+          "guest": "Guest"
+        },
+        "row": "Live now",
+        "rowTeacher": "Live now · the teacher is in",
+        "join": "Join now"
+      }
+    },
+    "actions": {
+      "menuTitle": "Lesson options",
+      "optionsFor": "Lesson options: {when}",
+      "confirm": "I'll attend",
+      "request": "Ask for another time",
+      "decline": "Excuse this lesson",
+      "withdraw": "Withdraw the request",
+      "back": "Go back",
+      "confirmedNotice": "Your attendance for this lesson is confirmed",
+      "confirmedLine": "You confirmed {student} will attend this lesson",
+      "sentNotice": "Your request was sent; we will reply soon",
+      "withdrawnNotice": "Your request was withdrawn; the lesson keeps its time",
+      "declinedNotice": "Your excuse for this lesson was recorded",
+      "pendingChip": "Waiting for the academy",
+      "rejectedChip": "Request not accepted",
+      "requestedLine": "You asked for {when}",
+      "decisionNote": "Note: {note}",
+      "staysNote": "The lesson keeps its time until the academy answers your request",
+      "declineTitle": "Excuse this lesson",
+      "declineTitleOf": "Excuse {lesson}",
+      "lessonToday": "Today's lesson",
+      "lessonTomorrow": "Tomorrow's lesson",
+      "lessonOn": "The lesson on {date}",
+      "declineConfirm": "Confirm the excuse",
+      "countsNo": "Only this lesson is cancelled, and it will not count against the package. The teacher and the academy are told.",
+      "countsYes": "Only this lesson is cancelled, and it counts against the package because the excuse came late. The teacher and the academy are told.",
+      "excusedNo": "You excused this lesson; it does not count from the package.",
+      "excusedYes": "You excused this lesson; it counts from the package.",
+      "reasonLabel": "Reason (optional)",
+      "currentWhen": "Current time: {when}",
+      "askSubline": "{student}'s lesson with {teacher} · {minutes}",
+      "noteLabel": "Note for the academy (optional)",
+      "send": "Send the request",
+      "failed": "Your request could not be completed. Try again.",
+      "errors": {
+        "proposal_pending": "You already have a request waiting on this lesson.",
+        "lesson_started": "The lesson has started or closed, so it can no longer change.",
+        "no_request": "No request is waiting on this lesson.",
+        "date_in_past": "That time has passed; pick another one.",
+        "group_lesson": "This is a group lesson; contact the academy to change it."
       }
     }
   },
@@ -494,8 +573,10 @@
       "noPreference": "No preference",
       "phone": "WhatsApp number (with country code)",
       "country": "Country",
-      "secondPhone": "Family's second number"
+      "secondPhone": "Family's second number",
+      "studentPhone": "Student's WhatsApp number (optional, with country code)"
     },
+    "studentPhoneHint": "The student signs in to the app with it, by a code sent on WhatsApp.",
     "removeSecond": "Remove the second number",
     "removeSecondConfirm": "Remove the second number {phone} from the family? Its chat becomes a lead chat again.",
     "save": "Save",
@@ -536,7 +617,9 @@
       "guardian_has_self": "The guardian is already a student of their family.",
       "student_has_records": "Not possible: the student has lessons, packages, payments, reports or messages.",
       "student_has_login": "Not possible: the student has a login. The admin unlinks it first.",
-      "phone_taken": "This number belongs to another family.",
+      "phone_taken": "This number already belongs to another family or student.",
+      "teacher_number": "This is a teacher's number; it cannot be a student's.",
+      "student_login_phone": "A student with a login keeps their number: sign-in codes go to it. The admin can change it.",
       "duplicate_student": "A student with the same name is already in the family.",
       "student_not_found": "This student does not exist.",
       "guardian_not_found": "The guardian does not exist.",
@@ -1175,7 +1258,7 @@
     "scopeLabelMove": "Change applies to",
     "proposal": {
       "title": "Time change requests",
-      "hint": "Teachers proposed other times for these lessons. Open the lesson to approve or reject.",
+      "hint": "Families asked for, or teachers proposed, other times for these lessons. Open the lesson to approve or decline.",
       "pending": "The teacher proposed another time: {when}",
       "note": "Teacher's note: {note}",
       "approve": "Approve time",
@@ -1183,7 +1266,23 @@
       "approved": "Lesson moved to the time the teacher proposed",
       "rejected": "Proposal rejected",
       "open": "Open lesson",
-      "change": "{from} → {to}"
+      "change": "{from} → {to}",
+      "fromFamily": "From the family",
+      "fromTeacher": "From the teacher",
+      "familyPending": "The family asked for another time: {when}",
+      "familyNote": "Family's note: {note}",
+      "sentAt": "Request sent {when}",
+      "rejectRequest": "Decline the request",
+      "pickOther": "Pick another time",
+      "pickOtherHint": "“Pick another time” opens “Change the lesson time” on the requested week.",
+      "decisionNote": "Reply to the family (optional)",
+      "decisionNoteHint": "The family gets the reply with the decision in a notification.",
+      "decisionNotePlaceholder": "For example: no other time is free this week",
+      "requestRejected": "Request declined; the family was told",
+      "requestApproved": "The lesson moved to the time the family asked for",
+      "waiting": "Waiting for your answer",
+      "familyRequests": "Family requests",
+      "when": "Time"
     },
     "editTime": "Edit time",
     "timeEdit": {
@@ -1255,6 +1354,14 @@
         "no_show": "Absent",
         "excused": "Student excused",
         "cancelled_by_teacher": "Cancelled by teacher"
+      },
+      "confirm": "Confirm",
+      "ask": "The lesson will be recorded as “{to}”.",
+      "counts": {
+        "completed": "This lesson counts from the package.",
+        "no_show": "The absence counts from the package.",
+        "excused": "The excuse counts from the package if it came after the late-cancel window.",
+        "cancelled_by_teacher": "This lesson does not count from the package."
       }
     }
   },
@@ -1440,9 +1547,28 @@
     "back": "Back",
     "count": "Participants: {n}",
     "connecting": "Connecting…",
-    "ended": "You left the room",
     "duplicate": "You joined from another device or window, so the room closed here",
     "missing": "Your entry expired; join again from the list",
+    "sdkFailed": "The lesson cannot run inside the app on this device; open it in the browser",
+    "left": {
+      "title": "You left the lesson",
+      "body": "The lesson is still running, and you can go back in now."
+    },
+    "leaveAsk": {
+      "title": "Leave the lesson?",
+      "body": "You can join again while the lesson is running.",
+      "stay": "Stay in the lesson"
+    },
+    "remember": "We keep this choice, so next time you join straight away.",
+    "dropped": "The connection to the lesson was lost",
+    "mutedHint": "You can turn the microphone back on with the «Mute» button.",
+    "host": {
+      "endAll": "End the lesson for everyone",
+      "endConfirm": "The lesson will end for everyone. End it?",
+      "endAction": "End now",
+      "ending": "Ending…",
+      "keep": "Go back"
+    },
     "permission": {
       "title": "Camera and microphone",
       "body": "The app needs the microphone so others can hear you, and the camera so they can see you. You can turn either off at any time.",
@@ -1463,6 +1589,11 @@
       "switchCamera": "Switch camera",
       "speaker": "Speaker",
       "earpiece": "Earpiece",
+      "headset": "Headset",
+      "bluetooth": "Bluetooth",
+      "audio": "Audio",
+      "output": "Audio output: {name}",
+      "chat": "Chat",
       "leave": "Leave"
     },
     "native": {
@@ -1788,11 +1919,13 @@
       "from": "From date",
       "to": "To date",
       "teacher": "Teacher",
-      "teacherAll": "All teachers"
+      "teacherAll": "All teachers",
+      "status": "Status",
+      "statusAll": "All statuses"
     },
     "visible": {
       "label": "Show to the student",
-      "on": "Ready to show to the student and guardian once their portal is on.",
+      "on": "Appears on the lesson report page once it is sent to the family.",
       "off": "Hidden from the student and guardian.",
       "failed": "Could not change the visibility. Try again.",
       "groupLesson": "A group lesson's recording cannot be shown to a student: it holds the lesson of more than one student."
@@ -3389,7 +3522,8 @@
         "number_taken": "This number is registered to another family",
         "family_has_second_number": "This family already has a second number",
         "teacher_number": "This is a teacher's number; it cannot be linked to a family",
-        "lead_has_family": "This number is another family's main number"
+        "lead_has_family": "This number is another family's main number",
+        "guardian_has_login": "This family has a login, and a second number signs in to it with a WhatsApp code. The admin adds it."
       }
     },
     "pdf": {
@@ -3730,6 +3864,7 @@
         "crmScopeMissing": "The CRM API key is valid but lacks the messages:send scope, so this line will not send. Update it in «Communications» → «Safety».",
         "crmScopeOk": "The CRM API key is valid and has the send scope",
         "crmTemplateScopesMissing": "The CRM API key lacks {scopes}, so this number's templates neither sync nor go for review from here. Update it in «Communications» → «Safety» → «CRM API key».",
+        "crmReadScopesMissing": "The CRM API key lacks {scopes}, so a send that timed out is not confirmed from the CRM and stays «Not confirmed yet». Add the scope to the key in the CRM.",
         "metaReady": "Ready to send directly through Meta",
         "metaAppSecretSet": "The Meta app secret is set, so signed inbound messages are accepted",
         "metaAppSecretMissing": "The Meta app secret is not set, so inbound messages from Meta will be refused",
@@ -4003,6 +4138,7 @@
     "deliveredAt": "Delivered {time}",
     "readAt": "Read {time}",
     "manualTick": "manually",
+    "unconfirmedTick": "Not confirmed yet",
     "attempts": "Attempts: {n} of {max}",
     "nextAttempt": "Next attempt {time}",
     "sendingNow": "Sending now",
@@ -4049,7 +4185,8 @@
       "handed_off": "Waiting for you to confirm you sent it yourself",
       "stale": "No longer needed: the lesson was cancelled or changed, or the lead replied or asked to stop messages",
       "auto_off": "Not sent because automatic messages are off — turn them on in Settings, then try again",
-      "uncertain": "We're not sure it was sent — check WhatsApp before sending it again",
+      "uncertain": "It may have arrived. We are waiting for the CRM to confirm it; don't send it again before checking WhatsApp.",
+      "crm_uncertain": "It may have arrived. We are waiting for the CRM to confirm it; don't send it again before checking WhatsApp.",
       "template_not_approved": "The template isn't approved by Meta yet",
       "network": "We couldn't reach WhatsApp",
       "internal": "The platform hit an error while sending",
@@ -4169,8 +4306,8 @@
       "body": "{reason}"
     },
     "channel_message": {
-      "title": "New message from a student's family",
-      "body": "{student}: {text}"
+      "title": "Message in {student}'s chat",
+      "body": "{name}: {text}"
     },
     "commission_earned": {
       "title": "New commission",
@@ -4212,6 +4349,14 @@
     "report_sent": {
       "title": "Lesson report received",
       "body": "{student}'s lesson report for {when} is ready"
+    },
+    "lesson_live": {
+      "title": "Lesson started",
+      "body": "Tap to join {student}'s lesson now, with your microphone on."
+    },
+    "lesson_request_declined": {
+      "title": "{student}'s lesson time did not change",
+      "body": "The lesson on {when} keeps its time.{note}"
     }
   },
   "bell": {
@@ -4443,7 +4588,9 @@
       "course_resumed": "Lessons resumed",
       "payment_received": "Payment received",
       "lesson_starting": "Lesson starting soon",
-      "report_sent": "Lesson report received"
+      "report_sent": "Lesson report received",
+      "lesson_live": "Lesson started",
+      "lesson_request_declined": "Time change request not accepted"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -4530,6 +4677,9 @@
       "lessonConfirmationRequired": "When on (the default) a lesson shows \"Needs confirmation\" until the family replies \"Yes\" or the admin team confirms it. Every lesson that has ended is deducted from the package, confirmed or not. After the grace period a confirmed lesson is recorded as held; an unconfirmed one is recorded as absent when the platform sent the family's reminder and no reply came, and otherwise stays \"Needs confirmation\" for an assistant to resolve. When off, no lesson shows \"Needs confirmation\" and a lesson counts as held after the grace period unless another status was recorded.",
       "lessonOutcomeGraceMinutes": "Minutes after a lesson's end before its status is recorded automatically (held or absent). Default: 30 minutes.",
       "shortLinkBase": "The address the platform's short links start with, e.g. https://example.com/r/ (must start with https:// and end with /). Empty = the platform API's address followed by /r/.",
+      "shortLinkDefaultDays": "How many days a short link made by the admin or sales team stays valid when no expiry is given. Default: 7 days.",
+      "shortLinkPurgeDays": "This many days after a short link expires, it is deleted with its user list and visits. Default: 30 days.",
+      "shortLinkExtraHosts": "Other hosts a short link may open besides the platform and Google Meet, comma separated, e.g. forms.example.com. The link must be https.",
       "teacherChatsEnabled": "When on, teachers who hold the chats permission see the «Chats» page on the website and its tab in the mobile app. When off, the page is hidden and teachers cannot open it; the chats and their data do not change. Admins, sales and assistants are not affected.",
       "teacherStudentMessagesEnabled": "When on, teachers see the «Student messages» page. When off, it is hidden on the website and under «More» in the mobile app and teachers cannot open it; the messages stay saved.",
       "teacherEarningsEnabled": "When on, teachers see the «My earnings» page. When off, it is hidden on the website and in the mobile app and teachers cannot open it; earnings and their calculation do not change.",
@@ -4569,6 +4719,9 @@
     "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson",
     "lessonOutcomeGraceMinutes": "Grace after a lesson ends before its status is recorded (minutes)",
     "shortLinkBase": "Short links base",
+    "shortLinkDefaultDays": "Short link lifetime (days)",
+    "shortLinkPurgeDays": "Delete short links after expiry (days)",
+    "shortLinkExtraHosts": "Extra hosts for short links",
     "teacherChatsEnabled": "Teacher «Chats» page",
     "teacherStudentMessagesEnabled": "Teacher «Student messages» page",
     "teacherEarningsEnabled": "Teacher «My earnings» page",
@@ -4700,23 +4853,16 @@
       "wordmark": "Ayat Al-Bayan",
       "wordmarkArabic": "آيات البيان",
       "welcome": "Follow lessons and reports in one place.",
-      "phoneHint": "The number on file at the academy. For another country, type the whole number starting with +.",
+      "phoneHint": "The number on file at the academy. Pick the country, or paste the whole number starting with +.",
       "phoneBad": "This number is incomplete or not valid for this country.",
       "country": "Country: {name}. Tap to change.",
       "countryTitle": "Choose the country",
-      "countries": {
-        "SA": "Saudi Arabia",
-        "AE": "United Arab Emirates",
-        "QA": "Qatar",
-        "KW": "Kuwait",
-        "OM": "Oman",
-        "BH": "Bahrain",
-        "EG": "Egypt"
-      },
+      "countrySearch": "Search by country name or calling code",
+      "countryNone": "No country matches this name or code.",
       "codeTitle": "Enter the code",
       "codeSentTo": "If {phone} is on file, a six-digit code will reach it on WhatsApp. You can paste it here.",
-      "withPassword": "Sign in with the student code and password",
-      "withWhatsApp": "Sign in with the WhatsApp number",
+      "withPassword": "Use the student code and password",
+      "withWhatsApp": "Use the WhatsApp number",
       "whatsappOff": "WhatsApp sign-in is not available yet.",
       "studentCode": "Student code",
       "studentCodeBad": "A student code looks like AB-1234."
@@ -4943,7 +5089,11 @@
     "nextLesson": "Your next lesson: {when} · {names}",
     "noneSoon": "No lessons in the next two weeks",
     "openSchedule": "Open my schedule",
-    "noOther": "No other lessons today"
+    "noOther": "No other lessons today",
+    "waiting": "Your student is waiting",
+    "waitingLine": "{name} is waiting for you in the room",
+    "waitingSince": "Came in {age}",
+    "liveNow": "The lesson is running now"
   },
   "live": {
     "now": "Live now"
@@ -4983,6 +5133,7 @@
     "guest": {
       "title": "Join the lesson",
       "intro": "Type your name and join right away, no sign-up.",
+      "introKnown": "Join the lesson right away, no sign-up.",
       "name": "Your name",
       "namePlaceholder": "e.g. Suhaila",
       "join": "Join the lesson"
@@ -5009,6 +5160,8 @@
       "join_not_open_yet": "The room is not open yet; it opens 15 minutes before the lesson",
       "join_closed": "The lesson time is over",
       "link_invalid": "This link is not valid",
+      "lesson_ended": "This lesson has ended and cannot be joined again",
+      "lesson_not_live": "The lesson cannot be ended now: its time has not started and nobody is in the room",
       "link_expired": "This link has expired",
       "too_many_requests": "Too many attempts, try again in a moment",
       "template_not_approved": "Meta has not approved the lesson link template yet",
@@ -6119,7 +6272,9 @@
       "people.edit": "Edit students' and families' details",
       "students.attach_guardian": "Link a student to another guardian",
       "people.switch_role": "Convert between student and guardian",
-      "templates.author": "Write chat templates"
+      "templates.author": "Write chat templates",
+      "short_links.manage": "Short links",
+      "short_links.all": "All short links"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -6140,7 +6295,9 @@
       "people.edit": "Edit any student's name, age, gender, level, time zone and notes, and the family's details and numbers. Never deletes or merges, never changes the status, program or teacher.",
       "students.attach_guardian": "Move the student to another family or to a new guardian by number. Packages, lessons and payments stay with the student; the old family stays. Also needs «Edit students' and families' details».",
       "people.switch_role": "«The student is the guardian», converting a guardian into a student of their family, and converting a student record with no history into the family's guardian. Also needs «Edit students' and families' details».",
-      "templates.author": "Create new templates sent to Meta from the chat number (they join the allowed list once approved) and edit that list's templates the platform does not send by itself. Does not grant managing every template."
+      "templates.author": "Create new templates sent to Meta from the chat number (they join the allowed list once approved) and edit that list's templates the platform does not send by itself. Does not grant managing every template.",
+      "short_links.manage": "Create short links to platform pages, Google Meet or allowed hosts, choose who may open them, how many users and for how long, and send them by WhatsApp. Without «All short links» a user sees only their own links.",
+      "short_links.all": "See, edit and revoke the short links the whole team made, not only one's own."
     },
     "page": {
       "title": "Roles and permissions",
@@ -7034,8 +7191,8 @@
         "trigger": "When the Google account link expires or a teacher has no mapped calendar"
       },
       "channel_message": {
-        "name": "Family message in the student channel",
-        "trigger": "When the student or guardian writes in the student channel"
+        "name": "Message in the student chat",
+        "trigger": "When someone writes in the student chat: to the teacher, the guardian, the student and the student's assistant, except the writer"
       },
       "commission_earned": {
         "name": "New assistant commission",
@@ -7068,6 +7225,14 @@
       "report_sent": {
         "name": "Lesson report received",
         "trigger": "When the lesson report is sent to the family, to the guardian and the student in the family app"
+      },
+      "lesson_live": {
+        "name": "Lesson started",
+        "trigger": "When the teacher enters the lesson room, to the guardian and the student in the family app"
+      },
+      "lesson_request_declined": {
+        "name": "Time change request declined",
+        "trigger": "When the academy declines a family's request to move a lesson, to whoever asked in the family app"
       }
     }
   },
@@ -8236,7 +8401,7 @@
       "family": "Families and students",
       "staff": "Academy team"
     },
-    "familyIntro": "Parent or adult student: sign in with the WhatsApp number the academy has on file, and we will send you a code on WhatsApp.",
+    "familyIntro": "Parent or student: sign in with the WhatsApp number the academy has on file, and we will send you a code on WhatsApp.",
     "phone": "WhatsApp number",
     "phoneHint": "The number on file at the academy, with the country code.",
     "sendCode": "Send the code",
@@ -8286,7 +8451,9 @@
       "attempts": "Attempts per code",
       "attemptsHint": "Once used up, a new code is needed.",
       "chat": "In-app chat for families",
-      "chatHint": "When on, guardians and adult students message the teacher from the app and the family pages. When off, the chat is hidden and no message is accepted.",
+      "chatHint": "When on, guardians and adult students message the teacher from the app and the family pages. When off, the chat is hidden and no message is accepted. Turn it on together with the teachers' «Student messages» page; with only one of the two on, teachers cannot open family messages.",
+      "meetings": "Lessons inside the family app",
+      "meetingsHint": "When on, lessons held in the academy's room open inside the family app with audio and video. When off, they open in the browser as before. Needs family app version 0.3.0 or later; older versions always open the browser. Nothing changes on the website.",
       "paymentInstructions": "Payment instructions for families",
       "paymentInstructionsHint": "Shown under the amount due on the package page (e.g. bank transfer details). Leave empty to hide."
     },
@@ -8346,7 +8513,9 @@
     "roles": {
       "teacher": "Teacher",
       "guardian": "Guardian",
-      "student": "Student"
+      "student": "Student",
+      "sales": "Follow-up owner",
+      "unknown": "Chat member"
     },
     "listEmpty": "No current students yet",
     "listEmptyHint": "The chat of every student you teach now appears here.",
@@ -8359,6 +8528,64 @@
     "hide": "Hide the chat",
     "closed": "The chat with the teacher opens after the subscription",
     "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher.",
+    "closedReasons": {
+      "not_subscribed": "The chat with the teacher opens after the subscription",
+      "no_teacher": "The chat opens once the student has a teacher.",
+      "family_chat_off": "The chat with the teacher is not available right now."
+    },
+    "kinds": {
+      "text": "Message",
+      "photo": "Photo",
+      "pdf": "PDF file",
+      "voice": "Voice message"
+    },
+    "media": {
+      "attach": "Attach a photo or a PDF",
+      "photo": "Photo",
+      "pdf": "PDF file",
+      "record": "Record a voice message",
+      "recording": "Recording…",
+      "stop": "Stop recording",
+      "cancel": "Cancel",
+      "uploading": "Uploading the file…",
+      "open": "Open the file",
+      "play": "Play",
+      "pause": "Pause",
+      "tooLarge": "The file is larger than the limit ({n} MB).",
+      "badType": "This file type is not supported. Send a photo, a PDF or a voice message.",
+      "failed": "Couldn't upload the file. Try again.",
+      "gallery": "Gallery",
+      "camera": "Camera",
+      "document": "Document",
+      "hint": "You can send JPG or PNG photos or PDF files only"
+    },
+    "reply": {
+      "action": "Reply",
+      "replyingTo": "Replying to {name}",
+      "cancel": "Cancel the reply",
+      "deleted": "Deleted message"
+    },
+    "reads": {
+      "action": "Message info",
+      "title": "Who read the message",
+      "read": "Read",
+      "unread": "Not read yet",
+      "none": "Nobody yet",
+      "failed": "Couldn't load who read it."
+    },
+    "sent": "Sent",
+    "readByAll": "Read by everyone",
+    "pending": "Sending",
+    "seat": {
+      "take": "Take this chat",
+      "taking": "Taking…",
+      "takeHint": "Once you take it, you write here and get its messages.",
+      "takeOver": "Move this chat to you",
+      "takeOverHint": "You registered this student, so you can move the chat from {name} to you.",
+      "leave": "Leave this chat",
+      "heldBy": "Followed by {name}",
+      "taken": "Another assistant follows this chat"
+    },
     "actions": {
       "menu": "Message options",
       "edit": "Edit",
@@ -8377,9 +8604,37 @@
         "edit_window_closed": "The 15-minute edit window has passed.",
         "delete_window_closed": "The 48-hour delete window has passed.",
         "not_your_message": "You can only edit or delete your own messages.",
-        "message_deleted": "This message was already deleted."
+        "message_deleted": "This message was already deleted.",
+        "channel_read_only": "You can only view this chat.",
+        "channel_not_open": "The chat is closed now, so messages cannot be edited or deleted.",
+        "family_chat_off": "The chat with the teacher is not available right now.",
+        "attachment_path": "Couldn't find the uploaded file. Send it again.",
+        "reply_not_found": "Couldn't find the message you are replying to.",
+        "not_a_text_message": "Only a message's text can be edited, not files."
+      },
+      "menuHint": "Long press for the message options."
+    },
+    "closedWho": "Here the teacher and the follow-up owner talk with the student and the guardian. The chat opens here by itself, with nothing more to do.",
+    "namesJoin": ", ",
+    "emoji": "Emoji",
+    "closedCard": {
+      "title": "The chat opens after the subscription and the teacher’s assignment",
+      "body": "Here the teacher and the follow-up owner talk with the student and the guardian. This is what is left before it opens:",
+      "current": "Current step",
+      "done": "Done.",
+      "steps": {
+        "subscribe": "Subscribe to a package",
+        "teacher": "Assign the teacher",
+        "open": "Open the chat"
+      },
+      "notes": {
+        "subscribe": "The student subscribes to one of the academy’s packages.",
+        "teacher": "The academy chooses the student’s teacher.",
+        "open": "It opens here by itself, with nothing more to do."
       }
-    }
+    },
+    "keyboard": "Keyboard",
+    "closeChat": "Close the chat"
   },
   "packagePayment": {
     "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",
@@ -8531,7 +8786,18 @@
       "customAmount": "Amount",
       "customHint": "From 0 to {amount}",
       "summary": "Refund: {refund} · Still owed by the family: {due}",
-      "refundUnavailable": "The refund cannot be computed right now, so «Cancel and refund» is not shown. Reopen the sheet shortly."
+      "refundUnavailable": "The refund cannot be computed right now, so «Cancel and refund» is not shown. Reopen the sheet shortly.",
+      "reasonRequired": "This field is required",
+      "cancelsOn": "Cancelled lessons: {dates}",
+      "doneStatus": "The student is now: {status}",
+      "next": "Transfer {amount} to the family by hand, and tell the family and the teacher in the chat.",
+      "nextTitle": "Next step",
+      "nextTell": "Tell the family and the teacher in the chat.",
+      "notifiedTitle": "Who was told",
+      "notifiedFamily": "Family: no message",
+      "notifiedTeacher": "Teacher: no message",
+      "notifiedAdmins": "Admins: a bell alert",
+      "close": "Done"
     },
     "teacher": {
       "action": "Change teacher",
@@ -8542,7 +8808,9 @@
       "keepDays": "Keep the current days and times",
       "changeDays": "Change the days and times too",
       "confirm": "Confirm teacher change",
-      "done": "The remaining lessons moved to the new teacher"
+      "done": "The remaining lessons moved to the new teacher",
+      "reviewCurrent": "Current teacher: {name}",
+      "reviewNew": "New teacher: {name}"
     },
     "times": {
       "action": "Change lesson times",
@@ -8594,7 +8862,69 @@
       "refund_mismatch": "This retry differs from an earlier refund of the same request: reopen the sheet",
       "not_your_student": "This student is not one of yours, so you cannot refund them",
       "owed_exceeds_price": "The amount still owed must be between 0 and the package price",
-      "stop_mismatch": "This attempt differs from the stop already recorded for the same request; reopen the sheet"
+      "stop_mismatch": "This attempt differs from the stop already recorded for the same request; reopen the sheet",
+      "amount_required": "Enter the amount",
+      "course_paused": "The course is paused; resume it first"
+    }
+  },
+  "courseCard": {
+    "title": "Course and package",
+    "left": {
+      "zero": "No lessons left in the package",
+      "one": "1 lesson left",
+      "two": "2 lessons left",
+      "few": "{n} lessons left",
+      "other": "{n} lessons left"
+    },
+    "teacherEnd": "{teacher} · last lesson on {date}",
+    "endsOn": "Last lesson on {date}",
+    "unbooked": {
+      "zero": "Every lesson of the package has a date",
+      "one": "1 lesson has no date yet",
+      "two": "2 lessons have no dates yet",
+      "few": "{n} lessons have no dates yet",
+      "other": "{n} lessons have no dates yet"
+    },
+    "noCourse": "The lesson days of this package are not booked yet",
+    "noPackage": "No current package",
+    "upcoming": "Upcoming lessons",
+    "noUpcoming": "No upcoming lessons",
+    "courseGroup": "Course",
+    "actions": "Course actions",
+    "packageActions": "Package and payments",
+    "hints": {
+      "pause": "The lessons in the pause are cancelled; the package is extended on resume",
+      "teacher": "The remaining lessons move to another teacher",
+      "times": "New days and times for the remaining lessons",
+      "extend": "Books the package lessons that have no date",
+      "renew": "A new package starting on the day you pick",
+      "pay": "Added to the current package payments",
+      "stop": "Upcoming lessons are cancelled; you choose what is refunded or still owed"
+    },
+    "pay": "Record a payment",
+    "statusNote": "Choosing “Paused” opens “Pause”, and choosing “Stopped” opens “Cancel subscription”.",
+    "whatHappens": "What will happen",
+    "notifyNone": "Neither the family nor the teacher is told automatically; tell them in the chat.",
+    "extend": {
+      "action": "Extend schedule",
+      "title": "Extend schedule",
+      "ask": "Extend the schedule to the end of the package?",
+      "books": {
+        "zero": "No lessons without a date to book",
+        "one": "1 lesson is booked on the same days and times: {dates}",
+        "two": "2 lessons are booked on the same days and times: {dates}",
+        "few": "{n} lessons are booked on the same days and times: {dates}",
+        "other": "{n} lessons are booked on the same days and times: {dates}"
+      },
+      "confirm": "Extend schedule",
+      "done": {
+        "zero": "Nothing booked: no lessons without a date",
+        "one": "1 lesson booked",
+        "two": "2 lessons booked",
+        "few": "{n} lessons booked",
+        "other": "{n} lessons booked"
+      },
+      "clashes": "Some new lessons clash with other lessons; check them in the schedule"
     }
   },
   "coursePause": {
@@ -8613,7 +8943,7 @@
       "other": "{n} lessons will be cancelled; the package is extended by the paused days"
     },
     "previewLoading": "Counting lessons…",
-    "noMessage": "No message is sent to the family; tell them in the chat.",
+    "noMessage": "A WhatsApp message about the pause goes to the family and the teacher.",
     "confirm": "Pause course",
     "done": "Course paused",
     "bannerUntil": "The course is paused until {date}",
@@ -8641,7 +8971,37 @@
       "pause_not_open": "This pause has already ended",
       "student_not_found": "Student not found",
       "generic": "Could not save the pause. Try again."
-    }
+    },
+    "cancels": {
+      "zero": "No upcoming lessons in this period",
+      "one": "1 lesson is cancelled: {dates}",
+      "two": "2 lessons are cancelled: {dates}",
+      "few": "{n} lessons are cancelled: {dates}",
+      "other": "{n} lessons are cancelled: {dates}"
+    },
+    "extendDays": {
+      "zero": "The package is not extended",
+      "one": "On resume the package is extended by 1 day",
+      "two": "On resume the package is extended by 2 days",
+      "few": "On resume the package is extended by {n} days",
+      "other": "On resume the package is extended by {n} days"
+    },
+    "extendOpen": "On resume the package is extended by the paused days",
+    "resumeBack": {
+      "zero": "No lessons come back",
+      "one": "1 lesson comes back: {dates}",
+      "two": "2 lessons come back: {dates}",
+      "few": "{n} lessons come back: {dates}",
+      "other": "{n} lessons come back: {dates}"
+    },
+    "resumeExtend": {
+      "zero": "The pause has not started, so the package is not extended",
+      "one": "The package is extended by 1 day",
+      "two": "The package is extended by 2 days",
+      "few": "The package is extended by {n} days",
+      "other": "The package is extended by {n} days"
+    },
+    "resumeAsk": "Resume the course now?"
   },
   "staffPhoto": {
     "title": "Photo",
@@ -8846,5 +9206,120 @@
     "nav": "Family pages sections",
     "toStaffApp": "Open the academy team's platform",
     "familySignIn": "Family and student sign-in"
+  },
+  "audioPlayer": {
+    "play": "Play",
+    "pause": "Pause",
+    "back": "Back 10 seconds",
+    "forward": "Forward 10 seconds",
+    "speed": "Speed",
+    "resumeFrom": "Where you stopped: {at}",
+    "startOver": "Start from the beginning",
+    "failed": "The recording could not be played. Try again.",
+    "loading": "Loading the recording…",
+    "position": "{at} of {total}",
+    "seek": "Playback position",
+    "audio": "Audio recording · {minutes} min"
+  },
+  "lessonFiles": {
+    "title": "Lesson files",
+    "count": {
+      "one": "1 file",
+      "two": "2 files",
+      "few": "{n} files",
+      "other": "{n} files"
+    },
+    "recording": "Lesson recording",
+    "recordings": "Recordings",
+    "recordingsHint": "Audio recordings of lessons in the academy room. They play in the app and continue where you stopped.",
+    "empty": "No recordings yet",
+    "isNew": "New",
+    "stoppedAt": "Stopped at {at}",
+    "heard": "Listened in full",
+    "parts": {
+      "one": "Recorded in 1 part",
+      "two": "Recorded in 2 parts",
+      "few": "Recorded in {n} parts",
+      "other": "Recorded in {n} parts"
+    },
+    "rowMeta": "{teacher} · {time} · {minutes} min",
+    "lessonPage": "Lesson page",
+    "lessonOf": "Lesson of {when}",
+    "report": "Lesson report",
+    "openReport": "Read the full report",
+    "reportPdf": "Lesson report (PDF)",
+    "teacher": "Teacher: {name}",
+    "kinds": {
+      "homework": "Homework file",
+      "voice_note": "Voice note from the teacher",
+      "whiteboard": "Whiteboard snapshot",
+      "material": "File from the teacher"
+    },
+    "media": {
+      "image": "Image",
+      "pdf": "PDF",
+      "audio": "Audio"
+    },
+    "open": "Open",
+    "listen": "Listen",
+    "sizeMb": "{n} MB",
+    "fileFailed": "The file could not be opened. Try again.",
+    "noFiles": "This lesson has no files.",
+    "loadFailed": "The lesson files could not be loaded. Try again.",
+    "add": "Add a file to the lesson",
+    "hint": "An image, PDF or audio recording, up to 25 MB per file.",
+    "visible": "Visible to the student and guardian",
+    "hidden": "Hidden: only the teacher and the administration see it.",
+    "familyNote": "These files appear to the student and guardian on the lesson report page once it is sent.",
+    "uploading": "Uploading…",
+    "uploaded": "File uploaded",
+    "tooLarge": "The file is too large; the limit is 25 MB",
+    "badType": "This file type is not allowed; upload an image, PDF or audio recording",
+    "uploadFailed": "The file was not uploaded correctly; upload it again",
+    "remove": "Remove the file",
+    "removeFailed": "The file could not be removed. Try again.",
+    "kind": "File type",
+    "pickFile": "Choose a file",
+    "cameraRationale": "We need the camera to photograph the homework page or the whiteboard and add it to the lesson files.",
+    "teacherFiles": "Teacher files · {n}",
+    "addedAt": "Added {when}",
+    "reportPdfNote": "Generated from the report and sent to the family with it; it cannot be removed here.",
+    "ready": "Ready",
+    "notReady": "Being generated",
+    "sources": {
+      "gallery": "Gallery",
+      "camera": "Camera",
+      "document": "Document"
+    },
+    "partsCount": {
+      "one": "1 part",
+      "two": "2 parts",
+      "few": "{n} parts",
+      "other": "{n} parts"
+    },
+    "part": "Part {n}",
+    "partOption": "Part {n} · {minutes} min",
+    "partsLabel": "Recording parts",
+    "header": "Lesson files · {n}",
+    "reportSummary": "From this lesson's report",
+    "emptyMeet": "{name}'s lessons held on Google Meet are not recorded.",
+    "emptyRoom": "When a lesson is held in the academy room, its recording appears here once its report is sent and the academy makes it available. Group lesson recordings are not shown.",
+    "removeConfirm": "Remove this file from the lesson?",
+    "removeConfirmBody": "The student and guardian will no longer see it, and it cannot be restored.",
+    "duration": "Duration: {at}",
+    "size": "Size: {size}",
+    "waiting": "Waiting"
+  },
+  "testAccounts": {
+    "chip": "Test",
+    "userSwitch": "Test account",
+    "studentSwitch": "Test student",
+    "hint": "This mode grants no extra access to any data.",
+    "confirmOn": "A test account skips the watermark, rate limits, the lesson join window and the screen-capture block, with test students only. The whole family changes. Continue?",
+    "confirmOff": "Every check applies again, for the whole family. Continue?",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "mismatch": "A family cannot mix a test account with a real student.",
+    "failed": "The change could not be saved. Try again."
   }
 }

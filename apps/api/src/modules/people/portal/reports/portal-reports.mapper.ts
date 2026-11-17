@@ -2,7 +2,9 @@ import type { PortalPrepare, PortalReport } from '@ab/shared';
 import type { PortalRecordingRow, PortalReportRow, ReportTexts } from './portal-reports.repo';
 
 /** The newest visible recording per lesson (rows come newest first). */
-export function recordingByLesson(rows: readonly PortalRecordingRow[]): Map<string, string> {
+export function recordingByLesson(
+  rows: readonly Pick<PortalRecordingRow, 'id' | 'lesson_id'>[],
+): Map<string, string> {
   const byLesson = new Map<string, string>();
   for (const r of rows) if (!byLesson.has(r.lesson_id)) byLesson.set(r.lesson_id, r.id);
   return byLesson;

@@ -85,7 +85,7 @@ const MB = 1024 * 1024;
 const isolate = (s: string): string => `⁨${s}⁩`;
 
 /** Whole KB below 1 MB (at least 1), else MB with one decimal; Western digits. */
-function fileSizeText(bytes: number, s: PdfMetaStrings): string {
+export function fileSizeText(bytes: number, s: PdfMetaStrings): string {
   const small = bytes < MB;
   const n = small ? String(Math.max(1, Math.floor(bytes / 1024))) : (bytes / MB).toFixed(1);
   return (small ? s.kb : s.mb).split('{n}').join(n);

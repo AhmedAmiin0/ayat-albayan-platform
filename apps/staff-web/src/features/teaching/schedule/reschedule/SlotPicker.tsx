@@ -1,18 +1,11 @@
-import { addDays, weekStart, zonedPartsIn } from '@ab/shared';
-import type { SlotsResponse, SlotView } from '@ab/shared';
-import { useQuery, type UseQueryResult } from '@tanstack/react-query';
+import type { SlotView } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
 import { useBookingMode } from '@/features/teaching/booking/mode';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { slotsQuery } from '@/features/teaching/schedule/api';
-import { SlotGrid, type SlotGridProps } from '@/features/teaching/schedule/grid/SlotGrid';
-import { bookableWindow, currentWeekStart } from './slots';
-import { dayMonthLabel } from '@/features/teaching/schedule/tz';
+import { bookableWindow, currentWeekStart, openingWeek } from '@ab/web-kit/schedule/slots';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { WeekSlotsFrame } from '@ab/web-kit/schedule/WeekSlotsFrame';
 
 export interface SlotPickerProps {
   teacherId: string;
@@ -36,16 +29,6 @@ export interface SlotPickerProps {
   lessonId?: string | undefined;
 }
 
-const cityOf = (tz: string) => tzCity(tz) ?? tz;
-
-/** The viewer's week to open on: the picked slot's, else `near`'s, never before this week. */
-function openingWeek(anchor: string | undefined, week0: { first: string; tz: string }): string {
-  const { first, tz } = week0;
-  if (!anchor) return first;
-  const week = weekStart(zonedPartsIn(new Date(anchor), tz).date);
-  return week > first ? week : first;
-}
-
 /** Week-by-week picker over GET /booking/slots (R-SCH-06, R-SCH-07): no past weeks, no typing. */
 export function SlotPicker(props: SlotPickerProps) {
   const { teacherId, durationMin, studentIds, studentTz, value, also, onPick, near, excludeCourse, excludeLessonId, lessonId } = props;
@@ -58,44 +41,14 @@ export function SlotPicker(props: SlotPickerProps) {
     ...slotsQuery({ teacherId, durationMin, studentIds, excludeCourse, excludeLessonId, lessonId, from: range?.from ?? now, to: range?.to ?? now }, useBookingMode()),
     enabled: range !== null,
   });
-  const legend =
-    studentTz === tz
-      ? t.schedule.zoneNote.replace('{city}', cityOf(tz))
-      : t.booking.slotLegendViewer.replace('{city}', cityOf(studentTz));
-
   return (
-    <div className="grid gap-3">
-      <div role="group" aria-label={t.booking.weekNav} className="flex flex-wrap items-center gap-2">
-        <Button type="button" variant="secondary" size="sm" disabled={week <= first} onClick={() => setWeek(addDays(week, -7))}>
-          <Icon name="chevron-right" />
-          {t.schedule.prevWeek}
-        </Button>
-        <span className="px-1 text-sm font-semibold tabular-nums">
-          {t.schedule.weekOf.replace('{date}', dayMonthLabel(week))}
-        </span>
-        <Button type="button" variant="secondary" size="sm" onClick={() => setWeek(addDays(week, 7))}>
-          {t.schedule.nextWeek}
-          <Icon name="chevron-left" />
-        </Button>
-      </div>
-      <p className="text-xs text-ink-3">{legend}</p>
-      <SlotsBody query={slots} grid={{ week, studentTz, value, also, onPick }} />
-    </div>
-  );
-}
-
-interface SlotsBodyProps {
-  query: UseQueryResult<SlotsResponse>;
-  grid: Omit<SlotGridProps, 'slots'>;
-}
-
-function SlotsBody({ query, grid }: SlotsBodyProps) {
-  if (query.isError) return <FormAlert>{t.booking.slotsError}</FormAlert>;
-  if (!query.data) return <p className="py-4 text-sm text-ink-3">{t.common.loading}</p>;
-  if (query.data.slots.length === 0) return <p className="py-4 text-sm text-ink-2">{t.booking.noSlots}</p>;
-  return (
-    <div aria-busy={query.isPlaceholderData || undefined} className={query.isPlaceholderData ? 'opacity-60' : undefined}>
-      <SlotGrid {...grid} slots={query.data.slots} />
-    </div>
+    <WeekSlotsFrame
+      week={week}
+      first={first}
+      onWeek={setWeek}
+      studentTz={studentTz}
+      read={{ data: slots.data?.slots, isError: slots.isError, dim: slots.isPlaceholderData }}
+      grid={{ value, also, onPick }}
+    />
   );
 }

@@ -33,10 +33,18 @@ describe('«جدّد الاشتراك» on the student profile (owner 2026-10-15
     expect(await screen.findByRole('button', { name: t.students.renew })).toBeTruthy();
   });
 
-  it.each(STUDENT_STATUSES.filter((s) => s !== 'pending_renewal' && s !== 'expired'))('%s: hidden, the balance never asked', (status) => {
+  // owner 2026-11-17: the admin renews ANY time once the student has a package.
+  const others = STUDENT_STATUSES.filter((s) => s !== 'pending_renewal' && s !== 'expired');
+  it.each(others)('%s with a package: shown once the balance answers', async (status) => {
     renderButton(status);
+    expect(await screen.findByRole('button', { name: t.students.renew })).toBeTruthy();
+  });
+
+  it('no package at all and not package-ended: hidden', async () => {
+    routeFetch(apiFetch, [['/students/stu-1/balance', balanceOf([])]]);
+    renderWithClient(<RenewSubscriptionButton student={{ id: 'stu-1', name: 'سهيلة', code: 'AB-0183', status: 'active' }} />);
+    await waitFor(() => expect(apiFetch).toHaveBeenCalled());
     expect(screen.queryByRole('button', { name: t.students.renew })).toBeNull();
-    expect(apiFetch).not.toHaveBeenCalled();
   });
 
   it('opens «اشتراك جديد» for this student, prefilled from the last package', async () => {

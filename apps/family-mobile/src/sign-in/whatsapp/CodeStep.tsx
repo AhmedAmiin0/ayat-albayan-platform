@@ -46,7 +46,8 @@ export function CodeStep({ sign }: { sign: WhatsAppSignIn }) {
         icon={progressIcon(flow.busy)}
         onPress={() => void verify(code)}
       />
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+      {/* One centred column: side by side, an English pair wrapped unevenly (owner 2026-11-15). */}
+      <View style={{ alignItems: 'center' }}>
         <ResendButton
           resendIn={flow.resendIn}
           busy={flow.busy}

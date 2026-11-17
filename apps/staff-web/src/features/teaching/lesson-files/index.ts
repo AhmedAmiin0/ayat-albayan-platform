@@ -1,0 +1,1 @@
+export { LessonFilesSection } from './LessonFilesSection';

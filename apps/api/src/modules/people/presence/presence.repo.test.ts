@@ -31,7 +31,7 @@ describe('PresenceRepo (migration 985)', () => {
     const { db } = fakeDb({
       'rpc:channel_teacher_ids': [{ data: ['t1', 't2'] }],
       teachers: [{ data: [{ profile_id: 'p-t1' }, { profile_id: null }] }],
-      students: [{ data: { guardian_id: 'g1', profile_id: 'p-s', contact_is_self: true } }],
+      students: [{ data: { guardian_id: 'g1', profile_id: 'p-s' } }],
       guardians: [{ data: { profile_id: 'p-g' } }],
     });
     expect(await new PresenceRepo(db).channelPeople('s1')).toEqual([
@@ -41,10 +41,10 @@ describe('PresenceRepo (migration 985)', () => {
     ]);
   });
 
-  it('leaves out a child login, a guardian without a login, and a channel with no teacher', async () => {
+  it('leaves out a student and a guardian without a login, and a channel with no teacher', async () => {
     const { db, trips } = fakeDb({
       'rpc:channel_teacher_ids': [{ data: [] }],
-      students: [{ data: { guardian_id: 'g1', profile_id: 'p-c', contact_is_self: false } }],
+      students: [{ data: { guardian_id: 'g1', profile_id: null } }],
       guardians: [{ data: { profile_id: null } }],
     });
     expect(await new PresenceRepo(db).channelPeople('s1')).toEqual([]);

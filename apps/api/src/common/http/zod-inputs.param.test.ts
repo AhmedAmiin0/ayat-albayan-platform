@@ -4,7 +4,7 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { badRequest, notFound } from './errors';
-import { ZodBody, ZodParam } from './zod-inputs';
+import { ZodBody, ZodParam, ZodParams } from './zod-inputs';
 
 const month = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/);
 const id = z.uuid();
@@ -12,6 +12,7 @@ const body = z.object({ name: z.string().min(1) });
 const noList = () => notFound('list_not_found');
 const badPhone = () => badRequest('invalid_phone');
 const phone = z.string().regex(/^\+\d{8,15}$/);
+const ids = z.object({ id, itemId: id });
 
 @Controller('probe')
 class ParamProbeController {
@@ -38,6 +39,11 @@ class ParamProbeController {
   @Get('lists/:id/phones/:phone')
   two(@ZodParam('phone', phone, badPhone) p: string, @ZodParam('id', id, noList) value: string) {
     return { p, value };
+  }
+
+  @Get('lists/:id/items/:itemId')
+  all(@ZodParams(ids) value: z.output<typeof ids>) {
+    return value;
   }
 }
 
@@ -101,5 +107,11 @@ describe('ZodParam (docs/36 z2a)', () => {
     expect([res.statusCode, res.json().code]).toEqual([404, 'list_not_found']);
     const phoneOnly = await get(`/probe/lists/${ID}/phones/abc`);
     expect([phoneOnly.statusCode, phoneOnly.json().code]).toEqual([400, 'invalid_phone']);
+  });
+
+  it('ZodParams: every param as one parsed object; any bad one is the 400 envelope', async () => {
+    expect((await get(`/probe/lists/${ID}/items/${ID}`)).json()).toEqual({ id: ID, itemId: ID });
+    const res = await get(`/probe/lists/${ID}/items/nope`);
+    expect([res.statusCode, res.json().message]).toEqual([400, 'validation_failed']);
   });
 });

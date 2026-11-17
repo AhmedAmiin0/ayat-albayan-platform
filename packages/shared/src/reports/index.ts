@@ -8,3 +8,4 @@ export * from './page.js';
 export * from './page-access.js';
 export * from './quran/index.js';
 export * from './v2/index.js';
+export * from './lesson-files/index.js';

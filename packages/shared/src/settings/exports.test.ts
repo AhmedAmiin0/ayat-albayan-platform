@@ -61,6 +61,7 @@ const DEFAULTS_LITERAL = Object.freeze({
   teacher_whatsapp_lesson_reminder: true, follow_up_hours: [24, 72], reminder_lookahead_hours: 25,
   follow_up_slots_from_hours: 12, follow_up_slots_to_days: 7, quick_reply_window_hours: 48, whatsapp_calls_enabled: false, calls_permission_template: '',
   chat_reopen_template: 'welcome_greeting', crm_media_host: '', crm_media_copy_all: false, short_link_base: '',
+  short_link_default_days: 7, short_link_purge_days: 30, short_link_extra_hosts: '',
   booking_horizon_weeks: 5, late_cancel_hours: null, makeup_window_days: 60, teachers_always_available: true,
   lesson_confirmation_required: true, lesson_outcome_grace_minutes: 30,
   join_opens_before_min: 15, join_closes_after_min: 120, default_meeting_title: 'اجتماع', meeting_link_auto: false,
@@ -78,7 +79,7 @@ const DEFAULTS_LITERAL = Object.freeze({
   teacher_earnings_enabled: false,
   teacher_statements_enabled: false, teacher_feedback_enabled: false,
   teacher_internal_meetings_enabled: false, teacher_scheduled_meetings_enabled: false,
-  family_chat_enabled: false, family_payment_instructions: '',
+  family_chat_enabled: false, family_payment_instructions: '', family_meetings_in_app: false,
 });
 
 const surface: Record<string, unknown> = root;
@@ -88,9 +89,9 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expect(surface[name]).toBeDefined();
   });
 
-  it('SETTING_DEFAULTS holds the 69 keys with today\'s values', () => {
-    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(69);
-    expect(root.SETTING_KEYS).toHaveLength(69);
+  it('SETTING_DEFAULTS holds the 73 keys with today\'s values', () => {
+    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(73);
+    expect(root.SETTING_KEYS).toHaveLength(73);
     expect(root.SETTING_DEFAULTS).toEqual(DEFAULTS_LITERAL);
   });
 
@@ -118,7 +119,7 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
       | 'teacher_student_messages_enabled' | 'teacher_earnings_enabled'
       | 'teacher_statements_enabled'
       | 'teacher_feedback_enabled' | 'teacher_internal_meetings_enabled'
-      | 'teacher_scheduled_meetings_enabled' | 'family_chat_enabled'
+      | 'teacher_scheduled_meetings_enabled' | 'family_chat_enabled' | 'family_meetings_in_app'
     >();
     expectTypeOf<PublicSettings>().toEqualTypeOf<Pick<AcademySettings, PublicSettingKey>>();
     expectTypeOf<keyof PublicConfig>().toEqualTypeOf<PublicSettingKey | 'custom'>();

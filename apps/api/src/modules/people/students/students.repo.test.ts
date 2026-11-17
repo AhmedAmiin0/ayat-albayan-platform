@@ -14,7 +14,11 @@ const ROW = {
 describe('students queries (R-STU-01, R-NFR-08)', () => {
   it('phone search finds the family’s students by any of its numbers (main or second), in any format', async () => {
     const phones = [{ guardian_id: 'g1' }, { guardian_id: 'g2' }, { guardian_id: 'g1' }];
-    const { db, argsOf } = fakeDb({ guardian_phones: [{ data: phones }], v_student_list: [{ data: [ROW], count: 1 }] });
+    const { db, argsOf } = fakeDb({
+      guardian_phones: [{ data: phones }],
+      v_student_list: [{ data: [ROW], count: 1 }],
+      students: [{ data: [] }],
+    });
     const page = await listStudents(db, { search: '0501234567', page: 1, pageSize: 20 });
     expect(argsOf('guardian_phones', 'ilike')).toEqual(['phone_e164', '%501234567%']);
     expect(argsOf('v_student_list', 'or')).toEqual(['guardian_id.in.(g1,g2),code.ilike.*501234567*']);
@@ -75,6 +79,8 @@ describe('students queries (R-STU-01, R-NFR-08)', () => {
     const { db, argsOf } = fakeDb({ students: [{ data: { id: 's1', meeting_link_override: null, guardian, teacher: null } }] });
     expect((await getStudentProfile(db, 's1')).guardian.phones).toEqual(phones);
     expect(String(argsOf('students', 'select')?.[0])).toContain('phones:guardian_phones(phone_e164, is_primary)');
+    // A student's own number (owner 2026-11-17) is not one of the family's numbers.
+    expect(argsOf('students', 'is')).toEqual(['guardian.phones.student_id', null]);
   });
 
   it('teacher options are active teachers only', async () => {

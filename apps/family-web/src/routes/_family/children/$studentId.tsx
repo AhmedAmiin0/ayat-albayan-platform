@@ -1,11 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { ChildPage, parseChildSearch } from '@/features/children';
-import { requireTab, WithHome } from '@/features/shell';
+import { WithHome } from '@/features/shell';
 
-/** One of a guardian's children; `?tab=` opens a tab (an alert opens the package). */
+/**
+ * One of a guardian's children, never filtered by the pick (a push or a link opens it); `?tab=`
+ * opens a tab (an alert opens the package).
+ */
 export const Route = createFileRoute('/_family/children/$studentId')({
   validateSearch: parseChildSearch,
-  beforeLoad: ({ context }) => requireTab(context, 'children'),
   component: Child,
 });
 

@@ -1,9 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { WithPick } from '@/features/children';
 import { StudentReportsPage } from '@/features/reports';
-import { requireTab, WithHome } from '@/features/shell';
 
-/** «التقارير»: a student's tab only (a guardian's reports live inside each child). */
+/** «التقارير»: the student in view's sent reports (the tab waits for that student). */
 export const Route = createFileRoute('/_family/reports')({
-  beforeLoad: ({ context }) => requireTab(context, 'reports'),
-  component: () => <WithHome>{(home) => <StudentReportsPage home={home} />}</WithHome>,
+  component: () => (
+    <WithPick>
+      {(student, home) => <StudentReportsPage student={student} kind={home.kind} />}
+    </WithPick>
+  ),
 });

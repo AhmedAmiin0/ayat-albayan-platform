@@ -16,17 +16,5 @@ export { appendComposerText } from './composer/draft-store';
 // «بحث في الرسائل» on a student's details opened from a chat (docs/37).
 export { MessageSearchRow } from './thread/anchor';
 export { chatMaySend } from './thread/hooks/chat-window';
-// The meetings room (classroom/room, docs/35) wears the calls' round controls and icons.
-export { RoundButton } from './thread/calls/screen/RoundButton';
-export {
-  CameraIcon,
-  CameraOffIcon,
-  HangUpIcon,
-  MicIcon,
-  MicOffIcon,
-  PhoneIcon,
-  SpeakerIcon,
-  SwitchCameraIcon,
-} from './thread/calls/screen/call-icons';
 // «القوالب» (owner 2026-11-14): list, create and edit; reached from «المزيد».
 export { TemplateCreateScreen, TemplateEditScreen, TemplatesScreen } from './composer/templates';

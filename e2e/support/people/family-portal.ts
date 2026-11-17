@@ -78,10 +78,10 @@ export async function guardianSignIn(page: Page, phone: string): Promise<void> {
   await page.goto(`${FAMILY_URL}/login`);
   await page.getByLabel(ar.familyAuth.phone).fill(phone);
   await page.getByRole('button', { name: ar.familyAuth.sendCode }).click();
-  await expect(page.getByText(ar.familyAuth.codeSent)).toBeVisible();
+  await expect(page.getByRole('heading', { name: ar.familyApp.signIn.codeTitle })).toBeVisible();
   const code = await codeSentTo(phone);
+  // The sixth digit signs in on its own (no verify tap).
   await page.getByLabel(ar.familyAuth.codeDigit.replace('{n}', '1')).fill(code);
-  await page.getByRole('button', { name: ar.familyAuth.verify }).click();
   await expect(page).toHaveURL(/\/portal/);
 }
 

@@ -6,8 +6,9 @@ import { AppModule } from '@/app.module';
 import { bootWith, ROLE_ADMIN, ROLE_SALES, ROLE_USERS } from '@/common/auth/auth.fakes';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
+import { PackagesService } from '@/modules/finance/subscriptions';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
-import { ConflictChecker } from '@/modules/teaching/scheduling';
+import { ConflictChecker, RuleExtendService } from '@/modules/teaching/scheduling';
 import {
   BODY,
   RULE_A,
@@ -20,6 +21,8 @@ import { CourseLessonRepo } from '@/modules/teaching/booking/course-change/cours
 import { CourseChangeRepo } from '@/modules/teaching/booking/course-change/course-change.repo';
 import { CourseChangeViews } from '@/modules/teaching/booking/course-change/course-change.view';
 import { CourseChangeWriter } from '@/modules/teaching/booking/course-change/course-change.writer';
+import { CourseExtendRepo } from '@/modules/teaching/booking/extend/course-extend.repo';
+import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
 import { ProfileCourseRepo } from './profile-course.repo';
 
@@ -53,9 +56,13 @@ function mocks() {
       upcoming: vi.fn(),
       assignTeacher: vi.fn(),
     },
-    views: { view: vi.fn() },
+    views: { view: vi.fn(), booked: vi.fn() },
+    extendRepo: { extendRules: vi.fn() },
+    drafts: { status: vi.fn() },
+    ruleExtend: { extend: vi.fn() },
     options: { list: vi.fn() },
     sales: { ownership: vi.fn() },
+    packages: { studentBalance: vi.fn() },
   };
 }
 
@@ -79,11 +86,15 @@ function reset(m: ReturnType<typeof mocks>): void {
   m.lessons.openFrom.mockResolvedValue([{ id: 'l9', status: 'scheduled', rule_id: 'ra' }]);
   m.lessons.held.mockResolvedValue(new Set(['ra:2026-10-19', 'rb:2026-10-21']));
   m.sales.ownership.mockResolvedValue(NOT_MINE);
+  const balance = { student_id: S1, remaining: 0, current: null, packages: [] };
+  m.packages.studentBalance.mockResolvedValue(balance);
   m.repo.currentSubscription.mockResolvedValue(SUB_ID);
   m.repo.studentTeacher.mockResolvedValue(T_OLD);
   m.repo.teacher.mockResolvedValue({ id: T_NEW, status: 'active' });
   m.repo.upcoming.mockResolvedValue([{ status: 'scheduled', starts_at: '2026-10-19T14:00:00Z' }]);
   m.repo.assignTeacher.mockResolvedValue(true);
+  m.drafts.status.mockResolvedValue('active');
+  m.ruleExtend.extend.mockResolvedValue({ rule_id: 'ra', until: '', inserted: 1, conflicts: [] });
   m.views.view.mockResolvedValue({
     student: { id: S1, name: 'سهيلة', code: 'AB-0001', tz: 'Asia/Riyadh' },
     course: { tz: 'Asia/Riyadh' },
@@ -100,6 +111,8 @@ export async function profileApp(
     .useValue(fakeSettings(settings))
     .overrideProvider(SalesRepo)
     .useValue(m.sales)
+    .overrideProvider(PackagesService)
+    .useValue(m.packages)
     .overrideProvider(ConflictChecker)
     .useValue(m.checker)
     .overrideProvider(CourseChangeRepo)
@@ -113,7 +126,13 @@ export async function profileApp(
     .overrideProvider(CourseChangeViews)
     .useValue(m.views)
     .overrideProvider(TeacherOptionsService)
-    .useValue(m.options);
+    .useValue(m.options)
+    .overrideProvider(CourseExtendRepo)
+    .useValue(m.extendRepo)
+    .overrideProvider(CourseDraftRepo)
+    .useValue(m.drafts)
+    .overrideProvider(RuleExtendService)
+    .useValue(m.ruleExtend);
   const app = await bootWith(builder, ROLE_USERS);
   const post = (token: string, url: string, body: object) =>
     app.inject({

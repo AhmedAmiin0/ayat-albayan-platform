@@ -2,6 +2,7 @@ import type { PortalHome as Home } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { MeTestChip } from '@/features/people/test-accounts';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { portalHomeQuery } from '@ab/web-kit/portal/api';
 import { ChildView } from './child/ChildView';
@@ -31,6 +32,9 @@ export function PortalHome() {
   const query = useQuery(portalHomeQuery);
   return (
     <div className="mx-auto grid w-full max-w-[640px] gap-5">
+      <div className="empty:hidden">
+        <MeTestChip />
+      </div>
       <LoadState query={query}>
         {(home) =>
           home.students.length === 0 ? (

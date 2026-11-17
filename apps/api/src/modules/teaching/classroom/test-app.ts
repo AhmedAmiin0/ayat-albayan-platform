@@ -19,8 +19,9 @@ import { meetingInviteMocks, overrideMeetingInvites, resetMeetingInvites } from 
 import { InternalMeetingsRepo } from './internal-meetings/internal-meetings.repo';
 import { LIVEKIT_HTTP } from './livekit/livekit-api';
 import { registerLivekitWebhookParser } from './livekit/livekit-webhook.controller';
-import { http, moderation, recordingQueries, S3 } from './moderation/moderation.fakes';
+import { http, moderation, recordingQueries, roomPersons, S3 } from './moderation/moderation.fakes';
 import { ModerationRepo } from './moderation/moderation.repo';
+import { RoomPersonRepo } from './moderation/room-person.repo';
 import { RecordingRepo } from './recordings/recording.repo';
 import { studentLinkQueries } from './student-link/student-link.fakes';
 import { StudentLinkRepo } from './student-link/student-link.repo';
@@ -58,6 +59,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     templates: { approved: vi.fn() },
     outbox: { send: vi.fn() },
     moderation: moderation(),
+    persons: roomPersons(),
     recordings: recordingQueries(),
     http: http(),
     storage: {
@@ -82,6 +84,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     .overrideProvider(CLASSROOM_CONFIG).useValue(config)
     .overrideProvider(CLASSROOM_WEB_ORIGIN).useValue('https://app.example.test')
     .overrideProvider(ModerationRepo).useValue(m.moderation)
+    .overrideProvider(RoomPersonRepo).useValue(m.persons)
     .overrideProvider(RecordingRepo).useValue(m.recordings)
     .overrideProvider(LIVEKIT_HTTP).useValue((...a: Parameters<typeof m.http>) => m.http(...a))
     .overrideProvider(RECORDING_CONFIG).useValue(S3)
@@ -107,6 +110,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     vi.resetAllMocks();
     Object.assign(m.queries, queries());
     Object.assign(m.moderation, moderation());
+    Object.assign(m.persons, roomPersons());
     Object.assign(m.recordings, recordingQueries());
     Object.assign(m.studentLinks, studentLinkQueries());
     Object.assign(m.meetings, meetingQueries());

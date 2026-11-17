@@ -1,7 +1,6 @@
 import { counted, courseLessonCount, type BookingRequest, type BookingResult, type SalesCourseView } from '@ab/shared';
 import { View } from 'react-native';
-import { whenText } from '@/booking';
-import { t, AppText, Button, NuqtaGlyph, type, useTheme } from '@ab/mobile-kit';
+import { t, AppText, Button, NuqtaGlyph, type, useTheme, whenText } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 import { ButtonRow } from '@/core/ui/actions';
 import { courseEnd } from '@/sales-course/lib/course-body';

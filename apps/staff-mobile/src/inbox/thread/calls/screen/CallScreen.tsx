@@ -3,17 +3,22 @@ import type { ActiveCallView } from '@ab/shared';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSyncExternalStore } from 'react';
-import { t, type, useTheme, AppText, IconButton, Avatar } from '@ab/mobile-kit';
 import {
+  t,
+  type,
+  useTheme,
+  AppText,
+  IconButton,
+  Avatar,
   ChevronDownIcon,
   HangUpIcon,
-  MicIcon,
+  CallMicIcon,
   MicOffIcon,
   PhoneIcon,
   SpeakerIcon,
-} from './call-icons';
+  RoundButton,
+} from '@ab/mobile-kit';
 import { CallerName } from './CallerName';
-import { RoundButton } from './RoundButton';
 
 interface CallActions {
   hangup: () => void;
@@ -93,7 +98,9 @@ export function CallScreen({ session, row, phase, actions }: CallScreenProps) {
             tone="plain"
             pressed={session.muted}
             onPress={actions.toggleMute}
-            icon={(ink) => (session.muted ? <MicOffIcon color={ink} /> : <MicIcon color={ink} />)}
+            icon={(ink) =>
+              session.muted ? <MicOffIcon color={ink} /> : <CallMicIcon color={ink} />
+            }
           />
           <RoundButton
             label={t.calls.controls.speaker}

@@ -6,7 +6,7 @@ import { conflictText } from './reschedule/ConflictNotice';
 import { JOUD, lesson, SUHAILA } from './lesson/lesson-fixture';
 import { LessonDetails } from './lesson/LessonDetails';
 import { studentNames } from './lesson/lessons';
-import { ProposalsPanel } from './reschedule/ProposalsPanel';
+import { ProposalsPanel } from './reschedule/proposals/ProposalsPanel';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */

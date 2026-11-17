@@ -51,6 +51,7 @@ export function ChannelBubbleMenu({ offers, mine, onPick }: Props) {
         <ChannelMenuItems
           offers={offers}
           mine={mine}
+          onEscape={() => close(true)}
           onPick={(what) => {
             close(true);
             onPick(what);

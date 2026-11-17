@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { FilterPills, type FilterPill } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import { FilterPills, type FilterPill, FormLabel } from '@ab/mobile-kit';
 
 interface PeopleChoiceProps<V extends string> {
   label: string;

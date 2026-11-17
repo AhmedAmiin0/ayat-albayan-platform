@@ -9,7 +9,8 @@ type ZonedClock = Clock & { tz: string };
 // «تغيير أيام الحلقات» (owner 2026-10-18): the current and the new days as one line each,
 // السبت → الجمعة, each day with its own time in the course zone. Pure.
 
-const daysText = (days: readonly DayTime[], tz: string, clock: ZonedClock): string =>
+/** «الأحد الساعة 17:00، الأربعاء الساعة 19:30» («الدورة والباقة» names the course with it too). */
+export const daysText = (days: readonly DayTime[], tz: string, clock: ZonedClock): string =>
   inWeekOrder(days)
     .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, clock, tz))
     .join(t.common.listSeparator);

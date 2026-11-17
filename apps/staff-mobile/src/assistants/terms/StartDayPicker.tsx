@@ -1,8 +1,7 @@
 import { View } from 'react-native';
-import { t, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, Button, ErrorLine, FormLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { localDay } from '@/core/lib/money/format';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 import { ButtonRow } from '@/core/ui/actions';
 import { shiftDay } from './terms-form';
 

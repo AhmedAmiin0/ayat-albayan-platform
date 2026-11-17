@@ -17,7 +17,8 @@ export {
   packageSummary, paymentInstructions, signedAmount, type PackageSummary,
 } from './package-view.js';
 export {
-  CHILD_TABS, FAMILY_CHAT_SETTING, childTabs, familyChatOn, portalViewer, seesMoney,
+  CHILD_TABS, FAMILY_CHAT_SETTING, FAMILY_MEETINGS_SETTING, childTabs, familyChatOn,
+  familyMeetingsOn, portalViewer, readsOwn, seesMoney,
   type ChildTab, type ChildTabsInput, type PortalViewer,
 } from './viewer.js';
 export { prepareCard, type PrepareCard } from './prepare.js';
@@ -28,4 +29,5 @@ export {
   lessonClockText, type CountdownWords,
 } from './countdown-text.js';
 export { lessonWaitText, type WaitTextInput, type WaitWords } from './wait-text.js';
+export * from './actions/index.js';
 export * from './app/index.js';

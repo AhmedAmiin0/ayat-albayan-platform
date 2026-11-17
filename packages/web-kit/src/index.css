@@ -37,6 +37,9 @@
 
   --ease-ink: cubic-bezier(0.2, 0.7, 0.2, 1);
 
+  /* theme.ts brandTile: the family sign-in's emblem tile, one deep green in both themes. */
+  --color-brand-tile: #064e3b;
+
   /* `shell:` = the sidebar fihris; below it the compact top row (docs/07 §7) */
   --breakpoint-shell: 56.25rem;
 }

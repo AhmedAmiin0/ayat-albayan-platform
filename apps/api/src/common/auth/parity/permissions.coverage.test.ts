@@ -19,6 +19,7 @@ const ACCOUNT = [
   'profile',
   'removeAvatar',
   'setAvatar',
+  'setLocale',
   'setup',
   'updateProfile',
 ].map((h) => `AccountController.${h}`);
@@ -26,7 +27,9 @@ const ACCOUNT = [
 const PRESENCE = ['PresenceController.me'];
 /** The report's live page: any role may ask; ReportReaders answers its readers only (404 else). */
 const REPORT_PAGE = ['ReportPageController.byPublicId', 'ReportPageController.byReportId'];
-const SIGNED_IN_ONLY = [...SESSION, ...ACCOUNT, ...PRESENCE, ...REPORT_PAGE];
+/** A managed short link's gate (docs/19): any signed-in user; the decision table answers. */
+const SHORT_LINK_GATE = ['GateSignedInController.open'];
+const SIGNED_IN_ONLY = [...SESSION, ...ACCOUNT, ...PRESENCE, ...REPORT_PAGE, ...SHORT_LINK_GATE];
 
 describe('permission coverage', () => {
   let routes: RouteAccess[];

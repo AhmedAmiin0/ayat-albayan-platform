@@ -1,11 +1,9 @@
 import { useRef, useState } from 'react';
-import { t, useTheme, IconButton } from '@ab/mobile-kit';
+import { t, useTheme, IconButton, EmojiIcon, insertAt } from '@ab/mobile-kit';
 import { TemplateIcon } from '@/inbox/shared/chat-icons';
-import { EmojiIcon } from '@/inbox/shared/composer-icons';
 import { AttachFile } from '@/inbox/composer/AttachFile';
 import { ComposerInput, type Selection } from '@/inbox/composer/ComposerInput';
 import { EmojiSheet } from '@/inbox/composer/emoji/EmojiSheet';
-import { insertAt } from '@/inbox/composer/emoji/emoji-list';
 import { QuoteButton } from '@/inbox/composer/quote/QuoteButton';
 import { useEditFocus } from '@/inbox/composer/edit/use-edit-focus';
 

@@ -11,7 +11,7 @@ const minio = services['ayat-minio'];
 const init = services['ayat-minio-init'];
 const initSh = readFileSync(root('deploy/staging/minio/init.sh'), 'utf8');
 const backupSh = readFileSync(root('deploy/staging/minio/backup.sh'), 'utf8');
-const BUCKETS = 'reports report-attachments receipts invoices wa-media recordings avatars';
+const BUCKETS = 'reports report-attachments receipts invoices wa-media recordings avatars channel-media';
 // MinIO stopped publishing images (Docker Hub repos deleted 2026-09); Chainguard rebuilds it from
 // source. Pinned by digest: its free tier tags only :latest, which must never reach a deploy.
 const PINNED = /^cgr\.dev\/chainguard\/minio@sha256:[0-9a-f]{64}$/;
@@ -82,7 +82,8 @@ test('init: one shot, after MinIO, its script read-only from the shipped checkou
 
 test('init.sh: private buckets, an app user limited to object calls, refuses weak keys', () => {
   assert.ok(initSh.includes(`BUCKETS="${BUCKETS}"`));
-  assert.ok(backupSh.includes(`BUCKETS="${BUCKETS}"`), 'the backup copies the same buckets');
+  const backedUp = BUCKETS.replace(' recordings', '');
+  assert.ok(backupSh.includes(`BUCKETS="${backedUp}"`), 'the backup copies them all but recordings');
   assert.match(initSh, /PREFIX="\$\{MINIO_BUCKET_PREFIX:-\}"/);
   assert.match(initSh, /mc mb --ignore-existing "\$ALIAS\/\$PREFIX\$b"/);
   assert.match(initSh, /mc anonymous set none "\$ALIAS\/\$PREFIX\$b"/);

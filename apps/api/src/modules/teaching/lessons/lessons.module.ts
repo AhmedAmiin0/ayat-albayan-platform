@@ -13,6 +13,10 @@ import { LessonAccess } from './store/lesson-access';
 import { LessonActionsController } from './status/lesson-actions.controller';
 import { LessonCancelService } from './status/lesson-cancel.service';
 import { LessonProposalsController } from './proposals/lesson-proposals.controller';
+import { RequestDeclinePush } from './proposals/request-decline.push';
+import { FamilyRequestAccess } from './family-requests/family-request.access';
+import { FamilyRequestService } from './family-requests/family-request.service';
+import { FamilyRequestsController } from './family-requests/family-requests.controller';
 import { LessonProposalRepo } from './proposals/lesson-proposals.repo';
 import { LessonProposeService, ProposalDecisionService } from './proposals/lesson-proposals.service';
 import { LessonRescheduleController } from './reschedule/lesson-reschedule.controller';
@@ -20,6 +24,9 @@ import { LessonTimeController } from './time-edit/lesson-time.controller';
 import { LessonStatusService } from './status/lesson-status.service';
 import { LessonStore } from './store/lesson-store';
 import { LessonViews } from './store/lesson-views';
+import { LessonViewExtras } from './store/lesson-view-extras';
+import { LessonRoomStates } from './live-room/lesson-room-states';
+import { RoomInsideRepo } from './live-room/room-inside.repo';
 import { LessonsController } from './lessons.controller';
 import { LessonsRepo } from './lessons.repo';
 import { LessonsSettings } from './lessons.settings';
@@ -62,6 +69,7 @@ import { TeacherLessonDeps, TeacherLessonService } from './teacher-me/teacher-le
     LessonsController,
     LessonActionsController,
     LessonProposalsController,
+    FamilyRequestsController,
     LessonRescheduleController,
     LessonTimeController,
     RuleCancelController,
@@ -79,11 +87,17 @@ import { TeacherLessonDeps, TeacherLessonService } from './teacher-me/teacher-le
     LessonAccess,
     LessonCancelService,
     LessonProposalRepo,
+    FamilyRequestAccess,
+    FamilyRequestService,
+    RequestDeclinePush,
     LessonProposeService,
     LessonStatusService,
     LessonStore,
     LessonTimeService,
     LessonViews,
+    LessonViewExtras,
+    LessonRoomStates,
+    RoomInsideRepo,
     LessonsRepo,
     LessonsSettings,
     OverviewRepo,
@@ -102,7 +116,9 @@ import { TeacherLessonDeps, TeacherLessonService } from './teacher-me/teacher-le
     TimeEditRepo,
   ],
   exports: [
+    FamilyRequestService,
     LessonCancelService,
+    LessonRoomStates,
     LessonStatusService,
     LessonViews,
     OutcomeCorrection,

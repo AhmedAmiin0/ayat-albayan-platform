@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { MESSAGE_STATUSES } from '@ab/catalog';
 import { messageStatusStyle } from './status-style.js';
-import { messageTicks, TICK_PATHS, tickTone, tickWord } from './ticks.js';
+import {
+  bubbleWord,
+  messageTicks,
+  sendUnconfirmed,
+  TICK_PATHS,
+  tickTone,
+  tickWord,
+} from './ticks.js';
 
 describe('messageTicks (WhatsApp-style delivery ticks)', () => {
   it.each([
@@ -34,5 +41,17 @@ describe('messageTicks (WhatsApp-style delivery ticks)', () => {
     expect(MESSAGE_STATUSES.filter((s) => tickWord(messageTicks(s)))).toEqual(['failed', 'sent_manually']);
     expect(tickWord('failed', true)).toBeNull();
     expect(tickWord('manual', true)).toBe('manual');
+  });
+
+  it('a failed send that may have gone reads unconfirmed, never «لم تُرسل» (docs/19)', () => {
+    expect(bubbleWord('failed', 'uncertain')).toBe('unconfirmed');
+    expect(bubbleWord('failed', 'crm_uncertain')).toBe('unconfirmed');
+    expect(bubbleWord('failed', '131026')).toBe('failed');
+    expect(bubbleWord('failed', null)).toBe('failed');
+    expect(bubbleWord('failed', 'uncertain', true)).toBeNull();
+    expect(bubbleWord('sent', 'uncertain')).toBeNull();
+    expect(bubbleWord('sent_manually')).toBe('manual');
+    expect(sendUnconfirmed('queued', 'uncertain')).toBe(false);
+    expect(tickTone(messageTicks('failed'))).toBe('act');
   });
 });

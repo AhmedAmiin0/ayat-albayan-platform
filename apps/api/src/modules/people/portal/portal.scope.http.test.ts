@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { portalApp, S1, S2, S3, type Who } from './portal.fakes';
+import { L1, lessonRow, portalApp, S1, S2, S3, type Who } from './portal.fakes';
 
 type App = Awaited<ReturnType<typeof portalApp>>;
 const ROUTES: ['GET' | 'POST', string][] = [
@@ -35,6 +35,7 @@ describe('/portal scope over HTTP', () => {
       kind: 'guardian',
       students: [expect.objectContaining({ id: S1, name: 'سلمى' }), expect.objectContaining({ id: S2, name: 'يوسف' })],
       renew_url: 'https://wa.me/966500000000',
+      locale: 'ar',
     });
     expect(t.scope.studentsOf).toHaveBeenCalledWith('g-a');
   });
@@ -71,5 +72,11 @@ describe('/portal scope over HTTP', () => {
     expect((await t.call('GET', '/portal/me', 'guardianA')).json().renew_url).toBeNull();
     t.chat.e164.mockRejectedValueOnce(new Error('db down'));
     expect((await t.call('GET', '/portal/me', 'guardianA')).json().renew_url).toBeNull();
+  });
+
+  it("the family requests read are this login's own only (another guardian's stay hidden)", async () => {
+    t.lessons.ahead.mockResolvedValueOnce([lessonRow()]);
+    expect((await t.call('GET', `/portal/students/${S1}/lessons`, 'guardianA')).statusCode).toBe(200);
+    expect(t.lessons.requests).toHaveBeenLastCalledWith({ lessonIds: [L1], userId: 'g-a' });
   });
 });

@@ -55,7 +55,8 @@ export interface PageReportRow extends ReportColumns {
 
 /** Who the report is about: the readers' check and the page's names. */
 export interface PageFacts {
-  lesson: { starts_at: string; ends_at: string };
+  /** teacher_id: who teaches the lesson NOW (it may have been reassigned since the report). */
+  lesson: Pick<Tables<'lessons'>, 'starts_at' | 'ends_at' | 'teacher_id'>;
   /** code is a generated column (never null in practice). */
   student: {
     name: string;
@@ -66,5 +67,8 @@ export interface PageFacts {
     guardian: { id: string; profile_id: string | null; phone_e164: string | null } | null;
   };
   /** phone_e164: where the teacher's report code goes (never in a response). */
-  teacher: { display_name_ar: string; profile_id: string | null; phone_e164: string | null };
+  teacher: Pick<
+    Tables<'teachers'>,
+    'id' | 'display_name_ar' | 'profile_id' | 'phone_e164' | 'status'
+  >;
 }

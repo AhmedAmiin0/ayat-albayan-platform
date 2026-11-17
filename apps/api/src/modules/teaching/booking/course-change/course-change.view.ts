@@ -1,4 +1,4 @@
-import { wallParts, type CourseChangeView } from '@ab/shared';
+import { wallParts, type BookedCourse, type CourseChangeView } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { CourseChangeRepo, type ChangeRule, type CourseSub } from './course-change.repo';
@@ -21,6 +21,12 @@ const unlinkedRow = (sub: CourseSub, r: ChangeRule): CourseRuleRow => ({
   teacher: null,
 });
 
+/** A package's student and its course (null = none booked). */
+interface Booked {
+  student: CourseChangeView['student'];
+  course: BookedCourse | null;
+}
+
 /** GET /booking/course/change?subscriptionId= (the admin): the course's current days, for the change dialog. */
 @Injectable()
 export class CourseChangeViews {
@@ -31,6 +37,15 @@ export class CourseChangeViews {
 
   /** 404 subscription_not_found / student_not_found / course_not_found. */
   async view(subscriptionId: string): Promise<CourseChangeView> {
+    const { student, course } = await this.booked(subscriptionId);
+    if (!course) throw domainError(HttpStatus.NOT_FOUND, 'course_not_found');
+    const today = wallParts(new Date().toISOString(), course.tz).date;
+    if (course.endsOn < today) throw domainError(HttpStatus.CONFLICT, 'course_finished');
+    return { student, course };
+  }
+
+  /** The package's student and its course, also one already finished; null = none booked. */
+  async booked(subscriptionId: string): Promise<Booked> {
     const sub = await this.change.subscription(subscriptionId);
     const [student, rows, own] = await Promise.all([
       this.course.student(sub.student_id),
@@ -38,12 +53,8 @@ export class CourseChangeViews {
       this.change.rules(sub.id),
     ]);
     const unlinked = own.filter((r) => r.course?.linked === false).map((r) => unlinkedRow(sub, r));
-    const now = new Date();
-    const courses = studentCourses([...rows, ...unlinked], now);
-    const course = courses.find((c) => c.subscriptionId === sub.id);
-    if (!course) throw domainError(HttpStatus.NOT_FOUND, 'course_not_found');
-    const today = wallParts(now.toISOString(), course.tz).date;
-    if (course.endsOn < today) throw domainError(HttpStatus.CONFLICT, 'course_finished');
+    const courses = studentCourses([...rows, ...unlinked], new Date());
+    const course = courses.find((c) => c.subscriptionId === sub.id) ?? null;
     return {
       student: { id: student.id, name: student.name, code: student.code, tz: student.tz },
       course,
