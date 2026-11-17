@@ -4,11 +4,12 @@ import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { useViewerClock } from '@/core/lib/clock';
 import { daysText } from '@/sales-course';
 import { cardLines } from './card-text';
+import { PackageHead } from './PackageHead';
 
 /**
- * The card's course lines (owner 2026-11-17): the days and times, «المعلم/ة · آخر حلقة في …»,
- * «بقيت حلقتان بلا مواعيد» in the act ink (it asks for «مدّ الجدول»); before a course is booked
- * the card says so.
+ * The card's lines (owner 2026-11-17): «بقيت N حلقات» with the package line (PackageHead), the
+ * days and times, «المعلم/ة · آخر حلقة في …», «بقيت حلقتان بلا مواعيد» in the act ink (it asks
+ * for «مدّ الجدول»); before a course is booked the card says so.
  */
 export function CourseSummary({ card }: { card: CourseCardView }) {
   const { color } = useTheme();
@@ -16,13 +17,20 @@ export function CourseSummary({ card }: { card: CourseCardView }) {
   const size = type.size.sm;
   const line = { fontFamily: type.ui[500], fontSize: size, lineHeight: type.lineHeight(size) };
   const course = card.course;
+  const head = card.package ? <PackageHead pkg={card.package} /> : null;
   if (!course) {
     const empty = card.subscriptionId ? t.courseCard.noCourse : t.courseCard.noPackage;
-    return <AppText style={{ ...line, color: color.ink2 }}>{empty}</AppText>;
+    return (
+      <View style={{ gap: 8 }}>
+        {head}
+        <AppText style={{ ...line, color: color.ink2 }}>{empty}</AppText>
+      </View>
+    );
   }
   const lines = cardLines(course);
   return (
     <View style={{ gap: 4 }}>
+      {head}
       <AppText style={{ ...line, color: color.ink }}>
         {daysText(course.days, course.tz, viewer)}
       </AppText>

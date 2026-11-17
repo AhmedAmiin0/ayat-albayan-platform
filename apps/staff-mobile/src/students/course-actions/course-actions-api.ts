@@ -80,7 +80,9 @@ export function useCurrentPackage(input: {
 }
 
 /** The package's id; null = none yet, or none (see useCurrentPackage). */
-export function useCurrentSubscription(input: Parameters<typeof useCurrentPackage>[0]): string | null {
+export function useCurrentSubscription(
+  input: Parameters<typeof useCurrentPackage>[0],
+): string | null {
   return useCurrentPackage(input).id ?? null;
 }
 

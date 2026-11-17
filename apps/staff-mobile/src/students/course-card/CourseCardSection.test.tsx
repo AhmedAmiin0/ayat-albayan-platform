@@ -15,8 +15,13 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 // «الدورة والباقة» (owner 2026-11-17): the course, its next lessons and «مدّ الجدول».
 const c = t.courseCard;
+const PKG = {
+  ...{ status: 'active', lessonsTotal: 12, used: 9, left: 3, paid: 360, owed: 360 },
+  ...{ currency: 'SAR', projectedEndAt: null },
+};
 const card = (course: object | null) => ({
   subscriptionId: SUB,
+  package: PKG,
   course: course && {
     ...{ teacherName: 'فاطمة', days: [{ weekday: 0, startTimeLocal: '18:30' }], tz: 'Asia/Riyadh' },
     ...{ endsOn: '2026-11-24', lastAt: null, lessonsTotal: 12, unbooked: 2 },
@@ -41,6 +46,7 @@ function answer(course: object | null) {
     if (path === `${BASE}/course-card`) return card(course);
     if (path === `${BASE}/course-pause`) return pauseState();
     if (path.startsWith(`${BASE}/course-extend`)) return PREVIEW;
+    if (path.startsWith('/lessons?')) return [];
     return base(path);
   });
 }
@@ -56,6 +62,23 @@ test('the summary, the lessons without a date and the next lessons', async () =>
   expect(await screen.findByText(c.unbooked.two)).toBeTruthy();
   expect(screen.getByText(c.upcoming)).toBeTruthy();
   expect(screen.getByText(t.courseActions.teacher.action)).toBeTruthy();
+});
+
+test('board CourseXActions: «بقيت 3 حلقات», the package\'s status and its line', async () => {
+  answer({});
+  await renderWithQuery(<CourseCardSection studentId="s1" tree="admin" />);
+  expect(await screen.findByText(c.left.few.replace('{n}', '3'))).toBeTruthy();
+  expect(screen.getByText(t.enums.subscriptionStatus.active)).toBeTruthy();
+  expect(screen.getByText(/9 من 12 حلقة · دُفع 360 من/)).toBeTruthy();
+});
+
+test('an upcoming lesson opens its sheet once read; gone meanwhile: says so', async () => {
+  answer({});
+  await renderWithQuery(<CourseCardSection studentId="s1" tree="admin" />);
+  await screen.findByText(c.upcoming);
+  await fireEvent.press(screen.getByRole('button', { name: /الثلاثاء/ }));
+  expect(await screen.findByText(t.common.notFound)).toBeTruthy();
+  expect(mockApiFetch).toHaveBeenCalledWith(expect.stringMatching(/^\/lessons\?from=2026-11-17T15/), undefined);
 });
 
 test('«مدّ الجدول» previews the dates, then books them and says so', async () => {

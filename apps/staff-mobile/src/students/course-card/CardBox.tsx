@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { shape, useTheme } from '@ab/mobile-kit';
 import { CourseSummary } from './CourseSummary';
-import { PackageHead } from './PackageHead';
 import { UpcomingList } from './UpcomingList';
 
 interface CardBoxProps {
@@ -12,10 +11,7 @@ interface CardBoxProps {
   upcoming?: ReactNode;
 }
 
-/**
- * The card's raised box: «بقيت N حلقات» with the package line, the course lines, then «الحلقات
- * القادمة». Nothing before either.
- */
+/** The card's raised box: the card's lines, then «الحلقات القادمة». Nothing before either. */
 export function CardBox({ card, upcoming }: CardBoxProps) {
   const { color } = useTheme();
   const booked = card?.course != null;
@@ -32,7 +28,6 @@ export function CardBox({ card, upcoming }: CardBoxProps) {
         backgroundColor: color.raised,
       }}
     >
-      {card?.package ? <PackageHead pkg={card.package} /> : null}
       {card ? <CourseSummary card={card} /> : null}
       {list}
     </View>

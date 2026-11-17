@@ -27,6 +27,7 @@ export function StopDoneView({ done, chatPhone, onClose }: StopDoneViewProps) {
   const s = t.courseActions.stop;
   const size = type.size.sm;
   const body = { fontFamily: type.ui[500], fontSize: size, lineHeight: type.lineHeight(size) };
+  const sunk = { backgroundColor: color.sunk };
   const openChat = (to: string) => () => {
     onClose();
     router.push(inTree(base, threadHref(to)));
@@ -35,7 +36,7 @@ export function StopDoneView({ done, chatPhone, onClose }: StopDoneViewProps) {
     <View style={{ gap: 14 }}>
       <AppText style={{ ...body, fontFamily: type.ui[700], color: color.ink }}>{done.head}</AppText>
       <AppText style={{ ...body, color: color.ink2 }}>{done.status}</AppText>
-      <View style={{ gap: 4, padding: 12, borderRadius: shape.radius.md, backgroundColor: color.sunk }}>
+      <View style={{ gap: 4, padding: 12, borderRadius: shape.radius.md, ...sunk }}>
         <SectionLabel>{s.nextTitle}</SectionLabel>
         <AppText style={{ ...body, color: color.ink }}>{done.next}</AppText>
       </View>

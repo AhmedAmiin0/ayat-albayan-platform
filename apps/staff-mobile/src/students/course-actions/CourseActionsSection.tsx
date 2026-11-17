@@ -68,6 +68,7 @@ export function CourseActionsSection(props: CourseActionsSectionProps) {
     setNotice(text);
   };
   const moveDone = open === 'teacher' ? c.teacher.done : c.times.done;
+  const stopping = { studentId, subscriptionId: sub };
   const moving = { studentId, subscriptionId: movesOf ?? sub };
   return (
     <View>
@@ -82,12 +83,7 @@ export function CourseActionsSection(props: CourseActionsSectionProps) {
         }}
       />
       <PauseSheetFrame open={open === 'stop'} title={c.stop.title} onClose={close}>
-        <CourseStopForm
-          sub={{ studentId, subscriptionId: sub }}
-          onClose={close}
-          onDone={done}
-          chatPhone={props.chatPhone}
-        />
+        <CourseStopForm sub={stopping} onClose={close} onDone={done} chatPhone={props.chatPhone} />
       </PauseSheetFrame>
       <PauseSheetFrame open={open === 'extend'} title={t.courseCard.extend.title} onClose={close}>
         <ExtendForm sub={moving} onClose={close} onDone={done} />
