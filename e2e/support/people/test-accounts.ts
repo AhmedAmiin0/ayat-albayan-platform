@@ -38,6 +38,8 @@ export async function household(tx: Tx, phone: string): Promise<Household> {
 /** The admin switch as the API calls it (service role function, owner here). */
 export async function flip(tx: Tx, input: { kind: 'student' | 'profile'; id: string; on: boolean }) {
   await tx`select public.set_test_flag(${input.kind}, ${input.id}, ${input.on}, null)`;
+  // The function defers the link checks to commit; back to immediate, which checks them now.
+  await tx`set constraints all immediate`;
 }
 
 export async function flagOf(tx: Tx, table: 'profiles' | 'students', id: string): Promise<boolean> {

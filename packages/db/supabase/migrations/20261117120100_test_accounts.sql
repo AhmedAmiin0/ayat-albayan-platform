@@ -182,6 +182,10 @@ begin
   if was is null then
     return null;
   end if;
+  -- The family rows change one table at a time: check the links once, at commit (a caller that set
+  -- them immediate sets them back after this call).
+  set constraints public.students_test_family_trg, public.guardians_test_family_trg,
+    public.profiles_test_family_trg deferred;
   -- The family: the target student or the login's students, then every child of their guardians.
   with seed as (
     select s.id, s.guardian_id from public.students s

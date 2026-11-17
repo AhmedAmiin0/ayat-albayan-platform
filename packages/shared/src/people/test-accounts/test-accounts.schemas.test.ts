@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { testFlagBodySchema, testFlagResultSchema } from './test-accounts.schemas';
+import { testFlagBodySchema, testFlagResultSchema } from './test-accounts.schemas.js';
 
 describe('test flag schemas', () => {
   it('takes a boolean is_test and nothing else', () => {
