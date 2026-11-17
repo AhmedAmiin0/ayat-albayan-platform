@@ -61,7 +61,8 @@
         "@expo/ui",
         "@livekit/react-native",
         "@livekit/react-native-webrtc",
-        "livekit-client"
+        "livekit-client",
+        "expo-screen-capture"
       ]
     },
     "tools/scripts": {
