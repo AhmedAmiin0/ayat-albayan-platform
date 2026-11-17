@@ -43,7 +43,13 @@ test.describe('family portal /portal', () => {
     await first.getByRole('button', { name: P.openChild }).click();
     await expect(page.getByRole('heading', { name: family.first.name })).toBeVisible();
     const tabs = page.getByRole('tab');
-    await expect(tabs).toHaveText([P.upcomingTab, P.attendedTab, P.absentTab, P.packageTab]);
+    await expect(tabs).toHaveText([
+      P.upcomingTab,
+      P.attendedTab,
+      P.absentTab,
+      ar.lessonFiles.recordings,
+      P.packageTab,
+    ]);
     await expect(page.getByRole('tab', { name: ar.studentChannel.portalTab })).toHaveCount(0);
 
     await page.getByRole('tab', { name: P.attendedTab }).click();
@@ -74,7 +80,12 @@ test.describe('family portal /portal', () => {
     await studentSignIn(page, family);
 
     await expect(page.getByRole('heading', { name: family.first.name })).toBeVisible();
-    await expect(page.getByRole('tab')).toHaveText([P.upcomingTab, P.attendedTab, P.absentTab]);
+    await expect(page.getByRole('tab')).toHaveText([
+      P.upcomingTab,
+      P.attendedTab,
+      P.absentTab,
+      ar.lessonFiles.recordings,
+    ]);
     await expect(page.getByRole('button', { name: P.allChildren })).toHaveCount(0);
     await page.getByRole('tab', { name: P.attendedTab }).click();
     await expect(page.getByRole('button', { name: P.openReport }).first()).toBeVisible();
