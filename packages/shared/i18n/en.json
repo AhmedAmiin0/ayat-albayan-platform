@@ -8435,7 +8435,10 @@
         "reply_not_found": "Couldn't find the message you are replying to.",
         "not_a_text_message": "Only a message's text can be edited, not files."
       }
-    }
+    },
+    "closedWho": "Here the teacher and the follow-up owner talk with the student and the guardian. The chat opens here by itself, with nothing more to do.",
+    "namesJoin": ", ",
+    "emoji": "Emoji"
   },
   "packagePayment": {
     "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",

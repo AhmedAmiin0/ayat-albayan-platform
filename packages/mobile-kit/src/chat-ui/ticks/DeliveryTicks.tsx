@@ -33,6 +33,8 @@ export interface DeliveryTicksProps {
   actionLabel?: string;
   /** In a chat-list row: the row's label already says the word (no separate stop). */
   inList?: boolean;
+  /** A long press of its own (the student channel's «من قرأ الرسالة») instead of the times. */
+  onHold?: () => void;
 }
 
 const named = ({ status, times }: DeliveryTicksProps): string =>
@@ -41,7 +43,11 @@ const named = ({ status, times }: DeliveryTicksProps): string =>
 const labelOf = (p: DeliveryTicksProps): string =>
   p.actionLabel ? `${named(p)} — ${p.actionLabel}` : named(p);
 
-const plain = (p: DeliveryTicksProps): boolean => !p.times && !p.onPress;
+const plain = (p: DeliveryTicksProps): boolean => !p.times && !p.onPress && !p.onHold;
+
+/** The long press: the caller's own, else the times' toggle when there are times. */
+const holdOf = (p: DeliveryTicksProps): (() => void) | undefined =>
+  p.onHold ?? (p.times ? p.onLongPress : undefined);
 
 /**
  * WhatsApp-style ticks on OUR message (packages/shared ticks.ts), drawn with react-native-svg: an
@@ -77,7 +83,7 @@ export function DeliveryTicks(p: DeliveryTicksProps) {
       {...a11y}
       hitSlop={14}
       onPress={p.onPress}
-      onLongPress={p.times ? p.onLongPress : undefined}
+      onLongPress={holdOf(p)}
     >
       {body}
     </Pressable>

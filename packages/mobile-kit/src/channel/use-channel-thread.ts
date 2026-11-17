@@ -1,7 +1,8 @@
 import { channelMode, liveChannelId } from '@ab/client-core';
 import { useState } from 'react';
-import { useChannel, useMarkRead, type ChannelRef } from './channel-api';
+import { useChannel, type ChannelRef } from './channel-api';
 import { useChannelLive } from './use-channel-live';
+import { useMarkRead } from './use-mark-read';
 
 /**
  * The thread's data (docs/31 §2): its pages, live over the socket once joined and polled as the
