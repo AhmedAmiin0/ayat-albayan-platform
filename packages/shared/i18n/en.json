@@ -9059,7 +9059,6 @@
     "recordings": "Recordings",
     "recordingsHint": "Audio recordings of lessons in the academy room. They play in the app and continue where you stopped.",
     "empty": "No recordings yet",
-    "emptyHint": "Lessons held in the academy room are recorded as audio; Google Meet lessons are not. A recording appears here once the lesson report is sent and the academy makes it available. Group lesson recordings are not shown.",
     "isNew": "New",
     "stoppedAt": "Stopped at {at}",
     "heard": "Listened in full",

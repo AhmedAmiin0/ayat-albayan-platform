@@ -41,6 +41,7 @@ function List({ data, student, onOpenReport }: Props & { data: PortalRecordings 
   }
   return (
     <div className="grid gap-5">
+      <p className="text-sm text-ink-3">{F.recordingsHint}</p>
       {picked && (
         <LessonPanel key={picked} student={student} lessonId={picked} onOpenReport={onOpenReport} />
       )}
@@ -63,15 +64,15 @@ function List({ data, student, onOpenReport }: Props & { data: PortalRecordings 
   );
 }
 
-/** «التسجيلات» (canvas RecXWebFamilyRecordings): the picked lesson's page, then all by month. */
+/**
+ * «التسجيلات» (canvas RecXWebFamilyRecordings): the hint, the picked lesson's page, then all by
+ * month; with none yet only the empty note (no hint above it).
+ */
 export function RecordingsPanel({ student, onOpenReport }: Props) {
   const query = useChildRecordings(student.id);
   return (
-    <div className="grid gap-4">
-      <p className="text-sm text-ink-3">{F.recordingsHint}</p>
-      <LoadState query={query}>
-        {(data) => <List data={data} student={student} onOpenReport={onOpenReport} />}
-      </LoadState>
-    </div>
+    <LoadState query={query}>
+      {(data) => <List data={data} student={student} onOpenReport={onOpenReport} />}
+    </LoadState>
   );
 }

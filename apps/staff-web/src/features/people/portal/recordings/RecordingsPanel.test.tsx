@@ -40,7 +40,8 @@ describe('RecordingsPanel', () => {
     reads([]);
     renderPortal(<RecordingsPanel student={kid()} onOpenReport={vi.fn()} />);
     expect(await screen.findByText(F.empty)).toBeTruthy();
-    expect(screen.getByText(F.emptyHint)).toBeTruthy();
+    expect(screen.getByText(new RegExp(F.emptyRoom))).toBeTruthy();
+    expect(screen.queryByText(F.recordingsHint)).toBeNull();
   });
 
   it('opens the newest lesson: its player, its files, and the full report', async () => {
@@ -51,7 +52,24 @@ describe('RecordingsPanel', () => {
     expect(apiFetch).toHaveBeenCalledWith('/portal/students/s1/lessons/L1/files');
     expect(await screen.findByLabelText(F.recording, { selector: 'audio' })).toBeTruthy();
     expect(screen.getAllByText(F.isNew)).toHaveLength(1);
+    expect(screen.getByText(F.reportPdf)).toBeTruthy();
+    expect(screen.getByText(F.header.replace('{n}', '2'))).toBeTruthy();
+    expect(screen.getByText(/· جزءان$/)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: F.openReport }));
     expect(onOpenReport).toHaveBeenCalledWith({ reportId: 'r-L1', recordingId: null });
+  });
+});
+
+describe('RecordingsPanel parts', () => {
+  it('a lesson recorded in parts picks one: «الجزء 1 · 44 دقيقة»', async () => {
+    reads([rec('A', 'L1'), rec('B', 'L1')]);
+    apiFetch.mockImplementation(async (path: string) => (path.endsWith('/recordings')
+      ? { items: [rec('A', 'L1'), rec('B', 'L1')] }
+      : { ...page, recordings: [rec('B', 'L1'), rec('A', 'L1')] }));
+    renderPortal(<RecordingsPanel student={kid()} onOpenReport={vi.fn()} />);
+    const second = await screen.findByRole('radio', { name: 'الجزء 2 · 44 دقيقة' });
+    fireEvent.click(second);
+    expect((second as HTMLInputElement).checked).toBe(true);
+    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/B/url');
   });
 });
