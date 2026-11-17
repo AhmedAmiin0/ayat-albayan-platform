@@ -1,16 +1,8 @@
-import {
-  CHANNEL_WRITES,
-  channelKey,
-  channelPollMs,
-  channelMessagesPath,
-  channelReadPath,
-  olderCursor,
-  type ChannelAudience,
-} from '@ab/client-core';
+import { channelKey, channelPollMs, channelMessagesPath, olderCursor } from '@ab/client-core';
+import type { ChannelAudience } from '@ab/client-core';
 import { channelPageSchema } from '@ab/shared';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import { apiFetch, apiSend } from '../lib/http/api';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { apiFetch } from '../lib/http/api';
 import { useScreenFocused } from '../ui/connecting/use-screen-focus';
 
 // The student channel on the phone (docs/31 §2), the same for the teacher, the family and the
@@ -40,27 +32,12 @@ export function useChannel({ audience, studentId }: ChannelRef, live = false) {
   });
 }
 
-export function useSendChannel(ref: ChannelRef) {
+/** After a send, an edit or a delete: the thread and the teacher's list re-read. */
+export function useChannelSettle(ref: ChannelRef) {
   const client = useQueryClient();
-  return useMutation({
-    mutationFn: (body: string) => apiSend('POST', channelMessagesPath(ref), { body }),
-    onSettled: () =>
-      Promise.all([
-        client.invalidateQueries({ queryKey: channelKey(ref.audience, ref.studentId) }),
-        client.invalidateQueries({ queryKey: TEACHER_CHANNELS_KEY }),
-      ]),
-  });
-}
-
-/** A participant has seen the thread up to its newest message (a monitor never marks it read). */
-export function useMarkRead(ref: ChannelRef, newestAt: string | undefined) {
-  const client = useQueryClient();
-  const writes = CHANNEL_WRITES[ref.audience];
-  useEffect(() => {
-    if (!writes || !newestAt) return;
-    apiSend('POST', channelReadPath(ref.audience, ref.studentId), { at: newestAt }).then(
-      () => client.invalidateQueries({ queryKey: TEACHER_CHANNELS_KEY }),
-      () => undefined,
-    );
-  }, [writes, newestAt, ref.audience, ref.studentId, client]);
+  return () =>
+    Promise.all([
+      client.invalidateQueries({ queryKey: channelKey(ref.audience, ref.studentId) }),
+      client.invalidateQueries({ queryKey: TEACHER_CHANNELS_KEY }),
+    ]);
 }

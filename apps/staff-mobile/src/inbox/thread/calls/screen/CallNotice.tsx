@@ -2,8 +2,7 @@ import type { NoticeAction } from '@ab/client-core';
 import { useEffect } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { t, shape, type, useTheme, AppText, IconButton } from '@ab/mobile-kit';
-import { CloseIcon } from '@/inbox/shared/chat-icons';
+import { t, shape, type, useTheme, AppText, IconButton, CloseIcon } from '@ab/mobile-kit';
 
 /** A notice goes by itself after this long (ms), like the chat's; one with an action stays until closed. */
 const CALL_NOTICE_MS = 6000;

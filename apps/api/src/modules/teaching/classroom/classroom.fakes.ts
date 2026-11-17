@@ -24,6 +24,7 @@ export const LESSON: JoinLesson = {
   ends_at: '2026-10-05T17:00:00.000Z',
   status: 'scheduled',
   room_opened_at: null,
+  room_ended_at: null,
 };
 export const OPEN = new Date('2026-10-05T16:05:00Z');
 export const EARLY = new Date('2026-10-05T15:00:00Z');
@@ -45,6 +46,7 @@ export const linkRow = (over: Partial<JoinLinkRow> = {}): JoinLinkRow => ({
   created_by: ADMIN.id,
   created_at: '2026-10-05T09:00:00.000Z',
   student_id: null,
+  sent_for_student_id: null,
   ...over,
 });
 

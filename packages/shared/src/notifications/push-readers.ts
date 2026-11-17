@@ -9,6 +9,7 @@ export type PushReader = 'staff' | 'family' | 'child';
 /** A lesson or its report: what every family reader may hear about. */
 const LESSON_PUSH_KINDS = [
   'lesson_starting',
+  'lesson_live',
   'report_sent',
   'lesson_request_declined',
   'lesson_rescheduled',

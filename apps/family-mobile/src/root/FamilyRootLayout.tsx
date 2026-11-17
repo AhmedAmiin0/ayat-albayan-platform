@@ -4,6 +4,7 @@ import {
   type GateStatus,
   useAuthGate,
   useMeReady,
+  useProfileLocaleSync,
   type RootBoot,
   RootFrame,
   RootProviders,
@@ -12,16 +13,16 @@ import {
 } from '@ab/mobile-kit';
 import { useFamilyCodes } from '@/sign-in';
 import { isFamilySignedIn } from './family-gate';
+import { ROOM_CHAT_SCREEN, ROOM_SCREEN } from './room-screen';
+import { screenAnimation } from './screen-animation';
 import { useFamilyPush } from './use-family-push';
-
-/** Native slide between the family screens (docs/50 §6: smooth transitions). */
-const SCREEN_ANIMATION = 'slide_from_right';
 
 /**
  * The family app's root (app/_layout, docs/50 §7): the shared boot, providers and frame
  * (@ab/mobile-kit), one stack. A guardian or a student gets the tabs (home, schedule, reports,
- * account), the pushed child, chat, report, package and alerts, and «اختر الطالب» (pick-child)
- * for a guardian of several children; everyone else the sign-in.
+ * account), the pushed child, chat, report, package and alerts, «اختر الطالب» (pick-child)
+ * for a guardian of several children, and a lesson's room with its channel sheet; everyone
+ * else the sign-in.
  * Staff are signed out by the gate with the inverted «wrongApp» notice
  * (role-claim / login-notice follow the app's audience, set in index.ts).
  */
@@ -45,13 +46,15 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
   const codesKnown = useFamilyCodes() !== undefined;
   const ready = boot.settled && meReady && (signedIn || codesKnown);
   useFamilyPush(ready && signedIn);
+  // The login's own language (profiles.locale): a different one switches the app (reload).
+  useProfileLocaleSync(ready && signedIn);
   return (
     <RootFrame ready={ready} fontsLoaded={boot.fontsLoaded}>
       <BiometricGate signedIn={signedIn}>
         <Stack
           screenOptions={{
             headerShown: false,
-            animation: SCREEN_ANIMATION,
+            animation: screenAnimation(),
             contentStyle: { backgroundColor: color.margin },
           }}
         >
@@ -67,6 +70,8 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
             <Stack.Screen name="alerts" />
             <Stack.Screen name="profile" />
             <Stack.Screen name="pick-child" />
+            <Stack.Screen name="room/[id]" options={ROOM_SCREEN} />
+            <Stack.Screen name="room-chat/[id]" options={ROOM_CHAT_SCREEN} />
           </Stack.Protected>
           <Stack.Protected guard={gate === 'out'}>
             <Stack.Screen name="login" />

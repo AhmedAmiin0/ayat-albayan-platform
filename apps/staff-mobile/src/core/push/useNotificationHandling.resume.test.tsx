@@ -9,7 +9,11 @@ import { useNotificationHandling } from './useNotificationHandling';
 // chat, and she has no realtime), cancels the chat reads stuck across the background and re-reads.
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), dismissTo: jest.fn() },
-  useNavigationContainerRef: () => ({ isReady: () => false, getRootState: () => undefined }),
+  useNavigationContainerRef: () => ({
+    isReady: () => false,
+    getRootState: () => undefined,
+    addListener: () => () => undefined,
+  }),
 }));
 jest.mock('expo-notifications', () => ({
   setNotificationHandler: jest.fn(),

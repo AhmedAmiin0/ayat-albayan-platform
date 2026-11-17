@@ -1,6 +1,6 @@
-import { chatDay, chatDayKey, type ClockCycle, dateText, dayParts } from '@ab/shared';
-import { t, locale } from '@ab/mobile-kit';
-import { clock, deviceTimeZone } from '@/inbox/messages/hooks/message-text';
+import { chatDayKey, type ClockCycle } from '@ab/shared';
+import { chatDayLabel, chatRowTime } from '@ab/mobile-kit';
+import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 
 // The day separators of a chat, as WhatsApp (owner 2026-10-27): «اليوم», «أمس», the weekday within
 // the last 6 days, else «29 سبتمبر» (and the year when it is not this year). The device's zone, as
@@ -11,20 +11,9 @@ interface DayOptions {
   tz?: string;
 }
 
-const DAY_MONTH = { day: 'numeric', month: 'long' } as const;
-const DAY_MONTH_YEAR = { ...DAY_MONTH, year: 'numeric' } as const;
-const pad = (n: number): string => String(n).padStart(2, '0');
-
-/** The separator's words for the day of `iso`. */
+/** The separator's words for the day of `iso` (the kit's chatDayLabel, in the device's zone). */
 export function dayLabel(iso: string, { now = new Date(), tz = deviceTimeZone() }: DayOptions = {}): string {
-  const day = chatDay(new Date(iso), { now, tz });
-  if (day.kind === 'today') return t.inbox.dayToday;
-  if (day.kind === 'yesterday') return t.inbox.dayYesterday;
-  const weekdays: Record<string, string> = t.enums.weekday;
-  if (day.kind === 'weekday') return weekdays[String(day.weekday)] ?? '';
-  // The calendar date at noon UTC, formatted in UTC: the same day whatever the device's zone.
-  const at = new Date(`${day.year ?? dayParts(now, tz).year}-${pad(day.month)}-${pad(day.day)}T12:00:00Z`);
-  return dateText(at, { tz: 'UTC', locale }, day.year === null ? DAY_MONTH : DAY_MONTH_YEAR);
+  return chatDayLabel(iso, { now, tz });
 }
 
 /**
@@ -33,8 +22,7 @@ export function dayLabel(iso: string, { now = new Date(), tz = deviceTimeZone() 
  * React Compiler would keep from the first render.
  */
 export function rowTime(iso: string | null | undefined, cycle: ClockCycle, { now, tz = deviceTimeZone() }: DayOptions & { now: Date }): string {
-  if (!iso || !Number.isFinite(Date.parse(iso))) return '';
-  return chatDay(new Date(iso), { now, tz }).kind === 'today' ? clock(iso, cycle, tz) : dayLabel(iso, { now, tz });
+  return chatRowTime(iso, { now, tz, cycle });
 }
 
 /**

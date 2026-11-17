@@ -1,9 +1,16 @@
 import { callEntryKind, type CallView } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
-import { bubbleSide } from '@/inbox/messages/hooks/bubble-side';
+import {
+  t,
+  shape,
+  type,
+  useTheme,
+  AppText,
+  bubbleSide,
+  CallArrowIcon,
+  PhoneIcon,
+} from '@ab/mobile-kit';
 import { clockAt } from '@/inbox/shared/format';
-import { CallArrowIcon, PhoneIcon } from '@/inbox/thread/calls/screen/call-icons';
 import { callEntryText, callInk } from './call-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

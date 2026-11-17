@@ -24,6 +24,7 @@ const READS: Record<string, unknown> = {
   lessons: { lessons: [], prepare: null, month: { attended: 1, absent: 0 } },
   history: { rows: [], next_cursor: null },
   package: { package: null, payments: [], payment_instructions: 'حوّلوا إلى الحساب' },
+  channel: { unread: 3 },
 };
 /** GET /settings/public as the API answers it: the public settings plus `custom`. */
 const config = (over: Partial<PublicConfig> = {}): PublicConfig => ({
@@ -34,6 +35,8 @@ const config = (over: Partial<PublicConfig> = {}): PublicConfig => ({
 let settings: unknown = config();
 const chatTab = t.portal.app.child.chat;
 const channelReads = () => mockFetch.mock.calls.filter(([p]) => String(p).includes('/channel'));
+const unreadOnly = () => [[`/portal/students/${student().id}/channel/unread`]];
+const chatPill = t.portal.app.child.chatUnread.replace('{n}', '3');
 
 /** The child's body, once GET /settings/public has answered (so an absent pill means off). */
 async function body(kind: PortalKind, over: Partial<PortalStudent> = {}) {
@@ -72,6 +75,13 @@ test('an adult who is their own contact sees their package', async () => {
   expect(screen.getByRole('tab', { name: t.portal.packageTab })).toBeTruthy();
 });
 
+test('a guardian who studies, on their own page: own words and the package (canvas Adult)', async () => {
+  await body('guardian', { contact_is_self: true });
+  expect(screen.getByRole('tab', { name: t.portal.app.child.attendedSelf })).toBeTruthy();
+  expect(screen.getByRole('tab', { name: t.portal.app.child.absentSelf })).toBeTruthy();
+  expect(screen.getByRole('tab', { name: t.portal.packageTab })).toBeTruthy();
+});
+
 test.each([
   ['unset', { custom: {} }],
   ['off', config({ family_chat_enabled: false })],
@@ -83,22 +93,24 @@ test.each([
   expect(channelReads()).toEqual([]);
 });
 
-test("the family chat on: a guardian's «المحادثة» opens chat/[id], no panel request", async () => {
+test("the family chat on: a guardian's last pill «المحادثة 3» opens chat/[id]", async () => {
   settings = config({ family_chat_enabled: true });
   await body('guardian');
-  await fireEvent.press(await screen.findByRole('tab', { name: chatTab }));
+  const chat = await screen.findByRole('tab', { name: chatPill });
+  expect(chat).toHaveTextContent(`${chatTab}3`);
+  await fireEvent.press(chat);
   expect(router.push).toHaveBeenCalledWith(`/chat/${student().id}`);
   expect(screen.getAllByRole('tab')).toHaveLength(6);
-  expect(channelReads()).toEqual([]);
+  expect(channelReads()).toEqual(unreadOnly());
 });
 
 test("the family chat on: a child's own login chats too (owner 2026-11-16)", async () => {
   settings = config({ family_chat_enabled: true });
   await body('student');
-  await fireEvent.press(await screen.findByRole('tab', { name: chatTab }));
+  await fireEvent.press(await screen.findByRole('tab', { name: chatPill }));
   expect(router.push).toHaveBeenCalledWith(`/chat/${student().id}`);
   expect(screen.getAllByRole('tab')).toHaveLength(5);
-  expect(channelReads()).toEqual([]);
+  expect(channelReads()).toEqual(unreadOnly());
 });
 
 test('«التسجيلات» opens the child\'s recordings screen (owner 2026-11-17)', async () => {

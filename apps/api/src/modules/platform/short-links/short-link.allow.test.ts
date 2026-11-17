@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allowedHosts, isAllowedTarget } from './short-link.allow';
+import { allowedHosts, extraHosts, isAllowedTarget } from './short-link.allow';
 
 const hosts = allowedHosts([
   'https://app.example.com',
@@ -37,5 +37,20 @@ describe('the short link allow-list (no open redirect)', () => {
     ]) {
       expect([url, isAllowedTarget(url, hosts)]).toEqual([url, false]);
     }
+  });
+
+  it('extra hosts (managed links): bare hosts only, folded to lower case; junk is skipped', () => {
+    expect(extraHosts(' Forms.Example.org, docs.example.com  x  https://a.b/ evil..com')).toEqual([
+      'forms.example.org',
+      'docs.example.com',
+    ]);
+    expect(extraHosts('')).toEqual([]);
+    const hosts = new Set([
+      ...allowedHosts(['https://app.example.com']),
+      ...extraHosts('forms.example.org'),
+    ]);
+    expect(isAllowedTarget('https://forms.example.org/f/1', hosts)).toBe(true);
+    expect(isAllowedTarget('http://forms.example.org/f/1', hosts)).toBe(false);
+    expect(isAllowedTarget('https://x.forms.example.org/f/1', hosts)).toBe(false);
   });
 });

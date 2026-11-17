@@ -7,3 +7,4 @@ export { SalesChannelButton } from './channel/SalesChannelButton';
 export { SalesChannelScreen } from './channel/SalesChannelScreen';
 export { TeacherChannelsScreen } from './channel/TeacherChannelsScreen';
 export { RecordingsButton } from './recordings/RecordingsButton';
+export { useTeacherChannels } from './channel/channel-queries';

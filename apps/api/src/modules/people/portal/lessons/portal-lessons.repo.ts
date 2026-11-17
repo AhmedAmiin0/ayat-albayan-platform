@@ -13,6 +13,8 @@ export interface PortalLessonRow {
   ends_at: string;
   status: LessonStatus;
   room_opened_at: string | null;
+  /** «إنهاء الحلقة للجميع» (migration 20261117100100); optional in test fakes. */
+  room_ended_at?: string | null;
   meeting_link: string | null;
   teacher: { display_name_ar: string; display_name_en: string | null; meeting_mode: string | null } | null;
   /** Every attendee id: one = the student's override link may apply, more = a group lesson. */
@@ -41,7 +43,7 @@ interface Embed {
   lesson: PortalLessonRow | null;
 }
 
-const LESSON = 'id, teacher_id, starts_at, ends_at, status, room_opened_at, meeting_link, teacher:teachers(display_name_ar, display_name_en, meeting_mode), lesson_students(student_id, chargeable)';
+const LESSON = 'id, teacher_id, starts_at, ends_at, status, room_opened_at, room_ended_at, meeting_link, teacher:teachers(display_name_ar, display_name_en, meeting_mode), lesson_students(student_id, chargeable)';
 /** The family's own words and the academy's answer to them; never a teacher's proposal. */
 const REQUEST = 'id, lesson_id, status, proposed_starts_at, note, decision_note, decided_at, created_at';
 

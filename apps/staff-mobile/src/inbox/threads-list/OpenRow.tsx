@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { View } from 'react-native';
-import { shape, useTheme } from '@ab/mobile-kit';
+import { ComposerBar, RoundAction } from '@ab/mobile-kit';
 import { PillContents, type PillProps } from '@/inbox/composer/pill/ComposerPill';
-import { RoundAction } from '@/inbox/composer/pill/RoundAction';
 import { MicHold } from '@/inbox/composer/voice/MicHold';
 import { RecordingBar } from '@/inbox/composer/voice/RecordingBar';
 import type { VoiceUi } from '@/inbox/composer/voice/use-voice';
@@ -28,7 +26,6 @@ interface Voice {
 
 /** The pill, then the round button, in reading order: mirrored with the phone's direction. */
 function Row({ p, voice }: { p: OpenRowProps; voice: Voice }) {
-  const { color } = useTheme();
   const { ui } = voice;
   const state = ui?.state ?? IDLE;
   const mode = roundMode({ voice: ui !== null && !voice.inCall, text: p.text, staged: p.staged, state });
@@ -45,28 +42,11 @@ function Row({ p, voice }: { p: OpenRowProps; voice: Voice }) {
       <RoundAction mode="send" disabled={p.sending || empty} onSend={p.onSend} />
     );
   return (
-    <View style={{ gap: 4 }}>
-      {ui ? <VoiceNoteLine note={ui.note} /> : null}
-      <View testID="open-row" style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 6 }}>
-        <View
-          testID="composer-pill"
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'flex-end',
-            minHeight: shape.control.touch,
-            borderRadius: shape.radius.pill,
-            borderWidth: 1,
-            borderColor: color.ruleInput,
-            backgroundColor: color.raised,
-            paddingHorizontal: 2,
-          }}
-        >
-          {bar && ui ? <RecordingBar voice={ui} /> : <PillContents {...p} />}
-        </View>
-        <View testID="round-action">{round}</View>
-      </View>
-    </View>
+    <ComposerBar
+      above={ui ? <VoiceNoteLine note={ui.note} /> : null}
+      pill={bar && ui ? <RecordingBar voice={ui} /> : <PillContents {...p} />}
+      action={round}
+    />
   );
 }
 

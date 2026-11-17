@@ -1,6 +1,7 @@
 import {
   calendarDaysBetween,
   localDateIn,
+  notificationKind,
   type AnyPushKind,
   type NotificationItem,
 } from '@ab/shared';
@@ -16,6 +17,7 @@ export type AlertTarget =
   | { screen: 'child'; studentId: string }
   | { screen: 'package'; studentId: string }
   | { screen: 'chat'; studentId: string }
+  | { screen: 'live'; studentId: string; lessonId: string }
   | { screen: 'schedule' };
 
 type Data = NotificationItem['data'];
@@ -23,6 +25,7 @@ type Reader = (data: Data) => AlertTarget | null;
 
 const reportData = z.object({ studentId: z.uuid(), reportId: z.uuid() });
 const studentData = z.object({ studentId: z.uuid() });
+const liveData = z.object({ studentId: z.uuid(), lessonId: z.uuid() });
 
 const toReport: Reader = (data) => {
   const parsed = reportData.safeParse(data);
@@ -37,10 +40,18 @@ const toStudent =
     return parsed.success ? { screen, studentId: parsed.data.studentId } : { screen: 'schedule' };
   };
 
+/** «بدأت الحلقة»: that lesson's way in; without a lesson id, the child's page. */
+const toLive: Reader = (data) => {
+  const parsed = liveData.safeParse(data);
+  return parsed.success ? { screen: 'live', ...parsed.data } : toStudent('child')(data);
+};
+
 /** The kinds a family's bell receives (family pushes, schedule notices, the chat); others: none. */
 const TARGETS: Partial<Record<AnyPushKind, Reader>> = {
   report_sent: toReport,
   lesson_starting: toStudent('child'),
+  // Owner 2026-11-16: the teacher is in; the tap goes straight to the lesson.
+  lesson_live: toLive,
   lesson_request_declined: toStudent('child'),
   lesson_rescheduled: toStudent('child'),
   lesson_cancelled: toStudent('child'),
@@ -54,6 +65,16 @@ const TARGETS: Partial<Record<AnyPushKind, Reader>> = {
 /** Where tapping the row goes; null = it only marks the row read. */
 export const alertTarget = (item: Pick<NotificationItem, 'kind' | 'data'>): AlertTarget | null =>
   TARGETS[item.kind]?.(item.data) ?? null;
+
+const pushData = z.record(z.string(), z.string());
+
+/** A tapped push (its `data` as the native module hands it over): the same target as its row. */
+export function pushTarget(data: unknown): AlertTarget | null {
+  const parsed = pushData.safeParse(data);
+  if (!parsed.success) return null;
+  const kind = notificationKind(parsed.data);
+  return kind ? alertTarget({ kind, data: parsed.data }) : null;
+}
 
 export const ALERT_GROUPS = ['today', 'yesterday', 'week', 'older'] as const;
 export type AlertGroup = (typeof ALERT_GROUPS)[number];

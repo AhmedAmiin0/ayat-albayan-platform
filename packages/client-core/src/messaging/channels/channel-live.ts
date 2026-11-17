@@ -80,6 +80,9 @@ export function subscribeChannelMessages(
   };
 }
 
+/** The thread's mode for this viewer (channelMode). */
+export type ChannelMode = 'closed' | 'write' | 'read';
+
 /**
  * What the thread shows for this viewer: `closed` = a participant before the subscription and the
  * teacher's assignment (the closed line, no composer); `write` = the composer; `read` = a monitor.
@@ -87,7 +90,7 @@ export function subscribeChannelMessages(
 export function channelMode(
   audience: ChannelAudience,
   page: { open: boolean; read_only: boolean } | undefined,
-): 'closed' | 'write' | 'read' {
+): ChannelMode {
   if (!CHANNEL_WRITES[audience] || page?.read_only === true) return 'read';
   return page?.open === false ? 'closed' : 'write';
 }
@@ -100,6 +103,6 @@ export function channelMode(
  * nothing.
  */
 export const liveChannelId = (
-  mode: 'closed' | 'write' | 'read',
+  mode: ChannelMode,
   page: { channel_id: string } | undefined,
 ): string => (mode === 'write' ? (page?.channel_id ?? '') : '');

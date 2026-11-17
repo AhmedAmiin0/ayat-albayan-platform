@@ -1,8 +1,8 @@
+import { looksLikeFamilyToken } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { signPair } from '@/common/http/pair-token';
 import {
   familyJoinExpiry,
-  looksLikeFamilyToken,
   signFamilyJoin,
   verifyFamilyJoin,
 } from './family-join.token';

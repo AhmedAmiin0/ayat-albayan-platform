@@ -27,7 +27,7 @@ import { PortalScopeRepo } from './scope/portal-scope.repo';
  * lesson actions reuse the lessons module's services and the booking slot grid (owner 2026-11-17).
  */
 @Module({
-  imports: [ClassroomModule, SubscriptionsModule, LessonsModule, BookingModule],
+  imports: [ClassroomModule, LessonsModule, SubscriptionsModule, BookingModule],
   controllers: [PortalController, PortalRecordsController, PortalLessonActionsController],
   providers: [
     PortalScopeRepo,

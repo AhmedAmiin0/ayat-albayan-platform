@@ -8,22 +8,32 @@ import { z } from 'zod';
 
 export type PortalViewer = 'guardian' | 'adult' | 'child';
 
-const STUDENT_VIEWER: Readonly<Record<'self' | 'child', PortalViewer>> = {
-  self: 'adult',
-  child: 'child',
+/** A login that is not its student's own contact: the guardian, or a child's own login. */
+const BY_KIND: Readonly<Record<PortalKind, PortalViewer>> = {
+  guardian: 'guardian',
+  student: 'child',
 };
 
-/** The login's kind (GET /portal/me) and the student's contact_is_self. */
+/**
+ * The student's contact_is_self first (owner 2026-11-16): an adult who registered themselves reads
+ * as an adult whichever path they signed in by (a guardian who also studies, too); else the
+ * login's kind (GET /portal/me).
+ */
 export function portalViewer(
   kind: PortalKind,
   student: Pick<PortalStudent, 'contact_is_self'>,
 ): PortalViewer {
-  const viewer: Record<PortalKind, PortalViewer> = {
-    guardian: 'guardian',
-    student: STUDENT_VIEWER[student.contact_is_self ? 'self' : 'child'],
-  };
-  return viewer[kind];
+  return student.contact_is_self ? 'adult' : BY_KIND[kind];
 }
+
+/** The page reads in its own words («أهلًا بك», «حضرتها», «حلقتك القادمة»): never a guardian's. */
+const READS_OWN: Readonly<Record<PortalViewer, boolean>> = {
+  guardian: false,
+  adult: true,
+  child: true,
+};
+
+export const readsOwn = (viewer: PortalViewer): boolean => READS_OWN[viewer];
 
 /** Price, amount due, payments and the package screen: never a child's (anti-goal, docs/50 §4). */
 const SEES_MONEY: Readonly<Record<PortalViewer, boolean>> = {

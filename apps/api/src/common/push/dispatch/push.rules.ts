@@ -21,6 +21,7 @@ const ROW_OF: Record<AnyPushKind, NotificationKey> = {
   course_resumed: 'course_resumed',
   payment_received: 'payment_received',
   lesson_starting: 'lesson_starting',
+  lesson_live: 'lesson_live',
   report_sent: 'report_sent',
   lesson_request_declined: 'lesson_request_declined',
 };

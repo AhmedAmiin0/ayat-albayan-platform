@@ -1,6 +1,7 @@
 import type { AlertTarget } from '@ab/client-core';
 import { router } from 'expo-router';
 import { markReportSeen } from '@/portal';
+import { roomHref, roomsInAppNow } from '@/room';
 
 // The family app's pushed screens (outside the tabs group: no tab bar under them, rn-screens#4132).
 
@@ -43,6 +44,10 @@ const OPEN: Openers = {
   child: (t) => router.push(childHref(t.studentId)),
   package: (t) => router.push(packageHref(t.studentId)),
   chat: (t) => router.push(chatHref(t.studentId)),
+  // «بدأت الحلقة»: straight into the room, the microphone on, while lessons open in the app;
+  // else the child's page, where the live card's «ادخل الآن» opens the browser room.
+  live: (t) =>
+    router.push(roomsInAppNow() ? roomHref({ ...t, direct: true }) : childHref(t.studentId)),
   schedule: () => router.navigate('/schedule'),
 };
 

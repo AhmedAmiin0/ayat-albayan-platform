@@ -35,6 +35,7 @@ describe('/portal scope over HTTP', () => {
       kind: 'guardian',
       students: [expect.objectContaining({ id: S1, name: 'سلمى' }), expect.objectContaining({ id: S2, name: 'يوسف' })],
       renew_url: 'https://wa.me/966500000000',
+      locale: 'ar',
     });
     expect(t.scope.studentsOf).toHaveBeenCalledWith('g-a');
   });

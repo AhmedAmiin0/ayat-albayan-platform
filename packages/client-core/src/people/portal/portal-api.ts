@@ -1,10 +1,12 @@
 import {
+  channelUnreadSchema,
   portalHistorySchema,
   portalHomeSchema,
   portalLessonsSchema,
   portalPackageViewSchema,
   portalReportsSchema,
   reportPageViewSchema,
+  type ChannelUnread,
   type PortalHistory,
   type PortalHistoryStatus,
   type PortalHome,
@@ -15,6 +17,7 @@ import {
 } from '@ab/shared';
 import type { ApiClient } from '../../core/http/index.js';
 import { listKey, pathKey } from '../../core/keys/index.js';
+import { portalUnreadPath } from '../../messaging/channels/index.js';
 
 // The family portal's reads (docs/31, docs/50 §7), shared by web and the family app: plain TanStack
 // Query options (no React), every answer parsed with the shared schema (rule 12). The API scopes
@@ -64,6 +67,7 @@ export interface PortalQueries {
   portalPackageQuery: (studentId: string) => PortalRead<PortalPackageView>;
   reportPageByIdQuery: (reportId: string) => PortalRead<ReportPageView> & { retry: false };
   portalHistoryQuery: (input: PortalHistoryInput) => PortalHistoryPages;
+  portalUnreadQuery: (studentId: string) => PortalRead<ChannelUnread> & { refetchInterval: number };
 }
 
 interface Schema<T> {
@@ -98,6 +102,11 @@ export function portalQueries(client: ApiClient): PortalQueries {
     reportPageByIdQuery: (reportId: string) => ({
       ...read(`/report-pages/by-report/${enc(reportId)}`, reportPageViewSchema),
       retry: false as const,
+    }),
+    /** «المحادثة»'s badge: the student chat's unread count, re-read with the lessons. */
+    portalUnreadQuery: (studentId: string) => ({
+      ...read(portalUnreadPath(studentId), channelUnreadSchema),
+      refetchInterval: PORTAL_REFRESH_MS,
     }),
     portalHistoryQuery: (input: PortalHistoryInput): PortalHistoryPages => ({
       queryKey: listKey(`${student(input.studentId)}/history`, { status: input.status }),

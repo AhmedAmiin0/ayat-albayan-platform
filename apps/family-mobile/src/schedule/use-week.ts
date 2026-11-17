@@ -2,7 +2,7 @@ import { scheduleWeek, weekSchedule } from '@ab/client-core';
 import { calendarDayText, type PortalStudent } from '@ab/shared';
 import { useState } from 'react';
 import { locale, useNow } from '@ab/mobile-kit';
-import { useChildrenLessons, useFamilyClock, useFamilyPick, usePortalMe } from '@/portal';
+import { ownPage, useChildrenLessons, useFamilyClock, useFamilyPick, usePortalMe } from '@/portal';
 
 /** The join button lights up within a few seconds of the window. */
 const TICK_MS = 5000;
@@ -24,8 +24,8 @@ export function useWeek() {
   const bounds = scheduleWeek(now, clock.tz, offset);
   const day = (d: string): string => calendarDayText(d, locale, { day: 'numeric', month: 'long' });
   return {
-    /** A student's own week («جدولي»), also while /portal/me loads (as before the picker). */
-    own: kind !== 'guardian',
+    /** A student's or an adult's own week («جدولي»), also while /portal/me loads. */
+    own: ownPage(kind, students[0] ?? null),
     offset,
     setOffset,
     range: `${day(bounds.from)} – ${day(bounds.to)}`,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Animated, View } from 'react-native';
 import {
   t,
@@ -9,33 +9,14 @@ import {
   Chevron,
   IconButton,
   Ltr,
-  useA11yPref,
+  mediaTime,
+  RecDot,
 } from '@ab/mobile-kit';
-import { mediaTime } from '@/inbox/messages/hooks/media-time';
 import { TrashIcon } from '@/inbox/shared/chat-icons';
 import { keptTake, meterLevel } from './voice-machine';
 import type { VoiceUi } from './use-voice';
 
 const BARS = 20;
-
-/** The red dot: blinks while recording (static with «Reduce Motion»); the timer and the announcement carry the state too. */
-function RecDot() {
-  const { color } = useTheme();
-  const still = useA11yPref('reduceMotion');
-  const [blink] = useState(() => new Animated.Value(1));
-  useEffect(() => {
-    if (still) return undefined;
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(blink, { toValue: 0.2, duration: 500, useNativeDriver: true }),
-        Animated.timing(blink, { toValue: 1, duration: 500, useNativeDriver: true }),
-      ]),
-    );
-    loop.start();
-    return () => loop.stop();
-  }, [still, blink]);
-  return <Animated.View testID="rec-dot" style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: color.bad, opacity: blink }} />;
-}
 
 /** About 20 level bars fed by the meter, filling from the start. */
 function LevelBars({ level, ms }: { level: number | null; ms: number }) {

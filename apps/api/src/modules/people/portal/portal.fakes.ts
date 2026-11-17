@@ -21,6 +21,8 @@ import { PortalPackageRepo } from './package/portal-package.repo';
 import { PortalReportsRepo } from './reports/portal-reports.repo';
 import { familyFakes } from './portal.family.fakes';
 import { PortalScopeRepo } from './scope/portal-scope.repo';
+import { MeZoneRepo } from '@/common/auth/me-zone.repo';
+import { RoomInsideRepo } from '@/modules/teaching/lessons';
 
 export const S1 = '51000000-0000-4000-8000-000000000001';
 export const S2 = '51000000-0000-4000-8000-000000000002';
@@ -101,6 +103,8 @@ export async function portalApp() {
     .overrideProvider(FAMILY_JOIN_SECRET).useValue(FAMILY_SECRET)
     .overrideProvider(StorageService).useValue(storage)
     .overrideProvider(ChatNumber).useValue(chat)
+    .overrideProvider(RoomInsideRepo).useValue({ inside: async () => [] })
+    .overrideProvider(MeZoneRepo).useValue({ zoneOf: async () => null, localeOf: async () => 'ar' })
     .overrideProvider(SettingsService).useValue(fakeSettings(SETTINGS));
   const app = await bootWith(builder, USERS);
   const call = (method: 'GET' | 'POST', url: string, who?: Who) =>

@@ -4,6 +4,12 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { PortalScopeRepo } from './portal-scope.repo';
 
+/** A login's student and the ids of all its students. */
+interface StudentInFamily {
+  student: PortalStudent;
+  family: string[];
+}
+
 interface PortalScope {
   kind: 'guardian' | 'student';
   students: PortalStudent[];
@@ -24,8 +30,14 @@ export class PortalScopes {
   }
 
   async student(user: AuthUser, studentId: string): Promise<PortalStudent> {
-    const found = (await this.of(user)).students.find((s) => s.id === studentId);
+    return (await this.withFamily(user, studentId)).student;
+  }
+
+  /** The student, and the ids of every student of this login (its family). 404 as student(). */
+  async withFamily(user: AuthUser, studentId: string): Promise<StudentInFamily> {
+    const { students } = await this.of(user);
+    const found = students.find((s) => s.id === studentId);
     if (!found) throw notFound('student_not_found');
-    return found;
+    return { student: found, family: students.map((s) => s.id) };
   }
 }

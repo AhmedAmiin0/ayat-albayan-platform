@@ -8,7 +8,7 @@ MINIO_ROOT_PASSWORD="${MINIO_ROOT_PASSWORD:-}"
 MINIO_APP_ACCESS_KEY="${MINIO_APP_ACCESS_KEY:-}"
 MINIO_APP_SECRET_KEY="${MINIO_APP_SECRET_KEY:-}"
 
-BUCKETS="reports report-attachments receipts invoices wa-media recordings avatars"
+BUCKETS="reports report-attachments receipts invoices wa-media recordings avatars channel-media"
 PREFIX="${MINIO_BUCKET_PREFIX:-}"
 POLICY=ayat-app
 ALIAS=ayat

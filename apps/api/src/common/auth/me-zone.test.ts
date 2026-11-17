@@ -38,3 +38,23 @@ describe('MeZoneRepo', () => {
     expect(await new MeZoneRepo(db).zoneOf('p1')).toBe('Africa/Cairo');
   });
 });
+
+describe('MeZoneRepo: the language (profiles.locale)', () => {
+  it('reads ar or en', async () => {
+    const { db } = fakeDb({ profiles: [{ data: { locale: 'en' } }] });
+    expect(await new MeZoneRepo(db).localeOf('p1')).toBe('en');
+  });
+
+  it('anything else, a missing row or a failed read is null (the app keeps its own)', async () => {
+    expect(await new MeZoneRepo(fakeDb({ profiles: [{ data: { locale: 'fr' } }] }).db).localeOf('p1')).toBeNull();
+    expect(await new MeZoneRepo(fakeDb({ profiles: [{ data: null }] }).db).localeOf('p1')).toBeNull();
+    expect(await new MeZoneRepo(fakeDb({ profiles: [{ error: { message: 'down' } }] }).db).localeOf('p1')).toBeNull();
+  });
+
+  it('writes the login\'s own row; a failed write throws', async () => {
+    const ok = fakeDb({ profiles: [{ data: null }] });
+    await expect(new MeZoneRepo(ok.db).setLocale('p1', 'en')).resolves.toBeUndefined();
+    const down = fakeDb({ profiles: [{ error: { message: 'down' } }] });
+    await expect(new MeZoneRepo(down.db).setLocale('p1', 'ar')).rejects.toThrow();
+  });
+});

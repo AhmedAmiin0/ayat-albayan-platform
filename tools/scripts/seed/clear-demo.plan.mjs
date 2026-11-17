@@ -36,6 +36,8 @@ export function allowedTarget(url, argv) {
 export const SET_NULL_DEPENDENTS = [
   { table: 'job_applicants', column: 'from_lead_id', parent: 'leads' },
   { table: 'schedule_rules', column: 'created_from_lead_id', parent: 'leads' },
+  // A WhatsApp lesson link sent for a demo student (migration 20261117100170).
+  { table: 'lesson_join_links', column: 'sent_for_student_id', parent: 'students' },
   { table: 'messages', column: 'lead_id', parent: 'leads' },
   { table: 'messages', column: 'guardian_id', parent: 'guardians' },
   // A reply a demo teacher sent from the inbox keeps its «بعتها:» (migration 164).
@@ -43,6 +45,10 @@ export const SET_NULL_DEPENDENTS = [
   // A WhatsApp call with a demo family keeps its chat links (docs/28).
   { table: 'wa_calls', column: 'lead_id', parent: 'leads' },
   { table: 'wa_calls', column: 'guardian_id', parent: 'guardians' },
+  // A short-link visitor whose verified phone matched a demo family (migration 20261117130100).
+  { table: 'short_link_visits', column: 'matched_guardian_id', parent: 'guardians' },
+  // A reply quoting a demo message (migration 20261117090300); the demo replies go with it.
+  { table: 'channel_messages', column: 'reply_to_id', parent: 'channel_messages' },
 ];
 
 /** FK-safe: rows that point at others go first (leads → guardians, students → guardians/teachers). */

@@ -1,8 +1,7 @@
 import type { SavedReply } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { t, type, useTheme, AppText, useInset } from '@ab/mobile-kit';
-import { AttachIcon } from '@/inbox/shared/chat-icons';
+import { t, type, useTheme, AppText, useInset, AttachIcon } from '@ab/mobile-kit';
 
 interface ReplyRowProps {
   reply: SavedReply;

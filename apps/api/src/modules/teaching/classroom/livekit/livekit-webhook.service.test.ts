@@ -5,12 +5,14 @@ import { LivekitWebhookService } from './livekit-webhook.service';
 import { recordingQueries, signedWebhook } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import type { RecordingLifecycle } from '@/modules/teaching/classroom/recordings/recording.lifecycle';
 import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
+import type { RoomPresenceService } from '@/modules/teaching/classroom/live/room-presence.service';
 
 const NOW = new Date('2026-10-05T17:00:00Z');
 let rq: ReturnType<typeof recordingQueries>;
 let life: { afterLeft: ReturnType<typeof vi.fn>; afterEgressEnded: ReturnType<typeof vi.fn> };
+let presence: { record: ReturnType<typeof vi.fn> };
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new LivekitWebhookService(config, rq as unknown as RecordingRepo, life as unknown as RecordingLifecycle);
+  new LivekitWebhookService(config, rq as unknown as RecordingRepo, life as unknown as RecordingLifecycle, presence as unknown as RoomPresenceService);
 const post = (event: object) => {
   const rawBody = Buffer.from(JSON.stringify(event));
   return { rawBody, authorization: signedWebhook(rawBody, { now: NOW }) };
@@ -19,6 +21,7 @@ const post = (event: object) => {
 beforeEach(() => {
   rq = recordingQueries();
   life = { afterLeft: vi.fn().mockResolvedValue('idle'), afterEgressEnded: vi.fn().mockResolvedValue('idle') };
+  presence = { record: vi.fn().mockResolvedValue(undefined) };
 });
 
 describe('LivekitWebhookService', () => {
@@ -32,7 +35,16 @@ describe('LivekitWebhookService', () => {
     await service().handle(post({ event: 'egress_ended', egressInfo: info }), NOW);
     expect(life.afterEgressEnded).toHaveBeenCalledWith({ room: 'meeting-1', status: 'done' });
     await service().handle(post({ event: 'participant_left', room: { name: 'lesson-1' }, participant: { identity: 'guest-1' } }), NOW);
-    expect(life.afterLeft).toHaveBeenCalledWith({ room: 'lesson-1', identity: 'guest-1' });
+    expect(life.afterLeft).toHaveBeenCalledWith(expect.objectContaining({ room: 'lesson-1', identity: 'guest-1' }));
+  });
+
+  it('a participant joining or leaving is who is inside now; joining never stops a recording', async () => {
+    const room = { name: 'lesson-1' };
+    await service().handle(post({ event: 'participant_joined', room, participant: { identity: 'teacher-1' } }), NOW);
+    expect(presence.record).toHaveBeenCalledWith({ kind: 'joined', room: 'lesson-1', identity: 'teacher-1', at: null }, NOW);
+    expect(life.afterLeft).not.toHaveBeenCalled();
+    await service().handle(post({ event: 'participant_left', room, participant: { identity: 'guest-1' } }), NOW);
+    expect(presence.record).toHaveBeenLastCalledWith({ kind: 'left', room: 'lesson-1', identity: 'guest-1', at: null }, NOW);
   });
 
   it('other events are acknowledged and change nothing', async () => {

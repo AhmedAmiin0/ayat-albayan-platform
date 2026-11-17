@@ -40,7 +40,10 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
     const mod = await Test.createTestingModule({ imports: [AppModule], controllers: [ProbeController] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(fakeVerify)
-      .overrideProvider(MeZoneRepo).useValue({ zoneOf: async (id: string) => (id === 'c1' ? 'Africa/Cairo' : null) })
+      .overrideProvider(MeZoneRepo).useValue({
+        zoneOf: async (id: string) => (id === 'c1' ? 'Africa/Cairo' : null),
+        localeOf: async (id: string) => (id === 'c1' ? 'en' : null),
+      })
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -68,13 +71,13 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
   it('GET /auth/me returns the verified user and their permissions', async () => {
     const res = await get('/auth/me', 'accountant-token');
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ ...USERS['accountant-token'], permissions: ['payments.read'], tz: 'Africa/Cairo' });
+    expect(res.json()).toEqual({ ...USERS['accountant-token'], permissions: ['payments.read'], tz: 'Africa/Cairo', locale: 'en' });
   });
 
   it('GET /auth/me answers a user without a role, with no permissions', async () => {
     const res = await get('/auth/me', 'norole-token');
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toMatchObject({ role: null, permissions: [], tz: null });
+    expect(res.json()).toMatchObject({ role: null, permissions: [], tz: null, locale: null });
   });
 
   it('@Permissions blocks a role without the permission with 403 and admits one with it', async () => {

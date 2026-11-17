@@ -3,6 +3,7 @@ import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CONFIG, decode, LESSON_ID, OPEN, queries } from '@/modules/teaching/classroom/classroom.fakes';
 import { admissionOf, moderation, recorder } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import { GUEST_TOKEN_TTL_S } from './room-admission';
 
 let mod: ReturnType<typeof moderation>;
 let rec: ReturnType<typeof recorder>;
@@ -41,11 +42,11 @@ describe('RoomAdmission', () => {
     expect(roleOfMeta(c.metadata)).toBe('teacher');
   });
 
-  it('records a guest with the link, and honours the ttl', async () => {
+  it('records a guest with the link; the ttl is capped at 15 minutes (GUEST_TOKEN_TTL_S)', async () => {
     const r = await admission().admit(guest, OPEN);
     expect(mod.isBlocked).toHaveBeenCalledWith(LESSON_ID, { joinLinkId: 'l1' });
     expect(mod.addParticipant).toHaveBeenCalledWith(expect.objectContaining({ role: 'guest', user_id: null, join_link_id: 'l1' }));
-    expect(decode(r.token).exp).toBe(OPEN.getTime() / 1000 + 3600);
+    expect(decode(r.token).exp).toBe(OPEN.getTime() / 1000 + GUEST_TOKEN_TTL_S);
   });
 
   it('every join, staff or guest, makes sure the lesson is recorded and says whether it can be', async () => {

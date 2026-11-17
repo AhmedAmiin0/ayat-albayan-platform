@@ -1,7 +1,9 @@
 import { channelMode, liveChannelId } from '@ab/client-core';
 import { useState } from 'react';
-import { useChannel, useMarkRead, type ChannelRef } from './channel-api';
+import { useChannel, type ChannelRef } from './channel-api';
 import { useChannelLive } from './use-channel-live';
+import { useMarkRead } from './use-mark-read';
+import { isPending } from './send/pending';
 
 /**
  * The thread's data (docs/31 §2): its pages, live over the socket once joined and polled as the
@@ -13,7 +15,9 @@ export function useChannelThread(refs: ChannelRef) {
   const query = useChannel(refs, live);
   const first = query.data?.pages[0];
   const mode = channelMode(refs.audience, first);
-  const newest = mode === 'write' ? first?.messages.at(-1)?.created_at : undefined;
+  // The API's newest time, never a pending row's (the phone's clock).
+  const sent = first?.messages.filter((m) => !isPending(m));
+  const newest = mode === 'write' ? sent?.at(-1)?.created_at : undefined;
   useChannelLive(refs, { channelId: liveChannelId(mode, first), onLive: setLive });
   useMarkRead(refs, newest);
   return { query, mode, first };

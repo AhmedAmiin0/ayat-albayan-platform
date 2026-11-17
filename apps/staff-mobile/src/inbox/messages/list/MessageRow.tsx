@@ -2,7 +2,7 @@ import type { CallView, MessageView } from '@ab/shared';
 import { memo } from 'react';
 import { View } from 'react-native';
 import { CallEntry } from '@/inbox/thread/calls/entries/CallEntry';
-import { DayChip } from '@/inbox/messages/days/DayChip';
+import { DayChip } from '@ab/mobile-kit';
 import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 import { Corrected } from '@/inbox/messages/components/correction/Corrected';
 

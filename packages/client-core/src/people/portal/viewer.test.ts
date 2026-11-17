@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { isNewReport, newReportCount, parseSeen, withSeen } from './report-seen.js';
-import { childTabs, familyChatOn, familyMeetingsOn, portalViewer, seesMoney } from './viewer.js';
+import {
+  childTabs,
+  familyChatOn,
+  familyMeetingsOn,
+  portalViewer,
+  readsOwn,
+  seesMoney,
+} from './viewer.js';
 
 const self = { contact_is_self: true };
 const child = { contact_is_self: false };
@@ -11,6 +18,19 @@ describe('who sees money (docs/50 §4)', () => {
     expect(portalViewer('student', self)).toBe('adult');
     expect(portalViewer('student', child)).toBe('child');
     expect(['guardian', 'adult', 'child'].map((v) => seesMoney(v as 'child'))).toEqual([true, true, false]);
+  });
+});
+
+describe('contact_is_self first (owner 2026-11-16, canvas Adult)', () => {
+  it('an adult who is their own contact reads as an adult by either sign-in path', () => {
+    expect(portalViewer('guardian', self)).toBe('adult');
+    expect(portalViewer('student', self)).toBe('adult');
+  });
+
+  it('own words for the adult and a child\'s own login, never for a guardian', () => {
+    expect(readsOwn(portalViewer('guardian', self))).toBe(true);
+    expect(readsOwn(portalViewer('student', child))).toBe(true);
+    expect(readsOwn(portalViewer('guardian', child))).toBe(false);
   });
 });
 
@@ -26,6 +46,7 @@ describe('childTabs', () => {
     expect(childTabs({ kind: 'guardian', student: child, chatOn: false })).toEqual(base);
     expect(childTabs({ kind: 'guardian', student: child, chatOn: true })).toEqual([...base, 'chat']);
     expect(childTabs({ kind: 'student', student: self, chatOn: true })).toEqual([...base, 'chat']);
+    expect(childTabs({ kind: 'guardian', student: self, chatOn: false })).toEqual(base);
   });
 });
 

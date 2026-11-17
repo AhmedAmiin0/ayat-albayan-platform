@@ -54,9 +54,7 @@ describe('boardReducer', () => {
     expect(once.strokes.map((x) => [x.id, x.pts.length])).toEqual([['t1', 4], ['a1', 2]]);
     expect(once).toMatchObject({ studentsCanDraw: true, open: true, allowed: ['g'] });
     expect(run(once, { msg, from: teacher }).strokes).toHaveLength(2);
-    const fromGuest = run(EMPTY_BOARD, { msg, from: guest });
-    expect(fromGuest).toMatchObject({ studentsCanDraw: false, open: false, allowed: [] });
-    expect(fromGuest.strokes).toHaveLength(2);
+    expect(run(EMPTY_BOARD, { msg, from: guest })).toBe(EMPTY_BOARD); // reducer.sync.test
     expect(run(EMPTY_BOARD, { msg, from: { identity: 'z', role: null } })).toBe(EMPTY_BOARD);
   });
 

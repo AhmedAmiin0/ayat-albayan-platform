@@ -4,3 +4,5 @@ export * from './feedback.js';
 export * from './activity.js';
 export * from './chat-media.js';
 export * from './booking-request.js';
+export * from './short-links.js';
+export * from './short-link-views.js';

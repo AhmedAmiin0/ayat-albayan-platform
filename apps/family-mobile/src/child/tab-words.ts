@@ -1,9 +1,5 @@
 import type { ChildTab } from '@ab/client-core';
-import type { PortalKind } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
-
-/** A student reads their own page («حضرتها»), a guardian their child's («حضرها»). */
-const OWN: Record<PortalKind, boolean> = { guardian: false, student: true };
 
 const WORD: Record<ChildTab, (own: boolean) => string> = {
   upcoming: () => t.portal.upcomingTab,
@@ -14,5 +10,8 @@ const WORD: Record<ChildTab, (own: boolean) => string> = {
   chat: () => t.portal.app.child.chat,
 };
 
-/** The child tab's word for this login. */
-export const tabWord = (tab: ChildTab, kind: PortalKind): string => WORD[tab](OWN[kind]);
+/**
+ * The child tab's word: a student or an adult reads their own page («حضرتها», @ab/client-core
+ * readsOwn), a guardian their child's («حضرها»).
+ */
+export const tabWord = (tab: ChildTab, own: boolean): string => WORD[tab](own);

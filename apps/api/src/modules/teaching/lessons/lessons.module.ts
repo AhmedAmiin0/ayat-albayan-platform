@@ -24,6 +24,9 @@ import { LessonTimeController } from './time-edit/lesson-time.controller';
 import { LessonStatusService } from './status/lesson-status.service';
 import { LessonStore } from './store/lesson-store';
 import { LessonViews } from './store/lesson-views';
+import { LessonViewExtras } from './store/lesson-view-extras';
+import { LessonRoomStates } from './live-room/lesson-room-states';
+import { RoomInsideRepo } from './live-room/room-inside.repo';
 import { LessonsController } from './lessons.controller';
 import { LessonsRepo } from './lessons.repo';
 import { LessonsSettings } from './lessons.settings';
@@ -92,6 +95,9 @@ import { TeacherLessonDeps, TeacherLessonService } from './teacher-me/teacher-le
     LessonStore,
     LessonTimeService,
     LessonViews,
+    LessonViewExtras,
+    LessonRoomStates,
+    RoomInsideRepo,
     LessonsRepo,
     LessonsSettings,
     OverviewRepo,
@@ -112,6 +118,7 @@ import { TeacherLessonDeps, TeacherLessonService } from './teacher-me/teacher-le
   exports: [
     FamilyRequestService,
     LessonCancelService,
+    LessonRoomStates,
     LessonStatusService,
     LessonViews,
     OutcomeCorrection,

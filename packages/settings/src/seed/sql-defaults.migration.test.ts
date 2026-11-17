@@ -53,6 +53,12 @@ const PINS: Pin[] = [
     parse: Number,
   },
   {
+    fn: 'public.can_read_channel',
+    key: 'family_chat_enabled',
+    re: /where s\.key = 'family_chat_enabled'\), (true|false)\)/,
+    parse: bool,
+  },
+  {
     fn: 'public.presence_enabled',
     key: 'presence_enabled',
     re: /s\.key = 'presence_enabled' and jsonb_typeof\(s\.value\) = 'boolean'\s*\), (true|false)\)/,

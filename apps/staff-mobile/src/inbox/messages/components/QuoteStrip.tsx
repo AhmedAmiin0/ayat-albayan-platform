@@ -1,57 +1,22 @@
 import { quoteIcon } from '@ab/shared';
-import { View } from 'react-native';
-import { t, shape, type, useTheme, AppText, IconButton } from '@ab/mobile-kit';
-import { ContentText } from '@/core/ui/primitives/ContentText';
+import { QuoteBar } from '@ab/mobile-kit';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
-import { CloseIcon } from '@/inbox/shared/chat-icons';
 import { quoteOf, quoteSender, quoteText } from '@/inbox/messages/hooks/quote-text';
 
 /**
- * Over the composer while she answers a message: ONE line (sender · first line) and ✕, 44pt in all,
- * so the thread keeps its reading height. Shown only while free text can go out. The sender keeps
- * its width; the quoted line sits on the side of its own language (ContentText) and is cut first.
+ * Over the composer while she answers a message (the kit's QuoteBar): shown only while free text
+ * can go out; ✕ stops answering it.
  */
 export function QuoteStrip() {
-  const { color } = useTheme();
   const { reply, setReply, threadName } = useChatActions();
   if (!reply) return null;
   const quote = quoteOf(reply);
-  const sender = quoteSender(quote, threadName);
-  const text = quoteText(quote);
-  const icon = quoteIcon(quote);
-  const line = { fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm) };
   return (
-    <View
-      testID="reply-strip"
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        minHeight: shape.control.touch,
-        paddingStart: 10,
-        borderStartWidth: 3,
-        borderStartColor: color.lapis,
-        borderRadius: shape.radius.sm,
-        backgroundColor: color.sunk,
-      }}
-    >
-      <View
-        testID="reply-strip-line"
-        accessible
-        accessibilityLabel={`${t.inbox.reply.strip}: ${[sender, text].filter(Boolean).join(': ')}`}
-        style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4 }}
-      >
-        {sender ? (
-          <AppText numberOfLines={1} style={{ ...line, flexShrink: 0, maxWidth: '45%', fontFamily: type.ui[600], color: color.lapis }}>
-            {`${sender} ·`}
-          </AppText>
-        ) : null}
-        <ContentText source={text} numberOfLines={1} style={{ ...line, flex: 1, fontFamily: type.ui[400], color: color.ink2 }}>
-          {icon ? `${icon} ${text}` : text}
-        </ContentText>
-      </View>
-      <IconButton label={t.inbox.reply.cancel} onPress={() => setReply(null)}>
-        <CloseIcon color={color.ink2} size={18} />
-      </IconButton>
-    </View>
+    <QuoteBar
+      sender={quoteSender(quote, threadName)}
+      text={quoteText(quote)}
+      icon={quoteIcon(quote)}
+      onCancel={() => setReply(null)}
+    />
   );
 }

@@ -50,3 +50,11 @@ export const roomsAnswer = z.looseObject({ rooms: list }).catch({ rooms: [] });
 export const egressAnswer = z
   .looseObject({ egress_id: z.unknown().optional(), egressId: z.unknown().optional() })
   .catch({});
+
+/** ParticipantPermission with nothing to publish, subscribe to or send (a removal's first cut). */
+export const NO_PERMISSION = {
+  can_subscribe: false,
+  can_publish: false,
+  can_publish_data: false,
+  can_publish_sources: [],
+};

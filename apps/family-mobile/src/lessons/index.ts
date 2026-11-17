@@ -6,3 +6,4 @@ export { OptionsRow } from './OptionsRow';
 export { dateLine, dayTile, rangeText, teacherText, whenText } from './lesson-text';
 export { LessonChip } from './options/LessonChip';
 export { RequestLine } from './options/RequestLine';
+export { LiveLine } from './live';

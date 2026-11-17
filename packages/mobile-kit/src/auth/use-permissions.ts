@@ -13,7 +13,8 @@ import { useMeZone } from './use-me-zone';
 
 export { permissionsOf, type Can };
 
-const meQuery = () => ({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+/** GET /auth/me: role, permissions, tz and locale; one query for every hook that reads it. */
+export const meQuery = () => ({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
 
 /**
  * Dynamic roles: the app stays role-gated (admin, teacher, sales and assistant trees, verify-role.ts), and the
