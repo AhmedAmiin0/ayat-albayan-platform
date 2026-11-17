@@ -10819,11 +10819,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/schedule/reschedule/ProposalBox.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
   "src/features/teaching/schedule/reschedule/RescheduleForm.tsx": {
     "ab/module-boundaries": {
       "count": 4

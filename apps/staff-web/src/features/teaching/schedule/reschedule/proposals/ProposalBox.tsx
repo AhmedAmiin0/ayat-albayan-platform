@@ -1,11 +1,7 @@
-import { isFamilyRequest, type LessonView, lessonWhenAt } from '@ab/shared';
+import { isFamilyRequest, type LessonView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
-import { studentTimes } from '@/features/teaching/schedule/lesson/lessons';
 import {
   approveProposal,
   conflictsOf,
@@ -14,6 +10,7 @@ import {
 } from '@/features/teaching/schedule/api';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { ProposalAnswer } from './ProposalAnswer';
+import { ProposalAsked } from './ProposalAsked';
 import { proposalWords } from './proposal-words';
 
 const P = t.lessons.proposal;
@@ -32,8 +29,6 @@ export interface ProposalBoxProps {
  * shows the usual notice and needs a reason) or «ارفض» — a family's with a note they read.
  */
 export function ProposalBox({ lesson, onDone, onPickOther }: ProposalBoxProps) {
-  const clock = useClock();
-  const tz = useViewerTz();
   const queryClient = useQueryClient();
   const [note, setNote] = useState('');
   const proposal = lesson.pending_proposal;
@@ -53,20 +48,9 @@ export function ProposalBox({ lesson, onDone, onPickOther }: ProposalBoxProps) {
   if (!proposal) return null;
   const conflicts = conflictsOf(approve.error);
   const busy = approve.isPending || reject.isPending;
-  const asked = new Date(proposal.proposed_starts_at);
-  const when = `${lessonWhenAt(asked, { tz, ...clock })} ${t.schedule.viewerTime}`;
-  const sent = lessonWhenAt(new Date(proposal.created_at), { tz, ...clock });
-  const at = { starts_at: proposal.proposed_starts_at, students: lesson.students };
-  const line = [...studentTimes(at, tz, clock), P.sentAt.replace('{when}', sent)].join(' · ');
-
   return (
     <section aria-label={P.title} className="grid gap-3 rounded-md bg-act-soft px-4 py-3.5">
-      <p className="flex items-start gap-2 text-sm font-semibold">
-        <NuqtaGlyph shape="half" className="mt-1.5 text-act" />
-        <span>{words.pending.replace('{when}', when)}</span>
-      </p>
-      <p className="text-xs text-ink-2">{line}</p>
-      {proposal.note && <p className="text-sm text-ink-2">{words.note.replace('{note}', proposal.note)}</p>}
+      <ProposalAsked lesson={lesson} proposal={proposal} words={words} />
       {conflicts ? (
         <ConflictNotice
           conflicts={conflicts}

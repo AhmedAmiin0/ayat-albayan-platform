@@ -10784,11 +10784,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/schedule/reschedule/ProposalBox.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
   "src/features/teaching/schedule/reschedule/RescheduleForm.tsx": {
     "max-lines-per-function": {
       "count": 1

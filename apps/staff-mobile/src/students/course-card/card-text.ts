@@ -1,10 +1,12 @@
 import {
   courseCardLines,
   extendPreviewLines,
+  packageCardLines,
   pausePreviewLines,
   resumePreviewLines,
 } from '@ab/client-core';
 import type {
+  CourseCardPackage,
   CourseCardView,
   CourseExtendPreview,
   CoursePausePreview,
@@ -22,6 +24,20 @@ export const dayIn = (tz: string) => (instant: string): string => slotDayLabel(n
 /** The card's teacher · last day line and «بقيت حلقتان بلا مواعيد». */
 export const cardLines = (course: NonNullable<CourseCardView['course']>) =>
   courseCardLines({ course, words: t.courseCard, date: localDay });
+
+/** «بقيت 3 حلقات», «12 حلقة · 9 من 12 حلقة · دُفع … من …» and «يُتوقع أن تنتهي يوم …». */
+export const packageLines = (pkg: CourseCardPackage, tz: string) =>
+  packageCardLines({
+    pkg,
+    words: {
+      left: t.courseCard.left,
+      lessons: t.today.count,
+      usedOf: t.subscriptions.usedOf,
+      paidOf: t.payments.paidOf,
+      projectedEnd: t.subscriptions.projectedEnd,
+    },
+    format: { money, day: dayIn(tz) },
+  });
 
 /** «إيقاف مؤقت»'s «ما سيحدث». */
 export const pauseLines = (preview: CoursePausePreview, tz: string): string[] =>
