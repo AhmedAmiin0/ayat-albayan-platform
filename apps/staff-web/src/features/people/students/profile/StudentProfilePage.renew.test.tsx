@@ -22,9 +22,13 @@ const student = (status: string) => ({
   siblings: [],
 });
 
+/** The file's lists answer lists; '/students/s1' alone would also catch its sub-paths. */
+const LISTS = [['/students/s1/assistants', []], ['/assistants', []]] as const;
+
 function renderPage(status: string) {
   routeFetch(apiFetch, [
     ['/students/s1/balance', balanceOf([WEEKLY])],
+    ...LISTS,
     ['/students/s1', student(status)],
   ]);
   renderWithClient(<StudentProfilePage studentId="s1" />);
@@ -45,6 +49,7 @@ describe('StudentProfilePage «جدّد الاشتراك» (owner 2026-10-15)', 
   it('a student without any package: no renewal', async () => {
     routeFetch(apiFetch, [
       ['/students/s1/balance', balanceOf([])],
+      ...LISTS,
       ['/students/s1', student('new')],
     ]);
     renderWithClient(<StudentProfilePage studentId="s1" />);
