@@ -1,0 +1,46 @@
+TEST ACCOUNTS (owner 2026-11-17)
+
+Owner words: «if the user have flag called test can pass some security validations».
+Owner's choice of what a test account may skip: watermark, rate limits, live join window, screen-capture block.
+
+SAFETY MODEL (non-negotiable)
+- Double condition: a check is skipped only when the signed-in profile is_test AND the content's student is_test.
+  The one exception is rate limits, which have no student context: the profile flag alone applies.
+  So a test flag set on a real account by mistake opens nothing on real families' data.
+- Never skippable: sign-in/auth, scope (who sees which student), RLS, admin permissions, payments.
+  Test accounts get NO extra visibility.
+- The server decides from the database, never from anything the client sends or from editable JWT claims.
+- Family links: a test family profile (guardian or student login) can link only to test students, and a real one only to real students. Enforced in the DB with triggers on the link tables (guardian↔student, a student's own profile).
+
+CORE PR (branch feat/test-accounts from develop, migration slot 20261117120100)
+1. Migration:
+   - profiles.is_test boolean not null default false;
+   - students.is_test boolean not null default false;
+   - revoke update(is_test) on both from authenticated (column privileges);
+   - the family-link triggers above;
+   - load supabase-postgres-best-practices; RLS unchanged otherwise.
+   The e2e SQL spec proves: a mixed link is refused, and a user cannot set their own flag.
+2. Shared rules in packages/shared:
+   - TEST_BYPASS: Record<'watermark' | 'rate_limits' | 'join_window' | 'screen_capture', TestScope>, where TestScope is 'user' (rate_limits) | 'user_and_student' (the rest);
+   - canSkip(check, { userIsTest, studentIsTest }) as a lookup, no if-chains;
+   - zod schemas;
+   - unit tests for every row of the table (including real user + test student, and test user + real student → never skipped).
+3. API:
+   - the auth user context carries isTest, read from profiles server-side;
+   - the session/me answer exposes is_test (zod), so apps can show the badge and skip the client-side checks;
+   - admin routes PATCH /admin/users/:id/test {is_test} and PATCH /students/:id/test {is_test}, behind the existing user/student admin permissions, with an audit row each;
+   - wire NOW the two checks that exist on develop:
+     a. the live join window (classroom join: joinWindow / room admission): skipped only with canSkip('join_window');
+     b. rate limits (common/http/rate-limit.repo.ts and every caller: sign-in codes, etc.): skipped with canSkip('rate_limits').
+     A test account's WhatsApp sends still go only to allow-listed test numbers (owner rule 10-11). Never widen that.
+4. Web admin (apps/staff-web):
+   - a «حساب تجريبي» switch on the user page and a «طالب تجريبي» switch on the student page (MSA, ar.json + en.json), with confirm text;
+   - a «تجريبي» chip in admin lists.
+   Family portal and family app headers show a small «تجريبي» chip for a test account, so nobody mistakes it for real.
+5. Docs: docs/ entry for the flag and the double rule.
+
+Tests next to the code. Rules 1–4 of CLAUDE.md. Commit order: migration + shared, then API, then web.
+
+LANES (they use canSkip when they build the protections)
+- lessons follow-up (feat/lessons-course-recordings): the video/file watermark and FLAG_SECURE on the recording/lesson screens: canSkip('watermark' | 'screen_capture', { userIsTest, studentIsTest }). The stream rate cap uses canSkip('rate_limits').
+- room follow-up (feat/family-room-and-home): the room watermark and FLAG_SECURE in the rooms: same helper.
