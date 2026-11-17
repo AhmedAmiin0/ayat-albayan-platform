@@ -1,31 +1,39 @@
 import type { ChannelMessageView } from '@ab/shared';
+import { View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
 import { MenuSheet } from '../../ui/feedback/MenuSheet';
 import { Button } from '../../ui/primitives/Button';
 import type { ChannelRef } from '../channel-api';
-import { ChannelMenuSteps } from './ChannelMenuSteps';
+import { ChannelMenuSteps, type MenuExits } from './ChannelMenuSteps';
+import type { MenuOffers } from './menu-offers';
+import { useKeyboardInset } from './use-keyboard-inset';
 
-interface ChannelMessageMenuProps {
+interface ChannelMessageMenuProps extends MenuExits {
   refs: ChannelRef;
-  /** The long-pressed message; null hides the menu. */
-  message: ChannelMessageView | null;
-  onClose: () => void;
+  /** The long-pressed message and what it offers now; null hides the menu. */
+  held: { message: ChannelMessageView; offers: MenuOffers } | null;
 }
 
 /**
- * A long press on a channel bubble (owner 2026-10-30): «تعديل» (the sender, 15 minutes) and «حذف
- * للجميع» (the sender, 48 hours; the admin any message), only what channelBubbleActions allows now.
+ * A long press on a channel bubble (ChatXMenu): «ردّ», «معلومات الرسالة», «تعديل» (the sender, 15
+ * minutes) and «حذف للجميع» (the sender, 48 hours; the admin any message), only what menuOffers
+ * allows now. The sheet rises over the keyboard while the edit box has it.
  */
-export function ChannelMessageMenu({ refs, message: m, onClose }: ChannelMessageMenuProps) {
+export function ChannelMessageMenu({ refs, held, ...exits }: ChannelMessageMenuProps) {
+  const inset = useKeyboardInset();
   return (
     <MenuSheet
-      open={m !== null}
+      open={held !== null}
       label={t.studentChannel.actions.menu}
       testID="channel-message-menu"
-      onClose={onClose}
+      onClose={exits.onClose}
     >
-      {m ? <ChannelMenuSteps refs={refs} message={m} onClose={onClose} /> : null}
-      <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
+      <View style={{ gap: 8, paddingBottom: inset }}>
+        {held ? (
+          <ChannelMenuSteps refs={refs} message={held.message} offers={held.offers} {...exits} />
+        ) : null}
+        <Button variant="secondary" label={t.common.cancel} onPress={exits.onClose} />
+      </View>
     </MenuSheet>
   );
 }

@@ -2,6 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import type { FlatList } from 'react-native';
 import type { ChannelRow } from './list-rows';
 
+/** FlatList's answer when the row is not laid out yet: scroll near it instead. */
+interface ScrollFailed {
+  index: number;
+  averageItemLength: number;
+}
+
 /** How long the quoted message keeps its brand edge after the jump. */
 const LIT_MS = 1500;
 
@@ -10,7 +16,7 @@ const LIT_MS = 1500;
  * to the middle and lights its edge a moment. Not loaded: nothing moves.
  */
 export function useJump(rows: readonly ChannelRow[]) {
-  const list = useRef<FlatList<ChannelRow>>(null);
+  const listRef = useRef<FlatList<ChannelRow>>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [lit, setLit] = useState<string | null>(null);
   useEffect(
@@ -22,11 +28,13 @@ export function useJump(rows: readonly ChannelRow[]) {
   const jump = (id: string) => {
     const index = rows.findIndex((r) => r.message.id === id);
     if (index < 0) return;
-    list.current?.scrollToIndex({ index, viewPosition: 0.5, animated: true });
+    listRef.current?.scrollToIndex({ index, viewPosition: 0.5, animated: true });
     setLit(id);
     timer.current = setTimeout(() => setLit(null), LIT_MS);
   };
-  const onScrollToIndexFailed = (info: { index: number; averageItemLength: number }) =>
-    list.current?.scrollToOffset({ offset: info.index * info.averageItemLength, animated: true });
-  return { list, lit, jump, onScrollToIndexFailed };
+  const onScrollToIndexFailed = (info: ScrollFailed) => {
+    const offset = info.index * info.averageItemLength;
+    listRef.current?.scrollToOffset({ offset, animated: true });
+  };
+  return { listRef, lit, jump, onScrollToIndexFailed };
 }

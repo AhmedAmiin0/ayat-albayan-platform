@@ -88,3 +88,10 @@ test('the admin’s row that did not go out: a button that says why, and a tap o
   await render(<DeliveryTicks status="queued" onPress={onPress} />);
   expect(screen.getByRole('button', { name: word.queued }).props.testID).toBe('ticks-pending');
 });
+
+test('a long press of its own (the student channel): a button even without times', async () => {
+  const onHold = jest.fn();
+  await render(<DeliveryTicks status="read" onHold={onHold} />);
+  await fireEvent(screen.getByTestId('ticks-read'), 'longPress');
+  expect(onHold).toHaveBeenCalled();
+});

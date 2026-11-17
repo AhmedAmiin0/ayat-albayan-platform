@@ -1,51 +1,70 @@
-import { CHANNEL_BODY_MAX } from '@ab/shared';
+import type { ChannelMessageView } from '@ab/shared';
 import { useState } from 'react';
-import { TextInput, View } from 'react-native';
-import { t } from '../lib/i18n/i18n';
-import { type, useTheme } from '../theme';
-import { AppText } from '../ui/primitives/AppText';
-import { Button } from '../ui/primitives/Button';
-import { channelInputStyle } from './channel-input-style';
-import { useSendChannel, type ChannelRef } from './channel-api';
+import { ComposerBar } from '../../chat-ui/composer/ComposerBar';
+import type { ChannelRef } from '../channel-api';
+import { AttachSheet } from './AttachSheet';
+import { ComposerAbove } from './ComposerAbove';
+import { ComposerAction } from './ComposerAction';
+import { ComposerPill } from './ComposerPill';
+import { useAttach } from './use-attach';
+import { useComposer } from './use-composer';
+import { useRecording } from './use-recording';
 
-/** Text only, up to CHANNEL_BODY_MAX characters; the API trims and checks again. */
-export function ChannelComposer({ refs }: { refs: ChannelRef }) {
-  const { color } = useTheme();
-  const send = useSendChannel(refs);
-  const [text, setText] = useState('');
-  const body = text.trim();
-  const tooLong = body.length > CHANNEL_BODY_MAX;
-  const over = tooLong ? t.studentChannel.tooLong.replace('{n}', String(CHANNEL_BODY_MAX)) : null;
-  const note = send.isError ? t.studentChannel.sendFailed : over;
-  const submit = () => {
-    if (!body || tooLong || send.isPending) return;
-    send.mutateAsync(body).then(
-      () => setText(''),
-      () => undefined,
-    );
-  };
+interface ChannelComposerProps {
+  refs: ChannelRef;
+  /** The message being answered (swipe or «ردّ»), or null. */
+  replyTo: ChannelMessageView | null;
+  onReplyDone: () => void;
+}
+
+/**
+ * The typing bar (ChatX boards, the kit's ComposerBar): the pill, then the round button: «أرسل»
+ * once there is text (or to send a recording), else the microphone where the app records. The
+ * quote being answered sits over it. Attach and the microphone only where the app gives the port.
+ */
+export function ChannelComposer({ refs, replyTo, onReplyDone }: ChannelComposerProps) {
+  const [sheet, setSheet] = useState(false);
+  const reply = { id: replyTo?.id ?? null, done: onReplyDone };
+  const box = useComposer(refs, reply);
+  const files = useAttach(refs, reply);
+  const voice = useRecording(files.sendFile);
+  const action = (
+    <ComposerAction
+      mic={!box.hasText && voice.available && !voice.on}
+      recording={voice.on}
+      canSend={box.canSend}
+      onRecord={voice.start}
+      onStop={voice.stop}
+      onSend={box.submit}
+    />
+  );
+  const above = (
+    <ComposerAbove
+      problem={box.note ?? files.error}
+      uploading={files.uploading}
+      recording={voice.on}
+      replyTo={replyTo}
+      onCancelReply={onReplyDone}
+    />
+  );
+  const pill = (
+    <ComposerPill
+      text={box.text}
+      onText={box.setText}
+      recording={voice.on}
+      onCancelRecording={voice.cancel}
+      onAttach={files.photo || files.pdf ? () => setSheet(true) : undefined}
+    />
+  );
   return (
-    <View style={{ gap: 8, paddingTop: 8, borderTopWidth: 1, borderColor: color.rule }}>
-      {note ? (
-        <AppText accessibilityRole="alert" style={{ color: color.bad, fontSize: type.size.xs }}>
-          {note}
-        </AppText>
-      ) : null}
-      <TextInput
-        accessibilityLabel={t.studentChannel.messageLabel}
-        multiline
-        value={text}
-        onChangeText={setText}
-        placeholder={t.studentChannel.placeholder}
-        placeholderTextColor={color.ink3}
-        style={channelInputStyle(color)}
+    <>
+      <ComposerBar above={above} pill={pill} action={action} />
+      <AttachSheet
+        open={sheet}
+        photo={files.photo}
+        pdf={files.pdf}
+        onClose={() => setSheet(false)}
       />
-      <Button
-        label={send.isPending ? t.studentChannel.sending : t.studentChannel.send}
-        busy={send.isPending}
-        disabled={!body || tooLong}
-        onPress={submit}
-      />
-    </View>
+    </>
   );
 }

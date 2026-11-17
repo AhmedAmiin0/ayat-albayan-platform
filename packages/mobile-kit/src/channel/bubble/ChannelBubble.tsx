@@ -1,89 +1,54 @@
-import { channelTimeText } from '@ab/client-core';
-import { splitLinks, type ChannelMessageView } from '@ab/shared';
-import { Linking, Pressable, View, type ViewStyle } from 'react-native';
-import { useClockCycle } from '../lib/clock/clock-store';
-import { t } from '../lib/i18n/i18n';
-import { locale } from '../lib/i18n/locale';
-import { shape, type, useTheme } from '../theme';
-import { AppText } from '../ui/primitives/AppText';
-import { ContentText } from '../ui/primitives/ContentText';
+import type { ChannelMessageView } from '@ab/shared';
+import { BubbleMeta } from '../../chat-ui/bubble/BubbleMeta';
+import { BubbleShell } from '../../chat-ui/bubble/BubbleShell';
+import { SwipeReply } from '../../chat-ui/swipe/SwipeReply';
+import { useClockCycle } from '../../lib/clock/clock-store';
+import { AttachmentBody } from '../attach/AttachmentBody';
+import { BubbleContent } from './BubbleContent';
+import { metaText, ticksOf } from './bubble-meta';
+import { ChannelQuote } from './ChannelQuote';
+import { SenderLine } from './SenderLine';
 
-const small = {
-  fontFamily: type.ui[500],
-  fontSize: type.size.xs,
-  lineHeight: type.lineHeight(type.size.xs, true),
-} as const;
-
-/** Mine at the inline end with its tail there (WhatsApp), theirs at the start. */
-const boxStyle = (mine: boolean, color: ReturnType<typeof useTheme>['color']): ViewStyle => ({
-  alignSelf: mine ? 'flex-end' : 'flex-start',
-  maxWidth: '85%',
-  gap: 4,
-  paddingHorizontal: 12,
-  paddingVertical: 8,
-  borderRadius: shape.radius.lg,
-  ...(mine ? { borderTopEndRadius: shape.radius.xs } : { borderTopStartRadius: shape.radius.xs }),
-  borderWidth: 1,
-  borderColor: color.rule,
-  backgroundColor: mine ? color.lapisWash : color.raised,
-});
-
-interface ChannelBubbleProps {
+export interface ChannelBubbleProps {
   message: ChannelMessageView;
   tz: string;
   /** The thread's clock (useNow): today's messages show only their time. */
   now: Date;
-  /** «تعديل» / «حذف للجميع» apply (channelBubbleActions): a long press opens the menu. */
+  /** The message's menu (reply, edit, delete…); absent → a plain bubble. */
   onLongPress?: () => void;
+  /** Swipe to answer it (write mode only). */
+  onReply?: () => void;
+  /** A long press on my ticks: who has read it. */
+  onReads?: () => void;
+  /** A tap on its quote: go to the original. */
+  onJump?: (id: string) => void;
+  /** Just jumped to: a brand edge for a moment. */
+  highlight?: boolean;
 }
 
 /**
- * One message: who (the caller is «أنت»), the text with its links clickable (splitLinks), the
- * time. Mine sits at the inline end like WhatsApp (left in Arabic, right in English); the text
- * aligns by its own words.
+ * One message (ChatX boards): mine at the inline end in the brand wash with its ticks, theirs at
+ * the start with the sender's name and role; the quote it answers, its file, its words, the time.
  */
-export function ChannelBubble({ message: m, tz, now, onLongPress }: ChannelBubbleProps) {
-  const { color } = useTheme();
+export function ChannelBubble(p: ChannelBubbleProps) {
+  const { message: m } = p;
   const cycle = useClockCycle();
-  const time = channelTimeText({ iso: m.created_at, tz, now, locale, cycle });
-  // «تم التعديل» by the time (owner 2026-10-30); a deleted message is only its muted line.
-  const meta = m.edited ? `${t.studentChannel.actions.edited} · ${time}` : time;
-  const who = m.mine
-    ? t.studentChannel.you
-    : [m.sender_name, t.studentChannel.roles[m.sender_role]].filter(Boolean).join(' · ');
-  const Box = onLongPress ? Pressable : View;
+  const status = ticksOf(m);
+  const ticks = status ? { status, onHold: p.onReads } : undefined;
   return (
-    <Box
-      testID={`channel-bubble-${m.id}`}
-      {...(onLongPress
-        ? { onLongPress, delayLongPress: 350, accessibilityHint: t.studentChannel.actions.menu }
-        : {})}
-      style={boxStyle(m.mine, color)}
-    >
-      <AppText style={{ ...small, color: color.ink3 }}>{who}</AppText>
-      {m.deleted ? (
-        <AppText style={{ ...small, fontStyle: 'italic', color: color.ink3 }}>
-          {t.studentChannel.actions.deleted}
-        </AppText>
-      ) : (
-        <ContentText source={m.body}>
-          {splitLinks(m.body).map((part, i) =>
-            part.href ? (
-              <AppText
-                key={i}
-                accessibilityRole="link"
-                onPress={() => void Linking.openURL(part.href ?? '').catch(() => undefined)}
-                style={{ color: color.lapis, textDecorationLine: 'underline' }}
-              >
-                {part.text}
-              </AppText>
-            ) : (
-              part.text
-            ),
-          )}
-        </ContentText>
-      )}
-      <AppText style={{ ...small, color: color.ink3, textAlign: 'right' }}>{meta}</AppText>
-    </Box>
+    <SwipeReply onReply={p.onReply}>
+      <BubbleShell
+        ours={m.mine}
+        highlight={p.highlight}
+        testID={`channel-bubble-${m.id}`}
+        onLongPress={p.onLongPress}
+      >
+        {m.mine ? null : <SenderLine name={m.sender_name} role={m.sender_role} />}
+        {m.reply_to && !m.deleted ? <ChannelQuote reply={m.reply_to} onJump={p.onJump} /> : null}
+        {m.deleted ? null : <AttachmentBody message={m} />}
+        <BubbleContent message={m} />
+        <BubbleMeta time={metaText(m, { tz: p.tz, now: p.now, cycle })} ticks={ticks} />
+      </BubbleShell>
+    </SwipeReply>
   );
 }

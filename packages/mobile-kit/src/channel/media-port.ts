@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, use } from 'react';
 
 // What the chat needs from the phone that the kit does not carry (docs/31 §2): a picker, the
 // recorder and a player live in each app (expo-image-picker, expo-document-picker, expo-audio),
@@ -48,13 +48,10 @@ export interface ChannelMediaPort {
   }) => ChannelVoicePlayer;
 }
 
-const NO_MEDIA: ChannelMediaPort = {};
+/** Text only: no picker, no recorder, no player. */
+export const NO_MEDIA: ChannelMediaPort = {};
 
 export const ChannelMediaContext = createContext<ChannelMediaPort>(NO_MEDIA);
 
 /** The app's port, or none (text only). */
-export const useChannelMedia = (): ChannelMediaPort => useContext(ChannelMediaContext);
-
-/** A photo or a PDF can be picked: the composer shows «إرفاق ملف». */
-export const canAttach = (port: ChannelMediaPort): boolean =>
-  port.pickPhoto !== undefined || port.pickPdf !== undefined;
+export const useChannelMedia = (): ChannelMediaPort => use(ChannelMediaContext);

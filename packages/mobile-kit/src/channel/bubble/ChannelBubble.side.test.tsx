@@ -1,22 +1,18 @@
 import type { ChannelMessageView } from '@ab/shared';
 import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
+import { channelMessage } from '../testing/channel-fixtures';
 import { ChannelBubble } from './ChannelBubble';
 
 // Arabic (jest setup: RTL), where flex-end is the left: mine there like WhatsApp, theirs on the
 // right.
 const NOW = new Date('2026-10-27T12:00:00.000Z');
-const msg = (over: Partial<ChannelMessageView>): ChannelMessageView => ({
-  id: 'm1',
-  body: 'غدًا إن شاء الله',
-  sender_role: 'teacher',
-  sender_name: 'أبرار',
-  mine: true,
-  created_at: '2026-10-27T10:05:00.000Z',
-  edited: false,
-  deleted: false,
-  ...over,
-});
+const msg = (over: Partial<ChannelMessageView>): ChannelMessageView =>
+  channelMessage({
+    ...{ body: 'غدًا إن شاء الله', sender_role: 'teacher', sender_name: 'Abrar', mine: true },
+    ...{ created_at: '2026-10-27T10:05:00.000Z' },
+    ...over,
+  });
 const bubble = (over: Partial<ChannelMessageView>) =>
   render(<ChannelBubble message={msg(over)} tz="Asia/Riyadh" now={NOW} />);
 const styleOf = (id: string) =>

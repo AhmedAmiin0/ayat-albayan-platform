@@ -33,6 +33,7 @@ const FETCH = [
   'src/inbox/composer/send-file.ts',
   'src/inbox/thread/share/shared-file.ts',
   'src/inbox/composer/voice/send-voice.ts',
+  'src/student-file/channel/channel-voice.ts',
 ];
 // apiFetch / apiSend come from the shared kit (@ab/mobile-kit) or its http/api module.
 const API = '(^|/)http/api(\\.js)?$|^@ab/mobile-kit$';

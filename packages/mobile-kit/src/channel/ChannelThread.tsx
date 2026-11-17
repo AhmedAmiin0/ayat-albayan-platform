@@ -1,34 +1,27 @@
-import type { ChannelMessageView, ChannelPage } from '@ab/shared';
-import { useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { t } from '../lib/i18n/i18n';
 import { useTheme } from '../theme';
-import { EmptyState } from '../ui/feedback/EmptyState';
 import { ErrorState } from '../ui/feedback/ErrorState';
-import { Note } from '../ui/feedback/Note';
-import { KeyboardFrame } from '../ui/layout/KeyboardFrame';
-import { ChannelComposer } from './ChannelComposer';
-import { ChannelList } from './ChannelList';
+import { ChannelClosed } from './ChannelClosed';
 import type { ChannelRef } from './channel-api';
-import { ChannelMessageMenu } from './edits/ChannelMessageMenu';
+import { ChannelMediaContext, NO_MEDIA, type ChannelMediaPort } from './media-port';
+import { ThreadBody } from './ThreadBody';
 import { useChannelThread } from './use-channel-thread';
 
-/** «للاطلاع فقط», and for a monitor of a closed channel why nobody writes yet. */
-const readOnlyText = (page: ChannelPage | undefined): string =>
-  page?.open === false
-    ? `${t.studentChannel.readOnly} ${t.studentChannel.closedMonitor}`
-    : t.studentChannel.readOnly;
+interface ChannelThreadProps {
+  refs: ChannelRef;
+  /** The app's picker, recorder and player; absent → text only. */
+  media?: ChannelMediaPort;
+}
 
 /**
- * One student's channel (docs/31 §2): the messages (ChannelList), live over the socket, polled as
- * the fallback. A participant writes and marks read up to the newest message; before the
- * subscription and the teacher's assignment (owner 2026-10-29) only the closed line. A monitor
- * gets «للاطلاع فقط» and no composer.
+ * One student's channel (docs/31 §2), embeddable (no Screen: a sheet in the lesson room mounts it
+ * too): the messages, live over the socket, polled as the fallback. A participant writes, answers
+ * and marks read; before the subscription and the teacher's assignment only the closed card. A
+ * monitor gets «للاطلاع فقط» and no composer.
  */
-export function ChannelThread({ refs }: { refs: ChannelRef }) {
+export function ChannelThread({ refs, media }: ChannelThreadProps) {
   const { color } = useTheme();
-  // «تعديل» / «حذف للجميع» (owner 2026-10-30): the long-pressed message's menu.
-  const [held, setHeld] = useState<ChannelMessageView | null>(null);
   const { query, mode, first } = useChannelThread(refs);
   if (!query.data) {
     return query.isError ? (
@@ -41,29 +34,10 @@ export function ChannelThread({ refs }: { refs: ChannelRef }) {
       />
     );
   }
-  if (mode === 'closed') {
-    return (
-      <View style={{ flex: 1 }}>
-        <EmptyState title={t.studentChannel.closed} />
-      </View>
-    );
-  }
-  const writes = mode === 'write';
+  if (mode === 'closed') return <ChannelClosed reason={first?.closed_reason ?? null} />;
   return (
-    <KeyboardFrame style={{ flex: 1 }}>
-      {writes ? null : <Note>{readOnlyText(first)}</Note>}
-      <ChannelList refs={refs} query={query} onHold={setHeld} />
-      {writes ? (
-        <View style={{ paddingBottom: 8 }}>
-          <ChannelComposer refs={refs} />
-        </View>
-      ) : null}
-      <ChannelMessageMenu
-        key={held ? held.id : 'none'}
-        refs={refs}
-        message={held}
-        onClose={() => setHeld(null)}
-      />
-    </KeyboardFrame>
+    <ChannelMediaContext value={media ?? NO_MEDIA}>
+      <ThreadBody refs={refs} query={query} mode={mode} first={first} />
+    </ChannelMediaContext>
   );
 }

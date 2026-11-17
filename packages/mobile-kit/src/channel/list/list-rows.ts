@@ -12,7 +12,7 @@ export interface ChannelRow {
 }
 
 /** Where the unread band goes: the first unread message, and how many there are. */
-export interface UnreadBand {
+interface UnreadBand {
   id: string;
   count: number;
 }

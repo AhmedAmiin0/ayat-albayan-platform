@@ -1,41 +1,41 @@
-import { channelBubbleActions, threadMessages } from '@ab/client-core';
-import type { ChannelMessageView } from '@ab/shared';
 import { FlatList, View } from 'react-native';
-import { phoneTz } from '../lib/clock/phone-tz';
-import { t } from '../lib/i18n/i18n';
-import { useNow } from '../lib/time/use-now';
-import { EmptyState } from '../ui/feedback/EmptyState';
-import { Button } from '../ui/primitives/Button';
-import { ChannelBubble } from './ChannelBubble';
-import type { ChannelRef, useChannel } from './channel-api';
+import { FloatingDay } from '../../chat-ui/days/FloatingDay';
+import { t } from '../../lib/i18n/i18n';
+import { EmptyState } from '../../ui/feedback/EmptyState';
+import { Button } from '../../ui/primitives/Button';
+import type { ChannelRef, useChannel } from '../channel-api';
+import { ChannelRowItem, type RowActions } from './ChannelRowItem';
+import { useFloatingDay } from './use-floating-day';
+import { useChannelRows } from './use-channel-rows';
+import { useJump } from './use-jump';
 
 interface ChannelListProps {
   refs: ChannelRef;
   query: ReturnType<typeof useChannel>;
-  /** A long press on a message whose «تعديل» / «حذف للجميع» this viewer may use now. */
-  onHold: (message: ChannelMessageView) => void;
+  mode: 'write' | 'read' | 'closed';
+  actions: Omit<RowActions, 'onJump'>;
 }
 
 /**
  * The thread's messages in an inverted list, so it opens on the newest message and a new one
- * lands in view; «الرسائل الأقدم» at the top pages back. Times in the phone's zone; `now` ticks
+ * lands in view: day chips, the floating day while scrolling, «n غير مقروءة» over the first unread
+ * when it opened; «الرسائل الأقدم» at the top pages back. Times in the phone's zone; `now` ticks
  * by the minute (useNow), which also closes the 15-minute edit window on screen.
  */
-export function ChannelList({ refs, query, onHold }: ChannelListProps) {
-  const now = useNow();
-  const tz = phoneTz();
-  const newestFirst = threadMessages(query.data?.pages).reverse();
-  if (newestFirst.length === 0) {
+export function ChannelList({ refs, query, mode, actions }: ChannelListProps) {
+  const { rows, clock } = useChannelRows(refs, {
+    pages: query.data?.pages,
+    more: query.hasNextPage,
+  });
+  const { listRef, lit, jump, onScrollToIndexFailed } = useJump(rows);
+  const floating = useFloatingDay();
+  if (rows.length === 0) {
     return (
       <View style={{ flex: 1 }}>
         <EmptyState title={t.studentChannel.empty} />
       </View>
     );
   }
-  const holdOf = (m: ChannelMessageView) => {
-    const may = channelBubbleActions({ audience: refs.audience, message: m, now });
-    return may.edit || may.delete ? () => onHold(m) : undefined;
-  };
   const older = query.hasNextPage ? (
     <Button
       variant="ghost"
@@ -45,16 +45,30 @@ export function ChannelList({ refs, query, onHold }: ChannelListProps) {
     />
   ) : null;
   return (
-    <FlatList
-      inverted
-      style={{ flex: 1 }}
-      contentContainerStyle={{ gap: 8, paddingVertical: 8 }}
-      data={newestFirst}
-      keyExtractor={(m) => m.id}
-      renderItem={({ item }) => (
-        <ChannelBubble message={item} tz={tz} now={now} onLongPress={holdOf(item)} />
-      )}
-      ListFooterComponent={older}
-    />
+    <View style={{ flex: 1 }}>
+      <FlatList
+        ref={listRef}
+        inverted
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingVertical: 4 }}
+        data={rows}
+        keyExtractor={(row) => row.message.id}
+        renderItem={({ item }) => (
+          <ChannelRowItem
+            row={item}
+            audience={refs.audience}
+            mode={mode}
+            clock={clock}
+            lit={lit === item.message.id}
+            actions={{ ...actions, onJump: jump }}
+          />
+        )}
+        ListFooterComponent={older}
+        onViewableItemsChanged={floating.onViewable}
+        onScrollToIndexFailed={onScrollToIndexFailed}
+        {...floating.scroll}
+      />
+      <FloatingDay label={floating.label} opacity={floating.opacity} />
+    </View>
   );
 }
