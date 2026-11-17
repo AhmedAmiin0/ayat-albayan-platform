@@ -1,11 +1,9 @@
 import { router } from 'expo-router';
 import { Linking } from 'react-native';
-import { handOff } from '@/classroom/room/model/join-handoff';
-import { roomRoute, roomWebUrl, type RoomEntry } from '@/classroom/room/model/join-target';
-import { roomMode } from '@/classroom/room/model/room-mode';
-import type { RoomTarget } from '@/classroom/room/model/room-types';
-import { liveKitNative } from '@/classroom/room/native/livekit-native';
-import { joinAnswer, sendJoin } from '@/classroom/room/state/fetch-join';
+import { handOff, type RoomTarget, liveKitNative } from '@ab/mobile-kit/room';
+import { roomRoute, roomWebUrl, type RoomEntry } from './join-target';
+import { roomMode } from './room-mode';
+import { joinAnswer, sendJoin } from './fetch-join';
 import { usePublicConfig } from '@/core/lib/query/public-config';
 
 /** settings.meetings_in_app (public, default on): rooms open inside the app (docs/35). */

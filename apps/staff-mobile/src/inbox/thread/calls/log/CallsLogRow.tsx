@@ -1,8 +1,7 @@
 import { callEntryKind, type CallView } from '@ab/shared';
 import { View } from 'react-native';
-import { type, useTheme, AppText, Avatar, ListRow } from '@ab/mobile-kit';
+import { type, useTheme, AppText, Avatar, ListRow, CallArrowIcon } from '@ab/mobile-kit';
 import { clockAt } from '@/inbox/shared/format';
-import { CallArrowIcon } from '@/inbox/thread/calls/screen/call-icons';
 import { callEntryText, callerName, callInk } from '@/inbox/thread/calls/entries/call-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

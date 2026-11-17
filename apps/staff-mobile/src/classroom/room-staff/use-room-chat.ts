@@ -1,6 +1,6 @@
 import type { TeacherChannelRow } from '@ab/shared';
 import { router } from 'expo-router';
-import type { RoomChat } from '@/classroom/room/screen/RoomScreen';
+import type { RoomChat } from '@ab/mobile-kit/room';
 import { useHolds } from '@ab/mobile-kit';
 import { useTeacherChannels } from '@/student-file';
 

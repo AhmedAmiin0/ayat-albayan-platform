@@ -1,13 +1,10 @@
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useState } from 'react';
 import { Linking } from 'react-native';
-import { parseTarget, roomWebUrl } from '@/classroom/room/model/join-target';
-import type { RoomTarget } from '@/classroom/room/model/room-types';
-import { nativeRoomPlatform } from '@/classroom/room/native/native-platform';
-import { RoomNotice } from '@/classroom/room/screen/RoomNotice';
-import { RoomScreen } from '@/classroom/room/screen/RoomScreen';
-import type { BackSource } from '@/classroom/room/screen/use-leave-guard';
+import { parseTarget, roomWebUrl } from './join-target';
+import { type RoomTarget, nativeRoomPlatform, RoomNotice, RoomScreen, type BackSource } from '@ab/mobile-kit/room';
 import { t } from '@ab/mobile-kit';
+import { fetchJoin } from './fetch-join';
 import { staffHost } from './staff-host';
 import { useRoomChat } from './use-room-chat';
 
@@ -65,6 +62,8 @@ export function RoomRoute() {
       host={staffHost(target)}
       chat={chat}
       backSource={backSource}
+      fetchJoin={fetchJoin}
+      onBrowser={() => void Linking.openURL(roomWebUrl(target))}
     />
   );
 }

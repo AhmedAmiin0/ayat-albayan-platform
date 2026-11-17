@@ -1,5 +1,5 @@
 import { Linking } from 'react-native';
-import { takeHandoff } from '@/classroom/room/model/join-handoff';
+import { takeHandoff } from '@ab/mobile-kit/room';
 import { ApiError } from '@ab/mobile-kit';
 import { openRoom } from './open-room';
 
@@ -11,7 +11,10 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (...a: unknown[]) => mockPush(...a) } }));
 let mockNative: unknown = {};
-jest.mock('@/classroom/room/native/livekit-native', () => ({ liveKitNative: () => mockNative }));
+jest.mock('@ab/mobile-kit/room', () => ({
+  ...jest.requireActual('@ab/mobile-kit/room'),
+  liveKitNative: () => mockNative,
+}));
 
 const ID = '0a5c2b1e-6c3e-4d61-9a43-1b2f9b8e7d10';
 const meeting = { kind: 'meeting', id: ID } as const;

@@ -3,17 +3,8 @@ import type { ActiveCallView } from '@ab/shared';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSyncExternalStore } from 'react';
-import { t, type, useTheme, AppText, IconButton, Avatar } from '@ab/mobile-kit';
-import {
-  ChevronDownIcon,
-  HangUpIcon,
-  MicIcon,
-  MicOffIcon,
-  PhoneIcon,
-  SpeakerIcon,
-} from './call-icons';
+import { t, type, useTheme, AppText, IconButton, Avatar, ChevronDownIcon, HangUpIcon, MicIcon, MicOffIcon, PhoneIcon, SpeakerIcon, RoundButton } from '@ab/mobile-kit';
 import { CallerName } from './CallerName';
-import { RoundButton } from './RoundButton';
 
 interface CallActions {
   hangup: () => void;

@@ -1,5 +1,5 @@
 import { classroomUrl, meetingUrl } from '@/classroom/links/web-origin';
-import type { RoomKind, RoomTarget } from '@/classroom/room/model/room-types';
+import type { RoomKind, RoomTarget } from '@ab/mobile-kit/room';
 
 const KINDS: readonly RoomKind[] = ['lesson', 'meeting'];
 

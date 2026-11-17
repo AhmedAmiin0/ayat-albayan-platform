@@ -1,7 +1,6 @@
 import { lessonRoomSends } from '@ab/client-core';
-import type { RoomKind, RoomTarget } from '@/classroom/room/model/room-types';
+import type { RoomKind, RoomTarget, RoomHost } from '@ab/mobile-kit/room';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
-import type { RoomHost } from '@/classroom/room/host/host-types';
 
 function lessonHost(lessonId: string): RoomHost {
   const sends = lessonRoomSends({ apiFetch, apiSend });

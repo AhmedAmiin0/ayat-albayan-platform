@@ -1,8 +1,7 @@
 import { roomJoinResultSchema } from '@ab/client-core';
 import type { RoomJoinResult } from '@ab/shared';
-import { credentialsOf } from '@/classroom/room/model/join-handoff';
-import { joinPath } from '@/classroom/room/model/join-target';
-import type { RoomCredentials, RoomTarget } from '@/classroom/room/model/room-types';
+import { credentialsOf, type RoomCredentials, type RoomTarget } from '@ab/mobile-kit/room';
+import { joinPath } from './join-target';
 import { apiSend } from '@ab/mobile-kit';
 
 const post: (method: 'POST', path: string) => Promise<unknown> = apiSend;
