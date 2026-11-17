@@ -1,10 +1,15 @@
-import type { PortalActionResult, PortalCancel, PortalRequest } from '@ab/shared';
+import {
+  isFamilyActionable,
+  type PortalActionResult,
+  type PortalCancel,
+  type PortalRequest,
+  type PortalStudent,
+} from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, notFound } from '@/common/http/errors';
 import {
   FamilyRequestService,
-  isAheadOpen,
   LessonCancelService,
   LessonStatusService,
 } from '@/modules/teaching/lessons';
@@ -21,6 +26,15 @@ export interface ActionCall {
   lessonId: string;
 }
 
+/** The login's own student and that student's lesson, as ahead() checked them. */
+export interface OwnLesson {
+  student: PortalStudent;
+  row: PortalLessonRow;
+}
+
+/** More than one student: the family's buttons would act on the others' lesson too. */
+const isGroupLesson = (row: PortalLessonRow): boolean => row.lesson_students.length > 1;
+
 /** The lesson services the family's buttons reuse (one injectable keeps the constructor small). */
 @Injectable()
 export class PortalActionDeps {
@@ -34,7 +48,8 @@ export class PortalActionDeps {
 /**
  * «خيارات الحلقة» of the family (owner 2026-11-17) on a lesson of the login's own student
  * (PortalScopes: 404 student_not_found / lesson_not_found), still open and not started (409
- * lesson_started): «سأحضر» = LessonStatusService.confirm; «أعتذر عن الحلقة» = the student's
+ * lesson_started), the student's alone (409 group_lesson: a group lesson is the academy's to
+ * move or cancel): «سأحضر» = LessonStatusService.confirm; «أعتذر عن الحلقة» = the student's
  * cancel of that one lesson under late_cancel_hours (its teacher hears it); «اطلب موعدًا آخر» /
  * «سحب الطلب» = FamilyRequestService. Each answers the lesson's status and package outcome.
  */
@@ -67,29 +82,30 @@ export class PortalLessonActions {
 
   async withdraw(call: ActionCall): Promise<PortalActionResult> {
     await this.ahead(call);
-    await this.deps.requests.withdraw(call.lessonId);
+    await this.deps.requests.withdraw(call.lessonId, call.user);
     return this.result(call);
   }
 
-  /** The login's own student's lesson, still ahead and open. */
-  async ahead(call: ActionCall): Promise<PortalLessonRow> {
-    const row = await this.own(call);
-    if (!isAheadOpen(row, new Date())) throw conflict('lesson_started');
-    return row;
+  /** The login's own student's lesson, still ahead and open, the student's alone. */
+  async ahead(call: ActionCall): Promise<OwnLesson> {
+    const student = await this.scopes.student(call.user, call.studentId);
+    const row = await this.row(call);
+    if (!isFamilyActionable(row, new Date())) throw conflict('lesson_started');
+    if (isGroupLesson(row)) throw conflict('group_lesson');
+    return { student, row };
   }
 
-  private async own(call: ActionCall): Promise<PortalLessonRow> {
-    await this.scopes.student(call.user, call.studentId);
+  private async row(call: ActionCall): Promise<PortalLessonRow> {
     const row = await this.lessons.one({ studentId: call.studentId, lessonId: call.lessonId });
     if (!row) throw notFound('lesson_not_found');
     return row;
   }
 
+  /** After the write: the lesson as it is now (the scope was checked by ahead()). */
   private async result(call: ActionCall): Promise<PortalActionResult> {
-    const row = await this.own(call);
-    const lateCancelHours = (await this.lessons.readSettings()).late_cancel_hours ?? null;
+    const [row, settings] = await Promise.all([this.row(call), this.lessons.readSettings()]);
+    const lateCancelHours = settings.late_cancel_hours ?? null;
     const ctx = { studentId: call.studentId, now: new Date(), lateCancelHours, requests: [] };
-    const family = familyOf(row, ctx);
-    return { lesson_id: row.id, status: row.status, counts: family.counts };
+    return { lesson_id: row.id, status: row.status, counts: familyOf(row, ctx).counts };
   }
 }

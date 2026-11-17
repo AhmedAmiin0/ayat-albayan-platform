@@ -1,5 +1,5 @@
 export { OutcomeCorrection } from './auto-held/outcome-correction';
-export { FamilyRequestService, isAheadOpen } from './family-requests/family-request.service';
+export { FamilyRequestService } from './family-requests/family-request.service';
 export { LessonsModule } from './lessons.module';
 export { RescheduleOneService } from './reschedule/reschedule-one.service';
 export {

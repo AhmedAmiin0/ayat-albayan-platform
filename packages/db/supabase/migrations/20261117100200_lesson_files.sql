@@ -5,9 +5,11 @@
 --
 -- Storage: the report-attachments bucket (25 MiB, images, PDF, audio; migration 122) under
 -- {lesson_id}/{uuid}.{ext}; no new bucket. The API (service role) signs every upload and download.
--- RLS (rule 9, the second wall): admins all; a teacher their own lessons' files (read, add);
--- a portal login (guardian or student) reads the visible files of its own students' lessons.
--- Removing a file and changing visibility go through the API only. Idempotent.
+-- Every write goes through the API (service role, which signed the upload and checked the
+-- object); a retried register finds its row by the unique storage_path (on conflict do nothing).
+-- RLS (rule 9, the second wall): staff read only — admins every file, a teacher their own
+-- lessons' files. The family reads through the API alone (sent report + visible rule, the
+-- portal's one reader), so no portal policy: authenticated family logins see no rows. Idempotent.
 
 create table if not exists public.lesson_files (
   id uuid primary key default gen_random_uuid(),
@@ -16,7 +18,7 @@ create table if not exists public.lesson_files (
   title text check (title is null or char_length(title) between 1 and 120),
   mime text not null,
   size integer not null check (size > 0 and size <= 26214400),
-  storage_path text not null,
+  storage_path text not null unique,
   visible_to_family boolean not null default true,
   created_by uuid references public.profiles (id) on delete set null,
   created_at timestamptz not null default now()
@@ -28,32 +30,14 @@ create index if not exists lesson_files_created_by_idx on public.lesson_files (c
 
 alter table public.lesson_files enable row level security;
 
--- A portal login's own students attend the lesson (portal_student_ids, migration 790).
-create or replace function public.is_portal_lesson(p_lesson uuid) returns boolean
-  language sql stable security definer set search_path = '' as $$
-  select exists (select 1 from public.lesson_students ls
-                 where ls.lesson_id = p_lesson
-                   and ls.student_id in (select public.portal_student_ids()))
-$$;
-revoke execute on function public.is_portal_lesson(uuid) from public, anon;
-grant execute on function public.is_portal_lesson(uuid) to authenticated, service_role;
-
-drop policy if exists lesson_files_admin_all on public.lesson_files;
-create policy lesson_files_admin_all on public.lesson_files for all to authenticated
-  using ((select public.is_admin())) with check ((select public.is_admin()));
+drop policy if exists lesson_files_admin_read on public.lesson_files;
+create policy lesson_files_admin_read on public.lesson_files for select to authenticated
+  using ((select public.is_admin()));
 
 drop policy if exists lesson_files_teacher_read on public.lesson_files;
 create policy lesson_files_teacher_read on public.lesson_files for select to authenticated
   using (public.is_my_lesson(lesson_id));
 
-drop policy if exists lesson_files_teacher_insert on public.lesson_files;
-create policy lesson_files_teacher_insert on public.lesson_files for insert to authenticated
-  with check (public.is_my_lesson(lesson_id));
-
-drop policy if exists lesson_files_portal_read on public.lesson_files;
-create policy lesson_files_portal_read on public.lesson_files for select to authenticated
-  using (visible_to_family and public.is_portal_lesson(lesson_id));
-
-revoke all on public.lesson_files from anon;
-grant select, insert on public.lesson_files to authenticated;
+revoke all on public.lesson_files from anon, authenticated;
+grant select on public.lesson_files to authenticated;
 grant all on public.lesson_files to service_role;

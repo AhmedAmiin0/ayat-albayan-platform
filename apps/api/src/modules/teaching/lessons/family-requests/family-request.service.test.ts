@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FAMILY_USER, fakeStore, LESSON_ID, lessonRow, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import type { LessonProposalRepo } from '@/modules/teaching/lessons/proposals/lesson-proposals.repo';
-import { FamilyRequestService, isAheadOpen } from './family-request.service';
+import { FamilyRequestService } from './family-request.service';
 
 const proposals = { create: vi.fn(), withdraw: vi.fn() };
 const NOW = new Date('2026-10-02T10:00:00Z');
@@ -44,16 +44,12 @@ describe('FamilyRequestService: «اطلب موعدًا آخر» and «سحب ا
     expect(proposals.create).not.toHaveBeenCalled();
   });
 
-  it('withdraw marks their pending row; nothing waiting → 409 no_request', async () => {
+  it("withdraw marks the asker's own pending row; nothing of theirs → 409 no_request", async () => {
     proposals.withdraw.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
-    await service().withdraw(LESSON_ID);
-    expect(proposals.withdraw).toHaveBeenCalledWith(LESSON_ID);
-    await expect(service().withdraw(LESSON_ID)).rejects.toMatchObject({ response: { code: 'no_request' } });
-  });
-
-  it('isAheadOpen: open and not started', () => {
-    expect(isAheadOpen({ status: 'confirmed', starts_at: LATER }, NOW)).toBe(true);
-    expect(isAheadOpen({ status: 'scheduled', starts_at: NOW.toISOString() }, NOW)).toBe(false);
-    expect(isAheadOpen({ status: 'completed', starts_at: LATER }, NOW)).toBe(false);
+    await service().withdraw(LESSON_ID, FAMILY_USER);
+    expect(proposals.withdraw).toHaveBeenCalledWith({ lessonId: LESSON_ID, userId: FAMILY_USER.id });
+    await expect(service().withdraw(LESSON_ID, FAMILY_USER)).rejects.toMatchObject({
+      response: { code: 'no_request' },
+    });
   });
 });

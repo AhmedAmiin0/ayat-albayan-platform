@@ -1,11 +1,20 @@
-import { LESSON_STATUSES } from '@ab/catalog';
-import { instant } from '@ab/schedule';
+import { LESSON_STATUSES, type LessonStatus } from '@ab/catalog';
+import { instant, isOpenLesson } from '@ab/schedule';
 import { z } from 'zod';
 
 // The family's own lesson actions (owner 2026-11-17: «add button to accept or reject or
 // reschedule»): «سأحضر» (confirm), «أعتذر عن الحلقة» (the student's cancel under the
 // late_cancel_hours rule) and «اطلب موعدًا آخر» (a family lesson_proposals row, answered by
 // staff), with «سحب الطلب». Whitelists: never a staff id or an internal reason.
+
+/**
+ * Open and not started: the family may still confirm, excuse, ask or withdraw (the API's guard and
+ * the apps' «خيارات الحلقة» read the same rule).
+ */
+export const isFamilyActionable = (
+  l: { status: LessonStatus; starts_at: string },
+  now: Date,
+): boolean => isOpenLesson(l.status) && Date.parse(l.starts_at) > now.getTime();
 
 /** The family's latest request on a lesson: waiting, or declined with the academy's note. */
 export const portalLessonRequestSchema = z.object({

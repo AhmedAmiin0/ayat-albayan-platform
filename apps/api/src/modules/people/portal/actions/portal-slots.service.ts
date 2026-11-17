@@ -3,7 +3,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { SlotsService } from '@/modules/teaching/booking';
 import type { PortalLessonRow } from '@/modules/people/portal/lessons/portal-lessons.repo';
-import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { PortalLessonActions, type ActionCall } from './portal-actions.service';
 
 const MIN_MS = 60_000;
@@ -26,14 +25,12 @@ export function freeStarts(slots: readonly SlotView[], row: PortalLessonRow, now
 @Injectable()
 export class PortalSlotsService {
   constructor(
-    @Inject(PortalScopes) private readonly scopes: PortalScopes,
     @Inject(PortalLessonActions) private readonly actions: PortalLessonActions,
     @Inject(SlotsService) private readonly slots: SlotsService,
   ) {}
 
   async free(call: ActionCall, q: PortalSlotsQuery): Promise<PortalSlots> {
-    const student = await this.scopes.student(call.user, call.studentId);
-    const row = await this.actions.ahead(call);
+    const { student, row } = await this.actions.ahead(call);
     const length = (Date.parse(row.ends_at) - Date.parse(row.starts_at)) / MIN_MS;
     const durationMin = lessonDuration.safeParse(length);
     if (!durationMin.success || !row.teacher_id) throw conflict('unsupported_duration');
@@ -43,6 +40,8 @@ export class PortalSlotsService {
       to: q.to,
       durationMin: durationMin.data,
       studentIds: row.lesson_students.map((s) => s.student_id),
+      // The lesson that moves never clashes with itself.
+      excludeLessonId: row.id,
     });
     const slots = freeStarts(res.slots, row, new Date());
     return { tz: student.tz, step_min: res.step_min, slots };

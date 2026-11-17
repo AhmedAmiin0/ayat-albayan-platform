@@ -5993,7 +5993,6 @@ export type Database = {
       is_my_report: { Args: { p_report: string }; Returns: boolean };
       is_my_report_pdf: { Args: { p_name: string }; Returns: boolean };
       is_my_sales_lesson: { Args: { p_lesson: string }; Returns: boolean };
-      is_portal_lesson: { Args: { p_lesson: string }; Returns: boolean };
       lesson_counts_for_pay: {
         Args: { p_rule: string; p_status: Database['public']['Enums']['lesson_status'] };
         Returns: boolean;
