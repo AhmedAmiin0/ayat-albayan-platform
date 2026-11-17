@@ -10,7 +10,7 @@ import { closeCodes, codeSentTo, family, openCodes, post } from '../../support/p
 // student's own login. Example data only.
 
 type Phones = { phone_e164: string }[];
-type View = { student: { phone_e164: unknown }; guardian: { phones: Phones } };
+interface View { student: { phone_e164: unknown }; guardian: { phones: Phones } }
 
 /** A fresh Egyptian mobile number of the student's own (seedFamily numbers are Saudi). */
 const ownNumber = () => `+20109${String(Date.now()).slice(-7)}`;
