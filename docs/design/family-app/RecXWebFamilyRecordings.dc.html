@@ -236,29 +236,6 @@ a{color:#047857}a:hover{color:#065f46}
         </div>
       </div>
     </main>
-    <aside aria-labelledby="notes-title" style="margin: 24px 6px 0; padding: 16px clamp(12px, 2vw, 20px); border: 1px dashed #77857d; border-radius: 8px; background: #f1f5f3; display: grid; gap: 12px">
-      <h2 id="notes-title" style="margin: 0; font-size: 16px; font-weight: 700; color: #17201c">للمطوّر: ما يحتاج عملًا في الخادم أو التخزين</h2>
-      <ol style="margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 13px; line-height: 1.7; color: #2f3a35">
-        <li style="display: flex; gap: 10px; align-items: baseline"><span style="justify-self: start; align-self: center; display: inline-flex; align-items: center; min-height: 20px; padding-inline: 6px; box-sizing: border-box; border: 1px dashed #2f3a35; border-radius: 4px; background: #f1f5f3; color: #2f3a35; font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; vertical-align: middle">خادم 1</span><span>قائمة جديدة GET /portal/students/:id/recordings: الأحدث أولًا، بصفحات، ضمن PortalScopes ودون مسار الملف أو egress_id. لكل حلقة: الوقت، والمعلم/ة، والمدة، والحجم، ومعرّف التقرير، مع مخطط zod في packages/shared واستعلام في client-core. اليوم لا تصل إلا recording_id داخل صفوف التقارير، ويُشترط تقرير مُرسل.</span></li>
-        <li style="display: flex; gap: 10px; align-items: baseline"><span style="justify-self: start; align-self: center; display: inline-flex; align-items: center; min-height: 20px; padding-inline: 6px; box-sizing: border-box; border: 1px dashed #2f3a35; border-radius: 4px; background: #f1f5f3; color: #2f3a35; font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; vertical-align: middle">خادم 2</span><span>أجزاء التسجيل: تعيد القائمة كل الأجزاء الظاهرة للحلقة. اليوم يُبقي recordingByLesson آخر جزء فقط.</span></li>
-        <li style="display: flex; gap: 10px; align-items: baseline"><span style="justify-self: start; align-self: center; display: inline-flex; align-items: center; min-height: 20px; padding-inline: 6px; box-sizing: border-box; border: 1px dashed #2f3a35; border-radius: 4px; background: #f1f5f3; color: #2f3a35; font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; vertical-align: middle">خادم 3</span><span>إصلاح حد 60 تقريرًا: recordingUrl يتحقق عبر sent() المحدود بـ 60، فيفشل رابط تسجيل قديم (recording_not_found). يُستعمل sentOf غير المحدود.</span></li>
-        <li style="display: flex; gap: 10px; align-items: baseline"><span style="justify-self: start; align-self: center; display: inline-flex; align-items: center; min-height: 20px; padding-inline: 6px; box-sizing: border-box; border: 1px dashed #2f3a35; border-radius: 4px; background: #f1f5f3; color: #2f3a35; font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; vertical-align: middle">خادم 4</span><span>اسم الملف ونوعه («ورقة الواجب»): عمود عنوان في report_attachments. وبدونه تبقى التسمية «صورة 1».</span></li>
-        <li style="display: flex; gap: 10px; align-items: baseline"><span style="justify-self: start; align-self: center; display: inline-flex; align-items: center; min-height: 20px; padding-inline: 6px; box-sizing: border-box; border: 1px dashed #2f3a35; border-radius: 4px; background: #f1f5f3; color: #2f3a35; font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; vertical-align: middle">خادم 5</span><span>الظهور مخفي افتراضيًا (visible_to_student)، فتبقى الصفحة فارغة حتى يتيح المعلم/ة كل تسجيل وحده. قرار المالك: إظهار تلقائي لحلقات الطالب الواحد، أو إعداد افتراضي، أو إظهار جماعي.</span></li>
-      </ol>
-      <div style="display: grid; gap: 4px">
-        <h3 style="margin: 0; font-size: 13px; font-weight: 700; color: #17201c">في المتصفح فقط، دون عمل في الخادم</h3>
-        <ul style="margin: 0; padding-inline-start: 20px; font-size: 13px; line-height: 1.7; color: #2f3a35"><li>السرعة (playbackRate)، والرجوع والتقديم 10 ثوانٍ، وتشغيل الأجزاء متتالية.</li><li>الاستئناف: يُحفظ الموضع في المتصفح (localStorage) لكل حساب وتسجيل، ومنه «جديد» و«استمعت إليه كاملًا».</li><li>عند انتهاء الرابط الموقّع (ساعة) يطلب المشغّل رابطًا جديدًا من /url ثم يعود إلى الموضع نفسه.</li><li>يتسع هذا التبويب إلى عرض الصفحة كاملًا (البوابة اليوم 640 بكسل) ليظهر التقرير بجانب المشغّل، ويتراصّان على الهاتف.</li><li>لا زر تنزيل للأسرة حتى يقرر المالك سياسة التنزيل والمشاركة.</li></ul>
-      </div>
-      
-      <div style="display: grid; gap: 8px">
-        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px"><h3 style="margin: 0; font-size: 13px; font-weight: 700; color: #17201c">التبويب نفسه قبل أن يُتاح أي تسجيل</h3><span style="justify-self: start; align-self: center; display: inline-flex; align-items: center; min-height: 20px; padding-inline: 6px; box-sizing: border-box; border: 1px dashed #2f3a35; border-radius: 4px; background: #f1f5f3; color: #2f3a35; font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; vertical-align: middle">خادم 5</span></div>
-        <div style="display: grid; justify-items: center; gap: 6px; padding: 24px 16px; border: 1px solid #e2e8e5; border-radius: 8px; background: #ffffff; text-align: center">
-          <svg width="28" height="28" viewBox="0 0 16 16" aria-hidden="true" focusable="false" style="flex-shrink: 0; color: #4f5b55"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"></path></svg>
-          <p style="margin: 0; font-size: 16px; font-weight: 600; color: #17201c">لا توجد تسجيلات متاحة بعد</p>
-          <p style="margin: 0; max-width: 36rem; font-size: 13px; line-height: 1.7; color: #2f3a35">تظهر هنا تسجيلات الحلقات التي تُعقد في غرفة الأكاديمية بعد إرسال تقريرها وإتاحتها من الأكاديمية. ولا تظهر هنا تسجيلات الحلقات الجماعية.</p>
-        </div>
-      </div>
-    </aside>
   </div>
 
 </div>

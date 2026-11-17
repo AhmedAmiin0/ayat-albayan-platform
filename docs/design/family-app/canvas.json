@@ -1125,6 +1125,67 @@
       "is_interactive": true,
       "radius": 12,
       "expand": "fill"
+    },
+    "RecXFamilyVideoPlayer.dc.html": {
+      "x": 5640,
+      "y": 20880,
+      "w": 390,
+      "h": 1295,
+      "title": "الأسرة — التسجيل المرئي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXFamilyVideoPlayerDark.dc.html": {
+      "x": 6110,
+      "y": 20880,
+      "w": 390,
+      "h": 1295,
+      "title": "الأسرة — التسجيل المرئي — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXFamilyListMixed.dc.html": {
+      "x": 6580,
+      "y": 20880,
+      "w": 390,
+      "h": 1070,
+      "title": "الأسرة — التسجيلات الصوتية والمرئية",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXFamilyListMixedDark.dc.html": {
+      "x": 7050,
+      "y": 20880,
+      "w": 390,
+      "h": 1070,
+      "title": "الأسرة — التسجيلات الصوتية والمرئية — ليلي",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXStaffAdminRecordingMedia.dc.html": {
+      "x": 7520,
+      "y": 20880,
+      "w": 390,
+      "h": 844,
+      "title": "القيم — نوع تسجيل الحلقات",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "RecXWebFamilyVideo.dc.html": {
+      "x": 6800,
+      "y": 22350,
+      "w": 1280,
+      "h": 1996,
+      "title": "الأسرة على الويب — تسجيل مرئي",
+      "is_interactive": true
+    },
+    "RecXWebAdminRecordingMedia.dc.html": {
+      "x": 8160,
+      "y": 22350,
+      "w": 1280,
+      "h": 1080,
+      "title": "الإعدادات — القيم: نوع تسجيل الحلقات",
+      "is_interactive": true
     }
   },
   "order": [
@@ -1231,12 +1292,19 @@
     "RecXFamilyLesson.dc.html",
     "RecXFamilyListDark.dc.html",
     "RecXFamilyPlayerDark.dc.html",
+    "RecXFamilyVideoPlayer.dc.html",
+    "RecXFamilyVideoPlayerDark.dc.html",
+    "RecXFamilyListMixed.dc.html",
+    "RecXFamilyListMixedDark.dc.html",
+    "RecXStaffAdminRecordingMedia.dc.html",
     "RecXStaffRecordings.dc.html",
     "RecXStaffLessonFiles.dc.html",
     "RecXStaffUpload.dc.html",
     "RecXStaffReportLink.dc.html",
     "RecXStaffRecordingsDark.dc.html",
     "RecXWebFamilyRecordings.dc.html",
+    "RecXWebFamilyVideo.dc.html",
+    "RecXWebAdminRecordingMedia.dc.html",
     "RecXWebFamilyLesson.dc.html",
     "RecXWebStaffRecordings.dc.html",
     "RecXWebStaffLessonFiles.dc.html",

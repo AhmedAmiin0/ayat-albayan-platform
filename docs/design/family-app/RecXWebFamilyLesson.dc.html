@@ -191,20 +191,6 @@ a{color:#047857}a:hover{color:#065f46}
         </div>
       </div>
     </main>
-    <aside aria-labelledby="notes-title" style="margin: 24px 6px 0; padding: 16px clamp(12px, 2vw, 20px); border: 1px dashed #77857d; border-radius: 8px; background: #f1f5f3; display: grid; gap: 12px">
-      <h2 id="notes-title" style="margin: 0; font-size: 16px; font-weight: 700; color: #17201c">للمطوّر: ما يحتاج عملًا في الخادم أو التخزين</h2>
-      <ol style="margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 13px; line-height: 1.7; color: #2f3a35">
-        <li style="display: flex; gap: 10px; align-items: baseline"><span style="justify-self: start; align-self: center; display: inline-flex; align-items: center; min-height: 20px; padding-inline: 6px; box-sizing: border-box; border: 1px dashed #2f3a35; border-radius: 4px; background: #f1f5f3; color: #2f3a35; font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; vertical-align: middle">خادم 1</span><span>صفحة الحلقة للأسرة تُبنى من الموجود: /report-pages/by-report/:id (الأسطر والمرفقات وPDF) و/portal/students/:id/recordings/:id/url. لكن صفحة التقرير لا تحمل recording_id ولا أجزاءه، فيُضاف إليها ليعمل التسجيل من كل مدخل: الجرس، و«ما المطلوب»، والإشعار.</span></li>
-        <li style="display: flex; gap: 10px; align-items: baseline"><span style="justify-self: start; align-self: center; display: inline-flex; align-items: center; min-height: 20px; padding-inline: 6px; box-sizing: border-box; border: 1px dashed #2f3a35; border-radius: 4px; background: #f1f5f3; color: #2f3a35; font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; vertical-align: middle">خادم 2</span><span>نوع الملف (واجب، مادة الحلقة) واسمه: عمودا kind وtitle في report_attachments، أو ملفات على مستوى الحلقة كما في لوحة «ملفات الحلقة» للموظفين.</span></li>
-        <li style="display: flex; gap: 10px; align-items: baseline"><span style="justify-self: start; align-self: center; display: inline-flex; align-items: center; min-height: 20px; padding-inline: 6px; box-sizing: border-box; border: 1px dashed #2f3a35; border-radius: 4px; background: #f1f5f3; color: #2f3a35; font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; vertical-align: middle">خادم 3</span><span>معاينة الصفحة الأولى من PDF: صورة يصنعها الخادم بإعادة استعمال معاينة PDF في المحادثة (messaging/inbox/files/pdf/pdf-preview.service.ts) على حاوية reports. والتنزيل الفعلي يحتاج خيار download (Content-Disposition) في signedDownload؛ اليوم يفتح الرابط الملف فقط.</span></li>
-        <li style="display: flex; gap: 10px; align-items: baseline"><span style="justify-self: start; align-self: center; display: inline-flex; align-items: center; min-height: 20px; padding-inline: 6px; box-sizing: border-box; border: 1px dashed #2f3a35; border-radius: 4px; background: #f1f5f3; color: #2f3a35; font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; vertical-align: middle">خادم 4</span><span>ملف أُضيف بعد إرسال التقرير: يحتاج مسار رفع لا يغلقه sent_at (لوحة «ملفات الحلقة» للموظفين).</span></li>
-      </ol>
-      <div style="display: grid; gap: 4px">
-        <h3 style="margin: 0; font-size: 13px; font-weight: 700; color: #17201c">في المتصفح فقط، دون عمل في الخادم</h3>
-        <ul style="margin: 0; padding-inline-start: 20px; font-size: 13px; line-height: 1.7; color: #2f3a35"><li>الملاحظات الصوتية موجودة اليوم مرفقاتٍ صوتية في report_attachments، ويشغّلها المشغّل نفسه داخل الصفحة.</li><li>لا مبالغ في هذه الصفحة، فهي صالحة لدخول الطالب بنفسه.</li><li>على الهاتف يأتي التقرير أولًا، ثم التسجيل، ثم الملفات.</li></ul>
-      </div>
-      
-    </aside>
   </div>
 
 </div>
