@@ -1,7 +1,7 @@
 import { backoffDelay, withJitter } from '@ab/shared';
 import { GoogleApiError } from '@/modules/platform/google-sync/google-client.port';
 
-/** Five attempts in all (docs/24 §3), then `failed` until an admin retries (lessons: the reconcile). */
+/** Five attempts (docs/24 §3), then `failed` until an admin retries (lessons: the reconcile). */
 export const MAX_ATTEMPTS = 5;
 const BACKOFF = { baseMs: 30_000, factor: 2, capMs: 30 * 60_000 };
 
@@ -44,7 +44,7 @@ const plainText = (e: unknown): string => (e instanceof Error ? e.message : Stri
 const textOf = (e: unknown): string =>
   e instanceof GoogleApiError ? `${e.status} ${e.reason}` : plainText(e);
 
-/** Never a token or a body: status and Google's reason only, at most 500 chars (the column check). */
+/** Never a token or a body: status and Google's reason only, ≤ 500 chars (the column check). */
 export function errorText(e: unknown): string {
   return textOf(e).replace(/(ya29|1\/\/)[A-Za-z0-9._-]+/g, '[redacted]').slice(0, 500);
 }

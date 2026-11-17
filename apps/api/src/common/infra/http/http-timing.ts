@@ -10,8 +10,11 @@ export const SLOW_HTTP_MS = 1_000;
 
 /** A path segment with 5+ digits (a phone number id, a phone, a message id) → `:id`. */
 const ID_LIKE = /\/[^/\s]*\d{5,}[^/\s]*/g;
+/** An email (a Google calendar id) or a long opaque id (Drive / Sheets / events) → `:id`. */
+const OPAQUE = /\/(?:[^/\s]*(?:%40|@)[^/\s]*|[A-Za-z0-9_-]{20,})(?=\/|:|$)/g;
 
-export const maskedWhere = (where: string): string => where.replace(ID_LIKE, '/:id');
+export const maskedWhere = (where: string): string =>
+  where.replace(ID_LIKE, '/:id').replace(OPAQUE, '/:id');
 
 interface HttpTiming {
   where: string;

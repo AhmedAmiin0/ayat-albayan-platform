@@ -45,7 +45,7 @@ const transportReason = (message: string): string =>
 const reasonOfThrown = (e: Thrown): string =>
   e.response?.data === undefined ? transportReason(e.message ?? '') : reasonOf(e.response.data);
 
-/** Any failure → GoogleApiError(status, reason); no status (network) → 0 'network'. Never a token. */
+/** Any failure → GoogleApiError(status, reason); no status (network) → 0 'network'. No token. */
 export function toGoogleError(e: unknown): GoogleApiError {
   if (e instanceof GoogleApiError) return e;
   const parsed = thrownSchema.safeParse(e);
