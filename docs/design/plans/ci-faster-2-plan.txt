@@ -1,0 +1,93 @@
+1. Lint parity reads the ESLint run that verify lint already makes (F1 + F2)
+   CHANGE: 1. Add an ESLint formatter in packages/config. It writes <pkg>/.lint/eslint.json and returns stylish text, so the log stays readable. The JSON holds `messages` plus every `suppressedMessages` entry whose `suppressions` kind is 'file'. ESLint 10.11.0 sets that kind; I checked it in lib/services/suppressions-service.js:275-289. `messages` plus those entries are exactly parity's 'no suppressions' run. 2. verify lint calls `pnpm turbo lint ... -- -f <absolute formatter path>`. 3. turbo.json lint gets outputs ['.lint/**'] and the formatter file as an input, so a replayed package restores its findings. 4. After turbo lint, the lint row runs `pnpm turbo build --filter='./packages/*'` (replayed), `pnpm lint:oxfull`, then `pnpm lint:parity` with two variables:    - LINT_PARITY_ESLINT=<folder>. eslint-run.mjs then lints only the packages that have no file, so old cache entries without a file still get linted.    - LINT_PARITY_OXLINT=oxlint-report.json (F2). Parity reuses the report run.mjs wrote one step earlier instead of running type-aware Oxlint again. 5. Delete the lint-parity job and remove it from check.needs. Move its oxlint prune diff and the lint-parity-report artifact into the lint row, name the row `lint + parity (oxlint)`, and print turbo's lint time in the summary. 6. Tests: add a unit test showing that a finding hidden by a file suppression, which Oxlint lacks, still counts as missing. Update workflows-fast.test.mjs:45-58, docs/31b and the comment at parity.mjs:62. Fallback: if the merge gets hard, ship F2 alone first (-1.2 min).
+   EXPECTED: PR: -2 min at p50 and -2 to -3 min at p90. Lint parity is the last job in 11 of 17 green PR runs (10.9/13.7 min). The merged lint row takes about 9/11.5 min (6.0 lint + 1.2 oxfull + 1.7 compare).
+Per run: one fewer job and about 8 runner-minutes less, because the 533 s second ESLint pass is gone.
+Develop: 0-1 min on its own; the rest comes with item 2.
+The PR's own CI run shows the saving.
+   KEEPS: The ESLint gate does not change: same turbo lint, same suppressions, --max-warnings 0. Oxlint parity uses the same compare.mjs and config-parity over the same unsuppressed set of ESLint findings and the same Oxlint report. The oxfull baseline gate and both prune diffs stay.
+2. Develop skips verify and guards when a green PR run already checked the same tree (F3)
+   CHANGE: PR side: `changes` outputs `git rev-parse HEAD^{tree}`. When the change is code and verify (which includes parity after item 1) and guards all succeeded, `check` uploads an artifact named ci-green-tree-<tree>, kept 7 days.  Push side: a new script in tools/scripts/ci-checks parses the API response with zod and has a unit test. It calls GET /actions/artifacts?name=ci-green-tree-<tree> and sets verified=true only when the match's workflow_run.head_repository_id is this repo. verified is forced false when: - the push touches pnpm-lock.yaml or the files in the vitest cache key, so develop still writes the default-branch vitest and pnpm caches that PRs read; - vars.VERIFIED_TREE_SKIP == 'false' (a kill switch, like RUN_E2E); - the API call fails.  Job changes: - verify and guards add `&& needs.changes.outputs.verified != 'true'`. - check accepts them as skipped when verified is true. - baselines becomes needs [changes, guards] with always(), and runs when guards succeeded or verified is true. - e2e does not change. Develop's cancel-in-progress stays false.  Update workflows.test.mjs:45-58 and workflows-fast.test.mjs in the same PR.
+   EXPECTED: About 21 of 29 recent develop pushes would qualify (estimated from timestamps; only #743 is proven by matching task hashes).
+On a qualifying push:
+- develop wall: 13.5 → about 9.5 min, with e2e as the whole run (with item 4);
+- runner-minutes: 164 → about 80, and 16 fewer jobs;
+- the wait behind the previous develop run (p90 10.6 min) and PR queues shrink with it;
+- merge-to-production: about -3 min.
+The net effect is not measured. Develop stops writing default-branch turbo entries for lint and tests, so a PR's first run may replay less. After a week, re-measure the PR turbo replay rate (today lint 28%, api 32%, web 48%); if PR p50 rises, set the switch to false.
+The skip path first runs on this PR's own merge push; the PR's CI run cannot prove it.
+   KEEPS: Lint, oxlint parity, typecheck, unit tests and guards all passed on the identical tree, ci.yml included. Full e2e on both projects still runs on every develop push, baselines still prunes, and deploy still waits for a green ci run. Fail-safe: no match, an artifact from a fork, an API error or the switch means everything runs.
+3. The e2e spec selection stops forcing the full suite for family-app and API test-fixture changes (F5)
+   CHANGE: In select.mjs: - Add ^apps/family-mobile/ and ^packages/mobile-kit/ to NO_E2E, matching what ci.yml:74 already exempts. - bundleUsers reads apps/family-mobile and packages/mobile-kit as mobile readers of i18n keys and ignores them, as it does staff-mobile. - Add ^apps/api/src/common/auth/parity/ to UNIT. I checked that access-before.json is read only by permissions.parity.test.ts and route-walk.test-util.ts. - Collect every full-suite reason and print them all in the notice. Update select.test.mjs and i18n.test.mjs. I also checked that staff-web, api and e2e import nothing from @ab/mobile-kit.
+   EXPECTED: In up to 19 of 23 PR runs with e2e, one of these paths was the first reason for the full suite. Each run that narrows:
+- drops from 9 e2e machines to 2-4, saving 30-40 runner-minutes;
+- fans out to 16-19 jobs instead of 25, under the 20-job ceiling. Lone runs of that size start every job within 2-4 s, so PR wall drops by 1-4 min on those runs.
+The new notice will show the real hit rate.
+   KEEPS: e2e still runs on PRs for the specs the change can reach, and the full suite on both projects runs on every develop push as the safety net. Every other unmapped path still forces the full suite.
+4. Refresh the e2e shard weights once, from the newest develop run (F4, done once by hand)
+   CHANGE: Download the e2e-durations-push-* artifacts of the newest green develop ci run and merge them with `node tools/scripts/ci-checks/e2e-shards.mjs merge` in the cloud session that builds the PR. Commit the result as e2e/shard-durations.json (last changed 10-30; 179 entries for 204 spec files). Do not download the weights per shard. Shards that start minutes apart could read different weights and cut at different points, so some specs would run twice and some never, and the run would still be green. 12 develop shards are left for later.
+   EXPECTED: Measured spec time per develop shard ranges from 238 to 467 s (mean 328); balanced cuts bring the slowest to about 340-350 s. e2e is the last job in 10 of 19 green develop runs, so develop wall and merge-to-production drop by about 2 min. PRs gain about 1 min on the slowest shard, which is rarely on the path.
+   KEEPS: Full suite unchanged: Playwright still assigns every test to exactly one shard. Only the cut points move, and every shard reads them from one committed file.
+5. Split test mobile into two shards and keep jest's transform cache (F6)
+   CHANGE: Replace the `test mobile` row with `test mobile 1/2` and `test mobile 2/2`, using args '-- --shard=1/2' and '-- --shard=2/2' (jest 30.5 supports --shard). In CI, packages/mobile-kit/jest.base.cjs sets cacheDirectory to <rootDir>/node_modules/.jest-cache, read from an environment variable. CI restores and saves that folder like the vitest cache. The key covers the lockfile, babel.config.cjs, the jest configs and the shard; save on develop, or when nothing was restored. Update mobile-family.test.mjs:73-79.
+   EXPECTED: test mobile: 8.6/12.2 → about 5/7 min. It was the last job in 8 of 28 PR runs (5 of the 11 red ones), and after item 1 it sets the PR p90: PR p90 -1 to -3 min. Cost: one more job, about 30 s of setup.
+   KEEPS: Every staff-mobile test still runs exactly once. Jest shards by file path, and the cache holds transformed code only, never results.
+6. Red lint: prune suppressions only when ESLint reports stale ones (F12)
+   CHANGE: Tee the turbo lint output to a file. Run the prune step only when that output contains 'There are suppressions left that do not occur anymore', and pass `--filter` for the packages that printed it (turbo prefixes each line with the package name). Update the regex in workflows-fast.test.mjs:79-83.
+   EXPECTED: When lint fails on a real violation, the red check arrives up to 6.5 min sooner (the prune took 389/486 s in 7 of 28 PR runs) and the runner is freed. A red run caused by stale suppressions prunes only its own packages, in 1-3 min.
+   KEEPS: The lint gate does not change: the job is red either way, and the prune diff still prints when suppressions are stale.
+7. Fold the small verify rows into fewer jobs (F10)
+   CHANGE: - One `typecheck + bundles` row runs `pnpm turbo typecheck bundle`; only the two Expo apps have a bundle task. - Merge test family into test others by removing the family-mobile and @ab/mobile-kit exclusions from its filter. Update mobile-bundle.test.mjs:14-18 and mobile-family.test.mjs.
+   EXPECTED: 3 fewer jobs per full run, so with items 1 and 5 the fan-out goes from 25 to 22, and about 1.5 runner-minutes less setup. The e2e and test shards queue less. Not on the critical path by itself.
+   KEEPS: The same typecheck, both Metro bundles and the family and mobile-kit tests all still run, in fewer jobs. When a merged row goes red, the log shows which part failed.
+8. Stop storing a 402 MB pnpm store per PR ref (F14)
+   CHANGE: Replace setup-node `cache: pnpm` with actions/cache/restore of the pnpm store (key pnpm-store-<lockfile hash>, restore-keys pnpm-store-) in every job of ci, deploy-staging, mobile and db-migrate. Save it once, from `baselines`, when the key missed. baselines runs on every develop code push, including after item 2. For vitest, develop saves only when the lockfile or config part of the restored key differs, instead of 8 new run-id keys per run. Read setup-node v4's action.yml at the pinned tag first.
+   EXPECTED: Frees about 5.6 GB of the 10.73 GB Actions cache (16 store copies, plus 179 vitest entries holding 1.88 GB). Turbo and vitest entries then outlive today's ~44 h eviction. Unmeasured: perhaps 0.5-2 min for PRs on an older base, and a lockfile PR restores a close store instead of starting cold.
+   KEEPS: No gate is touched; only caches change, and installs stay --frozen-lockfile.
+9. API Dockerfile: cache the browser/apt layer and the pnpm store (F8; ranked low for risk, not size; can be dropped)
+   CHANGE: - Stage 2 installs chromium-shell and the apt packages before `COPY --from=build`, taking the playwright-core version as a build arg read from pnpm-lock.yaml. After the COPY, it checks that /repo/apps/api/node_modules/playwright-core has that version. - Stage 1 installs with `RUN --mount=type=cache,id=ayat-pnpm,...` on the pnpm store, or adds a `pnpm fetch` layer built from the lockfile. - Update workspace-builds.test.mjs:14-16 and compose-pdf.test.mjs:64-65.
+   EXPECTED: Merge-to-production about -1.5 min on every deploy: the browser/apt layer (~47 s) comes from cache, and the install drops by ~45 s of its 56 s.
+   KEEPS: The image build and its PDF smoke step still run on every deploy. roll.sh runs under `set -eu` and builds (line 76) before it replaces any container, so a failed build leaves the running API in place (checked). No CI job builds this image, so this PR's own deploy is the first build of the new Dockerfile; watch it.
+10. deploy-staging builds the web app in its own job while plan and migrate run (F11; can be dropped)
+   CHANGE: Add a `web` job (needs preflight, environment develop, the same VITE_* values) that builds apps/staff-web/dist and uploads it as an artifact. «deploy» gets needs [preflight, migrate, web], downloads the artifact instead of building, and its `if` also checks web's result.
+   EXPECTED: Deploy and merge-to-production about -1 min: setup about 11 s, install about 10 s and the build (46/72 s) leave the deploy path. Runs where a migration waits for the reviewer gain nothing.
+   KEEPS: Same build of the same commit with the same environment values. Migrations keep their reviewer gate, and deploy still runs only after a green ci run.
+
+TARGETS: Baseline: 11-14 to 11-17. Targets with items 1-10 and no owner choice:
+
+| Metric | p50 now → target | p90 now → target |
+|---|---|---|
+| PR ci, whole run | 12.7 → 10.5 min or less | 17.7 → 14.5 min or less |
+| Develop ci | 13.5 → 10 min or less | 23.1 → 14 min or less |
+| Merge to production (no migration) | 27.3 → 21 min or less | not set |
+| Runner-minutes per PR run | 115 → 95 or less | not set |
+| Runner-minutes per develop run | 164 → 90 or less | not set |
+| PR with a red lint: red check | about 13 → 9 min or less | not set |
+
+- PR floor: the lint row (about 9/11.5 min) and test api (6.3/9.2 min).
+- A full PR run still fans out to 22 jobs, over the inferred 20-job ceiling, so the p90 queue stays except on runs that item 3 narrows.
+- Develop: a skipped (verified) push is e2e alone, about 8-9.5 min. Other pushes end with the lint row at about 10.5 min.
+- With F9 (40 jobs) as well: PR about 10/12 and develop p90 about 12. With F7: merge to production about 17.
+- Runs with a migration keep the reviewer wait (63 min measured).
+
+After a week of merges, repeat the same measurement and add the PR turbo replay rate (item 2's risk).
+
+Every changed script keeps rules 1-4: 150 lines or fewer, 3 parameters or fewer, zod at the GitHub API boundary, and a *.test.mjs beside it. All checks run only in GitHub Actions or a cloud session, never on the owner's PC.
+
+OWNER CHOICES: 1. Move the account to GitHub Pro (F9). Queue p90 is 2-6 min on every job, and 427-877 s when runs overlap. The 20-job ceiling is inferred from job timings (the peak was exactly 20, held 419 times), not confirmed. Check the billing page and GitHub's current price and concurrency limits first.
+
+2. Build the API image on the VPS at push time (F7, merge to production about -4 min). This adds a push-only workflow that holds the production SSH deploy key and builds on the server that runs the live CRM. It needs your go.
+
+3. A turbo remote cache that is not tied to one git branch (F13). It would reverse the 10-30 decision of no TURBO_TOKEN. Options: Vercel Remote Cache, or a server on the VPS backed by MinIO. Fork PRs get no token. It removes the cost of item 2 (fewer develop cache entries).
+
+4. Larger paid runners. GitHub offers them only to organisations on the Team or Enterprise plan, so the repo would have to move to an organisation.
+
+5. CLAUDE.md rule 3 names the CI job «lint parity (oxlint)» as the place that prints the Oxlint prune diff. After item 1, that diff prints in «verify (lint + parity (oxlint))». Please approve this one-line wording change in the same PR.
+
+6. Kill switch for item 2: setting the repository variable VERIFIED_TREE_SKIP to false (Settings → Variables) turns the develop skip off, like RUN_E2E.
+
+No required-check setting needs changing. develop has no branch protection and no rulesets (checked with gh api), so removing «lint parity (oxlint)» and splitting «test mobile» breaks no setting.
+
+Not in this PR:
+- F15, the threads pool for the api vitest tests: needs its own experiment PR and measurement.
+- F16, the i18n turbo inputs: correct as they are.
+- 12 develop e2e shards: wait until the slots item 2 frees are measured.
