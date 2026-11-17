@@ -4,12 +4,12 @@ import { reportsApp } from '@/modules/reporting/reports/test-app';
 import { ReportFilesService } from './report-files.service';
 
 const PATH = `${REPORT_ID}/0b7e4c1e-3f5a-4d2b-9c41-5a8e2f6d7c10.webm`;
-const WEBM = Uint8Array.of(0x1a, 0x45, 0xdf, 0xa3, 0x9f, 0x42, 0x86, 0x81, 0x01, 0x42, 0xf7, 0x81);
+const WEBM = Uint8Array.of(0x1a, 0x45, 0xdf, 0xa3, 0x9f, 0x42, 0x86, 0x81, 0x01, 0x42, 0xf7);
 const HTML = Uint8Array.from('<html><scrip', (c) => c.charCodeAt(0));
 const VOICE = { mime: 'audio/webm' as const, size: 4096, path: PATH };
 const SAVED = { id: 'a1', storage_path: PATH, mime: 'audio/webm', size: 4096, created_at: '' };
 
-// Audit A2: the first bytes, not the client's word, decide the type (the no-login link uses it too).
+// Audit A2: the first bytes, not the client's word, decide the type (the no-login link too).
 describe('ReportFilesService.register: the file type by content', () => {
   let h: Awaited<ReturnType<typeof reportsApp>>;
   let files: ReportFilesService;

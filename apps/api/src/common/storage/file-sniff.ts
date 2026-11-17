@@ -1,7 +1,8 @@
-/** How many leading bytes tell the formats of an upload apart (RIFF....WEBP and ftyp + brand need 12). */
+/** How many leading bytes tell an upload's formats apart (RIFF....WEBP, ftyp + brand: 12). */
 export const SNIFF_BYTES = 12;
 
-const ascii = (b: Uint8Array, from: number, to: number) => String.fromCharCode(...b.slice(from, to));
+const ascii = (b: Uint8Array, from: number, to: number) =>
+  String.fromCharCode(...b.slice(from, to));
 const HEIC_BRANDS = new Set(['heic', 'heix', 'hevc', 'hevx', 'mif1', 'msf1']);
 /** ADTS: 12 sync bits, MPEG-4/2 flag, layer 00 (FFF0/FFF1/FFF8/FFF9). */
 const isAdts = (b: Uint8Array) => b[0] === 0xff && ((b[1] ?? 0) & 0xf6) === 0xf0;
@@ -28,7 +29,8 @@ const FORMATS: readonly (readonly [string, (b: Uint8Array) => boolean])[] = [
 
 /**
  * The mime the first bytes say the file is: JPEG, PNG, WebP, HEIC, PDF or ogg, MP4, webm, WAV,
- * AAC or MP3 audio; null for anything else. Each caller compares it with its own list (an invoice still refuses audio).
+ * AAC or MP3 audio; null for anything else. Each caller compares it with its own list (an
+ * invoice still refuses audio).
  */
 export function sniffMime(b: Uint8Array): string | null {
   return FORMATS.find(([, is]) => is(b))?.[0] ?? null;

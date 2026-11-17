@@ -35,7 +35,7 @@ const hostOf = (raw: string | undefined): string | null => {
  * T1: a DB LIVEKIT_URL («التكاملات») must name the host the server's env names; once env pins it,
  * a DB value elsewhere is dropped from the overlay (it would get every join and server token).
  */
-export function livekitHostPinned(dbValue: string, envValue = process.env['LIVEKIT_URL']): boolean {
+export function livekitHostPinned(dbValue: string, envValue = process.env.LIVEKIT_URL): boolean {
   const pinned = hostOf(envValue);
   return pinned === null || hostOf(dbValue) === pinned;
 }
