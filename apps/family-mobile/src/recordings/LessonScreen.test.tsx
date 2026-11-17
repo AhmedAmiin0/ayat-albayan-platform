@@ -34,6 +34,8 @@ test('the recording plays in the app; the report PDF and the files are listed', 
   await renderWithQuery(<LessonScreen />, freshQueryClient());
   expect(await screen.findByText('صفحة الواجب')).toBeTruthy();
   expect(screen.getByText(F.reportPdf)).toBeTruthy();
+  expect(screen.getByText(F.header.replace('{n}', '3'))).toBeTruthy();
+  expect(screen.getByText(F.lessonOf.replace('{when}', 'الأحد 15 نوفمبر'))).toBeTruthy();
   expect(screen.getByText(F.kinds.voice_note)).toBeTruthy();
   expect(await screen.findByRole('button', { name: t.audioPlayer.play })).toBeTruthy();
   expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/A/url');

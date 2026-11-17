@@ -46,7 +46,6 @@ export function useStatusPick(studentId: string) {
   return {
     ask,
     hint: HINT[state],
-    pending: state === 'pending',
     pick: (status: StudentStatus, set: () => void) => routes[statusRoute(status)](set),
     close: () => setAsk(null),
   };

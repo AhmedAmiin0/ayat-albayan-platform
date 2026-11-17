@@ -118,7 +118,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       </dl>
       <StudentFamily siblings={student.siblings} contactIsSelf={student.contact_is_self ?? false} />
       <TrialDatesSection student={student} />
-      <CourseCardPanel studentId={student.id} />
+      <CourseCardPanel studentId={student.id} chatPhone={student.guardian.phone_e164} />
       <BalanceCard student={student} />
       <StudentPayments studentId={student.id} />
       <StudentInvoices studentId={student.id} />

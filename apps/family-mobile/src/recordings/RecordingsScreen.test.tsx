@@ -28,7 +28,9 @@ test('Meet lessons: the empty note says why', async () => {
   mockItems = [];
   await renderWithQuery(<RecordingsScreen />, freshQueryClient());
   expect(await screen.findByText(F.empty)).toBeTruthy();
-  expect(screen.getByText(F.emptyHint)).toBeTruthy();
+  expect(screen.getByText(F.emptyMeet.replace('{name}', 'سارة'))).toBeTruthy();
+  expect(screen.getByText(F.emptyRoom)).toBeTruthy();
+  expect(screen.queryByText(F.recordingsHint)).toBeNull();
 });
 
 test('one row per lesson, «جديد» until heard; a row opens the lesson page', async () => {
@@ -36,7 +38,8 @@ test('one row per lesson, «جديد» until heard; a row opens the lesson page'
   await renderWithQuery(<RecordingsScreen />, freshQueryClient());
   const [newest, ...rest] = await screen.findAllByRole('button', { name: F.recording });
   expect(rest).toHaveLength(1);
-  expect(screen.getByText(F.parts.replace('{n}', '2'))).toBeTruthy();
+  expect(screen.getByText(F.parts.two)).toBeTruthy();
+  expect(screen.getByText(F.recordingsHint)).toBeTruthy();
   expect(screen.getAllByText(F.isNew)).toHaveLength(2);
   if (newest) await fireEvent.press(newest);
   expect(router.push).toHaveBeenCalledWith('/lesson/L1?student=s1');

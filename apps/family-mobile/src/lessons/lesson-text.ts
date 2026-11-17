@@ -8,6 +8,7 @@ import {
   type PortalTeacher,
 } from '@ab/shared';
 import { locale, t } from '@ab/mobile-kit';
+import type { OptionsTitle } from './options/OptionsMenu';
 
 // A lesson's time in the family's words (Western digits, the viewer's 12 / 24 h cycle), on the
 // clock it is given (the student's zone for one child, the phone's for the week).
@@ -57,16 +58,7 @@ function lessonName(at: Date, clock: ClockOptions, now: Date): string {
   return word ? LESSON_DAY[word]() : t.portal.actions.lessonOn.replace('{date}', dateLine(at, clock));
 }
 
-/** «خيارات الحلقة»'s words for one lesson (canvas LessonXDecline). */
-export interface OptionsTitle {
-  /** «حلقة الغد · 6:30 م – 7:15 م». */
-  heading: string;
-  /** «الإثنين 17 نوفمبر · مع فاطمة · 45 دقيقة». */
-  subline: string;
-  /** «الاعتذار عن حلقة الغد». */
-  decline: string;
-}
-
+/** «خيارات الحلقة»'s heading, date line and excuse title (canvas LessonXDecline). */
 export function optionsTitle(lesson: PortalLesson, clock: ClockOptions, now: Date): OptionsTitle {
   const at = new Date(lesson.starts_at);
   const name = lessonName(at, clock, now);

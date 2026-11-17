@@ -4,10 +4,19 @@ import { useState } from 'react';
 import { AppText, Button, ErrorLine, MenuSheet, t, type, useTheme } from '@ab/mobile-kit';
 import { DeclineForm } from './DeclineForm';
 
-interface OptionsMenuProps {
-  lesson: PortalLesson;
+/** «خيارات الحلقة»'s words for one lesson (canvas LessonXDecline). */
+export interface OptionsTitle {
   /** «حلقة الغد · 6:30 م – 7:15 م». */
   heading: string;
+  /** «الإثنين 17 نوفمبر · مع فاطمة · 45 دقيقة». */
+  subline: string;
+  /** «الاعتذار عن حلقة الغد». */
+  decline: string;
+}
+
+interface OptionsMenuProps {
+  lesson: PortalLesson;
+  title: OptionsTitle;
   now: Date;
   open: boolean;
   busy: boolean;
@@ -29,7 +38,7 @@ const VARIANT: Readonly<Record<LessonOption, 'primary' | 'secondary' | 'ghost'>>
  * «سأحضر», «اطلب موعدًا آخر» / «سحب الطلب», «أعتذر عن الحلقة» (which opens its form in place).
  */
 export function OptionsMenu(props: OptionsMenuProps) {
-  const { lesson, heading, now, open, busy, error, onClose, onPick, onDecline } = props;
+  const { lesson, title, now, open, busy, error, onClose, onPick, onDecline } = props;
   const { color } = useTheme();
   const [declining, setDeclining] = useState(false);
   const close = () => {
@@ -41,12 +50,14 @@ export function OptionsMenu(props: OptionsMenuProps) {
   return (
     <MenuSheet open={open} label={A.menuTitle} testID="lesson-options" onClose={close}>
       <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>
-        {heading}
+        {title.heading}
       </AppText>
+      <AppText style={{ fontSize: type.size.sm, color: color.ink2 }}>{title.subline}</AppText>
       {error ? <ErrorLine message={error} /> : null}
       {declining ? (
         <DeclineForm
           lesson={lesson}
+          title={title.decline}
           busy={busy}
           onDecline={onDecline}
           onBack={() => setDeclining(false)}
