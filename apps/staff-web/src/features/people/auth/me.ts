@@ -15,6 +15,8 @@ export interface Me {
   permissions: Permission[];
   /** The person's own IANA zone (docs/34 §2); null → this browser's zone. */
   tz?: string | null;
+  /** A test account (docs/56): the «تجريبي» chip; absent from an older API = real. */
+  is_test?: boolean;
 }
 
 /** 403 account_disabled: the profile was disabled while the token was still valid (checked structurally, no import of ApiError). */

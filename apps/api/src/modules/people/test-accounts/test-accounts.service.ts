@@ -1,4 +1,4 @@
-import type { TestFlagResult } from '@ab/shared';
+import { testFlagResultSchema, type TestFlagResult } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { TestFlagReader } from '@/common/auth/test-flag';
 import { notFound } from '@/common/http/errors';
@@ -26,6 +26,6 @@ export class TestAccountsService {
     const flipped = await this.repo.set(write);
     if (!flipped) throw notFound(MISSING[write.kind]);
     this.flags.forget(flipped.profiles);
-    return { id: flipped.id, is_test: flipped.is_test };
+    return testFlagResultSchema.parse({ id: flipped.id, is_test: flipped.is_test });
   }
 }

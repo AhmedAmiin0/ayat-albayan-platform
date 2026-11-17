@@ -1,6 +1,16 @@
 import { dateText, type PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
-import { AppText, Avatar, Mark, type, useNow, useTheme } from '@ab/mobile-kit';
+import {
+  AppText,
+  Avatar,
+  Mark,
+  StatusChip,
+  t,
+  type,
+  useIsTestAccount,
+  useNow,
+  useTheme,
+} from '@ab/mobile-kit';
 import { FamilyBell } from './FamilyBell';
 import { useFamilyClock } from '@/portal';
 
@@ -13,11 +23,15 @@ interface GreetingHeaderProps {
   student?: PortalStudent;
 }
 
-/** Home's top (canvas Home, StudentHome): the mark, today's date over «أهلًا بك», the bell. */
+/**
+ * Home's top (canvas Home, StudentHome): the mark, today's date over «أهلًا بك», the bell, and
+ * «تجريبي» for a test account (docs/56), so nobody mistakes it for a real family.
+ */
 export function GreetingHeader({ title, over, student }: GreetingHeaderProps) {
   const { color } = useTheme();
   const clock = useFamilyClock();
   const today = dateText(useNow(), clock, { weekday: 'long', day: 'numeric', month: 'long' });
+  const isTest = useIsTestAccount();
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8 }}>
       {student ? <Avatar name={student.name} id={student.id} decorative /> : <Mark size={44} />}
@@ -30,6 +44,7 @@ export function GreetingHeader({ title, over, student }: GreetingHeaderProps) {
           {title}
         </AppText>
       </View>
+      {isTest && <StatusChip tone="act" glyph="hollow" size="sm" label={t.testAccounts.chip} />}
       <FamilyBell />
     </View>
   );
