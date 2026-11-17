@@ -1,8 +1,8 @@
-import type { LessonRoomState, PortalLessons, PortalStudent } from '@ab/shared';
+import type { PortalLessons, PortalStudent } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { PortalHistoryService } from '@/modules/people/portal/history/portal-history.service';
 import { PortalReportsService } from '@/modules/people/portal/reports/portal-reports.service';
-import { LessonRoomStates, type RoomLesson } from '@/modules/teaching/lessons';
+import { familyNamed, LessonRoomStates, type RoomLesson, type RoomStates } from '@/modules/teaching/lessons';
 
 type LessonExtras = Required<Pick<PortalLessons, 'prepare' | 'month'>>;
 
@@ -19,9 +19,12 @@ export class PortalLessonExtras {
     @Inject(LessonRoomStates) private readonly live: LessonRoomStates,
   ) {}
 
-  /** The `room` of each lesson (LessonRoomStates: only those near now are looked up). */
-  rooms(lessons: readonly RoomLesson[], now: Date): Promise<Map<string, LessonRoomState | null>> {
-    return this.live.of(lessons, now);
+  /**
+   * The `room` of each lesson (LessonRoomStates: only those near now are looked up), naming only
+   * the teacher and this family's students (owner 2026-11-16, review): others by role.
+   */
+  rooms(lessons: readonly RoomLesson[], at: { now: Date; family: readonly string[] }): Promise<RoomStates> {
+    return this.live.of(lessons, at.now, familyNamed(at.family));
   }
 
   async of(student: PortalStudent, now: Date): Promise<LessonExtras> {

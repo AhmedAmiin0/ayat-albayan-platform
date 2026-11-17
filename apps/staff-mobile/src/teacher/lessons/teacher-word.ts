@@ -60,7 +60,9 @@ function roomWord(lesson: Pick<LessonView, 'room'>): TeacherWord | null {
   if (studentWaiting(lesson.room)) {
     return { label: t.teacherToday.waiting, tone: 'act', glyph: 'fill' };
   }
-  return isRoomLive(lesson.room) ? { label: t.teacherToday.liveNow, tone: 'ok', glyph: 'fill' } : null;
+  return isRoomLive(lesson.room)
+    ? { label: t.teacherToday.liveNow, tone: 'ok', glyph: 'fill' }
+    : null;
 }
 
 /** Her word for the lesson now, or null: then the lesson-status chip speaks (held, excused…). */
@@ -69,11 +71,23 @@ export function teacherWord(lesson: WordLesson, now: Date): TeacherWord | null {
   return roomWord(lesson) ?? (isWorded(state) ? WORDS[state](lesson, now) : null);
 }
 
-/** «يوسف ينتظرك في الغرفة · منذ 3 دقائق» under the hero while the student waits; else null. */
-export function waitingLine(lesson: Pick<LessonView, 'room'>, now: Date): string | null {
+export interface Waiting {
+  name: string;
+  /** «يوسف ينتظرك في الغرفة». */
+  line: string;
+  /** «دخل منذ 3 دقائق». */
+  since: string;
+}
+
+/** Who waits for her in the room and since when (the hero's strip); null when nobody does. */
+export function waiting(lesson: Pick<LessonView, 'room'>, now: Date): Waiting | null {
   const minutes = roomLiveMinutes(lesson.room, now);
   const who = lesson.room?.inRoom.find((p) => p.role === 'student' || p.role === 'guardian');
   if (!studentWaiting(lesson.room) || !who || minutes === null) return null;
-  const since = minutes < 1 ? t.mobile.age.now : counted(t.mobile.age.minutes, minutes);
-  return `${t.teacherToday.waitingLine.replace('{name}', who.name)} · ${since}`;
+  const age = minutes < 1 ? t.mobile.age.now : counted(t.mobile.age.minutes, minutes);
+  return {
+    name: who.name,
+    line: t.teacherToday.waitingLine.replace('{name}', who.name),
+    since: t.teacherToday.waitingSince.replace('{age}', age),
+  };
 }

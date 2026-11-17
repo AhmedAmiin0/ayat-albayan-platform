@@ -1,5 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react-native';
-import { SCRIM_INK } from '@/classroom/room/live/TileCaption';
+import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 import {
   CREDS,
   fakePlatform,
@@ -44,7 +43,7 @@ test('«المحادثة» shows its unread count and opens the student channel'
   await live({ chat: { unread: 2, open, whenLocked: 'hide' } });
   const badge = screen.getByTestId('room-chat-unread', { includeHiddenElements: true });
   expect(badge).toHaveTextContent('2');
-  await press(R.controls.chat);
+  await press(t.portal.app.child.chatUnread.replace('{n}', '2'));
   expect(open).toHaveBeenCalled();
 });
 
@@ -52,7 +51,7 @@ test('a trial lesson: the family reads «تُفتح المحادثة…»; the s
   const open = jest.fn();
   await live({ chat: { unread: 1, open, whenLocked: 'explain' }, open: false });
   await press(R.controls.chat);
-  expect(screen.getByText(R.chatLocked)).toBeTruthy();
+  expect(screen.getByText(t.studentChannel.closed)).toBeTruthy();
   expect(open).not.toHaveBeenCalled();
   await screen.unmount();
   await live({ chat: { unread: 1, open, whenLocked: 'hide' }, open: false });
@@ -77,12 +76,35 @@ test('a shared screen fits whole (#bug: cropped), and «تكبير» gives it th
   expect(screen.getByTestId('room-tile-p1:camera')).toBeTruthy();
 });
 
-test('the caption is light ink on the scrim in the light theme too (#bug)', async () => {
+test('the caption is a solid inverse chip with onInverse ink (#bug: 2.3–3.4:1 on a scrim)', async () => {
   await live();
   await act(async () => p.client.push({ tiles: [tile()] }));
-  expect(SCRIM_INK).toBe(palette.dark.coverInk);
-  const caption = screen.getByTestId('tile-caption', { includeHiddenElements: true });
-  expect(caption).toHaveStyle({ color: SCRIM_INK });
+  const all = { includeHiddenElements: true };
+  expect(screen.getByTestId('tile-caption', all)).toHaveStyle({
+    backgroundColor: palette.light.inverse,
+  });
+  expect(screen.getByTestId('tile-caption-name', all)).toHaveStyle({
+    color: palette.light.onInverse,
+  });
+});
+
+test('muted by the teacher: «كتمك المعلم» and how to turn it back on; one’s own «كتم» is quiet', async () => {
+  await live();
+  const line = `${t.classroom.mute.byStaff}\n${R.mutedHint}`;
+  await act(async () => p.client.push({ micOn: false }));
+  expect(screen.getByText(line)).toBeTruthy();
+  await act(async () => p.client.push({ micOn: true }));
+  expect(screen.queryByText(line)).toBeNull();
+  await press(R.controls.mute);
+  await act(async () => p.client.push({ micOn: false }));
+  expect(screen.queryByText(line)).toBeNull();
+});
+
+test('«جارٍ التسجيل» carries the elapsed time as a timer', async () => {
+  await live();
+  await act(async () => p.client.push({ recording: true }));
+  const pill = within(screen.getByTestId('room-recording'));
+  expect(pill.getByRole('timer')).toHaveTextContent(/00:0\d/);
 });
 
 test('one’s own camera is mirrored again after a rejoin with the back camera (#bug)', async () => {

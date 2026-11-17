@@ -33,10 +33,9 @@ describe('migration 110: who is inside the room', () => {
 describe('migration 120: a time edit resets the room', () => {
   const sql = code('20261117000120_edit_lesson_time_room.sql');
 
-  it('a moved lesson loses «افتح الحلقة الآن»; every edit clears the end', () => {
+  it('a moved lesson loses «افتح الحلقة الآن»', () => {
     expect(sql).toContain('create or replace function public.edit_lesson_time(p jsonb)');
     expect(sql).toContain('room_opened_at = case when v_moved then null else l.room_opened_at end');
-    expect(sql).toContain('room_ended_at = null');
   });
 
   it('keeps the teacher confirmation reset and the service-role-only grant', () => {
@@ -46,6 +45,53 @@ describe('migration 120: a time edit resets the room', () => {
     expect(sql).toContain(
       'revoke execute on function public.edit_lesson_time(jsonb) from public, anon, authenticated;',
     );
+    expect(sql).toContain(
+      'grant execute on function public.edit_lesson_time(jsonb) to service_role;',
+    );
+  });
+});
+
+describe('migration 140: «اللغة» unset until chosen', () => {
+  const sql = code('20261117000140_profile_locale_unset.sql');
+
+  it("nullable with no default; the default 'ar' cleared, a deliberate 'en' kept; ar/en only", () => {
+    expect(sql).toContain('alter column locale drop not null, alter column locale drop default');
+    expect(sql).toContain(
+      "update public.profiles set locale = null where locale is distinct from 'en';",
+    );
+    expect(sql).toContain("check (locale is null or locale in ('ar', 'en'))");
+  });
+});
+
+describe('migrations 150 / 170: presence order, whom a sent link is for', () => {
+  it('adds the columns re-runnably', () => {
+    expect(code('20261117000150_room_presence_order.sql')).toContain(
+      'add column if not exists presence_at timestamptz',
+    );
+    const links = code('20261117000170_join_link_sent_for.sql');
+    expect(links).toContain(
+      'add column if not exists sent_for_student_id uuid references public.students (id) on delete set null',
+    );
+    expect(links).toContain('create index if not exists lesson_join_links_sent_for_idx');
+  });
+});
+
+describe('migration 160: edit_lesson_time, review fixes', () => {
+  const sql = code('20261117000160_edit_lesson_time_pushes.sql');
+
+  it('the end clears only when the start moves', () => {
+    expect(sql).toContain('room_ended_at = case when v_moved then null else l.room_ended_at end');
+    expect(sql).not.toContain('room_ended_at = null');
+  });
+
+  it('a re-timed lesson frees lesson_starting / lesson_live push keys (uuid suffix, A→B→A safe)', () => {
+    const retime = sql.slice(sql.indexOf('retime_open'), sql.indexOf('refresh_pdf'));
+    expect(retime).toContain("or dedup_key like 'lesson_starting:lesson:' || v_id::text || ':%'");
+    expect(retime).toContain("or dedup_key like 'lesson_live:lesson:' || v_id::text || ':%';");
+    expect(retime).toContain("dedup_key || ':old:' || gen_random_uuid()::text");
+  });
+
+  it('keeps the service-role-only grant', () => {
     expect(sql).toContain(
       'grant execute on function public.edit_lesson_time(jsonb) to service_role;',
     );

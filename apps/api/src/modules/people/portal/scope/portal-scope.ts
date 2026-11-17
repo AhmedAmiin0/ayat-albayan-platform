@@ -24,8 +24,14 @@ export class PortalScopes {
   }
 
   async student(user: AuthUser, studentId: string): Promise<PortalStudent> {
-    const found = (await this.of(user)).students.find((s) => s.id === studentId);
+    return (await this.withFamily(user, studentId)).student;
+  }
+
+  /** The student, and the ids of every student of this login (its family). 404 as student(). */
+  async withFamily(user: AuthUser, studentId: string): Promise<{ student: PortalStudent; family: string[] }> {
+    const { students } = await this.of(user);
+    const found = students.find((s) => s.id === studentId);
     if (!found) throw notFound('student_not_found');
-    return found;
+    return { student: found, family: students.map((s) => s.id) };
   }
 }

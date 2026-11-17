@@ -43,9 +43,9 @@ test('alone in the room: «بانتظار البقية…»; reconnecting shows 
 });
 
 test.each([
-  // Ended for everyone (#bug: it read «خرجت من الغرفة» with a way back): «انتهت الحلقة», no rejoin.
-  ['ended', t.classroom.closedHint, false],
-  ['dropped', R.left.title, true],
+  // The server closed it (DeleteRoom): «انتهت الحلقة»; a rejoin learns whether it is final (410).
+  ['ended', t.classroom.closedHint, true],
+  ['dropped', R.dropped, true],
   ['duplicate', R.duplicate, true],
   ['removed', t.classroom.error.removed_from_room, false],
 ] as const)(
@@ -63,7 +63,6 @@ test.each([
 test('the connection dropped (#476): «ادخل مرة أخرى» joins again, its audio stays on', async () => {
   await live();
   await act(async () => p.client.push({ status: 'dropped' }));
-  expect(screen.getByText(R.left.body)).toBeTruthy();
   // LiveKit's events while the new connect runs still carry the old «dropped».
   p.client.connect.mockImplementationOnce(async () => {
     p.client.push({ micOn: true });
@@ -109,13 +108,16 @@ test('the controls: mute, camera, the switch on one’s tile, the next audio out
   expect(p.client.switchCamera).toHaveBeenCalled();
   await press(R.controls.camera);
   expect(p.client.setCamera).toHaveBeenCalledWith(false);
-  await press(R.controls.headset);
+  await press(R.controls.output.replace('{name}', R.controls.headset));
   expect(p.audio.next).toHaveBeenLastCalledWith('headset');
-  expect(await screen.findByRole('button', { name: R.controls.speaker })).toBeTruthy();
+  const speaker = R.controls.output.replace('{name}', R.controls.speaker);
+  expect(await screen.findByRole('button', { name: speaker })).toBeTruthy();
 });
 
-test('«فتح في المتصفح» on any step: leaves and opens the web classroom', async () => {
+test('«فتح في المتصفح» sits in the participants panel (not the header): leaves, opens the web', async () => {
   await live();
+  expect(screen.queryByRole('button', { name: R.openInBrowser })).toBeNull();
+  await press(R.count.replace('{n}', '0'));
   await press(R.openInBrowser);
   expect(p.client.disconnect).toHaveBeenCalled();
   expect(Linking.openURL).toHaveBeenCalledWith(

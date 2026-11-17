@@ -1,4 +1,4 @@
-import { CORRECT_TO, type LessonRoomState, type LessonStatus, type LessonView } from '@ab/shared';
+import { CORRECT_TO, type LessonStatus, type LessonView } from '@ab/shared';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import type { Role } from '@/common/auth/verify-token';
 import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags.service';
@@ -7,6 +7,7 @@ import type { LessonRow } from './lesson-row';
 import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';
 import { LessonsRepo, type LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { markUnpaid, upcomingStudentIds } from '@/modules/teaching/lessons/status/unpaid-mark';
+import { withRoom } from '@/modules/teaching/lessons/live-room/lesson-room-states';
 import { LessonViewExtras } from './lesson-view-extras';
 
 /** The statuses the job writes or a correction may land on (LessonView.auto_held). */
@@ -14,14 +15,6 @@ const SETTLED: readonly LessonStatus[] = CORRECT_TO;
 
 const withAutoHeld = (view: LessonView, held: ReadonlySet<string>): LessonView =>
   held.has(view.id) ? { ...view, auto_held: true } : view;
-
-/** The live room only where there is one (absent otherwise, as an older API sent). */
-type Rooms = ReadonlyMap<string, LessonRoomState | null>;
-
-const withRoom = (view: LessonView, rooms: Rooms): LessonView => {
-  const room = rooms.get(view.id);
-  return room ? { ...view, room } : view;
-};
 
 const withPhoto = (view: LessonView, photos: ReadonlyMap<string, string>): LessonView =>
   photos.size ? { ...view, teacher: { ...view.teacher, avatar_url: photos.get(view.teacher.id) ?? null } } : view;

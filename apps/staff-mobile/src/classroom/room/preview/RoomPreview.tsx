@@ -47,9 +47,21 @@ export function RoomPreview({ PreviewVideo, preview, notice, onJoin }: RoomPrevi
         <MicButton on={preview.wanted.mic} onPress={preview.toggleMic} />
         <CameraButton on={preview.wanted.cam} onPress={preview.toggleCam} />
       </View>
-      <AppText style={{ fontSize: type.size.xs, color: color.coverInk, textAlign: 'center' }}>
-        {`${t.classroom.recordedNotice} · ${R.remember}`}
-      </AppText>
+      <View style={{ gap: 4 }}>
+        <View
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+        >
+          <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: color.badSolid }} />
+          <AppText
+            style={{ fontFamily: type.ui[700], fontSize: type.size.sm, color: color.coverInk }}
+          >
+            {t.classroom.recordedNotice}
+          </AppText>
+        </View>
+        <AppText style={{ fontSize: type.size.xs, color: color.coverInk, textAlign: 'center' }}>
+          {R.remember}
+        </AppText>
+      </View>
       <Button label={R.preview.join} onPress={onJoin} />
     </View>
   );

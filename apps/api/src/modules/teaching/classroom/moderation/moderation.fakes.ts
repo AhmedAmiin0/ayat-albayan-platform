@@ -33,6 +33,7 @@ export const participantRow = (over: Partial<ParticipantRow> = {}): ParticipantR
   joined_at: '2026-10-05T16:01:00.000Z',
   entered_at: null,
   left_at: null,
+  presence_at: null,
   ...over,
 });
 

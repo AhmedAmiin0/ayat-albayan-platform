@@ -70,8 +70,8 @@ describe('RecordingLifecycle', () => {
 
 describe('webhook room helpers', () => {
   it('participant_left with a room; people without recorders', () => {
-    expect(participantEventOf({ event: 'participant_left', room: { name: 'r' }, participant: { identity: 'g' } })).toEqual({ kind: 'left', room: 'r', identity: 'g' });
-    expect(participantEventOf({ event: 'participant_joined', room: { name: 'r' } })).toEqual({ kind: 'joined', room: 'r', identity: '' });
+    expect(participantEventOf({ event: 'participant_left', room: { name: 'r' }, participant: { identity: 'g' } })).toEqual({ kind: 'left', room: 'r', identity: 'g', at: null });
+    expect(participantEventOf({ event: 'participant_joined', room: { name: 'r' } })).toEqual({ kind: 'joined', room: 'r', identity: '', at: null });
     expect(participantEventOf({ event: 'participant_left', room: {} })).toBeNull();
     expect(participantEventOf({ event: 'room_started', room: { name: 'r' } })).toBeNull();
     expect(peopleIn({ participants: [EGRESS, { identity: 'a', kind: 2 }, { identity: 'b' }, { identity: 'c' }, 'junk'] }, 'c')).toEqual(['b']);

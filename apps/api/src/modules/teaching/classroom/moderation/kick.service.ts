@@ -5,7 +5,6 @@ import { notFound } from '@/common/http/errors';
 import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
 import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
 import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { revokeAndRemove } from '@/modules/teaching/classroom/livekit/livekit-api.revoke';
 import { ModerationRepo, principalOf, type ParticipantRow } from './moderation.repo';
 import { RoomPersonRepo } from './room-person.repo';
 
@@ -70,7 +69,7 @@ export class KickService {
 
   private async disconnect(room: string, identities: readonly string[]): Promise<void> {
     try {
-      for (const identity of identities) await revokeAndRemove(this.livekit, { room, identity });
+      for (const identity of identities) await this.livekit.revokeAndRemove({ room, identity });
     } catch (e) {
       if (e instanceof LivekitError) throw new BadGatewayException({ code: 'livekit_error', message: e.message });
       throw e;

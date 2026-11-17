@@ -17,13 +17,18 @@ describe('sync from a guest', () => {
 
   it('allowed one by one («سماح»): strokes merged, flags still the staff’s', () => {
     const s = boardReducer({ ...EMPTY_BOARD, allowed: ['g'] }, { msg, from: guest });
-    expect(s.strokes.map((x) => x.id)).toEqual(['g1', 't1']);
+    expect(s.strokes.map((x) => x.id)).toEqual(['g1']); // its own only: t1 is signed 't'
     expect(s).toMatchObject({ studentsCanDraw: false, open: false });
   });
 
-  it('every student allowed: strokes merged', () => {
+  it('every student allowed: its own strokes merged, none signed with another identity', () => {
     const s = boardReducer({ ...EMPTY_BOARD, studentsCanDraw: true }, { msg, from: guest });
-    expect(s.strokes).toHaveLength(2);
+    expect(s.strokes.map((x) => x.by)).toEqual(['g']);
+  });
+
+  it('the staff relay the whole board, whoever drew it', () => {
+    const teacher: BoardInput['from'] = { identity: 't', role: 'teacher' };
+    expect(boardReducer(EMPTY_BOARD, { msg, from: teacher }).strokes).toHaveLength(2);
   });
 
   it('another guest who is not the allowed one: dropped', () => {

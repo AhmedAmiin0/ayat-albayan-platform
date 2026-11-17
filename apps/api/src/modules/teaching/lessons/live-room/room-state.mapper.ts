@@ -18,12 +18,25 @@ const guestRole = (row: PresenceRow): RoomPresenceRole =>
 export const presenceRole = (row: PresenceRow): RoomPresenceRole =>
   STAFF_ROLE[row.role] ?? guestRole(row);
 
-/** One entry per person shown (two windows of one link are one person). */
-function people(rows: readonly PresenceRow[]): RoomPresence[] {
+/** Who may be named to the viewer; staff see everyone's name. */
+export type Named = (row: PresenceRow) => boolean;
+const EVERYONE: Named = () => true;
+
+/** The family's view (owner 2026-11-16, review): the teacher and the family's own students only. */
+export const familyNamed =
+  (studentIds: readonly string[]): Named =>
+  (row) =>
+    row.role === 'teacher' || studentIds.includes(row.link?.student_id ?? '');
+
+const personOf = (row: PresenceRow, named: Named): RoomPresence =>
+  named(row) ? { name: row.name, role: presenceRole(row) } : { role: presenceRole(row) };
+
+/** One entry per person shown (two windows of one link are one person; the unnamed by role). */
+function people(rows: readonly PresenceRow[], named: Named): RoomPresence[] {
   const seen = new Map<string, RoomPresence>();
   for (const row of rows) {
-    const person = { name: row.name, role: presenceRole(row) };
-    seen.set(`${person.role}:${person.name}`, person);
+    const person = personOf(row, named);
+    seen.set(`${person.role}:${person.name ?? ''}`, person);
   }
   return [...seen.values()];
 }
@@ -38,8 +51,10 @@ const earliest = (rows: readonly PresenceRow[]): string | null =>
 export function roomStateOf(input: {
   endedAt: string | null;
   inside: readonly PresenceRow[];
+  named?: Named;
 }): LessonRoomState | null {
   const inside = input.endedAt === null ? input.inside : [];
   if (input.endedAt === null && inside.length === 0) return null;
-  return { liveSince: earliest(inside), endedAt: input.endedAt, inRoom: people(inside) };
+  const inRoom = people(inside, input.named ?? EVERYONE);
+  return { liveSince: earliest(inside), endedAt: input.endedAt, inRoom };
 }

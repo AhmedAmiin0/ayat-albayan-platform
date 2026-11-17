@@ -6,7 +6,6 @@ export {
   CLASSROOM_KEY,
   copyJoinLinkUrl,
   dayAround,
-  type GuestJoinInput,
   joinAsGuest,
   joinRoom,
   localDay,

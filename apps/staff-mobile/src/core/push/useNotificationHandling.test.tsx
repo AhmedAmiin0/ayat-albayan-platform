@@ -12,9 +12,15 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 const mockPush = jest.fn();
 // The root stack shows the tabs (no chat open): every tap is a push (useNotificationHandling.chat.test).
-const mockTabsRoot = { routes: [{ name: '__root', state: { index: 0, routes: [{ name: '(tabs)' }] } }] };
+const mockTabsRoot = {
+  routes: [{ name: '__root', state: { index: 0, routes: [{ name: '(tabs)' }] } }],
+};
 // One ref for every render, like the real hook: a fresh object would re-run the tap effect on any re-render.
-const mockNav = { isReady: () => true, getRootState: () => mockTabsRoot };
+const mockNav = {
+  isReady: () => true,
+  getRootState: () => mockTabsRoot,
+  addListener: () => () => undefined,
+};
 jest.mock('expo-router', () => ({
   router: { push: (mockHref: string) => mockPush(mockHref) },
   useNavigationContainerRef: () => mockNav,
@@ -58,7 +64,11 @@ test('foreground pushes show as a banner, in the list, with sound', async () => 
   await mount();
   const handler = jest.mocked(Notifications.setNotificationHandler).mock.calls[0]?.[0];
   await expect(handler?.handleNotification(notification({}) as never)).resolves.toEqual(FOREGROUND);
-  expect(FOREGROUND).toMatchObject({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: true });
+  expect(FOREGROUND).toMatchObject({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+  });
 });
 
 test('a tap while the app runs opens the thread of that number', async () => {
@@ -92,11 +102,15 @@ test('a push that is not ours does not navigate', async () => {
 test('a message push refreshes that thread and the inbox, in the foreground', async () => {
   const { client } = await mount();
   const invalidate = jest.spyOn(client, 'invalidateQueries');
-  await act(async () => mockListeners.received?.(notification({ kind: 'new_message', phone: PHONE })));
+  await act(async () =>
+    mockListeners.received?.(notification({ kind: 'new_message', phone: PHONE })),
+  );
   expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', PHONE] });
   expect(invalidate).toHaveBeenCalledWith({ queryKey: ['leads'] });
   invalidate.mockClear();
-  await act(async () => mockListeners.received?.(notification({ kind: 'payment_due', studentId: 's1' })));
+  await act(async () =>
+    mockListeners.received?.(notification({ kind: 'payment_due', studentId: 's1' })),
+  );
   expect(invalidate.mock.calls).toEqual([[{ queryKey: ['notifications'] }]]); // only the bell
 });
 
@@ -110,7 +124,9 @@ test('unmount removes both listeners and the foreground handler', async () => {
 test('a message push also refreshes the chats list and the tab badge count (their own keys)', async () => {
   const { client } = await mount();
   const spy = jest.spyOn(client, 'invalidateQueries');
-  await act(async () => mockListeners.received?.(notification({ kind: 'new_message', phone: PHONE })));
+  await act(async () =>
+    mockListeners.received?.(notification({ kind: 'new_message', phone: PHONE })),
+  );
   expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
   // No list on screen: it is marked stale and re-reads when it shows (docs/43 AU2).
   expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'list'], refetchType: 'none' });
@@ -130,7 +146,9 @@ test('a tap into a hidden tab falls back to «المزيد» (a hidden tab goes 
 test('the teacher tree opens her own screens', async () => {
   const client = createTestQueryClient();
   await renderHook(() => useNotificationHandling('teacher'), { wrapper: queryWrapper(client) });
-  await act(async () => mockListeners.response?.(tap({ kind: 'new_student', studentId: 's1', lessonId: 'l1' })));
+  await act(async () =>
+    mockListeners.response?.(tap({ kind: 'new_student', studentId: 's1', lessonId: 'l1' })),
+  );
   expect(mockPush).toHaveBeenCalledWith('/teacher/schedule');
 });
 

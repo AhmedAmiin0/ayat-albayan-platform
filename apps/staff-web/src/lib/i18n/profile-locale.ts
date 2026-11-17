@@ -14,7 +14,7 @@ const sendLocale = (next: Locale) => meLocaleSend({ apiFetch, apiSend })(next);
 
 const savedSchema = z.enum(LOCALES).nullable().catch(null);
 
-/** This browser's saved «اللغة» choice; null when none (Arabic by default) or storage is blocked. */
+/** This browser's saved «اللغة» choice; null when none (Arabic by default) or blocked. */
 function savedChoice(): Locale | null {
   try {
     return savedSchema.parse(localStorage.getItem(LOCALE_STORAGE_KEY));

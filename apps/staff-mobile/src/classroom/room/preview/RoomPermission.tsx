@@ -7,12 +7,14 @@ const P = t.mobileRoom.permission;
 interface RoomPermissionProps {
   onAllow: () => void;
   onSkip: () => void;
+  /** «فتح في المتصفح»: the web room instead. */
+  onBrowser: () => void;
 }
 
 /**
  * Before the system dialog: why the room needs the camera and the microphone, in MSA (docs/35 §3).
  */
-export function RoomPermission({ onAllow, onSkip }: RoomPermissionProps) {
+export function RoomPermission({ onAllow, onSkip, onBrowser }: RoomPermissionProps) {
   const { color } = useTheme();
   return (
     <View
@@ -41,6 +43,7 @@ export function RoomPermission({ onAllow, onSkip }: RoomPermissionProps) {
       </AppText>
       <Button label={P.allow} onPress={onAllow} />
       <Button label={P.skip} variant="secondary" onPress={onSkip} />
+      <Button label={t.mobileRoom.openInBrowser} variant="ghost" onPress={onBrowser} />
     </View>
   );
 }

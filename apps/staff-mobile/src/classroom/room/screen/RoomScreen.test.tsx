@@ -39,13 +39,17 @@ test("allowed already: the preview with one's camera, then «انضم الآن»
   expect(p.audio.start).toHaveBeenCalled();
   // Never the loudspeaker forced over a headset (#bug): the button names LiveKit's own choice.
   expect(p.audio.next).not.toHaveBeenCalled();
-  expect(await screen.findByRole('button', { name: R.controls.headset })).toBeTruthy();
+  expect(
+    await screen.findByRole('button', {
+      name: R.controls.output.replace('{name}', R.controls.headset),
+    }),
+  ).toBeTruthy();
   const tiles = [tile(), tile({ key: 'me:camera', local: true, video: {} })];
   await act(async () => p.client.push({ status: 'connected', micOn: true, camOn: true, tiles }));
   expect(screen.getByTestId('room-grid')).toBeTruthy();
   expect(screen.getByTestId('video-mirrored')).toBeTruthy();
   expect(screen.getByRole('button', { name: R.count.replace('{n}', '2') })).toBeTruthy();
-  expect(screen.getByLabelText('Suhaila')).toBeTruthy();
+  expect(screen.getByLabelText(`Suhaila، ${t.classroom.roles.guest}`)).toBeTruthy();
   expect(screen.queryByText(t.classroom.waiting)).toBeNull();
 });
 

@@ -9,6 +9,7 @@ let mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams,
   router: { canGoBack: () => false, back: jest.fn(), push: jest.fn() },
+  useNavigation: () => ({ addListener: jest.fn(() => () => undefined) }),
 }));
 
 beforeEach(() => jest.spyOn(Linking, 'openURL').mockResolvedValue(true));

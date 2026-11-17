@@ -13,7 +13,7 @@ import { RoomScreen } from './RoomScreen';
 const R = t.mobileRoom;
 let p: FakePlatform;
 const fetchJoin = jest.fn(async () => CREDS);
-const mount = (direct = false) =>
+const mount = (direct = false, rememberChoice = true) =>
   render(
     withInsets(
       <RoomScreen
@@ -22,6 +22,7 @@ const mount = (direct = false) =>
         onExit={jest.fn()}
         fetchJoin={fetchJoin}
         direct={direct}
+        rememberChoice={rememberChoice}
       />,
     ),
   );
@@ -31,7 +32,14 @@ beforeEach(() => {
   p = fakePlatform();
 });
 
-test('a later join reuses the kept choice and skips the preview', async () => {
+test('the staff room (no rememberChoice) shows the preview every time, as before', async () => {
+  p.devices.load.mockResolvedValue({ mic: false, cam: true });
+  await mount(false, false);
+  expect(await screen.findByTestId('room-preview')).toBeTruthy();
+  expect(p.client.connect).not.toHaveBeenCalled();
+});
+
+test('the family room: a later join reuses the kept choice and skips the preview', async () => {
   p.devices.load.mockResolvedValue({ mic: false, cam: true });
   await mount();
   await waitFor(() =>
@@ -40,10 +48,10 @@ test('a later join reuses the kept choice and skips the preview', async () => {
   expect(screen.queryByTestId('room-preview')).toBeNull();
 });
 
-test('from the «بدأت الحلقة» push: straight in with the microphone on, even the first time', async () => {
+test('from the «بدأت الحلقة» push: straight in, the mic on, the camera off unless chosen', async () => {
   await mount(true);
   await waitFor(() =>
-    expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: true, cam: true }),
+    expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: true, cam: false }),
   );
   expect(p.devices.save).not.toHaveBeenCalled();
 });
@@ -53,7 +61,7 @@ test('from the push without the permissions: only they are asked, then in', asyn
   await mount(true);
   await fireEvent.press(await screen.findByRole('button', { name: R.permission.allow }));
   await waitFor(() =>
-    expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: true, cam: true }),
+    expect(p.client.connect).toHaveBeenCalledWith(CREDS, { mic: true, cam: false }),
   );
   expect(p.media.ask).toHaveBeenCalled();
 });
@@ -61,7 +69,7 @@ test('from the push without the permissions: only they are asked, then in', asyn
 test('a 410 lesson_ended join: «انتهت الحلقة» with no way back', async () => {
   fetchJoin.mockRejectedValueOnce(new ApiError(410, { code: 'lesson_ended' }));
   await mount(true);
-  expect(await screen.findByTestId('room-closed-ended')).toBeTruthy();
+  expect(await screen.findByTestId('room-closed-endedAll')).toBeTruthy();
   expect(screen.getByText(t.classroom.closedHint)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.classroom.rejoin })).toBeNull();
 });

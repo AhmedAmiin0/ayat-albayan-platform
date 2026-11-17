@@ -63,7 +63,9 @@ test('the teacher mutes, stops a camera and mutes every guest', async () => {
 test('«إخراج» asks with the web room’s words first; a refusal reads its code', async () => {
   await live('teacher');
   await press(C.kick.actionOf.replace('{name}', 'Suhaila'));
-  expect(screen.getByText(`${C.kick.title.replace('{name}', 'Suhaila')} ${C.kick.body}`)).toBeTruthy();
+  expect(
+    screen.getByText(`${C.kick.title.replace('{name}', 'Suhaila')} ${C.kick.body}`),
+  ).toBeTruthy();
   host.remove.mockRejectedValueOnce(new ApiError(403, { code: 'cannot_remove' }));
   await press(C.kick.confirm);
   expect(host.remove).toHaveBeenCalledWith(guest.identity);
@@ -79,9 +81,10 @@ test('«إنهاء الحلقة للجميع» is confirmed inline, then ends it
   await press(H.endAll);
   await press(H.endAction);
   expect(host.end).toHaveBeenCalled();
-  // LiveKit's DeleteRoom then closes the room for everyone, the teacher too.
+  // Final for her at once (LiveKit's DeleteRoom that follows changes nothing).
+  expect(await screen.findByTestId('room-closed-endedAll')).toBeTruthy();
   await act(async () => p.client.push({ status: 'ended' }));
-  expect(screen.getByTestId('room-closed-ended')).toBeTruthy();
+  expect(screen.getByTestId('room-closed-endedAll')).toBeTruthy();
   expect(screen.queryByRole('button', { name: C.rejoin })).toBeNull();
 });
 
@@ -91,5 +94,7 @@ test('without host powers (a guest, or the family’s room): the list only', asy
   expect(screen.getByText(`${me.name} (${C.you})`)).toBeTruthy();
   expect(screen.queryByRole('button', { name: C.mute.all })).toBeNull();
   expect(screen.queryByRole('button', { name: H.endAll })).toBeNull();
-  expect(screen.queryByRole('button', { name: C.kick.actionOf.replace('{name}', 'Suhaila') })).toBeNull();
+  expect(
+    screen.queryByRole('button', { name: C.kick.actionOf.replace('{name}', 'Suhaila') }),
+  ).toBeNull();
 });

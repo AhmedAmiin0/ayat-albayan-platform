@@ -1,7 +1,6 @@
-import { guestJoinSchema, type ClockCycle } from '@ab/shared';
+import { guestJoinSchema, type ClockCycle, type RoomJoinResult } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState, type SubmitEvent } from 'react';
-import { z } from 'zod';
 import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
 import { Button } from '@/components/ui/form/button';
 import { Cartouche } from '@/components/ui/display/cartouche';
@@ -28,7 +27,7 @@ interface Props {
   linkToken: string;
   make?: () => RoomClient;
   /** The public join call: the lesson link's by default, an internal meeting's (/m/:token) otherwise. */
-  joinWith?: typeof joinAsGuest;
+  joinWith?: NamedJoin;
   /** Heading and intro; the lesson's words by default. */
   title?: string;
   intro?: string;
@@ -38,8 +37,23 @@ interface Props {
   knownStudent?: boolean;
 }
 
-/** What the form sends: the typed name, or nothing at all for a link that names its student. */
-const KNOWN_STUDENT = z.object({});
+/** A join with the name typed on the page (the lesson link's, a meeting's). */
+type NamedJoin = (input: { linkToken: string; name: string }) => Promise<RoomJoinResult>;
+type Send = () => Promise<RoomJoinResult>;
+
+interface SendInput {
+  known: boolean;
+  linkToken: string;
+  name: string;
+  joinWith: NamedJoin;
+}
+
+/** The call the form makes: no name when the link names its student; null = no name typed. */
+function sendFor({ known, linkToken, name, joinWith }: SendInput): Send | null {
+  if (known) return () => joinAsGuest({ linkToken });
+  const parsed = guestJoinSchema.safeParse({ name });
+  return parsed.success ? () => joinWith({ linkToken, name: parsed.data.name }) : null;
+}
 
 /**
  * /join/:linkToken for a student or guardian (and /m/:token for a meeting): a name, then the room.
@@ -53,16 +67,16 @@ export function GuestJoinPage(props: Props) {
   const problemOf = problem ?? ((e: unknown) => problemText(e, cycle));
   const [name, setName] = useState('');
   const [missing, setMissing] = useState(false);
-  const join = useMutation({ mutationFn: joinWith });
+  const join = useMutation({ mutationFn: (send: Send) => send() });
 
   if (join.data) {
     return <ClassroomRoom join={join.data} {...(make && { make })} onRejoin={() => join.reset()} />;
   }
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
-    const parsed = (known ? KNOWN_STUDENT : guestJoinSchema).safeParse({ name });
-    setMissing(!parsed.success);
-    if (parsed.success) join.mutate({ linkToken, ...parsed.data });
+    const send = sendFor({ known, linkToken, name, joinWith });
+    setMissing(send === null);
+    if (send) join.mutate(send);
   };
   return (
     <main className="min-h-dvh bg-page px-4 py-6 sm:py-10">

@@ -8,8 +8,9 @@ import { z } from 'zod';
 export const ROOM_PRESENCE_ROLES = ['teacher', 'student', 'guardian', 'staff', 'guest'] as const;
 export type RoomPresenceRole = (typeof ROOM_PRESENCE_ROLES)[number];
 
+/** name: absent for someone the viewer may not know by name (the family sees roles only). */
 export const roomPresenceSchema = z.object({
-  name: z.string(),
+  name: z.string().optional(),
   role: z.enum(ROOM_PRESENCE_ROLES),
 });
 export type RoomPresence = z.infer<typeof roomPresenceSchema>;

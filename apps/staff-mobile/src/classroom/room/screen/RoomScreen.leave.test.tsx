@@ -1,6 +1,4 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
-import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
-import type { ComponentProps } from 'react';
 import {
   CREDS,
   fakePlatform,
@@ -10,32 +8,33 @@ import {
 } from '@/classroom/room/state/room-test-kit';
 import { t } from '@ab/mobile-kit';
 import { RoomScreen } from './RoomScreen';
+import type { BackSource, BeforeRemove } from './use-leave-guard';
 
 const R = t.mobileRoom;
 let p: FakePlatform;
 const onExit = jest.fn();
-type Nav = NonNullable<ComponentProps<typeof NavigationContext.Provider>['value']>;
-type BeforeRemove = (e: { preventDefault: () => void }) => void;
-let beforeRemove: BeforeRemove | null = null;
-const nav = {
-  addListener: jest.fn((_name: string, fn: BeforeRemove) => {
-    beforeRemove = fn;
-    return () => {
-      beforeRemove = null;
-    };
-  }),
-} as unknown as Nav;
+let beforeRemove: ((e: BeforeRemove) => void) | null = null;
+const backSource: BackSource = (fn) => {
+  beforeRemove = fn;
+  return () => {
+    beforeRemove = null;
+  };
+};
 const press = async (label: string) =>
   fireEvent.press(await screen.findByRole('button', { name: label }));
 
 async function live() {
   const fetchJoin = jest.fn(async () => CREDS);
   await render(
-    <NavigationContext value={nav}>
-      {withInsets(
-        <RoomScreen platform={p} target={LESSON} onExit={onExit} fetchJoin={fetchJoin} />,
-      )}
-    </NavigationContext>,
+    withInsets(
+      <RoomScreen
+        platform={p}
+        target={LESSON}
+        onExit={onExit}
+        fetchJoin={fetchJoin}
+        backSource={backSource}
+      />,
+    ),
   );
   await press(R.preview.join);
   await act(async () => p.client.push({ status: 'connected', micOn: true }));
@@ -46,7 +45,7 @@ beforeEach(() => {
   p = fakePlatform();
 });
 
-test('«غادر» asks first (#bug); «ابقَ في الحلقة» stays, «غادر» leaves and closes', async () => {
+test('«غادر» asks first (#bug); «ابقَ في الحلقة» stays; «غادر» leaves to RoomXLeft', async () => {
   await live();
   await press(R.controls.leave);
   expect(screen.getByText(R.leaveAsk.title)).toBeTruthy();
@@ -58,20 +57,27 @@ test('«غادر» asks first (#bug); «ابقَ في الحلقة» stays, «غ
   await fireEvent.press(ask.getByRole('button', { name: R.controls.leave }));
   expect(p.client.disconnect).toHaveBeenCalled();
   expect(p.audio.stop).toHaveBeenCalled();
+  // The screen stays: «خرجت من الحلقة» with «ادخل مرة أخرى»; only «رجوع» exits.
+  expect(screen.getByTestId('room-closed-left')).toBeTruthy();
+  expect(screen.getByText(R.left.body)).toBeTruthy();
+  expect(onExit).not.toHaveBeenCalled();
+  await press(R.back);
   expect(onExit).toHaveBeenCalled();
 });
 
 test('Android back in the room is held and asks «تغادر الحلقة؟» (#bug: it left at once)', async () => {
   await live();
   const preventDefault = jest.fn();
-  await act(async () => beforeRemove?.({ preventDefault }));
+  await act(async () => beforeRemove?.({ preventDefault, data: { action: { type: 'GO_BACK' } } }));
   expect(preventDefault).toHaveBeenCalled();
   expect(screen.getByTestId('room-leave')).toBeTruthy();
   expect(p.client.disconnect).not.toHaveBeenCalled();
-  // The screen's own exit is let through.
+  // A sign-out (RESET) or a replace still navigates away.
+  const reset = jest.fn();
+  beforeRemove?.({ preventDefault: reset, data: { action: { type: 'RESET' } } });
+  expect(reset).not.toHaveBeenCalled();
+  // Left: the guard lets go.
   const ask = within(screen.getByTestId('room-leave'));
   await fireEvent.press(ask.getByRole('button', { name: R.controls.leave }));
-  const later = jest.fn();
-  beforeRemove?.({ preventDefault: later });
-  expect(later).not.toHaveBeenCalled();
+  expect(beforeRemove).toBeNull();
 });

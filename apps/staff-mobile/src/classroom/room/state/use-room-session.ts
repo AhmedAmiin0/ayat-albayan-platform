@@ -61,6 +61,7 @@ export function useRoomSession(input: RoomSessionInput) {
     dispatch({ type: 'answered', answer: got });
   };
   return {
+    target,
     phase,
     snap,
     preview,

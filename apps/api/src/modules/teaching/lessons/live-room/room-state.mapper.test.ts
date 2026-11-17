@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { PresenceRow } from './room-inside.repo';
-import { presenceRole, roomStateOf } from './room-state.mapper';
+import { familyNamed, presenceRole, roomStateOf } from './room-state.mapper';
 
 const row = (over: Partial<PresenceRow> = {}): PresenceRow => ({
   lesson_id: 'l1',
@@ -55,5 +55,23 @@ describe('roomStateOf', () => {
       endedAt: '2026-11-16T10:30:00.000Z',
       inRoom: [],
     });
+  });
+});
+
+describe("the family's view (familyNamed)", () => {
+  it("names the teacher and the family's own students only; others by role", () => {
+    const inside = [
+      row({ role: 'teacher', name: 'أ. مريم', link: null }),
+      row({ name: 'سارة', link: { student_id: 's1' } }),
+      row({ name: 'خالد', link: { student_id: 's9' } }),
+      row({ role: 'assistant', name: 'نور', link: null }),
+    ];
+    const state = roomStateOf({ endedAt: null, inside, named: familyNamed(['s1']) });
+    expect(state?.inRoom).toEqual([
+      { name: 'أ. مريم', role: 'teacher' },
+      { name: 'سارة', role: 'student' },
+      { role: 'student' },
+      { role: 'staff' },
+    ]);
   });
 });

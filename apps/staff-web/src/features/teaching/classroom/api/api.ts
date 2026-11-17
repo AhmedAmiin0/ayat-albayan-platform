@@ -17,7 +17,7 @@ import { viewerZone } from '@/lib/clock-text';
 export const CLASSROOM_KEY = ['classroom'] as const;
 
 /** A public join: the link, and the name typed on the page (none when the link names the student). */
-export interface GuestJoinInput {
+interface GuestJoinInput {
   linkToken: string;
   name?: string;
 }

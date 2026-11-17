@@ -5,6 +5,7 @@ import { fetchJoin as apiJoin } from '@/classroom/room/state/fetch-join';
 import { t, useTheme } from '@ab/mobile-kit';
 import { RoomBody } from './RoomBody';
 import { RoomTopBar } from './RoomTopBar';
+import { useElapsed } from './use-elapsed';
 import { useRoomScreen, type RoomScreenInput } from './use-room-screen';
 
 export type { RoomChat } from './use-room-screen';
@@ -18,14 +19,20 @@ interface RoomScreenProps extends Omit<RoomScreenInput, 'fetchJoin'> {
 
 /**
  * A lesson's classroom or a meeting, inside the app (docs/35): the dark cover surface of the calls,
- * a header with «فتح في المتصفح» on every step, and the session's step under it.
+ * a header with the room's name (and, inside, the recording and the people), and the step under it.
  */
 export function RoomScreen({ fetchJoin = apiJoin, ...props }: RoomScreenProps) {
   const { color } = useTheme();
   const insets = useSafeAreaInsets();
   const screen = useRoomScreen({ ...props, fetchJoin });
   const { session } = screen;
-  const count = screen.panel.people.length;
+  const elapsed = useElapsed(screen.live ? session.joinedAt : null);
+  const live = {
+    people: screen.panel.people,
+    openPeople: () => screen.openSheet('people'),
+    recording: session.snap.recording,
+    elapsed,
+  };
   return (
     <View
       testID="room-screen"
@@ -33,9 +40,7 @@ export function RoomScreen({ fetchJoin = apiJoin, ...props }: RoomScreenProps) {
     >
       <RoomTopBar
         title={props.target.kind === 'lesson' ? t.classroom.title : t.meetings.internal.item}
-        people={screen.live ? { count, open: () => screen.openSheet('people') } : null}
-        recording={screen.live && session.snap.recording}
-        onBrowser={screen.browser}
+        live={screen.live ? live : null}
       />
       <RoomBody screen={screen} platform={props.platform} />
     </View>

@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useState } from 'react';
 import { Linking } from 'react-native';
 import { parseTarget, roomWebUrl } from '@/classroom/room/model/join-target';
@@ -6,6 +6,7 @@ import type { RoomTarget } from '@/classroom/room/model/room-types';
 import { nativeRoomPlatform } from '@/classroom/room/native/native-platform';
 import { RoomNotice } from '@/classroom/room/screen/RoomNotice';
 import { RoomScreen } from '@/classroom/room/screen/RoomScreen';
+import type { BackSource } from '@/classroom/room/screen/use-leave-guard';
 import { t } from '@ab/mobile-kit';
 import { staffHost } from './staff-host';
 import { useRoomChat } from './use-room-chat';
@@ -52,6 +53,8 @@ export function RoomRoute() {
   const target = parseTarget(params.kind, params.id);
   const [platform] = useState(nativeRoomPlatform);
   const chat = useRoomChat(params.student ?? null);
+  const navigation = useNavigation();
+  const backSource: BackSource = (listener) => navigation.addListener('beforeRemove', listener);
   if (!target || !platform) return <RoomUnavailable target={target} />;
   return (
     <RoomScreen
@@ -61,6 +64,7 @@ export function RoomRoute() {
       direct={params.direct === '1'}
       host={staffHost(target)}
       chat={chat}
+      backSource={backSource}
     />
   );
 }

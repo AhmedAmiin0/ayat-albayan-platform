@@ -2,7 +2,6 @@ import type { MeetingCreated, MeetingView, PublicMeetingView, RoomJoinResult } f
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { env } from '@/lib/http/env';
-import type { GuestJoinInput } from '@/features/teaching/classroom';
 
 // «اجتماع داخلي»: a standalone room with no lesson (POST /meetings and friends, /public/meetings/:token).
 
@@ -53,7 +52,7 @@ export const publicMeetingQuery = (token: string) =>
   });
 
 /** POST /public/meetings/:token/join {name}: a guest token. */
-export const joinMeetingAsGuest = ({ linkToken, name }: GuestJoinInput) =>
+export const joinMeetingAsGuest = ({ linkToken, name }: { linkToken: string; name: string }) =>
   publicCall<RoomJoinResult>(`/public/meetings/${encodeURIComponent(linkToken)}/join`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

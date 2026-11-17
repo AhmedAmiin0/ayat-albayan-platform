@@ -13,7 +13,7 @@ interface RoomBodyProps {
   platform: RoomPlatform;
 }
 
-/** In the room: the grid, the controls and the panel open at the foot. */
+/** In the room: the grid, the controls, «كتمك المعلم» and the panel open at the foot. */
 function Live({ screen, platform }: RoomBodyProps) {
   const { session: s } = screen;
   const controls = {
@@ -29,6 +29,8 @@ function Live({ screen, platform }: RoomBodyProps) {
       panel={screen.panel}
       onClose={screen.closeSheet}
       onLeave={screen.leave}
+      presence={screen.presence}
+      onBrowser={screen.browser}
     />
   );
   return (
@@ -51,7 +53,13 @@ export function RoomBody({ screen, platform }: RoomBodyProps) {
     case 'joining':
       return <RoomNotice testID={`room-${phase.step}`} message={t.mobileRoom.connecting} busy />;
     case 'permission':
-      return <RoomPermission onAllow={() => void s.allow()} onSkip={() => void s.skip()} />;
+      return (
+        <RoomPermission
+          onAllow={() => void s.allow()}
+          onSkip={() => void s.skip()}
+          onBrowser={screen.browser}
+        />
+      );
     case 'preview':
       return (
         <RoomPreview
@@ -65,6 +73,15 @@ export function RoomBody({ screen, platform }: RoomBodyProps) {
       return <Live screen={screen} platform={platform} />;
     case 'failed':
     case 'closed':
-      return <RoomEnd phase={phase} onAgain={s.retry} onBack={screen.back} />;
+      return (
+        <RoomEnd
+          phase={phase}
+          kind={s.target.kind}
+          presence={screen.presence}
+          onAgain={s.retry}
+          onBack={screen.back}
+          onBrowser={screen.browser}
+        />
+      );
   }
 }
