@@ -48,11 +48,15 @@ describe('LinesCheck on a crm line', () => {
     crmLine();
     const lacking = await check(me(['messages:send']));
     expect(lacking.view?.crm_template_scopes_missing).toEqual(['templates:read', 'templates:write']);
+    const reads = ['conversations:read', 'messages:read', 'contacts:read'];
+    expect(lacking.view?.crm_read_scopes_missing).toEqual(reads);
     expect(lacking.requests).toHaveLength(1);
     const half = await check(me(['messages:send', 'templates:read']));
     expect(half.view?.crm_template_scopes_missing).toEqual(['templates:write']);
     const all = await check(me(['messages:send', 'templates:read', 'templates:write']));
     expect(all.view?.crm_template_scopes_missing).toEqual([]);
+    const read = await check(me(['messages:send', 'messages:read', ...reads.slice(0, 1)]));
+    expect(read.view?.crm_read_scopes_missing).toEqual(['contacts:read']);
   });
 
   it('a refused key: one crm_me error tagged credential crm, scope unknown', async () => {
@@ -60,6 +64,7 @@ describe('LinesCheck on a crm line', () => {
     const { view } = await check(crmFailure(401, 'unauthorized'));
     expect(view?.crm_send_scope).toBeNull();
     expect(view?.crm_template_scopes_missing).toBeNull();
+    expect(view?.crm_read_scopes_missing).toBeNull();
     expect(view?.errors).toEqual([expect.objectContaining({ step: 'crm_me', credential: 'crm' })]);
   });
 

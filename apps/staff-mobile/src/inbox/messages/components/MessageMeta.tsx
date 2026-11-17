@@ -55,6 +55,7 @@ export function MessageMeta({ message: m, onTicksPress }: { message: MessageView
           {m.direction === 'outbound' ? (
             <DeliveryTicks
               status={m.status}
+              errorCode={m.error_code}
               times={times}
               onLongPress={() => setOpen((v) => !v)}
               onPress={onTicksPress}

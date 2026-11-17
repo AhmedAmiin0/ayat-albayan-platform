@@ -11,7 +11,11 @@ const envelopeSchema = z.object({
   data: z.unknown(),
 });
 
-const statusSchema = z.object({ whatsapp_message_id: z.string().min(1), status: z.string() });
+const statusSchema = z.object({
+  whatsapp_message_id: z.string().min(1),
+  status: z.string(),
+  conversation_id: z.string().min(1).max(200).nullish(),
+});
 
 type WacrmDelivery =
   | { id: string; kind: 'status'; status: StatusEvent }
@@ -21,7 +25,8 @@ const isDelivery = (s: string): s is StatusEvent['status'] => (DELIVERY_STATUSES
 
 /**
  * One delivery; null = not the CRM's envelope. A status the delivery path does not know (or a malformed
- * one) reads as `other`. The CRM's conversation id is its own, never Meta's: not stored.
+ * one) reads as `other`. The CRM's conversation id is its own, never Meta's: never stored on a row,
+ * only kept on the event to confirm a timed-out send (crm-confirm/).
  */
 export function parseWacrm(body: unknown, now: Date): WacrmDelivery | null {
   const env = envelopeSchema.safeParse(body);
@@ -39,6 +44,7 @@ export function parseWacrm(body: unknown, now: Date): WacrmDelivery | null {
     errorText: null,
     conversationId: null,
     pricingCategory: null,
+    crm: { conversationId: data.data.conversation_id ?? null },
   };
   return { id, kind: 'status', status };
 }
