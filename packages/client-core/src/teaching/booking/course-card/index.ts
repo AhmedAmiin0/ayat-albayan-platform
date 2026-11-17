@@ -34,3 +34,4 @@ export {
   type PackageLines,
   type PackageWords,
 } from './course-card-package.js';
+export { type StopDone, stopDoneLines, type StopDoneWords } from './course-stop-done.js';

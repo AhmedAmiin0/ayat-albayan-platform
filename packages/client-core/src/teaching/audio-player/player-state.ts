@@ -1,4 +1,4 @@
-import { clampPosition, nextSpeed, skipBy, SKIP_SECONDS, type PlayerSpeed } from './player-math.js';
+import { clampPosition, skipBy, SKIP_SECONDS, type PlayerSpeed } from './player-math.js';
 
 // The player's state as one reducer: the web <audio> and the mobile AudioSource both report what
 // the media did (loaded, time, ended) and the buttons ask for what the listener wants.
@@ -21,7 +21,7 @@ export type PlayerEvent =
   | { type: 'failed' }
   | { type: 'skip'; direction: 1 | -1 }
   | { type: 'seek'; position: number }
-  | { type: 'speed' };
+  | { type: 'speed'; speed: PlayerSpeed };
 
 /** A new player, at the saved stop. */
 export const initialPlayer = (startAt = 0): PlayerState => ({
@@ -49,7 +49,7 @@ const STEPS: Steps = {
     return { ...s, position: skipBy({ position: s.position, duration: s.duration, delta }) };
   },
   seek: (s, e) => ({ ...s, position: clampPosition(e.position, s.duration) }),
-  speed: (s) => ({ ...s, speed: nextSpeed(s.speed) }),
+  speed: (s, e) => ({ ...s, speed: e.speed }),
 };
 
 export function playerReducer(state: PlayerState, event: PlayerEvent): PlayerState {

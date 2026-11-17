@@ -1,11 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { clampPosition, formatClock, nextSpeed, progressOf, skipBy, speedLabel } from './index.js';
+import { clampPosition, formatClock, PLAYER_SPEEDS, progressOf, skipBy, speedLabel } from './index.js';
 
-describe('nextSpeed', () => {
-  it('cycles 1 → 1.5 → 2 → 1, an unknown speed back to the first step', () => {
-    expect([nextSpeed(1), nextSpeed(1.5), nextSpeed(2)]).toEqual([1.5, 2, 1]);
-    expect(nextSpeed(3)).toBe(1);
-    expect(speedLabel(1.5)).toBe('1.5×');
+describe('speeds', () => {
+  it('offers 1×, 1.5× and 2×', () => {
+    expect(PLAYER_SPEEDS.map(speedLabel)).toEqual(['1×', '1.5×', '2×']);
   });
 });
 

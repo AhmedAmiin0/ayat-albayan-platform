@@ -1,7 +1,8 @@
 export {
-  clampPosition, formatClock, nextSpeed, PLAYER_SPEEDS, progressOf, SKIP_SECONDS, skipBy,
+  clampPosition, formatClock, PLAYER_SPEEDS, progressOf, SKIP_SECONDS, skipBy,
   speedLabel, type PlayerSpeed,
 } from './player-math.js';
+export { seekAtPoint, seekByKey } from './player-seek.js';
 export {
   listenState, parseResume, RESUME_KEY, resumeAt, withPosition,
   type ListenState, type ResumeMap,

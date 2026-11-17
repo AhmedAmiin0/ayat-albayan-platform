@@ -11,12 +11,12 @@ describe('playerReducer', () => {
     expect(playerReducer(s, { type: 'pause' }).status).toBe('paused');
   });
 
-  it('skips by 10 s within the file and cycles the speed', () => {
+  it('skips by 10 s within the file and picks a speed', () => {
     const s = run([
       { type: 'loaded', duration: 30 },
       { type: 'time', position: 25 },
       { type: 'skip', direction: 1 },
-      { type: 'speed' },
+      { type: 'speed', speed: 1.5 },
     ]);
     expect(s).toMatchObject({ position: 30, speed: 1.5 });
     expect(playerReducer(s, { type: 'skip', direction: -1 }).position).toBe(20);

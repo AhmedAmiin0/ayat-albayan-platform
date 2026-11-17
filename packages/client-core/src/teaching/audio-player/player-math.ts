@@ -4,15 +4,9 @@
 /** «تقديم/رجوع 10 ثوانٍ». */
 export const SKIP_SECONDS = 10;
 
-/** «السرعة»: 1× → 1.5× → 2× → 1×. */
+/** «السرعة»: three choices, 1×, 1.5× and 2×. */
 export const PLAYER_SPEEDS = [1, 1.5, 2] as const;
 export type PlayerSpeed = (typeof PLAYER_SPEEDS)[number];
-
-/** The speed after `speed`; an unknown one starts again at 1×. */
-export function nextSpeed(speed: number): PlayerSpeed {
-  const at = PLAYER_SPEEDS.findIndex((s) => s === speed);
-  return PLAYER_SPEEDS[(at + 1) % PLAYER_SPEEDS.length] ?? 1;
-}
 
 /** «1.5×» (the digits stay Latin, as the boards show them). */
 export const speedLabel = (speed: number): string => `${String(speed)}×`;
