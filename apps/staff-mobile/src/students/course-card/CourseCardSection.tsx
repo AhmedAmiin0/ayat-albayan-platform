@@ -25,6 +25,8 @@ interface CourseCardSectionProps {
   extra?: ReactNode;
   /** The assistant's own «الحلقات القادمة» (with its lesson sheet) instead of the card's list. */
   upcoming?: ReactNode;
+  /** The guardian's phone: the stop's done block opens the chat. */
+  chatPhone?: string | undefined;
 }
 
 /**
@@ -51,6 +53,7 @@ export function CourseCardSection(props: CourseCardSectionProps) {
           movesOf={props.movesOf}
           extend={extendOffered(card)}
           extra={props.extra}
+          chatPhone={props.chatPhone}
         />
       </View>
     </View>

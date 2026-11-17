@@ -23,6 +23,7 @@ import { CourseCardSection } from '@/students/course-card/CourseCardSection';
 import { RenewRow } from '@/students/course-card/RenewRow';
 import { PeopleEditSection } from '@/students/people-edit/PeopleEditSection';
 import { BalanceCard } from '@/students/profile/BalanceCard';
+import { PayRow } from '@/students/profile/PayRow';
 import { GuardianCard } from '@/students/profile/GuardianCard';
 import { SiblingsList } from '@/students/profile/SiblingsList';
 import { StatusChanger } from '@/students/profile/StatusChanger';
@@ -33,7 +34,7 @@ const back = () => backWithin('/students');
 
 /**
  * Student quick view (R-MOB-02) on GET /students/:id. The status changes here, and a payment is
- * recorded from the balance card, «جدّد الاشتراك» once the package ended; editing, adding and merging stay on the web.
+ * recorded from «الدورة والباقة» («سجّل دفعة»), «جدّد الاشتراك» once the package ended; editing, adding and merging stay on the web.
  * «موعد تجريبي جديد» and the trial dates' history in TrialDateSection (R-STU-05); «عرض سجل الحضور» opens the
  * month-by-month attendance table (owner 2026-10-28, the same screen as sales' «تفاصيل الطالب»). The compact
  * h2 title (owner 2026-10-28: «the student screen still has a big header»): the file starts higher. Under the
@@ -76,8 +77,18 @@ export function StudentScreen() {
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>
         <MessageSearchRow />
-        <StatusChanger student={student} />
-        <CourseCardSection studentId={student.id} tree="admin" extra={<RenewRow student={student} />} />
+        <StatusChanger student={student} chatPhone={student.guardian.phone_e164} />
+        <CourseCardSection
+          studentId={student.id}
+          tree="admin"
+          chatPhone={student.guardian.phone_e164}
+          extra={
+            <>
+              <RenewRow student={student} />
+              <PayRow studentId={student.id} />
+            </>
+          }
+        />
         <Button
           variant="secondary"
           label={t.mobileAdmin.reports.button}
