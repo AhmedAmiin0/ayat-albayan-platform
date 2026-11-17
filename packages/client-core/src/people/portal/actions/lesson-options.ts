@@ -1,4 +1,4 @@
-import { isOpenLesson, type PortalLesson } from '@ab/shared';
+import { isFamilyActionable, isOpenLesson, type PortalLesson } from '@ab/shared';
 
 // What «خيارات الحلقة» offers on one lesson, and what its card says (owner 2026-11-17). Pure,
 // shared by the family app and the web portal.
@@ -14,18 +14,18 @@ export type CountsLine = 'countsYes' | 'countsNo' | 'excusedYes' | 'excusedNo';
 const WAITING: readonly LessonOption[] = ['confirm', 'withdraw', 'decline'];
 const OPEN: readonly LessonOption[] = ['confirm', 'request', 'decline'];
 
-/** Open and not started: the family may still act on it. */
-const isActionable = (l: Pick<PortalLesson, 'status' | 'starts_at'>, now: Date): boolean =>
-  isOpenLesson(l.status) && Date.parse(l.starts_at) > now.getTime();
-
 const isWaiting = (l: PortalLesson): boolean => l.family?.request?.status === 'pending';
 
 /** «سأحضر» only while it still needs the confirmation (a confirmed lesson needs none). */
 const fits = (l: PortalLesson) => (o: LessonOption) => o !== 'confirm' || l.status === 'scheduled';
 
+/** The student's own lesson, open and not started (a group lesson is the academy's to change). */
+const isFamilyOwn = (l: PortalLesson, now: Date): boolean =>
+  l.family !== undefined && !l.family.group && isFamilyActionable(l, now);
+
 /** The options, in the menu's order; none once it started or closed, or from an older API. */
 export function lessonOptions(lesson: PortalLesson, now: Date): LessonOption[] {
-  if (!lesson.family || !isActionable(lesson, now)) return [];
+  if (!isFamilyOwn(lesson, now)) return [];
   return (isWaiting(lesson) ? WAITING : OPEN).filter(fits(lesson));
 }
 
@@ -49,3 +49,7 @@ export function excusedLine(lesson: PortalLesson): CountsLine | null {
   if (lesson.status !== 'excused' || !lesson.family) return null;
   return lesson.family.counts ? 'excusedYes' : 'excusedNo';
 }
+
+/** «أكّدتم حضور … لهذه الحلقة»: a confirmed lesson the family still sees ahead. */
+export const confirmedLine = (lesson: PortalLesson, now: Date): boolean =>
+  lesson.status === 'confirmed' && isFamilyOwn(lesson, now);

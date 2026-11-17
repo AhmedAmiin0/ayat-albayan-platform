@@ -1,5 +1,16 @@
-import { courseCardLines, extendDoneLines, extendPreviewLines } from '@ab/client-core';
-import type { CourseCardView, CourseExtendPreview, CourseExtendResult } from '@ab/shared';
+import {
+  courseCardLines,
+  extendDoneLines,
+  extendPreviewLines,
+  packageCardLines,
+} from '@ab/client-core';
+import type {
+  CourseCardPackage,
+  CourseCardView,
+  CourseExtendPreview,
+  CourseExtendResult,
+} from '@ab/shared';
+import { moneyText } from '@/features/finance/subscriptions';
 import { dateLabel, dayIn } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 
@@ -8,6 +19,20 @@ import { t } from '@/lib/i18n/i18n';
 
 export const cardLines = (course: NonNullable<CourseCardView['course']>) =>
   courseCardLines({ course, words: t.courseCard, date: dateLabel });
+
+/** «بقيت 3 حلقات», «12 حلقة · 9 من 12 حلقة · دُفع … من …» and «يُتوقع أن تنتهي يوم …». */
+export const packageLines = (pkg: CourseCardPackage, tz: string) =>
+  packageCardLines({
+    pkg,
+    words: {
+      left: t.courseCard.left,
+      lessons: t.today.count,
+      usedOf: t.subscriptions.usedOf,
+      paidOf: t.payments.paidOf,
+      projectedEnd: t.subscriptions.projectedEnd,
+    },
+    format: { money: moneyText, day: dayIn(tz) },
+  });
 
 export const extendLines = (preview: CourseExtendPreview, tz: string): string[] =>
   extendPreviewLines({

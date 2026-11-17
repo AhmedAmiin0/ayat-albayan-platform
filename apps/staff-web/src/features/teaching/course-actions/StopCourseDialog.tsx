@@ -1,4 +1,4 @@
-import { courseStopErrorCode, stopFormCheck } from '@ab/client-core';
+import { courseStopErrorCode, stopFormCheck, type StopDone } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -8,6 +8,7 @@ import { t } from '@/lib/i18n/i18n';
 import { courseStopPreviewQuery, useStopCourse } from './api';
 import { useStopMoney } from './refund/use-stop-money';
 import { StopBody } from './StopSummary';
+import { StopDoneDialog, type StopChat } from './StopDoneDialog';
 
 export interface CourseActionDialogProps {
   studentId: string;
@@ -17,6 +18,11 @@ export interface CourseActionDialogProps {
   onDone: (message: string) => void;
 }
 
+interface StopCourseDialogProps extends CourseActionDialogProps {
+  /** The done block's «فتح محادثة ولي الأمر» (absent: no button). */
+  chat?: StopChat | undefined;
+}
+
 /**
  * «إلغاء الاشتراك» (owner 2026-10-30): stop the course, keep the money. The sheet says what
  * happens (the lessons and their dates, who is told), asks a short reason (owner 2026-11-17: a
@@ -24,8 +30,9 @@ export interface CourseActionDialogProps {
  * key per opening.
  * The money is the person's choice (owner 2026-11-06): «إلغاء فقط» with what the family still
  * owes, or (subscriptions.refund, something paid) «إلغاء مع استرداد» with the refund amount.
+ * Then the done block (StopDoneDialog); its «تم» leaves the head as the caller's toast.
  */
-export function StopCourseDialog(props: CourseActionDialogProps) {
+export function StopCourseDialog(props: StopCourseDialogProps) {
   const { studentId, subscriptionId, onClose } = props;
   const formId = useId();
   const [reason, setReason] = useState('');
@@ -35,13 +42,17 @@ export function StopCourseDialog(props: CourseActionDialogProps) {
   const money = useStopMoney(preview.data);
   const check = stopFormCheck({ money: money.money, text: money.state.text, reason, tried });
   const ask = money.money?.ask ?? {};
-  const stop = useStopCourse({ ...props, reason, ask, currency });
+  const [finished, setFinished] = useState<StopDone | null>(null);
+  const stop = useStopCourse({ ...props, reason, ask, currency, onDone: setFinished });
   const live = preview.data?.stopped === null;
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     setTried(true);
     if (live && !check.blocked && !stop.isPending) stop.mutate();
   };
+  if (finished) {
+    return <StopDoneDialog done={finished} chat={props.chat} onClose={() => props.onDone(finished.head)} />;
+  }
   const error = preview.error ?? stop.error;
   const actions = (
     <>

@@ -1,6 +1,8 @@
 import type { PortalLesson } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { declineLine, excusedLine, lessonOptions, requestChip } from './lesson-options.js';
+import {
+  confirmedLine, declineLine, excusedLine, lessonOptions, requestChip,
+} from './lesson-options.js';
 
 const NOW = new Date('2026-11-16T10:00:00Z');
 const request = (status: 'pending' | 'rejected') => ({
@@ -53,5 +55,17 @@ describe('«خيارات الحلقة» (owner 2026-11-17)', () => {
     expect(excusedLine(lesson({ status: 'excused', family: { group: false, counts: false, request: null } }))).toBe('excusedNo');
     expect(excusedLine(lesson({ status: 'excused', family: { group: false, counts: true, request: null } }))).toBe('excusedYes');
     expect(excusedLine(lesson())).toBeNull();
+  });
+
+  it('a group lesson: no options (the academy changes it), no «أكّدتم حضور»', () => {
+    const group = lesson({ status: 'confirmed', family: { group: true, counts: false, request: null } });
+    expect(lessonOptions(group, NOW)).toEqual([]);
+    expect(confirmedLine(group, NOW)).toBe(false);
+  });
+
+  it('«أكّدتم حضور … لهذه الحلقة» on a confirmed lesson ahead only', () => {
+    expect(confirmedLine(lesson({ status: 'confirmed' }), NOW)).toBe(true);
+    expect(confirmedLine(lesson(), NOW)).toBe(false);
+    expect(confirmedLine(lesson({ status: 'confirmed' }), new Date('2026-11-17T16:00:00Z'))).toBe(false);
   });
 });

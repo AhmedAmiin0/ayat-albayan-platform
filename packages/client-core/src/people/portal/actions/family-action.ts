@@ -39,7 +39,13 @@ export const runFamilyAction =
     RUNS[a.kind](sends, a);
 
 /** The family's own words for a refused action (portal.actions.errors.<code>), or null. */
-const FAMILY_ERRORS = ['proposal_pending', 'lesson_started', 'no_request', 'date_in_past'] as const;
+const FAMILY_ERRORS = [
+  'proposal_pending',
+  'lesson_started',
+  'no_request',
+  'date_in_past',
+  'group_lesson',
+] as const;
 type FamilyError = (typeof FAMILY_ERRORS)[number];
 
 export function familyErrorOf(error: unknown): FamilyError | null {
@@ -48,7 +54,7 @@ export function familyErrorOf(error: unknown): FamilyError | null {
 }
 
 /** portal.actions' words for a refusal: one per known code, else the general one. */
-interface FailureWords {
+export interface FailureWords {
   errors: Readonly<Record<FamilyError, string>>;
   failed: string;
 }

@@ -1,6 +1,8 @@
 import {
   courseActionsKey,
   courseStopBody,
+  stopDoneLines,
+  type StopDone,
   courseMoveBase,
   courseMoveErrorCode,
   courseMoveViewPath,
@@ -89,26 +91,24 @@ type StopInput = Course & {
   reason: string;
   /** The money choice: `refund` («إلغاء مع استرداد») or `owe` («إلغاء فقط»). */
   ask: StopMoneyAsk;
-  onDone: (message: string) => void;
+  onDone: (done: StopDone) => void;
 };
 
 /**
- * What the stop did (owner 2026-11-17): «أُلغي الاشتراك…» (with the refund's amount), the
- * student's status now, and the manual transfer still to do when there is one.
+ * What the stop did (owner 2026-11-17, board CourseXWebDone): «أُلغي الاشتراك…» (with the
+ * refund's amount), the student's status now, «الخطوة التالية» and who was told.
  */
-function doneText(result: CourseStopResult, currency: string): string {
-  const words = t.courseActions.stop;
-  const refund = result.refund;
-  const head = refund
-    ? words.doneRefund.replace('{amount}', moneyText(refund.amount, currency))
-    : words.done;
-  const status = words.doneStatus.replace('{status}', t.enums.studentStatus[result.studentStatus]);
-  const by = refund?.manual ?? 0;
-  const next = by > 0 ? [words.next.replace('{amount}', moneyText(by, currency))] : [];
-  return [head, status, ...next].join(' · ');
-}
+export const stopDoneOf = (result: CourseStopResult, currency: string): StopDone =>
+  stopDoneLines({
+    result,
+    words: t.courseActions.stop,
+    format: {
+      money: (amount) => moneyText(amount, currency),
+      status: (status) => t.enums.studentStatus[status],
+    },
+  });
 
-/** POST the stop with one idempotency key per dialog (rule 8), then re-read and the toast. */
+/** POST the stop with one idempotency key per dialog (rule 8), then re-read and the done block. */
 export function useStopCourse(input: StopInput & { currency: string }) {
   const { studentId, subscriptionId, onDone } = input;
   const [requestId] = useState(() => crypto.randomUUID());
@@ -123,7 +123,7 @@ export function useStopCourse(input: StopInput & { currency: string }) {
     mutationFn: () => stopCourse(studentId, courseStopBody(body)),
     onSuccess: async (result) => {
       await invalidate();
-      onDone(doneText(result, input.currency));
+      onDone(stopDoneOf(result, input.currency));
     },
   });
 }
