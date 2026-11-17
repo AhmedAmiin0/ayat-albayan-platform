@@ -40,6 +40,7 @@ describe('AudioPlayer (web)', () => {
     const audio = loaded();
     const slider = screen.getByRole('slider', { name: P.seek });
     document.documentElement.dir = 'rtl';
+    fireEvent.keyDown(slider, { key: 'Home' });
     fireEvent.keyDown(slider, { key: 'ArrowLeft' });
     expect(audio.currentTime).toBe(10);
     fireEvent.keyDown(slider, { key: 'End' });
