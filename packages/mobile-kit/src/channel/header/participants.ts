@@ -4,7 +4,7 @@ import type { ChannelMessageView, ChannelParticipantView } from '@ab/shared';
 const MAX_NAMES = 4;
 
 /** The header's people: the others by name (the avatar takes the first), then the whole line. */
-export interface HeaderPeople {
+interface HeaderPeople {
   others: string[];
   /** The others, then «أنت» when the viewer is in the chat; empty while nobody else is known. */
   line: string[];
