@@ -13,7 +13,7 @@ const request = (status: 'pending' | 'rejected', decision_note: string | null = 
 
 describe('what the family asked, on the web card (owner 2026-11-17)', () => {
   it('waiting: the chip, what was asked, and that the time stays', () => {
-    const l = lesson({ status: 'scheduled', family: { counts: false, request: request('pending') } });
+    const l = lesson({ status: 'scheduled', family: { group: false, counts: false, request: request('pending') } });
     renderPortal(<><FamilyChip lesson={l} /><FamilyLine lesson={l} tz="Africa/Cairo" /></>);
     expect(screen.getByText(A.pendingChip)).toBeTruthy();
     expect(screen.getByText(/^طلبتم /)).toBeTruthy();
@@ -21,13 +21,13 @@ describe('what the family asked, on the web card (owner 2026-11-17)', () => {
   });
 
   it('declined: «لم يُقبل الطلب» with the academy’s note', () => {
-    const l = lesson({ family: { counts: false, request: request('rejected', 'لا يتوفر وقت') } });
+    const l = lesson({ family: { group: false, counts: false, request: request('rejected', 'لا يتوفر وقت') } });
     renderPortal(<FamilyLine lesson={l} tz="Africa/Cairo" />);
     expect(screen.getByText(`${A.rejectedChip} · ${A.decisionNote.replace('{note}', 'لا يتوفر وقت')}`)).toBeTruthy();
   });
 
   it('excused: whether it counts from the package', () => {
-    renderPortal(<FamilyLine lesson={lesson({ status: 'excused', family: { counts: true, request: null } })} tz="Africa/Cairo" />);
+    renderPortal(<FamilyLine lesson={lesson({ status: 'excused', family: { group: false, counts: true, request: null } })} tz="Africa/Cairo" />);
     expect(screen.getByText(A.excusedYes)).toBeTruthy();
   });
 });

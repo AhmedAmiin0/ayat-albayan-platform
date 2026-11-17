@@ -15,7 +15,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 const now = new Date('2026-11-16T10:00:00.000Z');
 const A = t.portal.actions;
 const needs = (counts = false) =>
-  lesson(now, 24 * 60, { status: 'scheduled', family: { counts, request: null } });
+  lesson(now, 24 * 60, { status: 'scheduled', family: { group: false, counts, request: null } });
 const onNotice = jest.fn();
 const show = (l = needs()) =>
   renderWithQuery(
@@ -53,7 +53,7 @@ test('a waiting request offers «سحب الطلب» instead of asking again', a
     id: 'r', status: 'pending' as const, proposed_starts_at: '2026-11-18T14:30:00.000Z',
     note: null, decision_note: null, decided_at: null,
   };
-  await show(lesson(now, 24 * 60, { status: 'scheduled', family: { counts: false, request } }));
+  await show(lesson(now, 24 * 60, { status: 'scheduled', family: { group: false, counts: false, request } }));
   await fireEvent.press(screen.getByRole('button', { name: A.menuTitle }));
   expect(screen.queryByRole('button', { name: A.request })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: A.withdraw }));
@@ -83,6 +83,6 @@ test('a refused action says why, in the family’s words', async () => {
 });
 
 test('a started lesson has no options', async () => {
-  await show(lesson(now, -5, { status: 'scheduled', family: { counts: true, request: null } }));
+  await show(lesson(now, -5, { status: 'scheduled', family: { group: false, counts: true, request: null } }));
   expect(screen.queryByRole('button', { name: A.menuTitle })).toBeNull();
 });

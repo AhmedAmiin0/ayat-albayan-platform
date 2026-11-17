@@ -15,7 +15,7 @@ const lesson = (over: Partial<PortalLesson> = {}): PortalLesson => ({
   way_in: 'classroom',
   meeting_url: null,
   window: { state: 'early', opens_at: '2026-11-17T15:15:00.000Z', closes_at: '2026-11-17T16:30:00.000Z' },
-  family: { counts: false, request: null },
+  family: { group: false, counts: false, request: null },
   ...over,
 });
 
@@ -29,7 +29,7 @@ describe('«خيارات الحلقة» (owner 2026-11-17)', () => {
   });
 
   it('a request waiting: withdraw it instead of asking again', () => {
-    const waiting = lesson({ family: { counts: false, request: request('pending') } });
+    const waiting = lesson({ family: { group: false, counts: false, request: request('pending') } });
     expect(lessonOptions(waiting, NOW)).toEqual(['confirm', 'withdraw', 'decline']);
   });
 
@@ -40,18 +40,18 @@ describe('«خيارات الحلقة» (owner 2026-11-17)', () => {
   });
 
   it('the request chip replaces the status chip while the lesson is open', () => {
-    expect(requestChip(lesson({ family: { counts: false, request: request('pending') } }))).toBe('pendingChip');
-    expect(requestChip(lesson({ family: { counts: false, request: request('rejected') } }))).toBe('rejectedChip');
+    expect(requestChip(lesson({ family: { group: false, counts: false, request: request('pending') } }))).toBe('pendingChip');
+    expect(requestChip(lesson({ family: { group: false, counts: false, request: request('rejected') } }))).toBe('rejectedChip');
     expect(requestChip(lesson())).toBeNull();
-    const closed = lesson({ status: 'completed', family: { counts: true, request: request('pending') } });
+    const closed = lesson({ status: 'completed', family: { group: false, counts: true, request: request('pending') } });
     expect(requestChip(closed)).toBeNull();
   });
 
   it('the package lines: the preview, and an excused lesson\'s outcome', () => {
     expect(declineLine(lesson())).toBe('countsNo');
-    expect(declineLine(lesson({ family: { counts: true, request: null } }))).toBe('countsYes');
-    expect(excusedLine(lesson({ status: 'excused', family: { counts: false, request: null } }))).toBe('excusedNo');
-    expect(excusedLine(lesson({ status: 'excused', family: { counts: true, request: null } }))).toBe('excusedYes');
+    expect(declineLine(lesson({ family: { group: false, counts: true, request: null } }))).toBe('countsYes');
+    expect(excusedLine(lesson({ status: 'excused', family: { group: false, counts: false, request: null } }))).toBe('excusedNo');
+    expect(excusedLine(lesson({ status: 'excused', family: { group: false, counts: true, request: null } }))).toBe('excusedYes');
     expect(excusedLine(lesson())).toBeNull();
   });
 });

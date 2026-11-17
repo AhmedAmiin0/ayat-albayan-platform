@@ -11,7 +11,7 @@ vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend,
 
 const NOW = new Date('2026-10-26T10:00:00.000Z');
 const A = t.portal.actions;
-const needs = (counts = false) => lesson({ status: 'scheduled', family: { counts, request: null } });
+const needs = (counts = false) => lesson({ status: 'scheduled', family: { group: false, counts, request: null } });
 const show = (l = needs()) =>
   renderPortal(<LessonOptionsBar lesson={l} student={kid()} now={NOW} />);
 const RESULT = { lesson_id: 'l1', status: 'confirmed', counts: false };

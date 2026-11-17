@@ -12,24 +12,24 @@ const request = (status: 'pending' | 'rejected', decision_note: string | null = 
 });
 
 test('a waiting request: «بانتظار رد الأكاديمية» and what was asked', async () => {
-  const l = lesson(now, 60, { status: 'scheduled', family: { counts: false, request: request('pending') } });
+  const l = lesson(now, 60, { status: 'scheduled', family: { group: false, counts: false, request: request('pending') } });
   await render(<><LessonChip lesson={l} /><RequestLine lesson={l} clock={clock} ink="#000" /></>);
   expect(screen.getByText(A.pendingChip)).toBeTruthy();
   expect(screen.getByText(/^طلبتم .*18/)).toBeTruthy();
 });
 
 test('a declined request: «لم يُقبل الطلب» with the academy’s note; the status chip is back', async () => {
-  const l = lesson(now, 60, { status: 'confirmed', family: { counts: false, request: request('rejected', 'لا يتوفر وقت') } });
+  const l = lesson(now, 60, { status: 'confirmed', family: { group: false, counts: false, request: request('rejected', 'لا يتوفر وقت') } });
   await render(<><LessonChip lesson={l} /><RequestLine lesson={l} clock={clock} ink="#000" /></>);
   expect(screen.getByText(`${A.rejectedChip} · ${A.decisionNote.replace('{note}', 'لا يتوفر وقت')}`)).toBeTruthy();
   expect(screen.getByText(t.enums.lessonStatus.confirmed)).toBeTruthy();
 });
 
 test('an excused lesson says whether it counts from the package; nothing else: no line', async () => {
-  const excused = lesson(now, 60, { status: 'excused', family: { counts: false, request: null } });
+  const excused = lesson(now, 60, { status: 'excused', family: { group: false, counts: false, request: null } });
   await render(<RequestLine lesson={excused} clock={clock} ink="#000" />);
   expect(screen.getByText(A.excusedNo)).toBeTruthy();
-  const plain = lesson(now, 60, { family: { counts: false, request: null } });
+  const plain = lesson(now, 60, { family: { group: false, counts: false, request: null } });
   await render(<RequestLine lesson={plain} clock={clock} ink="#000" />);
   expect(screen.queryByText(A.excusedNo)).toBeNull();
 });
