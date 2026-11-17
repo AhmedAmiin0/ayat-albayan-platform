@@ -35,6 +35,24 @@ test('the family’s head: the app’s title with the student, the people, «أ�
   );
 });
 
+test('the API’s members name the people, teacher first, whoever spoke', async () => {
+  const participants = [
+    { name: 'أبرار', role: 'teacher', me: false },
+    { name: 'أم يوسف', role: 'guardian', me: true },
+    { name: 'سارة', role: 'sales', me: false },
+  ] as const;
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path.endsWith('/presence')
+      ? { enabled: false, peers: [] }
+      : { ...page, participants: participants.map((x) => ({ ...x })) },
+  );
+  const refs = { audience: 'portal', studentId: 's1' } as const;
+  await renderWithQuery(<ChannelScreen refs={refs} />, freshQueryClient());
+  expect(await screen.findByTestId('channel-people')).toHaveTextContent(
+    ['أبرار', 'سارة', t.studentChannel.you].join(t.studentChannel.namesJoin),
+  );
+});
+
 test('staff: the student’s name is the title', async () => {
   const refs = { audience: 'teacher', studentId: 's1' } as const;
   await renderWithQuery(<ChannelScreen refs={refs} />, freshQueryClient());

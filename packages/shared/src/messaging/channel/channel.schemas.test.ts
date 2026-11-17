@@ -27,10 +27,19 @@ const page: ChannelPage = {
   open: true,
   closed_reason: null,
   channel_id: 'c1',
+  participants: [
+    { name: 'أبرار', role: 'teacher', me: false },
+    { name: 'أم سلمى', role: 'guardian', me: true },
+  ],
+  my_last_read_at: '2026-10-27T10:00:00.123456+00:00',
 };
 
 /** What the API answered before files, replies and read ticks. */
-const oldPage = { ...page, messages: [message], closed_reason: undefined };
+const oldPage = {
+  ...page,
+  ...{ messages: [message], closed_reason: undefined },
+  ...{ participants: undefined, my_last_read_at: undefined },
+};
 
 describe('a thread page as the apps read it (docs/31 §2)', () => {
   it('reads the API answer as it is', () => {
@@ -45,6 +54,7 @@ describe('a thread page as the apps read it (docs/31 §2)', () => {
   it('an older API: every new field gets its default (text, no file, no quote, not read)', () => {
     const parsed = channelPageSchema.parse(oldPage);
     expect(parsed.closed_reason).toBeNull();
+    expect([parsed.participants, parsed.my_last_read_at]).toEqual([[], null]);
     expect(parsed.messages[0]).toEqual({
       ...message,
       ...{ kind: 'text', attachment: null, reply_to: null, read_by_all: false, client_id: null },
@@ -56,6 +66,14 @@ describe('a thread page as the apps read it (docs/31 §2)', () => {
     const parsed = channelPageSchema.parse({ ...page, messages: [newer], closed_reason: 'later' });
     expect([parsed.messages[0]?.sender_role, parsed.messages[0]?.kind]).toEqual(['unknown', 'text']);
     expect(parsed.closed_reason).toBeNull();
+  });
+
+  it('participants: an unknown role reads as unknown, a malformed list as none', () => {
+    const odd = [{ name: 'منى', role: 'supervisor', me: 'yes' }];
+    const parsed = channelPageSchema.parse({ ...page, participants: odd, my_last_read_at: 5 });
+    expect(parsed.participants).toEqual([{ name: 'منى', role: 'unknown', me: false }]);
+    expect(parsed.my_last_read_at).toBeNull();
+    expect(channelPageSchema.parse({ ...page, participants: 'x' }).participants).toEqual([]);
   });
 
   it('refuses an answer that is not a page (no messages, a message without an id)', () => {

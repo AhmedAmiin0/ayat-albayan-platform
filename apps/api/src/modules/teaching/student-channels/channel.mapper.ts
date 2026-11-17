@@ -5,16 +5,15 @@ import {
   type ChannelSenderRole,
   type TeacherChannelRow,
 } from '@ab/shared';
-import {
-  roleOf,
-  toMessageView,
-  type ViewContext,
-} from '@/modules/teaching/student-channels/views/message-view';
+import type {
+  PageViewContext,
+} from '@/modules/teaching/student-channels/views/channel-views.service';
+import { roleOf, toMessageView } from '@/modules/teaching/student-channels/views/message-view';
 import type { ChannelStudent } from './channel-people.repo';
 import type { ChannelMessageRow, ChannelSummaryRow } from './channel.repo';
 
 /** A page read newest first (one extra row = more to load), shown oldest first. */
-interface PageContext extends ViewContext {
+interface PageContext extends PageViewContext {
   readOnly: boolean;
   closedReason: ChannelClosedReason | null;
   studentName: string;
@@ -33,6 +32,8 @@ export function toPage(rows: readonly ChannelMessageRow[], ctx: PageContext): Ch
     open: ctx.open,
     closed_reason: ctx.open ? null : ctx.closedReason,
     channel_id: ctx.channelId,
+    participants: ctx.participants,
+    my_last_read_at: ctx.readOnly ? null : ctx.myLastReadAt,
   };
 }
 

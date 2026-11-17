@@ -6,6 +6,7 @@ import { ChannelMedia } from '@/modules/teaching/student-channels/media/channel-
 import {
   ChannelReadState,
   type ChannelViewer,
+  type PageReads,
 } from '@/modules/teaching/student-channels/reads/channel-read-state';
 import type { ViewContext } from './message-view';
 
@@ -14,6 +15,11 @@ const paths = (rows: readonly ChannelMessageRow[]): string[] =>
 
 const quoted = (rows: readonly ChannelMessageRow[]): string[] =>
   rows.flatMap((r) => (r.reply_to_id ? [r.reply_to_id] : []));
+
+/** A page's context: a message's and the page's read state (the header's people, my mark). */
+export type PageViewContext = ViewContext & Omit<PageReads, 'readByAll'>;
+
+const noReads = (): PageReads => ({ readByAll: new Set(), participants: [], myLastReadAt: null });
 
 const senders = (rows: readonly ChannelMessageRow[]): string[] =>
   rows.flatMap((r) => (r.sender_profile_id ? [r.sender_profile_id] : []));
@@ -35,13 +41,32 @@ export class ChannelViews {
   ) {}
 
   async context(rows: readonly ChannelMessageRow[], viewer: ChannelViewer): Promise<ViewContext> {
-    const [names, urls, goneQuotes, readByAll] = await Promise.all([
+    const [base, readByAll] = await Promise.all([
+      this.base(rows, viewer),
+      this.reads.byAll(viewer, rows).catch((e: unknown) => this.none('read ticks', e)),
+    ]);
+    return { ...base, readByAll };
+  }
+
+  /** A page's: as context, plus the chat's people and my read mark (none when that fails). */
+  async page(rows: readonly ChannelMessageRow[], viewer: ChannelViewer): Promise<PageViewContext> {
+    const [base, reads] = await Promise.all([
+      this.base(rows, viewer),
+      this.reads.page(viewer, rows).catch((e: unknown) => {
+        this.warn('read state', e);
+        return noReads();
+      }),
+    ]);
+    return { ...base, ...reads };
+  }
+
+  private async base(rows: readonly ChannelMessageRow[], viewer: ChannelViewer) {
+    const [names, urls, goneQuotes] = await Promise.all([
       this.people.names(senders(rows)),
       this.media.urls(paths(rows)),
       this.messages.deletedIds(quoted(rows)),
-      this.reads.byAll(viewer, rows).catch((e: unknown) => this.none('read ticks', e)),
     ]);
-    return { me: viewer.profileId, names, urls, goneQuotes, readByAll };
+    return { me: viewer.profileId, names, urls, goneQuotes };
   }
 
   /** One message just sent or changed: never fails (a lookup failure shows less, not a 500). */

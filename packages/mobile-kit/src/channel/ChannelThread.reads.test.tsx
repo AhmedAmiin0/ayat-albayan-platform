@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { AppState } from 'react-native';
 import { t } from '../lib/i18n/i18n';
@@ -33,8 +32,7 @@ const reads = {
   unread: [{ name: 'سلمى', role: 'student' }],
 };
 
-beforeEach(async () => {
-  await AsyncStorage.clear();
+beforeEach(() => {
   mockApiFetch.mockReset().mockImplementation(async (path: string) =>
     path.endsWith('/reads') ? reads : page,
   );
@@ -55,15 +53,24 @@ test('a long press on my ticks: who read it (with the time) and who not yet', as
   expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/channels/s1/messages/m3/reads');
 });
 
-test('the band sits over the first message after the last mark, and the mark moves on', async () => {
-  await AsyncStorage.setItem('channel-read:teacher:s1', '2026-10-27T09:30:00.000Z');
-  await open();
+test('the band sits over the first message after the page’s mark, and the mark moves on', async () => {
+  const marked = { ...page, my_last_read_at: '2026-10-27T09:30:00.000Z' };
+  mockApiFetch.mockImplementation(async (path: string) => (path.endsWith('/reads') ? reads : marked));
+  const client = freshQueryClient();
+  await renderWithQuery(<ChannelThread refs={{ audience: 'teacher', studentId: 's1' }} />, client);
   expect(await screen.findByText(c.unread.replace('{n}', '1'))).toBeTruthy();
   const at = '2026-10-27T10:05:00.000Z';
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', READ_PATH, { at }));
-  await waitFor(async () =>
-    expect(await AsyncStorage.getItem('channel-read:teacher:s1')).toBe(at),
-  );
+  // A refetch brings the moved mark: the band stays where it was when the chat opened.
+  mockApiFetch.mockResolvedValue({ ...marked, my_last_read_at: at });
+  await act(() => client.invalidateQueries());
+  expect(screen.getByText(c.unread.replace('{n}', '1'))).toBeTruthy();
+});
+
+test('no mark yet (never read, or a monitor): no band', async () => {
+  await open();
+  expect(await screen.findByText('جديدة')).toBeTruthy();
+  expect(screen.queryByText(c.unread.replace('{n}', '2'))).toBeNull();
 });
 
 test('in the background the thread is not marked read', async () => {

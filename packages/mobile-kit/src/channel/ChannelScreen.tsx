@@ -1,10 +1,11 @@
 import { threadMessages, type ChannelAudience } from '@ab/client-core';
+import type { ChannelPage, ChannelParticipantView } from '@ab/shared';
 import { t } from '../lib/i18n/i18n';
 import { Screen } from '../ui/layout/Screen';
 import { ChannelThread } from './ChannelThread';
 import { useChannel, type ChannelRef } from './channel-api';
 import { ChannelHeader } from './header/ChannelHeader';
-import { participantNames } from './header/participants';
+import { headerPeople } from './header/participants';
 import type { ChannelMediaPort } from './media-port';
 
 interface ChannelScreenProps {
@@ -26,6 +27,10 @@ const AVATAR: Readonly<Record<ChannelAudience, 'people' | 'student'>> = {
 const titleOf = (title: string | undefined, student: string): string =>
   [title, student].filter(Boolean).join(' · ');
 
+/** The newest page's members (an older API's and a loading page's: none). */
+const participantsOf = (pages: readonly ChannelPage[] | undefined): ChannelParticipantView[] =>
+  pages?.[0]?.participants ?? [];
+
 /**
  * A student channel screen (docs/31 §2), the same in both apps: the head (avatar, title, the
  * people, presence), then the thread. The app reads the student from its route.
@@ -34,8 +39,11 @@ export function ChannelScreen({ refs, title, media }: ChannelScreenProps) {
   // The same query the thread reads (one request): it names the student and the people.
   const pages = useChannel(refs).data?.pages;
   const student = pages?.[0]?.student_name ?? '';
-  const people = participantNames(threadMessages(pages), t.studentChannel.you);
-  const others = people.slice(0, -1);
+  const { others, line } = headerPeople({
+    participants: participantsOf(pages),
+    messages: threadMessages(pages),
+    you: t.studentChannel.you,
+  });
   const avatar = AVATAR[refs.audience] === 'people' ? (others[0] ?? student) : student;
   return (
     <Screen chat>
@@ -43,7 +51,7 @@ export function ChannelScreen({ refs, title, media }: ChannelScreenProps) {
         refs={refs}
         title={titleOf(title, student)}
         avatarName={avatar}
-        names={others.length > 0 ? people.join(t.studentChannel.namesJoin) : ''}
+        names={line.join(t.studentChannel.namesJoin)}
       />
       <ChannelThread refs={refs} media={media} />
     </Screen>

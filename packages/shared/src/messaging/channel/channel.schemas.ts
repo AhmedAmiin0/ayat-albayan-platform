@@ -71,6 +71,10 @@ export const channelPageSchema: z.ZodType<ChannelPage> = z.object({
   open: z.boolean(),
   closed_reason: closedReason,
   channel_id: z.string(),
+  participants: z
+    .array(z.object({ name: z.string().catch(''), role: senderRole, me: z.boolean().catch(false) }))
+    .catch([]),
+  my_last_read_at: z.string().nullable().catch(null),
 });
 
 /** GET …/messages/:messageId/reads. */

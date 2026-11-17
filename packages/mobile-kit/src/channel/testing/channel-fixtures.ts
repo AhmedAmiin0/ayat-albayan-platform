@@ -12,6 +12,6 @@ export const channelMessage = (over: Partial<ChannelMessageView> = {}): ChannelM
 
 export const channelPage = (over: Partial<ChannelPage> = {}): ChannelPage => ({
   ...{ student_name: 'سلمى', messages: [], has_more: false, read_only: false, open: true },
-  ...{ closed_reason: null, channel_id: '' },
+  ...{ closed_reason: null, channel_id: '', participants: [], my_last_read_at: null },
   ...over,
 });

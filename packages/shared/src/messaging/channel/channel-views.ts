@@ -80,6 +80,17 @@ export interface ChannelPage {
    * viewer.
    */
   channel_id: string;
+  /** The chat's people now (the header line); the viewer flagged `me`. */
+  participants: ChannelParticipantView[];
+  /** The viewer's read mark (channel_reads); null for a monitor or before any read. */
+  my_last_read_at: string | null;
+}
+
+/** One of the chat's current people: teacher(s), family logins (chat on), owning assistant(s). */
+export interface ChannelParticipantView {
+  name: string;
+  role: ChannelSenderLabel;
+  me: boolean;
 }
 
 /** GET …/messages/:messageId/reads: who of the chat (its sender aside) has read it, who not. */

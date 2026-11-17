@@ -23,7 +23,7 @@ interface ChannelListProps {
  * by the minute (useNow), which also closes the 15-minute edit window on screen.
  */
 export function ChannelList({ refs, query, mode, actions }: ChannelListProps) {
-  const { rows, clock } = useChannelRows(refs, {
+  const { rows, clock } = useChannelRows({
     pages: query.data?.pages,
     more: query.hasNextPage,
   });

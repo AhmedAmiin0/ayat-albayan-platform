@@ -1,4 +1,4 @@
-import type { ChannelReads } from '@ab/shared';
+import type { ChannelParticipantView, ChannelReads } from '@ab/shared';
 import type { ChannelMember } from '@/modules/teaching/student-channels/reads/channel-members';
 import type { ReadMark } from '@/modules/teaching/student-channels/reads/channel-reads.repo';
 import { atOrAfter, micros } from '@/modules/teaching/student-channels/reads/instant';
@@ -50,3 +50,19 @@ export function readByAll(
     others.length > 0 && others.every((o) => covered(o.profileId, created) !== null);
   return new Set(mine.filter((m) => byAll(m.created_at)).map((m) => m.id));
 }
+
+/** The chat's people (the header line), the viewer flagged `me`, in ChannelMembers' order. */
+export function toParticipants(
+  me: string,
+  input: Pick<ReadsInput, 'members' | 'names'>,
+): ChannelParticipantView[] {
+  return input.members.map((m) => ({
+    name: input.names.get(m.profileId) ?? '',
+    role: m.role,
+    me: m.profileId === me,
+  }));
+}
+
+/** The viewer's own read mark, null before any read. */
+export const myMark = (me: string, marks: readonly ReadMark[]): string | null =>
+  marks.find((m) => m.profile_id === me)?.last_read_at ?? null;

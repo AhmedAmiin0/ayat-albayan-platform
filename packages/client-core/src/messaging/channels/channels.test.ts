@@ -33,8 +33,8 @@ describe('student channel paths and pages (docs/31 §2)', () => {
   });
 
   it('pages: the next cursor is the oldest shown while more exist; all pages read oldest first', () => {
-    const newest: ChannelPage = { student_name: 'سلمى', messages: [msg('c', '3'), msg('d', '4')], has_more: true, read_only: false, open: true, closed_reason: null, channel_id: 'c1' };
-    const older: ChannelPage = { student_name: 'سلمى', messages: [msg('a', '1'), msg('b', '2')], has_more: false, read_only: false, open: true, closed_reason: null, channel_id: 'c1' };
+    const newest: ChannelPage = { student_name: 'سلمى', messages: [msg('c', '3'), msg('d', '4')], has_more: true, read_only: false, open: true, closed_reason: null, channel_id: 'c1', participants: [], my_last_read_at: null };
+    const older: ChannelPage = { student_name: 'سلمى', messages: [msg('a', '1'), msg('b', '2')], has_more: false, read_only: false, open: true, closed_reason: null, channel_id: 'c1', participants: [], my_last_read_at: null };
     expect(olderCursor(newest)).toBe('3');
     expect(olderCursor(older)).toBeUndefined();
     expect(threadMessages([newest, older]).map((m) => m.id)).toEqual(['a', 'b', 'c', 'd']);

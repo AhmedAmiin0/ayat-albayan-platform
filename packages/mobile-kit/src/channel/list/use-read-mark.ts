@@ -1,22 +1,18 @@
-import { useEffect, useState } from 'react';
-import type { ChannelRef } from '../channel-api';
-import { readMarkOf } from './read-mark';
+import type { ChannelPage } from '@ab/shared';
+import { useState } from 'react';
+
+/** The mark once known: `at` null when she never read here (or a monitor). */
+interface Captured {
+  at: string | null;
+}
 
 /**
- * The read mark as it was when the chat opened (undefined while it loads): read once, so the band
- * stays where it was while she reads, as WhatsApp's.
+ * The viewer's read mark as the first page gave it when the chat opened (null while it loads):
+ * kept once, so the band stays where it was while she reads and the mark moves on, as WhatsApp's.
  */
-export function useOpeningReadMark(ref: ChannelRef): string | null | undefined {
-  const [mark, setMark] = useState<string | null | undefined>(undefined);
-  const { audience, studentId } = ref;
-  useEffect(() => {
-    let live = true;
-    void readMarkOf({ audience, studentId }).then((at) => {
-      if (live) setMark(at);
-    });
-    return () => {
-      live = false;
-    };
-  }, [audience, studentId]);
-  return mark;
+export function useOpeningReadMark(pages: readonly ChannelPage[] | undefined): string | null {
+  const [mark, setMark] = useState<Captured | undefined>(undefined);
+  const first = pages?.[0];
+  if (mark === undefined && first) setMark({ at: first.my_last_read_at });
+  return mark?.at ?? null;
 }

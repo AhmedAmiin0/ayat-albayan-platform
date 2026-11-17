@@ -46,7 +46,7 @@ export class ChannelService {
     ]);
     const shown = rows.slice(0, CHANNEL_PAGE_SIZE);
     const viewer = { profileId: actor.profileId, studentId: actor.studentId, channelId };
-    const ctx = await this.views.context(shown, viewer);
+    const ctx = await this.views.page(shown, viewer);
     const readOnly = actor.mode === 'monitor';
     const page = { readOnly, studentName: student?.name ?? '', closedReason, channelId };
     return toPage(rows, { ...ctx, ...page, open: actor.open });

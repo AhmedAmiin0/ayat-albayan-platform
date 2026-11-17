@@ -1,18 +1,30 @@
-import { participantNames } from './participants';
+import type { ChannelParticipantView } from '@ab/shared';
+import { headerPeople } from './participants';
 
 const m = (sender_name: string, mine = false) => ({ sender_name, mine });
+const p = (name: string, me = false): ChannelParticipantView => ({ name, role: 'teacher', me });
 
-test('every other sender once, newest first, «أنت» last', () => {
+test('the API’s members in its order, the viewer as «أنت» last', () => {
+  const participants = [p('فاطمة'), p('أنا', true), p('زهراء')];
+  const people = headerPeople({ participants, messages: [m('يوسف')], you: 'أنت' });
+  expect(people).toEqual({ others: ['فاطمة', 'زهراء'], line: ['فاطمة', 'زهراء', 'أنت'] });
+});
+
+test('a monitor (no member is me): the people without «أنت»; nameless ones left out', () => {
+  const people = headerPeople({ participants: [p('فاطمة'), p(' ')], messages: [], you: 'أنت' });
+  expect(people.line).toEqual(['فاطمة']);
+});
+
+test('no member list (older API): every other sender once, newest first, «أنت» last', () => {
   const list = [m('فاطمة'), m('زهراء'), m('أنا', true), m('فاطمة'), m('يوسف')];
-  expect(participantNames(list, 'أنت')).toEqual(['يوسف', 'فاطمة', 'زهراء', 'أنت']);
+  const people = headerPeople({ participants: [], messages: list, you: 'أنت' });
+  expect(people.line).toEqual(['يوسف', 'فاطمة', 'زهراء', 'أنت']);
 });
 
-test('nameless senders are left out; an empty thread is only «أنت»', () => {
-  expect(participantNames([m('  ')], 'You')).toEqual(['You']);
-  expect(participantNames([], 'You')).toEqual(['You']);
-});
-
-test('at most four names before «أنت»', () => {
-  const list = ['أ', 'ب', 'ج', 'د', 'هـ'].map((n) => m(n));
-  expect(participantNames(list, 'أنت')).toHaveLength(5);
+test('nobody else known: an empty line; at most four names before «أنت»', () => {
+  expect(headerPeople({ participants: [p('أنا', true)], messages: [], you: 'You' }).line)
+    .toEqual([]);
+  expect(headerPeople({ participants: [], messages: [m('  ')], you: 'You' }).line).toEqual([]);
+  const many = ['أ', 'ب', 'ج', 'د', 'هـ'].map((n) => p(n));
+  expect(headerPeople({ participants: many, messages: [], you: 'أنت' }).line).toHaveLength(4);
 });

@@ -37,5 +37,7 @@ export const channelPage = (over: Partial<ChannelPage> = {}): ChannelPage => ({
   open: true,
   closed_reason: null,
   channel_id: '',
+  participants: [],
+  my_last_read_at: null,
   ...over,
 });

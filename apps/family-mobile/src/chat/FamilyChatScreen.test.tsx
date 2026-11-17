@@ -31,6 +31,8 @@ const page: ChannelPage = {
   open: true,
   closed_reason: null,
   channel_id: '',
+  participants: [],
+  my_last_read_at: null,
 };
 const PRESENCE = { enabled: false, peers: [] };
 
