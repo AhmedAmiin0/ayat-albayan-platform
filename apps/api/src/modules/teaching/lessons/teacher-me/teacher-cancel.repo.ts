@@ -34,7 +34,8 @@ export class TeacherCancelRepo {
     if (leads.error) throw dbError(leads.error);
     const holders = (guardian: string | null) =>
       leads.data.filter((l) => l.converted_guardian_id === guardian).map((l) => l.assigned_to);
-    const of = (s: (typeof students.data)[number]) => ids([s.brought_by, ...holders(s.guardian_id)]);
+    type Student = (typeof students.data)[number];
+    const of = (s: Student) => ids([s.brought_by, ...holders(s.guardian_id)]);
     return new Map(students.data.map((s) => [s.id, of(s)]));
   }
 }

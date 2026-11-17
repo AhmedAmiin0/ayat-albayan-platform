@@ -18,7 +18,10 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const words = t.courseActions.stop;
-const refund = { paid: 290, perLesson: 50, attended: 3, ratePercent: 100, charged: 150, refund: 140 };
+const refund = {
+  ...{ paid: 290, perLesson: 50, attended: 3 },
+  ...{ ratePercent: 100, charged: 150, refund: 140 },
+};
 const PREVIEW = {
   subscriptionId: SUB,
   futureLessons: 4,

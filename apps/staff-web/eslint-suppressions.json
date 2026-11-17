@@ -2681,9 +2681,6 @@
     "ab/forbidden-imports": {
       "count": 1
     },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }

@@ -47,7 +47,8 @@ describe('FamilyRequestService: «اطلب موعدًا آخر» and «سحب ا
   it("withdraw marks the asker's own pending row; nothing of theirs → 409 no_request", async () => {
     proposals.withdraw.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
     await service().withdraw(LESSON_ID, FAMILY_USER);
-    expect(proposals.withdraw).toHaveBeenCalledWith({ lessonId: LESSON_ID, userId: FAMILY_USER.id });
+    const mine = { lessonId: LESSON_ID, userId: FAMILY_USER.id };
+    expect(proposals.withdraw).toHaveBeenCalledWith(mine);
     await expect(service().withdraw(LESSON_ID, FAMILY_USER)).rejects.toMatchObject({
       response: { code: 'no_request' },
     });

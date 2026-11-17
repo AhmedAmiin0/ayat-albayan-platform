@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import { assets, LESSON } from './lesson-files.fixture';
+import { assets, fileView, LESSON } from './lesson-files.fixture';
 import { LessonFilesSection } from './LessonFilesSection';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -48,5 +48,28 @@ describe('LessonFilesSection', () => {
     const [box] = await screen.findAllByRole('checkbox', { name: F.visible });
     expect((box as HTMLInputElement).disabled).toBe(true);
     expect(screen.getByText(t.studentRecordings.visible.groupLesson)).toBeTruthy();
+  });
+});
+
+describe('LessonFilesSection files', () => {
+  it('lists the report PDF; a hidden file keeps its label with the note under it', async () => {
+    const reports = [{ id: 'rep-1', student_name: 'سلمى', pdf_ready: true, sent_at: null }];
+    show(assets({ reports, files: [fileView({ visible_to_family: false })] }));
+    expect(await screen.findByText(F.reportPdf)).toBeTruthy();
+    expect(screen.getByText(F.reportPdfNote)).toBeTruthy();
+    // The recording's, the file's and the upload box's: one label for all three.
+    expect(screen.getAllByRole('checkbox', { name: F.visible })).toHaveLength(3);
+    expect(screen.getAllByText(F.hidden).length).toBeGreaterThan(0);
+  });
+
+  it('«أزل الملف» asks once more, then removes', async () => {
+    show();
+    apiSend.mockResolvedValue(undefined);
+    fireEvent.click(await screen.findByRole('button', { name: F.remove }));
+    expect(apiSend).not.toHaveBeenCalled();
+    expect(screen.getByText(F.removeConfirmBody)).toBeTruthy();
+    const dialog = screen.getByRole('dialog');
+    fireEvent.click(within(dialog).getByRole('button', { name: F.remove }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/lesson-files/f-1'));
   });
 });

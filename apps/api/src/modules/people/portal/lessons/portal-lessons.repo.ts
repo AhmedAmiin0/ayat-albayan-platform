@@ -31,6 +31,12 @@ export interface PortalRequestRow {
   created_at: string;
 }
 
+/** PortalLessonsRepo.requests: these lessons, sent by this login. */
+interface RequestsOf {
+  lessonIds: readonly string[];
+  userId: string;
+}
+
 interface Embed {
   lesson: PortalLessonRow | null;
 }
@@ -90,7 +96,7 @@ export class PortalLessonsRepo {
    * The family requests this login sent on these lessons (owner 2026-11-17), any status; [] without
    * lessons. Another login's request (the other guardian's) is not this one's to see.
    */
-  async requests(input: { lessonIds: readonly string[]; userId: string }): Promise<PortalRequestRow[]> {
+  async requests(input: RequestsOf): Promise<PortalRequestRow[]> {
     if (input.lessonIds.length === 0) return [];
     const { data, error } = await this.db
       .from('lesson_proposals')

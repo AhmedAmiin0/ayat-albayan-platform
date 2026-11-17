@@ -13,13 +13,13 @@ vi.mock('@/lib/storage/upload-slot', () => ({ uploadSigned }));
 const F = t.lessonFiles;
 const slot = { bucket: 'report-attachments', path: `${LESSON}/x.pdf`, token: 't', signed_url: 'u' };
 
-function pick(file: File) {
+function pick(...files: File[]) {
   render(
     <QueryClientProvider client={new QueryClient()}>
       <UploadBox lessonId={LESSON} />
     </QueryClientProvider>,
   );
-  fireEvent.change(screen.getByLabelText(F.pickFile), { target: { files: [file] } });
+  fireEvent.change(screen.getByLabelText(F.pickFile), { target: { files } });
 }
 
 afterEach(() => {
@@ -50,5 +50,21 @@ describe('UploadBox', () => {
     uploadSigned.mockResolvedValue({ error: new Error('403') });
     pick(new File(['x'], 'a.png', { type: 'image/png' }));
     expect(await screen.findByText(F.uploadFailed)).toBeTruthy();
+  });
+});
+
+describe('UploadBox with several files', () => {
+  it('sends each allowed file in turn with a line each; a refused one says why', async () => {
+    apiSend.mockImplementation(async (_m: string, path: string) =>
+      path.endsWith('/upload-url') ? slot : fileView());
+    uploadSigned.mockResolvedValue({ error: null });
+    pick(
+      new File(['a'], 'a.png', { type: 'image/png' }),
+      new File(['x'], 'clip.mp4', { type: 'video/mp4' }),
+      new File(['b'], 'b.pdf', { type: 'application/pdf' }),
+    );
+    await waitFor(() => expect(screen.getAllByText(F.uploaded)).toHaveLength(2));
+    expect(screen.getByText(F.badType)).toBeTruthy();
+    expect(uploadSigned).toHaveBeenCalledTimes(2);
   });
 });
