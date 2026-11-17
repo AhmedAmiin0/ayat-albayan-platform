@@ -45,8 +45,10 @@ test('only claude-tasks, the two release jobs and ci baselines may write content
 test('ci baselines: develop pushes after green guards, only prunes the two lists, never fails ci', () => {
   const ci = workflows.find((w) => w.file === 'ci.yml').doc;
   const job = ci.jobs.baselines;
-  assert.deepEqual([job.needs, job['continue-on-error'], job.environment], ['guards', true, undefined]);
-  assert.equal(job.if, "github.event_name == 'push' && github.ref == 'refs/heads/develop'");
+  assert.deepEqual([job.needs, job['continue-on-error'], job.environment], [['changes', 'guards'], true, undefined]);
+  // Guards green, or skipped because a green PR run already checked the same tree (ci-skip/).
+  assert.match(job.if, /^!cancelled\(\) && github\.event_name == 'push' && github\.ref == 'refs\/heads\/develop' && /);
+  assert.match(job.if, / && \(needs\.guards\.result == 'success' \|\| needs\.changes\.outputs\.verified == 'true'\)$/);
   assert.ok(!ci.jobs.check.needs.includes('baselines'));
   assert.deepEqual(ci.on.push['paths-ignore'], ['refactor/guards/**']);
   assert.equal(job.steps[0].with['persist-credentials'], false);

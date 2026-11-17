@@ -43,6 +43,8 @@ jobs:
       code: ${{ steps.diff.outputs.code }}
       e2e_matrix: ${{ steps.e2e.outputs.e2e_matrix }}
       e2e_specs: ${{ steps.e2e.outputs.e2e_specs }}
+      tree: ${{ steps.diff.outputs.tree }}
+      verified: ${{ steps.verified.outputs.verified }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -54,6 +56,8 @@ jobs:
           BEFORE: ${{ github.event.before }}
           GH_TOKEN: ${{ github.token }}
         run: |
+          # The checked-out tree (on a PR: the merge commit's), the key of the «verified» skip below.
+          echo "tree=$(git rev-parse 'HEAD^{tree}')" | tee -a "$GITHUB_OUTPUT"
           full() { printf 'e2e=true\ncode=true\n' >> "$GITHUB_OUTPUT"; echo "::notice::$1: everything runs"; exit 0; }
           case "$EVENT" in
             pull_request)
@@ -80,6 +84,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+      # Develop pushes: a tree that a green PR run already put through verify and guards (job «check» uploaded
+      # ci-green-tree-<tree>) skips them here; e2e still runs in full. Only a run of this repository counts (no
+      # fork), and a push that changes a cache key file (lockfile, vitest/tsconfig) runs everything, so develop
+      # keeps writing the default-branch caches. Off with the repository variable VERIFIED_TREE_SKIP = 'false'.
+      # FAIL SAFE: no previous commit, an install, API or parse error = verified unset = everything runs.
+      - name: May develop skip verify and guards?
+        id: skip
+        if: >-
+          github.event_name == 'push' && github.ref == 'refs/heads/develop' && steps.diff.outputs.code == 'true'
+          && vars.VERIFIED_TREE_SKIP != 'false'
+        run: echo "try=true" >> "$GITHUB_OUTPUT"
+      - if: steps.skip.outputs.try == 'true'
+        uses: pnpm/action-setup@v4
+      - if: steps.skip.outputs.try == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Same tree verified on a PR?
+        id: verified
+        if: steps.skip.outputs.try == 'true'
+        continue-on-error: true
+        env:
+          BEFORE: ${{ github.event.before }}
+          TREE: ${{ steps.diff.outputs.tree }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pnpm i --frozen-lockfile --filter @ab/scripts > /dev/null
+          files=$(git diff --name-only "$BEFORE" HEAD)
+          node tools/scripts/ci-checks/ci-skip/verified-tree.mjs "$TREE" <<< "$files"
       # A proven pure move (docs/32 g1): plain folder moves only (move-e2e.mjs: a move map in the diff, no
       # identifier or file-name renames, no route moves, nothing e2e reads at start-up) and pure-move-check green.
       # Typecheck and the unit tests still run; e2e is skipped. FAIL SAFE: anything else = e2e as usual.
@@ -122,7 +156,7 @@ jobs:
   verify:
     name: verify (${{ matrix.name }})
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.code == 'true' && needs.changes.outputs.verified != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
@@ -303,7 +337,7 @@ jobs:
   # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
   guards:
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.code == 'true' && needs.changes.outputs.verified != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -345,15 +379,17 @@ jobs:
           pnpm guard:lint -- --configs "$RUNNER_TEMP/configs-base.txt" "$RUNNER_TEMP/configs-head.txt"
       - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
 
-  # develop only, after green guards: drop the knip and queries entries that are fixed (the gates pass on them, so
+  # develop only, after green guards (or guards skipped because a green PR run checked this tree): drop the knip and queries entries that are fixed (the gates pass on them, so
   # PRs never edit the lists for that; after a green gate `--write` can only remove lines). The commit says
   # [skip ci], touches only refactor/guards/ (paths-ignore above) and is pushed with the built-in token, which
   # starts no workflow: nothing loops and nothing deploys. The only ci job that may write contents; the token
   # reaches only the push step. continue-on-error: a rejected push (develop moved meanwhile) only warns and the
   # next push prunes, so ci stays green for deploy-staging.
   baselines:
-    needs: guards
-    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    needs: [changes, guards]
+    if: >-
+      !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/develop' && needs.changes.result == 'success'
+      && (needs.guards.result == 'success' || needs.changes.outputs.verified == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     continue-on-error: true
@@ -384,7 +420,9 @@ jobs:
 
   # The required aggregate for branch protection: every verify job (lint parity is in the lint row) and the guards passed, or a docs-only change
   # skipped them all (changes said code=false); on a PR the refactor job (folder cap, pure moves) passed too.
-  # Anything else (a failed or cancelled job, a failed changes job) is red.
+  # A develop push whose tree a green PR run already checked (changes said verified=true) passes with verify and the
+  # guards skipped. Anything else (a failed or cancelled job, a failed changes job) is red.
+  # A green PR run (code, verify, guards and refactor all passed) leaves ci-green-tree-<tree> for that skip.
   check:
     needs: [changes, verify, guards, refactor]
     if: always()
@@ -397,14 +435,32 @@ jobs:
           VERIFY: ${{ needs.verify.result }}
           GUARDS: ${{ needs.guards.result }}
           REFACTOR: ${{ needs.refactor.result }}
+          VERIFIED: ${{ needs.changes.outputs.verified }}
         run: |
           test "$CHANGES" = success
           test "$REFACTOR" = success || { [ "$GITHUB_EVENT_NAME" != pull_request ] && [ "$REFACTOR" = skipped ]; }
+          if [ "$VERIFIED" = true ] && [ "$GITHUB_EVENT_NAME" = push ] && [ "$VERIFY" = skipped ] && [ "$GUARDS" = skipped ]; then
+            echo "same tree passed verify and guards on a PR: skipped"; exit 0
+          fi
           if [ "$CODE" = false ] && [ "$VERIFY" = skipped ] && [ "$GUARDS" = skipped ]; then
             echo "docs only: verify skipped"; exit 0
           fi
           test "$VERIFY" = success
           test "$GUARDS" = success
+      - name: Green tree (PR)
+        id: green
+        if: >-
+          github.event_name == 'pull_request' && needs.changes.outputs.code == 'true' && needs.verify.result == 'success'
+          && needs.guards.result == 'success' && needs.refactor.result == 'success' && needs.changes.outputs.tree != ''
+        env:
+          TREE: ${{ needs.changes.outputs.tree }}
+        run: echo "$TREE" > "$RUNNER_TEMP/green-tree.txt"
+      - if: steps.green.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-green-tree-${{ needs.changes.outputs.tree }}
+          path: ${{ runner.temp }}/green-tree.txt
+          retention-days: 7
 
   # The e2e suite shares one database per run and runs with one worker, so it is split across machines
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does

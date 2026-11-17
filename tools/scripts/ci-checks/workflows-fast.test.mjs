@@ -70,7 +70,7 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries 
   // A rule the PR turns on (named only in the head's ESLint configs) gets its one-time baseline.
   assert.match(lint, /--configs "\$RUNNER_TEMP\/configs-base\.txt" "\$RUNNER_TEMP\/configs-head\.txt"/);
   assert.equal(ci.jobs.guards.steps[0].with?.['fetch-depth'], 0);
-  assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true'");
+  assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true' && needs.changes.outputs.verified != 'true'");
 });
 
 test('ci: a red lint prints the pruned suppressions to commit', () => {
