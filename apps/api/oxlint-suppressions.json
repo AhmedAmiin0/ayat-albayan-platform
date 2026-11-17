@@ -7831,6 +7831,11 @@
       "count": 3
     }
   },
+  "src/modules/people/sign-in/codes/short-link-codes.adapter.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 2
+    }
+  },
   "src/modules/people/sign-in/flows/family-code.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 2
@@ -9105,6 +9110,66 @@
   "src/modules/platform/process-role/trust-proxy.test.ts": {
     "stylistic/max-len": {
       "count": 2
+    }
+  },
+  "src/modules/platform/short-links-admin/expiry/expiry.job.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/short-links-admin/expiry/expiry.service.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "src/modules/platform/short-links-admin/gate/gate.controller.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/short-links-admin/gate/gate.limit.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/short-links-admin/gate/gate.service.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "src/modules/platform/short-links-admin/managed/link-targets.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/short-links-admin/managed/link-users-sync.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "src/modules/platform/short-links-admin/managed/managed-links.service.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 4
+    }
+  },
+  "src/modules/platform/short-links-admin/managed/managed-reads.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 4
+    }
+  },
+  "src/modules/platform/short-links-admin/managed/managed.controller.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/modules/platform/short-links-admin/managed/short-links-admin.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 4
+    }
+  },
+  "src/modules/platform/short-links-admin/send/link-send.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 4
     }
   },
   "src/modules/platform/short-links/short-links.controller.ts": {
