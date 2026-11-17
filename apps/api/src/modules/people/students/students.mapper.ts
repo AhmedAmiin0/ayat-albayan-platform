@@ -22,6 +22,8 @@ export type StudentListItem = Omit<StudentListRow, 'guardian' | 'teacher'> & {
   guardian_name: string;
   guardian_phone: string;
   teacher_name: string | null;
+  /** students.is_test (docs/56), read beside the view for the «تجريبي» chip. */
+  is_test?: boolean;
 };
 
 export type StudentProfileRow = Student & {

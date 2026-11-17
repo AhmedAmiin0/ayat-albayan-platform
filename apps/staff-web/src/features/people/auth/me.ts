@@ -18,6 +18,8 @@ export interface Me {
   tz?: string | null;
   /** The login's UI language (profiles.locale); read through meLocaleOf (zod). */
   locale?: string | null;
+  /** A test account (docs/56): the «تجريبي» chip; absent from an older API = real. */
+  is_test?: boolean;
 }
 
 /** 403 account_disabled: the profile was disabled while the token was still valid (checked structurally, no import of ApiError). */

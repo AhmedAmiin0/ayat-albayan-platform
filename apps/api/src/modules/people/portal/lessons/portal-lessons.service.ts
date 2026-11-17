@@ -34,6 +34,7 @@ interface PortalRoomInput {
   lessonId: string;
   studentId: string;
   profileId: string;
+  userIsTest: boolean;
 }
 
 /**
@@ -98,6 +99,7 @@ export class PortalLessonsService {
       throw new HttpException({ code: 'not_classroom_lesson', message: 'not_classroom_lesson' }, HttpStatus.CONFLICT);
     }
     if (!isOpenLesson(row.status)) throw new HttpException({ code: 'join_closed', message: 'join_closed' }, HttpStatus.GONE);
-    return { lessonId: row.id, studentId: call.studentId, profileId: call.user.id };
+    const userIsTest = call.user.isTest === true;
+    return { lessonId: row.id, studentId: call.studentId, profileId: call.user.id, userIsTest };
   }
 }

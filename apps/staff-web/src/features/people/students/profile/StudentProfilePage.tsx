@@ -33,6 +33,7 @@ import { MonitorChannel } from '@/features/teaching/student-channel';
 import { usePermissions } from '@/features/people/auth';
 import { CoursePauseAction, CoursePausePanel } from '@/features/teaching/course-pause';
 import { ProfileCourseActions } from '@/features/teaching/course-actions';
+import { TestChip, TestFlagSwitch } from '@/features/people/test-accounts';
 
 /** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */
 const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
@@ -55,7 +56,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
     const notFound = error instanceof ApiError && error.status === 404;
     return <FormAlert>{notFound ? t.common.notFound : t.common.error}</FormAlert>;
   }
-
   // The family's second number (owner 2026-10-29), linked from a lead chat; removed from «تعديل ولي الأمر».
   const second = secondPhoneOf(student.guardian.phones);
   const meta = [
@@ -91,6 +91,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <PageHead className="mb-3">
         <Cartouche>{student.name}</Cartouche>
         <StatusChip {...studentStatusStyle[student.status]} label={t.enums.studentStatus[student.status]} />
+        <TestChip when={student.is_test === true} />
         <HeadActions
           primary={head.primary}
           more={
@@ -126,6 +127,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <StudentInvoices studentId={student.id} />
       <StudentRecordings studentId={student.id} role="admin" />
       {can('student_channels.monitor') && <MonitorChannel studentId={student.id} audience="admin" />}
+      <TestFlagSwitch target="student" row={student} enabled={can('students.write')} />
       <StudentProfileForm key={student.id} student={student} />
       <AssistantsManager studentId={student.id} />
       <BroughtByField studentId={student.id} />

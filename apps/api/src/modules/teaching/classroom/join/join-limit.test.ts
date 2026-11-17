@@ -38,3 +38,15 @@ describe('PublicJoinLimit', () => {
     expect(() => limit.assert({ ip: '5.5.5.5', token: 'a' }, T0)).not.toThrow();
   });
 });
+
+describe('PublicJoinLimit and test logins (docs/56)', () => {
+  it('a test login is never counted; the same key without the flag still is', () => {
+    const limit = new PublicJoinLimit();
+    const key = { ip: 'portal:p1', token: 'l1' };
+    const tester = { ...key, userIsTest: true };
+    for (let i = 0; i < 30; i++) expect(() => limit.assert(tester, T0)).not.toThrow();
+    for (let i = 0; i < 10; i++) limit.assert(key, T0);
+    expect(() => limit.assert(key, T0)).toThrow(HttpException);
+    expect(() => limit.assertRead({ ...key, userIsTest: true }, T0)).not.toThrow();
+  });
+});

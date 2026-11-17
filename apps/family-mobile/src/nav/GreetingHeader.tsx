@@ -1,6 +1,17 @@
 import { dateText, type PortalStudent } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { AppText, Avatar, Chevron, Mark, t, type, useNow, useTheme } from '@ab/mobile-kit';
+import {
+  AppText,
+  Avatar,
+  Chevron,
+  Mark,
+  StatusChip,
+  t,
+  type,
+  useIsTestAccount,
+  useNow,
+  useTheme,
+} from '@ab/mobile-kit';
 import { FamilyBell } from './FamilyBell';
 import { openChildSwitch } from './switch-store';
 import { useFamilyClock, usePickedChild } from '@/portal';
@@ -55,7 +66,8 @@ const ROW = { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12 } as 
 /**
  * Home's top (canvas Home, StudentHome): the mark, today's date over «أهلًا بك», the bell. For a
  * guardian of several children the child's avatar, name and a chevron are one button that opens
- * the children sheet (canvas SwitchHome).
+ * the children sheet (canvas SwitchHome). «تجريبي» marks a test account (docs/56), so nobody
+ * mistakes it for a real family.
  */
 export function GreetingHeader({ title, over, student }: GreetingHeaderProps) {
   const clock = useFamilyClock();
@@ -63,6 +75,7 @@ export function GreetingHeader({ title, over, student }: GreetingHeaderProps) {
   const picked = usePickedChild();
   const switches = student !== undefined && picked?.id === student.id;
   const who = <Who title={title} over={over ?? today} student={student} switches={switches} />;
+  const isTest = useIsTestAccount();
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8 }}>
       {switches ? (
@@ -77,6 +90,7 @@ export function GreetingHeader({ title, over, student }: GreetingHeaderProps) {
       ) : (
         <View style={ROW}>{who}</View>
       )}
+      {isTest && <StatusChip tone="act" glyph="hollow" size="sm" label={t.testAccounts.chip} />}
       <FamilyBell />
     </View>
   );

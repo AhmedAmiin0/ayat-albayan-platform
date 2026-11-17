@@ -47,6 +47,7 @@ export * from './sales/course/course-picks.js';
 export * from './people/users/index.js';
 export * from './people/account/index.js';
 export * from './people/presence/index.js';
+export * from './people/test-accounts/index.js';
 export * from './notifications/index.js';
 export * from './messaging/numbers/index.js';
 export * from './reports/stored-path.js';

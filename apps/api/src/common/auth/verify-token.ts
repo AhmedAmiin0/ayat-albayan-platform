@@ -12,6 +12,8 @@ export interface AuthUser {
   sessionId?: string | null;
   /** Effective permissions, set by the AuthGuard from the user's role (never from the token). */
   permissions?: readonly Permission[];
+  /** profiles.is_test, set by the AuthGuard from the database (never from the token); docs/56. */
+  isTest?: boolean;
 }
 
 interface VerifierOptions {

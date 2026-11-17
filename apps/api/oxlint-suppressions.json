@@ -41,9 +41,6 @@
     }
   },
   "src/common/auth/auth.module.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/forbidden-imports": {
       "count": 2
     }
@@ -51,9 +48,6 @@
   "src/common/auth/db-permission.resolver.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -7978,7 +7972,7 @@
   },
   "src/modules/people/students/students.repo.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/people/students/students.repo.ts": {
@@ -8413,9 +8407,6 @@
     }
   },
   "src/modules/people/users/users.module.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -12374,7 +12365,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/join/room-join.trial.test.ts": {
@@ -13021,7 +13012,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/modules/teaching/classroom/test-app.ts": {
