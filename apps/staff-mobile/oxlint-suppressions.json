@@ -1622,9 +1622,6 @@
     }
   },
   "src/core/push/useNotificationHandling.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     },

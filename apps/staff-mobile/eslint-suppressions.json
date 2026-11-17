@@ -1646,9 +1646,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }

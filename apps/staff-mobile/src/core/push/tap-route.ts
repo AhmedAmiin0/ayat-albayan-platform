@@ -3,7 +3,7 @@ import { openPushed } from '@/core/nav/back-within';
 import { isThreadHref, overChat, overRoom, type NavState } from '@/core/nav/chat-groups';
 
 /** The root navigator as the tap reads it (expo-router's container ref). */
-export interface RootNav {
+interface RootNav {
   isReady: () => boolean;
   getRootState: () => NavState | undefined;
   addListener: (type: 'state', listener: () => void) => () => void;
