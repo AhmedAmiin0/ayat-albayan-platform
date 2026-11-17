@@ -17,9 +17,14 @@ const A = t.portal.actions;
 const needs = (counts = false) =>
   lesson(now, 24 * 60, { status: 'scheduled', family: { group: false, counts, request: null } });
 const onNotice = jest.fn();
+const title = {
+  heading: 'حلقة الغد · 6:30 م – 7:15 م',
+  subline: 'الإثنين 17 نوفمبر · مع فاطمة · 45 دقيقة',
+  decline: 'الاعتذار عن حلقة الغد',
+};
 const show = (l = needs()) =>
   renderWithQuery(
-    <LessonOptions lesson={l} student={student()} now={now} heading="حلقة الغد" onNotice={onNotice} />,
+    <LessonOptions lesson={l} student={student()} now={now} title={title} onNotice={onNotice} />,
     freshQueryClient(),
   );
 const RESULT = { lesson_id: 'l', status: 'confirmed', counts: false };
@@ -40,7 +45,9 @@ test('«سأحضر» confirms from the menu, and the card says so', async () => 
 test('«أعتذر»: the package line first, then the excuse with its reason', async () => {
   await show(needs(true));
   await fireEvent.press(screen.getByRole('button', { name: A.menuTitle }));
+  expect(screen.getByText(title.subline)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: A.decline }));
+  expect(screen.getByText(title.decline)).toBeTruthy();
   expect(screen.getByText(A.countsYes)).toBeTruthy();
   await fireEvent.changeText(screen.getByLabelText(A.reasonLabel), 'سفر مع الأسرة');
   await fireEvent.press(screen.getByRole('button', { name: A.declineConfirm }));
@@ -84,5 +91,10 @@ test('a refused action says why, in the family’s words', async () => {
 
 test('a started lesson has no options', async () => {
   await show(lesson(now, -5, { status: 'scheduled', family: { group: false, counts: true, request: null } }));
+  expect(screen.queryByRole('button', { name: A.menuTitle })).toBeNull();
+});
+
+test('a group lesson has no options: the academy changes it', async () => {
+  await show(lesson(now, 24 * 60, { status: 'scheduled', family: { group: true, counts: false, request: null } }));
   expect(screen.queryByRole('button', { name: A.menuTitle })).toBeNull();
 });

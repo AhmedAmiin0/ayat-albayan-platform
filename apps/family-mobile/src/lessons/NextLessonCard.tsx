@@ -1,12 +1,12 @@
 import { isLessonNow, lessonMinutes, windowStateAt } from '@ab/client-core';
-import type { ClockOptions, PortalLesson, PortalStudent } from '@ab/shared';
+import { firstName, type ClockOptions, type PortalLesson, type PortalStudent } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { AppText, Notice, t, type, useNow, useTheme } from '@ab/mobile-kit';
 import { useFamilyClock } from '@/portal';
 import { Countdown } from './Countdown';
 import { JoinAction } from './JoinAction';
-import { dateLine, rangeText, teacherText, whenText } from './lesson-text';
+import { optionsTitle, rangeText, teacherText, whenText } from './lesson-text';
 import { LessonChip } from './options/LessonChip';
 import { LessonOptions } from './options/LessonOptions';
 import { RequestLine } from './options/RequestLine';
@@ -23,8 +23,15 @@ interface NextLessonCardProps {
   own?: boolean;
 }
 
-/** The full card's lines: the time range and length, the teacher. */
-function Details({ lesson, clock }: { lesson: PortalLesson; clock: ClockOptions }) {
+interface DetailsProps {
+  lesson: PortalLesson;
+  student: PortalStudent;
+  clock: ClockOptions;
+  now: Date;
+}
+
+/** The full card's lines: the time range and length, the teacher, what the family did. */
+function Details({ lesson, student, clock, now }: DetailsProps) {
   const { color } = useTheme();
   const A = t.portal.app.lesson;
   const minutes = A.minutes.replace('{n}', String(lessonMinutes(lesson)));
@@ -35,7 +42,13 @@ function Details({ lesson, clock }: { lesson: PortalLesson; clock: ClockOptions 
         {`${rangeText(lesson, clock)} · ${minutes}`}
       </AppText>
       <AppText style={words}>{A.teacher.replace('{name}', teacherText(lesson.teacher))}</AppText>
-      <RequestLine lesson={lesson} clock={clock} ink={color.onLapis} />
+      <RequestLine
+        lesson={lesson}
+        clock={clock}
+        ink={color.onLapis}
+        now={now}
+        student={firstName(student.name)}
+      />
     </>
   );
 }
@@ -85,7 +98,7 @@ export function NextLessonCard(props: NextLessonCardProps) {
       {notice ? <Notice message={notice} /> : null}
       <View style={{ gap: 10, padding: 14, borderRadius: 12, backgroundColor: color.lapisFill }}>
         <CardTop lesson={lesson} clock={clock} now={now} full={full} own={own} />
-        {full ? <Details lesson={lesson} clock={clock} /> : null}
+        {full ? <Details lesson={lesson} student={student} clock={clock} now={now} /> : null}
         <Countdown lesson={lesson} now={now} big={full} />
         <JoinAction lesson={lesson} student={student} now={now} />
         {full ? <CardFooter {...props} clock={clock} now={now} onNotice={setNotice} /> : null}
@@ -104,7 +117,6 @@ type FooterProps = NextLessonCardProps & {
 function CardFooter({ lesson, student, clock, now, onNotice }: FooterProps) {
   const { color } = useTheme();
   const note = { color: color.onLapis, fontSize: type.size.xs, opacity: 0.85 };
-  const heading = `${dateLine(new Date(lesson.starts_at), clock)} · ${rangeText(lesson, clock)}`;
   return (
     <>
       {lesson.way_in === 'classroom' ? (
@@ -114,7 +126,7 @@ function CardFooter({ lesson, student, clock, now, onNotice }: FooterProps) {
         lesson={lesson}
         student={student}
         now={now}
-        heading={heading}
+        title={optionsTitle(lesson, clock, now)}
         onNotice={onNotice}
       />
     </>

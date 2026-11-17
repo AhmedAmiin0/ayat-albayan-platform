@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { I18nManager } from 'react-native';
 import { t } from '../lib/i18n/i18n';
 import type { AudioSource, AudioSourceEvents, CreateAudioSource } from './audio-source';
 import { AudioPlayer } from './AudioPlayer';
@@ -39,10 +40,12 @@ test('the bar seeks: a tap lands on its share, a screen reader swipe moves 10 s'
   await act(() => f.box.events?.onLoaded(120));
   const bar = screen.getByRole('adjustable', { name: t.audioPlayer.seek });
   await fireEvent(bar, 'layout', { nativeEvent: { layout: { width: 200 } } });
+  // The app runs right-to-left: the bar fills from the right, so a quarter from the left is 3/4.
+  const rtl = I18nManager.isRTL;
   await fireEvent(bar, 'responderGrant', { nativeEvent: { locationX: 50 } });
-  expect(f.media.seekTo).toHaveBeenLastCalledWith(30);
-  await fireEvent(bar, 'accessibilityAction', { nativeEvent: { actionName: 'increment' } });
-  expect(f.media.seekTo).toHaveBeenLastCalledWith(40);
+  expect(f.media.seekTo).toHaveBeenLastCalledWith(rtl ? 90 : 30);
+  await fireEvent(bar, 'accessibilityAction', { nativeEvent: { actionName: 'decrement' } });
+  expect(f.media.seekTo).toHaveBeenLastCalledWith(rtl ? 80 : 20);
 });
 
 test('shows the failure and frees the source on leave', async () => {

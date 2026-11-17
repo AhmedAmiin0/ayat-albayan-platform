@@ -35,10 +35,18 @@ test('the recording plays in the app; the report PDF and the files are listed', 
   expect(await screen.findByText('صفحة الواجب')).toBeTruthy();
   expect(screen.getByText(F.reportPdf)).toBeTruthy();
   expect(screen.getByText(F.header.replace('{n}', '3'))).toBeTruthy();
-  expect(screen.getByText(F.lessonOf.replace('{when}', 'الأحد 15 نوفمبر'))).toBeTruthy();
+  expect(screen.getByText(/^حلقة الأحد،? 15 نوفمبر$/)).toBeTruthy();
   expect(screen.getByText(F.kinds.voice_note)).toBeTruthy();
   expect(await screen.findByRole('button', { name: t.audioPlayer.play })).toBeTruthy();
   expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/A/url');
+});
+
+test('a signed link never reaches the disk cache (noPersist)', async () => {
+  const client = freshQueryClient();
+  await renderWithQuery(<LessonScreen />, client);
+  expect(await screen.findByRole('button', { name: t.audioPlayer.play })).toBeTruthy();
+  const link = client.getQueryCache().find({ queryKey: ['portal-recording-url', 's1', 'A'] });
+  expect(link?.meta).toEqual({ noPersist: true });
 });
 
 test('a picture opens in the phone’s viewer from a fresh link', async () => {
