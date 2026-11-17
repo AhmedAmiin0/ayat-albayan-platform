@@ -144,7 +144,7 @@ Missing (build):
 - **apps/staff-mobile** is the staff app again: no family routes, no `family-*` EAS profiles. The staff app keeps showing «wrongApp» to families; the family app shows it to staff.
 - **The in-app room is in the kit** (owner 2026-11-16): the LiveKit classroom moved from apps/staff-mobile into `@ab/mobile-kit`, and both apps use it. The family app shows it only while `family_meetings_in_app` is on (§2) and only on family APK **0.3.0** or later (the LiveKit native packages). On 0.2.0, or with the switch off, the lesson opens in the browser.
 - The constraint stays: **no copied screen, hook or helper** between the two apps: what both need moves into `@ab/mobile-kit` (or `@ab/client-core` when the web needs it too).
-- **CI** (`ci.yml` «verify»): lint and typecheck cover every workspace; `test family` runs the family app and `@ab/mobile-kit` (jest-expo, own machine); `bundle family` runs the Metro bundle. A change only under apps/staff-mobile, apps/family-mobile or packages/mobile-kit skips the e2e machines.
+- **CI** (`ci.yml` «verify»): lint and typecheck cover every workspace; `test others` runs the family app's and `@ab/mobile-kit`'s jest-expo tests; `typecheck + bundles` runs both Metro bundles. A change only under apps/staff-mobile, apps/family-mobile or packages/mobile-kit skips the e2e machines.
 
 **Shared client logic:**
 - Portal queries (keys, fetchers, zod schemas) and view-model rules go in `@ab/client-core` (e.g. `messaging`-style folder `people/portal/`). Both web `PortalHome` and the app use them.

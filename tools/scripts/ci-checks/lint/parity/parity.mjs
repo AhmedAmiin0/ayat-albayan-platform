@@ -1,9 +1,10 @@
-// `pnpm lint:parity` (docs/31b §5; CI job «lint parity»): ESLint (every package, no suppressions)
-// and Oxlint (oxlint.full.config.ts) on the whole repo, both timed. Fails when Oxlint misses a
-// finding ESLint reports (compare.mjs) outside gaps.json, or a rule ESLint turns on for a file is
-// off or set otherwise in Oxlint (config-parity.mjs). Writes lint-parity-report.json (details) and
-// the job summary. Needs the workspace packages built (type-aware rules), as turbo lint does.
-import { appendFileSync, writeFileSync } from 'node:fs';
+// `pnpm lint:parity` (docs/31b §5; ci «verify (lint + parity (oxlint))»): ESLint (every package,
+// no suppressions) and Oxlint (oxlint.full.config.ts) on the whole repo, both timed. Fails when
+// Oxlint misses a finding ESLint reports (compare.mjs) outside gaps.json, or a rule ESLint turns
+// on for a file is off or set otherwise in Oxlint (config-parity.mjs). Writes
+// lint-parity-report.json (details) and the job summary. Needs the workspace packages built
+// (type-aware rules), as turbo lint does.
+import { appendFileSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseJson, readJson } from '../json-file.mjs';
@@ -13,7 +14,7 @@ import { oxlintFiles, runOxlint } from '../oxlint/run.mjs';
 import { findingsFile, gapsFile, oxlintReport } from '../oxlint/schemas.mjs';
 import { compareFindings, failures, perRule } from './compare.mjs';
 import { fileDiff, oxlintRulesFor, summarize } from './config-parity.mjs';
-import { eslintConfigs, runEslint } from './eslint-run.mjs';
+import { eslintConfigs, runEslint, savedFindings } from './eslint-run.mjs';
 
 const timed = async (work) => {
   const started = performance.now();
@@ -55,13 +56,22 @@ function table({ eslint, oxlint, missing, moved, extra }) {
   return [...head, ...rules.map(row)];
 }
 
+/** LINT_PARITY_ESLINT: a folder = the findings turbo lint saved there (CI); a file = a saved run */
+function eslintFindings(root, dirs) {
+  const saved = process.env.LINT_PARITY_ESLINT;
+  if (!saved) return runEslint(root, dirs);
+  return statSync(saved).isDirectory()
+    ? savedFindings({ root, dirs, saved })
+    : readJson(saved, findingsFile);
+}
+
 async function main() {
   const root = fileURLToPath(new URL('../../../../..', import.meta.url));
   const dirs = packageDirs(root);
-  const ox = await timed(() => runOxlint(root));
-  // LINT_PARITY_ESLINT=<findings.json>: reuse a saved ESLint run (local reruns only; CI runs it).
-  const saved = process.env.LINT_PARITY_ESLINT;
-  const es = await timed(() => (saved ? readJson(saved, findingsFile) : runEslint(root, dirs)));
+  // LINT_PARITY_OXLINT=<oxlint-report.json>: the report `pnpm lint:oxfull` just wrote (same args).
+  const oxSaved = process.env.LINT_PARITY_OXLINT;
+  const ox = await timed(() => (oxSaved ? readFileSync(oxSaved, 'utf8') : runOxlint(root)));
+  const es = await timed(() => eslintFindings(root, dirs));
   const save = process.env.LINT_PARITY_SAVE;
   if (save) writeFileSync(save, JSON.stringify(es.value));
   const oxlint = findingsOf(ox.value);
@@ -71,7 +81,7 @@ async function main() {
   const details = JSON.stringify({ ...result, lines }, null, 1);
   writeFileSync(join(root, 'lint-parity-report.json'), details);
   const summary = [
-    `ESLint ${String(es.seconds)} s, Oxlint ${String(ox.seconds)} s (whole repo, this machine).`,
+    `ESLint ${String(es.seconds)} s, Oxlint ${String(ox.seconds)} s (whole repo, this step; a saved run is only read).`,
     '',
     ...table({ eslint: es.value, oxlint, ...result }),
     '',
