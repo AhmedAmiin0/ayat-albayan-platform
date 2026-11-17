@@ -2674,9 +2674,6 @@
     },
     "ab/forbidden-imports": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/reply-actions/reply-actions-context.ts": {
