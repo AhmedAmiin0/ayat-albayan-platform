@@ -40,27 +40,6 @@ export const courseStopPreviewQuery = (input: Course) =>
 export const stopCourse = (studentId: string, body: CourseStopRequest) =>
   apiSend<CourseStopResult>('POST', courseStopPath(studentId), body);
 
-/** Which GET resolves the student's current package: the first one the viewer may call. */
-export type CurrentVia = 'stop' | CourseMoveKind;
-
-/**
- * The student's current package id, from the server (no subscriptionId: the newest live one)
- * through a route the viewer holds; 404 subscription_not_found = nothing to act on.
- */
-export const currentCourseQuery = (studentId: string, via: CurrentVia) =>
-  queryOptions({
-    queryKey: [...courseActionsKey(studentId), 'current', via],
-    queryFn: async (): Promise<string> => {
-      if (via === 'stop') {
-        return (await apiFetch<CourseStopPreview>(courseStopPath(studentId))).subscriptionId;
-      }
-      const path = `${courseMoveBase({ studentId, kind: via })}/change`;
-      return (await apiFetch<ProfileCourseView>(path)).course.subscriptionId;
-    },
-    retry: false,
-  });
-
-/** The course to change, with «من تاريخ»'s default (the next lesson). */
 export const profileCourseQuery = (input: Course & { kind: CourseMoveKind }) =>
   queryOptions({
     queryKey: [...courseActionsKey(input.studentId), input.kind, input.subscriptionId],
@@ -113,13 +92,20 @@ type StopInput = Course & {
   onDone: (message: string) => void;
 };
 
-/** The toast: «أُلغي الاشتراك…», with the refund's amount when there was one. */
+/**
+ * What the stop did (owner 2026-11-17): «أُلغي الاشتراك…» (with the refund's amount), the
+ * student's status now, and the manual transfer still to do when there is one.
+ */
 function doneText(result: CourseStopResult, currency: string): string {
   const words = t.courseActions.stop;
   const refund = result.refund;
-  return refund
+  const head = refund
     ? words.doneRefund.replace('{amount}', moneyText(refund.amount, currency))
     : words.done;
+  const status = words.doneStatus.replace('{status}', t.enums.studentStatus[result.studentStatus]);
+  const by = refund?.manual ?? 0;
+  const next = by > 0 ? [words.next.replace('{amount}', moneyText(by, currency))] : [];
+  return [head, status, ...next].join(' · ');
 }
 
 /** POST the stop with one idempotency key per dialog (rule 8), then re-read and the toast. */

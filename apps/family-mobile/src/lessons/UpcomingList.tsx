@@ -5,6 +5,8 @@ import { AppText, InsetGroup, t, type, useTheme } from '@ab/mobile-kit';
 import { DateTile } from '@/ui';
 import { useFamilyClock } from '@/portal';
 import { dayTile, rangeText, teacherText } from './lesson-text';
+import { LessonChip } from './options/LessonChip';
+import { RequestLine } from './options/RequestLine';
 
 interface UpcomingListProps {
   lessons: readonly PortalLesson[];
@@ -39,7 +41,9 @@ export function UpcomingList({ lessons, student, now, own = false }: UpcomingLis
               <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>
                 {teacherText(lesson.teacher)}
               </AppText>
+              <RequestLine lesson={lesson} clock={clock} ink={color.ink2} />
             </View>
+            <LessonChip lesson={lesson} />
           </View>
         ))}
       </InsetGroup>

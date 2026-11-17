@@ -3,6 +3,7 @@ import type { Conflict } from './conflicts.js';
 import type { LessonEvent } from './state-machine.js';
 import type { LessonTimeEditView, TimeEditMode } from './series/time-edit.js';
 import type { TeacherMeetingMode } from '../classroom/meeting-mode.js';
+import type { LessonProposalView } from './proposals.js';
 
 // Phase 2 API response shapes (docs/10-phase2-contracts.md §3). Responses are snake_case like
 // every other API row; instants are ISO-8601 UTC strings; tz fields are IANA ids.
@@ -77,7 +78,7 @@ export interface LessonView {
    * (R-SCH-04: e.g. a DST change moved it onto another lesson). [] = none.
    */
   conflicts: Conflict[];
-  /** The teacher's pending «اقترح ميعاد تاني» (R-SCH-08), null when there is none. */
+  /** The pending «اقترح موعدًا آخر» of the teacher or the family (R-SCH-08), null when none. */
   pending_proposal: LessonProposalView | null;
   /** R-SCH-11 «عدّل الوقت»: what an admin may do to the time (null = nothing, and for teachers). Absent in an old cache. */
   time_edit_mode?: TimeEditMode | null;
@@ -85,13 +86,6 @@ export interface LessonView {
   time_edit?: LessonTimeEditView | null;
 }
 
-/** A teacher's proposed new time for one lesson; an admin approves (reschedule) or rejects. */
-export interface LessonProposalView {
-  id: string;
-  proposed_starts_at: string;
-  note: string | null;
-  created_at: string;
-}
 
 /** GET /teachers/me (R-TCH-03). */
 export interface TeacherMe {

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
 import { usePermissions } from '@/features/people/auth';
 import type { BookingMode } from '@/features/teaching/booking';
 import { t } from '@/lib/i18n/i18n';
+import { ActionItem } from './card/ActionItem';
+import { ExtendDialog } from './card/ExtendDialog';
 import { ChangeTeacherDialog } from './ChangeTeacherDialog';
 import { ChangeTimesDialog } from './ChangeTimesDialog';
 import { StopCourseDialog } from './StopCourseDialog';
@@ -15,20 +16,28 @@ export interface CourseActionsProps {
   mode: BookingMode;
   /** The page's toast. */
   onDone: (message: string) => void;
+  /** «مدّ الجدول»: lessons of the package have no date (owner 2026-11-17). */
+  extend?: boolean;
+  /** false: no «تغيير المعلم» / «تغيير موعد الحلقات» (no course booked yet: no dead end). */
+  moves?: boolean;
 }
 
-type Open = 'stop' | 'teacher' | 'times' | null;
+type Open = 'stop' | 'teacher' | 'times' | 'extend' | null;
 
 /**
- * The student profile's course actions (owner 2026-10-30), each behind its own key:
- * «تغيير المعلم» (students.change_teacher), «تغيير موعد الحلقات» (courses.reschedule) and
- * «إلغاء الاشتراك» (subscriptions.stop). Admins and sales, any student; not teachers.
+ * The student profile's course actions (owner 2026-10-30), each behind its own key, with what it
+ * does under it (owner 2026-11-17): «تغيير المعلم» (students.change_teacher), «تغيير موعد
+ * الحلقات» and «مدّ الجدول» (courses.reschedule), «إلغاء الاشتراك» (subscriptions.stop).
+ * Admins and sales, any student; not teachers.
  */
-export function CourseActions({ studentId, subscriptionId, mode, onDone }: CourseActionsProps) {
+export function CourseActions(props: CourseActionsProps) {
+  const { studentId, subscriptionId, mode, onDone } = props;
   const { can } = usePermissions();
   const [open, setOpen] = useState<Open>(null);
   const words = t.courseActions;
-  const props = {
+  const hints = t.courseCard.hints;
+  const moves = props.moves !== false;
+  const shared = {
     studentId,
     subscriptionId,
     onClose: () => setOpen(null),
@@ -37,26 +46,34 @@ export function CourseActions({ studentId, subscriptionId, mode, onDone }: Cours
       onDone(message);
     },
   };
+  const times = can('courses.reschedule');
+  const on = {
+    teacher: moves && can('students.change_teacher'),
+    times: moves && times,
+    extend: props.extend === true && times,
+  };
+  const items = [
+    { open: 'teacher', label: words.teacher.action, hint: hints.teacher, on: on.teacher },
+    { open: 'times', label: words.times.action, hint: hints.times, on: on.times },
+    { open: 'extend', label: t.courseCard.extend.action, hint: hints.extend, on: on.extend },
+  ] as const;
   return (
     <>
-      {can('students.change_teacher') && (
-        <Button type="button" variant="secondary" onClick={() => setOpen('teacher')}>
-          {words.teacher.action}
-        </Button>
-      )}
-      {can('courses.reschedule') && (
-        <Button type="button" variant="secondary" onClick={() => setOpen('times')}>
-          {words.times.action}
-        </Button>
-      )}
+      {items.filter((i) => i.on).map((i) => (
+        <ActionItem key={i.open} label={i.label} hint={i.hint} onClick={() => setOpen(i.open)} />
+      ))}
       {can('subscriptions.stop') && (
-        <Button type="button" variant="danger-quiet" onClick={() => setOpen('stop')}>
-          {words.stop.action}
-        </Button>
+        <ActionItem
+          label={words.stop.action}
+          hint={hints.stop}
+          onClick={() => setOpen('stop')}
+          danger
+        />
       )}
-      {open === 'teacher' && <ChangeTeacherDialog {...props} mode={mode} />}
-      {open === 'times' && <ChangeTimesDialog {...props} mode={mode} />}
-      {open === 'stop' && <StopCourseDialog {...props} />}
+      {open === 'teacher' && <ChangeTeacherDialog {...shared} mode={mode} />}
+      {open === 'times' && <ChangeTimesDialog {...shared} mode={mode} />}
+      {open === 'extend' && <ExtendDialog {...shared} />}
+      {open === 'stop' && <StopCourseDialog {...shared} />}
     </>
   );
 }

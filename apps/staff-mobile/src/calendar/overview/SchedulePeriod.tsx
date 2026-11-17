@@ -1,6 +1,6 @@
 import { t } from '@ab/mobile-kit';
 import type { ScheduleView } from './overview';
-import { PeriodSwitcher } from './PeriodSwitcher';
+import { PeriodSwitcher } from '@ab/mobile-kit';
 import { addDays, dayLabel, weekLabel, weekStart } from '@/calendar/lib/week';
 
 interface SchedulePeriodProps {

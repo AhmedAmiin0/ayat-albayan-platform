@@ -13,7 +13,7 @@ import { AgendaDayView } from '@/calendar/agenda/AgendaDayView';
 import { RowDefaultActions } from '@/calendar/agenda/RowDefaultActions';
 import { LessonDetailsSheet } from '@/calendar/details/LessonDetailsSheet';
 import { useLessonDetails } from '@/calendar/details/use-lesson-details';
-import { PeriodSwitcher } from '@/calendar/overview/PeriodSwitcher';
+import { PeriodSwitcher } from '@ab/mobile-kit';
 import { useAvailability, useTeacher, useWeekLessons } from '@/calendar/lib/queries';
 import { addDays, viewerToday, weekLabel, weekStart, weekWindow } from '@/calendar/lib/week';
 import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';

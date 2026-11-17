@@ -39,6 +39,8 @@ export interface ChangeTarget {
   review?: boolean | undefined;
   /** The admin: a clash may be saved with a reason (override.reason). */
   override?: boolean | undefined;
+  /** Lines the review and the result lead with («المعلم الجديد: …», owner 2026-11-17). */
+  lines?: readonly string[] | undefined;
 }
 
 /** The target's route; undefined = the assistant's own. */

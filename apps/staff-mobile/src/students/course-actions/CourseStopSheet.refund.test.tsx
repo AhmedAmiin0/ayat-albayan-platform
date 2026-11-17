@@ -54,7 +54,7 @@ test('«إلغاء فقط» by default, attended × rate owed: nothing more due 
   expect(screen.getByText(summary(0, 0))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await sent({ owe: { choice: 'attended' } });
-  expect(await screen.findByText(s.done)).toBeTruthy();
+  expect(await screen.findByText(s.done, { exact: false })).toBeTruthy();
 });
 
 test('«إلغاء فقط» with a custom owed amount: 0 .. the price', async () => {
@@ -81,7 +81,9 @@ test('«إلغاء مع استرداد»: unattended by default, everything paid
   expect(screen.getByText(summary(300, 0))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await sent({ refund: { choice: 'paid' } });
-  expect(await screen.findByText(s.doneRefund.replace('{amount}', sar(300)))).toBeTruthy();
+  const done = await screen.findByText(s.doneRefund.replace('{amount}', sar(300)), { exact: false });
+  // owner 2026-11-17: the result says the status now and the transfer still to do by hand.
+  expect(done.props.children).toContain(s.next.replace('{amount}', sar(300)));
 });
 
 test('without subscriptions.refund (sales by default): never below attended × rate', async () => {

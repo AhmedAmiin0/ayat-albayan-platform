@@ -41,6 +41,11 @@ export function CourseChangeReview(props: CourseChangeReviewProps) {
   return (
     <View style={{ gap: 14 }}>
       <View style={{ gap: 4 }}>
+        {target?.lines?.map((text) => (
+          <AppText key={text} style={line}>
+            {text}
+          </AppText>
+        ))}
         <AppText style={{ ...line, color: color.ink2 }}>{texts.currentDays.replace('{days}', daysText(course.days, course.tz, viewer))}</AppText>
         {body ? <AppText style={line}>{texts.newDays.replace('{days}', daysText(requestDays(body), course.tz, viewer))}</AppText> : null}
       </View>

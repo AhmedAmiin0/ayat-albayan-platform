@@ -13,7 +13,7 @@ import {
 } from '@ab/mobile-kit';
 import { MessageSearchRow } from '@/inbox';
 import { Note } from '@/more';
-import { CoursePauseSection, PeopleEditSection } from '@/students';
+import { PeopleEditSection } from '@/students';
 import { SalesLoadScreen } from '@/sales/sales/components/SalesLoadScreen';
 import { familyChatHref } from '@/sales/sales/lib/sales-href';
 import { fill } from '@/sales/sales/lib/sales-text';
@@ -46,7 +46,7 @@ function headLines({ code, guardian_phone: phone, program, teacher_name: teacher
  * «تغيير المعلم» / «تغيير موعد الحلقات» like the money action, once a course exists (before it
  * «أيام الحلقات», StudentCourseSection); «تعديل الموعد التجريبي» on her trial.
  * An unknown id answers 404: «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner
- * for ANY student.
+ * for ANY student, in «الدورة والباقة» (owner 2026-11-17) with the course and its next lessons.
  */
 export function SalesStudentScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
@@ -81,17 +81,17 @@ export function SalesStudentScreen() {
           ) : null}
           {acts ? <MoneyActionButton student={{ id: data.student.id, name: data.student.name, phone }} /> : null}
           <FamilySection family={data.family} phone={phone} />
-          <CoursePauseSection studentId={data.student.id} />
           <StudentCourseSection
             studentId={data.student.id}
             subscriptionId={data.current_id}
             acts={acts}
+            schedule={data.schedule}
           />
           <PeopleEditSection studentId={data.student.id} onRemoved={() => router.back()} />
           <PackageCancelAction studentId={data.student.id} subscriptionId={data.current_id} />
           <TrialSection trial={data.trial} student={mine ? data.student : null} />
           <SubscriptionSection data={data} />
-          <ScheduleSection schedule={data.schedule} studentId={data.student.id} />
+          <ScheduleSection schedule={data.schedule} />
           <AttendanceSection studentId={data.student.id} attendance={data.attendance} />
           <ReportsSection studentId={data.student.id} reports={data.reports} />
         </View>

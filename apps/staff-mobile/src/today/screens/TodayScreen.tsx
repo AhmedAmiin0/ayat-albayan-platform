@@ -10,6 +10,7 @@ import type { TodaySource } from '@/today/lib/today-source';
 import { useDayLessons } from '@/today/lib/use-day-lessons';
 import { useLessonAction } from '@/today/lib/use-lesson-action';
 import { TodayLayout } from './TodayLayout';
+import { FamilyRequests } from '@/today/requests/FamilyRequests';
 
 /** The admin's day: GET /lessons/day, every teacher; «جدول الغد» to «الجدول». */
 const ADMIN_DAY: TodaySource<LessonView> = { tree: 'admin', useDay: useDayLessons, schedule: '/schedule' };
@@ -28,6 +29,7 @@ export function TodayScreen() {
     <TodayLayout
       source={ADMIN_DAY}
       notice={action.notice}
+      requests={<FamilyRequests />}
       hero={(hero, onDetails) => (
         <HeroCard
           hero={hero}

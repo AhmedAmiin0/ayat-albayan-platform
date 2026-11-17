@@ -1,6 +1,5 @@
 import type { LessonView, RescheduleRequest, SlotsResponse } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addDays, riyadhMidnight } from '@/calendar/lib/week';
 import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 
 interface RescheduleSlotsParams {
@@ -8,7 +7,7 @@ interface RescheduleSlotsParams {
   durationMin: number;
   /** The lesson's students: their other lessons count as clashes. */
   studentIds: readonly string[];
-  /** The window (slotWindow): one Riyadh week, never in the past. */
+  /** The window (the kit's useSlotWeek): one Riyadh week, never in the past. */
   from: string;
   to: string;
   /** Grid step in minutes (the edit sheet asks for 15); the API defaults to the duration. */
@@ -19,19 +18,6 @@ interface RescheduleSlotsParams {
   path?: string;
   /** Sales' «تغيير الموعد»: the lesson being moved, so its students may be any family's (docs/16 row 37). */
   lessonId?: string;
-}
-
-/**
- * The picker's window: the Riyadh week starting `week` (a Saturday), from now when it is this
- * week. GET /booking/slots caps a window at 14 days; a week is 7.
- */
-export function slotWindow(week: string, now: Date): { from: string; to: string } {
-  // academy day (docs/34 b): the slot weeks page as the calendar's Riyadh weeks.
-  const start = riyadhMidnight(week);
-  return {
-    from: start > now.toISOString() ? start : now.toISOString(),
-    to: riyadhMidnight(addDays(week, 7)),
-  };
 }
 
 /**

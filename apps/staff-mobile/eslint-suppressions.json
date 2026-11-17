@@ -815,9 +815,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -1049,14 +1046,6 @@
   "src/calendar/live/LiveBadge.tsx": {
     "max-len": {
       "count": 1
-    }
-  },
-  "src/calendar/overview/PeriodSwitcher.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/calendar/overview/TeacherHeader.tsx": {
@@ -1686,11 +1675,6 @@
       "count": 1
     }
   },
-  "src/core/ui/form/FormLabel.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/core/ui/form/SearchField.tsx": {
     "max-len": {
       "count": 3
@@ -1904,9 +1888,6 @@
     }
   },
   "src/edit-time/components/CorrectTimes.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -7921,7 +7902,7 @@
   },
   "src/student-file/recordings/RecordingFiltersBar.tsx": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/student-file/recordings/RecordingPlay.tsx": {
@@ -7934,7 +7915,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "no-restricted-syntax": {
       "count": 2
@@ -7958,7 +7939,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/student-file/recordings/recording-format.ts": {
@@ -8838,32 +8819,10 @@
   },
   "src/teaching/reschedule/RescheduleSheet.tsx": {
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/teaching/reschedule/SlotButton.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/teaching/reschedule/SlotPicker.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    },
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "no-nested-ternary": {
       "count": 1
     }
   },
   "src/teaching/reschedule/queries.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 2
     },
@@ -9114,7 +9073,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/today/screens/TodayScreen.tsx": {

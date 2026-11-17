@@ -66,7 +66,8 @@ describe('PortalHome: the guardian sees every child at a glance', () => {
     expect(await screen.findByRole('heading', { name: 'يوسف' })).toBeTruthy();
     const tabs = screen.getAllByRole('tab').map((x) => x.textContent);
     const { upcomingTab, attendedTab, absentTab, packageTab } = t.portal;
-    expect(tabs).toEqual([upcomingTab, attendedTab, absentTab, packageTab]);
+    const recordings = t.lessonFiles.recordings;
+    expect(tabs).toEqual([upcomingTab, attendedTab, absentTab, recordings, packageTab]);
     fireEvent.click(screen.getByRole('button', { name: t.portal.allChildren }));
     expect(await screen.findByRole('article', { name: 'سلمى' })).toBeTruthy();
   });

@@ -29,6 +29,14 @@ import { SchedulingSettings } from './scheduling.settings';
     ScheduleRepo,
     SchedulingSettings,
   ],
-  exports: [BusyRepo, ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleRepo, SchedulingSettings],
+  exports: [
+    BusyRepo,
+    ConflictChecker,
+    LessonWriter,
+    OccurrenceGenerator,
+    RuleExtendService,
+    ScheduleRepo,
+    SchedulingSettings,
+  ],
 })
 export class SchedulingModule {}

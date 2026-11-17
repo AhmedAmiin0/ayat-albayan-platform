@@ -108,19 +108,22 @@ describe('StopCourseDialog: the money choices', () => {
     });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'paid' } });
-    await vi.waitFor(() =>
-      expect(onDone).toHaveBeenCalledWith(words.doneRefund.replace('{amount}', money(290))),
-    );
+    // owner 2026-11-17: the result also says the status now and the transfer still to do.
+    const head = words.doneRefund.replace('{amount}', money(290));
+    const next = words.next.replace('{amount}', money(290));
+    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(expect.stringContaining(head)));
+    expect(onDone).toHaveBeenCalledWith(expect.stringContaining(next));
   });
 
-  it('a custom refund: 0 .. net paid; above it the confirm is off', async () => {
+  it('a custom refund: 0 .. net paid; above it the error shows early and nothing is sent', async () => {
     const { dialog } = await open(KEYS);
     fireEvent.click(dialog.getByRole('radio', { name: words.withRefund }));
     fireEvent.click(dialog.getByRole('radio', { name: words.refundCustom }));
     const field = dialog.getByLabelText(words.customAmount);
     fireEvent.change(field, { target: { value: '290.01' } });
-    expect(confirm().disabled).toBe(true);
     expect(dialog.getByText(t.courseActions.errors.refund_exceeds_allowed)).toBeTruthy();
+    fireEvent.click(confirm());
+    expect(apiSend).not.toHaveBeenCalled();
     fireEvent.change(field, { target: { value: '100' } });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'custom', amount: 100 } });

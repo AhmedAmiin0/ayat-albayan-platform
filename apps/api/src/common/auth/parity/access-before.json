@@ -483,6 +483,9 @@
   "MessageHideController.unhide": ["admin","sales","teacher"],
   "StorageProbeController.run": ["admin"],
   "BackupStatusController.view": ["admin"],
+  "FamilyRequestsController.approve": ["admin","sales"],
+  "FamilyRequestsController.pending": ["admin","sales"],
+  "FamilyRequestsController.reject": ["admin","sales"],
   "StickersController.favourite": ["admin","sales","teacher"],
   "StickersController.gif": ["admin","sales","teacher"],
   "StickersController.gifList": ["admin","sales","teacher"],
@@ -526,5 +529,10 @@
   "TeacherLinkController.submitV2": "public",
   "ShortLinksController.go": "public",
   "TeacherJoinController.go": "public",
-  "LegacyReportLinkController.go": "public"
+  "LegacyReportLinkController.go": "public",
+  "PortalLessonActionsController.cancel": ["guardian","student"],
+  "PortalLessonActionsController.confirm": ["guardian","student"],
+  "PortalLessonActionsController.free": ["guardian","student"],
+  "PortalLessonActionsController.request": ["guardian","student"],
+  "PortalLessonActionsController.withdraw": ["guardian","student"]
 }

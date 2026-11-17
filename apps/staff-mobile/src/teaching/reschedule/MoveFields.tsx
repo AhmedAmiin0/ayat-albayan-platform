@@ -8,7 +8,7 @@ import { FormLabel } from '@/core/ui/form/FormLabel';
 import type { useReschedule } from './queries';
 import { repeatDays, rescheduleBody, seriesDays, type Scope } from './reschedule-body';
 import { useRescheduleFailure, type RescheduleFailure } from './reschedule-errors';
-import { SlotPicker } from './SlotPicker';
+import { LessonSlotPicker } from './LessonSlotPicker';
 
 const scopePills = () =>
   (['one', 'rule'] as const).map((s) => ({ value: s, label: t.lessons.scope[s] }));
@@ -59,7 +59,7 @@ export function MoveFields({ lesson, durationMin, tz, move, scope, onScope, reas
       {failure?.kind === 'conflict' ? (
         <ConflictNotice lines={failure.lines} onChangeSlot={() => pick(null)} />
       ) : (
-        <SlotPicker
+        <LessonSlotPicker
           lesson={lesson}
           durationMin={durationMin}
           tz={tz}

@@ -1,0 +1,50 @@
+import { lessonDuration, type PortalSlots, type PortalSlotsQuery, type SlotView } from '@ab/shared';
+import { Inject, Injectable } from '@nestjs/common';
+import { conflict } from '@/common/http/errors';
+import { SlotsService } from '@/modules/teaching/booking';
+import type { PortalLessonRow } from '@/modules/people/portal/lessons/portal-lessons.repo';
+import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
+import { PortalLessonActions, type ActionCall } from './portal-actions.service';
+
+const MIN_MS = 60_000;
+
+/** Free, still ahead, and not the lesson's own time; no clash reason leaves (other families). */
+export function freeStarts(slots: readonly SlotView[], row: PortalLessonRow, now: Date) {
+  const own = Date.parse(row.starts_at);
+  return slots
+    .filter((s) => s.conflicts.length === 0)
+    .filter((s) => Date.parse(s.starts_at) > now.getTime() && Date.parse(s.starts_at) !== own)
+    .map((s) => ({ starts_at: s.starts_at, ends_at: s.ends_at }));
+}
+
+/**
+ * «اطلب موعدًا آخر»'s times (owner 2026-11-17): the academy's own slot grid (SlotsService, the
+ * teacher's availability and every clash: the teacher's and the lesson's students' lessons,
+ * time-off) for the lesson's teacher, length and students, read on the student's clock. 409
+ * lesson_started, unsupported_duration; 400 range_too_large past 14 days.
+ */
+@Injectable()
+export class PortalSlotsService {
+  constructor(
+    @Inject(PortalScopes) private readonly scopes: PortalScopes,
+    @Inject(PortalLessonActions) private readonly actions: PortalLessonActions,
+    @Inject(SlotsService) private readonly slots: SlotsService,
+  ) {}
+
+  async free(call: ActionCall, q: PortalSlotsQuery): Promise<PortalSlots> {
+    const student = await this.scopes.student(call.user, call.studentId);
+    const row = await this.actions.ahead(call);
+    const length = (Date.parse(row.ends_at) - Date.parse(row.starts_at)) / MIN_MS;
+    const durationMin = lessonDuration.safeParse(length);
+    if (!durationMin.success || !row.teacher_id) throw conflict('unsupported_duration');
+    const res = await this.slots.slots({
+      teacherId: row.teacher_id,
+      from: q.from,
+      to: q.to,
+      durationMin: durationMin.data,
+      studentIds: row.lesson_students.map((s) => s.student_id),
+    });
+    const slots = freeStarts(res.slots, row, new Date());
+    return { tz: student.tz, step_min: res.step_min, slots };
+  }
+}

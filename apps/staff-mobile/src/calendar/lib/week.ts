@@ -10,7 +10,7 @@ import {
   weekStart,
   type DateFields,
 } from '@ab/shared';
-import { t, locale } from '@ab/mobile-kit';
+import { locale } from '@ab/mobile-kit';
 
 // Calendar days for the mobile schedule (R-SCH-01, R-TCH-02): the week runs السبت → الجمعة on the
 // viewer's calendar (docs/34), like the web grid. Dates are local YYYY-MM-DD; pure, unit-tested.
@@ -57,7 +57,6 @@ export function riyadhNoon(date: string): Date {
 // Labels in the UI language with Western digits (docs/07 §2). The date is a calendar day, so it is
 // formatted at UTC noon in UTC: the device's own zone never shifts it.
 const DAY: DateFields = { weekday: 'long', day: 'numeric', month: 'long' };
-const SHORT: DateFields = { day: 'numeric', month: 'long' };
 const calendarText = (date: string, fields: DateFields) =>
   dateText(new Date(`${date}T12:00:00Z`), { tz: 'UTC', locale }, fields);
 
@@ -66,9 +65,5 @@ export function dayLabel(date: string): string {
   return calendarText(date, DAY).replace(/[،,]\s*/, ' ');
 }
 
-/** «3 أكتوبر – 9 أكتوبر» for the week starting `start`. */
-export function weekLabel(start: string): string {
-  return t.calendar.range
-    .replace('{from}', calendarText(start, SHORT))
-    .replace('{to}', calendarText(addDays(start, 6), SHORT));
-}
+/** «3 أكتوبر – 9 أكتوبر»: moved to the kit (the family's slot picker pages weeks too). */
+export { weekLabel } from '@ab/mobile-kit';

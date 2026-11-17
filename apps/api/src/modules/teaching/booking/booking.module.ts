@@ -15,6 +15,8 @@ import { BookingService } from './core/booking.service';
 import { BookingSettings } from './booking.settings';
 import { BookingWriter } from './core/booking.writer';
 import { ConflictContext } from './plan/conflict-context';
+import { CourseCardController, SalesCourseCardController } from './card/course-card.controller';
+import { CourseCards } from './card/course-card.service';
 import { CourseChangeController } from './course-change/course-change.controller';
 import { CourseLessonRepo } from './course-change/course-change.lessons';
 import { CourseChangeNotices } from './course-change/notices/course-change.notices';
@@ -23,6 +25,10 @@ import { CourseChangeRepo } from './course-change/course-change.repo';
 import { CourseChange } from './course-change/course-change.service';
 import { CourseChangeViews } from './course-change/course-change.view';
 import { CourseChangeDeps, CourseChangeWriter } from './course-change/course-change.writer';
+import { CourseExtendController } from './extend/course-extend.controller';
+import { CourseExtendReader } from './extend/course-extend.reader';
+import { CourseExtendRepo } from './extend/course-extend.repo';
+import { CourseExtend } from './extend/course-extend.service';
 import { InstantController } from './instant/instant.controller';
 import { CourseTeacherController, CourseTimesController } from './profile/profile-course.controller';
 import { ProfileCourseRepo } from './profile/profile-course.repo';
@@ -66,7 +72,12 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     ScheduleNoticesModule,
     LessonLinksModule,
   ],
-  controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController, CourseTeacherController, CourseTimesController, TrialDateController, SalesTrialDateController],
+  controllers: [
+    ...[BookingController, BookingExtrasController, InstantController, SalesBookingController],
+    ...[SalesBookingOptionsController, SalesCourseController, CourseChangeController],
+    ...[CourseTeacherController, CourseTimesController, TrialDateController, SalesTrialDateController],
+    ...[CourseCardController, SalesCourseCardController, CourseExtendController],
+  ],
   providers: [
     BookingSettings,
     BookingRepo,
@@ -95,6 +106,10 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     CourseChangeNotices,
     ProfileCourse,
     ProfileCourseRepo,
+    CourseCards,
+    CourseExtend,
+    CourseExtendReader,
+    CourseExtendRepo,
     BookingWriter,
     BookingFollowUps,
     TeacherAlert,
@@ -109,5 +124,6 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     TrialDateDeps,
     SalesTrialDates,
   ],
+  exports: [SlotsService],
 })
 export class BookingModule {}

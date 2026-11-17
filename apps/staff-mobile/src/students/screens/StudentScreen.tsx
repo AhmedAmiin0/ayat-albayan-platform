@@ -19,12 +19,11 @@ import { useStudentHref } from '@/core/nav/tree-base';
 import { MessageSearchRow } from '@/inbox';
 import { StudentFileSections } from '@/student-file/components/StudentFileSections';
 import { TrialDateSection } from '@/trial-date/components/TrialDateSection';
-import { CoursePauseSection } from '@/students/course-pause/CoursePauseSection';
-import { CourseActionsSection } from '@/students/course-actions/CourseActionsSection';
+import { CourseCardSection } from '@/students/course-card/CourseCardSection';
+import { RenewRow } from '@/students/course-card/RenewRow';
 import { PeopleEditSection } from '@/students/people-edit/PeopleEditSection';
 import { BalanceCard } from '@/students/profile/BalanceCard';
 import { GuardianCard } from '@/students/profile/GuardianCard';
-import { RenewButton } from '@/students/profile/RenewButton';
 import { SiblingsList } from '@/students/profile/SiblingsList';
 import { StatusChanger } from '@/students/profile/StatusChanger';
 import { StudentFacts } from '@/students/profile/StudentFacts';
@@ -37,8 +36,8 @@ const back = () => backWithin('/students');
  * recorded from the balance card, «جدّد الاشتراك» once the package ended; editing, adding and merging stay on the web.
  * «موعد تجريبي جديد» and the trial dates' history in TrialDateSection (R-STU-05); «عرض سجل الحضور» opens the
  * month-by-month attendance table (owner 2026-10-28, the same screen as sales' «تفاصيل الطالب»). The compact
- * h2 title (owner 2026-10-28: «the student screen still has a big header»): the file starts higher. «إيقاف مؤقت»
- * (courses.pause) under the status, and the banner while the course is paused.
+ * h2 title (owner 2026-10-28: «the student screen still has a big header»): the file starts higher. Under the
+ * status «الدورة والباقة» (owner 2026-11-17): the course, its next lessons and every course action.
  */
 export function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -78,9 +77,7 @@ export function StudentScreen() {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>
         <MessageSearchRow />
         <StatusChanger student={student} />
-        <CoursePauseSection studentId={student.id} />
-        <CourseActionsSection studentId={student.id} />
-        <RenewButton student={student} />
+        <CourseCardSection studentId={student.id} tree="admin" extra={<RenewRow student={student} />} />
         <Button
           variant="secondary"
           label={t.mobileAdmin.reports.button}

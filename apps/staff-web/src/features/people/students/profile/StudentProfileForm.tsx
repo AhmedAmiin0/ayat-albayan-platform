@@ -1,3 +1,4 @@
+import { statusRoute } from '@ab/client-core';
 import { GENDERS, PROGRAMS, STUDENT_STATUSES } from '@ab/shared';
 import { useForm } from '@tanstack/react-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -16,6 +17,7 @@ import { saveProfile } from './save-profile';
 import { SavedNote } from './SavedNote';
 import { ContactIsSelfField } from './FactFields';
 import type { StudentProfile } from '@/features/people/students/types';
+import { type StatusAsk, StatusRouteDialogs } from '@/features/teaching/course-actions';
 
 type SelectName = 'gender' | 'program' | 'status' | 'teacher_id';
 type FieldName = Exclude<keyof ProfileValues, 'contact_is_self'>;
@@ -26,14 +28,32 @@ const FIELDS: FieldName[] = [
   'goal', 'riwaya', 'tz', 'meeting_link_override', 'notes',
 ];
 const LTR: FieldName[] = ['meeting_link_override', 'age'];
+/** «موقوف مؤقتًا» / «متوقف» open their dialogs (owner 2026-11-17); the link's own hint. */
+const HINTS: Partial<Record<FieldName, string>> = {
+  status: t.courseCard.statusNote,
+  meeting_link_override: t.students.meetingLinkHint,
+};
 const SELECTS: readonly FieldName[] = ['gender', 'program', 'status', 'teacher_id'];
 const isSelect = (name: FieldName): name is SelectName => SELECTS.includes(name);
+
+/** Where a picked select value leads: «موقوف مؤقتًا» / «متوقف» to their dialogs (owner 2026-11-17). */
+function routeOf(name: SelectName, value: string): StatusAsk {
+  const status = name === 'status' ? STUDENT_STATUSES.find((s) => s === value) : undefined;
+  const route = status ? statusRoute(status) : 'set';
+  return route === 'set' ? null : route;
+}
 
 /** Editable student profile (R-STU-05), saved with PATCH /students/:id. */
 export function StudentProfileForm({ student }: { student: StudentProfile }) {
   const queryClient = useQueryClient();
   const { data: teachers = [] } = useQuery(teacherOptionsQuery);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
+  const [ask, setAsk] = useState<StatusAsk>(null);
+  const pick = (name: SelectName, value: string, set: (v: never) => void) => {
+    const route = routeOf(name, value);
+    if (route) setAsk(route);
+    else set(value as never);
+  };
 
   const selects: Record<SelectName, { value: string; label: string }[]> = {
     gender: [{ value: '', label: '—' }, ...GENDERS.map((g) => ({ value: g, label: t.enums.gender[g] }))],
@@ -78,13 +98,12 @@ export function StudentProfileForm({ student }: { student: StudentProfile }) {
       {FIELDS.map((name) => (
         <form.Field key={name} name={name}>
           {(field) => (
-            <Field id={`p-${name}`} label={PROFILE_LABELS[name]}
-              hint={name === 'meeting_link_override' ? t.students.meetingLinkHint : undefined}>
+            <Field id={`p-${name}`} label={PROFILE_LABELS[name]} hint={HINTS[name]}>
               {(p) =>
                 name === 'tz' ? (
                   <TimeZoneSelect {...p} value={field.state.value} onValue={(tz) => field.handleChange(tz)} />
                 ) : isSelect(name) ? (
-                  <Select {...p} value={field.state.value} onChange={(e) => field.handleChange(e.target.value as never)}>
+                  <Select {...p} value={field.state.value} onChange={(e) => pick(name, e.target.value, field.handleChange)}>
                     {selects[name].map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                   </Select>
                 ) : (
@@ -108,6 +127,8 @@ export function StudentProfileForm({ student }: { student: StudentProfile }) {
         </form.Subscribe>
         {message && (message.ok ? <SavedNote>{message.text}</SavedNote> : <FormAlert>{message.text}</FormAlert>)}
       </div>
+      <StatusRouteDialogs studentId={student.id} ask={ask} onClose={() => setAsk(null)}
+        onDone={(text) => { setAsk(null); setMessage({ ok: true, text }); }} />
     </form>
   );
 }

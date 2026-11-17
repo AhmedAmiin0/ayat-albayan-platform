@@ -10831,9 +10831,6 @@
     }
   },
   "src/features/teaching/schedule/reschedule/ProposalBox.tsx": {
-    "max-len": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     }

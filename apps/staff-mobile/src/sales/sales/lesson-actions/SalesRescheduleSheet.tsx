@@ -1,5 +1,5 @@
 import type { SalesScheduleLesson } from '@ab/shared';
-import { RescheduleFrame } from '@/teaching';
+import { RescheduleFrame } from '@ab/mobile-kit';
 import { SalesRescheduleForm } from './SalesRescheduleForm';
 
 interface SalesRescheduleSheetProps {

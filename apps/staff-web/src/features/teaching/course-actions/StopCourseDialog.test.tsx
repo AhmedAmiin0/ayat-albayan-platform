@@ -57,11 +57,14 @@ describe('StopCourseDialog «إلغاء الاشتراك» (owner 2026-10-30)', 
   it('needs a reason, then posts it trimmed with one request id and closes with «done»', async () => {
     const { dialog, onDone } = open();
     await dialog.findByText(words.schedule);
-    expect(confirm()?.disabled).toBe(true);
+    // owner 2026-11-17: an empty reason says so clearly on «تأكيد الإلغاء», nothing is sent.
+    fireEvent.click(confirm() as HTMLButtonElement);
+    expect(await dialog.findByText(words.reasonRequired)).toBeTruthy();
+    expect(apiSend).not.toHaveBeenCalled();
     fireEvent.change(dialog.getByLabelText(words.reason), { target: { value: '  سفر الأسرة ' } });
     apiSend.mockResolvedValue({ subscriptionId: SUB, cancelledLessons: 4, endedRules: 1 });
     fireEvent.click(confirm() as HTMLButtonElement);
-    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(words.done));
+    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(expect.stringContaining(words.done)));
     expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-stop', {
       subscriptionId: SUB,
       reason: 'سفر الأسرة',

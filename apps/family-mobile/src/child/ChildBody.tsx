@@ -6,6 +6,7 @@ import { Animated, View } from 'react-native';
 import { FilterPills, t, usePublicConfig } from '@ab/mobile-kit';
 import { chatHref } from '@/nav';
 import { PackageBody } from '@/package';
+import { recordingsHref } from '@/recordings';
 import { HistoryPanel } from './HistoryPanel';
 import { tabWord } from './tab-words';
 import { UpcomingPanel } from './UpcomingPanel';
@@ -16,12 +17,13 @@ interface ChildBodyProps {
   kind: PortalKind;
 }
 
-/** Each tab's panel; «المحادثة» has none: it opens its own screen (chat/[id]). */
+/** Each tab's panel; «التسجيلات» and «المحادثة» have none: each opens its own screen. */
 const PANEL: Record<ChildTab, (p: ChildBodyProps) => ReactNode> = {
   upcoming: (p) => <UpcomingPanel student={p.student} own={p.kind === 'student'} />,
   attended: (p) => <HistoryPanel student={p.student} status="attended" />,
   absent: (p) => <HistoryPanel student={p.student} status="absent" />,
   package: (p) => <PackageBody student={p.student} />,
+  recordings: () => null,
   chat: () => null,
 };
 
@@ -46,6 +48,7 @@ export function ChildBody({ student, kind }: ChildBodyProps) {
     attended: show,
     absent: show,
     package: show,
+    recordings: () => router.push(recordingsHref(student.id)),
     chat: () => router.push(chatHref(student.id)),
   };
   return (

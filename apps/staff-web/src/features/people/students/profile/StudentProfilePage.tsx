@@ -31,8 +31,7 @@ import { CreateAccountButton } from '@/features/people/users/create/CreateAccoun
 import { TrialDatesSection } from '@/features/teaching/booking/trial-date/TrialDatesSection';
 import { MonitorChannel } from '@/features/teaching/student-channel';
 import { usePermissions } from '@/features/people/auth';
-import { CoursePauseAction, CoursePausePanel } from '@/features/teaching/course-pause';
-import { ProfileCourseActions } from '@/features/teaching/course-actions';
+import { CourseCardPanel } from '@/features/teaching/course-actions';
 
 /** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */
 const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
@@ -103,13 +102,10 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                 {t.guardians.edit}
               </Button>
               <CreateAccountButton student={student} />
-              <CoursePauseAction studentId={student.id} onDone={setNotice} />
-              <ProfileCourseActions studentId={student.id} onDone={setNotice} />
             </>
           }
         />
       </PageHead>
-      <CoursePausePanel studentId={student.id} onDone={setNotice} />
       <PeopleEditActions studentId={student.id} onRemoved={setRemoved} />
       <dl className="mb-6 flex flex-wrap gap-x-7 gap-y-2 border-b border-rule pb-4 text-sm">
         {meta.map(([term, value]) => (
@@ -121,6 +117,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       </dl>
       <StudentFamily siblings={student.siblings} contactIsSelf={student.contact_is_self ?? false} />
       <TrialDatesSection student={student} />
+      <CourseCardPanel studentId={student.id} />
       <BalanceCard student={student} />
       <StudentPayments studentId={student.id} />
       <StudentInvoices studentId={student.id} />

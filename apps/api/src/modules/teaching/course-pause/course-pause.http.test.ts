@@ -58,12 +58,12 @@ describe('course pause routes «إيقاف الدورة مؤقتًا» (owner 20
 
   it('preview counts the open lessons from max(now, Riyadh start of from) to the Riyadh start of the day after until', async () => {
     const res = await t.call({ method: 'GET', url: `${URL}/preview?from=2026-11-01&until=2026-11-10`, token: 'sales' });
-    expect(res.json()).toEqual({ from_date: '2026-11-01', until_date: '2026-11-10', lessons: 3 });
-    expect(t.m.queries.previewCount).toHaveBeenCalledWith({
+    expect(res.json()).toMatchObject({ from_date: '2026-11-01', until_date: '2026-11-10', lessons: 3, extend_days: 10 });
+    expect(t.m.queries.previewStarts).toHaveBeenCalledWith({
       studentId: STUDENT, start: new Date('2026-10-31T21:00:00Z'), end: new Date('2026-11-10T21:00:00Z'),
     });
     await t.call({ method: 'GET', url: `${URL}/preview`, token: 'sales' });
-    expect(t.m.queries.previewCount).toHaveBeenLastCalledWith({ studentId: STUDENT, start: NOW, end: null });
+    expect(t.m.queries.previewStarts).toHaveBeenLastCalledWith({ studentId: STUDENT, start: NOW, end: null });
   });
 
   it('a past preview start is 400; an unknown student 404 student_not_found', async () => {

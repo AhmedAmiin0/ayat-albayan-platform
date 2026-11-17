@@ -87,6 +87,7 @@ const ROUTES: Record<AnyPushKind, (area: Area, data: Data) => string> = {
   // staff area never gets them, so it opens its home.
   lesson_starting: (area) => HOME_BY_ROLE[area],
   report_sent: (area) => HOME_BY_ROLE[area],
+  lesson_request_declined: (area) => HOME_BY_ROLE[area],
 };
 
 /** «احجز أيام الحلقات» (owner 2026-11-06): the family chat, wizard open; else the student. */

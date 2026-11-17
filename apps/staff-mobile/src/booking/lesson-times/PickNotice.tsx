@@ -3,11 +3,10 @@ import { wallParts, type Conflict } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t, AppText, NuqtaGlyph, type, useTheme, ErrorLine } from '@ab/mobile-kit';
+import { t, AppText, NuqtaGlyph, SlotButton, type, useTheme, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { conflictLine } from '@/booking/shared/booking-errors';
 import { ConflictNotice } from '@/booking/shared/ConflictNotice';
-import { SlotButton } from '@/teaching';
 
 interface PickNoticeProps {
   state: PickState;
@@ -70,6 +69,7 @@ export function PickNotice({ state, nearest, tz, onUse }: PickNoticeProps) {
               key={at}
               startsAt={at}
               tz={tz}
+              viewer={{ tz: viewerTz, cycle }}
               role="button"
               selected={false}
               onPick={(slot) => onUse(wallParts(slot, tz).time)}

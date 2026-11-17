@@ -46,7 +46,8 @@ export {
 export { MoveReason } from './reschedule/MoveReason';
 export { reasonPart } from './reschedule/reschedule';
 export { SlotPicker, type SlotPickerProps } from './reschedule/SlotPicker';
-export { bookableWindow, byLocalDay, currentWeekStart, zoneLabel } from './reschedule/slots';
-export { dateLabel, dayMonthLabel } from './tz';
+export { type SlotsRead, WeekSlotsFrame } from './reschedule/WeekSlotsFrame';
+export { bookableWindow, byLocalDay, currentWeekStart, openingWeek, zoneLabel } from './reschedule/slots';
+export { dateLabel, dayIn, dayMonthLabel } from './tz';
 export { RescheduleForm, type RescheduleFormProps } from './reschedule/RescheduleForm';
 export { TeacherConfirmedTag } from './lesson/TeacherConfirmedTag';

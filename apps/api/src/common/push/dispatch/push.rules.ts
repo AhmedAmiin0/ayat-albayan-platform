@@ -22,6 +22,7 @@ const ROW_OF: Record<AnyPushKind, NotificationKey> = {
   payment_received: 'payment_received',
   lesson_starting: 'lesson_starting',
   report_sent: 'report_sent',
+  lesson_request_declined: 'lesson_request_declined',
 };
 
 /** Where a staff notification goes: the bell row (push_notifications), and the browser / app push. */

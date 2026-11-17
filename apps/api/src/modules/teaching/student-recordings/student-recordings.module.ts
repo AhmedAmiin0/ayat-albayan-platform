@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClassroomModule } from '@/modules/teaching/classroom/classroom.module';
 import { TeachersModule } from '@/modules/people/teachers/teachers.module';
+import { LessonFilesModule } from './lesson-files';
 import { RecordingAdminRepo } from './recording-admin.repo';
 import { RecordingDeleteService } from './retention/recording-delete.service';
 import { RecordingEraser } from './retention/recording-eraser';
@@ -20,7 +21,8 @@ import { StudentRecordingsService } from './student-recordings.service';
  * Settings, Storage and Audit are global modules; RecordingViews comes from ClassroomModule.
  */
 @Module({
-  imports: [ClassroomModule, TeachersModule],
+  // «ملفات الحلقة» and the family's «التسجيلات» ride along (app.module is at its line cap).
+  imports: [ClassroomModule, TeachersModule, LessonFilesModule],
   controllers: [StudentRecordingsController],
   providers: [
     StudentRecordingRepo,

@@ -16,3 +16,4 @@ export {
   studentTimes,
   viewerDayHint,
 } from './lib/lesson-text';
+export { FamilyRequests } from './requests/FamilyRequests';

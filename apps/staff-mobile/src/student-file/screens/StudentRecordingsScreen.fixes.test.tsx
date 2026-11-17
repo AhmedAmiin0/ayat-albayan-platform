@@ -42,7 +42,7 @@ afterEach(() => openURL.mockRestore());
 test('a failed link load says so instead of opening the old signed link', async () => {
   serve();
   await renderWithQuery(<StudentRecordingsScreen />);
-  await screen.findByText(R.status.done);
+  await screen.findAllByText(R.status.done);
   mockApiFetch.mockReset().mockRejectedValue(new ApiError(500));
   await fireEvent.press(screen.getByText(R.play));
   expect(await screen.findByText(R.playFailed)).toBeTruthy();
@@ -52,7 +52,7 @@ test('a failed link load says so instead of opening the old signed link', async 
 test('no delete on a row the viewer cannot manage', async () => {
   serve([recording({ can_manage: false })]);
   await renderWithQuery(<StudentRecordingsScreen />);
-  await screen.findByText(R.status.done);
+  await screen.findAllByText(R.status.done);
   expect(screen.queryByText(R.delete.action)).toBeNull();
 });
 
@@ -75,7 +75,7 @@ test('a teacher can clear the teacher filter after picking one', async () => {
 test('a play that cannot get a link says so', async () => {
   serve();
   await renderWithQuery(<StudentRecordingsScreen />);
-  await screen.findByText(R.status.done);
+  await screen.findAllByText(R.status.done);
   serve([recording({ url: null })]);
   await fireEvent.press(screen.getByText(R.play));
   expect(await screen.findByText(R.playFailed)).toBeTruthy();

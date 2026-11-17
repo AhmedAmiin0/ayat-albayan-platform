@@ -1,10 +1,9 @@
 import { counted, togglePick } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useViewerTz, zoneNote } from '@/core/lib/clock';
-import { t, AppText, ErrorState, type, useTheme } from '@ab/mobile-kit';
+import { useViewerClock, zoneNote } from '@/core/lib/clock';
+import { t, AppText, ErrorState, SlotButton, type, useTheme } from '@ab/mobile-kit';
 import { FormLabel } from '@/core/ui/form/FormLabel';
-import { SlotButton } from '@/teaching/reschedule/SlotButton';
 import { MultiFooter } from './MultiFooter';
 import { useSlots } from '@/booking/shared/queries';
 import { freeSlotDays, slotWindow, windowStart } from '@/booking/shared/slots';
@@ -47,7 +46,8 @@ export interface SlotStepProps {
 export function SlotStep(props: SlotStepProps) {
   const { teacherId, tz, durationMin, onPick, multi, from, exclude, excludeLessonId } = props;
   const { color } = useTheme();
-  const viewerZone = useViewerTz();
+  const viewer = useViewerClock();
+  const viewerZone = viewer.tz;
   const [now] = useState(() => new Date());
   const slots = useSlots({ teacherId, ...slotWindow(windowStart(now, from)), durationMin, ...excludeParams(exclude, excludeLessonId) });
   const days = slots.data ? freeSlotDays(slots.data.slots, viewerZone) : [];
@@ -77,6 +77,7 @@ export function SlotStep(props: SlotStepProps) {
                 key={slot.starts_at}
                 startsAt={slot.starts_at}
                 tz={tz}
+                viewer={viewer}
                 role={multi ? 'checkbox' : 'button'}
                 selected={picks.includes(slot.starts_at)}
                 onPick={tap}

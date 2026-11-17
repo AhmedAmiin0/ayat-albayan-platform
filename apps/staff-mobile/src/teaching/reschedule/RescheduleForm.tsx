@@ -6,7 +6,7 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t, type, useTheme, AppText, ErrorLine } from '@ab/mobile-kit';
 import { studentNames } from '@/today';
 import { MoveFields } from './MoveFields';
-import { MoveReason } from './MoveReason';
+import { MoveReason } from '@ab/mobile-kit';
 import { useReschedule } from './queries';
 import { familyTz, lessonDuration, type Scope } from './reschedule-body';
 import { RescheduleDone } from './RescheduleDone';

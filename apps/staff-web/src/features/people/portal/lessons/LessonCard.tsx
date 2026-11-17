@@ -1,14 +1,15 @@
 import type { PortalLesson, PortalStudent, RoomJoinResult } from '@ab/shared';
 import { useState } from 'react';
-import { StatusChip } from '@/components/ui/display/status-chip';
 import { ClassroomRoom } from '@/features/teaching/classroom';
 import { useNow } from '@/lib/time/use-now';
 import { t } from '@/lib/i18n/i18n';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
 import { LessonAction } from './LessonAction';
 import { LessonCountdown } from './LessonCountdown';
 import { LessonWhen } from './LessonWhen';
+import { FamilyChip } from './options/FamilyChip';
+import { FamilyLine } from './options/FamilyLine';
+import { LessonOptionsBar } from './options/LessonOptionsBar';
 
 /** The countdown ticks every second; the join button turns on by itself at the window. */
 const TICK_MS = 1_000;
@@ -19,12 +20,12 @@ interface Props {
 }
 
 /**
- * One upcoming lesson: when (family and viewer clocks), status, teacher, the live countdown and
- * «ادخل الحلقة». Once admitted, the classroom covers the page (as on the student's own link).
+ * One upcoming lesson: when (family and viewer clocks), status, teacher, what the family asked,
+ * the live countdown, «ادخل الحلقة» and «خيارات الحلقة» (owner 2026-11-17). Once admitted, the
+ * classroom covers the page (as on the student's own link).
  */
 export function LessonCard({ lesson, student }: Props) {
   const now = useNow(TICK_MS);
-  const status = useLessonStatusText();
   const [room, setRoom] = useState<RoomJoinResult | null>(null);
   if (room) {
     return (
@@ -37,13 +38,14 @@ export function LessonCard({ lesson, student }: Props) {
     <div className="grid gap-3">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <LessonWhen startsAt={lesson.starts_at} tz={student.tz} />
-        <StatusChip {...status.chip(lesson.status)} size="sm" />
+        <FamilyChip lesson={lesson} />
       </div>
       {lesson.teacher.display_name_ar && (
         <p className="text-sm text-ink-2">
           {t.portal.withTeacher.replace('{teacher}', teacherLabel(lesson.teacher))}
         </p>
       )}
+      <FamilyLine lesson={lesson} tz={student.tz} />
       <LessonCountdown lesson={lesson} now={now} />
       <LessonAction
         lesson={lesson}
@@ -52,6 +54,7 @@ export function LessonCard({ lesson, student }: Props) {
         now={now}
         onJoined={setRoom}
       />
+      <LessonOptionsBar lesson={lesson} student={student} now={now} />
     </div>
   );
 }

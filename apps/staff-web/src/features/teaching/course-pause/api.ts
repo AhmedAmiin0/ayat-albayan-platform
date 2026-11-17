@@ -1,5 +1,9 @@
 import {
+  courseActionsKey,
+  courseCardKey,
   coursePauseKey,
+  courseResumePreviewPath,
+  parseResumePreview,
   coursePausePath,
   coursePausePreviewPath,
   coursePauseResumePath,
@@ -26,6 +30,14 @@ export const coursePausePreviewQuery = (input: { studentId: string; from: string
     placeholderData: keepPreviousData,
   });
 
+/** «استئناف الدورة الآن؟»: the lessons back and the days the package moves (owner 2026-11-17). */
+export const resumePreviewQuery = (studentId: string) =>
+  queryOptions({
+    queryKey: [...courseCardKey(studentId), 'resume'],
+    queryFn: async () => parseResumePreview(await apiFetch(courseResumePreviewPath(studentId))),
+    retry: false,
+  });
+
 export const startCoursePause = (studentId: string, body: CoursePauseStart) =>
   apiSend<CoursePauseResult>('POST', coursePausePath(studentId), body);
 
@@ -47,7 +59,9 @@ export function useInvalidatePause(studentId: string): () => Promise<void> {
   const client = useQueryClient();
   return async () => {
     await Promise.all(
-      [coursePauseKey(studentId), ['students'], ['money']].map((queryKey) => client.invalidateQueries({ queryKey })),
+      [coursePauseKey(studentId), courseActionsKey(studentId), ['students'], ['money']].map((queryKey) =>
+        client.invalidateQueries({ queryKey }),
+      ),
     );
   };
 }

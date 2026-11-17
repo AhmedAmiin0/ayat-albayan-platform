@@ -93,6 +93,14 @@ export class CourseStopRepo {
     return stopPlan(data);
   }
 
+  /** The instants of these lessons, earliest first (the sheet lists what a stop cancels). */
+  async starts(ids: readonly string[]): Promise<string[]> {
+    if (ids.length === 0) return [];
+    const { data, error } = await this.db.from('lessons').select('starts_at').in('id', [...ids]);
+    if (error) throw dbError(error);
+    return data.map((l) => l.starts_at).sort();
+  }
+
   /** Net paid (payments − refunds): shown, never changed. */
   async paid(subscriptionId: string): Promise<number> {
     const { data, error } = await this.db

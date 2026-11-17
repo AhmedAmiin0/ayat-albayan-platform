@@ -57,7 +57,8 @@ export function CourseChangeFlow({ student, course, onLeave, onDone, target }: C
   };
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   const content = () => {
-    if (change.isSuccess) return <CourseChangeDone result={change.data} onDone={onDone} />;
+    const done = { onDone, lines: target?.lines };
+    if (change.isSuccess) return <CourseChangeDone result={change.data} {...done} />;
     if (step === 'slot') {
       return (
         <>

@@ -21,6 +21,17 @@ export function currentWeekStart(now: Date, tz: string): string {
   return weekStart(zonedPartsIn(now, tz).date);
 }
 
+/** The viewer's week to open on: the anchor's (a picked slot, the moved lesson), not earlier. */
+export function openingWeek(
+  anchor: string | undefined,
+  week0: { first: string; tz: string },
+): string {
+  const { first, tz } = week0;
+  if (!anchor) return first;
+  const week = weekStart(zonedPartsIn(new Date(anchor), tz).date);
+  return week > first ? week : first;
+}
+
 /** The bookable part of a week in `tz`: from now on; null once the whole week is past. */
 export function bookableWindow(start: string, now: Date, tz: string): Window | null {
   const week = weekWindowIn(start, tz);

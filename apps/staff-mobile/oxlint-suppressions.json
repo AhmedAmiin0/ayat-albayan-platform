@@ -7957,7 +7957,7 @@
   },
   "src/student-file/recordings/RecordingFiltersBar.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/student-file/recordings/RecordingPlay.tsx": {
@@ -7970,7 +7970,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/no-restricted-syntax": {
       "count": 2
@@ -7991,7 +7991,7 @@
   },
   "src/student-file/recordings/recording-filters.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/module-boundaries": {
       "count": 2

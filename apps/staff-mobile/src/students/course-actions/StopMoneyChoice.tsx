@@ -27,10 +27,8 @@ export function useStopMoney(preview: CourseStopPreview | undefined) {
   const mayLower = mayLowerOwe(holds, preview);
   const result = preview ? stopMoney({ state, preview, breakdown }) : null;
   const set: Set = (patch) => setState((s) => ({ ...s, ...patch }));
-  const ready = result?.valid === true;
-  const problem = result?.problem ?? null;
   const ask = result?.ask ?? {};
-  return { state, set, breakdown, result, ready, ask, problem, mayLower };
+  return { state, set, breakdown, result, ask, mayLower };
 }
 type MoneyView = ReturnType<typeof useStopMoney>;
 

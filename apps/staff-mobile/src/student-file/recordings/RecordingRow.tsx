@@ -8,6 +8,7 @@ import { RecordingPlay } from './RecordingPlay';
 import { RecordingVisibility } from './RecordingVisibility';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 import { useStableHandler } from '@/core/lib/stable-handler';
+import { LessonFilesLink } from '@/teaching';
 
 const R = t.mobileStudentFile.recordings;
 const CHIP = {
@@ -26,6 +27,8 @@ interface RecordingRowProps {
   canManage: boolean;
   /** Admin (and recordings.manage): the delete button. */
   canDelete: boolean;
+  /** The admin's list: «ملفات الحلقة» opens in the students tab, else in the teacher's. */
+  admin: boolean;
   /** Stable: a fresh signed link for this recording's id. */
   getUrl: (id: string) => Promise<string | null>;
 }
@@ -34,7 +37,8 @@ interface RecordingRowProps {
  * One recording: when, who taught, length, size, status, play, the visibility switch and delete. No fill
  * or rule of its own: the list's inset card draws them (owner 2026-10-28: one container rule).
  */
-const RecordingRow = memo(function RecordingRow({ rec, studentId, tz, canManage, canDelete, getUrl }: RecordingRowProps) {
+const RecordingRow = memo(function RecordingRow(props: RecordingRowProps) {
+  const { rec, studentId, tz, canManage, canDelete, admin, getUrl } = props;
   const cycle = useClockCycle();
   const url = useCallback(() => getUrl(rec.id), [getUrl, rec.id]);
   const { color } = useTheme();
@@ -59,6 +63,7 @@ const RecordingRow = memo(function RecordingRow({ rec, studentId, tz, canManage,
       {rec.status !== 'deleted' ? (
         <RecordingVisibility rec={rec} studentId={studentId} editable={canManage && rec.can_manage} />
       ) : null}
+      <LessonFilesLink lessonId={rec.lesson_id} admin={admin} />
       {canDelete && rec.can_manage && rec.status !== 'deleted' && rec.status !== 'recording' ? (
         <RecordingDelete id={rec.id} studentId={studentId} />
       ) : null}
@@ -88,6 +93,7 @@ export function useRecordingRow({ studentId, manage, admin, freshUrl }: Recordin
         tz={tz}
         canManage={manage}
         canDelete={admin && manage && item.can_manage}
+        admin={admin}
         getUrl={getUrl}
       />
     ),

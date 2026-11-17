@@ -6,10 +6,12 @@ import type { LessonProposalRepo } from './lesson-proposals.repo';
 import { LessonProposeService, ProposalDecisionService } from './lesson-proposals.service';
 import { ADMIN, fakeStore, LESSON_ID, lessonRow, TEACHER, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import type { RescheduleOneService } from '@/modules/teaching/lessons/reschedule/reschedule-one.service';
+import type { RequestDeclinePush } from './request-decline.push';
 
 const proposals = { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() };
 const access = { assertCanTouch: vi.fn() };
 const rescheduler = { reschedule: vi.fn() };
+const declined = { notify: vi.fn() };
 const NOW = new Date('2026-10-02T10:00:00Z');
 const LATER = '2026-10-05T15:00:00.000Z';
 const PROPOSAL = { id: 'p1', lesson_id: LESSON_ID, proposed_starts_at: '2026-10-05 15:00:00+00', status: 'pending', note: null };
@@ -23,6 +25,7 @@ const proposer = (row = lessonRow()) =>
 const decider = new ProposalDecisionService(
   proposals as unknown as LessonProposalRepo,
   rescheduler as unknown as RescheduleOneService,
+  declined as unknown as RequestDeclinePush,
 );
 
 describe('LessonProposeService — «اقترح موعدًا آخر» (R-SCH-08)', () => {

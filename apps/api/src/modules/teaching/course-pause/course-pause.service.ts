@@ -1,10 +1,6 @@
 import {
-  addDays,
   coursePauseProblem,
   riyadhToday,
-  RIYADH_TZ,
-  startOfLocalDay,
-  type CoursePausePreview,
   type CoursePauseResult,
   type CoursePauseResume,
   type CoursePauseStart,
@@ -30,9 +26,6 @@ const legacyResult = (subscriptionId: string): CoursePauseResult => {
   return { pause, cancelled: 0, left: 0, reopened: 0, conflicts: 0 };
 };
 
-/** Riyadh midnight at the start of `date` (UTC instant). */
-const riyadhStart = (date: string): Date => startOfLocalDay(date, RIYADH_TZ);
-
 /**
  * «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b, docs/16 row 37c): ANY student, for whoever holds courses.pause
  * (admins and assistants by default). The work is one RPC each (migration 956); this checks the dates first (400),
@@ -50,17 +43,6 @@ export class CoursePauseService {
     await this.assertStudent(studentId);
     const views = (await this.queries.pauses(studentId)).map(toPauseView);
     return { open: views.find((v) => v.resumed_at === null) ?? null, history: views.filter((v) => v.resumed_at !== null) };
-  }
-
-  /** The sheet's «ستُلغى N حلقات»: open lessons from max(now, from) until the day after until (or all). */
-  async preview(studentId: string, q: { from?: string; until?: string }): Promise<CoursePausePreview> {
-    await this.assertStudent(studentId);
-    const from = q.from ?? riyadhToday();
-    const until = q.until ?? null;
-    this.check(from, until);
-    const start = new Date(Math.max(Date.now(), riyadhStart(from).getTime()));
-    const end = until === null ? null : riyadhStart(addDays(until, 1));
-    return { from_date: from, until_date: until, lessons: await this.queries.previewCount({ studentId, start, end }) };
   }
 
   async start({ studentId, body, actor }: StartInput): Promise<CoursePauseResult> {

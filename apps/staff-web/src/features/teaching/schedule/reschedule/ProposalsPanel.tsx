@@ -7,13 +7,15 @@ import { proposalsQuery } from '@/features/teaching/schedule/api';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
 import { type Clock, useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
+import { RequesterTag } from './RequesterTag';
 
 /** The viewer's time; `clock.tz` is the viewer's zone (useViewerTz()). */
 const when = (iso: string, clock: Clock & { tz: string }) => lessonWhenAt(new Date(iso), clock);
 
 /**
- * «طلبات تغيير الميعاد» above the week (R-SCH-08): every lesson a teacher proposed to move, in any
- * week, as «سهيلة · أبرار: الأحد 4 أكتوبر 17:00 ← الاثنين 5 أكتوبر 18:00». Opening one shows the
+ * «طلبات تغيير الموعد» above the week (R-SCH-08): every lesson a teacher proposed, or a family
+ * asked (owner 2026-11-17), to move, in any week, as «من الأسرة سهيلة · أبرار: الأحد 4 أكتوبر
+ * 17:00 ← الاثنين 5 أكتوبر 18:00». Opening one shows the
  * drawer with «وافق» / «ارفض». Nothing pending → nothing rendered.
  */
 export function ProposalsPanel({ onOpen }: { onOpen: (lesson: LessonView) => void }) {
@@ -37,6 +39,7 @@ export function ProposalsPanel({ onOpen }: { onOpen: (lesson: LessonView) => voi
               onClick={() => onOpen(lesson)}
               className="min-h-11 w-full rounded-sm px-2 py-1.5 text-start text-sm hover:bg-sunk sm:min-h-9"
             >
+              <RequesterTag proposal={lesson.pending_proposal} />
               <span className="font-semibold">{`${studentNames(lesson)} · ${teacherLabel(lesson.teacher)}`}</span>
               {': '}
               <span>

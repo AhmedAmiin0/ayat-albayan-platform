@@ -75,10 +75,10 @@ test('an adult who is their own contact sees their package', async () => {
 test.each([
   ['unset', { custom: {} }],
   ['off', config({ family_chat_enabled: false })],
-])('the family chat %s: four pills, no «المحادثة», no channel request', async (_, answer) => {
+])('the family chat %s: five pills, no «المحادثة», no channel request', async (_, answer) => {
   settings = answer;
   await body('guardian');
-  expect(screen.getAllByRole('tab')).toHaveLength(4);
+  expect(screen.getAllByRole('tab')).toHaveLength(5);
   expect(screen.queryByRole('tab', { name: chatTab })).toBeNull();
   expect(channelReads()).toEqual([]);
 });
@@ -88,7 +88,7 @@ test("the family chat on: a guardian's «المحادثة» opens chat/[id], no 
   await body('guardian');
   await fireEvent.press(await screen.findByRole('tab', { name: chatTab }));
   expect(router.push).toHaveBeenCalledWith(`/chat/${student().id}`);
-  expect(screen.getAllByRole('tab')).toHaveLength(5);
+  expect(screen.getAllByRole('tab')).toHaveLength(6);
   expect(channelReads()).toEqual([]);
 });
 
@@ -97,6 +97,12 @@ test("the family chat on: a child's own login chats too (owner 2026-11-16)", asy
   await body('student');
   await fireEvent.press(await screen.findByRole('tab', { name: chatTab }));
   expect(router.push).toHaveBeenCalledWith(`/chat/${student().id}`);
-  expect(screen.getAllByRole('tab')).toHaveLength(4);
+  expect(screen.getAllByRole('tab')).toHaveLength(5);
   expect(channelReads()).toEqual([]);
+});
+
+test('«التسجيلات» opens the child\'s recordings screen (owner 2026-11-17)', async () => {
+  await body('guardian');
+  await fireEvent.press(screen.getByRole('tab', { name: t.lessonFiles.recordings }));
+  expect(router.push).toHaveBeenCalledWith(`/recordings/${student().id}`);
 });

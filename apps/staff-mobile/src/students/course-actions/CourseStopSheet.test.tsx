@@ -25,7 +25,7 @@ const openSheet = async () => {
   await screen.findByRole('header', { name: s.title });
 };
 
-test('the sheet says what happens: 3 lessons, the schedule, money kept, history, «توقف»', async () => {
+test('the sheet says what happens: 3 lessons, the schedule, money kept, history, «متوقف»', async () => {
   await openSheet();
   expect(await screen.findByText(s.lessons.few.replace('{n}', '3'))).toBeTruthy();
   expect(screen.getByText(s.schedule)).toBeTruthy();
@@ -39,6 +39,8 @@ test('the reason is required; the stop sends it trimmed with one request id, the
   await openSheet();
   await fireEvent.press(await screen.findByRole('button', { name: s.confirm }));
   expect(mockApiSend).not.toHaveBeenCalled();
+  // owner 2026-11-17: a clear error under the empty reason, only once «تأكيد الإلغاء» was pressed.
+  expect(screen.getByText(s.reasonRequired)).toBeTruthy();
   await fireEvent.changeText(screen.getByPlaceholderText(s.reasonHint), '  سفر  ');
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await waitFor(() =>
@@ -49,7 +51,7 @@ test('the reason is required; the stop sends it trimmed with one request id, the
       owe: { choice: 'attended' },
     }),
   );
-  expect(await screen.findByText(s.done)).toBeTruthy();
+  expect(await screen.findByText(s.done, { exact: false })).toBeTruthy();
 });
 
 test('a refused stop says why and keeps the sheet', async () => {

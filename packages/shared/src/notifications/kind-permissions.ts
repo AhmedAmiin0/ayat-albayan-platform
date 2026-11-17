@@ -37,6 +37,7 @@ export const PUSH_KIND_PERMISSIONS: Readonly<Record<AnyPushKind, readonly Permis
   // docs/50 §5.6: a lesson's join window opened; its report was sent to the family.
   lesson_starting: FAMILY,
   report_sent: FAMILY,
+  lesson_request_declined: FAMILY,
 };
 
 /** May a profile holding `held` be told about `kind`? */

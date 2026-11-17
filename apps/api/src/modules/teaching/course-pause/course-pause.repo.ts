@@ -81,14 +81,23 @@ export class CoursePauseRepo {
     return data.map((r) => r.id);
   }
 
-  /** How many open lessons of the student start in the window (what course_pause_window will take). */
-  async previewCount(w: PreviewWindow): Promise<number> {
-    let q = this.db.from('lesson_students').select('lesson_id, lesson:lessons!inner(id)', { count: 'exact', head: true })
+  /** The open lessons of the student starting in the window (what course_pause_window will take), earliest first. */
+  async previewStarts(w: PreviewWindow): Promise<string[]> {
+    let q = this.db.from('lesson_students').select('lesson:lessons!inner(starts_at)')
       .eq('student_id', w.studentId).in('lesson.status', ['scheduled', 'confirmed']).gt('lesson.starts_at', w.start.toISOString());
     if (w.end) q = q.lt('lesson.starts_at', w.end.toISOString());
-    const { count, error } = await q;
+    const { data, error } = await q;
     if (error) throw dbError(error);
-    return count ?? 0;
+    return data.map((r) => r.lesson.starts_at).sort();
+  }
+
+  /** The lessons the pause cancelled that a resume now books back (course_pause_restore's rule), earliest first. */
+  async pausedBack(pauseId: string, cutoff: Date): Promise<string[]> {
+    const after = new Date(Math.max(Date.now(), cutoff.getTime())).toISOString();
+    const { data, error } = await this.db.from('course_pause_lessons').select('lesson:lessons!inner(starts_at, status)')
+      .eq('pause_id', pauseId).eq('kind', 'cancelled').eq('lesson.status', 'cancelled_by_admin').gte('lesson.starts_at', after);
+    if (error) throw dbError(error);
+    return data.map((r) => r.lesson.starts_at).sort();
   }
 
   /**

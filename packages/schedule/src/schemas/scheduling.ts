@@ -104,8 +104,16 @@ export const lessonProposalRequestSchema = z.object({
   startsAt: instant,
   note: z.string().trim().max(500).optional(),
 });
-/** POST /lesson-proposals/:id/approve — the move is a reschedule, so a clash needs a reason. */
-export const proposalApproveSchema = z.object({ override: overrideSchema.optional() });
+/**
+ * POST /lesson-proposals/:id/approve — the move is a reschedule, so a clash needs a reason.
+ * `startsAt`: «اختر موعدًا آخر», staff move the lesson to another free time than the one asked.
+ */
+export const proposalApproveSchema = z.object({
+  override: overrideSchema.optional(),
+  startsAt: instant.optional(),
+});
+/** POST /lesson-proposals/:id/reject — `note` reaches the family (owner 2026-11-17). */
+export const proposalRejectSchema = z.object({ note: z.string().trim().max(500).optional() });
 
 export type RescheduleRequest = z.infer<typeof rescheduleRequestSchema>;
 export type CancelRequest = z.infer<typeof cancelRequestSchema>;
@@ -115,3 +123,4 @@ export type LessonStatusRequest = z.infer<typeof lessonStatusRequestSchema>;
 export type WeeklyRule = z.infer<typeof weeklyRuleSchema>;
 export type LessonProposalRequest = z.infer<typeof lessonProposalRequestSchema>;
 export type ProposalApprove = z.infer<typeof proposalApproveSchema>;
+export type ProposalReject = z.infer<typeof proposalRejectSchema>;

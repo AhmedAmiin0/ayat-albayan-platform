@@ -14551,9 +14551,6 @@
     }
   },
   "src/modules/teaching/student-recordings/student-recordings.repo.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }

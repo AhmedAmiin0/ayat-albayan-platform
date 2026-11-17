@@ -50,6 +50,7 @@ const BELL_SHOWN: Readonly<Record<AnyPushKind, boolean>> = {
   // The family app's kinds never reach a teacher (they need the portal scope).
   lesson_starting: false,
   report_sent: false,
+  lesson_request_declined: false,
 };
 
 const until = (l: LessonView, now: Date) => Date.parse(l.starts_at) - now.getTime();

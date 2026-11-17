@@ -57,6 +57,8 @@ describe('ChangeTeacherDialog «تغيير المعلم» (owner 2026-10-30)', (
     fireEvent.change(select, { target: { value: NEW_T } });
     fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
     expect(await screen.findByText(counted(t.booking.courseChange.remaining, 5))).toBeTruthy();
+    // owner 2026-11-17: the review names the new teacher, and so does the result.
+    expect(screen.getByText(/^المعلم الجديد: /)).toBeTruthy();
     const check = apiSend.mock.calls.find(
       ([, p]) => p === '/students/s1/course-teacher/change/check',
     );
@@ -67,7 +69,7 @@ describe('ChangeTeacherDialog «تغيير المعلم» (owner 2026-10-30)', (
       startsAt: SUN,
     });
     fireEvent.click(screen.getByRole('button', { name: t.booking.courseChange.submit }));
-    await waitFor(() => expect(onDone).toHaveBeenCalledWith(words.teacher.done));
+    await waitFor(() => expect(onDone).toHaveBeenCalledWith(expect.stringContaining(words.teacher.done)));
     expect(apiSend).toHaveBeenCalledWith(
       'POST',
       '/students/s1/course-teacher/change',

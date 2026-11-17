@@ -1,18 +1,27 @@
+import type { StudentRecordingStatus } from '@ab/shared';
 import { addDays } from '@/calendar/lib/week';
 import { monthRange } from '@/money/shared/months';
 
 export const DATE_PRESETS = ['all', 'last7', 'last30', 'month'] as const;
 export type DatePreset = (typeof DATE_PRESETS)[number];
 
-/** The recordings filters: a date preset (no date picker, no new native module) and a teacher ('' = all). */
+/** A recording's state to filter by ('' = every state). */
+export type StatusFilter = StudentRecordingStatus | '';
+
+/**
+ * The recordings filters: a date preset (no date picker, no new native module), a teacher and a
+ * state ('' = all).
+ */
 export interface RecordingFilters {
   preset: DatePreset;
   teacherId: string;
+  status: StatusFilter;
 }
 
-export const NO_FILTERS: RecordingFilters = { preset: 'all', teacherId: '' };
+export const NO_FILTERS: RecordingFilters = { preset: 'all', teacherId: '', status: '' };
 
-export const isFiltered = (f: RecordingFilters): boolean => f.preset !== 'all' || f.teacherId !== '';
+export const isFiltered = (f: RecordingFilters): boolean =>
+  f.preset !== 'all' || f.teacherId !== '' || f.status !== '';
 
 /** Today's UTC date (YYYY-MM-DD), recomputed on every call: the API reads from / to as UTC dates (dayBounds), like the web's date fields. */
 export const utcToday = (now: Date = new Date()): string => now.toISOString().slice(0, 10);
@@ -25,7 +34,8 @@ export function presetRange(preset: DatePreset, today: string): { from?: string;
   return {};
 }
 
-/** GET /students/:id/recordings query: from / to / teacherId, only the ones set. */
+/** GET /students/:id/recordings query: from / to / teacherId / status, only the ones set. */
 export function recordingParams(f: RecordingFilters, today: string): Record<string, string | undefined> {
-  return { ...presetRange(f.preset, today), teacherId: f.teacherId || undefined };
+  const range = presetRange(f.preset, today);
+  return { ...range, teacherId: f.teacherId || undefined, status: f.status || undefined };
 }

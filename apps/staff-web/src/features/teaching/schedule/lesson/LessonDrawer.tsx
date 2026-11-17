@@ -5,6 +5,7 @@ import { AdminCourseChange } from '@/features/teaching/booking/course-change/Adm
 import { ClassroomActions } from '@/features/teaching/classroom/join/ClassroomActions';
 import { FeedbackRequestButton } from '@/features/teaching/feedback/FeedbackRequestButton';
 import { LessonReportLinks } from '@/features/reporting/reports/history/LessonReportLinks';
+import { LessonFilesSection } from '@/features/teaching/lesson-files';
 import { t } from '@/lib/i18n/i18n';
 import { CancelForm } from '@/features/teaching/schedule/reschedule/CancelForm';
 import { CorrectOutcome } from '@/features/teaching/schedule/correct/CorrectOutcome';
@@ -63,6 +64,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
             <LessonInvoice lesson={lesson} />
             <ProposalBox lesson={lesson} onDone={done} />
             <LessonReportLinks lesson={lesson} role="admin" />
+            <LessonFilesSection lessonId={lesson.id} />
             <LessonActions
               lesson={lesson}
               proposalLeads={Boolean(lesson.pending_proposal)}

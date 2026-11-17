@@ -41,6 +41,7 @@ const toStudent =
 const TARGETS: Partial<Record<AnyPushKind, Reader>> = {
   report_sent: toReport,
   lesson_starting: toStudent('child'),
+  lesson_request_declined: toStudent('child'),
   lesson_rescheduled: toStudent('child'),
   lesson_cancelled: toStudent('child'),
   course_paused: toStudent('child'),

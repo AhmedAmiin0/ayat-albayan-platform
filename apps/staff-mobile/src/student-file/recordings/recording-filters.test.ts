@@ -9,7 +9,7 @@ test('presets map to inclusive day ranges', () => {
 
 test('params carry only what is set', () => {
   expect(recordingParams(NO_FILTERS, '2026-10-06')).toEqual({ teacherId: undefined });
-  expect(recordingParams({ preset: 'last7', teacherId: 't1' }, '2026-10-06')).toEqual({
+  expect(recordingParams({ ...NO_FILTERS, preset: 'last7', teacherId: 't1' }, '2026-10-06')).toEqual({
     from: '2026-09-30',
     to: '2026-10-06',
     teacherId: 't1',
@@ -18,10 +18,16 @@ test('params carry only what is set', () => {
 
 test('isFiltered', () => {
   expect(isFiltered(NO_FILTERS)).toBe(false);
-  expect(isFiltered({ preset: 'all', teacherId: 't1' })).toBe(true);
+  expect(isFiltered({ ...NO_FILTERS, teacherId: 't1' })).toBe(true);
 });
 
 test('today is the UTC date and follows the clock (Riyadh is already tomorrow after 21:00 UTC)', () => {
   expect(utcToday(new Date('2026-10-06T22:30:00Z'))).toBe('2026-10-06');
   expect(utcToday(new Date('2026-10-07T00:00:00Z'))).toBe('2026-10-07');
+});
+
+test('the state filter goes to the API only when picked', () => {
+  expect(recordingParams({ ...NO_FILTERS, status: 'failed' }, '2026-11-17').status).toBe('failed');
+  expect(recordingParams(NO_FILTERS, '2026-11-17').status).toBeUndefined();
+  expect(isFiltered({ ...NO_FILTERS, status: 'done' })).toBe(true);
 });
