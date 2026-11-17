@@ -4,7 +4,7 @@ import { showSwitched } from '@/nav';
 import { usePickChild } from '@/portal';
 
 /** «يوسف أحمد» → «يوسف»: the note names the child as the family calls them. */
-export const firstName = (name: string): string => name.trim().split(/\s+/)[0] ?? name;
+const firstName = (name: string): string => name.trim().split(/\s+/)[0] ?? name;
 
 /**
  * A row of the children sheet: work as that child (saved on the phone, every screen follows),

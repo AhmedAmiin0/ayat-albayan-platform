@@ -7,7 +7,7 @@ import { useSyncExternalStore } from 'react';
 /** How long the note after a switch stays. */
 export const SWITCH_NOTICE_MS = 4000;
 
-export interface ChildSwitchState {
+interface ChildSwitchState {
   /** The sheet with the children is up. */
   open: boolean;
   /** The note after a switch, while it shows. */
