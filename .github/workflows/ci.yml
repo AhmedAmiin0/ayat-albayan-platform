@@ -129,8 +129,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Type-aware lint (docs/31a): more heap, fewer packages at once.
-          - { name: lint, task: lint, opts: --concurrency=3, heap: --max-old-space-size=6144 }
+          # Type-aware lint (docs/31a): more heap, fewer packages at once. Every package is linted (--continue)
+          # and saves its findings, bulk-suppressed ones included (eslint-findings.mjs, a turbo output), so the
+          # Oxlint parity steps below compare against this ESLint run instead of running ESLint a second time.
+          - name: lint + parity (oxlint)
+            task: lint
+            opts: --concurrency=3 --continue
+            heap: --max-old-space-size=6144
+            args: '-- -f "$GITHUB_WORKSPACE/tools/scripts/ci-checks/lint/parity/eslint-findings.mjs"'
           - { name: typecheck, task: typecheck }
           - { name: test web 1/4, task: test, filter: --filter=staff-web, args: '-- --shard=1/4', vcache: web-1-4 }
           - { name: test web 2/4, task: test, filter: --filter=staff-web, args: '-- --shard=2/4', vcache: web-2-4 }
@@ -188,7 +194,12 @@ jobs:
         if: matrix.vcache
         run: touch "$RUNNER_TEMP/vitest-start"
       - id: turbo
-        run: pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} ${{ matrix.opts }} --cache-dir=.turbo/cache ${{ matrix.args }}
+        run: |
+          start=$SECONDS
+          status=0
+          pnpm turbo ${{ matrix.task }} ${{ matrix.filter }} ${{ matrix.opts }} --cache-dir=.turbo/cache ${{ matrix.args }} || status=$?
+          echo "turbo ${{ matrix.task }}: $((SECONDS - start)) s" >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
         env:
           NODE_OPTIONS: ${{ matrix.heap }}
       # Saved only when vitest wrote new transforms (not when turbo replayed the task), also after a red test (the
@@ -218,6 +229,42 @@ jobs:
         run: |
           pnpm lint:prune > /dev/null 2>&1 || true
           git --no-pager diff -- '*eslint-suppressions.json'
+
+      # Oxlint parity (owner 2026-11-07 «go with oxlint», docs/31b-oxlint-mapping.md): ESLint still gates (step
+      # above); these steps prove Oxlint can take over with no lost coverage, and run even after a red ESLint.
+      # «Oxlint (every rule)»: oxlint.full.config.ts (every ESLint rule of every package, type-aware) held to each
+      # package's oxlint-suppressions.json, the exact per-file, per-rule counts (lint-gate.mjs --oxlint).
+      # «Parity»: the findings turbo lint saved (no suppressions; a package with no saved file is linted again)
+      # against that same Oxlint report; red when Oxlint misses a finding ESLint reports, outside the reviewed
+      # parity/gaps.json, or a rule ESLint turns on for a file is off or set otherwise in Oxlint. Both need the
+      # workspace packages built (their types), as turbo lint does.
+      - name: Build the workspace packages (parity)
+        if: ${{ !cancelled() && matrix.task == 'lint' && steps.turbo.outcome != 'skipped' }}
+        run: pnpm turbo build --filter='./packages/*' --cache-dir=.turbo/cache
+      - name: Oxlint (every rule)
+        id: oxfull
+        if: ${{ !cancelled() && matrix.task == 'lint' && steps.turbo.outcome != 'skipped' }}
+        run: pnpm lint:oxfull
+      - name: Parity with ESLint
+        if: ${{ !cancelled() && matrix.task == 'lint' && steps.oxfull.outcome != 'skipped' }}
+        env:
+          LINT_PARITY_ESLINT: ${{ github.workspace }}
+          LINT_PARITY_OXLINT: oxlint-report.json
+          NODE_OPTIONS: ${{ matrix.heap }}
+        run: pnpm lint:parity
+      # A count below the baseline fails until pruned: the log shows the pruned files to commit.
+      - name: Oxlint baselines to prune (commit this diff)
+        if: failure() && steps.oxfull.outcome == 'failure'
+        run: |
+          pnpm lint:oxfull -- --prune > /dev/null 2>&1 || true
+          git --no-pager diff -- '*oxlint-suppressions.json'
+      - name: Parity details
+        if: failure() && matrix.task == 'lint'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-parity-report
+          path: lint-parity-report.json
+          if-no-files-found: ignore
 
   # Refactor guards (docs/27 §4). Folder cap: an error since Wave F (a new crowded folder, an allow-listed one
   # that grew, a stale allow-list entry). Pure-move check: for move PRs (refactor/* and cloud/refactor-* heads
@@ -298,49 +345,6 @@ jobs:
           pnpm guard:lint -- --configs "$RUNNER_TEMP/configs-base.txt" "$RUNNER_TEMP/configs-head.txt"
       - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
 
-  # Oxlint parity (owner 2026-11-07 «go with oxlint», docs/31b-oxlint-mapping.md): ESLint still gates (verify
-  # «lint»); this job proves Oxlint can take over with no lost coverage. «Oxlint (every rule)»: oxlint.full.config.ts
-  # (every ESLint rule of every package, type-aware) held to each package's oxlint-suppressions.json, the exact
-  # per-file, per-rule counts (lint-gate.mjs --oxlint). «Parity»: ESLint (no suppressions) and Oxlint on the whole
-  # repo, both timed in the job summary; red when Oxlint misses a finding ESLint reports, outside the reviewed
-  # parity/gaps.json, or a rule ESLint turns on for a file is off or set otherwise in Oxlint. Both need the
-  # workspace packages built (their types), as turbo lint does.
-  lint-parity:
-    name: lint parity (oxlint)
-    needs: changes
-    if: needs.changes.outputs.code == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-      - run: pnpm i --frozen-lockfile
-      - name: Turbo cache (GitHub Actions cache)
-        uses: rharkor/caching-for-turbo@760158c05c47e7a764f78e9a22ca3b5a6ed8c52e # v2.5.2
-      - run: pnpm turbo build --filter='./packages/*'
-      - name: Oxlint (every rule)
-        id: oxfull
-        run: pnpm lint:oxfull
-      - name: Parity with ESLint
-        run: pnpm lint:parity
-      # A count below the baseline fails until pruned: the log shows the pruned files to commit.
-      - name: Oxlint baselines to prune (commit this diff)
-        if: failure() && steps.oxfull.outcome == 'failure'
-        run: |
-          pnpm lint:oxfull -- --prune > /dev/null 2>&1 || true
-          git --no-pager diff -- '*oxlint-suppressions.json'
-      - name: Parity details
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: lint-parity-report
-          path: lint-parity-report.json
-          if-no-files-found: ignore
-
   # develop only, after green guards: drop the knip and queries entries that are fixed (the gates pass on them, so
   # PRs never edit the lists for that; after a green gate `--write` can only remove lines). The commit says
   # [skip ci], touches only refactor/guards/ (paths-ignore above) and is pushed with the built-in token, which
@@ -378,11 +382,11 @@ jobs:
           git push "https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:develop \
             || echo "::warning::develop moved: the next push prunes the lists"
 
-  # The required aggregate for branch protection: every verify job, the guards and lint parity passed, or a docs-only change
+  # The required aggregate for branch protection: every verify job (lint parity is in the lint row) and the guards passed, or a docs-only change
   # skipped them all (changes said code=false); on a PR the refactor job (folder cap, pure moves) passed too.
   # Anything else (a failed or cancelled job, a failed changes job) is red.
   check:
-    needs: [changes, verify, guards, refactor, lint-parity]
+    needs: [changes, verify, guards, refactor]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -393,16 +397,14 @@ jobs:
           VERIFY: ${{ needs.verify.result }}
           GUARDS: ${{ needs.guards.result }}
           REFACTOR: ${{ needs.refactor.result }}
-          PARITY: ${{ needs.lint-parity.result }}
         run: |
           test "$CHANGES" = success
           test "$REFACTOR" = success || { [ "$GITHUB_EVENT_NAME" != pull_request ] && [ "$REFACTOR" = skipped ]; }
-          if [ "$CODE" = false ] && [ "$VERIFY" = skipped ] && [ "$GUARDS" = skipped ] && [ "$PARITY" = skipped ]; then
+          if [ "$CODE" = false ] && [ "$VERIFY" = skipped ] && [ "$GUARDS" = skipped ]; then
             echo "docs only: verify skipped"; exit 0
           fi
           test "$VERIFY" = success
           test "$GUARDS" = success
-          test "$PARITY" = success
 
   # The e2e suite shares one database per run and runs with one worker, so it is split across machines
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does

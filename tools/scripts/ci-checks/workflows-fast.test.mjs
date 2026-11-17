@@ -43,14 +43,11 @@ test('the automatic OTA only dispatches mobile.yml ota-update to preview on deve
 });
 
 test('ci: check covers changes, every verify job, the guards and the refactor job; docs-only passes only when both were skipped', () => {
-  assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify', 'guards', 'refactor', 'lint-parity']);
+  assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify', 'guards', 'refactor']);
   const run = ci.jobs.check.steps.map((s) => s.run).join('\n');
   assert.match(run, /test "\$CHANGES" = success/);
-  assert.match(
-    run,
-    /\[ "\$CODE" = false \] && \[ "\$VERIFY" = skipped \] && \[ "\$GUARDS" = skipped \] && \[ "\$PARITY" = skipped \]/,
-  );
-  assert.match(run, /test "\$GUARDS" = success\n\s*test "\$PARITY" = success/);
+  assert.match(run, /\[ "\$CODE" = false \] && \[ "\$VERIFY" = skipped \] && \[ "\$GUARDS" = skipped \]; then/);
+  assert.match(run, /test "\$VERIFY" = success\n\s*test "\$GUARDS" = success/);
   assert.match(
     run,
     /test "\$REFACTOR" = success \|\| \{ \[ "\$GITHUB_EVENT_NAME" != pull_request \]/,
