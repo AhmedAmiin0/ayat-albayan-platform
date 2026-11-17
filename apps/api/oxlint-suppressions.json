@@ -8550,19 +8550,9 @@
       "count": 4
     }
   },
-  "src/modules/platform/google-sync/http/backoff.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/platform/google-sync/http/google-client.fake.ts": {
     "stylistic/max-len": {
       "count": 9
-    }
-  },
-  "src/modules/platform/google-sync/http/google-http.calendar.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/modules/platform/google-sync/http/google-http.client.test.ts": {
@@ -8581,19 +8571,9 @@
       "count": 12
     }
   },
-  "src/modules/platform/google-sync/http/google-http.drive.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/platform/google-sync/http/google-http.oauth.ts": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/modules/platform/google-sync/http/google-http.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/modules/platform/google-sync/map/discovery.ts": {
