@@ -15,7 +15,7 @@ const OWNERS = [
 const ownerOf = (whole: string) => OWNERS.find((c) => whole.startsWith(c.dial.slice(1)));
 
 /** Typed with «+» or «00»: a whole international number. */
-export const isInternational = (typed: string) => /^\s*(\+|00)/.test(asciiDigits(typed));
+export const isInternational = (typed: string): boolean => /^\s*(\+|00)/.test(asciiDigits(typed));
 
 interface DialSplit {
   country: Country;
