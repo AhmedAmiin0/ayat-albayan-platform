@@ -11,7 +11,7 @@ import {
 import { Note } from '@/more';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { useActionKeys } from '@/students/course-actions/ActionButtons';
-import { useCurrentPackage } from '@/students/course-actions/course-actions-api';
+import { useCurrentPackage, useHeldPackage } from '@/students/course-actions/course-actions-api';
 import { StatusSheets, type StatusAsk } from '@/students/course-card/StatusSheets';
 import type { StudentRef } from '@/students/shared/types';
 
@@ -36,11 +36,17 @@ const statusPills = (saving: boolean) => STUDENT_STATUSES.map((s) => ({
   disabled: saving,
 }));
 
+interface StatusChangerProps {
+  student: StudentRef;
+  /** The guardian's phone: the stop's done block opens the chat. */
+  chatPhone?: string | undefined;
+}
+
 /** «متوقف» while the package is read: «جارٍ التحميل», or the error when it cannot be read. */
 type StopRead = 'idle' | 'waiting' | 'failed';
-const STOP_READ_LINE: Record<Exclude<StopRead, 'idle'>, () => string> = {
-  waiting: () => t.common.loading,
-  failed: () => t.common.error,
+const STOP_READ_LINE: Record<Exclude<StopRead, 'idle'>, string> = {
+  waiting: t.common.loading,
+  failed: t.common.error,
 };
 
 /**
@@ -51,13 +57,14 @@ const STOP_READ_LINE: Record<Exclude<StopRead, 'idle'>, () => string> = {
  * 2026-11-17); without a package «متوقف» is set at once, as before. While the package is not
  * known yet «متوقف» waits for it (never mistaken for «no package»); a failed read says so.
  */
-export function StatusChanger({ student }: { student: StudentRef }) {
+export function StatusChanger({ student, chatPhone }: StatusChangerProps) {
   const change = useOptimisticStatus<StudentStatus, StudentStatusChange>(STATUS);
   const keys = useActionKeys();
   const sub = useCurrentPackage({ studentId: student.id, given: undefined, keys });
   const [ask, setAsk] = useState<StatusAsk>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [read, setRead] = useState<StopRead>('idle');
+  const stopping = useHeldPackage(sub.id ?? null, ask === 'stop');
   const setNow = (status: StudentStatus) =>
     change.mutate({ id: student.id, status, expected: student.status });
   const stop = async () => {
@@ -94,7 +101,7 @@ export function StatusChanger({ student }: { student: StudentRef }) {
       />
       <Note>{t.courseCard.statusNote}</Note>
       {notice ? <Note>{notice}</Note> : null}
-      {read === 'idle' ? null : <Note>{STOP_READ_LINE[read]()}</Note>}
+      {read === 'idle' ? null : <Note>{STOP_READ_LINE[read]}</Note>}
       {change.isError ? (
         <ErrorLine
           message={statusChanged(change.error) ? t.students.statusChanged : t.common.error}
@@ -102,7 +109,8 @@ export function StatusChanger({ student }: { student: StudentRef }) {
       ) : null}
       <StatusSheets
         studentId={student.id}
-        subscriptionId={sub.id ?? null}
+        subscriptionId={stopping}
+        chatPhone={chatPhone}
         ask={ask}
         onClose={() => setAsk(null)}
         onDone={done}

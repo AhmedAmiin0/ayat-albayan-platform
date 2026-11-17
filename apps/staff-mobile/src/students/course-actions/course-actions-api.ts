@@ -15,6 +15,7 @@ import type {
   ProfileCourseView,
 } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 // The student profile's «إلغاء الاشتراك» / «تغيير المعلم» / «تغيير موعد الحلقات» (owner
@@ -81,6 +82,16 @@ export function useCurrentPackage(input: {
 /** The package's id; null = none yet, or none (see useCurrentPackage). */
 export function useCurrentSubscription(input: Parameters<typeof useCurrentPackage>[0]): string | null {
   return useCurrentPackage(input).id ?? null;
+}
+
+/**
+ * A stop cancels the package, so the re-read finds none: while `keep` (its sheet is open) the last
+ * package seen stays, and the sheet can say what it did.
+ */
+export function useHeldPackage(current: string | null, keep: boolean): string | null {
+  const [held, setHeld] = useState<string | null>(null);
+  if (current && current !== held) setHeld(current);
+  return current ?? (keep ? held : null);
 }
 
 /** GET …/course-stop?subscriptionId=: the stop sheet's lines. */

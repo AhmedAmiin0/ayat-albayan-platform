@@ -5,7 +5,7 @@ import { t } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { PauseSheetFrame } from '@/students/course-pause/PauseSheetFrame';
 import { ActionButtons, useActionKeys, type Open } from './ActionButtons';
-import { useCurrentSubscription } from './course-actions-api';
+import { useCurrentSubscription, useHeldPackage } from './course-actions-api';
 import { CourseMoveSheet } from './CourseMoveSheet';
 import { CourseStopForm } from './CourseStopForm';
 import { ExtendForm } from '@/students/course-card/ExtendForm';
@@ -25,6 +25,8 @@ interface CourseActionsSectionProps {
   extend?: boolean;
   /** The package's rows, before «إلغاء الاشتراك». */
   extra?: ReactNode;
+  /** The guardian's phone: the stop's done block opens the chat. */
+  chatPhone?: string | undefined;
 }
 
 type Keys = ReturnType<typeof useActionKeys>;
@@ -53,11 +55,13 @@ const isMove = (open: Open): open is CourseMoveKind => open === 'teacher' || ope
 export function CourseActionsSection(props: CourseActionsSectionProps) {
   const { studentId, subscriptionId, movesOf } = props;
   const keys = keysOf(props.moves)(useActionKeys());
-  const sub = useCurrentSubscription({ studentId, given: subscriptionId, keys });
+  const current = useCurrentSubscription({ studentId, given: subscriptionId, keys });
   const [open, setOpen] = useState<Open>(null);
+  const sub = useHeldPackage(current, open !== null);
   const [notice, setNotice] = useState<string | null>(null);
   const c = t.courseActions;
-  if (!sub || (!keys.any && notice === null)) return <>{props.extra}</>;
+  const said = notice ? <Note>{notice}</Note> : null;
+  if (!sub || (!keys.any && notice === null)) return <>{said}{props.extra}</>;
   const close = () => setOpen(null);
   const done = (text: string) => {
     setOpen(null);
@@ -67,7 +71,7 @@ export function CourseActionsSection(props: CourseActionsSectionProps) {
   const moving = { studentId, subscriptionId: movesOf ?? sub };
   return (
     <View>
-      {notice ? <Note>{notice}</Note> : null}
+      {said}
       <ActionButtons
         keys={keys}
         extend={props.extend}
@@ -78,7 +82,12 @@ export function CourseActionsSection(props: CourseActionsSectionProps) {
         }}
       />
       <PauseSheetFrame open={open === 'stop'} title={c.stop.title} onClose={close}>
-        <CourseStopForm sub={{ studentId, subscriptionId: sub }} onClose={close} onDone={done} />
+        <CourseStopForm
+          sub={{ studentId, subscriptionId: sub }}
+          onClose={close}
+          onDone={done}
+          chatPhone={props.chatPhone}
+        />
       </PauseSheetFrame>
       <PauseSheetFrame open={open === 'extend'} title={t.courseCard.extend.title} onClose={close}>
         <ExtendForm sub={moving} onClose={close} onDone={done} />

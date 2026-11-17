@@ -13,6 +13,8 @@ interface StatusSheetsProps {
   onClose: () => void;
   /** Done: what changed, said under the pills. */
   onDone: (text: string) => void;
+  /** The guardian's phone: the stop's done block opens the chat. */
+  chatPhone?: string | undefined;
 }
 
 /**
@@ -33,7 +35,12 @@ export function StatusSheets(props: StatusSheetsProps) {
       </PauseSheetFrame>
       <PauseSheetFrame open={stopping} title={t.courseActions.stop.title} onClose={onClose}>
         {subscriptionId ? (
-          <CourseStopForm sub={{ studentId, subscriptionId }} onClose={onClose} onDone={onDone} />
+          <CourseStopForm
+            sub={{ studentId, subscriptionId }}
+            onClose={onClose}
+            onDone={onDone}
+            chatPhone={props.chatPhone}
+          />
         ) : null}
       </PauseSheetFrame>
     </>
