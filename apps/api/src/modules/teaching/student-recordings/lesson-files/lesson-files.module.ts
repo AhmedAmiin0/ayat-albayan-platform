@@ -12,7 +12,7 @@ import { PortalAssetsService } from './portal/portal-assets.service';
 
 /**
  * «ملفات الحلقة» and the family's «التسجيلات» (owner 2026-11-17): lesson_files (migration
- * 20261117100200) in the report-attachments bucket; Storage and Audit are global modules.
+ * 20261117150200) in the report-attachments bucket; Storage and Audit are global modules.
  */
 @Module({
   imports: [TeachersModule, PortalModule],
