@@ -126,7 +126,7 @@ below are updated accordingly (migrations `20261029000971`–`972`).
    edits / deletes her own messages; the others see her name and «مسؤول المتابعة». On a closed channel she
    still reads the history as a monitor (decision 2). Another assistant is 404.
    **One assistant seat per chat** (owner 2026-11-16: «any assistant can subscribe to the chating channel but
-   only 1», «who brought the student have the priority»; migration `20261116000300_channel_seat`):
+   only 1», «who brought the student have the priority»; migration `20261117090200_channel_seat`):
    `student_channels.assistant_id`, started with `students.brought_by`; any assistant takes a free seat (a
    holder no longer `sales` counts as free), the bringer takes it from anyone, otherwise 409
    `channel_seat_taken`; the holder leaves it. The seat is not ownership: no money, lead or commission scope.

@@ -14,7 +14,7 @@ export interface SeatRow {
 
 /**
  * The one assistant seat of a student chat (student_channels.assistant_id, migration
- * 20261116000300; owner 2026-11-16 «any assistant can subscribe to the chating channel but only
+ * 20261117090200; owner 2026-11-16 «any assistant can subscribe to the chating channel but only
  * 1»). Service role: ChannelSeatService decides who may take it.
  */
 @Injectable()

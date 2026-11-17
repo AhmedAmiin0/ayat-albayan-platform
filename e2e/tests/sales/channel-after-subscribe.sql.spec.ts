@@ -8,7 +8,7 @@ import { assistant, student } from '../../support/sales/assistant';
 // reads a message (RLS, also what Realtime checks per subscriber); monitors always read. The family side is
 // the guardian's login and the student's own login, a child's too (owner 2026-11-16, migration
 // 20261116000100_child_chat); the owning assistant writes too (20261116000200), and only the one
-// assistant in the chat's seat reads it (20261116000300, owner 2026-11-16 «… but only 1»).
+// assistant in the chat's seat reads it (20261117090200, owner 2026-11-16 «… but only 1»).
 // Rolled back; the e2e stack has no Realtime service, so the publication step is not exercised here.
 
 async function login(tx: Tx, input: { tag: string; role: 'guardian' | 'student' }): Promise<string> {
@@ -75,7 +75,7 @@ test.describe('student channel opens after the subscription (20261029000971–97
     });
   });
 
-  test('one assistant seat: a new student seats its bringer; only the holder reads (20261116000300)', async () => {
+  test('one assistant seat: a new student seats its bringer; only the holder reads (20261117090200)', async () => {
     await rolledBack(async (tx) => {
       const s = await seed(tx);
       const bringer = await assistant(tx, 'ch961-sales-a');

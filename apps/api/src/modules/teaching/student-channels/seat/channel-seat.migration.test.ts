@@ -6,14 +6,14 @@ import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 // Owner 2026-11-16 «… but only 1» and «who brought the student have the priority»: read as text,
 // no database in unit tests.
 const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
-const sql = strip(readFileSync(join(MIGRATIONS_DIR, '20261116000300_channel_seat.sql'), 'utf8'));
+const sql = strip(readFileSync(join(MIGRATIONS_DIR, '20261117090200_channel_seat.sql'), 'utf8'));
 /** The SQL between a function's two `$$` (its body). */
 const body = (fn: string): string => {
   const start = sql.indexOf('$$', sql.indexOf(`function public.${fn}(`)) + 2;
   return sql.slice(start, sql.indexOf('$$', start));
 };
 
-describe('migration 20261116000300: one assistant seat per student chat', () => {
+describe('migration 20261117090200: one assistant seat per student chat', () => {
   it('adds the seat: a profile, freed when the profile goes, indexed while held', () => {
     expect(sql).toContain('add column if not exists assistant_id uuid references public.profiles (id)');
     expect(sql).toContain('on delete set null');

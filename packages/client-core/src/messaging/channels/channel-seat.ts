@@ -12,7 +12,7 @@ import { apiErrorCode, type ApiClient } from '../../core/http/index.js';
 export type SeatState = 'mine' | 'take' | 'takeover' | 'held';
 
 /** Why a take failed: another assistant got there first (409), or anything else. */
-export type SeatError = 'taken' | 'failed';
+type SeatError = 'taken' | 'failed';
 
 /**
  * A row reads its seat once a minute at most: «كل الطلاب» and «طلابي» read one seat per row.
